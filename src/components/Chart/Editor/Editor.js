@@ -2,33 +2,40 @@ import React, { useState, useMemo } from 'react'
 import { css } from 'glamor'
 import { csvParse } from 'd3-dsv'
 
-import Field from '../Form/Field'
-import Dropdown from '../Form/Dropdown'
-import Checkbox from '../Form/Checkbox'
-import { Interaction, fontStyles } from '../Typography'
-import { useColorContext } from '../Colors/ColorContext'
-import { useCommaField } from './ChartEditor.utils'
+import Field from '../../Form/Field'
+import Dropdown from '../../Form/Dropdown'
+import Checkbox from '../../Form/Checkbox'
+import { TickField } from './TickField'
+import { FormFields } from './FormFields'
+import { ColorDropdownElement } from './ColorDropdownElement'
 
-import { timeParse } from '../../lib/timeFormat'
-import { getFormat } from './utils'
-import { defaultProps } from './ChartContext'
-import { lineEditorSchema } from './Lines'
-import { timeBarEditorSchema } from './TimeBars'
+import { Interaction, fontStyles } from '../../Typography'
+import { useColorContext } from '../../Colors/ColorContext'
+
+import { timeParse } from '../../../lib/timeFormat'
+import { getFormat } from '../utils'
+import { defaultProps } from '../ChartContext'
+import { lineEditorSchema } from '../Lines'
+import { timeBarEditorSchema } from '../TimeBars'
 
 // TODO: there is also a xNumberFormat option if some is using a linear xScale and the yNumberFormat
 // is not machting the xNumberFormat. Should we include this?
 const numberFormats = [
   {
-    value: '.0%',
-    text: '20%'
+    value: 's',
+    text: '8, 12, 85'
   },
   {
-    value: '.0f',
-    text: '20'
+    value: '.0%',
+    text: '8%, 12%, 85%'
   },
   {
     value: '.1f',
     text: '20,0'
+  },
+  {
+    value: '.2f',
+    text: '8, 12, 85'
   }
 ]
 
@@ -95,7 +102,6 @@ const styles = {
     gridTemplateColumns: '1fr 1fr',
     gridTemplateRows: '1fr',
     gap: '50px 30px',
-    gridTemplateAreas: '"xaxis yaxis" "color layout"',
     margin: '20px 0'
   })
 }
@@ -158,7 +164,10 @@ const ChartEditor = ({ data, value, onChange }) => {
       value: d,
       text: d,
       element: (
-        <ColorElement key={'colorRange' + i} colorRange={colorRanges[d]} />
+        <ColorDropdownElement
+          key={'colorRange' + i}
+          colorRange={colorRanges[d]}
+        />
       )
     }
   })
@@ -182,18 +191,8 @@ const ChartEditor = ({ data, value, onChange }) => {
   const timeFormatParser = timeParse(
     value.timeParse || value.timeFormat || '%Y'
   )
-  const [xTicksField, onXTicksChange] = useCommaField(
-    value.xTicks,
-    createOnFieldChange('xTicks'),
-    timeFormatParser
-  )
 
   const numberFormatParser = getFormat(value.numberFormat || '.1f')
-  const [yTicksField, onYTicksChange] = useCommaField(
-    value.xTicks,
-    createOnFieldChange('yTicks'),
-    numberFormatParser
-  )
 
   const schema =
     value.type === 'Line'
@@ -216,59 +215,45 @@ const ChartEditor = ({ data, value, onChange }) => {
           colorDropdownItems
         })
 
-  const xAxis = schema.properties.xAxis.properties
-  const yAxis = schema.properties.yAxis.properties
-  const colorFields = schema.properties.color.properties
-  const layout = schema.properties.layout.properties
-
-  const generateFormFields = (key, groupObject) => {
-    if (Object.prototype.hasOwnProperty.call(groupObject[key], 'enum')) {
+  const generateFormFields = (property, groupObject) => {
+    if (Object.prototype.hasOwnProperty.call(groupObject[property], 'enum')) {
       return (
         <Dropdown
-          key={key}
-          label={groupObject[key].title}
-          items={groupObject[key].enum}
-          value={value[key] || groupObject[key].default}
-          onChange={createOnDropdownChange(key)}
+          key={property}
+          label={groupObject[property].title}
+          items={groupObject[property].enum}
+          value={value[property] || groupObject[property].default}
+          onChange={createOnDropdownChange(property)}
         />
       )
-    } else if (key === 'xTicks') {
+    } else if (groupObject[property].type === 'array') {
       return (
-        <Field
-          key={key}
-          label={groupObject[key].title}
-          value={xTicksField.value}
-          error={xTicksField.error && 'Fehler in Achsenticks'}
-          onChange={onXTicksChange}
+        <TickField
+          key={property}
+          property={property}
+          groupObject={groupObject}
+          value={value.property || groupObject[property].default}
+          createOnFieldChange={createOnFieldChange}
+          parser={property === 'xTicks' ? timeFormatParser : numberFormatParser}
         />
       )
-    } else if (key === 'yTicks') {
-      return (
-        <Field
-          key={key}
-          label={groupObject[key].title}
-          value={yTicksField.value}
-          error={yTicksField.error && 'Fehler in Achsenticks'}
-          onChange={onYTicksChange}
-        />
-      )
-    } else if (groupObject[key].type === 'boolean') {
+    } else if (groupObject[property].type === 'boolean') {
       return (
         <Checkbox
-          key={key}
-          checked={value[key]}
-          onChange={createOnFieldChange(key)}
+          key={property}
+          checked={value[property]}
+          onChange={createOnFieldChange(property)}
         >
-          {groupObject[key].title}
+          {groupObject[property].title}
         </Checkbox>
       )
     } else {
       return (
         <Field
-          key={key}
-          label={groupObject[key].title}
-          value={value.key || groupObject[key].default}
-          onChange={createOnFieldChange(key)}
+          key={property}
+          label={groupObject[property].title}
+          value={value.property || groupObject[property].default}
+          onChange={createOnFieldChange(property)}
         />
       )
     }
@@ -316,10 +301,7 @@ const ChartEditor = ({ data, value, onChange }) => {
       {activeTab === 'basic' ? (
         <BasicSettings
           generateFormFields={generateFormFields}
-          xAxis={xAxis}
-          yAxis={yAxis}
-          colorFields={colorFields}
-          layout={layout}
+          schema={schema}
         />
       ) : (
         <AdvancedSettings
@@ -335,39 +317,21 @@ const ChartEditor = ({ data, value, onChange }) => {
 }
 
 const BasicSettings = props => {
-  const { generateFormFields, xAxis, yAxis, colorFields, layout } = props
-
-  const xAxisKeys = Object.keys(xAxis)
-  const yAxisKeys = Object.keys(yAxis)
-  const colorFieldsKeys = Object.keys(colorFields)
-  const layoutKeys = Object.keys(layout)
+  const { generateFormFields, schema } = props
 
   return (
     <div>
-      <div {...styles.gridContainer}>
-        <div className='xaxis'>
-          <Interaction.H3>Horizontale Achse</Interaction.H3>
-          {xAxisKeys.map(d => generateFormFields(d, xAxis))}
-        </div>
-        <div className='yaxis'>
-          <Interaction.H3>Vertikale Achse</Interaction.H3>
-          {yAxisKeys.map(d => generateFormFields(d, yAxis))}
-        </div>
-        <div className='color'>
-          <Interaction.H3>Farbe</Interaction.H3>
-          {colorFieldsKeys.map(d => generateFormFields(d, colorFields))}
-        </div>
-        <div className='layout'>
-          <Interaction.H3>Layout</Interaction.H3>
-          {layoutKeys.map(d => generateFormFields(d, layout))}
-        </div>
-      </div>
+      <FormFields
+        generateFormFields={generateFormFields}
+        fields={schema.properties}
+      />
     </div>
   )
 }
 
 const AdvancedSettings = props => {
   const { value, createOnFieldChange } = props
+
   return (
     <div {...styles.gridContainer}>
       <div className='yaxis'>
@@ -376,24 +340,6 @@ const AdvancedSettings = props => {
           Y-Achse bei 0 beginnen
         </Checkbox>
       </div>
-    </div>
-  )
-}
-
-const ColorElement = props => {
-  const { colorRange } = props
-  return (
-    <div style={{ display: 'flex', height: '25px', marginRight: '50px' }}>
-      {colorRange.map((d, i) => (
-        <span
-          key={d + i}
-          style={{
-            display: 'inline-block',
-            flex: 1,
-            backgroundColor: d
-          }}
-        />
-      ))}
     </div>
   )
 }

@@ -262,6 +262,7 @@ export const lineEditorSchema = ({
     type: 'object',
     properties: {
       xAxis: {
+        title: 'Horizontale Achse',
         properties: {
           x: {
             title: 'Spalte auswählen',
@@ -297,6 +298,7 @@ export const lineEditorSchema = ({
         }
       },
       yAxis: {
+        title: 'Vertikale Achse',
         properties: {
           numberFormat: {
             title: 'Achsenformat',
@@ -326,6 +328,7 @@ export const lineEditorSchema = ({
         }
       },
       color: {
+        title: 'Farbe',
         properties: {
           color: {
             title: 'Spalte auswählen',
@@ -342,6 +345,7 @@ export const lineEditorSchema = ({
         }
       },
       layout: {
+        title: 'Layout',
         properties: {
           column: {
             title: 'Spalte auswählen',

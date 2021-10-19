@@ -190,6 +190,7 @@ export const timeBarEditorSchema = ({
     type: 'object',
     properties: {
       xAxis: {
+        title: 'Horizontale Achse',
         properties: {
           x: {
             title: 'Spalte auswählen',
@@ -219,6 +220,7 @@ export const timeBarEditorSchema = ({
         }
       },
       yAxis: {
+        title: 'Vertikale Achse',
         properties: {
           y: {
             title: 'Spalte auswählen',
@@ -248,6 +250,7 @@ export const timeBarEditorSchema = ({
         }
       },
       color: {
+        title: 'Farbe',
         properties: {
           color: {
             title: 'Spalte auswählen',
@@ -264,6 +267,7 @@ export const timeBarEditorSchema = ({
         }
       },
       layout: {
+        title: 'Layout',
         properties: {
           column: {
             title: 'Spalte auswählen',
