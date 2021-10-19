@@ -169,6 +169,32 @@ const ChartEditor = ({ data, value, onChange }) => {
     return { value: d, text: d }
   })
 
+  const createOnFieldChange = key => {
+    return (_, newValue) => {
+      onChange({ ...value, [key]: newValue })
+    }
+  }
+
+  const createOnDropdownChange = key => item => {
+    return onChange({ ...value, [key]: item.value })
+  }
+
+  const timeFormatParser = timeParse(
+    value.timeParse || value.timeFormat || '%Y'
+  )
+  const [xTicksField, onXTicksChange] = useCommaField(
+    value.xTicks,
+    createOnFieldChange('xTicks'),
+    timeFormatParser
+  )
+
+  const numberFormatParser = getFormat(value.numberFormat || '.1f')
+  const [yTicksField, onYTicksChange] = useCommaField(
+    value.xTicks,
+    createOnFieldChange('yTicks'),
+    numberFormatParser
+  )
+
   const schema =
     value.type === 'Line'
       ? lineEditorSchema({
@@ -194,105 +220,6 @@ const ChartEditor = ({ data, value, onChange }) => {
   const yAxis = schema.properties.yAxis.properties
   const colorFields = schema.properties.color.properties
   const layout = schema.properties.layout.properties
-
-  const createOnFieldChange = key => {
-    return (_, newValue) => {
-      onChange({ ...value, [key]: newValue })
-    }
-  }
-
-  const createOnDropdownChange = key => item => {
-    return onChange({ ...value, [key]: item.value })
-  }
-
-  const handleTabClick = () => {
-    setActiveTab(activeTab === 'basic' ? 'advanced' : 'basic')
-  }
-
-  const hoverRule = useMemo(() => {
-    return css({
-      '@media (hover)': {
-        ':hover': {
-          color: colorScheme.getCSSColor('textSoft')
-        }
-      }
-    })
-  }, [colorScheme])
-
-  return (
-    <div>
-      <div {...styles.tabs}>
-        {tabs.map(d => {
-          return (
-            <a
-              key={d.value}
-              {...styles.orderBy}
-              {...colorScheme.set('color', 'text')}
-              {...styles[activeTab === d.value ? 'selected' : 'regular']}
-              {...(activeTab !== d.value && hoverRule)}
-              onClick={handleTabClick}
-            >
-              {d.text}
-            </a>
-          )
-        })}
-      </div>
-
-      {activeTab === 'basic' ? (
-        <BasicSettings
-          columns={columns}
-          value={value}
-          createOnDropdownChange={createOnDropdownChange}
-          createOnFieldChange={createOnFieldChange}
-          xAxis={xAxis}
-          yAxis={yAxis}
-          colorFields={colorFields}
-          layout={layout}
-        />
-      ) : (
-        <AdvancedSettings
-          columns={columns}
-          value={value}
-          createOnDropdownChange={createOnDropdownChange}
-          createOnFieldChange={createOnFieldChange}
-          colorDropdownItems={colorDropdownItems}
-        />
-      )}
-    </div>
-  )
-}
-
-const BasicSettings = props => {
-  const {
-    value,
-    createOnDropdownChange,
-    createOnFieldChange,
-    xAxis,
-    yAxis,
-    colorFields,
-    layout
-  } = props
-
-  const timeFormatParser = timeParse(
-    value.timeParse || value.timeFormat || '%Y'
-  )
-  const [xTicksField, onXTicksChange] = useCommaField(
-    value.xTicks,
-    createOnFieldChange('xTicks'),
-    timeFormatParser
-  )
-
-  const numberFormatParser = getFormat(value.numberFormat || '.1f')
-  const [yTicksField, onYTicksChange] = useCommaField(
-    value.xTicks,
-    createOnFieldChange('yTicks'),
-    numberFormatParser
-  )
-
-  const xAxisKeys = Object.keys(xAxis)
-  const yAxisKeys = Object.keys(yAxis)
-  const colorFieldsKeys = Object.keys(colorFields)
-  const layoutKeys = Object.keys(layout)
 
   const generateFormFields = (key, groupObject) => {
     if (Object.prototype.hasOwnProperty.call(groupObject[key], 'enum')) {
@@ -347,14 +274,76 @@ const BasicSettings = props => {
     }
   }
 
+  const handleTabClick = () => {
+    setActiveTab(activeTab === 'basic' ? 'advanced' : 'basic')
+  }
+
+  const hoverRule = useMemo(() => {
+    return css({
+      '@media (hover)': {
+        ':hover': {
+          color: colorScheme.getCSSColor('textSoft')
+        }
+      }
+    })
+  }, [colorScheme])
+
   return (
     <div>
+      <div {...styles.tabs}>
+        {tabs.map(d => {
+          return (
+            <a
+              key={d.value}
+              {...styles.orderBy}
+              {...colorScheme.set('color', 'text')}
+              {...styles[activeTab === d.value ? 'selected' : 'regular']}
+              {...(activeTab !== d.value && hoverRule)}
+              onClick={handleTabClick}
+            >
+              {d.text}
+            </a>
+          )
+        })}
+      </div>
       <Dropdown
         label='Charttyp auswählen'
         items={chartTypes}
         value={value.type}
         onChange={createOnDropdownChange('type')}
       />
+
+      {activeTab === 'basic' ? (
+        <BasicSettings
+          generateFormFields={generateFormFields}
+          xAxis={xAxis}
+          yAxis={yAxis}
+          colorFields={colorFields}
+          layout={layout}
+        />
+      ) : (
+        <AdvancedSettings
+          columns={columns}
+          value={value}
+          createOnDropdownChange={createOnDropdownChange}
+          createOnFieldChange={createOnFieldChange}
+          colorDropdownItems={colorDropdownItems}
+        />
+      )}
+    </div>
+  )
+}
+
+const BasicSettings = props => {
+  const { generateFormFields, xAxis, yAxis, colorFields, layout } = props
+
+  const xAxisKeys = Object.keys(xAxis)
+  const yAxisKeys = Object.keys(yAxis)
+  const colorFieldsKeys = Object.keys(colorFields)
+  const layoutKeys = Object.keys(layout)
+
+  return (
+    <div>
       <div {...styles.gridContainer}>
         <div className='xaxis'>
           <Interaction.H3>Horizontale Achse</Interaction.H3>
