@@ -248,73 +248,111 @@ export const Line = props => <LineChart {...props} />
 
 Line.defaultProps = defaultProps.Line
 
-export const createSchema = ({ fields, defaults }) => {
+export const lineEditorSchema = ({
+  fields,
+  defaults,
+  numberFormats,
+  xScaleTypes,
+  yScaleTypes,
+  timeFormats,
+  colorDropdownItems
+}) => {
   return {
-    title: 'Chart WYSIWYG',
+    title: 'LineChartConfig',
     type: 'object',
-    format: 'categories',
-    basicCategoryTitle: 'Grundeinstellungen',
-    options: {
-      disable_properties: true,
-      disable_edit_json: true,
-      disable_collapse: true
-    },
     properties: {
-      x: {
-        title: 'Spalte für X-Achse',
-        type: 'string',
-        enum: fields,
-        default: Line.defaultProps.x || defaults.x || ''
+      xAxis: {
+        properties: {
+          x: {
+            title: 'Spalte auswählen',
+            type: 'string',
+            enum: fields,
+            default: defaults.x
+          },
+          timeFormat: {
+            title: 'Achsenformat',
+            type: 'string',
+            enum: timeFormats,
+            default: defaults.timeFormat
+          },
+          xTicks: {
+            title: 'Achsenticks',
+            type: 'array',
+            contains: {
+              type: 'string'
+            },
+            default: defaults.xTicks
+          },
+          xUnit: {
+            title: 'Beschriftung',
+            type: 'string',
+            default: defaults.xUnit
+          },
+          xScale: {
+            title: 'Skalierungstyp',
+            type: 'string',
+            enum: xScaleTypes,
+            default: defaults.xScale
+          }
+        }
+      },
+      yAxis: {
+        properties: {
+          numberFormat: {
+            title: 'Achsenformat',
+            type: 'string',
+            enum: numberFormats,
+            default: defaults.numberFormat
+          },
+          yTicks: {
+            title: 'Achsenticks',
+            type: 'array',
+            contains: {
+              type: 'string'
+            },
+            default: defaults.yTicks
+          },
+          unit: {
+            title: 'Beschriftung',
+            type: 'string',
+            default: defaults.unit
+          },
+          yScale: {
+            title: 'Skalierungstyp',
+            type: 'string',
+            enum: yScaleTypes,
+            default: defaults.yScale
+          }
+        }
       },
       color: {
-        title: 'Spalte für Farbe',
-        type: 'string',
-        enum: fields,
-        default: Line.defaultProps.color || defaults.color || ''
-      },
-      xScale: {
-        title: 'Typ X-Achse',
-        type: 'string',
-        enum: ['time', 'ordinal', 'linear'],
-        default: defaults.xScale || Line.defaultProps.xScale || ''
-      },
-      numberFormat: {
-        title: 'Zahlenformat',
-        type: 'string',
-        default: defaults.numberFormat || Line.defaultProps.numberFormat || ''
-      },
-      unit: {
-        title: 'Beschriftung Y-Achse',
-        type: 'string',
-        default: defaults.unit || Line.defaultProps.unit || ''
-      },
-      zero: {
-        title: 'Y-Achse bei 0 beginnen',
-        type: 'boolean',
-        format: 'checkbox',
-        default: defaults.zero || Line.defaultProps.zero || ''
-      },
-      endLabel: {
-        title: 'Beschriftung am Linienende',
-        type: 'boolean',
-        format: 'checkbox',
-        default: Line.defaultProps.endLabel
-      },
-      advanced: {
-        type: 'object',
-        title: 'Weitere Einstellungen',
-        format: 'grid',
-        options: {
-          disable_properties: true,
-          disable_edit_json: true,
-          disable_collapse: true
-        },
         properties: {
-          b: {
-            title: 'Beschriftung am Linienende',
-            type: 'boolean',
-            format: 'checkbox',
-            default: Line.defaultProps.endLabel
+          color: {
+            title: 'Spalte auswählen',
+            type: 'string',
+            enum: fields,
+            default: defaults.color
+          },
+          colorRange: {
+            title: 'Farbschema auswählen',
+            type: 'string',
+            enum: colorDropdownItems,
+            default: defaults.colorRange
+          }
+        }
+      },
+      layout: {
+        properties: {
+          column: {
+            title: 'Spalte auswählen',
+            type: 'string',
+            enum: fields,
+            default: defaults.column
+          },
+          columns: {
+            title: 'Anzahl Spalten pro Zeile',
+            type: 'number',
+            default: defaults.columns
           }
         }
       }

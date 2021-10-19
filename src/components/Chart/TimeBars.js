@@ -175,3 +175,109 @@ TimeBarChart.propTypes = propTypes
 TimeBarChart.defaultProps = defaultProps.TimeBar
 
 export default TimeBarChart
+
+export const timeBarEditorSchema = ({
+  fields,
+  defaults,
+  numberFormats,
+  xScaleTypes,
+  yScaleTypes,
+  timeFormats,
+  colorDropdownItems
+}) => {
+  return {
+    title: 'LineChartConfig',
+    type: 'object',
+    properties: {
+      xAxis: {
+        properties: {
+          x: {
+            title: 'Spalte auswählen',
+            type: 'string',
+            enum: fields,
+            default: defaults.x
+          },
+          timeFormat: {
+            title: 'Achsenformat',
+            type: 'string',
+            enum: timeFormats,
+            default: defaults.timeFormat
+          },
+          xTicks: {
+            title: 'Achsenticks',
+            type: 'array',
+            contains: {
+              type: 'string'
+            },
+            default: defaults.xTicks
+          },
+          xUnit: {
+            title: 'Beschriftung',
+            type: 'string',
+            default: defaults.xUnit
+          }
+        }
+      },
+      yAxis: {
+        properties: {
+          y: {
+            title: 'Spalte auswählen',
+            type: 'string',
+            enum: fields,
+            default: defaults.y
+          },
+          numberFormat: {
+            title: 'Achsenformat',
+            type: 'string',
+            enum: numberFormats,
+            default: defaults.numberFormat
+          },
+          yTicks: {
+            title: 'Achsenticks',
+            type: 'array',
+            contains: {
+              type: 'string'
+            },
+            default: defaults.yTicks
+          },
+          unit: {
+            title: 'Beschriftung',
+            type: 'string',
+            default: defaults.unit
+          }
+        }
+      },
+      color: {
+        properties: {
+          color: {
+            title: 'Spalte auswählen',
+            type: 'string',
+            enum: fields,
+            default: defaults.color
+          },
+          colorRange: {
+            title: 'Farbschema auswählen',
+            type: 'string',
+            enum: colorDropdownItems,
+            default: defaults.colorRange
+          }
+        }
+      },
+      layout: {
+        properties: {
+          column: {
+            title: 'Spalte auswählen',
+            type: 'string',
+            enum: fields,
+            default: defaults.column
+          },
+          columns: {
+            title: 'Anzahl Spalten pro Zeile',
+            type: 'number',
+            default: defaults.columns
+          }
+        }
+      }
+    }
+  }
+}
