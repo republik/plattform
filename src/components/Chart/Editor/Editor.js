@@ -17,64 +17,12 @@ import { getFormat } from '../utils'
 import { defaultProps } from '../ChartContext'
 import { lineEditorSchema } from '../Lines'
 import { timeBarEditorSchema } from '../TimeBars'
-
-// TODO: there is also a xNumberFormat option if some is using a linear xScale and the yNumberFormat
-// is not machting the xNumberFormat. Should we include this?
-const numberFormats = [
-  {
-    value: 's',
-    text: '8, 12, 85'
-  },
-  {
-    value: '.0%',
-    text: '8%, 12%, 85%'
-  },
-  {
-    value: '.1f',
-    text: '20,0'
-  },
-  {
-    value: '.2f',
-    text: '8, 12, 85'
-  }
-]
-
-const xScaleTypes = [
-  {
-    value: 'time',
-    text: 'zeitlich'
-  },
-  {
-    value: 'linear',
-    text: 'linear'
-  },
-  {
-    value: 'ordinal',
-    text: 'ordinal'
-  }
-]
-
-const yScaleTypes = [
-  {
-    value: 'linear',
-    text: 'linear'
-  },
-  {
-    value: 'log',
-    text: 'logarithmisch'
-  }
-]
-
-const timeFormats = [
-  {
-    value: '%Y',
-    text: '2015, 2016'
-  },
-  {
-    value: '%d.%m.%Y',
-    text: '26.02.2017, 24.02.2018'
-  }
-]
+import {
+  numberFormats,
+  timeFormats,
+  xScaleTypes,
+  yScaleTypes
+} from './Editor.utils'
 
 const styles = {
   orderBy: css({
@@ -159,22 +107,22 @@ const ChartEditor = ({ data, value, onChange }) => {
 
   const colorRangesArray = Object.keys(colorRanges)
 
-  const colorDropdownItems = colorRangesArray.map((d, i) => {
-    return {
-      value: d,
-      text: d,
-      element: (
-        <ColorDropdownElement
-          key={'colorRange' + i}
-          colorRange={colorRanges[d]}
-        />
-      )
-    }
-  })
+  const colorDropdownItems = colorRangesArray
+    .map((d, i) => {
+      return {
+        value: d,
+        text: d,
+        element: (
+          <ColorDropdownElement
+            key={'colorRange' + i}
+            colorRange={colorRanges[d]}
+          />
+        )
+      }
+    })
+    .concat({ value: 'auto', text: 'automatisch' })
 
-  const columnNames = Object.keys(chartData[0])
-
-  const columns = columnNames.map(d => {
+  const columns = Object.keys(chartData[0]).map(d => {
     return { value: d, text: d }
   })
 
@@ -232,7 +180,7 @@ const ChartEditor = ({ data, value, onChange }) => {
           key={property}
           property={property}
           groupObject={groupObject}
-          value={value.property || groupObject[property].default}
+          value={value[property] || groupObject[property].default}
           createOnFieldChange={createOnFieldChange}
           parser={property === 'xTicks' ? timeFormatParser : numberFormatParser}
         />
@@ -252,7 +200,7 @@ const ChartEditor = ({ data, value, onChange }) => {
         <Field
           key={property}
           label={groupObject[property].title}
-          value={value.property || groupObject[property].default}
+          value={value[property] || groupObject[property].default}
           onChange={createOnFieldChange(property)}
         />
       )

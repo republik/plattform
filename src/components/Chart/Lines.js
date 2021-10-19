@@ -252,10 +252,10 @@ export const lineEditorSchema = ({
   fields,
   defaults,
   numberFormats,
-  xScaleTypes,
-  yScaleTypes,
   timeFormats,
-  colorDropdownItems
+  colorDropdownItems,
+  xScaleTypes,
+  yScaleTypes
 }) => {
   return {
     title: 'LineChartConfig',
@@ -287,7 +287,7 @@ export const lineEditorSchema = ({
           xUnit: {
             title: 'Beschriftung',
             type: 'string',
-            default: defaults.xUnit
+            default: defaults.xUnit || ''
           },
           xScale: {
             title: 'Skalierungstyp',
@@ -317,7 +317,7 @@ export const lineEditorSchema = ({
           unit: {
             title: 'Beschriftung',
             type: 'string',
-            default: defaults.unit
+            default: defaults.unit || ''
           },
           yScale: {
             title: 'Skalierungstyp',
@@ -333,14 +333,14 @@ export const lineEditorSchema = ({
           color: {
             title: 'Spalte auswählen',
             type: 'string',
-            enum: fields,
-            default: defaults.color
+            enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+            default: defaults.color || ''
           },
           colorRange: {
             title: 'Farbschema auswählen',
             type: 'string',
             enum: colorDropdownItems,
-            default: defaults.colorRange
+            default: defaults.colorRange || 'auto'
           }
         }
       },
@@ -350,8 +350,8 @@ export const lineEditorSchema = ({
           column: {
             title: 'Spalte auswählen',
             type: 'string',
-            enum: fields,
-            default: defaults.column
+            enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+            default: defaults.column || ''
           },
           columns: {
             title: 'Anzahl Spalten pro Zeile',

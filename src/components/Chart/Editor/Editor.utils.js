@@ -44,3 +44,61 @@ export const useCommaField = (value, onChange, parser) => {
 
   return [field, onFieldValueChange]
 }
+
+// TODO: there is also a xNumberFormat option if some is using a linear xScale and the yNumberFormat
+// is not machting the xNumberFormat. Should we include this?
+export const numberFormats = [
+  {
+    value: 's',
+    text: '8, 12, 85'
+  },
+  {
+    value: '.0%',
+    text: '8%, 12%, 85%'
+  },
+  {
+    value: '.1f',
+    text: '20,0'
+  },
+  {
+    value: '.2f',
+    text: '8, 12, 85'
+  }
+]
+
+export const xScaleTypes = [
+  {
+    value: 'time',
+    text: 'zeitlich'
+  },
+  {
+    value: 'linear',
+    text: 'linear'
+  },
+  {
+    value: 'ordinal',
+    text: 'ordinal'
+  }
+]
+
+export const yScaleTypes = [
+  {
+    value: 'linear',
+    text: 'linear'
+  },
+  {
+    value: 'log',
+    text: 'logarithmisch'
+  }
+]
+
+export const timeFormats = [
+  {
+    value: '%Y',
+    text: '2015, 2016'
+  },
+  {
+    value: '%d.%m.%Y',
+    text: '26.02.2017, 24.02.2018'
+  }
+]

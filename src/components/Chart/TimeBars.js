@@ -180,8 +180,6 @@ export const timeBarEditorSchema = ({
   fields,
   defaults,
   numberFormats,
-  xScaleTypes,
-  yScaleTypes,
   timeFormats,
   colorDropdownItems
 }) => {
@@ -215,7 +213,7 @@ export const timeBarEditorSchema = ({
           xUnit: {
             title: 'Beschriftung',
             type: 'string',
-            default: defaults.xUnit
+            default: defaults.xUnit || ''
           }
         }
       },
@@ -226,7 +224,7 @@ export const timeBarEditorSchema = ({
             title: 'Spalte auswählen',
             type: 'string',
             enum: fields,
-            default: defaults.y
+            default: defaults.y || 'value'
           },
           numberFormat: {
             title: 'Achsenformat',
@@ -245,7 +243,7 @@ export const timeBarEditorSchema = ({
           unit: {
             title: 'Beschriftung',
             type: 'string',
-            default: defaults.unit
+            default: defaults.unit || ''
           }
         }
       },
@@ -256,13 +254,13 @@ export const timeBarEditorSchema = ({
             title: 'Spalte auswählen',
             type: 'string',
             enum: fields,
-            default: defaults.color
+            default: defaults.color || 'keine Auswahl'
           },
           colorRange: {
             title: 'Farbschema auswählen',
             type: 'string',
             enum: colorDropdownItems,
-            default: defaults.colorRange
+            default: defaults.colorRange || 'automatisch'
           }
         }
       },
@@ -273,7 +271,7 @@ export const timeBarEditorSchema = ({
             title: 'Spalte auswählen',
             type: 'string',
             enum: fields,
-            default: defaults.column
+            default: defaults.column || 'keine Auswahl'
           },
           columns: {
             title: 'Anzahl Spalten pro Zeile',
