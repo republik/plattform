@@ -261,102 +261,131 @@ export const lineEditorSchema = ({
     title: 'LineChartConfig',
     type: 'object',
     properties: {
-      xAxis: {
-        title: 'Horizontale Achse',
-        properties: {
-          x: {
-            title: 'Spalte auswählen',
-            type: 'string',
-            enum: fields,
-            default: defaults.x
-          },
-          timeFormat: {
-            title: 'Achsenformat',
-            type: 'string',
-            enum: timeFormats,
-            default: defaults.timeFormat
-          },
-          xTicks: {
-            title: 'Achsenticks',
-            type: 'array',
-            contains: {
-              type: 'string'
+      basic: {
+        xAxis: {
+          title: 'Horizontale Achse',
+          properties: {
+            x: {
+              title: 'Spalte auswählen',
+              type: 'string',
+              enum: fields,
+              default: defaults.x
             },
-            default: defaults.xTicks
-          },
-          xUnit: {
-            title: 'Beschriftung',
-            type: 'string',
-            default: defaults.xUnit || ''
-          },
-          xScale: {
-            title: 'Skalierungstyp',
-            type: 'string',
-            enum: xScaleTypes,
-            default: defaults.xScale
-          }
-        }
-      },
-      yAxis: {
-        title: 'Vertikale Achse',
-        properties: {
-          numberFormat: {
-            title: 'Achsenformat',
-            type: 'string',
-            enum: numberFormats,
-            default: defaults.numberFormat
-          },
-          yTicks: {
-            title: 'Achsenticks',
-            type: 'array',
-            contains: {
-              type: 'string'
+            timeFormat: {
+              title: 'Achsenformat',
+              type: 'string',
+              enum: timeFormats,
+              default: defaults.timeFormat
             },
-            default: defaults.yTicks
-          },
-          unit: {
-            title: 'Beschriftung',
-            type: 'string',
-            default: defaults.unit || ''
-          },
-          yScale: {
-            title: 'Skalierungstyp',
-            type: 'string',
-            enum: yScaleTypes,
-            default: defaults.yScale
+            xTicks: {
+              title: 'Achsenticks',
+              type: 'array',
+              contains: {
+                type: 'string'
+              },
+              default: defaults.xTicks
+            },
+            xUnit: {
+              title: 'Beschriftung',
+              type: 'string',
+              default: defaults.xUnit || ''
+            },
+            xScale: {
+              title: 'Skalierungstyp',
+              type: 'string',
+              enum: xScaleTypes,
+              default: defaults.xScale
+            }
+          }
+        },
+        yAxis: {
+          title: 'Vertikale Achse',
+          properties: {
+            numberFormat: {
+              title: 'Achsenformat',
+              type: 'string',
+              enum: numberFormats,
+              default: defaults.numberFormat
+            },
+            yTicks: {
+              title: 'Achsenticks',
+              type: 'array',
+              contains: {
+                type: 'string'
+              },
+              default: defaults.yTicks
+            },
+            unit: {
+              title: 'Beschriftung',
+              type: 'string',
+              default: defaults.unit || ''
+            },
+            yScale: {
+              title: 'Skalierungstyp',
+              type: 'string',
+              enum: yScaleTypes,
+              default: defaults.yScale
+            }
+          }
+        },
+        color: {
+          title: 'Farbe',
+          properties: {
+            color: {
+              title: 'Spalte auswählen',
+              type: 'string',
+              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              default: defaults.color || ''
+            },
+            colorRange: {
+              title: 'Farbschema auswählen',
+              type: 'string',
+              enum: colorDropdownItems,
+              default: defaults.colorRange || 'auto'
+            }
+          }
+        },
+        layout: {
+          title: 'Layout',
+          properties: {
+            column: {
+              title: 'Spalte auswählen',
+              type: 'string',
+              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              default: defaults.column || ''
+            },
+            columns: {
+              title: 'Anzahl Spalten pro Zeile',
+              type: 'number',
+              default: defaults.columns
+            }
           }
         }
       },
-      color: {
-        title: 'Farbe',
-        properties: {
-          color: {
-            title: 'Spalte auswählen',
-            type: 'string',
-            enum: fields.concat({ value: '', text: 'keine Auswahl' }),
-            default: defaults.color || ''
-          },
-          colorRange: {
-            title: 'Farbschema auswählen',
-            type: 'string',
-            enum: colorDropdownItems,
-            default: defaults.colorRange || 'auto'
+      advanced: {
+        labels: {
+          title: 'Beschriftung',
+          properties: {
+            endLabel: {
+              title: 'Label am Linienende',
+              type: 'boolean',
+              default: defaults.endLabel
+            },
+            startValue: {
+              title: 'Wert am Linienanfang',
+              type: 'boolean',
+              default: defaults.startValue
+            }
           }
-        }
-      },
-      layout: {
-        title: 'Layout',
-        properties: {
-          column: {
-            title: 'Spalte auswählen',
-            type: 'string',
-            enum: fields.concat({ value: '', text: 'keine Auswahl' }),
-            default: defaults.column || ''
-          },
-          columns: {
-            title: 'Anzahl Spalten pro Zeile',
-            type: 'number',
-            default: defaults.columns
+        },
+        yAxis: {
+          title: 'Vertikale Achse',
+          properties: {
+            zero: {
+              title: 'Y-Achse bei 0 beginnen',
+              type: 'boolean',
+              default: defaults.zero
+            }
           }
         }
       }

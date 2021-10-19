@@ -9,7 +9,7 @@ import { TickField } from './TickField'
 import { FormFields } from './FormFields'
 import { ColorDropdownElement } from './ColorDropdownElement'
 
-import { Interaction, fontStyles } from '../../Typography'
+import { fontStyles } from '../../Typography'
 import { useColorContext } from '../../Colors/ColorContext'
 
 import { timeParse } from '../../../lib/timeFormat'
@@ -187,13 +187,15 @@ const ChartEditor = ({ data, value, onChange }) => {
       )
     } else if (groupObject[property].type === 'boolean') {
       return (
-        <Checkbox
-          key={property}
-          checked={value[property]}
-          onChange={createOnFieldChange(property)}
-        >
-          {groupObject[property].title}
-        </Checkbox>
+        <div style={{ marginTop: '20px' }}>
+          <Checkbox
+            key={property}
+            checked={value[property]}
+            onChange={createOnFieldChange(property)}
+          >
+            {groupObject[property].title}
+          </Checkbox>
+        </div>
       )
     } else {
       return (
@@ -246,48 +248,14 @@ const ChartEditor = ({ data, value, onChange }) => {
         onChange={createOnDropdownChange('type')}
       />
 
-      {activeTab === 'basic' ? (
-        <BasicSettings
-          generateFormFields={generateFormFields}
-          schema={schema}
-        />
-      ) : (
-        <AdvancedSettings
-          columns={columns}
-          value={value}
-          createOnDropdownChange={createOnDropdownChange}
-          createOnFieldChange={createOnFieldChange}
-          colorDropdownItems={colorDropdownItems}
-        />
-      )}
-    </div>
-  )
-}
-
-const BasicSettings = props => {
-  const { generateFormFields, schema } = props
-
-  return (
-    <div>
       <FormFields
         generateFormFields={generateFormFields}
-        fields={schema.properties}
+        fields={
+          activeTab === 'basic'
+            ? schema.properties.basic
+            : schema.properties.advanced
+        }
       />
-    </div>
-  )
-}
-
-const AdvancedSettings = props => {
-  const { value, createOnFieldChange } = props
-
-  return (
-    <div {...styles.gridContainer}>
-      <div className='yaxis'>
-        <Interaction.H3>Vertikale Achse</Interaction.H3>
-        <Checkbox checked={value.zero} onChange={createOnFieldChange('zero')}>
-          Y-Achse bei 0 beginnen
-        </Checkbox>
-      </div>
     </div>
   )
 }

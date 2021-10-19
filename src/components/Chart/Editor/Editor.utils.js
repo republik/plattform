@@ -50,19 +50,23 @@ export const useCommaField = (value, onChange, parser) => {
 export const numberFormats = [
   {
     value: 's',
-    text: '8, 12, 85'
-  },
-  {
-    value: '.0%',
-    text: '8%, 12%, 85%'
+    text: '4 505 80 Mio.'
   },
   {
     value: '.1f',
-    text: '20,0'
+    text: '4,3 505,2 78000000'
   },
   {
     value: '.2f',
-    text: '8, 12, 85'
+    text: '4,27 505,22 78000000'
+  },
+  {
+    value: ',.1r',
+    text: "4,3 500 80'000'000"
+  },
+  {
+    value: '.0%',
+    text: '4% 50% 80%'
   }
 ]
 

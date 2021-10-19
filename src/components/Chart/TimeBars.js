@@ -187,96 +187,118 @@ export const timeBarEditorSchema = ({
     title: 'LineChartConfig',
     type: 'object',
     properties: {
-      xAxis: {
-        title: 'Horizontale Achse',
-        properties: {
-          x: {
-            title: 'Spalte auswählen',
-            type: 'string',
-            enum: fields,
-            default: defaults.x
-          },
-          timeFormat: {
-            title: 'Achsenformat',
-            type: 'string',
-            enum: timeFormats,
-            default: defaults.timeFormat
-          },
-          xTicks: {
-            title: 'Achsenticks',
-            type: 'array',
-            contains: {
-              type: 'string'
+      basic: {
+        xAxis: {
+          title: 'Horizontale Achse',
+          properties: {
+            x: {
+              title: 'Spalte auswählen',
+              type: 'string',
+              enum: fields,
+              default: defaults.x
             },
-            default: defaults.xTicks
-          },
-          xUnit: {
-            title: 'Beschriftung',
-            type: 'string',
-            default: defaults.xUnit || ''
-          }
-        }
-      },
-      yAxis: {
-        title: 'Vertikale Achse',
-        properties: {
-          y: {
-            title: 'Spalte auswählen',
-            type: 'string',
-            enum: fields,
-            default: defaults.y || 'value'
-          },
-          numberFormat: {
-            title: 'Achsenformat',
-            type: 'string',
-            enum: numberFormats,
-            default: defaults.numberFormat
-          },
-          yTicks: {
-            title: 'Achsenticks',
-            type: 'array',
-            contains: {
-              type: 'string'
+            timeFormat: {
+              title: 'Achsenformat',
+              type: 'string',
+              enum: timeFormats,
+              default: defaults.timeFormat
             },
-            default: defaults.yTicks
-          },
-          unit: {
-            title: 'Beschriftung',
-            type: 'string',
-            default: defaults.unit || ''
+            xTicks: {
+              title: 'Achsenticks',
+              type: 'array',
+              contains: {
+                type: 'string'
+              },
+              default: defaults.xTicks
+            },
+            xUnit: {
+              title: 'Beschriftung',
+              type: 'string',
+              default: defaults.xUnit || ''
+            }
+          }
+        },
+        yAxis: {
+          title: 'Vertikale Achse',
+          properties: {
+            y: {
+              title: 'Spalte auswählen',
+              type: 'string',
+              enum: fields,
+              default: defaults.y || 'value'
+            },
+            numberFormat: {
+              title: 'Achsenformat',
+              type: 'string',
+              enum: numberFormats,
+              default: defaults.numberFormat
+            },
+            yTicks: {
+              title: 'Achsenticks',
+              type: 'array',
+              contains: {
+                type: 'string'
+              },
+              default: defaults.yTicks
+            },
+            unit: {
+              title: 'Beschriftung',
+              type: 'string',
+              default: defaults.unit || ''
+            }
+          }
+        },
+        color: {
+          title: 'Farbe',
+          properties: {
+            color: {
+              title: 'Spalte auswählen',
+              type: 'string',
+              enum: fields,
+              default: defaults.color || 'keine Auswahl'
+            },
+            colorRange: {
+              title: 'Farbschema auswählen',
+              type: 'string',
+              enum: colorDropdownItems,
+              default: defaults.colorRange || 'automatisch'
+            }
+          }
+        },
+        layout: {
+          title: 'Layout',
+          properties: {
+            column: {
+              title: 'Spalte auswählen',
+              type: 'string',
+              enum: fields,
+              default: defaults.column || 'keine Auswahl'
+            },
+            columns: {
+              title: 'Anzahl Spalten pro Zeile',
+              type: 'number',
+              default: defaults.columns
+            }
           }
         }
       },
-      color: {
-        title: 'Farbe',
-        properties: {
-          color: {
-            title: 'Spalte auswählen',
-            type: 'string',
-            enum: fields,
-            default: defaults.color || 'keine Auswahl'
-          },
-          colorRange: {
-            title: 'Farbschema auswählen',
-            type: 'string',
-            enum: colorDropdownItems,
-            default: defaults.colorRange || 'automatisch'
-          }
-        }
-      },
-      layout: {
-        title: 'Layout',
-        properties: {
-          column: {
-            title: 'Spalte auswählen',
-            type: 'string',
-            enum: fields,
-            default: defaults.column || 'keine Auswahl'
-          },
-          columns: {
-            title: 'Anzahl Spalten pro Zeile',
-            type: 'number',
-            default: defaults.columns
+      advanced: {
+        yAxis: {
+          title: 'Vertikale Achse',
+          properties: {
+            domain: {
+              title: 'Domain setzen',
+              type: 'array',
+              contains: {
+                type: 'string'
+              },
+              default: defaults.domain
+            },
+            yScaleInvert: {
+              title: 'Y-Achse umdrehen',
+              type: 'boolean',
+              default: defaults.yScaleInvert
+            }
           }
         }
       }
