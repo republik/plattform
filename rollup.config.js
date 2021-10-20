@@ -6,20 +6,55 @@ import fileSize from 'rollup-plugin-filesize'
 
 import pkg from './package.json'
 
-export default {
-  input: 'src/lib.js',
-  output: [
-    {
-      file: pkg.main,
-      format: 'cjs',
-      sourcemap: true
-    },
-    {
-      file: pkg.module,
-      format: 'esm',
-      sourcemap: true
-    }
-  ],
+export default [
+  {
+    input: './src/lib.js',
+    output: [
+      {
+        file: pkg.main,
+        format: 'cjs',
+        sourcemap: true
+      },
+      {
+        file: pkg.module,
+        format: 'esm',
+        sourcemap: true
+      }
+    ]
+  },
+  {
+    input: './src/chart.js',
+    output: [
+      {
+        file: './dist/chart.js',
+        format: 'cjs',
+        sourcemap: true
+      },
+      {
+        file: './dist/chart.esm.js',
+        format: 'esm',
+        sourcemap: true
+      }
+    ]
+  },
+  {
+    input: './src/icons.js',
+    output: [
+      {
+        file: './dist/icons.js',
+        format: 'cjs',
+        sourcemap: true
+      },
+      {
+        file: './dist/icons.esm.js',
+        format: 'esm',
+        sourcemap: true
+      }
+    ]
+  }
+].map(config => ({
+  input: config.input,
+  output: config.output,
   plugins: [
     peerDepsExternal(),
     resolve(),
@@ -53,4 +88,4 @@ export default {
     'scroll-into-view',
     'topojson'
   ]
-}
+}))
