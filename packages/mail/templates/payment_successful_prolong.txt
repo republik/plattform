@@ -2,7 +2,6 @@ Guten Tag
 
 Ihre Zahlung in Höhe von {{total_formatted}} ist erfolgreich bei uns
 eingegangen.
-Herzlichen Dank!
 
    {{#options}}
  * {{#if `this.oamount > 1`}} {{this.oamount}} {{this.olabel}} à
@@ -15,36 +14,7 @@ Herzlichen Dank!
    {{/if}}
  * Total: {{total_formatted}}
 
-{{#if discount}}
-
-Wir haben Ihre Begründung für die Preisreduktion erhalten.
-Vielen Dank für Ihre Offenheit. Wir freuen uns, dass Sie an Bord bleiben!
-
-{{/if}} {{#if donation}}
-
-Ihnen ist die Republik mehr wert. {{donation_formatted}}, um genau zu sein.
-Herzlichen Dank für Ihre grosszügige Spende.
-
-{{/if}} {{#if `gifted_memberships_count == 1`}}
-
-Schön, dass Sie die Verbreitung der Republik auch mit einer
-Geschenkmitgliedschaft unterstützen. Wir haben die Beschenkte darüber per E-Mail
-informiert.
-
-{{elseif `gifted_memberships_count > 1`}}
-
-Schön, dass Sie die Verbreitung der Republik auch mit Geschenkmitgliedschaften
-unterstützen. Wir haben die Beschenkte darüber per E-Mail informiert.
-
-{{/if}} {{#if goodies_count}}
-
-{{#if `goodies_count == 1`}} Sie haben sich noch ein Republik-Objekt gegönnt.
-{{elseif `goodies_count > 1`}} Sie haben sich noch mehrere Republik-Objekte
-gegönnt. {{/if}} Diese liefern wir innerhalb von 7 Werktagen.
-
-{{/if}}
-
-Herzlich
+Herzlichen Dank für Ihre Unterstützung!
 Ihre Crew der Republik
 
 

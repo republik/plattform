@@ -42,6 +42,10 @@ const createBuckets = (now) => [
       min: getMinEndDate(now, 13),
       max: getMaxEndDate(now, DAYS_BEFORE_END_DATE),
     },
+    /* TODO: is it possible, to just add membershipType here as object prop 
+      and propagate it to mailings and prepareMembershipOwnerNotice 
+      method or do we have it somewhere else?
+     */
     predicate: ({ id: userId, membershipType, membershipAutoPay, autoPay }) => {
       return (
         ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) &&

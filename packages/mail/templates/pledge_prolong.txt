@@ -2,14 +2,13 @@ Guten Tag
 
 {{#if `pledger_memberships_count > 0`}}
 
-Danke für Ihr Vertrauen.
+Ihr Vertrauen ehrt uns: Herzlichen Dank für Ihre Unterstützung!
 
 Mit Ihrer Mitgliedschaft erhalten Sie von Montag bis Samstag ein hochwertiges
-digitales Magazin. Sie unterstützen aber auch eine wirklich unabhängige vierte
-Gewalt.
+digitales Magazin, und Sie unterstützen eine wirklich unabhängige vierte Gewalt.
 
 Denn: Die Republik steht für die Verteidigung der demokratischen Institutionen
-und die Werte der Aufklärung: für Treue zu Fakten, für Lösungen von Fall zu
+und die Werte der Aufklärung. Für Treue zu Fakten, für Lösungen von Fall zu
 Fall, für Offenheit gegenüber Kritik, für Respektlosigkeit gegenüber der Macht
 und Respekt vor dem Menschen.
 
@@ -30,8 +29,8 @@ Details zum Kauf:
 
 {{#if discount}}
 
-Wir haben Ihre Begründung für die Preisreduktion erhalten. Vielen Dank für Ihre
-Offenheit. Wir freuen uns, dass Sie an Bord sind!
+Wir haben Ihre Begründung für die Preisreduktion erhalten: Vielen Dank für Ihre
+Offenheit. Wir freuen uns, dass Sie an Bord bleiben!
 
 {{/if}} {{#if donation}}
 
@@ -41,7 +40,8 @@ Herzlichen Dank für Ihre grosszügige Spende!
 {{/if}} {{#if `gifted_memberships_count == 1`}}
 
 Vielen Dank, dass Sie die Republik anderen zukommen lassen: Sie verlängern die
-Geschenkmitgliedschaft. Wir haben die Beschenkte darüber per E-Mail informiert.
+Geschenkmitgliedschaft. Wir haben die beschenkte Person darüber per E-Mail
+informiert.
 
 {{elseif `gifted_memberships_count > 1`}}
 
@@ -71,7 +71,7 @@ Mobile Banking, E-Banking oder am Schalter bei Bank und Post auslösen.
 
 {{/if}}
 
-Herzlich
+Wir grüssen Sie herzlich in Vorfreude auf das kommende Jahr!
 
 Ihre Crew der Republik
 
