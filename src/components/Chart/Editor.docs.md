@@ -1,5 +1,5 @@
 ```react
-state: { type: 'Line', numberFormat: '.1f', zero: true}
+state: { type: 'Line'}
 ---
 <div>
   <ChartEditor value={state} data={data.chartData} onChange={setState} />

@@ -2,10 +2,7 @@ import React, { useState, useMemo } from 'react'
 import { css } from 'glamor'
 import { csvParse } from 'd3-dsv'
 
-import Field from '../../Form/Field'
 import Dropdown from '../../Form/Dropdown'
-import Checkbox from '../../Form/Checkbox'
-import { TickField } from './TickField'
 import { FormFields } from './FormFields'
 import { ColorDropdownElement } from './ColorDropdownElement'
 
@@ -140,7 +137,7 @@ const ChartEditor = ({ data, value, onChange }) => {
     value.timeParse || value.timeFormat || '%Y'
   )
 
-  const numberFormatParser = getFormat(value.numberFormat || '.1f')
+  const numberFormatParser = getFormat(value.numberFormat || 's')
 
   const schema =
     value.type === 'Line'
@@ -163,53 +160,8 @@ const ChartEditor = ({ data, value, onChange }) => {
           colorDropdownItems
         })
 
-  const generateFormFields = (property, groupObject) => {
-    if (Object.prototype.hasOwnProperty.call(groupObject[property], 'enum')) {
-      return (
-        <Dropdown
-          key={property}
-          label={groupObject[property].title}
-          items={groupObject[property].enum}
-          value={value[property] || groupObject[property].default}
-          onChange={createOnDropdownChange(property)}
-        />
-      )
-    } else if (groupObject[property].type === 'array') {
-      return (
-        <TickField
-          key={property}
-          property={property}
-          groupObject={groupObject}
-          value={value[property] || groupObject[property].default}
-          createOnFieldChange={createOnFieldChange}
-          parser={property === 'xTicks' ? timeFormatParser : numberFormatParser}
-        />
-      )
-    } else if (groupObject[property].type === 'boolean') {
-      return (
-        <div style={{ marginTop: '20px' }}>
-          <Checkbox
-            key={property}
-            checked={value[property]}
-            onChange={createOnFieldChange(property)}
-          >
-            {groupObject[property].title}
-          </Checkbox>
-        </div>
-      )
-    } else {
-      return (
-        <Field
-          key={property}
-          label={groupObject[property].title}
-          value={value[property] || groupObject[property].default}
-          onChange={createOnFieldChange(property)}
-        />
-      )
-    }
-  }
-
-  const handleTabClick = () => {
+  const handleTabClick = e => {
+    e.preventDefault()
     setActiveTab(activeTab === 'basic' ? 'advanced' : 'basic')
   }
 
@@ -242,6 +194,7 @@ const ChartEditor = ({ data, value, onChange }) => {
         })}
       </div>
       <Dropdown
+        key={'type'}
         label='Charttyp auswählen'
         items={chartTypes}
         value={value.type}
@@ -249,7 +202,11 @@ const ChartEditor = ({ data, value, onChange }) => {
       />
 
       <FormFields
-        generateFormFields={generateFormFields}
+        createOnFieldChange={createOnFieldChange}
+        createOnDropdownChange={createOnDropdownChange}
+        timeFormatParser={timeFormatParser}
+        numberFormatParser={numberFormatParser}
+        value={value}
         fields={
           activeTab === 'basic'
             ? schema.properties.basic

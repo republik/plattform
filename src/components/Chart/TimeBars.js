@@ -254,7 +254,7 @@ export const timeBarEditorSchema = ({
             color: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields,
+              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
               default: defaults.color || 'keine Auswahl'
             },
             colorRange: {
@@ -271,7 +271,7 @@ export const timeBarEditorSchema = ({
             column: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields,
+              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
               default: defaults.column || 'keine Auswahl'
             },
             columns: {

@@ -371,6 +371,11 @@ export const lineEditorSchema = ({
               type: 'boolean',
               default: defaults.endLabel
             },
+            endValue: {
+              title: 'Wert am Linienende',
+              type: 'boolean',
+              default: defaults.endValue
+            },
             startValue: {
               title: 'Wert am Linienanfang',
               type: 'boolean',
