@@ -160,8 +160,7 @@ const ChartEditor = ({ data, value, onChange }) => {
           colorDropdownItems
         })
 
-  const handleTabClick = e => {
-    e.preventDefault()
+  const handleTabClick = () => {
     setActiveTab(activeTab === 'basic' ? 'advanced' : 'basic')
   }
 
@@ -194,7 +193,6 @@ const ChartEditor = ({ data, value, onChange }) => {
         })}
       </div>
       <Dropdown
-        key={'type'}
         label='Charttyp auswählen'
         items={chartTypes}
         value={value.type}
