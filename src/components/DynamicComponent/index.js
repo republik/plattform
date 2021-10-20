@@ -41,7 +41,10 @@ class DynamicComponent extends Component {
         .require(this.props.src)
         .then(module => {
           this.setState({
-            LoadedComponent: module.hasOwnProperty('default')
+            LoadedComponent: Object.prototype.hasOwnProperty.call(
+              module,
+              'default'
+            )
               ? module['default']
               : module
           })

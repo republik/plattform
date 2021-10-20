@@ -55,14 +55,14 @@ const ActiveDebates = ({
   const [colorScheme] = useColorContext()
   const highlighted = discussions.filter(discussion =>
     discussion.comments.nodes.some(comment =>
-      comment.hasOwnProperty('highlight')
+      Object.prototype.hasOwnProperty.call(comment, 'highlight')
     )
   )
   if (highlighted.length) {
     const notHighlighted = discussions.filter(
       discussion =>
         !discussion.comments.nodes.some(comment =>
-          comment.hasOwnProperty('highlight')
+          Object.prototype.hasOwnProperty.call(comment, 'highlight')
         )
     )
 
