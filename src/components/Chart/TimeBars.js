@@ -116,7 +116,9 @@ export const propTypes = {
   }).isRequired,
   colorMap: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   domain: PropTypes.arrayOf(PropTypes.number),
-  yTicks: PropTypes.arrayOf(PropTypes.number),
+  yTicks: PropTypes.arrayOf(
+    PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  ),
   yAnnotations: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.number.isRequired,
@@ -255,13 +257,13 @@ export const timeBarEditorSchema = ({
               title: 'Spalte auswählen',
               type: 'string',
               enum: fields.concat({ value: '', text: 'keine Auswahl' }),
-              default: defaults.color || 'keine Auswahl'
+              default: defaults.color || ''
             },
             colorRange: {
               title: 'Farbschema auswählen',
               type: 'string',
               enum: colorDropdownItems,
-              default: defaults.colorRange || 'automatisch'
+              default: defaults.colorRange || 'auto'
             }
           }
         },
@@ -272,7 +274,7 @@ export const timeBarEditorSchema = ({
               title: 'Spalte auswählen',
               type: 'string',
               enum: fields.concat({ value: '', text: 'keine Auswahl' }),
-              default: defaults.column || 'keine Auswahl'
+              default: defaults.column || ''
             },
             columns: {
               title: 'Anzahl Spalten pro Zeile',

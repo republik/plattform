@@ -213,7 +213,9 @@ export const propTypes = {
   paddingLeft: PropTypes.number,
   unit: PropTypes.string,
   yNice: PropTypes.number,
-  yTicks: PropTypes.arrayOf(PropTypes.number),
+  yTicks: PropTypes.arrayOf(
+    PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  ),
   yAnnotations: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.number.isRequired,

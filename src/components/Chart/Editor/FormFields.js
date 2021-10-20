@@ -36,12 +36,7 @@ export const FormFields = props => {
           <div key={group}>
             <Interaction.H3>{fields[group].title}</Interaction.H3>
             {Object.keys(fields[group].properties).map(property => {
-              if (
-                Object.prototype.hasOwnProperty.call(
-                  groupObject[property],
-                  'enum'
-                )
-              ) {
+              if (groupObject[property].enum) {
                 return (
                   <Dropdown
                     key={property}

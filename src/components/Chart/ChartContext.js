@@ -142,6 +142,7 @@ export const defaultProps = {
     xScale: 'time',
     xBandPadding: 0.25,
     timeParse: '%Y',
+    timeFormat: '%Y',
     numberFormat: 's',
     height: 240,
     padding: 50,
