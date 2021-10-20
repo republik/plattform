@@ -2,14 +2,12 @@ import peerDepsExternal from 'rollup-plugin-peer-deps-external'
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import { babel } from '@rollup/plugin-babel'
-import { terser } from 'rollup-plugin-terser'
 import fileSize from 'rollup-plugin-filesize'
-import css from 'rollup-plugin-import-css'
 
 import pkg from './package.json'
 
 export default {
-  input: 'src/index.js',
+  input: 'src/lib.js',
   output: [
     {
       file: pkg.main,
@@ -18,7 +16,7 @@ export default {
     },
     {
       file: pkg.module,
-      format: 'es',
+      format: 'esm',
       sourcemap: true
     }
   ],
@@ -31,8 +29,6 @@ export default {
       exclude: 'node_modules/**'
     }),
     commonjs(),
-    css(),
-    // terser(),
     fileSize()
   ],
   external: [

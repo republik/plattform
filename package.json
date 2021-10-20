@@ -89,9 +89,7 @@
     "rimraf": "^2.7.1",
     "rollup": "^2.58.0",
     "rollup-plugin-filesize": "^9.1.1",
-    "rollup-plugin-import-css": "^3.0.2",
     "rollup-plugin-peer-deps-external": "^2.2.4",
-    "rollup-plugin-terser": "^7.0.2",
     "rw": "^1.3.3",
     "scroll-into-view": "^1.15.0",
     "semantic-release": "^17.1.1",
@@ -118,13 +116,14 @@
   "scripts": {
     "commit": "git-cz",
     "prepublishOnly": "npm run prebuild && npm run build:lib",
-    "prebuild": "rimraf lib",
+    "prebuild": "rimraf dist",
     "build": "npm run build:lib && npm run build:docs",
     "build:lib": "rollup -c",
     "build:docs": "react-scripts build",
     "build:old": "babel src --out-dir lib && npm run build:docs",
     "start": "react-scripts start",
-    "dev": "rollup -c -w & PORT=3003 react-scripts start",
+    "dev": "PORT=3003 react-scripts start",
+    "dev:build": "npm run dev && npm run build:lib",
     "tape": "babel-tape-runner",
     "test": "babel-tape-runner src/**/*.test.js | tap-summary && babel-tape-runner src/**/**/*.test.js | tap-summary",
     "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./lib*\" | xargs wc -l",
@@ -136,7 +135,7 @@
     "translations": "npm run translations-raw && git add -p src/lib/translations.json && git checkout -- src/lib/translations.json"
   },
   "lint-staged": {
-    "*.js": [
+    "*.{js,ts,tsx}": [
       "prettier --write",
       "git add"
     ]
