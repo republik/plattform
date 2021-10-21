@@ -3,6 +3,7 @@ import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import { babel } from '@rollup/plugin-babel'
 import fileSize from 'rollup-plugin-filesize'
+import typescript from '@rollup/plugin-typescript'
 
 import pkg from './package.json'
 
@@ -58,7 +59,7 @@ export default [
   plugins: [
     peerDepsExternal(),
     resolve(),
-    /*typescript({ tsconfig: './tsconfig.json' }),*/
+    typescript({ tsconfig: './tsconfig.json' }),
     babel({
       babelHelpers: 'bundled',
       exclude: 'node_modules/**'
