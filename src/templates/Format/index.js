@@ -17,7 +17,7 @@ import {
 
 const DefaultLink = ({ children }) => children
 
-const createSchema = ({
+const createFormatSchema = ({
   Link = DefaultLink,
   customMetaFields = [],
   series = false,
@@ -151,4 +151,4 @@ const createSchema = ({
   })
 }
 
-export default createSchema
+export default createFormatSchema

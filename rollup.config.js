@@ -52,6 +52,21 @@ export default [
         sourcemap: true
       }
     ]
+  },
+  {
+    input: './src/templates.js',
+    output: [
+      {
+        file: './dist/templates.js',
+        format: 'cjs',
+        sourcemap: true
+      },
+      {
+        file: './dist/templates.esm.js',
+        format: 'esm',
+        sourcemap: true
+      }
+    ]
   }
 ].map(config => ({
   input: config.input,

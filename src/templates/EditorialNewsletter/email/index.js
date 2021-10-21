@@ -10,7 +10,7 @@ import { Sub, Sup } from './SubSup'
 import { Button } from './Button'
 import List, { ListItem } from './List'
 
-const createSchema = ({ ...args } = {}) => {
+const createNewsletterEmailSchema = ({ ...args } = {}) => {
   return createNewsletterSchema({
     H2,
     Paragraph,
@@ -37,4 +37,4 @@ const createSchema = ({ ...args } = {}) => {
   })
 }
 
-export default createSchema
+export default createNewsletterEmailSchema

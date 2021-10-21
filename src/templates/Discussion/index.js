@@ -1,7 +1,7 @@
 import createArticleSchema from '../Article'
 import { getDatePath } from '../Article/utils'
 
-const createSchema = ({
+const createDiscussionSchema = ({
   customMetaFields = [],
   getPath = args => `${getDatePath(args)}/diskussion`,
   ...args
@@ -67,4 +67,4 @@ const createSchema = ({
   })
 }
 
-export default createSchema
+export default createDiscussionSchema
