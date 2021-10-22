@@ -4,7 +4,7 @@ import { compose, graphql } from 'react-apollo'
 import { getSchema } from '../../../../Templates'
 import { renderMdast } from 'mdast-react-render'
 import { JSONEditor, PlainEditor } from '../../../utils/CodeEditorFields'
-import { CloseIcon } from '@project-r/styleguide/icons'
+import { CloseIcon } from '@project-r/styleguide'
 import {
   Center,
   IconButton,

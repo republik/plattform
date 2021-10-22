@@ -1,15 +1,17 @@
 import React from 'react'
 import newsletterSchema from '@project-r/template-newsletter'
-import editorialNewsletterSchema from '@project-r/styleguide/lib/templates/EditorialNewsletter/web'
 import neutrumSchema from './Neutrum'
 
-import createArticleSchema from '@project-r/styleguide/lib/templates/Article'
-import createPageSchema from '@project-r/styleguide/lib/templates/Page'
-import createFrontSchema from '@project-r/styleguide/lib/templates/Front'
-import createFormatSchema from '@project-r/styleguide/lib/templates/Format'
-import createSectionSchema from '@project-r/styleguide/lib/templates/Section'
-import createDiscussionSchema from '@project-r/styleguide/lib/templates/Discussion'
-import createDossierSchema from '@project-r/styleguide/lib/templates/Dossier'
+import {
+  createNewsletterWebSchema,
+  createArticleSchema,
+  createPageSchema,
+  createFrontSchema,
+  createFormatSchema,
+  createSectionSchema,
+  createDiscussionSchema,
+  createDossierSchema
+} from '@project-r/styleguide'
 
 import { t } from '../../lib/withT'
 
@@ -36,7 +38,7 @@ const schemas = {
   // first is default schema for the editor
   // - for Project R this should be the newsletter
   newsletter: newsletterSchema,
-  editorialNewsletter: editorialNewsletterSchema(),
+  editorialNewsletter: createNewsletterWebSchema(),
   neutrum: neutrumSchema,
   article: createArticleSchema(articleSchemaParams),
   front: createFrontSchema({

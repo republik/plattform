@@ -1,9 +1,6 @@
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { matchBlock } from '../../utils'
-import {
-  extractImages,
-  matchImagesParagraph
-} from '@project-r/styleguide/lib/templates/Article/utils'
+import { extractImages, matchImagesParagraph } from '@project-r/styleguide'
 
 import { getData } from './'
 
