@@ -93,7 +93,6 @@ const add = async (args, pgdb) => {
   const now = new Date()
   const defaults = {
     status: 302,
-    keepQuery: false,
     resource: null,
     createdAt: now,
     updatedAt: now,
@@ -138,7 +137,6 @@ const update = async (args, pgdb) => {
   const now = new Date()
   const defaults = {
     status: 302,
-    keepQuery: false,
     resource: null,
     updatedAt: now,
   }
