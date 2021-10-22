@@ -1,8 +1,9 @@
 {
   "name": "@project-r/styleguide",
   "version": "0.0.0-development",
-  "main": "./dist/index.js",
-  "module": "./dist/esm/src/lib.js",
+  "main": "dist/cjs/src/lib.js",
+  "module": "dist/esm/src/lib.js",
+  "types": "dist/types/lib.d.ts",
   "engines": {
     "node": ">=14"
   },
@@ -48,7 +49,6 @@
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-commonjs": "^21.0.1",
     "@rollup/plugin-node-resolve": "^13.0.6",
-    "@rollup/plugin-typescript": "^8.3.0",
     "@types/node": "^16.11.1",
     "@types/react": "^17.0.31",
     "@types/react-dom": "^17.0.10",
@@ -94,6 +94,7 @@
     "rollup": "^2.58.0",
     "rollup-plugin-filesize": "^9.1.1",
     "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-typescript2": "^0.30.0",
     "rw": "^1.3.3",
     "scroll-into-view": "^1.15.0",
     "semantic-release": "^17.1.1",
@@ -102,6 +103,7 @@
     "tap-summary": "^4.0.0",
     "tape": "^4.13.3",
     "topojson": "^3.0.2",
+    "tslib": "^2.3.1",
     "typescript": "^4.4.4",
     "validate-commit-msg": "^2.14.0"
   },

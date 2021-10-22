@@ -1,4 +1,5 @@
 {
+  "name": "tsconfig",
   "compilerOptions": {
     "target": "es5",
     "lib": [
@@ -17,12 +18,15 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "declarationDir": "dist/types"
   },
   "include": [
-    "src/"
+    "src"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "dist"
   ]
 }

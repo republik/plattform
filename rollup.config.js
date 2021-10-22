@@ -3,7 +3,7 @@ import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import { babel } from '@rollup/plugin-babel'
 import fileSize from 'rollup-plugin-filesize'
-import typescript from '@rollup/plugin-typescript'
+import typescript from 'rollup-plugin-typescript2'
 
 import pkg from './package.json'
 
@@ -11,21 +11,29 @@ export default {
   input: './src/lib.ts',
   output: [
     {
-      file: pkg.main,
+      dir: 'dist/cjs/src',
+      preserveModules: true,
+      preserveModulesRoot: 'src',
       format: 'cjs',
-      sourcemap: true
+      sourcemap: true,
+      exports: 'named'
     },
     {
-      dir: './dist/esm',
+      dir: 'dist/esm/src',
+      preserveModules: true,
+      preserveModulesRoot: 'src',
       format: 'esm',
       sourcemap: true,
-      preserveModules: true
+      exports: 'named'
     }
   ],
   plugins: [
     peerDepsExternal(),
     resolve(),
-    typescript({ tsconfig: './tsconfig.json' }),
+    typescript({
+      tsconfig: './tsconfig.json',
+      useTsconfigDeclarationDir: true
+    }),
     babel({
       babelHelpers: 'bundled',
       exclude: 'node_modules/**'
