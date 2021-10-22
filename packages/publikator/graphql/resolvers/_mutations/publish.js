@@ -207,12 +207,12 @@ module.exports = async (
   const newPath = doc.content.meta.path
 
   // deny if present redirect to other article / sth. else
-  const existingRedirects = await getRedirections(
+  const existingRedirect = await getRedirections(
     newPath,
     { repo: { id: repoId } },
     context,
   )
-  if (existingRedirects.length) {
+  if (existingRedirect) {
     throw new Error(
       t('api/publish/document/slug/redirectsExist', { path: newPath }),
     )
