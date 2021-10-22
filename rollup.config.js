@@ -5,8 +5,6 @@ import { babel } from '@rollup/plugin-babel'
 import fileSize from 'rollup-plugin-filesize'
 import typescript from 'rollup-plugin-typescript2'
 
-import pkg from './package.json'
-
 export default {
   input: './src/lib.ts',
   output: [
