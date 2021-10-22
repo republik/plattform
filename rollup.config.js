@@ -22,8 +22,8 @@ export default [
         sourcemap: true
       }
     ]
-  },
-  {
+  }
+  /*{
     input: './src/chart.js',
     output: [
       {
@@ -67,7 +67,7 @@ export default [
         sourcemap: true
       }
     ]
-  }
+  }*/
 ].map(config => ({
   input: config.input,
   output: config.output,
@@ -99,6 +99,7 @@ export default [
     'mdast-react-render',
     'prop-types',
     'react',
+    'react-dom',
     'react-maskedinput',
     'react-textarea-autosize',
     'scroll-into-view',

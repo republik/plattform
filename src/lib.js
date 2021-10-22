@@ -166,3 +166,12 @@ export { default as SharePreviewTwitter } from './components/ShareImage/SharePre
 
 export { default as TeaserEmbedComment } from './components/TeaserEmbedComment'
 export { SeriesNav } from './components/SeriesNav'
+
+// Export createRequire for dynamic-components
+export { createRequire } from './components/DynamicComponent'
+
+export * from './chart'
+
+export * from './icons'
+
+export * from './templates'

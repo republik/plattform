@@ -27,3 +27,7 @@ export { default as createPageSchema } from './templates/Page'
 
 // Export section-schema
 export { default as createSectionSchema } from './templates/Section'
+
+// Export Teaser components
+export { TeaserActiveDebates } from './components/TeaserActiveDebates'
+export { TeaserMyMagazine } from './components/TeaserMyMagazine'
