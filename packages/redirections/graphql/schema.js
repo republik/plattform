@@ -19,7 +19,7 @@ type mutations {
   addRedirection(
     source: String!
     target: String!
-    status: Int!
+    status: Int
     resource: JSON
   ): Redirection!
 
