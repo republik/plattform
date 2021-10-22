@@ -123,7 +123,6 @@
     "build": "npm run build:lib && npm run build:docs",
     "build:lib": "rollup -c",
     "build:docs": "react-scripts build",
-    "build:old": "babel src --out-dir lib && npm run build:docs",
     "start": "react-scripts start",
     "dev": "PORT=3003 react-scripts start",
     "dev:build": "npm run dev && npm run build:lib",
