@@ -2,7 +2,7 @@
   "name": "@project-r/styleguide",
   "version": "0.0.0-development",
   "main": "./dist/index.js",
-  "module": "./dist/index.esm.js",
+  "module": "./dist/esm/src/lib.js",
   "engines": {
     "node": ">=14"
   },
@@ -106,10 +106,7 @@
     "validate-commit-msg": "^2.14.0"
   },
   "files": [
-    "dist",
-    "src",
-    "chart.js",
-    "icons.js"
+    "dist"
   ],
   "author": "Thomas Preusse <t@preus.se> (https://t.preus.se/)",
   "license": "BSD-3-Clause",
