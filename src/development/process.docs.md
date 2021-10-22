@@ -27,7 +27,7 @@
 1. Start a new branch
 2. Develop the component
     - Document the public API with/in a catalog page
-    - Export in `src/lib.js`
+    - Export in `src/lib.ts`
 3. Create a pull request with screenshots
 4. Review by another developer
 5. Merge into master

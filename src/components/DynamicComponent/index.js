@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import * as glamor from 'glamor'
-import * as styleguide from '../../lib.js'
+import * as styleguide from '../../lib.ts'
 import * as styleguideChart from '../../chart.js'
 
 import { requireFrom } from './require'

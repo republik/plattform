@@ -18,7 +18,7 @@ By default modules can only be loaded from relative or absolute paths. Following
 - `react`
 - `prop-types`
 - `glamor`
-- `@project-r/styleguide` (everything exposed in `lib.js`)
+- `@project-r/styleguide` (everything exposed in `lib.ts`)
 - `@project-r/styleguide/chart` (everything exposed in `chart.js`)
 
 Set a `SG_DYNAMIC_COMPONENT_BASE_URLS` environment variable with comma-separated base urls to allow CDN hosts.
