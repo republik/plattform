@@ -3,6 +3,8 @@ const debug = require('debug')('publikator:cache:search')
 import { GraphqlContext } from '@orbiting/backend-modules-types'
 const utils = require('@orbiting/backend-modules-search/lib/utils')
 
+import { getPhases } from '../../lib/phases'
+
 const getSort = (args: any) => {
   // Default sorting
   if (!args.orderBy) {
@@ -107,6 +109,7 @@ const find = async (args: any, { elastic }: GraphqlContext) => {
       terms: {
         field: 'currentPhase.keyword',
         min_doc_count: 0,
+        size: getPhases().length,
       },
     },
   }

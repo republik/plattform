@@ -187,7 +187,7 @@ const runChecks = (repo: Repo, milestones: Milestone[], checks: Check[]) => {
   return hasAllPassed
 }
 
-const getPhases = () => [...phases]
+export const getPhases = () => [...phases]
 
 const hasReachedPhase = (repo: Repo, milestones: Milestone[], phase: Phase) => {
   const checks: Check[] = [
