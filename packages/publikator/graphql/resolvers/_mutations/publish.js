@@ -223,7 +223,7 @@ module.exports = async (
   }
 
   // remember if slug changed
-  if (!prepublication) {
+  if (!prepublication && !scheduledAt) {
     await handleRedirection(repoId, doc.content.meta, context)
   }
 
