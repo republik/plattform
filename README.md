@@ -115,7 +115,7 @@ yarn dev
 This kicks on [foreman](https://github.com/strongloop/node-foreman) which then launches all the servers locally.
 All servers greets you with `Cannot GET /` on the root route. The API server has a graphical API explorer available at `/graphiql`:
 
-- [GraphQL on port 5000](http://localhost:5000/graphiql)
+- [GraphQL on port 5010](http://localhost:5010/graphiql)
 - [Assets server on port 5020](http://localhost:5020/)
 
 ### Next steps
@@ -181,7 +181,7 @@ docker-compose -f docker-compose-test-network.yml up [-d]
 - bind: You now have a DNS server running locally. It resolves all requests of `*.republik.test` to `LOCAL_IP`.
 - traefik: routes requests based on SNI (check: [traefik.toml](.docker-config/traefik/traefik.toml))
   - `http://republik.test` -> `http://localhost:3010`
-  - `http://api.republik.test` -> `http://localhost:5000`
+  - `http://api.republik.test` -> `http://localhost:5010`
 
 4. Run backend services with docker (in `backends/`):
 

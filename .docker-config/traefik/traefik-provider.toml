@@ -35,9 +35,9 @@
 
   [http.services]
     [[http.services.api.loadBalancer.servers]]
-      url = "http://localhost:5000"
+      url = "http://localhost:5010"
     [[http.services.publikator-api.loadBalancer.servers]]
-      url = "http://localhost:5000"
+      url = "http://localhost:5010"
     [[http.services.assets-api.loadBalancer.servers]]
       url = "http://localhost:5020"
     [[http.services.frontend.loadBalancer.servers]]
