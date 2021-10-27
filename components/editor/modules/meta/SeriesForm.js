@@ -281,8 +281,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
           <IconButton
             Icon={AddIcon}
             label={t('metaData/series/episodes/add')}
-            onClick={e => {
-              e.preventDefault()
+            onClick={() => {
               onEpisodeChange(
                 [
                   {
@@ -328,8 +327,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                       <IconButton
                         Icon={ArrowUpwardIcon}
                         label={t('metaData/series/episodes/up')}
-                        onClick={e => {
-                          e.preventDefault()
+                        onClick={() => {
                           onEpisodeChange(
                             episodes
                               .slice(0, i - 1)
@@ -344,8 +342,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                       <IconButton
                         Icon={ArrowDownwardIcon}
                         label={t('metaData/series/episodes/down')}
-                        onClick={e => {
-                          e.preventDefault()
+                        onClick={() => {
                           onEpisodeChange(
                             episodes
                               .slice(0, i)
@@ -359,8 +356,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                     <IconButton
                       Icon={HighlightOffIcon}
                       label={t('metaData/series/episodes/rm')}
-                      onClick={e => {
-                        e.preventDefault()
+                      onClick={() => {
                         onEpisodeChange(
                           episodes.slice(0, i).concat(episodes.slice(i + 1))
                         )
@@ -398,8 +394,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
           <IconButton
             Icon={AddIcon}
             label={t('metaData/series/episodes/add')}
-            onClick={e => {
-              e.preventDefault()
+            onClick={() => {
               onEpisodeChange(
                 episodes.concat({
                   label: '',
