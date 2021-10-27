@@ -15,7 +15,7 @@ const argv = yargs
   .option('lobbywatch-url', { alias: 'l', required: true, coerce: url.parse })
   .option('elected-url', { alias: 'e', required: true, coerce: url.parse }).argv
 
-const { slug } = require('@project-r/styleguide/lib/lib/slug')
+const { slug } = require('@project-r/styleguide')
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 
 const maybeString = (value) => {
