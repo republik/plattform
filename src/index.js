@@ -1,6 +1,6 @@
-import 'core-js/fn/array/from'
-import 'core-js/fn/array/find'
-import 'core-js/es6'
+import 'core-js/features/array/from'
+import 'core-js/features/array/find'
+import 'core-js/es'
 
 import React, { Fragment, useState } from 'react'
 import ReactDOM from 'react-dom'
