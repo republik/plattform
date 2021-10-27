@@ -357,9 +357,10 @@ export const lineEditorSchema = ({
               default: defaults.column || ''
             },
             columns: {
-              title: 'Anzahl Spalten pro Zeile',
+              title: 'Anzahl Spalten pro Zeile:',
               type: 'number',
-              default: defaults.columns
+              default: defaults.columns,
+              format: 'Slider'
             }
           }
         }

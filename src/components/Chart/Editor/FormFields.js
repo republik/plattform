@@ -5,6 +5,7 @@ import { Interaction } from '../../Typography'
 import Field from '../../Form/Field'
 import Dropdown from '../../Form/Dropdown'
 import Checkbox from '../../Form/Checkbox'
+import Slider from '../../Form/Slider'
 import { TickField } from './TickField'
 
 const styles = {
@@ -75,6 +76,21 @@ export const FormFields = props => {
                       {groupObject[property].title}
                     </Checkbox>
                   </div>
+                )
+              } else if (groupObject[property].format === 'Slider') {
+                return (
+                  <Slider
+                    label={
+                      groupObject[property].title +
+                      ' ' +
+                      (value[property] || groupObject[property].default)
+                    }
+                    value={value[property] || groupObject[property].default}
+                    min='1'
+                    max='4'
+                    fullWidth
+                    onChange={createOnFieldChange(property)}
+                  />
                 )
               } else {
                 return (
