@@ -1,11 +1,14 @@
-const commentSchema = require('@project-r/styleguide/lib/templates/Comment/email').default()
+// Schema for Project-R newsletter
 const newsletterEmailSchema = require('@project-r/template-newsletter/lib/email')
-const editorialNewsletterSchema = require('@project-r/styleguide/lib/templates/EditorialNewsletter/email')
-const { inQuotes } = require('@project-r/styleguide/lib/lib/inQuotes')
+const {
+  createCommentEmailSchema,
+  createNewsletterEmailSchema,
+  inQuotes,
+} = require('@project-r/styleguide')
 
 module.exports = {
-  commentSchema,
+  createCommentEmailSchema,
   newsletterEmailSchema,
-  editorialNewsletterSchema,
+  createNewsletterEmailSchema,
   inQuotes,
 }
