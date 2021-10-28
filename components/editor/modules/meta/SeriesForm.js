@@ -7,8 +7,16 @@ import {
   Radio,
   Field,
   Dropdown,
-  Interaction
+  Interaction,
+  IconButton
 } from '@project-r/styleguide'
+import {
+  AddIcon,
+  ArrowDownwardIcon,
+  HighlightOffIcon
+} from '@project-r/styleguide/icons'
+import ArrowUpwardIcon from 'react-icons/lib/md/arrow-upward'
+
 import AutosizeInput from 'react-textarea-autosize'
 
 import ImageInput from '../../utils/ImageInput'
@@ -23,6 +31,18 @@ const styles = {
     minHeight: 40,
     paddingTop: '7px !important',
     paddingBottom: '6px !important'
+  }),
+  episodeContainer: css({
+    margin: '16px 0 16px 0',
+    border: '1px solid #DADDDC',
+    padding: 12
+  }),
+  episodeHeader: css({
+    display: 'flex',
+    justifyContent: 'space-between'
+  }),
+  episodeActionBar: css({
+    display: 'flex'
   })
 }
 
@@ -256,6 +276,24 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
           </div>
           <br style={{ clear: 'both' }} />
           <br />
+          <Interaction.H2>Episoden</Interaction.H2>
+          <br />
+          <IconButton
+            Icon={AddIcon}
+            label={t('metaData/series/episodes/add')}
+            onClick={() => {
+              onEpisodeChange(
+                [
+                  {
+                    label: '',
+                    title: '',
+                    lead: '',
+                    document: null
+                  }
+                ].concat(episodes)
+              )
+            }}
+          />
           {episodes.map((episode, i) => {
             // omit publishDate, no longer used
             const { document: episodeDoc, publishDate: _, ...values } = episode
@@ -279,63 +317,53 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
               })
             }
             return (
-              <div style={{ marginBottom: 20 }} key={`episode-${i}`}>
-                <Interaction.H2>
-                  {t('metaData/series/episodes/label')} &nbsp;{' '}
-                  <Label>
+              <div {...styles.episodeContainer} key={`episode-${i}`}>
+                <div {...styles.episodeHeader}>
+                  <Interaction.H3>
+                    {`${t('metaData/series/episodes/label')} ${i + 1}`}
+                  </Interaction.H3>
+                  <div {...styles.episodeActionBar}>
                     {i !== 0 && (
-                      <>
-                        <A
-                          href='#up'
-                          onClick={e => {
-                            e.preventDefault()
-                            onEpisodeChange(
-                              episodes
-                                .slice(0, i - 1)
-                                .concat(episode)
-                                .concat(episodes.slice(i - 1, i))
-                                .concat(episodes.slice(i + 1))
-                            )
-                          }}
-                        >
-                          {t('metaData/series/episodes/up')}
-                        </A>{' '}
-                        &nbsp;{' '}
-                      </>
+                      <IconButton
+                        Icon={ArrowUpwardIcon}
+                        label={t('metaData/series/episodes/up')}
+                        onClick={() => {
+                          onEpisodeChange(
+                            episodes
+                              .slice(0, i - 1)
+                              .concat(episode)
+                              .concat(episodes.slice(i - 1, i))
+                              .concat(episodes.slice(i + 1))
+                          )
+                        }}
+                      />
                     )}
                     {i !== episodes.length - 1 && (
-                      <>
-                        <A
-                          href='#down'
-                          onClick={e => {
-                            e.preventDefault()
-                            onEpisodeChange(
-                              episodes
-                                .slice(0, i)
-                                .concat(episodes.slice(i + 1, i + 2))
-                                .concat(episode)
-                                .concat(episodes.slice(i + 2))
-                            )
-                          }}
-                        >
-                          {t('metaData/series/episodes/down')}
-                        </A>{' '}
-                        &nbsp;{' '}
-                      </>
+                      <IconButton
+                        Icon={ArrowDownwardIcon}
+                        label={t('metaData/series/episodes/down')}
+                        onClick={() => {
+                          onEpisodeChange(
+                            episodes
+                              .slice(0, i)
+                              .concat(episodes.slice(i + 1, i + 2))
+                              .concat(episode)
+                              .concat(episodes.slice(i + 2))
+                          )
+                        }}
+                      />
                     )}
-                    <A
-                      href='#remove'
-                      onClick={e => {
-                        e.preventDefault()
+                    <IconButton
+                      Icon={HighlightOffIcon}
+                      label={t('metaData/series/episodes/rm')}
+                      onClick={() => {
                         onEpisodeChange(
                           episodes.slice(0, i).concat(episodes.slice(i + 1))
                         )
                       }}
-                    >
-                      {t('metaData/series/episodes/rm')}
-                    </A>
-                  </Label>
-                </Interaction.H2>
+                    />
+                  </div>
+                </div>
                 <RepoSelect
                   label={t('metaData/series/episodes/document')}
                   value={episodeDoc}
@@ -363,10 +391,10 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
               </div>
             )
           })}
-          <A
-            href='#add'
-            onClick={e => {
-              e.preventDefault()
+          <IconButton
+            Icon={AddIcon}
+            label={t('metaData/series/episodes/add')}
+            onClick={() => {
               onEpisodeChange(
                 episodes.concat({
                   label: '',
@@ -376,9 +404,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                 })
               )
             }}
-          >
-            {t('metaData/series/episodes/add')}
-          </A>
+          />
         </div>
       )}
       <br />
