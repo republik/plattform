@@ -920,6 +920,21 @@ year,category,value
       "xTicks": [
         0,
         100
+      ],
+      "xUnit": "Alter",
+      "xAnnotations": [
+        {
+          "column": "1851",
+          "x": "40",
+          "value": 0.54,
+          "label": "Mit 40."
+        },
+        {
+          "column": "2011",
+          "x": "80",
+          "value": 0.634,
+          "label": "Mit 80."
+        }
       ]
     }}
     values={`
