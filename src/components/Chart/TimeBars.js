@@ -16,8 +16,8 @@ const TimeBarChart = props => {
     width,
     tLabel,
     description,
-    yAnnotations,
-    xAnnotations,
+    yAnnotations = [],
+    xAnnotations = [],
     xUnit,
     yScaleInvert,
     type,
@@ -74,8 +74,12 @@ const TimeBarChart = props => {
               <TimeBarGroup
                 bars={bars}
                 title={key}
-                xAnnotations={xAnnotations}
-                yAnnotations={yAnnotations}
+                xAnnotations={xAnnotations.filter(
+                  annotation => !annotation.column || annotation.column === key
+                )}
+                yAnnotations={yAnnotations.filter(
+                  annotation => !annotation.column || annotation.column === key
+                )}
                 yTicks={yTicks}
                 x={xAxis.scale}
                 y={yAxis.scale}
@@ -119,6 +123,7 @@ export const propTypes = {
   yTicks: PropTypes.arrayOf(PropTypes.number),
   yAnnotations: PropTypes.arrayOf(
     PropTypes.shape({
+      column: PropTypes.string,
       value: PropTypes.number.isRequired,
       unit: PropTypes.string,
       label: PropTypes.string.isRequired,
@@ -138,6 +143,7 @@ export const propTypes = {
   xScale: PropTypes.oneOf(['time', 'ordinal', 'linear']),
   xAnnotations: PropTypes.arrayOf(
     PropTypes.shape({
+      column: PropTypes.string,
       valuePrefix: PropTypes.string,
       value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
         .isRequired,
