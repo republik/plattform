@@ -6269,7 +6269,7 @@ bereits Infizierte,2020-03-16,13801,13801,13801
 
 ## Areas
 
-Use a `area` column base name with `_lower` and `_upper` data to display areas. This is similair to the confidence intervals, but without opacity.
+Use a `area` column base name with `_lower` and `_upper` data to display areas. This is similair to the confidence intervals, but without middle line. Defaults to opaque. Use `areaOpacity` to define a custom value.
 
 ```react
 <div>
@@ -6282,11 +6282,11 @@ Use a `area` column base name with `_lower` and `_upper` data to display areas. 
   "areaOpacity": 0.8,
   "type": "Line",
   "labelFilter": "datum.pledges !== 'Bisherige Entwicklung'",
-  "colorLegend": true,
-  "colorLegendValues": ["Bisherige Entwicklung"],
+  "unit": "Gt CO<sub>2</sub>e",
   "endLabel": true,
   "colorSort": "none",
   "yTicks": [-50,0,50,100],
+  "xTicks": [1990,2020,2050,2100],
   "colorMap": {
     "Bisherige Entwicklung": "#000",
     "Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)": "#bb76d6",
@@ -6667,7 +6667,7 @@ year,pledges,area_upper,area_lower,value
     `.trim()}
     />
   <ChartLegend>
-    Quelle: Climate Action Tracker, Mai 2021
+    Quelle: Climate Action Tracker, Mai 2021; Die schwarze Linie zeigt die bisherige Entwicklung bis 2016.
   </ChartLegend>
 </div>
 ```

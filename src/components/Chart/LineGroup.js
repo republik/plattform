@@ -264,7 +264,7 @@ const LineGroup = props => {
             {...colorScheme.set('fill', 'text')}
             dy='-3px'
           >
-            {yAxisFormat(tick, isLastItem(yTicks, i))}
+            {subsup.svg(yAxisFormat(tick, isLastItem(yTicks, i)))}
           </text>
         </g>
       ))}
@@ -296,7 +296,7 @@ const LineGroup = props => {
             {annotation.showValue !== false && (
               <>
                 {' '}
-                {annotation.formattedValue} {annotation.unit}
+                {annotation.formattedValue} {subsup.svg(annotation.unit)}
               </>
             )}
           </text>
@@ -385,7 +385,7 @@ const LineGroup = props => {
                 {...colorScheme.set('fill', 'text')}
               >
                 {annotation.valuePrefix}
-                {annotation.formattedValue} {annotation.unit}
+                {annotation.formattedValue} {subsup.svg(annotation.unit)}
               </text>
             )}
           </g>
