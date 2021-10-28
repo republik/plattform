@@ -343,7 +343,7 @@ export const lineEditorSchema = ({
               title: 'Farbschema auswählen',
               type: 'string',
               enum: colorDropdownItems,
-              default: defaults.colorRange || 'auto'
+              default: defaults.colorRange || ''
             }
           }
         },

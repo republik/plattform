@@ -117,7 +117,7 @@ const ChartEditor = ({ data, value, onChange }) => {
         )
       }
     })
-    .concat({ value: 'auto', text: 'automatisch' })
+    .concat({ value: '', text: 'automatisch' })
 
   const columns = Object.keys(chartData[0]).map(d => {
     return { value: d, text: d }

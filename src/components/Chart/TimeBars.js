@@ -263,7 +263,7 @@ export const timeBarEditorSchema = ({
               title: 'Farbschema auswählen',
               type: 'string',
               enum: colorDropdownItems,
-              default: defaults.colorRange || 'auto'
+              default: defaults.colorRange || ''
             }
           }
         },
