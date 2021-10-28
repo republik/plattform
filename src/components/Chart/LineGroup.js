@@ -90,6 +90,7 @@ const LineGroup = props => {
     yAnnotations,
     xAnnotations,
     band,
+    area,
     endDy,
     xAccessor,
     xAxisElement
@@ -106,6 +107,11 @@ const LineGroup = props => {
     .x(d => x(xAccessor(d)))
     .y0(d => y(+d.datum[`${band}_lower`]))
     .y1(d => y(+d.datum[`${band}_upper`]))
+
+  const lineArea = areaShape()
+    .x(d => x(xAccessor(d)))
+    .y0(d => y(+d.datum[`${area}_lower`]))
+    .y1(d => y(+d.datum[`${area}_upper`]))
 
   const linesWithLayout = lines.map(line => {
     return {
@@ -189,6 +195,13 @@ const LineGroup = props => {
                   {...colorScheme.set('fill', lineColor, 'charts')}
                   fillOpacity='0.2'
                   d={bandArea(line)}
+                />
+              )}
+              {area && line.find(d => d.datum[`${area}_lower`]) && (
+                <path
+                  {...colorScheme.set('fill', lineColor, 'charts')}
+                  fillOpacity='1'
+                  d={lineArea(line)}
                 />
               )}
               <path
