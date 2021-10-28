@@ -6,13 +6,13 @@ import { getColorMapper } from './colorMaps'
 
 import {
   deduplicate,
-  hasValues,
   identityFn,
   xAccessor,
   getDataFilter,
   getFormat,
   subsup,
-  runSort
+  runSort,
+  isValuePresent
 } from './utils'
 
 import { timeBarsProcesser } from './TimeBars.context'
@@ -68,8 +68,13 @@ export const ChartContextProvider = plainProps => {
 
   const data = values
     .filter(getDataFilter(props.filter))
-    .filter(hasValues)
-    .map(normalizeData(props.x, xNormalizer))
+    .filter(
+      props.area
+        ? d =>
+            isValuePresent(d.value) || isValuePresent(d[`${props.area}_lower`])
+        : d => isValuePresent(d.value)
+    )
+    .map(normalizeData(props.x, xNormalizer, props.area))
     .map(categorizeData(props.category))
 
   const shouldXSort = props.xSort || xScale === 'time' || xScale === 'linear'

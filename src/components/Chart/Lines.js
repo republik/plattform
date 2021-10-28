@@ -197,6 +197,7 @@ export const propTypes = {
   colorLegend: PropTypes.bool,
   colorLegendValues: PropTypes.arrayOf(PropTypes.string),
   category: PropTypes.string,
+  area: PropTypes.string,
   band: PropTypes.string,
   bandLegend: PropTypes.string,
   numberFormat: PropTypes.string.isRequired,

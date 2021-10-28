@@ -5,7 +5,7 @@ import { css } from 'glamor'
 import { line as lineShape, area as areaShape } from 'd3-shape'
 import { useColorContext } from '../Colors/useColorContext'
 
-import { subsup, isLastItem } from './utils'
+import { subsup, isLastItem, isValuePresent } from './utils'
 
 import {
   Y_CONNECTOR,
@@ -204,13 +204,15 @@ const LineGroup = props => {
                   d={lineArea(line)}
                 />
               )}
-              <path
-                fill='none'
-                {...colorScheme.set('stroke', lineColor, 'charts')}
-                strokeWidth={highlighted ? 6 : 3}
-                strokeDasharray={stroked ? '6 2' : 'none'}
-                d={pathGenerator(line)}
-              />
+              {line.find(d => isValuePresent(d.value)) && (
+                <path
+                  fill='none'
+                  {...colorScheme.set('stroke', lineColor, 'charts')}
+                  strokeWidth={highlighted ? 6 : 3}
+                  strokeDasharray={stroked ? '6 2' : 'none'}
+                  d={pathGenerator(line)}
+                />
+              )}
               {(endValue || endLabel) && (
                 <g>
                   {!mini && yNeedsConnectors && (
@@ -397,11 +399,11 @@ LineGroup.propTypes = {
     PropTypes.shape({
       line: PropTypes.arrayOf(
         PropTypes.shape({
-          value: PropTypes.number.isRequired
+          value: PropTypes.number
         })
       ),
-      start: PropTypes.shape({ value: PropTypes.number.isRequired }),
-      end: PropTypes.shape({ value: PropTypes.number.isRequired }),
+      start: PropTypes.shape({ value: PropTypes.number }),
+      end: PropTypes.shape({ value: PropTypes.number }),
       highlighted: PropTypes.bool,
       stroked: PropTypes.bool,
       lineColor: PropTypes.string.isRequired,

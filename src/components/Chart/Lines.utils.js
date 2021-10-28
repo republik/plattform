@@ -1,4 +1,4 @@
-import { unsafeDatumFn, sortBy } from './utils'
+import { unsafeDatumFn, sortBy, isValuePresent } from './utils'
 import { scaleLinear, scaleLog } from 'd3-scale'
 import { createTextGauger } from '../../lib/textGauger'
 
@@ -41,6 +41,12 @@ export const groupByLines = (color, category) => ({ values, key }) => ({
   values: groupBy(values, groupLines(color, category))
 })
 
+const getMiddleOfRange = (field, d) => {
+  const lower = +d.datum[`${field}_lower`]
+  const upper = +d.datum[`${field}_upper`]
+  return lower + (upper - lower) / 2
+}
+
 export const addLabels = (
   color,
   colorAccessor,
@@ -58,6 +64,10 @@ export const addLabels = (
     : () => false
   const hasStroke = props.stroke ? unsafeDatumFn(props.stroke) : () => false
 
+  const hasStartValue = isValuePresent(start.value)
+  const hasEndValue = isValuePresent(end.value)
+  const endLabel = label && props.endLabel && ` ${colorAccessor(end)}`
+
   return {
     line,
     start,
@@ -65,11 +75,16 @@ export const addLabels = (
     highlighted: isHighlight(start.datum),
     stroked: hasStroke(start.datum),
     lineColor: color(colorAccessor(start)),
-    startValue: label && props.startValue && yFormat(start.value),
-    endValue: label && props.endValue && yFormat(end.value),
-    endLabel: label && props.endLabel && ` ${colorAccessor(end)}`,
-    startY: y(start.value),
-    endY: y(end.value)
+    startValue:
+      label && props.startValue && hasStartValue && yFormat(start.value),
+    endValue: label && props.endValue && hasEndValue && yFormat(end.value),
+    endLabel,
+    startY: hasStartValue ? y(start.value) : undefined,
+    endY: hasEndValue
+      ? y(end.value)
+      : props.area && end.datum[`${props.area}_lower`]
+      ? y(getMiddleOfRange(props.area, end))
+      : undefined
   }
 }
 

@@ -82,6 +82,12 @@ export const linesProcesser = ({
       .concat(dataWithBand.map(d => +d.datum[`${props.band}_lower`]))
       .concat(dataWithBand.map(d => +d.datum[`${props.band}_upper`]))
   }
+  if (props.area) {
+    const dataWithArea = data.filter(d => d.datum[`${props.area}_lower`])
+    yValues = yValues
+      .concat(dataWithArea.map(d => +d.datum[`${props.area}_lower`]))
+      .concat(dataWithArea.map(d => +d.datum[`${props.area}_upper`]))
+  }
   if (props.yTicks) {
     yValues = yValues.concat(props.yTicks)
   }
