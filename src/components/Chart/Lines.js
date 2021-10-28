@@ -279,14 +279,6 @@ export const lineEditorSchema = ({
               enum: timeFormats,
               default: defaults.timeFormat
             },
-            xTicks: {
-              title: 'Achsenticks',
-              type: 'array',
-              contains: {
-                type: 'string'
-              },
-              default: defaults.xTicks
-            },
             xUnit: {
               title: 'Beschriftung',
               type: 'string',
@@ -308,14 +300,6 @@ export const lineEditorSchema = ({
               type: 'string',
               enum: numberFormats,
               default: defaults.numberFormat
-            },
-            yTicks: {
-              title: 'Achsenticks',
-              type: 'array',
-              contains: {
-                type: 'string'
-              },
-              default: defaults.yTicks
             },
             unit: {
               title: 'Beschriftung',
@@ -366,6 +350,37 @@ export const lineEditorSchema = ({
         }
       },
       advanced: {
+        xAxis: {
+          title: 'Horizontale Achse',
+          properties: {
+            xTicks: {
+              title: 'Achsenticks',
+              type: 'array',
+              contains: {
+                type: 'string'
+              },
+              default: defaults.xTicks
+            }
+          }
+        },
+        yAxis: {
+          title: 'Vertikale Achse',
+          properties: {
+            yTicks: {
+              title: 'Achsenticks',
+              type: 'array',
+              contains: {
+                type: 'string'
+              },
+              default: defaults.yTicks
+            },
+            zero: {
+              title: 'Y-Achse bei 0 beginnen',
+              type: 'boolean',
+              default: defaults.zero
+            }
+          }
+        },
         labels: {
           title: 'Beschriftung',
           properties: {
@@ -383,16 +398,6 @@ export const lineEditorSchema = ({
               title: 'Wert am Linienanfang',
               type: 'boolean',
               default: defaults.startValue
-            }
-          }
-        },
-        yAxis: {
-          title: 'Vertikale Achse',
-          properties: {
-            zero: {
-              title: 'Y-Achse bei 0 beginnen',
-              type: 'boolean',
-              default: defaults.zero
             }
           }
         }

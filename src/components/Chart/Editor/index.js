@@ -129,6 +129,12 @@ const ChartEditor = ({ data, value, onChange }) => {
     }
   }
 
+  const createOnNumberFieldChange = key => {
+    return (_, newValue) => {
+      onChange({ ...value, [key]: Number(newValue) })
+    }
+  }
+
   const createOnDropdownChange = key => item => {
     return onChange({ ...value, [key]: item.value })
   }
@@ -202,6 +208,7 @@ const ChartEditor = ({ data, value, onChange }) => {
       <FormFields
         createOnFieldChange={createOnFieldChange}
         createOnDropdownChange={createOnDropdownChange}
+        createOnNumberFieldChange={createOnNumberFieldChange}
         timeFormatParser={timeFormatParser}
         numberFormatParser={numberFormatParser}
         value={value}

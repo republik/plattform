@@ -80,6 +80,7 @@ export const FormFields = props => {
               } else if (groupObject[property].format === 'Slider') {
                 return (
                   <Slider
+                    key={property}
                     label={
                       groupObject[property].title +
                       ' ' +
@@ -89,6 +90,15 @@ export const FormFields = props => {
                     min='1'
                     max='4'
                     fullWidth
+                    onChange={createOnFieldChange(property)}
+                  />
+                )
+              } else if (groupObject[property].type === 'number') {
+                return (
+                  <Field
+                    key={property}
+                    label={groupObject[property].title}
+                    value={value[property] || groupObject[property].default}
                     onChange={createOnFieldChange(property)}
                   />
                 )

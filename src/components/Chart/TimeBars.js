@@ -235,14 +235,6 @@ export const timeBarEditorSchema = ({
               enum: numberFormats,
               default: defaults.numberFormat
             },
-            yTicks: {
-              title: 'Achsenticks',
-              type: 'array',
-              contains: {
-                type: 'string'
-              },
-              default: defaults.yTicks
-            },
             unit: {
               title: 'Beschriftung',
               type: 'string',
@@ -286,9 +278,30 @@ export const timeBarEditorSchema = ({
         }
       },
       advanced: {
+        xAxis: {
+          title: 'Horizontale Achse',
+          properties: {
+            xTicks: {
+              title: 'Achsenticks',
+              type: 'array',
+              contains: {
+                type: 'string'
+              },
+              default: defaults.xTicks
+            }
+          }
+        },
         yAxis: {
           title: 'Vertikale Achse',
           properties: {
+            yTicks: {
+              title: 'Achsenticks',
+              type: 'array',
+              contains: {
+                type: 'string'
+              },
+              default: defaults.yTicks
+            },
             domain: {
               title: 'Domain setzen',
               type: 'array',
@@ -301,6 +314,16 @@ export const timeBarEditorSchema = ({
               title: 'Y-Achse umdrehen',
               type: 'boolean',
               default: defaults.yScaleInvert
+            }
+          }
+        },
+        layout: {
+          title: 'Layout',
+          properties: {
+            height: {
+              title: 'Höhe',
+              type: 'number',
+              default: defaults.height
             }
           }
         }
