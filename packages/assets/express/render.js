@@ -96,6 +96,7 @@ module.exports = (server) => {
         cacheTags: ['render'],
       },
       returnResult: !!cachePath,
+      req,
     })
 
     if (imageResult && cachePath && AWS_S3_BUCKET) {

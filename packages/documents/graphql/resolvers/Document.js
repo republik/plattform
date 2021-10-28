@@ -6,7 +6,6 @@ const {
   processRepoImageUrlsInContent,
   processRepoImageUrlsInMeta,
   processEmbedImageUrlsInContent,
-  processEmbedsInContent,
   processNodeModifiersInContent,
 } = require('../../lib/process')
 const { getMeta } = require('../../lib/meta')
@@ -15,7 +14,7 @@ const getDocuments = require('./_queries/documents')
 
 const {
   lib: {
-    webp: { addSuffix: addWebpSuffix },
+    webp: { addFormatAuto },
   },
 } = require('@orbiting/backend-modules-assets')
 
@@ -23,13 +22,6 @@ const {
   extractIdsFromNode,
   loadLinkedMetaData,
 } = require('@orbiting/backend-modules-search/lib/Documents')
-
-const shouldDeliverWebP = (argument = 'auto', req) => {
-  if (argument === 'auto') {
-    return req && req.get('Accept').indexOf('image/webp') > -1
-  }
-  return !!argument
-}
 
 const addTeaserContentHash = (nodes) => {
   nodes.forEach((node) => {
@@ -57,7 +49,10 @@ module.exports = {
         .join('/')
     )
   },
-  async content(doc, { urlPrefix, searchString, webp }, context, info) {
+  issuedForUserId(doc, args, context) {  
+    return context.user?.id|| null
+  },
+  async content(doc, { urlPrefix, searchString }, context, info) {
     // we only do auto slugging when in a published documents context
     // - this is easiest detectable by _all being present from documents resolver
     // - alt check info.path for documents / document being the root
@@ -76,19 +71,17 @@ module.exports = {
         context.user || null,
       )
 
-      if (shouldDeliverWebP(webp, context.req)) {
-        await Promise.all([
-          processRepoImageUrlsInContent(doc.content, addWebpSuffix),
-          processEmbedImageUrlsInContent(doc.content, addWebpSuffix),
-        ])
-      }
+      await Promise.all([
+        processRepoImageUrlsInContent(doc.content, addFormatAuto),
+        processEmbedImageUrlsInContent(doc.content, addFormatAuto),
+      ])
 
       processMembersOnlyZonesInContent(doc.content, context.user)
       processNodeModifiersInContent(doc.content, context.user)
     }
     return doc.content
   },
-  async meta(doc, { urlPrefix, searchString, webp }, context, info) {
+  async meta(doc, { urlPrefix, searchString }, context, info) {
     const meta = getMeta(doc)
     if (doc._all) {
       metaUrlResolver(
@@ -101,15 +94,13 @@ module.exports = {
         context.user || null,
       )
 
-      if (shouldDeliverWebP(webp, context.req)) {
-        await processRepoImageUrlsInMeta(doc.content, addWebpSuffix)
-      }
+      await processRepoImageUrlsInMeta(doc.content, addFormatAuto)
     }
     return meta
   },
   async children(
     doc,
-    { first, last, before, after, only, urlPrefix, searchString, webp },
+    { first, last, before, after, only, urlPrefix, searchString },
     context,
     info,
   ) {
@@ -159,15 +150,11 @@ module.exports = {
       // add content hash before mutating children by resolving
       addTeaserContentHash(nodes)
 
-      const shouldAddWebpSuffix = shouldDeliverWebP(webp, context.req)
-
       const idsFromNodes = await Promise.map(nodes, async (node) => {
-        if (shouldAddWebpSuffix) {
-          await Promise.all([
-            processRepoImageUrlsInContent(node, addWebpSuffix),
-            processEmbedImageUrlsInContent(node, addWebpSuffix),
-          ])
-        }
+        await Promise.all([
+          processRepoImageUrlsInContent(node, addFormatAuto),
+          processEmbedImageUrlsInContent(node, addFormatAuto),
+        ])
 
         processMembersOnlyZonesInContent(node, context.user)
         processNodeModifiersInContent(node, context.user)
@@ -242,14 +229,5 @@ module.exports = {
     }
 
     return getDocuments(doc, args, context, info)
-  },
-  async embeds(doc, { types = [] }, context, info) {
-    const embeds = []
-    await processEmbedsInContent(doc.content, (embed) => {
-      if (!types.length || types.includes(embed.__typename)) {
-        embeds.push(embed)
-      }
-    })
-    return embeds
   },
 }

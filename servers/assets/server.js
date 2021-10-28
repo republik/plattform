@@ -17,6 +17,8 @@ const addMiddleware = (middleware) => {
 const start = (workerId) => {
   const server = express()
 
+  server.disable('x-powered-by')
+
   // redirect to https
   if (!DEV) {
     server.enable('trust proxy')

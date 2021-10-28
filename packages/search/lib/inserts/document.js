@@ -20,6 +20,7 @@ const loaderBuilders = {
   ...require('@orbiting/backend-modules-auth/loaders'),
   ...require('@orbiting/backend-modules-discussions/loaders'),
   ...require('@orbiting/backend-modules-documents/loaders'),
+  ...require('@orbiting/backend-modules-embeds/loaders'),
   ...require('@orbiting/backend-modules-publikator/loaders'),
 }
 
@@ -142,10 +143,14 @@ module.exports = {
         await Promise.each(
           publications,
           async function mapPublication(publication) {
-            const doc = await getDocument(
-              { id: publication.commitId, repoId: publication.repoId },
-              { publicAssets: true },
-              context,
+            const doc = JSON.parse(
+              JSON.stringify(
+                await getDocument(
+                  { id: publication.commitId, repoId: publication.repoId },
+                  { publicAssets: true },
+                  context,
+                ),
+              ),
             )
 
             const scheduledAt = publication.scheduledAt

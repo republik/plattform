@@ -1,2 +1,2 @@
-web: yarn run start
-scheduler: yarn run startScheduler
+web: yarn start
+scheduler: yarn start:scheduler

@@ -72,29 +72,6 @@ describe('embeds unauthorized', () => {
     })
     expect(result.errors[0].message).toBe(t('api/signIn'))
   })
-
-  test('fetch documentcloud data with unathorized user', async () => {
-    const {
-      apolloFetch,
-      context: { t },
-    } = global.instance
-    const result = await apolloFetch({
-      query: `
-        {
-          embed(id: "325931", embedType: DocumentCloudEmbed) {
-            __typename
-            ... on DocumentCloudEmbed {
-              id
-              title
-              thumbnail
-              contributorName
-            }
-          }
-        }
-      `,
-    })
-    expect(result.errors[0].message).toBe(t('api/signIn'))
-  })
 })
 
 describe('embeds authorized', () => {
@@ -232,28 +209,5 @@ describe('embeds authorized', () => {
     expect(result.errors[0].message).toBe(
       'Twitter API Errors: 144: No status found with that ID.',
     )
-  }, 30000)
-
-  test('fetch documentcloud data', async () => {
-    const result = await global.instance.apolloFetch({
-      query: `
-        {
-          embed(id: "325931", embedType: DocumentCloudEmbed) {
-            __typename
-            ... on DocumentCloudEmbed {
-              id
-              title
-              thumbnail
-              contributorName
-            }
-          }
-        }
-      `,
-    })
-    expect(result.data.embed.__typename).toBe('DocumentCloudEmbed')
-    expect(result.data.embed.id).toBe('325931')
-    expect(result.data.embed.title).toBeTruthy()
-    expect(result.data.embed.thumbnail).toBeTruthy()
-    expect(result.data.embed.contributorName).toBeTruthy()
   }, 30000)
 })

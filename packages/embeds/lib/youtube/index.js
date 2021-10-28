@@ -78,14 +78,14 @@ const getYoutubeVideoById = async (id) => {
   })
 
   return {
-    platform: 'youtube',
     id: response.items[0].id,
+    platform: 'youtube',
     createdAt: new Date(response.items[0].snippet.publishedAt),
     retrievedAt: new Date(),
-    title: response.items[0].snippet.title,
     userUrl: `https://www.youtube.com/channel/${channelId}`,
     userName: response.items[0].snippet.channelTitle,
     thumbnail: thumbnails[bestThumbnailSize].url,
+    title: response.items[0].snippet.title,
     userProfileImageUrl: channelResponse
       ? channelResponse.items[0].snippet.thumbnails.default.url
       : '',
@@ -99,7 +99,9 @@ const getYoutubeVideoById = async (id) => {
 }
 
 module.exports = {
-  getYoutubeVideoById,
+  TYPE: 'YoutubeEmbed',
+  REGEX: /^http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-_]*)(&[^\s]*)*/,
+  get: getYoutubeVideoById,
   // manually keep in sync with backend-modules/packages/documents/lib/process.js
   // until embeds are in their own module
   imageKeys: ['thumbnail', 'userProfileImageUrl'],

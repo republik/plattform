@@ -1,16 +1,17 @@
-const addSuffix = (url) => {
-  const [base, query] = url.split('?')
-  if (!query) {
-    return base
+const { URL } = require('url')
+
+const addFormatAuto = (urlString) => {
+  if (!urlString?.trim()) {
+    return urlString
   }
-  // prevent double suffix
-  // - e.g. when resolving twice (content & children)
-  if (base.endsWith('.webp')) {
-    return url
+  const url = new URL(urlString)
+  if (!url.searchParams.has('format')) {
+    url.searchParams.set('format', 'auto')
+    return url.toString()
   }
-  return `${base}.webp?${query}`
+  return urlString
 }
 
 module.exports = {
-  addSuffix,
+  addFormatAuto,
 }

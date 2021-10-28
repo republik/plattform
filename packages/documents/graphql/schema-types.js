@@ -104,6 +104,8 @@ input DocumentInput {
 type Document {
   id: ID!
   repoId: ID!
+  issuedForUserId: ID
+
   # AST of /article.md
   content: JSON!
   meta: Meta!
@@ -121,8 +123,6 @@ type Document {
     after: ID
     feed: Boolean
   ): DocumentConnection!
-
-  embeds(types: [EmbedType!]): [Embed!]!
 }
 
 type DocumentNode {

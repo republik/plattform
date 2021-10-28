@@ -41,7 +41,7 @@ yarn install
 Run it.
 
 ```
-yarn run dev
+yarn dev
 ```
 
 ## Licensing
