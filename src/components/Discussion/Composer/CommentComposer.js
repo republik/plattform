@@ -94,9 +94,12 @@ export const CommentComposer = props => {
   /*
    * Get the discussion metadata, action callbacks and hinters from DiscussionContext.
    */
-  const { discussion, actions, composerHints = [] } = React.useContext(
-    DiscussionContext
-  )
+  const {
+    discussion,
+    actions,
+    selectedTag,
+    composerHints = []
+  } = React.useContext(DiscussionContext)
   const { id: discussionId, tags, rules, displayAuthor, isBoard } = discussion
   const { maxLength } = rules
 
@@ -123,6 +126,10 @@ export const CommentComposer = props => {
     ? preview.comment.contentLength
     : text.length
 
+  const [tagValue, setTagValue] = React.useState(
+    props.tagValue || (isRoot && selectedTag)
+  )
+
   /*
    * Focus the textarea upon mount.
    *
@@ -143,6 +150,7 @@ export const CommentComposer = props => {
   const [slowText] = useDebounce(text, 400)
   textRef.current = text
   React.useEffect(() => {
+    setTagValue(isRoot ? selectedTag : null)
     if (!isBoard || !isRoot || !previewCommentAction) {
       return
     }
@@ -186,7 +194,8 @@ export const CommentComposer = props => {
     discussionId,
     commentId,
     parentId,
-    isBoard
+    isBoard,
+    selectedTag
   ])
 
   const onChangeText = ev => {
@@ -199,8 +208,6 @@ export const CommentComposer = props => {
       /* Ignore errors */
     }
   }
-
-  const [tagValue, setTagValue] = React.useState(props.tagValue)
 
   /*
    * We keep track of the submission process, to prevent the user from
