@@ -190,7 +190,9 @@ const CommentNode = ({
   rootCommentOverlay,
   isLast
 }) => {
-  const { highlightedCommentId, actions } = React.useContext(DiscussionContext)
+  const { highlightedCommentId, selectedTag, actions } = React.useContext(
+    DiscussionContext
+  )
   const { id, parentIds, tags, text, comments } = comment
   const { displayAuthor } = discussion
   const isHighlighted = id === highlightedCommentId
@@ -343,7 +345,9 @@ const CommentNode = ({
                   <Comment.Body
                     t={t}
                     comment={comment}
-                    context={tags[0] ? { title: tags[0] } : undefined}
+                    context={
+                      !selectedTag && tags[0] ? { title: tags[0] } : undefined
+                    }
                   />
                   {(board || (rootCommentOverlay && isRoot)) && (
                     <div
