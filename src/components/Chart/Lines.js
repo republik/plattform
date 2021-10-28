@@ -77,7 +77,16 @@ const styles = {
 }
 
 const LineChart = props => {
-  const { width, mini, description, band, bandLegend, area, endDy } = props
+  const {
+    width,
+    mini,
+    description,
+    band,
+    bandLegend,
+    area,
+    areaOpacity,
+    endDy
+  } = props
 
   const [colorScheme] = useColorContext()
   const chartContext = React.useContext(ChartContext)
@@ -141,6 +150,7 @@ const LineChart = props => {
                 yAxisFormat={yAxis.axisFormat}
                 band={band}
                 area={area}
+                areaOpacity={areaOpacity}
                 yCut={yLayout.yCut}
                 yCutHeight={yLayout.yCutHeight}
                 yConnectorSize={yLayout.yConnectorSize}
@@ -197,6 +207,7 @@ export const propTypes = {
   colorLegend: PropTypes.bool,
   colorLegendValues: PropTypes.arrayOf(PropTypes.string),
   category: PropTypes.string,
+  areaOpacity: PropTypes.number,
   area: PropTypes.string,
   band: PropTypes.string,
   bandLegend: PropTypes.string,

@@ -91,6 +91,7 @@ const LineGroup = props => {
     xAnnotations,
     band,
     area,
+    areaOpacity = 1,
     endDy,
     xAccessor,
     xAxisElement
@@ -200,7 +201,7 @@ const LineGroup = props => {
               {area && line.find(d => d.datum[`${area}_lower`]) && (
                 <path
                   {...colorScheme.set('fill', lineColor, 'charts')}
-                  fillOpacity='1'
+                  fillOpacity={areaOpacity}
                   d={lineArea(line)}
                 />
               )}
