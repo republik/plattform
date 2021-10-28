@@ -64,7 +64,8 @@ export {
   FigureGroup,
   FigureByline,
   FigureCaption,
-  FigureImage
+  FigureImage,
+  MIN_GALLERY_IMG_WIDTH
 } from './components/Figure'
 export { Tweet } from './components/Social'
 export { Video } from './components/Video'
@@ -106,6 +107,7 @@ export {
   fontStyles,
   linkBlackStyle,
   linkRule,
+  plainLinkRule,
   A,
   H1,
   H2,
@@ -131,7 +133,6 @@ export {
   CommentComposer,
   CommentComposerPlaceholder
 } from './components/Discussion/Composer'
-export { SecondaryAction as CommentComposerSecondaryAction } from './components/Discussion/Internal/Composer'
 export { renderCommentMdast } from './components/Discussion/Internal/Comment/render'
 export { IconLink as DiscussionIconLink } from './components/Discussion/Internal/Comment/IconLink'
 
@@ -155,6 +156,7 @@ export { default as ShareImageGenerator } from './components/ShareImage'
 export {
   default as ShareImagePreview,
   socialPreviewStyles,
+  socialPreviewWidth,
   SHARE_IMAGE_DEFAULTS,
   SHARE_IMAGE_HEIGHT,
   SHARE_IMAGE_WIDTH
@@ -164,3 +166,12 @@ export { default as SharePreviewTwitter } from './components/ShareImage/SharePre
 
 export { default as TeaserEmbedComment } from './components/TeaserEmbedComment'
 export { SeriesNav } from './components/SeriesNav'
+
+// Export createRequire for dynamic-components
+export { createRequire } from './components/DynamicComponent'
+
+export * from './chart'
+
+export * from './icons'
+
+export * from './templates'

@@ -1,124 +1,43 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { ascending } from 'd3-array'
-import { scaleLinear, scaleBand } from 'd3-scale'
-import { timeFormat, timeParse } from '../../lib/timeFormat'
-import {
-  calculateAxis,
-  deduplicate,
-  hasValues,
-  identityFn,
-  xAccessor,
-  getDataFilter,
-  sortPropType,
-  groupInColumns,
-  getColumnLayout
-} from './utils'
-import { getColorMapper } from './colorMaps'
+import { sortPropType } from './utils'
 import ColorLegend from './ColorLegend'
 import TimeBarGroup from './TimeBarGroup'
-import {
-  insertXDomainGaps,
-  normalizeData,
-  intervals,
-  getAnnotationsXValues,
-  processSegments,
-  getMax,
-  getMin
-} from './TimeBars.utils'
+import { intervals } from './TimeBars.utils'
 import XAxis from './XAxis'
+import { ChartContext } from './ChartContext'
 
-const COLUMN_TITLE_HEIGHT = 24
-const AXIS_BOTTOM_HEIGHT = 24
-const PADDING_TOP = 24
-const COLUMN_PADDING = 20
-const PADDING_SIDES = 20
+import { PADDING_TOP } from './Layout.constants'
+import { defaultProps } from './ChartContext'
 
 const TimeBarChart = props => {
   const {
-    values,
     width,
-    mini,
     tLabel,
     description,
     yAnnotations,
     xAnnotations,
-    xScale,
-    xInterval,
-    xIntervalStep,
-    xTicks,
-    domain,
-    padding,
+    xUnit,
+    yScaleInvert,
+    type,
     height: innerHeight
   } = props
 
-  let xParser = identityFn
-  let xParserFormat = identityFn
-  let xNormalizer = identityFn
-  let xFormat = identityFn
-  let xSort = (a, b) => 0
-  if (xScale === 'time') {
-    xParser = timeParse(props.timeParse)
-    xParserFormat = timeFormat(props.timeParse)
-    xNormalizer = d => xParserFormat(xParser(d))
-    xFormat = timeFormat(props.timeFormat || props.timeParse)
-    xSort = ascending
-  } else if (xScale === 'linear') {
-    xParser = x => +x
-    xParserFormat = x => x.toString()
-    xSort = ascending
-  }
+  const chartContext = React.useContext(ChartContext)
+  const { groupPosition, yAxis, xAxis } = chartContext
 
-  let data = values
-    .filter(getDataFilter(props.filter))
-    .filter(hasValues)
-    .map(normalizeData(props.x, xNormalizer))
-
-  let groupedData = groupInColumns(data, props.column, props.columnFilter).map(
-    processSegments
-  )
-
-  const columnTitleHeight = props.column ? COLUMN_TITLE_HEIGHT : 0
-  const columnHeight =
-    innerHeight +
-    columnTitleHeight +
-    (mini ? 0 : PADDING_TOP + AXIS_BOTTOM_HEIGHT)
-  const { height, innerWidth, gx, gy } = getColumnLayout(
-    props.columns,
-    groupedData,
-    width,
-    props.minInnerWidth,
-    () => columnHeight,
-    props.columnSort,
-    0,
-    PADDING_SIDES,
-    0,
-    PADDING_SIDES,
-    COLUMN_PADDING,
-    true
-  )
-
-  const y = scaleLinear()
-    .domain(
-      props.domain ? props.domain : [getMin(groupedData), getMax(groupedData)]
-    )
-    .range([columnHeight - PADDING_TOP, AXIS_BOTTOM_HEIGHT + columnTitleHeight])
-
-  if (!domain) {
-    y.nice(3)
-  }
-
-  groupedData.forEach(group => {
+  chartContext.groupedData.forEach(group => {
     group.bars.forEach(bar => {
       let upValue = 0
-      let upPos = y(0)
+      let upPos = yAxis.scale(0)
       let downValue = 0
-      let downPos = y(0)
+      let downPos = yAxis.scale(0)
       bar.segments.forEach(segment => {
-        const isPositive = segment.value > 0
+        const isPositive = yScaleInvert ? segment.value < 0 : segment.value > 0
         const baseValue = isPositive ? upValue : downValue
-        const y0 = y(baseValue)
-        const y1 = y(baseValue + segment.value)
+        const y0 = yAxis.scale(baseValue)
+        const y1 = yAxis.scale(baseValue + segment.value)
         const size = (segment.height = Math.abs(y0 - y1))
         if (isPositive) {
           upPos -= size
@@ -133,101 +52,45 @@ const TimeBarChart = props => {
     })
   })
 
-  const yAxis = calculateAxis(
-    props.numberFormat,
-    tLabel,
-    y.domain(),
-    tLabel(props.unit),
-    {
-      ticks: props.yTicks
-    }
-  )
+  const yTicks = [].concat(yAxis.ticks).sort(ascending)
 
-  const yTicks = (props.yTicks || yAxis.ticks).sort(ascending)
-
-  const xValues = data
-    .map(xAccessor)
-    .concat(getAnnotationsXValues(xAnnotations, xNormalizer))
-    .filter(deduplicate)
-    .map(xParser)
-    .sort(xSort)
-    .map(xParserFormat)
-
-  const x = scaleBand()
-    .domain(xValues)
-    .range([padding, innerWidth - padding])
-    .padding(props.xBandPadding)
-    .round(true)
-
-  const xDomain = insertXDomainGaps(
-    xValues,
-    xInterval,
-    props.x,
-    props.timeParse,
-    xIntervalStep,
-    xParser,
-    xParserFormat,
-    x
-  )
-
-  x.domain(xDomain).round(true)
-
-  const colorAccessor = d => d.datum[props.color]
-
-  const colorValues = []
-    .concat(data.map(colorAccessor))
-    .concat(props.colorLegendValues)
-    .filter(Boolean)
-    .filter(deduplicate)
-
-  const color = getColorMapper(props, colorValues)
-
-  const colorLegendValues = []
-    .concat(
-      props.colorLegend &&
-        (props.colorLegendValues || colorValues).map(colorValue => ({
-          color: color(colorValue),
-          label: tLabel(colorValue)
-        }))
-    )
-    .filter(Boolean)
-
-  const xAxis = (
-    <XAxis
-      xTicks={xTicks}
-      width={innerWidth}
-      xValues={xValues}
-      xNormalizer={xNormalizer}
-      x={x}
-      xDomain={xDomain}
-      format={x => xFormat(xParser(x))}
-      strong={y.domain()[0] !== 0}
-    />
+  const xAxisElement = (
+    <XAxis xUnit={xUnit} yScaleInvert={yScaleInvert} type={type} />
   )
 
   return (
     <>
-      <ColorLegend inline values={colorLegendValues} />
-      <svg width={width} height={height}>
+      <ColorLegend inline values={chartContext.colorLegendValues} />
+      <svg width={width} height={chartContext.height}>
         <desc>{description}</desc>
-        {groupedData.map(({ bars, key }) => {
+        {chartContext.groupedData.map(({ bars, key }) => {
           return (
-            <g key={key || 1} transform={`translate(${gx(key)},${gy(key)})`}>
+            <g
+              key={key || 1}
+              transform={`translate(${groupPosition.x(key)},${groupPosition.y(
+                key
+              )})`}
+            >
               <TimeBarGroup
                 bars={bars}
                 title={key}
                 xAnnotations={xAnnotations}
                 yAnnotations={yAnnotations}
                 yTicks={yTicks}
-                x={x}
-                y={y}
-                xNormalizer={xNormalizer}
+                x={xAxis.scale}
+                y={yAxis.scale}
+                xNormalizer={chartContext.xNormalizer}
                 yAxis={yAxis}
-                width={innerWidth}
-                xAxis={xAxis}
-                xAxisPos={innerHeight + PADDING_TOP + columnTitleHeight}
+                width={chartContext.innerWidth}
+                xAxisElement={xAxisElement}
+                xAxisPos={
+                  yScaleInvert
+                    ? PADDING_TOP + PADDING_TOP / 2 + groupPosition.titleHeight
+                    : innerHeight + PADDING_TOP + groupPosition.titleHeight
+                }
                 tLabel={tLabel}
-                color={d => color(colorAccessor(d))}
+                color={d => chartContext.color(chartContext.colorAccessor(d))}
+                yScaleInvert={yScaleInvert}
               />
             </g>
           )
@@ -259,7 +122,7 @@ export const propTypes = {
       value: PropTypes.number.isRequired,
       unit: PropTypes.string,
       label: PropTypes.string.isRequired,
-      x: PropTypes.string,
+      x: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       dy: PropTypes.string,
       showValue: PropTypes.bool
     })
@@ -276,18 +139,20 @@ export const propTypes = {
   xAnnotations: PropTypes.arrayOf(
     PropTypes.shape({
       valuePrefix: PropTypes.string,
-      value: PropTypes.number.isRequired,
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        .isRequired,
       unit: PropTypes.string,
       label: PropTypes.string,
-      x: PropTypes.string,
-      x1: PropTypes.string,
-      x2: PropTypes.string,
+      x: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      x1: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      x2: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       ghost: PropTypes.bool,
       position: PropTypes.oneOf(['top', 'bottom']),
       showValue: PropTypes.bool
     })
   ).isRequired,
   unit: PropTypes.string,
+  xUnit: PropTypes.string,
   numberFormat: PropTypes.string.isRequired,
   filter: PropTypes.string,
   tLabel: PropTypes.func.isRequired,
@@ -301,26 +166,12 @@ export const propTypes = {
     })
   ),
   columns: PropTypes.number.isRequired,
-  minInnerWidth: PropTypes.number.isRequired
+  minInnerWidth: PropTypes.number.isRequired,
+  yScaleInvert: PropTypes.bool
 }
 
 TimeBarChart.propTypes = propTypes
 
-TimeBarChart.defaultProps = {
-  x: 'year',
-  xScale: 'time',
-  xBandPadding: 0.25,
-  timeParse: '%Y',
-  numberFormat: 's',
-  height: 240,
-  padding: 50,
-  unit: '',
-  colorLegend: true,
-  xIntervalStep: 1,
-  yAnnotations: [],
-  xAnnotations: [],
-  columns: 1,
-  minInnerWidth: 240
-}
+TimeBarChart.defaultProps = defaultProps.TimeBar
 
 export default TimeBarChart

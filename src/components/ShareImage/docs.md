@@ -63,6 +63,24 @@ Supported props:
 </div>
 ```
 
+### Text Length Test
+
+```react
+<div>
+  <SharePreviewTwitter
+    title='«Viele Pflegende brauchen jetzt noch mehr Kraft, weil sie wissen: Es müsste nicht sein»' 
+    description='Bericht aus den Intensiv­stationen des Uni­spitals Zürich: Pflege­expertin Carmen Karde erzählt, wie sich die vierte Corona-Welle auf den Alltag der Pflege­fachkräfte auswirkt.' 
+  />
+  <br />
+  <SharePreviewFacebook
+    title='Schweizer Firmen im Klimacheck' 
+    description='Die Finanzwelt muss beim Klimaschutz mithelfen. Doch das ist kniffliger, als man denkt. Wie wählt man die richtigen Aktien aus? Erster Teil einer Serie über klimafreundliche Investments.'
+  />
+</div>
+```
+
+Facebook hides the description if the title spans two lines.
+
 # Share Image Generator
 
 A `<ShareImageGenerator />` takes a format type and returns a form to create a share image for that specific format type style.

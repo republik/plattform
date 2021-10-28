@@ -1,6 +1,6 @@
-import 'core-js/fn/array/from'
-import 'core-js/fn/array/find'
-import 'core-js/es6'
+import 'core-js/features/array/from'
+import 'core-js/features/array/find'
+import 'core-js/es'
 
 import React, { Fragment, useState } from 'react'
 import ReactDOM from 'react-dom'
@@ -155,7 +155,8 @@ const Styleguide = () => {
                         ...require('./components/Typography'),
                         ShareImageGenerator: require('./components/ShareImage'),
                         ShareImagePreview: require('./components/ShareImage/ShareImagePreview'),
-                        SharePreviewTwitter: require('./components/ShareImage/SharePreviewTwitter')
+                        SharePreviewTwitter: require('./components/ShareImage/SharePreviewTwitter'),
+                        SharePreviewFacebook: require('./components/ShareImage/SharePreviewFacebook')
                       }
                     }
                   ]

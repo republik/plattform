@@ -76,6 +76,11 @@ export const linkErrorStyleNegative = css({
   }
 })
 
+export const plainLinkRule = css({
+  textDecoration: 'none',
+  color: 'inherit'
+})
+
 const styles = {
   h1: css({
     ...fontStyles.serifBold36,

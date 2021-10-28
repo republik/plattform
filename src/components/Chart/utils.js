@@ -49,7 +49,9 @@ const swissNumbers = formatLocale({
   decimal: ',',
   thousands: thousandSeparator,
   grouping: [3],
-  currency: ['CHF\u00a0', '']
+  currency: ['CHF\u00a0', ''],
+  minus: '\u2212',
+  percent: '\u2009%'
 })
 
 const formatPow = (tLabel, baseValue) => {
@@ -184,7 +186,8 @@ export const calculateAxis = (
   return {
     ticks,
     format: formatter,
-    axisFormat
+    axisFormat,
+    domain
   }
 }
 
@@ -262,7 +265,7 @@ export const xAccessor = d => d.x
 
 export const yAccessor = d => d.y
 
-export const hasValues = d => d.value && d.value.length > 0
+export const hasValues = d => d.value && d.value.toString().length > 0
 
 export const identityFn = x => x
 
@@ -378,3 +381,6 @@ export const getColumnLayout = (
 
   return { height, innerWidth, innerHeight, gx, gy }
 }
+
+// get last item from array
+export const isLastItem = (array, index) => array.length - 1 === index

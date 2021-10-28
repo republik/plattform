@@ -33,6 +33,7 @@ const BlockQuoteParagraph = ({ children, attributes }) => {
     <p
       {...attributes}
       {...styles.quote}
+      {...colorScheme.set('color', 'text')}
       {...colorScheme.set('backgroundColor', 'hover')}
       {...fontRule}
     >

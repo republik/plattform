@@ -2,7 +2,7 @@ import createArticleSchema from '../Article'
 
 const DefaultLink = ({ children }) => children
 
-const createSchema = ({
+const createPageSchema = ({
   documentEditorOptions,
   customMetaFields = [],
   series = false,
@@ -49,4 +49,4 @@ const createSchema = ({
   })
 }
 
-export default createSchema
+export default createPageSchema

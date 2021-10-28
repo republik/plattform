@@ -12,7 +12,7 @@ import SeriesNavTileContent from './SeriesNavTileContent'
 
 import { localInvertedColors } from '../../theme/colors'
 
-const GRID_MIN_WIDTH = 315
+const GRID_MIN_WIDTH = 300
 const OUTER_CONTAINER_PADDING = PADDING
 
 const styles = {
@@ -72,6 +72,13 @@ const SeriesNavTile = ({
 
   return (
     <div
+      /* 
+      Hide PayNote for members by setting the data-hide-if-active-membership attribute. 
+      This class is defined in the MeContext in republik-frontend
+      */
+      {...(PayNote && {
+        'data-hide-if-active-membership': true
+      })}
       {...(inline ? styles.inlineTile : styles.tile)}
       style={{
         opacity: inactiveTile ? 0.6 : 1

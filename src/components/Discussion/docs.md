@@ -15,9 +15,6 @@ Some config options are stored in `src/components/Discussion/config.js`. If you 
 The following symbols are exported from the styleguide:
 
  * `DiscussionContext`
-
  * `<CommentComposerPlaceholder>`
  * `<CommentComposer>`
- * `<CommentComposerSecondaryAction>`
-
  * `<CommentList>`

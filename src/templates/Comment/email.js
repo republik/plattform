@@ -16,7 +16,7 @@ import {
   StrikeThrough
 } from '../../components/CommentBody/email'
 
-const createSchema = ({ ...args } = {}) => {
+const createCommentEmailSchema = ({ ...args } = {}) => {
   return createCommentSchema({
     BlockCode,
     BlockQuote,
@@ -35,4 +35,4 @@ const createSchema = ({ ...args } = {}) => {
   })
 }
 
-export default createSchema
+export default createCommentEmailSchema

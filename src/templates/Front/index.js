@@ -81,7 +81,11 @@ export const subject = {
 
 const DefaultLink = ({ children }) => children
 
-const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
+const createFrontSchema = ({
+  Link = DefaultLink,
+  t = () => '',
+  ...rest
+} = {}) => {
   const credit = {
     matchMdast: matchParagraph,
     component: ({ children, attributes }) => (
@@ -716,4 +720,4 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
   return schema
 }
 
-export default createSchema
+export default createFrontSchema

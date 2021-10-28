@@ -64,7 +64,11 @@ test('calculateAxis with percentages', assert => {
     ticks: [0, 0.05, 0.1, 0.15]
   })
   assert.equal(yAxis.axisFormat(0.05), '5', 'format without ,0 on axis')
-  assert.equal(yAxis.format(0.05), '5,0%', 'format with ,0 outside of axis')
+  assert.equal(
+    yAxis.format(0.05),
+    '5,0\u2009%',
+    'format with ,0 outside of axis'
+  )
   assert.end()
 })
 
@@ -73,10 +77,18 @@ test('thousand separator', assert => {
     ticks: []
   })
 
-  assert.equal(axis.format(-1000), '-1000', 'format without thousand separator')
+  assert.equal(
+    axis.format(-1000),
+    '\u22121000',
+    'format without thousand separator'
+  )
   assert.equal(axis.format(1000), '1000', 'format without thousand separator')
 
-  assert.equal(axis.format(-10000), '-10’000', 'format with thousand separator')
+  assert.equal(
+    axis.format(-10000),
+    '\u221210’000',
+    'format with thousand separator'
+  )
   assert.equal(axis.format(10000), '10’000', 'format with thousand separator')
   assert.end()
 })
