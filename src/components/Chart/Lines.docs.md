@@ -6667,7 +6667,7 @@ year,pledges,area_upper,area_lower,value
     `.trim()}
     />
   <ChartLegend>
-    Quelle: Climate Action Tracker, Mai 2021; Die schwarze Linie zeigt die bisherige Entwicklung bis 2016.
+    Quelle: Climate Action Tracker, Mai 2021; Bis 2016 ist die bisherige Entwicklung eingezeichnet.
   </ChartLegend>
 </div>
 ```
