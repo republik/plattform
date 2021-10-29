@@ -9,6 +9,7 @@ const tableMapping = {
     ballotsTable: 'ballots',
     allowedMembershipsTable: 'votingMembershipRequirements',
     translationsKey: 'voting',
+    hasGroupSlug: true,
   },
   elections: {
     name: 'elections',
@@ -16,6 +17,7 @@ const tableMapping = {
     ballotsTable: 'electionBallots',
     allowedMembershipsTable: 'electionMembershipRequirements',
     translationsKey: 'election',
+    hasGroupSlug: true,
   },
   questionnaires: {
     name: 'questionnaires',
@@ -23,6 +25,7 @@ const tableMapping = {
     ballotsTable: 'questionnaireSubmissions',
     allowedMembershipsTable: 'questionnaireMembershipRequirements',
     translationsKey: 'questionnaire',
+    hasGroupSlug: false,
   },
 }
 
@@ -152,22 +155,36 @@ const buildQueries = (tableName) => {
   }
 
   const numSubmittedByGroup = async (groupSlug, pgdb) => {
-    return pgdb.queryOneField(
-      `
-      SELECT
-        COUNT(DISTINCT(b."userId"))
-      FROM
-        "${table.ballotsTable}" b
-      JOIN
-        "${table.name}" e
-        ON b."${table.foreignKey}" = e.id
-      WHERE
-        e."groupSlug" = :groupSlug
-    `,
-      {
-        groupSlug,
-      },
-    )
+    const ballotsQueryParts = []
+    Object.keys(tableMapping).forEach((key) => {
+      const table = tableMapping[key]
+      if (table.hasGroupSlug) {
+        ballotsQueryParts.push(`(
+          SELECT
+            DISTINCT(b."userId")
+          FROM
+            "${table.ballotsTable}" b
+          JOIN
+            "${table.name}" e
+            ON b."${table.foreignKey}" = e.id
+          WHERE
+            e."groupSlug" = '${groupSlug}'
+        )`)
+      }
+    })
+
+    if (ballotsQueryParts.length === 0) {
+      return 0
+    }
+
+    const queryString = `
+      SELECT 
+        COUNT(DISTINCT(u.id))
+      FROM "users" u
+      WHERE u.id IN 
+        ${ballotsQueryParts.filter(Boolean).join(' OR u.id IN ')}`
+    debug(queryString)
+    return pgdb.queryOneField(queryString)
   }
 
   const haveSameRestrictions = (entityA, entityB) => {
