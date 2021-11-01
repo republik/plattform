@@ -200,7 +200,7 @@ module.exports = async (discussion, args, context, info) => {
   if (totalCountOnly) {
     return {
       id: discussion.id,
-      totalCount: loaders.Discussion.byIdCommentsCount.load(discussion.id),
+      totalCount: loaders.Discussion.byIdCommentsCount.load(discussion.id), // TODO: can we use a loader with tag and id?
     }
   }
 
@@ -354,6 +354,8 @@ module.exports = async (discussion, args, context, info) => {
         }
         return false
       })
+      tree.comments.totalCount = filterComments.length
+      tree.comments.directTotalCount = taggedCommentIds.length
     }
     if (first) {
       if (maxDepth != null) {
@@ -383,10 +385,12 @@ module.exports = async (discussion, args, context, info) => {
   }
 
   // if parentId is given, we return the totalCount of the subtree
-  // otherwise it's the totalCount of the hole discussion
+  // otherwise it's the totalCount of the whole discussion
   if (!parentId) {
     tree.comments.id = discussion.id
-    tree.comments.totalCount = discussionTotalCount
+    if (!tag) {
+      tree.comments.totalCount = discussionTotalCount
+    }
   }
 
   if (focusComment) {
