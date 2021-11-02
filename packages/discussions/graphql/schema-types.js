@@ -160,6 +160,7 @@ type Discussion {
 
   tags: [String!]!
   tagBuckets: [DiscussionTagBucket!]!
+  # on root level
   tagRequired: Boolean!
 }
 

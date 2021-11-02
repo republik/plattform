@@ -364,6 +364,11 @@ module.exports = async (discussion, args, context, info) => {
         }
         return false
       })
+      /* 
+      TODO: Together with L402-404 this is a bit of a working interim solution
+      refactoring tree building, filtering and counting here would make
+      our lives so much easier :)
+      */
       tree.comments.totalCount = filterComments.length
       tree.comments.directTotalCount = taggedCommentIds.length
     }
