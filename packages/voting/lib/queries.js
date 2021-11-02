@@ -138,53 +138,45 @@ const buildQueries = (tableName) => {
     return !!(await userSubmitDate(id, userId, context))
   }
 
-  const numSubmitted = async (id, pgdb) => {
+  const numSubmitted = async (entityId, pgdb) => {
     return pgdb.queryOneField(
       `
-      SELECT
-        COUNT(DISTINCT("userId"))
-      FROM
-        "${table.ballotsTable}" b
-      WHERE
-        b."${table.foreignKey}" = :entityId
+      SELECT COUNT(DISTINCT "userId")
+      FROM "${table.ballotsTable}" b
+      WHERE b."${table.foreignKey}" = :entityId
     `,
-      {
-        entityId: id,
-      },
+      { entityId },
     )
   }
 
   const numSubmittedByGroup = async (groupSlug, pgdb) => {
-    const ballotsQueryParts = []
+    const queries = []
+
     Object.keys(tableMapping).forEach((key) => {
-      const table = tableMapping[key]
-      if (table.hasGroupSlug) {
-        ballotsQueryParts.push(`(
-          SELECT
-            DISTINCT(b."userId")
-          FROM
-            "${table.ballotsTable}" b
-          JOIN
-            "${table.name}" e
-            ON b."${table.foreignKey}" = e.id
-          WHERE
-            e."groupSlug" = '${groupSlug}'
-        )`)
+      const { hasGroupSlug, ballotsTable, name, foreignKey } = tableMapping[key]
+      if (hasGroupSlug) {
+        queries.push(`
+          SELECT DISTINCT b."userId"
+          FROM "${ballotsTable}" b
+          JOIN "${name}" e
+            ON b."${foreignKey}" = e.id
+          WHERE e."groupSlug" = '${groupSlug}'
+        `)
       }
     })
 
-    if (ballotsQueryParts.length === 0) {
+    if (!queries.length) {
       return 0
     }
 
-    const queryString = `
-      SELECT 
-        COUNT(DISTINCT(u.id))
-      FROM "users" u
-      WHERE u.id IN 
-        ${ballotsQueryParts.filter(Boolean).join(' OR u.id IN ')}`
-    debug(queryString)
-    return pgdb.queryOneField(queryString)
+    const submittedQuery = `
+      WITH "userIds" AS (${queries.join(' UNION ')})
+      SELECT COUNT("userId") FROM "userIds"
+    `
+
+    debug('numSubmittedByGroup', submittedQuery)
+
+    return pgdb.queryOneField(submittedQuery)
   }
 
   const haveSameRestrictions = (entityA, entityB) => {
