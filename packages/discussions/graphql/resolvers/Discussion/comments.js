@@ -197,13 +197,6 @@ module.exports = async (discussion, args, context, info) => {
       (key) => !['id', 'totalCount'].includes(key),
     ).length === 0
 
-  if (totalCountOnly) {
-    return {
-      id: discussion.id,
-      totalCount: loaders.Discussion.byIdCommentsCount.load(discussion.id), // TODO: can we use a loader with tag and id?
-    }
-  }
-
   const { after } = args
   const options = after
     ? {
@@ -222,6 +215,23 @@ module.exports = async (discussion, args, context, info) => {
     flatDepth,
     tag,
   } = options
+
+  if (totalCountOnly) {
+    if (tag) {
+      const countsPerTag = await loaders.Discussion.byIdCommentTagsCount.load(
+        discussion.id,
+      )
+      const tagCount = countsPerTag.filter((row) => row.value === tag)[0]
+      return {
+        id: discussion.id,
+        totalCount: (tagCount && tagCount.count) || 0,
+      }
+    }
+    return {
+      id: discussion.id,
+      totalCount: loaders.Discussion.byIdCommentsCount.load(discussion.id),
+    }
+  }
 
   // get comments
   const comments = await pgdb.public.comments
