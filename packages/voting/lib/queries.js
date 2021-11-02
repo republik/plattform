@@ -138,19 +138,14 @@ const buildQueries = (tableName) => {
     return !!(await userSubmitDate(id, userId, context))
   }
 
-  const numSubmitted = async (id, pgdb) => {
+  const numSubmitted = async (entityId, pgdb) => {
     return pgdb.queryOneField(
       `
-      SELECT
-        COUNT(DISTINCT("userId"))
-      FROM
-        "${table.ballotsTable}" b
-      WHERE
-        b."${table.foreignKey}" = :entityId
+      SELECT COUNT(DISTINCT "userId")
+      FROM "${table.ballotsTable}" b
+      WHERE b."${table.foreignKey}" = :entityId
     `,
-      {
-        entityId: id,
-      },
+      { entityId },
     )
   }
 
