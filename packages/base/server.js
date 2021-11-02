@@ -120,6 +120,8 @@ const start = async (
     server.use('*', cors(corsOptions))
   }
 
+  server.use(express.static('public'))
+
   // Once DB is available, setup sessions and routes for authentication
   const auth = Auth.configure({
     server,
