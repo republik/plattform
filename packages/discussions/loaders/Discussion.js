@@ -69,6 +69,41 @@ module.exports = (context) => ({
       return (row && row.count) || 0
     },
   ),
+  byIdCommentTagsCount: createDataLoader(
+    (ids) =>
+      context.pgdb.query(
+        `
+        WITH data AS (
+          SELECT
+            c."discussionId" "discussionId",
+            c.id,
+            CASE
+              WHEN (coalesce(jsonb_array_length(c.tags), 0) > 0) THEN c.tags 
+              WHEN (coalesce(jsonb_array_length(cr.tags), 0) > 0) THEN cr.tags 
+              ELSE '[]'::jsonb
+            END tags
+          FROM comments c
+          LEFT JOIN comments cr
+          ON cr.id = (c."parentIds"->>0)::uuid
+          WHERE ARRAY[c."discussionId"] && :ids
+        )
+        
+        SELECT d."discussionId", value, COUNT(*) count
+        FROM data d, jsonb_array_elements(d.tags) AS value
+        GROUP BY 1, 2
+      `,
+        { ids },
+      ),
+    null,
+    (key, rows) => {
+      return rows
+        .filter((row) => row.discussionId === key)
+        .map(({ value, count }) => ({
+          value,
+          count,
+        }))
+    },
+  ),
   byIdCommenterNamesToClip: createDataLoader(
     (ids) =>
       context.pgdb
