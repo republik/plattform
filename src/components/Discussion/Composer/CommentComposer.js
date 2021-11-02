@@ -97,7 +97,7 @@ export const CommentComposer = props => {
   const {
     discussion,
     actions,
-    selectedTag,
+    activeTag,
     composerHints = []
   } = React.useContext(DiscussionContext)
   const { id: discussionId, tags, rules, displayAuthor, isBoard } = discussion
@@ -127,7 +127,7 @@ export const CommentComposer = props => {
     : text.length
 
   const [tagValue, setTagValue] = React.useState(
-    props.tagValue || (isRoot && selectedTag)
+    props.tagValue || (isRoot && activeTag)
   )
 
   /*
@@ -150,7 +150,7 @@ export const CommentComposer = props => {
   const [slowText] = useDebounce(text, 400)
   textRef.current = text
   React.useEffect(() => {
-    setTagValue(isRoot ? selectedTag : null)
+    setTagValue(isRoot ? activeTag : null)
     if (!isBoard || !isRoot || !previewCommentAction) {
       return
     }
@@ -195,7 +195,7 @@ export const CommentComposer = props => {
     commentId,
     parentId,
     isBoard,
-    selectedTag
+    activeTag
   ])
 
   const onChangeText = ev => {
