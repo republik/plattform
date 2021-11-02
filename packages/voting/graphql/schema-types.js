@@ -175,6 +175,7 @@ input ElectionInput {
   allowEmptyBallots: Boolean
   allowedMemberships: [VotingMembershipRequirementInput!]
   allowedRoles: [String!]
+  groupSlug: String
 }
 
 input ElectionBallotInput {

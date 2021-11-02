@@ -22,7 +22,7 @@ module.exports = async (_, { electionInput }, context) => {
       null,
       {
         title: description,
-        path: `/election/${moment(beginDate).format('/YYYY/MM/DD')}/${slug}`,
+        path: `/election/${moment(beginDate).format('YYYY/MM/DD')}/${slug}`,
       },
       {
         ...context,
