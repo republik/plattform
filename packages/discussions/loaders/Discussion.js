@@ -103,7 +103,7 @@ module.exports = (context) => ({
           GROUP BY 1, 2
         )
         
-        SELECT edt."discussionId", edt.value, coalesce(c.count, 0)
+        SELECT edt."discussionId", edt.value, coalesce(c.count, 0) count
         FROM "expectedDiscussionTags" edt
         LEFT JOIN counts c
           ON c."discussionId" = edt."discussionId" AND c.value = edt.value
