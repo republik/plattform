@@ -41,5 +41,5 @@ export default {
     fileSize()
   ],
   external:
-    Object.keys(pkg.peerDependencies ?? {})
+    Object.keys(pkg.peerDependencies || {})
 }
