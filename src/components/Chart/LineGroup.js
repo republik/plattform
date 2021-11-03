@@ -5,7 +5,7 @@ import { css } from 'glamor'
 import { line as lineShape, area as areaShape } from 'd3-shape'
 import { useColorContext } from '../Colors/useColorContext'
 
-import { subsup, isLastItem } from './utils'
+import { subsup, isLastItem, isValuePresent } from './utils'
 
 import {
   Y_CONNECTOR,
@@ -90,6 +90,8 @@ const LineGroup = props => {
     yAnnotations,
     xAnnotations,
     band,
+    area,
+    areaOpacity = 1,
     endDy,
     xAccessor,
     xAxisElement
@@ -106,6 +108,11 @@ const LineGroup = props => {
     .x(d => x(xAccessor(d)))
     .y0(d => y(+d.datum[`${band}_lower`]))
     .y1(d => y(+d.datum[`${band}_upper`]))
+
+  const lineArea = areaShape()
+    .x(d => x(xAccessor(d)))
+    .y0(d => y(+d.datum[`${area}_lower`]))
+    .y1(d => y(+d.datum[`${area}_upper`]))
 
   const linesWithLayout = lines.map(line => {
     return {
@@ -191,13 +198,22 @@ const LineGroup = props => {
                   d={bandArea(line)}
                 />
               )}
-              <path
-                fill='none'
-                {...colorScheme.set('stroke', lineColor, 'charts')}
-                strokeWidth={highlighted ? 6 : 3}
-                strokeDasharray={stroked ? '6 2' : 'none'}
-                d={pathGenerator(line)}
-              />
+              {area && line.find(d => d.datum[`${area}_lower`]) && (
+                <path
+                  {...colorScheme.set('fill', lineColor, 'charts')}
+                  fillOpacity={areaOpacity}
+                  d={lineArea(line)}
+                />
+              )}
+              {line.find(d => isValuePresent(d.value)) && (
+                <path
+                  fill='none'
+                  {...colorScheme.set('stroke', lineColor, 'charts')}
+                  strokeWidth={highlighted ? 6 : 3}
+                  strokeDasharray={stroked ? '6 2' : 'none'}
+                  d={pathGenerator(line)}
+                />
+              )}
               {(endValue || endLabel) && (
                 <g>
                   {!mini && yNeedsConnectors && (
@@ -248,7 +264,7 @@ const LineGroup = props => {
             {...colorScheme.set('fill', 'text')}
             dy='-3px'
           >
-            {yAxisFormat(tick, isLastItem(yTicks, i))}
+            {subsup.svg(yAxisFormat(tick, isLastItem(yTicks, i)))}
           </text>
         </g>
       ))}
@@ -280,7 +296,7 @@ const LineGroup = props => {
             {annotation.showValue !== false && (
               <>
                 {' '}
-                {annotation.formattedValue} {annotation.unit}
+                {annotation.formattedValue} {subsup.svg(annotation.unit)}
               </>
             )}
           </text>
@@ -369,7 +385,7 @@ const LineGroup = props => {
                 {...colorScheme.set('fill', 'text')}
               >
                 {annotation.valuePrefix}
-                {annotation.formattedValue} {annotation.unit}
+                {annotation.formattedValue} {subsup.svg(annotation.unit)}
               </text>
             )}
           </g>
@@ -384,11 +400,11 @@ LineGroup.propTypes = {
     PropTypes.shape({
       line: PropTypes.arrayOf(
         PropTypes.shape({
-          value: PropTypes.number.isRequired
+          value: PropTypes.number
         })
       ),
-      start: PropTypes.shape({ value: PropTypes.number.isRequired }),
-      end: PropTypes.shape({ value: PropTypes.number.isRequired }),
+      start: PropTypes.shape({ value: PropTypes.number }),
+      end: PropTypes.shape({ value: PropTypes.number }),
       highlighted: PropTypes.bool,
       stroked: PropTypes.bool,
       lineColor: PropTypes.string.isRequired,
