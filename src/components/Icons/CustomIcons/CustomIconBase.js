@@ -1,5 +1,5 @@
 import React from 'react'
-import { useIconContext } from '../index'
+import { useIconContext } from '../IconContext'
 
 export default ({
   size = '1em',
