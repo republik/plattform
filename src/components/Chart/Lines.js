@@ -155,8 +155,12 @@ const LineChart = props => {
                 yCutHeight={yLayout.yCutHeight}
                 yConnectorSize={yLayout.yConnectorSize}
                 yNeedsConnectors={yLayout.yNeedsConnectors}
-                yAnnotations={chartContext.yAnnotations}
-                xAnnotations={chartContext.xAnnotations}
+                yAnnotations={chartContext.yAnnotations.filter(
+                  annotation => !annotation.column || annotation.column === key
+                )}
+                xAnnotations={chartContext.xAnnotations.filter(
+                  annotation => !annotation.column || annotation.column === key
+                )}
                 endDy={endDy}
                 width={chartContext.innerWidth}
                 paddingRight={paddingRight}
@@ -229,6 +233,7 @@ export const propTypes = {
   yTicks: PropTypes.arrayOf(PropTypes.number),
   yAnnotations: PropTypes.arrayOf(
     PropTypes.shape({
+      column: PropTypes.string,
       value: PropTypes.number.isRequired,
       unit: PropTypes.string,
       label: PropTypes.string,
@@ -239,6 +244,7 @@ export const propTypes = {
   ),
   xAnnotations: PropTypes.arrayOf(
     PropTypes.shape({
+      column: PropTypes.string,
       valuePrefix: PropTypes.string,
       value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
         .isRequired,
