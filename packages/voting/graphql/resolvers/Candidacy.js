@@ -24,7 +24,7 @@ module.exports = {
 
     return candidacy.user.address.city
   },
-  postalCodeGeo: async (candidacy, args, { user: me, pgdb }) => {
+  postalCodeGeo: async (candidacy, args, { user: me, loaders }) => {
     if (!Roles.userIsInRoles(me, ['admin', 'supporter', 'associate'])) {
       return
     }
@@ -35,27 +35,8 @@ module.exports = {
     ) {
       return
     }
-
-    const { postalCode, country } = candidacy.user.address
-
-    const geoResult = await pgdb.queryOne(
-      `
-      SELECT 
-        c.code, 
-        pc.lat, 
-        pc.lon
-      FROM "statisticsGeoCountry" c
-      JOIN "statisticsGeoPostalCode" pc
-      ON c."code" = pc."countryCode"
-      WHERE 
-        c."name" = :country AND 
-        pc."postalCode" = :postalCode
-    `,
-      {
-        country,
-        postalCode,
-      },
-    )
+    const { id, postalCode, country } = candidacy.user.address
+    const geoResult = await loaders.PostalCodeGeo.byAddressId.load(id)
 
     return {
       countryName: country,
