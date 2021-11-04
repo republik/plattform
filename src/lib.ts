@@ -172,6 +172,6 @@ export { createRequire } from './components/DynamicComponent'
 
 export * from './chart'
 
-export * from './icons'
+export * from './components/Icons'
 
 export * from './templates'
