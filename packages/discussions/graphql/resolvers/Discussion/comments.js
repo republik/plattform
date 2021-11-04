@@ -224,7 +224,7 @@ module.exports = async (discussion, args, context, info) => {
       const tagCount = countsPerTag.find((row) => row.value === tag)
       return {
         id: discussion.id,
-        totalCount: (tagCount && tagCount.count) || 0,
+        totalCount: tagCount?.count || 0,
       }
     }
     return {
