@@ -347,7 +347,7 @@ module.exports = async (discussion, args, context, info) => {
     index,
   }))
 
-  if (first || tag) {
+  if (first || (tag && !parentId)) {
     let filterComments = coveredComments.sort(compare)
 
     if (tag) {
