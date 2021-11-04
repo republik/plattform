@@ -1,15 +1,4 @@
-import React, { useContext } from 'react'
-import { IconContext } from '@react-icons/all-files'
-
-export const IconContextProvider = ({ children, value }) => {
-  return <IconContext.Provider value={value}>{children}</IconContext.Provider>
-}
-
-export const useIconContext = () => {
-  const iconContext = useContext(IconContext)
-  return iconContext
-}
-
+export { IconContextProvider, useIconContext } from './IconContext'
 export { MdPictureAsPdf as PdfIcon } from '@react-icons/all-files/md/MdPictureAsPdf'
 export { MdFileDownload as DownloadIcon } from '@react-icons/all-files/md/MdFileDownload'
 export { MdVolumeUp as AudioIcon } from '@react-icons/all-files/md/MdVolumeUp'
