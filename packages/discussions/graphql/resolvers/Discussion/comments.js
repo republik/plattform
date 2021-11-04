@@ -213,8 +213,10 @@ module.exports = async (discussion, args, context, info) => {
     parentId,
     includeParent = false,
     flatDepth,
-    tag,
+    tag: _tag,
   } = options
+
+  const tag = discussion.tags.includes(_tag) && _tag
 
   if (totalCountOnly) {
     if (tag) {
@@ -233,11 +235,18 @@ module.exports = async (discussion, args, context, info) => {
     }
   }
 
+  const commentsQuery = [
+    `SELECT c.* FROM comments c`,
+    tag && `LEFT JOIN comments cr ON cr.id = (c."parentIds"->>0)::uuid`,
+    `WHERE c."discussionId" = :discussionId`,
+    tag && `AND (c.tags @> '"${tag}"' OR cr.tags @> '"${tag}"')`,
+  ]
+    .filter(Boolean)
+    .join(' ')
+
   // get comments
-  const comments = await pgdb.public.comments
-    .find({
-      discussionId: discussion.id,
-    })
+  const comments = await pgdb
+    .query(commentsQuery, { discussionId: discussion.id })
     .then((comments) =>
       comments.map((c) => ({
         // precompute
@@ -246,6 +255,7 @@ module.exports = async (discussion, args, context, info) => {
         isPublished: c.published && !c.adminUnpublished,
       })),
     )
+
   const discussionTotalCount = comments.length
 
   if (!comments.length) {
@@ -331,6 +341,10 @@ module.exports = async (discussion, args, context, info) => {
   if (parentId && includeParent) {
     tree = { comments: { nodes: [tree] } }
   }
+
+  /* TODO: do filtering by tag here (use tree)
+    cut tree only if no parentId 
+  */
   measureTree(tree)
   deepSortTree(tree, ascDesc, sortKey, topValue, topIds, bubbleSort)
 
@@ -347,43 +361,16 @@ module.exports = async (discussion, args, context, info) => {
     index,
   }))
 
-  if (first || (tag && !parentId)) {
+  if (first) {
     let filterComments = coveredComments.sort(compare)
-
-    if (tag) {
-      const taggedCommentIds = coveredComments
-        .filter((c) => c.tags && c.tags.includes(tag))
-        .map((c) => c.id)
-
-      filterComments = filterComments.filter((c) => {
-        if (
-          (c.tags && c.tags.includes(tag)) ||
-          _.intersection(taggedCommentIds, c.parentIds).length > 0
-        ) {
-          return true
-        }
-        return false
-      })
-      /* 
-      TODO: Together with L402-404 this is a bit of a working interim solution
-      refactoring tree building, filtering and counting here would make
-      our lives so much easier :)
-      */
-      tree.comments.totalCount = filterComments.length
-      tree.comments.directTotalCount = taggedCommentIds.length
+    if (maxDepth != null) {
+      const maxDepthAbsolute =
+        parentId && tree.comments && tree.comments.nodes[0]
+          ? tree.comments.nodes[0].depth + maxDepth
+          : maxDepth
+      filterComments = filterComments.filter((c) => c.depth < maxDepthAbsolute)
     }
-    if (first) {
-      if (maxDepth != null) {
-        const maxDepthAbsolute =
-          parentId && tree.comments && tree.comments.nodes[0]
-            ? tree.comments.nodes[0].depth + maxDepth
-            : maxDepth
-        filterComments = filterComments.filter(
-          (c) => c.depth < maxDepthAbsolute,
-        )
-      }
-      filterComments = filterComments.slice(0, first)
-    }
+    filterComments = filterComments.slice(0, first)
 
     const filterCommentIds = filterComments.map((c) => c.id)
 
@@ -391,7 +378,7 @@ module.exports = async (discussion, args, context, info) => {
       orderBy,
       orderDirection,
       exceptIds,
-      tag,
+      tag, // @TODO: Remove
     })
   }
 
@@ -402,10 +389,8 @@ module.exports = async (discussion, args, context, info) => {
   // if parentId is given, we return the totalCount of the subtree
   // otherwise it's the totalCount of the whole discussion
   if (!parentId) {
-    tree.comments.id = discussion.id
-    if (!tag) {
-      tree.comments.totalCount = discussionTotalCount
-    }
+    tree.comments.id = discussion.id // TODO: base64 id + tag
+    tree.comments.totalCount = discussionTotalCount
   }
 
   if (focusComment) {
