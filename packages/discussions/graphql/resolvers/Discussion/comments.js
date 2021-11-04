@@ -216,7 +216,7 @@ module.exports = async (discussion, args, context, info) => {
     tag: _tag,
   } = options
 
-  const tag = discussion.tags.includes(_tag) && _tag
+  const tag = discussion.tags?.includes(_tag) && _tag
 
   if (totalCountOnly) {
     if (tag) {
