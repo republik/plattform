@@ -342,9 +342,6 @@ module.exports = async (discussion, args, context, info) => {
     tree = { comments: { nodes: [tree] } }
   }
 
-  /* TODO: do filtering by tag here (use tree)
-    cut tree only if no parentId 
-  */
   measureTree(tree)
   deepSortTree(tree, ascDesc, sortKey, topValue, topIds, bubbleSort)
 
@@ -378,7 +375,6 @@ module.exports = async (discussion, args, context, info) => {
       orderBy,
       orderDirection,
       exceptIds,
-      tag, // @TODO: Remove
     })
   }
 
