@@ -8,13 +8,11 @@ import {
   Field,
   Dropdown,
   Interaction,
-  IconButton
-} from '@project-r/styleguide'
-import {
+  IconButton,
   AddIcon,
   ArrowDownwardIcon,
   HighlightOffIcon
-} from '@project-r/styleguide/icons'
+} from '@project-r/styleguide'
 import ArrowUpwardIcon from 'react-icons/lib/md/arrow-upward'
 
 import AutosizeInput from 'react-textarea-autosize'
