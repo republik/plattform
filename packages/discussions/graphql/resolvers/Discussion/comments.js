@@ -221,7 +221,7 @@ module.exports = async (discussion, args, context, info) => {
       const countsPerTag = await loaders.Discussion.byIdCommentTagsCount.load(
         discussion.id,
       )
-      const tagCount = countsPerTag.filter((row) => row.value === tag)[0]
+      const tagCount = countsPerTag.find((row) => row.value === tag)
       return {
         id: discussion.id,
         totalCount: (tagCount && tagCount.count) || 0,
