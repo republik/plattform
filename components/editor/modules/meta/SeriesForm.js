@@ -193,6 +193,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
         <RepoSelect
           label={t('metaData/series/main')}
           value={value}
+          isSeriesMaster={true}
           onChange={onRepoInputChange('series')}
         />
       )}
@@ -235,6 +236,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
           <RepoSelect
             label={t('metaData/series/overview')}
             value={value.overview}
+            isSeriesMaster={true}
             onChange={(_, overview) => {
               onSeriesChange({
                 ...value,
@@ -365,6 +367,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                 <RepoSelect
                   label={t('metaData/series/episodes/document')}
                   value={episodeDoc}
+                  isSeriesEpisode={true}
                   onChange={(_, url, item) => {
                     const newData = {
                       document: url
