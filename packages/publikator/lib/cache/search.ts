@@ -45,7 +45,6 @@ const getSourceFilter = () => ({
 
 const find = async (args: any, { elastic }: GraphqlContext) => {
   debug('args: %o', args)
-  const { isTemplate, isSeriesMaster, isSeriesEpisode } = args
 
   const fields = [
     'id',
@@ -63,20 +62,20 @@ const find = async (args: any, { elastic }: GraphqlContext) => {
     },
   }
 
-  if (isTemplate) {
-    query.bool.must.push({ term: { 'meta.isTemplate': true } })
-  } else if (isTemplate === false) {
-    query.bool.must_not.push({ term: { 'meta.isTemplate': true } })
+  if ([true, false].includes(args.isTemplate)) {
+    query.bool[args.isTemplate ? 'must' : 'must_not'].push({
+      term: { 'meta.isTemplate': true },
+    })
   }
 
-  if ([true, false].includes(isSeriesMaster)) {
-    query.bool[isSeriesMaster ? 'must' : 'must_not'].push({
+  if ([true, false].includes(args.isSeriesMaster)) {
+    query.bool[args.isSeriesMaster ? 'must' : 'must_not'].push({
       exists: { field: 'commit.meta.seriesMaster' },
     })
   }
 
-  if ([true, false].includes(isSeriesEpisode)) {
-    query.bool[isSeriesEpisode ? 'must' : 'must_not'].push({
+  if ([true, false].includes(args.isSeriesEpisode)) {
+    query.bool[args.isSeriesEpisode ? 'must' : 'must_not'].push({
       exists: { field: 'commit.meta.seriesEpisode' },
     })
   }
