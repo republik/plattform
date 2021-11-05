@@ -28,6 +28,7 @@ const {
       processRepoImageUrlsInMeta,
       processEmbedImageUrlsInContent,
     },
+    resolve: { getRepoId },
   },
 } = require('@orbiting/backend-modules-documents')
 
@@ -83,7 +84,7 @@ const createImageUrlHandler = (repoId) => {
 }
 
 module.exports = async (_, args, context) => {
-  const { user, t, pgdb, pubsub } = context
+  const { user, t, pgdb, pubsub, loaders } = context
   ensureUserHasRole(user, 'editor')
 
   const { repoId, parentId, message, document, isTemplate } = args
@@ -102,6 +103,31 @@ module.exports = async (_, args, context) => {
 
     if (isTemplate && !meta.slug) {
       throw new Error(t('api/commit/templateSlug/required'))
+    }
+
+    /**
+     * Each document in a series should point to a series master.
+     * 
+     * In a master document, meta.series.overview should contain a repo URL (and
+     * is usually a self-reference).
+     * 
+     * In an episode document, meta.series should contain a repo URL.
+     * 
+     * meta.series is either an object (when master) or a string (when episode).
+     */
+    const { repoId: seriesMasterRepoId } = getRepoId(
+      meta.series?.overview ||
+      (typeof meta.series === 'string' && meta.series),
+    )
+
+    if (seriesMasterRepoId) {
+      const seriesMasterRepo = await loaders.Commit.byRepoIdLatest.load(
+        seriesMasterRepoId
+      )
+
+      if (typeof seriesMasterRepo.meta.series !== 'object') {
+        throw new Error(t('api/commit/seriesMaster/required'))
+      }
     }
 
     const repo = await tx.publikator.repos.findOne({ id: repoId })

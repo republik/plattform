@@ -1725,6 +1725,10 @@
       "value": "Repo-slug required for templates"
     },
     {
+      "key": "api/commit/seriesMaster/required",
+      "value": "Es ist keine Serienübersicht verlinkt."
+    },
+    {
       "key": "api/commit/parentId/required",
       "value": "Please provide a parentId to commit to the existing repo \"{repoId}\"."
     },
