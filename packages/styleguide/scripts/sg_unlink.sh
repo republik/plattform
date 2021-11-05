@@ -9,6 +9,6 @@ rm -rf node_modules/.cache
 
 cd ../../
 # fetch dependencies again
-yarn install
+yarn install --check-files
 
 echo '\n⚠️  Make sure to restart the next.js server.\n'
