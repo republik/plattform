@@ -5,14 +5,10 @@ import { MdDone as SaveIcon } from 'react-icons/md'
 
 import withT from '../../lib/withT'
 
-import {
-  InlineSpinner,
-  Loader,
-  Checkbox,
-  ErrorMessage
-} from '@project-r/styleguide'
+import { InlineSpinner, Loader, Checkbox } from '@project-r/styleguide'
 
 import { Section, SectionTitle, TextButton } from '../Display/utils'
+import ErrorMessage from '../ErrorMessage'
 
 export const RESUBSCRIBE_EMAIL = gql`
   mutation resubscribeEmail($userId: ID!) {
