@@ -27,7 +27,7 @@ PgDb.connect()
       (candidacy) => candidacy.elected,
     )
 
-    if (!incumbentCandidates || incumbentCandidates.length === 0) {
+    if (!incumbentCandidates?.length) {
       console.log(
         'Nothing to do - either no previous election found or no previously elected candidates',
       )
