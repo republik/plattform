@@ -18,7 +18,7 @@ module.exports = async (_, { electionInput }, context) => {
       throw new Error(t('api/election/exists'))
     }
 
-    /* TODO: would be nice to have the possibility to set discussionId via electionInput
+    /* Would be nice to have the possibility to set discussionId via electionInput
     because if discussion is created via publikator we cannot set id there */
     const { id: discussionId } = await upsertDiscussion(
       null,

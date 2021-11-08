@@ -30,11 +30,13 @@ module.exports = {
     }
 
     if (
-      !candidacy.user.address?.postalCode &&
+      !candidacy.user.address ||
+      !candidacy.user.address?.postalCode ||
       !candidacy.user.address?.country
     ) {
-      return
+      return null
     }
+
     const { id, postalCode, country } = candidacy.user.address
     const geoResult = await loaders.PostalCodeGeo.byAddressId.load(id)
 
