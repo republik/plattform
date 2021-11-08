@@ -385,7 +385,7 @@ module.exports = async (discussion, args, context, info) => {
   // if parentId is given, we return the totalCount of the subtree
   // otherwise it's the totalCount of the whole discussion
   if (!parentId) {
-    tree.comments.id = discussion.id // TODO: base64 id + tag
+    tree.comments.id = discussion.id
     tree.comments.totalCount = discussionTotalCount
   }
 

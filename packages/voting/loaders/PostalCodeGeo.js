@@ -12,9 +12,9 @@ module.exports = (context) => ({
         pc.lon
       FROM "statisticsGeoCountry" c
       JOIN "statisticsGeoPostalCode" pc
-      ON c."code" = pc."countryCode"
+        ON c."code" = pc."countryCode"
       JOIN addresses a
-      ON c."name" = a."country" AND pc."postalCode" = a."postalCode"
+        ON c."name" = a."country" AND pc."postalCode" = a."postalCode"
       WHERE 
         ARRAY[a."id"] && :addressIds
     `,
