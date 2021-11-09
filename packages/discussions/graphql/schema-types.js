@@ -159,8 +159,14 @@ type Discussion {
   userCanComment: Boolean!
 
   tags: [String!]!
+  tagBuckets: [DiscussionTagBucket!]!
   # on root level
   tagRequired: Boolean!
+}
+
+type DiscussionTagBucket {
+  value: String!
+  count: Int!
 }
 
 type CommentAggregation {

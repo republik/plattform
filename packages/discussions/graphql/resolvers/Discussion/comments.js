@@ -197,13 +197,6 @@ module.exports = async (discussion, args, context, info) => {
       (key) => !['id', 'totalCount'].includes(key),
     ).length === 0
 
-  if (totalCountOnly) {
-    return {
-      id: discussion.id,
-      totalCount: loaders.Discussion.byIdCommentsCount.load(discussion.id),
-    }
-  }
-
   const { after } = args
   const options = after
     ? {
@@ -220,14 +213,40 @@ module.exports = async (discussion, args, context, info) => {
     parentId,
     includeParent = false,
     flatDepth,
-    tag,
+    tag: _tag,
   } = options
 
+  const tag = discussion.tags?.includes(_tag) && _tag
+
+  if (totalCountOnly) {
+    if (tag) {
+      const countsPerTag = await loaders.Discussion.byIdCommentTagsCount.load(
+        discussion.id,
+      )
+      const tagCount = countsPerTag.find((row) => row.value === tag)
+      return {
+        id: discussion.id,
+        totalCount: tagCount?.count || 0,
+      }
+    }
+    return {
+      id: discussion.id,
+      totalCount: loaders.Discussion.byIdCommentsCount.load(discussion.id),
+    }
+  }
+
+  const commentsQuery = [
+    `SELECT c.* FROM comments c`,
+    tag && `LEFT JOIN comments cr ON cr.id = (c."parentIds"->>0)::uuid`,
+    `WHERE c."discussionId" = :discussionId`,
+    tag && `AND (c.tags @> '"${tag}"' OR cr.tags @> '"${tag}"')`,
+  ]
+    .filter(Boolean)
+    .join(' ')
+
   // get comments
-  const comments = await pgdb.public.comments
-    .find({
-      discussionId: discussion.id,
-    })
+  const comments = await pgdb
+    .query(commentsQuery, { discussionId: discussion.id })
     .then((comments) =>
       comments.map((c) => ({
         // precompute
@@ -236,6 +255,7 @@ module.exports = async (discussion, args, context, info) => {
         isPublished: c.published && !c.adminUnpublished,
       })),
     )
+
   const discussionTotalCount = comments.length
 
   if (!comments.length) {
@@ -321,6 +341,7 @@ module.exports = async (discussion, args, context, info) => {
   if (parentId && includeParent) {
     tree = { comments: { nodes: [tree] } }
   }
+
   measureTree(tree)
   deepSortTree(tree, ascDesc, sortKey, topValue, topIds, bubbleSort)
 
@@ -337,36 +358,16 @@ module.exports = async (discussion, args, context, info) => {
     index,
   }))
 
-  if (first || tag) {
+  if (first) {
     let filterComments = coveredComments.sort(compare)
-
-    if (tag) {
-      const taggedCommentIds = coveredComments
-        .filter((c) => c.tags && c.tags.includes(tag))
-        .map((c) => c.id)
-
-      filterComments = filterComments.filter((c) => {
-        if (
-          (c.tags && c.tags.includes(tag)) ||
-          _.intersection(taggedCommentIds, c.parentIds).length > 0
-        ) {
-          return true
-        }
-        return false
-      })
+    if (maxDepth != null) {
+      const maxDepthAbsolute =
+        parentId && tree.comments && tree.comments.nodes[0]
+          ? tree.comments.nodes[0].depth + maxDepth
+          : maxDepth
+      filterComments = filterComments.filter((c) => c.depth < maxDepthAbsolute)
     }
-    if (first) {
-      if (maxDepth != null) {
-        const maxDepthAbsolute =
-          parentId && tree.comments && tree.comments.nodes[0]
-            ? tree.comments.nodes[0].depth + maxDepth
-            : maxDepth
-        filterComments = filterComments.filter(
-          (c) => c.depth < maxDepthAbsolute,
-        )
-      }
-      filterComments = filterComments.slice(0, first)
-    }
+    filterComments = filterComments.slice(0, first)
 
     const filterCommentIds = filterComments.map((c) => c.id)
 
@@ -374,7 +375,6 @@ module.exports = async (discussion, args, context, info) => {
       orderBy,
       orderDirection,
       exceptIds,
-      tag,
     })
   }
 
@@ -383,7 +383,7 @@ module.exports = async (discussion, args, context, info) => {
   }
 
   // if parentId is given, we return the totalCount of the subtree
-  // otherwise it's the totalCount of the hole discussion
+  // otherwise it's the totalCount of the whole discussion
   if (!parentId) {
     tree.comments.id = discussion.id
     tree.comments.totalCount = discussionTotalCount

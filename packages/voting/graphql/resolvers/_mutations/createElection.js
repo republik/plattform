@@ -18,11 +18,13 @@ module.exports = async (_, { electionInput }, context) => {
       throw new Error(t('api/election/exists'))
     }
 
+    /* Would be nice to have the possibility to set discussionId via electionInput
+    because if discussion is created via publikator we cannot set id there */
     const { id: discussionId } = await upsertDiscussion(
       null,
       {
         title: description,
-        path: `/election/${moment(beginDate).format('/YYYY/MM/DD')}/${slug}`,
+        path: `/election/${moment(beginDate).format('YYYY')}/diskutieren`,
       },
       {
         ...context,
