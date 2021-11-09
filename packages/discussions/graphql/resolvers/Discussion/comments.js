@@ -4,7 +4,7 @@ const { ascending, descending } = require('d3-array')
 
 const getSortKey = require('../../../lib/sortKey')
 
-const THRESHOLD_OLD_DISCUSSION_IN_MS = 1000 * 60 * 60 * 24 // 24 hours
+const THRESHOLD_OLD_DISCUSSION_IN_MS = 1000 * 60 * 60 * 72 // 72 hours
 
 const assembleTree = (_comment, _comments) => {
   const coveredComments = []
@@ -268,7 +268,7 @@ module.exports = async (discussion, args, context, info) => {
 
   /* 
     AUTO = comments are sorted 
-    - by date if the first comment was created in the last 24 hours 
+    - by date if the first comment was created in the last 72 hours 
     - or by votes otherwise 
     the property resolvedOrderBy is just needed when DiscussionOrder === AUTO
   */
