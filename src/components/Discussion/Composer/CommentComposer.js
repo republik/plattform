@@ -126,9 +126,7 @@ export const CommentComposer = props => {
     ? preview.comment.contentLength
     : text.length
 
-  const [tagValue, setTagValue] = React.useState(
-    props.tagValue || (isRoot && activeTag)
-  )
+  const [tagValue, setTagValue] = React.useState(props.tagValue)
 
   /*
    * Focus the textarea upon mount.
@@ -150,7 +148,9 @@ export const CommentComposer = props => {
   const [slowText] = useDebounce(text, 400)
   textRef.current = text
   React.useEffect(() => {
-    setTagValue(isRoot ? activeTag : null)
+    if (!tagValue) {
+      setTagValue(isRoot ? activeTag : null)
+    }
     if (!isBoard || !isRoot || !previewCommentAction) {
       return
     }
