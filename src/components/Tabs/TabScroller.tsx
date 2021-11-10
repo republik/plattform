@@ -1,7 +1,6 @@
 import { css } from 'glamor'
 import React, { useRef, useState, useEffect, useMemo } from 'react'
 import scrollIntoView from 'scroll-into-view'
-
 import { ChevronLeftIcon, ChevronRightIcon } from '../Icons'
 import { PADDING, TILE_MARGIN_RIGHT } from '../TeaserCarousel/constants'
 import { plainButtonRule } from '../Button'
@@ -65,7 +64,7 @@ const styles = {
   })
 }
 
-type ScrollerType = {
+type TabScrollerType = {
   children: React.ReactNode
   centered?: boolean
   initialScrollTileIndex?: number
@@ -74,26 +73,23 @@ type ScrollerType = {
   color?: string
   hideArrows?: boolean
   arrowSize?: number
-  noBorderBottom?: boolean
 }
 
-const Scroller = ({
+const TabScroller = ({
   initialScrollTileIndex = 0,
   children,
   centered = false,
   fullWidth = false,
-  bgColor,
-  color,
   hideArrows = false,
-  arrowSize = 50,
-  noBorderBottom = false
-}: ScrollerType) => {
+  arrowSize = 28
+}: TabScrollerType) => {
   const overflow = useRef<HTMLDivElement>()
   const [{ left, right }, setArrows] = useState({ left: false, right: false })
   const [colorScheme] = useColorContext()
   const borderRule = useMemo(
     () =>
       css({
+        flex: 1,
         borderBottomWidth: 1,
         borderBottomStyle: 'solid',
         borderBottomColor: colorScheme.getCSSColor('divider')
@@ -195,9 +191,10 @@ const Scroller = ({
         style={{ justifyContent: shouldCenter ? 'center' : 'flex-start' }}
         ref={overflow}
       >
+        {shouldCenter && <div {...borderRule}></div>}
         {children}
         {/* filler component that draws rest of border */}
-        <div style={{ flex: 1 }} {...(!noBorderBottom && borderRule)}></div>
+        <div {...borderRule}></div>
       </div>
       {!hideArrows && (
         <>
@@ -209,12 +206,12 @@ const Scroller = ({
           >
             <span
               {...styles.arrowBg}
-              {...colorScheme.set('backgroundColor', bgColor || 'default')}
+              {...colorScheme.set('backgroundColor', 'default')}
             />
             <ChevronLeftIcon
               size={arrowSize}
               {...styles.arrowIcon}
-              {...colorScheme.set('fill', color || 'text')}
+              {...colorScheme.set('fill', 'text')}
             />
           </button>
 
@@ -226,12 +223,12 @@ const Scroller = ({
           >
             <span
               {...styles.arrowBg}
-              {...colorScheme.set('backgroundColor', bgColor || 'default')}
+              {...colorScheme.set('backgroundColor', 'default')}
             />
             <ChevronRightIcon
               size={arrowSize}
               {...styles.arrowIcon}
-              {...colorScheme.set('fill', color || 'text')}
+              {...colorScheme.set('fill', 'text')}
             />
           </button>
         </>
@@ -240,4 +237,4 @@ const Scroller = ({
   )
 }
 
-export default Scroller
+export default TabScroller

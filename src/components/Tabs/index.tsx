@@ -1,4 +1,4 @@
-import Scroller from '../Scroller'
+import TabScroller from './TabScroller'
 import React from 'react'
 import { css } from 'glamor'
 import TabItem, { ItemType } from './TabItem'
@@ -11,7 +11,10 @@ type TabsType = {
   onChange: (item: ItemType) => void
   type: 'scroll' | 'dropdown' | 'fixed'
   dropDownlabel: string
-  value: string
+  activeValue: string
+  scrollCentered: boolean
+  scrollFullWidth: boolean
+  scrollHideArrows: boolean
 }
 
 const styles = {
@@ -27,9 +30,12 @@ const styles = {
 const Tabs = ({
   type = 'scroll',
   items,
-  value,
+  activeValue,
   onChange,
-  dropDownlabel
+  dropDownlabel,
+  scrollCentered = false,
+  scrollFullWidth = false,
+  scrollHideArrows = false
 }: TabsType) => {
   const isDesktop = useMediaQuery(mUp)
 
@@ -37,10 +43,10 @@ const Tabs = ({
     const itemWidth = type === 'fixed' ? `${100 / items.length}%` : 'auto'
     return (
       <TabItem
-        itemWidth={itemWidth}
+        tabWidth={itemWidth}
         key={item.value}
         item={item}
-        value={value}
+        activeValue={activeValue}
         handleTabClick={() => onChange(item)}
       />
     )
@@ -48,15 +54,31 @@ const Tabs = ({
 
   switch (type) {
     case 'scroll':
-      return <Scroller arrowSize={28}>{Items}</Scroller>
+      return (
+        <TabScroller
+          centered={scrollCentered}
+          fullWidth={scrollFullWidth}
+          hideArrows={scrollHideArrows}
+        >
+          {Items}
+        </TabScroller>
+      )
     case 'dropdown': {
       if (isDesktop) {
-        return <Scroller arrowSize={28}>{Items}</Scroller>
+        return (
+          <TabScroller
+            centered={scrollCentered}
+            fullWidth={scrollFullWidth}
+            hideArrows={scrollHideArrows}
+          >
+            {Items}
+          </TabScroller>
+        )
       } else {
         return (
           <Dropdown
             items={items}
-            value={value}
+            value={activeValue}
             label={dropDownlabel}
             onChange={onChange}
           />

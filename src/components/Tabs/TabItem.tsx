@@ -13,8 +13,8 @@ export type ItemType = {
 
 export type TabItemType = {
   item: ItemType
-  itemWidth: string
-  value: string
+  tabWidth: string
+  activeValue: string
   handleTabClick: () => void
 }
 
@@ -54,16 +54,31 @@ const styles = {
   fixedItem: css({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+    '&:first-child': {
+      paddingLeft: '16px'
+    },
+    '&:last-of-type': {
+      paddingRight: '16px'
+    },
     '&::after': {
       display: 'none',
       textOverflow: 'ellipsis'
     }
+  }),
+  elementContainer: css({
+    display: 'flex',
+    justifyContent: 'center'
   })
 }
 
-const TabItem = ({ value, itemWidth, item, handleTabClick }: TabItemType) => {
+const TabItem = ({
+  activeValue,
+  tabWidth,
+  item,
+  handleTabClick
+}: TabItemType) => {
   const [colorScheme] = useColorContext()
-  const isActive = value === item.value
+  const isActive = activeValue === item.value
 
   const borderRule = useMemo(() => {
     return {
@@ -81,12 +96,16 @@ const TabItem = ({ value, itemWidth, item, handleTabClick }: TabItemType) => {
       {...plainButtonRule}
       {...styles.tabItem}
       {...(isActive ? borderRule.activeButton : borderRule.defaultButton)}
-      {...(itemWidth !== 'auto' && styles.fixedItem)}
-      style={{ width: itemWidth }}
+      {...(tabWidth !== 'auto' && styles.fixedItem)}
+      style={{ width: tabWidth }}
       title={item.text}
       onClick={() => handleTabClick()}
     >
-      {item.element || item.text}
+      {item.element ? (
+        <div {...styles.elementContainer}>{item.element}</div>
+      ) : (
+        item.text
+      )}
     </button>
   )
 }
