@@ -36,7 +36,8 @@
       ],
       "parser": "@typescript-eslint/parser",
       "rules": {
-        "@typescript-eslint/no-loss-of-precision": "off"
+        "@typescript-eslint/no-loss-of-precision": "off",
+        "react/prop-types": "off"
       }
     }
   ]
