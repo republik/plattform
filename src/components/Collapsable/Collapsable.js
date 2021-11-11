@@ -9,6 +9,7 @@ import { useMediaQuery } from '../../lib/useMediaQuery'
 import { useBoundingClientRect } from '../../lib/useBoundingClientRect'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
 import { useColorContext } from '../Colors/useColorContext'
+import { onResize as recalculateLazyLoads } from '../LazyLoad'
 
 const COLLAPSED_HEIGHT = {
   mobile: 180,
@@ -70,6 +71,10 @@ const Collapsable = ({
    */
 
   const [bodyVisibility, setBodyVisibility] = useState(initialVisibility)
+  useEffect(() => {
+    recalculateLazyLoads()
+  }, [bodyVisibility])
+
   const [bodyRef, bodySize] = useBoundingClientRect([children])
   const [colorScheme] = useColorContext()
   const isDesktop = useMediaQuery(mUp)

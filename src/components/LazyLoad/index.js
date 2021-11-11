@@ -18,7 +18,7 @@ const checkVisible = () => {
 }
 const onScroll = rafDebounce(checkVisible)
 
-const onResize = rafDebounce(() => {
+export const onResize = rafDebounce(() => {
   const scrollY = window.pageYOffset
 
   instances.all.forEach(instance => {
