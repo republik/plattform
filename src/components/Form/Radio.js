@@ -6,10 +6,15 @@ import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   label: css({
+    cursor: 'pointer'
+  }),
+  withText: css({
     ...fontStyles.sansSerifRegular,
     fontSize: pxToRem(16),
     lineHeight: pxToRem(20),
-    cursor: 'pointer'
+  }),
+  withoutText: css({
+    lineHeight: 0
   }),
   input: css({
     display: 'none'
@@ -19,12 +24,12 @@ const styles = {
     marginRight: 10,
     verticalAlign: 'middle'
   }),
-  clear: css({
-    clear: 'left'
+  boxWithouText: css({
+    display: 'inline-block',
   })
 }
 
-const Radio = ({ checked, disabled }) => {
+const RadioCircle = ({ checked, disabled }) => {
   const [colorScheme] = useColorContext()
   return (
     <svg width='24' height='24' viewBox='0 0 24 24'>
@@ -64,13 +69,14 @@ export default ({
   return (
     <label
       {...styles.label}
+      {...children ? styles.withText : styles.withoutText}
       {...(disabled
         ? colorScheme.set('color', 'disabled')
         : colorScheme.set('color', 'text'))}
       style={style}
     >
-      <span {...styles.box}>
-        <Radio checked={checked} disabled={disabled} />
+      <span {...children ? styles.box : styles.boxWithouText}>
+        <RadioCircle checked={checked} disabled={disabled} />
       </span>
       <input
         {...styles.input}
@@ -82,7 +88,6 @@ export default ({
         onChange={onChange}
       />
       {children}
-      <span {...styles.clear} />
     </label>
   )
 }
