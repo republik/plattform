@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import { fontFamilies } from '../../theme/fonts'
+import { fontStyles } from '../../theme/fonts'
 import { pxToRem } from '../Typography/utils'
 import { useColorContext } from '../Colors/useColorContext'
 
@@ -36,8 +36,8 @@ const Checkbox = ({
     ? colorScheme.set('fill', 'logo')
     : colorScheme.set('fill', 'primary')
   return (
-    <label {...styles.label} {...labelColor}>
-      <span {...styles.box}>
+    <label {...styles.label} {...children ? styles.withText : styles.withoutText} {...labelColor}>
+      <span {...children ? styles.box : styles.boxWithouText}>
         {checked ? (
           <svg {...checkMarkFill} width='18' height='18' viewBox='0 0 18 18'>
             <path
@@ -67,10 +67,15 @@ const Checkbox = ({
 
 const styles = {
   label: css({
+    cursor: 'pointer'
+  }),
+  withText: css({
+    ...fontStyles.sansSerifRegular,
     fontSize: pxToRem(16),
     lineHeight: pxToRem(20),
-    fontFamily: fontFamilies.sansSerifRegular,
-    cursor: 'pointer'
+  }),
+  withoutText: css({
+    lineHeight: 0
   }),
   input: css({
     display: 'none'
@@ -89,6 +94,10 @@ const styles = {
     marginRight: 5,
     marginTop: -3,
     float: 'left'
+  }),
+  boxWithouText: css({
+    display: 'inline-block',
+    padding: '3px 0',
   })
 }
 

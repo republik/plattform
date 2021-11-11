@@ -1,7 +1,7 @@
 import React, { useState, useRef, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { css, merge, simulate } from 'glamor'
-import { fontFamilies } from '../../theme/fonts'
+import { fontStyles } from '../../theme/fonts'
 import { mUp } from '../../theme/mediaQueries'
 import { useColorContext } from '../Colors/useColorContext'
 import {
@@ -18,7 +18,7 @@ const styles = {
     paddingTop: LINE_HEIGHT,
     position: 'relative',
     display: 'inline-block',
-    fontFamily: fontFamilies.sansSerifRegular,
+    ...fontStyles.sansSerifRegular,
     fontSize: 22,
     lineHeight: `${LINE_HEIGHT}px`,
     marginBottom: 15,
@@ -32,7 +32,7 @@ const styles = {
     padding: `0 ${X_PADDING}px`,
     textDecoration: 'none',
     height: FIELD_HEIGHT,
-    fontFamily: fontFamilies.sansSerifRegular,
+    ...fontStyles.sansSerifRegular,
     fontSize: 22,
     boxSizing: 'border-box',
     border: 'none',
