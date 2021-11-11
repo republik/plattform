@@ -1,13 +1,14 @@
 import React from 'react'
 import { css } from 'glamor'
-import { fontFamilies } from '../../theme/fonts'
+import { fontStyles } from '../../theme/fonts'
+import { pxToRem } from '../Typography/utils'
 import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   label: css({
-    fontSize: 16,
-    lineHeight: '20px',
-    fontFamily: fontFamilies.sansSerifRegular,
+    ...fontStyles.sansSerifRegular,
+    fontSize: pxToRem(16),
+    lineHeight: pxToRem(20),
     cursor: 'pointer'
   }),
   input: css({
@@ -66,7 +67,7 @@ export default ({
       {...(disabled
         ? colorScheme.set('color', 'disabled')
         : colorScheme.set('color', 'text'))}
-      style={{ ...style }}
+      style={style}
     >
       <span {...styles.box}>
         <Radio checked={checked} disabled={disabled} />

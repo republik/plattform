@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import { fontFamilies } from '../../theme/fonts'
+import { fontStyles } from '../../theme/fonts'
 import { pxToRem } from '../Typography/utils'
 import { useColorContext } from '../Colors/useColorContext'
 
@@ -67,9 +67,9 @@ const Checkbox = ({
 
 const styles = {
   label: css({
+    ...fontStyles.sansSerifRegular,
     fontSize: pxToRem(16),
     lineHeight: pxToRem(20),
-    fontFamily: fontFamilies.sansSerifRegular,
     cursor: 'pointer'
   }),
   input: css({
