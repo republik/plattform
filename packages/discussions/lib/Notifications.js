@@ -3,7 +3,7 @@ const { renderEmail } = require('mdast-react-render/lib/email')
 
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const {
-  commentSchema,
+  createCommentEmailSchema,
   inQuotes,
 } = require('@orbiting/backend-modules-styleguide')
 const {
@@ -55,7 +55,11 @@ const getCommentInfo = async (comment, displayAuthor, discussion, context) => {
     contentMdast: getContent(comment, { strip: false }, context),
   })
 
-  const contentHtml = renderEmail(contentMdast, commentSchema, { doctype: '' })
+  const contentHtml = renderEmail(
+    contentMdast,
+    createCommentEmailSchema(),
+    { doctype: '' }
+  )
   const contentPlain = htmlToText.fromString(contentHtml)
 
   const { parentIds } = comment

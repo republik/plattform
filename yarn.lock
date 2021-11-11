@@ -1356,13 +1356,13 @@
     stringify-entities "^1.3.1"
     unified "^6.1.5"
 
-"@project-r/styleguide@^12.0.9":
-  version "12.0.9"
-  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-12.0.9.tgz#cdd6cac4d92efdf51d7539d94d54dc05ffd95d17"
-  integrity sha512-EDaQtPK56yuJ/3UpTBnqpW+sGGQ8OJM6o6cXDGCUnGEqbRoQSrPIQvPqV4dd6zkWCTmQPB5PbcpOqfoP5ed80Q==
+"@project-r/styleguide@^13.0.0":
+  version "13.0.0"
+  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-13.0.0.tgz#e230df8a559b54abd606de389da1edb67c48ba19"
+  integrity sha512-cLONm4/nf0GMolp54Hnr10mEfGkZqjPmX9W6sctRIY0BIXCGlepWVHyVC2PRxN2grV+7icI/Q2W+6+EwblYXvg==
   dependencies:
     "@react-icons/all-files" "^4.1.0"
-    body-scroll-lock "3.0.3"
+    body-scroll-lock "^3.1.5"
 
 "@project-r/template-newsletter@^1.5.0":
   version "1.5.0"
@@ -3103,10 +3103,10 @@ body-parser@1.19.0, body-parser@^1.18.3, body-parser@^1.19.0:
     raw-body "2.4.0"
     type-is "~1.6.17"
 
-body-scroll-lock@3.0.3:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/body-scroll-lock/-/body-scroll-lock-3.0.3.tgz#221d87435bcfb50e27ab5d4508735f622aed11a2"
-  integrity sha512-EUryImgD6Gv87HOjJB/yB2WIGECiZMhmcUK+DrqVRFDDa64xR+FsK0LgvLPnBxZDTxIl+W80/KJ8i6gp2IwOHQ==
+body-scroll-lock@^3.1.5:
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/body-scroll-lock/-/body-scroll-lock-3.1.5.tgz#c1392d9217ed2c3e237fee1e910f6cdd80b7aaec"
+  integrity sha512-Yi1Xaml0EvNA0OYWxXiYNqY24AfWkbA6w5vxE7GWxtKfzIbZM+Qw+aSmkgsbWzbHiy/RCSkUZBplVxTA+E4jJg==
 
 boolbase@^1.0.0:
   version "1.0.0"
