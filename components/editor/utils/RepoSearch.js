@@ -7,13 +7,21 @@ import debounce from 'lodash.debounce'
 import { GITHUB_ORG, REPO_PREFIX } from '../../../lib/settings'
 
 export const filterRepos = gql`
-  query searchRepo($after: String, $search: String, $template: String) {
+  query searchRepo(
+    $after: String
+    $search: String
+    $template: String
+    $isSeriesMaster: Boolean
+    $isSeriesEpisode: Boolean
+  ) {
     repos: reposSearch(
       first: 10
       after: $after
       search: $search
       template: $template
       isTemplate: false
+      isSeriesMaster: $isSeriesMaster
+      isSeriesEpisode: $isSeriesEpisode
     ) {
       totalCount
       pageInfo {
@@ -91,9 +99,9 @@ export const filterRepos = gql`
 
 const ConnectedAutoComplete = graphql(filterRepos, {
   skip: props => !props.filter,
-  options: ({ search, template }) => ({
+  options: ({ search, template, isSeriesEpisode, isSeriesMaster }) => ({
     fetchPolicy: 'network-only',
-    variables: { search: search, template: template }
+    variables: { search, template, isSeriesEpisode, isSeriesMaster }
   }),
   props: props => {
     if (props.data.loading) return { data: props.data, items: [] }
@@ -194,6 +202,8 @@ export default class RepoSearch extends Component {
         value={value}
         search={search}
         template={this.props.template}
+        isSeriesMaster={this.props.isSeriesMaster}
+        isSeriesEpisode={this.props.isSeriesEpisode}
         items={[]}
         onChange={this.changeHandler}
         onFilterChange={this.filterChangeHandler}
