@@ -24,6 +24,8 @@ type queries {
     phases: [RepoPhaseKey!]
     orderBy: RepoOrderBy
     isTemplate: Boolean
+    isSeriesMaster: Boolean
+    isSeriesEpisode: Boolean
   ): RepoConnection!
 }
 
