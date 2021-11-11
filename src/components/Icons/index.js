@@ -67,18 +67,24 @@ export {
   MdReplay10 as ReplayIcon,
   MdCheckCircle as CheckCircleIcon,
   MdLock as LockIcon,
+  AiFillInstagram as InstagramIcon,
+  FaTelegramPlane as TelegramIcon,
+  SiThreema as ThreemaIcon,
+  DiOpensource as OpenSourceIcon
+} from 'react-icons/all'
+
+// Separately export io icons to prevent a re-export conflict
+// caused by react-icons export both io4 and io5 on the /all path.
+// This causes duplicate exports which causes a rollup error.
+export {
   IoLogoTwitter as TwitterIcon,
   IoLogoYoutube as YoutubeIcon,
   IoLogoVimeo as VimeoIcon,
   IoLogoWhatsapp as WhatsappIcon,
   IoLogoGoogle as GoogleIcon,
   IoLogoApple as AppleIcon,
-  IoLogoFacebook as FacebookIcon,
-  AiFillInstagram as InstagramIcon,
-  FaTelegramPlane as TelegramIcon,
-  SiThreema as ThreemaIcon,
-  DiOpensource as OpenSourceIcon
-} from 'react-icons/all'
+  IoLogoFacebook as FacebookIcon
+} from 'react-icons/io5'
 
 export { ShareIcon } from './CustomIcons/ShareIcon'
 export { MarkdownIcon } from './CustomIcons/MarkdownIcon'
