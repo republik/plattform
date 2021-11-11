@@ -155,7 +155,6 @@ describe('add()', () => {
 
     const expectedDefaultValues = {
       status: 302,
-      keepQuery: false,
       resource: null,
       createdAt: pinnedDate,
       updatedAt: pinnedDate,
@@ -180,7 +179,7 @@ describe('add()', () => {
     expect(rollbackMock).not.toHaveBeenCalled()
   })
 
-  test('w/ source, target, status and keepQuery', async () => {
+  test('w/ source, target and status', async () => {
     const { add } = Redirections
 
     const countMock = jest.fn()
@@ -203,7 +202,6 @@ describe('add()', () => {
     const expectedProps = {
       source: '/foobar',
       target: '/route/to/predition',
-      keepQuery: true,
       status: 301,
     }
 
@@ -237,7 +235,6 @@ describe('add()', () => {
 
     const expectedDefaultValues = {
       status: 302,
-      keepQuery: false,
       resource: null,
       createdAt: pinnedDate,
       updatedAt: pinnedDate,
@@ -418,7 +415,6 @@ describe('update()', () => {
     const expectedConditions = { deletedAt: null, id: '123-123-123' }
     const expectedDefaultValues = {
       status: 302,
-      keepQuery: false,
       resource: null,
       updatedAt: pinnedDate,
     }
@@ -435,7 +431,7 @@ describe('update()', () => {
     expect(rollbackMock).not.toHaveBeenCalled()
   })
 
-  test('w/ new target, status, keepQuery and resource', async () => {
+  test('w/ new target, status and resource', async () => {
     const { update } = Redirections
 
     const countMock = jest.fn().mockReturnValueOnce(1).mockReturnValueOnce(0)
@@ -453,7 +449,6 @@ describe('update()', () => {
       id: '123-123-123',
       target: '/route/to/perdition',
       status: 301,
-      keepQuery: true,
       resource: { foo: 'bar' },
     }
 

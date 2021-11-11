@@ -1,13 +1,13 @@
 const { get } = require('../../../lib/Redirections')
 
-module.exports = async (_, { path }, context) => {
-  const pathUrl = new URL(path, process.env.FRONTEND_BASE_URL)
+const { FRONTEND_BASE_URL } = process.env
 
-  const redirections = await get(pathUrl.pathname, null, context)
+module.exports = (_, { path }, context) => {
+  const pathUrl = new URL(path, FRONTEND_BASE_URL)
 
-  if (redirections[0]) {
-    return { __pathUrl: pathUrl, ...redirections[0] }
+  if (pathUrl.origin !== FRONTEND_BASE_URL) {
+    return null
   }
 
-  return null
+  return get(pathUrl.pathname, null, context)
 }

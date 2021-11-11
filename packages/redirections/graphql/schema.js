@@ -1,4 +1,5 @@
 module.exports = `
+
 schema {
   query: queries
   mutation: mutations
@@ -18,8 +19,7 @@ type mutations {
   addRedirection(
     source: String!
     target: String!
-    status: Int!
-    keepQuery: Boolean
+    status: Int
     resource: JSON
   ): Redirection!
 
@@ -28,10 +28,10 @@ type mutations {
     source: String
     target: String
     status: Int
-    keepQuery: Boolean
     resource: JSON
   ): Redirection!
 
   deleteRedirection(id: ID!): Boolean!
 }
+
 `
