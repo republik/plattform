@@ -1,4 +1,3 @@
-import test from 'tape'
 import { parse } from '@orbiting/remark-preset'
 
 import {
@@ -14,8 +13,9 @@ import { getDisplayWidth } from './utils'
 
 const parseFirst = string => parse(string).children[0]
 
-test('article.utils.getDisplayWidth: infobox', assert => {
-  const regularInfobox = parseFirst(`
+describe('article utils test-suite', () => {
+  test('article.utils.getDisplayWidth: infobox', () => {
+    const regularInfobox = parseFirst(`
 <section><h6>INFOBOX</h6>
 
 ![](/static/landscape.jpg?size=2000x1411)
@@ -23,12 +23,11 @@ test('article.utils.getDisplayWidth: infobox', assert => {
 <hr /></section>
   `)
 
-  assert.equal(
-    getDisplayWidth([regularInfobox]),
-    INFOBOX_IMAGE_SIZES[INFOBOX_DEFAULT_IMAGE_SIZE]
-  )
+    expect(getDisplayWidth([regularInfobox])).toBe(
+      INFOBOX_IMAGE_SIZES[INFOBOX_DEFAULT_IMAGE_SIZE]
+    )
 
-  const mInfobox = parseFirst(`
+    const mInfobox = parseFirst(`
 <section><h6>INFOBOX</h6>
 
 \`\`\`
@@ -44,13 +43,11 @@ test('article.utils.getDisplayWidth: infobox', assert => {
 <hr /></section>
   `)
 
-  assert.equal(getDisplayWidth([mInfobox]), INFOBOX_IMAGE_SIZES['M'])
+    expect(getDisplayWidth([mInfobox])).toBe(INFOBOX_IMAGE_SIZES['M'])
+  })
 
-  assert.end()
-})
-
-test('article.utils.getDisplayWidth: pull quote', assert => {
-  const pullQuote = parseFirst(`
+  test('article.utils.getDisplayWidth: pull quote', () => {
+    const pullQuote = parseFirst(`
 <section><h6>QUOTE</h6>
 
 <section><h6>FIGURE</h6>
@@ -63,14 +60,11 @@ _Foto: Laurent Burst_
 
 <hr /></section>
   `)
+    expect(getDisplayWidth([pullQuote])).toBe(PULLQUOTE_IMAGE_SIZE)
+  })
 
-  assert.equal(getDisplayWidth([pullQuote]), PULLQUOTE_IMAGE_SIZE)
-
-  assert.end()
-})
-
-test('article.utils.getDisplayWidth: figure', assert => {
-  const rootNode = parse(`
+  test('article.utils.getDisplayWidth: figure', () => {
+    const rootNode = parse(`
 <section><h6>CENTER</h6>
 
 <section><h6>FIGURE</h6>
@@ -83,16 +77,14 @@ _Foto: Laurent Burst_
 
 <hr /></section>
   `)
-  const center = rootNode.children[0]
-  const figure = center.children[0]
+    const center = rootNode.children[0]
+    const figure = center.children[0]
 
-  assert.equal(
-    getDisplayWidth([figure, center, rootNode]),
-    FIGURE_SIZES.center,
-    'center figure'
-  )
+    expect(getDisplayWidth([figure, center, rootNode])).toBe(
+      FIGURE_SIZES.center
+    )
 
-  const breakoutFigure = parseFirst(`
+    const breakoutFigure = parseFirst(`
 <section><h6>FIGURE</h6>
 
 \`\`\`
@@ -105,13 +97,11 @@ Etwas Böses _Foto: Laurent Burst_
 
 <hr /></section>
   `)
-  assert.equal(
-    getDisplayWidth([breakoutFigure, center, rootNode]),
-    FIGURE_SIZES.breakout,
-    'center figure'
-  )
+    expect(getDisplayWidth([breakoutFigure, center, rootNode])).toBe(
+      FIGURE_SIZES.breakout
+    )
 
-  const e2eFigureRootNode = parse(`
+    const e2eFigureRootNode = parse(`
 <section><h6>FIGURE</h6>
 
 ![](/static/landscape.jpg?size=2000x1411)
@@ -120,13 +110,8 @@ _Foto: Laurent Burst_
 
 <hr /></section>
   `)
-  const e2eFigure = e2eFigureRootNode.children[0]
+    const e2eFigure = e2eFigureRootNode.children[0]
 
-  assert.equal(
-    getDisplayWidth([e2eFigure, e2eFigureRootNode]),
-    1200,
-    'e2e figure'
-  )
-
-  assert.end()
+    expect(getDisplayWidth([e2eFigure, e2eFigureRootNode])).toBe(1200)
+  })
 })

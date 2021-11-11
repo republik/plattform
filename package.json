@@ -55,7 +55,6 @@
     "@typescript-eslint/eslint-plugin": "^5.2.0",
     "@typescript-eslint/parser": "^5.2.0",
     "babel-eslint": "^10.1.0",
-    "babel-tape-runner": "^3",
     "commitizen": "^4.2.4",
     "core-js": "^3.19.0",
     "cz-conventional-changelog": "^3.3.0",
@@ -100,8 +99,6 @@
     "semantic-release": "^17.1.1",
     "slate": "^0.41.3",
     "slate-mdast-serializer": "^3",
-    "tap-summary": "^4.0.0",
-    "tape": "^4.13.3",
     "topojson": "^3.0.2",
     "tslib": "^2.3.1",
     "typescript": "^4.4.4",
@@ -125,8 +122,7 @@
     "build:docs": "react-scripts build",
     "start": "react-scripts start",
     "dev": "rollup -c -w & PORT=3003 react-scripts start",
-    "tape": "babel-tape-runner",
-    "test": "babel-tape-runner src/**/*.test.js | tap-summary && babel-tape-runner src/**/**/*.test.js | tap-summary",
+    "test": "react-scripts test",
     "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./lib*\" | xargs wc -l",
     "eject": "react-scripts eject",
     "semantic-release": "semantic-release",
@@ -148,8 +144,8 @@
     }
   },
   "dependencies": {
-    "@react-icons/all-files": "^4.1.0",
-    "body-scroll-lock": "^3.1.5"
+    "body-scroll-lock": "^3.1.5",
+    "react-icons": "^4.3.1"
   },
   "browserslist": [
     ">0.2%",
