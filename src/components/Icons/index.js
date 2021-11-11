@@ -66,12 +66,13 @@ export {
   MdForward30 as ForwardIcon,
   MdReplay10 as ReplayIcon,
   MdCheckCircle as CheckCircleIcon,
-  MdLock as LockIcon,
-  AiFillInstagram as InstagramIcon,
-  FaTelegramPlane as TelegramIcon,
-  SiThreema as ThreemaIcon,
-  DiOpensource as OpenSourceIcon
-} from 'react-icons/all'
+  MdLock as LockIcon
+} from 'react-icons/md'
+
+export { AiFillInstagram as InstagramIcon } from 'react-icons/ai'
+export { FaTelegramPlane as TelegramIcon } from 'react-icons/fa'
+export { SiThreema as ThreemaIcon } from 'react-icons/si'
+export { DiOpensource as OpenSourceIcon } from 'react-icons/di'
 
 // Separately export io icons to prevent a re-export conflict
 // caused by react-icons export both io4 and io5 on the /all path.
