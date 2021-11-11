@@ -1,4 +1,4 @@
-import { IconContext } from '@react-icons/all-files'
+import { IconContext } from 'react-icons'
 import React, { useContext } from 'react'
 
 export const IconContextProvider = ({ children, value }) => {
