@@ -66,7 +66,8 @@ export {
   MdForward30 as ForwardIcon,
   MdReplay10 as ReplayIcon,
   MdCheckCircle as CheckCircleIcon,
-  MdLock as LockIcon
+  MdLock as LockIcon,
+  MdOutlineSmsFailed as OutlineSmsFailedIcon
 } from 'react-icons/md'
 
 export { AiFillInstagram as InstagramIcon } from 'react-icons/ai'
