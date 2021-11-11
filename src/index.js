@@ -34,6 +34,12 @@ ReactSpecimen.defaultProps = {
   showSource: true
 }
 
+const GetColorScheme = ({ children }) => {
+  const [colorScheme] = useColorContext()
+
+  return children(colorScheme)
+}
+
 require('glamor/reset')
 
 const styleTag = document.createElement('style')
@@ -327,6 +333,28 @@ const Styleguide = () => {
                         SearchIcon: require('./components/Icons').SearchIcon
                       },
                       src: require('./components/Form/docs.md')
+                    },
+                    {
+                      path: '/forms/radio',
+                      title: 'Radio',
+                      imports: {
+                        css,
+                        ...require('./components/Typography'),
+                        Radio: require('./components/Form/Radio.js'),
+                        GetColorScheme
+                      },
+                      src: require('./components/Form/Radio.docs.md')
+                    },
+                    {
+                      path: '/forms/checkbox',
+                      title: 'Checkbox',
+                      imports: {
+                        css,
+                        ...require('./components/Typography'),
+                        Checkbox: require('./components/Form/Checkbox.js'),
+                        GetColorScheme
+                      },
+                      src: require('./components/Form/Checkbox.docs.md')
                     },
                     {
                       path: '/forms/dropdown',
@@ -1055,11 +1083,7 @@ const Styleguide = () => {
                         ColorContextLocalExtension: require('./components/Colors/ColorContext')
                           .ColorContextLocalExtension,
                         useColorContext,
-                        GetColorScheme: ({ children }) => {
-                          const [colorScheme] = useColorContext()
-
-                          return children(colorScheme)
-                        },
+                        GetColorScheme,
                         css
                       }
                     }
