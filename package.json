@@ -76,7 +76,7 @@
     "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "glamor": "^2.20.40",
-    "gsheets": "^2.0.0",
+    "gsheets": "^3.0.1",
     "husky": "^7.0.4",
     "isomorphic-unfetch": "^3.1.0",
     "lint-staged": "^11.2.6",
