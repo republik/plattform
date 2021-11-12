@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { rafDebounce } from '../../lib/helpers'
+import debounce from 'lodash/debounce'
 
 const checkVisible = () => {
   const height = window.innerHeight
@@ -16,11 +17,13 @@ const checkVisible = () => {
     }
   })
 }
-const onScroll = rafDebounce(checkVisible)
+const onScroll = rafDebounce(() => {
+  checkVisible()
+  recalculateLazyLoads()
+})
 
-export const onResize = rafDebounce(() => {
+const onResize = rafDebounce(() => {
   const scrollY = window.pageYOffset
-
   instances.all.forEach(instance => {
     if (instance.ref) {
       const rect = instance.ref.getBoundingClientRect()
@@ -32,6 +35,7 @@ export const onResize = rafDebounce(() => {
 
   checkVisible()
 })
+export const recalculateLazyLoads = debounce(onResize, 1000)
 
 const instances = {
   add(instance) {

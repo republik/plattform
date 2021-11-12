@@ -9,7 +9,7 @@ import { useMediaQuery } from '../../lib/useMediaQuery'
 import { useBoundingClientRect } from '../../lib/useBoundingClientRect'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
 import { useColorContext } from '../Colors/useColorContext'
-import { onResize as recalculateLazyLoads } from '../LazyLoad'
+import { recalculateLazyLoads } from '../LazyLoad'
 
 const COLLAPSED_HEIGHT = {
   mobile: 180,
