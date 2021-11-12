@@ -8,7 +8,7 @@ Supported props:
 
 - `type`: ('scroll' | 'fixed' | 'dropdown', defaults to 'scroll'), determines the layout of the tabs.
 - `items`: ([{value: string, text: string, element?: ReactNode }]), tab items that should be rendered. the element prop allows rendering of a react element instead of just text.
-- `showTabBorder`: (boolean, true), set to false to remove borderBottom of TabItems.
+- `tabBorder`: (boolean, true), set to false to remove borderBottom of TabItems.
 - `activeValue`: (string), value of the active tab.
 - `onChange`: (fn), function that is called on tab clicks.
 - `dropDownlabel`: (string), required if type: dropdown.
@@ -24,7 +24,6 @@ Default scroll behavior left alignes all the tabs and once the tab container exe
 state: { activeValue: '2' }
 ---
 <Tabs
-  dropdownLabel='Bezeichnung'
   type='scroll'
   items={tabItems}
   activeValue={state.activeValue}
@@ -101,7 +100,7 @@ state: { activeValue: '2' }
 state: { activeValue: '2' }
 ---
 <Tabs
-  showTabBorder={false}
+  tabBorder={false}
   items={[
     { 
       value: '1',

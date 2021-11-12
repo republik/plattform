@@ -167,6 +167,7 @@ export { default as SharePreviewTwitter } from './components/ShareImage/SharePre
 export { default as TeaserEmbedComment } from './components/TeaserEmbedComment'
 export { SeriesNav } from './components/SeriesNav'
 export { default as Tabs } from './components/Tabs'
+export { default as Scroller } from './components/Scroller'
 // Export createRequire for dynamic-components
 export { createRequire } from './components/DynamicComponent'
 

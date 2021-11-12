@@ -160,15 +160,11 @@ const Scroller = ({
     })
   }
 
-  const shouldCenter = center && !(left || right)
+  const breakout = left || right
+  const shouldCenter = center && !breakout
 
   return (
-    <div
-      {...styles.container}
-      {...(breakoutWidth > 0 &&
-        css(css({ margin: `0 -${breakoutWidth}px 0` }), styles.breakoutMargin))}
-      role='group'
-    >
+    <div {...styles.container} role='group'>
       <div
         ref={overflow}
         {...styles.scroller}
@@ -176,9 +172,17 @@ const Scroller = ({
           justifyContent: shouldCenter ? 'center' : 'flex-start'
         }}
       >
-        <div style={{ flex: shouldCenter ? 1 : `0 0 ${breakoutWidth}px` }} />
+        <div
+          style={{
+            flex: shouldCenter ? 1 : `0 0 ${breakout ? breakoutWidth : 0}px`
+          }}
+        />
         {children}
-        <div style={{ flex: shouldCenter ? 1 : `0 0 ${breakoutWidth}px` }} />
+        <div
+          style={{
+            flex: shouldCenter ? 1 : `0 0 ${breakout ? breakoutWidth : 0}px`
+          }}
+        />
       </div>
       {!hideArrows && (
         <>

@@ -15,13 +15,16 @@ export type TabItemType = {
   item: ItemType
   tabWidth: string
   activeValue: string
-  showTabBorder: boolean
+  tabBorder: boolean
   handleTabClick: () => void
 }
 
 const styles = {
   tabItem: css({
     padding: '8px 16px',
+    borderBottomWidth: '1px',
+    borderBottomStyle: 'solid',
+    borderColor: 'transparent',
     whiteSpace: 'nowrap',
     ...sansSerifRegular16,
     [mUp]: {
@@ -61,6 +64,9 @@ const styles = {
       textOverflow: 'ellipsis'
     }
   }),
+  activeItem: css({
+    ...sansSerifMedium16
+  }),
   elementContainer: css({
     display: 'flex',
     justifyContent: 'center'
@@ -72,36 +78,28 @@ const TabItem = ({
   tabWidth,
   item,
   handleTabClick,
-  showTabBorder
+  tabBorder
 }: TabItemType) => {
   const [colorScheme] = useColorContext()
   const isActive = activeValue === item.value
 
-  const borderRule = useMemo(() => {
-    return {
-      activeButton: css({
-        ...sansSerifMedium16,
-        borderBottomWidth: '1px',
-        borderBottomStyle: 'solid',
-        borderBottomColor: colorScheme.getCSSColor('text')
-      }),
-      defaultButton: css({
-        borderBottomWidth: '1px',
-        borderBottomStyle: 'solid',
-        borderBottomColor: colorScheme.getCSSColor('divider')
-      })
-    }
+  const hoverRule = useMemo(() => {
+    return css({
+      '@media (hover)': {
+        ':hover': {
+          color: colorScheme.getCSSColor('textSoft')
+        }
+      }
+    })
   }, [colorScheme])
 
   return (
     <button
+      {...css(styles.tabItem, isActive && styles.activeItem)}
       {...plainButtonRule}
-      {...styles.tabItem}
-      {...(!showTabBorder
-        ? null
-        : isActive
-        ? borderRule.activeButton
-        : borderRule.defaultButton)}
+      {...(!isActive && hoverRule)}
+      {...(tabBorder &&
+        colorScheme.set('borderColor', isActive ? 'text' : 'divider'))}
       {...(tabWidth !== 'auto' && styles.fixedItem)}
       style={{ width: tabWidth }}
       title={item.text}

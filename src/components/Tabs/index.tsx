@@ -14,7 +14,8 @@ type TabsType = {
   activeValue: string
   scrollCentered: boolean
   scrollBreakoutWidth: number
-  showTabBorder: boolean
+  tabBorder: boolean
+  borderBottom: boolean
   scrollHideArrows: boolean
 }
 
@@ -37,7 +38,7 @@ const Tabs = ({
   scrollCentered = false,
   scrollBreakoutWidth = 0,
   scrollHideArrows = false,
-  showTabBorder = true
+  tabBorder = true
 }: TabsType) => {
   const isDesktop = useMediaQuery(mUp)
   const activeScrollItemIndex = items.findIndex(
@@ -51,7 +52,7 @@ const Tabs = ({
         tabWidth={itemWidth}
         key={item.value}
         item={item}
-        showTabBorder={showTabBorder}
+        tabBorder={tabBorder}
         activeValue={activeValue}
         handleTabClick={() => onChange(item)}
       />
