@@ -187,6 +187,30 @@ const meassureDepth = (fields, depth = 0) => {
   }
 }
 
+const getResolveOrderBy = (defaultOrder, orderBy, comments) => {
+  if (orderBy !== 'AUTO') {
+    return null
+  }
+
+  if (defaultOrder && defaultOrder !== 'AUTO') {
+    return defaultOrder
+  }
+
+  const oldestComment = comments?.reduce((oldest, current) => {
+    if (!oldest) {
+      return current
+    }
+    return oldest.createdAt < current.createdAt ? oldest : current
+  }, false)
+
+  const thresholdOldDiscussion =
+    new Date().getTime() - THRESHOLD_OLD_DISCUSSION_IN_MS
+
+  return oldestComment?.createdAt?.getTime() < thresholdOldDiscussion
+    ? 'VOTES'
+    : 'DATE'
+}
+
 module.exports = async (discussion, args, context, info) => {
   const { pgdb, loaders } = context
   const requestedGraphqlFields = graphqlFields(info)
@@ -270,25 +294,14 @@ module.exports = async (discussion, args, context, info) => {
     AUTO = comments are sorted 
     - by date if the first comment was created in the last 72 hours 
     - or by votes otherwise 
+    - this can be overruled by defaultOrder flag
     the property resolvedOrderBy is just needed when DiscussionOrder === AUTO
   */
-  let resolvedOrderBy
-  if (orderBy === 'AUTO') {
-    const oldestComment = comments?.reduce((oldest, current) => {
-      if (!oldest) {
-        return current
-      }
-      return oldest.createdAt < current.createdAt ? oldest : current
-    }, false)
-
-    const thresholdOldDiscussion =
-      new Date().getTime() - THRESHOLD_OLD_DISCUSSION_IN_MS
-
-    resolvedOrderBy =
-      oldestComment?.createdAt?.getTime() < thresholdOldDiscussion
-        ? 'VOTES'
-        : 'DATE'
-  }
+  const resolvedOrderBy = getResolveOrderBy(
+    discussion.defaultOrder,
+    orderBy,
+    comments,
+  )
 
   let tree = parentId ? comments.find((c) => c.id === parentId) : {}
 
