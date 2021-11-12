@@ -1,4 +1,4 @@
-import TabScroller from './TabScroller'
+import Scroller from '../Scroller'
 import React from 'react'
 import { css } from 'glamor'
 import TabItem, { ItemType } from './TabItem'
@@ -13,7 +13,8 @@ type TabsType = {
   dropDownlabel: string
   activeValue: string
   scrollCentered: boolean
-  scrollFullWidth: boolean
+  scrollBreakoutWidth: number
+  showTabBorder: boolean
   scrollHideArrows: boolean
 }
 
@@ -34,10 +35,14 @@ const Tabs = ({
   onChange,
   dropDownlabel,
   scrollCentered = false,
-  scrollFullWidth = false,
-  scrollHideArrows = false
+  scrollBreakoutWidth = 0,
+  scrollHideArrows = false,
+  showTabBorder = true
 }: TabsType) => {
   const isDesktop = useMediaQuery(mUp)
+  const activeScrollItemIndex = items.findIndex(
+    item => item.value === activeValue
+  )
 
   const Items = items.map((item, index) => {
     const itemWidth = type === 'fixed' ? `${100 / items.length}%` : 'auto'
@@ -46,6 +51,7 @@ const Tabs = ({
         tabWidth={itemWidth}
         key={item.value}
         item={item}
+        showTabBorder={showTabBorder}
         activeValue={activeValue}
         handleTabClick={() => onChange(item)}
       />
@@ -55,24 +61,26 @@ const Tabs = ({
   switch (type) {
     case 'scroll':
       return (
-        <TabScroller
-          centered={scrollCentered}
-          fullWidth={scrollFullWidth}
+        <Scroller
+          center={scrollCentered}
+          breakoutWidth={scrollBreakoutWidth}
           hideArrows={scrollHideArrows}
+          activeScrollItemIndex={activeScrollItemIndex}
         >
           {Items}
-        </TabScroller>
+        </Scroller>
       )
     case 'dropdown': {
       if (isDesktop) {
         return (
-          <TabScroller
-            centered={scrollCentered}
-            fullWidth={scrollFullWidth}
+          <Scroller
+            center={scrollCentered}
+            breakoutWidth={scrollBreakoutWidth}
             hideArrows={scrollHideArrows}
+            activeScrollItemIndex={activeScrollItemIndex}
           >
             {Items}
-          </TabScroller>
+          </Scroller>
         )
       } else {
         return (

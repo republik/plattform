@@ -15,14 +15,13 @@ export type TabItemType = {
   item: ItemType
   tabWidth: string
   activeValue: string
+  showTabBorder: boolean
   handleTabClick: () => void
 }
 
 const styles = {
   tabItem: css({
     padding: '8px 16px',
-    borderBottomWidth: '1px',
-    borderBottomStyle: 'solid',
     whiteSpace: 'nowrap',
     ...sansSerifRegular16,
     [mUp]: {
@@ -38,11 +37,8 @@ const styles = {
       visibility: 'hidden',
       overflow: 'hidden'
     },
-    '&:first-child': {
-      paddingLeft: '0px',
-      [mUp]: {
-        paddingLeft: '24px'
-      }
+    '&:first-of-type': {
+      paddingLeft: '0px'
     },
     '&:last-of-type': {
       paddingRight: '0px',
@@ -75,7 +71,8 @@ const TabItem = ({
   activeValue,
   tabWidth,
   item,
-  handleTabClick
+  handleTabClick,
+  showTabBorder
 }: TabItemType) => {
   const [colorScheme] = useColorContext()
   const isActive = activeValue === item.value
@@ -84,18 +81,27 @@ const TabItem = ({
     return {
       activeButton: css({
         ...sansSerifMedium16,
+        borderBottomWidth: '1px',
+        borderBottomStyle: 'solid',
         borderBottomColor: colorScheme.getCSSColor('text')
       }),
       defaultButton: css({
+        borderBottomWidth: '1px',
+        borderBottomStyle: 'solid',
         borderBottomColor: colorScheme.getCSSColor('divider')
       })
     }
   }, [colorScheme])
+
   return (
     <button
       {...plainButtonRule}
       {...styles.tabItem}
-      {...(isActive ? borderRule.activeButton : borderRule.defaultButton)}
+      {...(!showTabBorder
+        ? null
+        : isActive
+        ? borderRule.activeButton
+        : borderRule.defaultButton)}
       {...(tabWidth !== 'auto' && styles.fixedItem)}
       style={{ width: tabWidth }}
       title={item.text}

@@ -306,6 +306,17 @@ const Styleguide = () => {
                       src: require('./components/Callout/docs.md')
                     },
                     {
+                      path: '/scroller',
+                      title: 'Scroller',
+                      imports: {
+                        Scroller: require('./components/Scroller'),
+                        IconButton: require('./components/IconButton'),
+                        NotificationIcon: require('./components/Icons')
+                          .NotificationIcon
+                      },
+                      src: require('./components/Scroller/docs.md')
+                    },
+                    {
                       path: '/tabs',
                       title: 'Tabs',
                       imports: {
@@ -315,6 +326,7 @@ const Styleguide = () => {
                           { value: '2', text: 'Tab Two' },
                           { value: '3', text: 'Tab Three Yay' }
                         ],
+                        ...require('./components/Format'),
                         IconButton: require('./components/IconButton'),
                         NotificationIcon: require('./components/Icons')
                           .NotificationIcon

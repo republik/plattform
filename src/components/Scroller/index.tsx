@@ -2,17 +2,19 @@ import { css } from 'glamor'
 import React, { useRef, useState, useEffect, useMemo } from 'react'
 import scrollIntoView from 'scroll-into-view'
 import { ChevronLeftIcon, ChevronRightIcon } from '../Icons'
-import { PADDING, TILE_MARGIN_RIGHT } from '../TeaserCarousel/constants'
 import { plainButtonRule } from '../Button'
 import { useColorContext } from '../Colors/useColorContext'
+import { mUp } from '../../theme/mediaQueries'
 
 const styles = {
   container: css({
     position: 'relative',
     overflow: 'hidden'
   }),
-  containerMargin: css({
-    margin: `0 -${PADDING}px 0`
+  breakoutMargin: css({
+    [mUp]: {
+      margin: 0
+    }
   }),
   scroller: css({
     display: 'flex',
@@ -64,52 +66,39 @@ const styles = {
   })
 }
 
-type TabScrollerType = {
+type ScrollerType = {
   children: React.ReactNode
-  centered?: boolean
-  initialScrollTileIndex?: number
-  fullWidth?: boolean
-  bgColor?: string
-  color?: string
+  center?: boolean
+  activeScrollItemIndex?: number
   hideArrows?: boolean
   arrowSize?: number
+  breakoutWidth?: number
 }
 
-const TabScroller = ({
-  initialScrollTileIndex = 0,
+const Scroller = ({
   children,
-  centered = false,
-  fullWidth = false,
+  activeScrollItemIndex = 0,
+  center = false,
   hideArrows = false,
-  arrowSize = 28
-}: TabScrollerType) => {
+  arrowSize = 28,
+  breakoutWidth = 0
+}: ScrollerType) => {
   const overflow = useRef<HTMLDivElement>()
   const [{ left, right }, setArrows] = useState({ left: false, right: false })
   const [colorScheme] = useColorContext()
-  const borderRule = useMemo(
-    () =>
-      css({
-        flex: 1,
-        borderBottomWidth: 1,
-        borderBottomStyle: 'solid',
-        borderBottomColor: colorScheme.getCSSColor('divider')
-      }),
-    [colorScheme]
-  )
-
-  const padding = !fullWidth ? 0 : PADDING
 
   useEffect(() => {
-    if (!(initialScrollTileIndex > 0)) {
-      return
-    }
     const scroller = overflow.current
-    const target = Array.from(scroller?.children)[initialScrollTileIndex + 1] // + 1 for pad element
-
-    scroller.scrollLeft += Math.round(
-      target.getBoundingClientRect().left - padding
-    )
-  }, [initialScrollTileIndex])
+    const target = Array.from(scroller?.children)[activeScrollItemIndex + 1] // + 1 for pad element
+    scrollIntoView(target, {
+      time: 400,
+      align: {
+        left: 0,
+        leftOffset: breakoutWidth,
+        ...getTop()
+      }
+    })
+  }, [activeScrollItemIndex])
 
   useEffect(() => {
     const scroller = overflow.current
@@ -159,14 +148,7 @@ const TabScroller = ({
     // scroll all the way at the end
     const newRightEdge =
       scroller.scrollLeft + target.getBoundingClientRect().left + clientWidth
-    const leftOffset =
-      direction === 'left'
-        ? !fullWidth
-          ? TILE_MARGIN_RIGHT
-          : 0
-        : newRightEdge >= scroller.scrollWidth
-        ? 0
-        : PADDING
+    const leftOffset = newRightEdge >= scroller.scrollWidth ? 0 : breakoutWidth
 
     scrollIntoView(target, {
       time: 400,
@@ -178,23 +160,25 @@ const TabScroller = ({
     })
   }
 
-  const shouldCenter = centered && !(left || right)
+  const shouldCenter = center && !(left || right)
 
   return (
     <div
       {...styles.container}
-      {...(!fullWidth && styles.containerMargin)}
+      {...(breakoutWidth > 0 &&
+        css(css({ margin: `0 -${breakoutWidth}px 0` }), styles.breakoutMargin))}
       role='group'
     >
       <div
-        {...styles.scroller}
-        style={{ justifyContent: shouldCenter ? 'center' : 'flex-start' }}
         ref={overflow}
+        {...styles.scroller}
+        style={{
+          justifyContent: shouldCenter ? 'center' : 'flex-start'
+        }}
       >
-        {shouldCenter && <div {...borderRule}></div>}
+        <div style={{ flex: shouldCenter ? 1 : `0 0 ${breakoutWidth}px` }} />
         {children}
-        {/* filler component that draws rest of border */}
-        <div {...borderRule}></div>
+        <div style={{ flex: shouldCenter ? 1 : `0 0 ${breakoutWidth}px` }} />
       </div>
       {!hideArrows && (
         <>
@@ -237,4 +221,4 @@ const TabScroller = ({
   )
 }
 
-export default TabScroller
+export default Scroller
