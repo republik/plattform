@@ -297,7 +297,7 @@ module.exports = async (discussion, args, context, info) => {
     - this can be overruled by defaultOrder flag
     the property resolvedOrderBy is just needed when DiscussionOrder === AUTO
   */
-  const resolvedOrderBy = resolveOrderBy(
+  const resolvedOrderBy = getResolveOrderBy(
     discussion.defaultOrder,
     orderBy,
     comments,
