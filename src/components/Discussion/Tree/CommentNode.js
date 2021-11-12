@@ -285,14 +285,14 @@ const CommentNode = ({
     if (isAdmin) {
       items.push({
         icon: ReportIcon,
-        label: 'Als anstössiger Inhalt melden'
+        label: t('styleguide/CommentActions/report')
       })
     }
 
     if (actions.featureComment) {
       items.push({
         icon: FeaturedIcon,
-        label: 'Beitrag hervorheben'
+        label: t('styleguide/CommentActions/feature')
       })
     }
 
@@ -300,14 +300,14 @@ const CommentNode = ({
     if (true) {
       items.push({
         icon: FavoriteIcon,
-        label: 'Beitrag als Highlight markieren'
+        label: t('styleguide/CommentActions/highlight')
       })
     }
 
     if (isAdmin) {
       items.push({
         icon: UnpublishIcon,
-        label: 'Beitrag verbergen'
+        label: t('styleguide/CommentActions/unpublish')
       })
     }
 

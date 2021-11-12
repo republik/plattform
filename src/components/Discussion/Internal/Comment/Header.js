@@ -312,7 +312,11 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
         </button>
       )}
       {menu && (
-        <CalloutMenu Element={MoreIconWithProps} align='right'>
+        <CalloutMenu
+          contentPaddingMobile={'30px'}
+          Element={MoreIconWithProps}
+          align='right'
+        >
           {menu}
         </CalloutMenu>
       )}
