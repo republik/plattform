@@ -2,4 +2,4 @@ ALTER TABLE "discussions"
   DROP COLUMN IF EXISTS "defaultOrder"
 ;
 
-DROP TYPE IF EXISTS "discussionOrder";
+DROP DOMAIN discussion_order;
