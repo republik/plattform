@@ -6,7 +6,7 @@ import { Editorial } from '../../Typography'
 import { default as Button } from '../../Button'
 import { CommentComposer } from './CommentComposer'
 import { DiscussionContext } from '../DiscussionContext'
-import { MarkdownIcon, EtiquetteIcon } from '../../Icons'
+import { TextFormatIcon } from '../../Icons'
 import IconButton from '../../IconButton'
 import { Label } from '../../Typography'
 
@@ -81,8 +81,7 @@ export const CommentComposerPlayground = () => {
     ],
     composerSecondaryActions: (
       <div style={{ display: 'flex' }}>
-        <IconButton title='Mood' Icon={EtiquetteIcon} />
-        <IconButton title='Markdown' Icon={MarkdownIcon} />
+        <IconButton title='TextFormat' Icon={TextFormatIcon} />
       </div>
     )
   }
