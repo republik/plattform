@@ -187,7 +187,7 @@ const meassureDepth = (fields, depth = 0) => {
   }
 }
 
-const resolveOrderBy = (defaultOrder, orderBy, comments) => {
+const getResolveOrderBy = (defaultOrder, orderBy, comments) => {
   if (orderBy !== 'AUTO') {
     return null
   }
