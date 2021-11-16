@@ -19,7 +19,6 @@ type Redirection {
   target: String!
   status: Int!
   resource: JSON
-  keepQuery: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
 }

@@ -23,7 +23,7 @@ const init = async ({ publicationScheduler, searchNotifyListener = null }) => {
 
   const instanceId = await getId()
 
-  const port = 5000 + instanceId
+  const port = 5010 + instanceId
 
   // create PG DB
   const dbName = `test${instanceId}`

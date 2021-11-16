@@ -62,7 +62,14 @@ module.exports = {
   publicUrl: exposeProfileField('publicUrl'),
   disclosures: exposeProfileField('disclosures'),
   statement: exposeProfileField('statement'),
-  gender: exposeProfileField('gender'),
+  gender(user, args, { user: me }) {
+    if (
+      Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter', 'associate'])
+    ) {
+      return user._raw.gender || user.gender
+    }
+    return null
+  },
   isListed: (user) => user._raw.isListed,
   slug(user, args, { user: me }) {
     if (canAccessBasics(user, me)) {

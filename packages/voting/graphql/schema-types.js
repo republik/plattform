@@ -146,7 +146,17 @@ type Candidacy {
 
   yearOfBirth: Int
   city: String
+  postalCodeGeo: PostalCodeGeo
   credential: Credential
+  isIncumbent: Boolean
+}
+
+type PostalCodeGeo {
+  countryName: String
+  countryCode: String
+  postalCode: String
+  lat: Float
+  lon: Float
 }
 
 type ElectionTurnout {
@@ -165,6 +175,7 @@ input ElectionInput {
   allowEmptyBallots: Boolean
   allowedMemberships: [VotingMembershipRequirementInput!]
   allowedRoles: [String!]
+  groupSlug: String
 }
 
 input ElectionBallotInput {

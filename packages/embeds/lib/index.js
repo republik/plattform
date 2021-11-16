@@ -4,7 +4,6 @@ const youtube = require('./youtube')
 const linkPreview = require('./linkPreview')
 
 module.exports = {
-  documentcloud: require('./documentcloud'),
   twitter,
   vimeo,
   youtube,

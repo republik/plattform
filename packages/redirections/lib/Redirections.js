@@ -59,24 +59,22 @@ const upsert = async (redirection, { pgdb }, now = new Date()) => {
 }
 
 // notResource: get a redirection that does not match resource partial
-const get = async (source, notResource, { pgdb }) => {
-  return pgdb.query(
+const get = async (source, notResource, { pgdb }) =>
+  pgdb.queryOne(
     `
-    SELECT
-      *
-    FROM
-      redirections
+    SELECT *
+    FROM redirections
     WHERE
       source = :source
       ${notResource ? 'AND NOT (resource @> :notResource)' : ''}
       AND "deletedAt" IS NULL
-  `,
+    LIMIT 1
+    `,
     {
       source,
       ...(notResource ? { notResource } : {}),
     },
   )
-}
 
 const deleteBySource = async (source, { pgdb }, now = new Date()) => {
   return pgdb.public.redirections.updateAndGet(
@@ -93,7 +91,6 @@ const add = async (args, pgdb) => {
   const now = new Date()
   const defaults = {
     status: 302,
-    keepQuery: false,
     resource: null,
     createdAt: now,
     updatedAt: now,
@@ -138,7 +135,6 @@ const update = async (args, pgdb) => {
   const now = new Date()
   const defaults = {
     status: 302,
-    keepQuery: false,
     resource: null,
     updatedAt: now,
   }

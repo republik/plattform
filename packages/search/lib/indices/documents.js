@@ -99,16 +99,22 @@ module.exports = {
 
       // Adopted filter when role "editor" is present
       editor: ({ scheduledAt, ignorePrepublished, id, ids } = {}) => {
-        const should = [
-          {
+        const should = []
+        
+        if (ignorePrepublished) {
+          // Filter documents which are published
+          should.push({ term: { '__state.published': true } })
+        } else {
+          // Filter documents which should either be published or prepublished.
+          should.push({
             bool: {
-              must: [
+              should: [
                 { term: { '__state.published': true } },
                 { term: { '__state.prepublished': true } },
               ],
             },
-          },
-        ]
+          })
+        }
 
         if (scheduledAt) {
           const must = [{ term: { 'meta.prepublication': false } }]
@@ -119,17 +125,6 @@ module.exports = {
             must.push({ range: { 'meta.scheduledAt': { lte: scheduledAt } } })
           }
           should.push({ bool: { must } })
-        }
-
-        if (!ignorePrepublished) {
-          should.push({
-            bool: {
-              must: [
-                { term: { '__state.published': false } },
-                { term: { '__state.prepublished': true } },
-              ],
-            },
-          })
         }
 
         if (id) {

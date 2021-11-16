@@ -181,4 +181,8 @@ enum RepoChangeMutationType {
   DELETED
 }
 
+extend type Meta {
+  authors: [User!]!
+} 
+
 `

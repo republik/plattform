@@ -106,7 +106,9 @@ const init = async (context) => {
         // flush dataloaders
         await context.loaders.Document.byRepoId.clear(repoId)
 
-        await upsertDiscussion(doc.meta, context)
+        if (!prepublication) {
+          await upsertDiscussion(doc.meta, context)
+        }
 
         if (notifySubscribers && !prepublication) {
           await notifyPublish(repoId, context).catch((e) => {

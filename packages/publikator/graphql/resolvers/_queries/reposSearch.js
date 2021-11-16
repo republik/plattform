@@ -47,6 +47,8 @@ module.exports = async (__, args, context) => {
     phases,
     orderBy,
     isTemplate,
+    isSeriesMaster,
+    isSeriesEpisode,
     publishDateRange,
     // last - "last" parameter is not implemented in search API
   } = options
@@ -60,6 +62,8 @@ module.exports = async (__, args, context) => {
       phases,
       orderBy,
       isTemplate,
+      isSeriesMaster,
+      isSeriesEpisode,
       publishDateRange,
     },
     context,
@@ -92,6 +96,8 @@ module.exports = async (__, args, context) => {
             phases,
             orderBy,
             isTemplate,
+            isSeriesMaster,
+            isSeriesEpisode,
             publishDateRange,
           })
         : null,
@@ -105,6 +111,8 @@ module.exports = async (__, args, context) => {
             phases,
             orderBy,
             isTemplate,
+            isSeriesMaster,
+            isSeriesEpisode,
             publishDateRange,
           })
         : null,

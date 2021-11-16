@@ -2,7 +2,10 @@ const Promise = require('bluebird')
 const { hyphenate } = require('hyphen/de-ch-1901')
 
 const {
-  lib: { resolve },
+  lib: {
+    resolve,
+    meta: { getAuthorUserIds },
+  },
 } = require('@orbiting/backend-modules-documents')
 
 const commit = require('./Commit')
@@ -87,10 +90,27 @@ const resolvePath = (meta) => {
   })
 }
 
+const resolveAuthors = async (meta, args, context) => {
+  const { authorUserIds, credits } = meta
+  const { loaders } = context
+  
+  const ids = 
+    // published documents may come with an authorUserIds array …
+    authorUserIds ||
+    // … but if missing, we'll parse mdast credits
+    (await getAuthorUserIds(null, context, credits))
+  
+  return Promise.map(
+    ids,
+    (id) => loaders.User.byId.load(id),
+  ).filter(Boolean)
+}
+
 module.exports = {
   format: resolveRepoId('format'),
   section: resolveRepoId('section'),
   dossier: resolveRepoId('dossier'),
   series: resolveRepoId('series'),
   path: resolvePath,
+  authors: resolveAuthors,
 }

@@ -3,6 +3,8 @@ const debug = require('debug')('publikator:cache:search')
 import { GraphqlContext } from '@orbiting/backend-modules-types'
 const utils = require('@orbiting/backend-modules-search/lib/utils')
 
+import { getPhases } from '../../lib/phases'
+
 const getSort = (args: any) => {
   // Default sorting
   if (!args.orderBy) {
@@ -43,7 +45,6 @@ const getSourceFilter = () => ({
 
 const find = async (args: any, { elastic }: GraphqlContext) => {
   debug('args: %o', args)
-  const { isTemplate } = args
 
   const fields = [
     'id',
@@ -61,10 +62,22 @@ const find = async (args: any, { elastic }: GraphqlContext) => {
     },
   }
 
-  if (isTemplate) {
-    query.bool.must.push({ term: { 'meta.isTemplate': true } })
-  } else if (isTemplate === false) {
-    query.bool.must_not.push({ term: { 'meta.isTemplate': true } })
+  if ([true, false].includes(args.isTemplate)) {
+    query.bool[args.isTemplate ? 'must' : 'must_not'].push({
+      term: { 'meta.isTemplate': true },
+    })
+  }
+
+  if ([true, false].includes(args.isSeriesMaster)) {
+    query.bool[args.isSeriesMaster ? 'must' : 'must_not'].push({
+      exists: { field: 'commit.meta.seriesMaster' },
+    })
+  }
+
+  if ([true, false].includes(args.isSeriesEpisode)) {
+    query.bool[args.isSeriesEpisode ? 'must' : 'must_not'].push({
+      exists: { field: 'commit.meta.seriesEpisode' },
+    })
   }
 
   if (args.id) {
@@ -107,6 +120,7 @@ const find = async (args: any, { elastic }: GraphqlContext) => {
       terms: {
         field: 'currentPhase.keyword',
         min_doc_count: 0,
+        size: getPhases().length,
       },
     },
   }

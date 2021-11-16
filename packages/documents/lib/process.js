@@ -1,10 +1,13 @@
 const visit = require('unist-util-visit')
+const Promise = require('bluebird')
 
 const {
   Roles: { userIsInRoles },
 } = require('@orbiting/backend-modules-auth')
 const {
   imageKeys: embedImageKeys,
+  getEmbedByUrl,
+  canGetEmbedType,
 } = require('@orbiting/backend-modules-embeds')
 
 const modifiers = require('./modifiers')
@@ -70,39 +73,66 @@ const processEmbedImageUrlsInContent = async (mdast, fn) => {
   const fns = []
 
   visit(mdast, 'zone', (node) => {
-    if (node.data && node.identifier.indexOf('EMBED') > -1) {
-      for (const key of embedImageKeys) {
-        if (node.data[key]) {
-          fns.push(async () => {
+    if (node.data && node.identifier.startsWith('EMBED')) {
+      fns.push(() => {
+        return Promise.map(embedImageKeys, async (key) => {
+          if (node.data[key]) {
             node.data[key] = await fn(node.data[key])
-          })
-        }
-      }
-      if (typeof node.data.src === 'object') {
-        for (const key of embedImageKeys) {
-          if (node.data.src && node.data.src[key]) {
-            fns.push(async () => {
-              node.data.src[key] = await fn(node.data.src[key])
-            })
           }
-        }
-      }
+          if (node.data.src?.[key]) {
+            node.data.src[key] = await fn(node.data.src[key])
+          }
+        })
+      })
     }
   })
 
   return Promise.all(fns.map((fn) => fn()))
 }
 
-const processEmbedsInContent = async (mdast, fn) => {
+const processEmbedsInContent = async (mdast, fn, context) => {
   const fns = []
 
   visit(mdast, 'zone', (node) => {
-    if (node.data && node.identifier.indexOf('EMBED') > -1) {
-      fns.push(async () => {
-        const result = await fn(node.data)
-        if (result !== undefined) {
-          node.data = result
-        }
+    if (node.data && node.identifier.startsWith('EMBED')) {
+      visit(node, 'link', (link) => {
+        const { url } = link
+
+        fns.push(async () => {
+          try {
+            const embed =
+              url &&
+              canGetEmbedType(node.data.__typename) &&
+              (await getEmbedByUrl(url, context))
+
+            if (embed) {
+              Object.keys(node.data)
+                .filter((key) => typeof node.data[key] !== 'object')
+                .filter((key) => !!embed[key])
+                .forEach((key) => (node.data[key] = embed[key]))
+              if (node.data.src) {
+                Object.keys(node.data.src)
+                  .filter((key) => !!embed.src?.[key])
+                  .forEach((key) => (node.data.src[key] = embed.src[key]))
+              }
+            }
+          } catch (e) {
+            console.warn(
+              `processEmbedsInContent on "${url}" failed: ${e.message}`,
+            )
+          }
+
+          await Promise.map(embedImageKeys, async (key) => {
+            if (node.data[key]) {
+              node.data[key] = await fn(node.data[key])
+            }
+            if (node.data.src?.[key]) {
+              node.data.src[key] = await fn(node.data.src[key])
+            }
+          })
+
+          return node.data
+        })
       })
     }
   })

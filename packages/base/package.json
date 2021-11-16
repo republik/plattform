@@ -22,7 +22,7 @@
   "dependencies": {
     "@elastic/elasticsearch": "^7.13.0",
     "apollo-modules-node": "^0.1.4",
-    "apollo-server": "^2.15.1",
+    "apollo-server": "^2.25.3",
     "apollo-server-core": "^2.15.1",
     "apollo-server-express": "^2.15.1",
     "await-sleep": "^0.0.1",
@@ -41,7 +41,7 @@
     "graphql-subscriptions": "^1.0.0",
     "graphql-tools": "^6.0.12",
     "helmet": "^3.22.0",
-    "pogi": "^2.9.1",
+    "pogi": "^2.11.1",
     "redis": "^3.0.2"
   },
   "devDependencies": {

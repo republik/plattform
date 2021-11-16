@@ -6,7 +6,6 @@ const {
   processRepoImageUrlsInContent,
   processRepoImageUrlsInMeta,
   processEmbedImageUrlsInContent,
-  processEmbedsInContent,
   processNodeModifiersInContent,
 } = require('../../lib/process')
 const { getMeta } = require('../../lib/meta')
@@ -49,6 +48,9 @@ module.exports = {
         .slice(0, 2)
         .join('/')
     )
+  },
+  issuedForUserId(doc, args, context) {  
+    return context.user?.id|| null
   },
   async content(doc, { urlPrefix, searchString }, context, info) {
     // we only do auto slugging when in a published documents context
@@ -227,14 +229,5 @@ module.exports = {
     }
 
     return getDocuments(doc, args, context, info)
-  },
-  async embeds(doc, { types = [] }, context, info) {
-    const embeds = []
-    await processEmbedsInContent(doc.content, (embed) => {
-      if (!types.length || types.includes(embed.__typename)) {
-        embeds.push(embed)
-      }
-    })
-    return embeds
   },
 }

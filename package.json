@@ -100,7 +100,9 @@
     "test:cover": "TZ=Europe/Amsterdam jest --collectCoverage --detectOpenHandles --forceExit",
     "test:reportCover": "cat ./tests/coverage/lcov.info | coveralls",
     "tsc": "tsc",
-    "postinstall": "tsc"
+    "postinstall": "tsc",
+    "sg:link": "packages/styleguide/scripts/sg_link.sh",
+    "sg:unlink": "packages/styleguide/scripts/sg_unlink.sh"
   },
   "husky": {
     "hooks": {

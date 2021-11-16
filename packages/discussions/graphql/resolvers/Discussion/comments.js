@@ -4,7 +4,7 @@ const { ascending, descending } = require('d3-array')
 
 const getSortKey = require('../../../lib/sortKey')
 
-const THRESHOLD_OLD_DISCUSSION_IN_MS = 1000 * 60 * 60 * 24 // 24 hours
+const THRESHOLD_OLD_DISCUSSION_IN_MS = 1000 * 60 * 60 * 72 // 72 hours
 
 const assembleTree = (_comment, _comments) => {
   const coveredComments = []
@@ -187,6 +187,30 @@ const meassureDepth = (fields, depth = 0) => {
   }
 }
 
+const getResolveOrderBy = (defaultOrder, orderBy, comments) => {
+  if (orderBy !== 'AUTO') {
+    return null
+  }
+
+  if (defaultOrder && defaultOrder !== 'AUTO') {
+    return defaultOrder
+  }
+
+  const oldestComment = comments?.reduce((oldest, current) => {
+    if (!oldest) {
+      return current
+    }
+    return oldest.createdAt < current.createdAt ? oldest : current
+  }, false)
+
+  const thresholdOldDiscussion =
+    new Date().getTime() - THRESHOLD_OLD_DISCUSSION_IN_MS
+
+  return oldestComment?.createdAt?.getTime() < thresholdOldDiscussion
+    ? 'VOTES'
+    : 'DATE'
+}
+
 module.exports = async (discussion, args, context, info) => {
   const { pgdb, loaders } = context
   const requestedGraphqlFields = graphqlFields(info)
@@ -196,13 +220,6 @@ module.exports = async (discussion, args, context, info) => {
     Object.keys(requestedGraphqlFields).filter(
       (key) => !['id', 'totalCount'].includes(key),
     ).length === 0
-
-  if (totalCountOnly) {
-    return {
-      id: discussion.id,
-      totalCount: loaders.Discussion.byIdCommentsCount.load(discussion.id),
-    }
-  }
 
   const { after } = args
   const options = after
@@ -220,14 +237,40 @@ module.exports = async (discussion, args, context, info) => {
     parentId,
     includeParent = false,
     flatDepth,
-    tag,
+    tag: _tag,
   } = options
 
+  const tag = discussion.tags?.includes(_tag) && _tag
+
+  if (totalCountOnly) {
+    if (tag) {
+      const countsPerTag = await loaders.Discussion.byIdCommentTagsCount.load(
+        discussion.id,
+      )
+      const tagCount = countsPerTag.find((row) => row.value === tag)
+      return {
+        id: discussion.id,
+        totalCount: tagCount?.count || 0,
+      }
+    }
+    return {
+      id: discussion.id,
+      totalCount: loaders.Discussion.byIdCommentsCount.load(discussion.id),
+    }
+  }
+
+  const commentsQuery = [
+    `SELECT c.* FROM comments c`,
+    tag && `LEFT JOIN comments cr ON cr.id = (c."parentIds"->>0)::uuid`,
+    `WHERE c."discussionId" = :discussionId`,
+    tag && `AND (c.tags @> '"${tag}"' OR cr.tags @> '"${tag}"')`,
+  ]
+    .filter(Boolean)
+    .join(' ')
+
   // get comments
-  const comments = await pgdb.public.comments
-    .find({
-      discussionId: discussion.id,
-    })
+  const comments = await pgdb
+    .query(commentsQuery, { discussionId: discussion.id })
     .then((comments) =>
       comments.map((c) => ({
         // precompute
@@ -236,6 +279,7 @@ module.exports = async (discussion, args, context, info) => {
         isPublished: c.published && !c.adminUnpublished,
       })),
     )
+
   const discussionTotalCount = comments.length
 
   if (!comments.length) {
@@ -248,27 +292,16 @@ module.exports = async (discussion, args, context, info) => {
 
   /* 
     AUTO = comments are sorted 
-    - by date if the first comment was created in the last 24 hours 
+    - by date if the first comment was created in the last 72 hours 
     - or by votes otherwise 
+    - this can be overruled by defaultOrder flag
     the property resolvedOrderBy is just needed when DiscussionOrder === AUTO
   */
-  let resolvedOrderBy
-  if (orderBy === 'AUTO') {
-    const oldestComment = comments?.reduce((oldest, current) => {
-      if (!oldest) {
-        return current
-      }
-      return oldest.createdAt < current.createdAt ? oldest : current
-    }, false)
-
-    const thresholdOldDiscussion =
-      new Date().getTime() - THRESHOLD_OLD_DISCUSSION_IN_MS
-
-    resolvedOrderBy =
-      oldestComment?.createdAt?.getTime() < thresholdOldDiscussion
-        ? 'VOTES'
-        : 'DATE'
-  }
+  const resolvedOrderBy = getResolveOrderBy(
+    discussion.defaultOrder,
+    orderBy,
+    comments,
+  )
 
   let tree = parentId ? comments.find((c) => c.id === parentId) : {}
 
@@ -321,6 +354,7 @@ module.exports = async (discussion, args, context, info) => {
   if (parentId && includeParent) {
     tree = { comments: { nodes: [tree] } }
   }
+
   measureTree(tree)
   deepSortTree(tree, ascDesc, sortKey, topValue, topIds, bubbleSort)
 
@@ -337,36 +371,16 @@ module.exports = async (discussion, args, context, info) => {
     index,
   }))
 
-  if (first || tag) {
+  if (first) {
     let filterComments = coveredComments.sort(compare)
-
-    if (tag) {
-      const taggedCommentIds = coveredComments
-        .filter((c) => c.tags && c.tags.includes(tag))
-        .map((c) => c.id)
-
-      filterComments = filterComments.filter((c) => {
-        if (
-          (c.tags && c.tags.includes(tag)) ||
-          _.intersection(taggedCommentIds, c.parentIds).length > 0
-        ) {
-          return true
-        }
-        return false
-      })
+    if (maxDepth != null) {
+      const maxDepthAbsolute =
+        parentId && tree.comments && tree.comments.nodes[0]
+          ? tree.comments.nodes[0].depth + maxDepth
+          : maxDepth
+      filterComments = filterComments.filter((c) => c.depth < maxDepthAbsolute)
     }
-    if (first) {
-      if (maxDepth != null) {
-        const maxDepthAbsolute =
-          parentId && tree.comments && tree.comments.nodes[0]
-            ? tree.comments.nodes[0].depth + maxDepth
-            : maxDepth
-        filterComments = filterComments.filter(
-          (c) => c.depth < maxDepthAbsolute,
-        )
-      }
-      filterComments = filterComments.slice(0, first)
-    }
+    filterComments = filterComments.slice(0, first)
 
     const filterCommentIds = filterComments.map((c) => c.id)
 
@@ -374,7 +388,6 @@ module.exports = async (discussion, args, context, info) => {
       orderBy,
       orderDirection,
       exceptIds,
-      tag,
     })
   }
 
@@ -383,7 +396,7 @@ module.exports = async (discussion, args, context, info) => {
   }
 
   // if parentId is given, we return the totalCount of the subtree
-  // otherwise it's the totalCount of the hole discussion
+  // otherwise it's the totalCount of the whole discussion
   if (!parentId) {
     tree.comments.id = discussion.id
     tree.comments.totalCount = discussionTotalCount

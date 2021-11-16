@@ -20,7 +20,7 @@
     "link": "yarn link"
   },
   "dependencies": {
-    "@project-r/styleguide": "^12.0.9",
+    "@project-r/styleguide": "^13.0.0",
     "@project-r/template-newsletter": "^1.5.0",
     "d3-array": "1.x",
     "d3-color": "1.x",
