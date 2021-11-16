@@ -19,6 +19,7 @@ A Tabs layout can be achieved with the `Scroller` and `TabButton` components The
 - isActive: string
 - onClick: () => void
 - href: string
+- border: boolean
 
 ### Tabs
 
