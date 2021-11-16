@@ -11,7 +11,7 @@
     "es6": true,
     "node": true
   },
-   "rules": {
+  "rules": {
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "off",
     "react/jsx-no-target-blank": "off",
@@ -37,7 +37,8 @@
       "parser": "@typescript-eslint/parser",
       "rules": {
         "@typescript-eslint/no-loss-of-precision": "off",
-        "react/prop-types": "off"
+        "react/prop-types": "off",
+        "react/display-name": "off"
       }
     }
   ]

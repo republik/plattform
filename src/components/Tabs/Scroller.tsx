@@ -1,5 +1,5 @@
 import { css } from 'glamor'
-import React, { useRef, useState, useEffect, useMemo } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import scrollIntoView from 'scroll-into-view'
 import { ChevronLeftIcon, ChevronRightIcon } from '../Icons'
 import { plainButtonRule } from '../Button'
@@ -69,39 +69,42 @@ const styles = {
 type ScrollerType = {
   children: React.ReactNode
   center?: boolean
-  activeScrollItemIndex?: number
+  activeChildIndex?: number
   hideArrows?: boolean
   arrowSize?: number
-  breakoutWidth?: number
+  breakoutPadding?: number
 }
 
 const Scroller = ({
   children,
-  activeScrollItemIndex = 0,
+  activeChildIndex = 0,
   center = false,
   hideArrows = false,
   arrowSize = 28,
-  breakoutWidth = 0
+  breakoutPadding = 0
 }: ScrollerType) => {
-  const overflow = useRef<HTMLDivElement>()
+  const scrollRef = useRef<HTMLDivElement>()
   const [{ left, right }, setArrows] = useState({ left: false, right: false })
+  const [scrollerOverflow, setOverflow] = useState(false)
   const [colorScheme] = useColorContext()
 
   useEffect(() => {
-    const scroller = overflow.current
-    const target = Array.from(scroller?.children)[activeScrollItemIndex + 1] // + 1 for pad element
+    const scroller = scrollRef.current
+    if (!scroller) return
+    const target = Array.from(scroller?.children)[activeChildIndex + 1] // + 1 for pad element
     scrollIntoView(target, {
       time: 400,
       align: {
         left: 0,
-        leftOffset: breakoutWidth,
+        leftOffset: breakoutPadding,
         ...getTop()
       }
     })
-  }, [activeScrollItemIndex])
+  }, [activeChildIndex])
 
   useEffect(() => {
-    const scroller = overflow.current
+    const scroller = scrollRef.current
+
     const measure = () => {
       let left = false
       let right = false
@@ -117,6 +120,7 @@ const Scroller = ({
         }
         return current
       })
+      setOverflow(scroller.clientWidth < scroller.scrollWidth)
     }
     scroller.addEventListener('scroll', measure)
     window.addEventListener('resize', measure)
@@ -128,7 +132,7 @@ const Scroller = ({
   }, [])
 
   const getTop = () => {
-    const scroller = overflow.current
+    const scroller = scrollRef.current
     return {
       top: 0,
       topOffset: scroller.getBoundingClientRect().top
@@ -136,7 +140,7 @@ const Scroller = ({
   }
 
   const handleArrowClick = direction => () => {
-    const scroller = overflow.current
+    const scroller = scrollRef.current
     const clientWidth = scroller.clientWidth
     const target = Array.from(scroller.children).find(element => {
       const { left, width } = element.getBoundingClientRect()
@@ -148,7 +152,8 @@ const Scroller = ({
     // scroll all the way at the end
     const newRightEdge =
       scroller.scrollLeft + target.getBoundingClientRect().left + clientWidth
-    const leftOffset = newRightEdge >= scroller.scrollWidth ? 0 : breakoutWidth
+    const leftOffset =
+      newRightEdge >= scroller.scrollWidth ? 0 : breakoutPadding
 
     scrollIntoView(target, {
       time: 400,
@@ -160,13 +165,12 @@ const Scroller = ({
     })
   }
 
-  const breakout = left || right
-  const shouldCenter = center && !breakout
+  const shouldCenter = center && !scrollerOverflow
 
   return (
     <div {...styles.container} role='group'>
       <div
-        ref={overflow}
+        ref={scrollRef}
         {...styles.scroller}
         style={{
           justifyContent: shouldCenter ? 'center' : 'flex-start'
@@ -174,13 +178,17 @@ const Scroller = ({
       >
         <div
           style={{
-            flex: shouldCenter ? 1 : `0 0 ${breakout ? breakoutWidth : 0}px`
+            flex: shouldCenter
+              ? 1
+              : `0 0 ${scrollerOverflow ? breakoutPadding : 0}px`
           }}
         />
         {children}
         <div
           style={{
-            flex: shouldCenter ? 1 : `0 0 ${breakout ? breakoutWidth : 0}px`
+            flex: shouldCenter
+              ? 1
+              : `0 0 ${scrollerOverflow ? breakoutPadding : 0}px`
           }}
         />
       </div>
