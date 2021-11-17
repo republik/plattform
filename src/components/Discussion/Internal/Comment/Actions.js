@@ -11,7 +11,6 @@ import {
   ReplyIcon,
   ArrowDownIcon,
   ArrowUpIcon,
-  UnpublishIcon,
   ReportIcon,
   FeaturedIcon
 } from '../../../Icons'
@@ -56,6 +55,10 @@ const styles = {
       margin: '0 auto'
     }
   }),
+  iconButtonLabel: css({
+    marginLeft: '10px',
+    fontSize: '14px'
+  }),
   voteButton: css({
     lineHeight: 1,
     fontSize: '24px',
@@ -97,6 +100,7 @@ const ReplyIconButton = ({ userWaitUntil, clock, onReply, colorScheme, t }) => {
       disabled={!!replyBlockedMessage}
       onClick={onReply}
       title={replyBlockedMessage || t('styleguide/CommentActions/answer')}
+      label={t('styleguide/CommentActions/answer')}
     >
       <ReplyIcon
         {...colorScheme.set('fill', replyBlockedMessage ? 'disabled' : 'text')}
@@ -182,6 +186,14 @@ export const Actions = ({
           />
         </IconButton>
       )}
+      {published && (
+        <IconButton
+          onClick={onShare}
+          title={t('styleguide/CommentActions/share')}
+        >
+          <ShareIcon {...colorScheme.set('fill', 'text')} />
+        </IconButton>
+      )}
       {onReply && !!displayAuthor && (
         <ReplyIconButton
           onReply={onReply}
@@ -191,6 +203,8 @@ export const Actions = ({
           clock={clock}
         />
       )}
+      {/*
+      TODO: Move to header
       {userCanEdit && onEdit && (
         <IconButton
           onClick={onEdit}
@@ -225,38 +239,35 @@ export const Actions = ({
           </span>
         </IconButton>
       )}
-      {published && (
-        <IconButton
-          onClick={onShare}
-          title={t('styleguide/CommentActions/share')}
-        >
-          <ShareIcon {...colorScheme.set('fill', 'text')} />
-        </IconButton>
-      )}
+      */}
       {published && (
         <div {...styles.votes}>
-          {!!(featuredText || actions.featureComment) && (
+          {/*
+          TODO: Move Feature button
+            {!!(featuredText || actions.featureComment) && (
             <IconButton
-              type='left'
-              title={
-                featuredAt
-                  ? t('styleguide/CommentActions/featured', {
-                      date: dateFormat(new Date(featuredAt)),
-                      time: hmFormat(new Date(featuredAt)),
-                      text: featuredText
-                    })
-                  : t('styleguide/CommentActions/feature')
-              }
-              onClick={
-                actions.featureComment &&
-                (() => actions.featureComment(comment))
-              }
+            type='left'
+            title={
+            featuredAt
+            ? t('styleguide/CommentActions/featured', {
+            date: dateFormat(new Date(featuredAt)),
+            time: hmFormat(new Date(featuredAt)),
+            text: featuredText
+          })
+            : t('styleguide/CommentActions/feature')
+          }
+            onClick={
+            actions.featureComment &&
+            (() => actions.featureComment(comment))
+          }
             >
-              <FeaturedIcon
-                {...colorScheme.set('fill', featuredText ? 'primary' : 'text')}
-              />
+            <FeaturedIcon
+          {...colorScheme.set('fill', featuredText ? 'primary' : 'text')}
+            />
             </IconButton>
-          )}
+            )}
+         
+             */}
           <div {...styles.vote}>
             <IconButton
               selected={userVote === 'UP'}
@@ -300,7 +311,7 @@ export const Actions = ({
   )
 }
 
-const IconButton = ({ vote, selected, onClick, title, children }) => {
+const IconButton = ({ vote, selected, onClick, title, label, children }) => {
   const [colorScheme] = useColorContext()
   const iconButtonStyleRules = useMemo(
     () =>
@@ -325,6 +336,7 @@ const IconButton = ({ vote, selected, onClick, title, children }) => {
       onClick={onClick}
     >
       {children}
+      {label && <span {...styles.iconButtonLabel}>{label}</span>}
     </button>
   )
 }
