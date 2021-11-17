@@ -308,6 +308,8 @@ mail.sendMembershipDeactivated = async ({ membership, pgdb, t }) => {
     id: membership.membershipTypeId,
   })
 
+  /* TODO: pledge benefactor abfragen */
+
   const cancelState = membership.renew ? 'uncancelled' : 'cancelled'
   const templateName = `membership_deactivated_${type.name.toLowerCase()}_${cancelState}`
   const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
