@@ -7,7 +7,7 @@ import {
 } from '../../../Typography/styles'
 import { ellipsize } from '../../../../lib/styleMixins'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
-import { useColorContext } from '../../../Colors/useColorContext'
+import { useColorContext } from '../../../Colors/ColorContext'
 
 const buttonStyle = {
   background: 'none',
@@ -92,7 +92,17 @@ export const Header = ({ t, displayAuthor, onClick }) => {
   const { profilePicture, name, credential } = displayAuthor || {}
   const [colorScheme] = useColorContext()
   return (
-    <button {...styles.button} onClick={onClick}>
+    <button
+      {...styles.button}
+      {...css({
+        '@media(hover)': {
+          '&:hover': {
+            backgroundColor: colorScheme.getCSSColor('alert')
+          }
+        }
+      })}
+      onClick={onClick}
+    >
       <div {...styles.root}>
         {profilePicture && (
           <img {...styles.profilePicture} src={profilePicture} alt='' />
