@@ -13,6 +13,8 @@ import {
   FavoriteIcon,
   FeaturedIcon,
   ReportIcon,
+  UnfoldLessIcon,
+  UnfoldMoreIcon,
   UnpublishIcon
 } from '../../Icons'
 import IconButton from '../../IconButton'
@@ -102,11 +104,16 @@ const styles = {
         left: -((config.indentSizeM - config.verticalLineWidth) / 2),
         width: config.indentSizeM
       },
+      '&> *': {
+        position: 'absolute',
+        top: 0,
+        left: 0
+      },
       '::before': {
         display: 'block',
         content: '""',
         position: 'absolute',
-        top: 0,
+        top: 25,
         bottom: 0,
         left: (config.indentSizeS - config.verticalLineWidth) / 2,
         width: config.verticalLineWidth,
@@ -333,7 +340,9 @@ const CommentNode = ({
             {...verticalToggleStyle}
             {...verticalToggleStyleRules}
             onClick={toggleReplies}
-          />
+          >
+            <UnfoldLessIcon />
+          </button>
         )}
         <div
           {...merge(
@@ -466,7 +475,9 @@ const CommentNode = ({
     return (
       <div ref={root} data-comment-id={id} {...rootStyle}>
         {verticalToggleStyle && (
-          <button {...verticalToggleStyle} onClick={toggleReplies} />
+          <button {...verticalToggleStyle} onClick={toggleReplies}>
+            <UnfoldMoreIcon />
+          </button>
         )}
         <Comment.Header
           t={t}

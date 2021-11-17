@@ -1,6 +1,11 @@
 import React, { useMemo } from 'react'
 import { css } from 'glamor'
-import { CheckIcon, MoreIcon } from '../../../Icons'
+import {
+  CheckIcon,
+  MoreIcon,
+  UnfoldLessIcon,
+  UnfoldMoreIcon
+} from '../../../Icons'
 import {
   sansSerifMedium16,
   sansSerifRegular14
@@ -294,65 +299,41 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
           )}
         </div>
       </div>
-      {onToggle && (
-        <button
-          {...headerActionStyle({ isExpanded })}
-          {...headerActionStyleHover}
-          {...colorScheme.set('color', isExpanded ? 'divider' : 'textSoft')}
-          onClick={onToggle}
-        >
-          {!isExpanded && comments && comments.totalCount > 0 && (
-            <div {...styles.expandCount}>
-              {t.pluralize('styleguide/comment/header/expandCount', {
-                count: comments.totalCount + 1
-              })}
-            </div>
-          )}
-          {isExpanded ? <IcCollapse /> : <IcExpand />}
-        </button>
-      )}
-      {menu && (
-        <div {...css({ margin: '10px 0' })}>
-          <CalloutMenu
-            contentPaddingMobile={'30px'}
-            Element={MoreIconWithProps}
-            align='right'
+      <div
+        {...css({
+          display: 'flex',
+          alignItems: 'center'
+        })}
+      >
+        {onToggle && (
+          <button
+            {...headerActionStyle({ isExpanded })}
+            {...headerActionStyleHover}
+            {...colorScheme.set('color', isExpanded ? 'divider' : 'textSoft')}
+            onClick={onToggle}
           >
-            {menu}
-          </CalloutMenu>
-        </div>
-      )}
+            {!isExpanded && comments && comments.totalCount > 0 && (
+              <div {...styles.expandCount}>
+                {t.pluralize('styleguide/comment/header/expandCount', {
+                  count: comments.totalCount + 1
+                })}
+              </div>
+            )}
+            {isExpanded ? <UnfoldLessIcon /> : <UnfoldMoreIcon />}
+          </button>
+        )}
+        {menu && (
+          <div {...css({ margin: '10px 0' })}>
+            <CalloutMenu
+              contentPaddingMobile={'30px'}
+              Element={MoreIconWithProps}
+              align='right'
+            >
+              {menu}
+            </CalloutMenu>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
-
-const IcExpand = () => (
-  <svg width='20px' height='20px' viewBox='0 0 20 20'>
-    <rect
-      stroke='currentColor'
-      strokeWidth='2'
-      fill='transparent'
-      x='1'
-      y='1'
-      width='18'
-      height='18'
-    />
-    <rect fill='currentColor' x='9' y='6' width='2' height='8' />
-    <rect fill='currentColor' x='6' y='9' width='8' height='2' />
-  </svg>
-)
-
-const IcCollapse = () => (
-  <svg width='20px' height='20px' viewBox='0 0 20 20'>
-    <rect
-      stroke='currentColor'
-      strokeWidth='2'
-      fill='transparent'
-      x='1'
-      y='1'
-      width='18'
-      height='18'
-    />
-    <rect fill='currentColor' x='6' y='9' width='8' height='2' />
-  </svg>
-)

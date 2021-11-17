@@ -68,7 +68,9 @@ export {
   MdCheckCircle as CheckCircleIcon,
   MdLock as LockIcon,
   MdTextFormat as TextFormatIcon,
-  MdOutlineSmsFailed as EtiquetteIcon
+  MdOutlineSmsFailed as EtiquetteIcon,
+  MdUnfoldLess as UnfoldLessIcon,
+  MdUnfoldMore as UnfoldMoreIcon
 } from 'react-icons/md'
 
 export { AiFillInstagram as InstagramIcon } from 'react-icons/ai'
