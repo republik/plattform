@@ -72,7 +72,8 @@ export const CommentComposer = props => {
     onSubmitLabel,
     parentId,
     commentId,
-    autoFocus = true
+    autoFocus = true,
+    menu
   } = props
   const [colorScheme] = useColorContext()
   /*
@@ -346,7 +347,8 @@ CommentComposer.propTypes = {
   onClose: PropTypes.func.isRequired,
   onCloseLabel: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
-  onSubmitLabel: PropTypes.string
+  onSubmitLabel: PropTypes.string,
+  menu: PropTypes.arrayOf(PropTypes.element)
 }
 
 const MaxLengthIndicator = ({ maxLength, length }) => {

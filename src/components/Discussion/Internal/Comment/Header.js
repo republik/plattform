@@ -13,7 +13,7 @@ import { DiscussionContext } from '../../DiscussionContext'
 import * as config from '../../config'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
 import CalloutMenu from '../../../Callout/CalloutMenu'
-import { useColorContext } from '../../../Colors/useColorContext'
+import { useColorContext } from '../../../Colors/ColorContext'
 import IconButton from '../../../IconButton'
 
 import RelativeTime from './RelativeTime'
@@ -312,13 +312,15 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
         </button>
       )}
       {menu && (
-        <CalloutMenu
-          contentPaddingMobile={'30px'}
-          Element={MoreIconWithProps}
-          align='right'
-        >
-          {menu}
-        </CalloutMenu>
+        <div {...css({ margin: '10px 0' })}>
+          <CalloutMenu
+            contentPaddingMobile={'30px'}
+            Element={MoreIconWithProps}
+            align='right'
+          >
+            {menu}
+          </CalloutMenu>
+        </div>
       )}
     </div>
   )
