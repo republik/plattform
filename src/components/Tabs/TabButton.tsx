@@ -9,9 +9,9 @@ import { mUp } from '../../theme/mediaQueries'
 export type TabItemType = {
   text: string
   children: ReactNode
-  isActive: string
-  onClick: () => void
-  href: string
+  isActive?: boolean
+  onClick?: () => void
+  href?: string
   border?: boolean
 }
 

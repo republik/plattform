@@ -6,8 +6,8 @@ A Tabs layout can be achieved with the `Scroller` and `TabButton` components The
 
 ### Scroller
 
-- children (React.ReactNode): 
-- center? (boolean, false): Centers child nodes when there is enough space. 
+- children (React.ReactNode):
+- center? (boolean, false): Centers child nodes when there is enough space.
 - activeChildIndex? (activeChildIndex, 0): Index of the active scroll child dom node.
 - hideArrows? (boolean, false): Hides arrows
 - arrowSize? (number, 28): Set size of the arrows.
@@ -15,13 +15,13 @@ A Tabs layout can be achieved with the `Scroller` and `TabButton` components The
 
 ### TabButton
 
-- text: string
-- isActive: string
-- onClick: () => void
-- href: string
-- border: boolean
+- text (string, undefined): The text of the tab.
+- isActive? (boolean, undefined): determines the active tab, renders appropriate style
+- onClick? (function, undefined): Providing an onClick handler renders the TabButton as a <button> tag.
+- href? (string, undefined): Providing an href renders the TabButton as an <a> tag.
+- border? (boolean, true): Setting to false will render TabButtons without bottom borders.
 
-### Tabs
+### Default Tabs
 
 Default scroll behavior left aligns all the tabs and once the tab container exeeds the viewport, it allows for horizontal scrolling.
 
@@ -65,7 +65,52 @@ state: { activeChildIndex: 0 }
 </div>
 ```
 
-## Generic Scroller
+### Centered Tabs
+
+Default scroll behavior left aligns all the tabs and once the tab container exeeds the viewport, it allows for horizontal scrolling.
+
+```react
+state: { activeChildIndex: 0 }
+---
+<div style={{ margin: '0 -20px' }} >
+  <Scroller
+    breakoutPadding={20}
+    activeChildIndex={state.activeChildIndex}
+    center={true}
+  >
+    <TabButton
+      text="Child One"
+      isActive={state.activeChildIndex === 0}
+      onClick={() => {
+        setState({activeChildIndex: 0})
+      }}
+    />
+    <TabButton
+      text="Child Two"
+      isActive={state.activeChildIndex === 1}
+      onClick={() => {
+        setState({activeChildIndex: 1})
+      }}
+    />
+    <TabButton
+      text="Child Three"
+      isActive={state.activeChildIndex === 2}
+      onClick={() => {
+        setState({activeChildIndex: 2})
+      }}
+    />
+    <TabButton
+      text="Child Four"
+      isActive={state.activeChildIndex === 3}
+      onClick={() => {
+        setState({activeChildIndex: 3})
+      }}
+    />
+  </Scroller>
+</div>
+```
+
+## Generic Scroller with custom child nodes
 
 ```react
 state: { activeChildIndex: 0 }
@@ -135,6 +180,48 @@ state: { activeChildIndex: 0 }
         count={637}
       />
     </button>
+  </Scroller>
+</div>
+```
+
+## Use TabButtons with next link
+
+```react
+state: { activeChildIndex: 0 }
+---
+<div style={{ margin: '0 -20px' }} >
+  <Scroller
+    breakoutPadding={20}
+    activeChildIndex={state.activeChildIndex}
+    center={true}
+  >
+    <Link href="/" passHref>
+      <TabButton
+        href="/"
+        text="This is a link"
+        isActive={state.activeChildIndex === 0}
+      />
+    </Link>
+  </Scroller>
+</div>
+```
+
+```code|lang-js
+import Link from 'next/link'
+state: { activeChildIndex: 0 }
+---
+<div style={{ margin: '0 -20px' }} >
+  <Scroller
+    breakoutPadding={20}
+    activeChildIndex={state.activeChildIndex}
+    center={true}
+  >
+    <Link href="/" passHref>
+      <TabButton
+        text="This is a link"
+        isActive={state.activeChildIndex === 0}
+      />
+    </Link>
   </Scroller>
 </div>
 ```
