@@ -114,7 +114,7 @@ const styles = {
         content: '""',
         position: 'absolute',
         top: 25,
-        bottom: 0,
+        bottom: drawLineEnd ? 0 : 5,
         left: (config.indentSizeS - config.verticalLineWidth) / 2,
         width: config.verticalLineWidth,
         [mUp]: {

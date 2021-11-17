@@ -155,6 +155,10 @@ const styles = {
     [onlyS]: {
       display: 'none'
     }
+  }),
+  actionsWrapper: css({
+    display: 'flex',
+    alignItems: 'center'
   })
 }
 
@@ -299,12 +303,7 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
           )}
         </div>
       </div>
-      <div
-        {...css({
-          display: 'flex',
-          alignItems: 'center'
-        })}
-      >
+      <div {...styles.actionsWrapper}>
         {onToggle && (
           <button
             {...headerActionStyle({ isExpanded })}
