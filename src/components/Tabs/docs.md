@@ -207,21 +207,17 @@ state: { activeChildIndex: 0 }
 ```
 
 ```code|lang-js
-import Link from 'next/link'
-state: { activeChildIndex: 0 }
----
 <div style={{ margin: '0 -20px' }} >
   <Scroller
     breakoutPadding={20}
-    activeChildIndex={state.activeChildIndex}
+    activeChildIndex={0}
     center={true}
   >
     <Link href="/" passHref>
       <TabButton
         text="This is a link"
-        isActive={state.activeChildIndex === 0}
+        isActive
       />
     </Link>
   </Scroller>
 </div>
-```
