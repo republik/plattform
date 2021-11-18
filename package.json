@@ -129,7 +129,7 @@
     "semantic-release": "semantic-release",
     "commitmsg": "validate-commit-msg",
     "precommit": "lint-staged",
-    "translations-raw": "gsheets --key=1sMS5u4SIFY2loAmx8jftDXqTbq2RheJLY7FBeXSm1Tc --title=live --pretty --out src/lib/translations.json",
+    "translations-raw": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1sMS5u4SIFY2loAmx8jftDXqTbq2RheJLY7FBeXSm1Tc --title=live --pretty --out src/lib/translations.json",
     "translations": "npm run translations-raw && git add -p src/lib/translations.json && git checkout -- src/lib/translations.json",
     "upgrade-interactive": "npx npm-check -u"
   },
