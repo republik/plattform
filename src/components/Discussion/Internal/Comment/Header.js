@@ -10,7 +10,7 @@ import {
   sansSerifMedium16,
   sansSerifRegular14
 } from '../../../Typography/styles'
-import { onlyS } from '../../../../theme/mediaQueries'
+import { mUp, onlyS } from "../../../../theme/mediaQueries";
 
 import { ellipsize, underline } from '../../../../lib/styleMixins'
 import { timeFormat } from '../../../../lib/timeFormat'
@@ -159,6 +159,12 @@ const styles = {
   actionsWrapper: css({
     display: 'flex',
     alignItems: 'center'
+  }),
+  calloutWrapper: css({
+    margin: '5px 0',
+    [mUp]: {
+      margin: '10px 0'
+    }
   })
 }
 
@@ -322,7 +328,7 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
           </button>
         )}
         {menu && (
-          <div {...css({ margin: '10px 0' })}>
+          <div {...styles.calloutWrapper}>
             <CalloutMenu
               contentPaddingMobile={'30px'}
               Element={MoreIconWithProps}

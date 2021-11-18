@@ -10,7 +10,8 @@ import { CommentComposer } from '../Composer'
 import { CommentList } from './CommentList'
 import { mUp } from '../../../theme/mediaQueries'
 import {
-  FavoriteIcon,
+  EditIcon,
+  EtiquetteIcon,
   FeaturedIcon,
   ReportIcon,
   UnfoldLessIcon,
@@ -18,6 +19,10 @@ import {
   UnpublishIcon
 } from '../../Icons'
 import IconButton from '../../IconButton'
+import { timeFormat } from '../../../lib/timeFormat'
+
+const dateFormat = timeFormat('%d.%m.%Y')
+const hmFormat = timeFormat('%H:%M')
 
 const buttonStyle = {
   display: 'block',
@@ -107,14 +112,17 @@ const styles = {
       '&> *': {
         position: 'absolute',
         top: 0,
-        left: 0
+        left: -3,
+        [mUp]: {
+          left: 0
+        }
       },
       '::before': {
         display: 'block',
         content: '""',
         position: 'absolute',
-        top: 25,
-        bottom: drawLineEnd ? 0 : 5,
+        top: 20,
+        bottom: drawLineEnd ? 0 : 4,
         left: (config.indentSizeS - config.verticalLineWidth) / 2,
         width: config.verticalLineWidth,
         [mUp]: {
@@ -289,32 +297,57 @@ const CommentNode = ({
   const menu = useMemo(() => {
     const items = []
 
-    if (isAdmin) {
+    if (actions.toEtiquette && comment.userCanReport && actions.reportComment) {
+      items.push({
+        icon: EtiquetteIcon,
+        label: t('components/Discussion/etiquette'),
+        action: () => actions.toEtiquette
+      })
+    }
+
+    if (comment.published && comment.userCanReport && actions.reportComment) {
       items.push({
         icon: ReportIcon,
-        label: t('styleguide/CommentActions/report')
+        label: t('styleguide/CommentActions/report'),
+        action: () => {
+          if (window.confirm(t('styleguide/CommentActions/reportMessage'))) {
+            actions.reportComment(comment)
+          }
+        }
       })
     }
 
     if (actions.featureComment) {
       items.push({
         icon: FeaturedIcon,
-        label: t('styleguide/CommentActions/feature')
+        label: comment.featuredAt
+          ? t('styleguide/CommentActions/featured', {
+              date: dateFormat(new Date(comment.featuredAt)),
+              time: hmFormat(new Date(comment.featuredAt))
+            })
+          : t('styleguide/CommentActions/feature'),
+        action: () => actions.featureComment(comment)
       })
     }
 
-    // TODO: Implement highlight logic
-    if (true) {
+    // TODO: Add Edit action
+    if (comment.userCanEdit) {
       items.push({
-        icon: FavoriteIcon,
-        label: t('styleguide/CommentActions/highlight')
+        icon: EditIcon,
+        label: t('styleguide/CommentActions/edit'),
+        action: () => dispatch({ editComment: {} })
       })
     }
 
-    if (isAdmin) {
+    if (
+      comment.published &&
+      (isAdmin || comment.userCanEdit) &&
+      actions.unpublishComment
+    ) {
       items.push({
         icon: UnpublishIcon,
-        label: t('styleguide/CommentActions/unpublish')
+        label: t('styleguide/CommentActions/unpublish'),
+        action: () => actions.unpublishComment(comment)
       })
     }
 
@@ -326,6 +359,7 @@ const CommentNode = ({
             Icon={item.icon}
             label={item.label}
             labelShort={item.label}
+            onClick={item.action}
           />
         ))}
       </div>
@@ -422,14 +456,6 @@ const CommentNode = ({
                 dispatch({ showReplyComposer: {} })
               })
             }
-            /*
-            onEdit={() => {
-              dispatch({ editComment: {} })
-            }}
-            onReport={() => {
-              actions.reportComment(comment)
-            }}
-            */
           />
         </div>
 

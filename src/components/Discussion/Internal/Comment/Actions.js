@@ -10,15 +10,10 @@ import {
   EditIcon,
   ReplyIcon,
   ArrowDownIcon,
-  ArrowUpIcon,
-  ReportIcon,
-  FeaturedIcon
+  ArrowUpIcon
 } from '../../../Icons'
 import { useColorContext } from '../../../Colors/useColorContext'
 import { useCurrentMinute } from '../../../../lib/useCurrentMinute'
-
-const dateFormat = timeFormat('%d.%m.%Y')
-const hmFormat = timeFormat('%H:%M')
 
 const styles = {
   root: css({
