@@ -4,15 +4,13 @@ import { css, merge } from 'glamor'
 import CommentCountIcon from './CommentCountIcon'
 import { sansSerifMedium14 } from '../../../Typography/styles'
 import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
-import { timeFormat } from '../../../../lib/timeFormat'
 import {
   ShareIcon,
-  EditIcon,
   ReplyIcon,
   ArrowDownIcon,
   ArrowUpIcon
 } from '../../../Icons'
-import { useColorContext } from '../../../Colors/useColorContext'
+import { useColorContext } from '../../../Colors/ColorContext'
 import { useCurrentMinute } from '../../../../lib/useCurrentMinute'
 
 const styles = {
@@ -104,36 +102,12 @@ const ReplyIconButton = ({ userWaitUntil, clock, onReply, colorScheme, t }) => {
   )
 }
 
-export const Actions = ({
-  t,
-  comment,
-  onExpand,
-  onReply,
-  onEdit,
-  onReport
-}) => {
-  const {
-    published,
-    userCanEdit,
-    downVotes,
-    upVotes,
-    userVote,
-    numReports,
-    userReportedAt,
-    userCanReport,
-    featuredAt,
-    featuredText
-  } = comment
-  const { isAdmin, discussion, actions, clock } = React.useContext(
-    DiscussionContext
-  )
+export const Actions = ({ t, comment, onExpand, onReply }) => {
+  const { published, downVotes, upVotes, userVote } = comment
+  const { discussion, actions, clock } = React.useContext(DiscussionContext)
   const { displayAuthor, userWaitUntil } = discussion
   const onShare = () => actions.shareComment(comment)
 
-  const canUnpublish = (isAdmin || userCanEdit) && published
-  const onUnpublish = canUnpublish
-    ? () => actions.unpublishComment(comment)
-    : undefined
   const [colorScheme] = useColorContext()
 
   /*
@@ -161,12 +135,6 @@ export const Actions = ({
       }
     }
   })()
-
-  const handleReport = () => {
-    if (window.confirm(t('styleguide/CommentActions/reportMessage'))) {
-      onReport()
-    }
-  }
 
   return (
     <div {...styles.root} {...colorScheme.set('color', 'text')}>
@@ -198,71 +166,8 @@ export const Actions = ({
           clock={clock}
         />
       )}
-      {/*
-      TODO: Move to header
-      {userCanEdit && onEdit && (
-        <IconButton
-          onClick={onEdit}
-          title={t('styleguide/CommentActions/edit')}
-        >
-          <EditIcon {...colorScheme.set('fill', 'text')} />
-        </IconButton>
-      )}
-      {onUnpublish && (
-        <IconButton
-          onClick={onUnpublish}
-          title={t('styleguide/CommentActions/unpublish')}
-        >
-          <UnpublishIcon {...colorScheme.set('fill', 'text')} />
-        </IconButton>
-      )}
-      {published && userCanReport && onReport && (
-        <IconButton
-          disabled={userReportedAt}
-          onClick={handleReport}
-          title={t('styleguide/CommentActions/report')}
-        >
-          <span>
-            <ReportIcon
-              {...colorScheme.set('fill', userReportedAt ? 'disabled' : 'text')}
-            />
-            {numReports > 0 && (
-              <span {...styles.text} {...colorScheme.set('color', 'text')}>
-                {numReports}
-              </span>
-            )}
-          </span>
-        </IconButton>
-      )}
-      */}
       {published && (
         <div {...styles.votes}>
-          {/*
-          TODO: Move Feature button
-            {!!(featuredText || actions.featureComment) && (
-            <IconButton
-            type='left'
-            title={
-            featuredAt
-            ? t('styleguide/CommentActions/featured', {
-            date: dateFormat(new Date(featuredAt)),
-            time: hmFormat(new Date(featuredAt)),
-            text: featuredText
-          })
-            : t('styleguide/CommentActions/feature')
-          }
-            onClick={
-            actions.featureComment &&
-            (() => actions.featureComment(comment))
-          }
-            >
-            <FeaturedIcon
-          {...colorScheme.set('fill', featuredText ? 'primary' : 'text')}
-            />
-            </IconButton>
-            )}
-         
-             */}
           <div {...styles.vote}>
             <IconButton
               selected={userVote === 'UP'}

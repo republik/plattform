@@ -284,10 +284,16 @@ const CommentNode = ({
             background: drawLineEnd
               ? colorScheme.getCSSColor('primary')
               : 'none'
+          },
+          ':hover > *': {
+            color: colorScheme.getCSSColor('primary')
           }
         },
         '::after': {
           background: drawLineEnd ? colorScheme.getCSSColor('divider') : 'none'
+        },
+        '& > *': {
+          color: colorScheme.getCSSColor('divider')
         }
       }),
     [colorScheme, drawLineEnd]
