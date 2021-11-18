@@ -296,12 +296,11 @@ const CommentNode = ({
   // Returns the content of the more-button, located in the top right of the header.
   const menu = useMemo(() => {
     const items = []
-
     if (actions.toEtiquette && comment.userCanReport && actions.reportComment) {
       items.push({
         icon: EtiquetteIcon,
         label: t('components/Discussion/etiquette'),
-        action: () => actions.toEtiquette
+        action: () => actions.toEtiquette()
       })
     }
 
