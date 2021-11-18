@@ -125,7 +125,7 @@ module.exports = async (_, args, context) => {
         seriesMasterRepoId
       )
 
-      if (typeof seriesMasterRepo.meta.series !== 'object') {
+      if (seriesMasterRepo && typeof seriesMasterRepo.meta.series !== 'object') {
         throw new Error(t('api/commit/seriesMaster/required'))
       }
     }
