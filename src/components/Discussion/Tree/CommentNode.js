@@ -308,7 +308,12 @@ const CommentNode = ({
     if (comment.published && comment.userCanReport && actions.reportComment) {
       items.push({
         icon: ReportIcon,
-        label: t('styleguide/CommentActions/report'),
+        label:
+          comment.numReports && comment.numReports > 0
+            ? t('styleguide/CommentActions/reportWithAmount', {
+                amount: comment.numReports
+              })
+            : t('styleguide/CommentActions/report'),
         action: () => {
           if (window.confirm(t('styleguide/CommentActions/reportMessage'))) {
             actions.reportComment(comment)
