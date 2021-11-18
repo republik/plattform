@@ -85,7 +85,6 @@ const Scroller = ({
 }: ScrollerType) => {
   const scrollRef = useRef<HTMLDivElement>()
   const [{ left, right }, setArrows] = useState({ left: false, right: false })
-  const [scrollerOverflow, setOverflow] = useState(false)
   const [colorScheme] = useColorContext()
 
   useEffect(() => {
@@ -120,7 +119,6 @@ const Scroller = ({
         }
         return current
       })
-      setOverflow(scroller.clientWidth < scroller.scrollWidth)
     }
     scroller.addEventListener('scroll', measure)
     window.addEventListener('resize', measure)
@@ -165,7 +163,7 @@ const Scroller = ({
     })
   }
 
-  const shouldCenter = center && !scrollerOverflow
+  const shouldCenter = center && !(left || right)
 
   return (
     <div {...styles.container} role='group'>
