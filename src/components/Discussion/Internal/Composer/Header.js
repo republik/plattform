@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { css } from 'glamor'
 import { CheckIcon } from '../../../Icons'
 import {
@@ -91,18 +91,21 @@ const styles = {
 export const Header = ({ t, displayAuthor, onClick }) => {
   const { profilePicture, name, credential } = displayAuthor || {}
   const [colorScheme] = useColorContext()
-  return (
-    <button
-      {...styles.button}
-      {...css({
+
+  const hoverStyle = useMemo(
+    () =>
+      css({
         '@media(hover)': {
           '&:hover': {
             backgroundColor: colorScheme.getCSSColor('alert')
           }
         }
-      })}
-      onClick={onClick}
-    >
+      }),
+    [colorScheme]
+  )
+
+  return (
+    <button {...styles.button} {...hoverStyle} onClick={onClick}>
       <div {...styles.root}>
         {profilePicture && (
           <img {...styles.profilePicture} src={profilePicture} alt='' />
