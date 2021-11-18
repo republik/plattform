@@ -72,7 +72,7 @@ type ScrollerType = {
   activeChildIndex?: number
   hideArrows?: boolean
   arrowSize?: number
-  breakoutPadding?: number
+  innerPadding?: number
 }
 
 const Scroller = ({
@@ -81,7 +81,7 @@ const Scroller = ({
   center = false,
   hideArrows = false,
   arrowSize = 28,
-  breakoutPadding = 0
+  innerPadding = 0
 }: ScrollerType) => {
   const scrollRef = useRef<HTMLDivElement>()
   const [{ left, right }, setArrows] = useState({ left: false, right: false })
@@ -96,11 +96,11 @@ const Scroller = ({
       time: 400,
       align: {
         left: 0,
-        leftOffset: breakoutPadding,
+        leftOffset: innerPadding,
         ...getTop()
       }
     })
-  }, [activeChildIndex])
+  }, [activeChildIndex, innerPadding])
 
   useEffect(() => {
     const scroller = scrollRef.current
@@ -153,7 +153,7 @@ const Scroller = ({
     const newRightEdge =
       scroller.scrollLeft + target.getBoundingClientRect().left + clientWidth
     const leftOffset =
-      newRightEdge >= scroller.scrollWidth ? 0 : breakoutPadding
+      newRightEdge >= scroller.scrollWidth ? 0 : innerPadding
 
     scrollIntoView(target, {
       time: 400,
@@ -180,7 +180,7 @@ const Scroller = ({
           style={{
             flex: shouldCenter
               ? 1
-              : `0 0 ${scrollerOverflow ? breakoutPadding : 0}px`
+              : `0 0 ${innerPadding}px`
           }}
         />
         {children}
@@ -188,7 +188,7 @@ const Scroller = ({
           style={{
             flex: shouldCenter
               ? 1
-              : `0 0 ${scrollerOverflow ? breakoutPadding : 0}px`
+              : `0 0 ${innerPadding}px`
           }}
         />
       </div>

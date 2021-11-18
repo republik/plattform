@@ -11,7 +11,7 @@ A Tabs layout can be achieved with the `Scroller` and `TabButton` components The
 - activeChildIndex? (activeChildIndex, 0): Index of the active scroll child dom node.
 - hideArrows? (boolean, false): Hides arrows
 - arrowSize? (number, 28): Set size of the arrows.
-- breakoutPadding?: (number, 0): If the Scroller is in a container with negative horizontal margins, pass those as breakoutPadding to allow for proper padding in full width layouts.
+- innerPadding?: (number, 0): If the Scroller is in a container with negative horizontal margins, pass those as innerPadding to allow for proper padding in full width layouts.
 
 ### TabButton
 
@@ -30,7 +30,7 @@ state: { activeChildIndex: 0 }
 ---
 <div style={{ margin: '0 -20px' }} >
   <Scroller
-    breakoutPadding={20}
+    innerPadding={20}
     activeChildIndex={state.activeChildIndex}
   >
     <TabButton
@@ -74,7 +74,7 @@ state: { activeChildIndex: 0 }
 ---
 <div style={{ margin: '0 -20px' }} >
   <Scroller
-    breakoutPadding={20}
+    innerPadding={20}
     activeChildIndex={state.activeChildIndex}
     center={true}
   >
@@ -110,14 +110,14 @@ state: { activeChildIndex: 0 }
 </div>
 ```
 
-## Generic Scroller with custom child nodes
+## Generic Scroller with Custom Children
 
 ```react
 state: { activeChildIndex: 0 }
 ---
 <div style={{ margin: '0 -20px' }} >
   <Scroller
-    breakoutPadding={20}
+    innerPadding={20}
     activeChildIndex={state.activeChildIndex}
   >
     <button
@@ -184,32 +184,12 @@ state: { activeChildIndex: 0 }
 </div>
 ```
 
-## Use TabButtons with next link
-
-```react
-state: { activeChildIndex: 0 }
----
-<div style={{ margin: '0 -20px' }} >
-  <Scroller
-    breakoutPadding={20}
-    activeChildIndex={state.activeChildIndex}
-    center={true}
-  >
-    <Link href="/" passHref>
-      <TabButton
-        href="/"
-        text="This is a link"
-        isActive={state.activeChildIndex === 0}
-      />
-    </Link>
-  </Scroller>
-</div>
-```
+## Useage Example with Next Link
 
 ```code|lang-js
 <div style={{ margin: '0 -20px' }} >
   <Scroller
-    breakoutPadding={20}
+    innerPadding={20}
     activeChildIndex={0}
     center={true}
   >
@@ -221,3 +201,4 @@ state: { activeChildIndex: 0 }
     </Link>
   </Scroller>
 </div>
+```
