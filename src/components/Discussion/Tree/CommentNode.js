@@ -112,9 +112,9 @@ const styles = {
       '&> *': {
         position: 'absolute',
         top: 0,
-        left: -3,
+        left: -5,
         [mUp]: {
-          left: 0
+          left: -2
         }
       },
       '::before': {
@@ -385,7 +385,7 @@ const CommentNode = ({
             {...verticalToggleStyleRules}
             onClick={toggleReplies}
           >
-            <UnfoldLessIcon />
+            <UnfoldLessIcon size={20} />
           </button>
         )}
         <div
@@ -512,7 +512,7 @@ const CommentNode = ({
       <div ref={root} data-comment-id={id} {...rootStyle}>
         {verticalToggleStyle && (
           <button {...verticalToggleStyle} onClick={toggleReplies}>
-            <UnfoldMoreIcon />
+            <UnfoldMoreIcon size={20} />
           </button>
         )}
         <Comment.Header

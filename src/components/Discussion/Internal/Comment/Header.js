@@ -325,9 +325,9 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
               </div>
             )}
             {isExpanded ? (
-              <UnfoldLessIcon size={20} />
+              <UnfoldLessIcon size={24} />
             ) : (
-              <UnfoldMoreIcon size={20} />
+              <UnfoldMoreIcon size={24} />
             )}
           </button>
         )}
