@@ -10,6 +10,7 @@ const exposableRoles = [
   'debater',
   'editor',
   'member',
+  'moderator',
   'producer',
   'supporter',
   'tester',
