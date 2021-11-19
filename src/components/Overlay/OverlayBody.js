@@ -14,6 +14,8 @@ const overlayBodyStyle = css({
   }
 })
 
-const OverlayBody = props => <div {...overlayBodyStyle} {...props} />
+const OverlayBody = ({ noPadding = false, ...rest }) => (
+  <div {...(!noPadding && overlayBodyStyle)} {...rest} />
+)
 
 export default OverlayBody
