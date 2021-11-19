@@ -28,6 +28,11 @@ const styles = {
     display: 'flex',
     alignItems: 'center'
   }),
+  profileRoot: css({
+    display: 'inline-flex',
+    alignItems: 'center',
+    flexGrow: 1
+  }),
   profilePicture: css({
     display: 'block',
     width: pxToRem(40),
@@ -88,6 +93,59 @@ const styles = {
   })
 }
 
+export const CommentHeaderProfile = ({
+  t,
+  profilePicture,
+  name,
+  credential
+}) => {
+  const [colorScheme] = useColorContext()
+
+  return (
+    <div {...styles.profileRoot}>
+      {profilePicture && (
+        <img {...styles.profilePicture} src={profilePicture} alt='' />
+      )}
+      <div {...styles.center}>
+        <div {...styles.name} {...colorScheme.set('color', 'text')}>
+          {name}
+        </div>
+        <div {...styles.meta} {...colorScheme.set('color', 'textSoft')}>
+          {(() => {
+            if (credential) {
+              return (
+                <div
+                  {...styles.credential}
+                  {...(credential.verified && colorScheme.set('color', 'text'))}
+                >
+                  <div {...styles.descriptionText}>
+                    {credential.description}
+                  </div>
+                  {credential.verified && (
+                    <CheckIcon
+                      {...styles.verifiedCheck}
+                      {...colorScheme.set('color', 'primary')}
+                    />
+                  )}
+                </div>
+              )
+            } else {
+              return (
+                <div
+                  {...styles.credential}
+                  {...colorScheme.set('color', 'primary')}
+                >
+                  {t('styleguide/comment/header/credentialMissing')}
+                </div>
+              )
+            }
+          })()}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export const Header = ({ t, displayAuthor, onClick }) => {
   const { profilePicture, name, credential } = displayAuthor || {}
   const [colorScheme] = useColorContext()
@@ -107,46 +165,12 @@ export const Header = ({ t, displayAuthor, onClick }) => {
   return (
     <button {...styles.button} {...hoverStyle} onClick={onClick}>
       <div {...styles.root}>
-        {profilePicture && (
-          <img {...styles.profilePicture} src={profilePicture} alt='' />
-        )}
-        <div {...styles.center}>
-          <div {...styles.name} {...colorScheme.set('color', 'text')}>
-            {name}
-          </div>
-          <div {...styles.meta} {...colorScheme.set('color', 'textSoft')}>
-            {(() => {
-              if (credential) {
-                return (
-                  <div
-                    {...styles.credential}
-                    {...(credential.verified &&
-                      colorScheme.set('color', 'text'))}
-                  >
-                    <div {...styles.descriptionText}>
-                      {credential.description}
-                    </div>
-                    {credential.verified && (
-                      <CheckIcon
-                        {...styles.verifiedCheck}
-                        {...colorScheme.set('color', 'primary')}
-                      />
-                    )}
-                  </div>
-                )
-              } else {
-                return (
-                  <div
-                    {...styles.credential}
-                    {...colorScheme.set('color', 'primary')}
-                  >
-                    {t('styleguide/comment/header/credentialMissing')}
-                  </div>
-                )
-              }
-            })()}
-          </div>
-        </div>
+        <CommentHeaderProfile
+          t={t}
+          profilePicture={profilePicture}
+          credential={credential}
+          name={name}
+        />
         <div {...styles.action} {...colorScheme.set('color', 'primary')}>
           <EditIcon />
         </div>

@@ -131,8 +131,10 @@ export {
 export {
   commentComposerStorageKey,
   CommentComposer,
-  CommentComposerPlaceholder
+  CommentComposerPlaceholder,
+  CommentHeaderProfile
 } from './components/Discussion/Composer'
+
 export { renderCommentMdast } from './components/Discussion/Internal/Comment/render'
 export { IconLink as DiscussionIconLink } from './components/Discussion/Internal/Comment/IconLink'
 
