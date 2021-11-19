@@ -310,6 +310,18 @@ const Styleguide = () => {
                           .NotificationIcon
                       },
                       src: require('./components/Callout/docs.md')
+                    },
+                    {
+                      path: '/tabs',
+                      title: 'Tabs',
+                      imports: {
+                        ...require('./components/Format'),
+                        Scroller: require('./components/Tabs/Scroller'),
+                        TabButton: require('./components/Tabs/TabButton'),
+                        plainButtonRule: require('./components/Button')
+                          .plainButtonRule
+                      },
+                      src: require('./components/Tabs/docs.md')
                     }
                   ]
                 },
