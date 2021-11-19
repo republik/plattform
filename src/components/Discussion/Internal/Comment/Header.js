@@ -10,7 +10,7 @@ import {
   sansSerifMedium16,
   sansSerifRegular14
 } from '../../../Typography/styles'
-import { mUp, onlyS } from "../../../../theme/mediaQueries";
+import { mUp, onlyS } from '../../../../theme/mediaQueries'
 
 import { ellipsize, underline } from '../../../../lib/styleMixins'
 import { timeFormat } from '../../../../lib/timeFormat'
@@ -324,7 +324,11 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
                 })}
               </div>
             )}
-            {isExpanded ? <UnfoldLessIcon /> : <UnfoldMoreIcon />}
+            {isExpanded ? (
+              <UnfoldLessIcon size={20} />
+            ) : (
+              <UnfoldMoreIcon size={20} />
+            )}
           </button>
         )}
         {menu && (
