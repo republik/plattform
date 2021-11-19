@@ -8,8 +8,8 @@ A Tabs layout can be achieved with the `Scroller` and `TabButton` components The
 
 - children (React.ReactNode):
 - center? (boolean, false): Centers child nodes when there is enough space.
-- activeChildIndex? (activeChildIndex, 0): Index of the active scroll child dom node.
-- hideArrows? (boolean, false): Hides arrows
+- activeChildIndex? (number, 0): Index of the active scroll child dom node.
+- hideArrows? (boolean, false): Hides arrows.
 - arrowSize? (number, 28): Set size of the arrows.
 - innerPadding?: (number, 0): If the Scroller is in a container with negative horizontal margins, pass those as innerPadding to allow for proper padding in full width layouts.
 
@@ -26,41 +26,23 @@ A Tabs layout can be achieved with the `Scroller` and `TabButton` components The
 Default scroll behavior left aligns all the tabs and once the tab container exeeds the viewport, it allows for horizontal scrolling.
 
 ```react
-state: { activeChildIndex: 0 }
+state: { activeChildIndex: 1 }
 ---
 <div style={{ margin: '0 -20px' }} >
   <Scroller
     innerPadding={20}
     activeChildIndex={state.activeChildIndex}
   >
-    <TabButton
-      text="Child One"
-      isActive={state.activeChildIndex === 0}
-      onClick={() => {
-        setState({activeChildIndex: 0})
-      }}
-    />
-    <TabButton
-      text="Child Two"
-      isActive={state.activeChildIndex === 1}
-      onClick={() => {
-        setState({activeChildIndex: 1})
-      }}
-    />
-    <TabButton
-      text="Child Three"
-      isActive={state.activeChildIndex === 2}
-      onClick={() => {
-        setState({activeChildIndex: 2})
-      }}
-    />
-    <TabButton
-      text="Child Four"
-      isActive={state.activeChildIndex === 3}
-      onClick={() => {
-        setState({activeChildIndex: 3})
-      }}
-    />
+    {['One', 'Two', 'Three', 'Four', 'Five', 'Six'].map((n, i) => (
+      <TabButton
+        key={n}
+        text={`Child ${n}`}
+        isActive={state.activeChildIndex === i}
+        onClick={() => {
+          setState({activeChildIndex: i})
+        }}
+      />
+    ))}
   </Scroller>
 </div>
 ```
@@ -76,7 +58,7 @@ state: { activeChildIndex: 0 }
   <Scroller
     innerPadding={20}
     activeChildIndex={state.activeChildIndex}
-    center={true}
+    center
   >
     <TabButton
       text="Child One"
@@ -190,7 +172,6 @@ state: { activeChildIndex: 0 }
 <div style={{ margin: '0 -20px' }} >
   <Scroller
     innerPadding={20}
-    activeChildIndex={0}
     center={true}
   >
     <Link href="/" passHref>
