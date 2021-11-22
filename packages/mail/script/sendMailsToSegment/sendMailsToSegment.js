@@ -1,4 +1,5 @@
 require('@orbiting/backend-modules-env').config()
+const debug = require('debug')('mail:script:sendMailsToSegment')
 const Promise = require('bluebird')
 
 const { getTemplates, envMergeVars } = require('../../lib/sendMailTemplate')
@@ -39,6 +40,11 @@ module.exports = async (segment, mail, context) => {
     attachments: mail.attachments,
   }
 
+  debug({
+    ...message,
+    numberAddressesInSegment: segment.length,
+  })
+
   await Promise.each(segment, async (emailAddress) => {
     message.to = [{ email: emailAddress }]
 
@@ -77,7 +83,8 @@ module.exports = async (segment, mail, context) => {
       console.log(mail.templateName, emailAddress)
       return
     }
-    const { result, mailLogId } = await send({
+    const sentData = await send({
+      log: { onceFor: { type: mail.templateName, email: emailAddress } },
       sendFunc,
       message: {
         ...message,
@@ -88,10 +95,21 @@ module.exports = async (segment, mail, context) => {
           type,
         })),
       },
-      email: message.to[0].email,
+      email: emailAddress,
       template: mail.templateName,
       context: { pgdb },
     })
-    console.log(mail.templateName, emailAddress, mailLogId, result)
+
+    if (!sentData) {
+      debug(`mail ${mail.templateName} already sent to ${emailAddress}`)
+      return
+    }
+
+    console.log(
+      mail.templateName,
+      emailAddress,
+      sentData.mailLogId,
+      sentData.result,
+    )
   })
 }

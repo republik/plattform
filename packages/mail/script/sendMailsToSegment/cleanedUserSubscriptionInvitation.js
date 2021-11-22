@@ -31,7 +31,7 @@ PgDb.connect().then(async (pgdb) => {
     templateName: 'cleaned_user_subscription_invitation',
   }
 
-  const emailAddresses = pgdb.queryOneColumn(
+  const emailAddresses = await pgdb.queryOneColumn(
     `
     WITH records AS (
       WITH data AS (
