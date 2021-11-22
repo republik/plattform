@@ -1,8 +1,9 @@
 import React from 'react'
 import MarkdownSerializer from 'slate-mdast-serializer'
 
-import { matchBlock } from '../../utils'
+import { createPropertyForm, matchBlock } from '../../utils'
 import createUi from './ui'
+import InlineUI from '../../utils/InlineUI'
 
 export default ({ rule, subModules, TYPE }) => {
   const editorOptions = rule.editorOptions || {}
@@ -86,13 +87,15 @@ export default ({ rule, subModules, TYPE }) => {
     }),
     plugins: [
       {
-        renderNode({ node, children, attributes }) {
+        renderNode({ node, children, attributes, editor }) {
           if (!serializerRule.match(node)) return
 
           const hasFigure =
             figureModule && node.nodes.find(n => n.type === figureModule.TYPE)
+
           return (
             <Container
+              key='content'
               {...node.data.toJS()}
               editorPreview
               figureSize={
@@ -100,6 +103,13 @@ export default ({ rule, subModules, TYPE }) => {
               }
               attributes={attributes}
             >
+              <InlineUI
+                key='ui'
+                node={node}
+                editor={editor}
+                TYPE={TYPE}
+                subModules={subModules}
+              />
               {children}
             </Container>
           )
