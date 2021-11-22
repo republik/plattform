@@ -42,9 +42,12 @@ PgDb.connect().then(async (pgdb) => {
       
       SELECT data.*
       FROM data
-      JOIN users u ON data.email = u.email
-      JOIN memberships m ON m."userId" = u.id AND m."active" = TRUE
-      WHERE type IN ('cleaned')
+      JOIN users u 
+        ON data.email = u.email
+      JOIN memberships m 
+        ON m."userId" = u.id AND m."active" = TRUE
+      WHERE 
+        type IN ('cleaned')
       ORDER BY data."createdAt" DESC
     )
     
