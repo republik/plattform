@@ -1,5 +1,5 @@
 {
-  "exclude": ["docker-data/"],
+  "exclude": ["docker-data/","local/","node_modules"],
   "compilerOptions": {
     "target": "ES2019",
     "module": "commonjs",
