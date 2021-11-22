@@ -32,9 +32,8 @@ Dann müssen Sie jetzt auch nichts weiter unternehmen und dürfen sich gerne
 wieder der Lektüre von Interessanterem als dieser Nachricht widmen. Bitte
 entschuldigen Sie die Störung.
 
-PPS: Kennen Sie schon unsere Gebrauchsanleitung
-{{frontend_base_url}}/gebrauchsanleitung ? Darin finden Sie einige nützliche
-Tipps zur Handhabung unseres Magazins.
+PPS: Kennen Sie schon unsere Gebrauchsanleitung {{link_manual}} ? Darin finden
+Sie einige nützliche Tipps zur Handhabung unseres Magazins.
 
 
 Republik AG

@@ -1,5 +1,6 @@
 const yargs = require('yargs')
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
+const dayjs = require('dayjs')
 
 const sendMailsToSegment = require('./sendMailsToSegment')
 
@@ -7,17 +8,24 @@ const argv = yargs
   .option('dry-run', {
     default: true,
   })
-  .option('limit', {
-    default: 1000,
+  .option('from', {
+    coerce: dayjs,
+    default: dayjs().subtract(30, 'day'),
+  })
+  .option('to', {
+    coerce: dayjs,
+    default: dayjs(),
   })
   .help()
   .version().argv
 
 PgDb.connect().then(async (pgdb) => {
   if (argv.dryRun) {
-    console.warn('In dry-run mode. Use --no-dry-run to send scheduled emails.')
+    console.warn('In dry-run mode. Use --no-dry-run to send emails to segment.')
   }
 
+  console.log(dayjs(argv.to).format('YYYY-MM-DD'))
+  console.log(dayjs(argv.from).format('YYYY-MM-DD'))
   const mail = {
     subject: 'Warum Sie von uns keine Newsletter mehr erhalten',
     templateName: 'cleaned_user_subscription_invitation',
@@ -53,10 +61,11 @@ PgDb.connect().then(async (pgdb) => {
     
     SELECT email 
     FROM records 
-    WHERE "createdAt" >= now() - '60 days'::interval
-    LIMIT :limit
+    WHERE 
+      "createdAt" >= :from AND
+      "createdAt" <= :to
   `,
-    { limit: argv.limit },
+    { from: argv.from, to: argv.to },
   )
 
   await sendMailsToSegment(emailAddresses, mail, {
