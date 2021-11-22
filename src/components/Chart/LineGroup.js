@@ -79,7 +79,7 @@ const LineGroup = props => {
     mini,
     title,
     y,
-    yTicks,
+    yLines,
     yAxisFormat,
     x,
     width,
@@ -249,14 +249,18 @@ const LineGroup = props => {
           )
         }
       )}
-      {yTicks.map((tick, i) => (
-        <g data-axis key={`y${tick}`} transform={`translate(0,${y(tick)})`}>
+      {yLines.map(({ tick, label, base }, i) => (
+        <g
+          data-axis
+          key={`y${tick}`}
+          transform={`translate(0,${y(tick)})`}
+        >
           <line
             {...styles.axisYLine}
-            x2={width}
             {...colorScheme.set('stroke', 'text')}
+            x2={width}
             style={{
-              opacity: tick === 0 ? 0.8 : 0.17
+              opacity: base || (base === undefined && tick === 0) ? 0.8 : 0.17
             }}
           />
           <text
@@ -264,7 +268,7 @@ const LineGroup = props => {
             {...colorScheme.set('fill', 'text')}
             dy='-3px'
           >
-            {subsup.svg(yAxisFormat(tick, isLastItem(yTicks, i)))}
+            {subsup.svg(label ?? yAxisFormat(tick, isLastItem(yLines, i)))}
           </text>
         </g>
       ))}
@@ -419,7 +423,7 @@ LineGroup.propTypes = {
   y: PropTypes.func.isRequired,
   yCut: PropTypes.string,
   yCutHeight: PropTypes.number.isRequired,
-  yTicks: PropTypes.array.isRequired,
+  yLines: PropTypes.array.isRequired,
   yAxisFormat: PropTypes.func.isRequired,
   yAnnotations: PropTypes.arrayOf(
     PropTypes.shape({

@@ -120,8 +120,6 @@ const LineChart = props => {
     )
     .filter(Boolean)
 
-  const xAxisElement = <XAxis xUnit={props.xUnit} type={props.type} />
-
   return (
     <>
       <div style={{ paddingLeft, paddingRight }}>
@@ -133,6 +131,8 @@ const LineChart = props => {
       >
         <desc>{description}</desc>
         {chartContext.groupedData.map(({ values: lines, key }) => {
+          const filterByColumn = d => !d.column || d.column === key
+          const yLines = props.yLines || yAxis.ticks.map(tick => ({ tick }))
           return (
             <g
               key={key || 1}
@@ -147,6 +147,7 @@ const LineChart = props => {
                 xAccessor={xAccessor}
                 y={yAxis.scale}
                 yTicks={yAxis.ticks}
+                yLines={yLines.filter(filterByColumn)}
                 yAxisFormat={yAxis.axisFormat}
                 band={band}
                 area={area}
@@ -155,16 +156,12 @@ const LineChart = props => {
                 yCutHeight={yLayout.yCutHeight}
                 yConnectorSize={yLayout.yConnectorSize}
                 yNeedsConnectors={yLayout.yNeedsConnectors}
-                yAnnotations={chartContext.yAnnotations.filter(
-                  annotation => !annotation.column || annotation.column === key
-                )}
-                xAnnotations={chartContext.xAnnotations.filter(
-                  annotation => !annotation.column || annotation.column === key
-                )}
+                yAnnotations={chartContext.yAnnotations.filter(filterByColumn)}
+                xAnnotations={chartContext.xAnnotations.filter(filterByColumn)}
                 endDy={endDy}
                 width={chartContext.innerWidth}
                 paddingRight={paddingRight}
-                xAxisElement={xAxisElement}
+                xAxisElement={<XAxis xUnit={props.xUnit} lines={props.xLines?.filter(filterByColumn)} type={props.type} />}
               />
             </g>
           )
@@ -185,6 +182,14 @@ export const propTypes = {
   xSort: sortPropType,
   xTicks: PropTypes.arrayOf(
     PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  ),
+  xLines: PropTypes.arrayOf(
+    PropTypes.shape({
+      column: PropTypes.string,
+      tick: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      label: PropTypes.string,
+      textAnchor: PropTypes.string
+    }).isRequired
   ),
   yScale: PropTypes.oneOf(Object.keys(yScales)),
   timeParse: PropTypes.string.isRequired,
@@ -231,6 +236,14 @@ export const propTypes = {
   unit: PropTypes.string,
   yNice: PropTypes.number,
   yTicks: PropTypes.arrayOf(PropTypes.number),
+  yLines: PropTypes.arrayOf(
+    PropTypes.shape({
+      column: PropTypes.string,
+      tick: PropTypes.number.isRequired,
+      label: PropTypes.string,
+      base: PropTypes.bool
+    }).isRequired
+  ),
   yAnnotations: PropTypes.arrayOf(
     PropTypes.shape({
       column: PropTypes.string,
