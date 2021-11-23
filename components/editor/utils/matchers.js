@@ -6,3 +6,6 @@ export const matchAncestor = TYPE => value =>
       memo || value.document.getFurthest(node.key, matchBlock(TYPE)),
     undefined
   )
+
+export const matchSubmodules = (TYPE, subModules) => block =>
+  block.type === TYPE || subModules.some(m => m.TYPE === block.type)

@@ -4,6 +4,7 @@ import MarkdownSerializer from 'slate-mdast-serializer'
 import { createPropertyForm, matchBlock } from '../../utils'
 import createUi from './ui'
 import InlineUI from '../../utils/InlineUI'
+import { matchAncestor } from '../../utils/matchers'
 
 export default ({ rule, subModules, TYPE }) => {
   const editorOptions = rule.editorOptions || {}
@@ -106,13 +107,7 @@ export default ({ rule, subModules, TYPE }) => {
               <InlineUI
                 node={node}
                 editor={editor}
-                isMatch={value =>
-                  value.blocks.some(
-                    block =>
-                      block.type === TYPE ||
-                      subModules?.some(m => m.TYPE === block.type)
-                  )
-                }
+                isMatch={matchAncestor(TYPE)}
               />
               {children}
             </Container>

@@ -4,6 +4,8 @@ import { Block } from 'slate'
 
 import injectBlock from '../../utils/injectBlock'
 import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
+import { matchAncestor } from '../../utils/matchers'
+import InlineUI from '../../utils/InlineUI'
 
 const getNewItem = options => {
   const [blocktextModule, captionModule] = options.subModules
@@ -106,11 +108,20 @@ const blockQuotePlugin = options => {
   const { blocktextModule, captionModule } = getSubmodules(options)
   const BlockQuote = options.rule.component
   return {
-    renderNode: ({ node, children, attributes }) => {
+    renderNode: ({ node, children, attributes, editor }) => {
       if (!matchBlock(options.TYPE)(node)) {
         return
       }
-      return <BlockQuote attributes={attributes}>{children}</BlockQuote>
+      return (
+        <div style={{ position: 'relative' }}>
+          <InlineUI
+            node={node}
+            editor={editor}
+            isMatch={matchAncestor(options.TYPE)}
+          />
+          <BlockQuote attributes={attributes}>{children}</BlockQuote>
+        </div>
+      )
     },
     schema: {
       blocks: {
