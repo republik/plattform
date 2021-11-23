@@ -217,6 +217,7 @@ Daniel,415,https://www.republik.ch/~daniel
       "numberFormat": ".0%",
       "y": "alk",
       "showBarValues": true,
+      "unit": "Vol.",
       "domain": [-1, 0],
       "sort": "none"
     }}
