@@ -24,8 +24,11 @@ PgDb.connect().then(async (pgdb) => {
     console.warn('In dry-run mode. Use --no-dry-run to send emails to segment.')
   }
 
-  console.log(dayjs(argv.to).format('YYYY-MM-DD'))
-  console.log(dayjs(argv.from).format('YYYY-MM-DD'))
+  console.log(
+    `Fetching cleaned users between ${dayjs(argv.from).format(
+      'YYYY-MM-DD',
+    )} and ${dayjs(argv.to).format('YYYY-MM-DD')}`,
+  )
   const mail = {
     subject: 'Warum Sie von uns keine Newsletter mehr erhalten',
     templateName: 'cleaned_user_subscription_invitation',
