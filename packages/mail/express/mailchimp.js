@@ -1,6 +1,10 @@
 const bodyParser = require('body-parser')
 const moment = require('moment')
 
+const {
+  enforceSubscriptions,
+} = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail')
+
 const { MAIL_EXPRESS_MAILCHIMP_SECRET } = process.env
 
 module.exports = async (server, pgdb) => {
@@ -31,6 +35,7 @@ module.exports = async (server, pgdb) => {
       switch (type) {
         case 'subscribe':
           Object.assign(record, handleSubscribe(data))
+          await applyEnforceSubscriptions(record, pgdb)
           break
         case 'unsubscribe':
           Object.assign(record, handleUnsubscribe(data))
@@ -178,4 +183,14 @@ const getGroups = (name, data) => {
     .split(',')
     .map((g) => g.trim())
     .filter(Boolean)
+}
+
+const applyEnforceSubscriptions = async (record, pgdb) => {
+  try {
+    const { email } = record
+    const user = await pgdb.public.users.findOne({ email })
+    await enforceSubscriptions({ pgdb, userId: user?.id, email })
+  } catch (e) {
+    console.warn('applyEnforceSubscriptions failed:', e)
+  }
 }
