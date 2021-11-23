@@ -61,9 +61,7 @@ PgDb.connect().then(async (pgdb) => {
     
     SELECT email 
     FROM records 
-    WHERE 
-      "createdAt" >= :from AND
-      "createdAt" <= :to
+    WHERE "createdAt" BETWEEN :from AND :to
   `,
     { from: argv.from, to: argv.to },
   )
