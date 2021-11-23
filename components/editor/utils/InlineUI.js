@@ -1,5 +1,4 @@
 import React from 'react'
-import { colors, P } from '@project-r/styleguide'
 import { css } from 'glamor'
 import buttonStyles from './buttonStyles'
 import { parent } from './selection'
@@ -15,27 +14,22 @@ const styles = {
   ui: css({
     position: 'absolute',
     zIndex: 10,
-    margin: 0,
-    padding: 0,
-    left: -87,
-    overflow: 'hidden'
-  }),
-  uiInlineRow: css({
-    backgroundColor: '#fff',
-    border: `1px solid ${colors.divider}`,
-    padding: '5px',
-    display: 'inline-block',
+    left: -75,
+    overflow: 'hidden',
+    display: 'flex',
     margin: 0
   })
 }
 
-const MarkButton = props => {
+export const MarkButton = props => {
   if (!props.onMouseDown) return null
   return <span {...buttonStyles.mark} {...props} />
 }
 
-const InlineUI = ({ editor, node, isMatch }) => {
-  const isSelected = isMatch(editor.value) && !editor.value.isBlurred
+const InlineUI = ({ editor, node, isMatch, children, style }) => {
+  const isSelected = isMatch
+    ? isMatch(editor.value) && !editor.value.isBlurred
+    : true
   const isBreakout = parent(editor.state.value, node.key).nodes.size === 1
   if (!isSelected || isBreakout) return null
 
@@ -54,15 +48,14 @@ const InlineUI = ({ editor, node, isMatch }) => {
 
   return (
     <div contentEditable={false} {...styles.uiContainer}>
-      <div contentEditable={false} {...styles.ui}>
-        <P {...styles.uiInlineRow}>
-          <MarkButton onMouseDown={moveHandler(-1)}>
-            <ArrowUpIcon size={24} />
-          </MarkButton>
-          <MarkButton onMouseDown={moveHandler(+1)}>
-            <ArrowDownIcon size={24} />
-          </MarkButton>
-        </P>
+      <div contentEditable={false} {...styles.ui} style={style}>
+        <MarkButton onMouseDown={moveHandler(-1)}>
+          <ArrowUpIcon size={24} />
+        </MarkButton>
+        <MarkButton onMouseDown={moveHandler(+1)}>
+          <ArrowDownIcon size={24} />
+        </MarkButton>
+        {children}
       </div>
     </div>
   )
