@@ -39,7 +39,6 @@ PgDb.connect().then(async (pgdb) => {
           DISTINCT ON ("email")
           "email",
           "createdAt",
-          EXTRACT(DAYS FROM now() - "createdAt") days,
           type
           
         FROM "mailchimpLog"
