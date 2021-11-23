@@ -95,6 +95,10 @@ const envMergeVars = [
     content: `${FRONTEND_BASE_URL}/angebote?goto=account`,
   },
   {
+    name: 'link_account_newsletter',
+    content: `${FRONTEND_BASE_URL}/konto#newsletter`,
+  },
+  {
     name: 'link_account_share',
     content: `${FRONTEND_BASE_URL}/teilen`,
   },
@@ -156,7 +160,7 @@ const envMergeVars = [
   },
   {
     name: 'link_app',
-    content: `${FRONTEND_BASE_URL}/app`,
+    content: `${FRONTEND_BASE_URL}/app`, // TODO: change to https://www.republik.ch/faq#gibt-es-eine-app?
   },
   {
     name: 'link_manual',
