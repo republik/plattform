@@ -86,18 +86,20 @@ const Form = ({ node, onChange }) => {
   )
 }
 
+export const isFigureGroup = value =>
+  value.blocks.reduce(
+    (memo, node) =>
+      memo || value.document.getFurthest(node.key, matchBlock('FIGUREGROUP')),
+    undefined
+  )
+
 export const FigureGroupForm = options => {
   const { TYPE } = options
   const addFigureHandler = addFigure(options)
   const unwrapFiguresHandler = unwrapFigures(options)
   return createPropertyForm({
     isDisabled: ({ value }) => {
-      const figureGroup = value.blocks.reduce(
-        (memo, node) =>
-          memo || value.document.getFurthest(node.key, matchBlock(TYPE)),
-        undefined
-      )
-
+      const figureGroup = isFigureGroup(value)
       return !figureGroup
     }
   })(({ disabled, onChange, value }) => {

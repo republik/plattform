@@ -34,11 +34,8 @@ const MarkButton = props => {
   return <span {...buttonStyles.mark} {...props} />
 }
 
-const InlineUI = ({ editor, node, TYPE, subModules }) => {
-  const isInfoboxBlock = block =>
-    block.type === TYPE || subModules?.some(m => m.TYPE === block.type)
-  const isSelected =
-    editor.value.blocks.some(isInfoboxBlock) && !editor.value.isBlurred
+const InlineUI = ({ editor, node, isMatch }) => {
+  const isSelected = isMatch(editor.value) && !editor.value.isBlurred
   const isBreakout = parent(editor.state.value, node.key).nodes.size === 1
   if (!isSelected || isBreakout) return null
 

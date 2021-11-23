@@ -7,6 +7,8 @@ import { findOrCreate } from '../../utils/serialization'
 import { createRemoveEmptyKeyHandler } from '../../utils/keyHandlers'
 
 import MarkdownSerializer from 'slate-mdast-serializer'
+import InlineUI from '../../utils/InlineUI'
+import { isFigureGroup } from '../figuregroup/ui'
 
 const findP = (node, hasImage) =>
   node.children.find(
@@ -145,10 +147,22 @@ export default options => {
     }),
     plugins: [
       {
-        renderNode({ children, node, attributes }) {
+        renderNode({ children, node, attributes, editor }) {
           if (node.type !== TYPE) return
           return (
             <Figure {...node.data.toJS()} attributes={attributes}>
+              <InlineUI
+                key='ui'
+                node={node}
+                editor={editor}
+                isMatch={value => {
+                  const isFigureBlock = block =>
+                    block.type === FIGURE_IMAGE || block.type === FIGURE_CAPTION
+                  return (
+                    value.blocks.some(isFigureBlock) && !isFigureGroup(value)
+                  )
+                }}
+              />
               {children}
             </Figure>
           )

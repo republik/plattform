@@ -107,8 +107,13 @@ export default ({ rule, subModules, TYPE }) => {
                 key='ui'
                 node={node}
                 editor={editor}
-                TYPE={TYPE}
-                subModules={subModules}
+                isMatch={value =>
+                  value.blocks.some(
+                    block =>
+                      block.type === TYPE ||
+                      subModules?.some(m => m.TYPE === block.type)
+                  )
+                }
               />
               {children}
             </Container>
