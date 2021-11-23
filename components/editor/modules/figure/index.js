@@ -152,7 +152,6 @@ export default options => {
           return (
             <Figure {...node.data.toJS()} attributes={attributes}>
               <InlineUI
-                key='ui'
                 node={node}
                 editor={editor}
                 isMatch={value => {

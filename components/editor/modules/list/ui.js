@@ -9,6 +9,7 @@ import {
 import createOnFieldChange from '../../utils/createOnFieldChange'
 import injectBlock from '../../utils/injectBlock'
 import UIForm from '../../UIForm'
+import { matchAncestor } from '../../utils/matchers'
 
 export const ListForm = options => {
   const Form = ({ disabled, value, onChange, t }) => {
@@ -16,11 +17,7 @@ export const ListForm = options => {
       return null
     }
     // Multiple lists would involve more iteration work and given the fact, that this would happen on every select, I'd avoid it until necessary.
-    const list = value.blocks.reduce(
-      (memo, node) =>
-        memo || value.document.getFurthest(node.key, matchBlock(options.TYPE)),
-      undefined
-    )
+    const list = matchAncestor(options.TYPE)(value)
 
     const handlerFactory = createOnFieldChange(onChange, value, list)
 
@@ -41,13 +38,7 @@ export const ListForm = options => {
 
   return createPropertyForm({
     isDisabled: ({ value }) => {
-      const list = value.blocks.reduce(
-        (memo, node) =>
-          memo ||
-          value.document.getFurthest(node.key, matchBlock(options.TYPE)),
-        undefined
-      )
-
+      const list = matchAncestor(options.TYPE)(value)
       return !list
     }
   })(Form)

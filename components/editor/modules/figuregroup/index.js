@@ -113,12 +113,7 @@ const figureGroupPlugin = options => {
           slideshow={false}
           attributes={attributes}
         >
-          <InlineUI
-            key='ui'
-            node={node}
-            editor={editor}
-            isMatch={isFigureGroup}
-          />
+          <InlineUI node={node} editor={editor} isMatch={isFigureGroup} />
           {node.data.get('slideshow') > 0 && (
             <div style={{ position: 'absolute', left: -25 }}>
               <GalleryIcon />

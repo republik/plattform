@@ -104,7 +104,6 @@ export default ({ rule, subModules, TYPE }) => {
               attributes={attributes}
             >
               <InlineUI
-                key='ui'
                 node={node}
                 editor={editor}
                 isMatch={value =>
