@@ -39,8 +39,8 @@ const InlineUI = ({ editor, node, TYPE, subModules }) => {
     block.type === TYPE || subModules?.some(m => m.TYPE === block.type)
   const isSelected =
     editor.value.blocks.some(isInfoboxBlock) && !editor.value.isBlurred
-
-  if (!isSelected) return null
+  const isBreakout = parent(editor.state.value, node.key).nodes.size === 1
+  if (!isSelected || isBreakout) return null
 
   const moveHandler = dir => event => {
     const parentNode = parent(editor.state.value, node.key)
