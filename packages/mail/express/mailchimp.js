@@ -98,7 +98,7 @@ const handleUnsubscribe = (data) => {
     email: data.email,
     action: data.action,
     reason: data.reason,
-    campaign: data['campaign_id'],
+    campaign: data.campaign_id,
     customer: getGroups('Customer', data),
     newsletter: getGroups('Republik NL', data),
   }
@@ -131,8 +131,8 @@ const handleUpemail = (data) => {
   "data[old_email]": "api+old@mailchimp.com"
   */
   return {
-    email: data['new_email'],
-    oldEmail: data['old_email'],
+    email: data.new_email,
+    oldEmail: data.old_email,
   }
 }
 
@@ -146,7 +146,7 @@ const handleCleaned = (data) => {
   return {
     email: data.email,
     reason: data.reason,
-    campaign: data['campaign_id'],
+    campaign: data.campaign_id,
   }
 }
 
@@ -187,9 +187,9 @@ const getGroups = (name, data) => {
 
 const applyEnforceSubscriptions = async (record, pgdb) => {
   try {
-    const { email } = record
-    const user = await pgdb.public.users.findOne({ email })
-    await enforceSubscriptions({ pgdb, userId: user?.id, email })
+    const { email } = record
+    const userId = await pgdb.public.users.findOneFieldOnly({ email }, 'id')
+    await enforceSubscriptions({ pgdb, userId, email })
   } catch (e) {
     console.warn('applyEnforceSubscriptions failed:', e)
   }
