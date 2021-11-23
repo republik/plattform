@@ -61,9 +61,6 @@ module.exports = async (segment, mail, context) => {
         // Default method to send emails
         const mandrill = MandrillInterface({ logger: console })
         if (mandrill.isUsable(mail, message)) {
-          if (argv.dryRun) {
-            return [{ status: 'sent', interface: 'Mandrill' }]
-          }
           return mandrill.send(
             message,
             !message.html ? mail.templateName : false,
