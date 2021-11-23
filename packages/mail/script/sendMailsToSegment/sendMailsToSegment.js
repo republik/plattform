@@ -55,10 +55,6 @@ module.exports = async (segment, mail, context) => {
         // Backup method to send emails
         const nodemailer = NodemailerInterface({ logger: console })
         if (nodemailer.isUsable(mail, message)) {
-          if (argv.dryRun) {
-            return [{ status: 'sent', interface: 'Nodemailer' }]
-          }
-
           return nodemailer.send(message)
         }
 
