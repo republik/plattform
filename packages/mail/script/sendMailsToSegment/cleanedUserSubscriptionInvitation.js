@@ -38,13 +38,13 @@ PgDb.connect().then(async (pgdb) => {
         SELECT
           DISTINCT ON ("email")
           "email",
-          "createdAt",
+          "firedAt",
           type
           
         FROM "mailchimpLog"
         WHERE
           type IN ('subscribe', 'unsubscribe', 'cleaned')
-        ORDER BY "email", "createdAt" DESC
+        ORDER BY "email", "firedAt" DESC
       )
       
       SELECT data.*
@@ -55,12 +55,12 @@ PgDb.connect().then(async (pgdb) => {
         ON m."userId" = u.id AND m."active" = TRUE
       WHERE 
         type IN ('cleaned')
-      ORDER BY data."createdAt" DESC
+      ORDER BY data."firedAt" DESC
     )
     
     SELECT email 
     FROM records 
-    WHERE "createdAt" BETWEEN :from AND :to
+    WHERE "firedAt" BETWEEN :from AND :to
   `,
     { from: argv.from, to: argv.to },
   )
