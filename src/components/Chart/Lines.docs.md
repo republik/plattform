@@ -6848,10 +6848,6 @@ STA,JAHR,MO,TG,MO_augm,date_augm,value,TG_augm,daymonth
 71,2021,10,25,10,2021-10-25,8.4,25,10-25
 71,2021,10,26,10,2021-10-26,9.6,26,10-26
 71,2021,10,27,10,2021-10-27,7.3,27,10-27
-71,2021,10,28,10,2021-10-28,NA,28,10-28
-71,2021,10,29,10,2021-10-29,NA,29,10-29
-71,2021,10,30,10,2021-10-30,NA,30,10-30
-71,2021,10,31,10,2021-10-31,NA,31,10-31
 78,2020,9,1,09,2020-09-01,14.3,01,09-01
 78,2020,9,2,09,2020-09-02,13.9,02,09-02
 78,2020,9,3,09,2020-09-03,15.2,03,09-03
@@ -6970,10 +6966,6 @@ STA,JAHR,MO,TG,MO_augm,date_augm,value,TG_augm,daymonth
 78,2021,10,25,10,2021-10-25,8.2,25,10-25
 78,2021,10,26,10,2021-10-26,9,26,10-26
 78,2021,10,27,10,2021-10-27,5.9,27,10-27
-78,2021,10,28,10,2021-10-28,NA,28,10-28
-78,2021,10,29,10,2021-10-29,NA,29,10-29
-78,2021,10,30,10,2021-10-30,NA,30,10-30
-78,2021,10,31,10,2021-10-31,NA,31,10-31
 68,2020,9,1,09,2020-09-01,14.8,01,09-01
 68,2020,9,2,09,2020-09-02,15.4,02,09-02
 68,2020,9,3,09,2020-09-03,16.1,03,09-03
@@ -7092,10 +7084,6 @@ STA,JAHR,MO,TG,MO_augm,date_augm,value,TG_augm,daymonth
 68,2021,10,25,10,2021-10-25,8.1,25,10-25
 68,2021,10,26,10,2021-10-26,9.4,26,10-26
 68,2021,10,27,10,2021-10-27,7.2,27,10-27
-68,2021,10,28,10,2021-10-28,NA,28,10-28
-68,2021,10,29,10,2021-10-29,NA,29,10-29
-68,2021,10,30,10,2021-10-30,NA,30,10-30
-68,2021,10,31,10,2021-10-31,NA,31,10-31
 75,2020,9,1,09,2020-09-01,15.2,01,09-01
 75,2020,9,2,09,2020-09-02,15.9,02,09-02
 75,2020,9,3,09,2020-09-03,16.8,03,09-03
@@ -7214,10 +7202,6 @@ STA,JAHR,MO,TG,MO_augm,date_augm,value,TG_augm,daymonth
 75,2021,10,25,10,2021-10-25,9.8,25,10-25
 75,2021,10,26,10,2021-10-26,10.2,26,10-26
 75,2021,10,27,10,2021-10-27,8.5,27,10-27
-75,2021,10,28,10,2021-10-28,NA,28,10-28
-75,2021,10,29,10,2021-10-29,NA,29,10-29
-75,2021,10,30,10,2021-10-30,NA,30,10-30
-75,2021,10,31,10,2021-10-31,NA,31,10-31
 51,2020,9,1,09,2020-09-01,15.5,01,09-01
 51,2020,9,2,09,2020-09-02,15.6,02,09-02
 51,2020,9,3,09,2020-09-03,16.8,03,09-03
@@ -7336,10 +7320,6 @@ STA,JAHR,MO,TG,MO_augm,date_augm,value,TG_augm,daymonth
 51,2021,10,25,10,2021-10-25,9,25,10-25
 51,2021,10,26,10,2021-10-26,10.6,26,10-26
 51,2021,10,27,10,2021-10-27,7.6,27,10-27
-51,2021,10,28,10,2021-10-28,NA,28,10-28
-51,2021,10,29,10,2021-10-29,NA,29,10-29
-51,2021,10,30,10,2021-10-30,NA,30,10-30
-51,2021,10,31,10,2021-10-31,NA,31,10-31
 58,2020,9,1,09,2020-09-01,16.3,01,09-01
 58,2020,9,2,09,2020-09-02,16.2,02,09-02
 58,2020,9,3,09,2020-09-03,17.1,03,09-03
@@ -7458,14 +7438,101 @@ STA,JAHR,MO,TG,MO_augm,date_augm,value,TG_augm,daymonth
 58,2021,10,25,10,2021-10-25,8.4,25,10-25
 58,2021,10,26,10,2021-10-26,10.3,26,10-26
 58,2021,10,27,10,2021-10-27,7.9,27,10-27
-58,2021,10,28,10,2021-10-28,NA,28,10-28
-58,2021,10,29,10,2021-10-29,NA,29,10-29
-58,2021,10,30,10,2021-10-30,NA,30,10-30
-58,2021,10,31,10,2021-10-31,NA,31,10-31
     `.trim()}
     />
   <ChartLegend>
     Messwerte aus Zürich, Fluntern; Bern, Zollikofen; Luzern; Basel, Binningen; Neuenburg; Genf, Cointrin. Quelle: Meteo Schweiz, auf Anfrage.
+  </ChartLegend>
+</div>
+```
+
+## Custom Axis
+
+You can use `yLines` and `xLines` to provide custom axis tick label text, only show it for a certain column or skip it all together.
+
+```react
+<div>
+  <ChartTitle>Beide Parteien bewegten sich nach links</ChartTitle>
+  <ChartLead>Entwicklung nach soziokulturellen und sozioökonomischen Gesichtspunkten; je negativer die Werte, desto liberal-progressiver und desto mehr Staat</ChartLead>
+  <CsvChart
+    config={{
+      "type": "Line",
+      "unit": "konservativ-autoritärer bzw. weniger Staat",
+      "numberFormat": ".0f",
+      "colorLegend": true,
+      "colorMap": {
+        "SPD": "#d62728",
+        "CDU/CSU": "#292929"
+      },
+      "color": "party",
+      "column": "category",
+      "columns": 2,
+      "endValue": false,
+      "endLabel": false,
+      "yLines": [
+        { "column": "soziokulturell", "tick": -40, "label": "-40 liberal-progressiv" },
+        { "column": "sozioökonomisch", "tick": -40, "label": "-40 mehr Staat" },
+        { "tick": -20 },
+        { "tick": 0 },
+        { "tick": 20 },
+        { "column": "soziokulturell", "tick": 40, "label": "40 konservativ-autoritär" },
+        { "column": "sozioökonomisch", "tick": 40, "label": "40 weniger Staat" }
+      ],
+      "xLines": [
+        { "tick": "1990" },
+        { "tick": "1994", "label": "" },
+        { "tick": "1998", "label": "" },
+        { "tick": "2002", "label": "" },
+        { "tick": "2005", "label": "" },
+        { "tick": "2009", "label": "" },
+        { "tick": "2013", "label": "" },
+        { "tick": "2017", "label": "" },
+        { "tick": "2021" }
+      ],
+      "minInnerWidth": 150
+    }}
+    values={`
+party,year,value,category
+SPD,1990,0.491571429,soziokulturell
+CDU/CSU,1990,20.52257143,soziokulturell
+SPD,1994,5.045571429,soziokulturell
+CDU/CSU,1994,33.18457143,soziokulturell
+SPD,1998,9.797571429,soziokulturell
+CDU/CSU,1998,26.39957143,soziokulturell
+SPD,2002,10.36757143,soziokulturell
+CDU/CSU,2002,22.01057143,soziokulturell
+SPD,2005,0.586571429,soziokulturell
+CDU/CSU,2005,15.78657143,soziokulturell
+SPD,2009,-6.308428571,soziokulturell
+CDU/CSU,2009,12.58857143,soziokulturell
+SPD,2013,-4.667428571,soziokulturell
+CDU/CSU,2013,13.84257143,soziokulturell
+SPD,2017,-0.515428571,soziokulturell
+CDU/CSU,2017,15.36157143,soziokulturell
+SPD,2021,-5.163951758,soziokulturell
+CDU/CSU,2021,13.99657143,soziokulturell
+SPD,1990,-8.058119048,sozioökonomisch
+CDU/CSU,1990,-3.593119048,sozioökonomisch
+SPD,1994,-6.948119048,sozioökonomisch
+CDU/CSU,1994,13.21588095,sozioökonomisch
+SPD,1998,2.132880952,sozioökonomisch
+CDU/CSU,1998,19.37788095,sozioökonomisch
+SPD,2002,-0.190119048,sozioökonomisch
+CDU/CSU,2002,7.530880952,sozioökonomisch
+SPD,2005,3.215880952,sozioökonomisch
+CDU/CSU,2005,19.28988095,sozioökonomisch
+SPD,2009,-10.19811905,sozioökonomisch
+CDU/CSU,2009,7.568880952,sozioökonomisch
+SPD,2013,-13.88711905,sozioökonomisch
+CDU/CSU,2013,3.024880952,sozioökonomisch
+SPD,2017,-12.17611905,sozioökonomisch
+CDU/CSU,2017,0.484880952,sozioökonomisch
+SPD,2021,-16.63482297,sozioökonomisch
+CDU/CSU,2021,4.529556628,sozioökonomisch
+    `.trim()}
+    />
+  <ChartLegend>
+    Auf der soziokulturellen Skala bewegen sich die Werte von konservativ-autoritär (positive Werte) nach liberal-progressiv, auf der sozioökonimischen von weniger (positive Werte) nach mehr Staat. Positive bzw. negative Werte stehen für die Magnitude der Abweichung vom Zentrum der Skala. Die Skalen des Manifesto-Projekts wurden vom Wissenschaftszentrum Berlin auf das deutsche Parteiensystem zentriert. Quelle: <Editorial.A href='https://democracy.blog.wzb.eu/2021/08/10/wofuer-steht-die-spd-bei-der-bundestagswahl-2021/'>Democracy Blog des Wissenschaftszentrums Berlin</Editorial.A>, <Editorial.A href='https://manifesto-project.wzb.eu/'>Manifesto-Projekt</Editorial.A>
   </ChartLegend>
 </div>
 ```

@@ -96,7 +96,8 @@ export const ChartContextProvider = plainProps => {
 
   const xValuesUnformatted = data
     .map(xAccessor)
-    .concat(props.xTicks ? props.xTicks.map(xNormalizer) : [])
+    .concat(props.xLines || props.xTicks
+      ? (props.xLines?.map(d => d.tick) || props.xTicks).map(xNormalizer) : [])
     .concat(getAnnotationsXValues(xAnnotations, xNormalizer))
     .filter(deduplicate)
   if (shouldXSort) {

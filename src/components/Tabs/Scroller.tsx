@@ -87,18 +87,27 @@ const Scroller = ({
   const [{ left, right }, setArrows] = useState({ left: false, right: false })
   const [colorScheme] = useColorContext()
 
+  const lastActiveChildIndex = useRef<Number>()
   useEffect(() => {
     const scroller = scrollRef.current
-    if (!scroller) return
-    const target = Array.from(scroller?.children)[activeChildIndex + 1] // + 1 for pad element
-    scrollIntoView(target, {
-      time: 400,
-      align: {
-        left: 0,
-        leftOffset: innerPadding,
-        ...getTop()
-      }
-    })
+    const target = Array.from(scroller.children)[activeChildIndex + 1] // + 1 for pad element
+
+    if (lastActiveChildIndex.current !== undefined && lastActiveChildIndex.current !== activeChildIndex) {
+      scrollIntoView(target, {
+        time: 400,
+        align: {
+          left: 0,
+          leftOffset: innerPadding,
+          ...getTop()
+        }
+      })
+    } else {
+      const leftEdge = scroller.getBoundingClientRect().left
+      const targetBounds = target.getBoundingClientRect()
+      const diff =  targetBounds.left - leftEdge - innerPadding
+      scroller.scrollLeft += diff
+    }
+    lastActiveChildIndex.current = activeChildIndex
   }, [activeChildIndex, innerPadding])
 
   useEffect(() => {

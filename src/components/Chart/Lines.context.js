@@ -88,8 +88,11 @@ export const linesProcesser = ({
       .concat(dataWithArea.map(d => +d.datum[`${props.area}_lower`]))
       .concat(dataWithArea.map(d => +d.datum[`${props.area}_upper`]))
   }
-  if (props.yTicks) {
-    yValues = yValues.concat(props.yTicks)
+  const yTicks = props.yLines
+    ? props.yLines.map(d => d.tick)
+    : props.yTicks
+  if (yTicks) {
+    yValues = yValues.concat(yTicks)
   }
   const minValue = min(yValues)
 
@@ -108,7 +111,7 @@ export const linesProcesser = ({
     y.domain(),
     props.unit,
     {
-      ticks: props.yTicks
+      ticks: yTicks
     }
   )
   const { format: yFormat } = yAxis

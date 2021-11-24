@@ -233,7 +233,7 @@ const ScatterPlotGroup = ({
               {...colorScheme.set('fill', 'text')}
               dy='-3px'
             >
-              {subsup.svg(label || yAxis.axisFormat(tick, last(plotYLines, i)))}
+              {subsup.svg(label ?? yAxis.axisFormat(tick, last(plotYLines, i)))}
             </text>
           </g>
         ))}
@@ -278,7 +278,7 @@ const ScatterPlotGroup = ({
                 textAnchor={textAnchor}
               >
                 {subsup.svg(
-                  label || xAxis.axisFormat(tick, last(plotXLines, i))
+                  label ?? xAxis.axisFormat(tick, last(plotXLines, i))
                 )}
               </text>
             </g>
