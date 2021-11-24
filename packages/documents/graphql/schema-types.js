@@ -73,6 +73,7 @@ type Meta {
   section: Document
   format: Document
   dossier: Document
+  shareLogo: String
   shareBackgroundImage: String
   shareBackgroundImageInverted: String
 
