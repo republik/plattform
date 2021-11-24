@@ -23,7 +23,9 @@ const IconButton = React.forwardRef(
       style,
       size,
       disabled,
-      attributes
+      attributes,
+      invert,
+      noMargin
     },
     ref
   ) => {
@@ -36,6 +38,8 @@ const IconButton = React.forwardRef(
     return (
       <Element
         {...styles.button}
+        {...(invert ? styles.invertFlex : {})}
+        {...(noMargin ? styles.noMargin : {})}
         {...((onClick || href) && styles.hover)}
         {...attributes}
         style={{
@@ -82,6 +86,7 @@ const IconButton = React.forwardRef(
 const styles = {
   button: css({
     display: 'flex',
+    flexDirection: 'row',
     position: 'relative',
     alignItems: 'center',
     textDecoration: 'none',
@@ -105,6 +110,17 @@ const styles = {
     },
     ':disabled': {
       cursor: 'default'
+    },
+    '& > *:not(:last-child)': {
+      marginRight: 8,
+      marginLeft: 0
+    }
+  }),
+  invertFlex: css({
+    flexDirection: 'row-reverse',
+    '& > *:not(:last-child)': {
+      marginRight: 0,
+      marginLeft: 8
     }
   }),
   hover: css({
@@ -117,8 +133,12 @@ const styles = {
   label: css({
     ...fontStyles.sansSerifMedium,
     fontSize: 14,
-    marginLeft: 8,
+    /*marginLeft: 8,*/
     whiteSpace: 'nowrap'
+  }),
+  invertLabel: css({
+    marginLeft: 0,
+    marginRight: 8
   }),
   long: css({
     display: 'none',
@@ -131,6 +151,9 @@ const styles = {
     [mUp]: {
       display: 'none'
     }
+  }),
+  noMargin: css({
+    margin: '0 !important'
   })
 }
 

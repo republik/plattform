@@ -310,8 +310,26 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
         </div>
       </div>
       <div {...styles.actionsWrapper}>
-        {onToggle && (
-          <button
+        <IconButton
+          invert={true}
+          Icon={isExpanded ? UnfoldLessIcon : UnfoldMoreIcon}
+          onClick={onToggle}
+          label={
+            !isExpanded &&
+            t.pluralize('styleguide/comment/header/expandCount', {
+              count: comments.totalCount + 1
+            })
+          }
+          labelShort={
+            !isExpanded &&
+            t.pluralize('styleguide/comment/header/expandCount', {
+              count: comments.totalCount + 1
+            })
+          }
+          noMargin
+        />
+        {/*onToggle &&
+        (<button
             {...headerActionStyle({ isExpanded })}
             {...headerActionStyleHover}
             {...colorScheme.set('color', isExpanded ? 'divider' : 'textSoft')}
@@ -330,7 +348,7 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
               <UnfoldMoreIcon size={24} />
             )}
           </button>
-        )}
+        )*/}
         {menu && (
           <div {...styles.calloutWrapper}>
             <CalloutMenu
