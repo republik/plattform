@@ -1,6 +1,10 @@
 const bodyParser = require('body-parser')
 const moment = require('moment')
 
+const {
+  enforceSubscriptions,
+} = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail')
+
 const { MAIL_EXPRESS_MAILCHIMP_SECRET } = process.env
 
 module.exports = async (server, pgdb) => {
@@ -31,6 +35,7 @@ module.exports = async (server, pgdb) => {
       switch (type) {
         case 'subscribe':
           Object.assign(record, handleSubscribe(data))
+          await applyEnforceSubscriptions(record, pgdb)
           break
         case 'unsubscribe':
           Object.assign(record, handleUnsubscribe(data))
@@ -93,7 +98,7 @@ const handleUnsubscribe = (data) => {
     email: data.email,
     action: data.action,
     reason: data.reason,
-    campaign: data['campaign_id'],
+    campaign: data.campaign_id,
     customer: getGroups('Customer', data),
     newsletter: getGroups('Republik NL', data),
   }
@@ -126,8 +131,8 @@ const handleUpemail = (data) => {
   "data[old_email]": "api+old@mailchimp.com"
   */
   return {
-    email: data['new_email'],
-    oldEmail: data['old_email'],
+    email: data.new_email,
+    oldEmail: data.old_email,
   }
 }
 
@@ -141,7 +146,7 @@ const handleCleaned = (data) => {
   return {
     email: data.email,
     reason: data.reason,
-    campaign: data['campaign_id'],
+    campaign: data.campaign_id,
   }
 }
 
@@ -178,4 +183,14 @@ const getGroups = (name, data) => {
     .split(',')
     .map((g) => g.trim())
     .filter(Boolean)
+}
+
+const applyEnforceSubscriptions = async (record, pgdb) => {
+  try {
+    const { email } = record
+    const userId = await pgdb.public.users.findOneFieldOnly({ email }, 'id')
+    await enforceSubscriptions({ pgdb, userId, email })
+  } catch (e) {
+    console.warn('applyEnforceSubscriptions failed:', e)
+  }
 }
