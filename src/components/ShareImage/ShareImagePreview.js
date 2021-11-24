@@ -104,7 +104,7 @@ const ShareImagePreview = ({
   const textContainerRef = useRef()
 
   useEffect(() => {
-    const formatImageHeight = format?.image
+    const formatImageHeight = format?.shareImageLogo
       ? formatImageRef.current.clientHeight
       : 0
     const formatTitleHeight = format?.title
@@ -152,11 +152,11 @@ const ShareImagePreview = ({
             'center'
         }}
       >
-        {format?.image && !shareImage && (
+        {format?.shareImageLogo && !shareImage && (
           <img
             ref={formatImageRef}
             {...styles.formatImage}
-            src={format?.image}
+            src={format?.shareImageLogo}
             alt=''
           />
         )}
