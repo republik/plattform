@@ -67,12 +67,14 @@ class OverlayFormManager extends Component {
     const showModal = this.state.showModal || node.data.get('isNew')
     const parent = editor.value.document.getParent(node.key)
 
+    console.log(node.type, parent.type)
+
     return (
       <div {...attributes} style={{ position: 'relative' }}>
         <InlineUI
           node={nested ? parent : node}
           editor={editor}
-          style={{ left: -86 }}
+          style={{ left: -100 }}
         >
           <MarkButton onMouseDown={startEditing}>
             <MdEdit size={20} />
