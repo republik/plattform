@@ -1,4 +1,4 @@
-import React, { cloneElement } from 'react'
+import React, { cloneElement, useContext } from 'react'
 import { Block } from 'slate'
 
 import { matchBlock } from '../../utils'
@@ -8,10 +8,30 @@ import createUi from './ui'
 
 import EditOverlay from './EditOverlay'
 
-import { SG_DYNAMIC_COMPONENT_BASE_URLS } from '../../../../lib/settings'
-
 import dynamicComponentRequire from './require'
 import dynamicComponentIdentifiers from './identifiers'
+import InlineUI, { MarkButton } from '../../utils/InlineUI'
+import MdEdit from 'react-icons/lib/md/edit'
+import {
+  OverlayFormContext,
+  OverlayFormContextProvider
+} from '../../utils/OverlayFormContext'
+
+const CustomUi = ({ editor, node, TYPE }) => {
+  const { setShowModal } = useContext(OverlayFormContext)
+  return (
+    <InlineUI
+      node={node}
+      editor={editor}
+      style={{ left: -100 }}
+      isMatch={value => value.blocks.some(matchBlock(TYPE))}
+    >
+      <MarkButton onMouseDown={() => setShowModal(true)}>
+        <MdEdit size={20} />
+      </MarkButton>
+    </InlineUI>
+  )
+}
 
 const DynamicComponent = ({ rule, subModules, TYPE }) => {
   const { identifier = 'DYNAMIC_COMPONENT' } = rule.editorOptions || {}
@@ -85,7 +105,7 @@ const DynamicComponent = ({ rule, subModules, TYPE }) => {
     plugins: [
       {
         renderNode(props) {
-          const { node } = props
+          const { node, editor } = props
           if (node.type !== TYPE) return
           const data = node.data.toJS()
           const component = (
@@ -102,7 +122,16 @@ const DynamicComponent = ({ rule, subModules, TYPE }) => {
           })
 
           return (
-            <EditOverlay {...props} component={component} preview={preview} />
+            <OverlayFormContextProvider>
+              <div style={{ position: 'relative' }}>
+                <CustomUi node={node} editor={editor} TYPE={TYPE} />
+                <EditOverlay
+                  {...props}
+                  component={component}
+                  preview={preview}
+                />
+              </div>
+            </OverlayFormContextProvider>
           )
         },
         schema: {
