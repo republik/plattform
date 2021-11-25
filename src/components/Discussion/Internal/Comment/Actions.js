@@ -86,37 +86,24 @@ const styles = {
   })
 }
 
-const ReplyIconButton = ({ userWaitUntil, clock, onReply, colorScheme, t }) => {
-  const now = useCurrentMinute()
-  let replyBlockedMessage
-  const waitUntilDate = userWaitUntil && new Date(userWaitUntil)
-  if (waitUntilDate && waitUntilDate > now) {
-    replyBlockedMessage = t('styleguide/CommentComposer/wait', {
-      time: formatTimeRelative(waitUntilDate, { ...clock, now })
-    })
-  }
-
-  return (
-    <IconButton
-      disabled={!!replyBlockedMessage}
-      onClick={onReply}
-      title={replyBlockedMessage || t('styleguide/CommentActions/answer')}
-      label={t('styleguide/CommentActions/answer')}
-    >
-      <ReplyIcon
-        {...colorScheme.set('fill', replyBlockedMessage ? 'disabled' : 'text')}
-      />
-    </IconButton>
-  )
-}
-
 export const Actions = ({ t, comment, onExpand, onReply }) => {
   const { published, downVotes, upVotes, userVote } = comment
   const { discussion, actions, clock } = React.useContext(DiscussionContext)
   const { displayAuthor, userWaitUntil } = discussion
   const onShare = () => actions.shareComment(comment)
 
+  const now = useCurrentMinute()
   const [colorScheme] = useColorContext()
+
+  const replyBlockedMessage = useMemo(() => {
+    const waitUntilDate = userWaitUntil && new Date(userWaitUntil)
+    if (waitUntilDate && waitUntilDate > now) {
+      return t('styleguide/CommentComposer/wait', {
+        time: formatTimeRelative(waitUntilDate, { ...clock, now })
+      })
+    }
+    return null
+  }, [userWaitUntil, now])
 
   /*
    * The onClick functions are wired up such that when the user clicks a particular button twice,
@@ -168,12 +155,21 @@ export const Actions = ({ t, comment, onExpand, onReply }) => {
           />
         )}
         {onReply && !!displayAuthor && (
+          /*
           <ReplyIconButton
             onReply={onReply}
             colorScheme={colorScheme}
             t={t}
             userWaitUntil={userWaitUntil}
             clock={clock}
+          />*/
+          <OGIconButton
+            disabled={!!replyBlockedMessage}
+            onClick={onReply}
+            Icon={ReplyIcon}
+            size={18}
+            title={replyBlockedMessage || t('styleguide/CommentActions/answer')}
+            label={t('styleguide/CommentActions/answer')}
           />
         )}
       </div>
