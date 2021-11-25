@@ -17,7 +17,9 @@ Betrag unterstützen Sie die Republik und ermöglichen ihr langfristiges
 
 Dürfen wir deshalb versuchen, Sie umzustimmen?
 
-
+Legen Sie hier einfach selbst den Preis für eine Jahresmitgliedschaft fest
+{{prolong_url_reduced}} , den Sie für angemessen halten und den Sie sich leisten
+wollen.
 
 Was meinen Sie?
 
