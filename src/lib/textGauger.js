@@ -19,7 +19,7 @@ export const createTextGauger = memoize(
     if (typeof document === 'undefined') {
       return text => {
         // SSR approximation
-        return fontSize * 0.6 * text.length
+        return fontSize * 0.6 * String(text).length
       }
     }
     const element = document.createElement('span')

@@ -50,6 +50,7 @@ export const ChartContextProvider = plainProps => {
     xFormat = timeFormat(props.timeFormat || props.timeParse)
   } else if (xScale === 'linear') {
     xParser = x => +x
+    xFormat = x => `${x}`
     xParserFormat = x => x.toString()
     if (type === 'Line') {
       xFormat = getFormat(

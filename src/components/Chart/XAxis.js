@@ -55,7 +55,7 @@ const XAxis = ({ xUnit, yScaleInvert, type, lines: customLines }) => {
           />
         ))}
       {lines.map(({ tick, label, textAnchor }, i) => {
-        const tickText = xAxis.axisFormat(tick)
+        const tickText = label ?? xAxis.axisFormat(tick)
 
         currentX = xAxis.scale(tick) + tickPosition
         currentTextAnchor = 'middle'
@@ -96,7 +96,7 @@ const XAxis = ({ xUnit, yScaleInvert, type, lines: customLines }) => {
               dy={yScaleInvert ? '-1.1em' : '0.6em'}
               textAnchor={currentTextAnchor}
             >
-              {subsup.svg(label ?? tickText)}
+              {subsup.svg(tickText)}
             </text>
           </g>
         )
