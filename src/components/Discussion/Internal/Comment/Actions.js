@@ -47,6 +47,7 @@ const styles = {
   }),
   leftActionsWrapper: css({
     display: 'inline-flex',
+    marginLeft: 7,
     flexDirection: 'row',
     '& > button:not(:last-child)': {
       marginRight: 14
@@ -138,6 +139,7 @@ export const Actions = ({ t, comment, onExpand, onReply }) => {
             size={18}
             title={replyBlockedMessage || t('styleguide/CommentActions/answer')}
             label={t('styleguide/CommentActions/answer')}
+            labelShort={t('styleguide/CommentActions/answer')}
           />
         )}
       </div>
