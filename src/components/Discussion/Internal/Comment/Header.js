@@ -195,9 +195,10 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
   const headerActionStyleHover = useMemo(
     () =>
       css({
+        opacity: 0.6,
         '@media (hover)': {
           ':hover': {
-            color: colorScheme.getCSSColor('text')
+            opacity: 1
           }
         }
       }),
@@ -309,7 +310,7 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
           )}
         </div>
       </div>
-      <div {...styles.actionsWrapper}>
+      <div {...styles.actionsWrapper} {...headerActionStyleHover}>
         {onToggle && (
           <IconButton
             invert={true}
