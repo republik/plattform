@@ -205,7 +205,8 @@ const subSupSplitter = createTag => {
     if (!input) {
       return input
     }
-    return input
+
+    return String(input)
       .split(/(<sub>|<sup>)([^<]+)<\/su[bp]>/g)
       .reduce((elements, text, i) => {
         if (text === '<sub>' || text === '<sup>') {
