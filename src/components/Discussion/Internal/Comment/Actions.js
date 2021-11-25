@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { css, merge } from 'glamor'
+import { css } from 'glamor'
 // options: speaker-notes-off, block, clear, visibility-off, remove-circle
 import { sansSerifMedium14 } from '../../../Typography/styles'
 import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
@@ -183,35 +183,5 @@ export const Actions = ({ t, comment, onExpand, onReply }) => {
         </div>
       )}
     </div>
-  )
-}
-
-const IconButton = ({ vote, selected, onClick, title, label, children }) => {
-  const [colorScheme] = useColorContext()
-  const iconButtonStyleRules = useMemo(
-    () =>
-      css({
-        color: colorScheme.getCSSColor(selected ? 'primary' : 'text'),
-        '&[disabled]': {
-          cursor: 'inherit',
-          color: colorScheme.getCSSColor('disabled')
-        }
-      }),
-    [colorScheme, selected]
-  )
-  return (
-    <button
-      {...merge(
-        styles.iconButton,
-        vote ? styles.voteButton : styles.leftButton
-      )}
-      {...iconButtonStyleRules}
-      title={title}
-      disabled={!onClick}
-      onClick={onClick}
-    >
-      {children}
-      {label && <span {...styles.iconButtonLabel}>{label}</span>}
-    </button>
   )
 }
