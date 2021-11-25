@@ -310,45 +310,26 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
         </div>
       </div>
       <div {...styles.actionsWrapper}>
-        <IconButton
-          invert={true}
-          Icon={isExpanded ? UnfoldLessIcon : UnfoldMoreIcon}
-          onClick={onToggle}
-          label={
-            !isExpanded &&
-            t.pluralize('styleguide/comment/header/expandCount', {
-              count: comments.totalCount + 1
-            })
-          }
-          labelShort={
-            !isExpanded &&
-            t.pluralize('styleguide/comment/header/expandCount', {
-              count: comments.totalCount + 1
-            })
-          }
-          noMargin
-        />
-        {/*onToggle &&
-        (<button
-            {...headerActionStyle({ isExpanded })}
-            {...headerActionStyleHover}
-            {...colorScheme.set('color', isExpanded ? 'divider' : 'textSoft')}
+        {onToggle && (
+          <IconButton
+            invert={true}
+            Icon={isExpanded ? UnfoldLessIcon : UnfoldMoreIcon}
             onClick={onToggle}
-          >
-            {!isExpanded && comments && comments.totalCount > 0 && (
-              <div {...styles.expandCount}>
-                {t.pluralize('styleguide/comment/header/expandCount', {
-                  count: comments.totalCount + 1
-                })}
-              </div>
-            )}
-            {isExpanded ? (
-              <UnfoldLessIcon size={24} />
-            ) : (
-              <UnfoldMoreIcon size={24} />
-            )}
-          </button>
-        )*/}
+            label={
+              !isExpanded &&
+              t.pluralize('styleguide/comment/header/expandCount', {
+                count: comments.totalCount + 1
+              })
+            }
+            labelShort={
+              !isExpanded &&
+              t.pluralize('styleguide/comment/header/expandCount', {
+                count: comments.totalCount + 1
+              })
+            }
+            noMargin
+          />
+        )}
         {menu && (
           <div {...styles.calloutWrapper}>
             <CalloutMenu
