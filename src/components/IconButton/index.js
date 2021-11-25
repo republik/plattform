@@ -125,7 +125,7 @@ const styles = {
   }),
   hover: css({
     '@media(hover)': {
-      ':hover > *': {
+      ':hover:not(:disabled) > *': {
         opacity: 0.6
       }
     }
