@@ -9,6 +9,7 @@ import { sansSerifRegular12, sansSerifMedium14 } from '../Typography/styles'
 import { fontFamilies } from '../../theme/fonts'
 import { underline } from '../../lib/styleMixins'
 import { useColorContext } from '../Colors/useColorContext'
+import { defaultProps } from './ChartContext'
 
 import { sansSerifRegular12 as LABEL_FONT } from '../Typography/styles'
 import {
@@ -755,20 +756,326 @@ export const propTypes = {
 
 BarChart.propTypes = propTypes
 
-BarChart.defaultProps = {
-  columns: 1,
-  minInnerWidth: 140,
-  barStyle: 'small',
-  numberFormat: 's'
-}
+BarChart.defaultProps = defaultProps.Bar
 
 export const Lollipop = props => <BarChart {...props} />
 
-Lollipop.defaultProps = {
-  barStyle: 'lollipop'
-}
+Lollipop.defaultProps = defaultProps.Lollipop
 
 // Lollipop has additional default props
 Lollipop.wrap = 'Bar'
 
 export default BarChart
+
+export const barEditorSchema = ({
+  fields,
+  defaults,
+  numberFormats,
+  timeFormats,
+  colorDropdownItems,
+  sortingOptions
+}) => {
+  return {
+    title: 'BarChartConfig',
+    type: 'object',
+    properties: {
+      basic: {
+        xAxis: {
+          title: 'Horizontale Achse',
+          properties: {
+            xTicks: {
+              title: 'Achsenticks',
+              type: 'array',
+              contains: {
+                type: 'string'
+              },
+              default: defaults.xTicks
+            },
+            numberFormat: {
+              title: 'Achsenformat',
+              type: 'string',
+              enum: numberFormats,
+              default: defaults.numberFormat
+            }
+          }
+        },
+        yAxis: {
+          title: 'Vertikale Achse',
+          properties: {
+            y: {
+              title: 'Spalte auswählen',
+              type: 'string',
+              enum: fields,
+              default: defaults.y || 'value'
+            },
+            unit: {
+              title: 'Beschriftung',
+              type: 'string',
+              default: defaults.unit || ''
+            },
+            sort: {
+              title: 'Sortierung',
+              type: 'string',
+              enum: sortingOptions,
+              default: defaults.sort
+            }
+          }
+        },
+        color: {
+          title: 'Farbe',
+          properties: {
+            color: {
+              title: 'Spalte auswählen',
+              type: 'string',
+              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              default: defaults.color || ''
+            },
+            colorRange: {
+              title: 'Farbschema auswählen',
+              type: 'string',
+              enum: colorDropdownItems,
+              default: defaults.colorRange || ''
+            },
+            colorSort: {
+              title: 'Farbsortierung',
+              type: 'string',
+              enum: sortingOptions,
+              default: defaults.colorSort
+            }
+          }
+        },
+        layout: {
+          title: 'Layout',
+          properties: {
+            column: {
+              title: 'Spalte auswählen',
+              type: 'string',
+              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              default: defaults.column || ''
+            },
+            columns: {
+              title: 'Anzahl Spalten pro Zeile',
+              type: 'number',
+              default: defaults.columns
+            }
+          }
+        }
+      },
+      advanced: {
+        xAxis: {
+          title: 'Horizontale Achse',
+          properties: {
+            xTicks: {
+              title: 'Achsenticks',
+              type: 'array',
+              contains: {
+                type: 'string'
+              },
+              default: defaults.xTicks
+            },
+            showBarValues: {
+              title: 'Balken ausserhalb mit Wert beschriften',
+              type: 'boolean',
+              default: defaults.showBarValues
+            },
+            inlineValue: {
+              title: 'Balken innerhalb mit Wert beschriften',
+              type: 'boolean',
+              default: defaults.inlineValue
+            }
+          }
+        },
+        yAxis: {
+          title: 'Vertikale Achse',
+          properties: {
+            yTicks: {
+              title: 'Achsenticks',
+              type: 'array',
+              contains: {
+                type: 'string'
+              },
+              default: defaults.yTicks
+            },
+            domain: {
+              title: 'Domain setzen',
+              type: 'array',
+              contains: {
+                type: 'string'
+              },
+              default: defaults.domain
+            }
+          }
+        },
+        layout: {
+          title: 'Layout',
+          properties: {
+            height: {
+              title: 'Höhe',
+              type: 'number',
+              default: defaults.height
+            },
+            minInnerWidth: {
+              title: 'Minimale Breite',
+              type: 'number',
+              default: defaults.minInnerWidth
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+export const lollipopEditorSchema = ({
+  fields,
+  defaults,
+  numberFormats,
+  timeFormats,
+  colorDropdownItems
+}) => {
+  return {
+    title: 'LollipopChartConfig',
+    type: 'object',
+    properties: {
+      basic: {
+        xAxis: {
+          title: 'Horizontale Achse',
+          properties: {
+            x: {
+              title: 'Spalte auswählen',
+              type: 'string',
+              enum: fields,
+              default: defaults.x
+            },
+            timeFormat: {
+              title: 'Achsenformat',
+              type: 'string',
+              enum: timeFormats,
+              default: defaults.timeFormat
+            },
+            xTicks: {
+              title: 'Achsenticks',
+              type: 'array',
+              contains: {
+                type: 'string'
+              },
+              default: defaults.xTicks
+            },
+            xUnit: {
+              title: 'Beschriftung',
+              type: 'string',
+              default: defaults.xUnit || ''
+            }
+          }
+        },
+        yAxis: {
+          title: 'Vertikale Achse',
+          properties: {
+            y: {
+              title: 'Spalte auswählen',
+              type: 'string',
+              enum: fields,
+              default: defaults.y || 'value'
+            },
+            numberFormat: {
+              title: 'Achsenformat',
+              type: 'string',
+              enum: numberFormats,
+              default: defaults.numberFormat
+            },
+            unit: {
+              title: 'Beschriftung',
+              type: 'string',
+              default: defaults.unit || ''
+            }
+          }
+        },
+        color: {
+          title: 'Farbe',
+          properties: {
+            color: {
+              title: 'Spalte auswählen',
+              type: 'string',
+              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              default: defaults.color || ''
+            },
+            colorRange: {
+              title: 'Farbschema auswählen',
+              type: 'string',
+              enum: colorDropdownItems,
+              default: defaults.colorRange || ''
+            }
+          }
+        },
+        layout: {
+          title: 'Layout',
+          properties: {
+            column: {
+              title: 'Spalte auswählen',
+              type: 'string',
+              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              default: defaults.column || ''
+            },
+            columns: {
+              title: 'Anzahl Spalten pro Zeile:',
+              type: 'number',
+              default: defaults.columns,
+              format: 'Slider'
+            }
+          }
+        }
+      },
+      advanced: {
+        xAxis: {
+          title: 'Horizontale Achse',
+          properties: {
+            xTicks: {
+              title: 'Achsenticks',
+              type: 'array',
+              contains: {
+                type: 'string'
+              },
+              default: defaults.xTicks
+            }
+          }
+        },
+        yAxis: {
+          title: 'Vertikale Achse',
+          properties: {
+            yTicks: {
+              title: 'Achsenticks',
+              type: 'array',
+              contains: {
+                type: 'string'
+              },
+              default: defaults.yTicks
+            },
+            domain: {
+              title: 'Domain setzen',
+              type: 'array',
+              contains: {
+                type: 'string'
+              },
+              default: defaults.domain
+            }
+          }
+        },
+        layout: {
+          title: 'Layout',
+          properties: {
+            height: {
+              title: 'Höhe',
+              type: 'number',
+              default: defaults.height
+            },
+            minInnerWidth: {
+              title: 'Minimale Breite',
+              type: 'number',
+              default: defaults.minInnerWidth
+            }
+          }
+        }
+      }
+    }
+  }
+}

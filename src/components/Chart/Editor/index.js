@@ -18,8 +18,10 @@ import {
   numberFormats,
   timeFormats,
   xScaleTypes,
-  yScaleTypes
+  yScaleTypes,
+  sortingOptions
 } from './Editor.utils'
+import { barEditorSchema, lollipopEditorSchema } from '../Bars'
 
 const styles = {
   orderBy: css({
@@ -63,6 +65,10 @@ const chartTypes = [
   {
     value: 'Bar',
     text: 'Balken'
+  },
+  {
+    value: 'Lollipop',
+    text: 'Lollipop'
   }
 ]
 
@@ -74,22 +80,24 @@ const tabs = [
   }
 ]
 
+const schemaDict = {
+  Line: lineEditorSchema,
+  TimeBar: timeBarEditorSchema,
+  Lollipop: lollipopEditorSchema,
+  Bar: barEditorSchema
+}
+
 const ChartEditor = ({ data, value, onChange }) => {
   const [colorScheme] = useColorContext()
   const [activeTab, setActiveTab] = useState('basic')
   const chartData = useMemo(() => csvParse(data), [data])
 
-  const createRanges = ({
-    neutral,
-    sequential,
-    sequential3,
-    opposite3,
-    discrete
-  }) => {
+  console.log(value)
+
+  const createRanges = ({ sequential, sequential3, opposite3, discrete }) => {
     const oppositeReversed = [].concat(opposite3).reverse()
     return {
       diverging1: [sequential3[1], opposite3[1]],
-      diverging1n: [sequential3[1], neutral, opposite3[1]],
       diverging2: [...sequential3.slice(0, 2), ...oppositeReversed.slice(0, 2)],
       diverging3: [...sequential3, ...oppositeReversed],
       sequential3,
@@ -102,6 +110,8 @@ const ChartEditor = ({ data, value, onChange }) => {
     colorScheme
   ])
 
+  const customColors = [...colorRanges.discrete, ...colorRanges.sequential]
+
   const colorRangesArray = Object.keys(colorRanges)
 
   const colorDropdownItems = colorRangesArray
@@ -113,11 +123,26 @@ const ChartEditor = ({ data, value, onChange }) => {
           <ColorDropdownElement
             key={'colorRange' + i}
             colorRange={colorRanges[d]}
+            name={d}
           />
         )
       }
     })
-    .concat({ value: '', text: 'automatisch' })
+    .concat(
+      { value: '', text: 'automatisch' },
+      { value: 'custom_color', text: 'Farben einzeln auswählen' },
+      { value: 'party_colors', text: 'Parteifarben' }
+    )
+
+  const customColorDropdownItems = customColors.map((d, i) => {
+    return {
+      value: d,
+      text: d,
+      element: (
+        <ColorDropdownElement key={'singleColor' + i} colorRange={d} name={d} />
+      )
+    }
+  })
 
   const columns = Object.keys(chartData[0]).map(d => {
     return { value: d, text: d }
@@ -139,32 +164,30 @@ const ChartEditor = ({ data, value, onChange }) => {
     return onChange({ ...value, [key]: item.value })
   }
 
+  const createColorMapChange = colorMap => {
+    return onChange({ ...value, colorMap: colorMap })
+  }
+
   const timeFormatParser = timeParse(
     value.timeParse || value.timeFormat || '%Y'
   )
 
   const numberFormatParser = getFormat(value.numberFormat || 's')
 
-  const schema =
-    value.type === 'Line'
-      ? lineEditorSchema({
-          fields: columns,
-          defaults: defaultProps.Line,
-          numberFormats,
-          xScaleTypes,
-          yScaleTypes,
-          timeFormats,
-          colorDropdownItems
-        })
-      : timeBarEditorSchema({
-          fields: columns,
-          defaults: defaultProps.TimeBar,
-          numberFormats,
-          xScaleTypes,
-          yScaleTypes,
-          timeFormats,
-          colorDropdownItems
-        })
+  const createSchema = type => {
+    return schemaDict[type]({
+      fields: columns,
+      defaults: defaultProps[type],
+      numberFormats,
+      xScaleTypes,
+      yScaleTypes,
+      timeFormats,
+      colorDropdownItems,
+      sortingOptions
+    })
+  }
+
+  const schema = createSchema(value.type)
 
   const handleTabClick = () => {
     setActiveTab(activeTab === 'basic' ? 'advanced' : 'basic')
@@ -217,6 +240,9 @@ const ChartEditor = ({ data, value, onChange }) => {
             ? schema.properties.basic
             : schema.properties.advanced
         }
+        chartData={chartData}
+        customColorDropdownItems={customColorDropdownItems}
+        createColorMapChange={createColorMapChange}
       />
     </div>
   )

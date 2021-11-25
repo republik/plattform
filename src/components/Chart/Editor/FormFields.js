@@ -7,6 +7,7 @@ import Dropdown from '../../Form/Dropdown'
 import Checkbox from '../../Form/Checkbox'
 import Slider from '../../Form/Slider'
 import { TickField } from './TickField'
+import { ColorField } from './ColorField'
 
 const styles = {
   gridContainer: css({
@@ -23,9 +24,13 @@ export const FormFields = props => {
     fields,
     createOnDropdownChange,
     createOnFieldChange,
+    createOnNumberFieldChange,
     timeFormatParser,
     numberFormatParser,
-    value
+    value,
+    chartData,
+    customColorDropdownItems,
+    createColorMapChange
   } = props
   const fieldsKeys = Object.keys(fields)
 
@@ -37,7 +42,22 @@ export const FormFields = props => {
           <div key={group}>
             <Interaction.H3>{fields[group].title}</Interaction.H3>
             {Object.keys(fields[group].properties).map(property => {
-              if (groupObject[property].enum) {
+              if (property === 'colorRange') {
+                return (
+                  <ColorField
+                    key={property}
+                    property={property}
+                    label={groupObject[property].title}
+                    items={groupObject[property].enum}
+                    value={value[property] || groupObject[property].default}
+                    createOnDropdownChange={createOnDropdownChange}
+                    colorColumn={value['color'] || groupObject['color'].default}
+                    chartData={chartData}
+                    customColorDropdownItems={customColorDropdownItems}
+                    createColorMapChange={createColorMapChange}
+                  />
+                )
+              } else if (groupObject[property].enum) {
                 return (
                   <Dropdown
                     key={property}
@@ -96,10 +116,11 @@ export const FormFields = props => {
               } else if (groupObject[property].type === 'number') {
                 return (
                   <Field
+                    type='number'
                     key={property}
                     label={groupObject[property].title}
-                    value={value[property] || groupObject[property].default}
-                    onChange={createOnFieldChange(property)}
+                    value={value[property]}
+                    onChange={createOnNumberFieldChange(property)}
                   />
                 )
               } else {

@@ -190,6 +190,15 @@ export const defaultProps = {
     columns: 2,
     height: 240,
     yNice: 3
+  },
+  Bar: {
+    columns: 1,
+    minInnerWidth: 140,
+    barStyle: 'small',
+    numberFormat: 's'
+  },
+  Lollipop: {
+    barStyle: 'lollipop'
   }
 }
 

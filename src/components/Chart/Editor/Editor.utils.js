@@ -61,8 +61,12 @@ export const numberFormats = [
     text: 'Gleitkommazahl: 4,27'
   },
   {
-    value: '.0%',
+    value: '%',
     text: 'Prozentsatz: 4%'
+  },
+  {
+    value: '.1%',
+    text: 'Prozentsatz: 4.2%'
   },
   {
     value: ',.1r',
@@ -104,5 +108,20 @@ export const timeFormats = [
   {
     value: '%d.%m.%Y',
     text: '26.02.2017, 24.02.2018'
+  }
+]
+
+export const sortingOptions = [
+  {
+    value: 'none',
+    text: 'keine'
+  },
+  {
+    value: 'ascending',
+    text: 'aufsteigend'
+  },
+  {
+    value: 'descending',
+    text: 'absteigend'
   }
 ]

@@ -332,7 +332,7 @@ export const lineEditorSchema = ({
           }
         },
         layout: {
-          title: 'Layout',
+          title: 'Grid',
           properties: {
             column: {
               title: 'Spalte auswählen',
@@ -343,8 +343,7 @@ export const lineEditorSchema = ({
             columns: {
               title: 'Anzahl Spalten pro Zeile:',
               type: 'number',
-              default: defaults.columns,
-              format: 'Slider'
+              default: defaults.columns
             }
           }
         }
@@ -378,6 +377,11 @@ export const lineEditorSchema = ({
               title: 'Y-Achse bei 0 beginnen',
               type: 'boolean',
               default: defaults.zero
+            },
+            yNice: {
+              title: 'yNice',
+              type: 'number',
+              default: defaults.yNice
             }
           }
         },

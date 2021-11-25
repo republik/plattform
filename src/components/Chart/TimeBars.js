@@ -223,12 +223,6 @@ export const timeBarEditorSchema = ({
         yAxis: {
           title: 'Vertikale Achse',
           properties: {
-            y: {
-              title: 'Spalte auswählen',
-              type: 'string',
-              enum: fields,
-              default: defaults.y || 'value'
-            },
             numberFormat: {
               title: 'Achsenformat',
               type: 'string',
@@ -260,7 +254,7 @@ export const timeBarEditorSchema = ({
           }
         },
         layout: {
-          title: 'Layout',
+          title: 'Grid',
           properties: {
             column: {
               title: 'Spalte auswählen',
@@ -271,8 +265,7 @@ export const timeBarEditorSchema = ({
             columns: {
               title: 'Anzahl Spalten pro Zeile:',
               type: 'number',
-              default: defaults.columns,
-              format: 'Slider'
+              default: defaults.columns
             }
           }
         }
