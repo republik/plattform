@@ -3,7 +3,7 @@ const moment = require('moment')
 
 const wasSent = async (onceFor, { pgdb }) => {
   const conditions = Object.keys(onceFor)
-    .filter((key) => ['type', 'userId', 'keys'].includes(key))
+    .filter((key) => ['type', 'userId', 'email', 'keys'].includes(key))
     // if a onceFor value is an array, change the key to `${key} &&`
     // to ensure that if a mail was sent for one array member,
     // it doesn't get sent again

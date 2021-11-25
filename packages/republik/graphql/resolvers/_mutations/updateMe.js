@@ -21,6 +21,8 @@ const {
 } = require('@orbiting/backend-modules-assets')
 const { ensureStringLength } = require('@orbiting/backend-modules-utils')
 
+const validator = require('validator')
+
 const MAX_STATEMENT_LENGTH = 140
 const MAX_BIOGRAPHY_LENGTH = 2000
 const MAX_DISCLOSURES_LENGTH = 140
@@ -65,6 +67,7 @@ module.exports = async (_, args, context) => {
     portrait,
     statement,
     isListed,
+    publicUrl,
   } = args
 
   const ensureStringLengthForProfile = createEnsureStringLengthForProfile(
@@ -91,6 +94,17 @@ module.exports = async (_, args, context) => {
     'profile/contact/publicUrl/label',
     MAX_PUBLIC_URL_LENGTH,
   )
+
+  if (
+    publicUrl &&
+    !validator.isURL(publicUrl, {
+      require_protocol: true,
+      protocols: ['http', 'https'],
+    })
+  ) {
+    throw new Error(t('profile/contact/publicUrl/error'))
+  }
+
   ensureStringLengthForProfile(
     'twitterHandle',
     'profile/contact/twitter/label',
