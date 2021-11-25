@@ -1,18 +1,18 @@
 import React, { useMemo } from 'react'
 import { css, merge } from 'glamor'
 // options: speaker-notes-off, block, clear, visibility-off, remove-circle
-import CommentCountIcon from './CommentCountIcon'
 import { sansSerifMedium14 } from '../../../Typography/styles'
 import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
 import {
   ShareIcon,
   ReplyIcon,
   ArrowDownIcon,
-  ArrowUpIcon
+  ArrowUpIcon,
+  DiscussionIcon
 } from '../../../Icons'
 import { useColorContext } from '../../../Colors/ColorContext'
 import { useCurrentMinute } from '../../../../lib/useCurrentMinute'
-import OGIconButton from '../../../IconButton'
+import IconButton from '../../../IconButton'
 
 const styles = {
   root: css({
@@ -35,38 +35,6 @@ const styles = {
   }),
   voteDivider: css({
     padding: '0 2px'
-  }),
-  iconButton: css({
-    outline: 'none',
-    WebkitAppearance: 'none',
-    background: 'transparent',
-    border: 'none',
-    padding: '0',
-    display: 'block',
-    cursor: 'pointer',
-    height: '100%',
-    '& svg': {
-      margin: '0 auto'
-    }
-  }),
-  iconButtonLabel: css({
-    marginLeft: '10px',
-    fontSize: '14px'
-  }),
-  voteButton: css({
-    lineHeight: 1,
-    fontSize: '24px',
-    textAlign: 'center',
-    height: '40px',
-    margin: 0,
-    '& > svg': {
-      display: 'block',
-      flexShrink: 0
-    }
-  }),
-  leftButton: css({
-    fontSize: '18px',
-    padding: '0 7px'
   }),
   text: css({
     display: 'inline-block',
@@ -138,15 +106,23 @@ export const Actions = ({ t, comment, onExpand, onReply }) => {
           <IconButton
             onClick={onExpand}
             title={t('styleguide/CommentActions/expand')}
-          >
-            <CommentCountIcon
-              count={comment.comments && comment.comments.totalCount}
-              small={true}
-            />
-          </IconButton>
+            Icon={DiscussionIcon}
+            fillColorName={'primary'}
+            size={18}
+            label={
+              comment.comments &&
+              comment.comments.totalCount > 0 &&
+              `${comment.comments.totalCount}`
+            }
+            labelShort={
+              comment.comments &&
+              comment.comments.totalCount > 0 &&
+              `${comment.comments.totalCount}`
+            }
+          />
         )}
         {published && (
-          <OGIconButton
+          <IconButton
             title={t('styleguide/CommentActions/share')}
             Icon={ShareIcon}
             onClick={onShare}
@@ -155,15 +131,7 @@ export const Actions = ({ t, comment, onExpand, onReply }) => {
           />
         )}
         {onReply && !!displayAuthor && (
-          /*
-          <ReplyIconButton
-            onReply={onReply}
-            colorScheme={colorScheme}
-            t={t}
-            userWaitUntil={userWaitUntil}
-            clock={clock}
-          />*/
-          <OGIconButton
+          <IconButton
             disabled={!!replyBlockedMessage}
             onClick={onReply}
             Icon={ReplyIcon}
@@ -177,13 +145,13 @@ export const Actions = ({ t, comment, onExpand, onReply }) => {
         <div {...styles.votes}>
           <div {...styles.vote}>
             <IconButton
-              selected={userVote === 'UP'}
-              vote={true}
+              size={24}
+              fill={userVote === 'UP' && colorScheme.getCSSColor('primary')}
+              Icon={ArrowUpIcon}
               onClick={onUpvote}
               title={t('styleguide/CommentActions/upvote')}
-            >
-              <ArrowUpIcon />
-            </IconButton>
+              noMargin
+            />
             <span
               title={t.pluralize('styleguide/CommentActions/upvote/count', {
                 count: upVotes
@@ -204,13 +172,13 @@ export const Actions = ({ t, comment, onExpand, onReply }) => {
               {downVotes}
             </span>
             <IconButton
-              selected={userVote === 'DOWN'}
-              vote={true}
+              size={24}
+              fill={userVote === 'DOWN' && colorScheme.getCSSColor('primary')}
+              Icon={ArrowDownIcon}
               onClick={onDownvote}
               title={t('styleguide/CommentActions/downvote')}
-            >
-              <ArrowDownIcon />
-            </IconButton>
+              noMargin
+            />
           </div>
         </div>
       )}
