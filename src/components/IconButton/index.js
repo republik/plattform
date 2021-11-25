@@ -153,7 +153,7 @@ const styles = {
     }
   }),
   noMargin: css({
-    margin: '0 !important'
+    margin: '0'
   })
 }
 

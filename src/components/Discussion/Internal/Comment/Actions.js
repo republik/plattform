@@ -12,6 +12,7 @@ import {
 } from '../../../Icons'
 import { useColorContext } from '../../../Colors/ColorContext'
 import { useCurrentMinute } from '../../../../lib/useCurrentMinute'
+import OGIconButton from '../../../IconButton'
 
 const styles = {
   root: css({
@@ -75,6 +76,13 @@ const styles = {
     marginTop: -1,
     paddingLeft: 4,
     ...sansSerifMedium14
+  }),
+  leftActionsWrapper: css({
+    display: 'inline-flex',
+    flexDirection: 'row',
+    '& > button:not(:last-child)': {
+      marginRight: 14
+    }
   })
 }
 
@@ -138,34 +146,37 @@ export const Actions = ({ t, comment, onExpand, onReply }) => {
 
   return (
     <div {...styles.root} {...colorScheme.set('color', 'text')}>
-      {onExpand && (
-        <IconButton
-          onClick={onExpand}
-          title={t('styleguide/CommentActions/expand')}
-        >
-          <CommentCountIcon
-            count={comment.comments && comment.comments.totalCount}
-            small={true}
+      <div {...styles.leftActionsWrapper}>
+        {onExpand && (
+          <IconButton
+            onClick={onExpand}
+            title={t('styleguide/CommentActions/expand')}
+          >
+            <CommentCountIcon
+              count={comment.comments && comment.comments.totalCount}
+              small={true}
+            />
+          </IconButton>
+        )}
+        {published && (
+          <OGIconButton
+            title={t('styleguide/CommentActions/share')}
+            Icon={ShareIcon}
+            onClick={onShare}
+            size={18}
+            noMargin
           />
-        </IconButton>
-      )}
-      {published && (
-        <IconButton
-          onClick={onShare}
-          title={t('styleguide/CommentActions/share')}
-        >
-          <ShareIcon {...colorScheme.set('fill', 'text')} />
-        </IconButton>
-      )}
-      {onReply && !!displayAuthor && (
-        <ReplyIconButton
-          onReply={onReply}
-          colorScheme={colorScheme}
-          t={t}
-          userWaitUntil={userWaitUntil}
-          clock={clock}
-        />
-      )}
+        )}
+        {onReply && !!displayAuthor && (
+          <ReplyIconButton
+            onReply={onReply}
+            colorScheme={colorScheme}
+            t={t}
+            userWaitUntil={userWaitUntil}
+            clock={clock}
+          />
+        )}
+      </div>
       {published && (
         <div {...styles.votes}>
           <div {...styles.vote}>
