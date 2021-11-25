@@ -160,7 +160,7 @@ const envMergeVars = [
   },
   {
     name: 'link_app',
-    content: `${FRONTEND_BASE_URL}/app`, // TODO: change to https://www.republik.ch/faq#gibt-es-eine-app?
+    content: `${FRONTEND_BASE_URL}/app`,
   },
   {
     name: 'link_manual',

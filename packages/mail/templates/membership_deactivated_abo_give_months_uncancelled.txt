@@ -17,7 +17,7 @@ Deshalb verlieren Ihre Zugangsdaten ab sofort leider ihre Gültigkeit.
 Wenn Sie schlicht unsere E-Mails übersehen haben – lösen Sie jetzt eine
 Jahresmitgliedschaft. Das dauert nicht einmal drei Minuten.
 
-Jahresmitgliedschaft kaufen {{prolong_url}}
+Jahresmitgliedschaft kaufen {{link_offer_abo}}
 
 Falls Sie uns lieber kurzfristiger unterstützen wollen, gibt es die Möglichkeit,
 ein Monatsabo {{link_offer_monthly_abo}} zu kaufen. Das kostet nur CHF 22 im
