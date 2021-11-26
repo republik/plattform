@@ -327,7 +327,7 @@ INNER JOIN companies
 WHERE payments."dueDate" < now()
 AND payments.status = 'WAITING'
 AND payments.method = 'PAYMENTSLIP'
-AND pledges.status = 'SUCCESSFUL'
+AND pledges.status IN ('SUCCESSFUL', 'WAITING_FOR_PAYMENT')
 AND payments."createdAt" > :date
 ;
 `
