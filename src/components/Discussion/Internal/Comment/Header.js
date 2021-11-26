@@ -120,7 +120,7 @@ const styles = {
   expandCount: css({
     display: 'inline-block',
     paddingLeft: pxToRem(16),
-    marginRigth: pxToRem(-4),
+    marginRight: pxToRem(-4),
     whiteSpace: 'pre',
     verticalAlign: 'middle',
     [onlyS]: {
@@ -274,14 +274,9 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
           <IconButton
             invert={true}
             Icon={isExpanded ? UnfoldLessIcon : UnfoldMoreIcon}
+            fill={colorScheme.getCSSColor('textSoft')}
             onClick={onToggle}
             label={
-              !isExpanded &&
-              t.pluralize('styleguide/comment/header/expandCount', {
-                count: comments.totalCount + 1
-              })
-            }
-            labelShort={
               !isExpanded &&
               t.pluralize('styleguide/comment/header/expandCount', {
                 count: comments.totalCount + 1
@@ -296,6 +291,8 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
               contentPaddingMobile={'30px'}
               Element={MoreIconWithProps}
               align='right'
+              fillIcon={colorScheme.getCSSColor('textSoft')}
+
             >
               {menu}
             </CalloutMenu>

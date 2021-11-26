@@ -20,6 +20,7 @@ const CalloutMenu = ({
   initiallyOpen,
   contentPaddingMobile,
   padded,
+  fillIcon,
   attributes
 }) => {
   const [showMenu, setMenu] = React.useState(initiallyOpen)
@@ -56,7 +57,7 @@ const CalloutMenu = ({
           {children}
         </Callout>
       )}
-      <Element onClick={() => setMenu(!showMenu)} />
+      <Element fill={fillIcon} onClick={() => setMenu(!showMenu)} />
     </div>
   )
 }
