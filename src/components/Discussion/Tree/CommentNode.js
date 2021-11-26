@@ -70,7 +70,11 @@ const styles = {
         [`& .${CommentHeaderActionsClassName}`]: {
           visibility: 'hidden'
         },
-        '@media(hover)': {
+        // In case device doesn't support hover
+        '@media(hover:none)': {
+          visibility: 'visible'
+        },
+        '@media(hover: hover)': {
           [`:hover .${CommentHeaderActionsClassName}`]: {
             visibility: 'visible'
           }
