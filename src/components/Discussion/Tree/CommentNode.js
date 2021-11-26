@@ -66,18 +66,21 @@ const styles = {
       /*
        * On larger screens, hide the action button and reveal only on hover.
        */
+
       [mUp]: isExpanded && {
         [`& .${CommentHeaderActionsClassName}`]: {
           visibility: 'hidden'
         },
-        // In case device doesn't support hover
-        '@media(hover:none)': {
-          visibility: 'visible'
-        },
-        '@media(hover: hover)': {
+        '@media(hover)': {
           [`:hover .${CommentHeaderActionsClassName}`]: {
             visibility: 'visible'
           }
+        }
+      },
+      // In case device doesn't support hover
+      '@media(hover:none)': {
+        [`& .${CommentHeaderActionsClassName}`]: {
+          visibility: 'visible'
         }
       }
     }),
@@ -293,7 +296,7 @@ const CommentNode = ({
         },
         '::after': {
           background: drawLineEnd ? colorScheme.getCSSColor('divider') : 'none'
-        },
+        }
       }),
     [colorScheme, drawLineEnd]
   )
