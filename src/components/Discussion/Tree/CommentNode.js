@@ -285,19 +285,28 @@ const CommentNode = ({
             background: drawLineEnd
               ? colorScheme.getCSSColor('primary')
               : 'none'
-          },
-          ':hover > *': {
-            color: colorScheme.getCSSColor('primary')
           }
         },
         '::after': {
           background: drawLineEnd ? colorScheme.getCSSColor('divider') : 'none'
         },
+      }),
+    [colorScheme, drawLineEnd]
+  )
+
+  const verticalToggleChevronStyle = useMemo(
+    () =>
+      css({
+        '@media(hover)': {
+          ':hover > *': {
+            color: colorScheme.getCSSColor('primary')
+          }
+        },
         '& > *': {
           color: colorScheme.getCSSColor('divider')
         }
       }),
-    [colorScheme, drawLineEnd]
+    [colorScheme]
   )
 
   // Returns the content of the more-button, located in the top right of the header.
@@ -384,6 +393,7 @@ const CommentNode = ({
           <button
             {...verticalToggleStyle}
             {...verticalToggleStyleRules}
+            {...verticalToggleChevronStyle}
             onClick={toggleReplies}
           >
             <UnfoldLessIcon size={20} />
@@ -512,7 +522,11 @@ const CommentNode = ({
     return (
       <div ref={root} data-comment-id={id} {...rootStyle}>
         {verticalToggleStyle && (
-          <button {...verticalToggleStyle} onClick={toggleReplies}>
+          <button
+            {...verticalToggleStyle}
+            {...verticalToggleChevronStyle}
+            onClick={toggleReplies}
+          >
             <UnfoldMoreIcon size={20} />
           </button>
         )}
