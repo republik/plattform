@@ -29,6 +29,7 @@ export const profilePictureMargin = 10
 const styles = {
   root: css({
     display: 'flex',
+    flexDirection: 'row',
     alignItems: 'center'
   }),
   profilePicture: css({
@@ -130,10 +131,13 @@ const styles = {
   actionsWrapper: css({
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
     flexShrink: 0,
-    height: pxToRem('40px')
+    height: pxToRem('40px'),
+    '& > *:not(:last-child)': {
+      marginRight: 8
+    }
   })
 }
 
@@ -275,6 +279,7 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
             invert={true}
             Icon={isExpanded ? UnfoldLessIcon : UnfoldMoreIcon}
             fill={colorScheme.getCSSColor('textSoft')}
+            size={18}
             onClick={onToggle}
             label={
               !isExpanded &&
@@ -291,8 +296,10 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
               contentPaddingMobile={'30px'}
               Element={MoreIconWithProps}
               align='right'
-              fillIcon={colorScheme.getCSSColor('textSoft')}
-
+              iconProps={{
+                fill: colorScheme.getCSSColor('textSoft'),
+                size: 18
+              }}
             >
               {menu}
             </CalloutMenu>
