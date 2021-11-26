@@ -378,6 +378,9 @@ const CommentNode = ({
       })
     }
 
+    // Prevent rendering of an empty CalloutMenu
+    if (items.length === 0) return undefined
+
     return (
       <div {...styles.menuWrapper}>
         {items.map(item => (
