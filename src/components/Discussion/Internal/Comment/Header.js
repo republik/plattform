@@ -58,7 +58,7 @@ export const headerActionStyle = ({ isExpanded }) =>
 const styles = {
   root: css({
     display: 'flex',
-    alignItems: 'flex-start'
+    alignItems: 'center'
   }),
   profilePicture: css({
     display: 'block',
@@ -158,13 +158,9 @@ const styles = {
   }),
   actionsWrapper: css({
     display: 'flex',
-    alignItems: 'center'
-  }),
-  calloutWrapper: css({
-    margin: '5px 0',
-    [mUp]: {
-      margin: '10px 0'
-    }
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
   })
 }
 
@@ -191,19 +187,6 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
   const { profilePicture, name, credential } = displayAuthor || {}
 
   const isUpdated = updatedAt && updatedAt !== createdAt
-
-  const headerActionStyleHover = useMemo(
-    () =>
-      css({
-        opacity: 0.6,
-        '@media (hover)': {
-          ':hover': {
-            opacity: 1
-          }
-        }
-      }),
-    [colorScheme]
-  )
 
   return (
     <div {...styles.root}>
@@ -310,7 +293,7 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
           )}
         </div>
       </div>
-      <div {...styles.actionsWrapper} {...headerActionStyleHover}>
+      <div {...styles.actionsWrapper}>
         {onToggle && (
           <IconButton
             invert={true}
@@ -332,7 +315,7 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
           />
         )}
         {menu && (
-          <div {...styles.calloutWrapper}>
+          <div>
             <CalloutMenu
               contentPaddingMobile={'30px'}
               Element={MoreIconWithProps}
