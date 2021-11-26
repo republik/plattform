@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { css } from 'glamor'
 import {
   CheckIcon,
@@ -10,7 +10,7 @@ import {
   sansSerifMedium16,
   sansSerifRegular14
 } from '../../../Typography/styles'
-import { mUp, onlyS } from '../../../../theme/mediaQueries'
+import { onlyS } from '../../../../theme/mediaQueries'
 
 import { ellipsize, underline } from '../../../../lib/styleMixins'
 import { timeFormat } from '../../../../lib/timeFormat'
@@ -25,35 +25,6 @@ import RelativeTime from './RelativeTime'
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
-
-const buttonStyle = {
-  outline: 'none',
-  WebkitAppearance: 'none',
-  background: 'transparent',
-  border: 'none',
-  padding: '0',
-  display: 'block',
-  cursor: 'pointer'
-}
-
-/**
- * This style is exported so that <CommentNode> can control the visibility
- * of this action button on hover over the whole comment element.
- */
-export const headerActionStyle = ({ isExpanded }) =>
-  css({
-    ...buttonStyle,
-    ...convertStyleToRem(sansSerifRegular14),
-    flexShrink: 0,
-    height: pxToRem('40px'),
-    cursor: 'pointer',
-    '& svg': {
-      display: 'inline-block',
-      margin: '10px',
-      verticalAlign: 'middle'
-    },
-    marginRight: -10
-  })
 
 const styles = {
   root: css({
@@ -160,9 +131,14 @@ const styles = {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    flexShrink: 0,
+    height: pxToRem('40px')
   })
 }
+
+// Export to allow child hover styling in CommentNode
+export const CommentHeaderActionsClassName = styles.actionsWrapper
 
 const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
 const titleDate = string => dateTimeFormat(new Date(string))
@@ -293,7 +269,7 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
           )}
         </div>
       </div>
-      <div {...styles.actionsWrapper}>
+      <div {...styles.actionsWrapper} className={styles.actionsWrapper}>
         {onToggle && (
           <IconButton
             invert={true}

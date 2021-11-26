@@ -20,6 +20,7 @@ import {
 } from '../../Icons'
 import IconButton from '../../IconButton'
 import { timeFormat } from '../../../lib/timeFormat'
+import { CommentHeaderActionsClassName } from '../Internal/Comment'
 
 const dateFormat = timeFormat('%d.%m.%Y')
 const hmFormat = timeFormat('%H:%M')
@@ -66,12 +67,12 @@ const styles = {
        * On larger screens, hide the action button and reveal only on hover.
        */
       [mUp]: isExpanded && {
-        '@media (hover)': {
-          [`& [data-${Comment.headerActionStyle({ isExpanded })}]`]: {
-            display: 'none'
-          },
-          [`&:hover [data-${Comment.headerActionStyle({ isExpanded })}]`]: {
-            display: 'block'
+        [`& .${CommentHeaderActionsClassName}`]: {
+          visibility: 'hidden'
+        },
+        '@media(hover)': {
+          [`:hover .${CommentHeaderActionsClassName}`]: {
+            visibility: 'visible'
           }
         }
       }
