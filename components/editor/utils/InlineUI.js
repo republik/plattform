@@ -1,5 +1,5 @@
-import React from 'react'
-import { css } from 'glamor'
+import React, { useRef } from 'react'
+import { css, merge } from 'glamor'
 import buttonStyles from './buttonStyles'
 import { parent } from './selection'
 import ArrowUpIcon from 'react-icons/lib/md/arrow-upward'
@@ -14,10 +14,12 @@ const styles = {
   ui: css({
     position: 'absolute',
     zIndex: 10,
-    left: -75,
     overflow: 'hidden',
     display: 'flex',
     margin: 0
+  }),
+  breakoutUI: css({
+    top: -35
   })
 }
 
@@ -26,12 +28,15 @@ export const MarkButton = props => {
   return <span {...buttonStyles.mark} {...props} />
 }
 
-const InlineUI = ({ editor, node, isMatch, children, style }) => {
+const InlineUI = ({ editor, node, isMatch, children }) => {
+  const ref = useRef()
   const isSelected = isMatch
     ? isMatch(editor.value) && !editor.value.isBlurred
     : true
-  const isBreakout = parent(editor.state.value, node.key).nodes.size === 1
-  if (!isSelected || isBreakout) return null
+  const isBreakout =
+    !parent(editor.state.value, node.key).type ||
+    parent(editor.state.value, node.key).nodes.size === 1
+  if (!isSelected) return null
 
   const moveHandler = dir => event => {
     const parentNode = parent(editor.state.value, node.key)
@@ -45,16 +50,29 @@ const InlineUI = ({ editor, node, isMatch, children, style }) => {
       t.moveNodeByKey(node.key, parentNode.key, correctedIndex)
     )
   }
+  const currentWidth = ref.current?.getBoundingClientRect().width
 
   return (
     <div contentEditable={false} {...styles.uiContainer}>
-      <div contentEditable={false} {...styles.ui} style={style}>
-        <MarkButton onMouseDown={moveHandler(-1)}>
-          <ArrowUpIcon size={24} />
-        </MarkButton>
-        <MarkButton onMouseDown={moveHandler(+1)}>
-          <ArrowDownIcon size={24} />
-        </MarkButton>
+      <div
+        contentEditable={false}
+        ref={ref}
+        {...merge(styles.ui, isBreakout && styles.breakoutUI)}
+        style={{
+          left: isBreakout ? 0 : -(currentWidth + 15),
+          opacity: currentWidth ? 1 : 0
+        }}
+      >
+        {!isBreakout && (
+          <>
+            <MarkButton onMouseDown={moveHandler(-1)}>
+              <ArrowUpIcon size={24} />
+            </MarkButton>
+            <MarkButton onMouseDown={moveHandler(+1)}>
+              <ArrowDownIcon size={24} />
+            </MarkButton>
+          </>
+        )}
         {children}
       </div>
     </div>

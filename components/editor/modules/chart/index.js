@@ -19,7 +19,6 @@ const CustomUi = ({ editor, node, TYPE, subModules }) => {
     <InlineUI
       node={node}
       editor={editor}
-      style={{ left: -100 }}
       isMatch={value => value.blocks.some(matchSubmodules(TYPE, subModules))}
     >
       <MarkButton onMouseDown={() => setShowModal(true)}>

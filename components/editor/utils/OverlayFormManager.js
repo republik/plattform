@@ -1,45 +1,8 @@
-import React, { Component, useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import SlatePropTypes from 'slate-prop-types'
-import { css } from 'glamor'
-import { IconButton, useColorContext } from '@project-r/styleguide'
-
-import MdEdit from 'react-icons/lib/md/edit'
-
 import OverlayForm from './OverlayForm'
-import InlineUI, { MarkButton } from './InlineUI'
-import ArrowDownIcon from 'react-icons/lib/md/arrow-downward'
-import { matchAncestor } from './matchers'
 import { OverlayFormContext } from './OverlayFormContext'
-
-const styles = {
-  editButton: css({
-    position: 'absolute',
-    zIndex: 1,
-    fontSize: 24,
-    ':hover': {
-      cursor: 'pointer'
-    }
-  })
-}
-
-const EditButton = ({ onClick, size, parentType }) => {
-  const [colorScheme] = useColorContext()
-
-  return (
-    <div
-      //{...styles.editButton}
-      role='button'
-      onClick={onClick}
-      /*style={{
-        top: size === 'breakout' || !parentType ? -40 : 0,
-        left: !parentType ? 0 : -40
-      }}*/
-    >
-      <MdEdit {...colorScheme.set('fill', 'text')} />
-    </div>
-  )
-}
 
 const OverlayFormManager = ({
   editor,
@@ -52,13 +15,11 @@ const OverlayFormManager = ({
   extra,
   showPreview,
   title,
-  nested,
   children
 }) => {
   const { showModal, setShowModal } = useContext(OverlayFormContext)
   const startEditing = () => setShowModal(true)
   const isOpen = showModal || node.data.get('isNew')
-  const parent = editor.value.document.getParent(node.key)
 
   return (
     <div {...attributes} style={{ position: 'relative' }}>

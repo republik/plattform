@@ -23,7 +23,6 @@ const CustomUi = ({ editor, node, TYPE }) => {
     <InlineUI
       node={node}
       editor={editor}
-      style={{ left: -100 }}
       isMatch={value => value.blocks.some(matchBlock(TYPE))}
     >
       <MarkButton onMouseDown={() => setShowModal(true)}>
