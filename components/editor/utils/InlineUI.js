@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { css, merge } from 'glamor'
 import buttonStyles from './buttonStyles'
 import { parent } from './selection'
@@ -30,12 +30,13 @@ export const MarkButton = props => {
 
 const InlineUI = ({ editor, node, isMatch, children }) => {
   const ref = useRef()
-  const isSelected = isMatch
-    ? isMatch(editor.value) && !editor.value.isBlurred
-    : true
-  const isBreakout =
-    !parent(editor.state.value, node.key).type ||
-    parent(editor.state.value, node.key).nodes.size === 1
+  const [width, setWidth] = useState(0)
+  const isSelected = isMatch(editor.value) && !editor.value.isBlurred
+
+  useEffect(() => {
+    setWidth(ref.current?.getBoundingClientRect().width)
+  }, [ref, isSelected])
+
   if (!isSelected) return null
 
   const moveHandler = dir => event => {
@@ -50,7 +51,10 @@ const InlineUI = ({ editor, node, isMatch, children }) => {
       t.moveNodeByKey(node.key, parentNode.key, correctedIndex)
     )
   }
-  const currentWidth = ref.current?.getBoundingClientRect().width
+
+  const isBreakout =
+    !parent(editor.state.value, node.key).type ||
+    parent(editor.state.value, node.key).nodes.size === 1
 
   return (
     <div contentEditable={false} {...styles.uiContainer}>
@@ -59,8 +63,7 @@ const InlineUI = ({ editor, node, isMatch, children }) => {
         ref={ref}
         {...merge(styles.ui, isBreakout && styles.breakoutUI)}
         style={{
-          left: isBreakout ? 0 : -(currentWidth + 15),
-          opacity: currentWidth ? 1 : 0
+          left: isBreakout ? 0 : -(width + 15)
         }}
       >
         {!isBreakout && (
