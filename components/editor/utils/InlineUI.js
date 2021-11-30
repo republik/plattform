@@ -39,33 +39,36 @@ const InlineUI = ({ editor, node, isMatch, children }) => {
 
   if (!isSelected) return null
 
-  const getNextParent = currentParent => {
+  const getAllCenters = currentParent => {
     const allCenters = parent(
       editor.state.value,
       currentParent.key
     ).nodes.filter(n => n.type === 'CENTER')
-    const currentCenterIndex = allCenters.indexOf(currentParent)
+    return {
+      allCenters,
+      currentCenterIndex: allCenters.indexOf(currentParent)
+    }
+  }
+
+  const getNextParent = currentParent => {
+    const { allCenters, currentCenterIndex } = getAllCenters(currentParent)
     if (allCenters.size === 1) {
       return currentParent
-    } else if (currentCenterIndex === allCenters.nodes.size - 1) {
-      return allCenters[0]
+    } else if (currentCenterIndex === allCenters.size - 1) {
+      return allCenters.get(0)
     } else {
-      return allCenters[currentCenterIndex + 1]
+      return allCenters.get(currentCenterIndex + 1)
     }
   }
 
   const getPreviousParent = currentParent => {
-    const allCenters = parent(
-      editor.state.value,
-      currentParent.key
-    ).nodes.filter(n => n.type === 'CENTER')
-    const currentCenterIndex = allCenters.indexOf(currentParent)
+    const { allCenters, currentCenterIndex } = getAllCenters(currentParent)
     if (allCenters.size === 1) {
       return currentParent
     } else if (currentCenterIndex === 0) {
-      return allCenters[allCenters.size - 1]
+      return allCenters.get(allCenters.size - 1)
     } else {
-      return allCenters[currentCenterIndex - 1]
+      return allCenters.get(currentCenterIndex - 1)
     }
   }
 
@@ -75,8 +78,8 @@ const InlineUI = ({ editor, node, isMatch, children }) => {
     let targetIndex = targetParent.nodes.indexOf(node) + dir
     if (targetIndex === -1) {
       targetParent = getPreviousParent(targetParent)
-      targetIndex = targetParent.nodes.size - 1
-    } else if (targetIndex === targetParent.nodes.size) {
+      targetIndex = targetParent.nodes.size
+    } else if (targetIndex === targetParent.nodes.size - 1) {
       targetParent = getNextParent(targetParent)
       targetIndex = 0
     }
