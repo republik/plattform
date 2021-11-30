@@ -61,7 +61,6 @@ const Overlay = props => {
           })
         })
       }}
-      nested
     >
       {({ data, onChange }) => {
         const onChartSelect = (config, values, cleanup) => {
