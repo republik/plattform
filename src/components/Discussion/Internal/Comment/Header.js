@@ -279,7 +279,7 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
             invert={true}
             Icon={isExpanded ? UnfoldLessIcon : UnfoldMoreIcon}
             fill={colorScheme.getCSSColor('textSoft')}
-            size={18}
+            size={20}
             onClick={onToggle}
             label={
               !isExpanded &&
@@ -298,7 +298,7 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
               align='right'
               iconProps={{
                 fill: colorScheme.getCSSColor('textSoft'),
-                size: 18
+                size: 20
               }}
             >
               {menu}

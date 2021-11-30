@@ -109,7 +109,7 @@ export const Actions = ({ t, comment, onExpand, onReply }) => {
             title={t('styleguide/CommentActions/expand')}
             Icon={DiscussionIcon}
             fillColorName={'primary'}
-            size={18}
+            size={20}
             label={
               comment.comments &&
               comment.comments.totalCount > 0 &&
@@ -127,7 +127,7 @@ export const Actions = ({ t, comment, onExpand, onReply }) => {
             title={t('styleguide/CommentActions/share')}
             Icon={ShareIcon}
             onClick={onShare}
-            size={18}
+            size={20}
             noMargin
           />
         )}
@@ -136,7 +136,7 @@ export const Actions = ({ t, comment, onExpand, onReply }) => {
             disabled={!!replyBlockedMessage}
             onClick={onReply}
             Icon={ReplyIcon}
-            size={18}
+            size={20}
             title={replyBlockedMessage || t('styleguide/CommentActions/answer')}
             label={t('styleguide/CommentActions/answer')}
             labelShort={t('styleguide/CommentActions/answer')}
