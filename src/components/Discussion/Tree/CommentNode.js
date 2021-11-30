@@ -14,8 +14,6 @@ import {
   EtiquetteIcon,
   FeaturedIcon,
   ReportIcon,
-  UnfoldLessIcon,
-  UnfoldMoreIcon,
   UnpublishIcon
 } from '../../Icons'
 import IconButton from '../../IconButton'
@@ -117,20 +115,12 @@ const styles = {
         left: -((config.indentSizeM - config.verticalLineWidth) / 2),
         width: config.indentSizeM
       },
-      '&> *': {
-        position: 'absolute',
-        top: 0,
-        left: -5,
-        [mUp]: {
-          left: -2
-        }
-      },
       '::before': {
         display: 'block',
         content: '""',
         position: 'absolute',
-        top: 20,
-        bottom: drawLineEnd ? 0 : 4,
+        top: 0,
+        bottom: 0,
         left: (config.indentSizeS - config.verticalLineWidth) / 2,
         width: config.verticalLineWidth,
         [mUp]: {
@@ -301,31 +291,9 @@ const CommentNode = ({
     [colorScheme, drawLineEnd]
   )
 
-  const verticalToggleChevronStyle = useMemo(
-    () =>
-      css({
-        '@media(hover)': {
-          ':hover > *': {
-            color: colorScheme.getCSSColor('primary')
-          }
-        },
-        '& > *': {
-          color: colorScheme.getCSSColor('divider')
-        }
-      }),
-    [colorScheme]
-  )
-
   // Returns the content of the more-button, located in the top right of the header.
   const menu = useMemo(() => {
     const items = []
-    if (actions.toEtiquette && comment.userCanReport && actions.reportComment) {
-      items.push({
-        icon: EtiquetteIcon,
-        label: t('components/Discussion/etiquette'),
-        action: () => actions.toEtiquette()
-      })
-    }
 
     if (comment.published && comment.userCanReport && actions.reportComment) {
       items.push({
@@ -403,11 +371,8 @@ const CommentNode = ({
           <button
             {...verticalToggleStyle}
             {...verticalToggleStyleRules}
-            {...verticalToggleChevronStyle}
             onClick={toggleReplies}
-          >
-            <UnfoldLessIcon size={20} />
-          </button>
+          />
         )}
         <div
           {...merge(
@@ -532,13 +497,7 @@ const CommentNode = ({
     return (
       <div ref={root} data-comment-id={id} {...rootStyle}>
         {verticalToggleStyle && (
-          <button
-            {...verticalToggleStyle}
-            {...verticalToggleChevronStyle}
-            onClick={toggleReplies}
-          >
-            <UnfoldMoreIcon size={20} />
-          </button>
+          <button {...verticalToggleStyle} onClick={toggleReplies} />
         )}
         <Comment.Header
           t={t}
