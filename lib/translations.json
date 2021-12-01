@@ -197,6 +197,10 @@
       "value": "Keine Resultate"
     },
     {
+      "key": "repo/search/notPublished",
+      "value": "nicht publiziert"
+    },
+    {
       "key": "repo/table/nav/documents",
       "value": "Dokumente"
     },
