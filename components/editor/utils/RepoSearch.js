@@ -5,6 +5,12 @@ import { Autocomplete, InlineSpinner } from '@project-r/styleguide'
 import debounce from 'lodash.debounce'
 
 import { GITHUB_ORG, REPO_PREFIX } from '../../../lib/settings'
+import {
+  displayDateTime,
+  displayDateTimeFormat
+} from '../../../lib/utils/calendar'
+import { swissTime } from '../../../lib/utils/format'
+import withT from '../../../lib/withT'
 
 export const filterRepos = gql`
   query searchRepo(
@@ -30,6 +36,16 @@ export const filterRepos = gql`
       }
       nodes {
         id
+        meta {
+          publishDate
+        }
+        latestPublications {
+          document {
+            meta {
+              publishDate
+            }
+          }
+        }
         latestCommit {
           id
           document {
@@ -98,6 +114,29 @@ export const filterRepos = gql`
   }
 `
 
+const RepoItem = withT(({ t, repo }) => {
+  console.log(repo)
+  const title =
+    repo.latestCommit.document.meta.title ||
+    repo.id.replace([GITHUB_ORG, REPO_PREFIX || ''].join('/'), '')
+  const publicationDate =
+    repo?.latestPublications[0]?.document.meta.publishDate ||
+    repo.meta.publishDate
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      {title}
+      <br />
+      <small>
+        {publicationDate ? (
+          swissTime.format('%d.%m.%y')(new Date(publicationDate))
+        ) : (
+          <em>{t('repo/search/notPublished')}</em>
+        )}
+      </small>
+    </div>
+  )
+})
+
 const ConnectedAutoComplete = graphql(filterRepos, {
   skip: props => !props.filter,
   options: ({ search, template, isSeriesEpisode, isSeriesMaster }) => ({
@@ -113,9 +152,7 @@ const ConnectedAutoComplete = graphql(filterRepos, {
       data: props.data,
       items: nodes.map(v => ({
         value: v,
-        text:
-          v.latestCommit.document.meta.title ||
-          v.id.replace([GITHUB_ORG, REPO_PREFIX || ''].join('/'), '')
+        element: <RepoItem repo={v} />
       }))
     }
   }
