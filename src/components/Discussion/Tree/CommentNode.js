@@ -67,18 +67,18 @@ const styles = {
 
       [mUp]: isExpanded && {
         [`& .${CommentHeaderActionsClassName}`]: {
-          visibility: 'hidden'
+          opacity: 0.6
         },
         '@media(hover)': {
           [`:hover .${CommentHeaderActionsClassName}`]: {
-            visibility: 'visible'
+            opacity: 1
           }
         }
       },
       // In case device doesn't support hover
       '@media(hover:none)': {
         [`& .${CommentHeaderActionsClassName}`]: {
-          visibility: 'visible'
+          opacity: 1
         }
       }
     }),
