@@ -77,7 +77,7 @@ const OverlayForm = ({
   autoDarkModePreview = true
 }) => {
   const [colorScheme] = useColorContext()
-  const [showDarkMode, setShowDarkMode] = useState(autoDarkModePreview)
+  // const [showDarkMode, setShowDarkMode] = useState(autoDarkModePreview)
 
   return (
     <Overlay
@@ -91,25 +91,24 @@ const OverlayForm = ({
         </div>
         {showPreview && (
           <div {...styles.preview}>
-            {extra}
-            <br />
             <ContextBackground>{preview}</ContextBackground>
             <br />
-            <Checkbox
+            {/* <Checkbox
               checked={showDarkMode}
               onChange={(_, checked) => setShowDarkMode(checked)}
             >
               Nachtmodus Vorschau
-            </Checkbox>
-            {showDarkMode && (
-              <ColorContextProvider
-                colorSchemeKey={
-                  colorScheme.schemeKey === 'dark' ? 'light' : 'dark'
-                }
-              >
-                <ContextBackground>{preview}</ContextBackground>
-              </ColorContextProvider>
-            )}
+            </Checkbox> */}
+
+            <ColorContextProvider
+              colorSchemeKey={
+                colorScheme.schemeKey === 'dark' ? 'light' : 'dark'
+              }
+            >
+              <ContextBackground>{preview}</ContextBackground>
+            </ColorContextProvider>
+            <br />
+            {extra}
           </div>
         )}
         <br style={{ clear: 'both' }} />

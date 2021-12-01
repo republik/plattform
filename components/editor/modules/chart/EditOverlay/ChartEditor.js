@@ -7,7 +7,7 @@ import WYSIWYGChartEditor from '@project-r/styleguide/lib/components/Chart/Edito
 const ChartEditor = ({ data, onChange }) => {
   return (
     <>
-      <SizeSelector onChange={onChange} data={data} />
+      {/* <SizeSelector onChange={onChange} data={data} /> */}
       <PlainEditor
         label='CSV Daten'
         value={data.get('values')}
