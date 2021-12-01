@@ -4,6 +4,7 @@ import buttonStyles from './buttonStyles'
 import { parent } from './selection'
 import ArrowUpIcon from 'react-icons/lib/md/arrow-upward'
 import ArrowDownIcon from 'react-icons/lib/md/arrow-downward'
+import scrollIntoView from 'scroll-into-view'
 
 const styles = {
   uiContainer: css({
@@ -74,6 +75,8 @@ const InlineUI = ({ editor, node, isMatch, children }) => {
 
   const moveHandler = dir => event => {
     event.preventDefault()
+    const rect = ref.current.getBoundingClientRect()
+    const top = (rect.top + rect.height / 2) / window.innerHeight
     let targetParent = parent(editor.state.value, node.key)
     let targetIndex = targetParent.nodes.indexOf(node) + dir
     if (targetIndex === -1) {
@@ -84,6 +87,14 @@ const InlineUI = ({ editor, node, isMatch, children }) => {
       targetIndex = 0
     }
     editor.change(t => t.moveNodeByKey(node.key, targetParent.key, targetIndex))
+    setTimeout(() => {
+      scrollIntoView(ref.current, {
+        time: 0,
+        align: {
+          top
+        }
+      })
+    }, 0)
   }
 
   const isBreakout =
