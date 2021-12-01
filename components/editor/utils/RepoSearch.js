@@ -139,7 +139,7 @@ const RepoItem = withT(({ t, repo }) => {
 const ConnectedAutoComplete = graphql(filterRepos, {
   skip: props => !props.filter,
   options: ({ search, template, isSeriesEpisode, isSeriesMaster }) => ({
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'no-cache',
     variables: { search, template, isSeriesEpisode, isSeriesMaster }
   }),
   props: props => {
