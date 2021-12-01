@@ -847,10 +847,10 @@ const Styleguide = () => {
                     },
                     {
                       path: '/charts/editor',
-                      title: 'Editor Prototype',
+                      title: 'Editor',
                       imports: {
                         ...require('./components/Typography'),
-                        ChartEditor: require('./components/Chart/Editor'),
+                        ChartEditor: require('./components/Chart/Editor/EditorWrapper'),
                         data: {
                           ...require('./components/Chart/Editor.docs.data')
                         },

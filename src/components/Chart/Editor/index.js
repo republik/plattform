@@ -1,12 +1,10 @@
-import React, { useState, useMemo } from 'react'
-import { css } from 'glamor'
+import React, { useMemo } from 'react'
 import { csvParse } from 'd3-dsv'
 
 import Dropdown from '../../Form/Dropdown'
 import { FormFields } from './FormFields'
 import { ColorDropdownElement } from './ColorDropdownElement'
 
-import { fontStyles } from '../../Typography'
 import { useColorContext } from '../../Colors/ColorContext'
 
 import { timeParse } from '../../../lib/timeFormat'
@@ -19,80 +17,27 @@ import {
   timeFormats,
   xScaleTypes,
   yScaleTypes,
-  sortingOptions
+  sortingOptions,
+  timeParsing
 } from './Editor.utils'
 import { barEditorSchema, lollipopEditorSchema } from '../Bars'
-
-const styles = {
-  orderBy: css({
-    ...fontStyles.sansSerifRegular16,
-    outline: 'none',
-    WebkitAppearance: 'none',
-    background: 'transparent',
-    border: 'none',
-    padding: '0',
-    cursor: 'pointer',
-    marginRight: '20px'
-  }),
-  regular: css({
-    textDecoration: 'none'
-  }),
-  selected: css({
-    textDecoration: 'underline',
-    textDecorationSkip: 'ink'
-  }),
-  tabs: css({
-    margin: '20px 0px'
-  }),
-  gridContainer: css({
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gridTemplateRows: '1fr',
-    gap: '50px 30px',
-    margin: '20px 0'
-  })
-}
-
-const chartTypes = [
-  {
-    value: 'Line',
-    text: 'Linie'
-  },
-  {
-    value: 'TimeBar',
-    text: 'Balken über Zeit'
-  },
-  {
-    value: 'Bar',
-    text: 'Balken'
-  },
-  {
-    value: 'Lollipop',
-    text: 'Lollipop'
-  }
-]
-
-const tabs = [
-  { value: 'basic', text: 'Grundeinstellungen' },
-  {
-    value: 'advanced',
-    text: 'Erweiterte Optionen'
-  }
-]
+import { scatterPlotEditorSchema } from '../ScatterPlots'
 
 const schemaDict = {
   Line: lineEditorSchema,
   TimeBar: timeBarEditorSchema,
   Lollipop: lollipopEditorSchema,
-  Bar: barEditorSchema
+  Bar: barEditorSchema,
+  ScatterPlot: scatterPlotEditorSchema
 }
 
-const ChartEditor = ({ data, value, onChange }) => {
-  const [colorScheme] = useColorContext()
-  const [activeTab, setActiveTab] = useState('basic')
-  const chartData = useMemo(() => csvParse(data), [data])
+const chartTypes = Object.keys(schemaDict).map(d => {
+  return { value: d, text: d }
+})
 
-  console.log(value)
+const ChartEditor = ({ data, value, onChange, activeTab }) => {
+  const [colorScheme] = useColorContext()
+  const chartData = useMemo(() => csvParse(data), [data])
 
   const createRanges = ({ sequential, sequential3, opposite3, discrete }) => {
     const oppositeReversed = [].concat(opposite3).reverse()
@@ -110,7 +55,7 @@ const ChartEditor = ({ data, value, onChange }) => {
     colorScheme
   ])
 
-  const customColors = [...colorRanges.discrete, ...colorRanges.sequential]
+  const customColors = [...colorRanges.discrete]
 
   const colorRangesArray = Object.keys(colorRanges)
 
@@ -183,44 +128,15 @@ const ChartEditor = ({ data, value, onChange }) => {
       yScaleTypes,
       timeFormats,
       colorDropdownItems,
-      sortingOptions
+      sortingOptions,
+      timeParsing
     })
   }
 
   const schema = createSchema(value.type)
 
-  const handleTabClick = () => {
-    setActiveTab(activeTab === 'basic' ? 'advanced' : 'basic')
-  }
-
-  const hoverRule = useMemo(() => {
-    return css({
-      '@media (hover)': {
-        ':hover': {
-          color: colorScheme.getCSSColor('textSoft')
-        }
-      }
-    })
-  }, [colorScheme])
-
   return (
     <div>
-      <div {...styles.tabs}>
-        {tabs.map(d => {
-          return (
-            <a
-              key={d.value}
-              {...styles.orderBy}
-              {...colorScheme.set('color', 'text')}
-              {...styles[activeTab === d.value ? 'selected' : 'regular']}
-              {...(activeTab !== d.value && hoverRule)}
-              onClick={handleTabClick}
-            >
-              {d.text}
-            </a>
-          )
-        })}
-      </div>
       <Dropdown
         label='Charttyp auswählen'
         items={chartTypes}

@@ -771,7 +771,6 @@ export const barEditorSchema = ({
   fields,
   defaults,
   numberFormats,
-  timeFormats,
   colorDropdownItems,
   sortingOptions
 }) => {
@@ -783,14 +782,6 @@ export const barEditorSchema = ({
         xAxis: {
           title: 'Horizontale Achse',
           properties: {
-            xTicks: {
-              title: 'Achsenticks',
-              type: 'array',
-              contains: {
-                type: 'string'
-              },
-              default: defaults.xTicks
-            },
             numberFormat: {
               title: 'Achsenformat',
               type: 'string',
@@ -805,8 +796,8 @@ export const barEditorSchema = ({
             y: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields,
-              default: defaults.y || 'value'
+              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              default: defaults.y || ''
             },
             unit: {
               title: 'Beschriftung',
@@ -845,7 +836,7 @@ export const barEditorSchema = ({
           }
         },
         layout: {
-          title: 'Layout',
+          title: 'Grid',
           properties: {
             column: {
               title: 'Spalte auswählen',
@@ -874,12 +865,12 @@ export const barEditorSchema = ({
               default: defaults.xTicks
             },
             showBarValues: {
-              title: 'Balken ausserhalb mit Wert beschriften',
+              title: 'Balken ausserhalb mit Wert anschreiben',
               type: 'boolean',
               default: defaults.showBarValues
             },
             inlineValue: {
-              title: 'Balken innerhalb mit Wert beschriften',
+              title: 'Balken innerhalb mit Wert anschreiben',
               type: 'boolean',
               default: defaults.inlineValue
             }
@@ -930,8 +921,8 @@ export const lollipopEditorSchema = ({
   fields,
   defaults,
   numberFormats,
-  timeFormats,
-  colorDropdownItems
+  colorDropdownItems,
+  sortingOptions
 }) => {
   return {
     title: 'LollipopChartConfig',
@@ -941,30 +932,11 @@ export const lollipopEditorSchema = ({
         xAxis: {
           title: 'Horizontale Achse',
           properties: {
-            x: {
-              title: 'Spalte auswählen',
-              type: 'string',
-              enum: fields,
-              default: defaults.x
-            },
-            timeFormat: {
+            numberFormat: {
               title: 'Achsenformat',
               type: 'string',
-              enum: timeFormats,
-              default: defaults.timeFormat
-            },
-            xTicks: {
-              title: 'Achsenticks',
-              type: 'array',
-              contains: {
-                type: 'string'
-              },
-              default: defaults.xTicks
-            },
-            xUnit: {
-              title: 'Beschriftung',
-              type: 'string',
-              default: defaults.xUnit || ''
+              enum: numberFormats,
+              default: defaults.numberFormat
             }
           }
         },
@@ -976,12 +948,6 @@ export const lollipopEditorSchema = ({
               type: 'string',
               enum: fields,
               default: defaults.y || 'value'
-            },
-            numberFormat: {
-              title: 'Achsenformat',
-              type: 'string',
-              enum: numberFormats,
-              default: defaults.numberFormat
             },
             unit: {
               title: 'Beschriftung',
@@ -1004,11 +970,17 @@ export const lollipopEditorSchema = ({
               type: 'string',
               enum: colorDropdownItems,
               default: defaults.colorRange || ''
+            },
+            colorSort: {
+              title: 'Farbsortierung',
+              type: 'string',
+              enum: sortingOptions,
+              default: defaults.colorSort
             }
           }
         },
         layout: {
-          title: 'Layout',
+          title: 'Grid',
           properties: {
             column: {
               title: 'Spalte auswählen',
@@ -1019,8 +991,7 @@ export const lollipopEditorSchema = ({
             columns: {
               title: 'Anzahl Spalten pro Zeile:',
               type: 'number',
-              default: defaults.columns,
-              format: 'Slider'
+              default: defaults.columns
             }
           }
         }
@@ -1036,20 +1007,17 @@ export const lollipopEditorSchema = ({
                 type: 'string'
               },
               default: defaults.xTicks
+            },
+            showBarValues: {
+              title: 'Lollipop ausserhalb mit Wert anschreiben',
+              type: 'boolean',
+              default: defaults.showBarValues
             }
           }
         },
         yAxis: {
           title: 'Vertikale Achse',
           properties: {
-            yTicks: {
-              title: 'Achsenticks',
-              type: 'array',
-              contains: {
-                type: 'string'
-              },
-              default: defaults.yTicks
-            },
             domain: {
               title: 'Domain setzen',
               type: 'array',
@@ -1072,6 +1040,21 @@ export const lollipopEditorSchema = ({
               title: 'Minimale Breite',
               type: 'number',
               default: defaults.minInnerWidth
+            }
+          }
+        },
+        more: {
+          title: 'Weitere Einstellungen',
+          properties: {
+            band: {
+              title: 'Name für Konfidenzinterval',
+              type: 'string',
+              default: defaults.band || ''
+            },
+            bandLegend: {
+              title: 'Legende für Konfidenzinterval',
+              type: 'string',
+              default: defaults.bandLegend || ''
             }
           }
         }

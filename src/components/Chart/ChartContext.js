@@ -199,6 +199,29 @@ export const defaultProps = {
   },
   Lollipop: {
     barStyle: 'lollipop'
+  },
+  ScatterPlot: {
+    x: 'value',
+    y: 'value',
+    xScale: 'linear',
+    xShowValue: true,
+    yScale: 'linear',
+    yShowValue: true,
+    opacity: 1,
+    numberFormat: 's',
+    colorLegend: true,
+    paddingTop: 15,
+    paddingRight: 1,
+    paddingBottom: 50,
+    paddingLeft: 30,
+    size: 'size',
+    sizeRangeMax: 4,
+    label: 'label',
+    heightRatio: 1,
+    sizeShowValue: false,
+    columns: 1,
+    minInnerWidth: 240,
+    annotations: []
   }
 }
 

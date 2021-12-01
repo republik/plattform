@@ -1,5 +1,5 @@
 ```react
-state: { type: 'Bar'}
+state: { type: 'TimeBar'}
 ---
 <div>
   <ChartEditor value={state} data={data.chartData} onChange={setState} />

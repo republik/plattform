@@ -183,7 +183,9 @@ export const timeBarEditorSchema = ({
   defaults,
   numberFormats,
   timeFormats,
-  colorDropdownItems
+  colorDropdownItems,
+  timeParsing,
+  sortingOptions
 }) => {
   return {
     title: 'LineChartConfig',
@@ -205,13 +207,11 @@ export const timeBarEditorSchema = ({
               enum: timeFormats,
               default: defaults.timeFormat
             },
-            xTicks: {
-              title: 'Achsenticks',
-              type: 'array',
-              contains: {
-                type: 'string'
-              },
-              default: defaults.xTicks
+            timeParse: {
+              title: 'Achsenparsing',
+              type: 'string',
+              enum: timeParsing,
+              default: defaults.timeParse
             },
             xUnit: {
               title: 'Beschriftung',
@@ -250,6 +250,12 @@ export const timeBarEditorSchema = ({
               type: 'string',
               enum: colorDropdownItems,
               default: defaults.colorRange || ''
+            },
+            colorSort: {
+              title: 'Farbsortierung',
+              type: 'string',
+              enum: sortingOptions,
+              default: defaults.colorSort
             }
           }
         },
@@ -263,7 +269,7 @@ export const timeBarEditorSchema = ({
               default: defaults.column || ''
             },
             columns: {
-              title: 'Anzahl Spalten pro Zeile:',
+              title: 'Anzahl Spalten pro Zeile',
               type: 'number',
               default: defaults.columns
             }
@@ -317,6 +323,11 @@ export const timeBarEditorSchema = ({
               title: 'Höhe',
               type: 'number',
               default: defaults.height
+            },
+            minInnerWidth: {
+              title: 'Minimale Breite',
+              type: 'number',
+              default: defaults.minInnerWidth
             }
           }
         }

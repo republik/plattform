@@ -19,23 +19,25 @@ export const ColorField = props => {
   const [customColorMap, setCustomColorMap] = useState({})
   const [customColorFields, setCustomColorFields] = useState()
 
-  console.log(customColorMap)
-
   const handleColorChange = key => item => {
     return setCustomColorMap({ ...customColorMap, [key]: item.value })
   }
 
+  // const handleColorPickerChange = key => item => {
+  //   return setCustomColorMap({ ...customColorMap, [key]: item.target.value })
+  // }
+
   useEffect(() => {
     setCustomColorFields(chartData.map(d => d[colorColumn]).filter(deduplicate))
-  }, [colorColumn])
+  }, [colorColumn, chartData])
 
   useEffect(() => {
-    value === 'custom_color' && createColorMapChange(customColorMap)
-  }, [customColorMap])
-
-  useEffect(() => {
-    value === 'party_colors' && createColorMapChange('swissPartyColors')
-  }, [value])
+    value === 'custom_color'
+      ? createColorMapChange(customColorMap)
+      : value === 'party_colors'
+      ? createColorMapChange('swissPartyColors')
+      : createColorMapChange('')
+  }, [value, customColorMap])
 
   return (
     <>
@@ -50,11 +52,14 @@ export const ColorField = props => {
         customColorFields.map(colorField => {
           return (
             <div
-              style={{ display: 'flex', alignItems: 'center' }}
+              style={{
+                display: 'flex',
+                alignItems: 'center'
+              }}
               key={colorField}
             >
-              <div style={{ flexBasis: '50%' }}>{colorField}</div>
-              <div style={{ flexBasis: '50%' }}>
+              <div style={{ flexBasis: '60%' }}>{colorField}</div>
+              <div style={{ flexBasis: '39%' }}>
                 <Dropdown
                   label={''}
                   items={customColorDropdownItems}
@@ -62,6 +67,13 @@ export const ColorField = props => {
                   onChange={handleColorChange(colorField)}
                 />
               </div>
+              {/* <div style={{ flexBasis: '24%' }}>
+                <input
+                  type='color'
+                  value={customColorMap[colorField] || '#2077b4'}
+                  onChange={handleColorPickerChange(colorField)}
+                />
+              </div> */}
             </div>
           )
         })}

@@ -61,7 +61,7 @@ export const numberFormats = [
     text: 'Gleitkommazahl: 4,27'
   },
   {
-    value: '%',
+    value: '.0%',
     text: 'Prozentsatz: 4%'
   },
   {
@@ -103,11 +103,30 @@ export const yScaleTypes = [
 export const timeFormats = [
   {
     value: '%Y',
-    text: '2015, 2016'
+    text: '2017, 2018'
   },
   {
     value: '%d.%m.%Y',
-    text: '26.02.2017, 24.02.2018'
+    text: '26.01.2017, 24.02.2018'
+  },
+  {
+    value: '%b %Y',
+    text: 'Jan 2017, Feb 2018'
+  }
+]
+
+export const timeParsing = [
+  {
+    value: '%Y',
+    text: '2017, 2018'
+  },
+  {
+    value: '%Y-%m-%d',
+    text: '2017-01-26, 2018-02-24'
+  },
+  {
+    value: '%d.%m.%Y',
+    text: '26.01.2017, 24.02.2018'
   }
 ]
 

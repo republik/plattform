@@ -257,7 +257,8 @@ export const lineEditorSchema = ({
   timeFormats,
   colorDropdownItems,
   xScaleTypes,
-  yScaleTypes
+  yScaleTypes,
+  sortingOptions
 }) => {
   return {
     title: 'LineChartConfig',
@@ -278,6 +279,12 @@ export const lineEditorSchema = ({
               type: 'string',
               enum: timeFormats,
               default: defaults.timeFormat
+            },
+            timeParse: {
+              title: 'Achsenparsing',
+              type: 'string',
+              enum: timeFormats,
+              default: defaults.timeParse
             },
             xUnit: {
               title: 'Beschriftung',
@@ -328,6 +335,12 @@ export const lineEditorSchema = ({
               type: 'string',
               enum: colorDropdownItems,
               default: defaults.colorRange || ''
+            },
+            colorSort: {
+              title: 'Farbsortierung',
+              type: 'string',
+              enum: sortingOptions,
+              default: defaults.colorSort
             }
           }
         },
@@ -382,6 +395,21 @@ export const lineEditorSchema = ({
               title: 'yNice',
               type: 'number',
               default: defaults.yNice
+            }
+          }
+        },
+        layout: {
+          title: 'Layout',
+          properties: {
+            height: {
+              title: 'Höhe',
+              type: 'number',
+              default: defaults.height
+            },
+            minInnerWidth: {
+              title: 'Minimale Breite',
+              type: 'number',
+              default: defaults.minInnerWidth
             }
           }
         },
