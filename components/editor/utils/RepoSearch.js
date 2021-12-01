@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
-import { Autocomplete, InlineSpinner } from '@project-r/styleguide'
+import {
+  Autocomplete,
+  InlineSpinner,
+  Label,
+  Interaction
+} from '@project-r/styleguide'
 import debounce from 'lodash.debounce'
 
 import { GITHUB_ORG, REPO_PREFIX } from '../../../lib/settings'
-import {
-  displayDateTime,
-  displayDateTimeFormat
-} from '../../../lib/utils/calendar'
 import { swissTime } from '../../../lib/utils/format'
 import withT from '../../../lib/withT'
 
@@ -119,19 +120,18 @@ const RepoItem = withT(({ t, repo }) => {
     repo.latestCommit.document.meta.title ||
     repo.id.replace([GITHUB_ORG, REPO_PREFIX || ''].join('/'), '')
   const publicationDate =
-    repo?.latestPublications[0]?.document.meta.publishDate ||
+    repo.latestPublications[0]?.document.meta.publishDate ||
     repo.meta.publishDate
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      {title}
-      <br />
-      <small>
+      <Interaction.P>{title}</Interaction.P>
+      <Label>
         {publicationDate ? (
           swissTime.format('%d.%m.%y')(new Date(publicationDate))
         ) : (
           <em>{t('repo/search/notPublished')}</em>
         )}
-      </small>
+      </Label>
     </div>
   )
 })
