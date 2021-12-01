@@ -115,7 +115,6 @@ export const filterRepos = gql`
 `
 
 const RepoItem = withT(({ t, repo }) => {
-  console.log(repo)
   const title =
     repo.latestCommit.document.meta.title ||
     repo.id.replace([GITHUB_ORG, REPO_PREFIX || ''].join('/'), '')
