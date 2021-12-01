@@ -80,16 +80,20 @@ const ChartEditor = ({ data, onChange }) => {
           )
         })}
       </div>
-      <SizeSelector onChange={onChange} data={data} />
       {activeTab !== 'data' && (
-        <WYSIWYGChartEditor
-          data={data.get('values')}
-          value={data.get('config')}
-          onChange={newConfig => {
-            onChange(data.set('config', newConfig))
-          }}
-          activeTab={activeTab}
-        />
+        <>
+          {activeTab === 'basic' && (
+            <SizeSelector onChange={onChange} data={data} />
+          )}
+          <WYSIWYGChartEditor
+            data={data.get('values')}
+            value={data.get('config')}
+            onChange={newConfig => {
+              onChange(data.set('config', newConfig))
+            }}
+            activeTab={activeTab}
+          />
+        </>
       )}
       {activeTab === 'data' && (
         <>
