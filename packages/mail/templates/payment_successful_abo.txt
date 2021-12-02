@@ -47,8 +47,9 @@ sich mit Ihren Kolleginnen und Kollegen in der Verlagsetage austauschen.
 
 {{#if `goodies_count == 1`}} Sie haben sich zu Ihrer Mitgliedschaft noch ein
 Republik-Objekt gegönnt. {{elseif `goodies_count > 1`}} Sie haben sich zu Ihrer
-Mitgliedschaft noch mehrere Republik-Objekte gegönnt. {{/if}} Diese liefern wir
-innerhalb von 7 Werktagen.
+Mitgliedschaft noch mehrere Republik-Objekte gegönnt. {{/if}} Notizbücher und
+Taschen liefern wir Ihnen innerhalb von 7 Werktagen. {{#if goodies_has_fondue}}
+Das Republik-Fondue wird bis zum 23. Dezember bei Ihnen eintreffen. {{/if}}
 
 {{/if}} {{#if `total > 1000`}}
 
