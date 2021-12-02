@@ -329,7 +329,6 @@ const CommentNode = ({
     if (
       comment.published &&
       !comment.adminUnpublished &&
-      !comment.unpublished &&
       (isAdmin || isModerator || comment.userCanEdit) &&
       actions.unpublishComment
     ) {
