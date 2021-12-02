@@ -41,8 +41,6 @@ const EditorWrapper = ({ data, value, onChange }) => {
   const [colorScheme] = useColorContext()
   const [activeTab, setActiveTab] = useState('basic')
 
-  console.log(activeTab)
-
   const handleTabClick = item => {
     setActiveTab(item.target.value)
   }

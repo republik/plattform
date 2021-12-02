@@ -13,11 +13,12 @@ export const ColorField = props => {
     chartData,
     colorColumn,
     customColorDropdownItems,
-    createColorMapChange
+    createColorMapChange,
+    colorMap
   } = props
 
-  const [customColorMap, setCustomColorMap] = useState({})
-  const [customColorFields, setCustomColorFields] = useState()
+  const [customColorMap, setCustomColorMap] = useState(colorMap || {})
+  const [customColorFields, setCustomColorFields] = useState('')
 
   const handleColorChange = key => item => {
     return setCustomColorMap({ ...customColorMap, [key]: item.value })
@@ -41,6 +42,9 @@ export const ColorField = props => {
 
   return (
     <>
+      {value === 'custom_color' && !colorColumn && (
+        <span>Wähle noch eine Spalte für die Farbe aus.</span>
+      )}
       <div style={{ marginBottom: '30px' }}>
         <Dropdown
           label={label}
@@ -51,6 +55,7 @@ export const ColorField = props => {
       </div>
       {value === 'custom_color' &&
         colorColumn &&
+        customColorFields &&
         customColorFields.map(colorField => {
           return (
             <div
@@ -65,7 +70,7 @@ export const ColorField = props => {
                 <Dropdown
                   label={''}
                   items={customColorDropdownItems}
-                  value={customColorMap[colorField]}
+                  value={customColorMap[colorField] || ''}
                   onChange={handleColorChange(colorField)}
                 />
               </div>
@@ -79,9 +84,6 @@ export const ColorField = props => {
             </div>
           )
         })}
-      {value === 'custom_color' && !colorColumn && (
-        <span>Wähle noch eine Spalte für die Farbe aus.</span>
-      )}
     </>
   )
 }

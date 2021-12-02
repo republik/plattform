@@ -55,6 +55,7 @@ export const FormFields = props => {
                     chartData={chartData}
                     customColorDropdownItems={customColorDropdownItems}
                     createColorMapChange={createColorMapChange}
+                    colorMap={value['colorMap']}
                   />
                 )
               } else if (groupObject[property].enum) {

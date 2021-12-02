@@ -79,15 +79,21 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
       { value: 'party_colors', text: 'Parteifarben' }
     )
 
-  const customColorDropdownItems = customColors.map((d, i) => {
-    return {
-      value: d,
-      text: d,
-      element: (
-        <ColorDropdownElement key={'singleColor' + i} colorRange={d} name={d} />
-      )
-    }
-  })
+  const customColorDropdownItems = customColors
+    .map((d, i) => {
+      return {
+        value: d,
+        text: d,
+        element: (
+          <ColorDropdownElement
+            key={'singleColor' + i}
+            colorRange={d}
+            name={d}
+          />
+        )
+      }
+    })
+    .concat({ value: '', text: '' })
 
   const columns = Object.keys(chartData[0]).map(d => {
     return { value: d, text: d }
