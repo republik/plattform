@@ -64,8 +64,7 @@ const styles = {
       /*
        * On larger screens, hide the action button and reveal only on hover.
        */
-
-      [mUp]: isExpanded && {
+      /*[mUp]: isExpanded && {
         [`& .${CommentHeaderActionsClassName}`]: {
           opacity: 0.6
         },
@@ -80,7 +79,7 @@ const styles = {
         [`& .${CommentHeaderActionsClassName}`]: {
           opacity: 1
         }
-      }
+      }*/
     }),
   root: ({ isExpanded, nestLimitExceeded, depth, board }) =>
     css({
@@ -386,7 +385,7 @@ const CommentNode = ({
         >
           {{
             view: () => (
-              <div {...styles.commentWrapper({ isExpanded })}>
+              <div>
                 <Comment.Header
                   t={t}
                   comment={comment}

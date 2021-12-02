@@ -141,9 +141,6 @@ const styles = {
   })
 }
 
-// Export to allow child hover styling in CommentNode
-export const CommentHeaderActionsClassName = styles.actionsWrapper
-
 const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
 const titleDate = string => dateTimeFormat(new Date(string))
 const MoreIconWithProps = props => (
