@@ -97,7 +97,7 @@ const ChartEditor = ({ data, onChange }) => {
           )
         })}
       </div>
-      {activeTab !== 'data' && (
+      {activeTab !== 'json' && (
         <>
           {activeTab === 'basic' && (
             <SizeSelector onChange={onChange} data={data} />
