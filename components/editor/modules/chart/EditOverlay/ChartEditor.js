@@ -32,14 +32,14 @@ const styles = {
 }
 
 const tabs = [
-  {
-    value: 'data',
-    text: 'Daten & JSON'
-  },
   { value: 'basic', text: 'Grundeinstellungen' },
   {
     value: 'advanced',
     text: 'Erweiterte Optionen'
+  },
+  {
+    value: 'json',
+    text: 'JSON'
   }
 ]
 
@@ -63,6 +63,23 @@ const ChartEditor = ({ data, onChange }) => {
 
   return (
     <>
+      <PlainEditor
+        label='CSV Daten'
+        value={data.get('values')}
+        onChange={value => onChange(data.set('values', value))}
+        linesShown={10}
+        onPaste={e => {
+          const clipboardData = e.clipboardData || window.clipboardData
+          let parsedTsv
+          try {
+            parsedTsv = tsvParse(clipboardData.getData('Text'))
+          } catch (e) {}
+          if (parsedTsv && parsedTsv.columns.length > 1) {
+            e.preventDefault()
+            onChange(data.set('values', csvFormat(parsedTsv)))
+          }
+        }}
+      />
       <div {...styles.tabs}>
         {tabs.map(d => {
           return (
@@ -95,25 +112,8 @@ const ChartEditor = ({ data, onChange }) => {
           />
         </>
       )}
-      {activeTab === 'data' && (
+      {activeTab === 'json' && (
         <>
-          <PlainEditor
-            label='CSV Daten'
-            value={data.get('values')}
-            onChange={value => onChange(data.set('values', value))}
-            linesShown={10}
-            onPaste={e => {
-              const clipboardData = e.clipboardData || window.clipboardData
-              let parsedTsv
-              try {
-                parsedTsv = tsvParse(clipboardData.getData('Text'))
-              } catch (e) {}
-              if (parsedTsv && parsedTsv.columns.length > 1) {
-                e.preventDefault()
-                onChange(data.set('values', csvFormat(parsedTsv)))
-              }
-            }}
-          />
           <JSONEditor
             label='Einstellungen'
             config={data.get('config')}
