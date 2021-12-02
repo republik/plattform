@@ -9,16 +9,9 @@ import * as Comment from '../Internal/Comment'
 import { CommentComposer } from '../Composer'
 import { CommentList } from './CommentList'
 import { mUp } from '../../../theme/mediaQueries'
-import {
-  EditIcon,
-  EtiquetteIcon,
-  FeaturedIcon,
-  ReportIcon,
-  UnpublishIcon
-} from '../../Icons'
+import { EditIcon, FeaturedIcon, ReportIcon, UnpublishIcon } from '../../Icons'
 import IconButton from '../../IconButton'
 import { timeFormat } from '../../../lib/timeFormat'
-import { CommentHeaderActionsClassName } from '../Internal/Comment'
 
 const dateFormat = timeFormat('%d.%m.%Y')
 const hmFormat = timeFormat('%H:%M')
@@ -171,7 +164,8 @@ const CommentNode = ({
     highlightedCommentId,
     activeTag,
     actions,
-    isAdmin
+    isAdmin,
+    isModerator
   } = React.useContext(DiscussionContext)
   const { id, parentIds, tags, text, comments } = comment
   const { displayAuthor } = discussion
@@ -324,8 +318,7 @@ const CommentNode = ({
       })
     }
 
-    // TODO: Add Edit action
-    if (comment.userCanEdit) {
+    if (comment.userCanEdit && !comment.adminUnpublished) {
       items.push({
         icon: EditIcon,
         label: t('styleguide/CommentActions/edit'),
@@ -335,7 +328,9 @@ const CommentNode = ({
 
     if (
       comment.published &&
-      (isAdmin || comment.userCanEdit) &&
+      !comment.adminUnpublished &&
+      !comment.unpublished &&
+      (isAdmin || isModerator || comment.userCanEdit) &&
       actions.unpublishComment
     ) {
       items.push({
