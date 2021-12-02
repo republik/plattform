@@ -230,6 +230,7 @@ const ScatterPlot = ({
       <ColorLegend inline values={displayedColorLegendValues} />
       <div style={{ position: 'relative', width, height }}>
         {groupedData.map(({ values, key }) => {
+          const filterByColumn = d => !d.column || d.column === key
           return (
             <div
               key={key || 1}
@@ -245,8 +246,8 @@ const ScatterPlot = ({
                 inlineLabel={inlineLabel}
                 inlineSecondaryLabel={inlineSecondaryLabel}
                 inlineLabelPosition={inlineLabelPosition}
-                plotXLines={plotXLines}
-                plotYLines={plotYLines}
+                plotXLines={plotXLines.filter(filterByColumn)}
+                plotYLines={plotYLines.filter(filterByColumn)}
                 opacity={opacity}
                 width={innerWidth}
                 height={innerHeight}
@@ -260,9 +261,7 @@ const ScatterPlot = ({
                 maxYLine={maxYLine}
                 getColor={d => colorMapper(colorAccessor(d))}
                 xUnit={xUnit}
-                annotations={annotations.filter(
-                  annotation => !annotation.column || annotation.column === key
-                )}
+                annotations={annotations.filter(filterByColumn)}
                 contextBoxProps={contextBoxProps}
                 // canvas does not support dark mapping yet
                 allowCanvasRendering={allowCanvasRendering && !colorDarkMapping}
@@ -286,6 +285,7 @@ export const propTypes = {
   xTicks: PropTypes.arrayOf(PropTypes.number),
   xLines: PropTypes.arrayOf(
     PropTypes.shape({
+      column: PropTypes.string,
       tick: PropTypes.number.isRequired,
       label: PropTypes.string,
       base: PropTypes.bool,
@@ -301,6 +301,7 @@ export const propTypes = {
   yTicks: PropTypes.arrayOf(PropTypes.number),
   yLines: PropTypes.arrayOf(
     PropTypes.shape({
+      column: PropTypes.string,
       tick: PropTypes.number.isRequired,
       label: PropTypes.string,
       base: PropTypes.bool

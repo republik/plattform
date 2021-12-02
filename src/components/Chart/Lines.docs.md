@@ -5757,6 +5757,7 @@ year,value
 This should rarely be used. Generally we should use line charts to display developments over time. The default time scale and the ordinal option should be use.
 
 Known valid use cases:
+
 - reproduce a chart done elsewhere and then explain why it is bad
 
 If you have a valid case: set `"xScale": "linear"`, `"xNumberFormat"` if differen from the general `"numberFormat"` and make sure to set an `"xUnit"` – make the readers notice that those numbers are not years.
@@ -6262,6 +6263,1276 @@ bereits Infizierte,2020-03-16,13801,13801,13801
     />
   <ChartLegend>
     Quelle: BAG Situationsberichtes als XLS bis zum 26. März (aufsummiert, Stand 29. March 08:00)
+  </ChartLegend>
+</div>
+```
+
+## Areas
+
+Use a `area` column base name with `_lower` and `_upper` data to display areas. This is similair to the confidence intervals, but without middle line. Defaults to opaque. Use `areaOpacity` to define a custom value.
+
+```react
+<div>
+  <ChartTitle>Klimaabkommen hat den globalen Klimaschutz verschärft</ChartTitle>
+  <CsvChart
+    config={{
+  "numberFormat": ".2f",
+  "color": "pledges",
+  "area": "area",
+  "areaOpacity": 0.8,
+  "type": "Line",
+  "labelFilter": "datum.pledges !== 'Bisherige Entwicklung'",
+  "unit": "Gt CO<sub>2</sub>e",
+  "endLabel": true,
+  "colorSort": "none",
+  "yTicks": [-50,0,50,100],
+  "xTicks": [1990,2020,2050,2100],
+  "colorMap": {
+    "Bisherige Entwicklung": "#000",
+    "Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)": "#bb76d6",
+    "Aktueller Emissionspfad (2,7°C - 3,1°C)": "#fbbe29",
+    "Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)": "#4cbec2",
+    "Pariser-Klimaziel (1,5°C)": "#4ec291"
+  }
+}}
+    values={`
+year,pledges,area_upper,area_lower,value
+1990,Bisherige Entwicklung,,,35.9892772410999
+1991,Bisherige Entwicklung,,,36.3529059805546
+1992,Bisherige Entwicklung,,,35.529754806517
+1993,Bisherige Entwicklung,,,35.7364773912376
+1994,Bisherige Entwicklung,,,35.8572448217216
+1995,Bisherige Entwicklung,,,36.6681849423253
+1996,Bisherige Entwicklung,,,37.3170319100897
+1997,Bisherige Entwicklung,,,37.6894974075812
+1998,Bisherige Entwicklung,,,38.0387711589038
+1999,Bisherige Entwicklung,,,38.2936544723947
+2000,Bisherige Entwicklung,,,39.2972343
+2001,Bisherige Entwicklung,,,39.758757
+2002,Bisherige Entwicklung,,,40.40335
+2003,Bisherige Entwicklung,,,41.7931882
+2004,Bisherige Entwicklung,,,43.1715125
+2005,Bisherige Entwicklung,,,44.3958093
+2006,Bisherige Entwicklung,,,45.4282082
+2007,Bisherige Entwicklung,,,46.5708502
+2008,Bisherige Entwicklung,,,46.8618283
+2009,Bisherige Entwicklung,,,46.2471801
+2010,Bisherige Entwicklung,,,48.1847801
+2011,Bisherige Entwicklung,,,49.2213834
+2012,Bisherige Entwicklung,,,49.6985001
+2013,Bisherige Entwicklung,,,50.4044137
+2014,Bisherige Entwicklung,,,50.5299674
+2015,Bisherige Entwicklung,,,50.6250534
+2016,Bisherige Entwicklung,,,50.5825758
+2016,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",50.3020020836063,50.75723630530335,
+2017,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",50.942774473332214,51.54691642240051,
+2018,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",51.574651371602705,52.33592241244244,
+2019,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",52.20224740215272,53.12406991224235,
+2020,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",52.83017792517205,53.91117529506821,
+2021,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",53.58135485773941,54.83537343519655,
+2022,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",54.319187463072424,55.776229885263945,
+2023,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",55.041810070781494,56.72847998629089,
+2024,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",55.74735838591931,57.68686045474024,
+2025,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",56.433969529619894,58.64610942315606,
+2026,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",57.09978208121285,59.60096648227812,
+2027,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",57.74293612195559,60.546172724773875,
+2028,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",58.361573280516886,61.476470790722246,
+2029,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",58.95383678033913,62.38660491497575,
+2030,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",59.521581894782884,63.27503138230499,
+2031,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",60.10201258007769,64.18921282113143,
+2032,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",60.683659917574026,65.12790927567214,
+2033,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",61.26436569927047,66.08551898534793,
+2034,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",61.8419736505554,67.05644212296946,
+2035,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",62.414329494410104,68.03508085894026,
+2036,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",62.97928101836434,69.01583942821239,
+2037,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",63.53467814430668,69.99312420009663,
+2038,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",64.07837300125152,70.96134375102964,
+2039,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",64.6082200011653,71.91490894040017,
+2040,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",65.12207591795577,72.84823298953815,
+2041,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",65.6081743733433,73.77142480426653,
+2042,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",66.08532429568575,74.72128767632378,
+2043,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",66.55182652045981,75.68685750752614,
+2044,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",67.00598242834063,76.65717074488823,
+2045,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",67.44609395469737,77.62126439011878,
+2046,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",67.87046359981518,78.56817600984247,
+2047,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",68.27739443981908,79.48694374652378,
+2048,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",68.66519013827843,80.36660633007165,
+2049,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",69.03215495847172,81.19620309010405,
+2050,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",69.37659377629278,81.96477396885433,
+2051,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",69.63689164837051,82.61722860869779,
+2052,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",69.88100065103163,83.23599268814726,
+2053,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",70.11228439230993,83.82708840623559,
+2054,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",70.33410715888412,84.39653864064053,
+2055,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",70.5498339332227,84.95036696482967,
+2056,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",70.76283041133146,85.49459766580786,
+2057,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",70.97646302109875,86.0352557624625,
+2058,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",71.19409894123416,86.57836702450226,
+2059,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",71.41910612079901,87.12995799198751,
+2060,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",71.65485329932734,87.6960559954514,
+2061,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",71.8778687053104,88.26436983312443,
+2062,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",72.09995965674244,88.85068161420281,
+2063,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",72.32173791876802,89.4474530270242,
+2064,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",72.54381542978538,90.04714593317986,
+2065,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",72.76680430717009,90.64222237323851,
+2066,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",72.99131685307036,91.22514457254138,
+2067,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",73.21796556026801,91.78837494706342,
+2068,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",73.44736311810011,92.32437610933478,
+2069,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",73.68012241843766,92.8256108744195,
+2070,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",73.91685656171772,93.28454226594769,
+2071,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",74.1424621156461,93.70386023271502,
+2072,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",74.3765329755877,94.12380449723399,
+2073,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",74.61654279127212,94.53797730151437,
+2074,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",74.85996526789374,94.93998094303065,
+2075,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",75.10427416983275,95.32341777844307,
+2076,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",75.34694332432083,95.68189022726348,
+2077,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",75.58544662505216,96.00900077546608,
+2078,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",75.81725803574098,96.29835197904524,
+2079,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",76.03985159362718,96.54354646752091,
+2080,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",76.25070141293146,96.73818694739397,
+2081,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",76.43707692971519,96.88279484485831,
+2082,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",76.61999149500392,97.01536134190879,
+2083,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",76.79980997193643,97.13796865521921,
+2084,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",76.97689723794437,97.25269901575618,
+2085,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",77.15161818731433,97.36163467134143,
+2086,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",77.32433773366964,97.46685788913321,
+2087,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",77.49542081237459,97.5704509580309,
+2088,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",77.6652323828647,97.674496191005,
+2089,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",77.83413743090642,97.78107592735707,
+2090,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",78.00250097078936,97.89227253491167,
+2091,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",78.16279605096489,97.99574788325091,
+2092,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",78.32337716718025,98.09439762652477,
+2093,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",78.48399357783245,98.18871688257333,
+2094,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",78.64439453480318,98.27920076272144,
+2095,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",78.80432928517615,98.36634437349586,
+2096,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",78.96354707287905,98.45064281826745,
+2097,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",79.12179714025375,98.53259119882111,
+2098,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",79.27882872955824,98.61268461685799,
+2099,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",79.43439108440428,98.69141817543291,
+2100,"Emissionspfad vor Pariser Klimaabkommen (3,6°C - 4,7°C)",79.58823345113291,98.76928698033005,
+2016,"Aktueller Emissionspfad (2,7°C - 3,1°C)",50.510151,50.5002523,
+2017,"Aktueller Emissionspfad (2,7°C - 3,1°C)",51.1034867,51.0796988,
+2018,"Aktueller Emissionspfad (2,7°C - 3,1°C)",51.7819529,51.7303284,
+2019,"Aktueller Emissionspfad (2,7°C - 3,1°C)",52.0097602,51.6870598,
+2020,"Aktueller Emissionspfad (2,7°C - 3,1°C)",49.6286065,47.4451494,
+2021,"Aktueller Emissionspfad (2,7°C - 3,1°C)",50.9447,48.5901211,
+2022,"Aktueller Emissionspfad (2,7°C - 3,1°C)",51.489153,48.7120348,
+2023,"Aktueller Emissionspfad (2,7°C - 3,1°C)",51.9019801,48.9717765,
+2024,"Aktueller Emissionspfad (2,7°C - 3,1°C)",52.3911517,49.2551268,
+2025,"Aktueller Emissionspfad (2,7°C - 3,1°C)",52.8898343,49.4569162,
+2026,"Aktueller Emissionspfad (2,7°C - 3,1°C)",53.4421136,49.762924,
+2027,"Aktueller Emissionspfad (2,7°C - 3,1°C)",53.9448768,50.0218602,
+2028,"Aktueller Emissionspfad (2,7°C - 3,1°C)",54.4472697,50.320394,
+2029,"Aktueller Emissionspfad (2,7°C - 3,1°C)",54.9385484,50.6067865,
+2030,"Aktueller Emissionspfad (2,7°C - 3,1°C)",55.4176401,50.8663539,
+2031,"Aktueller Emissionspfad (2,7°C - 3,1°C)",55.7271496,50.90703,
+2032,"Aktueller Emissionspfad (2,7°C - 3,1°C)",56.0260297,50.8928436,
+2033,"Aktueller Emissionspfad (2,7°C - 3,1°C)",56.3203276,50.8500557,
+2034,"Aktueller Emissionspfad (2,7°C - 3,1°C)",56.6125766,50.794305,
+2035,"Aktueller Emissionspfad (2,7°C - 3,1°C)",56.9002536,50.7305567,
+2036,"Aktueller Emissionspfad (2,7°C - 3,1°C)",57.1698925,50.666098,
+2037,"Aktueller Emissionspfad (2,7°C - 3,1°C)",57.4123019,50.5967226,
+2038,"Aktueller Emissionspfad (2,7°C - 3,1°C)",57.6256769,50.5111331,
+2039,"Aktueller Emissionspfad (2,7°C - 3,1°C)",57.8015742,50.418814,
+2040,"Aktueller Emissionspfad (2,7°C - 3,1°C)",57.9412058,50.3085915,
+2041,"Aktueller Emissionspfad (2,7°C - 3,1°C)",58.1237913,50.2304272,
+2042,"Aktueller Emissionspfad (2,7°C - 3,1°C)",58.2913503,50.0908988,
+2043,"Aktueller Emissionspfad (2,7°C - 3,1°C)",58.4568568,49.9019287,
+2044,"Aktueller Emissionspfad (2,7°C - 3,1°C)",58.6239666,49.6597875,
+2045,"Aktueller Emissionspfad (2,7°C - 3,1°C)",58.7852138,49.3805235,
+2046,"Aktueller Emissionspfad (2,7°C - 3,1°C)",58.9509687,49.1129367,
+2047,"Aktueller Emissionspfad (2,7°C - 3,1°C)",59.1138003,48.8593558,
+2048,"Aktueller Emissionspfad (2,7°C - 3,1°C)",59.2532546,48.6057035,
+2049,"Aktueller Emissionspfad (2,7°C - 3,1°C)",59.3624985,48.3448706,
+2050,"Aktueller Emissionspfad (2,7°C - 3,1°C)",59.4393662,48.0734779,
+2051,"Aktueller Emissionspfad (2,7°C - 3,1°C)",59.4336918,47.6992294,
+2052,"Aktueller Emissionspfad (2,7°C - 3,1°C)",59.3684815,47.270724,
+2053,"Aktueller Emissionspfad (2,7°C - 3,1°C)",59.2554198,46.8094725,
+2054,"Aktueller Emissionspfad (2,7°C - 3,1°C)",59.1065283,46.3233619,
+2055,"Aktueller Emissionspfad (2,7°C - 3,1°C)",58.9322684,45.8355637,
+2056,"Aktueller Emissionspfad (2,7°C - 3,1°C)",58.7281594,45.3694633,
+2057,"Aktueller Emissionspfad (2,7°C - 3,1°C)",58.5042274,44.938204,
+2058,"Aktueller Emissionspfad (2,7°C - 3,1°C)",58.2747327,44.5655799,
+2059,"Aktueller Emissionspfad (2,7°C - 3,1°C)",58.0621007,44.2430439,
+2060,"Aktueller Emissionspfad (2,7°C - 3,1°C)",57.884047,43.9680021,
+2061,"Aktueller Emissionspfad (2,7°C - 3,1°C)",57.6713428,43.667885,
+2062,"Aktueller Emissionspfad (2,7°C - 3,1°C)",57.4370522,43.3458889,
+2063,"Aktueller Emissionspfad (2,7°C - 3,1°C)",57.1942296,42.9927546,
+2064,"Aktueller Emissionspfad (2,7°C - 3,1°C)",56.9652296,42.5876237,
+2065,"Aktueller Emissionspfad (2,7°C - 3,1°C)",56.7485175,42.1448139,
+2066,"Aktueller Emissionspfad (2,7°C - 3,1°C)",56.5605614,41.6475156,
+2067,"Aktueller Emissionspfad (2,7°C - 3,1°C)",56.3904265,41.0845442,
+2068,"Aktueller Emissionspfad (2,7°C - 3,1°C)",56.2363871,40.496645,
+2069,"Aktueller Emissionspfad (2,7°C - 3,1°C)",56.0777051,39.9117886,
+2070,"Aktueller Emissionspfad (2,7°C - 3,1°C)",55.9233675,39.3638324,
+2071,"Aktueller Emissionspfad (2,7°C - 3,1°C)",55.794428,38.8919822,
+2072,"Aktueller Emissionspfad (2,7°C - 3,1°C)",55.6489579,38.47061,
+2073,"Aktueller Emissionspfad (2,7°C - 3,1°C)",55.4851714,38.1083239,
+2074,"Aktueller Emissionspfad (2,7°C - 3,1°C)",55.303195,37.8014328,
+2075,"Aktueller Emissionspfad (2,7°C - 3,1°C)",55.1128507,37.5348216,
+2076,"Aktueller Emissionspfad (2,7°C - 3,1°C)",54.906496,37.3544301,
+2077,"Aktueller Emissionspfad (2,7°C - 3,1°C)",54.6971213,37.2261266,
+2078,"Aktueller Emissionspfad (2,7°C - 3,1°C)",54.4846968,37.1169575,
+2079,"Aktueller Emissionspfad (2,7°C - 3,1°C)",54.2738774,37.0027673,
+2080,"Aktueller Emissionspfad (2,7°C - 3,1°C)",54.0658611,36.8746801,
+2081,"Aktueller Emissionspfad (2,7°C - 3,1°C)",53.8133597,36.707966,
+2082,"Aktueller Emissionspfad (2,7°C - 3,1°C)",53.4760379,36.5266238,
+2083,"Aktueller Emissionspfad (2,7°C - 3,1°C)",53.0773411,36.3441671,
+2084,"Aktueller Emissionspfad (2,7°C - 3,1°C)",52.6400088,36.1682828,
+2085,"Aktueller Emissionspfad (2,7°C - 3,1°C)",52.1806771,35.990723,
+2086,"Aktueller Emissionspfad (2,7°C - 3,1°C)",51.7302558,35.818852,
+2087,"Aktueller Emissionspfad (2,7°C - 3,1°C)",51.3074895,35.6535776,
+2088,"Aktueller Emissionspfad (2,7°C - 3,1°C)",50.907915,35.4986955,
+2089,"Aktueller Emissionspfad (2,7°C - 3,1°C)",50.5371016,35.3597093,
+2090,"Aktueller Emissionspfad (2,7°C - 3,1°C)",50.2038444,35.246154,
+2091,"Aktueller Emissionspfad (2,7°C - 3,1°C)",49.9047474,35.1471412,
+2092,"Aktueller Emissionspfad (2,7°C - 3,1°C)",49.6342913,35.0670979,
+2093,"Aktueller Emissionspfad (2,7°C - 3,1°C)",49.3673666,34.9988573,
+2094,"Aktueller Emissionspfad (2,7°C - 3,1°C)",49.1041906,34.9418241,
+2095,"Aktueller Emissionspfad (2,7°C - 3,1°C)",48.8653516,34.8901523,
+2096,"Aktueller Emissionspfad (2,7°C - 3,1°C)",48.6571188,34.8399375,
+2097,"Aktueller Emissionspfad (2,7°C - 3,1°C)",48.4336664,34.7786754,
+2098,"Aktueller Emissionspfad (2,7°C - 3,1°C)",48.1903196,34.712076,
+2099,"Aktueller Emissionspfad (2,7°C - 3,1°C)",47.9297384,34.6310576,
+2100,"Aktueller Emissionspfad (2,7°C - 3,1°C)",47.6784841,34.5430283,
+2016,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",50.4803565,50.1289811,
+2017,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",51.0464649,50.6219159,
+2018,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",51.5991747,50.8011595,
+2019,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",51.3999949,50.6071215,
+2020,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",49.4285549,47.5702372,
+2021,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",49.9468433,48.000931,
+2022,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",49.9428575,48.0348888,
+2023,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",49.9363112,47.7910632,
+2024,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",49.9412067,47.5527001,
+2025,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",49.852367,47.3238427,
+2026,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",49.7666543,47.103366,
+2027,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",49.6899384,46.890841,
+2028,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",49.6186248,46.6573886,
+2029,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",49.5431075,46.3793101,
+2030,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",49.4310263,46.0746124,
+2031,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",49.1830533777308,45.708240320684,
+2032,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",48.8839288849138,45.2964890177196,
+2033,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",48.5491713904588,44.8556778112335,
+2034,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",48.1929156470766,44.3788434991829,
+2035,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",47.8163036672674,43.8633826301192,
+2036,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",47.4218150637568,43.3138403143888,
+2037,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",47.012413263354,42.7376063137046,
+2038,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",46.5867081435966,42.147950728209,
+2039,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",46.1473909587226,41.5436491640361,
+2040,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",45.6962574715593,40.937202818727,
+2041,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",45.2681006396851,40.3300690182118,
+2042,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",44.7824986014697,39.6366197265455,
+2043,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",44.2534220741758,38.8707230612771,
+2044,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",43.6792301295511,38.0494601247401,
+2045,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",43.0670501932732,37.1870508527698,
+2046,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",42.4452455179496,36.318433874436,
+2047,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",41.8233626063633,35.4708415900375,
+2048,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",41.2055465887324,34.6543613854224,
+2049,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",40.5972667037209,33.8849607057178,
+2050,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",40.0201468538361,33.1873032900486,
+2051,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",39.4619459493124,32.6220292750652,
+2052,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",38.8012834039939,32.0511761930835,
+2053,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",38.0466428380726,31.4832641443994,
+2054,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",37.2270949238133,30.941403125036,
+2055,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",36.3409183156215,30.3978959916227,
+2056,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",35.4388659454798,29.8708679860508,
+2057,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",34.5785115362642,29.3405830704719,
+2058,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",33.8277833193157,28.8072327909718,
+2059,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",33.1998372088016,28.2959723295849,
+2060,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",32.670347513531,27.8081318414329,
+2061,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",32.202316256245,27.3094585793273,
+2062,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",31.7739755680826,26.8034802354798,
+2063,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",31.4042574426627,26.3026971268076,
+2064,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",31.073207481574,25.8192722744912,
+2065,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",30.7559768440724,25.3681051518383,
+2066,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",30.4512503885967,24.9609592386802,
+2067,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",30.1731722466398,24.5934859763248,
+2068,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",29.8949341944217,24.2535523864714,
+2069,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",29.6145259624655,23.9327047835201,
+2070,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",29.3275333564616,23.627321735424,
+2071,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",29.0480459916097,23.3434986964431,
+2072,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",28.7394652228926,23.0558079656891,
+2073,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",28.4367156745902,22.7668689195229,
+2074,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",28.1420538561787,22.47550842054,
+2075,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",27.8317032201094,22.177274951424,
+2076,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",27.5406556353594,21.8759313699181,
+2077,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",27.2631386667102,21.5847783739952,
+2078,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",27.0285504592199,21.3038149395474,
+2079,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",26.8309318145097,21.0317521332698,
+2080,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",26.6643722710475,20.7681818968046,
+2081,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",26.5086659237058,20.5024806812496,
+2082,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",26.3701456606351,20.2380037070374,
+2083,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",26.2322421741028,19.9760584306158,
+2084,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",26.0809692905232,19.7175933927281,
+2085,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",25.9211999959717,19.4649695635555,
+2086,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",25.7501099642364,19.2234850579428,
+2087,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",25.573360374705,18.9925173295458,
+2088,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",25.3897272441598,18.7752568737551,
+2089,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",25.2043526068141,18.5716795186626,
+2090,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",25.0175773754753,18.3769271665327,
+2091,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",24.8270531652797,18.1946878418708,
+2092,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",24.6335899271862,18.0115647577452,
+2093,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",24.4345201416319,17.8254700633971,
+2094,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",24.2321118317858,17.6444116170882,
+2095,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",24.0326640163833,17.4599135075048,
+2096,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",23.8387310320823,17.2756907792631,
+2097,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",23.6537779679875,17.0839726163386,
+2098,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",23.4741087186405,16.8850339165227,
+2099,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",23.3014309471862,16.6819807149352,
+2100,"Aktuelle Ziele und Verpflichtungen (2,1°C - 2,4°C)",23.1311429346485,16.4660303619824,
+2016,"Pariser-Klimaziel (1,5°C)",51.5367538900543,49.5473690445102,
+2017,"Pariser-Klimaziel (1,5°C)",52.1095462050634,49.7885972185952,
+2018,"Pariser-Klimaziel (1,5°C)",52.6823385200724,50.0298253926803,
+2019,"Pariser-Klimaziel (1,5°C)",53.2551308350815,50.2710535667653,
+2020,"Pariser-Klimaziel (1,5°C)",53.8279231500905,50.5122817408503,
+2021,"Pariser-Klimaziel (1,5°C)",51.1983350127967,47.58866291857,
+2022,"Pariser-Klimaziel (1,5°C)",48.5687468755028,44.6650440962896,
+2023,"Pariser-Klimaziel (1,5°C)",45.9391587382089,41.7414252740092,
+2024,"Pariser-Klimaziel (1,5°C)",43.3095706009151,38.8178064517289,
+2025,"Pariser-Klimaziel (1,5°C)",40.6799824636212,35.8941876294485,
+2026,"Pariser-Klimaziel (1,5°C)",38.0503943263273,32.9705688071681,
+2027,"Pariser-Klimaziel (1,5°C)",35.4208061890334,30.0469499848878,
+2028,"Pariser-Klimaziel (1,5°C)",32.7912180517396,27.1233311626074,
+2029,"Pariser-Klimaziel (1,5°C)",30.1616299144457,24.199712340327,
+2030,"Pariser-Klimaziel (1,5°C)",27.5320417771518,21.2760935180467,
+2031,"Pariser-Klimaziel (1,5°C)",26.7865794583883,20.5192210794398,
+2032,"Pariser-Klimaziel (1,5°C)",25.6469602143748,19.4652230424821,
+2033,"Pariser-Klimaziel (1,5°C)",24.5073409703612,18.4112250055244,
+2034,"Pariser-Klimaziel (1,5°C)",23.3677217263477,17.3572269685668,
+2035,"Pariser-Klimaziel (1,5°C)",22.2281024823341,16.3032289316091,
+2036,"Pariser-Klimaziel (1,5°C)",21.0884832383206,15.2492308946514,
+2037,"Pariser-Klimaziel (1,5°C)",19.948863994307,14.1952328576937,
+2038,"Pariser-Klimaziel (1,5°C)",18.8092447502935,13.141234820736,
+2039,"Pariser-Klimaziel (1,5°C)",17.6696255062799,12.0872367837783,
+2040,"Pariser-Klimaziel (1,5°C)",16.4082787158709,10.9574034096212,
+2041,"Pariser-Klimaziel (1,5°C)",15.8868960065397,10.4437879553885,
+2042,"Pariser-Klimaziel (1,5°C)",15.2437857508131,9.85433716395648,
+2043,"Pariser-Klimaziel (1,5°C)",14.6006754950865,9.26488637252442,
+2044,"Pariser-Klimaziel (1,5°C)",13.9575652393598,8.67543558109236,
+2045,"Pariser-Klimaziel (1,5°C)",13.3144549836332,8.0859847896603,
+2046,"Pariser-Klimaziel (1,5°C)",12.6713447279065,7.49653399822824,
+2047,"Pariser-Klimaziel (1,5°C)",12.0282344721799,6.90708320679618,
+2048,"Pariser-Klimaziel (1,5°C)",11.3851242164533,6.31763241536412,
+2049,"Pariser-Klimaziel (1,5°C)",10.7420139607266,5.72818162393206,
+2050,"Pariser-Klimaziel (1,5°C)",10.098903705,5.1387308325,
+2051,"Pariser-Klimaziel (1,5°C)",9.6013749539,4.680760518899,
+2052,"Pariser-Klimaziel (1,5°C)",9.1038462028,4.222790205298,
+2053,"Pariser-Klimaziel (1,5°C)",8.6063174517,3.764819891697,
+2054,"Pariser-Klimaziel (1,5°C)",8.1087887006,3.306849578096,
+2055,"Pariser-Klimaziel (1,5°C)",7.6112599495,2.848879264495,
+2056,"Pariser-Klimaziel (1,5°C)",7.1137311984,2.390908950894,
+2057,"Pariser-Klimaziel (1,5°C)",6.6162024473,1.932938637293,
+2058,"Pariser-Klimaziel (1,5°C)",6.1186736962,1.474968323692,
+2059,"Pariser-Klimaziel (1,5°C)",5.6211449451,1.016998010091,
+2060,"Pariser-Klimaziel (1,5°C)",5.123616194,0.55902769649,
+2061,"Pariser-Klimaziel (1,5°C)",4.8904936747,0.266859726991,
+2062,"Pariser-Klimaziel (1,5°C)",4.6573711554,-0.025308242508,
+2063,"Pariser-Klimaziel (1,5°C)",4.4242486361,-0.317476212007,
+2064,"Pariser-Klimaziel (1,5°C)",4.1911261168,-0.609644181506,
+2065,"Pariser-Klimaziel (1,5°C)",3.9580035975,-0.901812151005,
+2066,"Pariser-Klimaziel (1,5°C)",3.7248810782,-1.193980120504,
+2067,"Pariser-Klimaziel (1,5°C)",3.4917585589,-1.486148090003,
+2068,"Pariser-Klimaziel (1,5°C)",3.2586360396,-1.778316059502,
+2069,"Pariser-Klimaziel (1,5°C)",3.0255135203,-2.070484029001,
+2070,"Pariser-Klimaziel (1,5°C)",2.792391001,-2.3626519985,
+2071,"Pariser-Klimaziel (1,5°C)",2.6815081102,-2.6925253799,
+2072,"Pariser-Klimaziel (1,5°C)",2.5706252194,-3.0223987613,
+2073,"Pariser-Klimaziel (1,5°C)",2.4597423286,-3.3522721427,
+2074,"Pariser-Klimaziel (1,5°C)",2.3488594378,-3.6821455241,
+2075,"Pariser-Klimaziel (1,5°C)",2.237976547,-4.0120189055,
+2076,"Pariser-Klimaziel (1,5°C)",2.1270936562,-4.3418922869,
+2077,"Pariser-Klimaziel (1,5°C)",2.0162107654,-4.6717656683,
+2078,"Pariser-Klimaziel (1,5°C)",1.9053278746,-5.0016390497,
+2079,"Pariser-Klimaziel (1,5°C)",1.7944449838,-5.3315124311,
+2080,"Pariser-Klimaziel (1,5°C)",1.683562093,-5.6613858125,
+2081,"Pariser-Klimaziel (1,5°C)",1.3878463732,-5.84971029735,
+2082,"Pariser-Klimaziel (1,5°C)",1.0921306534,-6.0380347822,
+2083,"Pariser-Klimaziel (1,5°C)",0.7964149336,-6.22635926705,
+2084,"Pariser-Klimaziel (1,5°C)",0.5006992138,-6.4146837519,
+2085,"Pariser-Klimaziel (1,5°C)",0.204983494,-6.60300823675,
+2086,"Pariser-Klimaziel (1,5°C)",-0.0907322258000003,-6.7913327216,
+2087,"Pariser-Klimaziel (1,5°C)",-0.386447945600001,-6.97965720645,
+2088,"Pariser-Klimaziel (1,5°C)",-0.682163665400001,-7.1679816913,
+2089,"Pariser-Klimaziel (1,5°C)",-0.9778793852,-7.35630617615,
+2090,"Pariser-Klimaziel (1,5°C)",-1.273595105,-7.544630661,
+2091,"Pariser-Klimaziel (1,5°C)",-1.35843000735,-7.6923086751,
+2092,"Pariser-Klimaziel (1,5°C)",-1.4432649097,-7.8399866892,
+2093,"Pariser-Klimaziel (1,5°C)",-1.52809981205,-7.9876647033,
+2094,"Pariser-Klimaziel (1,5°C)",-1.6129347144,-8.1353427174,
+2095,"Pariser-Klimaziel (1,5°C)",-1.69776961675,-8.2830207315,
+2096,"Pariser-Klimaziel (1,5°C)",-1.7826045191,-8.4306987456,
+2097,"Pariser-Klimaziel (1,5°C)",-1.86743942145,-8.5783767597,
+2098,"Pariser-Klimaziel (1,5°C)",-1.9522743238,-8.7260547738,
+2099,"Pariser-Klimaziel (1,5°C)",-2.03710922615,-8.8737327879,
+2100,"Pariser-Klimaziel (1,5°C)",-2.1219441285,-9.021410802,
+    `.trim()}
+    />
+  <ChartLegend>
+    Quelle: Climate Action Tracker, Mai 2021. Bis 2016 ist die bisherige Entwicklung eingezeichnet.
+  </ChartLegend>
+</div>
+```
+
+## Small Multiples
+
+```react
+<div>
+  <ChartTitle>Die Herbsttemperaturen brachen 2021 später ein als 2020</ChartTitle>
+  <ChartLead>Mittlere Tagestemperatur an Messstationen im Mittelland</ChartLead>
+  <CsvChart
+    config={{
+      "type": "Line",
+      "y": "value",
+      "yNice": 0,
+      "x": "daymonth",
+      "numberFormat": ".1f",
+      "timeParse": "%m-%d",
+      "timeFormat": "%d.%m.",
+      "xTicks": [
+        "09-01",
+        "10-01",
+        "10-31"
+      ],
+      "yTicks": [
+        0,
+        10,
+        20
+      ],
+      "xAnnotations": [
+        {
+          "x": "09-22",
+          "value": 18.8,
+          "label": "22.9.: Vor Einbruch",
+          "showValue": false,
+          "column": "2020"
+        },
+        {
+          "x": "10-02",
+          "value": 18.2,
+          "label": "2.10.: Vor Einbruch",
+          "showValue": false,
+          "column": "2021"
+        }
+      ],
+      "band": "confidence95",
+      "bandLegend": "Fehlerbereich",
+      "labelFilter": "false",
+      "columns": 2,
+      "column": "JAHR",
+      "color": "STA",
+      "colorRange": [
+        "#eff3ff",
+        "#c6dbef",
+        "#9ecae1",
+        "#6baed6",
+        "#3182bd",
+        "#08519c"
+      ]
+    }}
+    values={`
+STA,JAHR,MO,TG,MO_augm,date_augm,value,TG_augm,daymonth
+71,2020,9,1,09,2020-09-01,14,01,09-01
+71,2020,9,2,09,2020-09-02,14.5,02,09-02
+71,2020,9,3,09,2020-09-03,16.3,03,09-03
+71,2020,9,4,09,2020-09-04,19.3,04,09-04
+71,2020,9,5,09,2020-09-05,20.6,05,09-05
+71,2020,9,6,09,2020-09-06,14.7,06,09-06
+71,2020,9,7,09,2020-09-07,14.4,07,09-07
+71,2020,9,8,09,2020-09-08,15.6,08,09-08
+71,2020,9,9,09,2020-09-09,18,09,09-09
+71,2020,9,10,09,2020-09-10,18.4,10,09-10
+71,2020,9,11,09,2020-09-11,18.2,11,09-11
+71,2020,9,12,09,2020-09-12,19.2,12,09-12
+71,2020,9,13,09,2020-09-13,19.8,13,09-13
+71,2020,9,14,09,2020-09-14,20.5,14,09-14
+71,2020,9,15,09,2020-09-15,21.4,15,09-15
+71,2020,9,16,09,2020-09-16,20.5,16,09-16
+71,2020,9,17,09,2020-09-17,19.8,17,09-17
+71,2020,9,18,09,2020-09-18,17.9,18,09-18
+71,2020,9,19,09,2020-09-19,16.8,19,09-19
+71,2020,9,20,09,2020-09-20,18.3,20,09-20
+71,2020,9,21,09,2020-09-21,18.8,21,09-21
+71,2020,9,22,09,2020-09-22,18.5,22,09-22
+71,2020,9,23,09,2020-09-23,16.3,23,09-23
+71,2020,9,24,09,2020-09-24,15.7,24,09-24
+71,2020,9,25,09,2020-09-25,8.6,25,09-25
+71,2020,9,26,09,2020-09-26,6.7,26,09-26
+71,2020,9,27,09,2020-09-27,8.4,27,09-27
+71,2020,9,28,09,2020-09-28,10,28,09-28
+71,2020,9,29,09,2020-09-29,10.6,29,09-29
+71,2020,9,30,09,2020-09-30,11.2,30,09-30
+71,2020,10,1,10,2020-10-01,12.6,01,10-01
+71,2020,10,2,10,2020-10-02,13.6,02,10-02
+71,2020,10,3,10,2020-10-03,9.3,03,10-03
+71,2020,10,4,10,2020-10-04,11.8,04,10-04
+71,2020,10,5,10,2020-10-05,10.3,05,10-05
+71,2020,10,6,10,2020-10-06,11.9,06,10-06
+71,2020,10,7,10,2020-10-07,10.4,07,10-07
+71,2020,10,8,10,2020-10-08,12,08,10-08
+71,2020,10,9,10,2020-10-09,12.9,09,10-09
+71,2020,10,10,10,2020-10-10,10.1,10,10-10
+71,2020,10,11,10,2020-10-11,6.9,11,10-11
+71,2020,10,12,10,2020-10-12,6,12,10-12
+71,2020,10,13,10,2020-10-13,6.4,13,10-13
+71,2020,10,14,10,2020-10-14,6.4,14,10-14
+71,2020,10,15,10,2020-10-15,5.7,15,10-15
+71,2020,10,16,10,2020-10-16,7,16,10-16
+71,2020,10,17,10,2020-10-17,7.1,17,10-17
+71,2020,10,18,10,2020-10-18,7.5,18,10-18
+71,2020,10,19,10,2020-10-19,6.5,19,10-19
+71,2020,10,20,10,2020-10-20,9,20,10-20
+71,2020,10,21,10,2020-10-21,11.7,21,10-21
+71,2020,10,22,10,2020-10-22,12.7,22,10-22
+71,2020,10,23,10,2020-10-23,11.9,23,10-23
+71,2020,10,24,10,2020-10-24,11.1,24,10-24
+71,2020,10,25,10,2020-10-25,10.2,25,10-25
+71,2020,10,26,10,2020-10-26,6.1,26,10-26
+71,2020,10,27,10,2020-10-27,7.3,27,10-27
+71,2020,10,28,10,2020-10-28,9.5,28,10-28
+71,2020,10,29,10,2020-10-29,10.3,29,10-29
+71,2020,10,30,10,2020-10-30,11.4,30,10-30
+71,2020,10,31,10,2020-10-31,7.7,31,10-31
+71,2021,9,1,09,2021-09-01,15.4,01,09-01
+71,2021,9,2,09,2021-09-02,16.1,02,09-02
+71,2021,9,3,09,2021-09-03,17.4,03,09-03
+71,2021,9,4,09,2021-09-04,18.1,04,09-04
+71,2021,9,5,09,2021-09-05,18.4,05,09-05
+71,2021,9,6,09,2021-09-06,18.4,06,09-06
+71,2021,9,7,09,2021-09-07,17.9,07,09-07
+71,2021,9,8,09,2021-09-08,18.9,08,09-08
+71,2021,9,9,09,2021-09-09,19.2,09,09-09
+71,2021,9,10,09,2021-09-10,17.7,10,09-10
+71,2021,9,11,09,2021-09-11,18.2,11,09-11
+71,2021,9,12,09,2021-09-12,16.9,12,09-12
+71,2021,9,13,09,2021-09-13,18.5,13,09-13
+71,2021,9,14,09,2021-09-14,19.6,14,09-14
+71,2021,9,15,09,2021-09-15,18.4,15,09-15
+71,2021,9,16,09,2021-09-16,17.2,16,09-16
+71,2021,9,17,09,2021-09-17,15.4,17,09-17
+71,2021,9,18,09,2021-09-18,15,18,09-18
+71,2021,9,19,09,2021-09-19,11,19,09-19
+71,2021,9,20,09,2021-09-20,12.4,20,09-20
+71,2021,9,21,09,2021-09-21,13,21,09-21
+71,2021,9,22,09,2021-09-22,11.8,22,09-22
+71,2021,9,23,09,2021-09-23,13.3,23,09-23
+71,2021,9,24,09,2021-09-24,15.7,24,09-24
+71,2021,9,25,09,2021-09-25,17.1,25,09-25
+71,2021,9,26,09,2021-09-26,16.4,26,09-26
+71,2021,9,27,09,2021-09-27,16.7,27,09-27
+71,2021,9,28,09,2021-09-28,14.2,28,09-28
+71,2021,9,29,09,2021-09-29,13.6,29,09-29
+71,2021,9,30,09,2021-09-30,11.2,30,09-30
+71,2021,10,1,10,2021-10-01,13.1,01,10-01
+71,2021,10,2,10,2021-10-02,16.5,02,10-02
+71,2021,10,3,10,2021-10-03,16.3,03,10-03
+71,2021,10,4,10,2021-10-04,11.2,04,10-04
+71,2021,10,5,10,2021-10-05,11.5,05,10-05
+71,2021,10,6,10,2021-10-06,9.4,06,10-06
+71,2021,10,7,10,2021-10-07,9.4,07,10-07
+71,2021,10,8,10,2021-10-08,10.7,08,10-08
+71,2021,10,9,10,2021-10-09,9.2,09,10-09
+71,2021,10,10,10,2021-10-10,6.9,10,10-10
+71,2021,10,11,10,2021-10-11,6.7,11,10-11
+71,2021,10,12,10,2021-10-12,8.4,12,10-12
+71,2021,10,13,10,2021-10-13,7.1,13,10-13
+71,2021,10,14,10,2021-10-14,6.4,14,10-14
+71,2021,10,15,10,2021-10-15,8.6,15,10-15
+71,2021,10,16,10,2021-10-16,7.8,16,10-16
+71,2021,10,17,10,2021-10-17,8.8,17,10-17
+71,2021,10,18,10,2021-10-18,9.7,18,10-18
+71,2021,10,19,10,2021-10-19,11.6,19,10-19
+71,2021,10,20,10,2021-10-20,14.4,20,10-20
+71,2021,10,21,10,2021-10-21,13.3,21,10-21
+71,2021,10,22,10,2021-10-22,7.8,22,10-22
+71,2021,10,23,10,2021-10-23,6.3,23,10-23
+71,2021,10,24,10,2021-10-24,6.3,24,10-24
+71,2021,10,25,10,2021-10-25,8.4,25,10-25
+71,2021,10,26,10,2021-10-26,9.6,26,10-26
+71,2021,10,27,10,2021-10-27,7.3,27,10-27
+78,2020,9,1,09,2020-09-01,14.3,01,09-01
+78,2020,9,2,09,2020-09-02,13.9,02,09-02
+78,2020,9,3,09,2020-09-03,15.2,03,09-03
+78,2020,9,4,09,2020-09-04,17.9,04,09-04
+78,2020,9,5,09,2020-09-05,19.6,05,09-05
+78,2020,9,6,09,2020-09-06,14.8,06,09-06
+78,2020,9,7,09,2020-09-07,14.1,07,09-07
+78,2020,9,8,09,2020-09-08,14.9,08,09-08
+78,2020,9,9,09,2020-09-09,17.4,09,09-09
+78,2020,9,10,09,2020-09-10,17.5,10,09-10
+78,2020,9,11,09,2020-09-11,17.5,11,09-11
+78,2020,9,12,09,2020-09-12,18.4,12,09-12
+78,2020,9,13,09,2020-09-13,18.8,13,09-13
+78,2020,9,14,09,2020-09-14,20.1,14,09-14
+78,2020,9,15,09,2020-09-15,20.7,15,09-15
+78,2020,9,16,09,2020-09-16,19.3,16,09-16
+78,2020,9,17,09,2020-09-17,19.4,17,09-17
+78,2020,9,18,09,2020-09-18,18.9,18,09-18
+78,2020,9,19,09,2020-09-19,16.6,19,09-19
+78,2020,9,20,09,2020-09-20,17.4,20,09-20
+78,2020,9,21,09,2020-09-21,17.7,21,09-21
+78,2020,9,22,09,2020-09-22,17.2,22,09-22
+78,2020,9,23,09,2020-09-23,16.6,23,09-23
+78,2020,9,24,09,2020-09-24,15.2,24,09-24
+78,2020,9,25,09,2020-09-25,8.4,25,09-25
+78,2020,9,26,09,2020-09-26,7,26,09-26
+78,2020,9,27,09,2020-09-27,7.6,27,09-27
+78,2020,9,28,09,2020-09-28,9.5,28,09-28
+78,2020,9,29,09,2020-09-29,10.7,29,09-29
+78,2020,9,30,09,2020-09-30,10.1,30,09-30
+78,2020,10,1,10,2020-10-01,11.9,01,10-01
+78,2020,10,2,10,2020-10-02,11.4,02,10-02
+78,2020,10,3,10,2020-10-03,8.9,03,10-03
+78,2020,10,4,10,2020-10-04,10.8,04,10-04
+78,2020,10,5,10,2020-10-05,9.6,05,10-05
+78,2020,10,6,10,2020-10-06,11.3,06,10-06
+78,2020,10,7,10,2020-10-07,10,07,10-07
+78,2020,10,8,10,2020-10-08,11.1,08,10-08
+78,2020,10,9,10,2020-10-09,11.9,09,10-09
+78,2020,10,10,10,2020-10-10,10.1,10,10-10
+78,2020,10,11,10,2020-10-11,6.8,11,10-11
+78,2020,10,12,10,2020-10-12,5.3,12,10-12
+78,2020,10,13,10,2020-10-13,4.9,13,10-13
+78,2020,10,14,10,2020-10-14,7,14,10-14
+78,2020,10,15,10,2020-10-15,6.2,15,10-15
+78,2020,10,16,10,2020-10-16,7.7,16,10-16
+78,2020,10,17,10,2020-10-17,7.7,17,10-17
+78,2020,10,18,10,2020-10-18,7.7,18,10-18
+78,2020,10,19,10,2020-10-19,5.7,19,10-19
+78,2020,10,20,10,2020-10-20,7.7,20,10-20
+78,2020,10,21,10,2020-10-21,10.8,21,10-21
+78,2020,10,22,10,2020-10-22,10.7,22,10-22
+78,2020,10,23,10,2020-10-23,11.9,23,10-23
+78,2020,10,24,10,2020-10-24,10.5,24,10-24
+78,2020,10,25,10,2020-10-25,9.3,25,10-25
+78,2020,10,26,10,2020-10-26,6.2,26,10-26
+78,2020,10,27,10,2020-10-27,7.5,27,10-27
+78,2020,10,28,10,2020-10-28,9.8,28,10-28
+78,2020,10,29,10,2020-10-29,11,29,10-29
+78,2020,10,30,10,2020-10-30,10.4,30,10-30
+78,2020,10,31,10,2020-10-31,7.5,31,10-31
+78,2021,9,1,09,2021-09-01,15.8,01,09-01
+78,2021,9,2,09,2021-09-02,16.5,02,09-02
+78,2021,9,3,09,2021-09-03,17.3,03,09-03
+78,2021,9,4,09,2021-09-04,17.9,04,09-04
+78,2021,9,5,09,2021-09-05,18.3,05,09-05
+78,2021,9,6,09,2021-09-06,18.2,06,09-06
+78,2021,9,7,09,2021-09-07,17.7,07,09-07
+78,2021,9,8,09,2021-09-08,18.7,08,09-08
+78,2021,9,9,09,2021-09-09,17.2,09,09-09
+78,2021,9,10,09,2021-09-10,17.2,10,09-10
+78,2021,9,11,09,2021-09-11,17.7,11,09-11
+78,2021,9,12,09,2021-09-12,16.8,12,09-12
+78,2021,9,13,09,2021-09-13,18.1,13,09-13
+78,2021,9,14,09,2021-09-14,19,14,09-14
+78,2021,9,15,09,2021-09-15,18.6,15,09-15
+78,2021,9,16,09,2021-09-16,17.3,16,09-16
+78,2021,9,17,09,2021-09-17,15.9,17,09-17
+78,2021,9,18,09,2021-09-18,14.7,18,09-18
+78,2021,9,19,09,2021-09-19,11.6,19,09-19
+78,2021,9,20,09,2021-09-20,12.2,20,09-20
+78,2021,9,21,09,2021-09-21,12.8,21,09-21
+78,2021,9,22,09,2021-09-22,12,22,09-22
+78,2021,9,23,09,2021-09-23,13.2,23,09-23
+78,2021,9,24,09,2021-09-24,14.8,24,09-24
+78,2021,9,25,09,2021-09-25,16.6,25,09-25
+78,2021,9,26,09,2021-09-26,16,26,09-26
+78,2021,9,27,09,2021-09-27,15.9,27,09-27
+78,2021,9,28,09,2021-09-28,14.3,28,09-28
+78,2021,9,29,09,2021-09-29,13.9,29,09-29
+78,2021,9,30,09,2021-09-30,11.2,30,09-30
+78,2021,10,1,10,2021-10-01,12.3,01,10-01
+78,2021,10,2,10,2021-10-02,15.4,02,10-02
+78,2021,10,3,10,2021-10-03,14.2,03,10-03
+78,2021,10,4,10,2021-10-04,11.1,04,10-04
+78,2021,10,5,10,2021-10-05,11.9,05,10-05
+78,2021,10,6,10,2021-10-06,9.2,06,10-06
+78,2021,10,7,10,2021-10-07,9.6,07,10-07
+78,2021,10,8,10,2021-10-08,10.3,08,10-08
+78,2021,10,9,10,2021-10-09,8.7,09,10-09
+78,2021,10,10,10,2021-10-10,6.6,10,10-10
+78,2021,10,11,10,2021-10-11,6,11,10-11
+78,2021,10,12,10,2021-10-12,7.3,12,10-12
+78,2021,10,13,10,2021-10-13,7.7,13,10-13
+78,2021,10,14,10,2021-10-14,5.5,14,10-14
+78,2021,10,15,10,2021-10-15,6.8,15,10-15
+78,2021,10,16,10,2021-10-16,7,16,10-16
+78,2021,10,17,10,2021-10-17,6.8,17,10-17
+78,2021,10,18,10,2021-10-18,8.9,18,10-18
+78,2021,10,19,10,2021-10-19,10.1,19,10-19
+78,2021,10,20,10,2021-10-20,12,20,10-20
+78,2021,10,21,10,2021-10-21,12.6,21,10-21
+78,2021,10,22,10,2021-10-22,8.3,22,10-22
+78,2021,10,23,10,2021-10-23,5,23,10-23
+78,2021,10,24,10,2021-10-24,5.5,24,10-24
+78,2021,10,25,10,2021-10-25,8.2,25,10-25
+78,2021,10,26,10,2021-10-26,9,26,10-26
+78,2021,10,27,10,2021-10-27,5.9,27,10-27
+68,2020,9,1,09,2020-09-01,14.8,01,09-01
+68,2020,9,2,09,2020-09-02,15.4,02,09-02
+68,2020,9,3,09,2020-09-03,16.1,03,09-03
+68,2020,9,4,09,2020-09-04,18.5,04,09-04
+68,2020,9,5,09,2020-09-05,20.8,05,09-05
+68,2020,9,6,09,2020-09-06,15,06,09-06
+68,2020,9,7,09,2020-09-07,15,07,09-07
+68,2020,9,8,09,2020-09-08,15.9,08,09-08
+68,2020,9,9,09,2020-09-09,18,09,09-09
+68,2020,9,10,09,2020-09-10,18.8,10,09-10
+68,2020,9,11,09,2020-09-11,18.9,11,09-11
+68,2020,9,12,09,2020-09-12,19.5,12,09-12
+68,2020,9,13,09,2020-09-13,19.8,13,09-13
+68,2020,9,14,09,2020-09-14,20.4,14,09-14
+68,2020,9,15,09,2020-09-15,20.5,15,09-15
+68,2020,9,16,09,2020-09-16,19.6,16,09-16
+68,2020,9,17,09,2020-09-17,20.1,17,09-17
+68,2020,9,18,09,2020-09-18,19.7,18,09-18
+68,2020,9,19,09,2020-09-19,17.8,19,09-19
+68,2020,9,20,09,2020-09-20,18.3,20,09-20
+68,2020,9,21,09,2020-09-21,19,21,09-21
+68,2020,9,22,09,2020-09-22,17.9,22,09-22
+68,2020,9,23,09,2020-09-23,16.5,23,09-23
+68,2020,9,24,09,2020-09-24,16.5,24,09-24
+68,2020,9,25,09,2020-09-25,9.5,25,09-25
+68,2020,9,26,09,2020-09-26,8.6,26,09-26
+68,2020,9,27,09,2020-09-27,9.2,27,09-27
+68,2020,9,28,09,2020-09-28,11,28,09-28
+68,2020,9,29,09,2020-09-29,11.3,29,09-29
+68,2020,9,30,09,2020-09-30,10.9,30,09-30
+68,2020,10,1,10,2020-10-01,12.6,01,10-01
+68,2020,10,2,10,2020-10-02,12.9,02,10-02
+68,2020,10,3,10,2020-10-03,10,03,10-03
+68,2020,10,4,10,2020-10-04,11.9,04,10-04
+68,2020,10,5,10,2020-10-05,10.9,05,10-05
+68,2020,10,6,10,2020-10-06,11.9,06,10-06
+68,2020,10,7,10,2020-10-07,11.2,07,10-07
+68,2020,10,8,10,2020-10-08,11.2,08,10-08
+68,2020,10,9,10,2020-10-09,12.6,09,10-09
+68,2020,10,10,10,2020-10-10,10.3,10,10-10
+68,2020,10,11,10,2020-10-11,7.9,11,10-11
+68,2020,10,12,10,2020-10-12,7.2,12,10-12
+68,2020,10,13,10,2020-10-13,6.9,13,10-13
+68,2020,10,14,10,2020-10-14,7.5,14,10-14
+68,2020,10,15,10,2020-10-15,7,15,10-15
+68,2020,10,16,10,2020-10-16,8,16,10-16
+68,2020,10,17,10,2020-10-17,8.2,17,10-17
+68,2020,10,18,10,2020-10-18,8.5,18,10-18
+68,2020,10,19,10,2020-10-19,7,19,10-19
+68,2020,10,20,10,2020-10-20,8.4,20,10-20
+68,2020,10,21,10,2020-10-21,11,21,10-21
+68,2020,10,22,10,2020-10-22,12.6,22,10-22
+68,2020,10,23,10,2020-10-23,12.7,23,10-23
+68,2020,10,24,10,2020-10-24,11,24,10-24
+68,2020,10,25,10,2020-10-25,9.4,25,10-25
+68,2020,10,26,10,2020-10-26,6.8,26,10-26
+68,2020,10,27,10,2020-10-27,7.5,27,10-27
+68,2020,10,28,10,2020-10-28,9.5,28,10-28
+68,2020,10,29,10,2020-10-29,11.2,29,10-29
+68,2020,10,30,10,2020-10-30,10.6,30,10-30
+68,2020,10,31,10,2020-10-31,8.3,31,10-31
+68,2021,9,1,09,2021-09-01,15.8,01,09-01
+68,2021,9,2,09,2021-09-02,16.4,02,09-02
+68,2021,9,3,09,2021-09-03,17.8,03,09-03
+68,2021,9,4,09,2021-09-04,18.1,04,09-04
+68,2021,9,5,09,2021-09-05,18.6,05,09-05
+68,2021,9,6,09,2021-09-06,18.7,06,09-06
+68,2021,9,7,09,2021-09-07,18.2,07,09-07
+68,2021,9,8,09,2021-09-08,19.1,08,09-08
+68,2021,9,9,09,2021-09-09,18.3,09,09-09
+68,2021,9,10,09,2021-09-10,17.2,10,09-10
+68,2021,9,11,09,2021-09-11,17.7,11,09-11
+68,2021,9,12,09,2021-09-12,17,12,09-12
+68,2021,9,13,09,2021-09-13,18.5,13,09-13
+68,2021,9,14,09,2021-09-14,19.7,14,09-14
+68,2021,9,15,09,2021-09-15,19.3,15,09-15
+68,2021,9,16,09,2021-09-16,17.6,16,09-16
+68,2021,9,17,09,2021-09-17,16.2,17,09-17
+68,2021,9,18,09,2021-09-18,15.1,18,09-18
+68,2021,9,19,09,2021-09-19,11.7,19,09-19
+68,2021,9,20,09,2021-09-20,13,20,09-20
+68,2021,9,21,09,2021-09-21,14.2,21,09-21
+68,2021,9,22,09,2021-09-22,12.5,22,09-22
+68,2021,9,23,09,2021-09-23,14,23,09-23
+68,2021,9,24,09,2021-09-24,15.5,24,09-24
+68,2021,9,25,09,2021-09-25,16.7,25,09-25
+68,2021,9,26,09,2021-09-26,16,26,09-26
+68,2021,9,27,09,2021-09-27,16.7,27,09-27
+68,2021,9,28,09,2021-09-28,14.8,28,09-28
+68,2021,9,29,09,2021-09-29,14.7,29,09-29
+68,2021,9,30,09,2021-09-30,11.6,30,09-30
+68,2021,10,1,10,2021-10-01,12.6,01,10-01
+68,2021,10,2,10,2021-10-02,15.8,02,10-02
+68,2021,10,3,10,2021-10-03,15.6,03,10-03
+68,2021,10,4,10,2021-10-04,11.8,04,10-04
+68,2021,10,5,10,2021-10-05,12.2,05,10-05
+68,2021,10,6,10,2021-10-06,9.6,06,10-06
+68,2021,10,7,10,2021-10-07,10.2,07,10-07
+68,2021,10,8,10,2021-10-08,10.9,08,10-08
+68,2021,10,9,10,2021-10-09,9.9,09,10-09
+68,2021,10,10,10,2021-10-10,8.2,10,10-10
+68,2021,10,11,10,2021-10-11,7.1,11,10-11
+68,2021,10,12,10,2021-10-12,8.1,12,10-12
+68,2021,10,13,10,2021-10-13,7.4,13,10-13
+68,2021,10,14,10,2021-10-14,6.4,14,10-14
+68,2021,10,15,10,2021-10-15,8.1,15,10-15
+68,2021,10,16,10,2021-10-16,8.1,16,10-16
+68,2021,10,17,10,2021-10-17,7.9,17,10-17
+68,2021,10,18,10,2021-10-18,9.4,18,10-18
+68,2021,10,19,10,2021-10-19,10.3,19,10-19
+68,2021,10,20,10,2021-10-20,11.2,20,10-20
+68,2021,10,21,10,2021-10-21,13.1,21,10-21
+68,2021,10,22,10,2021-10-22,8,22,10-22
+68,2021,10,23,10,2021-10-23,7,23,10-23
+68,2021,10,24,10,2021-10-24,6.4,24,10-24
+68,2021,10,25,10,2021-10-25,8.1,25,10-25
+68,2021,10,26,10,2021-10-26,9.4,26,10-26
+68,2021,10,27,10,2021-10-27,7.2,27,10-27
+75,2020,9,1,09,2020-09-01,15.2,01,09-01
+75,2020,9,2,09,2020-09-02,15.9,02,09-02
+75,2020,9,3,09,2020-09-03,16.8,03,09-03
+75,2020,9,4,09,2020-09-04,20.4,04,09-04
+75,2020,9,5,09,2020-09-05,20.8,05,09-05
+75,2020,9,6,09,2020-09-06,16.1,06,09-06
+75,2020,9,7,09,2020-09-07,15.8,07,09-07
+75,2020,9,8,09,2020-09-08,16.5,08,09-08
+75,2020,9,9,09,2020-09-09,18.7,09,09-09
+75,2020,9,10,09,2020-09-10,18.7,10,09-10
+75,2020,9,11,09,2020-09-11,18.9,11,09-11
+75,2020,9,12,09,2020-09-12,20,12,09-12
+75,2020,9,13,09,2020-09-13,19.6,13,09-13
+75,2020,9,14,09,2020-09-14,21.4,14,09-14
+75,2020,9,15,09,2020-09-15,22.6,15,09-15
+75,2020,9,16,09,2020-09-16,21.3,16,09-16
+75,2020,9,17,09,2020-09-17,19.4,17,09-17
+75,2020,9,18,09,2020-09-18,19.4,18,09-18
+75,2020,9,19,09,2020-09-19,18.5,19,09-19
+75,2020,9,20,09,2020-09-20,18.5,20,09-20
+75,2020,9,21,09,2020-09-21,18.1,21,09-21
+75,2020,9,22,09,2020-09-22,18.4,22,09-22
+75,2020,9,23,09,2020-09-23,17.7,23,09-23
+75,2020,9,24,09,2020-09-24,17.1,24,09-24
+75,2020,9,25,09,2020-09-25,10.6,25,09-25
+75,2020,9,26,09,2020-09-26,8.7,26,09-26
+75,2020,9,27,09,2020-09-27,10,27,09-27
+75,2020,9,28,09,2020-09-28,10.6,28,09-28
+75,2020,9,29,09,2020-09-29,11.5,29,09-29
+75,2020,9,30,09,2020-09-30,12.8,30,09-30
+75,2020,10,1,10,2020-10-01,12.5,01,10-01
+75,2020,10,2,10,2020-10-02,12.4,02,10-02
+75,2020,10,3,10,2020-10-03,10.9,03,10-03
+75,2020,10,4,10,2020-10-04,13.4,04,10-04
+75,2020,10,5,10,2020-10-05,10.8,05,10-05
+75,2020,10,6,10,2020-10-06,13.1,06,10-06
+75,2020,10,7,10,2020-10-07,12,07,10-07
+75,2020,10,8,10,2020-10-08,13.8,08,10-08
+75,2020,10,9,10,2020-10-09,14.3,09,10-09
+75,2020,10,10,10,2020-10-10,10.6,10,10-10
+75,2020,10,11,10,2020-10-11,7.1,11,10-11
+75,2020,10,12,10,2020-10-12,6.8,12,10-12
+75,2020,10,13,10,2020-10-13,7.5,13,10-13
+75,2020,10,14,10,2020-10-14,7.4,14,10-14
+75,2020,10,15,10,2020-10-15,7.2,15,10-15
+75,2020,10,16,10,2020-10-16,9,16,10-16
+75,2020,10,17,10,2020-10-17,8.1,17,10-17
+75,2020,10,18,10,2020-10-18,8.3,18,10-18
+75,2020,10,19,10,2020-10-19,8.3,19,10-19
+75,2020,10,20,10,2020-10-20,10.4,20,10-20
+75,2020,10,21,10,2020-10-21,12.9,21,10-21
+75,2020,10,22,10,2020-10-22,13.5,22,10-22
+75,2020,10,23,10,2020-10-23,13.1,23,10-23
+75,2020,10,24,10,2020-10-24,12.3,24,10-24
+75,2020,10,25,10,2020-10-25,12,25,10-25
+75,2020,10,26,10,2020-10-26,7.7,26,10-26
+75,2020,10,27,10,2020-10-27,8.3,27,10-27
+75,2020,10,28,10,2020-10-28,11.7,28,10-28
+75,2020,10,29,10,2020-10-29,12.4,29,10-29
+75,2020,10,30,10,2020-10-30,12.6,30,10-30
+75,2020,10,31,10,2020-10-31,9.2,31,10-31
+75,2021,9,1,09,2021-09-01,16.4,01,09-01
+75,2021,9,2,09,2021-09-02,17.2,02,09-02
+75,2021,9,3,09,2021-09-03,18.8,03,09-03
+75,2021,9,4,09,2021-09-04,19.5,04,09-04
+75,2021,9,5,09,2021-09-05,20,05,09-05
+75,2021,9,6,09,2021-09-06,19.8,06,09-06
+75,2021,9,7,09,2021-09-07,18.8,07,09-07
+75,2021,9,8,09,2021-09-08,20.4,08,09-08
+75,2021,9,9,09,2021-09-09,20.5,09,09-09
+75,2021,9,10,09,2021-09-10,19,10,09-10
+75,2021,9,11,09,2021-09-11,18.2,11,09-11
+75,2021,9,12,09,2021-09-12,17.9,12,09-12
+75,2021,9,13,09,2021-09-13,18.9,13,09-13
+75,2021,9,14,09,2021-09-14,20.2,14,09-14
+75,2021,9,15,09,2021-09-15,18.6,15,09-15
+75,2021,9,16,09,2021-09-16,18.5,16,09-16
+75,2021,9,17,09,2021-09-17,17.1,17,09-17
+75,2021,9,18,09,2021-09-18,16,18,09-18
+75,2021,9,19,09,2021-09-19,13.1,19,09-19
+75,2021,9,20,09,2021-09-20,14.3,20,09-20
+75,2021,9,21,09,2021-09-21,14,21,09-21
+75,2021,9,22,09,2021-09-22,12.4,22,09-22
+75,2021,9,23,09,2021-09-23,14.1,23,09-23
+75,2021,9,24,09,2021-09-24,15.9,24,09-24
+75,2021,9,25,09,2021-09-25,18.1,25,09-25
+75,2021,9,26,09,2021-09-26,17.8,26,09-26
+75,2021,9,27,09,2021-09-27,17,27,09-27
+75,2021,9,28,09,2021-09-28,14.4,28,09-28
+75,2021,9,29,09,2021-09-29,13.9,29,09-29
+75,2021,9,30,09,2021-09-30,11.1,30,09-30
+75,2021,10,1,10,2021-10-01,13.4,01,10-01
+75,2021,10,2,10,2021-10-02,17,02,10-02
+75,2021,10,3,10,2021-10-03,15.2,03,10-03
+75,2021,10,4,10,2021-10-04,11.6,04,10-04
+75,2021,10,5,10,2021-10-05,12.6,05,10-05
+75,2021,10,6,10,2021-10-06,10.7,06,10-06
+75,2021,10,7,10,2021-10-07,11.2,07,10-07
+75,2021,10,8,10,2021-10-08,11,08,10-08
+75,2021,10,9,10,2021-10-09,9.6,09,10-09
+75,2021,10,10,10,2021-10-10,7.9,10,10-10
+75,2021,10,11,10,2021-10-11,8.3,11,10-11
+75,2021,10,12,10,2021-10-12,10.2,12,10-12
+75,2021,10,13,10,2021-10-13,8.3,13,10-13
+75,2021,10,14,10,2021-10-14,7,14,10-14
+75,2021,10,15,10,2021-10-15,8.8,15,10-15
+75,2021,10,16,10,2021-10-16,7.8,16,10-16
+75,2021,10,17,10,2021-10-17,9.2,17,10-17
+75,2021,10,18,10,2021-10-18,10.1,18,10-18
+75,2021,10,19,10,2021-10-19,12.4,19,10-19
+75,2021,10,20,10,2021-10-20,15.4,20,10-20
+75,2021,10,21,10,2021-10-21,14.5,21,10-21
+75,2021,10,22,10,2021-10-22,8.3,22,10-22
+75,2021,10,23,10,2021-10-23,6.4,23,10-23
+75,2021,10,24,10,2021-10-24,8.2,24,10-24
+75,2021,10,25,10,2021-10-25,9.8,25,10-25
+75,2021,10,26,10,2021-10-26,10.2,26,10-26
+75,2021,10,27,10,2021-10-27,8.5,27,10-27
+51,2020,9,1,09,2020-09-01,15.5,01,09-01
+51,2020,9,2,09,2020-09-02,15.6,02,09-02
+51,2020,9,3,09,2020-09-03,16.8,03,09-03
+51,2020,9,4,09,2020-09-04,18.9,04,09-04
+51,2020,9,5,09,2020-09-05,21.3,05,09-05
+51,2020,9,6,09,2020-09-06,16.4,06,09-06
+51,2020,9,7,09,2020-09-07,16.8,07,09-07
+51,2020,9,8,09,2020-09-08,17.3,08,09-08
+51,2020,9,9,09,2020-09-09,18.7,09,09-09
+51,2020,9,10,09,2020-09-10,20.1,10,09-10
+51,2020,9,11,09,2020-09-11,19.7,11,09-11
+51,2020,9,12,09,2020-09-12,20.2,12,09-12
+51,2020,9,13,09,2020-09-13,21,13,09-13
+51,2020,9,14,09,2020-09-14,21,14,09-14
+51,2020,9,15,09,2020-09-15,21.8,15,09-15
+51,2020,9,16,09,2020-09-16,20.9,16,09-16
+51,2020,9,17,09,2020-09-17,22,17,09-17
+51,2020,9,18,09,2020-09-18,20.7,18,09-18
+51,2020,9,19,09,2020-09-19,18,19,09-19
+51,2020,9,20,09,2020-09-20,18.9,20,09-20
+51,2020,9,21,09,2020-09-21,17.5,21,09-21
+51,2020,9,22,09,2020-09-22,17.8,22,09-22
+51,2020,9,23,09,2020-09-23,17.2,23,09-23
+51,2020,9,24,09,2020-09-24,16.7,24,09-24
+51,2020,9,25,09,2020-09-25,9.2,25,09-25
+51,2020,9,26,09,2020-09-26,7.9,26,09-26
+51,2020,9,27,09,2020-09-27,7.7,27,09-27
+51,2020,9,28,09,2020-09-28,9.9,28,09-28
+51,2020,9,29,09,2020-09-29,12.1,29,09-29
+51,2020,9,30,09,2020-09-30,10.5,30,09-30
+51,2020,10,1,10,2020-10-01,12.2,01,10-01
+51,2020,10,2,10,2020-10-02,12.9,02,10-02
+51,2020,10,3,10,2020-10-03,9.4,03,10-03
+51,2020,10,4,10,2020-10-04,11.6,04,10-04
+51,2020,10,5,10,2020-10-05,10,05,10-05
+51,2020,10,6,10,2020-10-06,11.9,06,10-06
+51,2020,10,7,10,2020-10-07,11.2,07,10-07
+51,2020,10,8,10,2020-10-08,12.8,08,10-08
+51,2020,10,9,10,2020-10-09,13,09,10-09
+51,2020,10,10,10,2020-10-10,10.9,10,10-10
+51,2020,10,11,10,2020-10-11,7.9,11,10-11
+51,2020,10,12,10,2020-10-12,6.8,12,10-12
+51,2020,10,13,10,2020-10-13,7.3,13,10-13
+51,2020,10,14,10,2020-10-14,8.5,14,10-14
+51,2020,10,15,10,2020-10-15,7.4,15,10-15
+51,2020,10,16,10,2020-10-16,8.8,16,10-16
+51,2020,10,17,10,2020-10-17,8.9,17,10-17
+51,2020,10,18,10,2020-10-18,9,18,10-18
+51,2020,10,19,10,2020-10-19,6.9,19,10-19
+51,2020,10,20,10,2020-10-20,8.8,20,10-20
+51,2020,10,21,10,2020-10-21,11.7,21,10-21
+51,2020,10,22,10,2020-10-22,11.5,22,10-22
+51,2020,10,23,10,2020-10-23,12,23,10-23
+51,2020,10,24,10,2020-10-24,11.5,24,10-24
+51,2020,10,25,10,2020-10-25,10.7,25,10-25
+51,2020,10,26,10,2020-10-26,7,26,10-26
+51,2020,10,27,10,2020-10-27,8.3,27,10-27
+51,2020,10,28,10,2020-10-28,11,28,10-28
+51,2020,10,29,10,2020-10-29,11.4,29,10-29
+51,2020,10,30,10,2020-10-30,11.6,30,10-30
+51,2020,10,31,10,2020-10-31,8.1,31,10-31
+51,2021,9,1,09,2021-09-01,17.9,01,09-01
+51,2021,9,2,09,2021-09-02,18.5,02,09-02
+51,2021,9,3,09,2021-09-03,18.7,03,09-03
+51,2021,9,4,09,2021-09-04,19.1,04,09-04
+51,2021,9,5,09,2021-09-05,19.5,05,09-05
+51,2021,9,6,09,2021-09-06,20.1,06,09-06
+51,2021,9,7,09,2021-09-07,19.8,07,09-07
+51,2021,9,8,09,2021-09-08,20,08,09-08
+51,2021,9,9,09,2021-09-09,17.5,09,09-09
+51,2021,9,10,09,2021-09-10,17.3,10,09-10
+51,2021,9,11,09,2021-09-11,18.3,11,09-11
+51,2021,9,12,09,2021-09-12,18.7,12,09-12
+51,2021,9,13,09,2021-09-13,19,13,09-13
+51,2021,9,14,09,2021-09-14,19.2,14,09-14
+51,2021,9,15,09,2021-09-15,18.8,15,09-15
+51,2021,9,16,09,2021-09-16,17.7,16,09-16
+51,2021,9,17,09,2021-09-17,17.3,17,09-17
+51,2021,9,18,09,2021-09-18,16.9,18,09-18
+51,2021,9,19,09,2021-09-19,12.5,19,09-19
+51,2021,9,20,09,2021-09-20,12.7,20,09-20
+51,2021,9,21,09,2021-09-21,14.7,21,09-21
+51,2021,9,22,09,2021-09-22,14.4,22,09-22
+51,2021,9,23,09,2021-09-23,14.3,23,09-23
+51,2021,9,24,09,2021-09-24,15.1,24,09-24
+51,2021,9,25,09,2021-09-25,16.7,25,09-25
+51,2021,9,26,09,2021-09-26,17.2,26,09-26
+51,2021,9,27,09,2021-09-27,16.3,27,09-27
+51,2021,9,28,09,2021-09-28,15.7,28,09-28
+51,2021,9,29,09,2021-09-29,15.2,29,09-29
+51,2021,9,30,09,2021-09-30,12.6,30,09-30
+51,2021,10,1,10,2021-10-01,12.7,01,10-01
+51,2021,10,2,10,2021-10-02,16.8,02,10-02
+51,2021,10,3,10,2021-10-03,15.1,03,10-03
+51,2021,10,4,10,2021-10-04,10.9,04,10-04
+51,2021,10,5,10,2021-10-05,12.4,05,10-05
+51,2021,10,6,10,2021-10-06,10.3,06,10-06
+51,2021,10,7,10,2021-10-07,10.9,07,10-07
+51,2021,10,8,10,2021-10-08,11.9,08,10-08
+51,2021,10,9,10,2021-10-09,11,09,10-09
+51,2021,10,10,10,2021-10-10,9.4,10,10-10
+51,2021,10,11,10,2021-10-11,8.9,11,10-11
+51,2021,10,12,10,2021-10-12,9.3,12,10-12
+51,2021,10,13,10,2021-10-13,9.4,13,10-13
+51,2021,10,14,10,2021-10-14,8.2,14,10-14
+51,2021,10,15,10,2021-10-15,8.2,15,10-15
+51,2021,10,16,10,2021-10-16,9.4,16,10-16
+51,2021,10,17,10,2021-10-17,8.6,17,10-17
+51,2021,10,18,10,2021-10-18,9.4,18,10-18
+51,2021,10,19,10,2021-10-19,11.4,19,10-19
+51,2021,10,20,10,2021-10-20,15,20,10-20
+51,2021,10,21,10,2021-10-21,13.7,21,10-21
+51,2021,10,22,10,2021-10-22,10.4,22,10-22
+51,2021,10,23,10,2021-10-23,7.8,23,10-23
+51,2021,10,24,10,2021-10-24,6.6,24,10-24
+51,2021,10,25,10,2021-10-25,9,25,10-25
+51,2021,10,26,10,2021-10-26,10.6,26,10-26
+51,2021,10,27,10,2021-10-27,7.6,27,10-27
+58,2020,9,1,09,2020-09-01,16.3,01,09-01
+58,2020,9,2,09,2020-09-02,16.2,02,09-02
+58,2020,9,3,09,2020-09-03,17.1,03,09-03
+58,2020,9,4,09,2020-09-04,19.2,04,09-04
+58,2020,9,5,09,2020-09-05,21.9,05,09-05
+58,2020,9,6,09,2020-09-06,18.1,06,09-06
+58,2020,9,7,09,2020-09-07,16.9,07,09-07
+58,2020,9,8,09,2020-09-08,16.9,08,09-08
+58,2020,9,9,09,2020-09-09,18.4,09,09-09
+58,2020,9,10,09,2020-09-10,19.5,10,09-10
+58,2020,9,11,09,2020-09-11,19.7,11,09-11
+58,2020,9,12,09,2020-09-12,20.4,12,09-12
+58,2020,9,13,09,2020-09-13,20.5,13,09-13
+58,2020,9,14,09,2020-09-14,21.4,14,09-14
+58,2020,9,15,09,2020-09-15,22.1,15,09-15
+58,2020,9,16,09,2020-09-16,21.2,16,09-16
+58,2020,9,17,09,2020-09-17,21.3,17,09-17
+58,2020,9,18,09,2020-09-18,20.5,18,09-18
+58,2020,9,19,09,2020-09-19,19.6,19,09-19
+58,2020,9,20,09,2020-09-20,18.8,20,09-20
+58,2020,9,21,09,2020-09-21,18.2,21,09-21
+58,2020,9,22,09,2020-09-22,18.8,22,09-22
+58,2020,9,23,09,2020-09-23,18.9,23,09-23
+58,2020,9,24,09,2020-09-24,17.5,24,09-24
+58,2020,9,25,09,2020-09-25,10.3,25,09-25
+58,2020,9,26,09,2020-09-26,8.2,26,09-26
+58,2020,9,27,09,2020-09-27,7.6,27,09-27
+58,2020,9,28,09,2020-09-28,10.6,28,09-28
+58,2020,9,29,09,2020-09-29,12.4,29,09-29
+58,2020,9,30,09,2020-09-30,10.9,30,09-30
+58,2020,10,1,10,2020-10-01,11.4,01,10-01
+58,2020,10,2,10,2020-10-02,11.7,02,10-02
+58,2020,10,3,10,2020-10-03,10.2,03,10-03
+58,2020,10,4,10,2020-10-04,11.8,04,10-04
+58,2020,10,5,10,2020-10-05,10.7,05,10-05
+58,2020,10,6,10,2020-10-06,11.9,06,10-06
+58,2020,10,7,10,2020-10-07,11.4,07,10-07
+58,2020,10,8,10,2020-10-08,11.8,08,10-08
+58,2020,10,9,10,2020-10-09,13.3,09,10-09
+58,2020,10,10,10,2020-10-10,11.5,10,10-10
+58,2020,10,11,10,2020-10-11,8.1,11,10-11
+58,2020,10,12,10,2020-10-12,7.6,12,10-12
+58,2020,10,13,10,2020-10-13,6.9,13,10-13
+58,2020,10,14,10,2020-10-14,9.1,14,10-14
+58,2020,10,15,10,2020-10-15,8.7,15,10-15
+58,2020,10,16,10,2020-10-16,10.5,16,10-16
+58,2020,10,17,10,2020-10-17,9.8,17,10-17
+58,2020,10,18,10,2020-10-18,8.4,18,10-18
+58,2020,10,19,10,2020-10-19,6.8,19,10-19
+58,2020,10,20,10,2020-10-20,11.2,20,10-20
+58,2020,10,21,10,2020-10-21,12.2,21,10-21
+58,2020,10,22,10,2020-10-22,11.9,22,10-22
+58,2020,10,23,10,2020-10-23,12.6,23,10-23
+58,2020,10,24,10,2020-10-24,11.5,24,10-24
+58,2020,10,25,10,2020-10-25,10.9,25,10-25
+58,2020,10,26,10,2020-10-26,7.6,26,10-26
+58,2020,10,27,10,2020-10-27,8.4,27,10-27
+58,2020,10,28,10,2020-10-28,11.4,28,10-28
+58,2020,10,29,10,2020-10-29,11.7,29,10-29
+58,2020,10,30,10,2020-10-30,9.7,30,10-30
+58,2020,10,31,10,2020-10-31,7.5,31,10-31
+58,2021,9,1,09,2021-09-01,17.6,01,09-01
+58,2021,9,2,09,2021-09-02,17.7,02,09-02
+58,2021,9,3,09,2021-09-03,17.4,03,09-03
+58,2021,9,4,09,2021-09-04,18.8,04,09-04
+58,2021,9,5,09,2021-09-05,19,05,09-05
+58,2021,9,6,09,2021-09-06,19.5,06,09-06
+58,2021,9,7,09,2021-09-07,19.2,07,09-07
+58,2021,9,8,09,2021-09-08,20.6,08,09-08
+58,2021,9,9,09,2021-09-09,18.9,09,09-09
+58,2021,9,10,09,2021-09-10,17.5,10,09-10
+58,2021,9,11,09,2021-09-11,18.6,11,09-11
+58,2021,9,12,09,2021-09-12,17.7,12,09-12
+58,2021,9,13,09,2021-09-13,19.3,13,09-13
+58,2021,9,14,09,2021-09-14,19.2,14,09-14
+58,2021,9,15,09,2021-09-15,19.9,15,09-15
+58,2021,9,16,09,2021-09-16,18.4,16,09-16
+58,2021,9,17,09,2021-09-17,17.4,17,09-17
+58,2021,9,18,09,2021-09-18,16.7,18,09-18
+58,2021,9,19,09,2021-09-19,13.9,19,09-19
+58,2021,9,20,09,2021-09-20,12.9,20,09-20
+58,2021,9,21,09,2021-09-21,15,21,09-21
+58,2021,9,22,09,2021-09-22,13.8,22,09-22
+58,2021,9,23,09,2021-09-23,16.2,23,09-23
+58,2021,9,24,09,2021-09-24,16,24,09-24
+58,2021,9,25,09,2021-09-25,17.6,25,09-25
+58,2021,9,26,09,2021-09-26,17.2,26,09-26
+58,2021,9,27,09,2021-09-27,16.7,27,09-27
+58,2021,9,28,09,2021-09-28,16.4,28,09-28
+58,2021,9,29,09,2021-09-29,15.1,29,09-29
+58,2021,9,30,09,2021-09-30,11.8,30,09-30
+58,2021,10,1,10,2021-10-01,14.7,01,10-01
+58,2021,10,2,10,2021-10-02,18.7,02,10-02
+58,2021,10,3,10,2021-10-03,16.4,03,10-03
+58,2021,10,4,10,2021-10-04,11.4,04,10-04
+58,2021,10,5,10,2021-10-05,12.2,05,10-05
+58,2021,10,6,10,2021-10-06,10.6,06,10-06
+58,2021,10,7,10,2021-10-07,11.9,07,10-07
+58,2021,10,8,10,2021-10-08,11.5,08,10-08
+58,2021,10,9,10,2021-10-09,12.4,09,10-09
+58,2021,10,10,10,2021-10-10,9.6,10,10-10
+58,2021,10,11,10,2021-10-11,8.7,11,10-11
+58,2021,10,12,10,2021-10-12,9.3,12,10-12
+58,2021,10,13,10,2021-10-13,9.8,13,10-13
+58,2021,10,14,10,2021-10-14,7.8,14,10-14
+58,2021,10,15,10,2021-10-15,7.6,15,10-15
+58,2021,10,16,10,2021-10-16,8.6,16,10-16
+58,2021,10,17,10,2021-10-17,9.1,17,10-17
+58,2021,10,18,10,2021-10-18,9.9,18,10-18
+58,2021,10,19,10,2021-10-19,11.5,19,10-19
+58,2021,10,20,10,2021-10-20,15.3,20,10-20
+58,2021,10,21,10,2021-10-21,13.5,21,10-21
+58,2021,10,22,10,2021-10-22,10.4,22,10-22
+58,2021,10,23,10,2021-10-23,6.4,23,10-23
+58,2021,10,24,10,2021-10-24,6.4,24,10-24
+58,2021,10,25,10,2021-10-25,8.4,25,10-25
+58,2021,10,26,10,2021-10-26,10.3,26,10-26
+58,2021,10,27,10,2021-10-27,7.9,27,10-27
+    `.trim()}
+    />
+  <ChartLegend>
+    Messwerte aus Zürich, Fluntern; Bern, Zollikofen; Luzern; Basel, Binningen; Neuenburg; Genf, Cointrin. Quelle: Meteo Schweiz, auf Anfrage.
+  </ChartLegend>
+</div>
+```
+
+## Custom Axis
+
+You can use `yLines` and `xLines` to provide custom axis tick label text, only show it for a certain column or skip it all together.
+
+```react
+<div>
+  <ChartTitle>Beide Parteien bewegten sich nach links</ChartTitle>
+  <ChartLead>Entwicklung nach soziokulturellen und sozioökonomischen Gesichtspunkten; je negativer die Werte, desto liberal-progressiver und desto mehr Staat</ChartLead>
+  <CsvChart
+    config={{
+      "type": "Line",
+      "unit": "konservativ-autoritärer bzw. weniger Staat",
+      "numberFormat": ".0f",
+      "colorLegend": true,
+      "colorMap": {
+        "SPD": "#d62728",
+        "CDU/CSU": "#292929"
+      },
+      "color": "party",
+      "column": "category",
+      "columns": 2,
+      "endValue": false,
+      "endLabel": false,
+      "yLines": [
+        { "column": "soziokulturell", "tick": -40, "label": "-40 liberal-progressiv" },
+        { "column": "sozioökonomisch", "tick": -40, "label": "-40 mehr Staat" },
+        { "tick": -20 },
+        { "tick": 0 },
+        { "tick": 20 },
+        { "column": "soziokulturell", "tick": 40, "label": "40 konservativ-autoritär" },
+        { "column": "sozioökonomisch", "tick": 40, "label": "40 weniger Staat" }
+      ],
+      "xLines": [
+        { "tick": "1990" },
+        { "tick": "1994", "label": "" },
+        { "tick": "1998", "label": "" },
+        { "tick": "2002", "label": "" },
+        { "tick": "2005", "label": "" },
+        { "tick": "2009", "label": "" },
+        { "tick": "2013", "label": "" },
+        { "tick": "2017", "label": "" },
+        { "tick": "2021" }
+      ],
+      "minInnerWidth": 150
+    }}
+    values={`
+party,year,value,category
+SPD,1990,0.491571429,soziokulturell
+CDU/CSU,1990,20.52257143,soziokulturell
+SPD,1994,5.045571429,soziokulturell
+CDU/CSU,1994,33.18457143,soziokulturell
+SPD,1998,9.797571429,soziokulturell
+CDU/CSU,1998,26.39957143,soziokulturell
+SPD,2002,10.36757143,soziokulturell
+CDU/CSU,2002,22.01057143,soziokulturell
+SPD,2005,0.586571429,soziokulturell
+CDU/CSU,2005,15.78657143,soziokulturell
+SPD,2009,-6.308428571,soziokulturell
+CDU/CSU,2009,12.58857143,soziokulturell
+SPD,2013,-4.667428571,soziokulturell
+CDU/CSU,2013,13.84257143,soziokulturell
+SPD,2017,-0.515428571,soziokulturell
+CDU/CSU,2017,15.36157143,soziokulturell
+SPD,2021,-5.163951758,soziokulturell
+CDU/CSU,2021,13.99657143,soziokulturell
+SPD,1990,-8.058119048,sozioökonomisch
+CDU/CSU,1990,-3.593119048,sozioökonomisch
+SPD,1994,-6.948119048,sozioökonomisch
+CDU/CSU,1994,13.21588095,sozioökonomisch
+SPD,1998,2.132880952,sozioökonomisch
+CDU/CSU,1998,19.37788095,sozioökonomisch
+SPD,2002,-0.190119048,sozioökonomisch
+CDU/CSU,2002,7.530880952,sozioökonomisch
+SPD,2005,3.215880952,sozioökonomisch
+CDU/CSU,2005,19.28988095,sozioökonomisch
+SPD,2009,-10.19811905,sozioökonomisch
+CDU/CSU,2009,7.568880952,sozioökonomisch
+SPD,2013,-13.88711905,sozioökonomisch
+CDU/CSU,2013,3.024880952,sozioökonomisch
+SPD,2017,-12.17611905,sozioökonomisch
+CDU/CSU,2017,0.484880952,sozioökonomisch
+SPD,2021,-16.63482297,sozioökonomisch
+CDU/CSU,2021,4.529556628,sozioökonomisch
+    `.trim()}
+    />
+  <ChartLegend>
+    Auf der soziokulturellen Skala bewegen sich die Werte von konservativ-autoritär (positive Werte) nach liberal-progressiv, auf der sozioökonimischen von weniger (positive Werte) nach mehr Staat. Positive bzw. negative Werte stehen für die Magnitude der Abweichung vom Zentrum der Skala. Die Skalen des Manifesto-Projekts wurden vom Wissenschaftszentrum Berlin auf das deutsche Parteiensystem zentriert. Quelle: <Editorial.A href='https://democracy.blog.wzb.eu/2021/08/10/wofuer-steht-die-spd-bei-der-bundestagswahl-2021/'>Democracy Blog des Wissenschaftszentrums Berlin</Editorial.A>, <Editorial.A href='https://manifesto-project.wzb.eu/'>Manifesto-Projekt</Editorial.A>
   </ChartLegend>
 </div>
 ```

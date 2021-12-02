@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import * as glamor from 'glamor'
-import * as styleguide from '../../lib.js'
-import * as styleguideChart from '../../chart.js'
+import * as styleguide from '../../lib'
+import { Chart, ChartTitle, ChartLead, ChartLegend } from '../../lib'
 
 import { requireFrom } from './require'
 import Loader from '../Loader'
@@ -25,7 +25,14 @@ export const createRequire = (allowList = DEFAULT_ALLOW_LIST) => {
     'prop-types': PropTypes,
     glamor,
     '@project-r/styleguide': styleguide,
-    '@project-r/styleguide/chart': styleguideChart
+    // Manually pass Chart components which are, starting from V 13.0.0,
+    // exported from lib.ts
+    '@project-r/styleguide/chart': {
+      Chart,
+      ChartTitle,
+      ChartLead,
+      ChartLegend
+    }
   })
 }
 

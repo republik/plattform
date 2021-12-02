@@ -6,13 +6,13 @@ import { getColorMapper } from './colorMaps'
 
 import {
   deduplicate,
-  hasValues,
   identityFn,
   xAccessor,
   getDataFilter,
   getFormat,
   subsup,
-  runSort
+  runSort,
+  isValuePresent
 } from './utils'
 
 import { timeBarsProcesser } from './TimeBars.context'
@@ -50,6 +50,7 @@ export const ChartContextProvider = plainProps => {
     xFormat = timeFormat(props.timeFormat || props.timeParse)
   } else if (xScale === 'linear') {
     xParser = x => +x
+    xFormat = x => `${x}`
     xParserFormat = x => x.toString()
     if (type === 'Line') {
       xFormat = getFormat(
@@ -68,8 +69,13 @@ export const ChartContextProvider = plainProps => {
 
   const data = values
     .filter(getDataFilter(props.filter))
-    .filter(hasValues)
-    .map(normalizeData(props.x, xNormalizer))
+    .filter(
+      props.area
+        ? d =>
+            isValuePresent(d.value) || isValuePresent(d[`${props.area}_lower`])
+        : d => isValuePresent(d.value)
+    )
+    .map(normalizeData(props.x, xNormalizer, props.area))
     .map(categorizeData(props.category))
 
   const shouldXSort = props.xSort || xScale === 'time' || xScale === 'linear'
@@ -91,7 +97,8 @@ export const ChartContextProvider = plainProps => {
 
   const xValuesUnformatted = data
     .map(xAccessor)
-    .concat(props.xTicks ? props.xTicks.map(xNormalizer) : [])
+    .concat(props.xLines || props.xTicks
+      ? (props.xLines?.map(d => d.tick) || props.xTicks).map(xNormalizer) : [])
     .concat(getAnnotationsXValues(xAnnotations, xNormalizer))
     .filter(deduplicate)
   if (shouldXSort) {

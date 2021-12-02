@@ -631,7 +631,7 @@ const BarChart = props => {
                             y={bar.y + bar.height / 2}
                             dy='.35em'
                           >
-                            {xAxis.format(bar.sumNegative)}
+                            {xAxis.format(bar.sumNegative)} {unit}
                           </text>
                         )}
                         {bar.sumPositiv && (
@@ -643,7 +643,7 @@ const BarChart = props => {
                             y={bar.y + bar.height / 2}
                             dy='.35em'
                           >
-                            {xAxis.format(bar.sumPositiv)}
+                            {xAxis.format(bar.sumPositiv)} {unit}
                           </text>
                         )}
                       </>
