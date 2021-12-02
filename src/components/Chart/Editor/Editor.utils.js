@@ -42,7 +42,7 @@ export const useCommaField = (value, onChange, parser) => {
       error
     })
     if (!error && formatCommaValue(value) !== formatCommaValue(parsedValue)) {
-      onChange(_, parsedValue)
+      onChange(_, parsedValue.length > 0 ? parsedValue : undefined)
     }
   }
 

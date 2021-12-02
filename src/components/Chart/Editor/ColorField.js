@@ -37,7 +37,7 @@ export const ColorField = props => {
       ? createColorMapChange(customColorMap)
       : value === 'party_colors'
       ? createColorMapChange('swissPartyColors')
-      : createColorMapChange('')
+      : createColorMapChange()
   }, [value, customColorMap])
 
   return (
