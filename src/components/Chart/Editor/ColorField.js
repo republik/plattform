@@ -41,12 +41,14 @@ export const ColorField = props => {
 
   return (
     <>
-      <Dropdown
-        label={label}
-        items={items}
-        value={value}
-        onChange={createOnDropdownChange(property)}
-      />
+      <div style={{ marginBottom: '30px' }}>
+        <Dropdown
+          label={label}
+          items={items}
+          value={value}
+          onChange={createOnDropdownChange(property)}
+        />
+      </div>
       {value === 'custom_color' &&
         colorColumn &&
         customColorFields.map(colorField => {

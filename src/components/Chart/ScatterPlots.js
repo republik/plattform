@@ -417,7 +417,8 @@ export const scatterPlotEditorSchema = ({
             }
           }
         }
-      }
+      },
+      advanced: {}
     }
   }
 }
