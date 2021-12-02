@@ -11,9 +11,13 @@ const formatCommaValue = (value = []) => value.join(', ')
 // hook to format comma separated input
 export const useCommaField = (value, onChange, parser) => {
   const isInvalid = newValue => {
+    if (!parser) {
+      return false
+    }
     try {
-      return !parser(newValue)
+      return parser(newValue) === null
     } catch (e) {
+      console.error(e)
       return true
     }
   }

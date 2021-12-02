@@ -26,7 +26,6 @@ export const FormFields = props => {
     createOnFieldChange,
     createOnNumberFieldChange,
     timeFormatParser,
-    numberFormatParser,
     value,
     chartData,
     customColorDropdownItems,
@@ -77,9 +76,9 @@ export const FormFields = props => {
                     value={value[property] || groupObject[property].default}
                     createOnFieldChange={createOnFieldChange}
                     parser={
-                      property === 'xTicks'
+                      property.match(/^x/) // ToDo limit to time scales
                         ? timeFormatParser
-                        : numberFormatParser
+                        : undefined
                     }
                   />
                 )

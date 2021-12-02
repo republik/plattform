@@ -123,8 +123,6 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
     value.timeParse || value.timeFormat || '%Y'
   )
 
-  const numberFormatParser = getFormat(value.numberFormat || 's')
-
   const createSchema = type => {
     return schemaDict[type]({
       fields: columns,
@@ -155,7 +153,6 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
         createOnDropdownChange={createOnDropdownChange}
         createOnNumberFieldChange={createOnNumberFieldChange}
         timeFormatParser={timeFormatParser}
-        numberFormatParser={numberFormatParser}
         value={value}
         fields={
           activeTab === 'basic'
