@@ -2,11 +2,13 @@ import React, { useState, useMemo } from 'react'
 import { tsvParse, csvFormat } from 'd3-dsv'
 import { JSONEditor, PlainEditor } from '../../../utils/CodeEditorFields'
 import SizeSelector from './SizeSelector'
-import WYSIWYGChartEditor from '@project-r/styleguide/lib/components/Chart/Editor'
 
 import { css } from 'glamor'
-import { fontStyles } from '@project-r/styleguide'
-import { useColorContext } from '@project-r/styleguide/lib/components/Colors/useColorContext'
+import {
+  fontStyles,
+  useColorContext,
+  ChartEditor as WYSIWYGChartEditor
+} from '@project-r/styleguide'
 
 const styles = {
   orderBy: css({
