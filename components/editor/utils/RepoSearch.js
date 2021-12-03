@@ -1,19 +1,34 @@
 import React, { Component } from 'react'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
-import { Autocomplete, InlineSpinner } from '@project-r/styleguide'
+import {
+  Autocomplete,
+  InlineSpinner,
+  Label,
+  Interaction
+} from '@project-r/styleguide'
 import debounce from 'lodash.debounce'
 
 import { GITHUB_ORG, REPO_PREFIX } from '../../../lib/settings'
+import { swissTime } from '../../../lib/utils/format'
+import withT from '../../../lib/withT'
 
 export const filterRepos = gql`
-  query searchRepo($after: String, $search: String, $template: String) {
+  query searchRepo(
+    $after: String
+    $search: String
+    $template: String
+    $isSeriesMaster: Boolean
+    $isSeriesEpisode: Boolean
+  ) {
     repos: reposSearch(
       first: 10
       after: $after
       search: $search
       template: $template
       isTemplate: false
+      isSeriesMaster: $isSeriesMaster
+      isSeriesEpisode: $isSeriesEpisode
     ) {
       totalCount
       pageInfo {
@@ -22,6 +37,16 @@ export const filterRepos = gql`
       }
       nodes {
         id
+        meta {
+          publishDate
+        }
+        latestPublications {
+          document {
+            meta {
+              publishDate
+            }
+          }
+        }
         latestCommit {
           id
           document {
@@ -34,6 +59,7 @@ export const filterRepos = gql`
               credits
               kind
               color
+              shareLogo
               shareBackgroundImage
               shareBackgroundImageInverted
               format {
@@ -89,11 +115,32 @@ export const filterRepos = gql`
   }
 `
 
+const RepoItem = withT(({ t, repo }) => {
+  const title =
+    repo.latestCommit.document.meta.title ||
+    repo.id.replace([GITHUB_ORG, REPO_PREFIX || ''].join('/'), '')
+  const publicationDate =
+    repo.latestPublications[0]?.document.meta.publishDate ||
+    repo.meta.publishDate
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <Interaction.P>{title}</Interaction.P>
+      <Label>
+        {publicationDate ? (
+          swissTime.format('%d.%m.%y')(new Date(publicationDate))
+        ) : (
+          <em>{t('repo/search/notPublished')}</em>
+        )}
+      </Label>
+    </div>
+  )
+})
+
 const ConnectedAutoComplete = graphql(filterRepos, {
   skip: props => !props.filter,
-  options: ({ search, template }) => ({
-    fetchPolicy: 'network-only',
-    variables: { search: search, template: template }
+  options: ({ search, template, isSeriesEpisode, isSeriesMaster }) => ({
+    fetchPolicy: 'no-cache',
+    variables: { search, template, isSeriesEpisode, isSeriesMaster }
   }),
   props: props => {
     if (props.data.loading) return { data: props.data, items: [] }
@@ -104,9 +151,7 @@ const ConnectedAutoComplete = graphql(filterRepos, {
       data: props.data,
       items: nodes.map(v => ({
         value: v,
-        text:
-          v.latestCommit.document.meta.title ||
-          v.id.replace([GITHUB_ORG, REPO_PREFIX || ''].join('/'), '')
+        element: <RepoItem repo={v} />
       }))
     }
   }
@@ -194,6 +239,8 @@ export default class RepoSearch extends Component {
         value={value}
         search={search}
         template={this.props.template}
+        isSeriesMaster={this.props.isSeriesMaster}
+        isSeriesEpisode={this.props.isSeriesEpisode}
         items={[]}
         onChange={this.changeHandler}
         onFilterChange={this.filterChangeHandler}

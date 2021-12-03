@@ -169,7 +169,7 @@ class Form extends Component {
                   onChange={item => defaultOnChange(undefined, item.value)}
                 />
               )
-            } else if (key.match(/image|src/i)) {
+            } else if (key.match(/image|logo|src/i)) {
               input = (
                 <ImageInput
                   maxWidth='100%'

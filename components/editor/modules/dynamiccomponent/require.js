@@ -1,4 +1,4 @@
-import { createRequire } from '@project-r/styleguide/lib/components/DynamicComponent'
+import { createRequire } from '@project-r/styleguide'
 
 /*
  * import all react-apollo and graphql-tag functions
