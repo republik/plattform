@@ -587,10 +587,6 @@ mail.sendMembershipOwnerAutoPay = async ({ autoPay, payload, pgdb, t }) => {
           content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}&userPrice=1`,
         },
         {
-          name: 'end_date_minus_10',
-          content: dateFormat(moment(autoPay.endDate).subtract(10, 'days')),
-        },
-        {
           name: 'end_date',
           content: dateFormat(autoPay.endDate),
         },
