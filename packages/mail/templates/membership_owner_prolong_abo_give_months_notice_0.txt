@@ -19,7 +19,7 @@ Nun haben Sie die Wahl:
    Hiermit erhalten Sie nicht nur von Montag bis Samstag unser Magazin, sondern
    werden auch Mitglied der Project R Genossenschaft und Teil unserer
    Verlagsetage.
- * Das Monatsabonnement} {{link_offer_monthly_abo} : Das kostet nur CHF 22 im
+ * Das Monatsabonnement {{link_offer_monthly_abo}} : Das kostet nur CHF 22 im
    Monat, wird Ihrer Kreditkarte belastet und verlängert sich automatisch – kann
    dabei aber jederzeit und ohne Frist gekündigt werden. Sie erhalten hierbei
    Zugriff auf das Magazin, sind aber nicht Teil der Genossenschaft.

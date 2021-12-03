@@ -1,6 +1,6 @@
 Guten Tag
 
-Wie bereits am {{end_date_minus_10}} angekündigt, haben wir nun unverfroren Ihre
+Wie bereits vor einigen Tagen angekündigt, haben wir nun unverfroren Ihre
 Mitgliedschaft um ein weiteres Jahr verlängert: Dafür wurde Ihre
 {{autopay_card_brand}} mit den Endziffern {{autopay_card_last4}} mit
 {{autopay_total}} belastet.
