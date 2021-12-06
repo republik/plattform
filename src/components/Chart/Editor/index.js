@@ -79,6 +79,10 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
       { value: 'party_colors', text: 'Parteifarben' }
     )
 
+  if (!chartData || !chartData[0]) {
+    return <span>Bitch don't kill my vibe</span>
+  }
+
   const columns = Object.keys(chartData[0]).map(d => {
     return { value: d, text: d }
   })
