@@ -146,6 +146,7 @@
   },
   "dependencies": {
     "body-scroll-lock": "^3.1.5",
+    "react-color": "2.19.3",
     "react-icons": "^4.3.1"
   },
   "browserslist": [

@@ -29,7 +29,8 @@ export const FormFields = props => {
     value,
     chartData,
     customColorDropdownItems,
-    createColorMapChange
+    createColorMapChange,
+    customColors
   } = props
   const fieldsKeys = Object.keys(fields)
 
@@ -55,6 +56,7 @@ export const FormFields = props => {
                     customColorDropdownItems={customColorDropdownItems}
                     createColorMapChange={createColorMapChange}
                     colorMap={value['colorMap']}
+                    customColors={customColors}
                   />
                 )
               } else if (groupObject[property].enum) {
@@ -116,7 +118,6 @@ export const FormFields = props => {
               } else if (groupObject[property].type === 'number') {
                 return (
                   <Field
-                    type='number'
                     key={property}
                     label={groupObject[property].title}
                     value={value[property]}
@@ -128,7 +129,7 @@ export const FormFields = props => {
                   <Field
                     key={property}
                     label={groupObject[property].title}
-                    value={value[property] || groupObject[property].default}
+                    value={value[property]}
                     onChange={createOnFieldChange(property)}
                   />
                 )

@@ -783,7 +783,7 @@ export const barEditorSchema = ({
           title: 'Horizontale Achse',
           properties: {
             numberFormat: {
-              title: 'Achsenformat',
+              title: 'Zahlenformat',
               type: 'string',
               enum: numberFormats,
               default: defaults.numberFormat
@@ -826,12 +826,6 @@ export const barEditorSchema = ({
               type: 'string',
               enum: colorDropdownItems,
               default: defaults.colorRange || ''
-            },
-            colorSort: {
-              title: 'Farbsortierung',
-              type: 'string',
-              enum: sortingOptions,
-              default: defaults.colorSort
             }
           }
         },
@@ -865,12 +859,12 @@ export const barEditorSchema = ({
               default: defaults.xTicks
             },
             showBarValues: {
-              title: 'Balken ausserhalb mit Wert anschreiben',
+              title: 'Balken mit Wert anschreiben (ausserhalb)',
               type: 'boolean',
               default: defaults.showBarValues
             },
             inlineValue: {
-              title: 'Balken innerhalb mit Wert anschreiben',
+              title: 'Balken mit Wert anschreiben (innerhalb)',
               type: 'boolean',
               default: defaults.inlineValue
             }
@@ -933,7 +927,7 @@ export const lollipopEditorSchema = ({
           title: 'Horizontale Achse',
           properties: {
             numberFormat: {
-              title: 'Achsenformat',
+              title: 'Zahlenformat',
               type: 'string',
               enum: numberFormats,
               default: defaults.numberFormat
@@ -950,7 +944,7 @@ export const lollipopEditorSchema = ({
               default: defaults.y || 'value'
             },
             unit: {
-              title: 'Beschriftung',
+              title: 'Achsenbeschriftung',
               type: 'string',
               default: defaults.unit || ''
             }
@@ -970,12 +964,6 @@ export const lollipopEditorSchema = ({
               type: 'string',
               enum: colorDropdownItems,
               default: defaults.colorRange || ''
-            },
-            colorSort: {
-              title: 'Farbsortierung',
-              type: 'string',
-              enum: sortingOptions,
-              default: defaults.colorSort
             }
           }
         },
@@ -1047,12 +1035,12 @@ export const lollipopEditorSchema = ({
           title: 'Weitere Einstellungen',
           properties: {
             band: {
-              title: 'Name für Konfidenzinterval',
+              title: 'Name Konfidenzinterval',
               type: 'string',
               default: defaults.band || ''
             },
             bandLegend: {
-              title: 'Legende für Konfidenzinterval',
+              title: 'Legende Konfidenzinterval',
               type: 'string',
               default: defaults.bandLegend || ''
             }

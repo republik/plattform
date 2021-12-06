@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
+import { BlockPicker as ColorPicker } from 'react-color'
 
 import Dropdown from '../../Form/Dropdown'
 import { deduplicate } from '../utils'
+import CalloutMenu from '../../Callout/CalloutMenu'
 
 export const ColorField = props => {
   const {
@@ -14,19 +16,20 @@ export const ColorField = props => {
     colorColumn,
     customColorDropdownItems,
     createColorMapChange,
-    colorMap
+    colorMap,
+    customColors
   } = props
 
-  const [customColorMap, setCustomColorMap] = useState(colorMap || {})
+  const [customColorMap, setCustomColorMap] = useState(colorMap || '')
   const [customColorFields, setCustomColorFields] = useState('')
 
   const handleColorChange = key => item => {
     return setCustomColorMap({ ...customColorMap, [key]: item.value })
   }
 
-  // const handleColorPickerChange = key => item => {
-  //   return setCustomColorMap({ ...customColorMap, [key]: item.target.value })
-  // }
+  const handleColorPickerChange = key => item => {
+    setCustomColorMap({ ...customColorMap, [key]: item.hex })
+  }
 
   useEffect(() => {
     setCustomColorFields(chartData.map(d => d[colorColumn]).filter(deduplicate))
@@ -37,7 +40,7 @@ export const ColorField = props => {
       ? createColorMapChange(customColorMap)
       : value === 'party_colors'
       ? createColorMapChange('swissPartyColors')
-      : createColorMapChange()
+      : createColorMapChange(customColorMap)
   }, [value, customColorMap])
 
   return (
@@ -61,18 +64,48 @@ export const ColorField = props => {
             <div
               style={{
                 display: 'flex',
-                alignItems: 'center'
+                alignItems: 'center',
+                padding: '5px 0'
               }}
               key={colorField}
             >
               <div style={{ flexBasis: '60%' }}>{colorField}</div>
-              <div style={{ flexBasis: '39%' }}>
-                <Dropdown
+              <div
+                style={{
+                  flexBasis: '39%',
+                  display: 'flex',
+                  justifyContent: 'flex-end'
+                }}
+              >
+                {/* <Dropdown
                   label={''}
                   items={customColorDropdownItems}
                   value={customColorMap[colorField] || ''}
                   onChange={handleColorChange(colorField)}
-                />
+                /> */}
+                <CalloutMenu
+                  Element={props => (
+                    <div
+                      style={{
+                        backgroundColor:
+                          customColorMap[colorField] || '#2077b4',
+                        width: '40px',
+                        height: '20px',
+                        borderRadius: '4px',
+                        cursor: 'pointer'
+                      }}
+                      {...props}
+                    />
+                  )}
+                  align='right'
+                >
+                  <ColorPicker
+                    triangle='hide'
+                    colors={customColors}
+                    color={customColorMap[colorField] || '#2077b4'}
+                    onChange={handleColorPickerChange(colorField)}
+                  />
+                </CalloutMenu>
               </div>
               {/* <div style={{ flexBasis: '24%' }}>
                 <input

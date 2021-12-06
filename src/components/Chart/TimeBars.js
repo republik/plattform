@@ -208,19 +208,19 @@ export const timeBarEditorSchema = ({
               default: defaults.x
             },
             timeFormat: {
-              title: 'Achsenformat',
+              title: 'Datumsformat (Chart)',
               type: 'string',
               enum: timeFormats,
               default: defaults.timeFormat
             },
             timeParse: {
-              title: 'Achsenparsing',
+              title: 'Datumsformat (Daten)',
               type: 'string',
               enum: timeParsing,
               default: defaults.timeParse
             },
             xUnit: {
-              title: 'Beschriftung',
+              title: 'Achsenbeschriftung',
               type: 'string',
               default: defaults.xUnit || ''
             }
@@ -230,13 +230,13 @@ export const timeBarEditorSchema = ({
           title: 'Vertikale Achse',
           properties: {
             numberFormat: {
-              title: 'Achsenformat',
+              title: 'Zahlenformat',
               type: 'string',
               enum: numberFormats,
               default: defaults.numberFormat
             },
             unit: {
-              title: 'Beschriftung',
+              title: 'Achsenbeschriftung',
               type: 'string',
               default: defaults.unit || ''
             }
@@ -256,12 +256,6 @@ export const timeBarEditorSchema = ({
               type: 'string',
               enum: colorDropdownItems,
               default: defaults.colorRange || ''
-            },
-            colorSort: {
-              title: 'Farbsortierung',
-              type: 'string',
-              enum: sortingOptions,
-              default: defaults.colorSort
             }
           }
         },
@@ -328,7 +322,7 @@ export const timeBarEditorSchema = ({
             height: {
               title: 'Höhe',
               type: 'number',
-              default: defaults.height
+              default: defaults.height || ''
             },
             minInnerWidth: {
               title: 'Minimale Breite',

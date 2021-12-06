@@ -75,7 +75,7 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
     })
     .concat(
       { value: '', text: 'automatisch' },
-      { value: 'custom_color', text: 'Farben einzeln auswählen' },
+      { value: 'custom_color', text: 'Farben einzeln zuweisen' },
       { value: 'party_colors', text: 'Parteifarben' }
     )
 
@@ -162,6 +162,7 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
         chartData={chartData}
         customColorDropdownItems={customColorDropdownItems}
         createColorMapChange={createColorMapChange}
+        customColors={customColors}
       />
     </div>
   )

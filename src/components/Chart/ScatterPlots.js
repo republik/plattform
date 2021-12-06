@@ -393,12 +393,6 @@ export const scatterPlotEditorSchema = ({
               type: 'string',
               enum: colorDropdownItems,
               default: defaults.colorRange || ''
-            },
-            colorSort: {
-              title: 'Farbsortierung',
-              type: 'string',
-              enum: sortingOptions,
-              default: defaults.colorSort
             }
           }
         },

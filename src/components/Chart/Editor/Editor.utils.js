@@ -54,27 +54,27 @@ export const useCommaField = (value, onChange, parser) => {
 export const numberFormats = [
   {
     value: 's',
-    text: 'Ganzzahl: 4'
+    text: '4'
   },
   {
     value: '.1f',
-    text: 'Gleitkommazahl: 4,3'
+    text: '4,3'
   },
   {
     value: '.2f',
-    text: 'Gleitkommazahl: 4,27'
+    text: '4,27'
   },
   {
     value: '.0%',
-    text: 'Prozentsatz: 4%'
+    text: '4%'
   },
   {
     value: '.1%',
-    text: 'Prozentsatz: 4.2%'
+    text: '4.2%'
   },
   {
     value: ',.1r',
-    text: "Gruppierte Tausender: 80'000'000"
+    text: "80'000'000"
   }
 ]
 

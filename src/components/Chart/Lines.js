@@ -161,7 +161,13 @@ const LineChart = props => {
                 endDy={endDy}
                 width={chartContext.innerWidth}
                 paddingRight={paddingRight}
-                xAxisElement={<XAxis xUnit={props.xUnit} lines={props.xLines?.filter(filterByColumn)} type={props.type} />}
+                xAxisElement={
+                  <XAxis
+                    xUnit={props.xUnit}
+                    lines={props.xLines?.filter(filterByColumn)}
+                    type={props.type}
+                  />
+                }
               />
             </g>
           )
@@ -186,7 +192,8 @@ export const propTypes = {
   xLines: PropTypes.arrayOf(
     PropTypes.shape({
       column: PropTypes.string,
-      tick: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      tick: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        .isRequired,
       label: PropTypes.string,
       textAnchor: PropTypes.string
     }).isRequired
@@ -305,27 +312,21 @@ export const lineEditorSchema = ({
               default: defaults.x
             },
             timeFormat: {
-              title: 'Achsenformat',
+              title: 'Datumsformat (Chart)',
               type: 'string',
               enum: timeFormats,
               default: defaults.timeFormat
             },
             timeParse: {
-              title: 'Achsenparsing',
+              title: 'Datumsformat (Daten)',
               type: 'string',
               enum: timeFormats,
               default: defaults.timeParse
             },
             xUnit: {
-              title: 'Beschriftung',
+              title: 'Achsenbeschriftung',
               type: 'string',
               default: defaults.xUnit || ''
-            },
-            xScale: {
-              title: 'Skalierungstyp',
-              type: 'string',
-              enum: xScaleTypes,
-              default: defaults.xScale
             }
           }
         },
@@ -333,21 +334,15 @@ export const lineEditorSchema = ({
           title: 'Vertikale Achse',
           properties: {
             numberFormat: {
-              title: 'Achsenformat',
+              title: 'Zahlenformat',
               type: 'string',
               enum: numberFormats,
               default: defaults.numberFormat
             },
             unit: {
-              title: 'Beschriftung',
+              title: 'Achsenbeschriftung',
               type: 'string',
               default: defaults.unit || ''
-            },
-            yScale: {
-              title: 'Skalierungstyp',
-              type: 'string',
-              enum: yScaleTypes,
-              default: defaults.yScale
             }
           }
         },
@@ -365,12 +360,6 @@ export const lineEditorSchema = ({
               type: 'string',
               enum: colorDropdownItems,
               default: defaults.colorRange || ''
-            },
-            colorSort: {
-              title: 'Farbsortierung',
-              type: 'string',
-              enum: sortingOptions,
-              default: defaults.colorSort
             }
           }
         },
@@ -402,6 +391,12 @@ export const lineEditorSchema = ({
                 type: 'string'
               },
               default: defaults.xTicks
+            },
+            xScale: {
+              title: 'Skala',
+              type: 'string',
+              enum: xScaleTypes,
+              default: defaults.xScale
             }
           }
         },
@@ -416,15 +411,16 @@ export const lineEditorSchema = ({
               },
               default: defaults.yTicks
             },
+            yScale: {
+              title: 'Skala',
+              type: 'string',
+              enum: yScaleTypes,
+              default: defaults.yScale
+            },
             zero: {
               title: 'Y-Achse bei 0 beginnen',
               type: 'boolean',
               default: defaults.zero
-            },
-            yNice: {
-              title: 'yNice',
-              type: 'number',
-              default: defaults.yNice
             }
           }
         },
@@ -443,9 +439,19 @@ export const lineEditorSchema = ({
             }
           }
         },
-        labels: {
-          title: 'Beschriftung',
+        more: {
+          title: 'Weitere Einstellungen',
           properties: {
+            band: {
+              title: 'Name Konfidenzinterval',
+              type: 'string',
+              default: defaults.band || ''
+            },
+            bandLegend: {
+              title: 'Legende Konfidenzinterval',
+              type: 'string',
+              default: defaults.bandLegend || ''
+            },
             endLabel: {
               title: 'Label am Linienende',
               type: 'boolean',
