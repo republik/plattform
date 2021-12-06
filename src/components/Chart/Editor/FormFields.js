@@ -28,7 +28,6 @@ export const FormFields = props => {
     timeFormatParser,
     value,
     chartData,
-    customColorDropdownItems,
     createColorMapChange,
     customColors
   } = props
@@ -53,7 +52,6 @@ export const FormFields = props => {
                     createOnDropdownChange={createOnDropdownChange}
                     colorColumn={value['color'] || groupObject['color'].default}
                     chartData={chartData}
-                    customColorDropdownItems={customColorDropdownItems}
                     createColorMapChange={createColorMapChange}
                     colorMap={value['colorMap']}
                     customColors={customColors}

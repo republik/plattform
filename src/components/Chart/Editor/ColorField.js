@@ -14,7 +14,6 @@ export const ColorField = props => {
     value,
     chartData,
     colorColumn,
-    customColorDropdownItems,
     createColorMapChange,
     colorMap,
     customColors
@@ -22,10 +21,6 @@ export const ColorField = props => {
 
   const [customColorMap, setCustomColorMap] = useState(colorMap || '')
   const [customColorFields, setCustomColorFields] = useState('')
-
-  const handleColorChange = key => item => {
-    return setCustomColorMap({ ...customColorMap, [key]: item.value })
-  }
 
   const handleColorPickerChange = key => item => {
     setCustomColorMap({ ...customColorMap, [key]: item.hex })
@@ -77,12 +72,6 @@ export const ColorField = props => {
                   justifyContent: 'flex-end'
                 }}
               >
-                {/* <Dropdown
-                  label={''}
-                  items={customColorDropdownItems}
-                  value={customColorMap[colorField] || ''}
-                  onChange={handleColorChange(colorField)}
-                /> */}
                 <CalloutMenu
                   Element={props => (
                     <div
@@ -107,13 +96,6 @@ export const ColorField = props => {
                   />
                 </CalloutMenu>
               </div>
-              {/* <div style={{ flexBasis: '24%' }}>
-                <input
-                  type='color'
-                  value={customColorMap[colorField] || '#2077b4'}
-                  onChange={handleColorPickerChange(colorField)}
-                />
-              </div> */}
             </div>
           )
         })}
