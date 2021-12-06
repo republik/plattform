@@ -1,10 +1,32 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { Block } from 'slate'
 
 import createUi from './ui'
 import { matchBlock } from '../../utils'
 import { createRemoveEmptyKeyHandler } from '../../utils/keyHandlers'
+import InlineUI, { MarkButton } from '../../utils/InlineUI'
+import MdEdit from 'react-icons/lib/md/edit'
+import { matchSubmodules } from '../../utils/matchers'
+import {
+  OverlayFormContext,
+  OverlayFormContextProvider
+} from '../../utils/OverlayFormContext'
+
+const CustomUi = ({ editor, node, TYPE, subModules }) => {
+  const { setShowModal } = useContext(OverlayFormContext)
+  return (
+    <InlineUI
+      node={node}
+      editor={editor}
+      isMatch={value => value.blocks.some(matchSubmodules(TYPE, subModules))}
+    >
+      <MarkButton onMouseDown={() => setShowModal(true)}>
+        <MdEdit size={20} />
+      </MarkButton>
+    </InlineUI>
+  )
+}
 
 export default ({ rule, subModules, TYPE }) => {
   const canvasModule = subModules.find(m => m.name === 'chartCanvas')
@@ -91,9 +113,17 @@ export default ({ rule, subModules, TYPE }) => {
         renderNode({ editor, node, children, attributes }) {
           if (!serializerRule.match(node)) return
           return (
-            <Container size={node.data.get('size')} attributes={attributes}>
-              {children}
-            </Container>
+            <OverlayFormContextProvider>
+              <Container size={node.data.get('size')} attributes={attributes}>
+                <CustomUi
+                  node={node}
+                  editor={editor}
+                  TYPE={TYPE}
+                  subModules={subModules}
+                />
+                {children}
+              </Container>
+            </OverlayFormContextProvider>
           )
         },
         onKeyDown: createRemoveEmptyKeyHandler({ TYPE, isEmpty }),

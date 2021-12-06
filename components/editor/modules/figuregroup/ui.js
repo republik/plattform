@@ -1,7 +1,7 @@
 import React from 'react'
 import { Radio, Label } from '@project-r/styleguide'
 
-import { buttonStyles, createPropertyForm, matchBlock } from '../../utils'
+import { buttonStyles, createPropertyForm } from '../../utils'
 
 import injectBlock from '../../utils/injectBlock'
 
@@ -10,6 +10,7 @@ import UIForm from '../../UIForm'
 import createOnFieldChange from '../../utils/createOnFieldChange'
 
 import { getNewBlock } from './'
+import { matchAncestor } from '../../utils/matchers'
 
 const addFigure = options => {
   const [figureModule] = options.subModules
@@ -86,18 +87,14 @@ const Form = ({ node, onChange }) => {
   )
 }
 
+export const isFigureGroup = matchAncestor('FIGUREGROUP')
+
 export const FigureGroupForm = options => {
-  const { TYPE } = options
   const addFigureHandler = addFigure(options)
   const unwrapFiguresHandler = unwrapFigures(options)
   return createPropertyForm({
     isDisabled: ({ value }) => {
-      const figureGroup = value.blocks.reduce(
-        (memo, node) =>
-          memo || value.document.getFurthest(node.key, matchBlock(TYPE)),
-        undefined
-      )
-
+      const figureGroup = isFigureGroup(value)
       return !figureGroup
     }
   })(({ disabled, onChange, value }) => {
@@ -105,12 +102,7 @@ export const FigureGroupForm = options => {
       return null
     }
 
-    const figureGroup = value.blocks.reduce(
-      (memo, node) =>
-        memo || value.document.getFurthest(node.key, matchBlock(TYPE)),
-      undefined
-    )
-
+    const figureGroup = isFigureGroup(value)
     const handlerFactory = createOnFieldChange(
       change => {
         onChange(change)

@@ -3,6 +3,8 @@ import MarkdownSerializer from 'slate-mdast-serializer'
 
 import { matchBlock } from '../../utils'
 import createUi from './ui'
+import { matchAncestor } from '../../utils/matchers'
+import InlineUI from '../../utils/InlineUI'
 
 export default ({ rule, subModules, TYPE }) => {
   const editorOptions = rule.editorOptions || {}
@@ -81,7 +83,7 @@ export default ({ rule, subModules, TYPE }) => {
     }),
     plugins: [
       {
-        renderNode({ node, children, attributes }) {
+        renderNode({ node, children, attributes, editor }) {
           if (!serializerRule.match(node)) return
 
           const hasFigure =
@@ -92,6 +94,11 @@ export default ({ rule, subModules, TYPE }) => {
               hasFigure={hasFigure}
               attributes={attributes}
             >
+              <InlineUI
+                node={node}
+                editor={editor}
+                isMatch={matchAncestor(TYPE)}
+              />
               {children}
             </Container>
           )

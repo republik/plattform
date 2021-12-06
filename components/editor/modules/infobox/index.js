@@ -1,8 +1,10 @@
 import React from 'react'
 import MarkdownSerializer from 'slate-mdast-serializer'
 
-import { matchBlock } from '../../utils'
+import { createPropertyForm, matchBlock } from '../../utils'
 import createUi from './ui'
+import InlineUI from '../../utils/InlineUI'
+import { matchAncestor } from '../../utils/matchers'
 
 export default ({ rule, subModules, TYPE }) => {
   const editorOptions = rule.editorOptions || {}
@@ -86,11 +88,12 @@ export default ({ rule, subModules, TYPE }) => {
     }),
     plugins: [
       {
-        renderNode({ node, children, attributes }) {
+        renderNode({ node, children, attributes, editor }) {
           if (!serializerRule.match(node)) return
 
           const hasFigure =
             figureModule && node.nodes.find(n => n.type === figureModule.TYPE)
+
           return (
             <Container
               {...node.data.toJS()}
@@ -100,6 +103,11 @@ export default ({ rule, subModules, TYPE }) => {
               }
               attributes={attributes}
             >
+              <InlineUI
+                node={node}
+                editor={editor}
+                isMatch={matchAncestor(TYPE)}
+              />
               {children}
             </Container>
           )
