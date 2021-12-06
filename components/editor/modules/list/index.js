@@ -10,6 +10,7 @@ import MarkdownSerializer from 'slate-mdast-serializer'
 import { Block } from 'slate'
 import InlineUI from '../../utils/InlineUI'
 import { matchAncestor } from '../../utils/matchers'
+import { parent } from '../../utils/selection'
 
 export default ({ rule, subModules, TYPE }) => {
   const {
@@ -117,13 +118,17 @@ export default ({ rule, subModules, TYPE }) => {
       {
         renderNode: ({ children, node, attributes, editor }) => {
           if (node.type !== TYPE) return
+          const isInInfobox =
+            parent(editor.state.value, node.key).type === 'INFOBOX'
           return (
             <div style={{ position: 'relative' }}>
-              <InlineUI
-                node={node}
-                editor={editor}
-                isMatch={matchAncestor(TYPE)}
-              />
+              {!isInInfobox && (
+                <InlineUI
+                  node={node}
+                  editor={editor}
+                  isMatch={matchAncestor(TYPE)}
+                />
+              )}
               <List attributes={attributes} data={node.data.toJS()}>
                 {children}
               </List>
