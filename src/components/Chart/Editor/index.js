@@ -83,6 +83,12 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
     return { value: d, text: d }
   })
 
+  const createOnColorChange = key => colorValue => {
+    const newValue = value
+    delete newValue[key === 'colorMap' ? 'colorRange' : 'colorMap']
+    onChange({ ...newValue, [key]: colorValue })
+  }
+
   const createOnFieldChange = key => {
     return (_, newValue) => {
       onChange({ ...value, [key]: newValue })
@@ -97,10 +103,6 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
 
   const createOnDropdownChange = key => item => {
     return onChange({ ...value, [key]: item.value })
-  }
-
-  const createColorMapChange = colorMap => {
-    return onChange({ ...value, colorMap: colorMap })
   }
 
   const timeFormatParser = timeParse(
@@ -136,6 +138,7 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
         createOnFieldChange={createOnFieldChange}
         createOnDropdownChange={createOnDropdownChange}
         createOnNumberFieldChange={createOnNumberFieldChange}
+        createOnColorChange={createOnColorChange}
         timeFormatParser={timeFormatParser}
         value={value}
         fields={
@@ -144,7 +147,6 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
             : schema.properties.advanced
         }
         chartData={chartData}
-        createColorMapChange={createColorMapChange}
         customColors={customColors}
       />
     </div>

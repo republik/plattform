@@ -25,10 +25,10 @@ export const FormFields = props => {
     createOnDropdownChange,
     createOnFieldChange,
     createOnNumberFieldChange,
+    createOnColorChange,
     timeFormatParser,
     value,
     chartData,
-    createColorMapChange,
     customColors
   } = props
   const fieldsKeys = Object.keys(fields)
@@ -45,15 +45,16 @@ export const FormFields = props => {
                 return (
                   <ColorField
                     key={property}
-                    property={property}
                     label={groupObject[property].title}
                     items={groupObject[property].enum}
-                    value={value[property] || groupObject[property].default}
-                    createOnDropdownChange={createOnDropdownChange}
+                    colorRange={
+                      value[property] || groupObject[property].default
+                    }
+                    colorMap={value['colorMap']}
+                    createOnFieldChange={createOnFieldChange}
+                    createOnColorChange={createOnColorChange}
                     colorColumn={value['color'] || groupObject['color'].default}
                     chartData={chartData}
-                    createColorMapChange={createColorMapChange}
-                    colorMap={value['colorMap']}
                     customColors={customColors}
                   />
                 )

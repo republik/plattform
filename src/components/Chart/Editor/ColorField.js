@@ -9,16 +9,15 @@ export const ColorField = props => {
   const {
     label,
     items,
-    createOnDropdownChange,
-    property,
-    value,
+    createOnColorChange,
     chartData,
     colorColumn,
-    createColorMapChange,
     colorMap,
-    customColors
+    customColors,
+    colorRange = ''
   } = props
 
+  const [value, setValue] = useState(colorMap ? 'custom_color' : colorRange)
   const [customColorMap, setCustomColorMap] = useState(colorMap || '')
   const [customColorFields, setCustomColorFields] = useState('')
 
@@ -27,16 +26,18 @@ export const ColorField = props => {
   }
 
   useEffect(() => {
-    setCustomColorFields(chartData.map(d => d[colorColumn]).filter(deduplicate))
-  }, [colorColumn, chartData])
+    if (value === 'custom_color') {
+      createOnColorChange('colorMap')(customColorMap)
+    } else if (value === 'party_color') {
+      createOnColorChange('colorMap')('swissPartyColors')
+    } else {
+      createOnColorChange('colorRange')(value)
+    }
+  }, [value, customColorMap])
 
   useEffect(() => {
-    value === 'custom_color'
-      ? createColorMapChange(customColorMap)
-      : value === 'party_colors'
-      ? createColorMapChange('swissPartyColors')
-      : createColorMapChange()
-  }, [value, customColorMap])
+    setCustomColorFields(chartData.map(d => d[colorColumn]).filter(deduplicate))
+  }, [colorColumn, chartData])
 
   return (
     <>
@@ -48,7 +49,7 @@ export const ColorField = props => {
           label={label}
           items={items}
           value={value}
-          onChange={createOnDropdownChange(property)}
+          onChange={item => setValue(item.value)}
         />
       </div>
       {value === 'custom_color' &&
