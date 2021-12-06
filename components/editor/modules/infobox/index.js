@@ -96,7 +96,6 @@ export default ({ rule, subModules, TYPE }) => {
 
           return (
             <Container
-              key='content'
               {...node.data.toJS()}
               editorPreview
               figureSize={
