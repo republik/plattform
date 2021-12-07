@@ -406,16 +406,7 @@ const getCustomOptions = async (package_) => {
 /*
   packages[] {
     user: {
-      memberhips[] {
-        membershipType
-        periods[]
-        latestPeriod
-        user
-        claimerName
-        pledge {
-          package
-        }
-      }
+      memberhips[] @see resolveMemberships
     }
     packageOptions[] {
       reward
@@ -527,6 +518,63 @@ const resolvePackages = async ({
   return resolvedPackages.sort((a, b) => ascending(a.order, b.order))
 }
 
+/*
+  memberships[]: {
+    // initial membership data (type, pledge, causing option)
+    membershipType
+    pledge: {
+      pledgeOptions[]: {
+        packageOption {
+          membershipType
+        }
+      }
+      package
+    }
+    pledgeOption: {
+      packageOption {
+        membershipType
+      }
+    }
+
+    periods[]: {
+      // subsequent membership data (pledge, causing option)
+      pledge: {
+        pledgeOptions[]: {
+          packageOption {
+            membershipType
+          }
+        }
+        package
+      }
+
+      pledgeOption: {
+        packageOption {
+          membershipType
+        }
+      }
+    }
+
+    latestPeriod: {
+      pledge: {
+        pledgeOptions[]: {
+          packageOption {
+            membershipType
+          }
+        }
+        package
+      }
+
+      pledgeOption: {
+        packageOption {
+          membershipType
+        }
+      }
+    }
+
+    user
+    claimerName
+  }
+*/
 const resolveMemberships = async ({ memberships, pgdb }) => {
   debug('resolveMemberships')
 
@@ -552,6 +600,7 @@ const resolveMemberships = async ({ memberships, pgdb }) => {
         id: pledges.map((pledge) => pledge.packageId),
       })
     : []
+
   const pledgeOptions = pledgeIds.length
     ? await pgdb.public.pledgeOptions.find({
         pledgeId: pledgeIds,
