@@ -40,16 +40,16 @@ schreibt https://keinundaber.ch/de/literary-work/deadline/ » zu.
 
 {{#if goodies_count}}
 
-{{#if `goodies_count == 1`}} Auch Ihr bestelltes Republik-Objekt eignet sich
-perfekt für die Code-Übergabe. {{elseif `goodies_count > 1`}} Auch Ihre
-bestellten Republik-Objekte eignen sich perfekt für die Code-Übergabe. {{/if}}
-{{#if goodies_has_notebook}} Notizbücher liefern wir Ihnen innerhalb von 7
-Werktagen. {{/if}} {{#if goodies_has_tablebook}} «Republik bei Stromausfall»
-liefern wir Ihnen innerhalb von 7 Werktagen. {{/if}} {{#if goodies_has_totebag}}
-Taschen liefern wir Ihnen innerhalb von 7 Werktagen. {{/if}} {{#if
-goodies_has_mask}} Republik-Masken liefern wir Ihnen innerhalb von 7 Werktagen.
-{{/if}} {{#if goodies_has_fondue}} Das Republik-Fondue wird bis zum 23. Dezember
-bei Ihnen eintreffen. {{/if}}
+{{#if `goodies_count == 1`}} Sie haben sich zu Ihrer Gönner-Mitgliedschaft noch
+ein Republik-Objekt gegönnt. {{elseif `goodies_count > 1`}} Sie haben sich zu
+Ihrer Gönner-Mitgliedschaft noch mehrere Republik-Objekte gegönnt. {{/if}} {{#if
+goodies_has_notebook}} Notizbücher liefern wir Ihnen innerhalb von 7 Werktagen.
+{{/if}} {{#if goodies_has_tablebook}} «Republik bei Stromausfall» liefern wir
+Ihnen innerhalb von 7 Werktagen. {{/if}} {{#if goodies_has_totebag}} Taschen
+liefern wir Ihnen innerhalb von 7 Werktagen. {{/if}} {{#if goodies_has_mask}}
+Republik-Masken liefern wir Ihnen innerhalb von 7 Werktagen. {{/if}} {{#if
+goodies_has_fondue}} Das Republik-Fondue wird bis zum 23. Dezember bei Ihnen
+eintreffen. {{/if}}
 
    {{#options}} {{#if `this.otype == "Goodie"`}}
  * {{this.oamount}} {{this.olabel}}
