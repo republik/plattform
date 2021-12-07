@@ -272,10 +272,12 @@ const evaluate = async ({
     return false
   }
 
-  // Return payload w/o membership if not a MembershipType reward.
+  // Return packageOption if not a MembershipType reward.
   if (packageOption.reward?.type !== 'MembershipType') {
-    const { membership, ...rest } = payload
-    return rest
+    return {
+      ...packageOption,
+      templateId: packageOption.id
+    }
   }
 
   return payload
