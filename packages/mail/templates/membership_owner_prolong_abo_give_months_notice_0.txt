@@ -3,7 +3,7 @@ Guten Tag
 Heute endet Ihr Republik-Abonnement. Herzlichen Dank für Ihr Interesse und Ihre
 Neugier bis hierhin!
 
-Wir würden uns sehr freuen, wenn Sie weiter an Bord blieben. {{prolong_url}}
+Wir würden uns sehr freuen, wenn Sie weiter an Bord blieben {{prolong_url}} .
 
 Ganz gleich, ob Sie uns einmal pro Woche, einmal pro Monat oder einmal pro Jahr
 lesen – mit Ihrem Beitrag stärken Sie kritischen Journalismus, die vierte Gewalt
