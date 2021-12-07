@@ -3,7 +3,7 @@ import { css } from 'glamor'
 
 import { mUp } from '../../theme/mediaQueries'
 import { fontStyles } from '../../theme/fonts'
-import { useColorContext } from '../Colors/useColorContext'
+import { useColorContext } from '../Colors/ColorContext'
 
 const ICON_SIZE = 24
 
