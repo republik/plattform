@@ -2,35 +2,31 @@ Guten Tag
 
 Ihre Mitgliedschaft erneuert sich am {{end_date}}.
 
-Wir freuen uns, Sie bei uns an Bord zu haben, denn die Republik und die Idee
-hinter unserem gemeinsamen Projekt brauchen Sie!
-
-Ganz gleich, ob Sie uns einmal pro Woche, einmal pro Monat oder einmal pro Jahr
-lesen – mit Ihrem Beitrag stärken Sie kritischen Journalismus, die vierte Gewalt
-und die Demokratie.
+Es ehrt uns, Sie als aufmerksames, kritisches und wohlwollendes Publikum an Bord
+zu haben, und wir würden uns freuen, Sie für ein weiteres Jahr dabei zu wissen:
 
 Jetzt erneuern {{prolong_url}}
 
-Als Magazin bieten wir Einordnung und Vertiefung anstelle einer Flut von
-Nachrichten. Wir recherchieren, um Missstände aufzudecken, oft monatelang. Und
-diskutieren über drängende Fragen der Gegenwart.
+Ganz gleich, ob Sie uns einmal pro Woche oder einmal pro Jahr lesen: Wir hoffen,
+dass wir Sie im vergangenen Jahr immer wieder erfolgreich überzeugen,
+herausfordern, informieren, ärgern und erfreuen konnten.
 
-Die Republik ist aber noch mehr. Wir sind ein Projekt gegen den Zynismus, den
-Vormarsch der Autoritären und gegen die Diktatur der Angst. Und stehen für die
-Verteidigung der demokratischen Institutionen und die Werte der Aufklärung.
+Wie Sie wissen, finanziert sich die Republik über ihre Leserinnen und Leser: Es
+kommt also wirklich auf jede einzelne Person an. Sollten Sie dieses Mal noch
+mehr in unseren Journalismus investieren wollen und können, würde es uns freuen,
+wenn Sie Ihren Beitrag erhöhen {{prolong_url}} : Jede zusätzliche Summe macht
+einen Unterschied.
 
-Wie Sie wissen, finanziert sich die Republik als unabhängiges und werbefreies
-Magazin über ihre Leserinnen und Leser.
+Sie haben nun die Wahl:
 
-Nun haben Sie die Wahl:
+ * Sie bleiben an Bord und unterstützen weiterhin die Republik und ihre Idee:
+   Hier bezahlen Sie die Rechnung für ein weiteres Jahr. {{prolong_url}}
+ * Sie möchten die Republik nicht mehr lesen? Hier können Sie Ihre
+   Mitgliedschaft kündigen {{cancel_url}} und, wenn Sie möchten, uns mitteilen,
+   warum.
 
- * Sie bleiben an Bord und investieren damit weiter in die Republik und ihre
-   Idee. {{prolong_url}}
- * Sie kündigen Ihre Mitgliedschaft bis zum {{cancel_until_date}}.
-   {{cancel_url}}
-
-Wie auch immer Sie entscheiden: Wir hoffen, dass wir Sie im vergangenen Jahr
-immer wieder erfolgreich informiert, unterhalten, geärgert und beglückt haben.
+Wie auch immer Sie entscheiden: Wir bedanken uns für Ihr Engagement und Ihr
+Vertrauen bis hierhin.
 
 Herzlich
 

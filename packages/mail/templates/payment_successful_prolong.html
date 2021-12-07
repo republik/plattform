@@ -45,7 +45,7 @@
                     <p>
                       <strong>
                         Ihre Zahlung in Höhe von {{total_formatted}} ist
-                        erfolgreich bei uns eingegangen.<br />Herzlichen Dank!
+                        erfolgreich bei uns eingegangen.
                       </strong>
                     </p>
 
@@ -70,42 +70,8 @@
                         <strong>Total: {{total_formatted}}</strong>
                       </li>
                     </ul>
-
-                    {{#if discount}}
                     <p>
-                      Wir haben Ihre Begründung für die Preisreduktion
-                      erhalten.<br />Vielen Dank für Ihre Offenheit. Wir freuen
-                      uns, dass Sie an Bord bleiben!
-                    </p>
-                    {{/if}} {{#if donation}}
-                    <p>
-                      Ihnen ist die Republik mehr wert. {{donation_formatted}},
-                      um genau zu sein.<br />
-                      Herzlichen Dank für Ihre grosszügige Spende.
-                    </p>
-                    {{/if}} {{#if `gifted_memberships_count == 1`}}
-                    <p>
-                      Schön, dass Sie die Verbreitung der Republik auch mit
-                      einer Geschenkmitgliedschaft unterstützen. Wir haben die
-                      Beschenkte darüber per E-Mail informiert.
-                    </p>
-                    {{elseif `gifted_memberships_count > 1`}}
-                    <p>
-                      Schön, dass Sie die Verbreitung der Republik auch mit
-                      Geschenkmitgliedschaften unterstützen. Wir haben die
-                      Beschenkte darüber per E-Mail informiert.
-                    </p>
-                    {{/if}} {{#if goodies_count}}
-                    <p>
-                      {{#if `goodies_count == 1`}} Sie haben sich noch ein
-                      Republik-Objekt gegönnt. {{elseif `goodies_count > 1`}}
-                      Sie haben sich noch mehrere Republik-Objekte gegönnt.
-                      {{/if}} Diese liefern wir innerhalb von 7 Werktagen.
-                    </p>
-                    {{/if}}
-
-                    <p>
-                      Herzlich<br />
+                      Herzlichen Dank für Ihre Unterstützung!<br />
                       Ihre Crew der Republik
                     </p>
                   </td>
