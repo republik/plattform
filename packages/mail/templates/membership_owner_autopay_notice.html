@@ -45,7 +45,7 @@
                     <p>
                       Am {{end_date}} erneuert sich Ihre Mitgliedschaft um ein
                       weiteres Jahr. Herzlichen Dank für Ihre Unterstützung. Wir
-                      sind sehr froh, Sie an Bord zu wissen.
+                      freuen uns, Sie an Bord zu wissen.
                     </p>
                     <p>
                       Bei Ihrem letzten Kauf haben Sie angegeben, dass Sie uns
@@ -53,55 +53,39 @@
                       belasten.
                     </p>
                     <p>
-                      Diese E-Mail informiert Sie darüber, dass wir das in
+                      Diese E-Mail informiert Sie darüber, dass wir dies in
                       {{days_left}} Tagen tatsächlich und unverfroren tun
                       werden: Ihre {{autopay_card_brand}} mit den Endziffern
                       {{autopay_card_last4}} belasten wir am {{end_date}} mit
                       {{autopay_total}}.
                     </p>
-                    {{#if `autopay_membership_type == "BENEFACTOR_ABO"`}} {{#if
-                    autopay_with_donation}}
+                    {{#if `autopay_membership_type == "BENEFACTOR_ABO"`}}
                     <p>
                       Dieser Beitrag kommt zustande, weil Sie die Republik im
                       letzten Jahr grosszügigerweise mit einer
-                      Gönner-Mitgliedschaft und einer zusätzlichen Spende
-                      unterstützt haben. Durch Sie ist unsere Unabhängigkeit,
-                      unsere Werbefreiheit, ja unsere Existenz erst möglich. Wir
-                      bedanken uns von ganzem Herzen und hoffen, dass Sie sich
-                      und uns treu bleiben und weiterhin in kompromisslosen
-                      Journalismus investieren. Sollten Sie es sich anders
-                      überlegen, können Sie
-                      <a href="{{prolong_url}}"
-                        >Ihre Mitgliedschaft beziehungsweise die Höhe Ihres
-                        Spendenbeitrags vor der Abbuchung noch anpassen</a
-                      >.
-                    </p>
-                    {{else}}
-                    <p>
-                      Dieser Beitrag kommt zustande, weil Sie die Republik im
-                      letzten Jahr grosszügigerweise mit einer
-                      Gönner-Mitgliedschaft unterstützt haben. Durch Sie ist
-                      unsere Unabhängigkeit, unsere Werbefreiheit, ja unsere
-                      Existenz erst möglich. Wir bedanken uns von ganzem Herzen
-                      und hoffen, dass Sie sich und uns treu bleiben und
+                      Gönner-Mitgliedschaft {{#if autopay_with_donation}} und
+                      einer zusätzlichen Spende{{/if}} unterstützt haben. Durch
+                      Sie ist unsere Unabhängigkeit, unsere Werbefreiheit, ja
+                      unsere Existenz erst möglich. Wir bedanken uns von ganzem
+                      Herzen und hoffen, dass Sie sich und uns treu bleiben und
                       weiterhin in kompromisslosen Journalismus investieren.
                       Sollten Sie es sich anders überlegen, können Sie
                       <a href="{{prolong_url}}"
-                        >Ihre Mitgliedschaft beziehungsweise die Höhe Ihres
-                        Spendenbeitrags vor der Abbuchung noch anpassen</a
+                        >Ihre Mitgliedschaft {{#if autopay_with_donation}}
+                        beziehungsweise die Höhe Ihres Spendenbeitrags{{/if}}
+                        vor der Abbuchung noch anpassen</a
                       >.
                     </p>
-                    {{/if}} {{else}} {{#if autopay_with_discount}}
+                    {{elseif autopay_with_discount}}
                     <p>
-                      Sie haben im letzten Jahr einen reduzierten Beitrag für
-                      Ihre Mitgliedschaft bezahlt. Da unsere Unabhängigkeit und
-                      Werbefreiheit, ja unsere Existenz von der Unterstützung
-                      unserer Verlegerinnen abhängt, wäre es grandios, wenn Sie
+                      Sie haben im letzten Jahr die vergünstigte Mitgliedschaft
+                      gewählt. Da unsere Unabhängigkeit, ja unsere Existenz von
+                      der Unterstützung unserer Verlegerinnen abhängt, würde es
+                      uns freuen, wenn Sie – falls es Ihre finanzielle Situation
+                      erlaubt –
                       <a href="{{prolong_url}}"
-                        >Ihre Mitgliedschaft auf den regulären Beitrag von
-                        {{autopay_default_price}} anpassen</a
-                      >
-                      könnten.
+                        >Ihren Mitgliedschaftsbeitrag erhöhen könnten</a
+                      >. Jede zusätzliche Summe macht einen Unterschied.
                     </p>
                     {{elseif autopay_with_donation}}
                     <p>
@@ -112,24 +96,22 @@
                       erst möglich. Wir bedanken uns von ganzem Herzen und
                       hoffen, dass Sie sich und uns treu bleiben und weiterhin
                       in kompromisslosen Journalismus investieren. Sollten Sie
-                      es sich anders überlegen, können Sie
+                      es sich anders überlegen, können Sie die
                       <a href="{{prolong_url}}"
-                        >Ihre Mitgliedschaft beziehungsweise die Höhe Ihres
-                        Spendenbeitrags vor der Abbuchung noch anpassen</a
+                        >Höhe Ihres Spendenbeitrags vor der Abbuchung noch
+                        anpassen</a
                       >.
                     </p>
                     {{else}}
                     <p>
                       Sie haben sich im letzten Jahr für eine reguläre
                       Mitgliedschaft entschieden. Sollten Sie dieses Mal noch
-                      mehr in kompromisslosen, unabhängigen und werbefreien
-                      Journalismus investieren wollen und können, passen Sie
-                      doch
-                      <a href="{{prolong_url}}"
-                        >Ihren Mitgliedsbeitrag vor der Abbuchung noch an</a
-                      >. Jede Spende macht einen Unterschied.
+                      mehr in unseren Journalismus investieren wollen und
+                      können, würde es uns freuen, wenn Sie
+                      <a href="{{prolong_url}}">Ihren Beitrag erhöhen</a>: Jede
+                      zusätzliche Summe macht einen Unterschied.
                     </p>
-                    {{/if}} {{/if}}
+                    {{/if}}
                     <p>
                       Ausserdem können Sie bis zur Abbuchung falls gewünscht
                       <a href="{{prolong_url}}"
@@ -140,9 +122,9 @@
                       <a href="{{cancel_url}}">Ihre Mitgliedschaft kündigen</a>.
                     </p>
                     <p>
-                      Wir melden uns erneut, sobald Ihr Abonnement erfolgreich
-                      verlängert wurde. In der Zwischenzeit können Sie sich bei
-                      Fragen unter
+                      Wir melden uns erneut, sobald Ihre Mitgliedschaft
+                      erfolgreich verlängert wurde. In der Zwischenzeit können
+                      Sie sich bei Fragen unter
                       <a href="mailto:kontakt@republik.ch"
                         >kontakt@republik.ch</a
                       >

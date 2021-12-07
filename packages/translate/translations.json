@@ -614,19 +614,19 @@
     },
     {
       "key": "api/email/membership_owner_prolong_notice/subject",
-      "value": "Am {endDate} erneuert sich Ihre Mitgliedschaft"
+      "value": "Bleiben Sie an Bord oder möchten Sie die Republik verlassen? Sie haben die Wahl"
     },
     {
       "key": "api/email/membership_owner_prolong_notice_7/subject",
-      "value": "Möchten Sie Ihre Mitgliedschaft verlängern oder die Republik verlassen? Entscheiden Sie sich bis {endDate}"
+      "value": "Am {endDate} erneuert sich Ihre Mitgliedschaft"
     },
     {
       "key": "api/email/membership_owner_prolong_notice_0/sequenceNumber/true/subject",
-      "value": "Ihre Abonnementsrechnung (#{sequenceNumber})"
+      "value": "Ihre Mitgliedschaftsrechnung (#{sequenceNumber})"
     },
     {
       "key": "api/email/membership_owner_prolong_notice_0/subject",
-      "value": "Ihre Abonnementsrechnung"
+      "value": "Ihre Mitgliedschaftsrechnung"
     },
     {
       "key": "api/email/membership_owner_prolong_abo_give_months_notice_0/subject",
