@@ -126,16 +126,24 @@
                       </li>
                     </ul>
 
-                    {{#unless waiting_for_payment}} {{#if goodies_count}}
+                    {{#if goodies_count}}
                     <p>
-                      {{#if `goodies_count == 1`}} Sie haben sich zu Ihrer
-                      Gönner-Mitgliedschaft noch ein Republik-Objekt gegönnt.
-                      {{elseif `goodies_count > 1`}} Sie haben sich zu Ihrer
-                      Gönner-Mitgliedschaft noch mehrere Republik-Objekte
-                      gegönnt. {{/if}} Diese liefern wir innerhalb von 7
-                      Werktagen.
+                      {{#unless waiting_for_payment}} {{#if `goodies_count ==
+                      1`}} Sie haben sich noch ein Republik-Objekt gegönnt.
+                      {{elseif `goodies_count > 1`}} Sie haben sich noch mehrere
+                      Republik-Objekte gegönnt. {{/if}} {{#if
+                      goodies_has_notebook}} Notizbücher liefern wir Ihnen
+                      innerhalb von 7 Werktagen. {{/if}} {{#if
+                      goodies_has_tablebook}} «Republik bei Stromausfall»
+                      liefern wir Ihnen innerhalb von 7 Werktagen. {{/if}} {{#if
+                      goodies_has_totebag}} Taschen liefern wir Ihnen innerhalb
+                      von 7 Werktagen. {{/if}} {{#if goodies_has_mask}}
+                      Republik-Masken liefern wir Ihnen innerhalb von 7
+                      Werktagen. {{/if}}{{/unless}} {{#if goodies_has_fondue}}
+                      Das Republik-Fondue wird bis zum 23. Dezember bei Ihnen
+                      eintreffen. {{/if}}
                     </p>
-                    {{/if}} {{/unless}} {{#if paymentslip}}
+                    {{/if}} {{#if paymentslip}}
                     <p>Zahlungsinformationen:</p>
                     <ul
                       style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"

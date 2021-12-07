@@ -42,11 +42,16 @@ schreibt https://keinundaber.ch/de/literary-work/deadline/ » zu.
 
 {{#if `goodies_count == 1`}} Sie haben sich zu Ihrer Gönner-Mitgliedschaft noch
 ein Republik-Objekt gegönnt. {{elseif `goodies_count > 1`}} Sie haben sich zu
-Ihrer Gönner-Mitgliedschaft noch mehrere Republik-Objekte gegönnt. {{/if}} Diese
-liefern wir innerhalb von 7 Werktagen.
+Ihrer Gönner-Mitgliedschaft noch mehrere Republik-Objekte gegönnt. {{/if}}
 
    {{#options}} {{#if `this.otype == "Goodie"`}}
- * {{this.oamount}} {{this.olabel}}
+ * {{this.oamount}} {{this.olabel}} {{#if goodies_has_notebook}} liefern wir
+   Ihnen innerhalb von 7 Werktagen. {{/if}} {{#if goodies_has_tablebook}}
+   liefern wir Ihnen innerhalb von 7 Werktagen. {{/if}} {{#if
+   goodies_has_totebag}} liefern wir Ihnen innerhalb von 7 Werktagen. {{/if}}
+   {{#if goodies_has_mask}} liefern wir Ihnen innerhalb von 7 Werktagen. {{/if}}
+   {{#if goodies_has_fondue}} wird bis zum 23. Dezember bei Ihnen eintreffen.
+   {{/if}}
    {{/if}} {{/options}}
 
 {{/if}} {{#if `total > 1000`}}

@@ -23,12 +23,15 @@ nur auf die Seite {{link_claim}} gehen. Und ihn dort eingeben.
 {{#if `goodies_count == 1`}} Auch Ihr bestelltes Republik-Objekt eignet sich
 perfekt für die Code-Übergabe. {{elseif `goodies_count > 1`}} Auch Ihre
 bestellten Republik-Objekte eignen sich perfekt für die Code-Übergabe. {{/if}}
-Notizbücher und Taschen liefern wir Ihnen innerhalb von 7 Werktagen. {{#if
-goodies_has_fondue}} Das Republik-Fondue wird bis zum 23. Dezember bei Ihnen
-eintreffen. {{/if}}
 
    {{#options}} {{#if `this.otype == "Goodie"`}}
- * {{this.oamount}} {{this.olabel}}
+ * {{this.oamount}} {{this.olabel}} {{#if goodies_has_notebook}} liefern wir
+   Ihnen innerhalb von 7 Werktagen. {{/if}} {{#if goodies_has_tablebook}}
+   liefern wir Ihnen innerhalb von 7 Werktagen. {{/if}} {{#if
+   goodies_has_totebag}} liefern wir Ihnen innerhalb von 7 Werktagen. {{/if}}
+   {{#if goodies_has_mask}} liefern wir Ihnen innerhalb von 7 Werktagen. {{/if}}
+   {{#if goodies_has_fondue}} wird bis zum 23. Dezember bei Ihnen eintreffen.
+   {{/if}}
    {{/if}} {{/options}}
 
 {{/if}} {{#if `num_access_granted_memberships > 0`}} {{#if

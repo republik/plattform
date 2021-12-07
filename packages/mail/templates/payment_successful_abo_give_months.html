@@ -76,15 +76,24 @@
                       Republik-Objekt eignet sich perfekt für die Code-Übergabe.
                       {{elseif `goodies_count > 1`}} Auch Ihre bestellten
                       Republik-Objekte eignen sich perfekt für die
-                      Code-Übergabe. {{/if}} Wir liefern Ihnen die Bestellung
-                      innerhalb von 7 Werktagen.
+                      Code-Übergabe. {{/if}}
                     </p>
 
                     <ul
                       style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
                     >
                       {{#options}} {{#if `this.otype == "Goodie"`}}
-                      <li>{{this.oamount}} {{this.olabel}}</li>
+                      <li>
+                        {{this.oamount}} {{this.olabel}} {{#if
+                        goodies_has_notebook}} liefern wir Ihnen innerhalb von 7
+                        Werktagen. {{/if}} {{#if goodies_has_tablebook}} liefern
+                        wir Ihnen innerhalb von 7 Werktagen. {{/if}} {{#if
+                        goodies_has_totebag}} liefern wir Ihnen innerhalb von 7
+                        Werktagen. {{/if}} {{#if goodies_has_mask}} liefern wir
+                        Ihnen innerhalb von 7 Werktagen. {{/if}} {{#if
+                        goodies_has_fondue}} wird bis zum 23. Dezember bei Ihnen
+                        eintreffen. {{/if}}
+                      </li>
                       {{/if}} {{/options}}
                     </ul>
                     {{/if}}
