@@ -27,19 +27,7 @@ const getCustomPackages = async ({ user, crowdfundingName, pgdb }) => {
 
   return Promise.map(
     await resolvePackages({ packages, pledger: user, strict: true, pgdb }),
-    async (package_) => {
-      if (package_.custom === true) {
-        const options = await getCustomOptions(package_)
-
-        if (options.length === 0) {
-          return
-        }
-
-        return { ...package_, options }
-      }
-
-      return package_
-    },
+    getCustomOptions,
   ).filter(Boolean)
 }
 

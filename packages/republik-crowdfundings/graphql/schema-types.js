@@ -64,6 +64,7 @@ type Package {
   company: Company!
   group: PackageGroup!
   options: [PackageOption!]!
+  suggestedTotal: Int
   paymentMethods: [PaymentMethod!]!
   createdAt: DateTime!
   updatedAt: DateTime!

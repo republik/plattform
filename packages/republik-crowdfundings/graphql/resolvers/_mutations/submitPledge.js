@@ -104,9 +104,8 @@ module.exports = async (_, args, context) => {
       })
     ).shift()
 
-    const resolvedOptions = resolvedPackage.custom
-      ? await getCustomOptions(resolvedPackage)
-      : []
+    const customOptions = resolvedPackage.custom && await getCustomOptions(resolvedPackage)
+    const resolvedOptions = customOptions ? customOptions.options : []
 
     // check if packageOptions are all from the same package
     // check if minAmount <= amount <= maxAmount
