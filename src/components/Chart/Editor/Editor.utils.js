@@ -1,15 +1,17 @@
 import { useState } from 'react'
 
-const parseCommaValue = (newValue = '') => {
+const parseCommaValue = (newValue = '', context) => {
   return newValue
     .split(',')
     .map(d => d.trim())
     .filter(Boolean)
+    .map(d => (context === 'number' ? (d === 0 ? 0 : +d) : d))
 }
+
 const formatCommaValue = (value = []) => value.join(', ')
 
 // hook to format comma separated input
-export const useCommaField = (value, onChange, parser) => {
+export const useCommaField = (value, onChange, parser, context) => {
   const isInvalid = newValue => {
     if (!parser) {
       return false
@@ -35,7 +37,7 @@ export const useCommaField = (value, onChange, parser) => {
   // }, [value])
 
   const onFieldValueChange = (_, newValue) => {
-    const parsedValue = parseCommaValue(newValue)
+    const parsedValue = parseCommaValue(newValue, context)
     const error = parsedValue.some(isInvalid)
     setField({
       value: newValue,

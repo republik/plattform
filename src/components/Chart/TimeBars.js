@@ -191,7 +191,7 @@ export const timeBarEditorSchema = ({
   timeFormats,
   colorDropdownItems,
   timeParsing,
-  sortingOptions
+  xScaleTypes
 }) => {
   return {
     title: 'LineChartConfig',
@@ -287,6 +287,12 @@ export const timeBarEditorSchema = ({
                 type: 'string'
               },
               default: defaults.xTicks
+            },
+            xScale: {
+              title: 'Skala',
+              type: 'string',
+              enum: xScaleTypes.slice(1, 3),
+              default: defaults.xScale
             }
           }
         },
@@ -302,7 +308,7 @@ export const timeBarEditorSchema = ({
               default: defaults.yTicks
             },
             domain: {
-              title: 'Domain setzen',
+              title: 'Bandbreite der Achsen',
               type: 'array',
               contains: {
                 type: 'string'

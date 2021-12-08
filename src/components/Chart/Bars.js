@@ -882,7 +882,7 @@ export const barEditorSchema = ({
               default: defaults.yTicks
             },
             domain: {
-              title: 'Domain setzen',
+              title: 'Bandbreite der Achsen',
               type: 'array',
               contains: {
                 type: 'string'
@@ -1007,7 +1007,7 @@ export const lollipopEditorSchema = ({
           title: 'Vertikale Achse',
           properties: {
             domain: {
-              title: 'Domain setzen',
+              title: 'Bandbreite der Achsen',
               type: 'array',
               contains: {
                 type: 'string'

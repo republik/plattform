@@ -19,6 +19,24 @@ const styles = {
   })
 }
 
+const determineContext = (currentProperty, chartConfig) => {
+  if (currentProperty.match(/^x/)) {
+    if (chartConfig.type === 'TimeBar') {
+      return chartConfig?.xScale === 'ordinal' ? 'strings' : 'time'
+    } else if (chartConfig.type === 'Line') {
+      return chartConfig?.xScale === 'ordinal'
+        ? 'strings'
+        : chartConfig?.xScale === 'linear'
+        ? 'number'
+        : 'time'
+    } else {
+      return 'time'
+    }
+  } else {
+    return 'number'
+  }
+}
+
 export const FormFields = props => {
   const {
     fields,
@@ -76,11 +94,8 @@ export const FormFields = props => {
                     groupObject={groupObject}
                     value={value[property] || groupObject[property].default}
                     createOnFieldChange={createOnFieldChange}
-                    parser={
-                      property.match(/^x/) // ToDo limit to time scales
-                        ? timeFormatParser
-                        : undefined
-                    }
+                    context={determineContext(property, value)}
+                    timeFormatParser={timeFormatParser}
                   />
                 )
               } else if (groupObject[property].type === 'boolean') {
