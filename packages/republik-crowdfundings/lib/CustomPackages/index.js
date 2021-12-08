@@ -88,6 +88,12 @@ const hasDormantMembership = ({ user, memberships }) => {
   return activeMembership && !!dormantMemberships.length > 0
 }
 
+/**
+ * Evalutes whether a (resolved) package and some packageOption may be applicable
+ * to a membership.
+ * 
+ * It returns a filtered filtered and sorted array w/ packageOptions.
+ */
 const evaluate = async ({
   package_,
   packageOption,
@@ -384,7 +390,7 @@ const getCustomOptions = async (package_) => {
         b.membership && b.membership.userId === package_.user.id,
       ),
     )
-    // Sort by sortOrder at lat
+    // … aaaand findally sort by sortOrder, at last
     .sort((a, b) => ascending(a.order, b.order))
 
   if (!filteredAndSortedOptions.length) {
