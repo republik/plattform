@@ -1,9 +1,14 @@
-import React, { useState, useRef, useMemo } from 'react'
-import PropTypes from 'prop-types'
+import React, {
+  useState,
+  useRef,
+  useMemo,
+  PropsWithChildren,
+  MutableRefObject
+} from 'react'
 import { css, merge, simulate } from 'glamor'
 import { fontStyles } from '../../theme/fonts'
 import { mUp } from '../../theme/mediaQueries'
-import { useColorContext } from '../Colors/useColorContext'
+import { useColorContext } from '../Colors/ColorContext'
 import {
   X_PADDING,
   Y_PADDING,
@@ -11,6 +16,7 @@ import {
   LINE_HEIGHT,
   FIELD_HEIGHT
 } from './constants'
+import { IconType } from 'react-icons/lib/esm/iconBase'
 
 const styles = {
   container: css({
@@ -83,7 +89,12 @@ const styles = {
   })
 }
 
-const ArrowUp = ({ size, fill, ...props }) => (
+interface ArrowProps extends Record<string, unknown> {
+  size: number
+  fill?: string
+}
+
+const ArrowUp: React.FC<ArrowProps> = ({ size, fill, ...props }) => (
   <svg
     {...props}
     fill={fill}
@@ -97,7 +108,7 @@ const ArrowUp = ({ size, fill, ...props }) => (
     <path d='M0 0h24v24H0z' fill='none' />
   </svg>
 )
-const ArrowDown = ({ size, fill, ...props }) => (
+const ArrowDown: React.FC<ArrowProps> = ({ size, fill, ...props }) => (
   <svg
     {...props}
     fill={fill}
@@ -112,7 +123,28 @@ const ArrowDown = ({ size, fill, ...props }) => (
   </svg>
 )
 
-const Field = React.forwardRef(
+const Field = React.forwardRef<
+  HTMLInputElement,
+  PropsWithChildren<{
+    value?: string | number
+    onChange?: (
+      event: InputEvent,
+      value: string | number,
+      shouldValidate: boolean
+    ) => void
+    name?: string
+    autoComplete?: boolean
+    type?: string
+    label?: string
+    disabled?: boolean
+    error?: string | boolean
+    onInc?: () => void
+    onDec?: () => void
+    icon?: IconType
+    simulate?: string
+    renderInput: React.FC<Record<string, unknown>>
+  }>
+>(
   (
     {
       onChange,
@@ -122,27 +154,27 @@ const Field = React.forwardRef(
       simulate: sim,
       label,
       error,
-      renderInput,
       onInc,
       onDec,
       icon,
       disabled,
-      value
+      value,
+      renderInput = props => <input {...props} />
     },
     forwardRef
   ) => {
-    let [isFocused, setIsFocused] = useState(false)
+    const [isFocused, setIsFocused] = useState(
+      sim && sim.indexOf('focus') !== -1
+    )
     const [isValidating, setIsValidating] = useState(false)
     const [isDirty, setIsDirty] = useState(false)
     const [localStateValue, setLocalStateValue] = useState('')
-    const ownRef = useRef()
+    const ownRef = useRef<HTMLInputElement>()
     const [colorScheme] = useColorContext()
 
-    const inputRef = forwardRef || ownRef
-
-    if (sim && sim.indexOf('focus') !== -1) {
-      isFocused = true
-    }
+    const inputRef = (forwardRef || ownRef) as MutableRefObject<
+      HTMLInputElement
+    >
 
     const simulationClassName = sim && simulate(sim).toString()
     const fieldValue = value !== undefined ? value : localStateValue
@@ -190,7 +222,7 @@ const Field = React.forwardRef(
           type,
           ref: inputRef,
           onChange: event => {
-            let v = event.target.value
+            const v = event.target.value
             if (onChange) {
               onChange(event, v, isValidating)
               setIsDirty(true)
@@ -257,16 +289,5 @@ const Field = React.forwardRef(
     )
   }
 )
-
-Field.propTypes = {
-  error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  renderInput: PropTypes.func.isRequired,
-  icon: PropTypes.node,
-  disabled: PropTypes.bool
-}
-
-Field.defaultProps = {
-  renderInput: props => <input {...props} />
-}
 
 export default Field

@@ -337,7 +337,7 @@ const Styleguide = () => {
                         Button: require('./components/Button'),
                         Checkbox: require('./components/Form/Checkbox.js'),
                         Radio: require('./components/Form/Radio.js'),
-                        Field: require('./components/Form/Field.js'),
+                        Field: require('./components/Form/Field.tsx'),
                         ...require('./components/Form/Field.docs.js'),
                         FieldSet: require('./components/Form/FieldSet.js'),
                         MaskedInput: require('react-maskedinput'),
@@ -375,10 +375,10 @@ const Styleguide = () => {
                         css,
                         ...require('./components/Typography'),
                         Button: require('./components/Button'),
-                        Field: require('./components/Form/Field.js'),
-                        Dropdown: require('./components/Form/Dropdown'),
-                        VirtualDropdown: require('./components/Form/VirtualDropdown'),
-                        NativeDropdown: require('./components/Form/NativeDropdown'),
+                        Field: require('./components/Form/Field.tsx'),
+                        Dropdown: require('./components/Form/Dropdown.js'),
+                        VirtualDropdown: require('./components/Form/VirtualDropdown.js'),
+                        NativeDropdown: require('./components/Form/NativeDropdown.js'),
                         dropdownItems: [
                           { value: '1', text: 'Redaktorin' },
                           { value: '2', text: 'Fussballerin' },
@@ -401,11 +401,11 @@ const Styleguide = () => {
                           }
                         ],
                         VirtualDropdownInternal: {
-                          Items: require('./components/Form/VirtualDropdown')
+                          Items: require('./components/Form/VirtualDropdown.js')
                             .Items,
-                          ItemsContainer: require('./components/Form/VirtualDropdown')
+                          ItemsContainer: require('./components/Form/VirtualDropdown.js')
                             .ItemsContainer,
-                          Inner: require('./components/Form/VirtualDropdown')
+                          Inner: require('./components/Form/VirtualDropdown.js')
                             .Inner
                         }
                       },
@@ -1025,7 +1025,7 @@ const Styleguide = () => {
                       title: 'Translate',
                       src: require('./lib/translate.docs.md'),
                       imports: {
-                        Field: require('./components/Form/Field.js'),
+                        Field: require('./components/Form/Field.tsx'),
                         ...require('./components/Typography'),
                         t: createFormatter([
                           {
