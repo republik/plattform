@@ -92,7 +92,7 @@ const hasDormantMembership = ({ user, memberships }) => {
  * Evalutes whether a (resolved) package and some packageOption may be applicable
  * to a membership.
  * 
- * It returns a filtered filtered and sorted array w/ packageOptions.
+ * It returns a filtered and sorted array w/ packageOptions.
  */
 const evaluate = async ({
   package_,
