@@ -398,7 +398,7 @@ const getCustomOptions = async (package_) => {
   }
 
   const suggestedTotal = filteredAndSortedOptions
-    .map((po) => po.suggestedPrice)
+    .map((option) => option.suggestedPrice)
     .filter(Boolean)
     .find((price) => !!price)
 
