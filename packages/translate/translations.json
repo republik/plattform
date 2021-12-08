@@ -421,6 +421,14 @@
       "value": "Republik-Masken"
     },
     {
+      "key": "api/email/option/goodie/fondue/1",
+      "value": "Republik-Fondue"
+    },
+    {
+      "key": "api/email/option/goodie/fondue/other",
+      "value": "Republik-Fondues"
+    },
+    {
       "key": "api/email/option/membershiptype/abo/1",
       "value": "Jahresmitgliedschaft"
     },
@@ -1470,7 +1478,7 @@
     },
     {
       "key": "timeAhead/days/1",
-      "value": "erst in einem Tag"
+      "value": "in einem Tag"
     },
     {
       "key": "timeAhead/days/other",
@@ -1478,7 +1486,7 @@
     },
     {
       "key": "timeAhead/weeks/1",
-      "value": "erst in einer Woche"
+      "value": "in einer Woche"
     },
     {
       "key": "timeAhead/weeks/other",
@@ -2049,6 +2057,14 @@
       "value": "Republik-Masken"
     },
     {
+      "key": "api/invoices/option/Goodie/FONDUE/1",
+      "value": "Republik-Fondue"
+    },
+    {
+      "key": "api/invoices/option/Goodie/FONDUE/other",
+      "value": "Republik-Fondues"
+    },
+    {
       "key": "api/invoices/option/MembershipType/ABO/1",
       "value": "Jahresmitgliedschaft"
     },
@@ -2130,7 +2146,7 @@
     },
     {
       "key": "api/republik/revenueStats/segment/goodie",
-      "value": "Waren wie Bücher, Taschen und Masken"
+      "value": "Waren wie Bücher, Taschen, Masken und Fondues"
     },
     {
       "key": "api/republik/revenueStats/segment/donation",
