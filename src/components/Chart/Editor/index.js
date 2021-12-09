@@ -45,7 +45,7 @@ const chartTypes = Object.keys(schemaDict)
   .map(d => {
     return { value: d, text: d }
   })
-  .slice(0, 5)
+  .slice(0, 6)
 
 const ChartEditor = ({ data, value, onChange, activeTab }) => {
   const [colorScheme] = useColorContext()
