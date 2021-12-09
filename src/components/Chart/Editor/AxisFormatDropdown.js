@@ -19,8 +19,6 @@ export const AxisFormatDropdown = props => {
   const isStringContext = context === 'string'
   const label = isTimeContext ? 'Datumsformat (Chart)' : 'Zahlenformat'
   const isOnXAxisAndNumber = context === 'number' && parent.match(/^x/)
-  console.log(context)
-  console.log(isOnXAxisAndNumber)
   return (
     <>
       {!isStringContext && !isOnXAxisAndNumber && (

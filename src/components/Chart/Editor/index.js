@@ -8,10 +8,17 @@ import { ColorDropdownElement } from './ColorDropdownElement'
 import { useColorContext } from '../../Colors/ColorContext'
 
 import { timeParse } from '../../../lib/timeFormat'
-import { getFormat } from '../utils'
 import { defaultProps } from '../ChartContext'
-import { lineEditorSchema } from '../Lines'
+import { slopeEditorSchema, lineEditorSchema } from '../Lines'
 import { timeBarEditorSchema } from '../TimeBars'
+import { barEditorSchema, lollipopEditorSchema } from '../Bars'
+import { scatterPlotEditorSchema } from '../ScatterPlots'
+import {
+  genericMapEditorSchema,
+  projectedMapEditorSchema,
+  swissMapEditorSchema
+} from '../Maps'
+import { hemicycleEditorSchema } from '../Hemicycle'
 import {
   numberFormats,
   timeFormats,
@@ -20,20 +27,25 @@ import {
   sortingOptions,
   timeParsing
 } from './Editor.utils'
-import { barEditorSchema, lollipopEditorSchema } from '../Bars'
-import { scatterPlotEditorSchema } from '../ScatterPlots'
 
 const schemaDict = {
   Line: lineEditorSchema,
   TimeBar: timeBarEditorSchema,
   Lollipop: lollipopEditorSchema,
   Bar: barEditorSchema,
-  ScatterPlot: scatterPlotEditorSchema
+  ScatterPlot: scatterPlotEditorSchema,
+  Slope: slopeEditorSchema,
+  GenericMap: genericMapEditorSchema,
+  ProjectedMap: projectedMapEditorSchema,
+  SwissMap: swissMapEditorSchema,
+  Hemicycle: hemicycleEditorSchema
 }
 
-const chartTypes = Object.keys(schemaDict).map(d => {
-  return { value: d, text: d }
-})
+const chartTypes = Object.keys(schemaDict)
+  .map(d => {
+    return { value: d, text: d }
+  })
+  .slice(0, 5)
 
 const ChartEditor = ({ data, value, onChange, activeTab }) => {
   const [colorScheme] = useColorContext()

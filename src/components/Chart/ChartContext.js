@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 
 import { timeFormat, timeParse } from '../../lib/timeFormat'
 import { getColorMapper } from './colorMaps'
+import { geoIdentity, geoMercator, geoEqualEarth } from 'd3-geo'
 
 import {
   deduplicate,
@@ -232,6 +233,42 @@ export const defaultProps = {
     columns: 1,
     minInnerWidth: 240,
     annotations: []
+  },
+  GenericMap: {
+    numberFormat: 's',
+    columns: 1,
+    unit: '',
+    heightRatio: 1,
+    colorLegend: true,
+    colorLegendSize: 0.16,
+    colorLegendMinWidth: 80,
+    colorLegendPosition: 'right',
+    points: false,
+    pointAttributes: [],
+    choropleth: false,
+    missingDataColor: 'divider',
+    ignoreMissingFeature: false,
+    feature: 'feature',
+    shape: 'circle',
+    sizeRangeMax: 10,
+    getProjection: () => geoEqualEarth().rotate([-10, 0]),
+    opacity: 0.6
+  },
+  ProjectedMap: {
+    getProjection: () => geoIdentity()
+  },
+  SwissMap: {
+    getProjection: () =>
+      geoMercator().rotate([-7.439583333333333, -46.95240555555556]),
+    heightRatio: 0.63
+  },
+  Hemicycle: {
+    color: 'label',
+    group: 'year',
+    values: [],
+    inlineLabelThreshold: 10,
+    padding: 0,
+    colorMap: 'swissPartyColors'
   }
 }
 

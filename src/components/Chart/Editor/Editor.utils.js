@@ -116,6 +116,10 @@ export const timeFormats = [
     text: '26.01.2017, 24.02.2018'
   },
   {
+    value: '%d.%m.',
+    text: '26.01., 24.02.'
+  },
+  {
     value: '%b %Y',
     text: 'Jan 2017, Feb 2018'
   }
@@ -152,7 +156,6 @@ export const sortingOptions = [
 ]
 
 export const determineAxisContext = (currentProperty, chartConfig) => {
-  console.log(chartConfig)
   if (currentProperty.match(/^x/)) {
     if (chartConfig.type === 'TimeBar') {
       return chartConfig?.xScale === 'ordinal' ||

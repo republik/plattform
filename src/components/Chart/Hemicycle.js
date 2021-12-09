@@ -14,6 +14,7 @@ import { arc as d3arc } from 'd3-shape'
 import { getTextColor } from './utils'
 import { getColorMapper } from './colorMaps'
 import { useColorContext } from '../Colors/useColorContext'
+import { defaultProps } from './ChartContext'
 
 const styles = {
   axis: css({
@@ -274,13 +275,39 @@ export const propTypes = {
 
 Hemicycle.propTypes = propTypes
 
-Hemicycle.defaultProps = {
-  color: 'label',
-  group: 'year',
-  values: [],
-  inlineLabelThreshold: 10,
-  padding: 0,
-  colorMap: 'swissPartyColors'
-}
+Hemicycle.defaultProps = defaultProps.Hemicycle
 
 export default Hemicycle
+
+export const hemicycleEditorSchema = ({
+  fields,
+  defaults,
+  colorDropdownItems
+}) => {
+  return {
+    title: 'hemicycleChartConfig',
+    type: 'object',
+    properties: {
+      basic: {
+        color: {
+          title: 'Farbe',
+          properties: {
+            color: {
+              title: 'Spalte auswählen',
+              type: 'string',
+              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              default: defaults.color || ''
+            },
+            colorRange: {
+              title: 'Farbschema auswählen',
+              type: 'string',
+              enum: colorDropdownItems,
+              default: defaults.colorRange || ''
+            }
+          }
+        }
+      },
+      advanced: {}
+    }
+  }
+}

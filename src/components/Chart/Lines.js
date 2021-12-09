@@ -477,6 +477,161 @@ export const Slope = props => <LineChart {...props} />
 
 Slope.defaultProps = defaultProps.Slope
 
+export const slopeEditorSchema = ({
+  fields,
+  defaults,
+  numberFormats,
+  timeFormats,
+  colorDropdownItems,
+  xScaleTypes,
+  yScaleTypes,
+  sortingOptions
+}) => {
+  return {
+    title: 'SlopeChartConfig',
+    type: 'object',
+    properties: {
+      basic: {
+        xAxis: {
+          title: 'Horizontale Achse',
+          properties: {
+            x: {
+              title: 'Spalte auswählen',
+              type: 'string',
+              enum: fields,
+              default: defaults.x
+            },
+            timeFormat: {
+              title: 'Datumsformat (Chart)',
+              type: 'string',
+              enum: timeFormats,
+              default: defaults.timeFormat,
+              format: 'dynamicDropdown',
+              parent: 'xAxis',
+              timeParseDefault: defaults.timeParse,
+              xNumberFormatDefault: defaults.xNumberFormat
+            }
+          }
+        },
+        yAxis: {
+          title: 'Vertikale Achse',
+          properties: {
+            numberFormat: {
+              title: 'Zahlenformat',
+              type: 'string',
+              enum: numberFormats,
+              default: defaults.numberFormat,
+              parent: 'yAxis'
+            },
+            unit: {
+              title: 'Achsenbeschriftung',
+              type: 'string',
+              default: defaults.unit || ''
+            }
+          }
+        },
+        color: {
+          title: 'Farbe',
+          properties: {
+            color: {
+              title: 'Spalte auswählen',
+              type: 'string',
+              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              default: defaults.color || ''
+            },
+            colorRange: {
+              title: 'Farbschema auswählen',
+              type: 'string',
+              enum: colorDropdownItems,
+              default: defaults.colorRange || ''
+            }
+          }
+        },
+        layout: {
+          title: 'Grid',
+          properties: {
+            column: {
+              title: 'Spalte auswählen',
+              type: 'string',
+              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              default: defaults.column || ''
+            },
+            columns: {
+              title: 'Anzahl Spalten pro Zeile:',
+              type: 'number',
+              default: defaults.columns
+            }
+          }
+        }
+      },
+      advanced: {
+        xAxis: {
+          title: 'Horizontale Achse',
+          properties: {
+            xScale: {
+              title: 'Skala',
+              type: 'string',
+              enum: xScaleTypes,
+              default: defaults.xScale
+            }
+          }
+        },
+        yAxis: {
+          title: 'Vertikale Achse',
+          properties: {
+            yScale: {
+              title: 'Skala',
+              type: 'string',
+              enum: yScaleTypes,
+              default: defaults.yScale
+            },
+            zero: {
+              title: 'Y-Achse bei 0 beginnen',
+              type: 'boolean',
+              default: defaults.zero
+            }
+          }
+        },
+        layout: {
+          title: 'Layout',
+          properties: {
+            height: {
+              title: 'Höhe',
+              type: 'number',
+              default: defaults.height
+            },
+            minInnerWidth: {
+              title: 'Minimale Breite',
+              type: 'number',
+              default: defaults.minInnerWidth
+            }
+          }
+        },
+        more: {
+          title: 'Weitere Einstellungen',
+          properties: {
+            endLabel: {
+              title: 'Label am Linienende',
+              type: 'boolean',
+              default: defaults.endLabel
+            },
+            endValue: {
+              title: 'Wert am Linienende',
+              type: 'boolean',
+              default: defaults.endValue
+            },
+            startValue: {
+              title: 'Wert am Linienanfang',
+              type: 'boolean',
+              default: defaults.startValue
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 // Additional Info for Docs
 // - Slope just has different default props
 Slope.base = 'Line'
