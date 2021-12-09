@@ -92,7 +92,12 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
     )
 
   if (!chartData || !chartData[0]) {
-    return <span>Bitch don't kill my vibe</span>
+    return (
+      <span>
+        Füge Daten in das Feld CSV Daten ein. Du kannst einfach aus einem
+        Tabellenprogramm kopieren und oben einfügen.
+      </span>
+    )
   }
 
   const columns = Object.keys(chartData[0]).map(d => {
@@ -125,7 +130,7 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
     value.timeParse || value.timeFormat || '%Y'
   )
 
-  const createSchema = type => {
+  const createSchema = (type = 'Line') => {
     return schemaDict[type]({
       fields: columns,
       defaults: defaultProps[type],
