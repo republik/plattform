@@ -497,6 +497,7 @@ const CommentNode = ({
           comment={comment}
           isExpanded={isExpanded}
           onToggle={toggleReplies}
+          menu={menu}
         />
       </div>
     )
