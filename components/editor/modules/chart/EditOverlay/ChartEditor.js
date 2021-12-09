@@ -104,6 +104,14 @@ const ChartEditor = ({ data, onChange }) => {
           {activeTab === 'basic' && (
             <SizeSelector onChange={onChange} data={data} />
           )}
+
+          {activeTab === 'basic' && !data[0] && (
+            <span>
+              Füge zuerst Daten in das Feld CSV Daten ein. Du kannst einfach aus
+              einem Tabellenprogramm kopieren und oben einfügen.
+            </span>
+          )}
+
           <WYSIWYGChartEditor
             data={data.get('values')}
             value={data.get('config')}
