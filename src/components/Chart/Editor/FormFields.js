@@ -31,7 +31,8 @@ export const FormFields = props => {
     timeFormatParser,
     value,
     chartData,
-    customColors
+    customColors,
+    colorRanges
   } = props
   const fieldsKeys = Object.keys(fields)
 
@@ -58,6 +59,7 @@ export const FormFields = props => {
                     colorColumn={value['color'] || groupObject['color'].default}
                     chartData={chartData}
                     customColors={customColors}
+                    colorRanges={colorRanges}
                   />
                 )
               } else if (groupObject[property].format === 'dynamicDropdown') {

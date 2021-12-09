@@ -14,17 +14,19 @@ export const ColorField = props => {
     colorColumn,
     colorMap,
     customColors,
-    colorRange = ''
+    colorRange = '',
+    colorRanges
   } = props
 
   const [value, setValue] = useState(colorMap ? 'custom_color' : colorRange)
   const [customColorMap, setCustomColorMap] = useState(colorMap || '')
-  const [customColorFields, setCustomColorFields] = useState('')
+  const [customColorFields, setCustomColorFields] = useState([])
 
   const handleColorPickerChange = key => item => {
     setCustomColorMap({ ...customColorMap, [key]: item.hex })
   }
 
+  // set colorMap or colorRange depending on user input
   useEffect(() => {
     if (value === 'custom_color') {
       createOnColorChange('colorMap')(customColorMap)
@@ -35,9 +37,26 @@ export const ColorField = props => {
     }
   }, [value, customColorMap])
 
+  // get color fields from data
   useEffect(() => {
     setCustomColorFields(chartData.map(d => d[colorColumn]).filter(deduplicate))
   }, [colorColumn, chartData])
+
+  // default color setup for colorMap if no colorMap exists
+  useEffect(() => {
+    let tempColorMap = {}
+    customColorFields.map(
+      (colorField, index) =>
+        (tempColorMap = {
+          ...tempColorMap,
+          [colorField]: colorRange
+            ? colorRanges[colorRange][index]
+            : customColors[index]
+        })
+    )
+    console.log(tempColorMap)
+    !colorMap && setCustomColorMap(tempColorMap)
+  }, [customColorFields, colorRange])
 
   return (
     <>
@@ -78,7 +97,7 @@ export const ColorField = props => {
                     <div
                       style={{
                         backgroundColor:
-                          customColorMap[colorField] || '#2077b4',
+                          customColorMap[colorField] || '#e0e0e0',
                         width: '40px',
                         height: '20px',
                         borderRadius: '4px',
@@ -92,7 +111,7 @@ export const ColorField = props => {
                   <ColorPicker
                     triangle='hide'
                     colors={customColors}
-                    color={customColorMap[colorField] || '#2077b4'}
+                    color={customColorMap[colorField] || '#e0e0e0'}
                     onChange={handleColorPickerChange(colorField)}
                   />
                 </CalloutMenu>

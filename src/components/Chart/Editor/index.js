@@ -164,6 +164,7 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
         }
         chartData={chartData}
         customColors={customColors}
+        colorRanges={colorRanges}
       />
     </div>
   )
