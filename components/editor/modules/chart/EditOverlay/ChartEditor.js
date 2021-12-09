@@ -46,8 +46,9 @@ const tabs = [
 ]
 
 const ChartEditor = ({ data, onChange }) => {
+  const hasNoData = !data.get('values')[0]
   const [colorScheme] = useColorContext()
-  const [activeTab, setActiveTab] = useState(!data[0] ? 'json' : 'basic')
+  const [activeTab, setActiveTab] = useState(hasNoData ? 'json' : 'basic')
 
   const handleTabClick = item => {
     setActiveTab(item.target.value)
@@ -105,7 +106,7 @@ const ChartEditor = ({ data, onChange }) => {
             <SizeSelector onChange={onChange} data={data} />
           )}
 
-          {activeTab === 'basic' && !data[0] && (
+          {activeTab === 'basic' && hasNoData && (
             <span>
               Füge zuerst Daten in das Feld CSV Daten ein. Du kannst einfach aus
               einem Tabellenprogramm kopieren und oben einfügen.
