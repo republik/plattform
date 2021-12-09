@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 
@@ -8,8 +8,7 @@ import {
   OverlayBody,
   mediaQueries,
   ColorContextProvider,
-  useColorContext,
-  Checkbox
+  useColorContext
 } from '@project-r/styleguide'
 
 const previewWidth = 290
@@ -73,16 +72,14 @@ const OverlayForm = ({
   extra,
   children,
   title,
-  showPreview = true,
-  autoDarkModePreview = true
+  showPreview = true
 }) => {
   const [colorScheme] = useColorContext()
-  // const [showDarkMode, setShowDarkMode] = useState(autoDarkModePreview)
 
   return (
     <Overlay
       onClose={onClose}
-      mUpStyle={{ maxWidth: '80vw', marginTop: '5vh' }}
+      mUpStyle={{ maxWidth: '85vw', marginTop: '5vh' }}
     >
       <OverlayToolbar onClose={onClose} title={title} />
       <OverlayBody>
@@ -93,12 +90,6 @@ const OverlayForm = ({
           <div {...styles.preview}>
             <ContextBackground>{preview}</ContextBackground>
             <br />
-            {/* <Checkbox
-              checked={showDarkMode}
-              onChange={(_, checked) => setShowDarkMode(checked)}
-            >
-              Nachtmodus Vorschau
-            </Checkbox> */}
 
             <ColorContextProvider
               colorSchemeKey={

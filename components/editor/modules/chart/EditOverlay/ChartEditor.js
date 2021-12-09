@@ -47,7 +47,7 @@ const tabs = [
 
 const ChartEditor = ({ data, onChange }) => {
   const [colorScheme] = useColorContext()
-  const [activeTab, setActiveTab] = useState('basic')
+  const [activeTab, setActiveTab] = useState(!data[0] ? 'json' : 'basic')
 
   const handleTabClick = item => {
     setActiveTab(item.target.value)
