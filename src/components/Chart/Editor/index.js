@@ -92,12 +92,7 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
     )
 
   if (!chartData || !chartData[0]) {
-    return (
-      <span>
-        Füge Daten in das Feld CSV Daten ein. Du kannst einfach aus einem
-        Tabellenprogramm kopieren und oben einfügen.
-      </span>
-    )
+    return
   }
 
   const columns = Object.keys(chartData[0]).map(d => {
