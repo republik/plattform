@@ -315,13 +315,11 @@ export const lineEditorSchema = ({
               title: 'Datumsformat (Chart)',
               type: 'string',
               enum: timeFormats,
-              default: defaults.timeFormat
-            },
-            timeParse: {
-              title: 'Datumsformat (Daten)',
-              type: 'string',
-              enum: timeFormats,
-              default: defaults.timeParse
+              default: defaults.timeFormat,
+              format: 'dynamicDropdown',
+              parent: 'xAxis',
+              timeParseDefault: defaults.timeParse,
+              xNumberFormatDefault: defaults.xNumberFormat
             },
             xUnit: {
               title: 'Achsenbeschriftung',
@@ -337,7 +335,8 @@ export const lineEditorSchema = ({
               title: 'Zahlenformat',
               type: 'string',
               enum: numberFormats,
-              default: defaults.numberFormat
+              default: defaults.numberFormat,
+              parent: 'yAxis'
             },
             unit: {
               title: 'Achsenbeschriftung',

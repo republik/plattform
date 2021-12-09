@@ -211,13 +211,10 @@ export const timeBarEditorSchema = ({
               title: 'Datumsformat (Chart)',
               type: 'string',
               enum: timeFormats,
-              default: defaults.timeFormat
-            },
-            timeParse: {
-              title: 'Datumsformat (Daten)',
-              type: 'string',
-              enum: timeParsing,
-              default: defaults.timeParse
+              default: defaults.timeFormat,
+              format: 'dynamicDropdown',
+              parent: 'xAxis',
+              timeParseDefault: defaults.timeParse
             },
             xUnit: {
               title: 'Achsenbeschriftung',
@@ -233,7 +230,9 @@ export const timeBarEditorSchema = ({
               title: 'Zahlenformat',
               type: 'string',
               enum: numberFormats,
-              default: defaults.numberFormat
+              default: defaults.numberFormat,
+              parent: 'yAxis',
+              format: 'dynamicDropdown'
             },
             unit: {
               title: 'Achsenbeschriftung',
@@ -291,7 +290,7 @@ export const timeBarEditorSchema = ({
             xScale: {
               title: 'Skala',
               type: 'string',
-              enum: xScaleTypes.slice(1, 3),
+              enum: xScaleTypes,
               default: defaults.xScale
             }
           }

@@ -8,6 +8,8 @@ import Checkbox from '../../Form/Checkbox'
 import Slider from '../../Form/Slider'
 import { TickField } from './TickField'
 import { ColorField } from './ColorField'
+import { AxisFormatDropdown } from './AxisFormatDropdown'
+import { determineAxisContext } from './Editor.utils'
 
 const styles = {
   gridContainer: css({
@@ -17,24 +19,6 @@ const styles = {
     gap: '50px 30px',
     margin: '20px 0'
   })
-}
-
-const determineContext = (currentProperty, chartConfig) => {
-  if (currentProperty.match(/^x/)) {
-    if (chartConfig.type === 'TimeBar') {
-      return chartConfig?.xScale === 'ordinal' ? 'strings' : 'time'
-    } else if (chartConfig.type === 'Line') {
-      return chartConfig?.xScale === 'ordinal'
-        ? 'strings'
-        : chartConfig?.xScale === 'linear'
-        ? 'number'
-        : 'time'
-    } else {
-      return 'time'
-    }
-  } else {
-    return 'number'
-  }
 }
 
 export const FormFields = props => {
@@ -76,6 +60,26 @@ export const FormFields = props => {
                     customColors={customColors}
                   />
                 )
+              } else if (groupObject[property].format === 'dynamicDropdown') {
+                return (
+                  <AxisFormatDropdown
+                    key={property}
+                    property={property}
+                    value={value[property] || groupObject[property].default}
+                    onChange={createOnDropdownChange}
+                    timeParseDefault={groupObject[property].timeParseDefault}
+                    xNumberFormatDefault={
+                      groupObject[property].xNumberFormatDefault
+                    }
+                    context={determineAxisContext(
+                      groupObject[property].parent,
+                      value
+                    )}
+                    parent={groupObject[property].parent}
+                    xNumberFormat={value.xNumberFormat}
+                    timeParse={value.timeParse}
+                  />
+                )
               } else if (groupObject[property].enum) {
                 return (
                   <Dropdown
@@ -94,7 +98,7 @@ export const FormFields = props => {
                     groupObject={groupObject}
                     value={value[property] || groupObject[property].default}
                     createOnFieldChange={createOnFieldChange}
-                    context={determineContext(property, value)}
+                    context={determineAxisContext(property, value)}
                     timeFormatParser={timeFormatParser}
                   />
                 )

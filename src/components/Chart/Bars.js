@@ -947,6 +947,12 @@ export const lollipopEditorSchema = ({
               title: 'Achsenbeschriftung',
               type: 'string',
               default: defaults.unit || ''
+            },
+            sort: {
+              title: 'Sortierung',
+              type: 'string',
+              enum: sortingOptions,
+              default: defaults.sort
             }
           }
         },

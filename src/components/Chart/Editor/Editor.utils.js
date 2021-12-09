@@ -150,3 +150,25 @@ export const sortingOptions = [
     text: 'absteigend'
   }
 ]
+
+export const determineAxisContext = (currentProperty, chartConfig) => {
+  console.log(chartConfig)
+  if (currentProperty.match(/^x/)) {
+    if (chartConfig.type === 'TimeBar') {
+      return chartConfig?.xScale === 'ordinal' ||
+        chartConfig?.xScale === 'linear'
+        ? 'string'
+        : 'time'
+    } else if (chartConfig.type === 'Line') {
+      return chartConfig?.xScale === 'ordinal'
+        ? 'string'
+        : chartConfig?.xScale === 'linear'
+        ? 'number'
+        : 'time'
+    } else {
+      return 'time'
+    }
+  } else {
+    return 'number'
+  }
+}
