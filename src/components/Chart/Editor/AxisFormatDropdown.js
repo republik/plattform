@@ -1,5 +1,5 @@
 import React from 'react'
-import Dropdown from '../../Form/Dropdown'
+import CustomValueDropdown from './CustomValueDropdown'
 
 import { numberFormats, timeFormats, timeParsing } from './Editor.utils'
 
@@ -22,7 +22,7 @@ export const AxisFormatDropdown = props => {
   return (
     <>
       {!isStringContext && !isOnXAxisAndNumber && (
-        <Dropdown
+        <CustomValueDropdown
           label={label}
           items={context === 'time' ? timeFormats : numberFormats}
           value={value}
@@ -30,7 +30,7 @@ export const AxisFormatDropdown = props => {
         />
       )}
       {isOnXAxisAndNumber && (
-        <Dropdown
+        <CustomValueDropdown
           label={label}
           items={numberFormats}
           value={xNumberFormat || xNumberFormatDefault}
@@ -38,7 +38,7 @@ export const AxisFormatDropdown = props => {
         />
       )}
       {isTimeContext && (
-        <Dropdown
+        <CustomValueDropdown
           label={'Datumsformat (Daten)'}
           items={timeParsing}
           value={timeParse || timeParseDefault}

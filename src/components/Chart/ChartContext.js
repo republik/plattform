@@ -147,6 +147,14 @@ export const ChartContextProvider = plainProps => {
   )
 }
 
+const defaultPropsBar = {
+  columns: 1,
+  minInnerWidth: 140,
+  barStyle: 'small',
+  numberFormat: 's',
+  sort: 'ascending'
+}
+
 export const defaultProps = {
   TimeBar: {
     x: 'year',
@@ -202,13 +210,9 @@ export const defaultProps = {
     height: 240,
     yNice: 3
   },
-  Bar: {
-    columns: 1,
-    minInnerWidth: 140,
-    barStyle: 'small',
-    numberFormat: 's'
-  },
+  Bar: defaultPropsBar,
   Lollipop: {
+    ...defaultPropsBar,
     barStyle: 'lollipop'
   },
   ScatterPlot: {

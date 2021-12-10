@@ -51,8 +51,6 @@ export const useCommaField = (value, onChange, parser, context) => {
   return [field, onFieldValueChange]
 }
 
-// TODO: there is also a xNumberFormat option if some is using a linear xScale and the yNumberFormat
-// is not machting the xNumberFormat. Should we include this?
 export const numberFormats = [
   {
     value: 's',

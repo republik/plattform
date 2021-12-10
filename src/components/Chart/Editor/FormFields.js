@@ -3,13 +3,13 @@ import React from 'react'
 import { css } from 'glamor'
 import { Interaction } from '../../Typography'
 import Field from '../../Form/Field'
-import Dropdown from '../../Form/Dropdown'
 import Checkbox from '../../Form/Checkbox'
 import Slider from '../../Form/Slider'
 import { TickField } from './TickField'
 import { ColorField } from './ColorField'
 import { AxisFormatDropdown } from './AxisFormatDropdown'
 import { determineAxisContext } from './Editor.utils'
+import CustomValueDropdown from './CustomValueDropdown'
 
 const styles = {
   gridContainer: css({
@@ -84,7 +84,7 @@ export const FormFields = props => {
                 )
               } else if (groupObject[property].enum) {
                 return (
-                  <Dropdown
+                  <CustomValueDropdown
                     key={property}
                     label={groupObject[property].title}
                     items={groupObject[property].enum}
