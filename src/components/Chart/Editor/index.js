@@ -66,7 +66,6 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
     colorScheme
   ])
 
-  const customColors = [...colorRanges.discrete]
 
 
   if (!chartData || !chartData[0]) {
@@ -77,10 +76,8 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
     return { value: d, text: d }
   })
 
-  const createOnColorChange = key => colorValue => {
-    const newValue = value
-    delete newValue[key === 'colorMap' ? 'colorRange' : 'colorMap']
-    onChange({ ...newValue, [key]: colorValue })
+  const onFieldsChange = newValues => {
+    onChange({ ...value, ...newValues })
   }
 
   const createOnFieldChange = key => {
@@ -96,7 +93,7 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
   }
 
   const createOnDropdownChange = key => item => {
-    return onChange({ ...value, [key]: item.value })
+    return onChange({ ...value, [key]: item.value || undefined })
   }
 
   const timeFormatParser = timeParse(
@@ -128,10 +125,10 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
       />
 
       <FormFields
+        onFieldsChange={onFieldsChange}
         createOnFieldChange={createOnFieldChange}
         createOnDropdownChange={createOnDropdownChange}
         createOnNumberFieldChange={createOnNumberFieldChange}
-        createOnColorChange={createOnColorChange}
         timeFormatParser={timeFormatParser}
         value={value}
         fields={
@@ -140,7 +137,6 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
             : schema.properties.advanced
         }
         chartData={chartData}
-        customColors={customColors}
         colorRanges={colorRanges}
       />
     </div>

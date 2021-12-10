@@ -1,44 +1,42 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { BlockPicker as ColorPicker } from 'react-color'
 
 import Dropdown from '../../Form/Dropdown'
-import { deduplicate } from '../utils'
+import { deduplicate, runSort } from '../utils'
 import CalloutMenu from '../../Callout/CalloutMenu'
 import { ColorDropdownElement } from './ColorDropdownElement'
 
-import { colorMaps } from '../colorMaps'
+import { colorMaps, CHART_DEFAULT_FILL } from '../colorMaps'
+
+const TYPES_WITH_COLOR_SORT = ['Bar', 'Lollipop', 'ScatterPlot']
 
 export const ColorField = props => {
   const {
     label,
-    createOnColorChange,
+    onFieldsChange,
     chartData,
     colorColumn,
+    config,
     colorMap,
-    customColors,
-    colorRange = '',
+    colorRange,
     colorRanges
   } = props
-
-  const [value, setValue] = useState(colorMap ? 'custom_color' : colorRange)
-  const [customColorMap, setCustomColorMap] = useState(colorMap || '')
-
-  const colorValues = chartData.map(d => d[colorColumn]).filter(deduplicate)
   const items = []
     .concat(
-      { value: '', text: 'automatisch' },
-      { value: 'custom_color', text: 'Farben einzeln zuweisen' },
+      { value: '_auto', text: 'automatisch' },
+      { value: '_custom', text: 'Farben einzeln zuweisen' }
     )
     .concat(
       Object.keys(colorRanges).map((d, i) => {
         return {
           value: d,
+          predefined: 'colorRange',
           text: d,
           element: (
             <ColorDropdownElement
               key={'colorRange' + i}
               colorRange={colorRanges[d]}
-              name={d}
+              name={`range ${d}`}
             />
           )
         }
@@ -48,49 +46,102 @@ export const ColorField = props => {
       Object.keys(colorMaps).map((d, i) => {
         return {
           value: d,
+          predefined: 'colorMap',
           text: d,
           element: (
             <ColorDropdownElement
               key={'colorMap' + i}
               colorRange={Object.values(colorMaps[d]).filter(deduplicate)}
-              name={d}
+              name={`map ${d}`}
             />
           )
         }
       })
     )
 
-  const handleColorPickerChange = key => item => {
-    setCustomColorMap({ ...customColorMap, [key]: item.hex })
+  const value = colorMaps[colorMap]
+    ? colorMap
+    : colorRanges[colorRange]
+    ? colorRange
+    : !colorMap && !colorRange
+    ? '_auto'
+    : '_custom'
+
+  const colorValues = chartData.map(d => d[colorColumn])
+    .concat(config.colorLegendValues)
+    .filter(Boolean)
+    .filter(deduplicate)
+  if (TYPES_WITH_COLOR_SORT.includes(config.type)) {
+    runSort(config.colorSort, colorValues)
+  }
+  if (colorMap) {
+    Object.keys(colorMap).forEach(colorValue => {
+      if (!colorValues.includes(colorValue)) {
+        colorValues.push(colorValue)
+      }
+    })
+  }
+  if (colorValues.length === 0) {
+    colorValues.push('')
+  }
+  const computedColorMap = {
+    ...colorMap
+  }
+  const colorRangeArray = colorRanges[colorRange] || colorRange
+  if (Array.isArray(colorRangeArray)) {
+    colorValues.forEach((colorValue, index) => {
+      if (computedColorMap[colorValue] === undefined) {
+        computedColorMap[colorValue] = colorRangeArray[index]
+      }
+    })
   }
 
-  // set colorMap or colorRange depending on user input
-  useEffect(() => {
-    if (value === 'custom_color') {
-      createOnColorChange('colorMap')(customColorMap)
-    } else if (value === 'party_color') {
-      createOnColorChange('colorMap')('swissPartyColors')
+  const setColorMap = newColorMap => {
+    const keys = Object.keys(newColorMap)
+    if (keys.length === 1 && !keys[0]) {
+      onFieldsChange({
+        colorMap: undefined,
+        colorRange: [newColorMap[keys[0]] || CHART_DEFAULT_FILL]
+      })
     } else {
-      createOnColorChange('colorRange')(value)
+      onFieldsChange({
+        colorMap: newColorMap,
+        colorRange: undefined
+      })
     }
-  }, [value, customColorMap])
+  }
+  const handleDropdownChange = item => {
+    if (item.predefined) {
+      onFieldsChange({
+        colorMap: undefined,
+        colorRange: undefined,
+        [item.predefined]: item.value 
+      })
+    } else if (item.value === '_auto') {
+      onFieldsChange({
+        colorMap: undefined,
+        colorRange: undefined
+      })
+    } else {
+      setColorMap(computedColorMap)
+    }
+  }
+  const createColorPickerOnChange = key => item => {
+    setColorMap({ ...computedColorMap, [key]: item.hex })
+  }
+  const pickableColors = colorRanges.discrete
 
   return (
     <>
-      {value === 'custom_color' && !colorColumn && (
-        <span>Wähle noch eine Spalte für die Farbe aus.</span>
-      )}
       <div style={{ marginBottom: '30px' }}>
         <Dropdown
           label={label}
           items={items}
           value={value}
-          onChange={item => setValue(item.value)}
+          onChange={handleDropdownChange}
         />
       </div>
-      {value === 'custom_color' &&
-        colorColumn &&
-        colorValues.map(colorValue => {
+      {value === '_custom' && colorValues.map(colorValue => {
           return (
             <div
               style={{
@@ -100,7 +151,7 @@ export const ColorField = props => {
               }}
               key={colorValue}
             >
-              <div style={{ flexBasis: '60%' }}>{colorValue}</div>
+              <div style={{ flexBasis: '60%' }}>{colorValue || 'Alle'}</div>
               <div
                 style={{
                   flexBasis: '39%',
@@ -113,7 +164,7 @@ export const ColorField = props => {
                     <div
                       style={{
                         backgroundColor:
-                          customColorMap[colorValue] || '#e0e0e0',
+                          computedColorMap[colorValue] || CHART_DEFAULT_FILL,
                         width: '40px',
                         height: '20px',
                         borderRadius: '4px',
@@ -126,9 +177,9 @@ export const ColorField = props => {
                 >
                   <ColorPicker
                     triangle='hide'
-                    colors={customColors}
-                    color={customColorMap[colorValue] || '#e0e0e0'}
-                    onChange={handleColorPickerChange(colorValue)}
+                    colors={pickableColors}
+                    color={computedColorMap[colorValue] || CHART_DEFAULT_FILL}
+                    onChange={createColorPickerOnChange(colorValue)}
                   />
                 </CalloutMenu>
               </div>

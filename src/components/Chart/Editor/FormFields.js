@@ -24,14 +24,13 @@ const styles = {
 export const FormFields = props => {
   const {
     fields,
+    onFieldsChange,
     createOnDropdownChange,
     createOnFieldChange,
     createOnNumberFieldChange,
-    createOnColorChange,
     timeFormatParser,
     value,
     chartData,
-    customColors,
     colorRanges
   } = props
   const fieldsKeys = Object.keys(fields)
@@ -53,12 +52,11 @@ export const FormFields = props => {
                     colorRange={
                       value[property] || groupObject[property].default
                     }
-                    colorMap={value['colorMap']}
-                    createOnFieldChange={createOnFieldChange}
-                    createOnColorChange={createOnColorChange}
-                    colorColumn={value['color'] || groupObject['color'].default}
+                    colorMap={value.colorMap}
+                    config={value}
+                    onFieldsChange={onFieldsChange}
+                    colorColumn={value.color || groupObject.color.default}
                     chartData={chartData}
-                    customColors={customColors}
                     colorRanges={colorRanges}
                   />
                 )
