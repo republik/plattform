@@ -8,7 +8,15 @@ The options are given as a list of objects, each option must have the following 
 
 ```react
 <pre style={{maxHeight: 380, overflow: 'auto'}}>
-  {JSON.stringify(dropdownItems, undefined, 2)}
+  {JSON.stringify(dropdownItems.map(item => {
+    if (item.element) {
+      return {
+        ...item,
+        element: "<RedactedCustomReactElement />"
+      }
+    }
+    return item
+  }), undefined, 2)}
 </pre>
 ```
 

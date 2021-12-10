@@ -376,9 +376,9 @@ const Styleguide = () => {
                         ...require('./components/Typography'),
                         Button: require('./components/Button'),
                         Field: require('./components/Form/Field.js'),
-                        Dropdown: require('./components/Form/Dropdown.js'),
-                        VirtualDropdown: require('./components/Form/VirtualDropdown.js'),
-                        NativeDropdown: require('./components/Form/NativeDropdown.js'),
+                        Dropdown: require('./components/Form/Dropdown'),
+                        VirtualDropdown: require('./components/Form/VirtualDropdown'),
+                        NativeDropdown: require('./components/Form/NativeDropdown'),
                         dropdownItems: [
                           { value: '1', text: 'Redaktorin' },
                           { value: '2', text: 'Fussballerin' },
@@ -401,11 +401,11 @@ const Styleguide = () => {
                           }
                         ],
                         VirtualDropdownInternal: {
-                          Items: require('./components/Form/VirtualDropdown.js')
+                          Items: require('./components/Form/VirtualDropdown')
                             .Items,
-                          ItemsContainer: require('./components/Form/VirtualDropdown.js')
+                          ItemsContainer: require('./components/Form/VirtualDropdown')
                             .ItemsContainer,
-                          Inner: require('./components/Form/VirtualDropdown.js')
+                          Inner: require('./components/Form/VirtualDropdown')
                             .Inner
                         }
                       },
