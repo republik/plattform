@@ -12,6 +12,8 @@ import EmbedLoader from './EmbedLoader'
 import gql from 'graphql-tag'
 import { FRONTEND_BASE_URL } from '../../../../lib/settings'
 import { stringify, parse } from '@orbiting/remark-preset'
+import { matchAncestor, matchSubmodules } from '../../utils/matchers'
+import InlineUI from '../../utils/InlineUI'
 
 const getVideoEmbed = gql`
   query getVideoEmbed($id: ID!, $embedType: EmbedType!) {
@@ -168,13 +170,22 @@ const embedPlugin = ({ query, ...options }) => {
 
   return {
     renderNode(props) {
-      const { node } = props
+      const { node, editor } = props
 
       if (!matchBlock(options.TYPE)(node)) {
         return
       }
 
-      return <Component {...props} />
+      return (
+        <div style={{ position: 'relative' }}>
+          <InlineUI
+            node={node}
+            editor={editor}
+            isMatch={value => value.blocks.some(matchBlock(options.TYPE))}
+          />
+          <Component {...props} />
+        </div>
+      )
     },
     schema: {
       blocks: {

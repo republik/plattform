@@ -189,12 +189,12 @@ export const LinkForm = withT(
         })
       )
     }
-    const repoChange = (onChange, value, node) => repo => {
+    const repoChange = (onChange, value, node) => item => {
       onChange(
         value.change().setNodeByKey(node.key, {
           data: node.data.merge({
-            title: repo.text,
-            href: `https://github.com/${repo.value.id}?autoSlug`
+            title: item.text,
+            href: `https://github.com/${item.value.id}?autoSlug`
           })
         })
       )

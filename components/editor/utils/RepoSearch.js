@@ -115,26 +115,33 @@ export const filterRepos = gql`
   }
 `
 
-const RepoItem = withT(({ t, repo }) => {
-  const title =
-    repo.latestCommit.document.meta.title ||
-    repo.id.replace([GITHUB_ORG, REPO_PREFIX || ''].join('/'), '')
-  const publicationDate =
-    repo.latestPublications[0]?.document.meta.publishDate ||
-    repo.meta.publishDate
+const RepoElement = withT(({ t, title, publishDate }) => {
+  const label = publishDate
+    ? swissTime.format('%d.%m.%Y')(new Date(publishDate))
+    : t('repo/search/notPublished')
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
+    <>
       <Interaction.P>{title}</Interaction.P>
-      <Label>
-        {publicationDate ? (
-          swissTime.format('%d.%m.%y')(new Date(publicationDate))
-        ) : (
-          <em>{t('repo/search/notPublished')}</em>
-        )}
-      </Label>
-    </div>
+      <Label>{label}</Label>
+    </>
   )
 })
+
+const createRepoItem = repo => {
+  const text =
+    repo.latestCommit.document.meta.title ||
+    repo.id.replace([GITHUB_ORG, REPO_PREFIX || ''].join('/'), '')
+  const publishDate =
+    repo.latestPublications[0]?.document.meta.publishDate ||
+    repo.meta.publishDate
+
+  return {
+    value: repo,
+    text,
+    element: <RepoElement title={text} publishDate={publishDate} />
+  }
+}
 
 const ConnectedAutoComplete = graphql(filterRepos, {
   skip: props => !props.filter,
@@ -149,10 +156,7 @@ const ConnectedAutoComplete = graphql(filterRepos, {
     } = props
     return {
       data: props.data,
-      items: nodes.map(v => ({
-        value: v,
-        element: <RepoItem repo={v} />
-      }))
+      items: nodes.map(createRepoItem)
     }
   }
 })(props => {

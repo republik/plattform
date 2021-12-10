@@ -6,6 +6,7 @@ import { Radio, Label, A } from '@project-r/styleguide'
 import { createPropertyForm, buttonStyles } from '../../utils'
 
 import injectBlock from '../../utils/injectBlock'
+import { matchSubmodules } from '../../utils/matchers'
 
 export default ({
   TYPE,
@@ -17,8 +18,7 @@ export default ({
 }) => {
   const { insertButtonText } = editorOptions
 
-  const isBlock = block =>
-    block.type === TYPE || subModules.some(m => m.TYPE === block.type)
+  const isBlock = block => matchSubmodules(TYPE, subModules)
   const Form = createPropertyForm({
     isDisabled: ({ value }) => !value.blocks.some(isBlock)
   })(({ disabled, value, onChange }) => {

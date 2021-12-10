@@ -1,10 +1,11 @@
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { Block } from 'slate'
 import React from 'react'
-import { FigureGroupButton, FigureGroupForm } from './ui'
+import { FigureGroupButton, FigureGroupForm, isFigureGroup } from './ui'
 import { matchBlock } from '../../utils'
 import { createRemoveEmptyKeyHandler } from '../../utils/keyHandlers'
 import GalleryIcon from 'react-icons/lib/md/filter'
+import InlineUI from '../../utils/InlineUI'
 
 export const getData = data => ({
   columns: 2,
@@ -40,9 +41,10 @@ export const fromMdast = ({ TYPE, subModules }) => (
 
   const caption = node.children[node.children.length - 1]
   const hasCaption = caption.type === 'paragraph'
-  const figures = (hasCaption ? node.children.slice(0, -1) : node.children).map(
-    v => figureSerializer.fromMdast(v)
-  )
+  const figures = (hasCaption
+    ? node.children.slice(0, -1)
+    : node.children
+  ).map(v => figureSerializer.fromMdast(v))
   const nodes = hasCaption
     ? figures.concat(captionModule.helpers.serializer.fromMdast(caption))
     : figures
@@ -94,7 +96,7 @@ const isEmpty = options => {
 }
 
 const figureGroupPlugin = options => {
-  const { TYPE, rule } = options
+  const { TYPE, rule, subModules } = options
   const [figureModule, captionModule] = options.subModules
 
   const FigureGroup = rule.component
@@ -111,6 +113,7 @@ const figureGroupPlugin = options => {
           slideshow={false}
           attributes={attributes}
         >
+          <InlineUI node={node} editor={editor} isMatch={isFigureGroup} />
           {node.data.get('slideshow') > 0 && (
             <div style={{ position: 'absolute', left: -25 }}>
               <GalleryIcon />

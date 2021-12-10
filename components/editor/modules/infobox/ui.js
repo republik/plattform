@@ -8,6 +8,7 @@ import { createPropertyForm, buttonStyles, matchBlock } from '../../utils'
 import MetaForm from '../../utils/MetaForm'
 
 import injectBlock from '../../utils/injectBlock'
+import { matchSubmodules } from '../../utils/matchers'
 
 export default ({
   TYPE,
@@ -19,8 +20,7 @@ export default ({
 }) => {
   const { insertButtonText } = editorOptions
 
-  const isInfoboxBlock = block =>
-    block.type === TYPE || subModules.some(m => m.TYPE === block.type)
+  const isInfoboxBlock = matchSubmodules(TYPE, subModules)
   const Form = createPropertyForm({
     isDisabled: ({ value }) => !value.blocks.some(isInfoboxBlock)
   })(({ disabled, value, onChange }) => {
