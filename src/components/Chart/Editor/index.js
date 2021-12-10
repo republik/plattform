@@ -3,7 +3,6 @@ import { csvParse } from 'd3-dsv'
 
 import Dropdown from '../../Form/Dropdown'
 import { FormFields } from './FormFields'
-import { ColorDropdownElement } from './ColorDropdownElement'
 
 import { useColorContext } from '../../Colors/ColorContext'
 
@@ -69,27 +68,6 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
 
   const customColors = [...colorRanges.discrete]
 
-  const colorRangesArray = Object.keys(colorRanges)
-
-  const colorDropdownItems = colorRangesArray
-    .map((d, i) => {
-      return {
-        value: d,
-        text: d,
-        element: (
-          <ColorDropdownElement
-            key={'colorRange' + i}
-            colorRange={colorRanges[d]}
-            name={d}
-          />
-        )
-      }
-    })
-    .concat(
-      { value: '', text: 'automatisch' },
-      { value: 'custom_color', text: 'Farben einzeln zuweisen' },
-      { value: 'party_colors', text: 'Parteifarben' }
-    )
 
   if (!chartData || !chartData[0]) {
     return
@@ -133,7 +111,6 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
       xScaleTypes,
       yScaleTypes,
       timeFormats,
-      colorDropdownItems,
       sortingOptions,
       timeParsing
     })

@@ -57,7 +57,7 @@ const swissPartyColors = {
   OTHER: '#B8B8B8'
 }
 
-const colorMaps = { swissPartyColors }
+export const colorMaps = { swissPartyColors }
 
 export const getColorMapper = (props, colorValues = []) => {
   const colorMapProp = props.colorMap

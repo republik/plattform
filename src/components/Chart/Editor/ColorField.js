@@ -4,11 +4,13 @@ import { BlockPicker as ColorPicker } from 'react-color'
 import Dropdown from '../../Form/Dropdown'
 import { deduplicate } from '../utils'
 import CalloutMenu from '../../Callout/CalloutMenu'
+import { ColorDropdownElement } from './ColorDropdownElement'
+
+import { colorMaps } from '../colorMaps'
 
 export const ColorField = props => {
   const {
     label,
-    items,
     createOnColorChange,
     chartData,
     colorColumn,
@@ -20,7 +22,43 @@ export const ColorField = props => {
 
   const [value, setValue] = useState(colorMap ? 'custom_color' : colorRange)
   const [customColorMap, setCustomColorMap] = useState(colorMap || '')
-  const [customColorFields, setCustomColorFields] = useState([])
+
+  const colorValues = chartData.map(d => d[colorColumn]).filter(deduplicate)
+  const items = []
+    .concat(
+      { value: '', text: 'automatisch' },
+      { value: 'custom_color', text: 'Farben einzeln zuweisen' },
+    )
+    .concat(
+      Object.keys(colorRanges).map((d, i) => {
+        return {
+          value: d,
+          text: d,
+          element: (
+            <ColorDropdownElement
+              key={'colorRange' + i}
+              colorRange={colorRanges[d]}
+              name={d}
+            />
+          )
+        }
+      })
+    )
+    .concat(
+      Object.keys(colorMaps).map((d, i) => {
+        return {
+          value: d,
+          text: d,
+          element: (
+            <ColorDropdownElement
+              key={'colorMap' + i}
+              colorRange={Object.values(colorMaps[d]).filter(deduplicate)}
+              name={d}
+            />
+          )
+        }
+      })
+    )
 
   const handleColorPickerChange = key => item => {
     setCustomColorMap({ ...customColorMap, [key]: item.hex })
@@ -37,27 +75,6 @@ export const ColorField = props => {
     }
   }, [value, customColorMap])
 
-  // get color fields from data
-  useEffect(() => {
-    setCustomColorFields(chartData.map(d => d[colorColumn]).filter(deduplicate))
-  }, [colorColumn, chartData])
-
-  // default color setup for colorMap if no colorMap exists
-  useEffect(() => {
-    let tempColorMap = {}
-    customColorFields.map(
-      (colorField, index) =>
-        (tempColorMap = {
-          ...tempColorMap,
-          [colorField]: colorRange
-            ? colorRanges[colorRange][index]
-            : customColors[index]
-        })
-    )
-    console.log(tempColorMap)
-    !colorMap && setCustomColorMap(tempColorMap)
-  }, [customColorFields, colorRange])
-
   return (
     <>
       {value === 'custom_color' && !colorColumn && (
@@ -73,8 +90,7 @@ export const ColorField = props => {
       </div>
       {value === 'custom_color' &&
         colorColumn &&
-        customColorFields &&
-        customColorFields.map(colorField => {
+        colorValues.map(colorValue => {
           return (
             <div
               style={{
@@ -82,9 +98,9 @@ export const ColorField = props => {
                 alignItems: 'center',
                 padding: '5px 0'
               }}
-              key={colorField}
+              key={colorValue}
             >
-              <div style={{ flexBasis: '60%' }}>{colorField}</div>
+              <div style={{ flexBasis: '60%' }}>{colorValue}</div>
               <div
                 style={{
                   flexBasis: '39%',
@@ -97,7 +113,7 @@ export const ColorField = props => {
                     <div
                       style={{
                         backgroundColor:
-                          customColorMap[colorField] || '#e0e0e0',
+                          customColorMap[colorValue] || '#e0e0e0',
                         width: '40px',
                         height: '20px',
                         borderRadius: '4px',
@@ -111,8 +127,8 @@ export const ColorField = props => {
                   <ColorPicker
                     triangle='hide'
                     colors={customColors}
-                    color={customColorMap[colorField] || '#e0e0e0'}
-                    onChange={handleColorPickerChange(colorField)}
+                    color={customColorMap[colorValue] || '#e0e0e0'}
+                    onChange={handleColorPickerChange(colorValue)}
                   />
                 </CalloutMenu>
               </div>
