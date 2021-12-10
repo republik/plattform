@@ -18,7 +18,6 @@ import Pledges from '../components/Users/Pledges'
 import AdminNotes from '../components/Users/AdminNotes'
 import AuthSettings from '../components/Users/AuthSettings'
 
-import EventLog from '../components/Users/EventLog'
 import Access from '../components/Users/Access'
 import Sessions from '../components/Users/Sessions'
 import Actions from '../components/Users/Actions'
@@ -50,7 +49,6 @@ const SectionSwitch = ({ userId, section }) => {
     return (
       <Fragment>
         <Sessions userId={userId} />
-        <EventLog userId={userId} />
       </Fragment>
     )
   }
