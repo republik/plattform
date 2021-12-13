@@ -105,7 +105,6 @@ export { Overlay, OverlayToolbar, OverlayBody } from './components/Overlay'
 export { Container, NarrowContainer } from './components/Grid'
 export {
   fontStyles,
-  linkBlackStyle,
   linkRule,
   plainLinkRule,
   A,
