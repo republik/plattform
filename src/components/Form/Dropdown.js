@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
+
 import NativeDropdown from './NativeDropdown'
 import VirtualDropdown from './VirtualDropdown'
 
@@ -23,5 +25,16 @@ const Dropdown = props => {
 
 Dropdown.Native = NativeDropdown
 Dropdown.Virtual = VirtualDropdown
+
+Dropdown.propTypes = {
+  label: PropTypes.string,
+  items: PropTypes.arrayOf(PropTypes.shape({
+    value: PropTypes.string.isRequired,
+    text: PropTypes.string.isRequired,
+    element: PropTypes.node
+  }).isRequired).isRequired,
+  value: PropTypes.string,
+  onChange: PropTypes.func
+}
 
 export default Dropdown
