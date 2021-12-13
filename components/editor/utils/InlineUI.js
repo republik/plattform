@@ -97,21 +97,23 @@ const InlineUI = ({ editor, node, isMatch, children }) => {
     }, 0)
   }
 
-  const isBreakout =
-    !parent(editor.state.value, node.key).type ||
-    parent(editor.state.value, node.key).nodes.size === 1
+  const currentParent = parent(editor.state.value, node.key)
+  const showMoveUI =
+    currentParent.type &&
+    currentParent.type === 'CENTER' &&
+    currentParent.nodes.size > 1
 
   return (
     <div contentEditable={false} {...styles.uiContainer}>
       <div
         contentEditable={false}
         ref={ref}
-        {...merge(styles.ui, isBreakout && styles.breakoutUI)}
+        {...merge(styles.ui, !showMoveUI && styles.breakoutUI)}
         style={{
-          left: isBreakout ? 0 : -(width + 15)
+          left: !showMoveUI ? 0 : -(width + 15)
         }}
       >
-        {!isBreakout && (
+        {showMoveUI && (
           <>
             <MarkButton onMouseDown={moveHandler(-1)}>
               <ArrowUpIcon size={24} />
