@@ -18,7 +18,6 @@ const charging = require('./owners/charging')
 
 const { PARKING_USER_ID, MEMBERSHIP_SCHEDULER_USER_LIMIT } = process.env
 
-const STATS_INTERVAL_SECS = 3
 const DAYS_BEFORE_END_DATE = 29
 
 const getMinEndDate = (now, daysBeforeEndDate) =>
@@ -168,21 +167,89 @@ const createBuckets = (now) => [
   },
 ]
 
-const getBuckets = async ({ now }, context) => {
+const pickAdditionals = (user) => ({
+  ...user,
+  membershipId: user._raw.membershipId,
+  membershipSequenceNumber: user._raw.membershipSequenceNumber,
+  membershipGraceInterval: user._raw.membershipGraceInterval,
+  membershipAutoPay: user._raw.membershipAutoPay,
+  membershipType: user._raw.membershipType,
+})
+
+const creatMaybeAppendProlongBeforeDate = (context) => async (user) => ({
+  ...user,
+  prolongBeforeDate: await getProlongBeforeDate(
+    user,
+    { ignoreAutoPayFlag: true },
+    { ...context, user },
+  ).then((date) => date && moment(date)),
+})
+
+const hasProlongBeforeDate = (user) => user.prolongBeforeDate
+
+const createHandleFn = (buckets, context) => async (rows, count, pgdb) => {
+  const users = await Promise.map(
+    rows.map(transformUser).map(pickAdditionals),
+    creatMaybeAppendProlongBeforeDate(context),
+    { concurrency: 10 },
+  ).filter(hasProlongBeforeDate)
+
+  debug({ count, rows: rows.length, withProlongBeforeDate: users.length })
+
+  await Promise.mapSeries(users, async (user) =>
+    Promise.map(
+      buckets,
+      async (bucket) => {
+        if (
+          user.prolongBeforeDate.isBetween(
+            bucket.endDate.min,
+            bucket.endDate.max,
+          )
+        ) {
+          if (user.membershipAutoPay && user.autoPay === undefined) {
+            user.autoPay = await autoPaySuggest(user.membershipId, pgdb)
+            if (!user.autoPay) {
+              user.membershipAutoPay = false
+              setAutoPayToFalse({
+                user,
+                membershipId: user.membershipId,
+                pgdb,
+              })
+            }
+          }
+
+          if (bucket.predicate(user)) {
+            await bucket.handler(
+              {
+                user,
+                prolongBeforeDate: user.prolongBeforeDate,
+              },
+              bucket,
+              context,
+            )
+          }
+        }
+      }
+    ).catch((e) => {
+      console.warn(e)
+    }),
+  )
+}
+
+const run = async (args, context) => {
+  const { now } = args
   const { pgdb } = context
 
-  /**
-   * Load users with a membership.
-   *
-   * WARNING: The following query will only hold up if user has only one active
-   * membership.
-   *
-   */
-  const users = await pgdb
-    .query(
-      `
+  const buckets = createBuckets(now)
+
+  await pgdb.queryInBatches(
+    { handleFn: createHandleFn(buckets, context), size: 1000 },
+    `
       SELECT
+        -- user
         u.*,
+
+        -- additionals
         m.id AS "membershipId",
         m."sequenceNumber" AS "membershipSequenceNumber",
         m."graceInterval" AS "membershipGraceInterval",
@@ -190,9 +257,9 @@ const getBuckets = async ({ now }, context) => {
         mt.name AS "membershipType"
       FROM
         memberships m
-      INNER JOIN
+      JOIN
         users u ON m."userId" = u.id
-      INNER JOIN
+      JOIN
         "membershipTypes" mt ON m."membershipTypeId" = mt.id
       WHERE
         m."userId" != :PARKING_USER_ID
@@ -205,115 +272,10 @@ const getBuckets = async ({ now }, context) => {
           : ''
       }
       `,
-      { PARKING_USER_ID },
-    )
-    .then((users) =>
-      users.map((user) => ({
-        ...transformUser(user),
-        membershipId: user.membershipId,
-        membershipSequenceNumber: user.membershipSequenceNumber,
-        membershipGraceInterval: user.membershipGraceInterval,
-        membershipAutoPay: user.membershipAutoPay,
-        membershipType: user.membershipType,
-      })),
-    )
-  debug(`investigating ${users.length} users for prolongBeforeDate`)
-
-  const stats = {
-    numNeedProlong: 0,
-    numNeedProlongProgress: 0,
-  }
-  const statsInterval = setInterval(() => {
-    debug(stats)
-  }, STATS_INTERVAL_SECS * 1000)
-
-  const buckets = createBuckets(now).map((bucket) => ({ ...bucket, users: [] }))
-  buckets.forEach((bucket) =>
-    debug('bucket: %o', {
-      ...bucket,
-      endDate: {
-        min: bucket.endDate.min.toISOString(),
-        max: bucket.endDate.max.toISOString(),
-      },
-    }),
+    { PARKING_USER_ID },
   )
 
-  await Promise.each(
-    users,
-    async (user) => {
-      const prolongBeforeDate = await getProlongBeforeDate(
-        user,
-        { ignoreAutoPayFlag: true },
-        { ...context, user },
-      ).then((date) => date && moment(date))
-
-      stats.numNeedProlongProgress++
-
-      if (prolongBeforeDate) {
-        const results = await Promise.map(
-          buckets,
-          async (bucket) => {
-            if (
-              prolongBeforeDate.isBetween(
-                bucket.endDate.min,
-                bucket.endDate.max,
-              )
-            ) {
-              if (user.membershipAutoPay && user.autoPay === undefined) {
-                user.autoPay = await autoPaySuggest(user.membershipId, pgdb)
-                if (!user.autoPay) {
-                  user.membershipAutoPay = false
-                  setAutoPayToFalse({
-                    user,
-                    membershipId: user.membershipId,
-                    pgdb,
-                  })
-                }
-              }
-
-              if (bucket.predicate(user)) {
-                bucket.users.push({ user, prolongBeforeDate })
-                return true
-              }
-            }
-
-            return false
-          },
-          { concurrency: 10 },
-        ).catch((e) => {
-          console.warn(e)
-        })
-
-        if (results.some(Boolean)) {
-          stats.numNeedProlong++
-        }
-      }
-    },
-    { concurrency: 10 },
-  )
-  delete stats.numNeedProlongProgress
-
-  debug(stats)
-  clearInterval(statsInterval)
-  return buckets
-}
-
-const run = async (args, context) => {
-  const buckets = await getBuckets(args, context)
-  buckets.forEach((bucket) =>
-    debug('bucket: %o', {
-      ...bucket,
-      endDate: {
-        min: bucket.endDate.min.toISOString(),
-        max: bucket.endDate.max.toISOString(),
-      },
-      users: bucket.users.length,
-    }),
-  )
-
-  await Promise.map(buckets, (bucket) =>
-    Promise.each(bucket.users, (user) => bucket.handler(user, bucket, context)),
-  )
+  debug('Done.')
 }
 
 module.exports = {
