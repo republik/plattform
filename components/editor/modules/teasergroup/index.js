@@ -96,7 +96,14 @@ const teaserGroupPlugin = options => {
       const isSelected = teaser === node && !editor.value.isBlurred
 
       return [
-        isSelected && <TeaserInlineUI key='ui' node={node} editor={editor} />,
+        isSelected && (
+          <TeaserInlineUI
+            key='ui'
+            node={node}
+            editor={editor}
+            serializer={getSerializer(options)}
+          />
+        ),
         <TeaserGroup key='teaser' {...node.data.toJS()} attributes={attributes}>
           {children}
         </TeaserGroup>
