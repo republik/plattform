@@ -9,18 +9,16 @@ const { prolong: autoPayProlong } = require('../../AutoPay')
 
 const { SLACK_CHANNEL_AUTOPAY } = process.env
 
-module.exports = async (user, bucket, context) => {
+module.exports = async (user, payload, context) => {
+  const { prolongBeforeDate: anchorDate, membershipId } = user
   const { pgdb, redis, mail, t } = context
-
-  const anchorDate = user.prolongBeforeDate
-  const { membershipId } = user.user
 
   // A list of dates after a charge attempts should be executed.
   const attempts = [
-    moment(user.prolongBeforeDate), // T+0
-    moment(user.prolongBeforeDate).add(1, 'days'), // T+1
-    moment(user.prolongBeforeDate).add(3, 'days'), // T+3
-    moment(user.prolongBeforeDate).add(7, 'days'), // T+7
+    moment(anchorDate), // T+0
+    moment(anchorDate).add(1, 'days'), // T+1
+    moment(anchorDate).add(3, 'days'), // T+3
+    moment(anchorDate).add(7, 'days'), // T+7
   ].sort(ascending)
 
   // Minutes to wait before potential next attempt scheduled.
@@ -47,7 +45,7 @@ module.exports = async (user, bucket, context) => {
     if (
       mostRecentAttempt.error?.raw?.code === 'authentication_required' &&
       (!mostRecentAttempt.sourceId ||
-        mostRecentAttempt.sourceId === user.user.autoPay.sourceId)
+        mostRecentAttempt.sourceId === user.autoPay.sourceId)
     ) {
       debug(
         'backing off, most recent attempt failed with authentication_required and no new payment source',
