@@ -78,18 +78,8 @@ const SeriesNavPlugin = ({ rule, subModules, TYPE }) => {
           const titleNode = value.document.findDescendant(
             node => node.type === 'TITLE'
           )
-
-          const isSelected = value.blocks.some(block => block.key === node.key)
           return (
             <div {...attributes}>
-              {isSelected && (
-                <TeaserInlineUI
-                  key='ui'
-                  copyable={false}
-                  node={node}
-                  editor={editor}
-                />
-              )}
               {titleNode && titleNode.data.get('series')?.episodes ? (
                 <SeriesNav
                   repoId={titleNode.data.get('repoId')}
