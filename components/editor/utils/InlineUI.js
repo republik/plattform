@@ -98,10 +98,7 @@ const InlineUI = ({ editor, node, isMatch, children }) => {
   }
 
   const currentParent = parent(editor.state.value, node.key)
-  const showMoveUI =
-    currentParent.type &&
-    currentParent.type === 'CENTER' &&
-    currentParent.nodes.size > 1
+  const showMoveUI = currentParent.type && currentParent.type === 'CENTER'
 
   return (
     <div contentEditable={false} {...styles.uiContainer}>
