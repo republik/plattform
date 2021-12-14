@@ -272,7 +272,7 @@ const createUserJobs = (jobs, context) => async (user) =>
         }
       }
     } catch (error) {
-      console.warn('scheduler owners, job failed', {
+      console.error('scheduler owners, job failed', {
         error,
         job,
         user: user.id,
