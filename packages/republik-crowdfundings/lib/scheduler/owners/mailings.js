@@ -27,7 +27,7 @@ module.exports = async (user, payload, context) => {
 
   return sendMailTemplate(templatePayload, context, {
     onceFor: {
-      type: payload.templateName,
+      type: templateName,
       userId,
       keys: [`endDate:${formatDate(prolongBeforeDate)}`],
     },
