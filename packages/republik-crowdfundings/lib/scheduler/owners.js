@@ -311,12 +311,12 @@ const run = async (args, context) => {
         m."graceInterval" AS "membershipGraceInterval",
         m."autoPay" AS "membershipAutoPay",
         mt.name AS "membershipType"
-      FROM
-        memberships m
-      JOIN
-        users u ON m."userId" = u.id
-      JOIN
-        "membershipTypes" mt ON m."membershipTypeId" = mt.id
+
+      FROM memberships m
+      JOIN users u
+        ON m."userId" = u.id
+      JOIN "membershipTypes" mt
+        ON m."membershipTypeId" = mt.id
       WHERE
         m."userId" != :PARKING_USER_ID
         AND m.active = true
