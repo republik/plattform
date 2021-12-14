@@ -39,7 +39,7 @@ if (!fs.existsSync(sqlDirAbs)) {
   throw new Error('specified sqldir does not exists')
 }
 
-const dateString = moment().format('YYYYMMDDhhmmss')
+const dateString = moment().format('YYYYMMDDHHmmss')
 const filenameBase = `${dateString}-${argv.name}`
 
 const metaFileAbs = path.join(metaDirAbs, `${filenameBase}.js`)
