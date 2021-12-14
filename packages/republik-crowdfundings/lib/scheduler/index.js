@@ -46,7 +46,7 @@ const init = async (context) => {
 
   schedulers.push(
     timeScheduler.init({
-      name: 'import-payments',
+      name: 'payment-reminders',
       context,
       runFunc: (_args, context) => sendPaymentReminders(context),
       lockTtlSecs,
