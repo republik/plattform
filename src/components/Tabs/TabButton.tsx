@@ -8,7 +8,7 @@ import { mUp } from '../../theme/mediaQueries'
 
 export type TabItemType = {
   text: string
-  children: ReactNode
+  children?: ReactNode
   isActive?: boolean
   onClick?: () => void
   href?: string
@@ -20,7 +20,6 @@ const styles = {
     padding: '8px 16px',
     borderBottomWidth: '1px',
     borderBottomStyle: 'solid',
-    borderColor: 'transparent',
     whiteSpace: 'nowrap',
     ...sansSerifRegular16,
     [mUp]: {
@@ -78,8 +77,10 @@ const TabButton = React.forwardRef(
         {...css(styles.default, isActive && styles.active, href && styles.link)}
         {...plainButtonRule}
         {...(!isActive && hoverRule)}
-        {...(border &&
-          colorScheme.set('borderColor', isActive ? 'text' : 'divider'))}
+        {...colorScheme.set(
+          'borderColor',
+          !border ? 'transparent' : isActive ? 'text' : 'divider'
+        )}
         title={text}
       >
         {text}
