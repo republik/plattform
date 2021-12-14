@@ -1,13 +1,38 @@
-import React from 'react'
+import React, {
+  Attributes,
+  MouseEventHandler,
+  PropsWithChildren
+} from 'react'
 import { css } from 'glamor'
 
 import { mUp } from '../../theme/mediaQueries'
 import { fontStyles } from '../../theme/fonts'
 import { useColorContext } from '../Colors/ColorContext'
+import { IconType } from 'react-icons/lib/esm/iconBase'
 
 const ICON_SIZE = 24
 
-const IconButton = React.forwardRef(
+const IconButton = React.forwardRef<
+  HTMLAnchorElement & HTMLButtonElement,
+  PropsWithChildren<{
+    Icon: IconType
+    href?: string
+    target?: string
+    label?: string
+    labelShort?: string
+    title?: string
+    fill?: string
+    fillColorName: string
+    onClick?: MouseEventHandler<HTMLAnchorElement> &
+      MouseEventHandler<HTMLButtonElement>
+    onMouseDown?: MouseEventHandler<HTMLAnchorElement> &
+      MouseEventHandler<HTMLButtonElement>
+    style?: React.CSSProperties
+    size?: number
+    disabled?: boolean
+    attributes?: Attributes
+  }>
+>(
   (
     {
       Icon,
@@ -19,6 +44,7 @@ const IconButton = React.forwardRef(
       fill,
       fillColorName,
       onClick,
+      onMouseDown,
       children,
       style: customStyles,
       size,
@@ -44,6 +70,7 @@ const IconButton = React.forwardRef(
           ...customStyles
         }}
         onClick={onClick}
+        onMouseDown={onMouseDown}
         href={href}
         target={target}
         rel={target === '_blank' ? 'noopener' : ''}
@@ -52,7 +79,6 @@ const IconButton = React.forwardRef(
         disabled={disabled}
       >
         <Icon
-          {...styles.icon}
           size={size || ICON_SIZE}
           {...colorScheme.set('fill', fillValue)}
         />
