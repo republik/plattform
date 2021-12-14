@@ -14,7 +14,7 @@ const init = async ({
   runFunc,
   lockTtlSecs,
   runAtTime,
-  runAtDaysOfWeek = [1, 2, 3, 4, 5, 6, 7],
+  runAtDaysOfWeek = [1, 2, 3, 4, 5, 6, 7], // 1 = Monday, 7 = Sunday
   runInitially = false,
   dryRun = false,
 }) => {
