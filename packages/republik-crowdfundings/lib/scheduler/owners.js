@@ -44,12 +44,12 @@ const createJobs = (now) => [
     },
     payload: { seed: Math.random() },
     predicateFn:
-      (user, payload) =>
-        payload.seed > Math.random()
+      (user) =>
+        user.membershipType === 'ABO'
     handleFn:
       async (user, payload, context) => {
         await postSomewhere(
-          'can randmonly prolong',
+          'ABO job',
           payload.seed,
           user.firstName
         )
