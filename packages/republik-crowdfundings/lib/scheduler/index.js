@@ -40,12 +40,13 @@ const init = async (context) => {
       runFunc: importPayments,
       lockTtlSecs,
       runAtTime: '04:00', // Postfinace exports new files at around 1 AM
+      runAtDaysOfWeek: [2, 3, 4, 5, 6], // Postfinance exports Tuesday to Saturday
     }),
   )
 
   schedulers.push(
     timeScheduler.init({
-      name: 'import-payments',
+      name: 'payment-reminders',
       context,
       runFunc: (_args, context) => sendPaymentReminders(context),
       lockTtlSecs,
