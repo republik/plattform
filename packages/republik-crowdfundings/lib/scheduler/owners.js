@@ -34,11 +34,23 @@ const getMaxEndDate = (now, daysBeforeEndDate) =>
     .add(daysBeforeEndDate, 'days')
     .endOf('day')
 
+/**
+ * Creates an array of jobs. A job maybe sending an email or charging
+ * a user. Each user is check whether a job should be run.
+ * 
+ * 1) Is {user.prolongBeforeDate} between {job.prolongBefore.minDate}
+ *    and {job.prolongBefore.maxDate}?
+ * 
+ * 2) Does user pass {job.predicateFn}?
+ * 
+ * 3) Then run {job.handleFn}
+ *
+ */
 const createJobs = (now) => [
   /*
   {
     name: 'some-example',
-    prolongDate: {
+    prolongBefore: {
       minDate: moment(2021-12-12),
       maxDate: moment(2021-12-24)
     },
