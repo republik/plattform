@@ -38,7 +38,6 @@ type User {
   enabledFirstFactors: [SignInTokenType!]!
   preferredFirstFactor: SignInTokenType
   enabledSecondFactors: [SignInTokenType!]!
-  eventLog: [EventLog!]! @deprecated
   # is this the user of the requesting session
   isUserOfCurrentSession: Boolean!
   # get an access token
@@ -97,23 +96,6 @@ type RequestInfo {
   isApp: Boolean!
   country: String
   city: String
-}
-
-enum EventLogType {
-  TOKEN_REQUEST
-  TOKEN_RE_REQUEST
-  ROLL_SESSION
-  AUTHORIZE_SESSION
-  DENY_SESSION
-  SIGNOUT_TIMEOUT
-  UNKNOWN
-}
-
-type EventLog {
-  type: EventLogType
-  archivedSession: Session
-  activeSession: Session
-  createdAt: DateTime!
 }
 
 type SignInNotification {
