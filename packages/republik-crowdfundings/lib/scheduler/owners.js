@@ -259,7 +259,6 @@ const createUserJobs = (jobs, context) => async (user) =>
           user.autoPay = await autoPaySuggest(user.membershipId, pgdb)
 
           if (!user.autoPay) {
-            user.membershipAutoPay = false
             await setAutoPayToFalse({
               user,
               membershipId: user.membershipId,
