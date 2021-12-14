@@ -53,38 +53,9 @@ module.exports = {
     }
     return []
   },
-  async eventLog(user, args, { pgdb, user: me }) {
+  eventLog(user, args, { user: me }) {
     Roles.ensureUserIsMeOrInRoles(user, me, DEFAULT_USER_ACCESS_ROLES)
-    return pgdb
-      .query(
-        `
-      SELECT
-        e.*,
-        to_json(s.*) as "activeSession"
-      FROM
-        "eventLog" e
-      LEFT JOIN
-        sessions s
-          ON e."newData" #>> '{sid}' = s.sid
-      WHERE
-        e."newData" #>> '{sess,email}' = :email OR
-        e."oldData" #>> '{sess,email}' = :email OR
-        e."newData" #>> '{sess,passport,user}' = :userId OR
-        e."oldData" #>> '{sess,passport,user}' = :userId
-      ORDER BY
-        e."createdAt" DESC
-    `,
-        {
-          email: user.email,
-          userId: user.userId,
-        },
-      )
-      .then((result) =>
-        result.map((e) => ({
-          ...e,
-          archivedSession: e.newData || e.oldData,
-        })),
-      )
+    return []
   },
   async enabledFirstFactors(user, args, { pgdb, user: me }) {
     Roles.ensureUserIsMeOrInRoles(user, me, DEFAULT_USER_ACCESS_ROLES)
