@@ -768,7 +768,7 @@ Lollipop.wrap = 'Bar'
 export default BarChart
 
 export const barEditorSchema = ({
-  fields,
+  optionalDataColumnEnum,
   defaults,
   numberFormats,
   colorDropdownItems,
@@ -796,7 +796,7 @@ export const barEditorSchema = ({
             y: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              enum: optionalDataColumnEnum,
               default: defaults.y || ''
             },
             unit: {
@@ -818,7 +818,7 @@ export const barEditorSchema = ({
             color: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              enum: optionalDataColumnEnum,
               default: defaults.color || ''
             },
             colorRange: {
@@ -835,7 +835,7 @@ export const barEditorSchema = ({
             column: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              enum: optionalDataColumnEnum,
               default: defaults.column || ''
             },
             columns: {
@@ -912,7 +912,8 @@ export const barEditorSchema = ({
 }
 
 export const lollipopEditorSchema = ({
-  fields,
+  dataColumnEnum,
+  optionalDataColumnEnum,
   defaults,
   numberFormats,
   colorDropdownItems,
@@ -940,7 +941,7 @@ export const lollipopEditorSchema = ({
             y: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields,
+              enum: dataColumnEnum,
               default: defaults.y || 'value'
             },
             unit: {
@@ -962,7 +963,7 @@ export const lollipopEditorSchema = ({
             color: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              enum: optionalDataColumnEnum,
               default: defaults.color || ''
             },
             colorRange: {
@@ -979,7 +980,7 @@ export const lollipopEditorSchema = ({
             column: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              enum: optionalDataColumnEnum,
               default: defaults.column || ''
             },
             columns: {

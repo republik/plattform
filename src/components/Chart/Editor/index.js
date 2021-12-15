@@ -76,7 +76,11 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
 
   const createSchema = (type = 'Line') => {
     return schemaDict[type]({
-      fields: columns,
+      dataColumnEnum: columns,
+      optionalDataColumnEnum: columns.concat({
+        value: '',
+        text: 'keine Auswahl'
+      }),
       defaults: defaultProps[type],
       numberFormats,
       xScaleTypes,

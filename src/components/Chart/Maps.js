@@ -651,10 +651,9 @@ SwissMap.defaultProps = defaultProps.SwissMap
 SwissMap.base = 'GenericMap'
 
 export const genericMapEditorSchema = ({
-  fields,
+  optionalDataColumnEnum,
   defaults,
-  colorDropdownItems,
-  sortingOptions
+  colorDropdownItems
 }) => {
   return {
     title: 'genericMapChartConfig',
@@ -667,7 +666,7 @@ export const genericMapEditorSchema = ({
             color: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              enum: optionalDataColumnEnum,
               default: defaults.color || ''
             },
             colorRange: {
@@ -684,7 +683,7 @@ export const genericMapEditorSchema = ({
             column: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              enum: optionalDataColumnEnum,
               default: defaults.column || ''
             },
             columns: {
@@ -701,10 +700,9 @@ export const genericMapEditorSchema = ({
 }
 
 export const projectedMapEditorSchema = ({
-  fields,
+  optionalDataColumnEnum,
   defaults,
-  colorDropdownItems,
-  sortingOptions
+  colorDropdownItems
 }) => {
   return {
     title: 'projectedMapChartConfig',
@@ -717,7 +715,7 @@ export const projectedMapEditorSchema = ({
             color: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              enum: optionalDataColumnEnum,
               default: defaults.color || ''
             },
             colorRange: {
@@ -734,7 +732,7 @@ export const projectedMapEditorSchema = ({
             column: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              enum: optionalDataColumnEnum,
               default: defaults.column || ''
             },
             columns: {
@@ -751,10 +749,9 @@ export const projectedMapEditorSchema = ({
 }
 
 export const swissMapEditorSchema = ({
-  fields,
+  optionalDataColumnEnum,
   defaults,
-  colorDropdownItems,
-  sortingOptions
+  colorDropdownItems
 }) => {
   return {
     title: 'swissMapChartConfig',
@@ -767,7 +764,7 @@ export const swissMapEditorSchema = ({
             color: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              enum: optionalDataColumnEnum,
               default: defaults.color || ''
             },
             colorRange: {
@@ -784,7 +781,7 @@ export const swissMapEditorSchema = ({
             column: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              enum: optionalDataColumnEnum,
               default: defaults.column || ''
             },
             columns: {

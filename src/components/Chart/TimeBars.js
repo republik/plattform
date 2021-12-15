@@ -185,12 +185,12 @@ TimeBarChart.defaultProps = defaultProps.TimeBar
 export default TimeBarChart
 
 export const timeBarEditorSchema = ({
-  fields,
+  dataColumnEnum,
+  optionalDataColumnEnum,
   defaults,
   numberFormats,
   timeFormats,
   colorDropdownItems,
-  timeParsing,
   xScaleTypes
 }) => {
   return {
@@ -204,7 +204,7 @@ export const timeBarEditorSchema = ({
             x: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields,
+              enum: dataColumnEnum,
               default: defaults.x
             },
             timeFormat: {
@@ -247,7 +247,7 @@ export const timeBarEditorSchema = ({
             color: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              enum: optionalDataColumnEnum,
               default: defaults.color || ''
             },
             colorRange: {
@@ -264,7 +264,7 @@ export const timeBarEditorSchema = ({
             column: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              enum: optionalDataColumnEnum,
               default: defaults.column || ''
             },
             columns: {

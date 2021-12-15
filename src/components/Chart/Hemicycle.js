@@ -280,7 +280,7 @@ Hemicycle.defaultProps = defaultProps.Hemicycle
 export default Hemicycle
 
 export const hemicycleEditorSchema = ({
-  fields,
+  optionalDataColumnEnum,
   defaults,
   colorDropdownItems
 }) => {
@@ -295,7 +295,7 @@ export const hemicycleEditorSchema = ({
             color: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              enum: optionalDataColumnEnum,
               default: defaults.color || ''
             },
             colorRange: {

@@ -369,10 +369,9 @@ ScatterPlot.propTypes = propTypes
 export default ScatterPlot
 
 export const scatterPlotEditorSchema = ({
-  fields,
+  optionalDataColumnEnum,
   defaults,
-  colorDropdownItems,
-  sortingOptions
+  colorDropdownItems
 }) => {
   return {
     title: 'ScatterPlotChartConfig',
@@ -385,7 +384,7 @@ export const scatterPlotEditorSchema = ({
             color: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              enum: optionalDataColumnEnum,
               default: defaults.color || ''
             },
             colorRange: {
@@ -402,7 +401,7 @@ export const scatterPlotEditorSchema = ({
             column: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              enum: optionalDataColumnEnum,
               default: defaults.column || ''
             },
             columns: {

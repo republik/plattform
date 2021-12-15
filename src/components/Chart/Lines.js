@@ -288,14 +288,14 @@ export const Line = props => <LineChart {...props} />
 Line.defaultProps = defaultProps.Line
 
 export const lineEditorSchema = ({
-  fields,
+  dataColumnEnum,
+  optionalDataColumnEnum,
   defaults,
   numberFormats,
   timeFormats,
   colorDropdownItems,
   xScaleTypes,
-  yScaleTypes,
-  sortingOptions
+  yScaleTypes
 }) => {
   return {
     title: 'LineChartConfig',
@@ -308,7 +308,7 @@ export const lineEditorSchema = ({
             x: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields,
+              enum: dataColumnEnum,
               default: defaults.x
             },
             timeFormat: {
@@ -351,7 +351,7 @@ export const lineEditorSchema = ({
             color: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              enum: optionalDataColumnEnum,
               default: defaults.color || ''
             },
             colorRange: {
@@ -368,7 +368,7 @@ export const lineEditorSchema = ({
             column: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              enum: optionalDataColumnEnum,
               default: defaults.column || ''
             },
             columns: {
@@ -478,14 +478,14 @@ export const Slope = props => <LineChart {...props} />
 Slope.defaultProps = defaultProps.Slope
 
 export const slopeEditorSchema = ({
-  fields,
+  dataColumnEnum,
+  optionalDataColumnEnum,
   defaults,
   numberFormats,
   timeFormats,
   colorDropdownItems,
   xScaleTypes,
-  yScaleTypes,
-  sortingOptions
+  yScaleTypes
 }) => {
   return {
     title: 'SlopeChartConfig',
@@ -498,7 +498,7 @@ export const slopeEditorSchema = ({
             x: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields,
+              enum: dataColumnEnum,
               default: defaults.x
             },
             timeFormat: {
@@ -536,7 +536,7 @@ export const slopeEditorSchema = ({
             color: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              enum: optionalDataColumnEnum,
               default: defaults.color || ''
             },
             colorRange: {
@@ -553,7 +553,7 @@ export const slopeEditorSchema = ({
             column: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: fields.concat({ value: '', text: 'keine Auswahl' }),
+              enum: optionalDataColumnEnum,
               default: defaults.column || ''
             },
             columns: {
