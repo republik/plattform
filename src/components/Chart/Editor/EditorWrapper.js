@@ -3,6 +3,7 @@ import { css } from 'glamor'
 
 import { useColorContext } from '../../Colors/ColorContext'
 import { fontStyles } from '../../Typography'
+import { plainButtonRule } from '../../Button'
 
 import ChartEditor from '.'
 
