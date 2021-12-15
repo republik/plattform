@@ -67,7 +67,7 @@ export const projectedMapEditorSchema = ({
           }
         },
         layout: {
-          title: 'Grid',
+          title: 'Aufteilung in Spalten',
           properties: {
             column: {
               title: 'Spalte auswählen',
