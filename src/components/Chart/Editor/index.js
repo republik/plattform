@@ -68,11 +68,11 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
 
 
 
-  if (!chartData || !chartData[0]) {
+  if (!chartData?.columns) {
     return
   }
 
-  const columns = Object.keys(chartData[0]).map(d => {
+  const columns = chartData.columns.map(d => {
     return { value: d, text: d }
   })
 
