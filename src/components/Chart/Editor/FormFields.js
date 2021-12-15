@@ -28,7 +28,6 @@ export const FormFields = props => {
     createOnDropdownChange,
     createOnFieldChange,
     createOnNumberFieldChange,
-    timeFormatParser,
     value,
     chartData,
     colorRanges
@@ -60,7 +59,8 @@ export const FormFields = props => {
                     colorRanges={colorRanges}
                   />
                 )
-              } else if (groupObject[property].format === 'dynamicDropdown') {
+              }
+              if (groupObject[property].format === 'dynamicDropdown') {
                 return (
                   <AxisFormatDropdown
                     key={property}
@@ -80,7 +80,8 @@ export const FormFields = props => {
                     timeParse={value.timeParse}
                   />
                 )
-              } else if (groupObject[property].enum) {
+              }
+              if (groupObject[property].enum) {
                 return (
                   <CustomValueDropdown
                     key={property}
@@ -90,7 +91,8 @@ export const FormFields = props => {
                     onChange={createOnDropdownChange(property)}
                   />
                 )
-              } else if (groupObject[property].type === 'array') {
+              }
+              if (groupObject[property].type === 'array') {
                 return (
                   <TickField
                     key={property}
@@ -102,7 +104,8 @@ export const FormFields = props => {
                     context={determineAxisContext(property, value)}
                   />
                 )
-              } else if (groupObject[property].type === 'boolean') {
+              }
+              if (groupObject[property].type === 'boolean') {
                 return (
                   <div key={property} style={{ marginTop: '20px' }}>
                     <Checkbox
@@ -117,7 +120,8 @@ export const FormFields = props => {
                     </Checkbox>
                   </div>
                 )
-              } else if (groupObject[property].format === 'Slider') {
+              }
+              if (groupObject[property].format === 'Slider') {
                 return (
                   <Slider
                     key={property}
@@ -133,7 +137,8 @@ export const FormFields = props => {
                     onChange={createOnFieldChange(property)}
                   />
                 )
-              } else if (groupObject[property].type === 'number') {
+              }
+              if (groupObject[property].type === 'number') {
                 return (
                   <Field
                     key={property}
@@ -142,16 +147,15 @@ export const FormFields = props => {
                     onChange={createOnNumberFieldChange(property)}
                   />
                 )
-              } else {
-                return (
-                  <Field
-                    key={property}
-                    label={groupObject[property].title}
-                    value={value[property]}
-                    onChange={createOnFieldChange(property)}
-                  />
-                )
               }
+              return (
+                <Field
+                  key={property}
+                  label={groupObject[property].title}
+                  value={value[property]}
+                  onChange={createOnFieldChange(property)}
+                />
+              )
             })}
           </div>
         )
