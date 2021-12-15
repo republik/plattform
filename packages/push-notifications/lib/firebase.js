@@ -1,8 +1,10 @@
 // https://firebase.google.com/docs/cloud-messaging/admin/legacy-fcm?authuser=1
 // https://firebase.google.com/docs/cloud-messaging/admin/send-messages?authuser=1#defining_the_message
 
-const firebase = require('firebase-admin')
+const { chunk } = require('lodash')
 const debug = require('debug')('notifications:publish:firebase')
+const firebase = require('firebase-admin')
+const Promise = require('bluebird')
 
 const { deleteSessionForDevices } = require('./utils')
 
@@ -75,16 +77,36 @@ const publish = async (args, pgdb) => {
       ...(ttl ? { timeToLive: parseInt(ttl / 1000) } : {}),
       ...(priority ? { priority } : {}),
     }
-    const result = await firebase
-      .messaging()
-      .sendToDevice(tokens, message, options)
-    debug(
-      'Firebase: #recipients %d, message: %O, result: %O',
-      tokens.length,
-      message,
-      result,
-    )
-    const staleTokens = result.results.reduce((acc, cur, idx) => {
+
+    const result = await Promise.mapSeries(
+      chunk(tokens, 1000),
+      async (tokensChunk) => {
+        /*
+          @see https://firebase.google.com/docs/reference/admin/node/firebase-admin.messaging.messagingdevicesresponse
+          response = {
+            results: [ { messageId: '123' } ], @see https://firebase.google.com/docs/reference/admin/node/firebase-admin.messaging.messagingdeviceresult
+            canonicalRegistrationTokenCount: 0,
+            failureCount: 0,
+            successCount: 1,
+            multicastId: 157195303459347400
+          }
+        */
+        const response = await firebase
+          .messaging()
+          .sendToDevice(tokensChunk, message, options)
+
+        debug(
+          'Firebase: #recipients %d, message: %O, response: %O',
+          tokensChunk.length,
+          message,
+          response,
+        )
+
+        return response.results
+      },
+    ).then((chunkResults) => chunkResults.flat())
+
+    const staleTokens = result.reduce((acc, cur, idx) => {
       if (
         cur.error &&
         cur.error.code === 'messaging/registration-token-not-registered'
