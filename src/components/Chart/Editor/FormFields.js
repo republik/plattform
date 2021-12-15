@@ -29,8 +29,7 @@ export const FormFields = props => {
     createOnFieldChange,
     createOnNumberFieldChange,
     value,
-    chartData,
-    colorRanges
+    chartData
   } = props
   const fieldsKeys = Object.keys(fields)
 
@@ -56,7 +55,6 @@ export const FormFields = props => {
                     onFieldsChange={onFieldsChange}
                     colorColumn={value.color || groupObject.color.default}
                     chartData={chartData}
-                    colorRanges={colorRanges}
                   />
                 )
               }

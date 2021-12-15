@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { BlockPicker as ColorPicker } from 'react-color'
 
 import Dropdown from '../../Form/Dropdown'
 import { deduplicate, runSort } from '../utils'
 import CalloutMenu from '../../Callout/CalloutMenu'
 import { ColorDropdownElement } from './ColorDropdownElement'
-
+import { useColorContext } from '../../Colors/ColorContext'
+import { createRanges } from '..'
 import { colorMaps, CHART_DEFAULT_FILL } from '../colorMaps'
 
 const TYPES_WITH_COLOR_SORT = ['Bar', 'Lollipop', 'ScatterPlot']
@@ -18,9 +19,14 @@ export const ColorField = props => {
     colorColumn,
     config,
     colorMap,
-    colorRange,
-    colorRanges
+    colorRange
   } = props
+
+  const [colorScheme] = useColorContext()
+  const colorRanges = useMemo(() => createRanges(colorScheme.ranges), [
+    colorScheme
+  ])
+
   const items = []
     .concat(
       { value: '_auto', text: 'automatisch' },
@@ -67,7 +73,8 @@ export const ColorField = props => {
     ? '_auto'
     : '_custom'
 
-  const colorValues = chartData.map(d => d[colorColumn])
+  const colorValues = chartData
+    .map(d => d[colorColumn])
     .concat(config.colorLegendValues)
     .filter(Boolean)
     .filter(deduplicate)
@@ -115,7 +122,7 @@ export const ColorField = props => {
       onFieldsChange({
         colorMap: undefined,
         colorRange: undefined,
-        [item.predefined]: item.value 
+        [item.predefined]: item.value
       })
     } else if (item.value === '_auto') {
       onFieldsChange({
@@ -141,7 +148,8 @@ export const ColorField = props => {
           onChange={handleDropdownChange}
         />
       </div>
-      {value === '_custom' && colorValues.map(colorValue => {
+      {value === '_custom' &&
+        colorValues.map(colorValue => {
           return (
             <div
               style={{

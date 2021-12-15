@@ -4,8 +4,6 @@ import { csvParse } from 'd3-dsv'
 import Dropdown from '../../Form/Dropdown'
 import { FormFields } from './FormFields'
 
-import { useColorContext } from '../../Colors/ColorContext'
-
 import { defaultProps } from '../ChartContext'
 import { slopeEditorSchema, lineEditorSchema } from '../Lines'
 import { timeBarEditorSchema } from '../TimeBars'
@@ -46,24 +44,7 @@ const chartTypes = Object.keys(schemaDict)
   .slice(0, 6)
 
 const ChartEditor = ({ data, value, onChange, activeTab }) => {
-  const [colorScheme] = useColorContext()
   const chartData = useMemo(() => csvParse(data), [data])
-
-  const createRanges = ({ sequential, sequential3, opposite3, discrete }) => {
-    const oppositeReversed = [].concat(opposite3).reverse()
-    return {
-      diverging1: [sequential3[1], opposite3[1]],
-      diverging2: [...sequential3.slice(0, 2), ...oppositeReversed.slice(0, 2)],
-      diverging3: [...sequential3, ...oppositeReversed],
-      sequential3,
-      sequential: sequential,
-      discrete
-    }
-  }
-
-  const colorRanges = useMemo(() => createRanges(colorScheme.ranges), [
-    colorScheme
-  ])
 
   if (!chartData?.columns) {
     return
@@ -129,7 +110,6 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
             : schema.properties.advanced
         }
         chartData={chartData}
-        colorRanges={colorRanges}
       />
     </div>
   )
