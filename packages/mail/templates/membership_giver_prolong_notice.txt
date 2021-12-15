@@ -18,11 +18,6 @@ Diese Mitgliedschaften enden bald.
 Schenken Sie noch ein weiteres Jahr unabhängige und werbefreie Einordnung und
 Vertiefung anstelle einer Flut von Nachrichten?
 
-Jede Mitgliedschaft unterstützt die Republik und die Idee hinter unserem Projekt
-einer wirklich unabhängigen vierten Gewalt und zentralen demokratischen
-Institution. Und stärkt unser gemeinsames Projekt gegen den Zynismus, den
-Vormarsch der Autoritären und gegen die Diktatur der Angst.
-
 Folgende{{#if `gifted_memberships_count == 1`}} Mitgliedschaft steht{{elseif
 `gifted_memberships_count > 1`}} Mitgliedschaften stehen{{/if}} zur Verlängerung
 an:
@@ -33,17 +28,18 @@ an:
 
 Klicken Sie hier, um {{#if `gifted_memberships_count == 1`}}die
 Geschenkmitgliedschaft{{elseif `gifted_memberships_count > 1`}}die
-Geschenkmitgliedschaften{{/if}} zu verlängern {{prolong_url}} .
+Geschenkmitgliedschaften{{/if}} zu verlängern:
+
+Jetzt weiter die Republik verschenken {{prolong_url}}
 
 Falls Sie innerhalb der nächsten {{inform_claimers_days}} Tage nichts
-unternehmen, erlauben wir uns, {{#if `gifted_memberships_count == 1`}}den oder
-die Beschenkte{{elseif `gifted_memberships_count > 1`}}die Beschenkten{{/if}}
-direkt anzufragen, ob {{#if `gifted_memberships_count == 1`}}sie oder er{{elseif
-`gifted_memberships_count > 1`}}sie{{/if}} ein weiteres Jahr an Bord sein {{#if
-`gifted_memberships_count == 1`}}möchte{{elseif `gifted_memberships_count >
-1`}}möchten{{/if}}. Dies dann natürlich auf eigene Rechnung.
+unternehmen, erlauben wir uns, {{#if `gifted_memberships_count == 1`}} die
+beschenkte Person{{elseif `gifted_memberships_count > 1`}}die beschenkten
+Personen{{/if}} direkt anzufragen, ob sie{{/if}} ein weiteres Jahr an Bord sein
+{{#if `gifted_memberships_count == 1`}}möchte{{elseif `gifted_memberships_count
+> 1`}}möchten{{/if}}. Dies dann natürlich auf eigene Rechnung.
 
-Vielen Dank für Ihre Unterstützung.
+Wir danken Ihnen herzlich für die Unterstützung!
 
 Ihre Crew der Republik
 

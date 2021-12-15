@@ -1,26 +1,26 @@
 Guten Tag
 
-Heute erneuert sich Ihre Mitgliedschaft – und Ihr Engagement für unser
-gemeinsames Projekt gegen den Zynismus, den Vormarsch der Autoritären und gegen
-die Diktatur der Angst um ein Jahr.
+Heute erneuern sich Ihre Mitgliedschaft und Ihr Engagement für die
+Medienvielfalt, die Informationsfreiheit und die Demokratie.
 
-Ihr Mitgliedsbeitrag ist fällig:
+Ihr Mitgliedschaftsbeitrag ist fällig. Damit Sie weiter Teil der Republik sind,
+müssen Sie nur die Rechnung für das nächste Jahr begleichen, was mit zwei Klicks
+erledigt ist:
 
 Jetzt bezahlen {{prolong_url}}
 
-Hierfür müssen Sie nur noch die Rechnung für das nächste Jahr bezahlen, was mit
-einem Klick in drei Minuten erledigt ist. {{prolong_url}}
+Sie wollen die Republik nicht mehr unterstützen? Bitte kündigen Sie Ihre
+Mitgliedschaft {{cancel_url}} und teilen Sie uns mit, warum. Es wäre wertvoll
+für uns, Ihre Gründe zu kennen.
 
-Sollten Sie das nicht tun, verlieren Ihre Zugangsdaten am {{grace_end_date}}
-leider ihre Gültigkeit.
+Sollte uns ein Fehler unterlaufen sein, schreiben Sie uns via
+kontakt@republik.ch , und wir gehen dem Problem auf die Spur.
 
-Sie wollen die Republik nicht mehr unterstützen? Jetzt kündigen {{cancel_url}} .
+Und wenn Sie einen finanziellen Engpass haben sollten, schreiben Sie uns ebenso
+auf kontakt@republik.ch – Journalismus kostet zwar, doch wir wollen niemanden
+ausschliessen: Wir finden eine Lösung.
 
-Und sollte uns ein Fehler unterlaufen sein, schreiben Sie uns auf
-kontakt@republik.ch .
-
-Mit grossem Dank für das letzte Jahr!
-Und in Vorfreude auf ein neues.
+Mit herzlichem Dank für das letzte Jahr und in Vorfreude auf ein neues!
 
 Ihre Crew der Republik
 

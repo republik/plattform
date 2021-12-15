@@ -48,10 +48,10 @@
                       <strong
                         >{{GRANTER_NAME}} (<a href="mailto:{{GRANTER_EMAIL}}"
                           >{{GRANTER_EMAIL}}</a
-                        >) hat die Republik – ein neues, unabhängiges und
-                        werbefreies digitales Magazin für Politik, Wirtschaft,
-                        Gesellschaft und Kultur – mit Ihnen geteilt.</strong
-                      >
+                        >) hat die Republik – ein unabhängiges und werbefreies
+                        digitales Magazin für Politik, Wirtschaft, Gesellschaft
+                        und Kultur – mit Ihnen geteilt.
+                      </strong>
                     </p>
                     {{#if GRANTER_MESSAGE}}
                     <p>Und uns eine Nachricht für Sie mitgegeben:</p>
@@ -63,8 +63,7 @@
                     {{/if}} {{/if}} {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
                     <p>
                       Für {{CAMPAIGN_PERIOD}} sind Sie jetzt Gast an Bord der
-                      Republik. Und können unser Magazin entdecken, es lesen,
-                      sehen und hören.
+                      Republik und können unverbindlich unser Magazin entdecken.
                     </p>
                     {{/if}}
 
@@ -98,7 +97,8 @@
                       den folgenden Gutscheincode ein:
                       <span style="font-family: monospace"
                         >{{GRANT_VOUCHER_CODE}}</span
-                      >. Der Gutscheincode ist gültig bis zum {{GRANT_BEGIN_BEFORE}}.
+                      >. Der Gutscheincode ist gültig bis zum
+                      {{GRANT_BEGIN_BEFORE}}.
                     </p>
 
                     <p>
@@ -110,28 +110,12 @@
                     </p>
 
                     <p>
-                      Als Magazin bieten wir Einordnung und Vertiefung anstelle
-                      einer Flut von Nachrichten. Wir recherchieren, um
-                      Missstände aufzudecken, oft monatelang. Und diskutieren
-                      über drängende Fragen der Gegenwart.
-                    </p>
-                    <p>
-                      Die Republik ist aber noch mehr als ein Magazin. In der
-                      Republik sind inhaltliche Debatten mit Expertinnen, Lesern
-                      und Journalistinnen mehr als nur ein demokratischer Traum.
-                      Mit verschiedenen Veranstaltungen zu Politik, Gesellschaft
-                      und Kultur und in unserer Genossenschaft sind wir und
-                      schaffen wir Gemeinschaft, ermöglichen wir Austausch und
-                      Verbindungen.
-                    </p>
-                    <p>
-                      Wir sind ein Projekt gegen den Zynismus, den Vormarsch der
-                      Autoritären und gegen die Diktatur der Angst. Wir stehen
-                      für die Verteidigung der demokratischen Institutionen und
-                      die Werte der Aufklärung: für Treue zu Fakten, für
-                      Lösungen von Fall zu Fall, für Offenheit gegenüber Kritik,
-                      für Respektlosigkeit gegenüber der Macht und Respekt vor
-                      dem Menschen.
+                      Die Republik ist aber mehr als nur ein Magazin. Durch
+                      inhaltliche Debatten schaffen wir Verbindungen zwischen
+                      Expertinnen, Lesern und Journalistinnen. Wir ermöglichen
+                      eine Gemeinschaft und gestalten den Austausch mit
+                      verschiedenen Veranstaltungen zu Politik, Gesellschaft und
+                      Kultur.
                     </p>
                     {{/unless}} {{#if RECIPIENT_HAS_MEMBERSHIPS}}
                     <p>
@@ -142,9 +126,8 @@
                     {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
                     <p>
                       {{GRANTER_NAME}} geht davon aus, dass Sie noch kein
-                      Republik-Abo besitzen. Dabei befinden Sie sich als
-                      Besitzerin oder Besitzer eines Abos bereits an Bord –
-                      vielen Dank dafür!
+                      Republik-Abo besitzen. Dabei befinden Sie sich bereits an
+                      Bord – vielen Dank dafür!
                     </p>
                     {{else}}
                     <p>

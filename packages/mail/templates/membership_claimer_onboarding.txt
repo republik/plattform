@@ -18,13 +18,14 @@ Mitgliedschaft ausgelaufen ist. So können Sie dann nahtlos weiterlesen.
 
 Sie erhalten also weiterhin von Montag bis Samstag ein hochwertiges digitales
 Magazin {{link_signin}} , können an sämtlichen Debatten teilnehmen
-{{link_dialog}} und Beiträge mit Ihren Freunden oder Feinden teilen.
+{{link_dialog}} und die Republik mit Ihren Freunden oder Feinden teilen
+{{link_account_share}} .
 
 {{else}}
 
 Sie können ab sofort das Magazin lesen {{link_signin}} , an sämtlichen Debatten
-teilnehmen {{link_dialog}} , eine öffentliche Profilseite aufschalten
-{{link_profile}} und Beiträge mit Ihren Freunden oder Feinden teilen.
+teilnehmen {{link_dialog}} und die Republik mit Ihren Freunden oder Feinden
+teilen {{link_account_share}} .
 
 {{/if}}
 

@@ -18,7 +18,6 @@ const charging = require('./owners/charging')
 
 const { PARKING_USER_ID, MEMBERSHIP_SCHEDULER_USER_LIMIT } = process.env
 
-const STATS_INTERVAL_SECS = 3
 const DAYS_BEFORE_END_DATE = 29
 
 const getMinEndDate = (now, daysBeforeEndDate) =>
@@ -35,52 +34,79 @@ const getMaxEndDate = (now, daysBeforeEndDate) =>
     .add(daysBeforeEndDate, 'days')
     .endOf('day')
 
-const createBuckets = (now) => [
+/**
+ * Creates an array of jobs. A job maybe sending an email or charging
+ * a user. Each user is check whether a job should be run.
+ * 
+ * 1) Is {user.prolongBeforeDate} between {job.prolongBefore.minDate}
+ *    and {job.prolongBefore.maxDate}?
+ * 
+ * 2) Does user pass {job.predicateFn}?
+ * 
+ * 3) Then run {job.handleFn}
+ *
+ */
+const createJobs = (now) => [
+  /*
+  {
+    name: 'some-example',
+    prolongBefore: {
+      minDate: moment(2021-12-12),
+      maxDate: moment(2021-12-24)
+    },
+    payload: { seed: Math.random() },
+    predicateFn:
+      (user) =>
+        user.membershipType === 'ABO'
+    handleFn:
+      async (user, payload, context) => {
+        await postSomewhere(
+          'ABO job',
+          payload.seed,
+          user.firstName
+        )
+      }
+  },
+  */
   {
     name: 'membership_owner_prolong_notice',
-    endDate: {
-      min: getMinEndDate(now, 13),
-      max: getMaxEndDate(now, DAYS_BEFORE_END_DATE),
-    },
-    predicate: ({ id: userId, membershipType, membershipAutoPay, autoPay }) => {
-      return (
-        ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) &&
-        (membershipAutoPay === false ||
-          (membershipAutoPay === true &&
-            (!autoPay || (autoPay && userId !== autoPay.userId))))
-      )
+    prolongBefore: {
+      minDate: getMinEndDate(now, 13),
+      maxDate: getMaxEndDate(now, DAYS_BEFORE_END_DATE),
     },
     payload: {
       templateName: 'membership_owner_prolong_notice',
     },
-    handler: mailings,
-  },
-  {
-    name: 'membership_owner_prolong_notice_7',
-    endDate: {
-      min: getMinEndDate(now, 3),
-      max: getMaxEndDate(now, 7),
-    },
-    predicate: ({ id: userId, membershipType, membershipAutoPay, autoPay }) => {
+    predicateFn: ({
+      id: userId,
+      membershipType,
+      membershipAutoPay,
+      autoPay,
+    }) => {
       return (
         ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) &&
         (membershipAutoPay === false ||
           (membershipAutoPay === true &&
             (!autoPay || (autoPay && userId !== autoPay.userId))))
       )
+    },
+    handleFn: mailings,
+  },
+  {
+    name: 'membership_owner_prolong_notice_7',
+    prolongBefore: {
+      minDate: getMinEndDate(now, 3),
+      maxDate: getMaxEndDate(now, 7),
     },
     payload: {
       templateName: 'membership_owner_prolong_notice_7',
     },
-    handler: mailings,
-  },
-  {
-    name: 'membership_owner_prolong_notice_0',
-    endDate: {
-      min: getMinEndDate(now, -3),
-      max: getMaxEndDate(now, 0),
-    },
-    predicate: ({ id: userId, membershipType, membershipAutoPay, autoPay }) => {
+    predicateFn: ({
+      id: userId,
+      membershipType,
+      membershipAutoPay,
+      autoPay,
+    }) => {
       return (
         ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) &&
         (membershipAutoPay === false ||
@@ -88,18 +114,47 @@ const createBuckets = (now) => [
             (!autoPay || (autoPay && userId !== autoPay.userId))))
       )
     },
+    handleFn: mailings,
+  },
+  {
+    name: 'membership_owner_prolong_notice_0',
+    prolongBefore: {
+      minDate: getMinEndDate(now, -3),
+      maxDate: getMaxEndDate(now, 0),
+    },
     payload: {
       templateName: 'membership_owner_prolong_notice_0',
     },
-    handler: mailings,
+    predicateFn: ({
+      id: userId,
+      membershipType,
+      membershipAutoPay,
+      autoPay,
+    }) => {
+      return (
+        ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) &&
+        (membershipAutoPay === false ||
+          (membershipAutoPay === true &&
+            (!autoPay || (autoPay && userId !== autoPay.userId))))
+      )
+    },
+    handleFn: mailings,
   },
   {
     name: 'membership_owner_prolong_abo_give_months_notice_0',
-    endDate: {
-      min: getMinEndDate(now, -3),
-      max: getMaxEndDate(now, 0),
+    prolongBefore: {
+      minDate: getMinEndDate(now, -3),
+      maxDate: getMaxEndDate(now, 0),
     },
-    predicate: ({ id: userId, membershipType, membershipAutoPay, autoPay }) => {
+    payload: {
+      templateName: 'membership_owner_prolong_abo_give_months_notice_0',
+    },
+    predicateFn: ({
+      id: userId,
+      membershipType,
+      membershipAutoPay,
+      autoPay,
+    }) => {
       return (
         membershipType === 'ABO_GIVE_MONTHS' &&
         (membershipAutoPay === false ||
@@ -107,18 +162,23 @@ const createBuckets = (now) => [
             (!autoPay || (autoPay && userId !== autoPay.userId))))
       )
     },
-    payload: {
-      templateName: 'membership_owner_prolong_abo_give_months_notice_0',
-    },
-    handler: mailings,
+    handleFn: mailings,
   },
   {
     name: 'membership_owner_prolong_winback_7',
-    endDate: {
-      min: getMinEndDate(now, -10),
-      max: getMaxEndDate(now, -7),
+    prolongBefore: {
+      minDate: getMinEndDate(now, -10),
+      maxDate: getMaxEndDate(now, -7),
     },
-    predicate: ({ id: userId, membershipType, membershipAutoPay, autoPay }) => {
+    payload: {
+      templateName: 'membership_owner_prolong_winback_7',
+    },
+    predicateFn: ({
+      id: userId,
+      membershipType,
+      membershipAutoPay,
+      autoPay,
+    }) => {
       return (
         ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) &&
         (membershipAutoPay === false ||
@@ -126,37 +186,23 @@ const createBuckets = (now) => [
             (!autoPay || (autoPay && userId !== autoPay.userId))))
       )
     },
-    payload: {
-      templateName: 'membership_owner_prolong_winback_7',
-    },
-    handler: mailings,
+    handleFn: mailings,
   },
   {
     name: 'membership_owner_autopay_notice',
-    endDate: {
-      min: moment(now).add(1, 'days'),
-      max: moment(now).add(10, 'days'),
-    },
-    predicate: ({ id: userId, membershipType, membershipAutoPay, autoPay }) => {
-      return (
-        ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) &&
-        membershipAutoPay === true &&
-        autoPay &&
-        userId === autoPay.userId
-      )
+    prolongBefore: {
+      minDate: moment(now).add(1, 'days'),
+      maxDate: moment(now).add(10, 'days'),
     },
     payload: {
       templateName: 'membership_owner_autopay_notice',
     },
-    handler: mailings,
-  },
-  {
-    name: 'membership_owner_autopay',
-    endDate: {
-      min: moment(now).add(-14, 'days'),
-      max: moment(now).add(0, 'days'),
-    },
-    predicate: ({ id: userId, membershipType, membershipAutoPay, autoPay }) => {
+    predicateFn: ({
+      id: userId,
+      membershipType,
+      membershipAutoPay,
+      autoPay,
+    }) => {
       return (
         ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) &&
         membershipAutoPay === true &&
@@ -164,36 +210,125 @@ const createBuckets = (now) => [
         userId === autoPay.userId
       )
     },
-    handler: charging, // Rate limit amount of requests in some manner...
+    handleFn: mailings,
+  },
+  {
+    name: 'membership_owner_autopay',
+    prolongBefore: {
+      minDate: moment(now).add(-14, 'days'),
+      maxDate: moment(now).add(0, 'days'),
+    },
+    predicateFn: ({
+      id: userId,
+      membershipType,
+      membershipAutoPay,
+      autoPay,
+    }) => {
+      return (
+        ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) &&
+        membershipAutoPay === true &&
+        autoPay &&
+        userId === autoPay.userId
+      )
+    },
+    handleFn: charging,
   },
 ]
 
-const getBuckets = async ({ now }, context) => {
+const pickAdditionals = (user) => ({
+  ...user,
+  membershipId: user._raw.membershipId,
+  membershipSequenceNumber: user._raw.membershipSequenceNumber,
+  membershipGraceInterval: user._raw.membershipGraceInterval,
+  membershipAutoPay: user._raw.membershipAutoPay,
+  membershipType: user._raw.membershipType,
+})
+
+const createMaybeAppendProlongBeforeDate = (context) => async (user) => ({
+  ...user,
+  prolongBeforeDate: await getProlongBeforeDate(
+    user,
+    { ignoreAutoPayFlag: true },
+    { ...context, user },
+  ).then((date) => date && moment(date)),
+})
+
+const hasProlongBeforeDate = (user) => user.prolongBeforeDate
+
+const createUserJobs = (jobs, context) => async (user) =>
+  Promise.each(jobs, async (job) => {
+    try {
+      const { pgdb } = context
+      const { prolongBefore, payload, predicateFn, handleFn } = job
+
+      if (
+        user.prolongBeforeDate.isBetween(
+          prolongBefore.minDate,
+          prolongBefore.maxDate,
+        )
+      ) {
+        if (user.membershipAutoPay) {
+          user.autoPay = await autoPaySuggest(user.membershipId, pgdb)
+
+          if (!user.autoPay) {
+            await setAutoPayToFalse({
+              user,
+              membershipId: user.membershipId,
+              pgdb,
+            })
+          }
+        }
+
+        if (predicateFn(user)) {
+          await handleFn(user, payload, context)
+        }
+      }
+    } catch (error) {
+      console.error('scheduler owners, job failed', {
+        error,
+        job,
+        user: user.id,
+      })
+    }
+  })
+
+const createHandleFn = (jobs, context) => async (rows, count) => {
+  const users = await Promise.map(
+    rows.map(transformUser).map(pickAdditionals),
+    createMaybeAppendProlongBeforeDate(context),
+    { concurrency: 10 },
+  ).filter(hasProlongBeforeDate)
+
+  debug({ count, rows: rows.length, withProlongBeforeDate: users.length })
+
+  await Promise.map(users, createUserJobs(jobs, context), { concurrency: 10 })
+}
+
+const run = async (args, context) => {
+  const { now } = args
   const { pgdb } = context
 
-  /**
-   * Load users with a membership.
-   *
-   * WARNING: The following query will only hold up if user has only one active
-   * membership.
-   *
-   */
-  const users = await pgdb
-    .query(
-      `
+  const jobs = createJobs(now)
+
+  await pgdb.queryInBatches(
+    { handleFn: createHandleFn(jobs, context), size: 1000 },
+    `
       SELECT
+        -- user
         u.*,
+
+        -- additionals
         m.id AS "membershipId",
         m."sequenceNumber" AS "membershipSequenceNumber",
         m."graceInterval" AS "membershipGraceInterval",
         m."autoPay" AS "membershipAutoPay",
         mt.name AS "membershipType"
-      FROM
-        memberships m
-      INNER JOIN
-        users u ON m."userId" = u.id
-      INNER JOIN
-        "membershipTypes" mt ON m."membershipTypeId" = mt.id
+
+      FROM memberships m
+      JOIN users u
+        ON m."userId" = u.id
+      JOIN "membershipTypes" mt
+        ON m."membershipTypeId" = mt.id
       WHERE
         m."userId" != :PARKING_USER_ID
         AND m.active = true
@@ -205,115 +340,10 @@ const getBuckets = async ({ now }, context) => {
           : ''
       }
       `,
-      { PARKING_USER_ID },
-    )
-    .then((users) =>
-      users.map((user) => ({
-        ...transformUser(user),
-        membershipId: user.membershipId,
-        membershipSequenceNumber: user.membershipSequenceNumber,
-        membershipGraceInterval: user.membershipGraceInterval,
-        membershipAutoPay: user.membershipAutoPay,
-        membershipType: user.membershipType,
-      })),
-    )
-  debug(`investigating ${users.length} users for prolongBeforeDate`)
-
-  const stats = {
-    numNeedProlong: 0,
-    numNeedProlongProgress: 0,
-  }
-  const statsInterval = setInterval(() => {
-    debug(stats)
-  }, STATS_INTERVAL_SECS * 1000)
-
-  const buckets = createBuckets(now).map((bucket) => ({ ...bucket, users: [] }))
-  buckets.forEach((bucket) =>
-    debug('bucket: %o', {
-      ...bucket,
-      endDate: {
-        min: bucket.endDate.min.toISOString(),
-        max: bucket.endDate.max.toISOString(),
-      },
-    }),
+    { PARKING_USER_ID },
   )
 
-  await Promise.each(
-    users,
-    async (user) => {
-      const prolongBeforeDate = await getProlongBeforeDate(
-        user,
-        { ignoreAutoPayFlag: true },
-        { ...context, user },
-      ).then((date) => date && moment(date))
-
-      stats.numNeedProlongProgress++
-
-      if (prolongBeforeDate) {
-        const results = await Promise.map(
-          buckets,
-          async (bucket) => {
-            if (
-              prolongBeforeDate.isBetween(
-                bucket.endDate.min,
-                bucket.endDate.max,
-              )
-            ) {
-              if (user.membershipAutoPay && user.autoPay === undefined) {
-                user.autoPay = await autoPaySuggest(user.membershipId, pgdb)
-                if (!user.autoPay) {
-                  user.membershipAutoPay = false
-                  setAutoPayToFalse({
-                    user,
-                    membershipId: user.membershipId,
-                    pgdb,
-                  })
-                }
-              }
-
-              if (bucket.predicate(user)) {
-                bucket.users.push({ user, prolongBeforeDate })
-                return true
-              }
-            }
-
-            return false
-          },
-          { concurrency: 10 },
-        ).catch((e) => {
-          console.warn(e)
-        })
-
-        if (results.some(Boolean)) {
-          stats.numNeedProlong++
-        }
-      }
-    },
-    { concurrency: 10 },
-  )
-  delete stats.numNeedProlongProgress
-
-  debug(stats)
-  clearInterval(statsInterval)
-  return buckets
-}
-
-const run = async (args, context) => {
-  const buckets = await getBuckets(args, context)
-  buckets.forEach((bucket) =>
-    debug('bucket: %o', {
-      ...bucket,
-      endDate: {
-        min: bucket.endDate.min.toISOString(),
-        max: bucket.endDate.max.toISOString(),
-      },
-      users: bucket.users.length,
-    }),
-  )
-
-  await Promise.map(buckets, (bucket) =>
-    Promise.each(bucket.users, (user) => bucket.handler(user, bucket, context)),
-  )
+  debug('Done.')
 }
 
 module.exports = {
