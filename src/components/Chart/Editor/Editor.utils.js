@@ -5,7 +5,7 @@ const parseCommaValue = (newValue = '', context) => {
     .split(',')
     .map(d => d.trim())
     .filter(Boolean)
-    .map(d => (context === 'number' ? (d === 0 ? 0 : +d) : d))
+    .map(d => (context === 'number' ? +d : d))
 }
 
 const formatCommaValue = (value = []) => value.join(', ')
