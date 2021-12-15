@@ -7,14 +7,8 @@ import { fontStyles } from '../../Typography'
 import ChartEditor from '.'
 
 const styles = {
-  orderBy: css({
+  orderBy: css(plainButtonRule, {
     ...fontStyles.sansSerifRegular16,
-    outline: 'none',
-    WebkitAppearance: 'none',
-    background: 'transparent',
-    border: 'none',
-    padding: '0',
-    cursor: 'pointer',
     marginRight: '20px'
   }),
   regular: css({
