@@ -5,7 +5,6 @@ import initLocalStore from '../../lib/utils/localStorage'
 import { withRouter } from 'next/router'
 import withT from '../../lib/withT'
 import withAuthorization from '../../components/Auth/withAuthorization'
-import withMe from '../../lib/withMe'
 import { compose } from 'react-apollo'
 import { stringify, parse } from '@orbiting/remark-preset'
 import { css } from 'glamor'
@@ -23,8 +22,7 @@ import InfoIcon from 'react-icons/lib/md/info-outline'
 import { Controlled as CodeMirror } from 'react-codemirror2'
 import {
   UncommittedChanges,
-  withUncommitedChanges,
-  withUncommittedChangesMutation
+  withUncommitedChanges
 } from '../../components/VersionControl/UncommittedChanges'
 import BranchingNotice from '../../components/VersionControl/BranchingNotice'
 
@@ -78,15 +76,13 @@ export default compose(
   withRouter,
   withT,
   withAuthorization(['editor']),
-  withMe,
   withUncommitedChanges({
     options: ({ router }) => ({
       variables: {
         repoId: router.query.repoId
       }
     })
-  }),
-  withUncommittedChangesMutation
+  })
 )(({ t, router, uncommittedChanges }) => {
   const { repoId, commitId, schema, template, isTemplate } = router.query
   const [store, setStore] = useState(undefined)
