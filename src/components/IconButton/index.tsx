@@ -1,4 +1,4 @@
-import React, { Attributes, MouseEventHandler, PropsWithChildren } from 'react'
+import React, { Attributes, MouseEventHandler } from 'react'
 import { css } from 'glamor'
 
 import { mUp } from '../../theme/mediaQueries'
@@ -10,7 +10,7 @@ const ICON_SIZE = 24
 
 const IconButton = React.forwardRef<
   HTMLAnchorElement & HTMLButtonElement,
-  PropsWithChildren<{
+  {
     Icon: IconType
     href?: string
     target?: string
@@ -27,7 +27,7 @@ const IconButton = React.forwardRef<
     size?: number
     disabled?: boolean
     attributes?: Attributes
-  }>
+  }
 >(
   (
     {

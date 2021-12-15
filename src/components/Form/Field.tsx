@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useRef,
-  useMemo,
-  PropsWithChildren,
-  MutableRefObject
-} from 'react'
+import React, { useState, useRef, useMemo, MutableRefObject } from 'react'
 import { css, merge, simulate } from 'glamor'
 import { fontStyles } from '../../theme/fonts'
 import { mUp } from '../../theme/mediaQueries'
@@ -125,7 +119,7 @@ const ArrowDown: React.FC<ArrowProps> = ({ size, fill, ...props }) => (
 
 const Field = React.forwardRef<
   HTMLInputElement,
-  PropsWithChildren<{
+  {
     value?: string | number
     onChange?: (
       event: InputEvent,
@@ -143,7 +137,7 @@ const Field = React.forwardRef<
     icon?: IconType
     simulate?: string
     renderInput: React.FC<Record<string, unknown>>
-  }>
+  }
 >(
   (
     {
