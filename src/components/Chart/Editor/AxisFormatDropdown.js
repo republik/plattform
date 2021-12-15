@@ -15,36 +15,30 @@ export const AxisFormatDropdown = props => {
     xNumberFormatDefault,
     parent
   } = props
-  const isTimeContext = context === 'time'
-  const isStringContext = context === 'string'
-  const label = isTimeContext ? 'Datumsformat (Chart)' : 'Zahlenformat'
-  const isOnXAxisAndNumber = context === 'number' && parent.match(/^x/)
-  return (
-    <>
-      {!isStringContext && !isOnXAxisAndNumber && (
-        <CustomValueDropdown
-          label={label}
-          items={context === 'time' ? timeFormats : numberFormats}
-          value={value}
-          onChange={onChange(property)}
-        />
-      )}
-      {isOnXAxisAndNumber && (
-        <CustomValueDropdown
-          label={label}
-          items={numberFormats}
-          value={xNumberFormat || xNumberFormatDefault}
-          onChange={onChange('xNumberFormat')}
-        />
-      )}
-      {isTimeContext && (
-        <CustomValueDropdown
-          label={'Datumsformat (Daten)'}
-          items={timeParsing}
-          value={timeParse || timeParseDefault}
-          onChange={onChange('timeParse')}
-        />
-      )}
+  if (context === 'time') {
+    return <>
+      <CustomValueDropdown
+        label='Datumsformat (Chart)'
+        items={timeFormats}
+        value={value}
+        onChange={onChange(property)}
+      />
+      <CustomValueDropdown
+        label='Datumsformat (Daten)'
+        items={timeParsing}
+        value={timeParse || timeParseDefault}
+        onChange={onChange('timeParse')}
+      />
     </>
-  )
+  }
+  if (context === 'number') {
+    const isOnXAxis = parent.match(/^x/)
+    return <CustomValueDropdown
+      label='Zahlenformat'
+      items={numberFormats}
+      value={isOnXAxis ? xNumberFormat || xNumberFormatDefault : value}
+      onChange={onChange(isOnXAxis ? 'xNumberFormat' : property)}
+    />
+  }
+  return null
 }
