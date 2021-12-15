@@ -1,7 +1,7 @@
 import React from 'react'
 import CustomValueDropdown from './CustomValueDropdown'
 
-import { numberFormats, timeFormats, timeParsing } from './Editor.utils'
+import { numberFormats, timeFormats, timeParsing } from './utils'
 
 export const AxisFormatDropdown = props => {
   const {
@@ -9,36 +9,39 @@ export const AxisFormatDropdown = props => {
     context,
     value,
     onChange,
-    timeParseDefault,
     timeParse,
     xNumberFormat,
-    xNumberFormatDefault,
-    parent
+    parent,
+    defaultProps
   } = props
   if (context === 'time') {
-    return <>
-      <CustomValueDropdown
-        label='Datumsformat (Chart)'
-        items={timeFormats}
-        value={value}
-        onChange={onChange(property)}
-      />
-      <CustomValueDropdown
-        label='Datumsformat (Daten)'
-        items={timeParsing}
-        value={timeParse || timeParseDefault}
-        onChange={onChange('timeParse')}
-      />
-    </>
+    return (
+      <>
+        <CustomValueDropdown
+          label='Datumsformat (Chart)'
+          items={timeFormats}
+          value={value}
+          onChange={onChange(property)}
+        />
+        <CustomValueDropdown
+          label='Datumsformat (Daten)'
+          items={timeParsing}
+          value={timeParse || defaultProps.timeParse}
+          onChange={onChange('timeParse')}
+        />
+      </>
+    )
   }
   if (context === 'number') {
     const isOnXAxis = parent.match(/^x/)
-    return <CustomValueDropdown
-      label='Zahlenformat'
-      items={numberFormats}
-      value={isOnXAxis ? xNumberFormat || xNumberFormatDefault : value}
-      onChange={onChange(isOnXAxis ? 'xNumberFormat' : property)}
-    />
+    return (
+      <CustomValueDropdown
+        label='Zahlenformat'
+        items={numberFormats}
+        value={isOnXAxis ? xNumberFormat || defaultProps.xNumberFormat : value}
+        onChange={onChange(isOnXAxis ? 'xNumberFormat' : property)}
+      />
+    )
   }
   return null
 }

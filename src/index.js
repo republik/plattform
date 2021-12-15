@@ -892,13 +892,13 @@ const Styleguide = () => {
                         ...require('./components/Typography'),
                         ChartEditor: require('./components/Chart/Editor/EditorWrapper'),
                         data: {
-                          ...require('./components/Chart/Editor.docs.data')
+                          ...require('./components/Chart/Editor/docs.data')
                         },
                         ErrorBoundary: require('./components/ErrorBoundary'),
                         CsvChart: require('./components/Chart/Csv'),
                         t
                       },
-                      src: require('./components/Chart/Editor.docs.md')
+                      src: require('./components/Chart/Editor/docs.md')
                     },
                     {
                       path: '/charts/bars',

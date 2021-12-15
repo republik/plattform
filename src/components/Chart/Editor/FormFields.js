@@ -8,7 +8,7 @@ import Slider from '../../Form/Slider'
 import { TickField } from './TickField'
 import { ColorField } from './ColorField'
 import { AxisFormatDropdown } from './AxisFormatDropdown'
-import { determineAxisContext } from './Editor.utils'
+import { determineAxisContext } from './utils'
 import CustomValueDropdown from './CustomValueDropdown'
 
 const styles = {
@@ -18,6 +18,10 @@ const styles = {
     gridTemplateRows: '1fr',
     gap: '50px 30px',
     margin: '20px 0'
+  }),
+  group: css({
+    border: '1px solid #DADDDC',
+    padding: '15px'
   })
 }
 
@@ -29,7 +33,8 @@ export const FormFields = props => {
     createOnFieldChange,
     createOnNumberFieldChange,
     value,
-    chartData
+    chartData,
+    defaultProps
   } = props
   const fieldsKeys = Object.keys(fields)
 
@@ -38,8 +43,8 @@ export const FormFields = props => {
       {fieldsKeys.map(group => {
         const groupObject = fields[group].properties
         return (
-          <div key={group}>
-            <Interaction.H3>{fields[group].title}</Interaction.H3>
+          <div key={group} {...styles.group}>
+            <Interaction.P>{fields[group].title}</Interaction.P>
             {Object.keys(fields[group].properties).map(property => {
               if (property === 'colorRange') {
                 return (
@@ -47,13 +52,11 @@ export const FormFields = props => {
                     key={property}
                     label={groupObject[property].title}
                     items={groupObject[property].enum}
-                    colorRange={
-                      value[property] || groupObject[property].default
-                    }
+                    colorRange={value[property] || defaultProps[property]}
                     colorMap={value.colorMap}
                     config={value}
                     onFieldsChange={onFieldsChange}
-                    colorColumn={value.color || groupObject.color.default}
+                    colorColumn={value.color || defaultProps.color}
                     chartData={chartData}
                   />
                 )
@@ -63,15 +66,13 @@ export const FormFields = props => {
                   <AxisFormatDropdown
                     key={property}
                     property={property}
-                    value={value[property] || groupObject[property].default}
+                    value={value[property] || defaultProps[property] || ''}
                     onChange={createOnDropdownChange}
-                    timeParseDefault={groupObject[property].timeParseDefault}
-                    xNumberFormatDefault={
-                      groupObject[property].xNumberFormatDefault
-                    }
+                    defaultProps={defaultProps}
                     context={determineAxisContext(
                       groupObject[property].parent,
-                      value
+                      value,
+                      defaultProps
                     )}
                     parent={groupObject[property].parent}
                     xNumberFormat={value.xNumberFormat}
@@ -85,7 +86,7 @@ export const FormFields = props => {
                     key={property}
                     label={groupObject[property].title}
                     items={groupObject[property].enum}
-                    value={value[property] || groupObject[property].default}
+                    value={value[property] || defaultProps[property] || ''}
                     onChange={createOnDropdownChange(property)}
                   />
                 )
@@ -96,10 +97,15 @@ export const FormFields = props => {
                     key={property}
                     property={property}
                     groupObject={groupObject}
-                    value={value[property] || groupObject[property].default}
+                    value={value[property] || defaultProps[property]}
                     config={value}
                     createOnFieldChange={createOnFieldChange}
-                    context={determineAxisContext(property, value)}
+                    context={determineAxisContext(
+                      property,
+                      value,
+                      defaultProps
+                    )}
+                    timeParseDefault={defaultProps.timeParse}
                   />
                 )
               }
@@ -109,7 +115,7 @@ export const FormFields = props => {
                     <Checkbox
                       checked={
                         value[property] === undefined
-                          ? groupObject[property].default
+                          ? defaultProps[property]
                           : value[property]
                       }
                       onChange={createOnFieldChange(property)}
@@ -126,9 +132,9 @@ export const FormFields = props => {
                     label={
                       groupObject[property].title +
                       ' ' +
-                      (value[property] || groupObject[property].default)
+                      (value[property] || defaultProps[property])
                     }
-                    value={value[property] || groupObject[property].default}
+                    value={value[property] || defaultProps[property]}
                     min='1'
                     max='4'
                     fullWidth

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import Field from '../../Form/Field'
-import { useCommaField } from './Editor.utils'
+import { useCommaField } from './utils'
 import { timeParse } from '../../../lib/timeFormat'
 
 export const TickField = props => {
@@ -11,11 +11,12 @@ export const TickField = props => {
     createOnFieldChange,
     value,
     config,
-    context
+    context,
+    timeParseDefault
   } = props
 
   const timeFormatParser = timeParse(
-    config.timeParse || config.timeFormat || '%Y'
+    config.timeParse || config.timeFormat || timeParseDefault
   )
 
   const parser =

@@ -153,23 +153,25 @@ export const sortingOptions = [
   }
 ]
 
-export const determineAxisContext = (currentProperty, chartConfig) => {
+export const determineAxisContext = (
+  currentProperty,
+  chartConfig,
+  defaultProps
+) => {
+  const xScale = chartConfig.xScale || defaultProps.xScale
   if (currentProperty.match(/^x/)) {
     if (chartConfig.type === 'TimeBar') {
-      return chartConfig?.xScale === 'ordinal' ||
-        chartConfig?.xScale === 'linear'
+      return xScale === 'ordinal' || xScale === 'linear' ? 'string' : 'time'
+    }
+    if (chartConfig.type === 'Line') {
+      return xScale === 'ordinal'
         ? 'string'
-        : 'time'
-    } else if (chartConfig.type === 'Line') {
-      return chartConfig?.xScale === 'ordinal'
-        ? 'string'
-        : chartConfig?.xScale === 'linear'
+        : xScale === 'linear'
         ? 'number'
         : 'time'
     } else {
       return 'time'
     }
-  } else {
-    return 'number'
   }
+  return 'number'
 }

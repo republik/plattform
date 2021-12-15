@@ -5,16 +5,16 @@ import Dropdown from '../../Form/Dropdown'
 import { FormFields } from './FormFields'
 
 import { defaultProps } from '../ChartContext'
-import { slopeEditorSchema, lineEditorSchema } from '../Lines'
-import { timeBarEditorSchema } from '../TimeBars'
-import { barEditorSchema, lollipopEditorSchema } from '../Bars'
-import { scatterPlotEditorSchema } from '../ScatterPlots'
+import { slopeEditorSchema, lineEditorSchema } from '../Lines.schema'
+import { timeBarEditorSchema } from '../TimeBars.schema'
+import { barEditorSchema, lollipopEditorSchema } from '../Bars.schema'
+import { scatterPlotEditorSchema } from '../ScatterPlots.schema'
 import {
   genericMapEditorSchema,
   projectedMapEditorSchema,
   swissMapEditorSchema
-} from '../Maps'
-import { hemicycleEditorSchema } from '../Hemicycle'
+} from '../Maps.schema'
+import { hemicycleEditorSchema } from '../Hemicycle.schema'
 import {
   numberFormats,
   timeFormats,
@@ -22,15 +22,15 @@ import {
   yScaleTypes,
   sortingOptions,
   timeParsing
-} from './Editor.utils'
+} from './utils'
 
 const schemaDict = {
   Line: lineEditorSchema,
   TimeBar: timeBarEditorSchema,
   Lollipop: lollipopEditorSchema,
   Bar: barEditorSchema,
-  ScatterPlot: scatterPlotEditorSchema,
   Slope: slopeEditorSchema,
+  ScatterPlot: scatterPlotEditorSchema,
   GenericMap: genericMapEditorSchema,
   ProjectedMap: projectedMapEditorSchema,
   SwissMap: swissMapEditorSchema,
@@ -114,6 +114,7 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
             : schema.properties.advanced
         }
         chartData={chartData}
+        defaultProps={schema.defaultProps}
       />
     </div>
   )

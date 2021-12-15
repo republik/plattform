@@ -278,36 +278,3 @@ Hemicycle.propTypes = propTypes
 Hemicycle.defaultProps = defaultProps.Hemicycle
 
 export default Hemicycle
-
-export const hemicycleEditorSchema = ({
-  optionalDataColumnEnum,
-  defaults,
-  colorDropdownItems
-}) => {
-  return {
-    title: 'hemicycleChartConfig',
-    type: 'object',
-    properties: {
-      basic: {
-        color: {
-          title: 'Farbe',
-          properties: {
-            color: {
-              title: 'Spalte auswählen',
-              type: 'string',
-              enum: optionalDataColumnEnum,
-              default: defaults.color || ''
-            },
-            colorRange: {
-              title: 'Farbschema auswählen',
-              type: 'string',
-              enum: colorDropdownItems,
-              default: defaults.colorRange || ''
-            }
-          }
-        }
-      },
-      advanced: {}
-    }
-  }
-}
