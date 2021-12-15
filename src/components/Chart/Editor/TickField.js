@@ -2,16 +2,21 @@ import React from 'react'
 
 import Field from '../../Form/Field'
 import { useCommaField } from './Editor.utils'
+import { timeParse } from '../../../lib/timeFormat'
 
 export const TickField = props => {
   const {
     property,
     groupObject,
     createOnFieldChange,
-    timeFormatParser,
     value,
+    config,
     context
   } = props
+
+  const timeFormatParser = timeParse(
+    config.timeParse || config.timeFormat || '%Y'
+  )
 
   const parser =
     context === 'time'

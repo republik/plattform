@@ -6,7 +6,6 @@ import { FormFields } from './FormFields'
 
 import { useColorContext } from '../../Colors/ColorContext'
 
-import { timeParse } from '../../../lib/timeFormat'
 import { defaultProps } from '../ChartContext'
 import { slopeEditorSchema, lineEditorSchema } from '../Lines'
 import { timeBarEditorSchema } from '../TimeBars'
@@ -66,8 +65,6 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
     colorScheme
   ])
 
-
-
   if (!chartData?.columns) {
     return
   }
@@ -95,10 +92,6 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
   const createOnDropdownChange = key => item => {
     return onChange({ ...value, [key]: item.value || undefined })
   }
-
-  const timeFormatParser = timeParse(
-    value.timeParse || value.timeFormat || '%Y'
-  )
 
   const createSchema = (type = 'Line') => {
     return schemaDict[type]({
@@ -129,7 +122,6 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
         createOnFieldChange={createOnFieldChange}
         createOnDropdownChange={createOnDropdownChange}
         createOnNumberFieldChange={createOnNumberFieldChange}
-        timeFormatParser={timeFormatParser}
         value={value}
         fields={
           activeTab === 'basic'

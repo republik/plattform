@@ -97,9 +97,9 @@ export const FormFields = props => {
                     property={property}
                     groupObject={groupObject}
                     value={value[property] || groupObject[property].default}
+                    config={value}
                     createOnFieldChange={createOnFieldChange}
                     context={determineAxisContext(property, value)}
-                    timeFormatParser={timeFormatParser}
                   />
                 )
               } else if (groupObject[property].type === 'boolean') {
