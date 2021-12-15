@@ -82,13 +82,16 @@ const publish = async (args, pgdb) => {
       chunk(tokens, 1000),
       async (tokensChunk) => {
         /*
-          @see https://firebase.google.com/docs/reference/admin/node/firebase-admin.messaging.messagingdevicesresponse
-          response = {
-            results: [ { messageId: '123' } ], @see https://firebase.google.com/docs/reference/admin/node/firebase-admin.messaging.messagingdeviceresult
+          response = { @see https://firebase.google.com/docs/reference/admin/node/firebase-admin.messaging.messagingdevicesresponse
+            results: [ @see https://firebase.google.com/docs/reference/admin/node/firebase-admin.messaging.messagingdeviceresult
+              { messageId: '123' },
+              { messageId: '456' },
+              ...
+            ],
             canonicalRegistrationTokenCount: 0,
             failureCount: 0,
-            successCount: 1,
-            multicastId: 157195303459347400
+            successCount: 123,
+            multicastId: 123123
           }
         */
         const response = await firebase
