@@ -2,15 +2,9 @@ There are two versions of the dropdown component: a native dropdown which uses `
 
 The options are given as a list of objects, each option must have the following keys:
 
- - **value**: an ID (string) unique across all options.
- - **text**: text label for the UI.
+ - **value**: an ID, `string`, the native select only works with strings, unique across all options.
+ - **text**: `string` label for the UI.
  - **element**: optional React element, with e.g. two lines, to show in virtual UIs. Note: in native selects, e.g. iOS wheel, just the text will be shown.
-
-```react
-<pre style={{maxHeight: 380, overflow: 'auto'}}>
-  {JSON.stringify(dropdownItems, undefined, 2)}
-</pre>
-```
 
 Here is the high-level `<Dropdown />` component:
 
@@ -27,6 +21,24 @@ state: { value: '2' }
   }}
 />
 ```
+
+Dropdown items data example:
+
+
+```react
+<pre style={{maxHeight: 380, overflow: 'auto'}}>
+  {JSON.stringify(dropdownItems.map(item => {
+    if (item.element) {
+      return {
+        ...item,
+        element: "<RedactedCustomReactElement />"
+      }
+    }
+    return item
+  }), undefined, 2)}
+</pre>
+```
+
 
 To explicitly use one or the other, use `<Dropdown.Virtual />` or `<Dropdown.Native />`. Below are the two versions, left the virtual and right the native.
 
