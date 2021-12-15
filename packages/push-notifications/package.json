@@ -27,6 +27,8 @@
     "@firebase/auth-interop-types": "0.1.5",
     "@firebase/util": "0.3.4",
     "apn": "^2.2.0",
-    "firebase-admin": "^8.12.1"
+    "bluebird": "^3.7.2",
+    "firebase-admin": "^8.12.1",
+    "lodash": "^4.17.19"
   }
 }
