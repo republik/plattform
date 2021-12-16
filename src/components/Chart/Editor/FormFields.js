@@ -10,14 +10,14 @@ import { ColorField } from './ColorField'
 import { AxisFormatDropdown } from './AxisFormatDropdown'
 import { determineAxisContext } from './utils'
 import CustomValueDropdown from './CustomValueDropdown'
+import { InfoBox, InfoBoxTitle } from '../../InfoBox'
 
 const styles = {
   gridContainer: css({
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
-    gridTemplateRows: '1fr',
-    gap: '30px',
-    margin: '20px 0'
+    gap: '40px',
+    margin: '60px 0'
   }),
   group: css({
     backgroundColor: 'white',
@@ -46,126 +46,124 @@ export const FormFields = props => {
       {fieldsKeys.map(group => {
         const groupObject = fields[group].properties
         return (
-          <div key={group} {...styles.group}>
-            <Label>{fields[group].title}</Label>
-            <div style={{ paddingTop: '10px' }}>
-              {Object.keys(fields[group].properties).map(property => {
-                if (property === 'colorRange') {
-                  return (
-                    <ColorField
-                      key={property}
-                      label={groupObject[property].title}
-                      items={groupObject[property].enum}
-                      colorRange={value[property] || defaultProps[property]}
-                      colorMap={value.colorMap}
-                      config={value}
-                      onFieldsChange={onFieldsChange}
-                      colorColumn={value.color || defaultProps.color}
-                      chartData={chartData}
-                    />
-                  )
-                }
-                if (groupObject[property].format === 'dynamicDropdown') {
-                  return (
-                    <AxisFormatDropdown
-                      key={property}
-                      property={property}
-                      value={value[property] || defaultProps[property] || ''}
-                      onChange={createOnDropdownChange}
-                      defaultProps={defaultProps}
-                      context={determineAxisContext(
-                        groupObject[property].parent,
-                        value,
-                        defaultProps
-                      )}
-                      parent={groupObject[property].parent}
-                      xNumberFormat={value.xNumberFormat}
-                      timeParse={value.timeParse}
-                    />
-                  )
-                }
-                if (groupObject[property].enum) {
-                  return (
-                    <CustomValueDropdown
-                      key={property}
-                      label={groupObject[property].title}
-                      items={groupObject[property].enum}
-                      value={value[property] || defaultProps[property] || ''}
-                      onChange={createOnDropdownChange(property)}
-                    />
-                  )
-                }
-                if (groupObject[property].type === 'array') {
-                  return (
-                    <TickField
-                      key={property}
-                      property={property}
-                      groupObject={groupObject}
-                      value={value[property] || defaultProps[property]}
-                      config={value}
-                      createOnFieldChange={createOnFieldChange}
-                      context={determineAxisContext(
-                        property,
-                        value,
-                        defaultProps
-                      )}
-                      timeParseDefault={defaultProps.timeParse}
-                    />
-                  )
-                }
-                if (groupObject[property].type === 'boolean') {
-                  return (
-                    <div key={property} style={{ marginTop: '20px' }}>
-                      <Checkbox
-                        checked={
-                          value[property] === undefined
-                            ? defaultProps[property]
-                            : value[property]
-                        }
-                        onChange={createOnFieldChange(property)}
-                      >
-                        {groupObject[property].title}
-                      </Checkbox>
-                    </div>
-                  )
-                }
-                if (groupObject[property].format === 'Slider') {
-                  return (
-                    <Slider
-                      key={property}
-                      label={
-                        groupObject[property].title +
-                        ' ' +
-                        (value[property] || defaultProps[property])
+          <div key={group}>
+            <InfoBoxTitle>{fields[group].title}</InfoBoxTitle>
+            {Object.keys(fields[group].properties).map(property => {
+              if (property === 'colorRange') {
+                return (
+                  <ColorField
+                    key={property}
+                    label={groupObject[property].title}
+                    items={groupObject[property].enum}
+                    colorRange={value[property] || defaultProps[property]}
+                    colorMap={value.colorMap}
+                    config={value}
+                    onFieldsChange={onFieldsChange}
+                    colorColumn={value.color || defaultProps.color}
+                    chartData={chartData}
+                  />
+                )
+              }
+              if (groupObject[property].format === 'dynamicDropdown') {
+                return (
+                  <AxisFormatDropdown
+                    key={property}
+                    property={property}
+                    value={value[property] || defaultProps[property] || ''}
+                    onChange={createOnDropdownChange}
+                    defaultProps={defaultProps}
+                    context={determineAxisContext(
+                      groupObject[property].parent,
+                      value,
+                      defaultProps
+                    )}
+                    parent={groupObject[property].parent}
+                    xNumberFormat={value.xNumberFormat}
+                    timeParse={value.timeParse}
+                  />
+                )
+              }
+              if (groupObject[property].enum) {
+                return (
+                  <CustomValueDropdown
+                    key={property}
+                    label={groupObject[property].title}
+                    items={groupObject[property].enum}
+                    value={value[property] || defaultProps[property] || ''}
+                    onChange={createOnDropdownChange(property)}
+                  />
+                )
+              }
+              if (groupObject[property].type === 'array') {
+                return (
+                  <TickField
+                    key={property}
+                    property={property}
+                    groupObject={groupObject}
+                    value={value[property] || defaultProps[property]}
+                    config={value}
+                    createOnFieldChange={createOnFieldChange}
+                    context={determineAxisContext(
+                      property,
+                      value,
+                      defaultProps
+                    )}
+                    timeParseDefault={defaultProps.timeParse}
+                  />
+                )
+              }
+              if (groupObject[property].type === 'boolean') {
+                return (
+                  <div key={property} style={{ marginTop: '20px' }}>
+                    <Checkbox
+                      checked={
+                        value[property] === undefined
+                          ? defaultProps[property]
+                          : value[property]
                       }
-                      value={value[property] || defaultProps[property]}
-                      min='1'
-                      max='4'
-                      fullWidth
                       onChange={createOnFieldChange(property)}
-                    />
-                  )
-                }
-                if (groupObject[property].type === 'number') {
-                  return (
-                    <Field
-                      key={property}
-                      label={groupObject[property].title}
-                      value={value[property]}
-                      onChange={createOnNumberFieldChange(property)}
-                    />
-                  )
-                }
+                    >
+                      {groupObject[property].title}
+                    </Checkbox>
+                  </div>
+                )
+              }
+              if (groupObject[property].format === 'Slider') {
+                return (
+                  <Slider
+                    key={property}
+                    label={
+                      groupObject[property].title +
+                      ' ' +
+                      (value[property] || defaultProps[property])
+                    }
+                    value={value[property] || defaultProps[property]}
+                    min='1'
+                    max='4'
+                    fullWidth
+                    onChange={createOnFieldChange(property)}
+                  />
+                )
+              }
+              if (groupObject[property].type === 'number') {
                 return (
                   <Field
                     key={property}
                     label={groupObject[property].title}
                     value={value[property]}
-                    onChange={createOnFieldChange(property)}
+                    onChange={createOnNumberFieldChange(property)}
                   />
                 )
-              })}
-            </div>
+              }
+              return (
+                <Field
+                  key={property}
+                  label={groupObject[property].title}
+                  value={value[property]}
+                  onChange={createOnFieldChange(property)}
+                />
+              )
+            })}
           </div>
         )
       })}
