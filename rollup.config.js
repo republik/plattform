@@ -6,39 +6,57 @@ import typescript from 'rollup-plugin-typescript2'
 import { DEFAULT_EXTENSIONS } from '@babel/core'
 import pkg from './package.json'
 
-export default {
-  input: './src/lib.ts',
-  output: [
-    {
-      dir: 'dist/cjs/src',
+const external = Object.keys(pkg.peerDependencies || {})
+const plugins = [
+  peerDepsExternal(),
+  resolve(),
+  typescript({
+    tsconfig: './tsconfig.json',
+    useTsconfigDeclarationDir: true
+  }),
+  babel({
+    babelHelpers: 'bundled',
+    exclude: 'node_modules/**',
+    extensions: [...DEFAULT_EXTENSIONS, '.ts', '.tsx']
+  }),
+  commonjs()
+]
+
+export default [
+  {
+    input: './src/editor.ts',
+    output: {
+      dir: 'dist/cjs/editor',
       preserveModules: true,
       preserveModulesRoot: 'src',
       format: 'cjs',
       sourcemap: true,
       exports: 'named'
     },
-    {
-      dir: 'dist/esm/src',
-      preserveModules: true,
-      preserveModulesRoot: 'src',
-      format: 'esm',
-      sourcemap: true,
-      exports: 'named'
-    }
-  ],
-  plugins: [
-    peerDepsExternal(),
-    resolve(),
-    typescript({
-      tsconfig: './tsconfig.json',
-      useTsconfigDeclarationDir: true
-    }),
-    babel({
-      babelHelpers: 'bundled',
-      exclude: 'node_modules/**',
-      extensions: [...DEFAULT_EXTENSIONS, '.ts', '.tsx']
-    }),
-    commonjs()
-  ],
-  external: Object.keys(pkg.peerDependencies || {})
-}
+    plugins,
+    external
+  },
+  {
+    input: './src/lib.ts',
+    output: [
+      {
+        dir: 'dist/cjs/src',
+        preserveModules: true,
+        preserveModulesRoot: 'src',
+        format: 'cjs',
+        sourcemap: true,
+        exports: 'named'
+      },
+      {
+        dir: 'dist/esm/src',
+        preserveModules: true,
+        preserveModulesRoot: 'src',
+        format: 'esm',
+        sourcemap: true,
+        exports: 'named'
+      }
+    ],
+    plugins,
+    external
+  }
+]

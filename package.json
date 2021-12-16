@@ -105,7 +105,8 @@
     "validate-commit-msg": "^2.14.0"
   },
   "files": [
-    "dist"
+    "dist",
+    "editor.js"
   ],
   "author": "Thomas Preusse <t@preus.se> (https://t.preus.se/)",
   "license": "BSD-3-Clause",
