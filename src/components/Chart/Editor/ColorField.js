@@ -78,6 +78,7 @@ export const ColorField = props => {
     .concat(config.colorLegendValues)
     .filter(Boolean)
     .filter(deduplicate)
+
   if (TYPES_WITH_COLOR_SORT.includes(config.type)) {
     runSort(config.colorSort, colorValues)
   }
@@ -105,6 +106,8 @@ export const ColorField = props => {
 
   const setColorMap = newColorMap => {
     const keys = Object.keys(newColorMap)
+    keys.map(colorValue => console.log(!colorValues.includes(colorValue)))
+
     if (keys.length === 1 && !keys[0]) {
       onFieldsChange({
         colorMap: undefined,
