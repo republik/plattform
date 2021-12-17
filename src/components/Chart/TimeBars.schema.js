@@ -5,7 +5,8 @@ export const timeBarEditorSchema = ({
   numberFormats,
   timeFormats,
   colorDropdownItems,
-  xScaleTypes
+  xScaleTypes,
+  chartSizes
 }) => {
   return {
     defaultProps: defaults,
@@ -120,6 +121,11 @@ export const timeBarEditorSchema = ({
         layout: {
           title: 'Layout',
           properties: {
+            size: {
+              title: 'Darstellung im Beitrag',
+              type: 'string',
+              enum: chartSizes
+            },
             height: {
               title: 'Höhe',
               type: 'number'

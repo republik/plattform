@@ -153,6 +153,48 @@ export const sortingOptions = [
   }
 ]
 
+export const chartSizes = [
+  {
+    value: '',
+    text: 'normal'
+  },
+  {
+    value: 'breakout',
+    text: 'gross'
+  },
+  {
+    value: 'narrow',
+    text: 'klein'
+  },
+  {
+    value: 'floatTiny',
+    text: 'links'
+  }
+]
+
+export const columnAmount = [
+  {
+    value: '',
+    text: 'keine Auswahl'
+  },
+  {
+    value: 1,
+    text: '1'
+  },
+  {
+    value: 2,
+    text: '2'
+  },
+  {
+    value: 3,
+    text: '3'
+  },
+  {
+    value: 4,
+    text: '4'
+  }
+]
+
 export const determineAxisContext = (
   currentProperty,
   chartConfig,

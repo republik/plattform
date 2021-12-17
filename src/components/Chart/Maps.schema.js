@@ -1,7 +1,8 @@
 export const genericMapEditorSchema = ({
   optionalDataColumnEnum,
   defaults,
-  colorDropdownItems
+  colorDropdownItems,
+  chartSizes
 }) => {
   return {
     defaultProps: defaults,
@@ -37,7 +38,18 @@ export const genericMapEditorSchema = ({
           }
         }
       },
-      advanced: {}
+      advanced: {
+        layout: {
+          title: 'Layout',
+          properties: {
+            size: {
+              title: 'Darstellung im Beitrag',
+              type: 'string',
+              enum: chartSizes
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -45,7 +57,8 @@ export const genericMapEditorSchema = ({
 export const projectedMapEditorSchema = ({
   optionalDataColumnEnum,
   defaults,
-  colorDropdownItems
+  colorDropdownItems,
+  chartSizes
 }) => {
   return {
     defaultProps: defaults,
@@ -81,7 +94,18 @@ export const projectedMapEditorSchema = ({
           }
         }
       },
-      advanced: {}
+      advanced: {
+        layout: {
+          title: 'Layout',
+          properties: {
+            size: {
+              title: 'Darstellung im Beitrag',
+              type: 'string',
+              enum: chartSizes
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -89,7 +113,8 @@ export const projectedMapEditorSchema = ({
 export const swissMapEditorSchema = ({
   optionalDataColumnEnum,
   defaults,
-  colorDropdownItems
+  colorDropdownItems,
+  chartSizes
 }) => {
   return {
     defaultProps: defaults,
@@ -119,13 +144,24 @@ export const swissMapEditorSchema = ({
               enum: optionalDataColumnEnum
             },
             columns: {
-              title: 'Anzahl Spalten pro Zeile:',
+              title: 'Anzahl Spalten pro Zeile',
               type: 'number'
             }
           }
         }
       },
-      advanced: {}
+      advanced: {
+        layout: {
+          title: 'Layout',
+          properties: {
+            size: {
+              title: 'Darstellung im Beitrag',
+              type: 'string',
+              enum: chartSizes
+            }
+          }
+        }
+      }
     }
   }
 }

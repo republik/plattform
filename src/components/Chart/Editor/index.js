@@ -21,7 +21,8 @@ import {
   xScaleTypes,
   yScaleTypes,
   sortingOptions,
-  timeParsing
+  timeParsing,
+  chartSizes
 } from './utils'
 
 const schemaDict = {
@@ -87,7 +88,8 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
       yScaleTypes,
       timeFormats,
       sortingOptions,
-      timeParsing
+      timeParsing,
+      chartSizes
     })
   }
 

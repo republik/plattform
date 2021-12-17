@@ -3,7 +3,8 @@ export const barEditorSchema = ({
   defaults,
   numberFormats,
   colorDropdownItems,
-  sortingOptions
+  sortingOptions,
+  chartSizes
 }) => {
   return {
     defaultProps: defaults,
@@ -111,6 +112,11 @@ export const barEditorSchema = ({
         layout: {
           title: 'Layout',
           properties: {
+            size: {
+              title: 'Darstellung im Beitrag',
+              type: 'string',
+              enum: chartSizes
+            },
             height: {
               title: 'Höhe',
               type: 'number'
@@ -132,7 +138,8 @@ export const lollipopEditorSchema = ({
   defaults,
   numberFormats,
   colorDropdownItems,
-  sortingOptions
+  sortingOptions,
+  chartSizes
 }) => {
   return {
     defaultProps: defaults,
@@ -229,6 +236,11 @@ export const lollipopEditorSchema = ({
         layout: {
           title: 'Layout',
           properties: {
+            size: {
+              title: 'Darstellung im Beitrag',
+              type: 'string',
+              enum: chartSizes
+            },
             height: {
               title: 'Höhe',
               type: 'number'

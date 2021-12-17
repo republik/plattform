@@ -1,7 +1,8 @@
 export const hemicycleEditorSchema = ({
   optionalDataColumnEnum,
   defaults,
-  colorDropdownItems
+  colorDropdownItems,
+  chartSizes
 }) => {
   return {
     defaultProps: defaults,
@@ -23,7 +24,18 @@ export const hemicycleEditorSchema = ({
           }
         }
       },
-      advanced: {}
+      advanced: {
+        layout: {
+          title: 'Layout',
+          properties: {
+            size: {
+              title: 'Darstellung im Beitrag',
+              type: 'string',
+              enum: chartSizes
+            }
+          }
+        }
+      }
     }
   }
 }
