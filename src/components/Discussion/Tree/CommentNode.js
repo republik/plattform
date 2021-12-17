@@ -355,7 +355,7 @@ const CommentNode = ({
         ))}
       </div>
     )
-  }, [])
+  }, [comment, actions, isAdmin, isModerator])
 
   if (isExpanded) {
     return (
