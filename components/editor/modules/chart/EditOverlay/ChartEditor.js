@@ -102,10 +102,6 @@ const ChartEditor = ({ data, onChange }) => {
       </div>
       {activeTab !== 'json' && (
         <>
-          {activeTab === 'basic' && (
-            <SizeSelector onChange={onChange} data={data} />
-          )}
-
           {activeTab === 'basic' && hasNoData && (
             <span>
               Füge zuerst Daten in das Feld CSV Daten ein. Du kannst einfach aus
@@ -125,6 +121,7 @@ const ChartEditor = ({ data, onChange }) => {
       )}
       {activeTab === 'json' && (
         <>
+          <SizeSelector onChange={onChange} data={data} />
           <JSONEditor
             label='Einstellungen'
             config={data.get('config')}
