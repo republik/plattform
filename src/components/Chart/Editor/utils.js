@@ -160,6 +160,9 @@ export const determineAxisContext = (
 ) => {
   const xScale = chartConfig.xScale || defaultProps.xScale
   if (currentProperty.match(/^x/)) {
+    if (chartConfig.type === 'Bar' || chartConfig.type === 'Lollipop') {
+      return 'number'
+    }
     if (chartConfig.type === 'TimeBar') {
       return xScale === 'ordinal' || xScale === 'linear' ? 'string' : 'time'
     }
