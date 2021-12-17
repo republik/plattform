@@ -4,7 +4,8 @@ export const barEditorSchema = ({
   numberFormats,
   colorDropdownItems,
   sortingOptions,
-  chartSizes
+  chartSizes,
+  columnAmount
 }) => {
   return {
     defaultProps: defaults,
@@ -64,7 +65,8 @@ export const barEditorSchema = ({
             },
             columns: {
               title: 'Anzahl Spalten pro Zeile',
-              type: 'number'
+              type: 'number',
+              enum: columnAmount
             }
           }
         }
@@ -139,7 +141,8 @@ export const lollipopEditorSchema = ({
   numberFormats,
   colorDropdownItems,
   sortingOptions,
-  chartSizes
+  chartSizes,
+  columnAmount
 }) => {
   return {
     defaultProps: defaults,
@@ -198,8 +201,9 @@ export const lollipopEditorSchema = ({
               enum: optionalDataColumnEnum
             },
             columns: {
-              title: 'Anzahl Spalten pro Zeile:',
-              type: 'number'
+              title: 'Anzahl Spalten pro Zeile',
+              type: 'number',
+              enum: columnAmount
             }
           }
         }

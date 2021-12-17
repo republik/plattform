@@ -6,7 +6,8 @@ export const timeBarEditorSchema = ({
   timeFormats,
   colorDropdownItems,
   xScaleTypes,
-  chartSizes
+  chartSizes,
+  columnAmount
 }) => {
   return {
     defaultProps: defaults,
@@ -72,7 +73,8 @@ export const timeBarEditorSchema = ({
             },
             columns: {
               title: 'Anzahl Spalten pro Zeile',
-              type: 'number'
+              type: 'number',
+              enum: columnAmount
             }
           }
         }

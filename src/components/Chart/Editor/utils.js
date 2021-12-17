@@ -174,10 +174,6 @@ export const chartSizes = [
 
 export const columnAmount = [
   {
-    value: '',
-    text: 'keine Auswahl'
-  },
-  {
     value: 1,
     text: '1'
   },

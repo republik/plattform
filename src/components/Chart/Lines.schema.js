@@ -7,7 +7,8 @@ export const lineEditorSchema = ({
   colorDropdownItems,
   xScaleTypes,
   yScaleTypes,
-  chartSizes
+  chartSizes,
+  columnAmount
 }) => {
   return {
     defaultProps: defaults,
@@ -72,7 +73,8 @@ export const lineEditorSchema = ({
             },
             columns: {
               title: 'Anzahl Spalten pro Zeile',
-              type: 'number'
+              type: 'number',
+              enum: columnAmount
             }
           }
         }
@@ -173,7 +175,8 @@ export const slopeEditorSchema = ({
   colorDropdownItems,
   xScaleTypes,
   yScaleTypes,
-  chartSizes
+  chartSizes,
+  columnAmount
 }) => {
   return {
     defaultProps: defaults,
@@ -233,8 +236,9 @@ export const slopeEditorSchema = ({
               enum: optionalDataColumnEnum
             },
             columns: {
-              title: 'Anzahl Spalten pro Zeile:',
-              type: 'number'
+              title: 'Anzahl Spalten pro Zeile',
+              type: 'number',
+              enum: columnAmount
             }
           }
         }

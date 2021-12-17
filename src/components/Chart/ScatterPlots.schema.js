@@ -2,7 +2,8 @@ export const scatterPlotEditorSchema = ({
   optionalDataColumnEnum,
   defaults,
   colorDropdownItems,
-  chartSizes
+  chartSizes,
+  columnAmount
 }) => {
   return {
     defaultProps: defaults,
@@ -32,8 +33,9 @@ export const scatterPlotEditorSchema = ({
               enum: optionalDataColumnEnum
             },
             columns: {
-              title: 'Anzahl Spalten pro Zeile:',
-              type: 'number'
+              title: 'Anzahl Spalten pro Zeile',
+              type: 'number',
+              enum: columnAmount
             }
           }
         }
