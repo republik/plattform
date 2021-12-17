@@ -58,7 +58,7 @@ const styles = {
 export const Actions = ({ t, comment, onExpand, onReply }) => {
   const { published, downVotes, upVotes, userVote } = comment
   const { discussion, actions, clock } = React.useContext(DiscussionContext)
-  const { displayAuthor, userWaitUntil } = discussion
+  const { displayAuthor, userWaitUntil, userCanComment } = discussion
   const onShare = () => actions.shareComment(comment)
 
   const now = useCurrentMinute()
@@ -149,6 +149,7 @@ export const Actions = ({ t, comment, onExpand, onReply }) => {
             <IconButton
               size={24}
               fill={userVote === 'UP' && colorScheme.getCSSColor('primary')}
+              disabled={!userCanComment}
               Icon={ArrowUpIcon}
               onClick={onUpvote}
               title={t('styleguide/CommentActions/upvote')}
@@ -176,6 +177,7 @@ export const Actions = ({ t, comment, onExpand, onReply }) => {
             <IconButton
               size={24}
               fill={userVote === 'DOWN' && colorScheme.getCSSColor('primary')}
+              disabled={!userCanComment}
               Icon={ArrowDownIcon}
               onClick={onDownvote}
               title={t('styleguide/CommentActions/downvote')}
