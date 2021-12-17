@@ -4,11 +4,8 @@ import { JSONEditor, PlainEditor } from '../../../utils/CodeEditorFields'
 import SizeSelector from './SizeSelector'
 
 import { css } from 'glamor'
-import {
-  fontStyles,
-  useColorContext,
-  ChartEditor as WYSIWYGChartEditor
-} from '@project-r/styleguide'
+import { fontStyles, useColorContext } from '@project-r/styleguide'
+import { ChartEditor as WYSIWYGChartEditor } from '@project-r/styleguide/editor'
 
 const styles = {
   orderBy: css({
