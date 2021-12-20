@@ -1,16 +1,19 @@
 import React, { useMemo } from 'react'
-import { BlockPicker as ColorPicker } from 'react-color'
 
 import Dropdown from '../../Form/Dropdown'
 import { deduplicate, runSort } from '../utils'
-import CalloutMenu from '../../Callout/CalloutMenu'
 import { ColorDropdownElement } from './ColorDropdownElement'
-import { useColorContext } from '../../Colors/ColorContext'
+import {
+  ColorContextProvider,
+  useColorContext
+} from '../../Colors/ColorContext'
 import { createRanges } from '..'
 import { colorMaps, CHART_DEFAULT_FILL } from '../colorMaps'
 import { CloseIcon } from '../../Icons'
 import { plainButtonRule } from '../../Button'
 import omit from 'lodash/omit'
+import Checkbox from '../../Form/Checkbox'
+import ColorPickerCallout from './ColorPickerCallout'
 
 const TYPES_WITH_COLOR_SORT = ['Bar', 'Lollipop', 'ScatterPlot']
 
@@ -107,19 +110,25 @@ export const ColorField = props => {
     })
   }
 
-  const setColorMap = newColorMap => {
+  const setColorMap = (
+    newColorMap,
+    newColorDarkMapping = config.colorDarkMapping
+  ) => {
     const keys = Object.keys(newColorMap)
-    keys.map(colorValue => console.log(!colorValues.includes(colorValue)))
-
+    const colorDarkMapping = newColorDarkMapping
+        ? newColorDarkMapping
+        : undefined
     if (keys.length === 1 && !keys[0]) {
       onFieldsChange({
         colorMap: undefined,
-        colorRange: [newColorMap[keys[0]] || CHART_DEFAULT_FILL]
+        colorRange: [newColorMap[keys[0]] || CHART_DEFAULT_FILL],
+        colorDarkMapping
       })
     } else {
       onFieldsChange({
         colorMap: newColorMap,
-        colorRange: undefined
+        colorRange: undefined,
+        colorDarkMapping
       })
     }
   }
@@ -139,14 +148,26 @@ export const ColorField = props => {
       setColorMap(computedColorMap)
     }
   }
-  const createColorPickerOnChange = key => item => {
-    setColorMap({ ...computedColorMap, [key]: item.hex })
+  const createColorPickerOnChange = (key, oldColor) => item => {
+    setColorMap(
+      { ...computedColorMap, [key]: item.hex },
+      config.colorDarkMapping && omit(config.colorDarkMapping, oldColor)
+    )
+  }
+  const createColorPickerOnChangeDark = color => item => {
+    onFieldsChange({
+      colorDarkMapping: {
+        ...config.colorDarkMapping,
+        [color]: item.hex
+      }
+    })
   }
   const pickableColors = colorRanges.discrete
+  const hasDarkModeColors = !!config.colorDarkMapping
 
   return (
     <>
-      <div style={{ marginBottom: '30px' }}>
+      <div style={{ marginBottom: '15px' }}>
         <Dropdown
           label={label}
           items={items}
@@ -154,61 +175,82 @@ export const ColorField = props => {
           onChange={handleDropdownChange}
         />
       </div>
-      {value === '_custom' &&
-        colorValues.map(colorValue => {
-          return (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                padding: '5px 0'
-              }}
-              key={colorValue}
-            >
-              <div style={{ flexBasis: '60%' }}>{colorValue || 'Alle'}</div>
+      {value === '_custom' && (
+        <>
+          {colorValues.map(colorValue => {
+            const color = computedColorMap[colorValue]
+            const colorDark = config.colorDarkMapping?.[color]
+
+            return (
               <div
                 style={{
-                  flexBasis: '39%',
                   display: 'flex',
-                  justifyContent: 'flex-end'
+                  alignItems: 'center'
                 }}
+                key={colorValue}
               >
-                {computedColorMap[colorValue] && <button {...plainButtonRule}  style={{
-                    verticalAlign: 'middle',
-                    padding: 2,
-                    lineHeight: 0
-                  }} onClick={() => {
-                    setColorMap(omit(computedColorMap, colorValue))
-                  }}>
-                  <CloseIcon size={16} />
-                </button>}
-                <CalloutMenu
-                  Element={props => (
-                    <div
-                      style={{
-                        backgroundColor:
-                          computedColorMap[colorValue] || CHART_DEFAULT_FILL,
-                        width: '40px',
-                        height: '20px',
-                        borderRadius: '4px',
-                        cursor: 'pointer'
-                      }}
-                      {...props}
-                    />
-                  )}
-                  align='right'
+                <div style={{ flexBasis: '60%' }}>{colorValue || 'Alle'}</div>
+                <div
+                  style={{
+                    flexBasis: '39%',
+                    display: 'flex',
+                    justifyContent: 'flex-end'
+                  }}
                 >
-                  <ColorPicker
-                    triangle='hide'
-                    colors={pickableColors}
-                    color={computedColorMap[colorValue] || CHART_DEFAULT_FILL}
-                    onChange={createColorPickerOnChange(colorValue)}
+                  {color && (
+                    <button
+                      {...plainButtonRule}
+                      style={{
+                        verticalAlign: 'middle',
+                        padding: 2,
+                        lineHeight: 0
+                      }}
+                      onClick={() => {
+                        setColorMap(
+                          omit(computedColorMap, colorValue),
+                          config.colorDarkMapping && omit(config.colorDarkMapping, color)
+                        )
+                      }}
+                    >
+                      <CloseIcon size={16} />
+                    </button>
+                  )}
+                  <ColorPickerCallout
+                    mode={hasDarkModeColors ? 'light' : undefined}
+                    pickableColors={pickableColors}
+                    color={color || CHART_DEFAULT_FILL}
+                    onChange={createColorPickerOnChange(colorValue, color)}
                   />
-                </CalloutMenu>
+                  {hasDarkModeColors && <ColorContextProvider colorSchemeKey='dark'>
+                    <ColorPickerCallout
+                      mode='dark'
+                      pickableColors={pickableColors}
+                      color={colorDark || color || CHART_DEFAULT_FILL}
+                      onChange={
+                        color
+                          ? createColorPickerOnChangeDark(color)
+                          : createColorPickerOnChange(colorValue, color)
+                      }
+                    />
+                  </ColorContextProvider>}
+                </div>
               </div>
-            </div>
-          )
-        })}
+            )
+          })}
+          <div style={{ marginTop: 15 }}>
+          <Checkbox
+            checked={hasDarkModeColors}
+            onChange={(_, checked) => {
+              onFieldsChange({
+                colorDarkMapping: checked ? {} : undefined
+              })
+            }}
+          >
+            Farben für den Nachtmodus anpassen
+          </Checkbox>
+          </div>
+        </>
+      )}
     </>
   )
 }
