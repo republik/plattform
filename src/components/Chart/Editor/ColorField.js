@@ -8,6 +8,9 @@ import { ColorDropdownElement } from './ColorDropdownElement'
 import { useColorContext } from '../../Colors/ColorContext'
 import { createRanges } from '..'
 import { colorMaps, CHART_DEFAULT_FILL } from '../colorMaps'
+import { CloseIcon } from '../../Icons'
+import { plainButtonRule } from '../../Button'
+import omit from 'lodash/omit'
 
 const TYPES_WITH_COLOR_SORT = ['Bar', 'Lollipop', 'ScatterPlot']
 
@@ -170,6 +173,14 @@ export const ColorField = props => {
                   justifyContent: 'flex-end'
                 }}
               >
+                {computedColorMap[colorValue] && <button {...plainButtonRule}  style={{
+                    verticalAlign: 'middle',
+                    padding: 2
+                  }} onClick={() => {
+                    setColorMap(omit(computedColorMap, colorValue))
+                  }}>
+                  <CloseIcon size={16} />
+                </button>}
                 <CalloutMenu
                   Element={props => (
                     <div
