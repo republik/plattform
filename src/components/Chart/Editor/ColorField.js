@@ -175,7 +175,8 @@ export const ColorField = props => {
               >
                 {computedColorMap[colorValue] && <button {...plainButtonRule}  style={{
                     verticalAlign: 'middle',
-                    padding: 2
+                    padding: 2,
+                    lineHeight: 0
                   }} onClick={() => {
                     setColorMap(omit(computedColorMap, colorValue))
                   }}>

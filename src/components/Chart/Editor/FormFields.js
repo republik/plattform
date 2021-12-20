@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { css } from 'glamor'
-import { Label } from '../../Typography'
+import { Interaction, Label } from '../../Typography'
 import Field from '../../Form/Field'
 import Checkbox from '../../Form/Checkbox'
 import Slider from '../../Form/Slider'
@@ -15,13 +15,8 @@ const styles = {
   gridContainer: css({
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
-    gap: '30px',
-    margin: '30px 0'
-  }),
-  group: css({
-    backgroundColor: 'white',
-    border: '1px solid #DADDDC',
-    padding: '10px'
+    gap: '20px 40px',
+    margin: '20px 0'
   })
 }
 
@@ -43,9 +38,8 @@ export const FormFields = props => {
       {fieldsKeys.map(group => {
         const groupObject = fields[group].properties
         return (
-          <div key={group} {...styles.group}>
-            <Label>{fields[group].title}</Label>
-            <div style={{ paddingTop: '10px' }}>
+          <div key={group}>
+            <Interaction.H3>{fields[group].title}</Interaction.H3>
               {Object.keys(fields[group].properties).map(property => {
                 if (property === 'colorRange') {
                   return (
@@ -163,7 +157,6 @@ export const FormFields = props => {
                 )
               })}
             </div>
-          </div>
         )
       })}
     </div>
