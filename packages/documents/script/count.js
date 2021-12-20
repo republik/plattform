@@ -8,6 +8,8 @@ const visit = require('unist-util-visit')
 const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
 const utils = require('@orbiting/backend-modules-search/lib/utils')
 
+const { getWordsPerMinute } = require('../lib/meta')
+
 const elastic = Elasticsearch.connect()
 
 const argv = yargs
@@ -30,6 +32,7 @@ const run = async () => {
     scroll: '5s',
     size: 100,
     _source: ['meta.path', 'content', 'contentString'],
+    stored_fields: ['contentString.count'],
     body: {
       query: {
         bool: {
@@ -58,6 +61,8 @@ const run = async () => {
     },
   }
 
+  let documentCount = 0
+  let readingMinutes = 0
   let charCount = 0
   let dynamicComponentCount = 0
   const dynamicComponents = new Set()
@@ -68,6 +73,14 @@ const run = async () => {
   })
 
   for await (const hit of Elasticsearch.scroll(elastic, params)) {
+    const [ wordCount ] = hit.fields['contentString.count']
+
+    // Count docs
+    documentCount += 1
+
+    // Word count, readingMinutes
+    readingMinutes += Math.round(wordCount / getWordsPerMinute())
+
     // Count chars
     charCount += hit._source.contentString?.length || 0
 
@@ -89,6 +102,8 @@ const run = async () => {
   console.log('result', {
     from: argv.from.toISOString(),
     to: argv.to.toISOString(),
+    documentCount,
+    readingMinutes,
     charCount,
     dynamicComponentCount,
     dynamicComponents: Array.from(dynamicComponents),

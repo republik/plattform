@@ -792,10 +792,7 @@ const findPublished = async function (elastic, repoId) {
                   { term: { '__state.published': true } },
                   {
                     bool: {
-                      must: [
-                        { term: { 'meta.prepublication': false } },
-                        { exists: { field: 'meta.scheduledAt' } },
-                      ],
+                      must: [{ term: { 'meta.prepublication': false } }],
                     },
                   },
                 ],
