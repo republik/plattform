@@ -24,7 +24,7 @@ describe('lib.utils.slug - test suite', function() {
     expect(slug('âàçéêèëîïôùû')).toEqual('aaceeeeiiouu')
   })
 
-  test('shy element', function() {
-    expect(slug('um&shy;welt&shy;schmerz')).toEqual('umweltschmerz')
+  test('soft hyphen', function() {
+    expect(slug('um\u00adwelt\u00adschmerz')).toEqual('umweltschmerz')
   })
 })
