@@ -1,6 +1,6 @@
 import React, { Component, useState, useMemo } from 'react'
 import { Router } from '../../lib/routes'
-import slugify from '../../lib/utils/slug'
+import { slug as slugify } from '@project-r/styleguide'
 import schemas from '../Templates'
 import { css } from 'glamor'
 import withT from '../../lib/withT'

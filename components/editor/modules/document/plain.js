@@ -2,7 +2,7 @@ import React from 'react'
 import { Document as SlateDocument } from 'slate'
 import { parse } from '@orbiting/remark-preset'
 
-import slugify from '../../../../lib/utils/slug'
+import { slug } from '@project-r/styleguide'
 import MarkdownSerializer from 'slate-mdast-serializer'
 
 import createPasteHtml from './createPasteHtml'
@@ -75,7 +75,7 @@ export default ({ rule, subModules, TYPE }) => {
     if (autoSlug) {
       newData = newData.set(
         'slug',
-        slugify(
+        slug(
           newData.get('seoTitle') ||
             newData.get('twitterTitle') ||
             newData.get('title')
