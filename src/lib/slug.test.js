@@ -23,4 +23,8 @@ describe('lib.utils.slug - test suite', function() {
   test('umlaut french', function() {
     expect(slug('âàçéêèëîïôùû')).toEqual('aaceeeeiiouu')
   })
+
+  test('shy element', function() {
+    expect(slug('um&shy;welt&shy;schmerz')).toEqual('umweltschmerz')
+  })
 })
