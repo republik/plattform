@@ -64,8 +64,7 @@ class Export extends Component {
           SVG
         </A>
         <br />
-        <br />
-        <Label>Abstract Teaser</Label>
+        <Label>Abstract Teaser für die Front</Label>
         <br />
         <A
           href='#'
@@ -89,7 +88,7 @@ class Export extends Component {
         </A>
         <br />
         <Label>
-          mit Hintergrund:{' '}
+          mit Hintergrund für Social:{' '}
           <input
             {...styles.input}
             value={color}

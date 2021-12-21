@@ -18,10 +18,8 @@ if (process.browser && window) {
 const LINE_HEIGHT = 20.4
 
 const styles = {
-  cmContainer: css({
-    margin: '10px 0 20px'
-  }),
   codemirror: css({
+    marginBottom: 20,
     padding: 0,
     '& .CodeMirror': {
       height: 'auto',
@@ -51,10 +49,13 @@ const CodeMirrorField = ({
 }) => {
   const showLabel = label || linesShown
   return (
-    <div {...styles.codemirror} {...styles.cmContainer}>
-      {showLabel && <Label>{label && <span>{label}</span>}</Label>}
+    <div {...styles.codemirror}>
+      {showLabel && (
+        <div style={{ marginBottom: 10 }}>
+          <Label>{label && <span>{label}</span>}</Label>
+        </div>
+      )}
       <div
-        {...styles.cmContainer}
         style={
           linesShown
             ? {

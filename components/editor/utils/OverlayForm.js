@@ -88,9 +88,10 @@ const OverlayForm = ({
         </div>
         {showPreview && (
           <div {...styles.preview}>
-            <ContextBackground>{preview}</ContextBackground>
-            <br />
-
+            {extra && <div style={{ marginBottom: 15 }}>{extra}</div>}
+            <div style={{ marginBottom: 15 }}>
+              <ContextBackground>{preview}</ContextBackground>
+            </div>
             <ColorContextProvider
               colorSchemeKey={
                 colorScheme.schemeKey === 'dark' ? 'light' : 'dark'
@@ -98,8 +99,6 @@ const OverlayForm = ({
             >
               <ContextBackground>{preview}</ContextBackground>
             </ColorContextProvider>
-            <br />
-            {extra}
           </div>
         )}
         <br style={{ clear: 'both' }} />
