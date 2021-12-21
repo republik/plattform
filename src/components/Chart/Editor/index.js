@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { csvParse } from 'd3-dsv'
 
-import Dropdown from '../../Form/Dropdown'
+import CustomValueDropdown from './CustomValueDropdown'
 import { FormFields } from './FormFields'
 
 import { defaultProps } from '../ChartContext'
@@ -33,6 +33,7 @@ const schemaDict = {
   Bar: barEditorSchema,
   Slope: slopeEditorSchema,
   ScatterPlot: scatterPlotEditorSchema,
+  // Not shown in UI, see slice below
   GenericMap: genericMapEditorSchema,
   ProjectedMap: projectedMapEditorSchema,
   SwissMap: swissMapEditorSchema,
@@ -99,7 +100,7 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
 
   return (
     <div>
-      <Dropdown
+      <CustomValueDropdown
         label='Charttyp auswählen'
         items={chartTypes}
         value={value.type}
