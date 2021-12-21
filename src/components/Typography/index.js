@@ -9,7 +9,6 @@ import * as _Meta from './Meta'
 import * as _Scribble from './Scribble'
 import { css } from 'glamor'
 import { convertStyleToRem } from './utils'
-import { underline } from '../../lib/styleMixins'
 import { useColorContext } from '../Colors/useColorContext'
 
 // Namespaced exports.
@@ -35,46 +34,6 @@ export const linkStyle = {
 }
 
 export const linkRule = css(linkStyle)
-
-export const linkBlackStyle = css({
-  ...underline,
-  color: '#000000',
-  '@media (hover)': {
-    ':hover': {
-      color: colors.text
-    }
-  }
-})
-
-export const linkWhiteStyle = css({
-  ...underline,
-  color: colors.negative.text,
-  '@media (hover)': {
-    ':hover': {
-      color: colors.negative.lightText
-    }
-  }
-})
-
-export const linkErrorStyle = css({
-  ...underline,
-  color: colors.error,
-  '@media (hover)': {
-    ':hover': {
-      color: colors.error
-    }
-  }
-})
-
-export const linkErrorStyleNegative = css({
-  ...underline,
-  color: colors.negative.error,
-  '@media (hover)': {
-    ':hover': {
-      color: colors.negative.error
-    }
-  }
-})
 
 export const plainLinkRule = css({
   textDecoration: 'none',
