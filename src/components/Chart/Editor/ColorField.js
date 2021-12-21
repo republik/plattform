@@ -35,8 +35,11 @@ export const ColorField = props => {
 
   const items = []
     .concat(
-      { value: '_auto', text: 'automatisch' },
-      { value: '_custom', text: 'Farben einzeln zuweisen' }
+      [
+        { value: '_auto', text: 'automatisch' },
+        { value: '_custom', text: 'Farben einzeln zuweisen' }
+      ],
+      config.thresholds ? { value: '_thresholds', text: 'Speziel: Schwellenwerte' } : []
     )
     .concat(
       Object.keys(colorRanges).map((d, i) => {
@@ -77,7 +80,9 @@ export const ColorField = props => {
     ? colorRange
     : !colorMap && !colorRange
     ? '_auto'
-    : '_custom'
+    : config.thresholds
+      ? '_thresholds'
+      : '_custom'
 
   const colorValues = chartData
     .map(d => d[colorColumn])
