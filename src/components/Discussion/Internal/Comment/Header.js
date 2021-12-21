@@ -1,11 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import {
-  CheckIcon,
-  MoreIcon,
-  UnfoldLessIcon,
-  UnfoldMoreIcon
-} from '../../../Icons'
+import { AddIcon, CheckIcon, MoreIcon, RemoveIcon } from '../../../Icons'
 import {
   sansSerifMedium16,
   sansSerifRegular14
@@ -274,7 +269,7 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
         {onToggle && (
           <IconButton
             invert={true}
-            Icon={isExpanded ? UnfoldLessIcon : UnfoldMoreIcon}
+            Icon={isExpanded ? RemoveIcon : AddIcon}
             fill={colorScheme.getCSSColor('textSoft')}
             size={20}
             onClick={onToggle}
