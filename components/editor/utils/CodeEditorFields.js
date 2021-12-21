@@ -94,24 +94,15 @@ const CodeMirrorField = ({
           onBeforeChange={(_, __, value) => {
             onChange(value)
           }}
-          onPaste={
-            onPaste &&
-            ((_, event) => {
-              onPaste(event)
-            })
-          }
-          onBlur={
-            onBlur &&
-            ((_, event) => {
-              onBlur(event)
-            })
-          }
-          onFocus={
-            onFocus &&
-            ((_, event) => {
-              onFocus(event)
-            })
-          }
+          onPaste={(_, event) => {
+            onPaste && onPaste(event)
+          }}
+          onBlur={(_, event) => {
+            onBlur && onBlur(event)
+          }}
+          onFocus={(_, event) => {
+            onFocus && onFocus(event)
+          }}
         />
       </div>
     </div>
