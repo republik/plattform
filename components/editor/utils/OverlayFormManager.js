@@ -11,7 +11,6 @@ const OverlayFormManager = ({
   onChange,
   component,
   preview,
-  autoDarkModePreview,
   extra,
   showPreview,
   title,
@@ -26,7 +25,6 @@ const OverlayFormManager = ({
       {isOpen && (
         <OverlayForm
           preview={preview}
-          autoDarkModePreview={autoDarkModePreview}
           showPreview={showPreview}
           title={title}
           extra={extra}
