@@ -38,6 +38,7 @@ export const lineEditorSchema = ({
           title: 'Vertikale Achse',
           properties: {
             numberFormat: {
+              title: 'Zahlenformat',
               type: 'string',
               enum: numberFormats,
               parent: 'yAxis'
@@ -202,6 +203,7 @@ export const slopeEditorSchema = ({
           title: 'Vertikale Achse',
           properties: {
             numberFormat: {
+              title: 'Zahlenformat',
               type: 'string',
               enum: numberFormats,
               parent: 'yAxis'
