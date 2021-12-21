@@ -39,7 +39,7 @@ export const ColorField = props => {
         { value: '_auto', text: 'automatisch' },
         { value: '_custom', text: 'Farben einzeln zuweisen' }
       ],
-      config.thresholds ? { value: '_thresholds', text: 'Speziel: Schwellenwerte' } : []
+      config.thresholds ? { value: '_thresholds', text: 'Spezial: Schwellenwerte' } : []
     )
     .concat(
       Object.keys(colorRanges).map((d, i) => {
