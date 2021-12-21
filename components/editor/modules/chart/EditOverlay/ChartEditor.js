@@ -1,34 +1,10 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState } from 'react'
 import { tsvParse, csvFormat } from 'd3-dsv'
 import { JSONEditor, PlainEditor } from '../../../utils/CodeEditorFields'
 import SizeSelector from './SizeSelector'
 
-import { css } from 'glamor'
-import { fontStyles, useColorContext } from '@project-r/styleguide'
-import { ChartEditor as WYSIWYGChartEditor } from '@project-r/styleguide/editor'
-
-const styles = {
-  orderBy: css({
-    ...fontStyles.sansSerifRegular16,
-    outline: 'none',
-    WebkitAppearance: 'none',
-    background: 'transparent',
-    border: 'none',
-    padding: '0',
-    cursor: 'pointer',
-    marginRight: '20px'
-  }),
-  regular: css({
-    textDecoration: 'none'
-  }),
-  selected: css({
-    textDecoration: 'underline',
-    textDecorationSkip: 'ink'
-  }),
-  tabs: css({
-    margin: '20px 0px'
-  })
-}
+import { Scroller, TabButton } from '@project-r/styleguide'
+import { ChartEditor } from '@project-r/styleguide/editor'
 
 const tabs = [
   { value: 'basic', text: 'Grundeinstellungen' },
@@ -42,24 +18,9 @@ const tabs = [
   }
 ]
 
-const ChartEditor = ({ data, onChange }) => {
+const ChartEditorWrapper = ({ data, onChange }) => {
   const hasNoData = !data.get('values')[0]
-  const [colorScheme] = useColorContext()
   const [activeTab, setActiveTab] = useState(hasNoData ? 'json' : 'basic')
-
-  const handleTabClick = item => {
-    setActiveTab(item.target.value)
-  }
-
-  const hoverRule = useMemo(() => {
-    return css({
-      '@media (hover)': {
-        ':hover': {
-          color: colorScheme.getCSSColor('textSoft')
-        }
-      }
-    })
-  }, [colorScheme])
 
   return (
     <>
@@ -80,24 +41,23 @@ const ChartEditor = ({ data, onChange }) => {
           }
         }}
       />
-      <div {...styles.tabs}>
-        {tabs.map(d => {
-          return (
-            <button
-              key={d.value}
-              {...styles.orderBy}
-              {...colorScheme.set('color', 'text')}
-              {...styles[activeTab === d.value ? 'selected' : 'regular']}
-              {...(activeTab !== d.value && hoverRule)}
-              value={d.value}
-              onClick={handleTabClick}
-            >
-              {d.text}
-            </button>
-          )
-        })}
+      <div style={{ margin: '20px 0px' }}>
+        <Scroller
+          activeChildIndex={tabs.findIndex(({ value }) => value === activeTab)}
+        >
+          {tabs.map(({ value, text }) => (
+            <TabButton
+              key={value}
+              text={text}
+              isActive={activeTab === value}
+              onClick={() => {
+                setActiveTab(value)
+              }}
+            />
+          ))}
+        </Scroller>
       </div>
-      {activeTab !== 'json' && (
+      {activeTab !== 'json' ? (
         <>
           {activeTab === 'basic' && hasNoData && (
             <span>
@@ -106,7 +66,7 @@ const ChartEditor = ({ data, onChange }) => {
             </span>
           )}
 
-          <WYSIWYGChartEditor
+          <ChartEditor
             data={data.get('values')}
             value={data.get('config')}
             onChange={newConfig => {
@@ -115,8 +75,7 @@ const ChartEditor = ({ data, onChange }) => {
             activeTab={activeTab}
           />
         </>
-      )}
-      {activeTab === 'json' && (
+      ) : (
         <>
           <SizeSelector onChange={onChange} data={data} />
           <JSONEditor
@@ -132,4 +91,4 @@ const ChartEditor = ({ data, onChange }) => {
   )
 }
 
-export default ChartEditor
+export default ChartEditorWrapper
