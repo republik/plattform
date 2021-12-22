@@ -31,7 +31,8 @@ const styles = {
   profileRoot: css({
     display: 'inline-flex',
     alignItems: 'center',
-    flexGrow: 1
+    flexGrow: 1,
+    overflowX: 'clip'
   }),
   profilePicture: css({
     display: 'block',
