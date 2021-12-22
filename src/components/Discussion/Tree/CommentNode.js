@@ -12,6 +12,7 @@ import { mUp } from '../../../theme/mediaQueries'
 import { EditIcon, FeaturedIcon, ReportIcon, UnpublishIcon } from '../../Icons'
 import IconButton from '../../IconButton'
 import { timeFormat } from '../../../lib/timeFormat'
+import { CommentHeaderCollapseIcon } from '../Internal/Comment'
 
 const dateFormat = timeFormat('%d.%m.%Y')
 const hmFormat = timeFormat('%H:%M')
@@ -57,22 +58,22 @@ const styles = {
       /*
        * On larger screens, hide the action button and reveal only on hover.
        */
-      /*[mUp]: isExpanded && {
-        [`& .${CommentHeaderActionsClassName}`]: {
-          opacity: 0.6
+      [mUp]: isExpanded && {
+        [`& .${CommentHeaderCollapseIcon}`]: {
+          visibility: 'hidden'
         },
         '@media(hover)': {
-          [`:hover .${CommentHeaderActionsClassName}`]: {
-            opacity: 1
+          [`:hover .${CommentHeaderCollapseIcon}`]: {
+            visibility: 'visible'
           }
         }
       },
       // In case device doesn't support hover
       '@media(hover:none)': {
-        [`& .${CommentHeaderActionsClassName}`]: {
-          opacity: 1
+        [`& .${CommentHeaderCollapseIcon}`]: {
+          visibility: 'visible'
         }
-      }*/
+      }
     }),
   root: ({ isExpanded, nestLimitExceeded, depth, board }) =>
     css({
@@ -379,7 +380,7 @@ const CommentNode = ({
         >
           {{
             view: () => (
-              <div>
+              <div {...styles.commentWrapper({ isExpanded })}>
                 <Comment.Header
                   t={t}
                   comment={comment}

@@ -126,15 +126,20 @@ const styles = {
   actionsWrapper: css({
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'space-between',
     flexShrink: 0,
     height: pxToRem('40px'),
     '& > *:not(:last-child)': {
       marginRight: 8
     }
+  }),
+  collapseWrapper: css({
+    display: 'block'
   })
 }
+
+export const CommentHeaderCollapseIcon = styles.collapseWrapper
 
 const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
 const titleDate = string => dateTimeFormat(new Date(string))
@@ -267,20 +272,22 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
       </div>
       <div {...styles.actionsWrapper} className={styles.actionsWrapper}>
         {onToggle && (
-          <IconButton
-            invert={true}
-            Icon={isExpanded ? RemoveIcon : AddIcon}
-            fill={colorScheme.getCSSColor('textSoft')}
-            size={20}
-            onClick={onToggle}
-            label={
-              !isExpanded &&
-              t.pluralize('styleguide/comment/header/expandCount', {
-                count: comments.totalCount + 1
-              })
-            }
-            noMargin
-          />
+          <div className={styles.collapseWrapper}>
+            <IconButton
+              invert={true}
+              Icon={isExpanded ? RemoveIcon : AddIcon}
+              fill={colorScheme.getCSSColor('textSoft')}
+              size={20}
+              onClick={onToggle}
+              label={
+                !isExpanded &&
+                t.pluralize('styleguide/comment/header/expandCount', {
+                  count: comments.totalCount + 1
+                })
+              }
+              noMargin
+            />
+          </div>
         )}
         {menu && (
           <div>
