@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 
@@ -8,8 +8,7 @@ import {
   OverlayBody,
   mediaQueries,
   ColorContextProvider,
-  useColorContext,
-  Checkbox
+  useColorContext
 } from '@project-r/styleguide'
 
 const previewWidth = 290
@@ -73,16 +72,14 @@ const OverlayForm = ({
   extra,
   children,
   title,
-  showPreview = true,
-  autoDarkModePreview = true
+  showPreview = true
 }) => {
   const [colorScheme] = useColorContext()
-  const [showDarkMode, setShowDarkMode] = useState(autoDarkModePreview)
 
   return (
     <Overlay
       onClose={onClose}
-      mUpStyle={{ maxWidth: '80vw', marginTop: '5vh' }}
+      mUpStyle={{ maxWidth: '85vw', marginTop: '5vh' }}
     >
       <OverlayToolbar onClose={onClose} title={title} />
       <OverlayBody>
@@ -91,25 +88,17 @@ const OverlayForm = ({
         </div>
         {showPreview && (
           <div {...styles.preview}>
-            {extra}
-            <br />
-            <ContextBackground>{preview}</ContextBackground>
-            <br />
-            <Checkbox
-              checked={showDarkMode}
-              onChange={(_, checked) => setShowDarkMode(checked)}
+            {extra && <div style={{ marginBottom: 15 }}>{extra}</div>}
+            <div style={{ marginBottom: 15 }}>
+              <ContextBackground>{preview}</ContextBackground>
+            </div>
+            <ColorContextProvider
+              colorSchemeKey={
+                colorScheme.schemeKey === 'dark' ? 'light' : 'dark'
+              }
             >
-              Nachtmodus Vorschau
-            </Checkbox>
-            {showDarkMode && (
-              <ColorContextProvider
-                colorSchemeKey={
-                  colorScheme.schemeKey === 'dark' ? 'light' : 'dark'
-                }
-              >
-                <ContextBackground>{preview}</ContextBackground>
-              </ColorContextProvider>
-            )}
+              <ContextBackground>{preview}</ContextBackground>
+            </ColorContextProvider>
           </div>
         )}
         <br style={{ clear: 'both' }} />

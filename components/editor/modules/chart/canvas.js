@@ -74,14 +74,7 @@ export default ({ rule, subModules, TYPE }) => {
             <Placeholder identifier='neues Chart' type='' />
           )
 
-          return (
-            <EditOverlay
-              autoDarkModePreview={values?.length < 500}
-              {...props}
-              preview={chart}
-              CsvChart={CsvChart}
-            />
-          )
+          return <EditOverlay {...props} preview={chart} CsvChart={CsvChart} />
         },
         schema: {
           blocks: {
