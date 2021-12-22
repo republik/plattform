@@ -297,7 +297,10 @@ const CommentNode = ({
             ? t('styleguide/CommentActions/reportWithAmount', {
                 amount: comment.numReports
               })
+            : comment.userReportedAt
+            ? t('styleguide/CommentActions/reported')
             : t('styleguide/CommentActions/report'),
+        disabled: !!comment.userReportedAt,
         action: () => {
           if (window.confirm(t('styleguide/CommentActions/reportMessage'))) {
             actions.reportComment(comment)
@@ -350,6 +353,7 @@ const CommentNode = ({
             key={item.label}
             Icon={item.icon}
             label={item.label}
+            disabled={item.disabled}
             labelShort={item.label}
             onClick={item.action}
           />
