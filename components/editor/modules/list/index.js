@@ -118,17 +118,13 @@ export default ({ rule, subModules, TYPE }) => {
       {
         renderNode: ({ children, node, attributes, editor }) => {
           if (node.type !== TYPE) return
-          const isInInfobox =
-            parent(editor.state.value, node.key).type === 'INFOBOX'
           return (
             <div style={{ position: 'relative' }}>
-              {!isInInfobox && (
-                <InlineUI
-                  node={node}
-                  editor={editor}
-                  isMatch={matchAncestor(TYPE)}
-                />
-              )}
+              <InlineUI
+                node={node}
+                editor={editor}
+                isMatch={matchAncestor(TYPE)}
+              />
               <List attributes={attributes} data={node.data.toJS()}>
                 {children}
               </List>

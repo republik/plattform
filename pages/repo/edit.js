@@ -290,13 +290,17 @@ export class EditorPage extends Component {
   }
 
   notifyChanges(action) {
-    debug('notifyChanges', action)
     const {
       router: {
-        query: { repoId }
+        query: { repoId, commitId }
       },
       t
     } = this.props
+
+    // we don't notify the backend if no backend repo exists
+    if (commitId === 'new') return
+
+    debug('notifyChanges', action)
 
     const warning = t('commit/warn/uncommittedChangesError')
     this.props

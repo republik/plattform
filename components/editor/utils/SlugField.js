@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import slugify from '../../../lib/utils/slug'
-import { Field } from '@project-r/styleguide'
+import { Field, slug } from '@project-r/styleguide'
 import withT from '../../../lib/withT'
 
 export default withT(({ t, onChange, value, isTemplate, ...props }) => {
@@ -12,7 +11,7 @@ export default withT(({ t, onChange, value, isTemplate, ...props }) => {
         event.target.value.length > 30 &&
         t('metaData/field/repoSlug/error/tooLong')
     )
-    onChange(event, slugify(event.target.value))
+    onChange(event, slug(event.target.value))
   }
 
   return (
