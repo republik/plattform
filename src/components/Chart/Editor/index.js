@@ -26,25 +26,29 @@ import {
   columnAmount
 } from './utils'
 
-const schemaDict = {
+const schemaDictFullSupport = {
   Line: lineEditorSchema,
   TimeBar: timeBarEditorSchema,
   Lollipop: lollipopEditorSchema,
   Bar: barEditorSchema,
   Slope: slopeEditorSchema,
+
+}
+
+const schemaDict = {
+  ...schemaDictFullSupport,
+  // not shown in UI for now, schema are not 100% ready, see slice below
   ScatterPlot: scatterPlotEditorSchema,
-  // Not shown in UI, see slice below
   GenericMap: genericMapEditorSchema,
   ProjectedMap: projectedMapEditorSchema,
   SwissMap: swissMapEditorSchema,
   Hemicycle: hemicycleEditorSchema
 }
 
-const chartTypes = Object.keys(schemaDict)
+const chartTypes = Object.keys(schemaDictFullSupport)
   .map(d => {
     return { value: d, text: d }
   })
-  .slice(0, 6)
 
 const ChartEditor = ({ data, value, onChange, activeTab }) => {
   const chartData = useMemo(() => csvParse(data), [data])
