@@ -14,6 +14,7 @@ import { plainButtonRule } from '../../Button'
 import omit from 'lodash/omit'
 import Checkbox from '../../Form/Checkbox'
 import ColorPickerCallout from './ColorPickerCallout'
+import Field from '../../Form/Field'
 
 const TYPES_WITH_COLOR_SORT = ['Bar', 'Lollipop', 'ScatterPlot']
 
@@ -35,11 +36,8 @@ export const ColorField = props => {
 
   const items = []
     .concat(
-      [
-        { value: '_auto', text: 'automatisch' },
-        { value: '_custom', text: 'Farben einzeln zuweisen' }
-      ],
-      config.thresholds ? { value: '_thresholds', text: 'Spezial: Schwellenwerte' } : []
+      { value: '_auto', text: 'automatisch' },
+      { value: '_custom', text: 'Farben einzeln zuweisen' }
     )
     .concat(
       Object.keys(colorRanges).map((d, i) => {
@@ -80,9 +78,7 @@ export const ColorField = props => {
     ? colorRange
     : !colorMap && !colorRange
     ? '_auto'
-    : config.thresholds
-      ? '_thresholds'
-      : '_custom'
+    : '_custom'
 
   const colorValues = chartData
     .map(d => d[colorColumn])
@@ -121,8 +117,8 @@ export const ColorField = props => {
   ) => {
     const keys = Object.keys(newColorMap)
     const colorDarkMapping = newColorDarkMapping
-        ? newColorDarkMapping
-        : undefined
+      ? newColorDarkMapping
+      : undefined
     if (keys.length === 1 && !keys[0]) {
       onFieldsChange({
         colorMap: undefined,
@@ -173,14 +169,18 @@ export const ColorField = props => {
   return (
     <>
       <div style={{ marginBottom: '15px' }}>
-        <Dropdown
-          label={label}
-          items={items}
-          value={value}
-          onChange={handleDropdownChange}
-        />
+        {config.thresholds ? (
+          <Field label={label} value='Spezial: Schwellenwerte' disabled />
+        ) : (
+          <Dropdown
+            label={label}
+            items={items}
+            value={value}
+            onChange={handleDropdownChange}
+          />
+        )}
       </div>
-      {value === '_custom' && (
+      {value === '_custom' && !config.thresholds && (
         <>
           {colorValues.map(colorValue => {
             const color = computedColorMap[colorValue]
@@ -213,7 +213,8 @@ export const ColorField = props => {
                       onClick={() => {
                         setColorMap(
                           omit(computedColorMap, colorValue),
-                          config.colorDarkMapping && omit(config.colorDarkMapping, color)
+                          config.colorDarkMapping &&
+                            omit(config.colorDarkMapping, color)
                         )
                       }}
                     >
@@ -226,33 +227,35 @@ export const ColorField = props => {
                     color={color || CHART_DEFAULT_FILL}
                     onChange={createColorPickerOnChange(colorValue, color)}
                   />
-                  {hasDarkModeColors && <ColorContextProvider colorSchemeKey='dark'>
-                    <ColorPickerCallout
-                      mode='dark'
-                      pickableColors={pickableColors}
-                      color={colorDark || color || CHART_DEFAULT_FILL}
-                      onChange={
-                        color
-                          ? createColorPickerOnChangeDark(color)
-                          : createColorPickerOnChange(colorValue, color)
-                      }
-                    />
-                  </ColorContextProvider>}
+                  {hasDarkModeColors && (
+                    <ColorContextProvider colorSchemeKey='dark'>
+                      <ColorPickerCallout
+                        mode='dark'
+                        pickableColors={pickableColors}
+                        color={colorDark || color || CHART_DEFAULT_FILL}
+                        onChange={
+                          color
+                            ? createColorPickerOnChangeDark(color)
+                            : createColorPickerOnChange(colorValue, color)
+                        }
+                      />
+                    </ColorContextProvider>
+                  )}
                 </div>
               </div>
             )
           })}
           <div style={{ marginTop: 15 }}>
-          <Checkbox
-            checked={hasDarkModeColors}
-            onChange={(_, checked) => {
-              onFieldsChange({
-                colorDarkMapping: checked ? {} : undefined
-              })
-            }}
-          >
-            Farben für den Nachtmodus anpassen
-          </Checkbox>
+            <Checkbox
+              checked={hasDarkModeColors}
+              onChange={(_, checked) => {
+                onFieldsChange({
+                  colorDarkMapping: checked ? {} : undefined
+                })
+              }}
+            >
+              Farben für den Nachtmodus anpassen
+            </Checkbox>
           </div>
         </>
       )}
