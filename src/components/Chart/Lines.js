@@ -161,7 +161,13 @@ const LineChart = props => {
                 endDy={endDy}
                 width={chartContext.innerWidth}
                 paddingRight={paddingRight}
-                xAxisElement={<XAxis xUnit={props.xUnit} lines={props.xLines?.filter(filterByColumn)} type={props.type} />}
+                xAxisElement={
+                  <XAxis
+                    xUnit={props.xUnit}
+                    lines={props.xLines?.filter(filterByColumn)}
+                    type={props.type}
+                  />
+                }
               />
             </g>
           )
@@ -186,7 +192,8 @@ export const propTypes = {
   xLines: PropTypes.arrayOf(
     PropTypes.shape({
       column: PropTypes.string,
-      tick: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      tick: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        .isRequired,
       label: PropTypes.string,
       textAnchor: PropTypes.string
     }).isRequired

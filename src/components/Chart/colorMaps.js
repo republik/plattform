@@ -57,7 +57,8 @@ const swissPartyColors = {
   OTHER: '#B8B8B8'
 }
 
-const colorMaps = { swissPartyColors }
+export const colorMaps = { swissPartyColors }
+export const CHART_DEFAULT_FILL = '#E0E0E0'
 
 export const getColorMapper = (props, colorValues = []) => {
   const colorMapProp = props.colorMap
@@ -69,7 +70,7 @@ export const getColorMapper = (props, colorValues = []) => {
         return map
       }, {})
 
-    return (value = '') => colorMap[value.toUpperCase()] || '#E0E0E0'
+    return (value = '') => colorMap[value.toUpperCase()] || CHART_DEFAULT_FILL
   }
   let colorRange = props.colorRanges[props.colorRange] || props.colorRange
   if (!colorRange) {

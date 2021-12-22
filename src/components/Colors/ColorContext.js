@@ -41,6 +41,7 @@ const createScheme = specificColors => {
     CSSVarSupport: colorDefinitions.CSSVarSupport,
     colorDefinitions,
     ranges: {
+      neutral: colorDefinitions.neutral,
       sequential: [
         'sequential100',
         'sequential95',

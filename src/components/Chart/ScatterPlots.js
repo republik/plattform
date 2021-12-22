@@ -19,6 +19,7 @@ import {
 import { getColorMapper } from './colorMaps'
 import { aggregateValues, getPlot, tickAccessor } from './ScatterPlots.utils'
 import ScatterPlotGroup from './ScatterPlotGroup'
+import { defaultProps } from './ChartContext'
 
 const COLUMN_PADDING = 28
 const COLUMN_TITLE_HEIGHT = 24
@@ -361,29 +362,7 @@ export const propTypes = {
   ).isRequired
 }
 
-ScatterPlot.defaultProps = {
-  x: 'value',
-  y: 'value',
-  xScale: 'linear',
-  xShowValue: true,
-  yScale: 'linear',
-  yShowValue: true,
-  opacity: 1,
-  numberFormat: 's',
-  colorLegend: true,
-  paddingTop: 15,
-  paddingRight: 1,
-  paddingBottom: 50,
-  paddingLeft: 30,
-  size: 'size',
-  sizeRangeMax: 4,
-  label: 'label',
-  heightRatio: 1,
-  sizeShowValue: false,
-  columns: 1,
-  minInnerWidth: 240,
-  annotations: []
-}
+ScatterPlot.defaultProps = defaultProps.ScatterPlot
 
 ScatterPlot.propTypes = propTypes
 
