@@ -14,11 +14,8 @@ const ColorPickerCallout = ({ mode, pickableColors, color, onChange }) => {
       {...colorScheme.set('color', 'text')}
       {...colorScheme.set('backgroundColor', 'default')}
       style={{
-        padding: mode === 'dark' 
-          ? '4px 4px 4px 0' 
-          : mode === 'light' 
-            ? '4px 0px 4px 4px'
-            : 4
+        padding: 4,
+        lineHeight: 0
       }}
     >
       <CalloutMenu
@@ -31,11 +28,7 @@ const ColorPickerCallout = ({ mode, pickableColors, color, onChange }) => {
               ...props.style,
               width: mode ? 15 : 30,
               height: 15,
-              borderRadius: mode === 'dark' 
-              ? '0px 4px 4px 0' 
-              : mode === 'light' 
-                ? '4px 0 0 4px'
-                : 4,
+              borderRadius: 4
             }}
           />
         )}

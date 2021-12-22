@@ -194,10 +194,9 @@ export const ColorField = props => {
                 }}
                 key={colorValue}
               >
-                <div style={{ flexBasis: '60%' }}>{colorValue || 'Alle'}</div>
+                <div style={{ flexGrow: 1 }}>{colorValue || 'Alle'}</div>
                 <div
                   style={{
-                    flexBasis: '39%',
                     display: 'flex',
                     justifyContent: 'flex-end'
                   }}
