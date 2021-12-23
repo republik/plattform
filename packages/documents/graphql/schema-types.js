@@ -95,6 +95,21 @@ type Meta {
   indicateChart: Boolean
   indicateGallery: Boolean
   indicateVideo: Boolean
+  # name of a special discussion type
+  discussionType: String
+  # tag properties like colors or title texts
+  tagMappings: [TagMapping!]
+}
+
+type TagMapping {
+  tag: String!
+  text: String!
+  color: TagMappingColor
+}
+
+type TagMappingColor {
+  light: String!
+  dark: String!
 }
 
 input DocumentInput {
