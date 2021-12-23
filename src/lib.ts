@@ -134,6 +134,8 @@ export {
   CommentHeaderProfile
 } from './components/Discussion/Composer'
 
+export { VoteButtons } from './components/Discussion/Internal/Comment'
+
 export { renderCommentMdast } from './components/Discussion/Internal/Comment/render'
 export { IconLink as DiscussionIconLink } from './components/Discussion/Internal/Comment/IconLink'
 
