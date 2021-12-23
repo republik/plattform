@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { scaleLinear } from 'd3-scale'
 import { descending, max } from 'd3-array'
 import { symbol, symbolSquare, symbolCircle } from 'd3-shape'
-import { geoIdentity, geoMercator, geoEqualEarth } from 'd3-geo'
 import ColorLegend from './ColorLegend'
 import layout, { MARKER_HEIGHT, MARKER_RADIUS } from './Maps.layout'
 import fetch from 'isomorphic-unfetch'
@@ -18,6 +17,7 @@ import ContextBox, {
 } from './ContextBox'
 import { sansSerifMedium14 } from '../Typography/styles'
 import { replaceKeys } from '../../lib/translate'
+import { defaultProps } from './ChartContext'
 
 const FEATURE_BG = '#E0E0E0'
 
@@ -635,41 +635,17 @@ export const propTypes = {
 
 GenericMap.propTypes = propTypes
 
-GenericMap.defaultProps = {
-  numberFormat: 's',
-  columns: 1,
-  unit: '',
-  heightRatio: 1,
-  colorLegend: true,
-  colorLegendSize: 0.16,
-  colorLegendMinWidth: 80,
-  colorLegendPosition: 'right',
-  points: false,
-  pointAttributes: [],
-  choropleth: false,
-  missingDataColor: 'divider',
-  ignoreMissingFeature: false,
-  feature: 'feature',
-  shape: 'circle',
-  sizeRangeMax: 10,
-  getProjection: () => geoEqualEarth().rotate([-10, 0]),
-  opacity: 0.6
-}
+GenericMap.defaultProps = defaultProps.GenericMap
 
 export const ProjectedMap = props => <GenericMap {...props} />
 
-ProjectedMap.defaultProps = {
-  getProjection: () => geoIdentity()
-}
+GenericMap.defaultProps = defaultProps.GenericMap
 
+ProjectedMap.defaultProps = defaultProps.ProjectedMap
 ProjectedMap.base = 'GenericMap'
 
 export const SwissMap = props => <GenericMap {...props} />
 
-SwissMap.defaultProps = {
-  getProjection: () =>
-    geoMercator().rotate([-7.439583333333333, -46.95240555555556]),
-  heightRatio: 0.63
-}
+SwissMap.defaultProps = defaultProps.SwissMap
 
 SwissMap.base = 'GenericMap'

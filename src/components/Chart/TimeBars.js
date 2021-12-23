@@ -120,7 +120,9 @@ export const propTypes = {
   }).isRequired,
   colorMap: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   domain: PropTypes.arrayOf(PropTypes.number),
-  yTicks: PropTypes.arrayOf(PropTypes.number),
+  yTicks: PropTypes.arrayOf(
+    PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  ),
   yAnnotations: PropTypes.arrayOf(
     PropTypes.shape({
       column: PropTypes.string,

@@ -36,7 +36,7 @@ export const ReactCharts = {
   Hemicycle
 }
 
-const createRanges = ({
+export const createRanges = ({
   neutral,
   sequential,
   sequential3,

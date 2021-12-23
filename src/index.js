@@ -886,6 +886,23 @@ const Styleguide = () => {
                       component: require('./components/Chart/docs.js').default
                     },
                     {
+                      path: '/charts/editor',
+                      title: 'Editor',
+                      imports: {
+                        ...require('./components/Typography'),
+                        ChartEditor: require('./components/Chart/Editor'),
+                        data: {
+                          ...require('./components/Chart/Editor/docs.data')
+                        },
+                        Scroller: require('./components/Tabs/Scroller'),
+                        TabButton: require('./components/Tabs/TabButton'),
+                        ErrorBoundary: require('./components/ErrorBoundary'),
+                        CsvChart: require('./components/Chart/Csv'),
+                        t
+                      },
+                      src: require('./components/Chart/Editor/docs.md')
+                    },
+                    {
                       path: '/charts/bars',
                       title: 'Bars',
                       imports: {
