@@ -1,13 +1,8 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import { Controlled as CodeMirror } from 'react-codemirror2'
-import {
-  fontStyles,
-  Label,
-  useColorContext,
-  useDebounce
-} from '@project-r/styleguide'
+import { colors, fontFamilies, Label, useDebounce } from '@project-r/styleguide'
 
 // CodeMirror can only run in the browser
 if (process.browser && window) {
@@ -22,9 +17,28 @@ if (process.browser && window) {
 
 const LINE_HEIGHT = 20.4
 
+const styles = {
+  codemirror: css({
+    marginBottom: 20,
+    padding: 0,
+    '& .CodeMirror': {
+      height: 'auto',
+      fontFamily: fontFamilies.monospaceRegular,
+      fontSize: 14,
+      color: colors.text
+    },
+    '& .CodeMirror-lines': {
+      backgroundColor: colors.light.hover
+    },
+    '& .CodeMirror-cursor': {
+      width: 1,
+      background: colors.light.text
+    }
+  })
+}
+
 const CodeMirrorField = ({
   label,
-  error,
   value,
   onChange,
   onPaste,
@@ -33,42 +47,12 @@ const CodeMirrorField = ({
   onBlur,
   linesShown
 }) => {
-  const [colorScheme] = useColorContext()
-  const showLabel = label || linesShown || error
-
-  const codemirrorRule = useMemo(
-    () =>
-      css({
-        marginBottom: 20,
-        padding: 0,
-        '& .CodeMirror': {
-          height: 'auto',
-          ...fontStyles.monospaceRegular,
-          fontSize: 14,
-          color: colorScheme.getCSSColor('text')
-        },
-        '& .CodeMirror-lines': {
-          backgroundColor: colorScheme.getCSSColor('hover')
-        },
-        '& .CodeMirror-cursor': {
-          width: 1,
-          background: colorScheme.getCSSColor('text')
-        }
-      }),
-    [colorScheme]
-  )
-
+  const showLabel = label || linesShown
   return (
-    <div {...codemirrorRule}>
+    <div {...styles.codemirror}>
       {showLabel && (
         <div style={{ marginBottom: 10 }}>
-          <Label>
-            {error ? (
-              <span {...colorScheme.set('color', 'error')}>{error}</span>
-            ) : (
-              label
-            )}
-          </Label>
+          <Label>{label && <span>{label}</span>}</Label>
         </div>
       )}
       <div
@@ -91,16 +75,16 @@ const CodeMirrorField = ({
             lineWrapping: true,
             ...options
           }}
-          onBeforeChange={(_, __, value) => {
+          onBeforeChange={(editor, data, value) => {
             onChange(value)
           }}
-          onPaste={(_, event) => {
+          onPaste={(editor, event) => {
             onPaste && onPaste(event)
           }}
-          onBlur={(_, event) => {
+          onBlur={(editor, event) => {
             onBlur && onBlur(event)
           }}
-          onFocus={(_, event) => {
+          onFocus={(editor, event) => {
             onFocus && onFocus(event)
           }}
         />
@@ -134,13 +118,6 @@ export const PlainEditor = ({
 }
 
 const stringify = json => (json ? JSON.stringify(json, null, 2) : '')
-const safeParse = string => {
-  let json
-  try {
-    json = JSON.parse(string)
-  } catch (e) {}
-  return json
-}
 
 export const JSONEditor = ({
   label,
@@ -149,49 +126,30 @@ export const JSONEditor = ({
   linesShown,
   readOnly
 }) => {
-  const [isEditing, setEditing] = useState()
-  const [stateValue, setStateValue] = useState(stringify(config))
+  const [stateValue, setStateValue] = useState('')
   const [debouncedStateValue] = useDebounce(stateValue, 300)
-
-  // we need to use a ref for invalid because
-  // onBlur and onFocus callbacks are not refreshed
-  // as of react-codemirror2 7.2.1
-  const validJsonRef = useRef(true)
+  const configRef = useRef()
+  configRef.current = config
+  const valueRef = useRef()
+  valueRef.current = stateValue
 
   useEffect(() => {
-    const json = safeParse(debouncedStateValue)
-    validJsonRef.current = !!json
+    let json
+    try {
+      json = JSON.parse(debouncedStateValue)
+    } catch (e) {}
     if (json) {
       onChange && onChange(json)
     }
   }, [debouncedStateValue])
-  useEffect(() => {
-    // always try to safe before unmount
-    return () => {
-      const json = safeParse(stateValue)
-      if (json) {
-        onChange && onChange(json)
-      }
-    }
-  }, [stateValue])
-  useEffect(() => {
-    if (!isEditing) {
-      setStateValue(stringify(config))
-    }
-  }, [isEditing, config])
 
   return (
     <CodeMirrorField
-      onFocus={() => {
-        setEditing(true)
-      }}
+      onFocus={() => setStateValue(stringify(configRef.current))}
       onBlur={() => {
-        if (validJsonRef.current) {
-          setEditing(false)
-        }
+        setStateValue(stringify(JSON.parse(valueRef.current)))
       }}
       label={label}
-      error={!validJsonRef.current && `${label} ungültig, JSON invalid`}
       value={stateValue}
       linesShown={linesShown}
       options={{
@@ -204,7 +162,6 @@ export const JSONEditor = ({
       }}
       onChange={newValue => {
         setStateValue(newValue)
-        validJsonRef.current = !!safeParse(newValue)
       }}
     />
   )
