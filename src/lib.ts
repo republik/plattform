@@ -102,6 +102,11 @@ export {
 export { CommentTeaser } from './components/CommentTeaser'
 export { Overlay, OverlayToolbar, OverlayBody } from './components/Overlay'
 
+export {
+  StatementNode,
+  StatementList
+} from './components/Discussion/Statements'
+
 export { Container, NarrowContainer } from './components/Grid'
 export {
   fontStyles,
