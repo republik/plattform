@@ -8,6 +8,8 @@ import { mUp } from '../../../theme/mediaQueries'
 import { useColorContext } from '../../Colors/ColorContext'
 import { stripTag } from './helpers/tagHelper'
 import { renderCommentMdast } from '../Internal/Comment/render'
+import IconButton from '../../IconButton'
+import { ShareIcon } from '../../Icons'
 
 const styles = {
   root: css({
@@ -22,17 +24,18 @@ const styles = {
     gridTemplateAreas: `
       "portrait heading"
       "text text"
-      "vote vote"
+      "actions vote"
     `,
     gridTemplateColumns: 'max-content 1fr',
     gridTemplateRows: 'auto auto auto',
     [mUp]: {
       gridTemplateAreas: `
       "portrait heading ."
-      "portrait text vote"
+      "portrait text ."
+      "portrait actions vote"
     `,
       gridTemplateColumns: 'minmax(100px, max-content) 1fr max-content',
-      gridTemplateRows: 'max-content auto'
+      gridTemplateRows: 'max-content auto auto'
     }
   }),
   withOutProfilePicture: css({
@@ -72,6 +75,9 @@ const styles = {
     margin: 0,
     ...fontStyles.sansSerifMedium22
   }),
+  actionWrapper: css({
+    gridArea: 'actions'
+  }),
   voteWrapper: css({
     gridArea: 'vote',
     display: 'flex',
@@ -84,7 +90,7 @@ const StatementNode = ({
   comment,
   tagMappings = [],
   t,
-  actions: { handleUpVote, handleDownVote, handleUnVote },
+  actions: { handleUpVote, handleDownVote, handleUnVote, handleShare },
   disableVoting = false
 }) => {
   const [colorScheme] = useColorContext()
@@ -135,6 +141,15 @@ const StatementNode = ({
         </p>
       </div>
       <div {...styles.textWrapper}>{commentText}</div>
+      <div {...styles.actionWrapper}>
+        <IconButton
+          title={t('styleguide/CommentActions/share')}
+          Icon={ShareIcon}
+          onClick={() => handleShare(comment)}
+          size={20}
+          noMargin
+        />
+      </div>
       <div {...styles.voteWrapper}>
         <VoteButtons
           t={t}
