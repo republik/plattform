@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import SlatePropTypes from 'slate-prop-types'
 import OverlayForm from './OverlayForm'
@@ -17,12 +17,21 @@ const OverlayFormManager = ({
   children
 }) => {
   const { showModal, setShowModal } = useContext(OverlayFormContext)
-  const startEditing = () => setShowModal(true)
-  const isOpen = showModal || node.data.get('isNew')
+  const isNew = node.data.get('isNew')
+  useEffect(() => {
+    if (isNew) {
+      setShowModal(true)
+      editor.change(change => {
+        change.setNodeByKey(node.key, {
+          data: node.data.delete('isNew')
+        })
+      })
+    }
+  }, [isNew])
 
   return (
     <div {...attributes} style={{ position: 'relative' }}>
-      {isOpen && (
+      {showModal && (
         <OverlayForm
           preview={preview}
           showPreview={showPreview}
@@ -30,18 +39,12 @@ const OverlayFormManager = ({
           extra={extra}
           onClose={() => {
             setShowModal(false)
-            node.data.get('isNew') &&
-              editor.change(change => {
-                change.setNodeByKey(node.key, {
-                  data: node.data.delete('isNew')
-                })
-              })
           }}
         >
           {children({ data: node.data, onChange })}
         </OverlayForm>
       )}
-      <div onDoubleClick={startEditing}>{component || preview}</div>
+      <div onDoubleClick={() => setShowModal(true)}>{component || preview}</div>
     </div>
   )
 }
