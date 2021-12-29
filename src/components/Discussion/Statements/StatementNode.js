@@ -10,6 +10,8 @@ import { stripTag } from './helpers/tagHelper'
 import { renderCommentMdast } from '../Internal/Comment/render'
 import IconButton from '../../IconButton'
 import { ShareIcon } from '../../Icons'
+import PropTypes from "prop-types";
+import { ActionsMenuItemPropType } from "../Internal/Comment/ActionsMenu";
 
 const styles = {
   root: css({
@@ -91,6 +93,7 @@ const StatementNode = ({
   tagMappings = [],
   t,
   actions: { handleUpVote, handleDownVote, handleUnVote, handleShare },
+  menuItems = [],
   disableVoting = false
 }) => {
   const [colorScheme] = useColorContext()
@@ -150,6 +153,10 @@ const StatementNode = ({
           noMargin
         />
       </div>
+      {/*
+      TODO: Render menu
+      */}
+      <p>{menuItems.map(item => item.label).join(', ')}</p>
       <div {...styles.voteWrapper}>
         <VoteButtons
           t={t}
@@ -165,3 +172,22 @@ const StatementNode = ({
 }
 
 export default StatementNode
+
+StatementNode.propTypes = {
+  comment: PropTypes.object.isRequired,
+  t: PropTypes.func.isRequired,
+  tagMappings: PropTypes.arrayOf(
+    PropTypes.shape({
+      tag: PropTypes.string.isRequired,
+      text: PropTypes.string.isRequired
+    })
+  ),
+  actions: PropTypes.shape({
+    handleUpVote: PropTypes.func.isRequired,
+    handleDownVote: PropTypes.func.isRequired,
+    handleUnVote: PropTypes.func.isRequired,
+    handleShare: PropTypes.func.isRequired
+  }),
+  menuItems: PropTypes.arrayOf(ActionsMenuItemPropType),
+  disableVoting: PropTypes.bool
+}
