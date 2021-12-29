@@ -1,22 +1,22 @@
 import React from 'react'
 import { css } from 'glamor'
-import { AddIcon, CheckIcon, MoreIcon, RemoveIcon } from '../../../Icons'
+import { AddIcon, CheckIcon, RemoveIcon } from '../../../Icons'
 import {
   sansSerifMedium16,
   sansSerifRegular14
 } from '../../../Typography/styles'
 import { onlyS } from '../../../../theme/mediaQueries'
-
 import { ellipsize, underline } from '../../../../lib/styleMixins'
 import { timeFormat } from '../../../../lib/timeFormat'
 import { DiscussionContext } from '../../DiscussionContext'
 import * as config from '../../config'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
-import CalloutMenu from '../../../Callout/CalloutMenu'
 import { useColorContext } from '../../../Colors/ColorContext'
 import IconButton from '../../../IconButton'
 
 import RelativeTime from './RelativeTime'
+import ActionsMenu, { ActionsMenuItemPropType } from './ActionsMenu'
+import PropTypes from 'prop-types'
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
@@ -143,11 +143,8 @@ export const CommentHeaderCollapseIcon = styles.collapseWrapper
 
 const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
 const titleDate = string => dateTimeFormat(new Date(string))
-const MoreIconWithProps = props => (
-  <IconButton title='Mehr' Icon={MoreIcon} {...props} />
-)
 
-export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
+export const Header = ({ t, comment, menuItems, isExpanded, onToggle }) => {
   const { clock, discussion, Link } = React.useContext(DiscussionContext)
 
   const [colorScheme] = useColorContext()
@@ -289,22 +286,16 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
             />
           </div>
         )}
-        {menu && (
-          <div>
-            <CalloutMenu
-              contentPaddingMobile={'30px'}
-              Element={MoreIconWithProps}
-              align='right'
-              iconProps={{
-                fill: colorScheme.getCSSColor('textSoft'),
-                size: 20
-              }}
-            >
-              {menu}
-            </CalloutMenu>
-          </div>
-        )}
+        {menuItems && menuItems.length > 0 && <ActionsMenu items={menuItems} />}
       </div>
     </div>
   )
+}
+
+Header.propTypes = {
+  t: PropTypes.func.isRequired,
+  comment: PropTypes.object.isRequired,
+  menuItems: PropTypes.arrayOf(ActionsMenuItemPropType),
+  isExpanded: PropTypes.bool,
+  onToggle: PropTypes.func
 }
