@@ -3,7 +3,7 @@ import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import { Controlled as CodeMirror } from 'react-codemirror2'
 import { fontStyles, Label, useColorContext } from '@project-r/styleguide'
-import debounce from 'lodash.debounce'
+import debounce from 'lodash/debounce'
 
 // CodeMirror can only run in the browser
 if (process.browser && window) {

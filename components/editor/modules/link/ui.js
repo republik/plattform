@@ -14,7 +14,7 @@ import RepoSearch from '../../utils/RepoSearch'
 import { AutoSlugLinkInfo } from '../../utils/github'
 import withT from '../../../../lib/withT'
 import gql from 'graphql-tag'
-import debounce from 'lodash.debounce'
+import debounce from 'lodash/debounce'
 
 import { createInlineButton, matchInline, buttonStyles } from '../../utils'
 

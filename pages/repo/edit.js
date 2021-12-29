@@ -3,7 +3,7 @@ import { withRouter } from 'next/router'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 import { Value, resetKeyGenerator } from 'slate'
-import debounce from 'lodash.debounce'
+import debounce from 'lodash/debounce'
 import { timeFormat } from 'd3-time-format'
 import { parse } from '@orbiting/remark-preset'
 
