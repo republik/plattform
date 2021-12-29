@@ -1,13 +1,9 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import { Controlled as CodeMirror } from 'react-codemirror2'
-import {
-  fontStyles,
-  Label,
-  useColorContext,
-  useDebounce
-} from '@project-r/styleguide'
+import { fontStyles, Label, useColorContext } from '@project-r/styleguide'
+import debounce from 'lodash.debounce'
 
 // CodeMirror can only run in the browser
 if (process.browser && window) {
@@ -151,29 +147,27 @@ export const JSONEditor = ({
 }) => {
   const [isEditing, setEditing] = useState()
   const [stateValue, setStateValue] = useState(stringify(config))
-  const [debouncedStateValue] = useDebounce(stateValue, 300)
 
   // we need to use a ref for invalid because
   // onBlur and onFocus callbacks are not refreshed
   // as of react-codemirror2 7.2.1
-  const validJsonRef = useRef(true)
+  const validJsonRef = useRef(safeParse(stateValue))
+  const [isValid, setIsValid] = useState(!!validJsonRef.current)
+  const onChangeRef = useRef()
+  onChangeRef.current = onChange
 
-  useEffect(() => {
-    const json = safeParse(debouncedStateValue)
-    validJsonRef.current = !!json
-    if (json) {
-      onChange && onChange(json)
-    }
-  }, [debouncedStateValue])
-  useEffect(() => {
-    // always try to safe before unmount
-    return () => {
-      const json = safeParse(stateValue)
-      if (json) {
-        onChange && onChange(json)
+  // save config onChange and onBlur
+  const slowSave = useCallback(
+    debounce(() => {
+      setIsValid(!!validJsonRef.current)
+      if (validJsonRef.current && onChangeRef.current) {
+        onChangeRef.current(validJsonRef.current)
       }
-    }
-  }, [stateValue])
+    }, 300),
+    []
+  )
+
+  // editor text with well formatted config from saved state
   useEffect(() => {
     if (!isEditing) {
       setStateValue(stringify(config))
@@ -187,11 +181,13 @@ export const JSONEditor = ({
       }}
       onBlur={() => {
         if (validJsonRef.current) {
+          // immediately run pending save
+          slowSave.flush()
           setEditing(false)
         }
       }}
       label={label}
-      error={!validJsonRef.current && `${label} ungültig, JSON invalid`}
+      error={!isValid && `${label} ungültig, JSON invalid`}
       value={stateValue}
       linesShown={linesShown}
       options={{
@@ -204,7 +200,8 @@ export const JSONEditor = ({
       }}
       onChange={newValue => {
         setStateValue(newValue)
-        validJsonRef.current = !!safeParse(newValue)
+        validJsonRef.current = safeParse(newValue)
+        slowSave()
       }}
     />
   )
