@@ -21,8 +21,12 @@ const styles = {
   })
 }
 
-const ActionsMenu = ({ items }) => {
+const ActionsMenu = ({ items = [] }) => {
   const [colorScheme] = useColorContext()
+
+  if (items.length === 0) {
+    return null
+  }
 
   return (
     <CalloutMenu

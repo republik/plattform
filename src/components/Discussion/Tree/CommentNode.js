@@ -343,9 +343,6 @@ const CommentNode = ({
       })
     }
 
-    // Prevent rendering of an empty CalloutMenu
-    if (items.length === 0) return undefined
-
     return items
   }, [comment, actions, isAdmin, isModerator])
 

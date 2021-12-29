@@ -10,8 +10,10 @@ import { stripTag } from './helpers/tagHelper'
 import { renderCommentMdast } from '../Internal/Comment/render'
 import IconButton from '../../IconButton'
 import { ShareIcon } from '../../Icons'
-import PropTypes from "prop-types";
-import { ActionsMenuItemPropType } from "../Internal/Comment/ActionsMenu";
+import PropTypes from 'prop-types'
+import ActionsMenu, {
+  ActionsMenuItemPropType
+} from '../Internal/Comment/ActionsMenu'
 
 const styles = {
   root: css({
@@ -156,7 +158,7 @@ const StatementNode = ({
       {/*
       TODO: Render menu
       */}
-      <p>{menuItems.map(item => item.label).join(', ')}</p>
+      {menuItems && <ActionsMenu items={menuItems} />}
       <div {...styles.voteWrapper}>
         <VoteButtons
           t={t}
