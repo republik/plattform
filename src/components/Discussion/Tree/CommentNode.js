@@ -286,7 +286,7 @@ const CommentNode = ({
   )
 
   // Returns the content of the more-button, located in the top right of the header.
-  const menu = useMemo(() => {
+  const menuItems = useMemo(() => {
     const items = []
 
     if (comment.published && comment.userCanReport && actions.reportComment) {
@@ -301,7 +301,7 @@ const CommentNode = ({
             ? t('styleguide/CommentActions/reported')
             : t('styleguide/CommentActions/report'),
         disabled: !!comment.userReportedAt,
-        action: () => {
+        onClick: () => {
           if (window.confirm(t('styleguide/CommentActions/reportMessage'))) {
             actions.reportComment(comment)
           }
@@ -318,7 +318,7 @@ const CommentNode = ({
               time: hmFormat(new Date(comment.featuredAt))
             })
           : t('styleguide/CommentActions/feature'),
-        action: () => actions.featureComment(comment)
+        onClick: () => actions.featureComment(comment)
       })
     }
 
@@ -326,7 +326,7 @@ const CommentNode = ({
       items.push({
         icon: EditIcon,
         label: t('styleguide/CommentActions/edit'),
-        action: () => dispatch({ editComment: {} })
+        onClick: () => dispatch({ editComment: {} })
       })
     }
 
@@ -339,27 +339,14 @@ const CommentNode = ({
       items.push({
         icon: UnpublishIcon,
         label: t('styleguide/CommentActions/unpublish'),
-        action: () => actions.unpublishComment(comment)
+        onClick: () => actions.unpublishComment(comment)
       })
     }
 
     // Prevent rendering of an empty CalloutMenu
     if (items.length === 0) return undefined
 
-    return (
-      <div {...styles.menuWrapper}>
-        {items.map(item => (
-          <IconButton
-            key={item.label}
-            Icon={item.icon}
-            label={item.label}
-            disabled={item.disabled}
-            labelShort={item.label}
-            onClick={item.action}
-          />
-        ))}
-      </div>
-    )
+    return items
   }, [comment, actions, isAdmin, isModerator])
 
   if (isExpanded) {
@@ -392,7 +379,7 @@ const CommentNode = ({
                   onToggle={
                     !board && !(isRoot && rootCommentOverlay) && toggleReplies
                   }
-                  menu={menu}
+                  menuItems={menuItems}
                 />
                 <div style={{ marginTop: 12 }}>
                   <Comment.Body
