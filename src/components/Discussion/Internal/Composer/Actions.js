@@ -22,11 +22,15 @@ const actionButtonStyle = {
 }
 
 const styles = {
-  root: css({
-    display: 'flex',
-    flexFlow: 'wrap',
-    justifyContent: 'space-between',
-    alignItems: 'center'
+  root: secondaryActions =>
+    css({
+      display: 'flex',
+      flexFlow: 'wrap',
+      justifyContent: secondaryActions ? 'space-between' : 'flex-end',
+      alignItems: 'center'
+    }),
+  rootWithActions: css({
+    justifyContent: 'justify-between'
   }),
   mainActions: css({
     display: 'flex'
@@ -76,7 +80,7 @@ export const Actions = ({
     }
   }, [colorScheme])
   return (
-    <div {...styles.root}>
+    <div {...styles.root(composerSecondaryActions)}>
       {composerSecondaryActions}
 
       <div {...styles.mainActions}>
