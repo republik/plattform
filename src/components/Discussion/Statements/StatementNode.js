@@ -156,7 +156,7 @@ const StatementNode = ({
         <IconButton
           title={t('styleguide/CommentActions/share')}
           Icon={ShareIcon}
-          onClick={() => handleShare(comment.id)}
+          onClick={() => handleShare(comment)}
           size={20}
           noMargin
         />
