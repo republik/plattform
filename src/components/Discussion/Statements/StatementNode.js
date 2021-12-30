@@ -134,6 +134,7 @@ const StatementNode = ({
         : styles.withOutProfilePicture)}
       {...(isHighlighted ? styles.highlightedContainer : {})}
       {...(isHighlighted ? colorScheme.set('backgroundColor', 'alert') : {})}
+      data-comment-id={comment.id}
     >
       {hasProfilePicture && (
         <img
