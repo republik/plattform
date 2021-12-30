@@ -13,6 +13,7 @@ interface VotingInterface {
   allowEmptyBallots: Boolean!
   allowedMemberships: [VotingMembershipRequirement!]
   allowedRoles: [String!]
+  requireAddress: Boolean!
 }
 
 type Voting implements VotingInterface {
@@ -30,6 +31,8 @@ type Voting implements VotingInterface {
   allowEmptyBallots: Boolean!
   allowedMemberships: [VotingMembershipRequirement!]
   allowedRoles: [String!]
+  requireAddress: Boolean!
+
   groupSlug: String
 
   name: String!
@@ -122,6 +125,7 @@ type Election implements VotingInterface {
   allowEmptyBallots: Boolean!
   allowedMemberships: [VotingMembershipRequirement!]
   allowedRoles: [String!]
+  requireAddress: Boolean!
 
   numSeats: Int!
   candidacyBeginDate: DateTime!
