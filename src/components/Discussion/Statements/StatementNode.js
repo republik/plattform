@@ -15,7 +15,7 @@ import ActionsMenu, {
   ActionsMenuItemPropType
 } from '../Internal/Comment/ActionsMenu'
 import HeaderMetaLine from '../Internal/Comment/HeaderMetaLine'
-import { mediaQueries, useMediaQuery } from "../../../lib";
+import { mediaQueries, useMediaQuery } from '../../../lib'
 
 const styles = {
   root: css({
@@ -154,11 +154,7 @@ const StatementNode = ({
         >
           {commentHeading}
         </p>
-        <HeaderMetaLine
-          t={t}
-          comment={comment}
-          Link={Link}
-        />
+        <HeaderMetaLine t={t} comment={comment} Link={Link} />
       </div>
       <div {...styles.textWrapper}>{commentText}</div>
       <div {...styles.actionWrapper}>

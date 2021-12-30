@@ -1,6 +1,5 @@
-import { CheckIcon } from '../../../Icons'
-import RelativeTime from './RelativeTime'
 import React from 'react'
+import RelativeTime from './RelativeTime'
 import { useColorContext } from '../../../Colors/ColorContext'
 import { timeFormat } from 'd3-time-format'
 import PropTypes from 'prop-types'
@@ -9,6 +8,7 @@ import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
 import { sansSerifRegular14 } from '../../../Typography/styles'
 import { ellipsize, underline } from '../../../../lib/styleMixins'
 import { mediaQueries, useMediaQuery } from '../../../../lib'
+import { CheckIcon } from '../../../Icons'
 
 const styles = {
   meta: css({
@@ -53,9 +53,10 @@ const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
 const titleDate = string => dateTimeFormat(new Date(string))
 
 /**
+ * ============================================================
  * REFACTOR NOTE
  * Make use of this component in the CommentNode to reduce redundancy.
- *
+ * ============================================================
  */
 
 /**
