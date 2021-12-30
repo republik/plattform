@@ -72,6 +72,7 @@ export const CommentComposer = props => {
     onSubmitLabel,
     onOpenPreferences,
     commentId,
+    parentId,
     autoFocus = true
   } = props
   const [colorScheme] = useColorContext()
