@@ -18,11 +18,13 @@ import ActionsMenu, {
 const styles = {
   root: css({
     display: 'grid',
-
     gap: '.5rem',
     [mUp]: {
       gap: '.5rem 1rem'
     }
+  }),
+  highlightedContainer: css({
+    padding: '7px'
   }),
   withProfilePicture: css({
     gridTemplateAreas: `
@@ -96,7 +98,8 @@ const StatementNode = ({
   t,
   actions: { handleUpVote, handleDownVote, handleUnVote, handleShare },
   menuItems = [],
-  disableVoting = false
+  disableVoting = false,
+  isHighlighted = false
 }) => {
   const [colorScheme] = useColorContext()
 
@@ -129,6 +132,8 @@ const StatementNode = ({
       {...(hasProfilePicture
         ? styles.withProfilePicture
         : styles.withOutProfilePicture)}
+      {...(isHighlighted ? styles.highlightedContainer : {})}
+      {...(isHighlighted ? colorScheme.set('backgroundColor', 'alert') : {})}
     >
       {hasProfilePicture && (
         <img
@@ -192,5 +197,6 @@ StatementNode.propTypes = {
     handleShare: PropTypes.func.isRequired
   }),
   menuItems: PropTypes.arrayOf(ActionsMenuItemPropType),
-  disableVoting: PropTypes.bool
+  disableVoting: PropTypes.bool,
+  isHighlighted: PropTypes.bool
 }

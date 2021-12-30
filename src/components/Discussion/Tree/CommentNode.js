@@ -10,7 +10,6 @@ import { CommentComposer } from '../Composer'
 import { CommentList } from './CommentList'
 import { mUp } from '../../../theme/mediaQueries'
 import { EditIcon, FeaturedIcon, ReportIcon, UnpublishIcon } from '../../Icons'
-import IconButton from '../../IconButton'
 import { timeFormat } from '../../../lib/timeFormat'
 import { CommentHeaderCollapseIcon } from '../Internal/Comment'
 
