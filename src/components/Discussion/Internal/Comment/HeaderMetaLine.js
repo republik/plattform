@@ -76,9 +76,10 @@ const HeaderMetaLine = ({ t, comment, Link }) => {
     createdAt,
     updatedAt,
     published,
-    isUpdated,
     displayAuthor: { credential }
   } = comment
+
+  const isUpdated = updatedAt && updatedAt !== createdAt
 
   return (
     <div {...styles.meta} {...colorScheme.set('color', 'textSoft')}>
