@@ -156,18 +156,18 @@ export const JSONEditor = ({
   const onChangeRef = useRef()
   onChangeRef.current = onChange
 
-  // save config onChange and onBlur
+  // slowly save valid json on change (immediately flushed on blur)
   const slowSave = useCallback(
     debounce(() => {
       setIsValid(!!validJsonRef.current)
       if (validJsonRef.current && onChangeRef.current) {
         onChangeRef.current(validJsonRef.current)
       }
-    }, 300),
+    }, 500),
     []
   )
 
-  // editor text with well formatted config from saved state
+  // set editor text with well formatted config from saved state when not isEditing
   useEffect(() => {
     if (!isEditing) {
       setStateValue(stringify(config))
