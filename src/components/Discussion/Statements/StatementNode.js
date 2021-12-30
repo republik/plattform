@@ -24,7 +24,8 @@ const styles = {
     }
   }),
   highlightedContainer: css({
-    padding: '7px'
+    padding: '7px 7px 0 7px',
+    margin: '0 -7px 12px -7px'
   }),
   withProfilePicture: css({
     gridTemplateAreas: `
