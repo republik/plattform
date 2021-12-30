@@ -5,8 +5,9 @@ import { LoadMore } from '../Tree/LoadMore'
 
 const styles = {
   wrapper: css({
-    '& > div:not(:last-child)': {
-      marginBottom: '2rem'
+    marginTop: '1rem',
+    '& > div:not(:first-child)': {
+      marginTop: '2rem'
     }
   })
 }

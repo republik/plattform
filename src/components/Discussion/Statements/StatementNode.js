@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { fontStyles } from '../../Typography'
 import { useMemo } from 'react'
@@ -10,7 +11,6 @@ import { stripTag } from './helpers/tagHelper'
 import { renderCommentMdast } from '../Internal/Comment/render'
 import IconButton from '../../IconButton'
 import { ShareIcon } from '../../Icons'
-import PropTypes from 'prop-types'
 import ActionsMenu, {
   ActionsMenuItemPropType
 } from '../Internal/Comment/ActionsMenu'
@@ -26,15 +26,15 @@ const styles = {
   }),
   withProfilePicture: css({
     gridTemplateAreas: `
-      "portrait heading"
-      "text text"
-      "actions vote"
+      "portrait heading menu"
+      "text text text"
+      "actions vote vote"
     `,
-    gridTemplateColumns: 'max-content 1fr',
+    gridTemplateColumns: 'max-content 1fr max-content',
     gridTemplateRows: 'auto auto auto',
     [mUp]: {
       gridTemplateAreas: `
-      "portrait heading ."
+      "portrait heading menu"
       "portrait text ."
       "portrait actions vote"
     `,
@@ -44,20 +44,12 @@ const styles = {
   }),
   withOutProfilePicture: css({
     gridTemplateAreas: `
-      "heading"
-      "text"
-      "vote"
+      "heading menu"
+      "text text"
+      "actions vote"
     `,
-    gridTemplateColumns: '1fr',
-    gridTemplateRows: 'auto auto auto',
-    [mUp]: {
-      gridTemplateAreas: `
-      "heading ."
-      "text vote"
-    `,
-      gridTemplateColumns: '1fr max-content',
-      gridTemplateRows: 'max-content auto'
-    }
+    gridTemplateColumns: '1fr max-content',
+    gridTemplateRows: 'auto auto auto auto'
   }),
   profilePicture: css({
     gridArea: 'portrait',
@@ -81,6 +73,12 @@ const styles = {
   }),
   actionWrapper: css({
     gridArea: 'actions'
+  }),
+  menuWrapper: css({
+    gridArea: 'menu',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-start'
   }),
   voteWrapper: css({
     gridArea: 'vote',
@@ -155,10 +153,11 @@ const StatementNode = ({
           noMargin
         />
       </div>
-      {/*
-      TODO: Render menu
-      */}
-      {menuItems && <ActionsMenu items={menuItems} />}
+      {menuItems && (
+        <div {...styles.menuWrapper}>
+          <ActionsMenu items={menuItems} />
+        </div>
+      )}
       <div {...styles.voteWrapper}>
         <VoteButtons
           t={t}
