@@ -6,13 +6,6 @@ import { useColorContext } from '../../../Colors/ColorContext'
 import { fontStyles } from '../../../Typography'
 
 const styles = {
-  root: css({
-    ...fontStyles.sansSerifMedium24,
-    height: '40px',
-    display: 'flex',
-    alignItems: 'center',
-    marginLeft: '-7px'
-  }),
   votes: css({
     display: 'flex',
     justifyContent: 'space-between',
@@ -23,6 +16,10 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center'
+  }),
+  voteNumber: css({
+    ...fontStyles.sansSerifMedium14,
+    fontFeatureSettings: '"tnum" 1'
   }),
   voteDivider: css({
     padding: '0 2px'
@@ -63,6 +60,7 @@ export const VoteButtons = ({
           noMargin
         />
         <span
+          {...styles.voteNumber}
           title={t.pluralize('styleguide/CommentActions/upvote/count', {
             count: comment.upVotes
           })}
@@ -75,6 +73,7 @@ export const VoteButtons = ({
       </div>
       <div {...styles.vote}>
         <span
+          {...styles.voteNumber}
           title={t.pluralize('styleguide/CommentActions/downvote/count', {
             count: comment.downVotes
           })}
