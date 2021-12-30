@@ -35,7 +35,7 @@ const styles = {
     [mUp]: {
       gridTemplateAreas: `
       "portrait heading menu"
-      "portrait text ."
+      "portrait text text"
       "portrait actions vote"
     `,
       gridTemplateColumns: 'minmax(100px, max-content) 1fr max-content',
@@ -72,7 +72,9 @@ const styles = {
     ...fontStyles.sansSerifMedium22
   }),
   actionWrapper: css({
-    gridArea: 'actions'
+    gridArea: 'actions',
+    display: 'flex',
+    alignItems: 'center'
   }),
   menuWrapper: css({
     gridArea: 'menu',
