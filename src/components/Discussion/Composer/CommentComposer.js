@@ -70,10 +70,9 @@ export const CommentComposer = props => {
     onClose,
     onCloseLabel,
     onSubmitLabel,
-    parentId,
+    onOpenPreferences,
     commentId,
-    autoFocus = true,
-    menu
+    autoFocus = true
   } = props
   const [colorScheme] = useColorContext()
   /*
@@ -276,7 +275,7 @@ export const CommentComposer = props => {
             <Header
               t={t}
               displayAuthor={displayAuthor}
-              onClick={actions.openDiscussionPreferences}
+              onClick={onOpenPreferences}
             />
           </div>
         )}
