@@ -7,15 +7,15 @@ import React from 'react'
  */
 export const createSampleDiscussionContextValue = ({
   t,
-  isAdmin = false,
+  isModerator = false,
   actions = {},
   userWaitUntil = null
 }) => ({
   /**
-   * Admin users have elevated priviledges, they can for example unpublish
+   * Moderator users have elevated priviledges, they can for example unpublish
    * any comment.
    */
-  isAdmin,
+  isModerator,
 
   /**
    * The Discussion object, straight from the GraphQL server.

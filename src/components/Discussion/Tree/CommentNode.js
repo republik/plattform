@@ -164,7 +164,6 @@ const CommentNode = ({
     highlightedCommentId,
     activeTag,
     actions,
-    isAdmin,
     isModerator
   } = React.useContext(DiscussionContext)
   const { id, parentIds, tags, text, comments } = comment
@@ -332,7 +331,7 @@ const CommentNode = ({
     if (
       comment.published &&
       !comment.adminUnpublished &&
-      (isAdmin || isModerator || comment.userCanEdit) &&
+      (isModerator || comment.userCanEdit) &&
       actions.unpublishComment
     ) {
       items.push({
@@ -343,7 +342,7 @@ const CommentNode = ({
     }
 
     return items
-  }, [comment, actions, isAdmin, isModerator])
+  }, [comment, actions, isModerator])
 
   if (isExpanded) {
     return (
