@@ -15,7 +15,8 @@ import ActionsMenu, {
   ActionsMenuItemPropType
 } from '../Internal/Comment/ActionsMenu'
 import HeaderMetaLine from '../Internal/Comment/HeaderMetaLine'
-import { mediaQueries, useMediaQuery } from '../../../lib'
+
+const HIGHLIGHT_PADDING = 7
 
 const styles = {
   root: css({
@@ -26,8 +27,8 @@ const styles = {
     }
   }),
   highlightedContainer: css({
-    padding: '7px 7px 0 7px',
-    margin: '0 -7px 12px -7px'
+    padding: HIGHLIGHT_PADDING,
+    margin: `0 -${HIGHLIGHT_PADDING}px`
   }),
   withProfilePicture: css({
     gridTemplateAreas: `
