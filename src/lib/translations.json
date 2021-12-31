@@ -33,14 +33,6 @@
       "value": "Damit System Gendersternchen erkennt, stellen Sie einen Backslash voran: Leser\\*in"
     },
     {
-      "key": "styleguide/CommentComposer/hints/formattingAsteriks",
-      "value": "Um * sichtbar zu machen, stellen Sie ein Backslash voran. Für Leser*in z.B. schreiben Sie: Leser\\*in."
-    },
-    {
-      "key": "styleguide/CommentComposer/hints/deepThought",
-      "value": "You found the Answer to the Ultimate Question of Life, The Universe, and Everything"
-    },
-    {
       "key": "styleguide/CommentActions/expand",
       "value": "Kommentare anschauen"
     },
@@ -66,7 +58,7 @@
     },
     {
       "key": "styleguide/CommentActions/reportWithAmount",
-      "value": "Inhalt gemeldet: ({amount})"
+      "value": "Inhalt ({amount}) gemeldet"
     },
     {
       "key": "styleguide/CommentActions/reported",
