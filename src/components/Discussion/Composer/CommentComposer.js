@@ -70,7 +70,6 @@ export const CommentComposer = props => {
     onClose,
     onCloseLabel,
     onSubmitLabel,
-    onOpenPreferences,
     commentId,
     parentId,
     autoFocus = true
@@ -276,7 +275,7 @@ export const CommentComposer = props => {
             <Header
               t={t}
               displayAuthor={displayAuthor}
-              onClick={onOpenPreferences}
+              onClick={actions.openDiscussionPreferences}
             />
           </div>
         )}
