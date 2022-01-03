@@ -12,6 +12,7 @@ const ROLES = [
   'producer',
   'supporter',
   'accountant',
+  'moderator',
   'admin',
   'accomplice',
   'tester',
