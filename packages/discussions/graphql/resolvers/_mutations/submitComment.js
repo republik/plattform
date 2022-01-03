@@ -13,7 +13,8 @@ const Promise = require('bluebird')
 
 const { submitComment: notify } = require('../../../lib/Notifications')
 
-module.exports = async (_, args, { pgdb, loaders, user: me, t, pubsub }) => {
+module.exports = async (_, args, context) => {
+  const { pgdb, loaders, user: me, t, pubsub } = context
   Roles.ensureUserHasRole(me, 'member')
 
   const {
