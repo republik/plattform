@@ -80,6 +80,7 @@ export const OverlayToolbar = ({ title, onClose, children }) => {
     </div>
   )
 }
+
 OverlayToolbar.propTypes = {
   onClick: PropTypes.func,
   title: PropTypes.node,

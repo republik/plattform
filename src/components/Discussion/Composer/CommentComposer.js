@@ -70,8 +70,8 @@ export const CommentComposer = props => {
     onClose,
     onCloseLabel,
     onSubmitLabel,
-    parentId,
     commentId,
+    parentId,
     autoFocus = true
   } = props
   const [colorScheme] = useColorContext()
