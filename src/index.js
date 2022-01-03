@@ -1115,6 +1115,11 @@ const Styleguide = () => {
                         GetColorScheme,
                         css
                       }
+                    },
+                    {
+                      path: '/dev/typescript',
+                      title: 'Typescript',
+                      src: require('./development/typescript.docs.md')
                     }
                   ]
                 }
