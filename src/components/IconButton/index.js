@@ -20,17 +20,15 @@ const IconButton = React.forwardRef(
       fillColorName,
       onClick,
       children,
-      style,
+      style: customStyles,
       size,
       disabled,
       attributes,
-      invert,
-      noMargin
+      invert
     },
     ref
   ) => {
     const Element = href ? 'a' : 'button'
-    const customStyles = style || null
     const [colorScheme] = useColorContext()
 
     const fillValue = disabled ? 'disabled' : fill || fillColorName || 'text'
@@ -38,8 +36,7 @@ const IconButton = React.forwardRef(
     return (
       <Element
         {...styles.button}
-        {...(invert ? styles.invertFlex : {})}
-        {...(noMargin ? styles.noMargin : {})}
+        {...(invert && styles.invertFlex)}
         {...((onClick || href) && styles.hover)}
         {...attributes}
         style={{
@@ -133,12 +130,7 @@ const styles = {
   label: css({
     ...fontStyles.sansSerifMedium,
     fontSize: 14,
-    /*marginLeft: 8,*/
     whiteSpace: 'nowrap'
-  }),
-  invertLabel: css({
-    marginLeft: 0,
-    marginRight: 8
   }),
   long: css({
     display: 'none',
@@ -151,9 +143,6 @@ const styles = {
     [mUp]: {
       display: 'none'
     }
-  }),
-  noMargin: css({
-    margin: '0'
   })
 }
 

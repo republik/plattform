@@ -282,7 +282,6 @@ export const Header = ({ t, comment, menuItems, isExpanded, onToggle }) => {
                   count: comments.totalCount + 1
                 })
               }
-              noMargin
             />
           </div>
         )}

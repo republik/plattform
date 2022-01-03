@@ -164,7 +164,6 @@ const StatementNode = ({
           Icon={ShareIcon}
           onClick={() => handleShare(comment)}
           size={20}
-          noMargin
         />
       </div>
       {menuItems && (

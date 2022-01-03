@@ -57,7 +57,7 @@ export const VoteButtons = ({
           disabled={disabled}
           onClick={() => upVoteHandler(comment.id)}
           title={t('styleguide/CommentActions/upvote')}
-          noMargin
+          style={{ margin: 0 }}
         />
         <span
           {...styles.voteNumber}
@@ -89,7 +89,7 @@ export const VoteButtons = ({
           disabled={disabled}
           onClick={() => downVoteHandler(comment.id)}
           title={t('styleguide/CommentActions/downvote')}
-          noMargin
+          style={{ margin: 0 }}
         />
       </div>
     </div>

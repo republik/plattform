@@ -1,18 +1,16 @@
 import React, { useMemo } from 'react'
 import { css } from 'glamor'
-// options: speaker-notes-off, block, clear, visibility-off, remove-circle
 import { sansSerifMedium14 } from '../../../Typography/styles'
 import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
 import {
   ShareIcon,
   ReplyIcon,
-  ArrowDownIcon,
-  ArrowUpIcon,
   DiscussionIcon
 } from '../../../Icons'
 import { useColorContext } from '../../../Colors/ColorContext'
 import { useCurrentMinute } from '../../../../lib/useCurrentMinute'
 import IconButton from '../../../IconButton'
+import { VoteButtons } from './VoteButtons'
 
 const styles = {
   root: css({
@@ -21,29 +19,6 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     marginLeft: '-7px'
-  }),
-  votes: css({
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginLeft: 'auto'
-  }),
-  vote: css({
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  }),
-  voteDivider: css({
-    padding: '0 2px'
-  }),
-  text: css({
-    display: 'inline-block',
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-    verticalAlign: 'middle',
-    marginTop: -1,
-    paddingLeft: 4,
-    ...sansSerifMedium14
   }),
   leftActionsWrapper: css({
     display: 'inline-flex',
@@ -56,7 +31,7 @@ const styles = {
 }
 
 export const Actions = ({ t, comment, onExpand, onReply }) => {
-  const { published, downVotes, upVotes, userVote } = comment
+  const { published } = comment
   const { discussion, actions, clock } = React.useContext(DiscussionContext)
   const { displayAuthor, userWaitUntil, userCanComment } = discussion
   const onShare = () => actions.shareComment(comment)
@@ -73,32 +48,6 @@ export const Actions = ({ t, comment, onExpand, onReply }) => {
     }
     return null
   }, [userWaitUntil, now])
-
-  /*
-   * The onClick functions are wired up such that when the user clicks a particular button twice,
-   * they effectively undo their vote. Eg. if the user clicks on 'downvote', then a second
-   * click on the downvote icon will 'unvote' their choice.
-   */
-  const { onUpvote, onDownvote } = (() => {
-    if (!displayAuthor) {
-      return { onUpvote: undefined, onDownvote: undefined }
-    } else if (userVote === 'UP') {
-      return {
-        onUpvote: () => actions.unvoteComment(comment),
-        onDownvote: () => actions.downvoteComment(comment)
-      }
-    } else if (userVote === 'DOWN') {
-      return {
-        onUpvote: () => actions.upvoteComment(comment),
-        onDownvote: () => actions.unvoteComment(comment)
-      }
-    } else {
-      return {
-        onUpvote: () => actions.upvoteComment(comment),
-        onDownvote: () => actions.downvoteComment(comment)
-      }
-    }
-  })()
 
   return (
     <div {...styles.root} {...colorScheme.set('color', 'text')}>
@@ -128,7 +77,6 @@ export const Actions = ({ t, comment, onExpand, onReply }) => {
             Icon={ShareIcon}
             onClick={onShare}
             size={20}
-            noMargin
           />
         )}
         {onReply && !!displayAuthor && (
@@ -144,47 +92,14 @@ export const Actions = ({ t, comment, onExpand, onReply }) => {
         )}
       </div>
       {published && (
-        <div {...styles.votes}>
-          <div {...styles.vote}>
-            <IconButton
-              size={24}
-              fill={userVote === 'UP' && colorScheme.getCSSColor('primary')}
-              disabled={!userCanComment}
-              Icon={ArrowUpIcon}
-              onClick={onUpvote}
-              title={t('styleguide/CommentActions/upvote')}
-              noMargin
-            />
-            <span
-              title={t.pluralize('styleguide/CommentActions/upvote/count', {
-                count: upVotes
-              })}
-            >
-              {upVotes}
-            </span>
-          </div>
-          <div {...styles.voteDivider} {...colorScheme.set('color', 'text')}>
-            /
-          </div>
-          <div {...styles.vote}>
-            <span
-              title={t.pluralize('styleguide/CommentActions/downvote/count', {
-                count: downVotes
-              })}
-            >
-              {downVotes}
-            </span>
-            <IconButton
-              size={24}
-              fill={userVote === 'DOWN' && colorScheme.getCSSColor('primary')}
-              disabled={!userCanComment}
-              Icon={ArrowDownIcon}
-              onClick={onDownvote}
-              title={t('styleguide/CommentActions/downvote')}
-              noMargin
-            />
-          </div>
-        </div>
+        <VoteButtons 
+          t={t}
+          comment={comment}
+          disabled={!userCanComment}
+          handleUpVote={id => actions.upvoteComment({ id })}
+          handleDownVote={id => actions.downvoteComment({ id })}
+          handleUnVote={id => actions.unvoteComment({ id })}
+        />
       )}
     </div>
   )
