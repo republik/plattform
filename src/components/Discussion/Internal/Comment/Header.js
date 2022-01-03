@@ -273,7 +273,7 @@ export const Header = ({ t, comment, menuItems, isExpanded, onToggle }) => {
             <IconButton
               invert={true}
               Icon={isExpanded ? RemoveIcon : AddIcon}
-              fill={colorScheme.getCSSColor('textSoft')}
+              fillColorName='textSoft'
               size={20}
               onClick={onToggle}
               label={

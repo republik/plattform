@@ -57,7 +57,7 @@ export const Actions = ({ t, comment, onExpand, onReply }) => {
             onClick={onExpand}
             title={t('styleguide/CommentActions/expand')}
             Icon={DiscussionIcon}
-            fillColorName={'primary'}
+            fillColorName='primary'
             size={20}
             label={
               comment.comments &&

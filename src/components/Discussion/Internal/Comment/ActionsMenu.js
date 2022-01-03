@@ -16,7 +16,7 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'start',
     '> *:not(:last-child)': {
-      marginBottom: '1rem'
+      marginBottom: '15px'
     }
   })
 }
@@ -33,8 +33,8 @@ const ActionsMenu = ({ items = [] }) => {
       contentPaddingMobile={'30px'}
       Element={MoreIconWithProps}
       align='right'
-      iconProps={{
-        fill: colorScheme.getCSSColor('textSoft'),
+      elementProps={{
+        ...colorScheme.set('fill', 'textSoft'),
         size: 20
       }}
     >

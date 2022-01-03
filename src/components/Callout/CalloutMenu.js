@@ -16,11 +16,11 @@ const hasAncestor = (node, predicate) => {
 const CalloutMenu = ({
   children,
   Element,
+  elementProps,
   align,
   initiallyOpen,
   contentPaddingMobile,
   padded,
-  iconProps: { fill, size } = {},
   attributes
 }) => {
   const [showMenu, setMenu] = React.useState(initiallyOpen)
@@ -57,7 +57,7 @@ const CalloutMenu = ({
           {children}
         </Callout>
       )}
-      <Element fill={fill} size={size} onClick={() => setMenu(!showMenu)} />
+      <Element {...elementProps} onClick={() => setMenu(!showMenu)} />
     </div>
   )
 }
