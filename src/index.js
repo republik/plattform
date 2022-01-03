@@ -401,11 +401,11 @@ const Styleguide = () => {
                           }
                         ],
                         VirtualDropdownInternal: {
-                          Items: require('./components/Form/VirtualDropdown.js')
+                          Items: require('./components/Form/VirtualDropdown')
                             .Items,
                           ItemsContainer: require('./components/Form/VirtualDropdown')
                             .ItemsContainer,
-                          Inner: require('./components/Form/VirtualDropdown.js')
+                          Inner: require('./components/Form/VirtualDropdown')
                             .Inner
                         }
                       },
