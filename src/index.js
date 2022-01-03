@@ -403,7 +403,7 @@ const Styleguide = () => {
                         VirtualDropdownInternal: {
                           Items: require('./components/Form/VirtualDropdown.js')
                             .Items,
-                          ItemsContainer: require('./components/Form/VirtualDropdown.js')
+                          ItemsContainer: require('./components/Form/VirtualDropdown')
                             .ItemsContainer,
                           Inner: require('./components/Form/VirtualDropdown.js')
                             .Inner
