@@ -11,7 +11,7 @@ module.exports = {
 
     if (
       !discussionSuspension.issuerUserId ||
-      !Roles.userIsInRoles(me, ['editor', 'admin'])
+      !Roles.userIsInRoles(me, ['supporter', 'admin'])
     ) {
       return null
     }

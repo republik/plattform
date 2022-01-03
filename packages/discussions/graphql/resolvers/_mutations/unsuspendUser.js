@@ -5,7 +5,7 @@ const slack = require('../../../lib/slack')
 module.exports = async (_, args, context) => {
   const { pgdb, loaders, user: me } = context
 
-  Roles.ensureUserIsInRoles(me, ['admin', 'supporter'])
+  Roles.ensureUserIsInRoles(me, ['supporter', 'admin'])
 
   const suspensions = await loaders.DiscussionSuspension.byUserId.load(args.id)
   const user = await loaders.User.byId.load(args.id)

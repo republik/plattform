@@ -1,7 +1,7 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 
 module.exports = async (_, args, { pgdb, user, t }) => {
-  Roles.ensureUserHasRole(user, 'editor')
+  Roles.ensureUserIsInRoles(user, ['editor', 'admin'])
 
   const { title, maxLength, minInterval, anonymity, tags, tagRequired } = args
 
