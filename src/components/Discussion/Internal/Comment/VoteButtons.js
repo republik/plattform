@@ -39,13 +39,8 @@ export const VoteButtons = ({
 }) => {
   const [colorScheme] = useColorContext()
 
-  const upVoteHandler = useMemo(() => {
-    return comment?.userVote !== 'UP' ? handleUpVote : handleUnVote
-  }, [comment])
-
-  const downVoteHandler = useMemo(() => {
-    return comment?.userVote !== 'DOWN' ? handleDownVote : handleUnVote
-  }, [comment])
+  const upVoteHandler = comment?.userVote !== 'UP' ? handleUpVote : handleUnVote
+  const downVoteHandler = comment?.userVote !== 'DOWN' ? handleDownVote : handleUnVote
 
   return (
     <div {...styles.votes}>
