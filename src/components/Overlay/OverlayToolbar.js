@@ -80,8 +80,6 @@ export const OverlayToolbar = ({ title, onClose, children }) => {
     </div>
   )
 }
-// Make sure to make height available for the page
-OverlayToolbar.height = height
 
 OverlayToolbar.propTypes = {
   onClick: PropTypes.func,
