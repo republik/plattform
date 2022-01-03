@@ -61,17 +61,6 @@ const styles = {
     flexShrink: 1,
     textDecoration: 'none',
     ...ellipsize,
-
-    /*
-     * Add hover effect only if the element has a href attribute. We always
-     * render the name as a <a> tag, but if it's not a public profile then
-     * we don't set a href attribute.
-     */
-    '@media (hover)': {
-      '[href]:hover': {
-        ...underline
-      }
-    }
   }),
   meta: css({
     ...convertStyleToRem(sansSerifRegular14),
@@ -198,22 +187,24 @@ export const Header = ({ t, comment, menuItems, isExpanded, onToggle }) => {
         }
       })()}
       <div {...styles.center}>
-        {!published && (
-          <div {...styles.name} {...colorScheme.set('color', 'textSoft')}>
-            {adminUnpublished
-              ? t('styleguide/comment/header/unpublishedByAdmin')
-              : unavailable
-              ? t('styleguide/comment/header/unavailable')
-              : t('styleguide/comment/header/unpublishedByUser')}
-          </div>
-        )}
-        {published && (
-          <Link displayAuthor={displayAuthor} passHref>
-            <a {...styles.name} {...colorScheme.set('color', 'text')}>
-              {name}
-            </a>
-          </Link>
-        )}
+        <div {...styles.name} {...colorScheme.set('color', 'text')}>
+          {!published && (
+            <span {...colorScheme.set('color', 'textSoft')}>
+              {adminUnpublished
+                ? t('styleguide/comment/header/unpublishedByAdmin')
+                : unavailable
+                ? t('styleguide/comment/header/unavailable')
+                : t('styleguide/comment/header/unpublishedByUser')}
+            </span>
+          )}
+          {published && (
+            <Link displayAuthor={displayAuthor} passHref>
+              <a {...styles.linkUnderline}>
+                {name}
+              </a>
+            </Link>
+          )}
+        </div>
         <div {...styles.meta} {...colorScheme.set('color', 'textSoft')}>
           {published && credential && (
             <>
@@ -280,6 +271,9 @@ export const Header = ({ t, comment, menuItems, isExpanded, onToggle }) => {
               fillColorName='textSoft'
               size={20}
               onClick={onToggle}
+              style={{
+                marginLeft: 10
+              }}
               label={
                 !isExpanded &&
                 t.pluralize('styleguide/comment/header/expandCount', {
