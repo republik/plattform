@@ -139,7 +139,11 @@ const styles = {
   })
 }
 
-export const CommentHeaderCollapseIcon = styles.collapseWrapper
+/**
+ * This glamor rule is exported so that <CommentNode> can control the visibility
+ * of this action button on hover over the whole comment element.
+ */
+export const collapseWrapperRule = styles.collapseWrapper
 
 const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
 const titleDate = string => dateTimeFormat(new Date(string))

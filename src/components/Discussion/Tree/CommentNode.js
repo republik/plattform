@@ -11,7 +11,7 @@ import { CommentList } from './CommentList'
 import { mUp } from '../../../theme/mediaQueries'
 import { EditIcon, FeaturedIcon, ReportIcon, UnpublishIcon } from '../../Icons'
 import { timeFormat } from '../../../lib/timeFormat'
-import { CommentHeaderCollapseIcon } from '../Internal/Comment'
+import { collapseWrapperRule } from '../Internal/Comment'
 
 const dateFormat = timeFormat('%d.%m.%Y')
 const hmFormat = timeFormat('%H:%M')
@@ -58,18 +58,18 @@ const styles = {
        * On larger screens, hide the action button and reveal only on hover.
        */
       [mUp]: isExpanded && {
-        [`& .${CommentHeaderCollapseIcon}`]: {
+        [`& .${collapseWrapperRule}`]: {
           visibility: 'hidden'
         },
         '@media(hover)': {
-          [`:hover .${CommentHeaderCollapseIcon}`]: {
+          [`:hover .${collapseWrapperRule}`]: {
             visibility: 'visible'
           }
         }
       },
       // In case device doesn't support hover
       '@media(hover:none)': {
-        [`& .${CommentHeaderCollapseIcon}`]: {
+        [`& .${collapseWrapperRule}`]: {
           visibility: 'visible'
         }
       }
