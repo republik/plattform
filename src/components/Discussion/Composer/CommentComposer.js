@@ -346,8 +346,7 @@ CommentComposer.propTypes = {
   onClose: PropTypes.func.isRequired,
   onCloseLabel: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
-  onSubmitLabel: PropTypes.string,
-  menu: PropTypes.arrayOf(PropTypes.element)
+  onSubmitLabel: PropTypes.string
 }
 
 const MaxLengthIndicator = ({ maxLength, length }) => {
