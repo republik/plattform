@@ -337,7 +337,7 @@ const Styleguide = () => {
                         Button: require('./components/Button'),
                         Checkbox: require('./components/Form/Checkbox.js'),
                         Radio: require('./components/Form/Radio.js'),
-                        Field: require('./components/Form/Field.tsx'),
+                        Field: require('./components/Form/Field'),
                         ...require('./components/Form/Field.docs.js'),
                         FieldSet: require('./components/Form/FieldSet.js'),
                         MaskedInput: require('react-maskedinput'),
