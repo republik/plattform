@@ -7,7 +7,7 @@ import {
   Label,
   Interaction
 } from '@project-r/styleguide'
-import debounce from 'lodash.debounce'
+import debounce from 'lodash/debounce'
 
 import { GITHUB_ORG, REPO_PREFIX } from '../../../lib/settings'
 import { swissTime } from '../../../lib/utils/format'
