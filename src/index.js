@@ -1025,7 +1025,7 @@ const Styleguide = () => {
                       title: 'Translate',
                       src: require('./lib/translate.docs.md'),
                       imports: {
-                        Field: require('./components/Form/Field.tsx'),
+                        Field: require('./components/Form/Field'),
                         ...require('./components/Typography'),
                         t: createFormatter([
                           {
