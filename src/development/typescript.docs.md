@@ -52,7 +52,7 @@ const Button = React.forwardRef<
 >(...)
 ```
 
-*Note: the `Button` component can either be a button or a link, hence the two element types.*
+*Note: the `Button` component can either be a button or a link, hence the union of two element types.*
 
 ### Misc
 
@@ -69,6 +69,4 @@ interface ArrowProps extends Record<string, unknown> {
 const ArrowUp: React.FC<ArrowProps> = ({ size, fill, ...props }) => ...
 ```
 
-We would rather not type the `...props`. However, we very much want types for `size` and `fill`. The [Record object](https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type) serves us perfectly for this.
-
-Admittedly, this isn't very useful in terms of type safety, but some type safety is always better than no type safety.
+We would rather not type the `...props`. However, we very much want types for `size` and `fill`. The [Record object](https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type) serves us perfectly for this. Admittedly, this isn't very useful in terms of type safety, but some type safety is better than no type safety.
