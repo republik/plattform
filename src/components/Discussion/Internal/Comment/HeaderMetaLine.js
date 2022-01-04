@@ -65,10 +65,11 @@ const titleDate = string => dateTimeFormat(new Date(string))
  * @param t
  * @param comment
  * @param Link
+ * @param focusHref
  * @returns {JSX.Element}
  * @constructor
  */
-const HeaderMetaLine = ({ t, comment, Link }) => {
+const HeaderMetaLine = ({ t, comment, Link, focusHref }) => {
   const [colorScheme] = useColorContext()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
 
@@ -121,7 +122,7 @@ const HeaderMetaLine = ({ t, comment, Link }) => {
         {...colorScheme.set('color', 'textSoft')}
         title={titleDate(createdAt)}
       >
-        <Link>
+        <Link href={focusHref} passHref>
           <a {...styles.linkUnderline}>
             <RelativeTime t={t} isDesktop={isDesktop} date={createdAt} />
           </a>
@@ -144,6 +145,7 @@ const HeaderMetaLine = ({ t, comment, Link }) => {
 HeaderMetaLine.propTypes = {
   t: PropTypes.func.isRequired,
   comment: PropTypes.object.isRequired,
+  focusHref: PropTypes.string.isRequired,
   Link: PropTypes.elementType.isRequired
 }
 

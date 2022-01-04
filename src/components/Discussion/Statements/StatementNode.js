@@ -115,8 +115,9 @@ const StatementNode = ({
   menuItems = [],
   disableVoting = false,
   isHighlighted = false,
-  FocusLink,
-  ProfileLink
+  Link,
+  focusHref,
+  profileHref
 }) => {
   const [colorScheme] = useColorContext()
 
@@ -182,7 +183,7 @@ const StatementNode = ({
     >
       {showProfilePicture && (
         <div {...styles.profilePictureWrapper}>
-          <ProfileLink>
+          <Link href={profileHref} passHref>
             <a {...styles.link}>
               <img
                 {...styles.profilePicture}
@@ -190,16 +191,21 @@ const StatementNode = ({
                 src={comment.displayAuthor.profilePicture}
               />
             </a>
-          </ProfileLink>
+          </Link>
         </div>
       )}
       <div {...styles.headingWrapper}>
         <p {...styles.heading} {...colorScheme.set('color', heading.color)}>
-          <ProfileLink>
+          <Link href={profileHref} passHref>
             <a {...styles.link}>{heading.text}</a>
-          </ProfileLink>
+          </Link>
         </p>
-        <HeaderMetaLine t={t} comment={comment} Link={FocusLink} />
+        <HeaderMetaLine
+          t={t}
+          comment={comment}
+          Link={Link}
+          focusHref={focusHref}
+        />
       </div>
       <div {...styles.textWrapper}>
         <span
@@ -260,6 +266,7 @@ StatementNode.propTypes = {
   menuItems: PropTypes.arrayOf(ActionsMenuItemPropType),
   disableVoting: PropTypes.bool,
   isHighlighted: PropTypes.bool,
-  FocusLink: PropTypes.elementType.isRequired,
-  ProfileLink: PropTypes.elementType.isRequired
+  Link: PropTypes.elementType.isRequired,
+  focusHref: PropTypes.string.isRequired,
+  profileHref: PropTypes.string.isRequired
 }
