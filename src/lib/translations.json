@@ -41,6 +41,10 @@
       "value": "Beitrag teilen"
     },
     {
+      "key": "styleguide/CommentActions/share/short",
+      "value": "Teilen"
+    },
+    {
       "key": "styleguide/CommentActions/answer",
       "value": "Antworten"
     },

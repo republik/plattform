@@ -215,6 +215,8 @@ const StatementNode = ({
       <div {...styles.actionWrapper}>
         <IconButton
           title={t('styleguide/CommentActions/share')}
+          label={t('styleguide/CommentActions/share/short')}
+          labelShort={t('styleguide/CommentActions/share/short')}
           Icon={ShareIcon}
           onClick={() => handleShare(comment)}
           size={20}
