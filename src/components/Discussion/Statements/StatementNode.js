@@ -57,8 +57,10 @@ const styles = {
     gridTemplateColumns: '1fr max-content',
     gridTemplateRows: 'auto auto auto auto'
   }),
+  profilePictureWrapper: css({
+    gridArea: 'portrait'
+  }),
   profilePicture: css({
-    gridArea: 'portrait',
     display: 'block',
     width: 60,
     height: 60,
@@ -93,6 +95,10 @@ const styles = {
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'flex-end'
+  }),
+  link: css({
+    color: 'inherit',
+    textDecoration: 'none'
   })
 }
 
@@ -104,7 +110,8 @@ const StatementNode = ({
   menuItems = [],
   disableVoting = false,
   isHighlighted = false,
-  Link
+  FocusLink,
+  ProfileLink
 }) => {
   const [colorScheme] = useColorContext()
 
@@ -142,20 +149,30 @@ const StatementNode = ({
       data-comment-id={comment.id}
     >
       {hasProfilePicture && (
-        <img
-          {...styles.profilePicture}
-          alt={comment.displayAuthor.name}
-          src={comment.displayAuthor.profilePicture}
-        />
+        <div {...styles.profilePictureWrapper}>
+          <ProfileLink>
+            <a {...styles.link}>
+              <img
+                {...styles.profilePicture}
+                alt={comment.displayAuthor.name}
+                src={comment.displayAuthor.profilePicture}
+              />
+            </a>
+          </ProfileLink>
+        </div>
       )}
       <div {...styles.headingWrapper}>
-        <p
-          {...styles.heading}
-          {...colorScheme.set('color', getUniqueColorTagName(tag))}
-        >
-          {commentHeading}
-        </p>
-        <HeaderMetaLine t={t} comment={comment} Link={Link} />
+        <ProfileLink>
+          <a {...styles.link}>
+            <p
+              {...styles.heading}
+              {...colorScheme.set('color', getUniqueColorTagName(tag))}
+            >
+              {commentHeading}
+            </p>
+          </a>
+        </ProfileLink>
+        <HeaderMetaLine t={t} comment={comment} Link={FocusLink} />
       </div>
       <div {...styles.textWrapper}>{commentText}</div>
       <div {...styles.actionWrapper}>
@@ -205,5 +222,6 @@ StatementNode.propTypes = {
   menuItems: PropTypes.arrayOf(ActionsMenuItemPropType),
   disableVoting: PropTypes.bool,
   isHighlighted: PropTypes.bool,
-  Link: PropTypes.elementType
+  FocusLink: PropTypes.elementType.isRequired,
+  ProfileLink: PropTypes.elementType.isRequired
 }
