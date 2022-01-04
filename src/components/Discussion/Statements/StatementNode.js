@@ -76,6 +76,8 @@ const styles = {
     gridArea: 'text'
   }),
   unpublishedText: css({
+    // Next line is needed for opacity to apply
+    display: 'inherit',
     opacity: 0.5
   }),
   heading: css({
@@ -91,7 +93,7 @@ const styles = {
     gridArea: 'menu',
     display: 'flex',
     justifyContent: 'flex-end',
-    alignItems: 'flex-start'
+    alignItems: 'center'
   }),
   voteWrapper: css({
     gridArea: 'vote',
@@ -203,7 +205,11 @@ const StatementNode = ({
         <HeaderMetaLine t={t} comment={comment} Link={FocusLink} />
       </div>
       <div {...styles.textWrapper}>
-        <span {...(!comment?.published ? styles.unpublishedText : {})}>
+        <span
+          {...(!comment?.published || comment.adminUnpublished
+            ? styles.unpublishedText
+            : {})}
+        >
           {commentText}
         </span>
         {unpublishedMessage}
