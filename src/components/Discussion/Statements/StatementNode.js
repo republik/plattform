@@ -194,13 +194,11 @@ const StatementNode = ({
         </div>
       )}
       <div {...styles.headingWrapper}>
-        <ProfileLink>
-          <a {...styles.link}>
-            <p {...styles.heading} {...colorScheme.set('color', heading.color)}>
-              {heading.text}
-            </p>
-          </a>
-        </ProfileLink>
+        <p {...styles.heading} {...colorScheme.set('color', heading.color)}>
+          <ProfileLink>
+            <a {...styles.link}>{heading.text}</a>
+          </ProfileLink>
+        </p>
         <HeaderMetaLine t={t} comment={comment} Link={FocusLink} />
       </div>
       <div {...styles.textWrapper}>
