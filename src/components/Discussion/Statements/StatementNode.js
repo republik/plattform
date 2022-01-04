@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { fontStyles } from '../../Typography'
+import { fontStyles, Label } from '../../Typography'
 import { useMemo } from 'react'
 import { getUniqueColorTagName } from './helpers/colorHelper'
 import { VoteButtons } from '../Internal/Comment'
@@ -75,6 +75,9 @@ const styles = {
   textWrapper: css({
     gridArea: 'text'
   }),
+  unpublishedText: css({
+    opacity: 0.5
+  }),
   heading: css({
     margin: 0,
     ...fontStyles.sansSerifMedium22
@@ -127,16 +130,44 @@ const StatementNode = ({
     )
   }, [comment, tag, tagMappings])
 
-  const commentHeading = useMemo(
-    () => tagMapper.text.replace('{user}', comment.displayAuthor.name),
-    [comment, tagMapper]
-  )
+  const heading = useMemo(() => {
+    if (comment?.adminUnpublished) {
+      return {
+        color: 'disabled',
+        text: t('styleguide/comment/header/unpublishedByAdmin')
+      }
+    }
+    if (!comment.published && !comment?.adminUnpublished) {
+      return {
+        color: 'disabled',
+        text: t('styleguide/comment/header/unpublishedByUser')
+      }
+    }
 
-  const commentText = useMemo(() => renderCommentMdast(comment.content), [
-    comment
-  ])
+    return {
+      color: getUniqueColorTagName(tag),
+      text: tagMapper.text.replace('{user}', comment?.displayAuthor?.name)
+    }
+  }, [comment, tag, tagMapper])
 
   const hasProfilePicture = comment.displayAuthor?.profilePicture !== null
+
+  const commentText = useMemo(
+    () => (comment?.content ? renderCommentMdast(comment.content) : null),
+    [comment?.content]
+  )
+
+  const unpublishedMessage = useMemo(() => {
+    if (!comment?.published && !comment?.adminUnpublished) {
+      return <Label>{t('styleguide/comment/unpublished/userCanEdit')}</Label>
+    }
+
+    if (!comment.published && comment?.adminUnpublished) {
+      return <Label>{t('styleguide/comment/adminUnpublished')}</Label>
+    }
+
+    return null
+  }, [comment?.published, comment?.adminUnpublished])
 
   return (
     <div
@@ -164,17 +195,19 @@ const StatementNode = ({
       <div {...styles.headingWrapper}>
         <ProfileLink>
           <a {...styles.link}>
-            <p
-              {...styles.heading}
-              {...colorScheme.set('color', getUniqueColorTagName(tag))}
-            >
-              {commentHeading}
+            <p {...styles.heading} {...colorScheme.set('color', heading.color)}>
+              {heading.text}
             </p>
           </a>
         </ProfileLink>
         <HeaderMetaLine t={t} comment={comment} Link={FocusLink} />
       </div>
-      <div {...styles.textWrapper}>{commentText}</div>
+      <div {...styles.textWrapper}>
+        <span {...(!comment?.published ? styles.unpublishedText : {})}>
+          {commentText}
+        </span>
+        {unpublishedMessage}
+      </div>
       <div {...styles.actionWrapper}>
         <IconButton
           title={t('styleguide/CommentActions/share')}
