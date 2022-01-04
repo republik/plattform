@@ -133,16 +133,14 @@ const StatementNode = ({
   }, [comment, tag, tagMappings])
 
   const heading = useMemo(() => {
-    if (comment?.adminUnpublished) {
+    if (!comment.published || comment?.adminUnpublished) {
       return {
         color: 'disabled',
-        text: t('styleguide/comment/header/unpublishedByAdmin')
-      }
-    }
-    if (!comment.published && !comment?.adminUnpublished) {
-      return {
-        color: 'disabled',
-        text: t('styleguide/comment/header/unpublishedByUser')
+        text: comment.adminUnpublished
+          ? t('styleguide/comment/header/unpublishedByAdmin')
+          : comment.unavailable
+          ? t('styleguide/comment/header/unavailable')
+          : t('styleguide/comment/header/unpublishedByUser')
       }
     }
 
@@ -160,12 +158,12 @@ const StatementNode = ({
   )
 
   const unpublishedMessage = useMemo(() => {
-    if (!comment?.published && !comment?.adminUnpublished) {
-      return <Label>{t('styleguide/comment/unpublished/userCanEdit')}</Label>
+    if (comment.userCanEdit && comment?.adminUnpublished) {
+      return <Label>{t('styleguide/comment/adminUnpublished')}</Label>
     }
 
-    if (!comment.published && comment?.adminUnpublished) {
-      return <Label>{t('styleguide/comment/adminUnpublished')}</Label>
+    if (comment.userCanEdit && !comment.published) {
+      return <Label>{t('styleguide/comment/unpublished/userCanEdit')}</Label>
     }
 
     return null
