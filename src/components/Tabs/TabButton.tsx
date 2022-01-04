@@ -60,8 +60,7 @@ const TabButton = React.forwardRef<
     isActive?: boolean
     text?: string
     href?: string
-    onClick?: MouseEventHandler<HTMLAnchorElement> &
-      MouseEventHandler<HTMLButtonElement>
+    onClick?: MouseEventHandler<HTMLAnchorElement & HTMLButtonElement>
   }
 >(({ border = true, isActive, text, href, onClick }: TabItemType, ref) => {
   const [colorScheme] = useColorContext()
