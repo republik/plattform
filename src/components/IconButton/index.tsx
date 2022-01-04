@@ -18,7 +18,7 @@ const IconButton = React.forwardRef<
     labelShort?: string
     title?: string
     fill?: string
-    fillColorName: string
+    fillColorName?: string
     onClick?: MouseEventHandler<HTMLAnchorElement> &
       MouseEventHandler<HTMLButtonElement>
     onMouseDown?: MouseEventHandler<HTMLAnchorElement> &
@@ -27,6 +27,7 @@ const IconButton = React.forwardRef<
     size?: number
     disabled?: boolean
     attributes?: Attributes
+    invert?: boolean
   }
 >(
   (
