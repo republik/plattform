@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { fontStyles } from '../../Typography'
+import { fontStyles, Label } from '../../Typography'
 import { useMemo } from 'react'
 import { getUniqueColorTagName } from './helpers/colorHelper'
 import { VoteButtons } from '../Internal/Comment'
@@ -57,8 +57,10 @@ const styles = {
     gridTemplateColumns: '1fr max-content',
     gridTemplateRows: 'auto auto auto auto'
   }),
+  profilePictureWrapper: css({
+    gridArea: 'portrait'
+  }),
   profilePicture: css({
-    gridArea: 'portrait',
     display: 'block',
     width: 60,
     height: 60,
@@ -73,6 +75,11 @@ const styles = {
   textWrapper: css({
     gridArea: 'text'
   }),
+  unpublishedText: css({
+    // Next line is needed for opacity to apply
+    display: 'inherit',
+    opacity: 0.5
+  }),
   heading: css({
     margin: 0,
     ...fontStyles.sansSerifMedium22
@@ -86,13 +93,17 @@ const styles = {
     gridArea: 'menu',
     display: 'flex',
     justifyContent: 'flex-end',
-    alignItems: 'flex-start'
+    alignItems: 'center'
   }),
   voteWrapper: css({
     gridArea: 'vote',
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'flex-end'
+  }),
+  link: css({
+    color: 'inherit',
+    textDecoration: 'none'
   })
 }
 
@@ -104,7 +115,9 @@ const StatementNode = ({
   menuItems = [],
   disableVoting = false,
   isHighlighted = false,
-  Link
+  Link,
+  focusHref,
+  profileHref
 }) => {
   const [colorScheme] = useColorContext()
 
@@ -120,47 +133,95 @@ const StatementNode = ({
     )
   }, [comment, tag, tagMappings])
 
-  const commentHeading = useMemo(
-    () => tagMapper.text.replace('{user}', comment.displayAuthor.name),
-    [comment, tagMapper]
+  const heading = useMemo(() => {
+    if (!comment.published || comment?.adminUnpublished) {
+      return {
+        color: 'disabled',
+        text: comment.adminUnpublished
+          ? t('styleguide/comment/header/unpublishedByAdmin')
+          : comment.unavailable
+          ? t('styleguide/comment/header/unavailable')
+          : t('styleguide/comment/header/unpublishedByUser')
+      }
+    }
+
+    return {
+      color: getUniqueColorTagName(tag),
+      text: tagMapper.text.replace('{user}', comment?.displayAuthor?.name)
+    }
+  }, [comment, tag, tagMapper])
+
+  const showProfilePicture =
+    comment.displayAuthor?.profilePicture !== null && comment.published
+
+  const commentText = useMemo(
+    () => (comment?.content ? renderCommentMdast(comment.content) : null),
+    [comment?.content]
   )
 
-  const commentText = useMemo(() => renderCommentMdast(comment.content), [
-    comment
-  ])
+  const unpublishedMessage = useMemo(() => {
+    if (comment.userCanEdit && comment?.adminUnpublished) {
+      return <Label>{t('styleguide/comment/adminUnpublished')}</Label>
+    }
 
-  const hasProfilePicture = comment.displayAuthor?.profilePicture !== null
+    if (comment.userCanEdit && !comment.published) {
+      return <Label>{t('styleguide/comment/unpublished/userCanEdit')}</Label>
+    }
+
+    return null
+  }, [comment?.published, comment?.adminUnpublished])
 
   return (
     <div
       {...styles.root}
-      {...(hasProfilePicture
+      {...(showProfilePicture
         ? styles.withProfilePicture
         : styles.withOutProfilePicture)}
       {...(isHighlighted ? styles.highlightedContainer : {})}
       {...(isHighlighted ? colorScheme.set('backgroundColor', 'alert') : {})}
       data-comment-id={comment.id}
     >
-      {hasProfilePicture && (
-        <img
-          {...styles.profilePicture}
-          alt={comment.displayAuthor.name}
-          src={comment.displayAuthor.profilePicture}
-        />
+      {showProfilePicture && (
+        <div {...styles.profilePictureWrapper}>
+          <Link href={profileHref} passHref>
+            <a {...styles.link}>
+              <img
+                {...styles.profilePicture}
+                alt={comment.displayAuthor.name}
+                src={comment.displayAuthor.profilePicture}
+              />
+            </a>
+          </Link>
+        </div>
       )}
       <div {...styles.headingWrapper}>
-        <p
-          {...styles.heading}
-          {...colorScheme.set('color', getUniqueColorTagName(tag))}
-        >
-          {commentHeading}
+        <p {...styles.heading} {...colorScheme.set('color', heading.color)}>
+          <Link href={profileHref} passHref>
+            <a {...styles.link}>{heading.text}</a>
+          </Link>
         </p>
-        <HeaderMetaLine t={t} comment={comment} Link={Link} />
+        <HeaderMetaLine
+          t={t}
+          comment={comment}
+          Link={Link}
+          focusHref={focusHref}
+        />
       </div>
-      <div {...styles.textWrapper}>{commentText}</div>
+      <div {...styles.textWrapper}>
+        <span
+          {...(!comment?.published || comment.adminUnpublished
+            ? styles.unpublishedText
+            : {})}
+        >
+          {commentText}
+        </span>
+        {unpublishedMessage}
+      </div>
       <div {...styles.actionWrapper}>
         <IconButton
           title={t('styleguide/CommentActions/share')}
+          label={t('styleguide/CommentActions/share/short')}
+          labelShort={t('styleguide/CommentActions/share/short')}
           Icon={ShareIcon}
           onClick={() => handleShare(comment)}
           size={20}
@@ -205,5 +266,7 @@ StatementNode.propTypes = {
   menuItems: PropTypes.arrayOf(ActionsMenuItemPropType),
   disableVoting: PropTypes.bool,
   isHighlighted: PropTypes.bool,
-  Link: PropTypes.elementType
+  Link: PropTypes.elementType.isRequired,
+  focusHref: PropTypes.string.isRequired,
+  profileHref: PropTypes.string.isRequired
 }
