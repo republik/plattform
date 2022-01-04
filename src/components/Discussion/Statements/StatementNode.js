@@ -150,7 +150,8 @@ const StatementNode = ({
     }
   }, [comment, tag, tagMapper])
 
-  const hasProfilePicture = comment.displayAuthor?.profilePicture !== null
+  const showProfilePicture =
+    comment.displayAuthor?.profilePicture !== null && comment.published
 
   const commentText = useMemo(
     () => (comment?.content ? renderCommentMdast(comment.content) : null),
@@ -172,14 +173,14 @@ const StatementNode = ({
   return (
     <div
       {...styles.root}
-      {...(hasProfilePicture
+      {...(showProfilePicture
         ? styles.withProfilePicture
         : styles.withOutProfilePicture)}
       {...(isHighlighted ? styles.highlightedContainer : {})}
       {...(isHighlighted ? colorScheme.set('backgroundColor', 'alert') : {})}
       data-comment-id={comment.id}
     >
-      {hasProfilePicture && (
+      {showProfilePicture && (
         <div {...styles.profilePictureWrapper}>
           <ProfileLink>
             <a {...styles.link}>
