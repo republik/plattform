@@ -54,8 +54,7 @@ const styles = {
 const Button = React.forwardRef<
   HTMLAnchorElement & HTMLButtonElement,
   {
-    onClick?: MouseEventHandler<HTMLAnchorElement> &
-      MouseEventHandler<HTMLButtonElement>
+    onClick?: MouseEventHandler<HTMLAnchorElement & HTMLButtonElement>
     type?: 'button' | 'submit' | 'reset'
     primary?: boolean
     big?: boolean
