@@ -8,6 +8,7 @@ import {
 import { ellipsize } from '../../../../lib/styleMixins'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
 import { useColorContext } from '../../../Colors/ColorContext'
+import PropTypes from 'prop-types'
 
 const buttonStyle = {
   background: 'none',
@@ -96,9 +97,7 @@ const styles = {
 
 export const CommentHeaderProfile = ({
   t,
-  profilePicture,
-  name,
-  credential
+  displayAuthor: { name, profilePicture, credential }
 }) => {
   const [colorScheme] = useColorContext()
 
@@ -189,3 +188,21 @@ const EditIcon = () => (
     />
   </svg>
 )
+
+Header.propTypes = {
+  t: PropTypes.func.isRequired,
+  onClick: PropTypes.func,
+  displayAuthor: PropTypes.shape({
+    profilePicture: PropTypes.string,
+    name: PropTypes.string.isRequired,
+    credential: PropTypes.shape({
+      description: PropTypes.string,
+      verified: PropTypes.bool
+    })
+  })
+}
+
+CommentHeaderProfile.propTypes = CommentHeaderProfile.propTypes = {
+  t: Header.propTypes.t,
+  displayAuthor: Header.propTypes.displayAuthor
+}
