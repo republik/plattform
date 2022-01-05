@@ -75,8 +75,10 @@ export const CommentComposer = ({
   autoFocus = true,
   placeholder,
   secondaryActions,
+  displayAuthor,
   // Initial values
-  initialText
+  initialText,
+  initialTagValue
 }) => {
   const [colorScheme] = useColorContext()
   /*
@@ -104,7 +106,7 @@ export const CommentComposer = ({
     activeTag,
     composerHints = []
   } = React.useContext(DiscussionContext)
-  const { id: discussionId, tags, rules, displayAuthor, isBoard } = discussion
+  const { id: discussionId, tags, rules, isBoard } = discussion
   const { maxLength } = rules
 
   /*
@@ -130,7 +132,7 @@ export const CommentComposer = ({
     ? preview.comment.contentLength
     : text.length
 
-  const [tagValue, setTagValue] = React.useState(props.tagValue)
+  const [tagValue, setTagValue] = React.useState(initialTagValue)
 
   /*
    * Focus the textarea upon mount.
@@ -356,7 +358,9 @@ CommentComposer.propTypes = {
   onSubmitLabel: PropTypes.string,
   placeholder: PropTypes.string,
   secondaryActions: PropTypes.node,
-  initialText: PropTypes.string
+  displayAuthor: Header.propTypes.displayAuthor,
+  initialText: PropTypes.string,
+  initialTagValue: PropTypes.string
 }
 
 const MaxLengthIndicator = ({ maxLength, length }) => {
@@ -377,4 +381,9 @@ const MaxLengthIndicator = ({ maxLength, length }) => {
       {remaining}
     </div>
   )
+}
+
+MaxLengthIndicator.propTypes = {
+  length: PropTypes.number.isRequired,
+  maxLength: PropTypes.number.isRequired
 }
