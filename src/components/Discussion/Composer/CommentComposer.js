@@ -73,7 +73,8 @@ export const CommentComposer = props => {
     commentId,
     parentId,
     autoFocus = true,
-    placeholder
+    placeholder,
+    secondaryActions
   } = props
   const [colorScheme] = useColorContext()
   /*
@@ -335,6 +336,7 @@ export const CommentComposer = props => {
             : onSubmit
         }
         onSubmitLabel={onSubmitLabel}
+        secondaryActions={secondaryActions}
       />
 
       {error && <Error>{error}</Error>}
@@ -350,7 +352,8 @@ CommentComposer.propTypes = {
   onCloseLabel: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
   onSubmitLabel: PropTypes.string,
-  placeholder: PropTypes.string
+  placeholder: PropTypes.string,
+  secondaryActions: PropTypes.node
 }
 
 const MaxLengthIndicator = ({ maxLength, length }) => {

@@ -2,9 +2,8 @@ import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { sansSerifMedium14 } from '../../../Typography/styles'
-import { DiscussionContext } from '../../DiscussionContext'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
-import { useColorContext } from '../../../Colors/useColorContext'
+import { useColorContext } from '../../../Colors/ColorContext'
 
 const actionButtonStyle = {
   ...convertStyleToRem(sansSerifMedium14),
@@ -28,7 +27,7 @@ const styles = {
     alignItems: 'center'
   }),
   rootMainOnly: css({
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-end'
   }),
   rootWithSecondary: css({
     justifyContent: 'space-between'
@@ -53,10 +52,10 @@ export const Actions = ({
   onClose,
   onCloseLabel,
   onSubmit,
-  onSubmitLabel
+  onSubmitLabel,
+  secondaryActions
 }) => {
   const [colorScheme] = useColorContext()
-  const { composerSecondaryActions } = React.useContext(DiscussionContext)
   const styleRules = useMemo(() => {
     return {
       closeButton: css({
@@ -81,8 +80,11 @@ export const Actions = ({
     }
   }, [colorScheme])
   return (
-    <div {...styles.root} {...styles[composerSecondaryActions ? 'rootWithSecondary' : 'rootMainOnly']}>
-      {composerSecondaryActions}
+    <div
+      {...styles.root}
+      {...styles[secondaryActions ? 'rootWithSecondary' : 'rootMainOnly']}
+    >
+      {secondaryActions}
 
       <div {...styles.mainActions}>
         <button
@@ -110,5 +112,6 @@ Actions.propTypes = {
   onClose: PropTypes.func.isRequired,
   onCloseLabel: PropTypes.string,
   onSubmit: PropTypes.func,
-  onSubmitLabel: PropTypes.string
+  onSubmitLabel: PropTypes.string,
+  secondaryActions: PropTypes.node
 }
