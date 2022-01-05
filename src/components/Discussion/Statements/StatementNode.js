@@ -15,6 +15,7 @@ import ActionsMenu, {
   ActionsMenuItemPropType
 } from '../Internal/Comment/ActionsMenu'
 import HeaderMetaLine from '../Internal/Comment/HeaderMetaLine'
+import { convertStyleToRem, pxToRem } from "../../Typography/utils";
 
 const HIGHLIGHT_PADDING = 7
 
@@ -61,7 +62,10 @@ const styles = {
   profilePictureWrapper: css({
     gridArea: 'portrait',
     // Offset to perfectly align with the capital-letters in the heading
-    paddingTop: '0.25rem'
+    paddingTop: pxToRem(3),
+    [mUp]: {
+      paddingTop: pxToRem(4)
+    }
   }),
   profilePicture: css({
     display: 'block',
@@ -85,11 +89,12 @@ const styles = {
   }),
   heading: css({
     margin: 0,
-    ...fontStyles.sansSerifMedium18,
-    lineHeight: '20px',
+    ...fontStyles.sansSerifMedium,
+    fontSize: pxToRem(18),
+    lineHeight: pxToRem(20),
     [mUp]: {
-      ...fontStyles.sansSerifMedium22,
-      lineHeight: '24px'
+      fontSize: pxToRem(22),
+      lineHeight: pxToRem(24)
     }
   }),
   actionWrapper: css({
