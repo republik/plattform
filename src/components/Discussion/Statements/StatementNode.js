@@ -60,11 +60,8 @@ const styles = {
   }),
   profilePictureWrapper: css({
     gridArea: 'portrait',
-    alignSelf: 'center',
-    [mUp]: {
-      alignSelf: 'start',
-      paddingTop: '0.4rem'
-    }
+    // Offset to perfectly align with the capital-letters in the heading
+    paddingTop: '0.25rem'
   }),
   profilePicture: css({
     display: 'block',
