@@ -60,7 +60,10 @@ const styles = {
   }),
   profilePictureWrapper: css({
     gridArea: 'portrait',
-    alignSelf: 'center'
+    alignSelf: 'center',
+    [mUp]: {
+      alignSelf: 'start'
+    }
   }),
   profilePicture: css({
     display: 'block',
