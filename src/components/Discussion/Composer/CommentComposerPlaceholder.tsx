@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react'
+import PropTypes, { InferProps } from 'prop-types'
 import { css } from 'glamor'
 import { serifRegular16 } from '../../Typography/styles'
 import { convertStyleToRem, pxToRem } from '../../Typography/utils'
-import { useColorContext } from '../../Colors/useColorContext'
-import PropTypes from 'prop-types'
+import { useColorContext } from '../../Colors/ColorContext'
 
 const styles = {
   root: css({
@@ -30,12 +30,21 @@ const styles = {
   })
 }
 
+const propTypes = {
+  t: PropTypes.func.isRequired,
+  displayAuthor: PropTypes.shape({
+    profilePicture: PropTypes.string.isRequired
+  }),
+  onClick: PropTypes.func,
+  placeholder: PropTypes.string
+}
+
 export const CommentComposerPlaceholder = ({
   t,
   displayAuthor,
   onClick,
   placeholder
-}) => {
+}: InferProps<typeof propTypes>) => {
   const [colorScheme] = useColorContext()
   const rootHover = useMemo(
     () =>
@@ -70,11 +79,4 @@ export const CommentComposerPlaceholder = ({
   )
 }
 
-CommentComposerPlaceholder.propTypes = {
-  t: PropTypes.func.isRequired,
-  displayAuthor: PropTypes.shape({
-    profilePicture: PropTypes.string
-  }),
-  onClick: PropTypes.func,
-  placeholder: PropTypes.string
-}
+CommentComposerPlaceholder.propTypes = propTypes
