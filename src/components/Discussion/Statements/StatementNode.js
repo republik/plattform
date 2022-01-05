@@ -59,7 +59,8 @@ const styles = {
     gridTemplateRows: 'auto auto auto auto'
   }),
   profilePictureWrapper: css({
-    gridArea: 'portrait'
+    gridArea: 'portrait',
+    alignSelf: 'center'
   }),
   profilePicture: css({
     display: 'block',
@@ -83,12 +84,14 @@ const styles = {
   }),
   heading: css({
     margin: 0,
-    ...fontStyles.sansSerifMedium22
+    ...fontStyles.sansSerifMedium18,
+    [mUp]: {
+      ...fontStyles.sansSerifMedium22
+    }
   }),
   actionWrapper: css({
     gridArea: 'actions',
-    display: 'flex',
-    alignItems: 'center'
+    alignSelf: 'center'
   }),
   menuWrapper: css({
     gridArea: 'menu',
