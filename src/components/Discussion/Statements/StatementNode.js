@@ -62,7 +62,8 @@ const styles = {
     gridArea: 'portrait',
     alignSelf: 'center',
     [mUp]: {
-      alignSelf: 'start'
+      alignSelf: 'start',
+      paddingTop: '0.4rem'
     }
   }),
   profilePicture: css({
@@ -88,8 +89,10 @@ const styles = {
   heading: css({
     margin: 0,
     ...fontStyles.sansSerifMedium18,
+    lineHeight: '20px',
     [mUp]: {
-      ...fontStyles.sansSerifMedium22
+      ...fontStyles.sansSerifMedium22,
+      lineHeight: '24px'
     }
   }),
   actionWrapper: css({
