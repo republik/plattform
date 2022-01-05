@@ -59,7 +59,9 @@ const styles = {
     gridTemplateRows: 'auto auto auto auto'
   }),
   profilePictureWrapper: css({
-    gridArea: 'portrait'
+    gridArea: 'portrait',
+    // Offset to perfectly align with the capital-letters in the heading
+    paddingTop: '0.25rem'
   }),
   profilePicture: css({
     display: 'block',
@@ -83,12 +85,16 @@ const styles = {
   }),
   heading: css({
     margin: 0,
-    ...fontStyles.sansSerifMedium22
+    ...fontStyles.sansSerifMedium18,
+    lineHeight: '20px',
+    [mUp]: {
+      ...fontStyles.sansSerifMedium22,
+      lineHeight: '24px'
+    }
   }),
   actionWrapper: css({
     gridArea: 'actions',
-    display: 'flex',
-    alignItems: 'center'
+    alignSelf: 'center'
   }),
   menuWrapper: css({
     gridArea: 'menu',
