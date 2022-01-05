@@ -62,20 +62,22 @@ const styles = {
 export const commentComposerStorageKey = discussionId =>
   `commentComposerText:${discussionId}`
 
-export const CommentComposer = props => {
-  const {
-    t,
-    isRoot,
-    hideHeader,
-    onClose,
-    onCloseLabel,
-    onSubmitLabel,
-    commentId,
-    parentId,
-    autoFocus = true,
-    placeholder,
-    secondaryActions
-  } = props
+export const CommentComposer = ({
+  t,
+  isRoot,
+  hideHeader,
+  onSubmit,
+  onClose,
+  onCloseLabel,
+  onSubmitLabel,
+  commentId,
+  parentId,
+  autoFocus = true,
+  placeholder,
+  secondaryActions,
+  // Initial values
+  initialText
+}) => {
   const [colorScheme] = useColorContext()
   /*
    * Refs
@@ -111,8 +113,8 @@ export const CommentComposer = props => {
    * crashes or if they inadvertently close the composer.
    */
   const [text, setText] = React.useState(() => {
-    if (props.initialText) {
-      return props.initialText
+    if (initialText) {
+      return initialText
     } else if (typeof localStorage !== 'undefined') {
       try {
         return readDraft(discussionId, commentId) ?? ''
@@ -221,12 +223,11 @@ export const CommentComposer = props => {
     loading: false,
     error: undefined
   })
-  const onSubmit = () => {
+  const submitHandler = () => {
     if (root.current) {
       setSubmit({ loading: true, error })
-      props
-        .onSubmit({ text, tags: tagValue ? [tagValue] : undefined })
-        .then(({ ok, error }) => {
+      onSubmit({ text, tags: tagValue ? [tagValue] : undefined }).then(
+        ({ ok, error }) => {
           /*
            * We may have been umounted in the meantime, so we use 'root.current' as a signal that
            * we have been so we can avoid calling React setState functions which generate warnings.
@@ -251,7 +252,8 @@ export const CommentComposer = props => {
               setSubmit({ loading: false, error })
             }
           }
-        })
+        }
+      )
     }
   }
 
@@ -333,7 +335,7 @@ export const CommentComposer = props => {
         onSubmit={
           loading || (maxLength && textLength > maxLength)
             ? undefined
-            : onSubmit
+            : submitHandler
         }
         onSubmitLabel={onSubmitLabel}
         secondaryActions={secondaryActions}
@@ -348,12 +350,13 @@ CommentComposer.propTypes = {
   t: PropTypes.func.isRequired,
   isRoot: PropTypes.bool.isRequired,
   hideHeader: PropTypes.bool,
+  onSubmit: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   onCloseLabel: PropTypes.string,
-  onSubmit: PropTypes.func.isRequired,
   onSubmitLabel: PropTypes.string,
   placeholder: PropTypes.string,
-  secondaryActions: PropTypes.node
+  secondaryActions: PropTypes.node,
+  initialText: PropTypes.string
 }
 
 const MaxLengthIndicator = ({ maxLength, length }) => {
