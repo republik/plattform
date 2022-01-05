@@ -36,7 +36,7 @@ const styles = {
       "text text text"
       "actions vote vote"
     `,
-    gridTemplateColumns: 'max-content 1fr max-content',
+    gridTemplateColumns: 'minmax(60px, max-content) minmax(0, 1fr) max-content',
     gridTemplateRows: 'auto auto auto',
     [mUp]: {
       gridTemplateAreas: `
@@ -44,7 +44,8 @@ const styles = {
       "portrait text text"
       "portrait actions vote"
     `,
-      gridTemplateColumns: 'minmax(100px, max-content) 1fr max-content',
+      gridTemplateColumns:
+        'minmax(100px, max-content) minmax(0, 1fr) max-content',
       gridTemplateRows: 'max-content auto auto'
     }
   }),
@@ -54,7 +55,7 @@ const styles = {
       "text text"
       "actions vote"
     `,
-    gridTemplateColumns: '1fr max-content',
+    gridTemplateColumns: 'minmax(0, 1fr) max-content',
     gridTemplateRows: 'auto auto auto auto'
   }),
   profilePictureWrapper: css({
