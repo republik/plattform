@@ -1,5 +1,4 @@
 import { PgTable } from 'pogi'
-import { v4 } from 'is-uuid'
 
 import createDataLoader from '@orbiting/backend-modules-dataloader'
 import { GraphqlContext } from '@orbiting/backend-modules-types'
