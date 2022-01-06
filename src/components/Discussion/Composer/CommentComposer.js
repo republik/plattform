@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import Textarea from 'react-textarea-autosize'
@@ -14,6 +14,7 @@ import { useDebounce } from '../../../lib/useDebounce'
 import { useColorContext } from '../../Colors/ColorContext'
 import Loader from '../../Loader'
 import { deleteDraft, readDraft, writeDraft } from './CommentDraftHelper'
+import { DisplayAuthorPropType } from "../Internal/PropTypes";
 
 const styles = {
   root: css({}),
@@ -66,6 +67,7 @@ const propTypes = {
   t: PropTypes.func.isRequired,
   isRoot: PropTypes.bool.isRequired,
 
+  discussionId: PropTypes.string,
   parentId: PropTypes.string,
   commentId: PropTypes.string,
 
@@ -78,6 +80,7 @@ const propTypes = {
   secondaryActions: PropTypes.node,
   hintValidators: PropTypes.arrayOf(PropTypes.func),
 
+  displayAuthor: DisplayAuthorPropType,
   placeholder: PropTypes.string,
 
   initialText: PropTypes.string,
@@ -91,6 +94,7 @@ export const CommentComposer = ({
   t,
   isRoot,
 
+  discussionId,
   commentId,
   parentId,
 
@@ -103,6 +107,7 @@ export const CommentComposer = ({
   secondaryActions,
   hintValidators = [],
 
+  displayAuthor,
   placeholder,
 
   // Initial values
@@ -116,15 +121,15 @@ export const CommentComposer = ({
   /*
    * Refs
    *
-   * We have one ref that is pointing to the root elment of the comment composer, and
+   * We have one ref that is pointing to the root element of the comment composer, and
    * another which gives us access to the <Textarea> input element. The later MUST be
    * a function-style ref because <Textarea> doesn't support React.useRef()-style refs.
    */
-  const root = React.useRef()
-  const [textarea, textareaRef] = React.useState(null)
-  const [hints, setHints] = React.useState([])
-  const textRef = React.useRef()
-  const [preview, setPreview] = React.useState({
+  const root = useRef()
+  const [textarea, textareaRef] = useState(null)
+  const [hints, setHints] = useState([])
+  const textRef = useRef()
+  const [preview, setPreview] = useState({
     loading: false,
     comment: null
   })
@@ -133,7 +138,7 @@ export const CommentComposer = ({
    * Get the discussion metadata, action callbacks and hinters from DiscussionContext.
    */
   const { discussion, actions } = useContext(DiscussionContext)
-  const { id: discussionId, tags, rules, displayAuthor, isBoard } = discussion
+  const { tags, rules, isBoard } = discussion
   const { maxLength } = rules
 
   /*
@@ -141,7 +146,7 @@ export const CommentComposer = ({
    * provided through props. This way the user won't lose their text if the browser
    * crashes or if they inadvertently close the composer.
    */
-  const [text, setText] = React.useState(() => {
+  const [text, setText] = useState(() => {
     if (initialText) {
       return initialText
     } else if (typeof localStorage !== 'undefined') {
