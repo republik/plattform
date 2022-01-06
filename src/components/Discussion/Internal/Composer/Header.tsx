@@ -8,6 +8,8 @@ import {
 import { ellipsize } from '../../../../lib/styleMixins'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
 import { useColorContext } from '../../../Colors/ColorContext'
+import PropTypes, { InferProps } from 'prop-types'
+import { DisplayAuthorPropType } from '../PropTypes'
 
 const buttonStyle = {
   background: 'none',
@@ -94,12 +96,19 @@ const styles = {
   })
 }
 
+const commentHeaderProfilePropTypes = {
+  t: PropTypes.func.isRequired,
+  displayAuthor: DisplayAuthorPropType.isRequired,
+  canEditRole: PropTypes.bool
+}
+
 export const CommentHeaderProfile = ({
   t,
-  profilePicture,
-  name,
-  credential
-}) => {
+  displayAuthor,
+  canEditRole
+}: InferProps<typeof commentHeaderProfilePropTypes>) => {
+  const { name, profilePicture, credential } = displayAuthor || {}
+
   const [colorScheme] = useColorContext()
 
   return (
@@ -130,7 +139,7 @@ export const CommentHeaderProfile = ({
                   )}
                 </div>
               )
-            } else {
+            } else if (canEditRole) {
               return (
                 <div
                   {...styles.credential}
@@ -147,8 +156,19 @@ export const CommentHeaderProfile = ({
   )
 }
 
-export const Header = ({ t, displayAuthor, onClick }) => {
-  const { profilePicture, name, credential } = displayAuthor || {}
+CommentHeaderProfile.propTypes = commentHeaderProfilePropTypes
+
+const headerPropTypes = {
+  t: PropTypes.func.isRequired,
+  displayAuthor: DisplayAuthorPropType.isRequired,
+  onClick: PropTypes.func
+}
+
+export const Header = ({
+  t,
+  displayAuthor,
+  onClick
+}: InferProps<typeof headerPropTypes>) => {
   const [colorScheme] = useColorContext()
 
   const hoverStyle = useMemo(
@@ -168,17 +188,20 @@ export const Header = ({ t, displayAuthor, onClick }) => {
       <div {...styles.root}>
         <CommentHeaderProfile
           t={t}
-          profilePicture={profilePicture}
-          credential={credential}
-          name={name}
+          displayAuthor={displayAuthor}
+          canEditRole={!!onClick}
         />
-        <div {...styles.action} {...colorScheme.set('color', 'primary')}>
-          <EditIcon />
-        </div>
+        {onClick && (
+          <div {...styles.action} {...colorScheme.set('color', 'primary')}>
+            <EditIcon />
+          </div>
+        )}
       </div>
     </button>
   )
 }
+
+Header.propTypes = headerPropTypes
 
 const EditIcon = () => (
   <svg width='24px' height='24px' viewBox='0 0 24 24'>
