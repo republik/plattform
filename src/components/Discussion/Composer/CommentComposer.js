@@ -76,12 +76,15 @@ const propTypes = {
   onClose: PropTypes.func.isRequired,
   onCloseLabel: PropTypes.string,
   onOpenPreferences: PropTypes.func,
+  onPreviewComment: PropTypes.func,
 
   secondaryActions: PropTypes.node,
   hintValidators: PropTypes.arrayOf(PropTypes.func),
 
   displayAuthor: DisplayAuthorPropType,
   placeholder: PropTypes.string,
+  maxLength: PropTypes.number,
+  tags: PropTypes.arrayOf(PropTypes.string),
 
   initialText: PropTypes.string,
   initialTag: PropTypes.string,
@@ -104,6 +107,7 @@ export const CommentComposer = ({
   onClose,
   onCloseLabel,
   onOpenPreferences,
+  onPreviewComment,
 
   secondaryActions,
   hintValidators = [],
@@ -111,6 +115,7 @@ export const CommentComposer = ({
   displayAuthor,
   placeholder,
   maxLength,
+  tags,
 
   // Initial values
   initialText,
@@ -136,12 +141,6 @@ export const CommentComposer = ({
     loading: false,
     comment: null
   })
-
-  /*
-   * Get the discussion metadata, action callbacks and hinters from DiscussionContext.
-   */
-  const { discussion, actions } = useContext(DiscussionContext)
-  const { tags } = discussion
 
   /*
    * Synchronize the text with localStorage, and restore it from there if not otherwise
@@ -184,7 +183,6 @@ export const CommentComposer = ({
     }
   }, [textarea, autoFocus])
 
-  const previewCommentAction = actions.previewComment
   const [slowText] = useDebounce(text, 400)
   textRef.current = text
 
@@ -192,7 +190,7 @@ export const CommentComposer = ({
     if (!tagValue) {
       setTagValue(isRoot ? initialTag : null)
     }
-    if (!isBoard || !isRoot || !previewCommentAction) {
+    if (!isBoard || !isRoot || !onPreviewComment) {
       return
     }
     if (!slowText || slowText.indexOf('http') === -1) {
@@ -206,7 +204,7 @@ export const CommentComposer = ({
       ...preview,
       loading: true
     }))
-    previewCommentAction({
+    onPreviewComment({
       content: slowText,
       discussionId,
       parentId,
@@ -230,7 +228,7 @@ export const CommentComposer = ({
       })
   }, [
     slowText,
-    previewCommentAction,
+    onPreviewComment,
     isRoot,
     discussionId,
     commentId,
