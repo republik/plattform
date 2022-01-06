@@ -62,6 +62,31 @@ const styles = {
 export const commentComposerStorageKey = discussionId =>
   `commentComposerText:${discussionId}`
 
+const propTypes = {
+  t: PropTypes.func.isRequired,
+  isRoot: PropTypes.bool.isRequired,
+
+  parentId: PropTypes.string,
+  commentId: PropTypes.string,
+
+  onSubmit: PropTypes.func.isRequired,
+  onSubmitLabel: PropTypes.string,
+  onClose: PropTypes.func.isRequired,
+  onCloseLabel: PropTypes.string,
+  onOpenPreferences: PropTypes.func,
+
+  secondaryActions: PropTypes.node,
+  hintValidators: PropTypes.arrayOf(PropTypes.func),
+
+  placeholder: PropTypes.string,
+
+  initialText: PropTypes.string,
+  initialTag: PropTypes.string,
+
+  autoFocus: PropTypes.bool,
+  hideHeader: PropTypes.bool
+}
+
 export const CommentComposer = ({
   t,
   isRoot,
@@ -76,6 +101,7 @@ export const CommentComposer = ({
   onOpenPreferences,
 
   secondaryActions,
+  hintValidators = [],
 
   placeholder,
 
@@ -106,9 +132,7 @@ export const CommentComposer = ({
   /*
    * Get the discussion metadata, action callbacks and hinters from DiscussionContext.
    */
-  const { discussion, actions, composerHints = [] } = useContext(
-    DiscussionContext
-  )
+  const { discussion, actions } = useContext(DiscussionContext)
   const { id: discussionId, tags, rules, displayAuthor, isBoard } = discussion
   const { maxLength } = rules
 
@@ -211,7 +235,7 @@ export const CommentComposer = ({
   const onChangeText = ev => {
     const nextText = ev.target.value
     setText(nextText)
-    setHints(composerHints.map(fn => fn(nextText)).filter(Boolean))
+    setHints(hintValidators.map(fn => fn(nextText)).filter(Boolean))
     try {
       writeDraft(discussionId, commentId, ev.target.value)
     } catch (e) {
@@ -352,28 +376,7 @@ export const CommentComposer = ({
   )
 }
 
-CommentComposer.propTypes = {
-  t: PropTypes.func.isRequired,
-  isRoot: PropTypes.bool.isRequired,
-
-  parentId: PropTypes.string,
-  commentId: PropTypes.string,
-
-  onSubmit: PropTypes.func.isRequired,
-  onSubmitLabel: PropTypes.string,
-  onClose: PropTypes.func.isRequired,
-  onCloseLabel: PropTypes.string,
-  onOpenPreferences: PropTypes.func,
-
-  secondaryActions: PropTypes.node,
-
-  placeholder: PropTypes.string,
-
-  initialText: PropTypes.string,
-  initialTag: PropTypes.string,
-
-  hideHeader: PropTypes.bool
-}
+CommentComposer.propTypes = propTypes
 
 const MaxLengthIndicator = ({ maxLength, length }) => {
   const [colorScheme] = useColorContext()
