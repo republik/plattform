@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import Textarea from 'react-textarea-autosize'
@@ -7,7 +7,6 @@ import { mBreakPoint } from '../../../theme/mediaQueries'
 import { serifRegular16, sansSerifRegular12 } from '../../Typography/styles'
 
 import { Header, Tags, Actions, Error } from '../Internal/Composer'
-import { DiscussionContext } from '../DiscussionContext'
 import { convertStyleToRem } from '../../Typography/utils'
 import { Embed } from '../Internal/Comment'
 import { useDebounce } from '../../../lib/useDebounce'
