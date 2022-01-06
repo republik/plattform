@@ -78,7 +78,7 @@ const handleRow = async (row) => {
     FNAME: `"${row.firstName}"` || '',
     LANEM: `"${row.lastName}"` || '',
     PRLG_SEG: '',
-    CP_ATOKEN: row.accessToken,
+    CP_ATOKEN: '',
   }
 
   if (
@@ -88,14 +88,12 @@ const handleRow = async (row) => {
     lastEndDate?.isBefore('2022-05-01')
   ) {
     record.PRLG_SEG = 'prolong-before-may'
+    record.CP_ATOKEN = row.accessToken
   } else if (
     !activeMembership
   ) {
     // inactive
     record.PRLG_SEG = ''
-    if (!hadSomePeriods) {
-      record.CP_ATOKEN = ''
-    }
   } else {
     // active + lastEndDate > 2022-05-01
     // active + dormant
