@@ -65,19 +65,26 @@ export const commentComposerStorageKey = discussionId =>
 export const CommentComposer = ({
   t,
   isRoot,
-  hideHeader,
-  onSubmit,
-  onClose,
-  onCloseLabel,
-  onSubmitLabel,
+
   commentId,
   parentId,
-  autoFocus = true,
-  placeholder,
+
+  onSubmit,
+  onSubmitLabel,
+  onClose,
+  onCloseLabel,
+  onOpenPreferences,
+
   secondaryActions,
+
+  placeholder,
+
   // Initial values
   initialText,
-  initialTag
+  initialTag,
+
+  autoFocus = true,
+  hideHeader
 }) => {
   const [colorScheme] = useColorContext()
   /*
@@ -278,7 +285,7 @@ export const CommentComposer = ({
             <Header
               t={t}
               displayAuthor={displayAuthor}
-              onClick={actions.openDiscussionPreferences}
+              onClick={onOpenPreferences}
             />
           </div>
         )}
@@ -348,16 +355,24 @@ export const CommentComposer = ({
 CommentComposer.propTypes = {
   t: PropTypes.func.isRequired,
   isRoot: PropTypes.bool.isRequired,
-  hideHeader: PropTypes.bool,
+
+  parentId: PropTypes.string,
+  commentId: PropTypes.string,
+
   onSubmit: PropTypes.func.isRequired,
+  onSubmitLabel: PropTypes.string,
   onClose: PropTypes.func.isRequired,
   onCloseLabel: PropTypes.string,
-  onSubmitLabel: PropTypes.string,
-  placeholder: PropTypes.string,
+  onOpenPreferences: PropTypes.func,
+
   secondaryActions: PropTypes.node,
 
+  placeholder: PropTypes.string,
+
   initialText: PropTypes.string,
-  initialTag: PropTypes.string
+  initialTag: PropTypes.string,
+
+  hideHeader: PropTypes.bool
 }
 
 const MaxLengthIndicator = ({ maxLength, length }) => {
