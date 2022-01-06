@@ -6,9 +6,10 @@ module.exports = {
   parentIds: ({ parentIds }) => parentIds || [],
   text: async (memo, args, { user: me }) =>
     isMine(memo, me) ? memo.text : null,
-  content: async (memo) =>
-    isMine(memo, me) || memo.published ? remark.parse(text) : null,
+  content: async (memo, args, { user: me }) =>
+    isMine(memo, me) || memo.published ? remark.parse(memo.text) : null,
   author: async (memo, args, context) => {
+    const { user: me } = context
     if (!isMine(memo, me) && !memo.published) {
       return { // @TODO: Check this
         name: 'anon',
