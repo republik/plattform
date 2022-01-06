@@ -86,7 +86,7 @@ const propTypes = {
   tags: PropTypes.arrayOf(PropTypes.string),
 
   initialText: PropTypes.string,
-  initialTag: PropTypes.string,
+  initialTagValue: PropTypes.string,
 
   isBoard: PropTypes.bool,
   autoFocus: PropTypes.bool,
@@ -118,7 +118,7 @@ export const CommentComposer = ({
 
   // Initial values
   initialText,
-  initialTag,
+  initialTagValue,
 
   isBoard,
   autoFocus = true,
@@ -164,7 +164,7 @@ export const CommentComposer = ({
     ? preview.comment.contentLength
     : text.length
 
-  const [tagValue, setTagValue] = useState(initialTag)
+  const [tagValue, setTagValue] = useState(initialTagValue)
 
   /*
    * Focus the textarea upon mount.
@@ -187,7 +187,7 @@ export const CommentComposer = ({
 
   useEffect(() => {
     if (!tagValue) {
-      setTagValue(isRoot ? initialTag : null)
+      setTagValue(isRoot ? initialTagValue : null)
     }
     if (!isBoard || !isRoot || !onPreviewComment) {
       return
@@ -233,7 +233,7 @@ export const CommentComposer = ({
     commentId,
     parentId,
     isBoard,
-    initialTag
+    initialTagValue
   ])
 
   const onChangeText = ev => {
