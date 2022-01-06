@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import Textarea from 'react-textarea-autosize'
@@ -76,7 +76,8 @@ export const CommentComposer = ({
   placeholder,
   secondaryActions,
   // Initial values
-  initialText
+  initialText,
+  initialTag
 }) => {
   const [colorScheme] = useColorContext()
   /*
@@ -98,12 +99,9 @@ export const CommentComposer = ({
   /*
    * Get the discussion metadata, action callbacks and hinters from DiscussionContext.
    */
-  const {
-    discussion,
-    actions,
-    activeTag,
-    composerHints = []
-  } = React.useContext(DiscussionContext)
+  const { discussion, actions, composerHints = [] } = useContext(
+    DiscussionContext
+  )
   const { id: discussionId, tags, rules, displayAuthor, isBoard } = discussion
   const { maxLength } = rules
 
@@ -130,7 +128,7 @@ export const CommentComposer = ({
     ? preview.comment.contentLength
     : text.length
 
-  const [tagValue, setTagValue] = React.useState(props.tagValue)
+  const [tagValue, setTagValue] = useState(initialTag)
 
   /*
    * Focus the textarea upon mount.
@@ -138,7 +136,7 @@ export const CommentComposer = ({
    * Furthermore, if we detect a small screen, scroll the whole elment to the top of
    * the viewport.
    */
-  React.useEffect(() => {
+  useEffect(() => {
     if (textarea && autoFocus) {
       textarea.focus()
 
@@ -151,9 +149,10 @@ export const CommentComposer = ({
   const previewCommentAction = actions.previewComment
   const [slowText] = useDebounce(text, 400)
   textRef.current = text
-  React.useEffect(() => {
+
+  useEffect(() => {
     if (!tagValue) {
-      setTagValue(isRoot ? activeTag : null)
+      setTagValue(isRoot ? initialTag : null)
     }
     if (!isBoard || !isRoot || !previewCommentAction) {
       return
@@ -199,7 +198,7 @@ export const CommentComposer = ({
     commentId,
     parentId,
     isBoard,
-    activeTag
+    initialTag
   ])
 
   const onChangeText = ev => {
@@ -356,7 +355,9 @@ CommentComposer.propTypes = {
   onSubmitLabel: PropTypes.string,
   placeholder: PropTypes.string,
   secondaryActions: PropTypes.node,
-  initialText: PropTypes.string
+
+  initialText: PropTypes.string,
+  initialTag: PropTypes.string
 }
 
 const MaxLengthIndicator = ({ maxLength, length }) => {
