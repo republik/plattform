@@ -14,7 +14,7 @@ import { useDebounce } from '../../../lib/useDebounce'
 import { useColorContext } from '../../Colors/ColorContext'
 import Loader from '../../Loader'
 import { deleteDraft, readDraft, writeDraft } from './CommentDraftHelper'
-import { DisplayAuthorPropType } from "../Internal/PropTypes";
+import { DisplayAuthorPropType } from '../Internal/PropTypes'
 
 const styles = {
   root: css({}),
@@ -86,6 +86,7 @@ const propTypes = {
   initialText: PropTypes.string,
   initialTag: PropTypes.string,
 
+  isBoard: PropTypes.bool,
   autoFocus: PropTypes.bool,
   hideHeader: PropTypes.bool
 }
@@ -109,11 +110,13 @@ export const CommentComposer = ({
 
   displayAuthor,
   placeholder,
+  maxLength,
 
   // Initial values
   initialText,
   initialTag,
 
+  isBoard,
   autoFocus = true,
   hideHeader
 }) => {
@@ -138,8 +141,7 @@ export const CommentComposer = ({
    * Get the discussion metadata, action callbacks and hinters from DiscussionContext.
    */
   const { discussion, actions } = useContext(DiscussionContext)
-  const { tags, rules, isBoard } = discussion
-  const { maxLength } = rules
+  const { tags } = discussion
 
   /*
    * Synchronize the text with localStorage, and restore it from there if not otherwise
