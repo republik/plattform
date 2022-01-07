@@ -41,7 +41,11 @@ export const getSvgNodes = (chartElement, width) => {
   const html = ReactDOMServer.renderToStaticMarkup(
     React.cloneElement(chartElement, {
       width,
-      allowCanvasRendering: false
+      allowCanvasRendering: false,
+      config: {
+        ...chartElement.props.config,
+        colorDarkMapping: undefined
+      }
     })
   )
   const container = document.createElement('div')
