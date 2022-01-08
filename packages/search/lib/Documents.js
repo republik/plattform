@@ -773,11 +773,36 @@ const isPathUsed = async function (elastic, path, repoId) {
   const total = body.hits.total
   const totalCount = Number.isFinite(total?.value) ? total.value : total
 
-  debug('findUsedPath', { path, repoId, totalCount })
+  debug('isPathUsed', { path, repoId, totalCount })
 
   return totalCount > 0
 }
 
+/**
+ * Return all publications for a given repo ID, stored in ElasticSearch.
+ */
+const findPublications = async function (elastic, repoId) {
+  const { body } = await elastic.search({
+    ...indexRef,
+    body: {
+      query: {
+        bool: {
+          must: [
+            { term: { 'meta.repoId': repoId } },
+            { term: { 'meta.prepublication': false } },
+          ],
+        },
+      },
+    },
+  })
+
+  return body.hits.hits.map((hit) => hit._source)
+}
+
+/**
+ * Return published and scheduled publications for a given repo ID, store
+ * in ElasticSearch.
+ */
 const findPublished = async function (elastic, repoId) {
   const { body } = await elastic.search({
     ...indexRef,
@@ -792,7 +817,10 @@ const findPublished = async function (elastic, repoId) {
                   { term: { '__state.published': true } },
                   {
                     bool: {
-                      must: [{ term: { 'meta.prepublication': false } }],
+                      must: [
+                        { term: { 'meta.prepublication': false } },
+                        { exists: { field: 'meta.scheduledAt' } },
+                      ],
                     },
                   },
                 ],
@@ -855,6 +883,7 @@ module.exports = {
   prepublishScheduled,
   createPublish,
   isPathUsed,
+  findPublications,
   findPublished,
   findTemplates,
   getResourceUrls,
