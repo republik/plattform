@@ -25,7 +25,7 @@ const getPath = ({ slug, template, publishDate, prepublication, path }) => {
       !!prepublication && PREFIX_PREPUBLICATION_PATH,
       ...path.split('/'),
     ]
-  
+
     return `/${parts.filter(Boolean).join('/')}`
   }
 
