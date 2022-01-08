@@ -799,6 +799,10 @@ const findPublications = async function (elastic, repoId) {
   return body.hits.hits.map((hit) => hit._source)
 }
 
+/**
+ * Return published and scheduled publications for a given repo ID, store
+ * in ElasticSearch.
+ */
 const findPublished = async function (elastic, repoId) {
   const { body } = await elastic.search({
     ...indexRef,
