@@ -778,6 +778,27 @@ const isPathUsed = async function (elastic, path, repoId) {
   return totalCount > 0
 }
 
+/**
+ * Return all publications stored in ElasticSearch for a particualr repo ID
+ */
+const findPublications = async function (elastic, repoId) {
+  const { body } = await elastic.search({
+    ...indexRef,
+    body: {
+      query: {
+        bool: {
+          must: [
+            { term: { 'meta.repoId': repoId } },
+            { term: { 'meta.prepublication': false } },
+          ],
+        },
+      },
+    },
+  })
+
+  return body.hits.hits.map((hit) => hit._source)
+}
+
 const findPublished = async function (elastic, repoId) {
   const { body } = await elastic.search({
     ...indexRef,
@@ -858,6 +879,7 @@ module.exports = {
   prepublishScheduled,
   createPublish,
   isPathUsed,
+  findPublications,
   findPublished,
   findTemplates,
   getResourceUrls,
