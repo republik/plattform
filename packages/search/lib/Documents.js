@@ -779,7 +779,7 @@ const isPathUsed = async function (elastic, path, repoId) {
 }
 
 /**
- * Return all publications stored in ElasticSearch for a particualr repo ID
+ * Return all publications for a given repo ID, stored in ElasticSearch.
  */
 const findPublications = async function (elastic, repoId) {
   const { body } = await elastic.search({
