@@ -773,7 +773,7 @@ const isPathUsed = async function (elastic, path, repoId) {
   const total = body.hits.total
   const totalCount = Number.isFinite(total?.value) ? total.value : total
 
-  debug('findUsedPath', { path, repoId, totalCount })
+  debug('isPathUsed', { path, repoId, totalCount })
 
   return totalCount > 0
 }
