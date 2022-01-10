@@ -9,7 +9,6 @@
 This pacakge provides tooling to keep tables tidy. It deletes obsolete or expired data. Actions are split into "jobs":
 - postgres/accessEvents: Deletes event rows older than 90 days
 - postgres/consents: Sets attribute `ip` to `null` if row is older than 365 days
-- postgres/eventLog: Deletes event rows older than 90 days
 - postgres/mailLog: Deletes data in attribute `info` but `message.subject` and `template` in rows older than 90 days
 - postgres/paymentsLog: Deletes event rows older than 90 days
 - postgres/previewEvents: Deletes event rows older than 90 days
@@ -45,7 +44,7 @@ Depending on how often and how old your data is, it might take a while until com
 1. Run `yarn run tsc -w` to re-compile changed files.
 2. Run script at will (or with `nodemon`):
 
-       node script/run.js --no-dry-run --no-nice --verbose`
+       node script/run.js --no-dry-run --no-nice --verbose
 
 ### Scheduler
 
