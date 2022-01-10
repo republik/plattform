@@ -53,12 +53,6 @@ const deleteRelatedData = async (
     table: 'discussionPreferences',
     column: 'userId',
   })
-  relations.push({
-    // needs to be last
-    schema: 'public',
-    table: 'eventLog',
-    column: 'userId',
-  })
   return Promise.all([
     pgdb.query(
       `

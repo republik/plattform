@@ -53,10 +53,6 @@ module.exports = {
     }
     return []
   },
-  eventLog(user, args, { user: me }) {
-    Roles.ensureUserIsMeOrInRoles(user, me, DEFAULT_USER_ACCESS_ROLES)
-    return []
-  },
   async enabledFirstFactors(user, args, { pgdb, user: me }) {
     Roles.ensureUserIsMeOrInRoles(user, me, DEFAULT_USER_ACCESS_ROLES)
     return enabledFirstFactors(user._raw.email, pgdb)

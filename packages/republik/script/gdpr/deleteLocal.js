@@ -57,11 +57,6 @@ PgDb.connect()
       )
       console.log('deleted sessions')
 
-      const numDeleteEventLog = await transaction.public.eventLog.delete({
-        userId: deleteUserIds,
-      })
-      console.log(`#numDeleteEventLog: ${numDeleteEventLog}`)
-
       const numDeleteCredentials = await transaction.public.credentials.delete({
         userId: deleteUserIds,
       })
