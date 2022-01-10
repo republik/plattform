@@ -1,5 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
+import { colors } from '@project-r/styleguide'
 
 const styles = {
   marker: css({
@@ -132,7 +133,7 @@ export const rotstift = {
           borderTopColor: isSelected && 'black',
           borderRightColor: isSelected && 'black',
           borderLeftColor: isSelected && 'black',
-          borderBottom: `3px solid rgb(255,100,255)`
+          borderBottom: `3px solid ${colors.error}`
         }}
         onClick={onClick}
       />
@@ -142,7 +143,7 @@ export const rotstift = {
     <span
       style={{
         borderBottom: `3px solid`,
-        borderBottomColor: `rgb(255,100,255)`
+        borderBottomColor: colors.error
       }}
       onDoubleClick={onDoubleClick}
     >

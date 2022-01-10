@@ -4,6 +4,7 @@ import { css } from 'glamor'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import MemoIcon from 'react-icons/lib/md/comment'
 import RemoveIcon from 'react-icons/lib/md/delete'
+import { Editorial } from '@project-r/styleguide'
 
 import {
   Overlay,
@@ -22,7 +23,7 @@ const styles = {
   tooling: css({
     display: 'flex',
     alignItems: 'center',
-    paddingBottom: '1em'
+    paddingBottom: 40
   })
 }
 
@@ -102,8 +103,11 @@ const Memo = compose(withT)(
       <>
         {showModal && (
           <Overlay mUpStyle={{ maxWidth: 720, minHeight: 0 }} onClose={close}>
-            <OverlayToolbar title={'Memo'} onClose={close} />
+            <OverlayToolbar title='Memo' onClose={close} />
             <OverlayBody>
+              <Editorial.P attributes={{ style: { marginBottom: 20 } }}>
+                <Marker>{children}</Marker>
+              </Editorial.P>
               <div {...styles.tooling}>
                 {Object.keys(markers)
                   .filter(name => name !== 'default')
@@ -118,7 +122,11 @@ const Memo = compose(withT)(
                     )
                   })}
                 <div style={{ flexGrow: 1 }} />
-                <IconButton Icon={RemoveIcon} onClick={remove} />
+                <IconButton
+                  label='Memo entfernen'
+                  Icon={RemoveIcon}
+                  onClick={remove}
+                />
               </div>
               <MemoTree
                 repoId={repoId}
