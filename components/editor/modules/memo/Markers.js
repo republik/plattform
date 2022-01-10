@@ -1,12 +1,11 @@
 import React from 'react'
 import { css } from 'glamor'
-import { colors } from '@project-r/styleguide'
 
 const styles = {
   marker: css({
     border: '1px solid transparent',
     borderRadius: '4px',
-    marginRight: 6,
+    marginRight: 10,
     width: 32,
     height: 32,
     verticalAlign: 'middle',
@@ -20,8 +19,8 @@ export const yellow = {
       <div
         {...styles.marker}
         style={{
-          backgroundColor: `rgb(255,255,0)`,
-          borderColor: isSelected && 'black'
+          backgroundColor: `rgb(255,240,0)`,
+          boxShadow: isSelected && 'rgb(240,255,0) 0px 0px 4px'
         }}
         onClick={onClick}
       />
@@ -48,7 +47,7 @@ export const pink = {
         {...styles.marker}
         style={{
           backgroundColor: `rgb(255,100,255)`,
-          borderColor: isSelected && 'black'
+          boxShadow: isSelected && 'rgb(255,100,255) 0px 0px 4px'
         }}
         onClick={onClick}
       />
@@ -77,7 +76,7 @@ export const green = {
         {...styles.marker}
         style={{
           backgroundColor: `rgb(0,255,0)`,
-          borderColor: isSelected && 'black'
+          boxShadow: isSelected && 'rgb(0,255,0) 0px 0px 4px'
         }}
         onClick={onClick}
       />
@@ -104,7 +103,7 @@ export const blue = {
         {...styles.marker}
         style={{
           backgroundColor: `rgb(0,230,230)`,
-          borderColor: isSelected && 'black'
+          boxShadow: isSelected && 'rgb(0,230,230) 0px 0px 4px'
         }}
         onClick={onClick}
       />
@@ -130,20 +129,31 @@ export const rotstift = {
       <div
         {...styles.marker}
         style={{
-          borderTopColor: isSelected && 'black',
-          borderRightColor: isSelected && 'black',
-          borderLeftColor: isSelected && 'black',
-          borderBottom: `3px solid ${colors.error}`
+          position: 'relative',
+          borderRadius: 0
         }}
         onClick={onClick}
-      />
+      >
+        <div
+          style={{
+            borderRadius: 4,
+            position: 'absolute',
+            backgroundColor: 'red',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 3,
+            boxShadow: isSelected && 'red 0px 0px 2px'
+          }}
+        />
+      </div>
     )
   },
   Marker: ({ onDoubleClick, children }) => (
     <span
       style={{
         borderBottom: `3px solid`,
-        borderBottomColor: colors.error
+        borderBottomColor: 'red'
       }}
       onDoubleClick={onDoubleClick}
     >
@@ -159,7 +169,7 @@ export const drop = {
         {...styles.marker}
         style={{
           backgroundColor: 'rgba(0,0,0,0.1)',
-          borderColor: isSelected && 'black'
+          boxShadow: isSelected && 'rgba(0,0,0,0.1) 0px 0px 4px'
         }}
         onClick={onClick}
       />
