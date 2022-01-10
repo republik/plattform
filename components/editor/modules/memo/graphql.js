@@ -31,9 +31,13 @@ const asTree = nodes => {
     userCanEdit: !!node.text,
     comments: {
       ...node.comments,
-      nodes: childrenOfComment(node.id)
+      nodes: childrenOfComment(node.id),
+      totalCount: descendantsOfComment(node.id)?.length || 0
     }
   })
+
+  const descendantsOfComment = id =>
+    nodes.filter(n => n.parentIds.indexOf(id) !== -1).map(toComment)
 
   const childrenOfComment = id =>
     nodes.filter(n => n.parentIds[n.parentIds.length - 1] === id).map(toComment)

@@ -34,14 +34,7 @@ const buildDiscussionContext = ({
     }
   },
   actions: {
-    previewComment: ({ content, discussionId, parentId, id }) => {
-      console.log('previewComment', {
-        content,
-        discussionId,
-        parentId,
-        id
-      })
-    },
+    previewComment: false,
     submitComment: async (parentComment, text) =>
       publish(repoId, parentComment?.id, text).then(
         async response => {
@@ -69,13 +62,7 @@ const buildDiscussionContext = ({
     fetchMoreComments: ({ parentId, after, appendAfter }) => {
       console.log('fetchMoreComments', { parentId, after, appendAfter })
     },
-    shareComment: comment => {
-      console.log('shareComment', comment)
-    },
-    openDiscussionPreferences: () => {
-      console.log('openDiscussionPreferences')
-    },
-    featureComment: false // () => {},
+    openDiscussionPreferences: false
   },
   clock: {
     isDesktop: true,
