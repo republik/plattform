@@ -164,11 +164,11 @@ const RenderChart = ({ node }) => {
 
 const ChartCode = ({ values, config, onChartSelect }) => {
   return (
-    <>
+    <div style={{ marginTop: 10 }}>
       <JSONEditor label='Einstellungen' config={config} readOnly />
       <PlainEditor label='CSV Daten' value={values} linesShown={10} readOnly />
       <ChartActions config={config} values={values} onSelect={onChartSelect} />
-    </>
+    </div>
   )
 }
 
