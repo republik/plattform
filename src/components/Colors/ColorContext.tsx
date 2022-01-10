@@ -25,7 +25,7 @@ const createScheme = specificColors => {
 
   const { mappings = {} } = colorDefinitions
 
-  const getCSSColor = (color, mappingName) => {
+  const getCSSColor = (color, mappingName = undefined) => {
     const mapping = mappings[mappingName] || {}
     return accessCSSColor(mapping[color] || color)
   }
@@ -92,6 +92,10 @@ export const ColorContextLocalExtension = ({
   children,
   localColors = {},
   localMappings = {}
+}: {
+  children: React.ReactNode | React.ReactNode[]
+  localColors: any
+  localMappings: any
 }) => {
   const [{ schemeKey, CSSVarSupport, colorDefinitions }] = useColorContext()
 
@@ -196,6 +200,10 @@ export const ColorContextProvider = ({
   colorSchemeKey = 'auto',
   root = false,
   children
+}: {
+  colorSchemeKey: 'light' | 'dark' | 'auto'
+  root?: boolean
+  children: React.ReactNode | React.ReactNode[]
 }) => {
   // we initially assume browser support it
   // - e.g. during server side rendering
@@ -207,7 +215,9 @@ export const ColorContextProvider = ({
         window.CSS &&
         window.CSS.supports &&
         window.CSS.supports('color', 'var(--color-test)')
-    } catch (e) {}
+    } catch (e) {
+      return
+    }
     if (!support) {
       // but if can't confirm the support in the browser we turn it off
       setCSSVarSupport(false)
@@ -266,10 +276,6 @@ export const ColorContextProvider = ({
       {children}
     </ColorContext.Provider>
   )
-}
-
-ColorContextProvider.propTypes = {
-  colorSchemeKey: PropTypes.oneOf(['light', 'dark', 'auto'])
 }
 
 export default ColorContext
