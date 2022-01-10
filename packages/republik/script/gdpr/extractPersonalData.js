@@ -858,30 +858,6 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
     )
 
     /**
-     * previews
-     */
-
-    const previewRequests = await pgdb.public.previewRequests.find({
-      userId: user.id,
-    })
-
-    if (previewRequests.length > 0) {
-      await save(
-        destination,
-        'previewRequests',
-        'Vorschau-Zugänge (veraltet)',
-        previewRequests.map((request) =>
-          pick(request, [
-            'createdAt',
-            'scheduledAt',
-            'expiredAt',
-            'followupAt',
-          ]),
-        ),
-      )
-    }
-
-    /**
      * tokens
      */
 
