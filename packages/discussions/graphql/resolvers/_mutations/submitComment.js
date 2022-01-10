@@ -14,10 +14,8 @@ const Promise = require('bluebird')
 const { submitComment: notify } = require('../../../lib/Notifications')
 
 module.exports = async (_, args, context) => {
-  const { pgdb, loaders, user, t, pubsub } = context
-  const userId = user.id
-
-  Roles.ensureUserHasRole(user, 'member')
+  const { pgdb, loaders, user: me, t, pubsub } = context
+  Roles.ensureUserHasRole(me, 'member')
 
   const {
     id,
@@ -85,7 +83,7 @@ module.exports = async (_, args, context) => {
       id,
       discussionId: discussion.id,
       parentId,
-      userId,
+      userId: me.id,
       content,
       tags,
       now: args.now,
@@ -112,7 +110,7 @@ module.exports = async (_, args, context) => {
     if (discussionPreferences) {
       await setDiscussionPreferences({
         discussionPreferences,
-        userId,
+        userId: me.id,
         discussion,
         transaction,
         t,
@@ -121,7 +119,7 @@ module.exports = async (_, args, context) => {
     } else {
       ensureAnonymousDifferentiator({
         transaction,
-        userId,
+        userId: me.id,
         discussion,
         t,
         loaders,

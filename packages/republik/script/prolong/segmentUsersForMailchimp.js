@@ -78,7 +78,7 @@ const handleRow = async (row) => {
     FNAME: `"${row.firstName}"` || '',
     LANEM: `"${row.lastName}"` || '',
     PRLG_SEG: '',
-    CP_ATOKEN: row.accessToken,
+    CP_ATOKEN: '',
   }
 
   if (
@@ -87,22 +87,18 @@ const handleRow = async (row) => {
     membershipTypeName !== 'MONTHLY_ABO' &&
     lastEndDate?.isBefore('2022-05-01')
   ) {
-    record.PRLG_SEG = 'prolong-before-apr'
+    record.PRLG_SEG = 'prolong-before-may'
+    record.CP_ATOKEN = row.accessToken
   } else if (
-    activeMembership &&
-    membershipTypeName !== 'MONTHLY_ABO'
+    !activeMembership
   ) {
-    record.PRLG_SEG = 'prolong-starting-apr'
-  } else if (
-    activeMembership &&
-    membershipTypeName === 'MONTHLY_ABO'
-  ) {
-    record.PRLG_SEG = 'has-monthly-abo'
-    record.CP_ATOKEN = ''
+    // inactive
+    record.PRLG_SEG = ''
   } else {
-    if (!hadSomePeriods) {
-      record.CP_ATOKEN = ''
-    }
+    // active + lastEndDate > 2022-05-01
+    // active + dormant
+    // active + MONTHLY
+    record.PRLG_SEG = 'no-action-required'
   }
 
   if (!stats[record.PRLG_SEG]) {

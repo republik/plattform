@@ -191,7 +191,7 @@ module.exports = {
   },
 
   author: async (comment, args, { user, loaders }) => {
-    if (!comment.userId || !Roles.userIsInRoles(user, ['editor', 'admin'])) {
+    if (!comment.userId || !Roles.userIsInRoles(user, ['admin'])) {
       return null
     }
     return loaders.User.byId.load(comment.userId)
@@ -343,7 +343,7 @@ module.exports = {
     ),
 
   numReports: ({ reports }, args, { user: me }) =>
-    Roles.userIsInRoles(me, ['editor', 'admin'])
+    Roles.userIsInRoles(me, ['moderator', 'admin'])
       ? reports
         ? reports.length
         : 0

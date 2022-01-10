@@ -7,7 +7,7 @@ const DEFAULT_INTERVAL_DAYS = 7
 module.exports = async (_, args, context) => {
   const { pgdb, loaders, user: me } = context
 
-  Roles.ensureUserIsInRoles(me, ['admin', 'supporter'])
+  Roles.ensureUserIsInRoles(me, ['supporter', 'admin'])
 
   const tx = await pgdb.transactionBegin()
   try {
