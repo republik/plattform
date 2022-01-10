@@ -4,7 +4,7 @@ import { css } from 'glamor'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import MemoIcon from 'react-icons/lib/md/comment'
 import RemoveIcon from 'react-icons/lib/md/delete'
-import { Editorial } from '@project-r/styleguide'
+import { Editorial, Interaction } from '@project-r/styleguide'
 
 import {
   Overlay,
@@ -18,6 +18,7 @@ import { matchInline, createInlineButton, buttonStyles } from '../../utils'
 
 import standard, * as markers from './Markers'
 import MemoTree from './MemoTree'
+import { withRouter } from 'next/router'
 
 const styles = {
   tooling: css({
@@ -31,118 +32,127 @@ const getMarker = name => {
   return markers[name] || standard
 }
 
-const Memo = compose(withT)(
-  ({ editor, node, children, isSelected, repoId }) => {
-    const [showModal, setShowModal] = useState()
-    const [parentId, setParentId] = useState()
-    const [marker, setMarker] = useState()
+const Memo = compose(
+  withT,
+  withRouter
+)(({ editor, node, children, isSelected, repoId, router }) => {
+  const [showModal, setShowModal] = useState()
+  const [parentId, setParentId] = useState()
+  const [marker, setMarker] = useState()
 
-    // If Memo is untouched – flag is missing – open overlay.
-    useEffect(() => {
-      !node.data.get('touched') && open()
-    }, [node.data.get('touched')])
+  // If Memo is untouched – flag is missing – open overlay.
+  useEffect(() => {
+    !node.data.get('touched') && open()
+  }, [node.data.get('touched')])
 
-    useEffect(() => {
-      reset()
-    }, [])
+  useEffect(() => {
+    reset()
+  }, [])
 
-    const pickMarker = name => e => {
-      e?.preventDefault?.()
-      setMarker(name)
+  const pickMarker = name => e => {
+    e?.preventDefault?.()
+    setMarker(name)
+    editor.change(change => {
+      change.setNodeByKey(node.key, {
+        data: node.data.merge({
+          marker: name,
+          touched: true
+        })
+      })
+    })
+  }
+
+  const reset = e => {
+    e?.preventDefault?.()
+    setParentId(node.data.get('parentId'))
+    setMarker(node.data.get('marker'))
+  }
+
+  const open = e => {
+    e?.preventDefault?.()
+    setShowModal(true)
+  }
+
+  const close = e => {
+    e?.preventDefault?.()
+    setShowModal(false)
+  }
+
+  const remove = e => {
+    e?.preventDefault?.()
+    editor.change(change => {
+      change.unwrapInline(node.type)
+    })
+  }
+
+  const onPublished = memo => {
+    if (!memo.parentIds.length) {
+      setParentId(memo.id)
+
       editor.change(change => {
         change.setNodeByKey(node.key, {
           data: node.data.merge({
-            marker: name,
+            parentId: memo.id,
             touched: true
           })
         })
       })
     }
+  }
 
-    const reset = e => {
-      e?.preventDefault?.()
-      setParentId(node.data.get('parentId'))
-      setMarker(node.data.get('marker'))
-    }
+  const { Marker } = getMarker(marker)
+  const discussionEnabled = router.query.commitId !== 'new'
 
-    const open = e => {
-      e?.preventDefault?.()
-      setShowModal(true)
-    }
-
-    const close = e => {
-      e?.preventDefault?.()
-      setShowModal(false)
-    }
-
-    const remove = e => {
-      e?.preventDefault?.()
-      editor.change(change => {
-        change.unwrapInline(node.type)
-      })
-    }
-
-    const onPublished = memo => {
-      if (!memo.parentIds.length) {
-        setParentId(memo.id)
-
-        editor.change(change => {
-          change.setNodeByKey(node.key, {
-            data: node.data.merge({
-              parentId: memo.id,
-              touched: true
-            })
-          })
-        })
-      }
-    }
-
-    const { Marker } = getMarker(marker)
-
-    return (
-      <>
-        {showModal && (
-          <Overlay mUpStyle={{ maxWidth: 720, minHeight: 0 }} onClose={close}>
-            <OverlayToolbar title='Memo' onClose={close} />
-            <OverlayBody>
-              <Editorial.P attributes={{ style: { marginBottom: 20 } }}>
-                <Marker>{children}</Marker>
-              </Editorial.P>
-              <div {...styles.tooling}>
-                {Object.keys(markers)
-                  .filter(name => name !== 'default')
-                  .map(name => {
-                    const { Picker } = getMarker(name)
-                    return (
-                      <Picker
-                        key={`marker-${name}`}
-                        isSelected={marker === name}
-                        onClick={pickMarker(name)}
-                      />
-                    )
-                  })}
-                <div style={{ flexGrow: 1 }} />
-                <IconButton
-                  label='Memo entfernen'
-                  Icon={RemoveIcon}
-                  onClick={remove}
-                />
-              </div>
+  return (
+    <>
+      {showModal && (
+        <Overlay mUpStyle={{ maxWidth: 720, minHeight: 0 }} onClose={close}>
+          <OverlayToolbar title='Memo' onClose={close} />
+          <OverlayBody>
+            <Editorial.P attributes={{ style: { marginBottom: 20 } }}>
+              <Marker>{children}</Marker>
+            </Editorial.P>
+            <div {...styles.tooling}>
+              {Object.keys(markers)
+                .filter(name => name !== 'default')
+                .map(name => {
+                  const { Picker } = getMarker(name)
+                  return (
+                    <Picker
+                      key={`marker-${name}`}
+                      isSelected={marker === name}
+                      onClick={pickMarker(name)}
+                    />
+                  )
+                })}
+              <div style={{ flexGrow: 1 }} />
+              <IconButton
+                label='Memo entfernen'
+                Icon={RemoveIcon}
+                onClick={remove}
+              />
+            </div>
+            {discussionEnabled ? (
               <MemoTree
                 repoId={repoId}
                 parentId={parentId}
                 onPublished={onPublished}
               />
-            </OverlayBody>
-          </Overlay>
-        )}
-        <Marker isSelected={isSelected} onDoubleClick={open}>
-          {children}
-        </Marker>
-      </>
-    )
-  }
-)
+            ) : (
+              <Interaction.P>
+                Sie können erst Kommentare hinterlassen, nachdem Sie den Beitrag
+                kommittet haben.
+              </Interaction.P>
+            )}
+          </OverlayBody>
+        </Overlay>
+      )}
+      <Marker isSelected={isSelected} onDoubleClick={open}>
+        {children}
+      </Marker>
+    </>
+  )
+})
 
 const MemoModule = ({ rule, TYPE }) => {
   const memo = {
