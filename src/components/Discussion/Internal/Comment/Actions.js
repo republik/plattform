@@ -2,11 +2,7 @@ import React, { useMemo } from 'react'
 import { css } from 'glamor'
 import { sansSerifMedium14 } from '../../../Typography/styles'
 import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
-import {
-  ShareIcon,
-  ReplyIcon,
-  DiscussionIcon
-} from '../../../Icons'
+import { ShareIcon, ReplyIcon, DiscussionIcon } from '../../../Icons'
 import { useColorContext } from '../../../Colors/ColorContext'
 import { useCurrentMinute } from '../../../../lib/useCurrentMinute'
 import IconButton from '../../../IconButton'
@@ -34,7 +30,6 @@ export const Actions = ({ t, comment, onExpand, onReply }) => {
   const { published } = comment
   const { discussion, actions, clock } = React.useContext(DiscussionContext)
   const { displayAuthor, userWaitUntil, userCanComment } = discussion
-  const onShare = () => actions.shareComment(comment)
 
   const now = useCurrentMinute()
   const [colorScheme] = useColorContext()
@@ -71,11 +66,11 @@ export const Actions = ({ t, comment, onExpand, onReply }) => {
             }
           />
         )}
-        {published && (
+        {actions.shareComment && published && (
           <IconButton
             title={t('styleguide/CommentActions/share')}
             Icon={ShareIcon}
-            onClick={onShare}
+            onClick={() => actions.shareComment(comment)}
             size={20}
           />
         )}
@@ -91,8 +86,8 @@ export const Actions = ({ t, comment, onExpand, onReply }) => {
           />
         )}
       </div>
-      {published && (
-        <VoteButtons 
+      {actions.upvoteComment && published && (
+        <VoteButtons
           t={t}
           comment={comment}
           disabled={!userCanComment}
