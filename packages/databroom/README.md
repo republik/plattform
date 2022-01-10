@@ -11,7 +11,6 @@ This pacakge provides tooling to keep tables tidy. It deletes obsolete or expire
 - postgres/consents: Sets attribute `ip` to `null` if row is older than 365 days
 - postgres/mailLog: Deletes data in attribute `info` but `message.subject` and `template` in rows older than 90 days
 - postgres/paymentsLog: Deletes event rows older than 90 days
-- postgres/previewEvents: Deletes event rows older than 90 days
 
 Databroom is either used as a scheduler (each day at 3am UTC) or as script ("manual").
 
