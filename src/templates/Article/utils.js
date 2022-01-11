@@ -99,22 +99,7 @@ const nestedInlines = [
     matchMdast: matchSpanType('MEMO'),
     editorModule: 'memo',
     editorOptions: {
-      parentTypes: [
-        'CREDIT',
-        'PARAGRAPH',
-        'NOTEP',
-        'CAPTION_TEXT',
-        'LOGBOOK_CREDIT',
-        'INFOH', //?
-        'INFOP',
-        'QUOTEP',
-        'QUOTECITE',
-        'BLOCKQUOTEPARAGRAPH',
-        'BYLINE',
-        'H2',
-        'H1',
-        'LEAD'
-      ]
+      type: 'MEMO'
     }
   }
 ]
