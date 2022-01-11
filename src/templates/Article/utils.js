@@ -97,6 +97,7 @@ const nestedInlines = [
   },
   {
     matchMdast: matchSpanType('MEMO'),
+    component: ({ children }) => <>{children}</>,
     editorModule: 'memo',
     editorOptions: {
       type: 'MEMO'
