@@ -8,9 +8,13 @@ module.exports = async (_, args, context) => {
   const tx = await pgdb.transactionBegin()
   try {
     const memo = await loaders.Memo.byId.load(id)
+    
+    if (!memo) {
+      throw new Error(t('api/editMemo/error/404'))
+    }
 
     if (memo.userId !== me.id) {
-      throw new Error(t('api/editMemo/error/notYours')) // @TODO: Add translation
+      throw new Error(t('api/editMemo/error/notYours'))
     }
 
     const updatedMemo = await tx.publikator.memos.updateAndGetOne(

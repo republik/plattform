@@ -9,8 +9,12 @@ module.exports = async (_, args, context) => {
   try {
     const memo = await loaders.Memo.byId.load(id)
 
+    if (!memo) {
+      throw new Error(t('api/unpublishMemo/error/404'))
+    }
+
     if (memo.userId !== me.id) {
-      throw new Error(t('api/unpublishMemo/error/notYours')) // @TODO: Add translation
+      throw new Error(t('api/unpublishMemo/error/notYours'))
     }
 
     const updatedMemo = await tx.publikator.memos.updateAndGetOne(

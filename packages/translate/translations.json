@@ -2183,6 +2183,22 @@
     {
       "key": "api/email/card/visa",
       "value": "Visa-Kreditkarte"
+    },
+    {
+      "key": "api/editMemo/error/404",
+      "value": "Memo nicht gefunden"
+    },
+    {
+      "key": "api/editMemo/error/notYours",
+      "value": "Sie können dieses Memo nicht bearbeiten."
+    },
+    {
+      "key": "api/unpublishMemo/error/404",
+      "value": "Memo nicht gefunden"
+    },
+    {
+      "key": "api/unpublishMemo/error/notYours",
+      "value": "Sie können dieses Memo nicht zurückziehen."
     }
   ]
 }
