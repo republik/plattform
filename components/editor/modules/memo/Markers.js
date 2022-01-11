@@ -1,5 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
+import { color as d3Color } from 'd3-color'
 
 const styles = {
   marker: css({
@@ -13,113 +14,109 @@ const styles = {
   })
 }
 
-export const yellow = {
-  Picker: ({ isSelected, onClick }) => {
-    return (
-      <div
-        {...styles.marker}
-        style={{
-          backgroundColor: `rgb(255,240,0)`,
-          boxShadow: isSelected && 'rgb(240,255,0) 0px 0px 4px'
-        }}
-        onClick={onClick}
-      />
-    )
-  },
-  Marker: ({ isSelected, onDoubleClick, children }) => (
-    <span
+const ColorPicker = ({ isSelected, onClick, color }) => {
+  return (
+    <div
+      {...styles.marker}
       style={{
-        backgroundColor: isSelected ? `rgb(255,255,0)` : `rgba(255,255,0,0.4)`,
-        paddingTop: '.2em',
-        paddingBottom: '.2em'
+        backgroundColor: color,
+        boxShadow: isSelected && `${color} 0px 0px 4px`
       }}
+      onClick={onClick}
+    />
+  )
+}
+
+const Highlighter = ({ isSelected, onDoubleClick, children, color }) => (
+  <span
+    style={{
+      backgroundColor: isSelected
+        ? color
+        : d3Color(color)
+            .copy({ opacity: 0.4 })
+            .toString(),
+      paddingTop: '.2em',
+      paddingBottom: '.2em'
+    }}
+    onDoubleClick={onDoubleClick}
+  >
+    {children}
+  </span>
+)
+
+export const yellow = {
+  Picker: ({ isSelected, onClick }) => (
+    <ColorPicker
+      isSelected={isSelected}
+      onClick={onClick}
+      color='rgb(255,255,0)'
+    />
+  ),
+  Marker: ({ isSelected, onDoubleClick, children }) => (
+    <Highlighter
+      isSelected={isSelected}
       onDoubleClick={onDoubleClick}
+      color='rgb(255,255,0)'
     >
       {children}
-    </span>
+    </Highlighter>
   )
 }
 
 export const pink = {
-  Picker: ({ isSelected, onClick }) => {
-    return (
-      <div
-        {...styles.marker}
-        style={{
-          backgroundColor: `rgb(255,100,255)`,
-          boxShadow: isSelected && 'rgb(255,100,255) 0px 0px 4px'
-        }}
-        onClick={onClick}
-      />
-    )
-  },
+  Picker: ({ isSelected, onClick }) => (
+    <ColorPicker
+      isSelected={isSelected}
+      onClick={onClick}
+      color='rgb(255,100,255)'
+    />
+  ),
   Marker: ({ isSelected, onDoubleClick, children }) => (
-    <span
-      style={{
-        backgroundColor: isSelected
-          ? `rgb(255,100,255)`
-          : `rgba(255,100,255,0.5)`,
-        paddingTop: '.2em',
-        paddingBottom: '.2em'
-      }}
+    <Highlighter
+      isSelected={isSelected}
       onDoubleClick={onDoubleClick}
+      color='rgb(255,100,255)'
     >
       {children}
-    </span>
+    </Highlighter>
   )
 }
 
 export const green = {
-  Picker: ({ isSelected, onClick }) => {
-    return (
-      <div
-        {...styles.marker}
-        style={{
-          backgroundColor: `rgb(0,255,0)`,
-          boxShadow: isSelected && 'rgb(0,255,0) 0px 0px 4px'
-        }}
-        onClick={onClick}
-      />
-    )
-  },
+  Picker: ({ isSelected, onClick }) => (
+    <ColorPicker
+      isSelected={isSelected}
+      onClick={onClick}
+      color='rgb(0,255,0)'
+    />
+  ),
   Marker: ({ isSelected, onDoubleClick, children }) => (
-    <span
-      style={{
-        backgroundColor: isSelected ? `rgb(0,255,0)` : `rgba(0,255,0,0.5)`,
-        paddingTop: '.2em',
-        paddingBottom: '.2em'
-      }}
+    <Highlighter
+      isSelected={isSelected}
       onDoubleClick={onDoubleClick}
+      color='rgb(0,255,0)'
     >
       {children}
-    </span>
+    </Highlighter>
   )
 }
 
 export const blue = {
-  Picker: ({ isSelected, onClick }) => {
-    return (
-      <div
-        {...styles.marker}
-        style={{
-          backgroundColor: `rgb(0,230,230)`,
-          boxShadow: isSelected && 'rgb(0,230,230) 0px 0px 4px'
-        }}
-        onClick={onClick}
-      />
-    )
-  },
+  Picker: ({ isSelected, onClick }) => (
+    <ColorPicker
+      isSelected={isSelected}
+      onClick={onClick}
+      color='rgb(0,230,230)'
+    />
+  ),
   Marker: ({ isSelected, onDoubleClick, children }) => (
-    <span
-      style={{
-        backgroundColor: isSelected ? `rgb(0,230,230)` : `rgba(0,230,230,0.5)`,
-        paddingTop: '.2em',
-        paddingBottom: '.2em'
-      }}
+    <Highlighter
+      isSelected={isSelected}
       onDoubleClick={onDoubleClick}
+      color='rgb(0,230,230)'
     >
       {children}
-    </span>
+    </Highlighter>
   )
 }
 
@@ -163,18 +160,13 @@ export const rotstift = {
 }
 
 export const drop = {
-  Picker: ({ isSelected, onClick }) => {
-    return (
-      <div
-        {...styles.marker}
-        style={{
-          backgroundColor: 'rgba(0,0,0,0.1)',
-          boxShadow: isSelected && 'rgba(0,0,0,0.1) 0px 0px 4px'
-        }}
-        onClick={onClick}
-      />
-    )
-  },
+  Picker: ({ isSelected, onClick }) => (
+    <ColorPicker
+      isSelected={isSelected}
+      onClick={onClick}
+      color='rgba(0,0,0,0.1)'
+    />
+  ),
   Marker: ({ isSelected, onDoubleClick, children }) => (
     <span
       style={{ opacity: isSelected ? 0.6 : 0.3 }}
