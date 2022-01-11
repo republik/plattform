@@ -35,7 +35,7 @@ const getMarker = name => {
 const Memo = compose(
   withT,
   withRouter
-)(({ editor, node, children, isSelected, repoId, router }) => {
+)(({ t, editor, node, children, isSelected, repoId, router }) => {
   const [showModal, setShowModal] = useState()
   const [parentId, setParentId] = useState()
   const [marker, setMarker] = useState()
@@ -127,7 +127,7 @@ const Memo = compose(
                 })}
               <div style={{ flexGrow: 1 }} />
               <IconButton
-                label='Memo entfernen'
+                label={t('memo/modal/remove')}
                 Icon={RemoveIcon}
                 onClick={remove}
               />
@@ -139,10 +139,7 @@ const Memo = compose(
                 onPublished={onPublished}
               />
             ) : (
-              <Interaction.P>
-                Sie können erst Kommentare hinterlassen, nachdem Sie den Beitrag
-                kommittet haben.
-              </Interaction.P>
+              <Interaction.P>{t('memo/modal/warning/newDoc')}</Interaction.P>
             )}
           </OverlayBody>
         </Overlay>
@@ -216,7 +213,6 @@ const MemoModule = ({ rule, TYPE }) => {
             .findDescendant(node => node.type === 'TITLE')
             .data.get('repoId')
 
-          // @TODO: Wenn Dokument nicht gespeichert
           // @TODO: Wenn Dokument ein Template ist …
 
           return (
