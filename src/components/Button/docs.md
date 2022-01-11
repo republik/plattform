@@ -55,22 +55,38 @@ The naked prop removes the background color from the button. They retain size an
 
 ```react|span-6
 <>
-  <div style={{marginBottom: 32}}>
-    <Button primary>
-      Mitmachen
-    </Button>
-    <Button naked>
-      Abbrechen
-    </Button>
-  </div>
-    <div>
-    <Button primary>
-      Jahresabo
-    </Button>
-    <Button naked primary>
-      Monatsabo
-    </Button>
-  </div>
+  <Button primary>
+    Mitmachen
+  </Button>
+  <Button naked primary>
+    Monatsabo
+  </Button>
+  <Button naked>
+    Abbrechen
+  </Button>
+</>
+```
+
+
+```react|span-3
+<>
+  <Button naked simulate='hover'>
+    Mitmachen
+  </Button>
+  <Button naked primary simulate='hover'>
+    Mitmachen
+  </Button>
+</>
+```
+
+```react|span-3
+<>
+  <Button naked simulate='active'>
+    Mitmachen
+  </Button>
+  <Button naked primary simulate='active'>
+    Mitmachen
+  </Button>
 </>
 ```
 

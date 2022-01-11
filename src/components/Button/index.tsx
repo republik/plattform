@@ -111,8 +111,8 @@ const Button = React.forwardRef<
             }
           },
           ':active': {
-            backgroundColor: colorScheme.getCSSColor('primaryHover'),
-            borderColor: colorScheme.getCSSColor('primaryHover'),
+            backgroundColor: colorScheme.getCSSColor(!naked && 'primaryHover'),
+            borderColor: colorScheme.getCSSColor(!naked && 'primaryHover'),
             color: colorScheme.getCSSColor(
               naked && primary ? 'primaryHover' : naked ? 'textSoft' : '#FFF'
             )
