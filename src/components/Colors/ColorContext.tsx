@@ -88,15 +88,10 @@ const getObjectForKeys = (colorKeys, mapper = key => key) =>
     return c
   }, {})
 
-export const ColorContextLocalExtension = ({
-  children,
-  localColors = {},
-  localMappings = {}
-}: {
-  children: React.ReactNode
+export const ColorContextLocalExtension: React.FC<{
   localColors: any
   localMappings: any
-}) => {
+}> = ({ children, localColors = {}, localMappings = {} }) => {
   const [{ schemeKey, CSSVarSupport, colorDefinitions }] = useColorContext()
 
   const [colorValue, cssVarRule] = useMemo(() => {
@@ -196,15 +191,10 @@ export const ColorHtmlBodyColors = ({ colorSchemeKey = 'auto' }) => {
   )
 }
 
-export const ColorContextProvider = ({
-  colorSchemeKey = 'auto',
-  root = false,
-  children
-}: {
+export const ColorContextProvider: React.FC<{
   colorSchemeKey: 'light' | 'dark' | 'auto'
   root?: boolean
-  children: React.ReactNode
-}) => {
+}> = ({ colorSchemeKey = 'auto', root = false, children }) => {
   // we initially assume browser support it
   // - e.g. during server side rendering
   const [CSSVarSupport, setCSSVarSupport] = useState(true)
