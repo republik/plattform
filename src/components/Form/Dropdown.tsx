@@ -10,7 +10,7 @@ const getUseNative = () =>
 
 let defaultUseNative = true
 
-const Dropdown = props => {
+const Dropdown = (props: DropdownProps) => {
   const [useNative, setUseNative] = useState(defaultUseNative)
   useEffect(() => {
     defaultUseNative = getUseNative()
@@ -26,15 +26,17 @@ const Dropdown = props => {
 Dropdown.Native = NativeDropdown
 Dropdown.Virtual = VirtualDropdown
 
-Dropdown.propTypes = {
-  label: PropTypes.string,
-  items: PropTypes.arrayOf(PropTypes.shape({
-    value: PropTypes.string.isRequired,
-    text: PropTypes.string.isRequired,
-    element: PropTypes.node
-  }).isRequired).isRequired,
-  value: PropTypes.string,
-  onChange: PropTypes.func
+type ItemType = {
+  value: string
+  text: string
+  element?: React.ReactNode
+}
+
+export type DropdownProps = {
+  label?: string
+  items: ItemType[]
+  value?: string
+  onChange?: (item: ItemType) => void
 }
 
 export default Dropdown

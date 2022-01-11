@@ -4,15 +4,17 @@ import { fontStyles } from '../../theme/fonts'
 import { pxToRem } from '../Typography/utils'
 import { useColorContext } from '../Colors/useColorContext'
 
-const Checkbox = ({
-  children,
-  name,
-  checked,
-  disabled,
-  onChange,
-  black,
-  error
-}) => {
+const Checkbox: React.FC<{
+  name?: string
+  checked: boolean
+  disabled?: boolean
+  onChange: (
+    event: React.ChangeEvent<HTMLInputElement>,
+    checked: boolean
+  ) => void
+  black?: boolean
+  error?: boolean
+}> = ({ children, name, checked, disabled, onChange, black, error }) => {
   const [colorScheme] = useColorContext()
   const labelColor = error
     ? colorScheme.set('color', 'error')
@@ -36,8 +38,12 @@ const Checkbox = ({
     ? colorScheme.set('fill', 'logo')
     : colorScheme.set('fill', 'primary')
   return (
-    <label {...styles.label} {...children ? styles.withText : styles.withoutText} {...labelColor}>
-      <span {...children ? styles.box : styles.boxWithouText}>
+    <label
+      {...styles.label}
+      {...(children ? styles.withText : styles.withoutText)}
+      {...labelColor}
+    >
+      <span {...(children ? styles.box : styles.boxWithouText)}>
         {checked ? (
           <svg {...checkMarkFill} width='18' height='18' viewBox='0 0 18 18'>
             <path
@@ -72,7 +78,7 @@ const styles = {
   withText: css({
     ...fontStyles.sansSerifRegular,
     fontSize: pxToRem(16),
-    lineHeight: pxToRem(20),
+    lineHeight: pxToRem(20)
   }),
   withoutText: css({
     lineHeight: 0
@@ -97,7 +103,7 @@ const styles = {
   }),
   boxWithouText: css({
     display: 'inline-block',
-    padding: '3px 0',
+    padding: '3px 0'
   })
 }
 

@@ -11,7 +11,7 @@ const styles = {
   withText: css({
     ...fontStyles.sansSerifRegular,
     fontSize: pxToRem(16),
-    lineHeight: pxToRem(20),
+    lineHeight: pxToRem(20)
   }),
   withoutText: css({
     lineHeight: 0
@@ -25,7 +25,7 @@ const styles = {
     verticalAlign: 'middle'
   }),
   boxWithouText: css({
-    display: 'inline-block',
+    display: 'inline-block'
   })
 }
 
@@ -56,26 +56,25 @@ const RadioCircle = ({ checked, disabled }) => {
   )
 }
 
-export default ({
-  children,
-  style,
-  name,
-  value,
-  checked,
-  disabled,
-  onChange
-}) => {
+const Radio: React.FC<{
+  style?: string
+  name?: string
+  value: string
+  checked: boolean
+  disabled?: boolean
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+}> = ({ children, style, name, value, checked, disabled, onChange }) => {
   const [colorScheme] = useColorContext()
   return (
     <label
       {...styles.label}
-      {...children ? styles.withText : styles.withoutText}
+      {...(children ? styles.withText : styles.withoutText)}
       {...(disabled
         ? colorScheme.set('color', 'disabled')
         : colorScheme.set('color', 'text'))}
       style={style}
     >
-      <span {...children ? styles.box : styles.boxWithouText}>
+      <span {...(children ? styles.box : styles.boxWithouText)}>
         <RadioCircle checked={checked} disabled={disabled} />
       </span>
       <input
@@ -91,3 +90,5 @@ export default ({
     </label>
   )
 }
+
+export default Radio

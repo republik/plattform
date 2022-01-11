@@ -1,17 +1,14 @@
 import React, { useState } from 'react'
-import { Label } from './Label'
+import { Label } from './DropdownLabel'
+import { DropdownProps } from './Dropdown'
 
-const NativeDropdown = (props) => {
+const NativeDropdown = (props: DropdownProps) => {
   const { label, items, value, onChange } = props
   const [focus, setFocus] = useState(false)
   const selectedItem = items.find(item => item.value === value)
 
   return (
-    <Label
-      top={!!selectedItem || focus}
-      focus={focus}
-      text={label}
-    >
+    <Label top={!!selectedItem || focus} focus={focus} text={label}>
       {/* ensure the height for selected multiline values (<Inner> is absolute) */}
       <Label Element='span' field>
         {selectedItem ? selectedItem.element || selectedItem.text : ''}
