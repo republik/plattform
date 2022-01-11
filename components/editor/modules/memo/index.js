@@ -135,7 +135,7 @@ const Memo = compose(
   )
 })
 
-const MemoModule = ({ rule, TYPE }) => {
+const MemoModule = ({ rule, TYPE, context }) => {
   const memo = {
     match: matchInline(TYPE),
     matchMdast: rule.matchMdast,
@@ -171,7 +171,8 @@ const MemoModule = ({ rule, TYPE }) => {
     ui: {
       textFormatButtons: [
         createInlineButton({
-          type: TYPE
+          type: TYPE,
+          isDisabled: () => context.isTemplate
         })(({ active, disabled, visible, ...props }) => (
           <span
             {...buttonStyles.mark}
@@ -190,7 +191,6 @@ const MemoModule = ({ rule, TYPE }) => {
         renderNode(props) {
           const { node } = props
           if (!memo.match(node)) return
-          // @TODO: Wenn Dokument ein Template ist …
           return <Memo {...props} />
         }
       }
