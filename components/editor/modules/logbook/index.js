@@ -4,6 +4,8 @@ import { Block } from 'slate'
 
 import injectBlock from '../../utils/injectBlock'
 import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
+import InlineUI from '../../utils/InlineUI'
+import { matchAncestor } from '../../utils/matchers'
 
 export const getSubmodules = options => {
   const [titleModule, creditsModule] = options.subModules
@@ -98,11 +100,20 @@ export const logbookPlugin = options => {
   const { titleModule, creditsModule } = getSubmodules(options)
   const Logbook = options.rule.component
   return {
-    renderNode: ({ node, children, attributes }) => {
+    renderNode: ({ node, children, attributes, editor }) => {
       if (!matchBlock(options.TYPE)(node)) {
         return
       }
-      return <Logbook attributes={attributes}>{children}</Logbook>
+      return (
+        <div style={{ position: 'relative' }}>
+          <InlineUI
+            node={node}
+            editor={editor}
+            isMatch={matchAncestor(options.TYPE)}
+          />
+          <Logbook attributes={attributes}>{children}</Logbook>
+        </div>
+      )
     },
     onKeyDown(event, change) {
       const isBackspace = event.key === 'Backspace'
