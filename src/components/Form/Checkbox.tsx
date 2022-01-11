@@ -13,7 +13,7 @@ const Checkbox = ({
   black,
   error
 }: {
-  children: React.ReactNode | string
+  children: React.ReactNode
   name?: string
   checked: boolean
   disabled?: boolean

@@ -81,11 +81,11 @@ export const Label = ({
   focus?: boolean
   error?: boolean
   text?: string
-  children: React.ReactNode | React.ReactNode[]
+  children: React.ReactNode
   Element?: string
   field?: boolean
   value?: string
-  style?: { [key: string]: string }
+  style?: Record<string, string>
   onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void
   onFocus?: (event: React.FocusEvent<HTMLSelectElement>) => void
   onBlur?: (event: React.FocusEvent<HTMLSelectElement>) => void

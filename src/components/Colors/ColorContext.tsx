@@ -93,7 +93,7 @@ export const ColorContextLocalExtension = ({
   localColors = {},
   localMappings = {}
 }: {
-  children: React.ReactNode | React.ReactNode[]
+  children: React.ReactNode
   localColors: any
   localMappings: any
 }) => {
@@ -203,7 +203,7 @@ export const ColorContextProvider = ({
 }: {
   colorSchemeKey: 'light' | 'dark' | 'auto'
   root?: boolean
-  children: React.ReactNode | React.ReactNode[]
+  children: React.ReactNode
 }) => {
   // we initially assume browser support it
   // - e.g. during server side rendering

@@ -65,7 +65,7 @@ const Radio = ({
   disabled,
   onChange
 }: {
-  children: React.ReactNode | string
+  children: React.ReactNode
   style?: string
   name?: string
   value: string
