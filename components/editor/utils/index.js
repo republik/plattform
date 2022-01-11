@@ -1,7 +1,6 @@
 import createFormatButton from './createFormatButton'
 import createBlockButton from './createBlockButton'
 import createMarkButton from './createMarkButton'
-import createMemoButton from './createMemoButton'
 import createInlineButton from './createInlineButton'
 import createActionButton from './createActionButton'
 import createPropertyForm from './createPropertyForm'
@@ -23,7 +22,6 @@ export {
   createFormatButton,
   createBlockButton,
   createMarkButton,
-  createMemoButton,
   createInlineButton,
   createActionButton,
   createPropertyForm
