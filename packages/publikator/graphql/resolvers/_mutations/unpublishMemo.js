@@ -19,10 +19,7 @@ module.exports = async (_, args, context) => {
 
     const updatedMemo = await tx.publikator.memos.updateAndGetOne(
       { id },
-      {
-        published: false,
-        updatedAt: new Date(),
-      },
+      { published: false },
     )
 
     await tx.transactionCommit()
