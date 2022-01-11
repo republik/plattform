@@ -75,8 +75,7 @@ export const Label = ({
   style,
   onChange,
   onFocus,
-  onBlur,
-  ...props
+  onBlur
 }: {
   top?: boolean
   focus?: boolean
@@ -114,7 +113,6 @@ export const Label = ({
     return (
       <>
         <Element
-          {...props}
           value={value}
           style={style}
           onChange={onChange}
