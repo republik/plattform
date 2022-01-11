@@ -89,59 +89,71 @@ const Button = React.forwardRef<
     ref
   ) => {
     const [colorScheme] = useColorContext()
-    const buttonStyleRules = useMemo(
-      () =>
-        css({
-          backgroundColor: colorScheme.getCSSColor(
-            primary ? 'primary' : 'transparent'
-          ),
-          borderColor: colorScheme.getCSSColor(primary ? 'primary' : 'text'),
-          color: colorScheme.getCSSColor(
-            naked && primary ? 'primary' : primary ? '#FFF' : 'text'
-          ),
-          '@media (hover)': {
-            ':hover': {
-              backgroundColor: colorScheme.getCSSColor(
-                !naked && 'primaryHover'
-              ),
-              borderColor: colorScheme.getCSSColor(!naked && 'primaryHover'),
-              color: colorScheme.getCSSColor(
-                naked && primary ? 'primaryHover' : naked ? 'textSoft' : '#FFF'
-              )
-            }
-          },
-          ':active': {
-            backgroundColor: colorScheme.getCSSColor(!naked && 'primaryHover'),
-            borderColor: colorScheme.getCSSColor(!naked && 'primaryHover'),
-            color: colorScheme.getCSSColor(
-              naked && primary ? 'primaryHover' : naked ? 'textSoft' : '#FFF'
-            )
-          },
-          ':disabled, [disabled]': {
-            backgroundColor: 'transparent',
-            cursor: 'default',
-            color: colorScheme.getCSSColor('disabled'),
-            borderColor: colorScheme.getCSSColor(!naked && 'disabled'),
+    const buttonRule = useMemo(() => {
+      const disabledCSSProps = {
+        cursor: 'default',
+        backgroundColor: 'transparent',
+        color: colorScheme.getCSSColor('disabled'),
+      }
+      const colorRule = naked
+        ? css({
+            color: colorScheme.getCSSColor(primary ? 'primary' : 'text'),
             '@media (hover)': {
-              ':hover': {
-                backgroundColor: 'transparent',
-                color: colorScheme.getCSSColor('disabled'),
-                borderColor: colorScheme.getCSSColor(!naked && 'disabled')
+              color: colorScheme.getCSSColor(
+                primary ? 'primaryHover' : 'textSoft'
+              )
+            },
+            ':active': {
+              color: colorScheme.getCSSColor(
+                primary ? 'primaryHover' : 'textSoft'
+              )
+            },
+            ':disabled, [disabled]': {
+              ...disabledCSSProps,
+              '@media (hover)': {
+                ':hover': disabledCSSProps
               }
             }
-          }
-        }),
+          })
+        : css({
+            backgroundColor: colorScheme.getCSSColor(
+              primary ? 'primary' : 'transparent'
+            ),
+            borderColor: colorScheme.getCSSColor(primary ? 'primary' : 'text'),
+            color: colorScheme.getCSSColor(primary ? '#FFF' : 'text'),
+            '@media (hover)': {
+              ':hover': {
+                backgroundColor: colorScheme.getCSSColor('primaryHover'),
+                borderColor: colorScheme.getCSSColor('primaryHover'),
+                color: colorScheme.getCSSColor('#FFF')
+              }
+            },
+            ':active': {
+              backgroundColor: colorScheme.getCSSColor('primaryHover'),
+              borderColor: colorScheme.getCSSColor('primaryHover'),
+              color: colorScheme.getCSSColor('#FFF')
+            },
+            ':disabled, [disabled]': {
+              ...disabledCSSProps,
+              borderColor: colorScheme.getCSSColor('disabled'),
+              '@media (hover)': {
+                ':hover': {
+                  ...disabledCSSProps,
+                  borderColor: colorScheme.getCSSColor('disabled')
+                }
+              }
+            }
+          })
 
-      [colorScheme, primary, naked]
-    )
+      return merge(
+        styles.default,
+        colorRule,
+        block && styles.block,
+        small && styles.small,
+        naked && styles.naked
+      )
+    }, [colorScheme, primary, naked, block, small])
     const simulations = sim ? simulate(sim) : {}
-    const buttonStyles = merge(
-      styles.default,
-      buttonStyleRules,
-      block && styles.block,
-      small && styles.small,
-      naked && styles.naked
-    )
 
     const Element = href ? 'a' : 'button'
 
@@ -156,7 +168,7 @@ const Button = React.forwardRef<
         disabled={disabled}
         target={target}
         {...attributes}
-        {...buttonStyles}
+        {...buttonRule}
         {...simulations}
       >
         {children}

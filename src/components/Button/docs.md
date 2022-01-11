@@ -90,6 +90,17 @@ The naked prop removes the background color from the button. They retain size an
 </>
 ```
 
+```react|span-3
+<>
+  <Button naked disabled>
+    Mitmachen
+  </Button>
+  <Button naked primary disabled>
+    Mitmachen
+  </Button>
+</>
+```
+
 ## Button Link
 
 ```react|span-3
