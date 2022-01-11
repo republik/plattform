@@ -9,11 +9,11 @@ module.exports = {
   content: async (memo, args, { user: me }) =>
     isMine(memo, me) || memo.published ? remark.parse(memo.text) : null,
   author: async (memo, args, context) => {
-    const { user: me } = context
+    const { user: me, t } = context
     if (!isMine(memo, me) && !memo.published) {
-      return { // @TODO: Check this
-        name: 'anon',
-        email: 'anon@republik.ch',
+      return {
+        name: t('api/publikator/memo/notPublished/author/name'),
+        email: t('api/publikator/memo/notPublished/author/email'),
       }
     }
 

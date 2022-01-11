@@ -10,11 +10,11 @@ module.exports = async (_, args, context) => {
     const memo = await loaders.Memo.byId.load(id)
     
     if (!memo) {
-      throw new Error(t('api/editMemo/error/404'))
+      throw new Error(t('api/publikator/editMemo/error/404'))
     }
 
     if (memo.userId !== me.id) {
-      throw new Error(t('api/editMemo/error/notYours'))
+      throw new Error(t('api/publikator/editMemo/error/notYours'))
     }
 
     const updatedMemo = await tx.publikator.memos.updateAndGetOne(
