@@ -19,10 +19,11 @@ export const plainButtonRule = css({
 
 const styles = {
   default: css(plainButtonRule, {
-    verticalAlign: 'bottom',
+    display: 'inline-flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: '10px 20px 10px 20px',
     minWidth: 160,
-    textAlign: 'center',
     textDecoration: 'none',
     fontSize: pxToRem(22),
     height: pxToRem(60),
@@ -33,21 +34,19 @@ const styles = {
     borderStyle: 'solid',
     borderRadius: 0
   }),
-  link: css({
-    display: 'inline-block',
-    verticalAlign: 'middle',
-    lineHeight: 1.5,
-    height: 'inherit',
-    minHeight: pxToRem(60)
-  }),
   block: css({
-    display: 'block',
     width: '100%'
   }),
-  big: css({
-    fontSize: pxToRem(22),
-    height: pxToRem(80),
-    padding: '10px 30px 10px 30px'
+  small: css({
+    minWidth: 0,
+    fontSize: pxToRem(16),
+    height: pxToRem(32),
+    padding: '0 16px 0 16px'
+  }),
+  naked: css({
+    borderWidth: 0,
+    borderStyle: 'none',
+    backgroundColor: 'transparent'
   })
 }
 
@@ -66,6 +65,8 @@ const Button = React.forwardRef<
     style?: React.CSSProperties
     simulate?: string
     attributes?: Attributes
+    naked?: boolean
+    small?: boolean
   }
 >(
   (
@@ -74,7 +75,6 @@ const Button = React.forwardRef<
       type,
       children,
       primary,
-      big,
       block,
       style,
       disabled,
@@ -82,69 +82,86 @@ const Button = React.forwardRef<
       title,
       target,
       simulate: sim,
-      attributes
+      attributes,
+      naked,
+      small
     },
     ref
   ) => {
     const [colorScheme] = useColorContext()
-    const buttonStyleRules = useMemo(
-      () =>
-        css({
-          backgroundColor: colorScheme.getCSSColor(
-            primary ? 'primary' : 'transparent'
-          ),
-          borderColor: colorScheme.getCSSColor(primary ? 'primary' : 'text'),
-          color: colorScheme.getCSSColor(primary ? '#FFF' : 'text'),
-          '@media (hover)': {
-            ':hover': {
-              backgroundColor: colorScheme.getCSSColor(
-                primary ? 'primaryHover' : 'primary'
-              ),
-              borderColor: colorScheme.getCSSColor(
-                primary ? 'primaryHover' : 'primary'
-              ),
-              color: colorScheme.getCSSColor('#FFF')
-            }
-          },
-          ':active': {
-            backgroundColor: colorScheme.getCSSColor(
-              primary ? 'primaryHover' : 'primary'
-            ),
-            borderColor: colorScheme.getCSSColor(
-              primary ? 'primaryHover' : 'primary'
-            ),
-            color: colorScheme.getCSSColor('#FFF')
-          },
-          ':disabled, [disabled]': {
-            backgroundColor: 'transparent',
-            cursor: 'default',
-            color: colorScheme.getCSSColor('disabled'),
-            borderColor: colorScheme.getCSSColor('disabled'),
+    const buttonRule = useMemo(() => {
+      const disabledCSSProps = {
+        cursor: 'default',
+        backgroundColor: 'transparent',
+        color: colorScheme.getCSSColor('disabled')
+      }
+      const colorRule = naked
+        ? css({
+            color: colorScheme.getCSSColor(primary ? 'primary' : 'text'),
             '@media (hover)': {
               ':hover': {
-                backgroundColor: 'transparent',
-                color: colorScheme.getCSSColor('disabled'),
-                borderColor: colorScheme.getCSSColor('disabled')
+                color: colorScheme.getCSSColor(
+                  primary ? 'primaryHover' : 'textSoft'
+                )
+              }
+            },
+            ':active': {
+              color: colorScheme.getCSSColor(
+                primary ? 'primaryHover' : 'textSoft'
+              )
+            },
+            ':disabled, [disabled]': {
+              ...disabledCSSProps,
+              '@media (hover)': {
+                ':hover': disabledCSSProps
               }
             }
-          }
-        }),
+          })
+        : css({
+            backgroundColor: colorScheme.getCSSColor(
+              primary ? 'primary' : 'transparent'
+            ),
+            borderColor: colorScheme.getCSSColor(primary ? 'primary' : 'text'),
+            color: colorScheme.getCSSColor(primary ? '#FFF' : 'text'),
+            '@media (hover)': {
+              ':hover': {
+                backgroundColor: colorScheme.getCSSColor('primaryHover'),
+                borderColor: colorScheme.getCSSColor('primaryHover'),
+                color: colorScheme.getCSSColor('#FFF')
+              }
+            },
+            ':active': {
+              backgroundColor: colorScheme.getCSSColor('primaryHover'),
+              borderColor: colorScheme.getCSSColor('primaryHover'),
+              color: colorScheme.getCSSColor('#FFF')
+            },
+            ':disabled, [disabled]': {
+              ...disabledCSSProps,
+              borderColor: colorScheme.getCSSColor('disabled'),
+              '@media (hover)': {
+                ':hover': {
+                  ...disabledCSSProps,
+                  borderColor: colorScheme.getCSSColor('disabled')
+                }
+              }
+            }
+          })
 
-      [colorScheme, primary]
-    )
+      return merge(
+        styles.default,
+        colorRule,
+        block && styles.block,
+        small && styles.small,
+        naked && styles.naked
+      )
+    }, [colorScheme, primary, naked, block, small])
     const simulations = sim ? simulate(sim) : {}
-    const buttonStyles = merge(
-      styles.default,
-      buttonStyleRules,
-      href && styles.link,
-      block && styles.block,
-      big && styles.big
-    )
 
     const Element = href ? 'a' : 'button'
 
     return (
       <Element
+        ref={ref}
         onClick={onClick}
         href={href}
         title={title}
@@ -153,9 +170,8 @@ const Button = React.forwardRef<
         disabled={disabled}
         target={target}
         {...attributes}
-        {...buttonStyles}
+        {...buttonRule}
         {...simulations}
-        ref={ref}
       >
         {children}
       </Element>
