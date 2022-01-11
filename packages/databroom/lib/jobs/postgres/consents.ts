@@ -17,8 +17,8 @@ export default module.exports = function setup(options: Options, context: JobCon
     try {
       const handlerDebug = debug.extend('handler')
       const batchHandler = async function (ids: string[]): Promise<void> {
-        debug('delete %s rows', ids.length)
-        handlerDebug('delete ids: %o', ids)
+        debug('update %s rows', ids.length)
+        handlerDebug('update ids: %o', ids)
 
         await tx.public.consents.update(
           { id: ids },
