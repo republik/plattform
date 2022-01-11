@@ -18,7 +18,7 @@ module.exports = async (_, args, context) => {
       {
         text,
         published: true,
-        updatedAt: new Date(),
+        ...(memo.text !== text && { updatedAt: new Date() }),
       },
     )
 
