@@ -93,7 +93,7 @@ const Button = React.forwardRef<
       const disabledCSSProps = {
         cursor: 'default',
         backgroundColor: 'transparent',
-        color: colorScheme.getCSSColor('disabled'),
+        color: colorScheme.getCSSColor('disabled')
       }
       const colorRule = naked
         ? css({
