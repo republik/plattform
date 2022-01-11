@@ -99,9 +99,11 @@ const Button = React.forwardRef<
         ? css({
             color: colorScheme.getCSSColor(primary ? 'primary' : 'text'),
             '@media (hover)': {
-              color: colorScheme.getCSSColor(
-                primary ? 'primaryHover' : 'textSoft'
-              )
+              ':hover': {
+                color: colorScheme.getCSSColor(
+                  primary ? 'primaryHover' : 'textSoft'
+                )
+              }
             },
             ':active': {
               color: colorScheme.getCSSColor(
