@@ -4,16 +4,7 @@ import { fontStyles } from '../../theme/fonts'
 import { pxToRem } from '../Typography/utils'
 import { useColorContext } from '../Colors/useColorContext'
 
-const Checkbox = ({
-  children,
-  name,
-  checked,
-  disabled,
-  onChange,
-  black,
-  error
-}: {
-  children: React.ReactNode
+const Checkbox: React.FC<{
   name?: string
   checked: boolean
   disabled?: boolean
@@ -23,7 +14,7 @@ const Checkbox = ({
   ) => void
   black?: boolean
   error?: boolean
-}) => {
+}> = ({ children, name, checked, disabled, onChange, black, error }) => {
   const [colorScheme] = useColorContext()
   const labelColor = error
     ? colorScheme.set('color', 'error')

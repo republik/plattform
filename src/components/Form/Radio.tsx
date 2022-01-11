@@ -56,23 +56,14 @@ const RadioCircle = ({ checked, disabled }) => {
   )
 }
 
-const Radio = ({
-  children,
-  style,
-  name,
-  value,
-  checked,
-  disabled,
-  onChange
-}: {
-  children: React.ReactNode
+const Radio: React.FC<{
   style?: string
   name?: string
   value: string
   checked: boolean
   disabled?: boolean
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-}) => {
+}> = ({ children, style, name, value, checked, disabled, onChange }) => {
   const [colorScheme] = useColorContext()
   return (
     <label
