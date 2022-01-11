@@ -147,10 +147,10 @@ Small buttons have no minimum width. They can be used for narrow UI spaces, like
 ```react|span-3
 <>
 <Button small primary style={{marginRight: 16}}>
-  abbrechen
+  speichern
 </Button>
 <Button small naked>
-  speichern
+  abbrechen
 </Button>
 </>
 ```
