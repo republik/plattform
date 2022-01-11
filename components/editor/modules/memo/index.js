@@ -190,8 +190,7 @@ const MemoModule = ({ rule, TYPE }) => {
     ui: {
       textFormatButtons: [
         createInlineButton({
-          type: TYPE,
-          parentTypes: rule.editorOptions?.parentTypes
+          type: TYPE
         })(({ active, disabled, visible, ...props }) => (
           <span
             {...buttonStyles.mark}
