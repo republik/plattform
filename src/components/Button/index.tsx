@@ -19,10 +19,11 @@ export const plainButtonRule = css({
 
 const styles = {
   default: css(plainButtonRule, {
-    verticalAlign: 'bottom',
+    display: 'inline-flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: '10px 20px 10px 20px',
     minWidth: 160,
-    textAlign: 'center',
     textDecoration: 'none',
     fontSize: pxToRem(22),
     height: pxToRem(60),
@@ -33,21 +34,13 @@ const styles = {
     borderStyle: 'solid',
     borderRadius: 0
   }),
-  link: css({
-    display: 'inline-block',
-    verticalAlign: 'middle',
-    lineHeight: 1.5,
-    height: 'inherit',
-    minHeight: pxToRem(60)
-  }),
   block: css({
-    display: 'block',
     width: '100%'
   }),
   small: css({
+    minWidth: 0,
     fontSize: pxToRem(16),
     height: pxToRem(32),
-    minWidth: 0,
     padding: '0 16px 0 16px'
   }),
   naked: css({
@@ -108,8 +101,10 @@ const Button = React.forwardRef<
           ),
           '@media (hover)': {
             ':hover': {
-              backgroundColor: colorScheme.getCSSColor('primaryHover'),
-              borderColor: colorScheme.getCSSColor('primaryHover'),
+              backgroundColor: colorScheme.getCSSColor(
+                !naked && 'primaryHover'
+              ),
+              borderColor: colorScheme.getCSSColor(!naked && 'primaryHover'),
               color: colorScheme.getCSSColor(
                 naked && primary ? 'primaryHover' : naked ? 'textSoft' : '#FFF'
               )
@@ -126,12 +121,12 @@ const Button = React.forwardRef<
             backgroundColor: 'transparent',
             cursor: 'default',
             color: colorScheme.getCSSColor('disabled'),
-            borderColor: colorScheme.getCSSColor('disabled'),
+            borderColor: colorScheme.getCSSColor(!naked && 'disabled'),
             '@media (hover)': {
               ':hover': {
                 backgroundColor: 'transparent',
                 color: colorScheme.getCSSColor('disabled'),
-                borderColor: colorScheme.getCSSColor('disabled')
+                borderColor: colorScheme.getCSSColor(!naked && 'disabled')
               }
             }
           }
@@ -143,7 +138,6 @@ const Button = React.forwardRef<
     const buttonStyles = merge(
       styles.default,
       buttonStyleRules,
-      href && styles.link,
       block && styles.block,
       small && styles.small,
       naked && styles.naked
