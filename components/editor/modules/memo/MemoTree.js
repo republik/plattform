@@ -87,13 +87,16 @@ const MemoTree = props => {
     )
   }
 
+  // memos == ALL memos for a given repoId
   const rootMemo = memos?.nodes?.find(node => node.id === parentId)
   const discussionContextValue = buildDiscussionContext(props)
 
   return (
     <>
       <DiscussionContext.Provider value={discussionContextValue}>
-        {!rootMemo && (
+        {rootMemo ? (
+          <CommentList comments={{ nodes: [rootMemo] }} t={t} />
+        ) : (
           <CommentComposer
             t={t}
             isRoot
@@ -105,7 +108,6 @@ const MemoTree = props => {
             }
           />
         )}
-        {!!rootMemo && <CommentList comments={{ nodes: [rootMemo] }} t={t} />}
       </DiscussionContext.Provider>
     </>
   )

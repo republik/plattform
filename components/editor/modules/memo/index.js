@@ -35,73 +35,57 @@ const getMarker = name => {
 const Memo = compose(
   withT,
   withRouter
-)(({ t, editor, node, children, isSelected, repoId, router }) => {
+)(({ t, editor, node, children, isSelected, router }) => {
   const [showModal, setShowModal] = useState()
-  const [parentId, setParentId] = useState()
-  const [marker, setMarker] = useState()
 
-  // If Memo is untouched – flag is missing – open overlay.
+  // noOpen flag added when deserializing
+  // only new memos trigger the modal automatically
   useEffect(() => {
-    !node.data.get('touched') && open()
-  }, [node.data.get('touched')])
-
-  useEffect(() => {
-    reset()
+    !node.data.get('noOpen') && open()
   }, [])
 
-  const pickMarker = name => e => {
-    e?.preventDefault?.()
-    setMarker(name)
+  const persistData = (key, value) =>
     editor.change(change => {
       change.setNodeByKey(node.key, {
-        data: node.data.merge({
-          marker: name,
-          touched: true
-        })
+        data: node.data.set(key, value)
       })
     })
-  }
 
-  const reset = e => {
-    e?.preventDefault?.()
-    setParentId(node.data.get('parentId'))
-    setMarker(node.data.get('marker'))
+  const pickMarker = name => e => {
+    e?.preventDefault()
+    persistData('marker', name)
   }
 
   const open = e => {
-    e?.preventDefault?.()
+    e?.preventDefault()
     setShowModal(true)
   }
 
   const close = e => {
-    e?.preventDefault?.()
+    e?.preventDefault()
     setShowModal(false)
   }
 
   const remove = e => {
-    e?.preventDefault?.()
+    e?.preventDefault()
     editor.change(change => {
       change.unwrapInline(node.type)
     })
   }
 
   const onPublished = memo => {
-    if (!memo.parentIds.length) {
-      setParentId(memo.id)
-
-      editor.change(change => {
-        change.setNodeByKey(node.key, {
-          data: node.data.merge({
-            parentId: memo.id,
-            touched: true
-          })
-        })
-      })
+    const isRoot = !memo.parentIds.length
+    if (isRoot) {
+      persistData('parentId', memo.id)
     }
   }
 
+  const { commitId, repoId } = router.query
+  const discussionEnabled = commitId !== 'new'
+  const parentId = node.data.get('parentId')
+
+  const marker = node.data.get('marker')
   const { Marker } = getMarker(marker)
-  const discussionEnabled = router.query.commitId !== 'new'
 
   return (
     <>
@@ -160,7 +144,7 @@ const MemoModule = ({ rule, TYPE }) => {
       type: TYPE,
       data: {
         ...node.data,
-        touched: true
+        noOpen: true
       },
       nodes: visitChildren(node)
     }),
@@ -204,22 +188,10 @@ const MemoModule = ({ rule, TYPE }) => {
     plugins: [
       {
         renderNode(props) {
-          const { children, ...rest } = props
-          const { node, editor } = rest
-
+          const { node } = props
           if (!memo.match(node)) return
-
-          const repoId = editor.value.document
-            .findDescendant(node => node.type === 'TITLE')
-            .data.get('repoId')
-
           // @TODO: Wenn Dokument ein Template ist …
-
-          return (
-            <Memo {...rest} repoId={repoId}>
-              {children}
-            </Memo>
-          )
+          return <Memo {...props} />
         }
       }
     ]
