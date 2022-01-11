@@ -38,10 +38,7 @@ const ArrowUp: React.FC<{
 We recommend to use `React.FC` whenever the corresponding component accepts `children` as a prop. If not, better to type a standard Typescript function. Similar example as above, minus children:
 
 ```code|lang-js
-const ArrowUp: React.FC<{
-  size: number
-  fill?: string 
-}> = ({ size, fill }: { size: number; fill?: string }): ReactElement => (
+const ArrowUp = ({ size, fill }: { size: number; fill?: string }): ReactElement => (
   <svg fill={fill} width={size} height={size} viewBox='0 0 24 24'>
     <path d='M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z' />
     <path d='M0 0h24v24H0z' fill='none' />
