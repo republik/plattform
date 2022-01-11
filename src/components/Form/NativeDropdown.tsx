@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Label } from './Label'
+import { Label } from './DropdownLabel'
 import { DropdownProps } from './Dropdown'
 
 const NativeDropdown = (props: DropdownProps) => {

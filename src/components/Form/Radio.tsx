@@ -65,12 +65,12 @@ const Radio = ({
   disabled,
   onChange
 }: {
-  children: React.ReactNode
-  style: string
-  name: string
+  children: React.ReactNode | string
+  style?: string
+  name?: string
   value: string
   checked: boolean
-  disabled: boolean
+  disabled?: boolean
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 }) => {
   const [colorScheme] = useColorContext()

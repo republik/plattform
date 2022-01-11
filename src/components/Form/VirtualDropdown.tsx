@@ -4,7 +4,7 @@ import Downshift from 'downshift'
 
 import zIndex from '../../theme/zIndex'
 import { sansSerifRegular21 } from '../Typography/styles'
-import { Label } from './Label'
+import { Label } from './DropdownLabel'
 import { LABEL_HEIGHT, FIELD_HEIGHT } from './constants'
 import { useColorContext } from '../Colors/useColorContext'
 import { DropdownProps } from './Dropdown'

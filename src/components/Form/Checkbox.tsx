@@ -13,16 +13,16 @@ const Checkbox = ({
   black,
   error
 }: {
-  children: React.ReactNode
-  name: string
+  children: React.ReactNode | string
+  name?: string
   checked: boolean
-  disabled: boolean
+  disabled?: boolean
   onChange: (
     event: React.ChangeEvent<HTMLInputElement>,
     checked: boolean
   ) => void
-  black: boolean
-  error: boolean
+  black?: boolean
+  error?: boolean
 }) => {
   const [colorScheme] = useColorContext()
   const labelColor = error

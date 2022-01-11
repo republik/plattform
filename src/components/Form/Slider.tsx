@@ -107,8 +107,9 @@ const Slider = ({
     event: React.ChangeEvent<HTMLInputElement>,
     value: string | number
   ) => void
-  onMouseUp: (event: React.MouseEvent<HTMLInputElement>) => void
-  onMouseDown: (event: React.MouseEvent<HTMLInputElement>) => void
+  onMouseUp?: (event: React.MouseEvent<HTMLInputElement>) => void
+  onMouseDown?: (event: React.MouseEvent<HTMLInputElement>) => void
+  onTouchEnd?: (event: React.TouchEvent<HTMLInputElement>) => void
 }) => {
   const [colorScheme] = useColorContext()
   const sliderStyleRules = useMemo(() => {
