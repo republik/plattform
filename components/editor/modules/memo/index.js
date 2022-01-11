@@ -171,14 +171,13 @@ const MemoModule = ({ rule, TYPE, context }) => {
     ui: {
       textFormatButtons: [
         createInlineButton({
-          type: TYPE,
-          isDisabled: () => context.isTemplate
+          type: TYPE
         })(({ active, disabled, visible, ...props }) => (
           <span
             {...buttonStyles.mark}
             {...props}
             data-active={active}
-            data-disabled={disabled}
+            data-disabled={disabled || context.isTemplate}
             data-visible={visible}
           >
             <MemoIcon />
