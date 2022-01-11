@@ -216,7 +216,7 @@ export const ColorContextProvider = ({
         window.CSS.supports &&
         window.CSS.supports('color', 'var(--color-test)')
     } catch (e) {
-      return
+      // continue regardless of error
     }
     if (!support) {
       // but if can't confirm the support in the browser we turn it off
