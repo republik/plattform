@@ -7,9 +7,9 @@ import {
   TILE_MARGIN_RIGHT,
   TILE_GRID_PADDING
 } from '../TeaserCarousel/constants'
-
+import { mUp } from '../../theme/mediaQueries'
 import SeriesNavTileContent from './SeriesNavTileContent'
-
+import { sansSerifRegular14, sansSerifRegular12 } from '../Typography/styles'
 import { localInvertedColors } from '../../theme/colors'
 
 const GRID_MIN_WIDTH = 300
@@ -36,6 +36,13 @@ const styles = {
     width: '20%',
     minWidth: 150,
     maxWidth: 170
+  }),
+  paynoteLabelSpace: css({
+    marginTop: 0,
+    ...sansSerifRegular12,
+    [mUp]: {
+      ...sansSerifRegular14
+    }
   })
 }
 
@@ -55,7 +62,10 @@ const SeriesNavTile = ({
 }) => {
   const isInverted = !!PayNote
   const content = PayNote ? (
-    <PayNote context={context} repoId={repoId} index={index} />
+    <>
+      <p {...styles.paynoteLabelSpace}>&nbsp;</p>
+      <PayNote context={context} repoId={repoId} index={index} />
+    </>
   ) : (
     <SeriesNavTileContent
       inline={inline}
