@@ -71,7 +71,24 @@ export const Label = ({
   children,
   Element = 'span',
   field,
-  ...props
+  value,
+  style,
+  onChange,
+  onFocus,
+  onBlur
+}: {
+  top?: boolean
+  focus?: boolean
+  error?: boolean
+  text?: string
+  children: React.ReactNode
+  Element?: string
+  field?: boolean
+  value?: string
+  style?: Record<string, string>
+  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void
+  onFocus?: (event: React.FocusEvent<HTMLSelectElement>) => void
+  onBlur?: (event: React.FocusEvent<HTMLSelectElement>) => void
 }) => {
   const [colorScheme] = useColorContext()
   const labelTextStyle = merge(styles.labelText, top && styles.labelTextTop)
@@ -96,7 +113,11 @@ export const Label = ({
     return (
       <>
         <Element
-          {...props}
+          value={value}
+          style={style}
+          onChange={onChange}
+          onFocus={onFocus}
+          onBlur={onBlur}
           {...merge(
             styles.field,
             styleRules.field,

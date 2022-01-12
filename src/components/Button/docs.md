@@ -1,30 +1,4 @@
-##  Primary
-
-```react|span-3
-<Button primary>
-  Mitmachen
-</Button>
-```
-
-```react|span-3
-<Button primary disabled>
-  Mitmachen
-</Button>
-```
-
-```react|span-3
-<Button primary simulate='hover'>
-  Mitmachen
-</Button>
-```
-
-```react|span-3
-<Button primary simulate='active'>
-  Mitmachen
-</Button>
-```
-
-## Secondary
+## Default
 
 ```react|span-3
 <Button>
@@ -50,27 +24,104 @@
 </Button>
 ```
 
+## Primary
+
+```react|span-3
+<Button primary>
+  Mitmachen
+</Button>
+```
+
+```react|span-3
+<Button primary disabled>
+  Mitmachen
+</Button>
+```
+
+```react|span-3
+<Button primary simulate='hover'>
+  Mitmachen
+</Button>
+```
+
+```react|span-3
+<Button primary simulate='active'>
+  Mitmachen
+</Button>
+```
+
+## Naked
+The naked prop removes the background color from the button. They retain size and padding consistencies, so they can easily be paired with buttons for less desired actions, like cancelling.
+
+```react|span-6
+<>
+  <Button primary>
+    Mitmachen
+  </Button>
+  <Button naked primary>
+    Monatsabo
+  </Button>
+  <Button naked>
+    Abbrechen
+  </Button>
+</>
+```
+
+
+```react|span-3
+<>
+  <Button naked simulate='hover'>
+    Mitmachen
+  </Button>
+  <Button naked primary simulate='hover'>
+    Mitmachen
+  </Button>
+</>
+```
+
+```react|span-3
+<>
+  <Button naked simulate='active'>
+    Mitmachen
+  </Button>
+  <Button naked primary simulate='active'>
+    Mitmachen
+  </Button>
+</>
+```
+
+```react|span-3
+<>
+  <Button naked disabled>
+    Mitmachen
+  </Button>
+  <Button naked primary disabled>
+    Mitmachen
+  </Button>
+</>
+```
+
 ## Button Link
 
 ```react|span-3
-<Button 
- href='https://www.republik.ch/feed' 
+<Button
+ href='https://www.republik.ch/feed'
  primary>
   Zum Feed
 </Button>
 ```
 
 ```react|span-3
-<Button 
- href='https://www.republik.ch/feed' 
+<Button
+ href='https://www.republik.ch/feed'
  title='Republik feed anzeigen'>
   Zum Feed
 </Button>
 ```
 
 ```react
-<Button 
- href='https://reactjs.org/' 
+<Button
+ href='https://reactjs.org/'
  title="You don't know what's gonna hit you"
  target='_blank'
  block>
@@ -78,19 +129,30 @@
 </Button>
 ```
 
+## Small
 
-## Big
+Small buttons have no minimum width. They can be used for narrow UI spaces, like save actions on forms.
 
 ```react|span-3
-<Button big primary>
-  Päng!
-</Button>
+<>
+  <Button small style={{marginRight: 16}}>
+    Jöh!
+  </Button>
+  <Button small primary>
+    Jöh!
+  </Button>
+</>
 ```
 
 ```react|span-3
-<Button big>
-  Päng
+<>
+<Button small primary style={{marginRight: 16}}>
+  speichern
 </Button>
+<Button small naked>
+  abbrechen
+</Button>
+</>
 ```
 
 ### Special Cases
@@ -108,12 +170,6 @@ To fit, e.g. in a header, it's permissible to set an explicit height.
 ```react
 <Button block>
   Volle Breite
-</Button>
-```
-
-```react
-<Button block big>
-  Päng, Päng!
 </Button>
 ```
 

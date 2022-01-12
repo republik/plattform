@@ -25,7 +25,7 @@ const createScheme = specificColors => {
 
   const { mappings = {} } = colorDefinitions
 
-  const getCSSColor = (color, mappingName) => {
+  const getCSSColor = (color, mappingName = undefined) => {
     const mapping = mappings[mappingName] || {}
     return accessCSSColor(mapping[color] || color)
   }
@@ -88,11 +88,10 @@ const getObjectForKeys = (colorKeys, mapper = key => key) =>
     return c
   }, {})
 
-export const ColorContextLocalExtension = ({
-  children,
-  localColors = {},
-  localMappings = {}
-}) => {
+export const ColorContextLocalExtension: React.FC<{
+  localColors: any
+  localMappings: any
+}> = ({ children, localColors = {}, localMappings = {} }) => {
   const [{ schemeKey, CSSVarSupport, colorDefinitions }] = useColorContext()
 
   const [colorValue, cssVarRule] = useMemo(() => {
@@ -192,11 +191,10 @@ export const ColorHtmlBodyColors = ({ colorSchemeKey = 'auto' }) => {
   )
 }
 
-export const ColorContextProvider = ({
-  colorSchemeKey = 'auto',
-  root = false,
-  children
-}) => {
+export const ColorContextProvider: React.FC<{
+  colorSchemeKey: 'light' | 'dark' | 'auto'
+  root?: boolean
+}> = ({ colorSchemeKey = 'auto', root = false, children }) => {
   // we initially assume browser support it
   // - e.g. during server side rendering
   const [CSSVarSupport, setCSSVarSupport] = useState(true)
@@ -207,7 +205,9 @@ export const ColorContextProvider = ({
         window.CSS &&
         window.CSS.supports &&
         window.CSS.supports('color', 'var(--color-test)')
-    } catch (e) {}
+    } catch (e) {
+      // continue regardless of error
+    }
     if (!support) {
       // but if can't confirm the support in the browser we turn it off
       setCSSVarSupport(false)
@@ -266,10 +266,6 @@ export const ColorContextProvider = ({
       {children}
     </ColorContext.Provider>
   )
-}
-
-ColorContextProvider.propTypes = {
-  colorSchemeKey: PropTypes.oneOf(['light', 'dark', 'auto'])
 }
 
 export default ColorContext

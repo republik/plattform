@@ -1,3 +1,49 @@
+import { ReactNode } from 'react'
+
+type Translations = {
+  key: string
+  value: string
+}[]
+type Replacements = { [key: string]: ReactNode }
+
+type FormatterFunction = (
+  key: string,
+  replacements?: Replacements,
+  missingValue?: string
+) => string
+
+type FirstFunction = (
+  keys: string[],
+  replacements?: Replacements,
+  missingValue?: string
+) => string
+
+type PluralizeFunction = (
+  baseKey: string,
+  replacements?: Replacements,
+  missingValue?: string
+) => string
+
+type ElementsFunction = (
+  key: string,
+  replacements?: Replacements,
+  missingValue?: string
+) => ReactNode
+
+type FirstElementsFunction = (
+  key: string | string[],
+  replacements?: Replacements,
+  missingValue?: string
+) => ReactNode
+
+type CreateFormatter = (translations: Translations) => Formatter
+
+export type Formatter = FormatterFunction & {
+  elements: ElementsFunction
+  first: FirstFunction & { elements?: FirstElementsFunction }
+  pluralize: PluralizeFunction & { elements?: ElementsFunction }
+}
+
 export const replaceKeys = (message, replacements) => {
   let withReplacements = message
   Object.keys(replacements).forEach(replacementKey => {
@@ -19,13 +65,13 @@ export const createPlaceholderFormatter = (placeholder = '') => {
   return formatter
 }
 
-export const createFormatter = translations => {
+export const createFormatter: CreateFormatter = translations => {
   const index = translations.reduce((accumulator, translation) => {
     accumulator[translation.key] = translation.value
     return accumulator
   }, {})
 
-  const formatter = (key, replacements, missingValue) => {
+  const formatter = <Formatter>function(key, replacements, missingValue) {
     let message =
       index[key] || (missingValue !== undefined ? missingValue : `TK(${key})`)
     if (replacements) {

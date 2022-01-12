@@ -20,7 +20,7 @@ One quick and easy way to add types to an existing component is to make use of a
 
 #### `React.FC`
 
-`React.FC` handles the return type of the component and automatically gives access to typed children (which may cause bugs in specific cases, but save some time in others).
+`React.FC` handles the return type of the component and automatically gives access to typed children.
 
 ```code|lang-js
 const ArrowUp: React.FC<{
@@ -31,6 +31,17 @@ const ArrowUp: React.FC<{
     <path d='M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z' />
     <path d='M0 0h24v24H0z' fill='none' />
     {children}
+  </svg>
+)
+```
+
+We recommend to use `React.FC` whenever the corresponding component accepts `children` as a prop. If not, better to type a standard Typescript function. Similar example as above, minus children:
+
+```code|lang-js
+const ArrowUp = ({ size, fill }: { size: number; fill?: string }): ReactElement => (
+  <svg fill={fill} width={size} height={size} viewBox='0 0 24 24'>
+    <path d='M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z' />
+    <path d='M0 0h24v24H0z' fill='none' />
   </svg>
 )
 ```

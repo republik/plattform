@@ -87,12 +87,15 @@ const Scroller = ({
   const [{ left, right }, setArrows] = useState({ left: false, right: false })
   const [colorScheme] = useColorContext()
 
-  const lastActiveChildIndex = useRef<Number>()
+  const lastActiveChildIndex = useRef<number>()
   useEffect(() => {
     const scroller = scrollRef.current
     const target = Array.from(scroller.children)[activeChildIndex + 1] // + 1 for pad element
 
-    if (lastActiveChildIndex.current !== undefined && lastActiveChildIndex.current !== activeChildIndex) {
+    if (
+      lastActiveChildIndex.current !== undefined &&
+      lastActiveChildIndex.current !== activeChildIndex
+    ) {
       scrollIntoView(target, {
         time: 400,
         align: {
@@ -104,7 +107,7 @@ const Scroller = ({
     } else {
       const leftEdge = scroller.getBoundingClientRect().left
       const targetBounds = target.getBoundingClientRect()
-      const diff =  targetBounds.left - leftEdge - innerPadding
+      const diff = targetBounds.left - leftEdge - innerPadding
       scroller.scrollLeft += diff
     }
     lastActiveChildIndex.current = activeChildIndex
@@ -159,8 +162,7 @@ const Scroller = ({
     // scroll all the way at the end
     const newRightEdge =
       scroller.scrollLeft + target.getBoundingClientRect().left + clientWidth
-    const leftOffset =
-      newRightEdge >= scroller.scrollWidth ? 0 : innerPadding
+    const leftOffset = newRightEdge >= scroller.scrollWidth ? 0 : innerPadding
 
     scrollIntoView(target, {
       time: 400,
@@ -185,17 +187,13 @@ const Scroller = ({
       >
         <div
           style={{
-            flex: shouldCenter
-              ? 1
-              : `0 0 ${innerPadding}px`
+            flex: shouldCenter ? 1 : `0 0 ${innerPadding}px`
           }}
         />
         {children}
         <div
           style={{
-            flex: shouldCenter
-              ? 1
-              : `0 0 ${innerPadding}px`
+            flex: shouldCenter ? 1 : `0 0 ${innerPadding}px`
           }}
         />
       </div>
