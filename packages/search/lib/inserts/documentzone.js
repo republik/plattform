@@ -9,6 +9,7 @@ const { getElasticDoc } = require('../Documents')
 const { createPublish } = require('../DocumentZones')
 
 const loaderBuilders = {
+  ...require('@orbiting/backend-modules-embeds/loaders'),
   ...require('@orbiting/backend-modules-publikator/loaders'),
 }
 
