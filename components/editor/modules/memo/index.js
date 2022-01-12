@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { compose } from 'react-apollo'
 import { css } from 'glamor'
 import MarkdownSerializer from 'slate-mdast-serializer'
-import MemoIcon from 'react-icons/lib/md/comment'
+import MemoIcon from 'react-icons/lib/md/rate-review'
 import RemoveIcon from 'react-icons/lib/md/delete'
 import { Editorial, Interaction } from '@project-r/styleguide'
 
