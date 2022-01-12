@@ -84,7 +84,7 @@ const styles = {
   })
 }
 
-interface ArrowProps extends Record<string, unknown> {
+export interface ArrowProps extends Record<string, unknown> {
   size: number
   fill?: string
 }

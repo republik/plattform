@@ -8,6 +8,7 @@ import { Label } from './DropdownLabel'
 import { LABEL_HEIGHT, FIELD_HEIGHT } from './constants'
 import { useColorContext } from '../Colors/useColorContext'
 import { DropdownProps } from './Dropdown'
+import { ArrowProps } from './Field'
 
 export const styles = {
   root: css({
@@ -229,7 +230,7 @@ const ItemSeparator = ({ hidden }) => {
   )
 }
 
-const ArrowDown = ({ size, fill, ...props }) => (
+const ArrowDown = ({ size, fill, ...props }: ArrowProps) => (
   <svg
     {...props}
     fill={fill}

@@ -17,13 +17,25 @@ interface DropdownLabelProps extends Record<string, unknown> {
   error?: boolean
   text?: string
   children: React.ReactNode
-  Element?: string
+  Element?: 'span' | 'select' | 'button'
   field?: boolean
   value?: string
   style?: Record<string, string>
-  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void
-  onFocus?: (event: React.FocusEvent<HTMLSelectElement>) => void
-  onBlur?: (event: React.FocusEvent<HTMLSelectElement>) => void
+  onChange?: (
+    event: React.ChangeEvent<
+      HTMLSelectElement & HTMLButtonElement & HTMLSpanElement
+    >
+  ) => void
+  onFocus?: (
+    event: React.FocusEvent<
+      HTMLSelectElement & HTMLButtonElement & HTMLSpanElement
+    >
+  ) => void
+  onBlur?: (
+    event: React.FocusEvent<
+      HTMLSelectElement & HTMLButtonElement & HTMLSpanElement
+    >
+  ) => void
 }
 
 const styles = {
