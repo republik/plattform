@@ -84,18 +84,7 @@ const styles = {
   })
 }
 
-const Slider = ({
-  min,
-  max,
-  value,
-  title,
-  label,
-  fullWidth = false,
-  inactive,
-  onChange,
-  onMouseUp,
-  onMouseDown
-}: {
+interface SliderProps extends Record<string, unknown> {
   min: string | number
   max: string | number
   value: string | number
@@ -110,7 +99,22 @@ const Slider = ({
   onMouseUp?: (event: React.MouseEvent<HTMLInputElement>) => void
   onMouseDown?: (event: React.MouseEvent<HTMLInputElement>) => void
   onTouchEnd?: (event: React.TouchEvent<HTMLInputElement>) => void
-}) => {
+}
+
+const Slider = ({
+  min,
+  max,
+  value,
+  title,
+  label,
+  fullWidth = false,
+  inactive,
+  onChange,
+  onMouseUp,
+  onMouseDown,
+  onTouchEnd,
+  ...props
+}: SliderProps) => {
   const [colorScheme] = useColorContext()
   const sliderStyleRules = useMemo(() => {
     return {
@@ -174,6 +178,7 @@ const Slider = ({
           fullWidth && styles.fullWidth
         )}
         type='range'
+        {...props}
         min={min}
         max={max}
         onMouseUp={onMouseUp}

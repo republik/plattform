@@ -148,7 +148,7 @@ export const Inner = ({ isOpen, children }) => {
 export const ItemsContainer = ({ isOpen, children }) => {
   const [height, setHeight] = useState(0)
   const [opacity, setOpacity] = useState(0)
-  const refFn = useRef<HTMLDivElement>()
+  const refFn = useRef<HTMLDivElement>(null)
   const [colorScheme] = useColorContext()
 
   useEffect(() => {
