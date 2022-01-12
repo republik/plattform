@@ -18,8 +18,8 @@ const buttonStyle = {
 }
 
 const styles = {
-  button: css({
-    ...buttonStyle,
+  button: css(buttonStyle),
+  container: css({
     textAlign: 'left',
     padding: '8px',
     width: '100%'
@@ -98,7 +98,8 @@ export const CommentHeaderProfile = ({
   t,
   profilePicture,
   name,
-  credential
+  credential,
+  onClick
 }) => {
   const [colorScheme] = useColorContext()
 
@@ -130,7 +131,7 @@ export const CommentHeaderProfile = ({
                   )}
                 </div>
               )
-            } else {
+            } else if (onClick) {
               return (
                 <div
                   {...styles.credential}
@@ -164,19 +165,34 @@ export const Header = ({ t, displayAuthor, onClick }) => {
   )
 
   return (
-    <button {...styles.button} {...hoverStyle} onClick={onClick}>
-      <div {...styles.root}>
-        <CommentHeaderProfile
-          t={t}
-          profilePicture={profilePicture}
-          credential={credential}
-          name={name}
-        />
-        <div {...styles.action} {...colorScheme.set('color', 'primary')}>
-          <EditIcon />
+    <>
+      {onClick ? (
+        <button {...styles.button} {...styles.container} {...hoverStyle} onClick={onClick}>
+          <div {...styles.root}>
+            <CommentHeaderProfile
+              t={t}
+              profilePicture={profilePicture}
+              credential={credential}
+              name={name}
+              onClick={onClick}
+            />
+            <div {...styles.action} {...colorScheme.set('color', 'primary')}>
+              <EditIcon />
+            </div>
+          </div>
+        </button>
+      ) : (
+        <div {...styles.root} {...styles.container}>
+          <CommentHeaderProfile
+            t={t}
+            profilePicture={profilePicture}
+            credential={credential}
+            name={name}
+            onClick={onClick}
+          />
         </div>
-      </div>
-    </button>
+      )}
+    </>
   )
 }
 
