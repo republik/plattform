@@ -56,7 +56,7 @@ export const barEditorSchema = ({
           }
         },
         layout: {
-          title: 'Aufteilung in Spalten',
+          title: 'Aufteilen in mehrere Charts',
           properties: {
             column: {
               title: 'Spalte auswählen',
@@ -193,7 +193,7 @@ export const lollipopEditorSchema = ({
           }
         },
         layout: {
-          title: 'Aufteilung in Spalten',
+          title: 'Aufteilen in mehrere Charts',
           properties: {
             column: {
               title: 'Spalte auswählen',

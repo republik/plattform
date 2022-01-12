@@ -25,7 +25,7 @@ export const genericMapEditorSchema = ({
           }
         },
         layout: {
-          title: 'Aufteilung in Spalten',
+          title: 'Aufteilen in mehrere Charts',
           properties: {
             column: {
               title: 'Spalte auswählen',
@@ -83,7 +83,7 @@ export const projectedMapEditorSchema = ({
           }
         },
         layout: {
-          title: 'Aufteilung in Spalten',
+          title: 'Aufteilen in mehrere Charts',
           properties: {
             column: {
               title: 'Spalte auswählen',
@@ -141,7 +141,7 @@ export const swissMapEditorSchema = ({
           }
         },
         layout: {
-          title: 'Aufteilung in Spalten',
+          title: 'Aufteilen in mehrere Charts',
           properties: {
             column: {
               title: 'Spalte auswählen',

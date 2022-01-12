@@ -25,7 +25,7 @@ export const scatterPlotEditorSchema = ({
           }
         },
         layout: {
-          title: 'Aufteilung in Spalten',
+          title: 'Aufteilen in mehrere Charts',
           properties: {
             column: {
               title: 'Spalte auswählen',

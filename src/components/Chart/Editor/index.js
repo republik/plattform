@@ -28,9 +28,9 @@ import {
 
 const schemaDict = {
   Line: lineEditorSchema,
+  Bar: barEditorSchema,
   TimeBar: timeBarEditorSchema,
   Lollipop: lollipopEditorSchema,
-  Bar: barEditorSchema,
   Slope: slopeEditorSchema,
   ScatterPlot: scatterPlotEditorSchema,
   GenericMap: genericMapEditorSchema,
@@ -39,9 +39,22 @@ const schemaDict = {
   Hemicycle: hemicycleEditorSchema
 }
 
+const chartTranslationDict = {
+  Line: 'Linien',
+  Bar: 'Balken',
+  TimeBar: 'Säulen',
+  Lollipop: 'Lollipop',
+  Slope: 'Slope',
+  ScatterPlot: 'Punkte',
+  GenericMap: 'Flächenkarte',
+  ProjectedMap: 'ProjectedMap',
+  SwissMap: 'Schweizerkarte',
+  Hemicycle: 'Hemicycle'
+}
+
 const chartTypes = Object.keys(schemaDict)
   .map(d => {
-    return { value: d, text: d }
+    return { value: d, text: chartTranslationDict[d] }
   })
   .slice(0, 6)
 

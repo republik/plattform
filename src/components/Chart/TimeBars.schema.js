@@ -64,7 +64,7 @@ export const timeBarEditorSchema = ({
           }
         },
         layout: {
-          title: 'Aufteilung in Spalten',
+          title: 'Aufteilen in mehrere Charts',
           properties: {
             column: {
               title: 'Spalte auswählen',
