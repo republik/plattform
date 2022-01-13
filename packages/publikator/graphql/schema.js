@@ -91,6 +91,21 @@ type mutations {
     repoIds: [ID!]!
     unpublish: Boolean
   ): RepoConnection!
+
+  publishMemo(
+    id: ID
+    repoId: ID!
+    parentId: ID
+    commitId: ID
+    text: String!
+  ): Memo!
+  editMemo(
+    id: ID
+    text: String!
+  ): Memo!
+  unpublishMemo(
+    id: ID
+  ): Memo!
 }
 
 type subscriptions {
