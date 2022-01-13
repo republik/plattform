@@ -36,7 +36,7 @@ const schemaDictFullSupport = {
 
 const schemaDict = {
   ...schemaDictFullSupport,
-  // not shown in UI for now, schema are not 100% ready, see slice below
+  // not shown in UI for now, schema are not 100% ready
   ScatterPlot: scatterPlotEditorSchema,
   GenericMap: genericMapEditorSchema,
   ProjectedMap: projectedMapEditorSchema,
@@ -49,12 +49,7 @@ const chartTranslationDict = {
   Bar: 'Balken (Bar)',
   TimeBar: 'Säulen (TimeBar)',
   Lollipop: 'Lollipop',
-  Slope: 'Slope',
-  ScatterPlot: 'Punkte',
-  GenericMap: 'Flächenkarte (GenericMap)',
-  ProjectedMap: 'ProjectedMap',
-  SwissMap: 'Schweizerkarte',
-  Hemicycle: 'Hemicycle'
+  Slope: 'Slope'
 }
 
 const chartTypes = Object.keys(schemaDictFullSupport).map(d => {
