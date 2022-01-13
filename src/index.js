@@ -1011,8 +1011,8 @@ const Styleguide = () => {
                       src: require('./components/Chart/Hemicycle.docs.md')
                     },
                     {
-                      path: '/charts/tables',
-                      title: 'Tables',
+                      path: '/charts/table',
+                      title: 'Table',
                       imports: {
                         ...require('./components/Typography'),
                         ChartTitle: require('./components/Chart').ChartTitle,
@@ -1021,7 +1021,7 @@ const Styleguide = () => {
                         CsvChart: require('./components/Chart/Csv'),
                         t
                       },
-                      src: require('./components/Chart/Tables.docs.md')
+                      src: require('./components/Chart/Table.docs.md')
                     }
                   ]
                 },

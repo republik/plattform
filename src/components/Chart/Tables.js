@@ -203,7 +203,7 @@ const Tables = props => {
     return (
       <div key={`row-${props.i}`} {...styles.row}>
         {columns.map((column, i) => (
-          <Cell {...props} row={props.row} column={column} i={i} />
+          <Cell {...props} row={props.row} column={column} key={i} />
         ))}
       </div>
     )
@@ -274,7 +274,7 @@ const Tables = props => {
       </div>
       <div>
         {sortedData.map((row, i) => (
-          <Row {...props} row={row} i={i} />
+          <Row {...props} row={row} key={i} />
         ))}
       </div>
     </section>
