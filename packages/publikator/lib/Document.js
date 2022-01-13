@@ -18,7 +18,7 @@ const { updateRepo } = require('./postgres')
 
 const slugDateFormat = timeFormat('%Y/%m/%d')
 
-const PREFIX_PREPUBLICATION_PATH = 'vorschau'
+const { PREFIX_PREPUBLICATION_PATH, SUPPRESS_AUDIO_DURATION_MEASURE } = process.env
 
 const getPath = ({ slug, template, publishDate, prepublication, path }) => {
   if (path) {
@@ -114,7 +114,7 @@ const prepareMetaForPublish = async ({
 
   const { audioSourceMp3, audioSourceAac, audioSourceOgg } = doc.content.meta
   let durationMs = 0
-  if (audioSourceMp3) {
+  if (audioSourceMp3 && !SUPPRESS_AUDIO_DURATION_MEASURE) {
     debug(repoId, 'fetching audio source', audioSourceMp3)
     durationMs = await fetch(audioSourceMp3)
       .then((res) => res.buffer())
