@@ -65,7 +65,7 @@ export const lineEditorSchema = ({
           }
         },
         layout: {
-          title: 'Aufteilung in Spalten',
+          title: 'Aufteilen in mehrere Charts',
           properties: {
             column: {
               title: 'Spalte auswählen',
@@ -230,7 +230,7 @@ export const slopeEditorSchema = ({
           }
         },
         layout: {
-          title: 'Aufteilung in Spalten',
+          title: 'Aufteilen in mehrere Charts',
           properties: {
             column: {
               title: 'Spalte auswählen',
