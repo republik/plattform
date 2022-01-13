@@ -4,7 +4,8 @@
   "description": "auth migrations, seeds, middleware, graphql schema and resolvers",
   "main": "index.js",
   "scripts": {
-    "link": "yarn link"
+    "dev": "tsc -w",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,7 @@
   },
   "homepage": "https://github.com/orbiting/backends#readme",
   "devDependencies": {
+    "@orbiting/backend-modules-types": "*",
     "@types/uuid": "^8.3.0",
     "gsheets": "^3.0.0"
   },

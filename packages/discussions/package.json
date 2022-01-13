@@ -17,10 +17,14 @@
   },
   "homepage": "https://github.com/orbiting/backends#readme",
   "scripts": {
-    "link": "yarn link"
+    "dev": "tsc -w",
+    "build": "tsc"
   },
   "dependencies": {
     "dataloader": "^2.0.0",
     "graphql-fields": "^2.0.3"
+  },
+  "devDependencies": {
+    "@orbiting/backend-modules-types": "*"
   }
 }

@@ -16,7 +16,8 @@
   },
   "homepage": "https://github.com/orbiting/backends#readme",
   "scripts": {
-    "link": "yarn link",
+    "dev": "tsc -w",
+    "build": "tsc",
     "db:seed:crowdfundings": "seeds/script/seed.js",
     "dev:postfinance:import": "concurrently 'tsc -w' 'sleep 3 && echo \"Starting import payments runner.\" && sleep 2 && NODE_ENV=development nodemon lib/scheduler/importPaymentsRunner.js'"
   },
@@ -39,6 +40,7 @@
     "uuid": "^8.3.1"
   },
   "devDependencies": {
+    "@orbiting/backend-modules-types": "*",
     "@types/lodash": "^4.14.162",
     "@types/sharp": "^0.25.1",
     "@types/ssh2-sftp-client": "^5.3.0",

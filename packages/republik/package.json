@@ -16,7 +16,8 @@
   },
   "homepage": "https://github.com/orbiting/backends#readme",
   "scripts": {
-    "link": "yarn link",
+    "dev": "tsc -w",
+    "build": "tsc",
     "db:seed:redirections": "cat ../redirections/seeds/seeds.example.json | node ../redirections/seeds/seed.js",
     "db:seed:users": "cat ../auth/seeds/seeds.example.json | node ../auth/seeds/seed.js --truncate"
   },
@@ -40,5 +41,8 @@
     "uuid": "^8.1.0",
     "validator": "^13.7.0",
     "yargs": "^17.0.1"
+  },
+  "devDependencies": {
+    "@orbiting/backend-modules-types": "*"
   }
 }

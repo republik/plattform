@@ -21,5 +21,9 @@
   "dependencies": {
   },
   "devDependencies": {
-  }
+    "typescript": "^4.0.2"
+  },
+  "files": [
+    "tsconfig-backend.json"
+  ]
 }
