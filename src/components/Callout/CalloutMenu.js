@@ -16,6 +16,7 @@ const hasAncestor = (node, predicate) => {
 const CalloutMenu = ({
   children,
   Element,
+  elementProps,
   align,
   initiallyOpen,
   contentPaddingMobile,
@@ -56,7 +57,7 @@ const CalloutMenu = ({
           {children}
         </Callout>
       )}
-      <Element onClick={() => setMenu(!showMenu)} />
+      <Element {...elementProps} onClick={() => setMenu(!showMenu)} />
     </div>
   )
 }

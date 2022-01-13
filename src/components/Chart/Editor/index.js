@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { csvParse } from 'd3-dsv'
 
-import Dropdown from '../../Form/Dropdown'
+import CustomValueDropdown from './CustomValueDropdown'
 import { FormFields } from './FormFields'
 
 import { defaultProps } from '../ChartContext'
@@ -26,12 +26,17 @@ import {
   columnAmount
 } from './utils'
 
-const schemaDict = {
+const schemaDictFullSupport = {
   Line: lineEditorSchema,
   Bar: barEditorSchema,
   TimeBar: timeBarEditorSchema,
   Lollipop: lollipopEditorSchema,
-  Slope: slopeEditorSchema,
+  Slope: slopeEditorSchema
+}
+
+const schemaDict = {
+  ...schemaDictFullSupport,
+  // not shown in UI for now, schema are not 100% ready, see slice below
   ScatterPlot: scatterPlotEditorSchema,
   GenericMap: genericMapEditorSchema,
   ProjectedMap: projectedMapEditorSchema,
@@ -52,11 +57,9 @@ const chartTranslationDict = {
   Hemicycle: 'Hemicycle'
 }
 
-const chartTypes = Object.keys(schemaDict)
-  .map(d => {
-    return { value: d, text: chartTranslationDict[d] }
-  })
-  .slice(0, 6)
+const chartTypes = Object.keys(schemaDictFullSupport).map(d => {
+  return { value: d, text: chartTranslationDict[d] }
+})
 
 const ChartEditor = ({ data, value, onChange, activeTab }) => {
   const chartData = useMemo(() => csvParse(data), [data])
@@ -112,7 +115,7 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
 
   return (
     <div>
-      <Dropdown
+      <CustomValueDropdown
         label='Charttyp auswählen'
         items={chartTypes}
         value={value.type}

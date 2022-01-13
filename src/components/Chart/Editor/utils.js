@@ -191,6 +191,8 @@ export const columnAmount = [
   }
 ]
 
+// Note: This could and probably should be refactored away
+// when supporting more charts and be infered from the schemas
 export const determineAxisContext = (
   currentProperty,
   chartConfig,

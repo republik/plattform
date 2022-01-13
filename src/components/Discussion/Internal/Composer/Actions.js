@@ -25,8 +25,13 @@ const styles = {
   root: css({
     display: 'flex',
     flexFlow: 'wrap',
-    justifyContent: 'space-between',
     alignItems: 'center'
+  }),
+  rootMainOnly: css({
+    justifyContent: 'flex-end',
+  }),
+  rootWithSecondary: css({
+    justifyContent: 'space-between'
   }),
   mainActions: css({
     display: 'flex'
@@ -76,7 +81,7 @@ export const Actions = ({
     }
   }, [colorScheme])
   return (
-    <div {...styles.root}>
+    <div {...styles.root} {...styles[composerSecondaryActions ? 'rootWithSecondary' : 'rootMainOnly']}>
       {composerSecondaryActions}
 
       <div {...styles.mainActions}>

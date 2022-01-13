@@ -66,7 +66,11 @@ export {
   MdForward30 as ForwardIcon,
   MdReplay10 as ReplayIcon,
   MdCheckCircle as CheckCircleIcon,
-  MdLock as LockIcon
+  MdLock as LockIcon,
+  MdTextFormat as TextFormatIcon,
+  MdOutlineSmsFailed as EtiquetteIcon,
+  MdUnfoldLess as UnfoldLessIcon,
+  MdUnfoldMore as UnfoldMoreIcon
 } from 'react-icons/md'
 
 export { AiFillInstagram as InstagramIcon } from 'react-icons/ai'
@@ -91,7 +95,6 @@ export { ShareIcon } from './CustomIcons/ShareIcon'
 export { MarkdownIcon } from './CustomIcons/MarkdownIcon'
 export { BackIcon } from './CustomIcons/BackIcon'
 export { DiscussionIcon } from './CustomIcons/DiscussionIcon'
-export { EtiquetteIcon } from './CustomIcons/EtiquetteIcon'
 export { FontSizeIcon } from './CustomIcons/FontSizeIcon'
 export { CheckSmallIcon } from './CustomIcons/MdCheckSmall'
 export { ReadIcon } from './CustomIcons/MdCheckCircleOutlined'

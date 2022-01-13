@@ -155,6 +155,27 @@ const defaultPropsBar = {
   sort: 'ascending'
 }
 
+const defaultPropsMap = {
+  numberFormat: 's',
+  columns: 1,
+  unit: '',
+  heightRatio: 1,
+  colorLegend: true,
+  colorLegendSize: 0.16,
+  colorLegendMinWidth: 80,
+  colorLegendPosition: 'right',
+  points: false,
+  pointAttributes: [],
+  choropleth: false,
+  missingDataColor: 'divider',
+  ignoreMissingFeature: false,
+  feature: 'feature',
+  shape: 'circle',
+  sizeRangeMax: 10,
+  getProjection: () => geoEqualEarth().rotate([-10, 0]),
+  opacity: 0.6
+}
+
 export const defaultProps = {
   TimeBar: {
     x: 'year',
@@ -238,30 +259,13 @@ export const defaultProps = {
     minInnerWidth: 240,
     annotations: []
   },
-  GenericMap: {
-    numberFormat: 's',
-    columns: 1,
-    unit: '',
-    heightRatio: 1,
-    colorLegend: true,
-    colorLegendSize: 0.16,
-    colorLegendMinWidth: 80,
-    colorLegendPosition: 'right',
-    points: false,
-    pointAttributes: [],
-    choropleth: false,
-    missingDataColor: 'divider',
-    ignoreMissingFeature: false,
-    feature: 'feature',
-    shape: 'circle',
-    sizeRangeMax: 10,
-    getProjection: () => geoEqualEarth().rotate([-10, 0]),
-    opacity: 0.6
-  },
+  GenericMap: defaultPropsMap,
   ProjectedMap: {
+    ...defaultPropsMap,
     getProjection: () => geoIdentity()
   },
   SwissMap: {
+    ...defaultPropsMap,
     getProjection: () =>
       geoMercator().rotate([-7.439583333333333, -46.95240555555556]),
     heightRatio: 0.63

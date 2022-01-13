@@ -41,8 +41,12 @@
       "value": "Beitrag teilen"
     },
     {
+      "key": "styleguide/CommentActions/share/short",
+      "value": "Teilen"
+    },
+    {
       "key": "styleguide/CommentActions/answer",
-      "value": "antworten"
+      "value": "Antworten"
     },
     {
       "key": "styleguide/CommentActions/unpublish",
@@ -50,11 +54,19 @@
     },
     {
       "key": "styleguide/CommentActions/edit",
-      "value": "bearbeiten"
+      "value": "Beitrag bearbeiten"
     },
     {
       "key": "styleguide/CommentActions/report",
       "value": "Anstössigen Inhalt melden"
+    },
+    {
+      "key": "styleguide/CommentActions/reportWithAmount",
+      "value": "Inhalt ({amount}) gemeldet"
+    },
+    {
+      "key": "styleguide/CommentActions/reported",
+      "value": "Inhalt gemeldet"
     },
     {
       "key": "styleguide/CommentActions/reportMessage",
@@ -98,7 +110,7 @@
     },
     {
       "key": "styleguide/CommentActions/featured",
-      "value": "Am {date} um {time} Uhr redaktionell hervorgehobenes Zitat: {text}"
+      "value": "Hervorgehoben am {date} um {time} Uhr."
     },
     {
       "key": "styleguide/CommentTeaser/comment/link",
@@ -155,7 +167,7 @@
     },
     {
       "key": "styleguide/comment/header/credentialMissing",
-      "value": "Rolle definieren"
+      "value": "Rolle festlegen"
     },
     {
       "key": "styleguide/comment/header/unpublishedByUser",
@@ -175,7 +187,7 @@
     },
     {
       "key": "styleguide/comment/edit/submit",
-      "value": "bearbeiten"
+      "value": "speichern"
     },
     {
       "key": "styleguide/comment/unpublished",
@@ -187,7 +199,7 @@
     },
     {
       "key": "styleguide/comment/adminUnpublished",
-      "value": "Leider mussten wir Ihren Beitrag verbergen. Wenden Sie sich bitte an kontakt@republik.ch."
+      "value": "Leider mussten wir Ihren Beitrag verbergen. Bei Fragen wenden Sie sich an kontakt@republik.ch."
     },
     {
       "key": "styleguide/AudioPlayer/aria",

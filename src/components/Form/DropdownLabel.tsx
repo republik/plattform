@@ -11,6 +11,33 @@ import {
 } from './constants'
 import { useColorContext } from '../Colors/useColorContext'
 
+interface DropdownLabelProps extends Record<string, unknown> {
+  top?: boolean
+  focus?: boolean
+  error?: boolean
+  text?: string
+  children: React.ReactNode
+  Element?: 'span' | 'select' | 'button'
+  field?: boolean
+  value?: string
+  style?: Record<string, string>
+  onChange?: (
+    event: React.ChangeEvent<
+      HTMLSelectElement & HTMLButtonElement & HTMLSpanElement
+    >
+  ) => void
+  onFocus?: (
+    event: React.FocusEvent<
+      HTMLSelectElement & HTMLButtonElement & HTMLSpanElement
+    >
+  ) => void
+  onBlur?: (
+    event: React.FocusEvent<
+      HTMLSelectElement & HTMLButtonElement & HTMLSpanElement
+    >
+  ) => void
+}
+
 const styles = {
   field: css({
     display: 'block',
@@ -71,8 +98,13 @@ export const Label = ({
   children,
   Element = 'span',
   field,
+  value,
+  style,
+  onChange,
+  onFocus,
+  onBlur,
   ...props
-}) => {
+}: DropdownLabelProps) => {
   const [colorScheme] = useColorContext()
   const labelTextStyle = merge(styles.labelText, top && styles.labelTextTop)
   const isSelect = Element === 'select'
@@ -97,6 +129,11 @@ export const Label = ({
       <>
         <Element
           {...props}
+          value={value}
+          style={style}
+          onChange={onChange}
+          onFocus={onFocus}
+          onBlur={onBlur}
           {...merge(
             styles.field,
             styleRules.field,

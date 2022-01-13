@@ -4,9 +4,11 @@ import Downshift from 'downshift'
 
 import zIndex from '../../theme/zIndex'
 import { sansSerifRegular21 } from '../Typography/styles'
-import { Label } from './Label'
+import { Label } from './DropdownLabel'
 import { LABEL_HEIGHT, FIELD_HEIGHT } from './constants'
 import { useColorContext } from '../Colors/useColorContext'
+import { DropdownProps } from './Dropdown'
+import { ArrowProps } from './Field'
 
 export const styles = {
   root: css({
@@ -57,7 +59,12 @@ export const styles = {
 
 export const itemToString = item => (item ? item.text : null)
 
-export const VirtualDropdown = ({ label, items, onChange, value }) => {
+export const VirtualDropdown = ({
+  label,
+  items,
+  onChange,
+  value
+}: DropdownProps) => {
   const [focus, setFocus] = useState(false)
   const [colorScheme] = useColorContext()
   const selectedItem = items.find(item => item.value === value)
@@ -142,7 +149,7 @@ export const Inner = ({ isOpen, children }) => {
 export const ItemsContainer = ({ isOpen, children }) => {
   const [height, setHeight] = useState(0)
   const [opacity, setOpacity] = useState(0)
-  const refFn = useRef()
+  const refFn = useRef<HTMLDivElement>(null)
   const [colorScheme] = useColorContext()
 
   useEffect(() => {
@@ -223,7 +230,7 @@ const ItemSeparator = ({ hidden }) => {
   )
 }
 
-const ArrowDown = ({ size, fill, ...props }) => (
+const ArrowDown = ({ size, fill, ...props }: ArrowProps) => (
   <svg
     {...props}
     fill={fill}

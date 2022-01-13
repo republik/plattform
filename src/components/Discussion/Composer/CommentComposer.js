@@ -70,9 +70,10 @@ export const CommentComposer = props => {
     onClose,
     onCloseLabel,
     onSubmitLabel,
-    parentId,
     commentId,
-    autoFocus = true
+    parentId,
+    autoFocus = true,
+    placeholder
   } = props
   const [colorScheme] = useColorContext()
   /*
@@ -296,7 +297,9 @@ export const CommentComposer = props => {
           {...colorScheme.set('color', 'text')}
           {...(maxLength ? styles.textAreaLimit : {})}
           {...(text === '' ? textAreaEmptyRule : {})}
-          placeholder={t('styleguide/CommentComposer/placeholder')}
+          placeholder={
+            placeholder ?? t('styleguide/CommentComposer/placeholder')
+          }
           value={text}
           rows='1'
           onChange={onChangeText}
@@ -346,7 +349,8 @@ CommentComposer.propTypes = {
   onClose: PropTypes.func.isRequired,
   onCloseLabel: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
-  onSubmitLabel: PropTypes.string
+  onSubmitLabel: PropTypes.string,
+  placeholder: PropTypes.string
 }
 
 const MaxLengthIndicator = ({ maxLength, length }) => {
