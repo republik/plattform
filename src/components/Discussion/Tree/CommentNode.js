@@ -12,6 +12,8 @@ import { mUp } from '../../../theme/mediaQueries'
 import { EditIcon, FeaturedIcon, ReportIcon, UnpublishIcon } from '../../Icons'
 import { timeFormat } from '../../../lib/timeFormat'
 import { collapseWrapperRule } from '../Internal/Comment'
+import PropTypes from "prop-types";
+import { ActionsMenuItemPropType } from "../Internal/Comment/ActionsMenu";
 
 const dateFormat = timeFormat('%d.%m.%Y')
 const hmFormat = timeFormat('%H:%M')
@@ -492,3 +494,19 @@ const CommentNode = ({
 }
 
 export default CommentNode
+
+CommentNode.propTypes = {
+  t: PropTypes.func.isRequired,
+  comment: PropTypes.object.isRequired,
+  discussionId: PropTypes.number.isRequired,
+  actions: PropTypes.shape({
+    handleUpVote: PropTypes.func.isRequired,
+    handleDownVote: PropTypes.func.isRequired,
+    handleUnVote: PropTypes.func.isRequired,
+    handleShare: PropTypes.func.isRequired,
+    handleReply: PropTypes.func.isRequired,
+    handleFetchMore: PropTypes.func.isRequired
+  }),
+  menuItems: PropTypes.arrayOf(ActionsMenuItemPropType),
+  replies: PropTypes.node
+}
