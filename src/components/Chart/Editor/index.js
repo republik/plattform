@@ -45,13 +45,13 @@ const schemaDict = {
 }
 
 const chartTranslationDict = {
-  Line: 'Linien',
-  Bar: 'Balken',
-  TimeBar: 'Säulen',
+  Line: 'Linien (Line)',
+  Bar: 'Balken (Bar)',
+  TimeBar: 'Säulen (TimeBar)',
   Lollipop: 'Lollipop',
   Slope: 'Slope',
   ScatterPlot: 'Punkte',
-  GenericMap: 'Flächenkarte',
+  GenericMap: 'Flächenkarte (GenericMap)',
   ProjectedMap: 'ProjectedMap',
   SwissMap: 'Schweizerkarte',
   Hemicycle: 'Hemicycle'
