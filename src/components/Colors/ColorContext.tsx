@@ -30,7 +30,7 @@ const createScheme = specificColors => {
     return accessCSSColor(mapping[color] || color)
   }
 
-  const createColorRule = (attr, color, mappingName) => {
+  const createColorRule = (attr, color, mappingName = undefined) => {
     return css({
       [attr]: getCSSColor(color, mappingName)
     })

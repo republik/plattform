@@ -57,7 +57,7 @@ const RadioCircle = ({ checked, disabled }) => {
 }
 
 const Radio: React.FC<{
-  style?: string
+  style?: React.CSSProperties
   name?: string
   value: string
   checked: boolean
