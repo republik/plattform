@@ -1028,7 +1028,7 @@ bereits Infizierte,2020-03-16,13801
     `
   },
   {
-    name: 'Steigunslinien',
+    name: 'Steigungslinien',
     screenshot: '/static/charts/slopes.png',
     config: {
       color: 'country',
