@@ -1,10 +1,11 @@
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true'
 })
+const withTM = require('next-transpile-modules')(['@project-r/styleguide']);
 
 const { NODE_ENV, CDN_FRONTEND_BASE_URL } = process.env
 
-module.exports = withBundleAnalyzer({
+module.exports = withTM(withBundleAnalyzer({
   webpack5: true,
   webpack: config => {
     config.externals = config.externals || {}
@@ -87,4 +88,4 @@ module.exports = withBundleAnalyzer({
       }
     ]
   }
-})
+}))

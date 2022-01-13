@@ -1,9 +1,9 @@
 {
   "name": "@project-r/styleguide",
-  "version": "0.0.0-development",
+  "version": "0.0.0",
   "main": "dist/cjs/src/lib.js",
-  "module": "dist/esm/src/lib.js",
-  "types": "dist/types/lib.d.ts",
+  "module": "src/lib.ts",
+  "types": "src/lib.ts",
   "engines": {
     "node": "^14.4.0"
   },
