@@ -4,7 +4,6 @@ import { css } from 'glamor'
 import { scaleThreshold, scaleLinear, scaleTime } from 'd3-scale'
 import { extent, range } from 'd3-array'
 import { line } from 'd3-shape'
-import { autoType } from 'd3-dsv'
 import { useColorContext } from '../Colors/ColorContext'
 import { getFormat } from './utils'
 
@@ -27,7 +26,6 @@ const styles = {
     marginRight: '-20px'
   }),
   table: css({
-    marginTop: '10px',
     ...sansSerifRegular18,
     lineHeight: '1.2',
     minWidth: '100%',
@@ -41,22 +39,52 @@ const styles = {
   }),
   cell: css({
     padding: '6px 0',
-    verticalAlign: 'top',
-    textAlign: 'center'
+    verticalAlign: 'top'
   })
 }
 
 const Table = props => {
   const [colorScheme] = useColorContext()
-
   const { values, labelCells, numberFormat } = props
-
-  const formatted = autoType(values[0])
-  console.log({ formatted })
-  console.log(values[0])
-
   const columns = values.columns
   console.log(values)
+
+  const [sortBy, setSortBy] = useState({
+    key: columns[0],
+    order: 'desc'
+  })
+
+  let parsedData = []
+
+  values.forEach(row => {
+    let parsedItem = {}
+    Object.keys(row).forEach(
+      item =>
+        (parsedItem[item] = labelCells.includes(item) ? row[item] : +row[item])
+    )
+    parsedData.push({ ...parsedItem })
+  })
+
+  const sortedData = parsedData.sort((a, b) => {
+    if (typeof a[sortBy.key] === 'string') {
+      return sortBy.order === 'desc'
+        ? a[sortBy.key].localeCompare(b[sortBy.key])
+        : b[sortBy.key].localeCompare(a[sortBy.key])
+    }
+    return sortBy.order === 'desc'
+      ? NaN2Zero(b[sortBy.key]) - NaN2Zero(a[sortBy.key])
+      : NaN2Zero(a[sortBy.key]) - NaN2Zero(b[sortBy.key])
+  })
+
+  // helper function that toggles order (desc/asc) or sets new sort by key (order: desc)
+  const setSort = key => {
+    if (sortBy.key === key) {
+      setSortBy({ key, order: sortBy.order === 'desc' ? 'asc' : 'desc' })
+    } else {
+      setSortBy({ key, order: 'desc' })
+    }
+  }
+
   return (
     <div {...styles.container}>
       <table {...styles.table}>
@@ -70,6 +98,7 @@ const Table = props => {
                   textAlign: labelCells.includes(tableHead) ? 'left' : 'center'
                 }}
                 key={index}
+                onClick={() => setSort(columns[index])}
               >
                 {tableHead}
               </th>
@@ -77,7 +106,7 @@ const Table = props => {
           </tr>
         </thead>
         <tbody>
-          {values.map((row, rowIndex) => (
+          {sortedData.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {Object.keys(row).map((cellKey, cellIndex) => (
                 <td
