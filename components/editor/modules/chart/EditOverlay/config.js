@@ -531,7 +531,7 @@ Lockheed Martin,2020-09-30,191.4
       type: 'Bar',
       color: 'type',
       colorSort: 'none',
-      numberFormat: '%',
+      numberFormat: '.0%',
       sort: 'none',
       column: 'type',
       y: 'category',
@@ -675,7 +675,7 @@ Energieversorgung,8210,6873,10182
     screenshot: '/static/charts/filled-bars.png',
     config: {
       type: 'Bar',
-      numberFormat: '%',
+      numberFormat: '.0%',
       color: 'concern',
       colorRange: 'diverging2',
       colorLegend: true,
@@ -716,7 +716,7 @@ Sexuelle Belästigung,sehr stark,0.093
       type: 'TimeBar',
       color: 'gas',
       unit: 'Tonnen',
-      numberFormat: '.3s',
+      numberFormat: 's',
       xAnnotations: [
         {
           x1: '2008',
