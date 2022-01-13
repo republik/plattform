@@ -2183,6 +2183,30 @@
     {
       "key": "api/email/card/visa",
       "value": "Visa-Kreditkarte"
+    },
+    {
+      "key": "api/publikator/editMemo/error/404",
+      "value": "Memo nicht gefunden"
+    },
+    {
+      "key": "api/publikator/editMemo/error/notYours",
+      "value": "Sie können dieses Memo nicht bearbeiten."
+    },
+    {
+      "key": "api/publikator/unpublishMemo/error/404",
+      "value": "Memo nicht gefunden"
+    },
+    {
+      "key": "api/publikator/unpublishMemo/error/notYours",
+      "value": "Sie können dieses Memo nicht zurückziehen."
+    },
+    {
+      "key": "api/publikator/memo/notPublished/author/name",
+      "value": "Memo zurückgezogen"
+    },
+    {
+      "key": "api/publikator/memo/notPublished/author/email",
+      "value": "zurückgezogen"
     }
   ]
 }

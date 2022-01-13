@@ -10,6 +10,7 @@ type Repo {
   latestCommit: Commit!
   commit(id: ID!): Commit
   uncommittedChanges: [User!]!
+  memos: [Memo!]!
   milestones: [Milestone!]!
   # nothing or latest prepublication and/or latest publication
   # nothing if repo is unpublished
@@ -183,6 +184,17 @@ enum RepoChangeMutationType {
 
 extend type Meta {
   authors: [User!]!
-} 
+}
+
+type Memo {
+  id: ID!
+  parentIds: [ID!]!
+  text: String
+  content: JSON
+  author: Author!
+  published: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
 
 `
