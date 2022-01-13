@@ -5,7 +5,7 @@ import { css } from 'glamor'
 import { sansSerifRegular14 } from '../../Typography/styles'
 import { usePrevious } from '../../../lib/usePrevious'
 import { convertStyleToRem, pxToRem } from '../../Typography/utils'
-import { useColorContext } from '../../Colors/useColorContext'
+import { useColorContext } from '../../Colors/ColorContext'
 
 const styles = {
   root: css({

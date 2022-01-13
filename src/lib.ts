@@ -102,10 +102,7 @@ export {
 export { CommentTeaser } from './components/CommentTeaser'
 export { Overlay, OverlayToolbar, OverlayBody } from './components/Overlay'
 
-export {
-  StatementNode,
-  StatementList
-} from './components/Discussion/Statements'
+export { StatementNode } from './components/Discussion/Statements'
 
 export { Container, NarrowContainer } from './components/Grid'
 export {
@@ -142,6 +139,7 @@ export {
 export { renderCommentMdast } from './components/Discussion/Internal/Comment/render'
 export { IconLink as DiscussionIconLink } from './components/Discussion/Internal/Comment/IconLink'
 
+export { default as DiscussionCommentsWrapper } from './components/Discussion/DiscussionCommentsWrapper'
 export { CommentList } from './components/Discussion/Tree'
 
 export { DiscussionContext } from './components/Discussion/DiscussionContext'

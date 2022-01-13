@@ -7,6 +7,8 @@ import {
 
 const ColorContextHelper = ({ children, tagMappings = [] }) => {
   const localColors = useMemo(() => {
+    if (!tagMappings.length > 0) return null
+
     const colorsObject = { light: {}, dark: {} }
 
     if (!tagMappings) return colorsObject
@@ -19,6 +21,8 @@ const ColorContextHelper = ({ children, tagMappings = [] }) => {
 
     return colorsObject
   }, [tagMappings])
+
+  if (!localColors) return children
 
   return (
     <ColorContextProvider>
