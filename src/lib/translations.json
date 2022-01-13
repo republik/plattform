@@ -1,6 +1,4 @@
 {
-  "updated": "2021-04-14T20:45:47.534Z",
-  "title": "live",
   "data": [
     {
       "key": "styleguide/Collapsable/expand",
@@ -31,6 +29,10 @@
       "value": "Sie können {time} wieder einen Beitrag schreiben."
     },
     {
+      "key": "styleguide/CommentComposer/formatting/asterisk",
+      "value": "Damit System Gendersternchen erkennt, stellen Sie einen Backslash voran: Leser\\*in"
+    },
+    {
       "key": "styleguide/CommentActions/expand",
       "value": "Kommentare anschauen"
     },
@@ -39,8 +41,12 @@
       "value": "Beitrag teilen"
     },
     {
+      "key": "styleguide/CommentActions/share/short",
+      "value": "Teilen"
+    },
+    {
       "key": "styleguide/CommentActions/answer",
-      "value": "antworten"
+      "value": "Antworten"
     },
     {
       "key": "styleguide/CommentActions/unpublish",
@@ -48,11 +54,19 @@
     },
     {
       "key": "styleguide/CommentActions/edit",
-      "value": "bearbeiten"
+      "value": "Beitrag bearbeiten"
     },
     {
       "key": "styleguide/CommentActions/report",
       "value": "Anstössigen Inhalt melden"
+    },
+    {
+      "key": "styleguide/CommentActions/reportWithAmount",
+      "value": "Inhalt ({amount}) gemeldet"
+    },
+    {
+      "key": "styleguide/CommentActions/reported",
+      "value": "Inhalt gemeldet"
     },
     {
       "key": "styleguide/CommentActions/reportMessage",
@@ -96,7 +110,7 @@
     },
     {
       "key": "styleguide/CommentActions/featured",
-      "value": "Am {date} um {time} Uhr redaktionell hervorgehobenes Zitat: {text}"
+      "value": "Hervorgehoben am {date} um {time} Uhr."
     },
     {
       "key": "styleguide/CommentTeaser/comment/link",
@@ -124,6 +138,18 @@
       "undefined": " "
     },
     {
+      "key": "styleguide/SeriesNav/seriesoverview/link",
+      "value": " {link}."
+    },
+    {
+      "key": "styleguide/SeriesNav/seriesoverview",
+      "value": "Zur Übersicht"
+    },
+    {
+      "key": "styleguide/SeriesNav/current",
+      "value": "Sie lesen:"
+    },
+    {
       "key": "styleguide/comment/header/updated",
       "value": "editiert"
     },
@@ -141,7 +167,7 @@
     },
     {
       "key": "styleguide/comment/header/credentialMissing",
-      "value": "Rolle definieren"
+      "value": "Rolle festlegen"
     },
     {
       "key": "styleguide/comment/header/unpublishedByUser",
@@ -152,8 +178,16 @@
       "value": "(von der Redaktion verborgen)"
     },
     {
+      "key": "styleguide/comment/header/unavailable",
+      "value": "(Autorenschaft nicht verfügbar)"
+    },
+    {
+      "key": "styleguide/comment/header/loading",
+      "value": "Lädt…"
+    },
+    {
       "key": "styleguide/comment/edit/submit",
-      "value": "bearbeiten"
+      "value": "speichern"
     },
     {
       "key": "styleguide/comment/unpublished",
@@ -165,7 +199,7 @@
     },
     {
       "key": "styleguide/comment/adminUnpublished",
-      "value": "Leider mussten wir Ihren Beitrag verbergen. Wenden Sie sich bitte an kontakt@republik.ch."
+      "value": "Leider mussten wir Ihren Beitrag verbergen. Bei Fragen wenden Sie sich an kontakt@republik.ch."
     },
     {
       "key": "styleguide/AudioPlayer/aria",

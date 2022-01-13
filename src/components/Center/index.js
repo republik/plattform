@@ -23,27 +23,16 @@ const floatStyle = {
   marginTop: FLOAT_MARGIN / 2,
   marginRight: FLOAT_MARGIN,
   marginBottom: FLOAT_MARGIN / 2,
-  marginLeft: -BREAKOUT,
-  width: '100%'
+  width: '100%',
+  '[data-can-breakout=true] &': {
+    marginLeft: -BREAKOUT
+  }
 }
 
 export const breakoutUp = `@media only screen and (min-width: ${MAX_WIDTH +
   BREAKOUT * 2 +
   PADDING * 2 +
   PADDING}px)`
-
-const styles = {
-  center: css({
-    maxWidth: MAX_WIDTH + PADDING * 2,
-    margin: '0 auto',
-    padding: PADDING,
-    '&:after': {
-      content: '""',
-      display: 'table',
-      clear: 'both'
-    }
-  })
-}
 
 export const BREAKOUT_SIZES = {
   narrow: NARROW_WIDTH,
@@ -68,15 +57,19 @@ export const breakoutStyles = {
   normal: css({}),
   breakout: css({
     [breakoutUp]: {
-      marginLeft: -BREAKOUT,
-      marginRight: -BREAKOUT,
-      width: `calc(100% + ${BREAKOUT * 2}px)`
+      '[data-can-breakout=true] &': {
+        marginLeft: -BREAKOUT,
+        marginRight: -BREAKOUT,
+        width: `calc(100% + ${BREAKOUT * 2}px)`
+      }
     }
   }),
   breakoutLeft: css({
     [breakoutUp]: {
-      marginLeft: -BREAKOUT,
-      width: `calc(100% + ${BREAKOUT}px)`
+      '[data-can-breakout=true] &': {
+        marginLeft: -BREAKOUT,
+        width: `calc(100% + ${BREAKOUT}px)`
+      }
     }
   }),
   float: css({
@@ -98,8 +91,36 @@ export const breakoutStyles = {
   })
 }
 
-const Center = ({ children, attributes = {}, ...props }) => (
-  <div {...styles.center} {...attributes} {...props} className='center'>
+export const PADDED_MAX_WIDTH = MAX_WIDTH + PADDING * 2
+export const PADDED_MAX_WIDTH_BREAKOUT = BREAKOUT_SIZES.breakout + PADDING * 2
+
+const centerStyles = {
+  base: css({
+    margin: '0 auto',
+    padding: PADDING,
+    '&:after': {
+      content: '""',
+      display: 'table',
+      clear: 'both'
+    }
+  }),
+  regular: css({
+    maxWidth: PADDED_MAX_WIDTH
+  }),
+  breakout: css({
+    maxWidth: PADDED_MAX_WIDTH_BREAKOUT
+  })
+}
+
+const Center = ({ children, attributes = {}, breakout, ...props }) => (
+  <div
+    {...centerStyles.base}
+    {...centerStyles[breakout ? 'breakout' : 'regular']}
+    {...attributes}
+    {...props}
+    data-can-breakout={!breakout}
+    className='center'
+  >
     {children}
   </div>
 )

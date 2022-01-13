@@ -20,6 +20,10 @@ import {
   INFOBOX_DEFAULT_IMAGE_SIZE
 } from '../../components/InfoBox'
 
+export const matchSpan = matchType('span')
+export const matchSpanType = type => node =>
+  matchSpan(node) && node.data?.type === type
+
 export const matchInfoBox = matchZone('INFOBOX')
 export const matchQuote = matchZone('QUOTE')
 export const matchFigure = matchZone('FIGURE')
@@ -89,6 +93,14 @@ const nestedInlines = [
     editorModule: 'mark',
     editorOptions: {
       type: 'sup'
+    }
+  },
+  {
+    matchMdast: matchSpanType('MEMO'),
+    component: ({ children }) => <>{children}</>,
+    editorModule: 'memo',
+    editorOptions: {
+      type: 'MEMO'
     }
   }
 ]

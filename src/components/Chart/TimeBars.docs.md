@@ -6,7 +6,7 @@ One very physical limitation is the width of a (small) mobile screen: 320px. If 
 
 More than that and the calculated width of the bar ends up at 0, which isn't very useful at all.
 
-## Examples 
+## Examples
 
 ```react
 <div>
@@ -20,7 +20,7 @@ More than that and the calculated width of the bar ends up at 0, which isn't ver
       "numberFormat": ".3s",
       "xAnnotations": [
         {"x1": "2008","x2": "2012","value": 973619338.97,"unit": "Tonnen","label": "Kyoto-Protokoll"},
-        {"x": "2020","value": 748700000,"label": "Ziel 2020","ghost": true}, 
+        {"x": "2020","value": 748700000,"label": "Ziel 2020","ghost": true},
         {"x": "2050","value": 249600000,"label": "Ziel 2050","valuePrefix": "max: ","ghost": true}
       ],
       "padding": 18
@@ -594,7 +594,7 @@ year,typ,value
       "xInterval": "month",
       "xIntervalStep": 6,
       "xAnnotations": [
-        {"x1": "2019-07", "x2": "2019-07","value": 5, "unit": "Punkte", "label": "Ziel 2020"}, 
+        {"x1": "2019-07", "x2": "2019-07","value": 5, "unit": "Punkte", "label": "Ziel 2020"},
         {"x1": "2019-07", "x2": "2019-07","value": 4,"label": "Stand jetzt","position": "bottom","showValue": false},
         {"x": "2022-01", "value": 7, "ghost": true}
       ]
@@ -753,6 +753,387 @@ year,value,color
     `.trim()} />
   <ChartLegend>
     Quellen: <Editorial.A href='https://apps.bea.gov/iTable/iTable.cfm?reqid=19&step=2#reqid=19&step=2&isuri=1&1921=survey'>Bureau of Economic Analysis (BEA)</Editorial.A>, <Editorial.A href='https://www.cbo.gov/publication/56335'>CBO</Editorial.A>
+  </ChartLegend>
+</div>
+```
+
+### Ordinal Scale
+
+```react
+<div>
+  <ChartTitle>Alle Generationen sind gut vertreten</ChartTitle>
+  <ChartLead>Aktuelle Altersverteilung bei Verlegerinnen mit angegebenem Geburtsdatum</ChartLead>
+  <CsvChart
+    config={{
+      "type": "TimeBar",
+      "x": "key",
+      "unit": "Verlegerinnen",
+      "xTicks": [20, 40, 60, 80, 100],
+      "xScale": "ordinal",
+      "padding": 0,
+    }}
+    values={`
+key,value
+18,0
+19,3
+20,4
+21,11
+22,16
+23,23
+24,37
+25,53
+26,37
+27,49
+28,57
+29,73
+30,107
+31,129
+32,121
+33,138
+34,153
+35,132
+36,160
+37,171
+38,168
+39,158
+40,159
+41,176
+42,146
+43,143
+44,143
+45,141
+46,133
+47,149
+48,140
+49,171
+50,140
+51,162
+52,166
+53,153
+54,155
+55,198
+56,164
+57,173
+58,202
+59,142
+60,139
+61,154
+62,148
+63,173
+64,140
+65,126
+66,141
+67,161
+68,142
+69,156
+70,147
+71,123
+72,102
+73,103
+74,96
+75,88
+76,87
+77,59
+78,49
+79,33
+80,26
+81,21
+82,19
+83,8
+84,12
+85,7
+86,8
+87,8
+88,3
+89,3
+90,0
+91,1
+92,0
+93,1
+94,1
+95,0
+96,0
+97,0
+98,1
+99,0
+100,0
+    `.trim()} />
+</div>
+```
+
+```react
+<div>
+  <ChartTitle>Die meisten Betriebe sind 10 bis 20 Hektaren gross</ChartTitle>
+  <ChartLead>Anteil der Betriebe nach Nutzfläche in Hektaren</ChartLead>
+  <CsvChart
+    config={{
+      "type": "TimeBar",
+      "x": "category",
+      "color": "year",
+      "colorRange": [
+        "#004529"
+      ],
+      "xScale": "ordinal",
+      "unit": "der landwirtschaftlichen Betriebe",
+      "numberFormat": ".1%",
+      "padding": 10,
+      "xTicks": [
+        "1–3",
+        "5–10",
+        "20–30",
+        "> 50"
+      ]
+    }}
+    values={`
+year,category,value
+2018,< 1,0.041748603791395
+2018,1–3,0.06330134507984
+2018,3–5,0.049535908125541
+2018,5–10,0.132777471879179
+2018,10–20,0.292476205458979
+2018,20–30,0.207976087469519
+2018,30–50,0.156218044521356
+2018,> 50,0.055966333674192
+    `.trim()} />
+  <ChartLegend>
+    Daten für das Jahr 2019 sind nicht verfügbar. Quelle:  <Editorial.A href='https://www.bfs.admin.ch/bfs/de/home/statistiken/kataloge-datenbanken/tabellen.assetdetail.8346709.html'>Bundesamt für Statistik</Editorial.A>
+  </ChartLegend>
+</div>
+```
+
+### Small Multiples
+
+```react
+<div>
+  <ChartTitle>Das Sterben setzt später ein</ChartTitle>
+  <ChartLead>Überleben der Engländerinnen und Waliser</ChartLead>
+  <CsvChart
+    config={{
+      "type": "TimeBar",
+      "unit": "Überlebende",
+      "x": "age",
+      "column": "date",
+      "columns": 3,
+      "xScale": "linear",
+      "padding": 10,
+      "numberFormat": ".0%",
+      "xTicks": [
+        0,
+        100
+      ],
+      "xUnit": "Alter",
+      "xAnnotations": [
+        {
+          "column": "1851",
+          "x": "40",
+          "value": 0.54,
+          "label": "Mit 40."
+        },
+        {
+          "column": "2011",
+          "x": "80",
+          "value": 0.634,
+          "label": "Mit 80."
+        }
+      ]
+    }}
+    values={`
+age,date,value
+0,1851,1
+20,1851,0.659
+40,1851,0.54
+60,1851,0.376
+80,1851,0.089
+100,1851,0
+0,1931,1
+20,1931,0.875
+40,1931,0.812
+60,1931,0.652
+80,1931,0.193
+100,1931,0
+0,2011,1
+20,2011,0.993
+40,2011,0.981
+60,2011,0.925
+80,2011,0.634
+100,2011,0.021
+    `.trim()} />
+  <ChartLegend>
+    Quelle: <Editorial.A href='https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/compendium/nationalpopulationprojections/2014basedreferencevolumeseriespp2/chapter4mortality2014basednationalpopulationprojectionsreferencevolume'>Office for National Statistics</Editorial.A>
+  </ChartLegend>
+</div>
+```
+
+### Inverted Y Scale
+
+```react
+<div>
+  <ChartTitle>Wer alles ärmer ist als Sie...</ChartTitle>
+  <ChartLead>Vermögensverteilung in der Schweiz (Einzelpersonen)</ChartLead>
+  <CsvChart
+    config={{
+  "type": "TimeBar",
+  "x": "percentile",
+  "xScale": "linear",
+  "padding": 0,
+  "numberFormat": "(.0f",
+  "xTicks": [
+    0,
+    25,
+    50,
+    75,
+    99
+  ],
+  "yTicks": [
+    100000,
+    50000
+  ],
+  "xBandPadding": 0.5,
+  "height": 400,
+  "color": "color",
+  "colorLegend": false,
+  "colorMap": {
+    "default": "#D5D8D7",
+    "estimate": "#00A000",
+    "reality": "#D02324"
+  },
+  "unit": "Franken",
+  "xUnit": "Perzentil",
+  "yScaleInvert": true,
+  "xAnnotations": [
+    {
+      "x": "40",
+      "value": 6000,
+      "label": "Schätzung",
+      "showValue": false,
+      "position": "bottom",
+      "textAlignment": "right"
+    },
+    {
+      "x": "74",
+      "value": 90712,
+      "label": "Tatsächlich",
+      "showValue": false,
+      "position": "bottom",
+      "textAlignment": "right"
+    },
+    {
+      "x1": "0",
+      "x2": "70",
+      "value": 68139,
+      "label": "70. Perzentile",
+      "showValue": true,
+      "unit": "Franken",
+      "position": "bottom",
+      "leftLabel": true
+    },
+  ]
+}}
+    values={`
+percentile,color,value
+0,default,0
+1,default,0
+2,default,0
+3,default,0
+4,default,0
+5,default,0
+6,default,0
+7,default,0
+8,default,0
+9,default,0
+10,default,0
+11,default,0
+12,default,0
+13,default,0
+14,default,0
+15,default,0
+16,default,0
+17,default,0
+18,default,0
+19,default,0
+20,default,0
+21,default,0
+22,default,0
+23,default,0
+24,default,0
+25,default,0
+26,default,0
+27,default,0
+28,default,0
+29,default,88
+30,default,305
+31,default,583
+32,default,920
+33,default,1317
+34,default,1775
+35,default,2292
+36,default,2870
+37,default,3507
+38,default,4203
+39,default,4958
+40,estimate,5770
+41,default,6640
+42,default,7565
+43,default,8546
+44,default,9579
+45,default,10665
+46,default,11802
+47,default,12988
+48,default,14222
+49,default,15504
+50,default,16830
+51,default,18203
+52,default,19620
+53,default,21083
+54,default,22594
+55,default,24156
+56,default,25773
+57,default,27454
+58,default,29208
+59,default,31051
+60,default,33002
+61,default,35089
+62,default,37346
+63,default,39820
+64,default,42571
+65,default,45676
+66,default,49238
+67,default,53360
+68,default,57976
+69,default,62944
+70,default,68139
+71,default,73472
+72,default,78921
+73,default,84578
+74,reality,90712
+75,default,0
+76,default,0
+77,default,0
+78,default,0
+79,default,0
+80,default,0
+81,default,0
+82,default,0
+83,default,0
+84,default,0
+85,default,0
+86,default,0
+87,default,0
+88,default,0
+89,default,0
+90,default,0
+91,default,0
+92,default,0
+93,default,0
+94,default,0
+95,default,0
+96,default,0
+97,default,0
+98,default,0
+99,default,0
+    `.trim()} />
+  <ChartLegend>
+    Quelle: <Editorial.A href='https://www.estv.admin.ch/estv/de/home.html'>ESTV</Editorial.A>
   </ChartLegend>
 </div>
 ```

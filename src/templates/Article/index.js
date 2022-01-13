@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import Container from './Container'
 import Center from '../../components/Center'
@@ -38,6 +38,7 @@ import createBase from './base'
 import createBlocks from './blocks'
 import createTeasers from './teasers'
 import createDynamicComponent from './dynamicComponent'
+import TeaserEmbedComment from '../../components/TeaserEmbedComment'
 
 const getProgressId = (node, index, parent, { ancestors }) => {
   if (parent.identifier === 'CENTER') {
@@ -97,6 +98,9 @@ export const DYNAMICCOMPONENT_TYPE = 'DYNAMICCOMPONENT'
 
 const mdastPlaceholder = '\u2063'
 const DefaultLink = ({ children }) => children
+const DefaultActionBar = () => null
+
+const withData = Component => props => <Component {...props} data={{}} />
 
 const createSchema = ({
   documentEditorOptions = { skipCredits: false },
@@ -150,6 +154,7 @@ const createSchema = ({
   titleBlockRule,
   titleBlockPrepend = null,
   titleMargin = true,
+  titleBreakout = false,
   repoPrefix = 'article-',
   series = true,
   darkMode = true,
@@ -166,7 +171,11 @@ const createSchema = ({
   metaBody = false,
   metaHeadlines = false,
   skipContainer = false,
-  skipCenter = false
+  skipCenter = false,
+  withCommentData = withData,
+  CommentLink = DefaultLink,
+  ActionBar = DefaultActionBar,
+  PayNote
 } = {}) => {
   const base = createBase({ metaBody, metaHeadlines })
   const blocks = createBlocks({
@@ -178,6 +187,8 @@ const createSchema = ({
   const teasers = createTeasers({
     t,
     Link,
+    ActionBar,
+    PayNote,
     plattformUnauthorizedZoneText
   })
 
@@ -188,6 +199,20 @@ const createSchema = ({
     insertButtonText: 'Dynamic Component',
     type: DYNAMICCOMPONENT_TYPE
   })
+
+  const TeaserEmbedCommentWithLiveData = withCommentData(TeaserEmbedComment)
+  const TeaserEmbedCommentSwitch = props => {
+    const [isMounted, setIsMounted] = useState()
+    useEffect(() => {
+      setIsMounted(true)
+    }, [])
+
+    const Embed = isMounted
+      ? TeaserEmbedCommentWithLiveData
+      : TeaserEmbedComment
+
+    return <Embed {...props} t={t} Link={CommentLink} />
+  }
 
   return {
     repoPrefix,
@@ -270,6 +295,7 @@ const createSchema = ({
               const root = ancestors[ancestors.length - 1]
               return {
                 center: node.data.center,
+                breakout: node.data.breakout ?? titleBreakout,
                 format: root.format,
                 series: root.series,
                 repoId: root.repoId,
@@ -328,8 +354,8 @@ const createSchema = ({
               },
               {
                 matchMdast: matchHeading(2),
-                component: ({ children, attributes, ...props }) => (
-                  <Editorial.Subject attributes={attributes} {...props}>
+                component: ({ children, attributes }) => (
+                  <Editorial.Subject attributes={attributes}>
                     {children}
                   </Editorial.Subject>
                 ),
@@ -514,6 +540,31 @@ const createSchema = ({
                 },
                 isVoid: true
               },
+              {
+                matchMdast: matchZone('EMBEDCOMMENT'),
+                props: (node, index, parent) => {
+                  const isNotComment = i => {
+                    if (i < 0 || i > parent.children.length - 1) {
+                      return true
+                    }
+                    return !matchZone('EMBEDCOMMENT')(parent.children[i])
+                  }
+                  return {
+                    isFirst: isNotComment(index - 1),
+                    isLast: isNotComment(index + 1),
+                    data: {
+                      ...node.data,
+                      url: node.children[0].children[0].url
+                    }
+                  }
+                },
+                component: TeaserEmbedCommentSwitch,
+                editorModule: 'embedComment',
+                editorOptions: {
+                  lookupType: 'PARAGRAPH'
+                },
+                isVoid: true
+              },
               blocks.infoBox,
               blocks.pullQuote,
               base.paragraph,
@@ -653,6 +704,7 @@ const createSchema = ({
           },
           addProgressProps(base.centerFigure),
           teasers.carousel,
+          teasers.seriesNav,
           {
             matchMdast: () => false,
             editorModule: 'specialchars'

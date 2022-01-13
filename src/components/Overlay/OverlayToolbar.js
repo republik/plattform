@@ -5,13 +5,14 @@ import { css } from 'glamor'
 import { CloseIcon } from '../Icons'
 import { useColorContext } from '../Colors/useColorContext'
 import { mUp } from '../../theme/mediaQueries'
-import { sansSerifRegular16 } from '../Typography/styles'
+import { sansSerifMedium16 } from '../Typography/styles'
 
 export const height = 48
 
 const styles = {
   root: css({
     display: 'flex',
+    alignItems: 'center',
     height: `${height}px`,
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
@@ -20,8 +21,11 @@ const styles = {
     left: '0',
     right: '0',
     zIndex: 100,
+    ...sansSerifMedium16,
+    paddingLeft: 12,
     [mUp]: {
-      position: 'absolute'
+      position: 'absolute',
+      paddingLeft: 20
     }
   }),
   close: css({
@@ -37,6 +41,7 @@ const styles = {
     outline: 'none',
     padding: '0',
     background: 'transparent',
+    marginLeft: 'auto',
     // For some reason 'justify-content' doesn't work in iOS, so
     // use auto margin to center the icon inside the button.
     '& > svg': {
@@ -46,42 +51,10 @@ const styles = {
       width: '48px',
       flexBasis: '48px'
     }
-  }),
-  confirm: css({
-    height: `${height}px`,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    cursor: 'pointer',
-    border: 'none',
-    outline: 'none',
-    background: 'transparent',
-    ...sansSerifRegular16,
-    margin: '0 0 0 auto',
-    padding: '0 12px',
-    [mUp]: {
-      padding: '0 20px'
-    }
   })
 }
 
-export const OverlayToolbar = ({ children }) => {
-  const [colorScheme] = useColorContext()
-  return (
-    <div
-      {...styles.root}
-      {...colorScheme.set('borderColor', 'divider')}
-      {...colorScheme.set('backgroundColor', 'overlay')}
-    >
-      {children}
-    </div>
-  )
-}
-OverlayToolbar.propTypes = {
-  children: PropTypes.node.isRequired
-}
-
-export const OverlayToolbarClose = ({ onClick }) => {
+const OverlayToolbarClose = ({ onClick }) => {
   const [colorScheme] = useColorContext()
   return (
     <button {...styles.close} onClick={onClick}>
@@ -93,19 +66,23 @@ OverlayToolbarClose.propTypes = {
   onClick: PropTypes.func.isRequired
 }
 
-export const OverlayToolbarConfirm = ({ label, onClick }) => {
+export const OverlayToolbar = ({ title, onClose, children }) => {
   const [colorScheme] = useColorContext()
   return (
-    <button
-      {...styles.confirm}
-      {...colorScheme.set('color', 'primary')}
-      onClick={onClick}
+    <div
+      {...styles.root}
+      {...colorScheme.set('borderColor', 'divider')}
+      {...colorScheme.set('backgroundColor', 'overlay')}
     >
-      {label}
-    </button>
+      {title}
+      {onClose && <OverlayToolbarClose onClick={onClose} />}
+      {children}
+    </div>
   )
 }
-OverlayToolbarConfirm.propTypes = {
-  label: PropTypes.node.isRequired,
-  onClick: PropTypes.func.isRequired
+
+OverlayToolbar.propTypes = {
+  onClick: PropTypes.func,
+  title: PropTypes.node,
+  children: PropTypes.node
 }

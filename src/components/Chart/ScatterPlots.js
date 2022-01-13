@@ -1,53 +1,38 @@
-import React, { Fragment, useEffect, useState, useRef } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-import { css } from 'glamor'
 
 import ColorLegend from './ColorLegend'
 import { scaleLinear, scaleLog, scaleSqrt } from 'd3-scale'
-import { extent, ascending, min, max } from 'd3-array'
-import ContextBox, { ContextBoxValue } from './ContextBox'
+import { ascending, max } from 'd3-array'
 import {
   calculateAxis,
-  subsup,
   runSort,
   deduplicate,
   sortPropType,
-  last,
   get3EqualDistTicks,
-  getFormat
+  getFormat,
+  groupInColumns,
+  getColumnLayout,
+  xAccessor,
+  yAccessor
 } from './utils'
 import { getColorMapper } from './colorMaps'
-import { sansSerifRegular12, sansSerifMedium12 } from '../Typography/styles'
-import { intersperse } from '../../lib/helpers'
-import { useColorContext } from '../Colors/useColorContext'
+import { aggregateValues, getPlot, tickAccessor } from './ScatterPlots.utils'
+import ScatterPlotGroup from './ScatterPlotGroup'
+import { defaultProps } from './ChartContext'
 
-const X_TICK_HEIGHT = 6
+const COLUMN_PADDING = 28
+const COLUMN_TITLE_HEIGHT = 24
 
-const scales = {
+export const scales = {
   linear: scaleLinear,
   log: scaleLog
-}
-
-const styles = {
-  axisLabel: css({
-    ...sansSerifRegular12
-  }),
-  axisLine: css({
-    strokeWidth: '1px',
-    shapeRendering: 'crispEdges'
-  }),
-  inlineLabel: css({
-    ...sansSerifMedium12
-  }),
-  inlineSecondaryLabel: css({
-    ...sansSerifRegular12
-  })
 }
 
 const ScatterPlot = ({
   values,
   width,
-  height,
+  height: userHeight,
   heightRatio,
   x,
   xUnit,
@@ -74,6 +59,7 @@ const ScatterPlot = ({
   colorRanges,
   colorMap,
   colorSort,
+  colorDarkMapping,
   size,
   sizeRange,
   sizeRangeMax,
@@ -90,15 +76,17 @@ const ScatterPlot = ({
   paddingTop,
   paddingRight,
   paddingBottom,
-  paddingLeft
+  paddingLeft,
+  tooltipLabel,
+  tooltipBody,
+  column,
+  columnSort,
+  columnFilter,
+  columns,
+  minInnerWidth,
+  annotations,
+  allowCanvasRendering
 }) => {
-  const [hover, setHover] = useState([])
-  const [hoverTouch, setHoverTouch] = useState()
-
-  const containerRef = useRef()
-  const hoverRectRef = useRef()
-  const [colorScheme] = useColorContext()
-
   const data = values
     .filter(d => d[x] && d[x].length > 0 && d[y] && d[y].length > 0)
     .map(d => {
@@ -111,36 +99,42 @@ const ScatterPlot = ({
       }
     })
 
-  const innerWidth = width - paddingLeft - paddingRight
-  const plotHeight =
-    height || innerWidth * heightRatio + paddingTop + paddingBottom
-  const innerHeight = plotHeight - paddingTop - paddingBottom
+  const groupedData = groupInColumns(data, column, columnFilter)
+
+  const columnTitleHeight = column ? COLUMN_TITLE_HEIGHT : 0
+  const { height, innerWidth, innerHeight, gx, gy } = getColumnLayout(
+    columns,
+    groupedData,
+    width - paddingLeft - paddingRight,
+    minInnerWidth,
+    innerWidth => (userHeight || innerWidth * heightRatio) + columnTitleHeight,
+    columnSort,
+    paddingTop,
+    paddingRight + COLUMN_PADDING / 2,
+    paddingBottom,
+    paddingLeft + COLUMN_PADDING / 2,
+    COLUMN_PADDING,
+    true
+  )
 
   // setup x axis
-  let xValues = data.map(d => d.x)
-  if (xTicks) {
-    xValues = xValues.concat(xTicks)
-  }
-  if (xLines) {
-    xValues = xValues.concat(xLines.map(line => line.tick))
-  }
-  const plotX = scales[xScale]()
-    .domain(extent(xValues))
-    .range([paddingLeft, paddingLeft + innerWidth])
-  const plotXNice =
-    xNice === undefined
-      ? Math.min(Math.max(Math.round(innerWidth / 150), 3), 5)
-      : xNice
-  if (plotXNice) {
-    plotX.nice(plotXNice)
-  }
+  const xValues = aggregateValues(data, xAccessor, xTicks, xLines)
+    .concat(annotations.map(annotation => annotation.x1))
+    .concat(annotations.map(annotation => annotation.x2))
+  const plotX = getPlot(
+    xScale,
+    xValues,
+    [paddingLeft, innerWidth + paddingLeft],
+    xNice,
+    innerWidth
+  )
   const xAxis = calculateAxis(
     xNumberFormat || numberFormat,
     tLabel,
     plotX.domain(),
     undefined,
     {
-      ticks: xLines ? xLines.map(line => line.tick) : xTicks
+      ticks: xLines ? xLines.map(tickAccessor) : xTicks
     }
   ) // xUnit is rendered separately
   const plotXLines =
@@ -148,34 +142,27 @@ const ScatterPlot = ({
     (
       xTicks || (xScale === 'log' ? get3EqualDistTicks(plotX) : xAxis.ticks)
     ).map(tick => ({ tick }))
-  // ensure highest value is last: the last value is labled with the unit
+  // ensure highest value is last: the last value is labelled with the unit
   plotXLines.sort((a, b) => ascending(a.tick, b.tick))
 
   // setup y axis
-  let yValues = data.map(d => d.y)
-  if (yTicks) {
-    yValues = yValues.concat(yTicks)
-  }
-  if (yLines) {
-    yValues = yValues.concat(yLines.map(line => line.tick))
-  }
-  const plotY = scales[yScale]()
-    .domain(extent(yValues))
-    .range([innerHeight + paddingTop, paddingTop])
-  const plotYNice =
-    yNice === undefined
-      ? Math.min(Math.max(Math.round(innerHeight / 150), 3), 5)
-      : yNice
-  if (plotYNice) {
-    plotY.nice(plotYNice)
-  }
+  const yValues = aggregateValues(data, yAccessor, yTicks, yLines)
+    .concat(annotations.map(annotation => annotation.y1))
+    .concat(annotations.map(annotation => annotation.y2))
+  const plotY = getPlot(
+    yScale,
+    yValues,
+    [innerHeight + paddingTop, paddingTop + columnTitleHeight],
+    yNice,
+    innerHeight
+  )
   const yAxis = calculateAxis(
     yNumberFormat || numberFormat,
     tLabel,
     plotY.domain(),
     tLabel(yUnit),
     {
-      ticks: yLines ? yLines.map(line => line.tick) : yTicks
+      ticks: yLines ? yLines.map(tickAccessor) : yTicks
     }
   )
   const plotYLines =
@@ -195,11 +182,6 @@ const ScatterPlot = ({
     .filter(Boolean)
   runSort(colorSort, colorValues)
 
-  let plotColorRange = colorRanges[colorRange] || colorRange
-  if (!plotColorRange) {
-    plotColorRange =
-      colorValues.length > 3 ? colorRanges.discrete : colorRanges.sequential3
-  }
   const colorMapper = getColorMapper(
     { colorMap, colorRanges, colorRange },
     colorValues
@@ -207,15 +189,18 @@ const ScatterPlot = ({
 
   const yLinesPaddingLeft = paddingLeft < 2 ? paddingLeft : 0
 
-  const displayedColorLegendValues = []
-    .concat(
-      colorLegend &&
-        (colorLegendValues || colorValues).map(colorValue => ({
-          color: colorMapper(colorValue),
-          label: colorValue
-        }))
-    )
-    .filter(Boolean)
+  const showColorLegend = color !== column
+  const displayedColorLegendValues = showColorLegend
+    ? []
+        .concat(
+          colorLegend &&
+            (colorLegendValues || colorValues).map(colorValue => ({
+              color: colorMapper(colorValue),
+              label: colorValue
+            }))
+        )
+        .filter(Boolean)
+    : []
 
   const rSize = scaleSqrt()
     .domain([0, max(data, d => d.size)])
@@ -226,329 +211,63 @@ const ScatterPlot = ({
         : sizeRangeMax
     ])
 
-  const symbols = data.map((value, i) => {
-    return {
-      key: `symbol${i}`,
-      value,
-      cx: plotX(value.x),
-      cy: plotY(value.y),
-      r: rSize(value.size)
-    }
-  })
-
-  const focusRef = useRef()
-  const focus = (focusRef.current = event => {
-    if (!symbols) {
-      return
-    }
-    const { left, top } = containerRef.current.getBoundingClientRect()
-    let hoverTouchItem = false
-    let currentEvent = event
-    if (currentEvent.changedTouches) {
-      hoverTouchItem = true
-      currentEvent = currentEvent.changedTouches[0]
-    }
-
-    const focusX = currentEvent.clientX - left
-    const focusY = currentEvent.clientY - top
-
-    const withDistance = symbols.map(symbol => {
-      return {
-        symbol,
-        distance:
-          Math.sqrt(
-            Math.pow(symbol.cx - focusX, 2) + Math.pow(symbol.cy - focusY, 2)
-          ) - symbol.r
-      }
-    })
-    let hoverItems = withDistance.filter(({ distance }) => distance < 1)
-    if (hoverItems.length === 0) {
-      const minDistance = min(withDistance, d => d.distance)
-      if (minDistance < 10) {
-        hoverItems = withDistance.filter(
-          ({ distance }) => distance === minDistance
-        )
-      }
-    }
-    if (hoverItems.length) {
-      event.preventDefault()
-    }
-    hoverItems = hoverItems.map(({ symbol }) => symbol)
-    setHover(hoverItems)
-    setHoverTouch(hoverTouchItem)
-  })
-  const blur = () => {
-    setHover([])
-  }
-
-  useEffect(() => {
-    const focusCallback = event => focusRef.current(event)
-    const blurCallback = () => {
-      setHover([])
-    }
-    const rect = hoverRectRef.current
-    rect.addEventListener('touchstart', focusCallback, {
-      passive: false
-    })
-    rect.addEventListener('touchmove', focusCallback)
-    rect.addEventListener('touchend', blurCallback)
-    return () => {
-      rect.removeEventListener('touchstart', focusCallback, {
-        passive: false
-      })
-      rect.removeEventListener('touchmove', focusCallback)
-      rect.removeEventListener('touchend', blurCallback)
-    }
-  }, [])
-
-  const renderHover = ({ width, height, xFormat, yFormat }) => {
-    if (!hover.length) {
-      return null
-    }
-
-    const sizeFormat = getFormat(sizeNumberFormat || numberFormat, tLabel)
-
-    const { cx, cy, r } = hover.sort((a, b) => ascending(a.cy, b.cy))[0]
-    const top = hoverTouch || cy > height / 3
-    const yOffset = r + (hoverTouch ? 40 : 12)
-    return (
-      <ContextBox
-        orientation={top ? 'top' : 'below'}
-        x={cx}
-        y={cy + (top ? -yOffset : yOffset)}
-        contextWidth={width}
-      >
-        {hover.map(({ value }, i) => (
-          <ContextBoxValue
-            key={`${value.datum[label]}${i}`}
-            label={value.datum[label]}
-          >
-            {intersperse(
-              []
-                .concat(
-                  value.datum[detail] &&
-                    value.datum[detail]
-                      .split('\n')
-                      .map((d, i) => (
-                        <Fragment key={`d${i}`}>{subsup(d)}</Fragment>
-                      ))
-                )
-                .concat([
-                  yShowValue && (
-                    <Fragment key='y'>
-                      {yFormat(value.y)} {subsup(yUnit)}
-                    </Fragment>
-                  ),
-                  xShowValue && (
-                    <Fragment key='x'>
-                      {xFormat(value.x)} {subsup(xUnit)}
-                    </Fragment>
-                  ),
-                  sizeShowValue && (
-                    <Fragment key='size'>
-                      {sizeFormat(value.size)} {subsup(sizeUnit)}
-                    </Fragment>
-                  )
-                ])
-                .filter(Boolean),
-              (item, index) => (
-                <br key={`br${index}`} />
-              )
-            )}
-          </ContextBoxValue>
-        ))}
-      </ContextBox>
-    )
+  const contextBoxProps = {
+    tooltipLabel,
+    tooltipBody,
+    label,
+    yShowValue,
+    xShowValue,
+    sizeShowValue,
+    detail,
+    yUnit,
+    xUnit,
+    sizeUnit,
+    sizeFormat: getFormat(sizeNumberFormat || numberFormat, tLabel)
   }
 
   return (
     <>
       <ColorLegend inline values={displayedColorLegendValues} />
-      <div style={{ position: 'relative' }} ref={containerRef}>
-        <svg width={width} height={plotHeight}>
-          <desc>{description}</desc>
-          {symbols.map((symbol, i) => (
-            <circle
-              key={symbol.key}
-              style={{ opacity }}
-              {...colorScheme.set(
-                'fill',
-                colorMapper(colorAccessor(symbol.value)),
-                'charts'
-              )}
-              cx={symbol.cx}
-              cy={symbol.cy}
-              r={symbol.r}
-            />
-          ))}
-          {(inlineLabel || inlineSecondaryLabel) &&
-            symbols
-              .filter(
-                ({ value: { datum } }) =>
-                  datum[inlineLabel] || datum[inlineSecondaryLabel]
-              )
-              .map((symbol, i) => {
-                const { datum } = symbol.value
-                const primary = datum[inlineLabel]
-                const secondary = datum[inlineSecondaryLabel]
-                const pos = datum[inlineLabelPosition] || 'center'
-                let textAnchor = 'middle'
-                let yOffset = 0
-                let xOffset = 0
-                if (pos === 'left') {
-                  textAnchor = 'end'
-                  xOffset = -(symbol.r + 5)
-                }
-                if (pos === 'right') {
-                  textAnchor = 'start'
-                  xOffset = symbol.r + 5
-                }
-                if (pos === 'top' || pos === 'bottom') {
-                  yOffset = symbol.r + 5 + (primary && secondary ? 15 : 7)
-                  if (pos === 'top') {
-                    yOffset = -yOffset
-                  }
-                }
-
-                return (
-                  <g
-                    key={`inlineLabel${symbol.key}`}
-                    textAnchor={textAnchor}
-                    transform={`translate(${symbol.cx + xOffset},${symbol.cy +
-                      yOffset})`}
-                  >
-                    {primary && (
-                      <text
-                        {...styles.inlineLabel}
-                        {...colorScheme.set('fill', 'text')}
-                        dy={secondary ? '-0.3em' : '0.4em'}
-                      >
-                        {subsup.svg(primary)}
-                      </text>
-                    )}
-                    {secondary && (
-                      <text
-                        {...styles.inlineSecondaryLabel}
-                        {...colorScheme.set('fill', 'text')}
-                        dy={primary ? '0.9em' : '0.4em'}
-                      >
-                        {subsup.svg(secondary)}
-                      </text>
-                    )}
-                  </g>
-                )
-              })}
-          {hover.map((symbol, i) => (
-            <circle
-              key={`hover${symbol.key}`}
-              fill='none'
-              {...colorScheme.set('stroke', 'text')}
-              cx={symbol.cx}
-              cy={symbol.cy}
-              r={symbol.r}
-            />
-          ))}
-          {plotYLines.map(({ tick, label, base }, i) => (
-            <g
-              key={tick}
-              transform={`translate(${yLinesPaddingLeft},${plotY(tick)})`}
+      <div style={{ position: 'relative', width, height }}>
+        {groupedData.map(({ values, key }) => {
+          const filterByColumn = d => !d.column || d.column === key
+          return (
+            <div
+              key={key || 1}
+              style={{ position: 'absolute', left: gx(key), top: gy(key) }}
             >
-              <line
-                {...styles.axisLine}
-                {...colorScheme.set('stroke', 'text')}
-                x2={width - paddingRight - yLinesPaddingLeft}
-                style={{
-                  opacity:
-                    base || (base === undefined && tick === 0) ? 0.8 : 0.17
-                }}
+              <ScatterPlotGroup
+                values={values}
+                plotX={plotX}
+                plotY={plotY}
+                rSize={rSize}
+                description={description}
+                title={key}
+                inlineLabel={inlineLabel}
+                inlineSecondaryLabel={inlineSecondaryLabel}
+                inlineLabelPosition={inlineLabelPosition}
+                plotXLines={plotXLines.filter(filterByColumn)}
+                plotYLines={plotYLines.filter(filterByColumn)}
+                opacity={opacity}
+                width={innerWidth}
+                height={innerHeight}
+                paddingTop={paddingTop}
+                paddingLeft={paddingLeft}
+                paddingRight={paddingRight}
+                paddingBottom={paddingBottom}
+                yLinesPaddingLeft={yLinesPaddingLeft}
+                xAxis={xAxis}
+                yAxis={yAxis}
+                maxYLine={maxYLine}
+                getColor={d => colorMapper(colorAccessor(d))}
+                xUnit={xUnit}
+                annotations={annotations.filter(filterByColumn)}
+                contextBoxProps={contextBoxProps}
+                // canvas does not support dark mapping yet
+                allowCanvasRendering={allowCanvasRendering && !colorDarkMapping}
               />
-              <text
-                {...styles.axisLabel}
-                {...colorScheme.set('fill', 'text')}
-                dy='-3px'
-              >
-                {subsup.svg(
-                  label || yAxis.axisFormat(tick, last(plotYLines, i))
-                )}
-              </text>
-            </g>
-          ))}
-          {plotXLines.map(({ tick, label, textAnchor, base }, i) => {
-            if (!textAnchor) {
-              textAnchor = 'middle'
-              if (last(plotXLines, i)) {
-                textAnchor = 'end'
-              }
-              if (i === 0 && paddingLeft < 20) {
-                textAnchor = 'start'
-              }
-            }
-            return (
-              <g
-                key={`x${tick}`}
-                transform={`translate(${plotX(tick)},${paddingTop +
-                  innerHeight +
-                  X_TICK_HEIGHT})`}
-              >
-                <line
-                  {...styles.axisLine}
-                  {...colorScheme.set('stroke', 'text')}
-                  y2={
-                    -(
-                      (maxYLine
-                        ? plotY(plotY.domain()[0]) - plotY(maxYLine.tick)
-                        : innerHeight) + X_TICK_HEIGHT
-                    )
-                  }
-                  style={{
-                    opacity:
-                      base || (base === undefined && tick === 0) ? 0.8 : 0.17
-                  }}
-                />
-                <text
-                  {...styles.axisLabel}
-                  {...colorScheme.set('fill', 'text')}
-                  y={5}
-                  dy='0.6em'
-                  textAnchor={textAnchor}
-                >
-                  {subsup.svg(
-                    label || xAxis.axisFormat(tick, last(plotXLines, i))
-                  )}
-                </text>
-              </g>
-            )
-          })}
-          <text
-            x={paddingLeft + innerWidth}
-            y={paddingTop + innerHeight + 28 + X_TICK_HEIGHT}
-            textAnchor='end'
-            {...styles.axisLabel}
-            {...colorScheme.set('fill', 'text')}
-          >
-            {xUnit}
-          </text>
-          <rect
-            fill='transparent'
-            width={width}
-            height={plotHeight}
-            onMouseEnter={e => focus(e)}
-            onMouseMove={e => focus(e)}
-            onMouseLeave={e => blur(e)}
-            ref={
-              /* touch events are added via ref for { passive: false } on touchstart
-               * react does not support setting passive, which defaults to true in newer browsers
-               * https://github.com/facebook/react/issues/6436
-               */
-              hoverRectRef
-            }
-          />
-        </svg>
-        {renderHover({
-          width,
-          height: plotHeight,
-          xFormat: xAxis.format,
-          yFormat: yAxis.format
+            </div>
+          )
         })}
       </div>
     </>
@@ -566,6 +285,7 @@ export const propTypes = {
   xTicks: PropTypes.arrayOf(PropTypes.number),
   xLines: PropTypes.arrayOf(
     PropTypes.shape({
+      column: PropTypes.string,
       tick: PropTypes.number.isRequired,
       label: PropTypes.string,
       base: PropTypes.bool,
@@ -581,6 +301,7 @@ export const propTypes = {
   yTicks: PropTypes.arrayOf(PropTypes.number),
   yLines: PropTypes.arrayOf(
     PropTypes.shape({
+      column: PropTypes.string,
       tick: PropTypes.number.isRequired,
       label: PropTypes.string,
       base: PropTypes.bool
@@ -616,29 +337,32 @@ export const propTypes = {
   paddingTop: PropTypes.number.isRequired,
   paddingRight: PropTypes.number.isRequired,
   paddingBottom: PropTypes.number.isRequired,
-  paddingLeft: PropTypes.number.isRequired
+  paddingLeft: PropTypes.number.isRequired,
+  tooltipLabel: PropTypes.string,
+  tooltipBody: PropTypes.string,
+  column: PropTypes.string,
+  columnSort: sortPropType,
+  columnFilter: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      test: PropTypes.string.isRequired
+    })
+  ),
+  columns: PropTypes.number.isRequired,
+  minInnerWidth: PropTypes.number.isRequired,
+  annotations: PropTypes.arrayOf(
+    PropTypes.shape({
+      column: PropTypes.string,
+      x1: PropTypes.string.isRequired,
+      x2: PropTypes.string.isRequired,
+      y1: PropTypes.string.isRequired,
+      y2: PropTypes.string.isRequired,
+      label: PropTypes.string
+    }).isRequired
+  ).isRequired
 }
 
-ScatterPlot.defaultProps = {
-  x: 'value',
-  y: 'value',
-  xScale: 'linear',
-  xShowValue: true,
-  yScale: 'linear',
-  yShowValue: true,
-  opacity: 1,
-  numberFormat: 's',
-  colorLegend: true,
-  paddingTop: 15,
-  paddingRight: 1,
-  paddingBottom: 50,
-  paddingLeft: 30,
-  size: 'size',
-  sizeRangeMax: 4,
-  label: 'label',
-  heightRatio: 1,
-  sizeShowValue: false
-}
+ScatterPlot.defaultProps = defaultProps.ScatterPlot
 
 ScatterPlot.propTypes = propTypes
 

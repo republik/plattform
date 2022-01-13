@@ -16,7 +16,7 @@ import { Sub, Sup } from '../../../components/Typography'
 import { P, Subhead, A } from '../../../components/Typography/Editorial'
 import { List, ListItem } from '../../../components/List'
 
-const createSchema = ({ ...args } = {}) => {
+const createNewsletterWebSchema = ({ ...args } = {}) => {
   return createNewsletterSchema({
     H2: Subhead,
     Paragraph: P,
@@ -39,4 +39,4 @@ const createSchema = ({ ...args } = {}) => {
   })
 }
 
-export default createSchema
+export default createNewsletterWebSchema

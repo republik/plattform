@@ -167,7 +167,140 @@ lat,lon,name,category
 </div>
 ```
 
+### Map with custom tooltips
+
+Supported replacements:
+- `formattedValue`
+- point attributes, e.g. `name`, or `Land`
+
+```react
+<div>
+  <CsvChart
+    config={{
+      type: 'GenericMap',
+      heightRatio: 0.5,
+      points: true,
+      colorLegend: false,
+      sizeRangeMax: 300,
+      unit: 't CO<sub>2</sub> pro Kopf',
+      features: {
+        url:
+          '/static/geo/world-atlas-110m.json',
+        object: 'land',
+      },
+      tooltipLabel: '{name}, {Land}',
+      tooltipBody: 'CO<sub>2</sub> footprint: {formattedValue} tons per year per person.\nThinking of moving to {name}?'
+    }}
+    values={`
+      lon,lat,name,value,Land
+      -81.6662,41.4609,"Cleveland",24.7086,"USA"
+      126.6235,45.72794,"Harbin",5.8252,"China"
+      114.4906,38.05647,"Shijiazhuang",7.409,"China"
+      117.2686,31.84478,"Hefei",6.4152,"China"
+      -1.97333,52.5129,"Birmingham",10.5696,"UK"
+      76.8976,43.2746,"Almaty",13.8718,"Kazakhstan"
+      125.2966,43.87748,"Changchun",7.5739,"China"
+      -76.6564,39.3269,"Baltimore",20.2459,"USA"
+      2.11335,41.4789,"Barcelona",7.1442,"Spain"
+      106.6912,10.87065,"Ho Chi Minh City",2.2753,"Viet Nam"
+      78.4717,17.4518,"Hyderabad",3.1619,"India"
+      18.5775,-33.9625,"Cape Town",7.7099,"South Africa"
+      4.41519,51.9588,"Rotterdam",11.0501,"Netherlands"
+      -70.6611,-33.4681,"Santiago",4.3807,"Chile"
+      117.0421,36.67991,"Jinan",8.5077,"China"
+      -117.1063,32.7846,"San Diego",14.4791,"USA"
+      -90.3813,38.6951,"St. Louis",24.0629,"USA"
+      -73.6943,45.5521,"Montreal",10.136,"Canada"
+      136.8378,35.12043,"Nagoya",3.7218,"Japan"
+      120.411,36.28456,"Qingdao",8.1821,"China"
+      32.7928,39.9609,"Ankara",6.8533,"Turkey"
+      30.3371,59.9087,"Saint Petersburg",6.9829,"Russia"
+      54.454,24.4269,"Abu Dhabi",32.8602,"UAE"
+      9.13365,45.5798,"Milan",7.9525,"Italy"
+      34.8784,32.1031,"Tel Aviv-Yafo",11.5437,"Israel"
+      121.6263,38.99737,"Dalian",9.3952,"China"
+      153.0552,-27.51827,"Brisbane",19.0862,"Australia"
+      118.5938,24.78757,"Quanzhou",8.4048,"China"
+      120.6562,27.82322,"Wenzhou",6.4134,"China"
+      50.0839,26.3944,"Ad Damman",19.8472,"Saudi Arabia"
+      72.9619,19.1761,"Mumbai",1.4947,"India"
+      51.4579,25.2746,"Doha",28.7132,"Qatar"
+      106.5132,29.57461,"Chongqing",6.5559,"China"
+      113.6637,34.76283,"Zhengzhou",7.179,"China"
+      -93.2164,44.9888,"Minneapolis",21.7644,"USA"
+      -2.36078,53.4913,"Manchester",9.4653,"UK"
+      13.405,52.5129,"Berlin",10.4007,"Germany"
+      -46.6011,-23.5479,"Sao Paulo",1.698,"Brazil"
+      106.233,38.48197,"Yinchuan",25.2636,"China"
+      -122.2551,47.45143,"Seattle",17.2947,"USA"
+      -84.3574,33.8844,"Atlanta",18.7141,"USA"
+      23.7196,38.0211,"Athens",10.7727,"Greece"
+      -104.9711,39.72846,"Denver",19.4066,"USA"
+      112.5425,37.83523,"Taiyuan",10.1129,"China"
+      109.8445,40.62399,"Baotou",18.4846,"China"
+      -71.1091,42.3653,"Boston",19.0138,"USA"
+      111.672,40.83059,"Huhot",22.0458,"China"
+      104.0681,30.69432,"Chengdu",4.3541,"China"
+      108.9148,34.27534,"Xi'an",7.285,"China"
+      150.9992,-33.82363,"Sydney",11.6716,"Australia"
+      129.0178,35.19027,"Pusan",13.7911,"South Korea"
+      88.283,22.4544,"Kolkata",1.7307,"India"
+      -3.71157,40.4176,"Madrid",8.7745,"Spain"
+      116.4689,23.44762,"Shantou",3.9664,"China"
+      145.0297,-37.8087,"Melbourne",13.9293,"Australia"
+      123.3946,41.79495,"Shenyang",8.0044,"China"
+      118.7815,32.0514,"Nanjing",7.066,"China"
+      -79.5519,43.722,"Toronto",9.7113,"Canada"
+      120.2954,30.19798,"Hangzhou",7.0071,"China"
+      114.2986,30.5573,"Wuhan",7.0301,"China"
+      -112.0331,33.47676,"Phoenix",15.8974,"USA"
+      121.3855,25.00582,"Taipei",6.1994,"Taiwan"
+      101.6246,3.073899,"Shah Alam",8.5001,"Malaysia"
+      -99.0966,19.4655,"Mexico City",2.808,"Mexico"
+      -58.5965,-34.6496,"Buenos Aires",4.1468,"Argentina"
+      135.5467,34.7454,"Osaka",3.785,"Japan"
+      -77.1072,38.9262,"Washington D.C.",18.9625,"USA"
+      39.2097,21.5221,"Jeddah",19.198,"Saudi Arabia"
+      -95.4129,29.7709,"Houston",14.6026,"USA"
+      7.04013,51.33,"Cologne",10.0302,"Germany"
+      77.1916,28.6125,"New Delhi",2.5576,"India"
+      -122.0793,37.48175,"San Jose",17.4855,"USA"
+      -75.1326,39.9967,"Philadelphia",19.5442,"USA"
+      -83.1926,42.456,"Detroit",25.4882,"USA"
+      29.0052,41.0194,"Istanbul",5.2215,"Turkey"
+      117.2377,39.08638,"Tianjin",8.9609,"China"
+      -96.9646,32.8364,"Dallas",16.4596,"USA"
+      2.33188,48.8549,"Paris",7.7125,"France"
+      100.5417,13.75945,"Samut Prakan",5.3063,"Thailand"
+      -80.2208,26.133,"Miami",15.9651,"USA"
+      47.9852,29.2763,"Al-Ahmadi",29.8952,"Kuwait"
+      106.8005,-6.289,"Jakarta",2.3034,"Indonesia"
+      116.3516,39.91616,"Beijing",4.2042,"China"
+      31.3098,30.5231,"Benha",2.5246,"Egypt"
+      -0.147562,51.4941,"London",10.4272,"UK"
+      37.6495,55.7439,"Moscow",6.8852,"Russia"
+      51.2507,35.7061,"Tehran",8.2422,"Iran"
+      28.1444,-26.1077,"Johannesburg",9.524,"South Africa"
+      120.4197,31.5094,"Wuxi",9.1925,"China"
+      55.3454,25.241,"Dubai",22.2961,"UAE"
+      46.7299,24.6785,"Riyadh",20.6706,"Saudi Arabia"
+      139.6472,35.72358,"Tokyo/Yokohama",4.0243,"Japan"
+      -87.82,41.804,"Chicago",21.0648,"USA"
+      103.8072,1.350698,"Country of Singapore",30.7692,"Singapore"
+      121.4062,31.17447,"Shanghai",7.6019,"China"
+      -118.08,34.00594,"Los Angeles",14.5675,"USA"
+      114.1044,22.38772,"Hong Kong SAR",34.5765,"China"
+      -73.947,40.7587,"New York",17.1069,"USA"
+      113.4872,22.92145,"Guangzhou",6.1392,"China"
+      126.9629,37.48175,"Seoul",12.989,"South Korea"
+    `.trim()} />
+  <ChartLegend>Geobasis: <Editorial.A href="https://github.com/topojson/world-atlas">World Atlas TopoJSON</Editorial.A></ChartLegend>
+</div>
+```
+
 ### World Wide Country Choropleth
+
+Use `missingDataLegend` to define a label for missing data. Without `missingDataLegend` it will complain about missing data, ensuring that you do not miss or miss match a country (or with other base data e.g. a small municipality).
 
 ```react
 <div>
@@ -763,6 +896,14 @@ JU,0.257
 
 #### Without Lakes
 
+**Tooltip:** following replacements are supported:
+- `value`: the raw number, e.g. `0.487`
+- `formattedValue`: the formatted number, e.g. `49%`
+- data point attributes, e.g. `language`
+- feature attributes, as defined in the features json file, e.g. `name` (the name of the feature) or `feature` (its key)
+
+**Pro tip:** define your own color legend with the `thresholdsLegend` prop. To revert to the default label for a given color, just omit the `label` attribute.
+
 ```react
 <div>
   <ChartTitle>Fonds zur Beschaffung des Kampfflugzeugs Gripen</ChartTitle>
@@ -773,41 +914,48 @@ JU,0.257
       "unit": "Jastimmen",
       "choropleth": true,
       "numberFormat": ".0%",
-      "thresholds": [0.3,0.4,0.5,0.6,0.7],
-      "colorRange": ["rgb(103,0,13)", "rgb(187,21,26)", "rgb(239,69,51)", "rgb(75,151,201)", "rgb(24,100,170)", "rgb(8,48,107)"],
+      "thresholdsLegend": [
+        {"label": "Roses are red"}, 
+        {minValue: 0.4, "label": "Gripens are blue"}, 
+        {minValue: 0.5, "label": "I want seven of them"}, 
+        {minValue: 0.6, "label": "And so do you"}
+      ], 
+      "colorRange": ["rgb(187,21,26)", "rgb(239,69,51)", "rgb(75,151,201)", "rgb(24,100,170)"],
       "features": {
         "url": "/static/geo/ch-cantons-wo-lakes.json",
         "object": "cantons"
-      }
+      },
+      "tooltipLabel": "What about {name}?",
+      "tooltipBody": "{formattedValue} of people in {name} ({feature}) voted in favour of purchasing new military airplanes.\nBtw, did you know that they speak {language} in this canton?"
     }}
     values={`
-feature,value
-ZH,0.487
-BE,0.491
-LU,0.543
-UR,0.624
-SZ,0.615
-OW,0.638
-NW,0.682
-GL,0.599
-ZG,0.6
-FR,0.406
-SO,0.503
-BS,0.323
-BL,0.425
-SH,0.494
-AR,0.511
-AI,0.608
-SG,0.5
-GR,0.507
-AG,0.519
-TG,0.556
-TI,0.453
-VD,0.349
-VS,0.381
-NE,0.309
-GE,0.322
-JU,0.257
+feature,value,language
+ZH,0.487,German
+BE,0.491,French and German
+LU,0.543,German
+UR,0.624,German
+SZ,0.615,German
+OW,0.638,German
+NW,0.682,German
+GL,0.599,German
+ZG,0.6,German
+FR,0.406,French and German
+SO,0.503,German
+BS,0.323,German
+BL,0.425,German
+SH,0.494,German
+AR,0.511,German
+AI,0.608,German
+SG,0.5,German
+GR,0.507,"German, Italian and Romansh"
+AG,0.519,German
+TG,0.556,German
+TI,0.453,Italian
+VD,0.349,French
+VS,0.381,French and German
+NE,0.309,French
+GE,0.322,French
+JU,0.257,French
     `.trim()} />
   <ChartLegend>Quelle: <Editorial.A href="https://www.bk.admin.ch/ch/d/pore/va/20140518/can584.html">Bundeskanzlei</Editorial.A></ChartLegend>
 </div>

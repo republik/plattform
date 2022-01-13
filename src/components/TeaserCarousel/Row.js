@@ -73,11 +73,23 @@ const styles = {
   })
 }
 
-const Row = ({ children }) => {
+const Row = ({ initialScrollTileIndex, children, isSeriesNav }) => {
   const context = useContext(CarouselContext)
   const overflow = useRef()
   const [{ left, right }, setArrows] = useState({ left: false, right: false })
   const [colorScheme] = useColorContext()
+
+  useEffect(() => {
+    if (!(initialScrollTileIndex > 0)) {
+      return
+    }
+    const scroller = overflow.current
+    const target = Array.from(scroller.children)[initialScrollTileIndex + 1] // + 1 for pad element
+
+    scroller.scrollLeft += Math.round(
+      target.getBoundingClientRect().left - PADDING
+    )
+  }, [initialScrollTileIndex])
 
   useEffect(() => {
     const scroller = overflow.current
@@ -114,12 +126,23 @@ const Row = ({ children }) => {
     }
   }
 
+  const shouldCenter = isSeriesNav && !(left || right)
+
   return (
     <div role='group' {...styles.container}>
       <div {...styles.overflow} ref={overflow}>
-        <div {...styles.pad} />
+        <div
+          {...styles.pad}
+          style={{ margin: shouldCenter ? 'auto' : undefined }}
+        />
         {children}
-        <div {...styles.pad} style={{ width: PADDING - TILE_MARGIN_RIGHT }} />
+        <div
+          {...styles.pad}
+          style={{
+            width: PADDING - TILE_MARGIN_RIGHT,
+            margin: shouldCenter ? 'auto' : undefined
+          }}
+        />
       </div>
       <button
         {...styles.arrow}

@@ -18,6 +18,7 @@ const swissPartyColors = {
   SP: '#F0554D',
   JUSO: '#F0554D',
   GPS: '#84B547',
+  GRÜNE: '#84B547',
   JG: '#84B547',
   GLP: '#C4C43D',
   JGLP: '#C4C43D',
@@ -25,6 +26,7 @@ const swissPartyColors = {
   JBDP: '#E6C820',
   EVP: '#DEAA28',
   JEVP: '#DEAA28',
+  MITTE: '#D6862B',
   CVP: '#D6862B',
   JCVP: '#D6862B',
   CSPO: '#E3BA24',
@@ -55,7 +57,8 @@ const swissPartyColors = {
   OTHER: '#B8B8B8'
 }
 
-const colorMaps = { swissPartyColors }
+export const colorMaps = { swissPartyColors }
+export const CHART_DEFAULT_FILL = '#E0E0E0'
 
 export const getColorMapper = (props, colorValues = []) => {
   const colorMapProp = props.colorMap
@@ -67,7 +70,7 @@ export const getColorMapper = (props, colorValues = []) => {
         return map
       }, {})
 
-    return (value = '') => colorMap[value.toUpperCase()] || '#E0E0E0'
+    return (value = '') => colorMap[value.toUpperCase()] || CHART_DEFAULT_FILL
   }
   let colorRange = props.colorRanges[props.colorRange] || props.colorRange
   if (!colorRange) {

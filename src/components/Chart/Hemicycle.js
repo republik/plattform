@@ -14,6 +14,7 @@ import { arc as d3arc } from 'd3-shape'
 import { getTextColor } from './utils'
 import { getColorMapper } from './colorMaps'
 import { useColorContext } from '../Colors/useColorContext'
+import { defaultProps } from './ChartContext'
 
 const styles = {
   axis: css({
@@ -274,13 +275,6 @@ export const propTypes = {
 
 Hemicycle.propTypes = propTypes
 
-Hemicycle.defaultProps = {
-  color: 'label',
-  group: 'year',
-  values: [],
-  inlineLabelThreshold: 10,
-  padding: 0,
-  colorMap: 'swissPartyColors'
-}
+Hemicycle.defaultProps = defaultProps.Hemicycle
 
 export default Hemicycle

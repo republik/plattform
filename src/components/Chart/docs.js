@@ -45,6 +45,7 @@ const props = Object.keys(baseChartPropTypes).reduce((all, chart) => {
 const IGNORE_KEYS = [
   // for react usage only
   't',
+  'tLabel',
   'children',
   'values',
   'width',
@@ -147,7 +148,8 @@ const chartPages = charts.map(key => {
     return null
   }
 
-  return markdown`### ${key}
+  return (
+    <div key={key}>{markdown`### ${key}
 
   ${label}
 
@@ -160,7 +162,8 @@ const chartPages = charts.map(key => {
     />
   )}
 
-  `
+  `}</div>
+  )
 })
 
 const allProps = markdown`

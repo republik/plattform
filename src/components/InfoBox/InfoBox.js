@@ -6,6 +6,7 @@ import { Collapsable } from '../Collapsable'
 import { mUp, onlyS } from '../../theme/mediaQueries'
 
 export const IMAGE_SIZES = {
+  XXS: 80,
   XS: 120,
   S: 155,
   M: 240,
@@ -23,6 +24,9 @@ const figureChildStyles = Object.keys(IMAGE_SIZES).reduce(
       '& figure': {
         width: size,
         maxWidth: '100%'
+      },
+      [mUp]: {
+        minHeight: size
       }
     })
     return styles
@@ -36,7 +40,6 @@ const figureChildStyles = Object.keys(IMAGE_SIZES).reduce(
       },
       [mUp]: {
         position: 'relative',
-        minHeight: IMAGE_SIZES.S,
         '& figure': {
           position: 'absolute',
           left: 0,
@@ -81,13 +84,13 @@ const textChildStyles = Object.keys(IMAGE_SIZES).reduce((styles, key) => {
   return styles
 }, {})
 
-const floatStyle = css({
+const floatMarginStyle = css({
   [onlyS]: {
     margin: '40px auto'
   }
 })
 
-const defaultStyle = css({
+const defaultMarginStyle = css({
   margin: '40px 0',
   [mUp]: {
     margin: '60px 0'
@@ -109,6 +112,7 @@ const InfoBox = ({
   children,
   attributes,
   size,
+  margin = true,
   figureSize,
   figureFloat,
   collapsable,
@@ -132,7 +136,11 @@ const InfoBox = ({
 
   styles = {
     ...styles,
-    ...(size === 'float' ? floatStyle : defaultStyle)
+    ...(size === 'float'
+      ? floatMarginStyle
+      : margin
+      ? defaultMarginStyle
+      : undefined)
   }
 
   const content = collapsable ? (

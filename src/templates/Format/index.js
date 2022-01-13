@@ -17,7 +17,7 @@ import {
 
 const DefaultLink = ({ children }) => children
 
-const createSchema = ({
+const createFormatSchema = ({
   Link = DefaultLink,
   customMetaFields = [],
   series = false,
@@ -56,6 +56,10 @@ const createSchema = ({
       {
         label: 'Sharebild (mit Hintergrundfarbe)',
         key: 'shareBackgroundImageInverted'
+      },
+      {
+        label: 'Sharetafel Logo',
+        key: 'shareLogo'
       },
       {
         label: 'Dossier',
@@ -151,4 +155,4 @@ const createSchema = ({
   })
 }
 
-export default createSchema
+export default createFormatSchema

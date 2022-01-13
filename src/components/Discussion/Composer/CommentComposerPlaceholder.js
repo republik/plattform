@@ -3,6 +3,7 @@ import { css } from 'glamor'
 import { serifRegular16 } from '../../Typography/styles'
 import { convertStyleToRem, pxToRem } from '../../Typography/utils'
 import { useColorContext } from '../../Colors/useColorContext'
+import PropTypes from 'prop-types'
 
 const styles = {
   root: css({
@@ -29,7 +30,12 @@ const styles = {
   })
 }
 
-export const CommentComposerPlaceholder = ({ t, displayAuthor, onClick }) => {
+export const CommentComposerPlaceholder = ({
+  t,
+  displayAuthor,
+  onClick,
+  placeholder
+}) => {
   const [colorScheme] = useColorContext()
   const rootHover = useMemo(
     () =>
@@ -57,7 +63,18 @@ export const CommentComposerPlaceholder = ({ t, displayAuthor, onClick }) => {
           alt=''
         />
       )}
-      <div {...styles.meta}>{t('styleguide/CommentComposer/placeholder')}</div>
+      <div {...styles.meta}>
+        {placeholder ?? t('styleguide/CommentComposer/placeholder')}
+      </div>
     </div>
   )
+}
+
+CommentComposerPlaceholder.propTypes = {
+  t: PropTypes.func.isRequired,
+  displayAuthor: PropTypes.shape({
+    profilePicture: PropTypes.string
+  }),
+  onClick: PropTypes.func,
+  placeholder: PropTypes.string
 }

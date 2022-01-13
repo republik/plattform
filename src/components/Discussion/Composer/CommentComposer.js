@@ -11,8 +11,9 @@ import { DiscussionContext } from '../DiscussionContext'
 import { convertStyleToRem } from '../../Typography/utils'
 import { Embed } from '../Internal/Comment'
 import { useDebounce } from '../../../lib/useDebounce'
-import { useColorContext } from '../../Colors/useColorContext'
+import { useColorContext } from '../../Colors/ColorContext'
 import Loader from '../../Loader'
+import { deleteDraft, readDraft, writeDraft } from './CommentDraftHelper'
 
 const styles = {
   root: css({}),
@@ -45,6 +46,9 @@ const styles = {
   withBorderBottom: css({
     borderBottomWidth: 1,
     borderBottomStyle: 'solid'
+  }),
+  hints: css({
+    marginTop: 6
   })
 }
 
@@ -66,9 +70,10 @@ export const CommentComposer = props => {
     onClose,
     onCloseLabel,
     onSubmitLabel,
-    parentId,
     commentId,
-    autoFocus = true
+    parentId,
+    autoFocus = true,
+    placeholder
   } = props
   const [colorScheme] = useColorContext()
   /*
@@ -80,6 +85,7 @@ export const CommentComposer = props => {
    */
   const root = React.useRef()
   const [textarea, textareaRef] = React.useState(null)
+  const [hints, setHints] = React.useState([])
   const textRef = React.useRef()
   const [preview, setPreview] = React.useState({
     loading: false,
@@ -87,9 +93,14 @@ export const CommentComposer = props => {
   })
 
   /*
-   * Get the discussion metadata and action callbacks from the DiscussionContext.
+   * Get the discussion metadata, action callbacks and hinters from DiscussionContext.
    */
-  const { discussion, actions } = React.useContext(DiscussionContext)
+  const {
+    discussion,
+    actions,
+    activeTag,
+    composerHints = []
+  } = React.useContext(DiscussionContext)
   const { id: discussionId, tags, rules, displayAuthor, isBoard } = discussion
   const { maxLength } = rules
 
@@ -98,13 +109,12 @@ export const CommentComposer = props => {
    * provided through props. This way the user won't lose their text if the browser
    * crashes or if they inadvertently close the composer.
    */
-  const localStorageKey = commentComposerStorageKey(discussionId)
   const [text, setText] = React.useState(() => {
     if (props.initialText) {
       return props.initialText
     } else if (typeof localStorage !== 'undefined') {
       try {
-        return localStorage.getItem(localStorageKey) || ''
+        return readDraft(discussionId, commentId) ?? ''
       } catch (e) {
         return ''
       }
@@ -116,6 +126,8 @@ export const CommentComposer = props => {
   const textLength = preview.comment
     ? preview.comment.contentLength
     : text.length
+
+  const [tagValue, setTagValue] = React.useState(props.tagValue)
 
   /*
    * Focus the textarea upon mount.
@@ -137,6 +149,9 @@ export const CommentComposer = props => {
   const [slowText] = useDebounce(text, 400)
   textRef.current = text
   React.useEffect(() => {
+    if (!tagValue) {
+      setTagValue(isRoot ? activeTag : null)
+    }
     if (!isBoard || !isRoot || !previewCommentAction) {
       return
     }
@@ -180,20 +195,20 @@ export const CommentComposer = props => {
     discussionId,
     commentId,
     parentId,
-    isBoard
+    isBoard,
+    activeTag
   ])
 
   const onChangeText = ev => {
     const nextText = ev.target.value
     setText(nextText)
+    setHints(composerHints.map(fn => fn(nextText)).filter(Boolean))
     try {
-      localStorage.setItem(localStorageKey, ev.target.value)
+      writeDraft(discussionId, commentId, ev.target.value)
     } catch (e) {
       /* Ignore errors */
     }
   }
-
-  const [tagValue, setTagValue] = React.useState(props.tagValue)
 
   /*
    * We keep track of the submission process, to prevent the user from
@@ -222,7 +237,7 @@ export const CommentComposer = props => {
 
           if (ok) {
             try {
-              localStorage.removeItem(localStorageKey)
+              deleteDraft(discussionId, commentId)
             } catch (e) {
               /* Ignore */
             }
@@ -282,7 +297,9 @@ export const CommentComposer = props => {
           {...colorScheme.set('color', 'text')}
           {...(maxLength ? styles.textAreaLimit : {})}
           {...(text === '' ? textAreaEmptyRule : {})}
-          placeholder={t('styleguide/CommentComposer/placeholder')}
+          placeholder={
+            placeholder ?? t('styleguide/CommentComposer/placeholder')
+          }
           value={text}
           rows='1'
           onChange={onChangeText}
@@ -292,6 +309,12 @@ export const CommentComposer = props => {
           <MaxLengthIndicator maxLength={maxLength} length={textLength} />
         )}
       </div>
+      {hints &&
+        hints.map((hint, index) => (
+          <div {...styles.hints} key={`hint-${index}`}>
+            {hint}
+          </div>
+        ))}
 
       <Loader
         loading={preview.loading && !(preview.comment && preview.comment.embed)}
@@ -300,7 +323,11 @@ export const CommentComposer = props => {
 
       <Actions
         t={t}
-        onClose={onClose}
+        onClose={() => {
+          onClose()
+          // Delete the draft of the field
+          deleteDraft(discussionId, commentId)
+        }}
         onCloseLabel={onCloseLabel}
         onSubmit={
           loading || (maxLength && textLength > maxLength)
@@ -322,7 +349,8 @@ CommentComposer.propTypes = {
   onClose: PropTypes.func.isRequired,
   onCloseLabel: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
-  onSubmitLabel: PropTypes.string
+  onSubmitLabel: PropTypes.string,
+  placeholder: PropTypes.string
 }
 
 const MaxLengthIndicator = ({ maxLength, length }) => {

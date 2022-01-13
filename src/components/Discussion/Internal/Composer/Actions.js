@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { sansSerifMedium14 } from '../../../Typography/styles'
 import { DiscussionContext } from '../../DiscussionContext'
-import { mUp } from '../../../../theme/mediaQueries'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
 import { useColorContext } from '../../../Colors/useColorContext'
 
@@ -26,6 +25,12 @@ const styles = {
   root: css({
     display: 'flex',
     flexFlow: 'wrap',
+    alignItems: 'center'
+  }),
+  rootMainOnly: css({
+    justifyContent: 'flex-end',
+  }),
+  rootWithSecondary: css({
     justifyContent: 'space-between'
   }),
   mainActions: css({
@@ -39,19 +44,6 @@ const styles = {
     marginLeft: '16px',
     '[disabled]': {
       cursor: 'inherit'
-    }
-  }),
-  secondaryActions: css({
-    height: pxToRem(20),
-    display: 'flex',
-    minWidth: 0,
-    flexShrink: 1
-  }),
-  secondaryAction: css({
-    ...actionButtonStyle,
-    margin: '0 4px',
-    [mUp]: {
-      margin: '0 8px'
     }
   })
 }
@@ -67,14 +59,6 @@ export const Actions = ({
   const { composerSecondaryActions } = React.useContext(DiscussionContext)
   const styleRules = useMemo(() => {
     return {
-      secondaryAction: css({
-        color: colorScheme.getCSSColor('textSoft'),
-        '@media (hover)': {
-          ':hover': {
-            color: colorScheme.getCSSColor('text')
-          }
-        }
-      }),
       closeButton: css({
         color: colorScheme.getCSSColor('textSoft'),
         '@media (hover)': {
@@ -97,12 +81,8 @@ export const Actions = ({
     }
   }, [colorScheme])
   return (
-    <div {...styles.root}>
-      {composerSecondaryActions && (
-        <div {...styles.secondaryActions} {...styleRules.secondaryAction}>
-          {composerSecondaryActions}
-        </div>
-      )}
+    <div {...styles.root} {...styles[composerSecondaryActions ? 'rootWithSecondary' : 'rootMainOnly']}>
+      {composerSecondaryActions}
 
       <div {...styles.mainActions}>
         <button
@@ -131,8 +111,4 @@ Actions.propTypes = {
   onCloseLabel: PropTypes.string,
   onSubmit: PropTypes.func,
   onSubmitLabel: PropTypes.string
-}
-
-export const SecondaryAction = ({ as = 'button', ...props }) => {
-  return React.createElement(as, { ...styles.secondaryAction, ...props })
 }

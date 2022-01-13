@@ -43,7 +43,7 @@ export default (props, geoJson) => {
     return {
       datum: d,
       value: value,
-      empty: !value && !d[props.color],
+      empty: !(value || value === 0) && !d[props.color],
       featureId: String(d[props.feature])
     }
   })
@@ -72,9 +72,11 @@ export default (props, geoJson) => {
     const dataValues = data.map(d => d.value)
     const valuesExtent = props.extent || extent(dataValues)
 
-    if (props.thresholds) {
+    if (props.thresholds || props.thresholdsLegend) {
       colorScale = scaleThreshold()
-      domain = props.thresholds
+      domain =
+        props.thresholds ||
+        props.thresholdsLegend.map(d => d.minValue).filter(Boolean)
       if (!colorRange) {
         colorRange = props.colorRanges.sequential.slice(0, domain.length + 1)
       }
@@ -85,7 +87,7 @@ export default (props, geoJson) => {
 
     colorScale.domain(domain).range(colorRange || props.colorRanges.sequential)
 
-    colorValues = colorScale.range().map(value => {
+    colorValues = colorScale.range().map((value, i) => {
       const extent = colorScale.invertExtent(value)
       const safeExtent = [
         extent[0] === undefined ? valuesExtent[0] : extent[0],
@@ -93,9 +95,11 @@ export default (props, geoJson) => {
       ]
       return {
         value: safeExtent[0],
-        label: `${numberFormat(safeExtent[0])} ${tLabel('bis')} ${numberFormat(
-          safeExtent[1]
-        )}`
+        label:
+          (props.thresholdsLegend && props.thresholdsLegend[i]?.label) ||
+          `${numberFormat(safeExtent[0])} ${tLabel('bis')} ${numberFormat(
+            safeExtent[1]
+          )}`
       }
     })
   }

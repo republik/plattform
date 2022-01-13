@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import CustomIconBase from './CustomIconBase'
-import { MdShare } from '@react-icons/all-files/md/MdShare'
+import { MdShare } from 'react-icons/md'
 let defaultIsGoogleOS = undefined
 
 export const ShareIcon = ({ fill, ...props }) => {

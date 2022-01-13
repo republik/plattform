@@ -6,7 +6,7 @@ import createArticleSchema from '../Article'
 
 const DefaultLink = ({ children }) => children
 
-const createSchema = ({
+const createDossierSchema = ({
   dossierLabel = 'Dossier',
   dossierHref = '/dossier',
   customMetaFields = [],
@@ -43,4 +43,4 @@ const createSchema = ({
   })
 }
 
-export default createSchema
+export default createDossierSchema

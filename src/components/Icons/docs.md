@@ -94,7 +94,7 @@ The default Icon style is Material. For brands we rely on Ionic icons. There are
 <IconButton Icon={ArrowDownIcon} label="ArrowDownIcon" />
 <IconButton Icon={ArrowUpIcon} label="ArrowUpIcon" />
 <IconButton Icon={ReportIcon} label="ReportIcon" />
-<IconButton Icon={MarkdownIcon} label="MarkdownIcon" />
+<IconButton Icon={TextFormatIcon} label="TextFormatIcon" />
 <IconButton Icon={EtiquetteIcon} label="EtiquetteIcon" />
 <IconButton Icon={MoodIcon} label="MoodIcon" />
 
@@ -115,6 +115,7 @@ The default Icon style is Material. For brands we rely on Ionic icons. There are
 <IconButton Icon={MailOutlineIcon} label="MailOutlineIcon" />
 <IconButton Icon={LinkIcon} label="LinkIcon" />
 <IconButton Icon={RssFeedIcon} label="RssFeedIcon" />
+<IconButton Icon={OpenSourceIcon} label="OpenSourceIcon" />
 
 <br />
 <Interaction.H3>User</Interaction.H3>

@@ -15,7 +15,7 @@ import {
 } from '../../components/CommentBody/web'
 import { Editorial } from '../../components/Typography'
 
-const createSchema = ({ ...args } = {}) => {
+const createCommentWebSchema = ({ ...args } = {}) => {
   return createCommentSchema({
     BlockCode: CommentBodyBlockCode,
     BlockQuote: CommentBodyBlockQuote,
@@ -34,4 +34,4 @@ const createSchema = ({ ...args } = {}) => {
   })
 }
 
-export default createSchema
+export default createCommentWebSchema

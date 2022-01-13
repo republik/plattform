@@ -4,10 +4,11 @@ import { createFormatter } from '../../../lib/translate'
 import { Editorial } from '../../Typography'
 
 import { default as Button } from '../../Button'
-import { SecondaryAction } from '../Internal/Composer'
 import { CommentComposer } from './CommentComposer'
 import { DiscussionContext } from '../DiscussionContext'
-import { MarkdownIcon, MoodIcon } from '../../Icons'
+import { TextFormatIcon } from '../../Icons'
+import IconButton from '../../IconButton'
+import { Label } from '../../Typography'
 
 export { CommentComposerPlaceholder } from './CommentComposerPlaceholder'
 
@@ -66,15 +67,22 @@ export const CommentComposerPlayground = () => {
     actions: {
       openDiscussionPreferences: () => Promise.resolve({ ok: true })
     },
+    composerHints: [
+      function formattingAsterisk(text) {
+        // Math where asterisk is within a word (not next to whitespace) "n*n" for example
+        const hasUnescapedAsterisk = !!text.match(/[^\\*\s:]\*[^*\s:]/)
+        if (hasUnescapedAsterisk) {
+          return (
+            <Label>{t('styleguide/CommentComposer/formatting/asterisk')}</Label>
+          )
+        }
+        return false
+      }
+    ],
     composerSecondaryActions: (
-      <>
-        <SecondaryAction>
-          <MoodIcon size={26} />
-        </SecondaryAction>
-        <SecondaryAction>
-          <MarkdownIcon size={26} />
-        </SecondaryAction>
-      </>
+      <div style={{ display: 'flex' }}>
+        <IconButton title='TextFormat' Icon={TextFormatIcon} />
+      </div>
     )
   }
 

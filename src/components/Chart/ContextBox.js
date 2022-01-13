@@ -9,6 +9,8 @@ import PropTypes from 'prop-types'
 import { Interaction } from '../Typography'
 import { sansSerifRegular14 } from '../Typography/styles'
 import { useColorContext } from '../Colors/useColorContext'
+import { subsup } from './utils'
+import { intersperse } from '../../lib/helpers'
 
 const boxStyle = css({
   position: 'absolute',
@@ -80,6 +82,15 @@ const labeledValueStyle = css({
     marginBottom: 0
   }
 })
+
+export const formatLines = text => {
+  return text
+    .split('\n')
+    .map((d, i) => <Fragment key={`d${i}`}>{subsup(d)}</Fragment>)
+}
+
+export const mergeFragments = fragments =>
+  intersperse(fragments, (item, index) => <br key={`br${index}`} />)
 
 export const ContextBoxValue = ({ label, children }) => {
   const [colorScheme] = useColorContext()

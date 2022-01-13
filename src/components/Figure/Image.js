@@ -9,6 +9,8 @@ import { sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
 import { mUp } from '../../theme/mediaQueries'
 import SwitchImage from './SwitchImage'
 
+export const MIN_GALLERY_IMG_WIDTH = 600
+
 const styles = {
   image: css({
     width: '100%'
@@ -114,6 +116,8 @@ const Image = (props, context) => {
   return (
     <div
       {...styles.imageContainer}
+      // recreate dom for chaning src to ensure old image is not shown while new one loads
+      key={src}
       style={{
         cursor: enableGallery // during SSR context.toggleGallery and therefore onClick are not present
           ? 'zoom-in'

@@ -46,6 +46,7 @@ import { subject } from '../Front'
 
 import { Breakout } from '../../components/Center'
 import RawHtml from '../../components/RawHtml'
+import { SeriesNav } from '../../components/SeriesNav'
 
 import * as Editorial from '../../components/Typography/Editorial'
 
@@ -60,7 +61,13 @@ const articleTileSubject = {
   }
 }
 
-const createTeasers = ({ t, Link, plattformUnauthorizedZoneText }) => {
+const createTeasers = ({
+  t,
+  Link,
+  ActionBar,
+  PayNote,
+  plattformUnauthorizedZoneText
+}) => {
   const teaserTitle = (type, Headline) => ({
     matchMdast: matchHeading(1),
     component: ({ children, href, ...props }) => (
@@ -517,8 +524,33 @@ const createTeasers = ({ t, Link, plattformUnauthorizedZoneText }) => {
     ]
   }
 
+  const seriesNav = {
+    matchMdast: matchZone('SERIES_NAV'),
+    component: ({ ...props }) => {
+      return <SeriesNav t={t} {...props} />
+    },
+    props: (node, index, parent, { ancestors }) => {
+      const root = ancestors[ancestors.length - 1]
+      return {
+        repoId: root.repoId,
+        series: root.series,
+        inline: !node.data.grid,
+        ActionBar: ActionBar,
+        PayNote: PayNote,
+        Link: Link
+      }
+    },
+    rules: [],
+    editorModule: 'seriesNav',
+    editorOptions: {
+      insertTypes: ['PARAGRAPH']
+    },
+    isVoid: true
+  }
+
   return {
     carousel,
+    seriesNav,
     articleCollection: {
       matchMdast: matchZone('ARTICLECOLLECTION'),
       component: ({

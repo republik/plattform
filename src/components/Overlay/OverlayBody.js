@@ -3,17 +3,21 @@ import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { height } from './OverlayToolbar'
 
+const PADDING = 20
+
 const overlayBodyStyle = css({
-  padding: `${height + 20}px 20px`,
+  padding: `${height + PADDING}px ${PADDING}px`,
   // The iPhone X Space
   // - thank you Apple for overlaying websites
   paddingBottom: 120,
   [mUp]: {
-    padding: `${height + 20}px 20px`,
-    paddingBottom: 20
+    padding: `${height + PADDING}px ${PADDING}px`,
+    paddingBottom: PADDING
   }
 })
 
 const OverlayBody = props => <div {...overlayBodyStyle} {...props} />
+
+OverlayBody.PADDING = PADDING
 
 export default OverlayBody

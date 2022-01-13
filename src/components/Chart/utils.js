@@ -1,8 +1,9 @@
 import { formatLocale, formatSpecifier, precisionFixed } from 'd3-format'
-import { ascending, descending, max as d3Max } from 'd3-array'
+import { ascending, descending, max as d3Max, range } from 'd3-array'
 import { rgb } from 'd3-color'
 import React, { createElement, Fragment } from 'react'
 import PropTypes from 'prop-types'
+import { scaleOrdinal } from 'd3-scale'
 
 export const groupBy = (array, key) => {
   const keys = []
@@ -48,7 +49,9 @@ const swissNumbers = formatLocale({
   decimal: ',',
   thousands: thousandSeparator,
   grouping: [3],
-  currency: ['CHF\u00a0', '']
+  currency: ['CHF\u00a0', ''],
+  minus: '\u2212',
+  percent: '\u2009%'
 })
 
 const formatPow = (tLabel, baseValue) => {
@@ -73,7 +76,7 @@ const sFormat = (tLabel, precision = 4, pow, type = 'r') => {
   const numberFormat4 = swissNumbers.format('d')
   const numberFormat5 = swissNumbers.format(',d')
   const numberFormat = value => {
-    if (String(Math.round(value)).length > 4) {
+    if (String(Math.abs(Math.round(value))).length > 4) {
       return numberFormat5(value)
     }
     return numberFormat4(value)
@@ -82,7 +85,7 @@ const sFormat = (tLabel, precision = 4, pow, type = 'r') => {
   const numberFormatWithSuffix4 = swissNumbers.format(`.${precision}${type}`)
   const numberFormatWithSuffix5 = swissNumbers.format(`,.${precision}${type}`)
   const numberFormatWithSuffix = value => {
-    if (String(Math.round(value)).length > 4) {
+    if (String(Math.abs(Math.round(value))).length > 4) {
       return numberFormatWithSuffix5(value)
     }
     return numberFormatWithSuffix4(value)
@@ -107,7 +110,7 @@ export const getFormat = (numberFormat, tLabel) => {
     specifier.comma = false
     const numberFormat4 = swissNumbers.format(specifier)
     return value => {
-      if (String(Math.round(value)).length > 4) {
+      if (String(Math.abs(Math.round(value))).length > 4) {
         return numberFormat5(value)
       }
       return numberFormat4(value)
@@ -139,7 +142,7 @@ export const calculateAxis = (
   let regularFormat
   let lastFormat
   if (specifier.type === '%') {
-    let fullStep = +(step * 100).toFixed(specifier.precision)
+    let fullStep = +(ticks[1] * 100).toFixed(specifier.precision)
     let fullMax = +(max * 100).toFixed(specifier.precision)
     specifier.precision = precisionFixed(
       fullStep - Math.floor(fullStep) || fullMax - Math.floor(fullMax)
@@ -183,7 +186,8 @@ export const calculateAxis = (
   return {
     ticks,
     format: formatter,
-    axisFormat
+    axisFormat,
+    domain
   }
 }
 
@@ -201,7 +205,8 @@ const subSupSplitter = createTag => {
     if (!input) {
       return input
     }
-    return input
+
+    return String(input)
       .split(/(<sub>|<sup>)([^<]+)<\/su[bp]>/g)
       .reduce((elements, text, i) => {
         if (text === '<sub>' || text === '<sup>') {
@@ -233,7 +238,9 @@ subsup.svg = subSupSplitter((tag, key, text) => {
       </tspan>
       {/* reset dy: https://stackoverflow.com/a/33711370 */}
       {/* adds a zero width space */}
-      <tspan dy={`-${dy}`}>{'\u200b'}</tspan>
+      <tspan dy={tag === 'sub' ? `-${dy}` : dy.slice(1)} fontSize='75%'>
+        {'\u200b'}
+      </tspan>
     </Fragment>
   )
 })
@@ -254,3 +261,127 @@ export const getTextColor = bgColor => {
   const yiq = (color.r * 299 + color.g * 587 + color.b * 114) / 1000
   return yiq >= 128 ? 'black' : 'white'
 }
+
+export const xAccessor = d => d.x
+
+export const yAccessor = d => d.y
+
+export const isValuePresent = value => value?.toString()?.length > 0
+
+export const identityFn = x => x
+
+export const getDataFilter = userFilter =>
+  userFilter ? unsafeDatumFn(userFilter) : identityFn
+
+export const groupInColumns = (data, column, columnFilter) =>
+  columnFilter
+    ? columnFilter
+        .map(({ test, title }) => {
+          const filter = unsafeDatumFn(test)
+          return {
+            key: title,
+            values: data.filter(d => filter(d.datum))
+          }
+        })
+        .reduce((all, group) => all.concat(group.values), [])
+    : groupBy(data, d => d.datum[column])
+
+const getColumnCount = (
+  itemCount,
+  userColumns,
+  width,
+  minWidth,
+  paddingLeft,
+  paddingRight,
+  skipRowPadding
+) => {
+  const possibleColumns = Math.floor(
+    (width + (skipRowPadding ? paddingLeft + paddingRight : 0)) /
+      (minWidth + paddingLeft + paddingRight)
+  )
+  let columns = userColumns
+  if (possibleColumns < userColumns) {
+    columns = Math.max(possibleColumns, 1)
+    // decrease columns if it does not lead to new rows
+    // e.g. four items, 4 desired columns, 3 possible => go with 2 columns
+    if (
+      Math.ceil(itemCount / columns) === Math.ceil(itemCount / (columns - 1))
+    ) {
+      columns -= 1
+    }
+  }
+  return columns
+}
+
+const xTranslateFn = (groups, columns, innerWidth, paddingLeft, paddingRight) =>
+  scaleOrdinal()
+    .domain(groups)
+    .range(
+      range(columns).map(d => {
+        return d * (innerWidth + paddingRight + paddingLeft)
+      })
+    )
+
+const yTranslateFn = (groups, columns, columnHeight, columnMargin) =>
+  scaleOrdinal()
+    .domain(groups)
+    .range(
+      range(groups.length).map(d => {
+        const row = Math.floor(d / columns)
+        return row * columnHeight + row * columnMargin
+      })
+    )
+
+export const getColumnLayout = (
+  userColumns,
+  groupedData,
+  width,
+  minWidth,
+  getHeight,
+  columnSort,
+  paddingTop,
+  paddingRight,
+  paddingBottom,
+  paddingLeft,
+  columnMargin,
+  skipRowPadding
+) => {
+  const itemCount = groupedData.length
+  const columns = getColumnCount(
+    itemCount,
+    userColumns,
+    width,
+    minWidth,
+    paddingLeft,
+    paddingRight,
+    skipRowPadding
+  )
+  const rows = Math.ceil(itemCount / columns)
+  // account for start and end of columns missing padding when skipping row padding
+  const innerWidth =
+    Math.floor(
+      (width -
+        (paddingLeft + paddingRight) *
+          (skipRowPadding ? columns - 1 : columns)) /
+        columns
+    ) - 1
+  const innerHeight = getHeight(innerWidth)
+  const columnHeight = innerHeight + paddingBottom + paddingTop
+  const height = rows * columnHeight + (rows - 1) * columnMargin
+
+  let groups = groupedData.map(g => g.key)
+  runSort(columnSort, groups)
+  const gx = xTranslateFn(
+    groups,
+    columns,
+    innerWidth,
+    paddingLeft,
+    paddingRight
+  )
+  const gy = yTranslateFn(groups, columns, columnHeight, columnMargin)
+
+  return { height, innerWidth, innerHeight, gx, gy }
+}
+
+// get last item from array
+export const isLastItem = (array, index) => array.length - 1 === index

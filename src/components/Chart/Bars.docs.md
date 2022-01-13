@@ -217,6 +217,7 @@ Daniel,415,https://www.republik.ch/~daniel
       "numberFormat": ".0%",
       "y": "alk",
       "showBarValues": true,
+      "unit": "Vol.",
       "domain": [-1, 0],
       "sort": "none"
     }}
@@ -231,6 +232,54 @@ Absinth,-0.8
 ```
 
 ## Advanced Labeling
+
+### Bar Values
+
+Bar values can also work in advanced cases if one wants to display the total of a bar.
+
+```react
+<div>
+  <CsvChart
+    config={{
+      "type": "Bar",
+      "y": "gender",
+      "color": "age",
+      "colorLegend": true,
+      "showBarValues": true,
+      "sort": "none",
+      "domain": [-2000, 20000],
+      "xTicks": [0]
+    }}
+    values={`
+age,gender,value
+0-9,Women,71
+10-19,Women,504
+20-29,Women,2270
+30-39,Women,2351
+40-49,Women,2728
+50-59,Women,3233
+60-69,Women,1613
+70-79,Women,1315
+80+,Women,2468
+0-9,Men,84
+10-19,Men,361
+20-29,Men,1534
+30-39,Men,1761
+40-49,Men,2042
+50-59,Men,2964
+60-69,Men,2034
+70-79,Men,1566
+80+,Men,1597
+80+,Cats,-100
+0-9,Cats,100
+10-19,Cats,100
+20-29,Cats,10
+80+,Dogs,-200
+    `.trim()} />
+</div>
+```
+
+### Inline Positions
 
 By default the first and middle bar segment labels are `left` and the last (if not also the first) is `right` ordiented. For negative values `right` and `left` are flipped.
 
@@ -273,6 +322,42 @@ Verzicht auf 9 bis 16 Stunden Flug pro Jahr,-2074,a,
 Verzicht auf 9 bis 16 Stunden Flug pro Jahr,-200,b,
 Verzicht auf 8 bis 15 Stunden Flug pro Jahr,-2074,a,center
 Verzicht auf ca. 3500 Kilometer mit ÖV,-79,a,
+    `.trim()} />
+</div>
+```
+
+### X-Ticks
+
+See [lollipop example](/charts/lollipops#x-ticks).
+
+### Skip Y Labels
+
+When `y` and `color` point to the same data attribute (example below: `type`), the system automatically shows the color legend and hides the y labels. (Except if we have only a single group.)
+
+```react
+<div>
+  <CsvChart
+    config={{
+      "type": "Bar",
+      "y": "type",
+      "column": "category",
+      "columnSort": "none",
+      "sort": "descending",
+      "color": "type",
+      "showBarValues": true,
+      "colorRange": [
+        "#2ca02c",
+        "#9467bd"
+      ]
+    }}
+    values={`
+category,type,value,Q_lower,Q_upper
+"Geschäftsführung, leitende Funktion",Mann,11100,8665,14523,
+"Geschäftsführung, leitende Funktion",Frau,8825,6786,11668,
+"Führungskräfte Gastronomie, Handel",Mann,6050,5047,7411,
+"Führungskräfte Gastronomie, Handel",Frau,4900,4613,5512,
+Ärztinnen,Mann,9709,7262,13265,
+Ärztinnen,Frau,7491,6395,9452
     `.trim()} />
 </div>
 ```

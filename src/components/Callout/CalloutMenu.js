@@ -16,10 +16,12 @@ const hasAncestor = (node, predicate) => {
 const CalloutMenu = ({
   children,
   Element,
+  elementProps,
   align,
   initiallyOpen,
   contentPaddingMobile,
-  padded
+  padded,
+  attributes
 }) => {
   const [showMenu, setMenu] = React.useState(initiallyOpen)
   const toggleRef = React.useRef()
@@ -42,6 +44,7 @@ const CalloutMenu = ({
   return (
     <div
       {...(padded && styles.padded)}
+      {...attributes}
       style={{ position: 'relative' }}
       ref={toggleRef}
     >
@@ -54,7 +57,7 @@ const CalloutMenu = ({
           {children}
         </Callout>
       )}
-      <Element onClick={() => setMenu(!showMenu)} />
+      <Element {...elementProps} onClick={() => setMenu(!showMenu)} />
     </div>
   )
 }

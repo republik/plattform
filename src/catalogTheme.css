@@ -9,8 +9,8 @@ svg g[fill="#FFFFFF"] {
 }
 
 /* code area of catalog */
-pre.css-o6vvb1 {
-  max-height: 800px;
+pre.css-o6vvb1, pre.css-1xyfnhc {
+  max-height: 60vh;
   overflow: auto;
 }
 

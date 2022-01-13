@@ -5,11 +5,17 @@ import { css, merge } from 'glamor'
 import { AudioIcon } from '../Icons'
 
 import { mUp } from '../../theme/mediaQueries'
-import { breakoutStyles, MAX_WIDTH, PADDING, BREAKOUT_SIZES } from '../Center'
+import {
+  breakoutStyles,
+  PADDED_MAX_WIDTH,
+  MAX_WIDTH,
+  PADDING,
+  BREAKOUT_SIZES
+} from '../Center'
 
 import { plainButtonRule } from '../Button'
 
-export { default as FigureImage } from './Image'
+export { default as FigureImage, MIN_GALLERY_IMG_WIDTH } from './Image'
 export { default as FigureCaption } from './Caption'
 export { default as FigureByline } from './Byline'
 
@@ -43,7 +49,7 @@ const styles = {
   }),
   coverBreakout: css({
     margin: '30px auto 20px auto',
-    maxWidth: MAX_WIDTH + PADDING * 2,
+    maxWidth: PADDED_MAX_WIDTH,
     padding: PADDING
   }),
   coverText: css({
@@ -116,7 +122,7 @@ const styles = {
 const figureBreakout = {
   ...breakoutStyles,
   center: css({
-    maxWidth: MAX_WIDTH + PADDING * 2,
+    maxWidth: PADDED_MAX_WIDTH,
     padding: PADDING,
     marginLeft: 'auto',
     marginRight: 'auto',
@@ -170,7 +176,7 @@ export const CoverTextTitleBlockHeadline = ({ children, attributes }) => (
   </div>
 )
 
-const AudioButton = ({ color, backgroundColor, onClick }) => {
+const AudioButton = ({ color, backgroundColor, onClick, meta }) => {
   const pulse = css.keyframes({
     '0%': { boxShadow: `0 0 0 0 ${backgroundColor}` },
     '70%': { boxShadow: `0 0 0 10px transparent` },
@@ -180,7 +186,9 @@ const AudioButton = ({ color, backgroundColor, onClick }) => {
   return (
     <button
       {...styles.coverAudio}
-      onClick={onClick}
+      onClick={() => {
+        onClick(meta)
+      }}
       style={{
         color,
         backgroundColor

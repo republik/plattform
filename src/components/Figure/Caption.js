@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
-import { css } from 'glamor'
+import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { PADDING } from '../Center'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
@@ -17,16 +17,20 @@ const styles = {
       ...convertStyleToRem(sansSerifRegular15),
       lineHeight: pxToRem('18px')
     }
+  }),
+  groupCaption: css({
+    marginTop: -10,
+    marginBottom: 15
   })
 }
 
-export const Caption = ({ children, attributes }) => {
+export const Caption = ({ children, attributes, groupCaption }) => {
   const [colorScheme] = useColorContext()
 
   return (
     <figcaption
       {...attributes}
-      {...styles.caption}
+      {...merge(styles.caption, groupCaption && styles.groupCaption)}
       {...colorScheme.set('color', 'text')}
     >
       {children}
@@ -36,7 +40,8 @@ export const Caption = ({ children, attributes }) => {
 
 Caption.propTypes = {
   children: PropTypes.node.isRequired,
-  attributes: PropTypes.object
+  attributes: PropTypes.object,
+  groupCaption: PropTypes.bool
 }
 
 export default Caption

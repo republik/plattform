@@ -97,8 +97,8 @@ const colors = {
     hover: '#F6F8F7',
     alert: '#E4F5E1',
     error: colorsDeprecated.error,
-    defaultInverted: '#111111',
-    overlayInverted: '#191919',
+    defaultInverted: '#191919',
+    overlayInverted: '#1F1F1F',
     divider: '#DADDDC',
     dividerInverted: '#4C4D4C',
     primary: '#00AA00',
@@ -201,6 +201,11 @@ const colors = {
       '#000000': 'chartsInverted'
     }
   }
+}
+
+export const localInvertedColors = {
+  light: colors.dark,
+  dark: colors.light
 }
 
 // add all deprecated colors, but only if they don't exist in new colors (no overwrites)

@@ -4,12 +4,19 @@ import CarouselContext from './Context'
 import Grid from './Grid'
 import Row from './Row'
 
-const Container = ({ children }) => {
+const Container = ({ initialScrollTileIndex, children, isSeriesNav }) => {
   const context = useContext(CarouselContext)
   if (context.grid) {
     return <Grid>{children}</Grid>
   }
-  return <Row>{children}</Row>
+  return (
+    <Row
+      initialScrollTileIndex={initialScrollTileIndex}
+      isSeriesNav={isSeriesNav}
+    >
+      {children}
+    </Row>
+  )
 }
 
 export default Container

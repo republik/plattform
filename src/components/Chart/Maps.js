@@ -1,23 +1,23 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { scaleLinear } from 'd3-scale'
 import { descending, max } from 'd3-array'
 import { symbol, symbolSquare, symbolCircle } from 'd3-shape'
-import { geoIdentity, geoMercator, geoEqualEarth } from 'd3-geo'
 import ColorLegend from './ColorLegend'
 import layout, { MARKER_HEIGHT, MARKER_RADIUS } from './Maps.layout'
 import fetch from 'isomorphic-unfetch'
 import { css } from 'glamor'
 import memoize from 'lodash/memoize'
 import { feature as topojsonFeature, mesh as topojsonMesh } from 'topojson'
-
-import { subsup } from './utils'
-
 import Loader from '../Loader'
-
-import ContextBox, { ContextBoxValue } from './ContextBox'
-
+import ContextBox, {
+  ContextBoxValue,
+  formatLines,
+  mergeFragments
+} from './ContextBox'
 import { sansSerifMedium14 } from '../Typography/styles'
+import { replaceKeys } from '../../lib/translate'
+import { defaultProps } from './ChartContext'
 
 const FEATURE_BG = '#E0E0E0'
 
@@ -206,7 +206,13 @@ export class GenericMap extends Component {
   }
   renderTooltips() {
     const props = this.props
-    const { width, tLabel, missingDataLegend } = props
+    const {
+      width,
+      tLabel,
+      missingDataLegend,
+      tooltipLabel,
+      tooltipBody
+    } = props
 
     const { paddingTop, gx, gy, groupedData, numberFormat } = this.state.layout
 
@@ -217,9 +223,35 @@ export class GenericMap extends Component {
       groupedData.map(({ values: groupData, key: groupTitle }) => {
         return groupData
           .filter(datum => datum.feature === hoverFeature)
-          .map((d, i) => {
+          .map(d => {
             const [[x0, y0], [x1]] = d.feature.bounds()
-            const ordinalValue = d.datum && d.datum[props.color]
+            const replacements = {
+              ...hoverFeature.properties,
+              ...d.datum,
+              value: d.value || d.value === 0,
+              formattedValue:
+                (d.value || d.value === 0) && numberFormat(d.value)
+            }
+            const contextT = text => replaceKeys(text, replacements)
+            const label = tooltipLabel
+              ? contextT(tooltipLabel)
+              : title === groupTitle
+              ? hoverFeature.properties.name
+              : tLabel(groupTitle)
+            const body = mergeFragments(
+              tooltipBody
+                ? formatLines(contextT(tooltipBody))
+                : [
+                    groupTitle && title === groupTitle && tLabel(groupTitle),
+                    replacements.formattedValue &&
+                      `${replacements.formattedValue} ${props.unit}`,
+                    d.datum && d.datum[props.color],
+                    d.empty && missingDataLegend
+                  ]
+                    .filter(Boolean)
+                    .map(formatLines)
+            )
+
             return (
               <ContextBox
                 key={d.feature.id}
@@ -228,29 +260,7 @@ export class GenericMap extends Component {
                 y={gy(groupTitle) + paddingTop + y0 - 15}
                 contextWidth={width}
               >
-                <ContextBoxValue
-                  label={
-                    title === groupTitle
-                      ? hoverFeature.properties.name
-                      : tLabel(groupTitle)
-                  }
-                >
-                  {groupTitle && title === groupTitle && (
-                    <Fragment>
-                      {tLabel(groupTitle)}
-                      <br />
-                    </Fragment>
-                  )}
-                  {d.empty ? (
-                    missingDataLegend
-                  ) : (
-                    <Fragment>
-                      {d.value ? `${numberFormat(d.value)} ${props.unit}` : ''}
-                      {!!d.value && ordinalValue && <br />}
-                      {ordinalValue}
-                    </Fragment>
-                  )}
-                </ContextBoxValue>
+                <ContextBoxValue label={label}>{body}</ContextBoxValue>
               </ContextBox>
             )
           })
@@ -267,37 +277,43 @@ export class GenericMap extends Component {
     const {
       layout: { projectPoint, numberFormat }
     } = this.state
-    const { pointLabel, pointAttributes } = this.props
+    const {
+      pointLabel,
+      pointAttributes,
+      unit,
+      tooltipLabel,
+      tooltipBody
+    } = this.props
     const [x, y] = projectPoint([datum.lon, datum.lat])
-    const label = datum[pointLabel]
+
     const value =
       datum.value !== undefined &&
       (isNaN(datum.value)
         ? String(datum.value).trim()
         : numberFormat(datum.value))
+    const replacements = {
+      ...datum,
+      formattedValue: value
+    }
 
-    const body = pointAttributes.map(t => {
-      const val = datum[t]
-      if (val) {
-        return (
-          <Fragment key={t}>
-            {subsup(val)}
-            <br />
-          </Fragment>
-        )
-      } else {
-        return null
-      }
-    })
-    if (label || value || body.length) {
+    const contextT = text => replaceKeys(text, replacements)
+    const label = tooltipLabel ? contextT(tooltipLabel) : datum[pointLabel]
+    const body = mergeFragments(
+      tooltipBody
+        ? formatLines(contextT(tooltipBody))
+        : [value && `${value} ${unit}`]
+            .concat(pointAttributes.map(t => datum[t]))
+            .filter(Boolean)
+            .map(formatLines)
+    )
+
+    if (label || body.length) {
       this.setState({
         hoverPoint: {
           x,
           y,
           label,
-          value,
-          body,
-          datum
+          body
         }
       })
     } else {
@@ -306,7 +322,7 @@ export class GenericMap extends Component {
   }
   renderPointTooltip() {
     const { hoverPoint } = this.state
-    const { width, unit } = this.props
+    const { width } = this.props
 
     if (!hoverPoint) {
       return null
@@ -320,13 +336,6 @@ export class GenericMap extends Component {
         contextWidth={width}
       >
         <ContextBoxValue label={hoverPoint.label}>
-          {hoverPoint.value && (
-            <>
-              {`${hoverPoint.value} `}
-              {subsup(unit)}
-              <br />
-            </>
-          )}
           {hoverPoint.body}
         </ContextBoxValue>
       </ContextBox>
@@ -574,8 +583,15 @@ export const propTypes = {
   ),
   columns: PropTypes.number.isRequired,
   thresholds: PropTypes.arrayOf(PropTypes.number),
+  thresholdsLegend: PropTypes.arrayOf(
+    PropTypes.shape({
+      minValue: PropTypes.number,
+      label: PropTypes.string
+    })
+  ),
   extent: PropTypes.arrayOf(PropTypes.number),
   colorLegend: PropTypes.bool.isRequired,
+  colorLegendLabels: PropTypes.arrayOf(PropTypes.string),
   colorLegendSize: PropTypes.number.isRequired,
   colorLegendMinWidth: PropTypes.number.isRequired,
   colorLegendPosition: PropTypes.string,
@@ -612,46 +628,24 @@ export const propTypes = {
   tLabel: PropTypes.func.isRequired,
   description: PropTypes.string,
   color: PropTypes.string,
-  opacity: PropTypes.number.isRequired
+  opacity: PropTypes.number.isRequired,
+  tooltipLabel: PropTypes.string,
+  tooltipBody: PropTypes.string
 }
 
 GenericMap.propTypes = propTypes
 
-GenericMap.defaultProps = {
-  numberFormat: 's',
-  columns: 1,
-  unit: '',
-  heightRatio: 1,
-  colorLegend: true,
-  colorLegendSize: 0.16,
-  colorLegendMinWidth: 80,
-  colorLegendPosition: 'right',
-  points: false,
-  pointAttributes: [],
-  choropleth: false,
-  missingDataColor: 'divider',
-  ignoreMissingFeature: false,
-  feature: 'feature',
-  shape: 'circle',
-  sizeRangeMax: 10,
-  getProjection: () => geoEqualEarth().rotate([-10, 0]),
-  opacity: 0.6
-}
+GenericMap.defaultProps = defaultProps.GenericMap
 
 export const ProjectedMap = props => <GenericMap {...props} />
 
-ProjectedMap.defaultProps = {
-  getProjection: () => geoIdentity()
-}
+GenericMap.defaultProps = defaultProps.GenericMap
 
+ProjectedMap.defaultProps = defaultProps.ProjectedMap
 ProjectedMap.base = 'GenericMap'
 
 export const SwissMap = props => <GenericMap {...props} />
 
-SwissMap.defaultProps = {
-  getProjection: () =>
-    geoMercator().rotate([-7.439583333333333, -46.95240555555556]),
-  heightRatio: 0.63
-}
+SwissMap.defaultProps = defaultProps.SwissMap
 
 SwissMap.base = 'GenericMap'

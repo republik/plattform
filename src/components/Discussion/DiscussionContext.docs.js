@@ -7,15 +7,15 @@ import React from 'react'
  */
 export const createSampleDiscussionContextValue = ({
   t,
-  isAdmin = false,
+  isModerator = false,
   actions = {},
   userWaitUntil = null
 }) => ({
   /**
-   * Admin users have elevated priviledges, they can for example unpublish
+   * Moderator users have elevated priviledges, they can for example unpublish
    * any comment.
    */
-  isAdmin,
+  isModerator,
 
   /**
    * The Discussion object, straight from the GraphQL server.
@@ -107,6 +107,12 @@ export const createSampleDiscussionContextValue = ({
   Link: ({ displayAuthor, discussion, comment, passHref, ...props }) => (
     <React.Fragment {...props} />
   ),
+
+  /**
+   * Array of functions run while typing in the comment box. Hints are rendered above secondary
+   * actions slot of the composer.
+   */
+  composerHints: [],
 
   /**
    * React Element that will be placed into the secondary actions slot of the
