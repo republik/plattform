@@ -49,7 +49,7 @@ const chartTranslationDict = {
   Bar: 'Balken (Bar)',
   TimeBar: 'Säulen (TimeBar)',
   Lollipop: 'Lollipop',
-  Slope: 'Slope'
+  Slope: 'Steigungslinien (Slope)'
 }
 
 const chartTypes = Object.keys(schemaDictFullSupport).map(d => {
