@@ -306,7 +306,7 @@ module.exports = {
             section: {
               type: 'keyword',
             },
-            kind: { // @TOOD: Maybe drop
+            kind: {
               type: 'keyword',
             },
             template: {
