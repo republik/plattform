@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { css } from 'glamor'
-import { Interaction, Label, fontStyles } from '../../Typography'
+import { Interaction } from '../../Typography'
 import Field from '../../Form/Field'
 import Checkbox from '../../Form/Checkbox'
 import Slider from '../../Form/Slider'
@@ -17,9 +17,6 @@ const styles = {
     gridTemplateColumns: '1fr 1fr',
     gap: '20px 40px',
     margin: '20px 0'
-  }),
-  title: css({
-    ...fontStyles.sansSerifMedium16
   }),
   box: css({
     padding: '10px',
@@ -46,7 +43,9 @@ export const FormFields = props => {
         const groupObject = fields[group].properties
         return (
           <div {...styles.box} key={group}>
-            <div {...styles.title}>{fields[group].title}</div>
+            <Interaction.P>
+              <strong>{fields[group].title}</strong>
+            </Interaction.P>
             {Object.keys(fields[group].properties).map(property => {
               if (property === 'colorRange') {
                 return (
