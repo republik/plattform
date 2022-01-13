@@ -1197,6 +1197,14 @@
       "value": "Dokument suchen"
     },
     {
+      "key": "memo/modal/remove",
+      "value": "Memo entfernen"
+    },
+    {
+      "key": "memo/modal/warning/newDoc",
+      "value": "Sie können erst Kommentare hinterlassen, nachdem Sie den Beitrag kommittet haben."
+    },
+    {
       "key": "styleguide/video/dnt/note",
       "value": "Dies ist ein {player}-Video. Wenn Sie das Video abspielen, kann {platform} Sie tracken."
     },
