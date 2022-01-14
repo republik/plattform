@@ -14,7 +14,7 @@ import IconButton from '../../../IconButton'
 
 import ActionsMenu, { ActionsMenuItemPropType } from './ActionsMenu'
 import PropTypes from 'prop-types'
-import HeaderMetaLine from "./HeaderMetaLine";
+import HeaderMetaLine from './HeaderMetaLine'
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
@@ -132,6 +132,17 @@ const styles = {
  */
 export const collapseWrapperRule = styles.collapseWrapper
 
+const propTypes = {
+  t: PropTypes.func.isRequired,
+  comment: PropTypes.object.isRequired,
+  menuItems: PropTypes.arrayOf(ActionsMenuItemPropType),
+  isExpanded: PropTypes.bool,
+  onToggle: PropTypes.func,
+  Link: PropTypes.elementType.isRequired,
+  focusHref: PropTypes.string.isRequired,
+  profileHref: PropTypes.string.isRequired
+}
+
 export const Header = ({
   t,
   comment,
@@ -239,13 +250,4 @@ export const Header = ({
   )
 }
 
-Header.propTypes = {
-  t: PropTypes.func.isRequired,
-  comment: PropTypes.object.isRequired,
-  menuItems: PropTypes.arrayOf(ActionsMenuItemPropType),
-  isExpanded: PropTypes.bool,
-  onToggle: PropTypes.func,
-  Link: PropTypes.elementType.isRequired,
-  focusHref: PropTypes.string.isRequired,
-  profileHref: PropTypes.string.isRequired
-}
+Header.propTypes = propTypes
