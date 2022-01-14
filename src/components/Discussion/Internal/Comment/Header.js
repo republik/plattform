@@ -1,22 +1,20 @@
 import React from 'react'
 import { css } from 'glamor'
-import { AddIcon, CheckIcon, RemoveIcon } from '../../../Icons'
+import { AddIcon, RemoveIcon } from '../../../Icons'
 import {
   sansSerifMedium16,
   sansSerifRegular14
 } from '../../../Typography/styles'
 import { onlyS } from '../../../../theme/mediaQueries'
 import { ellipsize, underline } from '../../../../lib/styleMixins'
-import { timeFormat } from '../../../../lib/timeFormat'
-import { DiscussionContext } from '../../DiscussionContext'
 import * as config from '../../config'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
 import { useColorContext } from '../../../Colors/ColorContext'
 import IconButton from '../../../IconButton'
 
-import RelativeTime from './RelativeTime'
 import ActionsMenu, { ActionsMenuItemPropType } from './ActionsMenu'
 import PropTypes from 'prop-types'
+import HeaderMetaLine from './HeaderMetaLine'
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
@@ -60,7 +58,7 @@ const styles = {
     flexGrow: 0,
     flexShrink: 1,
     textDecoration: 'none',
-    ...ellipsize,
+    ...ellipsize
   }),
   meta: css({
     ...convertStyleToRem(sansSerifRegular14),
@@ -134,26 +132,25 @@ const styles = {
  */
 export const collapseWrapperRule = styles.collapseWrapper
 
-const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
-const titleDate = string => dateTimeFormat(new Date(string))
-
-export const Header = ({ t, comment, menuItems, isExpanded, onToggle }) => {
-  const { clock, discussion, Link } = React.useContext(DiscussionContext)
-
+export const Header = ({
+  t,
+  comment,
+  menuItems,
+  isExpanded,
+  onToggle,
+  focusHref,
+  Link
+}) => {
   const [colorScheme] = useColorContext()
   const {
     displayAuthor,
-    updatedAt,
-    createdAt,
     published = true,
     adminUnpublished = false,
     unavailable,
     comments,
     parentIds = []
   } = comment
-  const { profilePicture, name, credential } = displayAuthor || {}
-
-  const isUpdated = updatedAt && updatedAt !== createdAt
+  const { profilePicture, name } = displayAuthor || {}
 
   return (
     <div {...styles.root}>
@@ -199,68 +196,16 @@ export const Header = ({ t, comment, menuItems, isExpanded, onToggle }) => {
           )}
           {published && (
             <Link displayAuthor={displayAuthor} passHref>
-              <a {...styles.linkUnderline}>
-                {name}
-              </a>
+              <a {...styles.linkUnderline}>{name}</a>
             </Link>
           )}
         </div>
-        <div {...styles.meta} {...colorScheme.set('color', 'textSoft')}>
-          {published && credential && (
-            <>
-              <div
-                {...styles.credential}
-                title={
-                  credential.verified
-                    ? t(
-                        'styleguide/comment/header/verifiedCredential',
-                        undefined,
-                        ''
-                      )
-                    : undefined
-                }
-              >
-                <div
-                  {...styles.descriptionText}
-                  {...colorScheme.set(
-                    'color',
-                    credential.verified ? 'text' : 'textSoft'
-                  )}
-                >
-                  {credential.description}
-                </div>
-                {credential.verified && (
-                  <CheckIcon
-                    {...styles.verifiedCheck}
-                    {...colorScheme.set('color', 'primary')}
-                  />
-                )}
-              </div>
-              <div style={{ whiteSpace: 'pre' }}>{' · '}</div>
-            </>
-          )}
-          <div
-            {...styles.timeago}
-            {...colorScheme.set('color', 'textSoft')}
-            title={titleDate(createdAt)}
-          >
-            <Link discussion={discussion} comment={comment} passHref>
-              <a {...styles.linkUnderline}>
-                <RelativeTime {...clock} date={createdAt} />
-              </a>
-            </Link>
-          </div>
-          {published && isUpdated && (
-            <div
-              {...styles.timeago}
-              {...colorScheme.set('color', 'textSoft')}
-              title={titleDate(updatedAt)}
-            >
-              {' · '}
-              {t('styleguide/comment/header/updated')}
-            </div>
-          )}
-        </div>
+        {/*<HeaderMetaLine
+          comment={comment}
+          t={t}
+          focusHref={focusHref}
+          Link={Link}
+        />*/}
       </div>
       <div {...styles.actionsWrapper} className={styles.actionsWrapper}>
         {onToggle && (
@@ -294,5 +239,7 @@ Header.propTypes = {
   comment: PropTypes.object.isRequired,
   menuItems: PropTypes.arrayOf(ActionsMenuItemPropType),
   isExpanded: PropTypes.bool,
-  onToggle: PropTypes.func
+  onToggle: PropTypes.func,
+  Link: PropTypes.elementType.isRequired,
+  focusHref: PropTypes.string.isRequired
 }
