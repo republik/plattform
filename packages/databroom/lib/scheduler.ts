@@ -22,8 +22,8 @@ const init = async (context: Context) => {
 
       const jobFns = await setup({ dryRun, nice: true }, context)
       debug('%i jobs set up', jobFns.length)
-    
-      await Promise.each(jobFns, fn => fn())
+
+      await Promise.each(jobFns, (fn) => fn())
     },
     lockTtlSecs,
     runAtTime: '03:00',

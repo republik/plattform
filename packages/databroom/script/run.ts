@@ -10,7 +10,7 @@ import { setup } from '../lib'
 
 const argv = yargs
   .option('dryRun', {
-    description: 'Don\'t make changes (rollback instead of commit)',
+    description: "Don't make changes (rollback instead of commit)",
     boolean: true,
     default: true,
   })
@@ -30,8 +30,7 @@ const argv = yargs
     description: 'Make run very talkative',
     boolean: true,
     default: false,
-  })
-  .argv
+  }).argv
 
 if (argv.verbose) {
   _debug.enable('databroom:*,-databroom:job:*:handler')
@@ -53,13 +52,14 @@ const broom = async (context: Context) => {
   const jobFns = await setup(options, context)
   debug('%i jobs set up', jobFns.length)
 
-  await Promise.each(jobFns, fn => fn())
+  await Promise.each(jobFns, (fn) => fn())
 }
 
-base.lib.ConnectionContext
-  .create('databroom')
+base.lib.ConnectionContext.create('databroom')
   .then(async (context: Context) => {
-    await broom(context).catch((error: any) => { console.error(error) })
+    await broom(context).catch((error: any) => {
+      console.error(error)
+    })
 
     return context
   })

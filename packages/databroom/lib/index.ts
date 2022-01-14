@@ -43,23 +43,30 @@ async function getJobs(): Promise<JobMeta[]> {
   const glob = 'jobs/**/*.js'
 
   debug('find in %s with "%s', __dirname, glob)
-  const paths = await fg(
-    glob,
-    { cwd: __dirname, onlyFiles: true, absolute: true }
-  )
+  const paths = await fg(glob, {
+    cwd: __dirname,
+    onlyFiles: true,
+    absolute: true,
+  })
   debug('%i jobs found', paths.length)
 
-  return paths.map(path => ({ name: basename(path, '.js'), path }))
+  return paths.map((path) => ({ name: basename(path, '.js'), path }))
 }
 
-export async function setup(options: Options, context: Context): Promise<JobFn[]> {
+export async function setup(
+  options: Options,
+  context: Context,
+): Promise<JobFn[]> {
   debug('setup job fns with %o', options)
 
   const jobs = await getJobs()
 
-  return jobs.map(job => {
+  return jobs.map((job) => {
     debug('setup %s', job.name)
-    return require(job.path)(options, { ...context, debug: debug.extend(`job:${job.name}`) })
+    return require(job.path)(options, {
+      ...context,
+      debug: debug.extend(`job:${job.name}`),
+    })
   })
 }
 
@@ -98,7 +105,7 @@ export async function forEachRow(
   )
 
   const qryOptions = {
-    ...nice && { limit },
+    ...(nice && { limit }),
     fields,
     stream: true,
   }
@@ -107,20 +114,24 @@ export async function forEachRow(
   const qryStream = await pogiTable.find(qryConditions, qryOptions)
 
   debug('processing stream with handler ...')
-  await processStream(
-    qryStream,
-    handlers,
-  )
+  await processStream(qryStream, handlers)
   debug('processing stream is done')
 
   const [seconds] = process.hrtime(hrstart)
   debug('duration: %ds', seconds)
 }
 
-export async function processStream(stream: stream.Readable, handlers: Handlers): Promise<void> {
+export async function processStream(
+  stream: stream.Readable,
+  handlers: Handlers,
+): Promise<void> {
   const { rowHandler: _rowHandler, batchHandler } = handlers
 
-  const rowHandler = _rowHandler || function defaultRowHandler(row: any) { return row.id }
+  const rowHandler =
+    _rowHandler ||
+    function defaultRowHandler(row: any) {
+      return row.id
+    }
   const rowsBatch: any[] = []
 
   return new Promise((resolve, reject) => {
@@ -140,7 +151,7 @@ export async function processStream(stream: stream.Readable, handlers: Handlers)
         }
 
         stream.resume()
-      } catch(e) {
+      } catch (e) {
         reject(e)
       }
     })

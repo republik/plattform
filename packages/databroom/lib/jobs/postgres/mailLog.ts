@@ -1,13 +1,23 @@
-import { NICE_ROWS_LIMIT_FACTOR, NICE_ROWS_LIMIT_MINIMUM, processStream, Options, JobContext, JobFn } from '../../index'
+import {
+  NICE_ROWS_LIMIT_FACTOR,
+  NICE_ROWS_LIMIT_MINIMUM,
+  processStream,
+  Options,
+  JobContext,
+  JobFn,
+} from '../../index'
 
 const AGE_DAYS = 90
 
-export default module.exports = function setup(options: Options, context: JobContext): JobFn {
+export default module.exports = function setup(
+  options: Options,
+  context: JobContext,
+): JobFn {
   const { pgdb, debug } = context
   const { dryRun, nice } = options
   const now = new Date()
 
-  return async function() {
+  return async function () {
     const hrstart = process.hrtime()
     const tx = await pgdb.transactionBegin()
 
@@ -22,11 +32,13 @@ export default module.exports = function setup(options: Options, context: JobCon
         debug('update %i rows', ids.length)
         handlerDebug('update ids: %o', ids)
 
-        await tx.public.mailLog.query([
-          `UPDATE "mailLog"`,
-          `SET info = jsonb_strip_nulls(jsonb_build_object('message', jsonb_build_object('subject', info->'message'->'subject'), 'template', info->'template'))`,
-          `WHERE "id" IN (${ids.map(id => `'${id}'`).join(',')})`,
-        ].join(' '))
+        await tx.public.mailLog.query(
+          [
+            `UPDATE "mailLog"`,
+            `SET info = jsonb_strip_nulls(jsonb_build_object('message', jsonb_build_object('subject', info->'message'->'subject'), 'template', info->'template'))`,
+            `WHERE "id" IN (${ids.map((id) => `'${id}'`).join(',')})`,
+          ].join(' '),
+        )
       }
 
       debug('counting rows ...')
@@ -35,7 +47,9 @@ export default module.exports = function setup(options: Options, context: JobCon
           `SELECT COUNT(*) FROM "mailLog"`,
           `WHERE "createdAt" < '${new Date(createdBefore).toISOString()}'`,
           `AND (info->'message'->>'to') IS NOT NULL`,
-        ].filter(Boolean).join(' '),
+        ]
+          .filter(Boolean)
+          .join(' '),
       )
       debug('%i rows found', count)
 
@@ -54,21 +68,24 @@ export default module.exports = function setup(options: Options, context: JobCon
           `FROM "mailLog"`,
           `WHERE "createdAt" < '${new Date(createdBefore).toISOString()}'`,
           `AND (info->'message'->>'to') IS NOT NULL`,
-          nice && `LIMIT ${limit}`
-        ].filter(Boolean).join(' '),
+          nice && `LIMIT ${limit}`,
+        ]
+          .filter(Boolean)
+          .join(' '),
       )
 
       debug('processing stream with handler ...')
-      await processStream(
-        qryStream,
-        { batchHandler },
-      )
+      await processStream(qryStream, { batchHandler })
       debug('processing stream is done')
 
       const [seconds] = process.hrtime(hrstart)
       debug('duration: %ds', seconds)
 
-      await (dryRun && tx.transactionRollback()) || tx.transactionCommit()
+      if (!dryRun) {
+        await tx.transactionCommit()
+      } else {
+        await tx.transactionRollback()
+      }
     } catch (e) {
       await tx.transactionRollback()
       throw e

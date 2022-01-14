@@ -2,12 +2,15 @@ import { forEachRow, Options, JobContext, JobFn } from '../../index'
 
 const AGE_DAYS = 365
 
-export default module.exports = function setup(options: Options, context: JobContext): JobFn {
+export default module.exports = function setup(
+  options: Options,
+  context: JobContext,
+): JobFn {
   const { pgdb, debug } = context
   const { dryRun } = options
   const now = new Date()
 
-  return async function() {
+  return async function () {
     const qryConditions = {
       'createdAt <': now.setDate(now.getDate() - AGE_DAYS),
       'ip !=': null,
@@ -20,10 +23,7 @@ export default module.exports = function setup(options: Options, context: JobCon
         debug('update %s rows', ids.length)
         handlerDebug('update ids: %o', ids)
 
-        await tx.public.consents.update(
-          { id: ids },
-          { ip: null }
-        )
+        await tx.public.consents.update({ id: ids }, { ip: null })
       }
 
       await forEachRow(
@@ -34,7 +34,11 @@ export default module.exports = function setup(options: Options, context: JobCon
         context,
       )
 
-      await (dryRun && tx.transactionRollback()) || tx.transactionCommit()
+      if (!dryRun) {
+        await tx.transactionCommit()
+      } else {
+        await tx.transactionRollback()
+      }
     } catch (e) {
       await tx.transactionRollback()
       throw e

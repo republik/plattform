@@ -2,7 +2,10 @@ import { forEachRow, Options, JobContext, JobFn } from '../../index'
 
 const AGE_DAYS = 90
 
-export default module.exports = function setup(options: Options, context: JobContext): JobFn {
+export default module.exports = function setup(
+  options: Options,
+  context: JobContext,
+): JobFn {
   const { pgdb, debug } = context
   const { dryRun } = options
   const now = new Date()
@@ -30,7 +33,11 @@ export default module.exports = function setup(options: Options, context: JobCon
         context,
       )
 
-      await (dryRun && tx.transactionRollback()) || tx.transactionCommit()
+      if (!dryRun) {
+        await tx.transactionCommit()
+      } else {
+        await tx.transactionRollback()
+      }
     } catch (e) {
       await tx.transactionRollback()
       throw e
