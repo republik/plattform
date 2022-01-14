@@ -20,8 +20,8 @@ export default module.exports = function setup(
     try {
       const handlerDebug = debug.extend('handler')
       const batchHandler = async function (ids: string[]): Promise<void> {
-        debug('update %s rows', ids.length)
-        handlerDebug('update ids: %o', ids)
+        debug('update %i rows%s', ids.length, dryRun ? ' (dry-run only)' : '')
+        handlerDebug('update ids%s: %o', dryRun ? ' (dry-run only)' : '', ids)
 
         await tx.public.consents.update({ id: ids }, { ip: null })
       }

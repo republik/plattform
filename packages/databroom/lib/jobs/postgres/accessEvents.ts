@@ -19,8 +19,8 @@ export default module.exports = function setup(
     try {
       const handlerDebug = debug.extend('handler')
       const batchHandler = async function (ids: string[]): Promise<void> {
-        debug('delete %s rows', ids.length)
-        handlerDebug('delete ids: %o', ids)
+        debug('delete %i rows%s', ids.length, dryRun ? ' (dry-run only)' : '')
+        handlerDebug('delete ids%s: %o', dryRun ? ' (dry-run only)' : '', ids)
 
         await tx.public.accessEvents.delete({ id: ids })
       }

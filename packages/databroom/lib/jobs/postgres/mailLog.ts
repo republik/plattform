@@ -29,8 +29,8 @@ export default module.exports = function setup(
 
       const handlerDebug = debug.extend('handler')
       const batchHandler = async function (ids: string[]): Promise<void> {
-        debug('update %i rows', ids.length)
-        handlerDebug('update ids: %o', ids)
+        debug('update %i rows%s', ids.length, dryRun ? ' (dry-run only)' : '')
+        handlerDebug('update ids%s: %o', dryRun ? ' (dry-run only)' : '', ids)
 
         await tx.public.mailLog.query(
           [
