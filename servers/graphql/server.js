@@ -119,7 +119,7 @@ const run = async (workerId, config) => {
   const middlewares = [
     require('@orbiting/backend-modules-republik-crowdfundings/express/paymentWebhooks'),
     require('@orbiting/backend-modules-gsheets/express/gsheets'),
-    require('@orbiting/backend-modules-maillog/express/Mandrill/webhook'),
+    require('@orbiting/backend-modules-mail/express/mandrill'),
     require('@orbiting/backend-modules-publikator/express/uncommittedChanges'),
     require('@orbiting/backend-modules-invoices/express'),
   ]
