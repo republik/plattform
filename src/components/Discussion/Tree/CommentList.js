@@ -1,7 +1,7 @@
 import React from 'react'
 import { DiscussionContext } from '../DiscussionContext'
 import { LoadMore } from './LoadMore'
-import CommentNode from './CommentNode'
+import LegacyCommentNode from './LegacyCommentNode'
 
 export const CommentList = ({
   t,
@@ -33,7 +33,7 @@ export const CommentList = ({
   return (
     <>
       {nodes.map((comment, i) => (
-        <CommentNode
+        <LegacyCommentNode
           key={comment.id}
           t={t}
           comment={comment}
