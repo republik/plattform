@@ -113,7 +113,6 @@ type Notification {
   subscription: Subscription
   content: NotificationContent!
   channels: [DiscussionNotificationChannel]!
-  mailLogRecord: MailLogRecord
   appPushesSuccessful: Int
   appPushesFailed: Int
   readAt: DateTime
