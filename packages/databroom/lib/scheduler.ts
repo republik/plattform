@@ -2,7 +2,7 @@ import { debug as _debug } from 'debug'
 import Promise from 'bluebird'
 
 import { timeScheduler } from '@orbiting/backend-modules-schedulers'
-import { Context } from '@orbiting/backend-modules-types'
+import { ConnectionContext } from '@orbiting/backend-modules-types'
 
 import { setup } from '../lib'
 
@@ -10,7 +10,7 @@ const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 
 const lockTtlSecs = 60 * 5 // 5 minutes
 
-const init = async (context: Context) => {
+const init = async (context: ConnectionContext) => {
   const debug = _debug('databroom:lib:scheduler')
   debug('init')
 

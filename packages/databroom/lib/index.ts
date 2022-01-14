@@ -3,13 +3,13 @@ import { debug as _debug, Debugger } from 'debug'
 import * as stream from 'stream'
 import fg from 'fast-glob'
 
-import { Context } from '@orbiting/backend-modules-types'
+import { ConnectionContext } from '@orbiting/backend-modules-types'
 
 export interface Options {
   dryRun?: boolean
   nice?: boolean
 }
-export interface JobContext extends Context {
+export interface JobContext extends ConnectionContext {
   debug: Debugger
 }
 
@@ -55,7 +55,7 @@ async function getJobs(): Promise<JobMeta[]> {
 
 export async function setup(
   options: Options,
-  context: Context,
+  context: ConnectionContext,
 ): Promise<JobFn[]> {
   debug('setup job fns with %o', options)
 
