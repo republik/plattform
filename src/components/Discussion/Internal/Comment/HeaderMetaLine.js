@@ -53,13 +53,6 @@ const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
 const titleDate = string => dateTimeFormat(new Date(string))
 
 /**
- * ============================================================
- * REFACTOR NOTE
- * Make use of this component in the CommentNode to reduce redundancy.
- * ============================================================
- */
-
-/**
  * Render the meta line of the comment-header
  * user credential - published at - edited state
  * @param t
