@@ -30,7 +30,8 @@ const styles = {
   header: css({
     borderBottomWidth: '1px',
     borderBottomStyle: 'solid',
-    padding: '6px 0'
+    padding: '6px 0',
+    userSelect: 'none'
   }),
   cell: css({
     padding: '6px 0',
@@ -53,13 +54,13 @@ const Table = props => {
     colorBy,
     colorRanges,
     colorRange,
-    sortColumn,
+    defaultSortColumn,
     customThreshold
   } = props
   const columns = values.columns
 
   const [sortBy, setSortBy] = useState({
-    key: sortColumn || columns[0],
+    key: defaultSortColumn || columns[0],
     order: 'desc'
   })
 
@@ -186,7 +187,7 @@ export const propTypes = {
   numberColumns: PropTypes.array,
   numberFormat: PropTypes.string.isRequired,
   enableSorting: PropTypes.bool,
-  sortColumn: PropTypes.string,
+  defaultSortColumn: PropTypes.string,
   customThreshold: PropTypes.number
 }
 

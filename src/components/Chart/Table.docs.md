@@ -37,7 +37,7 @@ Gesamtbevölkerung,38,8.6
       "numberColumns": ["Gewichtung"],
       "enableSorting": true,
       "colorBy": "Gewichtung",
-      "sortColumn": "Gewichtung",
+      "defaultSortColumn": "Gewichtung",
       "customThreshold": 0.1
     }}
     values={`
