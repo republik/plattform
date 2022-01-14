@@ -278,14 +278,6 @@ const CommentNode: FC<InferProps<typeof propTypes>> = ({
                     !activeTag && tags[0] ? { title: tags[0] } : undefined
                   }
                 />
-                {(board || (rootCommentOverlay && isRoot)) && (
-                  <div
-                    {...styles.hideMUp}
-                    style={{ marginTop: rootCommentOverlay ? 15 : null }}
-                  >
-                    <Comment.Embed comment={comment} />
-                  </div>
-                )}
               </div>
             </div>
           )}
@@ -307,12 +299,6 @@ const CommentNode: FC<InferProps<typeof propTypes>> = ({
             userWaitUntil={userWaitUntil}
           />
         </div>
-
-        {board && (
-          <div {...styles.boardColumn} {...styles.showMUp}>
-            <Comment.Embed comment={comment} />
-          </div>
-        )}
         {children}
         <LoadMore
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
