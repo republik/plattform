@@ -254,8 +254,8 @@ const Tables = props => {
   const colorRange = props.colorRanges[props.colorRange]
 
   const colorScale = scaleThreshold()
-    .domain(range(colorDomain[0], colorDomain[1], 10))
     .range(colorRange)
+    .domain(range(colorDomain[0], colorDomain[1], 10))
 
   return (
     <section {...styles.wrapper} {...colorScheme.set('color', 'text')}>

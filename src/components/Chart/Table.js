@@ -1,18 +1,13 @@
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { scaleThreshold, scaleLinear, scaleTime } from 'd3-scale'
+import { scaleThreshold, scaleLinear, scaleOrdinal } from 'd3-scale'
 import { extent, range } from 'd3-array'
-import { line } from 'd3-shape'
 import { useColorContext } from '../Colors/ColorContext'
 import { getFormat } from './utils'
+import { ExpandMoreIcon, ExpandLessIcon } from '../Icons'
 
-import {
-  sansSerifMedium14,
-  sansSerifRegular12,
-  sansSerifRegular18
-} from '../Typography/styles'
-import { getColorMapper } from './colorMaps'
+import { sansSerifRegular18 } from '../Typography/styles'
 
 import { getTextColor } from './utils'
 
@@ -40,17 +35,31 @@ const styles = {
   cell: css({
     padding: '6px 0',
     verticalAlign: 'top'
+  }),
+  placeholder: css({
+    display: 'inline-block',
+    width: '18px',
+    height: '18px'
   })
 }
 
 const Table = props => {
   const [colorScheme] = useColorContext()
-  const { values, labelCells, numberFormat } = props
+  const {
+    values,
+    numberColumns,
+    numberFormat,
+    enableSorting,
+    colorBy,
+    colorRanges,
+    colorRange,
+    sortColumn,
+    customThreshold
+  } = props
   const columns = values.columns
-  console.log(values)
 
   const [sortBy, setSortBy] = useState({
-    key: columns[0],
+    key: sortColumn || columns[0],
     order: 'desc'
   })
 
@@ -60,12 +69,17 @@ const Table = props => {
     let parsedItem = {}
     Object.keys(row).forEach(
       item =>
-        (parsedItem[item] = labelCells.includes(item) ? row[item] : +row[item])
+        (parsedItem[item] = numberColumns.includes(item)
+          ? +row[item]
+          : row[item])
     )
     parsedData.push({ ...parsedItem })
   })
 
   const sortedData = parsedData.sort((a, b) => {
+    if (!enableSorting) {
+      return
+    }
     if (typeof a[sortBy.key] === 'string') {
       return sortBy.order === 'desc'
         ? a[sortBy.key].localeCompare(b[sortBy.key])
@@ -85,6 +99,13 @@ const Table = props => {
     }
   }
 
+  const colorDomain = extent(parsedData, d => d[colorBy])
+  const currentColorRange = colorRanges[colorRange] || colorRange
+
+  const colorScale = scaleThreshold()
+    .range(currentColorRange)
+    .domain(range(colorDomain[0], colorDomain[1], customThreshold))
+
   return (
     <div {...styles.container}>
       <table {...styles.table}>
@@ -95,12 +116,22 @@ const Table = props => {
                 {...styles.header}
                 {...colorScheme.set('borderBottomColor', 'text')}
                 style={{
-                  textAlign: labelCells.includes(tableHead) ? 'left' : 'center'
+                  textAlign: numberColumns.includes(tableHead)
+                    ? 'center'
+                    : 'left',
+                  cursor: enableSorting && 'pointer'
                 }}
                 key={index}
                 onClick={() => setSort(columns[index])}
               >
                 {tableHead}
+                {enableSorting &&
+                  sortBy.key === tableHead &&
+                  (sortBy.order === 'desc' ? (
+                    <ExpandMoreIcon />
+                  ) : (
+                    <ExpandLessIcon />
+                  ))}
               </th>
             ))}
           </tr>
@@ -113,12 +144,21 @@ const Table = props => {
                   key={cellIndex}
                   {...styles.cell}
                   style={{
-                    textAlign: labelCells.includes(cellKey) ? 'left' : 'center'
+                    textAlign: numberColumns.includes(cellKey)
+                      ? 'center'
+                      : 'left',
+                    backgroundColor:
+                      colorBy === cellKey
+                        ? colorScale(row[cellKey])
+                        : 'transparent',
+                    color:
+                      colorBy === cellKey &&
+                      getTextColor(colorScale(row[cellKey]))
                   }}
                 >
-                  {labelCells.includes(cellKey)
-                    ? row[cellKey]
-                    : getFormat(numberFormat)(row[cellKey])}
+                  {numberColumns.includes(cellKey)
+                    ? getFormat(numberFormat)(row[cellKey])
+                    : row[cellKey]}
                 </td>
               ))}
             </tr>
@@ -143,8 +183,11 @@ export const propTypes = {
   }).isRequired,
   sparkLine: PropTypes.object,
   values: PropTypes.array.isRequired,
-  labelCells: PropTypes.array,
-  numberFormat: PropTypes.string.isRequired
+  numberColumns: PropTypes.array,
+  numberFormat: PropTypes.string.isRequired,
+  enableSorting: PropTypes.bool,
+  sortColumn: PropTypes.string,
+  customThreshold: PropTypes.number
 }
 
 Table.propTypes = propTypes
@@ -153,8 +196,10 @@ Table.defaultProps = {
   color: 'label',
   colorRange: 'sequential',
   values: [],
-  labelCells: [],
-  numberFormat: 's'
+  numberColumns: [],
+  numberFormat: 's',
+  enableSorting: false,
+  customThreshold: 10
 }
 
 export default Table
