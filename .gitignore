@@ -78,6 +78,7 @@ packages/auth/lib/index.js
 packages/auth/lib/transformUser.js
 packages/auth/loaders/User.js
 packages/base/express/keepalive.js
+packages/databroom/**/*.js
 packages/dataloader/**/*.js
 packages/discussions/loaders/Comment.js
 packages/invoices/**/*.js

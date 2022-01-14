@@ -93,6 +93,7 @@
     "migrate:down": "db-migrate down --migrations-dir packages/migrations/migrations --verbose",
     "db:seed": "packages/republik-crowdfundings/seeds/script/seed.js",
     "notifications:send": "cd packages/republik && node ../push-notifications/script/sendNotification.js",
+    "databroom": "node packages/databroom/script/run.js --verbose",
     "test": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit",
     "test:unit": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit --testPathPattern \"\\.(u)|(unit)\\.jest\"",
     "test:integration": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit --testPathPattern \"\\.(int)|(integration)\\.jest\"",
