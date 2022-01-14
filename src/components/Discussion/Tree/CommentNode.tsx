@@ -159,8 +159,11 @@ const propTypes = {
   rootCommentOverlay: PropTypes.bool,
   Link: PropTypes.elementType.isRequired,
   focusHref: PropTypes.string.isRequired,
+  profileHref: PropTypes.string.isRequired,
   userCanComment: PropTypes.bool,
-  userWaitUntil: PropTypes.string
+  userWaitUntil: PropTypes.string,
+
+  editComposer: PropTypes.node
 }
 
 /**
@@ -181,7 +184,10 @@ const CommentNode: FC<InferProps<typeof propTypes>> = ({
   board,
   rootCommentOverlay,
   Link,
-  focusHref
+  focusHref,
+  profileHref,
+
+  editComposer
 }) => {
   const { id, parentIds, tags, text } = comment as any
   const isHighlighted = id === focusId
@@ -243,38 +249,47 @@ const CommentNode: FC<InferProps<typeof propTypes>> = ({
             isRoot && rootCommentOverlay ? styles.modalRoot : null
           )}
         >
-          {/*<div {...styles.commentWrapper({ isExpanded })}>
-            {<Header
-              t={t}
-              comment={comment}
-              isExpanded={isExpanded}
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              onToggle={
-                !board &&
-                !(isRoot && rootCommentOverlay) &&
-                setExpanded(prev => !prev)
-              }
-              menuItems={menuItems}
-              Link={Link}
-              focusHref={focusHref}
-            />
-            <div style={{ marginTop: 12 }}>
-              <Comment.Body
-                t={t}
-                comment={comment}
-                context={!activeTag && tags[0] ? { title: tags[0] } : undefined}
-              />
-              {(board || (rootCommentOverlay && isRoot)) && (
-                <div
-                  {...styles.hideMUp}
-                  style={{ marginTop: rootCommentOverlay ? 15 : null }}
-                >
-                  <Comment.Embed comment={comment} />
+          <div {...styles.commentWrapper({ isExpanded })}>
+            {editComposer ? (
+              editComposer
+            ) : (
+              <>
+                <Header
+                  t={t}
+                  comment={comment}
+                  isExpanded={isExpanded}
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore
+                  onToggle={
+                    !board && !(isRoot && rootCommentOverlay)
+                      ? () => setExpanded(prev => !prev)
+                      : undefined
+                  }
+                  menuItems={menuItems}
+                  Link={Link}
+                  focusHref={focusHref}
+                  profileHref={profileHref}
+                />
+                <div style={{ marginTop: 12 }}>
+                  <Comment.Body
+                    t={t}
+                    comment={comment}
+                    context={
+                      !activeTag && tags[0] ? { title: tags[0] } : undefined
+                    }
+                  />
+                  {(board || (rootCommentOverlay && isRoot)) && (
+                    <div
+                      {...styles.hideMUp}
+                      style={{ marginTop: rootCommentOverlay ? 15 : null }}
+                    >
+                      <Comment.Embed comment={comment} />
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>*}
-          </div>*/}
+              </>
+            )}
+          </div>
 
           <CommentActions
             t={t}
@@ -311,13 +326,16 @@ const CommentNode: FC<InferProps<typeof propTypes>> = ({
             onClick={() => setExpanded(prev => !prev)}
           />
         )}
-        {/*<Comment.Header
+        <Comment.Header
           t={t}
           comment={comment}
           isExpanded={isExpanded}
           onToggle={() => setExpanded(prev => !prev)}
           menuItems={menuItems}
-        />*/}
+          Link={Link}
+          focusHref={focusHref}
+          profileHref={profileHref}
+        />
       </div>
     )
   }

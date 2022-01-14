@@ -14,7 +14,7 @@ import IconButton from '../../../IconButton'
 
 import ActionsMenu, { ActionsMenuItemPropType } from './ActionsMenu'
 import PropTypes from 'prop-types'
-import HeaderMetaLine from './HeaderMetaLine'
+import HeaderMetaLine from "./HeaderMetaLine";
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
@@ -139,6 +139,7 @@ export const Header = ({
   isExpanded,
   onToggle,
   focusHref,
+  profileHref,
   Link
 }) => {
   const [colorScheme] = useColorContext()
@@ -161,9 +162,13 @@ export const Header = ({
             return null
           }
           return (
-            <Link displayAuthor={displayAuthor} passHref>
+            <Link href={profileHref} passHref>
               <a {...styles.link}>
-                <img {...styles.profilePicture} src={profilePicture} alt='' />
+                <img
+                  {...styles.profilePicture}
+                  src={profilePicture}
+                  alt={name}
+                />
               </a>
             </Link>
           )
@@ -195,17 +200,17 @@ export const Header = ({
             </span>
           )}
           {published && (
-            <Link displayAuthor={displayAuthor} passHref>
+            <Link href={profileHref} passHref>
               <a {...styles.linkUnderline}>{name}</a>
             </Link>
           )}
         </div>
-        {/*<HeaderMetaLine
+        <HeaderMetaLine
           comment={comment}
           t={t}
           focusHref={focusHref}
           Link={Link}
-        />*/}
+        />
       </div>
       <div {...styles.actionsWrapper} className={styles.actionsWrapper}>
         {onToggle && (
@@ -241,5 +246,6 @@ Header.propTypes = {
   isExpanded: PropTypes.bool,
   onToggle: PropTypes.func,
   Link: PropTypes.elementType.isRequired,
-  focusHref: PropTypes.string.isRequired
+  focusHref: PropTypes.string.isRequired,
+  profileHref: PropTypes.string.isRequired
 }

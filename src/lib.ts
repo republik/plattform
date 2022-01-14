@@ -6,6 +6,7 @@ export const mediaQueries = allMediaQueries
 
 export { fontFamilies, fontFaces } from './theme/fonts'
 
+export { timeFormat, timeParse } from './lib/timeFormat'
 export { default as timeago } from './lib/timeago'
 export { default as timeahead } from './lib/timeahead'
 export { default as timeduration } from './lib/timeduration'
