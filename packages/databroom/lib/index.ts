@@ -45,7 +45,7 @@ async function getJobs(): Promise<JobMeta[]> {
   debug('find in %s with "%s', __dirname, glob)
   const paths = await fg(
     glob,
-    { cwd: __dirname, onlyFiles: true, absolute: true }
+    { cwd: __dirname, onlyFiles: true, absolute: true }
   )
   debug('%i jobs found', paths.length)
 
