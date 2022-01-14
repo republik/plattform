@@ -154,7 +154,7 @@ const propTypes = {
     handleLoadReplies: PropTypes.func
   }),
   menuItems: PropTypes.arrayOf(ActionsMenuItemPropType),
-  focusId: PropTypes.number,
+  focusId: PropTypes.string,
   isLast: PropTypes.bool,
   board: PropTypes.bool,
   rootCommentOverlay: PropTypes.bool,
