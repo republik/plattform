@@ -4,7 +4,7 @@ import yargs from 'yargs'
 
 require('@orbiting/backend-modules-env').config()
 import base from '@orbiting/backend-modules-base'
-import { Context } from '@orbiting/backend-modules-types'
+import { ConnectionContext } from '@orbiting/backend-modules-types'
 
 import { setup } from '../lib'
 
@@ -43,9 +43,7 @@ if (argv.veryVerbose) {
 const debug = _debug('databroom:script:run')
 debug('%o', argv)
 
-const broom = async (context: Context) => {
-  debug('ConnectionContext available')
-
+const broom = async (context: ConnectionContext) => {
   const { dryRun, nice } = argv
   const options = { dryRun, nice }
 
@@ -56,14 +54,14 @@ const broom = async (context: Context) => {
 }
 
 base.lib.ConnectionContext.create('databroom')
-  .then(async (context: Context) => {
+  .then(async (context: ConnectionContext) => {
     await broom(context).catch((error: any) => {
       console.error(error)
     })
 
     return context
   })
-  .then((context: Context) => base.lib.ConnectionContext.close(context))
+  .then((context: ConnectionContext) => base.lib.ConnectionContext.close(context))
   .catch((error: any) => {
     console.error(error)
   })
