@@ -389,7 +389,7 @@ const LegacyCommentNode = ({
                       {...styles.hideMUp}
                       style={{ marginTop: rootCommentOverlay ? 15 : null }}
                     >
-                      <Comment.Embed comment={comment} />
+                      <Comment.CommentEmbed comment={comment} />
                     </div>
                   )}
                 </div>
@@ -437,7 +437,7 @@ const LegacyCommentNode = ({
 
         {board && (
           <div {...styles.boardColumn} {...styles.showMUp}>
-            <Comment.Embed comment={comment} />
+            <Comment.CommentEmbed comment={comment} />
           </div>
         )}
 

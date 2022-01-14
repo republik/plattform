@@ -8,7 +8,7 @@ import { serifRegular16, sansSerifRegular12 } from '../../Typography/styles'
 
 import { Header, Tags, Actions, Error } from '../Internal/Composer'
 import { convertStyleToRem } from '../../Typography/utils'
-import { Embed } from '../Internal/Comment'
+import { CommentEmbed } from '../Internal/Comment'
 import { useDebounce } from '../../../lib/useDebounce'
 import { useColorContext } from '../../Colors/ColorContext'
 import Loader from '../../Loader'
@@ -355,7 +355,7 @@ export const CommentComposer = ({
 
       <Loader
         loading={preview.loading && !(preview.comment && preview.comment.embed)}
-        render={() => <Embed comment={preview.comment} />}
+        render={() => <CommentEmbed comment={preview.comment} />}
       />
 
       <Actions

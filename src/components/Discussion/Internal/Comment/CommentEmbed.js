@@ -10,8 +10,9 @@ import {
 import { mUp } from '../../../../theme/mediaQueries'
 import { linkStyle } from '../../../Typography'
 import { TwitterIcon } from '../../../Icons'
-import { useColorContext } from '../../../Colors/useColorContext'
+import { useColorContext } from "../../../Colors/ColorContext"
 import { timeFormat } from '../../../../lib/timeFormat'
+import PropTypes from 'prop-types'
 
 const styles = {
   link: css({
@@ -95,10 +96,13 @@ const normalizeEmbed = embed => ({
   body: embed.description
 })
 
-export const Embed = ({ comment }) => {
+const propTypes = {
+  embed: PropTypes.object.isRequired,
+  mentioningDocument: PropTypes.object
+}
+
+export const CommentEmbed = ({ embed, mentioningDocument }) => {
   const [colorScheme] = useColorContext()
-  if (!comment || !comment.embed) return null
-  const { mentioningDocument, embed } = comment
   const {
     url,
     title,
@@ -172,3 +176,5 @@ export const Embed = ({ comment }) => {
     </div>
   )
 }
+
+CommentEmbed.propTypes = propTypes
