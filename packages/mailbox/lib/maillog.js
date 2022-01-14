@@ -93,7 +93,8 @@ const toRecords = (row) => {
     status: getStatus(row),
     error: getError(row),
     from:
-      message &&
+      message?.from_name &&
+      message?.from_email &&
       getAddress({
         name: message.from_name,
         address: message.from_email,
