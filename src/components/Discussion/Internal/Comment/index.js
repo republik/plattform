@@ -1,4 +1,4 @@
-export * from './Actions'
+export * from './CommentActions'
 export * from './Body'
 export * from './Context'
 export * from './Header'
