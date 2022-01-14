@@ -152,7 +152,7 @@ const styles = {
  * It also manages
  * the editor for the comment itself, and composer for replies.
  */
-const CommentNode = ({
+const LegacyCommentNode = ({
   t,
   discussion,
   comment,
@@ -417,7 +417,7 @@ const CommentNode = ({
             )
           }[mode]()}
 
-          <Comment.Actions
+          <Comment.CommentActions
             t={t}
             comment={comment}
             onExpand={
@@ -491,4 +491,4 @@ const CommentNode = ({
   }
 }
 
-export default CommentNode
+export default LegacyCommentNode
