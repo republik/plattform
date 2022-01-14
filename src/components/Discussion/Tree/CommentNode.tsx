@@ -9,6 +9,7 @@ import { collapseWrapperRule } from '../Internal/Comment'
 import PropTypes, { InferProps } from 'prop-types'
 import { ActionsMenuItemPropType } from '../Internal/Comment/ActionsMenu'
 import { Header } from '../Internal/Comment/Header'
+import { LoadMore } from './LoadMore'
 
 const buttonStyle = {
   display: 'block',
@@ -249,47 +250,45 @@ const CommentNode: FC<InferProps<typeof propTypes>> = ({
             isRoot && rootCommentOverlay ? styles.modalRoot : null
           )}
         >
-          <div {...styles.commentWrapper({ isExpanded })}>
-            {editComposer ? (
-              editComposer
-            ) : (
-              <>
-                <Header
+          {editComposer ? (
+            editComposer
+          ) : (
+            <div {...styles.commentWrapper({ isExpanded })}>
+              <Header
+                t={t}
+                comment={comment}
+                isExpanded={isExpanded}
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                onToggle={
+                  !board && !(isRoot && rootCommentOverlay)
+                    ? () => setExpanded(prev => !prev)
+                    : undefined
+                }
+                menuItems={menuItems}
+                Link={Link}
+                focusHref={focusHref}
+                profileHref={profileHref}
+              />
+              <div style={{ marginTop: 12 }}>
+                <Comment.Body
                   t={t}
                   comment={comment}
-                  isExpanded={isExpanded}
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                  // @ts-ignore
-                  onToggle={
-                    !board && !(isRoot && rootCommentOverlay)
-                      ? () => setExpanded(prev => !prev)
-                      : undefined
+                  context={
+                    !activeTag && tags[0] ? { title: tags[0] } : undefined
                   }
-                  menuItems={menuItems}
-                  Link={Link}
-                  focusHref={focusHref}
-                  profileHref={profileHref}
                 />
-                <div style={{ marginTop: 12 }}>
-                  <Comment.Body
-                    t={t}
-                    comment={comment}
-                    context={
-                      !activeTag && tags[0] ? { title: tags[0] } : undefined
-                    }
-                  />
-                  {(board || (rootCommentOverlay && isRoot)) && (
-                    <div
-                      {...styles.hideMUp}
-                      style={{ marginTop: rootCommentOverlay ? 15 : null }}
-                    >
-                      <Comment.Embed comment={comment} />
-                    </div>
-                  )}
-                </div>
-              </>
-            )}
-          </div>
+                {(board || (rootCommentOverlay && isRoot)) && (
+                  <div
+                    {...styles.hideMUp}
+                    style={{ marginTop: rootCommentOverlay ? 15 : null }}
+                  >
+                    <Comment.Embed comment={comment} />
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           <CommentActions
             t={t}
@@ -315,6 +314,18 @@ const CommentNode: FC<InferProps<typeof propTypes>> = ({
           </div>
         )}
         {children}
+        <LoadMore
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          t={t}
+          visualDepth={0}
+          count={
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            comment?.comments?.directTotalCount - comment.comments.nodes.length
+          }
+          onClick={actions.handleLoadReplies}
+        />
       </div>
     )
   } else {
