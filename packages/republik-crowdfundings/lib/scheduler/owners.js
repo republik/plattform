@@ -16,7 +16,11 @@ const { suggest: autoPaySuggest } = require('../AutoPay')
 const mailings = require('./owners/mailings')
 const charging = require('./owners/charging')
 
-const { PARKING_USER_ID, MEMBERSHIP_SCHEDULER_USER_LIMIT } = process.env
+const {
+  PARKING_USER_ID,
+  MEMBERSHIP_SCHEDULER_USER_LIMIT,
+  MEMBERSHIP_SCHEDULER_CONCURRENCY = 10,
+} = process.env
 
 const DAYS_BEFORE_END_DATE = 29
 
@@ -37,12 +41,12 @@ const getMaxEndDate = (now, daysBeforeEndDate) =>
 /**
  * Creates an array of jobs. A job maybe sending an email or charging
  * a user. Each user is check whether a job should be run.
- * 
+ *
  * 1) Is {user.prolongBeforeDate} between {job.prolongBefore.minDate}
  *    and {job.prolongBefore.maxDate}?
- * 
+ *
  * 2) Does user pass {job.predicateFn}?
- * 
+ *
  * 3) Then run {job.handleFn}
  *
  */
@@ -301,7 +305,9 @@ const createHandleFn = (jobs, context) => async (rows, count) => {
 
   debug({ count, rows: rows.length, withProlongBeforeDate: users.length })
 
-  await Promise.map(users, createUserJobs(jobs, context), { concurrency: 10 })
+  await Promise.map(users, createUserJobs(jobs, context), {
+    concurrency: Number(MEMBERSHIP_SCHEDULER_CONCURRENCY),
+  })
 }
 
 const run = async (args, context) => {
