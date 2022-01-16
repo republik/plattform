@@ -121,7 +121,7 @@
     "commit": "git-cz",
     "prepublishOnly": "npm run prebuild && npm run build:lib",
     "prebuild": "rimraf dist",
-    "build": "npm run build:lib && npm run build:docs",
+    "build": "npm run build:lib && if [ \"$SERVER\" = \"styleguide\" ]; then npm run build:docs; fi",
     "build:lib": "rollup -c",
     "build:docs": "react-scripts build",
     "start": "react-scripts start",
