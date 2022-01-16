@@ -124,7 +124,7 @@
     "build": "npm run build:lib && if [ \"$SERVER\" = \"styleguide\" ]; then npm run build:docs; fi",
     "build:lib": "rollup -c",
     "build:docs": "react-scripts build",
-    "start": "react-scripts start",
+    "start": "serve -s build",
     "dev": "npm run dev:lib & BROWSER=none CI=true PORT=3003 react-scripts start",
     "dev:lib": "rollup -c -w",
     "test": "react-scripts test",
@@ -150,7 +150,8 @@
   },
   "dependencies": {
     "body-scroll-lock": "^3.1.5",
-    "react-icons": "^4.3.1"
+    "react-icons": "^4.3.1",
+    "serve": "^13.0.2"
   },
   "browserslist": [
     ">0.2%",
