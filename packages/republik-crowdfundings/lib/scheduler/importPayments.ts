@@ -39,8 +39,8 @@ export async function importPayments(
   } catch (e) {
     await informFailed(
       `importPayments(): postfinance sync failed with the following error: ${
-        e.message || e
-      } ${e.stack || ''}`,
+        e instanceof Error ? `${e.message} ${e.stack || ''}` : e
+      }`,
     )
     return
   }
@@ -155,8 +155,8 @@ async function tryMatchingPayments(
     transaction.transactionRollback({ savePoint: matchPaymentsSavepoint })
     informFailed(
       `importPayments(): match failed with the following error: ${
-        e.message || e
-      } ${e.stack || ''}`,
+        e instanceof Error ? `${e.message} ${e.stack || ''}` : e
+      }`,
     )
   }
 }
@@ -312,10 +312,14 @@ function getRecordsFromFile(
       )
       .map(extendWithImageAndAccountId(images, ibanToBankAccountId))
   } catch (e) {
-    throw new WrappingError(
-      e,
-      `Error when getting records from file ${file.fileName}`,
-    )
+    if (e instanceof Error) {
+      throw new WrappingError(
+        e,
+        `Error when getting records from file ${file.fileName}`,
+      )
+    } else {
+      throw e
+    }
   }
 }
 
