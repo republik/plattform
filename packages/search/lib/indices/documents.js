@@ -202,16 +202,6 @@ module.exports = {
                           type: 'text',
                           analyzer: 'german_with_stopwords',
                         },
-                        description: {
-                          type: 'text',
-                          analyzer: 'german',
-                        },
-                        kind: {
-                          type: 'keyword',
-                        },
-                        template: {
-                          type: 'keyword',
-                        },
                       },
                     },
                   },
@@ -224,14 +214,7 @@ module.exports = {
                           type: 'text',
                           analyzer: 'german_with_stopwords',
                         },
-                        description: {
-                          type: 'text',
-                          analyzer: 'german',
-                        },
                         kind: {
-                          type: 'keyword',
-                        },
-                        template: {
                           type: 'keyword',
                         },
                       },
@@ -245,16 +228,6 @@ module.exports = {
                         title: {
                           type: 'text',
                           analyzer: 'german_with_stopwords',
-                        },
-                        description: {
-                          type: 'text',
-                          analyzer: 'german',
-                        },
-                        kind: {
-                          type: 'keyword',
-                        },
-                        template: {
-                          type: 'keyword',
                         },
                       },
                     },
@@ -283,11 +256,6 @@ module.exports = {
             },
           },
         },
-        content: {
-          type: 'object',
-          dynamic: false,
-          enabled: false,
-        },
 
         meta: {
           properties: {
@@ -309,18 +277,11 @@ module.exports = {
             publishDate: {
               type: 'date',
             },
-            lastPublishedAt: {
-              type: 'date',
-            },
             scheduledAt: {
               type: 'date',
             },
             prepublication: {
               type: 'boolean',
-            },
-            slug: {
-              type: 'text',
-              ...keywordPartial,
             },
             path: {
               type: 'text',
@@ -335,11 +296,6 @@ module.exports = {
             },
             credits: {
               ...mdastPartial,
-            },
-            authors: {
-              type: 'text',
-              analyzer: 'german_with_stopwords',
-              ...keywordPartial,
             },
             dossier: {
               type: 'keyword',
@@ -372,38 +328,6 @@ module.exports = {
                   type: 'text',
                   analyzer: 'german_with_stopwords',
                 },
-                description: {
-                  type: 'text',
-                  analyzer: 'german',
-                },
-                overview: {
-                  type: 'keyword', // Document
-                },
-                episodes: {
-                  properties: {
-                    document: {
-                      type: 'keyword',
-                    },
-                    image: {
-                      type: 'keyword',
-                    },
-                    publishDate: {
-                      type: 'date',
-                    },
-                    lead: {
-                      type: 'text',
-                      analyzer: 'german_with_stopwords',
-                    },
-                    title: {
-                      type: 'text',
-                      analyzer: 'german_with_stopwords',
-                    },
-                    label: {
-                      type: 'text',
-                      analyzer: 'german_with_stopwords',
-                    },
-                  },
-                },
               },
             },
             hasAudio: {
@@ -424,9 +348,6 @@ module.exports = {
                   type: 'keyword',
                 },
               },
-            },
-            color: {
-              type: 'keyword',
             },
           },
         },
