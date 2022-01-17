@@ -61,7 +61,7 @@ module.exports = async ({
     try {
       ;({ width, height } = getWidthHeight(resize))
     } catch (e) {
-      res.status(400).end(e.message)
+      return res.status(400).send(e.message)
     }
   }
 
