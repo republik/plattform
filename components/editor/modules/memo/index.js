@@ -174,7 +174,7 @@ const MemoModule = ({ rule, TYPE, context }) => {
           type: TYPE
         })(({ active, disabled, visible, ...props }) => {
           if (context.isTemplate) {
-            return false
+            return null
           }
 
           return (
