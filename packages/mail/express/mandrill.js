@@ -1,4 +1,4 @@
-const debug = require('debug')('maillog:express:Mandrill:webhook')
+const debug = require('debug')('mail:express:Mandrill:webhook')
 const crypto = require('crypto')
 const Promise = require('bluebird')
 
@@ -8,7 +8,7 @@ const { MANDRILL_WEBHOOK_URL, MANDRILL_WEBHOOK_KEY } = process.env
 
 module.exports = async (server, pgdb) => {
   server.head(
-    '/maillog/mandrill/webhook',
+    '/mail/mandrill/webhook',
     bodyParser.urlencoded({ extended: true }),
     async (req, res) => {
       return res.sendStatus(200)
@@ -16,7 +16,7 @@ module.exports = async (server, pgdb) => {
   )
 
   server.post(
-    '/maillog/mandrill/webhook',
+    '/mail/mandrill/webhook',
     bodyParser.urlencoded({
       extended: true,
       limit: '1mb',

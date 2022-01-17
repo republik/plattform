@@ -28,7 +28,6 @@ const {
   graphql: subscriptions,
 } = require('@orbiting/backend-modules-subscriptions')
 const { graphql: cards } = require('@orbiting/backend-modules-cards')
-const { graphql: maillog } = require('@orbiting/backend-modules-maillog')
 const { graphql: embeds } = require('@orbiting/backend-modules-embeds')
 const { graphql: gsheets } = require('@orbiting/backend-modules-gsheets')
 const { graphql: mailbox } = require('@orbiting/backend-modules-mailbox')
@@ -39,7 +38,6 @@ const loaderBuilders = {
   ...require('@orbiting/backend-modules-documents/loaders'),
   ...require('@orbiting/backend-modules-auth/loaders'),
   ...require('@orbiting/backend-modules-collections/loaders'),
-  ...require('@orbiting/backend-modules-maillog/loaders'),
   ...require('@orbiting/backend-modules-subscriptions/loaders'),
   ...require('@orbiting/backend-modules-cards/loaders'),
   ...require('@orbiting/backend-modules-embeds/loaders'),
@@ -112,7 +110,6 @@ const run = async (workerId, config) => {
     collections,
     subscriptions,
     cards,
-    maillog,
     embeds,
     gsheets,
     mailbox,
@@ -122,7 +119,7 @@ const run = async (workerId, config) => {
   const middlewares = [
     require('@orbiting/backend-modules-republik-crowdfundings/express/paymentWebhooks'),
     require('@orbiting/backend-modules-gsheets/express/gsheets'),
-    require('@orbiting/backend-modules-maillog/express/Mandrill/webhook'),
+    require('@orbiting/backend-modules-mail/express/mandrill'),
     require('@orbiting/backend-modules-publikator/express/uncommittedChanges'),
     require('@orbiting/backend-modules-invoices/express'),
   ]
