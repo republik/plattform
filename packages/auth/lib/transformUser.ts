@@ -18,9 +18,15 @@ interface User {
   [key: string]: any
 }
 
-export = (user: UserRow, additionalFields = {}): User | null => {
+export = (user: UserRow | User, additionalFields = {}): User | null => {
   if (!user) {
     return null
+  }
+  if ('_raw' in user) {
+    return {
+      ...(user as User),
+      ...additionalFields,
+    }
   }
   const name = naming.getName(user)
   return {

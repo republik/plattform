@@ -1,6 +1,4 @@
-const t = require('../../../lib/t')
-const transformUser = require('../../../lib/transformUser')
-
+const { publishMonitor } = require('../../../lib/slack')
 const {
   ensureUserHasRole,
   userHasRole,
@@ -8,15 +6,15 @@ const {
   isRoleClaimableByMe,
 } = require('../../../lib/Roles')
 
-module.exports = async (_, args, { pgdb, signInHooks, user: me }) => {
-  const { userId = me && me.id, role } = args
+module.exports = async (_, args, { pgdb, loaders, user: me, req, t }) => {
+  const { userId, role } = args
+  const isMyself = !userId || me.id === userId
 
-  if (!(me && me.id === userId && isRoleClaimableByMe(role, me))) {
+  if (!(isMyself && isRoleClaimableByMe(role, me))) {
     ensureUserHasRole(me, 'admin')
   }
 
-  const user =
-    me.id !== userId ? await pgdb.public.users.findOne({ id: userId }) : me
+  const user = isMyself ? me : await loaders.User.byId.load(userId)
   if (!user) {
     throw new Error(t('api/users/404'))
   }
@@ -25,5 +23,20 @@ module.exports = async (_, args, { pgdb, signInHooks, user: me }) => {
     return user
   }
 
-  return addUserToRole(user.id, role, pgdb).then(transformUser)
+  await addUserToRole(user.id, role, pgdb)
+
+  try {
+    const { id, name, email } = user
+    await publishMonitor(
+      me,
+      `:key: addUserToRole \`${role}\` ` +
+        `on *<{ADMIN_FRONTEND_BASE_URL}/users/${id}|${name || email}>*`,
+    )
+  } catch (e) {
+    // swallow slack message
+    console.warn('publish to slack failed', { req: req._log(), args, error: e })
+  }
+
+  await loaders.User.byId.clear(userId)
+  return loaders.User.byId.load(userId)
 }
