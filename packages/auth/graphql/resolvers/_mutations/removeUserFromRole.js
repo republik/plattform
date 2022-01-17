@@ -37,6 +37,6 @@ module.exports = async (_, args, { pgdb, loaders, user: me, req, t }) => {
     console.warn('publish to slack failed', { req: req._log(), args, error: e })
   }
 
-  await loaders.User.byId.clear(userId)
-  return loaders.User.byId.load(userId)
+  await loaders.User.byId.clear(user.id)
+  return loaders.User.byId.load(user.id)
 }
