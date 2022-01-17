@@ -172,17 +172,23 @@ const MemoModule = ({ rule, TYPE, context }) => {
       textFormatButtons: [
         createInlineButton({
           type: TYPE
-        })(({ active, disabled, visible, ...props }) => (
-          <span
-            {...buttonStyles.mark}
-            {...props}
-            data-active={active}
-            data-disabled={disabled || context.isTemplate}
-            data-visible={visible}
-          >
-            <MemoIcon />
-          </span>
-        ))
+        })(({ active, disabled, visible, ...props }) => {
+          if (context.isTemplate) {
+            return null
+          }
+
+          return (
+            <span
+              {...buttonStyles.mark}
+              {...props}
+              data-active={active}
+              data-disabled={disabled}
+              data-visible={visible}
+            >
+              <MemoIcon />
+            </span>
+          )
+        })
       ]
     },
     plugins: [
