@@ -24,7 +24,7 @@ const config = (envFile) => {
   }
 }
 
-const getPath = (envFile = '.env') => path.join(__dirname, '../..', envFile)
+const getPath = (envFile = '.env') => path.join(__dirname, '../../..', envFile)
 
 module.exports = {
   config,
