@@ -13,6 +13,26 @@ const hasAncestor = (node, predicate) => {
   return false
 }
 
+const styles = {
+  padded: css({
+    marginRight: 20,
+    [mUp]: {
+      marginRight: 24
+    }
+  })
+}
+
+type Props<ElementProps = any> = {
+  children?: React.ReactNode
+  Element: React.ElementType<ElementProps>
+  elementProps: ElementProps
+  align?: 'left' | 'right'
+  initiallyOpen?: boolean
+  contentPaddingMobile?: string
+  padded?: boolean
+  attributes: any
+}
+
 const CalloutMenu = ({
   children,
   Element,
@@ -22,7 +42,7 @@ const CalloutMenu = ({
   contentPaddingMobile,
   padded,
   attributes
-}) => {
+}: Props) => {
   const [showMenu, setMenu] = React.useState(initiallyOpen)
   const toggleRef = React.useRef()
 
@@ -60,15 +80,6 @@ const CalloutMenu = ({
       <Element {...elementProps} onClick={() => setMenu(!showMenu)} />
     </div>
   )
-}
-
-const styles = {
-  padded: css({
-    marginRight: 20,
-    [mUp]: {
-      marginRight: 24
-    }
-  })
 }
 
 export default CalloutMenu
