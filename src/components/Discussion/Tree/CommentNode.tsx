@@ -62,7 +62,7 @@ const styles = {
         }
       }
     }),
-  root: ({ isExpanded, nestLimitExceeded, depth }) =>
+  root: ({ isExpanded, nestLimitExceeded, depth, isBoard }) =>
     css({
       background: 'transparent',
       position: 'relative',
@@ -219,10 +219,12 @@ const CommentNode = ({
   const rootStyle = styles.root({
     isExpanded,
     nestLimitExceeded,
-    depth
+    depth,
+    isBoard
   })
   const verticalToggleStyle =
-    !isRoot && styles.verticalToggle({ isExpanded, depth, drawLineEnd, isLast, isBoard })
+    !isRoot &&
+    styles.verticalToggle({ isExpanded, depth, drawLineEnd, isLast, isBoard })
   const verticalToggleStyleRules = useMemo(
     () =>
       css({

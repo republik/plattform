@@ -23,9 +23,11 @@ const BoardComment = (props: CommentProps) => (
     <div>
       <CommentNode {...props} isBoard={true} />
     </div>
-    <div>
-      <CommentEmbed embed={props.comment?.embed} />
-    </div>
+    {props.comment?.embed && (
+      <div>
+        <CommentEmbed embed={props.comment?.embed} />
+      </div>
+    )}
   </div>
 )
 
