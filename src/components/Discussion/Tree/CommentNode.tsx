@@ -222,7 +222,7 @@ const CommentNode = ({
     depth
   })
   const verticalToggleStyle =
-    !isRoot && styles.verticalToggle({ isExpanded, depth, drawLineEnd, isLast })
+    !isRoot && styles.verticalToggle({ isExpanded, depth, drawLineEnd, isLast, isBoard })
   const verticalToggleStyleRules = useMemo(
     () =>
       css({
