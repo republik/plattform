@@ -103,7 +103,7 @@ export const CommentActions = ({
             size={20}
           />
         )}
-        {handleReply && (
+        {handleReply && !isBoard && (
           <IconButton
             disabled={!!replyBlockedMessage}
             onClick={handleReply}
