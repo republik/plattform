@@ -5,6 +5,7 @@ import CalloutMenu from '../../../Callout/CalloutMenu'
 import IconButton from '../../../IconButton'
 import { MoreIcon } from '../../../Icons'
 import { useColorContext } from '../../../Colors/ColorContext'
+import { IconType } from 'react-icons/lib/esm/iconBase'
 
 const MoreIconWithProps = props => (
   <IconButton title='Mehr' Icon={MoreIcon} {...props} />
@@ -21,7 +22,18 @@ const styles = {
   })
 }
 
-const ActionsMenu = ({ items = [] }) => {
+export type ActionMenuItem = {
+  label: string
+  icon: IconType
+  onClick: () => void
+  disabled?: boolean
+}
+
+type Props = {
+  items?: ActionMenuItem[]
+}
+
+const ActionsMenu = ({ items = [] }: Props) => {
   const [colorScheme] = useColorContext()
 
   if (items.length === 0) {

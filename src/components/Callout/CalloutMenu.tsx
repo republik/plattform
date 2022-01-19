@@ -30,7 +30,7 @@ type Props<ElementProps = any> = {
   initiallyOpen?: boolean
   contentPaddingMobile?: string
   padded?: boolean
-  attributes: any
+  attributes?: any
 }
 
 const CalloutMenu = ({
