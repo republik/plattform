@@ -48,10 +48,8 @@ const Table = props => {
   const [colorScheme] = useColorContext()
   const {
     values,
-    numberColumns,
     numberFormat,
     enableSorting,
-    colorBy,
     colorRanges,
     colorRange,
     defaultSortColumn,
@@ -71,9 +69,10 @@ const Table = props => {
     let parsedItem = {}
     Object.keys(row).forEach(
       item =>
-        (parsedItem[item] = numberColumns.includes(item)
-          ? +row[item]
-          : row[item])
+        (parsedItem[item] =
+          tableColumns.find(d => d.column === item)?.type === 'number'
+            ? +row[item]
+            : row[item])
     )
     parsedData.push({ ...parsedItem })
   })
@@ -195,9 +194,8 @@ export const propTypes = {
     sequential3: PropTypes.array.isRequired,
     discrete: PropTypes.array.isRequired
   }).isRequired,
-  sparkLine: PropTypes.object,
   values: PropTypes.array.isRequired,
-  numberColumns: PropTypes.array,
+  tableColumns: PropTypes.array,
   numberFormat: PropTypes.string.isRequired,
   enableSorting: PropTypes.bool,
   defaultSortColumn: PropTypes.string,
@@ -210,7 +208,6 @@ Table.defaultProps = {
   color: 'label',
   colorRange: 'sequential',
   values: [],
-  numberColumns: [],
   numberFormat: 's',
   enableSorting: false,
   customThreshold: 10,

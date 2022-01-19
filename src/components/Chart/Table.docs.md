@@ -9,8 +9,8 @@
       "numberFormat": "s",
       "tableColumns": [
         {
-        "column": "Indikator",
-        "type": "string"
+          "column": "Indikator",
+          "type": "string"
         },
         {
           "column": "Afghanistan",
