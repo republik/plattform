@@ -6,7 +6,7 @@ import * as Comment from '../Internal/Comment'
 import { CommentActions } from '../Internal/Comment/CommentActions'
 import { mUp } from '../../../theme/mediaQueries'
 import { collapseWrapperRule } from '../Internal/Comment'
-import PropTypes, { InferProps } from 'prop-types'
+import PropTypes from 'prop-types'
 import { ActionsMenuItemPropType } from '../Internal/Comment/ActionsMenu'
 import { Header } from '../Internal/Comment/Header'
 import { LoadMore } from './LoadMore'
@@ -24,13 +24,6 @@ const styles = {
   highlightContainer: css({
     padding: '7px 7px 0 7px',
     margin: '0 -7px 12px -7px'
-  }),
-  boardColumn: css({
-    [mUp]: {
-      flex: '1 0 auto',
-      padding: 10,
-      width: '50%'
-    }
   }),
   showMUp: css({
     display: 'none',
@@ -69,25 +62,17 @@ const styles = {
         }
       }
     }),
-  root: ({ isExpanded, nestLimitExceeded, depth, board }) =>
+  root: ({ isExpanded, nestLimitExceeded, depth }) =>
     css({
       background: 'transparent',
       position: 'relative',
       margin: `10px 0 ${(isExpanded ? 24 : 16) + (depth === 0 ? 20 : 0)}px`,
       paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeS,
       [mUp]: {
-        paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeM,
-        ...(board
-          ? {
-              display: 'flex',
-              marginLeft: -10,
-              marginRight: -10,
-              marginBottom: 50
-            }
-          : {})
+        paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeM
       }
     }),
-  verticalToggle: ({ drawLineEnd, depth, isExpanded, isLast }) =>
+  verticalToggle: ({ drawLineEnd, depth, isExpanded, isLast, isBoard }) =>
     css({
       ...buttonStyle,
       position: 'absolute',
@@ -142,7 +127,32 @@ const styles = {
   })
 }
 
-const propTypes = {
+export type CommentProps<CommentType = any> = {
+  children?: React.ReactNode
+  t: any
+  comment: CommentType
+  actions: {
+    handleUpVote: (commentId: string) => Promise<unknown>
+    handleDownVote: (commentId: string) => Promise<unknown>
+    handleUnVote: (commentId: string) => Promise<unknown>
+    handleShare: (comment: CommentType) => Promise<unknown>
+    handleReply: () => void
+    handleLoadReplies: () => Promise<unknown>
+  }
+  menuItems
+  focusId?: string
+  isLast?: boolean
+  isBoard?: boolean
+  rootCommentOverlay?: boolean
+  Link: React.ElementType
+  focusHref: string
+  profileHref: string
+  userCanComment?: boolean
+  userWaitUntil?: string
+  editComposer: React.ReactNode
+}
+
+export const commentPropTypes = {
   t: PropTypes.func.isRequired,
   comment: PropTypes.object.isRequired,
   actions: PropTypes.shape({
@@ -156,7 +166,7 @@ const propTypes = {
   menuItems: PropTypes.arrayOf(ActionsMenuItemPropType),
   focusId: PropTypes.string,
   isLast: PropTypes.bool,
-  board: PropTypes.bool,
+  isBoard: PropTypes.bool,
   rootCommentOverlay: PropTypes.bool,
   Link: PropTypes.elementType.isRequired,
   focusHref: PropTypes.string.isRequired,
@@ -172,7 +182,7 @@ const propTypes = {
  * It also manages
  * the editor for the comment itself, and composer for replies.
  */
-const CommentNode: FC<InferProps<typeof propTypes>> = ({
+const CommentNode = ({
   children,
   t,
   comment,
@@ -182,14 +192,13 @@ const CommentNode: FC<InferProps<typeof propTypes>> = ({
   userWaitUntil,
   focusId,
   isLast,
-  board,
+  isBoard,
   rootCommentOverlay,
   Link,
   focusHref,
   profileHref,
-
   editComposer
-}) => {
+}: CommentProps) => {
   const { id, parentIds, tags, text } = comment as any
   const isHighlighted = id === focusId
   const depth = parentIds.length
@@ -207,7 +216,11 @@ const CommentNode: FC<InferProps<typeof propTypes>> = ({
    */
   const drawLineEnd = false
 
-  const rootStyle = styles.root({ isExpanded, nestLimitExceeded, depth, board })
+  const rootStyle = styles.root({
+    isExpanded,
+    nestLimitExceeded,
+    depth
+  })
   const verticalToggleStyle =
     !isRoot && styles.verticalToggle({ isExpanded, depth, drawLineEnd, isLast })
   const verticalToggleStyleRules = useMemo(
@@ -234,7 +247,7 @@ const CommentNode: FC<InferProps<typeof propTypes>> = ({
   if (isExpanded) {
     return (
       <div ref={root} data-comment-id={id} {...rootStyle}>
-        {!nestLimitExceeded && !board && verticalToggleStyle && (
+        {!nestLimitExceeded && !isBoard && verticalToggleStyle && (
           <button
             {...verticalToggleStyle}
             {...verticalToggleStyleRules}
@@ -245,8 +258,6 @@ const CommentNode: FC<InferProps<typeof propTypes>> = ({
           {...merge(
             isHighlighted && styles.highlightContainer,
             isHighlighted && colorScheme.set('backgroundColor', 'alert'),
-
-            board ? styles.boardColumn : null,
             isRoot && rootCommentOverlay ? styles.modalRoot : null
           )}
         >
@@ -261,7 +272,7 @@ const CommentNode: FC<InferProps<typeof propTypes>> = ({
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 onToggle={
-                  !board && !(isRoot && rootCommentOverlay)
+                  !isBoard && !(isRoot && rootCommentOverlay)
                     ? () => setExpanded(prev => !prev)
                     : undefined
                 }
@@ -297,6 +308,7 @@ const CommentNode: FC<InferProps<typeof propTypes>> = ({
             }}
             userCanComment={userCanComment}
             userWaitUntil={userWaitUntil}
+            isBoard={isBoard}
           />
         </div>
         {children}
@@ -338,6 +350,6 @@ const CommentNode: FC<InferProps<typeof propTypes>> = ({
   }
 }
 
-CommentNode.propTypes = propTypes
+CommentNode.propTypes = commentPropTypes
 
 export default CommentNode

@@ -141,7 +141,8 @@ export { renderCommentMdast } from './components/Discussion/Internal/Comment/ren
 export { IconLink as DiscussionIconLink } from './components/Discussion/Internal/Comment/IconLink'
 
 export { default as DiscussionCommentsWrapper } from './components/Discussion/DiscussionCommentsWrapper'
-export { CommentNode } from './components/Discussion/Tree'
+export { CommentNode, BoardComment } from './components/Discussion/Tree'
+export type {CommentProps} from './components/Discussion/Tree'
 
 export { DiscussionContext } from './components/Discussion/DiscussionContext'
 
