@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode } from 'react'
+import React, { MouseEventHandler, ReactElement, ReactNode } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
@@ -57,7 +57,7 @@ const styles = {
 const OverlayToolbarClose = ({
   onClick
 }: {
-  onClick: () => void
+  onClick: MouseEventHandler<HTMLButtonElement>
 }): ReactElement => {
   const [colorScheme] = useColorContext()
   return (
@@ -72,7 +72,7 @@ OverlayToolbarClose.propTypes = {
 
 export const OverlayToolbar: React.FC<{
   title: string | ReactNode
-  onClose: () => void
+  onClose: MouseEventHandler<HTMLButtonElement>
 }> = ({ title, onClose, children }) => {
   const [colorScheme] = useColorContext()
   return (

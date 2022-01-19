@@ -3,7 +3,8 @@ import React, {
   useEffect,
   useRef,
   MutableRefObject,
-  ReactNode
+  ReactNode,
+  MouseEventHandler
 } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
@@ -43,7 +44,7 @@ const styles = {
 const ssrAttribute = 'data-overlay-ssr'
 
 type OverlayProps = {
-  onClose: () => void
+  onClose: MouseEventHandler<HTMLButtonElement>
   children: ReactNode
   mUpStyle?: MUpStyle
 }
@@ -119,7 +120,7 @@ export const OverlayRenderer: React.FC<OverlayProps & {
 }> = ({ isVisible, mUpStyle, children, onClose, ssrMode, scrollRef }) => {
   const close = e => {
     if (e.target === e.currentTarget) {
-      onClose()
+      onClose(e)
     }
   }
   const [colorScheme] = useColorContext()
