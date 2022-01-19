@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { css } from 'glamor'
-import { scaleThreshold, scaleLinear, scaleOrdinal } from 'd3-scale'
+import { css, style } from 'glamor'
+import { scaleThreshold, scaleQuantize, scaleOrdinal } from 'd3-scale'
 import { extent, range } from 'd3-array'
 import { useColorContext } from '../Colors/ColorContext'
 import { getFormat } from './utils'
@@ -34,7 +34,7 @@ const styles = {
     userSelect: 'none'
   }),
   cell: css({
-    padding: '6px 0',
+    padding: '6px 5px 6px 0',
     verticalAlign: 'top'
   }),
   placeholder: css({
@@ -55,7 +55,8 @@ const Table = props => {
     colorRanges,
     colorRange,
     defaultSortColumn,
-    customThreshold
+    thresholds,
+    tableColumns
   } = props
   const columns = values.columns
 
@@ -79,7 +80,7 @@ const Table = props => {
 
   const sortedData = parsedData.sort((a, b) => {
     if (!enableSorting) {
-      return
+      return parsedData
     }
     if (typeof a[sortBy.key] === 'string') {
       return sortBy.order === 'desc'
@@ -100,12 +101,27 @@ const Table = props => {
     }
   }
 
-  const colorDomain = extent(parsedData, d => d[colorBy])
-  const currentColorRange = colorRanges[colorRange] || colorRange
+  let currentColorRange = colorRanges[colorRange] || colorRange
 
-  const colorScale = scaleThreshold()
-    .range(currentColorRange)
-    .domain(range(colorDomain[0], colorDomain[1], customThreshold))
+  const colorScale = (type, column) => {
+    let scale
+    let domain
+    if (type === 'number') {
+      if (thresholds) {
+        scale = scaleThreshold()
+        domain = thresholds
+        if (!colorRange) {
+          currentColorRange = colorRanges.sequential.slice(0, domain.length + 1)
+        }
+      } else {
+        scale = scaleQuantize()
+        domain = extent(parsedData, d => d[column])
+      }
+    }
+    return scale
+      .domain(domain)
+      .range(currentColorRange || colorRanges.sequential)
+  }
 
   return (
     <div {...styles.container}>
@@ -117,9 +133,11 @@ const Table = props => {
                 {...styles.header}
                 {...colorScheme.set('borderBottomColor', 'text')}
                 style={{
-                  textAlign: numberColumns.includes(tableHead)
-                    ? 'center'
-                    : 'left',
+                  textAlign:
+                    tableColumns.find(d => d.column === tableHead)?.type ===
+                    'number'
+                      ? 'right'
+                      : 'left',
                   cursor: enableSorting && 'pointer'
                 }}
                 key={index}
@@ -141,26 +159,21 @@ const Table = props => {
           {sortedData.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {Object.keys(row).map((cellKey, cellIndex) => (
-                <td
+                <Cell
                   key={cellIndex}
-                  {...styles.cell}
-                  style={{
-                    textAlign: numberColumns.includes(cellKey)
-                      ? 'center'
-                      : 'left',
-                    backgroundColor:
-                      colorBy === cellKey
-                        ? colorScale(row[cellKey])
-                        : 'transparent',
-                    color:
-                      colorBy === cellKey &&
-                      getTextColor(colorScale(row[cellKey]))
-                  }}
+                  style={styles.cell}
+                  column={cellKey}
+                  type={tableColumns.find(d => d.column === cellKey)?.type}
+                  width={tableColumns.find(d => d.column === cellKey)?.width}
+                  color={tableColumns.find(d => d.column === cellKey)?.color}
+                  value={row[cellKey]}
+                  colorScale={colorScale}
                 >
-                  {numberColumns.includes(cellKey)
+                  {tableColumns.find(d => d.column === cellKey)?.type ===
+                  'number'
                     ? getFormat(numberFormat)(row[cellKey])
                     : row[cellKey]}
-                </td>
+                </Cell>
               ))}
             </tr>
           ))}
@@ -200,7 +213,37 @@ Table.defaultProps = {
   numberColumns: [],
   numberFormat: 's',
   enableSorting: false,
-  customThreshold: 10
+  customThreshold: 10,
+  tableColumns: []
 }
 
 export default Table
+
+const Cell = props => {
+  const {
+    style,
+    type,
+    width,
+    color,
+    colorScale,
+    value,
+    column,
+    children
+  } = props
+  return (
+    <td
+      {...style}
+      style={{
+        width: width,
+        textAlign: type === 'number' ? 'right' : 'left',
+        fontFeatureSettings: type === 'number' && '"tnum", "kern"',
+        backgroundColor: color
+          ? colorScale(type, column)(value)
+          : 'transparent',
+        color: color && getTextColor(colorScale(type, column)(value))
+      }}
+    >
+      {children}
+    </td>
+  )
+}

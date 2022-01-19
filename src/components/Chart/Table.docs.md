@@ -7,7 +7,23 @@
     config={{
       "type": "Table",
       "numberFormat": "s",
-      "numberColumns": ["Afghanistan", "Schweiz"],
+      "tableColumns": [
+        {
+        "column": "Indikator",
+        "type": "string"
+        },
+        {
+          "column": "Afghanistan",
+          "type": "number",
+          "color": true,
+          "width": "120"
+        },
+        {
+          "column": "Schweiz",
+          "type": "number",
+          "width": "120"
+        }
+      ],
       "enableSorting": false
     }}
     values={`
