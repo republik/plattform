@@ -6,7 +6,7 @@ const path = require('path')
 require('@orbiting/backend-modules-env').config()
 
 // require server's server.js and start
-const Server = require('../../../servers/graphql/server')
+const Server = require('../../../../apps/api/server')
 
 Server.start().then(async (server) => {
   setTimeout(() => {

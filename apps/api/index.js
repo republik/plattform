@@ -1,4 +1,4 @@
-require('@orbiting/backend-modules-env').config('apps/api/.env')
+require('@orbiting/backend-modules-env').config()
 const server = require('./server')
 const throng = require('throng')
 

@@ -9,7 +9,7 @@ const path = require('path')
 const moment = require('moment')
 
 const metaDirAbs = path.join(__dirname, '../migrations/')
-const repoRootAbs = path.join(__dirname, '../../../')
+const repoRootAbs = path.join(__dirname, '../../../../')
 
 const argv = yargs
   .option('dir', { alias: ['d', 'sqldir'] })

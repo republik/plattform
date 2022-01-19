@@ -8,7 +8,7 @@ Check [assets-backend](https://github.com/orbiting/assets-backend) for a deploya
 
 ## ENVs
 
-See [servers/assets/.env.example](servers/assets/.env.example) for the required envs.
+See [apps/assets/.env.example](apps/assets/.env.example) for the required envs.
 
 ## URLs
 

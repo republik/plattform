@@ -16,7 +16,7 @@ const config = (envFile) => {
       paths.add(getPath(envFile))
     }
 
-    paths.add(getPath('.env'))
+    paths.add(getPath('apps/api/.env'))
 
     Array.from(paths).forEach((path) => dotenv.config({ path }))
 

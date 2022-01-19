@@ -1,6 +1,7 @@
 {
   "watch": [
     "../../packages",
+    "../api/.env",
     ".env",
     "./"
   ],
