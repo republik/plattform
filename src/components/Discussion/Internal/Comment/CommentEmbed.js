@@ -10,7 +10,7 @@ import {
 import { mUp } from '../../../../theme/mediaQueries'
 import { linkStyle } from '../../../Typography'
 import { TwitterIcon } from '../../../Icons'
-import { useColorContext } from "../../../Colors/ColorContext"
+import { useColorContext } from '../../../Colors/ColorContext'
 import { timeFormat } from '../../../../lib/timeFormat'
 import PropTypes from 'prop-types'
 
@@ -86,14 +86,14 @@ const dateFormat = timeFormat('%d.%m.%Y %H:%M')
 
 const normalizeEmbed = embed => ({
   ...embed,
-  imageUrl: embed.imageUrl || embed.image,
-  header: embed.siteName || embed.userName,
-  headerImageUrl: embed.siteImageUrl || embed.userProfileImageUrl,
+  imageUrl: embed?.imageUrl ?? embed?.image,
+  header: embed?.siteName ?? embed?.userName,
+  headerImageUrl: embed?.siteImageUrl ?? embed?.userProfileImageUrl,
   html:
-    embed.__typename === 'TwitterEmbed' &&
-    embed.html &&
-    embed.html.replace(/\s*target="_blank"/g, ''),
-  body: embed.description
+    embed?.__typename === 'TwitterEmbed' &&
+    embed?.html &&
+    embed?.html.replace(/\s*target="_blank"/g, ''),
+  body: embed?.description
 })
 
 const propTypes = {
@@ -153,7 +153,7 @@ export const CommentEmbed = ({ embed, mentioningDocument }) => {
               <img src={headerImageUrl} alt='' {...styles.siteImage} />
             )}
             <strong>{header}</strong>{' '}
-            {embed.userScreenName && ` @${embed.userScreenName}`}
+            {embed?.userScreenName && ` @${embed.userScreenName}`}
           </Interaction.P>
         )}
         {title && <Interaction.P {...styles.title}>{title}</Interaction.P>}
@@ -166,7 +166,7 @@ export const CommentEmbed = ({ embed, mentioningDocument }) => {
         {!html && body && (
           <Interaction.P {...styles.paragraph}>{body}</Interaction.P>
         )}
-        {embed.userScreenName && (
+        {embed?.userScreenName && (
           <Interaction.P {...styles.paragraph}>
             <TwitterIcon size={19} {...colorScheme.set('fill', 'disabled')} />{' '}
             {dateFormat(new Date(embed.createdAt))}
