@@ -35,8 +35,7 @@ const styles = {
     userSelect: 'none'
   }),
   cell: css({
-    padding: '8px 20px',
-    verticalAlign: 'top'
+    padding: '8px 20px'
   })
 }
 
