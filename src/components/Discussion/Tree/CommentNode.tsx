@@ -352,6 +352,4 @@ const CommentNode = ({
   }
 }
 
-CommentNode.propTypes = commentPropTypes
-
 export default CommentNode

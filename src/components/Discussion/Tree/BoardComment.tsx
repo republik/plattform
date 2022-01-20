@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import CommentNode, { CommentProps, commentPropTypes } from './CommentNode'
+import CommentNode, { CommentProps } from './CommentNode'
 import { CommentEmbed } from '../Internal/Comment'
 import { mUp } from '../../../theme/mediaQueries'
 
@@ -16,7 +16,6 @@ const styles = {
   })
 }
 
-const propTypes = commentPropTypes
 
 const BoardComment = (props: CommentProps) => (
   <div {...styles.wrapper}>
@@ -32,5 +31,3 @@ const BoardComment = (props: CommentProps) => (
 )
 
 export default BoardComment
-
-BoardComment.propTypes = propTypes
