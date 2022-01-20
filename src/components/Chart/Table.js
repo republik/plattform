@@ -11,8 +11,6 @@ import { ExpandMoreIcon, ExpandLessIcon } from '../Icons'
 import { defaultProps } from './ChartContext'
 import { sansSerifRegular18 } from '../Typography/styles'
 
-const NaN2Zero = number => (window.Number.isNaN(number) ? 0 : number)
-
 const styles = {
   container: css({
     overflowX: 'auto',
@@ -93,8 +91,8 @@ const Table = props => {
         : b[sortBy.key].localeCompare(a[sortBy.key])
     }
     return sortBy.order === 'desc'
-      ? NaN2Zero(b[sortBy.key]) - NaN2Zero(a[sortBy.key])
-      : NaN2Zero(a[sortBy.key]) - NaN2Zero(b[sortBy.key])
+      ? b[sortBy.key] - a[sortBy.key]
+      : a[sortBy.key] - b[sortBy.key]
   })
 
   // helper function that toggles order (desc/asc) or sets new sort by key (order: desc)
