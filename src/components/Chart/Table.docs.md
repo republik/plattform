@@ -49,6 +49,18 @@ Gesamtbevölkerung,38,8.6
       "colorRange": [
         "#762a83", "#af8dc3", "#e7d4e8", "#d9f0d3", "#7fbf7b", "#1b7837"
         ],
+      "tableColumns": [
+        {
+          "column": "Branch",
+          "type": "string",
+        },
+        {
+          "column": "Gewichtung",
+          "type": "number",
+          "width": "150",
+          "color": true
+        }
+      ],
       "numberFormat": "+.0%",
       "numberColumns": ["Gewichtung"],
       "enableSorting": true,

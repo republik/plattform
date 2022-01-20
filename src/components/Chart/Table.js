@@ -235,7 +235,7 @@ const Cell = props => {
     <td
       {...style}
       style={{
-        width: width,
+        width: width + 'px',
         textAlign: type === 'number' ? 'right' : 'left',
         fontFeatureSettings: type === 'number' && '"tnum", "kern"',
         backgroundColor: color
