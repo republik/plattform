@@ -10,12 +10,8 @@ import { Header, Tags, Actions, Error } from '../Internal/Composer'
 import { convertStyleToRem } from '../../Typography/utils'
 import { useDebounce } from '../../../lib/useDebounce'
 import { useColorContext } from '../../Colors/ColorContext'
-import Loader from '../../Loader'
 import { deleteDraft, readDraft, writeDraft } from './CommentDraftHelper'
 import { DisplayAuthorPropType } from '../Internal/PropTypes'
-import { CommentUI } from '../Tree/CommentNode'
-import { fontStyles } from '../../Typography'
-import IconButton from '../../IconButton'
 
 const styles = {
   root: css({}),
@@ -198,8 +194,6 @@ export const CommentComposer = ({
       })
     }
   }
-
-  console.debug('Preview', preview, activeView)
 
   /*
    * Focus the textarea upon mount.
