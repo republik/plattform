@@ -6,6 +6,7 @@ import { extent } from 'd3-array'
 import { useColorContext } from '../Colors/ColorContext'
 import { getFormat } from './utils'
 import { ExpandMoreIcon, ExpandLessIcon } from '../Icons'
+import { defaultProps } from './ChartContext'
 
 import { sansSerifRegular18 } from '../Typography/styles'
 
@@ -24,23 +25,18 @@ const styles = {
     ...sansSerifRegular18,
     lineHeight: '1.2',
     minWidth: '100%',
-    borderSpacing: '20px 0',
+    borderSpacing: '0',
     borderCollapse: 'separate'
   }),
   header: css({
     borderBottomWidth: '1px',
     borderBottomStyle: 'solid',
-    padding: '6px 0',
+    padding: '6px 20px',
     userSelect: 'none'
   }),
   cell: css({
-    padding: '6px 0',
+    padding: '6px 20px',
     verticalAlign: 'top'
-  }),
-  placeholder: css({
-    display: 'inline-block',
-    width: '18px',
-    height: '18px'
   })
 }
 
@@ -49,7 +45,6 @@ const Table = props => {
   const {
     values,
     numberFormat,
-    enableSorting,
     colorRanges,
     colorRange,
     defaultSortColumn,
@@ -59,8 +54,9 @@ const Table = props => {
   const columns = values.columns
 
   const [sortBy, setSortBy] = useState({
-    key: defaultSortColumn || columns[0],
-    order: 'desc'
+    key: defaultSortColumn,
+    order: 'desc',
+    enableSorting: !!defaultSortColumn || false
   })
 
   let parsedData = []
@@ -78,7 +74,7 @@ const Table = props => {
   })
 
   const sortedData = parsedData.sort((a, b) => {
-    if (!enableSorting) {
+    if (!sortBy.enableSorting) {
       return parsedData
     }
     if (typeof a[sortBy.key] === 'string') {
@@ -94,9 +90,13 @@ const Table = props => {
   // helper function that toggles order (desc/asc) or sets new sort by key (order: desc)
   const setSort = key => {
     if (sortBy.key === key) {
-      setSortBy({ key, order: sortBy.order === 'desc' ? 'asc' : 'desc' })
+      setSortBy({
+        key,
+        order: sortBy.order === 'desc' ? 'asc' : 'desc',
+        enableSorting: true
+      })
     } else {
-      setSortBy({ key, order: 'desc' })
+      setSortBy({ key, order: 'desc', enableSorting: true })
     }
   }
 
@@ -141,13 +141,13 @@ const Table = props => {
                     'number'
                       ? 'right'
                       : 'left',
-                  cursor: enableSorting && 'pointer'
+                  cursor: 'pointer'
                 }}
                 key={index}
                 onClick={() => setSort(columns[index])}
               >
                 {tableHead}
-                {enableSorting &&
+                {sortBy.enableSorting &&
                   sortBy.key === tableHead &&
                   (sortBy.order === 'desc' ? (
                     <ExpandMoreIcon />
@@ -160,7 +160,11 @@ const Table = props => {
         </thead>
         <tbody>
           {sortedData.map((row, rowIndex) => (
-            <tr key={rowIndex}>
+            <tr
+              key={rowIndex}
+              {...(rowIndex % 2 === 0 &&
+                colorScheme.set('backgroundColor', 'hover'))}
+            >
               {Object.keys(row).map((cellKey, cellIndex) => (
                 <Cell
                   key={cellIndex}
@@ -206,17 +210,9 @@ export const propTypes = {
   customThreshold: PropTypes.number
 }
 
-Table.propTypes = propTypes
+Table.defaultProps = defaultProps.Table
 
-Table.defaultProps = {
-  color: 'label',
-  colorRange: 'sequential',
-  values: [],
-  numberFormat: 's',
-  enableSorting: false,
-  customThreshold: 10,
-  tableColumns: []
-}
+Table.propTypes = propTypes
 
 export default Table
 
@@ -241,8 +237,7 @@ const Cell = props => {
         backgroundColor: color
           ? colorScale(type, column)(value)
           : 'transparent',
-        color: color && getTextColor(colorScale(type, column)(value)),
-        padding: color && '6px 5px'
+        color: color && getTextColor(colorScale(type, column)(value))
       }}
     >
       {children}

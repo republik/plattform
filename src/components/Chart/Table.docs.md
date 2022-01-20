@@ -16,12 +16,12 @@
         {
           "column": "Afghanistan",
           "type": "number",
-          "width": "120"
+          "width": "130"
         },
         {
           "column": "Schweiz",
           "type": "number",
-          "width": "120"
+          "width": "130"
         }
       ],
       "enableSorting": false
@@ -49,6 +49,7 @@ Gesamtbevölkerung,38,8.6
       "colorRange": [
         "#762a83", "#af8dc3", "#e7d4e8", "#d9f0d3", "#7fbf7b", "#1b7837"
         ],
+      "thresholds": [-0.5, -0.3, 0, 0.3, 0.5],
       "tableColumns": [
         {
           "column": "Branch",
@@ -62,11 +63,7 @@ Gesamtbevölkerung,38,8.6
         }
       ],
       "numberFormat": "+.0%",
-      "numberColumns": ["Gewichtung"],
-      "enableSorting": true,
-      "colorBy": "Gewichtung",
-      "defaultSortColumn": "Gewichtung",
-      "customThreshold": 0.1
+      "defaultSortColumn": "Gewichtung"
     }}
     values={`
 Branche,Gewichtung
