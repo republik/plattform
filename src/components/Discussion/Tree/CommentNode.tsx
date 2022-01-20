@@ -6,10 +6,9 @@ import * as Comment from '../Internal/Comment'
 import { CommentActions } from '../Internal/Comment/CommentActions'
 import { mUp } from '../../../theme/mediaQueries'
 import { collapseWrapperRule } from '../Internal/Comment'
-import PropTypes from 'prop-types'
-import { ActionsMenuItemPropType } from '../Internal/Comment/ActionsMenu'
 import { Header } from '../Internal/Comment/Header'
 import { LoadMore } from './LoadMore'
+import { ActionMenuItem } from '../Internal/Comment/ActionsMenu'
 
 const buttonStyle = {
   display: 'block',
@@ -127,6 +126,58 @@ const styles = {
   })
 }
 
+const MockLink = props => <>{props.children}</>
+
+type CommentUIProps = {
+  t: any
+  comment: any
+  isExpanded: boolean
+  onToggle?: () => void
+  tagText?: string
+  menuItems?: ActionMenuItem[]
+  Link?: React.ElementType
+  focusHref?: string
+  profileHref?: string,
+  isPreview?: boolean
+}
+
+export const CommentUI = ({
+  t,
+  comment,
+  isExpanded,
+  onToggle,
+  menuItems,
+  Link = MockLink,
+  profileHref,
+  focusHref,
+  isPreview
+}: CommentUIProps) => (
+  <div {...styles.commentWrapper({ isExpanded })}>
+    <Header
+      t={t}
+      comment={comment}
+      isExpanded={isExpanded}
+      onToggle={onToggle}
+      menuItems={menuItems}
+      Link={Link}
+      focusHref={focusHref}
+      profileHref={profileHref}
+    />
+    <div style={{ marginTop: 12 }}>
+      <Comment.Body
+        t={t}
+        comment={comment}
+        context={
+          comment?.tags && comment.tags.length > 0
+            ? { title: comment.tags[0] }
+            : undefined
+        }
+        isPreview={isPreview}
+      />
+    </div>
+  </div>
+)
+
 export type CommentProps<CommentType = any> = {
   children?: React.ReactNode
   t: any
@@ -174,13 +225,11 @@ const CommentNode = ({
   profileHref,
   editComposer
 }: CommentProps) => {
-  const { id, parentIds, tags, text } = comment as any
+  const { id, parentIds } = comment
   const isHighlighted = id === focusId
   const depth = parentIds.length
   const nestLimitExceeded = depth > config.nestLimit
   const isRoot = depth === 0
-
-  const activeTag = false
 
   const root = React.useRef()
   const [isExpanded, setExpanded] = React.useState(true)
@@ -241,33 +290,19 @@ const CommentNode = ({
           {editComposer ? (
             editComposer
           ) : (
-            <div {...styles.commentWrapper({ isExpanded })}>
-              <Header
-                t={t}
-                comment={comment}
-                isExpanded={isExpanded}
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                onToggle={
-                  !isBoard && !(isRoot && rootCommentOverlay)
-                    ? () => setExpanded(prev => !prev)
-                    : undefined
-                }
-                menuItems={menuItems}
-                Link={Link}
-                focusHref={focusHref}
-                profileHref={profileHref}
-              />
-              <div style={{ marginTop: 12 }}>
-                <Comment.Body
-                  t={t}
-                  comment={comment}
-                  context={
-                    !activeTag && tags[0] ? { title: tags[0] } : undefined
-                  }
-                />
-              </div>
-            </div>
+            <CommentUI
+              t={t}
+              comment={comment}
+              isExpanded={isExpanded}
+              onToggle={() => {
+                if (isBoard && isRoot && rootCommentOverlay) return
+                setExpanded(prev => !prev)
+              }}
+              menuItems={menuItems}
+              Link={Link}
+              focusHref={focusHref}
+              profileHref={profileHref}
+            />
           )}
 
           <CommentActions
