@@ -10,12 +10,12 @@
       "tableColumns": [
         {
           "column": "Indikator",
-          "type": "string"
+          "type": "string",
+          "color": true,
         },
         {
           "column": "Afghanistan",
           "type": "number",
-          "color": true,
           "width": "120"
         },
         {

@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { css, style } from 'glamor'
+import { css } from 'glamor'
 import { scaleThreshold, scaleQuantize, scaleOrdinal } from 'd3-scale'
-import { extent, range } from 'd3-array'
+import { extent } from 'd3-array'
 import { useColorContext } from '../Colors/ColorContext'
 import { getFormat } from './utils'
 import { ExpandMoreIcon, ExpandLessIcon } from '../Icons'
@@ -34,7 +34,7 @@ const styles = {
     userSelect: 'none'
   }),
   cell: css({
-    padding: '6px 5px 6px 0',
+    padding: '6px 0',
     verticalAlign: 'top'
   }),
   placeholder: css({
@@ -116,6 +116,10 @@ const Table = props => {
         scale = scaleQuantize()
         domain = extent(parsedData, d => d[column])
       }
+    } else {
+      scale = scaleOrdinal()
+      domain = parsedData.map(d => d[column])
+      currentColorRange = colorRanges.discrete.slice(0, domain.length + 1)
     }
     return scale
       .domain(domain)
@@ -237,7 +241,8 @@ const Cell = props => {
         backgroundColor: color
           ? colorScale(type, column)(value)
           : 'transparent',
-        color: color && getTextColor(colorScale(type, column)(value))
+        color: color && getTextColor(colorScale(type, column)(value)),
+        padding: color && '6px 5px'
       }}
     >
       {children}
