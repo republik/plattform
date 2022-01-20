@@ -4,6 +4,7 @@ import IconButton from '../../../IconButton'
 import { ArrowDownIcon, ArrowUpIcon } from '../../../Icons'
 import { useColorContext } from '../../../Colors/ColorContext'
 import { fontStyles } from '../../../Typography'
+import comment from '../../../../templates/Comment'
 
 const styles = {
   votes: css({
@@ -29,6 +30,15 @@ const styles = {
   })
 }
 
+type Props = {
+  t: any
+  comment: any
+  disabled?: boolean
+  handleUpVote: (commentId: string) => unknown
+  handleDownVote: (commentId: string) => unknown
+  handleUnVote: (commentId: string) => unknown
+}
+
 export const VoteButtons = ({
   t,
   comment,
@@ -36,11 +46,12 @@ export const VoteButtons = ({
   handleUpVote,
   handleDownVote,
   handleUnVote
-}) => {
+}: Props) => {
   const [colorScheme] = useColorContext()
 
   const upVoteHandler = comment?.userVote !== 'UP' ? handleUpVote : handleUnVote
-  const downVoteHandler = comment?.userVote !== 'DOWN' ? handleDownVote : handleUnVote
+  const downVoteHandler =
+    comment?.userVote !== 'DOWN' ? handleDownVote : handleUnVote
 
   return (
     <div {...styles.votes}>
