@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import * as config from '../config'
 import { useColorContext } from '../../Colors/ColorContext'
 import { css, merge } from 'glamor'
@@ -150,31 +150,6 @@ export type CommentProps<CommentType = any> = {
   userCanComment?: boolean
   userWaitUntil?: string
   editComposer: React.ReactNode
-}
-
-export const commentPropTypes = {
-  t: PropTypes.func.isRequired,
-  comment: PropTypes.object.isRequired,
-  actions: PropTypes.shape({
-    handleUpVote: PropTypes.func.isRequired,
-    handleDownVote: PropTypes.func.isRequired,
-    handleUnVote: PropTypes.func.isRequired,
-    handleShare: PropTypes.func,
-    handleReply: PropTypes.func,
-    handleLoadReplies: PropTypes.func
-  }),
-  menuItems: PropTypes.arrayOf(ActionsMenuItemPropType),
-  focusId: PropTypes.string,
-  isLast: PropTypes.bool,
-  isBoard: PropTypes.bool,
-  rootCommentOverlay: PropTypes.bool,
-  Link: PropTypes.elementType.isRequired,
-  focusHref: PropTypes.string.isRequired,
-  profileHref: PropTypes.string.isRequired,
-  userCanComment: PropTypes.bool,
-  userWaitUntil: PropTypes.string,
-
-  editComposer: PropTypes.node
 }
 
 /**
