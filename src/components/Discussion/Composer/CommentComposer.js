@@ -353,10 +353,14 @@ export const CommentComposer = ({
           </div>
         ))}
 
-      <Loader
-        loading={preview.loading && !(preview.comment && preview.comment.embed)}
-        render={() => <CommentEmbed comment={preview.comment} />}
-      />
+      {onPreviewComment && (
+        <Loader
+          loading={
+            preview.loading && !(preview.comment || preview.comment.embed)
+          }
+          render={() => <CommentEmbed comment={preview?.comment?.embed} />}
+        />
+      )}
 
       <Actions
         t={t}
