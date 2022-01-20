@@ -25,17 +25,17 @@ const styles = {
     ...sansSerifRegular18,
     lineHeight: '1.2',
     minWidth: '100%',
-    borderSpacing: '0',
+    borderSpacing: '0 2px',
     borderCollapse: 'separate'
   }),
   header: css({
     borderBottomWidth: '1px',
     borderBottomStyle: 'solid',
-    padding: '6px 20px',
+    padding: '8px 20px',
     userSelect: 'none'
   }),
   cell: css({
-    padding: '6px 20px',
+    padding: '8px 20px',
     verticalAlign: 'top'
   })
 }
@@ -158,11 +158,11 @@ const Table = props => {
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody style={{ marginTop: '5px' }}>
           {sortedData.map((row, rowIndex) => (
             <tr
               key={rowIndex}
-              {...(rowIndex % 2 === 0 &&
+              {...(rowIndex % 2 !== 0 &&
                 colorScheme.set('backgroundColor', 'hover'))}
             >
               {Object.keys(row).map((cellKey, cellIndex) => (

@@ -58,7 +58,7 @@ Gesamtbevölkerung,38,8.6
         {
           "column": "Gewichtung",
           "type": "number",
-          "width": "150",
+          "width": "170",
           "color": true
         }
       ],
