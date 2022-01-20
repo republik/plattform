@@ -15,12 +15,12 @@
         {
           "column": "Afghanistan",
           "type": "number",
-          "width": "130"
+          "width": "170"
         },
         {
           "column": "Schweiz",
           "type": "number",
-          "width": "130"
+          "width": "170"
         }
       ],
       "enableSorting": false

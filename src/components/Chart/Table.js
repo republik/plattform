@@ -30,11 +30,23 @@ const styles = {
   header: css({
     borderBottomWidth: '1px',
     borderBottomStyle: 'solid',
-    padding: '8px 20px',
-    userSelect: 'none'
+    padding: '8px 0',
+    userSelect: 'none',
+    '&:first-of-type': {
+      padding: '8px 0 8px 20px'
+    },
+    '&:last-of-type': {
+      padding: '8px 20px 8px 0'
+    }
   }),
   cell: css({
-    padding: '8px 20px'
+    padding: '8px 0',
+    '&:first-of-type': {
+      padding: '8px 0 8px 20px'
+    },
+    '&:last-of-type': {
+      padding: '8px 20px 8px 0'
+    }
   })
 }
 
