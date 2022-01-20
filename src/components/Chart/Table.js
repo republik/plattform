@@ -1,16 +1,15 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+
 import { css } from 'glamor'
 import { scaleThreshold, scaleQuantize, scaleOrdinal } from 'd3-scale'
 import { extent } from 'd3-array'
+
 import { useColorContext } from '../Colors/ColorContext'
-import { getFormat } from './utils'
+import { getFormat, getTextColor } from './utils'
 import { ExpandMoreIcon, ExpandLessIcon } from '../Icons'
 import { defaultProps } from './ChartContext'
-
 import { sansSerifRegular18 } from '../Typography/styles'
-
-import { getTextColor } from './utils'
 
 const NaN2Zero = number => (window.Number.isNaN(number) ? 0 : number)
 
@@ -149,9 +148,9 @@ const Table = props => {
                 {sortBy.enableSorting &&
                   sortBy.key === tableHead &&
                   (sortBy.order === 'desc' ? (
-                    <ExpandMoreIcon />
+                    <ExpandMoreIcon style={{ paddingLeft: '2px' }} />
                   ) : (
-                    <ExpandLessIcon />
+                    <ExpandLessIcon style={{ paddingLeft: '2px' }} />
                   ))}
               </th>
             ))}
