@@ -51,8 +51,8 @@ Gesamtbevölkerung,38,8.6
       "thresholds": [-0.5, -0.3, 0, 0.3, 0.5],
       "tableColumns": [
         {
-          "column": "Branch",
-          "type": "string",
+          "column": "Branche",
+          "type": "string"
         },
         {
           "column": "Gewichtung",
