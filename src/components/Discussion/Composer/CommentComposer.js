@@ -8,12 +8,14 @@ import { serifRegular16, sansSerifRegular12 } from '../../Typography/styles'
 
 import { Header, Tags, Actions, Error } from '../Internal/Composer'
 import { convertStyleToRem } from '../../Typography/utils'
-import { CommentEmbed } from '../Internal/Comment'
 import { useDebounce } from '../../../lib/useDebounce'
 import { useColorContext } from '../../Colors/ColorContext'
 import Loader from '../../Loader'
 import { deleteDraft, readDraft, writeDraft } from './CommentDraftHelper'
 import { DisplayAuthorPropType } from '../Internal/PropTypes'
+import { CommentUI } from '../Tree/CommentNode'
+import { fontStyles } from '../../Typography'
+import IconButton from '../../IconButton'
 
 const styles = {
   root: css({}),
@@ -49,7 +51,7 @@ const styles = {
   }),
   hints: css({
     marginTop: 6
-  })
+  }),
 }
 
 /**
@@ -136,8 +138,11 @@ export const CommentComposer = ({
   const [textarea, textareaRef] = useState(null)
   const [hints, setHints] = useState([])
   const textRef = useRef()
+
+  const [activeView, setActiveView] = useState('text')
   const [preview, setPreview] = useState({
     loading: false,
+    error: null,
     comment: null
   })
 
@@ -166,6 +171,36 @@ export const CommentComposer = ({
 
   const [tagValue, setTagValue] = useState(initialTagValue)
 
+  const fetchPreview = async () => {
+    setPreview({
+      loading: true,
+      error: null,
+      comment: null
+    })
+    try {
+      const result = await onPreviewComment({
+        discussionId,
+        parentId,
+        content: text
+      })
+      console.debug('result', result)
+      setPreview({
+        loading: false,
+        error: null,
+        comment: result
+      })
+    } catch (e) {
+      console.error(e)
+      setPreview({
+        loading: false,
+        error: e,
+        comment: null
+      })
+    }
+  }
+
+  console.debug('Preview', preview, activeView)
+
   /*
    * Focus the textarea upon mount.
    *
@@ -184,57 +219,6 @@ export const CommentComposer = ({
 
   const [slowText] = useDebounce(text, 400)
   textRef.current = text
-
-  useEffect(() => {
-    if (!tagValue) {
-      setTagValue(isRoot ? initialTagValue : null)
-    }
-    if (!isBoard || !isRoot || !onPreviewComment) {
-      return
-    }
-    if (!slowText || slowText.indexOf('http') === -1) {
-      setPreview({
-        comment: null,
-        loading: false
-      })
-      return
-    }
-    setPreview(preview => ({
-      ...preview,
-      loading: true
-    }))
-    onPreviewComment({
-      content: slowText,
-      discussionId,
-      parentId,
-      id: commentId
-    })
-      .then(nextPreview => {
-        if (textRef.current === slowText) {
-          setPreview({
-            comment: nextPreview,
-            loading: false
-          })
-        }
-      })
-      .catch(() => {
-        if (textRef.current === slowText) {
-          setPreview({
-            comment: null,
-            loading: false
-          })
-        }
-      })
-  }, [
-    slowText,
-    onPreviewComment,
-    isRoot,
-    discussionId,
-    commentId,
-    parentId,
-    isBoard,
-    initialTagValue
-  ])
 
   const onChangeText = ev => {
     const nextText = ev.target.value
@@ -317,7 +301,6 @@ export const CommentComposer = ({
             />
           </div>
         )}
-
         {/* Tags are only available in the root composer! */}
         {isRoot && tags && (
           <div
@@ -327,40 +310,39 @@ export const CommentComposer = ({
             <Tags tags={tags} onChange={setTagValue} value={tagValue} />
           </div>
         )}
-
-        <Textarea
-          inputRef={textareaRef}
-          {...styles.textArea}
-          {...colorScheme.set('color', 'text')}
-          {...(maxLength ? styles.textAreaLimit : {})}
-          {...(text === '' ? textAreaEmptyRule : {})}
-          placeholder={
-            placeholder ?? t('styleguide/CommentComposer/placeholder')
-          }
-          value={text}
-          rows='1'
-          onChange={onChangeText}
-        />
-
+        <>
+          <button
+            onClick={() => {
+              fetchPreview()
+              setActiveView('preview')
+            }}
+          >
+            Vorschau
+          </button>
+          <Textarea
+            inputRef={textareaRef}
+            {...styles.textArea}
+            {...colorScheme.set('color', 'text')}
+            {...(maxLength ? styles.textAreaLimit : {})}
+            {...(text === '' ? textAreaEmptyRule : {})}
+            placeholder={
+              placeholder ?? t('styleguide/CommentComposer/placeholder')
+            }
+            value={text}
+            rows='1'
+            onChange={onChangeText}
+          />
+          {hints &&
+            hints.map((hint, index) => (
+              <div {...styles.hints} key={`hint-${index}`}>
+                {hint}
+              </div>
+            ))}
+        </>
         {maxLength && (
           <MaxLengthIndicator maxLength={maxLength} length={textLength} />
         )}
       </div>
-      {hints &&
-        hints.map((hint, index) => (
-          <div {...styles.hints} key={`hint-${index}`}>
-            {hint}
-          </div>
-        ))}
-
-      {onPreviewComment && (
-        <Loader
-          loading={
-            preview.loading && !(preview.comment || preview.comment.embed)
-          }
-          render={() => <CommentEmbed comment={preview?.comment?.embed} />}
-        />
-      )}
 
       <Actions
         t={t}
