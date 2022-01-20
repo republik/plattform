@@ -140,7 +140,8 @@ const propTypes = {
   onToggle: PropTypes.func,
   Link: PropTypes.elementType.isRequired,
   focusHref: PropTypes.string.isRequired,
-  profileHref: PropTypes.string.isRequired
+  profileHref: PropTypes.string.isRequired,
+  isPreview: PropTypes.bool
 }
 
 export const Header = ({
@@ -149,9 +150,10 @@ export const Header = ({
   menuItems,
   isExpanded,
   onToggle,
+  Link,
   focusHref,
   profileHref,
-  Link
+  isPreview = false
 }) => {
   const [colorScheme] = useColorContext()
   const {
@@ -221,6 +223,7 @@ export const Header = ({
           t={t}
           focusHref={focusHref}
           Link={Link}
+          isPreview={isPreview}
         />
       </div>
       <div {...styles.actionsWrapper} className={styles.actionsWrapper}>

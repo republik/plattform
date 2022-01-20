@@ -24,7 +24,7 @@ const styles = {
   })
 }
 
-export const Body = ({ t, comment, context }) => {
+export const Body = ({ t, comment, context, isPreview = false }) => {
   const { discussion, highlightedCommentId } = React.useContext(
     DiscussionContext
   )
@@ -48,7 +48,7 @@ export const Body = ({ t, comment, context }) => {
       <Collapsable
         t={t}
         collapsable={collapsable && !isHighlighted}
-        style={{ opacity: published ? 1 : 0.5 }}
+        style={{ opacity: published || isPreview ? 1 : 0.5 }}
       >
         {body}
       </Collapsable>
@@ -59,7 +59,8 @@ export const Body = ({ t, comment, context }) => {
   return (
     <>
       {bodyNode}
-      {userCanEdit &&
+      {!isPreview &&
+        userCanEdit &&
         (() => {
           if (adminUnpublished) {
             return (

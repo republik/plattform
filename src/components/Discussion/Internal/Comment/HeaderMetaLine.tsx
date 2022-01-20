@@ -62,7 +62,7 @@ const titleDate = string => dateTimeFormat(new Date(string))
  * @returns {JSX.Element}
  * @constructor
  */
-const HeaderMetaLine = ({ t, comment, Link, focusHref }) => {
+const HeaderMetaLine = ({ t, comment, Link, focusHref, isPreview }) => {
   const [colorScheme] = useColorContext()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
 
@@ -77,7 +77,7 @@ const HeaderMetaLine = ({ t, comment, Link, focusHref }) => {
 
   return (
     <div {...styles.meta} {...colorScheme.set('color', 'textSoft')}>
-      {published && credential && (
+      {(published || isPreview) && credential && (
         <>
           <div
             {...styles.credential}
@@ -121,7 +121,7 @@ const HeaderMetaLine = ({ t, comment, Link, focusHref }) => {
           </a>
         </Link>
       </div>
-      {published && isUpdated && (
+      {(published || isPreview) && isUpdated && (
         <div
           {...styles.timeago}
           {...colorScheme.set('color', 'textSoft')}

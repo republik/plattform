@@ -137,7 +137,7 @@ type CommentUIProps = {
   menuItems?: ActionMenuItem[]
   Link?: React.ElementType
   focusHref?: string
-  profileHref?: string,
+  profileHref?: string
   isPreview?: boolean
 }
 
@@ -148,9 +148,9 @@ export const CommentUI = ({
   onToggle,
   menuItems,
   Link = MockLink,
-  profileHref,
-  focusHref,
-  isPreview
+  profileHref = '#',
+  focusHref = '#',
+  isPreview = false
 }: CommentUIProps) => (
   <div {...styles.commentWrapper({ isExpanded })}>
     <Header
@@ -162,6 +162,7 @@ export const CommentUI = ({
       Link={Link}
       focusHref={focusHref}
       profileHref={profileHref}
+      isPreview={isPreview}
     />
     <div style={{ marginTop: 12 }}>
       <Comment.Body
