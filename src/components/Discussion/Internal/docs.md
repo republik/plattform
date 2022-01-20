@@ -207,12 +207,12 @@ Word overflow is prevented with `word-wrap: break-word`.
 }} />
 ```
 
-#### ComposerActions
+#### Actions
 
 The buttons / icons below the comment. The reply button is disabled if the discussion doesn't allow the user to reply at the current time (this information is stored in the DiscussionContext).
 
 ```react|noSource,span-2
-<Comment.ComposerActions
+<Comment.Actions
   t={t}
   comment={comments.comment3}
   onReply={() => {}}
@@ -230,7 +230,7 @@ The buttons / icons below the comment. The reply button is disabled if the discu
     }
   })}
 >
-  <Comment.ComposerActions
+  <Comment.Actions
     t={t}
     comment={comments.withAdminActions}
     onUnpublish={() => {}}
@@ -249,7 +249,7 @@ The buttons / icons below the comment. The reply button is disabled if the discu
     userWaitUntil: '2050-01-01'
   })}
 >
-  <Comment.ComposerActions
+  <Comment.Actions
     t={t}
     comment={comments.withAdminActions}
     onUnpublish={() => {}}
@@ -261,7 +261,7 @@ The buttons / icons below the comment. The reply button is disabled if the discu
 ```
 
 ```react|noSource,span-2
-<Comment.ComposerActions
+<Comment.Actions
   t={t}
   comment={comments.featured}
   onUnpublish={() => {}}
@@ -331,7 +331,7 @@ The tags are an optional elment, shown between the **Header** and the **Textarea
 <Composer.Tags tags={['Lob', 'Kritik', 'Wunsch', 'Keine Angabe']} onChange={() => {}} />
 ```
 
-#### ComposerActions
+#### Actions
 
 The two primary actions on the right (_onClose_, _onSubmit_) are always present. The seconday actions on the left are optional. Use just icons for the secondary actions, and wrap each icon in `<SecondaryAction>`.
 
@@ -352,7 +352,7 @@ Due to limited space on mobile devices, you can really only put two actions (28p
     )
   }}
 >
-  <Composer.ComposerActions
+  <Composer.Actions
     t={t}
     onClose={() => {}}
     onCloseLabel="onClose"

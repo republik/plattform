@@ -76,7 +76,7 @@ export const CommentActions = ({
   return (
     <div {...styles.root} {...colorScheme.set('color', 'text')}>
       <div {...styles.leftActionsWrapper}>
-        {isBoard && handleLoadReplies && (
+        {isBoard && (
           <IconButton
             onClick={handleLoadReplies}
             title={t('styleguide/CommentActions/expand')}
