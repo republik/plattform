@@ -23,7 +23,8 @@ const styles = {
     lineHeight: '1.2',
     minWidth: '100%',
     borderSpacing: '0 2px',
-    borderCollapse: 'separate'
+    borderCollapse: 'separate',
+    padding: '0 10px'
   }),
   header: css({
     borderBottomWidth: '1px',
@@ -31,19 +32,19 @@ const styles = {
     padding: '8px 0',
     userSelect: 'none',
     '&:first-of-type': {
-      padding: '8px 0 8px 20px'
+      padding: '8px 0 8px 10px'
     },
     '&:last-of-type': {
-      padding: '8px 20px 8px 0'
+      padding: '8px 10px 8px 0'
     }
   }),
   cell: css({
     padding: '8px 0',
     '&:first-of-type': {
-      padding: '8px 0 8px 20px'
+      padding: '8px 0 8px 10px'
     },
     '&:last-of-type': {
-      padding: '8px 20px 8px 0'
+      padding: '8px 10px 8px 0'
     }
   })
 }
