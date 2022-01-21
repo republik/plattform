@@ -174,8 +174,7 @@ const Table = props => {
                   value={row[cellKey]}
                   colorScale={colorScale}
                 >
-                  {tableColumns.find(d => d.column === cellKey)?.type ===
-                  'number'
+                  {numberColumns.includes(tableHead)
                     ? getFormat(numberFormat)(row[cellKey])
                     : row[cellKey]}
                 </Cell>
