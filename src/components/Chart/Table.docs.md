@@ -94,9 +94,6 @@ Energie,-0.52
   <CsvChart
     config={{
       "type": "Table",
-      "colorRange": [
-        "#762a83", "#af8dc3", "#e7d4e8", "#d9f0d3", "#7fbf7b", "#1b7837"
-        ],
       "tableColumns": [
         {
           "column": "Land",
