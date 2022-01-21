@@ -1,10 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  MutableRefObject,
+  ReactNode,
+  MouseEventHandler
+} from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 import zIndex from '../../theme/zIndex'
 import { mUp } from '../../theme/mediaQueries'
-import { useColorContext } from '../Colors/useColorContext'
+import { useColorContext } from '../Colors/ColorContext'
 
 import { useBodyScrollLock } from '../../lib/useBodyScrollLock'
 
@@ -36,8 +43,14 @@ const styles = {
 
 const ssrAttribute = 'data-overlay-ssr'
 
-const Overlay = props => {
-  const rootDom = useRef()
+type OverlayProps = {
+  onClose: MouseEventHandler<HTMLButtonElement>
+  children: ReactNode
+  mUpStyle?: MUpStyle
+}
+
+const Overlay: React.FC<OverlayProps> = ({ onClose, children, mUpStyle }) => {
+  const rootDom = useRef<HTMLDivElement>()
   const isDomAvailable = typeof document !== 'undefined'
   if (isDomAvailable && !rootDom.current) {
     rootDom.current = document.createElement('div')
@@ -69,11 +82,14 @@ const Overlay = props => {
   const [scrollRef] = useBodyScrollLock(!ssrMode)
   const element = (
     <OverlayRenderer
-      {...props}
+      onClose={onClose}
+      mUpStyle={mUpStyle}
       scrollRef={scrollRef}
       isVisible={isVisible}
       ssrMode={ssrMode}
-    />
+    >
+      {children}
+    </OverlayRenderer>
   )
 
   if (!ssrMode) {
@@ -89,19 +105,22 @@ Overlay.propTypes = {
 
 export default Overlay
 
+type MUpStyle = {
+  maxWidth?: number | string
+  marginTop?: number | string
+  marginBottom?: number | string
+}
+
 // This is the actual Overlay component that is rendered. We export this so we
 // can document the overlay in the catalog without affecting 'document.body'.
-export const OverlayRenderer = ({
-  isVisible,
-  mUpStyle,
-  children,
-  onClose,
-  ssrMode,
-  scrollRef
-}) => {
+export const OverlayRenderer: React.FC<OverlayProps & {
+  isVisible: boolean
+  ssrMode?: boolean
+  scrollRef?: MutableRefObject<HTMLDivElement>
+}> = ({ isVisible, mUpStyle, children, onClose, ssrMode, scrollRef }) => {
   const close = e => {
     if (e.target === e.currentTarget) {
-      onClose()
+      onClose(e)
     }
   }
   const [colorScheme] = useColorContext()

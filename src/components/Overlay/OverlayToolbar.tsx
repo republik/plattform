@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { MouseEventHandler, ReactElement, ReactNode } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
 import { CloseIcon } from '../Icons'
-import { useColorContext } from '../Colors/useColorContext'
+import { useColorContext } from '../Colors/ColorContext'
 import { mUp } from '../../theme/mediaQueries'
 import { sansSerifMedium16 } from '../Typography/styles'
 
@@ -54,7 +54,11 @@ const styles = {
   })
 }
 
-const OverlayToolbarClose = ({ onClick }) => {
+const OverlayToolbarClose = ({
+  onClick
+}: {
+  onClick: MouseEventHandler<HTMLButtonElement>
+}): ReactElement => {
   const [colorScheme] = useColorContext()
   return (
     <button {...styles.close} onClick={onClick}>
@@ -66,7 +70,10 @@ OverlayToolbarClose.propTypes = {
   onClick: PropTypes.func.isRequired
 }
 
-export const OverlayToolbar = ({ title, onClose, children }) => {
+export const OverlayToolbar: React.FC<{
+  title: string | ReactNode
+  onClose: MouseEventHandler<HTMLButtonElement>
+}> = ({ title, onClose, children }) => {
   const [colorScheme] = useColorContext()
   return (
     <div
@@ -82,7 +89,6 @@ export const OverlayToolbar = ({ title, onClose, children }) => {
 }
 
 OverlayToolbar.propTypes = {
-  onClick: PropTypes.func,
-  title: PropTypes.node,
-  children: PropTypes.node
+  onClose: PropTypes.func,
+  title: PropTypes.node
 }
