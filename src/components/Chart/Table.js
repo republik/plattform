@@ -100,18 +100,16 @@ const Table = props => {
     }
   }
 
-  let currentColorRange = colorRanges[colorRange] || colorRange
   let colorScale
-  let domain
 
   if (thresholds) {
-    domain = thresholds
-    if (!colorRange) {
-      currentColorRange = colorRanges.sequential.slice(0, domain.length + 1)
-    }
     colorScale = scaleThreshold()
-      .domain(domain)
-      .range(currentColorRange || colorRanges.sequential)
+      .domain(thresholds)
+      .range(
+        colorRanges[colorRange] ||
+        colorRange ||
+        colorRanges.sequential.slice(0, thresholds.length + 1)
+      )
   } else {
     const colorColumns = tableColumns.filter(c => c.color).map(c => c.column)
     const colorValues = !colorColumns.length
