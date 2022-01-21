@@ -214,9 +214,7 @@ export const propTypes = {
   values: PropTypes.array.isRequired,
   tableColumns: PropTypes.array,
   numberFormat: PropTypes.string.isRequired,
-  enableSorting: PropTypes.bool,
-  defaultSortColumn: PropTypes.string,
-  customThreshold: PropTypes.number
+  defaultSortColumn: PropTypes.string
 }
 
 Table.defaultProps = defaultProps.Table
