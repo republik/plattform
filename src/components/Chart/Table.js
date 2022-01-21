@@ -55,6 +55,7 @@ const Table = props => {
     tableColumns
   } = props
   const columns = values.columns
+  const numberFormatter = getFormat(numberFormat)
 
   const [sortBy, setSortBy] = useState({
     key: defaultSortColumn,
@@ -107,8 +108,8 @@ const Table = props => {
       .domain(thresholds)
       .range(
         colorRanges[colorRange] ||
-        colorRange ||
-        colorRanges.sequential.slice(0, thresholds.length + 1)
+          colorRange ||
+          colorRanges.sequential.slice(0, thresholds.length + 1)
       )
   } else {
     const colorColumns = tableColumns.filter(c => c.color).map(c => c.column)
@@ -174,8 +175,8 @@ const Table = props => {
                   value={row[cellKey]}
                   colorScale={colorScale}
                 >
-                  {numberColumns.includes(tableHead)
-                    ? getFormat(numberFormat)(row[cellKey])
+                  {numberColumns.includes(cellKey)
+                    ? numberFormatter(row[cellKey])
                     : row[cellKey]}
                 </Cell>
               ))}
@@ -189,7 +190,14 @@ const Table = props => {
 
 export const propTypes = {
   values: PropTypes.array.isRequired,
-  tableColumns: PropTypes.array,
+  tableColumns: PropTypes.arrayOf(
+    PropTypes.shape({
+      column: PropTypes.string,
+      type: PropTypes.string,
+      width: PropTypes.string,
+      color: PropTypes.bool
+    })
+  ),
   numberFormat: PropTypes.string.isRequired,
   defaultSortColumn: PropTypes.string,
   colorMap: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
