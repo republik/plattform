@@ -367,7 +367,7 @@ export const CommentComposer = ({
           if (isPreviewing) {
             setIsPreviewing(false)
           } else {
-            deleteDraft(discussionId, commentId)
+            deleteDraft(discussionId, parentId)
             onClose()
             // Delete the draft of the field
           }
