@@ -165,13 +165,13 @@ const Table = props => {
           </tr>
         </thead>
         <tbody style={{ marginTop: '5px' }}>
-          {sortedData.map((row, rowIndex) => (
+          {parsedData.map((row, rowIndex) => (
             <tr
               key={rowIndex}
               {...(rowIndex % 2 !== 0 &&
                 colorScheme.set('backgroundColor', 'hover'))}
             >
-              {Object.keys(row).map((cellKey, cellIndex) => (
+              {columns.map((cellKey, cellIndex) => (
                 <Cell
                   key={cellIndex}
                   style={styles.cell}
