@@ -8,8 +8,7 @@
       "tableColumns": [
         {
           "column": "Indikator",
-          "type": "string",
-          "color": true
+          "type": "string"
         },
         {
           "column": "Afghanistan",

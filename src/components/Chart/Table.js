@@ -191,21 +191,17 @@ const Table = props => {
 }
 
 export const propTypes = {
-  width: PropTypes.number.isRequired,
-  unit: PropTypes.string,
-  colorBy: PropTypes.string,
-  color: PropTypes.string,
+  values: PropTypes.array.isRequired,
+  tableColumns: PropTypes.array,
+  numberFormat: PropTypes.string.isRequired,
+  defaultSortColumn: PropTypes.string,
   colorMap: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   colorRange: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   colorRanges: PropTypes.shape({
     diverging2: PropTypes.array.isRequired,
     sequential3: PropTypes.array.isRequired,
     discrete: PropTypes.array.isRequired
-  }).isRequired,
-  values: PropTypes.array.isRequired,
-  tableColumns: PropTypes.array,
-  numberFormat: PropTypes.string.isRequired,
-  defaultSortColumn: PropTypes.string
+  }).isRequired
 }
 
 Table.defaultProps = defaultProps.Table
