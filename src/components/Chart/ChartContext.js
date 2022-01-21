@@ -280,7 +280,6 @@ export const defaultProps = {
   },
   Table: {
     color: 'label',
-    colorRange: 'sequential',
     values: [],
     numberFormat: 's',
     tableColumns: []
