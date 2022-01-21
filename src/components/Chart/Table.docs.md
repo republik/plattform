@@ -33,11 +33,13 @@ Gesamtbevölkerung,38,8.6
 </div>
 ```
 
-## Color
+## Colored Backgrounds
 
-You may add a background color to a column. Supported are `thresholds`, `ordinal` and `quantize` scales.
+You may add a background color to a column. Supported are `thresholds` and `ordinal` scales.
 
-Also note the default sorting via [tbd, see below].
+You can set the default sorting to a specific column by setting `defaultSortColumn` to a column name of your data.
+
+### Thresholds
 
 ```react
 <div>
@@ -80,5 +82,67 @@ Versorger,-0.51
 Energie,-0.52
     `.trim()} />
   <ChartLegend>Lesebeispiel: Der Gesundheitssektor ist im Paris-Aligned Benchmark gegenüber dem Stoxx Europe 600 Basisindex um 34 Prozent übergewichtet. Quelle: Stoxx.</ChartLegend>
+</div>
+```
+
+### Ordinal Scale
+
+```react
+<div>
+  <ChartTitle>Öffentlich, privat – oder beides?</ChartTitle>
+  <ChartLead>Welche Angebote in den einzelnen europäischen Ländern dominieren</ChartLead>
+  <CsvChart
+    config={{
+      "type": "Table",
+      "colorRange": [
+        "#762a83", "#af8dc3", "#e7d4e8", "#d9f0d3", "#7fbf7b", "#1b7837"
+        ],
+      "tableColumns": [
+        {
+          "column": "Land",
+          "type": "string",
+        },
+        {
+          "column": "E-ID-Angebote",
+          "type": "string",
+          "width": "300",
+          "color": true
+        }
+      ],
+      "colorMap": {
+        "Öffentliche Angebote dominieren": "#66c2a5",
+        "Öffentliche und private": "#fc8d62",
+        "Private Angebote dominieren": "#8da0cb"
+        }
+    }}
+    values={`
+Land,E-ID-Angebote
+Kroatien,Öffentliche Angebote dominieren
+Belgien,Öffentliche und private
+Dänemark,Private Angebote dominieren
+Deutschland,Öffentliche und private
+Estland,Öffentliche Angebote dominieren
+Frankreich,Öffentliche und private
+Grossbritannien,Private Angebote dominieren
+Italien,Öffentliche und private
+Lettland,Öffentliche und private
+Litauen,Öffentliche Angebote dominieren
+Luxemburg,Öffentliche und private
+Malta,Öffentliche Angebote dominieren
+Niederlande,Öffentliche und private
+Norwegen,Öffentliche und private
+Österreich,Öffentliche und private
+Polen,Öffentliche Angebote dominieren
+Portugal,Öffentliche Angebote dominieren
+Schweden,Öffentliche und private
+Schweiz,Private Angebote dominieren
+Slowakei,Öffentliche Angebote dominieren
+Spanien,Öffentliche Angebote dominieren
+Tschechien,Öffentliche und private
+Slowenien,Öffentliche und private
+Finnland,Öffentliche und private
+Zypern,Öffentliche Angebote dominieren
+    `.trim()} />
+  <ChartLegend></ChartLegend>
 </div>
 ```
