@@ -10,13 +10,14 @@ import { getFormat, getTextColor } from './utils'
 import { ExpandMoreIcon, ExpandLessIcon } from '../Icons'
 import { defaultProps } from './ChartContext'
 import { sansSerifRegular18 } from '../Typography/styles'
+import { PADDING } from '../Center'
 
 const styles = {
   container: css({
     overflowX: 'auto',
     overflowY: 'hidden',
-    marginLeft: '-20px',
-    marginRight: '-20px'
+    marginLeft: -PADDING,
+    marginRight: -PADDING
   }),
   table: css({
     ...sansSerifRegular18,
