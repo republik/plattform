@@ -89,6 +89,7 @@ const propTypes = {
   hintValidators: PropTypes.arrayOf(PropTypes.func),
 
   displayAuthor: DisplayAuthorPropType,
+  autoCredentials: DisplayAuthorPropType.credential,
   placeholder: PropTypes.string,
   maxLength: PropTypes.number,
   tags: PropTypes.arrayOf(PropTypes.string),
