@@ -33,14 +33,16 @@ const styles = {
     justifyContent: 'space-between'
   }),
   mainActions: css({
-    display: 'flex'
+    display: 'flex',
+    '& > *': {
+      marginLeft: pxToRem(16)
+    }
   }),
-  closeButton: css({
+  secondaryButton: css({
     ...actionButtonStyle
   }),
-  submitButton: css({
+  primaryButton: css({
     ...actionButtonStyle,
-    marginLeft: '16px',
     '[disabled]': {
       cursor: 'inherit'
     }
@@ -53,6 +55,7 @@ export const Actions = ({
   onCloseLabel,
   onSubmit,
   onSubmitLabel,
+  onPreview,
   secondaryActions
 }) => {
   const [colorScheme] = useColorContext()
@@ -88,14 +91,23 @@ export const Actions = ({
 
       <div {...styles.mainActions}>
         <button
-          {...styles.closeButton}
+          {...styles.secondaryButton}
           {...styleRules.closeButton}
           onClick={onClose}
         >
           {onCloseLabel || t('styleguide/CommentComposer/cancel')}
         </button>
+        {onPreview && (
+          <button
+            {...styles.secondaryButton}
+            {...styleRules.closeButton}
+            onClick={onPreview}
+          >
+            {t('styleguide/CommentComposer/preview')}
+          </button>
+        )}
         <button
-          {...styles.submitButton}
+          {...styles.primaryButton}
           {...styleRules.submitButton}
           onClick={onSubmit}
           disabled={!onSubmit}
@@ -113,5 +125,7 @@ Actions.propTypes = {
   onCloseLabel: PropTypes.string,
   onSubmit: PropTypes.func,
   onSubmitLabel: PropTypes.string,
+  onPreview: PropTypes.func,
+  onPreviewLabel: PropTypes.string,
   secondaryActions: PropTypes.node
 }

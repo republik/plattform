@@ -25,6 +25,14 @@
       "value": "Etikette"
     },
     {
+      "key": "styleguide/CommentComposer/preview",
+      "value": "Vorschau"
+    },
+    {
+      "key": "styleguide/CommentComposer/exitPreview",
+      "value": "bearbeiten"
+    },
+    {
       "key": "styleguide/CommentComposer/wait",
       "value": "Sie können {time} wieder einen Beitrag schreiben."
     },

@@ -8,12 +8,12 @@ import { serifRegular16, sansSerifRegular12 } from '../../Typography/styles'
 
 import { Header, Tags, Actions, Error } from '../Internal/Composer'
 import { convertStyleToRem } from '../../Typography/utils'
-import { useDebounce } from '../../../lib/useDebounce'
 import { useColorContext } from '../../Colors/ColorContext'
 import { deleteDraft, readDraft, writeDraft } from './CommentDraftHelper'
 import { DisplayAuthorPropType } from '../Internal/PropTypes'
 import { CommentUI } from '../Tree/CommentNode'
-import Loader from "../../Loader";
+import Loader from '../../Loader'
+import { Label } from '../../Typography'
 
 const styles = {
   root: css({}),
@@ -49,6 +49,13 @@ const styles = {
   }),
   hints: css({
     marginTop: 6
+  }),
+  previewLabelWrapper: css({
+    marginBottom: '16px'
+  }),
+  secondaryActionsWrapper: css({
+    display: 'inline-flex',
+    flexDirection: 'row'
   })
 }
 
@@ -137,7 +144,7 @@ export const CommentComposer = ({
   const [hints, setHints] = useState([])
   const textRef = useRef()
 
-  const [activeView, setActiveView] = useState('text')
+  const [isPreviewing, setIsPreviewing] = useState(false)
   const [preview, setPreview] = useState({
     loading: false,
     error: null,
@@ -154,7 +161,7 @@ export const CommentComposer = ({
       return initialText
     } else if (typeof localStorage !== 'undefined') {
       try {
-        return readDraft(discussionId, commentId) ?? ''
+        return readDraft(discussionId, parentId) ?? ''
       } catch (e) {
         return ''
       }
@@ -187,7 +194,6 @@ export const CommentComposer = ({
         comment: result
       })
     } catch (e) {
-      console.error(e)
       setPreview({
         loading: false,
         error: e,
@@ -219,7 +225,7 @@ export const CommentComposer = ({
     setText(nextText)
     setHints(hintValidators.map(fn => fn(nextText)).filter(Boolean))
     try {
-      writeDraft(discussionId, commentId, ev.target.value)
+      writeDraft(discussionId, parentId, ev.target.value)
     } catch (e) {
       /* Ignore errors */
     }
@@ -282,7 +288,7 @@ export const CommentComposer = ({
 
   return (
     <div ref={root} {...styles.root}>
-      {activeView === 'text' && (
+      {!isPreviewing ? (
         <div {...styles.background} {...colorScheme.set('background', 'hover')}>
           {!hideHeader && (
             <div
@@ -306,14 +312,6 @@ export const CommentComposer = ({
             </div>
           )}
           <>
-            <button
-              onClick={() => {
-                fetchPreview()
-                setActiveView('preview')
-              }}
-            >
-              Vorschau
-            </button>
             <Textarea
               inputRef={textareaRef}
               {...styles.textArea}
@@ -338,10 +336,11 @@ export const CommentComposer = ({
             <MaxLengthIndicator maxLength={maxLength} length={textLength} />
           )}
         </div>
-      )}
-
-      {activeView === 'preview' && (
+      ) : (
         <div>
+          <div {...styles.previewLabelWrapper}>
+            <Label>{t('styleguide/CommentComposer/preview')}</Label>
+          </div>
           <Loader
             loading={preview.loading}
             error={preview.error}
@@ -364,20 +363,35 @@ export const CommentComposer = ({
       <Actions
         t={t}
         onClose={() => {
-          onClose()
-          // Delete the draft of the field
-          deleteDraft(discussionId, commentId)
+          if (isPreviewing) {
+            setIsPreviewing(false)
+          } else {
+            deleteDraft(discussionId, commentId)
+            onClose()
+            // Delete the draft of the field
+          }
         }}
-        onCloseLabel={onCloseLabel}
+        onCloseLabel={
+          isPreviewing
+            ? t('styleguide/CommentComposer/exitPreview')
+            : onCloseLabel
+        }
         onSubmit={
           loading || (maxLength && textLength > maxLength)
             ? undefined
             : submitHandler
         }
         onSubmitLabel={onSubmitLabel}
+        onPreview={
+          onPreviewComment && !isPreviewing
+            ? () => {
+                fetchPreview()
+                setIsPreviewing(true)
+              }
+            : undefined
+        }
         secondaryActions={secondaryActions}
       />
-
       {error && <Error>{error}</Error>}
     </div>
   )
