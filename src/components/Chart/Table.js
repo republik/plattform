@@ -25,7 +25,7 @@ const styles = {
     minWidth: '100%',
     borderSpacing: '0 2px',
     borderCollapse: 'separate',
-    padding: '0 10px'
+    padding: `0 ${PADDING - 10}px` // 10 cell padding on first and last cell in a row
   }),
   header: css({
     borderBottomWidth: '1px',
