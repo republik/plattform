@@ -82,19 +82,13 @@ const Table = props => {
     })
     : [].concat(values)
 
-  const sortedData = parsedData.sort((a, b) => {
-    if (!sortBy.enableSorting) {
-      return parsedData
-    }
-    if (typeof a[sortBy.key] === 'string') {
+  if (sortBy.key) {
+    parsedData.sort((a, b) => {
       return sortBy.order === 'desc'
-        ? a[sortBy.key].localeCompare(b[sortBy.key])
-        : b[sortBy.key].localeCompare(a[sortBy.key])
-    }
-    return sortBy.order === 'desc'
-      ? b[sortBy.key] - a[sortBy.key]
-      : a[sortBy.key] - b[sortBy.key]
-  })
+        ? descending(a[sortBy.key], b[sortBy.key]),
+        : ascending(a[sortBy.key], b[sortBy.key])
+    })
+  }
 
   // helper function that toggles order (desc/asc) or sets new sort by key (order: desc)
   const setSort = key => {
