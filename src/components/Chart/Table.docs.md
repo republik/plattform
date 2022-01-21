@@ -21,8 +21,7 @@
           "type": "number",
           "width": "170"
         }
-      ],
-      "enableSorting": false
+      ]
     }}
     values={`
 Indikator,Afghanistan,Schweiz
