@@ -257,7 +257,8 @@ export const CommentComposer = ({
 
           if (ok) {
             try {
-              deleteDraft(discussionId, commentId)
+              deleteDraft(discussionId, parentId)
+              onClose()
             } catch (e) {
               /* Ignore */
             }
