@@ -24,42 +24,6 @@ import { sortPropType, xAccessor } from './utils'
 import ColorLegend from './ColorLegend'
 
 const styles = {
-  columnTitle: css({
-    ...sansSerifMedium14
-  }),
-  axisLabel: css({
-    ...LABEL_FONT
-  }),
-  axisYLine: css({
-    strokeWidth: '1px',
-    shapeRendering: 'crispEdges'
-  }),
-  axisXLine: css({
-    strokeWidth: '1px',
-    shapeRendering: 'crispEdges'
-  }),
-  annotationLine: css({
-    strokeWidth: '1px',
-    fillRule: 'evenodd',
-    strokeLinecap: 'round',
-    strokeDasharray: '1,3',
-    strokeLinejoin: 'round'
-  }),
-  annotationText: css({
-    ...LABEL_FONT
-  }),
-  annotationValue: css({
-    ...sansSerifMedium12
-  }),
-  value: css({
-    ...VALUE_FONT
-  }),
-  valueMini: css({
-    ...sansSerifMedium22
-  }),
-  label: css({
-    ...LABEL_FONT
-  }),
   bandLegend: css({
     ...LABEL_FONT,
     whiteSpace: 'nowrap'

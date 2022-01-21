@@ -56,20 +56,6 @@ const styles = {
   }),
   label: css({
     ...LABEL_FONT
-  }),
-  bandLegend: css({
-    ...LABEL_FONT,
-    whiteSpace: 'nowrap'
-  }),
-  bandBar: css({
-    display: 'inline-block',
-    width: 24,
-    height: 11,
-    marginBottom: -1,
-    borderTopWidth: 4,
-    borderBottomWidth: 4,
-    borderTopStyle: 'solid',
-    borderBottomStyle: 'solid'
   })
 }
 
