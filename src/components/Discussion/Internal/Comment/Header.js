@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { css } from 'glamor'
 import { AddIcon, RemoveIcon } from '../../../Icons'
 import {
@@ -15,6 +15,7 @@ import IconButton from '../../../IconButton'
 import ActionsMenu, { ActionsMenuItemPropType } from './ActionsMenu'
 import PropTypes from 'prop-types'
 import HeaderMetaLine from './HeaderMetaLine'
+import { DiscussionContext } from '../../DiscussionContext'
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
@@ -139,8 +140,6 @@ const propTypes = {
   isExpanded: PropTypes.bool,
   onToggle: PropTypes.func,
   Link: PropTypes.elementType.isRequired,
-  focusHref: PropTypes.string.isRequired,
-  profileHref: PropTypes.string.isRequired,
   isPreview: PropTypes.bool
 }
 
@@ -151,11 +150,10 @@ export const Header = ({
   isExpanded,
   onToggle,
   Link,
-  focusHref,
-  profileHref,
   isPreview = false
 }) => {
   const [colorScheme] = useColorContext()
+  const { discussion } = useContext(DiscussionContext)
   const {
     displayAuthor,
     published = true,
@@ -175,7 +173,7 @@ export const Header = ({
             return null
           }
           return (
-            <Link href={profileHref} passHref>
+            <Link displayAuthor={displayAuthor} passHref>
               <a {...styles.link}>
                 <img
                   {...styles.profilePicture}
@@ -213,15 +211,15 @@ export const Header = ({
             </span>
           )}
           {published && (
-            <Link href={profileHref} passHref>
+            <Link displayAuthor={displayAuthor} passHref>
               <a {...styles.linkUnderline}>{name}</a>
             </Link>
           )}
         </div>
         <HeaderMetaLine
           comment={comment}
+          discussion={discussion}
           t={t}
-          focusHref={focusHref}
           Link={Link}
           isPreview={isPreview}
         />

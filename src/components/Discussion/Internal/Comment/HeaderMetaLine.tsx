@@ -9,6 +9,7 @@ import { sansSerifRegular14 } from '../../../Typography/styles'
 import { ellipsize, underline } from '../../../../lib/styleMixins'
 import { mediaQueries, useMediaQuery } from '../../../../lib'
 import { CheckIcon } from '../../../Icons'
+import discussion from '../../../../templates/Discussion'
 
 const styles = {
   meta: css({
@@ -55,14 +56,8 @@ const titleDate = string => dateTimeFormat(new Date(string))
 /**
  * Render the meta line of the comment-header
  * user credential - published at - edited state
- * @param t
- * @param comment
- * @param Link
- * @param focusHref
- * @returns {JSX.Element}
- * @constructor
  */
-const HeaderMetaLine = ({ t, comment, Link, focusHref, isPreview }) => {
+const HeaderMetaLine = ({ t, comment, discussion, Link, isPreview }) => {
   const [colorScheme] = useColorContext()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
 
@@ -115,7 +110,7 @@ const HeaderMetaLine = ({ t, comment, Link, focusHref, isPreview }) => {
         {...colorScheme.set('color', 'textSoft')}
         title={titleDate(createdAt)}
       >
-        <Link href={focusHref} passHref>
+        <Link comment={comment} discussion={discussion} passHref>
           <a {...styles.linkUnderline}>
             <RelativeTime t={t} isDesktop={isDesktop} date={createdAt} />
           </a>
