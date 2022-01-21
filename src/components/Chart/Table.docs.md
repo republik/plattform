@@ -1,4 +1,3 @@
-## Simple table
 
 ```react
 <div>
