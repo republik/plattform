@@ -15,7 +15,7 @@ const styles = {
   gridContainer: css({
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
-    gap: '20px 40px',
+    gap: '20px 20px',
     margin: '20px 0'
   }),
   box: css({
