@@ -126,6 +126,7 @@ export const CommentTeaser = ({
                 createdAt
               }}
               menu={menu}
+              Link={Link}
             />
           </div>
         )}

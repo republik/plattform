@@ -133,7 +133,6 @@ const HeaderMetaLine = ({ t, comment, discussion, Link, isPreview }) => {
 HeaderMetaLine.propTypes = {
   t: PropTypes.func.isRequired,
   comment: PropTypes.object.isRequired,
-  focusHref: PropTypes.string.isRequired,
   Link: PropTypes.elementType.isRequired
 }
 
