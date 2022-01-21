@@ -69,19 +69,18 @@ const Table = props => {
     enableSorting: !!defaultSortColumn || false
   })
 
-  let parsedData = []
-
-  values.forEach(row => {
-    let parsedItem = {}
-    Object.keys(row).forEach(
-      item =>
-        (parsedItem[item] =
-          tableColumns.find(d => d.column === item)?.type === 'number'
-            ? +row[item]
-            : row[item])
-    )
-    parsedData.push({ ...parsedItem })
-  })
+  const numberColumns = tableColumns.filter(d => d.type === 'number').map(d => d.column)
+  const parsedData = numberColumns.length
+    ? values.map(row => {
+      let parsedRow = { ...row }
+      numberColumns.forEach(key => {
+        if (parsedRow[key] !== undefined) {
+          parsedRow[key] = +parsedRow[key]
+        }
+      })
+      return parsedRow
+    })
+    : [].concat(values)
 
   const sortedData = parsedData.sort((a, b) => {
     if (!sortBy.enableSorting) {
