@@ -66,7 +66,7 @@ export const addLabels = (
 
   const hasStartValue = isValuePresent(start.value)
   const hasEndValue = isValuePresent(end.value)
-  const endLabel = label && props.endLabel && ` ${colorAccessor(end)}`
+  const endLabel = label && props.endLabel && colorAccessor(end)
 
   return {
     line,

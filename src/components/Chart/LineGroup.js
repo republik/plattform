@@ -225,6 +225,7 @@ const LineGroup = props => {
                         {...styles.label}
                         {...colorScheme.set('fill', 'text')}
                       >
+                        {' '}
                         {subsup.svg(endLabel)}
                       </tspan>
                     )}
