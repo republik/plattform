@@ -15,6 +15,7 @@ import {
   swissMapEditorSchema
 } from '../Maps.schema'
 import { hemicycleEditorSchema } from '../Hemicycle.schema'
+import { tableEditorSchema } from '../Table.schema'
 import {
   numberFormats,
   timeFormats,
@@ -41,7 +42,8 @@ const schemaDict = {
   GenericMap: genericMapEditorSchema,
   ProjectedMap: projectedMapEditorSchema,
   SwissMap: swissMapEditorSchema,
-  Hemicycle: hemicycleEditorSchema
+  Hemicycle: hemicycleEditorSchema,
+  Table: tableEditorSchema
 }
 
 const chartTranslationDict = {
