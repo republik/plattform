@@ -277,6 +277,12 @@ export const defaultProps = {
     inlineLabelThreshold: 10,
     padding: 0,
     colorMap: 'swissPartyColors'
+  },
+  Table: {
+    color: 'label',
+    values: [],
+    numberFormat: 's',
+    tableColumns: []
   }
 }
 
