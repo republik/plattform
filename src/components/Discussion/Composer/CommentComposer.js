@@ -89,7 +89,6 @@ const propTypes = {
   hintValidators: PropTypes.arrayOf(PropTypes.func),
 
   displayAuthor: DisplayAuthorPropType,
-  autoCredentials: DisplayAuthorPropType.credential,
   placeholder: PropTypes.string,
   maxLength: PropTypes.number,
   tags: PropTypes.arrayOf(PropTypes.string),
@@ -132,7 +131,6 @@ export const CommentComposer = ({
   isBoard,
   autoFocus = true,
   hideHeader,
-  autoCredential
 }) => {
   const [colorScheme] = useColorContext()
   /*
@@ -357,9 +355,7 @@ export const CommentComposer = ({
                   comment={{
                     ...preview.comment,
                     tags: tags ? [tagValue] : undefined,
-                    displayAuthor: autoCredential
-                      ? { ...displayAuthor, credential: autoCredential }
-                      : displayAuthor
+                    displayAuthor
                   }}
                   isExpanded
                   isPreview
