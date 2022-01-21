@@ -222,7 +222,7 @@ const Cell = props => {
       {...(type === 'number' && styles.cellNumber)}
       {...styles.cell}
       style={{
-        width: +width,
+        width: width !== undefined ? +width : undefined,
         backgroundColor: color ? colorScale(value) : 'transparent',
         color: color && getTextColor(colorScale(value))
       }}
