@@ -2,15 +2,16 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 import { css } from 'glamor'
-import { scaleThreshold, scaleQuantize, scaleOrdinal } from 'd3-scale'
-import { extent, descending, ascending } from 'd3-array'
+import { scaleThreshold, scaleOrdinal } from 'd3-scale'
+import { descending, ascending } from 'd3-array'
 
 import { useColorContext } from '../Colors/ColorContext'
-import { getFormat, getTextColor } from './utils'
+import { getFormat, getTextColor, deduplicate } from './utils'
 import { ExpandMoreIcon, ExpandLessIcon } from '../Icons'
 import { defaultProps } from './ChartContext'
 import { sansSerifRegular18 } from '../Typography/styles'
 import { PADDING } from '../Center'
+import { getColorMapper } from './colorMaps'
 
 const styles = {
   container: css({
@@ -30,23 +31,11 @@ const styles = {
   header: css({
     borderBottomWidth: '1px',
     borderBottomStyle: 'solid',
-    padding: '8px 0',
-    userSelect: 'none',
-    '&:first-of-type': {
-      padding: '8px 0 8px 10px'
-    },
-    '&:last-of-type': {
-      padding: '8px 10px 8px 0'
-    }
+    padding: '8px 10px',
+    userSelect: 'none'
   }),
   cell: css({
-    padding: '8px 0',
-    '&:first-of-type': {
-      padding: '8px 0 8px 10px'
-    },
-    '&:last-of-type': {
-      padding: '8px 10px 8px 0'
-    }
+    padding: '8px 10px'
   }),
   cellNumber: css({
     textAlign: 'right',
@@ -112,29 +101,32 @@ const Table = props => {
   }
 
   let currentColorRange = colorRanges[colorRange] || colorRange
+  let colorScale
+  let domain
 
-  const colorScale = (type, column) => {
-    let scale
-    let domain
-    if (type === 'number') {
-      if (thresholds) {
-        scale = scaleThreshold()
-        domain = thresholds
-        if (!colorRange) {
-          currentColorRange = colorRanges.sequential.slice(0, domain.length + 1)
-        }
-      } else {
-        scale = scaleQuantize()
-        domain = extent(parsedData, d => d[column])
-      }
-    } else {
-      scale = scaleOrdinal()
-      domain = parsedData.map(d => d[column])
-      currentColorRange = colorRanges.discrete.slice(0, domain.length + 1)
+  if (thresholds) {
+    domain = thresholds
+    if (!colorRange) {
+      currentColorRange = colorRanges.sequential.slice(0, domain.length + 1)
     }
-    return scale
+    colorScale = scaleThreshold()
       .domain(domain)
       .range(currentColorRange || colorRanges.sequential)
+  } else {
+    const colorColumns = tableColumns.filter(c => c.color).map(c => c.column)
+    const colorValues = !colorColumns.length
+      ? []
+      : parsedData
+          .reduce((values, row) => {
+            colorColumns.forEach(key => {
+              values.push(row[key])
+            })
+            return values
+          }, [])
+          .filter(Boolean)
+          .filter(deduplicate)
+
+    colorScale = getColorMapper(props, colorValues)
   }
 
   return (
@@ -178,8 +170,6 @@ const Table = props => {
               {columns.map((cellKey, cellIndex) => (
                 <Cell
                   key={cellIndex}
-                  style={styles.cell}
-                  column={cellKey}
                   type={tableColumns.find(d => d.column === cellKey)?.type}
                   width={tableColumns.find(d => d.column === cellKey)?.width}
                   color={tableColumns.find(d => d.column === cellKey)?.color}
@@ -225,26 +215,15 @@ Table.propTypes = propTypes
 export default Table
 
 const Cell = props => {
-  const {
-    style,
-    type,
-    width,
-    color,
-    colorScale,
-    value,
-    column,
-    children
-  } = props
+  const { type, width, color, colorScale, value, children } = props
   return (
     <td
       {...(type === 'number' && styles.cellNumber)}
       {...styles.cell}
       style={{
         width: +width,
-        backgroundColor: color
-          ? colorScale(type, column)(value)
-          : 'transparent',
-        color: color && getTextColor(colorScale(type, column)(value))
+        backgroundColor: color ? colorScale(value) : 'transparent',
+        color: color && getTextColor(colorScale(value))
       }}
     >
       {children}

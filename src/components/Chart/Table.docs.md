@@ -1,4 +1,3 @@
-
 ```react
 <div>
   <ChartTitle>Ländervergleich</ChartTitle>
@@ -9,7 +8,8 @@
       "tableColumns": [
         {
           "column": "Indikator",
-          "type": "string"
+          "type": "string",
+          "color": true
         },
         {
           "column": "Afghanistan",
@@ -39,7 +39,6 @@ Gesamtbevölkerung,38,8.6
 You may add a background color to a column. Supported are `thresholds`, `ordinal` and `quantize` scales.
 
 Also note the default sorting via [tbd, see below].
-
 
 ```react
 <div>
