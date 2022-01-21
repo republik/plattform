@@ -65,8 +65,7 @@ const Table = props => {
 
   const [sortBy, setSortBy] = useState({
     key: defaultSortColumn,
-    order: 'desc',
-    enableSorting: !!defaultSortColumn || false
+    order: 'desc'
   })
 
   const numberColumns = tableColumns.filter(d => d.type === 'number').map(d => d.column)
