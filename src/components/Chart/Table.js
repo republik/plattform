@@ -93,10 +93,9 @@ const Table = props => {
   // helper function that toggles order (desc/asc) or sets new sort by key (order: desc)
   const setSort = key => {
     if (sortBy.key === key) {
-      setSortBy({
+      setSortBy(sortBy.order === 'asc' ? {} : {
         key,
-        order: sortBy.order === 'desc' ? 'asc' : 'desc',
-        enableSorting: true
+        order: sortBy.order === 'desc' ? 'asc' : 'desc'
       })
     } else {
       setSortBy({ key, order: 'desc', enableSorting: true })
