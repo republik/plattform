@@ -13,7 +13,7 @@ import { deleteDraft, readDraft, writeDraft } from './CommentDraftHelper'
 import { DisplayAuthorPropType } from '../Internal/PropTypes'
 import { CommentUI } from '../Tree/CommentNode'
 import Loader from '../../Loader'
-import { Label } from '../../Typography'
+import { fontStyles, P } from "../../Typography";
 
 const styles = {
   root: css({}),
@@ -50,12 +50,13 @@ const styles = {
   hints: css({
     marginTop: 6
   }),
-  previewLabelWrapper: css({
-    marginBottom: '16px'
+  previewWrapper: css({
+    padding: '8px'
   }),
-  secondaryActionsWrapper: css({
-    display: 'inline-flex',
-    flexDirection: 'row'
+  previewLabel: css({
+    ...fontStyles.sansSerifMedium18,
+    display: 'block',
+    marginBottom: '16px'
   })
 }
 
@@ -289,77 +290,79 @@ export const CommentComposer = ({
 
   return (
     <div ref={root} {...styles.root}>
-      {!isPreviewing ? (
-        <div {...styles.background} {...colorScheme.set('background', 'hover')}>
-          {!hideHeader && (
-            <div
-              {...styles.withBorderBottom}
-              {...colorScheme.set('borderColor', 'default')}
-            >
-              <Header
-                t={t}
-                displayAuthor={displayAuthor}
-                onClick={onOpenPreferences}
-              />
-            </div>
-          )}
-          {/* Tags are only available in the root composer! */}
-          {isRoot && tags && (
-            <div
-              {...styles.withBorderBottom}
-              {...colorScheme.set('borderColor', 'default')}
-            >
-              <Tags tags={tags} onChange={setTagValue} value={tagValue} />
-            </div>
-          )}
+      <div {...styles.background} {...colorScheme.set('background', 'hover')}>
+        {!isPreviewing ? (
           <>
-            <Textarea
-              inputRef={textareaRef}
-              {...styles.textArea}
-              {...colorScheme.set('color', 'text')}
-              {...(maxLength ? styles.textAreaLimit : {})}
-              {...(text === '' ? textAreaEmptyRule : {})}
-              placeholder={
-                placeholder ?? t('styleguide/CommentComposer/placeholder')
-              }
-              value={text}
-              rows='1'
-              onChange={onChangeText}
-            />
-            {hints &&
-              hints.map((hint, index) => (
-                <div {...styles.hints} key={`hint-${index}`}>
-                  {hint}
-                </div>
-              ))}
-          </>
-          {maxLength && (
-            <MaxLengthIndicator maxLength={maxLength} length={textLength} />
-          )}
-        </div>
-      ) : (
-        <div>
-          <div {...styles.previewLabelWrapper}>
-            <Label>{t('styleguide/CommentComposer/preview')}</Label>
-          </div>
-          <Loader
-            loading={preview.loading}
-            error={preview.error}
-            render={() => (
-              <CommentUI
-                t={t}
-                comment={{
-                  ...preview.comment,
-                  tags: tags ? [tagValue] : undefined,
-                  displayAuthor
-                }}
-                isExpanded
-                isPreview
-              />
+            {!hideHeader && (
+              <div
+                {...styles.withBorderBottom}
+                {...colorScheme.set('borderColor', 'default')}
+              >
+                <Header
+                  t={t}
+                  displayAuthor={displayAuthor}
+                  onClick={onOpenPreferences}
+                />
+              </div>
             )}
-          />
-        </div>
-      )}
+            {/* Tags are only available in the root composer! */}
+            {isRoot && tags && (
+              <div
+                {...styles.withBorderBottom}
+                {...colorScheme.set('borderColor', 'default')}
+              >
+                <Tags tags={tags} onChange={setTagValue} value={tagValue} />
+              </div>
+            )}
+            <>
+              <Textarea
+                inputRef={textareaRef}
+                {...styles.textArea}
+                {...colorScheme.set('color', 'text')}
+                {...(maxLength ? styles.textAreaLimit : {})}
+                {...(text === '' ? textAreaEmptyRule : {})}
+                placeholder={
+                  placeholder ?? t('styleguide/CommentComposer/placeholder')
+                }
+                value={text}
+                rows='1'
+                onChange={onChangeText}
+              />
+              {hints &&
+                hints.map((hint, index) => (
+                  <div {...styles.hints} key={`hint-${index}`}>
+                    {hint}
+                  </div>
+                ))}
+            </>
+            {maxLength && (
+              <MaxLengthIndicator maxLength={maxLength} length={textLength} />
+            )}
+          </>
+        ) : (
+          <div {...styles.previewWrapper}>
+            <span {...styles.previewLabel}>
+              {t('styleguide/CommentComposer/preview')}
+            </span>
+            <Loader
+              loading={preview.loading}
+              error={preview.error}
+              render={() => (
+                <CommentUI
+                  t={t}
+                  comment={{
+                    ...preview.comment,
+                    tags: tags ? [tagValue] : undefined,
+                    displayAuthor
+                  }}
+                  isExpanded
+                  isPreview
+                />
+              )}
+            />
+          </div>
+        )}
+      </div>
 
       <Actions
         t={t}
