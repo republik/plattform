@@ -94,10 +94,14 @@ const Table = props => {
   // helper function that toggles order (desc/asc) or sets new sort by key (order: desc)
   const setSort = key => {
     if (sortBy.key === key) {
-      setSortBy(sortBy.order === 'asc' ? {} : {
-        key,
-        order: sortBy.order === 'desc' ? 'asc' : 'desc'
-      })
+      setSortBy(
+        sortBy.order === 'asc'
+          ? {}
+          : {
+              key,
+              order: sortBy.order === 'desc' ? 'asc' : 'desc'
+            }
+      )
     } else {
       setSortBy({ key, order: 'desc' })
     }
@@ -139,10 +143,9 @@ const Table = props => {
                 {...styles.header}
                 {...colorScheme.set('borderBottomColor', 'text')}
                 style={{
-                  textAlign:
-                   numberColumns.includes(tableHead)
-                      ? 'right'
-                      : 'left',
+                  textAlign: numberColumns.includes(tableHead)
+                    ? 'right'
+                    : 'left',
                   cursor: 'pointer',
                   whiteSpace: sortBy.key === tableHead ? 'nowrap' : undefined
                 }}
@@ -150,7 +153,7 @@ const Table = props => {
                 onClick={() => setSort(columns[index])}
               >
                 {tableHead}
-                {sortBy.enableSorting &&
+                {sortBy.key &&
                   sortBy.key === tableHead &&
                   (sortBy.order === 'desc' ? (
                     <ExpandMoreIcon style={{ paddingLeft: '2px' }} />
