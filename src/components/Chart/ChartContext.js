@@ -283,8 +283,6 @@ export const defaultProps = {
     colorRange: 'sequential',
     values: [],
     numberFormat: 's',
-    enableSorting: false,
-    customThreshold: 10,
     tableColumns: []
   }
 }
