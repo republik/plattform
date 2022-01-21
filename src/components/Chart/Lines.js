@@ -8,11 +8,7 @@ import XAxis from './XAxis'
 import { defaultProps } from './ChartContext'
 
 import {
-  sansSerifMedium12 as VALUE_FONT,
   sansSerifRegular12 as LABEL_FONT,
-  sansSerifMedium12,
-  sansSerifMedium14,
-  sansSerifMedium22
 } from '../Typography/styles'
 
 import { X_UNIT_PADDING } from './Layout.constants'

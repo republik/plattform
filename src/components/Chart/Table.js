@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 import { css } from 'glamor'
-import { scaleThreshold, scaleOrdinal } from 'd3-scale'
+import { scaleThreshold } from 'd3-scale'
 import { descending, ascending } from 'd3-array'
 
 import { useColorContext } from '../Colors/ColorContext'
