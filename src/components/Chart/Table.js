@@ -47,6 +47,10 @@ const styles = {
     '&:last-of-type': {
       padding: '8px 10px 8px 0'
     }
+  }),
+  cellNumber: css({
+    textAlign: 'right',
+    fontFeatureSettings: '"tnum", "kern"'
   })
 }
 
@@ -233,11 +237,10 @@ const Cell = props => {
   } = props
   return (
     <td
-      {...style}
+      {...(type === 'number' && styles.cellNumber)}
+      {...styles.cell}
       style={{
         width: +width,
-        textAlign: type === 'number' ? 'right' : 'left',
-        fontFeatureSettings: type === 'number' && '"tnum", "kern"',
         backgroundColor: color
           ? colorScale(type, column)(value)
           : 'transparent',
