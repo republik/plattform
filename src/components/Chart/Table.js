@@ -151,7 +151,8 @@ const Table = props => {
                     'number'
                       ? 'right'
                       : 'left',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  whiteSpace: sortBy.key === tableHead ? 'nowrap' : undefined
                 }}
                 key={index}
                 onClick={() => setSort(columns[index])}
