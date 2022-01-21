@@ -173,9 +173,10 @@ export const CommentComposer = ({
     }
   })
 
-  const textLength = preview.comment
-    ? preview.comment.contentLength
-    : text.length
+  const textLength =
+    isPreviewing && preview.comment
+      ? preview.comment.contentLength
+      : text.length
 
   const [tagValue, setTagValue] = useState(initialTagValue)
 
