@@ -138,8 +138,7 @@ const Table = props => {
                 {...colorScheme.set('borderBottomColor', 'text')}
                 style={{
                   textAlign:
-                    tableColumns.find(d => d.column === tableHead)?.type ===
-                    'number'
+                   numberColumns.includes(tableHead)
                       ? 'right'
                       : 'left',
                   cursor: 'pointer',
