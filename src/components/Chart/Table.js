@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import { css } from 'glamor'
 import { scaleThreshold, scaleQuantize, scaleOrdinal } from 'd3-scale'
-import { extent } from 'd3-array'
+import { extent, descending, ascending } from 'd3-array'
 
 import { useColorContext } from '../Colors/ColorContext'
 import { getFormat, getTextColor } from './utils'
@@ -69,23 +69,25 @@ const Table = props => {
     enableSorting: !!defaultSortColumn || false
   })
 
-  const numberColumns = tableColumns.filter(d => d.type === 'number').map(d => d.column)
+  const numberColumns = tableColumns
+    .filter(d => d.type === 'number')
+    .map(d => d.column)
   const parsedData = numberColumns.length
     ? values.map(row => {
-      let parsedRow = { ...row }
-      numberColumns.forEach(key => {
-        if (parsedRow[key] !== undefined) {
-          parsedRow[key] = +parsedRow[key]
-        }
+        let parsedRow = { ...row }
+        numberColumns.forEach(key => {
+          if (parsedRow[key] !== undefined) {
+            parsedRow[key] = +parsedRow[key]
+          }
+        })
+        return parsedRow
       })
-      return parsedRow
-    })
     : [].concat(values)
 
   if (sortBy.key) {
     parsedData.sort((a, b) => {
       return sortBy.order === 'desc'
-        ? descending(a[sortBy.key], b[sortBy.key]),
+        ? descending(a[sortBy.key], b[sortBy.key])
         : ascending(a[sortBy.key], b[sortBy.key])
     })
   }
