@@ -13,7 +13,7 @@ import { deleteDraft, readDraft, writeDraft } from './CommentDraftHelper'
 import { DisplayAuthorPropType } from '../Internal/PropTypes'
 import { CommentUI } from '../Tree/CommentNode'
 import Loader from '../../Loader'
-import { fontStyles, P } from '../../Typography'
+import { fontStyles } from '../../Typography'
 
 const styles = {
   root: css({}),
@@ -190,7 +190,8 @@ export const CommentComposer = ({
       const result = await onPreviewComment({
         discussionId,
         parentId,
-        content: text
+        content: text,
+        id: commentId
       })
       setPreview({
         loading: false,
