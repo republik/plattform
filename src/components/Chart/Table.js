@@ -54,7 +54,7 @@ const Table = props => {
     thresholds,
     tableColumns
   } = props
-  const columns = values.columns
+  const columns = values.columns || Object.keys(values[0] || {})
   const numberFormatter = getFormat(numberFormat)
 
   const [sortBy, setSortBy] = useState({
