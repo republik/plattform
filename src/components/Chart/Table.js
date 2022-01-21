@@ -65,8 +65,7 @@ const Table = props => {
 
   const [sortBy, setSortBy] = useState({
     key: defaultSortColumn,
-    order: 'desc',
-    enableSorting: !!defaultSortColumn || false
+    order: 'desc'
   })
 
   const numberColumns = tableColumns
@@ -95,13 +94,12 @@ const Table = props => {
   // helper function that toggles order (desc/asc) or sets new sort by key (order: desc)
   const setSort = key => {
     if (sortBy.key === key) {
-      setSortBy({
+      setSortBy(sortBy.order === 'asc' ? {} : {
         key,
-        order: sortBy.order === 'desc' ? 'asc' : 'desc',
-        enableSorting: true
+        order: sortBy.order === 'desc' ? 'asc' : 'desc'
       })
     } else {
-      setSortBy({ key, order: 'desc', enableSorting: true })
+      setSortBy({ key, order: 'desc' })
     }
   }
 
@@ -142,8 +140,7 @@ const Table = props => {
                 {...colorScheme.set('borderBottomColor', 'text')}
                 style={{
                   textAlign:
-                    tableColumns.find(d => d.column === tableHead)?.type ===
-                    'number'
+                   numberColumns.includes(tableHead)
                       ? 'right'
                       : 'left',
                   cursor: 'pointer',
