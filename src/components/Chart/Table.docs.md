@@ -34,7 +34,12 @@ Gesamtbevölkerung,38,8.6
 </div>
 ```
 
-## Table with background color and sorting
+## Color
+
+You may add a background color to a column. Supported are `thresholds`, `ordinal` and `quantize` scales.
+
+Also note the default sorting via [tbd, see below].
+
 
 ```react
 <div>
