@@ -117,6 +117,39 @@ At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergr
 ### With Covid-19 Logo
 
 ```react|noSource
+<Markdown schema={createEmailSchema()} rootData={{
+  "meta": {
+    "format": {
+      "repoId": "republik/format-covid-19-uhr-newsletter",
+      "meta": {
+        "title": "Covid-19-Uhr-Newsletter",
+        "path": "/format/covid-19-uhr-newsletter",
+        "kind": "meta",
+        "color": "#d44438"
+      }
+    }
+  }
+}}>{`
+<section><h6>CENTER</h6>
+
+Liebe Leserinnen, liebe Leser
+
+At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. **Lorem ipsum** dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua ...
+
+Bleiben Sie umsichtig, bleiben Sie freundlich, bleiben Sie gesund.
+
+Philipp Albrecht, Elia Blülle, Dennis Bühler, Oliver Fuchs und Cinzia Venafro
+
+**PS:** Haben Sie Fragen und Feedback, schreiben Sie an: covid19@republik.ch.
+
+<hr /></section>
+
+`.trim()}</Markdown>
+```
+
+For compatibility reasons we also support the showing the covid logo with just the format repo url:
+
+```react|noSource
 <Markdown schema={createEmailSchema()}>{`
 \-\-\-
 format: 'https://github.com/republik/format-covid-19-uhr-newsletter'

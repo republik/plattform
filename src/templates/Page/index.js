@@ -14,6 +14,7 @@ const createPageSchema = ({
   metaHeadlines = true,
   skipContainer = false,
   skipCenter = false,
+  hasEmailTemplate = false,
   ...args
 } = {}) => {
   return createArticleSchema({
@@ -23,6 +24,7 @@ const createPageSchema = ({
     },
     repoPrefix: 'page-',
     getPath,
+    hasEmailTemplate,
     customMetaFields: [
       {
         label: 'Diskussion',

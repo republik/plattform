@@ -16,11 +16,13 @@ const createDossierSchema = ({
   Link = DefaultLink,
   titleBlockPrepend = null,
   getPath = ({ slug }) => `/dossier/${(slug || '').split('/').pop()}`,
+  hasEmailTemplate = false,
   ...args
 } = {}) => {
   return createArticleSchema({
     repoPrefix: 'dossier-',
     getPath,
+    hasEmailTemplate,
     titleBlockPrepend: [
       titleBlockPrepend,
       <DossierTag attributes={{ contentEditable: false }}>
