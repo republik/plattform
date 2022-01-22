@@ -6,7 +6,8 @@ export default ({ meta }) => {
   const { slug, path, format } = meta
 
   const isCovid19 =
-    format && format.indexOf('format-covid-19-uhr-newsletter') !== -1
+    (typeof format === 'string' && format.includes('format-covid-19-uhr-newsletter')) ||
+    format?.repoId?.includes('format-covid-19-uhr-newsletter')
 
   const formatLine = useMemo(() => {
     return getFormatLine({
