@@ -63,7 +63,14 @@ const Footer = ({ meta }) => {
         >
           Ihre Newsletter-Einstellungen einzusehen und anzupassen
         </a>
-        , öffnen Sie «Konto» in der Republik-App oder auf republik.ch.{' '}
+        , öffnen Sie «Konto» in der Republik-App oder auf{' '}
+        <a
+          href='https://www.republik.ch/konto#newsletter'
+          style={footerLinkStyle}
+        >
+          republik.ch
+        </a>
+        .{' '}
         <a href='*|UNSUB|*' style={footerLinkStyle}>
           Alle Newsletter sofort pausieren
         </a>
