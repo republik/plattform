@@ -82,8 +82,17 @@ export const linesProcesser = ({
       .concat(dataWithBand.map(d => +d.datum[`${props.band}_lower`]))
       .concat(dataWithBand.map(d => +d.datum[`${props.band}_upper`]))
   }
-  if (props.yTicks) {
-    yValues = yValues.concat(props.yTicks)
+  if (props.area) {
+    const dataWithArea = data.filter(d => d.datum[`${props.area}_lower`])
+    yValues = yValues
+      .concat(dataWithArea.map(d => +d.datum[`${props.area}_lower`]))
+      .concat(dataWithArea.map(d => +d.datum[`${props.area}_upper`]))
+  }
+  const yTicks = props.yLines
+    ? props.yLines.map(d => d.tick)
+    : props.yTicks
+  if (yTicks) {
+    yValues = yValues.concat(yTicks)
   }
   const minValue = min(yValues)
 
@@ -102,7 +111,7 @@ export const linesProcesser = ({
     y.domain(),
     props.unit,
     {
-      ticks: props.yTicks
+      ticks: yTicks
     }
   )
   const { format: yFormat } = yAxis

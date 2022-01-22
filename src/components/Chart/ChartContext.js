@@ -3,16 +3,17 @@ import PropTypes from 'prop-types'
 
 import { timeFormat, timeParse } from '../../lib/timeFormat'
 import { getColorMapper } from './colorMaps'
+import { geoIdentity, geoMercator, geoEqualEarth } from 'd3-geo'
 
 import {
   deduplicate,
-  hasValues,
   identityFn,
   xAccessor,
   getDataFilter,
   getFormat,
   subsup,
-  runSort
+  runSort,
+  isValuePresent
 } from './utils'
 
 import { timeBarsProcesser } from './TimeBars.context'
@@ -50,6 +51,7 @@ export const ChartContextProvider = plainProps => {
     xFormat = timeFormat(props.timeFormat || props.timeParse)
   } else if (xScale === 'linear') {
     xParser = x => +x
+    xFormat = x => `${x}`
     xParserFormat = x => x.toString()
     if (type === 'Line') {
       xFormat = getFormat(
@@ -68,8 +70,13 @@ export const ChartContextProvider = plainProps => {
 
   const data = values
     .filter(getDataFilter(props.filter))
-    .filter(hasValues)
-    .map(normalizeData(props.x, xNormalizer))
+    .filter(
+      props.area
+        ? d =>
+            isValuePresent(d.value) || isValuePresent(d[`${props.area}_lower`])
+        : d => isValuePresent(d.value)
+    )
+    .map(normalizeData(props.x, xNormalizer, props.area))
     .map(categorizeData(props.category))
 
   const shouldXSort = props.xSort || xScale === 'time' || xScale === 'linear'
@@ -91,7 +98,11 @@ export const ChartContextProvider = plainProps => {
 
   const xValuesUnformatted = data
     .map(xAccessor)
-    .concat(props.xTicks ? props.xTicks.map(xNormalizer) : [])
+    .concat(
+      props.xLines || props.xTicks
+        ? (props.xLines?.map(d => d.tick) || props.xTicks).map(xNormalizer)
+        : []
+    )
     .concat(getAnnotationsXValues(xAnnotations, xNormalizer))
     .filter(deduplicate)
   if (shouldXSort) {
@@ -136,12 +147,42 @@ export const ChartContextProvider = plainProps => {
   )
 }
 
+const defaultPropsBar = {
+  columns: 1,
+  minInnerWidth: 140,
+  barStyle: 'small',
+  numberFormat: 's',
+  sort: 'ascending'
+}
+
+const defaultPropsMap = {
+  numberFormat: 's',
+  columns: 1,
+  unit: '',
+  heightRatio: 1,
+  colorLegend: true,
+  colorLegendSize: 0.16,
+  colorLegendMinWidth: 80,
+  colorLegendPosition: 'right',
+  points: false,
+  pointAttributes: [],
+  choropleth: false,
+  missingDataColor: 'divider',
+  ignoreMissingFeature: false,
+  feature: 'feature',
+  shape: 'circle',
+  sizeRangeMax: 10,
+  getProjection: () => geoEqualEarth().rotate([-10, 0]),
+  opacity: 0.6
+}
+
 export const defaultProps = {
   TimeBar: {
     x: 'year',
     xScale: 'time',
     xBandPadding: 0.25,
     timeParse: '%Y',
+    timeFormat: '%Y',
     numberFormat: 's',
     height: 240,
     padding: 50,
@@ -189,6 +230,56 @@ export const defaultProps = {
     columns: 2,
     height: 240,
     yNice: 3
+  },
+  Bar: defaultPropsBar,
+  Lollipop: {
+    ...defaultPropsBar,
+    barStyle: 'lollipop'
+  },
+  ScatterPlot: {
+    x: 'value',
+    y: 'value',
+    xScale: 'linear',
+    xShowValue: true,
+    yScale: 'linear',
+    yShowValue: true,
+    opacity: 1,
+    numberFormat: 's',
+    colorLegend: true,
+    paddingTop: 15,
+    paddingRight: 1,
+    paddingBottom: 50,
+    paddingLeft: 30,
+    size: 'size',
+    sizeRangeMax: 4,
+    label: 'label',
+    heightRatio: 1,
+    sizeShowValue: false,
+    columns: 1,
+    minInnerWidth: 240,
+    annotations: []
+  },
+  GenericMap: defaultPropsMap,
+  ProjectedMap: {
+    ...defaultPropsMap,
+    getProjection: () => geoIdentity()
+  },
+  SwissMap: {
+    ...defaultPropsMap,
+    getProjection: () =>
+      geoMercator().rotate([-7.439583333333333, -46.95240555555556]),
+    heightRatio: 0.63
+  },
+  Hemicycle: {
+    color: 'label',
+    group: 'year',
+    inlineLabelThreshold: 10,
+    padding: 0,
+    colorMap: 'swissPartyColors'
+  },
+  Table: {
+    numberFormat: 's',
+    tableColumns: []
   }
 }
 

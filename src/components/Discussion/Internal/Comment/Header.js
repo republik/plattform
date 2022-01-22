@@ -1,59 +1,31 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { css } from 'glamor'
-import { CheckIcon, MoreIcon } from '../../../Icons'
+import { AddIcon, CheckIcon, RemoveIcon } from '../../../Icons'
 import {
   sansSerifMedium16,
   sansSerifRegular14
 } from '../../../Typography/styles'
 import { onlyS } from '../../../../theme/mediaQueries'
-
 import { ellipsize, underline } from '../../../../lib/styleMixins'
 import { timeFormat } from '../../../../lib/timeFormat'
 import { DiscussionContext } from '../../DiscussionContext'
 import * as config from '../../config'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
-import CalloutMenu from '../../../Callout/CalloutMenu'
-import { useColorContext } from '../../../Colors/useColorContext'
+import { useColorContext } from '../../../Colors/ColorContext'
 import IconButton from '../../../IconButton'
 
 import RelativeTime from './RelativeTime'
+import ActionsMenu, { ActionsMenuItemPropType } from './ActionsMenu'
+import PropTypes from 'prop-types'
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
 
-const buttonStyle = {
-  outline: 'none',
-  WebkitAppearance: 'none',
-  background: 'transparent',
-  border: 'none',
-  padding: '0',
-  display: 'block',
-  cursor: 'pointer'
-}
-
-/**
- * This style is exported so that <CommentNode> can control the visibility
- * of this action button on hover over the whole comment element.
- */
-export const headerActionStyle = ({ isExpanded }) =>
-  css({
-    ...buttonStyle,
-    ...convertStyleToRem(sansSerifRegular14),
-    flexShrink: 0,
-    height: pxToRem('40px'),
-    cursor: 'pointer',
-    '& svg': {
-      display: 'inline-block',
-      margin: '10px',
-      verticalAlign: 'middle'
-    },
-    marginRight: -10
-  })
-
 const styles = {
   root: css({
     display: 'flex',
-    alignItems: 'flex-start'
+    flexDirection: 'row',
+    alignItems: 'center'
   }),
   profilePicture: css({
     display: 'block',
@@ -89,17 +61,6 @@ const styles = {
     flexShrink: 1,
     textDecoration: 'none',
     ...ellipsize,
-
-    /*
-     * Add hover effect only if the element has a href attribute. We always
-     * render the name as a <a> tag, but if it's not a public profile then
-     * we don't set a href attribute.
-     */
-    '@media (hover)': {
-      '[href]:hover': {
-        ...underline
-      }
-    }
   }),
   meta: css({
     ...convertStyleToRem(sansSerifRegular14),
@@ -144,22 +105,39 @@ const styles = {
   expandCount: css({
     display: 'inline-block',
     paddingLeft: pxToRem(16),
-    marginRigth: pxToRem(-4),
+    marginRight: pxToRem(-4),
     whiteSpace: 'pre',
     verticalAlign: 'middle',
     [onlyS]: {
       display: 'none'
     }
+  }),
+  actionsWrapper: css({
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexShrink: 0,
+    height: pxToRem('40px'),
+    '& > *:not(:last-child)': {
+      marginRight: 8
+    }
+  }),
+  collapseWrapper: css({
+    display: 'block'
   })
 }
 
+/**
+ * This glamor rule is exported so that <CommentNode> can control the visibility
+ * of this action button on hover over the whole comment element.
+ */
+export const collapseWrapperRule = styles.collapseWrapper
+
 const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
 const titleDate = string => dateTimeFormat(new Date(string))
-const MoreIconWithProps = props => (
-  <IconButton title='Mehr' Icon={MoreIcon} {...props} />
-)
 
-export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
+export const Header = ({ t, comment, menuItems, isExpanded, onToggle }) => {
   const { clock, discussion, Link } = React.useContext(DiscussionContext)
 
   const [colorScheme] = useColorContext()
@@ -176,18 +154,6 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
   const { profilePicture, name, credential } = displayAuthor || {}
 
   const isUpdated = updatedAt && updatedAt !== createdAt
-
-  const headerActionStyleHover = useMemo(
-    () =>
-      css({
-        '@media (hover)': {
-          ':hover': {
-            color: colorScheme.getCSSColor('text')
-          }
-        }
-      }),
-    [colorScheme]
-  )
 
   return (
     <div {...styles.root}>
@@ -221,22 +187,24 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
         }
       })()}
       <div {...styles.center}>
-        {!published && (
-          <div {...styles.name} {...colorScheme.set('color', 'textSoft')}>
-            {adminUnpublished
-              ? t('styleguide/comment/header/unpublishedByAdmin')
-              : unavailable
-              ? t('styleguide/comment/header/unavailable')
-              : t('styleguide/comment/header/unpublishedByUser')}
-          </div>
-        )}
-        {published && (
-          <Link displayAuthor={displayAuthor} passHref>
-            <a {...styles.name} {...colorScheme.set('color', 'text')}>
-              {name}
-            </a>
-          </Link>
-        )}
+        <div {...styles.name} {...colorScheme.set('color', 'text')}>
+          {!published && (
+            <span {...colorScheme.set('color', 'textSoft')}>
+              {adminUnpublished
+                ? t('styleguide/comment/header/unpublishedByAdmin')
+                : unavailable
+                ? t('styleguide/comment/header/unavailable')
+                : t('styleguide/comment/header/unpublishedByUser')}
+            </span>
+          )}
+          {published && (
+            <Link displayAuthor={displayAuthor} passHref>
+              <a {...styles.linkUnderline}>
+                {name}
+              </a>
+            </Link>
+          )}
+        </div>
         <div {...styles.meta} {...colorScheme.set('color', 'textSoft')}>
           {published && credential && (
             <>
@@ -294,59 +262,37 @@ export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
           )}
         </div>
       </div>
-      {onToggle && (
-        <button
-          {...headerActionStyle({ isExpanded })}
-          {...headerActionStyleHover}
-          {...colorScheme.set('color', isExpanded ? 'divider' : 'textSoft')}
-          onClick={onToggle}
-        >
-          {!isExpanded && comments && comments.totalCount > 0 && (
-            <div {...styles.expandCount}>
-              {t.pluralize('styleguide/comment/header/expandCount', {
-                count: comments.totalCount + 1
-              })}
-            </div>
-          )}
-          {isExpanded ? <IcCollapse /> : <IcExpand />}
-        </button>
-      )}
-      {menu && (
-        <CalloutMenu Element={MoreIconWithProps} align='right'>
-          {menu}
-        </CalloutMenu>
-      )}
+      <div {...styles.actionsWrapper} className={styles.actionsWrapper}>
+        {onToggle && (
+          <div className={styles.collapseWrapper}>
+            <IconButton
+              invert={true}
+              Icon={isExpanded ? RemoveIcon : AddIcon}
+              fillColorName='textSoft'
+              size={20}
+              onClick={onToggle}
+              style={{
+                marginLeft: 10
+              }}
+              label={
+                !isExpanded &&
+                t.pluralize('styleguide/comment/header/expandCount', {
+                  count: comments.totalCount + 1
+                })
+              }
+            />
+          </div>
+        )}
+        {menuItems && menuItems.length > 0 && <ActionsMenu items={menuItems} />}
+      </div>
     </div>
   )
 }
 
-const IcExpand = () => (
-  <svg width='20px' height='20px' viewBox='0 0 20 20'>
-    <rect
-      stroke='currentColor'
-      strokeWidth='2'
-      fill='transparent'
-      x='1'
-      y='1'
-      width='18'
-      height='18'
-    />
-    <rect fill='currentColor' x='9' y='6' width='2' height='8' />
-    <rect fill='currentColor' x='6' y='9' width='8' height='2' />
-  </svg>
-)
-
-const IcCollapse = () => (
-  <svg width='20px' height='20px' viewBox='0 0 20 20'>
-    <rect
-      stroke='currentColor'
-      strokeWidth='2'
-      fill='transparent'
-      x='1'
-      y='1'
-      width='18'
-      height='18'
-    />
-    <rect fill='currentColor' x='6' y='9' width='8' height='2' />
-  </svg>
-)
+Header.propTypes = {
+  t: PropTypes.func.isRequired,
+  comment: PropTypes.object.isRequired,
+  menuItems: PropTypes.arrayOf(ActionsMenuItemPropType),
+  isExpanded: PropTypes.bool,
+  onToggle: PropTypes.func
+}

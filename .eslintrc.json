@@ -9,11 +9,13 @@
   "env": {
     "browser": true,
     "es6": true,
-    "node": true
+    "node": true,
+    "jest": true
   },
-   "rules": {
+  "rules": {
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "off",
+   "react/react-in-jsx-scope": "off",
     "react/jsx-no-target-blank": "off",
     "react/display-name": "off",
     "react/prop-types": "off",
@@ -34,7 +36,12 @@
         "plugin:@typescript-eslint/recommended",
         "plugin:prettier/recommended"
       ],
-      "parser": "@typescript-eslint/parser"
+      "parser": "@typescript-eslint/parser",
+      "rules": {
+        "@typescript-eslint/no-loss-of-precision": "off",
+        "react/prop-types": "off",
+        "react/display-name": "off"
+      }
     }
   ]
 }

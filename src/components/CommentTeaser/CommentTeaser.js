@@ -114,7 +114,7 @@ export const CommentTeaser = ({
         id={id}
         {...styles.root}
         {...colorScheme.set('borderColor', 'divider')}
-        {...(highlighted && colorScheme.set('backgroundColor', 'hover'))}
+        {...(highlighted && colorScheme.set('backgroundColor', 'alert'))}
       >
         {displayAuthor && (
           <div {...styles.header}>

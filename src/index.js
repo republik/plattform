@@ -34,6 +34,12 @@ ReactSpecimen.defaultProps = {
   showSource: true
 }
 
+const GetColorScheme = ({ children }) => {
+  const [colorScheme] = useColorContext()
+
+  return children(colorScheme)
+}
+
 require('glamor/reset')
 
 const styleTag = document.createElement('style')
@@ -230,7 +236,7 @@ const Styleguide = () => {
                       imports: {
                         t,
                         ...require('./components/Overlay/docs.imports'),
-                        Slider: require('./components/Form/Slider.js')
+                        Slider: require('./components/Form/Slider.tsx')
                       },
                       src: require('./components/Overlay/docs.md')
                     },
@@ -304,6 +310,18 @@ const Styleguide = () => {
                           .NotificationIcon
                       },
                       src: require('./components/Callout/docs.md')
+                    },
+                    {
+                      path: '/tabs',
+                      title: 'Tabs',
+                      imports: {
+                        ...require('./components/Format'),
+                        Scroller: require('./components/Tabs/Scroller'),
+                        TabButton: require('./components/Tabs/TabButton'),
+                        plainButtonRule: require('./components/Button')
+                          .plainButtonRule
+                      },
+                      src: require('./components/Tabs/docs.md')
                     }
                   ]
                 },
@@ -317,9 +335,9 @@ const Styleguide = () => {
                         css,
                         ...require('./components/Typography'),
                         Button: require('./components/Button'),
-                        Checkbox: require('./components/Form/Checkbox.js'),
-                        Radio: require('./components/Form/Radio.js'),
-                        Field: require('./components/Form/Field.js'),
+                        Checkbox: require('./components/Form/Checkbox.tsx'),
+                        Radio: require('./components/Form/Radio.tsx'),
+                        Field: require('./components/Form/Field'),
                         ...require('./components/Form/Field.docs.js'),
                         FieldSet: require('./components/Form/FieldSet.js'),
                         MaskedInput: require('react-maskedinput'),
@@ -329,16 +347,38 @@ const Styleguide = () => {
                       src: require('./components/Form/docs.md')
                     },
                     {
+                      path: '/forms/radio',
+                      title: 'Radio',
+                      imports: {
+                        css,
+                        ...require('./components/Typography'),
+                        Radio: require('./components/Form/Radio.tsx'),
+                        GetColorScheme
+                      },
+                      src: require('./components/Form/Radio.docs.md')
+                    },
+                    {
+                      path: '/forms/checkbox',
+                      title: 'Checkbox',
+                      imports: {
+                        css,
+                        ...require('./components/Typography'),
+                        Checkbox: require('./components/Form/Checkbox.tsx'),
+                        GetColorScheme
+                      },
+                      src: require('./components/Form/Checkbox.docs.md')
+                    },
+                    {
                       path: '/forms/dropdown',
                       title: 'Dropdown',
                       imports: {
                         css,
                         ...require('./components/Typography'),
                         Button: require('./components/Button'),
-                        Field: require('./components/Form/Field.js'),
-                        Dropdown: require('./components/Form/Dropdown.js'),
-                        VirtualDropdown: require('./components/Form/VirtualDropdown.js'),
-                        NativeDropdown: require('./components/Form/NativeDropdown.js'),
+                        Field: require('./components/Form/Field'),
+                        Dropdown: require('./components/Form/Dropdown'),
+                        VirtualDropdown: require('./components/Form/VirtualDropdown'),
+                        NativeDropdown: require('./components/Form/NativeDropdown'),
                         dropdownItems: [
                           { value: '1', text: 'Redaktorin' },
                           { value: '2', text: 'Fussballerin' },
@@ -361,11 +401,11 @@ const Styleguide = () => {
                           }
                         ],
                         VirtualDropdownInternal: {
-                          Items: require('./components/Form/VirtualDropdown.js')
+                          Items: require('./components/Form/VirtualDropdown')
                             .Items,
-                          ItemsContainer: require('./components/Form/VirtualDropdown.js')
+                          ItemsContainer: require('./components/Form/VirtualDropdown')
                             .ItemsContainer,
-                          Inner: require('./components/Form/VirtualDropdown.js')
+                          Inner: require('./components/Form/VirtualDropdown')
                             .Inner
                         }
                       },
@@ -388,7 +428,7 @@ const Styleguide = () => {
                       imports: {
                         css,
                         ...require('./components/Typography'),
-                        Slider: require('./components/Form/Slider.js')
+                        Slider: require('./components/Form/Slider.tsx')
                       },
                       src: require('./components/Form/Slider.docs.md')
                     }
@@ -859,6 +899,23 @@ const Styleguide = () => {
                       component: require('./components/Chart/docs.js').default
                     },
                     {
+                      path: '/charts/editor',
+                      title: 'Editor',
+                      imports: {
+                        ...require('./components/Typography'),
+                        ChartEditor: require('./components/Chart/Editor'),
+                        data: {
+                          ...require('./components/Chart/Editor/docs.data')
+                        },
+                        Scroller: require('./components/Tabs/Scroller'),
+                        TabButton: require('./components/Tabs/TabButton'),
+                        ErrorBoundary: require('./components/ErrorBoundary'),
+                        CsvChart: require('./components/Chart/Csv'),
+                        t
+                      },
+                      src: require('./components/Chart/Editor/docs.md')
+                    },
+                    {
                       path: '/charts/bars',
                       title: 'Bars',
                       imports: {
@@ -965,6 +1022,19 @@ const Styleguide = () => {
                         t
                       },
                       src: require('./components/Chart/Hemicycle.docs.md')
+                    },
+                    {
+                      path: '/charts/table',
+                      title: 'Table',
+                      imports: {
+                        ...require('./components/Typography'),
+                        ChartTitle: require('./components/Chart').ChartTitle,
+                        ChartLead: require('./components/Chart').ChartLead,
+                        ChartLegend: require('./components/Chart').ChartLegend,
+                        CsvChart: require('./components/Chart/Csv'),
+                        t
+                      },
+                      src: require('./components/Chart/Table.docs.md')
                     }
                   ]
                 },
@@ -981,7 +1051,7 @@ const Styleguide = () => {
                       title: 'Translate',
                       src: require('./lib/translate.docs.md'),
                       imports: {
-                        Field: require('./components/Form/Field.js'),
+                        Field: require('./components/Form/Field'),
                         ...require('./components/Typography'),
                         t: createFormatter([
                           {
@@ -1068,13 +1138,14 @@ const Styleguide = () => {
                         ColorContextLocalExtension: require('./components/Colors/ColorContext')
                           .ColorContextLocalExtension,
                         useColorContext,
-                        GetColorScheme: ({ children }) => {
-                          const [colorScheme] = useColorContext()
-
-                          return children(colorScheme)
-                        },
+                        GetColorScheme,
                         css
                       }
+                    },
+                    {
+                      path: '/dev/typescript',
+                      title: 'Typescript',
+                      src: require('./development/typescript.docs.md')
                     }
                   ]
                 }

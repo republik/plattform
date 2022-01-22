@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import * as glamor from 'glamor'
 import * as styleguide from '../../lib'
 import { Chart, ChartTitle, ChartLead, ChartLegend } from '../../lib'
-import * as styleguideChart from '../../chart.js'
 
 import { requireFrom } from './require'
 import Loader from '../Loader'

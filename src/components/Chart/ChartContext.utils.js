@@ -1,9 +1,9 @@
-import { unsafeDatumFn } from './utils'
+import { isValuePresent, unsafeDatumFn } from './utils'
 
 export const normalizeData = (x, xNormalizer) => d => ({
   datum: d,
   x: xNormalizer(d[x]),
-  value: +d.value
+  value: isValuePresent(d.value) ? +d.value : undefined
 })
 
 export const getAnnotationsXValues = (annotations, xNormalizer) =>

@@ -224,7 +224,7 @@ The buttons / icons below the comment. The reply button is disabled if the discu
 <DiscussionContext.Provider
   value={createSampleDiscussionContextValue({ 
     t,
-    isAdmin: true,
+    isModerator: true,
     actions: {
       featureComment: () => Promise.resolve({ ok: true })
     }

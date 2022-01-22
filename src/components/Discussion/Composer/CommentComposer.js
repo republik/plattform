@@ -70,9 +70,10 @@ export const CommentComposer = props => {
     onClose,
     onCloseLabel,
     onSubmitLabel,
-    parentId,
     commentId,
-    autoFocus = true
+    parentId,
+    autoFocus = true,
+    placeholder
   } = props
   const [colorScheme] = useColorContext()
   /*
@@ -94,9 +95,12 @@ export const CommentComposer = props => {
   /*
    * Get the discussion metadata, action callbacks and hinters from DiscussionContext.
    */
-  const { discussion, actions, composerHints = [] } = React.useContext(
-    DiscussionContext
-  )
+  const {
+    discussion,
+    actions,
+    activeTag,
+    composerHints = []
+  } = React.useContext(DiscussionContext)
   const { id: discussionId, tags, rules, displayAuthor, isBoard } = discussion
   const { maxLength } = rules
 
@@ -123,6 +127,8 @@ export const CommentComposer = props => {
     ? preview.comment.contentLength
     : text.length
 
+  const [tagValue, setTagValue] = React.useState(props.tagValue)
+
   /*
    * Focus the textarea upon mount.
    *
@@ -143,6 +149,9 @@ export const CommentComposer = props => {
   const [slowText] = useDebounce(text, 400)
   textRef.current = text
   React.useEffect(() => {
+    if (!tagValue) {
+      setTagValue(isRoot ? activeTag : null)
+    }
     if (!isBoard || !isRoot || !previewCommentAction) {
       return
     }
@@ -186,7 +195,8 @@ export const CommentComposer = props => {
     discussionId,
     commentId,
     parentId,
-    isBoard
+    isBoard,
+    activeTag
   ])
 
   const onChangeText = ev => {
@@ -199,8 +209,6 @@ export const CommentComposer = props => {
       /* Ignore errors */
     }
   }
-
-  const [tagValue, setTagValue] = React.useState(props.tagValue)
 
   /*
    * We keep track of the submission process, to prevent the user from
@@ -289,7 +297,9 @@ export const CommentComposer = props => {
           {...colorScheme.set('color', 'text')}
           {...(maxLength ? styles.textAreaLimit : {})}
           {...(text === '' ? textAreaEmptyRule : {})}
-          placeholder={t('styleguide/CommentComposer/placeholder')}
+          placeholder={
+            placeholder ?? t('styleguide/CommentComposer/placeholder')
+          }
           value={text}
           rows='1'
           onChange={onChangeText}
@@ -339,7 +349,8 @@ CommentComposer.propTypes = {
   onClose: PropTypes.func.isRequired,
   onCloseLabel: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
-  onSubmitLabel: PropTypes.string
+  onSubmitLabel: PropTypes.string,
+  placeholder: PropTypes.string
 }
 
 const MaxLengthIndicator = ({ maxLength, length }) => {

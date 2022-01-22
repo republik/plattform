@@ -205,7 +205,8 @@ const subSupSplitter = createTag => {
     if (!input) {
       return input
     }
-    return input
+
+    return String(input)
       .split(/(<sub>|<sup>)([^<]+)<\/su[bp]>/g)
       .reduce((elements, text, i) => {
         if (text === '<sub>' || text === '<sup>') {
@@ -265,7 +266,7 @@ export const xAccessor = d => d.x
 
 export const yAccessor = d => d.y
 
-export const hasValues = d => d.value && d.value.toString().length > 0
+export const isValuePresent = value => value?.toString()?.length > 0
 
 export const identityFn = x => x
 

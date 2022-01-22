@@ -20,7 +20,8 @@ import {
   extractImages,
   getDatePath,
   matchFigure,
-  matchImagesParagraph
+  matchImagesParagraph,
+  matchSpanType
 } from '../Article/utils'
 
 const matchLast = (node, index, parent) => index === parent.children.length - 1
@@ -38,6 +39,7 @@ const createNewsletterSchema = ({
   Byline,
   Sub,
   Sup,
+  Memo = ({ children }) => <>{children}</>,
   Button,
   List,
   ListItem,
@@ -66,6 +68,14 @@ const createNewsletterSchema = ({
       editorModule: 'mark',
       editorOptions: {
         type: 'sup'
+      }
+    },
+    {
+      matchMdast: matchSpanType('MEMO'),
+      component: Memo,
+      editorModule: 'memo',
+      editorOptions: {
+        type: 'MEMO'
       }
     },
     {

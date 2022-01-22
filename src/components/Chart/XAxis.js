@@ -22,7 +22,7 @@ const tickGauger = createTextGauger(LABEL_FONT, {
   html: true
 })
 
-const XAxis = ({ xUnit, yScaleInvert, type }) => {
+const XAxis = ({ xUnit, yScaleInvert, type, lines: customLines }) => {
   const [colorScheme] = useColorContext()
   const chartContext = React.useContext(ChartContext)
   const { xAxis } = chartContext
@@ -35,6 +35,11 @@ const XAxis = ({ xUnit, yScaleInvert, type }) => {
   const xUnitWidth = xUnit ? tickGauger(xUnit) : 0
   let currentTextAnchor
   let currentX
+
+  const lines = customLines?.map(line => ({
+    ...line,
+    tick: chartContext.xNormalizer(line.tick)
+  })) || xAxis.ticks.map(tick => ({ tick }))
 
   return (
     <g data-axis>
@@ -49,8 +54,8 @@ const XAxis = ({ xUnit, yScaleInvert, type }) => {
             strokeDasharray={line.gap ? '2 2' : 'none'}
           />
         ))}
-      {xAxis.ticks.map((tick, i) => {
-        const tickText = xAxis.axisFormat(tick)
+      {lines.map(({ tick, label, textAnchor }, i) => {
+        const tickText = label ?? xAxis.axisFormat(tick)
 
         currentX = xAxis.scale(tick) + tickPosition
         currentTextAnchor = 'middle'
@@ -68,6 +73,9 @@ const XAxis = ({ xUnit, yScaleInvert, type }) => {
           if (chartContext.paddingLeft + currentX - tickTextWidth / 2 < 0) {
             currentTextAnchor = 'start'
           }
+        }
+        if (textAnchor) {
+          currentTextAnchor = textAnchor
         }
         const lineAlignmentCorrection =
           currentX === 0 ? 0.5 : currentX === chartContext.innerWidth ? -0.5 : 0
@@ -88,7 +96,7 @@ const XAxis = ({ xUnit, yScaleInvert, type }) => {
               dy={yScaleInvert ? '-1.1em' : '0.6em'}
               textAnchor={currentTextAnchor}
             >
-              {tickText}
+              {subsup.svg(tickText)}
             </text>
           </g>
         )

@@ -1,100 +1,100 @@
-import React, { useContext } from 'react'
-import { IconContext } from '@react-icons/all-files'
+export { IconContextProvider, useIconContext } from './IconContext'
+export {
+  MdPictureAsPdf as PdfIcon,
+  MdFileDownload as DownloadIcon,
+  MdVolumeUp as AudioIcon,
+  MdBookmark as BookmarkIcon,
+  MdBookmarkBorder as BookmarkBorderIcon,
+  MdSearch as SearchIcon,
+  MdPlayArrow as PlayIcon,
+  MdPause as PauseIcon,
+  MdSkipPrevious as RewindIcon,
+  MdClose as CloseIcon,
+  MdOpenInNew as NewPageIcon,
+  MdMood as MoodIcon,
+  MdKeyboardArrowDown as ArrowDownIcon,
+  MdKeyboardArrowUp as ArrowUpIcon,
+  MdKeyboardArrowLeft as ArrowLeftIcon,
+  MdKeyboardArrowRight as ArrowRightIcon,
+  MdFlag as ReportIcon,
+  MdEdit as EditIcon,
+  MdVisibilityOff as UnpublishIcon,
+  MdReply as ReplyIcon,
+  MdStarBorder as FeaturedIcon,
+  MdMoreVert as MoreIcon,
+  MdCheck as CheckIcon,
+  MdFilter as GalleryIcon,
+  MdChevronLeft as ChevronLeftIcon,
+  MdChevronRight as ChevronRightIcon,
+  MdFullscreen as FullscreenIcon,
+  MdFullscreenExit as FullscreenExitIcon,
+  MdMic as PodcastIcon,
+  MdPlayCircleOutline as PlayCircleIcon,
+  MdQueryBuilder as ReadingTimeIcon,
+  MdMail as MailIcon,
+  MdMailOutline as MailOutlineIcon,
+  MdPhonelink as PhonelinkIcon,
+  MdLink as LinkIcon,
+  MdHighlightOff as HighlightOffIcon,
+  MdLaunch as LaunchIcon,
+  MdRssFeed as RssFeedIcon,
+  MdArrowDownward as ArrowDownwardIcon,
+  MdArrowForward as ArrowForwardIcon,
+  MdExpandMore as ExpandMoreIcon,
+  MdExpandLess as ExpandLessIcon,
+  MdDone as DoneIcon,
+  MdNotificationsActive as NotificationsActiveIcon,
+  MdNotificationsActive as FollowIcon,
+  MdNotifications as NotificationIcon,
+  MdNotificationsOff as NotificationsOffIcon,
+  MdNotificationsNone as NotificationsNoneIcon,
+  MdRotateLeft as RotateLeftIcon,
+  MdRotateLeft as RevertIcon,
+  MdList as ListIcon,
+  MdFilterList as FilterListIcon,
+  MdAdd as AddIcon,
+  MdRemove as RemoveIcon,
+  MdAccountBox as AccountBoxIcon,
+  MdNoteAdd as NoteAddIcon,
+  MdVpnKey as VpnKeyIcon,
+  MdLanguage as LanguageIcon,
+  MdFavorite as FavoriteIcon,
+  MdStars as StarsIcon,
+  MdTrendingFlat as TrendingFlatIcon,
+  MdFolder as FolderIcon,
+  MdBrightness2 as DarkmodeIcon,
+  MdForward30 as ForwardIcon,
+  MdReplay10 as ReplayIcon,
+  MdCheckCircle as CheckCircleIcon,
+  MdLock as LockIcon,
+  MdTextFormat as TextFormatIcon,
+  MdOutlineSmsFailed as EtiquetteIcon,
+  MdUnfoldLess as UnfoldLessIcon,
+  MdUnfoldMore as UnfoldMoreIcon
+} from 'react-icons/md'
 
-export const IconContextProvider = ({ children, value }) => {
-  return <IconContext.Provider value={value}>{children}</IconContext.Provider>
-}
+export { AiFillInstagram as InstagramIcon } from 'react-icons/ai'
+export { FaTelegramPlane as TelegramIcon } from 'react-icons/fa'
+export { SiThreema as ThreemaIcon } from 'react-icons/si'
+export { DiOpensource as OpenSourceIcon } from 'react-icons/di'
 
-export const useIconContext = () => {
-  const iconContext = useContext(IconContext)
-  return iconContext
-}
-
-export { MdPictureAsPdf as PdfIcon } from '@react-icons/all-files/md/MdPictureAsPdf'
-export { MdFileDownload as DownloadIcon } from '@react-icons/all-files/md/MdFileDownload'
-export { MdVolumeUp as AudioIcon } from '@react-icons/all-files/md/MdVolumeUp'
-export { MdBookmark as BookmarkIcon } from '@react-icons/all-files/md/MdBookmark'
-export { MdBookmarkBorder as BookmarkBorderIcon } from '@react-icons/all-files/md/MdBookmarkBorder'
-export { MdSearch as SearchIcon } from '@react-icons/all-files/md/MdSearch'
-export { MdPlayArrow as PlayIcon } from '@react-icons/all-files/md/MdPlayArrow'
-export { MdPause as PauseIcon } from '@react-icons/all-files/md/MdPause'
-export { MdSkipPrevious as RewindIcon } from '@react-icons/all-files/md/MdSkipPrevious'
-export { MdClose as CloseIcon } from '@react-icons/all-files/md/MdClose'
-export { MdOpenInNew as NewPageIcon } from '@react-icons/all-files/md/MdOpenInNew'
-export { MdMood as MoodIcon } from '@react-icons/all-files/md/MdMood'
-export { MdKeyboardArrowDown as ArrowDownIcon } from '@react-icons/all-files/md/MdKeyboardArrowDown'
-export { MdKeyboardArrowUp as ArrowUpIcon } from '@react-icons/all-files/md/MdKeyboardArrowUp'
-export { MdKeyboardArrowLeft as ArrowLeftIcon } from '@react-icons/all-files/md/MdKeyboardArrowLeft'
-export { MdKeyboardArrowRight as ArrowRightIcon } from '@react-icons/all-files/md/MdKeyboardArrowRight'
-export { MdFlag as ReportIcon } from '@react-icons/all-files/md/MdFlag'
-export { MdEdit as EditIcon } from '@react-icons/all-files/md/MdEdit'
-export { MdVisibilityOff as UnpublishIcon } from '@react-icons/all-files/md/MdVisibilityOff'
-export { MdReply as ReplyIcon } from '@react-icons/all-files/md/MdReply'
-export { MdStarBorder as FeaturedIcon } from '@react-icons/all-files/md/MdStarBorder'
-export { MdMoreVert as MoreIcon } from '@react-icons/all-files/md/MdMoreVert'
-export { MdCheck as CheckIcon } from '@react-icons/all-files/md/MdCheck'
-export { MdFilter as GalleryIcon } from '@react-icons/all-files/md/MdFilter'
-export { MdChevronLeft as ChevronLeftIcon } from '@react-icons/all-files/md/MdChevronLeft'
-export { MdChevronRight as ChevronRightIcon } from '@react-icons/all-files/md/MdChevronRight'
-export { MdFullscreen as FullscreenIcon } from '@react-icons/all-files/md/MdFullscreen'
-export { MdFullscreenExit as FullscreenExitIcon } from '@react-icons/all-files/md/MdFullscreenExit'
-export { MdMic as PodcastIcon } from '@react-icons/all-files/md/MdMic'
-export { MdPlayCircleOutline as PlayCircleIcon } from '@react-icons/all-files/md/MdPlayCircleOutline'
-export { MdQueryBuilder as ReadingTimeIcon } from '@react-icons/all-files/md/MdQueryBuilder'
-export { MdMail as MailIcon } from '@react-icons/all-files/md/MdMail'
-export { MdMailOutline as MailOutlineIcon } from '@react-icons/all-files/md/MdMailOutline'
-export { MdPhonelink as PhonelinkIcon } from '@react-icons/all-files/md/MdPhonelink'
-export { MdLink as LinkIcon } from '@react-icons/all-files/md/MdLink'
-export { MdHighlightOff as HighlightOffIcon } from '@react-icons/all-files/md/MdHighlightOff'
-export { MdLaunch as LaunchIcon } from '@react-icons/all-files/md/MdLaunch'
-export { MdRssFeed as RssFeedIcon } from '@react-icons/all-files/md/MdRssFeed'
-export { MdArrowDownward as ArrowDownwardIcon } from '@react-icons/all-files/md/MdArrowDownward'
-export { MdArrowForward as ArrowForwardIcon } from '@react-icons/all-files/md/MdArrowForward'
-export { MdExpandMore as ExpandMoreIcon } from '@react-icons/all-files/md/MdExpandMore'
-export { MdExpandLess as ExpandLessIcon } from '@react-icons/all-files/md/MdExpandLess'
-export { MdDone as DoneIcon } from '@react-icons/all-files/md/MdDone'
-export { MdNotificationsActive as NotificationsActiveIcon } from '@react-icons/all-files/md/MdNotificationsActive'
-export { MdNotificationsActive as FollowIcon } from '@react-icons/all-files/md/MdNotificationsActive'
-export { MdNotifications as NotificationIcon } from '@react-icons/all-files/md/MdNotifications'
-export { MdNotificationsOff as NotificationsOffIcon } from '@react-icons/all-files/md/MdNotificationsOff'
-export { MdNotificationsNone as NotificationsNoneIcon } from '@react-icons/all-files/md/MdNotificationsNone'
-export { MdRotateLeft as RotateLeftIcon } from '@react-icons/all-files/md/MdRotateLeft'
-export { MdRotateLeft as RevertIcon } from '@react-icons/all-files/md/MdRotateLeft'
-export { MdList as ListIcon } from '@react-icons/all-files/md/MdList'
-export { MdFilterList as FilterListIcon } from '@react-icons/all-files/md/MdFilterList'
-export { MdAdd as AddIcon } from '@react-icons/all-files/md/MdAdd'
-export { MdRemove as RemoveIcon } from '@react-icons/all-files/md/MdRemove'
-export { MdAccountBox as AccountBoxIcon } from '@react-icons/all-files/md/MdAccountBox'
-export { MdNoteAdd as NoteAddIcon } from '@react-icons/all-files/md/MdNoteAdd'
-export { MdVpnKey as VpnKeyIcon } from '@react-icons/all-files/md/MdVpnKey'
-export { MdLanguage as LanguageIcon } from '@react-icons/all-files/md/MdLanguage'
-export { MdFavorite as FavoriteIcon } from '@react-icons/all-files/md/MdFavorite'
-export { MdStars as StarsIcon } from '@react-icons/all-files/md/MdStars'
-export { MdTrendingFlat as TrendingFlatIcon } from '@react-icons/all-files/md/MdTrendingFlat'
-export { MdFolder as FolderIcon } from '@react-icons/all-files/md/MdFolder'
-export { MdBrightness2 as DarkmodeIcon } from '@react-icons/all-files/md/MdBrightness2'
-export { MdForward30 as ForwardIcon } from '@react-icons/all-files/md/MdForward30'
-export { MdReplay10 as ReplayIcon } from '@react-icons/all-files/md/MdReplay10'
-export { MdCheckCircle as CheckCircleIcon } from '@react-icons/all-files/md/MdCheckCircle'
-export { MdLock as LockIcon } from '@react-icons/all-files/md/MdLock'
-
-export { IoLogoTwitter as TwitterIcon } from '@react-icons/all-files/io/IoLogoTwitter'
-export { IoLogoYoutube as YoutubeIcon } from '@react-icons/all-files/io/IoLogoYoutube'
-export { IoLogoVimeo as VimeoIcon } from '@react-icons/all-files/io/IoLogoVimeo'
-export { IoLogoWhatsapp as WhatsappIcon } from '@react-icons/all-files/io/IoLogoWhatsapp'
-export { IoLogoGoogle as GoogleIcon } from '@react-icons/all-files/io/IoLogoGoogle'
-export { IoLogoApple as AppleIcon } from '@react-icons/all-files/io/IoLogoApple'
-export { IoLogoFacebook as FacebookIcon } from '@react-icons/all-files/io/IoLogoFacebook'
-export { AiFillInstagram as InstagramIcon } from '@react-icons/all-files/ai/AiFillInstagram'
-export { FaTelegramPlane as TelegramIcon } from '@react-icons/all-files/fa/FaTelegramPlane'
-export { SiThreema as ThreemaIcon } from '@react-icons/all-files/si/SiThreema'
-export { DiOpensource as OpenSourceIcon } from '@react-icons/all-files/di/DiOpensource'
+// Separately export io icons to prevent a re-export conflict
+// caused by react-icons export both io4 and io5 on the /all path.
+// This causes duplicate exports which causes a rollup error.
+export {
+  IoLogoTwitter as TwitterIcon,
+  IoLogoYoutube as YoutubeIcon,
+  IoLogoVimeo as VimeoIcon,
+  IoLogoWhatsapp as WhatsappIcon,
+  IoLogoGoogle as GoogleIcon,
+  IoLogoApple as AppleIcon,
+  IoLogoFacebook as FacebookIcon
+} from 'react-icons/io5'
 
 export { ShareIcon } from './CustomIcons/ShareIcon'
 export { MarkdownIcon } from './CustomIcons/MarkdownIcon'
 export { BackIcon } from './CustomIcons/BackIcon'
 export { DiscussionIcon } from './CustomIcons/DiscussionIcon'
-export { EtiquetteIcon } from './CustomIcons/EtiquetteIcon'
 export { FontSizeIcon } from './CustomIcons/FontSizeIcon'
 export { CheckSmallIcon } from './CustomIcons/MdCheckSmall'
 export { ReadIcon } from './CustomIcons/MdCheckCircleOutlined'
@@ -105,26 +105,26 @@ export { SpotifyIcon } from './CustomIcons/SpotifyIcon'
 // Publikator
 // export { SuperscriptIcon } from './CustomIcons/SuperscriptIcon'
 // export { SubscriptIcon } from './CustomIcons/SubscriptIcon'
-// export { MdFormatBold as BoldIcon } from '@react-icons/all-files/md/MdFormatBold'
-// export { MdStrikethroughS as StrikethroughIcon } from '@react-icons/all-files/md/MdStrikethroughS'
-// export { MdFormatItalic as ItalicIcon } from '@react-icons/all-files/md/MdFormatItalic'
-// export { MdInfoOutline as InfoOutlineIcon } from '@react-icons/all-files/md/MdInfoOutline'
-// export { MdContentCopy as CopyToClippboardIcon } from '@react-icons/all-files/md/MdContentCopy'
-// export { MdSubdirectoryArrowLeft as MoveToEndIcon } from '@react-icons/all-files/md/MdSubdirectoryArrowLeft'
-// export { MdSubdirectoryArrowRight as MoveIntoIcon } from '@react-icons/all-files/md/MdSubdirectoryArrowRight'
-// export { FaTag as InsertVarIcon } from '@react-icons/all-files/fa/FaTag'
-// export { MdPublic as PublicIcon } from '@react-icons/all-files/md/MdPublic'
-// export { MdPhoneIphone as DevicePhoneIcon } from '@react-icons/all-files/md/MdPhoneIphone'
-// export { MdTabletMac as DeviceTabletIcon } from '@react-icons/all-files/md/MdTabletMac'
-// export { MdLaptopMac as DeviceLaptopIcon } from '@react-icons/all-files/md/MdLaptopMac'
-// export { MdDesktopMac as DeviceDesktopIcon } from '@react-icons/all-files/md/MdDesktopMac'
-// export { MdArrowDropDown as DropDownIcon } from '@react-icons/all-files/md/MdArrowDropDown'
-// export { MdArrowDropUp as DropUpIcon } from '@react-icons/all-files/md/MdArrowDropUp'
-// export { MdWrapText as TextDiffIcon } from '@react-icons/all-files/md/MdWrapText'
-// export { MdMoreHoriz as MoreHorizIcon } from '@react-icons/all-files/md/MdMoreHoriz'
-// export { MdLockOpen as LockOpenIcon } from '@react-icons/all-files/md/MdLockOpen'
-// export { MdGrade as StarFilledIcon } from '@react-icons/all-files/md/MdGrade'
-// export { MdCallSplit as NewerVersionIcon } from '@react-icons/all-files/md/MdCallSplit'
-// export { MdSignalWifiOff as OfflineIcon } from '@react-icons/all-files/md/MdSignalWifiOff'
-// export { MdLens as CircleFilledIcon } from '@react-icons/all-files/md/MdLens'
-// export { FaCogs as SettingsIcon } from '@react-icons/all-files/fa/FaCogs'
+// export { MdFormatBold as BoldIcon } from '@react-icons/all'
+// export { MdStrikethroughS as StrikethroughIcon } from '@react-icons/all'
+// export { MdFormatItalic as ItalicIcon } from '@react-icons/all'
+// export { MdInfoOutline as InfoOutlineIcon } from '@react-icons/all'
+// export { MdContentCopy as CopyToClippboardIcon } from '@react-icons/all'
+// export { MdSubdirectoryArrowLeft as MoveToEndIcon } from '@react-icons/all'
+// export { MdSubdirectoryArrowRight as MoveIntoIcon } from '@react-icons/all'
+// export { FaTag as InsertVarIcon } from '@react-icons/all'
+// export { MdPublic as PublicIcon } from '@react-icons/all'
+// export { MdPhoneIphone as DevicePhoneIcon } from '@react-icons/all'
+// export { MdTabletMac as DeviceTabletIcon } from '@react-icons/all'
+// export { MdLaptopMac as DeviceLaptopIcon } from '@react-icons/all'
+// export { MdDesktopMac as DeviceDesktopIcon } from '@react-icons/all'
+// export { MdArrowDropDown as DropDownIcon } from '@react-icons/all'
+// export { MdArrowDropUp as DropUpIcon } from '@react-icons/all'
+// export { MdWrapText as TextDiffIcon } from '@react-icons/all'
+// export { MdMoreHoriz as MoreHorizIcon } from '@react-icons/all'
+// export { MdLockOpen as LockOpenIcon } from '@react-icons/all'
+// export { MdGrade as StarFilledIcon } from '@react-icons/all'
+// export { MdCallSplit as NewerVersionIcon } from '@react-icons/all'
+// export { MdSignalWifiOff as OfflineIcon } from '@react-icons/all'
+// export { MdLens as CircleFilledIcon } from '@react-icons/all'
+// export { FaCogs as SettingsIcon } from '@react-icons/all'

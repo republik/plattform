@@ -102,10 +102,14 @@ export {
 export { CommentTeaser } from './components/CommentTeaser'
 export { Overlay, OverlayToolbar, OverlayBody } from './components/Overlay'
 
+export {
+  StatementNode,
+  StatementList
+} from './components/Discussion/Statements'
+
 export { Container, NarrowContainer } from './components/Grid'
 export {
   fontStyles,
-  linkBlackStyle,
   linkRule,
   plainLinkRule,
   A,
@@ -131,8 +135,10 @@ export {
 export {
   commentComposerStorageKey,
   CommentComposer,
-  CommentComposerPlaceholder
+  CommentComposerPlaceholder,
+  CommentHeaderProfile
 } from './components/Discussion/Composer'
+
 export { renderCommentMdast } from './components/Discussion/Internal/Comment/render'
 export { IconLink as DiscussionIconLink } from './components/Discussion/Internal/Comment/IconLink'
 
@@ -166,12 +172,13 @@ export { default as SharePreviewTwitter } from './components/ShareImage/SharePre
 
 export { default as TeaserEmbedComment } from './components/TeaserEmbedComment'
 export { SeriesNav } from './components/SeriesNav'
-
+export { default as TabButton } from './components/Tabs/TabButton'
+export { default as Scroller } from './components/Tabs/Scroller'
 // Export createRequire for dynamic-components
 export { createRequire } from './components/DynamicComponent'
 
 export * from './chart'
 
-export * from './icons'
+export * from './components/Icons'
 
 export * from './templates'

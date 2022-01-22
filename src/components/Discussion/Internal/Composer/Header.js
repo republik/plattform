@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { css } from 'glamor'
 import { CheckIcon } from '../../../Icons'
 import {
@@ -7,7 +7,7 @@ import {
 } from '../../../Typography/styles'
 import { ellipsize } from '../../../../lib/styleMixins'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
-import { useColorContext } from '../../../Colors/useColorContext'
+import { useColorContext } from '../../../Colors/ColorContext'
 
 const buttonStyle = {
   background: 'none',
@@ -18,8 +18,8 @@ const buttonStyle = {
 }
 
 const styles = {
-  button: css({
-    ...buttonStyle,
+  button: css(buttonStyle),
+  container: css({
     textAlign: 'left',
     padding: '8px',
     width: '100%'
@@ -27,6 +27,12 @@ const styles = {
   root: css({
     display: 'flex',
     alignItems: 'center'
+  }),
+  profileRoot: css({
+    display: 'inline-flex',
+    alignItems: 'center',
+    flexGrow: 1,
+    overflowX: 'clip'
   }),
   profilePicture: css({
     display: 'block',
@@ -88,57 +94,105 @@ const styles = {
   })
 }
 
+export const CommentHeaderProfile = ({
+  t,
+  profilePicture,
+  name,
+  credential,
+  onClick
+}) => {
+  const [colorScheme] = useColorContext()
+
+  return (
+    <div {...styles.profileRoot}>
+      {profilePicture && (
+        <img {...styles.profilePicture} src={profilePicture} alt='' />
+      )}
+      <div {...styles.center}>
+        <div {...styles.name} {...colorScheme.set('color', 'text')}>
+          {name}
+        </div>
+        <div {...styles.meta} {...colorScheme.set('color', 'textSoft')}>
+          {(() => {
+            if (credential) {
+              return (
+                <div
+                  {...styles.credential}
+                  {...(credential.verified && colorScheme.set('color', 'text'))}
+                >
+                  <div {...styles.descriptionText}>
+                    {credential.description}
+                  </div>
+                  {credential.verified && (
+                    <CheckIcon
+                      {...styles.verifiedCheck}
+                      {...colorScheme.set('color', 'primary')}
+                    />
+                  )}
+                </div>
+              )
+            } else if (onClick) {
+              return (
+                <div
+                  {...styles.credential}
+                  {...colorScheme.set('color', 'primary')}
+                >
+                  {t('styleguide/comment/header/credentialMissing')}
+                </div>
+              )
+            }
+          })()}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export const Header = ({ t, displayAuthor, onClick }) => {
   const { profilePicture, name, credential } = displayAuthor || {}
   const [colorScheme] = useColorContext()
+
+  const hoverStyle = useMemo(
+    () =>
+      css({
+        '@media(hover)': {
+          '&:hover': {
+            backgroundColor: colorScheme.getCSSColor('alert')
+          }
+        }
+      }),
+    [colorScheme]
+  )
+
   return (
-    <button {...styles.button} onClick={onClick}>
-      <div {...styles.root}>
-        {profilePicture && (
-          <img {...styles.profilePicture} src={profilePicture} alt='' />
-        )}
-        <div {...styles.center}>
-          <div {...styles.name} {...colorScheme.set('color', 'text')}>
-            {name}
+    <>
+      {onClick ? (
+        <button {...styles.button} {...styles.container} {...hoverStyle} onClick={onClick}>
+          <div {...styles.root}>
+            <CommentHeaderProfile
+              t={t}
+              profilePicture={profilePicture}
+              credential={credential}
+              name={name}
+              onClick={onClick}
+            />
+            <div {...styles.action} {...colorScheme.set('color', 'primary')}>
+              <EditIcon />
+            </div>
           </div>
-          <div {...styles.meta} {...colorScheme.set('color', 'textSoft')}>
-            {(() => {
-              if (credential) {
-                return (
-                  <div
-                    {...styles.credential}
-                    {...(credential.verified &&
-                      colorScheme.set('color', 'text'))}
-                  >
-                    <div {...styles.descriptionText}>
-                      {credential.description}
-                    </div>
-                    {credential.verified && (
-                      <CheckIcon
-                        {...styles.verifiedCheck}
-                        {...colorScheme.set('color', 'primary')}
-                      />
-                    )}
-                  </div>
-                )
-              } else {
-                return (
-                  <div
-                    {...styles.credential}
-                    {...colorScheme.set('color', 'primary')}
-                  >
-                    {t('styleguide/comment/header/credentialMissing')}
-                  </div>
-                )
-              }
-            })()}
-          </div>
+        </button>
+      ) : (
+        <div {...styles.root} {...styles.container}>
+          <CommentHeaderProfile
+            t={t}
+            profilePicture={profilePicture}
+            credential={credential}
+            name={name}
+            onClick={onClick}
+          />
         </div>
-        <div {...styles.action} {...colorScheme.set('color', 'primary')}>
-          <EditIcon />
-        </div>
-      </div>
-    </button>
+      )}
+    </>
   )
 }
 

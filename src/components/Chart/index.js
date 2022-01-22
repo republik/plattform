@@ -8,6 +8,7 @@ import { Line, Slope } from './Lines'
 import ScatterPlot from './ScatterPlots'
 import { GenericMap, ProjectedMap, SwissMap } from './Maps'
 import Hemicycle from './Hemicycle'
+import Table from './Table'
 
 import { mUp } from '../../theme/mediaQueries'
 import {
@@ -33,10 +34,11 @@ export const ReactCharts = {
   GenericMap,
   ProjectedMap,
   SwissMap,
-  Hemicycle
+  Hemicycle,
+  Table
 }
 
-const createRanges = ({
+export const createRanges = ({
   neutral,
   sequential,
   sequential3,

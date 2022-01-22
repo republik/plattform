@@ -9,6 +9,7 @@ import { sansSerifRegular12, sansSerifMedium14 } from '../Typography/styles'
 import { fontFamilies } from '../../theme/fonts'
 import { underline } from '../../lib/styleMixins'
 import { useColorContext } from '../Colors/useColorContext'
+import { defaultProps } from './ChartContext'
 
 import { sansSerifRegular12 as LABEL_FONT } from '../Typography/styles'
 import {
@@ -630,7 +631,7 @@ const BarChart = props => {
                             y={bar.y + bar.height / 2}
                             dy='.35em'
                           >
-                            {xAxis.format(bar.sumNegative)}
+                            {xAxis.format(bar.sumNegative)} {unit}
                           </text>
                         )}
                         {bar.sumPositiv && (
@@ -642,7 +643,7 @@ const BarChart = props => {
                             y={bar.y + bar.height / 2}
                             dy='.35em'
                           >
-                            {xAxis.format(bar.sumPositiv)}
+                            {xAxis.format(bar.sumPositiv)} {unit}
                           </text>
                         )}
                       </>
@@ -755,18 +756,11 @@ export const propTypes = {
 
 BarChart.propTypes = propTypes
 
-BarChart.defaultProps = {
-  columns: 1,
-  minInnerWidth: 140,
-  barStyle: 'small',
-  numberFormat: 's'
-}
+BarChart.defaultProps = defaultProps.Bar
 
 export const Lollipop = props => <BarChart {...props} />
 
-Lollipop.defaultProps = {
-  barStyle: 'lollipop'
-}
+Lollipop.defaultProps = defaultProps.Lollipop
 
 // Lollipop has additional default props
 Lollipop.wrap = 'Bar'
