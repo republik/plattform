@@ -1,4 +1,3 @@
-import test from 'tape'
 import { BaB153Stub, ArticleStub } from './article.stub'
 import { renderEmail } from 'mdast-react-render/lib/email'
 import { renderMdast } from 'mdast-react-render'
@@ -9,26 +8,22 @@ import createSchema from '../index'
 const babStub = parse(BaB153Stub)
 const articleStub = parse(ArticleStub)
 
-test('templates/article: render web', assert => {
-  assert.doesNotThrow(() => {
-    renderMdast(babStub, createSchema(), { MissingNode: false })
+describe('chart utils test-suite', () => {
+  it('templates/article: render web', () => {
+    expect(() => {
+      renderMdast(babStub, createSchema(), { MissingNode: false })
+    }).not.toThrow()
   })
 
-  assert.end()
-})
-
-test('templates/article: render bab as email', assert => {
-  assert.doesNotThrow(() => {
-    renderEmail(babStub, articleEmailSchema, { MissingNode: false })
+  it('templates/article: render bab as email', () => {
+    expect(() => {
+      renderEmail(babStub, articleEmailSchema, { MissingNode: false })
+    }).not.toThrow()
   })
 
-  assert.end()
-})
-
-test('templates/article: render article as email', assert => {
-  assert.doesNotThrow(() => {
-    renderEmail(articleStub, articleEmailSchema, { MissingNode: false })
+  it('templates/article: render article as email', () => {
+    expect(() => {
+      renderEmail(articleStub, articleEmailSchema, { MissingNode: false })
+    }).not.toThrow()
   })
-
-  assert.end()
 })
