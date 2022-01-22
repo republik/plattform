@@ -150,10 +150,12 @@ const createSchema = ({
       key: 'discussion',
       ref: 'repo'
     },
-    {
-      label: 'E-Mail-Betreff',
-      key: 'emailSubject'
-    }
+    // // disabled pending launch and backend support
+    // // https://github.com/orbiting/backends/compare/feat-article-email
+    // {
+    //   label: 'E-Mail-Betreff',
+    //   key: 'emailSubject'
+    // }
   ],
   titleBlockRule,
   titleBlockPrepend = null,
@@ -222,7 +224,9 @@ const createSchema = ({
   return {
     repoPrefix,
     getPath,
-    emailTemplate: hasEmailTemplate,
+    // // disabled pending launch and backend support
+    // // https://github.com/orbiting/backends/compare/feat-article-email
+    // emailTemplate: hasEmailTemplate,
     rules: [
       {
         matchMdast: matchType('root'),

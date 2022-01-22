@@ -5,6 +5,10 @@ import { getFormatLine } from '../../../components/TeaserFeed/utils'
 export default ({ meta }) => {
   const { slug, path, format } = meta
 
+  // support for old format string pending backend change
+  // https://github.com/orbiting/backends/compare/feat-article-email
+  // specifically resolved meta object
+  // https://github.com/orbiting/backends/commit/cce72915353d60c3cd3b4ecafefa3a11fb092933
   const isCovid19 =
     (typeof format === 'string' && format.includes('format-covid-19-uhr-newsletter')) ||
     format?.repoId?.includes('format-covid-19-uhr-newsletter')
