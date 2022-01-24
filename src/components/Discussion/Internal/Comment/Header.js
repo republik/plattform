@@ -82,17 +82,14 @@ const styles = {
     '& > *:not(:last-child)': {
       marginRight: 8
     }
-  }),
-  collapseWrapper: css({
-    display: 'block'
   })
 }
 
 /**
- * This glamor rule is exported so that <CommentNode> can control the visibility
+ * This class name is exported so that <CommentNode> can control the visibility
  * of this action button on hover over the whole comment element.
  */
-export const collapseWrapperRule = styles.collapseWrapper
+export const COLLAPSE_WRAPPER_CLASSNAME = 'comment-collapse-wrapper'
 
 const propTypes = {
   t: PropTypes.func.isRequired,
@@ -187,7 +184,7 @@ export const Header = ({
       </div>
       <div {...styles.actionsWrapper}>
         {onToggle && (
-          <div className={styles.collapseWrapper}>
+          <div className={COLLAPSE_WRAPPER_CLASSNAME}>
             <IconButton
               invert={true}
               Icon={isExpanded ? RemoveIcon : AddIcon}

@@ -5,7 +5,7 @@ import { css, merge } from 'glamor'
 import * as Comment from '../Internal/Comment'
 import { CommentActions } from '../Internal/Comment/CommentActions'
 import { mUp } from '../../../theme/mediaQueries'
-import { collapseWrapperRule } from '../Internal/Comment'
+import { COLLAPSE_WRAPPER_CLASSNAME } from '../Internal/Comment'
 import { Header } from '../Internal/Comment/Header'
 import { LoadMore } from './LoadMore'
 import { ActionMenuItem } from '../Internal/Comment/ActionsMenu'
@@ -45,18 +45,18 @@ const styles = {
        * On larger screens, hide the action button and reveal only on hover.
        */
       [mUp]: isExpanded && {
-        [`& .${collapseWrapperRule}`]: {
+        [`& .${COLLAPSE_WRAPPER_CLASSNAME}`]: {
           visibility: 'hidden'
         },
         '@media(hover)': {
-          [`:hover .${collapseWrapperRule}`]: {
+          [`:hover .${COLLAPSE_WRAPPER_CLASSNAME}`]: {
             visibility: 'visible'
           }
         }
       },
       // In case device doesn't support hover
       '@media(hover:none)': {
-        [`& .${collapseWrapperRule}`]: {
+        [`& .${COLLAPSE_WRAPPER_CLASSNAME}`]: {
           visibility: 'visible'
         }
       }
