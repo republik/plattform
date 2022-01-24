@@ -23,9 +23,7 @@ const styles = {
     color: 'inherit',
     textDecoration: 'none',
     '@media (hover)': {
-      ':hover': {
-        ...underline
-      }
+      '[href]:hover': underline
     }
   }),
   timeago: css({

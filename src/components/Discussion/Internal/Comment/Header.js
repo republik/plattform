@@ -61,28 +61,6 @@ const styles = {
     textDecoration: 'none',
     ...ellipsize
   }),
-  meta: css({
-    ...convertStyleToRem(sansSerifRegular14),
-    lineHeight: pxToRem(20),
-    display: 'flex',
-    alignItems: 'center'
-  }),
-  credential: css({
-    display: 'flex',
-    alignItems: 'center',
-    flexGrow: 0,
-    flexShrink: 1,
-    minWidth: 0
-  }),
-  descriptionText: css({
-    ...ellipsize
-  }),
-  verifiedCheck: css({
-    flexShrink: 0,
-    display: 'inline-block',
-    marginLeft: pxToRem(4),
-    marginTop: pxToRem(2)
-  }),
   link: css({
     color: 'inherit',
     textDecoration: 'none'
@@ -91,24 +69,7 @@ const styles = {
     color: 'inherit',
     textDecoration: 'none',
     '@media (hover)': {
-      ':hover': {
-        ...underline
-      }
-    }
-  }),
-  timeago: css({
-    flexShrink: 0,
-    flexGrow: 0,
-    whiteSpace: 'pre'
-  }),
-  expandCount: css({
-    display: 'inline-block',
-    paddingLeft: pxToRem(16),
-    marginRight: pxToRem(-4),
-    whiteSpace: 'pre',
-    verticalAlign: 'middle',
-    [onlyS]: {
-      display: 'none'
+      '[href]:hover': underline
     }
   }),
   actionsWrapper: css({
@@ -224,7 +185,7 @@ export const Header = ({
           isPreview={isPreview}
         />
       </div>
-      <div {...styles.actionsWrapper} className={styles.actionsWrapper}>
+      <div {...styles.actionsWrapper}>
         {onToggle && (
           <div className={styles.collapseWrapper}>
             <IconButton
