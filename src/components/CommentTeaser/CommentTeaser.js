@@ -53,7 +53,7 @@ const DefaultLink = ({ children }) => children
 
 export const CommentTeaser = ({
   t,
-  Link = DefaultLink,
+  CommentLink = DefaultLink,
   onClick,
   highlighted,
   menu,
@@ -95,7 +95,7 @@ export const CommentTeaser = ({
   const discussionContextValue = {
     discussion,
     clock,
-    Link
+    CommentLink
   }
 
   const highlightEMRule = useMemo(
@@ -126,18 +126,18 @@ export const CommentTeaser = ({
                 createdAt
               }}
               menu={menu}
-              Link={Link}
+              CommentLink={CommentLink}
             />
           </div>
         )}
         {tag && (
           <Context
             title={
-              <Link comment={comment} discussion={discussion} passHref>
+              <CommentLink comment={comment} discussion={discussion} passHref>
                 <a {...styles.link} {...highlightEMRule}>
                   {tag}
                 </a>
-              </Link>
+              </CommentLink>
             }
           />
         )}
@@ -147,7 +147,7 @@ export const CommentTeaser = ({
           style={{ marginTop: displayAuthor || tag ? undefined : 0 }}
         >
           <CommentBodyParagraph>
-            <Link comment={comment} discussion={discussion} passHref>
+            <CommentLink comment={comment} discussion={discussion} passHref>
               <a {...styles.link} {...highlightEMRule}>
                 {!!featuredText && (
                   <CommentBodyFeaturedText>
@@ -171,12 +171,12 @@ export const CommentTeaser = ({
                   </Fragment>
                 )}
               </a>
-            </Link>
+            </CommentLink>
           </CommentBodyParagraph>
         </div>
 
         {discussion?.image && (
-          <Link comment={comment} discussion={discussion} passHref>
+          <CommentLink comment={comment} discussion={discussion} passHref>
             <a {...styles.link}>
               <img
                 style={{ maxWidth: '100%', maxHeight: '100%' }}
@@ -186,10 +186,10 @@ export const CommentTeaser = ({
                 {...colorScheme.set('borderColor', 'divider')}
               />
             </a>
-          </Link>
+          </CommentLink>
         )}
 
-        <DiscussionFooter comment={comment} t={t} Link={Link} />
+        <DiscussionFooter comment={comment} t={t} CommentLink={CommentLink} />
       </div>
     </DiscussionContext.Provider>
   )

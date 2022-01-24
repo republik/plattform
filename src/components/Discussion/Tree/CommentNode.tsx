@@ -135,7 +135,7 @@ type CommentUIProps = {
   onToggle?: () => void
   tagText?: string
   menuItems?: ActionMenuItem[]
-  Link?: React.ElementType
+  CommentLink?: React.ElementType
   isPreview?: boolean
 }
 
@@ -145,7 +145,7 @@ export const CommentUI = ({
   isExpanded,
   onToggle,
   menuItems,
-  Link = MockLink,
+  CommentLink = MockLink,
   isPreview = false
 }: CommentUIProps) => (
   <div {...styles.commentWrapper({ isExpanded })}>
@@ -155,7 +155,7 @@ export const CommentUI = ({
       isExpanded={isExpanded}
       onToggle={onToggle}
       menuItems={menuItems}
-      Link={Link}
+      CommentLink={CommentLink}
       isPreview={isPreview}
     />
     <div style={{ marginTop: 12 }}>
@@ -190,7 +190,7 @@ export type CommentProps<CommentType = any> = {
   isLast?: boolean
   isBoard?: boolean
   rootCommentOverlay?: boolean
-  Link: React.ElementType
+  CommentLink: React.ElementType
   focusHref: string
   profileHref: string
   userCanComment?: boolean
@@ -215,7 +215,7 @@ const CommentNode = ({
   isLast,
   isBoard,
   rootCommentOverlay,
-  Link,
+  CommentLink,
   focusHref,
   profileHref,
   editComposer
@@ -294,7 +294,7 @@ const CommentNode = ({
                 setExpanded(prev => !prev)
               }}
               menuItems={menuItems}
-              Link={Link}
+              CommentLink={CommentLink}
             />
           )}
 
@@ -346,7 +346,7 @@ const CommentNode = ({
           isExpanded={isExpanded}
           onToggle={() => setExpanded(prev => !prev)}
           menuItems={menuItems}
-          Link={Link}
+          CommentLink={CommentLink}
         />
       </div>
     )

@@ -11,7 +11,7 @@ Props:
 - `createdAt`: The comment's creation timestamp.
 - `highlighted`: Adds a background to the teaser
 - `menu`: Adds a more icon to the right and a callout menu
-- `Link`: A Next.js like `<Link />` component, receiving these props:
+- `CommentLink`: A Next.js like `<Link />` component, receiving these props:
   - `commentId`: string
   - `displayAuthor`: object
   - `passHref`: Boolean, indicates this will eventually end in an `a` tag and you may overwrite `href`

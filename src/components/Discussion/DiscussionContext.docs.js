@@ -104,7 +104,7 @@ export const createSampleDiscussionContextValue = ({
   /**
    * When components need to create links to other parts of the website, they can use this component.
    */
-  Link: ({ displayAuthor, discussion, comment, passHref, ...props }) => (
+  CommentLink: ({ displayAuthor, discussion, comment, passHref, ...props }) => (
     <React.Fragment {...props} />
   ),
 

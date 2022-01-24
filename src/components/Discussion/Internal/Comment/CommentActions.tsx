@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { css } from 'glamor'
 import { sansSerifMedium14 } from '../../../Typography/styles'
-import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
+import { formatTimeRelative } from '../../DiscussionContext'
 import { ShareIcon, ReplyIcon, DiscussionIcon } from '../../../Icons'
 import { useColorContext } from '../../../Colors/ColorContext'
 import { useCurrentMinute } from '../../../../lib/useCurrentMinute'
@@ -9,7 +9,6 @@ import IconButton from '../../../IconButton'
 import { VoteButtons } from './VoteButtons'
 import PropTypes from 'prop-types'
 import { useMediaQuery } from '../../../../lib/useMediaQuery'
-import { mediaQueries } from '../../../../lib'
 import { mUp } from '../../../../theme/mediaQueries'
 
 const styles = {

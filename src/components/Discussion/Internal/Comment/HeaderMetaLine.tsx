@@ -9,7 +9,6 @@ import { sansSerifRegular14 } from '../../../Typography/styles'
 import { ellipsize, underline } from '../../../../lib/styleMixins'
 import { mediaQueries, useMediaQuery } from '../../../../lib'
 import { CheckIcon } from '../../../Icons'
-import discussion from '../../../../templates/Discussion'
 
 const styles = {
   meta: css({
@@ -57,7 +56,7 @@ const titleDate = string => dateTimeFormat(new Date(string))
  * Render the meta line of the comment-header
  * user credential - published at - edited state
  */
-const HeaderMetaLine = ({ t, comment, discussion, Link, isPreview }) => {
+const HeaderMetaLine = ({ t, comment, discussion, CommentLink, isPreview }) => {
   const [colorScheme] = useColorContext()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
 
@@ -110,11 +109,11 @@ const HeaderMetaLine = ({ t, comment, discussion, Link, isPreview }) => {
         {...colorScheme.set('color', 'textSoft')}
         title={titleDate(createdAt)}
       >
-        <Link comment={comment} discussion={discussion} passHref>
+        <CommentLink comment={comment} discussion={discussion} passHref>
           <a {...styles.linkUnderline}>
             <RelativeTime t={t} isDesktop={isDesktop} date={createdAt} />
           </a>
-        </Link>
+        </CommentLink>
       </div>
       {(published || isPreview) && isUpdated && (
         <div
@@ -133,7 +132,7 @@ const HeaderMetaLine = ({ t, comment, discussion, Link, isPreview }) => {
 HeaderMetaLine.propTypes = {
   t: PropTypes.func.isRequired,
   comment: PropTypes.object.isRequired,
-  Link: PropTypes.elementType.isRequired
+  CommentLink: PropTypes.elementType.isRequired
 }
 
 export default HeaderMetaLine

@@ -139,7 +139,7 @@ const propTypes = {
   menuItems: PropTypes.arrayOf(ActionsMenuItemPropType),
   isExpanded: PropTypes.bool,
   onToggle: PropTypes.func,
-  Link: PropTypes.elementType.isRequired,
+  CommentLink: PropTypes.elementType.isRequired,
   isPreview: PropTypes.bool
 }
 
@@ -149,7 +149,7 @@ export const Header = ({
   menuItems,
   isExpanded,
   onToggle,
-  Link,
+  CommentLink,
   isPreview = false
 }) => {
   const [colorScheme] = useColorContext()
@@ -173,7 +173,7 @@ export const Header = ({
             return null
           }
           return (
-            <Link displayAuthor={displayAuthor} passHref>
+            <CommentLink displayAuthor={displayAuthor} passHref>
               <a {...styles.link}>
                 <img
                   {...styles.profilePicture}
@@ -181,7 +181,7 @@ export const Header = ({
                   alt={name}
                 />
               </a>
-            </Link>
+            </CommentLink>
           )
         } else if (n === 0) {
           return null
@@ -211,16 +211,16 @@ export const Header = ({
             </span>
           )}
           {published && (
-            <Link displayAuthor={displayAuthor} passHref>
+            <CommentLink displayAuthor={displayAuthor} passHref>
               <a {...styles.linkUnderline}>{name}</a>
-            </Link>
+            </CommentLink>
           )}
         </div>
         <HeaderMetaLine
           comment={comment}
           discussion={discussion}
           t={t}
-          Link={Link}
+          CommentLink={CommentLink}
           isPreview={isPreview}
         />
       </div>
