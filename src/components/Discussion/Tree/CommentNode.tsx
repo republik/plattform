@@ -65,7 +65,9 @@ const styles = {
     css({
       background: 'transparent',
       position: 'relative',
-      margin: `10px 0 ${(isExpanded ? 24 : 16) + (depth === 0 ? 20 : 0)}px`,
+      margin: isBoard
+        ? 0
+        : `10px 0 ${(isExpanded ? 24 : 16) + (depth === 0 ? 20 : 0)}px`,
       paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeS,
       [mUp]: {
         paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeM

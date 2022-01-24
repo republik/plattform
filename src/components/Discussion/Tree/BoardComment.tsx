@@ -6,12 +6,19 @@ import { mUp } from '../../../theme/mediaQueries'
 
 const styles = {
   wrapper: css({
-    display: 'grid',
-    gridTemplateColumns: '1fr',
-    gridAutoRows: 'auto',
-    gap: 16,
+    marginTop: 10,
+    marginBottom: 50,
     [mUp]: {
-      gridTemplateColumns: '1fr 1fr'
+      display: 'flex',
+      marginLeft: -10,
+      marginRight: -10
+    }
+  }),
+  item: css({
+    [mUp]: {
+      padding: 10,
+      width: '50%',
+      flex: '1 0 auto'
     }
   })
 }
@@ -19,12 +26,12 @@ const styles = {
 
 const BoardComment = (props: CommentProps) => (
   <div {...styles.wrapper}>
-    <div>
-      <CommentNode {...props} isBoard={true} />
+    <div {...styles.item}>
+      <CommentNode {...props} isBoard />
     </div>
     {props.comment?.embed && (
-      <div>
-        <CommentEmbed embed={props.comment?.embed} />
+      <div {...styles.item}>
+        <CommentEmbed embed={props.comment.embed} />
       </div>
     )}
   </div>
