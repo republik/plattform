@@ -1,11 +1,26 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import colors from '../../../theme/colors'
+import { getFormatLine } from '../../../components/TeaserFeed/utils'
 
 export default ({ meta }) => {
   const { slug, path, format } = meta
 
+  // support for old format string pending backend change
+  // https://github.com/orbiting/backends/compare/feat-article-email
+  // specifically resolved meta object
+  // https://github.com/orbiting/backends/commit/cce72915353d60c3cd3b4ecafefa3a11fb092933
   const isCovid19 =
-    format && format.indexOf('format-covid-19-uhr-newsletter') !== -1
+    (typeof format === 'string' && format.includes('format-covid-19-uhr-newsletter')) ||
+    format?.repoId?.includes('format-covid-19-uhr-newsletter')
+
+  const formatLine = useMemo(() => {
+    return getFormatLine({
+      format: meta.format,
+      series: meta.series,
+      repoId: meta.repoId,
+      path: meta.path
+    })
+  }, [meta])
 
   return (
     <>
@@ -13,7 +28,12 @@ export default ({ meta }) => {
         <td
           align='center'
           valign='top'
-          style={{ borderBottom: `1px solid ${colors.divider}` }}
+          style={{
+            borderBottom:
+              formatLine && formatLine.color
+                ? `3px solid ${formatLine.color}`
+                : `1px solid ${colors.divider}`
+          }}
         >
           <a
             href={`https://www.republik.ch${path ? path : `/${slug}`}`}

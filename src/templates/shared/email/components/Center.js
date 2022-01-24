@@ -1,8 +1,8 @@
 import React from 'react'
-import { fontFamilies } from '../../../theme/fonts'
 import { Mso } from 'mdast-react-render/lib/email'
+import { fontFamilies } from '../../../../theme/fonts'
 
-export default ({ children }) => {
+const Center = ({ children }) => {
   return (
     <tr>
       <td align='center' valign='top'>
@@ -45,3 +45,5 @@ export default ({ children }) => {
     </tr>
   )
 }
+
+export default Center
