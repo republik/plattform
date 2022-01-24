@@ -63,8 +63,7 @@ export const CommentActions = ({
 
   const replyBlockedMessage: string | null = useMemo(() => {
     const waitUntilDate = userWaitUntil && new Date(userWaitUntil)
-    if (waitUntilDate && waitUntilDate.getMilliseconds() > now) {
-      // REVIEW THOMAS
+    if (waitUntilDate && waitUntilDate.getTime() > now) {
       return t('styleguide/CommentComposer/wait', {
         time: formatTimeRelative(waitUntilDate, { isDesktop, t, now })
       })
