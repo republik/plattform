@@ -189,7 +189,7 @@ export type CommentProps<CommentType = any> = {
   focusId?: string
   isLast?: boolean
   isBoard?: boolean
-  rootCommentOverlay?: boolean
+  inRootCommentOverlay?: boolean
   CommentLink: React.ElementType
   focusHref: string
   profileHref: string
@@ -214,7 +214,7 @@ const CommentNode = ({
   focusId,
   isLast,
   isBoard,
-  rootCommentOverlay,
+  inRootCommentOverlay,
   CommentLink,
   focusHref,
   profileHref,
@@ -279,7 +279,7 @@ const CommentNode = ({
           {...merge(
             isHighlighted && styles.highlightContainer,
             isHighlighted && colorScheme.set('backgroundColor', 'alert'),
-            isRoot && rootCommentOverlay ? styles.modalRoot : null
+            isRoot && inRootCommentOverlay ? styles.modalRoot : null
           )}
         >
           {editComposer ? (
@@ -289,10 +289,9 @@ const CommentNode = ({
               t={t}
               comment={comment}
               isExpanded={isExpanded}
-              onToggle={() => {
-                if (isBoard && isRoot && rootCommentOverlay) return
+              onToggle={!isBoard && !(isRoot && inRootCommentOverlay) && (() => {
                 setExpanded(prev => !prev)
-              }}
+              })}
               menuItems={menuItems}
               CommentLink={CommentLink}
             />
@@ -317,7 +316,7 @@ const CommentNode = ({
           />
         </div>
         {children}
-        <LoadMore
+        {!(isBoard && !inRootCommentOverlay) && <LoadMore
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           t={t}
@@ -328,7 +327,7 @@ const CommentNode = ({
             comment?.comments?.directTotalCount - comment.comments.nodes.length
           }
           onClick={actions.handleLoadReplies}
-        />
+        />}
       </div>
     )
   } else {
