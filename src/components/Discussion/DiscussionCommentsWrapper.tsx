@@ -22,7 +22,10 @@ const propTypes = {
   tagMappings: PropTypes.arrayOf(
     PropTypes.shape({
       tag: PropTypes.string.isRequired,
-      color: PropTypes.string.isRequired
+      color: PropTypes.shape({
+        light: PropTypes.string.isRequired,
+        dark: PropTypes.string.isRequired
+      })
     })
   )
 }
