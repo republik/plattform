@@ -157,6 +157,8 @@ export const CommentUI = ({
       isExpanded={isExpanded}
       onToggle={onToggle}
       menuItems={menuItems}
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       CommentLink={CommentLink}
       isPreview={isPreview}
     />
@@ -347,6 +349,8 @@ const CommentNode = ({
           isExpanded={isExpanded}
           onToggle={() => setExpanded(prev => !prev)}
           menuItems={menuItems}
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           CommentLink={CommentLink}
         />
       </div>

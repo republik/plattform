@@ -2,10 +2,8 @@ import React, { useContext } from 'react'
 import { css } from 'glamor'
 import { AddIcon, RemoveIcon } from '../../../Icons'
 import {
-  sansSerifMedium16,
-  sansSerifRegular14
+  sansSerifMedium16
 } from '../../../Typography/styles'
-import { onlyS } from '../../../../theme/mediaQueries'
 import { ellipsize, underline } from '../../../../lib/styleMixins'
 import * as config from '../../config'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
@@ -93,13 +91,27 @@ export const COLLAPSE_WRAPPER_CLASSNAME = 'comment-collapse-wrapper'
 
 const propTypes = {
   t: PropTypes.func.isRequired,
-  comment: PropTypes.object.isRequired,
+  comment: PropTypes.shape({
+    displayAuthor: PropTypes.shape({
+      profilePicture: PropTypes.string,
+      name: PropTypes.string,
+    }),
+    published: PropTypes.bool,
+    adminUnpublished: PropTypes.bool,
+    unavailable: PropTypes.bool,
+    comments: PropTypes.shape({
+      totalCount: PropTypes.number
+    }),
+    parentIds: PropTypes.arrayOf(PropTypes.string)
+  }).isRequired,
   menuItems: PropTypes.arrayOf(ActionsMenuItemPropType),
   isExpanded: PropTypes.bool,
   onToggle: PropTypes.func,
-  CommentLink: PropTypes.elementType.isRequired,
+  CommentLink: PropTypes.elementType,
   isPreview: PropTypes.bool
 }
+
+const DefaultLink = ({ children }) => <>{children}</>
 
 export const Header = ({
   t,
@@ -107,7 +119,7 @@ export const Header = ({
   menuItems,
   isExpanded,
   onToggle,
-  CommentLink,
+  CommentLink = DefaultLink,
   isPreview = false
 }) => {
   const [colorScheme] = useColorContext()
