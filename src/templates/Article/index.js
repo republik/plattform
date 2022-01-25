@@ -218,7 +218,7 @@ const createSchema = ({
       ? TeaserEmbedCommentWithLiveData
       : TeaserEmbedComment
 
-    return <Embed {...props} t={t} Link={CommentLink} />
+    return <Embed {...props} t={t} CommentLink={CommentLink} />
   }
 
   return {

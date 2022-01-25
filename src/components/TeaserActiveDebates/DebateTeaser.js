@@ -57,7 +57,7 @@ export const DebateTeaser = ({
       isDesktop,
       t
     },
-    Link: CommentLink
+    CommentLink
   }
 
   return (
@@ -85,7 +85,7 @@ export const DebateTeaser = ({
               />
             </CommentLink>
             <UserProfile // TODO: Links need to be fixed due to changes in the discussion refactoring
-              Link={CommentLink}
+              CommentLink={CommentLink}
               t={t}
               comment={comment}
               isExpanded={true}
