@@ -146,11 +146,14 @@ export const CommentComposer = ({
    * Synchronize the text with localStorage, and restore it from there if not otherwise
    * provided through props. This way the user won't lose their text if the browser
    * crashes or if they inadvertently close the composer.
+   * 
+   * This is only done when not editing. Edits are currently not supported by the store.
    */
+  const isEditing = !!commentId
   const [text, setText] = useState(() => {
     if (initialText) {
       return initialText
-    } else if (typeof localStorage !== 'undefined') {
+    } else if (!isEditing) {
       try {
         return readDraft(discussionId, parentId) ?? ''
       } catch (e) {
@@ -219,10 +222,12 @@ export const CommentComposer = ({
     const nextText = ev.target.value
     setText(nextText)
     setHints(hintValidators.map(fn => fn(nextText)).filter(Boolean))
-    try {
-      writeDraft(discussionId, parentId, ev.target.value)
-    } catch (e) {
-      /* Ignore errors */
+    if (!isEditing) {
+      try {
+        writeDraft(discussionId, parentId, ev.target.value)
+      } catch (e) {
+        /* Ignore errors */
+      }
     }
   }
 
@@ -251,12 +256,14 @@ export const CommentComposer = ({
            */
 
           if (ok) {
-            try {
-              deleteDraft(discussionId, parentId)
-              onClose()
-            } catch (e) {
-              /* Ignore */
+            if (!isEditing) {
+              try {
+                deleteDraft(discussionId, parentId)
+              } catch (e) {
+                /* Ignore */
+              }
             }
+            onClose()
 
             if (root.current) {
               setSubmit({ loading: true, error: undefined })
