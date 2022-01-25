@@ -131,7 +131,7 @@ export {
 } from './components/Typography/utils'
 
 export {
-  commentComposerStorageKey,
+  readDiscussionCommentDraft,
   CommentComposer,
   CommentComposerPlaceholder,
   CommentHeaderProfile

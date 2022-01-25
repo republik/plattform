@@ -60,16 +60,6 @@ const styles = {
   })
 }
 
-/**
- * The key in localStorage under which we store the text. Keyed by the discussion ID.
- *
- * This is exported from the styleguide so that the frontend can reuse this. In
- * particular, this allows the frontend to directly display the CommentComposer
- * if there is text stored in localStorage.
- */
-export const commentComposerStorageKey = discussionId =>
-  `commentComposerText:${discussionId}`
-
 const propTypes = {
   t: PropTypes.func.isRequired,
   isRoot: PropTypes.bool.isRequired,
