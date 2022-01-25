@@ -176,7 +176,9 @@ export const CommentComposer = ({
       ? preview.comment.contentLength
       : text.length
 
-  const [tagValue, setTagValue] = useState(initialTagValue)
+  const [selectedTagValue, setSelectedTagValue] = useState()
+  // we adapt to the initialTagValue as long as no tag has been selected
+  const tagValue = selectedTagValue || initialTagValue
 
   const fetchPreview = async () => {
     setPreview({
@@ -313,7 +315,7 @@ export const CommentComposer = ({
                 {...styles.withBorderBottom}
                 {...colorScheme.set('borderColor', 'default')}
               >
-                <Tags tags={tags} onChange={setTagValue} value={tagValue} />
+                <Tags tags={tags} onChange={setSelectedTagValue} value={tagValue} />
               </div>
             )}
             <>
