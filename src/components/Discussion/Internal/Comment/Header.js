@@ -1,22 +1,19 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { css } from 'glamor'
-import { AddIcon, CheckIcon, RemoveIcon } from '../../../Icons'
+import { AddIcon, RemoveIcon } from '../../../Icons'
 import {
-  sansSerifMedium16,
-  sansSerifRegular14
+  sansSerifMedium16
 } from '../../../Typography/styles'
-import { onlyS } from '../../../../theme/mediaQueries'
 import { ellipsize, underline } from '../../../../lib/styleMixins'
-import { timeFormat } from '../../../../lib/timeFormat'
-import { DiscussionContext } from '../../DiscussionContext'
 import * as config from '../../config'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
 import { useColorContext } from '../../../Colors/ColorContext'
 import IconButton from '../../../IconButton'
 
-import RelativeTime from './RelativeTime'
 import ActionsMenu, { ActionsMenuItemPropType } from './ActionsMenu'
 import PropTypes from 'prop-types'
+import HeaderMetaLine from './HeaderMetaLine'
+import { DiscussionContext } from '../../DiscussionContext'
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
@@ -60,29 +57,7 @@ const styles = {
     flexGrow: 0,
     flexShrink: 1,
     textDecoration: 'none',
-    ...ellipsize,
-  }),
-  meta: css({
-    ...convertStyleToRem(sansSerifRegular14),
-    lineHeight: pxToRem(20),
-    display: 'flex',
-    alignItems: 'center'
-  }),
-  credential: css({
-    display: 'flex',
-    alignItems: 'center',
-    flexGrow: 0,
-    flexShrink: 1,
-    minWidth: 0
-  }),
-  descriptionText: css({
     ...ellipsize
-  }),
-  verifiedCheck: css({
-    flexShrink: 0,
-    display: 'inline-block',
-    marginLeft: pxToRem(4),
-    marginTop: pxToRem(2)
   }),
   link: css({
     color: 'inherit',
@@ -92,24 +67,7 @@ const styles = {
     color: 'inherit',
     textDecoration: 'none',
     '@media (hover)': {
-      ':hover': {
-        ...underline
-      }
-    }
-  }),
-  timeago: css({
-    flexShrink: 0,
-    flexGrow: 0,
-    whiteSpace: 'pre'
-  }),
-  expandCount: css({
-    display: 'inline-block',
-    paddingLeft: pxToRem(16),
-    marginRight: pxToRem(-4),
-    whiteSpace: 'pre',
-    verticalAlign: 'middle',
-    [onlyS]: {
-      display: 'none'
+      '[href]:hover': underline
     }
   }),
   actionsWrapper: css({
@@ -122,38 +80,59 @@ const styles = {
     '& > *:not(:last-child)': {
       marginRight: 8
     }
-  }),
-  collapseWrapper: css({
-    display: 'block'
   })
 }
 
 /**
- * This glamor rule is exported so that <CommentNode> can control the visibility
+ * This class name is exported so that <CommentNode> can control the visibility
  * of this action button on hover over the whole comment element.
  */
-export const collapseWrapperRule = styles.collapseWrapper
+export const COLLAPSE_WRAPPER_CLASSNAME = 'comment-collapse-wrapper'
 
-const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
-const titleDate = string => dateTimeFormat(new Date(string))
+const propTypes = {
+  t: PropTypes.func.isRequired,
+  comment: PropTypes.shape({
+    displayAuthor: PropTypes.shape({
+      profilePicture: PropTypes.string,
+      name: PropTypes.string,
+    }),
+    published: PropTypes.bool,
+    adminUnpublished: PropTypes.bool,
+    unavailable: PropTypes.bool,
+    comments: PropTypes.shape({
+      totalCount: PropTypes.number
+    }),
+    parentIds: PropTypes.arrayOf(PropTypes.string)
+  }).isRequired,
+  menuItems: PropTypes.arrayOf(ActionsMenuItemPropType),
+  isExpanded: PropTypes.bool,
+  onToggle: PropTypes.func,
+  CommentLink: PropTypes.elementType,
+  isPreview: PropTypes.bool
+}
 
-export const Header = ({ t, comment, menuItems, isExpanded, onToggle }) => {
-  const { clock, discussion, Link } = React.useContext(DiscussionContext)
+const DefaultLink = ({ children }) => <>{children}</>
 
+export const Header = ({
+  t,
+  comment,
+  menuItems,
+  isExpanded,
+  onToggle,
+  CommentLink = DefaultLink,
+  isPreview = false
+}) => {
   const [colorScheme] = useColorContext()
+  const { discussion } = useContext(DiscussionContext)
   const {
     displayAuthor,
-    updatedAt,
-    createdAt,
     published = true,
     adminUnpublished = false,
     unavailable,
     comments,
     parentIds = []
   } = comment
-  const { profilePicture, name, credential } = displayAuthor || {}
-
-  const isUpdated = updatedAt && updatedAt !== createdAt
+  const { profilePicture, name } = displayAuthor || {}
 
   return (
     <div {...styles.root}>
@@ -164,11 +143,15 @@ export const Header = ({ t, comment, menuItems, isExpanded, onToggle }) => {
             return null
           }
           return (
-            <Link displayAuthor={displayAuthor} passHref>
+            <CommentLink displayAuthor={displayAuthor} passHref>
               <a {...styles.link}>
-                <img {...styles.profilePicture} src={profilePicture} alt='' />
+                <img
+                  {...styles.profilePicture}
+                  src={profilePicture}
+                  alt={name}
+                />
               </a>
-            </Link>
+            </CommentLink>
           )
         } else if (n === 0) {
           return null
@@ -198,73 +181,22 @@ export const Header = ({ t, comment, menuItems, isExpanded, onToggle }) => {
             </span>
           )}
           {published && (
-            <Link displayAuthor={displayAuthor} passHref>
-              <a {...styles.linkUnderline}>
-                {name}
-              </a>
-            </Link>
+            <CommentLink displayAuthor={displayAuthor} passHref>
+              <a {...styles.linkUnderline}>{name}</a>
+            </CommentLink>
           )}
         </div>
-        <div {...styles.meta} {...colorScheme.set('color', 'textSoft')}>
-          {published && credential && (
-            <>
-              <div
-                {...styles.credential}
-                title={
-                  credential.verified
-                    ? t(
-                        'styleguide/comment/header/verifiedCredential',
-                        undefined,
-                        ''
-                      )
-                    : undefined
-                }
-              >
-                <div
-                  {...styles.descriptionText}
-                  {...colorScheme.set(
-                    'color',
-                    credential.verified ? 'text' : 'textSoft'
-                  )}
-                >
-                  {credential.description}
-                </div>
-                {credential.verified && (
-                  <CheckIcon
-                    {...styles.verifiedCheck}
-                    {...colorScheme.set('color', 'primary')}
-                  />
-                )}
-              </div>
-              <div style={{ whiteSpace: 'pre' }}>{' · '}</div>
-            </>
-          )}
-          <div
-            {...styles.timeago}
-            {...colorScheme.set('color', 'textSoft')}
-            title={titleDate(createdAt)}
-          >
-            <Link discussion={discussion} comment={comment} passHref>
-              <a {...styles.linkUnderline}>
-                <RelativeTime {...clock} date={createdAt} />
-              </a>
-            </Link>
-          </div>
-          {published && isUpdated && (
-            <div
-              {...styles.timeago}
-              {...colorScheme.set('color', 'textSoft')}
-              title={titleDate(updatedAt)}
-            >
-              {' · '}
-              {t('styleguide/comment/header/updated')}
-            </div>
-          )}
-        </div>
+        <HeaderMetaLine
+          comment={comment}
+          discussion={discussion}
+          t={t}
+          CommentLink={CommentLink}
+          isPreview={isPreview}
+        />
       </div>
-      <div {...styles.actionsWrapper} className={styles.actionsWrapper}>
+      <div {...styles.actionsWrapper}>
         {onToggle && (
-          <div className={styles.collapseWrapper}>
+          <div className={COLLAPSE_WRAPPER_CLASSNAME}>
             <IconButton
               invert={true}
               Icon={isExpanded ? RemoveIcon : AddIcon}
@@ -289,10 +221,4 @@ export const Header = ({ t, comment, menuItems, isExpanded, onToggle }) => {
   )
 }
 
-Header.propTypes = {
-  t: PropTypes.func.isRequired,
-  comment: PropTypes.object.isRequired,
-  menuItems: PropTypes.arrayOf(ActionsMenuItemPropType),
-  isExpanded: PropTypes.bool,
-  onToggle: PropTypes.func
-}
+Header.propTypes = propTypes

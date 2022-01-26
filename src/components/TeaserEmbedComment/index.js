@@ -39,7 +39,7 @@ const styles = {
   })
 }
 
-const TeaserEmbedComment = ({ data, liveData, t, Link, isFirst, isLast }) => {
+const TeaserEmbedComment = ({ data, liveData, t, CommentLink, isFirst, isLast }) => {
   const isDesktop = useMediaQuery(mUp)
   const [colorScheme] = useColorContext()
 
@@ -72,7 +72,7 @@ const TeaserEmbedComment = ({ data, liveData, t, Link, isFirst, isLast }) => {
   const discussionContextValue = {
     discussion: metaDataComment.discussion,
     clock,
-    Link
+    CommentLink
   }
   return (
     <DiscussionContext.Provider value={discussionContextValue}>
@@ -90,7 +90,7 @@ const TeaserEmbedComment = ({ data, liveData, t, Link, isFirst, isLast }) => {
           comment={metaDataComment}
           discussion={discussionContextValue.discussion}
         />
-        <Link
+        <CommentLink
           comment={metaDataComment}
           discussion={discussionContextValue.discussion}
           passHref
@@ -108,8 +108,8 @@ const TeaserEmbedComment = ({ data, liveData, t, Link, isFirst, isLast }) => {
               />
             </div>
           </a>
-        </Link>
-        <DiscussionFooter comment={metaDataComment} t={t} Link={Link} />
+        </CommentLink>
+        <DiscussionFooter comment={metaDataComment} t={t} CommentLink={CommentLink} />
       </div>
     </DiscussionContext.Provider>
   )

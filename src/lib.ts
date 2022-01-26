@@ -6,6 +6,7 @@ export const mediaQueries = allMediaQueries
 
 export { fontFamilies, fontFaces } from './theme/fonts'
 
+export { timeFormat, timeParse } from './lib/timeFormat'
 export { default as timeago } from './lib/timeago'
 export { default as timeahead } from './lib/timeahead'
 export { default as timeduration } from './lib/timeduration'
@@ -102,10 +103,7 @@ export {
 export { CommentTeaser } from './components/CommentTeaser'
 export { Overlay, OverlayToolbar, OverlayBody } from './components/Overlay'
 
-export {
-  StatementNode,
-  StatementList
-} from './components/Discussion/Statements'
+export { StatementNode } from './components/Discussion/Statements'
 
 export { Container, NarrowContainer } from './components/Grid'
 export {
@@ -133,7 +131,7 @@ export {
 } from './components/Typography/utils'
 
 export {
-  commentComposerStorageKey,
+  readDiscussionCommentDraft,
   CommentComposer,
   CommentComposerPlaceholder,
   CommentHeaderProfile
@@ -142,7 +140,9 @@ export {
 export { renderCommentMdast } from './components/Discussion/Internal/Comment/render'
 export { IconLink as DiscussionIconLink } from './components/Discussion/Internal/Comment/IconLink'
 
-export { CommentList } from './components/Discussion/Tree'
+export { default as DiscussionCommentsWrapper } from './components/Discussion/DiscussionCommentsWrapper'
+export { CommentNode, BoardComment } from './components/Discussion/Tree'
+export type {CommentProps} from './components/Discussion/Tree'
 
 export { DiscussionContext } from './components/Discussion/DiscussionContext'
 

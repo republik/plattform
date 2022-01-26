@@ -2,9 +2,8 @@ import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { sansSerifMedium14 } from '../../../Typography/styles'
-import { DiscussionContext } from '../../DiscussionContext'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
-import { useColorContext } from '../../../Colors/useColorContext'
+import { useColorContext } from '../../../Colors/ColorContext'
 
 const actionButtonStyle = {
   ...convertStyleToRem(sansSerifMedium14),
@@ -28,20 +27,22 @@ const styles = {
     alignItems: 'center'
   }),
   rootMainOnly: css({
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-end'
   }),
   rootWithSecondary: css({
     justifyContent: 'space-between'
   }),
   mainActions: css({
-    display: 'flex'
+    display: 'flex',
+    '& > *': {
+      marginLeft: pxToRem(16)
+    }
   }),
-  closeButton: css({
+  secondaryButton: css({
     ...actionButtonStyle
   }),
-  submitButton: css({
+  primaryButton: css({
     ...actionButtonStyle,
-    marginLeft: '16px',
     '[disabled]': {
       cursor: 'inherit'
     }
@@ -53,10 +54,11 @@ export const Actions = ({
   onClose,
   onCloseLabel,
   onSubmit,
-  onSubmitLabel
+  onSubmitLabel,
+  onPreview,
+  secondaryActions
 }) => {
   const [colorScheme] = useColorContext()
-  const { composerSecondaryActions } = React.useContext(DiscussionContext)
   const styleRules = useMemo(() => {
     return {
       closeButton: css({
@@ -81,19 +83,31 @@ export const Actions = ({
     }
   }, [colorScheme])
   return (
-    <div {...styles.root} {...styles[composerSecondaryActions ? 'rootWithSecondary' : 'rootMainOnly']}>
-      {composerSecondaryActions}
+    <div
+      {...styles.root}
+      {...styles[secondaryActions ? 'rootWithSecondary' : 'rootMainOnly']}
+    >
+      {secondaryActions}
 
       <div {...styles.mainActions}>
         <button
-          {...styles.closeButton}
+          {...styles.secondaryButton}
           {...styleRules.closeButton}
           onClick={onClose}
         >
           {onCloseLabel || t('styleguide/CommentComposer/cancel')}
         </button>
+        {onPreview && (
+          <button
+            {...styles.secondaryButton}
+            {...styleRules.closeButton}
+            onClick={onPreview}
+          >
+            {t('styleguide/CommentComposer/preview')}
+          </button>
+        )}
         <button
-          {...styles.submitButton}
+          {...styles.primaryButton}
           {...styleRules.submitButton}
           onClick={onSubmit}
           disabled={!onSubmit}
@@ -110,5 +124,8 @@ Actions.propTypes = {
   onClose: PropTypes.func.isRequired,
   onCloseLabel: PropTypes.string,
   onSubmit: PropTypes.func,
-  onSubmitLabel: PropTypes.string
+  onSubmitLabel: PropTypes.string,
+  onPreview: PropTypes.func,
+  onPreviewLabel: PropTypes.string,
+  secondaryActions: PropTypes.node
 }

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { css } from 'glamor'
 import { Interaction } from '../Typography'
 import Spinner from '../Spinner'
-import { useColorContext } from '../Colors/useColorContext'
+import { useColorContext } from '../Colors/ColorContext'
+import PropTypes from 'prop-types'
 
 const { P } = Interaction
 
@@ -22,11 +23,28 @@ const styles = {
   })
 }
 
+const SpacerPropTypes = {
+  children: PropTypes.node,
+  style: PropTypes.object
+}
+
 const Spacer = ({ style, children }) => (
   <div {...styles.spacer} style={style}>
     {children}
   </div>
 )
+
+Spacer.propTypes = SpacerPropTypes
+
+const LoaderPropTypes = {
+  style: PropTypes.object,
+  message: PropTypes.node,
+  loading: PropTypes.bool.isRequired,
+  error: PropTypes.object,
+  render: PropTypes.func,
+  delay: PropTypes.number,
+  ErrorContainer: PropTypes.elementType
+}
 
 const Loader = ({
   style,
@@ -71,6 +89,8 @@ const Loader = ({
   }
   return render()
 }
+
+Loader.propTypes = LoaderPropTypes
 
 Loader.defaultProps = {
   delay: 500,

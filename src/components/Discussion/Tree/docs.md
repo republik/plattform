@@ -2,6 +2,11 @@
 
 ```
 
+
+```hint
+`CommentList` is no longer part of the code structure. This page will need to be revised.
+```
+
 The `<CommentList>` component is used to render the discussion comment tree. It starts by rendering the list of root-level comments, and recursively renders all children.
 
 ```code|lang-js
@@ -14,7 +19,7 @@ The internal `<CommentNode>` component is responsible for rendering a comment an
 
 Two root-level components and one more that can be loaded.
 
-```react|noSource
+```code
 <CommentList
   t={t}
   comments={{
@@ -27,7 +32,7 @@ Two root-level components and one more that can be loaded.
 
 ### Example with link preview
 
-```react|noSource
+```code
 <CommentList
   t={t}
   board
@@ -41,7 +46,7 @@ Two root-level components and one more that can be loaded.
 
 ### Complex Discussion Tree
 
-```react|noSource
+```code
 <CommentList
   t={t}
   comments={{

@@ -11,22 +11,22 @@ Components on this page are not exported from the styleguide. This documentation
 Visualisation of the link preview attached to the comment.
 
 ```react|noSource,span-3
-<Comment.Embed
-  comment={comments.comment7}
+<Comment.CommentEmbed
+  embed={comments.comment7.embed}
 />
 ```
 
 ```react|noSource,span-3
-<Comment.Embed
-  comment={comments.comment8}
+<Comment.CommentEmbed
+  embed={comments.comment8.embed}
 />
 ```
 
 With top story pick:
 
 ```react|noSource,span-3
-<Comment.Embed
-  comment={comments.comment9}
+<Comment.CommentEmbed
+  embed={comments.comment9.embed}
 />
 ```
 
@@ -209,9 +209,13 @@ Word overflow is prevented with `word-wrap: break-word`.
 
 #### Actions
 
+```hint
+`Comment.Actions` are no longer part of the code structure. This section will need to be revised.
+```
+
 The buttons / icons below the comment. The reply button is disabled if the discussion doesn't allow the user to reply at the current time (this information is stored in the DiscussionContext).
 
-```react|noSource,span-2
+```code|span-2
 <Comment.Actions
   t={t}
   comment={comments.comment3}
@@ -220,7 +224,7 @@ The buttons / icons below the comment. The reply button is disabled if the discu
 />
 ```
 
-```react|noSource,span-2
+```code|span-2
 <DiscussionContext.Provider
   value={createSampleDiscussionContextValue({ 
     t,
@@ -242,7 +246,7 @@ The buttons / icons below the comment. The reply button is disabled if the discu
 ```
 
 
-```react|noSource,span-2
+```code|span-2
 <DiscussionContext.Provider
   value={createSampleDiscussionContextValue({ 
     t,
@@ -260,7 +264,7 @@ The buttons / icons below the comment. The reply button is disabled if the discu
 </DiscussionContext.Provider>
 ```
 
-```react|noSource,span-2
+```code|span-2
 <Comment.Actions
   t={t}
   comment={comments.featured}
@@ -333,6 +337,10 @@ The tags are an optional elment, shown between the **Header** and the **Textarea
 
 #### Actions
 
+```hint
+Secondary actions are no longer part of the code structure. This section will need to be revised.
+```
+
 The two primary actions on the right (_onClose_, _onSubmit_) are always present. The seconday actions on the left are optional. Use just icons for the secondary actions, and wrap each icon in `<SecondaryAction>`.
 
 `<SecondaryAction>` renders as a button by default, but you can adjust that with the `as` prop. It also sets up CSS for font, color, and hover style to match the primary actions.
@@ -341,7 +349,7 @@ The two primary actions on the right (_onClose_, _onSubmit_) are always present.
 Due to limited space on mobile devices, you can really only put two actions (28px wide) into the secondary actions slot. Make sure you test that everything fits on a 320px wide screen and when the composer is shown in a deeply nested setting (with 5 vertical bars left of it), where the composer is squeezed into 240px.
 ```
 
-```react|noSource,span-2
+```code|span-2
 <DiscussionContext.Provider
   value={{
     composerSecondaryActions: (

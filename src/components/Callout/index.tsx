@@ -1,11 +1,11 @@
-import React, { useMemo } from 'react'
-import { css } from 'glamor'
+import React, { FC, useMemo } from 'react'
+import { css, keyframes } from 'glamor'
 import PropTypes from 'prop-types'
 import { mUp } from '../../theme/mediaQueries'
 import zIndex from '../../theme/zIndex'
 import { useColorContext } from '../Colors/useColorContext'
 
-const slideUp = css.keyframes({
+const slideUp = keyframes({
   from: {
     bottom: -400
   },
@@ -78,12 +78,19 @@ const styles = {
   }
 }
 
+type Props = {
+  children?: React.ReactNode
+  align?: 'left' | 'right'
+  onClose: () => void
+  contentPaddingMobile?: string
+}
+
 const Callout = ({
   children,
   align = 'left',
   onClose,
   contentPaddingMobile = '15px 15px 50px'
-}) => {
+}: Props) => {
   const [colorScheme] = useColorContext()
   const calloutRule = useMemo(
     () =>
@@ -116,7 +123,9 @@ const Callout = ({
 }
 
 Callout.propTypes = {
-  align: PropTypes.oneOf(['left', 'right'])
+  align: PropTypes.oneOf(['left', 'right']),
+  onClose: PropTypes.func,
+  contentPaddingMobile: PropTypes.string
 }
 
 export default Callout

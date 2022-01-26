@@ -37,9 +37,7 @@ const styles = {
     color: 'inherit',
     textDecoration: 'none',
     '@media (hover)': {
-      ':hover': {
-        ...underline
-      }
+      ':hover': underline
     }
   }),
   timeago: css({
@@ -53,23 +51,10 @@ const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
 const titleDate = string => dateTimeFormat(new Date(string))
 
 /**
- * ============================================================
- * REFACTOR NOTE
- * Make use of this component in the CommentNode to reduce redundancy.
- * ============================================================
- */
-
-/**
  * Render the meta line of the comment-header
  * user credential - published at - edited state
- * @param t
- * @param comment
- * @param Link
- * @param focusHref
- * @returns {JSX.Element}
- * @constructor
  */
-const HeaderMetaLine = ({ t, comment, Link, focusHref }) => {
+const HeaderMetaLine = ({ t, comment, discussion, CommentLink, isPreview }) => {
   const [colorScheme] = useColorContext()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
 
@@ -84,7 +69,7 @@ const HeaderMetaLine = ({ t, comment, Link, focusHref }) => {
 
   return (
     <div {...styles.meta} {...colorScheme.set('color', 'textSoft')}>
-      {published && credential && (
+      {(published || isPreview) && credential && (
         <>
           <div
             {...styles.credential}
@@ -122,13 +107,13 @@ const HeaderMetaLine = ({ t, comment, Link, focusHref }) => {
         {...colorScheme.set('color', 'textSoft')}
         title={titleDate(createdAt)}
       >
-        <Link href={focusHref} passHref>
+        <CommentLink comment={comment} discussion={discussion} passHref>
           <a {...styles.linkUnderline}>
             <RelativeTime t={t} isDesktop={isDesktop} date={createdAt} />
           </a>
-        </Link>
+        </CommentLink>
       </div>
-      {published && isUpdated && (
+      {(published || isPreview) && isUpdated && (
         <div
           {...styles.timeago}
           {...colorScheme.set('color', 'textSoft')}
@@ -145,8 +130,7 @@ const HeaderMetaLine = ({ t, comment, Link, focusHref }) => {
 HeaderMetaLine.propTypes = {
   t: PropTypes.func.isRequired,
   comment: PropTypes.object.isRequired,
-  focusHref: PropTypes.string.isRequired,
-  Link: PropTypes.elementType.isRequired
+  CommentLink: PropTypes.elementType.isRequired
 }
 
 export default HeaderMetaLine

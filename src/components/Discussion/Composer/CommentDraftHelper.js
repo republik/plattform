@@ -1,4 +1,8 @@
-import { commentComposerStorageKey } from './CommentComposer'
+/**
+ * The key in localStorage under which we store the drafts. Keyed by the discussion id.
+ */
+ export const commentComposerStorageKey = discussionId =>
+ `commentComposerText:${discussionId}`
 
 /**
  * Load a stored draft an validate the schema.

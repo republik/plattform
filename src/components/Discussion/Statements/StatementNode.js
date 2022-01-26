@@ -15,7 +15,7 @@ import ActionsMenu, {
   ActionsMenuItemPropType
 } from '../Internal/Comment/ActionsMenu'
 import HeaderMetaLine from '../Internal/Comment/HeaderMetaLine'
-import { convertStyleToRem, pxToRem } from "../../Typography/utils";
+import { pxToRem } from '../../Typography/utils'
 
 const HIGHLIGHT_PADDING = 7
 
@@ -128,7 +128,7 @@ const StatementNode = ({
   disableVoting = false,
   isHighlighted = false,
   Link,
-  focusHref,
+  CommentLink,
   profileHref
 }) => {
   const [colorScheme] = useColorContext()
@@ -183,6 +183,14 @@ const StatementNode = ({
     return null
   }, [comment?.published, comment?.adminUnpublished])
 
+  const profileImgElement = showProfilePicture && (
+    <img
+      {...styles.profilePicture}
+      alt={comment.displayAuthor.name}
+      src={comment.displayAuthor.profilePicture}
+    />
+  )
+
   return (
     <div
       {...styles.root}
@@ -195,29 +203,26 @@ const StatementNode = ({
     >
       {showProfilePicture && (
         <div {...styles.profilePictureWrapper}>
-          <Link href={profileHref} passHref>
-            <a {...styles.link}>
-              <img
-                {...styles.profilePicture}
-                alt={comment.displayAuthor.name}
-                src={comment.displayAuthor.profilePicture}
-              />
-            </a>
-          </Link>
+          {profileHref ? (
+            <Link href={profileHref} passHref>
+              <a {...styles.link}>{profileImgElement}</a>
+            </Link>
+          ) : (
+            profileImgElement
+          )}
         </div>
       )}
       <div {...styles.headingWrapper}>
         <p {...styles.heading} {...colorScheme.set('color', heading.color)}>
-          <Link href={profileHref} passHref>
-            <a {...styles.link}>{heading.text}</a>
-          </Link>
+          {profileHref ? (
+            <Link href={profileHref} passHref>
+              <a {...styles.link}>{heading.text}</a>
+            </Link>
+          ) : (
+            heading.text
+          )}
         </p>
-        <HeaderMetaLine
-          t={t}
-          comment={comment}
-          Link={Link}
-          focusHref={focusHref}
-        />
+        <HeaderMetaLine t={t} comment={comment} CommentLink={CommentLink} />
       </div>
       <div {...styles.textWrapper}>
         <span
@@ -278,6 +283,7 @@ StatementNode.propTypes = {
   menuItems: PropTypes.arrayOf(ActionsMenuItemPropType),
   disableVoting: PropTypes.bool,
   isHighlighted: PropTypes.bool,
+  CommentLink: PropTypes.elementType.isRequired,
   Link: PropTypes.elementType.isRequired,
   focusHref: PropTypes.string.isRequired,
   profileHref: PropTypes.string.isRequired

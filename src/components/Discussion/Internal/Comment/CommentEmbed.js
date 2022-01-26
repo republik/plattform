@@ -10,8 +10,9 @@ import {
 import { mUp } from '../../../../theme/mediaQueries'
 import { linkStyle } from '../../../Typography'
 import { TwitterIcon } from '../../../Icons'
-import { useColorContext } from '../../../Colors/useColorContext'
+import { useColorContext } from '../../../Colors/ColorContext'
 import { timeFormat } from '../../../../lib/timeFormat'
+import PropTypes from 'prop-types'
 
 const styles = {
   link: css({
@@ -85,20 +86,23 @@ const dateFormat = timeFormat('%d.%m.%Y %H:%M')
 
 const normalizeEmbed = embed => ({
   ...embed,
-  imageUrl: embed.imageUrl || embed.image,
-  header: embed.siteName || embed.userName,
-  headerImageUrl: embed.siteImageUrl || embed.userProfileImageUrl,
+  imageUrl: embed?.imageUrl ?? embed?.image,
+  header: embed?.siteName ?? embed?.userName,
+  headerImageUrl: embed?.siteImageUrl ?? embed?.userProfileImageUrl,
   html:
-    embed.__typename === 'TwitterEmbed' &&
-    embed.html &&
-    embed.html.replace(/\s*target="_blank"/g, ''),
-  body: embed.description
+    embed?.__typename === 'TwitterEmbed' &&
+    embed?.html &&
+    embed?.html.replace(/\s*target="_blank"/g, ''),
+  body: embed?.description
 })
 
-export const Embed = ({ comment }) => {
+const propTypes = {
+  embed: PropTypes.object.isRequired,
+  mentioningDocument: PropTypes.object
+}
+
+export const CommentEmbed = ({ embed, mentioningDocument }) => {
   const [colorScheme] = useColorContext()
-  if (!comment || !comment.embed) return null
-  const { mentioningDocument, embed } = comment
   const {
     url,
     title,
@@ -149,7 +153,7 @@ export const Embed = ({ comment }) => {
               <img src={headerImageUrl} alt='' {...styles.siteImage} />
             )}
             <strong>{header}</strong>{' '}
-            {embed.userScreenName && ` @${embed.userScreenName}`}
+            {embed?.userScreenName && ` @${embed.userScreenName}`}
           </Interaction.P>
         )}
         {title && <Interaction.P {...styles.title}>{title}</Interaction.P>}
@@ -162,7 +166,7 @@ export const Embed = ({ comment }) => {
         {!html && body && (
           <Interaction.P {...styles.paragraph}>{body}</Interaction.P>
         )}
-        {embed.userScreenName && (
+        {embed?.userScreenName && (
           <Interaction.P {...styles.paragraph}>
             <TwitterIcon size={19} {...colorScheme.set('fill', 'disabled')} />{' '}
             {dateFormat(new Date(embed.createdAt))}
@@ -172,3 +176,5 @@ export const Embed = ({ comment }) => {
     </div>
   )
 }
+
+CommentEmbed.propTypes = propTypes

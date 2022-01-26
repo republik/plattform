@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import Textarea from 'react-textarea-autosize'
@@ -7,13 +7,13 @@ import { mBreakPoint } from '../../../theme/mediaQueries'
 import { serifRegular16, sansSerifRegular12 } from '../../Typography/styles'
 
 import { Header, Tags, Actions, Error } from '../Internal/Composer'
-import { DiscussionContext } from '../DiscussionContext'
 import { convertStyleToRem } from '../../Typography/utils'
-import { Embed } from '../Internal/Comment'
-import { useDebounce } from '../../../lib/useDebounce'
 import { useColorContext } from '../../Colors/ColorContext'
-import Loader from '../../Loader'
 import { deleteDraft, readDraft, writeDraft } from './CommentDraftHelper'
+import { DisplayAuthorPropType } from '../Internal/PropTypes'
+import { CommentUI } from '../Tree/CommentNode'
+import Loader from '../../Loader'
+import { fontStyles } from '../../Typography'
 
 const styles = {
   root: css({}),
@@ -49,72 +49,113 @@ const styles = {
   }),
   hints: css({
     marginTop: 6
+  }),
+  previewWrapper: css({
+    padding: '8px'
+  }),
+  previewLabel: css({
+    ...fontStyles.sansSerifMedium18,
+    display: 'block',
+    marginBottom: '16px'
   })
 }
 
-/**
- * The key in localStorage under which we store the text. Keyed by the discussion ID.
- *
- * This is exported from the styleguide so that the frontend can reuse this. In
- * particular, this allows the frontend to directly display the CommentComposer
- * if there is text stored in localStorage.
- */
-export const commentComposerStorageKey = discussionId =>
-  `commentComposerText:${discussionId}`
+const propTypes = {
+  t: PropTypes.func.isRequired,
+  isRoot: PropTypes.bool.isRequired,
 
-export const CommentComposer = props => {
-  const {
-    t,
-    isRoot,
-    hideHeader,
-    onClose,
-    onCloseLabel,
-    onSubmitLabel,
-    commentId,
-    parentId,
-    autoFocus = true,
-    placeholder
-  } = props
+  discussionId: PropTypes.string,
+  parentId: PropTypes.string,
+  commentId: PropTypes.string,
+
+  onSubmit: PropTypes.func.isRequired,
+  onSubmitLabel: PropTypes.string,
+  onClose: PropTypes.func.isRequired,
+  onCloseLabel: PropTypes.string,
+  onOpenPreferences: PropTypes.func,
+  onPreviewComment: PropTypes.func,
+
+  secondaryActions: PropTypes.node,
+  hintValidators: PropTypes.arrayOf(PropTypes.func),
+
+  displayAuthor: DisplayAuthorPropType,
+  placeholder: PropTypes.string,
+  maxLength: PropTypes.number,
+  tags: PropTypes.arrayOf(PropTypes.string),
+
+  initialText: PropTypes.string,
+  initialTagValue: PropTypes.string,
+
+  isBoard: PropTypes.bool,
+  autoFocus: PropTypes.bool,
+  hideHeader: PropTypes.bool
+}
+
+export const CommentComposer = ({
+  t,
+  isRoot,
+
+  discussionId,
+  commentId,
+  parentId,
+
+  onSubmit,
+  onSubmitLabel,
+  onClose,
+  onCloseLabel,
+  onOpenPreferences,
+  onPreviewComment,
+
+  secondaryActions,
+  hintValidators = [],
+
+  displayAuthor,
+  placeholder,
+  maxLength,
+  tags,
+
+  // Initial values
+  initialText,
+  initialTagValue,
+
+  isBoard,
+  autoFocus = true,
+  hideHeader,
+}) => {
   const [colorScheme] = useColorContext()
   /*
    * Refs
    *
-   * We have one ref that is pointing to the root elment of the comment composer, and
+   * We have one ref that is pointing to the root element of the comment composer, and
    * another which gives us access to the <Textarea> input element. The later MUST be
    * a function-style ref because <Textarea> doesn't support React.useRef()-style refs.
    */
-  const root = React.useRef()
-  const [textarea, textareaRef] = React.useState(null)
-  const [hints, setHints] = React.useState([])
-  const textRef = React.useRef()
-  const [preview, setPreview] = React.useState({
+  const root = useRef()
+  const [textarea, textareaRef] = useState(null)
+  const [hints, setHints] = useState([])
+  const textRef = useRef()
+
+  const [isPreviewing, setIsPreviewing] = useState(false)
+  const [preview, setPreview] = useState({
     loading: false,
+    error: null,
     comment: null
   })
-
-  /*
-   * Get the discussion metadata, action callbacks and hinters from DiscussionContext.
-   */
-  const {
-    discussion,
-    actions,
-    activeTag,
-    composerHints = []
-  } = React.useContext(DiscussionContext)
-  const { id: discussionId, tags, rules, displayAuthor, isBoard } = discussion
-  const { maxLength } = rules
 
   /*
    * Synchronize the text with localStorage, and restore it from there if not otherwise
    * provided through props. This way the user won't lose their text if the browser
    * crashes or if they inadvertently close the composer.
+   * 
+   * This is only done when not editing. Edits are currently not supported by the store.
    */
-  const [text, setText] = React.useState(() => {
-    if (props.initialText) {
-      return props.initialText
-    } else if (typeof localStorage !== 'undefined') {
+  const isEditing = !!commentId
+  const [text, setText] = useState(() => {
+    if (initialText) {
+      return initialText
+    } else if (!isEditing) {
       try {
-        return readDraft(discussionId, commentId) ?? ''
+        return readDraft(discussionId, parentId) ?? ''
       } catch (e) {
         return ''
       }
@@ -123,19 +164,49 @@ export const CommentComposer = props => {
     }
   })
 
-  const textLength = preview.comment
-    ? preview.comment.contentLength
-    : text.length
+  const textLength =
+    isPreviewing && preview.comment
+      ? preview.comment.contentLength
+      : text.length
 
-  const [tagValue, setTagValue] = React.useState(props.tagValue)
+  const [selectedTagValue, setSelectedTagValue] = useState()
+  // we adapt to the initialTagValue as long as no tag has been selected
+  const tagValue = selectedTagValue || initialTagValue
+
+  const fetchPreview = async () => {
+    setPreview({
+      loading: true,
+      error: null,
+      comment: null
+    })
+    try {
+      const result = await onPreviewComment({
+        discussionId,
+        parentId,
+        content: text,
+        id: commentId
+      })
+      setPreview({
+        loading: false,
+        error: null,
+        comment: result
+      })
+    } catch (e) {
+      setPreview({
+        loading: false,
+        error: e,
+        comment: null
+      })
+    }
+  }
 
   /*
    * Focus the textarea upon mount.
    *
-   * Furthermore, if we detect a small screen, scroll the whole elment to the top of
+   * Furthermore, if we detect a small screen, scroll the whole element to the top of
    * the viewport.
    */
-  React.useEffect(() => {
+  useEffect(() => {
     if (textarea && autoFocus) {
       textarea.focus()
 
@@ -145,68 +216,18 @@ export const CommentComposer = props => {
     }
   }, [textarea, autoFocus])
 
-  const previewCommentAction = actions.previewComment
-  const [slowText] = useDebounce(text, 400)
   textRef.current = text
-  React.useEffect(() => {
-    if (!tagValue) {
-      setTagValue(isRoot ? activeTag : null)
-    }
-    if (!isBoard || !isRoot || !previewCommentAction) {
-      return
-    }
-    if (!slowText || slowText.indexOf('http') === -1) {
-      setPreview({
-        comment: null,
-        loading: false
-      })
-      return
-    }
-    setPreview(preview => ({
-      ...preview,
-      loading: true
-    }))
-    previewCommentAction({
-      content: slowText,
-      discussionId,
-      parentId,
-      id: commentId
-    })
-      .then(nextPreview => {
-        if (textRef.current === slowText) {
-          setPreview({
-            comment: nextPreview,
-            loading: false
-          })
-        }
-      })
-      .catch(() => {
-        if (textRef.current === slowText) {
-          setPreview({
-            comment: null,
-            loading: false
-          })
-        }
-      })
-  }, [
-    slowText,
-    previewCommentAction,
-    isRoot,
-    discussionId,
-    commentId,
-    parentId,
-    isBoard,
-    activeTag
-  ])
 
   const onChangeText = ev => {
     const nextText = ev.target.value
     setText(nextText)
-    setHints(composerHints.map(fn => fn(nextText)).filter(Boolean))
-    try {
-      writeDraft(discussionId, commentId, ev.target.value)
-    } catch (e) {
-      /* Ignore errors */
+    setHints(hintValidators.map(fn => fn(nextText)).filter(Boolean))
+    if (!isEditing) {
+      try {
+        writeDraft(discussionId, parentId, ev.target.value)
+      } catch (e) {
+        /* Ignore errors */
+      }
     }
   }
 
@@ -220,12 +241,11 @@ export const CommentComposer = props => {
     loading: false,
     error: undefined
   })
-  const onSubmit = () => {
+  const submitHandler = () => {
     if (root.current) {
       setSubmit({ loading: true, error })
-      props
-        .onSubmit({ text, tags: tagValue ? [tagValue] : undefined })
-        .then(({ ok, error }) => {
+      onSubmit({ text, tags: tagValue ? [tagValue] : undefined }).then(
+        ({ ok, error }) => {
           /*
            * We may have been umounted in the meantime, so we use 'root.current' as a signal that
            * we have been so we can avoid calling React setState functions which generate warnings.
@@ -236,11 +256,14 @@ export const CommentComposer = props => {
            */
 
           if (ok) {
-            try {
-              deleteDraft(discussionId, commentId)
-            } catch (e) {
-              /* Ignore */
+            if (!isEditing) {
+              try {
+                deleteDraft(discussionId, parentId)
+              } catch (e) {
+                /* Ignore */
+              }
             }
+            onClose()
 
             if (root.current) {
               setSubmit({ loading: true, error: undefined })
@@ -250,7 +273,8 @@ export const CommentComposer = props => {
               setSubmit({ loading: false, error })
             }
           }
-        })
+        }
+      )
     }
   }
 
@@ -268,90 +292,117 @@ export const CommentComposer = props => {
   return (
     <div ref={root} {...styles.root}>
       <div {...styles.background} {...colorScheme.set('background', 'hover')}>
-        {!hideHeader && (
-          <div
-            {...styles.withBorderBottom}
-            {...colorScheme.set('borderColor', 'default')}
-          >
-            <Header
-              t={t}
-              displayAuthor={displayAuthor}
-              onClick={actions.openDiscussionPreferences}
+        {!isPreviewing ? (
+          <>
+            {!hideHeader && (
+              <div
+                {...styles.withBorderBottom}
+                {...colorScheme.set('borderColor', 'default')}
+              >
+                <Header
+                  t={t}
+                  displayAuthor={displayAuthor}
+                  onClick={onOpenPreferences}
+                />
+              </div>
+            )}
+            {/* Tags are only available in the root composer! */}
+            {isRoot && tags && (
+              <div
+                {...styles.withBorderBottom}
+                {...colorScheme.set('borderColor', 'default')}
+              >
+                <Tags tags={tags} onChange={setSelectedTagValue} value={tagValue} />
+              </div>
+            )}
+            <>
+              <Textarea
+                inputRef={textareaRef}
+                {...styles.textArea}
+                {...colorScheme.set('color', 'text')}
+                {...(maxLength ? styles.textAreaLimit : {})}
+                {...(text === '' ? textAreaEmptyRule : {})}
+                placeholder={
+                  placeholder ?? t('styleguide/CommentComposer/placeholder')
+                }
+                value={text}
+                rows='1'
+                onChange={onChangeText}
+              />
+              {hints &&
+                hints.map((hint, index) => (
+                  <div {...styles.hints} key={`hint-${index}`}>
+                    {hint}
+                  </div>
+                ))}
+            </>
+            {maxLength && (
+              <MaxLengthIndicator maxLength={maxLength} length={textLength} />
+            )}
+          </>
+        ) : (
+          <div {...styles.previewWrapper}>
+            <span {...styles.previewLabel}>
+              {t('styleguide/CommentComposer/preview')}
+            </span>
+            <Loader
+              loading={preview.loading}
+              error={preview.error}
+              render={() => (
+                <CommentUI
+                  t={t}
+                  comment={{
+                    ...preview.comment,
+                    tags: tags ? [tagValue] : undefined,
+                    displayAuthor
+                  }}
+                  isExpanded
+                  isPreview
+                />
+              )}
             />
           </div>
         )}
-
-        {/* Tags are only available in the root composer! */}
-        {isRoot && tags && (
-          <div
-            {...styles.withBorderBottom}
-            {...colorScheme.set('borderColor', 'default')}
-          >
-            <Tags tags={tags} onChange={setTagValue} value={tagValue} />
-          </div>
-        )}
-
-        <Textarea
-          inputRef={textareaRef}
-          {...styles.textArea}
-          {...colorScheme.set('color', 'text')}
-          {...(maxLength ? styles.textAreaLimit : {})}
-          {...(text === '' ? textAreaEmptyRule : {})}
-          placeholder={
-            placeholder ?? t('styleguide/CommentComposer/placeholder')
-          }
-          value={text}
-          rows='1'
-          onChange={onChangeText}
-        />
-
-        {maxLength && (
-          <MaxLengthIndicator maxLength={maxLength} length={textLength} />
-        )}
       </div>
-      {hints &&
-        hints.map((hint, index) => (
-          <div {...styles.hints} key={`hint-${index}`}>
-            {hint}
-          </div>
-        ))}
-
-      <Loader
-        loading={preview.loading && !(preview.comment && preview.comment.embed)}
-        render={() => <Embed comment={preview.comment} />}
-      />
 
       <Actions
         t={t}
         onClose={() => {
-          onClose()
-          // Delete the draft of the field
-          deleteDraft(discussionId, commentId)
+          if (isPreviewing) {
+            setIsPreviewing(false)
+          } else {
+            deleteDraft(discussionId, parentId)
+            onClose()
+            // Delete the draft of the field
+          }
         }}
-        onCloseLabel={onCloseLabel}
+        onCloseLabel={
+          isPreviewing
+            ? t('styleguide/CommentComposer/exitPreview')
+            : onCloseLabel
+        }
         onSubmit={
           loading || (maxLength && textLength > maxLength)
             ? undefined
-            : onSubmit
+            : submitHandler
         }
         onSubmitLabel={onSubmitLabel}
+        onPreview={
+          onPreviewComment && !isPreviewing
+            ? () => {
+                fetchPreview()
+                setIsPreviewing(true)
+              }
+            : undefined
+        }
+        secondaryActions={secondaryActions}
       />
-
       {error && <Error>{error}</Error>}
     </div>
   )
 }
 
-CommentComposer.propTypes = {
-  t: PropTypes.func.isRequired,
-  isRoot: PropTypes.bool.isRequired,
-  hideHeader: PropTypes.bool,
-  onClose: PropTypes.func.isRequired,
-  onCloseLabel: PropTypes.string,
-  onSubmit: PropTypes.func.isRequired,
-  onSubmitLabel: PropTypes.string,
-  placeholder: PropTypes.string
-}
+CommentComposer.propTypes = propTypes
 
 const MaxLengthIndicator = ({ maxLength, length }) => {
   const [colorScheme] = useColorContext()

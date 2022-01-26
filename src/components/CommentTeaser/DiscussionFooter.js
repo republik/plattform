@@ -23,9 +23,7 @@ const styles = {
     color: 'inherit',
     textDecoration: 'none',
     '@media (hover)': {
-      ':hover': {
-        ...underline
-      }
+      '[href]:hover': underline
     }
   }),
   timeago: css({
@@ -36,7 +34,7 @@ const styles = {
 
 const DefaultLink = ({ children }) => children
 
-export const DiscussionFooter = ({ t, Link = DefaultLink, comment }) => {
+export const DiscussionFooter = ({ t, CommentLink = DefaultLink, comment }) => {
   const { id, discussion, parentIds, createdAt } = comment
   const isDesktop = useMediaQuery(mUp)
   const [colorScheme] = useColorContext()
@@ -59,7 +57,7 @@ export const DiscussionFooter = ({ t, Link = DefaultLink, comment }) => {
             }/link`,
             {
               count: (
-                <Link
+                <CommentLink
                   key={`link-count-${id}`}
                   comment={comment}
                   discussion={discussion}
@@ -74,17 +72,17 @@ export const DiscussionFooter = ({ t, Link = DefaultLink, comment }) => {
                       verticalAlign: 'top'
                     }}
                   />
-                </Link>
+                </CommentLink>
               ),
               link: (
-                <Link
+                <CommentLink
                   key={`link-title-${id}`}
                   comment={comment}
                   discussion={discussion}
                   passHref
                 >
                   <A>{inQuotes(discussion.title)}</A>
-                </Link>
+                </CommentLink>
               )
             }
           )}
@@ -92,11 +90,11 @@ export const DiscussionFooter = ({ t, Link = DefaultLink, comment }) => {
       )}
       {!comment.displayAuthor && (
         <div {...styles.timeago} {...colorScheme.set('color', 'textSoft')}>
-          <Link comment={comment} discussion={discussion} passHref>
+          <CommentLink comment={comment} discussion={discussion} passHref>
             <a {...styles.linkUnderline}>
               <RelativeTime {...clock} date={createdAt} />
             </a>
-          </Link>
+          </CommentLink>
         </div>
       )}
     </div>
