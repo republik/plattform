@@ -96,7 +96,7 @@ const envMergeVars = [
   },
   {
     name: 'link_account_newsletter',
-    content: `${FRONTEND_BASE_URL}/konto#newsletter`,
+    content: `${FRONTEND_BASE_URL}/konto/newsletter`,
   },
   {
     name: 'link_account_share',
@@ -108,11 +108,15 @@ const envMergeVars = [
   },
   {
     name: 'link_account_notifications',
-    content: `${FRONTEND_BASE_URL}/benachrichtigungen/einstellungen`,
+    content: `${FRONTEND_BASE_URL}/konto/benachrichtigungen`,
   },
   {
     name: 'link_account_progress',
-    content: `${FRONTEND_BASE_URL}/konto#position`,
+    content: `${FRONTEND_BASE_URL}/konto/einstellungen#position`,
+  },
+  {
+    name: 'link_account_signin_method',
+    content: `${FRONTEND_BASE_URL}/konto/einstellungen#anmeldung`,
   },
   {
     name: 'link_profile',
