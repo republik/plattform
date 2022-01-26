@@ -33,7 +33,7 @@ const styles = {
 const propTypes = {
   t: PropTypes.func.isRequired,
   displayAuthor: PropTypes.shape({
-    profilePicture: PropTypes.string.isRequired
+    profilePicture: PropTypes.string
   }),
   onClick: PropTypes.func,
   placeholder: PropTypes.string
