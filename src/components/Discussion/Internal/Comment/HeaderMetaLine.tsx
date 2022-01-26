@@ -7,7 +7,8 @@ import { css } from 'glamor'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
 import { sansSerifRegular14 } from '../../../Typography/styles'
 import { ellipsize, underline } from '../../../../lib/styleMixins'
-import { mediaQueries, useMediaQuery } from '../../../../lib'
+import * as mediaQueries from '../../../../theme/mediaQueries'
+import { useMediaQuery } from '../../../../lib/useMediaQuery'
 import { CheckIcon } from '../../../Icons'
 
 const styles = {

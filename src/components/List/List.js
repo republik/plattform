@@ -8,7 +8,7 @@ import {
 import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
-import { fontRule } from '../Typography/Editorial'
+import { editorialFontRule } from '../Typography/fontRules'
 import { useColorContext } from '../Colors/useColorContext'
 
 const WIDTH = 22
@@ -115,7 +115,7 @@ export const ListItem = ({ children, attributes = {}, style = {} }) => {
     <li
       {...styles.li}
       {...colorScheme.set('color', 'text')}
-      {...fontRule}
+      {...editorialFontRule}
       {...attributes}
       style={style}
     >

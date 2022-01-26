@@ -1,20 +1,13 @@
 import React from 'react'
 import * as styles from './styles'
 import { css } from 'glamor'
-import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { fontStyles } from '../../theme/fonts'
 import { convertStyleToRem } from './utils'
 import { useColorContext } from '../Colors/useColorContext'
+import { interactionFontRule as fontRule } from './fontRules'
 
-export const fontRule = css({
-  ...fontStyles.sansSerifRegular,
-  '& em, & i': fontStyles.sansSerifItalic,
-  '& strong, & b': fontStyles.sansSerifMedium,
-  '& strong em, & em strong, & b i, & i b': {
-    textDecoration: `underline wavy ${colors.error}`
-  }
-})
+export { interactionFontRule as fontRule } from './fontRules'
 
 const interactionHeadline = css({
   margin: '0 0 12px 0',

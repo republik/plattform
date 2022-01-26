@@ -4,9 +4,9 @@ import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { fontStyles } from '../../theme/fonts'
 import { underline } from '../../lib/styleMixins'
-import { fontRule as interactionFontRule } from './Interaction'
 import { convertStyleToRem, pxToRem } from './utils'
 import { useColorContext } from '../Colors/useColorContext'
+import { editorialFontRule as fontRule, interactionFontRule } from './fontRules'
 
 export {
   List,
@@ -15,12 +15,7 @@ export {
   ListItem as LI
 } from '../List'
 
-export const fontRule = css({
-  ...fontStyles.serifRegular,
-  '& em, & i': fontStyles.serifItalic,
-  '& strong, & b': fontStyles.serifBold,
-  '& strong em, & em strong, & b i, & i b': fontStyles.serifBoldItalic
-})
+export { editorialFontRule as fontRule } from './fontRules'
 
 const headline = css({
   ...convertStyleToRem(styles.serifTitle30),

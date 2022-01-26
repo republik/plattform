@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import ColorLegend from './ColorLegend'
-import { scaleLinear, scaleLog, scaleSqrt } from 'd3-scale'
+import { scaleSqrt } from 'd3-scale'
 import { ascending, max } from 'd3-array'
 import {
   calculateAxis,
@@ -17,17 +17,12 @@ import {
   yAccessor
 } from './utils'
 import { getColorMapper } from './colorMaps'
-import { aggregateValues, getPlot, tickAccessor } from './ScatterPlots.utils'
+import { aggregateValues, getPlot, tickAccessor, scales } from './ScatterPlots.utils'
 import ScatterPlotGroup from './ScatterPlotGroup'
 import { defaultProps } from './ChartContext'
 
 const COLUMN_PADDING = 28
 const COLUMN_TITLE_HEIGHT = 24
-
-export const scales = {
-  linear: scaleLinear,
-  log: scaleLog
-}
 
 const ScatterPlot = ({
   values,

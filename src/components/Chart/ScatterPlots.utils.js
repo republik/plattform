@@ -1,5 +1,10 @@
 import { extent } from 'd3-array'
-import { scales } from './ScatterPlots'
+import { scaleLinear, scaleLog } from 'd3-scale'
+
+export const scales = {
+  linear: scaleLinear,
+  log: scaleLog
+}
 
 export const tickAccessor = d => d.tick
 
