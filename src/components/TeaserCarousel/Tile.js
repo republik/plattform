@@ -1,7 +1,7 @@
 import { css, merge } from 'glamor'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { TeaserCarouselArticleCount } from '.'
+import TeaserCarouselArticleCount from './ArticleCount'
 import { FigureByline, FigureImage } from '../Figure'
 import { mUp } from '../TeaserFront/mediaQueries'
 import Text from '../TeaserFront/Text'

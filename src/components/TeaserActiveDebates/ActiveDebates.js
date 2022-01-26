@@ -2,7 +2,7 @@ import { css } from 'glamor'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { mUp } from '../../theme/mediaQueries'
-import { ActiveDebateTeaser } from '.'
+import ActiveDebateTeaser from './DebateTeaser'
 import { useColorContext } from '../Colors/ColorContext'
 
 const styles = {

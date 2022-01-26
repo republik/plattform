@@ -3,7 +3,7 @@ import React from 'react'
 import { createFormatter } from '../../../lib/translate'
 import { Editorial } from '../../Typography'
 
-import { default as Button } from '../../Button'
+import Button from '../../Button'
 import { CommentComposer } from './CommentComposer'
 import { DiscussionContext } from '../DiscussionContext'
 import { TextFormatIcon } from '../../Icons'
