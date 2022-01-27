@@ -1,0 +1,11 @@
+{
+  "app": {
+    "name": "Admin-Tool",
+    "parameters": {
+      "endpoint": {
+        "label": "URL zum Admin-Tool",
+        "helpText": "beispielsweise \"https://admin.republik.ch\""
+      }
+    }
+  }
+}

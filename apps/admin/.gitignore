@@ -1,0 +1,26 @@
+# build output
+dist
+.next
+
+# dependencies
+node_modules
+
+# logs
+*.log
+.env
+
+# coverage
+.nyc_output
+coverage
+
+# test output
+test/**/out
+.DS_Store
+
+# editor config
+.idea
+
+# zat
+/zat/tmp
+/zat/.zat
+/zat/settings.json
