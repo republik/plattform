@@ -1,0 +1,130 @@
+import React, { useMemo } from 'react'
+import { css } from 'glamor'
+import { sansSerifMedium14 } from '../../../Typography/styles'
+import { formatTimeRelative } from '../../DiscussionContext'
+import { ShareIcon, ReplyIcon, DiscussionIcon } from '../../../Icons'
+import { useColorContext } from '../../../Colors/ColorContext'
+import { useCurrentMinute } from '../../../../lib/useCurrentMinute'
+import IconButton from '../../../IconButton'
+import { VoteButtons } from './VoteButtons'
+import PropTypes from 'prop-types'
+import { useMediaQuery } from '../../../../lib/useMediaQuery'
+import { mUp } from '../../../../theme/mediaQueries'
+
+const styles = {
+  root: css({
+    ...sansSerifMedium14,
+    height: '40px',
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: '-7px'
+  }),
+  leftActionsWrapper: css({
+    display: 'inline-flex',
+    marginLeft: 7,
+    flexDirection: 'row',
+    '& > button:not(:last-child)': {
+      marginRight: 14
+    }
+  })
+}
+
+const propTypes = {
+  t: PropTypes.func.isRequired,
+  comment: PropTypes.object.isRequired,
+  actions: PropTypes.shape({
+    handleLoadReplies: PropTypes.func,
+    handleReply: PropTypes.func,
+    handleShare: PropTypes.func
+  }),
+  voteActions: PropTypes.shape({
+    handleUpVote: PropTypes.func.isRequired,
+    handleDownVote: PropTypes.func.isRequired,
+    handleUnVote: PropTypes.func.isRequired
+  }),
+  userCanComment: PropTypes.bool,
+  userWaitUntil: PropTypes.string,
+  isBoard: PropTypes.bool
+}
+
+export const CommentActions = ({
+  t,
+  comment,
+  actions: { handleLoadReplies, handleReply, handleShare },
+  voteActions,
+  userCanComment,
+  userWaitUntil,
+  isBoard
+}) => {
+  const isDesktop = useMediaQuery(mUp)
+
+  const now = useCurrentMinute()
+  const [colorScheme] = useColorContext()
+
+  const replyBlockedMessage: string | null = useMemo(() => {
+    const waitUntilDate = userWaitUntil && new Date(userWaitUntil)
+    if (waitUntilDate && waitUntilDate.getTime() > now) {
+      return t('styleguide/CommentComposer/wait', {
+        time: formatTimeRelative(waitUntilDate, { isDesktop, t, now })
+      })
+    }
+    return null
+  }, [userWaitUntil, now, isDesktop, t])
+
+  return (
+    <div {...styles.root} {...colorScheme.set('color', 'text')}>
+      <div {...styles.leftActionsWrapper}>
+        {isBoard && (
+          <IconButton
+            onClick={handleLoadReplies}
+            title={t('styleguide/CommentActions/expand')}
+            Icon={DiscussionIcon}
+            fillColorName='primary'
+            size={20}
+            label={
+              comment.comments &&
+              comment.comments.totalCount > 0 &&
+              `${comment.comments.totalCount}`
+            }
+            labelShort={
+              comment.comments &&
+              comment.comments.totalCount > 0 &&
+              `${comment.comments.totalCount}`
+            }
+          />
+        )}
+        {handleShare && comment?.published && (
+          <IconButton
+            title={t('styleguide/CommentActions/share')}
+            Icon={ShareIcon}
+            onClick={() => handleShare(comment)}
+            size={20}
+          />
+        )}
+        {handleReply && !isBoard && (
+          <IconButton
+            disabled={!!replyBlockedMessage}
+            onClick={handleReply}
+            Icon={ReplyIcon}
+            size={20}
+            title={replyBlockedMessage || t('styleguide/CommentActions/answer')}
+            label={t('styleguide/CommentActions/answer')}
+            labelShort={t('styleguide/CommentActions/answer')}
+          />
+        )}
+      </div>
+      {voteActions && comment?.published && (
+        <VoteButtons
+          t={t}
+          comment={comment}
+          disabled={!userCanComment}
+          handleUpVote={voteActions.handleUpVote}
+          handleDownVote={voteActions.handleDownVote}
+          handleUnVote={voteActions.handleUnVote}
+        />
+      )}
+    </div>
+  )
+}
+
+CommentActions.propTypes = propTypes
