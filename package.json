@@ -8,6 +8,8 @@
     "packages/backend-modules/*"
   ],
   "scripts": {
+    "commit": "cz",
+    "prepare": "husky install",
     "start": "scripts/start.sh",
     "start:scheduler": "cd apps/api && yarn start:scheduler",
     "build": "scripts/build.sh",
@@ -41,6 +43,11 @@
     "auth:role:users": "node packages/backend-modules/auth/script/roleUsers"
   },
   "devDependencies": {
+    "@commitlint/config-conventional": "^16.0.0",
+    "commitizen": "^4.2.4",
+    "commitlint": "^16.1.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^7.0.0",
     "prettier": "^2.5.1",
     "turbo": "latest"
   },
@@ -51,6 +58,16 @@
     "apps/publikator/.turbo",
     "apps/admin/.turbo"
   ],
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
+    }
+  },
   "engines": {
     "node": "^14.4.0"
   }

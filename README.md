@@ -149,3 +149,26 @@ yarn dev
 ```
 
 Please be patient on boot. It might take a minute for everything to compile and a few nodemon restarts before everything runs smoothly.
+
+### Commit Message Format
+
+```
+<type>(<scope>): <subject>
+<BLANK LINE>
+<body>
+<BLANK LINE>
+<footer>
+```
+
+You can use `yarn commit` to generate a message via an interactive prompt.
+
+**Types**
+
+Always changelog relevant: `feat`, `fix`, `perf`
+Others: `docs`, `chore`, `style`, `refactor`, `test`
+
+Scope is optional.
+
+> The body should include the motivation for the change and contrast this with previous behavior.
+
+> The footer should contain any information about Breaking Changes and is also the place to reference GitHub issues that this commit Closes.
