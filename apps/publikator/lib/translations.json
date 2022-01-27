@@ -1,0 +1,1568 @@
+{
+  "data": [
+    {
+      "key": "app/name",
+      "value": "Publikator"
+    },
+    {
+      "key": "signIn/button",
+      "value": "Anmelden"
+    },
+    {
+      "key": "signIn/email/label",
+      "value": "E-Mail-Adresse"
+    },
+    {
+      "key": "signIn/faq",
+      "value": "Fragen"
+    },
+    {
+      "key": "signIn/privacy",
+      "value": "Datenschutz"
+    },
+    {
+      "key": "signIn/hint",
+      "value": "Erste-Hilfe-Abteilung: kontakt@republik.ch."
+    },
+    {
+      "key": "signIn/success",
+      "value": "Erfolgreich als {nameOrEmail} angemeldet."
+    },
+    {
+      "key": "signIn/polling/APP/title",
+      "value": "Zugriff via Republik-App bestätigen"
+    },
+    {
+      "key": "signIn/polling/APP/text",
+      "value": "Wir haben Ihnen auf Ihre Republik-App <b>eine Benachrichtigung</b> geschickt. Bitte prüfen Sie Ihr Smartphone oder Tablet."
+    },
+    {
+      "key": "signIn/polling/EMAIL_TOKEN/title",
+      "value": "Zugriff via E-Mail bestätigen"
+    },
+    {
+      "key": "signIn/polling/EMAIL_TOKEN/text",
+      "value": "Wir haben Ihnen <b>eine E-Mail</b> geschickt, mit der Sie diesen Zugriff freischalten können."
+    },
+    {
+      "key": "signIn/polling/switch/APP",
+      "value": "Zugriff via Republik-App bestätigen?"
+    },
+    {
+      "key": "signIn/polling/switch/EMAIL_TOKEN",
+      "value": "Zugriff via E-Mail bestätigen?"
+    },
+    {
+      "key": "signIn/polling/phrase",
+      "value": "Seltsame Wörter (eine Sicherheitsmassnahme)"
+    },
+    {
+      "key": "signIn/polling/phrase/EMAIL_TOKEN/hint",
+      "value": "Wie funktioniert diese Sicherheitsmassnahme? Vergleichen Sie diese Wörter. Stehen sie ebenfalls auf der Betätigungsseite, können Sie sicher sein, dass Sie dieser Anfrage den Zugriff freischalten."
+    },
+    {
+      "key": "signIn/polling/phrase/APP/hint",
+      "value": "Wie funktioniert diese Sicherheitsmassnahme? Vergleichen Sie diese Wörter. Stehen sie ebenfalls auf der Bestätigungsmaske in der Republik-App, können Sie sicher sein, dass Sie dieser Anfrage den Zugriff freischalten."
+    },
+    {
+      "key": "signIn/polling/phrase/hint/show",
+      "value": "Wie funktioniert diese Sicherheitsmassnahme?"
+    },
+    {
+      "key": "signIn/polling/email",
+      "value": "E-Mail-Adresse"
+    },
+    {
+      "key": "signIn/polling/cancel",
+      "value": "Vertippt? E-Mail-Adresse erneut eingeben."
+    },
+    {
+      "key": "signIn/email/error/empty",
+      "value": "E-Mail-Adresse fehlt"
+    },
+    {
+      "key": "signIn/email/error/invalid",
+      "value": "E-Mail-Adresse ungültig"
+    },
+    {
+      "key": "cookies/disabled/error",
+      "value": "Cookies nicht erlaubt"
+    },
+    {
+      "key": "cookies/disabled/error/explanation",
+      "value": "Es scheint, als könnten wir Ihnen keinen Keks (Cookie) unterjubeln. Bitte erlauben Sie uns in Ihrem Browser ein Cookie zu hinterlegen. Nur damit gestatten Sie uns, Sie wiederzuerkennen und entsprechenden Zugriff auf Artikel und Diskussionen zu ermöglichen.<br />\n<ul>\n<li><a href=\"https://wiki.selfhtml.org/wiki/Sicherheit/Cookies_erlauben\" target=\"_blank\">Cookies für republik.ch erlauben?</a></li>\n<li><a href=\"/datenschutz\" target=\"_blank\">Mehr über Datenschutz bei der Republik AG erfahren?</a></li>\n</ul>\nWir helfen Ihnen per E-Mail unter <a href=\"mailto:kontakt@republik.ch\">kontakt@republik.ch</a> gerne weiter."
+    },
+    {
+      "key": "signOut/label",
+      "value": "abmelden"
+    },
+    {
+      "key": "signOut/error",
+      "value": "Unbekannter Fehler"
+    },
+    {
+      "key": "me/signedOut",
+      "value": "Sie sind nicht angemeldet"
+    },
+    {
+      "key": "me/signedinAs",
+      "value": "Sie sind angemeldet als: {nameOrEmail}"
+    },
+    {
+      "key": "withAuthorization/title",
+      "value": "Geschützter Bereich"
+    },
+    {
+      "key": "withAuthorization/authorizedRoles",
+      "value": "Zugelassene Rollen: {roles}"
+    },
+    {
+      "key": "repo/add/title",
+      "value": "Neues Dokument"
+    },
+    {
+      "key": "repo/add/template/title",
+      "value": "Neues Template"
+    },
+    {
+      "key": "repo/add/titleField/label",
+      "value": "Titel"
+    },
+    {
+      "key": "repo/add/titleField/error",
+      "value": "Titel fehlt"
+    },
+    {
+      "key": "repo/add/titleField/error/tooLong",
+      "value": "Titel zu lange"
+    },
+    {
+      "key": "repo/add/alreadyExists",
+      "value": "Es gibt bereits ein Dokument mit diesem Titel. Beim Erstellen muss der Titel pro Vorlage einzigartig sein."
+    },
+    {
+      "key": "repo/add/submit",
+      "value": "erstellen"
+    },
+    {
+      "key": "repo/add/template/newsletter",
+      "value": "Project R Newsletter"
+    },
+    {
+      "key": "repo/add/template/editorialNewsletter",
+      "value": "Republik Newsletter"
+    },
+    {
+      "key": "repo/add/template/neutrum",
+      "value": "Neutrum"
+    },
+    {
+      "key": "repo/add/template/article",
+      "value": "Artikel"
+    },
+    {
+      "key": "repo/add/template/front",
+      "value": "Front"
+    },
+    {
+      "key": "repo/add/template/format",
+      "value": "Format"
+    },
+    {
+      "key": "repo/add/template/section",
+      "value": "Rubrik"
+    },
+    {
+      "key": "repo/add/template/discussion",
+      "value": "Diskussion"
+    },
+    {
+      "key": "repo/add/template/dossier",
+      "value": "Dossier"
+    },
+    {
+      "key": "repo/add/template/page",
+      "value": "Seite"
+    },
+    {
+      "key": "repo/search/field/label",
+      "value": "Suche"
+    },
+    {
+      "key": "repo/search/field/minLength",
+      "value": "Suche, minimal {count} Zeichen"
+    },
+    {
+      "key": "repo/search/noResults",
+      "value": "Keine Resultate"
+    },
+    {
+      "key": "repo/search/notPublished",
+      "value": "nicht publiziert"
+    },
+    {
+      "key": "repo/table/nav/documents",
+      "value": "Dokumente"
+    },
+    {
+      "key": "repo/table/nav/templates",
+      "value": "Templates"
+    },
+    {
+      "key": "repo/table/nav/calendar",
+      "value": "Wochenvorschau"
+    },
+    {
+      "key": "repo/table/pageInfo/loadMore",
+      "value": "mehr laden"
+    },
+    {
+      "key": "repo/table/pageInfo/total",
+      "value": "Total {count}"
+    },
+    {
+      "key": "repo/table/pageInfo/loadedTotal",
+      "value": "die zuletzt bearbeiteten {loaded} von etwa {total}"
+    },
+    {
+      "key": "repo/table/col/title",
+      "value": "Titel"
+    },
+    {
+      "key": "repo/table/col/credits",
+      "value": "Autoren"
+    },
+    {
+      "key": "repo/table/col/phase",
+      "value": "Status"
+    },
+    {
+      "key": "repo/table/col/pushed",
+      "value": "Letzte Änderung"
+    },
+    {
+      "key": "repo/table/col/published",
+      "value": "Geplantes Publikationsdatum"
+    },
+    {
+      "key": "repo/table/col/creationDeadline",
+      "value": "Kreations-Deadline"
+    },
+    {
+      "key": "repo/table/col/productionDeadline",
+      "value": "Produktions-Deadline"
+    },
+    {
+      "key": "repo/calendar/nav/reset",
+      "value": "zur aktuellen Woche"
+    },
+    {
+      "key": "repo/calendar/newsletters",
+      "value": "Newsletter"
+    },
+    {
+      "key": "repo/calendar/articles",
+      "value": "Beiträge"
+    },
+    {
+      "key": "repo/archive/confirm",
+      "value": "Dokument tatsächlich archivieren?"
+    },
+    {
+      "key": "repo/archive/template/confirm",
+      "value": "Template tatsächlich archivieren?"
+    },
+    {
+      "key": "repo/archive/button",
+      "value": "Dokument archivieren"
+    },
+    {
+      "key": "repo/archive/template/button",
+      "value": "Template archivieren"
+    },
+    {
+      "key": "repo/archived/notice",
+      "value": "Dokument wurde archiviert und kann nicht bearbeitet oder veröffentlicht werden."
+    },
+    {
+      "key": "repo/archived/template/notice",
+      "value": "Template wurde archiviert und kann nicht bearbeitet oder verwendet werden."
+    },
+    {
+      "key": "repo/label/series/episode",
+      "value": "Episode {number}"
+    },
+    {
+      "key": "repo/label/series/overview",
+      "value": "Serie"
+    },
+    {
+      "key": "baseCommit/title",
+      "value": "Ausgangsversion:"
+    },
+    {
+      "key": "baseCommit/commitsBehind/-1",
+      "value": "Es gibt neuere Versionen"
+    },
+    {
+      "key": "baseCommit/commitsBehind/0",
+      "value": "Neueste Version"
+    },
+    {
+      "key": "baseCommit/commitsBehind/1",
+      "value": "Es gibt {count} neuere Version"
+    },
+    {
+      "key": "baseCommit/commitsBehind/other",
+      "value": "Es gibt {count} neuere Versionen"
+    },
+    {
+      "key": "checklist/title",
+      "value": "Checklist"
+    },
+    {
+      "key": "checklist/approvedFor",
+      "value": "{name} für"
+    },
+    {
+      "key": "checklist/labels/startTC",
+      "value": "Go Tribe-Chief"
+    },
+    {
+      "key": "checklist/labels/finalEditing",
+      "value": "Go CvD"
+    },
+    {
+      "key": "checklist/labels/startCR",
+      "value": "Go CR"
+    },
+    {
+      "key": "checklist/labels/startConception",
+      "value": "Go Konzeption"
+    },
+    {
+      "key": "checklist/labels/startCreation",
+      "value": "Go Peer"
+    },
+    {
+      "key": "checklist/labels/startProduction",
+      "value": "Go Produktion"
+    },
+    {
+      "key": "checklist/labels/numbersOk",
+      "value": "Grafik und Zahlen OK"
+    },
+    {
+      "key": "checklist/labels/imagesOk",
+      "value": "Bild OK"
+    },
+    {
+      "key": "checklist/labels/startProofReading",
+      "value": "Go Korrektorat "
+    },
+    {
+      "key": "checklist/labels/factCheckOk",
+      "value": "Faktencheck OK"
+    },
+    {
+      "key": "checklist/labels/proofReadingOk",
+      "value": "Korrektorat OK"
+    },
+    {
+      "key": "checklist/labels/finalControl",
+      "value": "Endkontrolle OK"
+    },
+    {
+      "key": "checklist/labels/chiefEditor",
+      "value": "CR OK"
+    },
+    {
+      "key": "tree/commit/localVersion",
+      "value": "Nicht committete Änderungen"
+    },
+    {
+      "key": "tree/commit/publish",
+      "value": "Vorschau und Veröffentlichung"
+    },
+    {
+      "key": "repo/nav/edit",
+      "value": "Inhalt"
+    },
+    {
+      "key": "repo/nav/raw",
+      "value": "Raw"
+    },
+    {
+      "key": "repo/nav/meta",
+      "value": "Metadaten"
+    },
+    {
+      "key": "repo/nav/tree",
+      "value": "Versionen"
+    },
+    {
+      "key": "repo/nav/publish",
+      "value": "Publizierung"
+    },
+    {
+      "key": "repo/nav/template/edit",
+      "value": "Template"
+    },
+    {
+      "key": "repo/nav/document/edit",
+      "value": "Dokument"
+    },
+    {
+      "key": "repo/nav/template/tree",
+      "value": "Versionen"
+    },
+    {
+      "key": "repo/nav/document/tree",
+      "value": "Versionen"
+    },
+    {
+      "key": "metaData/title",
+      "value": "Metadaten"
+    },
+    {
+      "key": "metaData/preview",
+      "value": "Vorschau"
+    },
+    {
+      "key": "metaData/field/title",
+      "value": "Titel"
+    },
+    {
+      "key": "metaData/field/auto",
+      "value": "Automatisch vom Titelblock ableiten (Titel, Lead)"
+    },
+    {
+      "key": "metaData/field/shortTitle",
+      "value": "Kurztitel"
+    },
+    {
+      "key": "metaData/field/short/count",
+      "value": "{count} Zeichen"
+    },
+    {
+      "key": "metaData/field/publishDate",
+      "value": "Publikationsdatum"
+    },
+    {
+      "key": "metaData/field/feed",
+      "value": "Erscheint im Feed"
+    },
+    {
+      "key": "metaData/field/description",
+      "value": "Lead"
+    },
+    {
+      "key": "metaData/field/image",
+      "value": "Bild"
+    },
+    {
+      "key": "metaData/field/lead",
+      "value": "Lead"
+    },
+    {
+      "key": "metaData/field/slug",
+      "value": "Web-Slug"
+    },
+    {
+      "key": "metaData/field/repoSlug",
+      "value": "Repo-Slug"
+    },
+    {
+      "key": "metaData/field/repoSlug/error/tooLong",
+      "value": "Repo-Slug zu lange (max. 30 Chars)"
+    },
+    {
+      "key": "metaData/field/slug/note",
+      "value": "Ergibt folgende URL: {base}{path}"
+    },
+    {
+      "key": "metaData/field/slug/pathNote",
+      "value": "Es ist aber ein fixer Pfad festgelegt: {base}{path}"
+    },
+    {
+      "key": "metaData/field/src",
+      "value": "Bild"
+    },
+    {
+      "key": "metaData/field/srcDark",
+      "value": "Nachtmodus (optional)"
+    },
+    {
+      "key": "metaData/field/srcDark/note",
+      "value": "Das Bildseitenverhältnis für den Nachtmodus muss identisch sein."
+    },
+    {
+      "key": "metaData/field/alt",
+      "value": "Bildbeschrieb"
+    },
+    {
+      "key": "metaData/field/formats",
+      "value": "Formate"
+    },
+    {
+      "key": "metaData/field/label",
+      "value": "Label"
+    },
+    {
+      "key": "metaData/field/captionRight",
+      "value": "Bildlegende rechts"
+    },
+    {
+      "key": "metaData/field/emailSubject",
+      "value": "E-Mail-Betreff"
+    },
+    {
+      "key": "metaData/field/facebookTitle",
+      "value": "Facebook Titel"
+    },
+    {
+      "key": "metaData/field/facebookDescription",
+      "value": "Facebook Lead"
+    },
+    {
+      "key": "metaData/field/facebookImage",
+      "value": "Facebook Bild"
+    },
+    {
+      "key": "metaData/field/facebookPreview",
+      "value": "Facebook Vorschau"
+    },
+    {
+      "key": "metaData/field/facebookPreview/note",
+      "value": "Sobald der Titel zweizeilig wird, wird der Lead meist ausgeblendet. Auf Mobile passiert dies bereits ab 40 bis 50 Zeichen. Sichtbare Textlänge varriert nach Bildschirmgrösse. "
+    },
+    {
+      "key": "metaData/field/twitterTitle",
+      "value": "Twitter Titel"
+    },
+    {
+      "key": "metaData/field/twitterDescription",
+      "value": "Twitter Lead"
+    },
+    {
+      "key": "metaData/field/twitterImage",
+      "value": "Twitter Bild"
+    },
+    {
+      "key": "metaData/field/twitterPreview",
+      "value": "Twitter Vorschau"
+    },
+    {
+      "key": "metaData/field/twitterPreview/note",
+      "value": "Auf Mobile wird der Lead meist nicht angezeigt. Sichtbare Textlänge varriert nach Bildschirmgrösse und Ansicht."
+    },
+    {
+      "key": "metaData/field/seoTitle",
+      "value": "SEO Titel (optional)"
+    },
+    {
+      "key": "metaData/field/seoDescription",
+      "value": "SEO Lead (optional)"
+    },
+    {
+      "key": "metaData/field/googlePreview",
+      "value": "Google Vorschau"
+    },
+    {
+      "key": "metaData/field/googlePreview/note",
+      "value": "Google verwendet einen Textausschnitt statt den Lead, falls es mehr zur Suchanfrage passt. Sofern nicht explizit definiert erscheinen Twitter oder allgemeine Titel und Leads."
+    },
+    {
+      "key": "metaData/field/href",
+      "value": "URL"
+    },
+    {
+      "key": "metaData/field/href/document",
+      "value": "Verlinktes Dokument: "
+    },
+    {
+      "key": "metaData/field/center",
+      "value": "Zentriert"
+    },
+    {
+      "key": "metaData/field/figureFloat",
+      "value": "Für Text optimieren (Desktop Float)"
+    },
+    {
+      "key": "metaData/field/plain",
+      "value": "Ohne Aussparung"
+    },
+    {
+      "key": "metaData/audio",
+      "value": "Audio-Version"
+    },
+    {
+      "key": "metaData/field/audioSourceMp3",
+      "value": ".mp3 URL (zwingend)"
+    },
+    {
+      "key": "metaData/field/audioSourceAac",
+      "value": ".aac URL (optional)"
+    },
+    {
+      "key": "metaData/audio/cover/anchor",
+      "value": "Audio auf Cover"
+    },
+    {
+      "key": "metaData/audio/cover/anchor/null",
+      "value": "aus"
+    },
+    {
+      "key": "metaData/audio/cover/anchor/middle",
+      "value": "Mitte"
+    },
+    {
+      "key": "metaData/audio/cover/color",
+      "value": "Farbe"
+    },
+    {
+      "key": "metaData/audio/cover/backgroundColor",
+      "value": "Hintergrund"
+    },
+    {
+      "key": "metaData/series/label",
+      "value": "Serie"
+    },
+    {
+      "key": "metaData/series/negative",
+      "value": "Keine"
+    },
+    {
+      "key": "metaData/series/main",
+      "value": "Übersicht"
+    },
+    {
+      "key": "metaData/series/title/label",
+      "value": "Titel"
+    },
+    {
+      "key": "metaData/series/description",
+      "value": "Serienbeschrieb"
+    },
+    {
+      "key": "metaData/series/overview",
+      "value": "Dokument Serienübersicht"
+    },
+    {
+      "key": "metaData/series/overview/note",
+      "value": "Im Normalfall: Eine Selbstreferenz auf dieses Dokument mit den Metadaten zur Serie und einem Episoden-Grid. Ausnahme: alte Serien vor Sommer 2021."
+    },
+    {
+      "key": "metaData/series/episode",
+      "value": "Episode"
+    },
+    {
+      "key": "metaData/series/episodes/label",
+      "value": "Episode"
+    },
+    {
+      "key": "metaData/series/episodes/add",
+      "value": "Episode hinzufügen"
+    },
+    {
+      "key": "metaData/series/episodes/rm",
+      "value": "entfernen"
+    },
+    {
+      "key": "metaData/series/episodes/up",
+      "value": "hoch"
+    },
+    {
+      "key": "metaData/series/episodes/down",
+      "value": "runter"
+    },
+    {
+      "key": "metaData/series/episodes/document",
+      "value": "Dokument"
+    },
+    {
+      "key": "metaData/series/coverText/anchor",
+      "value": "Text auf Cover"
+    },
+    {
+      "key": "metaData/series/coverText/anchor/null",
+      "value": "aus"
+    },
+    {
+      "key": "metaData/series/coverText/anchor/top",
+      "value": "Oben"
+    },
+    {
+      "key": "metaData/series/coverText/anchor/middle",
+      "value": "Mitte"
+    },
+    {
+      "key": "metaData/series/coverText/anchor/bottom",
+      "value": "Unten"
+    },
+    {
+      "key": "metaData/series/coverText/offset",
+      "value": "Offset (CSS Units)"
+    },
+    {
+      "key": "metaData/series/coverText/color",
+      "value": "Farbe"
+    },
+    {
+      "key": "metaData/series/coverText/fontSize",
+      "value": "Schriftgrösse"
+    },
+    {
+      "key": "metaData/paynotes/add",
+      "value": "Spezialangefertigte Störer hinzufügen"
+    },
+    {
+      "key": "metaData/paynotes/title",
+      "value": "Spezialangefertigte Störer"
+    },
+    {
+      "key": "metaData/paynotes/index",
+      "value": "Störer #{index}"
+    },
+    {
+      "key": "metaData/paynotes/before",
+      "value": "Am Anfang"
+    },
+    {
+      "key": "metaData/paynotes/after",
+      "value": "Am Ende"
+    },
+    {
+      "key": "metaData/paynotes/new",
+      "value": "Neuer Störer"
+    },
+    {
+      "key": "metaData/paynotes/help",
+      "value": "Anzahl Mitglieder mit <b>{count}</b> und B-Tags für <b>&lt;b&gt;gefettet&lt;/b&gt;</b>. Für einen neuen Paragraf, eine leere Zeile – doppelter Umbruch."
+    },
+    {
+      "key": "metaData/paynote/form/target/title",
+      "value": "Ziel"
+    },
+    {
+      "key": "metaData/paynote/form/target/value/true",
+      "value": "Ja"
+    },
+    {
+      "key": "metaData/paynote/form/target/value/false",
+      "value": "Nein"
+    },
+    {
+      "key": "metaData/paynote/form/target/value/undefined",
+      "value": "Egal"
+    },
+    {
+      "key": "metaData/paynote/form/target/hasActiveMembership",
+      "value": "Aktive Mitglieder"
+    },
+    {
+      "key": "metaData/paynote/form/target/isEligibleForTrial",
+      "value": "Probelesen berechtigt"
+    },
+    {
+      "key": "metaData/paynote/form/cta/label",
+      "value": "Aktivierung"
+    },
+    {
+      "key": "metaData/paynote/form/cta/0",
+      "value": "Probelesen"
+    },
+    {
+      "key": "metaData/paynote/form/cta/1",
+      "value": "Button"
+    },
+    {
+      "key": "metaData/paynote/form/cta/2",
+      "value": "Keine"
+    },
+    {
+      "key": "metaData/paynote/form/content",
+      "value": "Inhalt"
+    },
+    {
+      "key": "metaData/paynote/form/button/label",
+      "value": "Label"
+    },
+    {
+      "key": "metaData/paynote/form/button/link",
+      "value": "Link"
+    },
+    {
+      "key": "metaData/paynote/form/secondary/prefix",
+      "value": "Sekundärer Präfix (optional)"
+    },
+    {
+      "key": "metaData/paynote/form/secondary/label",
+      "value": "Sekundäres Label (optional)"
+    },
+    {
+      "key": "metaData/paynote/form/secondary/link",
+      "value": "Sekundärer Link (optional)"
+    },
+    {
+      "key": "metaData/field/url",
+      "value": "URL"
+    },
+    {
+      "key": "metaData/field/minPublishDate",
+      "value": "Ab Publikationsdatum"
+    },
+    {
+      "key": "metaData/field/excludeRepoIds",
+      "value": "Dokumente ausschliessen"
+    },
+    {
+      "key": "metaData/field/specificRepoIds",
+      "value": "Manuelle Auswahl"
+    },
+    {
+      "key": "metaData/field/lastDays",
+      "value": "Letzte X Tage"
+    },
+    {
+      "key": "metaData/field/first",
+      "value": "Erste X"
+    },
+    {
+      "key": "metaData/field/featured",
+      "value": "Hervorgehobene"
+    },
+    {
+      "key": "metaData/field/excludeFromGallery",
+      "value": "Von Galerie ausschliessen"
+    },
+    {
+      "key": "metaData/field/gallery",
+      "value": "Bilder als Galerie"
+    },
+    {
+      "key": "metaData/darkMode",
+      "value": "Dunkles Farbschema forcieren"
+    },
+    {
+      "key": "variable/insert/greeting",
+      "value": "Begrüssung"
+    },
+    {
+      "key": "variable/form/VARIABLE",
+      "value": "Variable"
+    },
+    {
+      "key": "variable/form/IF",
+      "value": "Falls"
+    },
+    {
+      "key": "metaData/field/variable",
+      "value": "Variable"
+    },
+    {
+      "key": "metaData/field/fallback",
+      "value": "Ersatzwert"
+    },
+    {
+      "key": "metaData/field/present",
+      "value": "Vorhanden"
+    },
+    {
+      "key": "uncommittedChanges/unlock/confirm/1",
+      "value": "Durch paralleles arbeiten, entstehen zwei Versionen. Falls Sie das nicht wollen, sprechen Sie miteinander.\n\nWollen Sie das Dokument jetzt bearbeiten? {activeUsers} wird gestört und darüber informiert."
+    },
+    {
+      "key": "uncommittedChanges/unlock/confirm/other",
+      "value": "Durch paralleles arbeiten, entstehen zwei Versionen. Falls Sie das nicht wollen, sprechen Sie miteinander.\n\nWollen Sie das Dokument jetzt bearbeiten? {activeUsers} werden gestört und darüber informiert."
+    },
+    {
+      "key": "uncommittedChanges/users/separator/last",
+      "value": " und "
+    },
+    {
+      "key": "uncommittedChanges/users/separator/other",
+      "value": ", "
+    },
+    {
+      "key": "uncommittedChanges/title",
+      "value": "Aktiv"
+    },
+    {
+      "key": "uncommittedChanges/empty",
+      "value": "Niemand"
+    },
+    {
+      "key": "uncommittedChanges/interruption/text/1",
+      "value": "{interruptingUsers} ist dazu gestossen und bearbeitet das Dokument jetzt auch."
+    },
+    {
+      "key": "uncommittedChanges/interruption/text/other",
+      "value": "{interruptingUsers} sind dazu gestossen und bearbeitet das Dokument jetzt auch."
+    },
+    {
+      "key": "uncommittedChanges/interruption/note",
+      "value": "Wenn Sie parallel arbeiten entstehen zwei Versionen, die später wieder zusammengeführt werden müssen. Falls Sie das nicht wollen, sprechen Sie miteinander."
+    },
+    {
+      "key": "uncommittedChanges/acknowledged",
+      "value": "Verstanden"
+    },
+    {
+      "key": "uncommittedChanges/revert",
+      "value": "Meine Änderungen verwerfen"
+    },
+    {
+      "key": "revert/confirm",
+      "value": "Sind Sie sicher, dass Sie alle bestehenden Änderungen verwerfen möchten?"
+    },
+    {
+      "key": "commitHistory/title",
+      "value": "Versionen"
+    },
+    {
+      "key": "commitHistory/more",
+      "value": "Mehr…"
+    },
+    {
+      "key": "commitHistory/none",
+      "value": "Keine Commits"
+    },
+    {
+      "key": "commit/button",
+      "value": "Commit"
+    },
+    {
+      "key": "commit/revert",
+      "value": "Verwerfen"
+    },
+    {
+      "key": "commit/unlock",
+      "value": "Bearbeiten"
+    },
+    {
+      "key": "commit/lock",
+      "value": "Abbrechen"
+    },
+    {
+      "key": "commit/promtMessage",
+      "value": "Commit-Message:"
+    },
+    {
+      "key": "commit/status/new",
+      "value": "Commite um das neue Dokument zu erstellen"
+    },
+    {
+      "key": "commit/status/new/short",
+      "value": "Neues Dokument erstellen"
+    },
+    {
+      "key": "commit/status/new/template",
+      "value": "Neues Template erstellen"
+    },
+    {
+      "key": "commit/status/committed",
+      "value": "Keine Änderungen"
+    },
+    {
+      "key": "commit/status/readOnly",
+      "value": "Lesemodus"
+    },
+    {
+      "key": "commit/status/uncommitted",
+      "value": "Änderungen committen?"
+    },
+    {
+      "key": "commit/warn/canNotLock",
+      "value": "Aufgrund von lokalen Änderungen, konnte das Dokument nicht gesperrt werden."
+    },
+    {
+      "key": "commit/warn/noStorage",
+      "value": "Änderungen können nicht lokal gespeichert werden!"
+    },
+    {
+      "key": "commit/warn/localParseError",
+      "value": "Lokale Änderungen könnten nicht wiederhergestellt werden."
+    },
+    {
+      "key": "commit/warn/uncommittedChangesError",
+      "value": "Deine Aktivität konnte nicht gemeldet werden."
+    },
+    {
+      "key": "commit/warn/commit404",
+      "value": "Commit wurde nicht gefunden. Die neuste Version wurde geladen."
+    },
+    {
+      "key": "commit/warn/failed",
+      "value": "Commit fehlgeschlagen:\n{error}"
+    },
+    {
+      "key": "commit/warn/missing",
+      "value": "Commit {commitId} nicht gefunden."
+    },
+    {
+      "key": "publish/title",
+      "value": "Veröffentlichung"
+    },
+    {
+      "key": "publish/preview/title",
+      "value": "Vorschau"
+    },
+    {
+      "key": "publish/preview/mobile",
+      "value": "Mobile"
+    },
+    {
+      "key": "publish/preview/desktop",
+      "value": "Desktop"
+    },
+    {
+      "key": "publish/commit/selected",
+      "value": "Ausgewählte Version"
+    },
+    {
+      "key": "publish/commit/change",
+      "value": "Version ändern"
+    },
+    {
+      "key": "publish/meta/date/label",
+      "value": "Publikationsdatum"
+    },
+    {
+      "key": "publish/meta/path/label",
+      "value": "URL"
+    },
+    {
+      "key": "publish/trigger",
+      "value": "publizieren"
+    },
+    {
+      "key": "publish/label/prepublication",
+      "value": "Interne Publikation (Vorschau für Editoren)"
+    },
+    {
+      "key": "publish/label/updateMailchimp",
+      "value": "Mailchimp aktualisieren"
+    },
+    {
+      "key": "publish/label/scheduled",
+      "value": "Publikation terminieren"
+    },
+    {
+      "key": "publish/label/scheduledAt",
+      "value": "Publikationstermin"
+    },
+    {
+      "key": "publish/label/notifySubscribers/1",
+      "value": "Benachrichtigung senden: aktuell {count} Empfangende"
+    },
+    {
+      "key": "publish/label/notifySubscribers/other",
+      "value": "Benachrichtigungen senden: aktuell {count} Empfangende"
+    },
+    {
+      "key": "publish/validation/links/1",
+      "value": "Im Text ist ein Link enthalten."
+    },
+    {
+      "key": "publish/validation/links/other",
+      "value": "Im Text sind {count} Links enthalten."
+    },
+    {
+      "key": "publish/validation/link",
+      "value": "[{text}]({link})"
+    },
+    {
+      "key": "publish/validation/link/error",
+      "value": "Ungültiger Link: [{text}]({link}) – {reason}"
+    },
+    {
+      "key": "publish/validation/link/warning",
+      "value": "Suspekter Link: [{text}]({link}) – {reason}"
+    },
+    {
+      "key": "publish/validation/link/issue/empty",
+      "value": "leerer URL"
+    },
+    {
+      "key": "publish/validation/link/issue/relative",
+      "value": "relative Links sind unzulässig, ging «https://» vergessen?"
+    },
+    {
+      "key": "publish/validation/link/issue/webp",
+      "value": ".webp-Dateien funktionieren nicht überall."
+    },
+    {
+      "key": "publish/validation/link/issue/wwwws",
+      "value": "richtige Anzahl Ws?"
+    },
+    {
+      "key": "publish/validation/link/issue/profiles",
+      "value": "Profile sollten immer via ID verlinkt werden."
+    },
+    {
+      "key": "publish/validation/hasErrors",
+      "value": "Diese Version kann nicht veröffentlicht werden:"
+    },
+    {
+      "key": "publish/validation/hasWarnings",
+      "value": "Warnungen:"
+    },
+    {
+      "key": "publish/validation/slug/empty",
+      "value": "Web-Slug fehlt"
+    },
+    {
+      "key": "publish/validation/publishDate/empty",
+      "value": "Publikationsdatum fehlt"
+    },
+    {
+      "key": "publish/validation/emailSubject/empty",
+      "value": "E-Mail-Betreff fehlt"
+    },
+    {
+      "key": "publish/validation/title/empty",
+      "value": "Metadaten-Titel fehlt"
+    },
+    {
+      "key": "publish/validation/description/empty",
+      "value": "Metadaten-Lead fehlt"
+    },
+    {
+      "key": "publish/validation/facebookImage/empty",
+      "value": "Bild für Facebook fehlt"
+    },
+    {
+      "key": "publish/validation/twitterImage/empty",
+      "value": "Bild für Twitter fehlt"
+    },
+    {
+      "key": "publish/error/unresolvedRepoIds",
+      "value": "In dem Dokument hat es Referenzen auf andere Dokumente die zum Zeitpunkt dieser Publikation noch nicht veröffentlicht sind. Dies sind folgende Dokumente:"
+    },
+    {
+      "key": "publish/error/unresolvedRepoIds/ignore",
+      "value": "ignorieren"
+    },
+    {
+      "key": "publish/error/unresolvedRepoIds/template",
+      "value": "Sie können diese Publikation nicht durchführen solange nicht alle Referenzen zur Veröffentlichung ferigegeben sind."
+    },
+    {
+      "key": "publication/current/title/1",
+      "value": "Publizierte Version"
+    },
+    {
+      "key": "publication/current/title/other",
+      "value": "Publizierte Versionen"
+    },
+    {
+      "key": "publication/current/prepublication",
+      "value": "Intern"
+    },
+    {
+      "key": "publication/current/scheduledAt",
+      "value": "terminiert auf {dateTime}"
+    },
+    {
+      "key": "publication/current/unpublish/action",
+      "value": "Veröffentlichung aufheben"
+    },
+    {
+      "key": "publication/current/unpublish/confirmAll",
+      "value": "Wollen sie wirklich alle veröffentlichten Versionen zurückziehen?"
+    },
+    {
+      "key": "dashboard/links",
+      "value": "gdrive,slack"
+    },
+    {
+      "key": "dashboard/links/gdrive/label",
+      "value": "Komandobrücke"
+    },
+    {
+      "key": "dashboard/links/gdrive/href",
+      "value": "wtfwtfwtf"
+    },
+    {
+      "key": "dashboard/links/slack/label",
+      "value": "Teamfunk"
+    },
+    {
+      "key": "dashboard/links/slack/href",
+      "value": "https://piratinnen.slack.com"
+    },
+    {
+      "key": "link/repo/search",
+      "value": "Dokument suchen"
+    },
+    {
+      "key": "memo/modal/remove",
+      "value": "Memo entfernen"
+    },
+    {
+      "key": "memo/modal/warning/newDoc",
+      "value": "Sie können erst Kommentare hinterlassen, nachdem Sie den Beitrag kommittet haben."
+    },
+    {
+      "key": "styleguide/video/dnt/note",
+      "value": "Dies ist ein {player}-Video. Wenn Sie das Video abspielen, kann {platform} Sie tracken."
+    },
+    {
+      "key": "styleguide/video/dnt/player/youtube",
+      "value": "Youtube"
+    },
+    {
+      "key": "styleguide/video/dnt/player/vimeo",
+      "value": "Vimeo"
+    },
+    {
+      "key": "image/upload/excessiveSize",
+      "value": "Wollen Sie wirklich dieses {sizeInMb}mb grosses {format} hochladen? Für JPEG ist mehr als {jpegMb}mb kaum sinvoll. Bei anderen Formaten ist mehr als {restMb}mb nicht sinnvoll (können kaum komprimiert werden im Vergleich zu JPEG)."
+    },
+    {
+      "key": "image/upload/notImage",
+      "value": "Dies ist kein Bild."
+    },
+    {
+      "key": "styleguide/charts/confidence95-legend",
+      "value": "95-Prozent-Konfidenzintervall"
+    },
+    {
+      "key": "styleguide/charts/y-cut",
+      "value": "Achse gekürzt"
+    },
+    {
+      "key": "styleguide/charts/error",
+      "value": "Diese Visualisierung ist kaputt. Die Ursache könnte eine falsche Konfiguration oder fehlenden und oder falsch formatierte Daten sein."
+    },
+    {
+      "key": "ui/sidebar/info/numCharacters",
+      "value": "Anzahl Zeichen"
+    },
+    {
+      "key": "styleguide/DynamicComponent/error",
+      "value": "Diese Komponente ist kaputt. Die Ursache könnte eine nicht erlaubte Grund-URL, eine falsche Konfiguration oder ein kaputtes Modul sein."
+    },
+    {
+      "key": "api/publish/disabled",
+      "value": "Dokumente können derzeit nicht veröffentlicht werden."
+    },
+    {
+      "key": "api/unpublish/disabled",
+      "value": "Dokumente können derzeit nicht zurückgezogen werden."
+    },
+    {
+      "key": "styleguide/Collapsable/expand",
+      "value": "Alles lesen"
+    },
+    {
+      "key": "styleguide/Collapsable/collapse",
+      "value": "Weniger"
+    },
+    {
+      "key": "timeago/justNow/other",
+      "value": "gerade eben"
+    },
+    {
+      "key": "timeago/seconds/1",
+      "value": "vor einer Sekunde"
+    },
+    {
+      "key": "timeago/seconds/other",
+      "value": "vor {count} Sekunden"
+    },
+    {
+      "key": "timeago/minutes/1",
+      "value": "vor einer Minute"
+    },
+    {
+      "key": "timeago/minutes/other",
+      "value": "vor {count} Minuten"
+    },
+    {
+      "key": "timeago/hours/1",
+      "value": "vor einer Stunde"
+    },
+    {
+      "key": "timeago/hours/other",
+      "value": "vor {count} Stunden"
+    },
+    {
+      "key": "timeago/days/1",
+      "value": "vor einem Tag"
+    },
+    {
+      "key": "timeago/days/other",
+      "value": "vor {count} Tagen"
+    },
+    {
+      "key": "timeago/weeks/1",
+      "value": "vor einer Woche"
+    },
+    {
+      "key": "timeago/weeks/other",
+      "value": "vor {count} Wochen"
+    },
+    {
+      "key": "timeago/months/1",
+      "value": "vor einem Monat"
+    },
+    {
+      "key": "timeago/months/other",
+      "value": "vor {count} Monaten"
+    },
+    {
+      "key": "timeago/years/1",
+      "value": "vor einem Jahr"
+    },
+    {
+      "key": "timeago/years/other",
+      "value": "vor {count} Jahren"
+    },
+    {
+      "key": "timeAhead/justNow/other",
+      "value": "in weniger als einer Minute"
+    },
+    {
+      "key": "timeAhead/minutes/1",
+      "value": "in einer Minute"
+    },
+    {
+      "key": "timeAhead/minutes/other",
+      "value": "in {count} Minuten"
+    },
+    {
+      "key": "timeAhead/hours/1",
+      "value": "in einer Stunde"
+    },
+    {
+      "key": "timeAhead/hours/other",
+      "value": "in {count} Stunden"
+    },
+    {
+      "key": "timeAhead/days/1",
+      "value": "erst in einem Tag"
+    },
+    {
+      "key": "timeAhead/days/other",
+      "value": "in {count} Tagen"
+    },
+    {
+      "key": "timeAhead/weeks/1",
+      "value": "erst in einer Woche"
+    },
+    {
+      "key": "timeAhead/weeks/other",
+      "value": "in {count} Wochen"
+    },
+    {
+      "key": "timeAhead/months/1",
+      "value": "in einem Monat"
+    },
+    {
+      "key": "timeAhead/months/other",
+      "value": "in {count} Monaten"
+    },
+    {
+      "key": "timeAhead/years/1",
+      "value": "in einem Jahr"
+    },
+    {
+      "key": "timeAhead/years/other",
+      "value": "in {count} Jahren"
+    },
+    {
+      "key": "timeduration/seconds",
+      "value": "vor {count} s"
+    },
+    {
+      "key": "timeduration/minutes",
+      "value": "vor {count} m"
+    },
+    {
+      "key": "timeduration/hours",
+      "value": "vor {count} h"
+    },
+    {
+      "key": "timeduration/days",
+      "value": "vor {count} d"
+    },
+    {
+      "key": "timeduration/weeks",
+      "value": "vor {count} w"
+    },
+    {
+      "key": "timeduration/years",
+      "value": "vor {count} y"
+    },
+    {
+      "key": "styleguide/CommentComposer/placeholder",
+      "value": "Einen Kommentar verfassen…"
+    },
+    {
+      "key": "styleguide/CommentComposer/answer",
+      "value": "antworten"
+    },
+    {
+      "key": "styleguide/CommentComposer/cancel",
+      "value": "abbrechen"
+    },
+    {
+      "key": "styleguide/CommentComposer/etiquette",
+      "value": "Etikette"
+    },
+    {
+      "key": "styleguide/CommentActions/answer",
+      "value": "antworten"
+    },
+    {
+      "key": "styleguide/CommentActions/unpublish",
+      "value": "unveröffentlichen"
+    },
+    {
+      "key": "styleguide/CommentActions/edit",
+      "value": "bearbeiten"
+    },
+    {
+      "key": "styleguide/CommentActions/upvote",
+      "value": "+1"
+    },
+    {
+      "key": "styleguide/CommentActions/upvote/count/0",
+      "value": "Keine Stimmen dafür"
+    },
+    {
+      "key": "styleguide/CommentActions/upvote/count/1",
+      "value": "Eine Stimme dafür"
+    },
+    {
+      "key": "styleguide/CommentActions/upvote/count/other",
+      "value": "{count} Stimmen dafür"
+    },
+    {
+      "key": "styleguide/CommentActions/downvote",
+      "value": "-1"
+    },
+    {
+      "key": "styleguide/CommentActions/downvote/count/0",
+      "value": "Keine Gegenstimmen"
+    },
+    {
+      "key": "styleguide/CommentActions/downvote/count/1",
+      "value": "Eine Gegenstimme"
+    },
+    {
+      "key": "styleguide/CommentActions/downvote/count/other",
+      "value": "{count} Gegenstimmen"
+    },
+    {
+      "key": "styleguide/CommentTeaser/comment/link",
+      "value": "Beitrag in {link}"
+    },
+    {
+      "key": "styleguide/CommentTeaser/reply/link",
+      "value": "Antwort in {link}"
+    },
+    {
+      "key": "styleguide/CommentTreeLoadMore/label/1",
+      "value": "Ein weiterer Kommentar"
+    },
+    {
+      "key": "styleguide/CommentTreeLoadMore/label/other",
+      "value": "{count} weitere Kommentare"
+    },
+    {
+      "key": "styleguide/CommentTreeCollapse/label",
+      "value": "ausblenden"
+    },
+    {
+      "key": "styleguide/comment/header/updated",
+      "value": "editiert"
+    },
+    {
+      "key": "styleguide/comment/header/verifiedCredential",
+      "value": "Verifizierte Rolle"
+    },
+    {
+      "key": "styleguide/comment/header/expandCount/1",
+      "value": "1 Beitrag"
+    },
+    {
+      "key": "styleguide/comment/header/expandCount/other",
+      "value": "{count} Beiträge"
+    },
+    {
+      "key": "styleguide/comment/header/credentialMissing",
+      "value": "Rolle definieren"
+    },
+    {
+      "key": "styleguide/comment/header/unpublishedByUser",
+      "value": "(durch User zurückgezogen)"
+    },
+    {
+      "key": "styleguide/comment/header/unpublishedByAdmin",
+      "value": "(von der Redaktion verborgen)"
+    },
+    {
+      "key": "styleguide/comment/header/unavailable",
+      "value": "(Autorenschaft nicht verfügbar)"
+    },
+    {
+      "key": "styleguide/comment/header/loading",
+      "value": "Lädt…"
+    },
+    {
+      "key": "styleguide/comment/edit/submit",
+      "value": "bearbeiten"
+    },
+    {
+      "key": "styleguide/comment/unpublished",
+      "value": "(unveröffentlicht)"
+    },
+    {
+      "key": "styleguide/comment/unpublished/userCanEdit",
+      "value": "Bearbeiten Sie den Beitrag um ihn erneut zu publizieren."
+    },
+    {
+      "key": "styleguide/comment/adminUnpublished",
+      "value": "Leider mussen wir Ihren Beitrag unveröffentlichen. Wenden sie sich an kontakt@republik.ch."
+    },
+    {
+      "key": "styleguide/TeaserFeed/InternalOnlyTag",
+      "value": "Intern publiziert"
+    },
+    {
+      "key": "pages/raw/save",
+      "value": "Übernehmen"
+    },
+    {
+      "key": "pages/raw/cancel",
+      "value": "Abbrechen"
+    },
+    {
+      "key": "pages/raw/title",
+      "value": "Quellcode bearbeiten"
+    },
+    {
+      "key": "pages/raw/metadata",
+      "value": "Metadaten bearbeiten"
+    },
+    {
+      "key": "publish/preview/404",
+      "value": "Dokument oder Schema nicht verfügbar."
+    },
+    {
+      "key": "styleguide/SeriesNav/seriesoverview/link",
+      "value": " {link}."
+    },
+    {
+      "key": "styleguide/SeriesNav/seriesoverview",
+      "value": "Zur Übersicht"
+    },
+    {
+      "key": "styleguide/SeriesNav/current",
+      "value": "Sie lesen:"
+    }
+  ]
+}
