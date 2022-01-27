@@ -1,4 +1,0 @@
-tsc: yarn dev:tsc
-graphql: cd servers/graphql && PORT=5010 yarn dev
-scheduler: cd servers/graphql && yarn dev:scheduler
-assets: cd servers/assets && PORT=5020 yarn dev
