@@ -1,0 +1,17 @@
+[entryPoints]
+  [entryPoints.web]
+    address = ":80"
+
+[providers]
+  [providers.file]
+    filename = "/etc/traefik/traefik-provider.toml"
+
+[api]
+  insecure = true
+  dashboard = true
+  debug = true
+
+# [log]
+#   level = "DEBUG"
+
+[accessLog]

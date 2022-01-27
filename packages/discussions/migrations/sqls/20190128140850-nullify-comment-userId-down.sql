@@ -1,0 +1,3 @@
+ALTER TABLE "comments"
+  ALTER COLUMN "userId" SET NOT NULL
+;

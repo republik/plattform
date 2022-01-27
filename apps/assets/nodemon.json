@@ -1,0 +1,14 @@
+{
+  "watch": [
+    "../../packages",
+    "../../.env",
+    "./"
+  ],
+  "ignore": [
+    "node_modules",
+    "__tests__",
+    "*.jest.js",
+    "package.json"
+  ],
+  "delay": 2000
+}

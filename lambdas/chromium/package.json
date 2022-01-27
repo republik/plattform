@@ -1,0 +1,21 @@
+{
+  "name": "@orbiting/lambdas-chromium",
+  "version": "0.0.1",
+  "description": "headless chrome providing screenshots",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backends.git"
+  },
+  "author": "Patrick Recher <patrick.recher@republik.ch>",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/orbiting/backends/issues"
+  },
+  "homepage": "https://github.com/orbiting/backends#readme",
+  "dependencies": {
+    "chrome-aws-lambda": "^1.12.0",
+    "debug": "^3.1.0",
+    "puppeteer-core": "^1.12.2"
+  }
+}

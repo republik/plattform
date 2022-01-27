@@ -1,0 +1,37 @@
+Guten Tag
+
+Herzlichen Dank für Ihre grosszügige Wachstums-Spende.
+
+
+
+Pro 240 Franken, die so zusammenkommen, schenken wir einer ausgewählten Person
+eine Mitgliedschaft.
+
+Mit Ihrem Geld fördern Sie das Wachstum der Republik – und damit auch eine
+unabhängige vierte Gewalt als zentrale Institution unserer Demokratie.
+
+{{#if paymentslip}}
+
+Zahlungsinformationen:
+
+ * IBAN: {{iban}}
+ * Referenz: {{reference}}
+ * Betrag: {{total_formatted}}
+ * Zahlbar bis: {{due_date}}
+
+Anbei finden Sie eine QR-Rechnung.
+
+Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit die Zahlung via
+Mobile Banking, E-Banking oder am Schalter bei Bank und Post auslösen.
+
+{{/if}}
+
+Herzlich
+
+Ihre Crew der Republik
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+{{frontend_base_url}}
+kontakt@republik.ch

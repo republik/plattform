@@ -1,0 +1,50 @@
+{
+  "name": "@orbiting/backend-modules-republik-crowdfundings",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backends.git"
+  },
+  "author": "Patrick Recher <patrick.recher@republik.ch>",
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/orbiting/backends/issues"
+  },
+  "homepage": "https://github.com/orbiting/backends#readme",
+  "scripts": {
+    "link": "yarn link",
+    "db:seed:crowdfundings": "seeds/script/seed.js",
+    "dev:postfinance:import": "concurrently 'tsc -w' 'sleep 3 && echo \"Starting import payments runner.\" && sleep 2 && NODE_ENV=development nodemon lib/scheduler/importPaymentsRunner.js'"
+  },
+  "dependencies": {
+    "apollo-modules-node": "^0.1.4",
+    "d3-array": "^2.4.0",
+    "d3-dsv": "^1.2.0",
+    "debug": "^4.1.1",
+    "fast-xml-parser": "^3.17.4",
+    "graphql": "^15.3.0",
+    "isomorphic-unfetch": "^3.0.0",
+    "lodash": "^4.17.19",
+    "memfs": "^3.2.0",
+    "moment": "^2.26.0",
+    "sharp": "^0.28.1",
+    "ssh2-sftp-client": "^5.3.1",
+    "stream-to-array": "^2.3.0",
+    "stripe": "^8.119.0",
+    "tar": "^6.1.9",
+    "uuid": "^8.3.1"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.162",
+    "@types/sharp": "^0.25.1",
+    "@types/ssh2-sftp-client": "^5.3.0",
+    "@types/stream-to-array": "^2.3.0",
+    "@types/tar": "^4.0.3",
+    "@types/uuid": "^8.3.0",
+    "simplytyped": "^3.3.0"
+  }
+}

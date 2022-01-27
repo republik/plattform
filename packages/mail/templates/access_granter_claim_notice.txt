@@ -1,0 +1,14 @@
+Guten Tag
+
+Der von Ihnen vermittelte Republik-Testzugang wurde soeben von
+{{recipient_name}} eingelöst.
+
+Herzlichen Dank für Ihre Vermittlungsarbeit!
+
+Ihre Crew der Republik
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+{{frontend_base_url}}
+kontakt@republik.ch
