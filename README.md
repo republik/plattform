@@ -102,9 +102,11 @@ All apps and the styleguide provide an `.env.example`, the provided default valu
 
 ```bash
 cp apps/www/.env.example apps/www/.env 
+cp apps/publikator/.env.example apps/publikator/.env 
+cp apps/admin/.env.example apps/admin/.env
+
 cp apps/api/.env.example apps/api/.env 
 cp apps/assets/.env.example apps/assets/.env 
-# cp packages/styleguide/.env.example packages/styleguide/.env
 ```
 
 <details><summary>Migrating from Individual Repos</summary>
@@ -114,6 +116,10 @@ You may copyover your environment from the individual repos with one manual edit
 
 ```bash
 cp ../republik-frontend/.env apps/www/.env
+cp ../publikator-frontend/.env apps/publikator/.env
+cp ../republik-admin-frontend/.env apps/admin/.env
+
+cp ../styleguide/.env packages/styleguide/.env
 
 cp ../backends/.env apps/api/.env
 echo "PORT=5010" >> apps/api/.env
@@ -141,3 +147,5 @@ To develop all apps and packages, run the following command:
 ```
 yarn dev
 ```
+
+Please be patient on boot. It might take a minute for everything to compile and a few nodemon restarts before everything runs smoothly.

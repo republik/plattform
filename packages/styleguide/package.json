@@ -81,6 +81,7 @@
     "gsheets": "^3.0.1",
     "husky": "^7.0.4",
     "isomorphic-unfetch": "^3.1.0",
+    "jest": "24.9.0",
     "lint-staged": "^11.2.6",
     "lodash": "^4.17.21",
     "mdast-react-render": "^1.1.0",

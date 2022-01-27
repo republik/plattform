@@ -32,6 +32,7 @@
     "isomorphic-unfetch": "^3.0.0",
     "lodash": "^4.17.19",
     "moment": "^2.26.0",
+    "node-fetch": "^3.2.0",
     "openpgp": "^4.10.4",
     "remark-breaks": "^1.0.5",
     "remark-parse": "^8.0.2",

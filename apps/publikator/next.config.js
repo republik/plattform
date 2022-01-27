@@ -1,4 +1,6 @@
-module.exports = {
+const withTM = require('next-transpile-modules')(['@project-r/styleguide'])
+
+module.exports = withTM({
   webpack: config => {
     const alias = Object.assign({}, config.resolve.alias)
     delete alias.url
@@ -10,4 +12,4 @@ module.exports = {
     return config
   },
   poweredByHeader: false
-}
+})
