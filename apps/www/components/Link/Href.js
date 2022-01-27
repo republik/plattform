@@ -1,0 +1,18 @@
+import React from 'react'
+import AreaLink from './Area'
+import Link from 'next/link'
+
+const HrefLink = ({ href, passHref, children }) => {
+  if (!href) {
+    return children
+  }
+
+  const Component = passHref ? Link : AreaLink
+
+  return (
+    <Component href={href} passHref={passHref} prefetch={false}>
+      {children}
+    </Component>
+  )
+}
+export default HrefLink

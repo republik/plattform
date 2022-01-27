@@ -1,0 +1,308 @@
+{
+  "data": [
+    {
+      "key": "info/description",
+      "value": "Urabstimmung der Project R Genossenschaft"
+    },
+    {
+      "key": "info/title",
+      "value": "Ihre Stimme für Project R!"
+    },
+    {
+      "key": "info/candidacy/previewLabel",
+      "value": "So erscheint Ihre Kandidatur auf der Wahlplattform:"
+    },
+    {
+      "key": "info/candidacy/previewTitle",
+      "value": "Vorschau"
+    },
+    {
+      "key": "info/candidacy/candidacyTitle",
+      "value": "Kandidatur"
+    },
+    {
+      "key": "info/candidacy/finePrint",
+      "value": "Die Mitglieder von Project R sehen später auf der Wahlplattform, was in der Vorschau angezeigt wird.\nDas Statement wird ausserdem unter Ihrem Namen in der Wahldebatte angezeigt und ist dort für alle Mitglieder sichtbar.\nGeburtsdatum, Strasse und Hausnummer sind nur für die Administration von Project R und der «Republik»\neinsehbar."
+    },
+    {
+      "key": "info/candidacy/missingFields",
+      "value": "Bitte füllen Sie alle obligatorischen Felder aus:"
+    },
+    {
+      "key": "info/candidacy/saveChanges",
+      "value": "Änderungen speichern"
+    },
+    {
+      "key": "info/candidacy/sumbitCandidacy",
+      "value": "Kandidatur abschicken"
+    },
+    {
+      "key": "info/footer",
+      "value": "Sie können Ihre Kandidatur bis zum {endDate} jederzeit bearbeiten."
+    },
+    {
+      "key": "info/candidacy/confirmation",
+      "value": "Ihre Kandidatur ist registriert. Vielen Dank für Ihr Engagement!"
+    },
+    {
+      "key": "info/candidacy/edit",
+      "value": "Kandidatur bearbeiten"
+    },
+    {
+      "key": "info/candidacy/delete",
+      "value": "Kandidatur löschen"
+    },
+    {
+      "key": "info/candidacy/biography",
+      "value": "Steckbrief (Stellen Sie sich in Kürze vor)"
+    },
+    {
+      "key": "info/candidacy/biographyMissing",
+      "value": "Steckbrief fehlt"
+    },
+    {
+      "key": "info/candidacy/statement",
+      "value": "Statement (Ihre Motivation für diese Kandidatur)"
+    },
+    {
+      "key": "info/candidacy/statementMissing",
+      "value": "Statement fehlt"
+    },
+    {
+      "key": "info/candidacy/credential",
+      "value": "Funktion (Tätigkeit, Beruf, Amt)"
+    },
+    {
+      "key": "info/candidacy/credentialMissing",
+      "value": "Funktion fehlt"
+    },
+    {
+      "key": "info/candidacy/notEligable",
+      "value": "Eine Mitgliedschaft in der Project R Genossenschaft ist Bedingung für eine Kandidatur. Wenn Sie ein Jahresabo der «Republik» haben, sind Sie automatisch Mitglied in der Genossenschaft."
+    },
+    {
+      "key": "vote/candidacy/tooLate",
+      "value": "Die Anmeldefrist für diese Wahl ist leider abgelaufen."
+    },
+    {
+      "key": "vote/members/recommendation",
+      "value": "Wahlempfehlung übernehmen"
+    },
+    {
+      "key": "vote/common/continue",
+      "value": "Weiter"
+    },
+    {
+      "key": "vote/common/back",
+      "value": "Zurück"
+    },
+    {
+      "key": "vote/common/reset",
+      "value": "Zurücksetzen"
+    },
+    {
+      "key": "vote/election/thankyou",
+      "value": "Ihre Wahl ist am {submissionDate} bei uns eingegangen. Danke für Ihre Teilnahme!"
+    },
+    {
+      "key": "vote/election/votesAvailable",
+      "value": "Sie haben {count} Stimmen zu verteilen."
+    },
+    {
+      "key": "vote/election/votesRemaining",
+      "value": "{count} von {max} Stimmen sind noch leer."
+    },
+    {
+      "key": "vote/election/noVotesRemaining",
+      "value": "Sie haben alle Ihre Stimmen verteilt."
+    },
+    {
+      "key": "vote/election/legendStar",
+      "value": "von Project R zur Wahl empfohlen"
+    },
+    {
+      "key": "vote/election/legendHeart",
+      "value": "Ihre Wahl für das Präsidium"
+    },
+    {
+      "key": "vote/election/legendIncumbent",
+      "value": ": Genossenschaftsrat 18-21"
+    },
+    {
+      "key": "vote/election/labelConfirm",
+      "value": "Wählen"
+    },
+    {
+      "key": "vote/election/labelConfirmCount/0",
+      "value": "Wollen Sie leer einlegen?"
+    },
+    {
+      "key": "vote/election/labelConfirmCount/1",
+      "value": "Sie haben nur eine von Ihren {numSeats} Stimmen verteilt – wollen Sie die übrigen {remaining} leer einlegen?"
+    },
+    {
+      "key": "vote/election/labelConfirmCount/other",
+      "value": "Sie haben erst {count} von {numSeats} Stimmen verteilt – wollen Sie die übrigen {remaining} leer einlegen?"
+    },
+    {
+      "key": "vote/election/labelConfirmAll/1",
+      "value": "Wollen Sie der ausgewählten Person Ihre Stimme geben?"
+    },
+    {
+      "key": "vote/election/labelConfirmAll/other",
+      "value": "Wollen Sie den ausgewählten {numSeats} Person Ihre Stimme geben?"
+    },
+    {
+      "key": "vote/election/confirmRecommendation",
+      "value": "Wollen Sie Ihre Wahl durch die Empfehlung ersetzen?"
+    },
+    {
+      "key": "vote/election/recommendation",
+      "value": "Empfehlung von Project R:"
+    },
+    {
+      "key": "vote/election/discussion",
+      "value": "Diskussion"
+    },
+    {
+      "key": "vote/election/confirm/header",
+      "value": "Wie repräsentativ ist Ihre Auswahl?\n"
+    },
+    {
+      "key": "vote/election/confirm/gender/header",
+      "value": "Geschlechterverhältnis"
+    },
+    {
+      "key": "vote/election/confirm/age/header",
+      "value": "Altersgruppen"
+    },
+    {
+      "key": "vote/voting/labelVote",
+      "value": "Abstimmen"
+    },
+    {
+      "key": "vote/voting/confirmAnswer",
+      "value": "Mit {answer} stimmen?"
+    },
+    {
+      "key": "vote/voting/confirmEmpty",
+      "value": "Leer einlegen?"
+    },
+    {
+      "key": "vote/voting/thankyou",
+      "value": "Ihre Stimme ist am {submissionDate} bei uns eingegangen.\nDanke für Ihre Teilnahme!"
+    },
+    {
+      "key": "vote/voting/empty/error",
+      "value": "Sie dürfen nicht leer einlegen."
+    },
+    {
+      "key": "vote/common/help/blank",
+      "value": "Sie können auch leer einlegen."
+    },
+    {
+      "key": "vote/common/help/final",
+      "value": "Eingelegte Stimmen sind definitiv."
+    },
+    {
+      "key": "vote/voting/optionYES",
+      "value": "Ja"
+    },
+    {
+      "key": "vote/voting/optionNO",
+      "value": "Nein"
+    },
+    {
+      "key": "vote/discussion/title",
+      "value": "Fragen Sie!"
+    },
+    {
+      "key": "vote/discussion/intro",
+      "value": "Im Zeitraum der <a target=\"_blank\" href='/vote/genossenschaft'>Urabstimmung</A> vom 17. bis zum 28. Oktober fanden drei Debatten statt.\n\nWas möchten Sie von Ihren Kandidatinnen und Kandidaten für den Genossenschaftsrat wissen? Stellen Sie Ihre Fragen unter <strong>Genossenschaftsrat</strong>.\n\nMöchten Sie mit den Kandidatinnen und dem Kandidaten für das Präsidium des Genossenschaftsrats ins Gespräch kommen? Dafür finden sie unten die Debatte <strong>Präsidium</strong>.\n\nAlle anderen Fragen zu den Abstimmungen und Wahlen beantwortet Ihnen gerne die <strong>Project-R-Crew</strong>."
+    },
+    {
+      "key": "common/missingUsername",
+      "value": "Profil URL fehlt"
+    },
+    {
+      "key": "common/missingAddressBody",
+      "value": "Um an der Urabstimmung teilnehmen zu können, bitten wir Sie, uns Ihre Adresse anzugeben. Danke!"
+    },
+    {
+      "key": "vote/voting/notSignedIn",
+      "value": "Um an dieser Abstimmung teilnehmen zu können, müssen Sie sich anmelden und eine Jahresmitgliedschaft haben, die vor dem {beginDate} begonnen hat."
+    },
+    {
+      "key": "vote/voting/notEligible",
+      "value": "Bitte entschuldigen Sie. An dieser Abstimmung können nur Personen teilnehmen, die vor dem Abstimmungsbeginn eine Jahresmitgliedschaft erworben haben."
+    },
+    {
+      "key": "vote/voting/ended",
+      "value": "Die Urnen sind geschlossen. Sie können nicht mehr abstimmen."
+    },
+    {
+      "key": "vote/election/notSignedIn",
+      "value": "Um an dieser Wahl teilnehmen zu können, müssen Sie sich anmelden und eine Jahresmitgliedschaft haben, die vor dem {beginDate} begonnen hat."
+    },
+    {
+      "key": "vote/election/notEligible",
+      "value": "Bitte entschuldigen Sie. An dieser Wahl können nur Personen teilnehmen, die vor dem Wahlsbeginn eine Jahresmitgliedschaft erworben haben."
+    },
+    {
+      "key": "vote/election/ended",
+      "value": "Die Urnen sind geschlossen. Sie können nicht mehr wählen."
+    },
+    {
+      "key": "vote/ended",
+      "value": "Guten Tag. Die Urnen sind geschlossen. Die Resultate der Urabstimmung finden Sie in wenigen Tagen hier."
+    },
+    {
+      "key": "vote/sm/title",
+      "value": "Project R hat abgestimmt: Das sind die Resultate"
+    },
+    {
+      "key": "vote/sm/description",
+      "value": "Danke an alle, die sich am demokratischen Experiment beteiligt haben."
+    },
+    {
+      "key": "vote/votes",
+      "value": "{formattedCount} Stimmen"
+    },
+    {
+      "key": "vote/voting/turnout/withEmpty",
+      "value": "Stimmbeteiligung: {formattedPercent}. Es sind {formattedCount} Stimmen eingegangen, davon {formattedEmptyCount} leer."
+    },
+    {
+      "key": "vote/voting/turnout/withoutEmpty",
+      "value": "Stimmbeteiligung: {formattedPercent}. Es sind {formattedCount} Stimmen eingegangen."
+    },
+    {
+      "key": "vote/voting/winner/YES",
+      "value": "Die Vorlage wurde angenommen."
+    },
+    {
+      "key": "vote/voting/winner/NO",
+      "value": "Die Vorlage wurde abgelehnt."
+    },
+    {
+      "key": "vote/election/elected/1",
+      "value": "Gewählt ist"
+    },
+    {
+      "key": "vote/election/elected/other",
+      "value": "Gewählt sind"
+    },
+    {
+      "key": "vote/election/notElected/1",
+      "value": "Nicht gewählt ist"
+    },
+    {
+      "key": "vote/election/notElected/other",
+      "value": "Nicht gewählt sind"
+    },
+    {
+      "key": "vote/election/turnout",
+      "value": "Wahlbeteiligung: {formattedPercent}. Es sind {formattedCount} Stimmen eingegangen, davon {formattedEmptyCount} leer."
+    }
+  ]
+}

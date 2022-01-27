@@ -1,0 +1,66 @@
+{
+  "name": "republik-frontend",
+  "scripts": {},
+  "env": {
+    "API_URL": "",
+    "API_WS_URL": "",
+    "PAYPAL_BUSINESS": "",
+    "PAYPAL_DONATE_LINK": "",
+    "PAYPAL_FORM_ACTION": "",
+    "PF_FORM_ACTION": "",
+    "PF_PSPID": "",
+    "MATOMO_SITE_ID": "",
+    "MATOMO_URL_BASE": "",
+    "PUBLIC_BASE_URL": "",
+    "STRIPE_PUBLISHABLE_KEY": "",
+    "ASSETS_SERVER_BASE_URL": {
+      "required": true
+    },
+    "CDN_FRONTEND_BASE_URL": {
+      "required": true
+    },
+    "CROWDFUNDING_NAME": {
+      "required": true
+    },
+    "DISCUSSION_POLL_INTERVAL_MS": {
+      "required": true
+    },
+    "ERROR_PAGE_URL": {
+      "required": true
+    },
+    "MAINTENANCE_PAGE_URL": {
+      "required": true
+    },
+    "SG_BRAND_MARK_PATH": {
+      "required": true
+    },
+    "SG_BRAND_MARK_VIEWBOX": {
+      "required": true
+    },
+    "SG_COLORS": {
+      "required": true
+    },
+    "SG_FONT_FACES": {
+      "required": true
+    },
+    "SG_FONT_FAMILIES": {
+      "required": true
+    },
+    "SG_LOGO_PATH": {
+      "required": true
+    },
+    "SG_LOGO_VIEWBOX": {
+      "required": true
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}

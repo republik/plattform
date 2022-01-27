@@ -1,0 +1,46 @@
+{
+  "plugins": [
+    "markdown-in-js/babel"
+  ],
+  "env": {
+    "development": {
+      "presets": [
+        [
+          "next/babel",
+          {
+            "preset-env": {
+              "targets": "defaults, IE 11, iOS 9"
+            }
+          }
+        ]
+      ]
+    },
+    "production": {
+      "presets": [
+        [
+          "next/babel",
+          {
+            "preset-env": {
+              "targets": "defaults, IE 11, iOS 9"
+            }
+          }
+        ]
+      ]
+    },
+    "test": {
+      "presets": [
+        [
+          "next/babel",
+          {
+            "preset-env": {
+              "modules": "commonjs",
+              "targets": {
+                "node": true
+              }
+            }
+          }
+        ]
+      ]
+    }
+  }
+}
