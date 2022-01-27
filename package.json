@@ -1,24 +1,57 @@
 {
-  "name": "turborepo-basic-shared",
+  "name": "republik-plattform",
   "version": "0.0.0",
   "private": true,
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "packages/backend-modules/*"
   ],
   "scripts": {
-    "build": "turbo run build",
+    "start": "scripts/start.sh",
+    "start:scheduler": "cd apps/api && yarn start:scheduler",
+    "build": "scripts/build.sh",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "heroku-postbuild": "scripts/heroku-postbuild.sh",
+    "dev:setup": "yarn migrate:db:create && yarn migrate:up && yarn migrate:db:import && yarn pull:elasticsearch --flush && yarn populate",
+    "pull:elasticsearch": "packages/backend-modules/search/script/pullElasticsearch.js",
+    "pull:images": "packages/backend-modules/publikator/script/copyImages.js",
+    "populate:membershipStats:evolution": "packages/backend-modules/republik/script/MembershipStats/evolution/populate.js",
+    "populate:membershipStats:lastSeen": "packages/backend-modules/republik/script/MembershipStats/lastSeen/populate.js",
+    "populate:membershipStats:ages": "packages/backend-modules/republik/script/MembershipStats/ages/populate.js",
+    "populate:membershipStats:names": "packages/backend-modules/republik/script/MembershipStats/names/populate.js",
+    "populate:membershipStats:geo": "packages/backend-modules/republik/script/MembershipStats/geo/populate.js",
+    "populate:membershipStats:geoCities": "packages/backend-modules/republik/script/MembershipStats/geoCities/populate.js",
+    "populate:revenueStats:segments": "packages/backend-modules/republik/script/RevenueStats/segments/populate.js",
+    "populate:collections:evolution": "packages/backend-modules/collections/script/stats/evolution.js",
+    "populate:collections:last": "packages/backend-modules/collections/script/stats/last.js",
+    "populate:discussions:evolution": "packages/backend-modules/discussions/script/stats/evolution.js",
+    "populate:discussions:last": "packages/backend-modules/discussions/script/stats/last.js",
+    "populate": "yarn populate:membershipStats:evolution; yarn populate:membershipStats:lastSeen; yarn populate:membershipStats:ages; yarn populate:membershipStats:names; yarn populate:membershipStats:geo; yarn populate:membershipStats:geoCities; yarn populate:revenueStats:segments; yarn populate:collections:evolution; yarn populate:collections:last; yarn populate:discussions:evolution; yarn populate:discussions:last;",
+    "migrate:db:create": "packages/backend-modules/migrations/script/db/create.js",
+    "migrate:db:import": "packages/backend-modules/migrations/script/db/import.js",
+    "migrate:create": "packages/backend-modules/migrations/script/create.js",
+    "migrate:up": "DOTENV_CONFIG_PATH=apps/api/.env NODE_OPTIONS='-r dotenv/config' db-migrate up --migrations-dir packages/backend-modules/migrations/migrations",
+    "migrate:down": "DOTENV_CONFIG_PATH=apps/api/.env NODE_OPTIONS='-r dotenv/config' db-migrate down --migrations-dir packages/backend-modules/migrations/migrations --verbose",
+    "db:seed": "packages/backend-modules/republik-crowdfundings/seeds/script/seed.js",
+    "notifications:send": "cd packages/backend-modules/republik && node ../push-notifications/script/sendNotification.js",
+    "auth:role:user": "node packages/backend-modules/auth/script/roleUser",
+    "auth:role:users": "node packages/backend-modules/auth/script/roleUsers"
   },
   "devDependencies": {
     "prettier": "^2.5.1",
     "turbo": "latest"
   },
+  "cacheDirectories": [
+    "node_modules",
+    "packages/styleguide/.turbo",
+    "apps/www/.turbo",
+    "apps/publikator/.turbo",
+    "apps/admin/.turbo"
+  ],
   "engines": {
-    "npm": ">=7.0.0",
-    "node": ">=14.0.0"
-  },
-  "packageManager": "yarn@1.22.10"
+    "node": "^14.4.0"
+  }
 }

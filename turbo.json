@@ -1,8 +1,23 @@
 {
   "pipeline": {
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**"]
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "dist/**",
+        ".next/**"
+      ]
+    },
+    "styleguide#build": {
+      "dependsOn": [
+        "^build",
+        "$SERVER"
+      ],
+      "outputs": [
+        "dist/**",
+        "build/**"
+      ]
     },
     "lint": {
       "outputs": []
@@ -10,5 +25,8 @@
     "dev": {
       "cache": false
     }
-  }
+  },
+  "globalDependencies": [
+    ".env.*"
+  ]
 }

@@ -18,7 +18,7 @@
       "src": "/",
       "status": 302,
       "headers": {
-        "Location": "/screenshot?url=https://github.com/orbiting/backends/tree/master/lambdas/chromium"
+        "Location": "/screenshot?url=https://github.com/republik/plattform/tree/master/lambdas/chromium"
       }
     }
   ]

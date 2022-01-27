@@ -1,40 +1,137 @@
-# Turborepo starter
+# Republik Plattform
 
-This is an official Yarn v1 starter turborepo.
+The platform that powers republik.ch. A tailored solution for a membership based online magazine.
 
 ## What's inside?
 
-This turborepo uses [Yarn](https://classic.yarnpkg.com/lang/en/) as a package manager. It includes the following packages/apps:
+This turborepo uses [Yarn](https://classic.yarnpkg.com/lang/en/) as a package manager. It includes the following apps and packages:
 
-### Apps and Packages
+### Apps
 
-- `docs`: a [Next.js](https://nextjs.org) app
-- `web`: another [Next.js](https://nextjs.org) app
-- `ui`: a stub React component library shared by both `web` and `docs` applications
-- `config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `tsconfig`: `tsconfig.json`s used throughout the monorepo
+- `www`: providing the public frontend
+- `publikator`: providing publication management interface
+- `admin`: providing the customer management interface
+- `api`: providing the graphql api
+- `assets`: fetching, compressing and resizing assets
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+The frontends are Next.js apps, the backends use Express.js. 
+
+### Packages
+
+- `styleguide`: a React component library shared by all frontends and used by the `api` to render newsletters
+- `backend-modules/*`: packages used by the `api` and `assets` server
+
+All packages and apps support [TypeScript](https://www.typescriptlang.org/) and plain ECMAScript.
 
 ### Utilities
 
 This turborepo has some additional tools already setup for you:
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
 - [ESLint](https://eslint.org/) for code linting
+- [Jest](https://jestjs.io) test runner for all things JavaScript
 - [Prettier](https://prettier.io) for code formatting
 
 ## Setup
 
-This repository is used in the `npx create-turbo` command, and selected when choosing which package manager you wish to use with your monorepo (Yarn).
+To get started you'll need:
 
-### Build
+- yarn v1.22
+- Node.js v14.4
+- Docker or native postgresql@12, elasticsearch@6 and redis
 
-To build all apps and packages, run the following command:
+<details><summary>Setup with Docker</summary>
+<p>
+
+The included [docker-compose.yml](docker-compose.yml) starts all external-services. Currently that's: postgresql, redis, elasticsearch (and kibana).
+
+The data is persisted in `./docker-data/`.
 
 ```
-cd my-turborepo
-yarn run build
+docker-compose up [-d]
+```
+
+##### Postgresql in docker
+
+We recommend you install the postgresql client tools on your machine to interact with the database. The tests scripts also depend on the clients being installed.
+
+```
+# linux
+sudo apt install postgresql-client-12
+```
+
+When postgresql in running in docker client tools like `psql` or `createdb`/`dropdb` don't automatically connect to it. They try to access postgresql via a local socket, when instead you want them to connect via network to localhost. To make your life easier, you can add the following environment variables to `~/.bashrc` / `~/.zshrc` so the client tools connect to localhost per default.
+
+```
+export PGHOST=127.0.0.1
+export PGUSER=postgres
+```
+
+</p>
+</details>
+
+<details><summary>Native Setup with Homebrew</summary>
+<p>
+
+```
+brew install postgresql@12 elasticsearch@6 redis nvm
+nvm install 14
+nvm alias default 14
+npm install -g yarn@1.22
+brew services start postgresql@12
+brew services start elasticsearch@6
+brew services start redis
+```
+
+#### Docker Kibana accessing native Elasticsearch
+
+```bash
+docker run -p 5601:5601 -e ELASTICSEARCH_HOSTS=http://host.docker.internal:9200 docker.elastic.co/kibana/kibana-oss:6.7.0
+```
+
+Note:
+
+- Elasticsearch and Kibana versions must match, ckeck ES version at `http://localhost:9200/`
+- `ELASTICSEARCH_HOSTS` must be accessible [within docker](https://nickjanetakis.com/blog/docker-tip-65-get-your-docker-hosts-ip-address-from-in-a-container).
+
+</p>
+</details>
+
+### Env
+
+All apps and the styleguide provide an `.env.example`, the provided default values should be enough to get started:
+
+```bash
+cp apps/www/.env.example apps/www/.env 
+cp apps/api/.env.example apps/api/.env 
+cp apps/assets/.env.example apps/assets/.env 
+# cp packages/styleguide/.env.example packages/styleguide/.env
+```
+
+<details><summary>Migrating from Individual Repos</summary>
+<p>
+
+You may copyover your environment from the individual repos with one manual edit:
+
+```bash
+cp ../republik-frontend/.env apps/www/.env
+
+cp ../backends/.env apps/api/.env
+echo "PORT=5010" >> apps/api/.env
+
+cp ../backends/servers/assets/.env apps/assets/.env
+```
+
+</p>
+</details>
+
+For more about the available env variables see the individual readme of the apps.
+
+### Database Setup
+
+```
+yarn install
+yarn build
+yarn dev:setup
 ```
 
 ### Develop
@@ -42,36 +139,5 @@ yarn run build
 To develop all apps and packages, run the following command:
 
 ```
-cd my-turborepo
-yarn run dev
+yarn dev
 ```
-
-### Remote Caching
-
-Turborepo can use a technique known as [Remote Caching (Beta)](https://turborepo.org/docs/features/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching (Beta) you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Pipelines](https://turborepo.org/docs/features/pipelines)
-- [Caching](https://turborepo.org/docs/features/caching)
-- [Remote Caching (Beta)](https://turborepo.org/docs/features/remote-caching)
-- [Scoped Tasks](https://turborepo.org/docs/features/scopes)
-- [Configuration Options](https://turborepo.org/docs/reference/configuration)
-- [CLI Usage](https://turborepo.org/docs/reference/command-line-reference)
