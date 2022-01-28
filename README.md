@@ -172,3 +172,11 @@ Scope is optional.
 > The body should include the motivation for the change and contrast this with previous behavior.
 
 > The footer should contain any information about Breaking Changes and is also the place to reference GitHub issues that this commit Closes.
+
+## Deployment
+
+The environment variable `SERVER` is used to determine which app to build and run on deploy. If `SERVER` is missing the api app is run.
+
+A `heroku-postbuild` script is used to add a `Procfile` for running the scheduler on heroku.
+
+You may use a `heroku-prebuild` script to run `scripts/prune.sh` which runs `turbo prune` with the correct scope. Watch out running this locally will wipe your `.env` files and create a git mess.
