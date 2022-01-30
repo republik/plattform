@@ -14,9 +14,16 @@
   },
   "homepage": "https://github.com/orbiting/backends#readme",
   "scripts": {
-    "link": "yarn link"
+    "test": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit --testPathPattern \"\\.(u)|(unit)\\.jest\"",
+    "test:all": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit",
+    "test:integration": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit --testPathPattern \"\\.(int)|(integration)\\.jest\"",
+    "test:dev": "yarn test:unit --watch",
+    "test:cover": "TZ=Europe/Amsterdam jest --collectCoverage --detectOpenHandles --forceExit",
+    "test:reportCover": "cat ./coverage/lcov.info | coveralls"
   },
   "devDependencies": {
+    "jest": "^26.0.1",
+    "jest-environment-node": "^26.0.1",
     "subscriptions-transport-ws": "^0.9.16",
     "why-is-node-running": "^2.1.2"
   },

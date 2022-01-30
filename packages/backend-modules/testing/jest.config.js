@@ -24,7 +24,7 @@ module.exports = {
   // collectCoverageFrom: null,
 
   // The directory where Jest should output its coverage files
-  coverageDirectory: 'tests/coverage',
+  coverageDirectory: '<rootDir>/testing/coverage',
 
   // An array of regexp pattern strings used to skip coverage collection
   coveragePathIgnorePatterns: ['/node_modules/'],
@@ -110,7 +110,7 @@ module.exports = {
   // restoreMocks: false,
 
   // The root directory that Jest should scan for tests and modules within
-  rootDir: './',
+  rootDir: '../',
 
   // A list of paths to directories that Jest should use to search for files in
   /* roots: [
@@ -125,7 +125,7 @@ module.exports = {
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
   setupFilesAfterEnv: [
-    '<rootDir>/packages/test/jest/setupTestFrameworkScriptFile.js',
+    '<rootDir>/testing/jest/setupTestFrameworkScriptFile.js',
   ],
 
   // A list of paths to snapshot serializer modules Jest should use for snapshot testing
