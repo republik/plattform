@@ -1,7 +1,8 @@
 import { UserRow } from '../loaders/User'
+
 const naming = require('@orbiting/backend-modules-utils/naming')
 
-interface User {
+export interface UserTransformed {
   id: string
   username: string
   firstName: string
@@ -18,13 +19,13 @@ interface User {
   [key: string]: any
 }
 
-export = (user: UserRow | User, additionalFields = {}): User | null => {
+const transformUser = (user: UserRow | UserTransformed, additionalFields = {}): UserTransformed | null => {
   if (!user) {
     return null
   }
   if ('_raw' in user) {
     return {
-      ...(user as User),
+      ...(user as UserTransformed),
       ...additionalFields,
     }
   }
@@ -47,3 +48,5 @@ export = (user: UserRow | User, additionalFields = {}): User | null => {
     ...additionalFields,
   }
 }
+
+export default transformUser

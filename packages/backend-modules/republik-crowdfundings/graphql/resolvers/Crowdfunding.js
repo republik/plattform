@@ -1,39 +1,13 @@
-const { ascending } = require('d3-array')
+const { getPackages } = require('../../lib/User')
 
 module.exports = {
-  async packages(crowdfunding, args, { pgdb }) {
-    const now = new Date()
-
-    const packages = await pgdb.public.packages.find(
-      { crowdfundingId: crowdfunding.id, custom: false },
-      { orderBy: { order: 'asc' } },
-    )
-
-    const packageOptions = await pgdb.public.packageOptions.find(
-      {
-        packageId: packages.map((p) => p.id),
-        and: [
-          { or: [{ 'disabledAt >': now }, { disabledAt: null }] },
-          { or: [{ 'hiddenAt >': now }, { hiddenAt: null }] },
-        ],
-      },
-      { orderBy: { order: 'asc' } },
-    )
-
-    return packages
-      .map((package_) => ({
-        ...package_,
-        options: packageOptions
-          .filter((po) => po.packageId === package_.id)
-          .map((option) => ({
-            ...option,
-            templateId: option.id,
-            package: package_,
-          }))
-          .sort((a, b) => ascending(a.order, b.order)),
-      }))
-      .filter((package_) => package_.options.length > 0)
-      .sort((a, b) => ascending(a.order, b.order))
+  packages(crowdfunding, args, { user, pgdb }) {
+    return getPackages({
+      crowdfunding,
+      pledger: user, // miiight be empty
+      custom: false,
+      pgdb,
+    })
   },
   async goals(crowdfunding, args, { pgdb }) {
     return pgdb.public.crowdfundingGoals.find(

@@ -31,7 +31,7 @@ module.exports = {
       .join('')
   },
   roles(user, args, { user: me }) {
-    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+    if (Roles.userIsMeOrInRoles(user, me, DEFAULT_USER_ACCESS_ROLES)) {
       return user.roles.filter((role) => Roles.exposableRoles.includes(role))
     }
     return []
@@ -48,7 +48,7 @@ module.exports = {
     return user._raw.deletedAt
   },
   enabledSecondFactors(user, args, { user: me }) {
-    if (Roles.userIsMeOrInRoles(user, me, ['supporter'])) {
+    if (Roles.userIsMeOrInRoles(user, me, DEFAULT_USER_ACCESS_ROLES)) {
       return user._raw.enabledSecondFactors
     }
     return []

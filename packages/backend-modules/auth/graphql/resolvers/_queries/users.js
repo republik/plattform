@@ -1,5 +1,5 @@
 const Roles = require('../../../lib/Roles')
-const transformUser = require('../../../lib/transformUser')
+const transformUser = require('../../../lib/transformUser').default
 
 module.exports = async (
   _,

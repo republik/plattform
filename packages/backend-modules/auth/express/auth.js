@@ -1,7 +1,7 @@
 const session = require('express-session')
 const PgSession = require('connect-pg-simple')(session)
 
-const transformUser = require('../lib/transformUser')
+const transformUser = require('../lib/transformUser').default
 const basicAuthMiddleware = require('./basicAuth')
 const { specialRoles, userIsInRoles } = require('../lib/Roles')
 

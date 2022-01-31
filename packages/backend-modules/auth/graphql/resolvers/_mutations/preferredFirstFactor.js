@@ -1,7 +1,7 @@
 const Roles = require('../../../lib/Roles')
 const ensureSignedIn = require('../../../lib/ensureSignedIn')
 const { setPreferredFirstFactor } = require('../../../lib/Users')
-const transformUser = require('../../../lib/transformUser')
+const transformUser = require('../../../lib/transformUser').default
 
 const { resolveUser, UserNotFoundError } = require('../../../lib/Users')
 

@@ -5,7 +5,7 @@ const {
 } = require('@orbiting/backend-modules-utils')
 
 const createCharge = require('./payments/stripe/createCharge')
-const { getCustomPackages } = require('./User')
+const { getPackages } = require('./User')
 const { getLastEndDate } = require('./utils')
 const createCache = require('./cache')
 
@@ -24,19 +24,16 @@ const suggest = async (membershipId, pgdb) => {
   }
 
   // load a bunch of stuff we'r going to need later
-  const [
-    membershipPeriods,
-    relatedPledgeOptions,
-    membershipTypes,
-  ] = await Promise.all([
-    pgdb.public.membershipPeriods.find({
-      membershipId: membership.id,
-    }),
-    pgdb.public.pledgeOptions.find({
-      or: [{ membershipId }, { pledgeId: membership.pledgeId }],
-    }),
-    pgdb.public.membershipTypes.findAll(),
-  ])
+  const [membershipPeriods, relatedPledgeOptions, membershipTypes] =
+    await Promise.all([
+      pgdb.public.membershipPeriods.find({
+        membershipId: membership.id,
+      }),
+      pgdb.public.pledgeOptions.find({
+        or: [{ membershipId }, { pledgeId: membership.pledgeId }],
+      }),
+      pgdb.public.membershipTypes.findAll(),
+    ])
 
   if (relatedPledgeOptions.length < 1) {
     return false
@@ -120,9 +117,9 @@ const suggest = async (membershipId, pgdb) => {
 
   // Pick package and options which may be used to submit and autopayment
   const user = await pgdb.public.users.findOne({ id: membership.userId })
-  const prolongPackage = (await getCustomPackages({ user, pgdb })).find(
-    (p) => p.name === 'PROLONG',
-  )
+  const prolongPackage = (
+    await getPackages({ pledger: user, custom: true, pgdb })
+  ).find((p) => p.name === 'PROLONG')
 
   const prolongOption =
     prolongPackage &&
@@ -181,13 +178,8 @@ const prolong = async (membershipId, pgdb, redis, t) => {
     // paymentMethod takes precedence over source
     // func suggest above expects this order
     if (suggestion.defaultPaymentMethod) {
-      const {
-        userId,
-        companyId,
-        defaultPaymentMethod,
-        total,
-        pledgeId,
-      } = suggestion
+      const { userId, companyId, defaultPaymentMethod, total, pledgeId } =
+        suggestion
       const paymentIntent = await createPaymentIntent({
         userId,
         companyId,

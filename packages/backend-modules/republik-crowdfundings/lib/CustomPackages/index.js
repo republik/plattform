@@ -7,7 +7,9 @@ const { ascending, descending } = require('d3-array')
 const {
   applyPgInterval: { add: addInterval },
 } = require('@orbiting/backend-modules-utils')
+const { timeFormat } = require('@orbiting/backend-modules-formats')
 
+const dateFormat = timeFormat('%x')
 const { getPeriodEndingLast, getLastEndDate } = require('../utils')
 const rules = require('./rules')
 
@@ -91,7 +93,7 @@ const hasDormantMembership = ({ user, memberships }) => {
 /**
  * Evalutes whether a (resolved) package and some packageOption may be applicable
  * to a membership.
- * 
+ *
  * It returns a filtered and sorted array w/ packageOptions.
  */
 const evaluate = async ({
@@ -107,6 +109,12 @@ const evaluate = async ({
   if (!membership.id) {
     return {
       ...packageOption,
+      suggestions: packageOption.suggestions?.map((suggestion, index) => {
+        return {
+          ...suggestion,
+          ref: [package_.id, packageOption.id, index].join('/'),
+        }
+      }),
       templateId: packageOption.id,
       package: package_,
       membership: null,
@@ -121,6 +129,12 @@ const evaluate = async ({
     ...packageOption,
     ...(packageOption.reward?.type === 'MembershipType' && {
       id: [packageOption.id, membership.id].join('-'),
+    }),
+    suggestions: packageOption.suggestions?.map((suggestion, index) => {
+      return {
+        ...suggestion,
+        ref: [package_.id, packageOption.id, index].join('/'),
+      }
     }),
     templateId: packageOption.id,
     package: package_,
@@ -226,6 +240,8 @@ const evaluate = async ({
       ...beginEnd,
     })
 
+    const isOwnMembership = membership.userId === package_.user.id
+
     const isSameRewardId =
       packageOption.rewardId ===
       (latestPeriod.pledgeOption?.packageOption?.rewardId ||
@@ -240,7 +256,6 @@ const evaluate = async ({
       payload.suggestedPrice = suggestedPrice
     }
 
-    const isOwnMembership = membership.userId === package_.user.id
     // If membership stems from ABO_GIVE_MONTHS package, default ABO option
     if (
       isOwnMembership &&
@@ -282,11 +297,116 @@ const evaluate = async ({
   if (packageOption.reward?.type !== 'MembershipType') {
     return {
       ...packageOption,
-      templateId: packageOption.id
+      suggestions: packageOption.suggestions?.map((suggestion, index) => {
+        return {
+          ...suggestion,
+          ref: [package_.id, packageOption.id, index].join('/'),
+        }
+      }),
+      templateId: packageOption.id,
     }
   }
 
   return payload
+}
+
+const createSuggestionMap = (package) => (option, index, options) => {
+  const { membership, reward, suggestions: suggestions_, optionGroup } = option
+
+  const suggestions = [...suggestions_]
+
+  const hasMembership = !!membership
+  const isOwnMembership = membership?.userId === package.user.id
+  const isSameRewardId =
+    reward?.rewardId ===
+    (membership?.latestPeriod.pledgeOption?.packageOption?.rewardId ||
+      membership?.membershipType.rewardId)
+
+  // find options by optionGroup
+  // check if suggestedPrice is set on either of it
+  // find best options[].suggestions[]
+  // flag as favorite, if in this option.suggestions[]
+  // remove filterIfNotFavorite === true in option.suggestions[]
+  // elseif find suggested.price === option.price
+  // flag as favorite
+  // (elseif only one option.defaultAmount > 0, flag as favorite)
+  // if none is favorite, pick first
+
+  const optionsByGroup = options.filter(
+    (option) => option.optionGroup === optionGroup,
+  )
+
+  const suggestedPriceOption = optionsByGroup.find(
+    (option) => !!option.suggestedPrice,
+  )
+
+  if (suggestedPriceOption) {
+    const { suggestedPrice } = suggestedPriceOption
+    const favoriteSuggestion = optionsByGroup
+      .map((option) => option.suggestions)
+      .flat()
+      .filter((option) => !!option.userPrice)
+      .reduce((a, b) => (b?.minPrice < suggestedPrice ? b : a))
+
+    const favoriteIndex = suggestions.findIndex(
+      (suggestion) => suggestion.ref === favoriteSuggestion.ref,
+    )
+
+    if (favoriteIndex >= 0) {
+      suggestions[favoriteIndex] = {
+        ...suggestions[favoriteIndex],
+        price: suggestedPrice,
+        favorite: true,
+      }
+    }
+  } else if (isOwnMembership && isSameRewardId) {
+    const favoriteIndex = suggestions.findIndex(
+      (suggestion) => suggestion.price === option.price,
+    )
+
+    if (favoriteIndex >= 0) {
+      suggestions[favoriteIndex] = {
+        ...suggestions[favoriteIndex],
+        favorite: true,
+      }
+    }
+  }
+
+  return {
+    ...option,
+    suggestions: suggestions
+      .filter(
+        (suggestion) =>
+          !hasMembership || !!suggestion.isGifted === !isOwnMembership,
+      )
+      .filter(
+        (suggestion) =>
+          !suggestion.filterIfNotFavorite ||
+          (suggestion.filterIfNotFavorite && !!suggestion.favorite),
+      )
+      .map((suggestion) => {
+        if (!!suggestion.isGifted) {
+
+          return {
+            ...suggestion,
+            claimerName: membership?.claimerName,
+            endDate:
+              membership?.latestPeriod?.endDate &&
+              dateFormat(membership.latestPeriod.endDate),
+          }
+        }
+
+        return suggestion
+      })
+      .map((suggestion, index) => {
+        const id = [package.name, option.id, 'suggestion', index].join('/')
+
+        return {
+          ...suggestion,
+          id,
+        }
+      }),
+  }
 }
 
 const getCustomOptions = async (package_) => {
@@ -392,6 +512,7 @@ const getCustomOptions = async (package_) => {
     )
     // … aaaand findally sort by sortOrder, at last
     .sort((a, b) => ascending(a.order, b.order))
+    .map(createSuggestionMap(package_))
 
   if (!filteredAndSortedOptions.length) {
     return
@@ -415,6 +536,7 @@ const getCustomOptions = async (package_) => {
       memberhips[] @see resolveMemberships
     }
     packageOptions[] {
+      suggestions
       reward
         reward
         membershipType
@@ -443,7 +565,7 @@ const resolvePackages = async ({
   const pledges = pledger.id
     ? await pgdb.public.pledges.find({
         userId: pledger.id,
-        status: 'SUCCESSFUL',
+        status: 'SUCCESSFUL', // @TODO: Broaden?
       })
     : []
 
@@ -541,7 +663,6 @@ const resolvePackages = async ({
         membershipType
       }
     }
-
     periods[]: {
       // subsequent membership data (pledge, causing option)
       pledge: {
@@ -552,14 +673,12 @@ const resolvePackages = async ({
         }
         package
       }
-
       pledgeOption: {
         packageOption {
           membershipType
         }
       }
     }
-
     latestPeriod: {
       pledge: {
         pledgeOptions[]: {
@@ -569,14 +688,12 @@ const resolvePackages = async ({
         }
         package
       }
-
       pledgeOption: {
         packageOption {
           membershipType
         }
       }
     }
-
     user
     claimerName
   }
@@ -672,6 +789,11 @@ const resolveMemberships = async ({ memberships, pgdb }) => {
     )
     memberships[index].pledge = pledges.find(
       (pledge) => pledge.id === membership.pledgeId,
+    )
+    memberships[index].pledgeOption = pledgeOptions.find(
+      (option) =>
+        option.pledgeId === membership.pledgeId &&
+        membershipTypeRewardIds.includes(option.packageOption.rewardId),
     )
     memberships[index].pledgeOption = pledgeOptions.find(
       (option) =>

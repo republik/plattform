@@ -12,7 +12,7 @@ const {
   hasDormantMembership,
   resolveMemberships,
 } = require('../../lib/CustomPackages')
-const { getCustomPackages } = require('../../lib/User')
+const { getPackages } = require('../../lib/User')
 const { suggest: autoPaySuggest } = require('../../lib/AutoPay')
 const createCache = require('../../lib/cache')
 const { getLastEndDate } = require('../../lib/utils')
@@ -258,14 +258,14 @@ module.exports = {
     }
     return false
   },
-  async customPackages(user, args, { pgdb, user: me }) {
+  customPackages(user, args, { pgdb, user: me }) {
     debug('customPackages')
 
     if (!isFieldExposed(user, 'customPackages')) {
       Roles.ensureUserIsMeOrInRoles(user, me, ['admin', 'supporter'])
     }
 
-    return getCustomPackages({ user, pgdb })
+    return getPackages({ pledger: user, custom: true, pgdb })
   },
   async isBonusEligable(user, args, context) {
     const { pgdb, user: me } = context
@@ -277,7 +277,7 @@ module.exports = {
 
     return cache.cache(async function () {
       const allPeriods = (
-        await getCustomPackages({ user, pgdb })
+        await getPackages({ pledger: user, custom: true, pgdb })
       ).map((package_) =>
         package_.options.map((option) => option.additionalPeriods),
       )

@@ -1,10 +1,8 @@
 import { v4 as isUuid } from 'is-uuid'
 
 import createDataLoader from '@orbiting/backend-modules-dataloader'
-import auth from '@orbiting/backend-modules-auth'
+import transformUser from '@orbiting/backend-modules-auth/lib/transformUser'
 import { PgTable } from 'pogi'
-
-const transformUser = auth.transformUser
 
 export interface UserRow {
   id: string

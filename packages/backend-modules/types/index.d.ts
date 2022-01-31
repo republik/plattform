@@ -1,4 +1,5 @@
 import { PgDb } from 'pogi'
+import { UserTransformed } from '@orbiting/backend-modules-auth/lib/transformUser'
 
 export interface ConnectionContext {
   elastic: any
@@ -11,6 +12,7 @@ export interface GraphqlContext extends ConnectionContext {
   signInHooks: any
   mail: any
   loaders: any
+  user?: UserTransformed
 }
 
 /**

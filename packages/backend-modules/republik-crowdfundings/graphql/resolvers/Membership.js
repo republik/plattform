@@ -8,7 +8,7 @@ const {
 } = require('@orbiting/backend-modules-utils')
 
 const { getLastEndDate } = require('../../lib/utils')
-const { getCustomPackages } = require('../../lib/User')
+const { getPackages } = require('../../lib/User')
 const createCache = require('../../lib/cache')
 
 const { DISABLE_RESOLVER_USER_CACHE } = process.env
@@ -56,7 +56,7 @@ const membershipResolver = {
     return createMembershipCache(membership, 'canProlong', context).cache(
       async () => {
         const user = await pgdb.public.users.findOne({ id: membership.userId })
-        const customPackages = await getCustomPackages({ user, pgdb })
+        const customPackages = await getPackages({ pledger: user, pgdb })
 
         const pickedMembershipIds = customPackages.map((p) =>
           p.options.map((o) => o.membership && o.membership.id),
