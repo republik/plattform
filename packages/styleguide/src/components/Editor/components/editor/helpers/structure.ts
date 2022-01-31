@@ -10,10 +10,18 @@ import {
   NormalizeFn,
   TemplateType
 } from '../../../custom-types'
-import {Editor, Element as SlateElement, Text, Transforms, Range, Node} from 'slate'
+import {
+  Editor,
+  Element as SlateElement,
+  Text,
+  Transforms,
+  Range,
+  Node
+} from 'slate'
 import {
   calculateSiblingPath,
   findInsertTarget,
+  getCommonDirectAncestry,
   getSelectedElement,
   getSiblingNode,
   hasNextSibling,
@@ -234,14 +242,19 @@ export const buildAndInsert = (
   //  (similar to toolbar getInline logic)
   const element = buildElement(elKey, !isCollapsed && [])
   // console.log('insert', element)
-  if (isCollapsed) {
-    Transforms.insertNodes(editor, element)
-  } else {
-    // TODO: review wrap/unwrap logic for inline vs block elements
-    //  if selected element is block it makes sense to unwrap first
-    Transforms.wrapNodes(editor, element, { split: true })
-    Transforms.collapse(editor, { edge: 'end' })
+  if (elConfig[elKey].attrs?.isInline && isCollapsed) {
+    return Transforms.insertNodes(editor, element)
   }
+  if (elConfig[elKey].attrs?.isInline) {
+    Transforms.wrapNodes(editor, element, { split: true })
+    return Transforms.collapse(editor, { edge: 'end' })
+  }
+  const { element: target } = getCommonDirectAncestry(editor)
+  // TODO: put parent/isMain logic in getCommonDirect...
+  const targetP = elConfig[target[0].type].attrs?.isMain
+    ? Editor.parent(editor, target[1])[1]
+    : target[1]
+  Transforms.setNodes(editor, { type: elKey }, { at: targetP })
 }
 
 export const insertOnKey = (keyCombo: KeyCombo, elKey: CustomElementsType) => (

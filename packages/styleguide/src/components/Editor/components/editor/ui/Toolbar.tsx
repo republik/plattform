@@ -8,13 +8,14 @@ import {
   CustomEditor,
   CustomElement,
   CustomElementsType,
+  CustomNode,
   CustomText,
   InsertButtonConfig,
   TemplateType
 } from '../../../custom-types'
 import { config as elConfig } from '../../elements'
 import { useSlate, ReactEditor } from 'slate-react'
-import { Editor, Range, Element as SlateElement } from 'slate'
+import { Editor, Range, Element as SlateElement, NodeEntry } from 'slate'
 import { useColorContext } from '../../../../Colors/ColorContext'
 import IconButton from '../../../../IconButton'
 import { getCommonDirectAncestry } from '../helpers/tree'
@@ -65,19 +66,30 @@ const showMarks = (
   )
 }
 
+// TODO: split into getAllowedBlocks and getAllowedInlines
 const getAllowedTypes = (
   editor: CustomEditor,
-  selectedNode: CustomText | CustomElement | undefined
+  selectedNode: NodeEntry<CustomNode> | undefined
 ): InsertButtonConfig[] => {
   if (!selectedNode) return []
-  const template = selectedNode.template
+  const [node, path] = selectedNode
+  if (Editor.isEditor(node)) return []
+  const template = node.template
   if (!template || !template.type) return []
-  return (Array.isArray(template.type) ? template.type : [template.type])
+  const parentButtons =
+    SlateElement.isElement(node) && elConfig[node.type].attrs?.isMain
+      ? getAllowedTypes(editor, Editor.parent(editor, path))
+      : []
+  const currentButtons = (Array.isArray(template.type)
+    ? template.type
+    : [template.type]
+  )
     .filter((t: TemplateType) => IMPLICIT_TEMPLATE_TYPES.indexOf(t) === -1)
     .map(t => ({
       type: t as CustomElementsType,
-      disabled: SlateElement.isElement(selectedNode) && t === selectedNode.type
+      disabled: SlateElement.isElement(node) && t === node.type
     }))
+  return parentButtons.concat(currentButtons)
 }
 
 const calcHoverPosition = (
@@ -133,24 +145,15 @@ const ToolbarButtons: React.FC<{
   marks: boolean
   inlines: InsertButtonConfig[]
   blocks: InsertButtonConfig[]
-  formatting: string
-}> = ({ marks, inlines, blocks, formatting }) => (
+}> = ({ marks, inlines, blocks }) => (
   <>
-    {formatting === 'inline' && (
-      <>
-        {marks && <Marks />}
-        {inlines.map(config => (
-          <InsertButton key={config.type} config={config} />
-        ))}
-      </>
-    )}
-    {formatting === 'block' && (
-      <>
-        {blocks.map(config => (
-          <InsertButton key={config.type} config={config} />
-        ))}
-      </>
-    )}
+    {marks && <Marks />}
+    {inlines.map(config => (
+      <InsertButton key={config.type} config={config} />
+    ))}
+    {blocks.map(config => (
+      <InsertButton key={config.type} config={config} />
+    ))}
   </>
 )
 
@@ -169,7 +172,6 @@ const Toolbar: React.FC<{
   const [marks, setMarks] = useState(false)
   const [inlines, setInlines] = useState<InsertButtonConfig[]>([])
   const [blocks, setBlocks] = useState<InsertButtonConfig[]>([])
-  const [formatting, setFormatting] = useState('inline')
 
   const reset = () => {
     setMarks(false)
@@ -203,17 +205,11 @@ const Toolbar: React.FC<{
     console.log({ text, element })
     const textNode = text && text[0]
     const elementNode = element && element[0]
-    setFormatting(
-      textNode &&
-        Editor.string(editor, editor.selection) === textNode.placeholder
-        ? 'block'
-        : 'inline'
-    )
     setMarks(showMarks(editor, textNode, elementNode))
-    setInlines(getAllowedTypes(editor, textNode))
+    setInlines(getAllowedTypes(editor, text))
     // TODO: only show blocks when whole element is selected
     //  ...or not?
-    setBlocks(getAllowedTypes(editor, elementNode))
+    setBlocks(getAllowedTypes(editor, element))
   }, [editor.selection])
 
   return (
@@ -224,12 +220,7 @@ const Toolbar: React.FC<{
         {...colorScheme.set('boxShadow', 'overlayShadow')}
         {...styles.hoveringToolbar}
       >
-        <ToolbarButtons
-          marks={marks}
-          inlines={inlines}
-          blocks={blocks}
-          formatting={formatting}
-        />
+        <ToolbarButtons marks={marks} inlines={inlines} blocks={blocks} />
       </div>
     </Portal>
   )
