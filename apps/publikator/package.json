@@ -92,7 +92,6 @@
     "express": "^4.16.3",
     "express-basic-auth": "^1.2.0",
     "glamor": "^2.20.40",
-    "graphql": "^14.7.0",
     "graphql-tag": "^2.10.4",
     "helmet": "^3.23.3",
     "immutable": "^3.8.2",
