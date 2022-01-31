@@ -30,7 +30,7 @@
     "yargs": "^17.0.1"
   },
   "scripts": {
-    "dev": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION --trace-warnings index.js",
+    "dev": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION --trace-warnings dev.js",
     "dev:scheduler": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION --trace-warnings scheduler.js",
     "inspect": "NODE_DEBUG_OPTION=--inspect yarn dev",
     "start": "node index.js",
