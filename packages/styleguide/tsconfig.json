@@ -20,7 +20,8 @@
     "jsx": "preserve",
     "allowSyntheticDefaultImports": true,
     "declaration": true,
-    "declarationDir": "dist/types"
+    "declarationDir": "dist/types",
+    "downlevelIteration": true
   },
   "include": [
     "src"

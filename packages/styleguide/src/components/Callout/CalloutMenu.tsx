@@ -3,7 +3,7 @@ import Callout from './index'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 
-const hasAncestor = (node, predicate) => {
+export const hasAncestor = (node, predicate) => {
   if (predicate(node)) {
     return true
   }

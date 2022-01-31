@@ -101,11 +101,14 @@
     "rw": "^1.3.3",
     "scroll-into-view": "1.15.0",
     "semantic-release": "^17.1.1",
-    "slate": "^0.41.3",
+    "slate": "^0.72.3",
+    "slate-history": "^0.66.0",
+    "slate-react": "^0.72.5",
     "slate-mdast-serializer": "^3",
     "topojson": "^3.0.2",
     "tslib": "^2.3.1",
     "typescript": "^4.4.4",
+    "use-memo-one": "^1.1.2",
     "validate-commit-msg": "^2.14.0"
   },
   "files": [

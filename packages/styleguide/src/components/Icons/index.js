@@ -70,11 +70,22 @@ export {
   MdTextFormat as TextFormatIcon,
   MdOutlineSmsFailed as EtiquetteIcon,
   MdUnfoldLess as UnfoldLessIcon,
-  MdUnfoldMore as UnfoldMoreIcon
+  MdUnfoldMore as UnfoldMoreIcon,
+  MdFormatBold as BoldIcon,
+  MdFormatItalic as ItalicIcon,
+  MdKeyboardReturn as BreakIcon,
+  MdFormatAlignLeft as ParagraphIcon,
+  MdWallpaper as ImageIcon,
+  MdFormatQuote as QuoteIcon
 } from 'react-icons/md'
 
+export {
+  FaTelegramPlane as TelegramIcon,
+  FaSubscript as SubIcon,
+  FaSuperscript as SupIcon
+} from 'react-icons/fa'
+
 export { AiFillInstagram as InstagramIcon } from 'react-icons/ai'
-export { FaTelegramPlane as TelegramIcon } from 'react-icons/fa'
 export { SiThreema as ThreemaIcon } from 'react-icons/si'
 export { DiOpensource as OpenSourceIcon } from 'react-icons/di'
 

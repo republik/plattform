@@ -137,7 +137,7 @@ const Field = React.forwardRef<
     onDec?: () => void
     icon?: IconType
     simulate?: string
-    renderInput: React.FC<Record<string, unknown>>
+    renderInput?: React.FC<Record<string, unknown>>
   }
 >(
   (
@@ -154,7 +154,7 @@ const Field = React.forwardRef<
       icon,
       disabled,
       value,
-      renderInput
+      renderInput = props => <input {...props} />
     },
     forwardRef
   ) => {
