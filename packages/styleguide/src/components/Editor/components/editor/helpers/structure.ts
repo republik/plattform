@@ -10,7 +10,7 @@ import {
   NormalizeFn,
   TemplateType
 } from '../../../custom-types'
-import { Editor, Element as SlateElement, Text, Transforms, Range } from 'slate'
+import {Editor, Element as SlateElement, Text, Transforms, Range, Node} from 'slate'
 import {
   calculateSiblingPath,
   findInsertTarget,
@@ -112,11 +112,16 @@ const insertMissingNode = (
   // console.log('convert current node')
   // TODO: what if the current node is an inline element
   //  and the template is a block?
-  SlateElement.isElement(node) && Transforms.unwrapNodes(editor, { at: path })
-  const wrapper = buildFromTemplate(currentTemplate, [])
-  SlateElement.isElement(wrapper)
-    ? Transforms.wrapNodes(editor, wrapper, { at: path })
-    : Transforms.setNodes(editor, { end: currentTemplate.end }, { at: path })
+  if (SlateElement.isElement(node)) {
+    Transforms.unwrapNodes(editor, { at: path })
+  }
+  const newNode = buildFromTemplate(currentTemplate, [])
+  if (SlateElement.isElement(newNode)) {
+    return Transforms.wrapNodes(editor, newNode, { at: path })
+  }
+  newNode.text = Node.string(node)
+  Transforms.removeNodes(editor, { at: path })
+  Transforms.insertNodes(editor, newNode, { at: path })
 }
 
 // we probably don't need to relink every time
