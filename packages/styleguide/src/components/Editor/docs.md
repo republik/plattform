@@ -175,21 +175,11 @@ const Form: React.FC<ElementFormProps<FigureImageElement>> = ({
   <>
     <div>
       <Label>Light mode</Label>
-      <ImageInput
-        src={element.src}
-        onChange={src => {
-          onChange({ src })
-        }}
-      />
+      <ImageInput src={element.src} onChange={src => { onChange({ src })}} />
     </div>
     <div>
       <Label>Dark mode (optional)</Label>
-      <ImageInput
-        src={element.srcDark}
-        onChange={srcDark => {
-          onChange({ srcDark })
-        }}
-      />
+      <ImageInput src={element.srcDark} onChange={srcDark => { onChange({ srcDark })}} />
     </div>
   </>
 )
