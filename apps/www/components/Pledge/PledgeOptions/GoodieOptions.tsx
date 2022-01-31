@@ -2,37 +2,13 @@ import React from 'react'
 import { css } from 'glamor'
 import { Interaction } from '@project-r/styleguide'
 import Goodie from './Goodie'
+import { OptionType, FieldSetValues } from './PledgeOptionsTypes'
 import FieldSet from '../../FieldSet'
+import { getOptionFieldKey } from '../CustomizePackage'
 
-type GoodieRewardType = {
-  __typename: 'Goodie'
-  id: string
-  name: 'FONDUE' | 'NOTEBOOK' | 'TOTEBAG'
-}
-
-export type PledgeOptionType = {
-  reward: GoodieRewardType
-  __typename: 'PackageOption'
-  defaultAmount: number
-  id: string
-  maxAmount: number
-  minAmount: number
-  price: number
-  templateId: string
-  userPrice: boolean
-}
-
-export type FieldType = {
-  default: number
-  key: string
-  max: 1
-  min: 0
-  option: PledgeOptionType
-}
-
-type FieldsType = {
-  fields: FieldType[]
-  values: Record<string, number>
+type GoodieOptionsPropTypes = {
+  options: OptionType[]
+  values: FieldSetValues
   onChange: (fields) => void
   t: (string: string) => string
 }
@@ -41,8 +17,13 @@ const styles = {
   goodieContainer: css({ marginBottom: 24 })
 }
 
-function GoodieOptions({ fields, values, onChange, t }: FieldsType) {
-  if (!fields.length) {
+function GoodieOptions({
+  options,
+  values,
+  onChange,
+  t
+}: GoodieOptionsPropTypes) {
+  if (!options?.length) {
     return null
   }
 
@@ -51,19 +32,21 @@ function GoodieOptions({ fields, values, onChange, t }: FieldsType) {
       <Interaction.H3>{t('Goodies/title')}</Interaction.H3>
 
       <div {...styles.goodieContainer}>
-        {fields.map(field => {
+        {options.map(option => {
           const value =
-            values[field.key] === undefined ? field.default : values[field.key]
+            values[getOptionFieldKey(option)] === undefined
+              ? option.defaultAmount
+              : values[getOptionFieldKey(option)]
 
           return (
             <Goodie
-              key={field.key}
-              option={field.option}
+              key={getOptionFieldKey(option)}
+              option={option}
               value={value}
               onChange={value =>
                 onChange(
                   FieldSet.utils.fieldsState({
-                    field: field.key,
+                    field: getOptionFieldKey(option),
                     value,
                     error: undefined,
                     dirty: true

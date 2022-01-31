@@ -10,7 +10,8 @@ import omit from 'lodash/omit'
 import { withRouter } from 'next/router'
 import { format } from 'url'
 import GoodieOptions from './PledgeOptions/GoodieOptions'
-
+import MembershipOptions from './PledgeOptions/MembershipOptions'
+import GiftMembershipOptions from './PledgeOptions/GiftMembershipOptions'
 import withT from '../../lib/withT'
 import { chfFormat, timeFormat } from '../../lib/utils/format'
 
@@ -18,20 +19,13 @@ import FieldSet, { styles as fieldSetStyles } from '../FieldSet'
 import { shouldIgnoreClick } from '../../lib/utils/link'
 
 import {
-  A,
-  Field,
-  Radio,
-  Checkbox,
   fontFamilies,
   Interaction,
-  Label,
   mediaQueries,
   Editorial,
-  fontStyles,
-  RawHtml
+  fontStyles
 } from '@project-r/styleguide'
 
-import ManageMembership from '../Account/Memberships/Manage'
 import Link from 'next/link'
 
 const dayFormat = timeFormat('%d. %B %Y')
@@ -79,6 +73,21 @@ const calculateMinPrice = (pkg, values, userPrice) => {
   return absolutMinPrice
 }
 
+const calculateGoodiePrice = (pkg, values) => {
+  return pkg.options
+    .filter(option => option.reward?.__typename === 'Goodie')
+    .reduce((price, option) => {
+      const amountValue = values[getOptionFieldKey(option)]
+      const amount =
+        amountValue !== undefined
+          ? amountValue
+          : option.defaultAmount || option.minAmount
+
+      // Price adopts to amount
+      return price + option.price * amount
+    }, 0)
+}
+
 const getPrice = ({ values, pkg, userPrice }) => {
   if (values.price !== undefined) {
     return values.price
@@ -101,7 +110,7 @@ const priceError = (price, minPrice, t) => {
     })
   }
 }
-const reasonError = (value = '', t) => {
+export const reasonError = (value = '', t) => {
   return (
     value.trim().length === 0 && t('package/customize/userPrice/reason/error')
   )
@@ -113,7 +122,7 @@ export const getOptionFieldKey = option =>
 export const getOptionPeriodsFieldKey = option =>
   `${getOptionFieldKey(option)}-periods`
 
-const getOptionValue = (option, values) => {
+export const getOptionValue = (option, values) => {
   const fieldKey = getOptionFieldKey(option)
   return values[fieldKey] === undefined
     ? option.defaultAmount
@@ -194,6 +203,14 @@ class CustomizePackage extends Component {
       this.focusRef = ref
     }
   }
+  getGoodiePrice(nextFields = {}) {
+    const { pkg, values } = this.props
+
+    return calculateGoodiePrice(pkg, {
+      ...values,
+      ...nextFields.values
+    })
+  }
   calculateNextPrice(nextFields) {
     const { pkg, values, userPrice, t } = this.props
 
@@ -208,6 +225,15 @@ class CustomizePackage extends Component {
 
     let price = values.price
 
+    if (this.state.customPrice) {
+      const currentGoodiePrice = this.getGoodiePrice()
+      const nextGoodiePrice = this.getGoodiePrice(nextFields)
+
+      if (currentGoodiePrice !== nextGoodiePrice) {
+        price += nextGoodiePrice - currentGoodiePrice
+      }
+    }
+
     if (!this.state.customPrice || minPrice > price) {
       price = minPrice !== absolutMinPrice ? minPrice : ''
       if (this.state.customPrice) {
@@ -221,6 +247,8 @@ class CustomizePackage extends Component {
       })(nextFields)
     }
     return FieldSet.utils.mergeField({
+      field: 'price',
+      value: price,
       error: priceError(price, minPrice, t)
     })(nextFields)
   }
@@ -298,16 +326,16 @@ class CustomizePackage extends Component {
       })
     )
   }
-  resetUserPrice() {
-    const { router } = this.props
-    router.replace(
-      { pathname: 'angebote', query: omit(router.query, ['userPrice']) },
-      undefined,
-      {
-        shallow: true
-      }
-    )
-  }
+  // resetUserPrice() {
+  //   const { router } = this.props
+  //   router.replace(
+  //     { pathname: 'angebote', query: omit(router.query, ['userPrice']) },
+  //     undefined,
+  //     {
+  //       shallow: true
+  //     }
+  //   )
+  // }
   componentWillUnmount() {
     this.resetPrice()
   }
@@ -362,15 +390,16 @@ class CustomizePackage extends Component {
     const regularMinPrice = calculateMinPrice(pkg, values, false)
     const fixedPrice = pkg.name === 'MONTHLY_ABO'
 
-    const onPriceChange = (_, value, shouldValidate) => {
+    const onPriceChange = (_, value, shouldValidate, suggestionMinPrice) => {
       const price = String(value).length
         ? Math.round(parseInt(value, 10)) * 100 || 0
         : 0
-      const error = priceError(price, minPrice, t)
 
-      if (userPrice && price >= regularMinPrice) {
-        this.resetUserPrice()
-      }
+      const error = priceError(price, suggestionMinPrice || minPrice, t)
+
+      // if (userPrice && price >= regularMinPrice) {
+      //   this.resetUserPrice()
+      // }
 
       this.setState({ customPrice: true })
       onChange(
@@ -512,10 +541,45 @@ class CustomizePackage extends Component {
     ].filter(Boolean)
     const description = t.first(descriptionKeys)
 
+    const membershipOptions = pkg.options.filter(
+      option =>
+        // No Goodies
+        option.reward?.__typename !== 'Goodie' &&
+        // No GiftMemberships
+        (option.membership === null ||
+          option.membership?.user?.isUserOfCurrentSession === true)
+    )
+
+    const goodieOptions = pkg.options.filter(
+      option => option.reward?.__typename === 'Goodie'
+    )
+
+    const giftMembershipOptions = pkg.options.filter(
+      option =>
+        // No Goodies
+        option.reward?.__typename !== 'Goodie' &&
+        // Only GiftMemberships
+        option.membership !== null &&
+        option.membership?.user?.isUserOfCurrentSession === false
+    )
+
     return (
       <div>
         <div style={{ marginTop: 20, marginBottom: 10 }}>
-          <Interaction.H2 style={{ marginBottom: 10 }}>
+          <Link
+            href={{
+              pathname: '/angebote',
+              query:
+                pkg.group && pkg.group !== 'ME'
+                  ? { group: pkg.group }
+                  : undefined
+            }}
+            shallow
+            passHref
+          >
+            <Editorial.A>{t('package/customize/changePackage')}</Editorial.A>
+          </Link>
+          <Interaction.H2 style={{ margin: '16px 0 24px 0' }}>
             {t.first(
               [
                 ownMembership &&
@@ -528,31 +592,41 @@ class CustomizePackage extends Component {
               ].filter(Boolean)
             )}
           </Interaction.H2>
-          <Link
-            href={{
-              pathname: '/angebote',
-              query:
-                pkg.group && pkg.group !== 'ME'
-                  ? { group: pkg.group }
-                  : undefined
-            }}
-            shallow
-            passHref
-          >
-            <A>{t('package/customize/changePackage')}</A>
-          </Link>
         </div>
-        {description.split('\n\n').map((text, i) => (
-          <P style={{ marginBottom: 10 }} key={i}>
-            {text.indexOf('<') !== -1 ? (
-              <RawHtml dangerouslySetInnerHTML={{ __html: text }} />
-            ) : (
-              text
-            )}
-          </P>
-        ))}
 
-        {optionGroups.map(
+        <MembershipOptions
+          options={membershipOptions}
+          giftMembershipOptions={giftMembershipOptions}
+          values={values}
+          errors={errors}
+          dirty={dirty}
+          onChange={fields => {
+            onChange(this.calculateNextPrice(fields))
+          }}
+          onPriceChange={onPriceChange}
+          goodiePrice={this.getGoodiePrice()}
+          userPrice={userPrice}
+        />
+        <GoodieOptions
+          options={goodieOptions}
+          values={values}
+          onChange={fields => {
+            onChange(this.calculateNextPrice(fields))
+          }}
+          t={t}
+        />
+        <GiftMembershipOptions
+          options={giftMembershipOptions}
+          onChange={fields => {
+            onChange(this.calculateNextPrice(fields))
+          }}
+        />
+
+        <Interaction.P>
+          Total in CHF: <strong>{price / 100}.-</strong>
+        </Interaction.P>
+
+        {/* {optionGroups.map(
           (
             {
               group,
@@ -948,48 +1022,10 @@ class CustomizePackage extends Component {
               </Fragment>
             )
           }
-        )}
-        <GoodieOptions
-          t={t}
-          values={values}
-          onChange={fields => {
-            onChange(this.calculateNextPrice(fields))
-          }}
-          fields={configurableGoodieFields}
-        />
-        {!!userPrice && (
-          <div>
-            <P>{t('package/customize/userPrice/beforeReason')}</P>
-            <div style={{ marginBottom: 20 }}>
-              <Field
-                label={t('package/customize/userPrice/reason/label')}
-                ref={this.focusRefSetter}
-                error={dirty.reason && errors.reason}
-                value={values.reason}
-                renderInput={({ ref, ...inputProps }) => (
-                  <AutosizeInput
-                    {...inputProps}
-                    {...fieldSetStyles.autoSize}
-                    inputRef={ref}
-                  />
-                )}
-                onChange={(_, value, shouldValidate) => {
-                  onChange(
-                    FieldSet.utils.fieldsState({
-                      field: 'reason',
-                      value,
-                      error: reasonError(value, t),
-                      dirty: shouldValidate
-                    })
-                  )
-                }}
-              />
-            </div>
-            <P>{t('package/customize/userPrice/beforePrice')}</P>
-          </div>
-        )}
+        )} */}
+
         <div style={{ marginBottom: 20 }}>
-          {fixedPrice ? (
+          {/* {fixedPrice ? (
             <Interaction.P>
               <Label>{t('package/customize/price/label')}</Label>
               <br />
@@ -1019,62 +1055,10 @@ class CustomizePackage extends Component {
               }}
               onChange={onPriceChange}
             />
-          )}
+          )} */}
+
           {!fixedPrice && (
             <div {...styles.smallP}>
-              {payMoreSuggestions.length > 0 && (
-                <Fragment>
-                  <Interaction.Emphasis>
-                    {t.first(
-                      [
-                        userPrice &&
-                          'package/customize/price/payMore/userPrice',
-                        `package/customize/price/payMore/${pkg.name}`,
-                        'package/customize/price/payMore'
-                      ].filter(Boolean)
-                    )}
-                  </Interaction.Emphasis>
-                  <ul {...styles.ul}>
-                    {payMoreSuggestions.map(({ value, key }) => {
-                      const label = t.elements(
-                        `package/customize/price/payMore/${key}`,
-                        {
-                          formattedCHF: chfFormat(value / 100)
-                        }
-                      )
-                      if (price >= value) {
-                        return <li key={key}>{label}</li>
-                      }
-                      return (
-                        <li key={key}>
-                          <Editorial.A
-                            href='#'
-                            onClick={e => {
-                              e.preventDefault()
-                              onPriceChange(undefined, value / 100, true)
-                              if (userPrice) {
-                                this.resetUserPrice()
-                              }
-                            }}
-                          >
-                            {label}
-                          </Editorial.A>
-                        </li>
-                      )
-                    })}
-                  </ul>
-                  {!!payMoreReached && (
-                    <div {...styles.ulNote}>
-                      <Interaction.Emphasis>
-                        {t.first([
-                          `package/customize/price/payMore/thx/${payMoreReached.key}`,
-                          'package/customize/price/payMore/thx'
-                        ])}
-                      </Interaction.Emphasis>
-                    </div>
-                  )}
-                </Fragment>
-              )}
               {pkg.name === 'ABO_GIVE_MONTHS' && (
                 <Fragment>
                   <Interaction.Emphasis>
@@ -1195,7 +1179,7 @@ class CustomizePackage extends Component {
                   </ul>
                 </Fragment>
               )}
-              {payingMoreThanRegular && (
+              {/* {payingMoreThanRegular && (
                 <Fragment>
                   <Editorial.A
                     href={format({
@@ -1239,8 +1223,8 @@ class CustomizePackage extends Component {
                   </Editorial.A>
                   <br />
                 </Fragment>
-              )}
-              {offerUserPrice && (
+              )} */}
+              {/* {offerUserPrice && (
                 <Fragment>
                   <Editorial.A
                     href={format({
@@ -1295,7 +1279,7 @@ class CustomizePackage extends Component {
                   </Editorial.A>
                   <br />
                 </Fragment>
-              )}
+              )} */}
             </div>
           )}
         </div>

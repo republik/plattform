@@ -493,6 +493,7 @@ const query = gql`
       packages {
         id
         name
+        suggestedTotal
         group
         paymentMethods
         options {
@@ -501,9 +502,25 @@ const query = gql`
           userPrice
           minAmount
           maxAmount
+          optionGroup
           defaultAmount
           templateId
           accessGranted
+          membership {
+            user {
+              isUserOfCurrentSession
+            }
+          }
+          suggestions {
+            id
+            price
+            label
+            description
+            userPrice
+            minUserPrice
+            favorite
+            userPriceFallback
+          }
           reward {
             __typename
             ... on MembershipType {
@@ -572,6 +589,7 @@ const query = gql`
             id
             user {
               id
+              isUserOfCurrentSession
             }
             claimerName
             createdAt
@@ -589,6 +607,16 @@ const query = gql`
               beginDate
               endDate
             }
+          }
+          suggestions {
+            id
+            price
+            label
+            description
+            userPrice
+            minUserPrice
+            favorite
+            userPriceFallback
           }
           additionalPeriods {
             kind

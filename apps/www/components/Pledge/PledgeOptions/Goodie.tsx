@@ -7,11 +7,11 @@ import {
   Interaction,
   useColorContext
 } from '@project-r/styleguide'
-import { PledgeOptionType } from './GoodieOptions'
+import { OptionType } from './PledgeOptionsTypes'
 import { CDN_FRONTEND_BASE_URL } from '../../../lib/constants'
 
 type PledgeOptionComponentType = {
-  option: PledgeOptionType
+  option: OptionType
   value: number
   onChange: (item) => void
   t: (string) => string
@@ -43,9 +43,11 @@ const styles = {
     flexGrow: 1,
     marginRight: 0,
     ...fontStyles.sansSerifRegular15,
+    lineHeight: '18px',
     [mediaQueries.mUp]: {
       marginRight: 16,
-      ...fontStyles.sansSerifRegular17
+      ...fontStyles.sansSerifRegular16,
+      lineHeight: '22px'
     },
     margin: 0
   }),
