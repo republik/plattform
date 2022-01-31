@@ -190,7 +190,7 @@ export const config: ElementConfigI = {
   attrs: {
     isVoid: true,
     editUi: true,
-    propagateDelete: true
+    isMain: true
   }
 }
 ```

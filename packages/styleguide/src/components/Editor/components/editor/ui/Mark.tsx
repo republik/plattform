@@ -30,7 +30,7 @@ const MarkButton: React.FC<{ mKey: CustomMarksType }> = ({ mKey }) => {
   return (
     <ToolbarButton
       button={mark.button}
-      disabled={!isMarkActive(editor, mKey)}
+      active={isMarkActive(editor, mKey)}
       onClick={() => toggleMark(editor, mKey)}
     />
   )

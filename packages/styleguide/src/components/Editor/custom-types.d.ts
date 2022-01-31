@@ -118,7 +118,7 @@ interface EditorAttrsI {
 
 interface ElementAttrsI extends EditorAttrsI {
   formatText?: boolean
-  propagateDelete?: boolean
+  isMain?: boolean
 }
 
 export type EditorAttr = keyof EditorAttrsI

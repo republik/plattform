@@ -62,6 +62,6 @@ export const config: ElementConfigI = {
   Form,
   attrs: {
     isVoid: true,
-    propagateDelete: true
+    isMain: true
   }
 }

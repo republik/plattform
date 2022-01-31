@@ -58,10 +58,10 @@ const showMarks = (
 ): boolean => {
   // console.log('showMarks', selectedText, selectedElement)
   return (
-    selectedText &&
     selectedElement &&
     elConfig[selectedElement.type].attrs?.formatText &&
-    Editor.string(editor, editor.selection) !== selectedText.placeholder
+    (!selectedText ||
+      Editor.string(editor, editor.selection) !== selectedText.placeholder)
   )
 }
 
@@ -116,9 +116,10 @@ export const ToolbarButton: React.FC<{
   button: ButtonI
   onClick: () => void
   disabled?: boolean
-}> = ({ button, onClick, disabled }) => (
+  active?: boolean
+}> = ({ button, onClick, disabled, active }) => (
   <IconButton
-    fillColorName={disabled ? 'divider' : 'text'}
+    fillColorName={disabled ? 'divider' : active ? 'primary' : 'text'}
     onMouseDown={event => {
       event.preventDefault()
       onClick()

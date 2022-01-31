@@ -2,7 +2,7 @@ import React from 'react'
 import { useSlate } from 'slate-react'
 import { config as elConfig } from '../../elements'
 import { ToolbarButton } from './Toolbar'
-import {InsertButtonConfig} from '../../../custom-types'
+import { InsertButtonConfig } from '../../../custom-types'
 import { buildAndInsert } from '../helpers/structure'
 
 export const ContainerComponent: React.FC<{

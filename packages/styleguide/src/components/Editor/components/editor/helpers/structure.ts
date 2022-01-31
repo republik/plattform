@@ -157,7 +157,7 @@ const deleteParent = (
     lastOp.type === 'remove_node' &&
     SlateElement.isElement(lastOp.node) &&
     lastOp.node.type === elementType &&
-    elConfig[elementType].attrs?.propagateDelete
+    elConfig[elementType].attrs?.isMain
   )
 }
 

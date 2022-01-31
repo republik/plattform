@@ -4,6 +4,6 @@ import { PullQuoteText } from '../../../../PullQuote'
 export const config: ElementConfigI = {
   Component: PullQuoteText,
   attrs: {
-    propagateDelete: true
+    isMain: true
   }
 }
