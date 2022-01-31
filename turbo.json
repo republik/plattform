@@ -1,4 +1,5 @@
 {
+  "baseBranch": "origin/main",
   "pipeline": {
     "build": {
       "dependsOn": [
@@ -24,6 +25,14 @@
     },
     "dev": {
       "cache": false
+    },
+    "test": {
+      "outputs": [
+        "coverage/**"
+      ],
+      "dependsOn": [
+        "build"
+      ]
     }
   },
   "globalDependencies": [
