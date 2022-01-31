@@ -1,8 +1,8 @@
 import React from 'react'
 import { useSlate } from 'slate-react'
-import { config } from '../../elements'
+import { config as elConfig } from '../../elements'
 import { ToolbarButton } from './Toolbar'
-import { CustomElementsType } from '../../../custom-types'
+import {InsertButtonConfig} from '../../../custom-types'
 import { buildAndInsert } from '../helpers/structure'
 
 export const ContainerComponent: React.FC<{
@@ -12,20 +12,19 @@ export const ContainerComponent: React.FC<{
 }
 
 export const InsertButton: React.FC<{
-  elKey: CustomElementsType
-  disabled?: boolean
-}> = ({ elKey, disabled }) => {
+  config: InsertButtonConfig
+}> = ({ config }) => {
   const editor = useSlate()
-  const element = config[elKey]
+  const element = elConfig[config.type]
   if (!element?.button) {
     return null
   }
   return (
     <ToolbarButton
       button={element.button}
-      disabled={disabled}
+      disabled={config.disabled}
       onClick={() => {
-        buildAndInsert(editor, elKey)
+        buildAndInsert(editor, config.type)
       }}
     />
   )

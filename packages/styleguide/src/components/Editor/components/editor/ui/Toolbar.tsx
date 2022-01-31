@@ -9,11 +9,12 @@ import {
   CustomElement,
   CustomElementsType,
   CustomText,
+  InsertButtonConfig,
   TemplateType
 } from '../../../custom-types'
 import { config as elConfig } from '../../elements'
 import { useSlate, ReactEditor } from 'slate-react'
-import { Editor, Range } from 'slate'
+import { Editor, Range, Element as SlateElement } from 'slate'
 import { useColorContext } from '../../../../Colors/ColorContext'
 import IconButton from '../../../../IconButton'
 import { getCommonDirectAncestry } from '../helpers/tree'
@@ -67,16 +68,16 @@ const showMarks = (
 const getAllowedTypes = (
   editor: CustomEditor,
   selectedNode: CustomText | CustomElement | undefined
-): CustomElementsType[] => {
+): InsertButtonConfig[] => {
   if (!selectedNode) return []
   const template = selectedNode.template
   if (!template || !template.type) return []
-  return (Array.isArray(template.type)
-    ? template.type
-    : [template.type]
-  ).filter(
-    (t: TemplateType) => IMPLICIT_TEMPLATE_TYPES.indexOf(t) === -1
-  ) as CustomElementsType[]
+  return (Array.isArray(template.type) ? template.type : [template.type])
+    .filter((t: TemplateType) => IMPLICIT_TEMPLATE_TYPES.indexOf(t) === -1)
+    .map(t => ({
+      type: t as CustomElementsType,
+      disabled: SlateElement.isElement(selectedNode) && t === selectedNode.type
+    }))
 }
 
 const calcHoverPosition = (
@@ -117,7 +118,7 @@ export const ToolbarButton: React.FC<{
   disabled?: boolean
 }> = ({ button, onClick, disabled }) => (
   <IconButton
-    fillColorName={disabled ? 'textSoft' : 'text'}
+    fillColorName={disabled ? 'divider' : 'text'}
     onMouseDown={event => {
       event.preventDefault()
       onClick()
@@ -129,23 +130,23 @@ export const ToolbarButton: React.FC<{
 
 const ToolbarButtons: React.FC<{
   marks: boolean
-  inlines: CustomElementsType[]
-  blocks: CustomElementsType[]
+  inlines: InsertButtonConfig[]
+  blocks: InsertButtonConfig[]
   formatting: string
 }> = ({ marks, inlines, blocks, formatting }) => (
   <>
     {formatting === 'inline' && (
       <>
         {marks && <Marks />}
-        {inlines.map(elKey => (
-          <InsertButton key={elKey} elKey={elKey} />
+        {inlines.map(config => (
+          <InsertButton key={config.type} config={config} />
         ))}
       </>
     )}
     {formatting === 'block' && (
       <>
-        {blocks.map(elKey => (
-          <InsertButton key={elKey} elKey={elKey} />
+        {blocks.map(config => (
+          <InsertButton key={config.type} config={config} />
         ))}
       </>
     )}
@@ -165,8 +166,8 @@ const Toolbar: React.FC<{
   const ref = useRef<HTMLDivElement>(null)
   const editor = useSlate()
   const [marks, setMarks] = useState(false)
-  const [inlines, setInlines] = useState<CustomElementsType[]>([])
-  const [blocks, setBlocks] = useState<CustomElementsType[]>([])
+  const [inlines, setInlines] = useState<InsertButtonConfig[]>([])
+  const [blocks, setBlocks] = useState<InsertButtonConfig[]>([])
   const [formatting, setFormatting] = useState('inline')
 
   const reset = () => {
@@ -189,7 +190,7 @@ const Toolbar: React.FC<{
     } else {
       el.removeAttribute('style')
     }
-  }, [marks, inlines, blocks, ref.current, containerRef.current])
+  })
 
   useEffect(() => {
     const el = ref.current
@@ -198,7 +199,7 @@ const Toolbar: React.FC<{
       return reset()
     }
     const { text, element } = getCommonDirectAncestry(editor)
-    console.log(text, element)
+    console.log({ text, element })
     const textNode = text && text[0]
     const elementNode = element && element[0]
     setFormatting(

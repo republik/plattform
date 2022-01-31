@@ -176,6 +176,11 @@ export type KeyCombo = {
   shift?: boolean
 }
 
+export type InsertButtonConfig = {
+  type: CustomElementsType
+  disabled?: boolean
+}
+
 export type CustomEditor = BaseEditor & ReactEditor & HistoryEditor
 
 declare module 'slate' {
