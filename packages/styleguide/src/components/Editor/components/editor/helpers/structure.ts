@@ -252,6 +252,7 @@ export const buildAndInsert = (
   const { element: targetEl, container: targetC } = getAncestry(editor)
   const target = targetC || targetEl
   Transforms.setNodes(editor, { type: elKey }, { at: target[1] })
+  // selectNode(editor, target[1])
 }
 
 export const insertOnKey = (keyCombo: KeyCombo, elKey: CustomElementsType) => (

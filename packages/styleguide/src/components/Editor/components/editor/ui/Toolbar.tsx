@@ -54,17 +54,9 @@ const hasVisibleSelection = (editor: CustomEditor): boolean => {
 
 const showMarks = (
   editor: CustomEditor,
-  selectedText: CustomText | undefined,
-  selectedElement: CustomElement | undefined
-): boolean => {
-  // console.log('showMarks', selectedText, selectedElement)
-  return (
-    selectedElement &&
-    elConfig[selectedElement.type].attrs?.formatText &&
-    (!selectedText ||
-      Editor.string(editor, editor.selection) !== selectedText.placeholder)
-  )
-}
+  selectedElement?: NodeEntry<CustomElement>
+): boolean =>
+  selectedElement && elConfig[selectedElement[0].type].attrs?.formatText
 
 const getTemplateTypes = (
   nodeEntry?: NodeEntry<CustomDescendant>
@@ -113,7 +105,7 @@ const calcHoverPosition = (
     ?.getRangeAt(0)
     ?.getBoundingClientRect()
   if (!rect) return {}
-  // console.log(rect, element)
+  // console.log({ rect, element: { offsetHeight: element.offsetHeight } })
   const top = rect.top + window.pageYOffset - element.offsetHeight
   const centered = rect.left - element.offsetWidth / 2 + rect.width / 2
   const left = container
@@ -178,6 +170,7 @@ const Toolbar: React.FC<{
   const [colorScheme] = useColorContext()
   const ref = useRef<HTMLDivElement>(null)
   const editor = useSlate()
+  const [isVisible, setVisible] = useState(false)
   const [marks, setMarks] = useState(false)
   const [inlines, setInlines] = useState<InsertButtonConfig[]>([])
   const [blocks, setBlocks] = useState<InsertButtonConfig[]>([])
@@ -191,16 +184,19 @@ const Toolbar: React.FC<{
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    console.log({ marks, inlines, blocks })
-    if (marks || inlines.length || blocks.length >= 2) {
-      const { top, left } = calcHoverPosition(el, containerRef.current)
+    if (marks || !!inlines.length || !!blocks.length) {
       el.style.opacity = '1'
       el.style.width = 'auto'
       el.style.height = 'auto'
-      el.style.left = `${left}px`
-      el.style.top = `${top}px`
+      setTimeout(() => {
+        const { top, left } = calcHoverPosition(el, containerRef.current)
+        el.style.left = `${left}px`
+        el.style.top = `${top}px`
+        setVisible(true)
+      }, 0)
     } else {
       el.removeAttribute('style')
+      setVisible(false)
     }
   })
 
@@ -211,20 +207,19 @@ const Toolbar: React.FC<{
       return reset()
     }
     const { text, element, container } = getAncestry(editor)
-    const textNode = text && text[0]
-    const elementNode = element && element[0]
-    setMarks(showMarks(editor, textNode, elementNode))
+    setMarks(showMarks(editor, element))
     setInlines(getAllowedInlines(editor, text))
-    setBlocks(getAllowedBlocks(editor, element, container))
+    const allowedBlocks = getAllowedBlocks(editor, element, container)
+    setBlocks(allowedBlocks.length >= 2 ? allowedBlocks : [])
   }, [editor.selection])
 
   return (
     <Portal>
       <div
         ref={ref}
-        {...colorScheme.set('backgroundColor', 'overlay')}
-        {...colorScheme.set('boxShadow', 'overlayShadow')}
         {...styles.hoveringToolbar}
+        {...(isVisible && colorScheme.set('backgroundColor', 'overlay'))}
+        {...(isVisible && colorScheme.set('boxShadow', 'overlayShadow'))}
       >
         <ToolbarButtons marks={marks} inlines={inlines} blocks={blocks} />
       </div>
