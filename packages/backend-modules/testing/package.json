@@ -1,0 +1,72 @@
+{
+  "name": "@orbiting/backend-modules-test",
+  "version": "0.0.1",
+  "description": "helpers for testing",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backends.git"
+  },
+  "author": "Patrick Recher <patrick.recher@republik.ch>",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/orbiting/backends/issues"
+  },
+  "homepage": "https://github.com/orbiting/backends#readme",
+  "scripts": {
+    "test": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit --testPathPattern \"\\.(u)|(unit)\\.jest\"",
+    "test:all": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit",
+    "test:integration": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit --testPathPattern \"\\.(int)|(integration)\\.jest\"",
+    "test:dev": "yarn test:unit --watch",
+    "test:cover": "TZ=Europe/Amsterdam jest --collectCoverage --detectOpenHandles --forceExit",
+    "test:reportCover": "cat ./coverage/lcov.info | coveralls"
+  },
+  "devDependencies": {
+    "@orbiting/backend-modules-access": "*",
+    "@orbiting/backend-modules-assets": "*",
+    "@orbiting/backend-modules-auth": "*",
+    "@orbiting/backend-modules-base": "*",
+    "@orbiting/backend-modules-base64u": "*",
+    "@orbiting/backend-modules-cards": "*",
+    "@orbiting/backend-modules-collections": "*",
+    "@orbiting/backend-modules-databroom": "*",
+    "@orbiting/backend-modules-dataloader": "*",
+    "@orbiting/backend-modules-discussions": "*",
+    "@orbiting/backend-modules-documents": "*",
+    "@orbiting/backend-modules-embeds": "*",
+    "@orbiting/backend-modules-env": "*",
+    "@orbiting/backend-modules-formats": "*",
+    "@orbiting/backend-modules-gsheets": "*",
+    "@orbiting/backend-modules-invoices": "*",
+    "@orbiting/backend-modules-keyCDN": "*",
+    "@orbiting/backend-modules-mail": "*",
+    "@orbiting/backend-modules-mailbox": "*",
+    "@orbiting/backend-modules-matomo": "*",
+    "@orbiting/backend-modules-migrations": "*",
+    "@orbiting/backend-modules-publikator": "*",
+    "@orbiting/backend-modules-push-notifications": "*",
+    "@orbiting/backend-modules-redirections": "*",
+    "@orbiting/backend-modules-republik": "*",
+    "@orbiting/backend-modules-republik-crowdfundings": "*",
+    "@orbiting/backend-modules-scalars": "*",
+    "@orbiting/backend-modules-schedulers": "*",
+    "@orbiting/backend-modules-search": "*",
+    "@orbiting/backend-modules-slack": "*",
+    "@orbiting/backend-modules-sms": "*",
+    "@orbiting/backend-modules-statistics": "*",
+    "@orbiting/backend-modules-styleguide": "*",
+    "@orbiting/backend-modules-subscriptions": "*",
+    "@orbiting/backend-modules-translate": "*",
+    "@orbiting/backend-modules-types": "*",
+    "@orbiting/backend-modules-utils": "*",
+    "@orbiting/backend-modules-voting": "*",
+    "apollo-modules-node": "*",
+    "jest": "^26.0.1",
+    "jest-environment-node": "^26.0.1",
+    "subscriptions-transport-ws": "^0.9.16",
+    "why-is-node-running": "^2.1.2"
+  },
+  "dependencies": {
+    "graphql": "^15.3.0"
+  }
+}

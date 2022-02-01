@@ -10,6 +10,7 @@
   "scripts": {
     "commit": "cz",
     "prepare": "husky install",
+    "test": "turbo run test",
     "start": "scripts/start.sh",
     "start:scheduler": "cd apps/api && yarn start:scheduler",
     "build": "scripts/build.sh",
