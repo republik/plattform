@@ -14,6 +14,11 @@ const MemoComposer = ({ isRoot = false, parentId, memo, onClose }) => {
 
   const { displayAuthor } = discussion
 
+  const onSubmitLabel =
+    (!!memo && t('memo/container/composer/edit')) ||
+    (!!parentId && t('memo/container/composer/answer')) ||
+    t('memo/container/composer/submit')
+
   if (isActive) {
     return (
       <CommentComposer
@@ -28,13 +33,13 @@ const MemoComposer = ({ isRoot = false, parentId, memo, onClose }) => {
 
           return actions.editMemo(memo.id, text)
         }}
-        // @TODO: onSubmitLabel t(...)
+        onSubmitLabel={onSubmitLabel}
         onClose={() => {
           onClose && onClose()
           setIsActive(false)
         }}
         displayAuthor={displayAuthor}
-        // @TODO: placeholder t(...)
+        placeholder={t('memo/container/composer/placeholder')}
         initialText={memo?.text}
       />
     )
@@ -48,7 +53,7 @@ const MemoComposer = ({ isRoot = false, parentId, memo, onClose }) => {
         onClick={() => {
           setIsActive(true)
         }}
-        // @TODO: placeholder t(...)
+        placeholder={t('memo/container/composer/placeholder')}
       />
     )
   }
@@ -67,12 +72,12 @@ const MemoContainer = ({ memo }) => {
     () =>
       [
         !!userCanEdit && {
-          label: t('styleguide/CommentActions/edit'),
+          label: t('memo/container/edit'),
           icon: EditIcon,
           onClick: () => setIsEditing(true)
         },
         !!userCanEdit && {
-          label: t('styleguide/CommentActions/unpublish'),
+          label: t('memo/container/unpublish'),
           icon: UnpublishIcon,
           onClick: () => actions.unpublishMemo(memo.id),
           disabled: !published

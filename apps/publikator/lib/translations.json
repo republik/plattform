@@ -1202,7 +1202,31 @@
     },
     {
       "key": "memo/modal/warning/newDoc",
-      "value": "Sie können erst Kommentare hinterlassen, nachdem Sie den Beitrag kommittet haben."
+      "value": "Sie können eine Notiz hinterlassen, nachdem Sie den Beitrag comitted haben."
+    },
+    {
+      "key": "memo/container/edit",
+      "value": "Notiz ändern"
+    },
+    {
+      "key": "memo/container/unpublish",
+      "value": "Notiz verbergen"
+    },
+    {
+      "key": "memo/container/composer/placeholder",
+      "value": "Eine Notiz hinterlassen…"
+    },
+    {
+      "key": "memo/container/composer/edit",
+      "value": "speichern"
+    },
+    {
+      "key": "memo/container/composer/answer",
+      "value": "antworten"
+    },
+    {
+      "key": "memo/container/composer/submit",
+      "value": "speichern"
     },
     {
       "key": "styleguide/video/dnt/note",
