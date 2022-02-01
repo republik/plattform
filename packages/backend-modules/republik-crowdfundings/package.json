@@ -41,6 +41,7 @@
   },
   "devDependencies": {
     "@orbiting/backend-modules-types": "*",
+    "@types/jest": "^27.4.0",
     "@types/lodash": "^4.14.162",
     "@types/sharp": "^0.25.1",
     "@types/ssh2-sftp-client": "^5.3.0",
