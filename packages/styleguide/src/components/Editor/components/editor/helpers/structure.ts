@@ -123,11 +123,15 @@ const insertMissingNode = (
   if (SlateElement.isElement(node)) {
     Transforms.unwrapNodes(editor, { at: path })
   }
-  const newNode = buildFromTemplate(currentTemplate, [])
-  if (SlateElement.isElement(newNode)) {
+  const templateType = getTemplateType(currentTemplate)
+  const isVoid = templateType && elConfig[templateType].attrs?.isVoid
+  const newNode = buildFromTemplate(currentTemplate, !isVoid && [])
+  if (SlateElement.isElement(newNode) && !isVoid) {
     return Transforms.wrapNodes(editor, newNode, { at: path })
   }
-  newNode.text = Node.string(node)
+  if (Text.isText(newNode)) {
+    newNode.text = Node.string(node)
+  }
   Transforms.removeNodes(editor, { at: path })
   Transforms.insertNodes(editor, newNode, { at: path })
 }
@@ -252,7 +256,6 @@ export const buildAndInsert = (
   const { element: targetEl, container: targetC } = getAncestry(editor)
   const target = targetC || targetEl
   Transforms.setNodes(editor, { type: elKey }, { at: target[1] })
-  // selectNode(editor, target[1])
 }
 
 export const insertOnKey = (keyCombo: KeyCombo, elKey: CustomElementsType) => (
