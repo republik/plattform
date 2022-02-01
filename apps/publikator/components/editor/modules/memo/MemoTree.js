@@ -19,8 +19,8 @@ const MemoTree = props => {
   const {
     repoId,
     parentId,
-    publish,
     onPublished,
+    publish,
     edit,
     unpublish,
     memos,
@@ -34,12 +34,6 @@ const MemoTree = props => {
       discussion: {
         id: repoId,
         displayAuthor: getDisplayAuthor(me),
-        rules: {
-          maxLength: null,
-          minInterval: null,
-          disableTopLevelComments: false,
-          anonymity: 'FORBIDDEN'
-        }
       },
       actions: {
         submitMemo: (parentId, text) =>
@@ -62,7 +56,7 @@ const MemoTree = props => {
           )
       }
     }
-  }, [repoId, onPublished, me])
+  }, [repoId, me])
 
   // memos == ALL memos for a given repoId
   const rootMemo = memos?.nodes?.find(node => node.id === parentId)
