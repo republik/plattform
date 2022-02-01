@@ -25,7 +25,7 @@ const CharCount: React.FC<{ charLimit: number }> = ({ charLimit }) => {
       <span
         {...colorScheme.set('color', countdown < 100 ? 'error' : 'textSoft')}
       >
-        ✂️ {countdown} Zeichen
+        {countdown} Zeichen
       </span>
     </Label>
   )
