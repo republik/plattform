@@ -8,7 +8,7 @@ elif [ "$SERVER" = "styleguide" ]
 then
   yarn turbo prune --scope="@project-r/styleguide"
 else
-  yarn turbo prune --scope="$SERVER"
+  yarn turbo prune --scope="@orbiting/$SERVER-app"
 fi
 rm yarn.lock
 rm -rf packages
