@@ -152,6 +152,7 @@ const MemoComposer = ({ isRoot = false, parentId, memo, onClose }) => {
         isRoot={isRoot}
         discussionId={discussion.id}
         commentId={memo?.id}
+        parentId={parentId}
         onSubmit={({ text }) => {
           if (!memo) {
             return actions.submitMemo(parentId, text)
