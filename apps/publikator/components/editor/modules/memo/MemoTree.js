@@ -15,7 +15,7 @@ import withMe from '../../../../lib/withMe'
 
 import { withMemos, getDisplayAuthor } from './graphql'
 
-const MemoTree = props => {
+const Tree = props => {
   const {
     repoId,
     parentId,
@@ -33,7 +33,7 @@ const MemoTree = props => {
       t,
       discussion: {
         id: repoId,
-        displayAuthor: getDisplayAuthor(me),
+        displayAuthor: getDisplayAuthor(me)
       },
       actions: {
         submitMemo: (parentId, text) =>
@@ -44,13 +44,13 @@ const MemoTree = props => {
             },
             error => ({ error })
           ),
-        editMemo: (memoId, text) =>
-          edit(memoId, text).then(
+        editMemo: (id, text) =>
+          edit(id, text).then(
             () => ({ ok: true }),
             error => ({ error })
           ),
-        unpublishMemo: memoId =>
-          unpublish(memoId).then(
+        unpublishMemo: id =>
+          unpublish(id).then(
             () => ({ ok: true }),
             error => ({ error })
           )
@@ -63,14 +63,14 @@ const MemoTree = props => {
 
   return (
     <DiscussionContext.Provider value={discussionContext}>
-      <MemoContainer t={t} memo={rootMemo} />
+      <Container memo={rootMemo} />
     </DiscussionContext.Provider>
   )
 }
 
-export default compose(withT, withMe, withMemos)(MemoTree)
+export default compose(withT, withMe, withMemos)(Tree)
 
-const MemoContainer = ({ memo }) => {
+const Container = ({ memo }) => {
   const [isEditing, setIsEditing] = useState(false)
   const [isReplying, setIsReplying] = useState(false)
   const { t, actions } = useContext(DiscussionContext)
@@ -96,7 +96,7 @@ const MemoContainer = ({ memo }) => {
   )
 
   if (!memo) {
-    return <MemoComposer isRoot={true} onClose={setIsReplying} />
+    return <Composer isRoot={true} onClose={setIsReplying} />
   }
 
   return (
@@ -113,22 +113,21 @@ const MemoContainer = ({ memo }) => {
         handleLoadReplies: undefined,
         handleShare: undefined
       }}
+      userCanComment={true}
       menuItems={menuItems}
       editComposer={
-        isEditing && <MemoComposer memo={memo} onClose={setIsEditing} />
+        isEditing && <Composer memo={memo} onClose={setIsEditing} />
       }
     >
-      {isReplying && (
-        <MemoComposer parentId={memo.id} onClose={setIsReplying} />
-      )}
+      {isReplying && <Composer parentId={memo.id} onClose={setIsReplying} />}
       {memo.comments.nodes.map(memo => (
-        <MemoContainer key={memo.id} memo={memo} />
+        <Container key={memo.id} memo={memo} />
       ))}
     </CommentNode>
   )
 }
 
-const MemoComposer = ({ isRoot = false, parentId, memo, onClose }) => {
+const Composer = ({ isRoot = false, parentId, memo, onClose }) => {
   const [isActive, setIsActive] = useState(!isRoot)
   const { t, discussion, actions } = useContext(DiscussionContext)
 
