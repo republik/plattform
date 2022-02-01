@@ -3,10 +3,17 @@ SERVER=${SERVER:-api}
 
 if [ "$SERVER" = "styleguide" ]
 then
-  yarn turbo prune --scope="@project-r/styleguide"
+  npx turbo prune --scope="@project-r/styleguide"
 else
-  yarn turbo prune --scope="@orbiting/$SERVER-app"
+  npx turbo prune --scope="@orbiting/$SERVER-app"
 fi
+
+if [ -f apps/www/.env ] || [ -f apps/api/.env ] || [ -f apps/assets/.env ]
+then
+  echo "⚠️ Early exit 1 because .env files were detected. The pruned out will not overwrite the root directory."
+  exit 1
+fi
+
 rm yarn.lock
 rm -rf packages
 rm -rf apps
