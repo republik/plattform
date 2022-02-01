@@ -60,7 +60,9 @@ export const FormOverlay = ({
   if (!path || path === []) return null
 
   const forms = getForms(editor, path)
-  if (!forms.length) return null
+  if (!forms.length) {
+    onClose()
+  }
 
   return (
     <Overlay onClose={onClose}>
