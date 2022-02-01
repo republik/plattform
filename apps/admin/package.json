@@ -49,6 +49,7 @@
     "express": "^4.17.1",
     "express-basic-auth": "^1.2.0",
     "glamor": "^2.20.40",
+    "graphql": "^15.3.0",
     "graphql-tag": "^2.11.0",
     "helmet": "^3.23.3",
     "isomorphic-unfetch": "^3.1.0",
