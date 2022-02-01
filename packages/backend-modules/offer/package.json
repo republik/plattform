@@ -17,6 +17,10 @@
     "url": "https://github.com/orbiting/backends/issues"
   },
   "homepage": "https://github.com/orbiting/backends#readme",
+  "scripts": {
+    "dev": "tsc -w",
+    "build": "tsc"
+  },
   "devDependencies": {
     "@types/bluebird": "^3.5.36"
   }
