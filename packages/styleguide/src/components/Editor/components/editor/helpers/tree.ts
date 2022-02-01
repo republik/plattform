@@ -17,6 +17,7 @@ import {
 } from 'slate'
 import { KeyboardEvent } from 'react'
 import { selectPlaceholder } from './text'
+import { config as elConfig } from '../../elements'
 
 export const getTextNode = (
   nodeEntry: NodeEntry,
@@ -145,21 +146,45 @@ const getSiblingTextNode = (
 const getCommonNode = (editor: CustomEditor): NodeEntry =>
   Node.common(editor, editor.selection.anchor.path, editor.selection.focus.path)
 
-export const getCommonDirectAncestry = (
+const getParent = (
+  editor: CustomEditor,
+  node: NodeEntry<Node>
+): NodeEntry<CustomElement> | undefined => {
+  const parent = Editor.parent(editor, node[1])
+  if (SlateElement.isElement(parent[0])) {
+    return parent as NodeEntry<CustomElement>
+  }
+}
+
+export const getAncestry = (
   editor: CustomEditor
 ): {
   text?: NodeEntry<CustomText>
-  element: NodeEntry<CustomElement>
+  element?: NodeEntry<CustomElement>
+  container?: NodeEntry<CustomElement>
 } => {
   const parent = getCommonNode(editor)
+  let text: NodeEntry<CustomText>
+  let element: NodeEntry<CustomElement>
+  let container: NodeEntry<CustomElement>
   if (Text.isText(parent[0])) {
-    return {
-      text: parent as NodeEntry<CustomText>,
-      element: Editor.parent(editor, parent[1]) as NodeEntry<CustomElement>
-    }
+    text = parent as NodeEntry<CustomText>
+    element = getParent(editor, parent)
+  } else if (SlateElement.isElement(parent[0])) {
+    element = parent as NodeEntry<CustomElement>
+  } else {
+    return {}
+  }
+  if (elConfig[element[0].type].attrs?.isMain) {
+    container = element
+  }
+  while (container && elConfig[container[0].type].attrs?.isMain) {
+    container = getParent(editor, container)
   }
   return {
-    element: parent as NodeEntry<CustomElement>
+    text,
+    element,
+    container
   }
 }
 

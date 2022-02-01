@@ -5,22 +5,22 @@ import { Marks } from './Mark'
 import { InsertButton } from './Element'
 import {
   ButtonI,
+  CustomDescendant,
   CustomEditor,
   CustomElement,
   CustomElementsType,
-  CustomNode,
   CustomText,
   InsertButtonConfig,
   TemplateType
 } from '../../../custom-types'
 import { config as elConfig } from '../../elements'
 import { useSlate, ReactEditor } from 'slate-react'
-import { Editor, Range, Element as SlateElement, NodeEntry } from 'slate'
+import { Editor, Range, NodeEntry } from 'slate'
 import { useColorContext } from '../../../../Colors/ColorContext'
 import IconButton from '../../../../IconButton'
-import { getCommonDirectAncestry } from '../helpers/tree'
+import { getAncestry } from '../helpers/tree'
 
-const IMPLICIT_TEMPLATE_TYPES: TemplateType[] = ['text', 'break']
+const IMPLICIT_INLINES: TemplateType[] = ['text', 'break']
 
 const styles = {
   hoveringToolbar: css({
@@ -66,30 +66,39 @@ const showMarks = (
   )
 }
 
-// TODO: split into getAllowedBlocks and getAllowedInlines
-const getAllowedTypes = (
-  editor: CustomEditor,
-  selectedNode: NodeEntry<CustomNode> | undefined
-): InsertButtonConfig[] => {
-  if (!selectedNode) return []
-  const [node, path] = selectedNode
-  if (Editor.isEditor(node)) return []
+const getTemplateTypes = (
+  nodeEntry?: NodeEntry<CustomDescendant>
+): TemplateType[] => {
+  if (!nodeEntry) return []
+  const node = nodeEntry[0]
   const template = node.template
   if (!template || !template.type) return []
-  const parentButtons =
-    SlateElement.isElement(node) && elConfig[node.type].attrs?.isMain
-      ? getAllowedTypes(editor, Editor.parent(editor, path))
-      : []
-  const currentButtons = (Array.isArray(template.type)
-    ? template.type
-    : [template.type]
-  )
-    .filter((t: TemplateType) => IMPLICIT_TEMPLATE_TYPES.indexOf(t) === -1)
-    .map(t => ({
-      type: t as CustomElementsType,
-      disabled: SlateElement.isElement(node) && t === node.type
-    }))
-  return parentButtons.concat(currentButtons)
+  return Array.isArray(template.type) ? template.type : [template.type]
+}
+
+const getAllowedInlines = (
+  editor: CustomEditor,
+  selectedNode?: NodeEntry<CustomText>
+): InsertButtonConfig[] => {
+  const templateTypes = getTemplateTypes(selectedNode)
+  return templateTypes
+    .filter((t: TemplateType) => IMPLICIT_INLINES.indexOf(t) === -1)
+    .map(t => ({ type: t as CustomElementsType }))
+}
+
+const getAllowedBlocks = (
+  editor: CustomEditor,
+  selectedNode?: NodeEntry<CustomElement>,
+  selectedContainer?: NodeEntry<CustomElement>
+): InsertButtonConfig[] => {
+  if (selectedContainer) {
+    return getAllowedBlocks(editor, selectedContainer)
+  }
+  const templateTypes = getTemplateTypes(selectedNode)
+  return templateTypes.map(t => ({
+    type: t as CustomElementsType,
+    disabled: selectedNode && t === selectedNode[0].type
+  }))
 }
 
 const calcHoverPosition = (
@@ -201,15 +210,12 @@ const Toolbar: React.FC<{
       el.removeAttribute('style')
       return reset()
     }
-    const { text, element } = getCommonDirectAncestry(editor)
-    console.log({ text, element })
+    const { text, element, container } = getAncestry(editor)
     const textNode = text && text[0]
     const elementNode = element && element[0]
     setMarks(showMarks(editor, textNode, elementNode))
-    setInlines(getAllowedTypes(editor, text))
-    // TODO: only show blocks when whole element is selected
-    //  ...or not?
-    setBlocks(getAllowedTypes(editor, element))
+    setInlines(getAllowedInlines(editor, text))
+    setBlocks(getAllowedBlocks(editor, element, container))
   }, [editor.selection])
 
   return (

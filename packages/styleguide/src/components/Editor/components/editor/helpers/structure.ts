@@ -21,7 +21,7 @@ import {
 import {
   calculateSiblingPath,
   findInsertTarget,
-  getCommonDirectAncestry,
+  getAncestry,
   getSelectedElement,
   getSiblingNode,
   hasNextSibling,
@@ -238,7 +238,7 @@ export const buildAndInsert = (
 ): void => {
   const { selection } = editor
   const isCollapsed = selection && Range.isCollapsed(selection)
-  // TODO: use commonAncestor to safeguard that element is valid
+  // TODO (nice to have): use commonAncestor to safeguard that element is valid
   //  (similar to toolbar getInline logic)
   const element = buildElement(elKey, !isCollapsed && [])
   // console.log('insert', element)
@@ -249,12 +249,9 @@ export const buildAndInsert = (
     Transforms.wrapNodes(editor, element, { split: true })
     return Transforms.collapse(editor, { edge: 'end' })
   }
-  const { element: target } = getCommonDirectAncestry(editor)
-  // TODO: put parent/isMain logic in getCommonDirect...
-  const targetP = elConfig[target[0].type].attrs?.isMain
-    ? Editor.parent(editor, target[1])[1]
-    : target[1]
-  Transforms.setNodes(editor, { type: elKey }, { at: targetP })
+  const { element: targetEl, container: targetC } = getAncestry(editor)
+  const target = targetC || targetEl
+  Transforms.setNodes(editor, { type: elKey }, { at: target[1] })
 }
 
 export const insertOnKey = (keyCombo: KeyCombo, elKey: CustomElementsType) => (

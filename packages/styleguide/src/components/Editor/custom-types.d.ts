@@ -178,7 +178,6 @@ export type KeyCombo = {
 
 export type InsertButtonConfig = {
   type: CustomElementsType
-  depth?: number
   disabled?: boolean
 }
 
