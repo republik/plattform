@@ -1,5 +1,5 @@
 {
-  "name": "@orbiting/graphql-server",
+  "name": "@orbiting/api-app",
   "version": "0.0.1",
   "engines": {
     "node": "14.x"
@@ -7,7 +7,7 @@
   "private": true,
   "license": "AGPL-3.0",
   "dependencies": {
-    "apollo-modules-node": "^0.1.4",
+    "apollo-modules-node": "*",
     "d3-array": "^2.4.0",
     "d3-dsv": "^1.2.0",
     "d3-time": "^1.0.8",

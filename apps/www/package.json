@@ -1,5 +1,6 @@
 {
-  "name": "republik-frontend",
+  "name": "@orbiting/www-app",
+  "private": true,
   "version": "1.0.0",
   "engines": {
     "node": "^14.4.0"
