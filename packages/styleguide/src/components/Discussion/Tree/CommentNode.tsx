@@ -270,6 +270,15 @@ const CommentNode = ({
   )
 
   if (isExpanded) {
+    const { handleUpVote, handleDownVote, handleUnVote } = actions
+    const voteActions = handleUpVote &&
+      handleDownVote &&
+      handleUnVote && {
+        handleUpVote,
+        handleDownVote,
+        handleUnVote
+      }
+
     return (
       <div ref={root} data-comment-id={id} {...rootStyle}>
         {!nestLimitExceeded && !isBoard && verticalToggleStyle && (
@@ -309,11 +318,7 @@ const CommentNode = ({
               handleShare: actions.handleShare,
               handleLoadReplies: actions.handleLoadReplies
             }}
-            voteActions={{
-              handleUpVote: actions.handleUpVote,
-              handleDownVote: actions.handleDownVote,
-              handleUnVote: actions.handleUnVote
-            }}
+            voteActions={voteActions}
             userCanComment={userCanComment}
             userWaitUntil={userWaitUntil}
             isBoard={isBoard}
