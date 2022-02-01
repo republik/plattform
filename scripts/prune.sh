@@ -1,10 +1,7 @@
-# experiemntal script that could be used as an heroku-prebuild 
+# experiemntal script that is used as an heroku-prebuild
+SERVER=${SERVER:-api}
 
-if [ -z "$SERVER" ] || [ "$SERVER" = "api" ] || [ "$SERVER" = "assets" ]
-then
-  # backend first needs to properly define dependencies
-  exit 0
-elif [ "$SERVER" = "styleguide" ]
+if [ "$SERVER" = "styleguide" ]
 then
   yarn turbo prune --scope="@project-r/styleguide"
 else

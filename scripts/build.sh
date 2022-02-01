@@ -1,12 +1,6 @@
 SERVER=${SERVER:-api}
 
-if [ "$SERVER" = "api" ] || [ "$SERVER" = "assets" ]
-then
-  yarn turbo run build \
-    --scope="@orbiting/$SERVER-app" \
-    --scope="@orbiting/backend-modules*" \
-    --no-deps --include-dependencies
-elif [ "$SERVER" = "styleguide" ]
+if [ "$SERVER" = "styleguide" ]
 then
   yarn turbo run build \
     --scope="@project-r/styleguide" \
