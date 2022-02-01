@@ -26,18 +26,18 @@ export const selectPlaceholder = (
   editor: CustomEditor,
   node: NodeEntry<CustomText>
 ): void => {
-  const [textNode, textPath] = node
+  const at = node[1]
   // this is a hack so that the element is selected before the text change
   // (selecting empty text nodes is a problem)
-  Transforms.insertText(editor, ' ', { at: textPath })
+  Transforms.insertText(editor, '\u2060', { at })
   ReactEditor.focus(editor)
-  Transforms.select(editor, textPath)
+  Transforms.select(editor, at)
   setTimeout(() => {
-    Transforms.insertText(editor, textNode.placeholder || 'Text', {
-      at: textPath
+    Transforms.insertText(editor, '', {
+      at
     })
-    Transforms.select(editor, textPath)
-  }, 0)
+    Transforms.select(editor, at)
+  })
 }
 
 export const handlePlaceholders: NormalizeFn<CustomText> = (

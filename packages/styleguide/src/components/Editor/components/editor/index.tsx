@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState
 } from 'react'
-import { createEditor, Editor } from 'slate'
+import { createEditor, Editor, Transforms } from 'slate'
 import { withHistory } from 'slate-history'
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
 import { useMemoOne } from 'use-memo-one'
@@ -51,13 +51,22 @@ const SlateEditor: React.FC<{
   const RenderedElement: React.FC<PropsWithChildren<{
     element: CustomElement
   }>> = props => {
-    const Component = elementsConfig[props.element.type].Component
+    const config = elementsConfig[props.element.type]
+    const Component = config.Component
+    const path = ReactEditor.findPath(editor, props.element)
     const showDataForm = e => {
-      e.stopPropagation()
-      const path = ReactEditor.findPath(editor, props.element)
+      e.preventDefault()
       setFormElementPath(path)
     }
-    return <Component {...props} onDoubleClick={showDataForm} />
+    const selectVoid = e => {
+      e.preventDefault()
+      if (config.attrs?.isVoid) {
+        Transforms.select(editor, path)
+      }
+    }
+    return (
+      <Component {...props} onClick={selectVoid} onDoubleClick={showDataForm} />
+    )
   }
 
   const renderElement = useCallback(RenderedElement, [])
@@ -78,7 +87,7 @@ const SlateEditor: React.FC<{
       >
         <FormOverlay
           path={formElementPath}
-          onClose={() => setFormElementPath(null)}
+          onClose={() => setFormElementPath(undefined)}
         />
         <Toolbar containerRef={containerRef} />
         <Editable

@@ -22,7 +22,7 @@ const Component: React.FC<{
   [x: string]: unknown
 }> = ({ children, element, ...props }) => (
   <div {...props}>
-    <div style={{ userSelect: 'none' }} contentEditable={false}>
+    <div contentEditable={false}>
       <FigureImage
         {...{ src: element.src || '/static/placeholder.png', ...element }}
       />

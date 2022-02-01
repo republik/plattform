@@ -42,15 +42,25 @@ const styles = {
   })
 }
 
-const hasVisibleSelection = (editor: CustomEditor): boolean => {
+const hasSelection = (editor: CustomEditor): boolean => {
+  const { selection } = editor
+  return !!selection && ReactEditor.isFocused(editor)
+}
+
+const hasTextSelection = (
+  editor: CustomEditor,
+  selectedNode?: NodeEntry<CustomElement>
+): boolean => {
   const { selection } = editor
   return (
-    !!selection &&
-    !Range.isCollapsed(selection) &&
-    ReactEditor.isFocused(editor) &&
-    Editor.string(editor, selection) !== ''
+    !Range.isCollapsed(selection) ||
+    (selectedNode && Editor.string(editor, selectedNode[1]) === '')
   )
 }
+
+const hasVoidSelection = (
+  selectedElement?: NodeEntry<CustomElement>
+): boolean => selectedElement && elConfig[selectedElement[0].type].attrs?.isVoid
 
 const showMarks = (
   editor: CustomEditor,
@@ -73,6 +83,7 @@ const getAllowedInlines = (
   selectedNode?: NodeEntry<CustomText>
 ): InsertButtonConfig[] => {
   const templateTypes = getTemplateTypes(selectedNode)
+  // console.log('getAllowedInlines', { selectedNode, templateTypes })
   return templateTypes
     .filter((t: TemplateType) => IMPLICIT_INLINES.indexOf(t) === -1)
     .map(t => ({ type: t as CustomElementsType }))
@@ -100,10 +111,15 @@ const calcHoverPosition = (
   top?: number
   left?: number
 } => {
-  const rect = window
-    .getSelection()
-    ?.getRangeAt(0)
-    ?.getBoundingClientRect()
+  let rect
+  try {
+    rect = window
+      .getSelection()
+      ?.getRangeAt(0)
+      ?.getBoundingClientRect()
+  } catch (e) {
+    return {}
+  }
   if (!rect) return {}
   // console.log({ rect, element: { offsetHeight: element.offsetHeight } })
   const top = rect.top + window.pageYOffset - element.offsetHeight
@@ -170,12 +186,15 @@ const Toolbar: React.FC<{
   const [colorScheme] = useColorContext()
   const ref = useRef<HTMLDivElement>(null)
   const editor = useSlate()
+  const [isVoid, setVoid] = useState(false)
   const [isVisible, setVisible] = useState(false)
   const [marks, setMarks] = useState(false)
   const [inlines, setInlines] = useState<InsertButtonConfig[]>([])
   const [blocks, setBlocks] = useState<InsertButtonConfig[]>([])
 
   const reset = () => {
+    setVoid(false)
+    setVisible(false)
     setMarks(false)
     setInlines([])
     setBlocks([])
@@ -190,6 +209,7 @@ const Toolbar: React.FC<{
       el.style.height = 'auto'
       setTimeout(() => {
         const { top, left } = calcHoverPosition(el, containerRef.current)
+        // console.log({ top, left })
         el.style.left = `${left}px`
         el.style.top = `${top}px`
         setVisible(true)
@@ -202,15 +222,21 @@ const Toolbar: React.FC<{
 
   useEffect(() => {
     const el = ref.current
-    if (!el || !hasVisibleSelection(editor)) {
-      el.removeAttribute('style')
+    if (!el || !hasSelection(editor)) {
       return reset()
     }
     const { text, element, container } = getAncestry(editor)
-    setMarks(showMarks(editor, element))
-    setInlines(getAllowedInlines(editor, text))
-    const allowedBlocks = getAllowedBlocks(editor, element, container)
-    setBlocks(allowedBlocks.length >= 2 ? allowedBlocks : [])
+    // console.log({ text, element, container })
+    const voidMode = hasVoidSelection(element)
+    setVoid(voidMode)
+    if (hasTextSelection(editor, element) || voidMode) {
+      setMarks(showMarks(editor, element))
+      setInlines(getAllowedInlines(editor, text))
+      const allowedBlocks = getAllowedBlocks(editor, element, container)
+      setBlocks(allowedBlocks.length >= 2 ? allowedBlocks : [])
+    } else {
+      reset()
+    }
   }, [editor.selection])
 
   return (

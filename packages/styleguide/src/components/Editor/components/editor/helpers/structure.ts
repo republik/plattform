@@ -255,6 +255,7 @@ export const buildAndInsert = (
   }
   const { element: targetEl, container: targetC } = getAncestry(editor)
   const target = targetC || targetEl
+  // TODO: cleanup for nonstandard attrs
   Transforms.setNodes(editor, { type: elKey }, { at: target[1] })
 }
 
