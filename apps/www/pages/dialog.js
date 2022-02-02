@@ -3,7 +3,6 @@ import { css } from 'glamor'
 import {
   A,
   Center,
-  DiscussionIcon,
   Editorial,
   inQuotes,
   Interaction,
@@ -199,9 +198,6 @@ const DialogContent = ({ tab, activeDiscussionId, serverContext }) => {
                       }}
                     >
                       {t('feedback/activeDiscussions/label')}
-                      <span style={{ position: 'absolute', right: 0, top: -1 }}>
-                        <DiscussionIcon size={24} fill='primary' />
-                      </span>
                     </H3>
                     <ActiveDiscussions first={5} />
                   </Fragment>
