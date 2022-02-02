@@ -73,23 +73,18 @@ const StatementContainer = ({ comment, tagMappings }: Props): ReactElement => {
       comment={comment}
       t={t}
       actions={{
+        handleShare: shareHandler
+      }}
+      voteActions={{
         handleUpVote: upVoteCommentHandler,
         handleDownVote: downVoteCommentHandler,
-        handleUnVote: unVoteCommentHandler,
-        handleShare: shareHandler
+        handleUnVote: unVoteCommentHandler
       }}
       menuItems={menuItems}
       tagMappings={tagMappings}
       isHighlighted={isFocused}
       disableVoting={!discussion.userCanComment}
-      Link={Link}
       CommentLink={CommentLink}
-      focusHref={format(getFocusHref(discussion, comment))}
-      profileHref={
-        comment?.displayAuthor?.slug
-          ? `~${comment.displayAuthor.slug}`
-          : undefined
-      }
     />
   )
 }

@@ -12,7 +12,6 @@ import {
 } from '@project-r/styleguide'
 import { useTranslation } from '../../../lib/withT'
 import CommentLink, { getFocusHref } from '../shared/CommentLink'
-import { format } from 'url'
 import { useDiscussion } from '../context/DiscussionContext'
 import useVoteCommentHandlers from '../hooks/actions/useVoteCommentHandlers'
 import { CommentTreeNode } from '../helpers/makeCommentTree'
@@ -108,21 +107,17 @@ const CommentContainer = ({
       t={t}
       comment={comment}
       CommentLink={CommentLink}
-      focusHref={format(getFocusHref(discussion, comment))}
-      profileHref={
-        comment.displayAuthor.slug
-          ? `/~${comment.displayAuthor.slug}`
-          : undefined
-      }
       actions={{
-        handleUpVote: voteHandlers.upVoteCommentHandler,
-        handleDownVote: voteHandlers.downVoteCommentHandler,
-        handleUnVote: voteHandlers.unVoteCommentHandler,
         handleReply: discussion.userCanComment
           ? () => setIsReplying(true)
           : undefined,
         handleLoadReplies: loadRemainingReplies,
         handleShare: shareOverlay.shareHandler
+      }}
+      voteActions={{
+        handleUpVote: voteHandlers.upVoteCommentHandler,
+        handleDownVote: voteHandlers.downVoteCommentHandler,
+        handleUnVote: voteHandlers.unVoteCommentHandler,
       }}
       menuItems={menuItems}
       userCanComment={discussion?.userCanComment}
