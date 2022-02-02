@@ -40,7 +40,7 @@ const getForm = (
   }
 }
 
-const getForms = (editor: CustomEditor, path: number[]): FormData[] =>
+export const getForms = (editor: CustomEditor, path: number[]): FormData[] =>
   path
     .reduce((forms, p, i) => {
       const currentPath = path.slice(0, i ? -i : undefined)

@@ -55,17 +55,22 @@ const SlateEditor: React.FC<{
     const Component = config.Component
     const path = ReactEditor.findPath(editor, props.element)
     const showDataForm = e => {
-      e.preventDefault()
+      e.stopPropagation()
+      console.log(props.element, config)
       setFormElementPath(path)
     }
     const selectVoid = e => {
-      e.preventDefault()
       if (config.attrs?.isVoid) {
+        e.preventDefault()
         Transforms.select(editor, path)
       }
     }
     return (
-      <Component {...props} onClick={selectVoid} onDoubleClick={showDataForm} />
+      <Component
+        {...props}
+        onMouseDown={selectVoid}
+        onDoubleClick={showDataForm}
+      />
     )
   }
 

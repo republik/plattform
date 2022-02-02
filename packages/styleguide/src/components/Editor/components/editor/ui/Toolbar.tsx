@@ -82,6 +82,7 @@ const getAllowedInlines = (
   editor: CustomEditor,
   selectedNode?: NodeEntry<CustomText>
 ): InsertButtonConfig[] => {
+  if (Editor.string(editor, editor.selection) === '') return []
   const templateTypes = getTemplateTypes(selectedNode)
   // console.log('getAllowedInlines', { selectedNode, templateTypes })
   return templateTypes

@@ -9,7 +9,7 @@ import { getTextNode } from './tree'
 export const handleEnds: NormalizeFn<CustomText> = ([node, path], editor) => {
   //console.log('***', node)
   if (!node.end || !node.text) {
-    return
+    return false
   }
   // console.log('HANDLE ENDS')
   // Since the end nodes are at one end of the structure,
@@ -22,5 +22,7 @@ export const handleEnds: NormalizeFn<CustomText> = ([node, path], editor) => {
     Transforms.insertText(editor, text, { at: nearestTextPath })
     Transforms.select(editor, nearestTextPath)
     Transforms.insertText(editor, '', { at: path })
+    return true
   }
+  return false
 }

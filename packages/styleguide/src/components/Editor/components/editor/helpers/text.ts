@@ -54,10 +54,8 @@ export const handlePlaceholders: NormalizeFn<CustomText> = (
     elConfig[parentNode.type].attrs?.isVoid
   ) {
     if (node.placeholder) {
-      const newProperties: Partial<CustomText> = {
-        placeholder: undefined
-      }
-      Transforms.setNodes(editor, newProperties, { at: path })
+      Transforms.unsetNodes(editor, 'placeholder', { at: path })
+      return true
     }
   } else {
     const placeholder = toTitle(parentNode.type)
@@ -69,6 +67,8 @@ export const handlePlaceholders: NormalizeFn<CustomText> = (
         },
         { at: path }
       )
+      return true
     }
   }
+  return false
 }

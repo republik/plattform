@@ -1,12 +1,14 @@
 import {
   ElementConfigI,
   ElementFormProps,
-  LinkElement
+  LinkElement,
+  NormalizeFn
 } from '../../custom-types'
 import { LinkIcon } from '../../../Icons'
 import { Editorial } from '../../../Typography'
 import React from 'react'
 import Field from '../../../Form/Field'
+import { Editor, Transforms } from 'slate'
 
 const Form: React.FC<ElementFormProps<LinkElement>> = ({
   element,
@@ -19,8 +21,17 @@ const Form: React.FC<ElementFormProps<LinkElement>> = ({
   />
 )
 
+const unlinkWhenEmpty: NormalizeFn<LinkElement> = ([node, path], editor) => {
+  if (!node.href && Editor.string(editor, path) === '') {
+    Transforms.unwrapNodes(editor, { at: path })
+    return true
+  }
+  return false
+}
+
 export const config: ElementConfigI = {
   Component: Editorial.A,
+  normalizations: [unlinkWhenEmpty],
   Form,
   attrs: {
     isInline: true,

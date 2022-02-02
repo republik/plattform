@@ -1,5 +1,6 @@
 import { KeyboardEvent } from 'react'
 import {
+  CustomAncestor,
   CustomDescendant,
   CustomEditor,
   CustomElement,
@@ -150,7 +151,7 @@ const linkTemplate = (
 
 const deleteExcessChildren = (
   from: number,
-  node: CustomElement,
+  node: CustomAncestor,
   path: number[],
   editor: CustomEditor
 ): void => {
@@ -178,9 +179,9 @@ const deleteParent = (
   )
 }
 
-export const matchStructure: (
+export const fixStructure: (
   structure?: NodeTemplate[]
-) => NormalizeFn<CustomElement> = (structure = DEFAULT_STRUCTURE) => (
+) => NormalizeFn<CustomAncestor> = (structure = DEFAULT_STRUCTURE) => (
   [node, path],
   editor
 ) => {
@@ -215,25 +216,32 @@ export const matchStructure: (
       shouldRemove(currentNode, nextNode, currentTemplate, prevTemplate)
     ) {
       // this is here mostly to delete unwanted <br> elements
-      return Transforms.removeNodes(editor, { at: currentPath })
+      Transforms.removeNodes(editor, { at: currentPath })
+      return true
     } else if (!currentTemplate) {
       loop = false
     } else if (isCorrect(currentNode, currentTemplate)) {
       linkTemplate(currentPath, currentTemplate, editor)
       i += 1
     } else if (deleteParent(editor, currentTemplate)) {
-      return Transforms.removeNodes(editor, { at: path })
+      Transforms.removeNodes(editor, { at: path })
+      return true
     } else {
-      return insertMissingNode(
+      insertMissingNode(
         currentNode,
         currentPath,
         currentTemplate,
         nextTemplate,
         editor
       )
+      return true
     }
   }
-  deleteExcessChildren(structure.length + repeatOffset, node, path, editor)
+  if (node.children.length - 1 - structure.length - repeatOffset > 0) {
+    deleteExcessChildren(structure.length + repeatOffset, node, path, editor)
+    return true
+  }
+  return false
 }
 
 export const buildAndInsert = (

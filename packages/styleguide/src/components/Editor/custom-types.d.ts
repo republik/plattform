@@ -91,6 +91,7 @@ export type CustomElement =
   | PullQuoteSourceElement
 
 export type CustomDescendant = CustomElement | CustomText
+export type CustomAncestor = CustomElement | CustomEditor
 
 export type CustomNode = CustomEditor | CustomDescendant
 
@@ -124,7 +125,7 @@ interface ElementAttrsI extends EditorAttrsI {
 
 export type EditorAttr = keyof EditorAttrsI
 
-export type NormalizeFn<E> = (entry: [E, Path], editor: CustomEditor) => void
+export type NormalizeFn<E> = (entry: [E, Path], editor: CustomEditor) => boolean
 
 export interface MarkConfigI {
   styles: StyleAttribute

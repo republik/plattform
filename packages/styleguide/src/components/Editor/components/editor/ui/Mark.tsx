@@ -1,4 +1,10 @@
-import React, { Attributes, ReactElement } from 'react'
+import React, {
+  Attributes,
+  ReactElement,
+  useEffect,
+  useRef,
+  useState
+} from 'react'
 import { Editor } from 'slate'
 import { ReactEditor, useSlate } from 'slate-react'
 import {
@@ -8,13 +14,26 @@ import {
   configKeys
 } from '../../marks'
 import { ToolbarButton } from './Toolbar'
-import { Placeholder } from './Placeholder'
 import {
   CustomEditor,
   CustomMarksType,
   CustomText
 } from '../../../custom-types'
 import { getTextNode } from '../helpers/tree'
+import { css } from 'glamor'
+import { useColorContext } from '../../../../Colors/ColorContext'
+import { selectPlaceholder } from '../helpers/text'
+
+const styles = {
+  leaf: css({
+    position: 'relative'
+  }),
+  placeholder: css({
+    cursor: 'text',
+    position: 'absolute',
+    whiteSpace: 'nowrap'
+  })
+}
 
 const isMarkActive = (editor: CustomEditor, mKey: CustomMarksType): boolean => {
   const marks = Editor.marks(editor)
@@ -60,24 +79,52 @@ export const LeafComponent: React.FC<{
   children: ReactElement
   leaf: CustomText
 }> = ({ attributes, children, leaf }) => {
+  const [colorScheme] = useColorContext()
   const editor = useSlate()
+  const [placeholderStyle, setPlaceholderStyle] = useState({})
+
   const parentPath = ReactEditor.findPath(editor, children.props.parent)
   const parentNode = Editor.node(editor, parentPath)
   const node = getTextNode(parentNode, editor)
+
   const markStyles = configKeys
     .filter(mKey => leaf[mKey])
     .reduce((acc, mKey) => {
       const mStyle = config[mKey].styles
       return { ...acc, ...mStyle }
     }, {})
+
+  const showPlaceholder = (!leaf.text || leaf.text === '\u2060') && !leaf.end
+  const placeholderRef = useRef<HTMLSpanElement>()
+
+  useEffect(() => {
+    const placeholderEl = placeholderRef.current
+    if (!placeholderEl || !showPlaceholder) return setPlaceholderStyle({})
+    setPlaceholderStyle({
+      width: placeholderEl.getBoundingClientRect().width,
+      display: 'inline-block'
+    })
+  }, [placeholderRef.current, showPlaceholder])
+
   return (
     <span
       {...attributes}
       {...markStyles}
-      style={{ display: 'inline-flex', flexDirection: 'row-reverse' }}
+      {...styles.leaf}
+      style={placeholderStyle}
+      data-text={showPlaceholder ? leaf.placeholder : ''}
     >
-      {(!leaf.text || leaf.text === '\u2060') && !leaf.end && (
-        <Placeholder node={node} />
+      {showPlaceholder && (
+        <span
+          ref={placeholderRef}
+          {...styles.placeholder}
+          {...colorScheme.set('color', 'disabled')}
+          style={{ userSelect: 'none' }}
+          contentEditable={false}
+          onMouseDown={() => selectPlaceholder(editor, node)}
+        >
+          {leaf.placeholder}
+        </span>
       )}
       {children}
     </span>
