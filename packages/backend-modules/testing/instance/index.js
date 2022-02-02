@@ -71,7 +71,7 @@ const init = async ({ publicationScheduler, searchNotifyListener = null }) => {
   })
 
   // require server's server.js and start
-  const Server = require('@orbiting/graphql-server/server')
+  const Server = require('@orbiting/api-app/server')
   const server = await Server.start()
 
   const closeAndCleanup = async () => {
