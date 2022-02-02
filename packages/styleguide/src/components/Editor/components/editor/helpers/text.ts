@@ -10,6 +10,7 @@ import {
 import { ReactEditor } from 'slate-react'
 import { config as elConfig } from '../../elements'
 import editorConfig from '../../../config'
+import { isCorrect } from './structure'
 
 export const CHAR_LIMIT = editorConfig.maxSigns
 const PSEUDO_EMPTY_STRING = '\u2060'
@@ -50,9 +51,16 @@ export const handlePlaceholders: NormalizeFn<CustomText> = (
 ) => {
   const parent = Editor.parent(editor, path)
   const parentNode = parent[0]
+  const currentIndex = path[path.length - 1]
+  const nextSibling = parentNode.children[currentIndex + 1]
+  const prevSibling = parentNode.children[currentIndex - 1]
+  const redundantSibling =
+    (nextSibling && isCorrect(nextSibling, node.template)) ||
+    (prevSibling && isCorrect(prevSibling, node.template))
+  // console.log({ prevSibling, node, nextSibling, parentNode: parentNode.children })
   if (
     node.end ||
-    path[path.length - 1] !== 0 ||
+    redundantSibling ||
     !SlateElement.isElement(parentNode) ||
     elConfig[parentNode.type].attrs?.isVoid
   ) {

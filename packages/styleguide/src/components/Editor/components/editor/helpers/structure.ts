@@ -43,7 +43,7 @@ const isAllowedType = (
     ? allowedTypes.some(t => t === elType)
     : allowedTypes === elType
 
-const isCorrect = (
+export const isCorrect = (
   node: CustomDescendant | undefined,
   template: NodeTemplate | undefined
 ): boolean => {
