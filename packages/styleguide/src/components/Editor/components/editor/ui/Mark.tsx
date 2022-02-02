@@ -22,7 +22,7 @@ import {
 import { getTextNode } from '../helpers/tree'
 import { css } from 'glamor'
 import { useColorContext } from '../../../../Colors/ColorContext'
-import { selectPlaceholder } from '../helpers/text'
+import { isEmpty, selectPlaceholder } from '../helpers/text'
 
 const styles = {
   leaf: css({
@@ -96,7 +96,7 @@ export const LeafComponent: React.FC<{
       return { ...acc, ...mStyle }
     }, {})
 
-  const showPlaceholder = (!leaf.text || leaf.text === '\u2060') && !leaf.end
+  const showPlaceholder = isEmpty(leaf.text) && !leaf.end
   const placeholderRef = useRef<HTMLSpanElement>()
 
   useEffect(() => {

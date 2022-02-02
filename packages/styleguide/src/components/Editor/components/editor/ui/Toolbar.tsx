@@ -19,6 +19,7 @@ import { Editor, Range, NodeEntry } from 'slate'
 import { useColorContext } from '../../../../Colors/ColorContext'
 import IconButton from '../../../../IconButton'
 import { getAncestry } from '../helpers/tree'
+import { isEmpty } from '../helpers/text'
 
 const IMPLICIT_INLINES: TemplateType[] = ['text', 'break']
 
@@ -54,13 +55,12 @@ const hasUsableSelection = (
   const { selection } = editor
   return (
     !Range.isCollapsed(selection) ||
-    (selectedNode && Editor.string(editor, selectedNode[1]) === '')
+    (selectedNode && isEmpty(Editor.string(editor, selectedNode[1])))
   )
 }
 
-const hasTextSelection = (editor: CustomEditor): boolean => {
-  return Editor.string(editor, editor.selection) !== ''
-}
+const hasTextSelection = (editor: CustomEditor): boolean =>
+  !isEmpty(Editor.string(editor, editor.selection))
 
 const hasVoidSelection = (
   selectedElement?: NodeEntry<CustomElement>

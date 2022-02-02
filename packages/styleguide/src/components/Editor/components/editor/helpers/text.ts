@@ -12,6 +12,7 @@ import { config as elConfig } from '../../elements'
 import editorConfig from '../../../config'
 
 export const CHAR_LIMIT = editorConfig.maxSigns
+const PSEUDO_EMPTY_STRING = '\u2060'
 
 export const getCharCount = (nodes: (Descendant | Node)[]): number =>
   nodes.map(node => Node.string(node).length).reduce((a, b) => a + b, 0)
@@ -29,7 +30,7 @@ export const selectPlaceholder = (
   const at = node[1]
   // this is a hack so that the element is selected before the text change
   // (selecting empty text nodes is a problem)
-  Transforms.insertText(editor, '\u2060', { at })
+  Transforms.insertText(editor, PSEUDO_EMPTY_STRING, { at })
   ReactEditor.focus(editor)
   Transforms.select(editor, at)
   setTimeout(() => {
@@ -39,6 +40,9 @@ export const selectPlaceholder = (
     Transforms.select(editor, at)
   })
 }
+
+export const isEmpty = (text?: string) =>
+  !text || text === '' || text === PSEUDO_EMPTY_STRING
 
 export const handlePlaceholders: NormalizeFn<CustomText> = (
   [node, path],
@@ -56,7 +60,7 @@ export const handlePlaceholders: NormalizeFn<CustomText> = (
       Transforms.unsetNodes(editor, 'placeholder', { at: path })
     }
   } else {
-    const placeholder = toTitle(parentNode.type)
+    const placeholder = toTitle(parentNode.type) + '\u202F\u202F'
     if (!node.placeholder || node.placeholder !== placeholder) {
       Transforms.setNodes(
         editor,
