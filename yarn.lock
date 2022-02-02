@@ -22325,7 +22325,7 @@ slate-react@^0.10.23:
     slate-plain-serializer "^0.4.16"
     slate-prop-types "^0.4.16"
 
-slate-react@^0.72.5:
+slate-react@^0.72.8:
   version "0.72.8"
   resolved "https://registry.yarnpkg.com/slate-react/-/slate-react-0.72.8.tgz#b6b5d88ce8f89ba26965066b628757c60866cb23"
   integrity sha512-asgRV/msGqfzm6cPxhrRo2Iuj5RhoDvicfkwpVD63b4K4yfPpL7a8sx0zO5WY7gqggBLjrYnNth6mAbdlHPzMg==
@@ -22353,7 +22353,7 @@ slate@^0.31.8:
     slate-dev-logger "^0.1.36"
     type-of "^2.0.1"
 
-slate@^0.72.3:
+slate@^0.72.8:
   version "0.72.8"
   resolved "https://registry.yarnpkg.com/slate/-/slate-0.72.8.tgz#5a018edf24e45448655293a68bfbcf563aa5ba81"
   integrity sha512-/nJwTswQgnRurpK+bGJFH1oM7naD5qDmHd89JyiKNT2oOKD8marW0QSBtuFnwEbL5aGCS8AmrhXQgNOsn4osAw==

@@ -73,10 +73,13 @@ const buildTextNode = (isEnd: boolean): CustomText => {
   }
 }
 
-export const buildElement = (elKey: CustomElementsType): CustomElement => ({
-  type: elKey,
-  children: []
-})
+export const buildElement = (elKey: CustomElementsType): CustomElement => {
+  const isVoid = elConfig[elKey].attrs?.isVoid
+  return {
+    type: elKey,
+    children: isVoid ? [TEXT] : []
+  }
+}
 
 const buildFromTemplate = (template: NodeTemplate): CustomDescendant => {
   const nodeType = getTemplateType(template)
@@ -309,6 +312,7 @@ const insertRepeat = (editor: CustomEditor): void => {
   }
   let insertP
   Editor.withoutNormalizing(editor, () => {
+    // console.log('insert', { target })
     // split nodes at selection and move the second half of the split
     // in the first position where repeats are allowed
     Transforms.splitNodes(editor, { always: true })

@@ -4,7 +4,7 @@ import {
   NodeTemplate
 } from '../../../custom-types'
 import { config } from '../../elements'
-import { Element as SlateElement, Text } from 'slate'
+import { Element as SlateElement, Text, Transforms } from 'slate'
 import { fixStructure } from '../helpers/structure'
 import { handleEnds } from '../helpers/ends'
 import { handlePlaceholders } from '../helpers/text'
@@ -27,7 +27,12 @@ export const withNormalizations = (topLevelStructure?: NodeTemplate[]) => (
     }
     // element normalization
     if (SlateElement.isElement(node)) {
+      // console.log(node, node.type)
       const elConfig = config[node.type]
+      if (!elConfig) {
+        Transforms.unwrapNodes(editor, { at: path })
+        return
+      }
       rerun = fixStructure(elConfig.structure)([node, path], editor)
       if (rerun) return
       const customNormalizations = elConfig.normalizations || []
