@@ -80,7 +80,8 @@ export const findInsertTarget = (
 
 const selectText = (
   editor: CustomEditor,
-  node: NodeEntry<CustomText>
+  node: NodeEntry<CustomText>,
+  direction: 'next' | 'previous' = 'next'
 ): void => {
   const [textNode, textPath] = node
   if (!textNode.text) {
@@ -88,6 +89,7 @@ const selectText = (
     return
   }
   Transforms.select(editor, textPath)
+  Transforms.collapse(editor, { edge: direction === 'next' ? 'start' : 'end' })
 }
 
 const isUnselectable = (
@@ -217,7 +219,7 @@ export const selectNode = (
 ): void => {
   const [targetNode, targetPath] = Editor.node(editor, target)
   const text = getTextNode([targetNode, targetPath], editor, direction)
-  selectText(editor, text)
+  selectText(editor, text, direction)
 }
 
 // BUG: from figureCaption, doesnt jump to figureByline if it's empty
