@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import {
   CustomEditor,
   CustomElement,
@@ -40,14 +40,16 @@ const getForm = (
   }
 }
 
-export const getForms = (editor: CustomEditor, path: number[]): FormData[] =>
-  path
+export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
+  if (!path || path === []) return []
+  return path
     .reduce((forms, p, i) => {
       const currentPath = path.slice(0, i ? -i : undefined)
       const currentForm = getForm(editor, currentPath)
       return forms.concat(currentForm)
     }, [])
     .filter(Boolean)
+}
 
 export const FormOverlay = ({
   path,
@@ -57,12 +59,17 @@ export const FormOverlay = ({
   onClose: () => void
 }): ReactElement => {
   const editor = useSlate()
-  if (!path || path === []) return null
+  const [forms, setForms] = useState<FormData[]>([])
 
-  const forms = getForms(editor, path)
-  if (!forms.length) {
-    onClose()
-  }
+  useEffect(() => {
+    !forms.length && onClose()
+  }, [forms])
+
+  useEffect(() => {
+    setForms(getForms(editor, path))
+  }, [path, onClose])
+
+  if (!path) return null
 
   return (
     <Overlay onClose={onClose}>

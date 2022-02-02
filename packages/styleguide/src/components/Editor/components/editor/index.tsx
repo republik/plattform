@@ -56,7 +56,6 @@ const SlateEditor: React.FC<{
     const path = ReactEditor.findPath(editor, props.element)
     const showDataForm = e => {
       e.stopPropagation()
-      console.log(props.element, config)
       setFormElementPath(path)
     }
     const selectVoid = e => {

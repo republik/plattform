@@ -83,6 +83,8 @@ export const LeafComponent: React.FC<{
   const editor = useSlate()
   const [placeholderStyle, setPlaceholderStyle] = useState({})
 
+  // ReactEditor cannot find the path of a leaf directly.
+  // That's not so great if the placeholder isn't the last text child
   const parentPath = ReactEditor.findPath(editor, children.props.parent)
   const parentNode = Editor.node(editor, parentPath)
   const node = getTextNode(parentNode, editor)
@@ -104,7 +106,7 @@ export const LeafComponent: React.FC<{
       width: placeholderEl.getBoundingClientRect().width,
       display: 'inline-block'
     })
-  }, [placeholderRef.current, showPlaceholder])
+  }, [showPlaceholder])
 
   return (
     <span

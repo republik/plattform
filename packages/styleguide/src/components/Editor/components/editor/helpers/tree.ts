@@ -2,7 +2,6 @@ import {
   CustomDescendant,
   CustomEditor,
   CustomElement,
-  CustomNode,
   CustomText
 } from '../../../custom-types'
 import {
