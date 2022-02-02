@@ -7,7 +7,8 @@ import {
   Editorial,
   inQuotes,
   Interaction,
-  mediaQueries
+  mediaQueries,
+  useColorContext
 } from '@project-r/styleguide'
 import {
   CDN_FRONTEND_BASE_URL,
@@ -75,6 +76,7 @@ const SUPPORTED_TABS = ['general', 'article']
 const DialogContent = ({ tab, activeDiscussionId, serverContext }) => {
   const { t } = useTranslation()
   const { query } = useRouter()
+  const [colorScheme] = useColorContext()
 
   const discussionContext = useDiscussion()
 
@@ -200,7 +202,10 @@ const DialogContent = ({ tab, activeDiscussionId, serverContext }) => {
                     >
                       {t('feedback/activeDiscussions/label')}
                       <span style={{ position: 'absolute', right: 0, top: -1 }}>
-                        <DiscussionIcon size={24} fill='primary' />
+                        <DiscussionIcon
+                          size={24}
+                          {...colorScheme.set('fill', 'primary')}
+                        />
                       </span>
                     </H3>
                     <ActiveDiscussions first={5} />
