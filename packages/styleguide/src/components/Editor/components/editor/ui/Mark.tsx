@@ -64,15 +64,16 @@ export const LeafComponent: React.FC<{
   const parentPath = ReactEditor.findPath(editor, children.props.parent)
   const parentNode = Editor.node(editor, parentPath)
   const node = getTextNode(parentNode, editor)
-  configKeys
+  const markStyles = configKeys
     .filter(mKey => leaf[mKey])
-    .forEach(mKey => {
-      const Component = config[mKey].Component
-      children = <Component>{children}</Component>
-    })
+    .reduce((acc, mKey) => {
+      const mStyle = config[mKey].styles
+      return { ...acc, ...mStyle }
+    }, {})
   return (
     <span
       {...attributes}
+      {...markStyles}
       style={{ display: 'inline-flex', flexDirection: 'row-reverse' }}
     >
       {(!leaf.text || leaf.text === '\u2060') && !leaf.end && (

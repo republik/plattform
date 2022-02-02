@@ -231,14 +231,14 @@ export const Question = ({ children, attributes, ...props }) => {
 
 export const Answer = P
 
-const emphasis = css(fontStyles.serifBold)
+export const emphasis = css(fontStyles.serifBold)
 export const Emphasis = ({ children, attributes, ...props }) => (
   <strong {...attributes} {...props} {...emphasis}>
     {children}
   </strong>
 )
 
-const cursive = css(fontStyles.serifItalic)
+export const cursive = css(fontStyles.serifItalic)
 export const Cursive = ({ children, attributes, ...props }) => (
   <em {...attributes} {...props} {...cursive}>
     {children}

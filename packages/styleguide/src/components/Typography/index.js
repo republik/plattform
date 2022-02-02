@@ -172,7 +172,7 @@ export const Label = ({ children, ...props }) => {
   )
 }
 
-const subSupStyles = {
+export const subSupStyles = {
   base: css({
     display: 'inline-block',
     textDecoration: 'none',
@@ -189,14 +189,16 @@ const subSupStyles = {
   })
 }
 
+export const sub = { ...subSupStyles.base, ...subSupStyles.sub }
 export const Sub = ({ children, attributes }) => (
-  <sub {...attributes} {...subSupStyles.base} {...subSupStyles.sub}>
+  <sub {...attributes} {...sub}>
     {children}
   </sub>
 )
 
+export const sup = { ...subSupStyles.base, ...subSupStyles.sup }
 export const Sup = ({ children, attributes }) => (
-  <sup {...attributes} {...subSupStyles.base} {...subSupStyles.sup}>
+  <sup {...attributes} {...sup}>
     {children}
   </sup>
 )

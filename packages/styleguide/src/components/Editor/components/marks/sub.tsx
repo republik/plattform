@@ -1,8 +1,8 @@
-import { NodeConfigI } from '../../custom-types'
-import { Sub } from '../../../Typography'
+import { MarkConfigI } from '../../custom-types'
+import { sub } from '../../../Typography'
 import { SubIcon } from '../../../Icons'
 
-export const config: NodeConfigI = {
-  Component: Sub,
+export const config: MarkConfigI = {
+  styles: sub,
   button: { icon: SubIcon, small: true }
 }

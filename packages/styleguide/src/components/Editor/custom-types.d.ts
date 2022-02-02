@@ -3,6 +3,7 @@ import { IconType } from '@react-icons/all-files/lib'
 import { BaseEditor, Path } from 'slate'
 import { ReactEditor } from 'slate-react'
 import { HistoryEditor } from 'slate-history'
+import {StyleAttribute} from "glamor";
 
 type CustomMarks = {
   italic?: boolean
@@ -125,8 +126,8 @@ export type EditorAttr = keyof EditorAttrsI
 
 export type NormalizeFn<E> = (entry: [E, Path], editor: CustomEditor) => void
 
-export interface NodeConfigI {
-  Component: React.FC | ForwardRefExoticComponent
+export interface MarkConfigI {
+  styles: StyleAttribute
   button?: ButtonI
 }
 
@@ -149,12 +150,14 @@ export type NodeTemplate = {
   end?: boolean
 }
 
-export interface ElementConfigI extends NodeConfigI {
+export interface ElementConfigI {
+  Component: React.FC | ForwardRefExoticComponent
   attrs?: ElementAttrsI
   dataRequired?: dataRequiredType
   normalizations?: NormalizeFn[]
   structure?: NodeTemplate[]
   Form?: React.FC<ElementFormProps<CustomElement>>
+  button?: ButtonI
 }
 
 export type ElementsConfig = {

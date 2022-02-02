@@ -1,8 +1,8 @@
-import { NodeConfigI } from '../../custom-types'
+import { MarkConfigI } from '../../custom-types'
 import { Editorial } from '../../../Typography'
 import { ItalicIcon } from '../../../Icons'
 
-export const config: NodeConfigI = {
-  Component: Editorial.Cursive,
+export const config: MarkConfigI = {
+  styles: Editorial.cursive,
   button: { icon: ItalicIcon }
 }

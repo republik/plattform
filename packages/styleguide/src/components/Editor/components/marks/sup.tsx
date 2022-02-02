@@ -1,8 +1,8 @@
-import { NodeConfigI } from '../../custom-types'
-import { Sup } from '../../../Typography'
+import { MarkConfigI } from '../../custom-types'
+import { sup } from '../../../Typography'
 import { SupIcon } from '../../../Icons'
 
-export const config: NodeConfigI = {
-  Component: Sup,
+export const config: MarkConfigI = {
+  styles: sup,
   button: { icon: SupIcon, small: true }
 }
