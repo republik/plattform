@@ -118,6 +118,8 @@ export const buildAndInsert = (
   }
   const target = targetC || targetE
   Transforms.setNodes(editor, { type: elKey }, { at: target[1] })
+  Transforms.select(editor, target[1])
+  Transforms.collapse(editor, { edge: 'start' })
 }
 
 const insertMissingNode = (
