@@ -182,21 +182,21 @@ export type CommentProps<CommentType = any> = {
   t: any
   comment: CommentType
   actions: {
-    handleUpVote: (commentId: string) => Promise<unknown>
-    handleDownVote: (commentId: string) => Promise<unknown>
-    handleUnVote: (commentId: string) => Promise<unknown>
     handleShare: (comment: CommentType) => Promise<unknown>
     handleReply: () => void
     handleLoadReplies: () => Promise<unknown>
   }
-  menuItems
+  voteActions?: {
+    handleUpVote: (commentId: string) => Promise<unknown>
+    handleDownVote: (commentId: string) => Promise<unknown>
+    handleUnVote: (commentId: string) => Promise<unknown>
+  }
+  menuItems?: ActionMenuItem[]
   focusId?: string
   isLast?: boolean
   isBoard?: boolean
   inRootCommentOverlay?: boolean
   CommentLink: React.ElementType
-  focusHref: string
-  profileHref: string
   userCanComment?: boolean
   userWaitUntil?: string
   editComposer: React.ReactNode
@@ -212,6 +212,7 @@ const CommentNode = ({
   t,
   comment,
   actions,
+  voteActions,
   menuItems = [],
   userCanComment,
   userWaitUntil,
@@ -220,8 +221,6 @@ const CommentNode = ({
   isBoard,
   inRootCommentOverlay,
   CommentLink,
-  focusHref,
-  profileHref,
   editComposer
 }: CommentProps) => {
   const { id, parentIds } = comment
@@ -270,15 +269,6 @@ const CommentNode = ({
   )
 
   if (isExpanded) {
-    const { handleUpVote, handleDownVote, handleUnVote } = actions
-    const voteActions = handleUpVote &&
-      handleDownVote &&
-      handleUnVote && {
-        handleUpVote,
-        handleDownVote,
-        handleUnVote
-      }
-
     return (
       <div ref={root} data-comment-id={id} {...rootStyle}>
         {!nestLimitExceeded && !isBoard && verticalToggleStyle && (
@@ -313,11 +303,7 @@ const CommentNode = ({
           <CommentActions
             t={t}
             comment={comment}
-            actions={{
-              handleReply: actions.handleReply,
-              handleShare: actions.handleShare,
-              handleLoadReplies: actions.handleLoadReplies
-            }}
+            actions={actions}
             voteActions={voteActions}
             userCanComment={userCanComment}
             userWaitUntil={userWaitUntil}

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { fontStyles, Label } from '../../Typography'
@@ -16,6 +16,7 @@ import ActionsMenu, {
 } from '../Internal/Comment/ActionsMenu'
 import HeaderMetaLine from '../Internal/Comment/HeaderMetaLine'
 import { pxToRem } from '../../Typography/utils'
+import { DiscussionContext } from '../DiscussionContext'
 
 const HIGHLIGHT_PADDING = 7
 
@@ -119,19 +120,21 @@ const styles = {
   })
 }
 
+const MockLink = props => <>{props.children}</>
+
 const StatementNode = ({
   comment,
   tagMappings = [],
   t,
-  actions: { handleUpVote, handleDownVote, handleUnVote, handleShare },
+  actions: { handleShare },
+  voteActions,
   menuItems = [],
   disableVoting = false,
   isHighlighted = false,
-  Link,
-  CommentLink,
-  profileHref
+  CommentLink = MockLink
 }) => {
   const [colorScheme] = useColorContext()
+  const { discussion } = useContext(DiscussionContext)
 
   const tag = comment.tags.length > 0 && comment.tags[0]
 
@@ -183,14 +186,6 @@ const StatementNode = ({
     return null
   }, [comment?.published, comment?.adminUnpublished])
 
-  const profileImgElement = showProfilePicture && (
-    <img
-      {...styles.profilePicture}
-      alt={comment.displayAuthor.name}
-      src={comment.displayAuthor.profilePicture}
-    />
-  )
-
   return (
     <div
       {...styles.root}
@@ -203,26 +198,24 @@ const StatementNode = ({
     >
       {showProfilePicture && (
         <div {...styles.profilePictureWrapper}>
-          {profileHref ? (
-            <Link href={profileHref} passHref>
-              <a {...styles.link}>{profileImgElement}</a>
-            </Link>
-          ) : (
-            profileImgElement
-          )}
+          <CommentLink displayAuthor={comment.displayAuthor} passHref>
+            <a {...styles.link}>
+              <img
+                {...styles.profilePicture}
+                alt={comment.displayAuthor.name}
+                src={comment.displayAuthor.profilePicture}
+              />
+            </a>
+          </CommentLink>
         </div>
       )}
       <div {...styles.headingWrapper}>
         <p {...styles.heading} {...colorScheme.set('color', heading.color)}>
-          {profileHref ? (
-            <Link href={profileHref} passHref>
-              <a {...styles.link}>{heading.text}</a>
-            </Link>
-          ) : (
-            heading.text
-          )}
+          <CommentLink displayAuthor={comment.displayAuthor} passHref>
+            <a {...styles.link}>{heading.text}</a>
+          </CommentLink>
         </p>
-        <HeaderMetaLine t={t} comment={comment} CommentLink={CommentLink} />
+        <HeaderMetaLine t={t} comment={comment} discussion={discussion} CommentLink={CommentLink} />
       </div>
       <div {...styles.textWrapper}>
         <span
@@ -249,16 +242,18 @@ const StatementNode = ({
           <ActionsMenu items={menuItems} />
         </div>
       )}
-      <div {...styles.voteWrapper}>
-        <VoteButtons
-          t={t}
-          disabled={disableVoting}
-          comment={comment}
-          handleUpVote={handleUpVote}
-          handleDownVote={handleDownVote}
-          handleUnVote={handleUnVote}
-        />
-      </div>
+      {voteActions && (
+        <div {...styles.voteWrapper}>
+          <VoteButtons
+            t={t}
+            disabled={disableVoting}
+            comment={comment}
+            handleUpVote={voteActions.handleUpVote}
+            handleDownVote={voteActions.handleDownVote}
+            handleUnVote={voteActions.handleUnVote}
+          />
+        </div>
+      )}
     </div>
   )
 }
@@ -275,16 +270,15 @@ StatementNode.propTypes = {
     })
   ),
   actions: PropTypes.shape({
+    handleShare: PropTypes.func.isRequired
+  }),
+  voteActions: PropTypes.shape({
     handleUpVote: PropTypes.func.isRequired,
     handleDownVote: PropTypes.func.isRequired,
-    handleUnVote: PropTypes.func.isRequired,
-    handleShare: PropTypes.func.isRequired
+    handleUnVote: PropTypes.func.isRequired
   }),
   menuItems: PropTypes.arrayOf(ActionsMenuItemPropType),
   disableVoting: PropTypes.bool,
   isHighlighted: PropTypes.bool,
-  CommentLink: PropTypes.elementType.isRequired,
-  Link: PropTypes.elementType.isRequired,
-  focusHref: PropTypes.string.isRequired,
-  profileHref: PropTypes.string.isRequired
+  CommentLink: PropTypes.elementType
 }
