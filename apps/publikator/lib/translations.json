@@ -1202,7 +1202,7 @@
     },
     {
       "key": "memo/modal/warning/newDoc",
-      "value": "Sie können eine Notiz hinterlassen, nachdem Sie den Beitrag comitted haben."
+      "value": "Sie können eine Notiz hinterlassen, nachdem Sie den Beitrag committed haben."
     },
     {
       "key": "memo/container/edit",
