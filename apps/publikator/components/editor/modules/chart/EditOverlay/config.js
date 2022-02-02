@@ -2120,5 +2120,35 @@ CSP,2015,1
 MCR,2015,1
 SVP,2015,65
 `
+  },
+  {
+    name: 'Tabelle',
+    screenshot: '/static/charts/table.png',
+    config: {
+      type: 'Table',
+      numberFormat: 's',
+      tableColumns: [
+        {
+          column: 'Indikator',
+          type: 'string'
+        },
+        {
+          column: 'Afghanistan',
+          type: 'number',
+          width: '170'
+        },
+        {
+          column: 'Schweiz',
+          type: 'number',
+          width: '170'
+        }
+      ]
+    },
+    values: `
+Indikator,Afghanistan,Schweiz
+Gesamtbevölkerung,38,8.6
+"BNE pro Kopf (USD, kaufkraftbereinigt)",2229,69394
+"Kindersterblichkeit (pro 1000 Kindern unter 5 Jahren)",62.3,4.1
+"Jahre in der Schule (Mittelwert)",3.9,13.4`
   }
 ]
