@@ -20,7 +20,6 @@ export const handleEnds: NormalizeFn<CustomText> = ([node, path], editor) => {
     const [nearestTextNode, nearestTextPath] = getTextNode(previous, editor)
     const text = nearestTextNode.text.concat(node.text)
     Transforms.insertText(editor, text, { at: nearestTextPath })
-    Transforms.select(editor, nearestTextPath)
     Transforms.insertText(editor, '', { at: path })
     return true
   }

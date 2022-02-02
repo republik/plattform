@@ -47,7 +47,7 @@ const hasSelection = (editor: CustomEditor): boolean => {
   return !!selection && ReactEditor.isFocused(editor)
 }
 
-const hasTextSelection = (
+const hasUsableSelection = (
   editor: CustomEditor,
   selectedNode?: NodeEntry<CustomElement>
 ): boolean => {
@@ -58,6 +58,10 @@ const hasTextSelection = (
   )
 }
 
+const hasTextSelection = (editor: CustomEditor): boolean => {
+  return Editor.string(editor, editor.selection) !== ''
+}
+
 const hasVoidSelection = (
   selectedElement?: NodeEntry<CustomElement>
 ): boolean => selectedElement && elConfig[selectedElement[0].type].attrs?.isVoid
@@ -66,7 +70,9 @@ const showMarks = (
   editor: CustomEditor,
   selectedElement?: NodeEntry<CustomElement>
 ): boolean =>
-  selectedElement && elConfig[selectedElement[0].type].attrs?.formatText
+  hasTextSelection(editor) &&
+  selectedElement &&
+  elConfig[selectedElement[0].type].attrs?.formatText
 
 const getTemplateTypes = (
   nodeEntry?: NodeEntry<CustomDescendant>
@@ -82,7 +88,7 @@ const getAllowedInlines = (
   editor: CustomEditor,
   selectedNode?: NodeEntry<CustomText>
 ): InsertButtonConfig[] => {
-  if (Editor.string(editor, editor.selection) === '') return []
+  if (!hasTextSelection(editor)) return []
   const templateTypes = getTemplateTypes(selectedNode)
   // console.log('getAllowedInlines', { selectedNode, templateTypes })
   return templateTypes
@@ -99,10 +105,15 @@ const getAllowedBlocks = (
     return getAllowedBlocks(editor, selectedContainer)
   }
   const templateTypes = getTemplateTypes(selectedNode)
-  return templateTypes.map(t => ({
-    type: t as CustomElementsType,
-    disabled: selectedNode && t === selectedNode[0].type
-  }))
+  const isInline = elConfig[selectedNode[0].type].attrs?.isInline
+  return templateTypes.map(t => {
+    const isSelected = selectedNode && t === selectedNode[0].type
+    return {
+      type: t as CustomElementsType,
+      disabled: !isInline && isSelected,
+      active: isInline && isSelected
+    }
+  })
 }
 
 const calcHoverPosition = (
@@ -230,7 +241,7 @@ const Toolbar: React.FC<{
     // console.log({ text, element, container })
     const voidMode = hasVoidSelection(element)
     setVoid(voidMode)
-    if (hasTextSelection(editor, element) || voidMode) {
+    if (hasUsableSelection(editor, element) || voidMode) {
       setMarks(showMarks(editor, element))
       setInlines(getAllowedInlines(editor, text))
       const allowedBlocks = getAllowedBlocks(editor, element, container)

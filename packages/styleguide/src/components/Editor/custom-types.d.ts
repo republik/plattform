@@ -183,6 +183,7 @@ export type KeyCombo = {
 export type InsertButtonConfig = {
   type: CustomElementsType
   disabled?: boolean
+  active?: boolean
 }
 
 export type CustomEditor = BaseEditor & ReactEditor & HistoryEditor

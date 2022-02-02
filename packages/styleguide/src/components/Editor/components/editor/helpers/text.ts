@@ -44,7 +44,6 @@ export const handlePlaceholders: NormalizeFn<CustomText> = (
   [node, path],
   editor
 ) => {
-  // console.log('PLACEHOLDER', [node, path])
   const parent = Editor.parent(editor, path)
   const parentNode = parent[0]
   if (
@@ -55,7 +54,6 @@ export const handlePlaceholders: NormalizeFn<CustomText> = (
   ) {
     if (node.placeholder) {
       Transforms.unsetNodes(editor, 'placeholder', { at: path })
-      return true
     }
   } else {
     const placeholder = toTitle(parentNode.type)
@@ -67,7 +65,6 @@ export const handlePlaceholders: NormalizeFn<CustomText> = (
         },
         { at: path }
       )
-      return true
     }
   }
   return false

@@ -23,6 +23,7 @@ export const InsertButton: React.FC<{
     <ToolbarButton
       button={element.button}
       disabled={config.disabled}
+      active={config.active}
       onClick={() => {
         buildAndInsert(editor, config.type)
       }}

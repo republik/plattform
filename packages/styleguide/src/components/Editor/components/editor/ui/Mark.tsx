@@ -108,11 +108,10 @@ export const LeafComponent: React.FC<{
 
   return (
     <span
-      {...attributes}
       {...markStyles}
       {...styles.leaf}
       style={placeholderStyle}
-      data-text={showPlaceholder ? leaf.placeholder : ''}
+      {...attributes}
     >
       {showPlaceholder && (
         <span
@@ -121,7 +120,7 @@ export const LeafComponent: React.FC<{
           {...colorScheme.set('color', 'disabled')}
           style={{ userSelect: 'none' }}
           contentEditable={false}
-          onMouseDown={() => selectPlaceholder(editor, node)}
+          onClick={() => selectPlaceholder(editor, node)}
         >
           {leaf.placeholder}
         </span>

@@ -73,22 +73,14 @@ const buildTextNode = (isEnd: boolean): CustomText => {
   }
 }
 
-export const buildElement = (
-  elKey: CustomElementsType,
-  children?: CustomDescendant[]
-): CustomElement => ({
+export const buildElement = (elKey: CustomElementsType): CustomElement => ({
   type: elKey,
-  children: children || [TEXT]
+  children: []
 })
 
-const buildFromTemplate = (
-  template: NodeTemplate,
-  children?: CustomDescendant[]
-): CustomDescendant => {
+const buildFromTemplate = (template: NodeTemplate): CustomDescendant => {
   const nodeType = getTemplateType(template)
-  return !nodeType
-    ? buildTextNode(template.end)
-    : buildElement(nodeType, children)
+  return !nodeType ? buildTextNode(template.end) : buildElement(nodeType)
 }
 
 const shouldRemove = (
@@ -103,6 +95,31 @@ const shouldRemove = (
   (isCorrect(nextNode, currentTemplate) ||
     (prevTemplate?.repeat && isCorrect(nextNode, prevTemplate)))
 
+export const buildAndInsert = (
+  editor: CustomEditor,
+  elKey: CustomElementsType
+): void => {
+  const { selection } = editor
+  if (!selection) return
+  const isCollapsed = Range.isCollapsed(selection)
+  const { text: targetT, element: targetE, container: targetC } = getAncestry(
+    editor
+  )
+  const element = buildElement(elKey)
+  // console.log('insert', element)
+  if (elConfig[elKey].attrs?.isInline) {
+    if (!targetT) return
+    if (isCollapsed) {
+      return Transforms.insertNodes(editor, element)
+    } else {
+      Transforms.wrapNodes(editor, element, { split: true })
+      return Transforms.collapse(editor, { edge: 'end' })
+    }
+  }
+  const target = targetC || targetE
+  Transforms.setNodes(editor, { type: elKey }, { at: target[1] })
+}
+
 const insertMissingNode = (
   node: CustomDescendant | undefined,
   path: number[],
@@ -110,10 +127,10 @@ const insertMissingNode = (
   nextTemplate: NodeTemplate | undefined,
   editor: CustomEditor
 ): void => {
-  // console.log('FIX STRUCTURE')
+  // console.log('INSERT MISSING NODE', { node, path })
   if (!node || isCorrect(node, nextTemplate)) {
-    // console.log('insert new node')
     const newNode = buildFromTemplate(currentTemplate)
+    // console.log('insert new node and return', { newNode })
     return Transforms.insertNodes(editor, newNode, {
       at: path
     })
@@ -122,12 +139,15 @@ const insertMissingNode = (
   // TODO: what if the current node is an inline element
   //  and the template is a block?
   if (SlateElement.isElement(node)) {
+    // console.log('unwrap')
     Transforms.unwrapNodes(editor, { at: path })
   }
   const templateType = getTemplateType(currentTemplate)
   const isVoid = templateType && elConfig[templateType].attrs?.isVoid
-  const newNode = buildFromTemplate(currentTemplate, !isVoid && [])
+  const newNode = buildFromTemplate(currentTemplate)
+  // console.log({ newNode })
   if (SlateElement.isElement(newNode) && !isVoid) {
+    // console.log('wrap')
     return Transforms.wrapNodes(editor, newNode, { at: path })
   }
   if (Text.isText(newNode)) {
@@ -237,34 +257,11 @@ export const fixStructure: (
       return true
     }
   }
-  if (node.children.length - 1 - structure.length - repeatOffset > 0) {
+  if (node.children.length > structure.length + repeatOffset) {
     deleteExcessChildren(structure.length + repeatOffset, node, path, editor)
     return true
   }
   return false
-}
-
-export const buildAndInsert = (
-  editor: CustomEditor,
-  elKey: CustomElementsType
-): void => {
-  const { selection } = editor
-  const isCollapsed = selection && Range.isCollapsed(selection)
-  // TODO (nice to have): use commonAncestor to safeguard that element is valid
-  //  (similar to toolbar getInline logic)
-  const element = buildElement(elKey, !isCollapsed && [])
-  // console.log('insert', element)
-  if (elConfig[elKey].attrs?.isInline && isCollapsed) {
-    return Transforms.insertNodes(editor, element)
-  }
-  if (elConfig[elKey].attrs?.isInline) {
-    Transforms.wrapNodes(editor, element, { split: true })
-    return Transforms.collapse(editor, { edge: 'end' })
-  }
-  const { element: targetEl, container: targetC } = getAncestry(editor)
-  const target = targetC || targetEl
-  // TODO: cleanup for nonstandard attrs
-  Transforms.setNodes(editor, { type: elKey }, { at: target[1] })
 }
 
 export const insertOnKey = (keyCombo: KeyCombo, elKey: CustomElementsType) => (
