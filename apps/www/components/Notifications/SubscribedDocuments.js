@@ -7,7 +7,7 @@ import {
   plainButtonRule,
   A,
   Interaction,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
 import SubscribeCheckbox from './SubscribeCheckbox'
@@ -17,8 +17,8 @@ import { withMembership } from '../Auth/checkRoles'
 
 const styles = {
   checkboxes: css({
-    margin: '8px 0 16px'
-  })
+    margin: '8px 0 16px',
+  }),
 }
 
 const SECTIONS_ALWAYS_SHOWN = ONBOARDING_SECTIONS_REPO_IDS
@@ -41,7 +41,7 @@ const getVisibleSections = (sections, prevShown = []) =>
     section =>
       prevShown.find(s => s.id === section.id) ||
       getSubscriptionCount(section) ||
-      SECTIONS_ALWAYS_SHOWN.find(repoId => repoId === section.repoId)
+      SECTIONS_ALWAYS_SHOWN.find(repoId => repoId === section.repoId),
   )
 
 const SubscribedDocuments = ({ t, data: { sections }, isMember }) => {
@@ -55,12 +55,12 @@ const SubscribedDocuments = ({ t, data: { sections }, isMember }) => {
   }, [sectionNodes])
 
   const [visibleSections, setVisibleSections] = useState(
-    getVisibleSections(sectionsWithFormat || [])
+    getVisibleSections(sectionsWithFormat || []),
   )
 
   useEffect(() => {
     setVisibleSections(prevShown =>
-      getVisibleSections(sectionsWithFormat, prevShown)
+      getVisibleSections(sectionsWithFormat, prevShown),
     )
   }, [sectionsWithFormat])
 
@@ -68,7 +68,7 @@ const SubscribedDocuments = ({ t, data: { sections }, isMember }) => {
     sectionsWithFormat &&
     sectionsWithFormat.reduce(
       (reducer, section) => reducer + getSubscriptionCount(section),
-      0
+      0,
     )
 
   if (!sectionsWithFormat || !sectionsWithFormat.length) return null
@@ -77,12 +77,16 @@ const SubscribedDocuments = ({ t, data: { sections }, isMember }) => {
     <>
       <Interaction.P style={{ marginBottom: 16 }}>
         {t.pluralize('Notifications/settings/formats/summary', {
-          count: totalSubs
+          count: totalSubs,
         })}
       </Interaction.P>
       {(showAll ? sectionsWithFormat : visibleSections).map(section => (
         <div
-          {...colorScheme.set('color', section.meta?.color || 'textSoft')}
+          {...colorScheme.set(
+            'color',
+            section.meta?.color || 'textSoft',
+            'format',
+          )}
           key={section.id}
         >
           <TeaserSectionTitle small>{section.meta.title}</TeaserSectionTitle>
@@ -109,5 +113,5 @@ const SubscribedDocuments = ({ t, data: { sections }, isMember }) => {
 export default compose(
   withT,
   withMembership,
-  graphql(possibleSubscriptions)
+  graphql(possibleSubscriptions),
 )(SubscribedDocuments)
