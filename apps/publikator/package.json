@@ -10,8 +10,7 @@
   "scripts": {
     "dev": "nodemon --watch server --watch app --watch .env --watch lib/routes.js server/index.js",
     "start": "node server/index.js",
-    "build": "exit 0 # tmp disabled until memo styleguide compat # next build",
-    "heroku-postbuild": "next build",
+    "build": "next build",
     "tape": "cross-env NODE_ENV=test babel-tape-runner",
     "test": "npm run test:unit && npm run test:jsdom",
     "test:unit": "cross-env NODE_ENV=test babel-tape-runner \"?(lib|pages|components)/**/*.test.js\" | tap-summary",

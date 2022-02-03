@@ -8,7 +8,6 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon --watch server --watch .env --watch server/routes.js --watch server/constants.js server/server.js",
     "build": "next build",
-    "heroku-postbuild": "npm run build",
     "start": "node server/server.js",
     "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./.next*\" | xargs wc -l",
     "lint": "eslint --fix .",
