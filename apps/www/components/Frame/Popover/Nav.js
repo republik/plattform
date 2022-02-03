@@ -37,6 +37,7 @@ const Nav = ({
   const [colorScheme] = useColorContext()
   const active = router.asPath
   const hasExpandedRef = useRef(expanded)
+  const hasAccessGrants = me?.accessGrants && !!me?.accessGrants.length
   if (expanded) {
     hasExpandedRef.current = true
   }
@@ -59,7 +60,7 @@ const Nav = ({
                 </Button>
               </Link>
             )}
-            {hasActiveMembership && (
+            {(hasActiveMembership || hasAccessGrants) && (
               <SearchForm
                 emptyState={
                   <Label>
