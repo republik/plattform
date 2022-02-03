@@ -7,7 +7,7 @@ import {
   colors,
   Editorial,
   InlineSpinner,
-  Interaction
+  Interaction,
 } from '@project-r/styleguide'
 import { withRouter } from 'next/router'
 import StatusError from '../StatusError'
@@ -79,14 +79,14 @@ const getDocument = gql`
 const styles = {
   prepublicationNotice: css({
     backgroundColor: colors.social,
-    padding: 15
+    padding: 15,
   }),
   more: css({
     backgroundColor: colors.negative.containerBg,
     color: colors.negative.text,
     textAlign: 'center',
-    padding: '20px 0'
-  })
+    padding: '20px 0',
+  }),
 }
 
 export const RenderFront = ({ t, isEditor, front, nodes }) => {
@@ -99,9 +99,9 @@ export const RenderFront = ({ t, isEditor, front, nodes }) => {
         DiscussionLink,
         ...withData,
         ActionBar,
-        t
+        t,
       }),
-    []
+    [],
   )
   const MissingNode = isEditor ? undefined : ({ children }) => children
   return (
@@ -110,10 +110,10 @@ export const RenderFront = ({ t, isEditor, front, nodes }) => {
         {
           type: 'root',
           children: nodes.map(v => v.body),
-          lastPublishedAt: front.meta.lastPublishedAt
+          lastPublishedAt: front.meta.lastPublishedAt,
         },
         schema,
-        { MissingNode }
+        { MissingNode },
       )}
     </>
   )
@@ -134,14 +134,14 @@ const Front = ({
   isEditor,
   finite,
   hasOverviewNav,
-  shouldAutoRefetch
+  shouldAutoRefetch,
 }) => {
   const now = new Date()
   const dailyUpdateTime = new Date(
     now.getFullYear(),
     now.getMonth(),
     now.getDate(),
-    5
+    5,
   )
   const shouldRefetch = shouldAutoRefetch && lastMountAt < dailyUpdateTime
   const [isRefetching, setIsRefetching] = useState(shouldRefetch)
@@ -158,16 +158,16 @@ const Front = ({
   const meta = front && {
     ...front.meta,
     title: front.meta.title || t('pages/magazine/title'),
-    url: `${PUBLIC_BASE_URL}${front.meta.path}`
+    url: `${PUBLIC_BASE_URL}${front.meta.path}`,
   }
 
   const hasMore = front && front.children.pageInfo.hasNextPage
   const [
     { containerRef, infiniteScroll, loadingMore, loadingMoreError },
-    setInfiniteScroll
+    setInfiniteScroll,
   ] = useInfiniteScroll({
     hasMore,
-    loadMore: fetchMore
+    loadMore: fetchMore,
   })
 
   if (extractId) {
@@ -247,7 +247,7 @@ const Front = ({
                     {t('front/loadMore', {
                       count: front.children.nodes.length,
                       remaining:
-                        front.children.totalCount - front.children.nodes.length
+                        front.children.totalCount - front.children.nodes.length,
                     })}
                   </Editorial.A>
                 )}
@@ -256,15 +256,15 @@ const Front = ({
                 <div style={{ marginBottom: 10 }}>
                   {t.elements('front/chronology', {
                     years: intersperse(
-                      [2021, 2020, 2019, 2018].map(year => (
+                      [2022, 2021, 2020, 2019, 2018].map(year => (
                         <Link key={year} href={`/${year}`} passHref>
                           <Editorial.A style={{ color: colors.negative.text }}>
                             {year}
                           </Editorial.A>
                         </Link>
                       )),
-                      () => ', '
-                    )
+                      () => ', ',
+                    ),
                   })}
                 </div>
               )}
@@ -321,8 +321,8 @@ export default compose(
         path: props.path || cleanAsPath(props.router.asPath),
         first: props.finite ? 1000 : 15,
         before: props.finite ? 'end' : undefined,
-        only: props.extractId
-      }
+        only: props.extractId,
+      },
     }),
     props: ({ data, ownProps: { serverContext, isPreview } }) => {
       if (serverContext && !data.loading && !data.front) {
@@ -342,7 +342,7 @@ export default compose(
               variables: {
                 first: 15,
                 after: data.front && data.front.children.pageInfo.endCursor,
-                before: undefined
+                before: undefined,
               },
               updateQuery: (previousResult = {}, { fetchMoreResult = {} }) => {
                 const previousSearch = previousResult.front.children || {}
@@ -356,16 +356,16 @@ export default compose(
                     children: {
                       ...previousResult.front.children,
                       nodes: [...previousNodes, ...currentNodes],
-                      pageInfo: currentSearch.pageInfo
-                    }
-                  }
+                      pageInfo: currentSearch.pageInfo,
+                    },
+                  },
                 }
                 return res
-              }
+              },
             })
             .catch(error => console.error(error))
-        }
+        },
       }
-    }
-  })
+    },
+  }),
 )(Front)
