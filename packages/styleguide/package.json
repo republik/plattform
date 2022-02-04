@@ -82,7 +82,6 @@
     "husky": "^7.0.4",
     "isomorphic-unfetch": "^3.1.0",
     "jest": "24.9.0",
-    "lint-staged": "^11.2.6",
     "lodash": "^4.17.21",
     "mdast-react-render": "^1.1.0",
     "prettier": "^1.19.1",
@@ -134,16 +133,9 @@
     "eject": "react-scripts eject",
     "semantic-release": "semantic-release",
     "commitmsg": "validate-commit-msg",
-    "precommit": "lint-staged",
     "translations-raw": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1sMS5u4SIFY2loAmx8jftDXqTbq2RheJLY7FBeXSm1Tc --title=live --pretty --out src/lib/translations.json",
     "translations": "npm run translations-raw && git add -p src/lib/translations.json && git checkout -- src/lib/translations.json",
     "upgrade-interactive": "npx npm-check -u"
-  },
-  "lint-staged": {
-    "*.{js,ts,tsx}": [
-      "prettier --write",
-      "git add"
-    ]
   },
   "config": {
     "commitizen": {
