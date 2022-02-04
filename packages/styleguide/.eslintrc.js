@@ -1,4 +1,11 @@
 module.exports = {
+  plugins: ['jsx-a11y'],
+  extends: ['eslint-config-frontend'],
+}
+
+/*
+TODO: remove old config
+module.exports = {
   plugins: ['react', 'react-hooks', 'prettier', 'jsx-a11y'],
   extends: [
     'eslint:recommended',
@@ -45,3 +52,4 @@ module.exports = {
     },
   ],
 }
+*/

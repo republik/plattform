@@ -1,4 +1,9 @@
 module.exports = {
+  extends: ['eslint-config-frontend'],
+}
+/*
+TODO: remove old config
+module.exports = {
   plugins: ['react', 'react-hooks', 'prettier'],
   extends: [
     'eslint:recommended',
@@ -27,3 +32,4 @@ module.exports = {
     },
   },
 }
+*/
