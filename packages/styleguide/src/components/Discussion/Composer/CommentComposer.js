@@ -154,11 +154,7 @@ export const CommentComposer = ({
     if (initialText) {
       return initialText
     } else if (!isEditing) {
-      try {
-        return readDraft(discussionId, parentId) ?? ''
-      } catch (e) {
-        return ''
-      }
+      return readDraft(discussionId, parentId) || ''
     } else {
       return ''
     }
@@ -219,16 +215,12 @@ export const CommentComposer = ({
 
   textRef.current = text
 
-  const onChangeText = ev => {
+  const onChangeText = (ev) => {
     const nextText = ev.target.value
     setText(nextText)
-    setHints(hintValidators.map(fn => fn(nextText)).filter(Boolean))
+    setHints(hintValidators.map((fn) => fn(nextText)).filter(Boolean))
     if (!isEditing) {
-      try {
-        writeDraft(discussionId, parentId, ev.target.value)
-      } catch (e) {
-        /* Ignore errors */
-      }
+      writeDraft(discussionId, parentId, ev.target.value)
     }
   }
 
@@ -258,11 +250,7 @@ export const CommentComposer = ({
 
           if (ok) {
             if (!isEditing) {
-              try {
-                deleteDraft(discussionId, parentId)
-              } catch (e) {
-                /* Ignore */
-              }
+              deleteDraft(discussionId, parentId)
             }
             onClose()
 
