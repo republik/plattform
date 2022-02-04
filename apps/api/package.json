@@ -76,7 +76,6 @@
   },
   "devDependencies": {
     "apollo-fetch": "^0.7.0",
-    "eslint": "^7.9.0",
     "eslint-config-backend": "*",
     "istanbul": "^1.1.0-alpha.1",
     "nodemon": "^2.0.4",

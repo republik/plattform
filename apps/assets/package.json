@@ -56,7 +56,6 @@
     "start": "node index.js"
   },
   "devDependencies": {
-    "eslint": "^7.9.0",
     "eslint-config-backend": "*",
     "nodemon": "^2.0.4"
   }
