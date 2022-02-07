@@ -83,6 +83,7 @@ export const getDocument = gql`
             title
             color
             kind
+            externalUrl
             image
             shareLogo
             shareBackgroundImage

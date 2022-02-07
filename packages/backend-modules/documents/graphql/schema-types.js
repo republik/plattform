@@ -67,6 +67,7 @@ type Meta {
   lastPublishedAt: DateTime
   feed: Boolean
   gallery: Boolean
+  externalUrl: String
   kind: String
   color: String
   series: Series
