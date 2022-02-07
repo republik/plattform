@@ -68,6 +68,7 @@
     "d3-time-format": "^2.2.3",
     "dotenv": "^8.2.0",
     "downshift": "^2.2.2",
+    "eslint": "^6.6.0",
     "eslint-config-frontend": "*",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "glamor": "^2.20.40",
