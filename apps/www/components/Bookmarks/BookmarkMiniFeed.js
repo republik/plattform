@@ -6,7 +6,8 @@ import {
   fontStyles,
   mediaQueries,
   Loader,
-  useColorContext
+  useColorContext,
+  getTeaserHref,
 } from '@project-r/styleguide'
 
 import BookmarkButton from '../ActionBar/BookmarkButton'
@@ -36,15 +37,17 @@ const BookmarkMiniFeed = ({ data, closeHandler, style }) => {
             style={style}
           >
             {nodes
-              .filter(node => node.document)
+              .filter((node) => node.document)
               .slice(0, 3)
-              .map(node => {
+              .map((node) => {
                 const { userProgress, userBookmark, id } = node.document
-                const {
-                  estimatedReadingMinutes,
-                  title,
-                  path
-                } = node.document.meta
+                const meta = node.document.meta
+                const { estimatedReadingMinutes, title, path, slug } = meta
+                const href = getTeaserHref(
+                  path,
+                  slug,
+                  meta.format?.meta.externalUrl,
+                )
                 return (
                   <div
                     {...styles.tile}
@@ -52,7 +55,7 @@ const BookmarkMiniFeed = ({ data, closeHandler, style }) => {
                     key={node.id}
                   >
                     <div {...styles.tileHeadlineContainer}>
-                      <Link href={path} passHref>
+                      <Link href={href} passHref>
                         <a
                           onClick={() => closeHandler()}
                           {...styles.tileHeadline}
@@ -100,8 +103,8 @@ const styles = {
     scrollbarWidth: 'none' /* Firefox */,
     msOverflowStyle: 'none' /* IE 10+ */,
     '::-webkit-scrollbar': {
-      display: 'none'
-    }
+      display: 'none',
+    },
   }),
   tile: css({
     width: 150,
@@ -116,26 +119,26 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     ':first-child': {
-      marginLeft: 16
+      marginLeft: 16,
     },
     [mediaQueries.mUp]: {
       padding: '12px 8px',
       height: 120,
-      flex: '0 0 210px'
-    }
+      flex: '0 0 210px',
+    },
   }),
   spacer: css({
     flex: '0 0 8px',
     [mediaQueries.mUp]: {
       flex: 0,
-      display: 'none'
-    }
+      display: 'none',
+    },
   }),
   tileHeadlineContainer: css({
     flex: 1,
     maxWidth: '100%',
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
   }),
   tileHeadline: css({
     textDecoration: 'none',
@@ -147,19 +150,19 @@ const styles = {
     lineHeight: '18px',
     [mediaQueries.mUp]: {
       ...fontStyles.serifBold19,
-      lineHeight: '21px'
-    }
+      lineHeight: '21px',
+    },
   }),
   iconContainer: css({
-    display: 'flex'
-  })
+    display: 'flex',
+  }),
 }
 
 export default compose(
   graphql(getCollectionItems, {
-    options: props => ({
+    options: (props) => ({
       fetchPolicy: 'cache-and-network',
-      variables: props.variables
-    })
-  })
+      variables: props.variables,
+    }),
+  }),
 )(BookmarkMiniFeed)
