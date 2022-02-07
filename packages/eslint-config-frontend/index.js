@@ -6,6 +6,9 @@ module.exports = {
     'plugin:prettier/recommended',
   ],
   parser: '@babel/eslint-parser',
+  parserOptions: {
+    requireConfigFile: false,
+  },
   env: {
     browser: true,
     es6: true,
