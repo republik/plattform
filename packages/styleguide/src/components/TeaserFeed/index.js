@@ -17,31 +17,31 @@ const dateFormat = timeFormat('%d.%m.%Y')
 const styles = {
   link: css({
     color: 'inherit',
-    textDecoration: 'none'
+    textDecoration: 'none',
   }),
   bar: css({
-    marginTop: 10
-  })
+    marginTop: 10,
+  }),
 }
 
 const br = {
   matchMdast: matchType('break'),
   component: () => <br />,
-  isVoid: true
+  isVoid: true,
 }
 const link = {
   matchMdast: matchType('link'),
-  props: node => ({
+  props: (node) => ({
     title: node.title,
-    href: node.url
+    href: node.url,
   }),
-  component: Editorial.A
+  component: Editorial.A,
 }
 const creditSchema = {
-  rules: [link, br]
+  rules: [link, br],
 }
 
-const DefaultLink = ({ children, path }) => children
+const DefaultLink = ({ children, href }) => children
 
 export const TeaserFeed = ({
   kind: metaKind,
@@ -49,6 +49,7 @@ export const TeaserFeed = ({
   template,
   format,
   path,
+  slug,
   repoId,
   title,
   description,
@@ -62,9 +63,13 @@ export const TeaserFeed = ({
   Link = DefaultLink,
   menu,
   highlighted,
-  series
+  series,
 }) => {
   const formatMeta = (format && format.meta) || {}
+  const externalUrl = formatMeta.externalUrl
+  const href = externalUrl
+    ? externalUrl.replace(/\/$/, '').concat('/').concat(slug)
+    : path
   const Headline =
     formatMeta.kind === 'meta' ||
     metaKind === 'meta' ||
@@ -94,20 +99,20 @@ export const TeaserFeed = ({
       Link={Link}
       menu={menu}
       repoId={repoId}
-      path={path}
+      href={href}
       title={title}
     >
       <Headline formatColor={titleColor}>
-        <Link href={path} passHref>
-          <a {...styles.link} href={path}>
+        <Link href={href} passHref>
+          <a {...styles.link} href={href}>
             {title}
           </a>
         </Link>
       </Headline>
       {!!description && (
         <Lead>
-          <Link href={path} passHref>
-            <a {...styles.link} href={path}>
+          <Link href={href} passHref>
+            <a {...styles.link} href={href}>
               {description}
             </a>
           </Link>
@@ -120,8 +125,8 @@ export const TeaserFeed = ({
       </Credit>
       {!!highlight && (
         <Highlight label={highlightLabel}>
-          <Link href={path} passHref>
-            <a {...styles.link} href={path}>
+          <Link href={href} passHref>
+            <a {...styles.link} href={href}>
               {highlight}
             </a>
           </Link>

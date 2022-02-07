@@ -14,6 +14,7 @@ export const documentFragment = `
       publishDate
       prepublication
       path
+      slug
       kind
       template
       color
@@ -39,6 +40,7 @@ export const documentFragment = `
           title
           color
           kind
+          externalUrl
         }
       }
       ownDiscussion {
