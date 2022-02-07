@@ -34,6 +34,7 @@ const feedQuery = gql`
               publishDate
               prepublication
               path
+              slug
               kind
               template
               color
@@ -41,6 +42,7 @@ const feedQuery = gql`
                 id
                 meta {
                   path
+                  externalUrl
                   title
                   color
                   kind
@@ -60,13 +62,13 @@ export const withFeedData = graphql(feedQuery, {
     excludeRepoIds: excludeRepoIdsCS = '',
     specificRepoIds = [],
     minPublishDate,
-    lastPublishedAt
+    lastPublishedAt,
   }) => {
     const excludeRepoIds = [
       ...priorRepoIds,
       ...(typeof excludeRepoIdsCS === 'string'
         ? excludeRepoIdsCS.split(',')
-        : excludeRepoIdsCS)
+        : excludeRepoIdsCS),
     ].filter(Boolean)
 
     let from =
@@ -80,34 +82,34 @@ export const withFeedData = graphql(feedQuery, {
         ? { specificRepoIds }
         : {
             minPublishDate: from && {
-              from
+              from,
             },
             filters: [
               { key: 'template', not: true, value: 'section' },
               { key: 'template', not: true, value: 'format' },
-              { key: 'template', not: true, value: 'front' }
+              { key: 'template', not: true, value: 'front' },
             ].concat(
-              excludeRepoIds.map(repoId => ({
+              excludeRepoIds.map((repoId) => ({
                 key: 'repoId',
                 not: true,
-                value: repoId
-              }))
-            )
-          }
+                value: repoId,
+              })),
+            ),
+          },
     }
-  }
+  },
 })
 
 export const withDiscussionsData = graphql(
   gql`
     ${TeaserActiveDebates.data.query}
   `,
-  TeaserActiveDebates.data.config
+  TeaserActiveDebates.data.config,
 )
 
 export const withMyMagazineData = graphql(
   gql`
     ${TeaserMyMagazine.data.query}
   `,
-  TeaserMyMagazine.data.config
+  TeaserMyMagazine.data.config,
 )
