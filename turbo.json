@@ -10,7 +10,7 @@
         ".next/**"
       ]
     },
-    "styleguide#build": {
+    "@project-r/styleguide#build": {
       "dependsOn": [
         "^build",
         "$SERVER"
