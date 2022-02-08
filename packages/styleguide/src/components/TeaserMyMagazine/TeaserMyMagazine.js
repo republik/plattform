@@ -60,7 +60,6 @@ const TeaserMyMagazine = ({
                 const { id } = doc
                 const {
                   path,
-                  slug,
                   title,
                   template,
                   kind: metaKind,
@@ -69,7 +68,7 @@ const TeaserMyMagazine = ({
                 const formatMeta = doc.meta.format?.meta
                 const formatTitle = formatMeta?.title
                 const formatPath = formatMeta?.path
-                const href = getTeaserHref(path, slug, formatMeta?.externalUrl)
+                const href = getTeaserHref(path, formatMeta?.externalUrl)
 
                 const formatColor = formatMeta?.title
                   ? colorScheme.set(
@@ -145,7 +144,6 @@ const TeaserMyMagazine = ({
                 const {
                   format,
                   path,
-                  slug,
                   title,
                   credits,
                   publishDate,
@@ -160,7 +158,6 @@ const TeaserMyMagazine = ({
                     color={color}
                     format={format}
                     path={path}
-                    slug={slug}
                     title={limitedTitle(emailSubject || title, 140)}
                     credits={credits}
                     publishDate={publishDate}
@@ -296,7 +293,6 @@ WrappedTeaserMyMagazine.data = {
                 credits
                 prepublication
                 path
-                slug
                 kind
                 template
                 color
@@ -327,7 +323,6 @@ WrappedTeaserMyMagazine.data = {
                 publishDate
                 title
                 path
-                slug
                 template
                 kind
                 color

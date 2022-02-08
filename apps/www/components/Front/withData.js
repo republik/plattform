@@ -34,7 +34,6 @@ const feedQuery = gql`
               publishDate
               prepublication
               path
-              slug
               kind
               template
               color

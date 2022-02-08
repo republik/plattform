@@ -14,7 +14,6 @@ export const documentFragment = `
       publishDate
       prepublication
       path
-      slug
       kind
       template
       color

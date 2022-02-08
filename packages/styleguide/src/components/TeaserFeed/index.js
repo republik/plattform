@@ -43,8 +43,8 @@ const creditSchema = {
 
 const DefaultLink = ({ children, href }) => children
 
-export const getTeaserHref = (path, slug, externalUrl) =>
-  externalUrl ? externalUrl.replace(/\/$/, '').concat('/').concat(slug) : path
+export const getTeaserHref = (path, externalUrl) =>
+  externalUrl ? externalUrl.replace(/\/$/, '').concat('/').concat(path) : path
 
 export const TeaserFeed = ({
   kind: metaKind,
@@ -52,7 +52,6 @@ export const TeaserFeed = ({
   template,
   format,
   path,
-  slug,
   repoId,
   title,
   description,
@@ -69,7 +68,7 @@ export const TeaserFeed = ({
   series,
 }) => {
   const formatMeta = (format && format.meta) || {}
-  const href = getTeaserHref(path, slug, formatMeta.externalUrl)
+  const href = getTeaserHref(path, formatMeta.externalUrl)
   const Headline =
     formatMeta.kind === 'meta' ||
     metaKind === 'meta' ||

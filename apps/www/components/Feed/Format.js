@@ -29,7 +29,6 @@ const getFeedDocuments = gql`
           description
           publishDate
           path
-          slug
           template
           format {
             id
