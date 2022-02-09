@@ -44,9 +44,7 @@ const creditSchema = {
 const DefaultLink = ({ children, href }) => children
 
 export const getTeaserHref = (path, externalBaseUrl) =>
-  externalBaseUrl
-    ? externalBaseUrl.replace(/\/$/, '').concat('/').concat(path)
-    : path
+  externalBaseUrl ? `${externalBaseUrl}${path}` : path
 
 export const TeaserFeed = ({
   kind: metaKind,
