@@ -17,6 +17,7 @@ module.exports = {
         'plugin:@typescript-eslint/recommended',
         // 'plugin:@typescript-eslint/recommended-requiring-type-checking',
         'prettier/@typescript-eslint',
+        'plugin:prettier/recommended',
       ],
       rules: {
         '@typescript-eslint/no-explicit-any': 'off',
@@ -32,7 +33,7 @@ module.exports = {
     },
     {
       files: ['**/*.js'],
-      extends: ['standard'],
+      extends: ['standard', 'prettier', 'plugin:prettier/recommended'],
       rules: {
         camelcase: 'off',
       },
