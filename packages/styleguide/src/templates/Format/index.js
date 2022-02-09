@@ -59,7 +59,6 @@ const createFormatSchema = ({
         label: 'Sharetafel Logo',
         key: 'shareLogo',
       },
-
       {
         label: 'Sharebild (Hintergrund weiss)',
         key: 'shareBackgroundImage',
@@ -67,10 +66,6 @@ const createFormatSchema = ({
       {
         label: 'Sharebild (mit Hintergrundfarbe)',
         key: 'shareBackgroundImageInverted',
-      },
-      {
-        label: 'Sharetafel Logo',
-        key: 'shareLogo',
       },
       {
         label: 'Dossier',
