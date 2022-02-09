@@ -45,9 +45,9 @@ const IconButton = React.forwardRef<
       size,
       disabled,
       attributes,
-      invert
+      invert,
     },
-    ref
+    ref,
   ) => {
     const Element = href ? 'a' : 'button'
     const [colorScheme] = useColorContext()
@@ -62,7 +62,7 @@ const IconButton = React.forwardRef<
         {...attributes}
         style={{
           cursor: (href || onClick) && !disabled ? 'pointer' : 'auto',
-          ...customStyles
+          ...customStyles,
         }}
         onClick={onClick}
         onMouseDown={onMouseDown}
@@ -98,7 +98,7 @@ const IconButton = React.forwardRef<
         {children}
       </Element>
     )
-  }
+  },
 )
 
 const styles = {
@@ -115,56 +115,56 @@ const styles = {
     backgroundColor: 'transparent',
     transition: 'opacity 0.3s',
     ':focus': {
-      outline: 'none'
+      outline: 'none',
     },
     ':last-child': {
-      marginRight: 0
+      marginRight: 0,
     },
     ':only-child': {
-      margin: 0
+      margin: 0,
     },
     [mUp]: {
-      marginRight: 24
+      marginRight: 24,
     },
     ':disabled': {
-      cursor: 'default'
+      cursor: 'default',
     },
     '& > *:not(:last-child)': {
       marginRight: 8,
-      marginLeft: 0
-    }
+      marginLeft: 0,
+    },
   }),
   invertFlex: css({
     flexDirection: 'row-reverse',
     '& > *:not(:last-child)': {
       marginRight: 0,
-      marginLeft: 8
-    }
+      marginLeft: 8,
+    },
   }),
   hover: css({
     '@media(hover)': {
       ':hover:not(:disabled) > *': {
-        opacity: 0.6
-      }
-    }
+        opacity: 0.6,
+      },
+    },
   }),
   label: css({
     ...fontStyles.sansSerifMedium,
     fontSize: 14,
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
   }),
   long: css({
     display: 'none',
     [mUp]: {
-      display: 'inline'
-    }
+      display: 'inline',
+    },
   }),
   short: css({
     display: 'inline',
     [mUp]: {
-      display: 'none'
-    }
-  })
+      display: 'none',
+    },
+  }),
 }
 
 export default IconButton

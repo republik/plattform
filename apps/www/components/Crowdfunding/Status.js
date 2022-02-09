@@ -18,7 +18,7 @@ import {
   fontStyles,
   mediaQueries,
   pxToRem,
-  Interaction
+  Interaction,
 } from '@project-r/styleguide'
 
 import Bar from './Bar'
@@ -28,29 +28,29 @@ const styles = {
     display: 'block',
     marginBottom: -3,
     [mediaQueries.mUp]: {
-      marginBottom: -8
+      marginBottom: -8,
     },
     fontSize: 80,
     ...fontStyles.sansSerifRegular,
-    lineHeight: 1
+    lineHeight: 1,
   }),
   secondaryNumber: css({
     display: 'block',
     [mediaQueries.mUp]: {
-      marginBottom: -3
+      marginBottom: -3,
     },
     fontSize: 43,
     ...fontStyles.sansSerifRegular,
-    lineHeight: 1
+    lineHeight: 1,
   }),
   smallNumber: css({
     display: 'block',
     [mediaQueries.mUp]: {
-      marginBottom: -3
+      marginBottom: -3,
     },
     fontSize: 22,
     ...fontStyles.sansSerifRegular,
-    lineHeight: 1
+    lineHeight: 1,
   }),
   label: css(Interaction.fontRule, {
     display: 'block',
@@ -59,13 +59,13 @@ const styles = {
     paddingTop: 5,
     paddingBottom: 5,
     [mediaQueries.mUp]: {
-      paddingTop: 8
-    }
+      paddingTop: 8,
+    },
   }),
   hoverGoal: css({
     cursor: 'default',
-    ...fontStyles.sansSerifMedium
-  })
+    ...fontStyles.sansSerifMedium,
+  }),
 }
 
 class Status extends Component {
@@ -96,7 +96,7 @@ class Status extends Component {
     clearTimeout(this.timeout)
     this.timeout = setTimeout(() => {
       this.setState({
-        now: new Date()
+        now: new Date(),
       })
       this.tick()
     }, msToNextTick)
@@ -125,7 +125,7 @@ class Status extends Component {
       memberships,
       color,
       barColor,
-      hasEnd = true
+      hasEnd = true,
     } = this.props
     const now = new Date()
     const nextMinute = timeMinute.ceil(new Date())
@@ -153,25 +153,25 @@ class Status extends Component {
       <a
         key='count'
         {...styles.hoverGoal}
-        onTouchStart={e => {
+        onTouchStart={(e) => {
           e.preventDefault()
           this.setState({
-            showGoal: true
+            showGoal: true,
           })
         }}
         onTouchEnd={() =>
           this.setState({
-            showGoal: false
+            showGoal: false,
           })
         }
         onMouseOver={() =>
           this.setState({
-            showGoal: true
+            showGoal: true,
           })
         }
         onMouseOut={() =>
           this.setState({
-            showGoal: false
+            showGoal: false,
           })
         }
       >
@@ -191,11 +191,11 @@ class Status extends Component {
               {t.first.elements(
                 [
                   `crowdfunding/status/goal/${crowdfundingName}/${accessor}`,
-                  `crowdfunding/status/goal/${accessor}`
+                  `crowdfunding/status/goal/${accessor}`,
                 ],
                 {
-                  count: createHoverGoalCount(countFormat, goal[accessor])
-                }
+                  count: createHoverGoalCount(countFormat, goal[accessor]),
+                },
               )}
             </span>
           </P>
@@ -219,7 +219,7 @@ class Status extends Component {
           <P style={{ marginBottom: -10, ...colorStyle }}>
             <span {...styles.smallNumber}>
               {t.pluralize('crowdfunding/status/current', {
-                count: countFormat(status.current)
+                count: countFormat(status.current),
               })}
             </span>
             <span
@@ -227,8 +227,8 @@ class Status extends Component {
               dangerouslySetInnerHTML={{
                 __html: t(
                   'crowdfunding/status/current/label',
-                  labelReplacements
-                )
+                  labelReplacements,
+                ),
               }}
             />
           </P>
@@ -236,16 +236,16 @@ class Status extends Component {
         {[
           memberships && {
             accessor: 'memberships',
-            format: countFormat
+            format: countFormat,
           },
           people && {
             accessor: 'people',
-            format: countFormat
+            format: countFormat,
           },
           money && {
             accessor: 'money',
-            format: value => chfFormat(value / 100)
-          }
+            format: (value) => chfFormat(value / 100),
+          },
         ]
           .filter(Boolean)
           .map(({ accessor, goalAccessor, format }, i) => (
@@ -260,14 +260,14 @@ class Status extends Component {
                   {t.first.elements(
                     [
                       `crowdfunding/status/goal/${crowdfundingName}/${accessor}`,
-                      `crowdfunding/status/goal/${accessor}`
+                      `crowdfunding/status/goal/${accessor}`,
                     ],
                     {
                       count: createHoverGoalCount(
                         format,
-                        goal[goalAccessor || accessor]
-                      )
-                    }
+                        goal[goalAccessor || accessor],
+                      ),
+                    },
                   )}
                 </span>
               </P>
@@ -285,7 +285,7 @@ class Status extends Component {
           <P style={colorStyle}>
             <span {...styles.smallNumber}>
               {t.pluralize('crowdfunding/status/lastSeen', {
-                count: countFormat(status.lastSeen)
+                count: countFormat(status.lastSeen),
               })}
             </span>
             <span {...styles.label}>
@@ -297,7 +297,7 @@ class Status extends Component {
           <P style={colorStyle}>
             <span {...styles.smallNumber}>
               {t.pluralize('crowdfunding/status/support', {
-                count: countFormat(status.support)
+                count: countFormat(status.support),
               })}
             </span>
             <span {...styles.label}>
@@ -315,34 +315,34 @@ class Status extends Component {
                 ? [
                     days > 0 &&
                       t.pluralize('crowdfunding/status/time/days', {
-                        count: days
+                        count: days,
                       }),
                     (days !== 0 || hours > 0) &&
                       t.pluralize('crowdfunding/status/time/hours', {
-                        count: hours
+                        count: hours,
                       }),
                     t.pluralize('crowdfunding/status/time/minutes', {
-                      count: minutes
+                      count: minutes,
                     }),
                     days === 0 &&
                       hours === 0 &&
                       this.state.now &&
                       t.pluralize('crowdfunding/status/time/seconds', {
-                        count: 60 - now.getSeconds()
-                      })
+                        count: 60 - now.getSeconds(),
+                      }),
                   ]
                     .filter(Boolean)
                     .join(' ')
                 : t.first([
                     `crowdfunding/status/time/ended/${crowdfundingName}`,
-                    'crowdfunding/status/time/ended'
+                    'crowdfunding/status/time/ended',
                   ])}
             </span>
             {isRunning ? (
               <span {...styles.label}>
                 {t.first([
                   `crowdfunding/status/time/label/${crowdfundingName}`,
-                  'crowdfunding/status/time/label'
+                  'crowdfunding/status/time/label',
                 ])}
               </span>
             ) : (
@@ -361,7 +361,7 @@ RawStatus.propTypes = {
   people: PropTypes.bool,
   memberships: PropTypes.bool,
   money: PropTypes.bool,
-  hasEnd: PropTypes.bool
+  hasEnd: PropTypes.bool,
 }
 
 const query = gql`
@@ -386,20 +386,20 @@ const query = gql`
   }
 `
 
-export const withStatus = Component =>
+export const withStatus = (Component) =>
   graphql(query, {
-    skip: props => props.crowdfunding || !props.crowdfundingName,
+    skip: (props) => props.crowdfunding || !props.crowdfundingName,
     options: {
-      pollInterval: +STATUS_POLL_INTERVAL_MS
+      pollInterval: +STATUS_POLL_INTERVAL_MS,
     },
     props: ({ data }) => {
       return {
         crowdfunding: data.crowdfunding,
         statusRefetch: data.refetch,
         statusStartPolling: data.startPolling,
-        statusStopPolling: data.stopPolling
+        statusStopPolling: data.stopPolling,
       }
-    }
+    },
   })(Component)
 
 export default compose(withStatus, withT)(Status)

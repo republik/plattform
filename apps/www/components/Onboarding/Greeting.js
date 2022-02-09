@@ -10,7 +10,7 @@ const styles = {
   greeting: css({
     paddingTop: 20,
     paddingBottom: 20,
-    display: 'flex'
+    display: 'flex',
   }),
   portrait: css({
     marginRight: 10,
@@ -18,10 +18,10 @@ const styles = {
     '> img': {
       width: 100,
       [mediaQueries.mUp]: {
-        width: 200
-      }
-    }
-  })
+        width: 200,
+      },
+    },
+  }),
 }
 
 export const fragments = {
@@ -35,10 +35,10 @@ export const fragments = {
         portrait
       }
     }
-  `
+  `,
 }
 
-export default props => {
+export default (props) => {
   const { employee } = props
 
   if (!employee) {

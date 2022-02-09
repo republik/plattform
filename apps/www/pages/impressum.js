@@ -6,7 +6,7 @@ import withDefaultSSR from '../lib/hocs/withDefaultSSR'
 const ImprintPage = () => {
   const meta = {
     title: 'Impressum',
-    description: 'Die Köpfe hinter der Republik.'
+    description: 'Die Köpfe hinter der Republik.',
   }
   return (
     <Frame meta={meta}>

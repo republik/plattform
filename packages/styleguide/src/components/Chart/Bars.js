@@ -21,7 +21,7 @@ import {
   unsafeDatumFn,
   subsup,
   getTextColor,
-  isLastItem
+  isLastItem,
 } from './utils'
 import ColorLegend from './ColorLegend'
 import { createTextGauger } from '../../lib/textGauger'
@@ -41,39 +41,39 @@ const BAR_STYLES = {
       height: 6,
       stroke: 4,
       popHeight: 14,
-      marginBottom: 16
+      marginBottom: 16,
     },
     normal: {
       marginTop: 4,
       height: 3,
       stroke: 3,
       popHeight: 13,
-      marginBottom: 9
-    }
+      marginBottom: 9,
+    },
   },
   small: {
     highlighted: {
       marginTop: 0,
       height: 24,
-      marginBottom: 16
+      marginBottom: 16,
     },
     normal: {
       marginTop: 0,
       height: 16,
-      marginBottom: 9
-    }
+      marginBottom: 9,
+    },
   },
   large: {
     highlighted: {
       marginTop: 0,
       height: 40,
-      marginBottom: 40
+      marginBottom: 40,
     },
     normal: {
       marginTop: 0,
       height: 24,
-      marginBottom: 16
-    }
+      marginBottom: 16,
+    },
   },
   inline: {
     withSecondary: {
@@ -82,56 +82,56 @@ const BAR_STYLES = {
       marginBottom: 9,
       fontSize: 16,
       secondaryFontSize: 12,
-      inlineTop: 6
+      inlineTop: 6,
     },
     normal: {
       marginTop: 0,
       height: 20,
       marginBottom: 9,
       fontSize: 12,
-      inlineTop: 2
-    }
-  }
+      inlineTop: 2,
+    },
+  },
 }
 
 const styles = {
   groupTitle: css({
-    ...sansSerifMedium14
+    ...sansSerifMedium14,
   }),
   barLabel: css({
-    ...sansSerifRegular12
+    ...sansSerifRegular12,
   }),
   barLabelLink: css({
-    ...underline
+    ...underline,
   }),
   inlineLabel: css({
     fontFamily: fontFamilies.sansSerifRegular,
-    fontWeight: 'normal'
+    fontWeight: 'normal',
   }),
   axisLabel: css({
-    ...sansSerifRegular12
+    ...sansSerifRegular12,
   }),
   axisXLine: css({
     strokeWidth: '1px',
-    shapeRendering: 'crispEdges'
+    shapeRendering: 'crispEdges',
   }),
   bandLegend: css({
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
   }),
   bandBar: css({
     display: 'inline-block',
     width: 24,
     height: 8,
-    borderRadius: '4px'
-  })
+    borderRadius: '4px',
+  }),
 }
 
 const labelGauger = createTextGauger(LABEL_FONT, {
   dimension: 'width',
-  html: true
+  html: true,
 })
 
-const BarChart = props => {
+const BarChart = (props) => {
   const {
     values,
     width,
@@ -147,11 +147,11 @@ const BarChart = props => {
     inlineSecondaryLabel,
     inlineLabelPosition,
     link,
-    unit
+    unit,
   } = props
   const [colorScheme] = useColorContext()
   const possibleColumns = Math.floor(
-    width / (props.minInnerWidth + COLUMN_PADDING)
+    width / (props.minInnerWidth + COLUMN_PADDING),
   )
   const columns =
     possibleColumns >= props.columns
@@ -167,21 +167,21 @@ const BarChart = props => {
     data = data.filter(filter)
   }
   data = data
-    .filter(d => d.value && d.value.length > 0)
-    .map(d => ({
+    .filter((d) => d.value && d.value.length > 0)
+    .map((d) => ({
       datum: d,
       label: d[props.y],
-      value: +d.value
+      value: +d.value,
     }))
   // compute category
   if (props.category) {
     const categorize = unsafeDatumFn(props.category)
-    data.forEach(d => {
+    data.forEach((d) => {
       d.category = categorize(d.datum)
     })
   }
   // sort by value (default lowest on top)
-  runSort(props.sort, data, d => d.value)
+  runSort(props.sort, data, (d) => d.value)
 
   // group data into columns
   let groupedData
@@ -190,21 +190,21 @@ const BarChart = props => {
       const filter = unsafeDatumFn(test)
       return {
         key: title,
-        values: data.filter(d => filter(d.datum))
+        values: data.filter((d) => filter(d.datum)),
       }
     })
     data = groupedData.reduce((all, group) => all.concat(group.values), [])
   } else {
-    groupedData = groupBy(data, d => d.datum[props.column])
+    groupedData = groupBy(data, (d) => d.datum[props.column])
   }
-  runSort(props.columnSort, groupedData, d => d.key)
+  runSort(props.columnSort, groupedData, (d) => d.key)
 
   const skipYLabels = props.y === props.color && groupedData.length > 1
 
   // compute colors
   const colorAccessor = props.color
-    ? d => d.datum[props.color]
-    : d => d.category
+    ? (d) => d.datum[props.color]
+    : (d) => d.category
   let colorValues = []
     .concat(data.map(colorAccessor))
     .concat(props.colorLegendValues)
@@ -231,7 +231,7 @@ const BarChart = props => {
     }
 
     let firstBarY
-    let stackedBars = groupBy(groupData, d => d.label)
+    let stackedBars = groupBy(groupData, (d) => d.label)
     let marginBottom = 0
     const bars = stackedBars.map(({ values: segments }) => {
       const first = segments[0]
@@ -266,22 +266,22 @@ const BarChart = props => {
         first,
         sumPositiv: barSegments.reduce(
           (sum, segment) => sum + Math.max(0, segment.value),
-          0
+          0,
         ),
         sumNegative: barSegments.reduce(
           (sum, segment) => sum + Math.min(0, segment.value),
-          0
-        )
+          0,
+        ),
       }
     })
 
     return {
       title,
       bars,
-      maxPositiv: max(bars, bar => bar.sumPositiv),
-      minNegative: min(bars, bar => bar.sumNegative),
+      maxPositiv: max(bars, (bar) => bar.sumPositiv),
+      minNegative: min(bars, (bar) => bar.sumNegative),
       height: gY,
-      firstBarY
+      firstBarY,
     }
   })
 
@@ -289,16 +289,14 @@ const BarChart = props => {
   const xDomain = props.domain || [
     Math.min(
       0,
-      min(groupedData.map(d => d.minNegative).concat(props.xTicks || []))
+      min(groupedData.map((d) => d.minNegative).concat(props.xTicks || [])),
     ),
     Math.max(
       0,
-      max(groupedData.map(d => d.maxPositiv).concat(props.xTicks || []))
-    )
+      max(groupedData.map((d) => d.maxPositiv).concat(props.xTicks || [])),
+    ),
   ]
-  const x = scaleLinear()
-    .domain(xDomain)
-    .range([0, columnWidth])
+  const x = scaleLinear().domain(xDomain).range([0, columnWidth])
   if (!props.domain) {
     x.nice(3)
   }
@@ -309,8 +307,8 @@ const BarChart = props => {
     x.domain(),
     undefined,
     {
-      ticks: props.xTicks
-    }
+      ticks: props.xTicks,
+    },
   )
 
   const xTicks = props.xTicks || (showBarValues ? [] : xAxis.ticks)
@@ -320,8 +318,8 @@ const BarChart = props => {
   const xLastTick = hasXTicks && x(xTicks[xTicks.length - 1])
 
   // stack bars
-  groupedData.forEach(group => {
-    group.bars.forEach(bar => {
+  groupedData.forEach((group) => {
+    group.bars.forEach((bar) => {
       let xPosPositive = xZero
       let xPosNegative = xZero
       bar.segments.forEach((d, i) => {
@@ -353,7 +351,7 @@ const BarChart = props => {
         d.inlineLabel = [
           inlineValue && xAxis.format(d.value),
           inlineValueUnit && inlineValueUnit,
-          inlineLabel && d.datum[inlineLabel]
+          inlineLabel && d.datum[inlineLabel],
         ].join(' ')
         d.inlineLabelTextWidth = d.inlineLabel ? labelGauger(d.inlineLabel) : 0
         const needsInlineTextShift = d.width <= d.inlineLabelTextWidth
@@ -398,7 +396,7 @@ const BarChart = props => {
   let yPos = 0
   groupBy(groupedData, (d, i) => Math.floor(i / columns)).forEach(
     ({ values: groups }) => {
-      const height = max(groups.map(d => d.height))
+      const height = max(groups.map((d) => d.height))
 
       groups.forEach((group, column) => {
         group.groupHeight = height
@@ -410,7 +408,7 @@ const BarChart = props => {
         height +
         (hasXTicks ? AXIS_HEIGHT : 0) +
         (isLollipop ? LOLLIPOP_PADDING : 0)
-    }
+    },
   )
 
   const highlightZero = xTicks.indexOf(0) !== -1 && xTicks[0] !== 0
@@ -418,10 +416,10 @@ const BarChart = props => {
   const colorLegendValues = []
     .concat(
       (props.colorLegend || skipYLabels) &&
-        (props.colorLegendValues || colorValues).map(colorValue => ({
+        (props.colorLegendValues || colorValues).map((colorValue) => ({
           color: color(colorValue),
-          label: colorValue
-        }))
+          label: colorValue,
+        })),
     )
     .concat(
       !mini &&
@@ -435,8 +433,8 @@ const BarChart = props => {
               />
               {` ${bandLegend}`}
             </span>
-          )
-        }
+          ),
+        },
     )
     .filter(Boolean)
 
@@ -445,11 +443,11 @@ const BarChart = props => {
       css({
         '@media (hover)': {
           ':hover': {
-            fill: colorScheme.getCSSColor('textSoft')
-          }
-        }
+            fill: colorScheme.getCSSColor('textSoft'),
+          },
+        },
       }),
-    [colorScheme]
+    [colorScheme],
   )
 
   return (
@@ -457,12 +455,13 @@ const BarChart = props => {
       <ColorLegend inline values={colorLegendValues} />
       <svg width={width} height={yPos}>
         <desc>{description}</desc>
-        {groupedData.map(group => {
+        {groupedData.map((group) => {
           return (
             <g
               key={`group${group.title || 1}`}
-              transform={`translate(${group.x},${group.y +
-                (hasXTicks ? AXIS_HEIGHT : 0)})`}
+              transform={`translate(${group.x},${
+                group.y + (hasXTicks ? AXIS_HEIGHT : 0)
+              })`}
             >
               <text
                 dy='1.5em'
@@ -472,7 +471,7 @@ const BarChart = props => {
               >
                 {group.title}
               </text>
-              {group.bars.map(bar => {
+              {group.bars.map((bar) => {
                 const href = bar.first.datum[link]
                 const hasNegativeValues = bar.xPosNegative !== xZero
                 const hasPositiveValues = bar.xPosPositive !== xZero
@@ -531,7 +530,7 @@ const BarChart = props => {
                             {...colorScheme.set(
                               'fill',
                               segment.color,
-                              'charts'
+                              'charts',
                             )}
                             width={segment.width}
                             height={bar.height}
@@ -548,7 +547,7 @@ const BarChart = props => {
                                   'fill',
                                   segment.shiftInlineText
                                     ? 'text'
-                                    : getTextColor(segment.color)
+                                    : getTextColor(segment.color),
                                 )}
                                 textAnchor={segment.iTextAnchor}
                               >
@@ -567,12 +566,12 @@ const BarChart = props => {
                                     'fill',
                                     segment.shiftInlineText
                                       ? 'text'
-                                      : getTextColor(segment.color)
+                                      : getTextColor(segment.color),
                                   )}
                                   textAnchor={segment.iTextAnchor}
                                 >
                                   {subsup.svg(
-                                    segment.datum[inlineSecondaryLabel]
+                                    segment.datum[inlineSecondaryLabel],
                                   )}
                                 </text>
                               )}
@@ -591,7 +590,7 @@ const BarChart = props => {
                               {...colorScheme.set(
                                 'fill',
                                 segment.color,
-                                'charts'
+                                'charts',
                               )}
                               height={bar.style.popHeight}
                               fillOpacity='0.3'
@@ -606,14 +605,14 @@ const BarChart = props => {
                               cy={bar.height / 2}
                               r={
                                 Math.floor(
-                                  bar.style.popHeight - bar.style.stroke / 2
+                                  bar.style.popHeight - bar.style.stroke / 2,
                                 ) / 2
                               }
                               {...colorScheme.set('fill', 'textInverted')}
                               {...colorScheme.set(
                                 'stroke',
                                 segment.color,
-                                'charts'
+                                'charts',
                               )}
                               strokeWidth={bar.style.stroke}
                             />
@@ -677,7 +676,7 @@ const BarChart = props => {
                           {...styles.axisXLine}
                           {...colorScheme.set('stroke', 'text')}
                           style={{
-                            opacity: highlightTick ? 1 : 0.17
+                            opacity: highlightTick ? 1 : 0.17,
                           }}
                           y1={0}
                           y2={group.groupHeight}
@@ -722,8 +721,8 @@ export const propTypes = {
   columnFilter: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string.isRequired,
-      test: PropTypes.string.isRequired
-    })
+      test: PropTypes.string.isRequired,
+    }),
   ),
   highlight: PropTypes.string,
   stroke: PropTypes.string,
@@ -736,7 +735,7 @@ export const propTypes = {
   colorRanges: PropTypes.shape({
     diverging2: PropTypes.array.isRequired,
     sequential3: PropTypes.array.isRequired,
-    discrete: PropTypes.array.isRequired
+    discrete: PropTypes.array.isRequired,
   }).isRequired,
   category: PropTypes.string,
   numberFormat: PropTypes.string.isRequired,
@@ -751,14 +750,14 @@ export const propTypes = {
   tLabel: PropTypes.func.isRequired,
   description: PropTypes.string,
   showBarValues: PropTypes.bool,
-  unit: PropTypes.string
+  unit: PropTypes.string,
 }
 
 BarChart.propTypes = propTypes
 
 BarChart.defaultProps = defaultProps.Bar
 
-export const Lollipop = props => <BarChart {...props} />
+export const Lollipop = (props) => <BarChart {...props} />
 
 Lollipop.defaultProps = defaultProps.Lollipop
 

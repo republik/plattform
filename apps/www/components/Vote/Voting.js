@@ -6,7 +6,7 @@ import {
   InlineSpinner,
   Interaction,
   Radio,
-  RawHtml
+  RawHtml,
 } from '@project-r/styleguide'
 import { timeFormat } from '../../lib/utils/format'
 import withMe from '../../lib/apollo/withMe'
@@ -57,14 +57,14 @@ const styles = {
   message: css({
     padding: 20,
     marginBottom: 20,
-    textAlign: 'center'
+    textAlign: 'center',
   }),
   confirm: css({
-    margin: '10px 0 15px'
+    margin: '10px 0 15px',
   }),
   buttons: css({
-    padding: '15px 0'
-  })
+    padding: '15px 0',
+  }),
 }
 
 const messageDateFormat = timeFormat('%e. %B %Y')
@@ -78,13 +78,13 @@ const Voting = compose(
         return mutate({
           variables: {
             votingId,
-            optionId
-          }
+            optionId,
+          },
         })
-      }
-    })
+      },
+    }),
   }),
-  withAddressData
+  withAddressData,
 )(
   ({
     voting,
@@ -93,14 +93,14 @@ const Voting = compose(
     addressData,
     vt,
     description,
-    messages = {}
+    messages = {},
   }) => {
     const [selectedValue, setSelectedValue] = useState(null)
     const [isConfirm, setConfirm] = useState(false)
     const [isUpdating, setUpdating] = useState(false)
     const [error, setError] = useState(null)
 
-    const reset = e => {
+    const reset = (e) => {
       e.preventDefault()
       setSelectedValue(null)
       setError(null)
@@ -114,7 +114,7 @@ const Voting = compose(
           setUpdating(false)
           setError(null)
         })
-        .catch(error => {
+        .catch((error) => {
           setUpdating(false)
           setError(error)
         })
@@ -126,7 +126,7 @@ const Voting = compose(
       dangerousDisabledHTML =
         messages.thankyou ||
         vt('vote/voting/thankyou', {
-          submissionDate: messageDateFormat(new Date(voting.userSubmitDate))
+          submissionDate: messageDateFormat(new Date(voting.userSubmitDate)),
         })
     } else if (Date.now() > new Date(voting.endDate)) {
       dangerousDisabledHTML = messages.ended || vt('vote/voting/ended')
@@ -134,7 +134,7 @@ const Voting = compose(
       dangerousDisabledHTML =
         messages.notSignedIn ||
         vt('vote/voting/notSignedIn', {
-          beginDate: timeFormat('%d.%m.%Y')(new Date(voting.beginDate))
+          beginDate: timeFormat('%d.%m.%Y')(new Date(voting.beginDate)),
         })
       showSignIn = true
     } else if (!voting.userIsEligible) {
@@ -157,7 +157,7 @@ const Voting = compose(
             <RawHtml
               type={P}
               dangerouslySetInnerHTML={{
-                __html: dangerousDisabledHTML
+                __html: dangerousDisabledHTML,
               }}
             />
           </div>
@@ -224,10 +224,10 @@ const Voting = compose(
               selectedValue
                 ? vt(
                     `vote/voting/option${
-                      voting.options.find(o => o.id === selectedValue).label
-                    }`
+                      voting.options.find((o) => o.id === selectedValue).label
+                    }`,
                   )
-                : ''
+                : '',
             )}{' '}
           </P>
         </div>
@@ -260,17 +260,17 @@ const Voting = compose(
         {isConfirm ? confirmation : choice}
       </NarrowCard>
     )
-  }
+  },
 )
 
 const VotingLoader = compose(
   graphql(query, {
     options: ({ slug }) => ({
       variables: {
-        slug
-      }
-    })
-  })
+        slug,
+      },
+    }),
+  }),
 )(({ data, description, messages }) => (
   <Loader
     loading={data.loading}

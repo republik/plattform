@@ -1,38 +1,31 @@
 export const mergeField = (field) => (state) =>
   mergeFields(fieldsState(field))(state)
 
-export const fieldsState = ({
-  field,
-  value,
-  error,
-  dirty
-}) => ({
+export const fieldsState = ({ field, value, error, dirty }) => ({
   values: {
-    [field]: value
+    [field]: value,
   },
   errors: {
-    [field]: error
+    [field]: error,
   },
   dirty: {
-    [field]: dirty
-  }
+    [field]: dirty,
+  },
 })
 
-export const mergeFields = ({
-  values,
-  errors,
-  dirty
-}) => (state) => ({
-  values: {
-    ...state.values,
-    ...values
-  },
-  errors: {
-    ...state.errors,
-    ...errors
-  },
-  dirty: {
-    ...state.dirty,
-    ...dirty
-  }
-})
+export const mergeFields =
+  ({ values, errors, dirty }) =>
+  (state) => ({
+    values: {
+      ...state.values,
+      ...values,
+    },
+    errors: {
+      ...state.errors,
+      ...errors,
+    },
+    dirty: {
+      ...state.dirty,
+      ...dirty,
+    },
+  })

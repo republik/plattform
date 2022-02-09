@@ -12,7 +12,7 @@ import {
   Dropdown,
   Field,
   InlineSpinner,
-  Interaction
+  Interaction,
 } from '@project-r/styleguide'
 
 const APPEND_PERIOD = gql`
@@ -39,7 +39,7 @@ class AppendPeriod extends React.Component {
     this.state = {
       duration: 1,
       durationUnit: 'month',
-      showForm: false
+      showForm: false,
     }
   }
 
@@ -52,7 +52,7 @@ class AppendPeriod extends React.Component {
     const variables = {
       id: membership.id,
       duration: this.state.duration,
-      durationUnit: this.state.durationUnit
+      durationUnit: this.state.durationUnit,
     }
 
     const onClose = () => this.setState({ showForm: false })
@@ -64,13 +64,16 @@ class AppendPeriod extends React.Component {
             { value: 'day', text: `Tag${this.state.duration > 1 ? 'e' : ''}` },
             {
               value: 'week',
-              text: `Woche${this.state.duration > 1 ? 'n' : ''}`
+              text: `Woche${this.state.duration > 1 ? 'n' : ''}`,
             },
             {
               value: 'month',
-              text: `Monat${this.state.duration > 1 ? 'e' : ''}`
+              text: `Monat${this.state.duration > 1 ? 'e' : ''}`,
             },
-            { value: 'year', text: `Jahr${this.state.duration > 1 ? 'e' : ''}` }
+            {
+              value: 'year',
+              text: `Jahr${this.state.duration > 1 ? 'e' : ''}`,
+            },
           ]
 
           const ondec =
@@ -117,7 +120,7 @@ class AppendPeriod extends React.Component {
                       label='Einheit'
                       items={durationUnits}
                       value={this.state.durationUnit}
-                      onChange={item => {
+                      onChange={(item) => {
                         this.setState({ durationUnit: item.value })
                       }}
                     />

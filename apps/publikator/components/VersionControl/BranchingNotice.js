@@ -20,7 +20,7 @@ const WarningIcon = ({ repoId }) => (
           marginTop: 27,
           minWidth: 40,
           padding: 0,
-          width: 40
+          width: 40,
         }}
       >
         <NewerVersionIcon style={{ marginTop: -5 }} />
@@ -35,7 +35,7 @@ const WarningButton = ({ repoId }) => (
       style={{
         backgroundColor: colors.social,
         borderColor: colors.social,
-        marginBottom: 10
+        marginBottom: 10,
       }}
       primary
       block

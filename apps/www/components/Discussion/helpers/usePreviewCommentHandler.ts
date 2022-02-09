@@ -26,7 +26,7 @@ function usePreviewCommentHandler(): PreviewCommentHandler {
         discussionId: id,
       },
     })
-      .then(result => result?.data?.commentPreview)
+      .then((result) => result?.data?.commentPreview)
       .catch(errorToString)
   }
 }

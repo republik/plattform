@@ -22,7 +22,7 @@ function useDiscussionFocusHelper(): DiscussionFocusHelperType {
     loading: discussionLoading,
     discussion,
     focusId,
-    fetchMore
+    fetchMore,
   } = useDiscussion()
 
   function navigateToSelector(selector: string) {
@@ -60,7 +60,7 @@ function useDiscussionFocusHelper(): DiscussionFocusHelperType {
 
     // Check if the focus is already present in the loaded comments
     const commentAlreadyLoaded = discussion.comments.nodes.find(
-      comment => comment.id === currentFocusId
+      (comment) => comment.id === currentFocusId,
     )
 
     // If the focus element could not be fetched assume 404
@@ -93,8 +93,8 @@ function useDiscussionFocusHelper(): DiscussionFocusHelperType {
       const reversedParentIDs = parentIds.reverse()
 
       // Fetch the closest parentId that has been loaded
-      const closestLoadedParentId = reversedParentIDs.find(parentID =>
-        discussion.comments.nodes.find(comment => comment.id === parentID)
+      const closestLoadedParentId = reversedParentIDs.find((parentID) =>
+        discussion.comments.nodes.find((comment) => comment.id === parentID),
       )
 
       // In case no parent comment has been loaded show an error
@@ -110,7 +110,7 @@ function useDiscussionFocusHelper(): DiscussionFocusHelperType {
         discussionId: discussion.id,
         parentId: closestLoadedParentId,
         after: discussion.comments.pageInfo.endCursor,
-        depth: distanceToParent
+        depth: distanceToParent,
       })
         .catch(errorToString)
         .catch(setFocusError)
@@ -119,7 +119,7 @@ function useDiscussionFocusHelper(): DiscussionFocusHelperType {
 
   return {
     loading: discussion && focusLoading,
-    error: focusError
+    error: focusError,
   }
 }
 

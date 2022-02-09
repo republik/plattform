@@ -4,7 +4,7 @@ import { HttpLink } from 'apollo-link-http'
 import { WebSocketLink } from 'apollo-link-ws'
 import {
   InMemoryCache,
-  IntrospectionFragmentMatcher
+  IntrospectionFragmentMatcher,
 } from 'apollo-cache-inmemory'
 
 import fetch from 'isomorphic-unfetch'
@@ -18,7 +18,7 @@ if (!process.browser) {
   global.fetch = fetch
 }
 
-export const dataIdFromObject = object => {
+export const dataIdFromObject = (object) => {
   if (object.__typename) {
     if (object.id !== undefined) {
       return `${object.__typename}:${object.id}`
@@ -39,55 +39,55 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
           name: 'Reward',
           possibleTypes: [
             {
-              name: 'Goodie'
+              name: 'Goodie',
             },
             {
-              name: 'MembershipType'
-            }
-          ]
+              name: 'MembershipType',
+            },
+          ],
         },
         {
           kind: 'INTERFACE',
           name: 'QuestionInterface',
           possibleTypes: [
             {
-              name: 'QuestionTypeText'
+              name: 'QuestionTypeText',
             },
             {
-              name: 'QuestionTypeChoice'
+              name: 'QuestionTypeChoice',
             },
             {
-              name: 'QuestionTypeRange'
+              name: 'QuestionTypeRange',
             },
             {
-              name: 'QuestionTypeDocument'
-            }
-          ]
+              name: 'QuestionTypeDocument',
+            },
+          ],
         },
         {
           kind: 'UNION',
           name: 'Embed',
           possibleTypes: [
             {
-              __typename: 'YoutubeEmbed'
+              __typename: 'YoutubeEmbed',
             },
             {
-              __typename: 'VimeoEmbed'
+              __typename: 'VimeoEmbed',
             },
             {
-              __typename: 'YoutubeEmbed'
-            }
-          ]
-        }
-      ]
-    }
-  }
+              __typename: 'YoutubeEmbed',
+            },
+          ],
+        },
+      ],
+    },
+  },
 })
 
 const hasSubscriptionOperation = ({ query: { definitions } }) =>
   definitions.some(
     ({ kind, operation }) =>
-      kind === 'OperationDefinition' && operation === 'subscription'
+      kind === 'OperationDefinition' && operation === 'subscription',
   )
 
 function create(initialState = {}, headers = {}) {
@@ -97,8 +97,8 @@ function create(initialState = {}, headers = {}) {
     headers: {
       cookie: headers.cookie,
       accept: headers.accept,
-      Authorization: API_AUTHORIZATION_HEADER
-    }
+      Authorization: API_AUTHORIZATION_HEADER,
+    },
   })
 
   const link = process.browser
@@ -108,10 +108,10 @@ function create(initialState = {}, headers = {}) {
           uri: API_WS_URL,
           options: {
             reconnect: true,
-            timeout: 50000
-          }
+            timeout: 50000,
+          },
         }),
-        http
+        http,
       )
     : http
 
@@ -119,10 +119,10 @@ function create(initialState = {}, headers = {}) {
     connectToDevTools: process.browser,
     cache: new InMemoryCache({
       fragmentMatcher,
-      dataIdFromObject
+      dataIdFromObject,
     }).restore(initialState || {}),
     ssrMode: !process.browser, // Disables forceFetch on the server (so queries are only run once)
-    link
+    link,
   })
 }
 

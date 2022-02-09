@@ -18,13 +18,13 @@ const styles = {
       ...convertStyleToRem(sansSerifRegular18),
       padding: '0 25px 20px 25px',
       '&:first-child': {
-        paddingTop: '20px'
-      }
+        paddingTop: '20px',
+      },
     },
     '&:first-child': {
-      paddingTop: '12px'
-    }
-  })
+      paddingTop: '12px',
+    },
+  }),
 }
 
 const BlockQuoteParagraph = ({ children, attributes }) => {
@@ -44,7 +44,7 @@ const BlockQuoteParagraph = ({ children, attributes }) => {
 
 BlockQuoteParagraph.propTypes = {
   children: PropTypes.node.isRequired,
-  attributes: PropTypes.object
+  attributes: PropTypes.object,
 }
 
 export default BlockQuoteParagraph

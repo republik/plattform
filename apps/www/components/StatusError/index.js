@@ -50,11 +50,11 @@ export default compose(
   withInNativeApp,
   withRouter,
   graphql(getRedirect, {
-    skip: props => props.statusCode !== 404 || !props.router.asPath,
+    skip: (props) => props.statusCode !== 404 || !props.router.asPath,
     options: ({ router: { asPath } }) => ({
       variables: {
-        path: asPath.split('#')[0]
-      }
+        path: asPath.split('#')[0],
+      },
     }),
     props: ({
       data,
@@ -63,8 +63,8 @@ export default compose(
         statusCode,
         router,
         inNativeApp,
-        inNativeIOSApp
-      }
+        inNativeIOSApp,
+      },
     }) => {
       const redirection = !data.error && !data.loading && data.redirection
 
@@ -107,8 +107,8 @@ export default compose(
       }
 
       return {
-        loading
+        loading,
       }
-    }
-  })
+    },
+  }),
 )(StatusError)

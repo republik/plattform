@@ -7,7 +7,7 @@ export const timeBarEditorSchema = ({
   colorDropdownItems,
   xScaleTypes,
   chartSizes,
-  columnAmount
+  columnAmount,
 }) => {
   return {
     defaultProps: defaults,
@@ -19,19 +19,19 @@ export const timeBarEditorSchema = ({
             x: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: dataColumnEnum
+              enum: dataColumnEnum,
             },
             timeFormat: {
               type: 'string',
               enum: timeFormats,
               format: 'dynamicDropdown',
-              parent: 'xAxis'
+              parent: 'xAxis',
             },
             xUnit: {
               title: 'Achsenbeschriftung',
-              type: 'string'
-            }
-          }
+              type: 'string',
+            },
+          },
         },
         yAxis: {
           title: 'Vertikale Achse',
@@ -40,13 +40,13 @@ export const timeBarEditorSchema = ({
               type: 'string',
               enum: numberFormats,
               parent: 'yAxis',
-              format: 'dynamicDropdown'
+              format: 'dynamicDropdown',
             },
             unit: {
               title: 'Achsenbeschriftung',
-              type: 'string'
-            }
-          }
+              type: 'string',
+            },
+          },
         },
         color: {
           title: 'Farbe',
@@ -54,14 +54,14 @@ export const timeBarEditorSchema = ({
             color: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: optionalDataColumnEnum
+              enum: optionalDataColumnEnum,
             },
             colorRange: {
               title: 'Farbschema auswählen',
               type: 'string',
-              enum: colorDropdownItems
-            }
-          }
+              enum: colorDropdownItems,
+            },
+          },
         },
         layout: {
           title: 'Aufteilen in mehrere Charts',
@@ -69,15 +69,15 @@ export const timeBarEditorSchema = ({
             column: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: optionalDataColumnEnum
+              enum: optionalDataColumnEnum,
             },
             columns: {
               title: 'Anzahl Spalten pro Zeile',
               type: 'number',
-              enum: columnAmount
-            }
-          }
-        }
+              enum: columnAmount,
+            },
+          },
+        },
       },
       advanced: {
         xAxis: {
@@ -87,15 +87,15 @@ export const timeBarEditorSchema = ({
               title: 'Achsenticks',
               type: 'array',
               contains: {
-                type: 'string'
-              }
+                type: 'string',
+              },
             },
             xScale: {
               title: 'Skala',
               type: 'string',
-              enum: xScaleTypes
-            }
-          }
+              enum: xScaleTypes,
+            },
+          },
         },
         yAxis: {
           title: 'Vertikale Achse',
@@ -104,21 +104,21 @@ export const timeBarEditorSchema = ({
               title: 'Achsenticks',
               type: 'array',
               contains: {
-                type: 'string'
-              }
+                type: 'string',
+              },
             },
             domain: {
               title: 'Bandbreite der Achsen',
               type: 'array',
               contains: {
-                type: 'string'
-              }
+                type: 'string',
+              },
             },
             yScaleInvert: {
               title: 'Y-Achse umdrehen',
-              type: 'boolean'
-            }
-          }
+              type: 'boolean',
+            },
+          },
         },
         layout: {
           title: 'Layout',
@@ -126,19 +126,19 @@ export const timeBarEditorSchema = ({
             size: {
               title: 'Darstellung im Beitrag',
               type: 'string',
-              enum: chartSizes
+              enum: chartSizes,
             },
             height: {
               title: 'Höhe',
-              type: 'number'
+              type: 'number',
             },
             minInnerWidth: {
               title: 'Minimale Breite',
-              type: 'number'
-            }
-          }
-        }
-      }
-    }
+              type: 'number',
+            },
+          },
+        },
+      },
+    },
   }
 }

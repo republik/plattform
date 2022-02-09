@@ -4,7 +4,7 @@ const DEFAULT_CONFIG = [{ minWidth: 0, headerHeight: 0 }]
 
 const HeaderHeightContext = React.createContext({
   value: DEFAULT_CONFIG[0].headerHeight,
-  rules: []
+  rules: [],
 })
 
 export const useHeaderHeight = () => {
@@ -14,16 +14,16 @@ export const useHeaderHeight = () => {
 
 export const HeaderHeightProvider = ({ children, config = DEFAULT_CONFIG }) => {
   const [headerHeightValue, setHeaderHeightValue] = React.useState(
-    config[0].headerHeight
+    config[0].headerHeight,
   )
 
   const rules = React.useMemo(
     () =>
       config.map(({ minWidth, headerHeight }) => ({
         mediaQuery: `@media only screen and (min-width: ${minWidth}px)`,
-        headerHeight
+        headerHeight,
       })),
-    [config]
+    [config],
   )
 
   React.useEffect(() => {

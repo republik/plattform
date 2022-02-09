@@ -93,17 +93,14 @@ const resolvePath = (meta) => {
 const resolveAuthors = async (meta, args, context) => {
   const { authorUserIds, credits } = meta
   const { loaders } = context
-  
-  const ids = 
+
+  const ids =
     // published documents may come with an authorUserIds array …
     authorUserIds ||
     // … but if missing, we'll parse mdast credits
     (await getAuthorUserIds(null, context, credits))
-  
-  return Promise.map(
-    ids,
-    (id) => loaders.User.byId.load(id),
-  ).filter(Boolean)
+
+  return Promise.map(ids, (id) => loaders.User.byId.load(id)).filter(Boolean)
 }
 
 module.exports = {

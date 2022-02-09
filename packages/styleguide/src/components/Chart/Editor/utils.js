@@ -3,16 +3,16 @@ import { useState } from 'react'
 const parseCommaValue = (newValue = '', context) => {
   return newValue
     .split(',')
-    .map(d => d.trim())
+    .map((d) => d.trim())
     .filter(Boolean)
-    .map(d => (context === 'number' ? +d : d))
+    .map((d) => (context === 'number' ? +d : d))
 }
 
 const formatCommaValue = (value = []) => value.join(', ')
 
 // hook to format comma separated input
 export const useCommaField = (value, onChange, parser, context) => {
-  const isInvalid = newValue => {
+  const isInvalid = (newValue) => {
     if (!parser) {
       return false
     }
@@ -26,7 +26,7 @@ export const useCommaField = (value, onChange, parser, context) => {
 
   const valueToField = (value = []) => ({
     error: value.some(isInvalid),
-    value: formatCommaValue(value)
+    value: formatCommaValue(value),
   })
 
   const [field, setField] = useState(valueToField(value))
@@ -41,7 +41,7 @@ export const useCommaField = (value, onChange, parser, context) => {
     const error = parsedValue.some(isInvalid)
     setField({
       value: newValue,
-      error
+      error,
     })
     if (!error && formatCommaValue(value) !== formatCommaValue(parsedValue)) {
       onChange(_, parsedValue.length > 0 ? parsedValue : undefined)
@@ -54,141 +54,141 @@ export const useCommaField = (value, onChange, parser, context) => {
 export const numberFormats = [
   {
     value: 's',
-    text: '4, 4000, 40’000, 40 Mio.'
+    text: '4, 4000, 40’000, 40 Mio.',
   },
   {
     value: ',.0f',
-    text: "4, 4000, 40’000, 40'000'000"
+    text: "4, 4000, 40’000, 40'000'000",
   },
   {
     value: '.1f',
-    text: '4,3'
+    text: '4,3',
   },
   {
     value: '.2f',
-    text: '4,27'
+    text: '4,27',
   },
   {
     value: '.0%',
-    text: '4%'
+    text: '4%',
   },
   {
     value: '.1%',
-    text: '4.2%'
-  }
+    text: '4.2%',
+  },
 ]
 
 export const xScaleTypes = [
   {
     value: 'time',
-    text: 'zeitlich'
+    text: 'zeitlich',
   },
   {
     value: 'linear',
-    text: 'linear'
+    text: 'linear',
   },
   {
     value: 'ordinal',
-    text: 'ordinal'
-  }
+    text: 'ordinal',
+  },
 ]
 
 export const yScaleTypes = [
   {
     value: 'linear',
-    text: 'linear'
+    text: 'linear',
   },
   {
     value: 'log',
-    text: 'logarithmisch'
-  }
+    text: 'logarithmisch',
+  },
 ]
 
 export const timeFormats = [
   {
     value: '%Y',
-    text: '2017, 2018'
+    text: '2017, 2018',
   },
   {
     value: '%d.%m.%Y',
-    text: '26.01.2017, 24.02.2018'
+    text: '26.01.2017, 24.02.2018',
   },
   {
     value: '%d.%m.',
-    text: '26.01., 24.02.'
+    text: '26.01., 24.02.',
   },
   {
     value: '%b %Y',
-    text: 'Jan 2017, Feb 2018'
-  }
+    text: 'Jan 2017, Feb 2018',
+  },
 ]
 
 export const timeParsing = [
   {
     value: '%Y',
-    text: '2017, 2018'
+    text: '2017, 2018',
   },
   {
     value: '%Y-%m-%d',
-    text: '2017-01-26, 2018-02-24'
+    text: '2017-01-26, 2018-02-24',
   },
   {
     value: '%d.%m.%Y',
-    text: '26.01.2017, 24.02.2018'
-  }
+    text: '26.01.2017, 24.02.2018',
+  },
 ]
 
 export const sortingOptions = [
   {
     value: 'none',
-    text: 'keine'
+    text: 'keine',
   },
   {
     value: 'ascending',
-    text: 'aufsteigend'
+    text: 'aufsteigend',
   },
   {
     value: 'descending',
-    text: 'absteigend'
-  }
+    text: 'absteigend',
+  },
 ]
 
 export const chartSizes = [
   {
     value: '',
-    text: 'normal'
+    text: 'normal',
   },
   {
     value: 'breakout',
-    text: 'gross'
+    text: 'gross',
   },
   {
     value: 'narrow',
-    text: 'klein'
+    text: 'klein',
   },
   {
     value: 'floatTiny',
-    text: 'links'
-  }
+    text: 'links',
+  },
 ]
 
 export const columnAmount = [
   {
     value: 1,
-    text: '1'
+    text: '1',
   },
   {
     value: 2,
-    text: '2'
+    text: '2',
   },
   {
     value: 3,
-    text: '3'
+    text: '3',
   },
   {
     value: 4,
-    text: '4'
-  }
+    text: '4',
+  },
 ]
 
 // Note: This could and probably should be refactored away
@@ -196,7 +196,7 @@ export const columnAmount = [
 export const determineAxisContext = (
   currentProperty,
   chartConfig,
-  defaultProps
+  defaultProps,
 ) => {
   const xScale = chartConfig.xScale || defaultProps.xScale
   if (currentProperty.match(/^x/)) {

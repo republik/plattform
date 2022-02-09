@@ -80,9 +80,11 @@ const populate = async (context, resultFn) => {
         ? postalCodeParser(membershipPostalCode)
         : membershipPostalCode
 
-      const postalCodeDetail = await pgdb.public.statisticsGeoPostalCode.findOne(
-        { countryCode, postalCode: parsedPostalCode.trim() },
-      )
+      const postalCodeDetail =
+        await pgdb.public.statisticsGeoPostalCode.findOne({
+          countryCode,
+          postalCode: parsedPostalCode.trim(),
+        })
 
       const key = `${countryName}${
         postalCodeDetail ? postalCodeDetail.postalCode : null

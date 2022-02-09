@@ -3,7 +3,7 @@ import { css } from 'glamor'
 import { fontStyles } from '../../theme/fonts'
 import {
   previewImageStyle,
-  TWITTER_CARD_PREVIEW_WIDTH
+  TWITTER_CARD_PREVIEW_WIDTH,
 } from './SharePreviewTwitter'
 import { FACEBOOK_CARD_PREVIEW_WIDTH } from './SharePreviewFacebook'
 import { Label } from '../Typography'
@@ -15,12 +15,12 @@ export const SHARE_IMAGE_HEIGHT = 628
 export const SHARE_IMAGE_PADDING = 48
 
 export const socialPreviewStyles = {
-  twitter: previewImageStyle
+  twitter: previewImageStyle,
 }
 
 export const socialPreviewWidth = {
   twitter: TWITTER_CARD_PREVIEW_WIDTH,
-  facebook: FACEBOOK_CARD_PREVIEW_WIDTH
+  facebook: FACEBOOK_CARD_PREVIEW_WIDTH,
 }
 
 const styles = {
@@ -34,10 +34,10 @@ const styles = {
     alignItems: 'center',
     padding: SHARE_IMAGE_PADDING,
     overflow: 'hidden',
-    wordWrap: 'break-word'
+    wordWrap: 'break-word',
   }),
   kolumnenContainer: css({
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
   }),
   textContainer: css({
     width: '100%',
@@ -45,7 +45,7 @@ const styles = {
     overflow: 'hidden',
     whiteSpace: 'pre-wrap',
     textAlign: 'center',
-    zIndex: 1
+    zIndex: 1,
   }),
   formatTitle: css({
     ...fontStyles.sansSerifMedium,
@@ -53,30 +53,30 @@ const styles = {
     fontSize: 44,
     width: '100%',
     textAlign: 'center',
-    zIndex: 1
+    zIndex: 1,
   }),
   formatImage: css({
     height: 260,
-    zIndex: 1
+    zIndex: 1,
   }),
-  errorLabel: css({})
+  errorLabel: css({}),
 }
 
 const formatFonts = {
   scribble: 'cursiveTitle',
   editorial: 'serifTitle',
-  meta: 'sansSerifRegular'
+  meta: 'sansSerifRegular',
 }
 
 const shareImageJustify = {
   top: 'flex-start',
-  bottom: 'flex-end'
+  bottom: 'flex-end',
 }
 
 export const SHARE_IMAGE_DEFAULTS = {
   customFontStyle: 'serifTitle',
   textPosition: 'bottom',
-  fontSize: 56
+  fontSize: 56,
 }
 
 const ShareImagePreview = ({
@@ -85,7 +85,7 @@ const ShareImagePreview = ({
   inverted,
   preview,
   fontSize,
-  textPosition
+  textPosition,
 }) => {
   const fontStyle = fontStyles[formatFonts[format?.kind] || 'serifTitle']
   const shareImage =
@@ -116,7 +116,7 @@ const ShareImagePreview = ({
   useEffect(() => {
     setTextContainerOverflow(
       textContainerRef.current.scrollHeight >
-        textContainerRef.current.clientHeight
+        textContainerRef.current.clientHeight,
     )
   }, [text, fontSize])
 
@@ -136,7 +136,7 @@ const ShareImagePreview = ({
             transform: `scale(${previewWidth / SHARE_IMAGE_WIDTH})`,
             transformOrigin: '0 0',
             marginBottom:
-              -SHARE_IMAGE_HEIGHT * (1 - previewWidth / SHARE_IMAGE_WIDTH)
+              -SHARE_IMAGE_HEIGHT * (1 - previewWidth / SHARE_IMAGE_WIDTH),
           }))}
         {...socialPreview}
         {...(shareImage && styles.kolumnenContainer)}
@@ -149,7 +149,7 @@ const ShareImagePreview = ({
               shareImageJustify[
                 textPosition || SHARE_IMAGE_DEFAULTS.textPosition
               ]) ||
-            'center'
+            'center',
         }}
       >
         {format?.shareLogo && !shareImage && (
@@ -166,7 +166,7 @@ const ShareImagePreview = ({
             {...styles.formatTitle}
             style={{
               color: inverted ? '#FFF' : formatColor,
-              width: shareImage && '80%'
+              width: shareImage && '80%',
             }}
           >
             {format.title}
@@ -186,7 +186,7 @@ const ShareImagePreview = ({
             maxHeight:
               SHARE_IMAGE_HEIGHT -
               2 * SHARE_IMAGE_PADDING -
-              reservedVerticalSpace
+              reservedVerticalSpace,
           }}
         >
           {displayedText}

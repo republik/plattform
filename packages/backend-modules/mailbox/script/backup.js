@@ -16,8 +16,8 @@ const config = {
     search: {
       since: '2018-09-01',
       before: '2019-09-01',
-    }
-  }
+    },
+  },
 }
 
 BigInt.prototype.toJSON = function () {
@@ -65,9 +65,10 @@ const run = async () => {
 
       const mailboxPath = `${mailboxDir}/mailbox.json`
       await fse.ensureFile(mailboxPath)
-      const mailbox = await fse.readJson(mailboxPath, { throws: false })
+      const mailbox = await fse.readJson(mailboxPath, { throws: false })
 
-      const highestModseq = mailbox?.status?.highestModseq && BigInt(mailbox.status.highestModseq)
+      const highestModseq =
+        mailbox?.status?.highestModseq && BigInt(mailbox.status.highestModseq)
 
       if (['\\Junk', '\\Drafts', '\\Trash'].includes(specialUse)) {
         console.log('ignore: %O', {
@@ -90,13 +91,21 @@ const run = async () => {
         return
       }
 
-      console.log('%O', { path, messages: status.messages }, { changedSince: highestModseq, now: status.highestModseq.toString() })
+      console.log(
+        '%O',
+        { path, messages: status.messages },
+        { changedSince: highestModseq, now: status.highestModseq.toString() },
+      )
 
       const range = config.auth.search
       const fetchQueryOptions = { source: true }
       const options = false // highestModseq && { changedSince: highestModseq }
       // for await (const rawMessage of imap.fetch('1:*', fetchQueryOptions, options)) {
-      for await (const rawMessage of imap.fetch(range, fetchQueryOptions, options)) {
+      for await (const rawMessage of imap.fetch(
+        range,
+        fetchQueryOptions,
+        options,
+      )) {
         const { modseq, source } = rawMessage
 
         await simpleParser(source).then(async (message) => {

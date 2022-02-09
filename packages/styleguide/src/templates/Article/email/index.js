@@ -4,7 +4,7 @@ import { editorialParagraphRule } from '../../shared/email/rules/paragraphRule'
 import centerRule from '../../shared/email/rules/centerRule'
 import {
   coverRule,
-  edgeToEdgeFigureRule
+  edgeToEdgeFigureRule,
 } from '../../shared/email/rules/figureRule'
 import titleBlockRule from '../../shared/email/rules/titleBlockRule'
 
@@ -13,23 +13,23 @@ const articleEmailSchema = {
     {
       matchMdast: matchType('root'),
       component: Container,
-      props: node => ({
+      props: (node) => ({
         meta: node.meta || {},
         variableContext: {
           firstName: 'FNAME',
           lastName: 'LNAME',
-          _mergeTags: true
-        }
+          _mergeTags: true,
+        },
       }),
       rules: [
         editorialParagraphRule,
         titleBlockRule,
         centerRule,
         coverRule,
-        edgeToEdgeFigureRule
-      ]
-    }
-  ]
+        edgeToEdgeFigureRule,
+      ],
+    },
+  ],
 }
 
 export default articleEmailSchema

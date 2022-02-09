@@ -8,7 +8,7 @@ import {
   serifRegular14,
   serifRegular16,
   serifRegular17,
-  serifRegular19
+  serifRegular19,
 } from '../../Typography/styles'
 import { convertStyleToRem } from '../../Typography/utils'
 import { useColorContext } from '../../Colors/useColorContext'
@@ -17,38 +17,38 @@ const styles = {
   p: css({
     ...convertStyleToRem(serifRegular14),
     [mUp]: {
-      ...convertStyleToRem(serifRegular16)
+      ...convertStyleToRem(serifRegular16),
     },
     margin: '10px 0',
     ':first-child': {
-      marginTop: 0
+      marginTop: 0,
     },
     ':last-child': {
-      marginBottom: 0
-    }
+      marginBottom: 0,
+    },
   }),
   code: css({
     borderRadius: '2px',
     display: 'inline-block',
     fontSize: '90%',
-    padding: '0 5px'
+    padding: '0 5px',
   }),
   definition: css({
     ...convertStyleToRem(sansSerifRegular12),
     margin: '10px 0',
     [mUp]: {
-      ...convertStyleToRem(sansSerifRegular15)
+      ...convertStyleToRem(sansSerifRegular15),
     },
     '& ~ &': {
-      marginTop: -5
-    }
+      marginTop: -5,
+    },
   }),
   featuredText: css({
     ...convertStyleToRem(serifRegular17),
     [mUp]: {
-      ...convertStyleToRem(serifRegular19)
-    }
-  })
+      ...convertStyleToRem(serifRegular19),
+    },
+  }),
 }
 
 const Paragraph = ({ children }) => <p {...styles.p}>{children}</p>

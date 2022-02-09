@@ -6,18 +6,18 @@ const containerStyles = ({
   display = 'flex',
   direction = 'column',
   wrap = 'wrap',
-  justifyContent = 'start'
+  justifyContent = 'start',
 }) =>
   css({
     display,
     flexDirection: direction,
     flexWrap: wrap,
-    justifyContent
+    justifyContent,
   })
 
 const tileStyles = ({ flex = '1 1 auto' }) =>
   css({
-    flex
+    flex,
   })
 
 const getRef = (Component, domRef) => {
@@ -27,82 +27,73 @@ const getRef = (Component, domRef) => {
     return { ref: domRef }
   } else {
     return {
-      domRef
+      domRef,
     }
   }
 }
 
-export const createTile = (
-  flexDefaults = {},
-  defaultProps = {}
-) => Component => ({
-  className,
-  style,
-  domRef,
-  children,
-  flex,
-  ...props
-}) =>
-  React.createElement(
-    Component,
-    {
-      className: mergeClassNames(
-        tileStyles({ flex, ...flexDefaults }),
-        className
-      ),
-      ...{
-        style: {
-          ...defaultProps.style,
-          ...style
-        }
+export const createTile =
+  (flexDefaults = {}, defaultProps = {}) =>
+  (Component) =>
+  ({ className, style, domRef, children, flex, ...props }) =>
+    React.createElement(
+      Component,
+      {
+        className: mergeClassNames(
+          tileStyles({ flex, ...flexDefaults }),
+          className,
+        ),
+        ...{
+          style: {
+            ...defaultProps.style,
+            ...style,
+          },
+        },
+        ...getRef(Component, domRef),
+        ...props,
       },
-      ...getRef(Component, domRef),
-      ...props
-    },
-    children
-  )
+      children,
+    )
 
-export const createContainer = (
-  flexDefaults = {},
-  defaultProps = {}
-) => Component => ({
-  className,
-  style,
-  domRef,
-  children,
-  display,
-  direction,
-  justifyContent,
-  wrap,
-  ...props
-}) =>
-  React.createElement(
-    Component,
-    {
-      className: mergeClassNames(
-        containerStyles({
-          display,
-          direction,
-          justifyContent,
-          wrap,
-          ...flexDefaults
-        }),
-        className
-      ),
-      ...{
-        style: {
-          ...defaultProps.style,
-          ...style
-        }
+export const createContainer =
+  (flexDefaults = {}, defaultProps = {}) =>
+  (Component) =>
+  ({
+    className,
+    style,
+    domRef,
+    children,
+    display,
+    direction,
+    justifyContent,
+    wrap,
+    ...props
+  }) =>
+    React.createElement(
+      Component,
+      {
+        className: mergeClassNames(
+          containerStyles({
+            display,
+            direction,
+            justifyContent,
+            wrap,
+            ...flexDefaults,
+          }),
+          className,
+        ),
+        ...{
+          style: {
+            ...defaultProps.style,
+            ...style,
+          },
+        },
+        ...getRef(Component, domRef),
+        ...props,
       },
-      ...getRef(Component, domRef),
-      ...props
-    },
-    children
-  )
+      children,
+    )
 
 export const Container = createContainer()('div')
 export const Tile = createTile()('div')
-export const ContainerTile = createContainer()(
-  createTile()('div')
-)
+export const ContainerTile = createContainer()(createTile()('div'))

@@ -6,7 +6,7 @@ import {
   mediaQueries,
   fontFamilies,
   Label,
-  IconButton
+  IconButton,
 } from '@project-r/styleguide'
 import { EMAIL_CONTACT } from '../../lib/constants'
 
@@ -20,9 +20,9 @@ const linkRule = css({
   color: 'inherit',
   '@media (hover)': {
     ':hover': {
-      opacity: 0.6
-    }
-  }
+      opacity: 0.6,
+    },
+  },
 })
 
 export const A = ({ children, ...props }) => (
@@ -35,29 +35,29 @@ const styles = {
   container: css({
     marginTop: SPACE * 2,
     paddingBottom: SPACE,
-    textAlign: 'center'
+    textAlign: 'center',
   }),
   nav: css({
     marginTop: SPACE,
     marginBottom: SPACE,
     [mediaQueries.mUp]: {
       marginTop: SPACE,
-      marginBottom: SPACE * 2
-    }
+      marginBottom: SPACE * 2,
+    },
   }),
   mainNav: css({
     fontFamily: fontFamilies.sansSerifRegular,
     fontSize: 44,
-    lineHeight: '60px'
+    lineHeight: '60px',
   }),
   address: css({
     lineHeight: 1.6,
-    fontStyle: 'normal'
+    fontStyle: 'normal',
   }),
   icons: css({
     display: 'flex',
-    justifyContent: 'center'
-  })
+    justifyContent: 'center',
+  }),
 }
 
 const Footer = ({ en }) => (

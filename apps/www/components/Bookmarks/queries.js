@@ -4,12 +4,12 @@ import { documentFragment } from '../Feed/fragments'
 const variablesAsJSONStrings = []
 
 export const getRefetchQueries = () =>
-  variablesAsJSONStrings.map(string => ({
+  variablesAsJSONStrings.map((string) => ({
     query: getCollectionItems,
-    variables: JSON.parse(string)
+    variables: JSON.parse(string),
   }))
 
-export const registerQueryVariables = variables => {
+export const registerQueryVariables = (variables) => {
   const string = JSON.stringify(variables)
   if (!variablesAsJSONStrings.includes(string)) {
     variablesAsJSONStrings.push(string)

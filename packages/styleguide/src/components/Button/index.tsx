@@ -14,7 +14,7 @@ export const plainButtonRule = css({
   cursor: 'pointer',
   outline: 'none',
   appearance: 'none',
-  padding: 0
+  padding: 0,
 })
 
 const styles = {
@@ -32,22 +32,22 @@ const styles = {
     ...fontStyles.sansSerifRegular,
     borderWidth: 1,
     borderStyle: 'solid',
-    borderRadius: 0
+    borderRadius: 0,
   }),
   block: css({
-    width: '100%'
+    width: '100%',
   }),
   small: css({
     minWidth: 0,
     fontSize: pxToRem(16),
     height: pxToRem(32),
-    padding: '0 16px 0 16px'
+    padding: '0 16px 0 16px',
   }),
   naked: css({
     borderWidth: 0,
     borderStyle: 'none',
-    backgroundColor: 'transparent'
-  })
+    backgroundColor: 'transparent',
+  }),
 }
 
 const Button = React.forwardRef<
@@ -84,16 +84,16 @@ const Button = React.forwardRef<
       simulate: sim,
       attributes,
       naked,
-      small
+      small,
     },
-    ref
+    ref,
   ) => {
     const [colorScheme] = useColorContext()
     const buttonRule = useMemo(() => {
       const disabledCSSProps = {
         cursor: 'default',
         backgroundColor: 'transparent',
-        color: colorScheme.getCSSColor('disabled')
+        color: colorScheme.getCSSColor('disabled'),
       }
       const colorRule = naked
         ? css({
@@ -101,25 +101,25 @@ const Button = React.forwardRef<
             '@media (hover)': {
               ':hover': {
                 color: colorScheme.getCSSColor(
-                  primary ? 'primaryHover' : 'textSoft'
-                )
-              }
+                  primary ? 'primaryHover' : 'textSoft',
+                ),
+              },
             },
             ':active': {
               color: colorScheme.getCSSColor(
-                primary ? 'primaryHover' : 'textSoft'
-              )
+                primary ? 'primaryHover' : 'textSoft',
+              ),
             },
             ':disabled, [disabled]': {
               ...disabledCSSProps,
               '@media (hover)': {
-                ':hover': disabledCSSProps
-              }
-            }
+                ':hover': disabledCSSProps,
+              },
+            },
           })
         : css({
             backgroundColor: colorScheme.getCSSColor(
-              primary ? 'primary' : 'transparent'
+              primary ? 'primary' : 'transparent',
             ),
             borderColor: colorScheme.getCSSColor(primary ? 'primary' : 'text'),
             color: colorScheme.getCSSColor(primary ? '#FFF' : 'text'),
@@ -127,13 +127,13 @@ const Button = React.forwardRef<
               ':hover': {
                 backgroundColor: colorScheme.getCSSColor('primaryHover'),
                 borderColor: colorScheme.getCSSColor('primaryHover'),
-                color: colorScheme.getCSSColor('#FFF')
-              }
+                color: colorScheme.getCSSColor('#FFF'),
+              },
             },
             ':active': {
               backgroundColor: colorScheme.getCSSColor('primaryHover'),
               borderColor: colorScheme.getCSSColor('primaryHover'),
-              color: colorScheme.getCSSColor('#FFF')
+              color: colorScheme.getCSSColor('#FFF'),
             },
             ':disabled, [disabled]': {
               ...disabledCSSProps,
@@ -141,10 +141,10 @@ const Button = React.forwardRef<
               '@media (hover)': {
                 ':hover': {
                   ...disabledCSSProps,
-                  borderColor: colorScheme.getCSSColor('disabled')
-                }
-              }
-            }
+                  borderColor: colorScheme.getCSSColor('disabled'),
+                },
+              },
+            },
           })
 
       return merge(
@@ -152,7 +152,7 @@ const Button = React.forwardRef<
         colorRule,
         block && styles.block,
         small && styles.small,
-        naked && styles.naked
+        naked && styles.naked,
       )
     }, [colorScheme, primary, naked, block, small])
     const simulations = sim ? simulate(sim) : {}
@@ -176,7 +176,7 @@ const Button = React.forwardRef<
         {children}
       </Element>
     )
-  }
+  },
 )
 
 export default Button

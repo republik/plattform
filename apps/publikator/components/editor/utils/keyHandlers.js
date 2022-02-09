@@ -2,7 +2,7 @@ import { Block } from 'slate'
 import { matchBlock } from './'
 import { getClosestInSelection } from './selection'
 
-const focusNext = change => {
+const focusNext = (change) => {
   const { value } = change
   const nextBlock = value.document.getNextBlock(value.endBlock.key)
   if (nextBlock) {
@@ -11,7 +11,7 @@ const focusNext = change => {
   return true
 }
 
-export const focusPrevious = change => {
+export const focusPrevious = (change) => {
   const { value } = change
   const nextBlock = value.document.getPreviousBlock(value.endBlock.key)
   if (nextBlock) {
@@ -26,21 +26,21 @@ const insertAfter = (change, afterType, insertAfterType) => {
     (insertAfterType &&
       value.document.getFurthest(
         value.endBlock.key,
-        matchBlock(insertAfterType)
+        matchBlock(insertAfterType),
       )) ||
     value.document
 
   const index = rootNode.nodes.findIndex(
-    n =>
+    (n) =>
       n.key === value.endBlock.key ||
-      !!n.findDescendant(m => m.key === value.endBlock.key)
+      !!n.findDescendant((m) => m.key === value.endBlock.key),
   )
 
   if (index !== -1) {
     return change.insertNodeByKey(
       rootNode.key,
       index + 1,
-      Block.create({ type: afterType })
+      Block.create({ type: afterType }),
     )
   }
   return change
@@ -151,34 +151,35 @@ export const createStaticKeyHandler = ({ TYPE, rule }) => {
   }
 }
 
-export const createSoftBreakKeyHandler = ({ TYPE }) => (event, change) => {
-  const { value } = change
-  if (event.key !== 'Enter') return
-  if (event.shiftKey === false) return
+export const createSoftBreakKeyHandler =
+  ({ TYPE }) =>
+  (event, change) => {
+    const { value } = change
+    if (event.key !== 'Enter') return
+    if (event.shiftKey === false) return
 
-  const { startBlock } = value
-  const { type } = startBlock
-  if (type !== TYPE) {
-    return
-  }
-  return change.insertText('\n')
-}
-
-export const createRemoveEmptyKeyHandler = ({ TYPE, isEmpty }) => (
-  event,
-  change
-) => {
-  if (event.key !== 'Backspace' && event.key !== 'Delete') {
-    return
+    const { startBlock } = value
+    const { type } = startBlock
+    if (type !== TYPE) {
+      return
+    }
+    return change.insertText('\n')
   }
 
-  const emptyNodes = getClosestInSelection(
-    n => matchBlock(TYPE)(n) && isEmpty(n),
-    change.value
-  )
-  if (emptyNodes.size < 1) return
+export const createRemoveEmptyKeyHandler =
+  ({ TYPE, isEmpty }) =>
+  (event, change) => {
+    if (event.key !== 'Backspace' && event.key !== 'Delete') {
+      return
+    }
 
-  return emptyNodes.reduce((t, node) => {
-    return t.removeNodeByKey(node.key)
-  }, change)
-}
+    const emptyNodes = getClosestInSelection(
+      (n) => matchBlock(TYPE)(n) && isEmpty(n),
+      change.value,
+    )
+    if (emptyNodes.size < 1) return
+
+    return emptyNodes.reduce((t, node) => {
+      return t.removeNodeByKey(node.key)
+    }, change)
+  }

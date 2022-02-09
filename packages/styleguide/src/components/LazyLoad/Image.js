@@ -10,12 +10,12 @@ const styles = {
   container: css({
     display: 'block',
     position: 'relative',
-    backgroundColor: 'rgba(0,0,0,0.1)'
+    backgroundColor: 'rgba(0,0,0,0.1)',
   }),
   img: css({
     position: 'absolute',
-    width: '100%'
-  })
+    width: '100%',
+  }),
 }
 
 const transparentExtension = /\.(png|gif|svg)(\.webp)?(\?|$)/
@@ -30,7 +30,7 @@ const LazyImage = ({
   attributes,
   visible,
   offset,
-  onClick
+  onClick,
 }) => (
   <LazyLoad
     attributes={{ ...styles.container, ...attributes }}
@@ -45,7 +45,7 @@ const LazyImage = ({
       backgroundColor:
         src.match(transparentExtension) || dark?.src.match(transparentExtension)
           ? 'transparent'
-          : undefined
+          : undefined,
     }}
   >
     <SwitchImage
@@ -63,8 +63,8 @@ const LazyImage = ({
 LazyImage.propTypes = {
   src: PropTypes.string.isRequired,
   dark: PropTypes.shape({
-    src: PropTypes.string.isRequired
-  })
+    src: PropTypes.string.isRequired,
+  }),
 }
 
 export default LazyImage

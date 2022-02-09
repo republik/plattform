@@ -12,7 +12,7 @@ const createPersistedState = (key, customProvider) => {
   }
   if (provider) {
     const storage = createStorage(provider)
-    return initialState => usePersistedState(initialState, key, storage)
+    return (initialState) => usePersistedState(initialState, key, storage)
   }
   return useState
 }

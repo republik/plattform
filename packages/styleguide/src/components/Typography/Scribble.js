@@ -9,7 +9,7 @@ export {
   List,
   UnorderedList as UL,
   OrderedList as OL,
-  ListItem as LI
+  ListItem as LI,
 } from '../List'
 
 const headline = css({
@@ -17,14 +17,14 @@ const headline = css({
   margin: '0 0 12px 0',
   [mUp]: {
     ...convertStyleToRem(styles.cursiveTitle58),
-    margin: '0 0 12px 0'
+    margin: '0 0 12px 0',
   },
   ':first-child': {
-    marginTop: 0
+    marginTop: 0,
   },
   ':last-child': {
-    marginBottom: 0
-  }
+    marginBottom: 0,
+  },
 })
 
 export const Headline = ({ children, attributes, ...props }) => {

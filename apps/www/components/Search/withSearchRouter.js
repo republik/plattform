@@ -4,7 +4,7 @@ import { withRouter } from 'next/router'
 
 import { DEFAULT_FILTER, DEFAULT_SORT, isSameFilter } from './constants'
 
-const isDefaultFilter = filter => isSameFilter(filter, DEFAULT_FILTER)
+const isDefaultFilter = (filter) => isSameFilter(filter, DEFAULT_FILTER)
 
 const QUERY_PARAM = 'q'
 const FILTER_KEY_PARAM = 'fkey'
@@ -12,22 +12,22 @@ const FILTER_VALUE_PARAM = 'fvalue'
 const SORT_KEY_PARAM = 'skey'
 const SORT_DIRECTION_PARAM = 'sdir'
 
-const WrapperRouter = WrappedComponent =>
+const WrapperRouter = (WrappedComponent) =>
   compose(withRouter)(({ router, ...props }) => {
     const { query } = router
     const urlQuery = query[QUERY_PARAM]
     const urlFilter = {
       key: query[FILTER_KEY_PARAM] || DEFAULT_FILTER.key,
-      value: query[FILTER_VALUE_PARAM] || DEFAULT_FILTER.value
+      value: query[FILTER_VALUE_PARAM] || DEFAULT_FILTER.value,
     }
     const urlSort = {
       key: query[SORT_KEY_PARAM] || DEFAULT_SORT.key,
-      direction: query[SORT_DIRECTION_PARAM]
+      direction: query[SORT_DIRECTION_PARAM],
     }
 
-    const pushRoute = newParams => {
+    const pushRoute = (newParams) => {
       return router.push({ pathname: '/suche', query: newParams }, undefined, {
-        shallow: true
+        shallow: true,
       })
     }
 
@@ -47,14 +47,14 @@ const WrapperRouter = WrappedComponent =>
       return getCleanQuery(query)
     }
 
-    const pushSearchParams = params => {
+    const pushSearchParams = (params) => {
       return pushRoute(getSearchParams(params))
     }
 
     const getCleanQuery = (newQuery = {}) => {
       const baseQuery = {
         ...query,
-        ...newQuery
+        ...newQuery,
       }
       const cleanQuery = {}
 
@@ -76,7 +76,7 @@ const WrapperRouter = WrappedComponent =>
 
       const defaultFilter = isDefaultFilter({
         key: baseQuery[FILTER_KEY_PARAM],
-        value: baseQuery[FILTER_VALUE_PARAM]
+        value: baseQuery[FILTER_VALUE_PARAM],
       })
       const defaultSort = DEFAULT_SORT.key === baseQuery[SORT_KEY_PARAM]
 
@@ -85,9 +85,9 @@ const WrapperRouter = WrappedComponent =>
         !defaultFilter && FILTER_KEY_PARAM,
         !defaultFilter && FILTER_VALUE_PARAM,
         !defaultSort && SORT_KEY_PARAM,
-        !defaultSort && SORT_DIRECTION_PARAM
+        !defaultSort && SORT_DIRECTION_PARAM,
       ].filter(Boolean)
-      transferKeys.forEach(key => {
+      transferKeys.forEach((key) => {
         // prevent empty keys (leading to an tailing ? in the url)
         if (baseQuery[key]) {
           cleanQuery[key] = baseQuery[key]
@@ -100,7 +100,7 @@ const WrapperRouter = WrappedComponent =>
       router.replace(
         { pathname: '/suche', query: getCleanQuery() },
         undefined,
-        { shallow: true }
+        { shallow: true },
       )
     }
 

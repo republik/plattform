@@ -5,8 +5,8 @@ export const Markdown = ({ children, schema, rootData }) => {
   return renderMdast(
     {
       ...parse(children),
-      ...rootData
+      ...rootData,
     },
-    schema
+    schema,
   )
 }

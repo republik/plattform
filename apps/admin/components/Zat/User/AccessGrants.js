@@ -14,7 +14,7 @@ export const fragments = gql`
 `
 
 export const AccessGrants = ({ accessGrants }) =>
-  accessGrants?.map(accessGrant => {
+  accessGrants?.map((accessGrant) => {
     const { id, endAt } = accessGrant
 
     return (

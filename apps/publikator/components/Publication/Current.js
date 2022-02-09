@@ -10,7 +10,7 @@ import {
   Interaction,
   Label,
   A,
-  colors
+  colors,
 } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
@@ -79,11 +79,11 @@ class CurrentPublications extends Component {
             <div>
               <Interaction.H2>
                 {t.pluralize('publication/current/title', {
-                  count: repo.latestPublications.length
+                  count: repo.latestPublications.length,
                 })}
               </Interaction.H2>
               <List>
-                {repo.latestPublications.map(publication => (
+                {repo.latestPublications.map((publication) => (
                   <Item key={publication.name}>
                     {publication.live && publication.document?.meta?.path && (
                       <div style={{ float: 'right' }}>
@@ -105,7 +105,7 @@ class CurrentPublications extends Component {
                     {!publication.live &&
                       publication.scheduledAt &&
                       t('publication/current/scheduledAt', {
-                        dateTime: timeFormat(new Date(publication.scheduledAt))
+                        dateTime: timeFormat(new Date(publication.scheduledAt)),
                       })}
                     <br />
                     <Label>
@@ -122,11 +122,11 @@ class CurrentPublications extends Component {
               ) : (
                 <A
                   href='#'
-                  onClick={e => {
+                  onClick={(e) => {
                     e.preventDefault()
                     if (
                       window.confirm(
-                        t('publication/current/unpublish/confirmAll')
+                        t('publication/current/unpublish/confirmAll'),
                       )
                     ) {
                       this.setState({ unpublishing: true })
@@ -135,10 +135,10 @@ class CurrentPublications extends Component {
                         .then(() => {
                           this.setState({ unpublishing: false })
                         })
-                        .catch(error => {
+                        .catch((error) => {
                           this.setState(() => ({
                             unpublishing: false,
-                            error: error
+                            error: error,
                           }))
                         })
                     }
@@ -162,18 +162,18 @@ export default compose(
       unpublish: () =>
         mutate({
           variables: {
-            repoId: ownProps.repoId
+            repoId: ownProps.repoId,
           },
           refetchQueries: [
             {
               query: getRepoWithPublications,
               variables: {
-                repoId: ownProps.repoId
-              }
-            }
-          ]
-        })
-    })
+                repoId: ownProps.repoId,
+              },
+            },
+          ],
+        }),
+    }),
   }),
-  graphql(getRepoWithPublications)
+  graphql(getRepoWithPublications),
 )(CurrentPublications)

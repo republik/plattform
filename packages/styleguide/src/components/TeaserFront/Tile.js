@@ -12,22 +12,22 @@ import SwitchImage from '../Figure/SwitchImage'
 const IMAGE_SIZE = {
   small: 220,
   medium: 300,
-  large: 360
+  large: 360,
 }
 
 export const sizeSmall = {
   maxHeight: `${IMAGE_SIZE.small}px`,
-  maxWidth: `${IMAGE_SIZE.small}px`
+  maxWidth: `${IMAGE_SIZE.small}px`,
 }
 
 export const sizeMedium = {
   maxHeight: `${IMAGE_SIZE.medium}px`,
-  maxWidth: `${IMAGE_SIZE.medium}px`
+  maxWidth: `${IMAGE_SIZE.medium}px`,
 }
 
 export const sizeLarge = {
   maxHeight: `${IMAGE_SIZE.large}px`,
-  maxWidth: `${IMAGE_SIZE.large}px`
+  maxWidth: `${IMAGE_SIZE.large}px`,
 }
 
 const styles = {
@@ -35,39 +35,39 @@ const styles = {
     padding: 0,
     [mUp]: {
       padding: '0 13%',
-      width: '100%'
-    }
+      width: '100%',
+    },
   }),
   imageContainer: css({
     margin: '0 auto 30px auto',
     [mUp]: {
-      fontSize: 0 // Removes the small flexbox space.
+      fontSize: 0, // Removes the small flexbox space.
     },
     [breakoutUp]: {
-      margin: '0 auto 60px auto'
-    }
+      margin: '0 auto 60px auto',
+    },
   }),
   onlyImageContainer: css({
     margin: '0 auto',
     fontSize: 0,
     minHeight: '100px', // IE11
-    width: '100%' // IE11
+    width: '100%', // IE11
   }),
   image: css({
     minWidth: 100,
     ...sizeSmall,
     [mUp]: {
-      ...sizeMedium
+      ...sizeMedium,
     },
     [breakoutUp]: {
-      ...sizeLarge
-    }
+      ...sizeLarge,
+    },
   }),
   onlyImage: css({
     minWidth: '100px',
     maxHeight: '100% !important',
-    maxWidth: '100% !important'
-  })
+    maxWidth: '100% !important',
+  }),
 }
 
 const Tile = ({
@@ -84,7 +84,7 @@ const Tile = ({
   textLeft,
   aboveTheFold,
   onlyImage,
-  singleColumn
+  singleColumn,
 }) => {
   const [colorScheme] = useColorContext()
   const justifyContent =
@@ -98,7 +98,7 @@ const Tile = ({
     backgroundColor: bgColor,
     cursor: onClick ? 'pointer' : 'default',
     justifyContent,
-    textAlign: textLeft ? 'left' : null
+    textAlign: textLeft ? 'left' : null,
   }
 
   if (onlyImage) {
@@ -128,7 +128,7 @@ const Tile = ({
             style={{
               position: 'relative',
               fontSize: 0,
-              display: 'inline-block'
+              display: 'inline-block',
             }}
           >
             <SwitchImage
@@ -172,11 +172,11 @@ Tile.propTypes = {
   bgColor: PropTypes.string,
   align: PropTypes.oneOf(['top', 'middle', 'bottom']),
   aboveTheFold: PropTypes.bool,
-  onlyImage: PropTypes.bool
+  onlyImage: PropTypes.bool,
 }
 
 Tile.defaultProps = {
-  alt: ''
+  alt: '',
 }
 
 export default Tile

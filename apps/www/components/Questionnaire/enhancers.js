@@ -83,39 +83,39 @@ export const withQuestionnaire = graphql(getQuestionnaire, {
   name: 'questionnaireData',
   options: ({ slug }) => ({
     variables: {
-      slug
-    }
-  })
+      slug,
+    },
+  }),
 })
 
 export const withQuestionnaireMutation = graphql(submitQuestionnaireMutation, {
   props: ({ mutate }) => ({
-    submitQuestionnaire: id => {
+    submitQuestionnaire: (id) => {
       return mutate({
         variables: {
-          id
-        }
+          id,
+        },
       })
-    }
-  })
+    },
+  }),
 })
 
 export const withQuestionnaireReset = graphql(resetQuestionnaireMutation, {
   props: ({ mutate, ownProps: { slug } }) => ({
-    resetQuestionnaire: id => {
+    resetQuestionnaire: (id) => {
       return mutate({
         variables: {
-          id
+          id,
         },
         refetchQueries: [
           {
             query: getQuestionnaire,
-            variables: { slug }
-          }
-        ]
+            variables: { slug },
+          },
+        ],
       })
-    }
-  })
+    },
+  }),
 })
 
 export const withAnswerMutation = graphql(submitAnswerMutation, {
@@ -125,7 +125,7 @@ export const withAnswerMutation = graphql(submitAnswerMutation, {
         variables: {
           answerId,
           questionId,
-          payload
+          payload,
         },
         optimisticResponse: {
           __typename: 'Mutation',
@@ -135,18 +135,18 @@ export const withAnswerMutation = graphql(submitAnswerMutation, {
             userAnswer: {
               __typename: 'Answer',
               id: answerId,
-              payload
-            }
-          }
+              payload,
+            },
+          },
         },
         update: (proxy, { data: { submitAnswer } }) => {
           const queryObj = {
             query: getQuestionnaire,
-            variables: { slug }
+            variables: { slug },
           }
           const data = proxy.readQuery(queryObj)
           const questionIndex = data.questionnaire.questions.findIndex(
-            q => q.id === questionId
+            (q) => q.id === questionId,
           )
           const newData = {
             ...data,
@@ -156,18 +156,18 @@ export const withAnswerMutation = graphql(submitAnswerMutation, {
                 ...data.questionnaire.questions.slice(0, questionIndex),
                 {
                   ...data.questionnaire.questions[questionIndex],
-                  userAnswer: submitAnswer.userAnswer
+                  userAnswer: submitAnswer.userAnswer,
                 },
-                ...data.questionnaire.questions.slice(questionIndex + 1)
-              ]
-            }
+                ...data.questionnaire.questions.slice(questionIndex + 1),
+              ],
+            },
           }
           proxy.writeQuery({
             ...queryObj,
-            data: newData
+            data: newData,
           })
-        }
+        },
       })
-    }
-  })
+    },
+  }),
 })

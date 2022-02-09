@@ -9,7 +9,7 @@ export const scrollIt = (destination, duration = 200) => {
     scrollTimer.stop()
   }
   const n = interpolateNumber(window.pageYOffset, destination)
-  scrollTimer = timer(elapsed => {
+  scrollTimer = timer((elapsed) => {
     const t = easeCubicOut(Math.min(elapsed / duration, 1))
 
     window.scroll(0, Math.round(n(t)))

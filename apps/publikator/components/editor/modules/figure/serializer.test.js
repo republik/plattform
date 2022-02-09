@@ -11,48 +11,48 @@ const TYPE = 'FIGURE'
 const imageModule = createImageModule({
   TYPE: 'FIGURE_IMAGE',
   rule: {
-    matchMdast: node =>
+    matchMdast: (node) =>
       node.type === 'paragraph' &&
       node.children.length === 3 &&
       node.children[0].type === 'image',
     editorOptions: {
-      depth: 1
-    }
+      depth: 1,
+    },
   },
-  subModules: []
+  subModules: [],
 })
 imageModule.name = 'figureImage'
 
 const bylineModule = createParagraphModule({
   TYPE: 'EMPHASIS',
   rule: {
-    matchMdast: node => node.type === 'emphasis'
+    matchMdast: (node) => node.type === 'emphasis',
   },
-  subModules: []
+  subModules: [],
 })
 
 const captionModule = createCaptionModule({
   TYPE: 'FIGURE_CAPTION',
   rule: {
-    matchMdast: node => node.type === 'paragraph',
-    editorOptions: {}
+    matchMdast: (node) => node.type === 'paragraph',
+    editorOptions: {},
   },
-  subModules: [bylineModule, boldModule]
+  subModules: [bylineModule, boldModule],
 })
 captionModule.name = 'figureCaption'
 
 const figureModule = createFigureModule({
   TYPE,
   rule: {
-    matchMdast: node => node.type === 'zone' && node.identifier === TYPE,
-    editorOptions: {}
+    matchMdast: (node) => node.type === 'zone' && node.identifier === TYPE,
+    editorOptions: {},
   },
-  subModules: [imageModule, captionModule]
+  subModules: [imageModule, captionModule],
 })
 
 const serializer = figureModule.helpers.serializer
 
-test('figure serialization', assert => {
+test('figure serialization', (assert) => {
   const md = `<section><h6>${TYPE}</h6>
 
 \`\`\`
@@ -87,7 +87,7 @@ Caption_Byline_
   assert.end()
 })
 
-test('figure caption with break in mark', assert => {
+test('figure caption with break in mark', (assert) => {
   const serializer = captionModule.helpers.serializer
 
   const md = `A**${'  '}

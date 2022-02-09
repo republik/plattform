@@ -106,12 +106,12 @@ const getComments = gql`
 `
 
 export const withActiveDiscussions = graphql(getActiveDiscussions, {
-  options: props => ({
+  options: (props) => ({
     variables: {
       lastDays: props.lastDays || 3,
-      first: props.first
-    }
-  })
+      first: props.first,
+    },
+  }),
 })
 
 export const withComments = (defaultProps = {}) =>
@@ -123,8 +123,8 @@ export const withComments = (defaultProps = {}) =>
           discussionIds,
           toDepth,
           orderBy: defaultProps.orderBy || 'DATE',
-          first: defaultProps.first || 10
-        }
+          first: defaultProps.first || 10,
+        },
       }
     },
     props: ({ data, ownProps }) => ({
@@ -132,15 +132,15 @@ export const withComments = (defaultProps = {}) =>
       fetchMore: ({ after }) =>
         data.fetchMore({
           variables: {
-            after
+            after,
           },
           updateQuery: (
             previousResult,
-            { fetchMoreResult, queryVariables }
+            { fetchMoreResult, queryVariables },
           ) => {
             const nodes = [
               ...previousResult.comments.nodes,
-              ...fetchMoreResult.comments.nodes
+              ...fetchMoreResult.comments.nodes,
             ]
             return {
               ...previousResult,
@@ -150,10 +150,10 @@ export const withComments = (defaultProps = {}) =>
               comments: {
                 ...previousResult.comments,
                 ...fetchMoreResult.comments,
-                nodes
-              }
+                nodes,
+              },
             }
-          }
-        })
-    })
+          },
+        }),
+    }),
   })

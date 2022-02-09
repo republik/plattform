@@ -27,28 +27,28 @@ export const withDiscussionPreferences = compose(
             discussionPreferences: {
               anonymity,
               credential: credential && credential.trim() ? credential : null,
-              notifications
-            }
+              notifications,
+            },
           },
           update: (proxy, { data: { setDiscussionPreferences } }) => {
             const variables = { discussionId }
             const data = proxy.readQuery({
               query: DISCUSSION_PREFERENCES_QUERY,
-              variables
+              variables,
             })
             proxy.writeQuery({
               query: DISCUSSION_PREFERENCES_QUERY,
               variables,
-              data: produce(data, draft => {
+              data: produce(data, (draft) => {
                 draft.discussion.userPreference =
                   setDiscussionPreferences.userPreference
                 draft.discussion.displayAuthor =
                   setDiscussionPreferences.displayAuthor
-              })
+              }),
             })
-          }
+          },
         }).catch(toRejectedString)
-      }
-    })
-  })
+      },
+    }),
+  }),
 )

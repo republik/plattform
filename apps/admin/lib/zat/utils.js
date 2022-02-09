@@ -103,7 +103,7 @@ export function when(items) {
       })
     }
     promise
-      .then(data => {
+      .then((data) => {
         resolveWith(data, index)
       })
       .catch(rejectAll.bind(rejectAll))

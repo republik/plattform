@@ -3,7 +3,7 @@ import { Highlight } from '../Elements'
 import Page from '../Page'
 
 const text = {
-  Januar: p => (
+  Januar: (p) => (
     <>
       Die Recherche über den{' '}
       <Highlight {...p} series='republik/article-serienuebersicht-kampfjets'>
@@ -67,6 +67,6 @@ const text = {
   ),
 }
 
-const Overview2022 = props => <Page {...props} year={2022} text={text} />
+const Overview2022 = (props) => <Page {...props} year={2022} text={text} />
 
 export default Overview2022

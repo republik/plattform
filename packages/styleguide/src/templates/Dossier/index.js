@@ -27,21 +27,21 @@ const createDossierSchema = ({
       titleBlockPrepend,
       <DossierTag attributes={{ contentEditable: false }}>
         {dossierLabel}
-      </DossierTag>
+      </DossierTag>,
     ],
     customMetaFields: [
       {
         label: 'Diskussion',
         key: 'discussion',
-        ref: 'repo'
+        ref: 'repo',
       },
-      ...customMetaFields
+      ...customMetaFields,
     ],
     series,
     darkMode,
     paynotes,
     Link,
-    ...args
+    ...args,
   })
 }
 

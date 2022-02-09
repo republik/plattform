@@ -1,6 +1,6 @@
 import React from 'react'
 
-const SvgObwalden = props => (
+const SvgObwalden = (props) => (
   <svg
     width={props.size}
     height={(props.size * 471.528) / 470.496}

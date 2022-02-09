@@ -6,7 +6,7 @@ import {
   sansSerifMedium14,
   sansSerifMedium16,
   sansSerifMedium18,
-  sansSerifMedium20
+  sansSerifMedium20,
 } from '../Typography/styles'
 import { mUp } from '../../theme/mediaQueries'
 import { useColorContext } from '../Colors/useColorContext'
@@ -19,16 +19,16 @@ const styles = {
     margin: '0 10px 5px 0',
     [mUp]: {
       ...sansSerifMedium20,
-      margin: '0 20px 5px 0'
-    }
+      margin: '0 20px 5px 0',
+    },
   }),
   count: css({
     ...sansSerifMedium14,
     marginLeft: 5,
     [mUp]: {
-      ...sansSerifMedium16
-    }
-  })
+      ...sansSerifMedium16,
+    },
+  }),
 }
 
 const FormatTag = ({ label, count, color }) => {
@@ -48,7 +48,7 @@ const FormatTag = ({ label, count, color }) => {
 FormatTag.propTypes = {
   label: PropTypes.string.isRequired,
   count: PropTypes.number,
-  color: PropTypes.string
+  color: PropTypes.string,
 }
 
 export default FormatTag

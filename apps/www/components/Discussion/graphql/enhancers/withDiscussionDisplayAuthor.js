@@ -26,8 +26,8 @@ export const withDiscussionDisplayAuthor = graphql(
         discussionClosed: discussion.closed,
         discussionUserPreference: discussion.userPreference,
         discussionUserCanComment: discussion.userCanComment,
-        discussionDisplayAuthor: discussion.displayAuthor
+        discussionDisplayAuthor: discussion.displayAuthor,
       }
-    }
-  }
+    },
+  },
 )

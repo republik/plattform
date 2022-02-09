@@ -9,21 +9,21 @@ import datetime from '../Article/Progress/datetime'
 import {
   HighlightOffIcon,
   CheckSmallIcon,
-  ReadIcon as OutlinedReadIcon
+  ReadIcon as OutlinedReadIcon,
 } from '@project-r/styleguide'
 import { withProgressApi } from '../Article/Progress/api'
 import {
   ProgressCircle,
   IconButton,
   CalloutMenu,
-  Label
+  Label,
 } from '@project-r/styleguide'
 import { getFeatureDescription } from '../Article/Progress'
 
 const styles = {
   consent: css({
-    marginTop: 16
-  })
+    marginTop: 16,
+  }),
 }
 
 const UserProgress = (
@@ -38,9 +38,9 @@ const UserProgress = (
     forceShortLabel,
     noCallout,
     noScroll,
-    displayMinutes
+    displayMinutes,
   },
-  { restoreArticleProgress, showConsentPrompt }
+  { restoreArticleProgress, showConsentPrompt },
 ) => {
   // Renders the Progress Consent Form as a Callout in the Article Top Actionbar
   if (showConsentPrompt && !noCallout) {
@@ -150,14 +150,14 @@ const UserProgress = (
           forceShortLabel
             ? `${percent}%`
             : t('progress/restore/title', {
-                percent: `${percent}%`
+                percent: `${percent}%`,
               })
         }
         labelShort={
           forceShortLabel
             ? `${percent}%`
             : t('progress/restore/titleShort', {
-                percent: `${percent}%`
+                percent: `${percent}%`,
               })
         }
         style={{ marginRight: 10 }}
@@ -183,7 +183,7 @@ const UserProgress = (
 
 UserProgress.contextTypes = {
   restoreArticleProgress: PropTypes.func,
-  showConsentPrompt: PropTypes.bool
+  showConsentPrompt: PropTypes.bool,
 }
 
 export default compose(withT, withProgressApi)(UserProgress)

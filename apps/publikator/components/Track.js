@@ -8,19 +8,14 @@ import track from '../lib/piwik'
 
 import { PUBLIC_BASE_URL } from '../lib/settings'
 
-const trackRoles = me =>
+const trackRoles = (me) =>
   track([
     'setCustomDimension',
     1,
-    me
-      ? []
-          .concat(me.roles)
-          .sort()
-          .join(' ') || 'none'
-      : 'guest'
+    me ? [].concat(me.roles).sort().join(' ') || 'none' : 'guest',
   ])
 
-const trackPageView = url => {
+const trackPageView = (url) => {
   // sanitize url
   const urlObject = parse(url, true)
   const { query } = urlObject
@@ -48,7 +43,7 @@ class Track extends Component {
     trackPageView(window.location.href)
     Router.events.on('routeChangeComplete', this.onRouteChangeComplete)
   }
-  onRouteChangeComplete = url => {
+  onRouteChangeComplete = (url) => {
     // give pages time to set correct page title
     // may not always be enough, e.g. if data dependent and slow query/network, but works fine for many cases
     setTimeout(() => {

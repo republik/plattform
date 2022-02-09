@@ -1,15 +1,15 @@
-define(['react', 'glamor'], function(React, glamor) {
+define(['react', 'glamor'], function (React, glamor) {
   'use strict'
 
   React = React && React.hasOwnProperty('default') ? React['default'] : React
 
-  return props =>
+  return (props) =>
     React.createElement(
       'div',
       glamor.css({
         backgroundColor: 'purple',
-        color: 'white'
+        color: 'white',
       }),
-      props.text || 'other side'
+      props.text || 'other side',
     )
 })

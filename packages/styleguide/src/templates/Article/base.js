@@ -10,7 +10,7 @@ import {
   FigureImage,
   FigureCaption,
   FigureByline,
-  FigureGroup
+  FigureGroup,
 } from '../../components/Figure'
 
 import { List, ListItem } from '../../components/List'
@@ -22,7 +22,7 @@ import {
   matchType,
   matchZone,
   matchParagraph,
-  imageSizeInfo
+  imageSizeInfo,
 } from 'mdast-react-render/lib/utils'
 
 import {
@@ -32,25 +32,25 @@ import {
   styles,
   mdastToString,
   extractImages,
-  matchImagesParagraph
+  matchImagesParagraph,
 } from './utils'
 import { MIN_GALLERY_IMG_WIDTH } from '../../components/Figure/Image'
 
 const createBase = ({ metaBody, metaHeadlines }) => {
   const link = {
     matchMdast: matchType('link'),
-    props: node => ({
+    props: (node) => ({
       title: node.title,
-      href: node.url
+      href: node.url,
     }),
-    component: props => {
+    component: (props) => {
       const { href } = props
       // workaround app issues with hash url by handling them ourselves and preventing the default behaviour
       if (href && href.slice(0, 3) === '#t=') {
         return (
           <Editorial.A
             {...props}
-            onClick={e => {
+            onClick={(e) => {
               const time = parseTimeHash(href)
               if (time !== false) {
                 e.preventDefault()
@@ -64,7 +64,7 @@ const createBase = ({ metaBody, metaHeadlines }) => {
         return (
           <Editorial.A
             {...props}
-            onClick={e => {
+            onClick={(e) => {
               const ele = document.getElementById(href.substr(1))
               if (ele) {
                 e.preventDefault()
@@ -77,7 +77,7 @@ const createBase = ({ metaBody, metaHeadlines }) => {
       return <Editorial.A {...props} />
     },
     editorModule: 'link',
-    rules: globalInlines
+    rules: globalInlines,
   }
 
   const paragraphFormatting = [
@@ -89,8 +89,8 @@ const createBase = ({ metaBody, metaHeadlines }) => {
       editorModule: 'mark',
       editorOptions: {
         type: 'STRONG',
-        mdastType: 'strong'
-      }
+        mdastType: 'strong',
+      },
     },
     {
       matchMdast: matchType('emphasis'),
@@ -100,9 +100,9 @@ const createBase = ({ metaBody, metaHeadlines }) => {
       editorModule: 'mark',
       editorOptions: {
         type: 'EMPHASIS',
-        mdastType: 'emphasis'
-      }
-    }
+        mdastType: 'emphasis',
+      },
+    },
   ]
 
   const paragraphRules = [
@@ -110,8 +110,8 @@ const createBase = ({ metaBody, metaHeadlines }) => {
     ...paragraphFormatting,
     {
       ...link,
-      rules: [...globalInlines, ...paragraphFormatting]
-    }
+      rules: [...globalInlines, ...paragraphFormatting],
+    },
   ]
 
   const Typography = metaBody ? Meta : Editorial
@@ -121,15 +121,15 @@ const createBase = ({ metaBody, metaHeadlines }) => {
     component: Typography.P,
     editorModule: 'paragraph',
     editorOptions: {
-      formatButtonText: 'Paragraph'
+      formatButtonText: 'Paragraph',
     },
-    rules: paragraphRules
+    rules: paragraphRules,
   }
 
   const subhead = {
     matchMdast: matchHeading(2),
-    props: node => ({
-      slug: slug(mdastToString(node))
+    props: (node) => ({
+      slug: slug(mdastToString(node)),
     }),
     component: ({ children, slug }) => {
       const Subhead = metaHeadlines ? Meta.Subhead : Typography.Subhead
@@ -146,20 +146,20 @@ const createBase = ({ metaBody, metaHeadlines }) => {
       depth: 2,
       formatButtonText: 'Zwischentitel',
       afterType: 'PARAGRAPH',
-      insertAfterType: 'CENTER'
+      insertAfterType: 'CENTER',
     },
-    rules: globalInlines
+    rules: globalInlines,
   }
 
   const list = {
     matchMdast: matchType('list'),
     component: List,
-    props: node => ({
+    props: (node) => ({
       data: {
         ordered: node.ordered,
         start: node.start,
-        compact: !node.loose
-      }
+        compact: !node.loose,
+      },
     }),
     editorModule: 'list',
     rules: [
@@ -167,9 +167,9 @@ const createBase = ({ metaBody, metaHeadlines }) => {
         matchMdast: matchType('listItem'),
         component: ListItem,
         editorModule: 'listItem',
-        rules: [paragraph]
-      }
-    ]
+        rules: [paragraph],
+      },
+    ],
   }
 
   const figureImage = {
@@ -215,11 +215,11 @@ const createBase = ({ metaBody, metaHeadlines }) => {
         alt: node.children[0].alt,
         enableGallery,
         gallerySize,
-        aboveTheFold
+        aboveTheFold,
       }
     },
     editorModule: 'figureImage',
-    isVoid: true
+    isVoid: true,
   }
 
   const figureByLine = {
@@ -228,22 +228,22 @@ const createBase = ({ metaBody, metaHeadlines }) => {
     editorModule: 'paragraph',
     editorOptions: {
       type: 'BYLINE',
-      placeholder: 'Credit'
-    }
+      placeholder: 'Credit',
+    },
   }
 
   const figureCaption = {
     matchMdast: matchParagraph,
     component: FigureCaption,
     props: (node, index, parent, { ancestors }) => ({
-      groupCaption: parent.identifier === 'FIGUREGROUP'
+      groupCaption: parent.identifier === 'FIGUREGROUP',
     }),
     editorModule: 'figureCaption',
     editorOptions: {
       isStatic: true,
-      placeholder: 'Legende'
+      placeholder: 'Legende',
     },
-    rules: [figureByLine, link, ...globalInlines]
+    rules: [figureByLine, link, ...globalInlines],
   }
 
   const figure = {
@@ -267,7 +267,7 @@ const createBase = ({ metaBody, metaHeadlines }) => {
 
       return {
         hidden,
-        size: node.data.size
+        size: node.data.size,
       }
     },
     editorModule: 'figure',
@@ -280,31 +280,31 @@ const createBase = ({ metaBody, metaHeadlines }) => {
           props: { size: undefined },
           parent: {
             kinds: ['document', 'block'],
-            types: ['CENTER']
+            types: ['CENTER'],
           },
-          unwrap: true
+          unwrap: true,
         },
         {
           label: 'Gross',
           props: { size: 'breakout' },
           parent: {
             kinds: ['document', 'block'],
-            types: ['CENTER']
+            types: ['CENTER'],
           },
-          wrap: 'CENTER'
+          wrap: 'CENTER',
         },
         {
           label: 'Normal',
           props: { size: undefined },
           parent: {
             kinds: ['document', 'block'],
-            types: ['CENTER']
+            types: ['CENTER'],
           },
-          wrap: 'CENTER'
-        }
-      ]
+          wrap: 'CENTER',
+        },
+      ],
     },
-    rules: [figureImage, figureCaption]
+    rules: [figureImage, figureCaption],
   }
 
   const centerFigureCaption = {
@@ -313,19 +313,19 @@ const createBase = ({ metaBody, metaHeadlines }) => {
       ...figureCaption.editorOptions,
       type: 'CENTERFIGURECAPTION',
       afterType: 'PARAGRAPH',
-      insertAfterType: 'CENTER'
+      insertAfterType: 'CENTER',
     },
     rules: [
       {
         ...figureByLine,
         editorOptions: {
           ...figureByLine.editorOptions,
-          type: 'CENTERBYLINE'
-        }
+          type: 'CENTERBYLINE',
+        },
       },
       link,
-      ...globalInlines
-    ]
+      ...globalInlines,
+    ],
   }
 
   const centerFigure = {
@@ -334,26 +334,26 @@ const createBase = ({ metaBody, metaHeadlines }) => {
       ...figure.editorOptions,
       insertButtonText: 'Bild',
       insertTypes: ['PARAGRAPH'],
-      type: 'CENTERFIGURE'
+      type: 'CENTERFIGURE',
     },
-    rules: [figureImage, centerFigureCaption]
+    rules: [figureImage, centerFigureCaption],
   }
 
   const figureGroup = {
     matchMdast: matchZone('FIGUREGROUP'),
     component: FigureGroup,
-    props: node => {
+    props: (node) => {
       return {
         size: node.data.size || 'breakout',
-        columns: node.data.columns
+        columns: node.data.columns,
       }
     },
     rules: [figure, centerFigureCaption],
     editorModule: 'figuregroup',
     editorOptions: {
       insertButtonText: 'Bildergruppe',
-      insertTypes: ['PARAGRAPH']
-    }
+      insertTypes: ['PARAGRAPH'],
+    },
   }
 
   return {
@@ -366,7 +366,7 @@ const createBase = ({ metaBody, metaHeadlines }) => {
     figureImage,
     figureCaption,
     figureGroup,
-    centerFigure
+    centerFigure,
   }
 }
 

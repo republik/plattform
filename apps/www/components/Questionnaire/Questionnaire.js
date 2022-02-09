@@ -10,7 +10,7 @@ import {
   Interaction,
   mediaQueries,
   InlineSpinner,
-  RawHtml
+  RawHtml,
 } from '@project-r/styleguide'
 
 import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../constants'
@@ -28,7 +28,7 @@ const { Headline, P } = Interaction
 
 const styles = {
   intro: css({
-    marginTop: 35
+    marginTop: 35,
   }),
   count: css({
     background: '#fff',
@@ -40,19 +40,19 @@ const styles = {
     minHeight: 55,
     top: HEADER_HEIGHT - 1,
     [mediaQueries.onlyS]: {
-      top: HEADER_HEIGHT_MOBILE - 1
-    }
+      top: HEADER_HEIGHT_MOBILE - 1,
+    },
   }),
   progressIcon: css({
     marginLeft: 5,
     marginTop: 3,
-    minHeight: 30
-  })
+    minHeight: 30,
+  }),
 }
 
 export const actionStyles = css({
   textAlign: 'center',
-  margin: '20px auto 20px auto'
+  margin: '20px auto 20px auto',
 })
 
 class Questionnaire extends Component {
@@ -69,14 +69,14 @@ class Questionnaire extends Component {
         onQuestionnaireChange && onQuestionnaireChange()
         return this.setState(() => ({
           updating: false,
-          error: null
+          error: null,
         }))
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState(() => ({
           updating: false,
           submitting: false,
-          error
+          error,
         }))
       })
   }
@@ -86,21 +86,21 @@ class Questionnaire extends Component {
     const {
       submitQuestionnaire,
       questionnaireData: {
-        questionnaire: { id }
+        questionnaire: { id },
       },
-      router
+      router,
     } = this.props
     this.processSubmit(submitQuestionnaire, id).then(() =>
-      router.push('/meta').then(() => window.scrollTo(0, 0))
+      router.push('/meta').then(() => window.scrollTo(0, 0)),
     )
   }
 
-  handleReset = e => {
+  handleReset = (e) => {
     const {
       resetQuestionnaire,
       questionnaireData: {
-        questionnaire: { id }
-      }
+        questionnaire: { id },
+      },
     } = this.props
     e.preventDefault()
     this.processSubmit(resetQuestionnaire, id).then(() => window.scrollTo(0, 0))
@@ -117,7 +117,7 @@ class Questionnaire extends Component {
       hideCount,
       sliceAt,
       showSlice2,
-      slug
+      slug,
     } = this.props
 
     return (
@@ -144,7 +144,7 @@ class Questionnaire extends Component {
 
           // handle already submitted
           const {
-            questionnaire: { userHasSubmitted, questions }
+            questionnaire: { userHasSubmitted, questions },
           } = questionnaireData
           const error = this.state.error || this.props.error
           const submitting = this.state.submitting || this.props.submitting
@@ -167,7 +167,7 @@ class Questionnaire extends Component {
           // handle questions
           const questionCount = questions.filter(Boolean).length
           const userAnswerCount = questions
-            .map(q => q.userAnswer)
+            .map((q) => q.userAnswer)
             .filter(Boolean).length
           const questionnairePath = questionnaireName
             ? `/${questionnaireName}/`
@@ -179,7 +179,7 @@ class Questionnaire extends Component {
                 <RawHtml
                   type={P}
                   dangerouslySetInnerHTML={{
-                    __html: t(`questionnaire${questionnairePath}intro`)
+                    __html: t(`questionnaire${questionnairePath}intro`),
                   }}
                 />
                 <br />
@@ -199,7 +199,7 @@ class Questionnaire extends Component {
                         <strong>
                           {t('questionnaire/header', {
                             questionCount,
-                            userAnswerCount
+                            userAnswerCount,
                           })}
                         </strong>
                       </P>
@@ -246,5 +246,5 @@ export default compose(
   withRouter,
   withAuthorization(['supporter', 'editor'], 'showResults'),
   withQuestionnaireMutation,
-  withQuestionnaireReset
+  withQuestionnaireReset,
 )(Questionnaire)
