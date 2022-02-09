@@ -1,6 +1,8 @@
 {
   "functions": {
-    "screenshots.js": {}
+    "screenshots.js": {
+      "maxDuration": 60
+    }
   },
   "rewrites": [
     { "source": "/screenshot", "destination": "/screenshot.js" }
