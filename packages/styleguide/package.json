@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "main": "dist/lib.js",
   "module": "src/lib.ts",
+  "types": "dist/lib.d.ts",
   "engines": {
     "node": "^14.4.0"
   },
@@ -108,7 +109,7 @@
     "build:docs": "react-scripts build",
     "start": "serve -s build",
     "dev": "concurrently yarn:dev:lib yarn:dev:docs",
-    "dev:lib": "tsc -w --project tsconfig.dist.json",
+    "dev:lib": "tsc -w --project tsconfig.json",
     "dev:docs": "BROWSER=none PORT=3003 react-scripts start",
     "test": "CI=true react-scripts test",
     "test:dev": "react-scripts test",
