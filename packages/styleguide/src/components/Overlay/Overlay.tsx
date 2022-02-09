@@ -4,7 +4,7 @@ import React, {
   useRef,
   MutableRefObject,
   ReactNode,
-  MouseEventHandler
+  MouseEventHandler,
 } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
@@ -26,7 +26,7 @@ const styles = {
     transition: 'opacity .12s ease-in-out',
     background: 'rgba(0,0,0,.2)',
     overflowY: 'auto',
-    WebkitOverflowScrolling: 'touch'
+    WebkitOverflowScrolling: 'touch',
   }),
   inner: css({
     position: 'relative',
@@ -36,9 +36,9 @@ const styles = {
       maxWidth: '600px',
       minHeight: '60vh',
       height: 'auto',
-      margin: '20vh auto 20vh'
-    }
-  })
+      margin: '20vh auto 20vh',
+    },
+  }),
 }
 
 const ssrAttribute = 'data-overlay-ssr'
@@ -61,7 +61,7 @@ const Overlay: React.FC<OverlayProps> = ({ onClose, children, mUpStyle }) => {
     () =>
       !isDomAvailable ||
       (isDomAvailable &&
-        document.querySelectorAll(`[${ssrAttribute}]`).length > 0)
+        document.querySelectorAll(`[${ssrAttribute}]`).length > 0),
   )
   const [isVisible, setIsVisible] = useState(ssrMode)
 
@@ -100,7 +100,7 @@ const Overlay: React.FC<OverlayProps> = ({ onClose, children, mUpStyle }) => {
 
 Overlay.propTypes = {
   children: PropTypes.node.isRequired,
-  onClose: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired,
 }
 
 export default Overlay
@@ -113,12 +113,14 @@ type MUpStyle = {
 
 // This is the actual Overlay component that is rendered. We export this so we
 // can document the overlay in the catalog without affecting 'document.body'.
-export const OverlayRenderer: React.FC<OverlayProps & {
-  isVisible: boolean
-  ssrMode?: boolean
-  scrollRef?: MutableRefObject<HTMLDivElement>
-}> = ({ isVisible, mUpStyle, children, onClose, ssrMode, scrollRef }) => {
-  const close = e => {
+export const OverlayRenderer: React.FC<
+  OverlayProps & {
+    isVisible: boolean
+    ssrMode?: boolean
+    scrollRef?: MutableRefObject<HTMLDivElement>
+  }
+> = ({ isVisible, mUpStyle, children, onClose, ssrMode, scrollRef }) => {
+  const close = (e) => {
     if (e.target === e.currentTarget) {
       onClose(e)
     }
@@ -149,9 +151,9 @@ OverlayRenderer.propTypes = {
   mUpStyle: PropTypes.shape({
     maxWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     marginTop: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    marginBottom: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+    marginBottom: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   }),
   children: PropTypes.node.isRequired,
   isVisible: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired,
 }

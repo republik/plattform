@@ -18,7 +18,7 @@ export const CoverImage = ({ src, alt }) => {
         padding: 0,
         width: '100%',
         height: 'auto !important',
-        maxWidth: '100% !important'
+        maxWidth: '100% !important',
       }}
     />
   )

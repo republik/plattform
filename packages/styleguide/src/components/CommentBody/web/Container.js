@@ -11,15 +11,15 @@ const styles = {
     wordWrap: 'break-word',
     ...convertStyleToRem(serifRegular14),
     [mUp]: {
-      ...convertStyleToRem(serifRegular16)
+      ...convertStyleToRem(serifRegular16),
     },
     '& > *:first-child': {
-      marginTop: 0
+      marginTop: 0,
     },
     '& > *:last-child': {
-      marginBottom: 0
-    }
-  })
+      marginBottom: 0,
+    },
+  }),
 }
 
 export default ({ children }) => (

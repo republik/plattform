@@ -12,15 +12,15 @@ const styles = {
     overflow: 'hidden',
     marginBottom: 10,
     marginTop: 18,
-    textDecoration: 'none'
+    textDecoration: 'none',
   }),
   preview: css(serifRegular15),
   highlight: css({
     ...serifBold28,
     [mUp]: {
-      ...serifBold32
-    }
-  })
+      ...serifBold32,
+    },
+  }),
 }
 
 const DebateComment = React.forwardRef(
@@ -45,7 +45,7 @@ const DebateComment = React.forwardRef(
             )}
       </a>
     )
-  }
+  },
 )
 
 export default DebateComment
@@ -54,6 +54,6 @@ DebateComment.propTypes = {
   highlight: PropTypes.string,
   preview: PropTypes.shape({
     string: PropTypes.string,
-    more: PropTypes.bool
-  })
+    more: PropTypes.bool,
+  }),
 }

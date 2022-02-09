@@ -17,7 +17,7 @@ const CancelMembershipPage = ({ router, me, t }) => {
 
   const meta = {
     title: t('memberships/cancel/title'),
-    description: ''
+    description: '',
   }
 
   return (
@@ -43,5 +43,5 @@ const CancelMembershipPage = ({ router, me, t }) => {
 }
 
 export default withDefaultSSR(
-  compose(withRouter, withT, withMe)(CancelMembershipPage)
+  compose(withRouter, withT, withMe)(CancelMembershipPage),
 )

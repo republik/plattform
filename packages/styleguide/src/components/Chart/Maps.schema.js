@@ -3,7 +3,7 @@ export const genericMapEditorSchema = ({
   defaults,
   colorDropdownItems,
   chartSizes,
-  columnAmount
+  columnAmount,
 }) => {
   return {
     defaultProps: defaults,
@@ -15,14 +15,14 @@ export const genericMapEditorSchema = ({
             color: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: optionalDataColumnEnum
+              enum: optionalDataColumnEnum,
             },
             colorRange: {
               title: 'Farbschema auswählen',
               type: 'string',
-              enum: colorDropdownItems
-            }
-          }
+              enum: colorDropdownItems,
+            },
+          },
         },
         layout: {
           title: 'Aufteilen in mehrere Charts',
@@ -30,15 +30,15 @@ export const genericMapEditorSchema = ({
             column: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: optionalDataColumnEnum
+              enum: optionalDataColumnEnum,
             },
             columns: {
               title: 'Anzahl Spalten pro Zeile',
               type: 'number',
-              enum: columnAmount
-            }
-          }
-        }
+              enum: columnAmount,
+            },
+          },
+        },
       },
       advanced: {
         layout: {
@@ -47,12 +47,12 @@ export const genericMapEditorSchema = ({
             size: {
               title: 'Darstellung im Beitrag',
               type: 'string',
-              enum: chartSizes
-            }
-          }
-        }
-      }
-    }
+              enum: chartSizes,
+            },
+          },
+        },
+      },
+    },
   }
 }
 
@@ -61,7 +61,7 @@ export const projectedMapEditorSchema = ({
   defaults,
   colorDropdownItems,
   chartSizes,
-  columnAmount
+  columnAmount,
 }) => {
   return {
     defaultProps: defaults,
@@ -73,14 +73,14 @@ export const projectedMapEditorSchema = ({
             color: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: optionalDataColumnEnum
+              enum: optionalDataColumnEnum,
             },
             colorRange: {
               title: 'Farbschema auswählen',
               type: 'string',
-              enum: colorDropdownItems
-            }
-          }
+              enum: colorDropdownItems,
+            },
+          },
         },
         layout: {
           title: 'Aufteilen in mehrere Charts',
@@ -88,15 +88,15 @@ export const projectedMapEditorSchema = ({
             column: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: optionalDataColumnEnum
+              enum: optionalDataColumnEnum,
             },
             columns: {
               title: 'Anzahl Spalten pro Zeile',
               type: 'number',
-              enum: columnAmount
-            }
-          }
-        }
+              enum: columnAmount,
+            },
+          },
+        },
       },
       advanced: {
         layout: {
@@ -105,12 +105,12 @@ export const projectedMapEditorSchema = ({
             size: {
               title: 'Darstellung im Beitrag',
               type: 'string',
-              enum: chartSizes
-            }
-          }
-        }
-      }
-    }
+              enum: chartSizes,
+            },
+          },
+        },
+      },
+    },
   }
 }
 
@@ -119,7 +119,7 @@ export const swissMapEditorSchema = ({
   defaults,
   colorDropdownItems,
   chartSizes,
-  columnAmount
+  columnAmount,
 }) => {
   return {
     defaultProps: defaults,
@@ -131,14 +131,14 @@ export const swissMapEditorSchema = ({
             color: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: optionalDataColumnEnum
+              enum: optionalDataColumnEnum,
             },
             colorRange: {
               title: 'Farbschema auswählen',
               type: 'string',
-              enum: colorDropdownItems
-            }
-          }
+              enum: colorDropdownItems,
+            },
+          },
         },
         layout: {
           title: 'Aufteilen in mehrere Charts',
@@ -146,15 +146,15 @@ export const swissMapEditorSchema = ({
             column: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: optionalDataColumnEnum
+              enum: optionalDataColumnEnum,
             },
             columns: {
               title: 'Anzahl Spalten pro Zeile',
               type: 'number',
-              enum: columnAmount
-            }
-          }
-        }
+              enum: columnAmount,
+            },
+          },
+        },
       },
       advanced: {
         layout: {
@@ -163,11 +163,11 @@ export const swissMapEditorSchema = ({
             size: {
               title: 'Darstellung im Beitrag',
               type: 'string',
-              enum: chartSizes
-            }
-          }
-        }
-      }
-    }
+              enum: chartSizes,
+            },
+          },
+        },
+      },
+    },
   }
 }

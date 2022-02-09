@@ -37,7 +37,7 @@ import {
   mediaQueries,
   usePrevious,
   useHeaderHeight,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import ElectionBallotRow from '../Vote/ElectionBallotRow'
 import { documentListQueryFragment } from '../Feed/DocumentListContainer'
@@ -55,41 +55,41 @@ const styles = {
     paddingBottom: 60,
     paddingTop: 10,
     [mediaQueries.mUp]: {
-      paddingTop: SIDEBAR_TOP + 5
-    }
+      paddingTop: SIDEBAR_TOP + 5,
+    },
   }),
   sidebar: css({
     paddingBottom: '20px',
     [mediaQueries.mUp]: {
       float: 'left',
-      width: PORTRAIT_SIZE_M
-    }
+      width: PORTRAIT_SIZE_M,
+    },
   }),
   mainColumn: css({
     [mediaQueries.mUp]: {
       float: 'left',
       paddingLeft: 20,
-      width: `calc(100% - ${PORTRAIT_SIZE_M}px)`
-    }
+      width: `calc(100% - ${PORTRAIT_SIZE_M}px)`,
+    },
   }),
   head: css({
     position: 'relative',
-    paddingTop: 20
+    paddingTop: 20,
   }),
   statement: css({
     [mediaQueries.mUp]: {
       float: 'right',
       width: `calc(100% - ${PORTRAIT_SIZE_M + 20}px)`,
-      paddingBottom: 30
-    }
+      paddingBottom: 30,
+    },
   }),
   portrait: css({
     width: PORTRAIT_SIZE_S,
     height: PORTRAIT_SIZE_S,
     [mediaQueries.mUp]: {
       width: PORTRAIT_SIZE_M,
-      height: PORTRAIT_SIZE_M
-    }
+      height: PORTRAIT_SIZE_M,
+    },
   }),
   headInfo: css({
     ...fontStyles.sansSerifRegular16,
@@ -98,8 +98,8 @@ const styles = {
     right: 0,
     left: PORTRAIT_SIZE_S + 10,
     [mediaQueries.mUp]: {
-      left: PORTRAIT_SIZE_M + 20
-    }
+      left: PORTRAIT_SIZE_M + 20,
+    },
   }),
   headInfoNumber: css({
     display: 'inline-block',
@@ -109,25 +109,25 @@ const styles = {
     verticalAlign: 'middle',
     [mediaQueries.mUp]: {
       marginRight: 0,
-      float: 'left'
-    }
+      float: 'left',
+    },
   }),
   headInfoShare: css({
     display: 'flex',
     float: 'right',
-    verticalAlign: 'middle'
+    verticalAlign: 'middle',
   }),
   badges: css({
-    margin: '20px 0 30px 0'
+    margin: '20px 0 30px 0',
   }),
   candidacy: css({
     marginTop: 0,
-    marginBottom: 20
-  })
+    marginBottom: 20,
+  }),
 }
 
 export const DEFAULT_VALUES = {
-  publicUrl: 'https://'
+  publicUrl: 'https://',
 }
 
 const getPublicUser = gql`
@@ -273,12 +273,12 @@ const getPublicUser = gql`
 const makeLoadMore = (fetchMore, dataType, variables) => () =>
   fetchMore({
     updateQuery: (previousResult, { fetchMoreResult }) => {
-      const getConnection = data => data.user[dataType]
+      const getConnection = (data) => data.user[dataType]
       const prevCon = getConnection(previousResult)
       const moreCon = getConnection(fetchMoreResult)
       const nodes = [...prevCon.nodes, ...moreCon.nodes].filter(
         // deduplicating due to off by one in pagination API
-        (node, index, all) => all.findIndex(n => n.id === node.id) === index
+        (node, index, all) => all.findIndex((n) => n.id === node.id) === index,
       )
       return {
         ...previousResult,
@@ -286,31 +286,31 @@ const makeLoadMore = (fetchMore, dataType, variables) => () =>
           ...previousResult.user,
           [dataType]: {
             ...moreCon,
-            nodes
-          }
-        }
+            nodes,
+          },
+        },
       }
     },
-    variables
+    variables,
   })
 
-const LoadedProfile = props => {
+const LoadedProfile = (props) => {
   const [state, setRawState] = useState({
     isEditing: false,
     showErrors: false,
     values: {},
     errors: {},
-    dirty: {}
+    dirty: {},
   })
-  const setState = newState =>
-    setRawState(prevState => ({
+  const setState = (newState) =>
+    setRawState((prevState) => ({
       ...prevState,
-      ...(typeof newState === 'function' ? newState(prevState) : newState)
+      ...(typeof newState === 'function' ? newState(prevState) : newState),
     }))
 
   const [layout, setLayout] = useState({
     isMobile: false,
-    isSticky: false
+    isSticky: false,
   })
   const innerRef = useRef()
   const sidebarInnerRef = useRef()
@@ -334,14 +334,14 @@ const LoadedProfile = props => {
           window.innerHeight - current.headerHeight - SIDEBAR_TOP
 
       if (isSticky !== current.layout.isSticky) {
-        setLayout(prev => ({ ...prev, isSticky }))
+        setLayout((prev) => ({ ...prev, isSticky }))
       }
     }
     const measure = () => {
       const { current } = currentRef
       const isMobile = window.innerWidth < mediaQueries.mBreakPoint
       if (isMobile !== current.layout.isMobile) {
-        setLayout(prev => ({ ...prev, isMobile }))
+        setLayout((prev) => ({ ...prev, isMobile }))
       }
       if (innerRef.current) {
         const rect = innerRef.current.getBoundingClientRect()
@@ -349,11 +349,12 @@ const LoadedProfile = props => {
         current.innerHeight = rect.height
         const x = window.pageXOffset + rect.left
         if (x !== current.layout.x) {
-          setLayout(prev => ({ ...prev, x }))
+          setLayout((prev) => ({ ...prev, x }))
         }
       }
       if (sidebarInnerRef.current) {
-        current.sidebarHeight = sidebarInnerRef.current.getBoundingClientRect().height
+        current.sidebarHeight =
+          sidebarInnerRef.current.getBoundingClientRect().height
       }
       if (mainRef.current) {
         current.mainHeight = mainRef.current.getBoundingClientRect().height
@@ -374,7 +375,7 @@ const LoadedProfile = props => {
     me,
     data: { user, fetchMore },
     card,
-    metaData
+    metaData,
   } = props
   const isMe = me && me.id === user.id
 
@@ -382,15 +383,15 @@ const LoadedProfile = props => {
     const { isEditing } = state
     if (!isEditing && isMe) {
       const credential =
-        user.credentials && user.credentials.find(c => c.isListed)
+        user.credentials && user.credentials.find((c) => c.isListed)
       setState({
         isEditing: true,
         values: {
           ...user,
           publicUrl: user.publicUrl || DEFAULT_VALUES.publicUrl,
           credential: credential && credential.description,
-          portrait: undefined
-        }
+          portrait: undefined,
+        },
       })
       window.scrollTo(0, 0)
     }
@@ -405,7 +406,7 @@ const LoadedProfile = props => {
     }
   }, [prevUser, user])
 
-  const onChange = fields => {
+  const onChange = (fields) => {
     startEditing()
     setState(FieldSet.utils.mergeFields(fields))
   }
@@ -419,7 +420,7 @@ const LoadedProfile = props => {
     emailSubject: t('profile/share/emailSubject', { name: user.name }),
     emailAttachUrl: false,
     emailBody: `${PUBLIC_BASE_URL}/~${user.slug}`,
-    overlayTitle: t('profile/share/overlayTitle')
+    overlayTitle: t('profile/share/overlayTitle'),
   }
   const [colorScheme] = useColorContext()
   return (
@@ -463,7 +464,7 @@ const LoadedProfile = props => {
             {!!user.sequenceNumber && (
               <span {...styles.headInfoNumber}>
                 {t('memberships/sequenceNumber/label', {
-                  sequenceNumber: user.sequenceNumber
+                  sequenceNumber: user.sequenceNumber,
                 })}
               </span>
             )}
@@ -482,7 +483,7 @@ const LoadedProfile = props => {
                       position: 'fixed',
                       top: `${headerHeight + SIDEBAR_TOP}px`,
                       left: `${layout.x}px`,
-                      width: PORTRAIT_SIZE_M
+                      width: PORTRAIT_SIZE_M,
                     }
                   : {}
               }
@@ -590,7 +591,7 @@ const LoadedProfile = props => {
                       <Link
                         href={{
                           pathname: '/vote/genossenschaft/kandidieren',
-                          query: { edit: true }
+                          query: { edit: true },
                         }}
                         passHref
                       >
@@ -606,7 +607,7 @@ const LoadedProfile = props => {
                 firstComments: 0,
                 firstDocuments: 20,
                 afterDocument:
-                  user.documents.pageInfo && user.documents.pageInfo.endCursor
+                  user.documents.pageInfo && user.documents.pageInfo.endCursor,
               })}
             />
             <Comments
@@ -615,7 +616,7 @@ const LoadedProfile = props => {
                 firstDocuments: 0,
                 firstComments: 40,
                 afterComment:
-                  user.comments.pageInfo && user.comments.pageInfo.endCursor
+                  user.comments.pageInfo && user.comments.pageInfo.endCursor,
               })}
             />
           </div>
@@ -626,11 +627,11 @@ const LoadedProfile = props => {
   )
 }
 
-const Profile = props => {
+const Profile = (props) => {
   const {
     t,
     me,
-    data: { loading, error, user }
+    data: { loading, error, user },
   } = props
 
   const card = user && user.cards && user.cards.nodes && user.cards.nodes[0]
@@ -639,14 +640,14 @@ const Profile = props => {
     image:
       user && user.portrait
         ? `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=628&updatedAt=${encodeURIComponent(
-            user.updatedAt
+            user.updatedAt,
           )}b2&url=${encodeURIComponent(
-            `${PUBLIC_BASE_URL}/community?share=${user.id}`
+            `${PUBLIC_BASE_URL}/community?share=${user.id}`,
           )}`
         : '',
     title: user
       ? t('pages/profile/pageTitle', { name: user.name })
-      : t('pages/profile/empty/pageTitle')
+      : t('pages/profile/empty/pageTitle'),
   }
 
   return (
@@ -668,7 +669,7 @@ const Profile = props => {
                         <Link href={`/~${me.username || me.id}`} passHref>
                           <A>{t('pages/profile/empty/content/linktext')}</A>
                         </Link>
-                      )
+                      ),
                     })}
                   </p>
                 )}
@@ -692,8 +693,8 @@ export default compose(
       variables: {
         slug: router.query.slug,
         firstDocuments: 10,
-        firstComments: 10
-      }
+        firstComments: 10,
+      },
     }),
     props: ({ data, ownProps: { serverContext, router, me } }) => {
       const { slug } = router.query
@@ -719,8 +720,8 @@ export default compose(
       }
 
       return {
-        data
+        data,
       }
-    }
-  })
+    },
+  }),
 )(Profile)

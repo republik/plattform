@@ -9,7 +9,7 @@ export const Caption = ({ children }) => (
       lineHeight: '18px',
       fontFamily: fontFamilies.sansSerifRegular,
       marginTop: '5px',
-      textAlign: 'left'
+      textAlign: 'left',
     }}
   >
     {children}
@@ -22,7 +22,7 @@ export const Byline = ({ children }) => (
     style={{
       fontSize: '12px',
       lineHeight: '15px',
-      fontFamily: fontFamilies.sansSerifRegular
+      fontFamily: fontFamilies.sansSerifRegular,
     }}
   >
     {children}

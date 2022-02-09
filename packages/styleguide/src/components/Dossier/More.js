@@ -11,17 +11,17 @@ const styles = {
     minHeight: '15px',
     textAlign: 'center',
     [mUp]: {
-      ...sansSerifRegular21
+      ...sansSerifRegular21,
     },
     '& > a': {
-      color: colors.text
+      color: colors.text,
     },
     '@media (hover)': {
       '& > a:hover': {
-        color: colors.lightText
-      }
-    }
-  })
+        color: colors.lightText,
+      },
+    },
+  }),
 }
 
 const More = ({ children, attributes }) => {

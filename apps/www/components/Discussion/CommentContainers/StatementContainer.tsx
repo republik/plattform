@@ -26,14 +26,11 @@ const StatementContainer = ({ comment, tagMappings }: Props): ReactElement => {
 
   const {
     discussion,
-    overlays: { shareOverlay }
+    overlays: { shareOverlay },
   } = useDiscussion()
   const { shareHandler } = shareOverlay
-  const {
-    upVoteCommentHandler,
-    downVoteCommentHandler,
-    unVoteCommentHandler
-  } = useVoteCommentHandlers()
+  const { upVoteCommentHandler, downVoteCommentHandler, unVoteCommentHandler } =
+    useVoteCommentHandlers()
   const unpublishCommentHandler = useUnpublishCommentHandler()
   const reportCommentHandler = useReportCommentHandler()
 
@@ -42,11 +39,11 @@ const StatementContainer = ({ comment, tagMappings }: Props): ReactElement => {
       comment,
       actions: {
         unpublishCommentHandler,
-        reportCommentHandler
+        reportCommentHandler,
       },
       roles: me?.roles ?? [],
       t,
-      setEditMode
+      setEditMode,
     })
   }, [comment, me?.roles, t, unpublishCommentHandler, reportCommentHandler])
 
@@ -73,12 +70,12 @@ const StatementContainer = ({ comment, tagMappings }: Props): ReactElement => {
       comment={comment}
       t={t}
       actions={{
-        handleShare: shareHandler
+        handleShare: shareHandler,
       }}
       voteActions={{
         handleUpVote: upVoteCommentHandler,
         handleDownVote: downVoteCommentHandler,
-        handleUnVote: unVoteCommentHandler
+        handleUnVote: unVoteCommentHandler,
       }}
       menuItems={menuItems}
       tagMappings={tagMappings}

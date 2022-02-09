@@ -14,7 +14,7 @@ const DateTime = (
   t,
   date,
   baseKey = 'progress',
-  lastMidnight = getLastMidnight()
+  lastMidnight = getLastMidnight(),
 ) => {
   const diff = date - lastMidnight
 
@@ -30,7 +30,7 @@ const DateTime = (
 
   return t(`${baseKey}/time`, {
     day: displayDay,
-    time: displayTime
+    time: displayTime,
   })
 }
 export default DateTime

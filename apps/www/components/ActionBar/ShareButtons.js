@@ -10,7 +10,7 @@ import {
   LinkIcon,
   TelegramIcon,
   ThreemaIcon,
-  ShareIcon
+  ShareIcon,
 } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
@@ -32,7 +32,7 @@ const ShareButtons = ({
   fill,
   onClose,
   grid,
-  inNativeApp
+  inNativeApp,
 }) => {
   const [copyLinkSuffix, setLinkCopySuffix] = useState()
   const { isAndroid, isIOS } = useUserAgent()
@@ -53,7 +53,7 @@ const ShareButtons = ({
         title={t('article/actionbar/share')}
         Icon={ShareIcon}
         href={url}
-        onClick={e => {
+        onClick={(e) => {
           e.preventDefault()
           trackEvent(['ActionBar', 'share', url])
           postMessage({
@@ -62,8 +62,8 @@ const ShareButtons = ({
               title: title,
               url: url,
               subject: emailSubject,
-              dialogTitle: t('article/share/title')
-            }
+              dialogTitle: t('article/share/title'),
+            },
           })
           e.target.blur()
         }}
@@ -79,11 +79,11 @@ const ShareButtons = ({
     {
       name: 'mail',
       href: `mailto:?subject=${encodeURIComponent(
-        emailSubject
+        emailSubject,
       )}&body=${encodeURIComponent(emailBody + emailAttache)}`,
       icon: MailIcon,
       title: t('article/actionbar/email/title'),
-      label: t('article/actionbar/email/label')
+      label: t('article/actionbar/email/label'),
     },
     {
       name: 'copyLink',
@@ -95,36 +95,36 @@ const ShareButtons = ({
           {t(
             `article/actionbar/link/label${
               copyLinkSuffix ? `/${copyLinkSuffix}` : ''
-            }`
+            }`,
           )}
         </span>
       ),
-      onClick: e => {
+      onClick: (e) => {
         e.preventDefault()
         copyToClipboard(url)
           .then(() => setLinkCopySuffix('success'))
           .catch(() => setLinkCopySuffix('error'))
-      }
+      },
     },
     {
       name: 'facebook',
       target: '_blank',
       href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-        url
+        url,
       )}`,
       icon: FacebookIcon,
       title: t('article/actionbar/facebook/title'),
-      label: t('article/actionbar/facebook/label')
+      label: t('article/actionbar/facebook/label'),
     },
     {
       name: 'twitter',
       target: '_blank',
       href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-        tweet
+        tweet,
       )}&url=${encodeURIComponent(url)}`,
       icon: TwitterIcon,
       title: t('article/actionbar/twitter/title'),
-      label: t('article/actionbar/twitter/label')
+      label: t('article/actionbar/twitter/label'),
     },
     {
       name: 'whatsapp',
@@ -132,7 +132,7 @@ const ShareButtons = ({
       href: `https://api.whatsapp.com/send?text=${encodeURIComponent(url)}`,
       icon: WhatsappIcon,
       title: t('article/actionbar/whatsapp/title'),
-      label: t('article/actionbar/whatsapp/label')
+      label: t('article/actionbar/whatsapp/label'),
     },
     {
       name: 'threema',
@@ -140,7 +140,7 @@ const ShareButtons = ({
       href: `https://threema.id/compose?text=${encodeURIComponent(url)}`,
       icon: ThreemaIcon,
       title: t('article/actionbar/threema/title'),
-      label: t('article/actionbar/threema/label')
+      label: t('article/actionbar/threema/label'),
     },
     {
       name: 'telegram',
@@ -148,13 +148,13 @@ const ShareButtons = ({
       href: `https://t.me/share/url?url=${encodeURIComponent(url)}`,
       icon: TelegramIcon,
       title: t('article/actionbar/telegram/title'),
-      label: t('article/actionbar/telegram/label')
-    }
+      label: t('article/actionbar/telegram/label'),
+    },
   ].filter(Boolean)
 
   return (
     <div {...styles.shared} {...styles[grid ? 'center' : 'left']}>
-      {shareOptions.map(props => {
+      {shareOptions.map((props) => {
         if (props.name === 'threema' && !isIOS && !isAndroid) {
           // only show threema on mobile devices
           return
@@ -167,7 +167,7 @@ const ShareButtons = ({
             label={props.label}
             labelShort={props.label}
             fill={fill}
-            onClick={e => {
+            onClick={(e) => {
               trackEvent([eventCategory, props.name, url])
               if (props.onClick) {
                 return props.onClick(e)
@@ -186,18 +186,18 @@ const styles = {
     display: 'flex',
     flexWrap: 'wrap',
     '@media print': {
-      display: 'none'
+      display: 'none',
     },
     '& > a': {
       flex: 'auto',
-      flexGrow: 0
-    }
+      flexGrow: 0,
+    },
   }),
   left: css({
     justifyContent: 'flex-start',
     '& > a': {
-      marginTop: 15
-    }
+      marginTop: 15,
+    },
   }),
   center: css({
     display: 'flex',
@@ -205,9 +205,9 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     '& > a': {
-      margin: 15
-    }
-  })
+      margin: 15,
+    },
+  }),
 }
 
 export default compose(withInNativeApp, withT)(ShareButtons)

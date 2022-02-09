@@ -9,7 +9,7 @@ import {
   Loader,
   Overlay,
   OverlayBody,
-  OverlayToolbar
+  OverlayToolbar,
 } from '@project-r/styleguide'
 
 import { displayDate, SectionSubhead, TextButton } from '../../Display/utils'
@@ -28,19 +28,19 @@ export default class DeleteUser extends Component {
     this.state = {
       isOpen: false,
       isDeleted: true,
-      unpublishComments: false
+      unpublishComments: false,
     }
 
     this.closeHandler = () => {
       this.setState(() => ({ isOpen: false, unpublishComments: false }))
     }
 
-    this.submitHandler = mutation => () => {
+    this.submitHandler = (mutation) => () => {
       return mutation({
         variables: {
           userId: this.props.userId,
-          unpublishComments: !!this.state.unpublishComments
-        }
+          unpublishComments: !!this.state.unpublishComments,
+        },
       }).then(() => window.location.replace('/users'))
     }
   }
@@ -83,7 +83,7 @@ export default class DeleteUser extends Component {
                             checked={unpublishComments}
                             onChange={(_, checked) =>
                               this.setState({
-                                unpublishComments: checked
+                                unpublishComments: checked,
                               })
                             }
                           >

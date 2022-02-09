@@ -6,7 +6,7 @@ import {
   Logo,
   mediaQueries,
   HeaderHeightProvider,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import { BackIcon } from '@project-r/styleguide'
 import { withMembership } from '../Auth/checkRoles'
@@ -34,7 +34,7 @@ import {
   LOGO_PADDING,
   LOGO_WIDTH_MOBILE,
   LOGO_PADDING_MOBILE,
-  TRANSITION_MS
+  TRANSITION_MS,
 } from '../constants'
 import Link from 'next/link'
 
@@ -59,13 +59,12 @@ const Header = ({
   hasOverviewNav,
   stickySecondaryNav,
   isOnMarketingPage,
-  pageColorSchemeKey
+  pageColorSchemeKey,
 }) => {
   const [colorScheme] = useColorContext()
   const [isMobile, setIsMobile] = useState()
-  const [scrollableHeaderHeight, setScrollableHeaderHeight] = useState(
-    HEADER_HEIGHT_MOBILE
-  )
+  const [scrollableHeaderHeight, setScrollableHeaderHeight] =
+    useState(HEADER_HEIGHT_MOBILE)
   const [expandedNav, setExpandedNav] = useState(null)
   const [userNavExpanded, setUserNavExpanded] = useState(false)
 
@@ -76,7 +75,7 @@ const Header = ({
 
   const backButton = !hasOverviewNav && inNativeIOSApp && me
 
-  const toggleExpanded = target => {
+  const toggleExpanded = (target) => {
     if (target === expandedNav) {
       setIsAnyNavExpanded(false)
       setExpandedNav(null)
@@ -103,7 +102,7 @@ const Header = ({
     }
   }
 
-  const goTo = href => e => {
+  const goTo = (href) => (e) => {
     if (shouldIgnoreClick(e)) {
       return
     }
@@ -127,7 +126,7 @@ const Header = ({
         diff.current += newDiff
         diff.current = Math.min(
           Math.max(-scrollableHeaderHeight, diff.current),
-          0
+          0,
         )
       }
 
@@ -163,7 +162,7 @@ const Header = ({
       (isMobile ? HEADER_HEIGHT_MOBILE : HEADER_HEIGHT) +
         (hasSecondaryNav && !hasStickySecondary ? SUBHEADER_HEIGHT : 0) +
         // scroll away thin HLine
-        (formatColor || hasStickySecondary ? 0 : 1)
+        (formatColor || hasStickySecondary ? 0 : 1),
     )
   }, [isMobile, hasSecondaryNav, hasStickySecondary, formatColor])
 
@@ -177,10 +176,10 @@ const Header = ({
             color: colorScheme.getCSSColor('#FFF'),
             backgroundColor: colorScheme.getCSSColor(
               formatColor || 'primary',
-              'format'
-            )
-          }
-        }
+              'format',
+            ),
+          },
+        },
       })
     }
     return css({
@@ -189,9 +188,9 @@ const Header = ({
       '@media (hover)': {
         ':hover': {
           color: colorScheme.getCSSColor('#FFF'),
-          backgroundColor: colorScheme.getCSSColor('primaryHover')
-        }
-      }
+          backgroundColor: colorScheme.getCSSColor('primaryHover'),
+        },
+      },
     })
   }, [isOnMarketingPage, colorScheme, formatColor])
 
@@ -215,10 +214,10 @@ const Header = ({
                   style={{
                     opacity: 1,
                     pointerEvents: backButton ? undefined : 'none',
-                    href: '#back'
+                    href: '#back',
                   }}
                   title={t('header/back')}
-                  onClick={e => {
+                  onClick={(e) => {
                     e.preventDefault()
                     if (backButton) {
                       routeChangeStarted = false
@@ -244,7 +243,7 @@ const Header = ({
                 title={t(
                   `header/nav/user/${
                     expandedNav === 'user' ? 'close' : 'open'
-                  }/aria`
+                  }/aria`,
                 )}
                 isOnMarketingPage={isOnMarketingPage}
                 inNativeIOSApp={inNativeIOSApp}
@@ -280,7 +279,7 @@ const Header = ({
                     title={t(
                       `header/nav/${
                         expandedNav === 'main' ? 'close' : 'open'
-                      }/aria`
+                      }/aria`,
                     )}
                   />
                 </div>
@@ -291,7 +290,7 @@ const Header = ({
                   title={t(
                     `header/nav/${
                       expandedNav === 'main' ? 'close' : 'open'
-                    }/aria`
+                    }/aria`,
                   )}
                   id='main'
                   onClick={() =>
@@ -393,7 +392,7 @@ const Header = ({
   )
 }
 
-const HeaderWithContext = props => {
+const HeaderWithContext = (props) => {
   const [isAnyNavExpanded, setIsAnyNavExpanded] = useState(false)
   const [headerOffset, setHeaderOffset] = useState(0)
 
@@ -407,15 +406,15 @@ const HeaderWithContext = props => {
         headerHeight:
           HEADER_HEIGHT_MOBILE +
           (hasSecondaryNav ? SUBHEADER_HEIGHT : 0) +
-          headerOffset
+          headerOffset,
       },
       {
         minWidth: mediaQueries.mBreakPoint,
         headerHeight:
           HEADER_HEIGHT +
           (hasSecondaryNav ? SUBHEADER_HEIGHT : 0) +
-          headerOffset
-      }
+          headerOffset,
+      },
     ]
   }, [hasSecondaryNav, headerOffset])
 
@@ -439,7 +438,7 @@ export default compose(
   withT,
   withMembership,
   withRouter,
-  withInNativeApp
+  withInNativeApp,
 )(HeaderWithContext)
 
 const styles = {
@@ -450,23 +449,23 @@ const styles = {
     left: 0,
     right: 0,
     '@media print': {
-      position: 'absolute'
-    }
+      position: 'absolute',
+    },
   }),
   primary: css({
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   }),
   navBarItem: css({
     flex: 1,
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
   }),
   leftBarItem: css({
     marginRight: 'auto',
     display: 'flex',
     justifyContent: 'flex-start',
-    width: '100%'
+    width: '100%',
   }),
   rightBarItem: css({
     marginLeft: 'auto',
@@ -474,8 +473,8 @@ const styles = {
     display: 'flex',
     justifyContent: 'flex-end',
     '@media print': {
-      display: 'none'
-    }
+      display: 'none',
+    },
   }),
   back: css({
     display: 'block',
@@ -483,8 +482,8 @@ const styles = {
     paddingRight: 0,
     [mediaQueries.mUp]: {
       padding: Math.floor((HEADER_HEIGHT - BACK_BUTTON_SIZE) / 2),
-      paddingRight: 0
-    }
+      paddingRight: 0,
+    },
   }),
   logo: css({
     display: 'block',
@@ -493,8 +492,8 @@ const styles = {
     verticalAlign: 'middle',
     [mediaQueries.mUp]: {
       padding: LOGO_PADDING,
-      width: LOGO_WIDTH + LOGO_PADDING * 2
-    }
+      width: LOGO_WIDTH + LOGO_PADDING * 2,
+    },
   }),
   button: css({
     whiteSpace: 'nowrap',
@@ -506,41 +505,41 @@ const styles = {
     lineHeight: 1.75,
     padding: '10px 20px',
     [mediaQueries.mUp]: {
-      fontSize: 22
-    }
+      fontSize: 22,
+    },
   }),
   buttonFormatColor: css({
     height: HEADER_HEIGHT_MOBILE,
     [mediaQueries.mUp]: {
       padding: '10px 30px',
-      height: HEADER_HEIGHT
-    }
+      height: HEADER_HEIGHT,
+    },
   }),
   buttonGeneric: css({
     height: HEADER_HEIGHT_MOBILE + 1,
     marginBottom: -1, // overlap HR line below button
     [mediaQueries.mUp]: {
       padding: '10px 30px',
-      height: HEADER_HEIGHT + 1
-    }
+      height: HEADER_HEIGHT + 1,
+    },
   }),
   buttonMarketing: css({
     height: HEADER_HEIGHT_MOBILE,
     [mediaQueries.mUp]: {
       height: HEADER_HEIGHT,
-      padding: '10px 80px'
-    }
+      padding: '10px 80px',
+    },
   }),
   buttonText: css({
     display: 'none',
     [mediaQueries.mUp]: {
-      display: 'inline'
-    }
+      display: 'inline',
+    },
   }),
   buttonTextMobile: css({
     display: 'inline',
     [mediaQueries.mUp]: {
-      display: 'none'
-    }
-  })
+      display: 'none',
+    },
+  }),
 }

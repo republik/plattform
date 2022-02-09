@@ -128,7 +128,7 @@ const styles = {
   }),
 }
 
-const MockLink = props => <>{props.children}</>
+const MockLink = (props) => <>{props.children}</>
 
 type CommentUIProps = {
   t: any
@@ -278,7 +278,7 @@ const CommentNode = ({
           <button
             {...verticalToggleStyle}
             {...verticalToggleStyleRules}
-            onClick={() => setExpanded(prev => !prev)}
+            onClick={() => setExpanded((prev) => !prev)}
           />
         )}
         <div
@@ -300,7 +300,7 @@ const CommentNode = ({
                 !isBoard &&
                 !(isRoot && inRootCommentOverlay) &&
                 (() => {
-                  setExpanded(prev => !prev)
+                  setExpanded((prev) => !prev)
                 })
               }
               menuItems={menuItems}
@@ -342,14 +342,14 @@ const CommentNode = ({
         {verticalToggleStyle && (
           <button
             {...verticalToggleStyle}
-            onClick={() => setExpanded(prev => !prev)}
+            onClick={() => setExpanded((prev) => !prev)}
           />
         )}
         <Comment.Header
           t={t}
           comment={comment}
           isExpanded={isExpanded}
-          onToggle={() => setExpanded(prev => !prev)}
+          onToggle={() => setExpanded((prev) => !prev)}
           menuItems={menuItems}
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore

@@ -13,9 +13,9 @@ const styles = {
     marginBottom: '-12px',
     [mUp]: {
       ...convertStyleToRem(sansSerifMedium18),
-      marginBottom: '-14px'
-    }
-  })
+      marginBottom: '-14px',
+    },
+  }),
 }
 
 export const Subhead = ({ children, attributes }) => {
@@ -34,7 +34,7 @@ export const Subhead = ({ children, attributes }) => {
 
 Subhead.propTypes = {
   children: PropTypes.node.isRequired,
-  attributes: PropTypes.object
+  attributes: PropTypes.object,
 }
 
 export default Subhead

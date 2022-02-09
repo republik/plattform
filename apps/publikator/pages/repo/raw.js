@@ -14,7 +14,7 @@ import {
   mediaQueries,
   colors,
   fontFamilies,
-  Checkbox
+  Checkbox,
 } from '@project-r/styleguide'
 import { Router } from '../../lib/routes'
 import CircleIcon from 'react-icons/lib/md/lens'
@@ -22,7 +22,7 @@ import InfoIcon from 'react-icons/lib/md/info-outline'
 import { Controlled as CodeMirror } from 'react-codemirror2'
 import {
   UncommittedChanges,
-  withUncommitedChanges
+  withUncommitedChanges,
 } from '../../components/VersionControl/UncommittedChanges'
 import BranchingNotice from '../../components/VersionControl/BranchingNotice'
 
@@ -33,12 +33,12 @@ const styles = css({
   '& .Checkbox': {
     display: 'inline-block',
     margin: 5,
-    marginLeft: 'calc(50% + 210px)'
+    marginLeft: 'calc(50% + 210px)',
   },
   '& .Info': {
     position: 'fixed',
     right: 25,
-    top: 95
+    top: 95,
   },
   '& .CodeMirror': {
     height: 'auto',
@@ -48,11 +48,11 @@ const styles = css({
     fontFamily: fontFamilies.monospaceRegular,
     fontSize: 14,
     color: colors.text,
-    lineHeight: 2
+    lineHeight: 2,
   },
   '& pre.CodeMirror-line': {
-    padding: '0 15px'
-  }
+    padding: '0 15px',
+  },
 })
 
 // CodeMirror can only run in the browser
@@ -63,7 +63,7 @@ if (process.browser) {
   require('codemirror/addon/fold/xml-fold')
 }
 
-const hasOpenSections = md => {
+const hasOpenSections = (md) => {
   if (!md) return
   // in synch with our remark-preset
   // https://github.com/orbiting/mdast/blob/fabbd146dd16f7bdcbf7b699c5bac7161f14d197/packages/remark-preset/src/index.js#L23-L28
@@ -79,10 +79,10 @@ export default compose(
   withUncommitedChanges({
     options: ({ router }) => ({
       variables: {
-        repoId: router.query.repoId
-      }
-    })
-  })
+        repoId: router.query.repoId,
+      },
+    }),
+  }),
 )(({ t, router, uncommittedChanges }) => {
   const { repoId, commitId, schema, template, isTemplate } = router.query
   const [store, setStore] = useState(undefined)
@@ -92,23 +92,23 @@ export default compose(
   const [editMeta, setEditMeta] = useState(false)
   const [validity, setValidity] = useState(true)
 
-  const goToEditor = e => {
+  const goToEditor = (e) => {
     if (e) e.preventDefault()
     Router.pushRoute('repo/edit', {
       ...router.query,
       repoId: repoId.split('/'),
       commitId,
-      ...(commitId === 'new' ? { schema: schema || template, isTemplate } : {})
+      ...(commitId === 'new' ? { schema: schema || template, isTemplate } : {}),
     })
   }
 
-  const onSave = e => {
+  const onSave = (e) => {
     if (e) e.preventDefault()
     const editedMdast = editMeta
       ? parse(md)
       : {
           ...parse(md),
-          meta
+          meta,
         }
 
     if (!editedMdast.meta.template) {
@@ -123,7 +123,7 @@ export default compose(
     setEditMeta(true)
     const contentAndMeta = stringify({
       ...parse(md),
-      meta
+      meta,
     })
     setMd(contentAndMeta)
   }
@@ -168,7 +168,7 @@ export default compose(
           <div
             {...css({
               width: 100,
-              [mediaQueries.mUp]: { width: 180 }
+              [mediaQueries.mUp]: { width: 180 },
             })}
           >
             <div
@@ -184,7 +184,7 @@ export default compose(
                 margin: '4px 0 0',
                 minWidth: 0,
                 height: 40,
-                fontSize: '16px'
+                fontSize: '16px',
               }}
               primary
               block
@@ -232,12 +232,12 @@ export default compose(
               foldGutter: foldCode,
               gutters: [
                 'CodeMirror-linenumbers',
-                foldCode && 'CodeMirror-foldgutter'
+                foldCode && 'CodeMirror-foldgutter',
               ].filter(Boolean),
               foldOptions: process.browser &&
                 foldCode && {
-                  rangeFinder: require('codemirror').fold.xml
-                }
+                  rangeFinder: require('codemirror').fold.xml,
+                },
             }}
             onBeforeChange={(editor, data, value) => {
               setMd(value)

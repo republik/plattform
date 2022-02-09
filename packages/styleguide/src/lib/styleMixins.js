@@ -1,10 +1,10 @@
 export const ellipsize = {
   whiteSpace: 'nowrap',
   overflow: 'hidden',
-  textOverflow: 'ellipsis'
+  textOverflow: 'ellipsis',
 }
 
 export const underline = {
   textDecoration: 'underline',
-  textDecorationSkip: 'ink'
+  textDecorationSkip: 'ink',
 }

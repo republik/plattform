@@ -10,7 +10,7 @@ import {
   FigureCover,
   FigureImage,
   FigureCaption,
-  FigureByline
+  FigureByline,
 } from '../../../components/Figure'
 import { Sub, Sup } from '../../../components/Typography'
 import { P, Subhead, A } from '../../../components/Typography/Editorial'
@@ -35,7 +35,7 @@ const createNewsletterWebSchema = ({ ...args } = {}) => {
     ListItem,
     ListP,
     A,
-    ...args
+    ...args,
   })
 }
 

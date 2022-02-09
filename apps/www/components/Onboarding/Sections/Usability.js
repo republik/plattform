@@ -9,7 +9,7 @@ import Section from '../Section'
 import ProgressSettings from '../../Account/ProgressSettings'
 import {
   submitConsentMutation,
-  revokeConsentMutation
+  revokeConsentMutation,
 } from '../../Article/Progress/api'
 import { PROGRESS_EXPLAINER_PATH } from '../../../lib/constants'
 import withT from '../../../lib/withT'
@@ -19,7 +19,7 @@ const { P } = Interaction
 
 const styles = {
   p: css({
-    marginBottom: 20
+    marginBottom: 20,
   }),
   actions: css({
     marginBottom: 20,
@@ -33,10 +33,10 @@ const styles = {
       [mediaQueries.mUp]: {
         flexGrow: 0,
         margin: '5px 15px 0 0',
-        minWidth: '160px'
-      }
-    }
-  })
+        minWidth: '160px',
+      },
+    },
+  }),
 }
 
 export const fragments = {
@@ -45,10 +45,10 @@ export const fragments = {
       id
       PROGRESS: hasConsentedTo(name: "PROGRESS")
     }
-  `
+  `,
 }
 
-const Usability = props => {
+const Usability = (props) => {
   const { user, onContinue, t } = props
 
   // Is ticked when either REVOKE or GRANT consent was submitted.
@@ -82,9 +82,9 @@ const Usability = props => {
                   <Link key='linkMore' href={PROGRESS_EXPLAINER_PATH} passHref>
                     <A>{t('Onboarding/Sections/Usability/linkMore')}</A>
                   </Link>
-                )
+                ),
               },
-              ''
+              '',
             )}
           </P>
           <div {...styles.actions}>

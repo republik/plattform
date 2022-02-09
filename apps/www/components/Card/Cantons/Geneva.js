@@ -1,6 +1,6 @@
 import React from 'react'
 
-const SvgGeneva = props => (
+const SvgGeneva = (props) => (
   <svg
     width={props.size}
     height={(props.size * 470.14) / 469.61}

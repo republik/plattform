@@ -13,13 +13,13 @@ const createSeriesNavUI = ({ TYPE, newBlock, zone }) => {
     const insertTypes = ['PARAGRAPH']
     const disabled =
       value.isBlurred ||
-      !value.blocks.every(n => insertTypes.includes(n.type)) ||
+      !value.blocks.every((n) => insertTypes.includes(n.type)) ||
       !value.document.data.get('series')
-    const clickHandler = event => {
+    const clickHandler = (event) => {
       event.preventDefault()
       if (!disabled) {
         const blocks = allBlocks(value)
-        const rootBlocks = blocks.filter(n => depth(value, n.key) === 1)
+        const rootBlocks = blocks.filter((n) => depth(value, n.key) === 1)
 
         const currentBlock = blocks.first()
         const currentRootBlock = rootBlocks.first()
@@ -33,17 +33,17 @@ const createSeriesNavUI = ({ TYPE, newBlock, zone }) => {
               value.selection,
               depth(value, currentBlock.key),
               {
-                normalize: false
-              }
+                normalize: false,
+              },
             )
             .insertNodeByKey(
               parent(value, currentRootBlock.key).key,
               childIndex(value, currentRootBlock.key) + 1,
               newBlock(
                 value.document.data.toJS(),
-                isOverview ? { grid: true } : undefined
-              )
-            )
+                isOverview ? { grid: true } : undefined,
+              ),
+            ),
         )
       }
     }
@@ -71,8 +71,8 @@ const createSeriesNavUI = ({ TYPE, newBlock, zone }) => {
     const onGridChange = (_, checked) => {
       onChange(
         value.change().setNodeByKey(node.key, {
-          data: node.data.set('grid', checked)
-        })
+          data: node.data.set('grid', checked),
+        }),
       )
     }
 
@@ -88,12 +88,12 @@ const createSeriesNavUI = ({ TYPE, newBlock, zone }) => {
   const SpecialForm = createPropertyForm({
     isDisabled: ({ value }) => {
       return !value.blocks.some(matchBlock(TYPE))
-    }
+    },
   })(SeriesNavForm)
 
   return {
     forms: [SpecialForm],
-    insertButtons: [SeriesNavButton]
+    insertButtons: [SeriesNavButton],
   }
 }
 

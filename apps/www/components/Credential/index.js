@@ -9,8 +9,8 @@ const styles = {
   check: css({
     display: 'inline-block',
     marginLeft: 4,
-    marginTop: -2
-  })
+    marginTop: -2,
+  }),
 }
 
 const Credential = ({ description, verified, t, textColor }) => {

@@ -129,26 +129,26 @@ const getSearchResults = gql`
 `
 
 export const withAggregations = graphql(getSearchAggregations, {
-  options: props => ({
+  options: (props) => ({
     variables: {
       searchQuery: props.searchQuery || props.urlQuery,
       keys: DEFAULT_AGGREGATION_KEYS,
-      filters: DEFAULT_FILTERS
-    }
+      filters: DEFAULT_FILTERS,
+    },
   }),
   props: ({ data }) => ({
-    dataAggregations: data
-  })
+    dataAggregations: data,
+  }),
 })
 
 export const withResults = graphql(getSearchResults, {
-  skip: props => props.startState,
-  options: props => ({
+  skip: (props) => props.startState,
+  options: (props) => ({
     variables: {
       searchQuery: props.urlQuery,
       sort: props.urlSort,
-      filters: DEFAULT_FILTERS.concat(props.urlFilter)
-    }
+      filters: DEFAULT_FILTERS.concat(props.urlFilter),
+    },
   }),
   props: ({ data, ownProps }) => ({
     data,
@@ -156,12 +156,12 @@ export const withResults = graphql(getSearchResults, {
       data.fetchMore({
         variables: {
           after,
-          sort: ownProps.sort
+          sort: ownProps.sort,
         },
         updateQuery: (previousResult, { fetchMoreResult }) => {
           const nodes = [
             ...previousResult.search.nodes,
-            ...fetchMoreResult.search.nodes
+            ...fetchMoreResult.search.nodes,
           ]
           return {
             ...previousResult,
@@ -171,10 +171,10 @@ export const withResults = graphql(getSearchResults, {
             search: {
               ...previousResult.search,
               ...fetchMoreResult.search,
-              nodes
-            }
+              nodes,
+            },
           }
-        }
-      })
-  })
+        },
+      }),
+  }),
 })

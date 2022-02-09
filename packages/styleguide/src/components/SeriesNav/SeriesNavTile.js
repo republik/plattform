@@ -5,7 +5,7 @@ import { ColorContextLocalExtension } from '../Colors/ColorContext'
 import {
   PADDING,
   TILE_MARGIN_RIGHT,
-  TILE_GRID_PADDING
+  TILE_GRID_PADDING,
 } from '../TeaserCarousel/constants'
 import { mUp } from '../../theme/mediaQueries'
 import SeriesNavTileContent from './SeriesNavTileContent'
@@ -21,29 +21,31 @@ const styles = {
     width: '100%',
     minWidth: GRID_MIN_WIDTH,
     padding: TILE_GRID_PADDING,
-    [`@media only screen and (min-width: ${OUTER_CONTAINER_PADDING * 2 +
-      GRID_MIN_WIDTH * 2}px)`]: {
-      width: '50%'
+    [`@media only screen and (min-width: ${
+      OUTER_CONTAINER_PADDING * 2 + GRID_MIN_WIDTH * 2
+    }px)`]: {
+      width: '50%',
     },
-    [`@media only screen and (min-width: ${OUTER_CONTAINER_PADDING * 2 +
-      GRID_MIN_WIDTH * 3}px)`]: {
-      width: '33.33%'
-    }
+    [`@media only screen and (min-width: ${
+      OUTER_CONTAINER_PADDING * 2 + GRID_MIN_WIDTH * 3
+    }px)`]: {
+      width: '33.33%',
+    },
   }),
   inlineTile: css({
     marginRight: TILE_MARGIN_RIGHT,
     padding: 7,
     width: '20%',
     minWidth: 150,
-    maxWidth: 170
+    maxWidth: 170,
   }),
   paynoteLabelSpace: css({
     marginTop: 0,
     ...sansSerifRegular12,
     [mUp]: {
-      ...sansSerifRegular14
-    }
-  })
+      ...sansSerifRegular14,
+    },
+  }),
 }
 
 const SeriesNavTile = ({
@@ -58,7 +60,7 @@ const SeriesNavTile = ({
   context,
   PayNote,
   onEpisodeClick,
-  aboveTheFold
+  aboveTheFold,
 }) => {
   const isInverted = !!PayNote
   const content = PayNote ? (
@@ -87,11 +89,11 @@ const SeriesNavTile = ({
       This class is defined in the MeContext in republik-frontend
       */
       {...(PayNote && {
-        'data-hide-if-active-membership': true
+        'data-hide-if-active-membership': true,
       })}
       {...(inline ? styles.inlineTile : styles.tile)}
       style={{
-        opacity: inactiveTile ? 0.6 : 1
+        opacity: inactiveTile ? 0.6 : 1,
       }}
       data-repo-id={episode?.document?.repoId}
     >

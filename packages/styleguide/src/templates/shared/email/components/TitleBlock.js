@@ -10,13 +10,13 @@ export const TitleBlock = ({
   format,
   series,
   repoId,
-  path
+  path,
 }) => {
   const formatLine = getFormatLine({
     format,
     series,
     repoId,
-    path
+    path,
   })
 
   return (
@@ -24,7 +24,7 @@ export const TitleBlock = ({
       <section
         className='title-block'
         style={{
-          textAlign: center ? 'center' : null
+          textAlign: center ? 'center' : null,
         }}
       >
         {formatLine.title && (
@@ -44,7 +44,7 @@ export const Headline = ({ children, attributes, ...props }) => (
       ...fontStyles.serifTitle,
       fontSize: '30px',
       lineHeight: '34px',
-      margin: '0px 0px 12px'
+      margin: '0px 0px 12px',
     }}
     {...attributes}
     {...props}
@@ -61,7 +61,7 @@ export const Subject = ({ children, attributes, ...props }) => (
       ...fontStyles.sansSerifRegular,
       fontSize: '23px',
       lineHeight: '37px',
-      paddingRight: '4px'
+      paddingRight: '4px',
     }}
     {...attributes}
     {...props}
@@ -78,7 +78,7 @@ export const Lead = ({ children, attributes, ...props }) => (
       fontSize: '23px',
       lineHeight: '30px',
       display: 'inline',
-      margin: '0 0 20px 0'
+      margin: '0 0 20px 0',
     }}
     {...attributes}
     {...props}
@@ -93,7 +93,7 @@ export const Credits = ({ children, attributes, ...props }) => (
       color: colors.text,
       ...fontStyles.sansSerifRegular,
       fontSize: '15px',
-      lineHeight: '21px'
+      lineHeight: '21px',
     }}
     {...attributes}
     {...props}
@@ -109,7 +109,7 @@ const Format = ({ children, color, href }) => (
       fontSize: '20px',
       fontStyles: '24px',
       margin: '0 0 28px 0',
-      color
+      color,
     }}
   >
     {children}

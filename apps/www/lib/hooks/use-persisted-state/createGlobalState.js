@@ -16,13 +16,13 @@ const createGlobalState = (key, thisCallback, initialValue) => {
     emit(value) {
       if (globalState[key].value !== value) {
         globalState[key].value = value
-        globalState[key].callbacks.forEach(callback => {
+        globalState[key].callbacks.forEach((callback) => {
           if (thisCallback !== callback) {
             callback(value)
           }
         })
       }
-    }
+    },
   }
 }
 

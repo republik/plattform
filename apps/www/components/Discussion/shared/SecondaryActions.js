@@ -4,14 +4,14 @@ import withT from '../../../lib/withT'
 import {
   IconButton,
   TextFormatIcon,
-  EtiquetteIcon
+  EtiquetteIcon,
 } from '@project-r/styleguide'
 import PropTypes from 'prop-types'
 
 const styles = {
   container: css({
-    display: 'flex'
-  })
+    display: 'flex',
+  }),
 }
 
 const SecondaryActions = ({ t, isReply = false }) => (
@@ -36,7 +36,7 @@ const SecondaryActions = ({ t, isReply = false }) => (
 
 SecondaryActions.propTypes = {
   t: PropTypes.func.isRequired,
-  isReply: PropTypes.bool
+  isReply: PropTypes.bool,
 }
 
 export default withT(SecondaryActions)

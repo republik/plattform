@@ -9,22 +9,22 @@ import { FigureImage } from '../Figure'
 export const LOGO_SIZES = {
   small: 24,
   medium: 36,
-  large: 52
+  large: 52,
 }
 
 const sizeSmall = {
   maxHeight: `${LOGO_SIZES.small}px`,
-  maxWidth: `${LOGO_SIZES.small}px`
+  maxWidth: `${LOGO_SIZES.small}px`,
 }
 
 const sizeMedium = {
   maxHeight: `${LOGO_SIZES.medium}px`,
-  maxWidth: `${LOGO_SIZES.medium}px`
+  maxWidth: `${LOGO_SIZES.medium}px`,
 }
 
 const sizeLarge = {
   maxHeight: `${LOGO_SIZES.large}px`,
-  maxWidth: `${LOGO_SIZES.large}px`
+  maxWidth: `${LOGO_SIZES.large}px`,
 }
 
 const styles = {
@@ -34,13 +34,13 @@ const styles = {
     ...sizeSmall,
     [mUp]: {
       ...sizeMedium,
-      marginBottom: LOGO_SIZES.small / 4
+      marginBottom: LOGO_SIZES.small / 4,
     },
     [breakoutUp]: {
       ...sizeLarge,
-      marginBottom: LOGO_SIZES.small / 4
-    }
-  })
+      marginBottom: LOGO_SIZES.small / 4,
+    },
+  }),
 }
 
 const TeaserLogo = ({ logo, logoDark, logoAlt }) => {

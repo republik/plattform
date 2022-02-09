@@ -10,7 +10,7 @@ const Play = ({ width, fill }) => (
 
 Play.defaultProps = {
   width: 26,
-  fill: '#fff'
+  fill: '#fff',
 }
 
 export default Play

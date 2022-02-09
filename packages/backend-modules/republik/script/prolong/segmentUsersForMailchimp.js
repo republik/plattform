@@ -89,9 +89,7 @@ const handleRow = async (row) => {
   ) {
     record.PRLG_SEG = 'prolong-before-may'
     record.CP_ATOKEN = row.accessToken
-  } else if (
-    !activeMembership
-  ) {
+  } else if (!activeMembership) {
     // inactive
     record.PRLG_SEG = ''
   } else {
@@ -108,11 +106,11 @@ const handleRow = async (row) => {
   }
 
   // if (stats[record.PRLG_SEG] <= 10) {
-    console.log(
-      Object.keys(record)
-        .map((key) => record[key])
-        .join(','),
-    )
+  console.log(
+    Object.keys(record)
+      .map((key) => record[key])
+      .join(','),
+  )
   // }
 }
 
@@ -141,14 +139,7 @@ ConnectionContext.create(applicationName)
     const { pgdb } = context
 
     console.log(
-      [
-        'id',
-        'EMAIL',
-        'FNAME',
-        'LNAME',
-        'PRLG_SEG',
-        'CP_ATOKEN',
-      ].join(','),
+      ['id', 'EMAIL', 'FNAME', 'LNAME', 'PRLG_SEG', 'CP_ATOKEN'].join(','),
     )
 
     await pgdb

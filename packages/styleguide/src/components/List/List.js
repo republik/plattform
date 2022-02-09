@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import {
   serifRegular14,
   serifRegular17,
-  serifRegular19
+  serifRegular19,
 } from '../Typography/styles'
 import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
@@ -22,27 +22,27 @@ const styles = {
     '& > li:before': {
       content: '–',
       position: 'absolute',
-      left: 0
-    }
+      left: 0,
+    },
   }),
   orderedList: css({
     paddingLeft: '1.7em',
     '& > li': {
-      paddingLeft: `${MARGIN}px`
-    }
+      paddingLeft: `${MARGIN}px`,
+    },
   }),
   li: css({
     paddingLeft: `${WIDTH}px`,
     position: 'relative',
     ...convertStyleToRem(serifRegular17),
     [mUp]: {
-      ...convertStyleToRem(serifRegular19)
+      ...convertStyleToRem(serifRegular19),
     },
     '& p': {
-      margin: '1em 0 1em 0'
+      margin: '1em 0 1em 0',
     },
     '& p:last-child': {
-      marginBottom: 0
+      marginBottom: 0,
     },
     'li &': {
       ...convertStyleToRem(serifRegular14),
@@ -51,22 +51,22 @@ const styles = {
       [mUp]: {
         ...convertStyleToRem(serifRegular17),
         lineHeight: pxToRem('28px'),
-        margin: '14px 0'
-      }
-    }
-  })
+        margin: '14px 0',
+      },
+    },
+  }),
 }
 
 styles.unorderedListCompact = merge(styles.unorderedList, {
   '& li, & li p': {
-    margin: 0
-  }
+    margin: 0,
+  },
 })
 
 styles.orderedListCompact = merge(styles.orderedList, {
   '& li, & li p': {
-    margin: 0
-  }
+    margin: 0,
+  },
 })
 
 export const UnorderedList = ({ children, attributes, compact }) => {
@@ -83,7 +83,7 @@ export const UnorderedList = ({ children, attributes, compact }) => {
 UnorderedList.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
-  compact: PropTypes.bool
+  compact: PropTypes.bool,
 }
 
 export const OrderedList = ({ children, attributes, start, compact }) => {
@@ -102,11 +102,11 @@ OrderedList.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
   start: PropTypes.number,
-  compact: PropTypes.bool
+  compact: PropTypes.bool,
 }
 
 OrderedList.defaultProps = {
-  start: 1
+  start: 1,
 }
 
 export const ListItem = ({ children, attributes = {}, style = {} }) => {
@@ -127,7 +127,7 @@ export const ListItem = ({ children, attributes = {}, style = {} }) => {
 ListItem.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
-  style: PropTypes.object
+  style: PropTypes.object,
 }
 
 export const List = ({ children, data, attributes = {} }) =>

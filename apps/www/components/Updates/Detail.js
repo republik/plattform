@@ -10,7 +10,7 @@ import {
   RawHtml,
   colors,
   fontFamilies,
-  mediaQueries
+  mediaQueries,
 } from '@project-r/styleguide'
 
 import ActionBar from '../ActionBar'
@@ -22,8 +22,8 @@ const styles = {
     marginBottom: 15,
     [mediaQueries.onlyS]: {
       fontSize: 36,
-      lineHeight: '39px'
-    }
+      lineHeight: '39px',
+    },
   }),
   content: css({
     color: colors.text,
@@ -32,25 +32,25 @@ const styles = {
     lineHeight: '25px',
     [mediaQueries.mUp]: {
       fontSize: 21,
-      lineHeight: '32px'
-    }
+      lineHeight: '32px',
+    },
   }),
   container: css({
     borderBottom: `1px solid ${colors.divider}`,
     paddingBottom: 10,
-    marginBottom: 60
+    marginBottom: 60,
   }),
   hr: css({
     height: 0,
     border: 0,
-    borderTop: `1px solid ${colors.divider}`
+    borderTop: `1px solid ${colors.divider}`,
   }),
   label: css({
     fontFamily: fontFamilies.sansSerifMedium,
     fontSize: 17,
     lineHeight: '25px',
-    letterSpacing: -0.19
-  })
+    letterSpacing: -0.19,
+  }),
 }
 
 const Content = ({ children, ...props }) => (
@@ -68,7 +68,7 @@ const Update = withT(
       title: title,
       url: `${PUBLIC_BASE_URL}/updates/${slug}`,
       emailSubject: title,
-      tweet: title
+      tweet: title,
     }
     return (
       <div {...styles.container}>
@@ -81,7 +81,7 @@ const Update = withT(
             style='serif'
             type={Content}
             dangerouslySetInnerHTML={{
-              __html: text || ''
+              __html: text || '',
             }}
           />
         )}
@@ -91,7 +91,7 @@ const Update = withT(
         </P>
       </div>
     )
-  }
+  },
 )
 
 export default Update

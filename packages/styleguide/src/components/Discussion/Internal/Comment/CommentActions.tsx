@@ -17,16 +17,16 @@ const styles = {
     height: '40px',
     display: 'flex',
     alignItems: 'center',
-    marginLeft: '-7px'
+    marginLeft: '-7px',
   }),
   leftActionsWrapper: css({
     display: 'inline-flex',
     marginLeft: 7,
     flexDirection: 'row',
     '& > button:not(:last-child)': {
-      marginRight: 14
-    }
-  })
+      marginRight: 14,
+    },
+  }),
 }
 
 const propTypes = {
@@ -35,16 +35,16 @@ const propTypes = {
   actions: PropTypes.shape({
     handleLoadReplies: PropTypes.func,
     handleReply: PropTypes.func,
-    handleShare: PropTypes.func
+    handleShare: PropTypes.func,
   }),
   voteActions: PropTypes.shape({
     handleUpVote: PropTypes.func.isRequired,
     handleDownVote: PropTypes.func.isRequired,
-    handleUnVote: PropTypes.func.isRequired
+    handleUnVote: PropTypes.func.isRequired,
   }),
   userCanComment: PropTypes.bool,
   userWaitUntil: PropTypes.string,
-  isBoard: PropTypes.bool
+  isBoard: PropTypes.bool,
 }
 
 export const CommentActions = ({
@@ -54,7 +54,7 @@ export const CommentActions = ({
   voteActions,
   userCanComment,
   userWaitUntil,
-  isBoard
+  isBoard,
 }) => {
   const isDesktop = useMediaQuery(mUp)
 
@@ -65,7 +65,7 @@ export const CommentActions = ({
     const waitUntilDate = userWaitUntil && new Date(userWaitUntil)
     if (waitUntilDate && waitUntilDate.getTime() > now) {
       return t('styleguide/CommentComposer/wait', {
-        time: formatTimeRelative(waitUntilDate, { isDesktop, t, now })
+        time: formatTimeRelative(waitUntilDate, { isDesktop, t, now }),
       })
     }
     return null

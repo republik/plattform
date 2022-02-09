@@ -160,9 +160,8 @@ module.exports = async (_, args, context) => {
 
         // Check if memebership should be cancelled when latest end date is now in past
         if (inPast) {
-          const cancelableMembership = await transaction.public.memberships.findOne(
-            { id },
-          )
+          const cancelableMembership =
+            await transaction.public.memberships.findOne({ id })
 
           const details = {
             type: 'SYSTEM',

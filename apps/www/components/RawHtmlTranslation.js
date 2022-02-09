@@ -9,7 +9,7 @@ const RawHtmlTranslation = ({
   translationKey,
   replacements = {},
   missingValue,
-  error
+  error,
 }) => {
   const mapElement = (element, i) =>
     typeof element === 'string' ? (
@@ -17,7 +17,7 @@ const RawHtmlTranslation = ({
         key={`html${i}`}
         error={error}
         dangerouslySetInnerHTML={{
-          __html: element
+          __html: element,
         }}
       />
     ) : (
@@ -43,7 +43,7 @@ RawHtmlTranslation.propTypes = {
   translationKey: PropTypes.string,
   first: PropTypes.arrayOf(PropTypes.string.isRequired),
   replacements: PropTypes.object,
-  missingValue: PropTypes.string
+  missingValue: PropTypes.string,
 }
 
 export default withT(RawHtmlTranslation)

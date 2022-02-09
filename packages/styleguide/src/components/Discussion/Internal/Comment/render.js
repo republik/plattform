@@ -13,7 +13,7 @@ const MissingNode = ({ node, children }) => {
         textDecorationLine: 'underline',
         textDecorationStyle: 'wavy',
         display: 'inline-block',
-        margin: 4
+        margin: 4,
       }}
       {...colorScheme.set('textDecorationColor', 'divider')}
       title={`Markdown element "${node.type}" wird nicht unterstützt.`}
@@ -23,5 +23,5 @@ const MissingNode = ({ node, children }) => {
   )
 }
 
-export const renderCommentMdast = content =>
+export const renderCommentMdast = (content) =>
   renderMdast(content, schema, { MissingNode })

@@ -1,6 +1,6 @@
 import React from 'react'
 
-const SvgVaud = props => (
+const SvgVaud = (props) => (
   <svg
     width={props.size}
     height={(props.size * 472.281) / 469.856}

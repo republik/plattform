@@ -12,15 +12,15 @@ import {
   Interaction,
   A,
   Button,
-  Loader
+  Loader,
 } from '@project-r/styleguide'
 import Greeting, { fragments as fragmentsGreeting } from './Greeting'
 import Newsletter, {
-  fragments as fragmentsNewsletter
+  fragments as fragmentsNewsletter,
 } from './Sections/Newsletter'
 import AppLogin, { fragments as fragmentsAppLogin } from './Sections/AppLogin'
 import Usability, {
-  fragments as fragmentsUsability
+  fragments as fragmentsUsability,
 } from './Sections/Usability'
 import Profile, { fragments as fragmentsProfile } from './Sections/Profile'
 import Frame from '../Frame'
@@ -29,7 +29,7 @@ import { HEADER_HEIGHT } from '../constants'
 import { SECTION_SPACE } from './Section'
 import withT from '../../lib/withT'
 import Subscriptions, {
-  fragments as fragmentsSubscriptions
+  fragments as fragmentsSubscriptions,
 } from './Sections/Subscriptions'
 import { ONBOARDING_SECTIONS_REPO_IDS } from '../../lib/constants'
 import withInNativeApp from '../../lib/withInNativeApp'
@@ -80,19 +80,19 @@ const styles = {
     marginBottom: 80,
     [mediaQueries.onlyS]: {
       ...fontStyles.sansSerifMedium40,
-      marginBottom: 50
-    }
+      marginBottom: 50,
+    },
   }),
   p: css({
-    marginBottom: 20
+    marginBottom: 20,
   }),
   sections: css({
     paddingTop: SECTION_SPACE,
-    paddingBottom: SECTION_SPACE
+    paddingBottom: SECTION_SPACE,
   }),
   buttonContainer: css({
-    marginBottom: SECTION_SPACE
-  })
+    marginBottom: SECTION_SPACE,
+  }),
 }
 
 class Page extends Component {
@@ -102,9 +102,9 @@ class Page extends Component {
     const {
       router: {
         query,
-        query: { context }
+        query: { context },
       },
-      inNativeApp
+      inNativeApp,
     } = props
 
     this.sections = [
@@ -112,44 +112,44 @@ class Page extends Component {
         component: Newsletter,
         name: 'newsletter',
         ref: React.createRef(),
-        visited: false
+        visited: false,
       },
       {
         component: Subscriptions,
         name: 'notifications', // this also gets into the url—we have to avoid «script» in urls
         ref: React.createRef(),
-        visited: false
+        visited: false,
       },
       !inNativeApp && {
         component: AppLogin,
         name: 'app-login',
         ref: React.createRef(),
-        visited: false
+        visited: false,
       },
       {
         component: Usability,
         name: 'usability',
         ref: React.createRef(),
-        visited: false
+        visited: false,
       },
       context !== 'card' && {
         component: Profile,
         name: 'profile',
         ref: React.createRef(),
-        visited: false
-      }
+        visited: false,
+      },
     ].filter(Boolean)
 
     this.state = {
-      expandedSection: this.sections.find(s => s.name === query.section)
+      expandedSection: this.sections.find((s) => s.name === query.section)
         ? query.section
         : null,
-      hasOnceVisitedAll: false
+      hasOnceVisitedAll: false,
     }
 
-    this.onExpand = props => {
+    this.onExpand = (props) => {
       this.setState(({ expandedSection }) => ({
-        expandedSection: expandedSection === props.name ? null : props.name
+        expandedSection: expandedSection === props.name ? null : props.name,
       }))
     }
 
@@ -159,7 +159,7 @@ class Page extends Component {
 
       if (expandedSection) {
         const currentSection = this.sections.find(
-          ({ name }) => expandedSection === name
+          ({ name }) => expandedSection === name,
         )
         currentSection.visited = true
 
@@ -171,7 +171,9 @@ class Page extends Component {
         } else {
           this.setState({
             expandedSection: null,
-            hasOnceVisitedAll: this.sections.every(section => !!section.visited)
+            hasOnceVisitedAll: this.sections.every(
+              (section) => !!section.visited,
+            ),
           })
 
           return
@@ -181,14 +183,13 @@ class Page extends Component {
       this.setState(
         { expandedSection: this.sections[sectionIndex].name },
         () => {
-          const { top } = this.sections[
-            sectionIndex
-          ].ref.current.getBoundingClientRect()
+          const { top } =
+            this.sections[sectionIndex].ref.current.getBoundingClientRect()
           const { pageYOffset } = window
 
           const target = pageYOffset + top - HEADER_HEIGHT * 1.2
           scrollIt(target, 400)
-        }
+        },
       )
     }
   }
@@ -196,18 +197,18 @@ class Page extends Component {
   render() {
     const {
       router: {
-        query: { context }
+        query: { context },
       },
       t,
-      inNativeIOSApp
+      inNativeIOSApp,
     } = this.props
     const { expandedSection } = this.state
 
     const meta = {
       title: t.first([
         `Onboarding/Page/${context}/meta/title`,
-        'Onboarding/Page/meta/title'
-      ])
+        'Onboarding/Page/meta/title',
+      ]),
     }
 
     return (
@@ -217,7 +218,7 @@ class Page extends Component {
           variables={{
             repoIds:
               ONBOARDING_SECTIONS_REPO_IDS &&
-              ONBOARDING_SECTIONS_REPO_IDS.split(',')
+              ONBOARDING_SECTIONS_REPO_IDS.split(','),
           }}
         >
           {({ loading, error, data }) => {
@@ -232,13 +233,13 @@ class Page extends Component {
                 <div {...styles.title}>
                   {t.first([
                     `Onboarding/Page/${context}/title`,
-                    'Onboarding/Page/title'
+                    'Onboarding/Page/title',
                   ])}
                 </div>
                 <P {...styles.p}>
                   {t.first([
                     `Onboarding/Page/${context}/preface`,
-                    'Onboarding/Page/preface'
+                    'Onboarding/Page/preface',
                   ])}
                 </P>
                 {context && <Greeting employee={employees[0]} />}
@@ -246,10 +247,10 @@ class Page extends Component {
                   {t.first(
                     [
                       `Onboarding/Page/${context}/introduction`,
-                      'Onboarding/Page/introduction'
+                      'Onboarding/Page/introduction',
                     ],
                     null,
-                    ''
+                    '',
                   )}
                 </P>
 
@@ -280,7 +281,7 @@ class Page extends Component {
                           isVisited={visited}
                         />
                       )
-                    }
+                    },
                   )}
                 </div>
 
@@ -296,7 +297,7 @@ class Page extends Component {
                         <Button primary={this.state.hasOnceVisitedAll}>
                           {t.first([
                             `Onboarding/Page/${context}/button`,
-                            'Onboarding/Page/button'
+                            'Onboarding/Page/button',
                           ])}
                         </Button>
                       </Link>
@@ -308,7 +309,7 @@ class Page extends Component {
                   {t.first.elements(
                     [
                       `Onboarding/Page/${context}/more/account`,
-                      'Onboarding/Page/more/account'
+                      'Onboarding/Page/more/account',
                     ],
                     {
                       link: (
@@ -316,12 +317,12 @@ class Page extends Component {
                           <A>
                             {t.first([
                               `Onboarding/Page/${context}/more/account/link`,
-                              'Onboarding/Page/more/account/link'
+                              'Onboarding/Page/more/account/link',
                             ])}
                           </A>
                         </Link>
-                      )
-                    }
+                      ),
+                    },
                   )}
                 </P>
 
@@ -329,7 +330,7 @@ class Page extends Component {
                   {t.first.elements(
                     [
                       `Onboarding/Page/${context}/more/questions`,
-                      'Onboarding/Page/more/questions'
+                      'Onboarding/Page/more/questions',
                     ],
                     {
                       linkManual: (
@@ -337,7 +338,7 @@ class Page extends Component {
                           <A>
                             {t.first([
                               `Onboarding/Page/${context}/more/questions/linkManual`,
-                              'Onboarding/Page/more/questions/linkManual'
+                              'Onboarding/Page/more/questions/linkManual',
                             ])}
                           </A>
                         </Link>
@@ -347,32 +348,32 @@ class Page extends Component {
                           <A>
                             {t.first([
                               `Onboarding/Page/${context}/more/questions/linkFaq`,
-                              'Onboarding/Page/more/questions/linkFaq'
+                              'Onboarding/Page/more/questions/linkFaq',
                             ])}
                           </A>
                         </Link>
-                      )
-                    }
+                      ),
+                    },
                   )}
                 </P>
                 <P {...styles.p}>
                   {t.first.elements(
                     [
                       `Onboarding/Page/${context}/more/help`,
-                      'Onboarding/Page/more/help'
+                      'Onboarding/Page/more/help',
                     ],
                     {
                       email: (
                         <A
                           key='email'
                           href={`mailto:${t(
-                            'Onboarding/Page/more/help/email'
+                            'Onboarding/Page/more/help/email',
                           )}`}
                         >
                           {t('Onboarding/Page/more/help/email')}
                         </A>
-                      )
-                    }
+                      ),
+                    },
                   )}
                 </P>
               </Center>

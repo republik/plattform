@@ -3,7 +3,7 @@ const { createApolloFetch } = require('apollo-fetch')
 
 server.get('/pgp/:userSlug.asc', async (req, res) => {
   const apolloFetch = createApolloFetch({
-    uri: process.env.API_URL
+    uri: process.env.API_URL,
   })
   apolloFetch.use(({ request, options }, next) => {
     if (!options.headers) {
@@ -25,8 +25,8 @@ server.get('/pgp/:userSlug.asc', async (req, res) => {
       }
     `,
     variables: {
-      slug: req.params.userSlug
-    }
+      slug: req.params.userSlug,
+    },
   })
 
   if (response.errors) {

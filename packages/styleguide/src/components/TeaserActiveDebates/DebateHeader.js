@@ -9,13 +9,13 @@ const styles = {
   header: css({
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   }),
   title: css({
     ...sansSerifMedium16,
     marginRight: 10,
-    textDecoration: 'none'
-  })
+    textDecoration: 'none',
+  }),
 }
 
 const DebateHeader = React.forwardRef(
@@ -41,7 +41,7 @@ const DebateHeader = React.forwardRef(
         />
       </div>
     )
-  }
+  },
 )
 
 export default DebateHeader
@@ -49,5 +49,5 @@ export default DebateHeader
 DebateHeader.propTypes = {
   title: PropTypes.string,
   commentCount: PropTypes.number,
-  href: PropTypes.string
+  href: PropTypes.string,
 }

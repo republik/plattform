@@ -153,9 +153,8 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
        * Stornierte, reduzierte Mitgliedschaften
        */
 
-      const StornierteReduzierteMitgliedschaften = StornierteMitgliedschaften.filter(
-        (m) => m.donation < 0,
-      )
+      const StornierteReduzierteMitgliedschaften =
+        StornierteMitgliedschaften.filter((m) => m.donation < 0)
 
       results.StornierteReduzierteMitgliedschaften = {
         Betrag:
@@ -189,11 +188,12 @@ const evaluateCompanyMonth = async (company, begin, end, pgdb) => {
        * Stornierte Gönner-Mitgliedschaften
        */
 
-      const StornierteGoennerMitgliedschaften = StornierteMitgliedschaften.filter(
-        (i) =>
-          i.packageName === 'BENEFACTOR' ||
-          (i.packageName === 'PROLONG' && i.price >= 100000),
-      )
+      const StornierteGoennerMitgliedschaften =
+        StornierteMitgliedschaften.filter(
+          (i) =>
+            i.packageName === 'BENEFACTOR' ||
+            (i.packageName === 'PROLONG' && i.price >= 100000),
+        )
 
       results.StornierteGoennerMitgliedschaften = {
         Anzahl: StornierteGoennerMitgliedschaften.map(

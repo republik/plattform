@@ -4,7 +4,7 @@ import {
   FormatTag,
   useColorContext,
   useHeaderHeight,
-  Scroller
+  Scroller,
 } from '@project-r/styleguide'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -16,7 +16,7 @@ const styles = {
   container: css({
     position: 'sticky',
     zIndex: 10,
-    margin: '24px 0'
+    margin: '24px 0',
   }),
   hr: css({
     margin: 0,
@@ -26,24 +26,24 @@ const styles = {
     bottom: 0,
     height: 1,
     left: 0,
-    right: 0
+    right: 0,
   }),
   tagLinkContainer: css({
     // FormatTag have margin: '0 5px 15px' to keep in mind
     padding: '15px 0 10px',
     marginRight: 10,
-    whiteSpace: 'nowrap'
-  })
+    whiteSpace: 'nowrap',
+  }),
 }
 
 const TagLink = ({ tag, commentCount }) => {
   const route = useRouter()
   const {
-    query: { tag: activeTag }
+    query: { tag: activeTag },
   } = route
   const isSelected = tag === activeTag
   const targetHref = rerouteDiscussion(route, {
-    tag: isSelected ? undefined : tag
+    tag: isSelected ? undefined : tag,
   })
   return (
     <div {...styles.tagLinkContainer}>
@@ -65,7 +65,7 @@ const TagFilter = ({ discussion }) => {
   const [headerHeight] = useHeaderHeight()
   const route = useRouter()
   const {
-    query: { tag: activeTag }
+    query: { tag: activeTag },
   } = route
 
   const [isEdge2Edge, setEdge2Edge] = useState(false)
@@ -97,13 +97,13 @@ const TagFilter = ({ discussion }) => {
         top: headerHeight,
         ...(isEdge2Edge && {
           marginLeft: -BREAKOUT_PADDING,
-          marginRight: -BREAKOUT_PADDING
-        })
+          marginRight: -BREAKOUT_PADDING,
+        }),
       }}
     >
       <Scroller
         innerPadding={isEdge2Edge ? BREAKOUT_PADDING : 0}
-        activeChildIndex={tags.findIndex(tag => tag === activeTag)}
+        activeChildIndex={tags.findIndex((tag) => tag === activeTag)}
       >
         {tags.map((tag, i) => (
           <TagLink
@@ -112,7 +112,7 @@ const TagFilter = ({ discussion }) => {
             commentCount={
               !tag
                 ? totalCount
-                : tagBuckets.find(t => t.value === tag)?.count || 0
+                : tagBuckets.find((t) => t.value === tag)?.count || 0
             }
           />
         ))}

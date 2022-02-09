@@ -5,7 +5,7 @@ import {
   Interaction,
   RawHtml,
   fontStyles,
-  mediaQueries
+  mediaQueries,
 } from '@project-r/styleguide'
 
 import { css } from 'glamor'
@@ -16,16 +16,16 @@ const styles = {
   cheatsheetH3: css({
     ...fontStyles.sansSerifMedium14,
     ...fontStyles.sansSerifMedium14,
-    margin: '30px 0 8px'
+    margin: '30px 0 8px',
   }),
   cheatsheetP: css({
     ...fontStyles.sansSerifRegular14,
     lineHeight: 1.2,
     paddingBottom: 15,
     [mediaQueries.mUp]: {
-      paddingBottom: 40
-    }
-  })
+      paddingBottom: 40,
+    },
+  }),
 }
 
 const CheatSheet = compose(withT)(({ t }) => (
@@ -36,7 +36,7 @@ const CheatSheet = compose(withT)(({ t }) => (
     <Interaction.P {...styles.cheatsheetP}>
       <RawHtml
         dangerouslySetInnerHTML={{
-          __html: t('search/docs/text')
+          __html: t('search/docs/text'),
         }}
       />
     </Interaction.P>

@@ -18,7 +18,7 @@ const styles = {
     alignItems: 'center',
     marginTop: '10px',
     position: 'relative',
-    paddingBottom: '10px'
+    paddingBottom: '10px',
   }),
   profilePicture: css({
     display: 'block',
@@ -26,16 +26,17 @@ const styles = {
     flexGrow: 0,
     flexShrink: 0,
     height: `${profilePictureSize + 2 * profilePictureBorderSize}px`,
-    margin: `${-profilePictureBorderSize}px ${-profilePictureBorderSize +
-      profilePictureMargin}px ${-profilePictureBorderSize}px ${-profilePictureBorderSize}px`,
-    border: `${profilePictureBorderSize}px solid white`
+    margin: `${-profilePictureBorderSize}px ${
+      -profilePictureBorderSize + profilePictureMargin
+    }px ${-profilePictureBorderSize}px ${-profilePictureBorderSize}px`,
+    border: `${profilePictureBorderSize}px solid white`,
   }),
   meta: css({
     alignSelf: 'stretch',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    width: `calc(100% - ${profilePictureSize + profilePictureMargin}px)`
+    width: `calc(100% - ${profilePictureSize + profilePictureMargin}px)`,
   }),
   name: css({
     ...sansSerifMedium16,
@@ -43,20 +44,20 @@ const styles = {
     color: colors.text,
     display: 'flex',
     alignItems: 'center',
-    paddingRight: '15px'
+    paddingRight: '15px',
   }),
   nameText: css({
-    ...ellipsize
+    ...ellipsize,
   }),
   subline: css({
     ...sansSerifRegular14,
     lineHeight: '20px',
     color: colors.text,
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
   }),
   sublineText: css({
-    ...ellipsize
+    ...ellipsize,
   }),
   icon: css({
     color: '#CDCDCD',
@@ -66,24 +67,24 @@ const styles = {
     flexShrink: 0,
     display: 'inline-block',
     marginLeft: 4,
-    fontSize: '24px'
+    fontSize: '24px',
   }),
   link: css({
     textDecoration: 'none',
     color: colors.text,
     '@media (hover)': {
       ':hover': {
-        color: colors.lightText
-      }
-    }
-  })
+        color: colors.lightText,
+      },
+    },
+  }),
 }
 
 const dateFormat = timeFormat('%d. %B %Y')
 
 const ICON = {
   vimeo: VimeoIcon,
-  youtube: YoutubeIcon
+  youtube: YoutubeIcon,
 }
 
 const Link = ({ href, children }) => (
@@ -99,7 +100,7 @@ export const Meta = ({
   userName,
   userUrl,
   userProfileImageUrl,
-  date
+  date,
 }) => {
   const Icon = ICON[platform]
   return (
@@ -133,11 +134,11 @@ Meta.propTypes = {
   userName: PropTypes.string.isRequired,
   userUrl: PropTypes.string.isRequired,
   userProfileImageUrl: PropTypes.string.isRequired,
-  date: PropTypes.object.isRequired
+  date: PropTypes.object.isRequired,
 }
 
 Meta.defaultProps = {
-  platform: 'youtube'
+  platform: 'youtube',
 }
 
 export default Meta

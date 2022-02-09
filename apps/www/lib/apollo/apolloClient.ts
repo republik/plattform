@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import {
   ApolloClient,
   InMemoryCache,
-  NormalizedCacheObject
+  NormalizedCacheObject,
 } from '@apollo/client'
 import { createLink } from './apolloLink'
 import deepMerge from '../deepMerge'
@@ -33,7 +33,7 @@ function mergeNullableData(existing, incoming) {
 }
 
 function createApolloClient(
-  options: Options = {}
+  options: Options = {},
 ): ApolloClient<NormalizedCacheObject> {
   return new ApolloClient({
     connectToDevTools: process.browser && isDev,
@@ -47,17 +47,17 @@ function createApolloClient(
             meta: {
               merge: (existing, incoming) => {
                 return deepMerge({}, existing, incoming)
-              }
-            }
-          }
+              },
+            },
+          },
         },
         Discussion: {
           fields: {
             userPreference: {
-              merge: mergeNullableData
-            }
-          }
-        }
+              merge: mergeNullableData,
+            },
+          },
+        },
       },
       // Generated with a script found in the apollo-client docs:
       // https://www.apollographql.com/docs/react/data/fragments/#generating-possibletypes-automatically
@@ -72,12 +72,12 @@ function createApolloClient(
           'QuestionTypeText',
           'QuestionTypeDocument',
           'QuestionTypeRange',
-          'QuestionTypeChoice'
+          'QuestionTypeChoice',
         ],
         CollectionItemInterface: [
           'CollectionItem',
           'DocumentProgress',
-          'MediaProgress'
+          'MediaProgress',
         ],
         EventObject: ['Comment', 'Document'],
         SubscriptionObject: ['Document', 'User', 'Discussion'],
@@ -85,15 +85,15 @@ function createApolloClient(
           'TwitterEmbed',
           'YoutubeEmbed',
           'VimeoEmbed',
-          'DocumentCloudEmbed'
+          'DocumentCloudEmbed',
         ],
-        CachedEmbed: ['LinkPreview', 'TwitterEmbed']
-      }
+        CachedEmbed: ['LinkPreview', 'TwitterEmbed'],
+      },
     }),
     link: createLink(
       options.headers ?? undefined,
-      options.onResponse ?? undefined
-    )
+      options.onResponse ?? undefined,
+    ),
   })
 }
 
@@ -110,7 +110,7 @@ let apolloClient: ApolloClient<NormalizedCacheObject> = null
  */
 export function initializeApollo(
   initialCache: NormalizedCacheObject = null,
-  options: Options = {}
+  options: Options = {},
 ): ApolloClient<NormalizedCacheObject> {
   const _apolloClient = apolloClient ?? createApolloClient(options)
 
@@ -141,14 +141,14 @@ export function initializeApollo(
  */
 export function useApollo<P extends unknown>(
   pageProps: P,
-  providedApolloClient?: ApolloClient<NormalizedCacheObject>
+  providedApolloClient?: ApolloClient<NormalizedCacheObject>,
 ): ApolloClient<NormalizedCacheObject> {
   const apolloCache =
     pageProps && pageProps[APOLLO_STATE_PROP_NAME]
       ? pageProps[APOLLO_STATE_PROP_NAME]
       : null
-  return useMemo(() => providedApolloClient || initializeApollo(apolloCache), [
-    apolloCache,
-    providedApolloClient
-  ])
+  return useMemo(
+    () => providedApolloClient || initializeApollo(apolloCache),
+    [apolloCache, providedApolloClient],
+  )
 }

@@ -4,7 +4,7 @@ import { Tab } from './Tabs'
 import { css } from 'glamor'
 
 const styles = {
-  tabContainer: css({})
+  tabContainer: css({}),
 }
 
 const TypeSelector = ({ selected, select }) => {

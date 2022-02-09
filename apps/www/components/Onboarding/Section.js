@@ -6,7 +6,7 @@ import {
   Button,
   Loader,
   mediaQueries,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
@@ -16,7 +16,7 @@ export const SECTION_SPACE_MOBILE = 20
 
 const styles = {
   p: css({
-    marginBottom: 20
+    marginBottom: 20,
   }),
   section: css({
     cursor: 'pointer',
@@ -29,32 +29,32 @@ const styles = {
     paddingBottom: SECTION_SPACE_MOBILE * 0.6,
     [mediaQueries.mUp]: {
       paddingTop: SECTION_SPACE * 0.6,
-      paddingBottom: SECTION_SPACE * 0.6
+      paddingBottom: SECTION_SPACE * 0.6,
     },
     '&:last-child': css({
       borderBottomWidth: 1,
-      borderBottomStyle: 'solid'
-    })
+      borderBottomStyle: 'solid',
+    }),
   }),
   heading: css({
     fontSize: SECTION_SPACE_MOBILE,
     [mediaQueries.mUp]: {
-      fontSize: SECTION_SPACE
-    }
+      fontSize: SECTION_SPACE,
+    },
   }),
   content: css({
     marginBottom: 20,
     '&:last-child': css({
       paddingBottom: SECTION_SPACE_MOBILE * 0.6,
       [mediaQueries.mUp]: {
-        paddingBottom: SECTION_SPACE * 0.6
+        paddingBottom: SECTION_SPACE * 0.6,
       },
       borderBottomWidth: 1,
-      borderBottomStyle: 'solid'
-    })
+      borderBottomStyle: 'solid',
+    }),
   }),
   contentFooter: css({
-    marginTop: 20
+    marginTop: 20,
   }),
   doneIcon: css({
     height: SECTION_SPACE_MOBILE * 1.1,
@@ -62,19 +62,19 @@ const styles = {
     alignSelf: 'flex-end',
     [mediaQueries.mUp]: {
       height: SECTION_SPACE * 1.1,
-      width: SECTION_SPACE * 1.1
-    }
-  })
+      width: SECTION_SPACE * 1.1,
+    },
+  }),
 }
 
-const Section = props => {
+const Section = (props) => {
   const [colorScheme] = useColorContext()
-  const onExpand = e => {
+  const onExpand = (e) => {
     e.preventDefault()
     props.onExpand(props)
   }
 
-  const onContinue = e => {
+  const onContinue = (e) => {
     e.preventDefault()
     props.onContinue(props)
   }
@@ -89,7 +89,7 @@ const Section = props => {
     children,
     forwardedRef,
     showContinue = true,
-    t
+    t,
   } = props
 
   return (

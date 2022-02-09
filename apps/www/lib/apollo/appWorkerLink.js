@@ -7,7 +7,7 @@ import { parseJSONObject } from '../safeJSON'
 export const hasSubscriptionOperation = ({ query: { definitions } }) =>
   definitions.some(
     ({ kind, operation }) =>
-      kind === 'OperationDefinition' && operation === 'subscription'
+      kind === 'OperationDefinition' && operation === 'subscription',
   )
 
 const GQL_MESSAGES_TYPES = ['start', 'data', 'stop', 'error', 'complete']
@@ -79,21 +79,21 @@ class PromiseWorkerLink extends ApolloLink {
         data: {
           error: 'Unknown operation id',
           id: operation.id,
-          operation
-        }
+          operation,
+        },
       })
     }
   }
 
   postMessage(id, operation) {
     return new Promise((resolve, reject) => {
-      this.callbacks[id] = result => {
+      this.callbacks[id] = (result) => {
         resolve(result)
       }
 
       postMessage({
         type: 'graphql',
-        data: { id, payload: operation }
+        data: { id, payload: operation },
       })
     })
   }
@@ -101,9 +101,9 @@ class PromiseWorkerLink extends ApolloLink {
   request(operation) {
     const id = uuid()
 
-    return new Observable(observer => {
+    return new Observable((observer) => {
       // Sends operation to be processed in app "worker"
-      this.postMessage(id, operation).then(response => {
+      this.postMessage(id, operation).then((response) => {
         observer.next(response)
         observer.complete()
       })
@@ -132,6 +132,6 @@ export const createAppWorkerLink = () => {
   return ApolloLink.split(
     hasSubscriptionOperation,
     subscriptionWorkerLink,
-    promiseWorkerLink
+    promiseWorkerLink,
   )
 }

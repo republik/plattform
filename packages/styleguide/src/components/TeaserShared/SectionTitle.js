@@ -5,7 +5,7 @@ import { mUp } from '../TeaserFront/mediaQueries'
 import {
   sansSerifMedium16,
   sansSerifMedium22,
-  sansSerifRegular30
+  sansSerifRegular30,
 } from '../Typography/styles'
 
 const styles = {
@@ -17,17 +17,17 @@ const styles = {
     '& svg': {
       width: 22,
       height: 22,
-      marginLeft: 8
+      marginLeft: 8,
     },
     [mUp]: {
       ...sansSerifRegular30,
       '& svg': {
         width: 30,
-        height: 30
+        height: 30,
       },
-      marginBottom: 25
+      marginBottom: 25,
     },
-    color: 'inherit'
+    color: 'inherit',
   }),
   small: css({
     color: 'inherit',
@@ -37,9 +37,9 @@ const styles = {
       marginTop: -1,
       width: 16,
       height: 16,
-      marginLeft: 4
-    }
-  })
+      marginLeft: 4,
+    },
+  }),
 }
 
 const SectionTitle = React.forwardRef(
@@ -55,7 +55,7 @@ const SectionTitle = React.forwardRef(
         {children}
       </span>
     )
-  }
+  },
 )
 
 export default SectionTitle

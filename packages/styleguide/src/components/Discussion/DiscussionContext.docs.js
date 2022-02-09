@@ -9,7 +9,7 @@ export const createSampleDiscussionContextValue = ({
   t,
   isModerator = false,
   actions = {},
-  userWaitUntil = null
+  userWaitUntil = null,
 }) => ({
   /**
    * Moderator users have elevated priviledges, they can for example unpublish
@@ -36,7 +36,7 @@ export const createSampleDiscussionContextValue = ({
      */
     displayAuthor: {
       name: 'Anonym',
-      profilePicture: '/static/profilePicture1.png'
+      profilePicture: '/static/profilePicture1.png',
     },
 
     /**
@@ -46,11 +46,11 @@ export const createSampleDiscussionContextValue = ({
     userWaitUntil,
 
     rules: {
-      maxLength: null
+      maxLength: null,
     },
 
     tags: [],
-    tagRequired: false
+    tagRequired: false,
   },
 
   /**
@@ -76,10 +76,10 @@ export const createSampleDiscussionContextValue = ({
     submitComment: (parent, text, tags) => Promise.resolve({ ok: true }),
 
     editComment: (comment, content, tags) => Promise.resolve({ ok: true }),
-    upvoteComment: comment => Promise.resolve({ ok: true }),
-    downvoteComment: comment => Promise.resolve({ ok: true }),
-    unvoteComment: comment => Promise.resolve({ ok: true }),
-    unpublishComment: comment => Promise.resolve({ ok: true }),
+    upvoteComment: (comment) => Promise.resolve({ ok: true }),
+    downvoteComment: (comment) => Promise.resolve({ ok: true }),
+    unvoteComment: (comment) => Promise.resolve({ ok: true }),
+    unpublishComment: (comment) => Promise.resolve({ ok: true }),
 
     /**
      * Fetch more comments.
@@ -87,10 +87,10 @@ export const createSampleDiscussionContextValue = ({
     fetchMoreComments: ({ parentId, after, appendAfter }) =>
       Promise.resolve({ ok: true }),
 
-    shareComment: commentId => Promise.resolve({ ok: true }),
+    shareComment: (commentId) => Promise.resolve({ ok: true }),
     openDiscussionPreferences: () => Promise.resolve({ ok: true }),
 
-    ...actions
+    ...actions,
   },
 
   /**
@@ -98,7 +98,7 @@ export const createSampleDiscussionContextValue = ({
    */
   clock: {
     isDesktop: true,
-    t
+    t,
   },
 
   /**
@@ -118,5 +118,5 @@ export const createSampleDiscussionContextValue = ({
    * React Element that will be placed into the secondary actions slot of the
    * composer. Can be null to not show anything.
    */
-  composerSecondaryActions: null
+  composerSecondaryActions: null,
 })

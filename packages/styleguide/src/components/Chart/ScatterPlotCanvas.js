@@ -36,7 +36,7 @@ const ScatterPlotCanvas = ({ symbols, width, height, getColor, opacity }) => {
         top: 0,
         left: 0,
         width,
-        height
+        height,
       }}
     />
   )

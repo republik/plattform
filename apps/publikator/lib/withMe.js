@@ -14,13 +14,13 @@ export const meQuery = gql`
   }
 `
 
-const withMe = Component =>
+const withMe = (Component) =>
   graphql(meQuery, {
     props: ({ data }) => {
       return {
-        me: data.me
+        me: data.me,
       }
-    }
+    },
   })(Component)
 
 export default withMe

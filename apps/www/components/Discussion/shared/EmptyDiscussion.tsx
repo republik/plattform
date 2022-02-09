@@ -4,8 +4,8 @@ import { useTranslation } from '../../../lib/withT'
 
 const styles = {
   emptyDiscussion: css({
-    margin: '20px 0'
-  })
+    margin: '20px 0',
+  }),
 }
 
 const EmptyDiscussion = () => {

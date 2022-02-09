@@ -37,9 +37,9 @@ export const withSubmitComment = compose(
         discussionDisplayAuthor: displayAuthor,
         discussionUserPreference: userPreference,
         client,
-        includeParent
+        includeParent,
       },
-      mutate
+      mutate,
     }) => ({
       previewComment: ({ content, discussionId, parentId, id }) => {
         return client
@@ -49,9 +49,9 @@ export const withSubmitComment = compose(
               content,
               discussionId,
               parentId,
-              id
+              id,
             },
-            fetchPolicy: 'no-cache'
+            fetchPolicy: 'no-cache',
           })
           .then(({ data }) => {
             return data.commentPreview
@@ -71,7 +71,7 @@ export const withSubmitComment = compose(
         const { parentId, parentIds } = parent
           ? {
               parentId: parent.id,
-              parentIds: parent.parentIds.concat(parent.id)
+              parentIds: parent.parentIds.concat(parent.id),
             }
           : { parentId: null, parentIds: [] }
 
@@ -108,11 +108,11 @@ export const withSubmitComment = compose(
                 id: discussionId,
                 userPreference: {
                   __typename: 'DiscussionPreferences',
-                  notifications: userPreference.notifications
+                  notifications: userPreference.notifications,
                 },
-                userWaitUntil: null
-              }
-            }
+                userWaitUntil: null,
+              },
+            },
           },
           update: (proxy, { data: { submitComment: comment } }) => {
             const variables = {
@@ -122,7 +122,7 @@ export const withSubmitComment = compose(
               activeTag,
               depth,
               focusId,
-              includeParent
+              includeParent,
             }
 
             proxy.writeQuery({
@@ -133,13 +133,13 @@ export const withSubmitComment = compose(
                 mergeComment({
                   comment,
                   initialParentId,
-                  activeTag
-                })
-              )
+                  activeTag,
+                }),
+              ),
             })
-          }
+          },
         }).catch(toRejectedString)
-      }
-    })
-  })
+      },
+    }),
+  }),
 )

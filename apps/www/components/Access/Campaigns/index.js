@@ -107,33 +107,33 @@ export default compose(
   withT,
   graphql(grantMutation, {
     props: ({ mutate }) => ({
-      grantAccess: variables =>
+      grantAccess: (variables) =>
         mutate({
           variables,
           refetchQueries: [
             {
-              query
-            }
-          ]
-        })
-    })
+              query,
+            },
+          ],
+        }),
+    }),
   }),
   graphql(revokeMutation, {
     props: ({ mutate }) => ({
-      revokeAccess: variables =>
+      revokeAccess: (variables) =>
         mutate({
           variables,
           refetchQueries: [
             {
-              query
-            }
-          ]
-        })
-    })
+              query,
+            },
+          ],
+        }),
+    }),
   }),
   graphql(query, {
     props: ({ data }) => ({
-      data
-    })
-  })
+      data,
+    }),
+  }),
 )(Campaigns)

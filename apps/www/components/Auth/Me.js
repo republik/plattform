@@ -15,7 +15,7 @@ const Me = ({ me, t, email, beforeSignInForm, beforeSignedInAs }) =>
       {beforeSignedInAs}
       <Interaction.P>
         {t('me/signedinAs', {
-          nameOrEmail: me.name ? `${me.name.trim()} (${me.email})` : me.email
+          nameOrEmail: me.name ? `${me.name.trim()} (${me.email})` : me.email,
         })}
       </Interaction.P>
       <SignOut />

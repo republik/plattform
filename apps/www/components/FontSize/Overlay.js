@@ -11,7 +11,7 @@ import {
   Editorial,
   Collapsable,
   plainButtonRule,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import { AddIcon, RemoveIcon } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
@@ -31,10 +31,10 @@ const FontSizeOverlay = ({ t, onClose }) => {
   const [colorScheme] = useColorContext()
 
   fontPercentage.current = `${Math.round(
-    (100 * fontSize) / DEFAULT_FONT_SIZE
+    (100 * fontSize) / DEFAULT_FONT_SIZE,
   )}%`
 
-  const trackFontSize = action => {
+  const trackFontSize = (action) => {
     trackEvent(['FontSize', action, fontPercentage.current])
   }
 
@@ -55,7 +55,7 @@ const FontSizeOverlay = ({ t, onClose }) => {
   const fontSizeRule = useMemo(
     () =>
       css({ fontSize: fontSize, borderColor: colorScheme.getCSSColor('text') }),
-    [fontSize, colorScheme]
+    [fontSize, colorScheme],
   )
   return (
     <Overlay onClose={onClose} mUpStyle={{ maxWidth: 375, minHeight: 0 }}>
@@ -119,11 +119,11 @@ const FontSizeOverlay = ({ t, onClose }) => {
 
 const styles = {
   label: css({
-    ...fontStyles.sansSerifRegular17
+    ...fontStyles.sansSerifRegular17,
   }),
   preview: css({
     borderTopWidth: 1,
-    borderTopStyle: 'solid'
+    borderTopStyle: 'solid',
   }),
   subhead: css({
     marginTop: 12,
@@ -133,27 +133,27 @@ const styles = {
     fontSize: '1.1875em',
     lineHeight: '1.25',
     [mediaQueries.mUp]: {
-      fontSize: '1.5em'
-    }
+      fontSize: '1.5em',
+    },
   }),
   paragraph: css({
     fontSize: '1.0625em',
     lineHeight: '1.578em',
     [mediaQueries.mUp]: {
-      fontSize: '1.1875em'
-    }
+      fontSize: '1.1875em',
+    },
   }),
   iconButton: css(plainButtonRule, {
     fontSize: 24,
-    padding: '20px 20px 10px'
+    padding: '20px 20px 10px',
   }),
   reset: css(plainButtonRule, {
     ...fontStyles.sansSerifRegular13,
-    padding: '0 20px 20px'
+    padding: '0 20px 20px',
   }),
   container: css({
-    textAlign: 'center'
-  })
+    textAlign: 'center',
+  }),
 }
 
 export default compose(withT)(FontSizeOverlay)

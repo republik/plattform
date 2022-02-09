@@ -80,15 +80,12 @@ module.exports = {
     if (
       Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter', 'accountant'])
     ) {
-      return createMembershipCache(
-        user,
-        'activeMembership',
-        context,
-      ).cache(async () =>
-        pgdb.public.memberships.findFirst(
-          { userId: user.id, active: true },
-          { orderBy: { createdAt: 'ASC' } },
-        ),
+      return createMembershipCache(user, 'activeMembership', context).cache(
+        async () =>
+          pgdb.public.memberships.findFirst(
+            { userId: user.id, active: true },
+            { orderBy: { createdAt: 'ASC' } },
+          ),
       )
     }
     return null
@@ -276,10 +273,9 @@ module.exports = {
     const cache = createMembershipCache(user, 'isBonusEligable', context)
 
     return cache.cache(async function () {
-      const allPeriods = (
-        await getCustomPackages({ user, pgdb })
-      ).map((package_) =>
-        package_.options.map((option) => option.additionalPeriods),
+      const allPeriods = (await getCustomPackages({ user, pgdb })).map(
+        (package_) =>
+          package_.options.map((option) => option.additionalPeriods),
       )
 
       return !!flattenDeep(allPeriods).find((period) => period.kind === 'BONUS')

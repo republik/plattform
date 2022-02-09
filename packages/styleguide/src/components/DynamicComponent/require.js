@@ -43,13 +43,13 @@ export function requireFrom(resolver) {
           script.src = url
           window.define = define
           document.head.appendChild(script)
-        }))
+        })),
       )
     return module
   }
 
   function requireRelative(base) {
-    return name => Promise.resolve(resolver(name, base)).then(requireAbsolute)
+    return (name) => Promise.resolve(resolver(name, base)).then(requireAbsolute)
   }
 
   function requireAlias(aliases) {
@@ -103,26 +103,26 @@ function define(name, dependencies, factory) {
       (dependencies = typeof name === 'string' ? [] : name)
   queue.push(
     some.call(dependencies, isexports)
-      ? require => {
+      ? (require) => {
           const exports = {}
           return Promise.all(
-            map.call(dependencies, name => {
+            map.call(dependencies, (name) => {
               return isexports((name += '')) ? exports : require(name)
-            })
-          ).then(dependencies => {
+            }),
+          ).then((dependencies) => {
             factory.apply(null, dependencies)
             return exports
           })
         }
-      : require => {
+      : (require) => {
           return Promise.all(map.call(dependencies, require)).then(
-            dependencies => {
+            (dependencies) => {
               return typeof factory === 'function'
                 ? factory.apply(null, dependencies)
                 : factory
-            }
+            },
           )
-        }
+        },
   )
 }
 
