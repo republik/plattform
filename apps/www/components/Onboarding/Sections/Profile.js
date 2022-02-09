@@ -18,7 +18,7 @@ import {
   Button,
   FieldSet,
   InlineSpinner,
-  mediaQueries
+  mediaQueries,
 } from '@project-r/styleguide'
 
 const { P } = Interaction
@@ -28,23 +28,23 @@ const PORTRAIT_SIZE_S = TESTIMONIAL_IMAGE_SIZE * 0.75
 
 const styles = {
   p: css({
-    marginBottom: 20
+    marginBottom: 20,
   }),
   field: css({
     marginTop: 10,
-    marginBottom: 10
+    marginBottom: 10,
   }),
   checkbox: css({
     marginTop: 40,
-    marginBottom: 40
+    marginBottom: 40,
   }),
   portrait: css({
     width: PORTRAIT_SIZE_S,
     height: PORTRAIT_SIZE_S,
     [mediaQueries.mUp]: {
       width: PORTRAIT_SIZE_M,
-      height: PORTRAIT_SIZE_M
-    }
+      height: PORTRAIT_SIZE_M,
+    },
   }),
   actions: css({
     marginBottom: 20,
@@ -58,14 +58,14 @@ const styles = {
       [mediaQueries.mUp]: {
         flexGrow: 0,
         margin: '5px 15px 0 0',
-        minWidth: '160px'
-      }
-    }
+        minWidth: '160px',
+      },
+    },
   }),
   save: css({
     width: 160,
-    textAlign: 'center'
-  })
+    textAlign: 'center',
+  }),
 }
 
 export const fragments = {
@@ -82,7 +82,7 @@ export const fragments = {
       isEligibleForProfile
       hasPublicProfile
     }
-  `
+  `,
 }
 
 class Profile extends Component {
@@ -92,10 +92,10 @@ class Profile extends Component {
     this.state = {
       values: {},
       errors: {},
-      dirty: {}
+      dirty: {},
     }
 
-    this.onChange = fields => {
+    this.onChange = (fields) => {
       this.setState(FieldSet.utils.mergeFields(fields))
     }
 
@@ -108,13 +108,14 @@ class Profile extends Component {
     const { user, onContinue, t } = this.props
     const { values, errors, dirty } = this.state
 
-    const hasErrors = !!Object.keys(errors).filter(key => !!errors[key]).length
+    const hasErrors = !!Object.keys(errors).filter((key) => !!errors[key])
+      .length
 
     const mergedValues = Object.assign(
       {},
       user,
       { portrait: undefined },
-      values
+      values,
     )
 
     return (

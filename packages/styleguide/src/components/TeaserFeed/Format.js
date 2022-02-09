@@ -12,9 +12,9 @@ const styles = {
     margin: '0 0 6px 0',
     [mUp]: {
       ...convertStyleToRem(sansSerifMedium16),
-      margin: '-5px 0 8px 0'
-    }
-  })
+      margin: '-5px 0 8px 0',
+    },
+  }),
 }
 
 export const Format = ({ children, color }) => {
@@ -32,7 +32,7 @@ export const Format = ({ children, color }) => {
 
 Format.propTypes = {
   children: PropTypes.node.isRequired,
-  color: PropTypes.string
+  color: PropTypes.string,
 }
 
 export default Format

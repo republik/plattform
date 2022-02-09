@@ -21,7 +21,7 @@ const SigninPage = () => {
   }, [me])
 
   const meta = {
-    title: t('pages/signin/title')
+    title: t('pages/signin/title'),
   }
 
   return (

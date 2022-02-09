@@ -8,7 +8,7 @@ import {
   Editorial,
   Interaction,
   timeahead,
-  useCurrentMinute
+  useCurrentMinute,
 } from '@project-r/styleguide'
 import Link from 'next/link'
 import { useTranslation } from '../../../lib/withT'
@@ -29,7 +29,7 @@ type Props = {
 const DiscussionComposerBarrier = ({
   children,
   isRoot,
-  showPayNotes
+  showPayNotes,
 }: Props): ReactElement => {
   const { inNativeIOSApp } = useInNativeApp()
   const { discussion } = useDiscussion()
@@ -77,9 +77,9 @@ const DiscussionComposerBarrier = ({
                     {t('submitComment/notEligible/pledgeText')}
                   </Editorial.A>
                 </Link>
-              )
+              ),
             },
-            ''
+            '',
           )}
         </Interaction.P>
       </Box>
@@ -95,7 +95,7 @@ const DiscussionComposerBarrier = ({
           {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
           {/* @ts-ignore */}
           {t('styleguide/CommentComposer/wait', {
-            time: timeAheadFromNow(waitUntilDate)
+            time: timeAheadFromNow(waitUntilDate),
           })}
         </Interaction.P>
       </Box>

@@ -88,7 +88,7 @@ const getFeedDocuments = gql`
   ${bookmarkOnDocumentFragment}
 `
 
-const mapNodes = node => node.entity
+const mapNodes = (node) => node.entity
 
 const SectionFeed = ({ t, formats, variablesAsString }) => {
   if (!variablesAsString && !(formats && formats.length)) {
@@ -108,7 +108,7 @@ const SectionFeed = ({ t, formats, variablesAsString }) => {
   const variables = variablesAsString
     ? parseJSONObject(variablesAsString)
     : {
-        filter: { formats, feed: true }
+        filter: { formats, feed: true },
       }
 
   return (

@@ -13,31 +13,31 @@ const { P } = Interaction
 
 const styles = {
   p: css({
-    marginBottom: 20
-  })
+    marginBottom: 20,
+  }),
 }
 
 const NEWSLETTERS = [
   'NEWSLETTER_DAILY',
   'NEWSLETTER_WEEKLY',
-  'NEWSLETTER_PROJECTR'
+  'NEWSLETTER_PROJECTR',
 ]
 
 export const fragments = {
   user: gql`
     fragment NewsletterUser on User {
       id
-      ${NEWSLETTERS.map(n => `${n}: hasConsentedTo(name:"${n}")`).join('\n')}
+      ${NEWSLETTERS.map((n) => `${n}: hasConsentedTo(name:"${n}")`).join('\n')}
     }
-  `
+  `,
 }
 
-const Newsletter = props => {
+const Newsletter = (props) => {
   const { user, t } = props
 
   // Is ticked when at least one newsletter consent it to be found
   const isTicked = NEWSLETTERS.some(
-    n => user && user[n] !== null && user[n] !== undefined
+    (n) => user && user[n] !== null && user[n] !== undefined,
   )
 
   return (
@@ -54,7 +54,7 @@ const Newsletter = props => {
             <Link key='account' href='/konto' passHref>
               <A>{t('Onboarding/Sections/Newsletter/hint/link')}</A>
             </Link>
-          )
+          ),
         })}
       </P>
     </Section>

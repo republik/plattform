@@ -9,26 +9,26 @@ import { FieldSet } from '@project-r/styleguide'
 export const styles = {
   mask: css({
     '::placeholder': {
-      color: 'transparent'
+      color: 'transparent',
     },
     ':focus': {
       '::placeholder': {
-        color: '#ccc'
-      }
-    }
+        color: '#ccc',
+      },
+    },
   }),
   autoSize: css({
     minHeight: 40,
     paddingTop: '7px !important',
     paddingBottom: '6px !important',
-    background: 'transparent'
-  })
+    background: 'transparent',
+  }),
 }
 
-const FieldSetWithMaskAndAutoSize = props => (
+const FieldSetWithMaskAndAutoSize = (props) => (
   <FieldSet
     {...props}
-    additionalFieldProps={field => {
+    additionalFieldProps={(field) => {
       const fieldProps = props.additionalFieldProps
         ? props.additionalFieldProps(field)
         : {}
@@ -38,7 +38,7 @@ const FieldSetWithMaskAndAutoSize = props => (
         )
       }
       if (field.mask) {
-        fieldProps.renderInput = inputProps => (
+        fieldProps.renderInput = (inputProps) => (
           <MaskedInput
             {...inputProps}
             {...styles.mask}

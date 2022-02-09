@@ -14,9 +14,8 @@ const { updateCurrentPhase } = require('../../../lib/postgres')
 async function archiveRepo(repoId, unpublish, context) {
   const { t, pgdb, elastic, redis, pubsub } = context
 
-  const publications = await context.loaders.Milestone.Publication.byRepoId.load(
-    repoId,
-  )
+  const publications =
+    await context.loaders.Milestone.Publication.byRepoId.load(repoId)
 
   if (publications.length && !unpublish) {
     throw new Error(t('api/archive/error/published', { repoId }))

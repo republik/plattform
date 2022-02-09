@@ -5,7 +5,7 @@ import {
   mediaQueries,
   useDebounce,
   usePrevious,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
 import withSearchRouter from './withSearchRouter'
@@ -20,14 +20,14 @@ import { useRouter } from 'next/router'
 const styles = css({
   paddingTop: 15,
   [mediaQueries.mUp]: {
-    paddingTop: 40
-  }
+    paddingTop: 40,
+  },
 })
 
 const Form = compose(
   withSearchRouter,
   withAggregations,
-  withT
+  withT,
 )(
   ({
     startState,
@@ -39,7 +39,7 @@ const Form = compose(
     searchQuery,
     setSearchQuery,
     onSearchSubmit,
-    emptyState
+    emptyState,
   }) => {
     const router = useRouter()
     const [formValue, setFormValue] = useState(urlQuery)
@@ -58,11 +58,11 @@ const Form = compose(
       }
     }, [urlQuery, previousUrlQuery])
 
-    const submit = e => {
+    const submit = (e) => {
       e.preventDefault()
       pushSearchParams({
         q: formValue,
-        sort: urlQuery ? undefined : DEFAULT_SORT
+        sort: urlQuery ? undefined : DEFAULT_SORT,
       })
       if (onSearchSubmit) {
         onSearchSubmit()
@@ -110,7 +110,7 @@ const Form = compose(
         )}
       </div>
     )
-  }
+  },
 )
 
 const FormWrapper = ({ onSearchSubmit, emptyState }) => {

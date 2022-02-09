@@ -8,7 +8,7 @@ import { extract as extractRepoId } from '../../utils/github'
 
 export default ({ rule, subModules, TYPE }) => {
   const matchLiveTeaserFeed = matchBlock('LIVETEASERFEED')
-  const extractUrls = nodes => {
+  const extractUrls = (nodes) => {
     if (!nodes) {
       return Set()
     }
@@ -16,22 +16,22 @@ export default ({ rule, subModules, TYPE }) => {
       (set, node) =>
         set
           .add(
-            node.data && (node.data.get ? node.data.get('url') : node.data.url)
+            node.data && (node.data.get ? node.data.get('url') : node.data.url),
           )
           .concat(extractUrls(node.nodes)),
-      Set()
+      Set(),
     )
   }
-  const extractRepoIds = nodes =>
+  const extractRepoIds = (nodes) =>
     extractUrls(nodes)
       .filter(Boolean)
-      .map(url => {
+      .map((url) => {
         const info = extractRepoId(url)
         return info && info.id
       })
       .filter(Boolean)
 
-  const getAutoFeedData = doc => {
+  const getAutoFeedData = (doc) => {
     const liveTeaserFeedIndex = doc.nodes.findIndex(matchLiveTeaserFeed)
 
     if (liveTeaserFeedIndex !== -1) {
@@ -43,7 +43,7 @@ export default ({ rule, subModules, TYPE }) => {
 
       return {
         priorRepoIds,
-        liveTeaserFeed
+        liveTeaserFeed,
       }
     }
   }
@@ -53,29 +53,29 @@ export default ({ rule, subModules, TYPE }) => {
       .reduce(
         (a, m) =>
           a.concat(
-            m.helpers && m.helpers.serializer && m.helpers.serializer.rules
+            m.helpers && m.helpers.serializer && m.helpers.serializer.rules,
           ),
-        []
+        [],
       )
-      .filter(Boolean)
+      .filter(Boolean),
   })
 
   const documentRule = {
-    match: object => object.kind === 'document',
+    match: (object) => object.kind === 'document',
     matchMdast: rule.matchMdast,
-    fromMdast: node => {
+    fromMdast: (node) => {
       const visibleNodes = node.children.slice(0, 42)
       const invisibleMdastNodes = node.children.slice(42)
       const res = {
         document: {
           data: {
             ...node.meta,
-            invisibleMdastNodes
+            invisibleMdastNodes,
           },
           kind: 'document',
-          nodes: childSerializer.fromMdast(visibleNodes)
+          nodes: childSerializer.fromMdast(visibleNodes),
         },
-        kind: 'value'
+        kind: 'value',
       }
       const feedData = getAutoFeedData(res.document)
       if (feedData) {
@@ -90,13 +90,13 @@ export default ({ rule, subModules, TYPE }) => {
         meta,
         children: childSerializer
           .toMdast(object.nodes)
-          .concat(invisibleMdastNodes)
+          .concat(invisibleMdastNodes),
       }
-    }
+    },
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [documentRule]
+    rules: [documentRule],
   })
 
   const newDocument = ({ title, schema }) =>
@@ -179,8 +179,8 @@ An article by [Christof Moser](), 31 December 2017
 
 <hr/></section>
 
-`.trim()
-      )
+`.trim(),
+      ),
     )
 
   const Container = rule.component
@@ -189,33 +189,33 @@ An article by [Christof Moser](), 31 December 2017
     TYPE,
     helpers: {
       serializer,
-      newDocument
+      newDocument,
     },
     changes: {},
     plugins: [
       {
         renderEditor: ({ children }) => <Container>{children}</Container>,
-        onChange: change => {
+        onChange: (change) => {
           const feedData = getAutoFeedData(change.value.document)
 
           if (feedData) {
             if (
               !is(
                 feedData.liveTeaserFeed.data.get('priorRepoIds'),
-                feedData.priorRepoIds
+                feedData.priorRepoIds,
               )
             ) {
               change.setNodeByKey(feedData.liveTeaserFeed.key, {
                 data: feedData.liveTeaserFeed.data.set(
                   'priorRepoIds',
-                  feedData.priorRepoIds
-                )
+                  feedData.priorRepoIds,
+                ),
               })
               return change
             }
           }
-        }
-      }
-    ]
+        },
+      },
+    ],
   }
 }

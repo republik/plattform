@@ -9,7 +9,7 @@ const SubscribeDocument = ({ t, subscriptions, setAnimate }) => {
       <SubscribeCalloutTitle>
         {t('SubscribeDocument/title')}
       </SubscribeCalloutTitle>
-      {subscriptions.map(subscription => (
+      {subscriptions.map((subscription) => (
         <SubscribeCheckbox
           key={subscription.id}
           subscription={subscription}

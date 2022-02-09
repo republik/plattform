@@ -9,12 +9,12 @@ import { mUp } from '../../theme/mediaQueries'
 const styles = {
   container: css({
     position: 'relative',
-    overflow: 'hidden'
+    overflow: 'hidden',
   }),
   breakoutMargin: css({
     [mUp]: {
-      margin: 0
-    }
+      margin: 0,
+    },
   }),
   scroller: css({
     display: 'flex',
@@ -25,8 +25,8 @@ const styles = {
     msOverflowStyle: 'none' /* IE 10+ */,
     WebkitOverflowScrolling: 'touch',
     '::-webkit-scrollbar': {
-      display: 'none'
-    }
+      display: 'none',
+    },
   }),
   arrow: css(plainButtonRule, {
     display: 'none',
@@ -40,12 +40,12 @@ const styles = {
       justifyContent: 'center',
       pointerEvents: 'none',
       opacity: 0,
-      transition: 'opacity 200ms'
-    }
+      transition: 'opacity 200ms',
+    },
   }),
   arrowIcon: css({
     // ontop of arrowBg
-    position: 'relative'
+    position: 'relative',
   }),
   arrowBg: css({
     display: 'block',
@@ -54,16 +54,16 @@ const styles = {
     left: 0,
     right: 0,
     bottom: 0,
-    opacity: 0.7
+    opacity: 0.7,
   }),
   arrowHoverable: css({
     '@media (hover)': {
       '[role=group]:hover > &': {
         pointerEvents: 'auto',
-        opacity: 1
-      }
-    }
-  })
+        opacity: 1,
+      },
+    },
+  }),
 }
 
 type ScrollerType = {
@@ -81,7 +81,7 @@ const Scroller = ({
   center = false,
   hideArrows = false,
   arrowSize = 28,
-  innerPadding = 0
+  innerPadding = 0,
 }: ScrollerType) => {
   const scrollRef = useRef<HTMLDivElement>()
   const [{ left, right }, setArrows] = useState({ left: false, right: false })
@@ -101,8 +101,8 @@ const Scroller = ({
         align: {
           left: 0,
           leftOffset: innerPadding,
-          ...getTop()
-        }
+          ...getTop(),
+        },
       })
     } else {
       const leftEdge = scroller.getBoundingClientRect().left
@@ -125,7 +125,7 @@ const Scroller = ({
       if (scroller.scrollLeft + scroller.clientWidth < scroller.scrollWidth) {
         right = true
       }
-      setArrows(current => {
+      setArrows((current) => {
         if (current.left !== left || current.right !== right) {
           return { left, right }
         }
@@ -145,14 +145,14 @@ const Scroller = ({
     const scroller = scrollRef.current
     return {
       top: 0,
-      topOffset: scroller.getBoundingClientRect().top
+      topOffset: scroller.getBoundingClientRect().top,
     }
   }
 
-  const handleArrowClick = direction => () => {
+  const handleArrowClick = (direction) => () => {
     const scroller = scrollRef.current
     const clientWidth = scroller.clientWidth
-    const target = Array.from(scroller.children).find(element => {
+    const target = Array.from(scroller.children).find((element) => {
       const { left, width } = element.getBoundingClientRect()
       if (direction === 'left') {
         return left + clientWidth >= 0
@@ -169,8 +169,8 @@ const Scroller = ({
       align: {
         left: 0,
         leftOffset,
-        ...getTop()
-      }
+        ...getTop(),
+      },
     })
   }
 
@@ -182,18 +182,18 @@ const Scroller = ({
         ref={scrollRef}
         {...styles.scroller}
         style={{
-          justifyContent: shouldCenter ? 'center' : 'flex-start'
+          justifyContent: shouldCenter ? 'center' : 'flex-start',
         }}
       >
         <div
           style={{
-            flex: shouldCenter ? 1 : `0 0 ${innerPadding}px`
+            flex: shouldCenter ? 1 : `0 0 ${innerPadding}px`,
           }}
         />
         {children}
         <div
           style={{
-            flex: shouldCenter ? 1 : `0 0 ${innerPadding}px`
+            flex: shouldCenter ? 1 : `0 0 ${innerPadding}px`,
           }}
         />
       </div>

@@ -3,11 +3,11 @@ import initApollo from './initApollo'
 import Head from 'next/head'
 import { getDataFromTree } from 'react-apollo'
 
-const WithApolloClient = App => {
+const WithApolloClient = (App) => {
   return class withApolloClient extends React.Component {
-    static displayName = `withApolloClient(${App.displayName ||
-      App.name ||
-      'App'})`
+    static displayName = `withApolloClient(${
+      App.displayName || App.name || 'App'
+    })`
     static async getInitialProps(appCtx) {
       const { ctx, AppTree } = appCtx
 
@@ -21,7 +21,7 @@ const WithApolloClient = App => {
       const headers = !process.browser
         ? {
             accept: ctx.req.headers.accept,
-            userAgent: ctx.req.headers['user-agent']
+            userAgent: ctx.req.headers['user-agent'],
           }
         : undefined
 
@@ -38,7 +38,7 @@ const WithApolloClient = App => {
               apolloClient={apollo}
               headers={headers}
               serverContext={ctx}
-            />
+            />,
           )
         } catch (error) {
           // Prevent Apollo Client GraphQL errors from crashing SSR.
@@ -58,7 +58,7 @@ const WithApolloClient = App => {
       return {
         ...appProps,
         apolloState,
-        headers
+        headers,
       }
     }
 

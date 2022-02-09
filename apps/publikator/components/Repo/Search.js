@@ -9,14 +9,14 @@ export const SEARCH_MIN_LENGTH = 3
 
 const DebouncedSearch = compose(
   withT,
-  withRouter
+  withRouter,
 )(
   ({
     t,
     router: {
       query,
-      query: { q }
-    }
+      query: { q },
+    },
   }) => {
     const [search, setSearch] = useState(q)
     const onChangeSearch = (_, value) => setSearch(value)
@@ -38,7 +38,7 @@ const DebouncedSearch = compose(
         onChange={onChangeSearch}
       />
     )
-  }
+  },
 )
 
 export default DebouncedSearch

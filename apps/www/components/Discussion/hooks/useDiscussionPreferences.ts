@@ -3,7 +3,7 @@ import { SET_DISCUSSION_PREFERENCES_MUTATION } from '../graphql/documents'
 import { toRejectedString } from '../graphql/utils'
 import {
   DiscussionPreferencesQuery,
-  useDiscussionPreferencesQuery
+  useDiscussionPreferencesQuery,
 } from '../graphql/queries/DiscussionPreferencesQuery.graphql'
 
 type DiscussionNotificationOption = 'MY_CHILDREN' | 'ALL' | 'NONE'
@@ -23,7 +23,7 @@ type SetDiscussionPreferencesMutationResult = unknown
 export type SetDiscussionPreferencesHandler = (
   anonymity: boolean,
   credential: string,
-  notifications?: DiscussionNotificationOption
+  notifications?: DiscussionNotificationOption,
 ) => Promise<FetchResult<SetDiscussionPreferencesMutationResult>>
 
 type DiscussionPreferences = {
@@ -35,7 +35,7 @@ type DiscussionPreferences = {
 
 function useDiscussionPreferences(discussionId: string): DiscussionPreferences {
   const { data, loading, error, refetch } = useDiscussionPreferencesQuery({
-    variables: { discussionId }
+    variables: { discussionId },
   })
 
   const [setDiscussionPreferencesMutation] = useMutation<
@@ -52,7 +52,7 @@ function useDiscussionPreferences(discussionId: string): DiscussionPreferences {
   async function updateDiscussionPreferencesHandler(
     anonymity: boolean,
     credential: string,
-    notifications?: DiscussionNotificationOption
+    notifications?: DiscussionNotificationOption,
   ) {
     return setDiscussionPreferencesMutation({
       variables: {
@@ -60,11 +60,11 @@ function useDiscussionPreferences(discussionId: string): DiscussionPreferences {
         discussionPreferences: {
           anonymity,
           credential: credential?.trim() || null,
-          notifications
-        }
-      }
+          notifications,
+        },
+      },
     })
-      .then(result => {
+      .then((result) => {
         return refetch().then(() => result)
       })
       .catch(toRejectedString)
@@ -74,7 +74,7 @@ function useDiscussionPreferences(discussionId: string): DiscussionPreferences {
     preferences: data,
     loading,
     error,
-    updateDiscussionPreferencesHandler
+    updateDiscussionPreferencesHandler,
   }
 }
 

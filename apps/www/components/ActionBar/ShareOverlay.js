@@ -12,7 +12,7 @@ const ShareOverlay = ({
   emailSubject,
   emailBody,
   emailAttachUrl,
-  onClose
+  onClose,
 }) => (
   <Overlay onClose={onClose} mUpStyle={{ maxWidth: 400, minHeight: 0 }}>
     <OverlayToolbar title={title} onClose={onClose} />

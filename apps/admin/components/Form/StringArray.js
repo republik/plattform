@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Input from './Input'
 
-export const parse = str => {
+export const parse = (str) => {
   if (!str) {
     return
   }
@@ -11,8 +11,7 @@ export const parse = str => {
   return { field: field.toString(), values }
 }
 
-export const serialize = ({ field, values }) =>
-  `${field};)${values.join(',')}`
+export const serialize = ({ field, values }) => `${field};)${values.join(',')}`
 
 const getInitialState = ({ stringArray, ...props }) =>
   stringArray
@@ -20,8 +19,8 @@ const getInitialState = ({ stringArray, ...props }) =>
     : {
         stringArray: {
           field: props.fields[0][0],
-          values: []
-        }
+          values: [],
+        },
       }
 
 export class Form extends Component {
@@ -30,52 +29,50 @@ export class Form extends Component {
     this.state = getInitialState(props)
   }
 
-  fieldChangeHandler = event => {
+  fieldChangeHandler = (event) => {
     const field = event.target.value
     this.setState(
       () => ({
         ...this.state,
         stringArray: {
           values: [],
-          field
-        }
+          field,
+        },
       }),
-      this.emitChange
+      this.emitChange,
     )
   }
 
-  choiceChangeHandler = event => {
+  choiceChangeHandler = (event) => {
     const value = event.target.value
     const checked = event.target.checked
     const oldValues = this.state.stringArray.values
-    const cleanValues = oldValues.filter(v => v !== value)
-    const values = checked
-      ? [value, ...cleanValues]
-      : cleanValues
+    const cleanValues = oldValues.filter((v) => v !== value)
+    const values = checked ? [value, ...cleanValues] : cleanValues
     this.setState(
       () => ({
         ...this.state,
         stringArray: {
           ...this.state.stringArray,
-          values
-        }
+          values,
+        },
       }),
-      this.emitChange
+      this.emitChange,
     )
   }
 
   emitChange = () => {
     if (this.props.onChange) {
       const {
-        stringArray: { field, values }
+        stringArray: { field, values },
       } = this.state
       this.props.onChange(
         values.length > 0
           ? {
               field,
-              values
+              values,
             }
-          : undefined
+          : undefined,
       )
     }
   }
@@ -87,33 +84,25 @@ export class Form extends Component {
   render() {
     const { fields } = this.props
     const {
-      stringArray: { field, values }
+      stringArray: { field, values },
     } = this.state
-    const selectedField = fields.find(
-      v => v && v[0] === field
-    )
+    const selectedField = fields.find((v) => v && v[0] === field)
 
     return (
       <div>
         {fields.length > 1 ? (
-          <select
-            value={field}
-            onChange={this.fieldChangeHandler}
-          >
-            {fields.map(fieldTuple => (
-              <option
-                key={fieldTuple[0]}
-                value={fieldTuple[0]}
-              >
+          <select value={field} onChange={this.fieldChangeHandler}>
+            {fields.map((fieldTuple) => (
+              <option key={fieldTuple[0]} value={fieldTuple[0]}>
                 {fieldTuple[0]}
               </option>
             ))}
           </select>
         ) : null}
         {selectedField
-          ? selectedField[1].map(choice => (
+          ? selectedField[1].map((choice) => (
               <Input
-                type="checkbox"
+                type='checkbox'
                 key={choice}
                 label={choice}
                 value={choice}
@@ -130,5 +119,5 @@ export class Form extends Component {
 export default {
   Form,
   parse,
-  serialize
+  serialize,
 }

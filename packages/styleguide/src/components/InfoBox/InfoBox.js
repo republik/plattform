@@ -10,7 +10,7 @@ export const IMAGE_SIZES = {
   XS: 120,
   S: 155,
   M: 240,
-  L: 325
+  L: 325,
 }
 export const DEFAULT_IMAGE_SIZE = 'S'
 
@@ -23,11 +23,11 @@ const figureChildStyles = Object.keys(IMAGE_SIZES).reduce(
     styles[key] = css({
       '& figure': {
         width: size,
-        maxWidth: '100%'
+        maxWidth: '100%',
       },
       [mUp]: {
-        minHeight: size
-      }
+        minHeight: size,
+      },
     })
     return styles
   },
@@ -35,8 +35,8 @@ const figureChildStyles = Object.keys(IMAGE_SIZES).reduce(
     absolute: css({
       [onlyS]: {
         '& figure': {
-          maxWidth: MAX_WIDTH_MOBILE
-        }
+          maxWidth: MAX_WIDTH_MOBILE,
+        },
       },
       [mUp]: {
         position: 'relative',
@@ -44,29 +44,29 @@ const figureChildStyles = Object.keys(IMAGE_SIZES).reduce(
           position: 'absolute',
           left: 0,
           margin: '0 15px 15px 0',
-          top: 0
-        }
-      }
+          top: 0,
+        },
+      },
     }),
     float: css({
       '& figure': {
         float: 'left',
         margin: '10px 15px 5px 0',
-        width: '99px'
+        width: '99px',
       },
       // Micro clearfix hack to avoid surrounding text floating into info boxes
       // with image and very short text.
       '&::before': {
         content: ' ',
-        display: 'table'
+        display: 'table',
       },
       '&::after': {
         content: ' ',
         display: 'table',
-        clear: 'both'
-      }
-    })
-  }
+        clear: 'both',
+      },
+    }),
+  },
 )
 const textChildStyles = Object.keys(IMAGE_SIZES).reduce((styles, key) => {
   const size = IMAGE_SIZES[key]
@@ -76,25 +76,25 @@ const textChildStyles = Object.keys(IMAGE_SIZES).reduce((styles, key) => {
         marginLeft: size + 20,
         // Text in ListItem
         [`& [${textAttribute}]`]: {
-          marginLeft: 0
-        }
-      }
-    }
+          marginLeft: 0,
+        },
+      },
+    },
   })
   return styles
 }, {})
 
 const floatMarginStyle = css({
   [onlyS]: {
-    margin: '40px auto'
-  }
+    margin: '40px auto',
+  },
 })
 
 const defaultMarginStyle = css({
   margin: '40px 0',
   [mUp]: {
-    margin: '60px 0'
-  }
+    margin: '60px 0',
+  },
 })
 
 const getBreakoutSize = (size, hasFigure) => {
@@ -116,7 +116,7 @@ const InfoBox = ({
   figureSize,
   figureFloat,
   collapsable,
-  editorPreview
+  editorPreview,
 }) => {
   let styles = {}
   const float = figureFloat || size === 'float'
@@ -124,12 +124,12 @@ const InfoBox = ({
     const allowedFigureSize = size === 'float' ? 'XS' : figureSize
     styles = {
       ...(float ? figureChildStyles.float : figureChildStyles.absolute),
-      ...figureChildStyles[allowedFigureSize]
+      ...figureChildStyles[allowedFigureSize],
     }
     if (!float) {
       styles = {
         ...styles,
-        ...textChildStyles[allowedFigureSize]
+        ...textChildStyles[allowedFigureSize],
       }
     }
   }
@@ -140,7 +140,7 @@ const InfoBox = ({
       ? floatMarginStyle
       : margin
       ? defaultMarginStyle
-      : undefined)
+      : undefined),
   }
 
   const content = collapsable ? (
@@ -169,12 +169,12 @@ InfoBox.propTypes = {
   size: PropTypes.oneOf(['float', 'breakout']),
   figureSize: PropTypes.oneOf(Object.keys(IMAGE_SIZES)),
   figureFloat: PropTypes.bool.isRequired,
-  collapsable: PropTypes.bool
+  collapsable: PropTypes.bool,
 }
 
 InfoBox.defaultProps = {
   figureFloat: false,
-  collapsable: false
+  collapsable: false,
 }
 
 export default InfoBox

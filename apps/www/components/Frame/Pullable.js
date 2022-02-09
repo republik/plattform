@@ -8,7 +8,7 @@ import { css } from 'glamor'
 import {
   InlineSpinner,
   isBodyScrollLocked,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import { ArrowDownwardIcon } from '@project-r/styleguide'
 
@@ -18,11 +18,11 @@ const styles = {
     overflow: 'hidden',
     justifyContent: 'center',
     pointerEvents: 'none',
-    alignItems: 'center'
-  })
+    alignItems: 'center',
+  }),
 }
 
-const Container = props => {
+const Container = (props) => {
   const [colorScheme] = useColorContext()
   return (
     <div
@@ -31,11 +31,11 @@ const Container = props => {
       {...styles.container}
       {...(props.shouldReset
         ? css({
-            transition: `height ${props.resetDuration}ms ${props.resetEase}`
+            transition: `height ${props.resetDuration}ms ${props.resetEase}`,
           })
         : undefined)}
       style={{
-        height: props.height
+        height: props.height,
       }}
     >
       {props.children}
@@ -49,7 +49,7 @@ class Pullable extends React.Component {
 
     this.state = {
       status: 'ready',
-      height: 0
+      height: 0,
     }
 
     this.clearTouchStatus = () => {
@@ -61,7 +61,7 @@ class Pullable extends React.Component {
     }
     this.clearTouchStatus()
 
-    this.onTouchStart = e => {
+    this.onTouchStart = (e) => {
       if (this.props.disabled || this.ignoreTouches) return
 
       if (this.state.status === 'ready' && this.props.shouldPullToRefresh()) {
@@ -71,7 +71,7 @@ class Pullable extends React.Component {
       }
     }
 
-    this.onTouchMove = e => {
+    this.onTouchMove = (e) => {
       if (this.props.disabled || this.ignoreTouches || this.pullStartY === null)
         return
 
@@ -83,17 +83,17 @@ class Pullable extends React.Component {
 
         this.distResisted = Math.min(
           this.dist / this.props.resistance,
-          this.props.distThreshold
+          this.props.distThreshold,
         )
 
         this.setState(
           {
             status: 'pulling',
-            height: this.distResisted
+            height: this.distResisted,
           },
           () => {
             if (this.distResisted === this.props.distThreshold) this.refresh()
-          }
+          },
         )
       }
     }
@@ -141,7 +141,7 @@ class Pullable extends React.Component {
   componentWillUnmount() {
     window.removeEventListener('touchstart', this.onTouchStart)
     window.removeEventListener('touchmove', this.onTouchMove, {
-      passive: false
+      passive: false,
     })
     window.removeEventListener('touchend', this.onTouchEnd)
 
@@ -183,7 +183,7 @@ Pullable.defaultProps = {
   resetDuration: 400,
   resetEase: 'cubic-bezier(0.215, 0.61, 0.355, 1)',
   shouldPullToRefresh: () => window.scrollY <= 0 && !isBodyScrollLocked(),
-  disabled: false
+  disabled: false,
 }
 
 Pullable.propTypes = {
@@ -194,7 +194,7 @@ Pullable.propTypes = {
   resetDuration: PropTypes.number,
   resetEase: PropTypes.string,
   shouldPullToRefresh: PropTypes.func,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
 }
 
 export default Pullable

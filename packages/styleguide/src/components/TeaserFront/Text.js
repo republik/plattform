@@ -8,13 +8,13 @@ const TEXT_PADDING = 50
 
 const positionHalfWidth = {
   position: 'absolute',
-  width: `calc(50% - ${TEXT_PADDING}px)`
+  width: `calc(50% - ${TEXT_PADDING}px)`,
 }
 
 const positionFullWidth = {
   position: 'absolute',
   left: `${TEXT_PADDING}px`,
-  right: `${TEXT_PADDING}px`
+  right: `${TEXT_PADDING}px`,
 }
 
 const styles = {
@@ -25,73 +25,73 @@ const styles = {
       right: 0,
       bottom: 0,
       left: 0,
-      overflow: 'hidden'
-    }
+      overflow: 'hidden',
+    },
   }),
   rootMiddle: css({
     [tUp]: {
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'center'
-    }
+      justifyContent: 'center',
+    },
   }),
   positioned: css({
-    position: 'relative'
+    position: 'relative',
   }),
   topleft: css({
     [tUp]: {
       ...positionHalfWidth,
       left: `${TEXT_PADDING}px`,
-      top: `${TEXT_PADDING}px`
-    }
+      top: `${TEXT_PADDING}px`,
+    },
   }),
   topright: css({
     [tUp]: {
       ...positionHalfWidth,
       left: '50%',
-      top: `${TEXT_PADDING}px`
-    }
+      top: `${TEXT_PADDING}px`,
+    },
   }),
   bottomleft: css({
     [tUp]: {
       ...positionHalfWidth,
       bottom: `${TEXT_PADDING}px`,
-      left: `${TEXT_PADDING}px`
-    }
+      left: `${TEXT_PADDING}px`,
+    },
   }),
   bottomright: css({
     [tUp]: {
       ...positionHalfWidth,
       bottom: `${TEXT_PADDING}px`,
-      left: '50%'
-    }
+      left: '50%',
+    },
   }),
   top: css({
     [tUp]: {
       ...positionFullWidth,
-      top: `${TEXT_PADDING}px`
-    }
+      top: `${TEXT_PADDING}px`,
+    },
   }),
   middle: css({
     [tUp]: {
-      ...positionFullWidth
-    }
+      ...positionFullWidth,
+    },
   }),
   bottom: css({
     [tUp]: {
       ...positionFullWidth,
-      bottom: `${TEXT_PADDING}px`
-    }
+      bottom: `${TEXT_PADDING}px`,
+    },
   }),
   center: css({
-    textAlign: 'center'
+    textAlign: 'center',
   }),
   centerMobileOnly: css({
     textAlign: 'center',
     [mUp]: {
-      textAlign: 'inherit'
-    }
-  })
+      textAlign: 'inherit',
+    },
+  }),
 }
 
 const Text = ({
@@ -103,7 +103,7 @@ const Text = ({
   collapsedColor,
   maxWidth,
   margin,
-  feuilleton
+  feuilleton,
 }) => {
   const [colorScheme] = useColorContext()
   const textAlignStyle =
@@ -121,13 +121,13 @@ const Text = ({
         ? css({
             color: collapsedColor,
             [tUp]: {
-              color: colorScheme.getCSSColor(color || 'text')
-            }
+              color: colorScheme.getCSSColor(color || 'text'),
+            },
           })
         : css({
-            color: colorScheme.getCSSColor(color || 'text')
+            color: colorScheme.getCSSColor(color || 'text'),
           }),
-    [colorScheme, collapsedColor, color]
+    [colorScheme, collapsedColor, color],
   )
 
   return (
@@ -155,19 +155,19 @@ Text.propTypes = {
     'bottomright',
     'top',
     'middle',
-    'bottom'
+    'bottom',
   ]),
   center: PropTypes.bool,
   color: PropTypes.string,
   collapsedColor: PropTypes.string,
   maxWidth: PropTypes.string,
   margin: PropTypes.string,
-  feuilleton: PropTypes.bool
+  feuilleton: PropTypes.bool,
 }
 
 Text.defaultProps = {
   maxWidth: '',
-  margin: ''
+  margin: '',
 }
 
 export default Text

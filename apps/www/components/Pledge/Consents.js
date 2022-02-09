@@ -14,7 +14,7 @@ const stringifyCombo = (combo = []) =>
     .join('_')
 
 const check = (required, accepted = []) =>
-  required.every(key => accepted.indexOf(key) !== -1)
+  required.every((key) => accepted.indexOf(key) !== -1)
 
 export const getConsentsError = (t, required, accepted) =>
   !check(required, accepted) &&
@@ -40,13 +40,13 @@ const Consents = withT(
           onChange={(_, checked) => {
             onChange(
               checked
-                ? required.filter(key => VALID_KEYS.indexOf(key) !== -1)
-                : []
+                ? required.filter((key) => VALID_KEYS.indexOf(key) !== -1)
+                : [],
             )
           }}
         >
           <span
-            onClick={event => {
+            onClick={(event) => {
               const href =
                 event.target.getAttribute && event.target.getAttribute('href')
               if (
@@ -57,7 +57,7 @@ const Consents = withT(
                 event.preventDefault()
                 setOverlay({
                   href: href,
-                  title: event.target.textContent
+                  title: event.target.textContent,
                 })
               }
             }}
@@ -65,14 +65,14 @@ const Consents = withT(
             <RawHtml
               error={error}
               dangerouslySetInnerHTML={{
-                __html: t(`pledge/consents/label/${stringifyCombo(required)}`)
+                __html: t(`pledge/consents/label/${stringifyCombo(required)}`),
               }}
             />
           </span>
         </Checkbox>
       </>
     )
-  }
+  },
 )
 
 const VALID_KEYS = ['PRIVACY', 'STATUTE', 'TOS']
@@ -89,11 +89,11 @@ Consents.propTypes = {
           '` supplied to' +
           ' `' +
           componentName +
-          '`. Validation failed.'
+          '`. Validation failed.',
       )
     }
   },
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
 }
 
 export default Consents

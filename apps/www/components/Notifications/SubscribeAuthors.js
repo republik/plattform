@@ -9,7 +9,7 @@ const SubscribeAuthor = ({
   setAnimate,
   showAuthorFilter,
   userHasNoDocuments,
-  onlyCommentFilter
+  onlyCommentFilter,
 }) => {
   return (
     <>
@@ -18,7 +18,7 @@ const SubscribeAuthor = ({
           <SubscribeCalloutTitle>
             {t('SubscribeMenu/title')}
           </SubscribeCalloutTitle>
-          {subscriptions.map(subscription => (
+          {subscriptions.map((subscription) => (
             <SubscribeCheckbox
               key={subscription.id}
               subscription={subscription}
@@ -30,12 +30,12 @@ const SubscribeAuthor = ({
         </>
       ) : showAuthorFilter ? (
         <>
-          {subscriptions.map(subscription =>
+          {subscriptions.map((subscription) =>
             (userHasNoDocuments &&
             !(subscription.active && subscription.filters.includes('Document'))
               ? ['Comment']
               : ['Document', 'Comment']
-            ).map(filter => (
+            ).map((filter) => (
               <SubscribeCheckbox
                 key={`${subscription.id}-${filter}`}
                 subscription={subscription}
@@ -44,7 +44,7 @@ const SubscribeAuthor = ({
                 setAnimate={setAnimate}
                 callout
               />
-            ))
+            )),
           )}
         </>
       ) : (
@@ -52,7 +52,7 @@ const SubscribeAuthor = ({
           <SubscribeCalloutTitle>
             {t('SubscribeMenu/title')}
           </SubscribeCalloutTitle>
-          {subscriptions.map(subscription => (
+          {subscriptions.map((subscription) => (
             <SubscribeCheckbox
               key={subscription.id}
               subscription={subscription}

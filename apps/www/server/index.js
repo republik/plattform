@@ -22,7 +22,7 @@ const PORT = process.env.PORT || 3005
 const { CURTAIN_MESSAGE } = process.env
 
 const app = next({
-  dev: DEV
+  dev: DEV,
 })
 const handler = app.getRequestHandler()
 
@@ -34,12 +34,12 @@ app.prepare().then(() => {
       hsts: {
         maxAge: 60 * 60 * 24 * 365, // 1 year to get preload approval
         preload: true,
-        includeSubDomains: true
+        includeSubDomains: true,
       },
       referrerPolicy: {
-        policy: 'no-referrer'
-      }
-    })
+        policy: 'no-referrer',
+      },
+    }),
   )
   server.use((req, res, next) => {
     res.setHeader('Permissions-Policy', 'interest-cohort=()')
@@ -70,7 +70,7 @@ app.prepare().then(() => {
       '/mitteilung',
       '/.well-known/apple-app-site-association',
       '/.well-known/apple-developer-merchantid-domain-association',
-      '/.well-known/assetlinks.json'
+      '/.well-known/assetlinks.json',
     ]
     const ALLOWED_UAS = (process.env.CURTAIN_UA_ALLOW_LIST || '')
       .split(',')
@@ -97,8 +97,8 @@ app.prepare().then(() => {
       const reqUa = String(req.get('User-Agent'))
       if (
         hasCookie ||
-        ALLOWED_PATHS.some(path => req.url.startsWith(path)) ||
-        ALLOWED_UAS.some(ua => reqUa.includes(ua))
+        ALLOWED_PATHS.some((path) => req.url.startsWith(path)) ||
+        ALLOWED_UAS.some((ua) => reqUa.includes(ua))
       ) {
         return next()
       }
@@ -115,8 +115,8 @@ app.prepare().then(() => {
       basicAuth({
         users: { [process.env.BASIC_AUTH_USER]: process.env.BASIC_AUTH_PASS },
         challenge: true,
-        realm: process.env.BASIC_AUTH_REALM
-      })
+        realm: process.env.BASIC_AUTH_REALM,
+      }),
     )
   }
 
@@ -143,8 +143,8 @@ app.prepare().then(() => {
       chalk.yellow(
         'reportError from',
         useragent(req.get('User-Agent')),
-        req.body
-      )
+        req.body,
+      ),
     )
     res.statusCode = 200
     res.setHeader('Content-Type', 'application/json')
@@ -160,8 +160,8 @@ app.prepare().then(() => {
         __dirname,
         '../public',
         '.well-known',
-        'apple-app-site-association'
-      )
+        'apple-app-site-association',
+      ),
     )
   })
 
@@ -181,9 +181,9 @@ app.prepare().then(() => {
     // page failing for to many requests
     const rateLimiter = rateLimit({
       windowMs: 60 * 1000,
-      max: function(req) {
+      max: function (req) {
         const {
-          headers: { cookie }
+          headers: { cookie },
         } = req
 
         // If user is logged in, 20 requests per minute are allowed. Otherwise, only 5 requests/min allowed.
@@ -192,7 +192,7 @@ app.prepare().then(() => {
         }
         return 5
       },
-      message: 'Too many requests. Try again later.'
+      message: 'Too many requests. Try again later.',
     })
     console.log('ROUTES_WITH_RATE_LIMIT', ROUTES_WITH_RATE_LIMIT)
     server.use(ROUTES_WITH_RATE_LIMIT, rateLimiter)
@@ -202,7 +202,7 @@ app.prepare().then(() => {
     return handler(req, res)
   })
 
-  server.listen(PORT, err => {
+  server.listen(PORT, (err) => {
     if (err) throw err
     console.log(`> Ready on port ${PORT}`)
   })

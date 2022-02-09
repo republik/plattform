@@ -22,13 +22,13 @@ import {
   Interaction,
   VideoPlayer,
   useColorContext,
-  ColorHtmlBodyColors
+  ColorHtmlBodyColors,
 } from '@project-r/styleguide'
 
 import {
   PUBLIC_BASE_URL,
   CDN_FRONTEND_BASE_URL,
-  PAYPAL_DONATE_LINK
+  PAYPAL_DONATE_LINK,
 } from '../lib/constants'
 import withDefaultSSR from '../lib/hocs/withDefaultSSR'
 
@@ -36,17 +36,15 @@ const { Headline: EH1, P: EP } = Editorial
 const { H2, P: IP } = Interaction
 
 const enVideo = {
-  hls:
-    'https://player.vimeo.com/external/215798102.m3u8?s=b3730f7f6332985771865f3b85c13aeae93223b1',
-  mp4:
-    'https://player.vimeo.com/external/215798102.hd.mp4?s=bdc8421b7d1c2a04fcf9521655332e54c7c4c039&profile_id=175',
+  hls: 'https://player.vimeo.com/external/215798102.m3u8?s=b3730f7f6332985771865f3b85c13aeae93223b1',
+  mp4: 'https://player.vimeo.com/external/215798102.hd.mp4?s=bdc8421b7d1c2a04fcf9521655332e54c7c4c039&profile_id=175',
   subtitles: '/static/subtitles/main_en.vtt',
-  thumbnail: `${CDN_FRONTEND_BASE_URL}/static/video/main.jpg`
+  thumbnail: `${CDN_FRONTEND_BASE_URL}/static/video/main.jpg`,
 }
 
 const pRule = css({
   fontFamily: fontFamilies.sansSerifRegular,
-  fontSize: 18
+  fontSize: 18,
 })
 
 const P = ({ children, ...props }) => (
@@ -59,24 +57,24 @@ const styles = {
   mBr: css({
     display: 'none',
     [mediaQueries.mUp]: {
-      display: 'inline'
-    }
+      display: 'inline',
+    },
   }),
   credits: css({
     marginBottom: SPACE * 2,
     marginTop: SPACE,
     maxWidth: 500,
     marginLeft: 'auto',
-    marginRight: 'auto'
-  })
+    marginRight: 'auto',
+  }),
 }
 
 const EnPage = ({
   router: {
     pathname,
     query,
-    query: { st }
-  }
+    query: { st },
+  },
 }) => {
   const [colorScheme] = useColorContext()
 
@@ -85,8 +83,8 @@ const EnPage = ({
     const url = {
       pathname: '/en',
       query: {
-        m: st === 'Completed' ? 'thank-you' : 'welcome-back'
-      }
+        m: st === 'Completed' ? 'thank-you' : 'welcome-back',
+      },
     }
     track([
       'addEcommerceItem',
@@ -94,7 +92,7 @@ const EnPage = ({
       undefined, // (optional) Product name
       undefined, // (optional) Product category
       parseFloat(query.amt), // (recommended) Product price
-      1 // (optional, default to 1) Product quantity
+      1, // (optional, default to 1) Product quantity
     ])
     track([
       'trackEcommerceOrder',
@@ -103,7 +101,7 @@ const EnPage = ({
       undefined, // (optional) Order sub total (excludes shipping)
       undefined, // (optional) Tax amount
       undefined, // (optional) Shipping amount
-      false // (optional) Discount offered (set to false for unspecified parameter)
+      false, // (optional) Discount offered (set to false for unspecified parameter)
     ])
     Router.replace(url, url, { shallow: true })
   }, st)
@@ -113,17 +111,17 @@ const EnPage = ({
       css({
         '& ::selection': {
           color: colorScheme.getCSSColor('default'),
-          background: colorScheme.getCSSColor('accentColorMeta')
-        }
+          background: colorScheme.getCSSColor('accentColorMeta'),
+        },
       }),
-    [colorScheme]
+    [colorScheme],
   )
 
   const meta = {
     title: 'We are Republik',
     description: '',
     image: `${CDN_FRONTEND_BASE_URL}/static/social-media/en.png`,
-    url: `${PUBLIC_BASE_URL}${pathname}`
+    url: `${PUBLIC_BASE_URL}${pathname}`,
   }
   const shareObject = {
     url: meta.url,
@@ -131,7 +129,7 @@ const EnPage = ({
     emailSubject: 'Republik Manifesto',
     emailAttachUrl: false,
     emailBody: `Manifesto for journalism by republik.ch: ${meta.url}`,
-    overlayTitle: 'Share manifesto'
+    overlayTitle: 'Share manifesto',
   }
   const message = query.m
 

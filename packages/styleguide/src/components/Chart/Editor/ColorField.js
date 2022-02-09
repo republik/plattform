@@ -5,7 +5,7 @@ import { deduplicate, runSort } from '../utils'
 import { ColorDropdownElement } from './ColorDropdownElement'
 import {
   ColorContextProvider,
-  useColorContext
+  useColorContext,
 } from '../../Colors/ColorContext'
 import { createRanges } from '..'
 import { colorMaps, CHART_DEFAULT_FILL } from '../colorMaps'
@@ -18,7 +18,7 @@ import Field from '../../Form/Field'
 
 const TYPES_WITH_COLOR_SORT = ['Bar', 'Lollipop', 'ScatterPlot']
 
-export const ColorField = props => {
+export const ColorField = (props) => {
   const {
     label,
     onFieldsChange,
@@ -26,18 +26,19 @@ export const ColorField = props => {
     colorColumn,
     config,
     colorMap,
-    colorRange
+    colorRange,
   } = props
 
   const [colorScheme] = useColorContext()
-  const colorRanges = useMemo(() => createRanges(colorScheme.ranges), [
-    colorScheme
-  ])
+  const colorRanges = useMemo(
+    () => createRanges(colorScheme.ranges),
+    [colorScheme],
+  )
 
   const items = []
     .concat(
       { value: '_auto', text: 'automatisch' },
-      { value: '_custom', text: 'Farben einzeln zuweisen' }
+      { value: '_custom', text: 'Farben einzeln zuweisen' },
     )
     .concat(
       Object.keys(colorRanges).map((d, i) => {
@@ -51,9 +52,9 @@ export const ColorField = props => {
               colorRange={colorRanges[d]}
               name={`range ${d}`}
             />
-          )
+          ),
         }
-      })
+      }),
     )
     .concat(
       Object.keys(colorMaps).map((d, i) => {
@@ -67,9 +68,9 @@ export const ColorField = props => {
               colorRange={Object.values(colorMaps[d]).filter(deduplicate)}
               name={`map ${d}`}
             />
-          )
+          ),
         }
-      })
+      }),
     )
 
   const value = colorMaps[colorMap]
@@ -81,7 +82,7 @@ export const ColorField = props => {
     : '_custom'
 
   const colorValues = chartData
-    .map(d => d[colorColumn])
+    .map((d) => d[colorColumn])
     .concat(config.colorLegendValues)
     .filter(Boolean)
     .filter(deduplicate)
@@ -90,7 +91,7 @@ export const ColorField = props => {
     runSort(config.colorSort, colorValues)
   }
   if (colorMap) {
-    Object.keys(colorMap).forEach(colorValue => {
+    Object.keys(colorMap).forEach((colorValue) => {
       if (!colorValues.includes(colorValue)) {
         colorValues.push(colorValue)
       }
@@ -100,7 +101,7 @@ export const ColorField = props => {
     colorValues.push('')
   }
   const computedColorMap = {
-    ...colorMap
+    ...colorMap,
   }
   const colorRangeArray = colorRanges[colorRange] || colorRange
   if (Array.isArray(colorRangeArray)) {
@@ -113,7 +114,7 @@ export const ColorField = props => {
 
   const setColorMap = (
     newColorMap,
-    newColorDarkMapping = config.colorDarkMapping
+    newColorDarkMapping = config.colorDarkMapping,
   ) => {
     const keys = Object.keys(newColorMap)
     const colorDarkMapping = newColorDarkMapping
@@ -123,44 +124,44 @@ export const ColorField = props => {
       onFieldsChange({
         colorMap: undefined,
         colorRange: [newColorMap[keys[0]] || CHART_DEFAULT_FILL],
-        colorDarkMapping
+        colorDarkMapping,
       })
     } else {
       onFieldsChange({
         colorMap: newColorMap,
         colorRange: undefined,
-        colorDarkMapping
+        colorDarkMapping,
       })
     }
   }
-  const handleDropdownChange = item => {
+  const handleDropdownChange = (item) => {
     if (item.predefined) {
       onFieldsChange({
         colorMap: undefined,
         colorRange: undefined,
-        [item.predefined]: item.value
+        [item.predefined]: item.value,
       })
     } else if (item.value === '_auto') {
       onFieldsChange({
         colorMap: undefined,
-        colorRange: undefined
+        colorRange: undefined,
       })
     } else {
       setColorMap(computedColorMap)
     }
   }
-  const createColorPickerOnChange = (key, oldColor) => item => {
+  const createColorPickerOnChange = (key, oldColor) => (item) => {
     setColorMap(
       { ...computedColorMap, [key]: item.hex },
-      config.colorDarkMapping && omit(config.colorDarkMapping, oldColor)
+      config.colorDarkMapping && omit(config.colorDarkMapping, oldColor),
     )
   }
-  const createColorPickerOnChangeDark = color => item => {
+  const createColorPickerOnChangeDark = (color) => (item) => {
     onFieldsChange({
       colorDarkMapping: {
         ...config.colorDarkMapping,
-        [color]: item.hex
-      }
+        [color]: item.hex,
+      },
     })
   }
   const pickableColors = colorRanges.discrete
@@ -182,7 +183,7 @@ export const ColorField = props => {
       </div>
       {value === '_custom' && !config.thresholds && (
         <>
-          {colorValues.map(colorValue => {
+          {colorValues.map((colorValue) => {
             const color = computedColorMap[colorValue]
             const colorDark = config.colorDarkMapping?.[color]
 
@@ -190,7 +191,7 @@ export const ColorField = props => {
               <div
                 style={{
                   display: 'flex',
-                  alignItems: 'center'
+                  alignItems: 'center',
                 }}
                 key={colorValue}
               >
@@ -198,7 +199,7 @@ export const ColorField = props => {
                 <div
                   style={{
                     display: 'flex',
-                    justifyContent: 'flex-end'
+                    justifyContent: 'flex-end',
                   }}
                 >
                   {color && (
@@ -207,13 +208,13 @@ export const ColorField = props => {
                       style={{
                         verticalAlign: 'middle',
                         padding: 2,
-                        lineHeight: 0
+                        lineHeight: 0,
                       }}
                       onClick={() => {
                         setColorMap(
                           omit(computedColorMap, colorValue),
                           config.colorDarkMapping &&
-                            omit(config.colorDarkMapping, color)
+                            omit(config.colorDarkMapping, color),
                         )
                       }}
                     >
@@ -249,7 +250,7 @@ export const ColorField = props => {
               checked={hasDarkModeColors}
               onChange={(_, checked) => {
                 onFieldsChange({
-                  colorDarkMapping: checked ? {} : undefined
+                  colorDarkMapping: checked ? {} : undefined,
                 })
               }}
             >

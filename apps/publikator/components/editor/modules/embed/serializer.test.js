@@ -8,7 +8,7 @@ import createParagraphModule from '../paragraph'
 const paragraphModule = createParagraphModule({
   TYPE: 'PARAGRAPH',
   rule: {},
-  subModules: []
+  subModules: [],
 })
 paragraphModule.name = 'paragraph'
 
@@ -17,10 +17,10 @@ const embedVideoModule = createEmbedVideoModule({
   rule: {
     matchMdast: matchZone('EMBEDVIDEO'),
     editorOptions: {
-      lookupType: 'paragraph'
-    }
+      lookupType: 'paragraph',
+    },
   },
-  subModules: []
+  subModules: [],
 })
 embedVideoModule.name = 'embedVideo'
 
@@ -29,17 +29,17 @@ const embedTwitterModule = createEmbedTwitterModule({
   rule: {
     matchMdast: matchZone('EMBEDTWITTER'),
     editorOptions: {
-      lookupType: 'paragraph'
-    }
+      lookupType: 'paragraph',
+    },
   },
-  subModules: []
+  subModules: [],
 })
 embedVideoModule.name = 'embedTwitter'
 
 const embedVideoSerializer = embedVideoModule.helpers.serializer
 const embedTwitterSerializer = embedTwitterModule.helpers.serializer
 
-test('embedVideo serialization', assert => {
+test('embedVideo serialization', (assert) => {
   const md = `<section><h6>EMBEDVIDEO</h6>
 
 \`\`\`
@@ -68,14 +68,14 @@ test('embedVideo serialization', assert => {
     userId: '/users/4801470',
     userName: 'Roman De Giuli',
     thumbnail: 'https://i.vimeocdn.com/video/666449997_960x556.jpg?r=pad',
-    url: 'https://vimeo.com/channels/staffpicks/242527960'
+    url: 'https://vimeo.com/channels/staffpicks/242527960',
   })
 
   assert.equal(stringify(embedVideoSerializer.serialize(value)).trimRight(), md)
   assert.end()
 })
 
-test('embedTwitter serialization', assert => {
+test('embedTwitter serialization', (assert) => {
   const md = `<section><h6>EMBEDTWITTER</h6>
 
 \`\`\`
@@ -102,17 +102,16 @@ test('embedTwitter serialization', assert => {
   assert.deepEqual(embed.data.toJS(), {
     __typename: 'TwitterEmbed',
     id: '930363029669203969',
-    text:
-      'Good luck against Argentina later, @alexiwobi https://t.co/mm9us0b7JC',
+    text: 'Good luck against Argentina later, @alexiwobi https://t.co/mm9us0b7JC',
     userId: '34613288',
     userName: 'Arsenal FC',
     userScreenName: 'Arsenal',
-    url: 'https://twitter.com/Arsenal/status/930363029669203969'
+    url: 'https://twitter.com/Arsenal/status/930363029669203969',
   })
 
   assert.equal(
     stringify(embedTwitterSerializer.serialize(value)).trimRight(),
-    md
+    md,
   )
   assert.end()
 })

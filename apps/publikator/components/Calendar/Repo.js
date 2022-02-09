@@ -5,7 +5,7 @@ import {
   fontStyles,
   useColorContext,
   inQuotes,
-  colors
+  colors,
 } from '@project-r/styleguide'
 import { Phase } from '../Repo/Phases'
 import EditMetaDate from '../Repo/EditMetaDate'
@@ -19,7 +19,7 @@ import withT from '../../lib/withT'
 const ellipsisRule = {
   whiteSpace: 'nowrap',
   overflow: 'hidden',
-  textOverflow: 'ellipsis'
+  textOverflow: 'ellipsis',
 }
 
 const styles = {
@@ -30,43 +30,43 @@ const styles = {
     margin: '0 20px 10px 0',
     padding: 8,
     ':hover .title': {
-      textDecoration: 'underline'
-    }
+      textDecoration: 'underline',
+    },
   }),
   link: css({
     color: 'inherit',
-    textDecoration: 'none'
+    textDecoration: 'none',
   }),
   title: css({
-    ...ellipsisRule
+    ...ellipsisRule,
   }),
   label: css({
     marginBottom: 10,
     ...fontStyles.sansSerifMedium14,
-    ...ellipsisRule
+    ...ellipsisRule,
   }),
   status: css({
     marginTop: 10,
-    ...ellipsisRule
+    ...ellipsisRule,
   }),
   editDate: css({
     ...fontStyles.sansSerifRegular14,
-    marginBottom: 10
+    marginBottom: 10,
   }),
   commitMsg: css({
-    ...fontStyles.sansSerifRegular14
+    ...fontStyles.sansSerifRegular14,
   }),
   placeholder: css({
     fontStyle: 'italic',
     textTransform: 'capitalize',
-    lineHeight: '2rem'
-  })
+    lineHeight: '2rem',
+  }),
 }
 
 export const Placeholder = graphql(getPlaceholder)(
   ({ data: { repo }, ...props }) => {
     return repo ? <Repo repo={repo} {...props} /> : null
-  }
+  },
 )
 
 const RepoLabel = ({ repo, isNewsletter }) => {
@@ -78,7 +78,7 @@ const RepoLabel = ({ repo, isNewsletter }) => {
     <div
       {...styles.label}
       style={{
-        color: label ? formatColor : colorScheme.getCSSColor('textSoft')
+        color: label ? formatColor : colorScheme.getCSSColor('textSoft'),
       }}
     >
       {label || (isNewsletter ? 'Newsletter' : 'Beitrag')}
@@ -90,7 +90,7 @@ const PublicationDate = ({ repoId, publishDate, readOnly }) => {
   const [colorScheme] = useColorContext()
   return (
     <div
-      onClick={e => e.preventDefault()}
+      onClick={(e) => e.preventDefault()}
       {...styles.editDate}
       {...colorScheme.set('color', 'textSoft')}
     >
@@ -114,9 +114,9 @@ const PlaceholderLink = ({ repo, placeholderDate, children }) => {
     id,
     latestCommit: {
       document: {
-        meta: { title, template }
-      }
-    }
+        meta: { title, template },
+      },
+    },
   } = repo
   const urlDate = getUrlDate(new Date(placeholderDate))
 
@@ -129,7 +129,7 @@ const PlaceholderLink = ({ repo, placeholderDate, children }) => {
         title,
         schema: template,
         templateRepoId: id,
-        publishDate: placeholderDate
+        publishDate: placeholderDate,
       }}
       passHref
     >
@@ -159,7 +159,7 @@ const Repo = withT(({ t, repo, isNewsletter, isPast, placeholderDate }) => {
     id,
     currentPhase,
     meta: { publishDate },
-    latestCommit
+    latestCommit,
   } = repo
   return (
     <RepoLink repo={repo} placeholderDate={placeholderDate}>
@@ -168,7 +168,7 @@ const Repo = withT(({ t, repo, isNewsletter, isPast, placeholderDate }) => {
         {...colorScheme.set('borderColor', isNewsletter ? 'hover' : 'divider')}
         {...colorScheme.set(
           'backgroundColor',
-          isNewsletter ? 'hover' : 'default'
+          isNewsletter ? 'hover' : 'default',
         )}
         style={{ paddingBottom: placeholderDate ? 20 : 5 }}
       >

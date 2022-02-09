@@ -9,11 +9,11 @@ const legendRule = {
   rules: [
     {
       matchMdast: matchType('emphasis'),
-      component: Byline
+      component: Byline,
     },
     linkRule,
-    inlineRules
-  ]
+    inlineRules,
+  ],
 }
 
 export default legendRule

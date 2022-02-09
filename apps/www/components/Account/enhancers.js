@@ -90,23 +90,23 @@ export const query = gql`
 `
 
 export const withMyDetails = graphql(query, {
-  name: 'detailsData'
+  name: 'detailsData',
 })
 
 export const withMyDetailsMutation = graphql(mutation, {
   props: ({ mutate }) => ({
-    updateDetails: variables =>
+    updateDetails: (variables) =>
       mutate({
-        variables
-      })
-  })
+        variables,
+      }),
+  }),
 })
 
 export const withAddMeToRole = graphql(addMeToRole, {
   props: ({ mutate }) => ({
-    addMeToRole: variables =>
+    addMeToRole: (variables) =>
       mutate({
-        variables
-      })
-  })
+        variables,
+      }),
+  }),
 })

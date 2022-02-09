@@ -6,8 +6,8 @@ import { IconButton } from '@project-r/styleguide'
 
 const styles = {
   icons: css({
-    display: 'flex'
-  })
+    display: 'flex',
+  }),
 }
 
 const SocialLinks = () => (

@@ -7,15 +7,15 @@ import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
 import InlineUI from '../../utils/InlineUI'
 import { matchAncestor } from '../../utils/matchers'
 
-export const getSubmodules = options => {
+export const getSubmodules = (options) => {
   const [titleModule, creditsModule] = options.subModules
   return {
     titleModule,
-    creditsModule
+    creditsModule,
   }
 }
 
-const getNewItem = options => {
+const getNewItem = (options) => {
   const [titleModule, creditsModule] = options.subModules
   return () =>
     Block.create({
@@ -24,17 +24,17 @@ const getNewItem = options => {
       nodes: [
         Block.create({
           kind: 'block',
-          type: titleModule.TYPE
+          type: titleModule.TYPE,
         }),
         Block.create({
           kind: 'block',
-          type: creditsModule.TYPE
-        })
-      ]
+          type: creditsModule.TYPE,
+        }),
+      ],
     })
 }
 
-const fromMdast = options => {
+const fromMdast = (options) => {
   const { titleModule, creditsModule } = getSubmodules(options)
   return (node, index, parent, rest) => {
     const title = node.children.filter(titleModule.rule.matchMdast)
@@ -44,8 +44,8 @@ const fromMdast = options => {
       titleModule.helpers.serializer.fromMdast(title)) || [
       {
         kind: 'block',
-        type: titleModule.TYPE
-      }
+        type: titleModule.TYPE,
+      },
     ]
 
     const deserializedCredits =
@@ -54,20 +54,20 @@ const fromMdast = options => {
         : [
             {
               kind: 'block',
-              type: creditsModule.TYPE
-            }
+              type: creditsModule.TYPE,
+            },
           ]
 
     return {
       kind: 'block',
       type: options.TYPE,
       data: node.data,
-      nodes: [...deserializedTitle, ...deserializedCredits]
+      nodes: [...deserializedTitle, ...deserializedCredits],
     }
   }
 }
 
-const toMdast = options => {
+const toMdast = (options) => {
   const { titleModule, creditsModule } = getSubmodules(options)
   return (node, index, parent, rest) => {
     const [title, credits] = node.nodes
@@ -77,26 +77,26 @@ const toMdast = options => {
       identifier: 'LOGBOOK',
       children: [
         titleModule.helpers.serializer.toMdast(title),
-        creditsModule.helpers.serializer.toMdast(credits)
-      ]
+        creditsModule.helpers.serializer.toMdast(credits),
+      ],
     }
   }
 }
 
-export const getSerializer = options => {
+export const getSerializer = (options) => {
   return new MarkdownSerializer({
     rules: [
       {
         match: matchBlock(options.TYPE),
         matchMdast: options.rule.matchMdast,
         fromMdast: fromMdast(options),
-        toMdast: toMdast(options)
-      }
-    ]
+        toMdast: toMdast(options),
+      },
+    ],
   })
 }
 
-export const logbookPlugin = options => {
+export const logbookPlugin = (options) => {
   const { titleModule, creditsModule } = getSubmodules(options)
   const Logbook = options.rule.component
   return {
@@ -122,7 +122,7 @@ export const logbookPlugin = options => {
       const { value } = change
       const logBook = value.document.getClosest(
         value.startBlock.key,
-        matchBlock(options.TYPE)
+        matchBlock(options.TYPE),
       )
       if (!logBook) return
 
@@ -141,29 +141,29 @@ export const logbookPlugin = options => {
           nodes: [
             {
               types: [titleModule.TYPE],
-              min: 1
+              min: 1,
             },
             {
               types: [creditsModule.TYPE],
               min: 1,
-              max: 1
-            }
-          ]
-        }
-      }
-    }
+              max: 1,
+            },
+          ],
+        },
+      },
+    },
   }
 }
 
-export const createLogbookButton = options =>
+export const createLogbookButton = (options) =>
   createBlockButton({
     type: options.TYPE,
-    reducer: props => event => {
+    reducer: (props) => (event) => {
       const { onChange, value } = props
       event.preventDefault()
 
       return onChange(value.change().call(injectBlock, getNewItem(options)()))
-    }
+    },
   })(({ active, disabled, visible, ...props }) => {
     return (
       <span
@@ -178,13 +178,13 @@ export const createLogbookButton = options =>
     )
   })
 
-export default options => ({
+export default (options) => ({
   helpers: {
     serializer: getSerializer(options),
-    newBlock: getNewItem(options)
+    newBlock: getNewItem(options),
   },
   plugins: [logbookPlugin(options)],
   ui: {
-    insertButtons: [createLogbookButton(options)]
-  }
+    insertButtons: [createLogbookButton(options)],
+  },
 })

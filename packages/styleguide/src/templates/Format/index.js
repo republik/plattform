@@ -69,6 +69,10 @@ const createFormatSchema = ({
         key: 'shareBackgroundImageInverted',
       },
       {
+        label: 'Sharetafel Logo',
+        key: 'shareLogo',
+      },
+      {
         label: 'Dossier',
         key: 'dossier',
         ref: 'repo',

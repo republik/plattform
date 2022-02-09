@@ -23,7 +23,7 @@ const styles = {
     whiteSpace: 'nowrap',
     ...sansSerifRegular16,
     [mUp]: {
-      padding: '8px 24px'
+      padding: '8px 24px',
     },
     '&::after': {
       display: 'block',
@@ -33,24 +33,24 @@ const styles = {
       color: 'transparent',
       whiteSpace: 'nowrap',
       visibility: 'hidden',
-      overflow: 'hidden'
+      overflow: 'hidden',
     },
     '&:first-of-type': {
-      paddingLeft: '0px'
+      paddingLeft: '0px',
     },
     '&:last-of-type': {
       paddingRight: '0px',
       [mUp]: {
-        paddingRight: '24px'
-      }
-    }
+        paddingRight: '24px',
+      },
+    },
   }),
   link: css({
-    ...plainLinkRule
+    ...plainLinkRule,
   }),
   active: css({
-    ...sansSerifMedium16
-  })
+    ...sansSerifMedium16,
+  }),
 }
 
 const TabButton = React.forwardRef<
@@ -69,9 +69,9 @@ const TabButton = React.forwardRef<
     return css({
       '@media (hover)': {
         ':hover': {
-          color: colorScheme.getCSSColor('textSoft')
-        }
-      }
+          color: colorScheme.getCSSColor('textSoft'),
+        },
+      },
     })
   }, [colorScheme])
 
@@ -87,7 +87,7 @@ const TabButton = React.forwardRef<
       {...(!isActive && hoverRule)}
       {...colorScheme.set(
         'borderColor',
-        !border ? 'transparent' : isActive ? 'text' : 'divider'
+        !border ? 'transparent' : isActive ? 'text' : 'divider',
       )}
       title={text}
     >

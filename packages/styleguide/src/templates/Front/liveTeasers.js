@@ -21,16 +21,16 @@ const styles = {
     paddingBottom: 10,
     [mUp]: {
       paddingTop: 55,
-      paddingBottom: 55
-    }
-  })
+      paddingBottom: 55,
+    },
+  }),
 }
 
 const LAZYLOADER_DIALOG_HEIGHT = 300
 const LAZYLOADER_MYMAGAZINE_HEIGHT = 210
 
 const DefaultLink = ({ children }) => children
-const withData = Component => props => <Component {...props} data={{}} />
+const withData = (Component) => (props) => <Component {...props} data={{}} />
 const Placeholder = ({ attributes, children, minHeight }) => (
   <div
     attributes={attributes}
@@ -42,7 +42,7 @@ const Placeholder = ({ attributes, children, minHeight }) => (
       minHeight,
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
     }}
   >
     {children}
@@ -58,7 +58,7 @@ const createLiveTeasers = ({
   withDiscussionsData = withData,
   withMyMagazineData = withData,
   ActionBar,
-  showMyMagazine = true
+  showMyMagazine = true,
 }) => {
   const MyMagazineWithData = withMyMagazineData(
     ({
@@ -68,7 +68,7 @@ const createLiveTeasers = ({
       bookmarksLabel,
       notificationsUrl,
       notificationsLabel,
-      placeholder
+      placeholder,
     }) => {
       return (
         <Loader
@@ -95,7 +95,7 @@ const createLiveTeasers = ({
           }}
         />
       )
-    }
+    },
   )
 
   const DiscussionWithData = withDiscussionsData(
@@ -123,10 +123,10 @@ const createLiveTeasers = ({
           }}
         />
       )
-    }
+    },
   )
 
-  const extractRepoIds = children => {
+  const extractRepoIds = (children) => {
     if (!children) {
       return []
     }
@@ -134,23 +134,23 @@ const createLiveTeasers = ({
       (all, node) =>
         all
           .concat(
-            (node.data && node.data.urlMeta && node.data.urlMeta.repoId) || []
+            (node.data && node.data.urlMeta && node.data.urlMeta.repoId) || [],
           )
           .concat(extractRepoIds(node.children)),
-      []
+      [],
     )
   }
 
   return [
     {
-      matchMdast: node =>
+      matchMdast: (node) =>
         matchZone('LIVETEASER')(node) && node.data.id === 'feed',
       props: (node, index, parent) => {
         const priorChildren = parent.children.slice(0, index)
         return {
           lastPublishedAt: parent.lastPublishedAt,
           priorRepoIds: Array.from(new Set(extractRepoIds(priorChildren))),
-          ...node.data
+          ...node.data,
         }
       },
       component: withFeedData(({ attributes, data, url, label }) => {
@@ -163,7 +163,7 @@ const createLiveTeasers = ({
                 return (
                   <div {...styles.feedContainer}>
                     {data.feed &&
-                      data.feed.nodes.map(node => {
+                      data.feed.nodes.map((node) => {
                         const doc = node.entity || node
                         return (
                           <TeaserFeed
@@ -203,35 +203,33 @@ const createLiveTeasers = ({
         insertId: 'feed',
         form: [
           {
-            key: 'label'
+            key: 'label',
           },
           {
-            key: 'url'
+            key: 'url',
           },
           {
             key: 'minPublishDate',
-            note:
-              'Minimales Publikationsdatum des Feeds. Leer lassen für automatisch – ab dem gleichen Tag wie die Front zuletzt publiziert wurde.'
+            note: 'Minimales Publikationsdatum des Feeds. Leer lassen für automatisch – ab dem gleichen Tag wie die Front zuletzt publiziert wurde.',
           },
           {
             key: 'excludeRepoIds',
             ref: 'repoIds',
-            note: 'Vorherige Artikel werden automatisch ausgeschlossen.'
+            note: 'Vorherige Artikel werden automatisch ausgeschlossen.',
           },
           {
             key: 'specificRepoIds',
             ref: 'repoIds',
-            note:
-              'Gewinnt gegen alles aber die Dokumente müssen immer noch im Feed sein.'
-          }
-        ]
-      }
+            note: 'Gewinnt gegen alles aber die Dokumente müssen immer noch im Feed sein.',
+          },
+        ],
+      },
     },
     {
-      matchMdast: node =>
+      matchMdast: (node) =>
         matchZone('LIVETEASER')(node) && node.data.id === 'dialog',
-      props: node => node.data,
-      component: props => {
+      props: (node) => node.data,
+      component: (props) => {
         return (
           <LazyLoad style={{ minHeight: LAZYLOADER_DIALOG_HEIGHT }}>
             <DiscussionWithData {...props} />
@@ -246,38 +244,38 @@ const createLiveTeasers = ({
         insertId: 'dialog',
         form: [
           {
-            key: 'label'
+            key: 'label',
           },
           {
-            key: 'url'
+            key: 'url',
           },
           {
             key: 'lastDays',
-            note: 'Default 3'
+            note: 'Default 3',
           },
           {
             key: 'first',
-            note: 'Anzahl Debatten, default 4'
+            note: 'Anzahl Debatten, default 4',
           },
           {
             key: 'featured',
-            note: 'Anzahl Beiträge, 0 für keine, default 1'
-          }
-        ]
-      }
+            note: 'Anzahl Beiträge, 0 für keine, default 1',
+          },
+        ],
+      },
     },
     {
-      matchMdast: node =>
+      matchMdast: (node) =>
         matchZone('LIVETEASER')(node) && node.data.id === 'mymagazine',
-      props: node => node.data,
-      component: props => {
+      props: (node) => node.data,
+      component: (props) => {
         if (!showMyMagazine) {
           return null
         }
         return (
           <LazyLoad
             style={{
-              minHeight: LAZYLOADER_MYMAGAZINE_HEIGHT
+              minHeight: LAZYLOADER_MYMAGAZINE_HEIGHT,
             }}
           >
             <MyMagazineWithData
@@ -301,27 +299,27 @@ const createLiveTeasers = ({
         insertId: 'mymagazine',
         form: [
           {
-            key: 'title'
+            key: 'title',
           },
           {
-            key: 'bookmarksLabel'
+            key: 'bookmarksLabel',
           },
           {
-            key: 'bookmarksUrl'
+            key: 'bookmarksUrl',
           },
           {
-            key: 'notificationsLabel'
+            key: 'notificationsLabel',
           },
           {
-            key: 'notificationsUrl'
-          }
-        ]
-      }
+            key: 'notificationsUrl',
+          },
+        ],
+      },
     },
     {
-      matchMdast: node =>
+      matchMdast: (node) =>
         matchZone('LIVETEASER')(node) && node.data.id === 'end',
-      props: node => node.data,
+      props: (node) => node.data,
       component: ({ attributes, data, url, label }) => {
         return <Placeholder attributes={attributes}>The End</Placeholder>
       },
@@ -330,9 +328,9 @@ const createLiveTeasers = ({
       editorOptions: {
         type: 'LIVETEASEREND',
         insertButtonText: 'The End',
-        insertId: 'end'
-      }
-    }
+        insertId: 'end',
+      },
+    },
   ]
 }
 

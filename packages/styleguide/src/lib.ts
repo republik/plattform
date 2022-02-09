@@ -142,10 +142,6 @@ export { IconLink as DiscussionIconLink } from './components/Discussion/Internal
 
 export { default as DiscussionCommentsWrapper } from './components/Discussion/DiscussionCommentsWrapper'
 export { CommentNode, BoardComment } from './components/Discussion/Tree'
-// TODO: update to prettier 2.0
-// https://prettier.io/blog/2020/03/21/2.0.0.html
-// https://devblogs.microsoft.com/typescript/announcing-typescript-3-8/#type-only-imports-exports
-// eslint-disable-next-line prettier/prettier
 export type { CommentProps } from './components/Discussion/Tree'
 
 export { DiscussionContext } from './components/Discussion/DiscussionContext'

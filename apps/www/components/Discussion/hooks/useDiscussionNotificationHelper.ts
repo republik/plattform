@@ -4,11 +4,11 @@ import { MARK_NOTIFICATION_AS_READ_MUTATION } from '../../Notifications/enhancer
 import { DiscussionQuery } from '../graphql/queries/DiscussionQuery.graphql'
 
 function useDiscussionNotificationHelper(
-  discussion: DiscussionQuery['discussion']
+  discussion: DiscussionQuery['discussion'],
 ) {
   /* ---- Handle notifications ---- */
   const [markNotificationAsReadMutation] = useMutation<unknown, { id: string }>(
-    MARK_NOTIFICATION_AS_READ_MUTATION
+    MARK_NOTIFICATION_AS_READ_MUTATION,
   )
 
   const markNotificationAsRead = useCallback(() => {
@@ -34,19 +34,19 @@ function useDiscussionNotificationHelper(
 
         // Get all notifications that haven't been read
         const filteredNotifications = notifications.nodes.filter(
-          notification => !notification.readAt
+          (notification) => !notification.readAt,
         )
 
         return [...prev, ...filteredNotifications]
       },
-      []
+      [],
     )
 
-    unreadNotifications.forEach(notification => {
+    unreadNotifications.forEach((notification) => {
       return markNotificationAsReadMutation({
         variables: {
-          id: notification.id
-        }
+          id: notification.id,
+        },
       })
     })
   }, [discussion?.comments, markNotificationAsReadMutation])

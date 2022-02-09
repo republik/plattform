@@ -15,8 +15,8 @@ const DEFAULT_ALLOW_LIST = (SG.DYNAMIC_COMPONENT_BASE_URLS || '')
 
 export const createRequire = (allowList = DEFAULT_ALLOW_LIST) => {
   const allowed = ['/', './'].concat(allowList)
-  return requireFrom(name => {
-    if (allowed.some(base => name.startsWith(base))) {
+  return requireFrom((name) => {
+    if (allowed.some((base) => name.startsWith(base))) {
       return name
     }
     return `./${name}`
@@ -31,8 +31,8 @@ export const createRequire = (allowList = DEFAULT_ALLOW_LIST) => {
       Chart,
       ChartTitle,
       ChartLead,
-      ChartLegend
-    }
+      ChartLegend,
+    },
   })
 }
 
@@ -46,14 +46,14 @@ class DynamicComponent extends Component {
     if (this.props.src) {
       this.props
         .require(this.props.src)
-        .then(module => {
+        .then((module) => {
           this.setState({
             LoadedComponent: module.hasOwnProperty('default')
               ? module['default']
-              : module
+              : module,
           })
         })
-        .catch(error => {
+        .catch((error) => {
           this.setState({ error })
         })
     }
@@ -88,7 +88,7 @@ class DynamicComponent extends Component {
       return (
         <div
           dangerouslySetInnerHTML={{
-            __html: html
+            __html: html,
           }}
         />
       )
@@ -104,12 +104,12 @@ DynamicComponent.propTypes = {
   props: PropTypes.object,
   loaderProps: PropTypes.object,
   require: PropTypes.func.isRequired,
-  identifiers: PropTypes.object.isRequired
+  identifiers: PropTypes.object.isRequired,
 }
 
 DynamicComponent.defaultProps = {
   require: createRequire(),
-  identifiers: {}
+  identifiers: {},
 }
 
 export default DynamicComponent

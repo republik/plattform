@@ -3,11 +3,11 @@ import initApollo from './initApollo'
 import Head from 'next/head'
 import { getDataFromTree } from 'react-apollo'
 
-const WithApolloClient = App => {
+const WithApolloClient = (App) => {
   return class withApolloClient extends React.Component {
-    static displayName = `withApolloClient(${App.displayName ||
-      App.name ||
-      'App'})`
+    static displayName = `withApolloClient(${
+      App.displayName || App.name || 'App'
+    })`
     static async getInitialProps(appCtx) {
       const { ctx, AppTree } = appCtx
 
@@ -21,7 +21,7 @@ const WithApolloClient = App => {
       const headers = !process.browser
         ? {
             accept: ctx.req.headers.accept,
-            userAgent: ctx.req.headers['user-agent']
+            userAgent: ctx.req.headers['user-agent'],
           }
         : undefined
 
@@ -29,7 +29,7 @@ const WithApolloClient = App => {
       // and extract the resulting data
       let apolloState
       if (!process.browser) {
-        const apollo = initApollo(undefined, ctx.req.headers, response => {
+        const apollo = initApollo(undefined, ctx.req.headers, (response) => {
           // headers.raw() is a node-fetch specific API and apparently the only way to get multiple cookies
           // https://github.com/bitinn/node-fetch/issues/251
           const cookies = response.headers.raw()['set-cookie']
@@ -45,7 +45,7 @@ const WithApolloClient = App => {
               apolloClient={apollo}
               headers={headers}
               serverContext={ctx}
-            />
+            />,
           )
         } catch (error) {
           // Prevent Apollo Client GraphQL errors from crashing SSR.
@@ -65,7 +65,7 @@ const WithApolloClient = App => {
       return {
         ...appProps,
         apolloState,
-        headers
+        headers,
       }
     }
 
@@ -81,6 +81,6 @@ const WithApolloClient = App => {
       return <App {...props} apolloClient={this.apolloClient} />
     }
   }
-};
+}
 
-export default WithApolloClient;
+export default WithApolloClient

@@ -33,7 +33,7 @@ const knownTypes = [
   'newsletter',
   'session-denied',
   'token-authorization',
-  'unavailable'
+  'unavailable',
 ]
 
 const AuthNotification = ({ query, goTo, onClose, t, me }) => {
@@ -58,7 +58,7 @@ const AuthNotification = ({ query, goTo, onClose, t, me }) => {
   let title = t.first(
     [`notifications/${type}/${context}/title`, `notifications/${type}/title`],
     undefined,
-    ''
+    '',
   )
   if (!title && !knownTypes.includes(type)) {
     title = t('notifications/unkown/title')
@@ -83,7 +83,7 @@ const AuthNotification = ({ query, goTo, onClose, t, me }) => {
       // Deprecated (superseeded by "newsletter")
       // Workaround to handle "script" replacements in email clients
       'newsletter-subscript-disabledion',
-      'newsletter'
+      'newsletter',
     ].includes(type)
   ) {
     content = (
@@ -128,7 +128,7 @@ const AuthNotification = ({ query, goTo, onClose, t, me }) => {
           <RawHtmlTranslation
             first={[
               `notifications/${type}/${context}/text`,
-              `notifications/${type}/text`
+              `notifications/${type}/text`,
             ]}
             replacements={query}
             missingValue={isUnkownType ? t('notifications/unkown/text') : ''}
@@ -154,7 +154,7 @@ const AuthNotification = ({ query, goTo, onClose, t, me }) => {
         <div
           style={{
             marginTop: 80,
-            marginBottom: 80
+            marginBottom: 80,
           }}
         >
           <Me email={email} />

@@ -7,17 +7,17 @@ export const paragraphStyle = {
   fontSize: '16px',
   lineHeight: '158%',
   margin: '10px 0',
-  fontFamily: fontFamilies.serifRegular
+  fontFamily: fontFamilies.serifRegular,
 }
 
 export const linkStyle = {
   color: colors.text,
   textDecoration: 'underline',
-  textDecorationSkip: 'ink'
+  textDecorationSkip: 'ink',
 }
 
 const strikeThroughStyle = {
-  textDecoration: 'line-through'
+  textDecoration: 'line-through',
 }
 
 const codeStyle = {
@@ -26,13 +26,13 @@ const codeStyle = {
   display: 'inline-block',
   fontFamily: fontFamilies.monospaceRegular,
   fontSize: '14px',
-  padding: '0 5px'
+  padding: '0 5px',
 }
 
 const definitionStyle = {
   fontFamily: fontFamilies.sansSerifRegular,
   fontSize: '15px',
-  margin: '10px 0'
+  margin: '10px 0',
 }
 
 export const Link = ({ children, href, title }) => (

@@ -2,7 +2,7 @@ const defaultMarks = {
   outerOpening: '«',
   outerClosing: '»',
   innerOpening: '‹',
-  innerClosing: '›'
+  innerClosing: '›',
 }
 
 export const inQuotes = (str, marks = defaultMarks) => {

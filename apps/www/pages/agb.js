@@ -111,7 +111,7 @@ Die Betreiberin behält sich vor, die AGB jederzeit ohne Angabe von Gründen zu 
 const TosPage = () => {
   const meta = {
     title: 'AGB',
-    description: ''
+    description: '',
   }
 
   return (

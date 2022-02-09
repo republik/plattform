@@ -9,26 +9,26 @@ export const intersperse = (list, separator) => {
     (items, item, i) => {
       return items.concat([separator(item, i), item])
     },
-    [list[0]]
+    [list[0]],
   )
 }
 
-const findTitleNode = document =>
-  document.children.find(node => node.identifier === 'TITLE')
+const findTitleNode = (document) =>
+  document.children.find((node) => node.identifier === 'TITLE')
 
-export const findTitleLeaf = document => {
+export const findTitleLeaf = (document) => {
   const titleNode = findTitleNode(document)
   if (!titleNode) return
 
   const heading = titleNode.children.find(
-    node => node.type === 'heading' && node.depth === 1
+    (node) => node.type === 'heading' && node.depth === 1,
   )
   if (!heading) return
 
   return heading.children[0]
 }
 
-export const findAuthorsP = document => {
+export const findAuthorsP = (document) => {
   const titleNode = findTitleNode(document)
   if (
     !titleNode ||
@@ -40,7 +40,7 @@ export const findAuthorsP = document => {
   return titleNode.children[3]
 }
 
-export const mdastToString = node =>
+export const mdastToString = (node) =>
   node
     ? node.value ||
       (node.children && node.children.map(mdastToString).join('')) ||
@@ -49,7 +49,7 @@ export const mdastToString = node =>
 
 const pubDateFormat = swissTime.format('%d.%m.%Y')
 
-export const generateAuthorsLine = me =>
+export const generateAuthorsLine = (me) =>
   `Von ${me ? `[${me.name}](/~${me.id})` : '[Autor](<>)'}, ${pubDateFormat(
-    new Date()
+    new Date(),
   )}`

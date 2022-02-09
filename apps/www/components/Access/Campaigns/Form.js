@@ -8,7 +8,7 @@ import {
   InlineSpinner,
   Interaction,
   A,
-  colors
+  colors,
 } from '@project-r/styleguide'
 
 import ErrorMessage from '../../ErrorMessage'
@@ -30,46 +30,46 @@ class Form extends Component {
       showErrors: false,
       values: {},
       errors: {},
-      dirty: {}
+      dirty: {},
     }
 
     this.hasMutated = () => {
       this.setState({
         isMutating: false,
         hideForm: true,
-        values: {}
+        values: {},
       })
     }
 
-    this.catchMutationError = error => {
+    this.catchMutationError = (error) => {
       this.setState({
         isMutating: false,
-        mutationError: error
+        mutationError: error,
       })
     }
 
-    this.onClickReset = event => {
+    this.onClickReset = (event) => {
       event.preventDefault()
 
       this.setState({
         hideForm: false,
         values: {},
         errors: {},
-        dirty: {}
+        dirty: {},
       })
     }
 
     this.grant = () => {
       this.setState({
         isMutating: true,
-        mutationError: false
+        mutationError: false,
       })
 
       return this.props
         .grantAccess({
           campaignId: this.props.campaign.id,
           email: this.state.values.email,
-          message: this.state.values.message
+          message: this.state.values.message,
         })
         .then(this.hasMutated)
         .catch(this.catchMutationError)
@@ -79,18 +79,12 @@ class Form extends Component {
   render() {
     const { campaign, givingMemberships, t } = this.props
 
-    const {
-      isMutating,
-      mutationError,
-      hideForm,
-      values,
-      errors,
-      dirty
-    } = this.state
+    const { isMutating, mutationError, hideForm, values, errors, dirty } =
+      this.state
 
     const isUsed = campaign.slots.used > 0
     const errorMessages = Object.keys(errors)
-      .map(key => errors[key])
+      .map((key) => errors[key])
       .filter(Boolean)
 
     const fields = [
@@ -100,13 +94,13 @@ class Form extends Component {
         label: t('Account/Access/Campaigns/Form/input/email/label'),
         error: dirty.email && errors.email,
         value: values.email,
-        validator: email =>
+        validator: (email) =>
           (email.trim().length <= 0 &&
             this.props.t(
-              'Account/Access/Campaigns/Form/input/email/missing'
+              'Account/Access/Campaigns/Form/input/email/missing',
             )) ||
           (!isEmail(email) &&
-            this.props.t('Account/Access/Campaigns/Form/input/email/invalid'))
+            this.props.t('Account/Access/Campaigns/Form/input/email/invalid')),
       },
       {
         name: 'message',
@@ -114,13 +108,13 @@ class Form extends Component {
         label: t('Account/Access/Campaigns/Form/input/message/label'),
         error: dirty.message && errors.message,
         value: values.message,
-        validator: message =>
+        validator: (message) =>
           message.trim().length > 3000 &&
           this.props.t('Account/Access/Campaigns/Form/input/message/tooLong', {
-            maxLength: 3000
+            maxLength: 3000,
           }),
-        autoSize: true
-      }
+        autoSize: true,
+      },
     ]
 
     return (
@@ -132,7 +126,7 @@ class Form extends Component {
                 {t(
                   `Account/Access/Campaigns/Form${
                     givingMemberships ? '/givingMemberships' : ''
-                  }/reset`
+                  }/reset`,
                 )}
               </A>
             )}
@@ -148,8 +142,8 @@ class Form extends Component {
                   givingMemberships ? '/givingMemberships' : ''
                 }/title`,
                 {
-                  count: campaign.slots.used
-                }
+                  count: campaign.slots.used,
+                },
               )}
             </H3>
             <P>
@@ -159,7 +153,7 @@ class Form extends Component {
                     key={`campaign-form-explanation-${campaign.id}`}
                     href={{
                       pathname: '/abholen',
-                      query: { context: 'access' }
+                      query: { context: 'access' },
                     }}
                     passHref
                   >
@@ -167,14 +161,14 @@ class Form extends Component {
                       {t('Account/Access/Campaigns/Form/explanation/linkClaim')}
                     </A>
                   </Link>
-                )
+                ),
               })}
             </P>
             <FieldSet
               values={values}
               errors={errors}
               dirty={dirty}
-              onChange={fields => {
+              onChange={(fields) => {
                 this.setState(FieldSet.utils.mergeFields(fields))
               }}
               fields={fields}
@@ -195,17 +189,17 @@ class Form extends Component {
             ) : (
               <Button
                 primary
-                onClick={event => {
+                onClick={(event) => {
                   event.preventDefault()
 
                   if (errorMessages.length) {
-                    this.setState(state => ({
+                    this.setState((state) => ({
                       showErrors: true,
                       dirty: {
                         ...state.dirty,
                         email: true,
-                        message: true
-                      }
+                        message: true,
+                      },
                     }))
                     return
                   }
@@ -220,7 +214,7 @@ class Form extends Component {
             {campaign.slots.free > 1 && campaign.slots.free < 10 && (
               <Label>
                 {t.pluralize('Account/Access/Campaigns/Form/freeSlots', {
-                  count: campaign.slots.free
+                  count: campaign.slots.free,
                 })}
               </Label>
             )}

@@ -10,7 +10,7 @@ import { enforceMembership } from '../../components/Auth/withMembership'
 import {
   withQuestionnaire,
   withQuestionnaireMutation,
-  withQuestionnaireReset
+  withQuestionnaireReset,
 } from '../../components/Questionnaire/enhancers'
 import QuestionnaireActions from '../../components/Questionnaire/QuestionnaireActions'
 import Frame from '../../components/Frame'
@@ -19,12 +19,12 @@ import Questionnaire from '../../components/Questionnaire/Questionnaire'
 import {
   userDetailsFragment,
   withAddMeToRole,
-  withMyDetails
+  withMyDetails,
 } from '../../components/Account/enhancers'
 import { errorToString } from '../../lib/utils/errors'
 import {
   DEFAULT_COUNTRY,
-  isEmptyAddress
+  isEmptyAddress,
 } from '../../components/Account/AddressForm'
 import FieldSet from '../../components/FieldSet'
 import { gql } from '@apollo/client'
@@ -35,7 +35,7 @@ import {
   FigureImage,
   Button,
   Meta,
-  Label
+  Label,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
 import NewsletterSignUp from '../../components/Auth/NewsletterSignUp'
@@ -69,11 +69,11 @@ const mutation = gql`
 
 const withMutation = graphql(mutation, {
   props: ({ mutate }) => ({
-    submitForm: variables =>
+    submitForm: (variables) =>
       mutate({
-        variables
-      })
-  })
+        variables,
+      }),
+  }),
 })
 
 const meta = {
@@ -81,18 +81,18 @@ const meta = {
   description: t('questionnaire/crowd/description'),
   image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
   facebookTitle: t('pages/meta/questionnaire/crowd/socialTitle'),
-  twitterTitle: t('pages/meta/questionnaire/crowd/socialTitle')
+  twitterTitle: t('pages/meta/questionnaire/crowd/socialTitle'),
 }
 
 const gifLink = `${CDN_FRONTEND_BASE_URL}/static/social-media/umfrage/crowd/schade.gif`
 
 const styles = {
   intro: css({
-    margin: '35px 0'
-  })
+    margin: '35px 0',
+  }),
 }
 
-const getValues = me => {
+const getValues = (me) => {
   let addressState = {}
   if (me.address) {
     addressState = {
@@ -101,7 +101,7 @@ const getValues = me => {
       line2: me.address.line2,
       postalCode: me.address.postalCode,
       city: me.address.city,
-      country: me.address.country
+      country: me.address.country,
     }
   } else if (me) {
     addressState.name = [me.firstName, me.lastName].filter(Boolean).join(' ')
@@ -110,7 +110,7 @@ const getValues = me => {
 
   return {
     phoneNumber: me.phoneNumber || '',
-    ...addressState
+    ...addressState,
   }
 }
 
@@ -125,12 +125,12 @@ const getMutation = (values, me) => {
           line2: values.line2,
           postalCode: values.postalCode,
           city: values.city,
-          country: values.country
-        }
+          country: values.country,
+        },
   }
 }
 
-const getWillingnessToHelp = questions => {
+const getWillingnessToHelp = (questions) => {
   if (!questions || !questions.length) return
 
   const answer1 = questions[0].userAnswer
@@ -175,7 +175,7 @@ const initState = {
   showErrors: false,
   values: {},
   errors: {},
-  dirty: {}
+  dirty: {},
 }
 
 class QuestionnaireCrowdPage extends Component {
@@ -190,7 +190,7 @@ class QuestionnaireCrowdPage extends Component {
 
   onQuestionnaireChange() {
     const {
-      questionnaireData: { questionnaire }
+      questionnaireData: { questionnaire },
     } = this.props
 
     const willingness = getWillingnessToHelp(questionnaire.questions)
@@ -199,13 +199,13 @@ class QuestionnaireCrowdPage extends Component {
       willingnessStatus: willingness,
       showErrors: isWilling ? this.state.showErrors : false,
       errors: isWilling ? this.state.errors : {},
-      dirty: isWilling ? this.state.dirty : {}
+      dirty: isWilling ? this.state.dirty : {},
     })
   }
 
   processErrors(errorMessages) {
     if (errorMessages.length) {
-      this.setState(state =>
+      this.setState((state) =>
         Object.keys(state.errors).reduce(
           (nextState, key) => {
             nextState.dirty[key] = true
@@ -213,9 +213,9 @@ class QuestionnaireCrowdPage extends Component {
           },
           {
             showErrors: true,
-            dirty: {}
-          }
-        )
+            dirty: {},
+          },
+        ),
       )
       return true
     }
@@ -227,8 +227,8 @@ class QuestionnaireCrowdPage extends Component {
       submitForm,
       submitQuestionnaire,
       questionnaireData: {
-        questionnaire: { id }
-      }
+        questionnaire: { id },
+      },
     } = this.props
 
     const { values, willingnessStatus } = this.state
@@ -254,14 +254,14 @@ class QuestionnaireCrowdPage extends Component {
       .then(() =>
         this.setState(() => ({
           updating: false,
-          serverError: null
-        }))
+          serverError: null,
+        })),
       )
-      .catch(error => {
+      .catch((error) => {
         this.setState(() => ({
           updating: false,
           submitting: false,
-          serverError: errorToString(error)
+          serverError: errorToString(error),
         }))
       })
       .then(() => window.scrollTo(0, 0))
@@ -271,16 +271,16 @@ class QuestionnaireCrowdPage extends Component {
     const {
       resetQuestionnaire,
       questionnaireData: {
-        questionnaire: { id }
+        questionnaire: { id },
       },
-      detailsData: { me }
+      detailsData: { me },
     } = this.props
 
     resetQuestionnaire(id).then(() =>
       this.setState({
         ...initState,
-        values: getValues(me)
-      })
+        values: getValues(me),
+      }),
     )
   }
 
@@ -296,9 +296,9 @@ class QuestionnaireCrowdPage extends Component {
       this.initialised = true
       this.setState(() => ({
         willingnessStatus: getWillingnessToHelp(
-          questionnaireData.questionnaire.questions
+          questionnaireData.questionnaire.questions,
         ),
-        values: getValues(detailsData.me)
+        values: getValues(detailsData.me),
       }))
     }
   }
@@ -320,7 +320,7 @@ class QuestionnaireCrowdPage extends Component {
       dirty,
       errors,
       showErrors,
-      willingnessStatus
+      willingnessStatus,
     } = this.state
 
     const submitted =
@@ -331,7 +331,7 @@ class QuestionnaireCrowdPage extends Component {
     const errorMessages =
       errors &&
       Object.keys(errors)
-        .map(key => errors[key])
+        .map((key) => errors[key])
         .filter(Boolean)
 
     const willingToHelp = willingnessStatus === 'true'
@@ -363,7 +363,7 @@ class QuestionnaireCrowdPage extends Component {
                 values={values}
                 errors={errors}
                 dirty={dirty}
-                onChange={fields => this.onDetailsChange(fields)}
+                onChange={(fields) => this.onDetailsChange(fields)}
                 errorMessages={errorMessages}
                 showErrors={!updating && !!showErrors}
               />
@@ -393,7 +393,7 @@ class QuestionnaireCrowdPage extends Component {
             <ErrorMessage
               style={{
                 marginTop: 100,
-                marginBottom: 20
+                marginBottom: 20,
               }}
             >
               Diese Resultate werden{' '}
@@ -409,7 +409,8 @@ class QuestionnaireCrowdPage extends Component {
 
 export default withDefaultSSR(
   compose(
-    WrappedComponent => props => <WrappedComponent {...props} slug={SLUG} />,
+    (WrappedComponent) => (props) =>
+      <WrappedComponent {...props} slug={SLUG} />,
     withQuestionnaire,
     withMyDetails,
     withMutation,
@@ -417,6 +418,6 @@ export default withDefaultSSR(
     withQuestionnaireReset,
     withAddMeToRole,
     withAuthorization(['supporter', 'editor'], 'showResults'),
-    enforceMembership(meta, { title: t('questionnaire/title'), description })
-  )(QuestionnaireCrowdPage)
+    enforceMembership(meta, { title: t('questionnaire/title'), description }),
+  )(QuestionnaireCrowdPage),
 )

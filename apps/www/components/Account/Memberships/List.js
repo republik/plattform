@@ -19,7 +19,7 @@ const MembershipsList = ({
   error,
   highlightId,
   activeMembership,
-  hasWaitingMemberships
+  hasWaitingMemberships,
 }) => {
   return (
     <Loader
@@ -35,7 +35,7 @@ const MembershipsList = ({
             <AccountSection
               id='abos'
               title={t.pluralize('memberships/title', {
-                count: memberships.length
+                count: memberships.length,
               })}
             >
               {!activeMembership && (
@@ -43,7 +43,7 @@ const MembershipsList = ({
                   <Interaction.P>{t('memberships/noActive')}</Interaction.P>
                 </Box>
               )}
-              {memberships.map(membership => (
+              {memberships.map((membership) => (
                 <Manage
                   key={membership.id}
                   membership={membership}
@@ -70,13 +70,15 @@ export default compose(
           data.me &&
           data.me.memberships &&
           data.me.memberships.filter(
-            m =>
+            (m) =>
               m.pledge.package.group !== 'GIVE' ||
-              (me.id === m.user.id && !m.voucherCode && !m.accessGranted)
+              (me.id === m.user.id && !m.voucherCode && !m.accessGranted),
           )) ||
         []
 
-      const activeMembership = memberships.find(membership => membership.active)
+      const activeMembership = memberships.find(
+        (membership) => membership.active,
+      )
 
       return {
         loading: data.loading,
@@ -84,10 +86,10 @@ export default compose(
         activeMembership,
         memberships,
         hasWaitingMemberships: memberships.some(
-          m => !m.active && !m.periods.length
-        )
+          (m) => !m.active && !m.periods.length,
+        ),
       }
-    }
+    },
   }),
-  withT
+  withT,
 )(MembershipsList)

@@ -12,9 +12,9 @@ const styles = {
     whiteSpace: 'normal',
     [mediaQueries.onlyS]: {
       marginRight: 15,
-      fontSize: 12
-    }
-  })
+      fontSize: 12,
+    },
+  }),
 }
 
 export const Me = ({ me }) => (

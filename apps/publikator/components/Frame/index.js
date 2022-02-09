@@ -15,7 +15,7 @@ css.global('html', { boxSizing: 'border-box' })
 css.global('*, *:before, *:after', { boxSizing: 'inherit' })
 
 css.global('body', {
-  fontFamily: fontFamilies.sansSerifRegular
+  fontFamily: fontFamilies.sansSerifRegular,
 })
 
 const Frame = ({ t, children }) => (

@@ -7,18 +7,20 @@ module.exports = async (_, args, context) => {
 
   const tx = await pgdb.transactionBegin()
   try {
-    const parentMemo = parentId && await loaders.Memo.byId.load(parentId)
+    const parentMemo = parentId && (await loaders.Memo.byId.load(parentId))
 
     const memo = await tx.publikator.memos.insertAndGet({
       ...(id && { id }),
       repoId,
-      parentIds: [...(parentMemo?.parentIds || []), parentMemo?.id].filter(Boolean),
+      parentIds: [...(parentMemo?.parentIds || []), parentMemo?.id].filter(
+        Boolean,
+      ),
       text,
       userId: me.id,
       author: {
         name: me.name,
         email: me.email,
-      }
+      },
     })
 
     await tx.transactionCommit()

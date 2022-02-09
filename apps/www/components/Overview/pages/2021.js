@@ -3,7 +3,7 @@ import { Highlight, A } from '../Elements'
 import Page from '../Page'
 
 const text = {
-  Januar: p => (
+  Januar: (p) => (
     <>
       <Highlight {...p} ids={['dwjY_vk9K']}>
         Gute Nachrichten
@@ -55,7 +55,7 @@ const text = {
       .
     </>
   ),
-  Februar: p => (
+  Februar: (p) => (
     <>
       <Highlight {...p} series='republik/article-auftakt-frauenstimmrecht'>
         Frauenstimmen: der Kampf dagegen, der Kampf dafür und warum sie nicht
@@ -99,7 +99,7 @@ const text = {
       .
     </>
   ),
-  März: p => (
+  März: (p) => (
     <>
       <Highlight {...p} ids={['Czufm6-fz']}>
         Hören Sie das
@@ -151,7 +151,7 @@ const text = {
       ?
     </>
   ),
-  April: p => (
+  April: (p) => (
     <>
       <Highlight {...p} ids={['oqEWDT746']}>
         Eine Luzerner Hackerin gerät ins Visier des FBI
@@ -206,7 +206,7 @@ const text = {
       .
     </>
   ),
-  Mai: p => (
+  Mai: (p) => (
     <>
       <Highlight {...p} ids={['1h5tCFWZw']}>
         Mit einer Bäuerin im Giftschrank
@@ -250,7 +250,7 @@ const text = {
       (vielleicht).
     </>
   ),
-  Juni: p => (
+  Juni: (p) => (
     <>
       <Highlight {...p} ids={['X4TEugfAw']}>
         Herr Drosten, woher kam dieses Virus
@@ -297,7 +297,7 @@ const text = {
       ?
     </>
   ),
-  Juli: p => (
+  Juli: (p) => (
     <>
       Der{' '}
       <Highlight {...p} ids={['LBztxSBiY']}>
@@ -349,7 +349,7 @@ const text = {
       .
     </>
   ),
-  August: p => (
+  August: (p) => (
     <>
       <Highlight {...p} ids={['9W6bPy6lA']}>
         Sollen Flüsse, Berge und Tiere Rechte haben
@@ -390,7 +390,7 @@ const text = {
       (zu Recht?).
     </>
   ),
-  September: p => (
+  September: (p) => (
     <>
       <Highlight {...p} ids={['xKXMaHXDk']}>
         Weder wirklich Wahl noch Kampf in Deutschland
@@ -435,7 +435,7 @@ const text = {
       <A href='https://www.republik.ch/2021/09/27/covid19'>Post um 19 Uhr</A>.
     </>
   ),
-  Oktober: p => (
+  Oktober: (p) => (
     <>
       <Highlight {...p} ids={['M23temriT']}>
         Mit Sexarbeiterinnen reden anstatt über sie
@@ -485,7 +485,7 @@ const text = {
       .
     </>
   ),
-  November: p => (
+  November: (p) => (
     <>
       Über{' '}
       <Highlight {...p} ids={['kxo7a6FCR']}>
@@ -542,7 +542,7 @@ const text = {
       .
     </>
   ),
-  Dezember: p => (
+  Dezember: (p) => (
     <>
       Die{' '}
       <Highlight {...p} ids={['LKlVqoufe']}>
@@ -591,9 +591,9 @@ const text = {
       </Highlight>
       .
     </>
-  )
+  ),
 }
 
-const Overview2021 = props => <Page {...props} year={2021} text={text} />
+const Overview2021 = (props) => <Page {...props} year={2021} text={text} />
 
 export default Overview2021

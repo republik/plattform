@@ -3,12 +3,12 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
-  useState
+  useState,
 } from 'react'
 import {
   CommentNode,
   CommentProps,
-  readDiscussionCommentDraft
+  readDiscussionCommentDraft,
 } from '@project-r/styleguide'
 import { useTranslation } from '../../../lib/withT'
 import CommentLink, { getFocusHref } from '../shared/CommentLink'
@@ -35,7 +35,7 @@ const CommentContainer = ({
   comment,
   isLast,
   isBoard,
-  inRootCommentOverlay
+  inRootCommentOverlay,
 }: Props): ReactElement => {
   const { t } = useTranslation()
   const { me } = useMe()
@@ -44,7 +44,7 @@ const CommentContainer = ({
     id: discussionId,
     discussion,
     fetchMore,
-    overlays: { shareOverlay, featureOverlay }
+    overlays: { shareOverlay, featureOverlay },
   } = useDiscussion()
 
   const parentId = comment.id
@@ -72,8 +72,8 @@ const CommentContainer = ({
         actions: {
           reportCommentHandler,
           unpublishCommentHandler,
-          featureCommentHandler: featureOverlay.handleOpen
-        }
+          featureCommentHandler: featureOverlay.handleOpen,
+        },
       }),
     [
       t,
@@ -82,8 +82,8 @@ const CommentContainer = ({
       me?.roles,
       reportCommentHandler,
       unpublishCommentHandler,
-      featureOverlay.handleOpen
-    ]
+      featureOverlay.handleOpen,
+    ],
   )
 
   const loadRemainingAfter = discussion?.comments?.pageInfo?.endCursor
@@ -98,7 +98,7 @@ const CommentContainer = ({
     return fetchMore({
       discussionId,
       parentId,
-      after: loadRemainingAfter
+      after: loadRemainingAfter,
     })
   }, [discussionId, parentId, loadRemainingAfter, fetchMore, isBoard])
 
@@ -112,7 +112,7 @@ const CommentContainer = ({
           ? () => setIsReplying(true)
           : undefined,
         handleLoadReplies: loadRemainingReplies,
-        handleShare: shareOverlay.shareHandler
+        handleShare: shareOverlay.shareHandler,
       }}
       voteActions={{
         handleUpVote: voteHandlers.upVoteCommentHandler,

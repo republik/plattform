@@ -22,18 +22,18 @@ app.prepare().then(() => {
       hsts: {
         maxAge: 60 * 60 * 24 * 365, // 1 year to get preload approval
         preload: true,
-        includeSubDomains: true
+        includeSubDomains: true,
       },
       referrerPolicy: {
-        policy: 'no-referrer'
+        policy: 'no-referrer',
       },
       contentSecurityPolicy: {
         directives: {
-          'frame-ancestors': ["'self'", ...CSP_FRAME_ANCESTORS].filter(Boolean)
-        }
+          'frame-ancestors': ["'self'", ...CSP_FRAME_ANCESTORS].filter(Boolean),
+        },
       },
-      frameguard: false // Depreacted in helmet@4, due lack of implementation
-    })
+      frameguard: false, // Depreacted in helmet@4, due lack of implementation
+    }),
   )
 
   if (!DEV) {
@@ -51,10 +51,10 @@ app.prepare().then(() => {
   if (process.env.BASIC_AUTH_PASS) {
     const opts = {
       users: {
-        [process.env.BASIC_AUTH_USER]: process.env.BASIC_AUTH_PASS
+        [process.env.BASIC_AUTH_USER]: process.env.BASIC_AUTH_PASS,
       },
       challenge: true,
-      realm: process.env.BASIC_AUTH_REALM
+      realm: process.env.BASIC_AUTH_REALM,
     }
 
     server.use(basicAuth(opts))

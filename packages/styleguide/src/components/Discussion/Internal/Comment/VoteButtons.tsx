@@ -11,23 +11,23 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginLeft: 'auto'
+    marginLeft: 'auto',
   }),
   vote: css({
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   }),
   voteNumber: css({
     ...fontStyles.sansSerifMedium14,
-    fontFeatureSettings: '"tnum" 1'
+    fontFeatureSettings: '"tnum" 1',
   }),
   voteDivider: css({
-    padding: '0 2px'
+    padding: '0 2px',
   }),
   voteButton: css({
-    margin: 0
-  })
+    margin: 0,
+  }),
 }
 
 type Props = {
@@ -45,7 +45,7 @@ export const VoteButtons = ({
   disabled = false,
   handleUpVote,
   handleDownVote,
-  handleUnVote
+  handleUnVote,
 }: Props) => {
   const [colorScheme] = useColorContext()
 
@@ -68,7 +68,7 @@ export const VoteButtons = ({
         <span
           {...styles.voteNumber}
           title={t.pluralize('styleguide/CommentActions/upvote/count', {
-            count: comment.upVotes
+            count: comment.upVotes,
           })}
         >
           {comment.upVotes}
@@ -81,7 +81,7 @@ export const VoteButtons = ({
         <span
           {...styles.voteNumber}
           title={t.pluralize('styleguide/CommentActions/downvote/count', {
-            count: comment.downVotes
+            count: comment.downVotes,
           })}
         >
           {comment.downVotes}

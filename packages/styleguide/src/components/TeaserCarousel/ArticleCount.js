@@ -30,12 +30,12 @@ const styles = {
     position: 'relative',
     margin: '10px auto',
     width: ICON_SIZE,
-    height: ICON_SIZE
+    height: ICON_SIZE,
   }),
   icon: css({
     position: 'absolute',
     top: 0,
-    left: 0
+    left: 0,
   }),
   count: css({
     position: 'absolute',
@@ -46,8 +46,8 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    ...sansSerifMedium16
-  })
+    ...sansSerifMedium16,
+  }),
 }
 
 const ArticleCount = ({ count, bgColor, color: textColor }) => {
@@ -67,5 +67,5 @@ export default ArticleCount
 ArticleCount.propTypes = {
   bgColor: PropTypes.string,
   color: PropTypes.string,
-  count: PropTypes.number
+  count: PropTypes.number,
 }

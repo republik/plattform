@@ -5,7 +5,7 @@ import {
   mediaQueries,
   Interaction,
   useColorContext,
-  ColorContextProvider
+  ColorContextProvider,
 } from '@project-r/styleguide'
 import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../constants'
 import TrialForm from '../Trial/Form'
@@ -38,16 +38,16 @@ const styles = {
   trialformsection: css({
     paddingTop: HEADER_HEIGHT_MOBILE,
     [mediaQueries.mUp]: {
-      paddingTop: HEADER_HEIGHT
-    }
+      paddingTop: HEADER_HEIGHT,
+    },
   }),
   container: css({
     padding: '15px 15px 30px 15px',
     display: 'flex',
     maxWidth: 600,
     margin: '0 auto',
-    flexDirection: 'column'
-  })
+    flexDirection: 'column',
+  }),
 }
 
 const WrappedMarketingTrialForm = ({ ...props }) => (

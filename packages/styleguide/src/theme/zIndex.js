@@ -3,5 +3,5 @@ export default {
   frontImage: 1,
   callout: 20,
   overlay: 50,
-  foreground: 100
+  foreground: 100,
 }

@@ -10,9 +10,9 @@ const styles = {
     ...convertStyleToRem(serifRegular17),
     margin: '0 0 5px 0',
     [mUp]: {
-      ...convertStyleToRem(serifRegular19)
-    }
-  })
+      ...convertStyleToRem(serifRegular19),
+    },
+  }),
 }
 
 const Lead = ({ children }) => {
@@ -20,7 +20,7 @@ const Lead = ({ children }) => {
 }
 
 Lead.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
 }
 
 export default Lead

@@ -5,47 +5,47 @@ export const getParams = ({ /* alias, */ userId, orderId, amount, sha }) => {
   const params = [
     {
       key: 'PSPID',
-      value: PF_PSPID
+      value: PF_PSPID,
     },
     {
       key: 'ORDERID',
-      value: orderId || ''
+      value: orderId || '',
     },
     {
       key: 'AMOUNT',
-      value: amount || ''
+      value: amount || '',
     },
     {
       key: 'CURRENCY',
-      value: 'CHF'
+      value: 'CHF',
     },
     {
       key: 'LANGUAGE',
-      value: 'de_DE'
+      value: 'de_DE',
     },
     {
       key: 'PM',
-      value: 'PostFinance Card'
+      value: 'PostFinance Card',
     },
     {
       key: 'BRAND',
-      value: 'PostFinance Card'
+      value: 'PostFinance Card',
     },
     {
       key: 'ACCEPTURL',
-      value: `${PUBLIC_BASE_URL}/angebote`
+      value: `${PUBLIC_BASE_URL}/angebote`,
     },
     {
       key: 'EXCEPTIONURL',
-      value: `${PUBLIC_BASE_URL}/angebote`
+      value: `${PUBLIC_BASE_URL}/angebote`,
     },
     {
       key: 'DECLINEURL',
-      value: `${PUBLIC_BASE_URL}/angebote`
+      value: `${PUBLIC_BASE_URL}/angebote`,
     },
     {
       key: 'CANCELURL',
-      value: `${PUBLIC_BASE_URL}/angebote`
+      value: `${PUBLIC_BASE_URL}/angebote`,
     },
     // {
     //   key: 'ALIAS',
@@ -53,8 +53,8 @@ export const getParams = ({ /* alias, */ userId, orderId, amount, sha }) => {
     // },
     {
       key: 'USERID',
-      value: userId || ''
-    }
+      value: userId || '',
+    },
     // , {
     //   key: 'ALIASUSAGE',
     //   value: 'membership'
@@ -65,7 +65,7 @@ export const getParams = ({ /* alias, */ userId, orderId, amount, sha }) => {
 
   params.push({
     key: 'SHASIGN',
-    value: sha
+    value: sha,
   })
 
   return params
