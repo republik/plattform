@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  # Used to prevent ESLint error in Styleguide due to 
+  # react-scripts requiring a different eslint version.
+  SKIP_PREFLIGHT_CHECK: true
+
 jobs:
   build:
 
