@@ -1,13 +1,12 @@
 module.exports = {
-  plugins: ['react', 'react-hooks', 'prettier'],
-  extends: [
-    'eslint:recommended',
-    'plugin:react/recommended',
-    'plugin:prettier/recommended',
-  ],
+  plugins: ['react', 'react-hooks'],
+  extends: ['eslint:recommended', 'plugin:react/recommended'],
   parser: '@babel/eslint-parser',
   parserOptions: {
     requireConfigFile: false,
+    babelOptions: {
+      presets: ['@babel/preset-react'],
+    },
   },
   env: {
     browser: true,
