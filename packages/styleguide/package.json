@@ -63,7 +63,6 @@
     "jest": "24.9.0",
     "lodash": "^4.17.21",
     "mdast-react-render": "^1.1.0",
-    "prettier": "^1.19.1",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-autocomplete": "^1.4.1",
