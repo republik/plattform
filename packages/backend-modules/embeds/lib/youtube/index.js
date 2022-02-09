@@ -100,7 +100,8 @@ const getYoutubeVideoById = async (id) => {
 
 module.exports = {
   TYPE: 'YoutubeEmbed',
-  REGEX: /^http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-_]*)(&[^\s]*)*/,
+  REGEX:
+    /^http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-_]*)(&[^\s]*)*/,
   get: getYoutubeVideoById,
   // manually keep in sync with backend-modules/packages/documents/lib/process.js
   // until embeds are in their own module

@@ -24,19 +24,16 @@ const suggest = async (membershipId, pgdb) => {
   }
 
   // load a bunch of stuff we'r going to need later
-  const [
-    membershipPeriods,
-    relatedPledgeOptions,
-    membershipTypes,
-  ] = await Promise.all([
-    pgdb.public.membershipPeriods.find({
-      membershipId: membership.id,
-    }),
-    pgdb.public.pledgeOptions.find({
-      or: [{ membershipId }, { pledgeId: membership.pledgeId }],
-    }),
-    pgdb.public.membershipTypes.findAll(),
-  ])
+  const [membershipPeriods, relatedPledgeOptions, membershipTypes] =
+    await Promise.all([
+      pgdb.public.membershipPeriods.find({
+        membershipId: membership.id,
+      }),
+      pgdb.public.pledgeOptions.find({
+        or: [{ membershipId }, { pledgeId: membership.pledgeId }],
+      }),
+      pgdb.public.membershipTypes.findAll(),
+    ])
 
   if (relatedPledgeOptions.length < 1) {
     return false
@@ -181,13 +178,8 @@ const prolong = async (membershipId, pgdb, redis, t) => {
     // paymentMethod takes precedence over source
     // func suggest above expects this order
     if (suggestion.defaultPaymentMethod) {
-      const {
-        userId,
-        companyId,
-        defaultPaymentMethod,
-        total,
-        pledgeId,
-      } = suggestion
+      const { userId, companyId, defaultPaymentMethod, total, pledgeId } =
+        suggestion
       const paymentIntent = await createPaymentIntent({
         userId,
         companyId,

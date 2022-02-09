@@ -19,8 +19,8 @@ const styles = {
     cursor: 'pointer',
     padding: 0,
     margin: '0 auto 0',
-    display: 'block'
-  })
+    display: 'block',
+  }),
 }
 
 const LatestComments = ({ t, data, fetchMore }) => {
@@ -39,7 +39,7 @@ const LatestComments = ({ t, data, fetchMore }) => {
             currentCount={comments.nodes.length}
             loadMoreKey={'feed/loadMore/comments'}
           >
-            {comments.nodes.map(node => {
+            {comments.nodes.map((node) => {
               const {
                 id,
                 discussion,
@@ -48,7 +48,7 @@ const LatestComments = ({ t, data, fetchMore }) => {
                 createdAt,
                 updatedAt,
                 tags,
-                parentIds
+                parentIds,
               } = node
               const meta =
                 (discussion &&

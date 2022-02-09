@@ -10,11 +10,11 @@ export const tableEditorSchema = ({ defaults, chartSizes }) => {
             size: {
               title: 'Darstellung im Beitrag',
               type: 'string',
-              enum: chartSizes
-            }
-          }
-        }
-      }
-    }
+              enum: chartSizes,
+            },
+          },
+        },
+      },
+    },
   }
 }

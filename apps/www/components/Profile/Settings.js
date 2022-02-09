@@ -57,8 +57,8 @@ export const ListedCheckbox = withT(({ user, values, onChange, t }) => (
       onChange={(_, checked) => {
         onChange({
           values: {
-            isListed: checked
-          }
+            isListed: checked,
+          },
         })
       }}
     >
@@ -71,7 +71,7 @@ export const ListedCheckbox = withT(({ user, values, onChange, t }) => (
           <Link key='communityLink' href='/community' passHref>
             <A target='_blank'>{t('profile/settings/privacy/communityLink')}</A>
           </Link>
-        )
+        ),
       })}
     </Label>
   </div>
@@ -85,8 +85,8 @@ export const PublicCheckbox = withT(({ user, values, onChange, t }) => (
       onChange={(_, checked) => {
         onChange({
           values: {
-            hasPublicProfile: checked
-          }
+            hasPublicProfile: checked,
+          },
         })
       }}
     >

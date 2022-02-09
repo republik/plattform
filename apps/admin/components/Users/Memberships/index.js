@@ -25,11 +25,10 @@ import {
   SectionTitle,
   DL,
   DT,
-  DD
+  DD,
 } from '../../Display/utils'
 import { tableStyles } from '../../Tables/utils'
 import { Link } from '../../../server/routes'
-
 
 import { REPUBLIK_FRONTEND_URL } from '../../../server/constants'
 
@@ -45,8 +44,8 @@ const styles = {
   icon: css({
     verticalAlign: 'baseline',
     marginRight: 3,
-    marginBottom: '-0.2em'
-  })
+    marginBottom: '-0.2em',
+  }),
 }
 
 const GET_MEMBERSHIPS = gql`
@@ -137,7 +136,6 @@ const getState = (membership) => {
   return 'aktiv'
 }
 
-
 const SET_AUTO_PAY = gql`
   mutation setMembershipAutoPay($id: ID!, $autoPay: Boolean!) {
     setMembershipAutoPay(id: $id, autoPay: $autoPay) {
@@ -148,60 +146,56 @@ const SET_AUTO_PAY = gql`
 `
 
 const autoPayOptions = [
-  {value: 'true', text: 'Yes'},
-  {value: 'false', text: 'No'}
+  { value: 'true', text: 'Yes' },
+  { value: 'false', text: 'No' },
 ]
 
 const AutoPayToggle = (membership) => {
-
-  if (!membership.autoPayIsMutable) return (
-    <React.Fragment>
-      <DT>
-        Automatisch abbuchen
-      </DT>
-      <DD>
-        { membership.autoPay ? 'YES' : 'NO' }
-      </DD>
-    </React.Fragment>
-  )
+  if (!membership.autoPayIsMutable)
+    return (
+      <React.Fragment>
+        <DT>Automatisch abbuchen</DT>
+        <DD>{membership.autoPay ? 'YES' : 'NO'}</DD>
+      </React.Fragment>
+    )
 
   // Currently the dropdown component only supports string values
-  const autoPayAsString = membership.autoPay ? 'true' : 'false';
+  const autoPayAsString = membership.autoPay ? 'true' : 'false'
 
   return (
     <Mutation mutation={SET_AUTO_PAY}>
-      {(mutation, {loading, error}) => {
-
+      {(mutation, { loading, error }) => {
         return (
           <React.Fragment>
             <DT>
               Automatisch abbuchen
               {error && (
                 <React.Fragment>
-                  <br/>
-                  <span style={{color: colors.error}}>
-                    {error.message}
-                  </span>
+                  <br />
+                  <span style={{ color: colors.error }}>{error.message}</span>
                 </React.Fragment>
               )}
             </DT>
-            <DD style={{
-              position: 'relative',
-              pointerEvents: loading ? 'none' : 'auto'
-            }}
+            <DD
+              style={{
+                position: 'relative',
+                pointerEvents: loading ? 'none' : 'auto',
+              }}
             >
-              { loading && (<Spinner/>) }
+              {loading && <Spinner />}
               <Dropdown
                 black
                 label=''
                 items={autoPayOptions}
                 value={autoPayAsString}
-                onChange={(item) => mutation({
-                  variables: {
-                    id: membership.id,
-                    autoPay: item.value === 'true'
-                  }
-                })}
+                onChange={(item) =>
+                  mutation({
+                    variables: {
+                      id: membership.id,
+                      autoPay: item.value === 'true',
+                    },
+                  })
+                }
               />
             </DD>
           </React.Fragment>
@@ -212,23 +206,16 @@ const AutoPayToggle = (membership) => {
 }
 
 const MembershipCard = ({ membership, ...props }) => {
-
   return (
     <tr {...tableStyles.row} {...props}>
       <td {...tableStyles.paddedCell}>
-        {membership.type.name.split('_').join(' ')} #
-        {membership.sequenceNumber}{' '}
+        {membership.type.name.split('_').join(' ')} #{membership.sequenceNumber}{' '}
         <br />
-        <Label>
-          Erstellt am{' '}
-          {displayDateTime(membership.createdAt)}
-        </Label>
+        <Label>Erstellt am {displayDateTime(membership.createdAt)}</Label>
         <br />
         <Label>ID: {membership.id}</Label>
       </td>
-      <td {...tableStyles.paddedCell}>
-        {getState(membership)}
-      </td>
+      <td {...tableStyles.paddedCell}>{getState(membership)}</td>
     </tr>
   )
 }
@@ -239,7 +226,7 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
       <td {...tableStyles.paddedCell} colSpan={2}>
         <div {...displayStyles.hFlexBox}>
           <DL>
-            <AutoPayToggle {... membership}></AutoPayToggle>
+            <AutoPayToggle {...membership}></AutoPayToggle>
             {!!membership.voucherCode && (
               <Fragment>
                 <DT>Voucher Code</DT>
@@ -252,9 +239,10 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                 <DD>
                   <Link
                     route='user'
-                    params={{userId: membership.pledge.user.id}}
-                    passHref>
-                      <A>{membership.pledge.user.name}</A>
+                    params={{ userId: membership.pledge.user.id }}
+                    passHref
+                  >
+                    <A>{membership.pledge.user.name}</A>
                   </Link>
                 </DD>
               </Fragment>
@@ -269,8 +257,7 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
               <Fragment>
                 <DT>Standard-Laufzeit</DT>
                 <DD>
-                  {membership.initialPeriods}{' '}
-                  {membership.initialInterval}
+                  {membership.initialPeriods} {membership.initialInterval}
                 </DD>
               </Fragment>
             )}
@@ -279,143 +266,169 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                 <DT>Laufzeiten</DT>
                 {membership.periods.map((period) => (
                   <DD key={`period-${period.id}`}>
-                    {displayDate(new Date(period.beginDate))} – {displayDate(new Date(period.endDate))}
-                    {period.isCurrent && <CurrentIcon size='1.1em' {...styles.icon} />}
+                    {displayDate(new Date(period.beginDate))} –{' '}
+                    {displayDate(new Date(period.endDate))}
+                    {period.isCurrent && (
+                      <CurrentIcon size='1.1em' {...styles.icon} />
+                    )}
                   </DD>
                 ))}
               </Fragment>
             )}
           </DL>
-          </div>
-          {!!membership.cancellations && !!membership.cancellations.length &&
-             <DL>
-              <hr />
-              <DT>Kündigungen</DT>
-              {membership.cancellations.map((cancellation, i) => (
-                <Fragment key={`cancellation-${i}`}>
-                  <div {...displayStyles.hFlexBox} >
-                    <DL>
-                      <DT>Gekündigt am</DT>
-                      <DD>{displayDateTime(cancellation.createdAt)}</DD>
-                    </DL>
-                    <DL>
-                      <DT>Grund</DT>
-                      <DD>{cancellation.category.label}</DD>
-                    </DL>
-                    <DL>
-                      <DT>keine Bestätigung</DT>
-                      <DD>
-                        <Checkbox
-                         checked={cancellation.suppressConfirmation}
-                         disabled={true}
-                        />
-                      </DD>
-                    </DL>
-                    <DL>
-                      <DT>kein Winback</DT>
-                      <DD>
-                        <Checkbox
-                         checked={cancellation.suppressWinback}
-                         disabled={true}
-                        />
-                      </DD>
-                    </DL>
-                    <DL>
-                      <DT>via Support</DT>
-                      <DD>
-                        <Checkbox
-                         checked={cancellation.cancelledViaSupport}
-                         disabled={true}
-                        />
-                      </DD>
-                    </DL>
-                 </div>
-                 <div {...displayStyles.hFlexBox}>
-                   <DL>
-                     {cancellation.reason &&
-                       <Fragment>
-                         <DT>Erläuterungen</DT>
-                         <DD>{cancellation.reason}</DD>
-                       </Fragment>
-                     }
-                   </DL>
-                 </div>
-                 <div {...displayStyles.hFlexBox}>
-                   {cancellation.winbackSentAt &&
-                     <DL>
-                       <DT>Winback verschickt am</DT>
-                       <DD>{displayDateTime(cancellation.winbackSentAt)}</DD>
-                     </DL>
-                   }
-                   {cancellation.revokedAt &&
-                     <DL>
-                       <DT>Zurückgezogen am</DT>
-                       <DD>{displayDateTime(cancellation.revokedAt)}</DD>
-                     </DL>
-                   }
-                 </div>
-                 <div {...displayStyles.hFlexBox}>
-                   <DL>
-                     <DT>Kündigungs Aktionen</DT>
-                     <DD>
-                       <CancelMembership
-                         membership={membership}
-                         cancellation={cancellation}
-                         refetchQueries={() => [{
-                          query: GET_MEMBERSHIPS,
-                          variables: { userId }
-                        }]}
-                       />
-                     </DD>
-                   </DL>
-                 </div>
-               </Fragment>
-              ))}
-             </DL>}
+        </div>
+        {!!membership.cancellations && !!membership.cancellations.length && (
           <DL>
-            <DT>Membership Aktionen</DT>
-            <DD>
-                {intersperse([
-                  membership.canAppendPeriod && <AppendPeriod key='AppendPeriod' membership={membership}></AppendPeriod>,
-                  <MoveMembership
-                    key='MoveMembership'
+            <hr />
+            <DT>Kündigungen</DT>
+            {membership.cancellations.map((cancellation, i) => (
+              <Fragment key={`cancellation-${i}`}>
+                <div {...displayStyles.hFlexBox}>
+                  <DL>
+                    <DT>Gekündigt am</DT>
+                    <DD>{displayDateTime(cancellation.createdAt)}</DD>
+                  </DL>
+                  <DL>
+                    <DT>Grund</DT>
+                    <DD>{cancellation.category.label}</DD>
+                  </DL>
+                  <DL>
+                    <DT>keine Bestätigung</DT>
+                    <DD>
+                      <Checkbox
+                        checked={cancellation.suppressConfirmation}
+                        disabled={true}
+                      />
+                    </DD>
+                  </DL>
+                  <DL>
+                    <DT>kein Winback</DT>
+                    <DD>
+                      <Checkbox
+                        checked={cancellation.suppressWinback}
+                        disabled={true}
+                      />
+                    </DD>
+                  </DL>
+                  <DL>
+                    <DT>via Support</DT>
+                    <DD>
+                      <Checkbox
+                        checked={cancellation.cancelledViaSupport}
+                        disabled={true}
+                      />
+                    </DD>
+                  </DL>
+                </div>
+                <div {...displayStyles.hFlexBox}>
+                  <DL>
+                    {cancellation.reason && (
+                      <Fragment>
+                        <DT>Erläuterungen</DT>
+                        <DD>{cancellation.reason}</DD>
+                      </Fragment>
+                    )}
+                  </DL>
+                </div>
+                <div {...displayStyles.hFlexBox}>
+                  {cancellation.winbackSentAt && (
+                    <DL>
+                      <DT>Winback verschickt am</DT>
+                      <DD>{displayDateTime(cancellation.winbackSentAt)}</DD>
+                    </DL>
+                  )}
+                  {cancellation.revokedAt && (
+                    <DL>
+                      <DT>Zurückgezogen am</DT>
+                      <DD>{displayDateTime(cancellation.revokedAt)}</DD>
+                    </DL>
+                  )}
+                </div>
+                <div {...displayStyles.hFlexBox}>
+                  <DL>
+                    <DT>Kündigungs Aktionen</DT>
+                    <DD>
+                      <CancelMembership
+                        membership={membership}
+                        cancellation={cancellation}
+                        refetchQueries={() => [
+                          {
+                            query: GET_MEMBERSHIPS,
+                            variables: { userId },
+                          },
+                        ]}
+                      />
+                    </DD>
+                  </DL>
+                </div>
+              </Fragment>
+            ))}
+          </DL>
+        )}
+        <DL>
+          <DT>Membership Aktionen</DT>
+          <DD>
+            {intersperse(
+              [
+                membership.canAppendPeriod && (
+                  <AppendPeriod
+                    key='AppendPeriod'
                     membership={membership}
-                    refetchQueries={() => [{
+                  ></AppendPeriod>
+                ),
+                <MoveMembership
+                  key='MoveMembership'
+                  membership={membership}
+                  refetchQueries={() => [
+                    {
                       query: GET_MEMBERSHIPS,
-                      variables: { userId }
-                    }]}
-                  />,
-                  !!membership.renew &&
-                    <CancelMembership
-                      key='CancelMembership'
-                      membership={membership}
-                      refetchQueries={() => [{
+                      variables: { userId },
+                    },
+                  ]}
+                />,
+                !!membership.renew && (
+                  <CancelMembership
+                    key='CancelMembership'
+                    membership={membership}
+                    refetchQueries={() => [
+                      {
                         query: GET_MEMBERSHIPS,
-                        variables: { userId }
-                      }]}
-                    />,
-                  !membership.renew &&
-                  (membership.active || membership.type.name === 'MONTHLY_ABO') &&
+                        variables: { userId },
+                      },
+                    ]}
+                  />
+                ),
+                !membership.renew &&
+                  (membership.active ||
+                    membership.type.name === 'MONTHLY_ABO') && (
                     <ReactivateMembership
                       key='ReactivateMembership'
                       membership={membership}
-                      refetchQueries={() => [{
-                        query: GET_MEMBERSHIPS,
-                        variables: { userId }
-                      }]}
-                    />,
-                  membership.canReset &&
-                    <ResetMembership
-                      key='ResetMembership'
-                      membership={membership}
-                      refetchQueries={() => [{
-                        query: GET_MEMBERSHIPS,
-                        variables: { userId }
-                      }]}
+                      refetchQueries={() => [
+                        {
+                          query: GET_MEMBERSHIPS,
+                          variables: { userId },
+                        },
+                      ]}
                     />
-                ].filter(Boolean), () => ', ')}
-            </DD>
-          </DL>
+                  ),
+                membership.canReset && (
+                  <ResetMembership
+                    key='ResetMembership'
+                    membership={membership}
+                    refetchQueries={() => [
+                      {
+                        query: GET_MEMBERSHIPS,
+                        variables: { userId },
+                      },
+                    ]}
+                  />
+                ),
+              ].filter(Boolean),
+              () => ', ',
+            )}
+          </DD>
+        </DL>
       </td>
     </tr>
   )
@@ -423,21 +436,17 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
 
 const Index = ({ userId }) => {
   return (
-    <Query
-      query={GET_MEMBERSHIPS}
-      variables={{ userId }}
-    >
+    <Query query={GET_MEMBERSHIPS} variables={{ userId }}>
       {({ loading, error, data }) => {
         const isInitialLoading =
-          loading &&
-          !(data && data.user && data.user.memberships)
+          loading && !(data && data.user && data.user.memberships)
         return (
           <Loader
             loading={isInitialLoading}
             error={isInitialLoading && error}
             render={() => {
               const {
-                user: { memberships, accessToken }
+                user: { memberships, accessToken },
               } = data
               return (
                 <Section>
@@ -445,7 +454,7 @@ const Index = ({ userId }) => {
                   <div style={{ marginBottom: 20 }}>
                     <A
                       href={`${REPUBLIK_FRONTEND_URL}/angebote?package=PROLONG&token=${accessToken}`}
-                      target="_blank"
+                      target='_blank'
                     >
                       Verlängerungs-Link ohne Anmelden
                     </A>
@@ -458,12 +467,9 @@ const Index = ({ userId }) => {
                       <col style={{ width: '50%' }} />
                     </colgroup>
                     <tbody>
-                      {memberships.map(m => (
+                      {memberships.map((m) => (
                         <Fragment key={m.id}>
-                          <MembershipCard
-                            key={`card-${m.id}`}
-                            membership={m}
-                          />
+                          <MembershipCard key={`card-${m.id}`} membership={m} />
                           <MembershipDetails
                             key={`details-${m.id}`}
                             userId={userId}
@@ -481,6 +487,6 @@ const Index = ({ userId }) => {
       }}
     </Query>
   )
-};
+}
 
-export default Index;
+export default Index

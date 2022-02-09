@@ -7,22 +7,22 @@ import createParagraphModule from '../paragraph'
 const linkModule = createLinkModule({
   TYPE: 'LINK',
   rule: {
-    matchMdast: node => node.type === 'link'
+    matchMdast: (node) => node.type === 'link',
   },
-  subModules: []
+  subModules: [],
 })
 linkModule.name = 'link'
 
 const paragraphModule = createParagraphModule({
   TYPE: 'PARAGRAPH',
   rule: {},
-  subModules: [linkModule]
+  subModules: [linkModule],
 })
 paragraphModule.name = 'paragraph'
 
 const serializer = paragraphModule.helpers.serializer
 
-test('link serialization', assert => {
+test('link serialization', (assert) => {
   const value = serializer.deserialize(parse('[Test](example.com)'))
   const node = value.document.nodes.first()
 
@@ -30,14 +30,14 @@ test('link serialization', assert => {
   assert.equal(node.type, 'PARAGRAPH')
   assert.equal(node.text, 'Test')
 
-  const link = node.nodes.find(node => node.type === 'LINK')
+  const link = node.nodes.find((node) => node.type === 'LINK')
   assert.ok(link)
 
   assert.equal(link.getIn(['data', 'href']), 'example.com')
 
   assert.equal(
     stringify(serializer.serialize(value)).trimRight(),
-    '[Test](example.com)'
+    '[Test](example.com)',
   )
   assert.end()
 })

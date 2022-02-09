@@ -9,18 +9,18 @@ import withT from '../../../../lib/withT'
 import UIForm from '../../UIForm'
 
 export default withT(({ t, editor, node, onInputChange }) => {
-  const audioCoverAnchors = [null, 'middle'].map(value => ({
+  const audioCoverAnchors = [null, 'middle'].map((value) => ({
     value,
-    text: t(`metaData/audio/cover/anchor/${value}`)
+    text: t(`metaData/audio/cover/anchor/${value}`),
   }))
 
-  const onChange = key => newValue => {
-    editor.change(change => {
+  const onChange = (key) => (newValue) => {
+    editor.change((change) => {
       change.setNodeByKey(node.key, {
         data:
           newValue !== null
             ? node.data.set(key, newValue)
-            : node.data.remove(key)
+            : node.data.remove(key),
       })
     })
   }
@@ -28,9 +28,9 @@ export default withT(({ t, editor, node, onInputChange }) => {
   const audioCover = node.data.get('audioCover')
 
   const audioSourceKeys = Set(['audioSourceMp3', 'audioSourceAac'])
-  const audioDefaultValues = Map(audioSourceKeys.map(key => [key, '']))
+  const audioDefaultValues = Map(audioSourceKeys.map((key) => [key, '']))
   const audioSourceData = audioDefaultValues.merge(
-    node.data.filter((_, key) => audioSourceKeys.has(key))
+    node.data.filter((_, key) => audioSourceKeys.has(key)),
   )
 
   return (
@@ -56,8 +56,8 @@ export default withT(({ t, editor, node, onInputChange }) => {
                 color: (audioCover && audioCover.color) || '#fff',
                 backgroundColor:
                   (audioCover && audioCover.backgroundColor) ||
-                  'rgba(255,255,255,0.3)'
-              }
+                  'rgba(255,255,255,0.3)',
+              },
             )
           }
         />
@@ -69,7 +69,7 @@ export default withT(({ t, editor, node, onInputChange }) => {
             onChange={(_, color) => {
               onChange('audioCover')({
                 ...audioCover,
-                color
+                color,
               })
             }}
           />
@@ -82,7 +82,7 @@ export default withT(({ t, editor, node, onInputChange }) => {
             onChange={(_, backgroundColor) => {
               onChange('audioCover')({
                 ...audioCover,
-                backgroundColor
+                backgroundColor,
               })
             }}
           />

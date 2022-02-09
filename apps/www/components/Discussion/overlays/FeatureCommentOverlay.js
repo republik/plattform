@@ -10,7 +10,7 @@ import {
   Label,
   useColorContext,
   CommentTeaser,
-  Checkbox
+  Checkbox,
 } from '@project-r/styleguide'
 import AutosizeInput from 'react-textarea-autosize'
 
@@ -30,7 +30,9 @@ const TargetCheckbox = ({ t, targets, setTargets, targetKey }) => (
       checked={targets.includes(targetKey)}
       onChange={(_, checked) => {
         setTargets(
-          targets.filter(t => t !== targetKey).concat(checked ? targetKey : [])
+          targets
+            .filter((t) => t !== targetKey)
+            .concat(checked ? targetKey : []),
         )
       }}
     >
@@ -43,14 +45,14 @@ export const FeatureCommentOverlay = ({ comment }) => {
   const { t } = useTranslation()
   const {
     discussion,
-    overlays: { featureOverlay }
+    overlays: { featureOverlay },
   } = useDiscussion()
 
   const [featureCommentMutation] = useFeatureCommentMutation()
 
   const [mutatingState, setMutatingState] = useState({})
   const [targets, setTargets] = useState(
-    comment.featuredTargets || [TARGETS[0]]
+    comment.featuredTargets || [TARGETS[0]],
   )
   const [text, setText] = useState(comment.featuredText || comment.text)
   const [colorScheme] = useColorContext()
@@ -62,7 +64,7 @@ export const FeatureCommentOverlay = ({ comment }) => {
       />
       <OverlayBody>
         <div>
-          {TARGETS.map(target => (
+          {TARGETS.map((target) => (
             <TargetCheckbox
               key={target}
               targetKey={target}
@@ -99,21 +101,21 @@ export const FeatureCommentOverlay = ({ comment }) => {
           type='submit'
           onClick={() => {
             setMutatingState({
-              loading: true
+              loading: true,
             })
             featureCommentMutation({
               variables: {
                 commentId: comment.id,
                 content: targets.length ? text : null,
-                targets
-              }
+                targets,
+              },
             })
               .then(() => {
                 featureOverlay.handleClose()
               })
-              .catch(error => {
+              .catch((error) => {
                 setMutatingState({
-                  error
+                  error,
                 })
               })
           }}
@@ -133,10 +135,10 @@ export const FeatureCommentOverlay = ({ comment }) => {
                     nodes: [
                       {
                         ...comment,
-                        highlight: text
-                      }
-                    ]
-                  }
+                        highlight: text,
+                      },
+                    ],
+                  },
                 }}
               />
             </div>
@@ -150,8 +152,8 @@ export const FeatureCommentOverlay = ({ comment }) => {
                   featuredText: text,
                   discussion: {
                     ...discussion,
-                    image: discussion?.document?.meta?.twitterImage
-                  }
+                    image: discussion?.document?.meta?.twitterImage,
+                  },
                 }}
                 t={t}
               />
@@ -166,9 +168,9 @@ export const FeatureCommentOverlay = ({ comment }) => {
 const styles = {
   checkbox: css({
     display: 'inline-block',
-    marginRight: 25
+    marginRight: 25,
   }),
   preview: css({
-    marginTop: 30
-  })
+    marginTop: 30,
+  }),
 }

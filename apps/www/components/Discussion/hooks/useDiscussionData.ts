@@ -6,7 +6,7 @@ import { bumpCounts, mergeComment, mergeComments } from '../graphql/store'
 import {
   DiscussionQuery,
   DiscussionQueryVariables,
-  useDiscussionQuery
+  useDiscussionQuery,
 } from '../graphql/queries/DiscussionQuery.graphql'
 
 // TODO: Add proper type
@@ -32,7 +32,7 @@ type FetchMoreParams = DiscussionQueryVariables & {
 }
 
 export type FetchDiscussionFunctionType = (
-  params?: Partial<FetchMoreParams>
+  params?: Partial<FetchMoreParams>,
 ) => Promise<ApolloQueryResult<DiscussionQuery>>
 
 // Data returned by the hook
@@ -46,7 +46,7 @@ type DiscussionData = {
 
 function useDiscussionData(
   discussionId: string,
-  options?: DiscussionOptions
+  options?: DiscussionOptions,
 ): DiscussionData {
   const {
     data: { discussion } = {},
@@ -55,7 +55,7 @@ function useDiscussionData(
     fetchMore,
     subscribeToMore,
     refetch,
-    previousData
+    previousData,
   } = useDiscussionQuery({
     variables: {
       discussionId,
@@ -64,8 +64,8 @@ function useDiscussionData(
       focusId: options.focusId,
       activeTag: options.activeTag,
       parentId: options.parentId,
-      includeParent: options.includeParent
-    }
+      includeParent: options.includeParent,
+    },
   })
 
   /**
@@ -81,7 +81,7 @@ function useDiscussionData(
     after,
     appendAfter,
     depth,
-    includeParent
+    includeParent,
   }: FetchMoreParams) =>
     fetchMore({
       variables: {
@@ -91,7 +91,7 @@ function useDiscussionData(
         orderBy: options.orderBy,
         activeTag: options.activeTag,
         depth: depth || 3,
-        includeParent
+        includeParent,
       },
       // Explanation: updateQuery is deprecated and not typed in TS
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -102,10 +102,10 @@ function useDiscussionData(
           mergeComments({
             parentId,
             appendAfter,
-            comments: discussion.comments
-          })
+            comments: discussion.comments,
+          }),
         )
-      }
+      },
     })
 
   const initialParentId = options.parentId
@@ -148,19 +148,19 @@ function useDiscussionData(
               mergeComment({
                 comment,
                 initialParentId,
-                activeTag: options.activeTag
-              })
+                activeTag: options.activeTag,
+              }),
             )
           } else {
             return produce(
               previousResult,
-              bumpCounts({ comment, initialParentId })
+              bumpCounts({ comment, initialParentId }),
             )
           }
         } else {
           return previousResult
         }
-      }
+      },
     })
   }, [loadedDiscussionId, initialParentId])
 
@@ -169,7 +169,7 @@ function useDiscussionData(
     loading: loading,
     error,
     refetch,
-    fetchMore: enhancedFetchMore
+    fetchMore: enhancedFetchMore,
   }
 }
 

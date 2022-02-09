@@ -14,8 +14,8 @@ const { P } = Interaction
 
 const styles = {
   p: css({
-    marginBottom: 20
-  })
+    marginBottom: 20,
+  }),
 }
 
 export const fragments = {
@@ -30,18 +30,18 @@ export const fragments = {
       }
     }
     ${subInfo}
-  `
+  `,
 }
 
-const Subscriptions = props => {
+const Subscriptions = (props) => {
   const { sections, t } = props
 
   const formats = sections.reduce(
     (reducer, section) => reducer.concat(section.linkedDocuments.nodes),
-    []
+    [],
   )
   const isTicked = formats.some(
-    format => format.subscribedByMe && format.subscribedByMe.active
+    (format) => format.subscribedByMe && format.subscribedByMe.active,
   )
 
   return (
@@ -62,7 +62,7 @@ const Subscriptions = props => {
             <Link key='link' href='/benachrichtigungen' passHref>
               <A>{t('Onboarding/Sections/Subscriptions/hint/link')}</A>
             </Link>
-          )
+          ),
         })}
       </P>
     </Section>

@@ -6,18 +6,18 @@ import { sansSerifMedium12, sansSerifRegular12 } from '../Typography/styles'
 
 const styles = {
   inlineLabel: css({
-    ...sansSerifMedium12
+    ...sansSerifMedium12,
   }),
   inlineSecondaryLabel: css({
-    ...sansSerifRegular12
-  })
+    ...sansSerifRegular12,
+  }),
 }
 
 export const InlineLabel = ({
   symbol,
   inlineLabel,
   inlineSecondaryLabel,
-  inlineLabelPosition
+  inlineLabelPosition,
 }) => {
   const [colorScheme] = useColorContext()
   const { datum } = symbol.value

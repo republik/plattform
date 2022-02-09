@@ -8,21 +8,21 @@ const diacritics = [
   { base: 'ss', letters: ['ß'] },
   { base: 'ae', letters: ['ä'] },
   { base: 'ue', letters: ['ü'] },
-  { base: 'oe', letters: ['ö'] }
+  { base: 'oe', letters: ['ö'] },
 ]
 
 const diacriticsMap = diacritics.reduce((map, diacritic) => {
-  diacritic.letters.forEach(letter => {
+  diacritic.letters.forEach((letter) => {
     map[letter] = diacritic.base
   })
   return map
 }, {})
 
-export const slug = string =>
+export const slug = (string) =>
   string
     .toLowerCase()
     // eslint-disable-next-line no-control-regex
-    .replace(/[^\u0000-\u007E]/g, a => diacriticsMap[a] || a)
+    .replace(/[^\u0000-\u007E]/g, (a) => diacriticsMap[a] || a)
     .replace(/\u00ad/g, '')
     .replace(/[^0-9a-z]+/g, ' ')
     .trim()

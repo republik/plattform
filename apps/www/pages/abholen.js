@@ -6,7 +6,7 @@ import isEmail from 'validator/lib/isEmail'
 
 import { maybeDecode } from '../lib/utils/base64u'
 import ClaimMembership, {
-  sanitizeVoucherCode
+  sanitizeVoucherCode,
 } from '../components/Account/Memberships/Claim'
 import Frame from '../components/Frame'
 import withT from '../lib/withT'
@@ -29,12 +29,12 @@ const Claim = ({ router: { query }, t }) => {
   const meta = {
     title: t.first([
       `pages/claim/${context}/meta/title`,
-      'pages/claim/meta/title'
+      'pages/claim/meta/title',
     ]),
     description: t.first([
       `pages/claim/${context}/meta/description`,
-      'pages/claim/meta/description'
-    ])
+      'pages/claim/meta/description',
+    ]),
   }
 
   return (

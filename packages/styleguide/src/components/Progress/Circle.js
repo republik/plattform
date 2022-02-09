@@ -6,8 +6,8 @@ const styles = {
   circle: css({
     transition: 'stroke-dashoffset 0.35s',
     transform: 'rotate(-90deg)',
-    transformOrigin: '50% 50%'
-  })
+    transformOrigin: '50% 50%',
+  }),
 }
 
 const Circle = ({
@@ -15,7 +15,7 @@ const Circle = ({
   size = 24,
   strokeColorName,
   strokeWidth = 2,
-  strokePlaceholder
+  strokePlaceholder,
 }) => {
   const circleSize = (size * 5) / 6
   const radius = circleSize / 2

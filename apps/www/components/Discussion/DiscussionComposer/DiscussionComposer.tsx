@@ -45,10 +45,8 @@ const DiscussionComposer = ({
   const { tags, rules, displayAuthor } = discussion
   const { preferencesOverlay } = overlays
 
-  const {
-    preferences,
-    updateDiscussionPreferencesHandler,
-  } = useDiscussionPreferences(discussionId)
+  const { preferences, updateDiscussionPreferencesHandler } =
+    useDiscussionPreferences(discussionId)
 
   const submitCommentHandler = useSubmitCommentHandler()
   const editCommentHandler = useEditCommentHandler()
@@ -65,7 +63,9 @@ const DiscussionComposer = ({
     ) {
       return null
     }
-    return preferences?.me?.credentials?.find(credential => credential.isListed)
+    return preferences?.me?.credentials?.find(
+      (credential) => credential.isListed,
+    )
   }, [preferences])
 
   const [active, setActive] = useState(!!(initialText || initialActiveState))

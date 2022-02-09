@@ -14,9 +14,10 @@ PgDb.connect()
   .then(async (pgdb) => {
     const transaction = await pgdb.transactionBegin()
     try {
-      const benefactorMembershipType = await transaction.public.membershipTypes.findOne(
-        { name: 'BENEFACTOR_ABO' },
-      )
+      const benefactorMembershipType =
+        await transaction.public.membershipTypes.findOne({
+          name: 'BENEFACTOR_ABO',
+        })
       const usersWithMultMemberships = await transaction.query(`
       select
         u.*,

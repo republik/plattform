@@ -17,9 +17,9 @@ const styles = {
   padded: css({
     marginRight: 20,
     [mUp]: {
-      marginRight: 24
-    }
-  })
+      marginRight: 24,
+    },
+  }),
 }
 
 type Props<ElementProps = any> = {
@@ -41,13 +41,13 @@ const CalloutMenu = ({
   initiallyOpen,
   contentPaddingMobile,
   padded,
-  attributes
+  attributes,
 }: Props) => {
   const [showMenu, setMenu] = React.useState(initiallyOpen)
   const toggleRef = React.useRef()
 
-  const handleClick = e => {
-    if (!hasAncestor(e.target, node => node === toggleRef.current)) {
+  const handleClick = (e) => {
+    if (!hasAncestor(e.target, (node) => node === toggleRef.current)) {
       setMenu(false)
     }
   }

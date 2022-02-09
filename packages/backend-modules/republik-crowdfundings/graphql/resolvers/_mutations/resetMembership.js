@@ -40,16 +40,17 @@ module.exports = async (_, args, context) => {
       "SELECT make_hrid('\"memberships\"'::regclass, 'voucherCode'::text, 6::bigint)",
     )
 
-    const updatedMembership = await transaction.public.memberships.updateAndGetOne(
-      { id: membershipId },
-      {
-        active: false, // disable membership
-        userId: pledge.userId, // return membership to pledger
-        voucherCode, // generate new voucher code
-        voucherable: true,
-        updatedAt: new Date(),
-      },
-    )
+    const updatedMembership =
+      await transaction.public.memberships.updateAndGetOne(
+        { id: membershipId },
+        {
+          active: false, // disable membership
+          userId: pledge.userId, // return membership to pledger
+          voucherCode, // generate new voucher code
+          voucherable: true,
+          updatedAt: new Date(),
+        },
+      )
 
     await transaction.transactionCommit()
 

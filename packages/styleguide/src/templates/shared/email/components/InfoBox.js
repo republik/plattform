@@ -4,17 +4,21 @@ import { Figure } from './Figure'
 
 const InfoBox = ({ children }) => {
   const figure = useMemo(() => {
-    return Children.toArray(children).filter(element => element.type === Figure)
+    return Children.toArray(children).filter(
+      (element) => element.type === Figure,
+    )
   }, [children])
 
   const rest = useMemo(() => {
-    return Children.toArray(children).filter(element => element.type !== Figure)
+    return Children.toArray(children).filter(
+      (element) => element.type !== Figure,
+    )
   }, [children])
 
   return (
     <div
       style={{
-        margin: '60px 0'
+        margin: '60px 0',
       }}
     >
       {figure.length > 0 ? (
@@ -24,7 +28,7 @@ const InfoBox = ({ children }) => {
               <td
                 style={{
                   width: '155px',
-                  paddingRight: '15px'
+                  paddingRight: '15px',
                 }}
               >
                 {figure}
@@ -49,7 +53,7 @@ export const Title = ({ children }) => (
       fontSize: '19px',
       lineHeight: '30px',
       margin: '0 0 12px 0',
-      borderTop: '1px solid'
+      borderTop: '1px solid',
     }}
   >
     {children}
@@ -61,7 +65,7 @@ export const SubTitle = ({ children }) => (
     style={{
       ...fontStyles.sansSerifMedium,
       fontSize: '18px',
-      lineHeight: '24px'
+      lineHeight: '24px',
     }}
   >
     {children}
@@ -74,7 +78,7 @@ export const Text = ({ children, noMargin }) => (
       ...fontStyles.sansSerifRegular,
       fontSize: '18px',
       lineHeight: '30px',
-      margin: noMargin ? '0px 0px' : undefined
+      margin: noMargin ? '0px 0px' : undefined,
     }}
   >
     {children}

@@ -25,8 +25,8 @@ const styles = {
     paddingLeft: 12,
     [mUp]: {
       position: 'absolute',
-      paddingLeft: 20
-    }
+      paddingLeft: 20,
+    },
   }),
   close: css({
     fontSize: '24px',
@@ -45,17 +45,17 @@ const styles = {
     // For some reason 'justify-content' doesn't work in iOS, so
     // use auto margin to center the icon inside the button.
     '& > svg': {
-      margin: '0 auto'
+      margin: '0 auto',
     },
     [mUp]: {
       width: '48px',
-      flexBasis: '48px'
-    }
-  })
+      flexBasis: '48px',
+    },
+  }),
 }
 
 const OverlayToolbarClose = ({
-  onClick
+  onClick,
 }: {
   onClick: MouseEventHandler<HTMLButtonElement>
 }): ReactElement => {
@@ -67,7 +67,7 @@ const OverlayToolbarClose = ({
   )
 }
 OverlayToolbarClose.propTypes = {
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
 }
 
 export const OverlayToolbar: React.FC<{
@@ -90,5 +90,5 @@ export const OverlayToolbar: React.FC<{
 
 OverlayToolbar.propTypes = {
   onClose: PropTypes.func,
-  title: PropTypes.node
+  title: PropTypes.node,
 }

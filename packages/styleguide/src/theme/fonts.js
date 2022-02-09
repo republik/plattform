@@ -18,50 +18,50 @@ export const fontFamilies = {
   ...Object.keys(FONT_STYLES).reduce((fams, key) => {
     fams[key] = FONT_STYLES[key].fontFamily
     return fams
-  }, {})
+  }, {}),
 }
 
 export const fontStyles = {
   serifTitle: {
     fontFamily: fontFamilies.serifTitle,
-    fontWeight: 900
+    fontWeight: 900,
   },
   serifRegular: {
-    fontFamily: fontFamilies.serifRegular
+    fontFamily: fontFamilies.serifRegular,
   },
   serifItalic: {
     fontFamily: fontFamilies.serifItalic,
-    fontStyle: 'italic'
+    fontStyle: 'italic',
   },
   serifBold: {
     fontFamily: fontFamilies.serifBold,
-    fontWeight: 700
+    fontWeight: 700,
   },
   serifBoldItalic: {
     fontFamily: fontFamilies.serifBoldItalic,
     fontWeight: 700,
-    fontStyle: 'italic'
+    fontStyle: 'italic',
   },
   sansSerifRegular: {
-    fontFamily: fontFamilies.sansSerifRegular
+    fontFamily: fontFamilies.sansSerifRegular,
   },
   sansSerifItalic: {
     fontFamily: fontFamilies.sansSerifItalic,
-    fontStyle: 'italic'
+    fontStyle: 'italic',
   },
   sansSerifMedium: {
     fontFamily: fontFamilies.sansSerifMedium,
-    fontWeight: 500
+    fontWeight: 500,
   },
   monospaceRegular: {
-    fontFamily: fontFamilies.monospaceRegular
+    fontFamily: fontFamilies.monospaceRegular,
   },
   cursiveTitle: {
     fontFamily: fontFamilies.cursiveTitle,
     fontWeight: 500,
-    fontStyle: 'italic'
+    fontStyle: 'italic',
   },
-  ...FONT_STYLES
+  ...FONT_STYLES,
 }
 
 export const fontFaces = () => SG.FONT_FACES || ''

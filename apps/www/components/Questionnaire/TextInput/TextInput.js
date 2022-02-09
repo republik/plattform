@@ -8,7 +8,7 @@ import { styles as fieldSetStyles } from '../../FieldSet'
 
 const styles = {
   form: css({
-    borderTop: '1px solid white'
+    borderTop: '1px solid white',
   }),
   textArea: css({
     width: '100%',
@@ -21,26 +21,26 @@ const styles = {
     outline: 'none',
     boxSizing: 'border-box',
     ...fontStyles.sansSerifRegular21,
-    color: colors.text
+    color: colors.text,
   }),
   textAreaEmpty: css({
     color: colors.lightText,
     '::-webkit-input-placeholder': {
-      color: colors.lightText
-    }
+      color: colors.lightText,
+    },
   }),
   maxLength: css({
     alignItems: 'center',
     display: 'flex',
     justifyContent: 'flex-end',
     marginBottom: '-10px',
-    padding: '0 12px'
+    padding: '0 12px',
   }),
   remaining: css({
     ...fontStyles.sansSerifRegular14,
     lineHeight: '20px',
-    padding: '0 5px'
-  })
+    padding: '0 5px',
+  }),
 }
 
 class TextInput extends Component {
@@ -48,7 +48,7 @@ class TextInput extends Component {
     const { text = '', maxLength } = this.props
     return {
       count: text.length,
-      progress: (text.length / maxLength) * 100
+      progress: (text.length / maxLength) * 100,
     }
   }
 
@@ -103,12 +103,12 @@ TextInput.propTypes = {
   text: PropTypes.string,
   maxLength: PropTypes.number,
   onChange: PropTypes.func.isRequired,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
 }
 
 TextInput.defaultProps = {
   placeholder: '',
-  text: ''
+  text: '',
 }
 
 export default TextInput

@@ -15,7 +15,7 @@ import {
   sansSerifMedium19,
   sansSerifMedium22,
   sansSerifRegular16,
-  sansSerifRegular19
+  sansSerifRegular19,
 } from '../Typography/styles'
 import { fontRule } from '../Typography/Interaction'
 import { Note } from '../Typography/Editorial'
@@ -35,7 +35,7 @@ export const ReactCharts = {
   ProjectedMap,
   SwissMap,
   Hemicycle,
-  Table
+  Table,
 }
 
 export const createRanges = ({
@@ -43,7 +43,7 @@ export const createRanges = ({
   sequential,
   sequential3,
   opposite3,
-  discrete
+  discrete,
 }) => {
   const oppositeReversed = [].concat(opposite3).reverse()
   return {
@@ -53,7 +53,7 @@ export const createRanges = ({
     diverging3: [...sequential3, ...oppositeReversed],
     sequential3,
     sequential: sequential,
-    discrete
+    discrete,
   }
 }
 
@@ -62,22 +62,22 @@ const styles = {
     ...convertStyleToRem(sansSerifMedium19),
     lineHeight: pxToRem('25px'),
     [mUp]: {
-      ...convertStyleToRem(sansSerifMedium22)
+      ...convertStyleToRem(sansSerifMedium22),
     },
     margin: 0,
     marginBottom: 15,
     '& + p': {
-      marginTop: -15
-    }
+      marginTop: -15,
+    },
   }),
   p: css({
     ...convertStyleToRem(sansSerifRegular16),
     [mUp]: {
-      ...convertStyleToRem(sansSerifRegular19)
+      ...convertStyleToRem(sansSerifRegular19),
     },
     margin: 0,
-    marginBottom: 15
-  })
+    marginBottom: 15,
+  }),
 }
 
 export const ChartTitle = ({ children, ...props }) => {
@@ -114,7 +114,7 @@ export const ChartLegend = ({ children, ...props }) => {
 
 const ssrAttribute = 'data-chart-ssr'
 
-const Chart = props => {
+const Chart = (props) => {
   const [colorScheme] = useColorContext()
 
   const isDomAvailable = typeof document !== 'undefined'
@@ -122,7 +122,7 @@ const Chart = props => {
     () =>
       !isDomAvailable ||
       (isDomAvailable &&
-        document.querySelectorAll(`[${ssrAttribute}]`).length > 0)
+        document.querySelectorAll(`[${ssrAttribute}]`).length > 0),
   )
   useEffect(() => {
     if (ssrMode) {
@@ -137,15 +137,16 @@ const Chart = props => {
     config,
     tLabel,
     // allowCanvasRendering might be set to false when exporting SVGs
-    allowCanvasRendering = true
+    allowCanvasRendering = true,
   } = props
 
   const width = fixedWidth || stateWidth
   const ReactChart = ReactCharts[config.type]
 
-  const colorRanges = useMemo(() => createRanges(colorScheme.ranges), [
-    colorScheme
-  ])
+  const colorRanges = useMemo(
+    () => createRanges(colorScheme.ranges),
+    [colorScheme],
+  )
 
   const ref = useRef()
   useEffect(() => {
@@ -177,15 +178,15 @@ const Chart = props => {
           localColors.light[`charts${i}`] = key
           return localColors
         },
-        { dark: {}, light: {} }
+        { dark: {}, light: {} },
       ),
       localMappings: keys.reduce(
         (mappings, key, i) => {
           mappings.charts[key] = `charts${i}`
           return mappings
         },
-        { charts: {} }
-      )
+        { charts: {} },
+      ),
     }
   }, [config])
 
@@ -194,7 +195,7 @@ const Chart = props => {
       {...(ssrMode && { [ssrAttribute]: true })}
       ref={fixedWidth ? undefined : ref}
       style={{
-        maxWidth: config.maxWidth
+        maxWidth: config.maxWidth,
       }}
     >
       {!!width && (
@@ -237,14 +238,14 @@ Chart.propTypes = {
   config: PropTypes.shape({
     type: PropTypes.oneOf(Object.keys(ReactCharts)).isRequired,
     description: PropTypes.string,
-    maxWidth: PropTypes.number
+    maxWidth: PropTypes.number,
   }).isRequired,
   width: PropTypes.number,
-  tLabel: PropTypes.func.isRequired
+  tLabel: PropTypes.func.isRequired,
 }
 
 Chart.defaultProps = {
-  tLabel: identity => identity
+  tLabel: (identity) => identity,
 }
 
 export default Chart

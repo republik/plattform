@@ -31,7 +31,7 @@ export const useInfiniteScroll = ({ hasMore, loadMore }) => {
               setLoadingMore(false)
               setLoadingMoreError(undefined)
             })
-            .catch(error => {
+            .catch((error) => {
               setLoadingMore(false)
               setInfiniteScroll(false)
               setLoadingMoreError(error)
@@ -51,8 +51,8 @@ export const useInfiniteScroll = ({ hasMore, loadMore }) => {
       containerRef,
       infiniteScroll,
       loadingMore,
-      loadingMoreError
+      loadingMoreError,
     },
-    setInfiniteScroll
+    setInfiniteScroll,
   ]
 }

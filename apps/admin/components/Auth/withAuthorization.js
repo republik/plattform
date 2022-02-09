@@ -10,12 +10,8 @@ import { Interaction } from '@project-r/styleguide'
 const checkRoles = (me, roles) => {
   return !!(
     me &&
-    (!roles || (
-      me.roles &&
-      me.roles.some(role =>
-        roles.indexOf(role) !== -1
-      )
-    ))
+    (!roles ||
+      (me.roles && me.roles.some((role) => roles.indexOf(role) !== -1)))
   )
 }
 
@@ -24,24 +20,25 @@ const styles = {
     width: '100%',
     maxWidth: '540px',
     margin: '20vh auto',
-    padding: 20
-  })
+    padding: 20,
+  }),
 }
-export const PageCenter = ({children}) => (
-  <div {...styles.center}>
-    {children}
-  </div>
+export const PageCenter = ({ children }) => (
+  <div {...styles.center}>{children}</div>
 )
 
-const withAuthorization = (roles, key = 'isAuthorized') =>
-  WrappedComponent =>
-    withMe(({me, ...props}) =>
-      <WrappedComponent {...props}
+const withAuthorization =
+  (roles, key = 'isAuthorized') =>
+  (WrappedComponent) =>
+    withMe(({ me, ...props }) => (
+      <WrappedComponent
+        {...props}
         me={me}
-        {...{[key]: checkRoles(me, roles)}} />
-    )
+        {...{ [key]: checkRoles(me, roles) }}
+      />
+    ))
 
-const UnauthorizedPage = withT(({t, me, roles = []}) => (
+const UnauthorizedPage = withT(({ t, me, roles = [] }) => (
   <div>
     <PageCenter>
       {!me ? (
@@ -55,7 +52,7 @@ const UnauthorizedPage = withT(({t, me, roles = []}) => (
           <Interaction.H1>{t('withAuthorization/title')}</Interaction.H1>
           <Interaction.P>
             {t('withAuthorization/authorizedRoles', {
-              roles: roles.join(', ')
+              roles: roles.join(', '),
             })}
             <br />
           </Interaction.P>
@@ -67,11 +64,12 @@ const UnauthorizedPage = withT(({t, me, roles = []}) => (
   </div>
 ))
 
-export const enforceAuthorization = roles => WrappedComponent => withAuthorization(roles)(({isAuthorized, me, ...props}) => {
-  if (isAuthorized) {
-    return <WrappedComponent {...props} />
-  }
-  return <UnauthorizedPage me={me} url={props.url} />
-})
+export const enforceAuthorization = (roles) => (WrappedComponent) =>
+  withAuthorization(roles)(({ isAuthorized, me, ...props }) => {
+    if (isAuthorized) {
+      return <WrappedComponent {...props} />
+    }
+    return <UnauthorizedPage me={me} url={props.url} />
+  })
 
 export default withAuthorization

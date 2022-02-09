@@ -168,11 +168,8 @@ module.exports = async (_, args, { pgdb, req, t, redis }) => {
 
   const transaction = await pgdb.transactionBegin()
   try {
-    const {
-      numMatchedPayments,
-      numUpdatedPledges,
-      numPaymentsSuccessful,
-    } = await matchPayments(transaction, t, redis)
+    const { numMatchedPayments, numUpdatedPledges, numPaymentsSuccessful } =
+      await matchPayments(transaction, t, redis)
 
     await transaction.transactionCommit()
     const result = `

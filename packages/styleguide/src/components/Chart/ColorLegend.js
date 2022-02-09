@@ -6,36 +6,36 @@ import { sansSerifRegular12, sansSerifMedium12 } from '../Typography/styles'
 
 const styles = {
   container: css({
-    marginBottom: 10
+    marginBottom: 10,
   }),
   inlineContainer: css({
-    lineHeight: '12px'
+    lineHeight: '12px',
   }),
   title: css({
-    ...sansSerifMedium12
+    ...sansSerifMedium12,
   }),
   label: css({
     ...sansSerifRegular12,
-    fontFeatureSettings: '"tnum" 1, "kern" 1'
+    fontFeatureSettings: '"tnum" 1, "kern" 1',
   }),
   labelWithColor: css({
     paddingLeft: 12,
-    position: 'relative'
+    position: 'relative',
   }),
   inlineLabel: css({
     display: 'inline-block',
-    marginRight: 12
+    marginRight: 12,
   }),
   color: css({
     position: 'absolute',
     left: 0,
     top: 5,
     width: 8,
-    height: 8
+    height: 8,
   }),
   circle: css({
-    borderRadius: '50%'
-  })
+    borderRadius: '50%',
+  }),
 }
 
 const ColorLegend = ({ title, shape, values, maxWidth, inline }) => {
@@ -62,7 +62,7 @@ const ColorLegend = ({ title, shape, values, maxWidth, inline }) => {
             {...merge(
               styles.label,
               inline && styles.inlineLabel,
-              !!value.color && styles.labelWithColor
+              !!value.color && styles.labelWithColor,
             )}
             {...colorScheme.set('color', 'text')}
           >
@@ -70,7 +70,7 @@ const ColorLegend = ({ title, shape, values, maxWidth, inline }) => {
               <div
                 {...merge(
                   styles.color,
-                  styles[shape === 'square' ? 'square' : 'circle']
+                  styles[shape === 'square' ? 'square' : 'circle'],
                 )}
                 {...colorScheme.set('backgroundColor', value.color, 'charts')}
               />
@@ -89,11 +89,11 @@ ColorLegend.propTypes = {
   values: PropTypes.arrayOf(
     PropTypes.shape({
       color: PropTypes.string,
-      label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired
-    })
+      label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired,
+    }),
   ),
   maxWidth: PropTypes.number,
-  inline: PropTypes.bool
+  inline: PropTypes.bool,
 }
 
 export default ColorLegend

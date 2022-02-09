@@ -11,7 +11,7 @@ import {
   RawHtml,
   colors,
   fontFamilies,
-  mediaQueries
+  mediaQueries,
 } from '@project-r/styleguide'
 
 import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../constants'
@@ -22,14 +22,14 @@ const { P } = Interaction
 
 const styles = {
   category: css({
-    marginBottom: 40
+    marginBottom: 40,
   }),
   title: css({
-    marginBottom: 20
+    marginBottom: 20,
   }),
   faq: css({
     padding: '10px 0',
-    borderBottom: `1px solid ${colors.divider}`
+    borderBottom: `1px solid ${colors.divider}`,
   }),
   faqAnchor: css({
     display: 'block',
@@ -37,33 +37,33 @@ const styles = {
     position: 'relative',
     top: -(HEADER_HEIGHT_MOBILE + 5),
     [mediaQueries.mUp]: {
-      top: -(HEADER_HEIGHT + 5)
-    }
+      top: -(HEADER_HEIGHT + 5),
+    },
   }),
   question: css({
     cursor: 'pointer',
     '& a': {
       color: 'inherit',
-      textDecoration: 'none'
-    }
+      textDecoration: 'none',
+    },
   }),
   answer: css({
     paddingBottom: 10,
-    margin: '20px 0 40px 0'
+    margin: '20px 0 40px 0',
   }),
   active: css({
     fontFamily: fontFamilies.sansSerifMedium,
-    marginBottom: 10
-  })
+    marginBottom: 10,
+  }),
 }
 
 export const H2 = ({ children }) => (
   <Interaction.H2 {...styles.title}>{children}</Interaction.H2>
 )
 
-const AnswerP = args => <P {...args} {...styles.answer} />
+const AnswerP = (args) => <P {...args} {...styles.answer} />
 
-const slug = string =>
+const slug = (string) =>
   string
     .toLowerCase()
     .replace(/[^0-9a-zäöü]+/g, ' ')
@@ -84,10 +84,10 @@ export class RawList extends Component {
           <P {...merge(styles.question, active && styles.active)}>
             <a
               href={`#${slug(faq.question)}`}
-              onClick={e => {
+              onClick={(e) => {
                 e.preventDefault()
                 this.setState(() => ({
-                  [slug(faq.question)]: !active
+                  [slug(faq.question)]: !active,
                 }))
               }}
             >
@@ -99,7 +99,7 @@ export class RawList extends Component {
               type={AnswerP}
               key={`answer${i}`}
               dangerouslySetInnerHTML={{
-                __html: faq.answer.split('\n').join('<br />')
+                __html: faq.answer.split('\n').join('<br />'),
               }}
             />
           )}
@@ -110,14 +110,14 @@ export class RawList extends Component {
   componentDidMount() {
     if (window.location.hash) {
       this.setState(() => ({
-        [window.location.hash.replace(/^#/, '')]: true
+        [window.location.hash.replace(/^#/, '')]: true,
       }))
     }
   }
   render() {
     const {
       data: { loading, error, faqs },
-      flat
+      flat,
     } = this.props
     return (
       <Loader
@@ -129,7 +129,7 @@ export class RawList extends Component {
           }
 
           const faqsByCategory = nest()
-            .key(d => d.category)
+            .key((d) => d.category)
             .entries(faqs)
 
           return (

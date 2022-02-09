@@ -7,7 +7,7 @@ describe('/components/Account/index.js', () => {
     render(<Item createdAt={new Date(2018, 0, 15)} />)
 
     expect(
-      screen.getByText('Erstellt am 15. Januar 2018 um 00:00')
+      screen.getByText('Erstellt am 15. Januar 2018 um 00:00'),
     ).toBeTruthy()
   })
 })

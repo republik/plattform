@@ -10,7 +10,7 @@ import {
   Interaction,
   Button,
   A,
-  Spinner
+  Spinner,
 } from '@project-r/styleguide'
 import { getInitials } from '../../lib/utils/name'
 import withT from '../../lib/withT'
@@ -19,7 +19,7 @@ import { GHOST_PRODUCER } from '../../lib/settings'
 import { errorToString } from '../../lib/utils/errors'
 import {
   UNCOMMITTED_CHANGES_POLL_INTERVAL_MS,
-  MILESTONES_POLL_INTERVAL_MS
+  MILESTONES_POLL_INTERVAL_MS,
 } from '../../lib/settings'
 import OfflineIcon from 'react-icons/lib/md/signal-wifi-off' // portable-wifi-off
 
@@ -74,12 +74,12 @@ export const withUncommittedChangesMutation = graphql(
   uncommittedChangesMutation,
   {
     props: ({ mutate }) => ({
-      hasUncommitedChanges: variables =>
+      hasUncommitedChanges: (variables) =>
         mutate({
-          variables
-        })
-    })
-  }
+          variables,
+        }),
+    }),
+  },
 )
 
 export const warningColor = '#E9A733'
@@ -90,7 +90,7 @@ const styles = {
     flexFlow: 'row wrap',
     fontSize: '11px',
     padding: '3px 0',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
   }),
   box: {
     color: '#000',
@@ -101,151 +101,154 @@ const styles = {
     margin: '0 4px 4px 0',
     textAlign: 'center',
     fontSize: 16,
-    position: 'relative'
-  }
+    position: 'relative',
+  },
 }
 
 styles.initials = merge(styles.box, {
   backgroundColor: '#ccc',
   textTransform: 'uppercase',
   backgroundPosition: 'center center',
-  backgroundSize: '150%'
+  backgroundSize: '150%',
 })
 
 styles.emptyBox = merge(styles.box, {
   backgroundColor: '#fff',
-  border: `1px solid ${colors.divider}`
+  border: `1px solid ${colors.divider}`,
 })
 
-export const withUncommitedChanges = ({ options } = {}) => WrappedComponent => {
-  class UncommittedChanges extends Component {
-    constructor(...args) {
-      super(...args)
-      this.state = {}
-    }
-    componentDidMount() {
-      this.subscribe()
-    }
-    componentDidUpdate() {
-      this.subscribe()
-    }
-    subscribe() {
-      if (!this.unsubscribe && this.props.data.repo) {
-        this.unsubscribe = this.props.subscribe({
-          onError: error => {
-            debug('subscription', 'error', error)
-            this.setState({
-              subscriptionError: error
-            })
-          },
-          onUpdate: () => {
-            this.setState({
-              subscriptionError: undefined
-            })
-          }
-        })
+export const withUncommitedChanges =
+  ({ options } = {}) =>
+  (WrappedComponent) => {
+    class UncommittedChanges extends Component {
+      constructor(...args) {
+        super(...args)
+        this.state = {}
       }
-    }
-    componentWillUnmount() {
-      this.unsubscribe && this.unsubscribe()
-    }
-    render() {
-      const {
-        data: { loading, error, repo },
-        me,
-        ownProps
-      } = this.props
-
-      const users = [].concat((repo && repo.uncommittedChanges) || [])
-
-      const isLocked = repo && repo.currentPhase.lock
-      const meIsProducer = me && me.roles.find(role => role === 'producer')
-      if (isLocked && !meIsProducer && ghostProducer.id) {
-        users.push(ghostProducer)
+      componentDidMount() {
+        this.subscribe()
       }
-
-      return (
-        <WrappedComponent
-          uncommittedChanges={{
-            loading,
-            error: this.state.subscriptionError || error,
-            users
-          }}
-          {...ownProps}
-        />
-      )
-    }
-  }
-
-  return compose(
-    withMe,
-    graphql(getMilestones, {
-      options: ({ repoId, router }) => ({
-        pollInterval: MILESTONES_POLL_INTERVAL_MS,
-        variables: {
-          repoId: repoId || router.query.repoId
+      componentDidUpdate() {
+        this.subscribe()
+      }
+      subscribe() {
+        if (!this.unsubscribe && this.props.data.repo) {
+          this.unsubscribe = this.props.subscribe({
+            onError: (error) => {
+              debug('subscription', 'error', error)
+              this.setState({
+                subscriptionError: error,
+              })
+            },
+            onUpdate: () => {
+              this.setState({
+                subscriptionError: undefined,
+              })
+            },
+          })
         }
-      }),
-      props: ({ data }) => ({
-        milestones: data.repo && data.repo.milestones
-      })
-    }),
-    graphql(getUncommittedChanges, {
-      options: props => ({
-        fetchPolicy: 'network-only',
-        pollInterval: UNCOMMITTED_CHANGES_POLL_INTERVAL_MS,
-        variables: { repoId: props.repoId },
-        ...(typeof options === 'function' ? options(props) : options)
-      }),
-      props: ({ data, ownProps }) => {
-        return {
+      }
+      componentWillUnmount() {
+        this.unsubscribe && this.unsubscribe()
+      }
+      render() {
+        const {
+          data: { loading, error, repo },
+          me,
           ownProps,
-          data: data,
-          subscribe: ({ onError, onUpdate }) => {
-            return data.subscribeToMore({
-              document: uncommittedChangesSubscription,
-              variables: {
-                repoId: data.repo.id
-              },
-              onError,
-              updateQuery: (prev, { subscriptionData }) => {
-                debug('subscription', 'update', subscriptionData)
-                if (!subscriptionData.data) {
-                  console.warn('empty subscription data')
-                  return prev
-                }
-                let uncommittedChanges = prev.repo.uncommittedChanges
-                const action = subscriptionData.data.uncommittedChanges.action
-                if (action === 'create') {
-                  const newUser = subscriptionData.data.uncommittedChanges.user
-                  if (
-                    !uncommittedChanges.find(user => user.id === newUser.id)
-                  ) {
-                    uncommittedChanges = uncommittedChanges.concat(newUser)
-                  }
-                } else if (action === 'delete') {
-                  uncommittedChanges = uncommittedChanges.filter(
-                    change =>
-                      change.id !==
-                      subscriptionData.data.uncommittedChanges.user.id
-                  )
-                }
-                onUpdate()
-                return {
-                  ...prev,
-                  repo: {
-                    ...prev.repo,
-                    uncommittedChanges
-                  }
-                }
-              }
-            })
-          }
+        } = this.props
+
+        const users = [].concat((repo && repo.uncommittedChanges) || [])
+
+        const isLocked = repo && repo.currentPhase.lock
+        const meIsProducer = me && me.roles.find((role) => role === 'producer')
+        if (isLocked && !meIsProducer && ghostProducer.id) {
+          users.push(ghostProducer)
         }
+
+        return (
+          <WrappedComponent
+            uncommittedChanges={{
+              loading,
+              error: this.state.subscriptionError || error,
+              users,
+            }}
+            {...ownProps}
+          />
+        )
       }
-    })
-  )(UncommittedChanges)
-}
+    }
+
+    return compose(
+      withMe,
+      graphql(getMilestones, {
+        options: ({ repoId, router }) => ({
+          pollInterval: MILESTONES_POLL_INTERVAL_MS,
+          variables: {
+            repoId: repoId || router.query.repoId,
+          },
+        }),
+        props: ({ data }) => ({
+          milestones: data.repo && data.repo.milestones,
+        }),
+      }),
+      graphql(getUncommittedChanges, {
+        options: (props) => ({
+          fetchPolicy: 'network-only',
+          pollInterval: UNCOMMITTED_CHANGES_POLL_INTERVAL_MS,
+          variables: { repoId: props.repoId },
+          ...(typeof options === 'function' ? options(props) : options),
+        }),
+        props: ({ data, ownProps }) => {
+          return {
+            ownProps,
+            data: data,
+            subscribe: ({ onError, onUpdate }) => {
+              return data.subscribeToMore({
+                document: uncommittedChangesSubscription,
+                variables: {
+                  repoId: data.repo.id,
+                },
+                onError,
+                updateQuery: (prev, { subscriptionData }) => {
+                  debug('subscription', 'update', subscriptionData)
+                  if (!subscriptionData.data) {
+                    console.warn('empty subscription data')
+                    return prev
+                  }
+                  let uncommittedChanges = prev.repo.uncommittedChanges
+                  const action = subscriptionData.data.uncommittedChanges.action
+                  if (action === 'create') {
+                    const newUser =
+                      subscriptionData.data.uncommittedChanges.user
+                    if (
+                      !uncommittedChanges.find((user) => user.id === newUser.id)
+                    ) {
+                      uncommittedChanges = uncommittedChanges.concat(newUser)
+                    }
+                  } else if (action === 'delete') {
+                    uncommittedChanges = uncommittedChanges.filter(
+                      (change) =>
+                        change.id !==
+                        subscriptionData.data.uncommittedChanges.user.id,
+                    )
+                  }
+                  onUpdate()
+                  return {
+                    ...prev,
+                    repo: {
+                      ...prev.repo,
+                      uncommittedChanges,
+                    },
+                  }
+                },
+              })
+            },
+          }
+        },
+      }),
+    )(UncommittedChanges)
+  }
 
 const Initials = ({ uncommittedChanges, t }) => (
   <div {...styles.container}>
@@ -267,13 +270,15 @@ const Initials = ({ uncommittedChanges, t }) => (
       </span>
     )}
     {uncommittedChanges.users.length ? (
-      uncommittedChanges.users.map(user => (
+      uncommittedChanges.users.map((user) => (
         <span
           key={user.id}
           {...css(styles.initials)}
           title={`${user.name} (${user.email})`}
           style={{
-            backgroundImage: user.portrait ? `url(${user.portrait})` : undefined
+            backgroundImage: user.portrait
+              ? `url(${user.portrait})`
+              : undefined,
           }}
         >
           {!user.portrait && getInitials(user)}
@@ -287,7 +292,7 @@ const Initials = ({ uncommittedChanges, t }) => (
 
 const Tags = ({ uncommittedChanges }) => (
   <div {...styles.container} style={{ margin: '40px 0' }}>
-    {uncommittedChanges.users.map(user => (
+    {uncommittedChanges.users.map((user) => (
       <div key={user.id} style={{ marginRight: 4, textAlign: 'center' }}>
         <div
           {...css(styles.initials)}
@@ -305,15 +310,15 @@ const Tags = ({ uncommittedChanges }) => (
 
 export const joinUsers = (users, t) =>
   users
-    .map(user => user.name)
+    .map((user) => user.name)
     .reduce((string, name, index, array) =>
       [string, name].join(
         t(
           `uncommittedChanges/users/separator/${
             index === array.length - 1 ? 'last' : 'other'
-          }`
-        )
-      )
+          }`,
+        ),
+      ),
     )
 
 export const ActiveInterruptionOverlay = withT(
@@ -323,7 +328,7 @@ export const ActiveInterruptionOverlay = withT(
         <Interaction.P>
           {t.pluralize('uncommittedChanges/interruption/text', {
             count: interruptingUsers.length,
-            interruptingUsers: joinUsers(interruptingUsers, t)
+            interruptingUsers: joinUsers(interruptingUsers, t),
           })}
         </Interaction.P>
         <Tags uncommittedChanges={uncommittedChanges} />
@@ -337,7 +342,7 @@ export const ActiveInterruptionOverlay = withT(
             onClick={onAcknowledged}
             style={{
               backgroundColor: warningColor,
-              borderColor: warningColor
+              borderColor: warningColor,
             }}
           >
             {t('uncommittedChanges/acknowledged')}
@@ -354,7 +359,7 @@ export const ActiveInterruptionOverlay = withT(
         </p>
       </OverlayBody>
     </Overlay>
-  )
+  ),
 )
 
 export const UncommittedChanges = ({ uncommittedChanges, t }) =>

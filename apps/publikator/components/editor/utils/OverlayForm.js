@@ -8,7 +8,7 @@ import {
   OverlayBody,
   mediaQueries,
   ColorContextProvider,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 
 const previewWidth = 290
@@ -21,35 +21,35 @@ export const styles = {
     zIndex: 1,
     fontSize: 24,
     ':hover': {
-      cursor: 'pointer'
-    }
+      cursor: 'pointer',
+    },
   }),
   preview: css({
     [mediaQueries.mUp]: {
       float: 'left',
       width: previewWidth,
-      marginRight: 20
-    }
+      marginRight: 20,
+    },
   }),
   edit: css({
     [mediaQueries.mUp]: {
       float: 'left',
       width: `calc(100% - ${previewWidth + 20}px)`,
-      paddingRight: 40
-    }
+      paddingRight: 40,
+    },
   }),
   noPreview: css({
     [mediaQueries.mUp]: {
       width: '100%',
-      paddingRight: 0
-    }
+      paddingRight: 0,
+    },
   }),
   contextBackground: css({
     position: 'relative',
     zIndex: 0,
     padding: '10px 15px',
-    margin: '0 -15px'
-  })
+    margin: '0 -15px',
+  }),
 }
 
 const ContextBackground = ({ children }) => {
@@ -72,7 +72,7 @@ const OverlayForm = ({
   extra,
   children,
   title,
-  showPreview = true
+  showPreview = true,
 }) => {
   const [colorScheme] = useColorContext()
 
@@ -111,7 +111,7 @@ OverlayForm.propTypes = {
   preview: PropTypes.node,
   extra: PropTypes.node,
   children: PropTypes.node,
-  onClose: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired,
 }
 
 export default OverlayForm

@@ -11,7 +11,7 @@ import {
   A,
   fontStyles,
   mediaQueries,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import withSearchRouter from './withSearchRouter'
 import { countFormat } from '../../lib/utils/format'
@@ -19,16 +19,16 @@ import { countFormat } from '../../lib/utils/format'
 const RESULT_COMPONENTS = {
   Document: DocumentResult,
   Comment: CommentResult,
-  User: UserResult
+  User: UserResult,
 }
 
 const styles = {
   container: css({
     paddingTop: 0,
-    paddingBottom: 120
+    paddingBottom: 120,
   }),
   results: css({
-    paddingTop: 5
+    paddingTop: 5,
   }),
   countLoaded: css({
     borderTopWidth: 1,
@@ -39,9 +39,9 @@ const styles = {
     textAlign: 'left',
     ...fontStyles.sansSerifRegular16,
     [mediaQueries.mUp]: {
-      ...fontStyles.sansSerifRegular21
-    }
-  })
+      ...fontStyles.sansSerifRegular21,
+    },
+  }),
 }
 
 const ResultsList = ({ nodes }) => {
@@ -53,7 +53,7 @@ const ResultsList = ({ nodes }) => {
         return (
           <Fragment key={index}>
             {React.createElement(RESULT_COMPONENTS[nodeType], {
-              node: node
+              node: node,
             })}
           </Fragment>
         )
@@ -69,16 +69,16 @@ const ResultsFooter = compose(withT)(
       <div {...styles.countLoaded} {...colorScheme.set('borderColor', 'text')}>
         {nodes.length === totalCount
           ? t.pluralize('search/pageInfo/total', {
-              count: countFormat(totalCount)
+              count: countFormat(totalCount),
             })
           : t('search/pageInfo/loadedTotal', {
               loaded: countFormat(nodes.length),
-              total: countFormat(totalCount)
+              total: countFormat(totalCount),
             })}
         {pageInfo.hasNextPage && (
           <A
             href='#'
-            onClick={e => {
+            onClick={(e) => {
               e.preventDefault()
               fetchMore({ after: pageInfo.endCursor })
             }}
@@ -88,12 +88,12 @@ const ResultsFooter = compose(withT)(
         )}
       </div>
     )
-  }
+  },
 )
 
 const Results = compose(
   withSearchRouter,
-  withResults
+  withResults,
 )(({ data: { loading, error, search } = {}, fetchMore }) => {
   return (
     <div {...styles.container}>

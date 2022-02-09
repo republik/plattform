@@ -17,7 +17,7 @@ import {
   Radio,
   Button,
   Interaction,
-  InlineSpinner
+  InlineSpinner,
 } from '@project-r/styleguide'
 
 import myBelongings from '../belongingsQuery'
@@ -31,8 +31,8 @@ export const styles = {
     minHeight: 40,
     paddingTop: '7px !important',
     paddingBottom: '6px !important',
-    background: 'transparent'
-  })
+    background: 'transparent',
+  }),
 }
 
 const cancellationCategories = gql`
@@ -61,14 +61,14 @@ const CancelMembership = ({
   membership,
   cancel,
   cancellationCategories,
-  t
+  t,
 }) => {
   const router = useRouter()
   const [cancellationType, setCancellationType] = useState('')
 
   const needsReason = ['OTHER', 'EDITORIAL'].includes(cancellationType)
   const [reason, setReason] = useState({
-    value: ''
+    value: '',
   })
   const reasonRef = useRef()
   const reasonError =
@@ -81,7 +81,7 @@ const CancelMembership = ({
   const [remoteState, setRemoteState] = useState({
     processing: false,
     success: false,
-    error: null
+    error: null,
   })
 
   useEffect(() => {
@@ -92,15 +92,15 @@ const CancelMembership = ({
         router.replace({
           pathname: '/abgang',
           query: {
-            membershipId: redirectMemberships[0].id
-          }
+            membershipId: redirectMemberships[0].id,
+          },
         })
       }
     }
   }, [redirectMemberships])
 
   useEffect(() => {
-    setReason(reason => ({ ...reason, dirty: false }))
+    setReason((reason) => ({ ...reason, dirty: false }))
     if (needsReason) {
       reasonRef.current.focus()
     }
@@ -145,7 +145,7 @@ const CancelMembership = ({
             <Item
               createdAt={new Date(membership.createdAt)}
               title={t(`memberships/title/${membership.type.name}`, {
-                sequenceNumber: membership.sequenceNumber
+                sequenceNumber: membership.sequenceNumber,
               })}
             >
               {!!latestPeriod && (
@@ -155,10 +155,10 @@ const CancelMembership = ({
                     t.first(
                       [
                         `memberships/${membership.type.name}/latestPeriod/renew/${membership.renew}/autoPay/${membership.autoPay}`,
-                        `memberships/latestPeriod/renew/${membership.renew}/autoPay/${membership.autoPay}`
+                        `memberships/latestPeriod/renew/${membership.renew}/autoPay/${membership.autoPay}`,
                       ],
                       { formattedEndDate },
-                      ''
+                      '',
                     )}
                 </P>
               )}
@@ -180,7 +180,7 @@ const CancelMembership = ({
             <div
               style={{
                 display: needsReason ? 'block' : 'none',
-                marginTop: 20
+                marginTop: 20,
               }}
             >
               <Field
@@ -208,8 +208,8 @@ const CancelMembership = ({
                     pathname: '/angebote',
                     query: {
                       package: membership.canProlong ? 'PROLONG' : 'ABO',
-                      userPrice: 1
-                    }
+                      userPrice: 1,
+                    },
                   }}
                 >
                   <A>{t('memberships/cancel/userPriceLink')}</A>
@@ -227,23 +227,23 @@ const CancelMembership = ({
                   return
                 }
                 setRemoteState({
-                  processing: true
+                  processing: true,
                 })
                 cancel({
                   id: membership.id,
                   details: {
                     type: cancellationType,
-                    reason: needsReason ? reason.value : ''
-                  }
+                    reason: needsReason ? reason.value : '',
+                  },
                 })
                   .then(() => {
                     setRemoteState({
-                      success: true
+                      success: true,
                     })
                   })
-                  .catch(error => {
+                  .catch((error) => {
                     setRemoteState({
-                      error
+                      error,
                     })
                   })
               }}
@@ -269,28 +269,28 @@ const CancelMembership = ({
 export default compose(
   graphql(cancelMembership, {
     props: ({ mutate }) => ({
-      cancel: variables => mutate({ variables })
-    })
+      cancel: (variables) => mutate({ variables }),
+    }),
   }),
   graphql(cancellationCategories, {
     props: ({ data, ownProps: { error, loading } }) => ({
       cancellationCategories: data.cancellationCategories,
       loading: loading || data.loading,
-      error: error || data.error
-    })
+      error: error || data.error,
+    }),
   }),
   graphql(myBelongings, {
     props: ({
       data,
-      ownProps: { membershipId, error, loading: categoryLoading }
+      ownProps: { membershipId, error, loading: categoryLoading },
     }) => {
       const memberships = data.me && data.me.memberships
       const membership =
-        memberships && memberships.find(v => v.id === membershipId)
+        memberships && memberships.find((v) => v.id === membershipId)
       const redirectMemberships =
         !membership &&
         memberships &&
-        memberships.filter(v => v.active && v.renew)
+        memberships.filter((v) => v.active && v.renew)
       const loading =
         (redirectMemberships && redirectMemberships.length > 0) ||
         categoryLoading ||
@@ -300,9 +300,9 @@ export default compose(
         membership: membership,
         loading,
         redirectMemberships,
-        error: error || data.error
+        error: error || data.error,
       }
-    }
+    },
   }),
-  withT
+  withT,
 )(CancelMembership)

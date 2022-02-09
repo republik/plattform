@@ -12,13 +12,13 @@ const styles = {
     alignItems: 'center',
     padding: '8px',
     height: pxToRem('56px'),
-    cursor: 'pointer'
+    cursor: 'pointer',
   }),
   profilePicture: css({
     display: 'block',
     width: pxToRem('40px'),
     height: pxToRem('40px'),
-    marginRight: '8px'
+    marginRight: '8px',
   }),
   meta: css({
     flex: 1,
@@ -26,24 +26,24 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    minWidth: 0
-  })
+    minWidth: 0,
+  }),
 }
 
 const propTypes = {
   t: PropTypes.func.isRequired,
   displayAuthor: PropTypes.shape({
-    profilePicture: PropTypes.string
+    profilePicture: PropTypes.string,
   }),
   onClick: PropTypes.func,
-  placeholder: PropTypes.string
+  placeholder: PropTypes.string,
 }
 
 export const CommentComposerPlaceholder = ({
   t,
   displayAuthor,
   onClick,
-  placeholder
+  placeholder,
 }: InferProps<typeof propTypes>) => {
   const [colorScheme] = useColorContext()
   const rootHover = useMemo(
@@ -51,11 +51,11 @@ export const CommentComposerPlaceholder = ({
       css({
         '@media (hover)': {
           ':hover': {
-            color: colorScheme.getCSSColor('text')
-          }
-        }
+            color: colorScheme.getCSSColor('text'),
+          },
+        },
       }),
-    [colorScheme]
+    [colorScheme],
   )
   return (
     <div

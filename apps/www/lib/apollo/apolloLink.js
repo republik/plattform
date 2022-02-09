@@ -4,13 +4,13 @@ import { WebSocketLink } from '@apollo/client/link/ws'
 import { API_URL, API_WS_URL, API_AUTHORIZATION_HEADER } from '../constants'
 import {
   inNativeAppBrowser,
-  inNativeAppBrowserLegacy
+  inNativeAppBrowserLegacy,
 } from '../withInNativeApp'
 import { createAppWorkerLink, hasSubscriptionOperation } from './appWorkerLink'
 
 const withResponseInterceptor = ({ onResponse }) =>
   new ApolloLink((operation, forward) => {
-    return forward(operation).map(result => {
+    return forward(operation).map((result) => {
       const context = operation.getContext()
       if (context.response) {
         onResponse(context.response)
@@ -21,7 +21,7 @@ const withResponseInterceptor = ({ onResponse }) =>
 
 const __DEV__ = process.env.NODE_ENV === 'development'
 
-const rewriteAPIHost = url => {
+const rewriteAPIHost = (url) => {
   if (__DEV__) {
     // support Android Emulator and Virtualbox IE VM
     if (
@@ -45,8 +45,8 @@ export const createLink = (headers = {}, onResponse = () => {}) => {
     headers: {
       cookie: headers.cookie,
       accept: headers.accept,
-      Authorization: API_AUTHORIZATION_HEADER
-    }
+      Authorization: API_AUTHORIZATION_HEADER,
+    },
   })
 
   if (process.browser) {
@@ -57,17 +57,17 @@ export const createLink = (headers = {}, onResponse = () => {}) => {
         options: {
           lazy: true,
           reconnect: true,
-          timeout: 50000
-        }
+          timeout: 50000,
+        },
       }),
-      http
+      http,
     )
   }
   // Link used for SSR
   return ApolloLink.from([
     withResponseInterceptor({
-      onResponse
+      onResponse,
     }),
-    http
+    http,
   ])
 }

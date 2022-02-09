@@ -11,7 +11,7 @@ export const AudioContext = React.createContext({
   toggleAudioPlayer: () => {},
   onCloseAudioPlayer: () => {},
   audioState: {},
-  autoPlayActive: false
+  autoPlayActive: false,
 })
 
 const useAudioState = createPersistedState('republik-audioplayer-audiostate')
@@ -40,7 +40,7 @@ const AudioProvider = ({ children }) => {
       url,
       title,
       sourcePath: path,
-      mediaId
+      mediaId,
     }
     if (inNativeApp) {
       let currentTime
@@ -51,8 +51,8 @@ const AudioProvider = ({ children }) => {
         type: 'play-audio',
         payload: {
           ...payload,
-          currentTime
-        }
+          currentTime,
+        },
       })
       return
     }
@@ -84,7 +84,7 @@ const AudioProvider = ({ children }) => {
         onCloseAudioPlayer,
         audioPlayerVisible,
         audioState,
-        autoPlayActive
+        autoPlayActive,
       }}
     >
       {children}

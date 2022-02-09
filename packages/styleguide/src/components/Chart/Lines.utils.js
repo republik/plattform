@@ -4,12 +4,12 @@ import { createTextGauger } from '../../lib/textGauger'
 
 import {
   sansSerifMedium12 as VALUE_FONT,
-  sansSerifRegular12 as LABEL_FONT
+  sansSerifRegular12 as LABEL_FONT,
 } from '../Typography/styles'
 
 export const yScales = {
   linear: scaleLinear,
-  log: scaleLog
+  log: scaleLog,
 }
 
 export const Y_LABEL_HEIGHT = 14
@@ -27,19 +27,21 @@ export const groupBy = (array, key) => {
     return o
   }, {})
 
-  return keys.map(k => ({
+  return keys.map((k) => ({
     key: k,
-    values: object[k]
+    values: object[k],
   }))
 }
 
 const groupLines = (color, category) =>
-  category ? d => d.category : d => d.datum[color]
+  category ? (d) => d.category : (d) => d.datum[color]
 
-export const groupByLines = (color, category) => ({ values, key }) => ({
-  key,
-  values: groupBy(values, groupLines(color, category))
-})
+export const groupByLines =
+  (color, category) =>
+  ({ values, key }) => ({
+    key,
+    values: groupBy(values, groupLines(color, category)),
+  })
 
 const getMiddleOfRange = (field, d) => {
   const lower = +d.datum[`${field}_lower`]
@@ -47,56 +49,51 @@ const getMiddleOfRange = (field, d) => {
   return lower + (upper - lower) / 2
 }
 
-export const addLabels = (
-  color,
-  colorAccessor,
-  labelFilter,
-  yFormat,
-  y,
-  props
-) => ({ values: line }) => {
-  const start = line[0]
-  const end = line[line.length - 1]
-  const label = labelFilter(start.datum)
+export const addLabels =
+  (color, colorAccessor, labelFilter, yFormat, y, props) =>
+  ({ values: line }) => {
+    const start = line[0]
+    const end = line[line.length - 1]
+    const label = labelFilter(start.datum)
 
-  const isHighlight = props.highlight
-    ? unsafeDatumFn(props.highlight)
-    : () => false
-  const hasStroke = props.stroke ? unsafeDatumFn(props.stroke) : () => false
+    const isHighlight = props.highlight
+      ? unsafeDatumFn(props.highlight)
+      : () => false
+    const hasStroke = props.stroke ? unsafeDatumFn(props.stroke) : () => false
 
-  const hasStartValue = isValuePresent(start.value)
-  const hasEndValue = isValuePresent(end.value)
-  const endLabel = label && props.endLabel && colorAccessor(end)
+    const hasStartValue = isValuePresent(start.value)
+    const hasEndValue = isValuePresent(end.value)
+    const endLabel = label && props.endLabel && colorAccessor(end)
 
-  return {
-    line,
-    start,
-    end,
-    highlighted: isHighlight(start.datum),
-    stroked: hasStroke(start.datum),
-    lineColor: color(colorAccessor(start)),
-    startValue:
-      label && props.startValue && hasStartValue && yFormat(start.value),
-    endValue: label && props.endValue && hasEndValue && yFormat(end.value),
-    endLabel,
-    startY: hasStartValue ? y(start.value) : undefined,
-    endY: hasEndValue
-      ? y(end.value)
-      : props.area && end.datum[`${props.area}_lower`]
-      ? y(getMiddleOfRange(props.area, end))
-      : undefined
+    return {
+      line,
+      start,
+      end,
+      highlighted: isHighlight(start.datum),
+      stroked: hasStroke(start.datum),
+      lineColor: color(colorAccessor(start)),
+      startValue:
+        label && props.startValue && hasStartValue && yFormat(start.value),
+      endValue: label && props.endValue && hasEndValue && yFormat(end.value),
+      endLabel,
+      startY: hasStartValue ? y(start.value) : undefined,
+      endY: hasEndValue
+        ? y(end.value)
+        : props.area && end.datum[`${props.area}_lower`]
+        ? y(getMiddleOfRange(props.area, end))
+        : undefined,
+    }
   }
-}
 
 export const calculateAndMoveLabelY = (linesWithLayout, property) => {
   let labelsMoved = 0
   let lastY = -Infinity
   sortBy(
     linesWithLayout.filter(
-      line => line[`${property}Value`] || line[`${property}Label`]
+      (line) => line[`${property}Value`] || line[`${property}Label`],
     ),
-    line => line[`${property}Y`]
-  ).forEach(line => {
+    (line) => line[`${property}Y`],
+  ).forEach((line) => {
     let labelY = line[`${property}Y`]
     let nextY = lastY + Y_LABEL_HEIGHT
     if (nextY > labelY) {
@@ -108,16 +105,16 @@ export const calculateAndMoveLabelY = (linesWithLayout, property) => {
   return labelsMoved
 }
 
-export const valueAccessor = d => d.value
+export const valueAccessor = (d) => d.value
 
 export const appendAnnotations = (values, annotations) =>
   annotations ? values.concat(annotations.map(valueAccessor)) : values
 
 export const valueGauger = createTextGauger(VALUE_FONT, {
   dimension: 'width',
-  html: true
+  html: true,
 })
 export const labelGauger = createTextGauger(LABEL_FONT, {
   dimension: 'width',
-  html: true
+  html: true,
 })

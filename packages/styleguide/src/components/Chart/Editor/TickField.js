@@ -4,7 +4,7 @@ import Field from '../../Form/Field'
 import { useCommaField } from './utils'
 import { timeParse } from '../../../lib/timeFormat'
 
-export const TickField = props => {
+export const TickField = (props) => {
   const {
     property,
     groupObject,
@@ -12,25 +12,25 @@ export const TickField = props => {
     value,
     config,
     context,
-    timeParseDefault
+    timeParseDefault,
   } = props
 
   const timeFormatParser = timeParse(
-    config.timeParse || config.timeFormat || timeParseDefault
+    config.timeParse || config.timeFormat || timeParseDefault,
   )
 
   const parser =
     context === 'time'
       ? timeFormatParser
       : context === 'number'
-      ? d => +d
+      ? (d) => +d
       : undefined
 
   const [ticksField, onTicksChange] = useCommaField(
     value,
     createOnFieldChange(property),
     parser,
-    context
+    context,
   )
 
   return (

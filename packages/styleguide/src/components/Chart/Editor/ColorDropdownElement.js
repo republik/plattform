@@ -1,7 +1,7 @@
 import React from 'react'
 import { fontStyles } from '../../Typography'
 
-export const ColorDropdownElement = props => {
+export const ColorDropdownElement = (props) => {
   const { colorRange, name } = props
   return (
     <div>
@@ -15,7 +15,7 @@ export const ColorDropdownElement = props => {
             style={{
               display: 'inline-block',
               flex: 1,
-              backgroundColor: d
+              backgroundColor: d,
             }}
           />
         ))}

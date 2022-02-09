@@ -15,7 +15,7 @@ const Me = ({ me, t, email, beforeSignInForm, beforeSignedInAs }) =>
       {beforeSignedInAs}
       <Interaction.P>
         {t('me/signedinAs', {
-          nameOrEmail: me.name ? `${me.name.trim()} (${me.email})` : me.email
+          nameOrEmail: me.name ? `${me.name.trim()} (${me.email})` : me.email,
         })}
       </Interaction.P>
       <SignOut />
@@ -24,7 +24,4 @@ const Me = ({ me, t, email, beforeSignInForm, beforeSignedInAs }) =>
     <SignIn email={email} beforeForm={beforeSignInForm} />
   )
 
-export default compose(
-  withMe,
-  withT
-)(Me)
+export default compose(withMe, withT)(Me)

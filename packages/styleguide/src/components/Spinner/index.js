@@ -5,11 +5,11 @@ const containerStyle = css({
   display: 'block',
   position: 'absolute',
   top: '50%',
-  left: '50%'
+  left: '50%',
 })
 const spin = css.keyframes({
   '0%': { opacity: 1 },
-  '100%': { opacity: 0.15 }
+  '100%': { opacity: 0.15 },
 })
 const barStyle = css({
   display: 'block',
@@ -20,7 +20,7 @@ const barStyle = css({
   width: '20%',
   height: '7.8%',
   top: '-3.9%',
-  left: '-10%'
+  left: '-10%',
 })
 
 export const Spinner = ({ size }) => {
@@ -43,7 +43,7 @@ export const Spinner = ({ size }) => {
 
 const inlineBlock = css({
   position: 'relative',
-  display: 'inline-block'
+  display: 'inline-block',
 })
 
 export const InlineSpinner = ({ size }) => (
@@ -53,7 +53,7 @@ export const InlineSpinner = ({ size }) => (
 )
 
 Spinner.defaultProps = InlineSpinner.defaultProps = {
-  size: 50
+  size: 50,
 }
 
 export default Spinner

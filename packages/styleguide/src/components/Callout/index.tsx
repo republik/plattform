@@ -7,11 +7,11 @@ import { useColorContext } from '../Colors/useColorContext'
 
 const slideUp = keyframes({
   from: {
-    bottom: -400
+    bottom: -400,
   },
   to: {
-    bottom: 0
-  }
+    bottom: 0,
+  },
 })
 
 const styles = {
@@ -25,8 +25,8 @@ const styles = {
     background: 'rgba(0,0,0,0.5)',
     [mUp]: {
       position: 'relative',
-      top: 18
-    }
+      top: 18,
+    },
   }),
   arrow: css({
     display: 'none',
@@ -36,8 +36,8 @@ const styles = {
       width: 14,
       height: 14,
       position: 'absolute',
-      top: -7
-    }
+      top: -7,
+    },
   }),
   callout: css({
     zIndex: 1,
@@ -51,31 +51,31 @@ const styles = {
       bottom: 'auto',
       top: 20,
       left: 'auto',
-      animation: 'none'
-    }
+      animation: 'none',
+    },
   }),
   right: {
     callout: css({
       [mUp]: {
         right: -9,
-        left: 'auto'
-      }
+        left: 'auto',
+      },
     }),
     arrow: css({
-      right: 14
-    })
+      right: 14,
+    }),
   },
   left: {
     callout: css({
       [mUp]: {
         left: -9,
-        right: 'auto'
-      }
+        right: 'auto',
+      },
     }),
     arrow: css({
-      left: 14
-    })
-  }
+      left: 14,
+    }),
+  },
 }
 
 type Props = {
@@ -89,7 +89,7 @@ const Callout = ({
   children,
   align = 'left',
   onClose,
-  contentPaddingMobile = '15px 15px 50px'
+  contentPaddingMobile = '15px 15px 50px',
 }: Props) => {
   const [colorScheme] = useColorContext()
   const calloutRule = useMemo(
@@ -97,10 +97,10 @@ const Callout = ({
       css({
         backgroundColor: colorScheme.getCSSColor('overlay'),
         [mUp]: {
-          boxShadow: colorScheme.getCSSColor('overlayShadow')
-        }
+          boxShadow: colorScheme.getCSSColor('overlayShadow'),
+        },
       }),
-    [colorScheme]
+    [colorScheme],
   )
   return (
     <div {...styles.calloutContainer} onClick={onClose}>
@@ -109,7 +109,7 @@ const Callout = ({
         {...styles.callout}
         {...styles[align].callout}
         {...calloutRule}
-        onClick={e => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
       >
         <div
           {...styles.arrow}
@@ -125,7 +125,7 @@ const Callout = ({
 Callout.propTypes = {
   align: PropTypes.oneOf(['left', 'right']),
   onClose: PropTypes.func,
-  contentPaddingMobile: PropTypes.string
+  contentPaddingMobile: PropTypes.string,
 }
 
 export default Callout

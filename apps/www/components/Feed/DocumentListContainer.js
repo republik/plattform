@@ -21,63 +21,65 @@ export const documentListQueryFragment = `
 `
 
 const defaultProps = {
-  getConnection: data => data.documents,
+  getConnection: (data) => data.documents,
   mergeConnection: (data, connection) => ({
     ...data,
-    documents: connection
+    documents: connection,
   }),
-  mapNodes: e => e,
+  mapNodes: (e) => e,
   variables: {},
-  placeholder: null
+  placeholder: null,
 }
 
-export const makeLoadMore = ({
-  fetchMore,
-  connection,
-  getConnection = defaultProps.getConnection,
-  mergeConnection = defaultProps.mergeConnection,
-  mapNodes = defaultProps.mapNodes,
-  variables
-}) => () =>
-  fetchMore({
-    updateQuery: (previousResult, { fetchMoreResult }) => {
-      const prevCon = getConnection(previousResult)
-      const moreCon = getConnection(fetchMoreResult)
-      const nodes = [...prevCon.nodes, ...moreCon.nodes]
-        .filter(node => mapNodes(node))
-        .filter(
-          // deduplicating due to off by one in pagination API
-          (node, index, all) =>
-            all.findIndex(n => mapNodes(n).id === mapNodes(node).id) === index
-        )
-      return mergeConnection(fetchMoreResult, {
-        ...prevCon,
-        ...moreCon,
-        nodes
-      })
-    },
-    variables: {
-      ...variables,
-      cursor: connection.pageInfo.endCursor
-    }
-  })
+export const makeLoadMore =
+  ({
+    fetchMore,
+    connection,
+    getConnection = defaultProps.getConnection,
+    mergeConnection = defaultProps.mergeConnection,
+    mapNodes = defaultProps.mapNodes,
+    variables,
+  }) =>
+  () =>
+    fetchMore({
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        const prevCon = getConnection(previousResult)
+        const moreCon = getConnection(fetchMoreResult)
+        const nodes = [...prevCon.nodes, ...moreCon.nodes]
+          .filter((node) => mapNodes(node))
+          .filter(
+            // deduplicating due to off by one in pagination API
+            (node, index, all) =>
+              all.findIndex((n) => mapNodes(n).id === mapNodes(node).id) ===
+              index,
+          )
+        return mergeConnection(fetchMoreResult, {
+          ...prevCon,
+          ...moreCon,
+          nodes,
+        })
+      },
+      variables: {
+        ...variables,
+        cursor: connection.pageInfo.endCursor,
+      },
+    })
 
 const DocumentListContainer = ({
-    query,
-    variables,
-    getConnection,
-    mergeConnection,
-    mapNodes,
-    placeholder,
-    help,
-    empty,
-    feedProps,
-    refetchOnUnmount,
-    showTotal
+  query,
+  variables,
+  getConnection,
+  mergeConnection,
+  mapNodes,
+  placeholder,
+  help,
+  empty,
+  feedProps,
+  refetchOnUnmount,
+  showTotal,
 }) => {
-
   const { loading, error, data, fetchMore, refetch } = useQuery(query, {
-    variables
+    variables,
   })
 
   useEffect(() => {
@@ -113,7 +115,7 @@ const DocumentListContainer = ({
                 getConnection,
                 mergeConnection,
                 mapNodes,
-                variables
+                variables,
               })}
               feedProps={feedProps}
               showTotal={showTotal}
@@ -138,7 +140,7 @@ DocumentListContainer.propTypes = {
   placeholder: PropTypes.element,
   refetchOnUnmount: PropTypes.bool,
   showTotal: PropTypes.bool,
-  help: PropTypes.element
+  help: PropTypes.element,
 }
 
 export default DocumentListContainer

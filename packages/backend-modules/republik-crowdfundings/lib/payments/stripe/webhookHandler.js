@@ -3,11 +3,8 @@ const getStripeClients = require('./clients')
 const handlers = require('./webhooks/index')
 
 module.exports = async ({ pgdb, t, redis, connectionContext }) => {
-  const {
-    platform,
-    connectedAccounts,
-    companyIdForAccountId,
-  } = await getStripeClients(pgdb)
+  const { platform, connectedAccounts, companyIdForAccountId } =
+    await getStripeClients(pgdb)
 
   const typesOfInterest = handlers.reduce(
     (arr, handler) => [...arr, ...handler.eventTypes],

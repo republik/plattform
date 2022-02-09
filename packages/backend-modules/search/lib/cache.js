@@ -46,38 +46,40 @@ const createGet = (redis) => async (query) => {
   }
 }
 
-const createSet = (redis) => async (query, data, options = {}) => {
-  if (SEARCH_CACHE_DISABLE) {
-    return
-  }
-  if (isEligible(query, options)) {
-    let payload
-    try {
-      payload = JSON.stringify({
-        data,
-        ...(SEARCH_CACHE_QUERY ? { query } : {}),
-      })
-      if (SEARCH_CACHE_COMPRESSION) {
-        payload = snappy.compressSync(payload)
+const createSet =
+  (redis) =>
+  async (query, data, options = {}) => {
+    if (SEARCH_CACHE_DISABLE) {
+      return
+    }
+    if (isEligible(query, options)) {
+      let payload
+      try {
+        payload = JSON.stringify({
+          data,
+          ...(SEARCH_CACHE_QUERY ? { query } : {}),
+        })
+        if (SEARCH_CACHE_COMPRESSION) {
+          payload = snappy.compressSync(payload)
+        }
+      } catch (e) {
+        console.warn(e, query)
       }
-    } catch (e) {
-      console.warn(e, query)
+      if (payload) {
+        debug('search:cache:set')('PUT %O', query)
+        return redis.setAsync(
+          // we don't expire the key because:
+          // - we flush the cache on publish which happens often (daily)
+          // - we run eviction policy: volatile-lru, let it take care of overspill
+          // - the data doesn't expire, old is valid, no need for redis to check
+          // - we don't need to keep the cache small and want to cache aggressively
+          getRedisKey(query),
+          payload,
+        )
+      }
     }
-    if (payload) {
-      debug('search:cache:set')('PUT %O', query)
-      return redis.setAsync(
-        // we don't expire the key because:
-        // - we flush the cache on publish which happens often (daily)
-        // - we run eviction policy: volatile-lru, let it take care of overspill
-        // - the data doesn't expire, old is valid, no need for redis to check
-        // - we don't need to keep the cache small and want to cache aggressively
-        getRedisKey(query),
-        payload,
-      )
-    }
+    debug('search:cache:set')('SKIP %O', query)
   }
-  debug('search:cache:set')('SKIP %O', query)
-}
 
 const createInvalidate = (redis) => async () => {
   debug('search:cache:invalidate')(`${keyPrefix}*`)

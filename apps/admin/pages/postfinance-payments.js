@@ -5,22 +5,18 @@ import { withRouter } from 'next/router'
 import App from '../components/App'
 import enforceAuthorization from '../components/Auth/withAuthorization'
 
-import {
-  Body,
-  Content,
-  Header
-} from '../components/Layout'
+import { Body, Content, Header } from '../components/Layout'
 import PostfinancePayments from '../components/PostfinancePayments/List'
 import { Router } from '../server/routes'
 
-const changeHandler = params => {
+const changeHandler = (params) => {
   Router.replaceRoute('postfinance-payments', params, { shallow: true })
 }
 
 export default compose(
   withRouter,
-  enforceAuthorization(['supporter', 'accountant'])
-)(props => {
+  enforceAuthorization(['supporter', 'accountant']),
+)((props) => {
   return (
     <App>
       <Body>

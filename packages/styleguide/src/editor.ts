@@ -1,3 +1,1 @@
-export {
-  default as ChartEditor
-} from './components/Chart/Editor'
+export { default as ChartEditor } from './components/Chart/Editor'

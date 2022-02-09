@@ -27,7 +27,7 @@ export const GET_ZAT_SEARCH = gql`
   ${MailsFragments}
 `
 
-const Zat = props => {
+const Zat = (props) => {
   const [zafClient, setZafClient] = useState(null)
   const [zafContext, setZafContext] = useState(null)
   const [zafUser, setZafUser] = useState(null)

@@ -6,7 +6,7 @@ import { useColorContext } from '../../Colors/useColorContext'
 const styles = {
   pre: css({
     margin: '20px auto',
-    whiteSpace: 'pre-wrap'
+    whiteSpace: 'pre-wrap',
   }),
   code: css({
     display: 'block',
@@ -16,13 +16,13 @@ const styles = {
     [mUp]: {
       padding: '0 25px 20px 25px',
       '&:first-child': {
-        paddingTop: '20px'
-      }
+        paddingTop: '20px',
+      },
     },
     '&:first-child': {
-      paddingTop: '12px'
-    }
-  })
+      paddingTop: '12px',
+    },
+  }),
 }
 
 export default ({ children }) => {

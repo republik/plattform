@@ -311,10 +311,10 @@ const checkSeed = async () => {
               defaultAmount: 1,
               reward: {
                 id: '00000000-0000-0000-0006-000000000020',
-                name: 'ABO'
-              }
-            }
-          ]
+                name: 'ABO',
+              },
+            },
+          ],
         },
       ],
     },
@@ -454,7 +454,6 @@ const syncPaymentIntent = ({
   })
 }
 
-
 module.exports = {
   prepareNewPledge,
   submitPledge,
@@ -466,5 +465,5 @@ module.exports = {
   addPaymentMethod,
   getDefaultPaymentSource,
   setDefaultPaymentMethod,
-  syncPaymentIntent
+  syncPaymentIntent,
 }

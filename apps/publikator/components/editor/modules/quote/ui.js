@@ -14,13 +14,13 @@ export default ({
   editorOptions = {},
   paragrapQuoteModule,
   paragraphSourceModule,
-  figureModule
+  figureModule,
 }) => {
   const { insertButtonText } = editorOptions
 
-  const isBlock = block => matchSubmodules(TYPE, subModules)
+  const isBlock = (block) => matchSubmodules(TYPE, subModules)
   const Form = createPropertyForm({
-    isDisabled: ({ value }) => !value.blocks.some(isBlock)
+    isDisabled: ({ value }) => !value.blocks.some(isBlock),
   })(({ disabled, value, onChange }) => {
     if (disabled) {
       return null
@@ -30,17 +30,17 @@ export default ({
       <div>
         {value.blocks
           .filter(isBlock)
-          .map(block =>
-            block.type === TYPE ? block : value.document.getParent(block.key)
+          .map((block) =>
+            block.type === TYPE ? block : value.document.getParent(block.key),
           )
           .filter(
             (block, index, all) =>
-              all.indexOf(block) === index && block.type === TYPE
+              all.indexOf(block) === index && block.type === TYPE,
           )
           .map((block, i) => {
             const figureNode =
               figureModule &&
-              block.nodes.find(n => n.type === figureModule.TYPE)
+              block.nodes.find((n) => n.type === figureModule.TYPE)
             return (
               <div key={`infobox-${i}`}>
                 <Label>Zitat</Label>
@@ -52,7 +52,7 @@ export default ({
                     { label: 'Normal', size: undefined },
                     { label: 'Klein', size: 'narrow' },
                     { label: 'Gross', size: 'breakout' },
-                    { label: 'Links', size: 'float' }
+                    { label: 'Links', size: 'float' },
                   ].map((size, i) => {
                     const checked = block.data.get('size') === size.size
 
@@ -60,12 +60,12 @@ export default ({
                       <Radio
                         key={`radio${i}`}
                         checked={checked}
-                        onChange={event => {
+                        onChange={(event) => {
                           event.preventDefault()
                           if (checked) return
 
                           let change = value.change().setNodeByKey(block.key, {
-                            data: block.data.set('size', size.size)
+                            data: block.data.set('size', size.size),
                           })
 
                           onChange(change)
@@ -73,7 +73,7 @@ export default ({
                       >
                         {size.label}
                       </Radio>,
-                      <br key={`br${i}`} />
+                      <br key={`br${i}`} />,
                     ]
                   })}
                 </p>
@@ -82,10 +82,10 @@ export default ({
                     {figureNode ? (
                       <A
                         href='#'
-                        onClick={e => {
+                        onClick={(e) => {
                           e.preventDefault()
                           onChange(
-                            value.change().removeNodeByKey(figureNode.key)
+                            value.change().removeNodeByKey(figureNode.key),
                           )
                         }}
                       >
@@ -94,13 +94,13 @@ export default ({
                     ) : (
                       <A
                         href='#'
-                        onClick={e => {
+                        onClick={(e) => {
                           e.preventDefault()
                           onChange(
                             value.change().insertNodeByKey(block.key, 0, {
                               kind: 'block',
-                              type: figureModule.TYPE
-                            })
+                              type: figureModule.TYPE,
+                            }),
                           )
                         }}
                       >
@@ -116,7 +116,7 @@ export default ({
     )
   })
 
-  const quoteButtonClickHandler = (value, onChange) => event => {
+  const quoteButtonClickHandler = (value, onChange) => (event) => {
     event.preventDefault()
 
     return onChange(
@@ -126,10 +126,10 @@ export default ({
           type: TYPE,
           nodes: [
             Block.create(paragrapQuoteModule.TYPE),
-            Block.create(paragraphSourceModule.TYPE)
-          ]
-        })
-      )
+            Block.create(paragraphSourceModule.TYPE),
+          ],
+        }),
+      ),
     )
   }
 
@@ -137,7 +137,8 @@ export default ({
 
   const QuoteButton = ({ value, onChange }) => {
     const disabled =
-      value.isBlurred || !value.blocks.every(n => insertTypes.includes(n.type))
+      value.isBlurred ||
+      !value.blocks.every((n) => insertTypes.includes(n.type))
     return (
       <span
         {...buttonStyles.insert}
@@ -152,6 +153,6 @@ export default ({
 
   return {
     insertButtons: [insertButtonText && QuoteButton],
-    forms: [Form]
+    forms: [Form],
   }
 }

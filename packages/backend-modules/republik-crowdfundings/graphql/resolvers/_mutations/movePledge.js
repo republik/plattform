@@ -48,12 +48,11 @@ module.exports = async (
     }
 
     // avoid multiple active memberships for one user
-    const userHasActiveMembership = !!(await transaction.public.memberships.findFirst(
-      {
+    const userHasActiveMembership =
+      !!(await transaction.public.memberships.findFirst({
         userId: user.id,
         active: true,
-      },
-    ))
+      }))
     if (
       userHasActiveMembership &&
       memberships.filter((m) => m.active).length > 0

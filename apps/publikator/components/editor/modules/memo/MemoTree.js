@@ -7,7 +7,7 @@ import {
   DiscussionContext,
   CommentNode,
   CommentComposer,
-  CommentComposerPlaceholder
+  CommentComposerPlaceholder,
 } from '@project-r/styleguide'
 
 import withT from '../../../../lib/withT'
@@ -15,7 +15,7 @@ import withMe from '../../../../lib/withMe'
 
 import { withMemos, getDisplayAuthor } from './graphql'
 
-const MemoTree = props => {
+const MemoTree = (props) => {
   const {
     repoId,
     parentId,
@@ -25,7 +25,7 @@ const MemoTree = props => {
     unpublish,
     memos,
     me,
-    t
+    t,
   } = props
 
   const discussionContext = useMemo(() => {
@@ -33,33 +33,33 @@ const MemoTree = props => {
       t,
       discussion: {
         id: repoId,
-        displayAuthor: getDisplayAuthor(me)
+        displayAuthor: getDisplayAuthor(me),
       },
       actions: {
         submitMemo: (parentId, text) =>
           publish(repoId, parentId, text).then(
-            async response => {
+            async (response) => {
               !!onPublished && (await onPublished(response.data.memo))
               return { ok: true }
             },
-            error => ({ error })
+            (error) => ({ error }),
           ),
         editMemo: (id, text) =>
           edit(id, text).then(
             () => ({ ok: true }),
-            error => ({ error })
+            (error) => ({ error }),
           ),
-        unpublishMemo: id =>
+        unpublishMemo: (id) =>
           unpublish(id).then(
             () => ({ ok: true }),
-            error => ({ error })
-          )
-      }
+            (error) => ({ error }),
+          ),
+      },
     }
   }, [repoId, me])
 
   // memos == ALL memos for a given repoId
-  const rootMemo = memos?.nodes?.find(node => node.id === parentId)
+  const rootMemo = memos?.nodes?.find((node) => node.id === parentId)
 
   return (
     <DiscussionContext.Provider value={discussionContext}>
@@ -83,16 +83,16 @@ const MemoContainer = ({ memo }) => {
         !!userCanEdit && {
           label: t('memo/container/edit'),
           icon: EditIcon,
-          onClick: () => setIsEditing(true)
+          onClick: () => setIsEditing(true),
         },
         !!userCanEdit && {
           label: t('memo/container/unpublish'),
           icon: UnpublishIcon,
           onClick: () => actions.unpublishMemo(memo.id),
-          disabled: !published
-        }
+          disabled: !published,
+        },
       ].filter(Boolean),
-    [userCanEdit, published]
+    [userCanEdit, published],
   )
 
   if (!memo) {
@@ -111,7 +111,7 @@ const MemoContainer = ({ memo }) => {
           setIsReplying(true)
         },
         handleLoadReplies: undefined,
-        handleShare: undefined
+        handleShare: undefined,
       }}
       userCanComment={true}
       menuItems={menuItems}
@@ -119,8 +119,10 @@ const MemoContainer = ({ memo }) => {
         isEditing && <MemoComposer memo={memo} onClose={setIsEditing} />
       }
     >
-      {isReplying && <MemoComposer parentId={memo.id} onClose={setIsReplying} />}
-      {memo.comments.nodes.map(memo => (
+      {isReplying && (
+        <MemoComposer parentId={memo.id} onClose={setIsReplying} />
+      )}
+      {memo.comments.nodes.map((memo) => (
         <MemoContainer key={memo.id} memo={memo} />
       ))}
     </CommentNode>
