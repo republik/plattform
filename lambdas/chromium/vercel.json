@@ -1,0 +1,11 @@
+{
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/screenshot?url=https://github.com/republik/plattform/tree/master/lambdas/chromium"
+    }
+  ],
+  "rewrites": [
+    { "source": "/screenshot", "destination": "/screenshot.js" }
+  ]
+}
