@@ -99,7 +99,6 @@ const DocumentListContainer = ({
       error={error}
       render={() => {
         const connection = getConnection(data)
-        console.log({ connection })
         const isEmpty = connection.totalCount < 1
         if (isEmpty) {
           return placeholder
