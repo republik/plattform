@@ -5,12 +5,14 @@ import colors from '../../../theme/colors'
 import { fontFamilies } from '../../../theme/fonts'
 
 import { paragraphStyle, linkStyle } from './Paragraph'
+import { matchProjectR } from './project-r/utils'
+import { Footer as ProjectRFooter } from './project-r/Footer'
 
 const footerParagraphStyle = {
   color: colors.text,
   fontFamily: fontFamilies.sansSerifRegular,
   fontSize: '15px',
-  lineHeight: '30px'
+  lineHeight: '30px',
 }
 
 const footerLinkStyle = {
@@ -18,11 +20,15 @@ const footerLinkStyle = {
   color: colors.text,
   fontFamily: fontFamilies.sansSerifRegular,
   fontSize: '15px',
-  lineHeight: '30px'
+  lineHeight: '30px',
 }
 
 const Footer = ({ meta }) => {
-  const { slug, path } = meta
+  const { slug, path, format } = meta
+  const isProjectR = matchProjectR(format)
+
+  if (isProjectR) return <ProjectRFooter />
+
   return (
     <Center>
       <a href='https://www.republik.ch/' style={linkStyle}>
@@ -35,7 +41,7 @@ const Footer = ({ meta }) => {
             width: '178px !important',
             height: '79px !important',
             margin: 0,
-            maxWidth: '100% !important'
+            maxWidth: '100% !important',
           }}
           alt='REPUBLIK'
         />

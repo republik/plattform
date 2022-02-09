@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import colors from '../../../theme/colors'
 import { getFormatLine } from '../../../components/TeaserFeed/utils'
+import { matchProjectR } from './project-r/utils'
 
 export default ({ meta }) => {
   const { slug, path, format } = meta
@@ -10,15 +11,20 @@ export default ({ meta }) => {
   // specifically resolved meta object
   // https://github.com/orbiting/backends/commit/cce72915353d60c3cd3b4ecafefa3a11fb092933
   const isCovid19 =
-    (typeof format === 'string' && format.includes('format-covid-19-uhr-newsletter')) ||
+    (typeof format === 'string' &&
+      format.includes('format-covid-19-uhr-newsletter')) ||
     format?.repoId?.includes('format-covid-19-uhr-newsletter')
+
+  const isProjectR = matchProjectR(format)
+
+  if (isProjectR) return null
 
   const formatLine = useMemo(() => {
     return getFormatLine({
       format: meta.format,
       series: meta.series,
       repoId: meta.repoId,
-      path: meta.path
+      path: meta.path,
     })
   }, [meta])
 
@@ -32,7 +38,7 @@ export default ({ meta }) => {
             borderBottom:
               formatLine && formatLine.color
                 ? `3px solid ${formatLine.color}`
-                : `1px solid ${colors.divider}`
+                : `1px solid ${colors.divider}`,
           }}
         >
           <a
@@ -50,7 +56,7 @@ export default ({ meta }) => {
                 width: `${isCovid19 ? 234 : 178}px !important`,
                 height: '79px !important',
                 margin: 0,
-                maxWidth: '100% !important'
+                maxWidth: '100% !important',
               }}
               alt='REPUBLIK'
             />
