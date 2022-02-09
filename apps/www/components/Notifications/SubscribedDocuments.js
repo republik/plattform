@@ -33,15 +33,15 @@ const FormatCheckboxes = ({ formats }) => (
   </div>
 )
 
-const getSubscriptionCount = section =>
-  section.formats.nodes.filter(f => f.subscribedByMe.active).length
+const getSubscriptionCount = (section) =>
+  section.formats.nodes.filter((f) => f.subscribedByMe.active).length
 
 const getVisibleSections = (sections, prevShown = []) =>
   sections.filter(
-    section =>
-      prevShown.find(s => s.id === section.id) ||
+    (section) =>
+      prevShown.find((s) => s.id === section.id) ||
       getSubscriptionCount(section) ||
-      SECTIONS_ALWAYS_SHOWN.find(repoId => repoId === section.repoId),
+      SECTIONS_ALWAYS_SHOWN.find((repoId) => repoId === section.repoId),
   )
 
 const SubscribedDocuments = ({ t, data: { sections }, isMember }) => {
@@ -50,7 +50,7 @@ const SubscribedDocuments = ({ t, data: { sections }, isMember }) => {
   const sectionNodes = sections && sections.nodes
   const sectionsWithFormat = React.useMemo(() => {
     return sectionNodes
-      ? sectionNodes.filter(s => s.formats.nodes.length > 0)
+      ? sectionNodes.filter((s) => s.formats.nodes.length > 0)
       : []
   }, [sectionNodes])
 
@@ -59,7 +59,7 @@ const SubscribedDocuments = ({ t, data: { sections }, isMember }) => {
   )
 
   useEffect(() => {
-    setVisibleSections(prevShown =>
+    setVisibleSections((prevShown) =>
       getVisibleSections(sectionsWithFormat, prevShown),
     )
   }, [sectionsWithFormat])
@@ -80,7 +80,7 @@ const SubscribedDocuments = ({ t, data: { sections }, isMember }) => {
           count: totalSubs,
         })}
       </Interaction.P>
-      {(showAll ? sectionsWithFormat : visibleSections).map(section => (
+      {(showAll ? sectionsWithFormat : visibleSections).map((section) => (
         <div
           {...colorScheme.set(
             'color',

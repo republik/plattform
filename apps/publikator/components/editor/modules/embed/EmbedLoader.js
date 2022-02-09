@@ -14,10 +14,10 @@ const styles = {
     lineHeight: 0,
     transition: 'outline-color 0.2s',
     '&[data-active="true"]': {
-      outlineColor: colors.primary
+      outlineColor: colors.primary,
     },
-    pointerEvents: 'none'
-  })
+    pointerEvents: 'none',
+  }),
 }
 
 export default (query, Component) => {
@@ -29,7 +29,7 @@ export default (query, Component) => {
       this.state = {
         loading: !hasId,
         error:
-          !hasId && !node.data.has('queryParams') && 'No embed params found.'
+          !hasId && !node.data.has('queryParams') && 'No embed params found.',
       }
     }
 
@@ -45,30 +45,30 @@ export default (query, Component) => {
       client
         .query({
           query,
-          variables: { id, embedType }
+          variables: { id, embedType },
         })
         .then(({ data }) => {
-          editor.change(t =>
+          editor.change((t) =>
             t.setNodeByKey(node.key, {
               data: {
                 ...data.embed,
                 ...(data.embed.__typename === 'Comment'
                   ? { content: data.embed.text, text: undefined }
                   : {}),
-                url: node.data.get('url')
-              }
-            })
+                url: node.data.get('url'),
+              },
+            }),
           )
           this.setState({ error: null, loading: false })
         })
-        .catch(error => this.setState({ error, loading: false }))
+        .catch((error) => this.setState({ error, loading: false }))
     }
 
     render() {
       const { loading, error } = this.state
       const { client, t, ...props } = this.props
       const { node, editor } = props
-      const active = editor.value.blocks.some(block => block.key === node.key)
+      const active = editor.value.blocks.some((block) => block.key === node.key)
 
       return (
         <Loader
@@ -92,10 +92,7 @@ export default (query, Component) => {
                 contentEditable={false}
               >
                 <Component
-                  data={node.data
-                    .set('t', t)
-                    .set('content', content)
-                    .toJS()}
+                  data={node.data.set('t', t).set('content', content).toJS()}
                 />
               </div>
             )

@@ -11,23 +11,23 @@ const styles = {
     flexWrap: 'wrap',
     marginTop: 27,
     [mediaQueries.mUp]: {
-      marginTop: -20
-    }
+      marginTop: -20,
+    },
   }),
   item: css({
     margin: '8px 15px',
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
   }),
   label: css({
     ...fontStyles.sansSerifMedium19,
     [mediaQueries.mUp]: {
-      ...fontStyles.sansSerifMedium26
-    }
+      ...fontStyles.sansSerifMedium26,
+    },
   }),
   link: css({
     color: 'inherit',
-    textDecoration: 'none'
-  })
+    textDecoration: 'none',
+  }),
 }
 
 const SectionNav = ({ color, linkedDocuments = { nodes: [] } }) => {
@@ -37,9 +37,9 @@ const SectionNav = ({ color, linkedDocuments = { nodes: [] } }) => {
   return (
     <div {...styles.container}>
       {linkedDocuments.nodes
-        .filter(d => d.meta.template === 'format')
+        .filter((d) => d.meta.template === 'format')
         .sort((a, b) => ascending(a.meta.title, b.meta.title))
-        .map(d => {
+        .map((d) => {
           return (
             <div key={d.id} {...styles.item}>
               <Link href={d.meta.path} key={d.meta.path} passHref>

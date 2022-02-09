@@ -33,7 +33,7 @@ const Component = ({ children }) => {
 
 [Development Guide](/dev/colors)
   `}
-    {['light', 'dark'].map(colorSchemeKey => {
+    {['light', 'dark'].map((colorSchemeKey) => {
       const colors = colorDefinitions[colorSchemeKey]
       return (
         <div
@@ -43,13 +43,13 @@ const Component = ({ children }) => {
             backgroundColor: colors.default,
             // headlines & paragraphs
             '& > div > *': {
-              color: `${colors.text} !important`
+              color: `${colors.text} !important`,
             },
             // ColorSpecimen text block
             '& .css-1uvsawy': {
               color: `${colors.text} !important`,
-              backgroundColor: `${colors.hover} !important`
-            }
+              backgroundColor: `${colors.hover} !important`,
+            },
           })}
         >
           {markdown`
@@ -130,14 +130,14 @@ ${(
 
 Most charts will use sequential colors, e.g. bars all in the first sequential color and one highlight in the second. Opposite colors are used for diverging ranges, with an optional neutral color in the middle.
 
-${[100, 80, 60].map(intensity => (
+${[100, 80, 60].map((intensity) => (
   <ColorSpecimen
     span={1}
     name={`sequential${intensity}`}
     value={colors[`sequential${intensity}`]}
   />
 ))}
-${[60, 80, 100].map(intensity => (
+${[60, 80, 100].map((intensity) => (
   <ColorSpecimen
     span={1}
     name={`opposite${intensity}`}

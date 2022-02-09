@@ -3,7 +3,7 @@ import Placeholder from './Placeholder'
 const identifiers = new Proxy(
   {},
   {
-    get: () => Placeholder
-  }
+    get: () => Placeholder,
+  },
 )
 export default identifiers

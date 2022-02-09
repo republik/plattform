@@ -9,8 +9,8 @@ import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   carousel: css({
-    padding: `30px ${PADDING}px ${30 - PADDING}px`
-  })
+    padding: `30px ${PADDING}px ${30 - PADDING}px`,
+  }),
 }
 
 export const Carousel = ({
@@ -22,7 +22,7 @@ export const Carousel = ({
   bgColor,
   color,
   grid,
-  isSeriesNav
+  isSeriesNav,
 }) => {
   const [colorScheme] = useColorContext()
   const row = children && children[1]
@@ -44,7 +44,7 @@ export const Carousel = ({
         color,
         tileCount,
         tileMaxWidth,
-        grid
+        grid,
       }}
     >
       <section
@@ -56,9 +56,9 @@ export const Carousel = ({
           ...(isSeriesNav
             ? {
                 paddingTop: 0,
-                paddingBottom: 0
+                paddingBottom: 0,
               }
-            : {})
+            : {}),
         }}
       >
         <div
@@ -68,7 +68,7 @@ export const Carousel = ({
               ? TILE_MAX_WIDTH * 5
               : tileCount
               ? tileCount * tileMaxWidth
-              : undefined
+              : undefined,
           }}
         >
           {children}
@@ -85,7 +85,7 @@ Carousel.propTypes = {
   color: PropTypes.string,
   outline: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   bigger: PropTypes.bool,
-  children: PropTypes.node
+  children: PropTypes.node,
 }
 
 Carousel.defaultProps = defaultValue

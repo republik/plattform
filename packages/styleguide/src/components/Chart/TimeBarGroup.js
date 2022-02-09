@@ -2,7 +2,7 @@ import React from 'react'
 import { css } from 'glamor'
 import {
   sansSerifMedium14,
-  sansSerifRegular12 as LABEL_FONT
+  sansSerifRegular12 as LABEL_FONT,
 } from '../Typography/styles'
 import { last } from './utils'
 import { useColorContext } from '../Colors/useColorContext'
@@ -10,19 +10,19 @@ import { XAnnotation, YAnnotation } from './TimeBarsAnnotations'
 
 const styles = {
   columnTitle: css({
-    ...sansSerifMedium14
+    ...sansSerifMedium14,
   }),
   axisLabel: css({
-    ...LABEL_FONT
+    ...LABEL_FONT,
   }),
   axisYLine: css({
     strokeWidth: '1px',
-    shapeRendering: 'crispEdges'
+    shapeRendering: 'crispEdges',
   }),
   axisXLine: css({
     strokeWidth: '1px',
-    shapeRendering: 'crispEdges'
-  })
+    shapeRendering: 'crispEdges',
+  }),
 }
 
 const TimeBarGroup = ({
@@ -40,7 +40,7 @@ const TimeBarGroup = ({
   width,
   xAxisPos,
   xAxisElement,
-  yScaleInvert
+  yScaleInvert,
 }) => {
   const [colorScheme] = useColorContext()
   const barWidth = x.bandwidth()
@@ -58,7 +58,7 @@ const TimeBarGroup = ({
         </text>
       )}
       {xAnnotations
-        .filter(annotation => annotation.ghost)
+        .filter((annotation) => annotation.ghost)
         .map((annotation, i) => (
           <rect
             key={`ghost-${i}`}
@@ -70,7 +70,7 @@ const TimeBarGroup = ({
             {...colorScheme.set('fill', 'divider')}
           />
         ))}
-      {bars.map(bar => {
+      {bars.map((bar) => {
         return (
           <g key={bar.x} transform={`translate(${x(bar.x)},0)`}>
             {bar.segments.map((segment, i) => (
@@ -94,7 +94,7 @@ const TimeBarGroup = ({
               {...styles.axisYLine}
               {...colorScheme.set('stroke', 'text')}
               style={{
-                opacity: tick === 0 ? 0.8 : 0.17
+                opacity: tick === 0 ? 0.8 : 0.17,
               }}
               x2={width}
             />
@@ -117,7 +117,7 @@ const TimeBarGroup = ({
             annotation={annotation}
             width={width}
             yFormat={yAxis.format}
-            xCalc={d => x(xNormalizer(d))}
+            xCalc={(d) => x(xNormalizer(d))}
             tLabel={tLabel}
           />
         </g>
@@ -132,7 +132,7 @@ const TimeBarGroup = ({
             width={width}
             barWidth={barWidth}
             yFormat={yAxis.format}
-            xCalc={d => x(xNormalizer(d))}
+            xCalc={(d) => x(xNormalizer(d))}
             tLabel={tLabel}
           />
         </g>

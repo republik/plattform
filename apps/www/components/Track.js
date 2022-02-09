@@ -12,26 +12,21 @@ import { PUBLIC_BASE_URL } from '../lib/constants'
 import { PSP_PLEDGE_ID_QUERY_KEYS } from './Payment/constants'
 import { useMe } from '../lib/context/MeContext'
 
-const trackRoles = me =>
+const trackRoles = (me) =>
   track([
     'setCustomDimension',
     1,
-    me
-      ? []
-          .concat(me.roles)
-          .sort()
-          .join(' ') || 'none'
-      : 'guest'
+    me ? [].concat(me.roles).sort().join(' ') || 'none' : 'guest',
   ])
 
-const trackUrl = url => {
+const trackUrl = (url) => {
   // sanitize url
   const urlObject = parse(url, true)
   const { query, pathname } = urlObject
 
   // Redact receive payment psp payloads
   if (pathname === '/angebote' || pathname === '/en') {
-    const key = PSP_PLEDGE_ID_QUERY_KEYS.find(key => query[key])
+    const key = PSP_PLEDGE_ID_QUERY_KEYS.find((key) => query[key])
     if (key) {
       // redact all query params
       urlObject.query = { [key]: 'R*' }
@@ -109,7 +104,7 @@ const Track = () => {
       trackUrl(window.location.href)
     }
 
-    const onRouteChangeComplete = url => {
+    const onRouteChangeComplete = (url) => {
       // give pages time to set correct page title
       // may not always be enough, e.g. if data dependent and slow query/network, but works fine for many cases
       setTimeout(() => {

@@ -7,17 +7,17 @@ import { GITHUB_ORG } from '../../../lib/settings'
 
 // setter for testing
 let githubOrg = GITHUB_ORG
-export const setOrg = value => {
+export const setOrg = (value) => {
   if (process.env.NODE_ENV !== 'test') {
     throw new Error(
-      'utils.github.setOrg can only be used in the TEST environment'
+      'utils.github.setOrg can only be used in the TEST environment',
     )
   }
   githubOrg = value
 }
 
 const regex = /^https:\/\/github.com\/([^/]+)\/([^/?]+)\??([^#]*)#?(.*)/
-export const extract = value => {
+export const extract = (value) => {
   const info = String(value).match(regex)
   if (!info || info[1] !== githubOrg) {
     return null
@@ -26,7 +26,7 @@ export const extract = value => {
     id: `${info[1]}/${info[2]}`,
     name: info[2],
     query: info[3],
-    hash: info[4]
+    hash: info[4],
   }
 }
 
@@ -36,7 +36,7 @@ export const RepoLink = ({
   value,
   Wrapper = Fragment,
   invalid = nada,
-  autoSlug
+  autoSlug,
 }) => {
   const info = extract(value)
   if (!info) {
@@ -51,7 +51,7 @@ export const RepoLink = ({
         passHref
         route='repo/tree'
         params={{
-          repoId: info.id.split('/')
+          repoId: info.id.split('/'),
         }}
       >
         <A>

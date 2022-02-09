@@ -10,9 +10,9 @@ const noteRule = {
     {
       matchMdast: matchParagraph,
       component: NoteParagraph,
-      rules: [inlineRules, linkRule]
-    }
-  ]
+      rules: [inlineRules, linkRule],
+    },
+  ],
 }
 
 export default noteRule

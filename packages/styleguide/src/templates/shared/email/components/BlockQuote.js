@@ -8,7 +8,7 @@ export default BlockQuote
 export const ParagraphWrapper = ({ children }) => (
   <div
     style={{
-      backgroundColor: '#F6F8F7'
+      backgroundColor: '#F6F8F7',
     }}
   >
     {children}
@@ -24,7 +24,7 @@ export const Paragraph = ({ children }) => (
       lineHeight: '30px',
       // Display 'inline-block' is needed to make sure that the bg-color
       // of the parent-element is also applied to the margin on the y-axis
-      display: 'inline-block'
+      display: 'inline-block',
     }}
   >
     {children}

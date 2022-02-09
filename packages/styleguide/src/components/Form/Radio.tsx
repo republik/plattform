@@ -6,27 +6,27 @@ import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   label: css({
-    cursor: 'pointer'
+    cursor: 'pointer',
   }),
   withText: css({
     ...fontStyles.sansSerifRegular,
     fontSize: pxToRem(16),
-    lineHeight: pxToRem(20)
+    lineHeight: pxToRem(20),
   }),
   withoutText: css({
-    lineHeight: 0
+    lineHeight: 0,
   }),
   input: css({
-    display: 'none'
+    display: 'none',
   }),
   box: css({
     display: 'inline-block',
     marginRight: 10,
-    verticalAlign: 'middle'
+    verticalAlign: 'middle',
   }),
   boxWithouText: css({
-    display: 'inline-block'
-  })
+    display: 'inline-block',
+  }),
 }
 
 const RadioCircle = ({ checked, disabled }) => {

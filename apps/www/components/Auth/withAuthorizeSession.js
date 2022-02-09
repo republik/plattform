@@ -21,11 +21,11 @@ const mutation = gql`
 
 export default graphql(mutation, {
   props: ({ mutate }) => ({
-    authorizeSession: variables =>
+    authorizeSession: (variables) =>
       mutate({
         variables,
         refetchQueries: [{ query: meQuery }],
-        awaitRefetchQueries: true
-      })
-  })
+        awaitRefetchQueries: true,
+      }),
+  }),
 })

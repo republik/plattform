@@ -12,7 +12,7 @@ import {
   Radio,
   Checkbox,
   Field,
-  Loader
+  Loader,
 } from '@project-r/styleguide'
 
 import { TextButton, displayDate } from '../../Display/utils'
@@ -63,7 +63,7 @@ export default class CancelPledge extends Component {
       suppressConfirmation: cancellation && cancellation.suppressConfirmation,
       suppressWinback: cancellation && cancellation.suppressWinback,
       reason: (cancellation && cancellation.reason) || '',
-      cancellationType: (cancellation && cancellation.category.type) || ''
+      cancellationType: (cancellation && cancellation.category.type) || '',
     }
 
     this.reasonChangeHandler = (_, value) => {
@@ -86,31 +86,31 @@ export default class CancelPledge extends Component {
       this.setState(() => ({ isOpen: false }))
     }
 
-    this.submitHandler = mutation => () => {
+    this.submitHandler = (mutation) => () => {
       const {
         immediately,
         suppressConfirmation,
         suppressWinback,
         reason,
-        cancellationType
+        cancellationType,
       } = this.state
 
       return mutation({
         variables: {
           ...(this.props.cancellation && {
-            cancellationId: this.props.cancellation.id
+            cancellationId: this.props.cancellation.id,
           }),
           ...(!this.props.cancellation && {
             membershipId: this.props.membership.id,
-            immediately
+            immediately,
           }),
           details: {
             reason,
             type: cancellationType,
             suppressConfirmation,
-            suppressWinback
-          }
-        }
+            suppressWinback,
+          },
+        },
       }).then(() => this.setState(() => ({ isOpen: false })))
     }
   }
@@ -143,7 +143,7 @@ export default class CancelPledge extends Component {
                       {({
                         loading: queryLoading,
                         error: queryError,
-                        data: queryData
+                        data: queryData,
                       }) => {
                         const { cancellationCategories } = queryData || {}
                         return (
@@ -182,20 +182,20 @@ export default class CancelPledge extends Component {
                                           checked={cancellationType === type}
                                           onChange={() =>
                                             this.setState({
-                                              cancellationType: type
+                                              cancellationType: type,
                                             })
                                           }
                                         >
                                           {label}
                                         </Radio>
                                       </Interaction.P>
-                                    )
+                                    ),
                                   )}
                                 <Field
                                   value={reason}
                                   label={'Erläuterungen'}
                                   onChange={this.reasonChangeHandler}
-                                  renderInput={props => (
+                                  renderInput={(props) => (
                                     <TextareaAutosize
                                       {...props}
                                       style={{ lineHeight: '30px' }}

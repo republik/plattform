@@ -2,16 +2,10 @@ import React, { Component } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 
-import {
-  Loader,
-  InlineSpinner
-} from '@project-r/styleguide'
+import { Loader, InlineSpinner } from '@project-r/styleguide'
 
-import {
-  Section,
-  SectionTitle
-} from '../../Display/utils'
-import DeleteUser from './DeleteUser';
+import { Section, SectionTitle } from '../../Display/utils'
+import DeleteUser from './DeleteUser'
 
 const GET_ACTIONS = gql`
   query actions($slug: String) {
@@ -31,8 +25,7 @@ export default class Actions extends Component {
     return (
       <Query query={GET_ACTIONS} variables={{ slug: this.props.userId }}>
         {({ loading, error, data }) => {
-          const isInitialLoading =
-            loading && !(data && data.user)
+          const isInitialLoading = loading && !(data && data.user)
           const isLoading = loading && !isInitialLoading
 
           return (
@@ -50,10 +43,7 @@ export default class Actions extends Component {
                       </div>
                     )}
                     {!isLoading && (
-                      <DeleteUser
-                        userId={user.id}
-                        deletedAt={user.deletedAt}
-                      />
+                      <DeleteUser userId={user.id} deletedAt={user.deletedAt} />
                     )}
                   </Section>
                 )

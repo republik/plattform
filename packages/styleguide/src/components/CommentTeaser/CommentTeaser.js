@@ -9,7 +9,7 @@ import { useMediaQuery } from '../../lib/useMediaQuery'
 import { serifRegular14 } from '../Typography/styles'
 import {
   CommentBodyParagraph,
-  CommentBodyFeaturedText
+  CommentBodyFeaturedText,
 } from '../CommentBody/web'
 import { Context, Header } from '../Discussion/Internal/Comment'
 import RawHtml from '../RawHtml/'
@@ -24,29 +24,29 @@ const styles = {
     margin: 0,
     paddingTop: 10,
     paddingBottom: 40,
-    textAlign: 'left'
+    textAlign: 'left',
   }),
   header: css({
-    marginBottom: 10
+    marginBottom: 10,
   }),
   body: css({
     ...serifRegular14,
     wordWrap: 'break-word',
-    margin: '10px 0'
+    margin: '10px 0',
   }),
   link: css({
     color: 'inherit',
     textDecoration: 'none',
-    cursor: 'pointer'
+    cursor: 'pointer',
   }),
   image: css({
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
     width: '100%',
     [mUp]: {
-      marginTop: 10
-    }
-  })
+      marginTop: 10,
+    },
+  }),
 }
 
 const DefaultLink = ({ children }) => children
@@ -68,7 +68,7 @@ export const CommentTeaser = ({
     preview,
     featuredText,
     highlights,
-    createdAt
+    createdAt,
   } = comment
   const isDesktop = useMediaQuery(mUp)
   const [colorScheme] = useColorContext()
@@ -89,13 +89,13 @@ export const CommentTeaser = ({
    */
   const clock = {
     t,
-    isDesktop
+    isDesktop,
   }
 
   const discussionContextValue = {
     discussion,
     clock,
-    CommentLink
+    CommentLink,
   }
 
   const highlightEMRule = useMemo(
@@ -103,10 +103,10 @@ export const CommentTeaser = ({
       css({
         '& em': {
           background: colorScheme.getCSSColor('alert'),
-          fontStyle: 'normal'
-        }
+          fontStyle: 'normal',
+        },
       }),
-    [colorScheme]
+    [colorScheme],
   )
   return (
     <DiscussionContext.Provider value={discussionContextValue}>
@@ -123,7 +123,7 @@ export const CommentTeaser = ({
               comment={{
                 id,
                 displayAuthor,
-                createdAt
+                createdAt,
               }}
               menu={menu}
               CommentLink={CommentLink}
@@ -164,7 +164,7 @@ export const CommentTeaser = ({
                   <Fragment>
                     <RawHtml
                       dangerouslySetInnerHTML={{
-                        __html: highlight
+                        __html: highlight,
                       }}
                     />
                     {!endsWithPunctuation && <Fragment>&nbsp;…</Fragment>}

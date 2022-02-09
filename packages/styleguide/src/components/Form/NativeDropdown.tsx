@@ -5,7 +5,7 @@ import { DropdownProps } from './Dropdown'
 const NativeDropdown = (props: DropdownProps) => {
   const { label, items, value, onChange } = props
   const [focus, setFocus] = useState(false)
-  const selectedItem = items.find(item => item.value === value)
+  const selectedItem = items.find((item) => item.value === value)
 
   return (
     <Label top={!!selectedItem || focus} focus={focus} text={label}>
@@ -19,7 +19,7 @@ const NativeDropdown = (props: DropdownProps) => {
         value={value}
         onChange={
           onChange &&
-          (e => onChange(items.find(item => item.value === e.target.value)))
+          ((e) => onChange(items.find((item) => item.value === e.target.value)))
         }
         onFocus={() => {
           setFocus(true)

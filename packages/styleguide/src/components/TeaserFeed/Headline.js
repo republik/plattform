@@ -7,7 +7,7 @@ import {
   sansSerifMedium20,
   sansSerifMedium22,
   cursiveTitle20,
-  cursiveTitle22
+  cursiveTitle22,
 } from '../Typography/styles'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
 import { useColorContext } from '../Colors/useColorContext'
@@ -17,28 +17,28 @@ const styles = {
     margin: 0,
     marginBottom: 6,
     [mUp]: {
-      marginBottom: 8
-    }
+      marginBottom: 8,
+    },
   }),
   editorial: css({
     ...convertStyleToRem(serifTitle20),
     [mUp]: {
-      ...convertStyleToRem(serifTitle22)
-    }
+      ...convertStyleToRem(serifTitle22),
+    },
   }),
   interaction: css({
     ...convertStyleToRem(sansSerifMedium20),
     [mUp]: {
       ...convertStyleToRem(sansSerifMedium22),
-      lineHeight: pxToRem(24)
-    }
+      lineHeight: pxToRem(24),
+    },
   }),
   scribble: css({
     ...convertStyleToRem(cursiveTitle20),
     [mUp]: {
-      ...convertStyleToRem(cursiveTitle22)
-    }
-  })
+      ...convertStyleToRem(cursiveTitle22),
+    },
+  }),
 }
 
 export const Editorial = ({ children, formatColor }) => {

@@ -70,7 +70,7 @@ export {
   MdTextFormat as TextFormatIcon,
   MdOutlineSmsFailed as EtiquetteIcon,
   MdUnfoldLess as UnfoldLessIcon,
-  MdUnfoldMore as UnfoldMoreIcon
+  MdUnfoldMore as UnfoldMoreIcon,
 } from 'react-icons/md'
 
 export { AiFillInstagram as InstagramIcon } from 'react-icons/ai'
@@ -88,7 +88,7 @@ export {
   IoLogoWhatsapp as WhatsappIcon,
   IoLogoGoogle as GoogleIcon,
   IoLogoApple as AppleIcon,
-  IoLogoFacebook as FacebookIcon
+  IoLogoFacebook as FacebookIcon,
 } from 'react-icons/io5'
 
 export { ShareIcon } from './CustomIcons/ShareIcon'

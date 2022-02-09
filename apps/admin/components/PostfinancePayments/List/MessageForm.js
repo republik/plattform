@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 
-const getInitialState = props => ({
+const getInitialState = (props) => ({
   message: props.message,
-  isDirty: false
+  isDirty: false,
 })
 
 export default class EmailForm extends Component {
@@ -11,29 +11,23 @@ export default class EmailForm extends Component {
     this.state = getInitialState(props)
   }
 
-  messageChangeHandler = event => {
+  messageChangeHandler = (event) => {
     const value = event.target.value
     this.setState(() => ({
       isDirty: true,
       message: value,
-      error:
-        value.trim().length <= 0 &&
-        `No empty message.`
+      error: value.trim().length <= 0 && `No empty message.`,
     }))
   }
 
-  submitHandler = (
-    onSubmit
-  ) => (event) => {
+  submitHandler = (onSubmit) => (event) => {
     event.preventDefault()
 
     onSubmit(this.state.message)
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState(() =>
-      getInitialState(nextProps)
-    )
+    this.setState(() => getInitialState(nextProps))
   }
 
   render() {
@@ -42,20 +36,15 @@ export default class EmailForm extends Component {
     const message = this.state.message
 
     return (
-      <form
-        onSubmit={this.submitHandler(onSubmit)}
-      >
+      <form onSubmit={this.submitHandler(onSubmit)}>
         <input
-          type=""
+          type=''
           value={message || ''}
           onChange={this.messageChangeHandler}
         />
         <button
-          type="submit"
-          disabled={
-            !this.state.isDirty ||
-            !!this.state.error
-          }
+          type='submit'
+          disabled={!this.state.isDirty || !!this.state.error}
         >
           Save
         </button>

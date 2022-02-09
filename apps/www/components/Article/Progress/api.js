@@ -77,13 +77,13 @@ export const revokeConsentMutation = gql`
 export const withProgressApi = compose(
   graphql(submitConsentMutation, {
     props: ({ mutate }) => ({
-      submitProgressConsent: mutate
-    })
+      submitProgressConsent: mutate,
+    }),
   }),
   graphql(revokeConsentMutation, {
     props: ({ mutate }) => ({
-      revokeProgressConsent: mutate
-    })
+      revokeProgressConsent: mutate,
+    }),
   }),
   graphql(upsertDocumentProgressMutation, {
     props: ({ mutate }) => ({
@@ -92,19 +92,19 @@ export const withProgressApi = compose(
           variables: {
             documentId,
             percentage,
-            nodeId
-          }
-        })
-    })
+            nodeId,
+          },
+        }),
+    }),
   }),
   graphql(removeDocumentProgress, {
     props: ({ mutate }) => ({
-      removeDocumentProgress: documentId =>
+      removeDocumentProgress: (documentId) =>
         mutate({
           variables: {
-            documentId
-          }
-        })
-    })
-  })
+            documentId,
+          },
+        }),
+    }),
+  }),
 )

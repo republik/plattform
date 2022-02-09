@@ -5,7 +5,7 @@ export const barEditorSchema = ({
   colorDropdownItems,
   sortingOptions,
   chartSizes,
-  columnAmount
+  columnAmount,
 }) => {
   return {
     defaultProps: defaults,
@@ -17,9 +17,9 @@ export const barEditorSchema = ({
             numberFormat: {
               title: 'Zahlenformat',
               type: 'string',
-              enum: numberFormats
-            }
-          }
+              enum: numberFormats,
+            },
+          },
         },
         yAxis: {
           title: 'Vertikale Achse',
@@ -27,18 +27,18 @@ export const barEditorSchema = ({
             y: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: optionalDataColumnEnum
+              enum: optionalDataColumnEnum,
             },
             unit: {
               title: 'Beschriftung',
-              type: 'string'
+              type: 'string',
             },
             sort: {
               title: 'Sortierung',
               type: 'string',
-              enum: sortingOptions
-            }
-          }
+              enum: sortingOptions,
+            },
+          },
         },
         color: {
           title: 'Farbe',
@@ -46,14 +46,14 @@ export const barEditorSchema = ({
             color: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: optionalDataColumnEnum
+              enum: optionalDataColumnEnum,
             },
             colorRange: {
               title: 'Farbschema auswählen',
               type: 'string',
-              enum: colorDropdownItems
-            }
-          }
+              enum: colorDropdownItems,
+            },
+          },
         },
         layout: {
           title: 'Aufteilen in mehrere Charts',
@@ -61,15 +61,15 @@ export const barEditorSchema = ({
             column: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: optionalDataColumnEnum
+              enum: optionalDataColumnEnum,
             },
             columns: {
               title: 'Anzahl Spalten pro Zeile',
               type: 'number',
-              enum: columnAmount
-            }
-          }
-        }
+              enum: columnAmount,
+            },
+          },
+        },
       },
       advanced: {
         xAxis: {
@@ -79,18 +79,18 @@ export const barEditorSchema = ({
               title: 'Achsenticks',
               type: 'array',
               contains: {
-                type: 'string'
-              }
+                type: 'string',
+              },
             },
             showBarValues: {
               title: 'Balken mit Wert anschreiben (ausserhalb)',
-              type: 'boolean'
+              type: 'boolean',
             },
             inlineValue: {
               title: 'Balken mit Wert anschreiben (innerhalb)',
-              type: 'boolean'
-            }
-          }
+              type: 'boolean',
+            },
+          },
         },
         yAxis: {
           title: 'Vertikale Achse',
@@ -99,17 +99,17 @@ export const barEditorSchema = ({
               title: 'Achsenticks',
               type: 'array',
               contains: {
-                type: 'string'
-              }
+                type: 'string',
+              },
             },
             domain: {
               title: 'Bandbreite der Achsen',
               type: 'array',
               contains: {
-                type: 'string'
-              }
-            }
-          }
+                type: 'string',
+              },
+            },
+          },
         },
         layout: {
           title: 'Layout',
@@ -117,20 +117,20 @@ export const barEditorSchema = ({
             size: {
               title: 'Darstellung im Beitrag',
               type: 'string',
-              enum: chartSizes
+              enum: chartSizes,
             },
             height: {
               title: 'Höhe',
-              type: 'number'
+              type: 'number',
             },
             minInnerWidth: {
               title: 'Minimale Breite',
-              type: 'number'
-            }
-          }
-        }
-      }
-    }
+              type: 'number',
+            },
+          },
+        },
+      },
+    },
   }
 }
 
@@ -142,7 +142,7 @@ export const lollipopEditorSchema = ({
   colorDropdownItems,
   sortingOptions,
   chartSizes,
-  columnAmount
+  columnAmount,
 }) => {
   return {
     defaultProps: defaults,
@@ -154,9 +154,9 @@ export const lollipopEditorSchema = ({
             numberFormat: {
               title: 'Zahlenformat',
               type: 'string',
-              enum: numberFormats
-            }
-          }
+              enum: numberFormats,
+            },
+          },
         },
         yAxis: {
           title: 'Vertikale Achse',
@@ -164,18 +164,18 @@ export const lollipopEditorSchema = ({
             y: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: dataColumnEnum
+              enum: dataColumnEnum,
             },
             unit: {
               title: 'Achsenbeschriftung',
-              type: 'string'
+              type: 'string',
             },
             sort: {
               title: 'Sortierung',
               type: 'string',
-              enum: sortingOptions
-            }
-          }
+              enum: sortingOptions,
+            },
+          },
         },
         color: {
           title: 'Farbe',
@@ -183,14 +183,14 @@ export const lollipopEditorSchema = ({
             color: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: optionalDataColumnEnum
+              enum: optionalDataColumnEnum,
             },
             colorRange: {
               title: 'Farbschema auswählen',
               type: 'string',
-              enum: colorDropdownItems
-            }
-          }
+              enum: colorDropdownItems,
+            },
+          },
         },
         layout: {
           title: 'Aufteilen in mehrere Charts',
@@ -198,15 +198,15 @@ export const lollipopEditorSchema = ({
             column: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: optionalDataColumnEnum
+              enum: optionalDataColumnEnum,
             },
             columns: {
               title: 'Anzahl Spalten pro Zeile',
               type: 'number',
-              enum: columnAmount
-            }
-          }
-        }
+              enum: columnAmount,
+            },
+          },
+        },
       },
       advanced: {
         xAxis: {
@@ -216,14 +216,14 @@ export const lollipopEditorSchema = ({
               title: 'Achsenticks',
               type: 'array',
               contains: {
-                type: 'string'
-              }
+                type: 'string',
+              },
             },
             showBarValues: {
               title: 'Lollipop ausserhalb mit Wert anschreiben',
-              type: 'boolean'
-            }
-          }
+              type: 'boolean',
+            },
+          },
         },
         yAxis: {
           title: 'Vertikale Achse',
@@ -232,10 +232,10 @@ export const lollipopEditorSchema = ({
               title: 'Bandbreite der Achsen',
               type: 'array',
               contains: {
-                type: 'string'
-              }
-            }
-          }
+                type: 'string',
+              },
+            },
+          },
         },
         layout: {
           title: 'Layout',
@@ -243,32 +243,32 @@ export const lollipopEditorSchema = ({
             size: {
               title: 'Darstellung im Beitrag',
               type: 'string',
-              enum: chartSizes
+              enum: chartSizes,
             },
             height: {
               title: 'Höhe',
-              type: 'number'
+              type: 'number',
             },
             minInnerWidth: {
               title: 'Minimale Breite',
-              type: 'number'
-            }
-          }
+              type: 'number',
+            },
+          },
         },
         more: {
           title: 'Weitere Einstellungen',
           properties: {
             band: {
               title: 'Name Konfidenzinterval',
-              type: 'string'
+              type: 'string',
             },
             bandLegend: {
               title: 'Legende Konfidenzinterval',
-              type: 'string'
-            }
-          }
-        }
-      }
-    }
+              type: 'string',
+            },
+          },
+        },
+      },
+    },
   }
 }

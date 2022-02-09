@@ -3,7 +3,7 @@ import { parse, format } from 'url'
 
 import {
   GENERAL_FEEDBACK_DISCUSSION_ID,
-  PUBLIC_BASE_URL
+  PUBLIC_BASE_URL,
 } from '../../../lib/constants'
 import Link from 'next/link'
 
@@ -18,7 +18,7 @@ export const getFocusHref = (discussion, comment) => {
   if (discussion.id === GENERAL_FEEDBACK_DISCUSSION_ID) {
     return {
       pathname: '/dialog',
-      query: { t: 'general', ...focusParams }
+      query: { t: 'general', ...focusParams },
     }
   } else if (
     discussion.document &&
@@ -29,7 +29,7 @@ export const getFocusHref = (discussion, comment) => {
   ) {
     return {
       pathname: '/dialog',
-      query: { t: 'article', id: discussion.id, ...focusParams }
+      query: { t: 'article', id: discussion.id, ...focusParams },
     }
   } else if (discussion.path) {
     const { pathname, query } = parse(discussion.path, true)
@@ -37,8 +37,8 @@ export const getFocusHref = (discussion, comment) => {
       pathname,
       query: {
         ...query,
-        ...focusParams
-      }
+        ...focusParams,
+      },
     }
   }
 }

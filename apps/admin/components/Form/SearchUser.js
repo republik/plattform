@@ -1,11 +1,7 @@
 import React, { Component } from 'react'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
-import {
-  Autocomplete,
-  Interaction,
-  Label
-} from '@project-r/styleguide'
+import { Autocomplete, Interaction, Label } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
 
@@ -24,20 +20,18 @@ const usersQuery = gql`
   }
 `
 const ConnectedAutoComplete = graphql(usersQuery, {
-  skip: props => !props.filter,
+  skip: (props) => !props.filter,
   options: ({ filter }) => ({
-    variables: { search: filter }
+    variables: { search: filter },
   }),
-  props: ({
-    data: { users: { items } = { items: [] } }
-  }) => {
+  props: ({ data: { users: { items } = { items: [] } } }) => {
     return {
-      items: items.map(v => ({
+      items: items.map((v) => ({
         value: v,
-        text: v.email
-      }))
+        text: v.email,
+      })),
     }
-  }
+  },
 })(Autocomplete)
 
 export class SearchUser extends Component {
@@ -46,26 +40,24 @@ export class SearchUser extends Component {
     this.state = {
       items: [],
       filter: '',
-      value: null
+      value: null,
     }
-    this.filterChangeHandler = this.filterChangeHandler.bind(
-      this
-    )
+    this.filterChangeHandler = this.filterChangeHandler.bind(this)
     this.changeHandler = this.changeHandler.bind(this)
   }
 
   filterChangeHandler(value) {
     this.setState(() => ({
-      filter: value
+      filter: value,
     }))
   }
 
   changeHandler(value) {
     this.setState(
       () => ({
-        value: value
+        value: value,
       }),
-      () => this.props.onChange(value)
+      () => this.props.onChange(value),
     )
   }
 
@@ -91,9 +83,7 @@ export class SearchUser extends Component {
               {user.address &&
                 user.address.postalCode &&
                 ` | ${user.address.postalCode}`}
-              {user.address &&
-                user.address.city &&
-                ` ${user.address.city}`}
+              {user.address && user.address.city && ` ${user.address.city}`}
             </Label>
           )}
         </Interaction.P>

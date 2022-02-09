@@ -13,7 +13,7 @@ import {
   List,
   ListItem,
   Paragraph,
-  StrikeThrough
+  StrikeThrough,
 } from '../../components/CommentBody/email'
 
 const createCommentEmailSchema = ({ ...args } = {}) => {
@@ -31,7 +31,7 @@ const createCommentEmailSchema = ({ ...args } = {}) => {
     ListItem,
     Paragraph,
     StrikeThrough,
-    ...args
+    ...args,
   })
 }
 

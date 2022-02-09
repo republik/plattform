@@ -6,7 +6,7 @@ import {
   Interaction,
   mediaQueries,
   RawHtml,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import withInNativeApp from '../../lib/withInNativeApp'
 
@@ -14,7 +14,7 @@ const { Headline } = Interaction
 
 export const sharedStyles = {
   hint: css({
-    marginTop: 10
+    marginTop: 10,
   }),
   buttons: css({
     display: 'flex',
@@ -24,24 +24,24 @@ export const sharedStyles = {
     rowGap: 15,
     [mediaQueries.onlyS]: {
       '& button': {
-        minWidth: 0
-      }
-    }
+        minWidth: 0,
+      },
+    },
   }),
   card: css({
     padding: 10,
     outlineWidth: 1,
-    outlineStyle: 'solid'
+    outlineStyle: 'solid',
   }),
   narrowCard: css({
-    padding: 10
-  })
+    padding: 10,
+  }),
 }
 
 export const Section = ({ children }) => (
   <section
     {...css({
-      marginTop: 30
+      marginTop: 30,
     })}
   >
     {children}
@@ -51,7 +51,7 @@ export const Section = ({ children }) => (
 export const Title = ({ children }) => (
   <Headline
     {...css({
-      marginBottom: 35
+      marginBottom: 35,
     })}
   >
     {children}
@@ -62,28 +62,28 @@ export const Strong = ({ children }) => (
   <strong
     {...css({
       fontFamily: fontFamilies.sansSerifMedium,
-      fontWeight: 'normal'
+      fontWeight: 'normal',
     })}
   >
     {children}
   </strong>
 )
 
-const PMedium = props => (
+const PMedium = (props) => (
   <div
     {...css({
       ...fontStyles.sansSerifRegular16,
       marginBottom: 15,
       [mediaQueries.mUp]: {
-        ...fontStyles.sansSerifRegular21
+        ...fontStyles.sansSerifRegular21,
       },
       '& strong': {
         fontFamily: fontFamilies.sansSerifMedium,
-        fontWeight: 'normal'
+        fontWeight: 'normal',
       },
       '& ul': {
-        paddingLeft: 25
-      }
+        paddingLeft: 25,
+      },
     })}
   >
     {props.children}
@@ -113,12 +113,12 @@ const PSmall = ({ children, indent = true }) => (
       ...fontStyles.sansSerifRegular16,
       [mediaQueries.mUp]: {
         ...fontStyles.sansSerifRegular16,
-        lineHeight: 1.4
+        lineHeight: 1.4,
       },
       '& strong': {
         fontFamily: fontFamilies.sansSerifMedium,
-        fontWeight: 'normal'
-      }
+        fontWeight: 'normal',
+      },
     })}
   >
     {children}
@@ -139,7 +139,7 @@ export const Small = withInNativeApp(
         ))}
       </div>
     )
-  }
+  },
 )
 
 export const Card = ({ children, style }) => {

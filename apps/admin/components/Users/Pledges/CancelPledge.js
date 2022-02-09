@@ -8,7 +8,7 @@ import {
   OverlayBody,
   OverlayToolbar,
   Interaction,
-  Loader
+  Loader,
 } from '@project-r/styleguide'
 
 import { TextButton } from '../../Display/utils'
@@ -26,18 +26,18 @@ export default class CancelPledge extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isOpen: false
+      isOpen: false,
     }
 
     this.closeHandler = () => {
       this.setState(() => ({ isOpen: false }))
     }
 
-    this.submitHandler = mutation => () => {
+    this.submitHandler = (mutation) => () => {
       return mutation({
         variables: {
-          pledgeId: this.props.pledge.id
-        }
+          pledgeId: this.props.pledge.id,
+        },
       }).then(() => this.setState(() => ({ isOpen: false })))
     }
   }

@@ -2,14 +2,14 @@ import React from 'react'
 import { fontFamilies } from '../../../theme/fonts'
 
 const blockquoteStyle = {
-  marginBottom: '30px'
+  marginBottom: '30px',
 }
 
 const textStyle = {
   color: '#000',
   fontSize: '28px',
   lineHeight: '33px',
-  fontFamily: fontFamilies.serifBold
+  fontFamily: fontFamilies.serifBold,
 }
 
 const sourceStyle = {
@@ -17,7 +17,7 @@ const sourceStyle = {
   fontSize: '15px',
   lineHeight: '158%',
   fontFamily: fontFamilies.sansSerifRegular,
-  fontStyle: 'normal'
+  fontStyle: 'normal',
 }
 
 export default ({ children }) => (

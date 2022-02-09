@@ -3,7 +3,7 @@ import { ascending } from 'd3-array'
 import ContextBox, {
   ContextBoxValue,
   mergeFragments,
-  formatLines
+  formatLines,
 } from './ContextBox'
 import { replaceKeys } from '../../lib/translate'
 
@@ -24,7 +24,7 @@ const Box = ({
   yUnit,
   xUnit,
   sizeUnit,
-  sizeFormat
+  sizeFormat,
 }) => {
   if (!hover.length) {
     return null
@@ -49,9 +49,9 @@ const Box = ({
           size: value.size,
           formattedY: yFormat(value.y),
           formattedX: xFormat(value.x),
-          formattedSize: sizeFormat(value.size)
+          formattedSize: sizeFormat(value.size),
         }
-        const contextT = text => replaceKeys(text, replacements)
+        const contextT = (text) => replaceKeys(text, replacements)
         return (
           <ContextBoxValue
             key={`${value.datum[label]}${i}`}
@@ -64,10 +64,11 @@ const Box = ({
                     value.datum[detail],
                     yShowValue && `${replacements.formattedY} ${yUnit}`,
                     xShowValue && `${replacements.formattedX} ${xUnit}`,
-                    sizeShowValue && `${replacements.formattedSize} ${sizeUnit}`
+                    sizeShowValue &&
+                      `${replacements.formattedSize} ${sizeUnit}`,
                   ]
                     .filter(Boolean)
-                    .map(formatLines)
+                    .map(formatLines),
             )}
           </ContextBoxValue>
         )

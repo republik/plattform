@@ -7,7 +7,7 @@ import {
   fontStyles,
   Loader,
   Interaction,
-  A
+  A,
 } from '@project-r/styleguide'
 import Head from 'next/head'
 
@@ -22,25 +22,25 @@ const styles = {
     position: 'sticky',
     top: -20,
     zIndex: 10,
-    borderBottom: `1px solid ${colors.disabled}`
+    borderBottom: `1px solid ${colors.disabled}`,
   }),
   byline: css({
-    ...fontStyles.sansSerifRegular16
+    ...fontStyles.sansSerifRegular16,
   }),
   portrait: css({
     float: 'left',
     height: '50px',
-    marginRight: '10px'
+    marginRight: '10px',
   }),
   navLink: css({
     color: '#000',
     padding: '0 3px',
     textDecoration: 'none',
     '&[data-active="true"]': {
-      textDecoration: 'underline'
+      textDecoration: 'underline',
     },
-    marginRight: 5
-  })
+    marginRight: 5,
+  }),
 }
 
 export const GET_PROFILE = gql`
@@ -62,7 +62,7 @@ const Subnav = ({ userId, section }) => (
     <Link
       route='user'
       params={{
-        userId
+        userId,
       }}
     >
       <a {...styles.navLink} data-active={section === 'index'}>
@@ -73,7 +73,7 @@ const Subnav = ({ userId, section }) => (
       route='user'
       params={{
         userId,
-        section: 'sessions'
+        section: 'sessions',
       }}
     >
       <a {...styles.navLink} data-active={section === 'sessions'}>
@@ -84,7 +84,7 @@ const Subnav = ({ userId, section }) => (
       route='user'
       params={{
         userId,
-        section: 'access-grants'
+        section: 'access-grants',
       }}
     >
       <a {...styles.navLink} data-active={section === 'access-grants'}>
@@ -95,7 +95,7 @@ const Subnav = ({ userId, section }) => (
       route='user'
       params={{
         userId,
-        section: 'mailbox'
+        section: 'mailbox',
       }}
     >
       <a {...styles.navLink} data-active={section === 'mailbox'}>
@@ -106,7 +106,7 @@ const Subnav = ({ userId, section }) => (
       route='user'
       params={{
         userId,
-        section: 'dialog'
+        section: 'dialog',
       }}
     >
       <a {...styles.navLink} data-active={section === 'dialog'}>
@@ -144,13 +144,14 @@ const ProfileHeader = ({ userId, section }) => {
                 <span key='profile'>
                   <A
                     key='profile-link'
-                    href={`${REPUBLIK_FRONTEND_URL}/~${user.username ||
-                      user.id}`}
+                    href={`${REPUBLIK_FRONTEND_URL}/~${
+                      user.username || user.id
+                    }`}
                     target='_blank'
                   >
                     {user.username || 'Profil-Seite'}
                   </A>
-                </span>
+                </span>,
               ]
                 .filter(Boolean)
                 .reduce((acc, v) => [...acc, ' | ', v], [])

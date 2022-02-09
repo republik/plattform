@@ -11,7 +11,7 @@ import AccountSection from '../../components/Account/AccountSection'
 
 export default compose(
   withT,
-  withMembership
+  withMembership,
 )(({ t, isMember }) => {
   return (
     <>

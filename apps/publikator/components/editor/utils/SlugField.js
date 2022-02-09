@@ -5,11 +5,11 @@ import withT from '../../../lib/withT'
 export default withT(({ t, onChange, value, isTemplate, ...props }) => {
   const [error, setError] = useState('')
 
-  const onSlugChange = event => {
+  const onSlugChange = (event) => {
     setError(
       isTemplate &&
         event.target.value.length > 30 &&
-        t('metaData/field/repoSlug/error/tooLong')
+        t('metaData/field/repoSlug/error/tooLong'),
     )
     onChange(event, slug(event.target.value))
   }
@@ -17,7 +17,7 @@ export default withT(({ t, onChange, value, isTemplate, ...props }) => {
   return (
     <Field
       {...props}
-      renderInput={props => <input {...props} onBlur={onSlugChange} />}
+      renderInput={(props) => <input {...props} onBlur={onSlugChange} />}
       onChange={onChange}
       value={value}
       error={error}

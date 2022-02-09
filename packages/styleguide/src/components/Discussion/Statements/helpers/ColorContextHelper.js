@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import { getUniqueColorTagName } from './colorHelper'
 import {
   ColorContextLocalExtension,
-  ColorContextProvider
+  ColorContextProvider,
 } from '../../../Colors/ColorContext'
 
 const ColorContextHelper = ({ children, tagMappings = [] }) => {

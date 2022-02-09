@@ -12,22 +12,22 @@ export const fontRule = css({
   '& em, & i': fontStyles.sansSerifItalic,
   '& strong, & b': fontStyles.sansSerifMedium,
   '& strong em, & em strong, & b i, & i b': {
-    textDecoration: `underline wavy ${colors.error}`
-  }
+    textDecoration: `underline wavy ${colors.error}`,
+  },
 })
 
 const metaHeadline = css({
   margin: '0 0 12px 0',
   ...convertStyleToRem(styles.sansSerifMedium30),
   [mUp]: {
-    ...convertStyleToRem(styles.sansSerifMedium58)
+    ...convertStyleToRem(styles.sansSerifMedium58),
   },
   ':first-child': {
-    marginTop: 0
+    marginTop: 0,
   },
   ':last-child': {
-    marginBottom: 0
-  }
+    marginBottom: 0,
+  },
 })
 
 export const Headline = ({ children, ...props }) => {
@@ -44,8 +44,8 @@ const subhead = css({
   margin: '36px 0 8px 0',
   [mUp]: {
     ...convertStyleToRem(styles.sansSerifMedium24),
-    margin: '46px 0 12px 0'
-  }
+    margin: '46px 0 12px 0',
+  },
 })
 
 export const Subhead = ({ children, attributes, ...props }) => {
@@ -67,17 +67,17 @@ const metaP = css({
   ...convertStyleToRem(styles.sansSerifRegular17),
   [mUp]: {
     ...convertStyleToRem(styles.sansSerifRegular19),
-    margin: `${pxToRem(30)} 0 ${pxToRem(30)} 0`
+    margin: `${pxToRem(30)} 0 ${pxToRem(30)} 0`,
   },
   ':first-child': {
-    marginTop: 0
+    marginTop: 0,
   },
   ':last-child': {
-    marginBottom: 0
+    marginBottom: 0,
   },
   'h2 + &': {
-    marginTop: 0
-  }
+    marginTop: 0,
+  },
 })
 
 export const P = ({ children, ...props }) => {
@@ -100,8 +100,8 @@ const lead = css({
   margin: '0 0 10px 0',
   [mUp]: {
     ...convertStyleToRem(styles.sansSerifRegular23),
-    margin: '0 0 20px 0'
-  }
+    margin: '0 0 20px 0',
+  },
 })
 
 export const Lead = ({ children, attributes, ...props }) => {

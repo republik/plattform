@@ -11,16 +11,16 @@ const styles = css({
 
   [mUp]: {
     ...sansSerifRegular18,
-    lineHeight: '24px'
-  }
+    lineHeight: '24px',
+  },
 })
 
 const Subject = ({ children }) => {
   const [colorScheme] = useColorContext()
   const customStyles = css(styles, {
     '&::after': {
-      content: children.length ? ' ' : undefined
-    }
+      content: children.length ? ' ' : undefined,
+    },
   })
   return (
     <span {...customStyles} {...colorScheme.set('color', 'textSoft')}>
@@ -32,5 +32,5 @@ const Subject = ({ children }) => {
 export default Subject
 
 Subject.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 }

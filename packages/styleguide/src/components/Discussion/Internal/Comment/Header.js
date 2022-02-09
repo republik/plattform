@@ -1,9 +1,7 @@
 import React, { useContext } from 'react'
 import { css } from 'glamor'
 import { AddIcon, RemoveIcon } from '../../../Icons'
-import {
-  sansSerifMedium16
-} from '../../../Typography/styles'
+import { sansSerifMedium16 } from '../../../Typography/styles'
 import { ellipsize, underline } from '../../../../lib/styleMixins'
 import * as config from '../../config'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
@@ -22,25 +20,25 @@ const styles = {
   root: css({
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   }),
   profilePicture: css({
     display: 'block',
     width: pxToRem(40),
     flex: `0 0 ${pxToRem(40)}`,
     height: pxToRem(40),
-    marginRight: pxToRem(8)
+    marginRight: pxToRem(8),
   }),
   indentIndicators: css({
     flexShrink: 0,
     marginRight: pxToRem(8 - 4),
-    display: 'flex'
+    display: 'flex',
   }),
   indentIndicator: css({
     width: pxToRem(4 + config.verticalLineWidth),
     height: pxToRem(40),
     borderLeftWidth: pxToRem(config.verticalLineWidth),
-    borderLeftStyle: 'solid'
+    borderLeftStyle: 'solid',
   }),
   center: css({
     alignSelf: 'stretch',
@@ -48,7 +46,7 @@ const styles = {
     flexDirection: 'column',
     justifyContent: 'center',
     flexGrow: 1,
-    minWidth: 0
+    minWidth: 0,
   }),
   name: css({
     ...convertStyleToRem(sansSerifMedium16),
@@ -57,18 +55,18 @@ const styles = {
     flexGrow: 0,
     flexShrink: 1,
     textDecoration: 'none',
-    ...ellipsize
+    ...ellipsize,
   }),
   link: css({
     color: 'inherit',
-    textDecoration: 'none'
+    textDecoration: 'none',
   }),
   linkUnderline: css({
     color: 'inherit',
     textDecoration: 'none',
     '@media (hover)': {
-      '[href]:hover': underline
-    }
+      '[href]:hover': underline,
+    },
   }),
   actionsWrapper: css({
     display: 'flex',
@@ -78,9 +76,9 @@ const styles = {
     flexShrink: 0,
     height: pxToRem('40px'),
     '& > *:not(:last-child)': {
-      marginRight: 8
-    }
-  })
+      marginRight: 8,
+    },
+  }),
 }
 
 /**
@@ -100,15 +98,15 @@ const propTypes = {
     adminUnpublished: PropTypes.bool,
     unavailable: PropTypes.bool,
     comments: PropTypes.shape({
-      totalCount: PropTypes.number
+      totalCount: PropTypes.number,
     }),
-    parentIds: PropTypes.arrayOf(PropTypes.string)
+    parentIds: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
   menuItems: PropTypes.arrayOf(ActionsMenuItemPropType),
   isExpanded: PropTypes.bool,
   onToggle: PropTypes.func,
   CommentLink: PropTypes.elementType,
-  isPreview: PropTypes.bool
+  isPreview: PropTypes.bool,
 }
 
 const DefaultLink = ({ children }) => <>{children}</>
@@ -120,7 +118,7 @@ export const Header = ({
   isExpanded,
   onToggle,
   CommentLink = DefaultLink,
-  isPreview = false
+  isPreview = false,
 }) => {
   const [colorScheme] = useColorContext()
   const { discussion } = useContext(DiscussionContext)
@@ -130,7 +128,7 @@ export const Header = ({
     adminUnpublished = false,
     unavailable,
     comments,
-    parentIds = []
+    parentIds = [],
   } = comment
   const { profilePicture, name } = displayAuthor || {}
 
@@ -204,12 +202,12 @@ export const Header = ({
               size={20}
               onClick={onToggle}
               style={{
-                marginLeft: 10
+                marginLeft: 10,
               }}
               label={
                 !isExpanded &&
                 t.pluralize('styleguide/comment/header/expandCount', {
-                  count: comments.totalCount + 1
+                  count: comments.totalCount + 1,
                 })
               }
             />

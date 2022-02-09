@@ -15,7 +15,7 @@ const hasParent = (type, document, key) => {
 
 // Google adds a weird b tag around the paragraphs.
 // We remove it, because the parser doesnt like it.
-const normalise = html =>
+const normalise = (html) =>
   html.replace(/<b[^>]*font-weight\s*:\s*normal[^>]*>/g, '')
 
 export default (centerModule, figureModule) => (event, change, editor) => {
@@ -34,12 +34,12 @@ export default (centerModule, figureModule) => (event, change, editor) => {
   const toMd = unified()
     .use(htmlParse, {
       emitParseErrors: true,
-      duplicateAttribute: false
+      duplicateAttribute: false,
     })
     .use(rehype2remark)
     .use(stringify)
   const pastedMd = toMd.processSync(
-    isCenter || isCaption ? normalise(transfer.html) : transfer.text
+    isCenter || isCaption ? normalise(transfer.html) : transfer.text,
   )
   const currentSerializer = isCaption
     ? figureModule.helpers.captionSerializer

@@ -6,7 +6,7 @@ import warn from './warn'
 let lockedElements = []
 
 const options = {
-  allowTouchMove: el => {
+  allowTouchMove: (el) => {
     if (
       el.tagName === 'INPUT' &&
       el.type &&
@@ -21,7 +21,7 @@ const options = {
 
       el = el.parentNode
     }
-  }
+  },
 }
 
 export const isBodyScrollLocked = () => lockedElements.length > 0
@@ -50,7 +50,7 @@ export const useBodyScrollLock = (lock = true) => {
     return () => {
       clearAllBodyScrollLocks()
       lockedElements = lockedElements.filter(
-        element => element !== targetElement
+        (element) => element !== targetElement,
       )
       const prevLockedElement = lockedElements[lockedElements.length - 1]
       if (prevLockedElement) {

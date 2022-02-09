@@ -10,8 +10,8 @@ const styles = {
     width: 32,
     height: 32,
     verticalAlign: 'middle',
-    cursor: 'pointer'
-  })
+    cursor: 'pointer',
+  }),
 }
 
 const ColorPicker = ({ isSelected, onClick, color }) => {
@@ -20,7 +20,7 @@ const ColorPicker = ({ isSelected, onClick, color }) => {
       {...styles.marker}
       style={{
         backgroundColor: color,
-        boxShadow: isSelected && `${color} 0px 0px 4px`
+        boxShadow: isSelected && `${color} 0px 0px 4px`,
       }}
       onClick={onClick}
     />
@@ -32,11 +32,9 @@ const Highlighter = ({ isSelected, onDoubleClick, children, color }) => (
     style={{
       backgroundColor: isSelected
         ? color
-        : d3Color(color)
-            .copy({ opacity: 0.4 })
-            .toString(),
+        : d3Color(color).copy({ opacity: 0.4 }).toString(),
       paddingTop: '.2em',
-      paddingBottom: '.2em'
+      paddingBottom: '.2em',
     }}
     onDoubleClick={onDoubleClick}
   >
@@ -60,7 +58,7 @@ export const yellow = {
     >
       {children}
     </Highlighter>
-  )
+  ),
 }
 
 export const pink = {
@@ -79,7 +77,7 @@ export const pink = {
     >
       {children}
     </Highlighter>
-  )
+  ),
 }
 
 export const green = {
@@ -98,7 +96,7 @@ export const green = {
     >
       {children}
     </Highlighter>
-  )
+  ),
 }
 
 export const blue = {
@@ -117,7 +115,7 @@ export const blue = {
     >
       {children}
     </Highlighter>
-  )
+  ),
 }
 
 export const rotstift = {
@@ -127,7 +125,7 @@ export const rotstift = {
         {...styles.marker}
         style={{
           position: 'relative',
-          borderRadius: 0
+          borderRadius: 0,
         }}
         onClick={onClick}
       >
@@ -140,7 +138,7 @@ export const rotstift = {
             left: 0,
             right: 0,
             height: 3,
-            boxShadow: isSelected && 'red 0px 0px 2px'
+            boxShadow: isSelected && 'red 0px 0px 2px',
           }}
         />
       </div>
@@ -150,13 +148,13 @@ export const rotstift = {
     <span
       style={{
         borderBottom: `3px solid`,
-        borderBottomColor: 'red'
+        borderBottomColor: 'red',
       }}
       onDoubleClick={onDoubleClick}
     >
       {children}
     </span>
-  )
+  ),
 }
 
 export const drop = {
@@ -174,7 +172,7 @@ export const drop = {
     >
       {children}
     </span>
-  )
+  ),
 }
 
 export default yellow

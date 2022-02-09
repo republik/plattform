@@ -9,14 +9,14 @@ const styles = {
     ...fontStyles.sansSerifRegular,
     '@media (hover)': {
       ':hover': {
-        textDecoration: 'underline'
-      }
+        textDecoration: 'underline',
+      },
     },
     '&.is-active': {
       ...fontStyles.sansSerifMedium,
-      lineHeight: '16px'
-    }
-  })
+      lineHeight: '16px',
+    },
+  }),
 }
 
 export const Tab = ({ tabKey, label, setTab, isActive, style }) => {

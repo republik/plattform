@@ -4,7 +4,7 @@ import {
   DateTime,
   DiscussionCredential,
   DiscussionPreferences,
-  DiscussionRules
+  DiscussionRules,
 } from '../types/SharedTypes'
 
 export type DiscussionFragmentType = {

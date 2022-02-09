@@ -7,7 +7,7 @@ import {
   NarrowContainer,
   Logo,
   mediaQueries,
-  fontStyles
+  fontStyles,
 } from '@project-r/styleguide'
 
 import { SPACE } from '../components/Frame/PureFooter'
@@ -19,7 +19,7 @@ const styles = {
   container: css({
     backgroundColor: '#E9A733',
     color: '#fff',
-    minHeight: '100vh'
+    minHeight: '100vh',
   }),
   logoContainer: css({
     textAlign: 'center',
@@ -29,16 +29,16 @@ const styles = {
     marginRight: 'auto',
     [mediaQueries.mUp]: {
       width: 280,
-      paddingTop: SPACE * 2
-    }
+      paddingTop: SPACE * 2,
+    },
   }),
   whiteOnBlack: css({
     textRendering: 'optimizeLegibility',
     WebkitFontSmoothing: 'antialiased',
     '& ::selection': {
       color: '#000',
-      backgroundColor: '#fff'
-    }
+      backgroundColor: '#fff',
+    },
   }),
   message: css({
     color: '#fff',
@@ -48,9 +48,9 @@ const styles = {
     marginTop: 40,
     '& a': {
       color: '#fff',
-      textDecorationSkip: 'ink'
-    }
-  })
+      textDecorationSkip: 'ink',
+    },
+  }),
 }
 
 const Page = ({ router }) => {
@@ -58,7 +58,7 @@ const Page = ({ router }) => {
     title: 'Republik',
     description: 'Bald wieder verfügbar.',
     image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
-    url: `${PUBLIC_BASE_URL}${router.pathname}`
+    url: `${PUBLIC_BASE_URL}${router.pathname}`,
   }
 
   return (

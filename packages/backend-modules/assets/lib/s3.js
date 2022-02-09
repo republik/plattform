@@ -1,12 +1,8 @@
 const aws = require('aws-sdk')
 const fetch = require('isomorphic-unfetch')
 
-const {
-  AWS_REGION,
-  AWS_ACCESS_KEY_ID,
-  AWS_SECRET_ACCESS_KEY,
-  AWS_S3_BUCKET,
-} = process.env
+const { AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_S3_BUCKET } =
+  process.env
 
 let s3
 if (AWS_ACCESS_KEY_ID && AWS_SECRET_ACCESS_KEY) {

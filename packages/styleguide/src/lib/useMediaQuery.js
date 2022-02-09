@@ -6,7 +6,7 @@ import React from 'react'
  * @param {string} queryInput
  * @returns {boolean}
  */
-export const useMediaQuery = queryInput => {
+export const useMediaQuery = (queryInput) => {
   /**
    * This is purely for convenience, so we can pass strings that start
    * with "@media ".

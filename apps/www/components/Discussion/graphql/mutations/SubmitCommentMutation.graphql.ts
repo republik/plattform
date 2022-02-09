@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 import {
   COMMENT_FRAGMENT,
-  CommentFragmentType
+  CommentFragmentType,
 } from '../fragments/CommentFragment.graphql'
 import Optional from '../../../../lib/types/Optional'
 import Nullable from '../../../../lib/types/Nullable'

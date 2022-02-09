@@ -8,7 +8,7 @@ export const lineEditorSchema = ({
   xScaleTypes,
   yScaleTypes,
   chartSizes,
-  columnAmount
+  columnAmount,
 }) => {
   return {
     defaultProps: defaults,
@@ -20,19 +20,19 @@ export const lineEditorSchema = ({
             x: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: dataColumnEnum
+              enum: dataColumnEnum,
             },
             timeFormat: {
               type: 'string',
               enum: timeFormats,
               format: 'dynamicDropdown',
-              parent: 'xAxis'
+              parent: 'xAxis',
             },
             xUnit: {
               title: 'Achsenbeschriftung',
-              type: 'string'
-            }
-          }
+              type: 'string',
+            },
+          },
         },
         yAxis: {
           title: 'Vertikale Achse',
@@ -41,13 +41,13 @@ export const lineEditorSchema = ({
               title: 'Zahlenformat',
               type: 'string',
               enum: numberFormats,
-              parent: 'yAxis'
+              parent: 'yAxis',
             },
             unit: {
               title: 'Achsenbeschriftung',
-              type: 'string'
-            }
-          }
+              type: 'string',
+            },
+          },
         },
         color: {
           title: 'Farbe',
@@ -55,14 +55,14 @@ export const lineEditorSchema = ({
             color: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: optionalDataColumnEnum
+              enum: optionalDataColumnEnum,
             },
             colorRange: {
               title: 'Farbschema auswählen',
               type: 'string',
-              enum: colorDropdownItems
-            }
-          }
+              enum: colorDropdownItems,
+            },
+          },
         },
         layout: {
           title: 'Aufteilen in mehrere Charts',
@@ -70,15 +70,15 @@ export const lineEditorSchema = ({
             column: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: optionalDataColumnEnum
+              enum: optionalDataColumnEnum,
             },
             columns: {
               title: 'Anzahl Spalten pro Zeile',
               type: 'number',
-              enum: columnAmount
-            }
-          }
-        }
+              enum: columnAmount,
+            },
+          },
+        },
       },
       advanced: {
         xAxis: {
@@ -88,15 +88,15 @@ export const lineEditorSchema = ({
               title: 'Achsenticks',
               type: 'array',
               contains: {
-                type: 'string'
-              }
+                type: 'string',
+              },
             },
             xScale: {
               title: 'Skala',
               type: 'string',
-              enum: xScaleTypes
-            }
-          }
+              enum: xScaleTypes,
+            },
+          },
         },
         yAxis: {
           title: 'Vertikale Achse',
@@ -105,19 +105,19 @@ export const lineEditorSchema = ({
               title: 'Achsenticks',
               type: 'array',
               contains: {
-                type: 'string'
-              }
+                type: 'string',
+              },
             },
             yScale: {
               title: 'Skala',
               type: 'string',
-              enum: yScaleTypes
+              enum: yScaleTypes,
             },
             zero: {
               title: 'Y-Achse bei 0 beginnen',
-              type: 'boolean'
-            }
-          }
+              type: 'boolean',
+            },
+          },
         },
         layout: {
           title: 'Layout',
@@ -125,45 +125,45 @@ export const lineEditorSchema = ({
             size: {
               title: 'Darstellung im Beitrag',
               type: 'string',
-              enum: chartSizes
+              enum: chartSizes,
             },
             height: {
               title: 'Höhe',
-              type: 'number'
+              type: 'number',
             },
             minInnerWidth: {
               title: 'Minimale Breite',
-              type: 'number'
-            }
-          }
+              type: 'number',
+            },
+          },
         },
         more: {
           title: 'Weitere Einstellungen',
           properties: {
             band: {
               title: 'Name Konfidenzinterval',
-              type: 'string'
+              type: 'string',
             },
             bandLegend: {
               title: 'Legende Konfidenzinterval',
-              type: 'string'
+              type: 'string',
             },
             endLabel: {
               title: 'Label am Linienende',
-              type: 'boolean'
+              type: 'boolean',
             },
             endValue: {
               title: 'Wert am Linienende',
-              type: 'boolean'
+              type: 'boolean',
             },
             startValue: {
               title: 'Wert am Linienanfang',
-              type: 'boolean'
-            }
-          }
-        }
-      }
-    }
+              type: 'boolean',
+            },
+          },
+        },
+      },
+    },
   }
 }
 
@@ -177,7 +177,7 @@ export const slopeEditorSchema = ({
   xScaleTypes,
   yScaleTypes,
   chartSizes,
-  columnAmount
+  columnAmount,
 }) => {
   return {
     defaultProps: defaults,
@@ -189,15 +189,15 @@ export const slopeEditorSchema = ({
             x: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: dataColumnEnum
+              enum: dataColumnEnum,
             },
             timeFormat: {
               type: 'string',
               enum: timeFormats,
               format: 'dynamicDropdown',
-              parent: 'xAxis'
-            }
-          }
+              parent: 'xAxis',
+            },
+          },
         },
         yAxis: {
           title: 'Vertikale Achse',
@@ -206,13 +206,13 @@ export const slopeEditorSchema = ({
               title: 'Zahlenformat',
               type: 'string',
               enum: numberFormats,
-              parent: 'yAxis'
+              parent: 'yAxis',
             },
             unit: {
               title: 'Achsenbeschriftung',
-              type: 'string'
-            }
-          }
+              type: 'string',
+            },
+          },
         },
         color: {
           title: 'Farbe',
@@ -220,14 +220,14 @@ export const slopeEditorSchema = ({
             color: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: optionalDataColumnEnum
+              enum: optionalDataColumnEnum,
             },
             colorRange: {
               title: 'Farbschema auswählen',
               type: 'string',
-              enum: colorDropdownItems
-            }
-          }
+              enum: colorDropdownItems,
+            },
+          },
         },
         layout: {
           title: 'Aufteilen in mehrere Charts',
@@ -235,15 +235,15 @@ export const slopeEditorSchema = ({
             column: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: optionalDataColumnEnum
+              enum: optionalDataColumnEnum,
             },
             columns: {
               title: 'Anzahl Spalten pro Zeile',
               type: 'number',
-              enum: columnAmount
-            }
-          }
-        }
+              enum: columnAmount,
+            },
+          },
+        },
       },
       advanced: {
         xAxis: {
@@ -252,9 +252,9 @@ export const slopeEditorSchema = ({
             xScale: {
               title: 'Skala',
               type: 'string',
-              enum: xScaleTypes
-            }
-          }
+              enum: xScaleTypes,
+            },
+          },
         },
         yAxis: {
           title: 'Vertikale Achse',
@@ -262,13 +262,13 @@ export const slopeEditorSchema = ({
             yScale: {
               title: 'Skala',
               type: 'string',
-              enum: yScaleTypes
+              enum: yScaleTypes,
             },
             zero: {
               title: 'Y-Achse bei 0 beginnen',
-              type: 'boolean'
-            }
-          }
+              type: 'boolean',
+            },
+          },
         },
         layout: {
           title: 'Layout',
@@ -276,36 +276,36 @@ export const slopeEditorSchema = ({
             size: {
               title: 'Darstellung im Beitrag',
               type: 'string',
-              enum: chartSizes
+              enum: chartSizes,
             },
             height: {
               title: 'Höhe',
-              type: 'number'
+              type: 'number',
             },
             minInnerWidth: {
               title: 'Minimale Breite',
-              type: 'number'
-            }
-          }
+              type: 'number',
+            },
+          },
         },
         more: {
           title: 'Weitere Einstellungen',
           properties: {
             endLabel: {
               title: 'Label am Linienende',
-              type: 'boolean'
+              type: 'boolean',
             },
             endValue: {
               title: 'Wert am Linienende',
-              type: 'boolean'
+              type: 'boolean',
             },
             startValue: {
               title: 'Wert am Linienanfang',
-              type: 'boolean'
-            }
-          }
-        }
-      }
-    }
+              type: 'boolean',
+            },
+          },
+        },
+      },
+    },
   }
 }

@@ -10,13 +10,13 @@ const styles = {
     width: '100%',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
-    textOverflow: 'ellipsis'
+    textOverflow: 'ellipsis',
   }),
   count: css({
     fontFeatureSettings: '"tnum" 1, "kern" 1',
     position: 'absolute',
-    right: 0
-  })
+    right: 0,
+  }),
 }
 
 const ArticleItem = ({ title, count }) => {
@@ -25,7 +25,7 @@ const ArticleItem = ({ title, count }) => {
     <span
       {...styles.container}
       style={{
-        paddingRight: count ? 10 + String(count).length * 12 : 0
+        paddingRight: count ? 10 + String(count).length * 12 : 0,
       }}
     >
       <span>{title}</span>

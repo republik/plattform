@@ -11,7 +11,7 @@ import {
   Loader,
   fontStyles,
   mediaQueries,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 
 const styles = {
@@ -26,27 +26,27 @@ const styles = {
       cursor: 'pointer',
       '& ~ &': {
         borderTopWidth: 1,
-        borderTopStyle: 'solid'
+        borderTopStyle: 'solid',
       },
       '@media(hover)': {
         '&:hover': {
           margin: '0 -15px',
           padding: '10px 15px',
-          width: 'calc(100% + 30px)'
+          width: 'calc(100% + 30px)',
         },
         '&:hover + &': {
-          borderColor: 'transparent'
+          borderColor: 'transparent',
         },
         '& + &:hover': {
-          borderColor: 'transparent'
-        }
+          borderColor: 'transparent',
+        },
       },
       ...fontStyles.sansSerifRegular18,
       [mediaQueries.mUp]: {
-        ...fontStyles.sansSerifRegular21
-      }
-    })
-  )
+        ...fontStyles.sansSerifRegular21,
+      },
+    }),
+  ),
 }
 
 const ActiveDiscussionItem = ({ discussion, label, count }) => {
@@ -55,15 +55,15 @@ const ActiveDiscussionItem = ({ discussion, label, count }) => {
     () =>
       css({
         '& ~ &': {
-          borderColor: colorScheme.getCSSColor('divider')
+          borderColor: colorScheme.getCSSColor('divider'),
         },
         '@media(hover)': {
           '&:hover': {
-            background: colorScheme.getCSSColor('hover')
-          }
-        }
+            background: colorScheme.getCSSColor('hover'),
+          },
+        },
       }),
-    [colorScheme]
+    [colorScheme],
   )
   return (
     <DiscussionLink discussion={discussion} passHref>
@@ -82,7 +82,7 @@ class ActiveDiscussions extends Component {
       data &&
       data.activeDiscussions &&
       data.activeDiscussions.filter(
-        activeDiscussion => !activeDiscussion.discussion.closed
+        (activeDiscussion) => !activeDiscussion.discussion.closed,
       )
 
     return (
@@ -93,7 +93,7 @@ class ActiveDiscussions extends Component {
           return (
             <div>
               {activeDiscussions &&
-                activeDiscussions.map(activeDiscussion => {
+                activeDiscussions.map((activeDiscussion) => {
                   const discussion = activeDiscussion.discussion
                   return (
                     <ActiveDiscussionItem

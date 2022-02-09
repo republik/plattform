@@ -5,7 +5,7 @@ import {
   sansSerifRegular13,
   sansSerifRegular15,
   sansSerifMedium16,
-  sansSerifMedium18
+  sansSerifMedium18,
 } from '../../../Typography/styles'
 import { mUp } from '../../../../theme/mediaQueries'
 import { linkStyle } from '../../../Typography'
@@ -21,7 +21,7 @@ const styles = {
     top: 0,
     left: 0,
     right: 0,
-    bottom: 0
+    bottom: 0,
   }),
   container: css({
     borderWidth: 1,
@@ -29,14 +29,14 @@ const styles = {
     position: 'relative',
     marginTop: 15,
     [mUp]: {
-      marginTop: 0
-    }
+      marginTop: 0,
+    },
   }),
   imageContainer: css({}),
   image: css({
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
-    width: '100%'
+    width: '100%',
   }),
   text: css({
     marginTop: 3,
@@ -44,47 +44,47 @@ const styles = {
     zIndex: 1,
     pointerEvents: 'none',
     position: 'relative',
-    overflowX: 'hidden'
+    overflowX: 'hidden',
   }),
   siteImage: css({
     width: 19,
     height: 19,
     marginRight: 5,
     marginBottom: 3,
-    verticalAlign: 'middle'
+    verticalAlign: 'middle',
   }),
   paragraph: css({
     marginTop: '0.3rem',
     ...sansSerifRegular13,
     [mUp]: {
-      ...sansSerifRegular15
+      ...sansSerifRegular15,
     },
     '& a': {
       ...linkStyle,
-      pointerEvents: 'all'
-    }
+      pointerEvents: 'all',
+    },
   }),
   title: css({
     margin: '0.3rem 0 0.5rem 0',
     ...sansSerifMedium16,
     [mUp]: {
       ...sansSerifMedium18,
-      lineHeight: '1.4rem'
+      lineHeight: '1.4rem',
     },
-    lineHeight: '1.4rem'
+    lineHeight: '1.4rem',
   }),
   topStory: css({
     position: 'absolute',
     top: -10,
     right: -10,
     color: 'red',
-    textTransform: 'uppercase'
-  })
+    textTransform: 'uppercase',
+  }),
 }
 
 const dateFormat = timeFormat('%d.%m.%Y %H:%M')
 
-const normalizeEmbed = embed => ({
+const normalizeEmbed = (embed) => ({
   ...embed,
   imageUrl: embed?.imageUrl ?? embed?.image,
   header: embed?.siteName ?? embed?.userName,
@@ -93,26 +93,18 @@ const normalizeEmbed = embed => ({
     embed?.__typename === 'TwitterEmbed' &&
     embed?.html &&
     embed?.html.replace(/\s*target="_blank"/g, ''),
-  body: embed?.description
+  body: embed?.description,
 })
 
 const propTypes = {
   embed: PropTypes.object.isRequired,
-  mentioningDocument: PropTypes.object
+  mentioningDocument: PropTypes.object,
 }
 
 export const CommentEmbed = ({ embed, mentioningDocument }) => {
   const [colorScheme] = useColorContext()
-  const {
-    url,
-    title,
-    imageUrl,
-    header,
-    headerImageUrl,
-    body,
-    html,
-    imageAlt
-  } = normalizeEmbed(embed)
+  const { url, title, imageUrl, header, headerImageUrl, body, html, imageAlt } =
+    normalizeEmbed(embed)
 
   return (
     <div {...styles.container} {...colorScheme.set('borderColor', 'divider')}>
@@ -131,7 +123,7 @@ export const CommentEmbed = ({ embed, mentioningDocument }) => {
             <a
               href={[
                 mentioningDocument.document.meta.path,
-                mentioningDocument.fragmentId
+                mentioningDocument.fragmentId,
               ]
                 .filter(Boolean)
                 .join('#')}

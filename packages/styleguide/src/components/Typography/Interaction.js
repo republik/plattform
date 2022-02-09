@@ -13,38 +13,38 @@ const interactionHeadline = css({
   margin: '0 0 12px 0',
   ...convertStyleToRem(styles.sansSerifMedium30),
   [mUp]: {
-    ...convertStyleToRem(styles.sansSerifMedium58)
+    ...convertStyleToRem(styles.sansSerifMedium58),
   },
   ':first-child': {
-    marginTop: 0
+    marginTop: 0,
   },
   ':last-child': {
-    marginBottom: 0
-  }
+    marginBottom: 0,
+  },
 })
 
 const interactionH1 = css({
   ...convertStyleToRem(styles.sansSerifMedium30),
   [mUp]: {
-    ...convertStyleToRem(styles.sansSerifMedium40)
+    ...convertStyleToRem(styles.sansSerifMedium40),
   },
-  margin: 0
+  margin: 0,
 })
 
 const interactionH2 = css({
   ...convertStyleToRem(styles.sansSerifMedium22),
   [mUp]: {
-    ...convertStyleToRem(styles.sansSerifMedium30)
+    ...convertStyleToRem(styles.sansSerifMedium30),
   },
-  margin: 0
+  margin: 0,
 })
 
 const interactionH3 = css({
   ...convertStyleToRem(styles.sansSerifMedium19),
   [mUp]: {
-    ...convertStyleToRem(styles.sansSerifMedium22)
+    ...convertStyleToRem(styles.sansSerifMedium22),
   },
-  margin: 0
+  margin: 0,
 })
 
 export const Headline = ({ children, ...props }) => {
@@ -91,8 +91,8 @@ const interactionP = css({
   margin: 0,
   ...convertStyleToRem(styles.sansSerifRegular17),
   [mUp]: {
-    ...convertStyleToRem(styles.sansSerifRegular21)
-  }
+    ...convertStyleToRem(styles.sansSerifRegular21),
+  },
 })
 
 export const P = ({ children, ...props }) => {
