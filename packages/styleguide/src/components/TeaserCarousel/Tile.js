@@ -135,7 +135,7 @@ const Tile = ({
       borderWidth: outline && 1,
       borderStyle: outline && 'solid',
       cursor: onClick ? 'pointer' : 'default',
-      padding: bigger ? '0 0 20px 0' : '30px 15px',
+      padding: bigger & !outline ? '0 0 20px 0' : '30px 15px',
       alignItems: bigger ? 'flex-start' : 'center',
     },
     context.tileCount < 3 && { width: `${100 / context.tileCount}%` },
