@@ -1,20 +1,20 @@
 - [Introduction](#introduction)
 - [Guides](#guides)
-    - [Adding New Elements](#adding-new-elements)
-    - [Adding New Marks](#adding-new-marks)
+  - [Adding New Elements](#adding-new-elements)
+  - [Adding New Marks](#adding-new-marks)
 - [Concepts](#concepts)
-    - [Insertion](#insertion)
-    - [Normalisation](#normalisation)
-    - [Nodes Data](#nodes-data)
-    - [Toolbars](#toolbars)
-    - [Placeholders](#placeholders)
-    - [Character Count](#character-count)
+  - [Insertion](#insertion)
+  - [Normalisation](#normalisation)
+  - [Nodes Data](#nodes-data)
+  - [Toolbars](#toolbars)
+  - [Placeholders](#placeholders)
+  - [Character Count](#character-count)
 - [Config Options](#config-options)
 
 
 ## Introduction
 
-This editor sits comfortably on top of [SlateJS](https://docs.slatejs.org/). It exists to provide the authorship of [Republik](https://www.republik.ch) with a tool that integrates into one's daily flow and allows to compose quick, of-the-moment, structured content.
+This editor sits on top of [SlateJS](https://docs.slatejs.org/). It provides the authorship of [Republik](https://www.republik.ch) with a tool that integrates into one's daily flow and allows to compose quick, of-the-moment, structured content.
 
 Our ambition is to write scalable code, and make it easy for the new dev on the team to extend the editor with another element. Everything that's touching Slate is tucked away in the `/editor` folder. This includes decorators, UI elements, and the handful of abstractions we describe in the [concepts](#concepts) section. The rest comes down to configuration. The [guide section](#guides) walks you through ~~a crazy few days in the life of Anna from IT~~ a few examples. If a comprehensive overview of the configuration options is what you are after, [we've got you covered](#config-options) too.
 
@@ -26,12 +26,12 @@ You don't need any Slate literacy to go through the [guides](#guides), but a wor
 
 *Monday:* Oli corners you in front of the coffee machine, and he really, really wants a carousel, because he thinks carousels are very cool. And indeed, you are getting chills, mostly because you know that carousels are tricky beasts. Can you throw a draft together before you've got to pick your kid at 6pm?
 
-We begin by creating a `/carousel` subfolder in the `/elements` folder. This is where the configuration for Slate `elements` lives. 
+We begin by creating a `/carousel` subfolder in the `/elements` folder. This is where the configuration for Slate `elements` lives.
 
-*Note:`elements` are the building blocks of Slate. They always have a `type` and are rendered as blocks unless otherwise specified. The other type of custom nodes are `marks`. As the name suggests, marks are annotations to text leaves, e.g. bold. If you are not sure whether your new component is an element or a mark, then it's probably an element.*
- 
+> `elements` are the building blocks of Slate. They always have a `type` and are rendered as blocks (divs) unless otherwise specified. The other type of custom nodes are `marks`. As the name suggests, marks are annotations to text leaves, for instance **bold**.
+
 #### Specify a Complex Structure
- 
+
 Now that our carousel has a home, let's create a `carouselContainer` element. This consists in 2 steps:
 
 1. Extend the type system to accommodate our new element and keep the compiler happy.
@@ -62,7 +62,7 @@ export type CustomElementsType =
   ...
   | 'carouselContainer'
 ```
-*Yes, we are aware that there is duplication in here.*
+*Yes, there is some duplication. No, there is no way around that.*
 
 For 2. we go back to our `/carousel` config folder. Let's specify the required configuration in `carousel/container.tsx`. No, this file doesn't exist yet. Yes, you should go ahead and create it. Here is what to put in it:
 
@@ -82,15 +82,19 @@ export const config: ElementConfigI = {
 }
 ```
 
-So, how about we pretend to be computers and parse this file together?
+Let's parse this, shall we?
 
 `Component` defines the React component represented by the `CarouselContainer` element. It is often an element from the [Republik Styleguide](https://styleguide.republik.ch/). Here though, `ContainerComponent` is a Slate-compliant div that serves as configuration vessel.
 
-*Note: If your component does funny things, try reading [this](https://docs.slatejs.org/walkthroughs/03-defining-custom-elements). Slate has a handful of trivial requirements for React components, which are often satisfied by default (but not always).*
+> Slate has a [handful of requirements](https://docs.slatejs.org/walkthroughs/03-defining-custom-elements) for React components:
+>
+> - the top-level node needs the `attributes`
+> - `children` are rendered as the last node
+> - elements which are not part of the slate tree should be marked with `style={{ userSelect: 'none' }}` or `contentEditable={false}`
 
-The `structure` array tells us that `carouselContainer` should have a `carouselTitle`, and multiple `figures` (image + caption). If this isn't the case, new nodes will be automatically inserted during the normalisation cycle of Slate, so that the structure of the document matches the one of the config.
+The `structure` array tells us that `carouselContainer` consists of a `carouselTitle` and multiple `figures`. If this isn't true, new nodes will be automatically inserted and/or deleted during the normalisation cycle of Slate, until our `carousel` complies with the structure.
 
-*Note: `structure` works recursively. For instance, `figure` also defines a structure for its descendants.*
+> Structures work recursively. For instance, `figure` requires a `figureImage` and a `figureCaption`.
 
 Very good. Now we need to define what `carouselTitle`does.
 
@@ -116,7 +120,7 @@ export type CustomElementsType =
   | 'carouselTitle'
 ```
 
-Then we configure our element. We want the title of the carousel to look like an editorial subhead. `/carousel/title.tsx`:
+Then we configure our element. Let's say we want the title of the carousel to look like an editorial subhead. `/carousel/title.tsx`:
 
 ```code|lang-js
 import { ElementConfigI } from '../../custom-types'
@@ -129,9 +133,11 @@ export const config: ElementConfigI = {
 
 #### Handle Custom Data
 
-*But what if a component needs data?* you may ask. 
+"Hey, but what if a component requires additional data?" you may ask. Good question.
 
-Let's take an excursion through `figureImage`. This element has an `src` attribute baked in all the way down to its type definition:
+This is `figureImage`. Without its `src` attribute, `figureImage` is nothing.
+
+It's in the type definition:
 
 ```code|lang-js
 export type FigureImageElement = SharedElement & {
@@ -140,20 +146,9 @@ export type FigureImageElement = SharedElement & {
 }
 ```
 
-And here is what the config looks like:
+And it's in the config, too:
 
 ```code|lang-js
-import { FigureImage } from '@project-r/styleguide'
-import {
-  DataFormType,
-  ElementConfigI,
-  FigureImageElement,
-  needsDataFn
-} from '../../custom-types'
-import React, { Attributes, ReactElement } from 'react'
-import ImageInput from '../../Publikator/ImageInput'
-
-
 const Component: React.FC<{
   element: FigureImageElement
   [x: string]: unknown
@@ -175,11 +170,21 @@ const Form: React.FC<ElementFormProps<FigureImageElement>> = ({
   <>
     <div>
       <Label>Light mode</Label>
-      <ImageInput src={element.src} onChange={src => { onChange({ src })}} />
+      <ImageInput
+        src={element.src}
+        onChange={src => {
+          onChange({ src })
+        }}
+      />
     </div>
     <div>
       <Label>Dark mode (optional)</Label>
-      <ImageInput src={element.srcDark} onChange={srcDark => { onChange({ srcDark })}} />
+      <ImageInput
+        src={element.srcDark}
+        onChange={srcDark => {
+          onChange({ srcDark })
+        }}
+      />
     </div>
   </>
 )
@@ -190,14 +195,12 @@ export const config: ElementConfigI = {
   attrs: {
     isVoid: true,
     editUi: true,
-    isMain: true
+    propagateDelete: true
   }
 }
 ```
 
-In order to edit your node's custom data, you have to define a `Form` property in the config. When the writer double clicks on an element, the editor checks whether such a form exists on this element's config and/or its parents. If the answer is yes, the forms are loaded in a modal.
-
-*Note: The `Component` in this config is a good example of a Slate-compliant component: `attributes` are spread on the root div and `children` are returned last. `src` is an attribute of `element` and gets passed to `<FigureImage/>` as prop.*
+In order to edit a node's custom data, we define a `Form` property in the config. Then, when someone double clicks on the element, the editor loads the form in an overlay. Parent elements' forms are pulled out and displayed as well.
 
 #### Putting Things Together
 
@@ -218,15 +221,15 @@ export const config: ElementsConfig = {
 }
 ```
 
-*Note: Please refrain from getting creative with the key names. They need to match the type of the elements.*
+> The key name should to match the type name of the element.
 
 Take that, Oli. Granted, an unstyled div isn't much of a carousel, but you didn't expect me to do ALL your work for you, did you? Go scour the Internet if [the one from the Styleguide](https://styleguide.republik.ch/teasercarousel) isn't good enough for you.
 
 ### Adding New Marks
 
-*Tuesday:* After the smashing success of yesterday, Katharina comes to find you in your fancy office. (You are a very important member of the organisation and your office is super glossy.) Katharina does marketing and she always erupts with crazy ideas, so you are getting nervous. Turns out she read this guide and ~~would like~~ **needs** the strikethrough effect for this winter's promotional campaign. You aren't fully convinced. *Isn't it going to be a bit much?* you think. But then again, no one pays you to think, right?
+*Tuesday:* After the smashing success of yesterday, Katharina comes to find you in your fancy office. (You are a very important member of the organisation and your office is super glossy.) Katharina does marketing and she always erupts with crazy ideas, so you are getting nervous. Turns out she read this guide and ~~would like~~ **needs** the strikethrough effect for this winter's promotional campaign. You aren't fully convinced. "Isn't it going to be a bit much?" you think. But then again, no one pays you to think, right?
 
-Luckily for you, this one's easy. Marks generally are. You open `custom-types.d.ts` and extend the `CustomMarks` type:
+Lucky for you, this one's easy. Marks generally are. You open `custom-types.d.ts` and extend the `CustomMarks` type:
 
 ```code|lang-js
 type CustomMarks = {
@@ -240,30 +243,19 @@ You add a `strikethrough.tsx` config file in `/marks`:
 
 ```code|lang-js
 import { NodeConfigI } from '../custom-types'
-import { Sub } from '@project-r/styleguide'
 import { MdStrikethroughS } from '@react-icons/all-files/md/MdStrikethroughS'
 
-const Component: React.FC<{
-  attributes: Attributes
-  children: ReactElement
-}> = ({ children, attributes }) => (
-  <span {...attributes} style={{ textDecoration: 'line-through' }}>
-    {children}
-  </span>
-)
-
-export const config: NodeConfigI = {
-  Component,
+export const config: MarkConfigI = {
+  styles: css({ textDecoration: 'line-through' }),
   button: {
-  	toolbar: 'hovering',
-	icon: MdStrikethroughS
+  	toolbar: 'hovering'
   }
 }
 ```
 
-The `button` configuration works for marks and elements alike. We offer two `toolbar` options: `hovering` xor `fixed`.
+The `button` configuration works for marks and elements alike. Marks buttons show up in a hovering toolbar whenever some text is selected.
 
-*Note: You may or may not have noticed that this `Component` is, in fact, a span. It is expected from mark components that they behave and keep themselves inline (no divs here).*
+The `styles` attribute refers to a piece of glamor CSS. The styles of the different marks are aggregated and rendered together in the leaf component.
 
 As a last step you include this config into `marks/index.tsx`, before getting back to Katharina with the satisfaction of a job well done:
 
@@ -281,86 +273,43 @@ export const config: MarksConfig = {
 
 ### Next steps
 
-It's only Tuesday. The ~~week~~ journey is far from over :D
-
-Please add subsequent guides here…
+The ~~week~~ journey is far from over but this is as far as this guide goes for now. Stay tuned for updates.
 
 ## Concepts
 
-### Insertion
+### Insert Element
 
-Element insertion isn't as much a topic for the shorts as it would be for Republik's [Publikator](https://publikator.republik.ch). With the exception of `link` and `break`, custom elements come from the template.
+There are three ways a new element can be inserted into the Slate tree.
 
-We provide two ways to insert an element:
+1. On enter
+2. Keyboard shortcuts
+3. Normalisation (which has a chapter of its own below)
+
+#### On Enter
+
+We check the structure to see if it allows for any insert. If it does, the first matching element is inserted. If it doesn't, we navigate to the next element (as would happen on Tab).
+
+> First matching element = closest repeatable element forward in the Slate tree **and** first element in the template type array. For instance if our structure specifies the following types: `['paragraph', 'figure', 'pullQuote']`, the Enter key will trigger the insertion of a new paragraph, even if the cursor is in a figure or a quote.
+
+#### Keyboard Shortcuts
+
+`insertOnKey` triggers the insertion of a specific element on a special key combo.
+
+For instance, `Enter+shift` inserts a `break` element:
 
 ```code|lang-js
-<ToolbarButton
-      button={element.button}
-      disabled={disabled}
-      onClick={() =>
-        element.insert
-          ? element.insert(editor)
-          : element.node
-          ? Transforms.insertNodes(editor, element.node)
-          : console.warn(`Element ${elKey} missing insert/node definition`)
-      }
+<Editable
+  renderElement={renderElement}
+  renderLeaf={renderLeaf}
+  onKeyDown={event => {
+    insertOnKey({ name: 'Enter', shift: true }, 'break')(editor, event)
+    handleInsert(editor, event)
+    navigateOnTab(editor, event)
+  }}
 />
 ```
 
-#### Node Definition
-
-Most of the time, we just want to plop the new element wherever the cursor is. In this straightforward situation, we provide a `node` definition through the config and use Slate's `Transforms.insertNodes` function.
-
-See `elements/break.tsx`:
-
-```code|lang-js
-const node: BreakElement = {
-  type: 'break',
-  children: [{ text: '' }]
-}
-
-export const config: ElementConfigI = {
-  Component,
-  node,
-  attrs: {
-    isInline: true,
-    isVoid: true
-  },
-  button: { 
-	toolbar: 'fixed',
-  	icon: MdKeyboardReturn 
-  }
-}
-```
-
-#### Insert Function
-
-If the insert logic is more complicated than that, it is also possible to specify an `insert` function in the config.
-
-Here is the one for `link`:
-
-```code|lang-js
-const link = (editor: CustomEditor, href: string): void => {
-  const { selection } = editor
-  const isCollapsed = selection && Range.isCollapsed(selection)
-  const element: LinkElement = {
-    type: 'link',
-    href,
-    children: isCollapsed ? [{ text: href }] : []
-  }
-  if (isCollapsed) {
-    Transforms.insertNodes(editor, element)
-  } else {
-    Transforms.wrapNodes(editor, element, { split: true })
-    Transforms.collapse(editor, { edge: 'end' })
-  }
-}
-
-const insert: InsertFn = editor => {
-  const href = window.prompt('Enter the URL of the link:')
-  return href && link(editor, href)
-}
-```
+> If the chosen element is not allowed in the structure, it gets deleted by the normalisation.
 
 ### Normalisation
 
@@ -368,29 +317,36 @@ Every time the value of the document changes (in plain text: every time someone 
 
 While Slate also has [its own agenda](https://docs.slatejs.org/concepts/11-normalizing#built-in-constraints), normalisations can be extended ad lib. Which we did.
 
-#### Match Structure
+#### Fix Structure
 
-Our main addition is a normalisation steps that reads the `structure` from any given element's config and ensures it matches with the first-level descendants of the actual element. It moves along the descendants, deletes the ones which are the wrong type and inserts required missing nodes.
+This is the most complex piece of custom normalisation in the project. Given a Slate node, we check that it conforms to the specified `structure` and iteratively fix the problems.
 
-*Note: If no structure is defined in the config, structure matching is skipped altogether (Slate default normaliser and any custom normaliser for this element will still run though).*
+> Everytime one problem is fixed, the normalisation function returns, and runs again. This prevents issues such as: a node is deleted, but a subsequent normaliser hasn't gotten the memo and tries to access it.
 
-Structure example from `/elements/chart/container.tsx`:
+The normalisation reruns until the Slate tree is stable, meaning that if a new element is inserted, it will move along the descendants automatically. So the structure only has to worry about first-level descendants. Example:
 
 ```code|lang-js
 export const config: ElementConfigI = {
-  Component: ContainerComponent,
-  structure: [
-    { type: 'chartTitle' },
-    { type: 'chartLead' },
-    { type: 'chart' },
-    { type: 'chartLegend' }
-  ]
+  Component,
+  Form,
+  structure: [{ type: 'figureImage' }, { type: 'figureCaption' }],
+  button: { icon: ImageIcon }
 }
 ```
 
-The same process runs recursively down the Slate tree, so descendants may also enjoy a round or two of structure matching. For instance, `chartLegend` could require `figureCaption` + `figureCredit`.
+`figureCaption` has its own structure requirements, but we don't care about this here. It will enjoy its own rounds of structure fixing.
 
-`type` can either be a simple element type, or a whole array of them, like in `/elements/figure/container.tsx`:
+Conversely, if an element config doesn't specify a structure, we default to:
+
+```code|lang-js
+const DEFAULT_STRUCTURE = [{ type: ['text'], repeat: true }]
+```
+
+#### Structure Array
+
+A `structure` is an array of `NodeTemplate`. Each `NodeTemplate` specifies the type of the element (single element or an array of them) and whether the element is unique or can be repeated.
+
+`figureCaption` is a good example:
 
 ```code|lang-js
 export const config: ElementConfigI = {
@@ -406,15 +362,21 @@ export const config: ElementConfigI = {
 }
 ```
 
-The first type of the array is also the insert type for missing nodes (here `text`).
+Structures cannot be ambiguous. The following structure will cause problems:
 
-*To be implemented:* Handle repetitions.
+```code|lang-js
+structure: [
+  { type: ['text', 'link'], repeat: true },
+  { type: 'link' },
+  { type: 'text', end: true }
+]
+```
 
 ### End Nodes
 
 One of Slate's [built-in constraints](https://docs.slatejs.org/concepts/11-normalizing#built-in-constraints) is that inline nodes cannot be the first or last nodes of a parent block.
 
-This is a bit of a problem. See once more `FigureCaption`, where `FigureByline` should be the last element:
+This is annoying. See once more `FigureCaption`, where `FigureByline` should be the last element:
 
 ```code|lang-js
 export const config: ElementConfigI = {
@@ -430,131 +392,63 @@ export const config: ElementConfigI = {
 }
 ```
 
-We solve the problem by adding an attribute called `end` to text nodes. End nodes sit at either end of the structure and do not contain any text. If one starts writing inside an end node, the text gets reallocated to the nearest non-end node in the next normalisation phase.
+We solve the problem by adding an attribute called `end` to text nodes. End nodes are at either end of the structure and do not contain any text. If someone starts writing inside an end node, the text gets reallocated to the nearest non-end node in the next normalisation cycle.
 
 #### Custom Normalisers
 
-Some elements (e.g. `FigureCaption`) still have the need for custom normalisation. An array of custom normalisers can be added to the config and is run automatically for the relevant element type at every normalisation cycle.
-
-For instance `/elements/link.tsx` will remove any empty link:
+Some elements need custom normalisation. This is achieved by passing an array of normalisers in the config. This one, for instance, remove any link where the node has no text:
 
 ```code|lang-js
-const unlink = (editor: CustomEditor, linkPath: Path): void => {
-  Transforms.unwrapNodes(editor, { at: linkPath })
-}
-
-const unlinkWhenEmpty: NormalizeFn<LinkElement> = (
-  [link, linkPath],
-  editor
-) => {
-  if (!link.href) {
-    unlink(editor, linkPath)
+const unlinkWhenEmpty: NormalizeFn<LinkElement> = ([node, path], editor) => {
+  if (!node.href && Editor.string(editor, path) === '') {
+    Transforms.unwrapNodes(editor, { at: path })
+    return true
   }
-}
-
-export const config: ElementConfigI = {
-  Component: Editorial.A,
-  insert,
-  normalizations: [unlinkWhenEmpty],
-  attrs: {
-    isInline: true,
-    editUi: true,
-    formatText: true
-  },
-  button: { icon: MdLink }
+  return false
 }
 ```
 
-### Nodes Data
+> A conform normaliser should break and return `true` when it changes something to the Slate tree, `false` otherwise. For instance, we want to unlink any link  will remove any empty link:
 
-Editing a node's data is another requirement for any editor worth its salt. We offer two options.
+### Forms
 
-#### editUi
+Declaring a `Form` in the config provides an interface to edit a node's data.
 
-If `attrs.editUi` is set to `true`, clicking on the element triggers a form for all the node's custom data (everything expect `type` and `children`). This works by adding an `EditableElement` around the `Component` in the `renderElement` function Slate uses.
-
-```code|lang-js
-  const renderElement = useCallback(props => {
-    const Component =
-      elementsConfig[props.element.type as CustomElementsType].Component
-    return (
-      <EditableElement element={props.element}>
-        <Component {...props} />
-      </EditableElement>
-    )
-  }, [])
-```
-
-Which checks if the element is editable or not and toggles the form:
+For example, here is the form for uploading an image:
 
 ```code|lang-js
-export const EditableElement: React.FC<{
-  element: CustomElement
-  children: ReactElement
-}> = ({ element, children }) => {
-  const [isEdit, edit] = useState(false)
-  ...
-  
-  const elementConfig = elementsConfig[element.type]
-  if (!elementConfig || !elementConfig.attrs?.editUi) {
-    return <>{children}</>
-  }
-  return (
-    <ElementWrapper
-      contentEditable={!isEdit}
-      isInline={elementConfig.attrs?.isInline}
-      onClick={(event: MouseEvent) => {
-        event.preventDefault()
-        edit(true)
-      }}
-      ref={editRef}
-    >
-      {children}
-      {isEdit && <EditBox element={element} />}
-    </ElementWrapper>
-  )
-}
-```
-
-*To be implemented:* Currently that form is very primitive. We need different field types for different data types (bool, string, choices, etc.).
-
-#### DataForm
-
-Another solution is to pass a `DataForm` to an element's config. This allows for more flexible data editing. The form takes two arguments: `value` and `onChange`.
-
-Example from `/elements/images.tsx`:
-
-```code|lang-js
-const DataForm: DataFormType<FigureImageElement> = ({
+const Form: React.FC<ElementFormProps<FigureImageElement>> = ({
   element,
-  setElement
+  onChange
 }) => (
+<div>
+  <Label>Light mode</Label>
   <ImageInput
-    onChange={(_: any, src: string) => {
-      setElement({
-        ...element,
-        src
-      })
+    src={element.src}
+    onChange={src => {
+      onChange({ src })
     }}
   />
+</div>
 )
 ```
 
-One component called `DataForms` iterates recursively through the Slate tree, and pulls the relevant forms. 
+TBC
 
-*To be implemented:* Pull the form when element is clicked, even if the data is set already (edit mode).
 
-### Toolbars
+### Toolbar
 
 Any element/mark that defines a `button` in the config can be rendered in either the `fixed` or the `hovering` toolbar.
 
-#### Hovering Toolbar
+#### Marks
 
-The hovering toolbar appears when a section of the text is selected. It needs to be enabled via `attrs.formatText`.
+#### Inlines
 
-The positionning of the bar itself is a bit of a tricky story, since it needs to account for situations where the bar would overflow to the left or to the right of the screen (on mobile).
+#### Blocks
 
-*To be implemented:* Check for android compatibility.
+
+
+
 
 ### Placeholders
 
@@ -587,7 +481,7 @@ export const LeafComponent: React.FC<{
 
 ### Character Count
 
-The last important feature of something named "kurzformat" is the length – or rather, the shortness – for which we use the `withCharLimit` decorator. 
+The last important feature of something named "kurzformat" is the length – or rather, the shortness – for which we use the `withCharLimit` decorator.
 
 This decorator intercepts Slate's `insertText`, `insertFragment` and `insertNode` and triggers an early return wheneverr the aggregate of all text in the editor is more than the number of `maxSigns` specified in the editor config (currently 3000).
 
