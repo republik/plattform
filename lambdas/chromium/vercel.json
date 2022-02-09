@@ -1,11 +1,6 @@
 {
-  "functions": {
-    "screenshots.js": {
-      "maxDuration": 60
-    }
-  },
   "rewrites": [
-    { "source": "/screenshot", "destination": "/screenshot.js" }
+    { "source": "/screenshot", "destination": "/api/screenshot.js" }
   ],
   "redirects": [
     {
