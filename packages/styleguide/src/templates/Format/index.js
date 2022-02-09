@@ -52,7 +52,7 @@ const createFormatSchema = ({
         key: 'color',
       },
       {
-        label: 'Ziel URL',
+        label: 'Externe Basis-URL',
         key: 'externalBaseUrl',
       },
       {
