@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "main": "dist/lib.js",
   "module": "src/lib.ts",
+  "types": "dist/lib.d.ts",
   "engines": {
     "node": "^14.4.0"
   },
