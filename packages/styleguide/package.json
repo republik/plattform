@@ -109,7 +109,7 @@
     "build:docs": "react-scripts build",
     "start": "serve -s build",
     "dev": "concurrently yarn:dev:lib yarn:dev:docs",
-    "dev:lib": "tsc -w --project tsconfig.json",
+    "dev:lib": "tsc -w --project tsconfig.dist.json",
     "dev:docs": "BROWSER=none PORT=3003 react-scripts start",
     "test": "CI=true react-scripts test",
     "test:dev": "react-scripts test",
