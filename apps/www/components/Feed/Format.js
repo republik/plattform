@@ -34,7 +34,7 @@ const getFeedDocuments = gql`
             id
             meta {
               kind
-              externalUrl
+              externalBaseUrl
             }
           }
           estimatedReadingMinutes

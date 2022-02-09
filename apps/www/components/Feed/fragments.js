@@ -39,7 +39,7 @@ export const documentFragment = `
           title
           color
           kind
-          externalUrl
+          externalBaseUrl
         }
       }
       ownDiscussion {

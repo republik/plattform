@@ -53,7 +53,7 @@ const createFormatSchema = ({
       },
       {
         label: 'Ziel URL',
-        key: 'externalUrl',
+        key: 'externalBaseUrl',
       },
       {
         label: 'Sharetafel Logo',

@@ -43,7 +43,10 @@ const BookmarkMiniFeed = ({ data, closeHandler, style }) => {
                 const { userProgress, userBookmark, id } = node.document
                 const meta = node.document.meta
                 const { estimatedReadingMinutes, title, path } = meta
-                const href = getTeaserHref(path, meta.format?.meta.externalUrl)
+                const href = getTeaserHref(
+                  path,
+                  meta.format?.meta.externalBaseUrl,
+                )
                 return (
                   <div
                     {...styles.tile}

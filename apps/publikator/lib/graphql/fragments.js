@@ -33,7 +33,7 @@ export const CommitWithDocument = gql`
             color
             kind
             image
-            externalUrl
+            externalBaseUrl
             shareLogo
             shareBackgroundImage
             shareBackgroundImageInverted
