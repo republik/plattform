@@ -25,13 +25,6 @@ type Options = {
   onResponse?: any
 }
 
-function mergeNullableData(existing, incoming) {
-  // only merge truthy objects
-  if (!existing || !incoming) return incoming
-
-  return { ...existing, ...incoming }
-}
-
 function createApolloClient(
   options: Options = {},
 ): ApolloClient<NormalizedCacheObject> {
@@ -40,21 +33,15 @@ function createApolloClient(
     ssrMode: !process.browser,
     cache: new InMemoryCache({
       typePolicies: {
-        Document: {
-          fields: {
-            // Since Meta doesn't have a key-field, update cached data
-            // Source: https://www.apollographql.com/docs/react/caching/cache-field-behavior/#merging-non-normalized-objects
-            meta: {
-              merge: (existing, incoming) => {
-                return deepMerge({}, existing, incoming)
-              },
-            },
-          },
+        // Since Meta doesn't have a key-field, update cached data
+        // Source: https://www.apollographql.com/docs/react/caching/cache-field-behavior/#merging-non-normalized-objects
+        Meta: {
+          merge: true,
         },
         Discussion: {
           fields: {
             userPreference: {
-              merge: mergeNullableData,
+              merge: true,
             },
           },
         },
