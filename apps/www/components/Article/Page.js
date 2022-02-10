@@ -551,9 +551,9 @@ const ArticlePage = ({
           const showNewsletterSignupBottom =
             isFreeNewsletter && !showNewsletterSignupTop
 
-          const feedQueryVariables = parseJSONObject(meta.feedQueryVariables)
-          const hideFeed = !!meta.hideFeed
-          const hideSectionNav = !!meta.hideSectionNav
+          const feedQueryVariables = parseJSONObject(article.content.meta.feedQueryVariables)
+          const hideFeed = !!article.content.meta.hideFeed
+          const hideSectionNav = !!article.content.meta.hideSectionNav
 
           return (
             <>
