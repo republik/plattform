@@ -24,7 +24,8 @@
     "sg:unlink": "./scripts/sg_unlink.sh",
     "yaproxy": "CORS_ORIGIN=http://localhost:3010,http://localhost:3005,http://localhost:3006 PORT=5010 TARGET=https://api.republik.ch yaproxy",
     "yaproxy:staging": "CORS_ORIGIN=http://localhost:3010,http://localhost:3005,http://localhost:3006 PORT=5010 TARGET=https://api.republik.love yaproxy",
-    "yaproxy-android": "COOKIE_DOMAIN_REWRITE=*:10.0.2.2 CORS_ORIGIN=http://10.0.2.2:3010 PORT=5010 TARGET=https://api.republik.ch yaproxy"
+    "yaproxy-android": "COOKIE_DOMAIN_REWRITE=*:10.0.2.2 CORS_ORIGIN=http://10.0.2.2:3010 PORT=5010 TARGET=https://api.republik.ch yaproxy",
+    "ngrok:start": "ngrok http --region=eu --hostname=republik.eu.ngrok.io 3010"
   },
   "cacheDirectories": [
     "node_modules",
