@@ -9,7 +9,7 @@ import { parseJSONObject } from '../../lib/safeJSON'
 
 import Box from '../Frame/Box'
 import { onDocumentFragment as bookmarkOnDocumentFragment } from '../Bookmarks/fragments'
-import { WithoutMembership, WithActiveMembership } from '../Auth/withMembership'
+import { WithoutMembership } from '../Auth/withMembership'
 
 import DocumentListContainer from '../Feed/DocumentListContainer'
 
@@ -90,8 +90,14 @@ const getFeedDocuments = gql`
 
 const mapNodes = (node) => node.entity
 
-const SectionFeed = ({ t, formats, variablesAsString }) => {
-  if (!variablesAsString && !(formats && formats.length)) {
+const SectionFeed = ({
+  t,
+  formats,
+  variables = {
+    filter: { formats, feed: true },
+  },
+}) => {
+  if (!variables && !(formats && formats.length)) {
     return null
   }
 
@@ -104,12 +110,6 @@ const SectionFeed = ({ t, formats, variablesAsString }) => {
       )}
     />
   )
-
-  const variables = variablesAsString
-    ? parseJSONObject(variablesAsString)
-    : {
-        filter: { formats, feed: true },
-      }
 
   return (
     <Center>
