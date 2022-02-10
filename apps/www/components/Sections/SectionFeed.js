@@ -89,15 +89,13 @@ const getFeedDocuments = gql`
 
 const mapNodes = (node) => node.entity
 
-const SectionFeed = ({
-  t,
-  formats,
-  variables = {
-    filter: { formats, feed: true },
-  },
-}) => {
-  if (!variables && !(formats && formats.length)) {
+const SectionFeed = ({ t, formats, variables: variablesObject }) => {
+  if (!variablesObject && !(formats && formats.length)) {
     return null
+  }
+
+  const variables = variablesObject || {
+    filter: { formats, feed: true },
   }
 
   const empty = (
