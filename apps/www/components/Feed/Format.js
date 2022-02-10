@@ -5,7 +5,6 @@ import { gql } from '@apollo/client'
 import { Center, Interaction } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
-import { parseJSONObject } from '../../lib/safeJSON'
 
 import Box from '../Frame/Box'
 import { onDocumentFragment as bookmarkOnDocumentFragment } from '../Bookmarks/fragments'
