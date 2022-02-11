@@ -76,6 +76,7 @@
   },
   "devDependencies": {
     "apollo-fetch": "^0.7.0",
+    "@republik/eslint-config-backend": "*",
     "istanbul": "^1.1.0-alpha.1",
     "nodemon": "^2.0.4",
     "snoowrap": "^1.21.0",
