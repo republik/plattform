@@ -24,6 +24,7 @@ import {
   SuggestionType,
   FieldSetValues,
 } from './PledgeOptionsTypes'
+import { chfFormat } from '../../../lib/utils/format'
 
 const styles = {
   suggestionsContainer: css({
@@ -36,7 +37,6 @@ const styles = {
   }),
   disabled: css({
     opacity: 0.5,
-    pointerEvents: 'none',
   }),
   button: css({
     flex: 1,
@@ -99,7 +99,7 @@ const MembershipOptions = ({
   dirty: Record<string, any>
   hasGiftMemberships: boolean
   options: OptionType[]
-  onChange: (options) => void
+  onChange: (options, selectedPrice?: number) => void
   onPriceChange: (event: Event, value: number, shouldValidate: boolean) => void
   goodiePrice: number
   userPrice: number
@@ -180,28 +180,38 @@ const MembershipOptions = ({
               {/* only render buttons if there are more than one suggestions */}
               {suggestions.length > 1 ? (
                 <button
-                  disabled={!!disabledSuggestion}
                   key={label}
                   {...plainButtonRule}
                   {...styles.button}
                   {...(isSelected ? buttonStyle.selected : buttonStyle.default)}
                   onClick={() => {
-                    onChange(
-                      FieldSet.utils.fieldsState({
-                        field: getOptionFieldKey(option),
-                        value: 1,
-                        error: undefined,
-                        dirty: true,
-                      }),
+                    let fields = FieldSet.utils.fieldsState({
+                      field: getOptionFieldKey(option),
+                      value: option.maxAmount,
+                      error: undefined,
+                      dirty: true,
+                    })
+                    const suggestionsWithOtherOption = suggestions.filter(
+                      (other) => other.option !== option,
                     )
-                    onPriceChange(
-                      undefined,
+                    suggestionsWithOtherOption.forEach((other) => {
+                      fields = FieldSet.utils.mergeField({
+                        field: getOptionFieldKey(other.option),
+                        value: 0,
+                        error: undefined,
+                        dirty: false,
+                      })(fields)
+                    })
+                    onChange(
+                      fields,
                       (values.price -
-                        selectedSuggestion.price +
+                        (selectedSuggestion ? selectedSuggestion.price : 0) +
                         suggestion.price) /
                         100,
-                      true,
                     )
+                    if (disabledSuggestion) {
+                      setDisabledSuggestion(null)
+                    }
                   }}
                   style={{ order: index }}
                 >
@@ -209,7 +219,7 @@ const MembershipOptions = ({
                     <span>{label}</span>
                     <br />
                     <span style={{ opacity: userPrice ? 0 : 1 }}>
-                      CHF {price / 100}
+                      {chfFormat(price / 100)}
                     </span>
                   </p>
                 </button>
@@ -360,11 +370,7 @@ const MembershipOptions = ({
                       dirty: false,
                     })(fields)
                   }, {}),
-                )
-                onPriceChange(
-                  undefined,
                   (values.price - selectedSuggestion.price) / 100,
-                  true,
                 )
                 setDisabledSuggestion(selectedSuggestion)
               } else {
@@ -375,11 +381,7 @@ const MembershipOptions = ({
                     error: undefined,
                     dirty: true,
                   }),
-                )
-                onPriceChange(
-                  undefined,
                   (values.price + disabledSuggestion.price) / 100,
-                  true,
                 )
                 setDisabledSuggestion(null)
               }

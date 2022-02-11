@@ -211,7 +211,7 @@ class CustomizePackage extends Component {
       ...nextFields.values,
     })
   }
-  calculateNextPrice(nextFields) {
+  calculateNextPrice(nextFields, selectedPrice) {
     const { pkg, values, userPrice, t } = this.props
 
     const minPrice = calculateMinPrice(
@@ -223,7 +223,7 @@ class CustomizePackage extends Component {
       userPrice,
     )
 
-    let price = values.price
+    let price = selectedPrice || values.price
 
     if (this.state.customPrice) {
       const currentGoodiePrice = this.getGoodiePrice()
@@ -601,8 +601,8 @@ class CustomizePackage extends Component {
           values={values}
           errors={errors}
           dirty={dirty}
-          onChange={(fields) => {
-            onChange(this.calculateNextPrice(fields))
+          onChange={(fields, selectedPrice) => {
+            onChange(this.calculateNextPrice(fields, selectedPrice))
           }}
           onPriceChange={onPriceChange}
           goodiePrice={this.getGoodiePrice()}
