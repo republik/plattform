@@ -8,7 +8,6 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.10.2",
     "@typescript-eslint/parser": "^5.10.2",
-    "eslint-config-backend": "*",
     "eslint-config-standard": "^14.1.1",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-import": "^2.22.0",
