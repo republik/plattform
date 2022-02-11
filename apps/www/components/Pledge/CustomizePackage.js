@@ -597,7 +597,7 @@ class CustomizePackage extends Component {
 
         <MembershipOptions
           options={membershipOptions}
-          giftMembershipOptions={giftMembershipOptions}
+          hasGiftMemberships={giftMembershipOptions.length > 0}
           values={values}
           errors={errors}
           dirty={dirty}

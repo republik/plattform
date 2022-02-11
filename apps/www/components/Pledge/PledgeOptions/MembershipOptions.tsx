@@ -9,7 +9,7 @@ import {
   Field,
   Interaction,
   fontStyles,
-  Checkbox
+  Checkbox,
 } from '@project-r/styleguide'
 
 import FieldSet, { styles as fieldSetStyles } from '../../FieldSet'
@@ -17,12 +17,12 @@ import {
   getOptionFieldKey,
   getOptionPeriodsFieldKey,
   getOptionValue,
-  reasonError
+  reasonError,
 } from '../CustomizePackage'
 import {
   OptionType,
   SuggestionType,
-  FieldSetValues
+  FieldSetValues,
 } from './PledgeOptionsTypes'
 
 const styles = {
@@ -31,12 +31,12 @@ const styles = {
     flexDirection: 'column',
     flexWrap: 'wrap',
     [mediaQueries.mUp]: {
-      flexDirection: 'row'
-    }
+      flexDirection: 'row',
+    },
   }),
   disabled: css({
     opacity: 0.5,
-    cursor: 'default'
+    pointerEvents: 'none',
   }),
   button: css({
     flex: 1,
@@ -46,17 +46,14 @@ const styles = {
     display: 'flex',
     flexDirection: 'row',
     [mediaQueries.mUp]: {
-      flexDirection: 'column'
+      flexDirection: 'column',
     },
     ':not(:first-of-type)': {
       marginTop: 4,
       [mediaQueries.mUp]: {
-        margin: '0px 0px 0px 4px'
-      }
-    }
-  }),
-  buttonDisabled: css({
-    cursor: 'default'
+        margin: '0px 0px 0px 4px',
+      },
+    },
   }),
   label: css(Interaction.fontRule, {
     margin: 0,
@@ -66,41 +63,41 @@ const styles = {
     [mediaQueries.mUp]: {
       paddingRight: 0,
       ...fontStyles.sansSerifRegular16,
-      lineHeight: '22px'
-    }
+      lineHeight: '22px',
+    },
   }),
   infocontainer: css({
     order: 9,
     padding: '16px 0px 16px',
     display: 'flex',
     flexDirection: 'column',
-    width: '100%'
+    width: '100%',
   }),
   fieldContainer: css({
     display: 'flex',
     flexDirection: 'column',
     [mediaQueries.mUp]: {
       flexDirection: 'row',
-      gap: 24
-    }
-  })
+      gap: 24,
+    },
+  }),
 }
 
 const MembershipOptions = ({
   options,
-  giftMembershipOptions,
+  hasGiftMemberships,
   values,
   errors,
   dirty,
   onChange,
   onPriceChange,
   goodiePrice,
-  userPrice: queryUserPrice
+  userPrice: queryUserPrice,
 }: {
   values: FieldSetValues
   errors: Record<string, any>
   dirty: Record<string, any>
-  giftMembershipOptions: OptionType[]
+  hasGiftMemberships: boolean
   options: OptionType[]
   onChange: (options) => void
   onPriceChange: (event: Event, value: number, shouldValidate: boolean) => void
@@ -108,58 +105,57 @@ const MembershipOptions = ({
   userPrice: number
 }) => {
   const suggestions = useMemo(() => {
-    return options.map(option => {
+    return options.map((option) => {
       // append option to each suggestion object
-      const suggestionsWithOption = option.suggestions.map(suggestion => ({
+      const suggestionsWithOption = option.suggestions.map((suggestion) => ({
         ...suggestion,
-        option
+        option,
       }))
       if (queryUserPrice) {
         return suggestionsWithOption.filter(
-          suggestion =>
-            !!suggestion.userPriceFallback || suggestion.price === 24000
+          (suggestion) =>
+            !!suggestion.userPriceFallback || suggestion.price === 24000,
         )
       } else {
         // filter out userPriceFallback suggestion
         return suggestionsWithOption.filter(
-          suggestion =>
+          (suggestion) =>
             !suggestion.userPriceFallback ||
-            (suggestion.userPriceFallback && suggestion.favorite)
+            (suggestion.userPriceFallback && suggestion.favorite),
         )
       }
     })
   }, [options]).flat()
 
   const [colorScheme] = useColorContext()
-  const [disabledSuggestion, setDisabledSuggestion] = useState(null)
 
   const buttonStyle = useMemo(
     () => ({
       default: css({
         backgroundColor: colorScheme.getCSSColor('hover'),
-        '@media (hover)': !disabledSuggestion && {
+        '@media (hover)': {
           ':hover': {
-            backgroundColor: colorScheme.getCSSColor('divider')
-          }
-        }
+            backgroundColor: colorScheme.getCSSColor('divider'),
+          },
+        },
       }),
       selected: css({
         backgroundColor: colorScheme.getCSSColor('text'),
-        color: colorScheme.getCSSColor('default')
-      })
+        color: colorScheme.getCSSColor('default'),
+      }),
     }),
-    [colorScheme, disabledSuggestion]
+    [colorScheme],
   )
 
+  const [disabledSuggestion, setDisabledSuggestion] = useState(null)
   const selectedSuggestion = suggestions
     .filter(
-      suggestion =>
+      (suggestion) =>
         suggestion.price <= values.price - goodiePrice &&
-        getOptionValue(suggestion.option, values) >= 1
+        getOptionValue(suggestion.option, values) >= 1,
     )
     .sort((a, b) => descending(a.price, b.price))[0]
 
-  const hasGiftMemberships = giftMembershipOptions.length > 0
   return (
     <>
       <div
@@ -189,15 +185,14 @@ const MembershipOptions = ({
                   {...plainButtonRule}
                   {...styles.button}
                   {...(isSelected ? buttonStyle.selected : buttonStyle.default)}
-                  {...(!!disabledSuggestion && styles.buttonDisabled)}
                   onClick={() => {
                     onChange(
                       FieldSet.utils.fieldsState({
                         field: getOptionFieldKey(option),
                         value: 1,
                         error: undefined,
-                        dirty: true
-                      })
+                        dirty: true,
+                      }),
                     )
                     onPriceChange(
                       undefined,
@@ -205,7 +200,7 @@ const MembershipOptions = ({
                         selectedSuggestion.price +
                         suggestion.price) /
                         100,
-                      true
+                      true,
                     )
                   }}
                   style={{ order: index }}
@@ -222,7 +217,7 @@ const MembershipOptions = ({
               <div
                 {...styles.infocontainer}
                 style={{
-                  display: isSelected ? 'inherit' : 'none'
+                  display: isSelected ? 'inherit' : 'none',
                 }}
               >
                 <Interaction.P>{description}</Interaction.P>
@@ -233,7 +228,7 @@ const MembershipOptions = ({
                       disabled={!!disabledSuggestion}
                       label='Betrag in CHF'
                       value={values.price / 100 || price / 100}
-                      renderInput={props => (
+                      renderInput={(props) => (
                         <input inputMode='numeric' {...props} />
                       )}
                       error={dirty.price && errors.price}
@@ -244,7 +239,7 @@ const MembershipOptions = ({
                           onPriceChange(
                             undefined,
                             (values.price - 1000) / 100,
-                            dirty.price
+                            dirty.price,
                           )
                         })
                       }
@@ -254,7 +249,7 @@ const MembershipOptions = ({
                           onPriceChange(
                             undefined,
                             (values.price + 1000) / 100,
-                            dirty.price
+                            dirty.price,
                           )
                         })
                       }
@@ -281,8 +276,8 @@ const MembershipOptions = ({
                               value,
                               // error: reasonError(value.toString(), t),
                               error: undefined,
-                              dirty: shouldValidate
-                            })
+                              dirty: shouldValidate,
+                            }),
                           )
                         }}
                       />
@@ -307,14 +302,14 @@ const MembershipOptions = ({
                               field: getOptionPeriodsFieldKey(option),
                               value: Math.min(
                                 Math.max(+value, option.reward.minPeriods),
-                                option.reward.maxPeriods
+                                option.reward.maxPeriods,
                               ),
                               error: undefined,
-                              dirty: true
-                            })
+                              dirty: true,
+                            }),
                           )
                         }
-                        renderInput={props => (
+                        renderInput={(props) => (
                           <input inputMode='numeric' {...props} />
                         )}
                       />
@@ -330,14 +325,14 @@ const MembershipOptions = ({
                               field: getOptionFieldKey(option),
                               value: Math.min(
                                 Math.max(+value, option.minAmount),
-                                option.maxAmount
+                                option.maxAmount,
                               ),
                               error: undefined,
-                              dirty: true
-                            })
+                              dirty: true,
+                            }),
                           )
                         }}
-                        renderInput={props => (
+                        renderInput={(props) => (
                           <input inputMode='numeric' {...props} />
                         )}
                       />
@@ -351,26 +346,42 @@ const MembershipOptions = ({
       </div>
       {hasGiftMemberships && (
         <div style={{ marginBottom: 16 }}>
-          gi
           <Checkbox
             black
             checked={!!disabledSuggestion}
             onChange={() => {
-              setDisabledSuggestion(
-                disabledSuggestion !== null ? null : selectedSuggestion
-              )
-              if (disabledSuggestion === null) {
+              if (!disabledSuggestion) {
+                onChange(
+                  options.reduce((fields, option) => {
+                    return FieldSet.utils.mergeField({
+                      field: getOptionFieldKey(option),
+                      value: 0,
+                      error: undefined,
+                      dirty: false,
+                    })(fields)
+                  }, {}),
+                )
                 onPriceChange(
                   undefined,
                   (values.price - selectedSuggestion.price) / 100,
-                  true
+                  true,
                 )
+                setDisabledSuggestion(selectedSuggestion)
               } else {
+                onChange(
+                  FieldSet.utils.fieldsState({
+                    field: getOptionFieldKey(disabledSuggestion.option),
+                    value: 1,
+                    error: undefined,
+                    dirty: true,
+                  }),
+                )
                 onPriceChange(
                   undefined,
                   (values.price + disabledSuggestion.price) / 100,
-                  true
+                  true,
                 )
+                setDisabledSuggestion(null)
               }
             }}
           >

@@ -7,6 +7,7 @@ import {
   Interaction,
 } from '@project-r/styleguide'
 import { OptionType } from './PledgeOptionsTypes'
+import { chfFormat } from '../../../lib/utils/format'
 
 const styles = {
   container: css({
@@ -62,7 +63,7 @@ const GiftMembership = ({
             onChange(checked)
           }}
         >
-          {`für ${option.price} verlängern`}
+          {`für ${chfFormat(option.price / 100)} verlängern`}
         </Checkbox>
       </div>
     </div>

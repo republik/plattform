@@ -9,7 +9,7 @@ const GiftMembershipOptions = ({
   options,
   values,
   onChange,
-  t
+  t,
 }: {
   options: OptionType[]
   values: FieldSetValues
@@ -22,7 +22,7 @@ const GiftMembershipOptions = ({
   return (
     <div>
       <Interaction.H3>Geschenkmitgliedschaften</Interaction.H3>
-      {options.map(option => {
+      {options.map((option) => {
         const value =
           values[getOptionFieldKey(option)] === undefined
             ? option.defaultAmount
@@ -32,14 +32,14 @@ const GiftMembershipOptions = ({
             key={option.id}
             option={option}
             value={value}
-            onChange={checked =>
+            onChange={(checked) =>
               onChange(
                 FieldSet.utils.fieldsState({
                   field: getOptionFieldKey(option),
-                  value: checked ? option.defaultAmount : 0,
+                  value: checked ? option.maxAmount : option.minAmount,
                   error: undefined,
-                  dirty: true
-                })
+                  dirty: true,
+                }),
               )
             }
             t={t}
