@@ -44,9 +44,6 @@ const Campaigns = ({ t, data, grantAccess, revokeAccess }) => {
   const { inNativeIOSApp } = useInNativeApp()
   return (
     <>
-      <Interaction.H1 style={{ marginBottom: 60 }}>
-        {t('Account/Access/Page/title')}
-      </Interaction.H1>
       <Loader
         loading={data.loading}
         error={data.error}
