@@ -40,6 +40,8 @@ import { loadStripe } from '../Payment/stripe'
 import { useFieldSetState } from './utils'
 
 import ErrorMessage, { ErrorContainer } from '../ErrorMessage'
+import { useIsApplePayAvailable } from '../Payment/Form/ApplePay'
+import { ApplePayWrapper } from '../Payment/PaymentRequestButton'
 
 const { H2, P } = Interaction
 
@@ -81,7 +83,7 @@ const getContactFields = (t) => [
   },
 ]
 
-const SubmitWithHooks = (props) => {
+const SubmitWithHooks = ({ paymentMethods, ...props }) => {
   const { t, basePledge, customMe, me } = props
   const addressFields = useMemo(() => getAddressFields(t), [t])
   const contactFields = useMemo(
@@ -129,10 +131,24 @@ const SubmitWithHooks = (props) => {
   )
 
   const [syncAddresses, setSyncAddresses] = useState(true)
+  const isApplePayAvailable = useIsApplePayAvailable()
+
+  // In case STRIPE is an accepted payment method,
+  // add additional payment methods such as Apple or Google Pay if available
+  const enhancedPaymentMethods = useMemo(() => {
+    let enhancedPaymentMethods = paymentMethods
+
+    if (paymentMethods.includes('STRIPE') && isApplePayAvailable) {
+      enhancedPaymentMethods = ['STRIPE-APPLEPAY', ...enhancedPaymentMethods]
+    }
+
+    return enhancedPaymentMethods
+  }, [paymentMethods, isApplePayAvailable])
 
   return (
     <Submit
       {...props}
+      paymentMethods={enhancedPaymentMethods}
       userName={userName}
       userAddress={userAddress}
       addressState={addressState}
@@ -536,7 +552,7 @@ class Submit extends Component {
     const {
       values: { paymentMethod },
     } = this.state
-    if (paymentMethod !== 'STRIPE') {
+    if (!paymentMethod || !paymentMethod.startsWith('STRIPE')) {
       return null
     }
     const { t, packageName, forceAutoPay, options } = this.props
@@ -610,107 +626,6 @@ class Submit extends Component {
 
     return (
       <>
-        {contactPreface && (
-          <div style={{ marginBottom: 40 }}>
-            <P>{contactPreface}</P>
-          </div>
-        )}
-        <H2>
-          {t.first([
-            `pledge/contact/title/${packageName}`,
-            'pledge/contact/title',
-          ])}
-        </H2>
-        <div style={{ marginTop: 10, marginBottom: 40 }}>
-          {me ? (
-            <>
-              <Interaction.P>
-                {t('pledge/contact/signedinAs', {
-                  nameOrEmail: me.name
-                    ? `${me.name.trim()} (${me.email})`
-                    : me.email,
-                })}{' '}
-                <A
-                  href='#'
-                  onClick={(e) => {
-                    e.preventDefault()
-                    this.setState({ emailVerify: false })
-                    this.props.signOut().then(() => {
-                      contactState.onChange({
-                        values: {
-                          firstName: '',
-                          lastName: '',
-                          email: '',
-                        },
-                        dirty: {
-                          firstName: false,
-                          lastName: false,
-                          email: false,
-                        },
-                      })
-                      this.setState({ showSignIn: false })
-                    })
-                  }}
-                >
-                  {t('pledge/contact/signOut')}
-                </A>
-              </Interaction.P>
-              {/* TODO: add active membership info */}
-            </>
-          ) : (
-            !customMe && (
-              <>
-                <A
-                  href='#'
-                  onClick={(e) => {
-                    e.preventDefault()
-                    this.setState(() => ({
-                      showSignIn: !showSignIn,
-                    }))
-                  }}
-                >
-                  {t(`pledge/contact/signIn/${showSignIn ? 'hide' : 'show'}`)}
-                </A>
-                {!!showSignIn && (
-                  <>
-                    <br />
-                    <br />
-                    <SignIn context='pledge' />
-                  </>
-                )}
-                <br />
-              </>
-            )
-          )}
-          {!showSignIn && (
-            <>
-              {customMe && !me ? (
-                <>
-                  <Interaction.P>
-                    <Label>{t('pledge/contact/email/label')}</Label>
-                    <br />
-                    {customMe.email}
-                  </Interaction.P>
-                  <br />
-                  <Link
-                    href={{
-                      pathname: '/angebote',
-                      query: {
-                        package: packageName,
-                      },
-                    }}
-                    replace
-                    passHref
-                  >
-                    <A>{t('pledge/contact/signIn/wrongToken')}</A>
-                  </Link>
-                </>
-              ) : (
-                <FieldSet {...contactState} />
-              )}
-            </>
-          )}
-        </div>
         <PaymentForm
           key={me && me.id}
           ref={this.paymentRef}
@@ -753,6 +668,113 @@ class Submit extends Component {
           errors={this.state.errors}
           dirty={this.state.dirty}
         />
+        {this.state.values.paymentMethod !== 'STRIPE-APPLEPAY' && (
+          <>
+            {contactPreface && (
+              <div style={{ marginBottom: 40 }}>
+                <P>{contactPreface}</P>
+              </div>
+            )}
+            <H2>
+              {t.first([
+                `pledge/contact/title/${packageName}`,
+                'pledge/contact/title',
+              ])}
+            </H2>
+            <div style={{ marginTop: 10, marginBottom: 40 }}>
+              {me ? (
+                <>
+                  <Interaction.P>
+                    {t('pledge/contact/signedinAs', {
+                      nameOrEmail: me.name
+                        ? `${me.name.trim()} (${me.email})`
+                        : me.email,
+                    })}{' '}
+                    <A
+                      href='#'
+                      onClick={(e) => {
+                        e.preventDefault()
+                        this.setState({ emailVerify: false })
+                        this.props.signOut().then(() => {
+                          contactState.onChange({
+                            values: {
+                              firstName: '',
+                              lastName: '',
+                              email: '',
+                            },
+                            dirty: {
+                              firstName: false,
+                              lastName: false,
+                              email: false,
+                            },
+                          })
+                          this.setState({ showSignIn: false })
+                        })
+                      }}
+                    >
+                      {t('pledge/contact/signOut')}
+                    </A>
+                  </Interaction.P>
+                  {/* TODO: add active membership info */}
+                </>
+              ) : (
+                !customMe && (
+                  <>
+                    <A
+                      href='#'
+                      onClick={(e) => {
+                        e.preventDefault()
+                        this.setState(() => ({
+                          showSignIn: !showSignIn,
+                        }))
+                      }}
+                    >
+                      {t(
+                        `pledge/contact/signIn/${showSignIn ? 'hide' : 'show'}`,
+                      )}
+                    </A>
+                    {!!showSignIn && (
+                      <>
+                        <br />
+                        <br />
+                        <SignIn context='pledge' />
+                      </>
+                    )}
+                    <br />
+                  </>
+                )
+              )}
+              {!showSignIn && (
+                <>
+                  {customMe && !me ? (
+                    <>
+                      <Interaction.P>
+                        <Label>{t('pledge/contact/email/label')}</Label>
+                        <br />
+                        {customMe.email}
+                      </Interaction.P>
+                      <br />
+                      <Link
+                        href={{
+                          pathname: '/angebote',
+                          query: {
+                            package: packageName,
+                          },
+                        }}
+                        replace
+                        passHref
+                      >
+                        <A>{t('pledge/contact/signIn/wrongToken')}</A>
+                      </Link>
+                    </>
+                  ) : (
+                    <FieldSet {...contactState} />
+                  )}
+                </>
+              )}
+            </div>
+          </>
+        )}
         <br />
         <br />
         {emailVerify && !me && (
@@ -812,6 +834,15 @@ class Submit extends Component {
             {this.renderAutoPay()}
             <br />
             <br />
+            <ApplePayWrapper
+              submitPledge={() =>
+                this.props.submit({
+                  variables: this.submitVariables(this.props),
+                  payload: getConversionPayload(query),
+                  consents: getRequiredConsents(this.props),
+                })
+              }
+            />
             <div style={{ opacity: errorMessages.length ? 0.5 : 1 }}>
               <Button
                 block
@@ -957,6 +988,7 @@ export const withPay = (Component) => {
               const confirmResult = await stripeClient.confirmCardPayment(
                 payPledge.stripeClientSecret,
               )
+              console.debug()
               if (confirmResult.error) {
                 throw confirmResult.error.message
               }
