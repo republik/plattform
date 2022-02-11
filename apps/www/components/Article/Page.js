@@ -551,9 +551,12 @@ const ArticlePage = ({
           const showNewsletterSignupBottom =
             isFreeNewsletter && !showNewsletterSignupTop
 
-          const feedQueryVariables = parseJSONObject(article.content.meta.feedQueryVariables)
-          const hideFeed = !!article.content.meta.hideFeed
-          const hideSectionNav = !!article.content.meta.hideSectionNav
+          const rawContentMeta = articleContent.meta
+          const feedQueryVariables = rawContentMeta.feedQueryVariables
+            ? parseJSONObject(rawContentMeta.feedQueryVariables)
+            : undefined
+          const hideFeed = !!rawContentMeta.hideFeed
+          const hideSectionNav = !!rawContentMeta.hideSectionNav
 
           return (
             <>
@@ -687,10 +690,7 @@ const ArticlePage = ({
                     discussionId={ownDiscussion.id}
                     isBoardRoot={ownDiscussion.isBoard}
                   >
-                    <Discussion
-                      documentMeta={articleContent.meta}
-                      showPayNotes
-                    />
+                    <Discussion documentMeta={rawContentMeta} showPayNotes />
                   </DiscussionContextProvider>
                 </Center>
               )}
