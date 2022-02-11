@@ -34,6 +34,7 @@ export type OptionType = {
     user: {
       isUserOfCurrentSession: boolean
     }
+    claimerName: string
   }
 }
 

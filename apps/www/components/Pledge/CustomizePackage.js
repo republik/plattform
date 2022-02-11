@@ -327,16 +327,16 @@ class CustomizePackage extends Component {
       }),
     )
   }
-  // resetUserPrice() {
-  //   const { router } = this.props
-  //   router.replace(
-  //     { pathname: 'angebote', query: omit(router.query, ['userPrice']) },
-  //     undefined,
-  //     {
-  //       shallow: true
-  //     }
-  //   )
-  // }
+  resetUserPrice() {
+    const { router } = this.props
+    router.replace(
+      { pathname: 'angebote', query: omit(router.query, ['userPrice']) },
+      undefined,
+      {
+        shallow: true,
+      },
+    )
+  }
   componentWillUnmount() {
     this.resetPrice()
   }
@@ -391,16 +391,16 @@ class CustomizePackage extends Component {
     const regularMinPrice = calculateMinPrice(pkg, values, false)
     const fixedPrice = pkg.name === 'MONTHLY_ABO'
 
-    const onPriceChange = (_, value, shouldValidate, suggestionMinPrice) => {
+    const onPriceChange = (_, value, shouldValidate) => {
       const price = String(value).length
         ? Math.round(parseInt(value, 10)) * 100 || 0
         : 0
 
-      const error = priceError(price, suggestionMinPrice || minPrice, t)
+      const error = priceError(price, minPrice, t)
 
-      // if (userPrice && price >= regularMinPrice) {
-      //   this.resetUserPrice()
-      // }
+      if (userPrice && price >= regularMinPrice) {
+        this.resetUserPrice()
+      }
 
       this.setState({ customPrice: true })
       onChange(
@@ -617,6 +617,7 @@ class CustomizePackage extends Component {
           t={t}
         />
         <GiftMembershipOptions
+          values={values}
           options={giftMembershipOptions}
           onChange={(fields) => {
             onChange(this.calculateNextPrice(fields))

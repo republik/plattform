@@ -4,7 +4,7 @@ import {
   Checkbox,
   mediaQueries,
   fontStyles,
-  Interaction
+  Interaction,
 } from '@project-r/styleguide'
 import { OptionType } from './PledgeOptionsTypes'
 
@@ -15,8 +15,8 @@ const styles = {
     flexDirection: 'column',
     justifyContent: 'space-between',
     [mediaQueries.mUp]: {
-      flexDirection: 'row'
-    }
+      flexDirection: 'row',
+    },
   }),
   label: css(Interaction.fontRule, {
     flexGrow: 1,
@@ -24,37 +24,35 @@ const styles = {
     ...fontStyles.sansSerifRegular15,
     [mediaQueries.mUp]: {
       marginRight: 16,
-      ...fontStyles.sansSerifRegular17
+      ...fontStyles.sansSerifRegular17,
     },
-    margin: 0
+    margin: 0,
   }),
   selection: css({
     minWidth: 100,
     marginLeft: 16,
     [mediaQueries.mUp]: {
-      marginLeft: 0
-    }
-  })
+      marginLeft: 0,
+    },
+  }),
 }
 
 const GiftMembership = ({
   option,
   value,
   onChange,
-  t
+  t,
 }: {
   value: number
   onChange: (fields) => void
   option: OptionType
   t: (any) => any
 }) => {
-  const suggestion = option.suggestions[0]
+  const { membership } = option
   return (
     <div {...styles.container}>
       <p {...styles.label}>
-        <strong>{suggestion.label}</strong>
-        <br />
-        {suggestion.description}
+        <strong>{membership.claimerName}</strong>
       </p>
       <div {...styles.selection}>
         <Checkbox
