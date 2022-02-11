@@ -107,7 +107,7 @@ class Form extends Component {
         type: 'text',
         label: t('Account/Access/Campaigns/Form/input/message/label'),
         error: dirty.message && errors.message,
-        value: values.message,
+        value: values.message || campaign.defaultMessage,
         validator: (message) =>
           message.trim().length > 3000 &&
           this.props.t('Account/Access/Campaigns/Form/input/message/tooLong', {

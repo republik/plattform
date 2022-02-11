@@ -39,7 +39,7 @@ const Page = ({ me, isMember, hasActiveMembership }) => {
         </>
       )}
 
-      {/* TODO: add prolong */}
+      {/* TODO: add prolong*/}
       {!isMember && (
         <>
           <Interaction.H2>
