@@ -21,7 +21,7 @@ function isApplePayAvailable(): boolean {
   return ApplePaySession.canMakePayments()
 }
 
-export const useIsApplePayAvailable = () => {
+export function useIsApplePayAvailable(): boolean {
   const [isAvailable, setIsAvailable] = useState(
     isInSecureDocument() && isApplePayAvailable(),
   )

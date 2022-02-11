@@ -43,6 +43,7 @@
   "homepage": "https://github.com/orbiting/republik-frontend#readme",
   "devDependencies": {
     "@next/eslint-plugin-next": "^11.1.3",
+    "@stripe/stripe-js": "^1.22.0",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@types/applepayjs": "^3.0.3",
