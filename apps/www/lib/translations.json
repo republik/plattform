@@ -1013,6 +1013,10 @@
       "value": "Kreditkarte"
     },
     {
+      "key": "account/pledges/payment/method/STRIPE-APPLEPAY",
+      "value": "Apple Pay"
+    },
+    {
       "key": "account/pledges/payment/method/POSTFINANCECARD",
       "value": "Postcard"
     },

@@ -37,6 +37,11 @@ const pad2 = format('02')
 const PAYMENT_METHODS = [
   {
     disabled: false,
+    key: 'STRIPE-APPLEPAY',
+    Icon: PSPIcons.ApplePay,
+  },
+  {
+    disabled: false,
     key: 'STRIPE',
     Icon: ({ values }) => {
       return (
