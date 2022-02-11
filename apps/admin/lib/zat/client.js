@@ -19,7 +19,7 @@ function timeoutReject(client, reject, name, paramsArray) {
   const actions = collateActions(name, paramsArray)
   switch (name) {
     case 'invoke': {
-      const matches = paramsArray.filter(action => {
+      const matches = paramsArray.filter((action) => {
         return NO_TIMEOUT_ACTIONS.indexOf(action) !== -1
       })
       const allWhitelisted = matches.length === paramsArray.length
@@ -29,7 +29,7 @@ function timeoutReject(client, reject, name, paramsArray) {
         const notAllWhitelisted = matches.length !== 0
         if (notAllWhitelisted) {
           throw new Error(
-            'Illegal bulk call - `instances.create` must be called separately.'
+            'Illegal bulk call - `instances.create` must be called separately.',
           )
         }
         return defaultTimer(client, actions, reject)
@@ -49,14 +49,15 @@ function defaultTimer(client, actions, callback) {
 }
 
 export function collateActions(name, params) {
-  return params.map(action => `${name}-${action}`)
+  return params.map((action) => `${name}-${action}`)
 }
 
 export function stripActionArgs(action) {
   // Capture:
   // 1. single or multiple comma-delimited arguments following an initial colon, and
   // 2. non-whitelisted, unescaped words following a period (i.e. file extensions in the case of assetURL calls)
-  const ACTION_ARGS = /:\w+(,?\w+)*((\.(show|hide|enable|disable))|(\\?\.\w*))?/g
+  const ACTION_ARGS =
+    /:\w+(,?\w+)*((\.(show|hide|enable|disable))|(\\?\.\w*))?/g
   // Return :arg.field_modifier, where field modifier is (optionally) one of 'show', 'hide', 'enable' or 'disable'
   return action.replace(ACTION_ARGS, ':arg$3')
 }
@@ -68,15 +69,17 @@ export function timeMsToSecondsRange(value, upperLimit = PROMISE_TIMEOUT_LONG) {
 }
 
 export function trackSDKRequestTimeout(client, actions, requestResponseTime) {
-  const actionsTags = actions.map(action => `action:${stripActionArgs(action)}`)
+  const actionsTags = actions.map(
+    (action) => `action:${stripActionArgs(action)}`,
+  )
   const responseTimeTag = `request_response_time:${timeMsToSecondsRange(
-    requestResponseTime
+    requestResponseTime,
   )}`
   client.postMessage('__track__', {
     event_name: 'sdk_request_timeout',
     event_type: 'increment',
     data: 1,
-    tags: actionsTags.concat(responseTimeTag)
+    tags: actionsTags.concat(responseTimeTag),
   })
 }
 
@@ -131,7 +134,7 @@ function wrappedPostMessage(name, params) {
       request: name,
       params: params,
       appGuid: client._appGuid,
-      instanceGuid: client._instanceGuid
+      instanceGuid: client._instanceGuid,
     })
     rawPostMessage(client, msg)
   })
@@ -146,7 +149,7 @@ function wrappedPostMessage(name, params) {
   // ensure promise is cleaned up when resolved/rejected, track request performance for resolved promises
   return promise.then(
     removePromise.bind(null, { id, timeoutId, trackTimeoutWithResolutionTime }),
-    removePromise.bind(null, { id, timeoutId })
+    removePromise.bind(null, { id, timeoutId }),
   )
 }
 
@@ -179,7 +182,7 @@ function triggerEvent(client, eventName, data) {
   if (!client._messageHandlers[eventName]) {
     return false
   }
-  client._messageHandlers[eventName].forEach(handler => {
+  client._messageHandlers[eventName].forEach((handler) => {
     handler(data)
   })
 }
@@ -201,12 +204,12 @@ function postReplyWith(client, key, msg) {
   client._repliesPending[key] = true
   return when(client._messageHandlers[key])
     .then(rawPostMessage.bind(null, client, msg))
-    .catch(reason => {
+    .catch((reason) => {
       // if the handler throws an error we want to send back its message, but
       // Error objects don't pass through the postMessage boundary.
       const rejectMessage = reason instanceof Error ? reason.message : reason
       msg.error = {
-        msg: rejectMessage
+        msg: rejectMessage,
       }
       rawPostMessage(client, msg)
     })
@@ -223,7 +226,7 @@ function getMessageRecipient(client, recipientGuid) {
 
     if (!messageRecipient) {
       throw Error(
-        '[ZAF SDK] Could not find client for instance ' + recipientGuid
+        '[ZAF SDK] Could not find client for instance ' + recipientGuid,
       )
     }
   }
@@ -302,7 +305,7 @@ function isOriginValid(origin) {
       /^https:\/\/.+\.cloudhatchery\.com$/,
       /^https:\/\/.+\.idealwith\.com$/,
       // Tesco domains:
-      /^https:\/\/.+\.ourtesco\.com$/
+      /^https:\/\/.+\.ourtesco\.com$/,
     ]
 
     for (let i = 0; i < WHITELISTED_ORIGINS.length; i++) {
@@ -360,20 +363,20 @@ export default class Client {
 
     this.on(
       'app.registered',
-      data => {
+      (data) => {
         this.ready = true
         this._metadata = data.metadata
         this._context = data.context
       },
-      this
+      this,
     )
 
     this.on(
       'context.updated',
-      context => {
+      (context) => {
         this._context = context
       },
-      this
+      this,
     )
 
     if (this._parent) {
@@ -410,7 +413,7 @@ export default class Client {
       key: name,
       message: data,
       appGuid: this._appGuid,
-      instanceGuid: this._instanceGuid
+      instanceGuid: this._instanceGuid,
     })
     rawPostMessage(this, msg, name === 'iframe.handshake')
   }
@@ -452,7 +455,7 @@ export default class Client {
       if (name !== 'app.registered') {
         // Subscriber count is needed as the framework will only bind events on the first attached handler
         this.postMessage('iframe.on:' + name, {
-          subscriberCount: this._messageHandlers[name].length
+          subscriberCount: this._messageHandlers[name].length,
         })
       }
     }
@@ -488,7 +491,7 @@ export default class Client {
 
     // Subscriber count is needed as the framework will only unbind events on the last detached handler (count of 0)
     this.postMessage('iframe.off:' + name, {
-      subscriberCount: this._messageHandlers[name].length
+      subscriberCount: this._messageHandlers[name].length,
     })
     return handler
   }
@@ -582,11 +585,11 @@ export default class Client {
         options = { url: options }
       }
 
-      this.on(requestKey + '.done', evt => {
+      this.on(requestKey + '.done', (evt) => {
         resolve.apply(this, evt.responseArgs)
       })
 
-      this.on(requestKey + '.fail', evt => {
+      this.on(requestKey + '.fail', (evt) => {
         reject.apply(this, evt.responseArgs)
       })
 
@@ -608,7 +611,7 @@ export default class Client {
     if (!instanceClient) {
       instanceClient = new Client({
         parent: this,
-        instanceGuid: instanceGuid
+        instanceGuid: instanceGuid,
       })
       this._instanceClients[instanceGuid] = instanceClient
     }
@@ -619,7 +622,7 @@ export default class Client {
     if (this._parent) {
       return this._parent.metadata()
     }
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       if (this._metadata) {
         resolve(this._metadata)
       } else {
@@ -636,13 +639,13 @@ export default class Client {
     } else {
       if (this._instanceGuid && this._instanceGuid !== this._appGuid) {
         const key = 'instances.' + this._instanceGuid
-        return this.get(key).then(data => {
+        return this.get(key).then((data) => {
           this._context = data[key]
           return this._context
         })
       } else {
-        return new Promise(resolve => {
-          this.on('app.registered', data => {
+        return new Promise((resolve) => {
+          this.on('app.registered', (data) => {
             resolve(data.context)
           })
         })
@@ -656,7 +659,7 @@ export default class Client {
 
     if (
       arguments.length > 1 ||
-      paths.some(path => {
+      paths.some((path) => {
         return !isString(path)
       })
     ) {
@@ -681,7 +684,7 @@ export default class Client {
 
     if (!isObject(obj) || Array.isArray(obj)) {
       throw new Error(
-        'The set method accepts a key and value pair, or an object of key and value pairs.'
+        'The set method accepts a key and value pair, or an object of key and value pairs.',
       )
     }
 
@@ -697,17 +700,17 @@ export default class Client {
       obj[keyOrObject] = Array.prototype.slice.call(arguments, 1)
     } else if (typeof keyOrObject === 'object') {
       // Validate object
-      Object.keys(keyOrObject).forEach(key => {
+      Object.keys(keyOrObject).forEach((key) => {
         const methodArgs = keyOrObject[key]
 
         if (
           !Array.isArray(methodArgs) ||
-          methodArgs.some(arg => {
+          methodArgs.some((arg) => {
             return !isString(arg)
           })
         ) {
           throw new Error(
-            'Invoke supports string arguments or an object with array of strings.'
+            'Invoke supports string arguments or an object with array of strings.',
           )
         }
       })
@@ -715,7 +718,7 @@ export default class Client {
       obj = keyOrObject
     } else {
       throw new Error(
-        'Invoke supports string arguments or an object with array of strings.'
+        'Invoke supports string arguments or an object with array of strings.',
       )
     }
 

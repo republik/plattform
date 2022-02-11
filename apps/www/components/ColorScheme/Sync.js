@@ -5,7 +5,7 @@ import NextHead from 'next/head'
 const ColorSchemeSync = () => {
   const { key: colorSchemeKey, defaultKey } = useColorSchemeKey()
 
-  const setColorSchemeKey = key => {
+  const setColorSchemeKey = (key) => {
     if (key && key !== 'auto') {
       document.documentElement.setAttribute('data-user-color-scheme', key)
     } else {
@@ -34,8 +34,8 @@ const ColorSchemeSync = () => {
             `if(key==='auto'){try{`,
             `key=JSON.parse(localStorage.getItem('${OS_COLOR_SCHEME_KEY}'))`,
             `}catch(e){}}`,
-            `if(key!=='auto'){document.documentElement.setAttribute('data-user-color-scheme', key)}`
-          ].join('')
+            `if(key!=='auto'){document.documentElement.setAttribute('data-user-color-scheme', key)}`,
+          ].join(''),
         }}
       />
     </NextHead>

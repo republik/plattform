@@ -13,10 +13,10 @@ export const MIN_GALLERY_IMG_WIDTH = 600
 
 const styles = {
   image: css({
-    width: '100%'
+    width: '100%',
   }),
   imageContainer: css({
-    position: 'relative'
+    position: 'relative',
   }),
   galleryButton: css({
     position: 'absolute',
@@ -29,12 +29,12 @@ const styles = {
     ...sansSerifRegular12,
     [mUp]: {
       ...sansSerifRegular15,
-      lineHeight: '18px'
-    }
+      lineHeight: '18px',
+    },
   }),
   maxWidth: css({
-    display: 'block'
-  })
+    display: 'block',
+  }),
 }
 
 const GalleryButton = ({ gallerySize, onClick }) => {
@@ -59,7 +59,7 @@ const Image = (props, context) => {
     size: sizeProp,
     aboveTheFold,
     enableGallery = false,
-    gallerySize
+    gallerySize,
   } = props
 
   const onClick =
@@ -121,7 +121,7 @@ const Image = (props, context) => {
       style={{
         cursor: enableGallery // during SSR context.toggleGallery and therefore onClick are not present
           ? 'zoom-in'
-          : undefined
+          : undefined,
       }}
     >
       {wrappedImage}
@@ -133,26 +133,26 @@ Image.propTypes = {
   src: PropTypes.string.isRequired,
   dark: PropTypes.shape({
     src: PropTypes.string.isRequired,
-    srcSet: PropTypes.string
+    srcSet: PropTypes.string,
   }),
   srcSet: PropTypes.string,
   alt: PropTypes.string,
   size: PropTypes.shape({
     width: PropTypes.number,
-    height: PropTypes.number
+    height: PropTypes.number,
   }),
   maxWidth: PropTypes.number,
   aboveTheFold: PropTypes.bool,
   enableGallery: PropTypes.bool,
-  gallerySize: PropTypes.number
+  gallerySize: PropTypes.number,
 }
 
 Image.contextTypes = {
-  toggleGallery: PropTypes.func
+  toggleGallery: PropTypes.func,
 }
 
 Image.utils = {
-  getResizedSrcs
+  getResizedSrcs,
 }
 
 export default Image

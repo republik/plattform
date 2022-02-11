@@ -177,6 +177,6 @@ Scope is optional.
 
 The environment variable `SERVER` is used to determine which app to build and run on deploy. If `SERVER` is missing the api app is run.
 
-A `heroku-postbuild` script is used to add a `Procfile` for running the scheduler on heroku.
+A `heroku-prebuild` script runs `scripts/prune.sh` which runs `turbo prune` with the correct scope and moved the pruned apps and packages to the root directory.
 
-You may use a `heroku-prebuild` script to run `scripts/prune.sh` which runs `turbo prune` with the correct scope. Watch out running this locally will wipe your `.env` files and create a git mess.
+A `heroku-postbuild` script is used to add a `Procfile` for running the scheduler on heroku for the `api` app.

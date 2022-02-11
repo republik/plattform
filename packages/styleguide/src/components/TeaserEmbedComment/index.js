@@ -20,26 +20,33 @@ const styles = {
     maxWidth: '455px',
     whiteSpace: 'normal',
     [mUp]: {
-      margin: '0 auto'
-    }
+      margin: '0 auto',
+    },
   }),
   isLast: css({
     marginBottom: 36,
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
     [mUp]: {
-      marginBottom: 45
-    }
+      marginBottom: 45,
+    },
   }),
   isFirst: css({
     marginTop: 36,
     [mUp]: {
-      marginTop: 45
-    }
-  })
+      marginTop: 45,
+    },
+  }),
 }
 
-const TeaserEmbedComment = ({ data, liveData, t, CommentLink, isFirst, isLast }) => {
+const TeaserEmbedComment = ({
+  data,
+  liveData,
+  t,
+  CommentLink,
+  isFirst,
+  isLast,
+}) => {
   const isDesktop = useMediaQuery(mUp)
   const [colorScheme] = useColorContext()
 
@@ -48,7 +55,7 @@ const TeaserEmbedComment = ({ data, liveData, t, CommentLink, isFirst, isLast })
         ...liveData?.comment,
         // content is based on thise dates
         createdAt: data.createdAt,
-        updatedAt: data.updatedAt
+        updatedAt: data.updatedAt,
       }
     : {
         // placeholder while loading or if no longer available
@@ -58,21 +65,21 @@ const TeaserEmbedComment = ({ data, liveData, t, CommentLink, isFirst, isLast })
         published: liveData ? false : true,
         unavailable: liveData && !liveData.loading,
         displayAuthor: {
-          name: t('styleguide/comment/header/loading')
+          name: t('styleguide/comment/header/loading'),
         },
-        discussion: data.discussion || {}
+        discussion: data.discussion || {},
       }
 
   const contentComment = data
 
   const clock = {
     t,
-    isDesktop
+    isDesktop,
   }
   const discussionContextValue = {
     discussion: metaDataComment.discussion,
     clock,
-    CommentLink
+    CommentLink,
   }
   return (
     <DiscussionContext.Provider value={discussionContextValue}>
@@ -81,7 +88,7 @@ const TeaserEmbedComment = ({ data, liveData, t, CommentLink, isFirst, isLast })
         {...merge(
           styles.root,
           isFirst && styles.isFirst,
-          isLast && styles.isLast
+          isLast && styles.isLast,
         )}
         {...colorScheme.set('color', 'text')}
       >
@@ -109,7 +116,11 @@ const TeaserEmbedComment = ({ data, liveData, t, CommentLink, isFirst, isLast })
             </div>
           </a>
         </CommentLink>
-        <DiscussionFooter comment={metaDataComment} t={t} CommentLink={CommentLink} />
+        <DiscussionFooter
+          comment={metaDataComment}
+          t={t}
+          CommentLink={CommentLink}
+        />
       </div>
     </DiscussionContext.Provider>
   )
@@ -120,12 +131,12 @@ export default TeaserEmbedComment
 TeaserEmbedComment.data = {
   config: {
     name: 'liveData',
-    skip: props => !props.data,
+    skip: (props) => !props.data,
     options: ({ data }) => ({
       variables: {
-        id: data.id
-      }
-    })
+        id: data.id,
+      },
+    }),
   },
   query: `
     query getLiveCommentEmbed($id: ID!) {
@@ -163,5 +174,5 @@ TeaserEmbedComment.data = {
         }
       }
     }
-  `
+  `,
 }

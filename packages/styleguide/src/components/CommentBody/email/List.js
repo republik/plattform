@@ -4,7 +4,7 @@ import { paragraphStyle } from './Paragraph'
 
 const listStyle = {
   marginLeft: '1em',
-  paddingLeft: '1em'
+  paddingLeft: '1em',
 }
 
 export const ListItem = ({ children }) => (

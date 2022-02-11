@@ -17,28 +17,28 @@ const dateFormat = timeFormat('%d.%m.%Y')
 const styles = {
   link: css({
     color: 'inherit',
-    textDecoration: 'none'
+    textDecoration: 'none',
   }),
   bar: css({
-    marginTop: 10
-  })
+    marginTop: 10,
+  }),
 }
 
 const br = {
   matchMdast: matchType('break'),
   component: () => <br />,
-  isVoid: true
+  isVoid: true,
 }
 const link = {
   matchMdast: matchType('link'),
-  props: node => ({
+  props: (node) => ({
     title: node.title,
-    href: node.url
+    href: node.url,
   }),
-  component: Editorial.A
+  component: Editorial.A,
 }
 const creditSchema = {
-  rules: [link, br]
+  rules: [link, br],
 }
 
 const DefaultLink = ({ children, path }) => children
@@ -62,7 +62,7 @@ export const TeaserFeed = ({
   Link = DefaultLink,
   menu,
   highlighted,
-  series
+  series,
 }) => {
   const formatMeta = (format && format.meta) || {}
   const Headline =

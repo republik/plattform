@@ -12,9 +12,9 @@ const styles = {
     textRendering: 'optimizeLegibility',
     WebkitFontSmoothing: 'antialiased',
     [mUp]: {
-      ...convertStyleToRem(sansSerifRegular12)
-    }
-  })
+      ...convertStyleToRem(sansSerifRegular12),
+    },
+  }),
 }
 
 const positionBaseStyle = {
@@ -24,7 +24,7 @@ const positionBaseStyle = {
   textAlign: 'left',
   position: 'absolute',
   bottom: 0,
-  whiteSpace: 'nowrap'
+  whiteSpace: 'nowrap',
 }
 
 const positionStyle = {
@@ -35,8 +35,8 @@ const positionStyle = {
     right: 0,
     display: 'block',
     [mUp]: {
-      ...convertStyleToRem(sansSerifRegular10)
-    }
+      ...convertStyleToRem(sansSerifRegular10),
+    },
   }),
   below: css({
     display: 'block',
@@ -44,16 +44,16 @@ const positionStyle = {
     paddingLeft: '15px',
     [mUpFront]: {
       ...convertStyleToRem(sansSerifRegular12),
-      paddingLeft: 0
-    }
+      paddingLeft: 0,
+    },
   }),
   belowFeuilleton: css({
     display: 'block',
     marginTop: '5px',
     paddingLeft: 0,
     [mUpFront]: {
-      ...convertStyleToRem(sansSerifRegular12)
-    }
+      ...convertStyleToRem(sansSerifRegular12),
+    },
   }),
   // right of relative container on desktop, below on mobile.
   right: css({
@@ -61,8 +61,8 @@ const positionStyle = {
     [mUpFront]: {
       ...positionBaseStyle,
       left: '100%',
-      marginLeft: '18px'
-    }
+      marginLeft: '18px',
+    },
   }),
   // right of relative container on desktop and mobile, always small font size.
   rightCompact: css({
@@ -71,8 +71,8 @@ const positionStyle = {
     left: '100%',
     marginLeft: '14px',
     [mUpFront]: {
-      ...convertStyleToRem(sansSerifRegular10)
-    }
+      ...convertStyleToRem(sansSerifRegular10),
+    },
   }),
   // left of relative container on desktop, below on mobile.
   left: css({
@@ -80,8 +80,8 @@ const positionStyle = {
     [mUpFront]: {
       ...positionBaseStyle,
       left: 0,
-      marginLeft: '-5px'
-    }
+      marginLeft: '-5px',
+    },
   }),
   // left inside relative container on desktop, below on mobile.
   leftInside: css({
@@ -92,8 +92,8 @@ const positionStyle = {
       ...positionBaseStyle,
       left: 0,
       marginTop: 0,
-      marginLeft: '18px'
-    }
+      marginLeft: '18px',
+    },
   }),
   // left inside relative container on desktop and mobile.
   leftInsideOnlyImage: css({
@@ -105,9 +105,9 @@ const positionStyle = {
     paddingLeft: '15px',
     [mUpFront]: {
       ...convertStyleToRem(sansSerifRegular12),
-      marginLeft: '18px'
-    }
-  })
+      marginLeft: '18px',
+    },
+  }),
 }
 
 export const Byline = ({ children, attributes, style, position }) => {
@@ -133,12 +133,12 @@ Byline.propTypes = {
     'rightCompact',
     'left',
     'leftInside',
-    'leftInsideOnlyImage'
-  ])
+    'leftInsideOnlyImage',
+  ]),
 }
 
 Byline.defaultProps = {
-  style: {}
+  style: {},
 }
 
 export default Byline

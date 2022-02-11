@@ -2,7 +2,7 @@ import { ascending } from 'd3-array'
 import { timeFormat } from 'd3-time-format'
 import {
   matchAndroidUserAgent,
-  matchIOSUserAgent
+  matchIOSUserAgent,
 } from '../context/UserAgentContext'
 
 import { inNativeAppBrowserAppVersion } from '../withInNativeApp'
@@ -10,7 +10,7 @@ import { inNativeAppBrowserAppVersion } from '../withInNativeApp'
 // needs to be compat with Postgres date casting
 const formatDate = timeFormat('%Y-%m-%d')
 
-export const getUtmParams = query => {
+export const getUtmParams = (query) => {
   // support /probelesen?campaign=x
   let defaultCampaign = query.campaign
   // check matomo attribution cookie
@@ -22,9 +22,9 @@ export const getUtmParams = query => {
   const params = defaultCampaign ? { utm_campaign: defaultCampaign } : {}
 
   Object.keys(query)
-    .filter(key => key.startsWith('utm_'))
+    .filter((key) => key.startsWith('utm_'))
     .sort((a, b) => ascending(a, b))
-    .forEach(key => {
+    .forEach((key) => {
       params[key] = query[key]
     })
 
@@ -78,7 +78,7 @@ const createPayloadStore = (storeKey, limit = 15) => {
   return {
     get,
     record,
-    disable
+    disable,
   }
 }
 
@@ -93,10 +93,10 @@ export const getConversionPayload = (query = {}) => {
             ? 'ios'
             : matchAndroidUserAgent(navigator.userAgent)
             ? 'android'
-            : 'unknown'
+            : 'unknown',
         }
       : undefined,
     ...payload.get(),
-    ...getUtmParams(query)
+    ...getUtmParams(query),
   }
 }

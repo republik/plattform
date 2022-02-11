@@ -76,9 +76,8 @@ PgDb.connect().then(async (pgdb) => {
       nationalCouncil.listMandatesPreviously
     row['Nationalrat: Listenplatz'] = nationalCouncil.minListPlace
     row['Nationalrat: Anzahl Listenplätze'] = nationalCouncil.listPlaces.length
-    row['Nationalrat: alle Listenplätze'] = nationalCouncil.listPlaces.join(
-      ', ',
-    )
+    row['Nationalrat: alle Listenplätze'] =
+      nationalCouncil.listPlaces.join(', ')
     row['Nationalrat: Rating'] = nationalCouncil.electionPlausibility
     row['Nationalrat: Mitglied'] = nationalCouncil.incumbent ? 'Ja' : ''
 

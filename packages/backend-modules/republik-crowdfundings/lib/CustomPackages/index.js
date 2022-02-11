@@ -386,7 +386,6 @@ const createSuggestionMap = (package) => (option, index, options) => {
       )
       .map((suggestion) => {
         if (!!suggestion.isGifted) {
-
           return {
             ...suggestion,
             claimerName: membership?.claimerName,

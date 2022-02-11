@@ -9,7 +9,7 @@ import withT from '../../../lib/withT'
 import AddressForm, {
   DEFAULT_COUNTRY,
   fields as addressFields,
-  isEmptyAddress
+  isEmptyAddress,
 } from '../AddressForm'
 
 import {
@@ -18,7 +18,7 @@ import {
   Interaction,
   Label,
   Button,
-  colors
+  colors,
 } from '@project-r/styleguide'
 
 import FieldSet from '../../FieldSet'
@@ -35,33 +35,33 @@ const styles = {
   buttonsContainer: css({
     display: 'flex',
     gap: 16,
-    flexWrap: 'wrap'
-  })
+    flexWrap: 'wrap',
+  }),
 }
 
-const fields = t => [
+const fields = (t) => [
   {
     label: t('pledge/contact/firstName/label'),
     name: 'firstName',
-    validator: value =>
-      value.trim().length <= 0 && t('pledge/contact/firstName/error/empty')
+    validator: (value) =>
+      value.trim().length <= 0 && t('pledge/contact/firstName/error/empty'),
   },
   {
     label: t('pledge/contact/lastName/label'),
     name: 'lastName',
-    validator: value =>
-      value.trim().length <= 0 && t('pledge/contact/lastName/error/empty')
+    validator: (value) =>
+      value.trim().length <= 0 && t('pledge/contact/lastName/error/empty'),
   },
   {
     label: t('Account/Update/phone/label'),
-    name: 'phoneNumber'
+    name: 'phoneNumber',
   },
   {
     label: t('Account/Update/birthday/label/optional'),
     name: 'birthday',
     mask: '11.11.1111',
     maskChar: '_',
-    validator: value => {
+    validator: (value) => {
       const parsedDate = birthdayParse(value)
       return (
         !!value.trim().length &&
@@ -70,11 +70,11 @@ const fields = t => [
           parsedDate < new Date(1798, 3, 12)) &&
         t('Account/Update/birthday/error/invalid')
       )
-    }
-  }
+    },
+  },
 ]
 
-const getValues = me => {
+const getValues = (me) => {
   let addressState = {}
   if (me.address) {
     addressState = {
@@ -83,7 +83,7 @@ const getValues = me => {
       line2: me.address.line2,
       postalCode: me.address.postalCode,
       city: me.address.city,
-      country: me.address.country
+      country: me.address.country,
     }
   } else if (me) {
     addressState.name = [me.firstName, me.lastName].filter(Boolean).join(' ')
@@ -94,13 +94,13 @@ const getValues = me => {
     lastName: me.lastName || '',
     phoneNumber: me.phoneNumber || '',
     birthday: me.birthday || '',
-    ...addressState
+    ...addressState,
   }
 }
 
 const UserNameAddress = compose(
   withT,
-  withMyDetails
+  withMyDetails,
 )(({ t, detailsData }) => {
   const { loading, error, me } = detailsData
   return (
@@ -131,11 +131,11 @@ const UserNameAddress = compose(
                     me.address.line1,
                     me.address.line2,
                     `${me.address.postalCode} ${me.address.city}`,
-                    me.address.country
+                    me.address.country,
                   ].filter(Boolean),
                   (_, i) => (
                     <br key={i} />
-                  )
+                  ),
                 )}
               </P>
             </>
@@ -153,27 +153,27 @@ class UpdateMe extends Component {
       isEditing: false,
       showErrors: false,
       values: {
-        country: DEFAULT_COUNTRY
+        country: DEFAULT_COUNTRY,
       },
       errors: {},
-      dirty: {}
+      dirty: {},
     }
   }
   startEditing() {
     const {
-      detailsData: { me }
+      detailsData: { me },
     } = this.props
-    this.setState(state => ({
+    this.setState((state) => ({
       isEditing: true,
       values: {
         ...state.values,
-        ...getValues(me)
-      }
+        ...getValues(me),
+      },
     }))
   }
   stopEditing() {
     this.setState({
-      isEditing: false
+      isEditing: false,
     })
   }
   autoEdit() {
@@ -182,18 +182,18 @@ class UpdateMe extends Component {
       const {
         t,
         hasActiveMembership,
-        detailsData: { me }
+        detailsData: { me },
       } = this.props
 
       const errors = FieldSet.utils.getErrors(
         fields(t).concat(
-          hasActiveMembership || me.address ? addressFields(t) : []
+          hasActiveMembership || me.address ? addressFields(t) : [],
         ),
-        getValues(me)
+        getValues(me),
       )
 
       const errorMessages = Object.keys(errors)
-        .map(key => errors[key])
+        .map((key) => errors[key])
         .filter(Boolean)
       errorMessages.length && this.startEditing()
     }
@@ -221,12 +221,12 @@ class UpdateMe extends Component {
             !me.address &&
             isEmptyAddress(values, me)
           ) {
-            errorFilter = key => meFields.find(field => field.name === key)
+            errorFilter = (key) => meFields.find((field) => field.name === key)
           }
 
           const errorMessages = Object.keys(errors)
             .filter(errorFilter)
-            .map(key => errors[key])
+            .map((key) => errors[key])
             .filter(Boolean)
 
           return (
@@ -248,7 +248,7 @@ class UpdateMe extends Component {
                       values={values}
                       errors={errors}
                       dirty={dirty}
-                      onChange={fields => {
+                      onChange={(fields) => {
                         this.setState(FieldSet.utils.mergeFields(fields))
                       }}
                       fields={meFields}
@@ -263,7 +263,7 @@ class UpdateMe extends Component {
                       values={values}
                       errors={errors}
                       dirty={dirty}
-                      onChange={fields => {
+                      onChange={(fields) => {
                         this.setState(FieldSet.utils.mergeFields(fields))
                       }}
                     />
@@ -300,7 +300,7 @@ class UpdateMe extends Component {
                           primary
                           onClick={() => {
                             if (errorMessages.length) {
-                              this.setState(state =>
+                              this.setState((state) =>
                                 Object.keys(state.errors).reduce(
                                   (nextState, key) => {
                                     nextState.dirty[key] = true
@@ -308,9 +308,9 @@ class UpdateMe extends Component {
                                   },
                                   {
                                     showErrors: true,
-                                    dirty: {}
-                                  }
-                                )
+                                    dirty: {},
+                                  },
+                                ),
                               )
                               return
                             }
@@ -333,19 +333,19 @@ class UpdateMe extends Component {
                                       line2: values.line2,
                                       postalCode: values.postalCode,
                                       city: values.city,
-                                      country: values.country
-                                    }
+                                      country: values.country,
+                                    },
                               })
                               .then(() => {
                                 this.setState(() => ({
                                   updating: false,
-                                  isEditing: false
+                                  isEditing: false,
                                 }))
                               })
-                              .catch(error => {
+                              .catch((error) => {
                                 this.setState(() => ({
                                   updating: false,
-                                  error: errorToString(error)
+                                  error: errorToString(error),
                                 }))
                               })
                           }}
@@ -353,7 +353,7 @@ class UpdateMe extends Component {
                           {t('Account/Update/submit')}
                         </Button>
                         <Button
-                          onClick={e => {
+                          onClick={(e) => {
                             e.preventDefault()
                             this.stopEditing()
                           }}
@@ -377,5 +377,5 @@ export default compose(
   withMe,
   withMyDetails,
   withMyDetailsMutation,
-  withT
+  withT,
 )(UpdateMe)

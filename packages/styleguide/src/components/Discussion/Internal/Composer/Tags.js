@@ -11,20 +11,20 @@ const styles = {
     flexDirection: 'column',
     flexWrap: 'wrap',
     [mUp]: {
-      flexDirection: 'row'
-    }
+      flexDirection: 'row',
+    },
   }),
   tag: css({
     marginRight: 24,
     '& ~ &': {
-      marginTop: 5
+      marginTop: 5,
     },
     [mUp]: {
       '& ~ &': {
-        marginTop: 0
-      }
-    }
-  })
+        marginTop: 0,
+      },
+    },
+  }),
 }
 
 export const Tags = ({ tags, value, onChange }) => {
@@ -33,12 +33,12 @@ export const Tags = ({ tags, value, onChange }) => {
   } else {
     return (
       <div {...styles.root}>
-        {tags.map(tag => (
+        {tags.map((tag) => (
           <div {...styles.tag} key={tag}>
             <Radio
               value={tag}
               checked={value === tag}
-              onChange={event => onChange(event.target.value)}
+              onChange={(event) => onChange(event.target.value)}
             >
               {tag}
             </Radio>
@@ -52,5 +52,5 @@ export const Tags = ({ tags, value, onChange }) => {
 Tags.propTypes = {
   tags: PropTypes.arrayOf(PropTypes.string),
   value: PropTypes.string,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
 }

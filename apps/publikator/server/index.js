@@ -12,7 +12,7 @@ if (DEV || process.env.DOTENV) {
 const PORT = process.env.PORT || 3003
 
 const app = next({
-  dev: DEV
+  dev: DEV,
 })
 const handler = routes.getRequestHandler(app)
 
@@ -24,12 +24,12 @@ app.prepare().then(() => {
       hsts: {
         maxAge: 60 * 60 * 24 * 365, // 1 year to get preload approval
         preload: true,
-        includeSubDomains: true
+        includeSubDomains: true,
       },
       referrerPolicy: {
-        policy: 'no-referrer'
-      }
-    })
+        policy: 'no-referrer',
+      },
+    }),
   )
 
   if (!DEV) {
@@ -49,14 +49,14 @@ app.prepare().then(() => {
       basicAuth({
         users: { [process.env.BASIC_AUTH_USER]: process.env.BASIC_AUTH_PASS },
         challenge: true,
-        realm: process.env.BASIC_AUTH_REALM
-      })
+        realm: process.env.BASIC_AUTH_REALM,
+      }),
     )
   }
 
   server.use(handler)
 
-  server.listen(PORT, err => {
+  server.listen(PORT, (err) => {
     if (err) throw err
     console.log(`> Ready on port ${PORT}`)
   })

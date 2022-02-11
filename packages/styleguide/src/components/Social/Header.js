@@ -17,7 +17,7 @@ const styles = {
   root: css({
     display: 'flex',
     alignItems: 'center',
-    position: 'relative'
+    position: 'relative',
   }),
   profilePicture: css({
     display: 'block',
@@ -26,19 +26,19 @@ const styles = {
     flexShrink: 0,
     height: `${pxToRem(profilePictureBoxSize)}`,
     margin: `${pxToRem(-profilePictureBorderSize)} ${pxToRem(
-      -profilePictureBorderSize + profilePictureMargin
+      -profilePictureBorderSize + profilePictureMargin,
     )} ${pxToRem(-profilePictureBorderSize)} ${pxToRem(
-      -profilePictureBorderSize
+      -profilePictureBorderSize,
     )}`,
     borderWidth: `${pxToRem(profilePictureBorderSize)}`,
-    borderStyle: 'solid'
+    borderStyle: 'solid',
   }),
   meta: css({
     alignSelf: 'stretch',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    width: `calc(100% - ${profilePictureSize + profilePictureMargin}px)`
+    width: `calc(100% - ${profilePictureSize + profilePictureMargin}px)`,
   }),
   name: css({
     ...convertStyleToRem(sansSerifMedium16),
@@ -46,20 +46,20 @@ const styles = {
     color: 'inherit',
     display: 'flex',
     alignItems: 'center',
-    paddingRight: '15px'
+    paddingRight: '15px',
   }),
   nameText: css({
-    ...ellipsize
+    ...ellipsize,
   }),
   subline: css({
     ...convertStyleToRem(sansSerifRegular14),
     lineHeight: pxToRem('20px'),
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
   }),
   sublineText: css({
     ...ellipsize,
-    overflow: 'hidden'
+    overflow: 'hidden',
   }),
   icon: css({
     position: 'absolute',
@@ -71,13 +71,13 @@ const styles = {
     fontSize: pxToRem('17px'),
     [mUp]: {
       fontSize: pxToRem('24px'),
-      top: '8px'
-    }
+      top: '8px',
+    },
   }),
   link: css({
     textDecoration: 'none',
-    color: 'inherit'
-  })
+    color: 'inherit',
+  }),
 }
 
 const dateFormat = timeFormat('%d. %B %Y')
@@ -89,11 +89,11 @@ const Link = ({ href, children }) => {
       css({
         '@media (hover)': {
           ':hover': {
-            color: colorScheme.getCSSColor('textSoft')
-          }
-        }
+            color: colorScheme.getCSSColor('textSoft'),
+          },
+        },
       }),
-    [colorScheme]
+    [colorScheme],
   )
   return (
     <a href={href} {...styles.link} {...hoverRule}>

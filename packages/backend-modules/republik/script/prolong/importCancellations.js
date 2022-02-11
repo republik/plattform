@@ -46,7 +46,8 @@ PgDb.connect()
     const stats = {
       numMemberships: 0,
     }
-    const numCancellationsBefore = await pgdb.public.membershipCancellations.count()
+    const numCancellationsBefore =
+      await pgdb.public.membershipCancellations.count()
 
     const transaction = await pgdb.transactionBegin()
     await Promise.map(

@@ -23,7 +23,7 @@ import {
   Interaction,
   mediaQueries,
   Editorial,
-  fontStyles
+  fontStyles,
 } from '@project-r/styleguide'
 
 import Link from 'next/link'
@@ -62,11 +62,11 @@ const calculateMinPrice = (pkg, values, userPrice) => {
   if (minPrice > absolutMinPrice) {
     return minPrice
   }
-  const groups = pkg.options.filter(option => option.optionGroup)
+  const groups = pkg.options.filter((option) => option.optionGroup)
   if (groups.length) {
     return (
-      min(groups, option =>
-        option.userPrice && userPrice ? 0 : option.price
+      min(groups, (option) =>
+        option.userPrice && userPrice ? 0 : option.price,
       ) || absolutMinPrice
     )
   }
@@ -75,7 +75,7 @@ const calculateMinPrice = (pkg, values, userPrice) => {
 
 const calculateGoodiePrice = (pkg, values) => {
   return pkg.options
-    .filter(option => option.reward?.__typename === 'Goodie')
+    .filter((option) => option.reward?.__typename === 'Goodie')
     .reduce((price, option) => {
       const amountValue = values[getOptionFieldKey(option)]
       const amount =
@@ -106,7 +106,7 @@ const getPrice = ({ values, pkg, userPrice }) => {
 const priceError = (price, minPrice, t) => {
   if (price < minPrice) {
     return t('package/customize/price/error', {
-      formattedCHF: chfFormat(minPrice / 100)
+      formattedCHF: chfFormat(minPrice / 100),
     })
   }
 }
@@ -116,10 +116,10 @@ export const reasonError = (value = '', t) => {
   )
 }
 
-export const getOptionFieldKey = option =>
+export const getOptionFieldKey = (option) =>
   [option.optionGroup, option.templateId].filter(Boolean).join('-')
 
-export const getOptionPeriodsFieldKey = option =>
+export const getOptionPeriodsFieldKey = (option) =>
   `${getOptionFieldKey(option)}-periods`
 
 export const getOptionValue = (option, values) => {
@@ -133,7 +133,7 @@ const GUTTER = 20
 const styles = {
   group: css({
     marginBottom: 10,
-    marginTop: 5
+    marginTop: 5,
   }),
   grid: css({
     clear: 'both',
@@ -141,13 +141,13 @@ const styles = {
     margin: `0 -${GUTTER / 2}px`,
     [mediaQueries.mUp]: {
       width: `calc(100% + ${GUTTER * 2}px)`,
-      margin: `0 -${GUTTER}px`
+      margin: `0 -${GUTTER}px`,
     },
     ':after': {
       content: '""',
       display: 'table',
-      clear: 'both'
-    }
+      clear: 'both',
+    },
   }),
   span: css({
     float: 'left',
@@ -155,15 +155,15 @@ const styles = {
     paddingRight: `${GUTTER / 2}px`,
     [mediaQueries.mUp]: {
       paddingLeft: `${GUTTER}px`,
-      paddingRight: `${GUTTER}px`
+      paddingRight: `${GUTTER}px`,
     },
     minHeight: 1,
-    width: '50%'
+    width: '50%',
   }),
   title: css({
     fontFamily: fontFamilies.sansSerifRegular,
     fontSize: 19,
-    lineHeight: '28px'
+    lineHeight: '28px',
   }),
   packageImage: css({
     float: 'right',
@@ -171,22 +171,22 @@ const styles = {
     maxHeight: 170,
     paddingLeft: 10,
     [mediaQueries.mUp]: {
-      paddingLeft: 30
-    }
+      paddingLeft: 30,
+    },
   }),
   ul: css({
     marginTop: 0,
     marginBottom: 5,
-    paddingLeft: 25
+    paddingLeft: 25,
   }),
   ulNote: css({
     marginTop: -5,
-    marginBottom: 5
+    marginBottom: 5,
   }),
   smallP: css({
     margin: 0,
-    ...fontStyles.sansSerifRegular16
-  })
+    ...fontStyles.sansSerifRegular16,
+  }),
 }
 
 const SmallP = ({ children, ...props }) => (
@@ -199,7 +199,7 @@ class CustomizePackage extends Component {
   constructor(props) {
     super(props)
     this.state = {}
-    this.focusRefSetter = ref => {
+    this.focusRefSetter = (ref) => {
       this.focusRef = ref
     }
   }
@@ -208,7 +208,7 @@ class CustomizePackage extends Component {
 
     return calculateGoodiePrice(pkg, {
       ...values,
-      ...nextFields.values
+      ...nextFields.values,
     })
   }
   calculateNextPrice(nextFields) {
@@ -218,9 +218,9 @@ class CustomizePackage extends Component {
       pkg,
       {
         ...values,
-        ...nextFields.values
+        ...nextFields.values,
       },
-      userPrice
+      userPrice,
     )
 
     let price = values.price
@@ -243,13 +243,13 @@ class CustomizePackage extends Component {
         field: 'price',
         value: price,
         error: priceError(price, minPrice, t),
-        dirty: false
+        dirty: false,
       })(nextFields)
     }
     return FieldSet.utils.mergeField({
       field: 'price',
       value: price,
-      error: priceError(price, minPrice, t)
+      error: priceError(price, minPrice, t),
     })(nextFields)
   }
   getPriceWithSuggestion() {
@@ -265,11 +265,11 @@ class CustomizePackage extends Component {
               pathname: 'angebote',
               query: {
                 ...router.query,
-                userPrice: '1'
-              }
+                userPrice: '1',
+              },
             },
             undefined,
-            { shallow: true }
+            { shallow: true },
           )
         }
       }
@@ -281,7 +281,8 @@ class CustomizePackage extends Component {
     if (this.focusRef && this.focusRef.focus) {
       this.focusRef.focus()
       if (this.focusRef.value) {
-        this.focusRef.selectionStart = this.focusRef.selectionEnd = this.focusRef.value.length
+        this.focusRef.selectionStart = this.focusRef.selectionEnd =
+          this.focusRef.value.length
       }
     }
 
@@ -291,12 +292,12 @@ class CustomizePackage extends Component {
     const minPrice = calculateMinPrice(pkg, values, userPrice)
     onChange({
       values: {
-        price
+        price,
       },
       errors: {
         price: priceError(price, minPrice, t),
-        reason: userPrice && reasonError(values.reason, t)
-      }
+        reason: userPrice && reasonError(values.reason, t),
+      },
     })
   }
   componentDidUpdate(prevProps) {
@@ -307,12 +308,12 @@ class CustomizePackage extends Component {
       const minPrice = calculateMinPrice(pkg, values, userPrice)
       onChange({
         values: {
-          price
+          price,
         },
         errors: {
           price: priceError(price, minPrice, t),
-          reason: userPrice && reasonError(values.reason, t)
-        }
+          reason: userPrice && reasonError(values.reason, t),
+        },
       })
     }
   }
@@ -322,8 +323,8 @@ class CustomizePackage extends Component {
         field: 'price',
         value: undefined,
         error: undefined,
-        dirty: undefined
-      })
+        dirty: undefined,
+      }),
     )
   }
   // resetUserPrice() {
@@ -351,7 +352,7 @@ class CustomizePackage extends Component {
       values,
       errors,
       dirty,
-      onChange
+      onChange,
     } = this.props
 
     const { query } = router
@@ -364,7 +365,7 @@ class CustomizePackage extends Component {
           key: getOptionFieldKey(option),
           min: option.minAmount,
           max: option.maxAmount,
-          default: option.defaultAmount
+          default: option.defaultAmount,
         })
       }
       if (
@@ -380,7 +381,7 @@ class CustomizePackage extends Component {
           min: option.reward.minPeriods,
           max: option.reward.maxPeriods,
           default: option.reward.defaultPeriods,
-          interval: option.reward.interval
+          interval: option.reward.interval,
         })
       }
       return fields
@@ -407,51 +408,51 @@ class CustomizePackage extends Component {
           field: 'price',
           value: price,
           error,
-          dirty: shouldValidate
-        })
+          dirty: shouldValidate,
+        }),
       )
     }
 
     const bonusValue = sum(
       pkg.options
         .filter(
-          option =>
+          (option) =>
             option.additionalPeriods &&
-            option.additionalPeriods.find(period => period.kind === 'BONUS')
+            option.additionalPeriods.find((period) => period.kind === 'BONUS'),
         )
-        .map(option => {
+        .map((option) => {
           const value = getOptionValue(option, values)
           if (!value) {
             return 0
           }
           const bonusDays = option.additionalPeriods
-            .filter(period => period.kind === 'BONUS')
+            .filter((period) => period.kind === 'BONUS')
             .reduce(
               (days, period) =>
                 days +
                 timeDay.count(
                   new Date(period.beginDate),
-                  new Date(period.endDate)
+                  new Date(period.endDate),
                 ),
-              0
+              0,
             )
           const regularDays = option.additionalPeriods
-            .filter(period => period.kind === 'REGULAR')
+            .filter((period) => period.kind === 'REGULAR')
             .reduce(
               (days, period) =>
                 days +
                 timeDay.count(
                   new Date(period.beginDate),
-                  new Date(period.endDate)
+                  new Date(period.endDate),
                 ),
-              0
+              0,
             )
           return (
             Math.ceil(((option.price / regularDays) * bonusDays) / 100) *
             100 *
             value
           )
-        })
+        }),
     )
     const payMoreSuggestions =
       pkg.name === 'DONATE' ||
@@ -464,7 +465,7 @@ class CustomizePackage extends Component {
             price >= minPrice &&
               bonusValue && { value: minPrice + bonusValue, key: 'bonus' },
             price >= minPrice && { value: minPrice * 1.5, key: '1.5' },
-            price >= minPrice && { value: minPrice * 2, key: '2' }
+            price >= minPrice && { value: minPrice * 2, key: '2' },
           ].filter(Boolean)
     const payMoreReached = payMoreSuggestions
       .filter(({ value }) => price >= value)
@@ -475,34 +476,34 @@ class CustomizePackage extends Component {
       !userPrice &&
       !payingMoreThanRegular &&
       pkg.name === 'PROLONG' &&
-      pkg.options.every(option => {
+      pkg.options.every((option) => {
         return (
           !getOptionValue(option, values) || option.userPrice || !option.price
         )
       })
 
     const configurableGoodieFields = configurableFields.filter(
-      field => field.option.reward.__typename === 'Goodie'
+      (field) => field.option.reward.__typename === 'Goodie',
     )
     const optionGroups = nest()
-      .key(d =>
+      .key((d) =>
         d.option.optionGroup
           ? d.option.optionGroup
-          : [d.option.reward.__typename].filter(Boolean).join()
+          : [d.option.reward.__typename].filter(Boolean).join(),
       )
       .entries(
         configurableFields.filter(
-          field => !configurableGoodieFields.includes(field)
-        )
+          (field) => !configurableGoodieFields.includes(field),
+        ),
       )
       .map(({ key: groupKey, values: fields }) => {
         const options = fields
-          .map(field => field.option)
+          .map((field) => field.option)
           .filter((o, i, a) => a.indexOf(o) === i)
         const group = options[0].optionGroup
         const selectedGroupOption =
           group &&
-          options.find(option => {
+          options.find((option) => {
             return getOptionValue(option, values)
           })
         const baseOption = selectedGroupOption || options[0]
@@ -524,7 +525,7 @@ class CustomizePackage extends Component {
           selectedGroupOption,
           membership,
           isAboGive,
-          additionalPeriods
+          additionalPeriods,
         }
       })
     const multipleThings =
@@ -537,30 +538,30 @@ class CustomizePackage extends Component {
       ownMembership &&
         `package/${pkg.name}/${ownMembership.type.name}/description`,
       `package/${crowdfundingName}/${pkg.name}/description`,
-      `package/${pkg.name}/description`
+      `package/${pkg.name}/description`,
     ].filter(Boolean)
     const description = t.first(descriptionKeys)
 
     const membershipOptions = pkg.options.filter(
-      option =>
+      (option) =>
         // No Goodies
         option.reward?.__typename !== 'Goodie' &&
         // No GiftMemberships
         (option.membership === null ||
-          option.membership?.user?.isUserOfCurrentSession === true)
+          option.membership?.user?.isUserOfCurrentSession === true),
     )
 
     const goodieOptions = pkg.options.filter(
-      option => option.reward?.__typename === 'Goodie'
+      (option) => option.reward?.__typename === 'Goodie',
     )
 
     const giftMembershipOptions = pkg.options.filter(
-      option =>
+      (option) =>
         // No Goodies
         option.reward?.__typename !== 'Goodie' &&
         // Only GiftMemberships
         option.membership !== null &&
-        option.membership?.user?.isUserOfCurrentSession === false
+        option.membership?.user?.isUserOfCurrentSession === false,
     )
 
     return (
@@ -572,7 +573,7 @@ class CustomizePackage extends Component {
               query:
                 pkg.group && pkg.group !== 'ME'
                   ? { group: pkg.group }
-                  : undefined
+                  : undefined,
             }}
             shallow
             passHref
@@ -588,8 +589,8 @@ class CustomizePackage extends Component {
                   new Date(ownMembership.graceEndDate) < new Date() &&
                   `package/${pkg.name}/reactivate/pageTitle`,
                 `package/${pkg.name}/pageTitle`,
-                `package/${pkg.name}/title`
-              ].filter(Boolean)
+                `package/${pkg.name}/title`,
+              ].filter(Boolean),
             )}
           </Interaction.H2>
         </div>
@@ -600,7 +601,7 @@ class CustomizePackage extends Component {
           values={values}
           errors={errors}
           dirty={dirty}
-          onChange={fields => {
+          onChange={(fields) => {
             onChange(this.calculateNextPrice(fields))
           }}
           onPriceChange={onPriceChange}
@@ -610,14 +611,14 @@ class CustomizePackage extends Component {
         <GoodieOptions
           options={goodieOptions}
           values={values}
-          onChange={fields => {
+          onChange={(fields) => {
             onChange(this.calculateNextPrice(fields))
           }}
           t={t}
         />
         <GiftMembershipOptions
           options={giftMembershipOptions}
-          onChange={fields => {
+          onChange={(fields) => {
             onChange(this.calculateNextPrice(fields))
           }}
         />
@@ -637,53 +638,55 @@ class CustomizePackage extends Component {
               selectedGroupOption,
               membership,
               isAboGive,
-              additionalPeriods
+              additionalPeriods,
             },
-            gi
+            gi,
           ) => {
-            const reset = group && optionGroups.length > 1 && !checkboxGroup && (
-              <Fragment>
-                <span
-                  style={{
-                    display: 'inline-block',
-                    whiteSpace: 'nowrap'
-                  }}
-                >
-                  <Radio
-                    value='0'
-                    checked={!selectedGroupOption}
-                    onChange={() => {
-                      if (userPrice) {
-                        this.resetUserPrice()
-                      }
-                      onChange(
-                        this.calculateNextPrice(
-                          options.reduce((fields, option) => {
-                            return FieldSet.utils.mergeField({
-                              field: getOptionFieldKey(option),
-                              value: 0,
-                              error: undefined,
-                              dirty: false
-                            })(fields)
-                          }, {})
-                        )
-                      )
+            const reset = group &&
+              optionGroups.length > 1 &&
+              !checkboxGroup && (
+                <Fragment>
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      whiteSpace: 'nowrap',
                     }}
                   >
-                    <span
-                      style={{
-                        display: 'inline-block',
-                        verticalAlign: 'top',
-                        marginRight: 20,
-                        whiteSpace: 'nowrap'
+                    <Radio
+                      value='0'
+                      checked={!selectedGroupOption}
+                      onChange={() => {
+                        if (userPrice) {
+                          this.resetUserPrice()
+                        }
+                        onChange(
+                          this.calculateNextPrice(
+                            options.reduce((fields, option) => {
+                              return FieldSet.utils.mergeField({
+                                field: getOptionFieldKey(option),
+                                value: 0,
+                                error: undefined,
+                                dirty: false,
+                              })(fields)
+                            }, {}),
+                          ),
+                        )
                       }}
                     >
-                      {t(`option/${pkg.name}/resetGroup`, {}, null)}
-                    </span>
-                  </Radio>
-                </span>
-              </Fragment>
-            )
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          verticalAlign: 'top',
+                          marginRight: 20,
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {t(`option/${pkg.name}/resetGroup`, {}, null)}
+                      </span>
+                    </Radio>
+                  </span>
+                </Fragment>
+              )
 
             const nextGroup = optionGroups[gi + 1]
             const prevGroup = optionGroups[gi - 1]
@@ -710,7 +713,7 @@ class CustomizePackage extends Component {
                       isAboGive
                         ? t(`memberships/title/${membership.type.name}/give`, {
                             name: membership.claimerName,
-                            sequenceNumber: membership.sequenceNumber
+                            sequenceNumber: membership.sequenceNumber,
                           })
                         : undefined
                     }
@@ -740,7 +743,7 @@ class CustomizePackage extends Component {
                           ...(isAboGive
                             ? [
                                 `option/${pkg.name}/${option.reward.name}/label/give`,
-                                `option/${option.reward.name}/label/give`
+                                `option/${option.reward.name}/label/give`,
                               ]
                             : []),
                           ...(field.interval
@@ -750,7 +753,7 @@ class CustomizePackage extends Component {
                                 `option/${pkg.name}/${option.reward.name}/interval/${field.interval}/label`,
                                 `option/${option.reward.name}/interval/${field.interval}/label/${labelValue}`,
                                 `option/${option.reward.name}/interval/${field.interval}/label/other`,
-                                `option/${option.reward.name}/interval/${field.interval}/label`
+                                `option/${option.reward.name}/interval/${field.interval}/label`,
                               ]
                             : []),
                           `option/${pkg.name}/${option.reward.name}/label/${labelValue}`,
@@ -758,11 +761,11 @@ class CustomizePackage extends Component {
                           `option/${pkg.name}/${option.reward.name}/label`,
                           `option/${option.reward.name}/label/${labelValue}`,
                           `option/${option.reward.name}/label/other`,
-                          `option/${option.reward.name}/label`
+                          `option/${option.reward.name}/label`,
                         ],
                         {
-                          count: value
-                        }
+                          count: value,
+                        },
                       )
 
                       const onFieldChange = (_, value, shouldValidate) => {
@@ -774,13 +777,13 @@ class CustomizePackage extends Component {
                         if (parsedValue > field.max) {
                           error = t('package/customize/option/error/max', {
                             label,
-                            maxAmount: field.max
+                            maxAmount: field.max,
                           })
                         }
                         if (parsedValue < field.min) {
                           error = t('package/customize/option/error/min', {
                             label,
-                            minAmount: field.min
+                            minAmount: field.min,
                           })
                         }
 
@@ -788,18 +791,18 @@ class CustomizePackage extends Component {
                           field: fieldKey,
                           value: parsedValue,
                           error,
-                          dirty: shouldValidate
+                          dirty: shouldValidate,
                         })
                         if (group) {
                           // unselect all other options from group
                           options
-                            .filter(other => other !== option)
-                            .forEach(other => {
+                            .filter((other) => other !== option)
+                            .forEach((other) => {
                               fields = FieldSet.utils.mergeField({
                                 field: getOptionFieldKey(other),
                                 value: 0,
                                 error: undefined,
-                                dirty: false
+                                dirty: false,
                               })(fields)
                             })
                         }
@@ -816,7 +819,7 @@ class CustomizePackage extends Component {
                               display: 'inline-block',
                               verticalAlign: 'top',
                               marginRight: 20,
-                              marginTop: isCheckboxOption ? -2 : 0
+                              marginTop: isCheckboxOption ? -2 : 0,
                             }}
                           >
                             <Interaction.Emphasis>{label}</Interaction.Emphasis>
@@ -826,11 +829,11 @@ class CustomizePackage extends Component {
                                 option.price === 0 && 'package/price/free',
                                 isAboGive && `package/${pkg.name}/price/give`,
                                 `package/${pkg.name}/price`,
-                                'package/price'
+                                'package/price',
                               ].filter(Boolean),
                               {
-                                formattedCHF: chfFormat(option.price / 100)
-                              }
+                                formattedCHF: chfFormat(option.price / 100),
+                              },
                             )}
                           </span>
                         )
@@ -843,7 +846,7 @@ class CustomizePackage extends Component {
                                 onFieldChange(
                                   undefined,
                                   +checked,
-                                  dirty[fieldKey]
+                                  dirty[fieldKey],
                                 )
                               }}
                             >
@@ -858,7 +861,7 @@ class CustomizePackage extends Component {
                                 {...styles.span}
                                 {...styles.group}
                                 style={{
-                                  width: '100%'
+                                  width: '100%',
                                 }}
                               >
                                 {checkboxElement}
@@ -874,7 +877,7 @@ class CustomizePackage extends Component {
                               style={{
                                 display: 'inline-block',
                                 whiteSpace: 'nowrap',
-                                marginBottom: 10
+                                marginBottom: 10,
                               }}
                             >
                               <Radio
@@ -900,7 +903,7 @@ class CustomizePackage extends Component {
                               fields.length === 1 ||
                               (fields.length === 3 && i === 0)
                                 ? '100%'
-                                : '50%'
+                                : '50%',
                           }}
                         >
                           <div>
@@ -913,7 +916,7 @@ class CustomizePackage extends Component {
                               label={label}
                               error={dirty[fieldKey] && errors[fieldKey]}
                               value={value || ''}
-                              renderInput={props => (
+                              renderInput={(props) => (
                                 <input inputMode='numeric' {...props} />
                               )}
                               onInc={
@@ -922,7 +925,7 @@ class CustomizePackage extends Component {
                                   onFieldChange(
                                     undefined,
                                     value + 1,
-                                    dirty[fieldKey]
+                                    dirty[fieldKey],
                                   )
                                 })
                               }
@@ -932,7 +935,7 @@ class CustomizePackage extends Component {
                                   onFieldChange(
                                     undefined,
                                     value - 1,
-                                    dirty[fieldKey]
+                                    dirty[fieldKey],
                                   )
                                 })
                               }
@@ -951,9 +954,9 @@ class CustomizePackage extends Component {
                     <div style={{ marginBottom: 20 }}>
                       {additionalPeriods
                         .filter(
-                          (period, i) => period.kind !== 'REGULAR' || i > 0
+                          (period, i) => period.kind !== 'REGULAR' || i > 0,
                         )
-                        .map(period => {
+                        .map((period) => {
                           const beginDate = new Date(period.beginDate)
                           const endDate = new Date(period.endDate)
                           const formattedEndDate = dayFormat(endDate)
@@ -962,23 +965,23 @@ class CustomizePackage extends Component {
                           const title = t.first(
                             [
                               `option/${pkg.name}/additionalPeriods/${period.kind}/title`,
-                              `option/${pkg.name}/additionalPeriods/title`
+                              `option/${pkg.name}/additionalPeriods/title`,
                             ],
                             {
                               formattedEndDate,
-                              days
-                            }
+                              days,
+                            },
                           )
                           const explanation = t.first(
                             [
                               `option/${pkg.name}/additionalPeriods/${period.kind}/explanation`,
-                              `option/${pkg.name}/additionalPeriods/explanation`
+                              `option/${pkg.name}/additionalPeriods/explanation`,
                             ],
                             {
                               formattedEndDate,
-                              days
+                              days,
                             },
-                            ''
+                            '',
                           )
 
                           return (
@@ -1001,16 +1004,16 @@ class CustomizePackage extends Component {
                               new Date(
                                 additionalPeriods[
                                   additionalPeriods.length - 1
-                                ].endDate
-                              )
-                            )
+                                ].endDate,
+                              ),
+                            ),
                           })}
                         </Interaction.Emphasis>
                       </SmallP>
                       {isAboGive && (
                         <SmallP>
                           {t(`option/${pkg.name}/additionalPeriods/give`, {
-                            name: membership.claimerName
+                            name: membership.claimerName,
                           })}
                         </SmallP>
                       )}
@@ -1034,7 +1037,9 @@ class CustomizePackage extends Component {
           ) : (
             <Field
               label={t(
-                `package/customize/price/label${multipleThings ? '/total' : ''}`
+                `package/customize/price/label${
+                  multipleThings ? '/total' : ''
+                }`,
               )}
               ref={
                 configurableFields.length || userPrice
@@ -1043,7 +1048,7 @@ class CustomizePackage extends Component {
               }
               error={dirty.price && errors.price}
               value={price ? price / 100 : ''}
-              renderInput={props => <input inputMode='numeric' {...props} />}
+              renderInput={(props) => <input inputMode='numeric' {...props} />}
               onDec={
                 price - 1000 >= minPrice &&
                 (() => {
@@ -1064,7 +1069,7 @@ class CustomizePackage extends Component {
                   <Interaction.Emphasis>
                     {t.first([
                       `package/customize/price/payMore/${pkg.name}`,
-                      'package/customize/price/payMore'
+                      'package/customize/price/payMore',
                     ])}
                   </Interaction.Emphasis>
                   <ul {...styles.ul}>
@@ -1072,27 +1077,27 @@ class CustomizePackage extends Component {
                       <Editorial.A
                         href={format({
                           pathname: '/angebote',
-                          query: { package: 'ABO_GIVE' }
+                          query: { package: 'ABO_GIVE' },
                         })}
-                        onClick={e => {
+                        onClick={(e) => {
                           if (shouldIgnoreClick(e)) {
                             return
                           }
                           e.preventDefault()
 
                           const aboGive = this.props.packages.find(
-                            p => p.name === 'ABO_GIVE'
+                            (p) => p.name === 'ABO_GIVE',
                           )
                           if (aboGive) {
                             const numMembershipMonths = pkg.options.find(
-                              o =>
+                              (o) =>
                                 o.reward &&
-                                o.reward.__typename === 'MembershipType'
+                                o.reward.__typename === 'MembershipType',
                             )
                             const numMembershipYears = aboGive.options.find(
-                              o =>
+                              (o) =>
                                 o.reward &&
-                                o.reward.__typename === 'MembershipType'
+                                o.reward.__typename === 'MembershipType',
                             )
                             if (numMembershipMonths && numMembershipYears) {
                               onChange(
@@ -1102,30 +1107,30 @@ class CustomizePackage extends Component {
                                     Math.max(
                                       getOptionValue(
                                         numMembershipMonths,
-                                        values
+                                        values,
                                       ),
-                                      numMembershipYears.minAmount
+                                      numMembershipYears.minAmount,
                                     ),
-                                    numMembershipYears.maxAmount
+                                    numMembershipYears.maxAmount,
                                   ),
                                   error: undefined,
-                                  dirty: true
-                                })
+                                  dirty: true,
+                                }),
                               )
                             }
 
                             aboGive.options
                               .filter(
-                                o =>
-                                  o.reward && o.reward.__typename === 'Goodie'
+                                (o) =>
+                                  o.reward && o.reward.__typename === 'Goodie',
                               )
-                              .forEach(oYears => {
+                              .forEach((oYears) => {
                                 const oMonths = pkg.options.find(
-                                  d =>
+                                  (d) =>
                                     d.reward &&
                                     d.reward.__typename ===
                                       oYears.reward.__typename &&
-                                    d.reward.name === oYears.reward.name
+                                    d.reward.name === oYears.reward.name,
                                 )
                                 if (!oMonths) {
                                   return
@@ -1136,13 +1141,13 @@ class CustomizePackage extends Component {
                                     value: Math.min(
                                       Math.max(
                                         getOptionValue(oMonths, values),
-                                        oYears.minAmount
+                                        oYears.minAmount,
                                       ),
-                                      oYears.maxAmount
+                                      oYears.maxAmount,
                                     ),
                                     error: undefined,
-                                    dirty: true
-                                  })
+                                    dirty: true,
+                                  }),
                                 )
                               })
                           }
@@ -1151,10 +1156,10 @@ class CustomizePackage extends Component {
                             .push(
                               {
                                 pathname: '/angebote',
-                                query: { package: 'ABO_GIVE' }
+                                query: { package: 'ABO_GIVE' },
                               },
                               undefined,
-                              { shallow: true }
+                              { shallow: true },
                             )
                             .then(() => {
                               this.resetPrice()
@@ -1166,13 +1171,13 @@ class CustomizePackage extends Component {
                           {
                             count: getOptionValue(
                               pkg.options.find(
-                                option =>
+                                (option) =>
                                   option.reward &&
-                                  option.reward.__typename === 'MembershipType'
+                                  option.reward.__typename === 'MembershipType',
                               ),
-                              values
-                            )
-                          }
+                              values,
+                            ),
+                          },
                         )}
                       </Editorial.A>
                     </li>
@@ -1184,9 +1189,9 @@ class CustomizePackage extends Component {
                   <Editorial.A
                     href={format({
                       pathname: '/angebote',
-                      query: omit(query, ['price', 'userPrice'])
+                      query: omit(query, ['price', 'userPrice']),
                     })}
-                    onClick={e => {
+                    onClick={(e) => {
                       if (shouldIgnoreClick(e)) {
                         return
                       }
@@ -1197,28 +1202,28 @@ class CustomizePackage extends Component {
                           field: 'price',
                           value: regularMinPrice,
                           error: undefined,
-                          dirty: true
-                        })
+                          dirty: true,
+                        }),
                       )
 
                       router.replace(
                         {
                           pathname: '/angebote',
-                          query: omit(query, ['price', 'userPrice'])
+                          query: omit(query, ['price', 'userPrice']),
                         },
                         undefined,
-                        { shallow: true }
+                        { shallow: true },
                       )
                     }}
                   >
                     {t.first(
                       [
                         `package/customize/price/payRegular/${pkg.name}`,
-                        'package/customize/price/payRegular'
+                        'package/customize/price/payRegular',
                       ],
                       {
-                        formattedCHF: chfFormat(regularMinPrice / 100)
-                      }
+                        formattedCHF: chfFormat(regularMinPrice / 100),
+                      },
                     )}
                   </Editorial.A>
                   <br />
@@ -1229,32 +1234,32 @@ class CustomizePackage extends Component {
                   <Editorial.A
                     href={format({
                       pathname: '/angebote',
-                      query: { ...omit(query, ['price']), userPrice: 1 }
+                      query: { ...omit(query, ['price']), userPrice: 1 },
                     })}
-                    onClick={e => {
+                    onClick={(e) => {
                       if (shouldIgnoreClick(e)) {
                         return
                       }
                       e.preventDefault()
 
                       const selectedUserPriceOption = pkg.options.find(
-                        option => {
+                        (option) => {
                           return (
                             getOptionValue(option, values) && option.userPrice
                           )
-                        }
+                        },
                       )
                       if (!selectedUserPriceOption) {
                         const firstUserPriceOption = pkg.options.find(
-                          option => {
+                          (option) => {
                             return option.userPrice
-                          }
+                          },
                         )
                         onChange(
                           FieldSet.utils.fieldsState({
                             field: getOptionFieldKey(firstUserPriceOption),
-                            value: firstUserPriceOption.maxAmount
-                          })
+                            value: firstUserPriceOption.maxAmount,
+                          }),
                         )
                       }
 
@@ -1262,10 +1267,10 @@ class CustomizePackage extends Component {
                         .replace(
                           {
                             pathname: '/angebote',
-                            query: { ...omit(query, ['price']), userPrice: 1 }
+                            query: { ...omit(query, ['price']), userPrice: 1 },
                           },
                           undefined,
-                          { shallow: true }
+                          { shallow: true },
                         )
                         .then(() => {
                           this.resetPrice()
@@ -1294,12 +1299,12 @@ CustomizePackage.propTypes = {
   dirty: PropTypes.object.isRequired,
   t: PropTypes.func.isRequired,
   me: PropTypes.shape({
-    id: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
   }),
   userPrice: PropTypes.bool,
   pkg: PropTypes.shape({
-    options: PropTypes.array.isRequired
-  }).isRequired
+    options: PropTypes.array.isRequired,
+  }).isRequired,
 }
 
 export default compose(withRouter, withT)(CustomizePackage)

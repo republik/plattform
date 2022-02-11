@@ -9,7 +9,7 @@ import { createRemoveEmptyKeyHandler } from '../../utils/keyHandlers'
 import injectBlock from '../../utils/injectBlock'
 import UIForm from '../../UIForm'
 
-const getNewBlock = options => {
+const getNewBlock = (options) => {
   const { headerModule, articleGroupModule } = getSubmodules(options)
   return () =>
     Block.create({
@@ -18,28 +18,28 @@ const getNewBlock = options => {
       nodes: [
         Block.create({
           kind: 'block',
-          type: headerModule.TYPE
+          type: headerModule.TYPE,
         }),
-        articleGroupModule.helpers.newItem()
-      ]
+        articleGroupModule.helpers.newItem(),
+      ],
     })
 }
 
-export const getData = data => ({
+export const getData = (data) => ({
   membersOnly: true,
   unauthorizedText: '',
-  ...(data || {})
+  ...(data || {}),
 })
 
-export const getSubmodules = options => {
+export const getSubmodules = (options) => {
   const [headerModule, articleGroupModule] = options.subModules
   return {
     headerModule,
-    articleGroupModule
+    articleGroupModule,
   }
 }
 
-export const fromMdast = options => {
+export const fromMdast = (options) => {
   const { TYPE } = options
   const { headerModule, articleGroupModule } = getSubmodules(options)
 
@@ -52,26 +52,26 @@ export const fromMdast = options => {
         node.children[0],
         0,
         node,
-        rest
+        rest,
       ),
       articleGroupModule.helpers.serializer.fromMdast(
         node.children[1],
         1,
         node,
-        rest
-      )
-    ]
+        rest,
+      ),
+    ],
   })
 }
 
-export const toMdast = options => {
+export const toMdast = (options) => {
   const { headerModule, articleGroupModule } = getSubmodules(options)
 
   return (node, index, parent, rest) => ({
     type: 'zone',
     identifier: 'ARTICLECOLLECTION',
     data: {
-      ...getData(node.data)
+      ...getData(node.data),
     },
     children: [
       headerModule.helpers.serializer.toMdast(node.nodes[0], 0, node, rest),
@@ -79,13 +79,13 @@ export const toMdast = options => {
         node.nodes[1],
         1,
         node,
-        rest
-      )
-    ]
+        rest,
+      ),
+    ],
   })
 }
 
-export const articleCollectionPlugin = options => {
+export const articleCollectionPlugin = (options) => {
   const ArticleCollection = options.rule.component
 
   return {
@@ -100,27 +100,25 @@ export const articleCollectionPlugin = options => {
     },
     onKeyDown: createRemoveEmptyKeyHandler({
       TYPE: options.TYPE,
-      isEmpty: node => !node.text.trim()
-    })
+      isEmpty: (node) => !node.text.trim(),
+    }),
   }
 }
 
-export const articleCollectionButton = options => {
-  const articleCollectionButtonClickHandler = (
-    disabled,
-    value,
-    onChange
-  ) => event => {
-    event.preventDefault()
-    if (!disabled) {
-      onChange(value.change().call(injectBlock, getNewBlock(options)()))
+export const articleCollectionButton = (options) => {
+  const articleCollectionButtonClickHandler =
+    (disabled, value, onChange) => (event) => {
+      event.preventDefault()
+      if (!disabled) {
+        onChange(value.change().call(injectBlock, getNewBlock(options)()))
+      }
     }
-  }
 
   const insertTypes = options.rule.editorOptions.insertTypes || []
   return ({ value, onChange }) => {
     const disabled =
-      value.isBlurred || !value.blocks.every(n => insertTypes.includes(n.type))
+      value.isBlurred ||
+      !value.blocks.every((n) => insertTypes.includes(n.type))
     return (
       <span
         {...buttonStyles.insert}
@@ -129,7 +127,7 @@ export const articleCollectionButton = options => {
         onMouseDown={articleCollectionButtonClickHandler(
           disabled,
           value,
-          onChange
+          onChange,
         )}
       >
         {options.rule.editorOptions.insertButtonText}
@@ -138,25 +136,25 @@ export const articleCollectionButton = options => {
   }
 }
 
-export const getSerializer = options => {
+export const getSerializer = (options) => {
   return new MarkdownSerializer({
     rules: [
       {
         matchMdast: options.rule.matchMdast,
         match: matchBlock(options.TYPE),
         fromMdast: fromMdast(options),
-        toMdast: toMdast(options)
-      }
-    ]
+        toMdast: toMdast(options),
+      },
+    ],
   })
 }
 
-export const articleCollectionForm = options => {
+export const articleCollectionForm = (options) => {
   return ({ value, onChange }) => {
     const articleCollection = value.blocks.reduce(
       (memo, node) =>
         memo || value.document.getFurthest(node.key, matchBlock(options.TYPE)),
-      undefined
+      undefined,
     )
     if (!articleCollection) {
       return null
@@ -169,8 +167,8 @@ export const articleCollectionForm = options => {
           onChange={(_, checked) => {
             onChange(
               value.change().setNodeByKey(articleCollection.key, {
-                data: articleCollection.data.set('membersOnly', checked)
-              })
+                data: articleCollection.data.set('membersOnly', checked),
+              }),
             )
           }}
         >
@@ -182,8 +180,8 @@ export const articleCollectionForm = options => {
           onChange={(_, text) => {
             onChange(
               value.change().setNodeByKey(articleCollection.key, {
-                data: articleCollection.data.set('unauthorizedText', text)
-              })
+                data: articleCollection.data.set('unauthorizedText', text),
+              }),
             )
           }}
         />
@@ -192,15 +190,15 @@ export const articleCollectionForm = options => {
   }
 }
 
-export default options => ({
+export default (options) => ({
   helpers: {
     serializer: getSerializer(options),
-    newBlock: getNewBlock(options)
+    newBlock: getNewBlock(options),
     // isEmpty: isEmpty(options)
   },
   plugins: [articleCollectionPlugin(options)],
   ui: {
     insertButtons: [articleCollectionButton(options)],
-    forms: [articleCollectionForm(options)]
-  }
+    forms: [articleCollectionForm(options)],
+  },
 })

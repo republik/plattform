@@ -10,7 +10,7 @@ import { BlockQuote, BlockQuoteParagraph } from '../../components/BlockQuote'
 import {
   PullQuote,
   PullQuoteText,
-  PullQuoteSource
+  PullQuoteSource,
 } from '../../components/PullQuote'
 
 import { FIGURE_SIZES } from '../../components/Figure'
@@ -19,7 +19,7 @@ import {
   matchType,
   matchZone,
   matchHeading,
-  matchParagraph
+  matchParagraph,
 } from 'mdast-react-render/lib/utils'
 
 import {
@@ -28,7 +28,7 @@ import {
   InfoBoxText,
   InfoBoxListItem,
   InfoBoxSubhead,
-  INFOBOX_DEFAULT_IMAGE_SIZE
+  INFOBOX_DEFAULT_IMAGE_SIZE,
 } from '../../components/InfoBox'
 
 import {
@@ -40,7 +40,7 @@ import {
   styles,
   mdastToString,
   matchImagesParagraph,
-  extractImages
+  extractImages,
 } from './utils'
 
 import { slug } from '../../lib/slug'
@@ -56,18 +56,18 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
       figureSize: node.children.find(matchFigure)
         ? node.data.figureSize || INFOBOX_DEFAULT_IMAGE_SIZE
         : undefined,
-      figureFloat: node.data.figureFloat
+      figureFloat: node.data.figureFloat,
     }),
     editorModule: 'infobox',
     editorOptions: {
       insertButtonText: 'Infobox',
-      insertTypes: ['PARAGRAPH']
+      insertTypes: ['PARAGRAPH'],
     },
     rules: [
       {
         matchMdast: matchHeading(3),
-        props: node => ({
-          slug: slug(mdastToString(node))
+        props: (node) => ({
+          slug: slug(mdastToString(node)),
         }),
         component: ({ children, slug }) => (
           <InfoBoxTitle>
@@ -80,9 +80,9 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
           type: 'INFOH',
           depth: 3,
           placeholder: 'Title',
-          isStatic: true
+          isStatic: true,
         },
-        rules: globalInlines
+        rules: globalInlines,
       },
       {
         matchMdast: matchHeading(4),
@@ -95,9 +95,9 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
           afterType: 'INFOP',
           insertAfterType: 'INFOBOX',
           formatButtonText: 'Infobox Zwischentitel',
-          formatTypes: ['INFOP']
+          formatTypes: ['INFOP'],
         },
-        rules: globalInlines
+        rules: globalInlines,
       },
       {
         ...base.list,
@@ -106,7 +106,7 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
           type: 'INFOLIST',
           formatButtonText: 'Infobox Liste',
           formatButtonTextOrdered: 'Infobox Aufzählung',
-          formatTypes: ['INFOP']
+          formatTypes: ['INFOP'],
         },
         rules: [
           {
@@ -114,7 +114,7 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
             component: InfoBoxListItem,
             editorModule: 'listItem',
             editorOptions: {
-              type: 'INFOLISTITEM'
+              type: 'INFOLISTITEM',
             },
             rules: [
               {
@@ -123,19 +123,19 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
                 editorModule: 'paragraph',
                 editorOptions: {
                   type: 'INFOP',
-                  placeholder: 'Infotext'
+                  placeholder: 'Infotext',
                 },
-                rules: base.paragraphRules
-              }
-            ]
-          }
-        ]
+                rules: base.paragraphRules,
+              },
+            ],
+          },
+        ],
       },
       {
         ...base.figure,
         editorOptions: {
           ...base.figure.editorOptions,
-          type: 'INFOFIGURE'
+          type: 'INFOFIGURE',
         },
         rules: [
           base.figureImage,
@@ -144,10 +144,10 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
             editorOptions: {
               type: 'INFOFIGURECAPTION',
               placeholder: 'Legende',
-              isStatic: true
-            }
-          }
-        ]
+              isStatic: true,
+            },
+          },
+        ],
       },
       {
         matchMdast: matchParagraph,
@@ -155,21 +155,21 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
         editorModule: 'paragraph',
         editorOptions: {
           type: 'INFOP',
-          placeholder: 'Infotext'
+          placeholder: 'Infotext',
         },
-        rules: base.paragraphRules
-      }
-    ]
+        rules: base.paragraphRules,
+      },
+    ],
   })
 
   const blockQuote = {
     matchMdast: matchZone('BLOCKQUOTE'),
-    props: node => {
+    props: (node) => {
       return {
         isEmpty:
           node.children &&
           node.children.length === 1 &&
-          !node.children[0].children
+          !node.children[0].children,
       }
     },
     component: ({ isEmpty, node, children, attributes }) =>
@@ -178,7 +178,7 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
       ),
     editorModule: 'blockquote',
     editorOptions: {
-      insertButtonText: 'Block-Zitat'
+      insertButtonText: 'Block-Zitat',
     },
     rules: [
       {
@@ -188,7 +188,7 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
         editorOptions: {
           type: 'BLOCKQUOTETEXT',
           mdastType: 'blockquote',
-          isStatic: true
+          isStatic: true,
         },
         rules: [
           {
@@ -196,15 +196,15 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
             editorModule: 'paragraph',
             editorOptions: {
               type: 'BLOCKQUOTEPARAGRAPH',
-              placeholder: 'Zitat-Absatz'
+              placeholder: 'Zitat-Absatz',
             },
             component: BlockQuoteParagraph,
-            rules: base.paragraphRules
-          }
-        ]
+            rules: base.paragraphRules,
+          },
+        ],
       },
-      base.figureCaption
-    ]
+      base.figureCaption,
+    ],
   }
 
   const pullQuote = {
@@ -212,12 +212,12 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
     component: PullQuote,
     props: (node, index, parent, { ancestors }) => ({
       size: node.data.size,
-      hasFigure: !!node.children.find(matchFigure)
+      hasFigure: !!node.children.find(matchFigure),
     }),
     editorModule: 'quote',
     editorOptions: {
       insertButtonText: 'Zitat',
-      insertTypes: ['PARAGRAPH']
+      insertTypes: ['PARAGRAPH'],
     },
     rules: [
       base.figure,
@@ -231,9 +231,9 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
         editorModule: 'paragraph',
         editorOptions: {
           type: 'QUOTEP',
-          placeholder: 'Zitat'
+          placeholder: 'Zitat',
         },
-        rules: [...globalInlines, base.link]
+        rules: [...globalInlines, base.link],
       },
       {
         matchMdast: (node, index, parent) =>
@@ -245,11 +245,11 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
           placeholder: 'Quellenangabe / Autor',
           isStatic: true,
           afterType: 'PARAGRAPH',
-          insertAfterType: 'CENTER'
+          insertAfterType: 'CENTER',
         },
-        rules: [...globalInlines, base.link]
-      }
-    ]
+        rules: [...globalInlines, base.link],
+      },
+    ],
   }
 
   const createCover = ({ onAudioCoverClick }) => ({
@@ -275,7 +275,7 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
             style={{
               color: meta.coverText.color,
               fontSize: meta.coverText.fontSize,
-              lineHeight: meta.coverText.lineHeight || 1.03
+              lineHeight: meta.coverText.lineHeight || 1.03,
             }}
           >
             {mdastToString(headline)}
@@ -285,7 +285,7 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
         text = {
           element,
           anchor: meta.coverText.anchor,
-          offset: meta.coverText.offset
+          offset: meta.coverText.offset,
         }
       }
       return {
@@ -294,8 +294,8 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
         audio: meta.audioCover && {
           ...meta.audioCover,
           onClick: onAudioCoverClick,
-          meta
-        }
+          meta,
+        },
       }
     },
     editorModule: 'figure',
@@ -308,21 +308,21 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
       sizes: [
         {
           label: 'Edge to Edge',
-          props: { size: undefined }
+          props: { size: undefined },
         },
         {
           label: 'Gross',
-          props: { size: 'breakout' }
+          props: { size: 'breakout' },
         },
         {
           label: 'Zentriert',
-          props: { size: 'center' }
+          props: { size: 'center' },
         },
         {
           label: 'Klein',
-          props: { size: 'tiny' }
-        }
-      ]
+          props: { size: 'tiny' },
+        },
+      ],
     },
     rules: [
       {
@@ -346,18 +346,18 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
               FigureImage.utils.getResizedSrcs(
                 srcDark,
                 displayWidth,
-                setMaxWidth
+                setMaxWidth,
               ),
             enableGallery,
             aboveTheFold: true,
-            alt: node.children[0].alt
+            alt: node.children[0].alt,
           }
         },
         editorModule: 'figureImage',
-        isVoid: true
+        isVoid: true,
       },
-      base.figureCaption
-    ]
+      base.figureCaption,
+    ],
   })
 
   const logbook = {
@@ -365,7 +365,7 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
     component: ({ children }) => <div>{children}</div>,
     editorModule: 'logbook',
     editorOptions: {
-      insertButtonText: 'Logbuch'
+      insertButtonText: 'Logbuch',
     },
     rules: [
       {
@@ -376,9 +376,9 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
           placeholder: 'Titel',
           type: 'LOGBOOK_TITLE',
           depth: 2,
-          isStatic: true
+          isStatic: true,
         },
-        rules: globalInlines
+        rules: globalInlines,
       },
       {
         matchMdast: matchParagraph,
@@ -389,11 +389,11 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
           placeholder: 'Autoren, Datum',
           isStatic: true,
           afterType: 'PARAGRAPH',
-          insertAfterType: 'CENTER'
+          insertAfterType: 'CENTER',
         },
-        rules: [...globalInlines, base.link]
-      }
-    ]
+        rules: [...globalInlines, base.link],
+      },
+    ],
   }
 
   return {
@@ -401,7 +401,7 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
     infoBox: createInfoBox({ t }),
     logbook,
     blockQuote,
-    pullQuote
+    pullQuote,
   }
 }
 

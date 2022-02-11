@@ -14,14 +14,14 @@ type GoodieOptionsPropTypes = {
 }
 
 const styles = {
-  goodieContainer: css({ marginBottom: 24 })
+  goodieContainer: css({ marginBottom: 24 }),
 }
 
 function GoodieOptions({
   options,
   values,
   onChange,
-  t
+  t,
 }: GoodieOptionsPropTypes) {
   if (!options?.length) {
     return null
@@ -32,7 +32,7 @@ function GoodieOptions({
       <Interaction.H3>{t('Goodies/title')}</Interaction.H3>
 
       <div {...styles.goodieContainer}>
-        {options.map(option => {
+        {options.map((option) => {
           const value =
             values[getOptionFieldKey(option)] === undefined
               ? option.defaultAmount
@@ -43,14 +43,14 @@ function GoodieOptions({
               key={getOptionFieldKey(option)}
               option={option}
               value={value}
-              onChange={value =>
+              onChange={(value) =>
                 onChange(
                   FieldSet.utils.fieldsState({
                     field: getOptionFieldKey(option),
                     value,
                     error: undefined,
-                    dirty: true
-                  })
+                    dirty: true,
+                  }),
                 )
               }
               t={t}

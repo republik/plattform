@@ -7,6 +7,7 @@ export type PreviewCommentQueryVariables = {
   content: string
   parentId?: string
   id?: string
+  tags?: string[]
 }
 
 export type PreviewCommentQuery = {
@@ -21,16 +22,19 @@ export const PREVIEW_COMMENT_QUERY = gql`
     $content: String!
     $parentId: ID
     $id: ID
+    $tags: [String!]
   ) {
     commentPreview(
       content: $content
       discussionId: $discussionId
       parentId: $parentId
       id: $id
+      tags: $tags
     ) {
       id
       content
       contentLength
+      tags
       updatedAt
       createdAt
       embed {

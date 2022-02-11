@@ -3,11 +3,11 @@ import createParagraphModule from './'
 import { parse, stringify } from '@orbiting/remark-preset'
 import { boldModule } from '../mark/testUtils'
 
-test('paragraph serialization', assert => {
+test('paragraph serialization', (assert) => {
   const paragraphModule = createParagraphModule({
     TYPE: 'P',
     rule: {},
-    subModules: []
+    subModules: [],
   })
 
   const serializer = paragraphModule.helpers.serializer
@@ -23,11 +23,11 @@ test('paragraph serialization', assert => {
   assert.end()
 })
 
-test('paragraph with break in mark', assert => {
+test('paragraph with break in mark', (assert) => {
   const paragraphModule = createParagraphModule({
     TYPE: 'P',
     rule: {},
-    subModules: [boldModule]
+    subModules: [boldModule],
   })
 
   const serializer = paragraphModule.helpers.serializer
@@ -46,15 +46,15 @@ B**
   assert.end()
 })
 
-test('paragraph with mdastPlaceholder', assert => {
+test('paragraph with mdastPlaceholder', (assert) => {
   const paragraphModule = createParagraphModule({
     TYPE: 'P',
     rule: {
       editorOptions: {
-        mdastPlaceholder: '\u2063'
-      }
+        mdastPlaceholder: '\u2063',
+      },
     },
-    subModules: []
+    subModules: [],
   })
 
   const serializer = paragraphModule.helpers.serializer

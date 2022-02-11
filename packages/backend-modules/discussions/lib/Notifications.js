@@ -55,11 +55,9 @@ const getCommentInfo = async (comment, displayAuthor, discussion, context) => {
     contentMdast: getContent(comment, { strip: false }, context),
   })
 
-  const contentHtml = renderEmail(
-    contentMdast,
-    createCommentEmailSchema(),
-    { doctype: '' }
-  )
+  const contentHtml = renderEmail(contentMdast, createCommentEmailSchema(), {
+    doctype: '',
+  })
   const contentPlain = htmlToText.fromString(contentHtml)
 
   const { parentIds } = comment

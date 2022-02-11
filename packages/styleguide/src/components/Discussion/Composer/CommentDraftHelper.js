@@ -1,8 +1,8 @@
 /**
  * The key in localStorage under which we store the drafts. Keyed by the discussion id.
  */
- export const commentComposerStorageKey = discussionId =>
- `commentComposerText:${discussionId}`
+export const commentComposerStorageKey = (discussionId) =>
+  `commentComposerText:${discussionId}`
 
 /**
  * Load a stored draft an validate the schema.
@@ -10,8 +10,10 @@
  * @returns {{replies}|{text}|any|undefined}
  */
 function loadStoredDraftsObject(key) {
-  if (typeof localStorage === 'undefined') return undefined
-  const storedValue = localStorage.getItem(key)
+  let storedValue
+  try {
+    storedValue = localStorage.getItem(key)
+  } catch (e) {}
   if (!storedValue) return undefined
 
   try {
@@ -30,7 +32,9 @@ function loadStoredDraftsObject(key) {
     const newValue = createDraftsObject()
     // assume the legacy-draft is a comment-draft -> save in text property
     newValue.text = storedValue
-    localStorage.setItem(key, JSON.stringify(newValue))
+    try {
+      localStorage.setItem(key, JSON.stringify(newValue))
+    } catch (e) {}
     return newValue
   }
 }
@@ -39,7 +43,7 @@ function loadStoredDraftsObject(key) {
 function createDraftsObject() {
   return {
     text: null,
-    replies: {}
+    replies: {},
   }
 }
 
@@ -50,7 +54,7 @@ function createDraftsObject() {
  */
 export function readDraft(discussionID, commentID) {
   const storedDrafts = loadStoredDraftsObject(
-    commentComposerStorageKey(discussionID)
+    commentComposerStorageKey(discussionID),
   )
   if (!storedDrafts) return undefined
 
@@ -83,7 +87,9 @@ export function writeDraft(discussionID, commentID, value) {
     drafts.text = value
   }
 
-  localStorage.setItem(storageKey, JSON.stringify(drafts))
+  try {
+    localStorage.setItem(storageKey, JSON.stringify(drafts))
+  } catch (e) {}
 }
 
 /**
@@ -106,9 +112,13 @@ export function deleteDraft(discussionID, commentID) {
 
   // If the drafts-object is empty delete it all together
   if (!drafts.text && Object.keys(drafts.replies).length === 0) {
-    localStorage.removeItem(storageKey)
+    try {
+      localStorage.removeItem(storageKey)
+    } catch (e) {}
   } else {
     // If the drafts-object is not empty update it
-    localStorage.setItem(storageKey, JSON.stringify(drafts))
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(drafts))
+    } catch (e) {}
   }
 }

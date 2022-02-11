@@ -12,7 +12,7 @@ const NotificationsSettingsPage = ({ t }) => {
   return (
     <Frame
       meta={{
-        title: t('pages/account/notifications/title')
+        title: t('pages/account/notifications/title'),
       }}
     >
       <AccountEnforceMe>

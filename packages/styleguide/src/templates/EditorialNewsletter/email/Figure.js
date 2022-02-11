@@ -12,7 +12,7 @@ export const Image = ({ src, alt, plain }) => (
       width: '640px',
       height: 'auto',
       margin: '0px',
-      maxWidth: '100% !important'
+      maxWidth: '100% !important',
     }}
     width='600'
     src={imageResizeUrl(src, '600x')}
@@ -28,7 +28,7 @@ export const Caption = ({ children, data }) => (
       fontFamily: fontFamilies.sansSerifRegular,
       marginTop: '5px',
       marginBottom: '30px',
-      textAlign: 'left'
+      textAlign: 'left',
     }}
   >
     {children}
@@ -40,7 +40,7 @@ export const Byline = ({ children, data }) => (
     key='caption'
     style={{
       fontSize: '12px',
-      fontFamily: fontFamilies.sansSerifRegular
+      fontFamily: fontFamilies.sansSerifRegular,
     }}
   >
     {children}

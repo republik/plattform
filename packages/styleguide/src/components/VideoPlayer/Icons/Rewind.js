@@ -13,7 +13,7 @@ const Rewind = ({ size, fill, disabled }) => (
 Rewind.defaultProps = {
   size: 24,
   fill: '#fff',
-  disabled: true
+  disabled: true,
 }
 
 export default Rewind

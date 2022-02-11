@@ -14,7 +14,7 @@ const styles = {
     position: 'relative',
     margin: `-${PADDING}px -${PADDING}px 0`,
     padding: `${PADDING}px 0`,
-    width: 'auto'
+    width: 'auto',
   }),
   overflow: css({
     display: 'flex',
@@ -26,13 +26,13 @@ const styles = {
     WebkitOverflowScrolling: 'touch',
     '::-webkit-scrollbar': {
       width: 0,
-      background: 'transparent'
-    }
+      background: 'transparent',
+    },
   }),
   pad: css({
     flexShrink: 0,
     width: PADDING,
-    height: 1
+    height: 1,
   }),
   arrow: css(plainButtonRule, {
     display: 'none',
@@ -47,12 +47,12 @@ const styles = {
       justifyContent: 'center',
       pointerEvents: 'none',
       opacity: 0,
-      transition: 'opacity 200ms'
-    }
+      transition: 'opacity 200ms',
+    },
   }),
   arrowIcon: css({
     // ontop of arrowBg
-    position: 'relative'
+    position: 'relative',
   }),
   arrowBg: css({
     display: 'block',
@@ -61,16 +61,16 @@ const styles = {
     left: 0,
     right: 0,
     bottom: 0,
-    opacity: 0.7
+    opacity: 0.7,
   }),
   arrowHoverable: css({
     '@media (hover)': {
       '[role=group]:hover > &': {
         pointerEvents: 'auto',
-        opacity: 1
-      }
-    }
-  })
+        opacity: 1,
+      },
+    },
+  }),
 }
 
 const Row = ({ initialScrollTileIndex, children, isSeriesNav }) => {
@@ -87,7 +87,7 @@ const Row = ({ initialScrollTileIndex, children, isSeriesNav }) => {
     const target = Array.from(scroller.children)[initialScrollTileIndex + 1] // + 1 for pad element
 
     scroller.scrollLeft += Math.round(
-      target.getBoundingClientRect().left - PADDING
+      target.getBoundingClientRect().left - PADDING,
     )
   }, [initialScrollTileIndex])
 
@@ -102,7 +102,7 @@ const Row = ({ initialScrollTileIndex, children, isSeriesNav }) => {
       if (scroller.scrollLeft + scroller.clientWidth < scroller.scrollWidth) {
         right = true
       }
-      setArrows(current => {
+      setArrows((current) => {
         if (current.left !== left || current.right !== right) {
           return { left, right }
         }
@@ -122,7 +122,7 @@ const Row = ({ initialScrollTileIndex, children, isSeriesNav }) => {
     const scroller = overflow.current
     return {
       top: 0,
-      topOffset: scroller.getBoundingClientRect().top
+      topOffset: scroller.getBoundingClientRect().top,
     }
   }
 
@@ -140,7 +140,7 @@ const Row = ({ initialScrollTileIndex, children, isSeriesNav }) => {
           {...styles.pad}
           style={{
             width: PADDING - TILE_MARGIN_RIGHT,
-            margin: shouldCenter ? 'auto' : undefined
+            margin: shouldCenter ? 'auto' : undefined,
           }}
         />
       </div>
@@ -151,7 +151,7 @@ const Row = ({ initialScrollTileIndex, children, isSeriesNav }) => {
         onClick={() => {
           const scroller = overflow.current
           const clientWidth = scroller.clientWidth
-          const target = Array.from(scroller.children).find(element => {
+          const target = Array.from(scroller.children).find((element) => {
             const { left } = element.getBoundingClientRect()
             return left + clientWidth >= 0
           })
@@ -160,8 +160,8 @@ const Row = ({ initialScrollTileIndex, children, isSeriesNav }) => {
             align: {
               left: 0,
               leftOffset: TILE_MARGIN_RIGHT,
-              ...getTop()
-            }
+              ...getTop(),
+            },
           })
         }}
       >
@@ -183,7 +183,7 @@ const Row = ({ initialScrollTileIndex, children, isSeriesNav }) => {
         onClick={() => {
           const scroller = overflow.current
           const clientWidth = scroller.clientWidth
-          const target = Array.from(scroller.children).find(element => {
+          const target = Array.from(scroller.children).find((element) => {
             const { left, width } = element.getBoundingClientRect()
             return left + width > clientWidth
           })
@@ -198,8 +198,8 @@ const Row = ({ initialScrollTileIndex, children, isSeriesNav }) => {
             align: {
               left: 0,
               leftOffset: newRightEdge >= scroller.scrollWidth ? 0 : PADDING,
-              ...getTop()
-            }
+              ...getTop(),
+            },
           })
         }}
       >
@@ -220,5 +220,5 @@ const Row = ({ initialScrollTileIndex, children, isSeriesNav }) => {
 export default Row
 
 Row.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 }

@@ -7,7 +7,7 @@ export const previewImageStyle = css({
   borderTopRightRadius: 15,
   // boxshadow of image is 2x that of text container beacuse
   // a scale 0.5 is applied on it.
-  boxShadow: '0px 0px 2px 2px rgb(204, 214, 221)'
+  boxShadow: '0px 0px 2px 2px rgb(204, 214, 221)',
 })
 
 export const TWITTER_CARD_PREVIEW_WIDTH = 504
@@ -25,7 +25,7 @@ const styles = {
     overflow: 'hidden',
     ...fontStyles.sansSerifRegular,
     fontSize: 15,
-    lineHeight: '1.33em'
+    lineHeight: '1.33em',
   }),
   title: css({
     maxHeight: '1.33em',
@@ -33,7 +33,7 @@ const styles = {
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    color: '#000'
+    color: '#000',
   }),
   description: css({
     fontSize: '1em',
@@ -44,7 +44,7 @@ const styles = {
     WebkitBoxOrient: 'vertical',
     WebkitLineClamp: 2,
     maxHeight: '2.66em',
-    color: 'rgb(83, 100, 113)'
+    color: 'rgb(83, 100, 113)',
   }),
   domain: css({
     fontSize: '1em',
@@ -53,8 +53,8 @@ const styles = {
     color: 'rgb(83, 100, 113)',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
-    whiteSpace: 'nowrap'
-  })
+    whiteSpace: 'nowrap',
+  }),
 }
 
 const SharePreviewTwitter = ({ title, description }) => (

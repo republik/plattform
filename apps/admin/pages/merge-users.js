@@ -10,7 +10,7 @@ import MergeUsers from '../components/Users/Merge'
 
 export default compose(
   withRouter,
-  enforceAuthorization(['supporter'])
+  enforceAuthorization(['supporter']),
 )(() => {
   return (
     <App>

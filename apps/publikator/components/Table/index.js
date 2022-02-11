@@ -11,7 +11,7 @@ import { Link } from '../../lib/routes'
 const styles = {
   table: css({
     borderSpacing: '0 0',
-    width: '100%'
+    width: '100%',
   }),
   th: css(
     {
@@ -20,46 +20,46 @@ const styles = {
       padding: 8,
       borderBottom: `1px solid ${colors.divider}`,
       ':first-child': {
-        paddingLeft: 0
+        paddingLeft: 0,
       },
       ':last-child': {
-        paddingRight: 0
-      }
+        paddingRight: 0,
+      },
     },
-    fontStyles.label
+    fontStyles.label,
   ),
   tr: css({
     ':nth-child(even)': {
-      backgroundColor: colors.secondaryBg
-    }
+      backgroundColor: colors.secondaryBg,
+    },
   }),
   td: css({
     padding: 8,
     ':first-child': {
-      paddingLeft: 0
+      paddingLeft: 0,
     },
     ':last-child': {
-      paddingRight: 0
-    }
+      paddingRight: 0,
+    },
   }),
   num: css({
     // textAlign: 'right',
-    fontFeatureSettings: '"tnum" 1, "kern" 1'
+    fontFeatureSettings: '"tnum" 1, "kern" 1',
   }),
   order: css({
     display: 'inline-block',
     position: 'relative',
-    paddingRight: 20
+    paddingRight: 20,
   }),
   orderLink: css({
     color: 'inherit',
-    textDecoration: 'none'
+    textDecoration: 'none',
   }),
   orderLinkIcon: css({
     position: 'absolute',
     top: 0,
-    right: 0
-  })
+    right: 0,
+  }),
 }
 
 export const Table = ({ children, style }) => (
@@ -91,7 +91,7 @@ export const ThOrder = ({
   route,
   params,
   children,
-  style
+  style,
 }) => (
   <Th style={style}>
     <span {...styles.order}>

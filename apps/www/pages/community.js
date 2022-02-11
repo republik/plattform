@@ -11,13 +11,13 @@ import withDefaultSSR from '../lib/hocs/withDefaultSSR'
 class CommunityPage extends Component {
   static async getInitialProps(ctx) {
     return {
-      seed: generateSeed()
+      seed: generateSeed(),
     }
   }
   render() {
     const {
       router: { query },
-      seed
+      seed,
     } = this.props
 
     if (query.share) {

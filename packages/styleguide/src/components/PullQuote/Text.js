@@ -7,22 +7,22 @@ import { convertStyleToRem } from '../Typography/utils'
 import { useColorContext } from '../Colors/useColorContext'
 
 const baseStyle = {
-  ...convertStyleToRem(serifBold24)
+  ...convertStyleToRem(serifBold24),
 }
 
 const styles = {
   default: css({
     ...baseStyle,
     [mUp]: {
-      ...convertStyleToRem(serifBold28)
-    }
+      ...convertStyleToRem(serifBold28),
+    },
   }),
   large: css({
     ...baseStyle,
     [mUp]: {
-      ...convertStyleToRem(serifBold42)
-    }
-  })
+      ...convertStyleToRem(serifBold42),
+    },
+  }),
 }
 
 export const Text = ({ children, attributes, size }) => {
@@ -41,11 +41,11 @@ export const Text = ({ children, attributes, size }) => {
 Text.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
-  size: PropTypes.oneOf(['default', 'large'])
+  size: PropTypes.oneOf(['default', 'large']),
 }
 
 Text.defaultProps = {
-  size: 'default'
+  size: 'default',
 }
 
 export default Text

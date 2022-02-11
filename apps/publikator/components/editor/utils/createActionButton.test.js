@@ -4,7 +4,7 @@ import spy from 'spy'
 import { shallow } from '../../../test/utils/enzyme'
 import createActionButton from './createActionButton'
 
-test('utils.createActionButton', assert => {
+test('utils.createActionButton', (assert) => {
   assert.plan(7)
 
   const Button = () => <span />
@@ -14,26 +14,26 @@ test('utils.createActionButton', assert => {
   const ActionButton = createActionButton({
     isDisabled: ({ value }) => value.disabled,
     isVisible: ({ value }) => value.visible,
-    reducer: props => event => props.onChange(props, event)
+    reducer: (props) => (event) => props.onChange(props, event),
   })(Button)
 
   const wrapper = shallow(
     <ActionButton
       value={{ disabled: false, visible: false }}
       onChange={onChange}
-    />
+    />,
   )
 
   assert.equal(
     wrapper.find('[disabled=false]').exists(),
     true,
-    'passes `disabled` property according to response from `options.isDisabled`'
+    'passes `disabled` property according to response from `options.isDisabled`',
   )
 
   assert.equal(
     wrapper.find('[visible=false]').exists(),
     true,
-    'passes `visible` property according to response from `options.isVisible`'
+    'passes `visible` property according to response from `options.isVisible`',
   )
 
   wrapper.find('Button').simulate('mousedown', { foo: 'bar' })
@@ -44,12 +44,12 @@ test('utils.createActionButton', assert => {
     onChange.calledWith(
       {
         value: { disabled: false, visible: false },
-        onChange
+        onChange,
       },
-      { foo: 'bar' }
+      { foo: 'bar' },
     ),
     true,
-    'calls `options.reducer` with props and the mousedown event'
+    'calls `options.reducer` with props and the mousedown event',
   )
 
   const disabledWrapper = shallow(<ActionButton value={{ disabled: true }} />)
@@ -59,7 +59,7 @@ test('utils.createActionButton', assert => {
   assert.equal(
     preventDefault.callCount,
     1,
-    'calls preventDefault() on the mousedown event if `options.isDisabled` returns true '
+    'calls preventDefault() on the mousedown event if `options.isDisabled` returns true ',
   )
 
   const isVisible = (props, visible) => {
@@ -76,18 +76,18 @@ test('utils.createActionButton', assert => {
       isVisible={isVisible}
       isDisabled={isDisabled}
       onChange={onChange}
-    />
+    />,
   )
 
   assert.equal(
     wrapperWithProps.find('[disabled=true]').exists(),
     true,
-    '`props.isDisabled` overrides `options.isDisabled`'
+    '`props.isDisabled` overrides `options.isDisabled`',
   )
 
   assert.equal(
     wrapperWithProps.find('[visible=false]').exists(),
     true,
-    '`props.isVisible` overrides `options.isVisible`'
+    '`props.isVisible` overrides `options.isVisible`',
   )
 })

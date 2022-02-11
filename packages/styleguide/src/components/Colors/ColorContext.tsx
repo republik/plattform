@@ -4,24 +4,24 @@ import { css } from 'glamor'
 import colors from '../../theme/colors'
 import memoize from 'lodash/memoize'
 
-const getVariableColorKeys = colors =>
+const getVariableColorKeys = (colors) =>
   Object.keys(colors.light).filter(
-    color => colors.light[color] !== colors.dark[color]
+    (color) => colors.light[color] !== colors.dark[color],
   )
 
 // identify all variable color keys
 const variableColorKeys = getVariableColorKeys(colors)
 
-const createScheme = specificColors => {
+const createScheme = (specificColors) => {
   const colorDefinitions = {
     ...colors,
-    ...specificColors
+    ...specificColors,
   }
 
   const accessCSSColor = colorDefinitions.cssColors
-    ? color =>
+    ? (color) =>
         colorDefinitions.cssColors[color] || colorDefinitions[color] || color
-    : color => colorDefinitions[color] || color
+    : (color) => colorDefinitions[color] || color
 
   const { mappings = {} } = colorDefinitions
 
@@ -32,7 +32,7 @@ const createScheme = specificColors => {
 
   const createColorRule = (attr, color, mappingName = undefined) => {
     return css({
-      [attr]: getCSSColor(color, mappingName)
+      [attr]: getCSSColor(color, mappingName),
     })
   }
 
@@ -53,18 +53,18 @@ const createScheme = specificColors => {
         'sequential65',
         'sequential60',
         'sequential55',
-        'sequential50'
-      ].map(key => colorDefinitions[key]),
+        'sequential50',
+      ].map((key) => colorDefinitions[key]),
       sequential3: ['sequential100', 'sequential80', 'sequential60'].map(
-        key => colorDefinitions[key]
+        (key) => colorDefinitions[key],
       ),
       opposite3: ['opposite100', 'opposite80', 'opposite60'].map(
-        key => colorDefinitions[key]
+        (key) => colorDefinitions[key],
       ),
-      discrete: colorDefinitions.discrete
+      discrete: colorDefinitions.discrete,
     },
     set: memoize(createColorRule, (...args) => args.join('.')),
-    getCSSColor
+    getCSSColor,
   }
 }
 
@@ -75,14 +75,14 @@ export const useColorContext = () => {
   return [colorContext]
 }
 
-const generateCSSColorDefinitions = colors => {
+const generateCSSColorDefinitions = (colors) => {
   return variableColorKeys
-    .map(key => `--color-${key}: ${colors[key]};`)
+    .map((key) => `--color-${key}: ${colors[key]};`)
     .join(' ')
 }
 
 // ensure only main colors are available via context
-const getObjectForKeys = (colorKeys, mapper = key => key) =>
+const getObjectForKeys = (colorKeys, mapper = (key) => key) =>
   colorKeys.reduce((c, key) => {
     c[key] = mapper(key)
     return c
@@ -103,27 +103,30 @@ export const ColorContextLocalExtension: React.FC<{
       ...colorDefinitions,
       ...localColors[schemeKey === 'auto' ? 'light' : schemeKey],
       ...(CSSVarSupport
-        ? getObjectForKeys(variableLocalColorKeys, key => `var(--color-${key})`)
+        ? getObjectForKeys(
+            variableLocalColorKeys,
+            (key) => `var(--color-${key})`,
+          )
         : {}),
       mappings: {
         ...mappings,
-        ...getObjectForKeys(Object.keys(localMappings), key => {
+        ...getObjectForKeys(Object.keys(localMappings), (key) => {
           return {
             ...mappings[key],
-            ...localMappings[key]
+            ...localMappings[key],
           }
-        })
+        }),
       },
       cssColors:
         schemeKey === 'auto'
           ? {
               ...colorDefinitions.cssColors,
-              ...getObjectForKeys(variableLocalColorKeys, key => [
+              ...getObjectForKeys(variableLocalColorKeys, (key) => [
                 localColors.light[key],
-                `var(--color-${key})`
-              ])
+                `var(--color-${key})`,
+              ]),
             }
-          : undefined
+          : undefined,
     }
 
     const lightColorCSSDefs = variableLocalColorKeys.reduce((defs, key) => {
@@ -142,17 +145,17 @@ export const ColorContextLocalExtension: React.FC<{
         ...lightColorCSSDefs,
         '[data-user-color-scheme="dark"] &': {
           // dark user
-          ...darkColorCSSDefs
+          ...darkColorCSSDefs,
         },
         '@media (prefers-color-scheme: dark)': {
           // dark auto
           ...darkColorCSSDefs,
           '[data-user-color-scheme="light"] &': {
             // light user
-            ...lightColorCSSDefs
-          }
-        }
-      })
+            ...lightColorCSSDefs,
+          },
+        },
+      }),
     ]
   }, [colorDefinitions, localColors, localMappings, CSSVarSupport, schemeKey])
 
@@ -181,11 +184,11 @@ export const ColorHtmlBodyColors = ({ colorSchemeKey = 'auto' }) => {
                   // auto dark via media query
                   `html, body { background-color: ${colors.dark.default}; color: ${colors.dark.text}; }`,
                   // light via user preference when os is dark
-                  `html[data-user-color-scheme="light"], html[data-user-color-scheme="light"] body { background-color: ${colors.light.default}; color: ${colors.light.text}; }`
+                  `html[data-user-color-scheme="light"], html[data-user-color-scheme="light"] body { background-color: ${colors.light.default}; color: ${colors.light.text}; }`,
                 ].join('\n'),
-                `}`
+                `}`,
               ].join('\n')
-            : `html, body { background-color: ${colors[colorSchemeKey].default}; color: ${colors[colorSchemeKey].text}; }`
+            : `html, body { background-color: ${colors[colorSchemeKey].default}; color: ${colors[colorSchemeKey].text}; }`,
       }}
     />
   )
@@ -221,17 +224,17 @@ export const ColorContextProvider: React.FC<{
         CSSVarSupport,
         ...colors.light,
         ...(CSSVarSupport
-          ? getObjectForKeys(variableColorKeys, key => `var(--color-${key})`)
+          ? getObjectForKeys(variableColorKeys, (key) => `var(--color-${key})`)
           : {}),
-        cssColors: getObjectForKeys(variableColorKeys, key => [
+        cssColors: getObjectForKeys(variableColorKeys, (key) => [
           colors.light[key],
-          `var(--color-${key})`
-        ])
+          `var(--color-${key})`,
+        ]),
       })
     }
     return createScheme({
       schemeKey: colorSchemeKey,
-      ...colors[colorSchemeKey]
+      ...colors[colorSchemeKey],
     })
   }, [colorSchemeKey, CSSVarSupport])
 
@@ -246,7 +249,7 @@ export const ColorContextProvider: React.FC<{
               `:root { ${generateCSSColorDefinitions(colors.light)} }`,
               // dark via user preference
               `:root[data-user-color-scheme="dark"] { ${generateCSSColorDefinitions(
-                colors.dark
+                colors.dark,
               )} }`,
               // os dark preference
               `@media (prefers-color-scheme: dark) {`,
@@ -255,11 +258,11 @@ export const ColorContextProvider: React.FC<{
                 `:root { ${generateCSSColorDefinitions(colors.dark)} }`,
                 // light via user preference when os is dark
                 `:root[data-user-color-scheme="light"] { ${generateCSSColorDefinitions(
-                  colors.light
-                )} }`
+                  colors.light,
+                )} }`,
               ].join('\n'),
-              `}`
-            ].join('\n')
+              `}`,
+            ].join('\n'),
           }}
         />
       )}

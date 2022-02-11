@@ -5,7 +5,7 @@ import {
   mediaQueries,
   fontStyles,
   Interaction,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import { OptionType } from './PledgeOptionsTypes'
 import { CDN_FRONTEND_BASE_URL } from '../../../lib/constants'
@@ -26,18 +26,18 @@ const styles = {
     flexDirection: 'column',
     justifyContent: 'space-between',
     [mediaQueries.mUp]: {
-      flexDirection: 'row'
-    }
+      flexDirection: 'row',
+    },
   }),
   info: css({
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
   }),
   goodieImage: css({
     width: IMAGE_SIZE,
     height: IMAGE_SIZE,
     marginRight: 16,
-    flexShrink: 0
+    flexShrink: 0,
   }),
   label: css(Interaction.fontRule, {
     flexGrow: 1,
@@ -47,33 +47,33 @@ const styles = {
     [mediaQueries.mUp]: {
       marginRight: 16,
       ...fontStyles.sansSerifRegular16,
-      lineHeight: '22px'
+      lineHeight: '22px',
     },
-    margin: 0
+    margin: 0,
   }),
   selection: css({
     minWidth: 100,
     marginLeft: IMAGE_SIZE + 16,
     [mediaQueries.mUp]: {
-      marginLeft: 0
-    }
-  })
+      marginLeft: 0,
+    },
+  }),
 }
 
 function GoodieOption({
   value,
   option,
   onChange,
-  t
+  t,
 }: PledgeOptionComponentType) {
   const [colorScheme] = useColorContext()
   const amounts = Array.from(
     { length: option.maxAmount - option.minAmount + 1 },
-    (_, index) => String(index + option.minAmount)
+    (_, index) => String(index + option.minAmount),
   )
-  const dropdownItems = amounts.map(amount => ({
+  const dropdownItems = amounts.map((amount) => ({
     value: amount,
-    text: amount
+    text: amount,
   }))
   return (
     <>
@@ -99,7 +99,7 @@ function GoodieOption({
             label={t('Goodie/dropdown/label')}
             items={dropdownItems}
             value={String(value)}
-            onChange={item => {
+            onChange={(item) => {
               onChange(+item.value)
             }}
           />

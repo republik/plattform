@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import {
   CommentComposer,
   CommentComposerPlaceholder,
-  readDiscussionCommentDraft
+  readDiscussionCommentDraft,
 } from '@project-r/styleguide'
 import PropTypes from 'prop-types'
 import { useDiscussion } from '../context/DiscussionContext'
@@ -24,7 +24,7 @@ const propTypes = {
   initialText: PropTypes.string,
   initialTagValue: PropTypes.string,
   initialActiveState: PropTypes.bool,
-  placeholder: PropTypes.string
+  placeholder: PropTypes.string,
 }
 
 const DiscussionComposer = ({
@@ -37,7 +37,7 @@ const DiscussionComposer = ({
   initialText,
   initialTagValue,
   initialActiveState,
-  placeholder
+  placeholder,
 }: PropTypes.InferProps<typeof propTypes>) => {
   const { t } = useTranslation()
 
@@ -45,10 +45,8 @@ const DiscussionComposer = ({
   const { tags, rules, displayAuthor } = discussion
   const { preferencesOverlay } = overlays
 
-  const {
-    preferences,
-    updateDiscussionPreferencesHandler
-  } = useDiscussionPreferences(discussionId)
+  const { preferences, updateDiscussionPreferencesHandler } =
+    useDiscussionPreferences(discussionId)
 
   const submitCommentHandler = useSubmitCommentHandler()
   const editCommentHandler = useEditCommentHandler()
@@ -65,7 +63,9 @@ const DiscussionComposer = ({
     ) {
       return null
     }
-    return preferences?.me?.credentials?.find(credential => credential.isListed)
+    return preferences?.me?.credentials?.find(
+      (credential) => credential.isListed,
+    )
   }, [preferences])
 
   const [active, setActive] = useState(!!(initialText || initialActiveState))
@@ -82,24 +82,24 @@ const DiscussionComposer = ({
       if (automaticCredential) {
         await updateDiscussionPreferencesHandler(
           false,
-          automaticCredential.description
+          automaticCredential.description,
         )
       }
 
       let response
 
       if (!commentId && !parentId) {
-        // New root comment or a reply to a comment
+        // New root comment
         response = await submitCommentHandler(value, tags, {
           discussionId,
-          parentId
+          parentId,
         })
       } else if (!commentId && parentId) {
-        // New root comment or a reply to a comment
+        // Reply to a comment
         // No tags are passed since responses should not have tags!
         response = await submitCommentHandler(value, [], {
           discussionId,
-          parentId
+          parentId,
         })
       } else {
         // Edit a comment
@@ -107,11 +107,11 @@ const DiscussionComposer = ({
       }
 
       return {
-        ok: response
+        ok: response,
       }
     } catch (err) {
       return {
-        error: err
+        error: err,
       }
     }
   }
@@ -147,14 +147,17 @@ const DiscussionComposer = ({
           secondaryActions={<SecondaryActions isReply={!!parentId} />}
           displayAuthor={{
             ...displayAuthor,
-            credential: displayAuthor?.credential || automaticCredential
+            credential: displayAuthor?.credential || automaticCredential,
           }}
           placeholder={placeholder}
           maxLength={rules?.maxLength}
           tags={tags}
           initialText={initialText}
           initialTagValue={
-            tags?.length > 0 ? initialTagValue ?? activeTag : undefined
+            // In case a reply is being composed, no tag-values should be passed
+            !parentId && tags?.length > 0
+              ? initialTagValue ?? activeTag
+              : undefined
           }
         />
       ) : (

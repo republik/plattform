@@ -10,7 +10,7 @@ import {
   sansSerifRegular14,
   sansSerifRegular12,
   sansSerifMedium14,
-  sansSerifMedium12
+  sansSerifMedium12,
 } from '../Typography/styles'
 import { useColorContext } from '../Colors/useColorContext'
 import { FigureImage } from '../Figure'
@@ -19,42 +19,42 @@ const styles = {
   title: css({
     ...serifTitle16,
     [mUp]: {
-      ...serifTitle20
-    }
+      ...serifTitle20,
+    },
   }),
   titleInline: css({
     ...serifTitle16,
-    marginBottom: 0
+    marginBottom: 0,
   }),
   lead: css({
     ...serifRegular15,
     [mUp]: {
-      ...serifRegular17
-    }
+      ...serifRegular17,
+    },
   }),
   label: css({
     marginTop: 0,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
   }),
   labelRegular: css({
     ...sansSerifRegular12,
     [mUp]: {
-      ...sansSerifRegular14
-    }
+      ...sansSerifRegular14,
+    },
   }),
   labelMedium: css({
     ...sansSerifMedium12,
     [mUp]: {
-      ...sansSerifMedium14
-    }
+      ...sansSerifMedium14,
+    },
   }),
   plainlink: css({
     textDecoration: 'none',
     color: 'inherit',
-    cursor: 'pointer'
-  })
+    cursor: 'pointer',
+  }),
 }
 
 const DefaultLink = ({ children }) => children
@@ -67,7 +67,7 @@ const SeriesNavTileContent = ({
   ActionBar,
   Link = DefaultLink,
   onEpisodeClick,
-  aboveTheFold
+  aboveTheFold,
 }) => {
   const [colorScheme] = useColorContext()
   const imageProps = inline

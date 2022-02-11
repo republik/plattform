@@ -10,7 +10,7 @@ const track = (...args) => {
   if (!_paq) {
     if (__DEV__) {
       throw new Error(
-        "Can't use the imperative track api while server rendering"
+        "Can't use the imperative track api while server rendering",
       )
     }
     return

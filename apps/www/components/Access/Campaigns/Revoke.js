@@ -13,33 +13,33 @@ class Revoke extends Component {
       email: '',
       error: false,
       isMutating: false,
-      mutationError: null
+      mutationError: null,
     }
 
     this.hasMutated = () => {
       this.setState({
-        isMutating: false
+        isMutating: false,
       })
     }
 
-    this.catchMutationError = error => {
+    this.catchMutationError = (error) => {
       this.setState({
         isMutating: false,
-        mutationError: error
+        mutationError: error,
       })
     }
 
-    this.onClickRevoke = event => {
+    this.onClickRevoke = (event) => {
       event.preventDefault()
 
       this.setState({
         isMutating: true,
-        mutationError: false
+        mutationError: false,
       })
 
       return this.props
         .revokeAccess({
-          id: this.props.grant.id
+          id: this.props.grant.id,
         })
         .then(this.hasMutated)
         .catch(this.catchMutationError)

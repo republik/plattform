@@ -48,12 +48,12 @@ export const repoSubscription = gql`
 
 const styles = {
   container: css({
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   }),
   button: {
     height: 40,
-    fontSize: '16px'
-  }
+    fontSize: '16px',
+  },
 }
 
 class EditSidebar extends Component {
@@ -70,7 +70,7 @@ class EditSidebar extends Component {
       this.unsubscribe = this.props.data.subscribeToMore({
         document: repoSubscription,
         variables: {
-          repoId: this.props.repoId
+          repoId: this.props.repoId,
         },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) {
@@ -82,7 +82,7 @@ class EditSidebar extends Component {
           const updatedRepo = { ...prev.repo, ...repo }
           const updatedCommitNodes = [
             commit,
-            ...prev.repo.commits.nodes
+            ...prev.repo.commits.nodes,
           ].filter(Boolean)
 
           return {
@@ -91,11 +91,11 @@ class EditSidebar extends Component {
               ...updatedRepo,
               commits: {
                 ...prev.repo.commits,
-                nodes: updatedCommitNodes
-              }
-            }
+                nodes: updatedCommitNodes,
+              },
+            },
           }
-        }
+        },
       })
     }
   }
@@ -151,12 +151,12 @@ class EditSidebar extends Component {
 export default compose(
   withT,
   graphql(getCommits, {
-    skip: props => props.isNew,
-    options: props => ({
+    skip: (props) => props.isNew,
+    options: (props) => ({
       variables: {
-        repoId: props.repoId
+        repoId: props.repoId,
       },
-      fetchPolicy: 'cache-first'
-    })
-  })
+      fetchPolicy: 'cache-first',
+    }),
+  }),
 )(EditSidebar)

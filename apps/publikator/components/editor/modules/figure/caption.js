@@ -4,36 +4,36 @@ import { Block } from 'slate'
 import { matchBlock } from '../../utils'
 import {
   createStaticKeyHandler,
-  createSoftBreakKeyHandler
+  createSoftBreakKeyHandler,
 } from '../../utils/keyHandlers'
 import { Inline } from '../../Placeholder'
 
-const getSerializer = options => {
+const getSerializer = (options) => {
   const [bylineModule, ...subModules] = options.subModules
   const inlineSerializer = new MarkdownSerializer({
     rules: subModules
       .reduce(
         (a, m) =>
           a.concat(
-            m.helpers && m.helpers.serializer && m.helpers.serializer.rules
+            m.helpers && m.helpers.serializer && m.helpers.serializer.rules,
           ),
-        []
+        [],
       )
       .filter(Boolean)
       .concat({
-        matchMdast: node => node.type === 'break',
+        matchMdast: (node) => node.type === 'break',
         fromMdast: () => ({
           kind: 'text',
-          leaves: [{ kind: 'leaf', text: '\n', marks: [] }]
-        })
-      })
+          leaves: [{ kind: 'leaf', text: '\n', marks: [] }],
+        }),
+      }),
   })
 
   const fromMdast = (node, index, parent, rest) => {
-    const captionNodes = node.children.filter(n => n.type !== 'emphasis')
-    const byline = node.children.find(n => n.type === 'emphasis') || {
+    const captionNodes = node.children.filter((n) => n.type !== 'emphasis')
+    const byline = node.children.find((n) => n.type === 'emphasis') || {
       type: 'emphasis',
-      children: []
+      children: [],
     }
     const bylineNodes = byline.children
 
@@ -44,7 +44,7 @@ const getSerializer = options => {
         {
           kind: 'block',
           type: 'CAPTION_TEXT',
-          nodes: inlineSerializer.fromMdast(captionNodes, 0, node, rest)
+          nodes: inlineSerializer.fromMdast(captionNodes, 0, node, rest),
         },
         {
           kind: 'block',
@@ -53,10 +53,10 @@ const getSerializer = options => {
             bylineNodes,
             0,
             node,
-            rest
-          )
-        }
-      ]
+            rest,
+          ),
+        },
+      ],
     }
     return res
   }
@@ -65,13 +65,13 @@ const getSerializer = options => {
     const [caption, byline] = object.nodes
 
     const children = [
-      ...inlineSerializer.toMdast(caption.nodes, 0, object, rest)
+      ...inlineSerializer.toMdast(caption.nodes, 0, object, rest),
     ]
     const bylineChildren = bylineModule.helpers.serializer.toMdast(
       byline.nodes,
       1,
       object,
-      rest
+      rest,
     )
 
     if (
@@ -80,13 +80,13 @@ const getSerializer = options => {
     ) {
       children.push({
         type: 'emphasis',
-        children: bylineChildren
+        children: bylineChildren,
       })
     }
 
     const res = {
       type: 'paragraph',
-      children
+      children,
     }
     return res
   }
@@ -97,9 +97,9 @@ const getSerializer = options => {
         match: matchBlock(options.TYPE),
         matchMdast: options.rule.matchMdast,
         fromMdast,
-        toMdast
-      }
-    ]
+        toMdast,
+      },
+    ],
   })
 }
 
@@ -118,11 +118,11 @@ const captionPlugin = ({ TYPE, rule, subModules }) => {
   const matchCaption = matchBlock(TYPE)
 
   const textSoftBreakHandler = createSoftBreakKeyHandler({
-    TYPE: 'CAPTION_TEXT'
+    TYPE: 'CAPTION_TEXT',
   })
   const textStaticHandler = createStaticKeyHandler({
     TYPE: 'CAPTION_TEXT',
-    rule: { editorOptions: {} }
+    rule: { editorOptions: {} },
   })
 
   const textKeyHandler = (...args) => {
@@ -135,7 +135,7 @@ const captionPlugin = ({ TYPE, rule, subModules }) => {
 
   const bylineKeyHandler = createStaticKeyHandler({
     TYPE: bylineModule.TYPE,
-    rule
+    rule,
   })
 
   const captionKeyHandler = (event, change) => {
@@ -203,42 +203,42 @@ const captionPlugin = ({ TYPE, rule, subModules }) => {
               types: ['CAPTION_TEXT'],
               kinds: ['block'],
               min: 1,
-              max: 1
+              max: 1,
             },
             {
               types: [bylineModule.TYPE],
               kinds: ['block'],
               min: 1,
-              max: 1
-            }
+              max: 1,
+            },
           ],
           normalize(change, reason, { node, index, child }) {
             switch (reason) {
               case 'child_kind_invalid':
                 change.wrapBlockByKey(child.key, {
                   kind: 'block',
-                  type: 'CAPTION_TEXT'
+                  type: 'CAPTION_TEXT',
                 })
                 break
               case 'child_required':
                 change.insertNodeByKey(node.key, index, {
                   kind: 'block',
-                  type: index > 0 ? bylineModule.TYPE : 'CAPTION_TEXT'
+                  type: index > 0 ? bylineModule.TYPE : 'CAPTION_TEXT',
                 })
             }
-          }
-        }
-      }
-    }
+          },
+        },
+      },
+    },
   }
 }
 
-export default options => ({
+export default (options) => ({
   TYPE: options.TYPE,
   rule: options.rule,
   helpers: {
     serializer: getSerializer(options),
-    newBlock: () => Block.create(options.TYPE)
+    newBlock: () => Block.create(options.TYPE),
   },
-  plugins: [captionPlugin(options)]
+  plugins: [captionPlugin(options)],
 })

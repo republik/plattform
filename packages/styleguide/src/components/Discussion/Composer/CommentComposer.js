@@ -18,7 +18,7 @@ import { fontStyles } from '../../Typography'
 const styles = {
   root: css({}),
   background: css({
-    position: 'relative'
+    position: 'relative',
   }),
   textArea: css({
     display: 'block',
@@ -31,33 +31,33 @@ const styles = {
     border: 'none',
     outline: 'none',
     boxSizing: 'border-box',
-    ...convertStyleToRem(serifRegular16)
+    ...convertStyleToRem(serifRegular16),
   }),
   textAreaLimit: css({
-    paddingBottom: '28px'
+    paddingBottom: '28px',
   }),
   maxLengthIndicator: css({
     ...convertStyleToRem(sansSerifRegular12),
     lineHeight: 1,
     position: 'absolute',
     bottom: 6,
-    left: 8
+    left: 8,
   }),
   withBorderBottom: css({
     borderBottomWidth: 1,
-    borderBottomStyle: 'solid'
+    borderBottomStyle: 'solid',
   }),
   hints: css({
-    marginTop: 6
+    marginTop: 6,
   }),
   previewWrapper: css({
-    padding: '8px'
+    padding: '8px',
   }),
   previewLabel: css({
     ...fontStyles.sansSerifMedium18,
     display: 'block',
-    marginBottom: '16px'
-  })
+    marginBottom: '16px',
+  }),
 }
 
 const propTypes = {
@@ -88,7 +88,7 @@ const propTypes = {
 
   isBoard: PropTypes.bool,
   autoFocus: PropTypes.bool,
-  hideHeader: PropTypes.bool
+  hideHeader: PropTypes.bool,
 }
 
 export const CommentComposer = ({
@@ -139,14 +139,14 @@ export const CommentComposer = ({
   const [preview, setPreview] = useState({
     loading: false,
     error: null,
-    comment: null
+    comment: null,
   })
 
   /*
    * Synchronize the text with localStorage, and restore it from there if not otherwise
    * provided through props. This way the user won't lose their text if the browser
    * crashes or if they inadvertently close the composer.
-   * 
+   *
    * This is only done when not editing. Edits are currently not supported by the store.
    */
   const isEditing = !!commentId
@@ -154,11 +154,7 @@ export const CommentComposer = ({
     if (initialText) {
       return initialText
     } else if (!isEditing) {
-      try {
-        return readDraft(discussionId, parentId) ?? ''
-      } catch (e) {
-        return ''
-      }
+      return readDraft(discussionId, parentId) || ''
     } else {
       return ''
     }
@@ -177,25 +173,26 @@ export const CommentComposer = ({
     setPreview({
       loading: true,
       error: null,
-      comment: null
+      comment: null,
     })
     try {
       const result = await onPreviewComment({
         discussionId,
         parentId,
         content: text,
-        id: commentId
+        id: commentId,
+        tags: tagValue ? [tagValue] : undefined,
       })
       setPreview({
         loading: false,
         error: null,
-        comment: result
+        comment: result,
       })
     } catch (e) {
       setPreview({
         loading: false,
         error: e,
-        comment: null
+        comment: null,
       })
     }
   }
@@ -218,16 +215,12 @@ export const CommentComposer = ({
 
   textRef.current = text
 
-  const onChangeText = ev => {
+  const onChangeText = (ev) => {
     const nextText = ev.target.value
     setText(nextText)
-    setHints(hintValidators.map(fn => fn(nextText)).filter(Boolean))
+    setHints(hintValidators.map((fn) => fn(nextText)).filter(Boolean))
     if (!isEditing) {
-      try {
-        writeDraft(discussionId, parentId, ev.target.value)
-      } catch (e) {
-        /* Ignore errors */
-      }
+      writeDraft(discussionId, parentId, ev.target.value)
     }
   }
 
@@ -239,7 +232,7 @@ export const CommentComposer = ({
    */
   const [{ loading, error }, setSubmit] = React.useState({
     loading: false,
-    error: undefined
+    error: undefined,
   })
   const submitHandler = () => {
     if (root.current) {
@@ -257,11 +250,7 @@ export const CommentComposer = ({
 
           if (ok) {
             if (!isEditing) {
-              try {
-                deleteDraft(discussionId, parentId)
-              } catch (e) {
-                /* Ignore */
-              }
+              deleteDraft(discussionId, parentId)
             }
             onClose()
 
@@ -273,7 +262,7 @@ export const CommentComposer = ({
               setSubmit({ loading: false, error })
             }
           }
-        }
+        },
       )
     }
   }
@@ -283,10 +272,10 @@ export const CommentComposer = ({
       css({
         color: colorScheme.getCSSColor('textSoft'),
         '::-webkit-input-placeholder': {
-          color: colorScheme.getCSSColor('textSoft')
-        }
+          color: colorScheme.getCSSColor('textSoft'),
+        },
       }),
-    [colorScheme]
+    [colorScheme],
   )
 
   return (
@@ -312,7 +301,11 @@ export const CommentComposer = ({
                 {...styles.withBorderBottom}
                 {...colorScheme.set('borderColor', 'default')}
               >
-                <Tags tags={tags} onChange={setSelectedTagValue} value={tagValue} />
+                <Tags
+                  tags={tags}
+                  onChange={setSelectedTagValue}
+                  value={tagValue}
+                />
               </div>
             )}
             <>
@@ -353,8 +346,7 @@ export const CommentComposer = ({
                   t={t}
                   comment={{
                     ...preview.comment,
-                    tags: tags ? [tagValue] : undefined,
-                    displayAuthor
+                    displayAuthor,
                   }}
                   isExpanded
                   isPreview
@@ -416,7 +408,7 @@ const MaxLengthIndicator = ({ maxLength, length }) => {
       {...styles.maxLengthIndicator}
       {...colorScheme.set(
         'color',
-        remaining < 0 ? 'error' : remaining < 21 ? 'text' : 'textSoft'
+        remaining < 0 ? 'error' : remaining < 21 ? 'text' : 'textSoft',
       )}
     >
       {remaining}

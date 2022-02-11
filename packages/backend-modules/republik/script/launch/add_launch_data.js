@@ -49,11 +49,10 @@ PgDb.connect()
         crowdfundingId: presale.id,
       })
       for (let presalePackage of presalePackages) {
-        const presalePackageOptions = await transaction.public.packageOptions.find(
-          {
+        const presalePackageOptions =
+          await transaction.public.packageOptions.find({
             packageId: presalePackage.id,
-          },
-        )
+          })
         delete presalePackage.id
         const launchPackage = await transaction.public.packages.insertAndGet({
           ...presalePackage,
@@ -78,11 +77,10 @@ PgDb.connect()
       })
 
       // insert monthly membership
-      const monthlyMembershipReward = await transaction.public.rewards.insertAndGet(
-        {
+      const monthlyMembershipReward =
+        await transaction.public.rewards.insertAndGet({
           type: 'MembershipType',
-        },
-      )
+        })
 
       await transaction.public.membershipTypes.insertAndGet({
         rewardId: monthlyMembershipReward.id,
@@ -94,14 +92,13 @@ PgDb.connect()
         companyId: republikCompany.id,
       })
 
-      const monthlyMembershipPackage = await transaction.public.packages.insertAndGet(
-        {
+      const monthlyMembershipPackage =
+        await transaction.public.packages.insertAndGet({
           name: 'MONTHLY_ABO',
           crowdfundingId: launch.id,
           companyId: republikCompany.id,
           paymentMethods: ['STRIPE'],
-        },
-      )
+        })
 
       await transaction.public.packageOptions.insert({
         packageId: monthlyMembershipPackage.id,

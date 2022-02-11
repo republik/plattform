@@ -11,7 +11,7 @@ import {
   CommentBodyHeading,
   CommentBodyList,
   CommentBodyListItem,
-  CommentBodyParagraph
+  CommentBodyParagraph,
 } from '../../components/CommentBody/web'
 import { Editorial } from '../../components/Typography'
 
@@ -30,7 +30,7 @@ const createCommentWebSchema = ({ ...args } = {}) => {
     ListItem: CommentBodyListItem,
     Paragraph: CommentBodyParagraph,
     StrikeThrough: Editorial.StrikeThrough,
-    ...args
+    ...args,
   })
 }
 

@@ -8,7 +8,7 @@ import {
   useColorContext,
   mediaQueries,
   fontStyles,
-  Loader
+  Loader,
 } from '@project-r/styleguide'
 
 import { notificationsMiniQuery } from './enhancers'
@@ -18,14 +18,14 @@ import Link from 'next/link'
 
 const dateFormat = timeFormat('%d.%m')
 
-const groupByDate = nest().key(n => {
+const groupByDate = nest().key((n) => {
   return dateFormat(new Date(n.createdAt))
 })
 
 const NotificationFeedMini = ({
   t,
   data: { notifications, loading, error },
-  closeHandler
+  closeHandler,
 }) => {
   const [colorScheme] = useColorContext()
   return (
@@ -36,9 +36,10 @@ const NotificationFeedMini = ({
       error={error}
       render={() => {
         const { nodes } = notifications
-        const isNew = node => !node.readAt || new Date() < new Date(node.readAt)
+        const isNew = (node) =>
+          !node.readAt || new Date() < new Date(node.readAt)
         if (!nodes) return
-        const newNodes = nodes.filter(node => isNew(node))
+        const newNodes = nodes.filter((node) => isNew(node))
 
         return (
           <>
@@ -93,7 +94,7 @@ const styles = {
     color: 'inherit',
     textDecoration: 'none',
     textOverflow: 'ellipsis',
-    overflow: 'hidden'
+    overflow: 'hidden',
   }),
   notificationItem: css({
     marginTop: 10,
@@ -102,7 +103,7 @@ const styles = {
     ...fontStyles.sansSerifRegular14,
     whiteSpace: 'nowrap',
     overflow: 'hidden',
-    [mediaQueries.mUp]: fontStyles.sansSerifRegular16
+    [mediaQueries.mUp]: fontStyles.sansSerifRegular16,
   }),
   unreadDot: css({
     width: 8,
@@ -111,15 +112,15 @@ const styles = {
     marginRight: 8,
     borderWidth: 1,
     borderStyle: 'solid',
-    background: 'red'
-  })
+    background: 'red',
+  }),
 }
 
 export default compose(
   withT,
   graphql(notificationsMiniQuery, {
     options: {
-      fetchPolicy: 'cache-and-network'
-    }
-  })
+      fetchPolicy: 'cache-and-network',
+    },
+  }),
 )(NotificationFeedMini)

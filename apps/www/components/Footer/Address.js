@@ -13,11 +13,11 @@ const styles = {
       textDecoration: 'none',
       '@media (hover)': {
         ':hover': {
-          textDecoration: 'underline'
-        }
-      }
-    }
-  })
+          textDecoration: 'underline',
+        },
+      },
+    },
+  }),
 }
 
 const Address = ({ t }) => {

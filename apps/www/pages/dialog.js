@@ -7,18 +7,19 @@ import {
   Editorial,
   inQuotes,
   Interaction,
-  mediaQueries
+  mediaQueries,
+  useColorContext,
 } from '@project-r/styleguide'
 import {
   CDN_FRONTEND_BASE_URL,
-  GENERAL_FEEDBACK_DISCUSSION_ID
+  GENERAL_FEEDBACK_DISCUSSION_ID,
 } from '../lib/constants'
 import Frame from '../components/Frame'
 import FontSizeSync from '../components/FontSize/Sync'
 import {
   UnauthorizedMessage,
   WithMembership,
-  WithoutMembership
+  WithoutMembership,
 } from '../components/Auth/withMembership'
 import Link from 'next/link'
 import DiscussionTitle from '../components/Dialog/DiscussionTitle'
@@ -42,16 +43,16 @@ const styles = {
     paddingTop: 15,
     paddingBottom: 120,
     [mediaQueries.mUp]: {
-      paddingTop: 25
-    }
+      paddingTop: 25,
+    },
   }),
   h3: css({
     marginTop: 30,
     [mediaQueries.mUp]: {
-      marginTop: 60
+      marginTop: 60,
     },
-    marginBottom: 20
-  })
+    marginBottom: 20,
+  }),
 }
 
 const H3 = ({ style, children }) => (
@@ -75,6 +76,7 @@ const SUPPORTED_TABS = ['general', 'article']
 const DialogContent = ({ tab, activeDiscussionId, serverContext }) => {
   const { t } = useTranslation()
   const { query } = useRouter()
+  const [colorScheme] = useColorContext()
 
   const discussionContext = useDiscussion()
 
@@ -94,13 +96,13 @@ const DialogContent = ({ tab, activeDiscussionId, serverContext }) => {
     discussionContext?.discussion && !query.focus
       ? {
           title: t('discussion/meta/title', {
-            quotedDiscussionTitle: inQuotes(discussionContext.discussion.title)
+            quotedDiscussionTitle: inQuotes(discussionContext.discussion.title),
           }),
-          url: getFocusUrl(discussionContext.discussion)
+          url: getFocusUrl(discussionContext.discussion),
         }
       : !discussionContext && {
           title: t('pages/feedback/title'),
-          image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`
+          image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
         }
 
   return (
@@ -120,7 +122,7 @@ const DialogContent = ({ tab, activeDiscussionId, serverContext }) => {
                       <Link
                         href={{
                           pathname: '/dialog',
-                          query: { t: 'general' }
+                          query: { t: 'general' },
                         }}
                         passHref
                       >
@@ -165,8 +167,8 @@ const DialogContent = ({ tab, activeDiscussionId, serverContext }) => {
                         <Link href='/angebote' passHref>
                           <A>{t('feedback/unauthorized/buyText')}</A>
                         </Link>
-                      )
-                    })
+                      ),
+                    }),
                   }}
                 />
                 <br />
@@ -195,12 +197,15 @@ const DialogContent = ({ tab, activeDiscussionId, serverContext }) => {
                     <H3
                       style={{
                         position: 'relative',
-                        paddingRight: 40
+                        paddingRight: 40,
                       }}
                     >
                       {t('feedback/activeDiscussions/label')}
                       <span style={{ position: 'absolute', right: 0, top: -1 }}>
-                        <DiscussionIcon size={24} fill='primary' />
+                        <DiscussionIcon
+                          size={24}
+                          {...colorScheme.set('fill', 'primary')}
+                        />
                       </span>
                     </H3>
                     <ActiveDiscussions first={5} />
@@ -228,7 +233,7 @@ const DialogContent = ({ tab, activeDiscussionId, serverContext }) => {
 
 const DialogPage = ({ serverContext }) => {
   const {
-    query: { t: tab, id }
+    query: { t: tab, id },
   } = useRouter()
 
   const activeDiscussionId =

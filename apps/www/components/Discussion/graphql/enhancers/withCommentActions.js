@@ -20,33 +20,43 @@ import * as docs from '../documents'
 export const withCommentActions = compose(
   graphql(docs.UPVOTE_COMMENT_MUTATION, {
     props: ({ mutate }) => ({
-      upvoteComment: comment =>
-        mutate({ variables: { commentId: comment.id } }).catch(toRejectedString)
-    })
+      upvoteComment: (comment) =>
+        mutate({ variables: { commentId: comment.id } }).catch(
+          toRejectedString,
+        ),
+    }),
   }),
   graphql(docs.DOWN_VOTE_COMMENT_ACTION, {
     props: ({ mutate }) => ({
-      downvoteComment: comment =>
-        mutate({ variables: { commentId: comment.id } }).catch(toRejectedString)
-    })
+      downvoteComment: (comment) =>
+        mutate({ variables: { commentId: comment.id } }).catch(
+          toRejectedString,
+        ),
+    }),
   }),
   graphql(docs.UP_VOTE_COMMENT_ACTION, {
     props: ({ mutate }) => ({
-      unvoteComment: comment =>
-        mutate({ variables: { commentId: comment.id } }).catch(toRejectedString)
-    })
+      unvoteComment: (comment) =>
+        mutate({ variables: { commentId: comment.id } }).catch(
+          toRejectedString,
+        ),
+    }),
   }),
   graphql(docs.REPORT_COMMENT_MUTATION, {
     props: ({ mutate }) => ({
-      reportComment: comment =>
-        mutate({ variables: { commentId: comment.id } }).catch(toRejectedString)
-    })
+      reportComment: (comment) =>
+        mutate({ variables: { commentId: comment.id } }).catch(
+          toRejectedString,
+        ),
+    }),
   }),
   graphql(docs.UNPUBLISH_COMMENT_MUTATION, {
     props: ({ mutate }) => ({
-      unpublishComment: comment =>
-        mutate({ variables: { commentId: comment.id } }).catch(toRejectedString)
-    })
+      unpublishComment: (comment) =>
+        mutate({ variables: { commentId: comment.id } }).catch(
+          toRejectedString,
+        ),
+    }),
   }),
   graphql(docs.EDIT_COMMENT_MUTATION, {
     props: ({ mutate }) => ({
@@ -57,11 +67,11 @@ export const withCommentActions = compose(
             __typename: 'Mutation',
             editComment: {
               ...comment,
-              ...optimisticContent(content)
-            }
-          }
+              ...optimisticContent(content),
+            },
+          },
         }).catch(toRejectedString)
-      }
-    })
-  })
+      },
+    }),
+  }),
 )

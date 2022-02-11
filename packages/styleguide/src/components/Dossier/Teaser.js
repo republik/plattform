@@ -11,9 +11,9 @@ const styles = {
     margin: 0,
     padding: '30px 15px',
     [mUp]: {
-      padding: '60px 0'
-    }
-  })
+      padding: '60px 0',
+    },
+  }),
 }
 
 const Teaser = ({ children, attributes, onClick }) => {
@@ -23,7 +23,7 @@ const Teaser = ({ children, attributes, onClick }) => {
       {...styles.container}
       onClick={onClick}
       style={{
-        cursor: onClick ? 'pointer' : 'default'
+        cursor: onClick ? 'pointer' : 'default',
       }}
     >
       {children}
@@ -34,7 +34,7 @@ const Teaser = ({ children, attributes, onClick }) => {
 Teaser.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
 }
 
 Teaser.defaultProps = {}

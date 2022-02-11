@@ -11,7 +11,7 @@ import {
   OverlayToolbar,
   Interaction,
   Field,
-  Loader
+  Loader,
 } from '@project-r/styleguide'
 
 import { TextButton } from '../../Display/utils'
@@ -34,7 +34,7 @@ export default class UpdatePayment extends Component {
     super(props)
     this.state = {
       isOpen: false,
-      reason: ''
+      reason: '',
     }
 
     this.reasonChangeHandler = (_, value) => {
@@ -45,28 +45,28 @@ export default class UpdatePayment extends Component {
       this.setState(() => ({ isOpen: false }))
     }
 
-    this.submitHandler = mutation => () => {
+    this.submitHandler = (mutation) => () => {
       const { payment } = this.props
       let promise
       if (payment.status === 'WAITING_FOR_REFUND') {
         promise = mutation({
           variables: {
             paymentId: payment.id,
-            status: 'REFUNDED'
-          }
+            status: 'REFUNDED',
+          },
         })
       } else if (payment.status === 'WAITING') {
         promise = mutation({
           variables: {
             paymentId: payment.id,
             status: 'PAID',
-            reason: this.state.reason
-          }
+            reason: this.state.reason,
+          },
         })
       }
 
       return promise.then(() =>
-        this.setState(() => ({ reason: '', isOpen: false }))
+        this.setState(() => ({ reason: '', isOpen: false })),
       )
     }
   }
@@ -102,13 +102,13 @@ export default class UpdatePayment extends Component {
                             <Field
                               label='Grund'
                               value={reason}
-                              renderInput={inputProps => (
+                              renderInput={(inputProps) => (
                                 <Textarea
                                   {...inputProps}
                                   {...css({
                                     minHeight: 40,
                                     paddingTop: '7px !important',
-                                    paddingBottom: '6px !important'
+                                    paddingBottom: '6px !important',
                                   })}
                                 />
                               )}

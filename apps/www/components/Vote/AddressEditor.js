@@ -18,15 +18,20 @@ class AddressEditor extends Component {
     this.state = {
       errors: {},
       dirty: {},
-      ...this.deriveStateFromProps(props)
+      ...this.deriveStateFromProps(props),
     }
   }
 
   deriveStateFromProps({ addressData }) {
     const { name: meName, address } = addressData.voteMe || {}
     const name = (address && address.name) || meName
-    const { line1, line2, city, postalCode, country = DEFAULT_COUNTRY } =
-      address || {}
+    const {
+      line1,
+      line2,
+      city,
+      postalCode,
+      country = DEFAULT_COUNTRY,
+    } = address || {}
     return {
       values: {
         name,
@@ -34,8 +39,8 @@ class AddressEditor extends Component {
         line2,
         city,
         postalCode,
-        country
-      }
+        country,
+      },
     }
   }
 
@@ -51,7 +56,7 @@ class AddressEditor extends Component {
   render() {
     const { addressData, t, vt } = this.props
     const { values, errors, error, dirty, updating, showErrors } = this.state
-    const isValid = !Object.keys(errors).some(k => Boolean(errors[k]))
+    const isValid = !Object.keys(errors).some((k) => Boolean(errors[k]))
 
     const save = () => {
       if (!isValid) {
@@ -66,13 +71,13 @@ class AddressEditor extends Component {
         .then(() =>
           this.setState(() => ({
             updating: false,
-            error: null
-          }))
+            error: null,
+          })),
         )
-        .catch(error => {
+        .catch((error) => {
           this.setState(() => ({
             updating: false,
-            error
+            error,
           }))
         })
     }
@@ -88,7 +93,7 @@ class AddressEditor extends Component {
               values={values}
               errors={errors}
               dirty={dirty}
-              onChange={fields => {
+              onChange={(fields) => {
                 this.setState(FieldSet.utils.mergeFields(fields))
               }}
             />
@@ -98,7 +103,7 @@ class AddressEditor extends Component {
                 {vt('info/candidacy/missingFields')}
                 <ul style={{ marginTop: 10 }}>
                   {Object.keys(errors).map(
-                    k => !!errors[k] && <li key={k}>{errors[k]}</li>
+                    (k) => !!errors[k] && <li key={k}>{errors[k]}</li>,
                   )}
                 </ul>
               </ErrorContainer>
@@ -157,14 +162,14 @@ export default compose(
   voteT,
   graphql(updateAddressMutation, {
     props: ({ mutate }) => ({
-      updateAddress: address => {
+      updateAddress: (address) => {
         return mutate({
           variables: {
-            address
-          }
+            address,
+          },
         })
-      }
-    })
+      },
+    }),
   }),
-  withAddressData
+  withAddressData,
 )(AddressEditor)

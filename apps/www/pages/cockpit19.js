@@ -12,13 +12,13 @@ import {
   VideoPlayer,
   FigureImage,
   FigureCaption,
-  fontStyles
+  fontStyles,
 } from '@project-r/styleguide'
 import {
   ChartTitle,
   ChartLead,
   ChartLegend,
-  Chart
+  Chart,
 } from '@project-r/styleguide'
 
 import md from 'markdown-in-js'
@@ -30,14 +30,14 @@ import { countFormat } from '../lib/utils/format'
 import { PackageItem, PackageBuffer } from '../components/Pledge/Accordion'
 
 import withSurviveStatus, {
-  withSurviveActions
+  withSurviveActions,
 } from '../components/Crowdfunding/withSurviveStatus'
 import { RawStatus } from '../components/Crowdfunding/Status'
 import withT from '../lib/withT'
 
 import {
   ListWithQuery as TestimonialList,
-  generateSeed
+  generateSeed,
 } from '../components/Testimonial/List'
 
 import { CROWDFUNDING, CDN_FRONTEND_BASE_URL } from '../lib/constants'
@@ -55,30 +55,24 @@ const YEAR_MONTH_FORMAT = '%Y-%m'
 
 const videos = [
   {
-    hls:
-      'https://player.vimeo.com/external/388987697.m3u8?s=8c23d87742613a058d6934b0631f6e33075a4b65',
-    mp4:
-      'https://player.vimeo.com/external/388987697.hd.mp4?s=696f80ae1ac1a950dbf3652ef7a28e8f7ffdca5c&profile_id=175',
+    hls: 'https://player.vimeo.com/external/388987697.m3u8?s=8c23d87742613a058d6934b0631f6e33075a4b65',
+    mp4: 'https://player.vimeo.com/external/388987697.hd.mp4?s=696f80ae1ac1a950dbf3652ef7a28e8f7ffdca5c&profile_id=175',
     thumbnail: `${CDN_FRONTEND_BASE_URL}/static/video/cockpit/status_feb.jpg`,
     caption: 'Statusmeldung Anfang Februar',
     title: 'Februar Status',
-    duration: '2 Minuten'
+    duration: '2 Minuten',
   },
   {
-    hls:
-      'https://player.vimeo.com/external/383482958.m3u8?s=5068dc339a5bc2b819ca2f3fc0b97660656c746b',
-    mp4:
-      'https://player.vimeo.com/external/383482958.hd.mp4?s=9c0f53b63b0a1851bc401fd60fb7d2e8f31c0319&profile_id=175',
+    hls: 'https://player.vimeo.com/external/383482958.m3u8?s=5068dc339a5bc2b819ca2f3fc0b97660656c746b',
+    mp4: 'https://player.vimeo.com/external/383482958.hd.mp4?s=9c0f53b63b0a1851bc401fd60fb7d2e8f31c0319&profile_id=175',
     thumbnail: `${CDN_FRONTEND_BASE_URL}/static/video/cockpit/status.jpg`,
     caption: 'Statusmeldung Anfang Januar aus dem Rothaus',
     title: 'Januar Status',
-    duration: '2 Minuten'
+    duration: '2 Minuten',
   },
   {
-    hls:
-      'https://player.vimeo.com/external/384007770.m3u8?s=c482cb6edf4b5a6fa2ba3bb5a68564f932889db2',
-    mp4:
-      'https://player.vimeo.com/external/384007770.hd.mp4?s=98e5b8f524fd43ca773d8db99a73673713b122e4&profile_id=174',
+    hls: 'https://player.vimeo.com/external/384007770.m3u8?s=c482cb6edf4b5a6fa2ba3bb5a68564f932889db2',
+    mp4: 'https://player.vimeo.com/external/384007770.hd.mp4?s=98e5b8f524fd43ca773d8db99a73673713b122e4&profile_id=174',
     thumbnail: `${CDN_FRONTEND_BASE_URL}/static/video/cockpit/talk.jpg`,
     caption: (
       <>
@@ -90,8 +84,8 @@ const videos = [
       </>
     ),
     title: 'Gesprächsrunde',
-    duration: '53 Minuten'
-  }
+    duration: '53 Minuten',
+  },
 ]
 
 const Accordion = withInNativeApp(
@@ -103,7 +97,7 @@ const Accordion = withInNativeApp(
       shouldBuyProlong,
       isReactivating,
       defaultBenefactor,
-      inNativeIOSApp
+      inNativeIOSApp,
     }) => {
       const [hover, setHover] = useState()
 
@@ -121,7 +115,7 @@ const Accordion = withInNativeApp(
               <Link
                 href={{
                   pathname: '/angebote',
-                  query: { package: 'PROLONG', token: query.token }
+                  query: { package: 'PROLONG', token: query.token },
                 }}
                 passHref
               >
@@ -141,8 +135,8 @@ const Accordion = withInNativeApp(
                   query: {
                     package: 'PROLONG',
                     token: query.token,
-                    price: 48000
-                  }
+                    price: 48000,
+                  },
                 }}
                 passHref
               >
@@ -166,8 +160,8 @@ const Accordion = withInNativeApp(
                   query: {
                     package: 'PROLONG',
                     membershipType: 'BENEFACTOR_ABO',
-                    token: query.token
-                  }
+                    token: query.token,
+                  },
                 }}
                 passHref
               >
@@ -188,7 +182,7 @@ const Accordion = withInNativeApp(
                 <Link
                   href={{
                     pathname: '/angebote',
-                    query: { package: 'ABO_GIVE' }
+                    query: { package: 'ABO_GIVE' },
                   }}
                   passHref
                 >
@@ -206,7 +200,7 @@ const Accordion = withInNativeApp(
                   <Link
                     href={{
                       pathname: '/angebote',
-                      query: { package: 'MONTHLY_ABO' }
+                      query: { package: 'MONTHLY_ABO' },
                     }}
                     passHref
                   >
@@ -222,7 +216,7 @@ const Accordion = withInNativeApp(
                   <Link
                     href={{
                       pathname: '/angebote',
-                      query: { package: 'ABO' }
+                      query: { package: 'ABO' },
                     }}
                     passHref
                   >
@@ -238,7 +232,7 @@ const Accordion = withInNativeApp(
                   <Link
                     href={{
                       pathname: '/angebote',
-                      query: { package: 'BENEFACTOR' }
+                      query: { package: 'BENEFACTOR' },
                     }}
                     passHref
                   >
@@ -258,7 +252,7 @@ const Accordion = withInNativeApp(
           <Link
             href={{
               pathname: '/angebote',
-              query: { package: 'DONATE' }
+              query: { package: 'DONATE' },
             }}
             passHref
           >
@@ -279,8 +273,8 @@ const Accordion = withInNativeApp(
           )}
         </div>
       )
-    }
-  )
+    },
+  ),
 )
 
 const PrimaryCTA = withInNativeApp(
@@ -292,7 +286,7 @@ const PrimaryCTA = withInNativeApp(
     block,
     query,
     children,
-    inNativeIOSApp
+    inNativeIOSApp,
   }) => {
     if (inNativeIOSApp) {
       return null
@@ -303,19 +297,19 @@ const PrimaryCTA = withInNativeApp(
     if (shouldBuyProlong) {
       href = {
         pathname: '/angebote',
-        query: { package: 'PROLONG', token: query.token }
+        query: { package: 'PROLONG', token: query.token },
       }
       text = isReactivating ? 'Zurückkehren' : 'Treu bleiben'
     } else if (!(me && me.activeMembership)) {
       href = {
         pathname: '/angebote',
-        query: { package: 'ABO' }
+        query: { package: 'ABO' },
       }
       text = 'Mitglied werden'
     } else if (questionnaire && questionnaire.shouldAnswer) {
       href = {
         pathname: 'umfrage/1-minute',
-        query: { slug: '1-minute' }
+        query: { slug: '1-minute' },
       }
       text = 'Ich möchte der Republik helfen.'
     } else {
@@ -335,7 +329,7 @@ const PrimaryCTA = withInNativeApp(
         </Button>
       </Link>
     )
-  }
+  },
 )
 
 const Page = ({
@@ -350,14 +344,14 @@ const Page = ({
   defaultBenefactor,
   communitySeed,
   crowdfunding,
-  router: { query }
+  router: { query },
 }) => {
   const meta = {
     pageTitle: '🚀 Republik Cockpit',
     title: 'Wir kämpfen für die Zukunft der Republik. Kämpfen Sie mit?',
     description:
       'Alles, was Sie zur Lage des Unternehmens wissen müssen – und wie Sie uns jetzt helfen können.',
-    image: `${CDN_FRONTEND_BASE_URL}/static/social-media/cockpit.jpg`
+    image: `${CDN_FRONTEND_BASE_URL}/static/social-media/cockpit.jpg`,
   }
 
   useEffect(() => {
@@ -366,8 +360,8 @@ const Page = ({
         `/cockpit?token=${encodeURIComponent(query.token)}`,
         '/cockpit',
         {
-          shallow: true
-        }
+          shallow: true,
+        },
       )
     }
   }, [query.token])
@@ -409,8 +403,8 @@ ${t('cockpit19/beforeNote')} ${(
                   crowdfundingName={crowdfunding.name}
                   labelReplacements={{
                     openPeople: countFormat(
-                      lastMonth.pending - lastMonth.pendingSubscriptionsOnly
-                    )
+                      lastMonth.pending - lastMonth.pendingSubscriptionsOnly,
+                    ),
                   }}
                   crowdfunding={crowdfunding}
                 />
@@ -473,7 +467,7 @@ Wir sind überzeugt, dass unsere Existenz einen Unterschied machen kann. Deshalb
                   style={{
                     color: '#ef4533',
                     marginBottom: 15,
-                    marginTop: 15
+                    marginTop: 15,
                   }}
                 >
                   {t('cockpit/ios')}
@@ -504,11 +498,11 @@ Konkret brauchen wir bis Ende März wieder 19’000 Mitglieder und Abonnenten un
                 </div>
 
                 <div style={{ marginTop: 20, marginBottom: 20 }}>
-                  {videos.map(v => (
+                  {videos.map((v) => (
                     <a
                       href={v !== activeVideo ? '#' : undefined}
                       key={v.hls}
-                      onClick={e => {
+                      onClick={(e) => {
                         e.preventDefault()
                         setActiveVideo(v)
                         setAutoPlay(true)
@@ -523,7 +517,7 @@ Konkret brauchen wir bis Ende März wieder 19’000 Mitglieder und Abonnenten un
                         backgroundColor:
                           v === activeVideo
                             ? colors.primary
-                            : colors.negative.primaryBg
+                            : colors.negative.primaryBg,
                       }}
                     >
                       <img src={v.thumbnail} width='100%' />
@@ -532,7 +526,7 @@ Konkret brauchen wir bis Ende März wieder 19’000 Mitglieder und Abonnenten un
                           display: 'inline-block',
                           minHeight: 38,
                           padding: '2px 5px 5px',
-                          ...fontStyles.sansSerifRegular12
+                          ...fontStyles.sansSerifRegular12,
                         }}
                       >
                         {v.title}
@@ -575,23 +569,25 @@ _09.12.2019, Fragen und Antworten:_
 _09.12.2019, Project-R-Newsletter_  
 [Der wichtigste Newsletter seit dem Start der Republik](https://project-r.construction/newsletter/2019-12-09-der-wichtigste-newsletter)
 
-${(shouldBuyProlong || !me || !me.activeMembership) && (
-  <PrimaryCTA
-    me={me}
-    query={query}
-    questionnaire={questionnaire}
-    shouldBuyProlong={shouldBuyProlong}
-    isReactivating={isReactivating}
-  >
-    <Button primary>
-      {shouldBuyProlong
-        ? isReactivating
-          ? 'Jetzt zurückkehren'
-          : 'Jetzt verlängern'
-        : 'Mitglied werden'}
-    </Button>
-  </PrimaryCTA>
-)}
+${
+  (shouldBuyProlong || !me || !me.activeMembership) && (
+    <PrimaryCTA
+      me={me}
+      query={query}
+      questionnaire={questionnaire}
+      shouldBuyProlong={shouldBuyProlong}
+      isReactivating={isReactivating}
+    >
+      <Button primary>
+        {shouldBuyProlong
+          ? isReactivating
+            ? 'Jetzt zurückkehren'
+            : 'Jetzt verlängern'
+          : 'Mitglied werden'}
+      </Button>
+    </PrimaryCTA>
+  )
+}
 
 ## Ohne Sie können wir nicht wachsen
 
@@ -623,7 +619,7 @@ ${
                 <FigureImage
                   {...FigureImage.utils.getResizedSrcs(
                     `${CDN_FRONTEND_BASE_URL}/static/video/cockpit/swag.jpg`,
-                    405
+                    405,
                   )}
                   alt='Flyer, Visitenkarten, Kleber und Poster'
                 />
@@ -672,15 +668,15 @@ Für die Bekanntmachung der Republik können Sie bei uns Flyer, Probeabo-Kärtch
                       max(
                         evolution.buckets
                           .map(
-                            month =>
+                            (month) =>
                               month.activeEndOfMonth +
                               month.pendingSubscriptionsOnly -
                               month.gaining +
                               month.pending -
-                              month.pendingSubscriptionsOnly
+                              month.pendingSubscriptionsOnly,
                           )
-                          .concat([20000, count * 1.05])
-                      )
+                          .concat([20000, count * 1.05]),
+                      ),
                     ],
                     yTicks: [0, 10000, 20000],
                     padding: 55,
@@ -692,16 +688,16 @@ Für die Bekanntmachung der Republik können Sie bei uns Flyer, Probeabo-Kärtch
                         value:
                           lastMonth.activeEndOfMonth +
                           lastMonth.pendingSubscriptionsOnly,
-                        position: reachedMemberGoal ? 'top' : 'bottom'
+                        position: reachedMemberGoal ? 'top' : 'bottom',
                       },
                       {
                         x1: '2020-03',
                         x2: '2020-03',
                         label: 'Ziel per 31. März',
                         value: 19000,
-                        position: reachedMemberGoal ? 'bottom' : 'top'
-                      }
-                    ].filter(Boolean)
+                        position: reachedMemberGoal ? 'bottom' : 'top',
+                      },
+                    ].filter(Boolean),
                   }}
                   values={
                     evolution.buckets.reduce(
@@ -715,21 +711,21 @@ Für die Bekanntmachung der Republik können Sie bei uns Flyer, Probeabo-Kärtch
                             value: String(
                               month.activeEndOfMonth -
                                 agg.gaining +
-                                month.pendingSubscriptionsOnly
-                            )
+                                month.pendingSubscriptionsOnly,
+                            ),
                           },
                           {
                             date: month.key,
                             action: 'neue',
-                            value: String(agg.gaining)
+                            value: String(agg.gaining),
                           },
                           {
                             date: month.key,
                             action: 'offene',
                             value: String(
-                              month.pending - month.pendingSubscriptionsOnly
-                            )
-                          }
+                              month.pending - month.pendingSubscriptionsOnly,
+                            ),
+                          },
                           // {
                           //   date: month.key,
                           //   action: 'Abgänge',
@@ -740,7 +736,7 @@ Für die Bekanntmachung der Republik können Sie bei uns Flyer, Probeabo-Kärtch
                         ])
                         return agg
                       },
-                      { gaining: 0, exit: 0, values: [] }
+                      { gaining: 0, exit: 0, values: [] },
                     ).values
                   }
                 />
@@ -813,7 +809,7 @@ Wir freuen uns, wenn Sie Seite an Seite mit uns für die Zukunft der Republik k�
 
 
 ## ${countFormat(
-                lastMonth.activeEndOfMonth + lastMonth.pendingSubscriptionsOnly
+                lastMonth.activeEndOfMonth + lastMonth.pendingSubscriptionsOnly,
               )} sind dabei.`}
 
               <TestimonialList
@@ -871,15 +867,15 @@ const EnhancedPage = compose(
   withRouter,
   withInNativeApp,
   withSurviveActions,
-  withSurviveStatus
+  withSurviveStatus,
 )(Page)
 
 EnhancedPage.getInitialProps = () => {
   return {
     communitySeed: {
       start: generateSeed(),
-      end: generateSeed()
-    }
+      end: generateSeed(),
+    },
   }
 }
 

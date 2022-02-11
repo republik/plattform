@@ -20,7 +20,7 @@ const AutoDiscussionTitle = () => {
           <Link key='link' href={documentMeta.path} passHref>
             <A href={documentMeta.path}>{inQuotes(documentMeta.title || '')}</A>
           </Link>
-        )
+        ),
       })}
     </>
   )

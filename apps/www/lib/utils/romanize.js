@@ -1,4 +1,4 @@
-export const romanize = num => {
+export const romanize = (num) => {
   if (!+num) return NaN
   let digits = String(+num).split('')
   const key = [
@@ -31,7 +31,7 @@ export const romanize = num => {
     'VI',
     'VII',
     'VIII',
-    'IX'
+    'IX',
   ]
   let roman = ''
   let i = 3

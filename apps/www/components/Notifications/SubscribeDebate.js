@@ -14,16 +14,16 @@ const styles = {
       display: 'flex',
       textAlign: 'left',
       alignItems: 'center',
-      margin: '5px 0'
+      margin: '5px 0',
     },
     '& svg': {
       width: 16,
-      height: 16
-    }
-  })
+      height: 16,
+    },
+  }),
 }
 
-export const getSelectedDiscussionPreference = data =>
+export const getSelectedDiscussionPreference = (data) =>
   (data &&
     data.discussion &&
     data.discussion.userPreference &&
@@ -34,7 +34,7 @@ const SubscribeDebate = ({
   t,
   discussionPreferences,
   setDiscussionPreferences,
-  setAnimate
+  setAnimate,
 }) => {
   const [isMutating, setIsMutating] = useState()
   const [serverError, setServerError] = useState()
@@ -47,14 +47,14 @@ const SubscribeDebate = ({
     return null
   }
 
-  const notificationOptions = DISCUSSION_NOTIFICATION_OPTIONS.map(option => ({
+  const notificationOptions = DISCUSSION_NOTIFICATION_OPTIONS.map((option) => ({
     value: option,
-    text: t(`SubscribeDebate/option/${option}/label`)
+    text: t(`SubscribeDebate/option/${option}/label`),
   }))
 
   const selectedValue = getSelectedDiscussionPreference(discussionPreferences)
 
-  const updatePreferences = option => e => {
+  const updatePreferences = (option) => (e) => {
     e.stopPropagation(e)
     setIsMutating(true)
     setDiscussionPreferences(undefined, undefined, option.value).then(
@@ -63,10 +63,10 @@ const SubscribeDebate = ({
         setServerError()
         setAnimate && setAnimate(true)
       },
-      reason => {
+      (reason) => {
         setIsMutating(false)
         setServerError(reason)
-      }
+      },
     )
   }
 
@@ -74,11 +74,11 @@ const SubscribeDebate = ({
     <>
       <SubscribeCalloutTitle>
         {t('SubscribeDebate/title', {
-          debate: inQuotes(discussionPreferences.discussion.title)
+          debate: inQuotes(discussionPreferences.discussion.title),
         })}
       </SubscribeCalloutTitle>
       <div {...styles.radio}>
-        {notificationOptions.map(option => (
+        {notificationOptions.map((option) => (
           <div key={option.value}>
             <Radio
               disabled={isMutating}

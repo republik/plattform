@@ -8,7 +8,7 @@ import {
   A,
   Interaction,
   mediaQueries,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { descending } from 'd3-array'
@@ -19,65 +19,63 @@ import Link from 'next/link'
 
 const styles = {
   checkboxes: css({
-    margin: '20px 0'
+    margin: '20px 0',
   }),
   authorContainer: css({
     display: 'flex',
     flexDirection: 'column',
     paddingTop: 8,
     ':first-of-type': {
-      paddingTop: 0
+      paddingTop: 0,
     },
     paddingBottom: 5,
     [mediaQueries.mUp]: {
       flexDirection: 'row',
-      justifyContent: 'space-between'
-    }
+      justifyContent: 'space-between',
+    },
   }),
   author: css({
     display: 'flex',
     flexDirection: 'row',
     marginBottom: 10,
     [mediaQueries.mUp]: {
-      marginBottom: 0
-    }
+      marginBottom: 0,
+    },
   }),
   checkbox: css({
     display: 'flex',
     flexDirection: 'row',
     ' div': {
-      marginRight: 16
-    }
-  })
+      marginRight: 16,
+    },
+  }),
 }
 
 const SubscribedAuthors = ({
   t,
-  data: { authors, myUserSubscriptions, loading, error }
+  data: { authors, myUserSubscriptions, loading, error },
 }) => {
   const [colorScheme] = useColorContext()
   const [showAll, setShowAll] = useState(false)
-  const [
-    initiallySubscribedAuthorIds,
-    setInitiallySubscribedAuthorIds
-  ] = useState([])
+  const [initiallySubscribedAuthorIds, setInitiallySubscribedAuthorIds] =
+    useState([])
 
   const authorContainerRule = useMemo(
     () =>
       css({
         [mediaQueries.mUp]: {
           '&:nth-child(even)': {
-            backgroundColor: colorScheme.getCSSColor('hover')
-          }
-        }
+            backgroundColor: colorScheme.getCSSColor('hover'),
+          },
+        },
       }),
-    [colorScheme]
+    [colorScheme],
   )
 
   const initializeSubscribedAuthorIds = (
     authors,
     myUserSubscriptions,
-    setInitialySubscribedAuthorIds
+    setInitialySubscribedAuthorIds,
   ) => {
     if (!authors || !myUserSubscriptions) {
       return
@@ -85,13 +83,13 @@ const SubscribedAuthors = ({
 
     const subscribedOtherAuthors = myUserSubscriptions.subscribedTo.nodes
     const subscribedPromotedAuthors = authors.map(
-      author => author.user.subscribedByMe
+      (author) => author.user.subscribedByMe,
     )
 
     const allSusbcribedAuthors = subscribedPromotedAuthors
       .concat(subscribedOtherAuthors)
-      .filter(author => author.active)
-      .map(author => author.object.id)
+      .filter((author) => author.active)
+      .map((author) => author.object.id)
 
     setInitialySubscribedAuthorIds(allSusbcribedAuthors)
   }
@@ -102,40 +100,40 @@ const SubscribedAuthors = ({
       error={error}
       render={() => {
         const subscribedPromotedAuthors = authors.map(
-          author => author.user.subscribedByMe
+          (author) => author.user.subscribedByMe,
         )
         const subscribedOtherAuthors = myUserSubscriptions.subscribedTo.nodes
         const allSusbcribedAuthors = subscribedPromotedAuthors.concat(
-          subscribedOtherAuthors
+          subscribedOtherAuthors,
         )
         const filteredAuthors = allSusbcribedAuthors
           .filter(
             (author, index, all) =>
-              all.findIndex(e => e.id === author.id) === index
+              all.findIndex((e) => e.id === author.id) === index,
           )
           .sort((a, b) =>
             descending(
               +initiallySubscribedAuthorIds.includes(a.object.id),
-              +initiallySubscribedAuthorIds.includes(b.object.id)
-            )
+              +initiallySubscribedAuthorIds.includes(b.object.id),
+            ),
           )
 
         const visibleAuthors =
-          filteredAuthors && filteredAuthors.filter(author => author.active)
+          filteredAuthors && filteredAuthors.filter((author) => author.active)
 
         const totalSubs =
           filteredAuthors &&
-          filteredAuthors.filter(author => author.active).length
+          filteredAuthors.filter((author) => author.active).length
 
         return (
           <>
             <Interaction.P style={{ marginBottom: 10 }}>
               {t.pluralize('Notifications/settings/authors/summary', {
-                count: totalSubs
+                count: totalSubs,
               })}
             </Interaction.P>
             <div style={{ margin: '20px 0' }}>
-              {(showAll ? filteredAuthors : visibleAuthors).map(author => (
+              {(showAll ? filteredAuthors : visibleAuthors).map((author) => (
                 <div
                   {...styles.authorContainer}
                   {...authorContainerRule}
@@ -151,7 +149,7 @@ const SubscribedAuthors = ({
                     (author.active && author.filters.includes('Document'))
                       ? ['Document', 'Comment']
                       : ['Comment']
-                    ).map(filter => (
+                    ).map((filter) => (
                       <SubscribeCheckbox
                         key={`${author.object.id}-${filter}`}
                         subscription={author}
@@ -171,7 +169,7 @@ const SubscribedAuthors = ({
                   initializeSubscribedAuthorIds(
                     authors,
                     myUserSubscriptions,
-                    setInitiallySubscribedAuthorIds
+                    setInitiallySubscribedAuthorIds,
                   )
                   setShowAll(!showAll)
                 }}
@@ -180,7 +178,7 @@ const SubscribedAuthors = ({
                   {t(
                     `Notifications/settings/formats/${
                       showAll ? 'hide' : 'show'
-                    }`
+                    }`,
                   )}
                 </A>
               </button>

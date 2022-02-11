@@ -3,7 +3,7 @@ import React, {
   ReactNode,
   useContext,
   useEffect,
-  useState
+  useState,
 } from 'react'
 
 export const matchIOSUserAgent = (value?: string): boolean =>
@@ -43,7 +43,7 @@ const UserAgentProvider = ({ children, providedValue }: Props) => {
       value={{
         userAgent,
         isIOS: matchIOSUserAgent(userAgent),
-        isAndroid: matchAndroidUserAgent(userAgent)
+        isAndroid: matchAndroidUserAgent(userAgent),
       }}
     >
       {children}

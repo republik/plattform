@@ -7,18 +7,18 @@ import { colors } from '@project-r/styleguide'
 
 const companies = [
   { label: 'Project R', name: 'PROJECT_R' },
-  { label: 'Republik AG', name: 'REPUBLIK' }
+  { label: 'Republik AG', name: 'REPUBLIK' },
 ]
 
 const link = css({
   textDecoration: 'none',
   color: colors.primary,
   ':visited': {
-    color: colors.primary
+    color: colors.primary,
   },
   ':hover': {
-    color: colors.secondary
-  }
+    color: colors.secondary,
+  },
 })
 
 const query = gql`
@@ -34,20 +34,20 @@ class CSVDownloader extends Component {
       csv: null,
       loading: false,
       error: null,
-      companyName: companies[0].name
+      companyName: companies[0].name,
     }
   }
 
   setCompany = (event) => {
     const companyName = event.target.value
     this.setState(() => ({
-      companyName: companyName
+      companyName: companyName,
     }))
   }
 
   query = () => {
     this.setState(() => ({
-      loading: true
+      loading: true,
     }))
 
     const { companyName } = this.state
@@ -55,17 +55,17 @@ class CSVDownloader extends Component {
       .query({
         query,
         variables: { companyName },
-        fetchPolicy: 'network-only'
+        fetchPolicy: 'network-only',
       })
       .then(({ data }) => {
         this.setState(() => ({
           loading: false,
-          csv: data.paymentsCSV
+          csv: data.paymentsCSV,
         }))
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState(() => ({
-          error
+          error,
         }))
       })
   }
@@ -73,7 +73,7 @@ class CSVDownloader extends Component {
   reset = () => {
     setTimeout(() => {
       this.setState(() => ({
-        csv: null
+        csv: null,
       }))
     }, 1000)
   }
@@ -89,7 +89,7 @@ class CSVDownloader extends Component {
         return (
           <div>
             <select
-              name="companyName"
+              name='companyName'
               value={this.state.companyName}
               onChange={this.setCompany}
             >
@@ -98,8 +98,7 @@ class CSVDownloader extends Component {
                   {label}
                 </option>
               ))}
-            </select>
-            {' '}
+            </select>{' '}
             <button
               style={{ cursor: 'pointer' }}
               className={`${link}`}
@@ -112,14 +111,14 @@ class CSVDownloader extends Component {
       }
     } else {
       const blob = new Blob([this.state.csv], {
-        type: 'text/csv'
+        type: 'text/csv',
       })
       const url = URL.createObjectURL(blob)
 
       return (
         <a
           className={`${link}`}
-          download="export.csv"
+          download='export.csv'
           href={url}
           onClick={this.reset}
         >

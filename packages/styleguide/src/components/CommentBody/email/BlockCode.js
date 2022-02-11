@@ -11,7 +11,7 @@ export default ({ children }) => (
         fontFamily: fontFamilies.monospaceRegular,
         fontSize: '14px',
         margin: 0,
-        padding: '20px 15px 20px 15px'
+        padding: '20px 15px 20px 15px',
       }}
     >
       {children}

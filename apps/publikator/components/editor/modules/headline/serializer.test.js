@@ -2,15 +2,15 @@ import test from 'tape'
 import createHeadlineModule from './'
 import { parse, stringify } from '@orbiting/remark-preset'
 
-test('h1 serialization', assert => {
+test('h1 serialization', (assert) => {
   const module = createHeadlineModule({
     TYPE: 'H1',
     rule: {
       editorOptions: {
-        depth: 1
-      }
+        depth: 1,
+      },
     },
-    subModules: []
+    subModules: [],
   })
 
   const serializer = module.helpers.serializer
@@ -26,15 +26,15 @@ test('h1 serialization', assert => {
   assert.end()
 })
 
-test('h2 serialization', assert => {
+test('h2 serialization', (assert) => {
   const module = createHeadlineModule({
     TYPE: 'H2',
     rule: {
       editorOptions: {
-        depth: 2
-      }
+        depth: 2,
+      },
     },
-    subModules: []
+    subModules: [],
   })
 
   const serializer = module.helpers.serializer
@@ -50,15 +50,15 @@ test('h2 serialization', assert => {
   assert.end()
 })
 
-test('h3 serialization', assert => {
+test('h3 serialization', (assert) => {
   const module = createHeadlineModule({
     TYPE: 'H3',
     rule: {
       editorOptions: {
-        depth: 3
-      }
+        depth: 3,
+      },
     },
-    subModules: []
+    subModules: [],
   })
 
   const serializer = module.helpers.serializer
