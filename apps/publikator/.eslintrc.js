@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['eslint-config-frontend'],
+  extends: ['@republik/eslint-config-frontend'],
   rules: {
     'no-control-regex': 'off',
   },

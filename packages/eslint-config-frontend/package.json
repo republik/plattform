@@ -1,5 +1,5 @@
 {
-  "name": "eslint-config-frontend",
+  "name": "@republik/eslint-config-frontend",
   "version": "0.0.0",
   "main": "index.js",
   "publishConfig": {
