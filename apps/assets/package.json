@@ -56,7 +56,7 @@
     "start": "node index.js"
   },
   "devDependencies": {
-    "eslint-config-backend": "*",
+    "@republik/eslint-config-backend": "*",
     "nodemon": "^2.0.4"
   }
 }

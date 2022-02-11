@@ -1,3 +1,3 @@
 module.exports = {
-  extends: ['eslint-config-backend'],
+  extends: ['@republik/eslint-config-backend'],
 }

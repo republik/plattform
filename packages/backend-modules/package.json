@@ -3,6 +3,6 @@
   "version": "0.0.0",
   "main": "index.js",
   "devDependencies": {
-    "eslint-config-backend": "*"
+    "@republik/eslint-config-backend": "*"
   }
 }
