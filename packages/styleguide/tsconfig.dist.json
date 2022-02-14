@@ -3,7 +3,11 @@
   "compilerOptions": {
     "outDir": "./dist",
     "module": "commonjs",
-    "noEmit": false
+    "noEmit": false,
+    "sourceMap": true,
+    "declaration": true,
+    "declarationDir": "./dist/types",
+    "declarationMap": true
   },
   "include": [
     "src"
