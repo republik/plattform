@@ -48,6 +48,11 @@ export const getRepoWithPublications = gql`
           id
           meta {
             path
+            format {
+              meta {
+                externalBaseUrl
+              }
+            }
           }
         }
       }
@@ -88,7 +93,10 @@ class CurrentPublications extends Component {
                     {publication.live && publication.document?.meta?.path && (
                       <div style={{ float: 'right' }}>
                         <a
-                          href={`${FRONTEND_BASE_URL}${publication.document.meta.path}`}
+                          href={`${
+                            publication.document.meta.format?.meta
+                              .externalBaseUrl || FRONTEND_BASE_URL
+                          }${publication.document.meta.path}`}
                         >
                           {publication.prepublication && (
                             <LockIcon color={colors.primary} />
