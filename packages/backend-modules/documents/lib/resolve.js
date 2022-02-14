@@ -90,6 +90,7 @@ const createUrlReplacer =
     errors = [],
     urlPrefix = '',
     searchString = '',
+    externalBaseUrl,
   ) =>
   (url, stripDocLinks) => {
     const userInfo = extractUserPath(url)
@@ -118,9 +119,14 @@ const createUrlReplacer =
     const linkedDoc = allDocuments.find((d) => d.meta.repoId === repoId)
 
     if (linkedDoc) {
+      const linkedFormat = createResolver(allDocuments)(linkedDoc.meta?.format)
+      const formatExternalBaseUrl = linkedFormat?.meta?.externalBaseUrl
+
+      const baseUrl = formatExternalBaseUrl || urlPrefix || ''
+
       // Stitch and parse simple URL version including arguments {urlPrefix}, {searchString}
       const resolvedUrl = new URL(
-        `${urlPrefix}${linkedDoc.content.meta.path}${searchString}`,
+        `${baseUrl}${linkedDoc.content.meta.path}${searchString}`,
         FRONTEND_BASE_URL,
       )
 
@@ -139,10 +145,11 @@ const createUrlReplacer =
         return resolvedUrl.toString()
       }
 
-      // If {urlPrefix} is not set, replace {FRONTEND_BASE_URL} to return relative URLs.
+      // If {urlPrefix} is not set, replace either {externalBaseUrl} or
+      // {FRONTEND_BASE_URL} to return relative URLs.
       return resolvedUrl
         .toString()
-        .replace(new RegExp(`^${FRONTEND_BASE_URL}`), '')
+        .replace(new RegExp(`^${externalBaseUrl || FRONTEND_BASE_URL}`), '')
     } else {
       errors.push(repoId)
     }
@@ -176,14 +183,17 @@ const contentUrlResolver = (
   searchString,
   user,
 ) => {
+  const docResolver = createResolver(allDocuments, errors)
+  const externalBaseUrl = docResolver(doc.meta?.format)?.meta?.externalBaseUrl
+
   const urlReplacer = createUrlReplacer(
     allDocuments,
     usernames,
     errors,
     urlPrefix,
     searchString,
+    externalBaseUrl,
   )
-  const docResolver = createResolver(allDocuments, errors)
 
   const stripDocLinks =
     DOCUMENTS_RESTRICT_TO_ROLES &&
