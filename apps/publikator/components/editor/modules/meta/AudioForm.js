@@ -8,16 +8,21 @@ import withT from '../../../../lib/withT'
 
 import UIForm from '../../UIForm'
 
-const AUDIO_SOURCE_KINDS = ['podcast', 'read', 'synthRead']
+// @see GraphQL schema-types enum AudioSourceKind
+const AUDIO_SOURCE_KINDS = [
+  // 'podcast', // not in use (yet)
+  'readAloud',
+  // 'syntheticReadAloud', // not in use (yet)
+]
 
 export default withT(({ t, editor, node, onInputChange }) => {
   const audioCoverAnchors = [null, 'middle'].map((value) => ({
     value,
     text: t(`metaData/audio/cover/anchor/${value}`),
   }))
-  const audioSourceKinds = AUDIO_SOURCE_KINDS.map((value) => ({
+  const audioSourceKinds = [null, ...AUDIO_SOURCE_KINDS].map((value) => ({
     value,
-    text: value,
+    text: t(`metaData/audio/source/kind/${value}`),
   }))
 
   const onChange = (key) => (newValue) => {
@@ -53,16 +58,10 @@ export default withT(({ t, editor, node, onInputChange }) => {
       <UIForm getWidth={() => '25%'}>
         <Dropdown
           black
-          label='Kind'
+          label={t('metaData/audio/source/kind')}
           items={audioSourceKinds}
-          value={audioSourceKind}
-          onChange={({ value }) =>
-            onChange('audioSourceKind')(
-              value && {
-                audioSourceKind: value,
-              },
-            )
-          }
+          value={audioSourceKind || null}
+          onChange={({ value }) => onChange('audioSourceKind')(value)}
         />
         <Dropdown
           black
