@@ -145,11 +145,19 @@ const createUrlReplacer =
         return resolvedUrl.toString()
       }
 
-      // If {urlPrefix} is not set, replace either {externalBaseUrl} or
-      // {FRONTEND_BASE_URL} to return relative URLs.
+      // If {externalBaseUrl} is given, replace {externalBaseUrl} to return
+      // relative URLs.
+      if (externalBaseUrl) {
+        const externalBasePath = new URL(externalBaseUrl)?.pathname
+        return resolvedUrl
+          .toString()
+          .replace(new RegExp(`^${externalBaseUrl}`), externalBasePath)
+      }
+
+      // Strip {FRONTEND_BASE_URL} to return relative URLs.
       return resolvedUrl
         .toString()
-        .replace(new RegExp(`^${externalBaseUrl || FRONTEND_BASE_URL}`), '')
+        .replace(new RegExp(`^${FRONTEND_BASE_URL}`), '')
     } else {
       errors.push(repoId)
     }
