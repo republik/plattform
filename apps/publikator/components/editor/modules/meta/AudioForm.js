@@ -8,10 +8,16 @@ import withT from '../../../../lib/withT'
 
 import UIForm from '../../UIForm'
 
+const AUDIO_SOURCE_KINDS = ['podcast', 'read', 'synthRead']
+
 export default withT(({ t, editor, node, onInputChange }) => {
   const audioCoverAnchors = [null, 'middle'].map((value) => ({
     value,
     text: t(`metaData/audio/cover/anchor/${value}`),
+  }))
+  const audioSourceKinds = AUDIO_SOURCE_KINDS.map((value) => ({
+    value,
+    text: value,
   }))
 
   const onChange = (key) => (newValue) => {
@@ -26,6 +32,7 @@ export default withT(({ t, editor, node, onInputChange }) => {
   }
 
   const audioCover = node.data.get('audioCover')
+  const audioSourceKind = node.data.get('audioSourceKind')
 
   const audioSourceKeys = Set(['audioSourceMp3', 'audioSourceAac'])
   const audioDefaultValues = Map(audioSourceKeys.map((key) => [key, '']))
@@ -44,6 +51,19 @@ export default withT(({ t, editor, node, onInputChange }) => {
         black
       />
       <UIForm getWidth={() => '25%'}>
+        <Dropdown
+          black
+          label='Kind'
+          items={audioSourceKinds}
+          value={audioSourceKind}
+          onChange={({ value }) =>
+            onChange('audioSourceKind')(
+              value && {
+                audioSourceKind: value,
+              },
+            )
+          }
+        />
         <Dropdown
           black
           label={t('metaData/audio/cover/anchor')}
