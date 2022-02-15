@@ -175,6 +175,7 @@ const schema = {
     criteria: hasCriteriaBuilder('meta.audioSource'),
     agg: existsCountAggBuilder('meta.audioSource'),
   },
+  audioSourceKind: termEntry('meta.audioSource.kind'),
   hasAudio: countEntry('meta.hasAudio'),
   hasVideo: countEntry('meta.hasVideo'),
   isSeriesMaster: countEntry('meta.isSeriesMaster'),
