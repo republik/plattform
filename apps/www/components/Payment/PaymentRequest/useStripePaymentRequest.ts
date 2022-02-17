@@ -4,6 +4,7 @@ import {
   PaymentRequest,
   PaymentRequestOptions,
   PaymentRequestPaymentMethodEvent,
+  PaymentMethod,
 } from '@stripe/stripe-js'
 import { loadStripe } from '../stripe'
 
@@ -28,6 +29,7 @@ interface PaymentRequestValues {
   initialized: boolean
   initialize: () => Promise<void>
   show: (pledgeHandler: PledgeHandler) => void
+  paymentMethod: PaymentMethod | null
 }
 
 function useStripePaymentRequest(
@@ -35,9 +37,7 @@ function useStripePaymentRequest(
 ): PaymentRequestValues {
   const [stripe, setStripe] = useState<Stripe>(null)
   const [paymentRequest, setPaymentRequest] = useState<PaymentRequest>(null)
-  // Keep track of the options last used to initialize the PaymentRequest
-  const [lastOptions, setLastOptions] =
-    useState<LeanPaymentRequestOptions>(null)
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(null)
 
   async function initialize() {
     let stripePromise = stripe
@@ -57,17 +57,17 @@ function useStripePaymentRequest(
       return
     }
 
-    setLastOptions(options)
     setPaymentRequest(newPaymentRequest)
   }
 
-  async function show(handlePayment: PledgeHandler) {
+  function show(handlePayment: PledgeHandler) {
     if (!paymentRequest) {
       alert('Payment Request not initialized')
       return
     }
 
     paymentRequest.on('paymentmethod', (ev) => {
+      setPaymentMethod(ev.paymentMethod)
       handlePayment(ev)
         .then(() => {
           ev.complete('success')
@@ -83,6 +83,11 @@ function useStripePaymentRequest(
         })
     })
 
+    paymentRequest.on('cancel', () => {
+      console.debug('Payment request cancelled')
+      setPaymentRequest(null)
+    })
+
     paymentRequest.show()
   }
 
@@ -90,6 +95,7 @@ function useStripePaymentRequest(
     initialized: !!paymentRequest,
     initialize,
     show,
+    paymentMethod,
   }
 }
 

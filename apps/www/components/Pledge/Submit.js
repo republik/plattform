@@ -1,4 +1,4 @@
-import React, { Fragment, Component, useMemo, useState } from 'react'
+import React, { Fragment, Component, useMemo, useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
@@ -41,7 +41,7 @@ import { useFieldSetState } from './utils'
 
 import ErrorMessage, { ErrorContainer } from '../ErrorMessage'
 import { useIsApplePayAvailable } from '../Payment/Form/ApplePay'
-import { ApplePayWrapper } from '../Payment/PaymentRequestButton'
+import useStripePaymentRequest from '../Payment/PaymentRequest/useStripePaymentRequest'
 
 const { H2, P } = Interaction
 
@@ -145,6 +145,24 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
     return enhancedPaymentMethods
   }, [paymentMethods, isApplePayAvailable])
 
+  const paymentRequest = useStripePaymentRequest({
+    total: {
+      amount: props.total ?? 0,
+      label: props.query.package ?? 'NO VALUE',
+    },
+  })
+
+  // in case a native browser payment is available initialize stripe
+  useEffect(() => {
+    if (
+      enhancedPaymentMethods.find((value) => value.startsWith('STRIPE-')) &&
+      !paymentRequest.initialized &&
+      props.total
+    ) {
+      paymentRequest.initialize()
+    }
+  }, [enhancedPaymentMethods, paymentRequest, props.total])
+
   return (
     <Submit
       {...props}
@@ -156,6 +174,7 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
       shippingAddressState={shippingAddressState}
       syncAddresses={props.requireShippingAddress && syncAddresses}
       setSyncAddresses={setSyncAddresses}
+      paymentRequest={paymentRequest}
     />
   )
 }
@@ -230,7 +249,7 @@ class Submit extends Component {
     }
   }
 
-  submitPledge() {
+  submitPledge(paymentMethod) {
     const {
       t,
       query,
@@ -240,8 +259,8 @@ class Submit extends Component {
       contactState,
     } = this.props
     const errorMessages = this.getErrorMessages()
-
-    if (errorMessages.length) {
+    console.debug('errorMessages', errorMessages)
+    if (errorMessages.length > 0) {
       this.props.onError()
       this.setState((state) => {
         const dirty = {
@@ -303,6 +322,7 @@ class Submit extends Component {
     this.setState(() => ({
       loading: t('pledge/submit/loading/submit'),
     }))
+
     this.props
       .submit({
         ...variables,
@@ -340,13 +360,16 @@ class Submit extends Component {
 
   payPledge(pledgeId, pledgeResponse) {
     const { paymentMethod } = this.state.values
-
+    console.debug('payPledge', pledgeId, pledgeResponse)
     if (paymentMethod === 'PAYMENTSLIP') {
       this.payWithPaymentSlip(pledgeId)
     } else if (paymentMethod === 'POSTFINANCECARD') {
       this.payWithPostFinance(pledgeId, pledgeResponse)
     } else if (paymentMethod === 'STRIPE') {
       this.payWithStripe(pledgeId)
+    } else if (paymentMethod === 'STRIPE-APPLEPAY') {
+      this.payWithApplePay(pledgeId, paymentMethod)
+      alert('SO WE ARRIVED AT PAY PLEDGE')
     } else if (paymentMethod === 'PAYPAL') {
       this.payWithPayPal(pledgeId)
     }
@@ -403,7 +426,7 @@ class Submit extends Component {
     this.setState(() => ({
       loading: t('pledge/submit/loading/pay'),
     }))
-    this.props
+    return this.props
       .pay({
         ...data,
         makeDefault: this.getAutoPayValue(),
@@ -489,6 +512,52 @@ class Submit extends Component {
           paymentError: error,
         })
       })
+  }
+
+  payWithApplePay(pledgeId) {
+    const { t } = this.props
+    const { values } = this.state
+    this.setState(() => ({
+      loading: t('pledge/submit/loading/stripe'),
+    }))
+
+    const paymentMethod = this.props.paymentRequest.paymentMethod
+    this.pay({
+      pledgeId,
+      method: 'STRIPE',
+      sourceId: paymentMethod.id,
+      pspPayload: paymentMethod,
+    })
+    alert(t('APPLE PAY IS DONE'))
+  }
+
+  handleApplePayIntent() {
+    const { t } = this.props
+    this.setState(() => ({
+      loading: t('pledge/submit/loading/stripe'),
+    }))
+
+    console.debug('SHOWING APPLE PAY')
+    this.props.paymentRequest.show(async (ev) => {
+      console.debug('Event value', ev)
+      // TODO: Sync contact data
+      const [firstName, lastName] = ev.payerName.split(' ').map((s) => s.trim())
+
+      this.props.contactState.onChange({
+        values: {
+          firstName,
+          lastName,
+          email: ev.payerEmail,
+        },
+        errors: {
+          firstName: null,
+          lastName: null,
+          email: null,
+        },
+      })
+
+      this.submitPledge(ev.paymentMethod)
+    })
   }
 
   getErrorMessages() {
@@ -662,6 +731,7 @@ class Submit extends Component {
           packageGroup={packageGroup}
           setSyncAddresses={setSyncAddresses}
           onChange={(fields) => {
+            console.debug('onChange', fields)
             this.setState((state) => {
               const nextState = FieldSet.utils.mergeFields(fields)(state)
 
@@ -680,113 +750,119 @@ class Submit extends Component {
           errors={this.state.errors}
           dirty={this.state.dirty}
         />
-        {this.state.values.paymentMethod !== 'STRIPE-APPLEPAY' && (
-          <>
-            {contactPreface && (
-              <div style={{ marginBottom: 40 }}>
-                <P>{contactPreface}</P>
-              </div>
-            )}
-            <H2>
-              {t.first([
-                `pledge/contact/title/${packageName}`,
-                'pledge/contact/title',
-              ])}
-            </H2>
-            <div style={{ marginTop: 10, marginBottom: 40 }}>
-              {me ? (
-                <>
-                  <Interaction.P>
-                    {t('pledge/contact/signedinAs', {
-                      nameOrEmail: me.name
-                        ? `${me.name.trim()} (${me.email})`
-                        : me.email,
-                    })}{' '}
-                    <A
-                      href='#'
-                      onClick={(e) => {
-                        e.preventDefault()
-                        this.setState({ emailVerify: false })
-                        this.props.signOut().then(() => {
-                          contactState.onChange({
-                            values: {
-                              firstName: '',
-                              lastName: '',
-                              email: '',
-                            },
-                            dirty: {
-                              firstName: false,
-                              lastName: false,
-                              email: false,
-                            },
-                          })
-                          this.setState({ showSignIn: false })
-                        })
-                      }}
-                    >
-                      {t('pledge/contact/signOut')}
-                    </A>
-                  </Interaction.P>
-                  {/* TODO: add active membership info */}
-                </>
-              ) : (
-                !customMe && (
-                  <>
-                    <A
-                      href='#'
-                      onClick={(e) => {
-                        e.preventDefault()
-                        this.setState(() => ({
-                          showSignIn: !showSignIn,
-                        }))
-                      }}
-                    >
-                      {t(
-                        `pledge/contact/signIn/${showSignIn ? 'hide' : 'show'}`,
-                      )}
-                    </A>
-                    {!!showSignIn && (
-                      <>
-                        <br />
-                        <br />
-                        <SignIn context='pledge' />
-                      </>
-                    )}
-                    <br />
-                  </>
-                )
-              )}
-              {!showSignIn && (
-                <>
-                  {customMe && !me ? (
+        {
+          // Only render the browser API in case we're not using a browser payment API
+          this.state.values.paymentMethod &&
+            !this.state.values.paymentMethod.startsWith('STRIPE-') && (
+              <>
+                {contactPreface && (
+                  <div style={{ marginBottom: 40 }}>
+                    <P>{contactPreface}</P>
+                  </div>
+                )}
+                <H2>
+                  {t.first([
+                    `pledge/contact/title/${packageName}`,
+                    'pledge/contact/title',
+                  ])}
+                </H2>
+                <div style={{ marginTop: 10, marginBottom: 40 }}>
+                  {me ? (
                     <>
                       <Interaction.P>
-                        <Label>{t('pledge/contact/email/label')}</Label>
-                        <br />
-                        {customMe.email}
+                        {t('pledge/contact/signedinAs', {
+                          nameOrEmail: me.name
+                            ? `${me.name.trim()} (${me.email})`
+                            : me.email,
+                        })}{' '}
+                        <A
+                          href='#'
+                          onClick={(e) => {
+                            e.preventDefault()
+                            this.setState({ emailVerify: false })
+                            this.props.signOut().then(() => {
+                              contactState.onChange({
+                                values: {
+                                  firstName: '',
+                                  lastName: '',
+                                  email: '',
+                                },
+                                dirty: {
+                                  firstName: false,
+                                  lastName: false,
+                                  email: false,
+                                },
+                              })
+                              this.setState({ showSignIn: false })
+                            })
+                          }}
+                        >
+                          {t('pledge/contact/signOut')}
+                        </A>
                       </Interaction.P>
-                      <br />
-                      <Link
-                        href={{
-                          pathname: '/angebote',
-                          query: {
-                            package: packageName,
-                          },
-                        }}
-                        replace
-                        passHref
-                      >
-                        <A>{t('pledge/contact/signIn/wrongToken')}</A>
-                      </Link>
+                      {/* TODO: add active membership info */}
                     </>
                   ) : (
-                    <FieldSet {...contactState} />
+                    !customMe && (
+                      <>
+                        <A
+                          href='#'
+                          onClick={(e) => {
+                            e.preventDefault()
+                            this.setState(() => ({
+                              showSignIn: !showSignIn,
+                            }))
+                          }}
+                        >
+                          {t(
+                            `pledge/contact/signIn/${
+                              showSignIn ? 'hide' : 'show'
+                            }`,
+                          )}
+                        </A>
+                        {!!showSignIn && (
+                          <>
+                            <br />
+                            <br />
+                            <SignIn context='pledge' />
+                          </>
+                        )}
+                        <br />
+                      </>
+                    )
                   )}
-                </>
-              )}
-            </div>
-          </>
-        )}
+                  {!showSignIn && (
+                    <>
+                      {customMe && !me ? (
+                        <>
+                          <Interaction.P>
+                            <Label>{t('pledge/contact/email/label')}</Label>
+                            <br />
+                            {customMe.email}
+                          </Interaction.P>
+                          <br />
+                          <Link
+                            href={{
+                              pathname: '/angebote',
+                              query: {
+                                package: packageName,
+                              },
+                            }}
+                            replace
+                            passHref
+                          >
+                            <A>{t('pledge/contact/signIn/wrongToken')}</A>
+                          </Link>
+                        </>
+                      ) : (
+                        <FieldSet {...contactState} />
+                      )}
+                    </>
+                  )}
+                </div>
+              </>
+            )
+        }
         <br />
         <br />
         {emailVerify && !me && (
@@ -846,21 +922,16 @@ class Submit extends Component {
             {this.renderAutoPay()}
             <br />
             <br />
-            <ApplePayWrapper
-              submitPledge={() =>
-                this.props.submit({
-                  variables: this.submitVariables(this.props),
-                  payload: getConversionPayload(query),
-                  consents: getRequiredConsents(this.props),
-                })
-              }
-            />
             <div style={{ opacity: errorMessages.length ? 0.5 : 1 }}>
               <Button
                 block
                 primary={!errorMessages.length}
                 onClick={() => {
-                  this.submitPledge()
+                  if (this.state.values.paymentMethod.startsWith('STRIPE-')) {
+                    this.handleApplePayIntent()
+                  } else {
+                    this.submitPledge()
+                  }
                 }}
               >
                 {t('pledge/submit/button/pay', {
@@ -1000,7 +1071,6 @@ export const withPay = (Component) => {
               const confirmResult = await stripeClient.confirmCardPayment(
                 payPledge.stripeClientSecret,
               )
-              console.debug()
               if (confirmResult.error) {
                 throw confirmResult.error.message
               }
