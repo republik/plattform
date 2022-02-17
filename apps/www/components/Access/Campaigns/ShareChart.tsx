@@ -1,5 +1,24 @@
 import React from 'react'
+import { gql } from '@apollo/client'
+import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
 import { ChartTitle, ChartLead, Chart } from '@project-r/styleguide'
+import { timeDay } from 'd3-time'
+import { swissTime } from '../../../lib/utils/format'
+
+// TODO: Real Query
+const statusQuery = gql`
+  query CockpitStatus($min: YearMonthDayDate!, $max: YearMonthDayDate!) {
+    sharedMemberStats {
+      evolution(min: $min, max: $max) {
+        buckets {
+          key
+          users
+        }
+      }
+    }
+  }
+`
 
 const ShareChart = () => {
   return (
@@ -41,4 +60,21 @@ const ShareChart = () => {
   )
 }
 
-export default ShareChart
+export default compose()(ShareChart)
+// graphql(statusQuery, {
+//   props: ({ data, ownProps }) => {
+//     return {
+//       data,
+//       ...mapActionData({ data, ownProps }),
+//     }
+//   },
+//   options: () => {
+//     const currentDay = timeDay.floor(new Date())
+//     return {
+//       variables: {
+//         prev: formatYearMonthKey(timeDay.offset(currentDay, -1)),
+//         max: formatYearMonthKey(timeDay.offset(currentDay, 30)),
+//       },
+//     }
+//   },
+// }),

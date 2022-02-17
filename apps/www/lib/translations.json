@@ -3625,6 +3625,10 @@
       "value": "überprüfen"
     },
     {
+      "key": "memberships/claim/personal/lead",
+      "value": "{name} schenkt Ihnen vier Wochen Republik"
+    },
+    {
       "key": "memberships/claim/access/lead",
       "value": "Geteilten Zugriff aktivieren"
     },

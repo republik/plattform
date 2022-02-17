@@ -19,7 +19,7 @@ const meta = {
   title: t('pages/access/title'),
 }
 
-const Page = ({ me, isMember, hasActiveMembership }) => {
+const Page = ({ me }) => {
   const [hover, setHover] = useState()
 
   return (
@@ -30,37 +30,25 @@ const Page = ({ me, isMember, hasActiveMembership }) => {
       <Interaction.P>Beschrieb</Interaction.P>
       <ShareChart />
       <AccessCampaigns />
-      {!me && (
-        <>
+      {/* TODO: add prolong*/}
+      {!me ? (
+        <div style={{ marginTop: 36 }}>
           <Interaction.H2>
             <strong>Einloggen und Abo Teilen</strong>
           </Interaction.H2>
           <SignIn />
-        </>
-      )}
-
-      {/* TODO: add prolong*/}
-      {!isMember && (
-        <>
+        </div>
+      ) : !me.accessCampaigns ? (
+        <div style={{ marginTop: 36 }}>
           <Interaction.H2>
-            <strong>Noch nicht Mitglied?</strong>
+            <strong>Mitglied werden und Abo Teilen</strong>
           </Interaction.H2>
-          <Link
-            href={{
-              pathname: '/angebote',
-              query: { package: 'MONTHLY_ABO' },
-            }}
-            passHref
-          >
-            <PackageItem
-              t={t}
-              crowdfundingName={CROWDFUNDING}
-              name='MONTHLY_ABO'
-              hover={hover}
-              setHover={setHover}
-              price={2200}
-            />
-          </Link>
+          <Interaction.P>
+            <strong>
+              Mit einer Republik Mitgliedschaft können Sie ihr Abo für x Wochem
+              mit anderen Leuten teilen
+            </strong>
+          </Interaction.P>
           <Link
             href={{
               pathname: '/angebote',
@@ -77,8 +65,8 @@ const Page = ({ me, isMember, hasActiveMembership }) => {
               price={24000}
             />
           </Link>
-        </>
-      )}
+        </div>
+      ) : null}
     </Frame>
   )
 }

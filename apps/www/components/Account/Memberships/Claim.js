@@ -25,9 +25,10 @@ import {
   Field,
   Button,
   Interaction,
-  RawHtml,
   InlineSpinner,
   colors,
+  fontStyles,
+  mediaQueries,
 } from '@project-r/styleguide'
 
 const { H2, P } = Interaction
@@ -36,6 +37,42 @@ const styles = {
   button: css({
     width: 160,
     textAlign: 'center',
+  }),
+  personalMessageContainer: css({
+    display: 'flex',
+    gap: 16,
+    [mediaQueries.mUp]: {
+      gap: 32,
+      padding: '16px 0',
+    },
+  }),
+  messages: css({
+    minHeight: 100,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+  }),
+  personalMessage: css({
+    ...fontStyles.serifRegular19,
+    margin: 0,
+    [mediaQueries.mUp]: {
+      ...fontStyles.serifRegular25,
+    },
+  }),
+  granterName: css({
+    ...fontStyles.serifRegular17,
+    margin: 0,
+    [mediaQueries.mUp]: {
+      ...fontStyles.serifRegular21,
+    },
+  }),
+  granterImage: css({
+    width: 128,
+    height: 128,
+    [mediaQueries.mUp]: {
+      width: 96,
+      height: 96,
+    },
   }),
 }
 
@@ -113,7 +150,6 @@ class ClaimMembership extends Component {
   }
   handleVoucherCode(value, shouldValidate, t) {
     const sanitizedValue = sanitizeVoucherCode(value)
-
     this.setState(
       FieldSet.utils.mergeField({
         field: 'voucherCode',
@@ -153,7 +189,7 @@ class ClaimMembership extends Component {
     this.checkUserFields(this.props)
   }
   claim(newTokenType) {
-    const { me, context } = this.props
+    const { me, context, accessToken } = this.props
     const { values } = this.state
 
     this.setState(() => ({
@@ -186,6 +222,7 @@ class ClaimMembership extends Component {
           context || 'claim',
           this.state.consents,
           newTokenType || 'EMAIL_CODE',
+          accessToken,
         )
         .then(({ data }) => {
           this.setState({
@@ -194,7 +231,6 @@ class ClaimMembership extends Component {
           })
         })
         .catch(catchError)
-
       return
     }
 
@@ -233,7 +269,7 @@ class ClaimMembership extends Component {
     claim()
   }
   render() {
-    const { context, t } = this.props
+    const { context, t, granterName, granterPortrait, message } = this.props
 
     const {
       consents,
@@ -253,22 +289,16 @@ class ClaimMembership extends Component {
       requiredConsents.push('STATUTE')
     }
 
-    const contextLead = t.first(
-      [`memberships/claim/${context}/lead`, 'memberships/claim/lead'],
-      undefined,
-      '',
-    )
-
-    const contextBody = t.first(
-      [`memberships/claim/${context}/body`, 'memberships/claim/body'],
-      undefined,
-      '',
-    )
-
-    const contextAddendum = t.first(
-      [`memberships/claim/${context}/addendum`, 'memberships/claim/addendum'],
-      undefined,
-      '',
+    const contextLead = t.first.elements(
+      [
+        granterName
+          ? `memberships/claim/personal/lead`
+          : `memberships/claim/${context}/lead`,
+        'memberships/claim/lead',
+      ],
+      {
+        name: granterName,
+      },
     )
 
     const {
@@ -295,15 +325,22 @@ class ClaimMembership extends Component {
         <div
           style={{ opacity: polling || loading ? 0.6 : 1, marginBottom: 40 }}
         >
-          {contextLead && <H2 style={{ marginBottom: 20 }}>{contextLead}</H2>}
-          {contextBody && (
-            <RawHtml
-              type={P}
-              dangerouslySetInnerHTML={{
-                __html: contextBody,
-              }}
-            />
-          )}
+          <H2 style={{ marginBottom: 20 }}>{contextLead}</H2>
+
+          <div {...styles.personalMessageContainer}>
+            {granterPortrait && (
+              <img src={granterPortrait} style={{ width: 100, height: 100 }} />
+            )}
+            <div {...styles.messages}>
+              <p {...styles.personalMessage}>
+                {`«${message}»`} <br />
+              </p>
+              <p {...styles.granterName}>
+                <em>{granterName}</em>
+              </p>
+            </div>
+          </div>
+
           <Field
             label={t('memberships/claim/voucherCode/label')}
             name='voucherCode'
@@ -351,14 +388,7 @@ class ClaimMembership extends Component {
           />
           <br />
           <br />
-          {contextAddendum && (
-            <RawHtml
-              type={P}
-              dangerouslySetInnerHTML={{
-                __html: contextAddendum,
-              }}
-            />
-          )}
+          <P>{t('memberships/claim/addendum')}</P>
           <br />
           <br />
           {!!showErrors && errorMessages.length > 0 && (
@@ -479,7 +509,22 @@ const updateName = gql`
   }
 `
 
+const accessGrantInfo = gql`
+  query accessGrantInfo($id: String!) {
+    granterName
+    granterPortrait
+    message
+  }
+`
+
 export default compose(
+  graphql(accessGrantInfo, {
+    options: ({ grantId }) => ({
+      variables: {
+        id: grantId,
+      },
+    }),
+  }),
   graphql(claimMembership, {
     props: ({ mutate }) => ({
       claimMembership: (voucherCode) =>
