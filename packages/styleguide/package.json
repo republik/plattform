@@ -71,7 +71,6 @@
     "react-maskedinput": "^4.0.1",
     "react-scripts": "^3.4.1",
     "react-textarea-autosize": "^5.1.0",
-    "rimraf": "^3.0.2",
     "rw": "^1.3.3",
     "scroll-into-view": "1.15.0",
     "semantic-release": "^17.1.1",
@@ -95,7 +94,6 @@
   "scripts": {
     "commit": "git-cz",
     "prepublishOnly": "yarn prebuild && yarn build:lib",
-    "prebuild": "rimraf dist",
     "build": "yarn build:lib && if [ \"$SERVER\" = \"styleguide\" ]; then yarn build:docs; fi",
     "build:lib": "tsc --project tsconfig.dist.json",
     "build:docs": "react-scripts build",
