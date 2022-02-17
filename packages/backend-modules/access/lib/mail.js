@@ -278,7 +278,7 @@ const getGlobalMergeVars = async (
       name: 'link_claim_prefilled',
       content: `${FRONTEND_BASE_URL}/abholen?code=${grant.voucherCode}&email=${
         email ? base64u.encode(email) : ''
-      }&token=${accessToken}&context=access`,
+      }&id=${grant.id}&token=${accessToken}&context=access`,
     },
 
     // Perk "gift membership"
