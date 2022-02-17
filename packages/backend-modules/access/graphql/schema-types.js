@@ -34,6 +34,30 @@ type AccessCampaign {
   endAt: DateTime!
 }
 
+type AccessGrantStats {
+  """
+  Returns access grant periods in daily buckets.
+  """
+  periods(
+    "Minimum day (DD-MM-YYYY)"
+    min: Date!
+    "Maximum day (DD-MM-YYYY)"
+    max: Date!
+  ): AccessGrantStatsPeriod!
+}
+
+type AccessGrantStatsPeriod {
+  days: [AccessGrantStatsPeriodDay!]
+  updatedAt: DateTime!
+}
+
+type AccessGrantStatsPeriodDay {
+  date: Date!
+  active: Int!
+  activeUnconverted: Int!
+  converted: Int!
+}
+
 type AccessGrantInfo {
   granterName: String!
   granterPortrait: String
