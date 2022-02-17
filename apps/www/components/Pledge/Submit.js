@@ -188,6 +188,7 @@ class Submit extends Component {
         ref && ref.getWrappedInstance ? ref.getWrappedInstance() : ref
     }
   }
+
   submitVariables(props) {
     const {
       contactState,
@@ -228,6 +229,7 @@ class Submit extends Component {
         customMe && customMe.isUserOfCurrentSession ? undefined : accessToken,
     }
   }
+
   submitPledge() {
     const {
       t,
@@ -335,6 +337,7 @@ class Submit extends Component {
         }))
       })
   }
+
   payPledge(pledgeId, pledgeResponse) {
     const { paymentMethod } = this.state.values
 
@@ -348,6 +351,7 @@ class Submit extends Component {
       this.payWithPayPal(pledgeId)
     }
   }
+
   payWithPayPal(pledgeId) {
     const { t } = this.props
 
@@ -361,6 +365,7 @@ class Submit extends Component {
       },
     )
   }
+
   payWithPostFinance(pledgeId, pledgeResponse) {
     const { t } = this.props
 
@@ -377,6 +382,7 @@ class Submit extends Component {
       },
     )
   }
+
   payWithPaymentSlip(pledgeId) {
     const { values } = this.state
     const { addressState, shippingAddressState, syncAddresses } = this.props
@@ -389,6 +395,7 @@ class Submit extends Component {
         : addressState.values,
     })
   }
+
   pay(data) {
     const { t, me, customMe, packageName, contactState } = this.props
 
@@ -444,6 +451,7 @@ class Submit extends Component {
         }))
       })
   }
+
   payWithStripe(pledgeId) {
     const { t } = this.props
     const { values } = this.state
@@ -482,6 +490,7 @@ class Submit extends Component {
         })
       })
   }
+
   getErrorMessages() {
     const { consents, values } = this.state
     const {
@@ -527,6 +536,7 @@ class Submit extends Component {
       },
     ].filter((d) => d.messages.length)
   }
+
   getAutoPayValue() {
     const { forceAutoPay, options } = this.props
     const {
@@ -548,6 +558,7 @@ class Submit extends Component {
     }
     return autoPay
   }
+
   renderAutoPay() {
     const {
       values: { paymentMethod },
@@ -593,6 +604,7 @@ class Submit extends Component {
       </div>
     )
   }
+
   render() {
     const { emailVerify, paymentError, submitError, signInError, loading } =
       this.state
