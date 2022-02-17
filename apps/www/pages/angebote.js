@@ -89,4 +89,4 @@ class PledgePage extends Component {
   }
 }
 
-export default withDefaultSSR(withRouter(PledgePage))
+export default withRouter(PledgePage)
