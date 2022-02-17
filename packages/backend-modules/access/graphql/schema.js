@@ -6,7 +6,7 @@ schema {
 }
 
 type queries {
-  accessInfo(voucherCode: String!): AccessInfo
+  accessGrantInfo(id: ID!): AccessGrantInfo
 }
 
 type mutations {

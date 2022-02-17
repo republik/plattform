@@ -34,7 +34,7 @@ type AccessCampaign {
   endAt: DateTime!
 }
 
-type AccessInfo {
+type AccessGrantInfo {
   granterName: String!
   granterPortrait: String
   message: String
