@@ -22,12 +22,14 @@ function isApplePayAvailable(): boolean {
 }
 
 export function useIsApplePayAvailable(): boolean {
-  const [isAvailable, setIsAvailable] = useState(false)
+  const checkIfApplePayAvailable = () =>
+    isInSecureDocument() && isApplePayAvailable()
+  const [isAvailable, setIsAvailable] = useState(checkIfApplePayAvailable())
 
   useEffect(() => {
     try {
       // Only check for Apple Pay on the client and when a secure connection is provided
-      setIsAvailable(isInSecureDocument() && isApplePayAvailable())
+      setIsAvailable(checkIfApplePayAvailable())
     } catch (error) {
       console.error('Error checking for Apple Pay availability', error)
     }
