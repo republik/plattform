@@ -49,44 +49,78 @@
 
                     {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
                     <p>
-                      Für {{CAMPAIGN_PERIOD}} sind Sie jetzt Gast an Bord der
-                      Republik und können unverbindlich unser Magazin entdecken.
+                      Für {{CAMPAIGN_PERIOD}} sind Sie unser Gast: {{#if
+                      `CAMPAIGN_TITLE == "Verschenken Sie vier Wochen
+                      Republik"`}}Sie können ab sofort
+                      <a href="{{link_signin}}">das Magazin lesen</a>, alle
+                      Beiträge mit Ihren Freunden oder Feinden teilen und in
+                      diesem Frühling sogar im Dialog mitdiskutieren.
+                      {{else}}Sie können ab sofort
+                      <a href="{{link_signin}}">das Magazin lesen</a> und alle
+                      Beiträge mit Ihren Freunden oder Feinden teilen.
+                      {{/if}}Das gibt Ihnen bis zum {{GRANT_END}} Zeit, die
+                      Republik unverbindlich kennenzulernen.
                     </p>
                     {{/if}}
 
                     <p>
                       Nachfolgend finden Sie die wichtigsten Informationen zur
-                      Republik:
+                      Republik in der Übersicht:
                     </p>
-                    <p>
-                      Wir bieten Einordnung und Vertiefung anstelle einer Flut
-                      von Nachrichten. Die Republik steht für die Werte der
-                      Aufklärung. Gemeinsam schützen wir die Medienvielfalt, die
-                      Informationsfreiheit und die Demokratie: Wir hören zu und
-                      diskutieren über drängende Fragen der Gegenwart.
-                    </p>
-                    <p>
-                      Die Republik erscheint von Montag bis Samstag mit täglich
-                      ein bis drei neuen Beiträgen. In der
-                      <a href="{{link_app}}">Republik-App</a>,
-                      <a href="{{frontend_base_url}}">auf der Website</a> und
-                      als Newsletter.
-                    </p>
-
-                    <p>
-                      Sie können ab sofort
-                      <a href="{{link_signin}}">das Magazin lesen</a> und
-                      Beiträge mit Ihren Freunden oder Feinden teilen. Und haben
-                      so bis zum {{GRANT_END}} Zeit, die Republik
-                      kennenzulernen.
-                    </p>
+                    <ol
+                      style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      <li>
+                        <p>
+                          Die Republik erscheint von Montag bis Samstag mit
+                          täglich ein bis drei neuen Beiträgen. In der
+                          <a href="{{link_app}}">Republik-App</a>,
+                          <a href="{{frontend_base_url}}">auf der Website</a>
+                          und als Newsletter – welche Newsletter und
+                          Benachrichtigungen Sie von uns erhalten, können Sie
+                          <a href="{{link_account}}">in Ihrem Konto</a>
+                          festlegen.
+                        </p>
+                      </li>
+                      <li>
+                        <p>
+                          Diskutieren Sie mit anderen Leserinnen und der
+                          Redaktion!
+                          <a href="{{link_dialog}}">Hier sehen Sie</a>, was
+                          aktuell bei der Republik zu reden gibt, in der
+                          <a href="{{frontend_base_url}}/etikette"
+                            >Etikette finden Sie unsere Grundsätze für einen
+                            höflichen Dialog.</a
+                          >
+                        </p>
+                      </li>
+                      <li>
+                        <p>
+                          Sie möchten wissen, wer die Menschen hinter der
+                          Republik sind? Lernen Sie unsere Crew kennen:
+                          <a href="{{link_imprint}}">Wir sind Ihr Team</a>.
+                        </p>
+                      </li>
+                      <li>
+                        <p>
+                          Hinter der Republik steht kein Verlag, sondern über
+                          29’000 Verlegerinnen – wir gehören unseren Lesern, die
+                          als Mitglieder der Project R Genossenschaft auch immer
+                          wieder mitentscheiden. Die Leserinnen sind es auch,
+                          die uns finanzieren – denn die Republik ist komplett
+                          werbefrei. Für mehr Details zu den Hintergründen und
+                          unserer Mission
+                          <a href="{{link_about}}">klicken Sie hier</a>.
+                        </p>
+                      </li>
+                    </ol>
                     <p>
                       Wenn Ihnen die Idee hinter unserem Projekt und unser
                       Magazin gefallen, gibt es verschiedene Möglichkeiten, wie
-                      auch Sie ein Teil davon werden:
+                      auch Sie ein Teil davon werden können:
                       <a href="{{link_offers_overview}}"
-                        >Hier finden Sie die Abonnemente und Mitgliedschaften
-                        als Übersicht</a
+                        >Hier finden Sie die Abonnemente und Mitgliedschaften in
+                        der Übersicht</a
                       >.
                     </p>
                     <p>
