@@ -1,7 +1,12 @@
 module.exports = `
 
 schema {
+  query: queries
   mutation: mutations
+}
+
+type queries {
+  accessInfo(voucherCode: String!): AccessInfo
 }
 
 type mutations {
