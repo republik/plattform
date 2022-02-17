@@ -34,6 +34,12 @@ type AccessCampaign {
   endAt: DateTime!
 }
 
+type AccessInfo {
+  granterName: String!
+  granterPortrait: String
+  message: String
+}
+
 """
 Entity representing a future, current or passed granted membership
 """
