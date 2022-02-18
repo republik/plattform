@@ -24,11 +24,15 @@ function makeOptions(
 }
 
 type PledgeHandler = (event: PaymentRequestPaymentMethodEvent) => Promise<void>
+type PaymentCanceledHandler = () => void
 
 interface PaymentRequestValues {
   initialized: boolean
   initialize: () => Promise<void>
-  show: (pledgeHandler: PledgeHandler) => void
+  show: (
+    handlePledge: PledgeHandler,
+    handleCancel: PaymentCanceledHandler,
+  ) => void
   paymentMethod: PaymentMethod | null
 }
 
@@ -60,7 +64,10 @@ function useStripePaymentRequest(
     setPaymentRequest(newPaymentRequest)
   }
 
-  function show(handlePayment: PledgeHandler) {
+  function show(
+    handlePledge: PledgeHandler,
+    handleCancel: PaymentCanceledHandler,
+  ) {
     if (!paymentRequest) {
       alert('Payment Request not initialized')
       return
@@ -68,7 +75,7 @@ function useStripePaymentRequest(
 
     paymentRequest.on('paymentmethod', (ev) => {
       setPaymentMethod(ev.paymentMethod)
-      handlePayment(ev)
+      handlePledge(ev)
         .then(() => {
           ev.complete('success')
           console.debug('Payment successful')
@@ -76,6 +83,7 @@ function useStripePaymentRequest(
         .catch((err) => {
           ev.complete('fail')
           console.debug('Payment failed', err)
+          handleCancel()
         })
         .finally(() => {
           console.debug('Resetting payment request')
@@ -85,6 +93,7 @@ function useStripePaymentRequest(
 
     paymentRequest.on('cancel', () => {
       console.debug('Payment request cancelled')
+      handleCancel()
       setPaymentRequest(null)
     })
 

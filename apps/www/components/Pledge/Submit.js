@@ -323,7 +323,7 @@ class Submit extends Component {
       loading: t('pledge/submit/loading/submit'),
     }))
 
-    this.props
+    return this.props
       .submit({
         ...variables,
         payload: getConversionPayload(query),
@@ -344,7 +344,7 @@ class Submit extends Component {
           pledgeResponse: data.submitPledge,
           submitError: undefined,
         }))
-        this.payPledge(data.submitPledge.pledgeId, data.submitPledge)
+        return this.payPledge(data.submitPledge.pledgeId, data.submitPledge)
       })
       .catch((error) => {
         const submitError = errorToString(error)
@@ -368,8 +368,7 @@ class Submit extends Component {
     } else if (paymentMethod === 'STRIPE') {
       this.payWithStripe(pledgeId)
     } else if (paymentMethod === 'STRIPE-APPLEPAY') {
-      this.payWithApplePay(pledgeId, paymentMethod)
-      alert('SO WE ARRIVED AT PAY PLEDGE')
+      return this.payWithApplePay(pledgeId, paymentMethod)
     } else if (paymentMethod === 'PAYPAL') {
       this.payWithPayPal(pledgeId)
     }
@@ -522,13 +521,12 @@ class Submit extends Component {
     }))
 
     const paymentMethod = this.props.paymentRequest.paymentMethod
-    this.pay({
+    return this.pay({
       pledgeId,
       method: 'STRIPE',
       sourceId: paymentMethod.id,
       pspPayload: paymentMethod,
     })
-    alert(t('APPLE PAY IS DONE'))
   }
 
   handleApplePayIntent() {
@@ -538,26 +536,39 @@ class Submit extends Component {
     }))
 
     console.debug('SHOWING APPLE PAY')
-    this.props.paymentRequest.show(async (ev) => {
-      console.debug('Event value', ev)
-      // TODO: Sync contact data
-      const [firstName, lastName] = ev.payerName.split(' ').map((s) => s.trim())
+    this.props.paymentRequest.show(
+      // Payment success handler
+      async (ev) => {
+        console.debug('Event value', ev)
+        // TODO: Sync contact data
+        const [firstName, lastName] = ev.payerName
+          .split(' ')
+          .map((s) => s.trim())
 
-      this.props.contactState.onChange({
-        values: {
-          firstName,
-          lastName,
-          email: ev.payerEmail,
-        },
-        errors: {
-          firstName: null,
-          lastName: null,
-          email: null,
-        },
-      })
+        this.props.contactState.onChange({
+          values: {
+            firstName,
+            lastName,
+            email: ev.payerEmail,
+          },
+          errors: {
+            firstName: null,
+            lastName: null,
+            email: null,
+          },
+        })
 
-      this.submitPledge(ev.paymentMethod)
-    })
+        await this.submitPledge(ev.paymentMethod)
+        console.debug('Pledge has ended')
+      },
+      // Cancel Handler
+      () => {
+        this.setState(() => ({
+          loading: false,
+          paymentError: 'Payment cancelled',
+        }))
+      },
+    )
   }
 
   getErrorMessages() {
