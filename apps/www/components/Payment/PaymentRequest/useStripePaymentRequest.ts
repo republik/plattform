@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   Stripe,
   PaymentRequest,
@@ -9,29 +9,44 @@ import {
 import { loadStripe } from '../stripe'
 import { makePaymentRequestOptions } from './PaymentRequestOption.helper'
 
+type PaymentRequestStatus =
+  | 'UNINITIALIZED'
+  | 'INITIALIZED'
+  | 'SHOWING'
+  | 'COMPLETED'
+  | 'CANCELED'
+  | 'FAILED'
+  | 'UNAVAILABLE'
+
 type LeanPaymentRequestOptions = Pick<PaymentRequestOptions, 'total'>
 
-type PledgeHandler = (event: PaymentRequestPaymentMethodEvent) => Promise<void>
+type PaymentHandler = (event: PaymentRequestPaymentMethodEvent) => Promise<void>
 type PaymentCanceledHandler = () => void
 
 interface PaymentRequestValues {
-  initialized: boolean
-  initialize: () => Promise<void>
+  status: PaymentRequestStatus
+  instantiate: () => Promise<void>
   show: (
-    handlePledge: PledgeHandler,
+    handlePayment: PaymentHandler,
     handleCancel: PaymentCanceledHandler,
   ) => void
-  paymentMethod: PaymentMethod | null
 }
 
+/**
+ * Hook used to wrap a Stripe.js payment-request object
+ * Upon the first initialization stripe is lazy-loaded.
+ *
+ * @param options used to initialize the payment request
+ */
 function useStripePaymentRequest(
   options: LeanPaymentRequestOptions,
 ): PaymentRequestValues {
   const [stripe, setStripe] = useState<Stripe>(null)
   const [lastOptions, setLastOptions] =
     useState<LeanPaymentRequestOptions>(null)
+
   const [paymentRequest, setPaymentRequest] = useState<PaymentRequest>(null)
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(null)
+  const [status, setStatus] = useState<PaymentRequestStatus>('UNINITIALIZED')
 
   useEffect(() => {
     // In case the input options have changed create a new PaymentRequest
@@ -40,17 +55,11 @@ function useStripePaymentRequest(
       JSON.stringify(lastOptions) !== JSON.stringify(options)
     ) {
       setLastOptions(options)
-      console.debug('PaymentRequestOptions changed, reinitializing', options)
-      initialize()
-    } else {
-      console.debug(
-        'PaymentRequest options unchanged, reusing existing',
-        lastOptions,
-      )
+      instantiatePaymentRequest()
     }
   }, [paymentRequest, lastOptions, options])
 
-  async function initialize() {
+  async function instantiatePaymentRequest(): Promise<void> {
     let stripePromise = stripe
     if (!stripe) {
       const globalStripePromise = await loadStripe()
@@ -65,53 +74,50 @@ function useStripePaymentRequest(
 
     const newPaymentRequestPromise = newPaymentRequest.canMakePayment()
     if (!newPaymentRequestPromise) {
-      alert('This browser does not support Payment Request')
+      setStatus('UNAVAILABLE')
       return
     }
     setPaymentRequest(newPaymentRequest)
+    setStatus('INITIALIZED')
   }
 
   function show(
-    handlePledge: PledgeHandler,
+    handlePayment: PaymentHandler,
     handleCancel: PaymentCanceledHandler,
   ) {
-    if (!paymentRequest) {
-      alert('Payment Request not initialized')
+    if (!paymentRequest || paymentRequest.isShowing()) {
       return
     }
 
     paymentRequest.on('paymentmethod', (ev) => {
-      setPaymentMethod(ev.paymentMethod)
-      handlePledge(ev)
+      handlePayment(ev)
         .then(() => {
           ev.complete('success')
-          console.debug('Payment successful')
+          setStatus('COMPLETED')
         })
         .catch((err) => {
           ev.complete('fail')
-          console.debug('Payment failed', err)
+          setStatus('FAILED')
           handleCancel()
-        })
-        .finally(() => {
-          console.debug('Resetting payment request')
-          setPaymentRequest(null)
+          instantiatePaymentRequest()
         })
     })
 
     paymentRequest.on('cancel', () => {
-      console.debug('Payment request cancelled')
-      handleCancel()
+      setStatus('CANCELED')
       setPaymentRequest(null)
+      handleCancel()
+      instantiatePaymentRequest()
     })
 
     paymentRequest.show()
+    setStatus('SHOWING')
   }
 
   return {
-    initialized: !!paymentRequest,
-    initialize,
+    status,
+    instantiate: instantiatePaymentRequest,
     show,
-    paymentMethod,
   }
 }
 
