@@ -32,7 +32,7 @@ const ShareChart = ({ data }) => {
         loading={data.loading}
         error={data.error}
         render={() => {
-          const array = ['activeUnconverted', 'converted']
+          const accessGrantData = ['activeUnconverted', 'converted']
             .map((key) => {
               return data.accessGrantStats.periods.days.map((day) => {
                 return {
@@ -43,15 +43,19 @@ const ShareChart = ({ data }) => {
               })
             })
             .flat()
+          const currentDay = timeDay.floor(new Date())
+          const currentActiveAccessGrants = accessGrantData.filter(
+            (day) =>
+              day.type === 'activeUnconverted' &&
+              day.date === formatDate(timeDay.offset(currentDay, -1)),
+          )[0].value
           return (
             <>
               <ChartTitle>
-                Aktuell lesen 283 Personen die Republik mit einem geteilten Abo
+                Aktuell lesen {currentActiveAccessGrants} Personen die Republik
+                mit einem geteilten Abo
               </ChartTitle>
-              <ChartLead>
-                Anzahl aktiver Nutzer, die Republik dank eines geteilten Abo
-                lesen
-              </ChartLead>
+              <ChartLead>In den letzten 30 Tagen</ChartLead>
               <Chart
                 config={{
                   type: 'TimeBar',
@@ -62,7 +66,7 @@ const ShareChart = ({ data }) => {
                   height: 300,
                   yTicks: [0, 200, 400, 600, 800],
                 }}
-                values={array}
+                values={accessGrantData}
               />
             </>
           )
@@ -71,21 +75,6 @@ const ShareChart = ({ data }) => {
     </div>
   )
 }
-
-// [
-//   { date: '2018-01-01', type: 'abo', value: 200 },
-//   { date: '2018-01-02', type: 'abo', value: 210 },
-//   { date: '2018-01-03', type: 'abo', value: 220 },
-//   { date: '2018-01-04', type: 'abo', value: 222 },
-//   { date: '2018-01-05', type: 'abo', value: 223 },
-//   { date: '2018-01-06', type: 'abo', value: 234 },
-//   { date: '2018-01-07', type: 'abo', value: 285 },
-//   { date: '2018-01-08', type: 'abo', value: 319 },
-//   { date: '2018-01-09', type: 'abo', value: 324 },
-//   { date: '2018-01-07', type: 'verkauf', value: 0 },
-//   { date: '2018-01-08', type: 'verkauf', value: 1 },
-//   { date: '2018-01-09', type: 'verkauf', value: 8 },
-// ]
 
 export default compose(
   graphql(accessGrantQuery, {
