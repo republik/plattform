@@ -624,7 +624,7 @@ class Submit extends Component {
       autoPay,
     } = this.state
 
-    if (paymentMethod !== 'STRIPE') {
+    if (paymentMethod !== 'STRIPE' && !paymentMethod?.startsWith('STRIPE-')) {
       return undefined
     }
     if (forceAutoPay) {
@@ -643,7 +643,7 @@ class Submit extends Component {
     const {
       values: { paymentMethod },
     } = this.state
-    if (!paymentMethod || !paymentMethod.startsWith('STRIPE')) {
+    if (paymentMethod !== 'STRIPE' && !paymentMethod?.startsWith('STRIPE-')) {
       return null
     }
     const { t, packageName, forceAutoPay, options } = this.props
