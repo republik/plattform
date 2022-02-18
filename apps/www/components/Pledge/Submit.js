@@ -42,7 +42,7 @@ import { useFieldSetState } from './utils'
 import ErrorMessage, { ErrorContainer } from '../ErrorMessage'
 import { useIsApplePayAvailable } from '../Payment/Form/ApplePay'
 import useStripePaymentRequest from '../Payment/PaymentRequest/useStripePaymentRequest'
-import { getPaymentInformationFromEvent } from '../Payment/PaymentRequest/PaymentRequestEventHelper'
+import { getPayerInformationFromEvent } from '../Payment/PaymentRequest/PaymentRequestEventHelper'
 
 const { H2, P } = Interaction
 
@@ -260,7 +260,7 @@ class Submit extends Component {
     }
   }
 
-  submitPledge(paymentMethod) {
+  submitPledge(paymentMethodObject) {
     const {
       t,
       query,
@@ -355,7 +355,11 @@ class Submit extends Component {
           pledgeResponse: data.submitPledge,
           submitError: undefined,
         }))
-        return this.payPledge(data.submitPledge.pledgeId, data.submitPledge)
+        return this.payPledge(
+          data.submitPledge.pledgeId,
+          data.submitPledge,
+          paymentMethodObject,
+        )
       })
       .catch((error) => {
         const submitError = errorToString(error)
@@ -369,7 +373,7 @@ class Submit extends Component {
       })
   }
 
-  payPledge(pledgeId, pledgeResponse) {
+  payPledge(pledgeId, pledgeResponse, paymentMethodObject) {
     const { paymentMethod } = this.state.values
     console.debug('payPledge', pledgeId, pledgeResponse)
     if (paymentMethod === 'PAYMENTSLIP') {
@@ -379,7 +383,7 @@ class Submit extends Component {
     } else if (paymentMethod === 'STRIPE') {
       this.payWithStripe(pledgeId)
     } else if (paymentMethod === 'STRIPE-APPLEPAY') {
-      return this.payWithApplePay(pledgeId, paymentMethod)
+      this.payWithApplePay(pledgeId, paymentMethodObject)
     } else if (paymentMethod === 'PAYPAL') {
       this.payWithPayPal(pledgeId)
     }
@@ -550,13 +554,13 @@ class Submit extends Component {
       // Payment success handler
       async (ev) => {
         console.debug('Event value', ev)
-        const paymentInformation = getPaymentInformationFromEvent(ev)
+        const payerInformation = getPayerInformationFromEvent(ev)
 
         this.props.contactState.onChange({
           values: {
-            firstName: paymentInformation.firstName,
-            lastName: paymentInformation.lastName,
-            email: paymentInformation.email,
+            firstName: payerInformation.firstName,
+            lastName: payerInformation.lastName,
+            email: payerInformation.email,
           },
           errors: {
             firstName: null,
@@ -565,9 +569,9 @@ class Submit extends Component {
           },
         })
 
-        if (paymentInformation.shippingAddress) {
+        if (payerInformation.shippingAddress) {
           this.props.shippingAddressState.onChange({
-            values: paymentInformation.shippingAddress,
+            values: payerInformation.shippingAddress,
             errors: {},
           })
         }
