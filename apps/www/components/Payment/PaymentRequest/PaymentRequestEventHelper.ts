@@ -12,17 +12,16 @@ type Address = {
   country: string
 }
 
-type PaymentInformation = {
+type PayerInformation = {
   email: string
   firstName: string
   lastName: string
   shippingAddress?: Address
-  paymentMethod: PaymentMethod
 }
 
-export function getPaymentInformationFromEvent(
+export function getPayerInformationFromEvent(
   event: PaymentRequestPaymentMethodEvent,
-): PaymentInformation {
+): PayerInformation {
   const [firstName, lastName] = event.payerName.split(' ').map((s) => s.trim())
 
   return {
@@ -45,6 +44,5 @@ export function getPaymentInformationFromEvent(
           country: event.shippingAddress.country,
         }
       : undefined,
-    paymentMethod: event.paymentMethod,
   }
 }
