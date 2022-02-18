@@ -528,19 +528,18 @@ class Submit extends Component {
       })
   }
 
-  payWithApplePay(pledgeId) {
+  payWithApplePay(pledgeId, paymentMethodObject) {
     const { t } = this.props
     const { values } = this.state
     this.setState(() => ({
       loading: t('pledge/submit/loading/stripe'),
     }))
 
-    const paymentMethod = this.props.paymentRequest.paymentMethod
     return this.pay({
       pledgeId,
       method: 'STRIPE',
-      sourceId: paymentMethod.id,
-      pspPayload: paymentMethod,
+      sourceId: paymentMethodObject.id,
+      pspPayload: paymentMethodObject,
     })
   }
 
