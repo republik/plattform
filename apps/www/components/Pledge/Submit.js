@@ -546,7 +546,7 @@ class Submit extends Component {
   handleApplePayIntent() {
     const { t } = this.props
     this.setState(() => ({
-      loading: t('pledge/submit/loading/stripe'),
+      loading: 'Warte auf Zahlung', // TODO: t9n
     }))
 
     this.props.paymentRequest.show(
@@ -616,7 +616,9 @@ class Submit extends Component {
         category: t('pledge/address/shipping/title'),
         messages: []
           .concat(
-            requireShippingAddress && objectValues(shippingAddressState.errors),
+            requireShippingAddress &&
+              !this.state.values?.paymentMethod?.startsWith('STRIPE-') &&
+              objectValues(shippingAddressState.errors),
           )
           .filter(Boolean),
       },
