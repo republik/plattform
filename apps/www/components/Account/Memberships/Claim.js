@@ -269,7 +269,8 @@ class ClaimMembership extends Component {
     claim()
   }
   render() {
-    const { context, t, granterName, granterPortrait, message } = this.props
+    const { context, t, granterName, granterPortrait, message, accessToken } =
+      this.props
 
     const {
       consents,
@@ -450,6 +451,7 @@ class ClaimMembership extends Component {
               tokenType={tokenType}
               phrase={phrase}
               email={values.email}
+              accessToken={accessToken}
               alternativeFirstFactors={
                 alternativeFirstFactorsIncludingEmailCode
               }
