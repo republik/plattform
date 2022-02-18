@@ -3,9 +3,9 @@ import { css } from 'glamor'
 const styles = {
   button: css({
     display: 'inline-block',
-    '-webkit-appearance': '-apple-pay-button',
-    '-apple-pay-button-type': 'plain',
-    '-apple-pay-button-style': 'white',
+    WebkitAppearance: '-apple-pay-button',
+    ApplePayButtonType: 'plain',
+    ApplePayButtonStyle: 'white',
     borderRadius: 0,
     width: '100%',
   }),

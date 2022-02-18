@@ -31,7 +31,7 @@ import * as PSPIcons from './PSPIcons'
 import { format } from 'd3-format'
 
 import StripeForm from './Form/Stripe'
-import ApplePayButton from './ApplePayButton'
+import ApplePayButton from './Form/ApplePayButton'
 
 const pad2 = format('02')
 
