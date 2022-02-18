@@ -1,9 +1,0 @@
-tunnels:
-  frontend:
-    proto: http
-    addr: 3010
-    hostname: repbulik.eu.ngrok.io
-  backend:
-    proto: http
-    addr: 5010
-    hostname: api-republik.eu.ngrok.io

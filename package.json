@@ -43,7 +43,7 @@
     "notifications:send": "cd packages/backend-modules/republik && node ../push-notifications/script/sendNotification.js",
     "auth:role:user": "node packages/backend-modules/auth/script/roleUser",
     "auth:role:users": "node packages/backend-modules/auth/script/roleUsers",
-    "ngrok:start": "ngrok start --all --region=eu --config=\"./ngrok.yml\"",
+    "ngrok:start": "ngrok start republik-frontend republik-backend --region=eu",
     "stripe:forward-webhooks": "stripe listen --latest --forward-to localhost:5010/payments/stripe"
   },
   "devDependencies": {

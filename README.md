@@ -180,3 +180,44 @@ The environment variable `SERVER` is used to determine which app to build and ru
 A `heroku-prebuild` script runs `scripts/prune.sh` which runs `turbo prune` with the correct scope and moved the pruned apps and packages to the root directory.
 
 A `heroku-postbuild` script is used to add a `Procfile` for running the scheduler on heroku for the `api` app.
+
+## Development in a secure context (HTTPS tunnels with NGROK)
+
+Install the `ngrok` cli: `brew install --cask ngrok`
+
+Login to ngrok with `ngrok authtoken <token>` (You can find your token at https://dashboard.ngrok.com/auth)
+
+After adding the authtoken, you must now add the following tunnels to your ngrok configuration file:
+(Default config path is `~/.ngrok2/ngrok.yml`)
+```yaml
+tunnels:
+  republik-frontend:
+    proto: http
+    addr: 3010
+    hostname: republik.eu.ngrok.io
+  republik-backend:
+    proto: http
+    addr: 5010
+    hostname: api-republik.eu.ngrok.io
+```
+
+Before starting the frontend, update the following environment variables:
+```
+API_URL=https://api-republik.eu.ngrok.io/graphql
+API_WS_URL=wss://api-republik.eu.ngrok.io/graphql
+```
+
+Start your frontend and api using:
+`yarn dev --scope="@orbiting/www-app" --scope="@orbiting/api-app"`
+
+
+Now run `yarn ngrok:start` in a new terminal inside the workspace-root.
+
+Your local development servers are now relayed to the following ngrok tunnels.
+
+| local-address | ngrok-address                    |
+| :------------ |:---------------------------------|
+| http://localhost:3010 | https://republik.eu.ngrok.io     |
+| http://localhost:5010 | https://api-republik.eu.ngrok.io |
+
+With this you're now able to test payment-options (such as Apple Pay) that are only available in a secure context.
