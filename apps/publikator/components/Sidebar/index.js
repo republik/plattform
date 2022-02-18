@@ -13,7 +13,7 @@ const styles = {
     right: -SIDEBAR_WIDTH,
     transition: 'right 0.2s ease',
     '&.open': {
-      right: 0
+      right: 0,
     },
     bottom: 0,
     overflow: 'auto',
@@ -22,7 +22,7 @@ const styles = {
     opacity: 1,
     zIndex: ZINDEX_SIDEBAR,
     // ensure 10px white space for <UIForm>s negative magins
-    padding: 10 + 1 * 2 // 1px border
+    padding: 10 + 1 * 2, // 1px border
   }),
   overlay: css({
     opacity: '0.5',
@@ -32,28 +32,28 @@ const styles = {
     top: 0,
     right: 0,
     bottom: 0,
-    left: 0
+    left: 0,
   }),
   tabButtonContainer: css({
     borderBottom: `1px solid ${colors.divider}`,
     paddingBottom: '10px',
-    marginBottom: '15px'
+    marginBottom: '15px',
   }),
   tabButton: css({
     display: 'inline-block',
     marginRight: '10px',
     cursor: 'pointer',
     '&.active': {
-      textDecoration: 'underline'
-    }
-  })
+      textDecoration: 'underline',
+    },
+  }),
 }
 
 export const TabButton = ({ active, tabId, onSelect, children }) => (
   <Label
     {...styles.tabButton}
     className={active ? 'active' : ''}
-    onMouseDown={e => {
+    onMouseDown={(e) => {
       e.preventDefault()
       !active && onSelect(tabId)
     }}
@@ -70,7 +70,7 @@ export default class Sidebar extends Component {
   constructor(props, ...args) {
     super(props, ...args)
     this.state = {
-      selectedTabId: props.selectedTabId || null
+      selectedTabId: props.selectedTabId || null,
     }
 
     this.tabClickHandler = this.tabClickHandler.bind(this)
@@ -80,7 +80,7 @@ export default class Sidebar extends Component {
   tabClickHandler(id) {
     this.props.onTabChange(id)
     this.setState({
-      selectedTabId: id
+      selectedTabId: id,
     })
   }
 
@@ -90,7 +90,7 @@ export default class Sidebar extends Component {
       nextProps.selectedTabId !== this.props.selectedTabId
     ) {
       this.setState({
-        selectedTabId: nextProps.selectedTabId
+        selectedTabId: nextProps.selectedTabId,
       })
     }
   }
@@ -108,8 +108,8 @@ export default class Sidebar extends Component {
 
     const cleanChildren = React.Children.toArray(children)
       .filter(Boolean)
-      .filter(c => Boolean(c.props))
-    const tabProperties = cleanChildren.map(child => child.props)
+      .filter((c) => Boolean(c.props))
+    const tabProperties = cleanChildren.map((child) => child.props)
 
     const tabButtons = tabProperties.map(({ tabId, label }) => (
       <TabButton
@@ -124,13 +124,13 @@ export default class Sidebar extends Component {
 
     const activeTab = cleanChildren
       .filter(Boolean)
-      .find(child => child.props.tabId === selectedTabId)
+      .find((child) => child.props.tabId === selectedTabId)
 
     return (
       <div {...styles.container} className={(isOpen && 'open') || ''}>
         {prependChildren}
         {isDisabled && (
-          <div {...styles.overlay} onMouseDown={e => e.preventDefault()} />
+          <div {...styles.overlay} onMouseDown={(e) => e.preventDefault()} />
         )}
         <div {...styles.tabButtonContainer}>{tabButtons}</div>
         {activeTab}

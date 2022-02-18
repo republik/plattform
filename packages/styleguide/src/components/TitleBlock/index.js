@@ -5,7 +5,7 @@ import {
   PADDED_MAX_WIDTH_BREAKOUT,
   MAX_WIDTH,
   PADDING,
-  BREAKOUT
+  BREAKOUT,
 } from '../Center'
 import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
@@ -19,15 +19,15 @@ const styles = {
     paddingRight: PADDING,
     [mUp]: {
       paddingTop: 40,
-      margin: '0 auto'
-    }
+      margin: '0 auto',
+    },
   }),
   containerMargin: css({
     marginBottom: 40,
     [mUp]: {
-      marginBottom: 70
-    }
-  })
+      marginBottom: 70,
+    },
+  }),
 }
 
 const TitleBlock = ({ children, attributes, center, margin, breakout }) => {
@@ -42,7 +42,7 @@ const TitleBlock = ({ children, attributes, center, margin, breakout }) => {
           ? MAX_WIDTH + BREAKOUT + PADDING
           : breakout
           ? PADDED_MAX_WIDTH_BREAKOUT
-          : undefined
+          : undefined,
       }}
     >
       {children}
@@ -53,7 +53,7 @@ const TitleBlock = ({ children, attributes, center, margin, breakout }) => {
 TitleBlock.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
-  center: PropTypes.bool
+  center: PropTypes.bool,
 }
 
 export default TitleBlock

@@ -42,10 +42,10 @@ const NewAppMessageSync = () => {
   const [upsertDevice] = useMutation(upsertDeviceMutation)
 
   useEffect(() => {
-    const handleRouteChange = url => {
+    const handleRouteChange = (url) => {
       postMessage({
         type: 'routeChange',
-        payload: { url }
+        payload: { url },
       })
     }
     router.events.on('routeChangeComplete', handleRouteChange)
@@ -58,15 +58,15 @@ const NewAppMessageSync = () => {
   useEffect(() => {
     async function checkPendingAppSignIn() {
       const {
-        data: { pendingAppSignIn }
+        data: { pendingAppSignIn },
       } = await client.query({
         query: pendingAppSignInQuery,
-        fetchPolicy: 'network-only'
+        fetchPolicy: 'network-only',
       })
       if (pendingAppSignIn) {
         const verificationUrlObject = parse(
           pendingAppSignIn.verificationUrl,
-          true
+          true,
         )
         const { query } = verificationUrlObject
         setSignInQuery(query)
@@ -75,18 +75,12 @@ const NewAppMessageSync = () => {
     if (me) {
       checkPendingAppSignIn()
     }
-    const onMessage = event => {
+    const onMessage = (event) => {
       const { content = {}, id } = event.data
       if (content.type === 'onPushRegistered') {
         // Register Notification Token
-        const {
-          token,
-          os,
-          osVersion,
-          model,
-          appVersion,
-          userAgent
-        } = content.data
+        const { token, os, osVersion, model, appVersion, userAgent } =
+          content.data
         upsertDevice({
           variables: {
             token,
@@ -95,9 +89,9 @@ const NewAppMessageSync = () => {
               osVersion,
               model,
               appVersion,
-              userAgent
-            }
-          }
+              userAgent,
+            },
+          },
         })
       } else if (content.type === 'onAppMediaProgressUpdate') {
         // Audio Player sent media progress update
@@ -133,7 +127,7 @@ const NewAppMessageSync = () => {
       }
       postMessage({
         type: 'ackMessage',
-        id: id
+        id: id,
       })
     }
 

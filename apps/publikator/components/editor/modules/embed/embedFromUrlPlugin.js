@@ -23,9 +23,9 @@ export default ({ matchSource, matchUrl, getQueryParams, TYPE }) => ({
         type: TYPE,
         data: {
           queryParams: getQueryParams(url),
-          url
+          url,
         },
-        isVoid: true
+        isVoid: true,
       }
 
       event.preventDefault()
@@ -35,5 +35,5 @@ export default ({ matchSource, matchUrl, getQueryParams, TYPE }) => ({
         .extendToEndOf(block)
         .delete()
     }
-  }
+  },
 })

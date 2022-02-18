@@ -109,7 +109,7 @@ export const RenderFront = ({ t, isEditor, front, nodes }) => {
       {renderMdast(
         {
           type: 'root',
-          children: nodes.map(v => v.body),
+          children: nodes.map((v) => v.body),
           lastPublishedAt: front.meta.lastPublishedAt,
         },
         schema,
@@ -239,7 +239,7 @@ const Front = ({
                   <Editorial.A
                     href='#'
                     style={{ color: colors.negative.text }}
-                    onClick={event => {
+                    onClick={(event) => {
                       event && event.preventDefault()
                       setInfiniteScroll(true)
                     }}
@@ -256,7 +256,7 @@ const Front = ({
                 <div style={{ marginBottom: 10 }}>
                   {t.elements('front/chronology', {
                     years: intersperse(
-                      [2022, 2021, 2020, 2019, 2018].map(year => (
+                      [2022, 2021, 2020, 2019, 2018].map((year) => (
                         <Link key={year} href={`/${year}`} passHref>
                           <Editorial.A style={{ color: colors.negative.text }}>
                             {year}
@@ -272,7 +272,7 @@ const Front = ({
           )
 
           const nodes = front.children.nodes
-          const endIndex = nodes.findIndex(node => node.id === 'end')
+          const endIndex = nodes.findIndex((node) => node.id === 'end')
           const sliceIndex = endIndex === -1 ? undefined : endIndex
 
           return (
@@ -316,7 +316,7 @@ export default compose(
   withRouter,
   withTester,
   graphql(getDocument, {
-    options: props => ({
+    options: (props) => ({
       variables: {
         path: props.path || cleanAsPath(props.router.asPath),
         first: props.finite ? 1000 : 15,
@@ -363,7 +363,7 @@ export default compose(
                 return res
               },
             })
-            .catch(error => console.error(error))
+            .catch((error) => console.error(error))
         },
       }
     },

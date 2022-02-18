@@ -10,7 +10,7 @@ describe('/lib/utils/base64u.js', () => {
       { string: 'äöüáàâéèê', base64u: 'w6TDtsO8w6HDoMOiw6nDqMOq' },
       { string: 'π', base64u: 'z4A' },
       { string: '😈', base64u: '8J-YiA' }, // Not urlsafe: 8J+YiA
-      { string: '\n', base64u: 'Cg' }
+      { string: '\n', base64u: 'Cg' },
     ].forEach(({ string, base64u }) => {
       expect(encode(string)).toBe(base64u)
       expect(decode(base64u)).toBe(string)

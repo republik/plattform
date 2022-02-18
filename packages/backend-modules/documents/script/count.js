@@ -73,7 +73,7 @@ const run = async () => {
   })
 
   for await (const hit of Elasticsearch.scroll(elastic, params)) {
-    const [ wordCount ] = hit.fields['contentString.count']
+    const [wordCount] = hit.fields['contentString.count']
 
     // Count docs
     documentCount += 1

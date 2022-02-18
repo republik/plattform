@@ -9,17 +9,17 @@ const styles = {
   subheader: css({
     ...convertStyleToRem(sansSerifMedium16),
     [mUp]: {
-      ...convertStyleToRem(sansSerifMedium20)
-    }
+      ...convertStyleToRem(sansSerifMedium20),
+    },
   }),
   spaced: css({
     width: '100%',
     margin: '70px 0 30px 0',
     textAlign: 'center',
     [mUp]: {
-      margin: '100px 0 70px 0'
-    }
-  })
+      margin: '100px 0 70px 0',
+    },
+  }),
 }
 
 const Subheader = ({ children, singleColumn }) => {

@@ -12,7 +12,7 @@ import { renderCommentMdast } from '../Internal/Comment/render'
 import IconButton from '../../IconButton'
 import { ShareIcon } from '../../Icons'
 import ActionsMenu, {
-  ActionsMenuItemPropType
+  ActionsMenuItemPropType,
 } from '../Internal/Comment/ActionsMenu'
 import HeaderMetaLine from '../Internal/Comment/HeaderMetaLine'
 import { pxToRem } from '../../Typography/utils'
@@ -25,12 +25,12 @@ const styles = {
     display: 'grid',
     gap: '.5rem',
     [mUp]: {
-      gap: '.5rem 1rem'
-    }
+      gap: '.5rem 1rem',
+    },
   }),
   highlightedContainer: css({
     padding: HIGHLIGHT_PADDING,
-    margin: `0 -${HIGHLIGHT_PADDING}px`
+    margin: `0 -${HIGHLIGHT_PADDING}px`,
   }),
   withProfilePicture: css({
     gridTemplateAreas: `
@@ -48,8 +48,8 @@ const styles = {
     `,
       gridTemplateColumns:
         'minmax(100px, max-content) minmax(0, 1fr) max-content',
-      gridTemplateRows: 'max-content auto auto'
-    }
+      gridTemplateRows: 'max-content auto auto',
+    },
   }),
   withOutProfilePicture: css({
     gridTemplateAreas: `
@@ -58,15 +58,15 @@ const styles = {
       "actions vote"
     `,
     gridTemplateColumns: 'minmax(0, 1fr) max-content',
-    gridTemplateRows: 'auto auto auto auto'
+    gridTemplateRows: 'auto auto auto auto',
   }),
   profilePictureWrapper: css({
     gridArea: 'portrait',
     // Offset to perfectly align with the capital-letters in the heading
     paddingTop: pxToRem(3),
     [mUp]: {
-      paddingTop: pxToRem(4)
-    }
+      paddingTop: pxToRem(4),
+    },
   }),
   profilePicture: css({
     display: 'block',
@@ -74,19 +74,19 @@ const styles = {
     height: 60,
     [mUp]: {
       width: 100,
-      height: 100
-    }
+      height: 100,
+    },
   }),
   headingWrapper: css({
-    gridArea: 'heading'
+    gridArea: 'heading',
   }),
   textWrapper: css({
-    gridArea: 'text'
+    gridArea: 'text',
   }),
   unpublishedText: css({
     // Next line is needed for opacity to apply
     display: 'inherit',
-    opacity: 0.5
+    opacity: 0.5,
   }),
   heading: css({
     margin: 0,
@@ -95,32 +95,32 @@ const styles = {
     lineHeight: pxToRem(20),
     [mUp]: {
       fontSize: pxToRem(22),
-      lineHeight: pxToRem(24)
-    }
+      lineHeight: pxToRem(24),
+    },
   }),
   actionWrapper: css({
     gridArea: 'actions',
-    alignSelf: 'center'
+    alignSelf: 'center',
   }),
   menuWrapper: css({
     gridArea: 'menu',
     display: 'flex',
     justifyContent: 'flex-end',
-    alignItems: 'center'
+    alignItems: 'center',
   }),
   voteWrapper: css({
     gridArea: 'vote',
     display: 'flex',
     justifyContent: 'flex-end',
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
   }),
   link: css({
     color: 'inherit',
-    textDecoration: 'none'
-  })
+    textDecoration: 'none',
+  }),
 }
 
-const MockLink = props => <>{props.children}</>
+const MockLink = (props) => <>{props.children}</>
 
 const StatementNode = ({
   comment,
@@ -131,7 +131,7 @@ const StatementNode = ({
   menuItems = [],
   disableVoting = false,
   isHighlighted = false,
-  CommentLink = MockLink
+  CommentLink = MockLink,
 }) => {
   const [colorScheme] = useColorContext()
   const { discussion } = useContext(DiscussionContext)
@@ -139,11 +139,13 @@ const StatementNode = ({
   const tag = comment.tags.length > 0 && comment.tags[0]
 
   const tagMapper = useMemo(() => {
-    const tagMapping = tagMappings.find(m => stripTag(m.tag) === stripTag(tag))
+    const tagMapping = tagMappings.find(
+      (m) => stripTag(m.tag) === stripTag(tag),
+    )
 
     return (
       tagMapping || {
-        text: '{user}'
+        text: '{user}',
       }
     )
   }, [comment, tag, tagMappings])
@@ -156,13 +158,13 @@ const StatementNode = ({
           ? t('styleguide/comment/header/unpublishedByAdmin')
           : comment.unavailable
           ? t('styleguide/comment/header/unavailable')
-          : t('styleguide/comment/header/unpublishedByUser')
+          : t('styleguide/comment/header/unpublishedByUser'),
       }
     }
 
     return {
       color: getUniqueColorTagName(tag),
-      text: tagMapper.text.replace('{user}', comment?.displayAuthor?.name)
+      text: tagMapper.text.replace('{user}', comment?.displayAuthor?.name),
     }
   }, [comment, tag, tagMapper])
 
@@ -171,7 +173,7 @@ const StatementNode = ({
 
   const commentText = useMemo(
     () => (comment?.content ? renderCommentMdast(comment.content) : null),
-    [comment?.content]
+    [comment?.content],
   )
 
   const unpublishedMessage = useMemo(() => {
@@ -215,7 +217,12 @@ const StatementNode = ({
             <a {...styles.link}>{heading.text}</a>
           </CommentLink>
         </p>
-        <HeaderMetaLine t={t} comment={comment} discussion={discussion} CommentLink={CommentLink} />
+        <HeaderMetaLine
+          t={t}
+          comment={comment}
+          discussion={discussion}
+          CommentLink={CommentLink}
+        />
       </div>
       <div {...styles.textWrapper}>
         <span
@@ -266,19 +273,19 @@ StatementNode.propTypes = {
   tagMappings: PropTypes.arrayOf(
     PropTypes.shape({
       tag: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired
-    })
+      text: PropTypes.string.isRequired,
+    }),
   ),
   actions: PropTypes.shape({
-    handleShare: PropTypes.func.isRequired
+    handleShare: PropTypes.func.isRequired,
   }),
   voteActions: PropTypes.shape({
     handleUpVote: PropTypes.func.isRequired,
     handleDownVote: PropTypes.func.isRequired,
-    handleUnVote: PropTypes.func.isRequired
+    handleUnVote: PropTypes.func.isRequired,
   }),
   menuItems: PropTypes.arrayOf(ActionsMenuItemPropType),
   disableVoting: PropTypes.bool,
   isHighlighted: PropTypes.bool,
-  CommentLink: PropTypes.elementType
+  CommentLink: PropTypes.elementType,
 }

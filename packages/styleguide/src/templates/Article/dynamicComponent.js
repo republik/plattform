@@ -11,7 +11,7 @@ const createDynamicComponent = ({
   dynamicComponentRequire,
   dynamicComponentIdentifiers,
   insertButtonText,
-  type
+  type,
 }) => ({
   matchMdast: matchZone('DYNAMIC_COMPONENT'),
   component: ({ showException, raw = false, size, attributes, ...props }) => {
@@ -34,8 +34,10 @@ const createDynamicComponent = ({
       </Figure>
     )
   },
-  props: node => {
-    const html = node.children.find(c => c.type === 'code' && c.lang === 'html')
+  props: (node) => {
+    const html = node.children.find(
+      (c) => c.type === 'code' && c.lang === 'html',
+    )
     return {
       raw: node.data.raw,
       size: node.data.size,
@@ -45,16 +47,16 @@ const createDynamicComponent = ({
       props: node.data.props,
       loader: node.data.loader,
       require: dynamicComponentRequire,
-      identifiers: dynamicComponentIdentifiers || {}
+      identifiers: dynamicComponentIdentifiers || {},
     }
   },
   editorModule: 'dynamiccomponent',
   editorOptions: {
     type,
     insertTypes: ['PARAGRAPH'],
-    insertButtonText
+    insertButtonText,
   },
-  isVoid: true
+  isVoid: true,
 })
 
 export default createDynamicComponent

@@ -9,7 +9,7 @@ import {
   QueryResult,
   TypedDocumentNode,
   useMutation,
-  useQuery
+  useQuery,
 } from '@apollo/client'
 
 /**
@@ -17,10 +17,10 @@ import {
  * @param query that should be abstracted in the new hook
  */
 export function makeQueryHook<TData = any, TVariables = OperationVariables>(
-  query: DocumentNode | TypedDocumentNode<TData, TVariables>
+  query: DocumentNode | TypedDocumentNode<TData, TVariables>,
 ) {
   return (
-    options?: QueryHookOptions<TData, TVariables>
+    options?: QueryHookOptions<TData, TVariables>,
   ): QueryResult<TData, TVariables> =>
     useQuery<TData, TVariables>(query, options)
 }
@@ -33,10 +33,10 @@ export function makeMutationHook<
   TData = any,
   TVariables = OperationVariables,
   TContext = DefaultContext,
-  TCache extends ApolloCache<any> = ApolloCache<any>
+  TCache extends ApolloCache<any> = ApolloCache<any>,
 >(mutation: DocumentNode | TypedDocumentNode<TData, TVariables>) {
   return (
-    options?: MutationHookOptions<TData, TVariables, TContext>
+    options?: MutationHookOptions<TData, TVariables, TContext>,
   ): MutationTuple<TData, TVariables, TContext, TCache> =>
     useMutation<TData, TVariables, TContext, TCache>(mutation, options)
 }

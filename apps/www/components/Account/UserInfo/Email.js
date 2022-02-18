@@ -11,7 +11,7 @@ import {
   Field,
   Interaction,
   Label,
-  mediaQueries
+  mediaQueries,
 } from '@project-r/styleguide'
 
 import { errorToString } from '../../../lib/utils/errors'
@@ -26,27 +26,27 @@ const styles = {
   container: css({
     margin: '16px 0 24px 0',
     [mediaQueries.mUp]: {
-      margin: '24px 0 36px 0'
-    }
+      margin: '24px 0 36px 0',
+    },
   }),
   spinner: css({
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
   }),
   alertContainer: css({
     padding: 8,
-    margin: '16px 0'
+    margin: '16px 0',
   }),
   buttonsContainer: css({
     display: 'flex',
     gap: 16,
-    flexWrap: 'wrap'
-  })
+    flexWrap: 'wrap',
+  }),
 }
 
 export const UserEmail = compose(
   withMe,
-  withT
+  withT,
 )(({ me, t }) => {
   return me ? (
     <>
@@ -69,11 +69,11 @@ const UpdateEmail = ({ t, me, loading, error, updateEmail }) => {
   const [value, setValue] = useState('')
   const [errorValue, setErrorValue] = useState(false)
 
-  const updateValue = value => {
+  const updateValue = (value) => {
     setValue(value)
     setErrorValue(
       (value.trim().length <= 0 && t('Account/Update/email/empty')) ||
-        (!isEmail(value) && t('Account/Update/email/error/invalid'))
+        (!isEmail(value) && t('Account/Update/email/error/invalid')),
     )
   }
 
@@ -84,13 +84,13 @@ const UpdateEmail = ({ t, me, loading, error, updateEmail }) => {
     setIsUpdating(true)
     updateEmail({
       email: value,
-      userId: me.id
+      userId: me.id,
     })
       .then(() => {
         setIsUpdating(false)
         setIsEditing(false)
       })
-      .catch(error => {
+      .catch((error) => {
         setIsUpdating(false)
         setErrorValue(errorToString(error))
       })
@@ -153,18 +153,18 @@ const mutation = gql`
 export default compose(
   graphql(mutation, {
     props: ({ mutate }) => ({
-      updateEmail: variables => {
+      updateEmail: (variables) => {
         return mutate({
           variables,
           refetchQueries: [
             {
-              query
-            }
-          ]
+              query,
+            },
+          ],
         })
-      }
-    })
+      },
+    }),
   }),
   withT,
-  withMe
+  withMe,
 )(UpdateEmail)

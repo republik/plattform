@@ -77,7 +77,11 @@ const createMaybeUpload = (repoId: string, origin: string) => {
       return uploadImage(repoId, { ...image, blob })
     } catch (e) {
       // swallow error purposfully
-      console.error('maybeUpload error', e instanceof Error ? e.message : e, originUrl)
+      console.error(
+        'maybeUpload error',
+        e instanceof Error ? e.message : e,
+        originUrl,
+      )
       return false
     }
   }

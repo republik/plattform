@@ -6,7 +6,7 @@ const apiSurfaces = [
     'fullscreenElement',
     'fullscreenEnabled',
     'fullscreenchange',
-    'fullscreenerror'
+    'fullscreenerror',
   ],
   // contemporary webkit
   [
@@ -15,7 +15,7 @@ const apiSurfaces = [
     'webkitFullscreenElement',
     'webkitFullscreenEnabled',
     'webkitfullscreenchange',
-    'webkitfullscreenerror'
+    'webkitfullscreenerror',
   ],
   // legacy webkit (Safari 5.1)
   [
@@ -24,7 +24,7 @@ const apiSurfaces = [
     'webkitCurrentFullScreenElement',
     'webkitCancelFullScreen',
     'webkitfullscreenchange',
-    'webkitfullscreenerror'
+    'webkitfullscreenerror',
   ],
   [
     'mozRequestFullScreen',
@@ -32,7 +32,7 @@ const apiSurfaces = [
     'mozFullScreenElement',
     'mozFullScreenEnabled',
     'mozfullscreenchange',
-    'mozfullscreenerror'
+    'mozfullscreenerror',
   ],
   // IE11
   // https://msdn.microsoft.com/en-us/library/dn265028(v=vs.85).aspx
@@ -42,14 +42,14 @@ const apiSurfaces = [
     'msFullscreenElement',
     'msFullscreenEnabled',
     'MSFullscreenChange',
-    'MSFullscreenError'
-  ]
+    'MSFullscreenError',
+  ],
 ]
 
 const getFullscreenApi = () => {
   let api = {}
   const canonicalSurface = apiSurfaces[0]
-  apiSurfaces.some(apiSurface => {
+  apiSurfaces.some((apiSurface) => {
     if (!document[apiSurface[1]]) {
       return false
     }
@@ -76,7 +76,7 @@ export const setupFullscreen = ({ onChange, video }) => {
         element() {
           return video
         },
-        dispose() {}
+        dispose() {},
       }
     }
     return
@@ -97,6 +97,6 @@ export const setupFullscreen = ({ onChange, video }) => {
     },
     dispose() {
       document.removeEventListener(api.fullscreenchange, onChange, false)
-    }
+    },
   }
 }

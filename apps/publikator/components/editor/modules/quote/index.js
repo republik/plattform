@@ -9,23 +9,23 @@ import InlineUI from '../../utils/InlineUI'
 export default ({ rule, subModules, TYPE }) => {
   const editorOptions = rule.editorOptions || {}
 
-  const paragrapQuoteModule = subModules.find(m => m.name === 'paragraph')
+  const paragrapQuoteModule = subModules.find((m) => m.name === 'paragraph')
   if (!paragrapQuoteModule) {
     throw new Error('Missing paragraph submodule (quote)')
   }
   const paragraphSourceModule = subModules.find(
-    m => m.name === 'paragraph' && m !== paragrapQuoteModule
+    (m) => m.name === 'paragraph' && m !== paragrapQuoteModule,
   )
   if (!paragraphSourceModule) {
     throw new Error('Missing a second paragraph submodule (source)')
   }
 
-  const figureModule = subModules.find(m => m.name === 'figure')
+  const figureModule = subModules.find((m) => m.name === 'figure')
 
   const orderedSubModules = [
     figureModule,
     paragrapQuoteModule,
-    paragraphSourceModule
+    paragraphSourceModule,
   ].filter(Boolean)
 
   const childSerializer = new MarkdownSerializer({
@@ -33,11 +33,11 @@ export default ({ rule, subModules, TYPE }) => {
       .reduce(
         (a, m) =>
           a.concat(
-            m.helpers && m.helpers.serializer && m.helpers.serializer.rules
+            m.helpers && m.helpers.serializer && m.helpers.serializer.rules,
           ),
-        []
+        [],
       )
-      .filter(Boolean)
+      .filter(Boolean),
   })
 
   const Container = rule.component
@@ -50,7 +50,7 @@ export default ({ rule, subModules, TYPE }) => {
         kind: 'block',
         type: TYPE,
         data: node.data,
-        nodes: childSerializer.fromMdast(node.children, 0, node, rest)
+        nodes: childSerializer.fromMdast(node.children, 0, node, rest),
       }
     },
     toMdast: (object, index, parent, rest) => {
@@ -58,19 +58,19 @@ export default ({ rule, subModules, TYPE }) => {
         type: 'zone',
         identifier: TYPE,
         data: object.data,
-        children: childSerializer.toMdast(object.nodes, 0, object, rest)
+        children: childSerializer.toMdast(object.nodes, 0, object, rest),
       }
-    }
+    },
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [serializerRule]
+    rules: [serializerRule],
   })
 
   return {
     TYPE,
     helpers: {
-      serializer
+      serializer,
     },
     changes: {},
     ui: createUi({
@@ -79,7 +79,7 @@ export default ({ rule, subModules, TYPE }) => {
       editorOptions,
       paragrapQuoteModule,
       paragraphSourceModule,
-      figureModule
+      figureModule,
     }),
     plugins: [
       {
@@ -87,7 +87,8 @@ export default ({ rule, subModules, TYPE }) => {
           if (!serializerRule.match(node)) return
 
           const hasFigure =
-            figureModule && !!node.nodes.find(n => n.type === figureModule.TYPE)
+            figureModule &&
+            !!node.nodes.find((n) => n.type === figureModule.TYPE)
           return (
             <Container
               {...node.data.toJS()}
@@ -110,7 +111,7 @@ export default ({ rule, subModules, TYPE }) => {
           const { value } = change
           const inBlock = value.document.getClosest(
             value.startBlock.key,
-            serializerRule.match
+            serializerRule.match,
           )
           if (!inBlock) return
 
@@ -128,32 +129,32 @@ export default ({ rule, subModules, TYPE }) => {
                   kinds: ['block'],
                   types: [figureModule.TYPE],
                   min: 0,
-                  max: 1
+                  max: 1,
                 },
                 {
                   kinds: ['block'],
                   types: [paragrapQuoteModule.TYPE],
                   min: 1,
-                  max: 1
+                  max: 1,
                 },
                 {
                   kinds: ['block'],
                   types: [paragraphSourceModule.TYPE],
                   min: 1,
-                  max: 1
-                }
+                  max: 1,
+                },
               ].filter(Boolean),
               normalize: (change, reason, { node, index, child }) => {
                 let orderedTypes = orderedSubModules.map(
-                  subModule => subModule.TYPE
+                  (subModule) => subModule.TYPE,
                 )
                 if (figureModule) {
                   const hasFigure = !!node.nodes.find(
-                    n => n.type === figureModule.TYPE
+                    (n) => n.type === figureModule.TYPE,
                   )
                   if (!hasFigure) {
                     orderedTypes = orderedTypes.filter(
-                      type => type !== figureModule.TYPE
+                      (type) => type !== figureModule.TYPE,
                     )
                   }
                 }
@@ -167,17 +168,17 @@ export default ({ rule, subModules, TYPE }) => {
                 if (reason === 'child_required') {
                   change.insertNodeByKey(node.key, index, {
                     kind: 'block',
-                    type: orderedTypes[index]
+                    type: orderedTypes[index],
                   })
                 }
                 if (reason === 'child_kind_invalid') {
                   change.wrapBlockByKey(child.key, {
-                    type: orderedTypes[index]
+                    type: orderedTypes[index],
                   })
                 }
                 if (reason === 'child_type_invalid') {
                   change.setNodeByKey(child.key, {
-                    type: orderedTypes[index]
+                    type: orderedTypes[index],
                   })
                 }
                 if (reason === 'child_unknown') {
@@ -185,11 +186,11 @@ export default ({ rule, subModules, TYPE }) => {
                     change.unwrapNodeByKey(child.key)
                   }
                 }
-              }
-            }
-          }
-        }
-      }
-    ]
+              },
+            },
+          },
+        },
+      },
+    ],
   }
 }

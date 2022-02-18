@@ -12,7 +12,7 @@ export default compose(withT)(({ t, node, isNew }) => {
       <CommentTeaser
         {...node.object}
         context={{
-          title: node.object.discussion.title
+          title: node.object.discussion.title,
         }}
         preview={node.object.preview}
         CommentLink={CommentLink}

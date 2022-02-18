@@ -17,7 +17,7 @@ import Link from 'next/link'
 import { useMe } from '../../lib/context/MeContext'
 
 export const UnauthorizedMessage = ({
-  unauthorizedTexts: { title, description } = {}
+  unauthorizedTexts: { title, description } = {},
 }) => {
   const { me } = useMe()
   const { inNativeIOSApp } = useInNativeApp()
@@ -66,7 +66,7 @@ export const UnauthorizedMessage = ({
               <Link key='account' href='/konto' passHref>
                 <A>{t('withMembership/unauthorized/accountText')}</A>
               </Link>
-            )
+            ),
           })}
           <br />
         </Interaction.P>
@@ -93,7 +93,7 @@ export const UnauthorizedMessage = ({
                   <Link key='index' href='/' passHref>
                     <A>{t('withMembership/signIn/note/moreText')}</A>
                   </Link>
-                )
+                ),
               })}
           </Interaction.P>
         }
@@ -116,12 +116,12 @@ export const WithoutMembership = withAuthorization(['member'])(
       return render()
     }
     return null
-  }
+  },
 )
 
 export const WithoutActiveMembership = compose(
   withMe,
-  withAuthorization(['member'])
+  withAuthorization(['member']),
 )(({ me, render }) => {
   if (me && me.activeMembership) {
     return null
@@ -136,12 +136,12 @@ export const WithMembership = withAuthorization(['member'])(
       return render()
     }
     return null
-  }
+  },
 )
 
 export const WithActiveMembership = compose(
   withMe,
-  withAuthorization(['member'])
+  withAuthorization(['member']),
 )(({ me, render }) => {
   if (me && me.activeMembership) {
     return render()
@@ -150,17 +150,15 @@ export const WithActiveMembership = compose(
   return null
 })
 
-export const enforceMembership = (
-  meta,
-  unauthorizedTexts
-) => WrappedComponent =>
-  withAuthorization(['member'])(({ isAuthorized, ...props }) => {
-    if (isAuthorized) {
-      return <WrappedComponent meta={meta} {...props} />
-    }
-    return (
-      <UnauthorizedPage meta={meta} unauthorizedTexts={unauthorizedTexts} />
-    )
-  })
+export const enforceMembership =
+  (meta, unauthorizedTexts) => (WrappedComponent) =>
+    withAuthorization(['member'])(({ isAuthorized, ...props }) => {
+      if (isAuthorized) {
+        return <WrappedComponent meta={meta} {...props} />
+      }
+      return (
+        <UnauthorizedPage meta={meta} unauthorizedTexts={unauthorizedTexts} />
+      )
+    })
 
 export default withMembership

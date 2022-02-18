@@ -7,11 +7,11 @@ const checkVisible = () => {
   const scrollY = window.pageYOffset
   const scrollYEdge = scrollY + height
 
-  instances.all.forEach(instance => {
+  instances.all.forEach((instance) => {
     if (!instance.state.visible) {
       if (instance.y - instance.props.offset * height < scrollYEdge) {
         instance.setState({
-          visible: true
+          visible: true,
         })
       }
     }
@@ -24,7 +24,7 @@ const onScroll = rafDebounce(() => {
 
 const onResize = rafDebounce(() => {
   const scrollY = window.pageYOffset
-  instances.all.forEach(instance => {
+  instances.all.forEach((instance) => {
     if (instance.ref) {
       const rect = instance.ref.getBoundingClientRect()
       instance.y = rect.top + scrollY
@@ -53,14 +53,14 @@ const instances = {
       window.removeEventListener('resize', onResize)
     }
   },
-  all: []
+  all: [],
 }
 
 class LazyLoad extends Component {
   constructor(...args) {
     super(...args)
     this.state = {}
-    this.setRef = ref => {
+    this.setRef = (ref) => {
       this.ref = ref
     }
   }
@@ -76,7 +76,7 @@ class LazyLoad extends Component {
       attributes,
       style,
       type: Element,
-      consistentPlaceholder
+      consistentPlaceholder,
     } = this.props
     const visible = this.props.visible || this.state.visible
     if (visible && !consistentPlaceholder) {
@@ -97,7 +97,7 @@ class LazyLoad extends Component {
 LazyLoad.defaultProps = {
   offset: 0.5,
   type: 'div',
-  consistentPlaceholder: false
+  consistentPlaceholder: false,
 }
 
 export default LazyLoad

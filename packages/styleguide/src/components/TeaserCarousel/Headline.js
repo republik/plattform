@@ -6,24 +6,24 @@ import CarouselContext from './Context'
 
 const styles = {
   base: css({
-    margin: '0 0 10px 0'
+    margin: '0 0 10px 0',
   }),
   editorial: css({
     ...fontStyles.serifTitle,
     fontSize: 19,
-    lineHeight: '22px'
+    lineHeight: '22px',
   }),
   interaction: css({
     ...fontStyles.sansSerifMedium,
     fontSize: 19,
-    lineHeight: '22px'
+    lineHeight: '22px',
   }),
   scribble: css({
     ...fontStyles.cursiveTitle,
     fontSize: 19,
-    lineHeight: '22px'
+    lineHeight: '22px',
   }),
-  bigger: css({ fontSize: 28, lineHeight: '28px' })
+  bigger: css({ fontSize: 28, lineHeight: '28px' }),
 }
 
 export const Editorial = ({ children, bigger: biggerProp }) => {
@@ -33,7 +33,7 @@ export const Editorial = ({ children, bigger: biggerProp }) => {
   const headlineStyles = css(
     styles.base,
     styles.editorial,
-    bigger && styles.bigger
+    bigger && styles.bigger,
   )
 
   return <h1 {...headlineStyles}>{children}</h1>
@@ -46,7 +46,7 @@ export const Interaction = ({ children, bigger: biggerProp }) => {
   const headlineStyles = css(
     styles.base,
     styles.interaction,
-    bigger && styles.bigger
+    bigger && styles.bigger,
   )
   return <h1 {...headlineStyles}>{children}</h1>
 }
@@ -58,31 +58,31 @@ export const Scribble = ({ children, bigger: biggerProp }) => {
   const headlineStyles = css(
     styles.base,
     styles.scribble,
-    bigger && styles.bigger
+    bigger && styles.bigger,
   )
   return <h1 {...headlineStyles}>{children}</h1>
 }
 
 Editorial.propTypes = {
   children: PropTypes.node,
-  bigger: PropTypes.bool
+  bigger: PropTypes.bool,
 }
 Editorial.defaultProps = {
-  bigger: false
+  bigger: false,
 }
 
 Interaction.propTypes = {
   children: PropTypes.node,
-  bigger: PropTypes.bool
+  bigger: PropTypes.bool,
 }
 Interaction.defaultProps = {
-  bigger: false
+  bigger: false,
 }
 
 Scribble.propTypes = {
   children: PropTypes.node,
-  bigger: PropTypes.bool
+  bigger: PropTypes.bool,
 }
 Scribble.defaultProps = {
-  bigger: false
+  bigger: false,
 }

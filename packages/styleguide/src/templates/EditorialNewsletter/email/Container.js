@@ -31,7 +31,7 @@ export default ({ children, attributes = {}, meta, variableContext }) => (
         ${SG.FONT_FACES}
         ${cssFor(Editorial.fontRule)}
         ${cssFor(Interaction.fontRule)}
-      `
+      `,
         }}
       />
     </head>

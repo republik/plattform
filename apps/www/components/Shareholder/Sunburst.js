@@ -14,7 +14,7 @@ const nbspNumbers = formatLocale({
   decimal: ',',
   thousands: '\u00a0',
   grouping: [3],
-  currency: ['CHF\u00a0', '']
+  currency: ['CHF\u00a0', ''],
 })
 const percentFormat = nbspNumbers.format('.1%')
 
@@ -23,7 +23,7 @@ const styles = {
     position: 'relative',
     height: 0,
     width: '100%',
-    paddingBottom: '100%'
+    paddingBottom: '100%',
   }),
   svg: css({
     fontFamily: fontFamilies.sansSerifRegular,
@@ -31,27 +31,27 @@ const styles = {
     height: '100%',
     width: '100%',
     left: 0,
-    top: 0
-  })
+    top: 0,
+  }),
 }
 
 export const radius = 250
 const layout = partition().size([2 * Math.PI, radius * radius])
 
-const startAngle = d => d.x0
-const endAngle = d => d.x1
+const startAngle = (d) => d.x0
+const endAngle = (d) => d.x1
 
 const arcGenerator = arc()
   .startAngle(startAngle)
   .endAngle(endAngle)
-  .innerRadius(d => Math.sqrt(d.y0))
-  .outerRadius(d => Math.sqrt(d.y1))
+  .innerRadius((d) => Math.sqrt(d.y0))
+  .outerRadius((d) => Math.sqrt(d.y1))
 
 const visSort = {
   Geldgeber: 2,
   Gründerteam: 1,
   'Eigenaktien Republik': 3,
-  'Project R Gen': 4
+  'Project R Gen': 4,
 }
 
 const grouppedVis = groupped
@@ -59,7 +59,7 @@ const grouppedVis = groupped
   .sort(
     (a, b) =>
       ascending(visSort[a.data.Kategorie], visSort[b.data.Kategorie]) ||
-      descending(a.value, b.value)
+      descending(a.value, b.value),
   )
 
 const legend = []
@@ -68,9 +68,9 @@ const legend = []
 
 const arcs = layout(grouppedVis)
   .descendants()
-  .filter(d => d.data.Kategorie)
+  .filter((d) => d.data.Kategorie)
 
-const computeTextRotation = d => {
+const computeTextRotation = (d) => {
   const centerRadians = startAngle(d) + (endAngle(d) - startAngle(d)) / 2
   const degree = centerRadians * (180 / Math.PI) - 90
 
@@ -93,7 +93,7 @@ export default () => (
         />
       ))}
       {arcs
-        .filter(d => d.depth === 1 || d.value / total > 0.01)
+        .filter((d) => d.depth === 1 || d.value / total > 0.01)
         .map((d, i) => {
           const centroid = arcGenerator.centroid(d)
           const rotate = computeTextRotation(d)
@@ -109,7 +109,7 @@ export default () => (
               transform={transform}
             >
               {percentFormat(d.value / total)}
-            </text>
+            </text>,
           ]
         })}
       <g transform={`translate(-65, -45)`}>

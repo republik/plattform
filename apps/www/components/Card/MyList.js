@@ -56,7 +56,7 @@ const MyList = ({
   isStale,
   t,
   me,
-  data
+  data,
 }) => {
   const [showIgnore, setShowIgnore] = useState(false)
 
@@ -66,37 +66,38 @@ const MyList = ({
 
   const { statePerUserId, pending } = queue
   const withCards = swipes
-    .filter(swipe => swipe.cardCache)
-    .map(swipe => ({
+    .filter((swipe) => swipe.cardCache)
+    .map((swipe) => ({
       ...swipe,
-      card: data.cards.nodes.find(n => n.id === swipe.cardId) || swipe.cardCache
+      card:
+        data.cards.nodes.find((n) => n.id === swipe.cardId) || swipe.cardCache,
     }))
   const rightSwipes = withCards
-    .filter(swipe => swipe.dir === 1)
-    .map(swipe => {
+    .filter((swipe) => swipe.dir === 1)
+    .map((swipe) => {
       const pendingItem = pending.find(
-        item => item.userId === swipe.card.user.id
+        (item) => item.userId === swipe.card.user.id,
       )
       return {
         card: swipe.card,
         sub:
           statePerUserId[swipe.card.user.id] ||
           (pendingItem && pendingItem.sub),
-        pending: me && !!pendingItem
+        pending: me && !!pendingItem,
       }
     })
-  const activeRightSwipes = rightSwipes.filter(swipe => swipe.sub)
-  const leftoverRightSwipes = rightSwipes.filter(swipe => !swipe.sub)
+  const activeRightSwipes = rightSwipes.filter((swipe) => swipe.sub)
+  const leftoverRightSwipes = rightSwipes.filter((swipe) => !swipe.sub)
   const leftSwipes = leftoverRightSwipes.concat(
     withCards
-      .filter(swipe => swipe.dir === -1)
-      .map(swipe => ({
-        card: swipe.card
-      }))
+      .filter((swipe) => swipe.dir === -1)
+      .map((swipe) => ({
+        card: swipe.card,
+      })),
   )
 
   const ignoreTitle = t.pluralize('components/Card/MyList/ignoreTitle', {
-    count: leftSwipes.length
+    count: leftSwipes.length,
   })
 
   return (
@@ -111,7 +112,7 @@ const MyList = ({
             <>
               <TitleRow>
                 {t.pluralize('components/Card/MyList/followTitle', {
-                  count: activeRightSwipes.length
+                  count: activeRightSwipes.length,
                 })}
               </TitleRow>
               <CardRows
@@ -131,7 +132,7 @@ const MyList = ({
               >
                 <Editorial.A
                   href='#'
-                  onClick={e => {
+                  onClick={(e) => {
                     e.preventDefault()
                     setShowIgnore(!showIgnore)
                   }}
@@ -166,19 +167,19 @@ const MyList = ({
         {t(
           `components/Card/MyList/data/${
             isPersisted ? 'isPersisted' : 'notPersisted'
-          }`
+          }`,
         )}
       </Paragraph>
       <br />
       <Paragraph>
         <Editorial.A
           download={`wahltindaer-${formatDate(new Date())}.csv`}
-          onClick={e => {
+          onClick={(e) => {
             const url = (e.target.href = URL.createObjectURL(
               new window.Blob(
                 [
                   csvFormat(
-                    withCards.map(s => ({
+                    withCards.map((s) => ({
                       status: s.dir === 1 ? 'folgen' : 'ignorieren',
                       name: s.card.user.name,
                       partei: s.card.payload.party,
@@ -186,14 +187,14 @@ const MyList = ({
                       reoublikLink: `https://www.republik.ch/~${s.card.user.slug}`,
                       smartvoteLink:
                         s.cardCache.payload.councilOfStates.linkSmartvote ||
-                        s.cardCache.payload.nationalCouncil.linkSmartvote
-                    }))
-                  )
+                        s.cardCache.payload.nationalCouncil.linkSmartvote,
+                    })),
+                  ),
                 ],
-                { type: 'text/csv' }
-              )
+                { type: 'text/csv' },
+              ),
             ))
-            setTimeout(function() {
+            setTimeout(function () {
               URL.revokeObjectURL(url)
             }, 50)
           }}
@@ -204,7 +205,7 @@ const MyList = ({
         {isPersisted && (
           <Editorial.A
             href='#'
-            onClick={e => {
+            onClick={(e) => {
               e.preventDefault()
               if (
                 !window.confirm(t('components/Card/MyList/data/clear/confirm'))

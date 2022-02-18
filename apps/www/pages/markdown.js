@@ -18,7 +18,7 @@ import {
   Editorial,
   Interaction,
   HR,
-  mediaQueries
+  mediaQueries,
 } from '@project-r/styleguide'
 
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
@@ -32,15 +32,15 @@ const styles = {
     '& th': {
       borderBottom: `1px solid ${colors.divider}`,
       padding: '0 40px 20px 0',
-      textAlign: 'left'
+      textAlign: 'left',
     },
     '& td': {
       padding: '20px 10px 0 0',
       [mediaQueries.mUp]: {
-        paddingRight: 40
-      }
-    }
-  })
+        paddingRight: 40,
+      },
+    },
+  }),
 }
 
 const Page = ({ router, t }) => {
@@ -49,7 +49,7 @@ const Page = ({ router, t }) => {
     title: t('markdown/title'),
     description: t('markdown/description'),
     image: `${CDN_FRONTEND_BASE_URL}/static/social-media/markdown.png`,
-    url: `${PUBLIC_BASE_URL}${router.pathname}`
+    url: `${PUBLIC_BASE_URL}${router.pathname}`,
   }
 
   return (

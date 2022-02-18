@@ -6,7 +6,7 @@ import injectBlock from '../../utils/injectBlock'
 const UI = ({ TYPE, newItem, editorOptions }) => {
   const { insertButtonText, insertTypes = [] } = editorOptions || {}
 
-  const buttonClickHandler = (disabled, value, onChange) => event => {
+  const buttonClickHandler = (disabled, value, onChange) => (event) => {
     event.preventDefault()
     if (!disabled) {
       return onChange(value.change().call(injectBlock, newItem()))
@@ -15,7 +15,8 @@ const UI = ({ TYPE, newItem, editorOptions }) => {
 
   const Button = ({ value, onChange }) => {
     const disabled =
-      value.isBlurred || !value.blocks.every(n => insertTypes.includes(n.type))
+      value.isBlurred ||
+      !value.blocks.every((n) => insertTypes.includes(n.type))
 
     return (
       <span
@@ -30,7 +31,7 @@ const UI = ({ TYPE, newItem, editorOptions }) => {
   }
 
   return {
-    insertButtons: [insertButtonText && Button]
+    insertButtons: [insertButtonText && Button],
   }
 }
 export default UI

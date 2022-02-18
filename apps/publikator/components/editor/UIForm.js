@@ -12,16 +12,16 @@ const styles = {
     ':after': {
       content: '""',
       display: 'table',
-      clear: 'both'
-    }
+      clear: 'both',
+    },
   }),
   span: css({
     float: 'left',
     paddingLeft: `${GUTTER / 2}px`,
     paddingRight: `${GUTTER / 2}px`,
     minHeight: 1,
-    width: '50%'
-  })
+    width: '50%',
+  }),
 }
 
 export default ({ children, getWidth = defaultGetWidth, ...props }) => {

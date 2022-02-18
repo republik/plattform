@@ -8,7 +8,7 @@ import createUi from './ui'
 const COLORS = {
   IF: '#7fbf7b',
   ELSE: '#af8dc3',
-  default: '#bbb'
+  default: '#bbb',
 }
 
 const styles = {
@@ -16,17 +16,17 @@ const styles = {
     borderLeft: '2px solid',
     paddingLeft: 5,
     '& > p:nth-child(2)': {
-      marginTop: 0
+      marginTop: 0,
     },
     '& > p + &': {
-      marginTop: '-1.875rem'
-    }
+      marginTop: '-1.875rem',
+    },
   }),
   label: css({
     marginLeft: -5,
     padding: '2px 0px 3px 5px',
-    ...fontStyles.sansSerifMedium14
-  })
+    ...fontStyles.sansSerifMedium14,
+  }),
 }
 
 const VisibleCondition = ({ children, attributes, type, data }) => {
@@ -55,24 +55,24 @@ export default ({ rule, subModules, TYPE, context }) => {
       kind: 'block',
       type: TYPE,
       data: node.data,
-      nodes: visitChildren(node)
+      nodes: visitChildren(node),
     }),
     toMdast: (object, index, parent, { visitChildren }) => ({
       type: 'zone',
       identifier: editorOptions.type,
       data: object.data,
-      children: visitChildren(object)
-    })
+      children: visitChildren(object),
+    }),
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [serializerRule]
+    rules: [serializerRule],
   })
 
   return {
     TYPE,
     helpers: {
-      serializer
+      serializer,
     },
     changes: {},
     ui: createUi({ TYPE, editorOptions, context }),
@@ -89,8 +89,8 @@ export default ({ rule, subModules, TYPE, context }) => {
               {children}
             </VisibleCondition>
           )
-        }
-      }
-    ]
+        },
+      },
+    ],
   }
 }

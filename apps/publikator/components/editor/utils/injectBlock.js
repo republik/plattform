@@ -1,6 +1,6 @@
 const injectBlock = (change, block) => {
   const {
-    value: { startBlock, endBlock }
+    value: { startBlock, endBlock },
   } = change
   if (startBlock === endBlock && !startBlock.text) {
     change.replaceNodeByKey(startBlock.key, block)

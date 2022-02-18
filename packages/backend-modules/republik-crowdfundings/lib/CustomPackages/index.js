@@ -91,7 +91,7 @@ const hasDormantMembership = ({ user, memberships }) => {
 /**
  * Evalutes whether a (resolved) package and some packageOption may be applicable
  * to a membership.
- * 
+ *
  * It returns a filtered and sorted array w/ packageOptions.
  */
 const evaluate = async ({
@@ -282,7 +282,7 @@ const evaluate = async ({
   if (packageOption.reward?.type !== 'MembershipType') {
     return {
       ...packageOption,
-      templateId: packageOption.id
+      templateId: packageOption.id,
     }
   }
 

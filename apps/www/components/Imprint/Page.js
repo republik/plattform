@@ -10,7 +10,7 @@ const { H1, H2, P } = Interaction
 export default withInNativeApp(({ inNativeIOSApp }) => {
   const meta = {
     title: 'Impressum',
-    description: ''
+    description: '',
   }
 
   return (

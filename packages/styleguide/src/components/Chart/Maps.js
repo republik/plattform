@@ -13,7 +13,7 @@ import Loader from '../Loader'
 import ContextBox, {
   ContextBoxValue,
   formatLines,
-  mergeFragments
+  mergeFragments,
 } from './ContextBox'
 import { sansSerifMedium14 } from '../Typography/styles'
 import { replaceKeys } from '../../lib/translate'
@@ -23,20 +23,20 @@ const FEATURE_BG = '#E0E0E0'
 
 const styles = {
   columnTitle: css({
-    ...sansSerifMedium14
+    ...sansSerifMedium14,
   }),
   interactivePath: css({
     userSelect: 'none',
-    WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'
+    WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)',
   }),
   pointGroup: css({
-    userSelect: 'none'
-  })
+    userSelect: 'none',
+  }),
 }
 
 const symbolShapes = {
   square: symbolSquare,
-  circle: symbolCircle
+  circle: symbolCircle,
 }
 const shapes = Object.keys(symbolShapes).concat('marker')
 
@@ -50,25 +50,25 @@ const Points = ({
   hoverPoint,
   setHoverPoint,
   opacity,
-  colorScheme
+  colorScheme,
 }) => {
-  const valueAccessor = d => (isNaN(d.value) ? 1 : d.value)
+  const valueAccessor = (d) => (isNaN(d.value) ? 1 : d.value)
 
   const marker = shape === 'marker'
   let symbolPath
   if (!marker) {
     const size = scaleLinear()
-      .domain([0, max(data.map(d => valueAccessor(d)))])
+      .domain([0, max(data.map((d) => valueAccessor(d)))])
       .range([0, sizeRangeMax])
     symbolPath = symbol()
       .type(symbolShapes[shape])
-      .size(d => size(valueAccessor(d)))
+      .size((d) => size(valueAccessor(d)))
   }
 
   const displayData = React.useMemo(
     () =>
       [...data].sort((a, b) => descending(valueAccessor(a), valueAccessor(b))),
-    [data]
+    [data],
   )
 
   return (
@@ -121,7 +121,7 @@ const Points = ({
                   d={symbolPath(d)}
                   {...colorScheme.set('fill', color, 'charts')}
                   style={{
-                    opacity
+                    opacity,
                   }}
                 />
               </>
@@ -140,19 +140,19 @@ Points.propTypes = {
   project: PropTypes.func.isRequired,
   shape: PropTypes.oneOf(shapes).isRequired,
   domain: PropTypes.array,
-  sizeRangeMax: PropTypes.number
+  sizeRangeMax: PropTypes.number,
 }
 
 // for synchronous access in constructor
 const fetchJsonCacheData = new Map()
 // memoize loading promise to avoid parallel double fetching
-const fetchJson = memoize(url =>
+const fetchJson = memoize((url) =>
   fetch(url)
-    .then(response => response.json())
-    .then(data => {
+    .then((response) => response.json())
+    .then((data) => {
       fetchJsonCacheData.set(url, data)
       return data
-    })
+    }),
 )
 
 const getStateFromFeaturesData = (features, data) => {
@@ -164,8 +164,8 @@ const getStateFromFeaturesData = (features, data) => {
       features: geoJsonFeatures,
       compositionBorders:
         features.compositionBorders &&
-        topojsonMesh(data, data.objects[features.compositionBorders])
-    }
+        topojsonMesh(data, data.objects[features.compositionBorders]),
+    },
   }
 }
 
@@ -176,7 +176,7 @@ export class GenericMap extends Component {
       props.features && fetchJsonCacheData.has(props.features.url)
         ? getStateFromFeaturesData(
             props.features,
-            fetchJsonCacheData.get(props.features.url)
+            fetchJsonCacheData.get(props.features.url),
           )
         : { loading: !!props.features }
     this.state.layout = layout(props, this.state.geoJson)
@@ -185,10 +185,10 @@ export class GenericMap extends Component {
     const { features } = this.props
     if (features) {
       fetchJson(features.url)
-        .then(data => {
+        .then((data) => {
           this.setState(getStateFromFeaturesData(features, data))
         })
-        .catch(error => {
+        .catch((error) => {
           this.setState({ loading: false, error })
         })
     }
@@ -196,7 +196,7 @@ export class GenericMap extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevProps !== this.props || prevState.geoJson !== this.state.geoJson) {
       this.setState({
-        layout: layout(this.props, this.state.geoJson)
+        layout: layout(this.props, this.state.geoJson),
       })
     }
   }
@@ -206,13 +206,8 @@ export class GenericMap extends Component {
   }
   renderTooltips() {
     const props = this.props
-    const {
-      width,
-      tLabel,
-      missingDataLegend,
-      tooltipLabel,
-      tooltipBody
-    } = props
+    const { width, tLabel, missingDataLegend, tooltipLabel, tooltipBody } =
+      props
 
     const { paddingTop, gx, gy, groupedData, numberFormat } = this.state.layout
 
@@ -222,17 +217,17 @@ export class GenericMap extends Component {
       !!hoverFeature &&
       groupedData.map(({ values: groupData, key: groupTitle }) => {
         return groupData
-          .filter(datum => datum.feature === hoverFeature)
-          .map(d => {
+          .filter((datum) => datum.feature === hoverFeature)
+          .map((d) => {
             const [[x0, y0], [x1]] = d.feature.bounds()
             const replacements = {
               ...hoverFeature.properties,
               ...d.datum,
               value: d.value || d.value === 0,
               formattedValue:
-                (d.value || d.value === 0) && numberFormat(d.value)
+                (d.value || d.value === 0) && numberFormat(d.value),
             }
-            const contextT = text => replaceKeys(text, replacements)
+            const contextT = (text) => replaceKeys(text, replacements)
             const label = tooltipLabel
               ? contextT(tooltipLabel)
               : title === groupTitle
@@ -246,10 +241,10 @@ export class GenericMap extends Component {
                     replacements.formattedValue &&
                       `${replacements.formattedValue} ${props.unit}`,
                     d.datum && d.datum[props.color],
-                    d.empty && missingDataLegend
+                    d.empty && missingDataLegend,
                   ]
                     .filter(Boolean)
-                    .map(formatLines)
+                    .map(formatLines),
             )
 
             return (
@@ -267,7 +262,7 @@ export class GenericMap extends Component {
       })
     )
   }
-  setHoverPoint = displayPoint => {
+  setHoverPoint = (displayPoint) => {
     if (!displayPoint) {
       this.setState({ hoverPoint: null })
       return
@@ -275,15 +270,10 @@ export class GenericMap extends Component {
 
     const { datum } = displayPoint
     const {
-      layout: { projectPoint, numberFormat }
+      layout: { projectPoint, numberFormat },
     } = this.state
-    const {
-      pointLabel,
-      pointAttributes,
-      unit,
-      tooltipLabel,
-      tooltipBody
-    } = this.props
+    const { pointLabel, pointAttributes, unit, tooltipLabel, tooltipBody } =
+      this.props
     const [x, y] = projectPoint([datum.lon, datum.lat])
 
     const value =
@@ -293,18 +283,18 @@ export class GenericMap extends Component {
         : numberFormat(datum.value))
     const replacements = {
       ...datum,
-      formattedValue: value
+      formattedValue: value,
     }
 
-    const contextT = text => replaceKeys(text, replacements)
+    const contextT = (text) => replaceKeys(text, replacements)
     const label = tooltipLabel ? contextT(tooltipLabel) : datum[pointLabel]
     const body = mergeFragments(
       tooltipBody
         ? formatLines(contextT(tooltipBody))
         : [value && `${value} ${unit}`]
-            .concat(pointAttributes.map(t => datum[t]))
+            .concat(pointAttributes.map((t) => datum[t]))
             .filter(Boolean)
-            .map(formatLines)
+            .map(formatLines),
     )
 
     if (label || body.length) {
@@ -313,8 +303,8 @@ export class GenericMap extends Component {
           x,
           y,
           label,
-          body
-        }
+          body,
+        },
       })
     } else {
       this.setState({ hoverPoint: null })
@@ -353,7 +343,7 @@ export class GenericMap extends Component {
       colorLegendPosition,
       missingDataColor,
       opacity,
-      colorScheme
+      colorScheme,
     } = props
     const { loading, error, geoJson, hoverPoint } = state
 
@@ -377,12 +367,12 @@ export class GenericMap extends Component {
       geotiffs,
       featuresWithPaths,
       compositionBorderPath,
-      colorLegendValues
+      colorLegendValues,
     } = this.state.layout
     let legendStyle
     if (mapSpace * colorLegendSize >= props.colorLegendMinWidth || mini) {
       legendStyle = {
-        position: 'absolute'
+        position: 'absolute',
       }
       if (colorLegendPosition === 'left') {
         legendStyle.bottom = paddingBottom
@@ -439,7 +429,7 @@ export class GenericMap extends Component {
                   </text>
                   <g transform={`translate(0,${paddingTop})`}>
                     {!choropleth &&
-                      featuresWithPaths.map(feature => {
+                      featuresWithPaths.map((feature) => {
                         return (
                           <path
                             key={feature.id}
@@ -452,7 +442,7 @@ export class GenericMap extends Component {
                       })}
                     {choropleth &&
                       hasGeoJson &&
-                      groupData.map(d => {
+                      groupData.map((d) => {
                         const { feature } = d
                         if (!feature) {
                           return null
@@ -475,7 +465,7 @@ export class GenericMap extends Component {
                             onTouchEnd={() =>
                               this.setState({
                                 hoverFeature: undefined,
-                                title: undefined
+                                title: undefined,
                               })
                             }
                             onMouseEnter={() =>
@@ -484,7 +474,7 @@ export class GenericMap extends Component {
                             onMouseLeave={() =>
                               this.setState({
                                 hoverFeature: undefined,
-                                title: undefined
+                                title: undefined,
                               })
                             }
                           />
@@ -492,8 +482,8 @@ export class GenericMap extends Component {
                       })}
                     {hasTooltips &&
                       featuresWithPaths
-                        .filter(feature => feature.id === hoverFeature.id)
-                        .map(feature => (
+                        .filter((feature) => feature.id === hoverFeature.id)
+                        .map((feature) => (
                           <path
                             key={`stroke-${feature.id}`}
                             fill='none'
@@ -538,7 +528,7 @@ export class GenericMap extends Component {
                 position: 'absolute',
                 left: paddingLeft,
                 top: paddingTop,
-                width: mapSpace
+                width: mapSpace,
               }}
             >
               <Loader loading={loading} error={error} />
@@ -554,11 +544,11 @@ export class GenericMap extends Component {
 
 const geotiffShape = PropTypes.shape({
   url: PropTypes.string.isRequired,
-  bbox: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number.isRequired))
+  bbox: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number.isRequired)),
 })
 const featuresShape = PropTypes.shape({
   object: PropTypes.string.isRequired,
-  url: PropTypes.string.isRequired
+  url: PropTypes.string.isRequired,
 })
 
 export const propTypes = {
@@ -578,16 +568,16 @@ export const propTypes = {
     PropTypes.shape({
       title: PropTypes.string.isRequired,
       test: PropTypes.string.isRequired,
-      geotiff: geotiffShape
-    })
+      geotiff: geotiffShape,
+    }),
   ),
   columns: PropTypes.number.isRequired,
   thresholds: PropTypes.arrayOf(PropTypes.number),
   thresholdsLegend: PropTypes.arrayOf(
     PropTypes.shape({
       minValue: PropTypes.number,
-      label: PropTypes.string
-    })
+      label: PropTypes.string,
+    }),
   ),
   extent: PropTypes.arrayOf(PropTypes.number),
   colorLegend: PropTypes.bool.isRequired,
@@ -599,7 +589,7 @@ export const propTypes = {
   colorRanges: PropTypes.shape({
     sequential3: PropTypes.array.isRequired,
     discrete: PropTypes.array.isRequired,
-    sequential: PropTypes.array.isRequired
+    sequential: PropTypes.array.isRequired,
   }).isRequired,
   colorMap: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   shape: PropTypes.oneOf(shapes).isRequired,
@@ -610,8 +600,8 @@ export const propTypes = {
   geotiffLegend: PropTypes.arrayOf(
     PropTypes.shape({
       color: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired
-    })
+      label: PropTypes.string.isRequired,
+    }),
   ),
   legendTitle: PropTypes.string,
   unit: PropTypes.string,
@@ -630,21 +620,21 @@ export const propTypes = {
   color: PropTypes.string,
   opacity: PropTypes.number.isRequired,
   tooltipLabel: PropTypes.string,
-  tooltipBody: PropTypes.string
+  tooltipBody: PropTypes.string,
 }
 
 GenericMap.propTypes = propTypes
 
 GenericMap.defaultProps = defaultProps.GenericMap
 
-export const ProjectedMap = props => <GenericMap {...props} />
+export const ProjectedMap = (props) => <GenericMap {...props} />
 
 GenericMap.defaultProps = defaultProps.GenericMap
 
 ProjectedMap.defaultProps = defaultProps.ProjectedMap
 ProjectedMap.base = 'GenericMap'
 
-export const SwissMap = props => <GenericMap {...props} />
+export const SwissMap = (props) => <GenericMap {...props} />
 
 SwissMap.defaultProps = defaultProps.SwissMap
 

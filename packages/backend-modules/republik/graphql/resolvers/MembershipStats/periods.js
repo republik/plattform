@@ -193,11 +193,12 @@ const getPeriods = async ({
   const membershipsInNeedForProlong = allMemberships
     .map((m) => ({
       ...m,
-      lastMembershipPeriodIndexEndingInRange: getLastMembershipPeriodIndexEndingInRange(
-        m.membershipPeriods,
-        minEndDate,
-        maxEndDate,
-      ),
+      lastMembershipPeriodIndexEndingInRange:
+        getLastMembershipPeriodIndexEndingInRange(
+          m.membershipPeriods,
+          minEndDate,
+          maxEndDate,
+        ),
     }))
     // if last period in range is followed by BONUS, it didn't need to be prolonged in range
     .filter((m) => {

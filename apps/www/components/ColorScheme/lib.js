@@ -9,9 +9,8 @@ const usePersistedColorSchemeKey = createPersistedState(COLOR_SCHEME_KEY)
 // used to persist os color scheme when running in our Android app
 // - our web view on Android currently does not support media query dark mode detection
 export const OS_COLOR_SCHEME_KEY = 'republik-os-color-scheme'
-export const usePersistedOSColorSchemeKey = createPersistedState(
-  OS_COLOR_SCHEME_KEY
-)
+export const usePersistedOSColorSchemeKey =
+  createPersistedState(OS_COLOR_SCHEME_KEY)
 
 const defaultKey = 'auto'
 
@@ -25,7 +24,7 @@ export const useColorSchemeKeyPreference = () => {
     if (inNewApp) {
       postMessage({
         type: 'setColorScheme',
-        colorSchemeKey: currentKey
+        colorSchemeKey: currentKey,
       })
     }
   }, [inNewApp, currentKey])
@@ -43,7 +42,7 @@ export const useColorSchemeKey = () => {
       colorSchemeKey === 'auto' && osColorSchemeKey
         ? osColorSchemeKey
         : colorSchemeKey,
-    defaultKey
+    defaultKey,
   }
 }
 

@@ -5,6 +5,6 @@ export const DisplayAuthorPropType = PropTypes.shape({
   profilePicture: PropTypes.string,
   credential: PropTypes.shape({
     description: PropTypes.string.isRequired,
-    verified: PropTypes.bool
-  })
+    verified: PropTypes.bool,
+  }),
 })

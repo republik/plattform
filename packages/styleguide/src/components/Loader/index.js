@@ -13,19 +13,19 @@ const styles = {
     top: '50%',
     marginTop: 30,
     width: '100%',
-    textAlign: 'center'
+    textAlign: 'center',
   }),
   spacer: css({
     position: 'relative',
     minHeight: 120,
     height: '100%',
-    minWidth: '100%'
-  })
+    minWidth: '100%',
+  }),
 }
 
 const SpacerPropTypes = {
   children: PropTypes.node,
-  style: PropTypes.object
+  style: PropTypes.object,
 }
 
 const Spacer = ({ style, children }) => (
@@ -43,7 +43,7 @@ const LoaderPropTypes = {
   error: PropTypes.object,
   render: PropTypes.func,
   delay: PropTypes.number,
-  ErrorContainer: PropTypes.elementType
+  ErrorContainer: PropTypes.elementType,
 }
 
 const Loader = ({
@@ -53,7 +53,7 @@ const Loader = ({
   error,
   render,
   delay,
-  ErrorContainer
+  ErrorContainer,
 }) => {
   const [visible, setVisible] = useState(false)
   const [colorScheme] = useColorContext()
@@ -81,7 +81,7 @@ const Loader = ({
       <ErrorContainer>
         <P {...colorScheme.set('color', 'error')}>
           {error.graphQLErrors && error.graphQLErrors.length
-            ? error.graphQLErrors.map(e => e.message).join(', ')
+            ? error.graphQLErrors.map((e) => e.message).join(', ')
             : error.toString()}
         </P>
       </ErrorContainer>
@@ -95,7 +95,7 @@ Loader.propTypes = LoaderPropTypes
 Loader.defaultProps = {
   delay: 500,
   render: () => null,
-  ErrorContainer: ({ children }) => children
+  ErrorContainer: ({ children }) => children,
 }
 
 export default Loader

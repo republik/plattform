@@ -17,14 +17,8 @@ module.exports = async (_, args, context) => {
   const { pgdb, loaders, user: me, t, pubsub } = context
   Roles.ensureUserHasRole(me, 'member')
 
-  const {
-    id,
-    discussionId,
-    parentId,
-    content,
-    discussionPreferences,
-    tags,
-  } = args
+  const { id, discussionId, parentId, content, discussionPreferences, tags } =
+    args
 
   if (!content || !content.trim().length) {
     throw new Error(t('api/comment/empty'))

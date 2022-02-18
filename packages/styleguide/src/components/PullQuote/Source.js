@@ -12,10 +12,10 @@ const styles = {
     marginTop: '18px',
     [mUp]: {
       ...convertStyleToRem(sansSerifRegular15),
-      marginTop: '21px'
+      marginTop: '21px',
     },
-    fontStyle: 'normal'
-  })
+    fontStyle: 'normal',
+  }),
 }
 
 export const Source = ({ children, attributes }) => {
@@ -28,7 +28,7 @@ export const Source = ({ children, attributes }) => {
 
 Source.propTypes = {
   children: PropTypes.node.isRequired,
-  attributes: PropTypes.object
+  attributes: PropTypes.object,
 }
 
 export default Source

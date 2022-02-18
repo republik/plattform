@@ -14,14 +14,14 @@ const styles = {
     top: 0,
     left: 0,
     width: '100%',
-    imageRendering: 'smooth'
+    imageRendering: 'smooth',
   }),
   big: css({
     position: 'relative',
     width: '100%',
     height: '100%',
-    transition: 'opacity 200ms'
-  })
+    transition: 'opacity 200ms',
+  }),
 }
 
 class TeaserHover extends Component {
@@ -40,7 +40,7 @@ class TeaserHover extends Component {
       teaser,
       contextWidth,
       highlight,
-      inNativeApp
+      inNativeApp,
     } = this.props
     const { loading } = this.state
 
@@ -65,7 +65,7 @@ class TeaserHover extends Component {
                 contextWidth
                 ? contextWidth - hoverWidth
                 : measurement.x + measurement.width / 2 - hoverWidth / 2
-              : 0
+              : 0,
         }}
       >
         <div
@@ -75,7 +75,7 @@ class TeaserHover extends Component {
             bottom: 0,
             height: Math.ceil(hoverWidth * ratio - 5),
             lineHeight: 0,
-            boxShadow: '0 2px 8px rgba(0,0,0,.4)'
+            boxShadow: '0 2px 8px rgba(0,0,0,.4)',
           }}
         >
           <div
@@ -86,7 +86,7 @@ class TeaserHover extends Component {
               height: Math.ceil(renderWidth * ratio - 5 / scale),
               overflow: 'hidden',
               transform: `scale(${hoverWidth / renderWidth})`,
-              transformOrigin: '0% 0%'
+              transformOrigin: '0% 0%',
             })}
           >
             <img {...styles.preview} src={getImgSrc(teaser, path)} />
@@ -105,7 +105,7 @@ class TeaserHover extends Component {
                 src={`${path}?extractId=${teaser.id}`}
                 {...styles.big}
                 style={{
-                  opacity: loading ? 0 : 1
+                  opacity: loading ? 0 : 1,
                 }}
               />
             )}

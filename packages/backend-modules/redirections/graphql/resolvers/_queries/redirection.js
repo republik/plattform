@@ -1,6 +1,6 @@
 const { get } = require('../../../lib/Redirections')
 
-const { FRONTEND_BASE_URL } = process.env
+const { FRONTEND_BASE_URL } = process.env
 
 module.exports = (_, { path }, context) => {
   const pathUrl = new URL(path, FRONTEND_BASE_URL)

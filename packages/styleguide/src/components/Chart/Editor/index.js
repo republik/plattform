@@ -12,7 +12,7 @@ import { scatterPlotEditorSchema } from '../ScatterPlots.schema'
 import {
   genericMapEditorSchema,
   projectedMapEditorSchema,
-  swissMapEditorSchema
+  swissMapEditorSchema,
 } from '../Maps.schema'
 import { hemicycleEditorSchema } from '../Hemicycle.schema'
 import { tableEditorSchema } from '../Table.schema'
@@ -24,7 +24,7 @@ import {
   sortingOptions,
   timeParsing,
   chartSizes,
-  columnAmount
+  columnAmount,
 } from './utils'
 
 const schemaDictFullSupport = {
@@ -32,7 +32,7 @@ const schemaDictFullSupport = {
   Bar: barEditorSchema,
   TimeBar: timeBarEditorSchema,
   Lollipop: lollipopEditorSchema,
-  Slope: slopeEditorSchema
+  Slope: slopeEditorSchema,
 }
 
 const schemaDict = {
@@ -43,7 +43,7 @@ const schemaDict = {
   ProjectedMap: projectedMapEditorSchema,
   SwissMap: swissMapEditorSchema,
   Hemicycle: hemicycleEditorSchema,
-  Table: tableEditorSchema
+  Table: tableEditorSchema,
 }
 
 const chartTranslationDict = {
@@ -51,10 +51,10 @@ const chartTranslationDict = {
   Bar: 'Balken (Bar)',
   TimeBar: 'Säulen (TimeBar)',
   Lollipop: 'Lollipop',
-  Slope: 'Steigungslinien (Slope)'
+  Slope: 'Steigungslinien (Slope)',
 }
 
-const chartTypes = Object.keys(schemaDictFullSupport).map(d => {
+const chartTypes = Object.keys(schemaDictFullSupport).map((d) => {
   return { value: d, text: chartTranslationDict[d] }
 })
 
@@ -65,27 +65,27 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
     return
   }
 
-  const columns = chartData.columns.map(d => {
+  const columns = chartData.columns.map((d) => {
     return { value: d, text: d }
   })
 
-  const onFieldsChange = newValues => {
+  const onFieldsChange = (newValues) => {
     onChange({ ...value, ...newValues })
   }
 
-  const createOnFieldChange = key => {
+  const createOnFieldChange = (key) => {
     return (_, newValue) => {
       onChange({ ...value, [key]: newValue })
     }
   }
 
-  const createOnNumberFieldChange = key => {
+  const createOnNumberFieldChange = (key) => {
     return (_, newValue) => {
       onChange({ ...value, [key]: Number(newValue) })
     }
   }
 
-  const createOnDropdownChange = key => item => {
+  const createOnDropdownChange = (key) => (item) => {
     return onChange({ ...value, [key]: item.value || undefined })
   }
 
@@ -94,7 +94,7 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
       dataColumnEnum: columns,
       optionalDataColumnEnum: columns.concat({
         value: '',
-        text: 'keine Auswahl'
+        text: 'keine Auswahl',
       }),
       defaults: defaultProps[type],
       numberFormats,
@@ -104,7 +104,7 @@ const ChartEditor = ({ data, value, onChange, activeTab }) => {
       sortingOptions,
       timeParsing,
       chartSizes,
-      columnAmount
+      columnAmount,
     })
   }
 

@@ -15,7 +15,7 @@ export const parseUrlDate = swissTime.parse(urlDateFormat)
 
 const formatDate = (date, format) => swissTime.format(format)(date)
 
-export const displayDateTime = string =>
+export const displayDateTime = (string) =>
   string && formatDate(new Date(string), displayDateTimeFormat)
 
 export const reformatUrlDate = (urlDate, dateFormat) => {
@@ -24,13 +24,11 @@ export const reformatUrlDate = (urlDate, dateFormat) => {
 }
 
 export const getIsoDate = (urlDate, time) =>
-  swissTime
-    .parse(urlDateHourFormat)(`${urlDate}T${time}`)
-    .toISOString()
+  swissTime.parse(urlDateHourFormat)(`${urlDate}T${time}`).toISOString()
 
-export const getUrlWeekStart = date => getUrlDate(timeMonday.floor(date))
+export const getUrlWeekStart = (date) => getUrlDate(timeMonday.floor(date))
 
-export const getUrlWeekEnd = date => getUrlDate(timeMonday.ceil(date))
+export const getUrlWeekEnd = (date) => getUrlDate(timeMonday.ceil(date))
 
 export const offsetUrlWeek = (urlDate, offset) => {
   const date = parseUrlDate(urlDate)
@@ -38,10 +36,10 @@ export const offsetUrlWeek = (urlDate, offset) => {
   return getUrlDate(offsetDate)
 }
 
-export const isCurrentWeek = urlDate =>
+export const isCurrentWeek = (urlDate) =>
   +timeMonday.floor(now) === +parseUrlDate(urlDate)
 
-export const isPast = urlDate => +timeDay.floor(now) > +parseUrlDate(urlDate)
+export const isPast = (urlDate) => +timeDay.floor(now) > +parseUrlDate(urlDate)
 
 export const getDaysFromUrl = (urlDateFrom, urlDateUntil) =>
   timeDay
@@ -53,25 +51,25 @@ export const matchWeekDays = (urlDate, weekDays) =>
 
 export const getPublicationCalendar = (from, until, repos = []) => {
   if (!from || !until) return []
-  const reposByDay = group(repos, repo =>
-    getUrlDate(new Date(repo.meta.publishDate))
+  const reposByDay = group(repos, (repo) =>
+    getUrlDate(new Date(repo.meta.publishDate)),
   )
-  return getDaysFromUrl(from, until).map(day => ({
+  return getDaysFromUrl(from, until).map((day) => ({
     date: day,
-    repos: reposByDay.get(day) || []
+    repos: reposByDay.get(day) || [],
   }))
 }
 
 export const getPlaceholders = (placeholders = [], date) => {
-  return placeholders.filter(placeholder =>
-    matchWeekDays(date, placeholder.publicationDays)
+  return placeholders.filter((placeholder) =>
+    matchWeekDays(date, placeholder.publicationDays),
   )
 }
 
 export const reformatPlaceholder = (placeholder, publishDate) => ({
   ...placeholder,
   meta: {
-    publishDate: getIsoDate(publishDate, placeholder.publicationTime)
+    publishDate: getIsoDate(publishDate, placeholder.publicationTime),
   },
-  isPlaceholder: true
+  isPlaceholder: true,
 })

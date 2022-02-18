@@ -18,7 +18,8 @@ const { updateRepo } = require('./postgres')
 
 const slugDateFormat = timeFormat('%Y/%m/%d')
 
-const { PREFIX_PREPUBLICATION_PATH, SUPPRESS_AUDIO_DURATION_MEASURE } = process.env
+const { PREFIX_PREPUBLICATION_PATH, SUPPRESS_AUDIO_DURATION_MEASURE } =
+  process.env
 
 const getPath = ({ slug, template, publishDate, prepublication, path }) => {
   if (path) {
@@ -230,7 +231,11 @@ const handleRedirection = async (repoId, newDocMeta, context) => {
   }
 
   await Promise.each([...new Set(previousPaths)], (previousPath) => {
-    debug('upsertRedirection', { source: previousPath, target: newPath, repoId })
+    debug('upsertRedirection', {
+      source: previousPath,
+      target: newPath,
+      repoId,
+    })
     return upsertRedirection(
       {
         source: previousPath,

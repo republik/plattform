@@ -6,7 +6,7 @@ export const editorialFontRule = css({
   ...fontStyles.serifRegular,
   '& em, & i': fontStyles.serifItalic,
   '& strong, & b': fontStyles.serifBold,
-  '& strong em, & em strong, & b i, & i b': fontStyles.serifBoldItalic
+  '& strong em, & em strong, & b i, & i b': fontStyles.serifBoldItalic,
 })
 
 export const interactionFontRule = css({
@@ -14,6 +14,6 @@ export const interactionFontRule = css({
   '& em, & i': fontStyles.sansSerifItalic,
   '& strong, & b': fontStyles.sansSerifMedium,
   '& strong em, & em strong, & b i, & i b': {
-    textDecoration: `underline wavy ${colors.error}`
-  }
+    textDecoration: `underline wavy ${colors.error}`,
+  },
 })

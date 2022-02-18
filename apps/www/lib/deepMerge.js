@@ -1,4 +1,4 @@
-const isObject = item =>
+const isObject = (item) =>
   item && typeof item === 'object' && !Array.isArray(item)
 
 const deepMerge = (target, ...sources) => {

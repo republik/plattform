@@ -17,36 +17,36 @@ const actionButtonStyle = {
   alignItems: 'center',
   minHeight: pxToRem(40),
   lineHeight: pxToRem(40),
-  padding: '0'
+  padding: '0',
 }
 
 const styles = {
   root: css({
     display: 'flex',
     flexFlow: 'wrap',
-    alignItems: 'center'
+    alignItems: 'center',
   }),
   rootMainOnly: css({
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   }),
   rootWithSecondary: css({
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   }),
   mainActions: css({
     display: 'flex',
     '& > *': {
-      marginLeft: pxToRem(16)
-    }
+      marginLeft: pxToRem(16),
+    },
   }),
   secondaryButton: css({
-    ...actionButtonStyle
+    ...actionButtonStyle,
   }),
   primaryButton: css({
     ...actionButtonStyle,
     '[disabled]': {
-      cursor: 'inherit'
-    }
-  })
+      cursor: 'inherit',
+    },
+  }),
 }
 
 export const Actions = ({
@@ -56,7 +56,7 @@ export const Actions = ({
   onSubmit,
   onSubmitLabel,
   onPreview,
-  secondaryActions
+  secondaryActions,
 }) => {
   const [colorScheme] = useColorContext()
   const styleRules = useMemo(() => {
@@ -65,21 +65,21 @@ export const Actions = ({
         color: colorScheme.getCSSColor('textSoft'),
         '@media (hover)': {
           ':hover': {
-            color: colorScheme.getCSSColor('text')
-          }
-        }
+            color: colorScheme.getCSSColor('text'),
+          },
+        },
       }),
       submitButton: css({
         color: colorScheme.getCSSColor('primary'),
         '[disabled]': {
-          color: colorScheme.getCSSColor('disabled')
+          color: colorScheme.getCSSColor('disabled'),
         },
         '@media (hover)': {
           ':not([disabled]):hover': {
-            color: colorScheme.getCSSColor('primaryHover')
-          }
-        }
-      })
+            color: colorScheme.getCSSColor('primaryHover'),
+          },
+        },
+      }),
     }
   }, [colorScheme])
   return (
@@ -127,5 +127,5 @@ Actions.propTypes = {
   onSubmitLabel: PropTypes.string,
   onPreview: PropTypes.func,
   onPreviewLabel: PropTypes.string,
-  secondaryActions: PropTypes.node
+  secondaryActions: PropTypes.node,
 }

@@ -13,7 +13,7 @@ import {
   VideoPlayer,
   mediaQueries,
   inQuotes,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import Link from 'next/link'
 
@@ -24,20 +24,20 @@ const styles = {
     width: '100%',
     padding: '30px 0',
     [mediaQueries.mUp]: {
-      padding: '30px 45px'
-    }
+      padding: '30px 45px',
+    },
   }),
   detailTitle: css({
-    lineHeight: '20px'
+    lineHeight: '20px',
   }),
   detailRole: css({
     fontSize: 17,
-    fontFamily: fontFamilies.sansSerifRegular
+    fontFamily: fontFamilies.sansSerifRegular,
   }),
   number: css({
     marginBottom: 20,
-    fontFamily: fontFamilies.sansSerifMedium
-  })
+    fontFamily: fontFamilies.sansSerifMedium,
+  }),
 }
 
 const Detail = ({
@@ -52,8 +52,8 @@ const Detail = ({
     portrait,
     sequenceNumber,
     video,
-    updatedAt
-  }
+    updatedAt,
+  },
 }) => {
   const [colorScheme] = useColorContext()
   const shareObject = {
@@ -62,7 +62,7 @@ const Detail = ({
     emailSubject: t('statement/share/title', { name }),
     emailAttachUrl: false,
     emailBody: `${PUBLIC_BASE_URL}/community?id=${id}`,
-    overlayTitle: t('statement/share/overlayTitle', { name })
+    overlayTitle: t('statement/share/overlayTitle', { name }),
   }
   return (
     <div {...styles.detail}>
@@ -72,7 +72,7 @@ const Detail = ({
             ? {
                 maxWidth: 400,
                 marginLeft: 'auto',
-                marginRight: 'auto'
+                marginRight: 'auto',
               }
             : {}
         }
@@ -96,7 +96,7 @@ const Detail = ({
           <div
             style={{
               marginBottom: 20,
-              marginTop: 10
+              marginTop: 10,
             }}
           >
             <VideoPlayer
@@ -115,7 +115,7 @@ const Detail = ({
         {!!sequenceNumber && (
           <P {...styles.number} {...colorScheme.set('color', 'text')}>
             {t('memberships/sequenceNumber/label', {
-              sequenceNumber
+              sequenceNumber,
             })}
           </P>
         )}
@@ -123,9 +123,9 @@ const Detail = ({
           <ActionBar
             share={shareObject}
             download={`${ASSETS_SERVER_BASE_URL}/render?width=1200&height=628&updatedAt=${encodeURIComponent(
-              updatedAt
+              updatedAt,
             )}&url=${encodeURIComponent(
-              `${PUBLIC_BASE_URL}/community?share=${id}`
+              `${PUBLIC_BASE_URL}/community?share=${id}`,
             )}`}
           />
         )}
@@ -135,7 +135,7 @@ const Detail = ({
 }
 
 Detail.defaultProps = {
-  share: true
+  share: true,
 }
 
 export default Detail

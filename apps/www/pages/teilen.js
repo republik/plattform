@@ -7,7 +7,7 @@ import { t } from '../lib/withT'
 import withDefaultSSR from '../lib/hocs/withDefaultSSR'
 
 const meta = {
-  title: t('pages/access/title')
+  title: t('pages/access/title'),
 }
 
 const Page = () => (

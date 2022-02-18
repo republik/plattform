@@ -3,7 +3,7 @@ import { css } from 'glamor'
 import {
   plainButtonRule,
   fontStyles,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 
 import MdPhoneIphone from 'react-icons/lib/md/phone-iphone'
@@ -15,7 +15,7 @@ const styles = {
   container: css({
     display: 'flex',
     justifyContent: 'flex-start',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   }),
   iconContainer: css({
     flex: '0 0 30%',
@@ -24,11 +24,11 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   }),
   containerInline: css({
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
   }),
   iconContainerInline: css({
     flex: 'none',
@@ -37,35 +37,35 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   }),
   label: css({
     ...fontStyles.sansSerifRegular12,
-    marginTop: 4
-  })
+    marginTop: 4,
+  }),
 }
 
 const screenSizes = [
   {
     name: 'phone',
     label: 'Mobile',
-    Icon: MdPhoneIphone
+    Icon: MdPhoneIphone,
   },
   {
     name: 'tablet',
     label: 'Tablet',
-    Icon: MdTabletMac
+    Icon: MdTabletMac,
   },
   {
     name: 'laptop',
     label: 'Laptop',
-    Icon: MdLaptopMac
+    Icon: MdLaptopMac,
   },
   {
     name: 'desktop',
     label: 'Desktop',
-    Icon: MdDesktopMac
-  }
+    Icon: MdDesktopMac,
+  },
 ]
 
 const ScreenSizePicker = ({ onSelect, selectedScreenSize, inline }) => {
@@ -74,14 +74,14 @@ const ScreenSizePicker = ({ onSelect, selectedScreenSize, inline }) => {
   return (
     <>
       <div {...(inline ? styles.containerInline : styles.container)}>
-        {screenSizes.map(size => {
+        {screenSizes.map((size) => {
           const isSelected = selectedScreenSize === size.name
           return (
             <button
               key={size.name}
               {...colorScheme.set(
                 'backgroundColor',
-                isSelected ? 'text' : 'none'
+                isSelected ? 'text' : 'none',
               )}
               {...(inline ? styles.iconContainerInline : styles.iconContainer)}
               {...plainButtonRule}

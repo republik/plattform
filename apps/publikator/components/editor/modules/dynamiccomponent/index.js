@@ -14,7 +14,7 @@ import InlineUI, { MarkButton } from '../../utils/InlineUI'
 import MdEdit from 'react-icons/lib/md/edit'
 import {
   OverlayFormContext,
-  OverlayFormContextProvider
+  OverlayFormContextProvider,
 } from '../../utils/OverlayFormContext'
 
 const CustomUi = ({ editor, node, TYPE }) => {
@@ -23,7 +23,7 @@ const CustomUi = ({ editor, node, TYPE }) => {
     <InlineUI
       node={node}
       editor={editor}
-      isMatch={value => value.blocks.some(matchBlock(TYPE))}
+      isMatch={(value) => value.blocks.some(matchBlock(TYPE))}
     >
       <MarkButton onMouseDown={() => setShowModal(true)}>
         <MdEdit size={20} />
@@ -38,9 +38,9 @@ const DynamicComponent = ({ rule, subModules, TYPE }) => {
   const mdastRule = {
     match: matchBlock(TYPE),
     matchMdast: rule.matchMdast,
-    fromMdast: node => {
+    fromMdast: (node) => {
       const html = node.children.find(
-        c => c.type === 'code' && c.lang === 'html'
+        (c) => c.type === 'code' && c.lang === 'html',
       )
 
       return {
@@ -48,13 +48,13 @@ const DynamicComponent = ({ rule, subModules, TYPE }) => {
         type: TYPE,
         data: {
           ...node.data,
-          html: html ? html.value : ''
+          html: html ? html.value : '',
         },
         isVoid: true,
-        nodes: []
+        nodes: [],
       }
     },
-    toMdast: object => {
+    toMdast: (object) => {
       const { html, ...data } = object.data
       return {
         type: 'zone',
@@ -65,16 +65,16 @@ const DynamicComponent = ({ rule, subModules, TYPE }) => {
               {
                 type: 'code',
                 lang: 'html',
-                value: html
-              }
+                value: html,
+              },
             ]
-          : []
+          : [],
       }
-    }
+    },
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [mdastRule]
+    rules: [mdastRule],
   })
 
   const DynamicComponent = rule.component
@@ -85,21 +85,21 @@ const DynamicComponent = ({ rule, subModules, TYPE }) => {
       isVoid: true,
       data: {
         identifier: 'TK',
-        autoHtml: false
-      }
+        autoHtml: false,
+      },
     })
 
   return {
     TYPE,
     helpers: {
       serializer,
-      newItem
+      newItem,
     },
     changes: {},
     ui: createUi({
       TYPE,
       newItem,
-      editorOptions: rule.editorOptions
+      editorOptions: rule.editorOptions,
     }),
     plugins: [
       {
@@ -117,7 +117,7 @@ const DynamicComponent = ({ rule, subModules, TYPE }) => {
             />
           )
           const preview = cloneElement(component, {
-            raw: true
+            raw: true,
           })
 
           return (
@@ -136,12 +136,12 @@ const DynamicComponent = ({ rule, subModules, TYPE }) => {
         schema: {
           blocks: {
             [TYPE]: {
-              isVoid: true
-            }
-          }
-        }
-      }
-    ]
+              isVoid: true,
+            },
+          },
+        },
+      },
+    ],
   }
 }
 export default DynamicComponent

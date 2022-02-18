@@ -10,8 +10,8 @@ function useUnpublishCommentHandler(): UnpublishCommentHandler {
   function unpublishCommentHandler(commentId: string) {
     return unpublishCommentMutation({
       variables: {
-        commentId: commentId
-      }
+        commentId: commentId,
+      },
     }).catch(toRejectedString)
   }
 

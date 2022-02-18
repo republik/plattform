@@ -10,7 +10,7 @@ import withMe from '../../lib/apollo/withMe'
 import {
   CDN_FRONTEND_BASE_URL,
   ASSETS_SERVER_BASE_URL,
-  PUBLIC_BASE_URL
+  PUBLIC_BASE_URL,
 } from '../../lib/constants'
 
 import Meta from '../Frame/Meta'
@@ -25,7 +25,7 @@ import Accordion from './Accordion'
 import Submit from './Submit'
 import CustomizePackage, {
   getOptionFieldKey,
-  getOptionPeriodsFieldKey
+  getOptionPeriodsFieldKey,
 } from './CustomizePackage'
 import Link from 'next/link'
 
@@ -49,15 +49,15 @@ class Pledge extends Component {
       const pkg = this.getPkg()
       if (pkg) {
         const matchingOptions = pkg.options.filter(
-          option =>
-            option.membership && membershipIds.includes(option.membership.id)
+          (option) =>
+            option.membership && membershipIds.includes(option.membership.id),
         )
         if (matchingOptions.length) {
           // we set all other options to the min amount (normally 0)
           // - this unselect extending ones own memberhip when arriving from a membership_giver_prolong_notice
           pkg.options
-            .filter(option => option.membership)
-            .forEach(option => {
+            .filter((option) => option.membership)
+            .forEach((option) => {
               values[getOptionFieldKey(option)] = option.minAmount
             })
           // set matching options to max amount (normally 1)
@@ -66,9 +66,10 @@ class Pledge extends Component {
             .filter(
               (option, i, all) =>
                 !option.optionGroup ||
-                all.findIndex(o => o.optionGroup === option.optionGroup) === i
+                all.findIndex((o) => o.optionGroup === option.optionGroup) ===
+                  i,
             )
-            .forEach(option => {
+            .forEach((option) => {
               values[getOptionFieldKey(option)] = option.maxAmount
             })
         }
@@ -79,17 +80,17 @@ class Pledge extends Component {
       const pkg = this.getPkg()
       if (pkg) {
         const matchingOptions = pkg.options.filter(
-          option =>
+          (option) =>
             option.membership &&
             option.reward &&
             option.reward.name === query.membershipType &&
-            option.membership.user?.id === props.customMe?.id // only preselect own membership
+            option.membership.user?.id === props.customMe?.id, // only preselect own membership
         )
         if (matchingOptions.length) {
           // we set all other options to the min amount (normally 0)
           pkg.options
-            .filter(option => option.membership)
-            .forEach(option => {
+            .filter((option) => option.membership)
+            .forEach((option) => {
               values[getOptionFieldKey(option)] = option.minAmount
             })
           // set matching options to max amount (normally 1)
@@ -98,9 +99,10 @@ class Pledge extends Component {
             .filter(
               (option, i, all) =>
                 !option.optionGroup ||
-                all.findIndex(o => o.optionGroup === option.optionGroup) === i
+                all.findIndex((o) => o.optionGroup === option.optionGroup) ===
+                  i,
             )
-            .forEach(option => {
+            .forEach((option) => {
               values[getOptionFieldKey(option)] = option.maxAmount
             })
         }
@@ -110,7 +112,7 @@ class Pledge extends Component {
     if (pledge) {
       values.reason = pledge.reason
       values.price = pledge.total
-      pledge.options.forEach(option => {
+      pledge.options.forEach((option) => {
         values[getOptionFieldKey(option)] = option.amount
         if (option.periods !== null) {
           values[getOptionPeriodsFieldKey(option)] = option.periods
@@ -118,12 +120,12 @@ class Pledge extends Component {
       })
       basePledge = {
         values: {
-          ...values
+          ...values,
         },
         query: {
-          ...query
+          ...query,
         },
-        pledge
+        pledge,
       }
     } else {
       values.price = +query.price || undefined
@@ -135,30 +137,32 @@ class Pledge extends Component {
       values,
       errors: {},
       dirty: {
-        price: values.price ? true : undefined
-      }
+        price: values.price ? true : undefined,
+      },
     }
   }
   getPkg(base) {
     const { query } = base || this.props
     const { packages } = this.props
     let pkg = query.package
-      ? packages.find(pkg => pkg.name === query.package.toUpperCase())
+      ? packages.find((pkg) => pkg.name === query.package.toUpperCase())
       : null
     if (pkg) {
       if (query.userPrice) {
         // only offer userPrice true options
         pkg = {
           ...pkg,
-          options: pkg.options.filter(option => option.userPrice)
+          options: pkg.options.filter((option) => option.userPrice),
         }
       }
       // the frontend no longer supports accessGranted and strips those options
-      const hasAccessGranted = pkg.options.some(option => option.accessGranted)
+      const hasAccessGranted = pkg.options.some(
+        (option) => option.accessGranted,
+      )
       if (hasAccessGranted) {
         pkg = {
           ...pkg,
-          options: pkg.options.filter(option => !option.accessGranted)
+          options: pkg.options.filter((option) => !option.accessGranted),
         }
       }
     }
@@ -172,7 +176,7 @@ class Pledge extends Component {
 
     let requireShippingAddress = pkg ? pkg.name === 'BENEFACTOR' : false
     const options = pkg
-      ? pkg.options.map(option => {
+      ? pkg.options.map((option) => {
           const fieldKey = getOptionFieldKey(option)
           const fieldKeyPeriods = getOptionPeriodsFieldKey(option)
 
@@ -205,7 +209,7 @@ class Pledge extends Component {
               (!option.membership ||
                 option.membership.user.id === (customMe && customMe.id))
                 ? true /* ToDo: check base pledge value once supported in backend */
-                : undefined
+                : undefined,
           }
         })
       : []
@@ -225,7 +229,7 @@ class Pledge extends Component {
       id: pledge ? pledge.id : undefined,
       pledgeShippingAddress: pledge ? pledge.shippingAddress : undefined,
       pledgeUser: pledge ? pledge.user : undefined,
-      requireShippingAddress
+      requireShippingAddress,
     }
   }
   refetchPackages() {
@@ -242,16 +246,16 @@ class Pledge extends Component {
       this.setState(
         FieldSet.utils.mergeField({
           field: 'price',
-          value: +query.price || undefined
-        })
+          value: +query.price || undefined,
+        }),
       )
     }
     if (!values.reason && query.reason) {
       this.setState(
         FieldSet.utils.mergeField({
           field: 'reason',
-          value: `${query.reason}`
-        })
+          value: `${query.reason}`,
+        }),
       )
     }
   }
@@ -280,7 +284,7 @@ class Pledge extends Component {
       customMe,
       statement,
       query,
-      packages
+      packages,
     } = this.props
 
     const queryGroup = query.group
@@ -305,9 +309,9 @@ class Pledge extends Component {
           <Link key='account' href='/konto' passHref>
             <A>{t(`pledge/form/instruction/${queryPackage}/accountText`)}</A>
           </Link>
-        )
+        ),
       },
-      ''
+      '',
     )
 
     const meta = statementTitle
@@ -315,23 +319,23 @@ class Pledge extends Component {
           title: t('pledge/form/statement/share/title', statement),
           description: t('pledge/form/statement/share/description'),
           image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=628&updatedAt=${encodeURIComponent(
-            statement.updatedAt
+            statement.updatedAt,
           )}&url=${encodeURIComponent(
-            `${PUBLIC_BASE_URL}/community?share=${statement.id}&package=${queryPackage}`
-          )}`
+            `${PUBLIC_BASE_URL}/community?share=${statement.id}&package=${queryPackage}`,
+          )}`,
         }
       : {
           title: t.first([
             pkg && `pledge/meta/package/${pkg.name}/title`,
             queryGroup && `pledge/meta/group/${queryGroup}/title`,
-            'pledge/meta/title'
+            'pledge/meta/title',
           ]),
           description: t.first([
             pkg && `pledge/meta/package/${pkg.name}/description`,
             queryGroup && `pledge/meta/group/${queryGroup}/description`,
-            'pledge/meta/description'
+            'pledge/meta/description',
           ]),
-          image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`
+          image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
         }
 
     return (
@@ -350,7 +354,7 @@ class Pledge extends Component {
                   <RawHtml
                     type={P}
                     dangerouslySetInnerHTML={{
-                      __html: t('ended/pledge/lead')
+                      __html: t('ended/pledge/lead'),
                     }}
                   />
                 </div>
@@ -363,10 +367,10 @@ class Pledge extends Component {
               customMe &&
               pkg &&
               pkg.options.find(
-                option =>
+                (option) =>
                   option.membership &&
                   option.membership.user &&
-                  option.membership.user.id === customMe.id
+                  option.membership.user.id === customMe.id,
               )
             const ownMembership =
               ownMembershipOption && ownMembershipOption.membership
@@ -380,10 +384,10 @@ class Pledge extends Component {
                 pkg && isMember && `pledge/title/${pkg.name}/member`,
                 pkg && `pledge/title/${pkg.name}`,
                 !pkg && isMember && 'pledge/title/member',
-                !pkg && 'pledge/title'
+                !pkg && 'pledge/title',
               ].filter(Boolean),
               undefined,
-              ''
+              '',
             )
 
             return (
@@ -430,7 +434,7 @@ class Pledge extends Component {
                       userPrice={userPrice}
                       pkg={pkg}
                       packages={packages}
-                      onChange={fields => {
+                      onChange={(fields) => {
                         this.setState(FieldSet.utils.mergeFields(fields))
                       }}
                     />
@@ -455,17 +459,17 @@ class Pledge extends Component {
                     }
                     errors={errors}
                     onError={() => {
-                      this.setState(state => {
+                      this.setState((state) => {
                         const dirty = {
-                          ...state.dirty
+                          ...state.dirty,
                         }
-                        Object.keys(state.errors).forEach(field => {
+                        Object.keys(state.errors).forEach((field) => {
                           if (state.errors[field]) {
                             dirty[field] = true
                           }
                         })
                         return {
-                          dirty
+                          dirty,
                         }
                       })
                     }}
@@ -481,7 +485,7 @@ class Pledge extends Component {
 }
 
 Pledge.propTypes = {
-  query: PropTypes.object.isRequired
+  query: PropTypes.object.isRequired,
 }
 
 const query = gql`
@@ -617,23 +621,23 @@ const PledgeWithQueries = compose(
   graphql(shareRefQuery, {
     options: ({ query }) => ({
       variables: {
-        id: query.utm_content || query.ref
-      }
+        id: query.utm_content || query.ref,
+      },
     }),
-    skip: props => !(props.query.utm_content || props.query.ref),
+    skip: (props) => !(props.query.utm_content || props.query.ref),
     props: ({ data }) => {
       return {
         statement:
-          data.statements && data.statements.nodes && data.statements.nodes[0]
+          data.statements && data.statements.nodes && data.statements.nodes[0],
       }
-    }
+    },
   }),
   graphql(query, {
     options: ({ query, crowdfundingName }) => ({
       variables: {
         crowdfundingName,
-        accessToken: query.token
-      }
+        accessToken: query.token,
+      },
     }),
     props: ({ data }) => {
       const packages = []
@@ -646,14 +650,14 @@ const PledgeWithQueries = compose(
         error: data.error,
         packages,
         hasEnded: data.crowdfunding && data.crowdfunding.hasEnded,
-        customMe: data.me
+        customMe: data.me,
       }
-    }
+    },
   }),
   withMembership, // provides isMember
   withT,
   withMe,
-  withRouter
+  withRouter,
 )(Pledge)
 
 export default PledgeWithQueries

@@ -12,11 +12,8 @@ const { publish } = require('@orbiting/backend-modules-slack')
 
 const { upsertStatement } = require('../../../lib/cards')
 
-const {
-  ADMIN_FRONTEND_BASE_URL,
-  CLAIM_CARD_CAMPAIGN,
-  SLACK_CHANNEL_FEED,
-} = process.env
+const { ADMIN_FRONTEND_BASE_URL, CLAIM_CARD_CAMPAIGN, SLACK_CHANNEL_FEED } =
+  process.env
 
 module.exports = async (
   _,

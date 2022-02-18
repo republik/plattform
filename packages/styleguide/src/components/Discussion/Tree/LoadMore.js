@@ -19,7 +19,7 @@ const styles = {
     cursor: 'pointer',
     whiteSpace: 'nowrap',
     lineHeight: pxToRem('40px'),
-    padding: 0
+    padding: 0,
   }),
   alternative: css({
     padding: '0 7px',
@@ -31,12 +31,12 @@ const styles = {
       left: 0,
       right: 0,
       bottom: 9,
-      borderRadius: 10
+      borderRadius: 10,
     },
     '& > span': {
-      position: 'relative'
-    }
-  })
+      position: 'relative',
+    },
+  }),
 }
 
 export const LoadMore = React.memo(({ t, count, onClick }) => {
@@ -57,7 +57,7 @@ export const LoadMore = React.memo(({ t, count, onClick }) => {
 LoadMore.propTypes = {
   t: PropTypes.func.isRequired,
   count: PropTypes.number.isRequired,
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
 }
 
 /**
@@ -70,21 +70,21 @@ export const LoadMore1 = ({ t, alternative, count, onClick }) => {
       root: css({
         '@media (hover)': {
           ':hover': {
-            color: colorScheme.getCSSColor('primaryHover')
-          }
-        }
+            color: colorScheme.getCSSColor('primaryHover'),
+          },
+        },
       }),
       alternative: css({
         '::before': { background: colorScheme.getCSSColor('primary') },
         '@media (hover)': {
           ':hover': {
-            color: colorScheme.getCSSColor('default')
+            color: colorScheme.getCSSColor('default'),
           },
           ':hover::before': {
-            background: colorScheme.getCSSColor('primaryHover')
-          }
-        }
-      })
+            background: colorScheme.getCSSColor('primaryHover'),
+          },
+        },
+      }),
     }
   }, [colorScheme])
   return (

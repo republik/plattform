@@ -4,17 +4,21 @@ import { Figure } from './Figure'
 
 export const PullQuote = ({ children }) => {
   const figure = useMemo(() => {
-    return Children.toArray(children).filter(element => element.type === Figure)
+    return Children.toArray(children).filter(
+      (element) => element.type === Figure,
+    )
   }, [children])
 
   const rest = useMemo(() => {
-    return Children.toArray(children).filter(element => element.type !== Figure)
+    return Children.toArray(children).filter(
+      (element) => element.type !== Figure,
+    )
   }, [children])
 
   return (
     <div
       style={{
-        margin: '60px 0'
+        margin: '60px 0',
       }}
     >
       {figure.length > 0 ? (
@@ -24,7 +28,7 @@ export const PullQuote = ({ children }) => {
               <td
                 style={{
                   width: '155px',
-                  paddingRight: '15px'
+                  paddingRight: '15px',
                 }}
               >
                 {figure}
@@ -46,7 +50,7 @@ export const PullQuoteText = ({ children }) => (
       ...fontStyles.serifBold,
       fontSize: '28px',
       lineHeight: '33px',
-      margin: '0px'
+      margin: '0px',
     }}
   >
     {children}
@@ -61,7 +65,7 @@ export const PullQuoteSource = ({ children }) => (
       fontSize: '15px',
       lineHeight: '21px',
       margin: '21px 0 0 0',
-      fontStyle: 'normal'
+      fontStyle: 'normal',
     }}
   >
     {children}

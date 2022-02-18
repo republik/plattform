@@ -12,7 +12,7 @@ const RelativeTime = ({ date, t, isDesktop, direction = 'past' }) => {
         t,
         isDesktop,
         now,
-        direction
+        direction,
       })}
     </span>
   )

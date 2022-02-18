@@ -11,11 +11,11 @@ export const useBoundingClientRect = (deps = []) => {
   const [rect, setRect] = React.useState({})
 
   return [
-    React.useCallback(el => {
+    React.useCallback((el) => {
       if (el) {
         setRect(el.getBoundingClientRect())
       }
     }, deps), // eslint-disable-line react-hooks/exhaustive-deps
-    rect
+    rect,
   ]
 }

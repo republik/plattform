@@ -10,7 +10,7 @@ const ErrorContainer = ({ children }) => (
   </NarrowContainer>
 )
 
-const LoaderWithHeaderHeight = props => (
+const LoaderWithHeaderHeight = (props) => (
   <Loader
     ErrorContainer={ErrorContainer}
     {...props}
