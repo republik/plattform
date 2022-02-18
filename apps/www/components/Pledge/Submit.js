@@ -42,6 +42,7 @@ import { useFieldSetState } from './utils'
 import ErrorMessage, { ErrorContainer } from '../ErrorMessage'
 import { useIsApplePayAvailable } from '../Payment/Form/ApplePay'
 import useStripePaymentRequest from '../Payment/PaymentRequest/useStripePaymentRequest'
+import { getPaymentInformationFromEvent } from '../Payment/PaymentRequest/PaymentRequestEventHelper'
 
 const { H2, P } = Interaction
 
@@ -150,16 +151,26 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
       amount: props.total ?? 0,
       label: props.query.package ?? 'NO VALUE',
     },
+    requestShipping: props?.requireShippingAddress ?? false,
+    shippingOptions: props?.requireShippingAddress
+      ? [
+          {
+            id: 'default',
+            label: t('account/pledges/free-delivery'),
+            amount: 0,
+          },
+        ]
+      : undefined,
   })
 
   // in case a native browser payment is available initialize stripe
   useEffect(() => {
     if (
       enhancedPaymentMethods.find((value) => value.startsWith('STRIPE-')) &&
-      !paymentRequest.initialized &&
+      paymentRequest.status === 'UNINITIALIZED' &&
       props.total
     ) {
-      paymentRequest.initialize()
+      paymentRequest.instantiate()
     }
   }, [enhancedPaymentMethods, paymentRequest, props.total])
 
@@ -535,21 +546,17 @@ class Submit extends Component {
       loading: t('pledge/submit/loading/stripe'),
     }))
 
-    console.debug('SHOWING APPLE PAY')
     this.props.paymentRequest.show(
       // Payment success handler
       async (ev) => {
         console.debug('Event value', ev)
-        // TODO: Sync contact data
-        const [firstName, lastName] = ev.payerName
-          .split(' ')
-          .map((s) => s.trim())
+        const paymentInformation = getPaymentInformationFromEvent(ev)
 
         this.props.contactState.onChange({
           values: {
-            firstName,
-            lastName,
-            email: ev.payerEmail,
+            firstName: paymentInformation.firstName,
+            lastName: paymentInformation.lastName,
+            email: paymentInformation.email,
           },
           errors: {
             firstName: null,
@@ -558,14 +565,20 @@ class Submit extends Component {
           },
         })
 
-        await this.submitPledge(ev.paymentMethod)
-        console.debug('Pledge has ended')
+        if (paymentInformation.shippingAddress) {
+          this.props.shippingAddressState.onChange({
+            values: paymentInformation.shippingAddress,
+            errors: {},
+          })
+        }
+
+        this.submitPledge(ev.paymentMethod)
       },
       // Cancel Handler
       () => {
         this.setState(() => ({
           loading: false,
-          paymentError: 'Payment cancelled',
+          paymentError: null,
         }))
       },
     )
@@ -742,7 +755,6 @@ class Submit extends Component {
           packageGroup={packageGroup}
           setSyncAddresses={setSyncAddresses}
           onChange={(fields) => {
-            console.debug('onChange', fields)
             this.setState((state) => {
               const nextState = FieldSet.utils.mergeFields(fields)(state)
 
@@ -933,6 +945,9 @@ class Submit extends Component {
             {this.renderAutoPay()}
             <br />
             <br />
+            <span>
+              Payment request status: {this.props.paymentRequest.status}
+            </span>
             <div style={{ opacity: errorMessages.length ? 0.5 : 1 }}>
               <Button
                 block
