@@ -31,6 +31,7 @@ import * as PSPIcons from './PSPIcons'
 import { format } from 'd3-format'
 
 import StripeForm from './Form/Stripe'
+import ApplePayButton from './ApplePayButton'
 
 const pad2 = format('02')
 
@@ -38,7 +39,7 @@ const PAYMENT_METHODS = [
   {
     disabled: false,
     key: 'STRIPE-APPLEPAY',
-    Icon: PSPIcons.ApplePay,
+    Icon: ApplePayButton,
   },
   {
     disabled: false,
