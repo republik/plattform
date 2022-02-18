@@ -1005,6 +1005,10 @@
       "value": "Die Funktion ist nur für Mitglieder und Abonnentinnen die Republik zugänglich."
     },
     {
+      "key": "account/pledges/free-delivery",
+      "value": "Kostenlose Lieferung"
+    },
+    {
       "key": "account/pledges/title",
       "value": "Einkäufe"
     },
