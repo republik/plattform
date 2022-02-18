@@ -5,6 +5,7 @@ import { Interaction } from '@project-r/styleguide'
 
 import { t } from '../lib/withT'
 import withDefaultSSR from '../lib/hocs/withDefaultSSR'
+import withT from '../lib/withT'
 import { CROWDFUNDING } from '../lib/constants'
 import useInNativeApp from '../lib/withInNativeApp'
 import { withMembership } from '../components/Auth/checkRoles'
@@ -19,22 +20,22 @@ const meta = {
   title: t('pages/access/title'),
 }
 
-const Page = ({ me }) => {
+const Page = ({ me, t }) => {
   const [hover, setHover] = useState()
 
   return (
     <Frame meta={meta}>
       <Interaction.H2>
-        <strong>Republik Teilen</strong>
+        <strong>{t('Share/title')}</strong>
       </Interaction.H2>
-      <Interaction.P>Beschrieb</Interaction.P>
+      <Interaction.P>{t('Share/lead')}</Interaction.P>
       <ShareChart />
       <AccessCampaigns />
       {/* TODO: add prolong*/}
       {!me ? (
         <div style={{ marginTop: 36 }}>
           <Interaction.H2>
-            <strong>Einloggen und Abo Teilen</strong>
+            <strong>Einloggen und Abo schenken</strong>
           </Interaction.H2>
           <SignIn />
         </div>
@@ -71,4 +72,4 @@ const Page = ({ me }) => {
   )
 }
 
-export default withDefaultSSR(compose(withMembership)(Page))
+export default withDefaultSSR(compose(withMembership, withT)(Page))

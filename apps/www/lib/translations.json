@@ -3645,6 +3645,22 @@
       "value": "Abo #{sequenceNumber}"
     },
     {
+      "key": "Share/title",
+      "value": "Verschenken Sie vier Wochen Republik"
+    },
+    {
+      "key": "Share/lead",
+      "value": "Laden Sie Ihre Freunde und Feinde ein, die Republik kennenzulernen. Damit ermöglichen Sie den Empfangenden einen vierwöchigen Probezugriff auf alle Inhalte der Republik."
+    },
+    {
+      "key": "Share/chart/title",
+      "value": "Aktuell lesen {currentActiveAccessGrants} Personen die Republik mit einem geteilten Abo"
+    },
+    {
+      "key": "Share/chart/lead",
+      "value": "In den letzten 30 Tagen haben {soldMembership} die Republik nach dem Probelesen abonniert"
+    },
+    {
       "key": "notifications/pageTitle",
       "value": "Mitteilung – Republik"
     },
