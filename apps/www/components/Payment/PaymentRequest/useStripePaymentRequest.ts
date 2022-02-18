@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Stripe,
   PaymentRequest,
@@ -7,21 +7,9 @@ import {
   PaymentMethod,
 } from '@stripe/stripe-js'
 import { loadStripe } from '../stripe'
+import { makePaymentRequestOptions } from './PaymentRequestOption.helper'
 
 type LeanPaymentRequestOptions = Pick<PaymentRequestOptions, 'total'>
-
-function makeOptions(
-  leanOptions: LeanPaymentRequestOptions,
-): PaymentRequestOptions {
-  return {
-    ...leanOptions,
-    disableWallets: ['browserCard'], // Only accept Apple- & Google Pay
-    country: 'CH',
-    currency: 'chf',
-    requestPayerEmail: true,
-    requestPayerName: true,
-  }
-}
 
 type PledgeHandler = (event: PaymentRequestPaymentMethodEvent) => Promise<void>
 type PaymentCanceledHandler = () => void
@@ -40,8 +28,27 @@ function useStripePaymentRequest(
   options: LeanPaymentRequestOptions,
 ): PaymentRequestValues {
   const [stripe, setStripe] = useState<Stripe>(null)
+  const [lastOptions, setLastOptions] =
+    useState<LeanPaymentRequestOptions>(null)
   const [paymentRequest, setPaymentRequest] = useState<PaymentRequest>(null)
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(null)
+
+  useEffect(() => {
+    // In case the input options have changed create a new PaymentRequest
+    if (
+      paymentRequest &&
+      JSON.stringify(lastOptions) !== JSON.stringify(options)
+    ) {
+      setLastOptions(options)
+      console.debug('PaymentRequestOptions changed, reinitializing', options)
+      initialize()
+    } else {
+      console.debug(
+        'PaymentRequest options unchanged, reusing existing',
+        lastOptions,
+      )
+    }
+  }, [paymentRequest, lastOptions, options])
 
   async function initialize() {
     let stripePromise = stripe
@@ -52,15 +59,15 @@ function useStripePaymentRequest(
     }
 
     const newPaymentRequest = await stripePromise.paymentRequest(
-      makeOptions(options),
+      makePaymentRequestOptions(options),
     )
+    setLastOptions(options)
 
     const newPaymentRequestPromise = newPaymentRequest.canMakePayment()
     if (!newPaymentRequestPromise) {
       alert('This browser does not support Payment Request')
       return
     }
-
     setPaymentRequest(newPaymentRequest)
   }
 
