@@ -72,7 +72,9 @@
     "dev:scheduler": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION --trace-warnings scheduler.js",
     "inspect": "NODE_DEBUG_OPTION=--inspect yarn dev",
     "start": "node index.js",
-    "start:scheduler": "node scheduler.js"
+    "start:scheduler": "node scheduler.js",
+    "ngrok:start": "ngrok http --region=eu --hostname=api-republik.eu.ngrok.io 5010",
+    "stripe:forward-webhooks": "stripe listen --latest --forward-to localhost:5010/payments/stripe"
   },
   "devDependencies": {
     "apollo-fetch": "^0.7.0",
