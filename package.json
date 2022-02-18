@@ -42,7 +42,9 @@
     "db:seed": "packages/backend-modules/republik-crowdfundings/seeds/script/seed.js",
     "notifications:send": "cd packages/backend-modules/republik && node ../push-notifications/script/sendNotification.js",
     "auth:role:user": "node packages/backend-modules/auth/script/roleUser",
-    "auth:role:users": "node packages/backend-modules/auth/script/roleUsers"
+    "auth:role:users": "node packages/backend-modules/auth/script/roleUsers",
+    "ngrok:start": "ngrok start --all --region=eu --config=\"./ngrok.yml\"",
+    "stripe:forward-webhooks": "stripe listen --latest --forward-to localhost:5010/payments/stripe"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^16.0.0",
