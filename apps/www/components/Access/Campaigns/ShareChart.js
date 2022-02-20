@@ -9,14 +9,19 @@ import withT from '../../../lib/withT'
 
 // TODO: Real Query
 const accessGrantQuery = gql`
-  query accessGrantQuery($min: Date!, $max: Date!) {
+  query accessGrantQuery($accessCampaignId: ID!, $min: Date!, $max: Date!) {
     accessGrantStats {
-      periods(min: $min, max: $max) {
-        days {
+      evolution(accessCampaignId: $accessCampaignId, min: $min, max: $max) {
+        buckets {
           date
-          active
           activeUnconverted
           converted
+        }
+        updatedAt
+      }
+      events(accessCampaignId: $accessCampaignId, min: $min, max: $max) {
+        buckets {
+          pledges
         }
         updatedAt
       }
@@ -26,8 +31,8 @@ const accessGrantQuery = gql`
 
 const fakeData = {
   accessGrantStats: {
-    periods: {
-      days: [
+    evolution: {
+      buckets: [
         {
           date: '01.02.2021',
           active: 418,
@@ -234,22 +239,25 @@ const ShareChart = ({ data, t }) => {
             { type: 'converted', label: 'Verkaufte Abos' },
           ]
             .map((key) => {
-              return fakeData.accessGrantStats.periods.days.map((day) => {
+              return data.accessGrantStats.evolution.buckets.map((bucket) => {
                 return {
-                  date: day.date,
+                  date: bucket.date,
                   type: key.label,
-                  value: day[key.type],
+                  value: bucket[key.type],
                 }
               })
             })
             .flat()
-          console.log(accessGrantData)
-          const currentDay = timeDay.floor(new Date())
-          const currentActiveAccessGrants = accessGrantData.filter(
-            (day) =>
-              day.type === 'Aktiv geteilte Abos' && day.date === '03.03.2021',
-          )[0].value
-          const soldMembership = 50
+
+          const currentActiveAccessGrants =
+            data.accessGrantStats.evolution.buckets
+              .slice(-1)
+              .pop().activeUnconverted
+          const soldMembership = data.accessGrantStats.events.buckets.reduce(
+            (prev, curr) => prev + curr.pledges,
+            0,
+          )
+
           return (
             <>
               <ChartTitle>
@@ -284,11 +292,12 @@ const ShareChart = ({ data, t }) => {
 
 export default compose(
   graphql(accessGrantQuery, {
-    options: () => {
+    options: ({ accessCampaignId }) => {
       const currentDay = timeDay.floor(new Date())
       return {
         variables: {
-          max: formatDate(timeDay.offset(currentDay)),
+          accessCampaignId,
+          max: formatDate(currentDay),
           min: formatDate(timeDay.offset(currentDay, -30)),
         },
       }

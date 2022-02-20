@@ -29,7 +29,8 @@ const Page = ({ me, t }) => {
         <strong>{t('Share/title')}</strong>
       </Interaction.H2>
       <Interaction.P>{t('Share/lead')}</Interaction.P>
-      <ShareChart />
+      {/* e3568e03-b6b3-46c5-b07a-e9afeea92023 "Teilen Sie Ihr Abonnement" */}
+      <ShareChart accessCampaignId='e3568e03-b6b3-46c5-b07a-e9afeea92023' />
       <AccessCampaigns />
       {/* TODO: add prolong*/}
       {!me ? (
