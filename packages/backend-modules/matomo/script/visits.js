@@ -341,6 +341,7 @@ GROUP BY "discussionId"
       key: 'member',
       test: (visit) =>
         (visit.roles && visit.roles.includes('member')) ||
+        // because it is free
         (visit.referer_name &&
           isNewsletterReferer(visit.referer_name) &&
           !covid19NLRepoIds.includes(visit.referer_name)),
@@ -390,10 +391,11 @@ GROUP BY "discussionId"
     switch (visit.referer_type) {
       case 6:
         referrer = normalizeCampagneName(visit.referer_name, [
-          {
-            name: 'Covid-19-Uhr-Newsletter',
-            values: covid19NLRepoIds,
-          },
+          // // Example, we no longer list Covid-19 separately
+          // {
+          //   name: 'Covid-19-Uhr-Newsletter',
+          //   values: covid19NLRepoIds,
+          // },
         ])
         shortReferrer = referrer.split(' ')[0]
         break
