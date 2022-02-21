@@ -298,7 +298,9 @@ const LineGroup = (props) => {
         const fullWidth = width + (props.paddingRight || 0)
         let textAnchor = 'middle'
         let tx = x1
-        if (annotation.textAlignment === undefined) {
+        if (textAlignmentDict[annotation.textAlignment]) {
+          textAnchor = textAlignmentDict[annotation.textAlignment]
+        } else {
           if (
             x1 + (range ? x2 - x1 : 0) / 2 + annotation.labelSize / 2 >
             fullWidth
@@ -316,8 +318,6 @@ const LineGroup = (props) => {
               tx = x1 + (x2 - x1) / 2
             }
           }
-        } else {
-          textAnchor = textAlignmentDict[annotation.textAlignment]
         }
 
         const isBottom = annotation.position === 'bottom'
