@@ -372,7 +372,7 @@ const LineGroup = (props) => {
                   dy={showValue ? (isBottom ? '1.1em' : '-1.1em') : 0}
                   y={
                     isBottom
-                      ? `${1.2 * (i + 1)}em`
+                      ? `${0.1 + 1.1 * (i + 1)}em`
                       : `-${0.5 + 1.1 * (all.length - i - 1)}em`
                   }
                 >
