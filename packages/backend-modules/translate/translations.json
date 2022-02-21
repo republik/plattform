@@ -1122,7 +1122,7 @@
     },
     {
       "key": "api/access/email/recipient/invitation_kampa202202/subject",
-      "value": "Einladung von {granterName}"
+      "value": "Einladung von {granterName} für vier Wochen Republik"
     },
     {
       "key": "api/access/email/recipient/invitation_gifted_membership/subject",
@@ -1134,7 +1134,7 @@
     },
     {
       "key": "api/access/email/recipient/onboarding_kampa202202/subject",
-      "value": "Ihr Republik-Testzugang: Willkommen!"
+      "value": "Ihr Republik-Probemonat: Willkommen!"
     },
     {
       "key": "api/access/email/recipient/onboarding_gifted_membership/subject",
