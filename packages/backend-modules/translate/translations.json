@@ -1121,11 +1121,19 @@
       "value": "Einladung von {granterName}"
     },
     {
+      "key": "api/access/email/recipient/invitation_kampa202202/subject",
+      "value": "Einladung von {granterName}"
+    },
+    {
       "key": "api/access/email/recipient/invitation_gifted_membership/subject",
       "value": "Ihre Geschenk-Mitgliedschaft"
     },
     {
       "key": "api/access/email/recipient/onboarding/subject",
+      "value": "Ihr Republik-Testzugang: Willkommen!"
+    },
+    {
+      "key": "api/access/email/recipient/onboarding_kampa202202/subject",
       "value": "Ihr Republik-Testzugang: Willkommen!"
     },
     {

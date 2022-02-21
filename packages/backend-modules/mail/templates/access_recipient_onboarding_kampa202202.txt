@@ -6,9 +6,9 @@ dürfen.
 {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
 
 Für {{CAMPAIGN_PERIOD}} sind Sie unser Gast: Sie können ab sofort das Magazin
-lesen {{link_signin}} und alle Beiträge mit Ihren Freunden oder Feinden teilen.
-Das gibt Ihnen bis zum {{GRANT_END}} Zeit, die Republik unverbindlich
-kennenzulernen.
+lesen {{link_signin}} , alle Beiträge mit Ihren Freunden oder Feinden teilen und
+in diesem Frühling sogar im Dialog mitdiskutieren. Das gibt Ihnen bis zum
+{{GRANT_END}} Zeit, die Republik unverbindlich kennenzulernen.
 
 {{/if}}
 
@@ -21,10 +21,15 @@ Nachfolgend finden Sie die wichtigsten Informationen zur Republik in der
     Benachrichtigungen Sie von uns erhalten, können Sie in Ihrem Konto
     {{link_account}} festlegen.
 
- 2. Sie möchten wissen, wer die Menschen hinter der Republik sind? Lernen Sie
+ 2. Diskutieren Sie mit anderen Leserinnen und der Redaktion! Auf der
+    Dialog-Seite {{link_dialog}} sehen Sie, was aktuell bei der Republik zu
+    reden gibt, in der Etikette {{frontend_base_url}}/etikette finden Sie unsere
+    Grundsätze für einen höflichen Dialog.
+
+ 3. Sie möchten wissen, wer die Menschen hinter der Republik sind? Lernen Sie
     unsere Crew kennen: Wir sind Ihr Team {{link_imprint}} .
 
- 3. Hinter der Republik steht kein Verlag, sondern über 29’000 Verlegerinnen –
+ 4. Hinter der Republik steht kein Verlag, sondern über 29’000 Verlegerinnen –
     wir gehören unseren Lesern, die als Mitglieder der Project R Genossenschaft
     auch immer wieder mitentscheiden. Die Leserinnen sind es auch, die uns
     finanzieren – denn die Republik ist komplett werbefrei. Für mehr Details zu

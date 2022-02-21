@@ -2,7 +2,7 @@ Guten Tag
 
 {{#unless RECIPIENT_HAS_MEMBERSHIPS}} {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
 
-{{GRANTER_NAME}} ({{GRANTER_EMAIL}} ) hat die Republik mit Ihnen geteilt.
+{{GRANTER_NAME}} ({{GRANTER_EMAIL}} ) hat Ihnen 4 Wochen Republik geschenkt.
 
 {{#if GRANTER_MESSAGE}}
 
@@ -14,7 +14,8 @@ Und uns eine Nachricht für Sie mitgegeben:
 
 Wir sind ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur
 – unabhängig und werbefrei. Wir heissen Sie als Gast herzlich willkommen an
-Bord. Entdecken Sie unser Magazin ganz unverbindlich für {{CAMPAIGN_PERIOD}}:
+Bord. Entdecken Sie unser Magazin ganz unverbindlich – ausnahmsweise und bis im
+April für die Dauer von vier statt nur drei Wochen:
 
 {{/if}}
 
@@ -30,7 +31,10 @@ Beiträgen. In der Republik-App {{link_manual}} , auf der Website {{link_signin}
 und als Newsletter.
 
 Neben hintergründigen Recherchen und Reportagen finden Sie bei uns kurze
-Nachrichtenbriefings, meinungsstarke Kolumnen sowie Audio- und Bildbeiträge.
+Nachrichtenbriefings, meinungsstarke Kolumnen sowie Audio- und Bildbeiträge. Der
+Austausch mit unseren Leserinnen liegt uns besonders am Herzen. Machen Sie sich
+ein eigenes Bild von unserem Dialog und diskutieren Sie mit: Bis im April haben
+wir den Zugang anders als sonst auch für Gäste freigeschaltet.
 
 {{/unless}} {{#if RECIPIENT_HAS_MEMBERSHIPS}}
 
@@ -47,9 +51,10 @@ Sie haben aber bereits ein gültiges Abo – vielen Dank dafür!
 
 {{/if}} {{#if RECIPIENT_HAS_CAMPAIGNS}}
 
-In diesem Fall ein Hinweis: Auch Sie können Ihr Abonnement mit Freunden und
-Feinden teilen {{LINK_ACCOUNT_SHARE}} . Die Empfänger erhalten eine persönliche
-Einladung per E-Mail.
+In diesem Fall ein Hinweis: Auch Sie können Ihre Freunde und Feinde noch bis
+Ende März mit einem kostenlosen vierwöchigen Republik-Zugang beschenken
+{{LINK_ACCOUNT_SHARE}} . Die Empfänger erhalten eine persönliche Einladung per
+E-Mail.
 
 Zugang teilen {{LINK_ACCOUNT_SHARE}}
 
@@ -58,7 +63,7 @@ Zugang teilen {{LINK_ACCOUNT_SHARE}}
 Bei Fragen und Anliegen stehen wir Ihnen gerne unter kontakt@republik.ch zur
 Verfügung.
 
-Wir wünschen Ihnen viel Freude beim Lesen und Ausprobieren!
+Wir wünschen Ihnen viel Freude beim Lesen, Mitdiskutieren und Ausprobieren!
 
 Ihre Crew der Republik
 
