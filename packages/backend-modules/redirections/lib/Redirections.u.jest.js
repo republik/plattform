@@ -1,3 +1,16 @@
+jest.mock(
+  '@orbiting/backend-modules-search/graphql/resolvers/_queries/search',
+  () => jest.fn(),
+)
+
+jest.mock('@orbiting/backend-modules-documents', () => ({
+  lib: {
+    resolve: {
+      createResolver: jest.fn(),
+    },
+  },
+}))
+
 const Redirections = require('./Redirections')
 
 const pinnedDate = new Date('2019-06-01')
