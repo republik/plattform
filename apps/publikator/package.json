@@ -17,7 +17,6 @@
     "test:jsdom": "cross-env NODE_ENV=test babel-tape-runner test/jsdom/setup.js \"test/jsdom/**/*.test.js\" | tap-summary",
     "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./.next*\" | xargs wc -l",
     "lint": "eslint --fix .",
-    "precommit": "npm run test:unit",
     "translations-raw": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1qPubCKz2YzbcFkRfF0MrgRqD0KLsgRPxoZfG5G3tHOA --title=live --pretty --out lib/translations.json",
     "translations": "npm run translations-raw && git add -p lib/translations.json && git checkout -- lib/translations.json",
     "sg:link": "./scripts/sg_link.sh",
