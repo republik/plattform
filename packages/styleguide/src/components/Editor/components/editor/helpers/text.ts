@@ -45,6 +45,21 @@ export const selectPlaceholder = (
 export const isEmpty = (text?: string) =>
   !text || text === '' || text === PSEUDO_EMPTY_STRING
 
+// ["TEXT HTTP://... TEXT"]  -> ["TEXT "] LINK [" TEXT"]
+//                                          |
+//                                    ["HTTP://..."]
+export const createLinks: NormalizeFn<CustomText> = ([node, path], editor) => {
+  // TODO: if text contains http(s)://* followed by trailing whitespace and node.parent !== link:
+  //  wrap the http(s)://* in a link element
+  // console.log('createLinks', { node, path })
+  // to get node text: node.text
+  // to get parent: const parent = Editor.parent(editor, path)
+  // to get parent type: SlateElement.isElement(parent) && parent.type === 'link'
+  // after you find and link in the text and wrap it and RETURN TRUE
+  // Transforms.wrapNodes(editor, { type: "link", children: [] }, { at: path, split: true })
+  return false
+}
+
 export const handlePlaceholders: NormalizeFn<CustomText> = (
   [node, path],
   editor
