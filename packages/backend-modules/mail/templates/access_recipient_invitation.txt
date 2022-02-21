@@ -2,9 +2,9 @@ Guten Tag
 
 {{#unless RECIPIENT_HAS_MEMBERSHIPS}} {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
 
-{{GRANTER_NAME}} ({{GRANTER_EMAIL}} ){{#if `CAMPAIGN_TITLE == "Verschenken Sie
-vier Wochen Republik"`}} hat Ihnen 4 Wochen Republik geschenkt.{{else}} hat die
-Republik mit Ihnen geteilt.{{/if}}
+{{GRANTER_NAME}} ({{GRANTER_EMAIL}} ){{#if `CAMPAIGN_SLUG == "kampa202202"`}}
+hat Ihnen 4 Wochen Republik geschenkt.{{else}} hat die Republik mit Ihnen
+geteilt.{{/if}}
 
 {{#if GRANTER_MESSAGE}}
 
@@ -16,10 +16,10 @@ Und uns eine Nachricht für Sie mitgegeben:
 
 Wir sind ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur
 – unabhängig und werbefrei. Wir heissen Sie als Gast herzlich willkommen an
-Bord. {{#if `CAMPAIGN_TITLE == "Verschenken Sie vier Wochen
-Republik"`}}Entdecken Sie unser Magazin ganz unverbindlich – ausnahmsweise und
-bis im April für die Dauer von vier statt nur drei Wochen:{{else}}Entdecken Sie
-unser Magazin ganz unverbindlich:{{/if}}
+Bord. {{#if `CAMPAIGN_SLUG == "kampa202202"`}}Entdecken Sie unser Magazin ganz
+unverbindlich – ausnahmsweise und bis im April für die Dauer von vier statt nur
+drei Wochen:{{else}}Entdecken Sie unser Magazin ganz unverbindlich für
+{{CAMPAIGN_PERIOD}}:{{/if}}
 
 {{/if}}
 
@@ -36,10 +36,10 @@ und als Newsletter.
 
 Neben hintergründigen Recherchen und Reportagen finden Sie bei uns kurze
 Nachrichtenbriefings, meinungsstarke Kolumnen sowie Audio- und Bildbeiträge.
-{{#if `CAMPAIGN_TITLE == "Verschenken Sie vier Wochen Republik"`}}Der Austausch
-mit unseren Leserinnen liegt uns besonders am Herzen. Machen Sie sich ein
-eigenes Bild von unserem Dialog und diskutieren Sie mit: Bis im April haben wir
-den Zugang anders als sonst auch für Gäste freigeschaltet.{{/if}}
+{{#if `CAMPAIGN_SLUG == "kampa202202"`}}Der Austausch mit unseren Leserinnen
+liegt uns besonders am Herzen. Machen Sie sich ein eigenes Bild von unserem
+Dialog und diskutieren Sie mit: Bis im April haben wir den Zugang anders als
+sonst auch für Gäste freigeschaltet.{{/if}}
 
 {{/unless}} {{#if RECIPIENT_HAS_MEMBERSHIPS}}
 
@@ -56,12 +56,13 @@ Sie haben aber bereits ein gültiges Abo – vielen Dank dafür!
 
 {{/if}} {{#if RECIPIENT_HAS_CAMPAIGNS}}
 
-{{#if `CAMPAIGN_TITLE == "Verschenken Sie vier Wochen Republik"`}}In diesem Fall
-ein Hinweis: Auch Sie können Ihre Freunde und Feinde noch bis Ende März mit
-einem kostenlosen vierwöchigen Republik-Zugang beschenken {{LINK_ACCOUNT_SHARE}}
-. Die Empfänger erhalten eine persönliche Einladung per E-Mail.{{else}}Sie
-können Ihr Abo auch mit anderen Personen teilen {{LINK_ACCOUNT_SHARE}} . Die
-Empfänger erhalten eine persönliche Einladung per E-Mail.{{/if}}
+{{#if `CAMPAIGN_SLUG == "kampa202202"`}}In diesem Fall ein Hinweis: Auch Sie
+können Ihre Freunde und Feinde noch bis Ende März mit einem kostenlosen
+vierwöchigen Republik-Zugang beschenken {{LINK_ACCOUNT_SHARE}} . Die Empfänger
+erhalten eine persönliche Einladung per E-Mail.{{else}}In diesem Fall ein
+Hinweis: Auch Sie können Ihr Abonnement mit Freunden und Feinden teilen
+{{LINK_ACCOUNT_SHARE}} . Die Empfänger erhalten eine persönliche Einladung per
+E-Mail.{{/if}}
 
 Zugang teilen {{LINK_ACCOUNT_SHARE}}
 
@@ -70,9 +71,9 @@ Zugang teilen {{LINK_ACCOUNT_SHARE}}
 Bei Fragen und Anliegen stehen wir Ihnen gerne unter kontakt@republik.ch zur
 Verfügung.
 
-{{#if `CAMPAIGN_TITLE == "Verschenken Sie vier Wochen Republik"`}}Wir wünschen
-Ihnen viel Freude beim Lesen, Mitdiskutieren und Ausprobieren! {{else}}Wir
-wünschen Ihnen viel Freude beim Lesen und Ausprobieren! {{/if}}
+{{#if `CAMPAIGN_SLUG == "kampa202202"`}}Wir wünschen Ihnen viel Freude beim
+Lesen, Mitdiskutieren und Ausprobieren! {{else}}Wir wünschen Ihnen viel Freude
+beim Lesen und Ausprobieren! {{/if}}
 
 Ihre Crew der Republik
 

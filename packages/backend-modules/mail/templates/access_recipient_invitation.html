@@ -48,10 +48,9 @@
                       <strong
                         >{{GRANTER_NAME}} (<a href="mailto:{{GRANTER_EMAIL}}"
                           >{{GRANTER_EMAIL}}</a
-                        >){{#if `CAMPAIGN_TITLE == "Verschenken Sie vier Wochen
-                        Republik"`}} hat Ihnen 4 Wochen Republik
-                        geschenkt.{{else}} hat die Republik mit Ihnen
-                        geteilt.{{/if}}
+                        >){{#if `CAMPAIGN_SLUG == "kampa202202"`}} hat Ihnen 4
+                        Wochen Republik geschenkt.{{else}} hat die Republik mit
+                        Ihnen geteilt.{{/if}}
                       </strong>
                     </p>
                     {{#if GRANTER_MESSAGE}}
@@ -66,11 +65,11 @@
                       Wir sind ein digitales Magazin für Politik, Wirtschaft,
                       Gesellschaft und Kultur – unabhängig und werbefrei. Wir
                       heissen Sie als Gast herzlich willkommen an Bord. {{#if
-                      `CAMPAIGN_TITLE == "Verschenken Sie vier Wochen
-                      Republik"`}}Entdecken Sie unser Magazin ganz unverbindlich
-                      – ausnahmsweise und bis im April für die Dauer von vier
-                      statt nur drei Wochen:{{else}}Entdecken Sie unser Magazin
-                      ganz unverbindlich:{{/if}}
+                      `CAMPAIGN_SLUG == "kampa202202"`}}Entdecken Sie unser
+                      Magazin ganz unverbindlich – ausnahmsweise und bis im
+                      April für die Dauer von vier statt nur drei
+                      Wochen:{{else}}Entdecken Sie unser Magazin ganz
+                      unverbindlich für {{CAMPAIGN_PERIOD}}:{{/if}}
                     </p>
                     {{/if}}
 
@@ -120,12 +119,11 @@
                       Neben hintergründigen Recherchen und Reportagen finden Sie
                       bei uns kurze Nachrichtenbriefings, meinungsstarke
                       Kolumnen sowie Audio- und Bildbeiträge. {{#if
-                      `CAMPAIGN_TITLE == "Verschenken Sie vier Wochen
-                      Republik"`}}Der Austausch mit unseren Leserinnen liegt uns
-                      besonders am Herzen. Machen Sie sich ein eigenes Bild von
-                      unserem Dialog und diskutieren Sie mit: Bis im April haben
-                      wir den Zugang anders als sonst auch für Gäste
-                      freigeschaltet.{{/if}}
+                      `CAMPAIGN_SLUG == "kampa202202"`}}Der Austausch mit
+                      unseren Leserinnen liegt uns besonders am Herzen. Machen
+                      Sie sich ein eigenes Bild von unserem Dialog und
+                      diskutieren Sie mit: Bis im April haben wir den Zugang
+                      anders als sonst auch für Gäste freigeschaltet.{{/if}}
                     </p>
                     {{/unless}} {{#if RECIPIENT_HAS_MEMBERSHIPS}}
                     <p>
@@ -146,16 +144,17 @@
                     </p>
                     {{/if}} {{#if RECIPIENT_HAS_CAMPAIGNS}}
                     <p>
-                      {{#if `CAMPAIGN_TITLE == "Verschenken Sie vier Wochen
-                      Republik"`}}In diesem Fall ein Hinweis: Auch Sie können
-                      Ihre Freunde und Feinde noch bis Ende März
+                      {{#if `CAMPAIGN_SLUG == "kampa202202"`}}In diesem Fall ein
+                      Hinweis: Auch Sie können Ihre Freunde und Feinde noch bis
+                      Ende März
                       <a href="{{LINK_ACCOUNT_SHARE}}"
                         >mit einem kostenlosen vierwöchigen Republik-Zugang
                         beschenken</a
                       >. Die Empfänger erhalten eine persönliche Einladung per
-                      E-Mail.{{else}}Sie können Ihr Abo auch
+                      E-Mail.{{else}}In diesem Fall ein Hinweis: Auch Sie können
+                      Ihr Abonnement
                       <a href="{{LINK_ACCOUNT_SHARE}}"
-                        >mit anderen Personen teilen</a
+                        >mit Freunden und Feinden teilen</a
                       >. Die Empfänger erhalten eine persönliche Einladung per
                       E-Mail.{{/if}}
                     </p>
@@ -190,10 +189,10 @@
                       zur Verfügung.
                     </p>
                     <p>
-                      {{#if `CAMPAIGN_TITLE == "Verschenken Sie vier Wochen
-                      Republik"`}}Wir wünschen Ihnen viel Freude beim Lesen,
-                      Mitdiskutieren und Ausprobieren! {{else}}Wir wünschen
-                      Ihnen viel Freude beim Lesen und Ausprobieren! {{/if}}
+                      {{#if `CAMPAIGN_SLUG == "kampa202202"`}}Wir wünschen Ihnen
+                      viel Freude beim Lesen, Mitdiskutieren und Ausprobieren!
+                      {{else}}Wir wünschen Ihnen viel Freude beim Lesen und
+                      Ausprobieren! {{/if}}
                     </p>
                     <p>Ihre Crew der Republik</p>
                   </td>

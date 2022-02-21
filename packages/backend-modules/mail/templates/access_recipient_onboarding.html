@@ -50,16 +50,15 @@
                     {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
                     <p>
                       Für {{CAMPAIGN_PERIOD}} sind Sie unser Gast: {{#if
-                      `CAMPAIGN_TITLE == "Verschenken Sie vier Wochen
-                      Republik"`}}Sie können ab sofort
+                      `CAMPAIGN_SLUG == "kampa202202"`}}Sie können ab sofort
                       <a href="{{link_signin}}">das Magazin lesen</a>, alle
                       Beiträge mit Ihren Freunden oder Feinden teilen und in
                       diesem Frühling sogar im Dialog mitdiskutieren.
                       {{else}}Sie können ab sofort
                       <a href="{{link_signin}}">das Magazin lesen</a> und alle
-                      Beiträge mit Ihren Freunden oder Feinden teilen.
-                      {{/if}}Das gibt Ihnen bis zum {{GRANT_END}} Zeit, die
-                      Republik unverbindlich kennenzulernen.
+                      Beiträge mit Ihren Freunden oder Feinden teilen.{{/if}}
+                      Das gibt Ihnen bis zum {{GRANT_END}} Zeit, die Republik
+                      unverbindlich kennenzulernen.
                     </p>
                     {{/if}}
 
@@ -82,18 +81,20 @@
                           festlegen.
                         </p>
                       </li>
+                      {{#if `CAMPAIGN_SLUG == "kampa202202"}}
                       <li>
                         <p>
                           Diskutieren Sie mit anderen Leserinnen und der
                           Redaktion!
-                          <a href="{{link_dialog}}">Hier sehen Sie</a>, was
-                          aktuell bei der Republik zu reden gibt, in der
-                          <a href="{{frontend_base_url}}/etikette"
-                            >Etikette finden Sie unsere Grundsätze für einen
-                            höflichen Dialog.</a
-                          >
+                          <a href="{{link_dialog}}">Auf der Dialog-Seite</a>
+                          sehen Sie, was aktuell bei der Republik zu reden gibt,
+                          in der
+                          <a href="{{frontend_base_url}}/etikette">Etikette</a>
+                          finden Sie unsere Grundsätze für einen höflichen
+                          Dialog.
                         </p>
                       </li>
+                      {{/if}}
                       <li>
                         <p>
                           Sie möchten wissen, wer die Menschen hinter der
@@ -119,9 +120,10 @@
                       Magazin gefallen, gibt es verschiedene Möglichkeiten, wie
                       auch Sie ein Teil davon werden können:
                       <a href="{{link_offers_overview}}"
-                        >Hier finden Sie die Abonnemente und Mitgliedschaften in
-                        der Übersicht</a
-                      >.
+                        >Auf der Angebotsseite</a
+                      >
+                      finden Sie die Abonnemente und Mitgliedschaften in der
+                      Übersicht.
                     </p>
                     <p>
                       Haben Sie Fragen oder brauchen Sie Unterstützung? Unter

@@ -44,10 +44,9 @@
                     <p>Guten Tag</p>
                     <p>
                       {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}} {{#if
-                      `CAMPAIGN_TITLE == "Verschenken Sie vier Wochen
-                      Republik"`}} Am {{GRANT_BEGIN}} hatte Ihnen
-                      {{GRANTER_NAME}} einen kostenlosen Zugang zur Republik
-                      geschenkt. {{else}} Am {{GRANT_BEGIN}} hat
+                      `CAMPAIGN_SLUG == "kampa202202"`}} Am {{GRANT_BEGIN}}
+                      hatte Ihnen {{GRANTER_NAME}} einen kostenlosen Zugang zur
+                      Republik geschenkt. {{else}} Am {{GRANT_BEGIN}} hat
                       {{GRANTER_NAME}} mit Ihnen das Republik-Abonnement
                       geteilt. {{/if}} {{else}}Bis zum {{GRANT_END}} waren Sie
                       als Gast an Bord der Republik.{{/if}}

@@ -181,6 +181,8 @@ const getGlobalMergeVars = async (
     !!recipient &&
     (await AccessToken.generateForUser(recipient, 'AUTHORIZE_SESSION'))
 
+  const campaignSlug = campaign.config?.slug || ''
+
   const pledgerName =
     grant.perks &&
     grant.perks.giftMembership &&
@@ -267,6 +269,10 @@ const getGlobalMergeVars = async (
     {
       name: 'campaign_period',
       content: getHumanInterval(campaign.grantPeriodInterval, t),
+    },
+    {
+      name: 'campaign_slug',
+      content: campaignSlug,
     },
 
     // Links

@@ -5,13 +5,13 @@ dürfen.
 
 {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
 
-Für {{CAMPAIGN_PERIOD}} sind Sie unser Gast: {{#if `CAMPAIGN_TITLE ==
-"Verschenken Sie vier Wochen Republik"`}}Sie können ab sofort das Magazin lesen
-{{link_signin}} , alle Beiträge mit Ihren Freunden oder Feinden teilen und in
-diesem Frühling sogar im Dialog mitdiskutieren. {{else}}Sie können ab sofort das
-Magazin lesen {{link_signin}} und alle Beiträge mit Ihren Freunden oder Feinden
-teilen. {{/if}}Das gibt Ihnen bis zum {{GRANT_END}} Zeit, die Republik
-unverbindlich kennenzulernen.
+Für {{CAMPAIGN_PERIOD}} sind Sie unser Gast: {{#if `CAMPAIGN_SLUG ==
+"kampa202202"`}}Sie können ab sofort das Magazin lesen {{link_signin}} , alle
+Beiträge mit Ihren Freunden oder Feinden teilen und in diesem Frühling sogar im
+Dialog mitdiskutieren. {{else}}Sie können ab sofort das Magazin lesen
+{{link_signin}} und alle Beiträge mit Ihren Freunden oder Feinden teilen.{{/if}}
+Das gibt Ihnen bis zum {{GRANT_END}} Zeit, die Republik unverbindlich
+kennenzulernen.
 
 {{/if}}
 
@@ -24,10 +24,14 @@ Nachfolgend finden Sie die wichtigsten Informationen zur Republik in der
     Benachrichtigungen Sie von uns erhalten, können Sie in Ihrem Konto
     {{link_account}} festlegen.
 
- 2. Diskutieren Sie mit anderen Leserinnen und der Redaktion! Hier sehen Sie
-    {{link_dialog}} , was aktuell bei der Republik zu reden gibt, in der
-    Etikette finden Sie unsere Grundsätze für einen höflichen Dialog.
-    {{frontend_base_url}}/etikette
+    {{#if `CAMPAIGN_SLUG == "kampa202202"}}
+
+ 2. Diskutieren Sie mit anderen Leserinnen und der Redaktion! Auf der
+    Dialog-Seite {{link_dialog}} sehen Sie, was aktuell bei der Republik zu
+    reden gibt, in der Etikette {{frontend_base_url}}/etikette finden Sie unsere
+    Grundsätze für einen höflichen Dialog.
+
+    {{/if}}
 
  3. Sie möchten wissen, wer die Menschen hinter der Republik sind? Lernen Sie
     unsere Crew kennen: Wir sind Ihr Team {{link_imprint}} .
@@ -39,9 +43,9 @@ Nachfolgend finden Sie die wichtigsten Informationen zur Republik in der
     den Hintergründen und unserer Mission klicken Sie hier {{link_about}} .
 
 Wenn Ihnen die Idee hinter unserem Projekt und unser Magazin gefallen, gibt es
-verschiedene Möglichkeiten, wie auch Sie ein Teil davon werden können: Hier
-finden Sie die Abonnemente und Mitgliedschaften in der Übersicht
-{{link_offers_overview}} .
+verschiedene Möglichkeiten, wie auch Sie ein Teil davon werden können: Auf der
+Angebotsseite {{link_offers_overview}} finden Sie die Abonnemente und
+Mitgliedschaften in der Übersicht.
 
 Haben Sie Fragen oder brauchen Sie Unterstützung? Unter kontakt@republik.ch
 helfen wir Ihnen gerne weiter.
