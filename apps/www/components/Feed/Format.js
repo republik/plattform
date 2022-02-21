@@ -13,8 +13,18 @@ import { WithoutMembership } from '../Auth/withMembership'
 import DocumentListContainer from './DocumentListContainer'
 
 const getFeedDocuments = gql`
-  query getFeedDocuments($formatId: String!, $cursor: String) {
-    documents(format: $formatId, first: 30, after: $cursor, feed: true) {
+  query getFeedDocuments(
+    $formatId: String!
+    $cursor: String
+    $filter: SearchFilterInput
+  ) {
+    documents(
+      format: $formatId
+      first: 30
+      after: $cursor
+      feed: true
+      filter: $filter
+    ) {
       totalCount
       pageInfo {
         endCursor
@@ -70,24 +80,34 @@ const getFeedDocuments = gql`
   ${bookmarkOnDocumentFragment}
 `
 
-const Feed = ({ t, formatId }) => (
-  <Center>
-    <DocumentListContainer
-      feedProps={{ showHeader: false }}
-      empty={
-        <WithoutMembership
-          render={() => (
-            <Box style={{ padding: '15px 20px' }}>
-              <Interaction.P>{t('format/feed/payNote')}</Interaction.P>
-            </Box>
-          )}
-        />
-      }
-      showTotal={true}
-      query={getFeedDocuments}
-      variables={{ formatId }}
+const FormatFeed = ({
+  t,
+  formatId,
+  variables = {
+    formatId,
+  },
+}) => {
+  const empty = (
+    <WithoutMembership
+      render={() => (
+        <Box style={{ marginBottom: 30, padding: '15px 20px' }}>
+          <Interaction.P>{t('section/feed/payNote')}</Interaction.P>
+        </Box>
+      )}
     />
-  </Center>
-)
+  )
 
-export default compose(withT)(Feed)
+  return (
+    <Center>
+      <DocumentListContainer
+        feedProps={{ showHeader: false }}
+        empty={empty}
+        showTotal={true}
+        query={getFeedDocuments}
+        variables={variables}
+      />
+    </Center>
+  )
+}
+
+export default compose(withT)(FormatFeed)

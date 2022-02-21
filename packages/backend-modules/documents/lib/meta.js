@@ -69,10 +69,12 @@ const getAudioSource = (doc) => {
     return doc.meta.audioSource
   }
   // before published - render in publikator (preview)
-  const { audioSourceMp3, audioSourceAac, audioSourceOgg } = doc.content.meta
+  const { audioSourceKind, audioSourceMp3, audioSourceAac, audioSourceOgg } =
+    doc.content.meta
   const audioSource =
     audioSourceMp3 || audioSourceAac || audioSourceOgg
       ? {
+          kind: audioSourceKind,
           mp3: audioSourceMp3,
           aac: audioSourceAac,
           ogg: audioSourceOgg,

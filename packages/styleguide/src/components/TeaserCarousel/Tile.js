@@ -209,7 +209,11 @@ const Tile = ({
           </div>
         )}
         {/* Body */}
-        <div>
+        <div
+          style={{
+            padding: bigger && outline ? '0 16px' : 0,
+          }}
+        >
           <Text color={color} margin='0 auto'>
             {children}
             {!!count && (
