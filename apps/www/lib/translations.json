@@ -3658,7 +3658,7 @@
     },
     {
       "key": "Share/chart/lead",
-      "value": "In den letzten 30 Tagen haben {soldMembership} die Republik nach dem Probelesen abonniert"
+      "value": "{soldMembership} davon haben sich in den letzten 30 Tagen für ein Republik-Abo entschieden"
     },
     {
       "key": "notifications/pageTitle",

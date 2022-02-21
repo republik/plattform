@@ -32,7 +32,7 @@ const formatDate = swissTime.format('%d.%m.%Y')
 
 const ShareChart = ({ data, t }) => {
   return (
-    <div style={{ marginTop: 20 }}>
+    <div style={{ margin: '16px 0px 32px 0px' }}>
       <Loader
         loading={data.loading}
         error={data.error}
