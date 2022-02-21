@@ -349,7 +349,7 @@ export class List extends Component {
         render={() => {
           const items = []
           const lastIndex = statements.length - 1
-          const focusItem = statements[0]?.id === focus ? statements[0] : null
+          const focusItem = statements[0]?.id === focus && statements[0]
 
           const hasNotFoundFocus = focus && !focusItem
           if (hasNotFoundFocus && serverContext) {
