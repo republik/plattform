@@ -6,8 +6,12 @@ schema {
 }
 
 type queries {
-  redirection(path: String): Redirection
+  redirection(
+    path: String!
+    externalBaseUrl: String
+  ): Redirection
   redirections(
+    externalBaseUrl: String
     first: Int
     last: Int
     before: String
