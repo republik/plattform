@@ -9,23 +9,26 @@ const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 * 8 // A week and a day
 
 const query = `
 SELECT
-  ag."accessCampaignId",
-  to_char(range.date, 'YYYY-MM-DD') "key",
-  range.date "date",
+  buckets."accessCampaignId",
+  to_char(buckets.date, 'YYYY-MM-DD') "key",
+  buckets.date "date",
   COUNT(DISTINCT ag.id) "active",
   COUNT(DISTINCT ag.id) - COUNT(DISTINCT p.id) "activeUnconverted",
   COUNT(DISTINCT p.id) "converted"
 FROM (
-      SELECT
-        generate_series(
-          :min::timestamp,
-          :max::timestamp,
-          '1 day'
-        ) :: date AT TIME ZONE :TZ "date"
-    ) "range"
+  SELECT
+    ac.id "accessCampaignId",
+    generate_series(
+      :min::timestamp,
+      :max::timestamp,
+      '1 day'
+    ) :: date AT TIME ZONE :TZ "date"
+  FROM "accessCampaigns" ac
+) buckets
 LEFT JOIN "accessGrants" ag
-  ON ag."beginAt" <= range.date
- AND ag."endAt" >= range.date
+  ON ag."accessCampaignId" = buckets."accessCampaignId"
+ AND ag."beginAt" :: date <= buckets.date
+ AND ag."endAt" :: date >= buckets.date 
 LEFT JOIN "pledges" p
   ON p."userId" = ag."recipientUserId"
  AND p."createdAt" BETWEEN ag."beginAt" AND ag."endAt" + '30 days' :: interval
