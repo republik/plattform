@@ -1053,6 +1053,18 @@
       "value": "Ameisen"
     },
     {
+      "key": "api/search/aggs/audioSourceKind/podcast",
+      "value": "Podcast"
+    },
+    {
+      "key": "api/search/aggs/audioSourceKind/readAloud",
+      "value": "vorgelesen"
+    },
+    {
+      "key": "api/search/aggs/audioSourceKind/syntheticReadAloud",
+      "value": "automatisch vorgelesen"
+    },
+    {
       "key": "api/noname",
       "value": "Unbenannt"
     },

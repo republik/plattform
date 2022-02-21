@@ -18,6 +18,7 @@ class CommunityPage extends Component {
     const {
       router: { query },
       seed,
+      serverContext,
     } = this.props
 
     if (query.share) {
@@ -43,7 +44,7 @@ class CommunityPage extends Component {
 
     return (
       <Frame>
-        <List seed={seed} id={query.id} isPage />
+        <List seed={seed} id={query.id} isPage serverContext={serverContext} />
       </Frame>
     )
   }
