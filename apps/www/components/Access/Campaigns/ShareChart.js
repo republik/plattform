@@ -234,6 +234,7 @@ const ShareChart = ({ data, t }) => {
         loading={data.loading}
         error={data.error}
         render={() => {
+          if (!data.accessGrantData) return null
           const accessGrantData = [
             { type: 'activeUnconverted', label: 'Aktiv geteilte Abos' },
             { type: 'converted', label: 'Verkaufte Abos' },

@@ -269,8 +269,8 @@ class ClaimMembership extends Component {
     claim()
   }
   render() {
-    const { context, t, granterName, granterPortrait, message, accessToken } =
-      this.props
+    const { context, t, accessGrantInfo, accessToken } = this.props
+    const { granterName, granterPortrait, message } = accessGrantInfo
 
     const {
       consents,
@@ -327,20 +327,24 @@ class ClaimMembership extends Component {
           style={{ opacity: polling || loading ? 0.6 : 1, marginBottom: 40 }}
         >
           <H2 style={{ marginBottom: 20 }}>{contextLead}</H2>
-
-          <div {...styles.personalMessageContainer}>
-            {granterPortrait && (
-              <img src={granterPortrait} style={{ width: 100, height: 100 }} />
-            )}
-            <div {...styles.messages}>
-              <p {...styles.personalMessage}>
-                {`«${message}»`} <br />
-              </p>
-              <p {...styles.granterName}>
-                <em>{granterName}</em>
-              </p>
+          {accessGrantInfo && (
+            <div {...styles.personalMessageContainer}>
+              {granterPortrait && (
+                <img
+                  src={granterPortrait}
+                  style={{ width: 100, height: 100 }}
+                />
+              )}
+              <div {...styles.messages}>
+                <p {...styles.personalMessage}>
+                  {`«${message}»`} <br />
+                </p>
+                <p {...styles.granterName}>
+                  <em>{granterName}</em>
+                </p>
+              </div>
             </div>
-          </div>
+          )}
 
           <Field
             label={t('memberships/claim/voucherCode/label')}
@@ -512,10 +516,12 @@ const updateName = gql`
 `
 
 const accessGrantInfo = gql`
-  query accessGrantInfo($id: String!) {
-    granterName
-    granterPortrait
-    message
+  query accessGrantInfoQuery($id: ID!) {
+    accessGrantInfo(id: $id) {
+      granterName
+      granterPortrait
+      message
+    }
   }
 `
 
@@ -526,6 +532,11 @@ export default compose(
         id: grantId,
       },
     }),
+    props: ({ data }) => {
+      return {
+        accessGrantInfo: !data.loading && data.accessGrantInfo,
+      }
+    },
   }),
   graphql(claimMembership, {
     props: ({ mutate }) => ({
