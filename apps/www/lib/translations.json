@@ -1102,7 +1102,7 @@
     },
     {
       "key": "Account/Access/Campaigns/Form/title/0",
-      "value": "Zugriff teilen"
+      "value": "Gäste einladen"
     },
     {
       "key": "Account/Access/Campaigns/Form/title/other",
@@ -1110,7 +1110,15 @@
     },
     {
       "key": "Account/Access/Campaigns/Form/explanation",
-      "value": "Beschenkte erhalten eine Einladungs-E-Mail mit Ihrem Namen und Ihrer E-Mail-Adresse, einem Gutscheincode und {linkClaim}-Link, mit dem der Gutscheincode eingelöst werden kann."
+      "value": "Ihre Gäste erhalten eine Einladungs-E-Mail mit Ihrem Namen und Ihrer E-Mail-Adresse sowie einen Link, über den sie ihren Probezugriff einlösen können."
+    },
+    {
+      "key": "Account/Access/Campaigns/login/title",
+      "value": "Einloggen und Abo verschenken"
+    },
+    {
+      "key": "Account/Access/Campaigns/becomeMamber/title",
+      "value": "Mitglied werden und Abo verschenken"
     },
     {
       "key": "Account/Access/Campaigns/Form/explanation/linkClaim",
@@ -3643,14 +3651,6 @@
     {
       "key": "memberships/sequenceNumber/label",
       "value": "Abo #{sequenceNumber}"
-    },
-    {
-      "key": "Share/title",
-      "value": "Verschenken Sie vier Wochen Republik"
-    },
-    {
-      "key": "Share/lead",
-      "value": "Laden Sie Ihre Freunde und Feinde ein, die Republik kennenzulernen. Damit ermöglichen Sie den Empfangenden einen vierwöchigen Probezugriff auf alle Inhalte der Republik."
     },
     {
       "key": "Share/chart/title",
