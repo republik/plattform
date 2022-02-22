@@ -53,6 +53,22 @@ const Page = ({ t }) => {
               price={24000}
             />
           </Link>
+          <Link
+            href={{
+              pathname: '/angebote',
+              query: { package: 'MONTHLY_ABO' },
+            }}
+            passHref
+          >
+            <PackageItem
+              t={t}
+              crowdfundingName={CROWDFUNDING}
+              name='MONTHLY_ABO'
+              hover={hover}
+              setHover={setHover}
+              price={2200}
+            />
+          </Link>
           <PackageBuffer />
         </div>
       ) : null}
