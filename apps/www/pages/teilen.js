@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
-import compose from 'lodash/flowRight'
 import Link from 'next/link'
 import { Interaction } from '@project-r/styleguide'
 
-import { t } from '../lib/withT'
+import { t, useTranslation } from '../lib/withT'
 import withDefaultSSR from '../lib/hocs/withDefaultSSR'
-import withT from '../lib/withT'
 import { CROWDFUNDING } from '../lib/constants'
 import { useMe } from '../lib/context/MeContext'
 import { PackageBuffer, PackageItem } from '../components/Pledge/Accordion'
@@ -13,26 +11,31 @@ import AccessCampaigns from '../components/Access/Campaigns'
 import ShareChart from '../components/Access/Campaigns/ShareChart'
 import Frame from '../components/Frame'
 import SignIn from '../components/Auth/SignIn'
+import { useInNativeApp } from '../lib/withInNativeApp'
 
 const meta = {
   title: t('pages/access/title'),
 }
 
-const Page = ({ t }) => {
-  const [hover, setHover] = useState()
+const Page = () => {
+  const { inNativeIOSApp } = useInNativeApp()
+  const { t } = useTranslation()
   const { me } = useMe()
+  const [hover, setHover] = useState()
+
   return (
     <Frame meta={meta}>
       <ShareChart />
       <AccessCampaigns />
-      {!me ? (
+      {!me && (
         <div style={{ marginTop: 36 }}>
           <Interaction.H2>
             {t('Account/Access/Campaigns/login/title')}
           </Interaction.H2>
           <SignIn />
         </div>
-      ) : !me.activeMembership ? (
+      )}
+      {me && !me.activeMembership && !inNativeIOSApp && (
         <div style={{ marginTop: 36 }}>
           <Interaction.H2 style={{ marginBottom: 10 }}>
             {t('Account/Access/Campaigns/becomeMamber/title')}
@@ -71,9 +74,9 @@ const Page = ({ t }) => {
           </Link>
           <PackageBuffer />
         </div>
-      ) : null}
+      )}
     </Frame>
   )
 }
 
-export default withDefaultSSR(compose(withT)(Page))
+export default withDefaultSSR(Page)
