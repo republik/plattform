@@ -365,7 +365,7 @@ const LineGroup = (props) => {
               {...styles.annotationText}
               {...colorScheme.set('fill', 'text')}
             >
-              {annotation.label.split('\n').map((line, i, all) => (
+              {annotation.label?.split('\n').map((line, i, all) => (
                 <tspan
                   key={i}
                   x={tx}
