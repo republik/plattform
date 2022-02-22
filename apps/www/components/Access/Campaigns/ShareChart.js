@@ -65,13 +65,9 @@ const ShareChart = ({ data, t }) => {
           return (
             <>
               <ChartTitle>
-                {t.elements('Share/chart/title', { currentActiveAccessGrants })}
+                {t('Share/chart/title', { currentActiveAccessGrants })}
               </ChartTitle>
-              <ChartLead>
-                {t.elements('Share/chart/lead', {
-                  soldMembership: soldMembership || 0,
-                })}
-              </ChartLead>
+              <ChartLead>{t('Share/chart/lead', { soldMembership })}</ChartLead>
               <Chart
                 config={{
                   type: 'TimeBar',
