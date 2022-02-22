@@ -8,7 +8,7 @@ import withDefaultSSR from '../lib/hocs/withDefaultSSR'
 import withT from '../lib/withT'
 import { CROWDFUNDING } from '../lib/constants'
 import { useMe } from '../lib/context/MeContext'
-import { PackageItem } from '../components/Pledge/Accordion'
+import { PackageBuffer, PackageItem } from '../components/Pledge/Accordion'
 import AccessCampaigns from '../components/Access/Campaigns'
 import ShareChart from '../components/Access/Campaigns/ShareChart'
 import Frame from '../components/Frame'
@@ -32,9 +32,9 @@ const Page = ({ t }) => {
           </Interaction.H2>
           <SignIn />
         </div>
-      ) : !me.accessCampaigns ? (
+      ) : !me.activeMembership ? (
         <div style={{ marginTop: 36 }}>
-          <Interaction.H2>
+          <Interaction.H2 style={{ marginBottom: 10 }}>
             {t('Account/Access/Campaigns/becomeMamber/title')}
           </Interaction.H2>
           <Link
@@ -53,6 +53,7 @@ const Page = ({ t }) => {
               price={24000}
             />
           </Link>
+          <PackageBuffer />
         </div>
       ) : null}
     </Frame>
