@@ -246,7 +246,7 @@ const getGlobalMergeVars = async (
       content: !!recipient && recipientHasMemberships,
     },
     {
-      name: 'recipent_has_campaigns',
+      name: 'recipient_has_campaigns',
       content:
         !!recipient && !!recipientCampaigns && recipientCampaigns.length > 0,
     },
