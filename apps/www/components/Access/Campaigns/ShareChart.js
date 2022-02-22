@@ -4,19 +4,23 @@ import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { ChartTitle, ChartLead, Chart, Loader } from '@project-r/styleguide'
 import { timeDay } from 'd3-time'
+import { sum } from 'd3-array'
 import { swissTime } from '../../../lib/utils/format'
 import withT from '../../../lib/withT'
 
 {
-  /* b86c78c5-b36b-4de6-8656-44d5e1ba410b = "Verschenken" 
-  e3568e03-b6b3-46c5-b07a-e9afeea92023 "Teilen Sie Ihr Abonnement" */
+  /*
+    accessCampaignIds:
+    b86c78c5-b36b-4de6-8656-44d5e1ba410b "Verschenken" 
+    e3568e03-b6b3-46c5-b07a-e9afeea92023 "Teilen Sie Ihr Abonnement" 
+  */
 }
 
 const accessGrantQuery = gql`
   query accessGrantQuery($min: Date!, $max: Date!) {
     accessGrantStats {
       evolution(
-        accessCampaignId: "b86c78c5-b36b-4de6-8656-44d5e1ba410b"
+        accessCampaignId: "e3568e03-b6b3-46c5-b07a-e9afeea92023"
         min: $min
         max: $max
       ) {
@@ -28,7 +32,7 @@ const accessGrantQuery = gql`
         updatedAt
       }
       events(
-        accessCampaignId: "b86c78c5-b36b-4de6-8656-44d5e1ba410b"
+        accessCampaignId: "e3568e03-b6b3-46c5-b07a-e9afeea92023"
         min: $min
         max: $max
       ) {
@@ -80,37 +84,20 @@ const ShareChart = ({ data, t }) => {
           const { events: events2, evolution: evolution2 } =
             data.accessGrantStats2
 
-          if (
-            events.buckets.length === 0 ||
-            evolution.buckets.length === 0 ||
-            events2.buckets.length === 0 ||
-            evolution2.buckets.length === 0
-          )
+          if (!evolution.buckets.length) {
             return null
+          }
 
-          const mergedEvolutionBuckets = evolution.buckets.map((item, i) => {
+          const mergedEvolutionBuckets = evolution.buckets.map((bucket) => {
+            const bucket2 = evolution2.buckets.find(
+              (secondBucket) => bucket.date === secondBucket.date,
+            )
             return {
-              date: item.date,
+              date: bucket.date,
               activeUnconverted:
-                item.activeUnconverted +
-                evolution2.buckets[
-                  evolution2.buckets.findIndex(
-                    (secondItem) => item.date === secondItem.date,
-                  )
-                ].activeUnconverted,
-              converted:
-                item.converted +
-                evolution2.buckets[
-                  evolution2.buckets.findIndex(
-                    (secondItem) => item.date === secondItem.date,
-                  )
-                ].converted,
-            }
-          })
-
-          const mergedEventsBuckets = events.buckets.map((item, i) => {
-            return {
-              pledges: item.pledges + events2.buckets[i].pledges,
+                bucket.activeUnconverted +
+                (bucket2 ? bucket2.activeUnconverted : 0),
+              converted: bucket.converted + (bucket2 ? bucket2.converted : 0),
             }
           })
 
@@ -130,10 +117,9 @@ const ShareChart = ({ data, t }) => {
             .slice(-1)
             .pop().activeUnconverted
 
-          const soldMembership = mergedEventsBuckets.reduce(
-            (prev, curr) => prev + curr.pledges,
-            0,
-          )
+          const soldMembership =
+            sum(events.buckets.map((bucket) => bucket.pledges)) +
+            sum(events2.buckets.map((bucket) => bucket.pledges))
 
           return (
             <>
