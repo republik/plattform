@@ -37,8 +37,8 @@ class Form extends Component {
       this.setState({
         isMutating: false,
         values: {
+          message: '',
           email: '',
-          message: props.campaign.defaultMessage,
         },
       })
     }
