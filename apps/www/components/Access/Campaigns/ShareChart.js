@@ -4,9 +4,10 @@ import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { ChartTitle, ChartLead, Chart, Loader } from '@project-r/styleguide'
 import { timeDay } from 'd3-time'
-import { sum } from 'd3-array'
+import { max, sum } from 'd3-array'
 import { swissTime } from '../../../lib/utils/format'
 import withT from '../../../lib/withT'
+import { scaleLinear } from 'd3-scale'
 
 {
   /*
@@ -84,22 +85,42 @@ const ShareChart = ({ data, t }) => {
           const { events: events2, evolution: evolution2 } =
             data.accessGrantStats2
 
-          if (!evolution.buckets.length) {
+          const mergedEvolutionBuckets = evolution.buckets
+            .map((bucket) => {
+              const bucket2 = evolution2.buckets.find(
+                (bucket2) => bucket.date === bucket2.date,
+              )
+              return {
+                date: bucket.date,
+                activeUnconverted:
+                  bucket.activeUnconverted +
+                  (bucket2 ? bucket2.activeUnconverted : 0),
+                converted: bucket.converted + (bucket2 ? bucket2.converted : 0),
+              }
+            })
+            .concat(
+              evolution2.buckets.filter(
+                (bucket) =>
+                  !evolution.buckets.find(
+                    (bucket2) => bucket.date === bucket2.date,
+                  ),
+              ),
+            )
+
+          const maxBarValue = Math.max(
+            max(
+              mergedEvolutionBuckets,
+              (bucket) => bucket.activeUnconverted + bucket.converted,
+            ),
+            10,
+          )
+          if (!mergedEvolutionBuckets.length || !maxBarValue) {
             return null
           }
-
-          const mergedEvolutionBuckets = evolution.buckets.map((bucket) => {
-            const bucket2 = evolution2.buckets.find(
-              (secondBucket) => bucket.date === secondBucket.date,
-            )
-            return {
-              date: bucket.date,
-              activeUnconverted:
-                bucket.activeUnconverted +
-                (bucket2 ? bucket2.activeUnconverted : 0),
-              converted: bucket.converted + (bucket2 ? bucket2.converted : 0),
-            }
-          })
+          const yTicksNumber = maxBarValue > 100 ? 5 : 3
+          const yScale = scaleLinear()
+            .domain([0, maxBarValue])
+            .nice(yTicksNumber)
 
           const accessGrantData = ['activeUnconverted', 'converted']
             .map((key) => {
@@ -135,7 +156,8 @@ const ShareChart = ({ data, t }) => {
                   timeParse: '%d.%m.%Y',
                   timeFormat: '%d. %B',
                   height: 300,
-                  yTicks: [0, 200, 400, 600, 800],
+                  domain: yScale.domain(),
+                  yTicks: yScale.ticks(yTicksNumber),
                   colorMap: {
                     [t('Share/chart/labels/activeUnconverted')]: '#256900',
                     [t('Share/chart/labels/converted')]: '#3CAD00',
