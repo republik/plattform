@@ -262,8 +262,12 @@ class ClaimMembership extends Component {
     claim()
   }
   render() {
-    const { context, t, accessGrantInfo, accessToken } = this.props
-    const { granterName, granter, message } = accessGrantInfo
+    const {
+      context,
+      t,
+      accessGrantInfo: { granterName, granter, message },
+      accessToken,
+    } = this.props
 
     const {
       consents,
@@ -530,7 +534,8 @@ export default compose(
     }),
     props: ({ data }) => {
       return {
-        accessGrantInfo: !data.loading && data.accessGrantInfo,
+        accessGrantInfo:
+          (!data.loading && data.accessGrantInfo) || (!data.loadung && {}),
       }
     },
   }),
