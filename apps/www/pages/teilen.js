@@ -23,8 +23,7 @@ const Page = ({ t }) => {
   const { me } = useMe()
   return (
     <Frame meta={meta}>
-      {/* e3568e03-b6b3-46c5-b07a-e9afeea92023 "Teilen Sie Ihr Abonnement" */}
-      <ShareChart accessCampaignId='e3568e03-b6b3-46c5-b07a-e9afeea92023' />
+      <ShareChart />
       <AccessCampaigns />
       {!me ? (
         <div style={{ marginTop: 36 }}>
