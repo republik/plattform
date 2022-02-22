@@ -38,16 +38,13 @@ const ShareChart = ({ data, t }) => {
         error={data.error}
         render={() => {
           if (!data.accessGrantStats) return null
-          const accessGrantData = [
-            { type: 'activeUnconverted', label: 'Aktiv geteilte Abos' },
-            { type: 'converted', label: 'Verkaufte Abos' },
-          ]
+          const accessGrantData = ['activeUnconverted', 'converted']
             .map((key) => {
               return data.accessGrantStats.evolution.buckets.map((bucket) => {
                 return {
                   date: bucket.date,
-                  type: key.label,
-                  value: bucket[key.type],
+                  type: t(`Share/chart/labels/${key}`),
+                  value: bucket[key],
                 }
               })
             })
