@@ -30,14 +30,14 @@ const Page = ({ me, t }) => {
       {!me ? (
         <div style={{ marginTop: 36 }}>
           <Interaction.H2>
-            <strong>{t('Account/Access/Campaigns/login/title')}</strong>
+            {t('Account/Access/Campaigns/login/title')}
           </Interaction.H2>
           <SignIn />
         </div>
       ) : !me.accessCampaigns ? (
         <div style={{ marginTop: 36 }}>
           <Interaction.H2>
-            <strong>{t('Account/Access/Campaigns/becomeMamber/title')}</strong>
+            {t('Account/Access/Campaigns/becomeMamber/title')}
           </Interaction.H2>
           <Link
             href={{

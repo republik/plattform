@@ -68,7 +68,9 @@ const ShareChart = ({ data, t }) => {
                 {t.elements('Share/chart/title', { currentActiveAccessGrants })}
               </ChartTitle>
               <ChartLead>
-                {t.elements('Share/chart/lead', { soldMembership })}
+                {t.elements('Share/chart/lead', {
+                  soldMembership: soldMembership || 0,
+                })}
               </ChartLead>
               <Chart
                 config={{
