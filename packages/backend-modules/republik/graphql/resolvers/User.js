@@ -137,7 +137,11 @@ module.exports = {
   },
 
   portrait(user, args, { user: me, req, allowAccess = false }) {
-    if (allowAccess || canAccessBasics(user, me)) {
+    if (
+      allowAccess ||
+      canAccessBasics(user, me) ||
+      isFieldExposed(user, 'portrait')
+    ) {
       const { portraitUrl } = user._raw
       if (!portraitUrl) {
         return portraitUrl

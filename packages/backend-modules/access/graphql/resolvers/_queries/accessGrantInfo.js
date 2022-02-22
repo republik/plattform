@@ -8,7 +8,12 @@ module.exports = async (_, { id }, { pgdb, t, loaders }) => {
     const granter = await loaders.User.byId.load(accessGrant.granterUserId)
     if (granter) {
       return {
-        granter,
+        granter: {
+          ...granter,
+          _scopeConfig: {
+            exposeFields: ['portrait'], // portrait will be exposed even if granter has non public profile
+          },
+        },
         granterName:
           granter.name ||
           t('api/access/resolvers/AccessGrant/tallDarkStranger'),
