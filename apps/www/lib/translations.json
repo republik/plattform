@@ -3658,15 +3658,15 @@
     },
     {
       "key": "Share/chart/lead",
-      "value": "{soldMembership} davon haben sich in den letzten 30 Tagen für ein Republik-Abo entschieden"
+      "value": "In den letzten vier Wochen haben sich nach dem Probelesen {soldMembership} Personen für die Republik entschieden"
     },
     {
       "key": "Share/chart/labels/activeUnconverted",
-      "value": "Aktiv geteilte Abos"
+      "value": "Aktive geteilte Abos"
     },
     {
       "key": "Share/chart/labels/converted",
-      "value": "Verkaufte Abos"
+      "value": "Gewonnene Verlegerinnen"
     },
     {
       "key": "notifications/pageTitle",
