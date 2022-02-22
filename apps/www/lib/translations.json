@@ -1114,7 +1114,7 @@
     },
     {
       "key": "Account/Access/Campaigns/login/title",
-      "value": "Einloggen und Abo verschenken"
+      "value": "Anmelden und Abo verschenken"
     },
     {
       "key": "Account/Access/Campaigns/becomeMamber/title",
@@ -3658,7 +3658,15 @@
     },
     {
       "key": "Share/chart/lead",
-      "value": "In den letzten 30 Tagen haben {soldMembership} die Republik nach dem Probelesen abonniert"
+      "value": "{soldMembership} davon haben sich in den letzten 30 Tagen für ein Republik-Abo entschieden"
+    },
+    {
+      "key": "Share/chart/labels/activeUnconverted",
+      "value": "Aktiv geteilte Abos"
+    },
+    {
+      "key": "Share/chart/labels/converted",
+      "value": "Verkaufte Abos"
     },
     {
       "key": "notifications/pageTitle",

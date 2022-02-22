@@ -14,16 +14,16 @@ import DocumentListContainer from './DocumentListContainer'
 
 const getFeedDocuments = gql`
   query getFeedDocuments(
-    $formatId: String!
     $cursor: String
     $filter: SearchFilterInput
+    $filters: [SearchGenericFilterInput!]
   ) {
-    documents(
-      format: $formatId
+    documents: search(
+      filters: $filters
+      filter: $filter
+      sort: { key: publishedAt, direction: DESC }
       first: 30
       after: $cursor
-      feed: true
-      filter: $filter
     ) {
       totalCount
       pageInfo {
@@ -31,46 +31,50 @@ const getFeedDocuments = gql`
         hasNextPage
       }
       nodes {
-        id
-        ...BookmarkOnDocument
-        meta {
-          credits
-          title
-          description
-          publishDate
-          path
-          template
-          format {
+        entity {
+          ... on Document {
             id
+            ...BookmarkOnDocument
             meta {
-              kind
-            }
-          }
-          estimatedReadingMinutes
-          estimatedConsumptionMinutes
-          indicateChart
-          indicateGallery
-          indicateVideo
-          audioSource {
-            mp3
-            aac
-            ogg
-            mediaId
-            durationMs
-          }
-          ownDiscussion {
-            id
-            closed
-            comments {
-              totalCount
-            }
-          }
-          linkedDiscussion {
-            id
-            path
-            closed
-            comments {
-              totalCount
+              credits
+              title
+              description
+              publishDate
+              path
+              template
+              format {
+                id
+                meta {
+                  kind
+                }
+              }
+              estimatedReadingMinutes
+              estimatedConsumptionMinutes
+              indicateChart
+              indicateGallery
+              indicateVideo
+              audioSource {
+                mp3
+                aac
+                ogg
+                mediaId
+                durationMs
+              }
+              ownDiscussion {
+                id
+                closed
+                comments {
+                  totalCount
+                }
+              }
+              linkedDiscussion {
+                id
+                path
+                closed
+                comments {
+                  totalCount
+                }
+              }
             }
           }
         }
@@ -80,13 +84,17 @@ const getFeedDocuments = gql`
   ${bookmarkOnDocumentFragment}
 `
 
-const FormatFeed = ({
-  t,
-  formatId,
-  variables = {
-    formatId,
-  },
-}) => {
+const mapNodes = (node) => node.entity
+
+const FormatFeed = ({ t, formatId, variables: variablesObject }) => {
+  if (!variablesObject && !formatId) {
+    return null
+  }
+
+  const variables = variablesObject || {
+    filter: { format: formatId, feed: true },
+  }
+
   const empty = (
     <WithoutMembership
       render={() => (
@@ -105,6 +113,7 @@ const FormatFeed = ({
         showTotal={true}
         query={getFeedDocuments}
         variables={variables}
+        mapNodes={mapNodes}
       />
     </Center>
   )

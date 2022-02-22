@@ -27,12 +27,6 @@ const {
   populate: populateMembershipStatsEvolution,
 } = require('@orbiting/backend-modules-republik/lib/MembershipStats/evolution')
 const countRange = require('@orbiting/backend-modules-republik/graphql/resolvers/MembershipStats/countRange')
-const {
-  populate: populateAccessGrantStatsEvents,
-} = require('@orbiting/backend-modules-access/lib/AccessGrantStats/events')
-const {
-  populate: populateAccessGrantStatsEvolution,
-} = require('@orbiting/backend-modules-access/lib/AccessGrantStats/evolution')
 
 const init = async (context) => {
   debug('init')
@@ -143,8 +137,6 @@ const init = async (context) => {
             },
             context,
           ),
-          populateAccessGrantStatsEvents(context),
-          populateAccessGrantStatsEvolution(context),
         ]),
       lockTtlSecs: 10,
       runIntervalSecs: 60,

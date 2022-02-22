@@ -32,22 +32,19 @@ const formatDate = swissTime.format('%d.%m.%Y')
 
 const ShareChart = ({ data, t }) => {
   return (
-    <div style={{ marginTop: 20 }}>
+    <div style={{ margin: '16px 0px 32px 0px' }}>
       <Loader
         loading={data.loading}
         error={data.error}
         render={() => {
-          if (!data.accessGrantData) return null
-          const accessGrantData = [
-            { type: 'activeUnconverted', label: 'Aktiv geteilte Abos' },
-            { type: 'converted', label: 'Verkaufte Abos' },
-          ]
+          if (!data.accessGrantStats) return null
+          const accessGrantData = ['activeUnconverted', 'converted']
             .map((key) => {
               return data.accessGrantStats.evolution.buckets.map((bucket) => {
                 return {
                   date: bucket.date,
-                  type: key.label,
-                  value: bucket[key.type],
+                  type: t(`Share/chart/labels/${key}`),
+                  value: bucket[key],
                 }
               })
             })
@@ -65,11 +62,9 @@ const ShareChart = ({ data, t }) => {
           return (
             <>
               <ChartTitle>
-                {t.elements('Share/chart/title', { currentActiveAccessGrants })}
+                {t('Share/chart/title', { currentActiveAccessGrants })}
               </ChartTitle>
-              <ChartLead>
-                {t.elements('Share/chart/lead', { soldMembership })}
-              </ChartLead>
+              <ChartLead>{t('Share/chart/lead', { soldMembership })}</ChartLead>
               <Chart
                 config={{
                   type: 'TimeBar',

@@ -29,6 +29,7 @@ import {
   colors,
   fontStyles,
   mediaQueries,
+  inQuotes,
 } from '@project-r/styleguide'
 
 const { H2, P } = Interaction
@@ -60,10 +61,12 @@ const styles = {
     },
   }),
   granterName: css({
-    ...fontStyles.serifRegular17,
+    ...fontStyles.serifItalic,
+    fontSize: '17px',
     margin: 0,
     [mediaQueries.mUp]: {
-      ...fontStyles.serifRegular21,
+      ...fontStyles.serifItalic,
+      fontSize: '21px',
     },
   }),
   granterImage: css({
@@ -327,7 +330,7 @@ class ClaimMembership extends Component {
           style={{ opacity: polling || loading ? 0.6 : 1, marginBottom: 40 }}
         >
           <H2 style={{ marginBottom: 20 }}>{contextLead}</H2>
-          {accessGrantInfo && (
+          {message && (
             <div {...styles.personalMessageContainer}>
               {granter && granter.portrait && (
                 <img
@@ -337,11 +340,9 @@ class ClaimMembership extends Component {
               )}
               <div {...styles.messages}>
                 <p {...styles.personalMessage}>
-                  {`«${message}»`} <br />
+                  {inQuotes(message)} <br />
                 </p>
-                <p {...styles.granterName}>
-                  <em>{granterName}</em>
-                </p>
+                <p {...styles.granterName}>{granterName}</p>
               </div>
             </div>
           )}
