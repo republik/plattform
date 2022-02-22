@@ -262,12 +262,7 @@ class ClaimMembership extends Component {
     claim()
   }
   render() {
-    const {
-      context,
-      t,
-      accessGrantInfo: { granterName, granter, message },
-      accessToken,
-    } = this.props
+    const { context, t, accessGrantInfo, accessToken } = this.props
 
     const {
       consents,
@@ -287,15 +282,15 @@ class ClaimMembership extends Component {
       requiredConsents.push('STATUTE')
     }
 
-    const contextLead = t.first.elements(
+    const contextLead = t.first(
       [
-        granterName
+        accessGrantInfo?.granterName
           ? `memberships/claim/personal/lead`
           : `memberships/claim/${context}/lead`,
         'memberships/claim/lead',
       ],
       {
-        name: granterName,
+        name: accessGrantInfo?.granterName,
       },
     )
 
@@ -324,19 +319,19 @@ class ClaimMembership extends Component {
           style={{ opacity: polling || loading ? 0.6 : 1, marginBottom: 40 }}
         >
           <H2 style={{ marginBottom: 20 }}>{contextLead}</H2>
-          {message && (
+          {accessGrantInfo?.message && (
             <div {...styles.personalMessageContainer}>
-              {granter && granter.portrait && (
+              {accessGrantInfo.granter?.portrait && (
                 <img
-                  src={granter.portrait}
+                  src={accessGrantInfo.granter.portrait}
                   style={{ width: 100, height: 100 }}
                 />
               )}
               <div {...styles.messages}>
                 <p {...styles.personalMessage}>
                   «
-                  {intersperse(message.split('\n'), () => (
-                    <br />
+                  {intersperse(accessGrantInfo.message.split('\n'), (_, i) => (
+                    <br key={i} />
                   ))}
                   »
                 </p>
@@ -527,6 +522,7 @@ const accessGrantInfo = gql`
 
 export default compose(
   graphql(accessGrantInfo, {
+    skip: (props) => !props.grantId,
     options: ({ grantId }) => ({
       variables: {
         id: grantId,
@@ -534,8 +530,7 @@ export default compose(
     }),
     props: ({ data }) => {
       return {
-        accessGrantInfo:
-          (!data.loading && data.accessGrantInfo) || (!data.loadung && {}),
+        accessGrantInfo: data.accessGrantInfo,
       }
     },
   }),
