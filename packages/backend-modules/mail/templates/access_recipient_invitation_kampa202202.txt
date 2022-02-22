@@ -22,7 +22,7 @@ April für die Dauer von vier statt nur drei Wochen:
 Jetzt anmelden {{LINK_CLAIM_PREFILLED}}
 
 Falls dieser Button nicht funktioniert: Öffnen Sie bitte
-{{LINK_CLAIM_PREFILLED}} , und geben Sie dann Ihren Namen, Ihre E-Mail-Adresse
+{{LINK_CLAIM_CONTEXTLESS}} , und geben Sie dann Ihren Namen, Ihre E-Mail-Adresse
 und den folgenden Gutscheincode ein: {{GRANT_VOUCHER_CODE}}. Der Gutscheincode
 ist gültig bis zum {{GRANT_BEGIN_BEFORE}}.
 
@@ -63,7 +63,11 @@ Zugang teilen {{LINK_ACCOUNT_SHARE}}
 Bei Fragen und Anliegen stehen wir Ihnen gerne unter kontakt@republik.ch zur
 Verfügung.
 
+{{#unless RECIPIENT_HAS_MEMBERSHIPS}}
+
 Wir wünschen Ihnen viel Freude beim Lesen, Mitdiskutieren und Ausprobieren!
+
+{{/unless}}
 
 Ihre Crew der Republik
 

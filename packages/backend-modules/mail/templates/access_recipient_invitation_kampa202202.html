@@ -93,7 +93,7 @@
                     </table>
                     <p>
                       Falls dieser Button nicht funktioniert: Öffnen Sie bitte
-                      <a href="{{LINK_CLAIM_PREFILLED}}"
+                      <a href="{{LINK_CLAIM_CONTEXTLESS}}"
                         >{{LINK_CLAIM_CONTEXTLESS}}</a
                       >, und geben Sie dann Ihren Namen, Ihre E-Mail-Adresse und
                       den folgenden Gutscheincode ein:
@@ -177,10 +177,12 @@
                       >
                       zur Verfügung.
                     </p>
+                    {{#unless RECIPIENT_HAS_MEMBERSHIPS}}
                     <p>
                       Wir wünschen Ihnen viel Freude beim Lesen, Mitdiskutieren
                       und Ausprobieren!
                     </p>
+                    {{/unless}}
                     <p>Ihre Crew der Republik</p>
                   </td>
                 </tr>
