@@ -12,7 +12,7 @@ import withT from '../../../lib/withT'
 import withMe, { meQuery } from '../../../lib/apollo/withMe'
 import isEmail from 'validator/lib/isEmail'
 import { trackEvent } from '../../../lib/matomo'
-
+import { intersperse } from '../../../lib/utils/helpers'
 import SwitchBoard from '../../Auth/SwitchBoard'
 import FieldSet from '../../FieldSet'
 
@@ -29,7 +29,6 @@ import {
   colors,
   fontStyles,
   mediaQueries,
-  inQuotes,
 } from '@project-r/styleguide'
 
 const { H2, P } = Interaction
@@ -58,15 +57,6 @@ const styles = {
     margin: 0,
     [mediaQueries.mUp]: {
       ...fontStyles.serifRegular25,
-    },
-  }),
-  granterName: css({
-    ...fontStyles.serifItalic,
-    fontSize: '17px',
-    margin: 0,
-    [mediaQueries.mUp]: {
-      ...fontStyles.serifItalic,
-      fontSize: '21px',
     },
   }),
   granterImage: css({
@@ -272,8 +262,12 @@ class ClaimMembership extends Component {
     claim()
   }
   render() {
-    const { context, t, accessGrantInfo, accessToken } = this.props
-    const { granterName, granter, message } = accessGrantInfo
+    const {
+      context,
+      t,
+      accessGrantInfo: { granterName, granter, message },
+      accessToken,
+    } = this.props
 
     const {
       consents,
@@ -340,9 +334,12 @@ class ClaimMembership extends Component {
               )}
               <div {...styles.messages}>
                 <p {...styles.personalMessage}>
-                  {inQuotes(message)} <br />
+                  «
+                  {intersperse(message.split('\n'), () => (
+                    <br />
+                  ))}
+                  »
                 </p>
-                <p {...styles.granterName}>{granterName}</p>
               </div>
             </div>
           )}
@@ -537,7 +534,8 @@ export default compose(
     }),
     props: ({ data }) => {
       return {
-        accessGrantInfo: !data.loading && data.accessGrantInfo,
+        accessGrantInfo:
+          (!data.loading && data.accessGrantInfo) || (!data.loadung && {}),
       }
     },
   }),

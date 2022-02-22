@@ -37,7 +37,12 @@ const ShareChart = ({ data, t }) => {
         loading={data.loading}
         error={data.error}
         render={() => {
-          if (!data.accessGrantStats) return null
+          console.log(data.accessGrantStats)
+          if (
+            data.accessGrantStats.events.buckets.length === 0 ||
+            data.accessGrantStats.evolution.buckets.length === 0
+          )
+            return null
           const accessGrantData = ['activeUnconverted', 'converted']
             .map((key) => {
               return data.accessGrantStats.evolution.buckets.map((bucket) => {
@@ -51,10 +56,10 @@ const ShareChart = ({ data, t }) => {
             .flat()
 
           const currentActiveAccessGrants =
-            data.accessGrantStats.evolution.buckets
+            data.accessGrantStats.evolution?.buckets
               .slice(-1)
               .pop().activeUnconverted
-          const soldMembership = data.accessGrantStats.events.buckets.reduce(
+          const soldMembership = data.accessGrantStats.events?.buckets.reduce(
             (prev, curr) => prev + curr.pledges,
             0,
           )
@@ -75,8 +80,8 @@ const ShareChart = ({ data, t }) => {
                   height: 300,
                   yTicks: [0, 200, 400, 600, 800],
                   colorMap: {
-                    'Aktiv geteilte Abos': '#256900',
-                    'Verkaufte Abos': '#3CAD00',
+                    [t('Share/chart/labels/activeUnconverted')]: '#256900',
+                    [t('Share/chart/labels/converted')]: '#3CAD00',
                   },
                 }}
                 values={accessGrantData}

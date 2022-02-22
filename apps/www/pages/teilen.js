@@ -7,8 +7,7 @@ import { t } from '../lib/withT'
 import withDefaultSSR from '../lib/hocs/withDefaultSSR'
 import withT from '../lib/withT'
 import { CROWDFUNDING } from '../lib/constants'
-import { withMembership } from '../components/Auth/checkRoles'
-
+import { useMe } from '../lib/context/MeContext'
 import { PackageItem } from '../components/Pledge/Accordion'
 import AccessCampaigns from '../components/Access/Campaigns'
 import ShareChart from '../components/Access/Campaigns/ShareChart'
@@ -19,9 +18,9 @@ const meta = {
   title: t('pages/access/title'),
 }
 
-const Page = ({ me, t }) => {
+const Page = ({ t }) => {
   const [hover, setHover] = useState()
-
+  const { me } = useMe()
   return (
     <Frame meta={meta}>
       {/* e3568e03-b6b3-46c5-b07a-e9afeea92023 "Teilen Sie Ihr Abonnement" */}
@@ -61,4 +60,4 @@ const Page = ({ me, t }) => {
   )
 }
 
-export default withDefaultSSR(compose(withMembership, withT)(Page))
+export default withDefaultSSR(compose(withT)(Page))
