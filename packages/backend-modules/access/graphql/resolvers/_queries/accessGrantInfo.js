@@ -1,20 +1,17 @@
-const transformUser = require('@orbiting/backend-modules-auth/lib/transformUser')
-
-module.exports = async (_, { id }, { pgdb }) => {
-  const accessGrant = await pgdb.public.accessGrants.findOne({ id: id })
+module.exports = async (_, { id }, { pgdb, t, loaders }) => {
+  const accessGrant = await pgdb.public.accessGrants.findOne({
+    id,
+    beginAt: null,
+    invalidatedAt: null,
+  })
   if (accessGrant) {
-    const granter = await pgdb.public.users.findOne({
-      id: accessGrant.granterUserId,
-    })
-
+    const granter = await loaders.User.byId.load(accessGrant.granterUserId)
     if (granter) {
-      const safeGranter = transformUser(granter, {
-        portraitUrl: granter.portraitUrl,
-      })
-
       return {
-        granterName: safeGranter.name,
-        granterPortrait: safeGranter.portraitUrl,
+        granter,
+        granterName:
+          granter.name ||
+          t('api/access/resolvers/AccessGrant/tallDarkStranger'),
         message: accessGrant.message,
       }
     }

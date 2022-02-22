@@ -270,7 +270,7 @@ class ClaimMembership extends Component {
   }
   render() {
     const { context, t, accessGrantInfo, accessToken } = this.props
-    const { granterName, granterPortrait, message } = accessGrantInfo
+    const { granterName, granter, message } = accessGrantInfo
 
     const {
       consents,
@@ -329,9 +329,9 @@ class ClaimMembership extends Component {
           <H2 style={{ marginBottom: 20 }}>{contextLead}</H2>
           {accessGrantInfo && (
             <div {...styles.personalMessageContainer}>
-              {granterPortrait && (
+              {granter && granter.portrait && (
                 <img
-                  src={granterPortrait}
+                  src={granter.portrait}
                   style={{ width: 100, height: 100 }}
                 />
               )}
@@ -518,8 +518,10 @@ const updateName = gql`
 const accessGrantInfo = gql`
   query accessGrantInfoQuery($id: ID!) {
     accessGrantInfo(id: $id) {
+      granter {
+        portrait
+      }
       granterName
-      granterPortrait
       message
     }
   }

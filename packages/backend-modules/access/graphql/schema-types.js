@@ -88,8 +88,8 @@ type AccessGrantStatsEventsBucket {
 }
 
 type AccessGrantInfo {
+  granter: User!
   granterName: String!
-  granterPortrait: String
   message: String
 }
 
