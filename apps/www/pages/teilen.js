@@ -12,9 +12,12 @@ import ShareChart from '../components/Access/Campaigns/ShareChart'
 import Frame from '../components/Frame'
 import SignIn from '../components/Auth/SignIn'
 import { useInNativeApp } from '../lib/withInNativeApp'
+import { CDN_FRONTEND_BASE_URL } from '../lib/constants'
 
 const meta = {
   title: t('pages/access/title'),
+  description: t('pages/access/description'),
+  image: `${CDN_FRONTEND_BASE_URL}/static/social-media/teilen.png`,
 }
 
 const Page = () => {
