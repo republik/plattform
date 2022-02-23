@@ -3,6 +3,7 @@ const debug = require('debug')('publikator:lib:Document')
 const mp3Duration = require('@rocka/mp3-duration')
 const fetch = require('isomorphic-unfetch')
 const Promise = require('bluebird')
+const moment = require('moment')
 
 const { timeFormat } = require('@orbiting/backend-modules-formats')
 const { mdastToString } = require('@orbiting/backend-modules-utils')
@@ -18,8 +19,12 @@ const { updateRepo } = require('./postgres')
 
 const slugDateFormat = timeFormat('%Y/%m/%d')
 
-const { PREFIX_PREPUBLICATION_PATH, SUPPRESS_AUDIO_DURATION_MEASURE } =
-  process.env
+const {
+  PREFIX_PREPUBLICATION_PATH,
+  SUPPRESS_AUDIO_DURATION_MEASURE,
+  READ_ALOUD_SERVER_BASE_URL,
+  PUBLIC_URL,
+} = process.env
 
 // @see GraphQL schema-types enum AudioSourceKind
 const getAudioSourceKind = (string) =>
@@ -255,8 +260,123 @@ const handleRedirection = async (repoId, newDocMeta, context) => {
   })
 }
 
+const handleSyntheticReadAloud = async (document, context) => {
+  const handlerDebug = debug.extend('handleSyntheticReadAloud')
+
+  if (!READ_ALOUD_SERVER_BASE_URL) {
+    handlerDebug(
+      'handleSyntheticReadAloud: READ_ALOUD_SERVER_BASE_URL not set. skipping synthesizing.',
+    )
+    return
+  }
+
+  if (!PUBLIC_URL) {
+    handlerDebug(
+      'handleSyntheticReadAloud: PUBLIC_URL not set. skipping synthesizing.',
+    )
+    return
+  }
+
+  if (document.meta?.suppressSyntheticReadAloud) {
+    handlerDebug(
+      'handleSyntheticReadAloud: meta.suppressSyntheticReadAloud set. skipping synthesizing.',
+    )
+    return
+  }
+
+  /* [org, name, commitId, versioName] */
+  const [, , commitId] = Buffer.from(document.id, 'base64')
+    .toString('utf-8')
+    .split('/')
+
+  const derivatives = await context.pgdb.publikator.derivatives.find({
+    commitId,
+    type: 'SyntheticReadAload',
+    or: [
+      {
+        // Ready, and not destroyed
+        'readyAt !=': null,
+        destroyedAt: null,
+      },
+      {
+        // Pending, and created not 15 minutes ago
+        status: 'Pending',
+        readyAt: null,
+        'createdAt >=': moment().subtract(15, 'minutes'),
+      },
+    ],
+  })
+
+  if (derivatives.length) {
+    handlerDebug(
+      'handleSyntheticReadAloud: derviative found. skipping synthesizing.',
+    )
+
+    return derivatives.slice(0, 1).pop()
+  }
+
+  const derivative = await context.pgdb.publikator.derivatives.insertAndGet({
+    commitId,
+    type: 'SyntheticReadAload',
+    status: 'Pending',
+  })
+
+  const substitutesUrl = ''
+  const lexiconUrl = ''
+  const webhookUrl = `${PUBLIC_URL}/publikator/webhook/syntheticReadAload`
+  const expireAt = new Date().toISOString
+
+  const isOk = await fetch(`${READ_ALOUD_SERVER_BASE_URL}/intake/document`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      document,
+      derivativeId: derivative.id,
+      substitutesUrl,
+      lexiconUrl,
+      webhookUrl,
+      expireAt,
+    }),
+  })
+    .then(async (res) => {
+      if (!res.ok) {
+        handlerDebug(
+          'unable to fetch reader intake URL (HTTP Status Code: $d)',
+          res.status,
+        )
+        return false
+      }
+
+      handlerDebug('intake URL call %o', await res.json())
+
+      return true
+    })
+    .catch((e) => {
+      handlerDebug('unable to fetch reader intake URL: %s', e.message)
+      return false
+    })
+
+  if (!isOk) {
+    return context.pgdb.publikator.derivatives.updateAndGetOne(
+      {
+        id: derivative.id,
+      },
+      {
+        status: 'Failure',
+        updatedAt: new Date(),
+        failedAt: new Date(),
+      },
+    )
+  }
+
+  return derivative
+}
+
 module.exports = {
   getPath,
   prepareMetaForPublish,
   handleRedirection,
+  handleSyntheticReadAloud,
 }
