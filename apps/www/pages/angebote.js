@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { withRouter } from 'next/router'
 
 import { NarrowContainer } from '@project-r/styleguide'
@@ -89,4 +89,4 @@ class PledgePage extends Component {
   }
 }
 
-export default withRouter(PledgePage)
+export default withDefaultSSR(withRouter(PledgePage))
