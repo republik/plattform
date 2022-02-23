@@ -22,7 +22,7 @@ function isApplePayAvailable(): boolean {
 export function useIsApplePayAvailable(): boolean {
   const checkIfApplePayAvailable = () =>
     isInSecureWindow() && isApplePayAvailable()
-  const [isAvailable, setIsAvailable] = useState(checkIfApplePayAvailable())
+  const [isAvailable, setIsAvailable] = useState(false)
 
   useEffect(() => {
     try {
