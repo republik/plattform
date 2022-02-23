@@ -645,7 +645,7 @@ class Submit extends Component {
       autoPay,
     } = this.state
 
-    if (paymentMethod !== 'STRIPE' && !paymentMethod?.startsWith('STRIPE-')) {
+    if (!paymentMethod || !paymentMethod.startsWith('STRIPE')) {
       return undefined
     }
     if (forceAutoPay) {
