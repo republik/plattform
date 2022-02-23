@@ -90,6 +90,8 @@ SELECT
 FROM "withRange" wr
 LEFT JOIN "withEvents" we
   ON we.key = to_char(wr.date, 'YYYY-MM-DD')
+ AND we."accessCampaignId" = wr."accessCampaignId"
+
 GROUP BY 1, 2, 3
 
 ORDER BY 1, 2, 3
