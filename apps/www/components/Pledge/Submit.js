@@ -149,7 +149,10 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
   const paymentRequest = useStripePaymentRequest({
     total: {
       amount: props.total ?? 0,
-      label: props.query.package ?? 'NO VALUE',
+      label: t.first([
+        `package/${props.query.package}/title`,
+        'package/choose',
+      ]),
     },
     requestShipping: props?.requireShippingAddress ?? false,
     shippingOptions: props?.requireShippingAddress
