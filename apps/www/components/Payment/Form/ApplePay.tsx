@@ -13,7 +13,7 @@ declare global {
 }
 
 function isApplePayAvailable(): boolean {
-  if (!window?.ApplePaySession) {
+  if (!window.ApplePaySession) {
     return false
   }
   return ApplePaySession.canMakePayments()
