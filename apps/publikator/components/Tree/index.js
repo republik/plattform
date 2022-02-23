@@ -10,6 +10,7 @@ import withT from '../../lib/withT'
 import { swissTime } from '../../lib/utils/format'
 import { transformData } from './transformData'
 import Diff from './Diff'
+import Derivatives from '../Derivatives'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
@@ -364,6 +365,7 @@ class Tree extends Component {
                       )}
                     </div>
                     <div style={{ marginRight: 10 }}>
+                      <Derivatives commit={commit} />
                       <Diff repoId={repoId} commit={commit} />
                     </div>
                   </div>

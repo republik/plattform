@@ -41,14 +41,23 @@ export const getRepoHistory = gql`
         }
         nodes {
           ...SimpleCommit
+          derivatives {
+            ...SimpleDerivative
+          }
         }
       }
       milestones {
         ...SimpleMilestone
+        commit {
+          derivatives {
+            ...SimpleDerivative
+          }
+        }
       }
     }
   }
   ${fragments.SimpleMilestone}
+  ${fragments.SimpleDerivative}
   ${fragments.SimpleCommit}
 `
 
@@ -61,14 +70,21 @@ const treeRepoSubscription = gql`
       }
       commit {
         ...SimpleCommit
+        derivatives {
+          ...SimpleDerivative
+        }
       }
       milestone {
         ...SimpleMilestone
+      }
+      derivative {
+        ...SimpleDerivative
       }
     }
   }
   ${fragments.SimpleCommit}
   ${fragments.SimpleMilestone}
+  ${fragments.SimpleDerivative}
 `
 
 const styles = {
@@ -108,15 +124,38 @@ class EditorPage extends Component {
             return prev
           }
 
-          const { mutation, repo, commit, milestone } =
+          const { mutation, repo, commit, milestone, derivative } =
             subscriptionData.data.repoChange
 
           const updatedRepo = { ...prev.repo, ...repo }
           const updatedCommitNodes = [
             commit,
-            ...prev.repo.commits.nodes,
-          ].filter(Boolean)
-          const updatedMilestones = [milestone, ...prev.repo.milestones]
+            ...prev.repo.commits.nodes.filter(
+              (prevCommit) => prevCommit.id !== commit?.id,
+            ),
+          ]
+            .filter(Boolean)
+            .map((prevCommit) => {
+              if (prevCommit.id !== commit?.id) {
+                return prevCommit
+              }
+
+              return {
+                ...prevCommit,
+                derivatives: [
+                  derivative,
+                  ...prevCommit.derivatives.filter(
+                    (perDerivative) => perDerivative.id !== derivative?.id,
+                  ),
+                ].filter(Boolean),
+              }
+            })
+          const updatedMilestones = [
+            milestone,
+            ...prev.repo.milestones.filter(
+              (prevMilestone) => prevMilestone.name !== milestone?.name,
+            ),
+          ]
             .filter(Boolean)
             .filter(
               (m) =>

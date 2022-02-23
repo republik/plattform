@@ -16,10 +16,12 @@ import {
 import withT from '../../lib/withT'
 import { getName } from '../../lib/utils/name'
 import { FRONTEND_BASE_URL } from '../../lib/settings'
+import * as fragments from '../../lib/graphql/fragments'
 import Loader from '../Loader'
 import List, { Item, Highlight } from '../List'
 import { swissTime } from '../../lib/utils/format'
 import ErrorMessage from '../ErrorMessage'
+import Derivatives from '../Derivatives'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
@@ -44,6 +46,12 @@ export const getRepoWithPublications = gql`
           name
           email
         }
+        commit {
+          id
+          derivatives {
+            ...SimpleDerivative
+          }
+        }
         document {
           id
           meta {
@@ -53,6 +61,8 @@ export const getRepoWithPublications = gql`
       }
     }
   }
+
+  ${fragments.SimpleDerivative}
 `
 
 class CurrentPublications extends Component {
@@ -85,8 +95,9 @@ class CurrentPublications extends Component {
               <List>
                 {repo.latestPublications.map((publication) => (
                   <Item key={publication.name}>
-                    {publication.live && publication.document?.meta?.path && (
-                      <div style={{ float: 'right' }}>
+                    <div style={{ float: 'right' }}>
+                      <Derivatives commit={publication.commit} />
+                      {publication.live && publication.document?.meta?.path && (
                         <a
                           href={`${FRONTEND_BASE_URL}${publication.document.meta.path}`}
                         >
@@ -97,8 +108,8 @@ class CurrentPublications extends Component {
                             <PublicIcon color={colors.primary} />
                           )}
                         </a>
-                      </div>
-                    )}
+                      )}
+                    </div>
                     {publication.prepublication &&
                       t('publication/current/prepublication')}{' '}
                     <Highlight>{publication.name}</Highlight>{' '}

@@ -33,6 +33,7 @@ export const transformData = (props) => {
         milestones: props.milestones.filter((o) => {
           return o.commit.id === commit.id && o.name !== 'meta'
         }),
+        derivatives: commit.derivatives,
       }
     })
     .sort(function (a, b) {
