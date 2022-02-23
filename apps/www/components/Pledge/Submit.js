@@ -40,7 +40,7 @@ import { loadStripe } from '../Payment/stripe'
 import { useFieldSetState } from './utils'
 
 import ErrorMessage, { ErrorContainer } from '../ErrorMessage'
-import { useIsApplePayAvailable } from '../Payment/Form/ApplePay'
+import { useIsApplePayAvailable } from '../Payment/Form/useIsApplePayAvailable'
 import useStripePaymentRequest from '../Payment/PaymentRequest/useStripePaymentRequest'
 import { getPayerInformationFromEvent } from '../Payment/PaymentRequest/PaymentRequestEventHelper'
 
@@ -575,6 +575,13 @@ class Submit extends Component {
             email: null,
           },
         })
+
+        if (!this.props.customMe?.address && payerInformation.billingAddress) {
+          this.props.addressState.onChange({
+            values: payerInformation.billingAddress,
+            errors: {},
+          })
+        }
 
         if (payerInformation.shippingAddress) {
           this.props.shippingAddressState.onChange({

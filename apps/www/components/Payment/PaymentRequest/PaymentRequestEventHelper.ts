@@ -1,4 +1,7 @@
-import { PaymentRequestPaymentMethodEvent } from '@stripe/stripe-js'
+import {
+  PaymentRequestPaymentMethodEvent,
+  PaymentRequestShippingAddress,
+} from '@stripe/stripe-js'
 
 type Address = {
   name: string
@@ -13,6 +16,7 @@ type PayerInformation = {
   email: string
   firstName: string
   lastName: string
+  billingAddress?: Address
   shippingAddress?: Address
 }
 
@@ -21,10 +25,22 @@ export function getPayerInformationFromEvent(
 ): PayerInformation {
   const [firstName, lastName] = event.payerName.split(' ').map((s) => s.trim())
 
+  const billingAddress = event.paymentMethod.billing_details.address
+
   return {
     email: event.payerEmail,
     firstName,
     lastName,
+    billingAddress: billingAddress
+      ? {
+          name: event.payerName,
+          line1: billingAddress.line1,
+          line2: billingAddress.line2,
+          postalCode: billingAddress.postal_code,
+          city: billingAddress.city,
+          country: billingAddress.country,
+        }
+      : undefined,
     shippingAddress: event.shippingAddress
       ? {
           name: event.shippingAddress.recipient,
