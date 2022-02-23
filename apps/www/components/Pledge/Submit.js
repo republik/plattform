@@ -403,8 +403,8 @@ class Submit extends Component {
       this.payWithPostFinance(pledgeId, pledgeResponse)
     } else if (paymentMethod === 'STRIPE') {
       this.payWithStripe(pledgeId)
-    } else if (paymentMethod === 'STRIPE-WALLET-APPLE-PAY') {
-      this.payWithWallet(pledgeId, paymentMethodObject)
+    } else if (paymentMethod.startsWith('STRIPE-WALLET')) {
+      return this.payWithWallet(pledgeId, paymentMethodObject)
     } else if (paymentMethod === 'PAYPAL') {
       this.payWithPayPal(pledgeId)
     }
@@ -567,7 +567,7 @@ class Submit extends Component {
   handlePayWithWalletIntent() {
     const { t } = this.props
     this.setState(() => ({
-      loading: 'Warte auf Zahlung', // TODO: t9n
+      loading: t('account/pledges/payment/waiting'),
     }))
 
     this.props.paymentRequest.show(
@@ -603,7 +603,7 @@ class Submit extends Component {
           })
         }
 
-        this.submitPledge(ev.paymentMethod)
+        return this.submitPledge(ev.paymentMethod)
       },
       // Cancel Handler
       () => {
