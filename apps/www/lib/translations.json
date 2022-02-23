@@ -3658,7 +3658,7 @@
     },
     {
       "key": "Share/chart/lead",
-      "value": "In den letzten {days} Tagen haben sich nach dem Probezugriff rund {averagePercent} für die Republik entschieden."
+      "value": "Anzahl geteilte Zugriffe über die letzten {days} Tage."
     },
     {
       "key": "Share/chart/labels/activeUnconverted",
@@ -3670,7 +3670,7 @@
     },
     {
       "key": "Share/chart/legend",
-      "value": "Als Konversion gilt wenn spätestens 30 Tage nach Ablauf des Probezugriff man Verlegerin wird, etwas spendet oder verschenkt. Datenstand: {formattedDateTime}"
+      "value": "Der Konversionsrate rechnen wir an, wer 30 Tage nach Ablauf des Probezugriff Verlegerin wird, etwas spendet oder verschenkt. Datenstand: {formattedDateTime}"
     },
     {
       "key": "Share/chart/annotation/averageRate",

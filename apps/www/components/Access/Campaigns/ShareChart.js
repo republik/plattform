@@ -142,7 +142,7 @@ const ShareChart = ({ data, t }) => {
             <>
               <ChartTitle>
                 {t('Share/chart/title', {
-                  currentActiveAccessGrants: lastBucket.active,
+                  currentActiveAccessGrants: lastBucket.activeUnconverted,
                 })}
               </ChartTitle>
               <ChartLead>
@@ -182,7 +182,7 @@ const ShareChart = ({ data, t }) => {
                     {
                       x1: lastBucket.date,
                       x2: lastBucket.date,
-                      value: lastBucket.active,
+                      value: lastBucket.activeUnconverted,
                       label: t('Share/chart/annotation/lastBucket'),
                     },
                   ].filter(Boolean),
