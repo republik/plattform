@@ -1,6 +1,6 @@
 Guten Tag
 
-{{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}} Am {{GRANT_BEGIN}} hat
+{{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}Am {{GRANT_BEGIN}} hat
 {{GRANTER_NAME}} mit Ihnen das Republik-Abonnement geteilt.{{else}}Bis zum
 {{GRANT_END}} waren Sie als Gast an Bord der Republik.{{/if}}
 
