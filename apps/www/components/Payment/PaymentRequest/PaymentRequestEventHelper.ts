@@ -1,7 +1,4 @@
-import {
-  PaymentMethod,
-  PaymentRequestPaymentMethodEvent,
-} from '@stripe/stripe-js'
+import { PaymentRequestPaymentMethodEvent } from '@stripe/stripe-js'
 
 type Address = {
   name: string
