@@ -985,27 +985,26 @@ class Submit extends Component {
               Payment request status: {this.props.paymentRequest.status}
               <p>{JSON.stringify(errorMessages, null, 2)}</p>
             </span>
-            <div style={{ opacity: errorMessages.length ? 0.5 : 1 }}>
-              <Button
-                block
-                primary={!errorMessages.length}
-                onClick={() => {
-                  if (
-                    this.state.values.paymentMethod.startsWith('STRIPE-WALLET')
-                  ) {
-                    this.handlePayWithWalletIntent()
-                  } else {
-                    this.submitPledge()
-                  }
-                }}
-              >
-                {t('pledge/submit/button/pay', {
-                  formattedChf: this.props.total
-                    ? chfFormat(this.props.total / 100)
-                    : '',
-                })}
-              </Button>
-            </div>
+            <Button
+              block
+              primary={!errorMessages.length}
+              disabled={errorMessages?.length > 0}
+              onClick={() => {
+                if (
+                  this.state.values.paymentMethod.startsWith('STRIPE-WALLET')
+                ) {
+                  this.handlePayWithWalletIntent()
+                } else {
+                  this.submitPledge()
+                }
+              }}
+            >
+              {t('pledge/submit/button/pay', {
+                formattedChf: this.props.total
+                  ? chfFormat(this.props.total / 100)
+                  : '',
+              })}
+            </Button>
           </div>
         )}
       </>
