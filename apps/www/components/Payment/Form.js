@@ -37,7 +37,7 @@ const pad2 = format('02')
 
 const PAYMENT_METHODS = [
   {
-    disabled: false,
+    disabled: inNativeAppBrowser,
     key: 'STRIPE-WALLET-APPLE-PAY',
     Icon: ApplePayButton,
   },
@@ -74,6 +74,11 @@ const PAYMENT_METHODS = [
         </span>
       )
     },
+  },
+  {
+    disabled: inNativeAppBrowser,
+    key: 'STRIPE-WALLET-GOOGLE-PAY',
+    Icon: () => <label>Google Pay</label>,
   },
   {
     disabled: inNativeAppBrowser,
@@ -308,7 +313,7 @@ class PaymentForm extends Component {
         </div>
         <Loader
           style={{ minHeight: PAYMENT_METHOD_HEIGHT * 2 }}
-          loading={loadingPaymentSource}
+          loading={loadingPaymentSource || false}
           render={() => {
             const hasPaymentSource = !!paymentSource
             const PaymentSourceIcon =
