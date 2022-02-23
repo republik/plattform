@@ -2,10 +2,16 @@ import React from 'react'
 import { gql } from '@apollo/client'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
-import { ChartTitle, ChartLead, Chart, Loader } from '@project-r/styleguide'
+import {
+  ChartTitle,
+  ChartLead,
+  ChartLegend,
+  Chart,
+  Loader,
+} from '@project-r/styleguide'
 import { timeDay } from 'd3-time'
-import { max, sum } from 'd3-array'
-import { swissTime } from '../../../lib/utils/format'
+import { ascending, max, mean, median, min, sum } from 'd3-array'
+import { countFormat, swissNumbers, swissTime } from '../../../lib/utils/format'
 import withT from '../../../lib/withT'
 import { scaleLinear } from 'd3-scale'
 
@@ -27,6 +33,7 @@ const accessGrantQuery = gql`
       ) {
         buckets {
           date
+          active
           activeUnconverted
           converted
         }
@@ -51,6 +58,7 @@ const accessGrantQuery = gql`
       ) {
         buckets {
           date
+          active
           activeUnconverted
           converted
         }
@@ -71,6 +79,8 @@ const accessGrantQuery = gql`
 `
 
 const formatDate = swissTime.format('%d.%m.%Y')
+const formatDateTime = swissTime.format('%d.%m.%Y %H:%M')
+const formatPercent = swissNumbers.format('.0%')
 
 const ShareChart = ({ data, t }) => {
   return (
@@ -92,6 +102,7 @@ const ShareChart = ({ data, t }) => {
               )
               return {
                 date: bucket.date,
+                active: bucket.active + (bucket2 ? bucket2.active : 0),
                 activeUnconverted:
                   bucket.activeUnconverted +
                   (bucket2 ? bucket2.activeUnconverted : 0),
@@ -106,17 +117,23 @@ const ShareChart = ({ data, t }) => {
                   ),
               ),
             )
+            .sort((a, b) => ascending(new Date(a.date), new Date(b.date)))
+            .map((bucket) => {
+              return {
+                ...bucket,
+                rate: bucket.converted / bucket.active,
+              }
+            })
 
-          const maxBarValue = Math.max(
-            max(
-              mergedEvolutionBuckets,
-              (bucket) => bucket.activeUnconverted + bucket.converted,
-            ),
-            10,
-          )
-          if (!mergedEvolutionBuckets.length || !maxBarValue) {
+          if (!mergedEvolutionBuckets.length) {
             return null
           }
+          const maxBarValue = Math.max(
+            max(mergedEvolutionBuckets, (bucket) => bucket.active),
+            10,
+          )
+          const maxRate = max(mergedEvolutionBuckets, (bucket) => bucket.rate)
+
           const yTicksNumber = maxBarValue > 100 ? 5 : 3
           const yScale = scaleLinear()
             .domain([0, maxBarValue])
@@ -138,7 +155,7 @@ const ShareChart = ({ data, t }) => {
             .slice(-1)
             .pop().activeUnconverted
 
-          const soldMembership =
+          const nPledges =
             sum(events.buckets.map((bucket) => bucket.pledges)) +
             sum(events2.buckets.map((bucket) => bucket.pledges))
 
@@ -147,17 +164,30 @@ const ShareChart = ({ data, t }) => {
               <ChartTitle>
                 {t('Share/chart/title', { currentActiveAccessGrants })}
               </ChartTitle>
-              <ChartLead>{t('Share/chart/lead', { soldMembership })}</ChartLead>
+              <ChartLead>
+                {t('Share/chart/lead', {
+                  maxRate: formatPercent(maxRate),
+                  nPledges: countFormat(nPledges),
+                  days: mergedEvolutionBuckets.length,
+                })}
+              </ChartLead>
               <Chart
                 config={{
                   type: 'TimeBar',
                   x: 'date',
+                  xBandPadding: 0,
                   color: 'type',
                   timeParse: '%d.%m.%Y',
                   timeFormat: '%d. %B',
                   height: 300,
                   domain: yScale.domain(),
                   yTicks: yScale.ticks(yTicksNumber),
+                  xTicks: [
+                    mergedEvolutionBuckets[0]?.date,
+                    mergedEvolutionBuckets[28]?.date,
+                    mergedEvolutionBuckets[56]?.date,
+                  ].filter(Boolean),
+                  colorLegendValues: [t('Share/chart/labels/converted')],
                   colorMap: {
                     [t('Share/chart/labels/activeUnconverted')]: '#256900',
                     [t('Share/chart/labels/converted')]: '#3CAD00',
@@ -165,6 +195,18 @@ const ShareChart = ({ data, t }) => {
                 }}
                 values={accessGrantData}
               />
+              <ChartLegend>
+                {t('Share/chart/legend', {
+                  formattedDateTime: formatDateTime(
+                    min([
+                      new Date(evolution.updatedAt),
+                      new Date(evolution2.updatedAt),
+                      new Date(events.updatedAt),
+                      new Date(events2.updatedAt),
+                    ]),
+                  ),
+                })}
+              </ChartLegend>
             </>
           )
         }}
@@ -180,7 +222,7 @@ export default compose(
       return {
         variables: {
           max: formatDate(currentDay),
-          min: formatDate(timeDay.offset(currentDay, -30)),
+          min: formatDate(timeDay.offset(currentDay, -59)),
         },
       }
     },

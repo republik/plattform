@@ -3658,15 +3658,19 @@
     },
     {
       "key": "Share/chart/lead",
-      "value": "In den letzten vier Wochen haben sich nach dem Probelesen {soldMembership} Personen für die Republik entschieden."
+      "value": "In den letzten {days} Tagen haben sich nach dem Probezugriff bis zu {maxRate}, Total {nPledges} Personen, für die Republik entschieden."
     },
     {
       "key": "Share/chart/labels/activeUnconverted",
-      "value": "Geteilte, aktive Probelesen"
+      "value": "Hat bisher nicht unterstützt"
     },
     {
       "key": "Share/chart/labels/converted",
-      "value": "Gewonnene Verlegerinnen"
+      "value": "Inzwischen als Unterstützerin gewonnen"
+    },
+    {
+      "key": "Share/chart/legend",
+      "value": "Als Unterstützer gelten alle die spätestens 30 Tage nach Ablauf des Probezugriffs ein Abo lösen, etwas verschenken oder spenden. Datenstand: {formattedDateTime}"
     },
     {
       "key": "notifications/pageTitle",
