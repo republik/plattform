@@ -3670,11 +3670,11 @@
     },
     {
       "key": "Share/chart/legend",
-      "value": "Als Unterstützer gelten alle die spätestens 30 Tage nach Ablauf des Probezugriffs ein Abo lösen, etwas verschenken oder spenden. Datenstand: {formattedDateTime}"
+      "value": "Als Konversion gilt wenn spätestens 30 Tage nach Ablauf des Probezugriff man Verlegerin wird, etwas spendet oder verschenkt. Datenstand: {formattedDateTime}"
     },
     {
       "key": "Share/chart/annotation/averageRate",
-      "value": "rund {percent} Unterstützung"
+      "value": "rund {percent} Konversionsrate"
     },
     {
       "key": "Share/chart/annotation/lastBucket",

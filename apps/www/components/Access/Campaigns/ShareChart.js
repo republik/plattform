@@ -186,7 +186,7 @@ const ShareChart = ({ data, t }) => {
                       label: t('Share/chart/annotation/lastBucket'),
                     },
                   ].filter(Boolean),
-                  colorLegendValues: [t('Share/chart/labels/converted')],
+                  colorLegendValues: [],
                   colorMap: {
                     [t('Share/chart/labels/activeUnconverted')]: '#256900',
                     [t('Share/chart/labels/converted')]: '#3CAD00',
