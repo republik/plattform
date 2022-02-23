@@ -4,7 +4,10 @@ Der von Ihnen vermittelte Republik-Testzugang wurde soeben von
 {{recipient_name}} eingelöst.
 
 Herzlichen Dank, dass Sie unser Magazin weiterempfohlen haben und damit zur
-Bekanntheit der Republik beitragen!
+Zukunft der Republik beitragen!
+
+Ohne Journalismus keine Demokratie. Und ohne Verlegerinnen keine Republik.
+Möchten Sie eine weitere Person einladen? Hier entlang {{LINK_ACCOUNT_SHARE}}
 
 Ihre Crew der Republik
 
