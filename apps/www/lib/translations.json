@@ -3658,7 +3658,7 @@
     },
     {
       "key": "Share/chart/lead",
-      "value": "Anzahl geteilte Zugriffe über die letzten {days} Tage."
+      "value": "Anzahl geteilter Zugriffe während der letzten {days} Tage"
     },
     {
       "key": "Share/chart/labels/activeUnconverted",
