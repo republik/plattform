@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 // Check if the website is running in a secure document.
 function isInSecureDocument(): boolean {
   return (
-    typeof window !== 'undefined' && window?.location?.protocol === 'https:'
+    typeof window !== 'undefined' && window.location.protocol === 'https:'
   )
 }
 
