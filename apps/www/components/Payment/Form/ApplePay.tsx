@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react'
 
 // Check if the website is running in a secure document.
-function isInSecureDocument(): boolean {
-  return (
-    typeof window !== 'undefined' && window.location.protocol === 'https:'
-  )
+function isInSecureWindow(): boolean {
+  return typeof window !== 'undefined' && window.location.protocol === 'https:'
 }
 
 // Declare ApplePaySession property to prevent TypeScript errors
@@ -23,7 +21,7 @@ function isApplePayAvailable(): boolean {
 
 export function useIsApplePayAvailable(): boolean {
   const checkIfApplePayAvailable = () =>
-    isInSecureDocument() && isApplePayAvailable()
+    isInSecureWindow() && isApplePayAvailable()
   const [isAvailable, setIsAvailable] = useState(checkIfApplePayAvailable())
 
   useEffect(() => {
