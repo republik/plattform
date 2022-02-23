@@ -338,6 +338,9 @@ module.exports = {
             },
             audioSource: {
               properties: {
+                kind: {
+                  type: 'keyword',
+                },
                 mp3: {
                   type: 'keyword',
                 },

@@ -4569,6 +4569,10 @@
       "value": "ansehen"
     },
     {
+      "key": "statement/404",
+      "value": "Das gewünschte Statement ist zurzeit nicht verfügbar."
+    },
+    {
       "key": "statement/share/overlayTitle",
       "value": "Statement von {name}"
     },

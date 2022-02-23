@@ -30,6 +30,7 @@ module.exports = async (_, args, { pgdb, t }) => {
       {
         testimonialId: focus,
         isListed: true,
+        'roles @>': '["member"]',
       },
       'id',
     )

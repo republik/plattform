@@ -13,54 +13,68 @@ import { WithoutMembership } from '../Auth/withMembership'
 import DocumentListContainer from './DocumentListContainer'
 
 const getFeedDocuments = gql`
-  query getFeedDocuments($formatId: String!, $cursor: String) {
-    documents(format: $formatId, first: 30, after: $cursor, feed: true) {
+  query getFeedDocuments(
+    $cursor: String
+    $filter: SearchFilterInput
+    $filters: [SearchGenericFilterInput!]
+  ) {
+    documents: search(
+      filters: $filters
+      filter: $filter
+      sort: { key: publishedAt, direction: DESC }
+      first: 30
+      after: $cursor
+    ) {
       totalCount
       pageInfo {
         endCursor
         hasNextPage
       }
       nodes {
-        id
-        ...BookmarkOnDocument
-        meta {
-          credits
-          title
-          description
-          publishDate
-          path
-          template
-          format {
+        entity {
+          ... on Document {
             id
+            ...BookmarkOnDocument
             meta {
-              kind
-            }
-          }
-          estimatedReadingMinutes
-          estimatedConsumptionMinutes
-          indicateChart
-          indicateGallery
-          indicateVideo
-          audioSource {
-            mp3
-            aac
-            ogg
-            mediaId
-            durationMs
-          }
-          ownDiscussion {
-            id
-            closed
-            comments {
-              totalCount
-            }
-          }
-          linkedDiscussion {
-            id
-            path
-            closed
-            comments {
-              totalCount
+              credits
+              title
+              description
+              publishDate
+              path
+              template
+              format {
+                id
+                meta {
+                  kind
+                }
+              }
+              estimatedReadingMinutes
+              estimatedConsumptionMinutes
+              indicateChart
+              indicateGallery
+              indicateVideo
+              audioSource {
+                mp3
+                aac
+                ogg
+                mediaId
+                durationMs
+              }
+              ownDiscussion {
+                id
+                closed
+                comments {
+                  totalCount
+                }
+              }
+              linkedDiscussion {
+                id
+                path
+                closed
+                comments {
+                  totalCount
+                }
+              }
             }
           }
         }
@@ -70,24 +84,39 @@ const getFeedDocuments = gql`
   ${bookmarkOnDocumentFragment}
 `
 
-const Feed = ({ t, formatId }) => (
-  <Center>
-    <DocumentListContainer
-      feedProps={{ showHeader: false }}
-      empty={
-        <WithoutMembership
-          render={() => (
-            <Box style={{ padding: '15px 20px' }}>
-              <Interaction.P>{t('format/feed/payNote')}</Interaction.P>
-            </Box>
-          )}
-        />
-      }
-      showTotal={true}
-      query={getFeedDocuments}
-      variables={{ formatId }}
-    />
-  </Center>
-)
+const mapNodes = (node) => node.entity
 
-export default compose(withT)(Feed)
+const FormatFeed = ({ t, formatId, variables: variablesObject }) => {
+  if (!variablesObject && !formatId) {
+    return null
+  }
+
+  const variables = variablesObject || {
+    filter: { format: formatId, feed: true },
+  }
+
+  const empty = (
+    <WithoutMembership
+      render={() => (
+        <Box style={{ marginBottom: 30, padding: '15px 20px' }}>
+          <Interaction.P>{t('section/feed/payNote')}</Interaction.P>
+        </Box>
+      )}
+    />
+  )
+
+  return (
+    <Center>
+      <DocumentListContainer
+        feedProps={{ showHeader: false }}
+        empty={empty}
+        showTotal={true}
+        query={getFeedDocuments}
+        variables={variables}
+        mapNodes={mapNodes}
+      />
+    </Center>
+  )
+}
+
+export default compose(withT)(FormatFeed)

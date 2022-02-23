@@ -295,14 +295,20 @@ export const linesProcesser = ({
     ...d,
     x: d.x ? xParser(d.x) : undefined,
   }))
-  const translatedXAnnotations = (props.xAnnotations || []).map((d) => ({
-    formattedValue: yFormat(d.value),
-    ...d,
-    x: d.x ? xParser(d.x) : undefined,
-    x1: d.x1 ? xParser(d.x1) : undefined,
-    x2: d.x2 ? xParser(d.x2) : undefined,
-    labelSize: d.label ? labelGauger(d.label) : 0,
-  }))
+  const translatedXAnnotations = (props.xAnnotations || []).map((d) => {
+    const longestLabel =
+      d.label &&
+      d.label.split('\n').reduce((a, b) => (a.length > b.length ? a : b))
+
+    return {
+      formattedValue: yFormat(d.value),
+      ...d,
+      x: d.x ? xParser(d.x) : undefined,
+      x1: d.x1 ? xParser(d.x1) : undefined,
+      x2: d.x2 ? xParser(d.x2) : undefined,
+      labelSize: d.label ? labelGauger(longestLabel) : 0,
+    }
+  })
 
   return {
     groupedData,
