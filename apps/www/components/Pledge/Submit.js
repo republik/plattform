@@ -172,7 +172,9 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
   // in case a native browser payment is available initialize stripe
   useEffect(() => {
     if (
-      enhancedPaymentMethods.find((value) => value.startsWith('STRIPE-')) &&
+      enhancedPaymentMethods.find((value) =>
+        value.startsWith('STRIPE-WALLET'),
+      ) &&
       paymentRequest.status === 'UNINITIALIZED' &&
       props.total
     ) {
@@ -623,7 +625,7 @@ class Submit extends Component {
         messages: []
           .concat(
             requireShippingAddress &&
-              !this.state.values?.paymentMethod?.startsWith('STRIPE-') &&
+              !this.state.values?.paymentMethod?.startsWith('STRIPE-WALLET') &&
               objectValues(shippingAddressState.errors),
           )
           .filter(Boolean),
@@ -787,7 +789,7 @@ class Submit extends Component {
         {
           // Only render the browser API in case we're not using a browser payment API
           this.state.values.paymentMethod &&
-            !this.state.values.paymentMethod.startsWith('STRIPE-') && (
+            !this.state.values.paymentMethod.startsWith('STRIPE-WALLET') && (
               <>
                 {contactPreface && (
                   <div style={{ marginBottom: 40 }}>
@@ -964,7 +966,9 @@ class Submit extends Component {
                 block
                 primary={!errorMessages.length}
                 onClick={() => {
-                  if (this.state.values.paymentMethod.startsWith('STRIPE-')) {
+                  if (
+                    this.state.values.paymentMethod.startsWith('STRIPE-WALLET')
+                  ) {
                     this.handleApplePayIntent()
                   } else {
                     this.submitPledge()

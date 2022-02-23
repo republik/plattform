@@ -262,7 +262,7 @@ class PaymentForm extends Component {
 
     return (
       <div>
-        {requireShippingAddress && !paymentMethod?.startsWith('STRIPE-') && (
+        {requireShippingAddress && !paymentMethod?.startsWith('STRIPE-WALLET') && (
           <div style={{ marginBottom: 40 }}>
             <H2 style={{ marginBottom: 10 }}>
               {t('pledge/address/shipping/title')}
