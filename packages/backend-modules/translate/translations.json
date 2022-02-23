@@ -1161,6 +1161,10 @@
       "value": "Zeit für eine Entscheidung"
     },
     {
+      "key": "api/access/email/recipient/followup_kampa202202/subject",
+      "value": "Zeit für eine Entscheidung"
+    },
+    {
       "key": "api/access/email/granter/claim_notice/subject",
       "value": "Republik-Testzugang von {recipientName} aktiviert"
     },
