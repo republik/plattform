@@ -391,7 +391,7 @@ class Submit extends Component {
     } else if (paymentMethod === 'STRIPE') {
       this.payWithStripe(pledgeId)
     } else if (paymentMethod === 'STRIPE-WALLET-APPLE-PAY') {
-      this.payWithApplePay(pledgeId, paymentMethodObject)
+      this.payWithWallet(pledgeId, paymentMethodObject)
     } else if (paymentMethod === 'PAYPAL') {
       this.payWithPayPal(pledgeId)
     }
@@ -536,7 +536,7 @@ class Submit extends Component {
       })
   }
 
-  payWithApplePay(pledgeId, paymentMethodObject) {
+  payWithWallet(pledgeId, paymentMethodObject) {
     const { t } = this.props
     const { values } = this.state
     this.setState(() => ({
@@ -551,7 +551,7 @@ class Submit extends Component {
     })
   }
 
-  handleApplePayIntent() {
+  handlePayWithWalletIntent() {
     const { t } = this.props
     this.setState(() => ({
       loading: 'Warte auf Zahlung', // TODO: t9n
@@ -969,7 +969,7 @@ class Submit extends Component {
                   if (
                     this.state.values.paymentMethod.startsWith('STRIPE-WALLET')
                   ) {
-                    this.handleApplePayIntent()
+                    this.handlePayWithWalletIntent()
                   } else {
                     this.submitPledge()
                   }
