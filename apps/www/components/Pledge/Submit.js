@@ -154,8 +154,8 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
         'package/choose',
       ]),
     },
-    requestShipping: props?.requireShippingAddress ?? false,
-    shippingOptions: props?.requireShippingAddress
+    requestShipping: props.requireShippingAddress || false,
+    shippingOptions: props.requireShippingAddress
       ? [
           {
             id: 'default',
