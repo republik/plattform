@@ -37,7 +37,7 @@ class Form extends Component {
       this.setState({
         isMutating: false,
         values: {
-          message: props.campaign.defaultMessage,
+          message: props.campaign.defaultMessage || '',
           email: '',
         },
       })
@@ -92,9 +92,9 @@ class Form extends Component {
         type: 'text',
         label: t('Account/Access/Campaigns/Form/input/message/label'),
         validator: (message) =>
-          message.trim().length > 3000 &&
+          message.trim().length > 500 &&
           t('Account/Access/Campaigns/Form/input/message/tooLong', {
-            maxLength: 3000,
+            maxLength: 500,
           }),
         autoSize: true,
       },
