@@ -1017,8 +1017,12 @@
       "value": "Kreditkarte"
     },
     {
-      "key": "account/pledges/payment/method/STRIPE-APPLEPAY",
+      "key": "account/pledges/payment/method/STRIPE-WALLET-APPLE-PAY",
       "value": "Apple Pay"
+    },
+    {
+      "key": "account/pledges/payment/method/STRIPE-WALLET-GOOGLE-PAY",
+      "value": "Google Pay"
     },
     {
       "key": "account/pledges/payment/method/POSTFINANCECARD",

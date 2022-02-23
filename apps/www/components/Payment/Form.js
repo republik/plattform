@@ -38,7 +38,7 @@ const pad2 = format('02')
 const PAYMENT_METHODS = [
   {
     disabled: false,
-    key: 'STRIPE-APPLEPAY',
+    key: 'STRIPE-WALLET-APPLE-PAY',
     Icon: ApplePayButton,
   },
   {

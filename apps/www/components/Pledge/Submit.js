@@ -140,7 +140,10 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
     let enhancedPaymentMethods = paymentMethods
 
     if (paymentMethods.includes('STRIPE') && isApplePayAvailable) {
-      enhancedPaymentMethods = ['STRIPE-APPLEPAY', ...enhancedPaymentMethods]
+      enhancedPaymentMethods = [
+        'STRIPE-WALLET-APPLE-PAY',
+        ...enhancedPaymentMethods,
+      ]
     }
 
     return enhancedPaymentMethods
@@ -385,7 +388,7 @@ class Submit extends Component {
       this.payWithPostFinance(pledgeId, pledgeResponse)
     } else if (paymentMethod === 'STRIPE') {
       this.payWithStripe(pledgeId)
-    } else if (paymentMethod === 'STRIPE-APPLEPAY') {
+    } else if (paymentMethod === 'STRIPE-WALLET-APPLE-PAY') {
       this.payWithApplePay(pledgeId, paymentMethodObject)
     } else if (paymentMethod === 'PAYPAL') {
       this.payWithPayPal(pledgeId)
