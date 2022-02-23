@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
 // Check if the website is running in a secure document.
 function isInSecureWindow(): boolean {
@@ -19,7 +19,10 @@ function isApplePayAvailable(): boolean {
   return ApplePaySession.canMakePayments()
 }
 
-export function useIsApplePayAvailable(): boolean {
+export function useIsApplePayAvailable(): [
+  boolean,
+  Dispatch<SetStateAction<boolean>>,
+] {
   const checkIfApplePayAvailable = () =>
     isInSecureWindow() && isApplePayAvailable()
   const [isAvailable, setIsAvailable] = useState(false)
@@ -33,5 +36,5 @@ export function useIsApplePayAvailable(): boolean {
     }
   }, [])
 
-  return isAvailable
+  return [isAvailable, setIsAvailable]
 }

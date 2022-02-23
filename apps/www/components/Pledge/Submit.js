@@ -132,42 +132,49 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
   )
 
   const [syncAddresses, setSyncAddresses] = useState(true)
-  const isApplePayAvailable = useIsApplePayAvailable()
+  const [isApplePayAvailable, setIsApplePayAvailable] = useIsApplePayAvailable()
+  const [isGooglePayAvailable, setIsGooglePayAvailable] = useState(false)
 
   // In case STRIPE is an accepted payment method,
   // add additional payment methods such as Apple or Google Pay if available
   const enhancedPaymentMethods = useMemo(() => {
     let enhancedPaymentMethods = paymentMethods
 
-    if (paymentMethods.includes('STRIPE') && isApplePayAvailable) {
+    if (paymentMethods.includes('STRIPE')) {
       enhancedPaymentMethods = [
-        'STRIPE-WALLET-APPLE-PAY',
+        isApplePayAvailable ? 'STRIPE-WALLET-APPLE-PAY' : null,
+        isGooglePayAvailable ? 'STRIPE-WALLET-GOOGLE-PAY' : null,
         ...enhancedPaymentMethods,
       ]
     }
+    return enhancedPaymentMethods.filter(Boolean)
+  }, [paymentMethods, isApplePayAvailable, isGooglePayAvailable])
 
-    return enhancedPaymentMethods
-  }, [paymentMethods, isApplePayAvailable])
-
-  const paymentRequest = useStripePaymentRequest({
-    total: {
-      amount: props.total ?? 0,
-      label: t.first([
-        `package/${props.query.package}/title`,
-        'package/choose',
-      ]),
+  const paymentRequest = useStripePaymentRequest(
+    {
+      total: {
+        amount: props.total ?? 0,
+        label: t.first([
+          `package/${props.query.package}/title`,
+          'package/choose',
+        ]),
+      },
+      requestShipping: props.requireShippingAddress || false,
+      shippingOptions: props.requireShippingAddress
+        ? [
+            {
+              id: 'default',
+              label: t('account/pledges/free-delivery'),
+              amount: 0,
+            },
+          ]
+        : undefined,
     },
-    requestShipping: props.requireShippingAddress || false,
-    shippingOptions: props.requireShippingAddress
-      ? [
-          {
-            id: 'default',
-            label: t('account/pledges/free-delivery'),
-            amount: 0,
-          },
-        ]
-      : undefined,
-  })
+    {
+      setIsApplePayAvailable,
+      setIsGooglePayAvailable,
+    },
+  )
 
   // in case a native browser payment is available initialize stripe
   useEffect(() => {
