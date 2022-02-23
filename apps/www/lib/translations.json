@@ -1013,6 +1013,10 @@
       "value": "Einkäufe"
     },
     {
+      "key": "account/pledges/payment/methods/loading",
+      "value": "Verfügbare Zahlungsmittel werden ermittelt"
+    },
+    {
       "key": "account/pledges/payment/method/STRIPE",
       "value": "Kreditkarte"
     },

@@ -29,6 +29,7 @@ import {
   Checkbox,
   InlineSpinner,
   Label,
+  Loader,
   A,
 } from '@project-r/styleguide'
 
@@ -138,16 +139,15 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
   // In case STRIPE is an accepted payment method,
   // add additional payment methods such as Apple or Google Pay if available
   const enhancedPaymentMethods = useMemo(() => {
-    let enhancedPaymentMethods = paymentMethods
-
-    if (paymentMethods.includes('STRIPE')) {
-      enhancedPaymentMethods = [
-        isApplePayAvailable ? 'STRIPE-WALLET-APPLE-PAY' : null,
-        isGooglePayAvailable ? 'STRIPE-WALLET-GOOGLE-PAY' : null,
-        ...enhancedPaymentMethods,
-      ]
+    if (!paymentMethods.includes('STRIPE')) {
+      return paymentMethods
     }
-    return enhancedPaymentMethods.filter(Boolean)
+
+    return [
+      isApplePayAvailable ? 'STRIPE-WALLET-APPLE-PAY' : null,
+      isGooglePayAvailable ? 'STRIPE-WALLET-GOOGLE-PAY' : null,
+      ...paymentMethods,
+    ].filter(Boolean)
   }, [paymentMethods, isApplePayAvailable, isGooglePayAvailable])
 
   const paymentRequest = useStripePaymentRequest(
@@ -190,17 +190,23 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
   }, [enhancedPaymentMethods, paymentRequest, props.total])
 
   return (
-    <Submit
-      {...props}
-      paymentMethods={enhancedPaymentMethods}
-      userName={userName}
-      userAddress={userAddress}
-      addressState={addressState}
-      contactState={contactState}
-      shippingAddressState={shippingAddressState}
-      syncAddresses={props.requireShippingAddress && syncAddresses}
-      setSyncAddresses={setSyncAddresses}
-      paymentRequest={paymentRequest}
+    <Loader
+      loading={paymentRequest.status === 'LOADING'}
+      message={t('account/pledges/payment/methods/loading')}
+      render={() => (
+        <Submit
+          {...props}
+          paymentMethods={enhancedPaymentMethods}
+          userName={userName}
+          userAddress={userAddress}
+          addressState={addressState}
+          contactState={contactState}
+          shippingAddressState={shippingAddressState}
+          syncAddresses={props.requireShippingAddress && syncAddresses}
+          setSyncAddresses={setSyncAddresses}
+          paymentRequest={paymentRequest}
+        />
+      )}
     />
   )
 }
@@ -621,12 +627,15 @@ class Submit extends Component {
       contactState,
     } = this.props
 
+    const isStripeWalletSelected =
+      this.state.values?.paymentMethod?.startsWith('STRIPE-WALLET')
+
     return [
       {
         category: t('pledge/submit/error/title'),
         messages: [options.length < 1 && t('pledge/submit/package/error')]
           .concat(objectValues(this.props.errors))
-          .concat(objectValues(contactState.errors))
+          .concat(!isStripeWalletSelected && objectValues(contactState.errors))
           .concat(objectValues(this.state.errors))
           .concat([
             !values.paymentMethod && t('pledge/submit/payMethod/error'),
@@ -639,7 +648,7 @@ class Submit extends Component {
         messages: []
           .concat(
             requireShippingAddress &&
-              !this.state.values?.paymentMethod?.startsWith('STRIPE-WALLET') &&
+              !isStripeWalletSelected &&
               objectValues(shippingAddressState.errors),
           )
           .filter(Boolean),
@@ -974,6 +983,7 @@ class Submit extends Component {
             <br />
             <span>
               Payment request status: {this.props.paymentRequest.status}
+              <p>{JSON.stringify(errorMessages, null, 2)}</p>
             </span>
             <div style={{ opacity: errorMessages.length ? 0.5 : 1 }}>
               <Button
