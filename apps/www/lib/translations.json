@@ -1118,7 +1118,7 @@
     },
     {
       "key": "Account/Access/Campaigns/Form/title/0",
-      "value": "Zugriff teilen"
+      "value": "Gäste einladen"
     },
     {
       "key": "Account/Access/Campaigns/Form/title/other",
@@ -1126,7 +1126,15 @@
     },
     {
       "key": "Account/Access/Campaigns/Form/explanation",
-      "value": "Beschenkte erhalten eine Einladungs-E-Mail mit Ihrem Namen und Ihrer E-Mail-Adresse, einem Gutscheincode und {linkClaim}-Link, mit dem der Gutscheincode eingelöst werden kann."
+      "value": "Ihre Gäste erhalten eine Einladungs-E-Mail mit Ihrem Namen und Ihrer E-Mail-Adresse sowie einen Link, über den sie ihren Probezugriff einlösen können."
+    },
+    {
+      "key": "Account/Access/Campaigns/login/title",
+      "value": "Anmelden und Abo verschenken"
+    },
+    {
+      "key": "Account/Access/Campaigns/becomeMamber/title",
+      "value": "Mitglied werden und Abo verschenken"
     },
     {
       "key": "Account/Access/Campaigns/Form/explanation/linkClaim",
@@ -1150,7 +1158,7 @@
     },
     {
       "key": "Account/Access/Campaigns/Form/button/submit",
-      "value": "Teilen"
+      "value": "Jetzt einladen"
     },
     {
       "key": "Account/Access/Campaigns/Form/input/email/label",
@@ -3641,6 +3649,10 @@
       "value": "überprüfen"
     },
     {
+      "key": "memberships/claim/personal/lead",
+      "value": "{name} schenkt Ihnen vier Wochen Republik"
+    },
+    {
       "key": "memberships/claim/access/lead",
       "value": "Geteilten Zugriff aktivieren"
     },
@@ -3655,6 +3667,22 @@
     {
       "key": "memberships/sequenceNumber/label",
       "value": "Abo #{sequenceNumber}"
+    },
+    {
+      "key": "Share/chart/title",
+      "value": "Aktuell lesen {currentActiveAccessGrants} Personen die Republik mit einem geteilten Abo"
+    },
+    {
+      "key": "Share/chart/lead",
+      "value": "In den letzten vier Wochen haben sich nach dem Probelesen {soldMembership} Personen für die Republik entschieden."
+    },
+    {
+      "key": "Share/chart/labels/activeUnconverted",
+      "value": "Geteilte, aktive Probelesen"
+    },
+    {
+      "key": "Share/chart/labels/converted",
+      "value": "Gewonnene Verlegerinnen"
     },
     {
       "key": "notifications/pageTitle",

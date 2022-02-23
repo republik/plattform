@@ -19,6 +19,7 @@ type AccessCampaign {
   id: ID!
   title: String!
   description: String
+  defaultMessage: String
   grants(
     "Include grants with were revoked (admin only)"
     withRevoked: Boolean
@@ -31,6 +32,65 @@ type AccessCampaign {
   beginAt: DateTime!
   "End of campaign"
   endAt: DateTime!
+}
+
+type AccessGrantStats {
+  """
+  Returns access grant states per in daily buckets.
+  """
+  evolution(
+    "An AccessCampaign.id"
+    accessCampaignId: ID!
+    "Minimum day (DD-MM-YYYY)"
+    min: Date!
+    "Maximum day (DD-MM-YYYY)"
+    max: Date!
+  ): AccessGrantStatsEvolution!
+
+  """
+  Returns events on access grants in daily buckets
+  """
+  events(
+    "An AccessCampaign.id"
+    accessCampaignId: ID!
+    "Minimum day (DD-MM-YYYY)"
+    min: Date!
+    "Maximum day (DD-MM-YYYY)"
+    max: Date!
+  ): AccessGrantStatsEvents!
+}
+
+type AccessGrantStatsEvolution {
+  buckets: [AccessGrantStatsPeriodBucket!]
+  updatedAt: DateTime!
+}
+
+type AccessGrantStatsPeriodBucket {
+  key: String!
+  date: Date!
+  active: Int!
+  activeUnconverted: Int!
+  converted: Int!
+}
+
+type AccessGrantStatsEvents {
+  buckets: [AccessGrantStatsEventsBucket!]
+  updatedAt: DateTime!
+}
+
+type AccessGrantStatsEventsBucket {
+  key: String!
+  date: Date!
+  invites: Int!
+  claims: Int!
+  pledges: Int!
+  revenue: Int!
+}
+
+type AccessGrantInfo {
+  granter: User!
+  granterName: String!
+  message: String
 }
 
 """
