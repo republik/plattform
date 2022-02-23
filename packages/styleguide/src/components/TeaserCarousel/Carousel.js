@@ -11,6 +11,12 @@ const styles = {
   carousel: css({
     padding: `30px ${PADDING}px ${30 - PADDING}px`,
   }),
+  articleMargin: css({
+    margin: '20px 0',
+    '& ~ &': {
+      marginTop: -20,
+    },
+  }),
 }
 
 export const Carousel = ({
@@ -51,8 +57,8 @@ export const Carousel = ({
         {...styles.carousel}
         {...colorScheme.set('backgroundColor', bgColor)}
         {...colorScheme.set('color', color || 'inherit')}
+        {...(article ? styles.articleMargin : undefined)}
         style={{
-          margin: article ? '20px 0' : undefined,
           ...(isSeriesNav
             ? {
                 paddingTop: 0,
