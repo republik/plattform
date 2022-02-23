@@ -6570,7 +6570,11 @@
     },
     {
       "key": "pages/access/title",
-      "value": "Republik teilen"
+      "value": "Verschenken Sie vier Wochen Republik"
+    },
+    {
+      "key": "pages/access/description",
+      "value": "Laden Sie jetzt Ihre Freunde und Feinde ein, die Republik kennenzulernen. Damit ermöglichen Sie ihnen 28 Tage Probezugriff auf alle Inhalte der Republik."
     },
     {
       "key": "nav/crowdfunding2",
