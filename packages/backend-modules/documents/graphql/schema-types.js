@@ -23,11 +23,18 @@ type Episode {
 
 type AudioSource implements PlayableMedia {
   mediaId: ID!
+  kind: AudioSourceKind
   mp3: String
   aac: String
   ogg: String
   durationMs: Int!
 }
+
+enum AudioSourceKind {
+  podcast
+  readAloud
+  syntheticReadAloud
+} 
 
 type Podcast {
   podigeeSlug: String
