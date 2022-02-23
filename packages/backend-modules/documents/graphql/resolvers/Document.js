@@ -21,7 +21,10 @@ const {
 const {
   extractIdsFromNode,
   loadLinkedMetaData,
+  getParsedDocumentId,
 } = require('@orbiting/backend-modules-search/lib/Documents')
+
+const { ASSETS_SERVER_BASE_URL } = process.env
 
 const addTeaserContentHash = (nodes) => {
   nodes.forEach((node) => {
@@ -66,7 +69,7 @@ module.exports = {
         doc._all,
         doc._usernames,
         undefined,
-        urlPrefix,
+        urlPrefix, // https://www.republik.ch bei Newslettern?
         searchString,
         context.user || null,
       )
@@ -96,6 +99,46 @@ module.exports = {
 
       await processRepoImageUrlsInMeta(doc.content, addFormatAuto)
     }
+
+    // @TODO: Move PoC to /lib
+    const { audioSource } = meta
+    if (!audioSource) {
+      const { repoId, commitId, versionName } = getParsedDocumentId(doc.id)
+      if (versionName !== 'preview') {
+        const derivatives = await context.loaders.Derivative.byCommitId.load(
+          commitId,
+        )
+        const synthesizedAudio = derivatives.find(
+          (d) => d.type === 'SyntheticReadAload' && d.status === 'Ready',
+        )
+        if (synthesizedAudio) {
+          const { result } = synthesizedAudio
+          if (!result) {
+            return meta
+          }
+
+          const { audioDuration, s3 } = result
+          if (!audioDuration || !s3) {
+            return meta
+          }
+
+          const { key, bucket } = s3
+          if (!key || !bucket) {
+            return meta
+          }
+
+          meta.audioSource = {
+            mediaId: Buffer.from(
+              [repoId, 'SyntheticReadAload'].join('/'),
+            ).toString('base64'),
+            kind: 'syntheticReadAloud',
+            mp3: `${ASSETS_SERVER_BASE_URL}/s3/${bucket}/${key}`,
+            durationMs: Math.round(1000 * audioDuration),
+          }
+        }
+      }
+    }
+
     return meta
   },
   async children(

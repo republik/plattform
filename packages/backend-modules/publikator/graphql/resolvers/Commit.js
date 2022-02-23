@@ -54,9 +54,13 @@ module.exports = {
     ])
 
     return {
-      id: Buffer.from(`repo:${commit.repoId}:${commit.id}`).toString('base64'),
+      id: Buffer.from(`${commit.repoId}/${commit.id}/preview`).toString(
+        'base64',
+      ),
       repoId,
       content: mdast,
     }
   },
+  derivatives: async (commit, args, context) =>
+    context.loaders.Derivative.byCommitId.load(commit.id),
 }

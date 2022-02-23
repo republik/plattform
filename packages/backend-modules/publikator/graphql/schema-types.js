@@ -143,6 +143,7 @@ type Commit {
   date: DateTime!
   markdown: String!
   document: Document!
+  derivatives: [Derivative!]
   repo: Repo!
 }
 
@@ -174,6 +175,7 @@ type RepoChange {
   repo: Repo
   commit: Commit
   milestone: Milestone
+  derivative: Derivative
 }
 
 enum RepoChangeMutationType {
@@ -195,6 +197,18 @@ type Memo {
   published: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
+}
+
+type Derivative {
+  id: ID!
+  type: String!
+  status: String!
+  result: JSON
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  readyAt: DateTime
+  failedAt: DateTime
+  destroyedAt: DateTime
 }
 
 `
