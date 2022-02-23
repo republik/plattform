@@ -20,7 +20,7 @@ export default module.exports = function (context: GraphqlContext) {
   const derivatives: PgTable<DerivativeRow> =
     context.pgdb.publikator.derivatives
   return {
-    byId: createDataLoader((idssss: readonly string[]) =>
+    byId: createDataLoader((ids: readonly string[]) =>
       derivatives.find({ id: ids }, { orderBy: { createdAt: 'desc' } }),
     ),
     byCommitId: createDataLoader(
