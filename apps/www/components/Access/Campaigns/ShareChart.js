@@ -10,8 +10,8 @@ import {
   Loader,
 } from '@project-r/styleguide'
 import { timeDay } from 'd3-time'
-import { ascending, max, mean, median, min, sum } from 'd3-array'
-import { countFormat, swissNumbers, swissTime } from '../../../lib/utils/format'
+import { ascending, max, mean, min } from 'd3-array'
+import { swissNumbers, swissTime } from '../../../lib/utils/format'
 import withT from '../../../lib/withT'
 import { scaleLinear } from 'd3-scale'
 
@@ -39,16 +39,6 @@ const accessGrantQuery = gql`
         }
         updatedAt
       }
-      events(
-        accessCampaignId: "e3568e03-b6b3-46c5-b07a-e9afeea92023"
-        min: $min
-        max: $max
-      ) {
-        buckets {
-          pledges
-        }
-        updatedAt
-      }
     }
     accessGrantStats2: accessGrantStats {
       evolution(
@@ -61,16 +51,6 @@ const accessGrantQuery = gql`
           active
           activeUnconverted
           converted
-        }
-        updatedAt
-      }
-      events(
-        accessCampaignId: "b86c78c5-b36b-4de6-8656-44d5e1ba410b"
-        min: $min
-        max: $max
-      ) {
-        buckets {
-          pledges
         }
         updatedAt
       }
@@ -91,9 +71,8 @@ const ShareChart = ({ data, t }) => {
         render={() => {
           if (!data.accessGrantStats) return null
 
-          const { events, evolution } = data.accessGrantStats
-          const { events: events2, evolution: evolution2 } =
-            data.accessGrantStats2
+          const { evolution } = data.accessGrantStats
+          const { evolution: evolution2 } = data.accessGrantStats2
 
           const mergedEvolutionBuckets = evolution.buckets
             .map((bucket) => {
@@ -132,14 +111,20 @@ const ShareChart = ({ data, t }) => {
             max(mergedEvolutionBuckets, (bucket) => bucket.active),
             10,
           )
-          const maxRate = max(mergedEvolutionBuckets, (bucket) => bucket.rate)
+          const finishedBuckets =
+            mergedEvolutionBuckets.length === 60 &&
+            mergedEvolutionBuckets.slice(0, 30)
+          const averageRate =
+            finishedBuckets && mean(finishedBuckets, (bucket) => bucket.rate)
+          const averageActive =
+            finishedBuckets && mean(finishedBuckets, (bucket) => bucket.active)
 
           const yTicksNumber = maxBarValue > 100 ? 5 : 3
           const yScale = scaleLinear()
             .domain([0, maxBarValue])
             .nice(yTicksNumber)
 
-          const accessGrantData = ['activeUnconverted', 'converted']
+          const accessGrantData = ['converted', 'activeUnconverted']
             .map((key) => {
               return mergedEvolutionBuckets.map((bucket) => {
                 return {
@@ -151,23 +136,18 @@ const ShareChart = ({ data, t }) => {
             })
             .flat()
 
-          const currentActiveAccessGrants = mergedEvolutionBuckets
-            .slice(-1)
-            .pop().activeUnconverted
-
-          const nPledges =
-            sum(events.buckets.map((bucket) => bucket.pledges)) +
-            sum(events2.buckets.map((bucket) => bucket.pledges))
+          const lastBucket = mergedEvolutionBuckets.slice(-1).pop()
 
           return (
             <>
               <ChartTitle>
-                {t('Share/chart/title', { currentActiveAccessGrants })}
+                {t('Share/chart/title', {
+                  currentActiveAccessGrants: lastBucket.active,
+                })}
               </ChartTitle>
               <ChartLead>
                 {t('Share/chart/lead', {
-                  maxRate: formatPercent(maxRate),
-                  nPledges: countFormat(nPledges),
+                  averagePercent: formatPercent(averageRate),
                   days: mergedEvolutionBuckets.length,
                 })}
               </ChartLead>
@@ -183,9 +163,28 @@ const ShareChart = ({ data, t }) => {
                   domain: yScale.domain(),
                   yTicks: yScale.ticks(yTicksNumber),
                   xTicks: [
-                    mergedEvolutionBuckets[0]?.date,
-                    mergedEvolutionBuckets[28]?.date,
-                    mergedEvolutionBuckets[56]?.date,
+                    mergedEvolutionBuckets[0].date,
+                    mergedEvolutionBuckets[
+                      Math.round(mergedEvolutionBuckets.length / 2)
+                    ]?.date,
+                    lastBucket.date,
+                  ].filter(Boolean),
+                  xAnnotations: [
+                    averageRate && {
+                      x1: mergedEvolutionBuckets[0].date,
+                      x2: mergedEvolutionBuckets[29].date,
+                      value: averageActive * averageRate,
+                      showValue: false,
+                      label: t('Share/chart/annotation/averageRate', {
+                        percent: formatPercent(averageRate),
+                      }),
+                    },
+                    {
+                      x1: lastBucket.date,
+                      x2: lastBucket.date,
+                      value: lastBucket.active,
+                      label: t('Share/chart/annotation/lastBucket'),
+                    },
                   ].filter(Boolean),
                   colorLegendValues: [t('Share/chart/labels/converted')],
                   colorMap: {
@@ -201,8 +200,6 @@ const ShareChart = ({ data, t }) => {
                     min([
                       new Date(evolution.updatedAt),
                       new Date(evolution2.updatedAt),
-                      new Date(events.updatedAt),
-                      new Date(events2.updatedAt),
                     ]),
                   ),
                 })}

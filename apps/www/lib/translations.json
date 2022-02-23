@@ -3658,7 +3658,7 @@
     },
     {
       "key": "Share/chart/lead",
-      "value": "In den letzten {days} Tagen haben sich nach dem Probezugriff bis zu {maxRate}, Total {nPledges} Personen, für die Republik entschieden."
+      "value": "In den letzten {days} Tagen haben sich nach dem Probezugriff rund {averagePercent} für die Republik entschieden."
     },
     {
       "key": "Share/chart/labels/activeUnconverted",
@@ -3671,6 +3671,14 @@
     {
       "key": "Share/chart/legend",
       "value": "Als Unterstützer gelten alle die spätestens 30 Tage nach Ablauf des Probezugriffs ein Abo lösen, etwas verschenken oder spenden. Datenstand: {formattedDateTime}"
+    },
+    {
+      "key": "Share/chart/annotation/averageRate",
+      "value": "rund {percent} Unterstützung"
+    },
+    {
+      "key": "Share/chart/annotation/lastBucket",
+      "value": "Aktuell"
     },
     {
       "key": "notifications/pageTitle",
