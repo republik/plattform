@@ -37,11 +37,6 @@ const pad2 = format('02')
 
 const PAYMENT_METHODS = [
   {
-    disabled: inNativeAppBrowser,
-    key: 'STRIPE-WALLET-APPLE-PAY',
-    Icon: ApplePayButton,
-  },
-  {
     disabled: false,
     key: 'STRIPE',
     Icon: ({ values }) => {
@@ -74,6 +69,11 @@ const PAYMENT_METHODS = [
         </span>
       )
     },
+  },
+  {
+    disabled: inNativeAppBrowser,
+    key: 'STRIPE-WALLET-APPLE-PAY',
+    Icon: ApplePayButton,
   },
   {
     disabled: inNativeAppBrowser,
