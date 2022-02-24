@@ -42,7 +42,9 @@ import { useFieldSetState } from './utils'
 
 import ErrorMessage, { ErrorContainer } from '../ErrorMessage'
 import { useIsApplePayAvailable } from '../Payment/Form/useIsApplePayAvailable'
-import useStripePaymentRequest from '../Payment/PaymentRequest/useStripePaymentRequest'
+import useStripePaymentRequest, {
+  PaymentRequestStatus,
+} from '../Payment/PaymentRequest/useStripePaymentRequest'
 import { getPayerInformationFromEvent } from '../Payment/PaymentRequest/PaymentRequestEventHelper'
 
 const { H2, P } = Interaction
@@ -182,7 +184,7 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
       enhancedPaymentMethods.find((value) =>
         value.startsWith('STRIPE-WALLET'),
       ) &&
-      paymentRequest.status === 'UNINITIALIZED' &&
+      paymentRequest.status === PaymentRequestStatus.IDLE &&
       props.total
     ) {
       paymentRequest.instantiate()
@@ -190,23 +192,17 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
   }, [enhancedPaymentMethods, paymentRequest, props.total])
 
   return (
-    <Loader
-      loading={paymentRequest.status === 'LOADING'}
-      message={t('account/pledges/payment/methods/loading')}
-      render={() => (
-        <Submit
-          {...props}
-          paymentMethods={enhancedPaymentMethods}
-          userName={userName}
-          userAddress={userAddress}
-          addressState={addressState}
-          contactState={contactState}
-          shippingAddressState={shippingAddressState}
-          syncAddresses={props.requireShippingAddress && syncAddresses}
-          setSyncAddresses={setSyncAddresses}
-          paymentRequest={paymentRequest}
-        />
-      )}
+    <Submit
+      {...props}
+      paymentMethods={enhancedPaymentMethods}
+      userName={userName}
+      userAddress={userAddress}
+      addressState={addressState}
+      contactState={contactState}
+      shippingAddressState={shippingAddressState}
+      syncAddresses={props.requireShippingAddress && syncAddresses}
+      setSyncAddresses={setSyncAddresses}
+      paymentRequest={paymentRequest}
     />
   )
 }
@@ -1009,7 +1005,12 @@ class Submit extends Component {
             <Button
               block
               primary={!errorMessages.length}
-              disabled={errorMessages?.length > 0}
+              disabled={
+                errorMessages?.length > 0 ||
+                (this.state.values?.paymentMethod.startsWith('STRIPE-WALLET') &&
+                  this.state.paymentRequest?.status ===
+                    PaymentRequestStatus.READY)
+              }
               onClick={() => {
                 if (
                   this.state.values.paymentMethod.startsWith('STRIPE-WALLET')

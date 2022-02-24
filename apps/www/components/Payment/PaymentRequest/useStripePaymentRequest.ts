@@ -10,15 +10,16 @@ import {
 import { loadStripe } from '../stripe'
 import { makePaymentRequestOptions } from './PaymentRequestOption.helper'
 
-type PaymentRequestStatus =
-  | 'UNINITIALIZED'
-  | 'LOADING'
-  | 'INITIALIZED'
-  | 'SHOWING'
-  | 'COMPLETED'
-  | 'CANCELED'
-  | 'FAILED'
-  | 'UNAVAILABLE'
+export enum PaymentRequestStatus {
+  IDLE = 'IDLE',
+  LOADING = 'LOADING',
+  READY = 'READY',
+  SHOWING = 'SHOWING',
+  CANCELED = 'CANCELED',
+  SUCCEEDED = 'SUCCEEDED',
+  FAILED = 'FAILED',
+  UNAVAILABLE = 'UNAVAILABLE',
+}
 
 type LeanPaymentRequestOptions = Pick<PaymentRequestOptions, 'total'>
 
@@ -54,7 +55,9 @@ function useStripePaymentRequest(
     useState<LeanPaymentRequestOptions>(null)
 
   const [paymentRequest, setPaymentRequest] = useState<PaymentRequest>(null)
-  const [status, setStatus] = useState<PaymentRequestStatus>('UNINITIALIZED')
+  const [status, setStatus] = useState<PaymentRequestStatus>(
+    PaymentRequestStatus.IDLE,
+  )
 
   useEffect(() => {
     // In case the input options have changed create a new PaymentRequest
@@ -80,9 +83,7 @@ function useStripePaymentRequest(
     }
   }
 
-  async function instantiatePaymentRequest(): Promise<void> {
-    setStatus('LOADING')
-    console.debug('Instantiating payment request')
+  async function createPaymentRequest(): Promise<void> {
     let stripePromise = stripe
     if (!stripe) {
       const globalStripePromise = await loadStripe()
@@ -100,12 +101,18 @@ function useStripePaymentRequest(
     console.debug('canMakePayment', canMakePaymentResult)
     if (!canMakePaymentResult) {
       console.debug('Payment request unavailable')
-      setStatus('UNAVAILABLE')
+      setStatus(PaymentRequestStatus.UNAVAILABLE)
       return
     }
     setPaymentRequest(newPaymentRequest)
-    console.debug('Payment request instantiated')
-    setStatus('INITIALIZED')
+    console.debug('Payment request created')
+    setStatus(PaymentRequestStatus.READY)
+  }
+
+  async function instantiatePaymentRequest(): Promise<void> {
+    setStatus(PaymentRequestStatus.LOADING)
+    console.debug('Instantiating payment request')
+    return createPaymentRequest()
   }
 
   function show(
@@ -121,26 +128,24 @@ function useStripePaymentRequest(
       handlePayment(ev)
         .then(() => {
           ev.complete('success')
-          setStatus('COMPLETED')
+          setStatus(PaymentRequestStatus.SUCCEEDED)
         })
         .catch((err) => {
           console.debug('caught error', err)
           ev.complete('fail')
-          setStatus('FAILED')
-          handleCancel()
-          instantiatePaymentRequest()
+          setStatus(PaymentRequestStatus.FAILED)
         })
     })
 
     paymentRequest.on('cancel', () => {
-      setStatus('CANCELED')
+      setStatus(PaymentRequestStatus.CANCELED)
       setPaymentRequest(null)
       handleCancel()
-      instantiatePaymentRequest()
+      createPaymentRequest()
     })
 
     paymentRequest.show()
-    setStatus('SHOWING')
+    setStatus(PaymentRequestStatus.SHOWING)
   }
 
   return {
