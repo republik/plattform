@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const util = require('util')
 
-const { NODE_ENV, WS_KEEPALIVE_INTERVAL } = process.env
+const { NODE_ENV, COOKIE_NAME, WS_KEEPALIVE_INTERVAL } = process.env
 
 module.exports = (
   server,
@@ -59,7 +59,7 @@ module.exports = (
             return createContext()
           }
           const cookies = cookie.parse(cookiesRaw)
-          const authCookie = cookies['connect.sid']
+          const authCookie = cookies[COOKIE_NAME || 'connect.sid']
           const sid =
             authCookie &&
             cookieParser.signedCookie(authCookie, process.env.SESSION_SECRET)
