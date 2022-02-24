@@ -224,10 +224,12 @@ class Submit extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+    const { paymentMethod } = this.state.values
     // Delay creation of a payment-request, which requires Stripe to be loaded,
     // until a wallet payment-method is selected
     if (
-      this.state.values?.paymentMethod.startsWith('STRIPE-WALLET') &&
+      paymentMethod &&
+      paymentMethod?.startsWith('STRIPE-WALLET') &&
       this.props.paymentRequest.status === PaymentRequestStatus.IDLE
     ) {
       const { t } = this.props
