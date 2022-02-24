@@ -1017,6 +1017,10 @@
       "value": "Verfügbare Zahlungsmittel werden ermittelt"
     },
     {
+      "key": "account/pledges/payment/waiting",
+      "value": "Warte auf Ausführung der Zahlung"
+    },
+    {
       "key": "account/pledges/payment/method/STRIPE",
       "value": "Kreditkarte"
     },

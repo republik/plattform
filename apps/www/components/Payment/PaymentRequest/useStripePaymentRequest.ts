@@ -124,6 +124,7 @@ function useStripePaymentRequest(
           setStatus('COMPLETED')
         })
         .catch((err) => {
+          console.debug('caught error', err)
           ev.complete('fail')
           setStatus('FAILED')
           handleCancel()

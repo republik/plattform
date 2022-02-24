@@ -367,6 +367,13 @@ class Submit extends Component {
             loading: false,
             emailVerify: true,
           }))
+
+          // Rethrow error in case STRIPE-WALLET is used
+          // This needs to be done in order to call payment-request
+          // complete handler with 'fail'
+          if (this.state.values.paymentMethod?.startsWith('STRIPE-WALLET')) {
+            throw new Error('Email verification required')
+          }
           return
         }
         this.setState(() => ({
@@ -391,6 +398,13 @@ class Submit extends Component {
           pledgeHash: undefined,
           submitError,
         }))
+
+        // Rethrow error in case STRIPE-WALLET is used
+        // This needs to be done in order to call payment-request
+        // complete handler with 'fail'
+        if (this.state.values.paymentMethod?.startsWith('STRIPE-WALLET')) {
+          throw error
+        }
       })
   }
 
@@ -507,6 +521,13 @@ class Submit extends Component {
           loading: false,
           paymentError: errorToString(error),
         }))
+
+        // Rethrow error in case STRIPE-WALLET is used
+        // This needs to be done in order to call payment-request
+        // complete handler with 'fail'
+        if (this.state.values.paymentMethod?.startsWith('STRIPE-WALLET')) {
+          throw error
+        }
       })
   }
 
