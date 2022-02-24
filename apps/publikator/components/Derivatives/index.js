@@ -1,12 +1,12 @@
 import React from 'react'
-import { keyframes, css, compose as glamorCompose } from 'glamor'
+import { keyframes } from 'glamor'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 
 import MdHearingIcon from 'react-icons/lib/md/hearing'
 import MdRemoveIcon from 'react-icons/lib/md/remove-circle-outline'
 
-import { A, useColorContext } from '@project-r/styleguide'
+import { IconButton } from '@project-r/styleguide'
 
 import * as fragments from '../../lib/graphql/fragments'
 
@@ -35,64 +35,67 @@ const pulsate = keyframes({
   '100%': { opacity: 0.1 },
 })
 
-const styles = {
-  linkIcon: css({
-    cursor: 'pointer',
-  }),
-  missing: css({
-    cursor: 'pointer',
-    opacity: 0.3,
-  }),
-  pending: css({
-    animation: `${pulsate} 0.5s linear infinite alternate`,
-  }),
-  failure: css({
-    color: 'red',
-  }),
-}
-
 const SynthesizedAudio = ({ derivative, onClickGenerate, onClickDestroy }) => {
-  const [colorScheme] = useColorContext()
-
   if (!derivative) {
     return (
-      <>
-        <MdHearingIcon
-          {...glamorCompose(styles.linkIcon, styles.missing)}
-          onClick={onClickGenerate}
-          size={18}
-        />
-      </>
+      <IconButton
+        invert
+        style={{ marginRight: 0 }}
+        Icon={MdHearingIcon}
+        label='Audio generieren'
+        labelShort=''
+        size={24}
+        onClick={onClickGenerate}
+      />
     )
   }
 
   if (derivative.status === 'Pending') {
     return (
-      <>
-        <MdHearingIcon {...styles.pending} size={18} />
-      </>
+      <IconButton
+        invert
+        style={{
+          marginRight: 0,
+          animation: `${pulsate} 0.5s linear infinite alternate`,
+        }}
+        Icon={MdHearingIcon}
+        label='Wird generiert'
+        labelShort=''
+        size={24}
+        disabled
+      />
     )
   }
 
   if (derivative.status === 'Failure') {
     return (
       <>
-        <MdHearingIcon
-          {...glamorCompose(styles.linkIcon, styles.failure)}
-          {...colorScheme.set('color', 'error')}
+        <IconButton
+          invert
+          style={{ marginRight: 0 }}
+          fillColorName='error'
+          Icon={MdHearingIcon}
+          label='Fehler. Neu generieren'
+          labelShort=''
           onClick={onClickGenerate}
-          size={18}
+          size={24}
         />
       </>
     )
   }
 
   return (
-    <>
-      <A href={derivative.result.audioUrl} target='_blank'>
-        <MdHearingIcon {...styles.linkIcon} size={18} />
-      </A>
-    </>
+    <IconButton
+      invert
+      style={{ marginRight: 0 }}
+      fillColorName='primary'
+      Icon={MdHearingIcon}
+      label='Abspielen'
+      labelShort=''
+      size={24}
+      href={derivative.result.audioUrl}
+      target='_blank'
+    />
   )
 }
 

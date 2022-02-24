@@ -11,13 +11,8 @@ import {
   OverlayToolbar,
   OverlayBody,
   Loader,
+  IconButton,
 } from '@project-r/styleguide'
-
-const styles = {
-  linkDiff: css({
-    cursor: 'pointer',
-  }),
-}
 
 export const TREE_DIFF_QUERY = gql`
   query TreeDiff($repoId: ID!, $commitId: ID!, $parentCommitId: ID!) {
@@ -68,7 +63,15 @@ export default function TreeDiff(props) {
 
   return (
     <>
-      <MdWrapText size={18} {...styles.linkDiff} onClick={handleOnClick} />
+      <IconButton
+        size={24}
+        label='Differenz'
+        labelShort=''
+        Icon={MdWrapText}
+        onClick={handleOnClick}
+        invert
+        style={{ marginRight: 0 }}
+      />
       {isVisible && (
         <Query query={TREE_DIFF_QUERY} variables={variables}>
           {({ loading, error, data }) => (

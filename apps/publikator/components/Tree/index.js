@@ -67,7 +67,7 @@ const styles = {
   listItemWrapper: css({
     width: '100%',
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
   }),
   svg: css({
@@ -364,7 +364,14 @@ class Tree extends Component {
                         </Interaction.P>
                       )}
                     </div>
-                    <div style={{ marginRight: 10 }}>
+                    <div
+                      style={{
+                        margin: '8px 10px 0 0',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 8,
+                      }}
+                    >
                       <Derivatives commit={commit} />
                       <Diff repoId={repoId} commit={commit} />
                     </div>
