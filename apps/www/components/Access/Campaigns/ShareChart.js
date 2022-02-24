@@ -2,67 +2,77 @@ import React from 'react'
 import { gql } from '@apollo/client'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
-import { ChartTitle, ChartLead, Chart, Loader } from '@project-r/styleguide'
+import {
+  ChartTitle,
+  ChartLead,
+  ChartLegend,
+  Chart,
+  Loader,
+  Editorial,
+} from '@project-r/styleguide'
 import { timeDay } from 'd3-time'
-import { max, sum } from 'd3-array'
-import { swissTime } from '../../../lib/utils/format'
+import { ascending, max, sum, min } from 'd3-array'
+import { countFormat, swissTime } from '../../../lib/utils/format'
 import withT from '../../../lib/withT'
 import { scaleLinear } from 'd3-scale'
 
-{
-  /*
-    accessCampaignIds:
-    b86c78c5-b36b-4de6-8656-44d5e1ba410b "Verschenken" 
-    e3568e03-b6b3-46c5-b07a-e9afeea92023 "Teilen Sie Ihr Abonnement" 
-  */
+const CAMPAIGN_IDS = {
+  old: 'e3568e03-b6b3-46c5-b07a-e9afeea92023', // "Teilen Sie Ihr Abonnement"
+  new: 'b86c78c5-b36b-4de6-8656-44d5e1ba410b', // "Verschenken"
 }
 
 const accessGrantQuery = gql`
   query accessGrantQuery($min: Date!, $max: Date!) {
     accessGrantStats {
       evolution(
-        accessCampaignId: "e3568e03-b6b3-46c5-b07a-e9afeea92023"
+        accessCampaignId: "${CAMPAIGN_IDS.old}"
         min: $min
         max: $max
       ) {
         buckets {
           date
+          active
           activeUnconverted
           converted
         }
         updatedAt
       }
       events(
-        accessCampaignId: "e3568e03-b6b3-46c5-b07a-e9afeea92023"
+        accessCampaignId: "${CAMPAIGN_IDS.old}"
         min: $min
         max: $max
       ) {
         buckets {
           pledges
+          claims
+          invites
         }
         updatedAt
       }
     }
     accessGrantStats2: accessGrantStats {
       evolution(
-        accessCampaignId: "b86c78c5-b36b-4de6-8656-44d5e1ba410b"
+        accessCampaignId: "${CAMPAIGN_IDS.new}"
         min: $min
         max: $max
       ) {
         buckets {
           date
+          active
           activeUnconverted
           converted
         }
         updatedAt
       }
       events(
-        accessCampaignId: "b86c78c5-b36b-4de6-8656-44d5e1ba410b"
+        accessCampaignId: "${CAMPAIGN_IDS.new}"
         min: $min
         max: $max
       ) {
         buckets {
           pledges
+          claims
+          invites
         }
         updatedAt
       }
@@ -70,7 +80,13 @@ const accessGrantQuery = gql`
   }
 `
 
-const formatDate = swissTime.format('%d.%m.%Y')
+const apiDateFormat = '%d.%m.%Y'
+const formatApiDate = swissTime.format(apiDateFormat)
+const parseApiDate = swissTime.parse(apiDateFormat)
+
+const chartTimeFormat = '%d. %B'
+const formatChartDate = swissTime.format(chartTimeFormat)
+const formatDateTime = swissTime.format('%d.%m.%Y %H:%M')
 
 const ShareChart = ({ data, t }) => {
   return (
@@ -92,10 +108,7 @@ const ShareChart = ({ data, t }) => {
               )
               return {
                 date: bucket.date,
-                activeUnconverted:
-                  bucket.activeUnconverted +
-                  (bucket2 ? bucket2.activeUnconverted : 0),
-                converted: bucket.converted + (bucket2 ? bucket2.converted : 0),
+                active: bucket.active + (bucket2 ? bucket2.active : 0),
               }
             })
             .concat(
@@ -106,65 +119,110 @@ const ShareChart = ({ data, t }) => {
                   ),
               ),
             )
+            .sort((a, b) =>
+              ascending(parseApiDate(a.date), parseApiDate(b.date)),
+            )
+            .map((bucket) => {
+              return {
+                ...bucket,
+                rate: bucket.converted / bucket.active,
+              }
+            })
 
-          const maxBarValue = Math.max(
-            max(
-              mergedEvolutionBuckets,
-              (bucket) => bucket.activeUnconverted + bucket.converted,
-            ),
-            10,
-          )
-          if (!mergedEvolutionBuckets.length || !maxBarValue) {
+          if (!mergedEvolutionBuckets.length) {
             return null
           }
+          const maxBarValue = Math.max(
+            max(mergedEvolutionBuckets, (bucket) => bucket.active),
+            10,
+          )
+
           const yTicksNumber = maxBarValue > 100 ? 5 : 3
           const yScale = scaleLinear()
             .domain([0, maxBarValue])
             .nice(yTicksNumber)
 
-          const accessGrantData = ['activeUnconverted', 'converted']
-            .map((key) => {
-              return mergedEvolutionBuckets.map((bucket) => {
-                return {
-                  date: bucket.date,
-                  type: t(`Share/chart/labels/${key}`),
-                  value: bucket[key],
-                }
-              })
-            })
-            .flat()
+          const chartValues = mergedEvolutionBuckets.map((bucket) => {
+            return {
+              date: bucket.date,
+              value: bucket.active,
+            }
+          })
+          const firstBucket = mergedEvolutionBuckets[0]
+          const lastBucket = mergedEvolutionBuckets.slice(-1).pop()
 
-          const currentActiveAccessGrants = mergedEvolutionBuckets
-            .slice(-1)
-            .pop().activeUnconverted
-
-          const soldMembership =
-            sum(events.buckets.map((bucket) => bucket.pledges)) +
-            sum(events2.buckets.map((bucket) => bucket.pledges))
+          const eventSums = ['pledges', 'claims', 'invites'].reduce(
+            (sums, key) => {
+              sums[key] =
+                sum(events.buckets, (bucket) => bucket[key]) +
+                sum(events2.buckets, (bucket) => bucket[key])
+              return sums
+            },
+            {},
+          )
 
           return (
             <>
               <ChartTitle>
-                {t('Share/chart/title', { currentActiveAccessGrants })}
+                {t('Share/chart/title', {
+                  currentActiveAccessGrants: lastBucket.active,
+                })}
               </ChartTitle>
-              <ChartLead>{t('Share/chart/lead', { soldMembership })}</ChartLead>
+              <ChartLead>
+                {t('Share/chart/lead', {
+                  days: mergedEvolutionBuckets.length,
+                })}
+              </ChartLead>
               <Chart
                 config={{
                   type: 'TimeBar',
                   x: 'date',
+                  xBandPadding: 0,
                   color: 'type',
                   timeParse: '%d.%m.%Y',
-                  timeFormat: '%d. %B',
+                  timeFormat: chartTimeFormat,
                   height: 300,
                   domain: yScale.domain(),
                   yTicks: yScale.ticks(yTicksNumber),
-                  colorMap: {
-                    [t('Share/chart/labels/activeUnconverted')]: '#256900',
-                    [t('Share/chart/labels/converted')]: '#3CAD00',
-                  },
+                  xTicks: [
+                    firstBucket.date,
+                    mergedEvolutionBuckets[
+                      Math.round(mergedEvolutionBuckets.length / 2)
+                    ]?.date,
+                    lastBucket.date,
+                  ].filter(Boolean),
+                  xAnnotations: [
+                    {
+                      x1: lastBucket.date,
+                      x2: lastBucket.date,
+                      value: lastBucket.active,
+                      label: t('Share/chart/annotation/lastBucket'),
+                    },
+                  ].filter(Boolean),
+                  colorRange: ['#256900'],
                 }}
-                values={accessGrantData}
+                values={chartValues}
               />
+              <ChartLead style={{ marginTop: 15 }}>
+                {t('Share/chart/after', {
+                  startDate: formatChartDate(parseApiDate(firstBucket.date)),
+                  invites: countFormat(eventSums.invites),
+                  claims: countFormat(eventSums.claims),
+                  pledges: countFormat(eventSums.pledges),
+                })}
+              </ChartLead>
+              <Editorial.Note style={{ marginTop: 0 }}>
+                {t('Share/chart/legend', {
+                  formattedDateTime: formatDateTime(
+                    min([
+                      new Date(evolution.updatedAt),
+                      new Date(evolution2.updatedAt),
+                      new Date(events.updatedAt),
+                      new Date(events2.updatedAt),
+                    ]),
+                  ),
+                })}
+              </Editorial.Note>
             </>
           )
         }}
@@ -179,8 +237,8 @@ export default compose(
       const currentDay = timeDay.floor(new Date())
       return {
         variables: {
-          max: formatDate(currentDay),
-          min: formatDate(timeDay.offset(currentDay, -30)),
+          max: formatApiDate(currentDay),
+          min: formatApiDate(timeDay.offset(currentDay, -59)),
         },
       }
     },
