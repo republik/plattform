@@ -1,4 +1,4 @@
-import React, { Fragment, Component, useMemo, useState, useEffect } from 'react'
+import React, { Fragment, Component, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
@@ -852,7 +852,7 @@ class Submit extends Component {
                     'pledge/contact/title',
                   ])}
                 </H2>
-                <div style={{ marginTop: 10, marginBottom: 40 }}>
+                <div style={{ marginTop: 10, marginBottom: 10 }}>
                   {me ? (
                     <>
                       <Interaction.P>
@@ -1033,11 +1033,6 @@ class Submit extends Component {
                   : '',
               })}
             </Button>
-            <span style={{ fontSize: '.75rem' }}>
-              Payment request status: {this.props.paymentRequest.status}
-              <pre>{JSON.stringify(errorMessages, null, 2)}</pre>
-              <pre>{JSON.stringify(this.state, null, 2)}</pre>
-            </span>
           </div>
         )}
       </>
