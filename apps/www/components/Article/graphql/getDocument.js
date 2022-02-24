@@ -158,6 +158,7 @@ export const getDocument = gql`
                   ogg
                   mediaId
                   durationMs
+                  kind
                 }
                 ownDiscussion {
                   id
@@ -185,6 +186,7 @@ export const getDocument = gql`
           ogg
           mediaId
           durationMs
+          kind
         }
         podcast {
           podigeeSlug

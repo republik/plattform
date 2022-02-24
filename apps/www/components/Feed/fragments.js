@@ -28,6 +28,7 @@ export const documentFragment = `
         ogg
         mediaId
         durationMs
+        kind
       }
       dossier {
         id

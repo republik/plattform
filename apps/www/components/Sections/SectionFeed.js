@@ -62,6 +62,7 @@ const getFeedDocuments = gql`
                 ogg
                 mediaId
                 durationMs
+                kind
               }
               ownDiscussion {
                 id
