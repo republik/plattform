@@ -178,19 +178,6 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
     },
   )
 
-  // in case a native browser payment is available initialize stripe
-  useEffect(() => {
-    if (
-      enhancedPaymentMethods.find((value) =>
-        value.startsWith('STRIPE-WALLET'),
-      ) &&
-      paymentRequest.status === PaymentRequestStatus.IDLE &&
-      props.total
-    ) {
-      paymentRequest.instantiate()
-    }
-  }, [enhancedPaymentMethods, paymentRequest, props.total])
-
   return (
     <Submit
       {...props}
@@ -233,6 +220,26 @@ class Submit extends Component {
     this.paymentRef = (ref) => {
       this.payment =
         ref && ref.getWrappedInstance ? ref.getWrappedInstance() : ref
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    // Delay creation of a payment-request, which requires Stripe to be loaded,
+    // until a wallet payment-method is selected
+    if (
+      this.state.values?.paymentMethod.startsWith('STRIPE-WALLET') &&
+      this.props.paymentRequest.status === PaymentRequestStatus.IDLE
+    ) {
+      const { t } = this.props
+      this.setState(() => ({
+        loading: t('account/pledges/payment/methods/loading'),
+      }))
+      // Create payment-request
+      this.props.paymentRequest.instantiate().then(() => {
+        this.setState(() => ({
+          loading: false,
+        }))
+      })
     }
   }
 
@@ -386,6 +393,13 @@ class Submit extends Component {
         )
       })
       .catch((error) => {
+        // Rethrow error in case STRIPE-WALLET is used
+        // This needs to be done in order to call payment-request
+        // complete handler with 'fail'
+        if (this.state.values.paymentMethod?.startsWith('STRIPE-WALLET')) {
+          throw error
+        }
+
         const submitError = errorToString(error)
 
         this.setState(() => ({
@@ -394,13 +408,6 @@ class Submit extends Component {
           pledgeHash: undefined,
           submitError,
         }))
-
-        // Rethrow error in case STRIPE-WALLET is used
-        // This needs to be done in order to call payment-request
-        // complete handler with 'fail'
-        if (this.state.values.paymentMethod?.startsWith('STRIPE-WALLET')) {
-          throw error
-        }
       })
   }
 
@@ -581,7 +588,7 @@ class Submit extends Component {
     })
   }
 
-  handlePayWithWalletIntent() {
+  handleWalletPayIntent() {
     const { t } = this.props
     this.setState(() => ({
       loading: t('account/pledges/payment/waiting'),
@@ -626,7 +633,7 @@ class Submit extends Component {
       () => {
         this.setState(() => ({
           loading: false,
-          paymentError: null,
+          submitError: t('account/pledges/payment/canceled'),
         }))
       },
     )
@@ -998,10 +1005,6 @@ class Submit extends Component {
             {this.renderAutoPay()}
             <br />
             <br />
-            <span>
-              Payment request status: {this.props.paymentRequest.status}
-              <p>{JSON.stringify(errorMessages, null, 2)}</p>
-            </span>
             <Button
               block
               primary={!errorMessages.length}
@@ -1015,7 +1018,7 @@ class Submit extends Component {
                 if (
                   this.state.values.paymentMethod.startsWith('STRIPE-WALLET')
                 ) {
-                  this.handlePayWithWalletIntent()
+                  this.handleWalletPayIntent()
                 } else {
                   this.submitPledge()
                 }
@@ -1027,6 +1030,11 @@ class Submit extends Component {
                   : '',
               })}
             </Button>
+            <span style={{ fontSize: '.75rem' }}>
+              Payment request status: {this.props.paymentRequest.status}
+              <pre>{JSON.stringify(errorMessages, null, 2)}</pre>
+              <pre>{JSON.stringify(this.state, null, 2)}</pre>
+            </span>
           </div>
         )}
       </>
