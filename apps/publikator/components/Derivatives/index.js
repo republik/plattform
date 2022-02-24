@@ -1,14 +1,13 @@
-import React from 'react'
-import { keyframes } from 'glamor'
+import React, { useState } from 'react'
+import { keyframes, css } from 'glamor'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
-
 import MdHearingIcon from 'react-icons/lib/md/hearing'
 import MdRemoveIcon from 'react-icons/lib/md/remove-circle-outline'
-
-import { IconButton } from '@project-r/styleguide'
+import { IconButton, AudioPlayer, mediaQueries } from '@project-r/styleguide'
 
 import * as fragments from '../../lib/graphql/fragments'
+import withT from '../../lib/withT'
 
 const GENERATE_DERIVATIVE = gql`
   mutation generateDerivative($commitId: ID!) {
@@ -35,69 +34,98 @@ const pulsate = keyframes({
   '100%': { opacity: 0.1 },
 })
 
-const SynthesizedAudio = ({ derivative, onClickGenerate, onClickDestroy }) => {
-  if (!derivative) {
-    return (
-      <IconButton
-        invert
-        style={{ marginRight: 0 }}
-        Icon={MdHearingIcon}
-        label='Audio generieren'
-        labelShort=''
-        size={24}
-        onClick={onClickGenerate}
-      />
-    )
-  }
+const styles = {
+  audioPlayer: css({
+    backgroundColor: 'white',
+    padding: 12,
+  }),
+  audioPlayerContainer: css({
+    position: 'fixed',
+    zIndex: 100,
+    boxShadow: '0 0 10px rgba(0,0,0,0.15)',
+    width: '100%',
+    right: 0,
+    bottom: 0,
+    transition: 'opacity ease-out 0.3s',
+    [mediaQueries.mUp]: {
+      width: 400,
+      right: 24,
+      bottom: 24,
+    },
+  }),
+}
 
-  if (derivative.status === 'Pending') {
-    return (
-      <IconButton
-        invert
-        style={{
-          marginRight: 0,
-          animation: `${pulsate} 0.5s linear infinite alternate`,
-        }}
-        Icon={MdHearingIcon}
-        label='Wird generiert'
-        labelShort=''
-        size={24}
-        disabled
-      />
-    )
-  }
+const SynthesizedAudio = withT(
+  ({ t, derivative, onClickGenerate, onClickDestroy }) => {
+    const [showAudioPlayer, setShowAudioPlayer] = useState(false)
 
-  if (derivative.status === 'Failure') {
     return (
       <>
-        <IconButton
-          invert
-          style={{ marginRight: 0 }}
-          fillColorName='error'
-          Icon={MdHearingIcon}
-          label='Fehler. Neu generieren'
-          labelShort=''
-          onClick={onClickGenerate}
-          size={24}
-        />
+        {!derivative ? (
+          <IconButton
+            invert
+            style={{ marginRight: 0 }}
+            Icon={MdHearingIcon}
+            label='Audio generieren'
+            labelShort=''
+            size={24}
+            onClick={onClickGenerate}
+          />
+        ) : derivative.status === 'Pending' ? (
+          <IconButton
+            invert
+            style={{
+              marginRight: 0,
+              animation: `${pulsate} 0.5s linear infinite alternate`,
+            }}
+            Icon={MdHearingIcon}
+            label='Wird generiert'
+            labelShort=''
+            size={24}
+            disabled
+          />
+        ) : derivative.status === 'Failure' ? (
+          <IconButton
+            invert
+            style={{ marginRight: 0 }}
+            fillColorName='error'
+            Icon={MdHearingIcon}
+            label='Fehler. Neu generieren'
+            labelShort=''
+            onClick={onClickGenerate}
+            size={24}
+          />
+        ) : (
+          <IconButton
+            invert
+            style={{ marginRight: 0 }}
+            fillColorName='primary'
+            Icon={MdHearingIcon}
+            label='Abspielen'
+            labelShort=''
+            size={24}
+            onClick={() => setShowAudioPlayer(true)}
+          />
+        )}
+        {showAudioPlayer && (
+          <diy {...styles.audioPlayerContainer}>
+            <div {...styles.audioPlayer}>
+              <AudioPlayer
+                src={{
+                  mp3: derivative.result.audioUrl,
+                }}
+                closeHandler={() => setShowAudioPlayer(false)}
+                autoPlay
+                scrubberPosition='bottom'
+                t={t}
+              />
+            </div>
+          </diy>
+        )}
       </>
     )
-  }
-
-  return (
-    <IconButton
-      invert
-      style={{ marginRight: 0 }}
-      fillColorName='primary'
-      Icon={MdHearingIcon}
-      label='Abspielen'
-      labelShort=''
-      size={24}
-      href={derivative.result.audioUrl}
-      target='_blank'
-    />
-  )
-}
+  },
+)
 
 const Derivatives = ({ commit, generateDerivative, destroyDerivative }) => {
   if (!commit.derivatives) {
