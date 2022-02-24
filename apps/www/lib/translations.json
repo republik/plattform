@@ -3662,7 +3662,7 @@
     },
     {
       "key": "Share/chart/after",
-      "value": "Seit dem {startDate} wurden {invites} Personen eingeladen, die Republik kennen zu lernen. {claims} haben den Probezugriff eingelöst, und {pledges} durften wir in der Verlagsetage begrüssen – dank Ihrem Engagement."
+      "value": "Seit dem {startDate} wurden {invites} Personen eingeladen, die Republik kennenzulernen. {claims} haben den Probezugriff eingelöst, und {pledges} durften wir in der Verlagsetage begrüssen – dank Ihrem Engagement."
     },
     {
       "key": "Share/chart/legend",
