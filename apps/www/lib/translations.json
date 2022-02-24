@@ -1017,6 +1017,10 @@
       "value": "Zahlungsmittel wird geladen"
     },
     {
+      "key": "account/pledges/payment/methods/unavailable",
+      "value": "Dieses Zahlungsmittel ist zur Zeit nicht verfügbar."
+    },
+    {
       "key": "account/pledges/payment/waiting",
       "value": "Warte auf Ausführung der Zahlung"
     },

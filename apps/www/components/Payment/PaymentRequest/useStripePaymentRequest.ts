@@ -1,10 +1,9 @@
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import {
   Stripe,
   PaymentRequest,
   PaymentRequestOptions,
   PaymentRequestPaymentMethodEvent,
-  PaymentMethod,
   CanMakePaymentResult,
 } from '@stripe/stripe-js'
 import { loadStripe } from '../stripe'
@@ -33,7 +32,7 @@ type PaymentCanceledHandler = () => void
 
 interface PaymentRequestValues {
   status: PaymentRequestStatus
-  instantiate: () => Promise<void>
+  instantiate: () => Promise<PaymentRequestStatus>
   show: (
     handlePayment: PaymentHandler,
     handleCancel: PaymentCanceledHandler,
@@ -83,14 +82,13 @@ function useStripePaymentRequest(
     }
   }
 
-  async function createPaymentRequest(): Promise<void> {
+  async function createPaymentRequest(): Promise<PaymentRequestStatus> {
     let stripePromise = stripe
     if (!stripe) {
       const globalStripePromise = await loadStripe()
       setStripe(globalStripePromise)
       stripePromise = globalStripePromise
     }
-
     const newPaymentRequest = await stripePromise.paymentRequest(
       makePaymentRequestOptions(options),
     )
@@ -98,20 +96,19 @@ function useStripePaymentRequest(
 
     const canMakePaymentResult = await newPaymentRequest.canMakePayment()
     updateAvailability(canMakePaymentResult)
-    console.debug('canMakePayment', canMakePaymentResult)
+
     if (!canMakePaymentResult) {
-      console.debug('Payment request unavailable')
       setStatus(PaymentRequestStatus.UNAVAILABLE)
-      return
+      return PaymentRequestStatus.UNAVAILABLE
     }
+
     setPaymentRequest(newPaymentRequest)
-    console.debug('Payment request created')
     setStatus(PaymentRequestStatus.READY)
+    return PaymentRequestStatus.READY
   }
 
-  async function instantiatePaymentRequest(): Promise<void> {
+  async function instantiatePaymentRequest(): Promise<PaymentRequestStatus> {
     setStatus(PaymentRequestStatus.LOADING)
-    console.debug('Instantiating payment request')
     return createPaymentRequest()
   }
 
@@ -124,14 +121,12 @@ function useStripePaymentRequest(
     }
 
     paymentRequest.on('paymentmethod', (ev) => {
-      console.debug('paymentmethod', ev)
       handlePayment(ev)
         .then(() => {
           ev.complete('success')
           setStatus(PaymentRequestStatus.SUCCEEDED)
         })
         .catch((err) => {
-          console.debug('caught error', err)
           ev.complete('fail')
           setStatus(PaymentRequestStatus.FAILED)
         })
@@ -141,6 +136,9 @@ function useStripePaymentRequest(
       setStatus(PaymentRequestStatus.CANCELED)
       setPaymentRequest(null)
       handleCancel()
+
+      // The result of the following reinitialization is ignored
+      // since we can only get to this point if it was successful before
       createPaymentRequest()
     })
 

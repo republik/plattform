@@ -235,9 +235,13 @@ class Submit extends Component {
         loading: t('account/pledges/payment/methods/loading'),
       }))
       // Create payment-request
-      this.props.paymentRequest.instantiate().then(() => {
+      this.props.paymentRequest.instantiate().then((status) => {
         this.setState(() => ({
           loading: false,
+          paymentError:
+            status === PaymentRequestStatus.UNAVAILABLE
+              ? t('account/pledges/payment/methods/unavailable')
+              : null,
         }))
       })
     }
@@ -294,7 +298,7 @@ class Submit extends Component {
       contactState,
     } = this.props
     const errorMessages = this.getErrorMessages()
-    console.debug('errorMessages', errorMessages)
+
     if (errorMessages.length > 0) {
       this.props.onError()
       this.setState((state) => {
@@ -413,7 +417,7 @@ class Submit extends Component {
 
   payPledge(pledgeId, pledgeResponse, paymentMethodObject) {
     const { paymentMethod } = this.state.values
-    console.debug('payPledge', pledgeId, pledgeResponse)
+
     if (paymentMethod === 'PAYMENTSLIP') {
       this.payWithPaymentSlip(pledgeId)
     } else if (paymentMethod === 'POSTFINANCECARD') {
@@ -597,7 +601,6 @@ class Submit extends Component {
     this.props.paymentRequest.show(
       // Payment success handler
       async (ev) => {
-        console.debug('Event value', ev)
         const payerInformation = getPayerInformationFromEvent(ev)
 
         this.props.contactState.onChange({
