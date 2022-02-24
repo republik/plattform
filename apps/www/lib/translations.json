@@ -3661,20 +3661,12 @@
       "value": "Anzahl geteilter Zugriffe während der letzten {days} Tage"
     },
     {
-      "key": "Share/chart/labels/activeUnconverted",
-      "value": "Hat bisher nicht unterstützt"
-    },
-    {
-      "key": "Share/chart/labels/converted",
-      "value": "Inzwischen als Unterstützerin gewonnen"
+      "key": "Share/chart/after",
+      "value": "Seit dem {startDate} wurde insgesamt {invites} mal das Abo geteilt, {claims} Probezugriffe eingelöst und {pledges} mal konnten wir, dank Ihrem Engagement, eine Verlegerin dazu gewinnen."
     },
     {
       "key": "Share/chart/legend",
-      "value": "Der Konversionsrate rechnen wir an, wer 30 Tage nach Ablauf des Probezugriff Verlegerin wird, etwas spendet oder verschenkt. Datenstand: {formattedDateTime}"
-    },
-    {
-      "key": "Share/chart/annotation/averageRate",
-      "value": "rund {percent} Konversionsrate"
+      "value": "Mitgliedschaften, Abos und Spenden die spätestens 30 Tage nach Ablauf des Probezugriffs erfolgen zählen. Datenstand: {formattedDateTime}"
     },
     {
       "key": "Share/chart/annotation/lastBucket",
