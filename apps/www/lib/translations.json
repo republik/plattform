@@ -3662,11 +3662,11 @@
     },
     {
       "key": "Share/chart/after",
-      "value": "Seit dem {startDate} wurde insgesamt {invites} mal das Abo geteilt, {claims} Probezugriffe eingelöst und {pledges} mal konnten wir, dank Ihrem Engagement, eine Verlegerin dazu gewinnen."
+      "value": "Seit dem {startDate} wurden {invites} Personen eingeladen, die Republik kennen zu lernen. {claims} haben den Probezugriff eingelöst, und {pledges} durften wir in der Verlagsetage begrüssen – dank Ihrem Engagement."
     },
     {
       "key": "Share/chart/legend",
-      "value": "Mitgliedschaften, Abos und Spenden die spätestens 30 Tage nach Ablauf des Probezugriffs erfolgen zählen. Datenstand: {formattedDateTime}"
+      "value": "Es zählen Mitgliedschaften, Abos und Spenden innerhalb von 30 Tagen nach Probezugriff. Datenstand: {formattedDateTime}"
     },
     {
       "key": "Share/chart/annotation/lastBucket",
