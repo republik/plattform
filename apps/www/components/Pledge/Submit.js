@@ -46,6 +46,7 @@ import useStripePaymentRequest, {
   PaymentRequestStatus,
 } from '../Payment/PaymentRequest/useStripePaymentRequest'
 import { getPayerInformationFromEvent } from '../Payment/PaymentRequest/PaymentRequestEventHelper'
+import useIsGooglePayAvailable from '../Payment/Form/useIsGooglePayAvailable'
 
 const { H2, P } = Interaction
 
@@ -136,7 +137,8 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
 
   const [syncAddresses, setSyncAddresses] = useState(true)
   const [isApplePayAvailable, setIsApplePayAvailable] = useIsApplePayAvailable()
-  const [isGooglePayAvailable, setIsGooglePayAvailable] = useState(false)
+  const [isGooglePayAvailable, setIsGooglePayAvailable] =
+    useIsGooglePayAvailable()
 
   // In case STRIPE is an accepted payment method,
   // add additional payment methods such as Apple or Google Pay if available
@@ -152,8 +154,12 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
     ].filter(Boolean)
   }, [paymentMethods, isApplePayAvailable, isGooglePayAvailable])
 
+  console.debug('enhancedPaymentMethods', enhancedPaymentMethods)
+
   const paymentRequest = useStripePaymentRequest(
     {
+      requestPayerEmail: !customMe,
+      requestPayerName: !customMe || !customMe?.address,
       total: {
         amount: props.total ?? 0,
         label: t.first([
