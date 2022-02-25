@@ -22,7 +22,7 @@ const slugDateFormat = timeFormat('%Y/%m/%d')
 const {
   PREFIX_PREPUBLICATION_PATH,
   SUPPRESS_AUDIO_DURATION_MEASURE,
-  READ_ALOUD_SERVER_BASE_URL,
+  TTS_SERVER_BASE_URL,
   PUBLIC_URL,
 } = process.env
 
@@ -263,9 +263,9 @@ const handleRedirection = async (repoId, newDocMeta, context) => {
 const handleSyntheticReadAloud = async (document, context) => {
   const handlerDebug = debug.extend('handleSyntheticReadAloud')
 
-  if (!READ_ALOUD_SERVER_BASE_URL) {
+  if (!TTS_SERVER_BASE_URL) {
     handlerDebug(
-      'handleSyntheticReadAloud: READ_ALOUD_SERVER_BASE_URL not set. skipping synthesizing.',
+      'handleSyntheticReadAloud: TTS_SERVER_BASE_URL not set. skipping synthesizing.',
     )
     return
   }
@@ -273,13 +273,6 @@ const handleSyntheticReadAloud = async (document, context) => {
   if (!PUBLIC_URL) {
     handlerDebug(
       'handleSyntheticReadAloud: PUBLIC_URL not set. skipping synthesizing.',
-    )
-    return
-  }
-
-  if (document.meta?.suppressSyntheticReadAloud) {
-    handlerDebug(
-      'handleSyntheticReadAloud: meta.suppressSyntheticReadAloud set. skipping synthesizing.',
     )
     return
   }
@@ -326,7 +319,7 @@ const handleSyntheticReadAloud = async (document, context) => {
   const webhookUrl = `${PUBLIC_URL}/publikator/webhook/syntheticReadAload`
   const expireAt = new Date().toISOString
 
-  const isOk = await fetch(`${READ_ALOUD_SERVER_BASE_URL}/intake/document`, {
+  const isOk = await fetch(`${TTS_SERVER_BASE_URL}/intake/document`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
