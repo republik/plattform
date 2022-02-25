@@ -198,13 +198,13 @@ tunnels:
   republik-backend:
     proto: http
     addr: 5010
-    hostname: api-republik.eu.ngrok.io
+    hostname: api.republik.eu.ngrok.io
 ```
 
 Before starting the frontend, update the following environment variables:
 ```
-API_URL=https://api-republik.eu.ngrok.io/graphql
-API_WS_URL=wss://api-republik.eu.ngrok.io/graphql
+API_URL=https://api.republik.eu.ngrok.io/graphql
+API_WS_URL=wss://api.republik.eu.ngrok.io/graphql
 ```
 
 Start your frontend and api using:
@@ -218,6 +218,6 @@ Your local development servers are now relayed to the following ngrok tunnels.
 | local-address | ngrok-address                    |
 | :------------ |:---------------------------------|
 | http://localhost:3010 | https://republik.eu.ngrok.io     |
-| http://localhost:5010 | https://api-republik.eu.ngrok.io |
+| http://localhost:5010 | https://api.republik.eu.ngrok.io |
 
 With this you're now able to test payment-options (such as Apple Pay) that are only available in a secure context.
