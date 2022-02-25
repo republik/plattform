@@ -123,16 +123,19 @@ function useStripePaymentRequest(
     paymentRequest.on('paymentmethod', (ev) => {
       handlePayment(ev)
         .then(() => {
+          console.debug('PaymentRequest success-callback')
           ev.complete('success')
           setStatus(PaymentRequestStatus.SUCCEEDED)
         })
         .catch((err) => {
+          console.debug('PaymentRequest error-callback', err)
           ev.complete('fail')
           setStatus(PaymentRequestStatus.FAILED)
         })
     })
 
     paymentRequest.on('cancel', () => {
+      console.debug('PaymentRequest cancel-callback')
       setStatus(PaymentRequestStatus.CANCELED)
       setPaymentRequest(null)
       handleCancel()
