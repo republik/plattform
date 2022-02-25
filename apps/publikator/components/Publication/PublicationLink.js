@@ -8,7 +8,7 @@ import { FRONTEND_BASE_URL } from '../../lib/settings'
 
 const PublicationLink = ({ publication }) => {
   if (!publication.live || !publication.document?.meta?.path) {
-    return
+    return null
   }
 
   return (

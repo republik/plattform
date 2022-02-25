@@ -128,7 +128,7 @@ const SynthesizedAudio = withT(
 
 const Derivatives = ({ commit, generateDerivative, destroyDerivative }) => {
   if (!commit.derivatives) {
-    return
+    return null
   }
 
   const { derivatives, canDeriveSyntheticReadAloud } = commit
