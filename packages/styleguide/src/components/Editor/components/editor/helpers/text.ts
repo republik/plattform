@@ -5,12 +5,15 @@ import {
   Element as SlateElement,
   Node,
   NodeEntry,
-  Transforms
+  Transforms,
+  Point
 } from 'slate'
 import { ReactEditor } from 'slate-react'
 import { config as elConfig } from '../../elements'
 import editorConfig from '../../../config'
 import { isCorrect } from './structure'
+import { link } from 'fs'
+import { text } from 'stream/consumers'
 
 export const CHAR_LIMIT = editorConfig.maxSigns
 const PSEUDO_EMPTY_STRING = '\u2060'
@@ -45,18 +48,45 @@ export const selectPlaceholder = (
 export const isEmpty = (text?: string) =>
   !text || text === '' || text === PSEUDO_EMPTY_STRING
 
-// ["TEXT HTTP://... TEXT"]  -> ["TEXT "] LINK [" TEXT"]
-//                                          |
-//                                    ["HTTP://..."]
+
 export const createLinks: NormalizeFn<CustomText> = ([node, path], editor) => {
-  // TODO: if text contains http(s)://* followed by trailing whitespace and node.parent !== link:
-  //  wrap the http(s)://* in a link element
-  // console.log('createLinks', { node, path })
-  // to get node text: node.text
-  // to get parent: const parent = Editor.parent(editor, path)
-  // to get parent type: SlateElement.isElement(parent) && parent.type === 'link'
-  // after you find and link in the text and wrap it and RETURN TRUE
-  // Transforms.wrapNodes(editor, { type: "link", children: [] }, { at: path, split: true })
+  const parent = Editor.parent(editor, path)
+  const parentNode = parent[0]
+
+  // regex should only return one link!
+  const regex = /(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})/gi;
+  const linkContent = node.text.match(regex)
+  
+  if(!!linkContent) {
+    console.log(linkContent)
+    if(SlateElement.isElement(parentNode) && parentNode.type !== 'link') {
+      const linkStartPoint = node.text.indexOf(linkContent[0])
+      const linkEndPoint = linkContent[0].length + linkStartPoint
+
+      Transforms.wrapNodes(editor, { type: "link", children: [] }, { at: {anchor: { path, offset: linkStartPoint } , focus: { path, offset: linkEndPoint }}, split: true })
+      
+      if (!Point.equals({ path, offset: linkContent[0].length }, editor.selection.focus)) {
+        console.log({path})
+        const nextTextPath = path.map((p, idx) => idx !== path.length - 1 ? p : p + 2)
+        console.log('nextTextPath', nextTextPath)
+        setTimeout(() => { 
+          Transforms.select(editor, nextTextPath)
+        })
+
+      }
+      //  -> setSelection (editor.select) at link path + 1 ^, offset: 0
+      
+
+      // examples:
+      // path = [1, 0] before wrapping
+      // path of link would be [1,1]
+      // path of link text: [1,1,0]
+      // path of next text node [1,2] -> that's the one we target
+      // so from [1,0] -> [1,2] /// [1,4,3,2] -> [1,4,3,4]
+      
+      return true
+    }
+  }
   return false
 }
 

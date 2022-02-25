@@ -87,7 +87,9 @@ const SlateEditor: React.FC<{
       <Slate
         editor={editor}
         value={value}
-        onChange={newValue => setValue(newValue)}
+        onChange={newValue => {
+          console.log(newValue)
+          setValue(newValue)}}
       >
         <FormOverlay
           path={formElementPath}
