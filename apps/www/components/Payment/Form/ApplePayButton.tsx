@@ -1,3 +1,4 @@
+import React from 'react'
 import { css } from 'glamor'
 
 const styles = {
@@ -8,6 +9,7 @@ const styles = {
     ApplePayButtonStyle: 'white',
     borderRadius: 0,
     width: '100%',
+    height: '44px',
   }),
 }
 
