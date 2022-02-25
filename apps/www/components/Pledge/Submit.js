@@ -231,6 +231,11 @@ class Submit extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+    console.debug('Wallet Debug', {
+      status: this.props.paymentRequest.status,
+      initializedWallet: this.props.paymentRequest.usedWallet,
+      currentWallet: this.state.values?.paymentMethod,
+    })
     if (this.props.paymentRequest.status === PaymentRequestStatus.LOADING) {
       return
     }
@@ -640,7 +645,6 @@ class Submit extends Component {
       // Payment success handler
       async (ev) => {
         const payerInformation = getPayerInformationFromEvent(ev)
-        console.debug()
 
         this.props.contactState.onChange({
           values: {
@@ -800,7 +804,6 @@ class Submit extends Component {
   }
 
   render() {
-    console.debug('CustomMe', this.props.customMe)
     const {
       emailVerify,
       paymentError,
