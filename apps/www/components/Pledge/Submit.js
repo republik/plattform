@@ -640,12 +640,13 @@ class Submit extends Component {
       // Payment success handler
       async (ev) => {
         const payerInformation = getPayerInformationFromEvent(ev)
+        console.debug()
 
         this.props.contactState.onChange({
           values: {
-            firstName: payerInformation.firstName,
-            lastName: payerInformation.lastName,
-            email: payerInformation.email,
+            firstName: payerInformation.firstName || null,
+            lastName: payerInformation.lastName || null,
+            email: this.props.customMe?.email ?? payerInformation.email,
           },
           errors: {
             firstName: null,
@@ -799,6 +800,7 @@ class Submit extends Component {
   }
 
   render() {
+    console.debug('CustomMe', this.props.customMe)
     const {
       emailVerify,
       paymentError,

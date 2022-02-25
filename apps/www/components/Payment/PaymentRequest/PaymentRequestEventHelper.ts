@@ -11,8 +11,8 @@ type Address = {
 
 type PayerInformation = {
   email: string
-  firstName: string
-  lastName: string
+  firstName?: string
+  lastName?: string
   billingAddress?: Address
   shippingAddress?: Address
 }
@@ -20,7 +20,8 @@ type PayerInformation = {
 export function getPayerInformationFromEvent(
   event: PaymentRequestPaymentMethodEvent,
 ): PayerInformation {
-  const [firstName, lastName] = event.payerName.split(' ').map((s) => s.trim())
+  const name = event.payerName ?? ''
+  const [firstName, lastName] = name.split(' ').map((s) => s.trim())
 
   const billingAddress = event.paymentMethod.billing_details.address
 
