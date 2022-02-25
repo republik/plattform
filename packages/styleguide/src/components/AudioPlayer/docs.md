@@ -16,6 +16,7 @@ Props:
 - `timePosition`: `right` (default) or `left`.
 - `height`: number; The player height in pixels.
 - `controlsPadding`: number; The horizontal padding between controls and container, defaults to 0.
+- `playbackRates`: sorted Array of numbers: MUST INCLUDE "1". An Array with all the playback speeds that need to be displayed. Renders a playback rate button that toggels through all the options.
 
 Context:
 - `getMediaProgress(props)`: a function that is expected to return a `Promise` of a `Number`. If present it will be called with the component props to retrieve the start time on `componentDidMount` from it.
@@ -218,6 +219,16 @@ The `<AudioPlayer />` may also be used to play from video sources when visual co
   src={{
     mp4: 'https://player.vimeo.com/external/213080233.hd.mp4?s=ab84df0ac9134c86bb68bd9ea7ac6b9df0c35774&profile_id=175'
   }}
+  t={t}
+/>
+```
+
+```react
+<AudioPlayer
+  src={{
+    mp4: 'https://player.vimeo.com/external/213080233.hd.mp4?s=ab84df0ac9134c86bb68bd9ea7ac6b9df0c35774&profile_id=175'
+  }}
+  playbackRates={[0.75, 1, 1.25]}
   t={t}
 />
 ```

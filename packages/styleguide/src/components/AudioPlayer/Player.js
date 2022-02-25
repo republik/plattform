@@ -9,7 +9,11 @@ import globalState from '../../lib/globalMediaState'
 
 import { breakoutStyles } from '../Center'
 import { InlineSpinner } from '../Spinner'
-import { sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
+import {
+  sansSerifRegular12,
+  sansSerifRegular15,
+  sansSerifMedium16,
+} from '../Typography/styles'
 import { mUp } from '../../theme/mediaQueries'
 import {
   PlayIcon,
@@ -100,6 +104,17 @@ const styles = {
     left: SIZE.play + SIZE.replay + SIZE.forward + ICON_SPACING,
     marginTop: -10,
     textAlign: 'center',
+  }),
+  playbackRate: css({
+    position: 'absolute',
+    top: '50%',
+    left: SIZE.play + SIZE.replay + SIZE.forward + SIZE.download + ICON_SPACING,
+    marginTop: -10,
+    textAlign: 'center',
+  }),
+  playbackRateButton: css({
+    ...buttonStyle,
+    ...sansSerifMedium16,
   }),
   close: css({
     ...buttonStyle,
@@ -216,6 +231,7 @@ class AudioPlayer extends Component {
       loading: false,
       buffered: null,
       sourceError: false,
+      playbackRate: 1,
     }
 
     this.updateProgress = () => {
@@ -351,7 +367,18 @@ class AudioPlayer extends Component {
         }
       }
     }
+    this.handleplaybackRate = () => {
+      const { playbackRates } = this.props
+      const currentRateIndex = playbackRates.indexOf(this.state.playbackRate)
+      const isLast = playbackRates[currentRateIndex + 1] === undefined
+      const nextplaybackRate = isLast
+        ? playbackRates[0]
+        : playbackRates[currentRateIndex + 1]
+      this.setState({ playbackRate: nextplaybackRate })
+      this.audio.playbackRate = nextplaybackRate
+    }
   }
+
   play() {
     const { audio } = this
     const playPromise = audio && audio.play()
@@ -454,10 +481,18 @@ class AudioPlayer extends Component {
       fixed,
       sourcePath,
       colorScheme,
+      playbackRates,
       Link = DefaultLink,
     } = this.props
-    const { playEnabled, playing, progress, loading, buffered, sourceError } =
-      this.state
+    const {
+      playEnabled,
+      playing,
+      progress,
+      loading,
+      buffered,
+      sourceError,
+      playbackRate,
+    } = this.state
     const isVideo = src.mp4 || src.hls
     const leftIconsWidth =
       SIZE.play +
@@ -638,6 +673,14 @@ class AudioPlayer extends Component {
               )}
             </div>
           )}
+          {!!playbackRates && (
+            <div {...styles.playbackRate}>
+              <button
+                {...styles.playbackRateButton}
+                onClick={this.handleplaybackRate}
+              >{`${playbackRate}x`}</button>
+            </div>
+          )}
           {closeHandler && (
             <button
               title={t('styleguide/AudioPlayer/close')}
@@ -772,6 +815,7 @@ AudioPlayer.propTypes = {
   scrubberPosition: PropTypes.oneOf(['top', 'bottom']),
   timePosition: PropTypes.oneOf(['left', 'right']),
   controlsPadding: PropTypes.number,
+  playbackRates: PropTypes.arrayOf(PropTypes.number),
 }
 
 AudioPlayer.defaultProps = {
@@ -783,6 +827,7 @@ AudioPlayer.defaultProps = {
   scrubberPosition: 'top',
   timePosition: 'right',
   controlsPadding: 0,
+  playbackRates: undefined,
 }
 
 AudioPlayer.contextTypes = {
