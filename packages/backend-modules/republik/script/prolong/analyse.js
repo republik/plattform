@@ -56,23 +56,27 @@ ConnectionContext.create(applicationName)
       user.periods.forEach((period, i, all) => {
         period.beginDate = new Date(period.begin)
         period.endDate = new Date(period.end)
+
         const prevPeriod = all[i - 1]
         if (prevPeriod && period.beginDate < prevPeriod.endDate) {
           usersWithOverlaps.add(user)
           period.beginDate = prevPeriod.endDate
+          period.modification = 'trim'
           if (period.endDate < prevPeriod.endDate) {
             usersWithSwallowed.add(user)
             period.endDate = prevPeriod.endDate
-            period.empty = true
+            period.modification = 'empty'
           }
         }
+
+        period.days = timeDay.count(period.beginDate, period.endDate)
       })
 
       user.events = []
       user.totalDays = user.periods
-        .filter((period) => !period.empty)
+        .filter(({ days }) => days > 0)
         .reduce((totalDays, period, i, all) => {
-          const days = timeDay.count(period.beginDate, period.endDate)
+          const { days } = period
           const prevAge = Math.floor(totalDays / 365)
           const newAge = Math.floor((totalDays + days) / 365)
           const prevPeriod = all[i - 1]
@@ -170,6 +174,13 @@ ConnectionContext.create(applicationName)
     console.log('usersWithOverlaps', usersWithOverlaps.size)
     console.log('usersWithSwallowed', usersWithSwallowed.size)
 
+    // clean up for easier analysis
+    users.forEach((user) => {
+      user.periods.forEach((period) => {
+        period.beginDate = undefined
+        period.endDate = undefined
+      })
+    })
     fs.writeFileSync(
       path.resolve(__dirname, '..', 'data', 'prolongUsers.json'),
       JSON.stringify(users, undefined, 2),
