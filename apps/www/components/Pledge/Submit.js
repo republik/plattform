@@ -157,8 +157,6 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
     ].filter(Boolean)
   }, [paymentMethods, isApplePayAvailable, isGooglePayAvailable])
 
-  console.debug('enhancedPaymentMethods', enhancedPaymentMethods)
-
   const paymentRequest = useStripePaymentRequest(
     {
       requestPayerEmail: !customMe,
