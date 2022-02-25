@@ -273,6 +273,13 @@ class Submit extends Component {
                 : null,
           }))
         })
+        .catch((error) => {
+          console.error('Wallet initialization error', error)
+          this.setState(() => ({
+            loading: false,
+            walletError: t('account/pledges/payment/methods/unavailable'),
+          }))
+        })
     } else if (this.state.walletError) {
       this.setState(() => ({
         walletError: null,
