@@ -47,6 +47,7 @@ import {
 } from '../Payment/Form/StripeWalletHelpers'
 import useStripePaymentRequest, {
   PaymentRequestStatus,
+  WalletPaymentMethods,
 } from '../Payment/PaymentRequest/useStripePaymentRequest'
 import { getPayerInformationFromEvent } from '../Payment/PaymentRequest/PaymentRequestEventHelper'
 
@@ -150,8 +151,8 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
     }
 
     return [
-      isApplePayAvailable ? 'STRIPE-WALLET-APPLE-PAY' : null,
-      isGooglePayAvailable ? 'STRIPE-WALLET-GOOGLE-PAY' : null,
+      isApplePayAvailable ? WalletPaymentMethods.APPLE_PAY : null,
+      isGooglePayAvailable ? WalletPaymentMethods.GOOGLE_PAY : null,
       ...paymentMethods,
     ].filter(Boolean)
   }, [paymentMethods, isApplePayAvailable, isGooglePayAvailable])
@@ -249,6 +250,7 @@ class Submit extends Component {
       this.setState(() => ({
         loading: t('account/pledges/payment/methods/loading'),
       }))
+
       // Create payment-request
       this.props.paymentRequest.instantiate().then((status) => {
         this.setState(() => ({

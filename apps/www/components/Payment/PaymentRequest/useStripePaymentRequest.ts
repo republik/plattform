@@ -9,6 +9,11 @@ import {
 import { loadStripe } from '../stripe'
 import { makePaymentRequestOptions } from './PaymentRequestOption.helper'
 
+export enum WalletPaymentMethods {
+  APPLE_PAY = 'STRIPE-WALLET-APPLE-PAY',
+  GOOGLE_PAY = 'STRIPE-WALLET-GOOGLE-PAY',
+}
+
 export enum PaymentRequestStatus {
   IDLE = 'IDLE',
   LOADING = 'LOADING',
