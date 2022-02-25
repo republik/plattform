@@ -41,17 +41,17 @@ export const processMeta = async (
   if (synthesizedAudio) {
     const { result } = synthesizedAudio
     if (!result) {
-      return
+      return preprocessedMeta
     }
 
     const { audioDuration, s3 } = result
     if (!audioDuration || !s3) {
-      return
+      return preprocessedMeta
     }
 
     const { key, bucket } = s3
     if (!key || !bucket) {
-      return
+      return preprocessedMeta
     }
 
     preprocessedMeta.audioSource = {
@@ -65,6 +65,35 @@ export const processMeta = async (
   }
 
   return preprocessedMeta
+}
+
+export const applyAssetsAudioUrl = (derivative: DerivativeRow) => {
+  const { type, result } = derivative
+  if (type !== 'SyntheticReadAloud') {
+    return derivative
+  }
+
+  if (!result) {
+    return derivative
+  }
+
+  const { audioDuration, s3 } = result
+  if (!audioDuration || !s3) {
+    return derivative
+  }
+
+  const { key, bucket } = s3
+  if (!key || !bucket) {
+    return derivative
+  }
+
+  return {
+    ...derivative,
+    result: {
+      ...derivative.result,
+      audioAssetsUrl: `${ASSETS_SERVER_BASE_URL}/s3/${bucket}/${key}`,
+    },
+  }
 }
 
 export const onPublish = async (document: any, context: GraphqlContext) => {
