@@ -29,7 +29,7 @@ export const processMeta = async (
   }
 
   const { repoId, commitId, versionName } = getParsedDocumentId(document.id)
-  if (versionName !== 'preview') {
+  if (versionName === 'preview') {
     return preprocessedMeta
   }
 
