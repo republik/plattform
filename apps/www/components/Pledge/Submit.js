@@ -223,13 +223,18 @@ class Submit extends Component {
     }
   }
 
+  isStripeWalletPayment() {
+    return (
+      this.state.values.paymentMethod &&
+      this.state.values.paymentMethod?.startsWith('STRIPE-WALLET')
+    )
+  }
+
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { paymentMethod } = this.state.values
     // Delay creation of a payment-request, which requires Stripe to be loaded,
     // until a wallet payment-method is selected
     if (
-      paymentMethod &&
-      paymentMethod?.startsWith('STRIPE-WALLET') &&
+      this.isStripeWalletPayment() &&
       this.props.paymentRequest.status === PaymentRequestStatus.IDLE
     ) {
       const { t } = this.props
@@ -381,7 +386,7 @@ class Submit extends Component {
           // Rethrow error in case STRIPE-WALLET is used
           // This needs to be done in order to call payment-request
           // complete handler with 'fail'
-          if (this.state.values.paymentMethod?.startsWith('STRIPE-WALLET')) {
+          if (this.isStripeWalletPayment()) {
             throw new Error('Email verification required')
           }
           return
@@ -404,7 +409,7 @@ class Submit extends Component {
         // Rethrow error in case STRIPE-WALLET is used
         // This needs to be done in order to call payment-request
         // complete handler with 'fail'
-        if (this.state.values.paymentMethod?.startsWith('STRIPE-WALLET')) {
+        if (this.isStripeWalletPayment()) {
           throw error
         }
 
@@ -428,7 +433,7 @@ class Submit extends Component {
       this.payWithPostFinance(pledgeId, pledgeResponse)
     } else if (paymentMethod === 'STRIPE') {
       this.payWithStripe(pledgeId)
-    } else if (paymentMethod.startsWith('STRIPE-WALLET')) {
+    } else if (this.isStripeWalletPayment()) {
       return this.payWithWallet(pledgeId, paymentMethodObject)
     } else if (paymentMethod === 'PAYPAL') {
       this.payWithPayPal(pledgeId)
@@ -538,7 +543,7 @@ class Submit extends Component {
         // Rethrow error in case STRIPE-WALLET is used
         // This needs to be done in order to call payment-request
         // complete handler with 'fail'
-        if (this.state.values.paymentMethod?.startsWith('STRIPE-WALLET')) {
+        if (this.isStripeWalletPayment()) {
           throw error
         }
       })
@@ -661,15 +666,14 @@ class Submit extends Component {
       contactState,
     } = this.props
 
-    const isStripeWalletSelected =
-      this.state.values?.paymentMethod?.startsWith('STRIPE-WALLET')
-
     return [
       {
         category: t('pledge/submit/error/title'),
         messages: [options.length < 1 && t('pledge/submit/package/error')]
           .concat(objectValues(this.props.errors))
-          .concat(!isStripeWalletSelected && objectValues(contactState.errors))
+          .concat(
+            !this.isStripeWalletPayment() && objectValues(contactState.errors),
+          )
           .concat(objectValues(this.state.errors))
           .concat([
             !values.paymentMethod && t('pledge/submit/payMethod/error'),
@@ -682,7 +686,7 @@ class Submit extends Component {
         messages: []
           .concat(
             requireShippingAddress &&
-              !isStripeWalletSelected &&
+              !this.isStripeWalletPayment() &&
               objectValues(shippingAddressState.errors),
           )
           .filter(Boolean),
@@ -845,116 +849,115 @@ class Submit extends Component {
         />
         {
           // Only render the browser API in case we're not using a browser payment API
-          this.state.values.paymentMethod &&
-            !this.state.values.paymentMethod.startsWith('STRIPE-WALLET') && (
-              <>
-                {contactPreface && (
-                  <div style={{ marginBottom: 40 }}>
-                    <P>{contactPreface}</P>
-                  </div>
-                )}
-                <H2>
-                  {t.first([
-                    `pledge/contact/title/${packageName}`,
-                    'pledge/contact/title',
-                  ])}
-                </H2>
-                <div style={{ marginTop: 10, marginBottom: 10 }}>
-                  {me ? (
-                    <>
-                      <Interaction.P>
-                        {t('pledge/contact/signedinAs', {
-                          nameOrEmail: me.name
-                            ? `${me.name.trim()} (${me.email})`
-                            : me.email,
-                        })}{' '}
-                        <A
-                          href='#'
-                          onClick={(e) => {
-                            e.preventDefault()
-                            this.setState({ emailVerify: false })
-                            this.props.signOut().then(() => {
-                              contactState.onChange({
-                                values: {
-                                  firstName: '',
-                                  lastName: '',
-                                  email: '',
-                                },
-                                dirty: {
-                                  firstName: false,
-                                  lastName: false,
-                                  email: false,
-                                },
-                              })
-                              this.setState({ showSignIn: false })
-                            })
-                          }}
-                        >
-                          {t('pledge/contact/signOut')}
-                        </A>
-                      </Interaction.P>
-                      {/* TODO: add active membership info */}
-                    </>
-                  ) : (
-                    !customMe && (
-                      <>
-                        <A
-                          href='#'
-                          onClick={(e) => {
-                            e.preventDefault()
-                            this.setState(() => ({
-                              showSignIn: !showSignIn,
-                            }))
-                          }}
-                        >
-                          {t(
-                            `pledge/contact/signIn/${
-                              showSignIn ? 'hide' : 'show'
-                            }`,
-                          )}
-                        </A>
-                        {!!showSignIn && (
-                          <>
-                            <br />
-                            <br />
-                            <SignIn context='pledge' />
-                          </>
-                        )}
-                        <br />
-                      </>
-                    )
-                  )}
-                  {!showSignIn && (
-                    <>
-                      {customMe && !me ? (
-                        <>
-                          <Interaction.P>
-                            <Label>{t('pledge/contact/email/label')}</Label>
-                            <br />
-                            {customMe.email}
-                          </Interaction.P>
-                          <br />
-                          <Link
-                            href={{
-                              pathname: '/angebote',
-                              query: {
-                                package: packageName,
-                              },
-                            }}
-                            replace
-                            passHref
-                          >
-                            <A>{t('pledge/contact/signIn/wrongToken')}</A>
-                          </Link>
-                        </>
-                      ) : (
-                        <FieldSet {...contactState} />
-                      )}
-                    </>
-                  )}
+          this.state.values.paymentMethod && !this.isStripeWalletPayment() && (
+            <>
+              {contactPreface && (
+                <div style={{ marginBottom: 40 }}>
+                  <P>{contactPreface}</P>
                 </div>
-              </>
-            )
+              )}
+              <H2>
+                {t.first([
+                  `pledge/contact/title/${packageName}`,
+                  'pledge/contact/title',
+                ])}
+              </H2>
+              <div style={{ marginTop: 10, marginBottom: 10 }}>
+                {me ? (
+                  <>
+                    <Interaction.P>
+                      {t('pledge/contact/signedinAs', {
+                        nameOrEmail: me.name
+                          ? `${me.name.trim()} (${me.email})`
+                          : me.email,
+                      })}{' '}
+                      <A
+                        href='#'
+                        onClick={(e) => {
+                          e.preventDefault()
+                          this.setState({ emailVerify: false })
+                          this.props.signOut().then(() => {
+                            contactState.onChange({
+                              values: {
+                                firstName: '',
+                                lastName: '',
+                                email: '',
+                              },
+                              dirty: {
+                                firstName: false,
+                                lastName: false,
+                                email: false,
+                              },
+                            })
+                            this.setState({ showSignIn: false })
+                          })
+                        }}
+                      >
+                        {t('pledge/contact/signOut')}
+                      </A>
+                    </Interaction.P>
+                    {/* TODO: add active membership info */}
+                  </>
+                ) : (
+                  !customMe && (
+                    <>
+                      <A
+                        href='#'
+                        onClick={(e) => {
+                          e.preventDefault()
+                          this.setState(() => ({
+                            showSignIn: !showSignIn,
+                          }))
+                        }}
+                      >
+                        {t(
+                          `pledge/contact/signIn/${
+                            showSignIn ? 'hide' : 'show'
+                          }`,
+                        )}
+                      </A>
+                      {!!showSignIn && (
+                        <>
+                          <br />
+                          <br />
+                          <SignIn context='pledge' />
+                        </>
+                      )}
+                      <br />
+                    </>
+                  )
+                )}
+                {!showSignIn && (
+                  <>
+                    {customMe && !me ? (
+                      <>
+                        <Interaction.P>
+                          <Label>{t('pledge/contact/email/label')}</Label>
+                          <br />
+                          {customMe.email}
+                        </Interaction.P>
+                        <br />
+                        <Link
+                          href={{
+                            pathname: '/angebote',
+                            query: {
+                              package: packageName,
+                            },
+                          }}
+                          replace
+                          passHref
+                        >
+                          <A>{t('pledge/contact/signIn/wrongToken')}</A>
+                        </Link>
+                      </>
+                    ) : (
+                      <FieldSet {...contactState} />
+                    )}
+                  </>
+                )}
+              </div>
+            </>
+          )
         }
         <br />
         <br />
@@ -1020,14 +1023,12 @@ class Submit extends Component {
               primary={!errorMessages.length}
               disabled={
                 errorMessages?.length > 0 ||
-                (this.state.values?.paymentMethod.startsWith('STRIPE-WALLET') &&
+                (this.isStripeWalletPayment() &&
                   this.state.paymentRequest?.status ===
                     PaymentRequestStatus.READY)
               }
               onClick={() => {
-                if (
-                  this.state.values.paymentMethod.startsWith('STRIPE-WALLET')
-                ) {
+                if (this.isStripeWalletPayment()) {
                   this.handleWalletPayIntent()
                 } else {
                   this.submitPledge()
