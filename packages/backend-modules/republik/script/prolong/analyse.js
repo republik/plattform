@@ -22,7 +22,7 @@ ConnectionContext.create(applicationName)
         json_agg(
           json_build_object(
           'membership', m."sequenceNumber",
-          'membershipType', mt.name,
+          'interval', mt.interval,
           'kind', mp.kind,
           'begin', mp."beginDate",
           'end', mp."endDate"
@@ -82,17 +82,26 @@ ConnectionContext.create(applicationName)
             if (!gapless) {
               user.events.push({
                 type: 'break',
-                membershipType: prevPeriod.membershipType,
+                interval: prevPeriod.interval,
                 date: prevPeriod.endDate,
                 year: prevPeriod.endDate.getFullYear(),
                 age: prevAge,
               })
             }
 
+            if (prevPeriod.interval !== period.interval) {
+              user.events.push({
+                type: 'changeInterval',
+                interval: period.interval,
+                date: period.beginDate,
+                year: period.beginDate.getFullYear(),
+                age: prevAge,
+              })
+            }
             if (newAge > prevAge) {
               user.events.push({
                 type: gapless ? 'anniversary' : 'return',
-                membershipType: period.membershipType,
+                interval: period.interval,
                 date: period.beginDate,
                 year: period.beginDate.getFullYear(),
                 age: prevAge,
@@ -103,7 +112,7 @@ ConnectionContext.create(applicationName)
           if (!nextPeriod && period.endDate < endOfRecords) {
             user.events.push({
               type: 'break',
-              membershipType: period.membershipType,
+              interval: period.interval,
               date: period.endDate,
               year: period.endDate.getFullYear(),
               age: newAge,
@@ -113,7 +122,7 @@ ConnectionContext.create(applicationName)
         }, 0)
       // console.log('total days', user.totalDays, user.id)
       // console.log(user.events)
-      // console.log(user.periods.map(p => [p.membershipType, p.begin, p.end]))
+      // console.log(user.periods.map(p => [p.interval, p.begin, p.end]))
       // console.log('---')
     })
 
@@ -126,6 +135,7 @@ ConnectionContext.create(applicationName)
           .sortKeys(ascending)
           .key((d) => d.year)
           .sortKeys(ascending)
+          .key((d) => d.interval)
           .key((d) => d.type)
           .rollup((values) => values.length)
           .entries(allEvents)
@@ -133,16 +143,22 @@ ConnectionContext.create(applicationName)
             return {
               key,
               values: values.map(({ key: year, values }) => {
-                const object = values.reduce(
-                  (obj, { key, value }) => {
-                    obj[key] = value
-                    return obj
-                  },
-                  { year },
-                )
-                object.rate =
-                  object.anniversary / (object.break + object.anniversary)
-                return object
+                const intervals = values.map(({ key: interval, values }) => {
+                  const object = values.reduce(
+                    (obj, { key, value }) => {
+                      obj[key] = value
+                      return obj
+                    },
+                    { interval },
+                  )
+                  object.rate =
+                    object.anniversary / (object.break + object.anniversary)
+                  return object
+                })
+                return {
+                  key: year,
+                  intervals,
+                }
               }),
             }
           }),
