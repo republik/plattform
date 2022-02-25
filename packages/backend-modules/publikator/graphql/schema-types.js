@@ -201,14 +201,25 @@ type Memo {
 
 type Derivative {
   id: ID!
-  type: String!
-  status: String!
+  type: DerivativeType!
+  status: DerivativeStatus!
   result: JSON
   createdAt: DateTime!
   updatedAt: DateTime!
   readyAt: DateTime
   failedAt: DateTime
   destroyedAt: DateTime
+}
+
+enum DerivativeType {
+  SyntheticReadAloud
+}
+
+enum DerivativeStatus {
+  Pending
+  Ready
+  Failure
+  Destroyed
 }
 
 `

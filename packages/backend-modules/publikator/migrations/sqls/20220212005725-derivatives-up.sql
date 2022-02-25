@@ -2,7 +2,7 @@ CREATE DOMAIN "derivativesTypeDomain" AS TEXT
   CONSTRAINT "derivativesTypeDomainCheck"
     CHECK(
       VALUE IN (
-        'SyntheticReadAload'
+        'SyntheticReadAloud'
       )
     );
 

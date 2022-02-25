@@ -109,7 +109,7 @@ module.exports = {
           commitId,
         )
         const synthesizedAudio = derivatives.find(
-          (d) => d.type === 'SyntheticReadAload' && d.status === 'Ready',
+          (d) => d.type === 'SyntheticReadAloud' && d.status === 'Ready',
         )
         if (synthesizedAudio) {
           const { result } = synthesizedAudio
@@ -129,7 +129,7 @@ module.exports = {
 
           meta.audioSource = {
             mediaId: Buffer.from(
-              [repoId, 'SyntheticReadAload'].join('/'),
+              [repoId, 'SyntheticReadAloud'].join('/'),
             ).toString('base64'),
             kind: 'syntheticReadAloud',
             mp3: `${ASSETS_SERVER_BASE_URL}/s3/${bucket}/${key}`,

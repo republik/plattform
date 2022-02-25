@@ -284,7 +284,7 @@ const handleSyntheticReadAloud = async (document, context) => {
 
   const derivatives = await context.pgdb.publikator.derivatives.find({
     commitId,
-    type: 'SyntheticReadAload',
+    type: 'SyntheticReadAloud',
     or: [
       {
         // Ready, and not destroyed
@@ -310,13 +310,13 @@ const handleSyntheticReadAloud = async (document, context) => {
 
   const derivative = await context.pgdb.publikator.derivatives.insertAndGet({
     commitId,
-    type: 'SyntheticReadAload',
+    type: 'SyntheticReadAloud',
     status: 'Pending',
   })
 
   const substitutesUrl = ''
   const lexiconUrl = ''
-  const webhookUrl = `${PUBLIC_URL}/publikator/webhook/syntheticReadAload`
+  const webhookUrl = `${PUBLIC_URL}/publikator/webhook/syntheticReadAloud`
   const expireAt = new Date().toISOString
 
   const isOk = await fetch(`${TTS_SERVER_BASE_URL}/intake/document`, {

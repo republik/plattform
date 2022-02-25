@@ -4,11 +4,11 @@ const bodyParser = require('body-parser')
 module.exports = (server, pgdb, t, redis, context) => {
   // Callback for assets which are ready
   server.post(
-    '/publikator/webhook/syntheticReadAload', // @TODO: Find better naming than audio
+    '/publikator/webhook/syntheticReadAloud',
     bodyParser.json(),
     async (req, res) => {
       const { pgdb, loaders } = context
-      console.log('/publikator/webhook/syntheticReadAload', req.body)
+      console.log('/publikator/webhook/syntheticReadAloud', req.body)
 
       res.status(200).json({ ok: true })
 

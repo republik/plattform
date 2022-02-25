@@ -135,7 +135,7 @@ const Derivatives = ({ commit, generateDerivative, destroyDerivative }) => {
   const { derivatives } = commit
 
   const synthesizedAudio = derivatives
-    .filter((d) => d.type === 'SyntheticReadAload')
+    .filter((d) => d.type === 'SyntheticReadAloud')
     .reduce(
       (prev, curr) =>
         (!prev && curr) ||
