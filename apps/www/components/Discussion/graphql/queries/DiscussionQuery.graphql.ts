@@ -1,12 +1,12 @@
 import { gql } from '@apollo/client'
 import {
   DISCUSSION_FRAGMENT,
-  DiscussionFragmentType
+  DiscussionFragmentType,
 } from '../fragments/DiscussionFragment.graphql'
 import { makeQueryHook } from '../../../../lib/helpers/AbstractApolloGQLHooks.helper'
 import {
   COMMENT_FRAGMENT,
-  CommentFragmentType
+  CommentFragmentType,
 } from '../fragments/CommentFragment.graphql'
 import Nullable from '../../../../lib/types/Nullable'
 

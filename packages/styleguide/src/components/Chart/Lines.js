@@ -7,9 +7,7 @@ import LineGroup from './LineGroup'
 import XAxis from './XAxis'
 import { defaultProps } from './ChartContext'
 
-import {
-  sansSerifRegular12 as LABEL_FONT,
-} from '../Typography/styles'
+import { sansSerifRegular12 as LABEL_FONT } from '../Typography/styles'
 
 import { X_UNIT_PADDING } from './Layout.constants'
 
@@ -22,7 +20,7 @@ import ColorLegend from './ColorLegend'
 const styles = {
   bandLegend: css({
     ...LABEL_FONT,
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
   }),
   bandBar: css({
     display: 'inline-block',
@@ -32,11 +30,11 @@ const styles = {
     borderTopWidth: 4,
     borderBottomWidth: 4,
     borderTopStyle: 'solid',
-    borderBottomStyle: 'solid'
-  })
+    borderBottomStyle: 'solid',
+  }),
 }
 
-const LineChart = props => {
+const LineChart = (props) => {
   const {
     width,
     mini,
@@ -45,19 +43,13 @@ const LineChart = props => {
     bandLegend,
     area,
     areaOpacity,
-    endDy
+    endDy,
   } = props
 
   const [colorScheme] = useColorContext()
   const chartContext = React.useContext(ChartContext)
-  const {
-    paddingLeft,
-    paddingRight,
-    yLayout,
-    groupPosition,
-    xAxis,
-    yAxis
-  } = chartContext
+  const { paddingLeft, paddingRight, yLayout, groupPosition, xAxis, yAxis } =
+    chartContext
 
   const visibleColorLegendValues = []
     .concat(chartContext.colorLegendValues)
@@ -75,8 +67,8 @@ const LineChart = props => {
               />
               {` ${bandLegend}`}
             </span>
-          )
-        }
+          ),
+        },
     )
     .filter(Boolean)
 
@@ -91,13 +83,14 @@ const LineChart = props => {
       >
         <desc>{description}</desc>
         {chartContext.groupedData.map(({ values: lines, key }) => {
-          const filterByColumn = d => !d.column || d.column === key
-          const yLines = props.yLines || yAxis.ticks.map(tick => ({ tick }))
+          const filterByColumn = (d) => !d.column || d.column === key
+          const yLines = props.yLines || yAxis.ticks.map((tick) => ({ tick }))
           return (
             <g
               key={key || 1}
-              transform={`translate(${groupPosition.x(key) +
-                paddingLeft},${groupPosition.y(key)})`}
+              transform={`translate(${
+                groupPosition.x(key) + paddingLeft
+              },${groupPosition.y(key)})`}
             >
               <LineGroup
                 mini={mini}
@@ -147,7 +140,7 @@ export const propTypes = {
   xNumberFormat: PropTypes.string,
   xSort: sortPropType,
   xTicks: PropTypes.arrayOf(
-    PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   ),
   xLines: PropTypes.arrayOf(
     PropTypes.shape({
@@ -155,8 +148,8 @@ export const propTypes = {
       tick: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
         .isRequired,
       label: PropTypes.string,
-      textAnchor: PropTypes.string
-    }).isRequired
+      textAnchor: PropTypes.string,
+    }).isRequired,
   ),
   yScale: PropTypes.oneOf(Object.keys(yScales)),
   timeParse: PropTypes.string.isRequired,
@@ -166,8 +159,8 @@ export const propTypes = {
   columnFilter: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string.isRequired,
-      test: PropTypes.string.isRequired
-    })
+      test: PropTypes.string.isRequired,
+    }),
   ),
   highlight: PropTypes.string,
   stroke: PropTypes.string,
@@ -177,7 +170,7 @@ export const propTypes = {
   colorRange: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   colorRanges: PropTypes.shape({
     sequential3: PropTypes.array.isRequired,
-    discrete: PropTypes.array.isRequired
+    discrete: PropTypes.array.isRequired,
   }).isRequired,
   colorMap: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   colorLegend: PropTypes.bool,
@@ -208,8 +201,8 @@ export const propTypes = {
       column: PropTypes.string,
       tick: PropTypes.number.isRequired,
       label: PropTypes.string,
-      base: PropTypes.bool
-    }).isRequired
+      base: PropTypes.bool,
+    }).isRequired,
   ),
   yAnnotations: PropTypes.arrayOf(
     PropTypes.shape({
@@ -219,8 +212,8 @@ export const propTypes = {
       label: PropTypes.string,
       x: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       dy: PropTypes.string,
-      showValue: PropTypes.bool
-    })
+      showValue: PropTypes.bool,
+    }),
   ),
   xAnnotations: PropTypes.arrayOf(
     PropTypes.shape({
@@ -234,20 +227,20 @@ export const propTypes = {
       x1: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       x2: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       position: PropTypes.oneOf(['top', 'bottom']),
-      showValue: PropTypes.bool
-    })
+      showValue: PropTypes.bool,
+    }),
   ),
   tLabel: PropTypes.func.isRequired,
-  description: PropTypes.string
+  description: PropTypes.string,
 }
 
 LineChart.propTypes = propTypes
 
-export const Line = props => <LineChart {...props} />
+export const Line = (props) => <LineChart {...props} />
 
 Line.defaultProps = defaultProps.Line
 
-export const Slope = props => <LineChart {...props} />
+export const Slope = (props) => <LineChart {...props} />
 
 Slope.defaultProps = defaultProps.Slope
 

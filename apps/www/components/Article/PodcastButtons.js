@@ -14,7 +14,7 @@ import {
   LaunchIcon,
   RssFeedIcon,
   AppleIcon,
-  GoogleIcon
+  GoogleIcon,
 } from '@project-r/styleguide'
 import { useUserAgent } from '../../lib/context/UserAgentContext'
 
@@ -26,18 +26,18 @@ const styles = {
       flex: 'auto',
       marginTop: 15,
       marginBottom: 15,
-      flexGrow: 0
+      flexGrow: 0,
     },
     '@media print': {
-      display: 'none'
-    }
+      display: 'none',
+    },
   }),
   buttonGroupLeft: css({
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
   }),
   buttonGroupCenter: css({
-    justifyContent: 'center'
-  })
+    justifyContent: 'center',
+  }),
 }
 
 const PodcastButtons = ({
@@ -49,7 +49,7 @@ const PodcastButtons = ({
   eventCategory = 'PodcastButtons',
   audioSource,
   onAudioClick,
-  center
+  center,
 }) => {
   const [copyLinkSuffix, setLinkCopySuffix] = useState()
   const { userAgent, isAndroid, isIOS } = useUserAgent()
@@ -90,13 +90,13 @@ const PodcastButtons = ({
       icon: PlayCircleIcon,
       title: t('PodcastButtons/play'),
       label: t('PodcastButtons/play'),
-      onClick: e => {
+      onClick: (e) => {
         if (shouldIgnoreClick(e)) {
           return
         }
         e.preventDefault()
         onAudioClick()
-      }
+      },
     },
     plattformWithApp && {
       href:
@@ -104,51 +104,51 @@ const PodcastButtons = ({
           ? `pcast:${podigeeSlug}.podigee.io/feed/mp3`
           : `podcast://${podigeeSlug}.podigee.io/feed/aac`,
       icon: LaunchIcon,
-      label: t('PodcastButtons/app')
+      label: t('PodcastButtons/app'),
     },
     spotifyUrl && {
       href: spotifyUrl,
       target: '_blank',
       icon: SpotifyIcon,
-      label: t('PodcastButtons/spotify')
+      label: t('PodcastButtons/spotify'),
     },
     appleUrl &&
       !isAndroid && {
         href: appleUrl,
         target: '_blank',
         icon: AppleIcon,
-        label: t('PodcastButtons/apple')
+        label: t('PodcastButtons/apple'),
       },
     googleUrl &&
       !isIOS && {
         href: googleUrl,
         target: '_blank',
         icon: GoogleIcon,
-        label: t('PodcastButtons/google')
+        label: t('PodcastButtons/google'),
       },
     {
       href: `https://${podigeeSlug}.podigee.io/feed/mp3`,
       target: '_blank',
       icon: RssFeedIcon,
-      label: t('PodcastButtons/rss')
+      label: t('PodcastButtons/rss'),
     },
     {
       href: mainFeed,
       icon: LinkIcon,
       title: t('PodcastButtons/copy'),
       label: t(
-        `PodcastButtons/copy${copyLinkSuffix ? `/${copyLinkSuffix}` : ''}`
+        `PodcastButtons/copy${copyLinkSuffix ? `/${copyLinkSuffix}` : ''}`,
       ),
-      onClick: e => {
+      onClick: (e) => {
         e.preventDefault()
         copyToClipboard(mainFeed)
           .then(() => setLinkCopySuffix('success'))
           .catch(() => setLinkCopySuffix('error'))
       },
       style: {
-        minWidth: copyMinWidth
-      }
-    }
+        minWidth: copyMinWidth,
+      },
+    },
   ].filter(Boolean)
 
   return (
@@ -163,11 +163,11 @@ const PodcastButtons = ({
           label={props.label}
           labelShort={props.label}
           {...props}
-          onClick={e => {
+          onClick={(e) => {
             trackEvent([
               eventCategory,
               [plattformWithApp, props.icon].filter(Boolean).join(' '),
-              podigeeSlug
+              podigeeSlug,
             ])
             if (props.onClick) {
               return props.onClick(e)

@@ -95,6 +95,12 @@ PgDb.connect()
               })) === 0))
         ) {
           grants.push(grant)
+          debug(
+            'grant %s (%i/%i)',
+            grant.voucherCode,
+            grants.length,
+            argv.amount,
+          )
         }
       }
 

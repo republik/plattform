@@ -3,6 +3,8 @@ const debug = require('debug')('access:lib:accessScheduler')
 
 const campaignsLib = require('./campaigns')
 const grantsLib = require('./grants')
+const { populate: populateEvents } = require('./AccessGrantStats/events')
+const { populate: populateEvolution } = require('./AccessGrantStats/evolution')
 
 // Interval in which scheduler runs
 const intervalSecs = 60 * 10
@@ -13,8 +15,10 @@ const schedulerLock = (redis) => new Redlock([redis])
 /**
  * Function to initialize scheduler. Provides scheduling.
  */
-const init = async ({ pgdb, redis, t, mail }) => {
+const init = async (context) => {
   debug('init')
+
+  const { redis, t, pgdb, mail } = context
 
   let timeout
 
@@ -33,6 +37,7 @@ const init = async ({ pgdb, redis, t, mail }) => {
 
       await expireGrants(t, pgdb, mail)
       await followupGrants(t, pgdb, mail)
+      await updateStats(context)
 
       // Extend lock for a fraction of usual interval to prevent runner to
       // be executed back-to-back to previous run.
@@ -120,4 +125,19 @@ const followupGrants = async (t, pgdb, mail) => {
     }
   }
   debug('followupGrants done')
+}
+
+/**
+ * Updates statistics
+ */
+const updateStats = async (context) => {
+  debug('updateStats...')
+  try {
+    await populateEvents(context)
+    await populateEvolution(context)
+  } catch (e) {
+    debug('updateStats failed: %s', e.message)
+    console.warn(e)
+  }
+  debug('updateStats done')
 }

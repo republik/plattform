@@ -16,7 +16,7 @@ const ROLES = [
   'admin',
   'accomplice',
   'tester',
-  'debater'
+  'debater',
 ]
 
 const GET_ROLES = gql`
@@ -49,15 +49,15 @@ class UpdateRole extends Component {
     super(props)
     const {
       role,
-      user: { roles }
+      user: { roles },
     } = this.props
 
     this.state = {
       initialValue: roles.includes(role),
-      value: roles.includes(role)
+      value: roles.includes(role),
     }
 
-    this.handleSubmit = mutation => event => {
+    this.handleSubmit = (mutation) => (event) => {
       event.preventDefault()
       mutation()
     }
@@ -66,7 +66,7 @@ class UpdateRole extends Component {
   render() {
     const {
       user: { id },
-      role
+      role,
     } = this.props
     const { value, initialValue } = this.state
     return (
@@ -77,9 +77,9 @@ class UpdateRole extends Component {
           {
             query: GET_ROLES,
             variables: {
-              id
-            }
-          }
+              id,
+            },
+          },
         ]}
       >
         {(mutation, { loading }) => {
@@ -91,13 +91,14 @@ class UpdateRole extends Component {
                   disabled={loading}
                   onChange={(_, checked) =>
                     this.setState({
-                      value: checked
+                      value: checked,
                     })
                   }
                 >
                   {role.replace(
                     /(\w)\w*/,
-                    (match, group) => `${group.toUpperCase()}${match.substr(1)}`
+                    (match, group) =>
+                      `${group.toUpperCase()}${match.substr(1)}`,
                   )}
                 </Checkbox>
                 <span style={{ float: 'right' }}>
@@ -107,9 +108,7 @@ class UpdateRole extends Component {
                     <TextButton type='submit'>
                       <SaveIcon size={22} />
                     </TextButton>
-                  ) : (
-                    undefined
-                  )}
+                  ) : undefined}
                 </span>
               </p>
             </form>
@@ -135,7 +134,7 @@ const Roles = ({ userId }) => {
               return (
                 <InteractiveSection>
                   <SectionTitle>Rollen</SectionTitle>
-                  {ROLES.map(role => (
+                  {ROLES.map((role) => (
                     <UpdateRole
                       key={`${role}-${user.roles.includes(role)}`}
                       user={user}

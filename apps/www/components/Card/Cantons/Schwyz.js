@@ -1,6 +1,6 @@
 import React from 'react'
 
-const SvgSchwyz = props => (
+const SvgSchwyz = (props) => (
   <svg
     width={props.size}
     height={(props.size * 474.797) / 473.19}

@@ -6,17 +6,17 @@ import Sub from '../components/Sub'
 const inlineRules = [
   {
     matchMdast: matchType('sup'),
-    component: Sup
+    component: Sup,
   },
   {
     matchMdast: matchType('sub'),
-    component: Sub
+    component: Sub,
   },
   {
     matchMdast: matchType('break'),
     component: () => <br />,
-    isVoid: true
-  }
+    isVoid: true,
+  },
 ]
 
 export default inlineRules

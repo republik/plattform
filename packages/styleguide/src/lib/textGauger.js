@@ -11,13 +11,13 @@ const measurementDiv = memoize(
     document.body.appendChild(div)
     return div
   },
-  () => ''
+  () => '',
 )
 
 export const createTextGauger = memoize(
   ({ fontFamily, fontSize, lineHeight }, { dimension, html }) => {
     if (typeof document === 'undefined') {
-      return text => {
+      return (text) => {
         // SSR approximation
         return fontSize * 0.6 * String(text).length
       }
@@ -28,16 +28,16 @@ export const createTextGauger = memoize(
     element.style.lineHeight = lineHeight
     measurementDiv().appendChild(element)
     if (html) {
-      return memoize(text => {
+      return memoize((text) => {
         element.innerHTML = text
         return element.getBoundingClientRect()[dimension]
       })
     }
-    return memoize(text => {
+    return memoize((text) => {
       element.textContent = text
       return element.getBoundingClientRect()[dimension]
     })
   },
   ({ fontFamily, fontSize, lineHeight }, { dimension, html }) =>
-    [fontFamily, fontSize, lineHeight, dimension, html].join()
+    [fontFamily, fontSize, lineHeight, dimension, html].join(),
 )

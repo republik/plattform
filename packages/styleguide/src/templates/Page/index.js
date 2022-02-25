@@ -20,7 +20,7 @@ const createPageSchema = ({
   return createArticleSchema({
     documentEditorOptions: {
       skipCredits: true,
-      titleCenter: true
+      titleCenter: true,
     },
     repoPrefix: 'page-',
     getPath,
@@ -29,14 +29,14 @@ const createPageSchema = ({
       {
         label: 'Diskussion',
         key: 'discussion',
-        ref: 'repo'
+        ref: 'repo',
       },
       {
         label: 'Action Bar ausblenden',
         key: 'disableActionBar',
-        ref: 'bool'
+        ref: 'bool',
       },
-      ...customMetaFields
+      ...customMetaFields,
     ],
     series,
     darkMode,
@@ -45,7 +45,7 @@ const createPageSchema = ({
     metaHeadlines,
     skipContainer,
     skipCenter,
-    ...args
+    ...args,
   })
 }
 

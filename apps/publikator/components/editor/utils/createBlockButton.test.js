@@ -15,11 +15,11 @@ const rawDoc = {
           kind: 'text',
           leaves: [
             {
-              text: 'Hello BlockButton!'
-            }
-          ]
-        }
-      ]
+              text: 'Hello BlockButton!',
+            },
+          ],
+        },
+      ],
     },
     {
       kind: 'block',
@@ -29,11 +29,11 @@ const rawDoc = {
           kind: 'text',
           leaves: [
             {
-              text: 'We are blocks at your service.'
-            }
-          ]
-        }
-      ]
+              text: 'We are blocks at your service.',
+            },
+          ],
+        },
+      ],
     },
     {
       kind: 'block',
@@ -43,22 +43,22 @@ const rawDoc = {
           kind: 'text',
           leaves: [
             {
-              text: 'Tamper with us'
-            }
-          ]
-        }
-      ]
-    }
-  ]
+              text: 'Tamper with us',
+            },
+          ],
+        },
+      ],
+    },
+  ],
 }
 
 const initialState = Value.fromJSON({
-  document: rawDoc
+  document: rawDoc,
 })
 const Button = () => <span />
 const BlockButton = createBlockButton({ type: 'lead' })(Button)
 
-test('utils.createBlockButton: blurred', assert => {
+test('utils.createBlockButton: blurred', (assert) => {
   assert.plan(1)
   const value = initialState
 
@@ -68,11 +68,11 @@ test('utils.createBlockButton: blurred', assert => {
     !wrapper.find('Button').prop('active') &&
       wrapper.find('Button').prop('disabled'),
     true,
-    'renders as disabled and inactive'
+    'renders as disabled and inactive',
   )
 })
 
-test('utils.createBlockButton: focused cursor', assert => {
+test('utils.createBlockButton: focused cursor', (assert) => {
   assert.plan(1)
 
   const value = initialState
@@ -81,7 +81,7 @@ test('utils.createBlockButton: focused cursor', assert => {
       anchorKey: initialState.document.nodes.get(0).nodes.first().key,
       anchorOffset: 2,
       focusKey: initialState.document.nodes.get(0).nodes.first().key,
-      focusOffset: 2
+      focusOffset: 2,
     })
     .focus().value
 
@@ -91,11 +91,11 @@ test('utils.createBlockButton: focused cursor', assert => {
     !wrapper.find('Button').prop('active') &&
       !wrapper.find('Button').prop('disabled'),
     true,
-    'renders as enabled and inactive'
+    'renders as enabled and inactive',
   )
 })
 
-test('utils.createBlockButton: focused cursor on `blockType`', assert => {
+test('utils.createBlockButton: focused cursor on `blockType`', (assert) => {
   assert.plan(1)
 
   const value = initialState
@@ -104,7 +104,7 @@ test('utils.createBlockButton: focused cursor on `blockType`', assert => {
       anchorKey: initialState.document.nodes.get(1).nodes.first().key,
       anchorOffset: 2,
       focusKey: initialState.document.nodes.get(1).nodes.first().key,
-      focusOffset: 2
+      focusOffset: 2,
     })
     .focus().value
 
@@ -114,11 +114,11 @@ test('utils.createBlockButton: focused cursor on `blockType`', assert => {
     wrapper.find('Button').prop('active') &&
       wrapper.find('Button').prop('disabled'),
     true,
-    'renders as disabled and active'
+    'renders as disabled and active',
   )
 })
 
-test('utils.createBlockButton: focused selection of mixed block types', assert => {
+test('utils.createBlockButton: focused selection of mixed block types', (assert) => {
   assert.plan(1)
 
   const value = initialState
@@ -127,7 +127,7 @@ test('utils.createBlockButton: focused selection of mixed block types', assert =
       anchorKey: initialState.document.nodes.get(0).nodes.first().key,
       anchorOffset: 5,
       focusKey: initialState.document.nodes.get(1).nodes.first().key,
-      focusOffset: 2
+      focusOffset: 2,
     })
     .focus().value
 
@@ -137,11 +137,11 @@ test('utils.createBlockButton: focused selection of mixed block types', assert =
     wrapper.find('Button').prop('active') &&
       !wrapper.find('Button').prop('disabled'),
     true,
-    'renders as enabled and active'
+    'renders as enabled and active',
   )
 })
 
-test('utils.createBlockButton: action on focused cursor', assert => {
+test('utils.createBlockButton: action on focused cursor', (assert) => {
   assert.plan(1)
 
   const value = initialState
@@ -150,7 +150,7 @@ test('utils.createBlockButton: action on focused cursor', assert => {
       anchorKey: initialState.document.nodes.get(0).nodes.first().key,
       anchorOffset: 2,
       focusKey: initialState.document.nodes.get(0).nodes.first().key,
-      focusOffset: 2
+      focusOffset: 2,
     })
     .focus().value
 
@@ -158,11 +158,11 @@ test('utils.createBlockButton: action on focused cursor', assert => {
     assert.equal(
       value.document.nodes.get(0).type,
       'lead',
-      'sets the block at the cursor to `blockType`'
+      'sets the block at the cursor to `blockType`',
     )
 
   const event = {
-    preventDefault: spy()
+    preventDefault: spy(),
   }
 
   const wrapper = shallow(<BlockButton value={value} onChange={onChange} />)
@@ -170,7 +170,7 @@ test('utils.createBlockButton: action on focused cursor', assert => {
   wrapper.find('Button').simulate('mousedown', event)
 })
 
-test('utils.createBlockButton: action on mixed selection', assert => {
+test('utils.createBlockButton: action on mixed selection', (assert) => {
   assert.plan(1)
 
   const value = initialState
@@ -179,7 +179,7 @@ test('utils.createBlockButton: action on mixed selection', assert => {
       anchorKey: initialState.document.nodes.get(0).nodes.first().key,
       anchorOffset: 2,
       focusKey: initialState.document.nodes.get(1).nodes.first().key,
-      focusOffset: 5
+      focusOffset: 5,
     })
     .focus().value
 
@@ -187,11 +187,11 @@ test('utils.createBlockButton: action on mixed selection', assert => {
     assert.equal(
       value.document.nodes.get(0).type,
       'lead',
-      'sets all blocks in the selection that were not of type `blockType` to it'
+      'sets all blocks in the selection that were not of type `blockType` to it',
     )
 
   const event = {
-    preventDefault: spy()
+    preventDefault: spy(),
   }
 
   const wrapper = shallow(<BlockButton value={value} onChange={onChange} />)

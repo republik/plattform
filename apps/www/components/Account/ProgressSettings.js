@@ -15,7 +15,7 @@ import { withProgressApi } from '../Article/Progress/api'
 
 const styles = {
   headline: css({
-    margin: '80px 0 30px 0'
+    margin: '80px 0 30px 0',
   }),
   spinnerWrapper: css({
     display: 'inline-block',
@@ -23,38 +23,33 @@ const styles = {
     marginLeft: 15,
     verticalAlign: 'middle',
     '& > span': {
-      display: 'inline'
-    }
+      display: 'inline',
+    },
   }),
   label: css({
     display: 'block',
-    paddingLeft: '28px'
-  })
+    paddingLeft: '28px',
+  }),
 }
 
 class ProgressSettings extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      mutating: false
+      mutating: false,
     }
 
-    this.catchServerError = error => {
+    this.catchServerError = (error) => {
       this.setState(() => ({
         mutating: false,
-        serverError: error
+        serverError: error,
       }))
     }
   }
 
   render() {
-    const {
-      t,
-      me,
-      isMember,
-      revokeProgressConsent,
-      submitProgressConsent
-    } = this.props
+    const { t, me, isMember, revokeProgressConsent, submitProgressConsent } =
+      this.props
 
     return (
       <Loader
@@ -77,19 +72,17 @@ class ProgressSettings extends Component {
                     return
                   }
                   this.setState({
-                    mutating: true
+                    mutating: true,
                   })
                   const finish = () => {
                     this.setState({
-                      mutating: false
+                      mutating: false,
                     })
                   }
                   const consentMutation = hasAccepted
                     ? revokeProgressConsent
                     : submitProgressConsent
-                  consentMutation()
-                    .then(finish)
-                    .catch(this.catchServerError)
+                  consentMutation().then(finish).catch(this.catchServerError)
                 }}
               >
                 <span {...styles.label}>
@@ -119,5 +112,5 @@ export default compose(
   withProgressApi,
   withMembership,
   withT,
-  withMe
+  withMe,
 )(ProgressSettings)

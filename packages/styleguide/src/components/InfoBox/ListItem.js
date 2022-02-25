@@ -15,12 +15,12 @@ const styles = {
     position: 'relative',
     ...convertStyleToRem(sansSerifRegular15),
     [mUp]: {
-      ...convertStyleToRem(sansSerifRegular18)
+      ...convertStyleToRem(sansSerifRegular18),
     },
     '& p:last-child': {
-      marginBottom: 0
-    }
-  })
+      marginBottom: 0,
+    },
+  }),
 }
 
 const ListItem = ({ children, attributes = {}, style = {} }) => {
@@ -41,7 +41,7 @@ const ListItem = ({ children, attributes = {}, style = {} }) => {
 ListItem.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
-  style: PropTypes.object
+  style: PropTypes.object,
 }
 
 export default ListItem

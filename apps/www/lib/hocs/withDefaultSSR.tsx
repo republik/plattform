@@ -1,7 +1,7 @@
 import React from 'react'
 import {
   APOLLO_STATE_PROP_NAME,
-  initializeApollo
+  initializeApollo,
 } from '../apollo/apolloClient'
 import { getDataFromTree } from '@apollo/client/react/ssr'
 import { NextPage, NextPageContext } from 'next'
@@ -34,13 +34,13 @@ type DefaultSSRPageProps<P = unknown> = BasePageProps<P> & {
  * @param Page
  */
 function withDefaultSSR(
-  Page: NextPage<DefaultSSRPageProps>
+  Page: NextPage<DefaultSSRPageProps>,
 ): NextPage<DefaultSSRPageProps> {
   // If the page component already has a getInitialProps method make sure to run it.
   const originalGetInitialProps = Page.getInitialProps ?? undefined
 
   async function getInitialProps(
-    ctx: NextPageContext
+    ctx: NextPageContext,
   ): Promise<DefaultSSRPageProps> {
     const { AppTree } = ctx
     let props: DefaultSSRPageProps<Record<string, unknown>> = {}
@@ -55,19 +55,19 @@ function withDefaultSSR(
 
       const apolloClient = initializeApollo(null, {
         headers: ctx.req.headers,
-        onResponse: response => {
+        onResponse: (response) => {
           // headers.raw() is a node-fetch specific API and apparently the only way to get multiple cookies
           // https://github.com/bitinn/node-fetch/issues/251
           const cookies = response.headers.raw()['set-cookie']
           if (cookies) {
             ctx.res.setHeader('Set-Cookie', cookies)
           }
-        }
+        },
       })
 
       try {
         await apolloClient.query({
-          query: meQuery
+          query: meQuery,
         })
 
         // Run all GraphQL queries with a provided apolloClient
@@ -76,9 +76,9 @@ function withDefaultSSR(
             pageProps={{
               providedApolloClient: apolloClient,
               serverContext: ctx,
-              ...props
+              ...props,
             }}
-          />
+          />,
         )
       } catch (error) {
         if (error.message !== 'redirect') {

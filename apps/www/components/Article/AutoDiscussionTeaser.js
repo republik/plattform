@@ -15,13 +15,13 @@ const AutoDiscussionTeaser = ({ t, discussionId }) => (
             key='feedback'
             href={{
               pathname: '/dialog',
-              query: { t: 'article', id: discussionId }
+              query: { t: 'article', id: discussionId },
             }}
             passHref
           >
             <A>{t('article/autodiscussionteaser/linktext')}</A>
           </Link>
-        )
+        ),
       })}
     </InfoBoxText>
   </div>

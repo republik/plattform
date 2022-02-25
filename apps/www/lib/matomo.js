@@ -7,7 +7,7 @@ const track = (...args) => {
   if (typeof window === 'undefined' || !window._paq) {
     if (__DEV__) {
       throw new Error(
-        "Can't use the imperative track api while server rendering"
+        "Can't use the imperative track api while server rendering",
       )
     }
     return
@@ -26,16 +26,15 @@ export const trackEvent = ([category, action, name, value]) => {
   payload.record('events', { category, action, name, value })
 }
 
-export const trackEventOnClick = (
-  [category, action, name, value],
-  onClick
-) => e => {
-  trackEvent([category, action, name, value])
+export const trackEventOnClick =
+  ([category, action, name, value], onClick) =>
+  (e) => {
+    trackEvent([category, action, name, value])
 
-  if (shouldIgnoreClick(e)) {
-    return
+    if (shouldIgnoreClick(e)) {
+      return
+    }
+
+    e.preventDefault()
+    onClick(e)
   }
-
-  e.preventDefault()
-  onClick(e)
-}

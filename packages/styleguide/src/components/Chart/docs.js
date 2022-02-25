@@ -14,7 +14,7 @@ import { propTypes as genericMapPropTypes } from './Maps'
 import { propTypes as hemicyclePropTypes } from './Hemicycle'
 
 const propTypeNames = new Map()
-Object.keys(PropTypes).forEach(key => {
+Object.keys(PropTypes).forEach((key) => {
   propTypeNames.set(PropTypes[key], key)
   propTypeNames.set(PropTypes[key].isRequired, key)
 })
@@ -26,17 +26,17 @@ const baseChartPropTypes = {
   Line: linePropTypes,
   ScatterPlot: scatterPlotPropTypes,
   GenericMap: genericMapPropTypes,
-  Hemicycle: hemicyclePropTypes
+  Hemicycle: hemicyclePropTypes,
 }
 
 const charts = Object.keys(ReactCharts)
 
 const props = Object.keys(baseChartPropTypes).reduce((all, chart) => {
   const propTypes = baseChartPropTypes[chart]
-  const props = Object.keys(propTypes).map(key => ({
+  const props = Object.keys(propTypes).map((key) => ({
     key,
     type: propTypeNames.get(propTypes[key]),
-    chart
+    chart,
   }))
 
   return all.concat(props)
@@ -55,14 +55,14 @@ const IGNORE_KEYS = [
   'description',
   'filter',
   // functions
-  'getProjection'
+  'getProjection',
 ]
 
-const propByName = groupBy(props, d => d.key)
-  .filter(group => IGNORE_KEYS.indexOf(group.key) === -1)
+const propByName = groupBy(props, (d) => d.key)
+  .filter((group) => IGNORE_KEYS.indexOf(group.key) === -1)
   .sort(
     (a, b) =>
-      descending(a.values.length, b.values.length) || ascending(a.key, b.key)
+      descending(a.values.length, b.values.length) || ascending(a.key, b.key),
   )
 
 const examples = {
@@ -81,7 +81,7 @@ const examples = {
   band: '`confidence95`',
   domain: '`[2005, 2015]`',
   height: '`300`',
-  sizeRangeMax: '`20`'
+  sizeRangeMax: '`20`',
 }
 const comments = {
   color: 'column name',
@@ -104,11 +104,11 @@ const comments = {
   columns: 'number of columns, normally 1 up to 4',
   domain: 'same format as your data',
   height: 'higher than 320 is usually bad on mobile',
-  sizeRangeMax: 'max radius plotted'
+  sizeRangeMax: 'max radius plotted',
 }
 const manualType = {
   colorRange: 'array, string',
-  xTicks: 'array'
+  xTicks: 'array',
 }
 
 const options = propByName.map(({ key, values }) => ({
@@ -116,21 +116,21 @@ const options = propByName.map(({ key, values }) => ({
   Example: examples[key],
   Type:
     values
-      .map(d => d.type)
+      .map((d) => d.type)
       .filter(Boolean)
       .filter(deduplicate)
       .join(', ') || manualType[key],
-  Charts: values.map(d => d.chart).join(', '),
-  Comment: comments[key]
+  Charts: values.map((d) => d.chart).join(', '),
+  Comment: comments[key],
 }))
 
 if (process.env.NODE_ENV === 'production') {
-  options.forEach(option => {
+  options.forEach((option) => {
     delete option.Type
   })
 }
 
-const chartPages = charts.map(key => {
+const chartPages = charts.map((key) => {
   const { base, wrap, defaultProps } = ReactCharts[key]
 
   let label = 'Default props:'
@@ -141,7 +141,7 @@ const chartPages = charts.map(key => {
   }
 
   const keys = Object.keys(defaultProps).filter(
-    key => IGNORE_KEYS.indexOf(key) === -1
+    (key) => IGNORE_KEYS.indexOf(key) === -1,
   )
 
   if (!keys.length) {
@@ -155,9 +155,9 @@ const chartPages = charts.map(key => {
 
   ${(
     <TableSpecimen
-      rows={keys.map(key => ({
+      rows={keys.map((key) => ({
         Name: key,
-        Value: `\`${JSON.stringify(defaultProps[key])}\``
+        Value: `\`${JSON.stringify(defaultProps[key])}\``,
       }))}
     />
   )}

@@ -18,7 +18,7 @@ const styles = {
     overflowX: 'auto',
     overflowY: 'hidden',
     marginLeft: -PADDING,
-    marginRight: -PADDING
+    marginRight: -PADDING,
   }),
   table: css({
     ...sansSerifRegular18,
@@ -26,24 +26,24 @@ const styles = {
     minWidth: '100%',
     borderSpacing: '0 2px',
     borderCollapse: 'separate',
-    padding: `0 ${PADDING - 10}px` // 10 cell padding on first and last cell in a row
+    padding: `0 ${PADDING - 10}px`, // 10 cell padding on first and last cell in a row
   }),
   header: css({
     borderBottomWidth: '1px',
     borderBottomStyle: 'solid',
     padding: '8px 10px',
-    userSelect: 'none'
+    userSelect: 'none',
   }),
   cell: css({
-    padding: '8px 10px'
+    padding: '8px 10px',
   }),
   cellNumber: css({
     textAlign: 'right',
-    fontFeatureSettings: '"tnum", "kern"'
-  })
+    fontFeatureSettings: '"tnum", "kern"',
+  }),
 }
 
-const Table = props => {
+const Table = (props) => {
   const [colorScheme] = useColorContext()
   const {
     values,
@@ -52,23 +52,23 @@ const Table = props => {
     colorRange,
     defaultSortColumn,
     thresholds,
-    tableColumns
+    tableColumns,
   } = props
   const columns = values.columns || Object.keys(values[0] || {})
   const numberFormatter = getFormat(numberFormat)
 
   const [sortBy, setSortBy] = useState({
     key: defaultSortColumn,
-    order: 'desc'
+    order: 'desc',
   })
 
   const numberColumns = tableColumns
-    .filter(d => d.type === 'number')
-    .map(d => d.column)
+    .filter((d) => d.type === 'number')
+    .map((d) => d.column)
   const parsedData = numberColumns.length
-    ? values.map(row => {
+    ? values.map((row) => {
         let parsedRow = { ...row }
-        numberColumns.forEach(key => {
+        numberColumns.forEach((key) => {
           if (parsedRow[key] !== undefined) {
             parsedRow[key] = +parsedRow[key]
           }
@@ -86,15 +86,15 @@ const Table = props => {
   }
 
   // helper function that toggles order (desc/asc) or sets new sort by key (order: desc)
-  const setSort = key => {
+  const setSort = (key) => {
     if (sortBy.key === key) {
       setSortBy(
         sortBy.order === 'asc'
           ? {}
           : {
               key,
-              order: sortBy.order === 'desc' ? 'asc' : 'desc'
-            }
+              order: sortBy.order === 'desc' ? 'asc' : 'desc',
+            },
       )
     } else {
       setSortBy({ key, order: 'desc' })
@@ -109,15 +109,17 @@ const Table = props => {
       .range(
         colorRanges[colorRange] ||
           colorRange ||
-          colorRanges.sequential.slice(0, thresholds.length + 1)
+          colorRanges.sequential.slice(0, thresholds.length + 1),
       )
   } else {
-    const colorColumns = tableColumns.filter(c => c.color).map(c => c.column)
+    const colorColumns = tableColumns
+      .filter((c) => c.color)
+      .map((c) => c.column)
     const colorValues = !colorColumns.length
       ? []
       : parsedData
           .reduce((values, row) => {
-            colorColumns.forEach(key => {
+            colorColumns.forEach((key) => {
               values.push(row[key])
             })
             return values
@@ -142,7 +144,7 @@ const Table = props => {
                     ? 'right'
                     : 'left',
                   cursor: 'pointer',
-                  whiteSpace: sortBy.key === tableHead ? 'nowrap' : undefined
+                  whiteSpace: sortBy.key === tableHead ? 'nowrap' : undefined,
                 }}
                 key={index}
                 onClick={() => setSort(columns[index])}
@@ -169,9 +171,9 @@ const Table = props => {
               {columns.map((cellKey, cellIndex) => (
                 <Cell
                   key={cellIndex}
-                  type={tableColumns.find(d => d.column === cellKey)?.type}
-                  width={tableColumns.find(d => d.column === cellKey)?.width}
-                  color={tableColumns.find(d => d.column === cellKey)?.color}
+                  type={tableColumns.find((d) => d.column === cellKey)?.type}
+                  width={tableColumns.find((d) => d.column === cellKey)?.width}
+                  color={tableColumns.find((d) => d.column === cellKey)?.color}
                   value={row[cellKey]}
                   colorScale={colorScale}
                 >
@@ -195,8 +197,8 @@ export const propTypes = {
       column: PropTypes.string,
       type: PropTypes.string,
       width: PropTypes.string,
-      color: PropTypes.bool
-    })
+      color: PropTypes.bool,
+    }),
   ),
   numberFormat: PropTypes.string.isRequired,
   defaultSortColumn: PropTypes.string,
@@ -205,8 +207,8 @@ export const propTypes = {
   colorRanges: PropTypes.shape({
     diverging2: PropTypes.array.isRequired,
     sequential3: PropTypes.array.isRequired,
-    discrete: PropTypes.array.isRequired
-  }).isRequired
+    discrete: PropTypes.array.isRequired,
+  }).isRequired,
 }
 
 Table.defaultProps = defaultProps.Table
@@ -215,7 +217,7 @@ Table.propTypes = propTypes
 
 export default Table
 
-const Cell = props => {
+const Cell = (props) => {
   const { type, width, color, colorScale, value, children } = props
   return (
     <td
@@ -224,7 +226,7 @@ const Cell = props => {
       style={{
         width: width !== undefined ? +width : undefined,
         backgroundColor: color ? colorScale(value) : 'transparent',
-        color: color && getTextColor(colorScale(value))
+        color: color && getTextColor(colorScale(value)),
       }}
     >
       {children}

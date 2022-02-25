@@ -118,7 +118,7 @@ export const getRepoWithCommit = gql`
 
 const styles = {
   container: css({
-    display: 'flex'
+    display: 'flex',
   }),
   formContainer: css({
     position: 'fixed',
@@ -127,10 +127,10 @@ const styles = {
     width: '500px',
     backgroundColor: 'white',
     overflow: 'scroll',
-    overscrollBehavior: 'contain'
+    overscrollBehavior: 'contain',
   }),
   column: css({
-    padding: '1em'
+    padding: '1em',
   }),
   darkmodeButton: css({
     position: 'absolute',
@@ -138,8 +138,8 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
-  })
+    alignItems: 'center',
+  }),
 }
 
 const Preview = ({ commit }) => {
@@ -151,7 +151,7 @@ const Preview = ({ commit }) => {
         <div style={{ marginRight: PUBLICATION_COLUMN_WIDTH }}>
           <ScreeenSizePicker
             selectedScreenSize={previewScreenSize}
-            onSelect={screenSize => {
+            onSelect={(screenSize) => {
               setPreviewScreenSize(screenSize)
             }}
             inline={true}

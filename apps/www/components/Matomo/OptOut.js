@@ -16,10 +16,10 @@ const OptOut = ({ t }) => {
       setStatus('timeout')
     }, 15000)
     track([
-      function() {
+      function () {
         clearTimeout(timeout.current)
         setStatus(this.isUserOptedOut() ? 'off' : 'on')
-      }
+      },
     ])
   }, [])
   useEffect(() => {
@@ -42,7 +42,7 @@ const OptOut = ({ t }) => {
       {(status === 'off' || status === 'on') && (
         <A
           href='#tracking'
-          onClick={e => {
+          onClick={(e) => {
             e.preventDefault()
             setStatus('saving')
             if (status === 'off') {

@@ -11,7 +11,7 @@ const DiscussionShareOverlay = ({ t, onClose, url, title }) => (
     title={t('discussion/share/title')}
     tweet={''}
     emailSubject={t('discussion/share/emailSubject', {
-      title
+      title,
     })}
     emailBody={''}
     emailAttachUrl={url}

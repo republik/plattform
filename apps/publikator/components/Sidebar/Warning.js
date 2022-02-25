@@ -10,13 +10,13 @@ const styles = {
     color: '#fff',
     marginBottom: 10,
     padding: 10,
-    position: 'relative'
+    position: 'relative',
   }),
   remove: css(plainButtonRule, {
     position: 'absolute',
     right: 5,
-    top: 3
-  })
+    top: 3,
+  }),
 }
 
 const Warning = ({ message, onRemove }) => {

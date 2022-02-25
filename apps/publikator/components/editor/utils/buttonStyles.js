@@ -6,33 +6,33 @@ const base = {
   color: colors.secondary,
   transition: 'color 0.1s, opacity 0.1s',
   '&[data-visible="false"]': {
-    display: 'none'
-  }
+    display: 'none',
+  },
 }
 
 const format = {
   ...base,
   '&[data-active="true"]': {
-    color: colors.primary
+    color: colors.primary,
   },
   '&[data-disabled="true"]': {
     opacity: 0.3,
-    color: colors.secondary
+    color: colors.secondary,
   },
   '&[data-active="false"][data-disabled="false"]:hover': {
-    color: colors.text
-  }
+    color: colors.text,
+  },
 }
 
 const action = {
   ...base,
   '&[data-disabled="true"]': {
     opacity: 0.3,
-    color: colors.secondary
+    color: colors.secondary,
   },
   '&[data-disabled="false"]:hover': {
-    color: colors.text
-  }
+    color: colors.text,
+  },
 }
 
 export default {
@@ -43,14 +43,14 @@ export default {
     textAlign: 'center',
     display: 'inline-block',
     width: '30px',
-    ...format
+    ...format,
   }),
   block: css({
     display: 'block',
-    ...format
+    ...format,
   }),
   insert: css({
     display: 'block',
-    ...action
-  })
+    ...action,
+  }),
 }

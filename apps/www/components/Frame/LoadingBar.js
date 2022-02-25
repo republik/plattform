@@ -13,8 +13,8 @@ const styles = {
     left: 0,
     height: 2,
     backgroundColor: colors.primary,
-    transition: 'width 200ms linear, opacity 200ms linear'
-  })
+    transition: 'width 200ms linear, opacity 200ms linear',
+  }),
 }
 
 class LoadingBar extends Component {
@@ -23,10 +23,10 @@ class LoadingBar extends Component {
 
     this.state = {
       loading: false,
-      progress: 0
+      progress: 0,
     }
   }
-  onRouteChangeStart = url => {
+  onRouteChangeStart = (url) => {
     clearTimeout(this.timeout)
     this.setState({ loading: true, progress: 0.02 })
 
@@ -70,7 +70,7 @@ class LoadingBar extends Component {
             amount = 0.005
           }
           return {
-            progress: progress + amount
+            progress: progress + amount,
           }
         })
       }, 200)
@@ -83,7 +83,7 @@ class LoadingBar extends Component {
         {...styles.loadingBar}
         style={{
           opacity: loading ? 1 : 0,
-          width: `${progress * 100}%`
+          width: `${progress * 100}%`,
         }}
       />
     )

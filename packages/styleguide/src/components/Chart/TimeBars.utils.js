@@ -3,7 +3,7 @@ import { deduplicate, groupBy, xAccessor } from './utils'
 import { max, min } from 'd3-array'
 
 export const intervals = Object.keys(d3Intervals)
-  .filter(key => key.match(/^time/) && key !== 'timeInterval')
+  .filter((key) => key.match(/^time/) && key !== 'timeInterval')
   .reduce((all, key) => {
     all[key.replace(/^time/, '').toLowerCase()] = d3Intervals[key]
     return all
@@ -39,7 +39,7 @@ export const getBaselines = (xDomain, x, width) => {
       lines.push({
         x1,
         x2,
-        gap
+        gap,
       })
     }
     return lines
@@ -56,14 +56,14 @@ const insertXGaps = (
   xIntervalStep,
   xParser,
   xParserFormat,
-  x
+  x,
 ) => {
   const gapsNeeded = Math.max(
     Math.ceil(
       // at least 26 px
-      26 / Math.max(x.bandwidth(), 1)
+      26 / Math.max(x.bandwidth(), 1),
     ),
-    2 // at least 2 bars
+    2, // at least 2 bars
   )
   return xValues.reduce((values, value, index, all) => {
     values.push(value)
@@ -85,7 +85,7 @@ export const insertXDomainGaps = (
   xIntervalStep,
   xParser,
   xParserFormat,
-  x
+  x,
 ) => {
   const intervals = getIntervals(xInterval, xProp, timeParse)
   return intervals
@@ -97,22 +97,22 @@ const sumSegments = (sum, segment) => sum + segment.value
 
 const mergeSegments = ({ values: segments, key: x }) => ({
   segments,
-  up: segments.filter(segment => segment.value > 0).reduce(sumSegments, 0),
-  down: segments.filter(segment => segment.value < 0).reduce(sumSegments, 0),
-  x
+  up: segments.filter((segment) => segment.value > 0).reduce(sumSegments, 0),
+  down: segments.filter((segment) => segment.value < 0).reduce(sumSegments, 0),
+  x,
 })
 
-export const processSegments = data => ({
+export const processSegments = (data) => ({
   bars: groupBy(data.values, xAccessor).map(mergeSegments),
-  key: data.key
+  key: data.key,
 })
 
-const getGroupMin = group => min(group.bars, d => d.down)
+const getGroupMin = (group) => min(group.bars, (d) => d.down)
 
-const getGroupMax = group => max(group.bars, d => d.up)
+const getGroupMax = (group) => max(group.bars, (d) => d.up)
 
-export const getMin = groupedData => {
+export const getMin = (groupedData) => {
   return min([0].concat(groupedData.map(getGroupMin)))
 }
 
-export const getMax = groupedData => max(groupedData.map(getGroupMax))
+export const getMax = (groupedData) => max(groupedData.map(getGroupMax))

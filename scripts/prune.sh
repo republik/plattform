@@ -1,15 +1,19 @@
-# experiemntal script that could be used as an heroku-prebuild 
+# experiemntal script that is used as an heroku-prebuild
+SERVER=${SERVER:-api}
 
-if [ -z "$SERVER" ] || [ "$SERVER" = "api" ] || [ "$SERVER" = "assets" ]
+if [ "$SERVER" = "styleguide" ]
 then
-  # backend first needs to properly define dependencies
-  exit 0
-elif [ "$SERVER" = "styleguide" ]
-then
-  yarn turbo prune --scope="@project-r/styleguide"
+  npx turbo prune --scope="@project-r/styleguide"
 else
-  yarn turbo prune --scope="$SERVER"
+  npx turbo prune --scope="@orbiting/$SERVER-app"
 fi
+
+if [ -f apps/www/.env ] || [ -f apps/api/.env ] || [ -f apps/assets/.env ]
+then
+  echo "⚠️ Early exit 1 because .env files were detected. The pruned out will not overwrite the root directory."
+  exit 1
+fi
+
 rm yarn.lock
 rm -rf packages
 rm -rf apps

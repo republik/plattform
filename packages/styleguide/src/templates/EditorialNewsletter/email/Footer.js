@@ -10,7 +10,7 @@ const footerParagraphStyle = {
   color: colors.text,
   fontFamily: fontFamilies.sansSerifRegular,
   fontSize: '15px',
-  lineHeight: '30px'
+  lineHeight: '30px',
 }
 
 const footerLinkStyle = {
@@ -18,7 +18,7 @@ const footerLinkStyle = {
   color: colors.text,
   fontFamily: fontFamilies.sansSerifRegular,
   fontSize: '15px',
-  lineHeight: '30px'
+  lineHeight: '30px',
 }
 
 const Footer = ({ meta }) => {
@@ -35,7 +35,7 @@ const Footer = ({ meta }) => {
             width: '178px !important',
             height: '79px !important',
             margin: 0,
-            maxWidth: '100% !important'
+            maxWidth: '100% !important',
           }}
           alt='REPUBLIK'
         />

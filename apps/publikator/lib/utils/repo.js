@@ -1,12 +1,12 @@
 import { GITHUB_ORG, REPO_PREFIX, TEMPLATE_PREFIX } from '../settings'
 import { t } from '../withT'
 
-export const getLabel = repo => {
+export const getLabel = (repo) => {
   const {
     id: repoId,
     latestCommit: {
-      document: { meta }
-    }
+      document: { meta },
+    },
   } = repo
 
   if (meta.series) {
@@ -15,7 +15,7 @@ export const getLabel = repo => {
     const isTitleDifferent = meta.title !== title
     const isOverview = overview?.repoId === repoId
 
-    const index = episodes?.findIndex(e => e.document?.repoId === repoId)
+    const index = episodes?.findIndex((e) => e.document?.repoId === repoId)
     const label = index >= 0 && episodes[index].label
     const number =
       index >= 0 &&
@@ -26,7 +26,7 @@ export const getLabel = repo => {
       isTitleDifferent && title,
       isOverview && t('repo/label/series/overview'),
       label,
-      number
+      number,
     ]
       .filter(Boolean)
       .join(' – ')
@@ -41,12 +41,12 @@ export const getLabel = repo => {
   )
 }
 
-export const getTitle = repo => {
+export const getTitle = (repo) => {
   const {
     id,
     latestCommit: {
-      document: { meta }
-    }
+      document: { meta },
+    },
   } = repo
 
   const isPlayground = meta.title?.match(/(^Spielplatz|Spielplatz$)/gi)
@@ -58,16 +58,16 @@ export const getTitle = repo => {
   )
 }
 
-export const isPrepublished = publication =>
+export const isPrepublished = (publication) =>
   publication.document && publication.prepublication
 
-export const isPublished = publication =>
+export const isPublished = (publication) =>
   publication.document && !publication.prepublication && publication.live
 
-export const getTemplateRepoPrefix = templateId =>
+export const getTemplateRepoPrefix = (templateId) =>
   templateId.split('/')[1].replace(TEMPLATE_PREFIX, '')
 
 export const containsRepoFromTemplate = (repos, templateRepoId) =>
-  !!repos.find(repo =>
-    repo.id.split('/')[1].startsWith(getTemplateRepoPrefix(templateRepoId))
+  !!repos.find((repo) =>
+    repo.id.split('/')[1].startsWith(getTemplateRepoPrefix(templateRepoId)),
   )

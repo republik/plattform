@@ -10,21 +10,21 @@ const styles = {
   uiContainer: css({
     position: 'relative',
     height: 0,
-    overflow: 'visible'
+    overflow: 'visible',
   }),
   ui: css({
     position: 'absolute',
     zIndex: 10,
     overflow: 'hidden',
     display: 'flex',
-    margin: 0
+    margin: 0,
   }),
   breakoutUI: css({
-    top: -35
-  })
+    top: -35,
+  }),
 }
 
-export const MarkButton = props => {
+export const MarkButton = (props) => {
   if (!props.onMouseDown) return null
   return <span {...buttonStyles.mark} {...props} />
 }
@@ -40,18 +40,18 @@ const InlineUI = ({ editor, node, isMatch, children }) => {
 
   if (!isSelected) return null
 
-  const getAllCenters = currentParent => {
+  const getAllCenters = (currentParent) => {
     const allCenters = parent(
       editor.state.value,
-      currentParent.key
-    ).nodes.filter(n => n.type === 'CENTER')
+      currentParent.key,
+    ).nodes.filter((n) => n.type === 'CENTER')
     return {
       allCenters,
-      currentCenterIndex: allCenters.indexOf(currentParent)
+      currentCenterIndex: allCenters.indexOf(currentParent),
     }
   }
 
-  const getNextParent = currentParent => {
+  const getNextParent = (currentParent) => {
     const { allCenters, currentCenterIndex } = getAllCenters(currentParent)
     if (allCenters.size === 1) {
       return currentParent
@@ -62,7 +62,7 @@ const InlineUI = ({ editor, node, isMatch, children }) => {
     }
   }
 
-  const getPreviousParent = currentParent => {
+  const getPreviousParent = (currentParent) => {
     const { allCenters, currentCenterIndex } = getAllCenters(currentParent)
     if (allCenters.size === 1) {
       return currentParent
@@ -73,7 +73,7 @@ const InlineUI = ({ editor, node, isMatch, children }) => {
     }
   }
 
-  const moveHandler = dir => event => {
+  const moveHandler = (dir) => (event) => {
     event.preventDefault()
     const rect = ref.current.getBoundingClientRect()
     const top = (rect.top + rect.height / 2) / window.innerHeight
@@ -86,13 +86,15 @@ const InlineUI = ({ editor, node, isMatch, children }) => {
       targetParent = getNextParent(targetParent)
       targetIndex = 0
     }
-    editor.change(t => t.moveNodeByKey(node.key, targetParent.key, targetIndex))
+    editor.change((t) =>
+      t.moveNodeByKey(node.key, targetParent.key, targetIndex),
+    )
     setTimeout(() => {
       scrollIntoView(ref.current, {
         time: 0,
         align: {
-          top
-        }
+          top,
+        },
       })
     }, 0)
   }
@@ -107,7 +109,7 @@ const InlineUI = ({ editor, node, isMatch, children }) => {
         ref={ref}
         {...merge(styles.ui, !showMoveUI && styles.breakoutUI)}
         style={{
-          left: !showMoveUI ? 0 : -(width + 15)
+          left: !showMoveUI ? 0 : -(width + 15),
         }}
       >
         {showMoveUI && (

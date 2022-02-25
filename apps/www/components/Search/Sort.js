@@ -5,7 +5,7 @@ import { ArrowDownIcon, ArrowUpIcon } from '@project-r/styleguide'
 import {
   fontStyles,
   mediaQueries,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
 import withSearchRouter from './withSearchRouter'
@@ -16,36 +16,36 @@ import Link from 'next/link'
 
 const styles = {
   container: css({
-    paddingTop: '3px'
+    paddingTop: '3px',
   }),
   link: css({
     ...fontStyles.sansSerifRegular14,
     marginRight: '17px',
     [mediaQueries.mUp]: {
       ...fontStyles.sansSerifRegular16,
-      marginRight: '30px'
-    }
+      marginRight: '30px',
+    },
   }),
   linkRegular: css({
-    textDecoration: 'none'
+    textDecoration: 'none',
   }),
   linkSelected: css({
     textDecoration: 'underline',
-    textDecorationSkip: 'ink'
+    textDecorationSkip: 'ink',
   }),
   icon: css({
     display: 'inline-block',
     lineHeight: 0,
-    verticalAlign: 'text-bottom'
-  })
+    verticalAlign: 'text-bottom',
+  }),
 }
 
 const SORT_DIRECTION_ICONS = {
   ASC: ArrowDownIcon,
-  DESC: ArrowUpIcon
+  DESC: ArrowUpIcon,
 }
 
-const getDefaultDirection = sort => sort.directions && sort.directions[0]
+const getDefaultDirection = (sort) => sort.directions && sort.directions[0]
 
 const getNextDirection = (sort, directions) => {
   const index = directions.indexOf(sort.direction)
@@ -62,11 +62,11 @@ const SortToggle = compose(withT)(({ t, sort, urlSort, getSearchParams }) => {
       css({
         '@media (hover)': {
           ':hover': {
-            color: colorScheme.getCSSColor('textSoft')
-          }
-        }
+            color: colorScheme.getCSSColor('textSoft'),
+          },
+        },
       }),
-    [colorScheme]
+    [colorScheme],
   )
   return (
     <Link
@@ -78,9 +78,9 @@ const SortToggle = compose(withT)(({ t, sort, urlSort, getSearchParams }) => {
             direction:
               selected && direction
                 ? getNextDirection(urlSort, sort.directions)
-                : direction
-          }
-        })
+                : direction,
+          },
+        }),
       }}
       passHref
     >
@@ -109,7 +109,7 @@ const Sort = compose(withSearchRouter)(
   ({ urlQuery, urlSort, getSearchParams }) => {
     return (
       <div {...styles.container}>
-        {SUPPORTED_SORT.filter(sort => urlQuery || !sort.needsQuery).map(
+        {SUPPORTED_SORT.filter((sort) => urlQuery || !sort.needsQuery).map(
           (sort, key) => (
             <SortToggle
               key={key}
@@ -117,11 +117,11 @@ const Sort = compose(withSearchRouter)(
               urlSort={urlSort}
               getSearchParams={getSearchParams}
             />
-          )
+          ),
         )}
       </div>
     )
-  }
+  },
 )
 
 export default Sort

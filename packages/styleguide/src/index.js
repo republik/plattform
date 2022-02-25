@@ -17,7 +17,7 @@ import { DiscussionContext } from './components/Discussion/DiscussionContext'
 import { createSampleDiscussionContextValue } from './components/Discussion/DiscussionContext.docs'
 import {
   ColorContextProvider,
-  useColorContext
+  useColorContext,
 } from './components/Colors/ColorContext'
 import { IconContextProvider } from './components/Icons'
 import { DarkmodeIcon } from './components/Icons'
@@ -31,7 +31,7 @@ speedy(false)
 // we want react code by default :)
 ReactSpecimen.defaultProps = {
   ...ReactSpecimen.defaultProps,
-  showSource: true
+  showSource: true,
 }
 
 const GetColorScheme = ({ children }) => {
@@ -53,7 +53,7 @@ const darkModeSwitch = css({
   WebkitAppearance: 'none',
   background: 'transparent',
   border: 'none',
-  cursor: 'pointer'
+  cursor: 'pointer',
 })
 
 const DarkModeSwitch = ({ setColorSchemeKey, colorSchemeKey }) => {
@@ -93,26 +93,26 @@ const Styleguide = () => {
                 { name: 'Mobile', width: 320, height: 480 },
                 { name: 'Desktop small', width: 800, height: 600 },
                 { name: 'Desktop large', width: 1095, height: 800 },
-                { name: 'Desktop xlarge', width: 2560, height: 800 }
+                { name: 'Desktop xlarge', width: 2560, height: 800 },
               ]}
               specimens={{
                 'remove-react-source': () => {
                   // eslint-disable-next-line
                   React.useEffect(() => {
                     for (const el of document.querySelectorAll(
-                      '[class$=-source-className'
+                      '[class$=-source-className',
                     )) {
                       el.remove()
                     }
                   }, [])
                   return null
-                }
+                },
               }}
               pages={[
                 {
                   path: '/',
                   title: 'Overview',
-                  src: require('./README.md')
+                  src: require('./README.md'),
                 },
                 {
                   title: 'Brand',
@@ -122,9 +122,9 @@ const Styleguide = () => {
                       title: 'Logo',
                       imports: {
                         Logo: require('./components/Logo'),
-                        BrandMark: require('./components/Logo/BrandMark')
+                        BrandMark: require('./components/Logo/BrandMark'),
                       },
-                      src: require('./components/Logo/docs.md')
+                      src: require('./components/Logo/docs.md'),
                     },
                     {
                       path: '/typography',
@@ -133,14 +133,14 @@ const Styleguide = () => {
                         ...require('./components/Typography'),
                         css,
                         styles: JSON.parse(JSON.stringify(fontStyles)),
-                        fontFamilies: require('./theme/fonts').fontFamilies
+                        fontFamilies: require('./theme/fonts').fontFamilies,
                       },
-                      src: require('./components/Typography/docs.md')
+                      src: require('./components/Typography/docs.md'),
                     },
                     {
                       path: '/colors',
                       title: 'Colors',
-                      component: require('./theme/colors.docs.js')
+                      component: require('./theme/colors.docs.js'),
                     },
                     {
                       path: '/icons',
@@ -149,9 +149,9 @@ const Styleguide = () => {
                         css,
                         ...require('./components/Icons'),
                         ...require('./components/Typography'),
-                        IconButton: require('./components/IconButton')
+                        IconButton: require('./components/IconButton'),
                       },
-                      src: require('./components/Icons/docs.md')
+                      src: require('./components/Icons/docs.md'),
                     },
                     {
                       path: '/share-image',
@@ -162,10 +162,10 @@ const Styleguide = () => {
                         ShareImageGenerator: require('./components/ShareImage'),
                         ShareImagePreview: require('./components/ShareImage/ShareImagePreview'),
                         SharePreviewTwitter: require('./components/ShareImage/SharePreviewTwitter'),
-                        SharePreviewFacebook: require('./components/ShareImage/SharePreviewFacebook')
-                      }
-                    }
-                  ]
+                        SharePreviewFacebook: require('./components/ShareImage/SharePreviewFacebook'),
+                      },
+                    },
+                  ],
                 },
                 {
                   title: 'Components',
@@ -176,15 +176,15 @@ const Styleguide = () => {
                       imports: {
                         Spinner: require('./components/Spinner'),
                         InlineSpinner: require('./components/Spinner')
-                          .InlineSpinner
+                          .InlineSpinner,
                       },
-                      src: require('./components/Spinner/docs.md')
+                      src: require('./components/Spinner/docs.md'),
                     },
                     {
                       path: '/components/container',
                       title: 'Container',
                       imports: require('./components/Grid'),
-                      src: require('./components/Grid/docs.md')
+                      src: require('./components/Grid/docs.md'),
                     },
                     {
                       path: '/components/loader',
@@ -193,10 +193,10 @@ const Styleguide = () => {
                         ...require('./components/Typography'),
                         Loader: require('./components/Loader'),
                         Spinner: require('./components/Spinner'),
-                        NarrowContainer: require('./components/Grid')
-                          .NarrowContainer
+                        NarrowContainer:
+                          require('./components/Grid').NarrowContainer,
                       },
-                      src: require('./components/Loader/docs.md')
+                      src: require('./components/Loader/docs.md'),
                     },
                     {
                       path: '/components/button',
@@ -207,28 +207,28 @@ const Styleguide = () => {
                         Button: require('./components/Button'),
                         AudioIcon: require('./components/Icons').AudioIcon,
                         plainButtonRule: require('./components/Button')
-                          .plainButtonRule
+                          .plainButtonRule,
                       },
-                      src: require('./components/Button/docs.md')
+                      src: require('./components/Button/docs.md'),
                     },
                     {
                       path: '/components/iconbutton',
                       title: 'IconButton',
                       imports: {
                         css,
-                        BookmarkIcon: require('./components/Icons')
-                          .BookmarkIcon,
-                        IconButton: require('./components/IconButton')
+                        BookmarkIcon:
+                          require('./components/Icons').BookmarkIcon,
+                        IconButton: require('./components/IconButton'),
                       },
-                      src: require('./components/IconButton/docs.md')
+                      src: require('./components/IconButton/docs.md'),
                     },
                     {
                       path: '/format',
                       title: 'FormatTag',
                       imports: {
-                        ...require('./components/Format')
+                        ...require('./components/Format'),
                       },
-                      src: require('./components/Format/docs.md')
+                      src: require('./components/Format/docs.md'),
                     },
                     {
                       path: '/components/overlay',
@@ -236,18 +236,18 @@ const Styleguide = () => {
                       imports: {
                         t,
                         ...require('./components/Overlay/docs.imports'),
-                        Slider: require('./components/Form/Slider.tsx')
+                        Slider: require('./components/Form/Slider.tsx'),
                       },
-                      src: require('./components/Overlay/docs.md')
+                      src: require('./components/Overlay/docs.md'),
                     },
                     {
                       path: '/components/raw-html',
                       title: 'RawHtml',
                       imports: {
                         ...require('./components/Typography'),
-                        RawHtml: require('./components/RawHtml')
+                        RawHtml: require('./components/RawHtml'),
                       },
-                      src: require('./components/RawHtml/docs.md')
+                      src: require('./components/RawHtml/docs.md'),
                     },
                     {
                       path: '/videoplayer',
@@ -256,9 +256,9 @@ const Styleguide = () => {
                         css,
                         ...require('./components/Typography'),
                         ...require('./components/VideoPlayer'),
-                        Center: require('./components/Center')
+                        Center: require('./components/Center'),
                       },
-                      src: require('./components/VideoPlayer/docs.md')
+                      src: require('./components/VideoPlayer/docs.md'),
                     },
                     {
                       path: '/audioplayer',
@@ -268,9 +268,9 @@ const Styleguide = () => {
                         css,
                         ...require('./components/Typography'),
                         ...require('./components/AudioPlayer'),
-                        Center: require('./components/Center')
+                        Center: require('./components/Center'),
                       },
-                      src: require('./components/AudioPlayer/docs.md')
+                      src: require('./components/AudioPlayer/docs.md'),
                     },
                     {
                       path: '/lazyload',
@@ -278,18 +278,18 @@ const Styleguide = () => {
                       imports: {
                         ...require('./components/Typography').Interaction,
                         LazyLoad: require('./components/LazyLoad'),
-                        LazyImage: require('./components/LazyLoad/Image')
+                        LazyImage: require('./components/LazyLoad/Image'),
                       },
-                      src: require('./components/LazyLoad/docs.md')
+                      src: require('./components/LazyLoad/docs.md'),
                     },
                     {
                       path: '/components/progress',
                       title: 'Progress',
                       imports: {
                         ...require('./components/Progress'),
-                        colors: require('./theme/colors')
+                        colors: require('./theme/colors'),
                       },
-                      src: require('./components/Progress/docs.md')
+                      src: require('./components/Progress/docs.md'),
                     },
                     {
                       path: '/collapsable',
@@ -297,19 +297,19 @@ const Styleguide = () => {
                       imports: {
                         t,
                         ...require('./components/Typography'),
-                        ...require('./components/Collapsable')
+                        ...require('./components/Collapsable'),
                       },
-                      src: require('./components/Collapsable/docs.md')
+                      src: require('./components/Collapsable/docs.md'),
                     },
                     {
                       path: '/callout',
                       title: 'Callout',
                       imports: {
                         CalloutMenu: require('./components/Callout/CalloutMenu'),
-                        NotificationIcon: require('./components/Icons')
-                          .NotificationIcon
+                        NotificationIcon:
+                          require('./components/Icons').NotificationIcon,
                       },
-                      src: require('./components/Callout/docs.md')
+                      src: require('./components/Callout/docs.md'),
                     },
                     {
                       path: '/tabs',
@@ -319,11 +319,11 @@ const Styleguide = () => {
                         Scroller: require('./components/Tabs/Scroller'),
                         TabButton: require('./components/Tabs/TabButton'),
                         plainButtonRule: require('./components/Button')
-                          .plainButtonRule
+                          .plainButtonRule,
                       },
-                      src: require('./components/Tabs/docs.md')
-                    }
-                  ]
+                      src: require('./components/Tabs/docs.md'),
+                    },
+                  ],
                 },
                 {
                   title: 'Forms',
@@ -342,9 +342,9 @@ const Styleguide = () => {
                         FieldSet: require('./components/Form/FieldSet.js'),
                         MaskedInput: require('react-maskedinput'),
                         AutosizeInput: require('react-textarea-autosize'),
-                        SearchIcon: require('./components/Icons').SearchIcon
+                        SearchIcon: require('./components/Icons').SearchIcon,
                       },
-                      src: require('./components/Form/docs.md')
+                      src: require('./components/Form/docs.md'),
                     },
                     {
                       path: '/forms/radio',
@@ -353,9 +353,9 @@ const Styleguide = () => {
                         css,
                         ...require('./components/Typography'),
                         Radio: require('./components/Form/Radio.tsx'),
-                        GetColorScheme
+                        GetColorScheme,
                       },
-                      src: require('./components/Form/Radio.docs.md')
+                      src: require('./components/Form/Radio.docs.md'),
                     },
                     {
                       path: '/forms/checkbox',
@@ -364,9 +364,9 @@ const Styleguide = () => {
                         css,
                         ...require('./components/Typography'),
                         Checkbox: require('./components/Form/Checkbox.tsx'),
-                        GetColorScheme
+                        GetColorScheme,
                       },
-                      src: require('./components/Form/Checkbox.docs.md')
+                      src: require('./components/Form/Checkbox.docs.md'),
                     },
                     {
                       path: '/forms/dropdown',
@@ -385,31 +385,31 @@ const Styleguide = () => {
                           { value: '3', text: 'Pizzaliebhaberin' },
                           {
                             value: '4',
-                            text: 'Fussballspielende Redaktionspizzaliebhaberin'
+                            text: 'Fussballspielende Redaktionspizzaliebhaberin',
                           },
                           {
                             value: '5',
-                            text:
-                              'Fussballspielende Redaktionspizzaliebhaberin Elementa',
+                            text: 'Fussballspielende Redaktionspizzaliebhaberin Elementa',
                             element: (
                               <span>
                                 <small>Fussballspielende</small>
                                 <br />
                                 Redaktionspizzaliebhaberin Elementa
                               </span>
-                            )
-                          }
+                            ),
+                          },
                         ],
                         VirtualDropdownInternal: {
                           Items: require('./components/Form/VirtualDropdown')
                             .Items,
-                          ItemsContainer: require('./components/Form/VirtualDropdown')
-                            .ItemsContainer,
+                          ItemsContainer:
+                            require('./components/Form/VirtualDropdown')
+                              .ItemsContainer,
                           Inner: require('./components/Form/VirtualDropdown')
-                            .Inner
-                        }
+                            .Inner,
+                        },
                       },
-                      src: require('./components/Form/Dropdown.docs.md')
+                      src: require('./components/Form/Dropdown.docs.md'),
                     },
                     {
                       path: '/forms/autocomplete',
@@ -418,9 +418,9 @@ const Styleguide = () => {
                         css,
                         ...require('./components/Typography'),
                         Autocomplete: require('./components/Form/Autocomplete.js'),
-                        SearchIcon: require('./components/Icons').SearchIcon
+                        SearchIcon: require('./components/Icons').SearchIcon,
                       },
-                      src: require('./components/Form/Autocomplete.docs.md')
+                      src: require('./components/Form/Autocomplete.docs.md'),
                     },
                     {
                       path: '/forms/slider',
@@ -428,11 +428,11 @@ const Styleguide = () => {
                       imports: {
                         css,
                         ...require('./components/Typography'),
-                        Slider: require('./components/Form/Slider.tsx')
+                        Slider: require('./components/Form/Slider.tsx'),
                       },
-                      src: require('./components/Form/Slider.docs.md')
-                    }
-                  ]
+                      src: require('./components/Form/Slider.docs.md'),
+                    },
+                  ],
                 },
                 {
                   title: 'Discussion',
@@ -440,34 +440,34 @@ const Styleguide = () => {
                     {
                       path: '/components/discussion',
                       title: 'Introduction',
-                      src: require('./components/Discussion/docs.md')
+                      src: require('./components/Discussion/docs.md'),
                     },
                     {
                       path: '/components/discussion/comment-teaser',
                       title: 'Comment Teaser',
                       imports: {
                         t,
-                        ...require('./components/CommentTeaser/docs.imports')
+                        ...require('./components/CommentTeaser/docs.imports'),
                       },
-                      src: require('./components/CommentTeaser/docs.md')
+                      src: require('./components/CommentTeaser/docs.md'),
                     },
                     {
                       path: '/components/discussion/composer',
                       title: 'Composer',
                       imports: {
                         t,
-                        ...require('./components/Discussion/Composer/docs.imports')
+                        ...require('./components/Discussion/Composer/docs.imports'),
                       },
-                      src: require('./components/Discussion/Composer/docs.md')
+                      src: require('./components/Discussion/Composer/docs.md'),
                     },
                     {
                       path: '/components/discussion/tree',
                       title: 'Tree',
                       imports: {
                         t,
-                        ...require('./components/Discussion/Tree/docs.imports')
+                        ...require('./components/Discussion/Tree/docs.imports'),
                       },
-                      src: require('./components/Discussion/Tree/docs.md')
+                      src: require('./components/Discussion/Tree/docs.md'),
                     },
                     {
                       path: '/components/discussion/internal',
@@ -475,11 +475,11 @@ const Styleguide = () => {
                       imports: {
                         t,
                         createSampleDiscussionContextValue,
-                        ...require('./components/Discussion/Internal/docs.imports')
+                        ...require('./components/Discussion/Internal/docs.imports'),
                       },
-                      src: require('./components/Discussion/Internal/docs.md')
-                    }
-                  ]
+                      src: require('./components/Discussion/Internal/docs.md'),
+                    },
+                  ],
                 },
                 {
                   title: 'Article Elements',
@@ -489,9 +489,9 @@ const Styleguide = () => {
                       title: 'Center',
                       imports: {
                         Center: require('./components/Center'),
-                        Breakout: require('./components/Center').Breakout
+                        Breakout: require('./components/Center').Breakout,
                       },
-                      src: require('./components/Center/docs.md')
+                      src: require('./components/Center/docs.md'),
                     },
                     {
                       path: '/titleblock',
@@ -500,9 +500,9 @@ const Styleguide = () => {
                         css,
                         ...require('./components/Typography'),
                         TitleBlock: require('./components/TitleBlock'),
-                        TeaserFrontLogo: require('./components/TeaserFront/Logo')
+                        TeaserFrontLogo: require('./components/TeaserFront/Logo'),
                       },
-                      src: require('./components/TitleBlock/docs.md')
+                      src: require('./components/TitleBlock/docs.md'),
                     },
                     {
                       path: '/blockquote',
@@ -511,9 +511,9 @@ const Styleguide = () => {
                         css,
                         ...require('./components/BlockQuote'),
                         ...require('./components/Typography'),
-                        ...require('./components/Figure')
+                        ...require('./components/Figure'),
                       },
-                      src: require('./components/BlockQuote/docs.md')
+                      src: require('./components/BlockQuote/docs.md'),
                     },
                     {
                       path: '/pullquote',
@@ -523,9 +523,9 @@ const Styleguide = () => {
                         ...require('./components/Typography'),
                         ...require('./components/PullQuote'),
                         ...require('./components/Figure'),
-                        Center: require('./components/Center')
+                        Center: require('./components/Center'),
                       },
-                      src: require('./components/PullQuote/docs.md')
+                      src: require('./components/PullQuote/docs.md'),
                     },
                     {
                       path: '/infobox',
@@ -536,9 +536,9 @@ const Styleguide = () => {
                         ...require('./components/Typography'),
                         ...require('./components/InfoBox'),
                         ...require('./components/Figure'),
-                        Center: require('./components/Center')
+                        Center: require('./components/Center'),
                       },
-                      src: require('./components/InfoBox/docs.md')
+                      src: require('./components/InfoBox/docs.md'),
                     },
                     {
                       path: '/tweet',
@@ -547,9 +547,9 @@ const Styleguide = () => {
                         css,
                         ...require('./components/Typography'),
                         Tweet: require('./components/Social/Tweet'),
-                        Center: require('./components/Center')
+                        Center: require('./components/Center'),
                       },
-                      src: require('./components/Social/docs.md')
+                      src: require('./components/Social/docs.md'),
                     },
                     {
                       path: '/video',
@@ -559,9 +559,9 @@ const Styleguide = () => {
                         css,
                         ...require('./components/Typography'),
                         ...require('./components/Video'),
-                        Center: require('./components/Center')
+                        Center: require('./components/Center'),
                       },
-                      src: require('./components/Video/docs.md')
+                      src: require('./components/Video/docs.md'),
                     },
                     {
                       path: '/figure',
@@ -572,9 +572,9 @@ const Styleguide = () => {
                         ...require('./components/Figure'),
                         Center: require('./components/Center'),
                         Fragment,
-                        ColorContextProvider
+                        ColorContextProvider,
                       },
-                      src: require('./components/Figure/docs.md')
+                      src: require('./components/Figure/docs.md'),
                     },
                     {
                       path: '/list',
@@ -583,9 +583,9 @@ const Styleguide = () => {
                         css,
                         ...require('./components/Typography'),
                         ...require('./components/List'),
-                        Center: require('./components/Center')
+                        Center: require('./components/Center'),
                       },
-                      src: require('./components/List/docs.md')
+                      src: require('./components/List/docs.md'),
                     },
                     {
                       path: '/dossier',
@@ -596,27 +596,27 @@ const Styleguide = () => {
                         ...require('./components/Typography'),
                         ...require('./components/Dossier'),
                         ...require('./components/TeaserFront'),
-                        ...require('./components/Figure')
+                        ...require('./components/Figure'),
                       },
-                      src: require('./components/Dossier/docs.md')
+                      src: require('./components/Dossier/docs.md'),
                     },
                     {
                       path: '/illustration-html',
                       title: 'IllustrationHtml',
                       imports: {
-                        IllustrationHtml: require('./components/IllustrationHtml')
+                        IllustrationHtml: require('./components/IllustrationHtml'),
                       },
-                      src: require('./components/IllustrationHtml/docs.md')
+                      src: require('./components/IllustrationHtml/docs.md'),
                     },
                     {
                       path: '/dynamic-component',
                       title: 'DynamicComponent',
                       imports: {
-                        DynamicComponent: require('./components/DynamicComponent')
+                        DynamicComponent: require('./components/DynamicComponent'),
                       },
-                      src: require('./components/DynamicComponent/docs.md')
-                    }
-                  ]
+                      src: require('./components/DynamicComponent/docs.md'),
+                    },
+                  ],
                 },
                 {
                   title: 'Teasers',
@@ -630,11 +630,11 @@ const Styleguide = () => {
                         ...require('./components/Typography'),
                         ...require('./components/TeaserFeed'),
                         AudioIcon: require('./components/Icons').AudioIcon,
-                        BookmarkIcon: require('./components/Icons')
-                          .BookmarkIcon,
-                        Center: require('./components/Center')
+                        BookmarkIcon:
+                          require('./components/Icons').BookmarkIcon,
+                        Center: require('./components/Center'),
                       },
-                      src: require('./components/TeaserFeed/docs.md')
+                      src: require('./components/TeaserFeed/docs.md'),
                     },
                     {
                       path: '/teaserfrontimage',
@@ -643,9 +643,9 @@ const Styleguide = () => {
                         css,
                         ...require('./components/Typography'),
                         ...require('./components/TeaserFront'),
-                        Image: require('./components/Figure/Image')
+                        Image: require('./components/Figure/Image'),
                       },
-                      src: require('./components/TeaserFront/Image.md')
+                      src: require('./components/TeaserFront/Image.md'),
                     },
                     {
                       path: '/teaserfronttypo',
@@ -653,9 +653,9 @@ const Styleguide = () => {
                       imports: {
                         css,
                         ...require('./components/Typography'),
-                        ...require('./components/TeaserFront')
+                        ...require('./components/TeaserFront'),
                       },
-                      src: require('./components/TeaserFront/Typo.md')
+                      src: require('./components/TeaserFront/Typo.md'),
                     },
                     {
                       path: '/teaserfrontsplit',
@@ -664,9 +664,9 @@ const Styleguide = () => {
                         css,
                         ...require('./components/Typography'),
                         ...require('./components/TeaserFront'),
-                        Image: require('./components/Figure/Image')
+                        Image: require('./components/Figure/Image'),
                       },
-                      src: require('./components/TeaserFront/Split.md')
+                      src: require('./components/TeaserFront/Split.md'),
                     },
                     {
                       path: '/teaserfronttile',
@@ -675,9 +675,9 @@ const Styleguide = () => {
                         css,
                         ...require('./components/Typography'),
                         ...require('./components/TeaserFront'),
-                        Image: require('./components/Figure/Image')
+                        Image: require('./components/Figure/Image'),
                       },
-                      src: require('./components/TeaserFront/Tile.md')
+                      src: require('./components/TeaserFront/Tile.md'),
                     },
                     {
                       path: '/teaserfrontdossier',
@@ -688,9 +688,9 @@ const Styleguide = () => {
                         ...require('./components/Typography'),
                         ...require('./components/Dossier'),
                         ...require('./components/TeaserFront'),
-                        ...require('./components/Figure')
+                        ...require('./components/Figure'),
                       },
-                      src: require('./components/Dossier/Teaser.md')
+                      src: require('./components/Dossier/Teaser.md'),
                     },
                     {
                       path: '/teaseractivedebates',
@@ -702,9 +702,9 @@ const Styleguide = () => {
                         ...require('./components/TeaserActiveDebates/__docs__'),
                         ...require('./components/Discussion/Internal/Comment'),
                         ...require('./components/TeaserShared'),
-                        ...require('./components/Typography')
+                        ...require('./components/Typography'),
                       },
-                      src: require('./components/TeaserActiveDebates/docs.md')
+                      src: require('./components/TeaserActiveDebates/docs.md'),
                     },
                     {
                       path: '/teasermymagazine',
@@ -715,11 +715,11 @@ const Styleguide = () => {
                         ...require('./components/TeaserMyMagazine/__docs__'),
                         ...require('./components/TeaserFeed'),
                         ...require('./components/Progress'),
-                        BookmarkIcon: require('./components/Icons')
-                          .BookmarkIcon,
-                        IconButton: require('./components/IconButton')
+                        BookmarkIcon:
+                          require('./components/Icons').BookmarkIcon,
+                        IconButton: require('./components/IconButton'),
                       },
-                      src: require('./components/TeaserMyMagazine/docs.md')
+                      src: require('./components/TeaserMyMagazine/docs.md'),
                     },
                     {
                       path: '/teasercarousel',
@@ -731,11 +731,11 @@ const Styleguide = () => {
                         ...require('./components/TeaserCarousel'),
                         ...require('./components/TeaserShared'),
                         ...require('./components/TeaserFront'),
-                        ...require('./components/Typography')
+                        ...require('./components/Typography'),
 
                         // ...require("./components/Figure")
                       },
-                      src: require('./components/TeaserCarousel/docs.md')
+                      src: require('./components/TeaserCarousel/docs.md'),
                     },
                     {
                       path: '/seriesnav',
@@ -750,20 +750,20 @@ const Styleguide = () => {
                         ...require('./components/Typography'),
                         ...require('./components/Progress'),
                         ...require('./components/Icons'),
-                        IconButton: require('./components/IconButton')
+                        IconButton: require('./components/IconButton'),
                       },
-                      src: require('./components/SeriesNav/docs.md')
+                      src: require('./components/SeriesNav/docs.md'),
                     },
                     {
                       path: '/teasershared',
                       title: 'Shared',
                       imports: {
                         css,
-                        ...require('./components/TeaserShared')
+                        ...require('./components/TeaserShared'),
                       },
-                      src: require('./components/TeaserShared/docs.md')
-                    }
-                  ]
+                      src: require('./components/TeaserShared/docs.md'),
+                    },
+                  ],
                 },
                 {
                   title: 'Templates',
@@ -775,20 +775,20 @@ const Styleguide = () => {
                         schema: require('./templates/Article').default({
                           t,
                           PayNote: require('./components/SeriesNav/__docs__')
-                            .TestPayNote
+                            .TestPayNote,
                         }),
-                        customSchema: options =>
+                        customSchema: (options) =>
                           require('./templates/Article').default({
                             t,
                             PayNote: require('./components/SeriesNav/__docs__')
                               .TestPayNote,
-                            ...options
+                            ...options,
                           }),
                         ...require('./components/SeriesNav/__docs__'),
                         ...require('./templates/docs'),
-                        renderMdast: require('mdast-react-render').renderMdast
+                        renderMdast: require('mdast-react-render').renderMdast,
                       },
-                      src: require('./templates/Article/docs.md')
+                      src: require('./templates/Article/docs.md'),
                     },
                     {
                       path: '/templates/article-email',
@@ -798,10 +798,10 @@ const Styleguide = () => {
                         ...require('./templates/docs'),
                         renderMdast: require('mdast-react-render').renderMdast,
                         fixtures: {
-                          ...require('./templates/Article/test/article.stub')
-                        }
+                          ...require('./templates/Article/test/article.stub'),
+                        },
                       },
-                      src: require('./templates/Article/email/docs.md')
+                      src: require('./templates/Article/email/docs.md'),
                     },
                     {
                       path: '/templates/discussion',
@@ -809,20 +809,21 @@ const Styleguide = () => {
                       imports: {
                         schema: require('./templates/Discussion').default(),
                         ...require('./templates/docs'),
-                        renderMdast: require('mdast-react-render').renderMdast
+                        renderMdast: require('mdast-react-render').renderMdast,
                       },
-                      src: require('./templates/Discussion/docs.md')
+                      src: require('./templates/Discussion/docs.md'),
                     },
                     {
                       path: '/templates/comment',
                       title: 'Comment',
                       imports: {
                         webSchema: require('./templates/Comment/web').default(),
-                        emailSchema: require('./templates/Comment/email').default(),
+                        emailSchema:
+                          require('./templates/Comment/email').default(),
                         ...require('./templates/docs'),
-                        renderMdast: require('mdast-react-render').renderMdast
+                        renderMdast: require('mdast-react-render').renderMdast,
                       },
-                      src: require('./templates/Comment/docs.md')
+                      src: require('./templates/Comment/docs.md'),
                     },
                     {
                       path: '/templates/section',
@@ -830,9 +831,9 @@ const Styleguide = () => {
                       imports: {
                         schema: require('./templates/Section').default(),
                         ...require('./templates/docs'),
-                        renderMdast: require('mdast-react-render').renderMdast
+                        renderMdast: require('mdast-react-render').renderMdast,
                       },
-                      src: require('./templates/Section/docs.md')
+                      src: require('./templates/Section/docs.md'),
                     },
                     {
                       path: '/templates/format',
@@ -840,9 +841,9 @@ const Styleguide = () => {
                       imports: {
                         schema: require('./templates/Format').default(),
                         ...require('./templates/docs'),
-                        renderMdast: require('mdast-react-render').renderMdast
+                        renderMdast: require('mdast-react-render').renderMdast,
                       },
-                      src: require('./templates/Format/docs.md')
+                      src: require('./templates/Format/docs.md'),
                     },
                     {
                       path: '/templates/dossier',
@@ -850,9 +851,9 @@ const Styleguide = () => {
                       imports: {
                         schema: require('./templates/Dossier').default(),
                         ...require('./templates/docs'),
-                        renderMdast: require('mdast-react-render').renderMdast
+                        renderMdast: require('mdast-react-render').renderMdast,
                       },
-                      src: require('./templates/Dossier/docs.md')
+                      src: require('./templates/Dossier/docs.md'),
                     },
                     {
                       path: '/templates/front',
@@ -860,9 +861,9 @@ const Styleguide = () => {
                       imports: {
                         schema: require('./templates/Front').default({ t }),
                         ...require('./templates/docs'),
-                        renderMdast: require('mdast-react-render').renderMdast
+                        renderMdast: require('mdast-react-render').renderMdast,
                       },
-                      src: require('./templates/Front/docs.md')
+                      src: require('./templates/Front/docs.md'),
                     },
                     {
                       path: '/templates/editorialnewsletter',
@@ -870,13 +871,15 @@ const Styleguide = () => {
                       imports: {
                         VariableContext: require('./components/Variables')
                           .VariableContext,
-                        webSchema: require('./templates/EditorialNewsletter/web').default(),
-                        createEmailSchema: require('./templates/EditorialNewsletter/email')
-                          .default,
+                        webSchema:
+                          require('./templates/EditorialNewsletter/web').default(),
+                        createEmailSchema:
+                          require('./templates/EditorialNewsletter/email')
+                            .default,
                         ...require('./templates/docs'),
-                        renderMdast: require('mdast-react-render').renderMdast
+                        renderMdast: require('mdast-react-render').renderMdast,
                       },
-                      src: require('./templates/EditorialNewsletter/docs.md')
+                      src: require('./templates/EditorialNewsletter/docs.md'),
                     },
                     {
                       path: '/templates/page',
@@ -884,11 +887,11 @@ const Styleguide = () => {
                       imports: {
                         schema: require('./templates/Page').default(),
                         ...require('./templates/docs'),
-                        renderMdast: require('mdast-react-render').renderMdast
+                        renderMdast: require('mdast-react-render').renderMdast,
                       },
-                      src: require('./templates/Page/docs.md')
-                    }
-                  ]
+                      src: require('./templates/Page/docs.md'),
+                    },
+                  ],
                 },
                 {
                   title: 'Charts',
@@ -896,7 +899,7 @@ const Styleguide = () => {
                     {
                       path: '/charts',
                       title: 'Overview',
-                      component: require('./components/Chart/docs.js').default
+                      component: require('./components/Chart/docs.js').default,
                     },
                     {
                       path: '/charts/editor',
@@ -905,15 +908,15 @@ const Styleguide = () => {
                         ...require('./components/Typography'),
                         ChartEditor: require('./components/Chart/Editor'),
                         data: {
-                          ...require('./components/Chart/Editor/docs.data')
+                          ...require('./components/Chart/Editor/docs.data'),
                         },
                         Scroller: require('./components/Tabs/Scroller'),
                         TabButton: require('./components/Tabs/TabButton'),
                         ErrorBoundary: require('./components/ErrorBoundary'),
                         CsvChart: require('./components/Chart/Csv'),
-                        t
+                        t,
                       },
-                      src: require('./components/Chart/Editor/docs.md')
+                      src: require('./components/Chart/Editor/docs.md'),
                     },
                     {
                       path: '/charts/bars',
@@ -925,9 +928,9 @@ const Styleguide = () => {
                         ChartLead: require('./components/Chart').ChartLead,
                         ChartLegend: require('./components/Chart').ChartLegend,
                         CsvChart: require('./components/Chart/Csv'),
-                        t
+                        t,
                       },
-                      src: require('./components/Chart/Bars.docs.md')
+                      src: require('./components/Chart/Bars.docs.md'),
                     },
                     {
                       path: '/charts/timebars',
@@ -938,9 +941,9 @@ const Styleguide = () => {
                         ChartLead: require('./components/Chart').ChartLead,
                         ChartLegend: require('./components/Chart').ChartLegend,
                         CsvChart: require('./components/Chart/Csv'),
-                        t
+                        t,
                       },
-                      src: require('./components/Chart/TimeBars.docs.md')
+                      src: require('./components/Chart/TimeBars.docs.md'),
                     },
                     {
                       path: '/charts/lollipops',
@@ -951,9 +954,9 @@ const Styleguide = () => {
                         ChartLead: require('./components/Chart').ChartLead,
                         ChartLegend: require('./components/Chart').ChartLegend,
                         CsvChart: require('./components/Chart/Csv'),
-                        t
+                        t,
                       },
-                      src: require('./components/Chart/Lollipops.docs.md')
+                      src: require('./components/Chart/Lollipops.docs.md'),
                     },
                     {
                       path: '/charts/lines',
@@ -964,9 +967,9 @@ const Styleguide = () => {
                         ChartLead: require('./components/Chart').ChartLead,
                         ChartLegend: require('./components/Chart').ChartLegend,
                         CsvChart: require('./components/Chart/Csv'),
-                        t
+                        t,
                       },
-                      src: require('./components/Chart/Lines.docs.md')
+                      src: require('./components/Chart/Lines.docs.md'),
                     },
                     {
                       path: '/charts/slopes',
@@ -977,9 +980,9 @@ const Styleguide = () => {
                         ChartLead: require('./components/Chart').ChartLead,
                         ChartLegend: require('./components/Chart').ChartLegend,
                         CsvChart: require('./components/Chart/Csv'),
-                        t
+                        t,
                       },
-                      src: require('./components/Chart/Slopes.docs.md')
+                      src: require('./components/Chart/Slopes.docs.md'),
                     },
                     {
                       path: '/charts/scatterplots',
@@ -990,9 +993,9 @@ const Styleguide = () => {
                         ChartLead: require('./components/Chart').ChartLead,
                         ChartLegend: require('./components/Chart').ChartLegend,
                         CsvChart: require('./components/Chart/Csv'),
-                        t
+                        t,
                       },
-                      src: require('./components/Chart/ScatterPlots.docs.md')
+                      src: require('./components/Chart/ScatterPlots.docs.md'),
                     },
                     {
                       path: '/charts/maps',
@@ -1000,15 +1003,15 @@ const Styleguide = () => {
                       imports: {
                         ...require('./components/Typography'),
                         data: {
-                          ...require('./components/Chart/Maps.docs.data')
+                          ...require('./components/Chart/Maps.docs.data'),
                         },
                         ChartTitle: require('./components/Chart').ChartTitle,
                         ChartLead: require('./components/Chart').ChartLead,
                         ChartLegend: require('./components/Chart').ChartLegend,
                         CsvChart: require('./components/Chart/Csv'),
-                        t
+                        t,
                       },
-                      src: require('./components/Chart/Maps.docs.md')
+                      src: require('./components/Chart/Maps.docs.md'),
                     },
                     {
                       path: '/charts/hemicycle',
@@ -1019,9 +1022,9 @@ const Styleguide = () => {
                         ChartLead: require('./components/Chart').ChartLead,
                         ChartLegend: require('./components/Chart').ChartLegend,
                         CsvChart: require('./components/Chart/Csv'),
-                        t
+                        t,
                       },
-                      src: require('./components/Chart/Hemicycle.docs.md')
+                      src: require('./components/Chart/Hemicycle.docs.md'),
                     },
                     {
                       path: '/charts/table',
@@ -1032,11 +1035,11 @@ const Styleguide = () => {
                         ChartLead: require('./components/Chart').ChartLead,
                         ChartLegend: require('./components/Chart').ChartLegend,
                         CsvChart: require('./components/Chart/Csv'),
-                        t
+                        t,
                       },
-                      src: require('./components/Chart/Table.docs.md')
-                    }
-                  ]
+                      src: require('./components/Chart/Table.docs.md'),
+                    },
+                  ],
                 },
                 {
                   title: 'Editor',
@@ -1062,7 +1065,7 @@ const Styleguide = () => {
                     {
                       path: '/dev/process',
                       title: 'Process',
-                      src: require('./development/process.docs.md')
+                      src: require('./development/process.docs.md'),
                     },
                     {
                       path: '/dev/translate',
@@ -1074,57 +1077,57 @@ const Styleguide = () => {
                         t: createFormatter([
                           {
                             key: 'styleguide/Hello/generic',
-                            value: 'Hallo!'
+                            value: 'Hallo!',
                           },
                           {
                             key: 'styleguide/Hello/greetings',
-                            value: 'Hallo {name}'
+                            value: 'Hallo {name}',
                           },
                           {
                             key: 'styleguide/Hello/greetings/Thomas',
-                            value: 'Hoi Thomas'
+                            value: 'Hoi Thomas',
                           },
                           {
                             key: 'styleguide/Hello/message/0',
-                            value: 'Sie waren noch nie hier'
+                            value: 'Sie waren noch nie hier',
                           },
                           {
                             key: 'styleguide/Hello/message/1',
-                            value: 'Willkommen an Bord {name}!'
+                            value: 'Willkommen an Bord {name}!',
                           },
                           {
                             key: 'styleguide/Hello/message/2',
-                            value: 'Schön Sie wieder zu sehen!'
+                            value: 'Schön Sie wieder zu sehen!',
                           },
                           {
                             key: 'styleguide/Hello/message/other',
-                            value: 'Willkommen zum {count}. Mal {name}!'
+                            value: 'Willkommen zum {count}. Mal {name}!',
                           },
                           {
                             key: 'styleguide/Hello/label/visits',
-                            value: 'Anzahl Besuche'
+                            value: 'Anzahl Besuche',
                           },
                           {
                             key: 'styleguide/Hello/label/name',
-                            value: 'Name'
+                            value: 'Name',
                           },
                           {
                             key: 'styleguide/Hello/html',
-                            value: 'Hallo<br />{link}'
-                          }
+                            value: 'Hallo<br />{link}',
+                          },
                         ]),
-                        RawHtml: require('./components/RawHtml')
-                      }
+                        RawHtml: require('./components/RawHtml'),
+                      },
                     },
                     {
                       path: '/dev/slug',
                       title: 'Slug',
-                      src: require('./lib/slug.docs.md')
+                      src: require('./lib/slug.docs.md'),
                     },
                     {
                       path: '/z-index',
                       title: 'z-index',
-                      src: require('./theme/zIndex.docs.md')
+                      src: require('./theme/zIndex.docs.md'),
                     },
                     {
                       path: '/dev/inQuotes',
@@ -1132,8 +1135,8 @@ const Styleguide = () => {
                       src: require('./lib/inQuotes.docs.md'),
                       imports: {
                         ...require('./components/Typography'),
-                        ...require('./lib/inQuotes')
-                      }
+                        ...require('./lib/inQuotes'),
+                      },
                     },
                     {
                       path: '/dev/useHeaderHeight',
@@ -1141,8 +1144,8 @@ const Styleguide = () => {
                       src: require('./lib/useHeaderHeight.docs.md'),
                       imports: {
                         ...require('./lib/useHeaderHeight'),
-                        css
-                      }
+                        css,
+                      },
                     },
                     {
                       path: '/dev/colors',
@@ -1153,20 +1156,21 @@ const Styleguide = () => {
                           .default,
                         ...require('./components/Typography'),
                         ColorContextProvider,
-                        ColorContextLocalExtension: require('./components/Colors/ColorContext')
-                          .ColorContextLocalExtension,
+                        ColorContextLocalExtension:
+                          require('./components/Colors/ColorContext')
+                            .ColorContextLocalExtension,
                         useColorContext,
                         GetColorScheme,
-                        css
-                      }
+                        css,
+                      },
                     },
                     {
                       path: '/dev/typescript',
                       title: 'Typescript',
-                      src: require('./development/typescript.docs.md')
-                    }
-                  ]
-                }
+                      src: require('./development/typescript.docs.md'),
+                    },
+                  ],
+                },
               ]}
             />
           </div>

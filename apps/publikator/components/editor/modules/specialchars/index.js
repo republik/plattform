@@ -2,7 +2,7 @@ import React from 'react'
 import { buttonStyles } from '../../utils'
 import invisibleDecoratorPlugin from './invisibleDecoratorPlugin'
 
-const doubleGuillemetClickHandler = (value, onChange) => event => {
+const doubleGuillemetClickHandler = (value, onChange) => (event) => {
   event.preventDefault()
   return onChange(value.change().wrapText('«', '»'))
 }
@@ -21,7 +21,7 @@ const DoubleGuillemetButton = ({ value, onChange }) => {
   )
 }
 
-const singleGuillemetClickHandler = (value, onChange) => event => {
+const singleGuillemetClickHandler = (value, onChange) => (event) => {
   event.preventDefault()
   return onChange(value.change().wrapText('‹', '›'))
 }
@@ -40,17 +40,17 @@ const SingleGuillemetButton = ({ value, onChange }) => {
   )
 }
 
-const ensureSpace = char => (char && char.text.match(/\s/) ? '' : ' ')
+const ensureSpace = (char) => (char && char.text.match(/\s/) ? '' : ' ')
 
-const longDashClickHandler = (value, onChange) => event => {
+const longDashClickHandler = (value, onChange) => (event) => {
   event.preventDefault()
 
   const before = ensureSpace(
-    value.startText.characters.get(value.selection.startOffset - 1)
+    value.startText.characters.get(value.selection.startOffset - 1),
   )
 
   const after = ensureSpace(
-    value.endText.characters.get(value.selection.endOffset)
+    value.endText.characters.get(value.selection.endOffset),
   )
 
   if (value.isCollapsed) {
@@ -58,17 +58,17 @@ const longDashClickHandler = (value, onChange) => event => {
   }
 
   const innerBefore = ensureSpace(
-    value.startText.characters.get(value.selection.startOffset)
+    value.startText.characters.get(value.selection.startOffset),
   )
 
   const innerAfter = ensureSpace(
-    value.endText.characters.get(value.selection.endOffset - 1)
+    value.endText.characters.get(value.selection.endOffset - 1),
   )
 
   return onChange(
     value
       .change()
-      .wrapText(`${before}–${innerBefore}`, `${innerAfter}–${after}`)
+      .wrapText(`${before}–${innerBefore}`, `${innerAfter}–${after}`),
   )
 }
 
@@ -86,7 +86,7 @@ const LongDashButton = ({ value, onChange }) => {
   )
 }
 
-const nbspClickHandler = (value, onChange) => event => {
+const nbspClickHandler = (value, onChange) => (event) => {
   event.preventDefault()
 
   return onChange(value.change().insertText('\u00a0'))
@@ -106,7 +106,7 @@ const NBSPButton = ({ value, onChange }) => {
   )
 }
 
-const softHyphenClickHandler = (value, onChange) => event => {
+const softHyphenClickHandler = (value, onChange) => (event) => {
   event.preventDefault()
 
   return onChange(value.change().insertText('\u00ad'))
@@ -137,7 +137,7 @@ export default ({ TYPE }) => ({
       SingleGuillemetButton,
       LongDashButton,
       NBSPButton,
-      SoftHyphenButton
-    ]
-  }
+      SoftHyphenButton,
+    ],
+  },
 })

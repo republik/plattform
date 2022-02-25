@@ -14,58 +14,20 @@ import {
   Label,
   HR,
   A,
-  Loader
+  Loader,
 } from '@project-r/styleguide'
 
 import ErrorMessage from '../ErrorMessage'
 import List, { Item } from '../List'
 import routes from '../../server/routes'
 
-import {
-  displayDateTime,
-  Section,
-  SectionTitle
-} from '../Display/utils'
+import { displayDateTime, Section, SectionTitle } from '../Display/utils'
 
 const GET_ACCESS_GRANTS = gql`
-query user($id: String) {
-  user(slug: $id) {
-    id
-    accessGrants(withPast: true) {
+  query user($id: String) {
+    user(slug: $id) {
       id
-      status
-      createdAt
-      beginBefore
-      voucherCode
-      beginAt
-      endAt
-      revokedAt
-      invalidatedAt
-      granter {
-        id
-        email
-        name
-      }
-      campaign {
-        id
-        title
-        endAt
-      }
-      events {
-        createdAt
-        event
-      }
-    }
-    accessCampaigns(withPast: true) {
-      id
-      title
-      endAt
-      slots {
-        total
-        free
-        used
-      }
-      grants(withRevoked: true, withInvalidated: true) {
+      accessGrants(withPast: true) {
         id
         status
         createdAt
@@ -75,26 +37,58 @@ query user($id: String) {
         endAt
         revokedAt
         invalidatedAt
-        email
-        recipient {
+        granter {
           id
           email
           name
+        }
+        campaign {
+          id
+          title
+          endAt
         }
         events {
           createdAt
           event
         }
       }
+      accessCampaigns(withPast: true) {
+        id
+        title
+        endAt
+        slots {
+          total
+          free
+          used
+        }
+        grants(withRevoked: true, withInvalidated: true) {
+          id
+          status
+          createdAt
+          beginBefore
+          voucherCode
+          beginAt
+          endAt
+          revokedAt
+          invalidatedAt
+          email
+          recipient {
+            id
+            email
+            name
+          }
+          events {
+            createdAt
+            event
+          }
+        }
+      }
     }
   }
-}
 `
 
 const REVOKE_ACCESS = gql`
-  mutation revokeAccess(
-    $id: ID!
-  ) {
+  mutation revokeAccess($id: ID!) {
     revokeAccess(id: $id)
   }
 `
@@ -108,27 +102,27 @@ const GUTTER = 30
 const styles = {
   heading: css({
     marginTop: 20,
-    marginBottom: 20
+    marginBottom: 20,
   }),
   grant: css({
     width: `calc(50% - ${GUTTER}px)`,
     padding: 10,
     backgroundColor: colors.secondaryBg,
-    marginBottom: GUTTER
-  })
+    marginBottom: GUTTER,
+  }),
 }
 
 class Events extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isExpanded: false
+      isExpanded: false,
     }
 
     this.toggle = (e) => {
       e.preventDefault()
       this.setState({
-        isExpanded: !this.state.isExpanded
+        isExpanded: !this.state.isExpanded,
       })
     }
   }
@@ -140,18 +134,22 @@ class Events extends Component {
     return (
       <Fragment>
         <List>
-          {isExpanded && events.map((event, i) => (
-            <Item key={i}>{displayDateTime(event.createdAt)} {event.event}</Item>
-          ))}
+          {isExpanded &&
+            events.map((event, i) => (
+              <Item key={i}>
+                {displayDateTime(event.createdAt)} {event.event}
+              </Item>
+            ))}
         </List>
-        {isExpanded
-          ? <A href='#' onClick={this.toggle}>
+        {isExpanded ? (
+          <A href='#' onClick={this.toggle}>
             {t('account/access/Events/details/hide')}
           </A>
-          : <A href='#' onClick={this.toggle}>
+        ) : (
+          <A href='#' onClick={this.toggle}>
             {t('account/access/Events/details/show')}
           </A>
-        }
+        )}
         <br />
       </Fragment>
     )
@@ -165,20 +163,20 @@ class Grant extends Component {
       isMutating: false,
       hasMutated: false,
       mutationError: null,
-      isExpanded: false
+      isExpanded: false,
     }
 
     this.hasMutated = () => {
       this.setState({
         isMutating: false,
-        hasMutated: true
+        hasMutated: true,
       })
     }
 
-    this.catchMutationError = error => {
+    this.catchMutationError = (error) => {
       this.setState({
         isMutating: false,
-        mutationError: error
+        mutationError: error,
       })
     }
 
@@ -187,12 +185,13 @@ class Grant extends Component {
 
       this.setState({
         isMutating: true,
-        mutationError: null
+        mutationError: null,
       })
 
-      return this.props.revokeAccess({
-        variables: { id: this.props.grant.id }
-      })
+      return this.props
+        .revokeAccess({
+          variables: { id: this.props.grant.id },
+        })
         .then(this.hasMutated)
         .catch(this.catchMutationError)
     }
@@ -200,7 +199,7 @@ class Grant extends Component {
     this.toggle = (e) => {
       e.preventDefault()
       this.setState({
-        isExpanded: !this.state.isExpanded
+        isExpanded: !this.state.isExpanded,
       })
     }
   }
@@ -211,46 +210,34 @@ class Grant extends Component {
 
     return (
       <div {...styles.grant}>
-        {mutationError &&
-          <ErrorMessage error={mutationError} />
-        }
-        {grant.granter &&
+        {mutationError && <ErrorMessage error={mutationError} />}
+        {grant.granter && (
           <Interaction.P>
             <Label>{t('account/access/Grant/granter/label')}</Label>
             <br />
-            <Link
-              route='user'
-              params={{userId: grant.granter.id}}
-              passHref>
-              <A>
-                {`${grant.granter.name} (${grant.granter.email})`}
-              </A>
+            <Link route='user' params={{ userId: grant.granter.id }} passHref>
+              <A>{`${grant.granter.name} (${grant.granter.email})`}</A>
             </Link>
           </Interaction.P>
-        }
+        )}
 
-        {grant.recipient &&
+        {grant.recipient && (
           <Interaction.P>
             <Label>{t('account/access/Grant/recipient/label')}</Label>
             <br />
-            <Link
-              route='user'
-              params={{userId: grant.recipient.id}}
-              passHref>
-              <A>
-                {`${grant.recipient.name} (${grant.recipient.email})`}
-              </A>
+            <Link route='user' params={{ userId: grant.recipient.id }} passHref>
+              <A>{`${grant.recipient.name} (${grant.recipient.email})`}</A>
             </Link>
           </Interaction.P>
-        }
+        )}
 
-        {!grant.recipient && !!grant.email &&
+        {!grant.recipient && !!grant.email && (
           <Interaction.P>
             <Label>{t('account/access/Grant/recipient/unlinked/label')}</Label>
             <br />
             {grant.email}
           </Interaction.P>
-        }
+        )}
 
         <Interaction.P>
           <Label>{t('account/access/Grant/status/label')}</Label>
@@ -258,116 +245,119 @@ class Grant extends Component {
           {grant.status}
         </Interaction.P>
 
-        {(isExpanded || !grant.email) && grant.voucherCode &&
+        {(isExpanded || !grant.email) && grant.voucherCode && (
           <Interaction.P>
             <Label>{t('account/access/Grant/voucherCode/label')}</Label>
             <br />
             {grant.voucherCode}
           </Interaction.P>
-        }
+        )}
 
-        {isExpanded &&
+        {isExpanded && (
           <Interaction.P>
             <Label>{t('account/access/Grant/beginBefore/label')}</Label>
             <br />
             {displayDateTime(grant.beginBefore)}
           </Interaction.P>
-        }
+        )}
 
-        {isExpanded && grant.beginAt &&
+        {isExpanded && grant.beginAt && (
           <Interaction.P>
             <Label>{t('account/access/Grant/beginAt/label')}</Label>
             <br />
             {displayDateTime(grant.beginAt)}
           </Interaction.P>
-        }
+        )}
 
-        {grant.endAt &&
+        {grant.endAt && (
           <Interaction.P>
             <Label>{t('account/access/Grant/endAt/label')}</Label>
             <br />
-            {displayDateTime(grant.endAt)}<br />
+            {displayDateTime(grant.endAt)}
+            <br />
           </Interaction.P>
-        }
+        )}
 
-        {isExpanded && new Date(grant.endAt) > new Date() &&
+        {isExpanded && new Date(grant.endAt) > new Date() && (
           <Interaction.P>
             <Label>{t('account/access/Grant/remaining/label')}</Label>
             <br />
             {getDays(new Date(), grant.endAt)} Tage
           </Interaction.P>
-        }
+        )}
 
-        {isExpanded &&
+        {isExpanded && (
           <Interaction.P>
             <Label>{t('account/access/Grant/createdAt/label')}</Label>
             <br />
             {displayDateTime(grant.createdAt)}
           </Interaction.P>
-        }
+        )}
 
-        {isExpanded && grant.revokedAt &&
+        {isExpanded && grant.revokedAt && (
           <Interaction.P>
             <Label>{t('account/access/Grant/revokedAt/label')}</Label>
             <br />
             {displayDateTime(grant.revokedAt)}
           </Interaction.P>
-        }
+        )}
 
-        {isExpanded && grant.invalidatedAt &&
+        {isExpanded && grant.invalidatedAt && (
           <Interaction.P>
             <Label>{t('account/access/Grant/invalidatedAt/label')}</Label>
             <br />
             {displayDateTime(grant.invalidatedAt)}
           </Interaction.P>
-        }
+        )}
 
-        {isExpanded && grant.campaign &&
+        {isExpanded && grant.campaign && (
           <Interaction.P>
             <Label>{t('account/access/Grant/campaign/label')}</Label>
             <br />
             {grant.campaign.title}
           </Interaction.P>
-        }
+        )}
 
-        {isExpanded && grant.campaign && grant.campaign.endAt &&
+        {isExpanded && grant.campaign && grant.campaign.endAt && (
           <Interaction.P>
             <Label>{t('account/access/Grant/campaignEndAt/label')}</Label>
             <br />
             {displayDateTime(grant.campaign.endAt)}
           </Interaction.P>
-        }
+        )}
 
-        {isExpanded &&
+        {isExpanded && (
           <Interaction.P>
             <Label>{t('account/access/Grant/id/label')}</Label>
             <br />
             {grant.id}
           </Interaction.P>
-        }
+        )}
 
-        {isExpanded
-          ? <A href='#' onClick={this.toggle}>
+        {isExpanded ? (
+          <A href='#' onClick={this.toggle}>
             {t('account/access/Grant/details/hide')}
           </A>
-          : <A href='#' onClick={this.toggle}>
+        ) : (
+          <A href='#' onClick={this.toggle}>
             {t('account/access/Grant/details/show')}
           </A>
-        }
+        )}
 
         <Events events={grant.events} t={t} />
 
-        {!grant.revokedAt && !grant.invalidatedAt &&
+        {!grant.revokedAt && !grant.invalidatedAt && (
           <Fragment>
             <HR />
-            {isMutating || hasMutated
-              ? <InlineSpinner />
-              : <Button onClick={this.onClick}>
+            {isMutating || hasMutated ? (
+              <InlineSpinner />
+            ) : (
+              <Button onClick={this.onClick}>
                 {t('account/access/Grant/button/revoke')}
               </Button>
-            }
+            )}
           </Fragment>
-        }
+        )}
       </div>
     )
   }
@@ -383,67 +373,62 @@ const Slots = ({ slots, t }) => {
   )
 }
 
-
 const Grants = ({ grants, revokeAccess, t }) => (
   <Fragment>
-    <SectionTitle>
-      {t('account/access/Grants/title')}
-    </SectionTitle>
+    <SectionTitle>{t('account/access/Grants/title')}</SectionTitle>
     <div {...styles.grants}>
-      {grants && grants.length > 0
-        ? grants.map(grant => (
+      {grants && grants.length > 0 ? (
+        grants.map((grant) => (
           <Grant
             key={`grants-${grant.id}`}
             grant={grant}
             revokeAccess={revokeAccess}
-            t={t} />
+            t={t}
+          />
         ))
-        : <Interaction.P>
-          {t('account/access/Grants/noGrants')}
-        </Interaction.P>
-      }
+      ) : (
+        <Interaction.P>{t('account/access/Grants/noGrants')}</Interaction.P>
+      )}
     </div>
   </Fragment>
 )
 
 const Campaigns = ({ campaigns, revokeAccess, t }) => (
   <Fragment>
-    <SectionTitle>
-      {t('account/access/Campaigns/title')}
-    </SectionTitle>
-    {campaigns && campaigns.length > 0 && campaigns.map(campaign => (
-      <Fragment key={`camp-${campaign.id}`}>
-        <Interaction.H3>
-          {t(
-            'account/access/Campaigns/campaign/title',
-            { title: campaign.title }
-          )}
-        </Interaction.H3>
-        <Label>
-          {t(
-            moment(campaign.endAt) < moment()
-              ? 'account/access/Campaigns/campaign/ended'
-              : 'account/access/Campaigns/campaign/ending',
-            { endAt: displayDateTime(campaign.endAt) }
-          )}
-        </Label>
-        {campaign.slots && <Slots slots={campaign.slots} t={t} />}
-        <div {...styles.grants}>
-          {campaign.grants.map(grant => (
-            <Grant
-              key={`camp-grants-${grant.id}`}
-              grant={grant}
-              revokeAccess={revokeAccess}
-              t={t} />
-          ))}
-        </div>
-      </Fragment>
-    ))}
-    {campaigns && campaigns.length === 0 &&
-      <Interaction.P>
-        {t('account/access/Campaigns/noCampaigns')}
-      </Interaction.P>
-    }
+    <SectionTitle>{t('account/access/Campaigns/title')}</SectionTitle>
+    {campaigns &&
+      campaigns.length > 0 &&
+      campaigns.map((campaign) => (
+        <Fragment key={`camp-${campaign.id}`}>
+          <Interaction.H3>
+            {t('account/access/Campaigns/campaign/title', {
+              title: campaign.title,
+            })}
+          </Interaction.H3>
+          <Label>
+            {t(
+              moment(campaign.endAt) < moment()
+                ? 'account/access/Campaigns/campaign/ended'
+                : 'account/access/Campaigns/campaign/ending',
+              { endAt: displayDateTime(campaign.endAt) },
+            )}
+          </Label>
+          {campaign.slots && <Slots slots={campaign.slots} t={t} />}
+          <div {...styles.grants}>
+            {campaign.grants.map((grant) => (
+              <Grant
+                key={`camp-grants-${grant.id}`}
+                grant={grant}
+                revokeAccess={revokeAccess}
+                t={t}
+              />
+            ))}
+          </div>
+        </Fragment>
+      ))}
+    {campaigns && campaigns.length === 0 && (
+      <Interaction.P>{t('account/access/Campaigns/noCampaigns')}</Interaction.P>
+    )}
   </Fragment>
 )
 
@@ -456,24 +441,33 @@ const Access = withT(({ grants, campaigns, revokeAccess, t }) => {
   )
 })
 
-const AccessComponent = ({ userId }) => {
+const AccessComponent = ({ userId }) => {
   return (
-    <Query query={GET_ACCESS_GRANTS} variables={{id: userId}}>{({loading, error, data}) => {
-      return (
-        <Mutation mutation={REVOKE_ACCESS}>{
-          (revokeAccess, {loading: mutationLoading, error: mutationError}) => (
-            <Loader
-              loading={loading || mutationLoading}
-              error={error || mutationError}
-              render={() =>
-                <Access grants={data.user.accessGrants} campaigns={data.user.accessCampaigns} revokeAccess={revokeAccess} />
-              }
-            />
-          )
-        }</Mutation>
-      )
-    }}</Query>
+    <Query query={GET_ACCESS_GRANTS} variables={{ id: userId }}>
+      {({ loading, error, data }) => {
+        return (
+          <Mutation mutation={REVOKE_ACCESS}>
+            {(
+              revokeAccess,
+              { loading: mutationLoading, error: mutationError },
+            ) => (
+              <Loader
+                loading={loading || mutationLoading}
+                error={error || mutationError}
+                render={() => (
+                  <Access
+                    grants={data.user.accessGrants}
+                    campaigns={data.user.accessCampaigns}
+                    revokeAccess={revokeAccess}
+                  />
+                )}
+              />
+            )}
+          </Mutation>
+        )
+      }}
+    </Query>
   )
-};
+}
 
-export default AccessComponent;
+export default AccessComponent

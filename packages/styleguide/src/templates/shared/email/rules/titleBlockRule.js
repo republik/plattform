@@ -2,7 +2,7 @@ import React from 'react'
 import {
   matchHeading,
   matchParagraph,
-  matchZone
+  matchZone,
 } from 'mdast-react-render/lib/utils'
 import inlineRules from './inlineRules'
 import { interactionParagraphRule } from './paragraphRule'
@@ -12,7 +12,7 @@ import {
   Headline,
   Lead,
   Subject,
-  Credits
+  Credits,
 } from '../components/TitleBlock'
 
 const titleBlockRule = {
@@ -27,7 +27,7 @@ const titleBlockRule = {
       format: root.meta?.format,
       series: root.meta?.series,
       repoId: root.repoId,
-      path: root.meta?.path
+      path: root.meta?.path,
     }
   },
   rules: [
@@ -35,31 +35,31 @@ const titleBlockRule = {
     {
       matchMdast: matchHeading(1),
       component: Headline,
-      rules: inlineRules
+      rules: inlineRules,
     },
     // Subject
     {
       matchMdast: matchHeading(2),
       component: Subject,
-      rules: inlineRules
+      rules: inlineRules,
     },
     // Lead
     {
       matchMdast: (node, index, parent) => {
         const numHeadings = parent.children.filter(
-          child => child.type === 'heading'
+          (child) => child.type === 'heading',
         ).length
         return matchParagraph(node) && index === numHeadings
       },
-      component: Lead
+      component: Lead,
     },
     // Credits
     {
       matchMdast: matchParagraph,
       component: Credits,
-      rules: [interactionParagraphRule, linkRule]
-    }
-  ]
+      rules: [interactionParagraphRule, linkRule],
+    },
+  ],
 }
 
 export default titleBlockRule

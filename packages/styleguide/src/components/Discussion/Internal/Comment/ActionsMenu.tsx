@@ -7,7 +7,7 @@ import { MoreIcon } from '../../../Icons'
 import { useColorContext } from '../../../Colors/ColorContext'
 import { IconType } from 'react-icons/lib/esm/iconBase'
 
-const MoreIconWithProps = props => (
+const MoreIconWithProps = (props) => (
   <IconButton title='Mehr' Icon={MoreIcon} {...props} />
 )
 
@@ -17,9 +17,9 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'start',
     '> *:not(:last-child)': {
-      marginBottom: '15px'
-    }
-  })
+      marginBottom: '15px',
+    },
+  }),
 }
 
 export type ActionMenuItem = {
@@ -47,11 +47,11 @@ const ActionsMenu = ({ items = [] }: Props) => {
       align='right'
       elementProps={{
         ...colorScheme.set('fill', 'textSoft'),
-        size: 20
+        size: 20,
       }}
     >
       <div {...styles.menuWrapper}>
-        {items.map(item => (
+        {items.map((item) => (
           <IconButton
             key={item.label}
             Icon={item.icon}
@@ -70,10 +70,10 @@ export const ActionsMenuItemPropType = PropTypes.shape({
   label: PropTypes.string.isRequired,
   icon: PropTypes.elementType.isRequired,
   onClick: PropTypes.func.isRequired,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
 })
 ActionsMenu.propTypes = {
-  items: PropTypes.arrayOf(ActionsMenuItemPropType).isRequired
+  items: PropTypes.arrayOf(ActionsMenuItemPropType).isRequired,
 }
 
 export default ActionsMenu

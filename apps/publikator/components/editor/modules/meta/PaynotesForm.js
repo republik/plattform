@@ -12,30 +12,30 @@ import PaynoteForm from './PaynoteForm'
 const styles = {
   title: css({
     display: 'block',
-    marginBottom: 5
+    marginBottom: 5,
   }),
   container: css({
     backgroundColor: '#fff',
     padding: '5px 10px 15px',
-    marginBottom: 15
+    marginBottom: 15,
   }),
   close: css({
-    float: 'right'
+    float: 'right',
   }),
   add: css({
     marginTop: 10,
-    fontSize: 14
+    fontSize: 14,
   }),
   help: css({
-    margin: '0 0 10px'
-  })
+    margin: '0 0 10px',
+  }),
 }
 
 const PAYNOTE_KEY = 'paynotes'
 const TARGETS = ['hasActiveMembership', 'isEligibleForTrial']
 
 const DEFAULT_TARGET = {
-  hasActiveMembership: false
+  hasActiveMembership: false,
 }
 
 const DEFAULT_PAYNOTE = {
@@ -43,13 +43,13 @@ const DEFAULT_PAYNOTE = {
   cta: 'button',
   button: {
     label: '',
-    link: ''
+    link: '',
   },
   secondary: {
     prefix: '',
     label: '',
-    link: ''
-  }
+    link: '',
+  },
 }
 
 const TargetForm = withT(({ t, data, onInputChange }) => (
@@ -61,7 +61,7 @@ const TargetForm = withT(({ t, data, onInputChange }) => (
           <Label style={{ display: 'block', marginBottom: 5 }}>
             {t(`metaData/paynote/form/target/${target}`)}
           </Label>
-          {[true, false, undefined].map(value => (
+          {[true, false, undefined].map((value) => (
             <Radio
               key={String(value)}
               value={String(value)}
@@ -81,47 +81,47 @@ const TargetForm = withT(({ t, data, onInputChange }) => (
 export default withT(({ t, editor, node }) => {
   const paynotes = node.data.get(PAYNOTE_KEY) || []
 
-  const onPaynotesChange = newPaynotes => {
-    editor.change(change => {
+  const onPaynotesChange = (newPaynotes) => {
+    editor.change((change) => {
       change.setNodeByKey(node.key, {
         data:
           newPaynotes !== null && newPaynotes.length
             ? node.data.set(PAYNOTE_KEY, newPaynotes)
-            : node.data.remove(PAYNOTE_KEY)
+            : node.data.remove(PAYNOTE_KEY),
       })
     })
   }
 
-  const addPaynote = e => {
+  const addPaynote = (e) => {
     e.preventDefault()
     onPaynotesChange(
       paynotes.concat({
         target: DEFAULT_TARGET,
         before: DEFAULT_PAYNOTE,
-        after: DEFAULT_PAYNOTE
-      })
+        after: DEFAULT_PAYNOTE,
+      }),
     )
   }
 
-  const removePaynote = i => e => {
+  const removePaynote = (i) => (e) => {
     e.preventDefault()
     onPaynotesChange(paynotes.slice(0, i).concat(paynotes.slice(i + 1)))
   }
 
-  const editPaynote = (i, paynote, attr) => newAttrs => {
+  const editPaynote = (i, paynote, attr) => (newAttrs) => {
     const editedPaynote = {
       ...paynote,
       [attr]: {
         ...paynote[attr],
-        ...newAttrs
-      }
+        ...newAttrs,
+      },
     }
 
     onPaynotesChange(
       paynotes
         .slice(0, i)
         .concat(editedPaynote)
-        .concat(paynotes.slice(i + 1))
+        .concat(paynotes.slice(i + 1)),
     )
   }
 
@@ -172,7 +172,7 @@ export default withT(({ t, editor, node }) => {
               <MdInfoOutline style={{ verticalAlign: 'sub' }} />{' '}
               <RawHtml
                 dangerouslySetInnerHTML={{
-                  __html: t('metaData/paynotes/help')
+                  __html: t('metaData/paynotes/help'),
                 }}
               />
             </small>

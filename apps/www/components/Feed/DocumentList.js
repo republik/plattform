@@ -16,8 +16,8 @@ const styles = {
   more: css({
     position: 'relative',
     height: 50,
-    padding: '20px 0 0 0'
-  })
+    padding: '20px 0 0 0',
+  }),
 }
 
 const DocumentList = ({
@@ -29,11 +29,11 @@ const DocumentList = ({
   showTotal,
   help,
   empty,
-  t
+  t,
 }) => {
   const [
     { containerRef, infiniteScroll, loadingMore, loadingMoreError },
-    setInfiniteScroll
+    setInfiniteScroll,
   ] = useInfiniteScroll({ hasMore, loadMore })
 
   if (totalCount < 1) {
@@ -46,7 +46,7 @@ const DocumentList = ({
         <>
           <Interaction.H2>
             {t.pluralize('feed/title', {
-              count: totalCount
+              count: totalCount,
             })}
           </Interaction.H2>
           <br />
@@ -64,14 +64,14 @@ const DocumentList = ({
         {!infiniteScroll && hasMore && (
           <A
             href='#'
-            onClick={event => {
+            onClick={(event) => {
               event && event.preventDefault()
               setInfiniteScroll(true)
             }}
           >
             {t('feed/loadMore', {
               count: documents.length,
-              remaining: totalCount - documents.length
+              remaining: totalCount - documents.length,
             })}
           </A>
         )}
@@ -89,7 +89,7 @@ DocumentList.propTypes = {
   feedProps: PropTypes.object,
   variables: PropTypes.object,
   showTotal: PropTypes.bool,
-  help: PropTypes.element
+  help: PropTypes.element,
 }
 
 export default compose(withT, withInNativeApp)(DocumentList)

@@ -1102,7 +1102,7 @@
     },
     {
       "key": "Account/Access/Campaigns/Form/title/0",
-      "value": "Zugriff teilen"
+      "value": "Gäste einladen"
     },
     {
       "key": "Account/Access/Campaigns/Form/title/other",
@@ -1110,7 +1110,15 @@
     },
     {
       "key": "Account/Access/Campaigns/Form/explanation",
-      "value": "Beschenkte erhalten eine Einladungs-E-Mail mit Ihrem Namen und Ihrer E-Mail-Adresse, einem Gutscheincode und {linkClaim}-Link, mit dem der Gutscheincode eingelöst werden kann."
+      "value": "Ihre Gäste erhalten eine Einladungs-E-Mail mit Ihrem Namen und Ihrer E-Mail-Adresse sowie einen Link, über den sie ihren Probezugriff einlösen können."
+    },
+    {
+      "key": "Account/Access/Campaigns/login/title",
+      "value": "Anmelden und Abo verschenken"
+    },
+    {
+      "key": "Account/Access/Campaigns/becomeMamber/title",
+      "value": "Mitglied werden und Abo verschenken"
     },
     {
       "key": "Account/Access/Campaigns/Form/explanation/linkClaim",
@@ -1134,7 +1142,7 @@
     },
     {
       "key": "Account/Access/Campaigns/Form/button/submit",
-      "value": "Teilen"
+      "value": "Jetzt einladen"
     },
     {
       "key": "Account/Access/Campaigns/Form/input/email/label",
@@ -3625,6 +3633,10 @@
       "value": "überprüfen"
     },
     {
+      "key": "memberships/claim/personal/lead",
+      "value": "{name} schenkt Ihnen vier Wochen Republik"
+    },
+    {
       "key": "memberships/claim/access/lead",
       "value": "Geteilten Zugriff aktivieren"
     },
@@ -3639,6 +3651,26 @@
     {
       "key": "memberships/sequenceNumber/label",
       "value": "Abo #{sequenceNumber}"
+    },
+    {
+      "key": "Share/chart/title",
+      "value": "Aktuell lesen {currentActiveAccessGrants} Personen die Republik mit einem geteilten Abo"
+    },
+    {
+      "key": "Share/chart/lead",
+      "value": "Anzahl geteilter Zugriffe während der letzten {days} Tage"
+    },
+    {
+      "key": "Share/chart/after",
+      "value": "Seit dem {startDate} wurden {invites} Personen eingeladen, die Republik kennenzulernen. {claims} haben den Probezugriff eingelöst, und {pledges} durften wir in der Verlagsetage begrüssen – dank Ihrem Engagement."
+    },
+    {
+      "key": "Share/chart/legend",
+      "value": "Es zählen Mitgliedschaften, Abos und Spenden innerhalb von 30 Tagen nach Probezugriff. Datenstand: {formattedDateTime}"
+    },
+    {
+      "key": "Share/chart/annotation/lastBucket",
+      "value": "Aktuell"
     },
     {
       "key": "notifications/pageTitle",
@@ -4567,6 +4599,10 @@
     {
       "key": "statement/viewLive",
       "value": "ansehen"
+    },
+    {
+      "key": "statement/404",
+      "value": "Das gewünschte Statement ist zurzeit nicht verfügbar."
     },
     {
       "key": "statement/share/overlayTitle",
@@ -6538,7 +6574,11 @@
     },
     {
       "key": "pages/access/title",
-      "value": "Republik teilen"
+      "value": "Verschenken Sie vier Wochen Republik"
+    },
+    {
+      "key": "pages/access/description",
+      "value": "Laden Sie jetzt Ihre Freunde und Feinde ein, die Republik kennenzulernen. Damit ermöglichen Sie ihnen 28 Tage Probezugriff auf alle Inhalte der Republik."
     },
     {
       "key": "nav/crowdfunding2",

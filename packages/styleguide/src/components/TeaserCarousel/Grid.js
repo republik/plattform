@@ -9,8 +9,8 @@ const styles = {
     flexWrap: 'wrap',
     marginLeft: -TILE_GRID_PADDING,
     marginRight: -TILE_GRID_PADDING,
-    width: `calc(100% + ${TILE_GRID_PADDING * 2}px)`
-  })
+    width: `calc(100% + ${TILE_GRID_PADDING * 2}px)`,
+  }),
 }
 
 const Grid = ({ children }) => {

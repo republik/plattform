@@ -4,18 +4,18 @@ import { css } from 'glamor'
 
 const styles = {
   image: css({
-    width: '100%'
+    width: '100%',
   }),
   aspectRatio: css({
     backgroundColor: 'rgba(0,0,0,0.1)',
     backgroundPosition: 'center',
     backgroundSize: 'cover',
     display: 'block',
-    position: 'relative'
+    position: 'relative',
   }),
   maxWidth: css({
-    display: 'block'
-  })
+    display: 'block',
+  }),
 }
 
 class Image extends Component {
@@ -26,7 +26,7 @@ class Image extends Component {
       alt,
       attributes = {},
       maxWidth,
-      aspectRatio
+      aspectRatio,
     } = this.props
 
     const image = isFinite(aspectRatio) ? (
@@ -35,7 +35,7 @@ class Image extends Component {
         {...styles.aspectRatio}
         style={{
           paddingBottom: `${100 / aspectRatio}%`,
-          backgroundImage: `url(${src})`
+          backgroundImage: `url(${src})`,
         }}
         role='img'
         aria-label={alt}
@@ -66,7 +66,7 @@ Image.propTypes = {
   srcSet: PropTypes.string,
   alt: PropTypes.string,
   maxWidth: PropTypes.number,
-  aspectRatio: PropTypes.number
+  aspectRatio: PropTypes.number,
 }
 
 export default Image

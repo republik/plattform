@@ -1,6 +1,6 @@
 import React from 'react'
 
-const SvgJura = props => (
+const SvgJura = (props) => (
   <svg
     width={props.size}
     height={(props.size * 469.543) / 467.969}

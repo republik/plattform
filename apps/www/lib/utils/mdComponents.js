@@ -11,7 +11,7 @@ import {
   colors,
   Editorial,
   convertStyleToRem,
-  slug
+  slug,
 } from '@project-r/styleguide'
 
 import Anchor from '../../components/Anchor'
@@ -25,24 +25,24 @@ const styles = {
     [mediaQueries.mUp]: {
       fontSize: 30,
       lineHeight: 1.2,
-      margin: '46px 0 12px 0'
-    }
+      margin: '46px 0 12px 0',
+    },
   }),
   p: css({
     margin: '20px 0 20px 0',
     ...convertStyleToRem(fontStyles.serifRegular17),
     [mediaQueries.mUp]: {
-      ...convertStyleToRem(fontStyles.serifRegular21)
+      ...convertStyleToRem(fontStyles.serifRegular21),
     },
     ':first-child': {
-      marginTop: 0
+      marginTop: 0,
     },
     ':last-child': {
-      marginBottom: 0
+      marginBottom: 0,
     },
     'h2 + &': {
-      marginTop: 0
-    }
+      marginTop: 0,
+    },
   }),
   list: css({
     ...fontStyles.serifRegular,
@@ -50,9 +50,9 @@ const styles = {
     lineHeight: '25px',
     [mediaQueries.mUp]: {
       fontSize: 21,
-      lineHeight: '32px'
-    }
-  })
+      lineHeight: '32px',
+    },
+  }),
 }
 
 const mdComponents = {
@@ -74,11 +74,11 @@ const mdComponents = {
   ul: ({ children }) => <ul {...styles.list}>{children}</ul>,
   ol: ({ children }) => <ol {...styles.list}>{children}</ol>,
   li: ({ children }) => <li>{children}</li>,
-  img: props => <img {...props} style={{ width: '100%' }} />
+  img: (props) => <img {...props} style={{ width: '100%' }} />,
 }
 
 const lightStyle = {
-  color: colors.negative.text
+  color: colors.negative.text,
 }
 
 export const light = {
@@ -118,7 +118,7 @@ export const light = {
   li: ({ children }) => (
     <Editorial.LI style={lightStyle}>{children}</Editorial.LI>
   ),
-  img: props => <img {...props} style={{ width: '100%' }} />
+  img: (props) => <img {...props} style={{ width: '100%' }} />,
 }
 
 export default mdComponents

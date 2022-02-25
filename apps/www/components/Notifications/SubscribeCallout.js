@@ -11,11 +11,11 @@ import Link from 'next/link'
 
 const styles = {
   container: css({
-    minWidth: 180
+    minWidth: 180,
   }),
   settings: css({
-    margin: '10px 0 0'
-  })
+    margin: '10px 0 0',
+  }),
 }
 
 const SettingsLink = withT(({ t }) => (
@@ -36,14 +36,14 @@ const SubscribeCallout = ({
   userHasNoDocuments,
   setAnimate,
   me,
-  t
+  t,
 }) => {
   const meSubscription = authorSubscriptions.find(
-    subscription => subscription.object.id === me?.id
+    (subscription) => subscription.object.id === me?.id,
   )
 
   const authorSubscriptionsWithoutMe = authorSubscriptions.filter(
-    subscription => subscription !== meSubscription
+    (subscription) => subscription !== meSubscription,
   )
 
   return (
@@ -75,7 +75,7 @@ const SubscribeCallout = ({
 
 SubscribeCallout.propTypes = {
   formatSubscriptions: PropTypes.array,
-  authorSubscriptions: PropTypes.array
+  authorSubscriptions: PropTypes.array,
 }
 
 export default withMe(withT(SubscribeCallout))

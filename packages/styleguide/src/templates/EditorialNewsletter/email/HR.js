@@ -7,7 +7,7 @@ const hrStyle = {
   color: colors.divider,
   backgroundColor: colors.divider,
   marginTop: 30,
-  marginBottom: 30
+  marginBottom: 30,
 }
 
 export default () => <hr style={hrStyle} />

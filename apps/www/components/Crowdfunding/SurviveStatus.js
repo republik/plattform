@@ -24,8 +24,8 @@ const SurviveStatus = ({ t, crowdfunding, hasActiveMembership }) => {
             status: crowdfunding.status && {
               memberships: crowdfunding.status.memberships,
               people: crowdfunding.status.people,
-              money: crowdfunding.status.money
-            }
+              money: crowdfunding.status.money,
+            },
           }
         }
         memberships

@@ -15,26 +15,26 @@ const styles = {
     borderTopWidth: 1,
     borderTopStyle: 'solid',
     margin: '0 0 30px 0',
-    paddingTop: 10
+    paddingTop: 10,
   }),
   footer: css({
     ...sansSerifRegular14,
     display: 'flex',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
   }),
   profilePicture: css({
     display: 'block',
     width: `40px`,
     flex: `0 0 40px`,
     height: `40px`,
-    marginRight: '8px'
+    marginRight: '8px',
   }),
   commentMeta: css({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-around',
-    alignItems: 'flex-start'
-  })
+    alignItems: 'flex-start',
+  }),
 }
 
 const DefaultLink = ({ children }) => children
@@ -43,7 +43,7 @@ export const DebateTeaser = ({
   t,
   discussion,
   DiscussionLink = DefaultLink,
-  CommentLink = DefaultLink
+  CommentLink = DefaultLink,
 }) => {
   const [colorScheme] = useColorContext()
   const isDesktop = useMediaQuery(mUp)
@@ -56,9 +56,9 @@ export const DebateTeaser = ({
     discussion,
     clock: {
       isDesktop,
-      t
+      t,
     },
-    CommentLink
+    CommentLink,
   }
 
   return (
@@ -102,5 +102,5 @@ export default DebateTeaser
 
 DebateTeaser.propTypes = {
   t: PropTypes.func,
-  discussion: PropTypes.object
+  discussion: PropTypes.object,
 }

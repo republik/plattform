@@ -23,15 +23,15 @@ const Comments = ({ t, comments, loadMore }) => {
     >
       <Interaction.H3 style={{ marginBottom: 20 }}>
         {t.pluralize('profile/comments/title', {
-          count: comments.totalCount
+          count: comments.totalCount,
         })}
       </Interaction.H3>
       {comments.nodes
-        .filter(comment => comment.preview)
-        .map(comment => {
+        .filter((comment) => comment.preview)
+        .map((comment) => {
           const discussion = comment.discussion || {}
           const context = {
-            title: discussion.title
+            title: discussion.title,
           }
           return (
             <CommentTeaser
@@ -46,7 +46,7 @@ const Comments = ({ t, comments, loadMore }) => {
                         (comment.adminUnpublished
                           ? ' ' + t('styleguide/comment/adminUnpublished')
                           : ''),
-                      more: false
+                      more: false,
                     }
                   : comment.preview
               }

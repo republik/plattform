@@ -9,7 +9,7 @@ const CardOverlay = ({
   title,
   children,
   beta = false,
-  maxWidth = 720
+  maxWidth = 720,
 }) => {
   return (
     <Overlay onClose={onClose} mUpStyle={{ maxWidth, minHeight: 0 }}>
@@ -19,7 +19,7 @@ const CardOverlay = ({
             style={{
               position: 'absolute',
               right: 60,
-              top: 9
+              top: 9,
             }}
           />
         )}

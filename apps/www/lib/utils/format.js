@@ -7,11 +7,13 @@ export const swissNumbers = formatLocale({
   decimal: ',',
   thousands: thousandSeparator,
   grouping: [3],
-  currency: ['CHF\u00a0', '']
+  currency: ['CHF\u00a0', ''],
+  minus: '\u2212',
+  percent: '\u2009%',
 })
 const chf4Format = swissNumbers.format('$.0f')
 const chf5Format = swissNumbers.format('$,.0f')
-export const chfFormat = value => {
+export const chfFormat = (value) => {
   if (String(Math.round(value)).length > 4) {
     return chf5Format(value)
   }
@@ -20,7 +22,7 @@ export const chfFormat = value => {
 
 const count4Format = swissNumbers.format('.0f')
 const count5Format = swissNumbers.format(',.0f')
-export const countFormat = value => {
+export const countFormat = (value) => {
   if (String(Math.round(value)).length > 4) {
     return count5Format(value)
   }
@@ -34,8 +36,8 @@ const dateFormat = '%d.%m.%Y'
 export const parseDate = swissTime.parse(dateFormat)
 export const formatDate = swissTime.format(dateFormat)
 
-export const formatExcerpt = string =>
+export const formatExcerpt = (string) =>
   '... ' + string.replace(/\.+$/, '') + '...'
 
-export const capitalize = word =>
+export const capitalize = (word) =>
   word && word.charAt(0).toUpperCase() + word.slice(1)

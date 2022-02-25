@@ -10,7 +10,7 @@ import {
   Label,
   fontStyles,
   Editorial,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 
 import SectionTitle from './Common/SectionTitle'
@@ -37,7 +37,7 @@ const Team = ({ t, data: { loading, error, employees } }) => {
         style={{ minHeight: 400 }}
         render={() => (
           <TeaserFrontTileRow autoColumns>
-            {employees.map(employee => {
+            {employees.map((employee) => {
               return (
                 <TeaserFrontTile key={employee.name}>
                   <h3 {...styles.pitch}>{`«${employee.pitch}»`}</h3>
@@ -78,33 +78,33 @@ const Team = ({ t, data: { loading, error, employees } }) => {
 const styles = {
   link: css({
     color: 'inherit',
-    textDecoration: 'none'
+    textDecoration: 'none',
   }),
   profilePicture: css({
     display: 'block',
     width: 46,
     flex: `0 0 ${46}`,
     height: 46,
-    marginRight: 8
+    marginRight: 8,
   }),
   pitch: css({
     ...fontStyles.serifTitle26,
-    wordWrap: 'break-word'
+    wordWrap: 'break-word',
   }),
   employee: css({
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   }),
   employeeText: css({
-    textAlign: 'left'
+    textAlign: 'left',
   }),
   employeeName: css({
     ...fontStyles.sansSerifRegular18,
     whiteSpace: 'nowrap',
     lineHeight: 1.2,
-    margin: 0
-  })
+    margin: 0,
+  }),
 }
 
 const query = gql`

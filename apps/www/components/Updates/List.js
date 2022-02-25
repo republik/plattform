@@ -39,24 +39,24 @@ const Overview = compose(
       data,
       ownProps: {
         router: {
-          query: { slug }
-        }
-      }
+          query: { slug },
+        },
+      },
     }) => {
       const error = data.error
       let update
       if (slug && data.updates && !error) {
         update =
-          data.updates.find(update => update.slug === slug.join('/')) || 404
+          data.updates.find((update) => update.slug === slug.join('/')) || 404
       }
       return {
         loading: data.loading,
         updates: data.updates,
         error,
-        update
+        update,
       }
-    }
-  })
+    },
+  }),
 )(({ updates, update, t, loading, error, serverContext }) => (
   <Loader
     loading={loading}
@@ -74,7 +74,7 @@ const Overview = compose(
                   title: update.title,
                   description: update.metaDescription,
                   url: `${PUBLIC_BASE_URL}/updates/${update.slug}`,
-                  image: update.socialMediaImage
+                  image: update.socialMediaImage,
                 }}
               />
               <Update data={update} />
@@ -95,10 +95,10 @@ const Overview = compose(
                 title: t('updates/title'),
                 description: t('updates/metaDescription'),
                 url: `${PUBLIC_BASE_URL}/updates`,
-                image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`
+                image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
               }}
             />
-            {updates.map(update => (
+            {updates.map((update) => (
               <Update key={update.slug} data={update} />
             ))}
           </Content>

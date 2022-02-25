@@ -8,14 +8,14 @@ export const chartTypes = [
   { label: 'Scatter Plot', value: 'ScatterPlot' },
   { label: 'Weltkarte', value: 'GenericMap' },
   { label: 'Schweiz/Region', value: 'ProjectedMap' },
-  { label: 'Hemicycle', value: 'Hemicycle' }
+  { label: 'Hemicycle', value: 'Hemicycle' },
 ]
 
 export const sizes = [
   { label: 'Normal', size: undefined },
   { label: 'Klein', size: 'narrow' },
   { label: 'Gross', size: 'breakout' },
-  { label: 'Links', size: 'floatTiny' }
+  { label: 'Links', size: 'floatTiny' },
 ]
 
 export const baseCharts = [
@@ -33,7 +33,7 @@ export const baseCharts = [
       timeFormat: '%d.%m.',
       colorRange: ['rgb(24,100,170)'],
       endValue: false,
-      endLabel: false
+      endLabel: false,
     },
     values: `
 location,date,value
@@ -103,7 +103,7 @@ Switzerland,2020-04-28,29081
 Switzerland,2020-04-29,29181
 Switzerland,2020-04-30,29324
 Switzerland,2020-05-01,29503
-`
+`,
   },
   {
     name: 'Balken',
@@ -113,7 +113,7 @@ Switzerland,2020-05-01,29503
       numberFormat: '.0%',
       y: 'country',
       color: 'highlight',
-      showBarValues: true
+      showBarValues: true,
     },
     values: `
 country,value,highlight
@@ -124,7 +124,7 @@ Deutschland,0.369,0
 Schweiz,0.279,1
 USA,0.264,0
 Irland,0.236,0
-`
+`,
   },
   {
     name: 'Säulen (zeitlich)',
@@ -136,7 +136,7 @@ Irland,0.236,0
       timeParse: '%Y-%m-%d',
       timeFormat: '%d.%m.',
       xTicks: ['2020-08-01', '2020-09-01'],
-      y: 'value'
+      y: 'value',
     },
     values: `
 Datum,value
@@ -187,7 +187,7 @@ Datum,value
 2020-09-14,500
 2020-09-15,457
 2020-09-16,495
-`
+`,
   },
   {
     name: 'Säulen (ordinal)',
@@ -203,7 +203,7 @@ Datum,value
       colorRange: ['#FF5768'],
       domain: [0, 8500],
       yTicks: [0, 4000, 8000],
-      xUnit: 'Buchstaben pro Wort'
+      xUnit: 'Buchstaben pro Wort',
     },
     values: `
 length,value
@@ -238,7 +238,7 @@ length,value
 29,0
 30,0
 31,1
-`
+`,
   },
   {
     name: 'Linien, mehrere',
@@ -257,8 +257,8 @@ length,value
       endLabel: false,
       colorMap: {
         'Northrop Grumman': '#d62728',
-        'Lockheed Martin': '#ff7f0e'
-      }
+        'Lockheed Martin': '#ff7f0e',
+      },
     },
     values: `
 company,date,value
@@ -522,7 +522,7 @@ Lockheed Martin,2020-06-30,197.3
 Lockheed Martin,2020-07-31,193.9
 Lockheed Martin,2020-08-31,187.5
 Lockheed Martin,2020-09-30,191.4
-`
+`,
   },
   {
     name: 'Balken, mehrere',
@@ -536,7 +536,7 @@ Lockheed Martin,2020-09-30,191.4
       column: 'type',
       y: 'category',
       columns: 3,
-      minInnerWidth: 250
+      minInnerWidth: 250,
     },
     values: `
 category,type,value
@@ -544,7 +544,7 @@ category,type,value
 Pädagogik und Sozialkompetenz,Nicht-berufsbezogene Weiterbildung,0.07
 "Sprachen, Kultur, Politik",Individuelle berufsbezogene Weiterbildung,0.15
 Pädagogik und Sozialkompetenz,Individuelle berufsbezogene Weiterbildung,0.17
-`
+`,
   },
   {
     name: 'Säulen (zeitlich), mehrere',
@@ -556,7 +556,7 @@ Pädagogik und Sozialkompetenz,Individuelle berufsbezogene Weiterbildung,0.17
       xIntervalStep: 10,
       column: 'activity',
       columns: 2,
-      unit: 'Minuten'
+      unit: 'Minuten',
     },
     values: `
 year,activity,value
@@ -568,7 +568,7 @@ year,activity,value
 1975,Tisch und Küche aufräumen,12
 1985,Tisch und Küche aufräumen,10
 1995,Tisch und Küche aufräumen,4
-`
+`,
   },
   {
     name: 'Säulen (ordinal), mehrere',
@@ -586,7 +586,7 @@ year,activity,value
       colorRange: ['#FF5768'],
       xTicks: [1, 5, 10, 15, 20, 25, 30],
       yTicks: [0, 20000, 40000],
-      padding: 15
+      padding: 15,
     },
     values: `
 length,book,value
@@ -648,7 +648,7 @@ length,book,value
 28,«Les Misérables»,0
 29,«Notre-Dame de Paris»,8
 29,«Les Misérables»,0
-`
+`,
   },
   {
     name: 'Lollipops',
@@ -661,14 +661,14 @@ length,book,value
       bandLegend: 'in diesem Bereich liegt die Hälfte aller Löhne',
       domain: [0, 15000],
       unit: 'CHF',
-      xTicks: [0, 6502, 10000, 15000]
+      xTicks: [0, 6502, 10000, 15000],
     },
     values: `
 category,value,Q_lower,Q_upper
 Informationstechnologie,8900,6918,11373
 Forschung und Entwicklung,8764,7143,11837
 Energieversorgung,8210,6873,10182
-`
+`,
   },
   {
     name: 'Gestapelte Balken',
@@ -683,7 +683,7 @@ Energieversorgung,8210,6873,10182
       domain: [0, 1],
       sort: 'none',
       colorSort: 'none',
-      highlight: "datum.category == 'Allgemein'"
+      highlight: "datum.category == 'Allgemein'",
     },
     values: `
 category,concern,value
@@ -707,7 +707,7 @@ Sexuelle Belästigung,gar nicht,0.692
 Sexuelle Belästigung,etwas,0.167
 Sexuelle Belästigung,ziemlich,0.047
 Sexuelle Belästigung,sehr stark,0.093
-`
+`,
   },
   {
     name: 'Gestapelte Säulen (zeitlich)',
@@ -723,7 +723,7 @@ Sexuelle Belästigung,sehr stark,0.093
           x2: '2012',
           value: 973619338.97,
           unit: 'Tonnen',
-          label: 'Kyoto-Protokoll'
+          label: 'Kyoto-Protokoll',
         },
         { x: '2020', value: 748700000, label: 'Ziel 2020', ghost: true },
         {
@@ -731,10 +731,10 @@ Sexuelle Belästigung,sehr stark,0.093
           value: 249600000,
           label: 'Ziel 2050',
           valuePrefix: 'max: ',
-          ghost: true
-        }
+          ghost: true,
+        },
       ],
-      padding: 18
+      padding: 18,
     },
     values: `
 gas,year,value
@@ -857,7 +857,7 @@ Stickstofftrifluorid,2013,16030.4000
 Stickstofftrifluorid,2014,20278.8000
 Stickstofftrifluorid,2015,11885.2000
 Stickstofftrifluorid,2016,12000.0000
-`
+`,
   },
   {
     name: 'Linie mit Unsicherheitsbereich',
@@ -867,7 +867,7 @@ Stickstofftrifluorid,2016,12000.0000
       color: 'category',
       band: 'confidence95',
       bandLegend: '95-Prozent-Konfidenzintervall',
-      type: 'Line'
+      type: 'Line',
     },
     values: `
 category,year,value,confidence95_lower,confidence95_upper
@@ -943,7 +943,7 @@ Gesamt,2011,7.01994,6.97718,7.06270
 Gesamt,2012,7.00601,6.94204,7.06998
 Gesamt,2013,7.05254,7.00163,7.10346
 Gesamt,2014,7.13645,7.11445,7.15846
-`
+`,
   },
   {
     name: 'Gestrichelte Linien',
@@ -961,7 +961,7 @@ Gesamt,2014,7.13645,7.11445,7.15846
       timeFormat: '%d.%m.',
       colorMap: {
         'positiv Getestete': 'rgba(31, 119, 180, 1)',
-        'bereits Infizierte': 'rgba(127,191,123, 0.9)'
+        'bereits Infizierte': 'rgba(127,191,123, 0.9)',
       },
       labelFilter: 'false',
       colorLegend: true,
@@ -977,9 +977,9 @@ Gesamt,2014,7.13645,7.11445,7.15846
           value: 13801,
           unit: ' Personen',
           label: 'bereits vor 10 Tagen infiziert',
-          showValue: false
-        }
-      ]
+          showValue: false,
+        },
+      ],
     },
     values: `
 type,date,value
@@ -1025,7 +1025,7 @@ bereits Infizierte,2020-03-13,10416
 bereits Infizierte,2020-03-14,11664
 bereits Infizierte,2020-03-15,12726
 bereits Infizierte,2020-03-16,13801
-    `
+    `,
   },
   {
     name: 'Steigungslinien',
@@ -1039,7 +1039,7 @@ bereits Infizierte,2020-03-16,13801
       columns: 2,
       columnSort: 'none',
       numberFormat: '.0%',
-      type: 'Slope'
+      type: 'Slope',
     },
     values: `
 year,country,value
@@ -1047,7 +1047,7 @@ year,country,value
 1870,Deutschland,0.806969593440383
 2016,Österreich,0.727798978073863
 2016,Deutschland,0.75740573054783
-`
+`,
   },
   {
     name: 'Scatter Plot',
@@ -1066,7 +1066,7 @@ year,country,value
       xScale: 'log',
       tooltipLabel: 'The case of {geo}',
       tooltipBody:
-        'Average Joe in {geo} emitted {formattedY} tons of CO<sub>2</sub> in 2014.\nIn the same period of time, Joe worked and worked and earned himself {formattedX} USD.'
+        'Average Joe in {geo} emitted {formattedY} tons of CO<sub>2</sub> in 2014.\nIn the same period of time, Joe worked and worked and earned himself {formattedX} USD.',
     },
     values: `
 geo,income pp 2014,co2 pp 2014,region
@@ -1263,7 +1263,7 @@ Vietnam,5370,1.8,Asia
 Yemen,3770,0.865,Asia
 Zambia,3630,0.288,Africa
 Zimbabwe,1910,0.78,Africa
-`
+`,
   },
   {
     name: 'Punktekarte, Schweiz',
@@ -1282,13 +1282,12 @@ Zimbabwe,1910,0.78,Africa
         'Chrisch(t)-': '#de2d26',
         Chrischindli: '#fc9272',
         'St. Niklaus': '#31a354',
-        'Mehr als eine Variante': '#54278f'
+        'Mehr als eine Variante': '#54278f',
       },
       features: {
-        url:
-          'https://cdn.repub.ch/s3/republik-assets/assets/geo/ch-cantons-wo-lakes.json',
-        object: 'cantons'
-      }
+        url: 'https://cdn.repub.ch/s3/republik-assets/assets/geo/ch-cantons-wo-lakes.json',
+        object: 'cantons',
+      },
     },
     values: `
 BFS_CODE,SDS_CODE,SDS_NAME,SDS_KT,SDS_NR,cnt_primar,c_total,lon,lat,word,variant,nameCanton
@@ -1841,7 +1840,7 @@ BFS_CODE,SDS_CODE,SDS_NAME,SDS_KT,SDS_NR,cnt_primar,c_total,lon,lat,word,variant
 4132,AG55,Birrwil,AG,55,cnt_chrischt,2,8.19719962040172,47.2917602337923,Mehr als eine Variante,1,Birrwil (AG)
 3357,SG32,Wildhaus,SG,32,cnt_chrischt,2,9.35247368146663,47.2045848382997,Mehr als eine Variante,1,Wildhaus (SG)
 6296,WS14,Törbel,WS,14,cnt_chrischt,2,7.85190007752387,46.2391243638932,Mehr als eine Variante,1,Törbel (VS)
-`
+`,
   },
   {
     name: 'Flächenkarte, Welt',
@@ -1862,19 +1861,18 @@ BFS_CODE,SDS_CODE,SDS_NAME,SDS_KT,SDS_NR,cnt_primar,c_total,lon,lat,word,variant
         '#fd8d3c',
         '#feb24c',
         '#fed976',
-        '#ffeda0'
+        '#ffeda0',
       ],
       features: {
-        url:
-          'https://cdn.repub.ch/s3/republik-assets/assets/geo/world-atlas-110m-without-antarctic.json',
-        object: 'countries'
+        url: 'https://cdn.repub.ch/s3/republik-assets/assets/geo/world-atlas-110m-without-antarctic.json',
+        object: 'countries',
       },
       missingDataLegend: 'Nicht untersucht',
       label: 'label',
       legendTitle: 'Medienfreiheit',
       colorLegendPosition: 'left',
       colorLegendSize: 0.17,
-      colorLegendMinWidth: 90
+      colorLegendMinWidth: 90,
     },
     values: `
 feature,value
@@ -2043,7 +2041,7 @@ feature,value
 716,59.05
 KOS,70.67
 CYN,70.21
-`
+`,
   },
   {
     name: 'Flächenkarte, Schweiz mit Kantonen',
@@ -2060,13 +2058,12 @@ CYN,70.21
         'rgb(187,21,26)',
         'rgb(239,69,51)',
         'rgb(75,151,201)',
-        'rgb(24,100,170)'
+        'rgb(24,100,170)',
       ],
       features: {
-        url:
-          'https://cdn.repub.ch/s3/republik-assets/assets/geo/epsg2056-projected-ch-cantons-wo-lakes.json',
-        object: 'cantons'
-      }
+        url: 'https://cdn.repub.ch/s3/republik-assets/assets/geo/epsg2056-projected-ch-cantons-wo-lakes.json',
+        object: 'cantons',
+      },
     },
     values: `
 feature,value
@@ -2096,14 +2093,14 @@ VS,0.381
 NE,0.309
 GE,0.322
 JU,0.257
-`
+`,
   },
   {
     name: 'Hemicycle',
     screenshot: '/static/charts/hemicycle.png',
     config: {
       type: 'Hemicycle',
-      unit: 'Sitze'
+      unit: 'Sitze',
     },
     values: `
 label,year,value
@@ -2119,6 +2116,36 @@ Lega,2015,2
 CSP,2015,1
 MCR,2015,1
 SVP,2015,65
-`
-  }
+`,
+  },
+  {
+    name: 'Tabelle',
+    screenshot: '/static/charts/table.png',
+    config: {
+      type: 'Table',
+      numberFormat: 's',
+      tableColumns: [
+        {
+          column: 'Indikator',
+          type: 'string',
+        },
+        {
+          column: 'Afghanistan',
+          type: 'number',
+          width: '170',
+        },
+        {
+          column: 'Schweiz',
+          type: 'number',
+          width: '170',
+        },
+      ],
+    },
+    values: `
+Indikator,Afghanistan,Schweiz
+Gesamtbevölkerung,38,8.6
+"BNE pro Kopf (USD, kaufkraftbereinigt)",2229,69394
+"Kindersterblichkeit (pro 1000 Kindern unter 5 Jahren)",62.3,4.1
+"Jahre in der Schule (Mittelwert)",3.9,13.4`,
+  },
 ]

@@ -14,14 +14,14 @@ const loadStripeScript = () => {
       // https://mtlynch.io/stripe-update/#support-library-unloading
       loadScript(
         'https://js.stripe.com/v3?advancedFraudSignals=false',
-        error => {
+        (error) => {
           if (error) {
             reject(error)
             promise = undefined
             return
           }
           resolve(window.Stripe)
-        }
+        },
       )
     })
   }
@@ -29,7 +29,7 @@ const loadStripeScript = () => {
 }
 
 const initializedInstances = {}
-export const loadStripe = stripePublishableKey => {
+export const loadStripe = (stripePublishableKey) => {
   const key = stripePublishableKey || STRIPE_PUBLISHABLE_KEY
   if (initializedInstances[key]) {
     return Promise.resolve(initializedInstances[key])
@@ -37,7 +37,7 @@ export const loadStripe = stripePublishableKey => {
   return loadStripeScript().then(() => {
     const instance = window.Stripe(key, {
       apiVersion: '2020-08-27',
-      locale: 'de'
+      locale: 'de',
     })
     initializedInstances[key] = instance
     return instance

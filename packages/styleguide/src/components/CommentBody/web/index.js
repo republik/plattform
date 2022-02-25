@@ -3,14 +3,14 @@ export { default as CommentBodyBlockCode } from './BlockCode'
 export {
   default as CommentBodyBlockQuote,
   BlockQuoteNested as CommentBodyBlockQuoteNested,
-  BlockQuoteParagraph as CommentBodyBlockQuoteParagraph
+  BlockQuoteParagraph as CommentBodyBlockQuoteParagraph,
 } from './Blockquote'
 
 export { default as CommentBodyContainer } from './Container'
 
 export {
   default as CommentBodyList,
-  ListItem as CommentBodyListItem
+  ListItem as CommentBodyListItem,
 } from './List'
 
 export {
@@ -18,5 +18,5 @@ export {
   Code as CommentBodyCode,
   Definition as CommentBodyDefinition,
   Heading as CommentBodyHeading,
-  FeaturedText as CommentBodyFeaturedText
+  FeaturedText as CommentBodyFeaturedText,
 } from './Paragraph'

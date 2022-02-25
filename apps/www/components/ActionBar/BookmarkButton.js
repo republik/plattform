@@ -9,7 +9,7 @@ import { IconButton } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 import {
   onDocumentFragment,
-  BOOKMARKS_COLLECTION_NAME
+  BOOKMARKS_COLLECTION_NAME,
 } from '../Bookmarks/fragments'
 import { getRefetchQueries } from '../Bookmarks/queries'
 
@@ -23,7 +23,7 @@ const Bookmark = ({
   router,
   label,
   disabled,
-  attributes
+  attributes,
 }) => {
   const [mutating, setMutating] = useState(false)
   const [error, setError] = useState(undefined)
@@ -107,11 +107,11 @@ export default compose(
         mutate({
           variables: {
             documentId,
-            collectionName: BOOKMARKS_COLLECTION_NAME
+            collectionName: BOOKMARKS_COLLECTION_NAME,
           },
-          refetchQueries: update ? getRefetchQueries() : []
-        })
-    })
+          refetchQueries: update ? getRefetchQueries() : [],
+        }),
+    }),
   }),
   graphql(removeMutation, {
     props: ({ mutate }) => ({
@@ -119,12 +119,12 @@ export default compose(
         mutate({
           variables: {
             documentId,
-            collectionName: BOOKMARKS_COLLECTION_NAME
+            collectionName: BOOKMARKS_COLLECTION_NAME,
           },
-          refetchQueries: update ? getRefetchQueries() : []
-        })
-    })
+          refetchQueries: update ? getRefetchQueries() : [],
+        }),
+    }),
   }),
   withT,
-  withRouter
+  withRouter,
 )(Bookmark)

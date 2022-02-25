@@ -9,7 +9,7 @@ import {
   Y_PADDING,
   BORDER_WIDTH,
   LINE_HEIGHT,
-  FIELD_HEIGHT
+  FIELD_HEIGHT,
 } from './constants'
 import { IconType } from 'react-icons/lib/esm/iconBase'
 
@@ -23,7 +23,7 @@ const styles = {
     fontSize: 22,
     lineHeight: `${LINE_HEIGHT}px`,
     marginBottom: 15,
-    cursor: 'text'
+    cursor: 'text',
   }),
   field: css({
     width: '100%',
@@ -40,13 +40,13 @@ const styles = {
     borderBottomWidth: BORDER_WIDTH,
     borderBottomStyle: 'solid',
     borderRadius: 0,
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
   }),
   labelText: css({
     position: 'absolute',
     left: X_PADDING,
     top: LINE_HEIGHT + Y_PADDING,
-    transition: 'top 200ms, font-size 200ms'
+    transition: 'top 200ms, font-size 200ms',
   }),
   labelTextFocused: css({
     top: 3,
@@ -55,33 +55,33 @@ const styles = {
     [mUp]: {
       top: 5,
       fontSize: 14,
-      lineHeight: '15px'
-    }
+      lineHeight: '15px',
+    },
   }),
   iconWrapper: css({
     position: 'absolute',
     right: 3,
-    top: LINE_HEIGHT + 5
+    top: LINE_HEIGHT + 5,
   }),
   arrow: css({
     position: 'absolute',
     right: 0,
-    cursor: 'pointer'
+    cursor: 'pointer',
   }),
   noBrowserIcon: css({
     '::-ms-clear': {
-      display: 'none'
+      display: 'none',
     },
     '::-webkit-inner-spin-button': {
-      appearance: 'none'
+      appearance: 'none',
     },
     '::-webkit-outer-spin-button': {
-      appearance: 'none'
-    }
+      appearance: 'none',
+    },
   }),
   fieldIcon: css({
-    paddingRight: FIELD_HEIGHT
-  })
+    paddingRight: FIELD_HEIGHT,
+  }),
 }
 
 export interface ArrowProps extends Record<string, unknown> {
@@ -125,7 +125,7 @@ const Field = React.forwardRef<
     onChange?: (
       event: InputEvent,
       value: string | number,
-      shouldValidate: boolean
+      shouldValidate: boolean,
     ) => void
     name?: string
     autoComplete?: boolean
@@ -154,12 +154,12 @@ const Field = React.forwardRef<
       icon,
       disabled,
       value,
-      renderInput = props => <input {...props} />
+      renderInput,
     },
-    forwardRef
+    forwardRef,
   ) => {
     const [isFocused, setIsFocused] = useState(
-      sim && sim.indexOf('focus') !== -1
+      sim && sim.indexOf('focus') !== -1,
     )
     const [isValidating, setIsValidating] = useState(false)
     const [isDirty, setIsDirty] = useState(false)
@@ -167,9 +167,8 @@ const Field = React.forwardRef<
     const ownRef = useRef<HTMLInputElement>()
     const [colorScheme] = useColorContext()
 
-    const inputRef = (forwardRef || ownRef) as MutableRefObject<
-      HTMLInputElement
-    >
+    const inputRef = (forwardRef ||
+      ownRef) as MutableRefObject<HTMLInputElement>
 
     const simulationClassName = sim && simulate(sim).toString()
     const fieldValue = value !== undefined ? value : localStateValue
@@ -187,17 +186,17 @@ const Field = React.forwardRef<
       return {
         labelText: css({
           color: colorScheme.getCSSColor(
-            error ? 'error' : isFocused ? 'primary' : 'disabled'
-          )
+            error ? 'error' : isFocused ? 'primary' : 'disabled',
+          ),
         }),
         field: css({
           borderColor: colorScheme.getCSSColor(
-            error ? 'error' : isFocused ? 'primary' : 'divider'
+            error ? 'error' : isFocused ? 'primary' : 'divider',
           ),
           color: colorScheme.getCSSColor(
-            error ? 'error' : disabled ? 'disabled' : 'text'
-          )
-        })
+            error ? 'error' : disabled ? 'disabled' : 'text',
+          ),
+        }),
       }
     }, [colorScheme, isFocused, error, disabled])
 
@@ -205,7 +204,7 @@ const Field = React.forwardRef<
       styles.field,
       styleRules.field,
       browserIconStyle,
-      iconStyle
+      iconStyle,
     )
 
     return (
@@ -216,7 +215,7 @@ const Field = React.forwardRef<
           autoComplete,
           type,
           ref: inputRef,
-          onChange: event => {
+          onChange: (event) => {
             const v = event.target.value
             if (onChange) {
               onChange(event, v, isValidating)
@@ -228,7 +227,7 @@ const Field = React.forwardRef<
           },
           value,
           onFocus: () => setIsFocused(true),
-          onBlur: event => {
+          onBlur: (event) => {
             const v = event.target.value
             if (!isValidating && onChange && isDirty) {
               onChange(event, v, true)
@@ -238,7 +237,7 @@ const Field = React.forwardRef<
           },
           className: [fStyle.toString(), simulationClassName]
             .filter(Boolean)
-            .join(' ')
+            .join(' '),
         })}
         <span
           {...styles.labelText}
@@ -253,7 +252,7 @@ const Field = React.forwardRef<
               ? colorScheme.set('fill', 'primary')
               : colorScheme.set('fill', 'disabled'))}
             size={FIELD_HEIGHT / 2}
-            onClick={e => {
+            onClick={(e) => {
               e.preventDefault()
               e.stopPropagation()
               onDec()
@@ -269,7 +268,7 @@ const Field = React.forwardRef<
               ? colorScheme.set('fill', 'primary')
               : colorScheme.set('fill', 'disabled'))}
             size={FIELD_HEIGHT / 2}
-            onClick={e => {
+            onClick={(e) => {
               e.preventDefault()
               e.stopPropagation()
               onInc()
@@ -282,18 +281,18 @@ const Field = React.forwardRef<
         {icon && <span {...styles.iconWrapper}>{icon}</span>}
       </label>
     )
-  }
+  },
 )
 
 Field.propTypes = {
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   renderInput: PropTypes.func.isRequired,
   icon: PropTypes.func,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
 }
 
 Field.defaultProps = {
-  renderInput: props => <input {...props} />
+  renderInput: (props) => <input {...props} />,
 }
 
 export default Field

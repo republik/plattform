@@ -5,5 +5,5 @@ import withMe from '../../../lib/apollo/withMe'
 import withDefaultSSR from '../../../lib/hocs/withDefaultSSR'
 
 export default withDefaultSSR(
-  compose(enforceMembership(), withMe)(ElectionDiscussionPage)
+  compose(enforceMembership(), withMe)(ElectionDiscussionPage),
 )

@@ -10,13 +10,13 @@ import {
   Overlay,
   OverlayToolbar,
   OverlayBody,
-  Loader
+  Loader,
 } from '@project-r/styleguide'
 
 const styles = {
   linkDiff: css({
-    cursor: 'pointer'
-  })
+    cursor: 'pointer',
+  }),
 }
 
 export const TREE_DIFF_QUERY = gql`
@@ -56,14 +56,14 @@ export default function TreeDiff(props) {
   const variables = {
     repoId: props.repoId,
     commitId: props.commit.id,
-    parentCommitId: props.commit.parentIds?.[0]
+    parentCommitId: props.commit.parentIds?.[0],
   }
 
   const newStyles = {
     diffContainer: { wordBreak: 'break-word' },
     wordDiff: { display: 'inline' },
     wordAdded: { display: 'inline' },
-    wordRemoved: { display: 'inline' }
+    wordRemoved: { display: 'inline' },
   }
 
   return (

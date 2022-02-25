@@ -11,27 +11,27 @@ const styles = {
     margin: '20px auto',
     padding: '15px',
     [mUp]: {
-      padding: '25px'
-    }
+      padding: '25px',
+    },
   }),
   nestedBlockQuote: css({
     borderLeftWidth: 2,
-    borderLeftStyle: 'solid'
+    borderLeftStyle: 'solid',
   }),
   paragraph: css({
     margin: '6px 0',
     ...convertStyleToRem(serifRegular14),
     [mUp]: {
       ...convertStyleToRem(serifRegular16),
-      margin: '10px 0'
+      margin: '10px 0',
     },
     '&:first-child': {
-      marginTop: 0
+      marginTop: 0,
     },
     '&:last-child': {
-      marginBottom: 0
-    }
-  })
+      marginBottom: 0,
+    },
+  }),
 }
 
 export const BlockQuoteParagraph = ({ children }) => (

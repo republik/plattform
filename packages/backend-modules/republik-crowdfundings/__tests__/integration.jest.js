@@ -408,9 +408,8 @@ describe('claimMembership', () => {
     await signIn({ user: Users.Member })
     const result = await claimMembership({ voucherCode })
     expect(result).toEqual({ data: { claimMembership: true } })
-    const membershipAfterClaim = await pgDatabase().public.memberships.findFirst(
-      { pledgeId },
-    )
+    const membershipAfterClaim =
+      await pgDatabase().public.memberships.findFirst({ pledgeId })
     expect(membershipAfterClaim.userId).toBe(Users.Member.id)
     expect(membershipAfterClaim.voucherable).toBeFalsy()
 
@@ -439,9 +438,8 @@ describe('claimMembership', () => {
     await signIn({ user: Users.Member })
     const result = await claimMembership({ voucherCode: 'TEST' })
     expect(result.errors[0].message).toBeTruthy()
-    const membershipAfterClaim = await pgDatabase().public.memberships.findFirst(
-      { pledgeId },
-    )
+    const membershipAfterClaim =
+      await pgDatabase().public.memberships.findFirst({ pledgeId })
     expect(membershipAfterClaim.userId).not.toBe(Users.Member.id)
 
     await signOut()

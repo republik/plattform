@@ -15,6 +15,6 @@ export const sectionContainerStyle = css({
   marginTop: '5em',
   padding: '0px 15px',
   [mediaQueries.mUp]: {
-    marginTop: '8em'
-  }
+    marginTop: '8em',
+  },
 })

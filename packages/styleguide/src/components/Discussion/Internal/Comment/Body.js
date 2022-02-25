@@ -10,28 +10,30 @@ import { renderCommentMdast } from './render'
 
 const styles = {
   container: css({
-    position: 'relative'
+    position: 'relative',
   }),
   margin: css({
     display: 'block',
-    marginTop: 8
+    marginTop: 8,
   }),
   unpublished: css({
-    marginBottom: 8
+    marginBottom: 8,
   }),
   context: css({
-    marginBottom: 10
-  })
+    marginBottom: 10,
+  }),
 }
 
-export const Body = ({ t, comment, context, isPreview = false }) => {
-  const { discussion, highlightedCommentId } = React.useContext(
-    DiscussionContext
-  )
+export const Body = ({
+  t,
+  comment,
+  context,
+  isPreview = false,
+  isHighlighted = false,
+}) => {
+  const { discussion } = React.useContext(DiscussionContext)
   const { collapsable } = discussion
   const { published, content, userCanEdit, adminUnpublished } = comment
-
-  const isHighlighted = highlightedCommentId === comment.id
 
   const body = (
     <>

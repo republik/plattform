@@ -10,7 +10,7 @@ const DiscussionLinkButton = ({
   t,
   document,
   forceShortLabel,
-  isOnArticlePage
+  isOnArticlePage,
 }) => {
   const meta = document && document.meta
   const {
@@ -18,19 +18,19 @@ const DiscussionLinkButton = ({
     discussionPath,
     discussionQuery,
     discussionCount,
-    isDiscussionPage
+    isDiscussionPage,
   } = getDiscussionLinkProps(
     meta.linkedDiscussion,
     meta.ownDiscussion,
     meta.template,
-    meta.path
+    meta.path,
   )
 
   return (
     <Link
       href={{
         pathname: discussionPath,
-        query: discussionQuery
+        query: discussionQuery,
       }}
       passHref
     >
@@ -40,14 +40,14 @@ const DiscussionLinkButton = ({
           forceShortLabel
             ? discussionCount
             : t('profile/documents/title/other', {
-                count: discussionCount || ''
+                count: discussionCount || '',
               })
         }
         labelShort={discussionCount || ''}
         fillColorName='primary'
         onClick={
           isDiscussionPage && isOnArticlePage
-            ? e => {
+            ? (e) => {
                 e.preventDefault()
                 focusSelector(`[data-discussion-id='${discussionId}']`)
               }

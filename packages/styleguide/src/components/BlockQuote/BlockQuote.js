@@ -8,13 +8,13 @@ const styles = {
   container: css({
     margin: '30px auto',
     [mUp]: {
-      margin: '40px auto'
+      margin: '40px auto',
     },
     '& figcaption': {
       marginLeft: 0,
-      marginRight: 0
-    }
-  })
+      marginRight: 0,
+    },
+  }),
 }
 
 const BlockQuote = ({ children, attributes }) => {
@@ -27,7 +27,7 @@ const BlockQuote = ({ children, attributes }) => {
 
 BlockQuote.propTypes = {
   children: PropTypes.node.isRequired,
-  attributes: PropTypes.object
+  attributes: PropTypes.object,
 }
 
 export default BlockQuote

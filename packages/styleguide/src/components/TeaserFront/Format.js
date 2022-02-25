@@ -11,8 +11,8 @@ const format = css({
   margin: '0 0 18px 0',
   [mUp]: {
     ...convertStyleToRem(sansSerifMedium20),
-    margin: '0 0 28px 0'
-  }
+    margin: '0 0 28px 0',
+  },
 })
 
 const Format = ({ children, color, collapsedColor }) => {
@@ -26,8 +26,8 @@ const Format = ({ children, color, collapsedColor }) => {
           ? labCollapsedColor.darker(0.6)
           : labCollapsedColor.brighter(3.0),
       [tUp]: {
-        color: labColor.l > 50 ? labColor.darker(2.0) : labColor.brighter(3.0)
-      }
+        color: labColor.l > 50 ? labColor.darker(2.0) : labColor.brighter(3.0),
+      },
     })
 
   return (
@@ -44,7 +44,7 @@ const Format = ({ children, color, collapsedColor }) => {
 Format.propTypes = {
   children: PropTypes.node.isRequired,
   color: PropTypes.string,
-  collapsedColor: PropTypes.string
+  collapsedColor: PropTypes.string,
 }
 
 export default Format

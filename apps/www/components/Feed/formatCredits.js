@@ -5,11 +5,11 @@ export default function formatCredits(credits) {
         i === 0
           ? /(,\s|^)\d{1,2}\.\d{1,2}\.\d{4},?\s?/g
           : /(,\s|^)\d{1,2}\.\d{1,2}\.\d{4}\s?/g,
-        ''
+        '',
       )
       return {
         ...c,
-        value
+        value,
       }
     } else {
       return c

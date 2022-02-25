@@ -29,7 +29,7 @@ import {
   matchZone,
   matchHeading,
   matchParagraph,
-  matchImage
+  matchImage,
 } from 'mdast-react-render/lib/utils'
 
 import { matchLast, globalInlines, styles, getDatePath } from './utils'
@@ -77,20 +77,20 @@ const getProgressProps = (node, index, parent, { ancestors }) => {
   return progressId
     ? {
         attributes: {
-          'data-pos': progressId
-        }
+          'data-pos': progressId,
+        },
       }
     : {}
 }
 
-const addProgressProps = rule => ({
+const addProgressProps = (rule) => ({
   ...rule,
   props: rule.props
     ? (...args) => ({
         ...rule.props(...args),
-        ...getProgressProps(...args)
+        ...getProgressProps(...args),
       })
-    : getProgressProps
+    : getProgressProps,
 })
 
 export const COVER_TYPE = 'COVERFIGURE'
@@ -100,7 +100,7 @@ const mdastPlaceholder = '\u2063'
 const DefaultLink = ({ children }) => children
 const DefaultActionBar = () => null
 
-const withData = Component => props => <Component {...props} data={{}} />
+const withData = (Component) => (props) => <Component {...props} data={{}} />
 
 const createSchema = ({
   documentEditorOptions = { skipCredits: false },
@@ -108,47 +108,47 @@ const createSchema = ({
     {
       label: 'Bildergalerie aktiv',
       key: 'gallery',
-      ref: 'bool'
+      ref: 'bool',
     },
     {
       label: 'Icon: Bildergalerie',
       key: 'indicateGallery',
-      ref: 'bool'
+      ref: 'bool',
     },
     {
       label: 'Icon: Video',
       key: 'indicateVideo',
-      ref: 'bool'
+      ref: 'bool',
     },
     {
       label: 'Icon: Chart',
       key: 'indicateChart',
-      ref: 'bool'
+      ref: 'bool',
     },
     {
       label: 'Keine Leseposition (z.B. für Videoartikel)',
       key: 'disableTextProgress',
-      ref: 'bool'
+      ref: 'bool',
     },
     {
       label: 'Diskussion geschlossen',
       key: 'discussionClosed',
-      ref: 'bool'
+      ref: 'bool',
     },
     {
       label: 'Format',
       key: 'format',
-      ref: 'repo'
+      ref: 'repo',
     },
     {
       label: 'Dossier',
       key: 'dossier',
-      ref: 'repo'
+      ref: 'repo',
     },
     {
       label: 'Diskussion',
       key: 'discussion',
-      ref: 'repo'
+      ref: 'repo',
     },
     // // disabled pending launch and backend support
     // // https://github.com/orbiting/backends/compare/feat-article-email
@@ -172,7 +172,7 @@ const createSchema = ({
   dynamicComponentRequire,
   dynamicComponentIdentifiers,
   previewTeaser,
-  getVideoPlayerProps = props => props,
+  getVideoPlayerProps = (props) => props,
   onAudioCoverClick,
   metaBody = false,
   metaHeadlines = false,
@@ -182,21 +182,21 @@ const createSchema = ({
   CommentLink = DefaultLink,
   ActionBar = DefaultActionBar,
   PayNote,
-  hasEmailTemplate = true
+  hasEmailTemplate = true,
 } = {}) => {
   const base = createBase({ metaBody, metaHeadlines })
   const blocks = createBlocks({
     COVER_TYPE,
     base,
     t,
-    onAudioCoverClick
+    onAudioCoverClick,
   })
   const teasers = createTeasers({
     t,
     Link,
     ActionBar,
     PayNote,
-    plattformUnauthorizedZoneText
+    plattformUnauthorizedZoneText,
   })
 
   const dynamicComponent = createDynamicComponent({
@@ -204,11 +204,11 @@ const createSchema = ({
     dynamicComponentRequire,
     dynamicComponentIdentifiers,
     insertButtonText: 'Dynamic Component',
-    type: DYNAMICCOMPONENT_TYPE
+    type: DYNAMICCOMPONENT_TYPE,
   })
 
   const TeaserEmbedCommentWithLiveData = withCommentData(TeaserEmbedComment)
-  const TeaserEmbedCommentSwitch = props => {
+  const TeaserEmbedCommentSwitch = (props) => {
     const [isMounted, setIsMounted] = useState()
     useEffect(() => {
       setIsMounted(true)
@@ -245,17 +245,17 @@ const createSchema = ({
               customFields: customMetaFields,
               teaser:
                 previewTeaser ||
-                (props => (
+                ((props) => (
                   <div
                     style={{
                       backgroundColor: '#fff',
-                      padding: '30px 30px 1px'
+                      padding: '30px 30px 1px',
                     }}
                   >
                     <TeaserFeed {...props} />
                   </div>
-                ))
-            }
+                )),
+            },
           },
           blocks.cover,
           addProgressProps(dynamicComponent),
@@ -273,7 +273,7 @@ const createSchema = ({
                 format,
                 series,
                 repoId,
-                path
+                path,
               })
 
               return (
@@ -309,13 +309,13 @@ const createSchema = ({
                 format: root.format,
                 series: root.series,
                 repoId: root.repoId,
-                path: root.meta?.path
+                path: root.meta?.path,
               }
             },
             editorModule: 'title',
             editorOptions: {
               coverType: COVER_TYPE,
-              dynamicComponentCoverType: DYNAMICCOMPONENT_TYPE
+              dynamicComponentCoverType: DYNAMICCOMPONENT_TYPE,
             },
             rules: [
               {
@@ -350,7 +350,7 @@ const createSchema = ({
                   const rootNode = ancestors[ancestors.length - 1]
                   return {
                     format: rootNode.format,
-                    meta: rootNode.meta
+                    meta: rootNode.meta,
                   }
                 },
                 rules: globalInlines,
@@ -359,8 +359,8 @@ const createSchema = ({
                   type: 'H1',
                   placeholder: 'Titel',
                   depth: 1,
-                  isStatic: true
-                }
+                  isStatic: true,
+                },
               },
               {
                 matchMdast: matchHeading(2),
@@ -374,14 +374,14 @@ const createSchema = ({
                   type: 'SUBJECT',
                   placeholder: 'Subject',
                   depth: 2,
-                  isStatic: true
+                  isStatic: true,
                 },
-                rules: globalInlines
+                rules: globalInlines,
               },
               {
                 matchMdast: (node, index, parent) => {
                   const numHeadings = parent.children.filter(
-                    child => child.type === 'heading'
+                    (child) => child.type === 'heading',
                   ).length
                   return matchParagraph(node) && index === numHeadings
                 },
@@ -401,9 +401,9 @@ const createSchema = ({
                   type: 'LEAD',
                   placeholder: 'Lead',
                   mdastPlaceholder,
-                  isStatic: true
+                  isStatic: true,
                 },
-                rules: [...globalInlines, base.link]
+                rules: [...globalInlines, base.link],
               },
               {
                 matchMdast: matchParagraph,
@@ -414,11 +414,11 @@ const createSchema = ({
                   placeholder: 'Autoren, Datum',
                   isStatic: true,
                   afterType: 'PARAGRAPH',
-                  insertAfterType: 'CENTER'
+                  insertAfterType: 'CENTER',
                 },
-                rules: [...globalInlines, base.link]
-              }
-            ]
+                rules: [...globalInlines, base.link],
+              },
+            ],
           },
           {
             matchMdast: matchZone('CENTER'),
@@ -445,7 +445,7 @@ const createSchema = ({
                   return {
                     ...node.data,
                     title: link.title,
-                    href: link.url
+                    href: link.url,
                   }
                 },
                 rules: globalInlines.concat({
@@ -455,11 +455,11 @@ const createSchema = ({
                     {
                       matchMdast: matchType('link'),
                       component: ({ children }) => children,
-                      rules: globalInlines
-                    }
-                  ]
+                      rules: globalInlines,
+                    },
+                  ],
                 }),
-                editorModule: 'button'
+                editorModule: 'button',
               },
               base.list,
               {
@@ -468,9 +468,9 @@ const createSchema = ({
                 editorModule: 'line',
                 editorOptions: {
                   insertButtonText: 'Trennlinie',
-                  insertTypes: ['PARAGRAPH']
+                  insertTypes: ['PARAGRAPH'],
                 },
-                isVoid: true
+                isVoid: true,
               },
               {
                 matchMdast: matchZone('EMBEDTWITTER'),
@@ -481,17 +481,17 @@ const createSchema = ({
                     date={new Date(data.createdAt)}
                   />
                 ),
-                props: node => ({
+                props: (node) => ({
                   data: {
                     ...node.data,
-                    url: node.children[0].children[0].url
-                  }
+                    url: node.children[0].children[0].url,
+                  },
                 }),
                 editorModule: 'embedTwitter',
                 editorOptions: {
-                  lookupType: 'PARAGRAPH'
+                  lookupType: 'PARAGRAPH',
                 },
-                isVoid: true
+                isVoid: true,
               },
               blocks.logbook,
               {
@@ -520,11 +520,11 @@ const createSchema = ({
                     />
                   )
                 },
-                props: node => ({
+                props: (node) => ({
                   data: {
                     ...node.data,
-                    url: node.children[0].children[0].url
-                  }
+                    url: node.children[0].children[0].url,
+                  },
                 }),
                 editorModule: 'embedVideo',
                 editorOptions: {
@@ -532,28 +532,28 @@ const createSchema = ({
                   sizes: [
                     {
                       label: 'Normal',
-                      props: { size: undefined }
+                      props: { size: undefined },
                     },
                     {
                       label: 'Gross',
-                      props: { size: 'breakout' }
+                      props: { size: 'breakout' },
                     },
                     {
                       label: 'Mittel',
-                      props: { size: 'narrow' }
+                      props: { size: 'narrow' },
                     },
                     {
                       label: 'Klein',
-                      props: { size: 'tiny' }
-                    }
-                  ]
+                      props: { size: 'tiny' },
+                    },
+                  ],
                 },
-                isVoid: true
+                isVoid: true,
               },
               {
                 matchMdast: matchZone('EMBEDCOMMENT'),
                 props: (node, index, parent) => {
-                  const isNotComment = i => {
+                  const isNotComment = (i) => {
                     if (i < 0 || i > parent.children.length - 1) {
                       return true
                     }
@@ -564,16 +564,16 @@ const createSchema = ({
                     isLast: isNotComment(index + 1),
                     data: {
                       ...node.data,
-                      url: node.children[0].children[0].url
-                    }
+                      url: node.children[0].children[0].url,
+                    },
                   }
                 },
                 component: TeaserEmbedCommentSwitch,
                 editorModule: 'embedComment',
                 editorOptions: {
-                  lookupType: 'PARAGRAPH'
+                  lookupType: 'PARAGRAPH',
                 },
-                isVoid: true
+                isVoid: true,
               },
               blocks.infoBox,
               blocks.pullQuote,
@@ -586,7 +586,7 @@ const createSchema = ({
                   mdastType: 'zone',
                   identifier: 'NOTE',
                   formatButtonText: 'Notiz',
-                  isStatic: true
+                  isStatic: true,
                 },
                 rules: [
                   {
@@ -598,22 +598,22 @@ const createSchema = ({
                       placeholder: 'Anmerkung',
                       isStatic: true,
                       afterType: 'PARAGRAPH',
-                      insertAfterType: 'CENTER'
+                      insertAfterType: 'CENTER',
                     },
-                    rules: base.paragraphRules
-                  }
-                ]
+                    rules: base.paragraphRules,
+                  },
+                ],
               },
               {
                 matchMdast: matchZone('CHART'),
                 component: Figure,
-                props: node => ({
-                  size: node.data.size
+                props: (node) => ({
+                  size: node.data.size,
                 }),
                 editorModule: 'chart',
                 editorOptions: {
                   insertButtonText: 'Chart',
-                  insertTypes: ['PARAGRAPH']
+                  insertTypes: ['PARAGRAPH'],
                 },
                 rules: [
                   {
@@ -624,9 +624,9 @@ const createSchema = ({
                       type: 'CHARTTITLE',
                       placeholder: 'Titel',
                       depth: 3,
-                      isStatic: true
+                      isStatic: true,
                     },
-                    rules: globalInlines
+                    rules: globalInlines,
                   },
                   {
                     matchMdast: (node, index, parent) =>
@@ -636,9 +636,9 @@ const createSchema = ({
                     editorOptions: {
                       type: 'CHARTLEAD',
                       placeholder: 'Lead',
-                      isStatic: true
+                      isStatic: true,
                     },
-                    rules: base.paragraphRules
+                    rules: base.paragraphRules,
                   },
                   {
                     matchMdast: matchType('code'),
@@ -656,10 +656,10 @@ const createSchema = ({
                       return {
                         t,
                         config: zone.data,
-                        values: node.value
+                        values: node.value,
                       }
                     },
-                    editorModule: 'chartCanvas'
+                    editorModule: 'chartCanvas',
                   },
                   {
                     matchMdast: (node, index, parent) =>
@@ -672,11 +672,11 @@ const createSchema = ({
                       placeholder: 'Quelle',
                       isStatic: true,
                       afterType: 'PARAGRAPH',
-                      insertAfterType: 'CENTER'
+                      insertAfterType: 'CENTER',
                     },
-                    rules: base.paragraphRules
-                  }
-                ]
+                    rules: base.paragraphRules,
+                  },
+                ],
               },
               base.centerFigure,
               teasers.articleCollection,
@@ -684,44 +684,44 @@ const createSchema = ({
               {
                 matchMdast: matchZone('HTML'),
                 component: IllustrationHtml,
-                props: node => {
-                  const code = node.children.find(c => c.type === 'code')
+                props: (node) => {
+                  const code = node.children.find((c) => c.type === 'code')
                   const deepNodes = node.children
                     .reduce(
                       (children, child) =>
                         children.concat(child).concat(child.children),
-                      []
+                      [],
                     )
                     .filter(Boolean)
-                  const images = deepNodes.filter(matchImage).map(image => ({
+                  const images = deepNodes.filter(matchImage).map((image) => ({
                     ref: image.alt,
-                    url: image.url
+                    url: image.url,
                   }))
                   return {
                     code: code && code.value,
-                    images
+                    images,
                   }
                 },
                 editorModule: 'html',
                 editorOptions: {
                   insertTypes: ['PARAGRAPH'],
-                  insertButtonText: 'HTML Illustration'
+                  insertButtonText: 'HTML Illustration',
                 },
-                isVoid: true
+                isVoid: true,
               },
-              dynamicComponent
-            ].map(addProgressProps)
+              dynamicComponent,
+            ].map(addProgressProps),
           },
           addProgressProps(base.centerFigure),
           teasers.carousel,
           teasers.seriesNav,
           {
             matchMdast: () => false,
-            editorModule: 'specialchars'
-          }
-        ]
-      }
-    ]
+            editorModule: 'specialchars',
+          },
+        ],
+      },
+    ],
   }
 }
 

@@ -8,20 +8,16 @@ const { mdastContentToString } = require('../utils')
 async function transform(row) {
   const { userId, discussionId } = row
 
-  const {
-    user,
-    discussion,
-    discussionPreferences,
-    credentials,
-  } = await Promise.props({
-    user: this.payload.getUser(userId),
-    discussion: this.payload.getDiscussion(discussionId),
-    discussionPreferences: this.payload.getDiscussionPreferences(
-      userId,
-      discussionId,
-    ),
-    credentials: this.payload.getCredentials(userId),
-  })
+  const { user, discussion, discussionPreferences, credentials } =
+    await Promise.props({
+      user: this.payload.getUser(userId),
+      discussion: this.payload.getDiscussion(discussionId),
+      discussionPreferences: this.payload.getDiscussionPreferences(
+        userId,
+        discussionId,
+      ),
+      credentials: this.payload.getCredentials(userId),
+    })
 
   const isAnonymityEnforced = discussion.anonymity === 'ENFORCED'
   const isAnonymous = !!discussionPreferences?.anonymous

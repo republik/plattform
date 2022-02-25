@@ -5,7 +5,7 @@ import {
   OverlayBody,
   OverlayToolbar,
   OverlayToolbarClose,
-  Interaction
+  Interaction,
 } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'

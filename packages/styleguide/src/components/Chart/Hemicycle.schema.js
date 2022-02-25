@@ -2,7 +2,7 @@ export const hemicycleEditorSchema = ({
   optionalDataColumnEnum,
   defaults,
   colorDropdownItems,
-  chartSizes
+  chartSizes,
 }) => {
   return {
     defaultProps: defaults,
@@ -14,15 +14,15 @@ export const hemicycleEditorSchema = ({
             color: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: optionalDataColumnEnum
+              enum: optionalDataColumnEnum,
             },
             colorRange: {
               title: 'Farbschema auswählen',
               type: 'string',
-              enum: colorDropdownItems
-            }
-          }
-        }
+              enum: colorDropdownItems,
+            },
+          },
+        },
       },
       advanced: {
         layout: {
@@ -31,11 +31,11 @@ export const hemicycleEditorSchema = ({
             size: {
               title: 'Darstellung im Beitrag',
               type: 'string',
-              enum: chartSizes
-            }
-          }
-        }
-      }
-    }
+              enum: chartSizes,
+            },
+          },
+        },
+      },
+    },
   }
 }

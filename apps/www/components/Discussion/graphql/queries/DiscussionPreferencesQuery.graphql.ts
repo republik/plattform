@@ -3,11 +3,11 @@ import Nullable from '../../../../lib/types/Nullable'
 import {
   DiscussionCredential,
   DiscussionNotificationChannel,
-  DiscussionNotificationOption
+  DiscussionNotificationOption,
 } from '../types/SharedTypes'
 import {
   DISCUSSION_FRAGMENT,
-  DiscussionFragmentType
+  DiscussionFragmentType,
 } from '../fragments/DiscussionFragment.graphql'
 import { makeQueryHook } from '../../../../lib/helpers/AbstractApolloGQLHooks.helper'
 

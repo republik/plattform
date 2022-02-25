@@ -8,7 +8,7 @@ import {
   Checkbox,
   Label,
   colors,
-  slug
+  slug,
 } from '@project-r/styleguide'
 
 import withT from '../../../../lib/withT'
@@ -28,19 +28,19 @@ const styles = {
   container: css({
     marginTop: 100,
     backgroundColor: colors.secondaryBg,
-    padding: 30
+    padding: 30,
   }),
   center: css({
     maxWidth: 640,
-    margin: '0 auto'
+    margin: '0 auto',
   }),
   bool: css({
     clear: 'left',
-    margin: '10px 0'
-  })
+    margin: '10px 0',
+  }),
 }
 
-export const getWidth = key =>
+export const getWidth = (key) =>
   key.match(/title|feed|emailSubject/i) ? '100%' : ''
 
 const MetaData = ({
@@ -55,7 +55,7 @@ const MetaData = ({
   additionalFields = [],
   customFields = [],
   teaser: Teaser,
-  t
+  t,
 }) => {
   const node = value.document
 
@@ -65,22 +65,22 @@ const MetaData = ({
     'title',
     'shortTitle',
     'image',
-    'description'
+    'description',
   ])
   const genericDefaultValues = Map(
-    genericKeys.map(key => [key, key === 'feed' ? false : ''])
+    genericKeys.map((key) => [key, key === 'feed' ? false : '']),
   )
   const genericData = genericDefaultValues.merge(
-    node.data.filter((_, key) => genericKeys.has(key))
+    node.data.filter((_, key) => genericKeys.has(key)),
   )
 
   const seoKeys = Set(['seoTitle', 'seoDescription'])
-  const seoDefaultValues = Map(seoKeys.map(key => [key, '']))
+  const seoDefaultValues = Map(seoKeys.map((key) => [key, '']))
   const seoData = seoDefaultValues.merge(
-    node.data.filter((_, key) => seoKeys.has(key))
+    node.data.filter((_, key) => seoKeys.has(key)),
   )
 
-  const onInputChange = key => (_, inputValue) => {
+  const onInputChange = (key) => (_, inputValue) => {
     let newData = node.data
     if (key === 'title' || key === 'description') {
       newData = newData.remove('auto')
@@ -88,64 +88,66 @@ const MetaData = ({
     if (key === 'slug') {
       newData = newData.remove('autoSlug')
     }
-    editor.change(change => {
+    editor.change((change) => {
       change.setNodeByKey(node.key, {
         data:
           inputValue || inputValue === false
             ? newData.set(key, inputValue)
-            : newData.remove(key)
+            : newData.remove(key),
       })
     })
   }
-  const onRepoInputChange = key => (_, __, item) => {
-    editor.change(change => {
+  const onRepoInputChange = (key) => (_, __, item) => {
+    editor.change((change) => {
       change.setNodeByKey(node.key, {
         data: item
           ? node.data.set(key, `https://github.com/${item.value.id}`)
-          : node.data.remove(key)
+          : node.data.remove(key),
       })
       let data = item ? item.value.latestCommit.document : undefined
       if (key === 'series' && data) {
         data = data.meta.series
 
         const seriesNavNodes = change.value.document.filterDescendants(
-          node => node.type === 'SERIES_NAV'
+          (node) => node.type === 'SERIES_NAV',
         )
-        seriesNavNodes.forEach(node => {
+        seriesNavNodes.forEach((node) => {
           change.setNodeByKey(node.key, {
-            data: node.data.set('series', data)
+            data: node.data.set('series', data),
           })
         })
       }
 
       const titleNode = change.value.document.findDescendant(
-        node => node.type === 'TITLE'
+        (node) => node.type === 'TITLE',
       )
       if (titleNode) {
         const newData = {
           ...titleNode.data.toJS(),
-          [key]: data
+          [key]: data,
         }
         change.setNodeByKey(titleNode.key, {
-          data: newData
+          data: newData,
         })
-        titleNode.nodes.forEach(node => {
+        titleNode.nodes.forEach((node) => {
           change.setNodeByKey(node.key, {
-            data: newData
+            data: newData,
           })
         })
       }
     })
   }
-  const titleNode = value.document.findDescendant(node => node.type === 'TITLE')
+  const titleNode = value.document.findDescendant(
+    (node) => node.type === 'TITLE',
+  )
   const titleData = titleNode ? titleNode.data.toJS() : {}
 
   const dataAsJs = node.data.toJS()
   const customFieldsByRef = nest()
-    .key(d => (d ? d.ref : 'field'))
+    .key((d) => (d ? d.ref : 'field'))
     .object(customFields)
 
-  const customFieldsRest = customFields.filter(f => !f.ref)
+  const customFieldsRest = customFields.filter((f) => !f.ref)
 
   const previewPublishDate = contextMeta.publishDate
     ? new Date(contextMeta.publishDate)
@@ -153,7 +155,7 @@ const MetaData = ({
   const previewPath = mdastSchema.getPath({
     ...dataAsJs,
     publishDate: previewPublishDate,
-    slug: slug(dataAsJs.slug || '')
+    slug: slug(dataAsJs.slug || ''),
   })
 
   const slugFieldElement = (
@@ -163,7 +165,7 @@ const MetaData = ({
         label={t(
           `metaData/field/${isTemplate ? 'repoSlug' : 'slug'}`,
           undefined,
-          'slug'
+          'slug',
         )}
         value={node.data.get('slug')}
         onChange={onInputChange('slug')}
@@ -187,14 +189,14 @@ const MetaData = ({
             base: FRONTEND_BASE_URL
               ? FRONTEND_BASE_URL.replace(/https?:\/\/(www\.)?/, '')
               : '',
-            path: previewPath
+            path: previewPath,
           })}
           <br />
           {!!dataAsJs.path && (
             <>
               {t('metaData/field/slug/pathNote', {
                 base: FRONTEND_BASE_URL.replace(/https?:\/\/(www\.)?/, ''),
-                path: dataAsJs.path
+                path: dataAsJs.path,
               })}
               <br />
             </>
@@ -231,11 +233,11 @@ const MetaData = ({
             darkMode
               ? {
                   key: 'darkMode',
-                  label: t('metaData/darkMode')
+                  label: t('metaData/darkMode'),
                 }
-              : []
+              : [],
           )
-          .map(customField => {
+          .map((customField) => {
             return (
               <div key={customField.key} {...styles.bool}>
                 <Checkbox
@@ -249,7 +251,7 @@ const MetaData = ({
           })}
         <br />
         <UIForm getWidth={() => '50%'}>
-          {(customFieldsByRef['repo'] || []).map(customField => {
+          {(customFieldsByRef['repo'] || []).map((customField) => {
             const label =
               customField.label ||
               t(`metaData/field/${customField.key}`, undefined, customField.key)
@@ -274,7 +276,10 @@ const MetaData = ({
         <MetaForm
           customFields={customFieldsRest}
           data={Map(
-            customFieldsRest.map(field => [field.key, node.data.get(field.key)])
+            customFieldsRest.map((field) => [
+              field.key,
+              node.data.get(field.key),
+            ]),
           )}
           onInputChange={onInputChange}
           black

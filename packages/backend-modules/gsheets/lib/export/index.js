@@ -1,11 +1,8 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet')
 const moment = require('moment')
 
-const {
-  GSHEETS_EXPORT,
-  GOOGLE_SERVICE_ACCOUNT_EMAIL,
-  GOOGLE_PRIVATE_KEY,
-} = process.env
+const { GSHEETS_EXPORT, GOOGLE_SERVICE_ACCOUNT_EMAIL, GOOGLE_PRIVATE_KEY } =
+  process.env
 
 const mapping = GSHEETS_EXPORT && JSON.parse(GSHEETS_EXPORT)
 

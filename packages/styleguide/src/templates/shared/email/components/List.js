@@ -16,7 +16,7 @@ export const ListParagraph = ({ children }) => (
       ...fontStyles.serifRegular,
       fontSize: '19px',
       lineHeight: '30px',
-      margin: '0px 0px'
+      margin: '0px 0px',
     }}
   >
     {children}

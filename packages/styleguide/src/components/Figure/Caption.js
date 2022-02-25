@@ -15,13 +15,13 @@ const styles = {
     ...convertStyleToRem(sansSerifRegular12),
     [mUp]: {
       ...convertStyleToRem(sansSerifRegular15),
-      lineHeight: pxToRem('18px')
-    }
+      lineHeight: pxToRem('18px'),
+    },
   }),
   groupCaption: css({
     marginTop: -10,
-    marginBottom: 15
-  })
+    marginBottom: 15,
+  }),
 }
 
 export const Caption = ({ children, attributes, groupCaption }) => {
@@ -41,7 +41,7 @@ export const Caption = ({ children, attributes, groupCaption }) => {
 Caption.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
-  groupCaption: PropTypes.bool
+  groupCaption: PropTypes.bool,
 }
 
 export default Caption

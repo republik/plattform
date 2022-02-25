@@ -1,6 +1,6 @@
 import React from 'react'
 
-const SvgNidwalden = props => (
+const SvgNidwalden = (props) => (
   <svg
     width={props.size}
     height={(props.size * 469.824) / 468.551}

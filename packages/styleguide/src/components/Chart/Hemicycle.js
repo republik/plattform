@@ -7,7 +7,7 @@ import { sum } from 'd3-array'
 import {
   sansSerifMedium14,
   sansSerifRegular12,
-  sansSerifRegular14
+  sansSerifRegular14,
 } from '../Typography/styles'
 
 import { arc as d3arc } from 'd3-shape'
@@ -18,14 +18,14 @@ import { defaultProps } from './ChartContext'
 
 const styles = {
   axis: css({
-    ...sansSerifRegular12
+    ...sansSerifRegular12,
   }),
   labelStrong: css({
-    ...sansSerifMedium14
+    ...sansSerifMedium14,
   }),
   label: css({
-    ...sansSerifRegular14
-  })
+    ...sansSerifRegular14,
+  }),
 }
 
 const arc = d3arc()
@@ -33,7 +33,7 @@ const arc = d3arc()
 const MAX_ARC = Math.PI
 
 const calcSectorAngles = (vals = []) => {
-  const total = sum(vals, d => +d.value)
+  const total = sum(vals, (d) => +d.value)
   return vals.reduce((acc, cur, i) => {
     const deltaAngle = (MAX_ARC / total) * cur.value
     const startAngle = acc[i - 1] ? acc[i - 1][1] : -MAX_ARC / 2
@@ -43,7 +43,7 @@ const calcSectorAngles = (vals = []) => {
   }, [])
 }
 
-const Hemicycle = props => {
+const Hemicycle = (props) => {
   const {
     values,
     width,
@@ -52,13 +52,13 @@ const Hemicycle = props => {
     middleAnnotation,
     padding,
     group,
-    color: colorProp
+    color: colorProp,
   } = props
   const margins = {
     top: 0,
     right: 0,
     bottom: 0,
-    left: 0
+    left: 0,
   }
 
   const color = getColorMapper(props)
@@ -73,12 +73,12 @@ const Hemicycle = props => {
 
   const [primaryVals, secondaryVals] = partition(
     values,
-    v => v[group] === primaryGroupLabel
+    (v) => v[group] === primaryGroupLabel,
   )
   const secondaryGroupLabel =
     secondaryVals.length > 0 && secondaryVals[0][group]
 
-  const primaryValsTotal = sum(primaryVals, d => +d.value)
+  const primaryValsTotal = sum(primaryVals, (d) => +d.value)
 
   const primaryAngles = calcSectorAngles(primaryVals)
   const secondaryAngles = calcSectorAngles(secondaryVals)
@@ -108,7 +108,7 @@ const Hemicycle = props => {
             }
             {...colorScheme.set('stroke', 'text')}
             style={{
-              opacity: 0.17
+              opacity: 0.17,
             }}
           />
           {middleAnnotation && (
@@ -130,7 +130,7 @@ const Hemicycle = props => {
         >
           <g transform={`translate(${w >> 1},${hemicycleOffset})`}>
             {primaryAngles.map((d, i) => {
-              const datum = primaryVals.find(g => g.label === d[2])
+              const datum = primaryVals.find((g) => g.label === d[2])
               const fill = color(datum[colorProp])
               return (
                 <path
@@ -140,7 +140,7 @@ const Hemicycle = props => {
                     outerRadius: outerRadiusPrimary,
                     innerRadius: innerRadiusPrimary,
                     startAngle: d[0],
-                    endAngle: d[1] + 0.001
+                    endAngle: d[1] + 0.001,
                   })}
                 />
               )
@@ -149,7 +149,7 @@ const Hemicycle = props => {
               .filter((d, i) => primaryVals[i].value >= inlineLabelThreshold)
               .map((d, i) => {
                 const isMajorParty = Math.abs(d[1] - d[0]) > MAX_ARC / 10
-                const datum = primaryVals.find(g => g.label === d[2])
+                const datum = primaryVals.find((g) => g.label === d[2])
                 const fill = color(datum[colorProp])
                 const x =
                   hemicycleHeight *
@@ -159,7 +159,7 @@ const Hemicycle = props => {
                   -hemicycleOffset,
                   -hemicycleHeight *
                     (isMajorParty ? 0.78 : 1.15) *
-                    Math.cos((d[0] + d[1]) / 2)
+                    Math.cos((d[0] + d[1]) / 2),
                 )
 
                 const textAnchor =
@@ -195,7 +195,7 @@ const Hemicycle = props => {
                 )
               })}
             {secondaryAngles.map((d, i) => {
-              const datum = secondaryVals.find(g => g.label === d[2])
+              const datum = secondaryVals.find((g) => g.label === d[2])
               const fill = color(datum[colorProp])
               return (
                 <path
@@ -205,7 +205,7 @@ const Hemicycle = props => {
                     outerRadius: outerRadiusSecondary,
                     innerRadius: innerRadiusSecondary,
                     startAngle: d[0],
-                    endAngle: d[1] + 0.001
+                    endAngle: d[1] + 0.001,
                   })}
                 />
               )
@@ -244,10 +244,10 @@ const Hemicycle = props => {
         <ColorLegend
           inline
           values={primaryVals
-            .filter(v => v.value < inlineLabelThreshold)
-            .map(v => ({
+            .filter((v) => v.value < inlineLabelThreshold)
+            .map((v) => ({
               color: color(v[colorProp]),
-              label: `${v.label}: ${v.value}`
+              label: `${v.label}: ${v.value}`,
             }))}
         />
       </div>
@@ -268,9 +268,9 @@ export const propTypes = {
     PropTypes.shape({
       label: PropTypes.string.isRequired,
       value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-        .isRequired
-    })
-  ).isRequired
+        .isRequired,
+    }),
+  ).isRequired,
 }
 
 Hemicycle.propTypes = propTypes

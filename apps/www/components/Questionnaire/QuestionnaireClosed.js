@@ -19,8 +19,8 @@ const styles = {
     justifyContent: 'center',
     padding: 30,
     textAlign: 'center',
-    marginBottom: 30
-  })
+    marginBottom: 30,
+  }),
 }
 
 export default compose(withT)(({ t, slug, submitted, showResults }) => {
@@ -33,7 +33,7 @@ export default compose(withT)(({ t, slug, submitted, showResults }) => {
             ? t.elements('questionnaire/thankyou', {
                 metaLink: (
                   <A href='/meta'>{t('questionnaire/thankyou/metaText')}</A>
-                )
+                ),
               })
             : t('questionnaire/ended')}
         </P>

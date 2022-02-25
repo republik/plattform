@@ -9,7 +9,7 @@ import {
   withApollo,
   withMutation,
   withQuery,
-  withSubscription
+  withSubscription,
 } from '@apollo/client/react/hoc'
 import { ApolloConsumer, ApolloProvider, gql, useQuery } from '@apollo/client'
 
@@ -33,7 +33,7 @@ import {
   createDiscussionSchema,
   createNewsletterWebSchema,
   createSectionSchema,
-  createPageSchema
+  createPageSchema,
 } from '@project-r/styleguide'
 import { EditIcon } from '@project-r/styleguide'
 import { createRequire } from '@project-r/styleguide'
@@ -47,13 +47,14 @@ import Progress from './Progress'
 import PodcastButtons from './PodcastButtons'
 import { getDocument } from './graphql/getDocument'
 import withT from '../../lib/withT'
+import { parseJSONObject } from '../../lib/safeJSON'
 import { formatDate } from '../../lib/utils/format'
 import withInNativeApp, { postMessage } from '../../lib/withInNativeApp'
 import { splitByTitle } from '../../lib/utils/mdast'
 import {
   ASSETS_SERVER_BASE_URL,
   PUBLIC_BASE_URL,
-  PUBLIKATOR_BASE_URL
+  PUBLIKATOR_BASE_URL,
 } from '../../lib/constants'
 import ShareImage from './ShareImage'
 import FontSizeSync from '../FontSize/Sync'
@@ -83,34 +84,34 @@ import Discussion from '../Discussion/Discussion'
 
 const dynamicOptions = {
   loading: () => <SmallLoader loading />,
-  ssr: false
+  ssr: false,
 }
 const Manifest = dynamic(() => import('../About/Manifest'), {
-  ssr: true
+  ssr: true,
 })
 const TeamTeaser = dynamic(() => import('../About/TeamTeaser'), dynamicOptions)
 const TestimonialList = dynamic(
-  () => import('../Testimonial/List').then(m => m.ListWithQuery),
-  dynamicOptions
+  () => import('../Testimonial/List').then((m) => m.ListWithQuery),
+  dynamicOptions,
 )
 const ReasonsVideo = dynamic(() => import('../About/ReasonsVideo'), {
-  ssr: true
+  ssr: true,
 })
 const Votebox = dynamic(() => import('../Vote/Voting'), dynamicOptions)
 const VoteCounter = dynamic(() => import('../Vote/VoteCounter'), dynamicOptions)
 const VoteResult = dynamic(() => import('../Vote/VoteResult'), dynamicOptions)
 const ElectionCandidacy = dynamic(
   () => import('../Vote/ElectionCandidacy'),
-  dynamicOptions
+  dynamicOptions,
 )
 const Election = dynamic(() => import('../Vote/Election'), dynamicOptions)
 const ElectionResult = dynamic(
   () => import('../Vote/ElectionResult'),
-  dynamicOptions
+  dynamicOptions,
 )
 const ElectionResultDiversity = dynamic(
   () => import('../Vote/ElectionDiversity'),
-  dynamicOptions
+  dynamicOptions,
 )
 
 const schemaCreators = {
@@ -122,14 +123,14 @@ const schemaCreators = {
   discussion: createDiscussionSchema,
   editorialNewsletter: createNewsletterWebSchema,
   section: createSectionSchema,
-  page: createPageSchema
+  page: createPageSchema,
 }
 
 export const withCommentData = graphql(
   gql`
     ${TeaserEmbedComment.data.query}
   `,
-  TeaserEmbedComment.data.config
+  TeaserEmbedComment.data.config,
 )
 
 const dynamicComponentRequire = createRequire().alias({
@@ -147,13 +148,13 @@ const dynamicComponentRequire = createRequire().alias({
     withMutation,
     withSubscription,
     withApollo,
-    compose
+    compose,
   },
   // Reexport graphql-tag to be used by dynamic-components
-  'graphql-tag': gql
+  'graphql-tag': gql,
 })
 
-const getSchemaCreator = template => {
+const getSchemaCreator = (template) => {
   const key = template || Object.keys(schemaCreators)[0]
   const schema = schemaCreators[key]
 
@@ -196,7 +197,7 @@ const ArticlePage = ({
   payNoteTryOrBuy,
   isPreview,
   markAsReadMutation,
-  serverContext
+  serverContext,
 }) => {
   const actionBarRef = useRef()
   const bottomActionBarRef = useRef()
@@ -212,11 +213,11 @@ const ArticlePage = ({
     data: articleData,
     loading: articleLoading,
     error: articleError,
-    refetch: articleRefetch
+    refetch: articleRefetch,
   } = useQuery(getDocument, {
     variables: {
-      path: cleanedPath
-    }
+      path: cleanedPath,
+    },
   })
 
   const article = articleData?.article
@@ -243,7 +244,7 @@ const ArticlePage = ({
     needsRefetch,
     // ensure effect is run when article or me changes
     me?.id,
-    article?.id
+    article?.id,
   ])
 
   if (isPreview && !articleLoading && !article && serverContext) {
@@ -255,10 +256,10 @@ const ArticlePage = ({
 
   const markNotificationsAsRead = () => {
     const unreadNotifications = articleUnreadNotifications?.nodes?.filter(
-      n => !n.readAt
+      (n) => !n.readAt,
     )
     if (unreadNotifications && unreadNotifications.length) {
-      unreadNotifications.forEach(n => markAsReadMutation(n.id))
+      unreadNotifications.forEach((n) => markAsReadMutation(n.id))
     }
   }
 
@@ -270,7 +271,7 @@ const ArticlePage = ({
     return (
       articleContent &&
       JSON.stringify(
-        runMetaFromQuery(articleContent.meta.fromQuery, routerQuery)
+        runMetaFromQuery(articleContent.meta.fromQuery, routerQuery),
       )
     )
   }, [routerQuery, articleContent])
@@ -282,9 +283,9 @@ const ArticlePage = ({
         url: `${PUBLIC_BASE_URL}${articleMeta.path}`,
         ...(metaJSONStringFromQuery
           ? JSON.parse(metaJSONStringFromQuery)
-          : undefined)
+          : undefined),
       },
-    [articleMeta, articleContent, metaJSONStringFromQuery]
+    [articleMeta, articleContent, metaJSONStringFromQuery],
   )
 
   const hasMeta = !!meta
@@ -328,29 +329,29 @@ const ArticlePage = ({
           ELECTION_CANDIDACY: ElectionCandidacy,
           ELECTION: Election,
           ELECTION_RESULT: ElectionResult,
-          ELECTION_RESULT_DIVERSITY: ElectionResultDiversity
+          ELECTION_RESULT_DIVERSITY: ElectionResultDiversity,
         },
         titleMargin: false,
         titleBreakout,
         onAudioCoverClick: toggleAudioPlayer,
         getVideoPlayerProps:
           inNativeApp && !inNativeIOSApp
-            ? props => ({
+            ? (props) => ({
                 ...props,
                 fullWindow: true,
-                onFull: isFull => {
+                onFull: (isFull) => {
                   postMessage({
-                    type: isFull ? 'fullscreen-enter' : 'fullscreen-exit'
+                    type: isFull ? 'fullscreen-enter' : 'fullscreen-exit',
                   })
-                }
+                },
               })
             : undefined,
         withCommentData,
         CommentLink,
         ActionBar: BrowserOnlyActionBar,
-        PayNote: showInlinePaynote ? TrialPayNoteMini : undefined
+        PayNote: showInlinePaynote ? TrialPayNoteMini : undefined,
       }),
-    [template, inNativeIOSApp, inNativeApp, showInlinePaynote, titleBreakout]
+    [template, inNativeIOSApp, inNativeApp, showInlinePaynote, titleBreakout],
   )
 
   const documentId = article?.id
@@ -367,13 +368,13 @@ const ArticlePage = ({
   )
   const actionBarEnd = actionBar
     ? React.cloneElement(actionBar, {
-        mode: isSeriesOverview ? 'seriesOverviewBottom' : 'articleBottom'
+        mode: isSeriesOverview ? 'seriesOverviewBottom' : 'articleBottom',
       })
     : undefined
 
   const actionBarOverlay = actionBar
     ? React.cloneElement(actionBar, {
-        mode: 'articleOverlay'
+        mode: 'articleOverlay',
       })
     : undefined
 
@@ -424,7 +425,7 @@ const ArticlePage = ({
                 format: meta.format,
                 section: meta.section,
                 series: meta.series,
-                repoId: article.repoId
+                repoId: article.repoId,
               }}
             />
           )
@@ -434,17 +435,17 @@ const ArticlePage = ({
   }
 
   const splitContent = article && splitByTitle(article.content)
-  const renderSchema = content =>
+  const renderSchema = (content) =>
     renderMdast(
       {
         ...content,
         format: meta.format,
         section: meta.section,
         series: meta.series,
-        repoId: article.repoId
+        repoId: article.repoId,
       },
       schema,
-      { MissingNode }
+      { MissingNode },
     )
 
   const hasOverviewNav = meta ? meta.template === 'section' : true // show/keep around while loading meta
@@ -453,9 +454,9 @@ const ArticlePage = ({
   const shareImage =
     article &&
     `${ASSETS_SERVER_BASE_URL}/render?width=${SHARE_IMAGE_WIDTH}&height=${SHARE_IMAGE_HEIGHT}&updatedAt=${encodeURIComponent(
-      `${article.id}${meta?.format ? `-${meta.format.id}` : ''}`
+      `${article.id}${meta?.format ? `-${meta.format.id}` : ''}`,
     )}&url=${encodeURIComponent(
-      `${PUBLIC_BASE_URL}${articleMeta.path}?extract=share`
+      `${PUBLIC_BASE_URL}${articleMeta.path}?extract=share`,
     )}`
 
   const metaWithSocialImages =
@@ -465,7 +466,7 @@ const ArticlePage = ({
       : meta && {
           ...meta,
           facebookImage: meta?.shareText ? shareImage : meta?.facebookImage,
-          twitterImage: meta?.shareText ? shareImage : meta?.twitterImage
+          twitterImage: meta?.shareText ? shareImage : meta?.twitterImage,
         }
 
   return (
@@ -550,6 +551,13 @@ const ArticlePage = ({
           const showNewsletterSignupBottom =
             isFreeNewsletter && !showNewsletterSignupTop
 
+          const rawContentMeta = articleContent.meta
+          const feedQueryVariables = rawContentMeta.feedQueryVariables
+            ? parseJSONObject(rawContentMeta.feedQueryVariables)
+            : undefined
+          const hideFeed = !!rawContentMeta.hideFeed
+          const hideSectionNav = !!rawContentMeta.hideSectionNav
+
           return (
             <>
               <FontSizeSync />
@@ -627,13 +635,13 @@ const ArticlePage = ({
                                   textAlign: titleAlign,
                                   marginBottom: isEditorialNewsletter
                                     ? 0
-                                    : undefined
+                                    : undefined,
                                 }}
                               >
                                 {actionBar}
                               </div>
                             )}
-                            {isSection && (
+                            {isSection && !hideSectionNav && (
                               <Breakout size='breakout'>
                                 <SectionNav
                                   color={sectionColor}
@@ -682,10 +690,7 @@ const ArticlePage = ({
                     discussionId={ownDiscussion.id}
                     isBoardRoot={ownDiscussion.isBoard}
                   >
-                    <Discussion
-                      documentMeta={articleContent.meta}
-                      showPayNotes
-                    />
+                    <Discussion documentMeta={rawContentMeta} showPayNotes />
                   </DiscussionContextProvider>
                 </Center>
               )}
@@ -736,17 +741,18 @@ const ArticlePage = ({
                   seriesDescription={false}
                 />
               )}
-              {isSection && (
+              {isSection && !hideFeed && (
                 <SectionFeed
                   key={`sectionFeed${article?.issuedForUserId}`}
-                  formats={article.linkedDocuments.nodes.map(n => n.id)}
-                  variablesAsString={article.content.meta.feedQueryVariables}
+                  formats={article.linkedDocuments.nodes.map((n) => n.id)}
+                  variables={feedQueryVariables}
                 />
               )}
-              {isFormat && (
+              {isFormat && !hideFeed && (
                 <FormatFeed
                   key={`formatFeed${article?.issuedForUserId}`}
                   formatId={article.repoId}
+                  variables={feedQueryVariables}
                 />
               )}
               {(hasActiveMembership || isFormat) && (
@@ -769,31 +775,31 @@ const ArticlePage = ({
 const styles = {
   link: css({
     color: 'inherit',
-    textDecoration: 'none'
+    textDecoration: 'none',
   }),
   prepublicationNotice: css({
-    backgroundColor: colors.social
+    backgroundColor: colors.social,
   }),
   titleBlock: css({
-    marginBottom: 20
+    marginBottom: 20,
   }),
   actionBarContainer: css({
     marginTop: 16,
     marginBottom: 24,
     [mediaQueries.mUp]: {
-      marginBottom: 36
-    }
+      marginBottom: 36,
+    },
   }),
   flexCenter: css({
     display: 'flex',
-    justifyContent: 'center'
-  })
+    justifyContent: 'center',
+  }),
 }
 
 const ComposedPage = compose(
   withT,
   withInNativeApp,
-  withMarkAsReadMutation
+  withMarkAsReadMutation,
 )(ArticlePage)
 
 export default ComposedPage

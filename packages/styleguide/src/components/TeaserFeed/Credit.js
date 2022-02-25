@@ -11,9 +11,9 @@ const styles = {
     margin: 0,
     ...convertStyleToRem(sansSerifRegular14),
     [mUp]: {
-      ...convertStyleToRem(sansSerifRegular15)
-    }
-  })
+      ...convertStyleToRem(sansSerifRegular15),
+    },
+  }),
 }
 
 const Credit = ({ children }) => {
@@ -26,7 +26,7 @@ const Credit = ({ children }) => {
 }
 
 Credit.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
 }
 
 export default Credit

@@ -6,7 +6,7 @@ import { useColorContext } from '../Colors/useColorContext'
 const VIEWBOX = SG.LOGO_VIEWBOX || '0 0 4 1.5'
 const GRADIENT = SG.LOGO_GRADIENT
 const PATH = SG.LOGO_PATH || 'M0 0 L4 0 L4 1.5 L3 0.5 L2 4 L1 0.5 L0 1.5 Z'
-const VIEWBOX_ARRAY = VIEWBOX.split(' ').map(d => +d)
+const VIEWBOX_ARRAY = VIEWBOX.split(' ').map((d) => +d)
 const WIDTH = VIEWBOX_ARRAY[2] - VIEWBOX_ARRAY[0]
 const HEIGHT = VIEWBOX_ARRAY[3] - VIEWBOX_ARRAY[1]
 
@@ -17,15 +17,15 @@ const styles = {
     position: 'relative',
     height: 0,
     width: '100%',
-    paddingBottom: `${(HEIGHT / WIDTH) * 100}%`
+    paddingBottom: `${(HEIGHT / WIDTH) * 100}%`,
   }),
   svg: css({
     position: 'absolute',
     height: '100%',
     width: '100%',
     left: 0,
-    top: 0
-  })
+    top: 0,
+  }),
 }
 
 const LogoSvg = ({ width, height, fill, ...props }) => {
@@ -44,7 +44,7 @@ const LogoSvg = ({ width, height, fill, ...props }) => {
   )
 }
 
-const Logo = props => {
+const Logo = (props) => {
   let width
   let height
   if (props.width) {

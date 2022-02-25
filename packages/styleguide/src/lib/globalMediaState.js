@@ -3,14 +3,14 @@ const state = {
   muted: false, // video only
   subtitles: false, // currently video only
   instances: [],
-  setTime: time => {
-    state.instances.forEach(setter => {
+  setTime: (time) => {
+    state.instances.forEach((setter) => {
       setter.setTime && setter.setTime(time)
     })
-  }
+  },
 }
 
-export const parseTimeHash = hash => {
+export const parseTimeHash = (hash) => {
   const matches = hash && hash.match(/t=(\d+)/)
   const time = matches && +matches[1]
   if (time && time > -1) {

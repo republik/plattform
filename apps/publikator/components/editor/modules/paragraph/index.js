@@ -4,54 +4,58 @@ import MarkdownSerializer from 'slate-mdast-serializer'
 import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
 import {
   createSoftBreakKeyHandler,
-  createStaticKeyHandler
+  createStaticKeyHandler,
 } from '../../utils/keyHandlers'
 import Placeholder from '../../Placeholder'
 
-const removeMarksFromSpace = node => {
+const removeMarksFromSpace = (node) => {
   return !node.leaves
     ? node
     : {
         ...node,
-        leaves: node.leaves.map(leaf => {
+        leaves: node.leaves.map((leaf) => {
           return leaf.text &&
             leaf.text.trim() === '' &&
             leaf.marks &&
             leaf.marks.length
             ? { ...leaf, marks: [] }
             : leaf
-        })
+        }),
       }
 }
 
 export default ({ rule, subModules, TYPE }) => {
-  const { formatButtonText, placeholder, mdastPlaceholder, isStatic = false } =
-    rule.editorOptions || {}
+  const {
+    formatButtonText,
+    placeholder,
+    mdastPlaceholder,
+    isStatic = false,
+  } = rule.editorOptions || {}
 
   const inlineSerializer = new MarkdownSerializer({
     rules: subModules
       .reduce(
         (a, m) =>
           a.concat(
-            m.helpers && m.helpers.serializer && m.helpers.serializer.rules
+            m.helpers && m.helpers.serializer && m.helpers.serializer.rules,
           ),
-        []
+        [],
       )
       .filter(Boolean)
       .concat({
-        matchMdast: node => node.type === 'break',
+        matchMdast: (node) => node.type === 'break',
         fromMdast: () => ({
           kind: 'text',
-          leaves: [{ kind: 'leaf', text: '\n', marks: [] }]
-        })
-      })
+          leaves: [{ kind: 'leaf', text: '\n', marks: [] }],
+        }),
+      }),
   })
 
   const Paragraph = rule.component
 
   const paragraph = {
     match: matchBlock(TYPE),
-    matchMdast: rule.matchMdast || (node => node.type === 'paragraph'),
+    matchMdast: rule.matchMdast || ((node) => node.type === 'paragraph'),
     fromMdast: (node, index, parent, rest) => {
       let children = node.children
       if (mdastPlaceholder) {
@@ -68,7 +72,7 @@ export default ({ rule, subModules, TYPE }) => {
       return {
         kind: 'block',
         type: TYPE,
-        nodes: inlineSerializer.fromMdast(children, 0, node, rest)
+        nodes: inlineSerializer.fromMdast(children, 0, node, rest),
       }
     },
     toMdast: (object, index, parent, rest) => {
@@ -76,7 +80,7 @@ export default ({ rule, subModules, TYPE }) => {
         object.nodes.map(removeMarksFromSpace),
         0,
         object,
-        rest
+        rest,
       )
 
       if (mdastPlaceholder) {
@@ -93,33 +97,33 @@ export default ({ rule, subModules, TYPE }) => {
 
       return {
         type: 'paragraph',
-        children: children
+        children: children,
       }
-    }
+    },
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [paragraph]
+    rules: [paragraph],
   })
 
   const paragraphSoftBreakHandler = createSoftBreakKeyHandler({ TYPE })
   const paragraphStaticHandler = createStaticKeyHandler({
     TYPE,
-    rule: rule || {}
+    rule: rule || {},
   })
 
   return {
     TYPE,
     rule,
     helpers: {
-      serializer
+      serializer,
     },
     changes: {},
     ui: {
       blockFormatButtons: [
         formatButtonText &&
           createBlockButton({
-            type: TYPE
+            type: TYPE,
           })(({ active, disabled, visible, ...props }) => (
             <span
               {...buttonStyles.block}
@@ -130,8 +134,8 @@ export default ({ rule, subModules, TYPE }) => {
             >
               {formatButtonText}
             </span>
-          ))
-      ]
+          )),
+      ],
     },
     plugins: [
       {
@@ -158,7 +162,7 @@ export default ({ rule, subModules, TYPE }) => {
           const parent = editor.value.document.getParent(node.key)
           // align with FE, renders title block (and cover) separately
           const titleBlockIndex = editor.value.document.nodes.findIndex(
-            n => n.type === 'TITLE'
+            (n) => n.type === 'TITLE',
           )
           const rootIndex =
             editor.value.document.nodes.indexOf(parent) - (titleBlockIndex + 1)
@@ -172,7 +176,7 @@ export default ({ rule, subModules, TYPE }) => {
                 ['data-pos']:
                   rootIndex >= 0
                     ? `${rootIndex}-${parent.nodes.indexOf(node)}`
-                    : undefined
+                    : undefined,
               }}
               data={node.data.toJS()}
               {...node.data.toJS()}
@@ -188,18 +192,18 @@ export default ({ rule, subModules, TYPE }) => {
             [TYPE]: {
               nodes: [
                 {
-                  kinds: ['text', 'inline']
-                }
+                  kinds: ['text', 'inline'],
+                },
               ],
               normalize: (change, reason, { node, index, child }) => {
                 if (reason === 'child_kind_invalid') {
                   change.unwrapBlockByKey(child.key)
                 }
-              }
-            }
-          }
-        }
-      }
-    ]
+              },
+            },
+          },
+        },
+      },
+    ],
   }
 }

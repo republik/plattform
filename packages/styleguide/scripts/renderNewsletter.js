@@ -9,12 +9,13 @@ require('dotenv').config()
 const { renderEmail } = require('mdast-react-render/lib/email')
 const { parse } = require('@orbiting/remark-preset')
 const rw = require('rw')
-const editorialNewsletterSchema = require('../lib/templates/EditorialNewsletter/email').default()
+const editorialNewsletterSchema =
+  require('../lib/templates/EditorialNewsletter/email').default()
 
 const mdast = parse(rw.readFileSync('/dev/stdin', 'utf8'))
 
 rw.writeFileSync(
   '/dev/stdout',
   renderEmail(mdast, editorialNewsletterSchema),
-  'utf8'
+  'utf8',
 )

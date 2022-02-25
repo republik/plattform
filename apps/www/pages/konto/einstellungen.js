@@ -16,7 +16,7 @@ const SettingsPage = ({ t }) => {
   return (
     <Frame
       meta={{
-        title: t('pages/account/settings/title')
+        title: t('pages/account/settings/title'),
       }}
     >
       <AccountEnforceMe>

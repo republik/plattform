@@ -6,7 +6,7 @@ export default curry((onChange, value, node, key, event, fieldValue) => {
       data:
         fieldValue || fieldValue === false
           ? node.data.set(key, fieldValue)
-          : node.data.remove(key)
-    })
+          : node.data.remove(key),
+    }),
   )
 })

@@ -28,8 +28,8 @@ export default ({ rule, TYPE, context = {} }) => {
               </ColorContextProvider>
             </div>
           )
-        }
-      }
-    ]
+        },
+      },
+    ],
   }
 }

@@ -11,11 +11,11 @@ import { displayDateTime } from '../../lib/utils/calendar'
 
 const loading = css.keyframes({
   'from, to': {
-    opacity: 0.5
+    opacity: 0.5,
   },
   '50%': {
-    opacity: 1
-  }
+    opacity: 1,
+  },
 })
 
 const styles = {
@@ -23,7 +23,7 @@ const styles = {
     cursor: 'pointer',
     display: 'block',
     width: '100%',
-    height: 16
+    height: 16,
   }),
   mask: css({
     outline: 'none',
@@ -32,12 +32,12 @@ const styles = {
     font: 'inherit',
     marginRight: -10,
     '::placeholder': {
-      color: '#ccc'
+      color: '#ccc',
     },
     '[disabled]': {
-      animation: `0.4s ${loading} infinite ease-in-out`
-    }
-  })
+      animation: `0.4s ${loading} infinite ease-in-out`,
+    },
+  }),
 }
 
 const dateFormat = '%d.%m.%y %H:%M'
@@ -56,8 +56,8 @@ const editRepoMeta = gql`
 
 export const withEditRepoMeta = graphql(editRepoMeta, {
   props: ({ mutate }) => ({
-    editRepoMeta: variables => mutate({ variables })
-  })
+    editRepoMeta: (variables) => mutate({ variables }),
+  }),
 })
 
 const PublishDate = ({ date, readOnly }) =>
@@ -101,7 +101,7 @@ const EditMeta = ({ publishDate, repoId, editRepoMeta, readOnly }) => {
           disabled={disabled}
           ref={setRef}
           {...styles.mask}
-          onKeyUp={event => {
+          onKeyUp={(event) => {
             if (event.key === 'Enter') {
               const parsedValue = parseDate(formattedFormValue)
               if (!parsedValue && formattedFormValue !== '') {
@@ -114,7 +114,7 @@ const EditMeta = ({ publishDate, repoId, editRepoMeta, readOnly }) => {
               setDisabled(true)
               editRepoMeta({
                 repoId,
-                publishDate: parsedValue ? parsedValue.toISOString() : null
+                publishDate: parsedValue ? parsedValue.toISOString() : null,
               })
                 .then(() => {
                   resetForm()
@@ -129,7 +129,7 @@ const EditMeta = ({ publishDate, repoId, editRepoMeta, readOnly }) => {
             }
           }}
           onBlur={resetForm}
-          onChange={event => setFormValue(event.target.value)}
+          onChange={(event) => setFormValue(event.target.value)}
           placeholderChar={'_'}
           mask={dateMask}
         />

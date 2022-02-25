@@ -3,7 +3,7 @@ import Document, {
   Html,
   Head as DefaultHead,
   Main,
-  NextScript
+  NextScript,
 } from 'next/document'
 import { renderStaticOptimized } from 'glamor/server'
 import { fontFaces, DEFAULT_FONT_SIZE } from '@project-r/styleguide'
@@ -33,8 +33,8 @@ class NoJsHead extends DefaultHead {
           ...node,
           props: {
             ...node.props,
-            children: React.Children.map(node.props.children, transform)
-          }
+            children: React.Children.map(node.props.children, transform),
+          },
         }
       }
       if (Array.isArray(node)) {
@@ -62,7 +62,7 @@ export default class MyDocument extends Document {
       ...page,
       ...styles,
       env: require('../lib/constants'),
-      nojs
+      nojs,
     }
   }
 
@@ -77,7 +77,7 @@ export default class MyDocument extends Document {
     const {
       css,
       env: { MATOMO_URL_BASE, MATOMO_SITE_ID, PUBLIC_BASE_URL },
-      nojs
+      nojs,
     } = this.props
     const matomo = !!MATOMO_URL_BASE && !!MATOMO_SITE_ID
     const Head = nojs ? NoJsHead : DefaultHead
@@ -89,8 +89,8 @@ export default class MyDocument extends Document {
             dangerouslySetInnerHTML={{
               __html: [
                 fontFaces(),
-                `html, body { font-size: ${DEFAULT_FONT_SIZE}px }`
-              ].join('\n')
+                `html, body { font-size: ${DEFAULT_FONT_SIZE}px }`,
+              ].join('\n'),
             }}
           />
           {css ? <style dangerouslySetInnerHTML={{ __html: css }} /> : null}
@@ -162,7 +162,7 @@ export default class MyDocument extends Document {
               _paq.push(['setSiteId', '${MATOMO_SITE_ID}']);
               var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
               g.type='text/javascript'; g.async=true; g.defer=true; g.src='${MATOMO_URL_BASE}/matomo.js'; s.parentNode.insertBefore(g,s);
-            })();`
+            })();`,
               }}
             />
           )}

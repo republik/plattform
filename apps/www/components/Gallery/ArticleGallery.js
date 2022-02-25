@@ -6,27 +6,27 @@ import { postMessage } from '../../lib/withInNativeApp'
 import { removeQuery } from '../../lib/utils/link'
 import { MIN_GALLERY_IMG_WIDTH } from '@project-r/styleguide'
 
-export const mdastToString = node =>
+export const mdastToString = (node) =>
   node
     ? node.value ||
       (node.children && node.children.map(mdastToString).join('')) ||
       ''
     : ''
 
-const getGroupFigures = group => {
+const getGroupFigures = (group) => {
   const nodes = group.children
   if (!nodes || nodes.length < 2) return []
-  const groupCaptionMdast = nodes.find(n => n.type === 'paragraph')
+  const groupCaptionMdast = nodes.find((n) => n.type === 'paragraph')
   const figures = nodes.slice(0, nodes.length - (groupCaptionMdast ? 1 : 0))
-  return figures.map(f => ({
+  return figures.map((f) => ({
     ...f,
-    children: f.children.concat(groupCaptionMdast)
+    children: f.children.concat(groupCaptionMdast),
   }))
 }
 
 const findFigures = (node, acc = []) => {
   if (node && node.children && node.children.length > 0) {
-    node.children.forEach(c => {
+    node.children.forEach((c) => {
       if (c.identifier === 'FIGUREGROUP') {
         acc.push(...getGroupFigures(c))
       } else if (c.identifier === 'FIGURE') {
@@ -39,7 +39,7 @@ const findFigures = (node, acc = []) => {
   return acc
 }
 
-const getImageProps = node => {
+const getImageProps = (node) => {
   const url = node?.children[0]?.children[0]?.url || ''
   const urlDark = node?.children[0]?.children[2]?.url
   const captionMdast = node?.children[1]?.children || []
@@ -52,11 +52,11 @@ const getImageProps = node => {
   // @see https://github.com/orbiting/styleguide/blob/198f43845d282b498baafbc1e5684b90857bbb4f/src/templates/Article/base.js#L222
 
   const caption = mdastToString({
-    children: captionMdast.filter(n => n.type !== 'emphasis')
+    children: captionMdast.filter((n) => n.type !== 'emphasis'),
   })
 
   const byLine = mdastToString({
-    children: captionMdast.filter(n => n.type === 'emphasis')
+    children: captionMdast.filter((n) => n.type === 'emphasis'),
   })
 
   return {
@@ -65,14 +65,14 @@ const getImageProps = node => {
     title: true, // otherwise PhotoSwipe won't call addCaptionHTMLFn
     caption,
     byLine,
-    included
+    included,
   }
 }
 
 const getGalleryItems = ({ article }) => {
   return findFigures(article.content)
     .map(getImageProps)
-    .filter(i => i.included)
+    .filter((i) => i.included)
 }
 
 class ArticleGallery extends Component {
@@ -80,7 +80,7 @@ class ArticleGallery extends Component {
     super(props)
     this.state = {
       show: false,
-      startItemSrc: null
+      startItemSrc: null,
     }
 
     this.toggleGallery = (nextSrc = '') => {
@@ -88,22 +88,22 @@ class ArticleGallery extends Component {
       const { galleryItems } = this.state
       if (
         nextShow &&
-        galleryItems.some(i => removeQuery(i.src) === removeQuery(nextSrc))
+        galleryItems.some((i) => removeQuery(i.src) === removeQuery(nextSrc))
       ) {
         this.setState(
           {
             show: true,
-            startItemSrc: nextSrc
+            startItemSrc: nextSrc,
           },
-          () => postMessage({ type: 'fullscreen-enter' })
+          () => postMessage({ type: 'fullscreen-enter' }),
         )
       } else {
         this.setState(
           {
             show: false,
-            startItemSrc: null
+            startItemSrc: null,
           },
-          () => postMessage({ type: 'fullscreen-exit' })
+          () => postMessage({ type: 'fullscreen-exit' }),
         )
       }
     }
@@ -116,13 +116,13 @@ class ArticleGallery extends Component {
     }
 
     this.getChildContext = () => ({
-      toggleGallery: this.toggleGallery
+      toggleGallery: this.toggleGallery,
     })
   }
 
   static getDerivedStateFromProps(nextProps) {
     return {
-      galleryItems: getGalleryItems(nextProps)
+      galleryItems: getGalleryItems(nextProps),
     }
   }
 
@@ -153,11 +153,11 @@ class ArticleGallery extends Component {
 }
 
 ArticleGallery.propTypes = {
-  article: PropTypes.object.isRequired
+  article: PropTypes.object.isRequired,
 }
 
 ArticleGallery.childContextTypes = {
-  toggleGallery: PropTypes.func
+  toggleGallery: PropTypes.func,
 }
 
 export default ArticleGallery

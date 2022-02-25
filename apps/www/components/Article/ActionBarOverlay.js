@@ -39,7 +39,7 @@ const ActionBarOverlay = ({ children, audioPlayerVisible }) => {
         setOverlayVisible(
           articleActionBarVisible || footerOverlap || diff.current < 30
             ? false
-            : true
+            : true,
         )
       }
       lastY.current = y

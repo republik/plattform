@@ -45,8 +45,8 @@ const DiscussionContextProvider: FC<{
       depth,
       focusId,
       parentId,
-      includeParent
-    }
+      includeParent,
+    },
   )
 
   useDiscussionNotificationHelper(discussion)
@@ -72,8 +72,8 @@ const DiscussionContextProvider: FC<{
     overlays: {
       shareOverlay,
       preferencesOverlay,
-      featureOverlay
-    }
+      featureOverlay,
+    },
   }
 
   return (

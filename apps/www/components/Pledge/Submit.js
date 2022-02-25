@@ -29,7 +29,7 @@ import {
   Checkbox,
   InlineSpinner,
   Label,
-  A
+  A,
 } from '@project-r/styleguide'
 
 import PaymentForm from '../Payment/Form'
@@ -43,10 +43,10 @@ import ErrorMessage, { ErrorContainer } from '../ErrorMessage'
 
 const { H2, P } = Interaction
 
-const objectValues = object => Object.keys(object).map(key => object[key])
+const objectValues = (object) => Object.keys(object).map((key) => object[key])
 const simpleHash = (object, delimiter = '|') => {
   return objectValues(object)
-    .map(value => {
+    .map((value) => {
       if (value && typeof value === 'object') {
         return simpleHash(value, delimiter === '|' ? '$' : `$${delimiter}`)
       }
@@ -58,36 +58,36 @@ const simpleHash = (object, delimiter = '|') => {
 const getRequiredConsents = ({ requiresStatutes }) =>
   ['PRIVACY', 'TOS', requiresStatutes && 'STATUTE'].filter(Boolean)
 
-const getContactFields = t => [
+const getContactFields = (t) => [
   {
     label: t('pledge/contact/firstName/label'),
     name: 'firstName',
-    validator: value =>
-      value.trim().length <= 0 && t('pledge/contact/firstName/error/empty')
+    validator: (value) =>
+      value.trim().length <= 0 && t('pledge/contact/firstName/error/empty'),
   },
   {
     label: t('pledge/contact/lastName/label'),
     name: 'lastName',
-    validator: value =>
-      value.trim().length <= 0 && t('pledge/contact/lastName/error/empty')
+    validator: (value) =>
+      value.trim().length <= 0 && t('pledge/contact/lastName/error/empty'),
   },
   {
     label: t('pledge/contact/email/label'),
     name: 'email',
     type: 'email',
-    validator: value =>
+    validator: (value) =>
       (value.trim().length <= 0 && t('pledge/contact/email/error/empty')) ||
-      (!isEmail(value) && t('pledge/contact/email/error/invalid'))
-  }
+      (!isEmail(value) && t('pledge/contact/email/error/invalid')),
+  },
 ]
 
-const SubmitWithHooks = props => {
+const SubmitWithHooks = (props) => {
   const { t, basePledge, customMe, me } = props
   const addressFields = useMemo(() => getAddressFields(t), [t])
   const contactFields = useMemo(
     () =>
-      getContactFields(t).filter(field => !customMe || !customMe[field.name]),
-    [t, customMe]
+      getContactFields(t).filter((field) => !customMe || !customMe[field.name]),
+    [t, customMe],
   )
 
   const defaultContactState = useMemo(() => {
@@ -95,7 +95,7 @@ const SubmitWithHooks = props => {
     return {
       firstName: prefillMe.firstName,
       lastName: prefillMe.lastName,
-      email: prefillMe.email
+      email: prefillMe.email,
     }
   }, [me, customMe, basePledge])
   const contactState = useFieldSetState(contactFields, defaultContactState)
@@ -115,17 +115,17 @@ const SubmitWithHooks = props => {
             line2: userAddress.line2,
             postalCode: userAddress.postalCode,
             city: userAddress.city,
-            country: userAddress.country
+            country: userAddress.country,
           }
-        : {})
+        : {}),
     }),
-    [userAddress]
+    [userAddress],
   )
 
   const addressState = useFieldSetState(addressFields, defaultAddress)
   const shippingAddressState = useFieldSetState(
     addressFields,
-    props.basePledge?.pledgeShippingAddress || defaultAddress
+    props.basePledge?.pledgeShippingAddress || defaultAddress,
   )
 
   const [syncAddresses, setSyncAddresses] = useState(true)
@@ -153,12 +153,12 @@ class Submit extends Component {
       values: {},
       errors: {},
       dirty: {},
-      loading: false
+      loading: false,
     }
     if (props.basePledge) {
       const variables = this.submitVariables({
         ...props,
-        ...props.basePledge
+        ...props.basePledge,
       })
       const hash = simpleHash(variables)
 
@@ -167,7 +167,7 @@ class Submit extends Component {
       this.state.pledgeHash = hash
       this.state.pledgeId = props.basePledge.id
     }
-    this.paymentRef = ref => {
+    this.paymentRef = (ref) => {
       this.payment =
         ref && ref.getWrappedInstance ? ref.getWrappedInstance() : ref
     }
@@ -182,7 +182,7 @@ class Submit extends Component {
       customMe,
       requireShippingAddress,
       shippingAddressState,
-      syncAddresses
+      syncAddresses,
     } = props
 
     const shippingAddress = requireShippingAddress
@@ -191,10 +191,10 @@ class Submit extends Component {
 
     return {
       total,
-      options: options.map(option => ({
+      options: options.map((option) => ({
         ...option,
         autoPay:
-          option.autoPay !== undefined ? this.getAutoPayValue() : undefined
+          option.autoPay !== undefined ? this.getAutoPayValue() : undefined,
       })),
       reason,
       user: contactState.fields.length
@@ -203,13 +203,13 @@ class Submit extends Component {
               user[field.name] = contactState.values[field.name]
               return user
             },
-            customMe ? { email: customMe.email } : {}
+            customMe ? { email: customMe.email } : {},
           )
         : undefined,
       address: syncAddresses ? shippingAddress : undefined,
       shippingAddress,
       accessToken:
-        customMe && customMe.isUserOfCurrentSession ? undefined : accessToken
+        customMe && customMe.isUserOfCurrentSession ? undefined : accessToken,
     }
   }
   submitPledge() {
@@ -219,38 +219,38 @@ class Submit extends Component {
       addressState,
       shippingAddressState,
       requireShippingAddress,
-      contactState
+      contactState,
     } = this.props
     const errorMessages = this.getErrorMessages()
 
     if (errorMessages.length) {
       this.props.onError()
-      this.setState(state => {
+      this.setState((state) => {
         const dirty = {
-          ...state.dirty
+          ...state.dirty,
         }
-        Object.keys(state.errors).forEach(field => {
+        Object.keys(state.errors).forEach((field) => {
           if (state.errors[field]) {
             dirty[field] = true
           }
         })
         return {
           dirty,
-          showErrors: true
+          showErrors: true,
         }
       })
       contactState.onChange({
         dirty: Object.keys(contactState.errors).reduce((agg, key) => {
           agg[key] = true
           return agg
-        }, {})
+        }, {}),
       })
       if (this.state.values.paymentMethod === 'PAYMENTSLIP') {
         addressState.onChange({
           dirty: Object.keys(addressState.errors).reduce((agg, key) => {
             agg[key] = true
             return agg
-          }, {})
+          }, {}),
         })
       }
       if (requireShippingAddress) {
@@ -258,7 +258,7 @@ class Submit extends Component {
           dirty: Object.keys(shippingAddressState.errors).reduce((agg, key) => {
             agg[key] = true
             return agg
-          }, {})
+          }, {}),
         })
       }
       return
@@ -283,19 +283,19 @@ class Submit extends Component {
     }
 
     this.setState(() => ({
-      loading: t('pledge/submit/loading/submit')
+      loading: t('pledge/submit/loading/submit'),
     }))
     this.props
       .submit({
         ...variables,
         payload: getConversionPayload(query),
-        consents: getRequiredConsents(this.props)
+        consents: getRequiredConsents(this.props),
       })
       .then(({ data }) => {
         if (data.submitPledge.emailVerify) {
           this.setState(() => ({
             loading: false,
-            emailVerify: true
+            emailVerify: true,
           }))
           return
         }
@@ -304,18 +304,18 @@ class Submit extends Component {
           pledgeId: data.submitPledge.pledgeId,
           pledgeHash: hash,
           pledgeResponse: data.submitPledge,
-          submitError: undefined
+          submitError: undefined,
         }))
         this.payPledge(data.submitPledge.pledgeId, data.submitPledge)
       })
-      .catch(error => {
+      .catch((error) => {
         const submitError = errorToString(error)
 
         this.setState(() => ({
           loading: false,
           pledgeId: undefined,
           pledgeHash: undefined,
-          submitError
+          submitError,
         }))
       })
   }
@@ -338,11 +338,11 @@ class Submit extends Component {
     this.setState(
       () => ({
         loading: t('pledge/submit/loading/paypal'),
-        pledgeId: pledgeId
+        pledgeId: pledgeId,
       }),
       () => {
         this.payment.payPalForm.submit()
-      }
+      },
     )
   }
   payWithPostFinance(pledgeId, pledgeResponse) {
@@ -354,11 +354,11 @@ class Submit extends Component {
         pledgeId: pledgeId,
         userId: pledgeResponse.userId,
         pfAliasId: pledgeResponse.pfAliasId,
-        pfSHA: pledgeResponse.pfSHA
+        pfSHA: pledgeResponse.pfSHA,
       }),
       () => {
         this.payment.postFinanceForm.submit()
-      }
+      },
     )
   }
   payWithPaymentSlip(pledgeId) {
@@ -368,7 +368,9 @@ class Submit extends Component {
       pledgeId,
       method: 'PAYMENTSLIP',
       paperInvoice: values.paperInvoice || false,
-      address: syncAddresses ? shippingAddressState.values : addressState.values
+      address: syncAddresses
+        ? shippingAddressState.values
+        : addressState.values,
     })
   }
   pay(data) {
@@ -376,17 +378,17 @@ class Submit extends Component {
 
     const email = customMe ? customMe.email : contactState.values.email
     this.setState(() => ({
-      loading: t('pledge/submit/loading/pay')
+      loading: t('pledge/submit/loading/pay'),
     }))
     this.props
       .pay({
         ...data,
-        makeDefault: this.getAutoPayValue()
+        makeDefault: this.getAutoPayValue(),
       })
       .then(({ data: { payPledge } }) => {
         const baseQuery = {
           package: packageName,
-          id: payPledge.pledgeId
+          id: payPledge.pledgeId,
         }
         if (customMe && customMe.isListed) {
           baseQuery.statement = customMe.id
@@ -395,7 +397,7 @@ class Submit extends Component {
           if (customMe || packageName === 'PROLONG') {
             gotoMerci({
               ...baseQuery,
-              email
+              email,
             })
             return
           }
@@ -405,24 +407,24 @@ class Submit extends Component {
               gotoMerci({
                 ...baseQuery,
                 email: email,
-                ...encodeSignInResponseQuery(signIn)
-              })
+                ...encodeSignInResponseQuery(signIn),
+              }),
             )
-            .catch(error =>
+            .catch((error) =>
               gotoMerci({
                 ...baseQuery,
                 email: email,
-                signInError: errorToString(error)
-              })
+                signInError: errorToString(error),
+              }),
             )
         } else {
           gotoMerci(baseQuery)
         }
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState(() => ({
           loading: false,
-          paymentError: errorToString(error)
+          paymentError: errorToString(error),
         }))
       })
   }
@@ -431,36 +433,36 @@ class Submit extends Component {
     const { values } = this.state
 
     this.setState(() => ({
-      loading: t('pledge/submit/loading/stripe')
+      loading: t('pledge/submit/loading/stripe'),
     }))
 
     if (values.paymentSource) {
       this.pay({
         pledgeId,
         method: 'STRIPE',
-        sourceId: values.paymentSource
+        sourceId: values.paymentSource,
       })
       return
     }
 
     this.payment.stripe
       .createPaymentMethod()
-      .then(paymentMethod => {
+      .then((paymentMethod) => {
         this.setState({
           loading: false,
-          paymentError: undefined
+          paymentError: undefined,
         })
         this.pay({
           pledgeId,
           method: 'STRIPE',
           sourceId: paymentMethod.id,
-          pspPayload: paymentMethod
+          pspPayload: paymentMethod,
         })
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({
           loading: false,
-          paymentError: error
+          paymentError: error,
         })
       })
   }
@@ -473,7 +475,7 @@ class Submit extends Component {
       requireShippingAddress,
       shippingAddressState,
       syncAddresses,
-      contactState
+      contactState,
     } = this.props
 
     return [
@@ -485,17 +487,17 @@ class Submit extends Component {
           .concat(objectValues(this.state.errors))
           .concat([
             !values.paymentMethod && t('pledge/submit/payMethod/error'),
-            getConsentsError(t, getRequiredConsents(this.props), consents)
+            getConsentsError(t, getRequiredConsents(this.props), consents),
           ])
-          .filter(Boolean)
+          .filter(Boolean),
       },
       {
         category: t('pledge/address/shipping/title'),
         messages: []
           .concat(
-            requireShippingAddress && objectValues(shippingAddressState.errors)
+            requireShippingAddress && objectValues(shippingAddressState.errors),
           )
-          .filter(Boolean)
+          .filter(Boolean),
       },
       {
         category: t('pledge/address/payment/title'),
@@ -503,17 +505,17 @@ class Submit extends Component {
           .concat(
             values.paymentMethod === 'PAYMENTSLIP' &&
               !syncAddresses &&
-              objectValues(addressState.errors)
+              objectValues(addressState.errors),
           )
-          .filter(Boolean)
-      }
-    ].filter(d => d.messages.length)
+          .filter(Boolean),
+      },
+    ].filter((d) => d.messages.length)
   }
   getAutoPayValue() {
     const { forceAutoPay, options } = this.props
     const {
       values: { paymentMethod },
-      autoPay
+      autoPay,
     } = this.state
 
     if (paymentMethod !== 'STRIPE') {
@@ -524,36 +526,36 @@ class Submit extends Component {
     }
     if (autoPay === undefined) {
       return (
-        options.every(option => option.autoPay !== false) &&
-        options.some(option => option.autoPay)
+        options.every((option) => option.autoPay !== false) &&
+        options.some((option) => option.autoPay)
       )
     }
     return autoPay
   }
   renderAutoPay() {
     const {
-      values: { paymentMethod }
+      values: { paymentMethod },
     } = this.state
     if (paymentMethod !== 'STRIPE') {
       return null
     }
     const { t, packageName, forceAutoPay, options } = this.props
 
-    if (options.every(option => option.autoPay === undefined)) {
+    if (options.every((option) => option.autoPay === undefined)) {
       return null
     }
 
     const label = t.first([
       `pledge/submit/${packageName}/autoPay`,
-      'pledge/submit/autoPay'
+      'pledge/submit/autoPay',
     ])
     const note = t.first(
       [
         `pledge/submit/${packageName}/autoPay/note`,
-        'pledge/submit/autoPay/note'
+        'pledge/submit/autoPay/note',
       ],
       undefined,
-      null
+      null,
     )
 
     return (
@@ -576,13 +578,8 @@ class Submit extends Component {
     )
   }
   render() {
-    const {
-      emailVerify,
-      paymentError,
-      submitError,
-      signInError,
-      loading
-    } = this.state
+    const { emailVerify, paymentError, submitError, signInError, loading } =
+      this.state
     const {
       me,
       t,
@@ -598,7 +595,7 @@ class Submit extends Component {
       setSyncAddresses,
       packageGroup,
       customMe,
-      contactState
+      contactState,
     } = this.props
 
     const errorMessages = this.getErrorMessages()
@@ -606,7 +603,7 @@ class Submit extends Component {
     const contactPreface = t.first(
       [`pledge/contact/preface/${packageName}`, 'pledge/contact/preface'],
       undefined,
-      ''
+      '',
     )
 
     const showSignIn = this.state.showSignIn && !me
@@ -621,7 +618,7 @@ class Submit extends Component {
         <H2>
           {t.first([
             `pledge/contact/title/${packageName}`,
-            'pledge/contact/title'
+            'pledge/contact/title',
           ])}
         </H2>
         <div style={{ marginTop: 10, marginBottom: 40 }}>
@@ -631,11 +628,11 @@ class Submit extends Component {
                 {t('pledge/contact/signedinAs', {
                   nameOrEmail: me.name
                     ? `${me.name.trim()} (${me.email})`
-                    : me.email
+                    : me.email,
                 })}{' '}
                 <A
                   href='#'
-                  onClick={e => {
+                  onClick={(e) => {
                     e.preventDefault()
                     this.setState({ emailVerify: false })
                     this.props.signOut().then(() => {
@@ -643,13 +640,13 @@ class Submit extends Component {
                         values: {
                           firstName: '',
                           lastName: '',
-                          email: ''
+                          email: '',
                         },
                         dirty: {
                           firstName: false,
                           lastName: false,
-                          email: false
-                        }
+                          email: false,
+                        },
                       })
                       this.setState({ showSignIn: false })
                     })
@@ -665,10 +662,10 @@ class Submit extends Component {
               <>
                 <A
                   href='#'
-                  onClick={e => {
+                  onClick={(e) => {
                     e.preventDefault()
                     this.setState(() => ({
-                      showSignIn: !showSignIn
+                      showSignIn: !showSignIn,
                     }))
                   }}
                 >
@@ -699,8 +696,8 @@ class Submit extends Component {
                     href={{
                       pathname: '/angebote',
                       query: {
-                        package: packageName
-                      }
+                        package: packageName,
+                      },
                     }}
                     replace
                     passHref
@@ -726,7 +723,7 @@ class Submit extends Component {
             userId: this.state.userId,
             total: this.props.total,
             pfAliasId: this.state.pfAliasId,
-            pfSHA: this.state.pfSHA
+            pfSHA: this.state.pfSHA,
           }}
           context={packageName}
           allowedMethods={paymentMethods}
@@ -737,8 +734,8 @@ class Submit extends Component {
           syncAddresses={syncAddresses}
           packageGroup={packageGroup}
           setSyncAddresses={setSyncAddresses}
-          onChange={fields => {
-            this.setState(state => {
+          onChange={(fields) => {
+            this.setState((state) => {
               const nextState = FieldSet.utils.mergeFields(fields)(state)
 
               if (
@@ -806,9 +803,9 @@ class Submit extends Component {
             <Consents
               required={getRequiredConsents(this.props)}
               accepted={this.state.consents}
-              onChange={keys => {
+              onChange={(keys) => {
                 this.setState(() => ({
-                  consents: keys
+                  consents: keys,
                 }))
               }}
             />
@@ -826,7 +823,7 @@ class Submit extends Component {
                 {t('pledge/submit/button/pay', {
                   formattedChf: this.props.total
                     ? chfFormat(this.props.total / 100)
-                    : ''
+                    : '',
                 })}
               </Button>
             </div>
@@ -846,7 +843,7 @@ Submit.propTypes = {
   options: PropTypes.array.isRequired,
   submit: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
-  onError: PropTypes.func.isRequired
+  onError: PropTypes.func.isRequired,
 }
 
 const submitPledge = gql`
@@ -928,37 +925,37 @@ const syncPaymentIntentMutation = gql`
 `
 
 let pendingOrder
-const setPendingOrder = order => {
+const setPendingOrder = (order) => {
   pendingOrder = order
 }
 
-export const withPay = Component => {
+export const withPay = (Component) => {
   const EnhancedComponent = compose(
     graphql(syncPaymentIntentMutation, {
       props: ({ mutate }) => ({
-        syncPaymentIntent: variables => {
+        syncPaymentIntent: (variables) => {
           return mutate({
-            variables
+            variables,
           })
-        }
-      })
+        },
+      }),
     }),
     graphql(payPledge, {
       props: ({ mutate, ownProps: { syncPaymentIntent } }) => ({
-        pay: variables =>
+        pay: (variables) =>
           mutate({
             variables,
-            refetchQueries: [{ query: addressQuery }]
-          }).then(async response => {
+            refetchQueries: [{ query: addressQuery }],
+          }).then(async (response) => {
             const {
-              data: { payPledge }
+              data: { payPledge },
             } = response
             if (payPledge.stripeClientSecret) {
               const stripeClient = await loadStripe(
-                payPledge.stripePublishableKey
+                payPledge.stripePublishableKey,
               )
               const confirmResult = await stripeClient.confirmCardPayment(
-                payPledge.stripeClientSecret
+                payPledge.stripeClientSecret,
               )
               if (confirmResult.error) {
                 throw confirmResult.error.message
@@ -967,15 +964,15 @@ export const withPay = Component => {
             await Promise.all(
               [
                 pendingOrder &&
-                  new Promise(resolve => {
-                    pendingOrder.options.forEach(option => {
+                  new Promise((resolve) => {
+                    pendingOrder.options.forEach((option) => {
                       track([
                         'addEcommerceItem',
                         option.templateId, // (required) SKU: Product unique identifier
                         undefined, // (optional) Product name
                         undefined, // (optional) Product category
                         option.price / 100, // (recommended) Product price
-                        option.amount // (optional, default to 1) Product quantity
+                        option.amount, // (optional, default to 1) Product quantity
                       ])
                     })
                     track([
@@ -985,42 +982,42 @@ export const withPay = Component => {
                       undefined, // (optional) Order sub total (excludes shipping)
                       undefined, // (optional) Tax amount
                       undefined, // (optional) Shipping amount
-                      !!pendingOrder.reason // (optional) Discount offered (set to false for unspecified parameter)
+                      !!pendingOrder.reason, // (optional) Discount offered (set to false for unspecified parameter)
                     ])
                     // give matomo half a second to track
                     setTimeout(() => {
                       resolve()
                     }, 500)
                   }),
-                payPledge.stripePaymentIntentId && syncPaymentIntent(payPledge)
-              ].filter(Boolean)
+                payPledge.stripePaymentIntentId && syncPaymentIntent(payPledge),
+              ].filter(Boolean),
             )
 
             return response
-          })
-      })
+          }),
+      }),
     }),
-    withSignIn
+    withSignIn,
   )(Component)
-  return props => <EnhancedComponent {...props} />
+  return (props) => <EnhancedComponent {...props} />
 }
 
 const SubmitWithMutations = compose(
   graphql(submitPledge, {
     props: ({ mutate }) => ({
-      submit: variables => {
+      submit: (variables) => {
         setPendingOrder(variables)
 
         return mutate({
-          variables
+          variables,
         })
-      }
-    })
+      },
+    }),
   }),
   withSignOut,
   withPay,
   withMe,
-  withT
+  withT,
 )(SubmitWithHooks)
 
 export default SubmitWithMutations

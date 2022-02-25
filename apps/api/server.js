@@ -270,10 +270,10 @@ const runOnce = async () => {
     DATABROOM_SCHEDULER === 'false' ||
     (DEV && DATABROOM_SCHEDULER !== 'true')
   ) {
-    console.log(
-      'DATABROOM_SCHEDULER prevented scheduler from being started',
-      { DATABROOM_SCHEDULER, DEV },
-    )
+    console.log('DATABROOM_SCHEDULER prevented scheduler from being started', {
+      DATABROOM_SCHEDULER,
+      DEV,
+    })
   } else {
     databroomScheduler = await DatabroomScheduler.init(context).catch(
       (error) => {

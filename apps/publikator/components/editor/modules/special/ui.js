@@ -7,7 +7,7 @@ import {
   matchBlock,
   createPropertyForm,
   createActionButton,
-  buttonStyles
+  buttonStyles,
 } from '../../utils'
 import injectBlock from '../../utils/injectBlock'
 import MetaForm from '../../utils/MetaForm'
@@ -17,11 +17,13 @@ export default ({ TYPE, newBlock, rule }) => {
     isDisabled: ({ value }) => {
       return value.isBlurred
     },
-    reducer: ({ value, onChange }) => event => {
-      event.preventDefault()
+    reducer:
+      ({ value, onChange }) =>
+      (event) => {
+        event.preventDefault()
 
-      return onChange(value.change().call(injectBlock, newBlock()))
-    }
+        return onChange(value.change().call(injectBlock, newBlock()))
+      },
   })(({ disabled, visible, ...props }) => (
     <span
       {...buttonStyles.insert}
@@ -41,20 +43,20 @@ export default ({ TYPE, newBlock, rule }) => {
       <div>
         <Label>Special</Label>
         {value.blocks.filter(matchBlock(TYPE)).map((node, i) => {
-          const onInputChange = key => (_, inputValue) => {
+          const onInputChange = (key) => (_, inputValue) => {
             onChange(
               value.change().setNodeByKey(node.key, {
                 data: inputValue
                   ? node.data.set(key, inputValue)
-                  : node.data.remove(key)
-              })
+                  : node.data.remove(key),
+              }),
             )
           }
           return (
             <MetaForm
               key={`special-${i}`}
               data={Map({
-                identifier: ''
+                identifier: '',
               }).merge(node.data)}
               onInputChange={onInputChange}
             />
@@ -67,11 +69,11 @@ export default ({ TYPE, newBlock, rule }) => {
   const SpecialForm = createPropertyForm({
     isDisabled: ({ value }) => {
       return !value.blocks.some(matchBlock(TYPE))
-    }
+    },
   })(Form)
 
   return {
     forms: [SpecialForm],
-    insertButtons: [SpecialButton]
+    insertButtons: [SpecialButton],
   }
 }

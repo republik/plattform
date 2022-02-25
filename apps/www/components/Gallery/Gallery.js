@@ -18,7 +18,7 @@ const Gallery = ({ items, onClose, startItemSrc, children, t }) => {
   React.useEffect(() => {
     if (galleryRef) {
       const startIndex = items.findIndex(
-        i => removeQuery(i.src) === removeQuery(startItemSrc)
+        (i) => removeQuery(i.src) === removeQuery(startItemSrc),
       )
 
       const options = {
@@ -32,7 +32,7 @@ const Gallery = ({ items, onClose, startItemSrc, children, t }) => {
         barsSize: { top: 65, bottom: 'auto' },
         history: false,
         errorMsg: `<div class="pswp__error-msg"><a href="%url%" target="_blank">${t(
-          'article/gallery/error'
+          'article/gallery/error',
         )}</a></div>`,
         addCaptionHTMLFn: (item, captionEl) => {
           const { caption, byLine } = item
@@ -48,22 +48,22 @@ const Gallery = ({ items, onClose, startItemSrc, children, t }) => {
 
           captionEl.children[0].innerHTML = innerHtml.join(' ')
           return !!innerHtml.length
-        }
+        },
       }
 
       const gallery = new PhotoSwipe(
         galleryRef.current,
         PhotoSwipeUIDefault,
         items,
-        options
+        options,
       )
 
-      gallery.listen('gettingData', function(index, item) {
+      gallery.listen('gettingData', function (index, item) {
         const src = item.srcDark || item.src
         const sizeInfo = imageSizeInfo(src)
         const maxWidth = Math.min(
           sizeInfo.width,
-          Math.ceil((window.innerWidth * MAX_SPREAD_ZOOM) / 500) * 500
+          Math.ceil((window.innerWidth * MAX_SPREAD_ZOOM) / 500) * 500,
         )
         const resizeUrl = imageResizeUrl(src, `${maxWidth}x`)
         const aspectRatio = sizeInfo.height / sizeInfo.width
@@ -93,9 +93,9 @@ const Gallery = ({ items, onClose, startItemSrc, children, t }) => {
         role='dialog'
         style={{
           background: '#000',
-          zIndex: ZINDEX_GALLERY
+          zIndex: ZINDEX_GALLERY,
         }}
-        onTouchStart={e => {
+        onTouchStart={(e) => {
           // prevent touchstart from bubbling to Pullable
           e.stopPropagation()
         }}

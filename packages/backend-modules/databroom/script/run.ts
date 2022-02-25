@@ -61,7 +61,9 @@ base.lib.ConnectionContext.create('databroom')
 
     return context
   })
-  .then((context: ConnectionContext) => base.lib.ConnectionContext.close(context))
+  .then((context: ConnectionContext) =>
+    base.lib.ConnectionContext.close(context),
+  )
   .catch((error: any) => {
     console.error(error)
   })

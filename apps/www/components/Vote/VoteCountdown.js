@@ -5,7 +5,7 @@ import {
   mediaQueries,
   P,
   pxToRem,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import { timeMinute } from 'd3-time'
 import withT from '../../lib/withT'
@@ -15,11 +15,11 @@ const styles = {
   smallNumber: css({
     display: 'block',
     [mediaQueries.mUp]: {
-      marginBottom: -3
+      marginBottom: -3,
     },
     fontSize: 22,
     ...fontStyles.sansSerifRegular,
-    lineHeight: 1
+    lineHeight: 1,
   }),
   label: css(Interaction.fontRule, {
     display: 'block',
@@ -28,9 +28,9 @@ const styles = {
     paddingTop: 5,
     paddingBottom: 5,
     [mediaQueries.mUp]: {
-      paddingTop: 8
-    }
-  })
+      paddingTop: 8,
+    },
+  }),
 }
 
 const Countdown = withT(({ t, endDate, caption, over }) => {
@@ -59,7 +59,7 @@ const Countdown = withT(({ t, endDate, caption, over }) => {
       setTimeout(() => {
         setLastUpdate(new Date())
         tick()
-      }, msToNextTick)
+      }, msToNextTick),
     )
   }
 
@@ -93,21 +93,21 @@ const Countdown = withT(({ t, endDate, caption, over }) => {
           ? [
               days > 0 &&
                 t.pluralize('crowdfunding/status/time/days', {
-                  count: days
+                  count: days,
                 }),
               (days !== 0 || hours > 0) &&
                 t.pluralize('crowdfunding/status/time/hours', {
-                  count: hours
+                  count: hours,
                 }),
               t.pluralize('crowdfunding/status/time/minutes', {
-                count: minutes
+                count: minutes,
               }),
               days === 0 &&
                 hours === 0 &&
                 lastUpdate &&
                 t.pluralize('crowdfunding/status/time/seconds', {
-                  count: 60 - now.getSeconds()
-                })
+                  count: 60 - now.getSeconds(),
+                }),
             ]
               .filter(Boolean)
               .join(' ')

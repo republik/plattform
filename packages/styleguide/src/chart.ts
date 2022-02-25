@@ -2,5 +2,5 @@ export {
   default as Chart,
   ChartTitle,
   ChartLead,
-  ChartLegend
+  ChartLegend,
 } from './components/Chart'

@@ -10,7 +10,7 @@ import {
   mediaQueries,
   fontStyles,
   plainButtonRule,
-  colors
+  colors,
 } from '@project-r/styleguide'
 
 import createPersistedState from '../../lib/hooks/use-persisted-state'
@@ -21,7 +21,7 @@ import medianSmartspiders from './medianSmartspiders'
 import getPartyColor from './partyColors'
 
 export const useCardPreferences = createPersistedState(
-  'republik-card-preferences'
+  'republik-card-preferences',
 )
 
 const styles = {
@@ -29,20 +29,20 @@ const styles = {
     display: 'inline-block',
     minWidth: 150,
     marginRight: 5,
-    marginBottom: 5
+    marginBottom: 5,
   }),
   mySmartspider: css({
-    position: 'relative'
+    position: 'relative',
   }),
   mySmartspiderSpider: css({
     [mediaQueries.mUp]: {
       position: 'absolute',
       right: 0,
-      top: 0
-    }
+      top: 0,
+    },
   }),
   mySmartspiderSlider: css({
-    marginBottom: 5
+    marginBottom: 5,
   }),
   medianSmartspider: css(plainButtonRule, {
     border: '2px solid transparent',
@@ -52,12 +52,12 @@ const styles = {
     fontSize: 14,
     padding: 1,
     ':first-child': {
-      marginLeft: -1
+      marginLeft: -1,
     },
     ':last-child': {
-      marginRight: -1
-    }
-  })
+      marginRight: -1,
+    },
+  }),
 }
 
 const inactiveValue = -1
@@ -69,20 +69,20 @@ const nullSmartspider = [
   inactiveValue,
   inactiveValue,
   inactiveValue,
-  inactiveValue
+  inactiveValue,
 ]
 
 const Filters = ({ t, party, onParty, forcedVariables = {} }) => {
   const [preferences, setPreferences] = useCardPreferences({})
 
   const setSlider = (newValue, i) =>
-    setPreferences(p => {
+    setPreferences((p) => {
       let newSmartspider = [
         ...(p.mySmartspider || nullSmartspider).slice(0, i),
         newValue,
-        ...(p.mySmartspider || nullSmartspider).slice(i + 1)
+        ...(p.mySmartspider || nullSmartspider).slice(i + 1),
       ]
-      if (newSmartspider.every(v => v === inactiveValue)) {
+      if (newSmartspider.every((v) => v === inactiveValue)) {
         newSmartspider = undefined
       }
       return {
@@ -93,7 +93,7 @@ const Filters = ({ t, party, onParty, forcedVariables = {} }) => {
               ? true
               : undefined
             : p.mySmartspiderSort,
-        mySmartspider: newSmartspider
+        mySmartspider: newSmartspider,
       }
     })
 
@@ -106,7 +106,7 @@ const Filters = ({ t, party, onParty, forcedVariables = {} }) => {
         <Checkbox
           checked={!!preferences.portrait}
           onChange={(_, checked) => {
-            setPreferences(p => ({ ...p, portrait: checked }))
+            setPreferences((p) => ({ ...p, portrait: checked }))
           }}
         >
           {t('components/Card/Preferences/filter/portrait')}
@@ -116,7 +116,7 @@ const Filters = ({ t, party, onParty, forcedVariables = {} }) => {
         <Checkbox
           checked={!!preferences.smartspider}
           onChange={(_, checked) => {
-            setPreferences(p => ({ ...p, smartspider: checked }))
+            setPreferences((p) => ({ ...p, smartspider: checked }))
           }}
         >
           {t('components/Card/Preferences/filter/smartspider')}
@@ -126,7 +126,7 @@ const Filters = ({ t, party, onParty, forcedVariables = {} }) => {
         <Checkbox
           checked={!!preferences.statement}
           onChange={(_, checked) => {
-            setPreferences(p => ({ ...p, statement: checked }))
+            setPreferences((p) => ({ ...p, statement: checked }))
           }}
         >
           {t('components/Card/Preferences/filter/statement')}
@@ -137,7 +137,7 @@ const Filters = ({ t, party, onParty, forcedVariables = {} }) => {
           <Checkbox
             checked={!!preferences.elected}
             onChange={(_, checked) => {
-              setPreferences(p => ({ ...p, elected: checked }))
+              setPreferences((p) => ({ ...p, elected: checked }))
             }}
           >
             {t('components/Card/Preferences/filter/elected')}
@@ -148,7 +148,7 @@ const Filters = ({ t, party, onParty, forcedVariables = {} }) => {
         <Checkbox
           checked={!!preferences.financing}
           onChange={(_, checked) => {
-            setPreferences(p => ({ ...p, financing: checked }))
+            setPreferences((p) => ({ ...p, financing: checked }))
           }}
         >
           {t('components/Card/Preferences/filter/financing')}
@@ -160,20 +160,20 @@ const Filters = ({ t, party, onParty, forcedVariables = {} }) => {
         <strong>{t('components/Card/Preferences/medianSmartspiders')}</strong>
       </Paragraph>
       <div>
-        {medianSmartspiders.map(medianSmartspider => {
+        {medianSmartspiders.map((medianSmartspider) => {
           const fill = getPartyColor(medianSmartspider.value)
           const active = party === medianSmartspider.value
           return (
             <button
               key={medianSmartspider.value}
               {...styles.medianSmartspider}
-              onClick={e => {
+              onClick={(e) => {
                 e.preventDefault()
                 onParty(active ? undefined : medianSmartspider.value)
               }}
               style={{
                 color: color(fill).darker(0.5),
-                borderColor: active ? colors.primary : undefined
+                borderColor: active ? colors.primary : undefined,
               }}
             >
               <Spider
@@ -203,19 +203,19 @@ const Filters = ({ t, party, onParty, forcedVariables = {} }) => {
             <Editorial.A
               key='link'
               href={t(
-                'components/Card/Preferences/mySmartspider/intro/linkHref'
+                'components/Card/Preferences/mySmartspider/intro/linkHref',
               )}
             >
               {t('components/Card/Preferences/mySmartspider/intro/linkText')}
             </Editorial.A>
-          )
+          ),
         })}
       </Paragraph>
       <br />
 
       <div {...styles.mySmartspider}>
         {(preferences.mySmartspider || nullSmartspider).map((value, i) => {
-          const onUp = e => {
+          const onUp = (e) => {
             if (e.target.value < 0) {
               setSlider(inactiveValue, i)
             }
@@ -248,7 +248,7 @@ const Filters = ({ t, party, onParty, forcedVariables = {} }) => {
               checked={!!preferences.mySmartspiderSort && !party}
               onChange={(_, checked) => {
                 onParty()
-                setPreferences(p => ({ ...p, mySmartspiderSort: checked }))
+                setPreferences((p) => ({ ...p, mySmartspiderSort: checked }))
               }}
             >
               {t('components/Card/Preferences/mySmartspider/sort')}
@@ -259,7 +259,7 @@ const Filters = ({ t, party, onParty, forcedVariables = {} }) => {
                 size={280}
                 fill='#000'
                 fillOpacity={0.3}
-                data={preferences.mySmartspider.map(v => Math.max(0, v))}
+                data={preferences.mySmartspider.map((v) => Math.max(0, v))}
                 reference={preferences.mySmartspider}
               />
             </div>
@@ -267,11 +267,11 @@ const Filters = ({ t, party, onParty, forcedVariables = {} }) => {
             <br />
             <Editorial.A
               href='#'
-              onClick={e => {
+              onClick={(e) => {
                 e.preventDefault()
                 if (
                   window.confirm(
-                    t('components/Card/Preferences/mySmartspider/resetConfirm')
+                    t('components/Card/Preferences/mySmartspider/resetConfirm'),
                   )
                 ) {
                   setPreferences(({ mySmartspider, ...rest }) => rest)

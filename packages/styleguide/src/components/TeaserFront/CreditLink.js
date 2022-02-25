@@ -6,7 +6,7 @@ import { underline } from '../../lib/styleMixins'
 import { tUp } from './mediaQueries'
 import { useColorContext } from '../Colors/useColorContext'
 
-const getHoverColor = labColor =>
+const getHoverColor = (labColor) =>
   labColor.l > 50 ? labColor.darker(0.6) : labColor.brighter(3)
 
 const CreditLink = React.forwardRef(
@@ -20,9 +20,9 @@ const CreditLink = React.forwardRef(
         ':hover': {
           color: color
             ? getHoverColor(lab(color))
-            : colorScheme.getCSSColor('textSoft')
-        }
-      }
+            : colorScheme.getCSSColor('textSoft'),
+        },
+      },
     }
 
     const colorStyle = labCollapsedColor
@@ -30,32 +30,32 @@ const CreditLink = React.forwardRef(
           color: collapsedColor,
           '@media (hover)': {
             ':hover': {
-              color: getHoverColor(labCollapsedColor)
-            }
+              color: getHoverColor(labCollapsedColor),
+            },
           },
           [tUp]: {
-            ...baseColorStyle
-          }
+            ...baseColorStyle,
+          },
         }
       : baseColorStyle
 
     const style = css({
       ...underline,
       cursor: 'pointer',
-      ...colorStyle
+      ...colorStyle,
     })
     return (
       <a {...attributes} {...props} {...style} ref={ref}>
         {children}
       </a>
     )
-  }
+  },
 )
 
 CreditLink.propTypes = {
   children: PropTypes.node.isRequired,
   color: PropTypes.string,
-  collapsedColor: PropTypes.string
+  collapsedColor: PropTypes.string,
 }
 
 export default CreditLink

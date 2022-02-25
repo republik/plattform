@@ -26,7 +26,7 @@ import {
   ActiveInterruptionOverlay,
   warningColor,
   joinUsers,
-  withUncommittedChangesMutation
+  withUncommittedChangesMutation,
 } from '../../components/VersionControl/UncommittedChanges'
 import Sidebar from '../../components/Sidebar'
 import Warning from '../../components/Sidebar/Warning'
@@ -51,7 +51,7 @@ import {
   colors,
   plainButtonRule,
   Interaction,
-  Checkbox
+  Checkbox,
 } from '@project-r/styleguide'
 import SettingsIcon from 'react-icons/lib/fa/cogs'
 
@@ -59,7 +59,7 @@ import createDebug from 'debug'
 import {
   findAuthorsP,
   findTitleLeaf,
-  generateAuthorsLine
+  generateAuthorsLine,
 } from '../../lib/utils/helpers'
 import { withEditRepoMeta } from '../../components/Repo/EditMetaDate'
 
@@ -129,21 +129,22 @@ const debug = createDebug('publikator:pages:edit')
 const TEST = process.env.NODE_ENV === 'test'
 
 const formatTime = timeFormat('%H:%M')
-const addWarning = message => {
+const addWarning = (message) => {
   const time = formatTime(new Date())
-  return state => {
+  return (state) => {
     return {
       showSidebar: true,
       warnings: [{ time, message }, ...state.warnings].filter(
         // de-dup
-        ({ message }, i, all) => all.findIndex(w => w.message === message) === i
-      )
+        ({ message }, i, all) =>
+          all.findIndex((w) => w.message === message) === i,
+      ),
     }
   }
 }
 
-const rmWarning = message => state => ({
-  warnings: state.warnings.filter(warning => warning.message !== message)
+const rmWarning = (message) => (state) => ({
+  warnings: state.warnings.filter((warning) => warning.message !== message),
 })
 
 const SIDEBAR_ICON_SIZE = 30
@@ -152,10 +153,10 @@ export class EditorPage extends Component {
   constructor(...args) {
     super(...args)
 
-    this.toggleSidebarHandler = event => {
+    this.toggleSidebarHandler = (event) => {
       event.preventDefault()
-      this.setState(state => ({
-        showSidebar: !state.showSidebar
+      this.setState((state) => ({
+        showSidebar: !state.showSidebar,
       }))
     }
     this.changeHandler = this.changeHandler.bind(this)
@@ -163,13 +164,13 @@ export class EditorPage extends Component {
     this.goToRaw = this.goToRaw.bind(this)
     this.documentChangeHandler = debounce(
       this.documentChangeHandler.bind(this),
-      500
+      500,
     )
-    this.uiChangeHandler = change => {
+    this.uiChangeHandler = (change) => {
       this.changeHandler(change)
       this.documentChangeHandler(null, change)
     }
-    this.revertHandler = e => {
+    this.revertHandler = (e) => {
       e.preventDefault()
       const { t } = this.props
       if (!window.confirm(t('revert/confirm'))) {
@@ -178,13 +179,13 @@ export class EditorPage extends Component {
       this.setState({
         didUnlock: false,
         acknowledgedUsers: [],
-        previewScreenSize: null
+        previewScreenSize: null,
       })
       this.store.clear()
       this.loadState(this.props)
     }
 
-    this.editorRef = ref => {
+    this.editorRef = (ref) => {
       this.editor = ref
       if (ref) {
         this.forceUpdate()
@@ -202,10 +203,10 @@ export class EditorPage extends Component {
       showSidebar: true,
       readOnly: true,
       previewScreenSize: null,
-      previewDarkmode: false
+      previewDarkmode: false,
     }
 
-    this.lock = state => {
+    this.lock = (state) => {
       const { t } = this.props
       const warning = t('commit/warn/canNotLock')
       if (state.hasUncommittedChanges) {
@@ -214,29 +215,29 @@ export class EditorPage extends Component {
 
       return {
         readOnly: true,
-        ...rmWarning(warning)(state)
+        ...rmWarning(warning)(state),
       }
     }
-    this.unlock = state => {
+    this.unlock = (state) => {
       return {
-        readOnly: false
+        readOnly: false,
       }
     }
-    this.lockHandler = event => {
+    this.lockHandler = (event) => {
       event && event.preventDefault()
       this.setState({
-        didUnlock: false
+        didUnlock: false,
       })
       if (this.state.hasUncommittedChanges) {
         console.warn(
-          'lockHandler should not be called when user has uncommitted changes'
+          'lockHandler should not be called when user has uncommitted changes',
         )
         return
       }
       this.notifyChanges('delete')
       this.setState(this.lock)
     }
-    this.unlockHandler = event => {
+    this.unlockHandler = (event) => {
       event && event.preventDefault()
       const { t } = this.props
 
@@ -246,8 +247,8 @@ export class EditorPage extends Component {
         !window.confirm(
           t.pluralize('uncommittedChanges/unlock/confirm', {
             count: activeUsers.length,
-            activeUsers: joinUsers(activeUsers, t)
-          })
+            activeUsers: joinUsers(activeUsers, t),
+          }),
         )
       ) {
         return
@@ -257,19 +258,19 @@ export class EditorPage extends Component {
         {
           didUnlock: true,
           acknowledgedUsers: this.state.activeUsers,
-          readOnly: false
+          readOnly: false,
         },
         () => {
           this.notifyChanges('create')
-        }
+        },
       )
       this.setState(this.unlock)
     }
-    this.beforeunload = event => {
+    this.beforeunload = (event) => {
       const {
         router: {
-          query: { repoId }
-        }
+          query: { repoId },
+        },
       } = this.props
       const { hasUncommittedChanges, didUnlock } = this.state
       if (!hasUncommittedChanges && didUnlock) {
@@ -280,8 +281,8 @@ export class EditorPage extends Component {
               API_UNCOMMITTED_CHANGES_URL,
               JSON.stringify({
                 repoId,
-                action: 'delete'
-              })
+                action: 'delete',
+              }),
             )
           } catch (e) {}
         }
@@ -292,9 +293,9 @@ export class EditorPage extends Component {
   notifyChanges(action) {
     const {
       router: {
-        query: { repoId, commitId }
+        query: { repoId, commitId },
       },
-      t
+      t,
     } = this.props
 
     // we don't notify the backend if no backend repo exists
@@ -306,12 +307,12 @@ export class EditorPage extends Component {
     this.props
       .hasUncommitedChanges({
         repoId,
-        action
+        action,
       })
       .then(() => {
         this.setState(rmWarning(warning))
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(warning, error)
         this.setState(addWarning(warning))
       })
@@ -321,7 +322,7 @@ export class EditorPage extends Component {
     this.setState({
       hasUncommittedChanges: true,
       beginChanges: new Date(),
-      readOnly: false
+      readOnly: false,
     })
 
     this.notifyChanges('create')
@@ -329,7 +330,7 @@ export class EditorPage extends Component {
 
   concludeChanges(notify = true) {
     this.setState({
-      hasUncommittedChanges: false
+      hasUncommittedChanges: false,
     })
 
     if (notify) {
@@ -364,7 +365,7 @@ export class EditorPage extends Component {
       debug(
         'componentWillReceiveProps',
         'shouldUpdateActiveUsers',
-        shouldUpdateActiveUsers
+        shouldUpdateActiveUsers,
       )
       if (shouldUpdateActiveUsers) {
         this.updateActiveUsers(nextProps)
@@ -375,21 +376,21 @@ export class EditorPage extends Component {
   updateActiveUsers(props) {
     const {
       uncommittedChanges: { users },
-      me
+      me,
     } = props
 
-    this.setState(state => {
-      const activeUsers = users.filter(user => user.id !== me.id)
+    this.setState((state) => {
+      const activeUsers = users.filter((user) => user.id !== me.id)
       const acknowledgedUsers = state.acknowledgedUsers
 
       let addToState = {}
       const newUsers = activeUsers.filter(
-        user => !acknowledgedUsers.find(ack => ack.id === user.id)
+        (user) => !acknowledgedUsers.find((ack) => ack.id === user.id),
       )
       if (newUsers.length) {
         if (state.hasUncommittedChanges || state.didUnlock) {
           addToState = {
-            interruptingUsers: newUsers
+            interruptingUsers: newUsers,
           }
         } else {
           addToState = this.lock(state)
@@ -402,18 +403,18 @@ export class EditorPage extends Component {
       if (!addToState.interruptingUsers && state.interruptingUsers) {
         addToState = {
           ...addToState,
-          interruptingUsers: undefined
+          interruptingUsers: undefined,
         }
       }
 
       debug('updateActiveUsers', addToState, {
         activeUsers,
-        acknowledgedUsers
+        acknowledgedUsers,
       })
       return {
         ...addToState,
         activeUsers,
-        acknowledgedUsers
+        acknowledgedUsers,
       }
     })
   }
@@ -441,9 +442,9 @@ export class EditorPage extends Component {
       templateData: {
         loading: templateLoading,
         error: templateError,
-        templateRepo
+        templateRepo,
       } = {},
-      router
+      router,
     } = props
 
     if (!process.browser && !TEST) {
@@ -465,7 +466,7 @@ export class EditorPage extends Component {
         'isLoading',
         templateLoading,
         'hasError',
-        templateError
+        templateError,
       )
       return
     }
@@ -476,7 +477,7 @@ export class EditorPage extends Component {
       debug('loadState', 'redirect', repo.latestCommit)
       Router.replaceRoute('repo/edit', {
         repoId: repoId.split('/'),
-        commitId: repo.latestCommit.id
+        commitId: repo.latestCommit.id,
       })
       return
     }
@@ -484,7 +485,7 @@ export class EditorPage extends Component {
     if (commitId && repo && !repo.commit) {
       this.setState(addWarning(t('commit/warn/commit404')))
       Router.replaceRoute('repo/edit', {
-        repoId: repoId.split('/')
+        repoId: repoId.split('/'),
       })
       return
     }
@@ -502,11 +503,11 @@ export class EditorPage extends Component {
       debug('loadState', 'loadSchema', schema)
       this.setState(
         {
-          schema: getSchema(schema)
+          schema: getSchema(schema),
         },
         () => {
           this.loadState(this.props)
-        }
+        },
       )
       return
     }
@@ -527,8 +528,8 @@ export class EditorPage extends Component {
             format: commit.document.meta.format,
             section: commit.document.meta.section,
             series: commit.document.meta.series,
-            repoId: commit.document.repoId
-          })
+            repoId: commit.document.repoId,
+          }),
         )
 
         const titleLeaf = findTitleLeaf(json)
@@ -554,7 +555,7 @@ export class EditorPage extends Component {
       } else {
         committedEditorState = this.editor.newDocument(
           router.query,
-          this.props.me
+          this.props.me,
         )
         debug('loadState', 'new document', committedEditorState)
       }
@@ -562,7 +563,7 @@ export class EditorPage extends Component {
       const commit = repo.commit
       if (!commit) {
         this.setState({
-          error: t('commit/warn/missing', { commitId })
+          error: t('commit/warn/missing', { commitId }),
         })
         return
       }
@@ -573,7 +574,7 @@ export class EditorPage extends Component {
         format: commit.document.meta.format,
         section: commit.document.meta.section,
         series: commit.document.meta.series,
-        repoId: commit.document.repoId
+        repoId: commit.document.repoId,
       }
 
       committedEditorState = this.editor.serializer.deserialize(json)
@@ -592,7 +593,7 @@ export class EditorPage extends Component {
       debug('loadState', 'edit document', committedEditorState)
     }
     const committedRawDocString = JSON.stringify(
-      committedEditorState.document.toJSON()
+      committedEditorState.document.toJSON(),
     )
 
     const storeKey = [repoId, commitId].join('/')
@@ -615,7 +616,7 @@ export class EditorPage extends Component {
             format: repo?.commit?.document?.meta?.format,
             section: repo?.commit?.document?.meta?.section,
             series: repo?.commit?.document?.meta?.series,
-            repoId: repo?.commit?.document?.repoId
+            repoId: repo?.commit?.document?.repoId,
           })
           debug('loadState', 'using local mdast document', localEditorState)
         }
@@ -626,7 +627,7 @@ export class EditorPage extends Component {
     }
 
     const nextState = {
-      committedRawDocString
+      committedRawDocString,
     }
     if (localEditorState) {
       this.beginChanges()
@@ -652,13 +653,13 @@ export class EditorPage extends Component {
     ) {
       this.store.set(
         'editorState',
-        this.editor.serializer.serialize(newEditorState)
+        this.editor.serializer.serialize(newEditorState),
       )
       debug(
         'loadState',
         'documentChangeHandler',
         'edited document',
-        newEditorState
+        newEditorState,
       )
       if (process.env.NODE_ENV !== 'production') {
         debug(
@@ -668,8 +669,8 @@ export class EditorPage extends Component {
           require('diff').createPatch(
             'string',
             JSON.stringify(JSON.parse(committedRawDocString), null, 2),
-            JSON.stringify(newEditorState.document.toJSON(), null, 2)
-          )
+            JSON.stringify(newEditorState.document.toJSON(), null, 2),
+          ),
         )
       }
 
@@ -680,7 +681,7 @@ export class EditorPage extends Component {
       if (
         !hasUncommittedChanges ||
         msSinceBegin > 1000 * 60 * 5 ||
-        (!uncommittedChanges.users.find(user => user.id === me.id) &&
+        (!uncommittedChanges.users.find((user) => user.id === me.id) &&
           (!msSinceBegin || msSinceBegin > 1000))
       ) {
         this.beginChanges()
@@ -697,34 +698,34 @@ export class EditorPage extends Component {
   commitCleanup(data) {
     const {
       router: {
-        query: { repoId }
-      }
+        query: { repoId },
+      },
     } = this.props
 
     this.store.clear()
     this.concludeChanges()
 
     this.setState({
-      committing: false
+      committing: false,
     })
     Router.replaceRoute('repo/edit', {
       repoId: repoId.split('/'),
       commitId: data.commit.id,
       isTemplate: null,
       templateRepoId: null,
-      publishDate: null
+      publishDate: null,
     })
   }
 
   commitHandler() {
     const {
       router: {
-        query: { repoId, commitId, isTemplate, publishDate }
+        query: { repoId, commitId, isTemplate, publishDate },
       },
       commitMutation,
       editRepoMeta,
       data,
-      t
+      t,
     } = this.props
     const { editorState } = this.state
 
@@ -733,7 +734,7 @@ export class EditorPage extends Component {
       return
     }
     this.setState({
-      committing: true
+      committing: true,
     })
 
     const isNew = commitId === 'new'
@@ -744,14 +745,14 @@ export class EditorPage extends Component {
       isTemplate: isNew ? isTemplate === 'true' : data?.repo?.isTemplate,
       message: message,
       document: {
-        content: this.editor.serializer.serialize(editorState)
-      }
+        content: this.editor.serializer.serialize(editorState),
+      },
     })
       .then(({ data }) => {
         if (publishDate) {
           editRepoMeta({
             repoId,
-            publishDate
+            publishDate,
           }).then(() => {
             this.commitCleanup(data)
           })
@@ -759,15 +760,15 @@ export class EditorPage extends Component {
           this.commitCleanup(data)
         }
       })
-      .catch(e => {
+      .catch((e) => {
         console.error(e)
-        this.setState(state => ({
+        this.setState((state) => ({
           committing: false,
           ...addWarning(
             t('commit/warn/failed', {
-              error: errorToString(e)
-            })
-          )(state)
+              error: errorToString(e),
+            }),
+          )(state),
         }))
       })
   }
@@ -775,8 +776,8 @@ export class EditorPage extends Component {
   goToRaw(isTemplate) {
     const {
       router: {
-        query: { repoId, commitId, schema, template }
-      }
+        query: { repoId, commitId, schema, template },
+      },
     } = this.props
     const { editorState } = this.state
     const serializedState = this.editor.serializer.serialize(editorState)
@@ -789,9 +790,9 @@ export class EditorPage extends Component {
       isTemplate: isTemplate,
       ...(commitId === 'new'
         ? {
-            schema: schema || template
+            schema: schema || template,
           }
-        : {})
+        : {}),
     })
   }
 
@@ -801,7 +802,7 @@ export class EditorPage extends Component {
       data = {},
       templateData = {},
       uncommittedChanges,
-      t
+      t,
     } = this.props
     const { repoId, commitId, publishDate } = router.query
     const { loading, repo } = data
@@ -816,7 +817,7 @@ export class EditorPage extends Component {
       readOnly,
       activeUsers,
       interruptingUsers,
-      didUnlock
+      didUnlock,
     } = this.state
 
     const isTemplate = repo
@@ -824,7 +825,7 @@ export class EditorPage extends Component {
       : router.query.isTemplate === 'true'
     const meta = {
       ...repo?.meta,
-      publishDate: publishDate || repo?.meta?.publishDate
+      publishDate: publishDate || repo?.meta?.publishDate,
     }
     const isNew = commitId === 'new'
     const error = data.error || templateError || this.state.error
@@ -851,7 +852,7 @@ export class EditorPage extends Component {
       ),
       !showLoading && repo && repo.isArchived && (
         <RepoArchivedBanner key='repo-archived-banner' />
-      )
+      ),
     ].filter(Boolean)
     const sidebarDisabled = !!(showLoading || error)
     return (
@@ -861,7 +862,7 @@ export class EditorPage extends Component {
           barStyle={{
             borderBottom: activeUsers.length
               ? `3px solid ${readOnly ? colors.error : warningColor}`
-              : undefined
+              : undefined,
           }}
         >
           <Frame.Header.Section align='left'>
@@ -881,7 +882,7 @@ export class EditorPage extends Component {
                 // 1 px header border
                 paddingBottom: HEADER_HEIGHT - SIDEBAR_ICON_SIZE - 30 - 1,
                 cursor: 'pointer',
-                color: showSidebar ? colors.primary : undefined
+                color: showSidebar ? colors.primary : undefined,
               }}
               onMouseDown={this.toggleSidebarHandler}
             >
@@ -936,7 +937,7 @@ export class EditorPage extends Component {
                     onAcknowledged={() =>
                       this.setState({
                         acknowledgedUsers: this.state.activeUsers,
-                        interruptingUsers: undefined
+                        interruptingUsers: undefined,
                       })
                     }
                   />
@@ -976,7 +977,7 @@ export class EditorPage extends Component {
             isDisabled={sidebarDisabled}
             selectedTabId={readOnly ? 'workflow' : 'edit'}
             isOpen={showSidebar}
-            onTabChange={activeTab => {
+            onTabChange={(activeTab) => {
               if (activeTab !== 'view') {
                 // reset device preivew when navigation away from view
                 this.setState({ previewScreenSize: null })
@@ -1019,7 +1020,7 @@ export class EditorPage extends Component {
               </Interaction.P>
               <ScreenSizePicker
                 selectedScreenSize={this.state.previewScreenSize}
-                onSelect={screenSize => {
+                onSelect={(screenSize) => {
                   this.setState({ previewScreenSize: screenSize })
                 }}
               />
@@ -1033,7 +1034,7 @@ export class EditorPage extends Component {
                     checked={this.state.previewDarkmode}
                     onChange={() =>
                       this.setState({
-                        previewDarkmode: !this.state.previewDarkmode
+                        previewDarkmode: !this.state.previewDarkmode,
                       })
                     }
                   >
@@ -1060,9 +1061,9 @@ export default compose(
     options: ({ router }) => ({
       variables: {
         repoId: router.query.repoId,
-        commitId: router.query.commitId
-      }
-    })
+        commitId: router.query.commitId,
+      },
+    }),
   }),
   graphql(getLatestCommit, {
     skip: ({ router }) =>
@@ -1071,44 +1072,44 @@ export default compose(
       // always the latest
       fetchPolicy: 'network-only',
       variables: {
-        repoId: router.query.repoId
-      }
+        repoId: router.query.repoId,
+      },
     }),
     props: ({ data, ownProps: { router, t } }) => {
       if (router.query.commitId === 'new') {
         if (data.repo && data.repo.latestCommit) {
           return {
             data: {
-              error: t('repo/add/alreadyExists')
-            }
+              error: t('repo/add/alreadyExists'),
+            },
           }
         }
         return {}
       }
       return {
-        data
+        data,
       }
-    }
+    },
   }),
   graphql(getTemplateById, {
     name: 'templateData',
     skip: ({ router }) => !router.query.templateRepoId,
     options: ({ router }) => ({
       variables: {
-        repoId: router.query.templateRepoId
-      }
-    })
+        repoId: router.query.templateRepoId,
+      },
+    }),
   }),
   withUncommitedChanges({
     options: ({ router }) => ({
       variables: {
-        repoId: router.query.repoId
-      }
-    })
+        repoId: router.query.repoId,
+      },
+    }),
   }),
   graphql(commitMutation, {
     props: ({ mutate, ownProps: { router } }) => ({
-      commitMutation: variables =>
+      commitMutation: (variables) =>
         mutate({
           variables,
           update: (store, { data: { commit } }) => {
@@ -1119,36 +1120,36 @@ export default compose(
                 query: getCommitById,
                 variables: {
                   repoId,
-                  commitId: parentId
-                }
+                  commitId: parentId,
+                },
               })
               data = {
                 ...oldData,
                 repo: {
                   ...oldData.repo,
-                  commit
-                }
+                  commit,
+                },
               }
             } else {
               data = {
                 repo: {
                   ...commit.repo,
-                  commit
-                }
+                  commit,
+                },
               }
             }
             store.writeQuery({
               query: getCommitById,
               variables: {
                 repoId,
-                commitId: commit.id
+                commitId: commit.id,
               },
-              data
+              data,
             })
-          }
-        })
-    })
+          },
+        }),
+    }),
   }),
   withUncommittedChangesMutation,
-  withEditRepoMeta
+  withEditRepoMeta,
 )(EditorPage)

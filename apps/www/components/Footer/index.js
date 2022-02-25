@@ -9,7 +9,7 @@ import {
   mediaQueries,
   fontStyles,
   ColorContextProvider,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import { OpenSourceIcon } from '@project-r/styleguide'
 
@@ -26,31 +26,31 @@ import Address from './Address'
 const styles = {
   bg: css({
     '@media print': {
-      display: 'none !important'
+      display: 'none !important',
     },
     position: 'relative',
     zIndex: ZINDEX_FOOTER, // goes over sidebar
     backgroundColor: 'black',
     padding: '40px 15px',
     [mediaQueries.mUp]: {
-      padding: '80px 40px'
-    }
+      padding: '80px 40px',
+    },
   }),
   content: css({
     maxWidth: 1230,
-    margin: '0 auto'
+    margin: '0 auto',
   }),
   hr: css({
     border: 'none',
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
-    marginBottom: 36
+    marginBottom: 36,
   }),
   topRow: css({
     display: 'flex',
     justifyContent: 'space-between',
     flexDirection: 'row-reverse',
-    marginBottom: 36
+    marginBottom: 36,
   }),
   middleRow: css({
     display: 'flex',
@@ -58,8 +58,8 @@ const styles = {
     flexDirection: 'column',
     marginBottom: 36,
     [mediaQueries.mUp]: {
-      flexDirection: 'row-reverse'
-    }
+      flexDirection: 'row-reverse',
+    },
   }),
   nav: css({
     display: 'flex',
@@ -68,19 +68,19 @@ const styles = {
     maxWidth: 780,
     flex: 1,
     [mediaQueries.mUp]: {
-      flexDirection: 'row'
-    }
+      flexDirection: 'row',
+    },
   }),
   addressColumn: css({
-    marginRight: 70
+    marginRight: 70,
   }),
   since: css({
     ...fontStyles.sansSerifRegular14,
     display: 'none',
     marginLeft: 8,
     [mediaQueries.mUp]: {
-      display: 'inline-block'
-    }
+      display: 'inline-block',
+    },
   }),
   navList: css({
     display: 'flex',
@@ -93,25 +93,25 @@ const styles = {
     [mediaQueries.mUp]: {
       flexDirection: 'column',
       marginBottom: 0,
-      marginLeft: 8
+      marginLeft: 8,
     },
     '& li': {
       ...fontStyles.sansSerifRegular16,
       marginTop: 8,
       marginRight: 22,
       [mediaQueries.mUp]: {
-        marginRight: 0
-      }
+        marginRight: 0,
+      },
     },
     '& li:first-child': {
       ...fontStyles.sansSerifRegular14,
       marginTop: 0,
       width: '100%',
       [mediaQueries.mUp]: {
-        width: 'inherit'
-      }
-    }
-  })
+        width: 'inherit',
+      },
+    },
+  }),
 }
 
 const Footer = ({
@@ -120,7 +120,7 @@ const Footer = ({
   signOut,
   inNativeIOSApp,
   isOnMarketingPage,
-  hasActiveMembership
+  hasActiveMembership,
 }) => {
   const [colorScheme] = useColorContext()
   const navLinkStyle = useMemo(
@@ -131,14 +131,14 @@ const Footer = ({
         textDecoration: 'none',
         '@media (hover)': {
           ':hover': {
-            textDecoration: 'underline'
-          }
-        }
+            textDecoration: 'underline',
+          },
+        },
       }),
-    [colorScheme]
+    [colorScheme],
   )
 
-  const FooterNavLink = props => <Link prefetch={false} {...props} />
+  const FooterNavLink = (props) => <Link prefetch={false} {...props} />
 
   const router = useRouter()
 
@@ -189,15 +189,15 @@ const Footer = ({
                       href={{
                         pathname: '/angebote',
                         query: {
-                          group: hasActiveMembership ? 'GIVE' : undefined
-                        }
+                          group: hasActiveMembership ? 'GIVE' : undefined,
+                        },
                       }}
                     >
                       <a {...navLinkStyle}>
                         {t(
                           hasActiveMembership
                             ? 'footer/me/give'
-                            : 'footer/offers'
+                            : 'footer/offers',
                         )}
                       </a>
                     </FooterNavLink>
@@ -214,7 +214,7 @@ const Footer = ({
                 <li>
                   <FooterNavLink
                     href='/teilen'
-                    onClick={e => {
+                    onClick={(e) => {
                       if (shouldIgnoreClick(e)) {
                         return
                       }
@@ -230,7 +230,7 @@ const Footer = ({
                   <a
                     {...navLinkStyle}
                     href='#'
-                    onClick={e => {
+                    onClick={(e) => {
                       e.preventDefault()
                       signOut()
                     }}
@@ -350,7 +350,7 @@ const Footer = ({
             <a
               {...navLinkStyle}
               style={{ ...fontStyles.sansSerifRegular14 }}
-              href='https://github.com/orbiting'
+              href='https://github.com/republik/plattform'
               rel='noopener'
               target='_blank'
             >
@@ -363,7 +363,7 @@ const Footer = ({
   )
 }
 
-const FooterWithStaticColorContext = props => {
+const FooterWithStaticColorContext = (props) => {
   return (
     <ColorContextProvider colorSchemeKey='dark'>
       <Footer {...props} />
@@ -375,5 +375,5 @@ export default compose(
   withT,
   withMe,
   withSignOut,
-  withInNativeApp
+  withInNativeApp,
 )(FooterWithStaticColorContext)

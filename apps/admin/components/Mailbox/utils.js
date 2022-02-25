@@ -53,5 +53,5 @@ const html = gql`
 export const fragments = {
   address,
   record,
-  html
+  html,
 }

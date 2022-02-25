@@ -6,27 +6,27 @@ import { mUp, tUp } from './mediaQueries'
 import {
   sansSerifRegular18,
   sansSerifRegular19,
-  sansSerifRegular23
+  sansSerifRegular23,
 } from '../Typography/styles'
 
 const subjectStyle = {
   ...sansSerifRegular19,
   lineHeight: '27px',
   [mUp]: {
-    ...sansSerifRegular23
-  }
+    ...sansSerifRegular23,
+  },
 }
 
 const subject = css({
-  ...subjectStyle
+  ...subjectStyle,
 })
 
 const subjectSmall = css({
   ...subjectStyle,
   [mUp]: {
     ...sansSerifRegular18,
-    lineHeight: '24px'
-  }
+    lineHeight: '24px',
+  },
 })
 
 const Subject = ({ children, color, collapsedColor, columns }) => {
@@ -39,12 +39,12 @@ const Subject = ({ children, color, collapsedColor, columns }) => {
         ? labCompactColor.darker(2)
         : labCompactColor.brighter(3),
     '&::after': {
-      content: !!children.length ? ' ' : undefined
+      content: !!children.length ? ' ' : undefined,
     },
     paddingRight: !!children.length ? '.2em' : 0,
     [tUp]: {
-      color: labColor.l > 50 ? labColor.darker(2) : labColor.brighter(3)
-    }
+      color: labColor.l > 50 ? labColor.darker(2) : labColor.brighter(3),
+    },
   })
   return (
     <span {...style} {...(columns === 3 ? subjectSmall : subject)}>
@@ -57,7 +57,7 @@ Subject.propTypes = {
   children: PropTypes.node.isRequired,
   color: PropTypes.string,
   collapsedColor: PropTypes.string,
-  columns: PropTypes.number
+  columns: PropTypes.number,
 }
 
 export default Subject

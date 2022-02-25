@@ -1,7 +1,13 @@
 module.exports = `
 
 schema {
+  query: queries
   mutation: mutations
+}
+
+type queries {
+  accessGrantInfo(id: ID!): AccessGrantInfo
+  accessGrantStats: AccessGrantStats!
 }
 
 type mutations {

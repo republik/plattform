@@ -36,9 +36,8 @@ if (PF_SFTP_CONNECTIONS) {
 }
 
 function postfinanceImportsTable(transaction: PgDb) {
-  return transaction.public.postfinanceImports as PgTable<
-    PostfinanceImportsRecord
-  >
+  return transaction.public
+    .postfinanceImports as PgTable<PostfinanceImportsRecord>
 }
 
 interface PostfinanceImportsRecord {

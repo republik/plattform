@@ -11,7 +11,7 @@ import {
   Interaction,
   Button,
   Label,
-  mediaQueries
+  mediaQueries,
 } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 import FieldSet from '../FieldSet'
@@ -39,32 +39,33 @@ const birthdayParse = swissTime.parse(birthdayFormat)
 const DEFAULT_COUNTRY = COUNTRIES[0]
 const PUBLIC_URL_PREFIX = 'https://'
 
-const addressFields = t => [
+const addressFields = (t) => [
   {
     label: t('Account/AddressForm/line1/label'),
     name: 'line1',
-    validator: value => !value && t('Account/AddressForm/line1/error/empty')
+    validator: (value) => !value && t('Account/AddressForm/line1/error/empty'),
   },
   {
     label: t('Account/AddressForm/line2/label'),
-    name: 'line2'
+    name: 'line2',
   },
   {
     label: t('Account/AddressForm/postalCode/label'),
     name: 'postalCode',
-    validator: value =>
-      !value && t('Account/AddressForm/postalCode/error/empty')
+    validator: (value) =>
+      !value && t('Account/AddressForm/postalCode/error/empty'),
   },
   {
     label: t('Account/AddressForm/city/label'),
     name: 'city',
-    validator: value => !value && t('Account/AddressForm/city/error/empty')
+    validator: (value) => !value && t('Account/AddressForm/city/error/empty'),
   },
   {
     label: t('Account/AddressForm/country/label'),
     name: 'country',
-    validator: value => !value && t('Account/AddressForm/country/error/empty')
-  }
+    validator: (value) =>
+      !value && t('Account/AddressForm/country/error/empty'),
+  },
 ]
 
 const fields = (t, vt) => [
@@ -73,7 +74,7 @@ const fields = (t, vt) => [
     name: 'birthday',
     mask: '11.11.1111',
     maskChar: '_',
-    validator: value => {
+    validator: (value) => {
       const parsedDate = birthdayParse(value)
       return (
         (parsedDate === null ||
@@ -81,82 +82,82 @@ const fields = (t, vt) => [
           parsedDate < new Date(1798, 3, 12)) &&
         t('Account/Update/birthday/error/invalid')
       )
-    }
+    },
   },
   {
     label: vt('info/candidacy/credential'),
     name: 'credential',
-    validator: value => {
+    validator: (value) => {
       return (
         ((!value || value === '') && vt('info/candidacy/credentialMissing')) ||
         (value.trim().length >= 40 && t('profile/credentials/errors/tooLong'))
       )
-    }
+    },
   },
   {
     label: vt('info/candidacy/statement'),
     name: 'statement',
     autoSize: true,
-    validator: value =>
+    validator: (value) =>
       (!value && vt('info/candidacy/statementMissing')) ||
-      (value.trim().length >= 140 && t('profile/statement/tooLong'))
+      (value.trim().length >= 140 && t('profile/statement/tooLong')),
   },
   {
     label: vt('info/candidacy/biography'),
     name: 'biography',
     autoSize: true,
-    validator: value =>
+    validator: (value) =>
       (!value && vt('info/candidacy/biographyMissing')) ||
-      (value.trim().length >= 1500 && t('profile/biography/label/tooLong'))
+      (value.trim().length >= 1500 && t('profile/biography/label/tooLong')),
   },
   {
     label: t('profile/disclosures/label'),
     explanation: <Label>{t('profile/disclosures/explanation')}</Label>,
     name: 'disclosures',
     autoSize: true,
-    validator: value =>
-      !!value && value.trim().length >= 140 && t('profile/statement/tooLong')
+    validator: (value) =>
+      !!value && value.trim().length >= 140 && t('profile/statement/tooLong'),
   },
   {
     label: t('profile/contact/facebook/label'),
-    name: 'facebookId'
+    name: 'facebookId',
   },
   {
     label: t('profile/contact/twitter/label'),
-    name: 'twitterHandle'
+    name: 'twitterHandle',
   },
   {
     label: t('profile/contact/publicUrl/label'),
     name: 'publicUrl',
-    validator: value =>
+    validator: (value) =>
       !!value &&
       !isURL(value, { require_protocol: true, protocols: ['http', 'https'] }) &&
       value !== PUBLIC_URL_PREFIX &&
-      t('profile/contact/publicUrl/error')
-  }
+      t('profile/contact/publicUrl/error'),
+  },
 ]
 
 const styles = {
   previewWrapper: css({
-    margin: '20px 0'
+    margin: '20px 0',
   }),
   vSpace: css({
-    marginTop: 20
+    marginTop: 20,
   }),
   section: css({
-    marginTop: 40
+    marginTop: 40,
   }),
   error: css({
-    color: colors.error
+    color: colors.error,
   }),
   saveButton: css({
     textAlign: 'center',
     width: 300,
     position: 'relative',
     [mediaQueries.onlyS]: {
-      width: '100%'
-    }
-  })
+      width: '100%',
+    },
+  }),
 }
 
 class ElectionCandidacy extends React.Component {
@@ -167,7 +168,7 @@ class ElectionCandidacy extends React.Component {
       showErrors: true,
       errors: {},
       dirty: {},
-      ...this.deriveStateFromProps(props)
+      ...this.deriveStateFromProps(props),
     }
 
     this.startEditing = () => {
@@ -199,28 +200,28 @@ class ElectionCandidacy extends React.Component {
           line2: values.line2,
           postalCode: values.postalCode,
           city: values.city,
-          country: values.country
+          country: values.country,
         },
         publicUrl:
           values.publicUrl === PUBLIC_URL_PREFIX ? '' : values.publicUrl,
         twitterHandle: values.twitterHandle,
-        facebookId: values.facebookId
+        facebookId: values.facebookId,
       })
         .then(() => {
-          return new Promise(resolve => setTimeout(resolve, 200)) // insert delay to slow down UI
+          return new Promise((resolve) => setTimeout(resolve, 200)) // insert delay to slow down UI
         })
         .then(() => {
           this.setState(() => ({
             isEditing: false,
             updating: false,
-            error: null
+            error: null,
           }))
         })
         .then(() => window.scrollTo(0, 0))
-        .catch(error => {
+        .catch((error) => {
           this.setState(() => ({
             updating: false,
-            error
+            error,
           }))
         })
     }
@@ -231,19 +232,19 @@ class ElectionCandidacy extends React.Component {
         .then(() => {
           this.setState(() => ({
             isEditing: false,
-            error: null
+            error: null,
           }))
         })
         .then(() => window.scrollTo(0, 0))
-        .catch(error => {
+        .catch((error) => {
           this.setState(() => ({
             updating: false,
-            error
+            error,
           }))
         })
     }
 
-    this.onChange = fields => {
+    this.onChange = (fields) => {
       this.setState(FieldSet.utils.mergeFields(fields))
     }
   }
@@ -260,14 +261,21 @@ class ElectionCandidacy extends React.Component {
       biographyContent,
       publicUrl,
       twitterHandle,
-      facebookId
+      facebookId,
     } = data.me || {}
-    const { line1, line2, city, postalCode, country = DEFAULT_COUNTRY } =
-      address || {}
+    const {
+      line1,
+      line2,
+      city,
+      postalCode,
+      country = DEFAULT_COUNTRY,
+    } = address || {}
 
-    const candidacy = data.me?.candidacies?.find(c => c.election.slug === slug)
+    const candidacy = data.me?.candidacies?.find(
+      (c) => c.election.slug === slug,
+    )
     const credential =
-      candidacy?.credential || credentials?.find(c => c.isListed)
+      candidacy?.credential || credentials?.find((c) => c.isListed)
 
     return {
       values: {
@@ -285,8 +293,8 @@ class ElectionCandidacy extends React.Component {
         city,
         postalCode,
         country,
-        credential: credential ? credential.description : undefined
-      }
+        credential: credential ? credential.description : undefined,
+      },
     }
   }
 
@@ -323,29 +331,23 @@ class ElectionCandidacy extends React.Component {
               </>
             )
           }
-          const {
-            values,
-            errors,
-            error,
-            dirty,
-            isEditing,
-            updating
-          } = this.state
+          const { values, errors, error, dirty, isEditing, updating } =
+            this.state
 
           const candidate =
             !updating &&
             me.candidacies &&
-            me.candidacies.find(c => c.election.slug === slug)
+            me.candidacies.find((c) => c.election.slug === slug)
           const combinedErrors = {
             username:
               values.username || me.username
                 ? undefined
                 : vt('common/missingUsername'),
-            ...errors
+            ...errors,
           }
 
-          const isValid = !Object.keys(combinedErrors).some(k =>
-            Boolean(combinedErrors[k])
+          const isValid = !Object.keys(combinedErrors).some((k) =>
+            Boolean(combinedErrors[k]),
           )
 
           const { name } = me
@@ -362,7 +364,7 @@ class ElectionCandidacy extends React.Component {
             gender,
             publicUrl,
             twitterHandle,
-            facebookId
+            facebookId,
           } = values
           const parsedBirthday = birthdayParse(birthday)
 
@@ -381,14 +383,14 @@ class ElectionCandidacy extends React.Component {
               gender,
               publicUrl,
               twitterHandle,
-              facebookId
+              facebookId,
             },
             city,
             yearOfBirth: parsedBirthday
               ? parsedBirthday.getFullYear()
               : undefined,
             credential,
-            recommendation: candidate ? candidate.recommendation : undefined
+            recommendation: candidate ? candidate.recommendation : undefined,
           }
 
           const endDate = new Date(election.candidacyEndDate)
@@ -421,7 +423,7 @@ class ElectionCandidacy extends React.Component {
                         style={{
                           width: 200,
                           height: 200,
-                          background: 'black'
+                          background: 'black',
                         }}
                       >
                         <Portrait
@@ -476,10 +478,10 @@ class ElectionCandidacy extends React.Component {
                           {vt('info/candidacy/missingFields')}
                           <ul>
                             {Object.keys(combinedErrors).map(
-                              k =>
+                              (k) =>
                                 !!combinedErrors[k] && (
                                   <li key={k}>{combinedErrors[k]}</li>
-                                )
+                                ),
                             )}
                           </ul>
                         </div>
@@ -508,7 +510,7 @@ class ElectionCandidacy extends React.Component {
                       <div {...styles.vSpace}>
                         <Body
                           dangerousHTML={vt('info/footer', {
-                            endDate: formatDate(endDate)
+                            endDate: formatDate(endDate),
                           })}
                         />
                       </div>
@@ -540,12 +542,12 @@ class ElectionCandidacy extends React.Component {
                           </Button>
                         </div>
                       </div>
-                      {this.props.me.roles.some(r => r === 'admin') && (
+                      {this.props.me.roles.some((r) => r === 'admin') && (
                         <div {...styles.vSpace}>
                           ADMIN TOOL:{' '}
                           <A
                             href='#'
-                            onClick={e => {
+                            onClick={(e) => {
                               e.preventDefault()
                               this.cancel()
                             }}
@@ -717,36 +719,36 @@ export default compose(
   graphql(query, {
     options: ({ slug }) => ({
       variables: {
-        slug
-      }
-    })
+        slug,
+      },
+    }),
   }),
   graphql(updateCandidacy, {
     props: ({ mutate }) => ({
-      updateCandidacy: variables => {
+      updateCandidacy: (variables) => {
         return mutate({
-          variables
+          variables,
         })
-      }
-    })
+      },
+    }),
   }),
   graphql(cancelCandidacy, {
     props: ({ mutate }) => ({
-      cancelCandidacy: slug => {
+      cancelCandidacy: (slug) => {
         return mutate({
           variables: {
-            slug
+            slug,
           },
           refetchQueries: [
             {
               query,
               variables: {
-                slug
-              }
-            }
-          ]
+                slug,
+              },
+            },
+          ],
         })
-      }
-    })
-  })
+      },
+    }),
+  }),
 )(ElectionCandidacy)

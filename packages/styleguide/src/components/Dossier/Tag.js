@@ -11,12 +11,12 @@ const styles = {
     margin: '0 0 18px 0',
     [mUp]: {
       ...sansSerifMedium20,
-      margin: '0 0 28px 0'
-    }
+      margin: '0 0 28px 0',
+    },
   }),
   icon: css({
-    marginRight: '8px'
-  })
+    marginRight: '8px',
+  }),
 }
 
 const Tag = ({ children, attributes }) => {

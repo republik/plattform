@@ -16,13 +16,13 @@ export default ({
   editorOptions = {},
   titleModule,
   paragraphModule,
-  figureModule
+  figureModule,
 }) => {
   const { insertButtonText } = editorOptions
 
   const isInfoboxBlock = matchSubmodules(TYPE, subModules)
   const Form = createPropertyForm({
-    isDisabled: ({ value }) => !value.blocks.some(isInfoboxBlock)
+    isDisabled: ({ value }) => !value.blocks.some(isInfoboxBlock),
   })(({ disabled, value, onChange }) => {
     if (disabled) {
       return null
@@ -32,28 +32,28 @@ export default ({
       <div>
         {value.blocks
           .filter(isInfoboxBlock)
-          .map(block =>
+          .map((block) =>
             block.type === TYPE
               ? block
-              : value.document.getClosest(block.key, matchBlock(TYPE))
+              : value.document.getClosest(block.key, matchBlock(TYPE)),
           )
           .filter(
             (block, index, all) =>
-              all.indexOf(block) === index && block.type === TYPE
+              all.indexOf(block) === index && block.type === TYPE,
           )
           .map((block, i) => {
-            const onInputChange = subject => key => (_, val) => {
+            const onInputChange = (subject) => (key) => (_, val) => {
               onChange(
                 value.change().setNodeByKey(subject.key, {
                   data: val
                     ? subject.data.set(key, val)
-                    : subject.data.remove(key)
-                })
+                    : subject.data.remove(key),
+                }),
               )
             }
             const figureNode =
               figureModule &&
-              block.nodes.find(n => n.type === figureModule.TYPE)
+              block.nodes.find((n) => n.type === figureModule.TYPE)
             const floatSize = block.data.get('size') === 'float'
 
             return (
@@ -74,7 +74,7 @@ export default ({
                   {[
                     { label: 'Normal', size: undefined },
                     { label: 'Gross', size: 'breakout' },
-                    { label: 'Links', size: 'float' }
+                    { label: 'Links', size: 'float' },
                   ].map((size, i) => {
                     const checked = block.data.get('size') === size.size
 
@@ -82,12 +82,12 @@ export default ({
                       <Radio
                         key={`radio${i}`}
                         checked={checked}
-                        onChange={event => {
+                        onChange={(event) => {
                           event.preventDefault()
                           if (checked) return
 
                           let change = value.change().setNodeByKey(block.key, {
-                            data: block.data.set('size', size.size)
+                            data: block.data.set('size', size.size),
                           })
 
                           onChange(change)
@@ -95,7 +95,7 @@ export default ({
                       >
                         {size.label}
                       </Radio>,
-                      <br key={`br${i}`} />
+                      <br key={`br${i}`} />,
                     ]
                   })}
                 </p>
@@ -104,10 +104,10 @@ export default ({
                     {figureNode ? (
                       <A
                         href='#'
-                        onClick={e => {
+                        onClick={(e) => {
                           e.preventDefault()
                           onChange(
-                            value.change().removeNodeByKey(figureNode.key)
+                            value.change().removeNodeByKey(figureNode.key),
                           )
                         }}
                       >
@@ -116,13 +116,13 @@ export default ({
                     ) : (
                       <A
                         href='#'
-                        onClick={e => {
+                        onClick={(e) => {
                           e.preventDefault()
                           onChange(
                             value.change().insertNodeByKey(block.key, 1, {
                               kind: 'block',
-                              type: figureModule.TYPE
-                            })
+                              type: figureModule.TYPE,
+                            }),
                           )
                         }}
                       >
@@ -143,14 +143,14 @@ export default ({
                         <Radio
                           key={`radio${i}`}
                           checked={checked}
-                          onChange={event => {
+                          onChange={(event) => {
                             event.preventDefault()
                             if (checked) return
 
                             let change = value
                               .change()
                               .setNodeByKey(block.key, {
-                                data: block.data.set('figureSize', figureSize)
+                                data: block.data.set('figureSize', figureSize),
                               })
 
                             onChange(change)
@@ -158,7 +158,7 @@ export default ({
                         >
                           {figureSize}
                         </Radio>,
-                        <br key={`br${i}`} />
+                        <br key={`br${i}`} />,
                       ]
                     })}
                   </p>
@@ -166,7 +166,7 @@ export default ({
                 {figureNode && !floatSize && (
                   <MetaForm
                     data={Map({
-                      figureFloat: block.data.get('figureFloat') || false
+                      figureFloat: block.data.get('figureFloat') || false,
                     })}
                     onInputChange={onInputChange(block)}
                   />
@@ -178,7 +178,7 @@ export default ({
     )
   })
 
-  const infoBoxButtonClickHandler = (value, onChange) => event => {
+  const infoBoxButtonClickHandler = (value, onChange) => (event) => {
     event.preventDefault()
     return onChange(
       value.change().call(
@@ -187,17 +187,18 @@ export default ({
           type: TYPE,
           nodes: [
             Block.create(titleModule.TYPE),
-            Block.create(paragraphModule.TYPE)
-          ]
-        })
-      )
+            Block.create(paragraphModule.TYPE),
+          ],
+        }),
+      ),
     )
   }
   const insertTypes = editorOptions.insertTypes || []
 
   const InfoboxButton = ({ value, onChange }) => {
     const disabled =
-      value.isBlurred || !value.blocks.every(n => insertTypes.includes(n.type))
+      value.isBlurred ||
+      !value.blocks.every((n) => insertTypes.includes(n.type))
     return (
       <span
         {...buttonStyles.insert}
@@ -212,6 +213,6 @@ export default ({
 
   return {
     insertButtons: [insertButtonText && InfoboxButton],
-    forms: [Form]
+    forms: [Form],
   }
 }

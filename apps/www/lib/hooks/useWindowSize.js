@@ -11,13 +11,11 @@ export const useWindowSize = () => {
       ) {
         // bogus window.innerWidth & window.innerHeight values on iOS when rotating
         // https://bugs.webkit.org/show_bug.cgi?id=170595
-        const {
-          width,
-          height
-        } = document.documentElement.getBoundingClientRect()
+        const { width, height } =
+          document.documentElement.getBoundingClientRect()
         setSize([
           Math.max(window.innerWidth, width),
-          Math.max(window.innerHeight, height)
+          Math.max(window.innerHeight, height),
         ])
       } else {
         setSize([window.innerWidth, window.innerHeight])

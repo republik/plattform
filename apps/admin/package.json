@@ -1,5 +1,6 @@
 {
-  "name": "republik-admin-frontend",
+  "name": "@orbiting/admin-app",
+  "private": true,
   "version": "1.1.0",
   "engines": {
     "node": "^14.4.0"
@@ -7,23 +8,12 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon --watch server --watch .env --watch server/routes.js --watch server/constants.js server/server.js",
     "build": "next build",
-    "heroku-postbuild": "npm run build",
     "start": "node server/server.js",
     "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./.next*\" | xargs wc -l",
     "lint": "eslint --fix .",
     "zat:setup": "docker compose build",
     "zat:dev": "docker compose up zat-server",
     "zat:package": "docker compose run --rm zat-package"
-  },
-  "lint-staged": {
-    "*.js": [
-      "eslint --fix"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "cacheDirectories": [
     "node_modules",
@@ -37,8 +27,8 @@
     "apollo-link-ws": "^1.0.20",
     "d3-array": "^1.2.4",
     "d3-color": "^1.4.1",
-    "d3-format": "^1.4.5",
     "d3-dsv": "^1.2.0",
+    "d3-format": "^1.4.5",
     "d3-geo": "^1.12.1",
     "d3-scale": "^2.2.2",
     "d3-shape": "^1.3.7",
@@ -48,7 +38,7 @@
     "express": "^4.17.1",
     "express-basic-auth": "^1.2.0",
     "glamor": "^2.20.40",
-    "graphql": "^14.7.0",
+    "graphql": "^15.3.0",
     "graphql-tag": "^2.11.0",
     "helmet": "^3.23.3",
     "isomorphic-unfetch": "^3.1.0",
@@ -75,20 +65,13 @@
     "validator": "^10.11.0"
   },
   "devDependencies": {
-    "babel-eslint": "^10.1.0",
     "cross-env": "^5.2.1",
     "dotenv": "^6.2.0",
     "enzyme": "^3.11.0",
+    "@republik/eslint-config-frontend": "*",
     "glob": "^7.1.6",
     "gsheets": "^2.0.0",
-    "nodemon": "^2.0.6",
-    "prettier": "^1.19.1",
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.15.0",
-    "eslint-plugin-prettier": "^3.3.1",
-    "eslint-plugin-react": "^7.23.2",
-    "eslint-plugin-react-hooks": "^2.5.0",
-    "lint-staged": "^10.5.4",
-    "husky": "^4.3.8"
+    "husky": "^4.3.8",
+    "nodemon": "^2.0.6"
   }
 }

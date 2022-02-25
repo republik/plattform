@@ -25,20 +25,20 @@ const styles = {
     position: 'relative',
     width: WIDTH,
     height: HEIGHT,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   }),
   logo: css({
     position: 'absolute',
     left: 628 + 50,
     right: 210,
-    bottom: 50
+    bottom: 50,
   }),
   image: css({
     position: 'absolute',
     top: 0,
     left: 0,
     bottom: 0,
-    width: 628
+    width: 628,
   }),
   text: css({
     position: 'absolute',
@@ -46,30 +46,30 @@ const styles = {
     left: 628 + 50,
     right: 50,
     bottom: 50 + 120,
-    wordWrap: 'break-word'
+    wordWrap: 'break-word',
   }),
   quote: css({
     fontSize: 27,
     lineHeight: 1.42,
     fontFamily: fontFamilies.serifRegular,
-    margin: '20px 0'
+    margin: '20px 0',
   }),
   number: css({
     fontSize: 30,
-    fontFamily: fontFamilies.sansSerifMedium
+    fontFamily: fontFamilies.sansSerifMedium,
   }),
   videoTitle: css({
     fontSize: 60,
     lineHeight: '75px',
-    marginBottom: 20
+    marginBottom: 20,
   }),
   headline: css({
     fontSize: 32,
-    fontFamily: fontFamilies.sansSerifMedium
-  })
+    fontFamily: fontFamilies.sansSerifMedium,
+  }),
 }
 
-const fontSizeBoost = length => {
+const fontSizeBoost = (length) => {
   if (length < 40) {
     return 26
   }
@@ -93,7 +93,7 @@ const Item = ({
   pkg,
   error,
   t,
-  statement: { cards, statement, portrait, name, sequenceNumber } = {}
+  statement: { cards, statement, portrait, name, sequenceNumber } = {},
 }) => {
   return (
     <Loader
@@ -112,7 +112,7 @@ const Item = ({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                flexWrap: 'wrap'
+                flexWrap: 'wrap',
               })}
             >
               <Head>
@@ -124,7 +124,7 @@ const Item = ({
                   width: 380,
                   height: 380 * 1.4,
                   transform: 'rotate(-1.5deg)',
-                  margin: '30px 40px 30px -120px'
+                  margin: '30px 40px 30px -120px',
                 }}
               >
                 <Card width={380} {...card} t={t} firstSlideOnly noEmoji />
@@ -133,14 +133,14 @@ const Item = ({
                 style={{
                   marginLeft: 140,
                   height: 190,
-                  width: 190
+                  width: 190,
                 }}
               >
                 <BrandMark />
               </div>
               <div
                 style={{
-                  marginLeft: 40
+                  marginLeft: 40,
                 }}
               >
                 <CardLogo size={190} />
@@ -152,7 +152,7 @@ const Item = ({
         const headline = t(
           `testimonial/detail/share/package/${pkg}`,
           undefined,
-          ''
+          '',
         )
         const invert = pkg === 'PROLONG'
 
@@ -163,7 +163,7 @@ const Item = ({
               invert
                 ? {
                     backgroundColor: '#000',
-                    color: '#fff'
+                    color: '#fff',
                   }
                 : undefined
             }
@@ -179,7 +179,7 @@ const Item = ({
                   {...styles.quote}
                   style={{
                     fontSize:
-                      24 + fontSizeBoost(statement.length + headline.length)
+                      24 + fontSizeBoost(statement.length + headline.length),
                   }}
                 >
                   {inQuotes(statement)}
@@ -188,7 +188,7 @@ const Item = ({
               {!!sequenceNumber && (
                 <div {...styles.number}>
                   {t('memberships/sequenceNumber/label', {
-                    sequenceNumber
+                    sequenceNumber,
                   })}
                 </div>
               )}
@@ -248,8 +248,10 @@ export default compose(
         error: data.error,
         statement: data.user
           ? data.user
-          : data.statements && data.statements.nodes && data.statements.nodes[0]
+          : data.statements &&
+            data.statements.nodes &&
+            data.statements.nodes[0],
       }
-    }
-  })
+    },
+  }),
 )(Item)

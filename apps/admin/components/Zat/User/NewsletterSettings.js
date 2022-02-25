@@ -18,13 +18,13 @@ export const fragments = gql`
 
 export const NewsletterSettings = ({ newsletterSettings, t }) => {
   const newsletterNames = newsletterSettings?.subscriptions
-    ?.filter(subscription => subscription.subscribed)
-    .map(subscription =>
+    ?.filter((subscription) => subscription.subscribed)
+    .map((subscription) =>
       t(
         `account/newsletterSubscriptions/${subscription.name}/label`,
         undefined,
-        subscription.name
-      )
+        subscription.name,
+      ),
     )
 
   return (
@@ -33,7 +33,7 @@ export const NewsletterSettings = ({ newsletterSettings, t }) => {
       {newsletterSettings?.status && <>({newsletterSettings?.status})</>}
       {!!newsletterNames.length && ' · '}
       {newsletterNames
-        .map(name => name)
+        .map((name) => name)
         .filter(Boolean)
         .join(' · ')}
     </div>

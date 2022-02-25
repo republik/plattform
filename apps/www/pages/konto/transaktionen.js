@@ -12,7 +12,7 @@ const TransactionPage = ({ t }) => {
   return (
     <Frame
       meta={{
-        title: t('pages/account/transactions/title')
+        title: t('pages/account/transactions/title'),
       }}
     >
       <AccountEnforceMe>

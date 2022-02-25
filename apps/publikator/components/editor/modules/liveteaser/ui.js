@@ -12,11 +12,11 @@ import MetaForm from '../../utils/MetaForm'
 export default ({ TYPE, newBlock, rule = {}, zone }) => {
   const { editorOptions = {} } = rule
 
-  const clickHandler = (value, onChange) => event => {
+  const clickHandler = (value, onChange) => (event) => {
     event.preventDefault()
     const nodes = allBlocks(value)
-      .filter(n => depth(value, n.key) < 2)
-      .filter(n => {
+      .filter((n) => depth(value, n.key) < 2)
+      .filter((n) => {
         return ['teaser', 'teasergroup'].includes(n.data.get('module'))
       })
     const node = nodes.first()
@@ -26,8 +26,8 @@ export default ({ TYPE, newBlock, rule = {}, zone }) => {
         .insertNodeByKey(
           parent(value, node.key).key,
           childIndex(value, node.key),
-          newBlock()
-        )
+          newBlock(),
+        ),
     )
   }
 
@@ -56,13 +56,13 @@ export default ({ TYPE, newBlock, rule = {}, zone }) => {
       <div>
         <Label>Live Teaser</Label>
         {value.blocks.filter(matchBlock(TYPE)).map((node, i) => {
-          const onInputChange = key => (_, inputValue) => {
+          const onInputChange = (key) => (_, inputValue) => {
             onChange(
               value.change().setNodeByKey(node.key, {
                 data: inputValue
                   ? node.data.set(key, inputValue)
-                  : node.data.remove(key)
-              })
+                  : node.data.remove(key),
+              }),
             )
           }
 
@@ -71,13 +71,10 @@ export default ({ TYPE, newBlock, rule = {}, zone }) => {
           return (
             <MetaForm
               key={`liveteaser-${i}`}
-              data={Map(form.map(field => [field.key, ''])).merge(
-                node.data
-                  .remove('id')
-                  .remove('module')
-                  .remove('priorRepoIds')
+              data={Map(form.map((field) => [field.key, ''])).merge(
+                node.data.remove('id').remove('module').remove('priorRepoIds'),
               )}
-              notes={Map(form.map(field => [field.key, field.note]))}
+              notes={Map(form.map((field) => [field.key, field.note]))}
               customFields={form}
               onInputChange={onInputChange}
             />
@@ -92,9 +89,9 @@ export default ({ TYPE, newBlock, rule = {}, zone }) => {
       createPropertyForm({
         isDisabled: ({ value }) => {
           return !value.blocks.some(matchBlock(TYPE))
-        }
-      })(Form)
+        },
+      })(Form),
     ],
-    insertButtons: editorOptions.insertButtonText ? [InsertButton] : []
+    insertButtons: editorOptions.insertButtonText ? [InsertButton] : [],
   }
 }

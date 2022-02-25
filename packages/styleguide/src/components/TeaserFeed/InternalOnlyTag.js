@@ -13,9 +13,9 @@ const styles = {
     top: '-20px',
     right: 0,
     [mUp]: {
-      ...convertStyleToRem(sansSerifRegular13)
-    }
-  })
+      ...convertStyleToRem(sansSerifRegular13),
+    },
+  }),
 }
 
 const InternalOnlyTag = ({ t }) => {

@@ -13,11 +13,11 @@ const thumbStyle = {
   width: thumbSize,
   height: thumbSize,
   cursor: 'pointer',
-  outline: 'none'
+  outline: 'none',
 }
 
 const trackStyle = {
-  height: trackHeight
+  height: trackHeight,
 }
 
 const styles = {
@@ -25,7 +25,7 @@ const styles = {
     minHeight: thumbSize,
     display: 'inline-block',
     ...fontStyles.sansSerifRegular14,
-    paddingTop: 0
+    paddingTop: 0,
   }),
   slider: css({
     WebkitAppearance: 'none',
@@ -39,49 +39,49 @@ const styles = {
     marginLeft: 0,
     verticalAlign: 'middle',
     ':focus': {
-      outline: 'none'
+      outline: 'none',
     },
     // thumb
     '::-webkit-slider-thumb': {
       ...thumbStyle,
       WebkitAppearance: 'none',
-      marginTop: (thumbSize - trackHeight) * -0.5
+      marginTop: (thumbSize - trackHeight) * -0.5,
     },
     '::-moz-focus-outer': {
-      border: 0
+      border: 0,
     },
     '::-moz-range-thumb': {
-      ...thumbStyle
+      ...thumbStyle,
     },
     '::-ms-thumb': {
-      ...thumbStyle
+      ...thumbStyle,
     },
     // track
     '::-webkit-slider-runnable-track': {
       ...trackStyle,
-      width: '100%'
+      width: '100%',
     },
     '::-moz-range-track': {
       ...trackStyle,
-      width: '100%'
+      width: '100%',
     },
     '::-ms-track': {
       width: '100%',
       borderColor: 'transparent',
       color: 'transparent',
       background: 'transparent',
-      height: thumbSize
+      height: thumbSize,
     },
     '::-ms-fill-lower': {
-      ...trackStyle
+      ...trackStyle,
     },
     '::-ms-fill-upper': {
-      ...trackStyle
-    }
+      ...trackStyle,
+    },
   }),
   fullWidth: css({
-    width: '100%'
-  })
+    width: '100%',
+  }),
 }
 
 interface SliderProps extends Record<string, unknown> {
@@ -94,7 +94,7 @@ interface SliderProps extends Record<string, unknown> {
   inactive?: boolean
   onChange: (
     event: React.ChangeEvent<HTMLInputElement>,
-    value: string | number
+    value: string | number,
   ) => void
   onMouseUp?: (event: React.MouseEvent<HTMLInputElement>) => void
   onMouseDown?: (event: React.MouseEvent<HTMLInputElement>) => void
@@ -120,43 +120,43 @@ const Slider = ({
     return {
       sliderInactive: css({
         '::-webkit-slider-thumb': {
-          background: colorScheme.getCSSColor('disabled')
+          background: colorScheme.getCSSColor('disabled'),
         },
         '::-moz-range-thumb': {
-          background: colorScheme.getCSSColor('disabled')
+          background: colorScheme.getCSSColor('disabled'),
         },
         '::-ms-thumb': {
-          background: colorScheme.getCSSColor('disabled')
-        }
+          background: colorScheme.getCSSColor('disabled'),
+        },
       }),
       slider: css({
         // thumb
         '::-webkit-slider-thumb': {
-          background: colorScheme.getCSSColor('primary')
+          background: colorScheme.getCSSColor('primary'),
         },
         '::-moz-focus-outer': {
-          border: 0
+          border: 0,
         },
         '::-moz-range-thumb': {
-          background: colorScheme.getCSSColor('primary')
+          background: colorScheme.getCSSColor('primary'),
         },
         '::-ms-thumb': {
-          background: colorScheme.getCSSColor('primary')
+          background: colorScheme.getCSSColor('primary'),
         },
         // track
         '::-webkit-slider-runnable-track': {
-          background: colorScheme.getCSSColor('divider')
+          background: colorScheme.getCSSColor('divider'),
         },
         '::-moz-range-track': {
-          background: colorScheme.getCSSColor('divider')
+          background: colorScheme.getCSSColor('divider'),
         },
         '::-ms-fill-lower': {
-          background: colorScheme.getCSSColor('divider')
+          background: colorScheme.getCSSColor('divider'),
         },
         '::-ms-fill-upper': {
-          background: colorScheme.getCSSColor('divider')
-        }
-      })
+          background: colorScheme.getCSSColor('divider'),
+        },
+      }),
     }
   }, [colorScheme])
   return (
@@ -175,7 +175,7 @@ const Slider = ({
           styles.slider,
           sliderStyleRules.slider,
           inactive && sliderStyleRules.sliderInactive,
-          fullWidth && styles.fullWidth
+          fullWidth && styles.fullWidth,
         )}
         type='range'
         {...props}
@@ -183,7 +183,7 @@ const Slider = ({
         max={max}
         onMouseUp={onMouseUp}
         onMouseDown={onMouseDown}
-        onChange={e => onChange(e, +e.target.value)}
+        onChange={(e) => onChange(e, +e.target.value)}
       />
     </label>
   )

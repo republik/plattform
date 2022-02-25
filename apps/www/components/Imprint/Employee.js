@@ -17,7 +17,7 @@ const Employee = ({
   style,
   minColumns,
   maxColumns,
-  singleRow
+  singleRow,
 }) => {
   const displayName = name + (title ? `, ${title}` : '')
   const columnProps = { minColumns, maxColumns, singleRow }

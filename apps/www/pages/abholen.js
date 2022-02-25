@@ -1,21 +1,22 @@
 import React from 'react'
-
 import compose from 'lodash/flowRight'
-import { withRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import isEmail from 'validator/lib/isEmail'
 
 import { maybeDecode } from '../lib/utils/base64u'
-import ClaimMembership, {
-  sanitizeVoucherCode
-} from '../components/Account/Memberships/Claim'
-import Frame from '../components/Frame'
 import withT from '../lib/withT'
 import withDefaultSSR from '../lib/hocs/withDefaultSSR'
 
+import ClaimMembership, {
+  sanitizeVoucherCode,
+} from '../components/Account/Memberships/Claim'
+import Frame from '../components/Frame'
+
 const ALLOWED_CONTEXT = ['claim', 'access']
 
-const Claim = ({ router: { query }, t }) => {
-  let { context, email, code } = query
+const Claim = ({ t }) => {
+  const { query } = useRouter()
+  let { context, email, code, token, id } = query
 
   context =
     ALLOWED_CONTEXT.includes(context) &&
@@ -29,19 +30,25 @@ const Claim = ({ router: { query }, t }) => {
   const meta = {
     title: t.first([
       `pages/claim/${context}/meta/title`,
-      'pages/claim/meta/title'
+      'pages/claim/meta/title',
     ]),
     description: t.first([
       `pages/claim/${context}/meta/description`,
-      'pages/claim/meta/description'
-    ])
+      'pages/claim/meta/description',
+    ]),
   }
 
   return (
     <Frame meta={meta}>
-      <ClaimMembership context={context} email={email} voucherCode={code} />
+      <ClaimMembership
+        context={context}
+        email={email}
+        voucherCode={code}
+        accessToken={token}
+        grantId={id}
+      />
     </Frame>
   )
 }
 
-export default withDefaultSSR(compose(withRouter, withT)(Claim))
+export default withDefaultSSR(compose(withT)(Claim))

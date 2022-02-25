@@ -23,11 +23,10 @@ PgDb.connect()
 
     for (const country of countries) {
       const { lat, lon, ...restOfCountry } = country
-      const existingCountry = await transaction.public.statisticsGeoCountry.findOne(
-        {
+      const existingCountry =
+        await transaction.public.statisticsGeoCountry.findOne({
           code: country.code,
-        },
-      )
+        })
 
       if (existingCountry) {
         await transaction.public.statisticsGeoCountry.update(

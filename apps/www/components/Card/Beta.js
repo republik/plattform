@@ -14,8 +14,8 @@ const styles = {
     ...fontStyles.sansSerifMedium,
     color: '#fff',
     pointerEvents: 'none',
-    backgroundColor: colors.secondary
-  })
+    backgroundColor: colors.secondary,
+  }),
 }
 
 export default ({ style }) => (

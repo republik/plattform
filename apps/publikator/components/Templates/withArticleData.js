@@ -6,5 +6,5 @@ export const withCommentData = graphql(
   gql`
     ${TeaserEmbedComment.data.query}
   `,
-  TeaserEmbedComment.data.config
+  TeaserEmbedComment.data.config,
 )

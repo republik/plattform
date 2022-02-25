@@ -1,4 +1,4 @@
-export const parseJSONObject = json => {
+export const parseJSONObject = (json) => {
   let object
   try {
     object = JSON.parse(json)

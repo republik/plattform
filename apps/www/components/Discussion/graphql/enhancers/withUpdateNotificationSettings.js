@@ -16,14 +16,14 @@ export const withUpdateNotificationSettings = graphql(
     props: ({ mutate }) => ({
       updateNotificationSettings: ({
         discussionNotificationChannels,
-        defaultDiscussionNotificationOption
+        defaultDiscussionNotificationOption,
       }) =>
         mutate({
           variables: {
             discussionNotificationChannels,
-            defaultDiscussionNotificationOption
-          }
-        })
-    })
-  }
+            defaultDiscussionNotificationOption,
+          },
+        }),
+    }),
+  },
 )

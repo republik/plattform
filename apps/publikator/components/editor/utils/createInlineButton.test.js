@@ -15,11 +15,11 @@ const rawDoc = {
           kind: 'text',
           leaves: [
             {
-              text: 'Hello MarkButton!'
-            }
-          ]
-        }
-      ]
+              text: 'Hello MarkButton!',
+            },
+          ],
+        },
+      ],
     },
     {
       kind: 'block',
@@ -29,11 +29,11 @@ const rawDoc = {
           kind: 'text',
           leaves: [
             {
-              text: 'We are blocks at your service.'
-            }
-          ]
-        }
-      ]
+              text: 'We are blocks at your service.',
+            },
+          ],
+        },
+      ],
     },
     {
       kind: 'block',
@@ -43,22 +43,22 @@ const rawDoc = {
           kind: 'text',
           leaves: [
             {
-              text: 'Tamper with us'
-            }
-          ]
-        }
-      ]
-    }
-  ]
+              text: 'Tamper with us',
+            },
+          ],
+        },
+      ],
+    },
+  ],
 }
 
 const initialState = Value.fromJSON({
-  document: rawDoc
+  document: rawDoc,
 })
 const Button = () => <span />
 const InlineButton = createInlineButton({ type: 'link' })(Button)
 
-test('utils.createInlineButton: blurred', assert => {
+test('utils.createInlineButton: blurred', (assert) => {
   assert.plan(1)
   const value = initialState
 
@@ -68,11 +68,11 @@ test('utils.createInlineButton: blurred', assert => {
     !wrapper.find('Button').prop('active') &&
       wrapper.find('Button').prop('disabled'),
     true,
-    'renders as disabled and inactive'
+    'renders as disabled and inactive',
   )
 })
 
-test('utils.createInlineButton: focused cursor on text without inlines', assert => {
+test('utils.createInlineButton: focused cursor on text without inlines', (assert) => {
   assert.plan(1)
 
   const value = initialState
@@ -81,7 +81,7 @@ test('utils.createInlineButton: focused cursor on text without inlines', assert 
       anchorKey: initialState.document.nodes.get(0).nodes.first().key,
       anchorOffset: 2,
       focusKey: initialState.document.nodes.get(0).nodes.first().key,
-      focusOffset: 2
+      focusOffset: 2,
     })
     .focus().value
 
@@ -91,11 +91,11 @@ test('utils.createInlineButton: focused cursor on text without inlines', assert 
     !wrapper.find('Button').prop('active') &&
       wrapper.find('Button').prop('disabled'),
     true,
-    'renders as disabled and inactive'
+    'renders as disabled and inactive',
   )
 })
 
-test('utils.createInlineButton: focused cursor on text with the given inline', assert => {
+test('utils.createInlineButton: focused cursor on text with the given inline', (assert) => {
   assert.plan(1)
 
   const value = initialState
@@ -104,10 +104,10 @@ test('utils.createInlineButton: focused cursor on text with the given inline', a
       anchorKey: initialState.document.nodes.get(1).nodes.first().key,
       anchorOffset: 2,
       focusKey: initialState.document.nodes.get(1).nodes.first().key,
-      focusOffset: 6
+      focusOffset: 6,
     })
     .wrapInline({
-      type: 'link'
+      type: 'link',
     })
     .focus().value
 
@@ -117,11 +117,11 @@ test('utils.createInlineButton: focused cursor on text with the given inline', a
     wrapper.find('Button').prop('active') &&
       !wrapper.find('Button').prop('disabled'),
     true,
-    'renders as enabled and active'
+    'renders as enabled and active',
   )
 })
 
-test('utils.createInlineButton: selection containing text without any inlines', assert => {
+test('utils.createInlineButton: selection containing text without any inlines', (assert) => {
   assert.plan(1)
 
   const value = initialState
@@ -130,7 +130,7 @@ test('utils.createInlineButton: selection containing text without any inlines', 
       anchorKey: initialState.document.nodes.get(1).nodes.first().key,
       anchorOffset: 2,
       focusKey: initialState.document.nodes.get(1).nodes.first().key,
-      focusOffset: 6
+      focusOffset: 6,
     })
     .focus().value
 
@@ -140,11 +140,11 @@ test('utils.createInlineButton: selection containing text without any inlines', 
     !wrapper.find('Button').prop('active') &&
       !wrapper.find('Button').prop('disabled'),
     true,
-    'renders as enabled and inactive'
+    'renders as enabled and inactive',
   )
 })
 
-test('utils.createInlineButton: selection containing text with the given inline', assert => {
+test('utils.createInlineButton: selection containing text with the given inline', (assert) => {
   assert.plan(1)
 
   const value = initialState
@@ -153,7 +153,7 @@ test('utils.createInlineButton: selection containing text with the given inline'
       anchorKey: initialState.document.nodes.get(1).nodes.first().key,
       anchorOffset: 2,
       focusKey: initialState.document.nodes.get(1).nodes.first().key,
-      focusOffset: 6
+      focusOffset: 6,
     })
     .wrapInline({ type: 'link' })
     .moveStart(2)
@@ -166,11 +166,11 @@ test('utils.createInlineButton: selection containing text with the given inline'
     wrapper.find('Button').prop('active') &&
       !wrapper.find('Button').prop('disabled'),
     true,
-    'renders as enabled and active'
+    'renders as enabled and active',
   )
 })
 
-test('utils.createInlineButton: action on selection containing text without any inlines', assert => {
+test('utils.createInlineButton: action on selection containing text without any inlines', (assert) => {
   assert.plan(1)
 
   const value = initialState
@@ -179,7 +179,7 @@ test('utils.createInlineButton: action on selection containing text without any 
       anchorKey: initialState.document.nodes.get(1).nodes.first().key,
       anchorOffset: 2,
       focusKey: initialState.document.nodes.get(1).nodes.first().key,
-      focusOffset: 6
+      focusOffset: 6,
     })
     .focus().value
 
@@ -187,12 +187,12 @@ test('utils.createInlineButton: action on selection containing text without any 
     assert.equal(
       nextState.inlines.size > 0,
       true,
-      'wraps the text in the selection into an inline'
+      'wraps the text in the selection into an inline',
     )
   }
 
   const event = {
-    preventDefault: spy()
+    preventDefault: spy(),
   }
 
   const wrapper = shallow(<InlineButton value={value} onChange={onChange} />)
@@ -200,7 +200,7 @@ test('utils.createInlineButton: action on selection containing text without any 
   wrapper.find('Button').simulate('mousedown', event)
 })
 
-test('utils.createInlineButton: action on cursor over a text wrapped in a given inline', assert => {
+test('utils.createInlineButton: action on cursor over a text wrapped in a given inline', (assert) => {
   assert.plan(1)
 
   const value = initialState
@@ -209,23 +209,23 @@ test('utils.createInlineButton: action on cursor over a text wrapped in a given 
       anchorKey: initialState.document.nodes.get(1).nodes.first().key,
       anchorOffset: 2,
       focusKey: initialState.document.nodes.get(1).nodes.first().key,
-      focusOffset: 6
+      focusOffset: 6,
     })
     .wrapInline({ type: 'link' })
     .moveStart(2)
     .moveEnd(-2)
     .focus().value
 
-  const onChange = change => {
+  const onChange = (change) => {
     assert.equal(
       change.value.inlines.size,
       0,
-      'unwraps all contents of the selected inline'
+      'unwraps all contents of the selected inline',
     )
   }
 
   const event = {
-    preventDefault: spy()
+    preventDefault: spy(),
   }
 
   const wrapper = shallow(<InlineButton value={value} onChange={onChange} />)
@@ -233,7 +233,7 @@ test('utils.createInlineButton: action on cursor over a text wrapped in a given 
   wrapper.find('Button').simulate('mousedown', event)
 })
 
-test('utils.createInlineButton: action on selection containing text inside and outside an inline', assert => {
+test('utils.createInlineButton: action on selection containing text inside and outside an inline', (assert) => {
   assert.plan(2)
 
   const value = initialState
@@ -242,23 +242,23 @@ test('utils.createInlineButton: action on selection containing text inside and o
       anchorKey: initialState.document.nodes.get(1).nodes.first().key,
       anchorOffset: 2,
       focusKey: initialState.document.nodes.get(1).nodes.first().key,
-      focusOffset: 6
+      focusOffset: 6,
     })
     .wrapInline({ type: 'link' })
     .moveStart(2)
     .moveEnd(2)
     .focus().value
 
-  const onChange = change => {
+  const onChange = (change) => {
     assert.equal(
       change.moveStart(-2).value.inlines.size,
       0,
-      'unwraps all contents of the given inline'
+      'unwraps all contents of the given inline',
     )
   }
 
   const event = {
-    preventDefault: spy()
+    preventDefault: spy(),
   }
 
   const wrapper = shallow(<InlineButton value={value} onChange={onChange} />)
@@ -267,7 +267,7 @@ test('utils.createInlineButton: action on selection containing text inside and o
     wrapper.find('Button').prop('active') &&
       !wrapper.find('Button').prop('disabled'),
     true,
-    'renders as enabled and active'
+    'renders as enabled and active',
   )
 
   wrapper.find('Button').simulate('mousedown', event)

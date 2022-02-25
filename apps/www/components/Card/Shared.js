@@ -17,8 +17,8 @@ const styles = {
     '& small': {
       display: 'block',
       fontSize: 14,
-      lineHeight: '20px'
-    }
+      lineHeight: '20px',
+    },
   }),
   smallP: css(Interaction.fontRule, {
     margin: '0 0 5px',
@@ -27,16 +27,16 @@ const styles = {
     '& small': {
       display: 'block',
       fontSize: 10,
-      lineHeight: '16px'
-    }
+      lineHeight: '16px',
+    },
   }),
   ul: css({
     margin: 0,
     marginTop: -3,
     paddingLeft: 20,
     fontSize: 15,
-    lineHeight: '22px'
-  })
+    lineHeight: '22px',
+  }),
 }
 
 export const Paragraph = ({ children, style }) => (
@@ -64,39 +64,39 @@ const colorMap = {
   '2a': '#8c564b',
   '2b': '#9467bd',
   '2c': '#bcbd22',
-  '2d': '#d62728'
+  '2d': '#d62728',
 }
 
 const FinanceFinancingAnswers = ({
   payload,
   payload: { financing },
   t,
-  width
+  width,
 }) => {
   const incomeDetail = ['1a', '1b', '1c', '1cII', '1d']
-    .filter(key => financing[key] && +financing[key].value)
-    .map(key => ({
+    .filter((key) => financing[key] && +financing[key].value)
+    .map((key) => ({
       label:
         key === '1b' && financing['1bI'] && +financing['1bI'].value
           ? t.pluralize(`components/Card/financing/${key}`, {
-              count: financing['1bI'].value
+              count: financing['1bI'].value,
             })
           : t(`components/Card/financing/${key}`),
       color: colorMap[key],
-      value: financing[key].value
+      value: financing[key].value,
     }))
-  const incomeDetailTotal = sum(incomeDetail, d => +d.value)
+  const incomeDetailTotal = sum(incomeDetail, (d) => +d.value)
   const incomeTotal =
     financing['1'] && max([+financing['1'].value, incomeDetailTotal])
 
   const expenseDetail = ['2a', '2b', '2c', '2d']
-    .filter(key => financing[key] && +financing[key].value)
-    .map(key => ({
+    .filter((key) => financing[key] && +financing[key].value)
+    .map((key) => ({
       label: t(`components/Card/financing/${key}`),
       color: colorMap[key],
-      value: financing[key].value
+      value: financing[key].value,
     }))
-  const expenseDetailTotal = sum(expenseDetail, d => +d.value)
+  const expenseDetailTotal = sum(expenseDetail, (d) => +d.value)
   const expenseTotal =
     financing['2'] && max([+financing['2'].value, expenseDetailTotal])
   const total = max([incomeTotal, expenseTotal])
@@ -121,17 +121,17 @@ const FinanceFinancingAnswers = ({
             domain: [0, total],
             color: 'label',
             colorSort: 'none',
-            colorRange: incomeDetail.map(d => d.color).concat('#ddd'),
+            colorRange: incomeDetail.map((d) => d.color).concat('#ddd'),
             sort: 'none',
-            xTicks: []
+            xTicks: [],
           }}
           values={incomeDetail.concat(
             [
               incomeTotal > incomeDetailTotal && {
                 label: t('components/Card/unidentified'),
-                value: String(incomeTotal - incomeDetailTotal)
-              }
-            ].filter(Boolean)
+                value: String(incomeTotal - incomeDetailTotal),
+              },
+            ].filter(Boolean),
           )}
         />
       )}
@@ -156,17 +156,17 @@ const FinanceFinancingAnswers = ({
             domain: [0, total],
             color: 'label',
             colorSort: 'none',
-            colorRange: expenseDetail.map(d => d.color).concat('#ddd'),
+            colorRange: expenseDetail.map((d) => d.color).concat('#ddd'),
             sort: 'none',
-            xTicks: []
+            xTicks: [],
           }}
           values={expenseDetail.concat(
             [
               expenseTotal > expenseDetailTotal && {
                 label: t('components/Card/unidentified'),
-                value: String(expenseTotal - expenseDetailTotal)
-              }
-            ].filter(Boolean)
+                value: String(expenseTotal - expenseDetailTotal),
+              },
+            ].filter(Boolean),
           )}
         />
       )}
@@ -192,7 +192,7 @@ export const Finance = withT(({ payload, t, width }) => (
     )}
     {(!payload.financing ||
       !Object.keys(payload.financing).find(
-        key => payload.financing[key] && payload.financing !== '0'
+        (key) => payload.financing[key] && payload.financing !== '0',
       )) && (
       <Paragraph>
         <strong>{t('components/Card/personalBudget')}</strong>

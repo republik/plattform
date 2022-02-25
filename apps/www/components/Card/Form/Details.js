@@ -4,16 +4,11 @@ import { Interaction } from '@project-r/styleguide'
 
 const { H2, H3, P } = Interaction
 
-const Details = props => {
+const Details = (props) => {
   const { card, user } = props
 
-  const {
-    party,
-    councilOfStates,
-    nationalCouncil,
-    occupation,
-    yearOfBirth
-  } = card.payload
+  const { party, councilOfStates, nationalCouncil, occupation, yearOfBirth } =
+    card.payload
 
   const { listName, listPlaces } = nationalCouncil
 

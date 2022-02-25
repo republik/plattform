@@ -16,56 +16,54 @@ const t = createFormatter(require('../../../lib/translations.json').data)
 const someText = 'Das Tückische beim Crowdfunding ist, dass der Ansturm'
 
 export const CommentComposerPlayground = () => {
-  const [
-    { counter, mode, initialText, tagRequired, maxLength },
-    dispatch
-  ] = React.useReducer(
-    (state, action) => {
-      if ('start' in action) {
-        return {
-          ...state,
-          counter: state.counter + 1,
-          mode: 'composer',
-          initialText: action.start.initialText,
-          tagRequired: action.start.tagRequired,
-          maxLength: action.start.maxLength
+  const [{ counter, mode, initialText, tagRequired, maxLength }, dispatch] =
+    React.useReducer(
+      (state, action) => {
+        if ('start' in action) {
+          return {
+            ...state,
+            counter: state.counter + 1,
+            mode: 'composer',
+            initialText: action.start.initialText,
+            tagRequired: action.start.tagRequired,
+            maxLength: action.start.maxLength,
+          }
+        } else if ('cancel' in action) {
+          return { ...state, mode: 'initial' }
+        } else if ('submit' in action) {
+          return { ...state, mode: 'wait', ...action.submit }
+        } else if ('reject' in action) {
+          state.resolve({ error: action.reject.reason })
+          return { ...state, mode: 'composer' }
+        } else if ('accept' in action) {
+          state.resolve({ ok: true })
+          return { ...state, mode: 'initial' }
         }
-      } else if ('cancel' in action) {
-        return { ...state, mode: 'initial' }
-      } else if ('submit' in action) {
-        return { ...state, mode: 'wait', ...action.submit }
-      } else if ('reject' in action) {
-        state.resolve({ error: action.reject.reason })
-        return { ...state, mode: 'composer' }
-      } else if ('accept' in action) {
-        state.resolve({ ok: true })
-        return { ...state, mode: 'initial' }
-      }
 
-      return state
-    },
-    {
-      counter: 1,
-      mode: 'composer',
-      initialText: someText,
-      tagValue: undefined,
-      tagRequired: true
-    }
-  )
+        return state
+      },
+      {
+        counter: 1,
+        mode: 'composer',
+        initialText: someText,
+        tagValue: undefined,
+        tagRequired: true,
+      },
+    )
 
   const discussionContextValue = {
     discussion: {
       displayAuthor: {
         name: 'Adrienne Fichter',
         profilePicture: '/static/profilePicture1.png',
-        credential: { description: 'Redaktorin', verified: false }
+        credential: { description: 'Redaktorin', verified: false },
       },
       rules: { maxLength },
       tags: ['Lob', 'Kritik', 'Wunsch', 'Keine Angabe'],
-      tagRequired
+      tagRequired,
     },
     actions: {
-      openDiscussionPreferences: () => Promise.resolve({ ok: true })
+      openDiscussionPreferences: () => Promise.resolve({ ok: true }),
     },
     composerHints: [
       function formattingAsterisk(text) {
@@ -77,13 +75,13 @@ export const CommentComposerPlayground = () => {
           )
         }
         return false
-      }
+      },
     ],
     composerSecondaryActions: (
       <div style={{ display: 'flex' }}>
         <IconButton title='TextFormat' Icon={TextFormatIcon} />
       </div>
-    )
+    ),
   }
 
   return (
@@ -99,7 +97,7 @@ export const CommentComposerPlayground = () => {
               dispatch({ cancel: {} })
             }}
             onSubmit={(text, tags) =>
-              new Promise(resolve => {
+              new Promise((resolve) => {
                 dispatch({ submit: { resolve } })
               })
             }
@@ -120,7 +118,7 @@ export const CommentComposerPlayground = () => {
             style={{
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
             }}
           >
             <div style={{ margin: 4 }}>
@@ -132,8 +130,8 @@ export const CommentComposerPlayground = () => {
                       initialText: undefined,
                       tagValue: undefined,
                       tagRequired: false,
-                      maxLength: undefined
-                    }
+                      maxLength: undefined,
+                    },
                   })
                 }}
               >
@@ -149,8 +147,8 @@ export const CommentComposerPlayground = () => {
                       initialText: someText,
                       tagValue: 'Wunsch',
                       tagRequired: true,
-                      maxLength: 60
-                    }
+                      maxLength: 60,
+                    },
                   })
                 }}
               >
@@ -173,7 +171,7 @@ export const CommentComposerPlayground = () => {
             style={{
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
             }}
           >
             <div style={{ margin: 4 }}>
@@ -183,8 +181,8 @@ export const CommentComposerPlayground = () => {
                   dispatch({
                     reject: {
                       reason:
-                        'Sie sind zu früh. Bitte warten Sie, zwei Minuten bevor Sie wieder kommentieren.'
-                    }
+                        'Sie sind zu früh. Bitte warten Sie, zwei Minuten bevor Sie wieder kommentieren.',
+                    },
                   })
                 }}
               >

@@ -8,25 +8,19 @@ import { displayDate } from '../../Display/utils'
 import {
   tableStyles as styles,
   createSortHandler,
-  createSortIndicator
+  createSortIndicator,
 } from '../../Tables/utils'
 
 const { Link } = routes
 
-const getDueDate = (
-  status,
-  dueDate
-) => {
+const getDueDate = (status, dueDate) => {
   if (!dueDate) {
     return ''
-  } else if (
-    new Date(dueDate) < new Date() &&
-    status !== 'PAID'
-  ) {
+  } else if (new Date(dueDate) < new Date() && status !== 'PAID') {
     return (
       <span
         style={{
-          color: colors.error
+          color: colors.error,
         }}
       >
         {displayDate(dueDate)}
@@ -73,14 +67,10 @@ const Table = ({ items, sort, onSort, ...props }) => {
           >
             <Label>Zahlungsart{indicator('method')}</Label>
           </th>
-          <th
-            {...styles.left}
-          >
+          <th {...styles.left}>
             <Label>Name</Label>
           </th>
-          <th
-            {...styles.left}
-          >
+          <th {...styles.left}>
             <Label>Adresse</Label>
           </th>
           <th
@@ -108,27 +98,32 @@ const Table = ({ items, sort, onSort, ...props }) => {
       </thead>
       <tbody>
         {items.map((payment, index) => {
-          const { user, user: { address } } = payment
+          const {
+            user,
+            user: { address },
+          } = payment
 
           return (
             <tr key={`payment-${index}`} {...styles.row}>
               <td>{displayDate(payment.createdAt)}</td>
-              <td>{
-                getDueDate(payment.status, payment.dueDate)
-              }</td>
+              <td>{getDueDate(payment.status, payment.dueDate)}</td>
               <td>{payment.method}</td>
               <td>
-                <Link
-                  route='user'
-                  params={{ userId: user.id }}
-                >
+                <Link route='user' params={{ userId: user.id }}>
                   <a {...styles.link}>
-                    {user.name || (`${user.firstName} ${user.lastName}`)}
+                    {user.name || `${user.firstName} ${user.lastName}`}
                   </a>
                 </Link>
               </td>
               <td>
-                {address && [address.line1, address.line2, [address.postalCode, address.city].join(' ')].filter(Boolean).join(', ')}
+                {address &&
+                  [
+                    address.line1,
+                    address.line2,
+                    [address.postalCode, address.city].join(' '),
+                  ]
+                    .filter(Boolean)
+                    .join(', ')}
               </td>
               <td>{chfFormat(payment.total / 100)}</td>
               <td>{payment.hrid}</td>
@@ -139,6 +134,6 @@ const Table = ({ items, sort, onSort, ...props }) => {
       </tbody>
     </table>
   )
-};
+}
 
-export default Table;
+export default Table

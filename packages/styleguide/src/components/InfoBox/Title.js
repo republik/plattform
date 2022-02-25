@@ -15,9 +15,9 @@ const styles = {
     ...convertStyleToRem(sansSerifMedium16),
     [mUp]: {
       ...convertStyleToRem(sansSerifMedium19),
-      margin: '0 0 12px 0'
-    }
-  })
+      margin: '0 0 12px 0',
+    },
+  }),
 }
 
 export const Title = ({ children, attributes }) => {
@@ -37,7 +37,7 @@ export const Title = ({ children, attributes }) => {
 
 Title.propTypes = {
   children: PropTypes.node.isRequired,
-  attributes: PropTypes.object
+  attributes: PropTypes.object,
 }
 
 export default Title

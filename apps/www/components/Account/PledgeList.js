@@ -17,8 +17,8 @@ const dayFormat = timeFormat('%d. %B %Y')
 class PledgeList extends Component {
   componentDidMount() {
     const { pledges } = this.props
-    pledges.forEach(pledge => {
-      pledge.options.forEach(option => {
+    pledges.forEach((pledge) => {
+      pledge.options.forEach((option) => {
         track([
           'addEcommerceItem',
           option.templateId, // (required) SKU: Product unique identifier
@@ -26,7 +26,7 @@ class PledgeList extends Component {
           // (optional) Product name
           undefined, // (optional) Product category
           option.price / 100, // (recommended) Product price
-          option.amount // (optional, default to 1) Product quantity
+          option.amount, // (optional, default to 1) Product quantity
         ])
       })
       track([
@@ -36,7 +36,7 @@ class PledgeList extends Component {
         undefined, // (optional) Order sub total (excludes shipping)
         undefined, // (optional) Tax amount
         undefined, // (optional) Shipping amount
-        pledge.donation < 0 // (optional) Discount offered (set to false for unspecified parameter)
+        pledge.donation < 0, // (optional) Discount offered (set to false for unspecified parameter)
       ])
     })
   }
@@ -45,9 +45,9 @@ class PledgeList extends Component {
 
     return (
       <Fragment>
-        {pledges.map(pledge => {
+        {pledges.map((pledge) => {
           const options = pledge.options.filter(
-            option => option.amount && option.minAmount !== option.maxAmount
+            (option) => option.amount && option.minAmount !== option.maxAmount,
           )
           const createdAt = new Date(pledge.createdAt)
 
@@ -94,7 +94,7 @@ class PledgeList extends Component {
                               `option/${option.reward.name}/accessGranted/label`,
                             `option/${option.reward.name}/label/${option.amount}`,
                             `option/${option.reward.name}/label/other`,
-                            `option/${option.reward.name}/label`
+                            `option/${option.reward.name}/label`,
                           ].filter(Boolean),
                           {
                             count: option.amount,
@@ -105,7 +105,9 @@ class PledgeList extends Component {
                               option.membership.sequenceNumber,
                             endDateSuffix: endDate
                               ? t('option/suffix/endDate', {
-                                  formattedEndDate: dayFormat(new Date(endDate))
+                                  formattedEndDate: dayFormat(
+                                    new Date(endDate),
+                                  ),
                                 })
                               : '',
                             periods:
@@ -113,9 +115,9 @@ class PledgeList extends Component {
                               option.reward.interval &&
                               t.pluralize(
                                 `option/${option.reward.name}/interval/${option.reward.interval}/periods`,
-                                { count: option.periods }
-                              )
-                          }
+                                { count: option.periods },
+                              ),
+                          },
                         )}
                       </Item>
                     )
@@ -134,14 +136,14 @@ class PledgeList extends Component {
                                   'account/pledges/payment/status/generic/PAID/dateSuffix',
                                   {
                                     createdAt: dayFormat(
-                                      new Date(payment.createdAt)
-                                    )
-                                  }
+                                      new Date(payment.createdAt),
+                                    ),
+                                  },
                                 ),
                           method: t(
-                            `account/pledges/payment/method/${payment.method}`
-                          )
-                        }
+                            `account/pledges/payment/method/${payment.method}`,
+                          ),
+                        },
                       )}
                     </Item>
                     {payment.paymentslipUrl && (
@@ -182,8 +184,8 @@ export default compose(
         pledges: (
           (!data.loading && !data.error && data.me && data.me.pledges) ||
           []
-        ).filter(pledge => pledge.status !== 'DRAFT')
+        ).filter((pledge) => pledge.status !== 'DRAFT'),
       }
-    }
-  })
+    },
+  }),
 )(PledgeList)

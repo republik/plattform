@@ -350,9 +350,8 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
     /**
      * collectionDocumentItems
      */
-    const collectionDocumentItems = await pgdb.public.collectionDocumentItems.find(
-      { userId: user.id },
-    )
+    const collectionDocumentItems =
+      await pgdb.public.collectionDocumentItems.find({ userId: user.id })
 
     if (collectionDocumentItems.length > 0) {
       const collections = await pgdb.public.collections.find({
@@ -443,9 +442,10 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
       const discussions = await pgdb.public.discussions.find({
         id: commentsPosted.map(({ discussionId }) => discussionId),
       })
-      const discussionPreferences = await pgdb.public.discussionPreferences.find(
-        { discussionId: discussions.map(({ id }) => id) },
-      )
+      const discussionPreferences =
+        await pgdb.public.discussionPreferences.find({
+          discussionId: discussions.map(({ id }) => id),
+        })
       const credentials = await pgdb.public.credentials.find({
         id: discussionPreferences.map(({ credentialId }) => credentialId),
       })
@@ -728,9 +728,10 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
         }),
       )
 
-      const membershipCancellations = await pgdb.public.membershipCancellations.find(
-        { membershipId: memberships.map(({ id }) => id) },
-      )
+      const membershipCancellations =
+        await pgdb.public.membershipCancellations.find({
+          membershipId: memberships.map(({ id }) => id),
+        })
 
       await save(
         destination,

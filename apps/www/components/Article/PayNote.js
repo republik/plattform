@@ -8,7 +8,7 @@ import {
   Label,
   ColorContextProvider,
   useColorContext,
-  RawHtml
+  RawHtml,
 } from '@project-r/styleguide'
 import TrialForm from '../Trial/Form'
 import { css } from 'glamor'
@@ -23,28 +23,28 @@ import { shouldIgnoreClick } from '../../lib/utils/link'
 
 const styles = {
   banner: css({
-    padding: '5px 0'
+    padding: '5px 0',
   }),
   content: css({
     paddingBottom: 0,
     margin: '0.8rem 0 0.8rem 0',
     ':first-of-type': {
-      marginTop: 0
+      marginTop: 0,
     },
     ':last-child': {
-      marginBottom: 0
-    }
+      marginBottom: 0,
+    },
   }),
   cta: css({
-    marginTop: 10
+    marginTop: 10,
   }),
   actions: css({
     display: 'flex',
     flexDirection: 'column',
     [mediaQueries.mUp]: {
       alignItems: 'center',
-      flexDirection: 'row'
-    }
+      flexDirection: 'row',
+    },
   }),
   aside: css({
     maxWidth: '50%',
@@ -55,9 +55,9 @@ const styles = {
       ...fontStyles.sansSerifRegular18,
       lineHeight: 1.4,
       marginLeft: 30,
-      marginTop: 0
-    }
-  })
+      marginTop: 0,
+    },
+  }),
 }
 
 export const TRY_TO_BUY_RATIO = 0.5
@@ -75,7 +75,7 @@ const generatePositionedNote = (variation, target, cta, position) => {
       contentReached: t(
         `article/${variation}/${position}/reached`,
         undefined,
-        ''
+        '',
       ),
       cta: cta,
       button: {
@@ -83,32 +83,32 @@ const generatePositionedNote = (variation, target, cta, position) => {
         link: t(
           `article/${variation}/${position}/buy/button/link`,
           undefined,
-          DEFAULT_BUTTON_TARGET
-        )
+          DEFAULT_BUTTON_TARGET,
+        ),
       },
       secondary: t(
         `article/${variation}/${position}/secondary/label`,
         undefined,
-        ''
+        '',
       ) && {
         prefix: t(
           `article/${variation}/${position}/secondary/prefix`,
           undefined,
-          ''
+          '',
         ),
         label: t(
           `article/${variation}/${position}/secondary/label`,
           undefined,
-          ''
+          '',
         ),
         link: t(
           `article/${variation}/${position}/secondary/link`,
           undefined,
-          ''
-        )
+          '',
+        ),
       },
-      note: t(`article/${variation}/${position}/note`, undefined, '')
-    }
+      note: t(`article/${variation}/${position}/note`, undefined, ''),
+    },
   }
 }
 
@@ -117,31 +117,31 @@ const generateNote = (variation, target, cta) => {
     key: variation,
     target: target,
     ...generatePositionedNote(variation, target, cta, 'before'),
-    ...generatePositionedNote(variation, target, cta, 'after')
+    ...generatePositionedNote(variation, target, cta, 'after'),
   }
 }
 
 const generateNotes = (variations, target, cta) =>
-  variations.map(v => generateNote(v, target, cta))
+  variations.map((v) => generateNote(v, target, cta))
 
 const predefinedNotes = generateNotes(
   TRY_VARIATIONS,
   {
     hasActiveMembership: false,
     isEligibleForTrial: true,
-    inNativeIOSApp: true
+    inNativeIOSApp: true,
   },
-  'trialForm'
+  'trialForm',
 )
   .concat(
     generateNotes(
       BUY_VARIATIONS,
       {
         hasActiveMembership: false,
-        inNativeIOSApp: false
+        inNativeIOSApp: false,
       },
-      'button'
-    )
+      'button',
+    ),
   )
   .concat(
     generateNotes(
@@ -149,24 +149,26 @@ const predefinedNotes = generateNotes(
       {
         hasActiveMembership: false,
         isEligibleForTrial: false,
-        inNativeIOSApp: true
+        inNativeIOSApp: true,
       },
-      null
-    )
+      null,
+    ),
   )
 
-const isEmpty = positionedNote =>
+const isEmpty = (positionedNote) =>
   (!positionedNote.cta ||
     (positionedNote.cta === 'button' && !positionedNote.button.label)) &&
   !positionedNote.content
 
-const meetTarget = target => payNote => {
+const meetTarget = (target) => (payNote) => {
   const targetKeys = new Set(Object.keys(payNote.target))
   return Array.from(targetKeys).every(
-    key =>
+    (key) =>
       payNote.target[key] === 'any' ||
       payNote.target[key] ===
-        (typeof payNote.target[key] === 'boolean' ? !!target[key] : target[key])
+        (typeof payNote.target[key] === 'boolean'
+          ? !!target[key]
+          : target[key]),
   )
 }
 
@@ -174,9 +176,9 @@ const generateKey = (note, index) => {
   return { ...note, key: `custom-${index}` }
 }
 
-const isPermissibleIOSCta = cta => !cta || cta === 'trialForm'
+const isPermissibleIOSCta = (cta) => !cta || cta === 'trialForm'
 
-const disableForIOS = note => {
+const disableForIOS = (note) => {
   return {
     ...note,
     target: {
@@ -185,24 +187,24 @@ const disableForIOS = note => {
         isPermissibleIOSCta(note.before.cta) &&
         isPermissibleIOSCta(note.after.cta)
           ? 'any'
-          : false
-    }
+          : false,
+    },
   }
 }
 
-const hasCta = cta => note => note.before.cta === cta
+const hasCta = (cta) => (note) => note.before.cta === cta
 
-const hasTryAndBuyCtas = notes =>
+const hasTryAndBuyCtas = (notes) =>
   notes.some(hasCta('button')) &&
   notes.some(hasCta('trialForm')) &&
-  notes.every(n => n.before.cta === 'trialForm' || n.before.cta === 'button')
+  notes.every((n) => n.before.cta === 'trialForm' || n.before.cta === 'button')
 
 const getPayNote = (
   subject,
   seed,
   tryOrBuy,
   customOnly,
-  customPayNotes = []
+  customPayNotes = [],
 ) => {
   const targetedCustomPaynotes = customPayNotes
     .map(generateKey)
@@ -216,8 +218,8 @@ const getPayNote = (
     meetTarget({
       ...subject,
       // tmp: disallow generic trials pending new strategie
-      isEligibleForTrial: subject.isEligibleForTrial && subject.inNativeIOSApp
-    })
+      isEligibleForTrial: subject.isEligibleForTrial && subject.inNativeIOSApp,
+    }),
   )
 
   if (!targetedPredefinedNotes.length) return null
@@ -239,7 +241,7 @@ const BuyButton = ({ payNote, payload }) => {
       href={payNote.button.link}
       onClick={trackEventOnClick(
         ['PayNote', `pledge ${payload.position}`, payload.variation],
-        () => router.push(payNote.button.link)
+        () => router.push(payNote.button.link),
       )}
     >
       {payNote.button.label}
@@ -258,12 +260,12 @@ const SecondaryCta = ({ payNote, payload }) => {
           color: colorScheme.getCSSColor('primary'),
           '@media (hover)': {
             ':hover': {
-              color: colorScheme.getCSSColor('textSoft')
-            }
-          }
-        }
+              color: colorScheme.getCSSColor('textSoft'),
+            },
+          },
+        },
       }),
-    [colorScheme]
+    [colorScheme],
   )
   return (
     <>
@@ -279,7 +281,7 @@ const SecondaryCta = ({ payNote, payload }) => {
             href={payNote.secondary.link}
             onClick={trackEventOnClick(
               ['PayNote', `secondary ${payload.position}`, payload.variation],
-              () => router.push(payNote.secondary.link)
+              () => router.push(payNote.secondary.link),
             )}
           >
             {payNote.secondary.label}
@@ -324,12 +326,12 @@ const PayNoteCta = ({ payNote, payload, hasAccess }) => {
           {payNote.note && (
             <div
               style={{ marginTop: 10, marginBottom: 5 }}
-              onClick={e => {
+              onClick={(e) => {
                 if (e.target.nodeName === 'A') {
                   trackEvent([
                     'PayNote',
                     `note ${payload.position}`,
-                    payload.variation
+                    payload.variation,
                   ])
                   const href =
                     e.target.getAttribute && e.target.getAttribute('href')
@@ -346,7 +348,7 @@ const PayNoteCta = ({ payNote, payload, hasAccess }) => {
                   __html: hasAccess
                     ? // use about for more info instead of index which is magazin front with access
                       payNote.note.replace('href="/"', 'href="/about"')
-                    : payNote.note
+                    : payNote.note,
                 }}
               />
             </div>
@@ -361,7 +363,7 @@ const PayNoteP = ({ content }) => (
   <Interaction.P
     {...styles.content}
     dangerouslySetInnerHTML={{
-      __html: content
+      __html: content,
     }}
   />
 )
@@ -375,7 +377,7 @@ const PayNoteContent = ({ content }) =>
     </>
   ) : null
 
-const withDarkContextWhenBefore = WrappedComponent => props => {
+const withDarkContextWhenBefore = (WrappedComponent) => (props) => {
   if (props.position === 'before') {
     return (
       <ColorContextProvider colorSchemeKey='dark'>
@@ -389,7 +391,7 @@ const withDarkContextWhenBefore = WrappedComponent => props => {
 export const PayNote = compose(
   withInNativeApp,
   withMe,
-  withDarkContextWhenBefore
+  withDarkContextWhenBefore,
 )(
   ({
     inNativeIOSApp,
@@ -402,21 +404,21 @@ export const PayNote = compose(
     repoId,
     position,
     customPayNotes,
-    customOnly
+    customOnly,
   }) => {
     const [colorScheme] = useColorContext()
     const { query } = useRouter()
     const subject = {
       inNativeIOSApp,
       isEligibleForTrial: !me || !!query.trialSignup,
-      hasActiveMembership
+      hasActiveMembership,
     }
     const payNote = getPayNote(
       subject,
       seed,
       tryOrBuy,
       customOnly,
-      customPayNotes
+      customPayNotes,
     )
 
     if (!payNote) return null
@@ -429,7 +431,7 @@ export const PayNote = compose(
       documentId,
       repoId,
       variation: payNote.key,
-      position
+      position,
     }
     const isBefore = position === 'before'
 
@@ -454,5 +456,5 @@ export const PayNote = compose(
         </Center>
       </div>
     )
-  }
+  },
 )

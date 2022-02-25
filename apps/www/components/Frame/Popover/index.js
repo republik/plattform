@@ -6,12 +6,12 @@ import {
   mediaQueries,
   fontFamilies,
   useBodyScrollLock,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import {
   ZINDEX_POPOVER,
   HEADER_HEIGHT,
-  HEADER_HEIGHT_MOBILE
+  HEADER_HEIGHT_MOBILE,
 } from '../../constants'
 
 const Popover = ({ expanded, id, children, dark }) => {
@@ -26,8 +26,8 @@ const Popover = ({ expanded, id, children, dark }) => {
         borderTopStyle: 'solid',
         [mediaQueries.mUp]: {
           top: HEADER_HEIGHT,
-          height: `calc(100vh - ${HEADER_HEIGHT}px)`
-        }
+          height: `calc(100vh - ${HEADER_HEIGHT}px)`,
+        },
       })}
       {...colorScheme.set('borderColor', 'divider')}
       {...colorScheme.set('backgroundColor', 'default')}
@@ -54,14 +54,14 @@ const menuStyle = css({
   '&[aria-expanded=true]': {
     opacity: 1,
     visibility: 'visible',
-    transition: 'opacity 0.2s ease-in-out'
+    transition: 'opacity 0.2s ease-in-out',
   },
   overflow: 'auto',
-  WebkitOverflowScrolling: 'touch'
+  WebkitOverflowScrolling: 'touch',
 })
 
 Popover.propTypes = {
-  expanded: PropTypes.bool
+  expanded: PropTypes.bool,
 }
 
 export default Popover

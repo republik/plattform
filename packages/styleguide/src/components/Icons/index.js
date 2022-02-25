@@ -76,13 +76,13 @@ export {
   MdKeyboardReturn as BreakIcon,
   MdFormatAlignLeft as ParagraphIcon,
   MdWallpaper as ImageIcon,
-  MdFormatQuote as QuoteIcon
+  MdFormatQuote as QuoteIcon,
 } from 'react-icons/md'
 
 export {
   FaTelegramPlane as TelegramIcon,
   FaSubscript as SubIcon,
-  FaSuperscript as SupIcon
+  FaSuperscript as SupIcon,
 } from 'react-icons/fa'
 
 export { AiFillInstagram as InstagramIcon } from 'react-icons/ai'
@@ -99,7 +99,7 @@ export {
   IoLogoWhatsapp as WhatsappIcon,
   IoLogoGoogle as GoogleIcon,
   IoLogoApple as AppleIcon,
-  IoLogoFacebook as FacebookIcon
+  IoLogoFacebook as FacebookIcon,
 } from 'react-icons/io5'
 
 export { ShareIcon } from './CustomIcons/ShareIcon'

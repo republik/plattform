@@ -10,7 +10,7 @@ import {
   NarrowContainer,
   fontFamilies,
   mediaQueries,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 
 const styles = {
@@ -26,25 +26,25 @@ const styles = {
     [mediaQueries.mUp]: {
       top: HEADER_HEIGHT,
       height: 420,
-      fontSize: 300
-    }
+      fontSize: 300,
+    },
   }),
   headline: css({
     position: 'absolute',
     left: 0,
     right: 0,
-    textAlign: 'center'
+    textAlign: 'center',
   }),
   content: css({
     position: 'relative',
     zIndex: 1,
     marginTop: 200,
     [mediaQueries.mUp]: {
-      marginTop: 400
+      marginTop: 400,
     },
     paddingTop: 60,
-    paddingBottom: 60
-  })
+    paddingBottom: 60,
+  }),
 }
 
 const ErrorFrame = ({ children, statusCode }) => {
@@ -133,7 +133,7 @@ const t = (y, z) => {
     WebkitTransform: transform,
     MozTransform: transform,
     msTransform: transform,
-    OTransform: transform
+    OTransform: transform,
   }
 }
 

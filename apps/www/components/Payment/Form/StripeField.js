@@ -30,7 +30,7 @@ const StripeField = ({
   unlockFieldKey,
   setUnlockFieldKey,
   stripeLoadState,
-  setStripeLoadState
+  setStripeLoadState,
 }) => {
   const [isEmpty, setEmpty] = useState(true)
   const [isFocussed, setFocus] = useState()
@@ -38,17 +38,17 @@ const StripeField = ({
   useEffect(() => {
     onChange({
       errors: {
-        [fieldKey]: t(`payment/stripe/${fieldKey}/error/empty`)
-      }
+        [fieldKey]: t(`payment/stripe/${fieldKey}/error/empty`),
+      },
     })
     return () => {
       onChange({
         errors: {
-          [fieldKey]: undefined
+          [fieldKey]: undefined,
         },
         dirty: {
-          [fieldKey]: undefined
-        }
+          [fieldKey]: undefined,
+        },
       })
     }
   }, [])
@@ -64,16 +64,14 @@ const StripeField = ({
       icon={
         stripeLoadState === 'loading' && unlockFieldKey === fieldKey ? (
           <LoadingIcon />
-        ) : (
-          undefined
-        )
+        ) : undefined
       }
       renderInput={
         !unlockFieldKey
-          ? props => (
+          ? (props) => (
               <input
                 {...props}
-                onFocus={e => {
+                onFocus={(e) => {
                   e.preventDefault()
                   setUnlockFieldKey(fieldKey)
                 }}
@@ -89,10 +87,10 @@ const StripeField = ({
                   onBlur={() => {
                     setFocus(false)
                     onBlur({
-                      target: { value: isEmpty ? '' : ' ' }
+                      target: { value: isEmpty ? '' : ' ' },
                     })
                   }}
-                  onChange={event => {
+                  onChange={(event) => {
                     setEmpty(event.empty)
                     onChange({
                       values:
@@ -101,7 +99,7 @@ const StripeField = ({
                               cardType:
                                 event.brand === 'unknown'
                                   ? undefined
-                                  : event.brand
+                                  : event.brand,
                             }
                           : undefined,
                       errors: {
@@ -110,16 +108,16 @@ const StripeField = ({
                           : event.error
                           ? t.first([
                               `payment/stripe/${fieldKey}/error/${event.error.code}`,
-                              `payment/stripe/${fieldKey}/error/generic`
+                              `payment/stripe/${fieldKey}/error/generic`,
                             ])
-                          : undefined
+                          : undefined,
                       },
                       dirty: {
-                        [fieldKey]: true
-                      }
+                        [fieldKey]: true,
+                      },
                     })
                   }}
-                  onReady={element => {
+                  onReady={(element) => {
                     if (unlockFieldKey === fieldKey) {
                       element.focus()
                     }
@@ -129,7 +127,7 @@ const StripeField = ({
                   }}
                   options={{
                     classes: {
-                      base: `StripeElement StripeElement-${fieldKey} ${className}`
+                      base: `StripeElement StripeElement-${fieldKey} ${className}`,
                     },
                     style:
                       // CVC has a placeholder which says the samething as the label -> hide
@@ -139,11 +137,11 @@ const StripeField = ({
                             base: {
                               ...style.base,
                               '::placeholder': {
-                                color: 'transparent'
-                              }
-                            }
+                                color: 'transparent',
+                              },
+                            },
                           }
-                        : style
+                        : style,
                   }}
                 />
               </div>

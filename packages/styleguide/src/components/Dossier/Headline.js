@@ -10,9 +10,9 @@ const styles = {
     marginBottom: '25px',
     [mUp]: {
       ...serifTitle58,
-      marginBottom: '35px'
-    }
-  })
+      marginBottom: '35px',
+    },
+  }),
 }
 
 const Headline = ({ children, poster, large, medium }) => {

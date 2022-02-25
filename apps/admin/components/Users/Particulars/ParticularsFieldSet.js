@@ -6,31 +6,29 @@ import { FieldSet } from '@project-r/styleguide'
 const birthdayFormat = '%d.%m.%Y'
 const birthdayParse = swissTime.parse(birthdayFormat)
 
-const fields = t => [
+const fields = (t) => [
   {
     label: t('pledge/contact/firstName/label'),
     name: 'firstName',
-    validator: value =>
-      value.trim().length <= 0 &&
-      t('pledge/contact/firstName/error/empty')
+    validator: (value) =>
+      value.trim().length <= 0 && t('pledge/contact/firstName/error/empty'),
   },
   {
     label: t('pledge/contact/lastName/label'),
     name: 'lastName',
-    validator: value =>
-      value.trim().length <= 0 &&
-      t('pledge/contact/lastName/error/empty')
+    validator: (value) =>
+      value.trim().length <= 0 && t('pledge/contact/lastName/error/empty'),
   },
   {
     label: t('merci/updateMe/phone/label'),
-    name: 'phoneNumber'
+    name: 'phoneNumber',
   },
   {
     label: t('merci/updateMe/birthday/label'),
     name: 'birthday',
     mask: '11.11.1111',
     maskChar: '_',
-    validator: value => {
+    validator: (value) => {
       const parsedDate = birthdayParse(value)
 
       return (
@@ -40,8 +38,8 @@ const fields = t => [
         (parsedDate < new Date(1798, 3, 12) &&
           t('merci/updateMe/birthday/error/invalid'))
       )
-    }
-  }
+    },
+  },
 ]
 
 const Form = ({ t, values, errors, dirty, onChange }) => (

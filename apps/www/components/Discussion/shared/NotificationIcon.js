@@ -9,12 +9,12 @@ const DEFAULT_SIZE = 24
 export const styles = {
   link: css({
     cursor: 'pointer',
-    display: 'block'
+    display: 'block',
   }),
   text: css({
     ...convertStyleToRem(fontStyles.sansSerifRegular14),
-    display: 'block'
-  })
+    display: 'block',
+  }),
 }
 
 const Icon = ({ off, fill, children, size = DEFAULT_SIZE, style, onClick }) => {
@@ -42,7 +42,7 @@ Icon.propTypes = {
   children: PropTypes.node,
   size: PropTypes.number,
   style: PropTypes.object,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
 }
 
 export default Icon

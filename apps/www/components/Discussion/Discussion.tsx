@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import {
   Loader,
   DiscussionCommentsWrapper,
-  pxToRem
+  pxToRem,
 } from '@project-r/styleguide'
 import { useTranslation } from '../../lib/withT'
 import { useDiscussion } from './context/DiscussionContext'
@@ -16,8 +16,8 @@ import useDiscussionFocusHelper from './hooks/useDiscussionFocusHelper'
 
 const styles = {
   commentsWrapper: css({
-    marginTop: pxToRem(20)
-  })
+    marginTop: pxToRem(20),
+  }),
 }
 
 type Props = {
@@ -29,7 +29,7 @@ type Props = {
 const Discussion = ({
   documentMeta,
   inRootCommentOverlay,
-  showPayNotes
+  showPayNotes,
 }: Props) => {
   const { t } = useTranslation()
 
@@ -37,7 +37,7 @@ const Discussion = ({
     discussion,
     loading: discussionLoading,
     error: discussionError,
-    fetchMore
+    fetchMore,
   } = useDiscussion()
 
   const { error: focusError } = useDiscussionFocusHelper()
@@ -48,7 +48,7 @@ const Discussion = ({
         totalCount: 0,
         directTotalCount: 0,
         pageInfo: {},
-        nodes: []
+        nodes: [],
       }
     }
     return makeCommentTree(discussion?.comments)
@@ -61,7 +61,7 @@ const Discussion = ({
     const endCursor = discussion.comments.pageInfo.endCursor
     await fetchMore({
       after: endCursor,
-      appendAfter: lastNode.id
+      appendAfter: lastNode.id,
     })
   }
 

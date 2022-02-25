@@ -11,13 +11,13 @@ import {
   Interaction,
   Loader,
   colors,
-  LazyLoad
+  LazyLoad,
 } from '@project-r/styleguide'
 import {
   ChartTitle,
   ChartLead,
   ChartLegend,
-  Chart
+  Chart,
 } from '@project-r/styleguide'
 
 import md from 'markdown-in-js'
@@ -30,7 +30,7 @@ import { PackageItem, PackageBuffer } from '../components/Pledge/Accordion'
 
 import {
   mapActionData,
-  userSurviveActionsFragment
+  userSurviveActionsFragment,
 } from '../components/Crowdfunding/withSurviveStatus'
 import { RawStatus } from '../components/Crowdfunding/Status'
 import withT from '../lib/withT'
@@ -116,7 +116,7 @@ const Accordion = withInNativeApp(
       shouldBuyProlong,
       isReactivating,
       defaultBenefactor,
-      inNativeIOSApp
+      inNativeIOSApp,
     }) => {
       const [hover, setHover] = useState()
 
@@ -150,7 +150,7 @@ const Accordion = withInNativeApp(
                   <Link
                     href={{
                       pathname: '/angebote',
-                      query: { package: 'PROLONG', token: query.token }
+                      query: { package: 'PROLONG', token: query.token },
                     }}
                     passHref
                   >
@@ -170,8 +170,8 @@ const Accordion = withInNativeApp(
                       query: {
                         package: 'PROLONG',
                         token: query.token,
-                        price: 48000
-                      }
+                        price: 48000,
+                      },
                     }}
                     passHref
                   >
@@ -195,8 +195,8 @@ const Accordion = withInNativeApp(
                       query: {
                         package: 'PROLONG',
                         membershipType: 'BENEFACTOR_ABO',
-                        token: query.token
-                      }
+                        token: query.token,
+                      },
                     }}
                     passHref
                   >
@@ -219,7 +219,7 @@ const Accordion = withInNativeApp(
                     <Link
                       href={{
                         pathname: '/angebote',
-                        query: { package: 'ABO_GIVE' }
+                        query: { package: 'ABO_GIVE' },
                       }}
                       passHref
                     >
@@ -237,7 +237,7 @@ const Accordion = withInNativeApp(
                       <Link
                         href={{
                           pathname: '/angebote',
-                          query: { package: 'MONTHLY_ABO' }
+                          query: { package: 'MONTHLY_ABO' },
                         }}
                         passHref
                       >
@@ -253,7 +253,7 @@ const Accordion = withInNativeApp(
                       <Link
                         href={{
                           pathname: '/angebote',
-                          query: { package: 'ABO' }
+                          query: { package: 'ABO' },
                         }}
                         passHref
                       >
@@ -269,7 +269,7 @@ const Accordion = withInNativeApp(
                       <Link
                         href={{
                           pathname: '/angebote',
-                          query: { package: 'BENEFACTOR' }
+                          query: { package: 'BENEFACTOR' },
                         }}
                         passHref
                       >
@@ -289,7 +289,7 @@ const Accordion = withInNativeApp(
               <Link
                 href={{
                   pathname: '/angebote',
-                  query: { package: 'DONATE' }
+                  query: { package: 'DONATE' },
                 }}
                 passHref
               >
@@ -317,14 +317,14 @@ const Accordion = withInNativeApp(
           )}
         </div>
       )
-    }
-  )
+    },
+  ),
 )
 
 // https://ultradashboard.republik.ch/question/506
 const bucketsBefore = [
   { key: '2017-04', presale: 9703 },
-  { key: '2017-05', presale: 3866 }
+  { key: '2017-05', presale: 3866 },
 ].reduce((summed, d) => {
   const prev = summed[summed.length - 1]
   summed.push({ ...d, preactive: d.presale + (prev ? prev.preactive : 0) })
@@ -340,14 +340,14 @@ const Page = ({
   shouldBuyProlong,
   isReactivating,
   defaultBenefactor,
-  router: { query }
+  router: { query },
 }) => {
   const meta = {
     pageTitle: '🚀 Republik Cockpit',
     title: 'Das Cockpit zum Stand unseres Unternehmens',
     description:
       'Alles, was Sie zur finanziellen Lage der Republik wissen müssen.',
-    image: `${CDN_FRONTEND_BASE_URL}/static/social-media/cockpit.jpg`
+    image: `${CDN_FRONTEND_BASE_URL}/static/social-media/cockpit.jpg`,
   }
 
   useEffect(() => {
@@ -356,8 +356,8 @@ const Page = ({
         `/cockpit?token=${encodeURIComponent(query.token)}`,
         '/cockpit',
         {
-          shallow: true
-        }
+          shallow: true,
+        },
       )
     }
   }, [query.token])
@@ -370,7 +370,7 @@ const Page = ({
         style={{ minHeight: `calc(90vh)` }}
         render={() => {
           const {
-            evolution: { buckets, updatedAt }
+            evolution: { buckets, updatedAt },
           } = data.membershipStats
 
           const labels = [
@@ -379,7 +379,7 @@ const Page = ({
             { key: 'loss', color: '#9970ab', label: 'Abgänge' },
             { key: 'missing', color: '#444', label: 'fehlende' },
             { key: 'pending', color: '#444', label: 'offene' },
-            { key: 'base', color: '#3CAD00', label: 'bestehende' }
+            { key: 'base', color: '#3CAD00', label: 'bestehende' },
             // { key: 'gaining', color: '#2A7A00', label: 'neue' }
           ]
           const labelMap = labels.reduce((map, d) => {
@@ -394,14 +394,14 @@ const Page = ({
           const currentKey = formatYearMonthKey(new Date())
           const lastBucket = buckets[buckets.length - 1]
           const currentBucket =
-            buckets.find(bucket => bucket.key === currentKey) || lastBucket
+            buckets.find((bucket) => bucket.key === currentKey) || lastBucket
 
           const minMaxValues = []
           const values = bucketsBefore
-            .map(bucket => ({
+            .map((bucket) => ({
               month: bucket.key,
               label: labelMap.preactive,
-              value: bucket.preactive
+              value: bucket.preactive,
             }))
             .concat(
               buckets
@@ -413,15 +413,15 @@ const Page = ({
                   acc.push({
                     month: key,
                     label: labelMap.active,
-                    value: active + overdue
+                    value: active + overdue,
                   })
                   acc.push({
                     month: key,
                     label: labelMap.loss,
-                    value: -ended
+                    value: -ended,
                   })
                   return acc
-                }, [])
+                }, []),
             )
 
           const pendingBuckets = buckets.slice(-7)
@@ -434,7 +434,7 @@ const Page = ({
                 {
                   month: month.key,
                   label: labelMap.base,
-                  value: month.active - pendingYearly // - month.gaining
+                  value: month.active - pendingYearly, // - month.gaining
                 },
                 // {
                 //   month: month.key,
@@ -444,17 +444,17 @@ const Page = ({
                 {
                   month: month.key,
                   label: labelMap.pending,
-                  value: pendingYearly + month.overdue
+                  value: pendingYearly + month.overdue,
                 },
                 {
                   month: month.key,
                   label: labelMap.loss,
-                  value: -month.ended
-                }
+                  value: -month.ended,
+                },
               ])
               return agg
             },
-            { gaining: 0, values: [] }
+            { gaining: 0, values: [] },
           ).values
 
           const activeCount = currentBucket.active + currentBucket.overdue
@@ -463,39 +463,40 @@ const Page = ({
             values.push({
               month: currentBucket.key,
               label: labelMap.missing,
-              value: missingCount
+              value: missingCount,
             })
           }
           minMaxValues.push(numMembersNeeded)
           const [minValue, maxValue] = extent(minMaxValues).map((d, i) =>
-            Math[i ? 'ceil' : 'floor'](Math.round(d / 1000) * 1000)
+            Math[i ? 'ceil' : 'floor'](Math.round(d / 1000) * 1000),
           )
 
-          const lastSeenBucket = data.membershipStats.lastSeen.buckets.slice(
-            -1
-          )[0]
+          const lastSeenBucket =
+            data.membershipStats.lastSeen.buckets.slice(-1)[0]
           const lastSeen = lastSeenBucket.users
 
           const engagedUsers = [].concat(
             data.discussionsStats.evolution.buckets
               .slice(0, -1)
-              .map(bucket => ({
+              .map((bucket) => ({
                 type: 'Dialog',
                 date: bucket.key,
-                value: String(bucket.users)
+                value: String(bucket.users),
               })),
-            data.collectionsStats.progress.buckets.slice(0, -1).map(bucket => ({
-              type: 'Lesepositionen',
-              date: bucket.key,
-              value: String(bucket.users)
-            })),
+            data.collectionsStats.progress.buckets
+              .slice(0, -1)
+              .map((bucket) => ({
+                type: 'Lesepositionen',
+                date: bucket.key,
+                value: String(bucket.users),
+              })),
             data.collectionsStats.bookmarks.buckets
               .slice(0, -1)
-              .map(bucket => ({
+              .map((bucket) => ({
                 type: 'Lesezeichen',
                 date: bucket.key,
-                value: String(bucket.users)
-              }))
+                value: String(bucket.users),
+              })),
           )
 
           return (
@@ -513,13 +514,13 @@ const Page = ({
                       name: 'PERMANENT',
                       goals: [
                         {
-                          memberships: numMembersNeeded
-                        }
+                          memberships: numMembersNeeded,
+                        },
                       ],
                       status: {
                         memberships: activeCount,
-                        lastSeen
-                      }
+                        lastSeen,
+                      },
                     }
                   }
                 />
@@ -541,9 +542,9 @@ Die Grundlage dafür ist ein Geschäftsmodell für werbefreien, unabhängigen, l
                   und&nbsp;Abonnentinnen
                 </ChartTitle>
                 <ChartLead>
-                  Entwicklung vom Crowdfunding im April 2017 bis heute.{' '}
+                  Entwicklung vom Crowdfunding im April 2017 bis heute
                   {missingCount > 0 &&
-                    `Es fehlen ${countFormat(missingCount)} Mitglieder.`}
+                    `. Es fehlen ${countFormat(missingCount)} Mitglieder.`}
                 </ChartLead>
                 <Chart
                   config={{
@@ -555,7 +556,13 @@ Die Grundlage dafür ist ein Geschäftsmodell für werbefreien, unabhängigen, l
                     timeParse: '%Y-%m',
                     timeFormat: '%Y',
                     xInterval: 'month',
-                    xTicks: ['2018-01', '2019-01', '2020-01', '2021-01'],
+                    xTicks: [
+                      '2018-01',
+                      '2019-01',
+                      '2020-01',
+                      '2021-01',
+                      '2022-01',
+                    ],
                     height: 300,
                     domain: [minValue, maxValue + 2000],
                     yTicks: [-5000, 0, 5000, 10000, 15000, 20000, 25000, 30000],
@@ -564,24 +571,24 @@ Die Grundlage dafür ist ein Geschäftsmodell für werbefreien, unabhängigen, l
                         x1: currentBucket.key,
                         x2: currentBucket.key,
                         value: activeCount,
-                        label: 'Stand jetzt'
-                      }
+                        label: 'Stand jetzt',
+                      },
                     ],
-                    xBandPadding: 0
+                    xBandPadding: 0,
                   }}
-                  values={values.map(d => ({ ...d, value: String(d.value) }))}
+                  values={values.map((d) => ({ ...d, value: String(d.value) }))}
                 />
               </div>
 
               <div style={{ marginTop: 20 }}>
                 <ChartTitle>
                   {countFormat(
-                    lastBucket.pending - lastBucket.pendingSubscriptionsOnly
+                    lastBucket.pending - lastBucket.pendingSubscriptionsOnly,
                   )}{' '}
                   anstehende Verläng&shy;erungen in den nächsten&nbsp;Monaten
                 </ChartTitle>
                 <ChartLead>
-                  Anzahl Mitgliedschaften und Abos per Monatsende.
+                  Anzahl Mitgliedschaften und Abos per Monatsende
                 </ChartLead>
                 <Chart
                   config={{
@@ -600,21 +607,21 @@ Die Grundlage dafür ist ein Geschäftsmodell für werbefreien, unabhängigen, l
                       {
                         value: numMembersNeeded,
                         label: 'selbsttragend ab',
-                        dy: '1.1em'
-                      }
+                        dy: '1.1em',
+                      },
                     ],
                     xAnnotations: [
                       {
                         x1: currentBucket.key,
                         x2: currentBucket.key,
                         value: activeCount,
-                        label: 'Stand jetzt'
-                      }
-                    ]
+                        label: 'Stand jetzt',
+                      },
+                    ],
                   }}
-                  values={pendingValues.map(d => ({
+                  values={pendingValues.map((d) => ({
                     ...d,
-                    value: String(d.value)
+                    value: String(d.value),
                   }))}
                 />
                 <ChartLegend>
@@ -627,12 +634,12 @@ Die Grundlage dafür ist ein Geschäftsmodell für werbefreien, unabhängigen, l
               {md(mdComponents)`
 
 Mit ${countFormat(
-                numMembersNeeded
+                numMembersNeeded,
               )} Abonnentinnen und Mitgliedern haben wir genügend Einnahmen, um den gesamten Betrieb zu finanzieren. Und wir haben die Mittel, um Neues auszuprobieren und Experimente zu machen.
 
 Diese Zahl leitet sich aus dem aktuellen Budget 2021/22 ab. [Erfahren Sie, wofür wir das Geld ausgeben und wie sich das Budget über die Zeit entwickelt hat](/2021/10/08/werfen-sie-einen-blick-in-unsere-geschaeftsbuecher).
 
-## ${countFormat(lastSeen)} Mitglieder sind monatlich&nbsp;aktiv
+## ${countFormat(lastSeen)} Verlegerinnen sind monatlich&nbsp;aktiv
 
 Der beste Journalismus nützt nichts, wenn ihn niemand sieht. Für ein gesundes Unternehmen braucht es eine aktive und interessierte Verlegerschaft.
 
@@ -643,7 +650,7 @@ Der beste Journalismus nützt nichts, wenn ihn niemand sieht. Für ein gesundes 
                   Wie beliebt sind Dialog, Lesezeichen und Leseposition?
                 </ChartTitle>
                 <ChartLead>
-                  Anzahl Mitglieder, welche pro Monat eine Funktion benutzen.
+                  Anzahl Verleger, welche pro Monat eine Funktion benutzen.
                 </ChartLead>
                 <Chart
                   config={{
@@ -659,7 +666,8 @@ Der beste Journalismus nützt nichts, wenn ihn niemand sieht. Für ein gesundes 
                       '2018-01',
                       '2019-01',
                       '2020-01',
-                      '2021-01'
+                      '2021-01',
+                      '2022-01',
                       // lastSeenBucket.key
                     ],
                     yNice: 0,
@@ -667,8 +675,8 @@ Der beste Journalismus nützt nichts, wenn ihn niemand sieht. Für ein gesundes 
                     colorMap: {
                       Lesepositionen: '#9467bd',
                       Lesezeichen: '#e377c2',
-                      Dialog: '#bcbd22'
-                    }
+                      Dialog: '#bcbd22',
+                    },
                   }}
                   values={engagedUsers}
                 />
@@ -742,7 +750,7 @@ const EnhancedPage = compose(
     props: ({ data, ownProps }) => {
       return {
         data,
-        ...mapActionData({ data, ownProps })
+        ...mapActionData({ data, ownProps }),
       }
     },
     options: ({ router: { query } }) => {
@@ -751,11 +759,11 @@ const EnhancedPage = compose(
         variables: {
           prev: formatYearMonthKey(timeMonth.offset(currentMonth, -1)),
           max: formatYearMonthKey(timeMonth.offset(currentMonth, 3)),
-          accessToken: query.token
-        }
+          accessToken: query.token,
+        },
       }
-    }
-  })
+    },
+  }),
 )(Page)
 
 export default withDefaultSSR(EnhancedPage)

@@ -12,61 +12,61 @@ const rawDoc = {
           kind: 'text',
           leaves: [
             {
-              text: 'Hello Node w/o data!'
-            }
-          ]
-        }
-      ]
+              text: 'Hello Node w/o data!',
+            },
+          ],
+        },
+      ],
     },
     {
       kind: 'block',
       type: 'paragraph',
       data: {
-        foo: 'bar'
+        foo: 'bar',
       },
       nodes: [
         {
           kind: 'text',
           leaves: [
             {
-              text: 'Hello Node with data!'
-            }
-          ]
-        }
-      ]
-    }
-  ]
+              text: 'Hello Node with data!',
+            },
+          ],
+        },
+      ],
+    },
+  ],
 }
 
 const initialState = Value.fromJSON({
-  document: rawDoc
+  document: rawDoc,
 })
 
-test('utils.createOnFieldChange: handler called with value', assert => {
+test('utils.createOnFieldChange: handler called with value', (assert) => {
   assert.plan(1)
   const paragraphNode = initialState.document.nodes.first()
 
-  const onChange = change => {
+  const onChange = (change) => {
     assert.equal(
       change.value.document.nodes.first().data.get('foo'),
       'bar',
-      'sets the data[key] property to the second argument passed to the handler function'
+      'sets the data[key] property to the second argument passed to the handler function',
     )
   }
 
   createOnFieldChange(onChange, initialState, paragraphNode, 'foo', null, 'bar')
 })
 
-test('utils.createOnFieldChange: handler called without value', assert => {
+test('utils.createOnFieldChange: handler called without value', (assert) => {
   assert.plan(1)
 
   const paragraphNodeWithData = initialState.document.nodes.get(1)
 
-  const onChange = change => {
+  const onChange = (change) => {
     assert.equal(
       change.value.document.nodes.get(1).data.has('foo'),
       false,
-      'removes the data[key] property if the second argument passed to the handler is falsy'
+      'removes the data[key] property if the second argument passed to the handler is falsy',
     )
   }
 
@@ -76,11 +76,11 @@ test('utils.createOnFieldChange: handler called without value', assert => {
     paragraphNodeWithData,
     'foo',
     null,
-    undefined
+    undefined,
   )
 })
 
-test('utils.createOnFieldChange: partial application', assert => {
+test('utils.createOnFieldChange: partial application', (assert) => {
   assert.plan(1)
 
   const paragraphNode = initialState.document.nodes.first()

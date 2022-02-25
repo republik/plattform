@@ -11,7 +11,7 @@ import {
   IconButton,
   AddIcon,
   ArrowDownwardIcon,
-  HighlightOffIcon
+  HighlightOffIcon,
 } from '@project-r/styleguide'
 import ArrowUpwardIcon from 'react-icons/lib/md/arrow-upward'
 
@@ -28,36 +28,36 @@ const styles = {
   autoSize: css({
     minHeight: 40,
     paddingTop: '7px !important',
-    paddingBottom: '6px !important'
+    paddingBottom: '6px !important',
   }),
   episodeContainer: css({
     margin: '16px 0 16px 0',
     border: '1px solid #DADDDC',
-    padding: 12
+    padding: 12,
   }),
   episodeHeader: css({
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   }),
   episodeActionBar: css({
-    display: 'flex'
-  })
+    display: 'flex',
+  }),
 }
 
 export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
-  const coverTextAnchors = [null, 'top', 'middle', 'bottom'].map(value => ({
+  const coverTextAnchors = [null, 'top', 'middle', 'bottom'].map((value) => ({
     value,
-    text: t(`metaData/series/coverText/anchor/${value}`)
+    text: t(`metaData/series/coverText/anchor/${value}`),
   }))
 
   const value = node.data.get('series')
-  const onChange = key => newValue => {
-    editor.change(change => {
+  const onChange = (key) => (newValue) => {
+    editor.change((change) => {
       change.setNodeByKey(node.key, {
         data:
           newValue !== null
             ? node.data.set(key, newValue)
-            : node.data.remove(key)
+            : node.data.remove(key),
       })
     })
   }
@@ -70,7 +70,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
     <Fragment>
       <Radio
         checked={value === undefined}
-        onChange={event => {
+        onChange={(event) => {
           event.preventDefault()
 
           onSeriesChange(undefined)
@@ -81,7 +81,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
       &nbsp;{' '}
       <Radio
         checked={isMain}
-        onChange={event => {
+        onChange={(event) => {
           event.preventDefault()
           onSeriesChange({
             title: '',
@@ -92,9 +92,9 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                 label: '',
                 title: '',
                 lead: '',
-                document: null
-              }
-            ]
+                document: null,
+              },
+            ],
           })
         }}
       >
@@ -103,7 +103,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
       &nbsp;{' '}
       <Radio
         checked={isEpisode}
-        onChange={event => {
+        onChange={(event) => {
           event.preventDefault()
           onSeriesChange('')
         }}
@@ -114,10 +114,10 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
   )
 
   const episodes = isMain && value.episodes
-  const onEpisodeChange = episodes => {
+  const onEpisodeChange = (episodes) => {
     onSeriesChange({
       ...value,
-      episodes: episodes
+      episodes: episodes,
     })
   }
 
@@ -143,8 +143,8 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                     value === 'middle'
                       ? ''
                       : (coverText && coverText.offset) || '5%',
-                  color: (coverText && coverText.color) || '#fff'
-                }
+                  color: (coverText && coverText.color) || '#fff',
+                },
               )
             }
           />
@@ -156,7 +156,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
               onChange={(_, color) => {
                 onChange('coverText')({
                   ...coverText,
-                  color
+                  color,
                 })
               }}
             />
@@ -169,7 +169,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
               onChange={(_, fontSize) => {
                 onChange('coverText')({
                   ...coverText,
-                  fontSize
+                  fontSize,
                 })
               }}
             />
@@ -182,7 +182,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
               onChange={(_, offset) => {
                 onChange('coverText')({
                   ...coverText,
-                  offset
+                  offset,
                 })
               }}
             />
@@ -202,7 +202,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
           style={{
             backgroundColor: '#fff',
             padding: '5px 10px 10px',
-            marginTop: 5
+            marginTop: 5,
           }}
         >
           <Field
@@ -211,7 +211,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
             onChange={(_, title) => {
               onSeriesChange({
                 ...value,
-                title
+                title,
               })
             }}
           />
@@ -229,7 +229,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
             onChange={(_, description) => {
               onSeriesChange({
                 ...value,
-                description
+                description,
               })
             }}
           />
@@ -240,7 +240,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
             onChange={(_, overview) => {
               onSeriesChange({
                 ...value,
-                overview
+                overview,
               })
             }}
           />
@@ -255,7 +255,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
               onChange={(_, logo) => {
                 onSeriesChange({
                   ...value,
-                  logo
+                  logo,
                 })
               }}
             />
@@ -269,7 +269,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
               onChange={(_, logoDark) => {
                 onSeriesChange({
                   ...value,
-                  logoDark
+                  logoDark,
                 })
               }}
             />
@@ -288,9 +288,9 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                     label: '',
                     title: '',
                     lead: '',
-                    document: null
-                  }
-                ].concat(episodes)
+                    document: null,
+                  },
+                ].concat(episodes),
               )
             }}
           />
@@ -298,22 +298,22 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
             // omit publishDate, no longer used
             const { document: episodeDoc, publishDate: _, ...values } = episode
             const keys = Set(['title', 'lead', 'label', 'image'])
-            const defaultValues = Map(keys.map(key => [key, '']))
+            const defaultValues = Map(keys.map((key) => [key, '']))
 
-            const onEpisodeFieldsChange = newData => {
+            const onEpisodeFieldsChange = (newData) => {
               onEpisodeChange(
                 episodes
                   .slice(0, i)
                   .concat({
                     ...episode,
-                    ...newData
+                    ...newData,
                   })
-                  .concat(episodes.slice(i + 1))
+                  .concat(episodes.slice(i + 1)),
               )
             }
-            const onEpisodeFieldChange = key => (_, keyValue) => {
+            const onEpisodeFieldChange = (key) => (_, keyValue) => {
               onEpisodeFieldsChange({
-                [key]: keyValue
+                [key]: keyValue,
               })
             }
             return (
@@ -333,7 +333,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                               .slice(0, i - 1)
                               .concat(episode)
                               .concat(episodes.slice(i - 1, i))
-                              .concat(episodes.slice(i + 1))
+                              .concat(episodes.slice(i + 1)),
                           )
                         }}
                       />
@@ -348,7 +348,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                               .slice(0, i)
                               .concat(episodes.slice(i + 1, i + 2))
                               .concat(episode)
-                              .concat(episodes.slice(i + 2))
+                              .concat(episodes.slice(i + 2)),
                           )
                         }}
                       />
@@ -358,7 +358,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                       label={t('metaData/series/episodes/rm')}
                       onClick={() => {
                         onEpisodeChange(
-                          episodes.slice(0, i).concat(episodes.slice(i + 1))
+                          episodes.slice(0, i).concat(episodes.slice(i + 1)),
                         )
                       }}
                     />
@@ -370,7 +370,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                   isSeriesEpisode={true}
                   onChange={(_, url, item) => {
                     const newData = {
-                      document: url
+                      document: url,
                     }
                     const meta = item?.value?.latestCommit?.document?.meta
                     if (meta) {
@@ -401,8 +401,8 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                   label: '',
                   title: '',
                   lead: '',
-                  document: null
-                })
+                  document: null,
+                }),
               )
             }}
           />

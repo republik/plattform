@@ -66,16 +66,16 @@ const PreviewPage = ({ t, router, data = {} }) => {
                         format: localState.meta?.format,
                         section: localState.meta?.section,
                         series: localState.meta?.series,
-                        repoId
+                        repoId,
                       }
                     : {
                         ...document.content,
                         format: document.meta.format,
                         section: document.meta.section,
                         series: document.meta.series,
-                        repoId
+                        repoId,
                       },
-                  schema
+                  schema,
                 )}
               </>
             )
@@ -95,8 +95,8 @@ export default compose(
     options: ({ router }) => ({
       variables: {
         repoId: router.query.repoId,
-        commitId: router.query.commitId
-      }
-    })
-  })
+        commitId: router.query.commitId,
+      },
+    }),
+  }),
 )(PreviewPage)

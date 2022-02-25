@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <!--[if gte mso 15]>
+      <xml>
+        <o:officedocumentsettings>
+          <o:allowpng />
+          <o:pixelsperinch>96</o:pixelsperinch>
+        </o:officedocumentsettings>
+      </xml>
+    <![endif]-->
+    <style type="text/css">
+      {{sg_font_faces}}
+    </style>
+    <style type="text/css">
+      p {
+        color:#282828;font-size:17px;line-height:24px;
+        {{sg_font_style_sans_serif_regular}}
+      }
+      p strong {
+        {{sg_font_style_sans_serif_medium}}
+      }
+    </style>
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #fff">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tbody>
+        <tr>
+          <td align="center" valign="top">
+            <table
+              align="center"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              width="100%"
+              style="max-width:640px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+            >
+              <tbody>
+                <tr>
+                  <td style="padding: 20px">
+                    <p>Guten Tag</p>
+                    {{#unless RECIPIENT_HAS_MEMBERSHIPS}} {{#if `RECIPIENT_EMAIL
+                    != GRANTER_EMAIL`}}
+                    <p>
+                      <strong
+                        >{{GRANTER_NAME}} (<a href="mailto:{{GRANTER_EMAIL}}"
+                          >{{GRANTER_EMAIL}}</a
+                        >) hat Ihnen 4 Wochen Republik geschenkt.
+                      </strong>
+                    </p>
+                    {{#if GRANTER_MESSAGE}}
+                    <p>Und uns eine Nachricht für Sie mitgegeben:</p>
+                    <blockquote
+                      style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      {{{GRANTER_MESSAGE}}}
+                    </blockquote>
+                    {{/if}} {{/if}} {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
+                    <p>
+                      Wir sind ein digitales Magazin für Politik, Wirtschaft,
+                      Gesellschaft und Kultur – unabhängig und werbefrei. Wir
+                      heissen Sie als Gast herzlich willkommen an Bord.
+                      Entdecken Sie unser Magazin ganz unverbindlich –
+                      ausnahmsweise und bis im April für die Dauer von vier
+                      Wochen:
+                    </p>
+                    {{/if}}
+
+                    <table
+                      width="100%"
+                      border="0"
+                      cellspacing="0"
+                      cellpadding="0"
+                    >
+                      <tr>
+                        <td>
+                          <table border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td align="center" bgcolor="#3CAD00">
+                                <a
+                                  href="{{LINK_CLAIM_PREFILLED}}"
+                                  style="font-size:20px;{{sg_font_style_sans_serif_regular}}color:#ffffff;text-decoration:none;border-radius:0;padding:15px 30px 15px 30px;border:1px solid #3CAD00;display:inline-block;"
+                                  >Jetzt anmelden</a
+                                >
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                    <p>
+                      Falls dieser Button nicht funktioniert: Öffnen Sie bitte
+                      <a href="{{LINK_CLAIM_CONTEXTLESS}}"
+                        >{{LINK_CLAIM_CONTEXTLESS}}</a
+                      >, und geben Sie dann Ihren Namen, Ihre E-Mail-Adresse und
+                      den folgenden Gutscheincode ein:
+                      <span style="font-family: monospace"
+                        >{{GRANT_VOUCHER_CODE}}</span
+                      >. Der Gutscheincode ist gültig bis zum
+                      {{GRANT_BEGIN_BEFORE}}.
+                    </p>
+
+                    <p>
+                      Die Republik erscheint von Montag bis Samstag mit täglich
+                      ein bis drei neuen Beiträgen.
+                      <a href="{{link_manual}}">In der Republik-App</a>,
+                      <a href="{{link_signin}}">auf der Website</a> und als
+                      Newsletter.
+                    </p>
+
+                    <p>
+                      Neben hintergründigen Recherchen und Reportagen finden Sie
+                      bei uns kurze Nachrichtenbriefings, meinungsstarke
+                      Kolumnen sowie Audio- und Bildbeiträge. Der Austausch mit
+                      unseren Leserinnen liegt uns besonders am Herzen. Machen
+                      Sie sich ein eigenes Bild von unserem Dialog und
+                      diskutieren Sie mit: Bis im April haben wir den Zugang
+                      anders als sonst auch für Gäste freigeschaltet.
+                    </p>
+                    {{/unless}} {{#if RECIPIENT_HAS_MEMBERSHIPS}}
+                    <p>
+                      Sie erhalten diese E-Mail im Rahmen unserer Aktion
+                      «{{CAMPAIGN_TITLE}}».
+                    </p>
+
+                    {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
+                    <p>
+                      {{GRANTER_NAME}} geht davon aus, dass Sie noch kein
+                      Republik-Abo besitzen. Dabei befinden Sie sich bereits an
+                      Bord – vielen Dank dafür!
+                    </p>
+                    {{else}}
+                    <p>
+                      Sie haben aber bereits ein gültiges Abo – vielen Dank
+                      dafür!
+                    </p>
+                    {{/if}} {{#if RECIPIENT_HAS_CAMPAIGNS}}
+                    <p>
+                      In diesem Fall ein Hinweis: Auch Sie können Ihre Freunde
+                      und Feinde noch bis Ende März
+                      <a href="{{LINK_ACCOUNT_SHARE}}"
+                        >mit einem kostenlosen vierwöchigen Republik-Zugang
+                        beschenken</a
+                      >. Die Empfänger erhalten eine persönliche Einladung per
+                      E-Mail.
+                    </p>
+                    <table
+                      width="100%"
+                      border="0"
+                      cellspacing="0"
+                      cellpadding="0"
+                    >
+                      <tr>
+                        <td>
+                          <table border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                              <td align="center" bgcolor="#3CAD00">
+                                <a
+                                  href="{{LINK_ACCOUNT_SHARE}}"
+                                  style="font-size:20px;{{sg_font_style_sans_serif_regular}}color:#ffffff;text-decoration:none;border-radius:0;padding:15px 30px 15px 30px;border:1px solid #3CAD00;display:inline-block;"
+                                  >Zugang teilen</a
+                                >
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                    {{/if}} {{/if}}
+                    <p>
+                      Bei Fragen und Anliegen stehen wir Ihnen gerne unter
+                      <a href="mailto:kontakt@republik.ch"
+                        >kontakt@republik.ch</a
+                      >
+                      zur Verfügung.
+                    </p>
+                    {{#unless RECIPIENT_HAS_MEMBERSHIPS}}
+                    <p>
+                      Wir wünschen Ihnen viel Freude beim Lesen, Mitdiskutieren
+                      und Ausprobieren!
+                    </p>
+                    {{/unless}}
+                    <p>Ihre Crew der Republik</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 20px">
+                    <p
+                      style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      <img
+                        height="79"
+                        src="{{frontend_base_url}}/static/logo_republik_newsletter.png"
+                        style="
+                          border: 0px;
+                          width: 180px !important;
+                          height: 79px !important;
+                          margin: 0px;
+                        "
+                        width="180"
+                        alt=""
+                      />
+                      <br />
+                      Republik AG<br />
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br />
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br />
+                      <a href="mailto:kontakt@republik.ch"
+                        >kontakt@republik.ch</a
+                      >
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

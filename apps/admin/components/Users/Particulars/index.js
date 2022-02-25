@@ -8,7 +8,7 @@ import {
   OverlayBody,
   OverlayToolbar,
   Loader,
-  InlineSpinner
+  InlineSpinner,
 } from '@project-r/styleguide'
 
 import {
@@ -18,7 +18,7 @@ import {
   DL,
   DT,
   DD,
-  TextButton
+  TextButton,
 } from '../../Display/utils'
 
 import UserForm from './UserForm'
@@ -90,15 +90,15 @@ const UpdateUser = ({ user, onSubmit, ...props }) => (
       {
         query: GET_USER,
         variables: {
-          id: updateUser.id
-        }
+          id: updateUser.id,
+        },
       },
       {
         query: GET_PROFILE,
         variables: {
-          id: updateUser.id
-        }
-      }
+          id: updateUser.id,
+        },
+      },
     ]}
     variables={{ id: user.id }}
   >
@@ -111,7 +111,7 @@ const UpdateUser = ({ user, onSubmit, ...props }) => (
             <UserForm
               key={user.id}
               user={user}
-              onSubmit={variables => onSubmit(updateUser({ variables }))}
+              onSubmit={(variables) => onSubmit(updateUser({ variables }))}
             />
           )}
         />
@@ -170,7 +170,7 @@ export default class User extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isOpen: false
+      isOpen: false,
     }
 
     this.closeHandler = () => this.setState({ isOpen: false })
@@ -215,7 +215,7 @@ export default class User extends Component {
                         <OverlayBody>
                           <UpdateUser
                             user={user}
-                            onSubmit={promise =>
+                            onSubmit={(promise) =>
                               promise.then(this.closeHandler)
                             }
                           />

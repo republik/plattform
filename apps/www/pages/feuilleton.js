@@ -12,7 +12,7 @@ import { Interaction, Loader, RawHtml } from '@project-r/styleguide'
 
 import withDefaultSSR from '../lib/hocs/withDefaultSSR'
 
-const FeuilletonPage = props => {
+const FeuilletonPage = (props) => {
   const { t, router, isMember, serverContext } = props
 
   if (isMember) {
@@ -26,7 +26,7 @@ const FeuilletonPage = props => {
               <Interaction.P>
                 <RawHtml
                   dangerouslySetInnerHTML={{
-                    __html: t('feuilleton/deprecatedPage')
+                    __html: t('feuilleton/deprecatedPage'),
                   }}
                 />
               </Interaction.P>
@@ -52,5 +52,5 @@ const FeuilletonPage = props => {
 }
 
 export default withDefaultSSR(
-  compose(withMembership, withRouter, withT)(FeuilletonPage)
+  compose(withMembership, withRouter, withT)(FeuilletonPage),
 )

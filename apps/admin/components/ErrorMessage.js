@@ -9,7 +9,7 @@ const ErrorMessage = ({ error }) => (
   <P
     style={{
       color: colors.error,
-      margin: '20px 0'
+      margin: '20px 0',
     }}
   >
     {errorToString(error)}

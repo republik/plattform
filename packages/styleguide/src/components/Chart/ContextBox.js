@@ -19,20 +19,20 @@ const boxStyle = css({
   padding: '12px 16px',
   pointerEvents: 'none',
   zIndex: 10,
-  minWidth: 200
+  minWidth: 200,
 })
 
 const boxPosition = {
   top: {
     center: css({ transform: 'translateX(-50%) translateY(-100%)' }),
     left: css({ transform: 'translateX(-15%) translateY(-100%)' }),
-    right: css({ transform: 'translateX(-85%) translateY(-100%)' })
+    right: css({ transform: 'translateX(-85%) translateY(-100%)' }),
   },
   below: {
     center: css({ transform: 'translateX(-50%) translateY(0)' }),
     left: css({ transform: 'translateX(-15%) translateY(0)' }),
-    right: css({ transform: 'translateX(-85%) translateY(0)' })
-  }
+    right: css({ transform: 'translateX(-85%) translateY(0)' }),
+  },
 }
 
 const notchStyle = css({
@@ -41,32 +41,32 @@ const notchStyle = css({
   height: 0,
   borderStyle: 'solid',
   borderWidth: '8px 7.5px 0 7.5px',
-  borderColor: 'transparent'
+  borderColor: 'transparent',
 })
 
 const notchPosition = {
   top: {
     center: css({ bottom: -8, transform: 'translateX(-50%)', left: '50%' }),
     left: css({ bottom: -8, transform: 'translateX(-50%)', left: '15%' }),
-    right: css({ bottom: -8, transform: 'translateX(50%)', right: '15%' })
+    right: css({ bottom: -8, transform: 'translateX(50%)', right: '15%' }),
   },
   below: {
     center: css({
       top: -8,
       transform: 'translateX(-50%) rotate(180deg)',
-      left: '50%'
+      left: '50%',
     }),
     left: css({
       top: -8,
       transform: 'translateX(-50%) rotate(180deg)',
-      left: '15%'
+      left: '15%',
     }),
     right: css({
       top: -8,
       transform: 'translateX(50%) rotate(180deg)',
-      right: '15%'
-    })
-  }
+      right: '15%',
+    }),
+  },
 }
 
 const labeledValueStyle = css({
@@ -79,17 +79,17 @@ const labeledValueStyle = css({
   ':last-child': {
     borderBottom: 'none',
     paddingBottom: 5,
-    marginBottom: 0
-  }
+    marginBottom: 0,
+  },
 })
 
-export const formatLines = text => {
+export const formatLines = (text) => {
   return text
     .split('\n')
     .map((d, i) => <Fragment key={`d${i}`}>{subsup(d)}</Fragment>)
 }
 
-export const mergeFragments = fragments =>
+export const mergeFragments = (fragments) =>
   intersperse(fragments, (item, index) => <br key={`br${index}`} />)
 
 export const ContextBoxValue = ({ label, children }) => {
@@ -117,7 +117,7 @@ export const ContextBoxValue = ({ label, children }) => {
 
 ContextBoxValue.propTypes = {
   label: PropTypes.string,
-  children: PropTypes.node
+  children: PropTypes.node,
 }
 
 const ContextBox = ({
@@ -125,7 +125,7 @@ const ContextBox = ({
   x,
   y,
   contextWidth,
-  children
+  children,
 }) => {
   const maxWidth = Math.min(400, contextWidth)
   let xOrientation = 'center'
@@ -146,7 +146,7 @@ const ContextBox = ({
       style={{
         left: x,
         top: y,
-        maxWidth
+        maxWidth,
       }}
     >
       <div>{children}</div>
@@ -160,14 +160,14 @@ const ContextBox = ({
 }
 
 ContextBox.defaultProps = {
-  orientation: 'top'
+  orientation: 'top',
 }
 ContextBox.propTypes = {
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
   contextWidth: PropTypes.number.isRequired,
   orientation: PropTypes.oneOf(['top', 'below']).isRequired,
-  children: PropTypes.node
+  children: PropTypes.node,
 }
 
 export default ContextBox

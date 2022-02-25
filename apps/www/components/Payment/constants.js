@@ -6,5 +6,5 @@ export const PSP_PLEDGE_ID_QUERY_KEYS = [
   // paypal
   'item_name',
   // strip 3d secure
-  STRIPE_PLEDGE_ID_QUERY_KEY
+  STRIPE_PLEDGE_ID_QUERY_KEY,
 ]

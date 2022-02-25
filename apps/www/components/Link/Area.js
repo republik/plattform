@@ -19,7 +19,7 @@ class AreaLink extends Component {
     this.linkClicked = this.linkClicked.bind(this)
   }
   linkClicked(e) {
-    if (hasAncestor(e.target, node => node.nodeName === 'A')) {
+    if (hasAncestor(e.target, (node) => node.nodeName === 'A')) {
       // ignore click for specific links
       // the area link links areas that are not part of an A tag
       return
@@ -37,12 +37,12 @@ class AreaLink extends Component {
 
     router
       .push(href)
-      .then(success => {
+      .then((success) => {
         if (!success) return
         scrollTop()
         document.body.focus()
       })
-      .catch(err => {
+      .catch((err) => {
         if (this.props.onError) this.props.onError(err)
       })
   }
@@ -54,7 +54,7 @@ class AreaLink extends Component {
     }
 
     const props = {
-      onClick: this.linkClicked
+      onClick: this.linkClicked,
     }
 
     return React.cloneElement(child, props)
@@ -63,7 +63,7 @@ class AreaLink extends Component {
 
 AreaLink.propTypes = {
   children: PropTypes.element.isRequired,
-  href: PropTypes.string.isRequired
+  href: PropTypes.string.isRequired,
 }
 
 export default withRouter(AreaLink)

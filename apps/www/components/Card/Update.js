@@ -10,7 +10,7 @@ import {
   A,
   InlineSpinner,
   Button,
-  RawHtml
+  RawHtml,
 } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
@@ -38,46 +38,47 @@ const maybeCard = (data, apply) => {
   )
 }
 
-const initialVestedInterests = data => {
+const initialVestedInterests = (data) => {
   const records =
-    maybeCard(data, card => card.payload.vestedInterests) ||
-    maybeCard(data, card => card.payload.vestedInterestsSmartvote) ||
+    maybeCard(data, (card) => card.payload.vestedInterests) ||
+    maybeCard(data, (card) => card.payload.vestedInterestsSmartvote) ||
     []
 
   return records.map((vestedInterest, index) => ({
     id: `interest${index}`,
-    ...vestedInterest
+    ...vestedInterest,
   }))
 }
 
-const Update = props => {
+const Update = (props) => {
   const {
     data,
     t,
     router: {
-      query: { locale }
-    }
+      query: { locale },
+    },
   } = props
 
   const statementId = maybeCard(
     data,
-    card => card.statement && card.statement.id
+    (card) => card.statement && card.statement.id,
   )
-  const group = maybeCard(data, card => card.group)
+  const group = maybeCard(data, (card) => card.group)
   const [portrait, setPortrait] = useState({ values: {} })
   const [statement, setStatement] = useState({
-    value: maybeCard(data, card => card.payload.statement) || ''
+    value: maybeCard(data, (card) => card.payload.statement) || '',
   })
   const [budget, setBudget] = useState(() => ({
-    value: maybeCard(data, card => card.payload.campaignBudget)
+    value: maybeCard(data, (card) => card.payload.campaignBudget),
   }))
   const [budgetComment, setBudgetComment] = useState(() => ({
-    value: maybeCard(data, card => card.payload.campaignBudgetComment)
+    value: maybeCard(data, (card) => card.payload.campaignBudgetComment),
   }))
   const [vestedInterests, setVestedInterests] = useState(() => ({
-    value: initialVestedInterests(data)
+    value: initialVestedInterests(data),
   }))
-  const payloadFinancing = maybeCard(data, card => card.payload.financing) || {}
+  const payloadFinancing =
+    maybeCard(data, (card) => card.payload.financing) || {}
   const hasPayloadFinancingValues = Object.keys(payloadFinancing).length
 
   const [financing, setFinancing] = useState({ value: payloadFinancing })
@@ -88,7 +89,7 @@ const Update = props => {
   const [isDirty, setIsDirty] = useState(false)
 
   const [financingExpanded, setFinancingExpanded] = useState(
-    !hasPayloadFinancingValues
+    !hasPayloadFinancingValues,
   )
 
   useEffect(() => {
@@ -103,7 +104,7 @@ const Update = props => {
             id: card.id,
             portrait: portrait.values.portrait,
             statement: statement.value,
-            payload: { financing: financing.value }
+            payload: { financing: financing.value },
           })
           .then(() => {
             setIsDirty(false)
@@ -135,7 +136,7 @@ const Update = props => {
         <P {...formStyles.paragraph}>
           <RawHtml
             dangerouslySetInnerHTML={{
-              __html: t('components/Card/Update/nothing/help')
+              __html: t('components/Card/Update/nothing/help'),
             }}
           />
         </P>
@@ -149,7 +150,7 @@ const Update = props => {
     setIsDirty(true)
     setPortrait({
       values,
-      errors
+      errors,
     })
   }
 
@@ -159,7 +160,7 @@ const Update = props => {
       ...statement,
       value,
       error: value.trim().length <= 0 && 'Statement fehlt',
-      dirty: shouldValidate
+      dirty: shouldValidate,
     })
   }
 
@@ -168,7 +169,7 @@ const Update = props => {
       ...budget,
       value: String(value).replace(/[^0-9]/g, ''),
       error: false,
-      dirty: shouldValidate
+      dirty: shouldValidate,
     })
   }
 
@@ -177,7 +178,7 @@ const Update = props => {
       ...budgetComment,
       value,
       error: false,
-      dirty: shouldValidate
+      dirty: shouldValidate,
     })
   }
 
@@ -186,7 +187,7 @@ const Update = props => {
       ...vestedInterests,
       value,
       error: false,
-      dirty: shouldValidate
+      dirty: shouldValidate,
     })
   }
 
@@ -195,11 +196,11 @@ const Update = props => {
       ...financing,
       value,
       error: false,
-      dirty: shouldValidate
+      dirty: shouldValidate,
     })
   }
 
-  const updateCard = e => {
+  const updateCard = (e) => {
     e && e.preventDefault && e.preventDefault()
 
     handleStatement(statement.value, true)
@@ -211,7 +212,7 @@ const Update = props => {
     setAutoUpdateCard(true)
   }
 
-  const catchError = error => {
+  const catchError = (error) => {
     setServerError(error)
     setLoading(false)
   }
@@ -223,7 +224,7 @@ const Update = props => {
       statement.error,
       budget.error,
       budgetComment.error,
-      vestedInterests.error
+      vestedInterests.error,
     ].filter(Boolean)
   }
 
@@ -239,7 +240,7 @@ const Update = props => {
       <P {...formStyles.paragraph}>
         <RawHtml
           dangerouslySetInnerHTML={{
-            __html: t(`${titleBaseKey}/lead`)
+            __html: t(`${titleBaseKey}/lead`),
           }}
         />
       </P>
@@ -279,8 +280,8 @@ const Update = props => {
                 query: {
                   group: group.slug,
                   suffix: 'diskussion',
-                  focus: statementId
-                }
+                  focus: statementId,
+                },
               }}
               passHref
             >
@@ -325,14 +326,14 @@ const Update = props => {
         <P style={{ marginTop: 40, marginBottom: 40 }}>
           <A
             href='#'
-            onClick={e => {
+            onClick={(e) => {
               e.preventDefault()
               setFinancingExpanded(true)
             }}
           >
             {t.first([
               `components/Card/Form/Financing/headline/${locale}`,
-              'components/Card/Form/Financing/headline'
+              'components/Card/Form/Financing/headline',
             ])}
           </A>
         </P>
@@ -430,9 +431,9 @@ const withUpdateCard = graphql(UPDATE_CARD, {
   props: ({ mutate }) => ({
     updateCard: ({ id, portrait, statement, payload }) =>
       mutate({
-        variables: { id, portrait, statement, payload }
-      })
-  })
+        variables: { id, portrait, statement, payload },
+      }),
+  }),
 })
 
 export default compose(withRouter, withT, withMeCard, withUpdateCard)(Update)

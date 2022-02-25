@@ -9,9 +9,9 @@ const styles = {
   wrapper: css({
     marginTop: '1rem',
     '& > div:not(:first-child)': {
-      marginTop: '2rem'
-    }
-  })
+      marginTop: '2rem',
+    },
+  }),
 }
 
 const propTypes = {
@@ -24,10 +24,10 @@ const propTypes = {
       tag: PropTypes.string.isRequired,
       color: PropTypes.shape({
         light: PropTypes.string.isRequired,
-        dark: PropTypes.string.isRequired
-      })
-    })
-  )
+        dark: PropTypes.string.isRequired,
+      }),
+    }),
+  ),
 }
 
 const DiscussionCommentsWrapper: FC<InferProps<typeof propTypes>> = ({
@@ -36,7 +36,7 @@ const DiscussionCommentsWrapper: FC<InferProps<typeof propTypes>> = ({
   loadMore,
   moreAvailableCount,
   errorMessage,
-  tagMappings
+  tagMappings,
 }) => {
   const [colorScheme] = useColorContext()
   return (

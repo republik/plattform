@@ -7,11 +7,13 @@ const Consents = require('../../lib/Consents')
 const DEFAULT_USER_ACCESS_ROLES = ['admin', 'supporter']
 const BASICS_USER_ACCESS_ROLES = [...DEFAULT_USER_ACCESS_ROLES, 'editor']
 
-const expose = (roles, accessor) => (user, args, { user: me }) => {
-  if (Roles.userIsMeOrInRoles(user, me, roles)) {
-    return user[accessor]
+const expose =
+  (roles, accessor) =>
+  (user, args, { user: me }) => {
+    if (Roles.userIsMeOrInRoles(user, me, roles)) {
+      return user[accessor]
+    }
   }
-}
 module.exports = {
   email: expose(BASICS_USER_ACCESS_ROLES, 'email'),
   name: expose(BASICS_USER_ACCESS_ROLES, 'name'),

@@ -18,7 +18,7 @@ import { withRouter } from 'next/router'
 
 import { loadStripe } from '../Payment/stripe'
 
-const objectValues = object => Object.keys(object).map(key => object[key])
+const objectValues = (object) => Object.keys(object).map((key) => object[key])
 
 class PaymentSources extends Component {
   constructor(...args) {
@@ -26,9 +26,9 @@ class PaymentSources extends Component {
     this.state = {
       values: {},
       dirty: {},
-      errors: {}
+      errors: {},
     }
-    this.paymentRef = ref => {
+    this.paymentRef = (ref) => {
       this.payment =
         ref && ref.getWrappedInstance ? ref.getWrappedInstance() : ref
     }
@@ -37,51 +37,51 @@ class PaymentSources extends Component {
     const { t, company } = this.props
     this.setState({
       loading: t('account/paymentSource/saving'),
-      remoteError: undefined
+      remoteError: undefined,
     })
     this.payment.stripe
       .createPaymentMethod()
-      .then(async paymentMethod => {
+      .then(async (paymentMethod) => {
         const {
           data: {
-            addPaymentMethod: { stripeClientSecret, stripePublishableKey }
-          }
+            addPaymentMethod: { stripeClientSecret, stripePublishableKey },
+          },
         } = await this.props.addPaymentMethod({
           stripePlatformPaymentMethodId: paymentMethod.id,
-          companyId: company.id
+          companyId: company.id,
         })
 
         if (stripeClientSecret) {
           const stripeClient = await loadStripe(stripePublishableKey)
           const confirmResult = await stripeClient.confirmCardSetup(
-            stripeClientSecret
+            stripeClientSecret,
           )
           if (confirmResult.error) {
             this.setState(() => ({
               loading: false,
-              remoteError: confirmResult.error.message
+              remoteError: confirmResult.error.message,
             }))
             return
           }
         }
         await this.props.setDefaultPaymentMethod({
-          stripePlatformPaymentMethodId: paymentMethod.id
+          stripePlatformPaymentMethodId: paymentMethod.id,
         })
         this.setState({
           loading: false,
           remoteError: undefined,
           values: {
             paymentSource: paymentMethod.id,
-            paymentMethod: 'STRIPE'
+            paymentMethod: 'STRIPE',
           },
           errors: {},
-          dirty: {}
+          dirty: {},
         })
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({
           loading: false,
-          remoteError: errorToString(error)
+          remoteError: errorToString(error),
         })
       })
   }
@@ -98,12 +98,12 @@ class PaymentSources extends Component {
           t={t}
           loadSources
           payload={{
-            id: me.id
+            id: me.id,
           }}
           context='DEFAULT_SOURCE'
           allowedMethods={['STRIPE']}
-          onChange={fields => {
-            this.setState(state => {
+          onChange={(fields) => {
+            this.setState((state) => {
               const nextState = FieldSet.utils.mergeFields(fields)(state)
 
               if (
@@ -148,16 +148,16 @@ class PaymentSources extends Component {
               style={{ opacity: errorMessages.length ? 0.5 : 1 }}
               onClick={() => {
                 if (errorMessages.length) {
-                  this.setState(state => {
+                  this.setState((state) => {
                     const dirty = {}
-                    Object.keys(state.errors).forEach(field => {
+                    Object.keys(state.errors).forEach((field) => {
                       if (state.errors[field]) {
                         dirty[field] = true
                       }
                     })
                     return {
                       dirty,
-                      showErrors: true
+                      showErrors: true,
                     }
                   })
                   return
@@ -211,25 +211,25 @@ export default compose(
   withRouter,
   graphql(addPaymentMethodMutation, {
     props: ({ mutate }) => ({
-      addPaymentMethod: variables => {
+      addPaymentMethod: (variables) => {
         return mutate({
-          variables
+          variables,
         })
-      }
-    })
+      },
+    }),
   }),
   graphql(setDefaultPaymentMethodMutation, {
     props: ({ mutate }) => ({
-      setDefaultPaymentMethod: variables => {
+      setDefaultPaymentMethod: (variables) => {
         return mutate({
           variables,
           refetchQueries: [
             {
-              query
-            }
-          ]
+              query,
+            },
+          ],
         })
-      }
-    })
-  })
+      },
+    }),
+  }),
 )(PaymentSources)

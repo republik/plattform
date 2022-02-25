@@ -2,25 +2,20 @@ import React from 'react'
 import { css } from 'glamor'
 import {
   sansSerifMedium12 as VALUE_FONT,
-  sansSerifRegular12 as LABEL_FONT
+  sansSerifRegular12 as LABEL_FONT,
 } from '../Typography/styles'
 import { createTextGauger } from '../../lib/textGauger'
 import { useColorContext } from '../Colors/useColorContext'
+import { textAlignmentDict } from './utils'
 
 const valueGauger = createTextGauger(VALUE_FONT, {
   dimension: 'width',
-  html: true
+  html: true,
 })
 const labelGauger = createTextGauger(LABEL_FONT, {
   dimension: 'width',
-  html: true
+  html: true,
 })
-
-const textAlignmentDict = {
-  left: 'start',
-  center: 'middle',
-  right: 'end'
-}
 
 const styles = {
   annotationLine: css({
@@ -28,21 +23,21 @@ const styles = {
     fillRule: 'evenodd',
     strokeLinecap: 'round',
     strokeDasharray: '1,3',
-    strokeLinejoin: 'round'
+    strokeLinejoin: 'round',
   }),
   annotationLineValue: css({
     strokeWidth: '1px',
-    shapeRendering: 'crispEdges'
+    shapeRendering: 'crispEdges',
   }),
   annotationValue: css({
-    ...VALUE_FONT
+    ...VALUE_FONT,
   }),
   annotationText: css({
-    ...LABEL_FONT
-  })
+    ...LABEL_FONT,
+  }),
 }
 
-const showAnnotationValue = annotation => annotation.showValue !== false
+const showAnnotationValue = (annotation) => annotation.showValue !== false
 
 export const YAnnotation = ({ annotation, width, tLabel, yFormat, xCalc }) => {
   const [colorScheme] = useColorContext()
@@ -85,7 +80,7 @@ export const XAnnotation = ({
   yFormat,
   barWidth,
   xCalc,
-  width
+  width,
 }) => {
   const [colorScheme] = useColorContext()
   if (
@@ -105,14 +100,14 @@ export const XAnnotation = ({
       tLabel(annotation.valuePrefix),
       yFormat(annotation.value),
       annotation.unit ? ' ' : '',
-      tLabel(annotation.unit)
+      tLabel(annotation.unit),
     ]
       .filter(Boolean)
       .join('')
 
   const textSize = Math.max(
     labelText ? labelGauger(labelText) : 0,
-    valueText ? valueGauger(valueText) : 0
+    valueText ? valueGauger(valueText) : 0,
   )
   const x1 = annotation.leftLabel
     ? 0

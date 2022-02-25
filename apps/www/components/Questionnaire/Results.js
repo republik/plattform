@@ -22,11 +22,11 @@ const DownloadableChart = ({ canDownload, ...props }) => (
         Download:{' '}
         <Editorial.A
           download='data.csv'
-          onClick={e => {
+          onClick={(e) => {
             const url = (e.target.href = URL.createObjectURL(
-              new window.Blob([csvFormat(props.values)], { type: 'text/csv' })
+              new window.Blob([csvFormat(props.values)], { type: 'text/csv' }),
             ))
-            setTimeout(function() {
+            setTimeout(function () {
               URL.revokeObjectURL(url)
             }, 50)
           }}
@@ -36,13 +36,13 @@ const DownloadableChart = ({ canDownload, ...props }) => (
         {', '}
         <Editorial.A
           download='config.json'
-          onClick={e => {
+          onClick={(e) => {
             const url = (e.target.href = URL.createObjectURL(
               new window.Blob([JSON.stringify(props.config, null, 2)], {
-                type: 'application/json'
-              })
+                type: 'application/json',
+              }),
             ))
-            setTimeout(function() {
+            setTimeout(function () {
               URL.revokeObjectURL(url)
             }, 50)
           }}
@@ -121,7 +121,7 @@ const RANKED_CATEGORY_BAR_CONFIG = {
   columns: 3,
   minInnerWidth: 170,
   inlineValue: true,
-  link: 'href'
+  link: 'href',
 }
 
 const RANKED_BAR_CONFIG = {
@@ -133,7 +133,7 @@ const RANKED_BAR_CONFIG = {
   y: 'label',
   minInnerWidth: 170,
   inlineValue: true,
-  link: 'href'
+  link: 'href',
 }
 
 const STACKED_BAR_CONFIG = {
@@ -145,7 +145,7 @@ const STACKED_BAR_CONFIG = {
   sort: 'none',
   barStyle: 'large',
   colorLegend: true,
-  domain: [0, 1]
+  domain: [0, 1],
 }
 
 const BIN_BAR_CONFIG = {
@@ -166,9 +166,9 @@ const BIN_BAR_CONFIG = {
     '#3D155B',
     '#542785',
     '#A46FDA',
-    '#C79CF0'
+    '#C79CF0',
   ],
-  colorLegend: false
+  colorLegend: false,
 }
 
 const RankedBars = withT(({ t, question, canDownload }) => {
@@ -179,24 +179,24 @@ const RankedBars = withT(({ t, question, canDownload }) => {
         canDownload={canDownload}
         config={RANKED_BAR_CONFIG}
         values={question.results
-          .filter(result => result.document)
-          .map(result => ({
+          .filter((result) => result.document)
+          .map((result) => ({
             label: result.document && result.document.meta.title,
             href: result.document && result.document.meta.path,
-            value: String(result.count)
+            value: String(result.count),
           }))}
       />
     )
   }
 
-  const hasCategories = question.results.filter(r => r.category).length > 0
+  const hasCategories = question.results.filter((r) => r.category).length > 0
   const numberPerColumn = question.results.length / 3
   const mapResult = (result, i) => ({
     label: result.option.label,
     category:
       result.option.category ||
       `Top ${numberPerColumn * (1 + Math.floor(i / numberPerColumn))}`,
-    value: String(result.count)
+    value: String(result.count),
   })
   return (
     <DownloadableChart
@@ -209,14 +209,14 @@ const RankedBars = withT(({ t, question, canDownload }) => {
 })
 
 const SentimentBar = withT(({ t, question, canDownload }) => {
-  const mapResult = result => {
+  const mapResult = (result) => {
     return {
       index: question.options.findIndex(
-        option => option.label === result.option.label
+        (option) => option.label === result.option.label,
       ),
       label: result.option.label,
       category: result.option.category,
-      value: String(result.count / question.turnout.submitted)
+      value: String(result.count / question.turnout.submitted),
     }
   }
   return (
@@ -235,7 +235,7 @@ const HistogramBar = withT(({ t, question, canDownload }) => {
   const mapResult = (result, i) => {
     const tick =
       question.ticks.find(
-        tick => tick.value === result.x0 || tick.value === result.x1
+        (tick) => tick.value === result.x0 || tick.value === result.x1,
       ) ||
       (result.x0 > 0
         ? question.ticks[question.ticks.length - 1]
@@ -243,7 +243,7 @@ const HistogramBar = withT(({ t, question, canDownload }) => {
     return {
       category: tick.label,
       color: `${result.x0}:${result.x1}`,
-      value: String(result.count / question.turnout.submitted)
+      value: String(result.count / question.turnout.submitted),
     }
   }
 
@@ -269,7 +269,7 @@ const Results = ({ data, t, canDownload, Wrapper = DefaultWrapper }) => {
       loading={data.loading}
       error={data.error}
       render={() => {
-        return data.questionnaire.questions.map(question => {
+        return data.questionnaire.questions.map((question) => {
           const { id, text } = question
           if (!question.result && !question.results) {
             return null
@@ -306,9 +306,11 @@ const Results = ({ data, t, canDownload, Wrapper = DefaultWrapper }) => {
                 <Editorial.Note style={{ marginTop: 10 }}>
                   {t('questionnaire/turnout', {
                     formattedSubmittedCount: countFormat(
-                      question.turnout.submitted
+                      question.turnout.submitted,
                     ),
-                    formattedSkippedCount: countFormat(question.turnout.skipped)
+                    formattedSkippedCount: countFormat(
+                      question.turnout.skipped,
+                    ),
                   })}
                 </Editorial.Note>
               }

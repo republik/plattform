@@ -3,16 +3,15 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
-  useState
+  useState,
 } from 'react'
 import {
   CommentNode,
   CommentProps,
-  readDiscussionCommentDraft
+  readDiscussionCommentDraft,
 } from '@project-r/styleguide'
 import { useTranslation } from '../../../lib/withT'
 import CommentLink, { getFocusHref } from '../shared/CommentLink'
-import { format } from 'url'
 import { useDiscussion } from '../context/DiscussionContext'
 import useVoteCommentHandlers from '../hooks/actions/useVoteCommentHandlers'
 import { CommentTreeNode } from '../helpers/makeCommentTree'
@@ -36,7 +35,7 @@ const CommentContainer = ({
   comment,
   isLast,
   isBoard,
-  inRootCommentOverlay
+  inRootCommentOverlay,
 }: Props): ReactElement => {
   const { t } = useTranslation()
   const { me } = useMe()
@@ -45,7 +44,7 @@ const CommentContainer = ({
     id: discussionId,
     discussion,
     fetchMore,
-    overlays: { shareOverlay, featureOverlay }
+    overlays: { shareOverlay, featureOverlay },
   } = useDiscussion()
 
   const parentId = comment.id
@@ -73,8 +72,8 @@ const CommentContainer = ({
         actions: {
           reportCommentHandler,
           unpublishCommentHandler,
-          featureCommentHandler: featureOverlay.handleOpen
-        }
+          featureCommentHandler: featureOverlay.handleOpen,
+        },
       }),
     [
       t,
@@ -83,8 +82,8 @@ const CommentContainer = ({
       me?.roles,
       reportCommentHandler,
       unpublishCommentHandler,
-      featureOverlay.handleOpen
-    ]
+      featureOverlay.handleOpen,
+    ],
   )
 
   const loadRemainingAfter = discussion?.comments?.pageInfo?.endCursor
@@ -99,7 +98,7 @@ const CommentContainer = ({
     return fetchMore({
       discussionId,
       parentId,
-      after: loadRemainingAfter
+      after: loadRemainingAfter,
     })
   }, [discussionId, parentId, loadRemainingAfter, fetchMore, isBoard])
 
@@ -108,21 +107,17 @@ const CommentContainer = ({
       t={t}
       comment={comment}
       CommentLink={CommentLink}
-      focusHref={format(getFocusHref(discussion, comment))}
-      profileHref={
-        comment.displayAuthor.slug
-          ? `/~${comment.displayAuthor.slug}`
-          : undefined
-      }
       actions={{
-        handleUpVote: voteHandlers.upVoteCommentHandler,
-        handleDownVote: voteHandlers.downVoteCommentHandler,
-        handleUnVote: voteHandlers.unVoteCommentHandler,
         handleReply: discussion.userCanComment
           ? () => setIsReplying(true)
           : undefined,
         handleLoadReplies: loadRemainingReplies,
-        handleShare: shareOverlay.shareHandler
+        handleShare: shareOverlay.shareHandler,
+      }}
+      voteActions={{
+        handleUpVote: voteHandlers.upVoteCommentHandler,
+        handleDownVote: voteHandlers.downVoteCommentHandler,
+        handleUnVote: voteHandlers.unVoteCommentHandler,
       }}
       menuItems={menuItems}
       userCanComment={discussion?.userCanComment}

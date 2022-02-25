@@ -14,8 +14,8 @@ const GenderField = ({ values, onChange, isMandadory, t }) => {
     if (isMandadory && !values.gender) {
       onChange({
         errors: {
-          gender: t('profile/gender/empty')
-        }
+          gender: t('profile/gender/empty'),
+        },
       })
     }
   }, [isMandadory])
@@ -23,7 +23,7 @@ const GenderField = ({ values, onChange, isMandadory, t }) => {
 
   const value = values.gender
   const isX =
-    value?.trim() && !SUGGESTIONS.some(suggestion => suggestion === value)
+    value?.trim() && !SUGGESTIONS.some((suggestion) => suggestion === value)
 
   return (
     <>
@@ -34,14 +34,14 @@ const GenderField = ({ values, onChange, isMandadory, t }) => {
           </span>
         </Label>
       </div>
-      {SUGGESTIONS.map(suggestion => (
+      {SUGGESTIONS.map((suggestion) => (
         <>
           <span
             style={{
               display: 'inline-block',
               whiteSpace: 'nowrap',
               marginBottom: 10,
-              marginRight: 10
+              marginRight: 10,
             }}
           >
             <Radio
@@ -51,11 +51,11 @@ const GenderField = ({ values, onChange, isMandadory, t }) => {
                 onChange({
                   values: {
                     gender: suggestion,
-                    genderCustom: undefined
+                    genderCustom: undefined,
                   },
                   errors: {
-                    gender: undefined
-                  }
+                    gender: undefined,
+                  },
                 })
               }}
             >
@@ -71,11 +71,11 @@ const GenderField = ({ values, onChange, isMandadory, t }) => {
           setShouldAutoFocus(true)
           onChange({
             values: {
-              gender: X_GENDER
+              gender: X_GENDER,
             },
             errors: {
-              gender: undefined
-            }
+              gender: undefined,
+            },
           })
         }}
       >
@@ -85,7 +85,7 @@ const GenderField = ({ values, onChange, isMandadory, t }) => {
         <>
           <br />
           <Field
-            renderInput={props => (
+            renderInput={(props) => (
               <input autoFocus={shouldAutoFocus} {...props} />
             )}
             label={t('profile/gender/custom')}
@@ -96,8 +96,8 @@ const GenderField = ({ values, onChange, isMandadory, t }) => {
             onChange={(_, newValue) => {
               onChange({
                 values: {
-                  genderCustom: newValue
-                }
+                  genderCustom: newValue,
+                },
               })
             }}
           />

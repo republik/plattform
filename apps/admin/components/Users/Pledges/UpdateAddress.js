@@ -8,7 +8,7 @@ import {
   OverlayBody,
   OverlayToolbar,
   Loader,
-  FieldSet
+  FieldSet,
 } from '@project-r/styleguide'
 
 import { TextButton } from '../../Display/utils'
@@ -36,14 +36,14 @@ export default class UpdateAddress extends Component {
       isOpen: false,
       values: props.address || {},
       dirty: {},
-      errors: {}
+      errors: {},
     }
 
     this.closeHandler = () => {
       this.setState({ isOpen: false })
     }
 
-    this.submitHandler = mutation => () => {
+    this.submitHandler = (mutation) => () => {
       const { values } = this.state
       return mutation({
         variables: {
@@ -54,9 +54,9 @@ export default class UpdateAddress extends Component {
             line2: values.line2,
             postalCode: values.postalCode,
             city: values.city,
-            country: values.country
-          }
-        }
+            country: values.country,
+          },
+        },
       }).then(() => this.setState({ isOpen: false }))
     }
   }
@@ -86,7 +86,7 @@ export default class UpdateAddress extends Component {
                       render={() => (
                         <Fragment>
                           <AddressFieldSet
-                            onChange={fields => {
+                            onChange={(fields) => {
                               this.setState(FieldSet.utils.mergeFields(fields))
                             }}
                             {...this.state}

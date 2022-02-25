@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client'
 import {
   DOWN_VOTE_COMMENT_ACTION,
   UP_VOTE_COMMENT_ACTION,
-  UPVOTE_COMMENT_MUTATION
+  UPVOTE_COMMENT_MUTATION,
 } from '../../graphql/documents'
 import { toRejectedString } from '../../graphql/utils'
 
@@ -20,31 +20,31 @@ function useVoteCommentHandlers(): VoteCommentHandlers {
   function upVoteCommentHandler(commentId) {
     return upVoteCommentMutation({
       variables: {
-        commentId: commentId
-      }
+        commentId: commentId,
+      },
     }).catch(toRejectedString)
   }
 
   function downVoteCommentHandler(commentId) {
     return downVoteCommentMutation({
       variables: {
-        commentId: commentId
-      }
+        commentId: commentId,
+      },
     }).catch(toRejectedString)
   }
 
   function unVoteCommentHandler(commentId) {
     return unVoteCommentMutation({
       variables: {
-        commentId: commentId
-      }
+        commentId: commentId,
+      },
     }).catch(toRejectedString)
   }
 
   return {
     upVoteCommentHandler,
     downVoteCommentHandler,
-    unVoteCommentHandler
+    unVoteCommentHandler,
   }
 }
 

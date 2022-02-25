@@ -7,28 +7,28 @@ import MetaForm from '../../utils/MetaForm'
 
 import { createPropertyForm, matchBlock } from '../../utils'
 
-export const createCoverForm = TYPE =>
+export const createCoverForm = (TYPE) =>
   createPropertyForm({
     isDisabled: ({ value }) => {
-      return !value.blocks.some(block => {
+      return !value.blocks.some((block) => {
         return matchBlock(TYPE)(value.document.getParent(block.key))
       })
-    }
+    },
   })(({ disabled, value, onChange }) => {
     if (disabled) {
       return null
     }
     const node = value.blocks
-      .map(block => value.document.getParent(block.key))
+      .map((block) => value.document.getParent(block.key))
       .find(matchBlock(TYPE))
 
-    const onInputChange = key => (_, inputValue) => {
+    const onInputChange = (key) => (_, inputValue) => {
       onChange(
         value.change().setNodeByKey(node.key, {
           data: inputValue
             ? node.data.set(key, inputValue)
-            : node.data.remove(key)
-        })
+            : node.data.remove(key),
+        }),
       )
     }
 
@@ -38,7 +38,7 @@ export const createCoverForm = TYPE =>
         <MetaForm
           data={Map({
             src: '',
-            alt: ''
+            alt: '',
           }).merge(node.data)}
           onInputChange={onInputChange}
         />

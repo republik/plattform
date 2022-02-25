@@ -8,7 +8,7 @@ import {
   fontStyles,
   mediaQueries,
   useColorContext,
-  renderCommentMdast
+  renderCommentMdast,
 } from '@project-r/styleguide'
 import { Strong } from './text'
 import voteT from './voteT'
@@ -19,28 +19,28 @@ const styles = {
   statement: css({
     marginBottom: 15,
     [mediaQueries.onlyS]: {
-      ...fontStyles.serifTitle22
+      ...fontStyles.serifTitle22,
     },
-    ...fontStyles.serifTitle26
+    ...fontStyles.serifTitle26,
   }),
   roleMobile: css({
     [mediaQueries.mUp]: {
-      display: 'none'
-    }
+      display: 'none',
+    },
   }),
   roleDesktop: css({
     marginTop: 15,
     [mediaQueries.onlyS]: {
-      display: 'none'
-    }
+      display: 'none',
+    },
   }),
   detail: css({
     display: 'flex',
     padding: 15,
     marginTop: 8,
     [mediaQueries.onlyS]: {
-      flexDirection: 'column'
-    }
+      flexDirection: 'column',
+    },
   }),
   profile: css({
     display: 'flex',
@@ -49,8 +49,8 @@ const styles = {
     alignItems: 'start',
     [mediaQueries.onlyS]: {
       flexDirection: 'row',
-      marginBottom: 15
-    }
+      marginBottom: 15,
+    },
   }),
   portrait: css({
     display: 'block',
@@ -60,28 +60,28 @@ const styles = {
     minWidth: 100,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    filter: 'grayscale(1)'
+    filter: 'grayscale(1)',
   }),
   moreInfo: css({
-    marginTop: 15
+    marginTop: 15,
   }),
   externalLinks: css({
-    display: 'flex'
+    display: 'flex',
   }),
   shortInfo: css({
     [mediaQueries.onlyS]: {
-      paddingLeft: 15
-    }
-  })
+      paddingLeft: 15,
+    },
+  }),
 }
 
 const CandidateCard = compose(
   voteT,
-  withT
+  withT,
 )(({ vt, t, candidate, discussionPath, discussionTag }) => {
   const [colorScheme] = useColorContext()
   const { user: d } = candidate
-  const role = (candidate.credential || d.credentials?.find(c => c.isListed))
+  const role = (candidate.credential || d.credentials?.find((c) => c.isListed))
     ?.description
 
   return (
@@ -89,7 +89,7 @@ const CandidateCard = compose(
       <div {...styles.profile}>
         <div
           style={{
-            backgroundImage: `url(${d.portrait || DEFAULT_PROFILE_PICTURE})`
+            backgroundImage: `url(${d.portrait || DEFAULT_PROFILE_PICTURE})`,
           }}
           {...styles.portrait}
         />
@@ -121,8 +121,8 @@ const CandidateCard = compose(
                   query: {
                     discussion: candidate.election.slug,
                     focus: candidate.comment.id,
-                    tag: discussionTag
-                  }
+                    tag: discussionTag,
+                  },
                 }}
                 passHref
               >

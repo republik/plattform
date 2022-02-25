@@ -3,7 +3,7 @@ import React from 'react'
 import {
   matchType,
   matchParagraph,
-  matchImage
+  matchImage,
 } from 'mdast-react-render/lib/utils'
 
 import { HR } from '../../components/Typography'
@@ -21,7 +21,7 @@ const createCommentSchema = ({
   List,
   ListItem,
   Paragraph,
-  StrikeThrough
+  StrikeThrough,
 } = {}) => {
   const ellipsizeHref = (href = '') => {
     if (href.length > 50) {
@@ -35,11 +35,11 @@ const createCommentSchema = ({
   const screenHref = (href = '') => {
     if (href.match(/^(https?:|\/|#)/)) {
       return {
-        safe: href
+        safe: href,
       }
     }
     return {
-      unknown: href.replace(/^mailto:/, '')
+      unknown: href.replace(/^mailto:/, ''),
     }
   }
 
@@ -68,32 +68,32 @@ const createCommentSchema = ({
   const globalInlines = [
     {
       matchMdast: matchType('break'),
-      component: () => <br />
+      component: () => <br />,
     },
     {
       matchMdast: matchImage,
-      props: node => ({
+      props: (node) => ({
         title: node.title,
         text: node.alt,
-        href: node.url
+        href: node.url,
       }),
-      component: SafeA
+      component: SafeA,
     },
     {
       matchMdast: matchType('link'),
-      props: node => ({
+      props: (node) => ({
         title: node.title,
-        href: node.url
+        href: node.url,
       }),
-      component: SafeA
+      component: SafeA,
     },
     // Make sure text like [...] is preserved.
     {
       matchMdast: matchType('linkReference'),
-      props: node => ({
+      props: (node) => ({
         identifier: node.identifier,
         url: node.url,
-        referenceType: node.referenceType
+        referenceType: node.referenceType,
       }),
       component: ({ children, identifier, url, referenceType }) => {
         if (referenceType === 'shortcut') {
@@ -105,121 +105,121 @@ const createCommentSchema = ({
             </span>
           )
         }
-      }
+      },
     },
     {
       matchMdast: matchType('imageReference'),
-      props: node => ({
+      props: (node) => ({
         identifier: node.identifier,
-        alt: node.alt
+        alt: node.alt,
       }),
       component: ({ identifier, alt }) => (
         <span>
           {alt} [{identifier}]
         </span>
-      )
+      ),
     },
     {
       matchMdast: matchType('emphasis'),
-      component: ({ children }) => <em>{children}</em>
+      component: ({ children }) => <em>{children}</em>,
     },
     {
       matchMdast: matchType('strong'),
-      component: ({ children }) => <strong>{children}</strong>
+      component: ({ children }) => <strong>{children}</strong>,
     },
     {
       matchMdast: matchType('delete'),
-      component: StrikeThrough
+      component: StrikeThrough,
     },
     {
       matchMdast: matchType('inlineCode'),
-      props: node => ({
-        value: node.value
+      props: (node) => ({
+        value: node.value,
       }),
-      component: ({ value, ...props }) => <Code {...props}>{value}</Code>
+      component: ({ value, ...props }) => <Code {...props}>{value}</Code>,
     },
     {
       matchMdast: matchType('html'),
-      props: node => ({
-        value: node.value
+      props: (node) => ({
+        value: node.value,
       }),
-      component: ({ value }) => <span>{value}</span>
-    }
+      component: ({ value }) => <span>{value}</span>,
+    },
   ]
 
   const heading = {
     matchMdast: matchType('heading'),
-    component: Heading
+    component: Heading,
   }
 
   const paragraph = {
     matchMdast: matchParagraph,
     component: Paragraph,
-    rules: [...globalInlines]
+    rules: [...globalInlines],
   }
 
   const blockCode = {
     matchMdast: matchType('code'),
-    props: node => ({
-      value: node.value
+    props: (node) => ({
+      value: node.value,
     }),
-    component: ({ value }) => <BlockCode>{value}</BlockCode>
+    component: ({ value }) => <BlockCode>{value}</BlockCode>,
   }
 
   const list = {
     matchMdast: matchType('list'),
     component: List,
-    props: node => ({
+    props: (node) => ({
       data: {
         ordered: node.ordered,
         start: node.start,
-        compact: !node.loose
-      }
+        compact: !node.loose,
+      },
     }),
     rules: [
       {
         matchMdast: matchType('listItem'),
         component: ListItem,
-        rules: [paragraph]
-      }
-    ]
+        rules: [paragraph],
+      },
+    ],
   }
 
   const thematicBreak = {
     matchMdast: matchType('thematicBreak'),
-    component: HR
+    component: HR,
   }
 
   const blockLevelHtml = {
     matchMdast: matchType('html'),
-    props: node => ({
-      value: node.value
+    props: (node) => ({
+      value: node.value,
     }),
-    component: ({ value }) => <Paragraph>{value}</Paragraph>
+    component: ({ value }) => <Paragraph>{value}</Paragraph>,
   }
 
   const definition = {
     matchMdast: matchType('definition'),
-    props: node => ({
+    props: (node) => ({
       identifier: node.identifier,
-      url: node.url
+      url: node.url,
     }),
     component: ({ identifier, url }) => (
       <Definition>
         [{identifier}] <SafeA href={url}>{url}</SafeA>
       </Definition>
-    )
+    ),
   }
 
   const blockquoteParagraph = {
     matchMdast: matchParagraph,
     component: BlockQuoteParagraph,
-    rules: [...globalInlines]
+    rules: [...globalInlines],
   }
 
   const blockQuoteNested = {
     matchMdast: matchType('blockquote'),
-    component: BlockQuoteNested
+    component: BlockQuoteNested,
   }
 
   const blockQuote = {
@@ -233,8 +233,8 @@ const createCommentSchema = ({
       list,
       thematicBreak,
       blockLevelHtml,
-      definition
-    ]
+      definition,
+    ],
   }
 
   return {
@@ -250,10 +250,10 @@ const createCommentSchema = ({
           list,
           thematicBreak,
           blockLevelHtml,
-          definition
-        ]
-      }
-    ]
+          definition,
+        ],
+      },
+    ],
   }
 }
 

@@ -2,12 +2,12 @@ import { ParsedUrlQuery } from 'querystring'
 import {
   GetStaticProps,
   GetStaticPropsContext,
-  GetStaticPropsResult
+  GetStaticPropsResult,
 } from 'next'
 import { BasePageProps } from '../../pages/_app'
 import {
   APOLLO_STATE_PROP_NAME,
-  initializeApollo
+  initializeApollo,
 } from '../apollo/apolloClient'
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 
@@ -16,7 +16,7 @@ import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
  */
 type ApolloSSGQueryFunc<P, Q extends ParsedUrlQuery> = (
   client: ApolloClient<NormalizedCacheObject>,
-  params: Q
+  params: Q,
 ) => Promise<GetStaticPropsResult<P>>
 
 /**
@@ -25,10 +25,10 @@ type ApolloSSGQueryFunc<P, Q extends ParsedUrlQuery> = (
  * @param queryFunc
  */
 function createGetStaticProps<P, Q extends ParsedUrlQuery = ParsedUrlQuery>(
-  queryFunc: ApolloSSGQueryFunc<P, Q>
+  queryFunc: ApolloSSGQueryFunc<P, Q>,
 ): GetStaticProps<BasePageProps<P>> {
   return async (
-    ctx: GetStaticPropsContext<Q>
+    ctx: GetStaticPropsContext<Q>,
   ): Promise<GetStaticPropsResult<BasePageProps<P>>> => {
     const apolloClient = initializeApollo()
     const result = await queryFunc(apolloClient, ctx.params)

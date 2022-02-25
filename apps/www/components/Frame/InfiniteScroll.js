@@ -10,8 +10,8 @@ const styles = {
   more: css({
     position: 'relative',
     height: 50,
-    padding: '20px 0 0 0'
-  })
+    padding: '20px 0 0 0',
+  }),
 }
 
 const InfiniteScroll = ({
@@ -22,14 +22,14 @@ const InfiniteScroll = ({
   currentCount,
   loadMoreStyles,
   loadMoreKey,
-  children
+  children,
 }) => {
   const [
     { containerRef, infiniteScroll, loadingMore, loadingMoreError },
-    setInfiniteScroll
+    setInfiniteScroll,
   ] = useInfiniteScroll({
     hasMore,
-    loadMore
+    loadMore,
   })
 
   return (
@@ -41,14 +41,14 @@ const InfiniteScroll = ({
         {!infiniteScroll && hasMore && (
           <A
             href='#'
-            onClick={event => {
+            onClick={(event) => {
               event && event.preventDefault()
               setInfiniteScroll(true)
             }}
           >
             {t(loadMoreKey || 'feed/loadMore', {
               count: countFormat(currentCount),
-              remaining: countFormat(totalCount - currentCount)
+              remaining: countFormat(totalCount - currentCount),
             })}
           </A>
         )}

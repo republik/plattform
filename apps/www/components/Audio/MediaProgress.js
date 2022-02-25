@@ -34,20 +34,18 @@ const upsertMediaProgressMutation = gql`
 `
 
 const useLocalMediaProgressState = createPersistedState(
-  'republik-progress-media'
+  'republik-progress-media',
 )
 
 const MediaProgressProvider = ({
   children,
   me,
   client,
-  upsertMediaProgress
+  upsertMediaProgress,
 }) => {
   const isTrackingAllowed = me && me.progressConsent === true
-  const [
-    localMediaProgress,
-    setLocalMediaProgress
-  ] = useLocalMediaProgressState()
+  const [localMediaProgress, setLocalMediaProgress] =
+    useLocalMediaProgressState()
 
   const saveMediaProgressNotPlaying = debounce((mediaId, currentTime) => {
     // Fires on pause, on scrub, on end of video.
@@ -68,7 +66,7 @@ const MediaProgressProvider = ({
       }
     },
     5000,
-    { trailing: true }
+    { trailing: true },
   )
 
   const saveMediaProgress = ({ mediaId }, mediaElement) => {
@@ -88,7 +86,7 @@ const MediaProgressProvider = ({
         .query({
           query: mediaProgressQuery,
           variables: { mediaId },
-          fetchPolicy: 'network-only'
+          fetchPolicy: 'network-only',
         })
         .then(({ data: { mediaProgress } }) => {
           // mediaProgress can be null
@@ -113,7 +111,7 @@ const MediaProgressProvider = ({
     <MediaProgressContext.Provider
       value={{
         getMediaProgress,
-        saveMediaProgress
+        saveMediaProgress,
       }}
     >
       {children}
@@ -130,11 +128,11 @@ const ComposedMediaProgressProvider = compose(
         mutate({
           variables: {
             mediaId,
-            secs
-          }
-        })
-    })
-  })
+            secs,
+          },
+        }),
+    }),
+  }),
 )(MediaProgressProvider)
 
 export default ComposedMediaProgressProvider

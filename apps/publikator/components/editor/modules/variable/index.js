@@ -16,28 +16,28 @@ export default ({ rule, subModules, TYPE }) => {
       kind: 'inline',
       type: TYPE,
       data: {
-        variable: node.data.variable
+        variable: node.data.variable,
       },
       isVoid: true,
-      nodes: []
+      nodes: [],
     }),
     toMdast: (object, index, parent, { visitChildren }) => ({
       type: 'span',
       data: {
-        variable: object.data.variable
+        variable: object.data.variable,
       },
-      children: []
-    })
+      children: [],
+    }),
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [serializerRule]
+    rules: [serializerRule],
   })
 
   return {
     TYPE,
     helpers: {
-      serializer
+      serializer,
     },
     changes: {},
     ui: createUi({ TYPE, editorOptions }),
@@ -58,11 +58,11 @@ export default ({ rule, subModules, TYPE }) => {
         schema: {
           inlines: {
             [TYPE]: {
-              isVoid: true
-            }
-          }
-        }
-      }
-    ]
+              isVoid: true,
+            },
+          },
+        },
+      },
+    ],
   }
 }

@@ -6,6 +6,6 @@ export default {
     background: 'transparent',
     cursor: 'pointer',
     outline: 'none',
-    WebkitAppearance: 'none'
-  })
+    WebkitAppearance: 'none',
+  }),
 }

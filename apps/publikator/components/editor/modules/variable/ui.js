@@ -16,7 +16,7 @@ import {
   createInlineButton,
   buttonStyles,
   matchBlock,
-  matchInline
+  matchInline,
 } from '../../utils'
 
 const blockFactories = {
@@ -44,15 +44,15 @@ Willkommen
 <hr /></section>
 
 <hr /></section>
-`.trim()
-        )
+`.trim(),
+        ),
       )
       .document.nodes.first()
       .nodes.first()
-  }
+  },
 }
 
-const createForm = options =>
+const createForm = (options) =>
   withT(({ t, value, onChange }) => {
     const { TYPE, editorOptions } = options
 
@@ -63,33 +63,33 @@ const createForm = options =>
       .filter(matchInlineType)
       .concat(
         value.blocks
-          .map(node => value.document.getFurthest(node.key, matchBlockType))
-          .filter(Boolean)
+          .map((node) => value.document.getFurthest(node.key, matchBlockType))
+          .filter(Boolean),
       )
 
     if (!nodes.size) {
       return null
     }
 
-    const onInputChange = node => key => (_, inputValue) => {
+    const onInputChange = (node) => (key) => (_, inputValue) => {
       onChange(
         value.change().setNodeByKey(node.key, {
           data: inputValue
             ? node.data.set(key, inputValue)
-            : node.data.remove(key)
-        })
+            : node.data.remove(key),
+        }),
       )
     }
 
     return (
       <div>
         <Label>{t(`variable/form/${TYPE}`, undefined, TYPE)}</Label>
-        {nodes.map(node => (
+        {nodes.map((node) => (
           <MetaForm
             key={node.key}
-            data={Map(editorOptions.fields.map(field => [field.key, ''])).merge(
-              node.data
-            )}
+            data={Map(
+              editorOptions.fields.map((field) => [field.key, '']),
+            ).merge(node.data)}
             onInputChange={onInputChange(node)}
             customFields={editorOptions.fields}
           />
@@ -111,14 +111,14 @@ const createUI = ({ TYPE, editorOptions, context }) => {
     withT(({ t, value, onChange }) => {
       const disabled =
         value.isBlurred ||
-        !value.blocks.every(n => insertTypes.includes(n.type))
+        !value.blocks.every((n) => insertTypes.includes(n.type))
 
       return (
         <span
           {...buttonStyles.insert}
           data-disabled={disabled}
           data-visible
-          onMouseDown={event => {
+          onMouseDown={(event) => {
             event.preventDefault()
             if (!disabled) {
               const change = value.change()
@@ -138,7 +138,7 @@ const createUI = ({ TYPE, editorOptions, context }) => {
       type: TYPE,
       parentTypes: insertTypes,
       isDisabled: ({ value }) => value.isExpanded,
-      reducer: props => event => {
+      reducer: (props) => (event) => {
         event.preventDefault()
         const { onChange, value } = props
 
@@ -151,11 +151,11 @@ const createUI = ({ TYPE, editorOptions, context }) => {
                   data[field.key] = field.items[0].value
                 }
                 return data
-              }, {})
-            })
-          )
+              }, {}),
+            }),
+          ),
         )
-      }
+      },
     })(({ active, disabled, visible, ...props }) => (
       <span
         {...buttonStyles.mark}
@@ -171,7 +171,7 @@ const createUI = ({ TYPE, editorOptions, context }) => {
   return {
     forms: [From],
     insertButtons: [InsertButton],
-    textFormatButtons: [textButton]
+    textFormatButtons: [textButton],
   }
 }
 

@@ -13,9 +13,9 @@ const styles = {
     [mediaQueries.mUp]: {
       fontSize: 39,
       lineHeight: '52px',
-      marginBottom: 30
-    }
-  })
+      marginBottom: 30,
+    },
+  }),
 }
 
 const Vision = ({ t }) => {

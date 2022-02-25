@@ -14,12 +14,12 @@ import {
   Checkbox,
   Dropdown,
   mediaQueries,
-  Interaction
+  Interaction,
 } from '@project-r/styleguide'
 
 import {
   DISCUSSION_NOTIFICATION_CHANNELS,
-  DISCUSSION_NOTIFICATION_OPTIONS
+  DISCUSSION_NOTIFICATION_OPTIONS,
 } from '../Discussion/shared/constants'
 import { withUpdateNotificationSettings } from '../Discussion/graphql/enhancers/withUpdateNotificationSettings'
 import ErrorMessage from '../ErrorMessage'
@@ -33,20 +33,20 @@ const styles = {
     marginLeft: 15,
     verticalAlign: 'middle',
     '& > span': {
-      display: 'inline'
-    }
+      display: 'inline',
+    },
   }),
   dropdown: css({
     marginTop: 20,
     position: 'relative',
-    zIndex: ZINDEX_CONTENT
+    zIndex: ZINDEX_CONTENT,
   }),
   dropdownItem: css({
     fontSize: 16,
     [mediaQueries.mUp]: {
-      fontSize: 'inherit'
-    }
-  })
+      fontSize: 'inherit',
+    },
+  }),
 }
 
 const ErrorContainer = ({ children }) => (
@@ -58,7 +58,7 @@ const NotificationOptions = ({
   meDiscussionNotification,
   loading,
   error,
-  updateNotificationSettings
+  updateNotificationSettings,
 }) => {
   const [serverError, setServerError] = useState()
   const [mutatingChannel, setMutatingChannel] = useState()
@@ -72,7 +72,7 @@ const NotificationOptions = ({
       render={() => {
         const {
           discussionNotificationChannels,
-          defaultDiscussionNotificationOption
+          defaultDiscussionNotificationOption,
         } = meDiscussionNotification
         // the 'ALL' option is confusing as a default as it will show
         // on discussions but only gets truly 'activated' when you take
@@ -81,22 +81,22 @@ const NotificationOptions = ({
         // The best resolution here seems to not show it in the overall
         // settings, except for the few users who have it set as such already
         const dropdownItems = DISCUSSION_NOTIFICATION_OPTIONS.filter(
-          option =>
-            defaultDiscussionNotificationOption === 'ALL' || option !== 'ALL'
-        ).map(option => ({
+          (option) =>
+            defaultDiscussionNotificationOption === 'ALL' || option !== 'ALL',
+        ).map((option) => ({
           value: option,
           text: t(`components/Discussion/Notification/${option}/label`),
           element: (
             <span {...styles.dropdownItem}>
               {t(`components/Discussion/Notification/${option}/label`)}
             </span>
-          )
+          ),
         }))
 
         return (
           <Fragment>
             <P>{t('account/discussionNotificationChannels/intro')}</P>
-            {DISCUSSION_NOTIFICATION_CHANNELS.map(channel => (
+            {DISCUSSION_NOTIFICATION_CHANNELS.map((channel) => (
               <p key={channel}>
                 <Checkbox
                   disabled={!!mutatingChannel}
@@ -110,16 +110,16 @@ const NotificationOptions = ({
                     }
                     setMutatingChannel(channel)
                     updateNotificationSettings({
-                      discussionNotificationChannels: channels
+                      discussionNotificationChannels: channels,
                     }).then(
                       () => {
                         setServerError()
                         setMutatingChannel()
                       },
-                      reason => {
+                      (reason) => {
                         setServerError(reason)
                         setMutatingChannel()
-                      }
+                      },
                     )
                   }}
                 >
@@ -140,21 +140,21 @@ const NotificationOptions = ({
                 label={t('account/defaultDiscussionNotificationOption/label')}
                 items={dropdownItems}
                 value={defaultDiscussionNotificationOption}
-                onChange={item => {
+                onChange={(item) => {
                   setMutatingDefaultOption(true)
                   updateNotificationSettings({
                     defaultDiscussionNotificationOption: item.target
                       ? item.target.value
-                      : item.value
+                      : item.value,
                   }).then(
                     () => {
                       setServerError()
                       setMutatingDefaultOption(false)
                     },
-                    reason => {
+                    (reason) => {
                       setServerError(reason)
                       setMutatingDefaultOption(false)
-                    }
+                    },
                   )
                 }}
               />
@@ -188,8 +188,8 @@ export default compose(
     props: ({ data }) => ({
       loading: data.loading,
       error: data.error,
-      meDiscussionNotification: data.meDiscussionNotification
-    })
+      meDiscussionNotification: data.meDiscussionNotification,
+    }),
   }),
-  withT
+  withT,
 )(NotificationOptions)

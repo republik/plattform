@@ -8,7 +8,7 @@ import {
   fontFamilies,
   mediaQueries,
   ColorHtmlBodyColors,
-  ColorContextProvider
+  ColorContextProvider,
 } from '@project-r/styleguide'
 import Meta from './Meta'
 import Header from './Header'
@@ -20,7 +20,7 @@ import {
   HEADER_HEIGHT_MOBILE,
   SUBHEADER_HEIGHT,
   FRAME_CONTENT_PADDING,
-  FRAME_CONTENT_PADDING_MOBILE
+  FRAME_CONTENT_PADDING_MOBILE,
 } from '../constants'
 import { withMembership } from '../Auth/checkRoles'
 import withT from '../../lib/withT'
@@ -33,54 +33,54 @@ css.global('*, *:before, *:after', { boxSizing: 'inherit' })
 
 css.global('body', {
   width: '100%',
-  fontFamily: fontFamilies.sansSerifRegular
+  fontFamily: fontFamilies.sansSerifRegular,
 })
 
 css.global('button', {
-  fontFamily: fontFamilies.sansSerifRegular
+  fontFamily: fontFamilies.sansSerifRegular,
 })
 
 // avoid gray rects over links and icons on iOS
 css.global('*', {
-  WebkitTapHighlightColor: 'transparent'
+  WebkitTapHighlightColor: 'transparent',
 })
 // avoid orange highlight, observed around full screen gallery, on Android
 css.global('div:focus', {
-  outline: 'none'
+  outline: 'none',
 })
 
 // Manually set hyphenate-character to U+002D
 // Used as a workaround for chrome on MacOS Monterrey
 // Underlying issue: https://bugs.chromium.org/p/chromium/issues/detail?id=1267606#c24
 css.global('body', {
-  WebkitHyphenateCharacter: "'\\2D'"
+  WebkitHyphenateCharacter: "'\\2D'",
 })
 
 const styles = {
   bodyGrowerContainer: css({
     minHeight: '100vh',
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
   }),
   padHeader: css({
     // minus 1px for first sticky hr from header
     // - otherwise there is a jump when scroll 0 and opening hamburger
     paddingTop: HEADER_HEIGHT_MOBILE - 1,
     [mediaQueries.mUp]: {
-      paddingTop: HEADER_HEIGHT - 1
-    }
+      paddingTop: HEADER_HEIGHT - 1,
+    },
   }),
   bodyGrower: css({
-    flexGrow: 1
+    flexGrow: 1,
   }),
   content: css({
     paddingTop: FRAME_CONTENT_PADDING_MOBILE,
     paddingBottom: FRAME_CONTENT_PADDING_MOBILE * 2,
     [mediaQueries.mUp]: {
       paddingTop: FRAME_CONTENT_PADDING,
-      paddingBottom: FRAME_CONTENT_PADDING * 2
-    }
-  })
+      paddingBottom: FRAME_CONTENT_PADDING * 2,
+    },
+  }),
 }
 
 export const MainContainer = ({ children }) => (
@@ -108,7 +108,7 @@ const Frame = ({
   hasOverviewNav: wantOverviewNav,
   stickySecondaryNav,
   isOnMarketingPage,
-  pageColorSchemeKey
+  pageColorSchemeKey,
 }) => {
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
   const { me } = useMe()
@@ -123,8 +123,8 @@ const Frame = ({
       [mediaQueries.mUp]: {
         paddingTop: hasSecondaryNav
           ? HEADER_HEIGHT + SUBHEADER_HEIGHT
-          : HEADER_HEIGHT - 1
-      }
+          : HEADER_HEIGHT - 1,
+      },
     })
   }, [hasSecondaryNav])
   return (
@@ -155,7 +155,7 @@ const Frame = ({
               <Box style={{ padding: 30 }}>
                 <RawHtml
                   dangerouslySetInnerHTML={{
-                    __html: t('noscript')
+                    __html: t('noscript'),
                   }}
                 />
               </Box>

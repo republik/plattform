@@ -18,7 +18,14 @@ const { updateRepo } = require('./postgres')
 
 const slugDateFormat = timeFormat('%Y/%m/%d')
 
-const { PREFIX_PREPUBLICATION_PATH, SUPPRESS_AUDIO_DURATION_MEASURE } = process.env
+const { PREFIX_PREPUBLICATION_PATH, SUPPRESS_AUDIO_DURATION_MEASURE } =
+  process.env
+
+// @see GraphQL schema-types enum AudioSourceKind
+const getAudioSourceKind = (string) =>
+  ['podcast', 'readAloud', 'syntheticReadAloud'].includes(string)
+    ? string
+    : null
 
 const getPath = ({ slug, template, publishDate, prepublication, path }) => {
   if (path) {
@@ -112,7 +119,8 @@ const prepareMetaForPublish = async ({
 
   const creditsString = mdastToString({ children: credits })
 
-  const { audioSourceMp3, audioSourceAac, audioSourceOgg } = doc.content.meta
+  const { audioSourceKind, audioSourceMp3, audioSourceAac, audioSourceOgg } =
+    doc.content.meta
   let durationMs = 0
   if (audioSourceMp3 && !SUPPRESS_AUDIO_DURATION_MEASURE) {
     debug(repoId, 'fetching audio source', audioSourceMp3)
@@ -133,6 +141,7 @@ const prepareMetaForPublish = async ({
     audioSourceMp3 || audioSourceAac || audioSourceOgg
       ? {
           mediaId: Buffer.from(`${repoId}/audio`).toString('base64'),
+          kind: getAudioSourceKind(audioSourceKind),
           mp3: audioSourceMp3,
           aac: audioSourceAac,
           ogg: audioSourceOgg,
@@ -230,7 +239,11 @@ const handleRedirection = async (repoId, newDocMeta, context) => {
   }
 
   await Promise.each([...new Set(previousPaths)], (previousPath) => {
-    debug('upsertRedirection', { source: previousPath, target: newPath, repoId })
+    debug('upsertRedirection', {
+      source: previousPath,
+      target: newPath,
+      repoId,
+    })
     return upsertRedirection(
       {
         source: previousPath,

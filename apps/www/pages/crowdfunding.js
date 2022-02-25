@@ -26,7 +26,7 @@ import {
   A,
   Interaction,
   VideoPlayer,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import Link from 'next/link'
 import withDefaultSSR from '../lib/hocs/withDefaultSSR'
@@ -39,35 +39,31 @@ const styles = {
       borderWidth: 1,
       borderStyle: 'solid',
       borderColor: 'inherit',
-      margin: 5
-    }
+      margin: 5,
+    },
   }),
   stretchLead: css({
-    margin: '20px 0 0'
+    margin: '20px 0 0',
   }),
   stretchP: css({
     fontSize: 17,
-    lineHeight: '25px'
-  })
+    lineHeight: '25px',
+  }),
 }
 
 export const VIDEOS = {
   main: {
-    hls:
-      'https://player.vimeo.com/external/213080233.m3u8?s=40bdb9917fa47b39119a9fe34b9d0fb13a10a92e',
-    mp4:
-      'https://player.vimeo.com/external/213080233.hd.mp4?s=ab84df0ac9134c86bb68bd9ea7ac6b9df0c35774&profile_id=175',
+    hls: 'https://player.vimeo.com/external/213080233.m3u8?s=40bdb9917fa47b39119a9fe34b9d0fb13a10a92e',
+    mp4: 'https://player.vimeo.com/external/213080233.hd.mp4?s=ab84df0ac9134c86bb68bd9ea7ac6b9df0c35774&profile_id=175',
     subtitles: '/static/subtitles/main.vtt',
-    thumbnail: `${CDN_FRONTEND_BASE_URL}/static/video/main.jpg`
+    thumbnail: `${CDN_FRONTEND_BASE_URL}/static/video/main.jpg`,
   },
   team: {
-    hls:
-      'https://player.vimeo.com/external/213078685.m3u8?s=09907679a29279449533845fa451ef9a3754da02',
-    mp4:
-      'https://player.vimeo.com/external/213078685.hd.mp4?s=150318d6e82f1f342442340bade748be38280e61&profile_id=175',
+    hls: 'https://player.vimeo.com/external/213078685.m3u8?s=09907679a29279449533845fa451ef9a3754da02',
+    mp4: 'https://player.vimeo.com/external/213078685.hd.mp4?s=150318d6e82f1f342442340bade748be38280e61&profile_id=175',
     subtitles: '/static/subtitles/team.vtt',
-    thumbnail: `${CDN_FRONTEND_BASE_URL}/static/video/team.jpg`
-  }
+    thumbnail: `${CDN_FRONTEND_BASE_URL}/static/video/team.jpg`,
+  },
 }
 
 export const Page = ({ router, t, inNativeIOSApp }) => {
@@ -82,42 +78,42 @@ export const Page = ({ router, t, inNativeIOSApp }) => {
     {
       href: {
         pathname: '/angebote',
-        query: { package: 'ABO', userPrice: 1 }
+        query: { package: 'ABO', userPrice: 1 },
       },
-      text: 'Sie können sich den Betrag nicht leisten?'
+      text: 'Sie können sich den Betrag nicht leisten?',
     },
     {
       href: `mailto:ir@republik.ch?subject=${encodeURIComponent(
-        'Investitionsmöglichkeiten bei der Republik AG'
+        'Investitionsmöglichkeiten bei der Republik AG',
       )}`,
-      text: 'Sie wollen Investor/Investorin werden?'
-    }
+      text: 'Sie wollen Investor/Investorin werden?',
+    },
   ]
   const packages = [
     {
       name: 'ABO',
       title: 'Für mich',
-      price: 24000
+      price: 24000,
     },
     {
       name: 'ABO_GIVE',
       title: 'Für andere',
-      price: 24000
+      price: 24000,
     },
     {
       name: 'BENEFACTOR',
       title: 'Für Gönner',
-      price: 100000
+      price: 100000,
     },
     {
       name: 'DONATE',
-      title: 'Spenden, sonst nichts'
-    }
+      title: 'Spenden, sonst nichts',
+    },
   ]
 
   const shareObject = {
     url: PUBLIC_BASE_URL + router.pathname,
-    emailSubject: 'Es ist Zeit.'
+    emailSubject: 'Es ist Zeit.',
   }
 
   return (
@@ -128,7 +124,7 @@ export const Page = ({ router, t, inNativeIOSApp }) => {
         pageTitle: 'Republik – das digitale Magazin von Project R',
         title: 'Republik – das digitale Magazin von Project R',
         description: 'Das war unser Crowdfunding.',
-        image: `${CDN_FRONTEND_BASE_URL}/static/social-media/main.jpg`
+        image: `${CDN_FRONTEND_BASE_URL}/static/social-media/main.jpg`,
       }}
       cover={<VideoCover src={VIDEOS.main} cursor endScroll={0.97} />}
     >
@@ -137,7 +133,7 @@ export const Page = ({ router, t, inNativeIOSApp }) => {
           links,
           packages,
           crowdfundingName: 'REPUBLIK',
-          title: 'Abo und Mitgliedschaft für ein Jahr'
+          title: 'Abo und Mitgliedschaft für ein Jahr',
         }}
       >
         <Box style={{ padding: 14, marginBottom: 20 }}>
@@ -392,7 +388,7 @@ Die Republik kann nicht ein Projekt von wenigen sein. Ein neues Fundament für u
         <div style={{ margin: '20px 0' }}>
           <TestimonialList
             first={10}
-            onSelect={id => {
+            onSelect={(id) => {
               Router.push(`/community?id=${id}`).then(() => {
                 window.scrollTo(0, 0)
               })

@@ -10,31 +10,31 @@ import {
   Button,
   InlineSpinner,
   Field,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 
 const styles = {
   form: css({
     display: 'flex',
     justifyContent: 'space-between',
-    flexFlow: 'row wrap'
+    flexFlow: 'row wrap',
   }),
   input: css({
     marginRight: 10,
     marginBottom: 0,
     width: '58%',
-    flexGrow: 1
+    flexGrow: 1,
   }),
   button: css({
     width: 160,
     textAlign: 'center',
-    marginBottom: 15
+    marginBottom: 15,
   }),
   hints: css({
     marginTop: -5,
     fontSize: 16,
-    lineHeight: '24px'
-  })
+    lineHeight: '24px',
+  }),
 }
 
 export const checkEmail = ({ value, shouldValidate, t }) => ({
@@ -42,10 +42,10 @@ export const checkEmail = ({ value, shouldValidate, t }) => ({
   error:
     (value.trim().length <= 0 && t('signIn/email/error/empty')) ||
     (!isEmail(value) && t('signIn/email/error/invalid')),
-  dirty: shouldValidate
+  dirty: shouldValidate,
 })
 
-const EmailForm = props => {
+const EmailForm = (props) => {
   const {
     t,
     label,
@@ -58,7 +58,7 @@ const EmailForm = props => {
     dirty,
     email,
     serverError,
-    black
+    black,
   } = props
 
   const [colorScheme] = useColorContext()
@@ -80,8 +80,8 @@ const EmailForm = props => {
                   checkEmail({
                     t,
                     value,
-                    shouldValidate
-                  })
+                    shouldValidate,
+                  }),
                 )
               }}
               value={email}

@@ -10,9 +10,9 @@ const styles = {
     margin: '0 0 10px 0',
     [mUp]: {
       ...serifRegular23,
-      margin: '0 0 20px 0'
-    }
-  })
+      margin: '0 0 20px 0',
+    },
+  }),
 }
 
 const Lead = ({ children }) => {
@@ -20,7 +20,7 @@ const Lead = ({ children }) => {
 }
 
 Lead.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 }
 
 export default Lead

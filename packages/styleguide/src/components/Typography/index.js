@@ -20,7 +20,7 @@ export const Scribble = { ..._Scribble }
 // Direct exports.
 export const fontStyles = {
   ..._fontStyles,
-  ..._fontStyleSizes
+  ..._fontStyleSizes,
 }
 
 export const linkStyle = {
@@ -28,65 +28,65 @@ export const linkStyle = {
   color: colors.primary,
   '@media (hover)': {
     ':hover': {
-      color: colors.secondary
-    }
-  }
+      color: colors.secondary,
+    },
+  },
 }
 
 export const linkRule = css(linkStyle)
 
 export const plainLinkRule = css({
   textDecoration: 'none',
-  color: 'inherit'
+  color: 'inherit',
 })
 
 const styles = {
   h1: css({
     ...fontStyles.serifBold36,
     [mUp]: {
-      ...fontStyles.serifBold52
+      ...fontStyles.serifBold52,
     },
     color: colors.text,
     margin: '30px 0 20px 0',
     ':first-child': {
-      marginTop: 0
+      marginTop: 0,
     },
     ':last-child': {
-      marginBottom: 0
-    }
+      marginBottom: 0,
+    },
   }),
   h2: css({
     ...fontStyles.serifBold19,
     [mUp]: {
-      ...fontStyles.serifBold24
+      ...fontStyles.serifBold24,
     },
     color: colors.text,
     margin: '30px 0 20px 0',
     ':first-child': {
-      marginTop: 0
+      marginTop: 0,
     },
     ':last-child': {
-      marginBottom: 0
-    }
+      marginBottom: 0,
+    },
   }),
   lead: css({
     ...fontStyles.serifRegular25,
     color: colors.text,
-    margin: '20px 0 20px 0'
+    margin: '20px 0 20px 0',
   }),
   p: css({
     color: colors.text,
     ...fontStyles.serifRegular16,
     [mUp]: {
-      ...fontStyles.serifRegular21
+      ...fontStyles.serifRegular21,
     },
     margin: '20px 0 20px 0',
     ':first-child': {
-      marginTop: 0
+      marginTop: 0,
     },
     ':last-child': {
-      marginBottom: 0
-    }
+      marginBottom: 0,
+    },
   }),
   hr: css({
     border: 0,
@@ -94,15 +94,15 @@ const styles = {
     color: colors.divider,
     backgroundColor: colors.divider,
     marginTop: 30,
-    marginBottom: 30
+    marginBottom: 30,
   }),
   label: css({
-    ...convertStyleToRem(fontStyles.sansSerifRegular14)
+    ...convertStyleToRem(fontStyles.sansSerifRegular14),
   }),
   quote: css({
     ...fontStyles.sansSerifRegular21,
-    color: colors.text
-  })
+    color: colors.text,
+  }),
 }
 
 export const A = React.forwardRef(({ children, ...props }, ref) => {
@@ -114,11 +114,11 @@ export const A = React.forwardRef(({ children, ...props }, ref) => {
         color: colorScheme.getCSSColor('primary'),
         '@media (hover)': {
           ':hover': {
-            color: colorScheme.getCSSColor('primaryHover')
-          }
-        }
+            color: colorScheme.getCSSColor('primaryHover'),
+          },
+        },
       }),
-    [colorScheme]
+    [colorScheme],
   )
   return (
     <a {...props} {...linkStyleRule} ref={ref}>
@@ -179,14 +179,14 @@ export const subSupStyles = {
     fontSize: '75%',
     lineHeight: '1.4em',
     position: 'relative',
-    verticalAlign: 'baseline'
+    verticalAlign: 'baseline',
   }),
   sub: css({
-    bottom: '-0.25em'
+    bottom: '-0.25em',
   }),
   sup: css({
-    top: '-0.5em'
-  })
+    top: '-0.5em',
+  }),
 }
 
 export const sub = { ...subSupStyles.base, ...subSupStyles.sub }

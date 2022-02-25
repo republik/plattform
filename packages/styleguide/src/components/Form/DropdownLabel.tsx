@@ -7,7 +7,7 @@ import {
   Y_PADDING,
   BORDER_WIDTH,
   LABEL_HEIGHT,
-  FIELD_HEIGHT
+  FIELD_HEIGHT,
 } from './constants'
 import { useColorContext } from '../Colors/useColorContext'
 
@@ -24,17 +24,17 @@ interface DropdownLabelProps extends Record<string, unknown> {
   onChange?: (
     event: React.ChangeEvent<
       HTMLSelectElement & HTMLButtonElement & HTMLSpanElement
-    >
+    >,
   ) => void
   onFocus?: (
     event: React.FocusEvent<
       HTMLSelectElement & HTMLButtonElement & HTMLSpanElement
-    >
+    >,
   ) => void
   onBlur?: (
     event: React.FocusEvent<
       HTMLSelectElement & HTMLButtonElement & HTMLSpanElement
-    >
+    >,
   ) => void
 }
 
@@ -54,25 +54,25 @@ const styles = {
     textAlign: 'left',
     cursor: 'pointer',
     borderBottomWidth: BORDER_WIDTH,
-    borderBottomStyle: 'solid'
+    borderBottomStyle: 'solid',
   }),
   label: css({
     width: '100%',
     paddingTop: pxToRem(LABEL_HEIGHT),
     position: 'relative',
-    display: 'block'
+    display: 'block',
   }),
   labelText: css({
     ...convertStyleToRem(sansSerifRegular22),
     lineHeight: pxToRem(20),
     position: 'absolute',
     top: pxToRem(LABEL_HEIGHT + Y_PADDING),
-    transition: 'top 200ms, font-size 200ms'
+    transition: 'top 200ms, font-size 200ms',
   }),
   labelTextTop: css({
     top: 5,
     fontSize: pxToRem(14),
-    lineHeight: pxToRem(15)
+    lineHeight: pxToRem(15),
   }),
   select: css({
     position: 'absolute',
@@ -80,14 +80,14 @@ const styles = {
     left: 0,
     right: 0,
     bottom: 0,
-    opacity: 0
+    opacity: 0,
   }),
   selectArrow: css({
     position: 'absolute',
     right: 0,
     top: pxToRem(28),
-    pointerEvents: 'none'
-  })
+    pointerEvents: 'none',
+  }),
 }
 
 export const Label = ({
@@ -113,14 +113,14 @@ export const Label = ({
       field: css({
         borderColor: colorScheme.getCSSColor('disabled'),
         ':focus': {
-          borderColor: colorScheme.getCSSColor('primary')
-        }
+          borderColor: colorScheme.getCSSColor('primary'),
+        },
       }),
       select: css({
         ':focus + svg': {
-          fill: colorScheme.getCSSColor('primary')
-        }
-      })
+          fill: colorScheme.getCSSColor('primary'),
+        },
+      }),
     }
   }, [colorScheme])
 
@@ -138,7 +138,7 @@ export const Label = ({
             styles.field,
             styleRules.field,
             isSelect && styles.select,
-            isSelect && styleRules.select
+            isSelect && styleRules.select,
           )}
           {...(error
             ? colorScheme.set('color', 'error')

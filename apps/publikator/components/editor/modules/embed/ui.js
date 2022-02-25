@@ -8,7 +8,7 @@ export default ({ TYPE, editorOptions = {} }) => {
   const VideoForm = createPropertyForm({
     isDisabled: ({ value }) => {
       return !value.blocks.some(isMatch)
-    }
+    },
   })(({ disabled, value, onChange }) => {
     const { sizes = [] } = editorOptions
     if (disabled) {
@@ -30,18 +30,18 @@ export default ({ TYPE, editorOptions = {} }) => {
                   <br />
                   {sizes.map((size, i) => {
                     let checked = Object.keys(size.props).every(
-                      key => block.data.get(key) === size.props[key]
+                      (key) => block.data.get(key) === size.props[key],
                     )
                     return [
                       <Radio
                         key={`radio${i}`}
                         checked={checked}
-                        onChange={event => {
+                        onChange={(event) => {
                           event.preventDefault()
                           if (checked) return
 
                           let change = value.change().setNodeByKey(block.key, {
-                            data: block.data.merge(size.props)
+                            data: block.data.merge(size.props),
                           })
 
                           onChange(change)
@@ -49,7 +49,7 @@ export default ({ TYPE, editorOptions = {} }) => {
                       >
                         {size.label}
                       </Radio>,
-                      <br key={`br${i}`} />
+                      <br key={`br${i}`} />,
                     ]
                   })}
                   <br />
@@ -58,12 +58,14 @@ export default ({ TYPE, editorOptions = {} }) => {
                       <div style={{ margin: '10px 0' }}>
                         <Checkbox
                           checked={block.data.get('forceAudio')}
-                          onChange={event => {
+                          onChange={(event) => {
                             const checked = block.data.get('forceAudio')
                             let change = value
                               .change()
                               .setNodeByKey(block.key, {
-                                data: block.data.merge({ forceAudio: !checked })
+                                data: block.data.merge({
+                                  forceAudio: !checked,
+                                }),
                               })
                             onChange(change)
                           }}
@@ -74,14 +76,14 @@ export default ({ TYPE, editorOptions = {} }) => {
                       <div style={{ margin: '10px 0' }}>
                         <Checkbox
                           checked={block.data.get('cinemagraph')}
-                          onChange={event => {
+                          onChange={(event) => {
                             const checked = block.data.get('cinemagraph')
                             let change = value
                               .change()
                               .setNodeByKey(block.key, {
                                 data: block.data.merge({
-                                  cinemagraph: !checked
-                                })
+                                  cinemagraph: !checked,
+                                }),
                               })
                             onChange(change)
                           }}
@@ -92,14 +94,14 @@ export default ({ TYPE, editorOptions = {} }) => {
                       <div style={{ margin: '10px 0' }}>
                         <Checkbox
                           checked={block.data.get('primary')}
-                          onChange={event => {
+                          onChange={(event) => {
                             const checked = block.data.get('primary')
                             let change = value
                               .change()
                               .setNodeByKey(block.key, {
                                 data: block.data.merge({
-                                  primary: !checked
-                                })
+                                  primary: !checked,
+                                }),
                               })
                             onChange(change)
                           }}
@@ -121,7 +123,7 @@ export default ({ TYPE, editorOptions = {} }) => {
   const CommentForm = createPropertyForm({
     isDisabled: ({ value }) => {
       return !value.blocks.some(isMatch)
-    }
+    },
   })(({ disabled, value, onChange }) => {
     if (disabled) {
       return null
@@ -144,11 +146,11 @@ export default ({ TYPE, editorOptions = {} }) => {
                   renderInput={({ ref, ...inputProps }) => (
                     <AutosizeInput {...inputProps} inputRef={ref} />
                   )}
-                  onChange={event => {
+                  onChange={(event) => {
                     let change = value.change().setNodeByKey(block.key, {
                       data: block.data.merge({
-                        content: event.target.value
-                      })
+                        content: event.target.value,
+                      }),
                     })
                     onChange(change)
                   }}
@@ -164,7 +166,7 @@ export default ({ TYPE, editorOptions = {} }) => {
   return {
     forms: [
       TYPE === 'EMBEDVIDEO' && VideoForm,
-      TYPE === 'EMBEDCOMMENT' && CommentForm
-    ].filter(Boolean)
+      TYPE === 'EMBEDCOMMENT' && CommentForm,
+    ].filter(Boolean),
   }
 }

@@ -61,6 +61,7 @@ input SearchFilterInput {
   discussion: Boolean
   isSeriesMaster: Boolean
   isSeriesEpisode: Boolean
+  audioSourceKind: AudioSourceKind
   hasAudio: Boolean
   hasVideo: Boolean
   textLength: DocumentTextLengths

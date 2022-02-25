@@ -5,17 +5,17 @@ import Link from 'next/link'
 export const rerouteDiscussion = (route, targetQuery) => {
   const {
     pathname,
-    query: { focus, ...restQuery }
+    query: { focus, ...restQuery },
   } = route
 
   const query = {
     ...restQuery,
-    ...targetQuery
+    ...targetQuery,
   }
 
   const params = ['tag', 'order']
 
-  params.forEach(param => {
+  params.forEach((param) => {
     if (query[param] === undefined) {
       delete query[param]
     }
@@ -23,11 +23,11 @@ export const rerouteDiscussion = (route, targetQuery) => {
 
   return {
     pathname,
-    query
+    query,
   }
 }
 
-export const getDiscussionUrlObject = discussion => {
+export const getDiscussionUrlObject = (discussion) => {
   let tab
   if (discussion && discussion.document) {
     const meta = discussion.document.meta || {}
@@ -43,7 +43,7 @@ export const getDiscussionUrlObject = discussion => {
   if (tab) {
     return {
       pathname: '/dialog',
-      query: { t: tab, id: tab === 'general' ? undefined : discussion.id }
+      query: { t: tab, id: tab === 'general' ? undefined : discussion.id },
     }
   }
   if (discussion) {
@@ -54,7 +54,7 @@ export const getDiscussionUrlObject = discussion => {
         discussion.document.meta.path
           ? discussion.document.meta.path
           : discussion.path,
-      query: {}
+      query: {},
     }
   }
 }

@@ -42,7 +42,7 @@ const Mailbox = withT(({ userId, narrow = false }) => {
           fetchMore({
             variables: {
               id: data.user.id,
-              after: data.user.mailbox.pageInfo.endCursor
+              after: data.user.mailbox.pageInfo.endCursor,
             },
             updateQuery: (previousResult, { fetchMoreResult }) => {
               const previousNodes = previousResult.user.mailbox.nodes
@@ -59,11 +59,11 @@ const Mailbox = withT(({ userId, narrow = false }) => {
                   mailbox: {
                     __typename,
                     nodes: [...previousNodes, ...fetchedNodes],
-                    pageInfo: newPageInfo
-                  }
-                }
+                    pageInfo: newPageInfo,
+                  },
+                },
               }
-            }
+            },
           })
 
         return (
@@ -77,7 +77,7 @@ const Mailbox = withT(({ userId, narrow = false }) => {
                   <SectionNav>
                     <A
                       href={`https://mandrillapp.com/settings/rejections?q=${encodeURIComponent(
-                        data.user.email
+                        data.user.email,
                       )}`}
                       target='_blank'
                     >

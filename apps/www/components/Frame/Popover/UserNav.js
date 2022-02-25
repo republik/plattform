@@ -7,7 +7,7 @@ import {
   Center,
   Button,
   Loader,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../../constants'
 
@@ -38,7 +38,7 @@ const UserNav = ({
   t,
   inNativeApp,
   inNativeIOSApp,
-  pageColorSchemeKey
+  pageColorSchemeKey,
 }) => {
   const [containerPadding, setContainerPadding] = useState()
   const containerRef = useRef(null)
@@ -66,11 +66,11 @@ const UserNav = ({
       return {
         collections: ['progress', 'bookmarks'],
         progress: 'UNFINISHED',
-        lastDays: 30
+        lastDays: 30,
       }
     }
     return {
-      collections: ['bookmarks']
+      collections: ['bookmarks'],
     }
   }, [hasProgress])
   registerQueryVariables(variables)
@@ -137,7 +137,7 @@ const UserNav = ({
                       <BookmarkMiniFeed
                         style={{
                           marginTop: 10,
-                          paddingLeft: containerPadding - 16
+                          paddingLeft: containerPadding - 16,
                         }}
                         closeHandler={closeHandler}
                         variables={variables}
@@ -188,7 +188,7 @@ const UserNav = ({
                           <NavLink
                             href={{
                               pathname: '/angebote',
-                              query: { group: 'GIVE' }
+                              query: { group: 'GIVE' },
                             }}
                             active={active}
                             closeHandler={closeHandler}
@@ -200,7 +200,7 @@ const UserNav = ({
                             {...fontStyles.sansSerifLight16}
                             href={{
                               pathname: '/angebote',
-                              query: { package: 'DONATE' }
+                              query: { package: 'DONATE' },
                             }}
                             active={active}
                             closeHandler={closeHandler}
@@ -231,25 +231,25 @@ const UserNav = ({
 const styles = {
   container: css({
     [mediaQueries.mUp]: {
-      marginTop: '40px'
-    }
+      marginTop: '40px',
+    },
   }),
   hr: css({
     margin: 0,
     display: 'block',
     border: 0,
     height: 1,
-    width: '100%'
+    width: '100%',
   }),
   hrFixed: css({
     position: 'fixed',
     top: HEADER_HEIGHT_MOBILE - 1,
     [mediaQueries.mUp]: {
-      top: HEADER_HEIGHT - 1
-    }
+      top: HEADER_HEIGHT - 1,
+    },
   }),
   signInBlock: css({
-    display: 'block'
+    display: 'block',
   }),
   bookmarkContainer: css({
     width: '100vw',
@@ -257,26 +257,26 @@ const styles = {
     left: '50%',
     right: '50%',
     marginLeft: '-50vw',
-    marginRight: '-50vw'
+    marginRight: '-50vw',
   }),
   navSection: css({
     display: 'flex',
     flexDirection: 'column',
-    margin: '24px 0px'
+    margin: '24px 0px',
   }),
   navLinks: css({
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
     [mediaQueries.mUp]: {
-      flexDirection: 'row'
-    }
+      flexDirection: 'row',
+    },
   }),
   smallLinks: css({
     '& a': {
-      ...fontStyles.sansSerifRegular18
-    }
-  })
+      ...fontStyles.sansSerifRegular18,
+    },
+  }),
 }
 
 export default compose(withT, withInNativeApp, withMembership)(UserNav)

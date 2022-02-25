@@ -8,8 +8,8 @@ import BrowserOnly from './BrowserOnly'
 
 const styles = {
   container: css({
-    padding: 13
-  })
+    padding: 13,
+  }),
 }
 
 const InlineWrapper = ({ inline, children }) => {
@@ -40,12 +40,12 @@ const TrialPayNoteMini = ({ repoId, inline, context, index }) => {
               variation: 'tryNoteMini/210613',
               position: [context, inline ? 'inline' : 'grid', index]
                 .filter(Boolean)
-                .join('-')
+                .join('-'),
             },
             onSuccess: () => {
               return false
             },
-            isInSeriesNav: true
+            isInSeriesNav: true,
           }}
           height={115}
         />

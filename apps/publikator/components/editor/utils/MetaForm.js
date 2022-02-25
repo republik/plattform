@@ -8,7 +8,7 @@ import {
   Checkbox,
   Label,
   Interaction,
-  Dropdown
+  Dropdown,
 } from '@project-r/styleguide'
 import AutosizeInput from 'react-textarea-autosize'
 import MaskedInput from 'react-maskedinput'
@@ -36,31 +36,31 @@ const styles = {
     ':after': {
       content: '""',
       display: 'table',
-      clear: 'both'
-    }
+      clear: 'both',
+    },
   }),
   span: css({
     float: 'left',
     paddingLeft: `${GUTTER / 2}px`,
     paddingRight: `${GUTTER / 2}px`,
     minHeight: 1,
-    width: '50%'
+    width: '50%',
   }),
   autoSize: css({
     minHeight: 40,
     paddingTop: '7px !important',
-    paddingBottom: '6px !important'
+    paddingBottom: '6px !important',
   }),
   mask: css({
     '::placeholder': {
-      color: 'transparent'
+      color: 'transparent',
     },
     ':focus': {
       '::placeholder': {
-        color: '#ccc'
-      }
-    }
-  })
+        color: '#ccc',
+      },
+    },
+  }),
 }
 
 class Form extends Component {
@@ -92,7 +92,7 @@ class Form extends Component {
       notes = Map(),
       customFields = [],
       getWidth = defaultGetWidth,
-      black
+      black,
     } = this.props
 
     return (
@@ -102,7 +102,7 @@ class Form extends Component {
             let input
             let formattedValue = value
             let onChange
-            const customField = customFields.find(f => f.key === key) || {}
+            const customField = customFields.find((f) => f.key === key) || {}
 
             const label =
               customField.label || t(`metaData/field/${key}`, undefined, key)
@@ -135,11 +135,11 @@ class Form extends Component {
                   {lastValueEmpty ? (
                     <A
                       href='#cancel'
-                      onClick={e => {
+                      onClick={(e) => {
                         e.preventDefault()
                         onInputChange(key)(
                           e,
-                          values.slice(0, values.length - 1)
+                          values.slice(0, values.length - 1),
                         )
                       }}
                     >
@@ -148,7 +148,7 @@ class Form extends Component {
                   ) : (
                     <A
                       href='#add'
-                      onClick={e => {
+                      onClick={(e) => {
                         e.preventDefault()
                         onInputChange(key)(e, [...values, ''])
                       }}
@@ -166,7 +166,7 @@ class Form extends Component {
                   items={customField.items}
                   label={label}
                   value={value}
-                  onChange={item => defaultOnChange(undefined, item.value)}
+                  onChange={(item) => defaultOnChange(undefined, item.value)}
                 />
               )
             } else if (key.match(/image|logo|src/i)) {
@@ -232,14 +232,14 @@ class Form extends Component {
                     {
                       [key]: {
                         formatted: inputValue,
-                        value: parsedValue !== value ? parsedValue : value
-                      }
+                        value: parsedValue !== value ? parsedValue : value,
+                      },
                     },
                     () => {
                       if (parsedValue !== value) {
                         onInputChange(key)(_, parsedValue)
                       }
-                    }
+                    },
                   )
                 }
               }
@@ -263,13 +263,13 @@ class Form extends Component {
                     style={{
                       display: 'block',
                       marginBottom: 10,
-                      marginTop: -10
+                      marginTop: -10,
                     }}
                   >
                     {notes.get(key)}{' '}
                     {isShort && formattedValue && formattedValue.length
                       ? t('metaData/field/short/count', {
-                          count: formattedValue.length
+                          count: formattedValue.length,
                         })
                       : ' '}
                   </Label>

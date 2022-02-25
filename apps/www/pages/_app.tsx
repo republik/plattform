@@ -6,7 +6,7 @@ import Head from 'next/head'
 
 import {
   ColorContextProvider,
-  IconContextProvider
+  IconContextProvider,
 } from '@project-r/styleguide'
 
 import { ErrorBoundary, reportError } from '../lib/errors'
@@ -27,7 +27,7 @@ if (typeof window !== 'undefined') {
     const { message, filename, lineno, colno, error } = event
     reportError(
       'onerror',
-      (error && error.stack) || [message, filename, lineno, colno].join('\n')
+      (error && error.stack) || [message, filename, lineno, colno].join('\n'),
     )
   })
 
@@ -36,9 +36,9 @@ if (typeof window !== 'undefined') {
     (event: PromiseRejectionEvent) => {
       reportError(
         'onunhandledrejection',
-        (event.reason && event.reason.stack) || event.reason
+        (event.reason && event.reason.stack) || event.reason,
       )
-    }
+    },
   )
 }
 

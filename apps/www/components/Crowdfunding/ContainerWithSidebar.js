@@ -14,19 +14,19 @@ const styles = {
     paddingTop: 25,
     [mUp]: {
       float: 'right',
-      width: SIDEBAR_WIDTH
-    }
+      width: SIDEBAR_WIDTH,
+    },
   }),
   content: css({
     paddingTop: 20,
     [mUp]: {
       paddingLeft: CONTENT_PADDING,
-      paddingRight: CONTENT_PADDING + SIDEBAR_WIDTH
+      paddingRight: CONTENT_PADDING + SIDEBAR_WIDTH,
     },
     [lUp]: {
-      paddingRight: CONTENT_PADDING * 2 + SIDEBAR_WIDTH
-    }
-  })
+      paddingRight: CONTENT_PADDING * 2 + SIDEBAR_WIDTH,
+    },
+  }),
 }
 
 export const Content = ({ children }) => (

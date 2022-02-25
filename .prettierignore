@@ -1,4 +1,12 @@
-**/node_modules
+node_modules
+
 **/*.min.js
 **/*.min.css
+
 .vscode
+.idea
+.next
+.turbo
+.cache
+dist
+build

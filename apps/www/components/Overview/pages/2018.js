@@ -3,7 +3,7 @@ import { Highlight, A } from '../Elements'
 import Page from '../Page'
 
 const text = {
-  Januar: p => (
+  Januar: (p) => (
     <>
       Die Republik geht mit{' '}
       <Highlight {...p} ids={['ByKAxDA8c0Zm', 'Bkm0xwA89AbX']}>
@@ -169,9 +169,9 @@ const text = {
       </A>
       .
     </>
-  )
+  ),
 }
 
-const Overview2018 = props => <Page {...props} year={2018} text={text} />
+const Overview2018 = (props) => <Page {...props} year={2018} text={text} />
 
 export default Overview2018

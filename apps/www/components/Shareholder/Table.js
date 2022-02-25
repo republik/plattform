@@ -10,7 +10,7 @@ const nbspNumbers = formatLocale({
   decimal: ',',
   thousands: '\u00a0',
   grouping: [3],
-  currency: ['CHF\u00a0', '']
+  currency: ['CHF\u00a0', ''],
 })
 const countFormat = nbspNumbers.format(',.0f')
 const percentFormat = nbspNumbers.format(' 05.1%')
@@ -21,12 +21,12 @@ const td = css({
   textAlign: 'left',
   verticalAlign: 'top',
   paddingTop: 3,
-  paddingBottom: 3
+  paddingBottom: 3,
 })
 
 const num = merge(td, {
   textAlign: 'right',
-  fontFeatureSettings: '"tnum" 1, "kern" 1'
+  fontFeatureSettings: '"tnum" 1, "kern" 1',
 })
 
 const groupTd = css({
@@ -35,11 +35,11 @@ const groupTd = css({
   borderBottomStyle: 'solid',
   verticalAlign: 'bottom',
   'tr:first-child > &': {
-    paddingTop: 3
+    paddingTop: 3,
   },
   'tr:last-child > &': {
-    borderBottom: 'none'
-  }
+    borderBottom: 'none',
+  },
 })
 
 const styles = {
@@ -50,12 +50,12 @@ const styles = {
     paddingRight: 5,
     minWidth: '100%',
     '@media (max-width: 600px)': {
-      fontSize: 14
+      fontSize: 14,
     },
     '& th': {
       fontFamily: fontFamilies.sansSerifMedium,
-      fontWeight: 'normal'
-    }
+      fontWeight: 'normal',
+    },
   }),
   td,
   num,
@@ -63,8 +63,8 @@ const styles = {
   groupTdNum: merge(num, groupTd),
   highlight: css({
     fontFamily: fontFamilies.sansSerifMedium,
-    fontWeight: 'normal'
-  })
+    fontWeight: 'normal',
+  }),
 }
 
 const Table = ({ children }) => {
@@ -75,7 +75,7 @@ const Table = ({ children }) => {
         overflowX: 'auto',
         overflowY: 'hidden',
         marginLeft: -PADDING,
-        marginRight: -PADDING
+        marginRight: -PADDING,
       }}
     >
       <table
@@ -118,10 +118,10 @@ export default () => (
             <th {...styles.groupTdNum}>{percentFormat(group.value / total)}</th>
             <th {...styles.groupTdNum}>
               {percentFormat(
-                (group.value * group.data['Nominal CHF']) / totalChf
+                (group.value * group.data['Nominal CHF']) / totalChf,
               )}
             </th>
-          </tr>
+          </tr>,
         ]
 
         if (group.children) {
@@ -133,10 +133,10 @@ export default () => (
                 <td {...styles.num}>{percentFormat(entity.value / total)}</td>
                 <td {...styles.num}>
                   {percentFormat(
-                    (entity.value * entity.data['Nominal CHF']) / totalChf
+                    (entity.value * entity.data['Nominal CHF']) / totalChf,
                   )}
                 </td>
-              </tr>
+              </tr>,
             )
           })
         }

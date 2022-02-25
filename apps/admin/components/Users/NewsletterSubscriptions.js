@@ -63,19 +63,19 @@ class UpdateSubscription extends Component {
   constructor(props) {
     super(props)
     const {
-      subscription: { subscribed }
+      subscription: { subscribed },
     } = this.props
 
     this.state = {
-      value: subscribed
+      value: subscribed,
     }
 
-    this.handleSubmit = mutation => event => {
+    this.handleSubmit = (mutation) => (event) => {
       event.preventDefault()
       mutation({
         variables: {
-          subscribed: this.state.value
-        }
+          subscribed: this.state.value,
+        },
       })
     }
   }
@@ -84,7 +84,7 @@ class UpdateSubscription extends Component {
     const {
       t,
       user: { id },
-      subscription: { name, status, isEligible, subscribed }
+      subscription: { name, status, isEligible, subscribed },
     } = this.props
     const { value } = this.state
     return (
@@ -95,9 +95,9 @@ class UpdateSubscription extends Component {
           {
             query: GET_NEWSLETTER_SUBSCRIPTION,
             variables: {
-              id: updateNewsletterSubscription.id
-            }
-          }
+              id: updateNewsletterSubscription.id,
+            },
+          },
         ]}
       >
         {(mutation, { loading }) => {
@@ -109,7 +109,7 @@ class UpdateSubscription extends Component {
                   disabled={(!isEligible && !value) || loading}
                   onChange={(_, checked) =>
                     this.setState({
-                      value: checked
+                      value: checked,
                     })
                   }
                 >
@@ -122,9 +122,7 @@ class UpdateSubscription extends Component {
                     <TextButton type='submit'>
                       <SaveIcon size={22} />
                     </TextButton>
-                  ) : (
-                    undefined
-                  )}
+                  ) : undefined}
                 </span>
               </p>
             </form>
@@ -147,7 +145,7 @@ const NewsletterSubscriptions = ({ t, userId }) => (
             const { user } = data
             const { subscriptions, status } = user.newsletterSettings
             const hasNonEligibleSubscription = subscriptions.some(
-              newsletter => !newsletter.isEligible
+              (newsletter) => !newsletter.isEligible,
             )
 
             return (
@@ -166,7 +164,7 @@ const NewsletterSubscriptions = ({ t, userId }) => (
                               disabled={loading}
                               onClick={() => {
                                 const answer = confirm(
-                                  'Wollen Sie die Newsletter für diesen Benutzer reaktivieren?\nDer Benutzer wird eine E-Mail erhalten, um die Reaktivierung zu bestätigen.'
+                                  'Wollen Sie die Newsletter für diesen Benutzer reaktivieren?\nDer Benutzer wird eine E-Mail erhalten, um die Reaktivierung zu bestätigen.',
                                 )
                                 if (answer)
                                   mutate({ variables: { userId: user.id } })

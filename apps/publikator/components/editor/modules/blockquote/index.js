@@ -7,7 +7,7 @@ import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
 import { matchAncestor } from '../../utils/matchers'
 import InlineUI from '../../utils/InlineUI'
 
-const getNewItem = options => {
+const getNewItem = (options) => {
   const [blocktextModule, captionModule] = options.subModules
   return () =>
     Block.create({
@@ -16,29 +16,29 @@ const getNewItem = options => {
       nodes: [
         Block.create({
           kind: 'block',
-          type: blocktextModule.TYPE
+          type: blocktextModule.TYPE,
         }),
-        captionModule.helpers.newBlock()
-      ]
+        captionModule.helpers.newBlock(),
+      ],
     })
 }
 
 const getSubmodules = ({ subModules }) => {
-  const blocktextModule = subModules.find(m => m.name === 'blocktext')
+  const blocktextModule = subModules.find((m) => m.name === 'blocktext')
   if (!blocktextModule) {
     throw new Error('Missing blocktext submodule')
   }
-  const captionModule = subModules.find(m => m.name === 'figureCaption')
+  const captionModule = subModules.find((m) => m.name === 'figureCaption')
   if (!captionModule) {
     throw new Error('Missing figureCaption submodule')
   }
   return {
     blocktextModule,
-    captionModule
+    captionModule,
   }
 }
 
-const fromMdast = options => {
+const fromMdast = (options) => {
   const { blocktextModule, captionModule } = getSubmodules(options)
   return (node, index, parent, rest) => {
     const caption = node.children.filter(captionModule.rule.matchMdast)
@@ -57,23 +57,23 @@ const fromMdast = options => {
                 { type: 'text', value: '' },
                 {
                   type: 'emphasis',
-                  children: [{ type: 'text', value: '' }]
-                }
-              ]
-            }
-          ]
+                  children: [{ type: 'text', value: '' }],
+                },
+              ],
+            },
+          ],
     )
 
     return {
       kind: 'block',
       type: options.TYPE,
       data: node.data,
-      nodes: [...serializedBlockQuotes, ...serializedCaption]
+      nodes: [...serializedBlockQuotes, ...serializedCaption],
     }
   }
 }
 
-const toMdast = options => {
+const toMdast = (options) => {
   const { blocktextModule, captionModule } = getSubmodules(options)
 
   return (node, index, parent, rest) => {
@@ -85,26 +85,26 @@ const toMdast = options => {
       identifier: 'BLOCKQUOTE',
       children: [
         ...blocktextModule.helpers.serializer.toMdast(paragraphs),
-        ...captionModule.helpers.serializer.toMdast(caption)
-      ]
+        ...captionModule.helpers.serializer.toMdast(caption),
+      ],
     }
   }
 }
 
-const getSerializer = options => {
+const getSerializer = (options) => {
   return new MarkdownSerializer({
     rules: [
       {
         match: matchBlock(options.TYPE),
         matchMdast: options.rule.matchMdast,
         fromMdast: fromMdast(options),
-        toMdast: toMdast(options)
-      }
-    ]
+        toMdast: toMdast(options),
+      },
+    ],
   })
 }
 
-const blockQuotePlugin = options => {
+const blockQuotePlugin = (options) => {
   const { blocktextModule, captionModule } = getSubmodules(options)
   const BlockQuote = options.rule.component
   return {
@@ -129,29 +129,29 @@ const blockQuotePlugin = options => {
           nodes: [
             {
               types: [blocktextModule.TYPE],
-              min: 1
+              min: 1,
             },
             {
               types: [captionModule.TYPE],
               min: 1,
-              max: 1
-            }
-          ]
-        }
-      }
-    }
+              max: 1,
+            },
+          ],
+        },
+      },
+    },
   }
 }
 
-const createBlockQuoteButton = options =>
+const createBlockQuoteButton = (options) =>
   createBlockButton({
     type: options.TYPE,
-    reducer: props => event => {
+    reducer: (props) => (event) => {
       const { onChange, value } = props
       event.preventDefault()
 
       return onChange(value.change().call(injectBlock, getNewItem(options)()))
-    }
+    },
   })(({ active, disabled, visible, ...props }) => {
     return (
       <span
@@ -166,13 +166,13 @@ const createBlockQuoteButton = options =>
     )
   })
 
-export default options => ({
+export default (options) => ({
   helpers: {
     serializer: getSerializer(options),
-    newBlock: getNewItem(options)
+    newBlock: getNewItem(options),
   },
   plugins: [blockQuotePlugin(options)],
   ui: {
-    insertButtons: [createBlockQuoteButton(options)]
-  }
+    insertButtons: [createBlockQuoteButton(options)],
+  },
 })

@@ -13,7 +13,7 @@ export const NoteParagraph = ({ children, attributes, ...props }) => (
       ...fontStyles.sansSerifRegular,
       fontSize: '15px',
       lineHeight: '21px', // 1.3125rem
-      margin: '30px 0'
+      margin: '30px 0',
     }}
     {...attributes}
     {...props}

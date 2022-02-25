@@ -625,6 +625,26 @@
       "value": "Hintergrund"
     },
     {
+      "key": "metaData/audio/source/kind",
+      "value": "Gattung"
+    },
+    {
+      "key": "metaData/audio/source/kind/null",
+      "value": "regulär"
+    },
+    {
+      "key": "metaData/audio/source/kind/podcast",
+      "value": "Podcast"
+    },
+    {
+      "key": "metaData/audio/source/kind/readAloud",
+      "value": "vorgelesen"
+    },
+    {
+      "key": "metaData/audio/source/kind/syntheticReadAloud",
+      "value": "automatisch vorgelesen"
+    },
+    {
       "key": "metaData/series/label",
       "value": "Serie"
     },
@@ -1202,7 +1222,31 @@
     },
     {
       "key": "memo/modal/warning/newDoc",
-      "value": "Sie können erst Kommentare hinterlassen, nachdem Sie den Beitrag kommittet haben."
+      "value": "Sie können eine Notiz hinterlassen, nachdem Sie den Beitrag committed haben."
+    },
+    {
+      "key": "memo/container/edit",
+      "value": "Notiz ändern"
+    },
+    {
+      "key": "memo/container/unpublish",
+      "value": "Notiz verbergen"
+    },
+    {
+      "key": "memo/container/composer/placeholder",
+      "value": "Eine Notiz hinterlassen…"
+    },
+    {
+      "key": "memo/container/composer/edit",
+      "value": "speichern"
+    },
+    {
+      "key": "memo/container/composer/answer",
+      "value": "antworten"
+    },
+    {
+      "key": "memo/container/composer/submit",
+      "value": "speichern"
     },
     {
       "key": "styleguide/video/dnt/note",

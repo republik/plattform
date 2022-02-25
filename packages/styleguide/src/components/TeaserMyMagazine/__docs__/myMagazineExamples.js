@@ -5,10 +5,9 @@ export const latestProgressOrBookmarkedArticles = [
         'Das Nachrichtenbriefing: Die Pandemie profitiert, Hongkong zensiert das Internet, die Arktis brennt – und Trump schummelt',
       title:
         'Die Pandemie profitiert, Hongkong zensiert das Internet, die Arktis brennt – und Trump schummelt',
-      path:
-        '/2020/07/10/die-pandemie-profitiert-hongkong-zensiert-das-internet-die-arktis-brennt-und-trump-schummelt',
-      format: {}
-    }
+      path: '/2020/07/10/die-pandemie-profitiert-hongkong-zensiert-das-internet-die-arktis-brennt-und-trump-schummelt',
+      format: {},
+    },
   },
   {
     meta: {
@@ -23,81 +22,78 @@ export const latestProgressOrBookmarkedArticles = [
           title: 'Format',
           kind: 'meta',
           color: '#d44438',
-          path: '/path-to-format'
-        }
-      }
-    }
-  }
+          path: '/path-to-format',
+        },
+      },
+    },
+  },
 ]
 
 export const latestSubscribedArticles = [
   {
-    id:
-      'cmVwdWJsaWsvYXJ0aWNsZS13YXJ1bS1ncm9zc211ZXR0ZXItdW5kLWVua2Vsa2luZGVyLWVtbWEtaGVpc3Nlbi1hYmVyLW51ci1ncm9zc211ZXR0ZXItZXJuYS8wMzJiZjhkM2FhZGU3MjNjY2IyZTRjM2YzZDdlYTMxYjk5ZWI2YjY3L3Yy',
+    id: 'cmVwdWJsaWsvYXJ0aWNsZS13YXJ1bS1ncm9zc211ZXR0ZXItdW5kLWVua2Vsa2luZGVyLWVtbWEtaGVpc3Nlbi1hYmVyLW51ci1ncm9zc211ZXR0ZXItZXJuYS8wMzJiZjhkM2FhZGU3MjNjY2IyZTRjM2YzZDdlYTMxYjk5ZWI2YjY3L3Yy',
     meta: {
       credits: [],
       format: {
         meta: {
           title: '7-Uhr-Newsletter',
           kind: 'meta',
-          template: 'format'
-        }
+          template: 'format',
+        },
       },
       publishDate: '2020-08-24T02:49:00.000Z',
       shortTitle:
         'Der verschmähte Kandidat für das SVP-Präsidium bricht sein Schweigen – ein launiges Gespräch über die Lage der SVP. Dazu: Das Wichtigste aus der Schweizer Politik und ein Urteil im Fall «Carlos»',
       title:
         'Alfred Heer bricht sein Schweigen, das Wichtigste der Woche aus der Schweizer Politik und ein Urteil im Fall «Carlos»',
-      path: '/format/7-uhr-newsletter'
-    }
+      path: '/format/7-uhr-newsletter',
+    },
   },
   {
-    id:
-      'cmVwdWJsaWsvYXJ0aWNsZS13YXJ1bS1ncm9zc211ZXR0ZXItdW5kLWVua2Vsa2luZGVyLWVtbWEtaGVpc3Nlbi1hYmVyLW51ci1ncm9zc211ZXR0ZXItZXJuYS8wMzJiZjhkM2FhZGU3MjNjY2IyZTRjM2YzZDdlYTMxYjk5ZWI2YjY3L3Yy',
+    id: 'cmVwdWJsaWsvYXJ0aWNsZS13YXJ1bS1ncm9zc211ZXR0ZXItdW5kLWVua2Vsa2luZGVyLWVtbWEtaGVpc3Nlbi1hYmVyLW51ci1ncm9zc211ZXR0ZXItZXJuYS8wMzJiZjhkM2FhZGU3MjNjY2IyZTRjM2YzZDdlYTMxYjk5ZWI2YjY3L3Yy',
     meta: {
       credits: [
         {
           type: 'text',
-          value: 'Ein Interview von '
+          value: 'Ein Interview von ',
         },
         {
           children: [
             {
               type: 'text',
-              value: 'Anja Conzett'
-            }
+              value: 'Anja Conzett',
+            },
           ],
           type: 'link',
           title: 'Anja Conzett',
-          url: '/~acon'
+          url: '/~acon',
         },
         {
           type: 'text',
-          value: ', '
+          value: ', ',
         },
         {
           children: [
             {
               type: 'text',
-              value: 'Constantin Seibt'
-            }
+              value: 'Constantin Seibt',
+            },
           ],
           type: 'link',
           title: null,
-          url: '/~cseibt'
+          url: '/~cseibt',
         },
         {
           type: 'text',
-          value: ' (Text) und Anne Morgenstern (Bild), 27.08.2020'
-        }
+          value: ' (Text) und Anne Morgenstern (Bild), 27.08.2020',
+        },
       ],
       format: null,
       publishDate: '2020-08-24T02:49:00.000Z',
       shortTitle: 'Emma erlebt ein Comeback, Erika nicht. Warum?',
       title:
         'Warum Grossmamis und Kinder Emma heissen, aber nur Grossmamis Erna',
-      path:
-        '/2020/08/24/warum-grossmamis-und-kinder-emma-heissen-aber-nur-grossmamis-erna'
-    }
-  }
+      path: '/2020/08/24/warum-grossmamis-und-kinder-emma-heissen-aber-nur-grossmamis-erna',
+    },
+  },
 ]

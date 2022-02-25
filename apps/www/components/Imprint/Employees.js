@@ -14,43 +14,43 @@ const styles = {
   container: css({
     marginBottom: 30,
     [mediaQueries.mUp]: {
-      marginBottom: 50
-    }
+      marginBottom: 50,
+    },
   }),
   group: css({
     marginTop: 30,
     [mediaQueries.mUp]: {
-      marginTop: 50
-    }
+      marginTop: 50,
+    },
   }),
   subgroup: css({
     marginTop: 10,
     [mediaQueries.mUp]: {
-      marginTop: 20
-    }
+      marginTop: 20,
+    },
   }),
   groupHeading: css({
     marginBottom: 10,
     [mediaQueries.mUp]: {
-      marginBottom: 20
-    }
+      marginBottom: 20,
+    },
   }),
   subgroupHeading: css({
     margin: '5px 0',
     [mediaQueries.mUp]: {
-      margin: '10px 0'
-    }
+      margin: '10px 0',
+    },
   }),
   tiles: css({
     marginLeft: '-5px',
     flexWrap: 'wrap',
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
   }),
   tilesSingleRow: css({
     flexWrap: 'nowrap',
-    overflow: 'hidden'
-  })
+    overflow: 'hidden',
+  }),
 }
 
 const getEmployees = gql`
@@ -69,25 +69,25 @@ const getEmployees = gql`
   }
 `
 
-const renderEmployee = ({ minColumns, maxColumns, singleRow }) => (
-  employee,
-  i
-) => (
-  <Employee
-    {...employee}
-    key={i}
-    minColumns={minColumns}
-    maxColumns={maxColumns}
-    singleRow={singleRow}
-  />
-)
+const renderEmployee =
+  ({ minColumns, maxColumns, singleRow }) =>
+  (employee, i) =>
+    (
+      <Employee
+        {...employee}
+        key={i}
+        minColumns={minColumns}
+        maxColumns={maxColumns}
+        singleRow={singleRow}
+      />
+    )
 
 const Employees = compose(
   graphql(getEmployees, {
     options: ({ ssr = true }) => ({
-      ssr
-    })
-  })
+      ssr,
+    }),
+  }),
 )(
   ({
     data: { loading, error, employees },
@@ -95,7 +95,7 @@ const Employees = compose(
     slice,
     minColumns,
     maxColumns,
-    singleRow
+    singleRow,
   }) => (
     <Loader
       loading={loading}
@@ -103,7 +103,7 @@ const Employees = compose(
       render={() => {
         const tilesStyle = merge(
           styles.tiles,
-          singleRow && styles.tilesSingleRow
+          singleRow && styles.tilesSingleRow,
         )
         if (filter) {
           return (
@@ -118,27 +118,27 @@ const Employees = compose(
           )
         }
         const employeeGroups = nest()
-          .key(d => d['group'])
-          .key(d => d['subgroup'] || 'group')
+          .key((d) => d['group'])
+          .key((d) => d['subgroup'] || 'group')
           .object(employees)
         return (
           <div {...styles.container}>
-            {entries(employeeGroups).map(group => (
+            {entries(employeeGroups).map((group) => (
               <section {...styles.group} key={group.key}>
                 <H2 {...styles.groupHeading}>{group.key}</H2>
                 {group.value.group ? (
                   <div {...tilesStyle}>
                     {group.value.group.map(
-                      renderEmployee({ minColumns, maxColumns, singleRow })
+                      renderEmployee({ minColumns, maxColumns, singleRow }),
                     )}
                   </div>
                 ) : (
-                  entries(group.value).map(subgroup => (
+                  entries(group.value).map((subgroup) => (
                     <section {...styles.subgroup} key={subgroup.key}>
                       <H3 {...styles.subgroupHeading}>{subgroup.key}</H3>
                       <div {...tilesStyle}>
                         {subgroup.value.map(
-                          renderEmployee({ minColumns, maxColumns, singleRow })
+                          renderEmployee({ minColumns, maxColumns, singleRow }),
                         )}
                       </div>
                     </section>
@@ -150,7 +150,7 @@ const Employees = compose(
         )
       }}
     />
-  )
+  ),
 )
 
 export default Employees

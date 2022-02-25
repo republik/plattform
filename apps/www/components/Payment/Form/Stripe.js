@@ -7,14 +7,14 @@ import {
   CardExpiryElement,
   CardCvcElement,
   useElements,
-  useStripe
+  useStripe,
 } from '@stripe/react-stripe-js'
 
 import {
   fontStyles,
   colors,
   useColorContext,
-  Interaction
+  Interaction,
 } from '@project-r/styleguide'
 
 import { useResolvedColorSchemeKey } from '../../ColorScheme/lib'
@@ -26,14 +26,14 @@ import StripeField from './StripeField'
 const styles = {
   container: css({
     margin: '10px 0',
-    lineHeight: 0
-  })
+    lineHeight: 0,
+  }),
 }
 
 const fieldElements = [
   { key: 'cardNumber', Element: CardNumberElement },
   { key: 'expiry', Element: CardExpiryElement },
-  { key: 'cvc', Element: CardCvcElement }
+  { key: 'cvc', Element: CardCvcElement },
 ]
 
 const Form = React.forwardRef(
@@ -47,9 +47,9 @@ const Form = React.forwardRef(
       setUnlockFieldKey,
       stripeLoadState,
       setStripeLoadState,
-      retryLoadStripe
+      retryLoadStripe,
     },
-    ref
+    ref,
   ) => {
     const colorSchemeKey = useResolvedColorSchemeKey()
     const stripe = useStripe()
@@ -62,12 +62,12 @@ const Form = React.forwardRef(
         color: colors[colorSchemeKey].text,
         lineHeight: '40px',
         '::placeholder': {
-          color: colors[colorSchemeKey].disabled
-        }
+          color: colors[colorSchemeKey].disabled,
+        },
       },
       invalid: {
-        color: colors[colorSchemeKey].error
-      }
+        color: colors[colorSchemeKey].error,
+      },
     }
 
     ref({
@@ -79,9 +79,9 @@ const Form = React.forwardRef(
           stripe
             .createPaymentMethod({
               type: 'card',
-              card: elements.getElement(CardNumberElement)
+              card: elements.getElement(CardNumberElement),
             })
-            .then(result => {
+            .then((result) => {
               if (result.error) {
                 reject(result.error.message)
               } else {
@@ -89,7 +89,7 @@ const Form = React.forwardRef(
               }
             })
         })
-      }
+      },
     })
 
     return (
@@ -119,23 +119,23 @@ const Form = React.forwardRef(
         ))}
       </div>
     )
-  }
+  },
 )
 
 let globalStripeState
 const setupStripe = () => {
   const newState = {
     attempt: (globalStripeState?.attempt || 0) + 1,
-    started: false
+    started: false,
   }
-  newState.stripePromise = new Promise(resolve => {
+  newState.stripePromise = new Promise((resolve) => {
     newState.loadNow = ({ setStripeLoadState }) => {
       resolve({ setStripeLoadState })
       newState.started = true
     }
   }).then(({ setStripeLoadState }) => {
     setStripeLoadState('loading')
-    return loadStripe().catch(error => {
+    return loadStripe().catch((error) => {
       setStripeLoadState('failed')
       return error
     })
@@ -149,11 +149,11 @@ const PrivacyWrapper = React.forwardRef((props, ref) => {
   const [colorScheme] = useColorContext()
   const { t } = props
   const [unlockFieldKey, setUnlockFieldKey] = useState(
-    globalStripeState.started ? 'auto' : undefined
+    globalStripeState.started ? 'auto' : undefined,
   )
   const [stripeLoadState, setStripeLoadState] = useState()
 
-  const retryLoadStripe = e => {
+  const retryLoadStripe = (e) => {
     if (e) {
       e.preventDefault()
     }
@@ -164,14 +164,14 @@ const PrivacyWrapper = React.forwardRef((props, ref) => {
   useEffect(() => {
     if (unlockFieldKey && !globalStripeState.started) {
       globalStripeState.loadNow({
-        setStripeLoadState
+        setStripeLoadState,
       })
     }
   }, [unlockFieldKey])
   const options = useMemo(() => {
     const fontFamily = fontStyles.sansSerifRegular.fontFamily.split(',')[0]
-    const def = SG_FONT_FACES?.split('@font-face').find(d =>
-      d.includes(fontFamily)
+    const def = SG_FONT_FACES?.split('@font-face').find((d) =>
+      d.includes(fontFamily),
     )
     return {
       fonts: def
@@ -183,10 +183,10 @@ const PrivacyWrapper = React.forwardRef((props, ref) => {
                 .split('src:')
                 .slice(-1)[0] // get last src which wins in css
                 .split(';')[0] // stop at ;
-                .split('}')[0] // or }
-            }
+                .split('}')[0], // or }
+            },
           ]
-        : []
+        : [],
     }
   })
 

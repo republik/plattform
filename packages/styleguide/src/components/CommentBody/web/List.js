@@ -6,7 +6,7 @@ export const ListItem = ({ children }) => (
   <CommentListItem
     style={{
       fontSize: 'inherit',
-      lineHeight: 'inherit'
+      lineHeight: 'inherit',
     }}
   >
     {children}

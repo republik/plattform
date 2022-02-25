@@ -7,8 +7,8 @@ import { useColorContext } from '../../../Colors/useColorContext'
 const styles = {
   root: css({
     ...convertStyleToRem(sansSerifRegular16),
-    marginTop: 12
-  })
+    marginTop: 12,
+  }),
 }
 
 export const Error = ({ children }) => {

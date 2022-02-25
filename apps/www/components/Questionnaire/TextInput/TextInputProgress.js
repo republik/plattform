@@ -5,8 +5,8 @@ const styles = {
   circle: css({
     transition: 'stroke-dashoffset 0.35s',
     transform: 'rotate(-90deg)',
-    transformOrigin: '50% 50%'
-  })
+    transformOrigin: '50% 50%',
+  }),
 }
 
 class TextInputProgress extends Component {

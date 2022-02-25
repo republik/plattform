@@ -9,23 +9,23 @@ import { Label, A, fontStyles } from '@project-r/styleguide'
 
 const styles = {
   icons: css({
-    padding: '15px 0'
+    padding: '15px 0',
   }),
   credential: css({
     display: 'block',
     ...fontStyles.sansSerifRegular16,
     overflow: 'hidden',
-    textOverflow: 'ellipsis'
-  })
+    textOverflow: 'ellipsis',
+  }),
 }
 
-const fields = t => [
+const fields = (t) => [
   {
     label: t('profile/credentials/label'),
     name: 'credential',
-    validator: value =>
-      value && value.length > 40 && t('profile/credentials/errors/tooLong')
-  }
+    validator: (value) =>
+      value && value.length > 40 && t('profile/credentials/errors/tooLong'),
+  },
 ]
 
 const Credentials = ({
@@ -35,12 +35,12 @@ const Credentials = ({
   values,
   errors,
   dirty,
-  t
+  t,
 }) => {
   const credentials = user.credentials || []
-  const publicOnes = credentials.filter(c => c.isListed)
+  const publicOnes = credentials.filter((c) => c.isListed)
   if (isEditing) {
-    const privateCreds = credentials.filter(c => !c.isListed)
+    const privateCreds = credentials.filter((c) => !c.isListed)
     return (
       <Fragment>
         <FieldSet
@@ -57,18 +57,18 @@ const Credentials = ({
         )}
         {privateCreds
           .concat(publicOnes)
-          .filter(c => c.description !== values.credential)
-          .map(c => (
+          .filter((c) => c.description !== values.credential)
+          .map((c) => (
             <A
               key={c.description}
               href='#use'
               {...styles.credential}
-              onClick={e => {
+              onClick={(e) => {
                 e.preventDefault()
                 onChange({
                   values: {
-                    credential: c.description
-                  }
+                    credential: c.description,
+                  },
                 })
               }}
             >

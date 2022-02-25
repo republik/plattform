@@ -18,7 +18,7 @@ import {
   Field,
   Label,
   RawHtml,
-  colors
+  colors,
 } from '@project-r/styleguide'
 
 import Poller from './Poller'
@@ -27,33 +27,33 @@ const styles = {
   form: css({
     display: 'flex',
     justifyContent: 'space-between',
-    flexFlow: 'row wrap'
+    flexFlow: 'row wrap',
   }),
   input: css({
     marginRight: 10,
     marginBottom: 0,
     width: '58%',
-    flexGrow: 1
+    flexGrow: 1,
   }),
   button: css({
     width: 160,
     textAlign: 'center',
-    marginBottom: 15
+    marginBottom: 15,
   }),
   hint: css({
     marginTop: -5,
     color: colors.lightText,
     display: 'block',
-    lineHeight: '20px'
+    lineHeight: '20px',
   }),
   hintA: css({
     textDecoration: 'underline',
     textDecorationSkip: 'ink',
     color: colors.lightText,
     ':hover': {
-      color: colors.text
-    }
-  })
+      color: colors.text,
+    },
+  }),
 }
 
 const checkEmail = ({ value, shouldValidate, t }) => ({
@@ -61,7 +61,7 @@ const checkEmail = ({ value, shouldValidate, t }) => ({
   error:
     (value.trim().length <= 0 && t('signIn/email/error/empty')) ||
     (!isEmail(value) && t('signIn/email/error/invalid')),
-  dirty: shouldValidate
+  dirty: shouldValidate,
 })
 
 class SignIn extends Component {
@@ -71,19 +71,19 @@ class SignIn extends Component {
     this.state = {
       ...checkEmail({
         value: props.email || '',
-        t: props.t
+        t: props.t,
       }),
       polling: false,
       loading: false,
-      success: undefined
+      success: undefined,
     }
 
-    this.onFormSubmit = event => {
+    this.onFormSubmit = (event) => {
       event.preventDefault()
       this.signIn()
     }
 
-    this.signIn = tokenType => {
+    this.signIn = (tokenType) => {
       const { loading, error, email } = this.state
       const { signIn, context, acceptedConsents } = this.props
 
@@ -105,13 +105,13 @@ class SignIn extends Component {
             loading: false,
             phrase: data.signIn.phrase,
             tokenType: data.signIn.tokenType,
-            alternativeFirstFactors: data.signIn.alternativeFirstFactors
+            alternativeFirstFactors: data.signIn.alternativeFirstFactors,
           }))
         })
-        .catch(error => {
+        .catch((error) => {
           this.setState(() => ({
             serverError: error,
-            loading: false
+            loading: false,
           }))
         })
     }
@@ -153,7 +153,7 @@ class SignIn extends Component {
       error,
       dirty,
       email,
-      serverError
+      serverError,
     } = this.state
 
     if (polling) {
@@ -167,18 +167,18 @@ class SignIn extends Component {
           alternativeFirstFactors={alternativeFirstFactors}
           onCancel={() => {
             this.setState(() => ({
-              polling: false
+              polling: false,
             }))
           }}
-          onTokenTypeChange={altTokenType => {
+          onTokenTypeChange={(altTokenType) => {
             this.signIn(altTokenType)
           }}
-          onSuccess={me => {
+          onSuccess={(me) => {
             this.setState(() => ({
               polling: false,
               success: t('signIn/success', {
-                nameOrEmail: me.name || me.email
-              })
+                nameOrEmail: me.name || me.email,
+              }),
             }))
             this.reloadOnSuccess()
           }}
@@ -196,7 +196,7 @@ class SignIn extends Component {
           <RawHtml
             type={Interaction.P}
             dangerouslySetInnerHTML={{
-              __html: t('cookies/disabled/error/explanation')
+              __html: t('cookies/disabled/error/explanation'),
             }}
           />
         </Fragment>
@@ -219,8 +219,8 @@ class SignIn extends Component {
                     checkEmail({
                       t,
                       value,
-                      shouldValidate
-                    })
+                      shouldValidate,
+                    }),
                   )
                 }}
                 value={email}
@@ -256,7 +256,7 @@ class SignIn extends Component {
 
 SignIn.propTypes = {
   signIn: PropTypes.func.isRequired,
-  noReload: PropTypes.bool
+  noReload: PropTypes.bool,
 }
 
 const signInMutation = gql`
@@ -282,12 +282,8 @@ const signInMutation = gql`
 export const withSignIn = graphql(signInMutation, {
   props: ({ mutate }) => ({
     signIn: (email, context = 'signIn', consents, tokenType) =>
-      mutate({ variables: { email, context, consents, tokenType } })
-  })
+      mutate({ variables: { email, context, consents, tokenType } }),
+  }),
 })
 
-export default compose(
-  withApollo,
-  withSignIn,
-  withT
-)(SignIn)
+export default compose(withApollo, withSignIn, withT)(SignIn)

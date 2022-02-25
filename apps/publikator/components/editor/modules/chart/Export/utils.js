@@ -19,7 +19,7 @@ export const getSvgNode = (chartElement, width = 660) => {
   svgs.forEach(({ svg, rect }) => {
     const g = document.createElementNS(svgNS, 'g')
     g.setAttribute('transform', `translate(${rect.x}, ${rect.y})`)
-    ;[...svg.childNodes].forEach(child => {
+    ;[...svg.childNodes].forEach((child) => {
       if (child.getBBox) {
         g.appendChild(child)
       } else {
@@ -44,9 +44,9 @@ export const getSvgNodes = (chartElement, width) => {
       allowCanvasRendering: false,
       config: {
         ...chartElement.props.config,
-        colorDarkMapping: undefined
-      }
-    })
+        colorDarkMapping: undefined,
+      },
+    }),
   )
   const container = document.createElement('div')
   container.style.position = 'fixed'
@@ -56,24 +56,24 @@ export const getSvgNodes = (chartElement, width) => {
   container.innerHTML = html
   document.body.appendChild(container)
 
-  const nodes = [...container.querySelectorAll('svg')].map(svg => {
+  const nodes = [...container.querySelectorAll('svg')].map((svg) => {
     ;[
       ...svg.querySelectorAll(
-        'circle,ellipse,line,path,polygon,polyline,rect,text,use'
-      )
-    ].forEach(node => {
+        'circle,ellipse,line,path,polygon,polyline,rect,text,use',
+      ),
+    ].forEach((node) => {
       const compStyles = window.getComputedStyle(node)
       node.setAttribute('fill', compStyles.getPropertyValue('fill'))
       node.setAttribute('stroke', compStyles.getPropertyValue('stroke'))
       node.setAttribute(
         'stroke-dasharray',
-        compStyles.getPropertyValue('stroke-dasharray')
+        compStyles.getPropertyValue('stroke-dasharray'),
       )
     })
 
     return {
       svg,
-      rect: svg.getBoundingClientRect()
+      rect: svg.getBoundingClientRect(),
     }
   })
   document.body.removeChild(container)
@@ -81,8 +81,8 @@ export const getSvgNodes = (chartElement, width) => {
   return nodes
 }
 
-export const downloadBlobOnClick = getObject => {
-  return e => {
+export const downloadBlobOnClick = (getObject) => {
+  return (e) => {
     const a = e.currentTarget
     const url = (a.href = window.URL.createObjectURL(getObject()))
     setTimeout(() => {
@@ -92,7 +92,7 @@ export const downloadBlobOnClick = getObject => {
 }
 
 export const downloadPngOnClick = (getObject, scale = 2.5) => {
-  return e => {
+  return (e) => {
     e.preventDefault()
     const canvas = document.createElement('canvas')
     const context = canvas.getContext('2d')
@@ -130,7 +130,7 @@ const fitTransform = ({
   offset = 0,
   // align 0 to 1, 0.5 = center
   alignLeft = 0.5,
-  alignTop = 0.55 // slight gravitation to the ground
+  alignTop = 0.55, // slight gravitation to the ground
 }) => {
   let width = innerWidth
   let height = innerHeight
@@ -148,73 +148,75 @@ const fitTransform = ({
 
   return `translate(${[
     offset + (outerWidth - width) * alignLeft,
-    offset + (outerHeight - height) * alignTop
+    offset + (outerHeight - height) * alignTop,
   ].join(' ')}) scale(${scale})`
 }
 
 export const DEFAULT_BG = '#F6F8F7'
 
-export const createSvgBackgrounder = ({
-  color = DEFAULT_BG,
-  width: bgWidth = 665,
-  height: bgHeight = 347,
-  padding = 20
-} = {}) => ({ svg, width, height, extent }) => {
-  const bg = document.createElementNS(svgNS, 'rect')
-  bg.setAttribute('x', extent[0])
-  bg.setAttribute('y', extent[1])
-  bg.setAttribute('width', bgWidth)
-  bg.setAttribute('height', bgHeight)
-  bg.setAttribute('fill', color)
+export const createSvgBackgrounder =
+  ({
+    color = DEFAULT_BG,
+    width: bgWidth = 665,
+    height: bgHeight = 347,
+    padding = 20,
+  } = {}) =>
+  ({ svg, width, height, extent }) => {
+    const bg = document.createElementNS(svgNS, 'rect')
+    bg.setAttribute('x', extent[0])
+    bg.setAttribute('y', extent[1])
+    bg.setAttribute('width', bgWidth)
+    bg.setAttribute('height', bgHeight)
+    bg.setAttribute('fill', color)
 
-  const g = document.createElementNS(svgNS, 'g')
-  ;[...svg.childNodes].forEach(node => {
-    g.appendChild(node)
-  })
-
-  g.setAttribute(
-    'transform',
-    fitTransform({
-      innerWidth: Math.abs(extent[2] - extent[0]),
-      innerHeight: Math.abs(extent[3] - extent[1]),
-      outerWidth: bgWidth - 2 * padding,
-      outerHeight: bgHeight - 2 * padding,
-      offset: padding
+    const g = document.createElementNS(svgNS, 'g')
+    ;[...svg.childNodes].forEach((node) => {
+      g.appendChild(node)
     })
-  )
 
-  svg.appendChild(bg)
-  svg.appendChild(g)
+    g.setAttribute(
+      'transform',
+      fitTransform({
+        innerWidth: Math.abs(extent[2] - extent[0]),
+        innerHeight: Math.abs(extent[3] - extent[1]),
+        outerWidth: bgWidth - 2 * padding,
+        outerHeight: bgHeight - 2 * padding,
+        offset: padding,
+      }),
+    )
 
-  svg.setAttribute('width', bgWidth)
-  svg.setAttribute('height', bgHeight)
-  svg.setAttribute(
-    'viewBox',
-    [extent[0], extent[1], bgWidth, bgHeight].join(' ')
-  )
+    svg.appendChild(bg)
+    svg.appendChild(g)
 
-  return {
-    svg,
-    width: bgWidth,
-    height: bgHeight
+    svg.setAttribute('width', bgWidth)
+    svg.setAttribute('height', bgHeight)
+    svg.setAttribute(
+      'viewBox',
+      [extent[0], extent[1], bgWidth, bgHeight].join(' '),
+    )
+
+    return {
+      svg,
+      width: bgWidth,
+      height: bgHeight,
+    }
   }
-}
 
-export const getAbstractSvg = chartElement => {
+export const getAbstractSvg = (chartElement) => {
   let svg = getSvgNode(chartElement)
 
   const remove = [
     ...svg.querySelectorAll('text'),
-    ...svg.querySelectorAll('[data-axis]')
+    ...svg.querySelectorAll('[data-axis]'),
   ]
 
-  remove.forEach(node => {
+  remove.forEach((node) => {
     node.parentNode.removeChild(node)
   })
-  ;[...svg.querySelectorAll('[stroke-width]')].forEach(node => {
+  ;[...svg.querySelectorAll('[stroke-width]')].forEach((node) => {
     node.setAttribute('stroke-width', +node.getAttribute('stroke-width') * 2)
   })
-  ;[...svg.querySelectorAll('a')].forEach(node => {
+  ;[...svg.querySelectorAll('a')].forEach((node) => {
     node.removeAttribute('xlink:href')
   })
 
@@ -227,7 +229,7 @@ export const getAbstractSvg = chartElement => {
   const svgRect = svg.getBoundingClientRect()
 
   const extent = [...svg.childNodes]
-    .filter(node => node.getBBox) // only SVGGraphicsElement: ignore desc
+    .filter((node) => node.getBBox) // only SVGGraphicsElement: ignore desc
     .reduce(
       (extent, node) => {
         const rect = node.getBoundingClientRect()
@@ -237,10 +239,10 @@ export const getAbstractSvg = chartElement => {
           Math.min(extent[0], x),
           Math.min(extent[1], y),
           Math.max(extent[2], x + rect.width),
-          Math.max(extent[3], y + rect.height)
+          Math.max(extent[3], y + rect.height),
         ]
       },
-      [Infinity, Infinity, 0, 0]
+      [Infinity, Infinity, 0, 0],
     )
   let width = Math.abs(extent[2] - extent[0])
   let height = Math.abs(extent[3] - extent[1])
@@ -252,7 +254,7 @@ export const getAbstractSvg = chartElement => {
     svg.setAttribute('height', height)
     svg.setAttribute(
       'viewBox',
-      [extent[0] - padding, extent[1] - padding, width, height].join(' ')
+      [extent[0] - padding, extent[1] - padding, width, height].join(' '),
     )
   }
   document.body.removeChild(container)
@@ -261,6 +263,6 @@ export const getAbstractSvg = chartElement => {
     svg,
     width,
     height,
-    extent
+    extent,
   }
 }

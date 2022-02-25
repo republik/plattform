@@ -262,7 +262,7 @@ Die Verantwortlichen können die Bestimmungen der vorliegenden Datenschutzerklä
 const PrivacyPage = () => {
   const meta = {
     title: 'Datenschutz',
-    description: ''
+    description: '',
   }
 
   return (

@@ -21,17 +21,17 @@ import ShareButtons from '../components/ActionBar/ShareButtons'
 import List, { Highlight } from '../components/List'
 import { ListWithQuery as TestimonialList } from '../components/Testimonial/List'
 import ContainerWithSidebar, {
-  Content
+  Content,
 } from '../components/Crowdfunding/ContainerWithSidebar'
 import withSurviveStatus, {
   userSurviveActionsFragment,
-  mapActionData
+  mapActionData,
 } from '../components/Crowdfunding/withSurviveStatus'
 
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
 
 import TeaserBlock, {
-  GAP as TEASER_BLOCK_GAP
+  GAP as TEASER_BLOCK_GAP,
 } from '../components/Overview/TeaserBlock'
 import { getTeasersFromDocument } from '../components/Overview/utils'
 
@@ -45,7 +45,7 @@ import {
   colors,
   Interaction,
   mediaQueries,
-  LazyLoad
+  LazyLoad,
 } from '@project-r/styleguide'
 import ReasonsVideo from '../components/About/ReasonsVideo'
 import Link from 'next/link'
@@ -86,14 +86,14 @@ const styles = {
 
     paddingTop: 420,
     marginTop: -400,
-    marginBottom: 20
+    marginBottom: 20,
   }),
   overviewContainer: css({
     position: 'relative',
     zIndex: 1,
     padding: '30px 0 0',
     backgroundColor: colors.negative.containerBg,
-    color: colors.negative.text
+    color: colors.negative.text,
   }),
   overviewBottomShadow: css({
     position: 'absolute',
@@ -103,7 +103,7 @@ const styles = {
     right: 0,
     background:
       'linear-gradient(0deg, rgba(17,17,17,0.9) 0%, rgba(17,17,17,0.8) 30%, rgba(17,17,17,0) 100%)',
-    pointerEvents: 'none'
+    pointerEvents: 'none',
   }),
   overviewTopShadow: css({
     position: 'absolute',
@@ -116,15 +116,15 @@ const styles = {
       'linear-gradient(180deg, rgba(17,17,17,0.9) 0%, rgba(17,17,17,0.8) 67%, rgba(17,17,17,0) 100%)',
     pointerEvents: 'none',
     [mediaQueries.mUp]: {
-      display: 'none'
-    }
+      display: 'none',
+    },
   }),
   stretchLead: css({
-    margin: '20px 0 0'
+    margin: '20px 0 0',
   }),
   stretchP: css({
     fontSize: 17,
-    lineHeight: '25px'
+    lineHeight: '25px',
   }),
   cards: css({
     position: 'relative',
@@ -132,12 +132,12 @@ const styles = {
     background: colors.light.defaultInverted,
     margin: '30px 0',
     [mediaQueries.mUp]: {
-      margin: '50px 0'
-    }
+      margin: '50px 0',
+    },
   }),
   tnum: css({
-    fontFeatureSettings: '"tnum" 1, "kern" 1'
-  })
+    fontFeatureSettings: '"tnum" 1, "kern" 1',
+  }),
 }
 
 const Page = ({
@@ -150,7 +150,7 @@ const Page = ({
   activeMembership,
   actionsLoading,
   t,
-  router
+  router,
 }) => {
   const { query } = router
   useEffect(() => {
@@ -159,15 +159,15 @@ const Page = ({
         `/maerzkampagne?token=${encodeURIComponent(query.token)}`,
         '/maerzkampagne',
         {
-          shallow: true
-        }
+          shallow: true,
+        },
       )
     }
   }, [query.token])
 
   const [highlight, setHighlight] = useState()
   // ensure the highlighFunction is not dedected as an state update function
-  const onHighlight = highlighFunction => setHighlight(() => highlighFunction)
+  const onHighlight = (highlighFunction) => setHighlight(() => highlighFunction)
 
   const tokenParams = query.token ? { token: query.token } : {}
   const primaryQuery = shouldBuyProlong
@@ -190,16 +190,16 @@ const Page = ({
     !activeMembership && {
       href: {
         pathname: '/angebote',
-        query: { package: 'ABO', userPrice: 1 }
+        query: { package: 'ABO', userPrice: 1 },
       },
-      text: 'Sie können sich den Betrag nicht leisten?'
+      text: 'Sie können sich den Betrag nicht leisten?',
     },
     {
       href: `mailto:ir@republik.ch?subject=${encodeURIComponent(
-        'Investitionsmöglichkeiten bei der Republik AG'
+        'Investitionsmöglichkeiten bei der Republik AG',
       )}`,
-      text: 'Sie wollen investieren?'
-    }
+      text: 'Sie wollen investieren?',
+    },
   ].filter(Boolean)
   const packages = actionsLoading
     ? []
@@ -209,18 +209,18 @@ const Page = ({
           name: 'PROLONG',
           title: isReactivating ? 'Zurückkehren' : 'Verlängern',
           params: tokenParams,
-          price: 24000
+          price: 24000,
         },
         {
           name: 'PROLONG-BEN',
           params: {
             package: 'PROLONG',
             membershipType: 'BENEFACTOR_ABO',
-            ...tokenParams
+            ...tokenParams,
           },
           title: defaultBenefactor ? 'Gönner bleiben' : 'Gönner werden',
-          price: 100000
-        }
+          price: 100000,
+        },
       ]
     : activeMembership
     ? []
@@ -228,18 +228,18 @@ const Page = ({
         {
           name: 'MONTHLY_ABO',
           title: 'Monats-Abo',
-          price: 2200
+          price: 2200,
         },
         {
           name: 'ABO',
           title: 'Jahresmitgliedschaft',
-          price: 24000
+          price: 24000,
         },
         {
           name: 'BENEFACTOR',
           title: 'Gönner-Mitgliedschaft',
-          price: 100000
-        }
+          price: 100000,
+        },
       ]
 
   const shareProps = {
@@ -248,7 +248,7 @@ const Page = ({
     emailBody: '',
     emailAttachUrl: true,
     emailSubject: '101 Gründe, die Republik jetzt zu unterstützen.',
-    eventCategory: 'March2020'
+    eventCategory: 'March2020',
   }
 
   return (
@@ -261,7 +261,7 @@ const Page = ({
         title: '101 Gründe, die Republik jetzt zu unterstützen.',
         description:
           'Unabhängiger Journalismus ohne Bullshit. Transparent. Werbefrei. Finanziert von den Leserinnen und Lesern.',
-        image: `${CDN_FRONTEND_BASE_URL}/static/social-media/march20.jpg`
+        image: `${CDN_FRONTEND_BASE_URL}/static/social-media/march20.jpg`,
       }}
       cover={<ReasonsVideo />}
     >
@@ -274,15 +274,15 @@ const Page = ({
               status: crowdfunding.status && {
                 memberships: crowdfunding.status.memberships,
                 people: crowdfunding.status.people,
-                money: crowdfunding.status.money
-              }
+                money: crowdfunding.status.money,
+              },
             },
           links,
           packages,
           primaryQuery,
           statusProps: {
-            memberships: true
-          }
+            memberships: true,
+          },
         }}
         raw
       >
@@ -404,7 +404,7 @@ ${pledgeLink}
                     </Interaction.P>
                     <List>
                       {goals
-                        .filter(g => g.description)
+                        .filter((g) => g.description)
                         .map((goal, i) => (
                           <List.Item key={i}>{goal.description}</List.Item>
                         ))}
@@ -480,7 +480,7 @@ ${!activeMembership ? pledgeLink : ''}
           <Container
             style={{
               maxWidth: 1200,
-              padding: 0
+              padding: 0,
             }}
           >
             <div style={{ padding: `0 ${TEASER_BLOCK_GAP}px` }}>
@@ -543,7 +543,7 @@ Unsere Crew besteht aus kompetenten Profis. Den besten, die wir finden konnten. 
             data.employees ? (
               <Employees
                 employees={data.employees}
-                filter={e => e.group === 'Redaktion'}
+                filter={(e) => e.group === 'Redaktion'}
               />
             ) : null
           }
@@ -609,7 +609,7 @@ Eine Republik baut niemand alleine, sondern nur viele gemeinsam. Wir mit Ihnen?
           {md(mdComponents)`
 
 ## ${countFormat(
-            (crowdfunding && crowdfunding.status.people) || 'Unsere'
+            (crowdfunding && crowdfunding.status.people) || 'Unsere',
           )} Verlegerinnen und Verleger
 
   `}
@@ -644,20 +644,20 @@ const EnhancedPage = compose(
   withMe,
   withRouter,
   graphql(query, {
-    props: args => {
+    props: (args) => {
       return {
         ...mapActionData(args),
-        data: args.data
+        data: args.data,
       }
     },
     options: ({ router: { query } }) => ({
       variables: {
-        accessToken: query.token
-      }
-    })
+        accessToken: query.token,
+      },
+    }),
   }),
   withInNativeApp,
-  withT
+  withT,
 )(Page)
 
 export default withDefaultSSR(EnhancedPage)

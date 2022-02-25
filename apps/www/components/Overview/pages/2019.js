@@ -3,7 +3,7 @@ import { Highlight, A } from '../Elements'
 import Page from '../Page'
 
 const text = {
-  Januar: p => (
+  Januar: (p) => (
     <>
       Die Republik startet mit einer grossen{' '}
       <Highlight
@@ -28,7 +28,7 @@ const text = {
       sorgt für Wirbel.
     </>
   ),
-  Februar: p => (
+  Februar: (p) => (
     <>
       Das Thema Zersiedelung beschäftigt die Redaktion. In einem{' '}
       <Highlight {...p} ids={['8_3Zpsz5U']}>
@@ -46,7 +46,7 @@ const text = {
       und die Frage: Brauchen wir wirklich noch mehr Autobahnen?
     </>
   ),
-  März: p => (
+  März: (p) => (
     <>
       Auf{' '}
       <Highlight {...p} ids={['ohlgcekzS']}>
@@ -69,7 +69,7 @@ const text = {
       .
     </>
   ),
-  April: p => (
+  April: (p) => (
     <>
       Sie fragen ja nur – unser Schwerpunkt zu Verschwörungstheorien. Eine{' '}
       <Highlight {...p} series='republik/article-auftakt-brexit-serie'>
@@ -91,7 +91,7 @@ const text = {
       .
     </>
   ),
-  Mai: p => (
+  Mai: (p) => (
     <>
       Neue Erzählformen bei der Republik!{' '}
       <Highlight {...p} ids={['Qh8NGgtsL']}>
@@ -132,7 +132,7 @@ const text = {
       .
     </>
   ),
-  Juni: p => (
+  Juni: (p) => (
     <>
       Wir starten unsere{' '}
       <Highlight {...p} series='republik/article-wahnsinn-wahlkampf'>
@@ -159,7 +159,7 @@ const text = {
       steht.
     </>
   ),
-  Juli: p => (
+  Juli: (p) => (
     <>
       Recherchen zur{' '}
       <Highlight {...p} ids={['v5m1zIJ1a']}>
@@ -197,7 +197,7 @@ const text = {
       .
     </>
   ),
-  August: p => (
+  August: (p) => (
     <>
       Schwerpunkt Klimawandel. Wie könnte die{' '}
       <Highlight {...p} ids={['5TNAznvgI']}>
@@ -234,7 +234,7 @@ const text = {
       .
     </>
   ),
-  September: p => (
+  September: (p) => (
     <>
       Wie ein{' '}
       <Highlight {...p} ids={['uU2bQvKK5']}>
@@ -275,7 +275,7 @@ const text = {
       .
     </>
   ),
-  Oktober: p => (
+  Oktober: (p) => (
     <>
       Die Schweiz hat ein neues Parlament gewählt: die{' '}
       <Highlight {...p} ids={['8et6Ay9-G']}>
@@ -304,7 +304,7 @@ const text = {
       ist. Sowie Hintergründiges zu arabischer Küche, Überwachung und Freerun.
     </>
   ),
-  November: p => (
+  November: (p) => (
     <>
       Hat die Atomenergie einen Platz im{' '}
       <Highlight {...p} series='republik/article-edz-intro-global'>
@@ -329,7 +329,7 @@ const text = {
       getroffen hat.
     </>
   ),
-  Dezember: p => (
+  Dezember: (p) => (
     <>
       Die{' '}
       <Highlight {...p} ids={['v0AUVa73z']}>
@@ -365,9 +365,9 @@ const text = {
       </Highlight>
       .
     </>
-  )
+  ),
 }
 
-const Overview2019 = props => <Page {...props} year={2019} text={text} />
+const Overview2019 = (props) => <Page {...props} year={2019} text={text} />
 
 export default Overview2019

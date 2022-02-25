@@ -20,7 +20,7 @@ import {
   DEFAULT_FILTER,
   SUPPORTED_FILTERS,
   isSameFilter,
-  findAggregation
+  findAggregation,
 } from './constants'
 
 const styles = {
@@ -29,22 +29,22 @@ const styles = {
     paddingLeft: 15,
     [mediaQueries.mUp]: {
       paddingRight: 0,
-      paddingLeft: 0
-    }
-  })
+      paddingLeft: 0,
+    },
+  }),
 }
 
 const hasResults = (aggregations, filter) =>
   !!findAggregation(aggregations, filter).count
 
-const findFilterWithResults = aggregations =>
-  SUPPORTED_FILTERS.find(filter => hasResults(aggregations, filter)) ||
+const findFilterWithResults = (aggregations) =>
+  SUPPORTED_FILTERS.find((filter) => hasResults(aggregations, filter)) ||
   DEFAULT_FILTER
 
 export default compose(
   withSearchRouter,
   withAggregations,
-  withResults
+  withResults,
 )(
   ({
     cleanupUrl,
@@ -53,7 +53,7 @@ export default compose(
     pushSearchParams,
     startState,
     data: { search } = {},
-    dataAggregations
+    dataAggregations,
   }) => {
     useEffect(() => {
       cleanupUrl()
@@ -113,5 +113,5 @@ export default compose(
         )}
       </Center>
     )
-  }
+  },
 )

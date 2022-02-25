@@ -7,7 +7,7 @@ import {
   fontStyles,
   Editorial,
   Button,
-  mediaQueries
+  mediaQueries,
 } from '@project-r/styleguide'
 import Link from 'next/link'
 
@@ -50,7 +50,7 @@ const Reasons = ({ t, inNativeApp }) => {
 
 const styles = {
   title: css({
-    ...fontStyles.sansSerifMedium24
+    ...fontStyles.sansSerifMedium24,
   }),
   buttons: css({
     display: 'flex',
@@ -58,16 +58,16 @@ const styles = {
     flexWrap: 'wrap',
     flexDirection: 'column',
     '>:first-child': {
-      marginBottom: 20
+      marginBottom: 20,
     },
     [mediaQueries.mUp]: {
       flexDirection: 'row',
       '>:first-child': {
         marginRight: 24,
-        marginBottom: 0
-      }
-    }
-  })
+        marginBottom: 0,
+      },
+    },
+  }),
 }
 
 export default Reasons

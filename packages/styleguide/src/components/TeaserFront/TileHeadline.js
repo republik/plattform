@@ -4,26 +4,26 @@ import { mUp } from './mediaQueries'
 import {
   serifTitle20,
   sansSerifMedium20,
-  cursiveTitle20
+  cursiveTitle20,
 } from '../Typography/styles'
 import { pxToRem } from '../Typography/utils'
 
 const smallSize = {
   fontSize: pxToRem('26px'),
   lineHeight: pxToRem('32px'),
-  marginBottom: '16px'
+  marginBottom: '16px',
 }
 
 const standardSize = {
   fontSize: pxToRem('32px'),
   lineHeight: pxToRem('37px'),
-  marginBottom: '25px'
+  marginBottom: '25px',
 }
 
 const mediumSize = {
   fontSize: pxToRem('48px'),
   lineHeight: pxToRem('54px'),
-  marginBottom: '25px'
+  marginBottom: '25px',
 }
 
 const styles = {
@@ -31,85 +31,85 @@ const styles = {
     margin: 0,
     marginBottom: 6,
     [mUp]: {
-      marginBottom: 8
-    }
+      marginBottom: 8,
+    },
   }),
   editorialCol1: css({
     ...serifTitle20,
     ...smallSize,
     [mUp]: {
-      ...standardSize
-    }
+      ...standardSize,
+    },
   }),
   editorialCol1Medium: css({
     ...serifTitle20,
     ...smallSize,
     [mUp]: {
-      ...mediumSize
-    }
+      ...mediumSize,
+    },
   }),
   editorialCol2: css({
     ...serifTitle20,
     ...smallSize,
     [mUp]: {
-      ...standardSize
-    }
+      ...standardSize,
+    },
   }),
   editorialCol2Medium: css({
     ...serifTitle20,
     ...smallSize,
     [mUp]: {
-      ...mediumSize
-    }
+      ...mediumSize,
+    },
   }),
   editorialCol3: css({
     ...serifTitle20,
     ...smallSize,
     [mUp]: {
-      ...standardSize
-    }
+      ...standardSize,
+    },
   }),
   interactionCol1: css({
     ...sansSerifMedium20,
     ...smallSize,
     [mUp]: {
-      ...standardSize
-    }
+      ...standardSize,
+    },
   }),
   interactionCol1Medium: css({
     ...sansSerifMedium20,
     ...smallSize,
     [mUp]: {
-      ...mediumSize
-    }
+      ...mediumSize,
+    },
   }),
   interactionCol2: css({
     ...sansSerifMedium20,
     ...smallSize,
     [mUp]: {
-      ...standardSize
-    }
+      ...standardSize,
+    },
   }),
   interactionCol2Medium: css({
     ...sansSerifMedium20,
     ...smallSize,
     [mUp]: {
-      ...mediumSize
-    }
+      ...mediumSize,
+    },
   }),
   interactionCol3: css({
     ...sansSerifMedium20,
     ...smallSize,
     [mUp]: {
-      ...standardSize
-    }
+      ...standardSize,
+    },
   }),
   scribble: css({
     ...cursiveTitle20,
     [mUp]: {
-      ...standardSize
-    }
-  })
+      ...standardSize,
+    },
+  }),
 }
 
 export const Editorial = ({ children, medium, columns = 1 }) => {
@@ -117,7 +117,7 @@ export const Editorial = ({ children, medium, columns = 1 }) => {
     styles.base,
     medium
       ? styles[`editorialCol${columns}Medium`]
-      : styles[`editorialCol${columns}`]
+      : styles[`editorialCol${columns}`],
   )
 
   return <h1 {...headlineStyles}>{children}</h1>
@@ -128,7 +128,7 @@ export const Interaction = ({ children, medium, columns = 1 }) => {
     styles.base,
     medium
       ? styles[`interactionCol${columns}Medium`]
-      : styles[`interactionCol${columns}`]
+      : styles[`interactionCol${columns}`],
   )
   return <h1 {...headlineStyles}>{children}</h1>
 }

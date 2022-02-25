@@ -25,22 +25,22 @@ const getSubmodules = ({ subModules }) => {
   return {
     titleModule,
     leadModule,
-    formatModule
+    formatModule,
   }
 }
 
-const getRules = subModules =>
+const getRules = (subModules) =>
   subModules
     .reduce(
       (a, m) =>
         a.concat(
-          m.helpers && m.helpers.serializer && m.helpers.serializer.rules
+          m.helpers && m.helpers.serializer && m.helpers.serializer.rules,
         ),
-      []
+      [],
     )
     .filter(Boolean)
 
-const fromMdast = options => {
+const fromMdast = (options) => {
   return (node, index, parent, rest) => {
     const { TYPE, subModules } = options
     const imageParagraph = node.children.find(matchImageParagraph)
@@ -52,38 +52,38 @@ const fromMdast = options => {
     }
 
     const childSerializer = new MarkdownSerializer({
-      rules: getRules(subModules)
+      rules: getRules(subModules),
     })
 
     const nodes = childSerializer
       .fromMdast(
-        node.children.filter(node => node !== imageParagraph),
+        node.children.filter((node) => node !== imageParagraph),
         0,
         node,
         {
           context: {
             ...rest.context,
             // pass link color to link through context
-            color: data.color
-          }
-        }
+            color: data.color,
+          },
+        },
       )
       // enhance all immediate children with data
-      .map(node => ({ ...node, data: { ...node.data, ...data } }))
+      .map((node) => ({ ...node, data: { ...node.data, ...data } }))
     const result = {
       kind: 'block',
       type: TYPE,
       data: {
         ...getData(data),
-        module: 'teaser'
+        module: 'teaser',
       },
-      nodes: nodes
+      nodes: nodes,
     }
     return result
   }
 }
 
-const toMdast = options => {
+const toMdast = (options) => {
   return (node, index, parent, rest) => {
     const { subModules } = options
     const { visitChildren, context } = rest
@@ -91,12 +91,12 @@ const toMdast = options => {
     const args = [
       {
         visitChildren,
-        context
-      }
+        context,
+      },
     ]
 
     const childSerializer = new MarkdownSerializer({
-      rules: getRules(subModules)
+      rules: getRules(subModules),
     })
 
     const { image, module, ...data } = node.data
@@ -105,9 +105,9 @@ const toMdast = options => {
       children: [
         {
           type: 'image',
-          url: image
-        }
-      ]
+          url: image,
+        },
+      ],
     }
 
     return {
@@ -116,25 +116,25 @@ const toMdast = options => {
       data: getData(data),
       children: [
         ...(imageNode ? [imageNode] : []),
-        ...childSerializer.toMdast(node.nodes, 0, node, ...args)
-      ]
+        ...childSerializer.toMdast(node.nodes, 0, node, ...args),
+      ],
     }
   }
 }
 
-const getSerializer = options =>
+const getSerializer = (options) =>
   new MarkdownSerializer({
     rules: [
       {
         match: matchBlock(options.TYPE),
         matchMdast: options.rule.matchMdast,
         fromMdast: fromMdast(options),
-        toMdast: toMdast(options)
-      }
-    ]
+        toMdast: toMdast(options),
+      },
+    ],
   })
 
-const getData = data => ({
+const getData = (data) => ({
   url: null,
   textPosition: 'topleft',
   color: '#000',
@@ -148,10 +148,10 @@ const getData = data => ({
   portrait: true,
   showImage: true,
   onlyImage: false,
-  ...(data || {})
+  ...(data || {}),
 })
 
-const getNewBlock = options => () => {
+const getNewBlock = (options) => () => {
   const { formatModule, titleModule, leadModule } = getSubmodules(options)
 
   const data = getData()
@@ -160,27 +160,27 @@ const getNewBlock = options => () => {
     type: options.TYPE,
     data: {
       ...data,
-      module: 'teaser'
+      module: 'teaser',
     },
     nodes: [
       Block.create({
         type: formatModule.TYPE,
-        data
+        data,
       }),
       Block.create({
         type: titleModule.TYPE,
-        data
+        data,
       }),
       Block.create({
         type: leadModule.TYPE,
-        data
-      })
-    ]
+        data,
+      }),
+    ],
   })
   return res
 }
 
-const introPlugin = options => {
+const introPlugin = (options) => {
   const { TYPE, rule } = options
 
   // const {
@@ -208,19 +208,19 @@ const introPlugin = options => {
           {children}
         </Intro>
       )
-    }
+    },
   }
 }
 
-export default options => ({
+export default (options) => ({
   rule: options.rule,
   helpers: {
     serializer: getSerializer(options),
-    newItem: getNewBlock(options)
+    newItem: getNewBlock(options),
   },
   plugins: [introPlugin(options)],
   ui: {
     insertButtons: [],
-    forms: [TeaserForm({ subModuleResolver: getSubmodules, ...options })]
-  }
+    forms: [TeaserForm({ subModuleResolver: getSubmodules, ...options })],
+  },
 })

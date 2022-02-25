@@ -3,7 +3,7 @@ import {
   matchHeading,
   matchParagraph,
   matchType,
-  matchZone
+  matchZone,
 } from 'mdast-react-render/lib/utils'
 import InfoBox, { Title, SubTitle, Text } from '../components/InfoBox'
 import { Figure } from '../components/Figure'
@@ -15,7 +15,7 @@ import List, { ListItem } from '../components/List'
 const infoBoxParagraphRule = {
   matchMdast: matchParagraph,
   component: Text,
-  rules: inlineInteractionParagraphRules
+  rules: inlineInteractionParagraphRules,
 }
 
 const infoBoxRule = {
@@ -25,20 +25,20 @@ const infoBoxRule = {
     {
       matchMdast: matchHeading(3),
       component: Title,
-      rules: inlineRules
+      rules: inlineRules,
     },
     {
       matchMdast: matchHeading(4),
       component: SubTitle,
-      rules: inlineRules
+      rules: inlineRules,
     },
     infoBoxParagraphRule,
     {
       matchMdast: matchType('list'),
       component: List,
-      props: node => ({
+      props: (node) => ({
         ordered: node.ordered,
-        start: node.start
+        start: node.start,
       }),
       rules: [
         {
@@ -48,19 +48,19 @@ const infoBoxRule = {
             {
               ...infoBoxParagraphRule,
               props: () => ({
-                noMargin: true
-              })
-            }
-          ]
-        }
-      ]
+                noMargin: true,
+              }),
+            },
+          ],
+        },
+      ],
     },
     {
       matchMdast: matchZone('FIGURE'),
       component: Figure,
-      rules: getImageRules({ forceWidth: '155px' })
-    }
-  ]
+      rules: getImageRules({ forceWidth: '155px' }),
+    },
+  ],
 }
 
 export default infoBoxRule

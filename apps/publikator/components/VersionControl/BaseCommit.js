@@ -12,11 +12,11 @@ const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 const styles = {
   container: css({
     fontSize: '11px',
-    padding: '0 0 5px 0'
+    padding: '0 0 5px 0',
   }),
   commitsBehind: css({
-    display: 'block'
-  })
+    display: 'block',
+  }),
 }
 
 class BaseCommit extends Component {
@@ -24,10 +24,10 @@ class BaseCommit extends Component {
     const { commit, commits, repoId, t } = this.props
 
     const commitsBehind = [...commits]
-      .sort(function(a, b) {
+      .sort(function (a, b) {
         return descending(new Date(a.date), new Date(b.date))
       })
-      .map(c => c.id)
+      .map((c) => c.id)
       .indexOf(commit.id)
 
     return (
@@ -44,7 +44,7 @@ class BaseCommit extends Component {
                   {commitsBehind !== null && (
                     <span>
                       {t.pluralize('baseCommit/commitsBehind', {
-                        count: commitsBehind
+                        count: commitsBehind,
                       })}
                     </span>
                   )}

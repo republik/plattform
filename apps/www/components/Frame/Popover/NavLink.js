@@ -4,7 +4,7 @@ import { css } from 'glamor'
 import {
   fontStyles,
   mediaQueries,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import Link from 'next/link'
 
@@ -14,32 +14,32 @@ const styles = {
     '@media (hover)': {
       ':hover': {
         textDecoration: 'underline',
-        textDecorationSkip: 'ink'
-      }
-    }
+        textDecorationSkip: 'ink',
+      },
+    },
   }),
   inline: css({
     display: 'inline-block',
     '& + &': {
-      marginLeft: 20
-    }
+      marginLeft: 20,
+    },
   }),
   block: css({
-    display: 'block'
+    display: 'block',
   }),
   large: css({
     '& + &': {
-      marginTop: 24
+      marginTop: 24,
     },
     ...fontStyles.sansSerifMedium20,
     [mediaQueries.mUp]: {
       ...fontStyles.sansSerifMedium22,
       '& + &': {
         marginLeft: 36,
-        marginTop: 0
-      }
-    }
-  })
+        marginTop: 0,
+      },
+    },
+  }),
 }
 
 export const NavA = React.forwardRef(
@@ -56,7 +56,7 @@ export const NavA = React.forwardRef(
       isActive,
       ...props
     },
-    ref
+    ref,
   ) => {
     const [colorScheme] = useColorContext()
     const hoverRule = useMemo(
@@ -67,11 +67,11 @@ export const NavA = React.forwardRef(
           transitionDelay: '33ms',
           '@media (hover)': {
             ':hover': {
-              color: colorScheme.getCSSColor(formatColor, 'format')
-            }
-          }
+              color: colorScheme.getCSSColor(formatColor, 'format'),
+            },
+          },
         }),
-      [colorScheme, formatColor]
+      [colorScheme, formatColor],
     )
 
     const colorRule =
@@ -95,7 +95,7 @@ export const NavA = React.forwardRef(
         {children}
       </a>
     )
-  }
+  },
 )
 
 const NavLink = ({
@@ -109,7 +109,7 @@ const NavLink = ({
   prefetch = false,
   minifeed,
   title,
-  large
+  large,
 }) => {
   const isActive = href === active
   const linkRef = useRef()
@@ -127,7 +127,7 @@ const NavLink = ({
         inline={inline}
         onClick={
           !minifeed
-            ? e => {
+            ? (e) => {
                 e.stopPropagation()
                 closeHandler()
               }

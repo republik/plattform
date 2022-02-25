@@ -28,8 +28,9 @@ const removeDuplicates = (arrayWithObject, identfier) => {
 }
 
 const buildDeck = (cards, seed, focus = [], smartspider = []) => {
-  const smartspiderCount = smartspider.filter((s) => s !== null && s >= 0)
-    .length
+  const smartspiderCount = smartspider.filter(
+    (s) => s !== null && s >= 0,
+  ).length
 
   const deck = cards
     .map((card) => {
@@ -197,15 +198,16 @@ const filterCards = async (cards, { filters = {} }, context) => {
   // { subscribedByMe: <Boolean> }
   if (filteredCards.length > 0 && filters.subscribedByMe) {
     if (context.user) {
-      const subscriptions = await Subscriptions.getSubscriptionsForUserAndObjects(
-        context.user.id,
-        {
-          type: 'User',
-          ids: filteredCards.map((card) => card.userId),
-          filter: 'COMMENTS',
-        },
-        context,
-      )
+      const subscriptions =
+        await Subscriptions.getSubscriptionsForUserAndObjects(
+          context.user.id,
+          {
+            type: 'User',
+            ids: filteredCards.map((card) => card.userId),
+            filter: 'COMMENTS',
+          },
+          context,
+        )
 
       const subscribedUserIds = subscriptions.map(
         (subscription) => subscription.objectUserId,
@@ -285,9 +287,11 @@ const upsertStatement = async (_card, transaction) => {
       isListed: true,
     })
 
-    const discussionPreference = await transaction.public.discussionPreferences.findOne(
-      { discussionId: discussion.id, userId: card.userId },
-    )
+    const discussionPreference =
+      await transaction.public.discussionPreferences.findOne({
+        discussionId: discussion.id,
+        userId: card.userId,
+      })
 
     if (!discussionPreference) {
       await transaction.public.discussionPreferences.insert({

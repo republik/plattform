@@ -6,7 +6,7 @@ import { css } from 'glamor'
 import {
   mediaQueries,
   useHeaderHeight,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import PropTypes from 'prop-types'
 import { withTester } from '../Auth/checkRoles'
@@ -29,7 +29,7 @@ const StickySection = ({ children, label, hasSpaceAfter }) => {
     sticky,
     height,
     headerHeight,
-    hasSpaceAfter
+    hasSpaceAfter,
   }
 
   useEffect(() => {
@@ -77,7 +77,7 @@ const StickySection = ({ children, label, hasSpaceAfter }) => {
             borderTopWidth: sticky ? 0 : 1,
             top: sticky ? headerHeight : undefined,
             position: sticky ? 'fixed' : 'relative',
-            width: isMedium ? width : width ? SIDEBAR_WIDTH : '100%'
+            width: isMedium ? width : width ? SIDEBAR_WIDTH : '100%',
           }}
         >
           {label}
@@ -99,31 +99,31 @@ const style = {
       margin: `0 0 30px -${SIDEBAR_WIDTH + MARGIN_WIDTH}px`,
       width: SIDEBAR_WIDTH,
       '& > div': {
-        width: SIDEBAR_WIDTH
-      }
-    }
+        width: SIDEBAR_WIDTH,
+      },
+    },
   }),
   label: css({
     padding: '8px 0',
     borderTopStyle: 'solid',
-    zIndex: ZINDEX_FEED_STICKY_SECTION_LABEL
+    zIndex: ZINDEX_FEED_STICKY_SECTION_LABEL,
   }),
   sticky: css({
     borderBottomWidth: '0.5px',
     borderBottomStyle: 'solid',
     [mediaQueries.lUp]: {
-      borderBottom: 'none'
-    }
-  })
+      borderBottom: 'none',
+    },
+  }),
 }
 
 StickySection.propTypes = {
   hasSpaceAfter: PropTypes.bool,
-  label: PropTypes.string.isRequired
+  label: PropTypes.string.isRequired,
 }
 
 StickySection.defaultProps = {
-  hasSpaceAfter: true
+  hasSpaceAfter: true,
 }
 
 export default compose(withTester)(StickySection)

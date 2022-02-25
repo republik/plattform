@@ -15,7 +15,7 @@ export type ShareOverlayState = OverlayState<string> & {
  * Provide the share overlay state and comment share-handler
  */
 function useShareCommentOverlay(
-  discussion: DiscussionFragmentType | undefined
+  discussion: DiscussionFragmentType | undefined,
 ): ShareOverlayState {
   const { t } = useTranslation()
   const { inNativeApp } = useInNativeApp()
@@ -35,14 +35,14 @@ function useShareCommentOverlay(
           subject: t(
             'discussion/share/emailSubject',
             {
-              title: discussion.title
+              title: discussion.title,
             },
-            ''
+            '',
           ),
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          dialogTitle: t('article/share/title')
-        }
+          dialogTitle: t('article/share/title'),
+        },
       })
     } else {
       overlay.handleOpen(getFocusUrl(discussion, comment))
@@ -52,7 +52,7 @@ function useShareCommentOverlay(
 
   return {
     ...overlay,
-    shareHandler
+    shareHandler,
   }
 }
 

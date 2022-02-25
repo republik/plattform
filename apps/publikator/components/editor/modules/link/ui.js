@@ -5,7 +5,7 @@ import {
   Label,
   Field,
   Autocomplete,
-  InlineSpinner
+  InlineSpinner,
 } from '@project-r/styleguide'
 import LinkIcon from 'react-icons/lib/fa/chain'
 import UIForm from '../../UIForm'
@@ -41,7 +41,7 @@ const UserItem = ({ user }) => (
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         marginRight: 10,
-        flexShrink: 0
+        flexShrink: 0,
       }}
     />
     <div>
@@ -57,18 +57,18 @@ const UserItem = ({ user }) => (
 )
 
 const ConnectedAutoComplete = graphql(getUsers, {
-  skip: props => !props.filter,
+  skip: (props) => !props.filter,
   options: ({ search }) => ({ variables: { search } }),
   props: ({ data }) => ({
     data: data,
     items:
       data.loading ||
-      data.users.slice(0, 5).map(user => ({
+      data.users.slice(0, 5).map((user) => ({
         value: user,
-        element: <UserItem user={user} />
-      }))
-  })
-})(props => (
+        element: <UserItem user={user} />,
+      })),
+  }),
+})((props) => (
   <span style={{ position: 'relative', display: 'block' }}>
     <Autocomplete key='autocomplete' {...props} />
     {props.data?.loading && (
@@ -77,7 +77,7 @@ const ConnectedAutoComplete = graphql(getUsers, {
           position: 'absolute',
           top: '21px',
           right: '0px',
-          zIndex: 500
+          zIndex: 500,
         }}
       >
         <InlineSpinner size={35} />
@@ -94,7 +94,7 @@ const SearchUserForm = withT(
         items: [],
         filter: '',
         search: '',
-        value: null
+        value: null,
       }
       this.filterChangeHandler = this.filterChangeHandler.bind(this)
       this.changeHandler = this.changeHandler.bind(this)
@@ -107,27 +107,27 @@ const SearchUserForm = withT(
 
     setSearchValue() {
       this.setState({
-        search: this.state.filter
+        search: this.state.filter,
       })
     }
 
     filterChangeHandler(value) {
       this.setState(
-        state => ({
+        (state) => ({
           ...this.state,
-          filter: value
+          filter: value,
         }),
-        this.setSearchValue
+        this.setSearchValue,
       )
     }
 
     changeHandler(value) {
       this.setState(
-        state => ({
+        (state) => ({
           filter: null,
-          value: null
+          value: null,
         }),
-        () => this.props.onChange(value)
+        () => this.props.onChange(value),
       )
     }
 
@@ -138,7 +138,7 @@ const SearchUserForm = withT(
           label={this.props.t(
             'metaData/field/authors',
             undefined,
-            'Autor suchen'
+            'Autor suchen',
           )}
           filter={filter}
           value={value}
@@ -149,54 +149,56 @@ const SearchUserForm = withT(
         />
       )
     }
-  }
+  },
 )
 
-const createForm = options => ({ value, onChange }) => {
-  const { TYPE } = options
+const createForm =
+  (options) =>
+  ({ value, onChange }) => {
+    const { TYPE } = options
 
-  if (!value.inlines.some(matchInline(TYPE))) {
-    return null
+    if (!value.inlines.some(matchInline(TYPE))) {
+      return null
+    }
+    return (
+      <div>
+        <Label>Links</Label>
+        <LinkForm
+          TYPE={TYPE}
+          nodes={value.inlines.filter(matchInline(TYPE))}
+          value={value}
+          onChange={onChange}
+        />
+      </div>
+    )
   }
-  return (
-    <div>
-      <Label>Links</Label>
-      <LinkForm
-        TYPE={TYPE}
-        nodes={value.inlines.filter(matchInline(TYPE))}
-        value={value}
-        onChange={onChange}
-      />
-    </div>
-  )
-}
 
 export const LinkForm = withT(
   ({ kind = 'inline', TYPE, nodes, value, onChange, t }) => {
     const handlerFactory = createOnFieldChange(onChange, value)
-    const authorChange = (onChange, value, node) => author => {
+    const authorChange = (onChange, value, node) => (author) => {
       onChange(
         value.change().replaceNodeByKey(node.key, {
           type: TYPE,
           kind,
           data: node.data.merge({
             title: `${author.value.firstName} ${author.value.lastName}`,
-            href: `/~${author.value.id}`
+            href: `/~${author.value.id}`,
           }),
           nodes: [
-            Text.create(`${author.value.firstName} ${author.value.lastName}`)
-          ]
-        })
+            Text.create(`${author.value.firstName} ${author.value.lastName}`),
+          ],
+        }),
       )
     }
-    const repoChange = (onChange, value, node) => item => {
+    const repoChange = (onChange, value, node) => (item) => {
       onChange(
         value.change().setNodeByKey(node.key, {
           data: node.data.merge({
             title: item.text,
-            href: `https://github.com/${item.value.id}?autoSlug`
-          })
-        })
+            href: `https://github.com/${item.value.id}?autoSlug`,
+          }),
+        }),
       )
     }
 
@@ -230,13 +232,13 @@ export const LinkForm = withT(
         })}
       </>
     )
-  }
+  },
 )
 
-const createLink = options =>
+const createLink = (options) =>
   createInlineButton({
     type: options.TYPE,
-    parentTypes: options.parentTypes
+    parentTypes: options.parentTypes,
   })(({ active, disabled, visible, ...props }) => (
     <span
       {...buttonStyles.mark}
@@ -249,9 +251,9 @@ const createLink = options =>
     </span>
   ))
 
-export default options => {
+export default (options) => {
   return {
     forms: [createForm(options)],
-    textFormatButtons: [createLink(options)]
+    textFormatButtons: [createLink(options)],
   }
 }

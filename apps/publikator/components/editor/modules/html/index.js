@@ -19,9 +19,9 @@ const styles = {
     lineHeight: 0,
     transition: 'outline-color 0.2s',
     '&[data-active="true"]': {
-      outlineColor: colors.primary
-    }
-  })
+      outlineColor: colors.primary,
+    },
+  }),
 }
 
 export default ({ rule, subModules, TYPE }) => {
@@ -30,32 +30,32 @@ export default ({ rule, subModules, TYPE }) => {
   const mdastRule = {
     match: matchBlock(TYPE),
     matchMdast: rule.matchMdast,
-    fromMdast: node => {
+    fromMdast: (node) => {
       const deepNodes = node.children
         .reduce(
           (children, child) => children.concat(child).concat(child.children),
-          []
+          [],
         )
         .filter(Boolean)
-      const images = deepNodes.filter(matchImage).map(image => ({
+      const images = deepNodes.filter(matchImage).map((image) => ({
         ref: image.alt,
-        url: image.url
+        url: image.url,
       }))
 
-      const code = node.children.find(c => c.type === 'code')
+      const code = node.children.find((c) => c.type === 'code')
 
       return {
         kind: 'block',
         type: TYPE,
         data: {
           images,
-          code: code ? code.value : ''
+          code: code ? code.value : '',
         },
         isVoid: true,
-        nodes: []
+        nodes: [],
       }
     },
-    toMdast: object => {
+    toMdast: (object) => {
       const { images, code } = object.data
       return {
         type: 'zone',
@@ -64,19 +64,19 @@ export default ({ rule, subModules, TYPE }) => {
           .map(({ ref, url }) => ({
             type: 'image',
             url,
-            alt: ref
+            alt: ref,
           }))
           .concat({
             type: 'code',
             lang: 'html',
-            value: code
-          })
+            value: code,
+          }),
       }
-    }
+    },
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [mdastRule]
+    rules: [mdastRule],
   })
 
   const Html = rule.component
@@ -85,21 +85,21 @@ export default ({ rule, subModules, TYPE }) => {
     Block.fromJSON(
       mdastRule.fromMdast({
         children: [],
-        data: {}
-      })
+        data: {},
+      }),
     )
 
   return {
     TYPE,
     helpers: {
       serializer,
-      newBlock
+      newBlock,
     },
     changes: {},
     ui: createUi({
       TYPE,
       newBlock,
-      editorOptions: rule.editorOptions
+      editorOptions: rule.editorOptions,
     }),
     plugins: [
       {
@@ -107,7 +107,7 @@ export default ({ rule, subModules, TYPE }) => {
           const { node, editor, attributes } = props
           if (node.type !== TYPE) return
           const active = editor.value.blocks.some(
-            block => block.key === node.key
+            (block) => block.key === node.key,
           )
           return (
             <span {...styles.border} {...attributes} data-active={active}>
@@ -124,11 +124,11 @@ export default ({ rule, subModules, TYPE }) => {
         schema: {
           blocks: {
             [TYPE]: {
-              isVoid: true
-            }
-          }
-        }
-      }
-    ]
+              isVoid: true,
+            },
+          },
+        },
+      },
+    ],
   }
 }

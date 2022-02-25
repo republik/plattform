@@ -5,14 +5,14 @@ import { Label } from '@project-r/styleguide'
 const styles = {
   popover: {
     position: 'absolute',
-    zIndex: '2'
+    zIndex: '2',
   },
   cover: {
     position: 'fixed',
     top: '0px',
     right: '0px',
     bottom: '0px',
-    left: '0px'
+    left: '0px',
   },
   button: {
     display: 'inline-block',
@@ -22,15 +22,15 @@ const styles = {
     textAlign: 'center',
     verticalAlign: 'middle',
     fontSize: 15,
-    padding: '7px 6px'
-  }
+    padding: '7px 6px',
+  },
 }
 
 class ColorPicker extends Component {
   constructor(...args) {
     super(...args)
     this.state = {
-      displayColorPicker: false
+      displayColorPicker: false,
     }
     this.clickHandler = this.clickHandler.bind(this)
     this.closeHandler = this.closeHandler.bind(this)
@@ -53,7 +53,7 @@ class ColorPicker extends Component {
             onClick={this.clickHandler}
             style={{
               backgroundColor: this.props.value,
-              ...styles.button
+              ...styles.button,
             }}
           >
             {!this.props.value && '❌'}
@@ -65,7 +65,7 @@ class ColorPicker extends Component {
               }}
               style={{
                 ...styles.button,
-                borderColor: 'transparent'
+                borderColor: 'transparent',
               }}
             >
               ❌
@@ -77,7 +77,7 @@ class ColorPicker extends Component {
             <div style={styles.cover} onClick={this.closeHandler} />
             <ChromePicker
               color={this.props.value || '#7C7070'}
-              onChange={value => {
+              onChange={(value) => {
                 this.props.onChange(value.hex)
               }}
             />

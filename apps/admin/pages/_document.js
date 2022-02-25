@@ -1,10 +1,5 @@
 import React from 'react'
-import Document, {
-  Html,
-  Head,
-  Main,
-  NextScript
-} from 'next/document'
+import Document, { Html, Head, Main, NextScript } from 'next/document'
 import { renderStatic } from 'glamor/server'
 import { fontFaces } from '@project-r/styleguide'
 
@@ -15,7 +10,7 @@ export default class MyDocument extends Document {
     return {
       ...page,
       ...styles,
-      env: require('../server/constants')
+      env: require('../server/constants'),
     }
   }
 
@@ -32,26 +27,20 @@ export default class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          <meta
-            httpEquiv="X-UA-Compatible"
-            content="IE=edge"
-          />
+          <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
           <style
             dangerouslySetInnerHTML={{
-              __html: fontFaces()
+              __html: fontFaces(),
             }}
           />
           {css ? (
             <style
               dangerouslySetInnerHTML={{
-                __html: css
+                __html: css,
               }}
             />
           ) : null}
-          <meta
-            name="author"
-            content="Republik"
-          />
+          <meta name='author' content='Republik' />
         </Head>
         <body>
           <Main />

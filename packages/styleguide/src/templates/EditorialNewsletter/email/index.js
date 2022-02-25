@@ -32,8 +32,8 @@ const createNewsletterEmailSchema = ({ ...args } = {}) => {
     variableContext: args.variableContext || {
       firstName: 'FNAME',
       lastName: 'LNAME',
-      _mergeTags: true
-    }
+      _mergeTags: true,
+    },
   })
 }
 

@@ -8,7 +8,7 @@ import {
   Field,
   A,
   InlineSpinner,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
@@ -25,22 +25,22 @@ const CODE_LENGTH = 6
 const styles = {
   button: css({
     width: 160,
-    textAlign: 'center'
+    textAlign: 'center',
   }),
   help: css({
     listStyleType: 'none',
     marginTop: 40,
     paddingLeft: 0,
     '> li': {
-      paddingBottom: 10
-    }
+      paddingBottom: 10,
+    },
   }),
   minimalHelp: css({
-    margin: '10px 0 0 0'
+    margin: '10px 0 0 0',
   }),
   description: css({
-    marginBottom: 20
-  })
+    marginBottom: 20,
+  }),
 }
 
 const CodeAuthorization = ({
@@ -51,7 +51,7 @@ const CodeAuthorization = ({
   minimal,
   authorizeSession,
   me,
-  onSuccess
+  onSuccess,
 }) => {
   const [code, setCode] = useState('')
   const [payload, setPayload] = useState('')
@@ -68,7 +68,7 @@ const CodeAuthorization = ({
     setError(
       (payload.length === 0 && t('Auth/CodeAuthorization/code/missing')) ||
         (payload.length < CODE_LENGTH &&
-          t('Auth/CodeAuthorization/code/tooShort'))
+          t('Auth/CodeAuthorization/code/tooShort')),
     )
     setDirty(shouldValidate)
   }
@@ -79,13 +79,13 @@ const CodeAuthorization = ({
     setMutating(false)
   }
 
-  const onSubmit = e => {
+  const onSubmit = (e) => {
     e && e.preventDefault()
 
     setMutating(true)
     authorizeSession({
       email,
-      tokens: [{ type: tokenType, payload: payload }]
+      tokens: [{ type: tokenType, payload: payload }],
     }).catch(handleMutateError)
   }
 
@@ -123,10 +123,10 @@ const CodeAuthorization = ({
             emphasis: (
               <Emphasis key='emphasis'>
                 {t('Auth/CodeAuthorization/description/emphasis/email', {
-                  email: email
+                  email: email,
                 })}
               </Emphasis>
-            )
+            ),
           })}
         </P>
       ) : (
@@ -138,13 +138,13 @@ const CodeAuthorization = ({
                 <Emphasis key='emphasis'>
                   {t('Auth/CodeAuthorization/description/emphasis')}
                 </Emphasis>
-              )
+              ),
             })}
           </P>
         </>
       )}
       <Field
-        renderInput={props => <input {...props} pattern={'[0-9]*'} />}
+        renderInput={(props) => <input {...props} pattern={'[0-9]*'} />}
         label={t('Auth/CodeAuthorization/code/label')}
         value={code}
         autoComplete='false'

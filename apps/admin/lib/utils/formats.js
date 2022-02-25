@@ -6,7 +6,7 @@ export const swissNumbers = formatLocale({
   decimal: '.',
   thousands: thousandSeparator,
   grouping: [3],
-  currency: ['CHF\u00a0', '']
+  currency: ['CHF\u00a0', ''],
 })
 const chf4Format = swissNumbers.format('$.0f')
 const chf5Format = swissNumbers.format('$,.0f')
@@ -38,7 +38,7 @@ export const swissTime = timeFormatLocale({
     'Mittwoch',
     'Donnerstag',
     'Freitag',
-    'Samstag'
+    'Samstag',
   ],
   shortDays: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
   months: [
@@ -53,7 +53,7 @@ export const swissTime = timeFormatLocale({
     'September',
     'Oktober',
     'November',
-    'Dezember'
+    'Dezember',
   ],
   shortMonths: [
     'Jan',
@@ -67,8 +67,8 @@ export const swissTime = timeFormatLocale({
     'Sep',
     'Okt',
     'Nov',
-    'Dez'
-  ]
+    'Dez',
+  ],
 })
 
 export const timeFormat = swissTime.format

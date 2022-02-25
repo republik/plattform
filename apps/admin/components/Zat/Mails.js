@@ -24,7 +24,7 @@ const Mails = ({ mails }) => {
 
   return (
     <div>
-      {mails.map(mail => {
+      {mails.map((mail) => {
         return (
           <div key={mail.id} {...styles.mail}>
             <div>

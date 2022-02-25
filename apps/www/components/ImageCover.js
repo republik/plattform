@@ -13,15 +13,15 @@ const coverStyle = css({
     minHeight: 500,
     height: ['500px', '50vh'],
     backgroundSize: 'cover',
-    backgroundPosition: 'center'
-  }
+    backgroundPosition: 'center',
+  },
 })
 const coverImageStyle = css({
   display: 'block',
   width: '100%',
   [mqLarge]: {
-    display: 'none'
-  }
+    display: 'none',
+  },
 })
 const creditStyle = css({
   position: 'absolute',
@@ -33,16 +33,16 @@ const creditStyle = css({
   [mqMedium]: {
     color: '#fff',
     top: 'auto',
-    bottom: 10
-  }
+    bottom: 10,
+  },
 })
 
 const leadStyle = css({
   '& p': {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   '& p:last-child': {
-    margin: 0
+    margin: 0,
   },
   position: 'relative',
   [mqMedium]: {
@@ -53,24 +53,24 @@ const leadStyle = css({
     height: '40%',
     color: '#fff',
     backgroundImage:
-      'linear-gradient(-180deg, rgba(0,0,0,0.00) 0%, rgba(0,0,0,0.3) 20%, rgba(0,0,0,0.80) 100%)'
-  }
+      'linear-gradient(-180deg, rgba(0,0,0,0.00) 0%, rgba(0,0,0,0.3) 20%, rgba(0,0,0,0.80) 100%)',
+  },
 })
 const leadContainerStyle = css({
   [mqMedium]: {
     position: 'absolute',
     bottom: '15%',
     left: 0,
-    right: 0
-  }
+    right: 0,
+  },
 })
 const leadCenterStyle = css({
   padding: '20px 20px 0',
   [mqMedium]: {
     textAlign: 'center',
     maxWidth: 640,
-    margin: '0 auto'
-  }
+    margin: '0 auto',
+  },
 })
 
 const Cover = ({ image, children }) => (
@@ -93,9 +93,9 @@ const Cover = ({ image, children }) => (
 Cover.propTypes = {
   image: PropTypes.shape({
     src: PropTypes.string.isRequired,
-    alt: PropTypes.string.isRequired
+    alt: PropTypes.string.isRequired,
   }).isRequired,
-  children: PropTypes.node
+  children: PropTypes.node,
 }
 
 export default Cover

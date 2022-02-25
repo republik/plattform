@@ -1,4 +1,5 @@
 {
+  "baseBranch": "origin/main",
   "pipeline": {
     "build": {
       "dependsOn": [
@@ -9,7 +10,44 @@
         ".next/**"
       ]
     },
-    "styleguide#build": {
+    "@orbiting/backend-modules-auth#build": {
+      "cache": false
+    },
+    "@orbiting/backend-modules-base#build": {
+      "cache": false
+    },
+    "@orbiting/backend-modules-databroom#build": {
+      "cache": false
+    },
+    "@orbiting/backend-modules-dataloader#build": {
+      "cache": false
+    },
+    "@orbiting/backend-modules-discussions#build": {
+      "cache": false
+    },
+    "@orbiting/backend-modules-invoices#build": {
+      "cache": false
+    },
+    "@orbiting/backend-modules-publikator#build": {
+      "cache": false
+    },
+    "@orbiting/backend-modules-republik#build": {
+      "cache": false
+    },
+    "@orbiting/backend-modules-republik-crowdfundings#build": {
+      "cache": false
+    },
+    "@orbiting/www-app#build": {
+      "cache": false
+    },
+    "@orbiting/publikator-app#build": {
+      "cache": false
+    },
+    "@orbiting/admin-app#build": {
+      "cache": false
+    },
+    "@project-r/styleguide#build": {
+      "cache": false,
       "dependsOn": [
         "^build",
         "$SERVER"
@@ -24,6 +62,14 @@
     },
     "dev": {
       "cache": false
+    },
+    "test": {
+      "outputs": [
+        "coverage/**"
+      ],
+      "dependsOn": [
+        "^build"
+      ]
     }
   },
   "globalDependencies": [

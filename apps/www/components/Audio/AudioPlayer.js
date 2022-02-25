@@ -18,7 +18,7 @@ const AudioPlayerFrontend = ({ t }) => {
         audioPlayerVisible,
         onCloseAudioPlayer,
         audioState,
-        autoPlayActive
+        autoPlayActive,
       }) => {
         return (
           <>

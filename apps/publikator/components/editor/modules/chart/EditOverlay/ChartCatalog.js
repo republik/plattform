@@ -15,7 +15,7 @@ import {
   A,
   fontStyles,
   mediaQueries,
-  Interaction
+  Interaction,
 } from '@project-r/styleguide'
 import Code from 'react-icons/lib/md/code'
 import Edit from 'react-icons/lib/md/edit'
@@ -28,7 +28,7 @@ import ChartActions from './ChartActions'
 
 const DEFAULT_FILTERS = [
   { key: 'type', value: 'DocumentZone' },
-  { key: 'documentZoneIdentifier', value: 'CHART' }
+  { key: 'documentZoneIdentifier', value: 'CHART' },
 ]
 
 const getZones = gql`
@@ -76,21 +76,24 @@ const getZones = gql`
 
 const styles = {
   container: css({
-    position: 'relative'
+    position: 'relative',
   }),
   actions: css({
-    display: 'flex'
+    display: 'flex',
   }),
   footerAction: css({
     paddingBottom: 30,
     ...fontStyles.sansSerifRegular16,
     [mediaQueries.mUp]: {
-      ...fontStyles.sansSerifRegular21
-    }
-  })
+      ...fontStyles.sansSerifRegular21,
+    },
+  }),
 }
 
-const resetSize = node => ({ ...node, data: { ...node.data, size: undefined } })
+const resetSize = (node) => ({
+  ...node,
+  data: { ...node.data, size: undefined },
+})
 
 const PaginationLink = ({ onClick, label, style, containerRef }) => {
   return (
@@ -98,14 +101,14 @@ const PaginationLink = ({ onClick, label, style, containerRef }) => {
       {...styles.footerAction}
       style={style}
       href='#'
-      onClick={e => {
+      onClick={(e) => {
         e.preventDefault()
         onClick()
         scrollIntoView(containerRef.current, {
           time: 0,
           align: {
-            top: 0
-          }
+            top: 0,
+          },
         })
       }}
     >
@@ -116,10 +119,10 @@ const PaginationLink = ({ onClick, label, style, containerRef }) => {
 
 const Pagination = ({
   search: {
-    pageInfo: { hasNextPage, hasPreviousPage, startCursor, endCursor }
+    pageInfo: { hasNextPage, hasPreviousPage, startCursor, endCursor },
   },
   fetchMore,
-  containerRef
+  containerRef,
 }) => (
   <Center>
     {hasPreviousPage && (
@@ -154,10 +157,10 @@ const RenderChart = ({ node }) => {
         data: {},
         identifier: 'CENTER',
         type: 'zone',
-        children: [resetSize(node)]
-      }
+        children: [resetSize(node)],
+      },
     ],
-    meta: {}
+    meta: {},
   }
   return <>{renderMdast(fullMdast, schema)}</>
 }
@@ -205,7 +208,7 @@ const ChartContainer = ({ chart, onChartSelect }) => {
         {showCode && (
           <ChartCode
             config={node.data}
-            values={node.children.find(n => n.type === 'code')?.value}
+            values={node.children.find((n) => n.type === 'code')?.value}
             onChartSelect={onChartSelect}
           />
         )}
@@ -218,7 +221,7 @@ const Results = compose(
   graphql(getZones, {
     options: () => ({
       // otherwise pagination info is cached
-      fetchPolicy: 'network-only'
+      fetchPolicy: 'network-only',
     }),
     props: ({ data }) => ({
       data,
@@ -226,18 +229,18 @@ const Results = compose(
         data.fetchMore({
           variables: {
             after,
-            before
+            before,
           },
-          updateQuery: (previousResult, { fetchMoreResult }) => fetchMoreResult
-        })
-    })
-  })
+          updateQuery: (previousResult, { fetchMoreResult }) => fetchMoreResult,
+        }),
+    }),
+  }),
 )(
   ({
     data: { loading, error, search },
     fetchMore,
     containerRef,
-    onChartSelect
+    onChartSelect,
   }) => (
     <Loader
       loading={loading}
@@ -271,7 +274,7 @@ const Results = compose(
         )
       }}
     />
-  )
+  ),
 )
 
 const TextSearch = ({ setText }) => {
@@ -311,7 +314,7 @@ const ChartCatalog = ({ onChartSelect }) => {
   const containerRef = useRef()
 
   const filters = DEFAULT_FILTERS.concat(
-    selectedType && [{ key: 'documentZoneDataType', value: selectedType }]
+    selectedType && [{ key: 'documentZoneDataType', value: selectedType }],
   ).filter(Boolean)
   return (
     <div ref={containerRef}>

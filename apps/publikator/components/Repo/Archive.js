@@ -21,23 +21,23 @@ export const ARCHIVE_REPO = gql`
 const RepoArchive = ({ repoId, isTemplate, t }) => {
   return (
     <Mutation mutation={ARCHIVE_REPO} variables={{ repoId }}>
-      {archiveRepo => (
+      {(archiveRepo) => (
         <A
           href='#'
-          onClick={e => {
+          onClick={(e) => {
             e.preventDefault()
             if (
               window.confirm(
                 t(`repo/archive${isTemplate ? '/template/' : '/'}confirm`, {
-                  repoId
-                })
+                  repoId,
+                }),
               )
             ) {
               archiveRepo()
                 .then(() => {
                   Router.pushRoute('index')
                 })
-                .catch(error => {
+                .catch((error) => {
                   window.alert(errorToString(error))
                 })
             }

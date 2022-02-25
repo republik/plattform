@@ -10,10 +10,10 @@ const styles = {
     height: 8,
     marginTop: -20,
     marginBottom: 20,
-    position: 'relative'
+    position: 'relative',
   }),
   barInner: css({
-    height: '100%'
+    height: '100%',
   }),
   goal: css({
     position: 'absolute',
@@ -22,14 +22,14 @@ const styles = {
     height: HEIGHT,
     backgroundColor: 'transparent',
     boxSizing: 'content-box',
-    borderRight: `2px solid transparent`
+    borderRight: `2px solid transparent`,
   }),
   currentGoal: css({
-    borderRight: 'none'
+    borderRight: 'none',
   }),
   lowerGoal: css({
     borderRightWidth: 2,
-    borderRightStyle: 'solid'
+    borderRightStyle: 'solid',
   }),
   goalNumber: css({
     fontFamiliy: fontFamilies.sansSerifMedium,
@@ -39,13 +39,13 @@ const styles = {
     borderRightStyle: 'solid',
     textAlign: 'right',
     paddingTop: 12,
-    paddingRight: 4
+    paddingRight: 4,
   }),
   goalBar: css({
     position: 'absolute',
     top: 0,
     left: 0,
-    height: 8
+    height: 8,
   }),
   box: css({
     position: 'absolute',
@@ -55,7 +55,7 @@ const styles = {
     fontFamiliy: fontFamilies.sansSerifMedium,
     fontSize: 14,
     lineHeight: '19px',
-    padding: '12px 17px'
+    padding: '12px 17px',
   }),
   arrow: css({
     position: 'absolute',
@@ -67,11 +67,11 @@ const styles = {
     borderWidth: '0 4px 8px 4px',
     borderColorTop: 'transparent',
     borderColorRight: 'transparent',
-    borderColorLeft: 'transparent'
+    borderColorLeft: 'transparent',
   }),
   noInteraction: css({
-    pointerEvents: 'none'
-  })
+    pointerEvents: 'none',
+  }),
 }
 
 const widthForGoal = (goal, status, accessor) => {
@@ -93,9 +93,9 @@ const GoalBar = ({ status, goals, accessor, format, showLast, color }) => {
     setUniqueGoals(
       goals
         .filter(
-          (d, i) => i === goals.findIndex(g => g[accessor] === d[accessor])
+          (d, i) => i === goals.findIndex((g) => g[accessor] === d[accessor]),
         )
-        .reverse()
+        .reverse(),
     )
   }, goals)
 
@@ -109,7 +109,7 @@ const GoalBar = ({ status, goals, accessor, format, showLast, color }) => {
     <div
       {...styles.bar}
       style={{
-        zIndex: hover ? 1 : 0
+        zIndex: hover ? 1 : 0,
       }}
       {...colorScheme.set('background', 'divider')}
     >
@@ -117,7 +117,7 @@ const GoalBar = ({ status, goals, accessor, format, showLast, color }) => {
         {...styles.barInner}
         {...colorScheme.set('background', 'primary')}
         style={{
-          width: widthForGoal(goal, status, accessor)
+          width: widthForGoal(goal, status, accessor),
         }}
       />
       {uniqueGoals.length > 1 &&
@@ -127,13 +127,13 @@ const GoalBar = ({ status, goals, accessor, format, showLast, color }) => {
             {...merge(
               styles.goal,
               i === 0 && styles.currentGoal,
-              i > 0 && status[accessor] < goal[accessor] && styles.lowerGoal
+              i > 0 && status[accessor] < goal[accessor] && styles.lowerGoal,
             )}
             {...colorScheme.set('borderRightColor', 'default')}
             style={{
-              width: widthForGoal(goal, uniqueGoal, accessor)
+              width: widthForGoal(goal, uniqueGoal, accessor),
             }}
-            onTouchStart={e => {
+            onTouchStart={(e) => {
               e.preventDefault()
               setHover(uniqueGoal)
             }}
@@ -147,7 +147,7 @@ const GoalBar = ({ status, goals, accessor, format, showLast, color }) => {
                   {...styles.goalBar}
                   {...colorScheme.set('backgroundColor', 'primaryHover')}
                   style={{
-                    width: widthForGoal(uniqueGoal, status, accessor)
+                    width: widthForGoal(uniqueGoal, status, accessor),
                   }}
                 />
                 <div
@@ -175,7 +175,7 @@ const GoalBar = ({ status, goals, accessor, format, showLast, color }) => {
           <RawHtml
             dangerouslySetInnerHTML={{
               __html:
-                '<span style="color: white;">' + hover.description + '</span>'
+                '<span style="color: white;">' + hover.description + '</span>',
             }}
           />
         </div>
@@ -185,7 +185,7 @@ const GoalBar = ({ status, goals, accessor, format, showLast, color }) => {
 }
 
 GoalBar.defaultProps = {
-  format: value => value
+  format: (value) => value,
 }
 
 export default GoalBar

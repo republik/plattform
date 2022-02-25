@@ -19,16 +19,16 @@ const styles = {
     margin: 0,
     [mUp]: {
       paddingBottom: 40,
-      paddingTop: '10px'
-    }
+      paddingTop: '10px',
+    },
   }),
   link: css({
     color: 'inherit',
-    textDecoration: 'none'
-  })
+    textDecoration: 'none',
+  }),
 }
 
-const MoreIconWithProps = props => (
+const MoreIconWithProps = (props) => (
   <IconButton title='Mehr' Icon={MoreIcon} {...props} />
 )
 
@@ -42,7 +42,7 @@ const Teaser = ({
   path,
   Link,
   highlighted,
-  menu
+  menu,
 }) => {
   const [colorScheme] = useColorContext()
 
@@ -51,7 +51,7 @@ const Teaser = ({
     series,
     repoId,
     path,
-    title
+    title,
   })
 
   return (
@@ -63,7 +63,7 @@ const Teaser = ({
       {menu && (
         <div
           style={{
-            float: 'right'
+            float: 'right',
           }}
         >
           <CalloutMenu Element={MoreIconWithProps} align='right'>
@@ -90,7 +90,7 @@ Teaser.propTypes = {
   color: PropTypes.string,
   format: PropTypes.object,
   interaction: PropTypes.bool,
-  Link: PropTypes.func.isRequired // a react component
+  Link: PropTypes.func.isRequired, // a react component
 }
 
 export default Teaser

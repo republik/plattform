@@ -30,10 +30,10 @@ class NewsletterSubscription extends Component {
           <Consents
             accepted={consents}
             required={requiredConsents}
-            onChange={keys => {
+            onChange={(keys) => {
               this.setState({
                 consents: keys,
-                error: undefined
+                error: undefined,
               })
             }}
           />
@@ -55,7 +55,7 @@ class NewsletterSubscription extends Component {
                 }
                 this.setState({ updating: true }, () => {
                   updateNewsletterSubscription({
-                    consents
+                    consents,
                   })
                     .then(() =>
                       router.replace({
@@ -63,14 +63,14 @@ class NewsletterSubscription extends Component {
                         query: {
                           type: 'email-confirmed',
                           email,
-                          context: this.props.context
-                        }
-                      })
+                          context: this.props.context,
+                        },
+                      }),
                     )
-                    .catch(error => {
+                    .catch((error) => {
                       this.setState({
                         updating: false,
-                        error
+                        error,
                       })
                     })
                 })
@@ -118,11 +118,11 @@ export default compose(
             subscribed,
             email,
             mac,
-            consents
-          }
-        })
-    })
+            consents,
+          },
+        }),
+    }),
   }),
   withT,
-  withRouter
+  withRouter,
 )(NewsletterSubscription)

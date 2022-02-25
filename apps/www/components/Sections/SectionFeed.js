@@ -5,11 +5,10 @@ import { gql } from '@apollo/client'
 import { Center, Interaction } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
-import { parseJSONObject } from '../../lib/safeJSON'
 
 import Box from '../Frame/Box'
 import { onDocumentFragment as bookmarkOnDocumentFragment } from '../Bookmarks/fragments'
-import { WithoutMembership, WithActiveMembership } from '../Auth/withMembership'
+import { WithoutMembership } from '../Auth/withMembership'
 
 import DocumentListContainer from '../Feed/DocumentListContainer'
 
@@ -88,11 +87,15 @@ const getFeedDocuments = gql`
   ${bookmarkOnDocumentFragment}
 `
 
-const mapNodes = node => node.entity
+const mapNodes = (node) => node.entity
 
-const SectionFeed = ({ t, formats, variablesAsString }) => {
-  if (!variablesAsString && !(formats && formats.length)) {
+const SectionFeed = ({ t, formats, variables: variablesObject }) => {
+  if (!variablesObject && !(formats && formats.length)) {
     return null
+  }
+
+  const variables = variablesObject || {
+    filter: { formats, feed: true },
   }
 
   const empty = (
@@ -104,12 +107,6 @@ const SectionFeed = ({ t, formats, variablesAsString }) => {
       )}
     />
   )
-
-  const variables = variablesAsString
-    ? parseJSONObject(variablesAsString)
-    : {
-        filter: { formats, feed: true }
-      }
 
   return (
     <Center>

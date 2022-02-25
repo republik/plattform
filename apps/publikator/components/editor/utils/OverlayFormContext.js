@@ -8,7 +8,7 @@ export const OverlayFormContextProvider = ({ children }) => {
     <OverlayFormContext.Provider
       value={{
         showModal,
-        setShowModal
+        setShowModal,
       }}
     >
       {children}

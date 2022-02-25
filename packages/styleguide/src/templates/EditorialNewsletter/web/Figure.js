@@ -7,8 +7,8 @@ const StyledFigure = ({ children, plain }) => (
       style: {
         borderTop: plain ? undefined : '1px solid #555',
         paddingTop: plain ? undefined : '13px',
-        marginBottom: '30px'
-      }
+        marginBottom: '30px',
+      },
     }}
   >
     {children}

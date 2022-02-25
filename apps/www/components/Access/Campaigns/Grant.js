@@ -34,7 +34,7 @@ const Grants = ({ grant, givingMemberships, revokeAccess, t }) => {
       <Emphasis key={`grant-end-${grant.id}`}>
         {dayFormat(new Date(grant.endAt))}
       </Emphasis>
-    )
+    ),
   }
 
   return (

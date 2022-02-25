@@ -6,8 +6,8 @@ import { isSelected } from './Election'
 
 const styles = {
   table: css({
-    width: '100%'
-  })
+    width: '100%',
+  }),
 }
 
 const ElectionBallot = ({
@@ -19,7 +19,7 @@ const ElectionBallot = ({
   showMeta,
   disabled,
   discussionPath,
-  discussionTag
+  discussionTag,
 }) => (
   <div {...styles.table}>
     {candidates.map((candidate, i) => (
@@ -29,7 +29,7 @@ const ElectionBallot = ({
         candidate={candidate}
         selected={isSelected(candidate, vote)}
         maxVotes={maxVotes}
-        mandatory={mandatory.some(c => candidate.user.id === c.user.id)}
+        mandatory={mandatory.some((c) => candidate.user.id === c.user.id)}
         onChange={onChange}
         disabled={disabled}
         showMeta={showMeta}
@@ -49,14 +49,14 @@ ElectionBallot.propTypes = {
   showMeta: PropTypes.bool,
   disabled: PropTypes.bool,
   discussionPath: PropTypes.string,
-  discussionTag: PropTypes.string
+  discussionTag: PropTypes.string,
 }
 
 ElectionBallot.defaultProps = {
   vote: [],
   mandatory: [],
   maxVotes: 1,
-  showMeta: true
+  showMeta: true,
 }
 
 export default ElectionBallot

@@ -30,7 +30,7 @@ const discrete = [
   '#e377c2',
   '#7f7f7f',
   '#bcbd22',
-  '#17becf'
+  '#17becf',
 ]
 
 const colorsDeprecated = {
@@ -65,7 +65,7 @@ const colorsDeprecated = {
     'rgb(60, 139, 195)',
     'rgb(75, 151, 201)',
     'rgb(91, 163, 207)',
-    'rgb(109, 174, 213)'
+    'rgb(109, 174, 213)',
   ],
   sequential3: ['rgb(8,48,107)', 'rgb(24,100,170)', 'rgb(75,151,201)'],
   opposite3: ['rgb(103,0,13)', 'rgb(187,21,26)', 'rgb(239,69,51)'],
@@ -79,9 +79,9 @@ const colorsDeprecated = {
     fill: '#FFF',
     lightFill: '#555',
     error: 'rgb(239,69,51)',
-    disabled: '#242424'
+    disabled: '#242424',
   },
-  ...getJson('COLORS')
+  ...getJson('COLORS'),
 }
 
 // ToDos
@@ -137,7 +137,7 @@ const colors = {
     opposite60: 'rgb(239,69,51)',
     neutral: '#bbb',
     discrete,
-    chartsInverted: '#000000'
+    chartsInverted: '#000000',
   },
   dark: {
     logo: '#FFFFFF',
@@ -186,7 +186,7 @@ const colors = {
     opposite60: 'rgb(252, 138, 107)',
     neutral: '#bbb',
     discrete,
-    chartsInverted: '#FFFFFF'
+    chartsInverted: '#FFFFFF',
   },
   mappings: {
     format: {
@@ -194,22 +194,22 @@ const colors = {
       '#000000': 'accentColorMeta',
       '#282828': 'accentColorMeta',
       '#07809A': 'accentColorBriefing',
-      '#07809a': 'accentColorBriefing'
+      '#07809a': 'accentColorBriefing',
     },
     charts: {
       '#000': 'chartsInverted',
-      '#000000': 'chartsInverted'
-    }
-  }
+      '#000000': 'chartsInverted',
+    },
+  },
 }
 
 export const localInvertedColors = {
   light: colors.dark,
-  dark: colors.light
+  dark: colors.light,
 }
 
 // add all deprecated colors, but only if they don't exist in new colors (no overwrites)
-Object.keys(colorsDeprecated).forEach(key => {
+Object.keys(colorsDeprecated).forEach((key) => {
   if (!colors[key]) {
     colors[key] = colorsDeprecated[key]
   }

@@ -15,7 +15,7 @@ const AppVariableContext = withMe(({ me, children }) => {
         me && isMounted
           ? {
               firstName: me.firstName,
-              lastName: me.lastName
+              lastName: me.lastName,
             }
           : {}
       }

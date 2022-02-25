@@ -7,7 +7,7 @@ import {
   Interaction,
   Center,
   fontStyles,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import { DiscussionIcon } from '@project-r/styleguide'
 import { css } from 'glamor'
@@ -30,7 +30,7 @@ const VOTING_COOP_BOARD_SLUG = 'gen18board'
 const DISCUSSION_TITLES = {
   [VOTING_COOP_BOARD_SLUG]: 'vote/discussion/board',
   [ELECTION_COOP_PRESIDENT_SLUG]: 'vote/discussion/president',
-  [ELECTION_COOP_MEMBERS_SLUG]: 'vote/discussion/members'
+  [ELECTION_COOP_MEMBERS_SLUG]: 'vote/discussion/members',
 }
 
 const styles = {
@@ -39,21 +39,21 @@ const styles = {
     padding: '0 10px',
     position: 'sticky',
     zIndex: 10,
-    top: 0
+    top: 0,
   }),
   tabBar: css({
     padding: '10px 0px 20px 0px',
-    borderTop: `0.5px solid ${colors.divider}`
+    borderTop: `0.5px solid ${colors.divider}`,
   }),
   tab: css({
     marginRight: 20,
-    display: 'inline-block'
+    display: 'inline-block',
   }),
   count: css({
     marginLeft: 10,
     color: colors.primary,
-    ...fontStyles.sansSerifMedium16
-  })
+    ...fontStyles.sansSerifMedium16,
+  }),
 }
 
 const DiscussionPage = ({ router, data, vt }) => {
@@ -61,7 +61,7 @@ const DiscussionPage = ({ router, data, vt }) => {
 
   const meta = {
     title: vt('info/title'),
-    description: vt('info/description')
+    description: vt('info/description'),
   }
 
   return (
@@ -93,8 +93,8 @@ const DiscussionPage = ({ router, data, vt }) => {
                     {[
                       VOTING_COOP_BOARD_SLUG,
                       ELECTION_COOP_PRESIDENT_SLUG,
-                      ELECTION_COOP_MEMBERS_SLUG
-                    ].map(id => (
+                      ELECTION_COOP_MEMBERS_SLUG,
+                    ].map((id) => (
                       <div key={id} {...styles.tab}>
                         <P>
                           <Link
@@ -102,8 +102,8 @@ const DiscussionPage = ({ router, data, vt }) => {
                               pathname: '/vote/genossenschaft/diskutieren',
                               query: {
                                 discussion:
-                                  (data[id] && data[id].discussion.slug) || id
-                              }
+                                  (data[id] && data[id].discussion.slug) || id,
+                              },
                             }}
                             passHref
                             scroll={false}

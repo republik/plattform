@@ -8,7 +8,7 @@ export const Link = ({ children, href, title }) => (
     style={{
       color: colors.text,
       textDecoration: 'underline',
-      textDecorationSkip: 'ink'
+      textDecorationSkip: 'ink',
     }}
   >
     {children}

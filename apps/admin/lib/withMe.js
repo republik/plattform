@@ -14,11 +14,11 @@ export const meQuery = gql`
   }
 `
 
-export default Component =>
+export default (Component) =>
   graphql(meQuery, {
     props: ({ data }) => {
       return {
-        me: data.me
+        me: data.me,
       }
-    }
+    },
   })(Component)

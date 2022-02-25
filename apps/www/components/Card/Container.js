@@ -17,20 +17,20 @@ const styles = {
     overflow: 'hidden',
     // overscrollBehaviorY: 'contain',
     width: '100%',
-    paddingBottom: 20
+    paddingBottom: 20,
   }),
   minHeight: css({
     minHeight: `calc(100vh - ${HEADER_HEIGHT_MOBILE}px)`,
     [mediaQueries.mUp]: {
-      minHeight: `calc(100vh - ${HEADER_HEIGHT}px)`
-    }
+      minHeight: `calc(100vh - ${HEADER_HEIGHT}px)`,
+    },
   }),
   height: css({
     height: `calc(100vh - ${HEADER_HEIGHT_MOBILE}px)`,
     [mediaQueries.mUp]: {
-      height: `calc(100vh - ${HEADER_HEIGHT}px)`
-    }
-  })
+      height: `calc(100vh - ${HEADER_HEIGHT}px)`,
+    },
+  }),
 }
 
 export const RawContainer = ({ children, style, imprint }) => (

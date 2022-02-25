@@ -10,18 +10,18 @@ import { safeDump } from 'js-yaml'
 
 import {
   generateAuthorsLine,
-  mdastToString
+  mdastToString,
 } from '../../../../lib/utils/helpers'
 
 export default ({ rule, subModules, TYPE }) => {
-  const centerModule = subModules.find(m => m.name === 'center')
+  const centerModule = subModules.find((m) => m.name === 'center')
   if (!centerModule) {
     throw new Error('Missing center submodule')
   }
-  const titleModule = subModules.find(m => m.name === 'title')
-  const figureModule = subModules.find(m => m.name === 'figure')
+  const titleModule = subModules.find((m) => m.name === 'title')
+  const figureModule = subModules.find((m) => m.name === 'figure')
   const dynamicComponentModule = subModules.find(
-    m => m.name === 'dynamiccomponent'
+    (m) => m.name === 'dynamiccomponent',
   )
 
   const childSerializer = new MarkdownSerializer({
@@ -29,14 +29,14 @@ export default ({ rule, subModules, TYPE }) => {
       .reduce(
         (a, m) =>
           a.concat(
-            m.helpers && m.helpers.serializer && m.helpers.serializer.rules
+            m.helpers && m.helpers.serializer && m.helpers.serializer.rules,
           ),
-        []
+        [],
       )
-      .filter(Boolean)
+      .filter(Boolean),
   })
 
-  const autoMeta = documentNode => {
+  const autoMeta = (documentNode) => {
     const data = documentNode.data
     const autoMeta = !data || !data.delete('template').size || data.get('auto')
     const autoSlug = data.get('autoSlug')
@@ -50,7 +50,7 @@ export default ({ rule, subModules, TYPE }) => {
       const title =
         titleModule &&
         documentNode.nodes.find(
-          n => n.type === titleModule.TYPE && n.kind === 'block'
+          (n) => n.type === titleModule.TYPE && n.kind === 'block',
         )
       const fallbackTitle = data.get('title')
 
@@ -78,8 +78,8 @@ export default ({ rule, subModules, TYPE }) => {
         slug(
           newData.get('seoTitle') ||
             newData.get('twitterTitle') ||
-            newData.get('title')
-        )
+            newData.get('title'),
+        ),
       )
     }
 
@@ -93,7 +93,7 @@ export default ({ rule, subModules, TYPE }) => {
   }
 
   const documentRule = {
-    match: object => object.kind === 'document',
+    match: (object) => object.kind === 'document',
     matchMdast: rule.matchMdast,
     fromMdast: (node, index, parent, rest) => {
       node.children.forEach((child, index) => {
@@ -111,9 +111,9 @@ export default ({ rule, subModules, TYPE }) => {
             format: node.format,
             section: node.section,
             series: node.series,
-            repoId: node.repoId
-          }
-        })
+            repoId: node.repoId,
+          },
+        }),
       }
 
       const newData = autoMeta(SlateDocument.fromJSON(documentNode))
@@ -123,7 +123,7 @@ export default ({ rule, subModules, TYPE }) => {
 
       return {
         document: documentNode,
-        kind: 'value'
+        kind: 'value',
       }
     },
     toMdast: (object, index, parent, rest) => {
@@ -132,20 +132,20 @@ export default ({ rule, subModules, TYPE }) => {
         meta: object.data,
         children: childSerializer
           .toMdast(object.nodes, 0, object, rest)
-          .filter(mdNode => {
+          .filter((mdNode) => {
             return !(
               mdNode.identifier === centerModule.TYPE &&
               mdNode.children.length === 1 &&
               mdNode.children[0].type === 'paragraph' &&
               mdastToString(mdNode.children[0]) === ''
             )
-          })
+          }),
       }
-    }
+    },
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [documentRule]
+    rules: [documentRule],
   })
 
   const newDocument = ({ title = '', schema = '', repoId }, me) =>
@@ -158,7 +158,7 @@ ${safeDump({
   auto: true,
   autoSlug: true,
   feed: true,
-  gallery: true
+  gallery: true,
 })}
 ---
 ${
@@ -198,7 +198,7 @@ ${generateAuthorsLine(me)}
 ${titleModule ? 'Text' : title}
 
 <hr/></section>
-`)
+`),
     })
 
   const Container = rule.component
@@ -207,7 +207,7 @@ ${titleModule ? 'Text' : title}
     TYPE,
     helpers: {
       serializer,
-      newDocument
+      newDocument,
     },
     changes: {},
     plugins: [
@@ -216,18 +216,18 @@ ${titleModule ? 'Text' : title}
         renderEditor: ({ children, value }) => (
           <Container>{children}</Container>
         ),
-        validateNode: node => {
+        validateNode: (node) => {
           if (node.kind !== 'document') return
 
           const adjacentCenter = node.nodes.find(
             (n, i) =>
               i &&
               n.type === centerModule.TYPE &&
-              node.nodes.get(i - 1).type === centerModule.TYPE
+              node.nodes.get(i - 1).type === centerModule.TYPE,
           )
           if (!adjacentCenter) return
 
-          return change => {
+          return (change) => {
             change.mergeNodeByKey(adjacentCenter.key)
           }
         },
@@ -237,34 +237,34 @@ ${titleModule ? 'Text' : title}
               dynamicComponentModule && {
                 types: [dynamicComponentModule.TYPE],
                 min: 0,
-                max: 1
+                max: 1,
               },
               figureModule && {
                 types: [figureModule.TYPE],
                 min: 0,
-                max: 1
+                max: 1,
               },
               titleModule && {
                 types: [titleModule.TYPE],
                 min: 1,
-                max: 1
+                max: 1,
               },
               {
                 types: subModules
-                  .filter(module => module !== titleModule)
-                  .map(module => module.TYPE),
-                min: 1
-              }
+                  .filter((module) => module !== titleModule)
+                  .map((module) => module.TYPE),
+                min: 1,
+              },
             ].filter(Boolean),
             first: (titleModule || figureModule) && {
               types: [
                 titleModule && titleModule.TYPE,
                 figureModule && figureModule.TYPE,
-                dynamicComponentModule && dynamicComponentModule.TYPE
-              ].filter(Boolean)
+                dynamicComponentModule && dynamicComponentModule.TYPE,
+              ].filter(Boolean),
             },
             last: {
-              types: [centerModule.TYPE]
+              types: [centerModule.TYPE],
             },
             normalize: (change, reason, { node, index, child }) => {
               if (reason === 'child_required') {
@@ -272,9 +272,9 @@ ${titleModule ? 'Text' : title}
                   kind: 'block',
                   type:
                     !titleModule ||
-                    node.nodes.find(n => n.type === titleModule.TYPE)
+                    node.nodes.find((n) => n.type === titleModule.TYPE)
                       ? centerModule.TYPE
-                      : titleModule.TYPE
+                      : titleModule.TYPE,
                 })
               }
               if (reason === 'child_type_invalid') {
@@ -282,7 +282,7 @@ ${titleModule ? 'Text' : title}
                   type:
                     index === 0 && titleModule
                       ? titleModule.TYPE
-                      : centerModule.TYPE
+                      : centerModule.TYPE,
                 })
               }
               if (
@@ -291,29 +291,29 @@ ${titleModule ? 'Text' : title}
               ) {
                 change.insertNodeByKey(node.key, 0, {
                   kind: 'block',
-                  type: titleModule ? titleModule.TYPE : figureModule.TYPE
+                  type: titleModule ? titleModule.TYPE : figureModule.TYPE,
                 })
               }
               if (reason === 'last_child_type_invalid') {
                 change.insertNodeByKey(node.key, node.nodes.size, {
                   kind: 'block',
-                  type: centerModule.TYPE
+                  type: centerModule.TYPE,
                 })
               }
-            }
-          }
+            },
+          },
         },
-        onChange: change => {
+        onChange: (change) => {
           const newData = autoMeta(change.value.document)
 
           if (newData) {
             change.setNodeByKey(change.value.document.key, {
-              data: newData
+              data: newData,
             })
             return change
           }
-        }
-      }
-    ]
+        },
+      },
+    ],
   }
 }

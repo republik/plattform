@@ -18,12 +18,12 @@ const tokenQuery = gql`
 const TokenPackageLink = compose(
   withInNativeApp,
   graphql(tokenQuery, {
-    skip: props => !props.inNativeApp,
+    skip: (props) => !props.inNativeApp,
     props: ({ data }) => ({
       loading: data.loading,
-      accessToken: data.me && data.me.accessToken
-    })
-  })
+      accessToken: data.me && data.me.accessToken,
+    }),
+  }),
 )(
   ({
     loading,
@@ -46,14 +46,14 @@ const TokenPackageLink = compose(
       <Link
         href={{
           pathname: '/angebote',
-          query
+          query,
         }}
         {...props}
       >
         {children}
       </Link>
     )
-  }
+  },
 )
 
 export default TokenPackageLink

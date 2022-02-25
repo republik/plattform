@@ -6,13 +6,13 @@ import injectBlock from '../../utils/injectBlock'
 import FilesInput from './FilesInput'
 
 export default ({ TYPE, newBlock, editorOptions }) => {
-  const isHtmlBlock = block => block.type === TYPE
+  const isHtmlBlock = (block) => block.type === TYPE
   const { insertButtonText, insertTypes = [] } = editorOptions || {}
 
   const Form = createPropertyForm({
     isDisabled: ({ value }) => {
       return !value.blocks.some(isHtmlBlock)
-    }
+    },
   })(({ disabled, value, onChange }) => {
     if (disabled) {
       return null
@@ -24,14 +24,14 @@ export default ({ TYPE, newBlock, editorOptions }) => {
             <div key={`html-${i}`}>
               <FilesInput
                 data={block.data}
-                onChange={files => {
+                onChange={(files) => {
                   console.log(files)
                   onChange(
                     value.change().setNodeByKey(block.key, {
                       data: block.data
                         .set('code', files.code)
-                        .set('images', files.images)
-                    })
+                        .set('images', files.images),
+                    }),
                   )
                 }}
               />
@@ -42,7 +42,7 @@ export default ({ TYPE, newBlock, editorOptions }) => {
     )
   })
 
-  const buttonClickHandler = (disabled, value, onChange) => event => {
+  const buttonClickHandler = (disabled, value, onChange) => (event) => {
     event.preventDefault()
     if (!disabled) {
       return onChange(value.change().call(injectBlock, newBlock()))
@@ -51,7 +51,8 @@ export default ({ TYPE, newBlock, editorOptions }) => {
 
   const Button = ({ value, onChange }) => {
     const disabled =
-      value.isBlurred || !value.blocks.every(n => insertTypes.includes(n.type))
+      value.isBlurred ||
+      !value.blocks.every((n) => insertTypes.includes(n.type))
 
     return (
       <span
@@ -67,6 +68,6 @@ export default ({ TYPE, newBlock, editorOptions }) => {
 
   return {
     forms: [Form],
-    insertButtons: [insertButtonText && Button]
+    insertButtons: [insertButtonText && Button],
   }
 }

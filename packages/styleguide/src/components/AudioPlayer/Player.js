@@ -17,7 +17,7 @@ import {
   ForwardIcon,
   ReplayIcon,
   DownloadIcon,
-  CloseIcon
+  CloseIcon,
 } from '../Icons'
 import { useColorContext } from '../Colors/useColorContext'
 
@@ -40,14 +40,14 @@ const SIZE = {
   close: 30,
   download: 22,
   forward: 22,
-  replay: 22
+  replay: 22,
 }
 
 const barStyle = {
   position: 'absolute',
   height: PROGRESS_HEIGHT,
   left: 0,
-  right: 0
+  right: 0,
 }
 
 const buttonStyle = {
@@ -55,7 +55,7 @@ const buttonStyle = {
   border: 'none',
   cursor: 'pointer',
   outline: 'none',
-  padding: 0
+  padding: 0,
 }
 
 const styles = {
@@ -63,43 +63,43 @@ const styles = {
     position: 'relative',
     lineHeight: 0,
     ':focus': {
-      outline: 'none'
-    }
+      outline: 'none',
+    },
   }),
   audio: css({
     height: 0,
     width: '100%',
     '::-webkit-media-controls-panel': {
-      display: 'none !important'
+      display: 'none !important',
     },
     '::--webkit-media-controls-play-button': {
-      display: 'none !important'
+      display: 'none !important',
     },
     '::-webkit-media-controls-start-playback-button': {
-      display: 'none !important'
-    }
+      display: 'none !important',
+    },
   }),
   controls: css({
     position: 'absolute',
     cursor: 'pointer',
-    height: `${CONTROLS_HEIGHT}px`
+    height: `${CONTROLS_HEIGHT}px`,
   }),
   buttons: css({
     position: 'absolute',
     top: '50%',
     left: 0,
     marginTop: -15,
-    textAlign: 'center'
+    textAlign: 'center',
   }),
   button: css({
-    ...buttonStyle
+    ...buttonStyle,
   }),
   download: css({
     position: 'absolute',
     top: '50%',
     left: SIZE.play + SIZE.replay + SIZE.forward + ICON_SPACING,
     marginTop: -10,
-    textAlign: 'center'
+    textAlign: 'center',
   }),
   close: css({
     ...buttonStyle,
@@ -107,23 +107,23 @@ const styles = {
     right: 0,
     top: '50%',
     marginTop: -14,
-    textAlign: 'center'
+    textAlign: 'center',
   }),
   scrubberTop: css({
     ...barStyle,
     top: -PROGRESS_HEIGHT,
-    zIndex: ZINDEX_AUDIOPLAYER_ICONS
+    zIndex: ZINDEX_AUDIOPLAYER_ICONS,
   }),
   scrubberBottom: css({
     ...barStyle,
     bottom: -PROGRESS_HEIGHT,
-    zIndex: ZINDEX_AUDIOPLAYER_ICONS
+    zIndex: ZINDEX_AUDIOPLAYER_ICONS,
   }),
   progress: css({
     position: 'absolute',
     zIndex: ZINDEX_AUDIOPLAYER_PROGRESS,
     left: 0,
-    height: PROGRESS_HEIGHT
+    height: PROGRESS_HEIGHT,
   }),
   uiText: css({
     position: 'absolute',
@@ -134,13 +134,13 @@ const styles = {
     lineHeight: '25px',
     height: '30px',
     [mUp]: {
-      fontSize: '19px'
-    }
+      fontSize: '19px',
+    },
   }),
   time: css({
     ...ellipsize,
     fontFeatureSettings: '"tnum" 1, "kern" 1',
-    fontSize: '19px'
+    fontSize: '19px',
   }),
   scrub: css({
     ...barStyle,
@@ -148,19 +148,19 @@ const styles = {
     height: 20,
     marginTop: -((20 + PROGRESS_HEIGHT) / 2),
     paddingTop: 20 / 2 - PROGRESS_HEIGHT / 2,
-    cursor: 'ew-resize'
+    cursor: 'ew-resize',
   }),
   buffer: css({
     ...barStyle,
-    zIndex: ZINDEX_AUDIOPLAYER_BUFFER
+    zIndex: ZINDEX_AUDIOPLAYER_BUFFER,
   }),
   totalDuration: css({
     ...barStyle,
-    zIndex: ZINDEX_AUDIOPLAYER_TOTAL
+    zIndex: ZINDEX_AUDIOPLAYER_TOTAL,
   }),
   timeRange: css({
     position: 'absolute',
-    height: PROGRESS_HEIGHT
+    height: PROGRESS_HEIGHT,
   }),
   sourceError: css({
     height: '25px',
@@ -169,15 +169,15 @@ const styles = {
     lineHeight: '25px',
     [mUp]: {
       ...sansSerifRegular15,
-      lineHeight: '25px'
-    }
+      lineHeight: '25px',
+    },
   }),
   retry: css({
-    cursor: 'pointer'
+    cursor: 'pointer',
   }),
   titlebox: css({
     ...ellipsize,
-    position: 'absolute'
+    position: 'absolute',
   }),
   sliderThumb: css({
     zIndex: 2,
@@ -186,13 +186,13 @@ const styles = {
     position: 'absolute',
     width: SLIDERTHUMB_SIZE,
     height: SLIDERTHUMB_SIZE,
-    transition: 'opacity ease-out 0.3s'
-  })
+    transition: 'opacity ease-out 0.3s',
+  }),
 }
 
 const DefaultLink = ({ children }) => children
 
-export const getFormattedTime = secs => {
+export const getFormattedTime = (secs) => {
   let totalSeconds = secs
   let hours = Math.floor(totalSeconds / 3600)
   totalSeconds %= 3600
@@ -215,7 +215,7 @@ class AudioPlayer extends Component {
       progress: 0,
       loading: false,
       buffered: null,
-      sourceError: false
+      sourceError: false,
     }
 
     this.updateProgress = () => {
@@ -229,7 +229,7 @@ class AudioPlayer extends Component {
         this.context.saveMediaProgress(this.props, audio)
       this.setState({
         progress,
-        buffered: audio.buffered
+        buffered: audio.buffered,
       })
       this.formattedCurrentTime = getFormattedTime(audio.currentTime)
     }
@@ -239,10 +239,10 @@ class AudioPlayer extends Component {
         this.syncProgress()
       }, 16)
     }
-    this.containerRef = ref => {
+    this.containerRef = (ref) => {
       this.container = ref
     }
-    this.ref = ref => {
+    this.ref = (ref) => {
       this.audio = ref
     }
     this.onPlay = () => {
@@ -252,21 +252,21 @@ class AudioPlayer extends Component {
       globalState.playingRef = this.audio
       this.setState(() => ({
         playing: true,
-        loading: false
+        loading: false,
       }))
       this.syncProgress()
       this.props.onPlay && this.props.onPlay()
     }
     this.onPause = () => {
       this.setState(() => ({
-        playing: false
+        playing: false,
       }))
       clearTimeout(this.readTimeout)
       this.props.onPause && this.props.onPause()
     }
     this.onLoadStart = () => {
       this.setState(() => ({
-        loading: true
+        loading: true,
       }))
     }
     this.setTime = (time = 0) => {
@@ -276,27 +276,27 @@ class AudioPlayer extends Component {
       }
     }
 
-    this.isSeekable = new Promise(resolve => {
+    this.isSeekable = new Promise((resolve) => {
       this.onSeekable = resolve
     })
     this.onCanPlay = () => {
       this.setState(() => ({
         playEnabled: true,
         loading: false,
-        sourceError: false
+        sourceError: false,
       }))
       this.onSeekable()
     }
     this.onSourceError = () => {
       this.setState(() => ({
         sourceError: true,
-        loading: false
+        loading: false,
       }))
     }
-    this.scrubRef = ref => {
+    this.scrubRef = (ref) => {
       this.scrubber = ref
     }
-    this.scrub = event => {
+    this.scrub = (event) => {
       const { scrubber, audio } = this
       if (this.scrubbing && scrubber && audio && audio.duration) {
         event.preventDefault()
@@ -315,16 +315,16 @@ class AudioPlayer extends Component {
 
         const progress = Math.min(
           1,
-          Math.max((currentEvent.clientX - rect.left) / rect.width, 0)
+          Math.max((currentEvent.clientX - rect.left) / rect.width, 0),
         )
         audio.currentTime = audio.duration * progress
         this.updateProgress()
       }
     }
-    this.scrubStart = event => {
+    this.scrubStart = (event) => {
       this.scrubbing = true
       if (event.type === 'mousedown') {
-        const up = e => {
+        const up = (e) => {
           this.scrubEnd(e)
           document.removeEventListener('mousemove', this.scrub)
           document.removeEventListener('mouseup', up)
@@ -334,11 +334,11 @@ class AudioPlayer extends Component {
       }
       this.scrub(event)
     }
-    this.scrubEnd = event => {
+    this.scrubEnd = (event) => {
       this.scrub(event)
       this.scrubbing = false
     }
-    this.setInstanceState = state => {
+    this.setInstanceState = (state) => {
       this.setState(state)
     }
     this.toggle = () => {
@@ -356,7 +356,7 @@ class AudioPlayer extends Component {
     const { audio } = this
     const playPromise = audio && audio.play()
     if (playPromise) {
-      playPromise.catch(e => {
+      playPromise.catch((e) => {
         warn('[AudioPlayer]', e.message)
       })
     }
@@ -369,7 +369,7 @@ class AudioPlayer extends Component {
     const { audio } = this
     if (audio) {
       this.setState(() => ({
-        loading: true
+        loading: true,
       }))
       audio.load()
     }
@@ -422,7 +422,7 @@ class AudioPlayer extends Component {
   }
   componentWillUnmount() {
     globalState.instances = globalState.instances.filter(
-      setter => setter !== this.setInstanceState
+      (setter) => setter !== this.setInstanceState,
     )
     if (globalState.playingRef === this.audio) {
       globalState.playingRef = undefined
@@ -454,16 +454,10 @@ class AudioPlayer extends Component {
       fixed,
       sourcePath,
       colorScheme,
-      Link = DefaultLink
+      Link = DefaultLink,
     } = this.props
-    const {
-      playEnabled,
-      playing,
-      progress,
-      loading,
-      buffered,
-      sourceError
-    } = this.state
+    const { playEnabled, playing, progress, loading, buffered, sourceError } =
+      this.state
     const isVideo = src.mp4 || src.hls
     const leftIconsWidth =
       SIZE.play +
@@ -475,10 +469,10 @@ class AudioPlayer extends Component {
       maxWidth: `calc(100% - ${leftIconsWidth + rightIconsWidth + 20}px)`,
       left: timePosition === 'left' ? leftIconsWidth + 10 : 'auto',
       right: timePosition === 'right' ? rightIconsWidth + 10 : 'auto',
-      top: loading ? '0px' : fixed ? '-12px' : '1px'
+      top: loading ? '0px' : fixed ? '-12px' : '1px',
     }
     const timeTextStyle = {
-      fontSize: fixed ? '16px' : '19px'
+      fontSize: fixed ? '16px' : '19px',
     }
 
     let timeRanges = []
@@ -560,7 +554,7 @@ class AudioPlayer extends Component {
           style={{
             top: Math.ceil((height - CONTROLS_HEIGHT) / 2),
             left: controlsPadding,
-            right: controlsPadding
+            right: controlsPadding,
           }}
         >
           <div {...styles.buttons}>
@@ -720,8 +714,9 @@ class AudioPlayer extends Component {
             {...colorScheme.set('backgroundColor', 'defaultInverted')}
             style={{
               opacity: playing || progress > 0 ? 1 : 0,
-              left: `calc(${progress * 100}% - ${progress *
-                SLIDERTHUMB_SIZE}px)`
+              left: `calc(${progress * 100}% - ${
+                progress * SLIDERTHUMB_SIZE
+              }px)`,
             }}
           />
           <div
@@ -744,7 +739,7 @@ class AudioPlayer extends Component {
                   {...colorScheme.set('backgroundColor', 'dividerInverted')}
                   style={{
                     left: `${(start / this.audio.duration) * 100}%`,
-                    width: `${((end - start) / this.audio.duration) * 100}%`
+                    width: `${((end - start) / this.audio.duration) * 100}%`,
                   }}
                 />
               ))}
@@ -765,7 +760,7 @@ AudioPlayer.propTypes = {
     aac: PropTypes.string,
     ogg: PropTypes.string,
     hls: PropTypes.string,
-    mp4: PropTypes.string
+    mp4: PropTypes.string,
   }),
   autoPlay: PropTypes.bool,
   size: PropTypes.oneOf(Object.keys(breakoutStyles)),
@@ -776,7 +771,7 @@ AudioPlayer.propTypes = {
   download: PropTypes.bool,
   scrubberPosition: PropTypes.oneOf(['top', 'bottom']),
   timePosition: PropTypes.oneOf(['left', 'right']),
-  controlsPadding: PropTypes.number
+  controlsPadding: PropTypes.number,
 }
 
 AudioPlayer.defaultProps = {
@@ -787,12 +782,12 @@ AudioPlayer.defaultProps = {
   download: false,
   scrubberPosition: 'top',
   timePosition: 'right',
-  controlsPadding: 0
+  controlsPadding: 0,
 }
 
 AudioPlayer.contextTypes = {
   getMediaProgress: PropTypes.func,
-  saveMediaProgress: PropTypes.func
+  saveMediaProgress: PropTypes.func,
 }
 
 const AudioPlayerWithColorContext = ({ ...props }) => {

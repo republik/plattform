@@ -63,7 +63,7 @@ const NewsletterSubscriptions = ({ t, isMember, free, onlyName }) => (
 
       const { status } = data.me.newsletterSettings
       const subscriptions = data.me.newsletterSettings.subscriptions.filter(
-        onlyName ? subscription => subscription.name === onlyName : Boolean
+        onlyName ? (subscription) => subscription.name === onlyName : Boolean,
       )
 
       return (
@@ -84,7 +84,7 @@ const NewsletterSubscriptions = ({ t, isMember, free, onlyName }) => (
                     {status === 'pending' && !mutationData && (
                       <P>
                         {t(
-                          'account/newsletterSubscriptions/resubscribeEmailPending'
+                          'account/newsletterSubscriptions/resubscribeEmailPending',
                         )}
                       </P>
                     )}
@@ -98,15 +98,15 @@ const NewsletterSubscriptions = ({ t, isMember, free, onlyName }) => (
                             onClick={() =>
                               mutate({
                                 variables: {
-                                  userId: data.me.id
-                                }
+                                  userId: data.me.id,
+                                },
                               })
                             }
                           >
                             {status !== 'pending'
                               ? t('account/newsletterSubscriptions/resubscribe')
                               : t(
-                                  'account/newsletterSubscriptions/resendResubscribeEmail'
+                                  'account/newsletterSubscriptions/resendResubscribeEmail',
                                 )}
                           </Button>
                         )}
@@ -135,8 +135,8 @@ const NewsletterSubscriptions = ({ t, isMember, free, onlyName }) => (
                           mutate({
                             variables: {
                               name,
-                              subscribed: true
-                            }
+                              subscribed: true,
+                            },
                           })
                         }}
                       >
@@ -154,8 +154,8 @@ const NewsletterSubscriptions = ({ t, isMember, free, onlyName }) => (
                           mutate({
                             variables: {
                               name,
-                              subscribed: checked
-                            }
+                              subscribed: checked,
+                            },
                           })
                         }}
                       />

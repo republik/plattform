@@ -12,48 +12,48 @@ const link = css({
   textDecoration: 'none',
   color: colors.primary,
   ':visited': {
-    color: colors.primary
+    color: colors.primary,
   },
   ':hover': {
-    color: colors.secondary
-  }
+    color: colors.secondary,
+  },
 })
 
 const Header = compose(
   createTile(
     {
-      flex: '0 0 80px'
+      flex: '0 0 80px',
     },
     {
       style: {
-        borderBottom: `1px solid ${colors.divider}`
-      }
-    }
+        borderBottom: `1px solid ${colors.divider}`,
+      },
+    },
   ),
   createContainer({
     direction: 'row',
-    justifyContent: 'stretch'
-  })
+    justifyContent: 'stretch',
+  }),
 )('header')
 
 const HeaderSection = compose(
   createTile(),
   createContainer({
     direction: 'column',
-    justifyContent: 'center'
-  })
+    justifyContent: 'center',
+  }),
 )('div')
 
 const logoStyles = {
   width: '50px',
   marginLeft: '15px',
-  display: 'inline-block'
+  display: 'inline-block',
 }
 
 const navLinkStyles = {
   display: 'inline-block',
   marginRight: '12px',
-  cursor: 'pointer'
+  cursor: 'pointer',
 }
 
 const HeaderComponent = ({ ...props }) => {

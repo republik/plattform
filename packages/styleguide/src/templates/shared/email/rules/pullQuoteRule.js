@@ -6,21 +6,21 @@ import { getImageRules } from './figureRule'
 import {
   PullQuote,
   PullQuoteSource,
-  PullQuoteText
+  PullQuoteText,
 } from '../components/PullQuote'
 import { Figure } from '../components/Figure'
 
 const pullQuoteRule = {
   matchMdast: matchZone('QUOTE'),
   component: PullQuote,
-  props: node => ({
-    hasFigure: !!node.children.find(matchZone('FIGURE'))
+  props: (node) => ({
+    hasFigure: !!node.children.find(matchZone('FIGURE')),
   }),
   rules: [
     {
       matchMdast: matchZone('FIGURE'),
       component: Figure,
-      rules: getImageRules({ forceWidth: '155px' })
+      rules: getImageRules({ forceWidth: '155px' }),
     },
     {
       // PullQuote text
@@ -30,16 +30,16 @@ const pullQuoteRule = {
           (index === 1 && matchFigure(parent.children[0])) ||
           !matchLast(node, index, parent)),
       component: PullQuoteText,
-      rules: [...inlineRules, linkRule]
+      rules: [...inlineRules, linkRule],
     },
     {
       // PullQuote Source
       matchMdast: (node, index, parent) =>
         matchParagraph(node) && matchLast(node, index, parent),
       component: PullQuoteSource,
-      rules: [...inlineRules, linkRule]
-    }
-  ]
+      rules: [...inlineRules, linkRule],
+    },
+  ],
 }
 
 export default pullQuoteRule

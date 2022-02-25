@@ -7,7 +7,7 @@ import {
   useColorContext,
   mediaQueries,
   FigureImage,
-  Editorial
+  Editorial,
 } from '@project-r/styleguide'
 import SectionTitle from './Common/SectionTitle'
 import SectionContainer from './Common/SectionContainer'
@@ -27,34 +27,34 @@ const sectionContent = [
     ),
     href: '/format/covid-19-uhr-newsletter',
     image: '/static/marketing/covid19_wave3.png?size=807x807',
-    color: '#D44438'
+    color: '#D44438',
   },
   {
     name: 'briefings',
     href: '/briefings',
     image: '/static/marketing/briefings.png?size=933x933',
-    color: '#0A99B8'
+    color: '#0A99B8',
   },
   {
     name: 'kolumnen',
     href: '/kolumnen',
     image: '/static/marketing/kolumnen.png?size=2000x2000',
     imageDark: '/static/marketing/kolumnen-dark.png?size=2000x2000',
-    color: '#D2933C'
+    color: '#D2933C',
   },
   {
     name: 'serien',
     href: '/serien',
     image: '/static/marketing/serien.png?size=500x500',
     imageDark: '/static/marketing/serien-dark.png?size=500x500',
-    color: '#000000'
+    color: '#000000',
   },
   {
     name: 'audio',
     href: '/audio',
     image: '/static/marketing/audio.png?size=1426x1426',
-    color: '#000000'
-  }
+    color: '#000000',
+  },
 ]
 
 const Sections = ({ t }) => {
@@ -65,7 +65,7 @@ const Sections = ({ t }) => {
         title={t('marketing/page/sections/title')}
         lead={t('marketing/page/sections/lead')}
       />
-      {sectionContent.map(section => (
+      {sectionContent.map((section) => (
         <div
           key={section.name}
           {...styles.section}
@@ -77,13 +77,13 @@ const Sections = ({ t }) => {
                 <FigureImage
                   {...FigureImage.utils.getResizedSrcs(
                     `${CDN_FRONTEND_BASE_URL}${section.image}`,
-                    80
+                    80,
                   )}
                   dark={
                     section.imageDark &&
                     FigureImage.utils.getResizedSrcs(
                       `${CDN_FRONTEND_BASE_URL}${section.imageDark}`,
-                      80
+                      80,
                     )
                   }
                 />
@@ -122,10 +122,10 @@ const styles = {
     borderTopWidth: 1,
     borderTopStyle: 'solid',
     paddingTop: 28,
-    marginBottom: 32
+    marginBottom: 32,
   }),
   description: css({
-    flex: 1
+    flex: 1,
   }),
   picture: css({
     width: 80,
@@ -133,19 +133,19 @@ const styles = {
     marginRight: 16,
     objectFit: 'cover',
     [mediaQueries.mUp]: {
-      marginRight: 36
-    }
+      marginRight: 36,
+    },
   }),
   title: css({
-    ...fontStyles.sansSerifRegular22
+    ...fontStyles.sansSerifRegular22,
   }),
   link: css({
     color: 'inherit',
-    textDecoration: 'none'
+    textDecoration: 'none',
   }),
   descriptionText: {
-    ...fontStyles.sansSerifRegular18
-  }
+    ...fontStyles.sansSerifRegular18,
+  },
 }
 
 export default Sections

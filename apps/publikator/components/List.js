@@ -10,19 +10,19 @@ const styles = {
     lineHeight: '25px',
     listStyle: 'none',
     margin: '10px 0',
-    padding: 0
+    padding: 0,
   }),
   item: css({
     borderTop: `1px solid ${colors.divider}`,
     padding: '5px 0',
     ':last-child': {
-      borderBottom: `1px solid ${colors.divider}`
-    }
+      borderBottom: `1px solid ${colors.divider}`,
+    },
   }),
   highlight: css({
     fontFamily: fontFamilies.sansSerifMedium,
-    fontWeight: 'normla'
-  })
+    fontWeight: 'normla',
+  }),
 }
 
 export const Item = ({ children }) => <li {...styles.item}>{children}</li>

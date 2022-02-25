@@ -10,7 +10,7 @@ const Checkbox: React.FC<{
   disabled?: boolean
   onChange: (
     event: React.ChangeEvent<HTMLInputElement>,
-    checked: boolean
+    checked: boolean,
   ) => void
   black?: boolean
   error?: boolean
@@ -62,7 +62,7 @@ const Checkbox: React.FC<{
         type='checkbox'
         checked={checked}
         disabled={disabled}
-        onChange={event => {
+        onChange={(event) => {
           onChange(event, event.target.checked)
         }}
       />
@@ -73,18 +73,18 @@ const Checkbox: React.FC<{
 
 const styles = {
   label: css({
-    cursor: 'pointer'
+    cursor: 'pointer',
   }),
   withText: css({
     ...fontStyles.sansSerifRegular,
     fontSize: pxToRem(16),
-    lineHeight: pxToRem(20)
+    lineHeight: pxToRem(20),
   }),
   withoutText: css({
-    lineHeight: 0
+    lineHeight: 0,
   }),
   input: css({
-    display: 'none'
+    display: 'none',
   }),
   unchecked: css({
     display: 'inline-block',
@@ -92,19 +92,19 @@ const styles = {
     width: 18,
     height: 18,
     borderWidth: 1,
-    borderStyle: 'solid'
+    borderStyle: 'solid',
   }),
   box: css({
     display: 'inline-block',
     padding: '3px 3px 3px 0',
     marginRight: 5,
     marginTop: -3,
-    float: 'left'
+    float: 'left',
   }),
   boxWithouText: css({
     display: 'inline-block',
-    padding: '3px 0'
-  })
+    padding: '3px 0',
+  }),
 }
 
 export default Checkbox

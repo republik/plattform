@@ -27,7 +27,7 @@ export default Address
 export const Bucket = ({ addresses, min = 5 }) => {
   const [expanded, setExpanded] = useState()
 
-  const expand = e => {
+  const expand = (e) => {
     e.preventDefault()
     setExpanded(true)
   }

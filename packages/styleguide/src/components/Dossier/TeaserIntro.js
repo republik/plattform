@@ -8,35 +8,35 @@ const styles = {
   container: css({
     margin: 0,
     [mUp]: {
-      marginBottom: '40px'
-    }
+      marginBottom: '40px',
+    },
   }),
   containerWithImage: css({
     [mUp]: {
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center'
-    }
+      justifyContent: 'center',
+    },
   }),
   content: css({
     padding: '0 0 15px 0',
     [mUp]: {
       padding: '0 0 15px 5%',
-      width: '67%'
+      width: '67%',
     },
     [tUp]: {
-      width: '51%'
-    }
+      width: '51%',
+    },
   }),
   contentWithImage: css({
     paddingTop: '15px',
     [mUp]: {
       padding: '0 5% 0 5%',
-      width: '60%'
+      width: '60%',
     },
     [tUp]: {
-      width: '60%'
-    }
+      width: '60%',
+    },
   }),
   imageContainer: css({
     position: 'relative',
@@ -44,13 +44,13 @@ const styles = {
       flexShrink: 0,
       fontSize: 0, // Removes the small flexbox space.
       height: 'auto',
-      width: '40%'
-    }
+      width: '40%',
+    },
   }),
   image: css({
     height: 'auto',
-    maxWidth: '100%'
-  })
+    maxWidth: '100%',
+  }),
 }
 
 const TeaserIntro = ({
@@ -60,7 +60,7 @@ const TeaserIntro = ({
   alt,
   onClick,
   byline,
-  t
+  t,
 }) => {
   return (
     <div
@@ -68,7 +68,7 @@ const TeaserIntro = ({
       {...merge(styles.container, image ? styles.containerWithImage : {})}
       onClick={onClick}
       style={{
-        cursor: onClick ? 'pointer' : 'default'
+        cursor: onClick ? 'pointer' : 'default',
       }}
     >
       {image && (
@@ -94,11 +94,11 @@ TeaserIntro.propTypes = {
   image: PropTypes.string,
   byline: PropTypes.string,
   alt: PropTypes.string,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
 }
 
 TeaserIntro.defaultProps = {
-  alt: ''
+  alt: '',
 }
 
 export default TeaserIntro

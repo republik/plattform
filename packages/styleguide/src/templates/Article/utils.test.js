@@ -2,7 +2,7 @@ import { parse } from '@orbiting/remark-preset'
 
 import {
   INFOBOX_IMAGE_SIZES,
-  INFOBOX_DEFAULT_IMAGE_SIZE
+  INFOBOX_DEFAULT_IMAGE_SIZE,
 } from '../../components/InfoBox'
 
 import { PULLQUOTE_IMAGE_SIZE } from '../../components/PullQuote'
@@ -11,7 +11,7 @@ import { FIGURE_SIZES } from '../../components/Figure'
 
 import { getDisplayWidth } from './utils'
 
-const parseFirst = string => parse(string).children[0]
+const parseFirst = (string) => parse(string).children[0]
 
 describe('article utils test-suite', () => {
   test('article.utils.getDisplayWidth: infobox', () => {
@@ -24,7 +24,7 @@ describe('article utils test-suite', () => {
   `)
 
     expect(getDisplayWidth([regularInfobox])).toBe(
-      INFOBOX_IMAGE_SIZES[INFOBOX_DEFAULT_IMAGE_SIZE]
+      INFOBOX_IMAGE_SIZES[INFOBOX_DEFAULT_IMAGE_SIZE],
     )
 
     const mInfobox = parseFirst(`
@@ -81,7 +81,7 @@ _Foto: Laurent Burst_
     const figure = center.children[0]
 
     expect(getDisplayWidth([figure, center, rootNode])).toBe(
-      FIGURE_SIZES.center
+      FIGURE_SIZES.center,
     )
 
     const breakoutFigure = parseFirst(`
@@ -98,7 +98,7 @@ Etwas Böses _Foto: Laurent Burst_
 <hr /></section>
   `)
     expect(getDisplayWidth([breakoutFigure, center, rootNode])).toBe(
-      FIGURE_SIZES.breakout
+      FIGURE_SIZES.breakout,
     )
 
     const e2eFigureRootNode = parse(`

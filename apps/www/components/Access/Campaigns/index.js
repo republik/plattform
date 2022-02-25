@@ -19,6 +19,7 @@ const query = gql`
         id
         title
         description
+        defaultMessage
         grants {
           id
           email
@@ -44,9 +45,6 @@ const Campaigns = ({ t, data, grantAccess, revokeAccess }) => {
   const { inNativeIOSApp } = useInNativeApp()
   return (
     <>
-      <Interaction.H1 style={{ marginBottom: 60 }}>
-        {t('Account/Access/Page/title')}
-      </Interaction.H1>
       <Loader
         loading={data.loading}
         error={data.error}
@@ -107,33 +105,33 @@ export default compose(
   withT,
   graphql(grantMutation, {
     props: ({ mutate }) => ({
-      grantAccess: variables =>
+      grantAccess: (variables) =>
         mutate({
           variables,
           refetchQueries: [
             {
-              query
-            }
-          ]
-        })
-    })
+              query,
+            },
+          ],
+        }),
+    }),
   }),
   graphql(revokeMutation, {
     props: ({ mutate }) => ({
-      revokeAccess: variables =>
+      revokeAccess: (variables) =>
         mutate({
           variables,
           refetchQueries: [
             {
-              query
-            }
-          ]
-        })
-    })
+              query,
+            },
+          ],
+        }),
+    }),
   }),
   graphql(query, {
     props: ({ data }) => ({
-      data
-    })
-  })
+      data,
+    }),
+  }),
 )(Campaigns)

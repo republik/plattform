@@ -26,9 +26,9 @@ export const If = ({ present, children }) => {
 
   const childs = Children.toArray(children)
   if (vars[present]) {
-    return <>{childs.filter(child => child.type !== Else)}</>
+    return <>{childs.filter((child) => child.type !== Else)}</>
   }
-  return <>{childs.filter(child => child.type === Else)}</>
+  return <>{childs.filter((child) => child.type === Else)}</>
 }
 
 export const Else = ({ children }) => {

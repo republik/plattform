@@ -8,7 +8,7 @@ import {
   Interaction,
   A,
   Button,
-  Checkbox
+  Checkbox,
 } from '@project-r/styleguide'
 import { DownloadIcon } from '@project-r/styleguide'
 import withT from '../../lib/withT'
@@ -16,26 +16,27 @@ import { ASSETS_SERVER_BASE_URL } from '../../lib/constants'
 
 export const getPdfUrl = (meta, { images = true, download = false } = {}) => {
   const query = [!images && 'images=0', download && 'download=1'].filter(
-    Boolean
+    Boolean,
   )
   return `${ASSETS_SERVER_BASE_URL}/pdf${meta.path}.pdf${
     query.length ? `?${query.join('&')}` : ''
   }`
 }
 
-const matchFigure = node => node.type === 'zone' && node.identifier === 'FIGURE'
-const matchVideo = node =>
+const matchFigure = (node) =>
+  node.type === 'zone' && node.identifier === 'FIGURE'
+const matchVideo = (node) =>
   node.type === 'zone' &&
   node.identifier === 'EMBEDVIDEO' &&
   node.data.forceAudio
 
-export const countImages = element => {
+export const countImages = (element) => {
   if (matchFigure(element) || matchVideo(element)) {
     return 1
   }
   return (element.children || []).reduce(
     (count, node) => count + countImages(node),
-    0
+    0,
   )
 }
 
@@ -56,7 +57,7 @@ const PdfOverlay = ({ onClose, article, t }) => {
               }}
             >
               {t.pluralize('article/pdf/images', {
-                count: imageCount
+                count: imageCount,
               })}
             </Checkbox>
             <br />
@@ -65,7 +66,7 @@ const PdfOverlay = ({ onClose, article, t }) => {
         )}
         <Button
           block
-          onClick={e => {
+          onClick={(e) => {
             e.preventDefault()
             window.location = getPdfUrl(article.meta, { images })
           }}
@@ -77,7 +78,7 @@ const PdfOverlay = ({ onClose, article, t }) => {
             target='_blank'
             href={getPdfUrl(article.meta, {
               images,
-              download: true
+              download: true,
             })}
             download
           >

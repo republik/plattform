@@ -11,7 +11,7 @@ const CampaignBudget = ({
   budget,
   handleBudget,
   budgetComment,
-  handleBudgetComment
+  handleBudgetComment,
 }) => (
   <>
     <H2>Wahlkampf-Budget</H2>

@@ -5,7 +5,7 @@ import {
   Radio,
   Label,
   useColorContext,
-  DarkmodeIcon
+  DarkmodeIcon,
 } from '@project-r/styleguide'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 
@@ -27,10 +27,10 @@ const DarkmodeSwitch = ({ t }) => {
     <IconButton
       Icon={DarkmodeIcon}
       label={t('darkmode/switch/label', {
-        iconLabel
+        iconLabel,
       })}
       labelShort={t('darkmode/switch/label', {
-        iconLabel
+        iconLabel,
       })}
       ref={ref}
       {...props}

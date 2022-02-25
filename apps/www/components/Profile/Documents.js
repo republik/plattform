@@ -9,8 +9,8 @@ import { css } from 'glamor'
 const styles = {
   loadMore: css({
     marginTop: -30,
-    marginBottom: 40
-  })
+    marginBottom: 40,
+  }),
 }
 
 const Documents = ({ t, documents, loadMore }) => {
@@ -32,10 +32,10 @@ const Documents = ({ t, documents, loadMore }) => {
     >
       <Interaction.H3 style={{ marginBottom: 20 }}>
         {t.pluralize('profile/documents/title', {
-          count: documents.totalCount
+          count: documents.totalCount,
         })}
       </Interaction.H3>
-      {documents.nodes.map(doc => (
+      {documents.nodes.map((doc) => (
         <TeaserFeed
           {...doc.meta}
           title={doc.meta.shortTitle || doc.meta.title}

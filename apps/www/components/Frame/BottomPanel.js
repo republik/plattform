@@ -14,13 +14,13 @@ const styles = {
     margin: `0 ${MARGIN}px`,
     [mediaQueries.mUp]: {
       right: MARGIN,
-      marginBottom: MARGIN
-    }
+      marginBottom: MARGIN,
+    },
   }),
   wide: css({
     width: [290, `calc(100% - ${MARGIN * 2}px)`],
-    maxWidth: 380
-  })
+    maxWidth: 380,
+  }),
 }
 
 const BottomPanel = ({
@@ -28,7 +28,7 @@ const BottomPanel = ({
   visible,
   offset = 0,
   wide = false,
-  foreground = false
+  foreground = false,
 }) => {
   const [colorScheme] = useColorContext()
   const { inIOSVersion, inNativeApp } = useInNativeApp()
@@ -44,10 +44,10 @@ const BottomPanel = ({
       css({
         bottom: [
           bottomPosition,
-          `calc(${bottomPosition}px + env(safe-area-inset-bottom))`
-        ]
+          `calc(${bottomPosition}px + env(safe-area-inset-bottom))`,
+        ],
       }),
-    [bottomPosition]
+    [bottomPosition],
   )
 
   return (
@@ -55,7 +55,7 @@ const BottomPanel = ({
       style={{
         opacity: visible ? 1 : 0,
         pointerEvents: visible ? undefined : 'none',
-        zIndex: foreground ? zIndex.foreground : zIndex.callout
+        zIndex: foreground ? zIndex.foreground : zIndex.callout,
       }}
       {...bottomRule}
       {...colorScheme.set('backgroundColor', 'overlay')}

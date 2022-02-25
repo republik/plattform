@@ -8,7 +8,7 @@ import {
   OverlayBody,
   OverlayToolbar,
   Loader,
-  InlineSpinner
+  InlineSpinner,
 } from '@project-r/styleguide'
 
 import {
@@ -17,7 +17,7 @@ import {
   DL,
   DT,
   DD,
-  TextButton
+  TextButton,
 } from '../../Display/utils'
 
 import EmailForm from './EmailForm'
@@ -51,7 +51,7 @@ const UpdateEmail = ({ user, onSubmit, ...props }) => (
             <EmailForm
               key={user.id}
               user={user}
-              onSubmit={variables => onSubmit(updateUser({ variables }))}
+              onSubmit={(variables) => onSubmit(updateUser({ variables }))}
             />
           )}
         />
@@ -71,7 +71,7 @@ export default class Email extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isOpen: false
+      isOpen: false,
     }
 
     this.closeHandler = () => this.setState({ isOpen: false })
@@ -115,7 +115,7 @@ export default class Email extends Component {
                         <OverlayBody>
                           <UpdateEmail
                             user={user}
-                            onSubmit={promise =>
+                            onSubmit={(promise) =>
                               promise.then(this.closeHandler)
                             }
                           />

@@ -21,13 +21,13 @@ const AccessGrants = ({ accessGrants, inNativeIOSApp, t }) => {
     accessGrants.reduce(
       (acc, grant) =>
         new Date(grant.endAt) > acc ? new Date(grant.endAt) : acc,
-      new Date()
+      new Date(),
     )
 
   return maxEndAt ? (
     <P>
       {t.elements('Account/Access/Grants/message/claimed', {
-        maxEndAt: <span>{dayFormat(new Date(maxEndAt))}</span>
+        maxEndAt: <span>{dayFormat(new Date(maxEndAt))}</span>,
       })}
       {!inNativeIOSApp && (
         <>
@@ -47,9 +47,9 @@ export default compose(
   graphql(query, {
     props: ({ data }) => ({
       accessGrants:
-        (!data.loading && !data.error && data.me && data.me.accessGrants) || []
-    })
+        (!data.loading && !data.error && data.me && data.me.accessGrants) || [],
+    }),
   }),
   withT,
-  withInNativeApp
+  withInNativeApp,
 )(AccessGrants)
