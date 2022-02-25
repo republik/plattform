@@ -231,11 +231,8 @@ class Submit extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    console.debug('Wallet Debug', {
-      status: this.props.paymentRequest.status,
-      initializedWallet: this.props.paymentRequest.usedWallet,
-      currentWallet: this.state.values?.paymentMethod,
-    })
+    const { t } = this.props
+    // Skip if loading
     if (this.props.paymentRequest.status === PaymentRequestStatus.LOADING) {
       return
     }
@@ -253,8 +250,11 @@ class Submit extends Component {
       this.props.paymentRequest.status !== PaymentRequestStatus.IDLE &&
       this.props.paymentRequest.usedWallet !== this.state.values?.paymentMethod
 
+    const isUnavailableAndStripeWalletIsSelected =
+      this.isStripeWalletPayment() &&
+      this.props.paymentRequest.status === PaymentRequestStatus.UNAVAILABLE
+
     if (isUninitializedStripeWallet || isOutdatedStripeWallet) {
-      const { t } = this.props
       this.setState(() => ({
         loading: t('account/pledges/payment/methods/loading'),
       }))
@@ -280,7 +280,15 @@ class Submit extends Component {
             walletError: t('account/pledges/payment/methods/unavailable'),
           }))
         })
-    } else if (this.state.walletError) {
+    } else if (
+      isUnavailableAndStripeWalletIsSelected &&
+      !this.state.walletError
+    ) {
+      this.setState(() => ({
+        loading: false,
+        walletError: t('account/pledges/payment/methods/unavailable'),
+      }))
+    } else if (!this.isStripeWalletPayment() && this.state.walletError) {
       this.setState(() => ({
         walletError: null,
       }))
