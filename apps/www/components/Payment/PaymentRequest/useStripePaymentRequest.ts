@@ -5,13 +5,28 @@ import {
   PaymentRequestOptions,
   PaymentRequestPaymentMethodEvent,
   CanMakePaymentResult,
+  PaymentRequestWallet,
 } from '@stripe/stripe-js'
 import { loadStripe } from '../stripe'
 import { makePaymentRequestOptions } from './PaymentRequestOption.helper'
+import { withWarningSpy } from '@apollo/client/testing'
 
 export enum WalletPaymentMethods {
   APPLE_PAY = 'STRIPE-WALLET-APPLE-PAY',
   GOOGLE_PAY = 'STRIPE-WALLET-GOOGLE-PAY',
+}
+
+function getPaymentRequestWalletValue(
+  wallet: WalletPaymentMethods,
+): PaymentRequestWallet {
+  switch (wallet) {
+    case WalletPaymentMethods.APPLE_PAY:
+      return 'applePay'
+    case WalletPaymentMethods.GOOGLE_PAY:
+      return 'googlePay'
+    default:
+      return null
+  }
 }
 
 export enum PaymentRequestStatus {
@@ -27,21 +42,17 @@ export enum PaymentRequestStatus {
 
 type LeanPaymentRequestOptions = Pick<PaymentRequestOptions, 'total'>
 
-type PaymentAvailabilitySetters = {
-  setIsApplePayAvailable: Dispatch<SetStateAction<boolean>>
-  setIsGooglePayAvailable: Dispatch<SetStateAction<boolean>>
-}
-
 type PaymentHandler = (event: PaymentRequestPaymentMethodEvent) => Promise<void>
 type PaymentCanceledHandler = () => void
 
 interface PaymentRequestValues {
   status: PaymentRequestStatus
-  instantiate: () => Promise<PaymentRequestStatus>
+  initialize: (wallet: WalletPaymentMethods) => Promise<PaymentRequestStatus>
   show: (
     handlePayment: PaymentHandler,
     handleCancel: PaymentCanceledHandler,
   ) => void
+  usedWallet: WalletPaymentMethods
 }
 
 /**
@@ -52,55 +63,49 @@ interface PaymentRequestValues {
  */
 function useStripePaymentRequest(
   options: LeanPaymentRequestOptions,
-  availabilitySetters: PaymentAvailabilitySetters,
 ): PaymentRequestValues {
   const [stripe, setStripe] = useState<Stripe>(null)
-  const [lastOptions, setLastOptions] =
-    useState<LeanPaymentRequestOptions>(null)
-
   const [paymentRequest, setPaymentRequest] = useState<PaymentRequest>(null)
   const [status, setStatus] = useState<PaymentRequestStatus>(
     PaymentRequestStatus.IDLE,
   )
 
+  const [usedWallet, setUsedWallet] = useState<WalletPaymentMethods>(null)
+  const [lastOptions, setLastOptions] =
+    useState<LeanPaymentRequestOptions>(null)
+
   useEffect(() => {
-    // In case the input options have changed create a new PaymentRequest
+    // In case the input options have changed (f.e. shipping address is now required)
+    // Reinitialize the payment request
     if (
       paymentRequest &&
       JSON.stringify(lastOptions) !== JSON.stringify(options)
     ) {
       setLastOptions(options)
-      instantiatePaymentRequest()
+      initializePaymentRequest(usedWallet)
     }
   }, [paymentRequest, lastOptions, options])
 
-  function updateAvailability(result: CanMakePaymentResult | null) {
-    if (!availabilitySetters) {
-      return
-    }
-    if (result) {
-      availabilitySetters.setIsApplePayAvailable(result.applePay)
-      availabilitySetters.setIsGooglePayAvailable(result.googlePay)
-    } else {
-      availabilitySetters.setIsApplePayAvailable(false)
-      availabilitySetters.setIsGooglePayAvailable(false)
-    }
-  }
-
-  async function createPaymentRequest(): Promise<PaymentRequestStatus> {
+  async function createPaymentRequest(
+    wallet: WalletPaymentMethods,
+  ): Promise<PaymentRequestStatus> {
     let stripePromise = stripe
     if (!stripe) {
       const globalStripePromise = await loadStripe()
       setStripe(globalStripePromise)
       stripePromise = globalStripePromise
     }
+
     const newPaymentRequest = await stripePromise.paymentRequest(
-      makePaymentRequestOptions(options),
+      makePaymentRequestOptions(options, getPaymentRequestWalletValue(wallet)),
     )
+
+    // Track used options to prevent useless re-initializations
     setLastOptions(options)
+    // Track the wallet in case the previous payment request was initialized with a different one
+    setUsedWallet(wallet)
 
     const canMakePaymentResult = await newPaymentRequest.canMakePayment()
-    updateAvailability(canMakePaymentResult)
 
     if (!canMakePaymentResult) {
       setStatus(PaymentRequestStatus.UNAVAILABLE)
@@ -112,9 +117,12 @@ function useStripePaymentRequest(
     return PaymentRequestStatus.READY
   }
 
-  async function instantiatePaymentRequest(): Promise<PaymentRequestStatus> {
+  async function initializePaymentRequest(
+    wallet: WalletPaymentMethods,
+  ): Promise<PaymentRequestStatus> {
+    console.debug('initializing payment request for wallet', wallet)
     setStatus(PaymentRequestStatus.LOADING)
-    return createPaymentRequest()
+    return createPaymentRequest(wallet)
   }
 
   function show(
@@ -147,7 +155,7 @@ function useStripePaymentRequest(
 
       // The result of the following reinitialization is ignored
       // since we can only get to this point if it was successful before
-      createPaymentRequest()
+      createPaymentRequest(usedWallet)
     })
 
     paymentRequest.show()
@@ -156,8 +164,9 @@ function useStripePaymentRequest(
 
   return {
     status,
-    instantiate: instantiatePaymentRequest,
+    initialize: initializePaymentRequest,
     show,
+    usedWallet,
   }
 }
 

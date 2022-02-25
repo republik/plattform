@@ -139,9 +139,8 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
   )
 
   const [syncAddresses, setSyncAddresses] = useState(true)
-  const [isApplePayAvailable, setIsApplePayAvailable] = useIsApplePayAvailable()
-  const [isGooglePayAvailable, setIsGooglePayAvailable] =
-    useIsGooglePayAvailable()
+  const [isApplePayAvailable] = useIsApplePayAvailable()
+  const [isGooglePayAvailable] = useIsGooglePayAvailable()
 
   // In case STRIPE is an accepted payment method,
   // add additional payment methods such as Apple or Google Pay if available
@@ -157,33 +156,27 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
     ].filter(Boolean)
   }, [paymentMethods, isApplePayAvailable, isGooglePayAvailable])
 
-  const paymentRequest = useStripePaymentRequest(
-    {
-      requestPayerEmail: !customMe,
-      requestPayerName: !customMe || !customMe?.address,
-      total: {
-        amount: props.total ?? 0,
-        label: t.first([
-          `package/${props.query.package}/title`,
-          'package/choose',
-        ]),
-      },
-      requestShipping: props.requireShippingAddress || false,
-      shippingOptions: props.requireShippingAddress
-        ? [
-            {
-              id: 'default',
-              label: t('account/pledges/free-delivery'),
-              amount: 0,
-            },
-          ]
-        : undefined,
+  const paymentRequest = useStripePaymentRequest({
+    requestPayerEmail: !customMe,
+    requestPayerName: !customMe || !customMe?.address,
+    total: {
+      amount: props.total ?? 0,
+      label: t.first([
+        `package/${props.query.package}/title`,
+        'package/choose',
+      ]),
     },
-    {
-      setIsApplePayAvailable,
-      setIsGooglePayAvailable,
-    },
-  )
+    requestShipping: props.requireShippingAddress || false,
+    shippingOptions: props.requireShippingAddress
+      ? [
+          {
+            id: 'default',
+            label: t('account/pledges/free-delivery'),
+            amount: 0,
+          },
+        ]
+      : undefined,
+  })
 
   return (
     <Submit
@@ -238,27 +231,43 @@ class Submit extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.paymentRequest.status === PaymentRequestStatus.LOADING) {
+      return
+    }
+
     // Delay creation of a payment-request, which requires Stripe to be loaded,
     // until a wallet payment-method is selected
-    if (
+    const isUninitializedStripeWallet =
       this.isStripeWalletPayment() &&
       this.props.paymentRequest.status === PaymentRequestStatus.IDLE
-    ) {
+
+    // Since we don't want to always load all Payment Providers data,
+    // we must reinitialize when switching to a different wallet
+    const isOutdatedStripeWallet =
+      this.isStripeWalletPayment() &&
+      this.props.paymentRequest.status !== PaymentRequestStatus.IDLE &&
+      this.props.paymentRequest.usedWallet !== this.state.values?.paymentMethod
+
+    if (isUninitializedStripeWallet || isOutdatedStripeWallet) {
       const { t } = this.props
       this.setState(() => ({
         loading: t('account/pledges/payment/methods/loading'),
       }))
 
+      const selectedPaymentMethod = this.state.values.paymentMethod
+
       // Create payment-request
-      this.props.paymentRequest.instantiate().then((status) => {
-        this.setState(() => ({
-          loading: false,
-          paymentError:
-            status === PaymentRequestStatus.UNAVAILABLE
-              ? t('account/pledges/payment/methods/unavailable')
-              : null,
-        }))
-      })
+      this.props.paymentRequest
+        .initialize(selectedPaymentMethod)
+        .then((status) => {
+          this.setState(() => ({
+            loading: false,
+            walletError:
+              status === PaymentRequestStatus.UNAVAILABLE
+                ? t('account/pledges/payment/methods/unavailable')
+                : null,
+          }))
+        })
     }
   }
 
@@ -786,8 +795,14 @@ class Submit extends Component {
   }
 
   render() {
-    const { emailVerify, paymentError, submitError, signInError, loading } =
-      this.state
+    const {
+      emailVerify,
+      paymentError,
+      submitError,
+      walletError,
+      signInError,
+      loading,
+    } = this.state
     const {
       me,
       t,
@@ -993,6 +1008,9 @@ class Submit extends Component {
         {!!paymentError && (
           <ErrorMessage style={{ margin: '0 0 40px' }} error={paymentError} />
         )}
+        {!!walletError && (
+          <ErrorMessage style={{ margin: '0 0 40px' }} error={walletError} />
+        )}
         {!!signInError && (
           <ErrorMessage style={{ margin: '0 0 40px' }} error={signInError} />
         )}
@@ -1037,7 +1055,7 @@ class Submit extends Component {
               disabled={
                 errorMessages?.length > 0 ||
                 (this.isStripeWalletPayment() &&
-                  this.state.paymentRequest?.status ===
+                  this.props.paymentRequest?.status !==
                     PaymentRequestStatus.READY)
               }
               onClick={() => {
