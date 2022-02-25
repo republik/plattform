@@ -32,6 +32,7 @@ import { format } from 'd3-format'
 
 import StripeForm from './Form/Stripe'
 import ApplePayButton from './Form/ApplePayButton'
+import GooglePayMark from './Form/GooglePayMark'
 
 const pad2 = format('02')
 
@@ -78,7 +79,7 @@ const PAYMENT_METHODS = [
   {
     disabled: inNativeAppBrowser,
     key: 'STRIPE-WALLET-GOOGLE-PAY',
-    Icon: () => <label>Google Pay</label>,
+    Icon: GooglePayMark,
   },
   {
     disabled: inNativeAppBrowser,
