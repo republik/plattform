@@ -1,3 +1,4 @@
+import React from 'react'
 import { Br } from './email/Paragraph'
 import HR from './email/HR'
 import Blockquote, {
