@@ -45,8 +45,10 @@ const {
 const {
   prepareMetaForPublish,
   handleRedirection,
-  handleSyntheticReadAloud,
 } = require('../../../lib/Document')
+const {
+  onPublish: onPublishSyntheticReadAloud,
+} = require('../../../lib/Derivative/SyntheticReadAloud')
 const { notifyPublish } = require('../../../lib/Notifications')
 const { document: getDocument } = require('../Commit')
 
@@ -228,7 +230,7 @@ module.exports = async (
     await handleRedirection(repoId, doc.content.meta, context)
   }
 
-  await handleSyntheticReadAloud(resolvedDoc, context)
+  await onPublishSyntheticReadAloud(resolvedDoc, context)
 
   // get/create campaign on mailchimp
   // fail early if mailchimp not available

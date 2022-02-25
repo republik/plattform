@@ -11,6 +11,10 @@ const {
   },
 } = require('@orbiting/backend-modules-documents')
 
+const {
+  canDerive: canDeriveSyntheticReadAloud,
+} = require('../../lib/Derivative/SyntheticReadAloud')
+
 module.exports = {
   author: async (commit, args, context) => {
     const user =
@@ -63,4 +67,13 @@ module.exports = {
   },
   derivatives: async (commit, args, context) =>
     context.loaders.Derivative.byCommitId.load(commit.id),
+  canDerive: async (commit, args) => {
+    const { type } = args
+
+    if (type === 'SyntheticReadAloud') {
+      return canDeriveSyntheticReadAloud(commit.meta.template)
+    }
+
+    return false
+  },
 }

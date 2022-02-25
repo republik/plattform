@@ -4,7 +4,10 @@ const { intervalScheduler } = require('@orbiting/backend-modules-schedulers')
 const indices = require('@orbiting/backend-modules-search/lib/indices')
 const index = indices.dict.documents
 const { getIndexAlias } = require('@orbiting/backend-modules-search/lib/utils')
-const { handleRedirection, handleSyntheticReadAloud } = require('./Document')
+const { handleRedirection } = require('./Document')
+const {
+  onPublish: onPublishSyntheticReadAloud,
+} = require('./Derivative/SyntheticReadAloud')
 const {
   maybeDelcareMilestonePublished,
   updateCurrentPhase,
@@ -78,7 +81,7 @@ const init = async (context) => {
             })
           }
 
-          await handleSyntheticReadAloud(doc, {
+          await onPublishSyntheticReadAloud(doc, {
             ...context,
             pgdb: tx,
           })

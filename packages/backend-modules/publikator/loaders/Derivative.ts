@@ -3,13 +3,13 @@ import { PgTable } from 'pogi'
 import createDataLoader from '@orbiting/backend-modules-dataloader'
 import { GraphqlContext } from '@orbiting/backend-modules-types'
 
-interface DerivativeRow {
+export interface DerivativeRow {
   id: string
   commitId?: string
   type: string
   settings: string
   status: string
-  result: string
+  result: any
   createdAt: Date
   readyAt?: Date
   failedAt?: Date
