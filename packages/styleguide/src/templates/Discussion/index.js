@@ -45,6 +45,11 @@ const createDiscussionSchema = ({
         ref: 'repo',
       },
       {
+        label: 'Kein synthetisches Vorlesen',
+        key: 'suppressSyntheticReadAloud',
+        ref: 'bool',
+      },
+      {
         label: 'Diskussion geschlossen',
         key: 'discussionClosed',
         ref: 'bool',

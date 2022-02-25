@@ -1,4 +1,3 @@
-import React from 'react'
 import { Br } from './email/Paragraph'
 import HR from './email/HR'
 import Blockquote, {
@@ -189,7 +188,7 @@ const createNewsletterSchema = ({
       type: 'CENTERFIGURE',
       plainOption: true,
     },
-    props: (node, index, parent) => {
+    props: (node) => {
       return node.data
     },
     rules: [
@@ -218,7 +217,7 @@ const createNewsletterSchema = ({
   }
 
   const cover = {
-    matchMdast: (node, index, parent) => {
+    matchMdast: (node, index) => {
       return matchFigure(node) && index === 0
     },
     component: Cover,
@@ -274,6 +273,11 @@ const createNewsletterSchema = ({
             editorModule: 'meta',
             editorOptions: {
               customFields: [
+                {
+                  label: 'Kein synthetisches Vorlesen',
+                  key: 'suppressSyntheticReadAloud',
+                  ref: 'bool',
+                },
                 {
                   label: 'Format',
                   key: 'format',
@@ -334,7 +338,7 @@ const createNewsletterSchema = ({
               {
                 matchMdast: matchZone('BUTTON'),
                 component: Button,
-                props: (node, index, parent, { ancestors }) => {
+                props: (node) => {
                   const link =
                     (node.children[0] && node.children[0].children[0]) || {}
 
