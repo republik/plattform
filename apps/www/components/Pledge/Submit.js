@@ -268,6 +268,10 @@ class Submit extends Component {
                 : null,
           }))
         })
+    } else if (this.state.walletError) {
+      this.setState(() => ({
+        walletError: null,
+      }))
     }
   }
 
