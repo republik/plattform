@@ -34,6 +34,7 @@ export const transformData = (props) => {
           return o.commit.id === commit.id && o.name !== 'meta'
         }),
         derivatives: commit.derivatives,
+        canDeriveSyntheticReadAloud: commit.canDeriveSyntheticReadAloud,
       }
     })
     .sort(function (a, b) {

@@ -51,6 +51,7 @@ export const getRepoWithPublications = gql`
           derivatives {
             ...SimpleDerivative
           }
+          canDeriveSyntheticReadAloud: canDerive(type: SyntheticReadAloud)
         }
         document {
           id

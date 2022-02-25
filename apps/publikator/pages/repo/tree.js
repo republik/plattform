@@ -44,6 +44,7 @@ export const getRepoHistory = gql`
           derivatives {
             ...SimpleDerivative
           }
+          canDeriveSyntheticReadAloud: canDerive(type: SyntheticReadAloud)
         }
       }
       milestones {
@@ -52,6 +53,7 @@ export const getRepoHistory = gql`
           derivatives {
             ...SimpleDerivative
           }
+          canDeriveSyntheticReadAloud: canDerive(type: SyntheticReadAloud)
         }
       }
     }
@@ -73,6 +75,7 @@ const treeRepoSubscription = gql`
         derivatives {
           ...SimpleDerivative
         }
+        canDeriveSyntheticReadAloud: canDerive(type: SyntheticReadAloud)
       }
       milestone {
         ...SimpleMilestone

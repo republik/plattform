@@ -3,7 +3,6 @@ import { keyframes, css } from 'glamor'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 import MdHearingIcon from 'react-icons/lib/md/hearing'
-import MdRemoveIcon from 'react-icons/lib/md/remove-circle-outline'
 import { IconButton, AudioPlayer, mediaQueries } from '@project-r/styleguide'
 
 import * as fragments from '../../lib/graphql/fragments'
@@ -132,7 +131,7 @@ const Derivatives = ({ commit, generateDerivative, destroyDerivative }) => {
     return
   }
 
-  const { derivatives } = commit
+  const { derivatives, canDeriveSyntheticReadAloud } = commit
 
   const synthesizedAudio = derivatives
     .filter((d) => d.type === 'SyntheticReadAloud')
@@ -148,11 +147,13 @@ const Derivatives = ({ commit, generateDerivative, destroyDerivative }) => {
 
   return (
     <>
-      <SynthesizedAudio
-        derivative={synthesizedAudio}
-        onClickGenerate={generateDerivative}
-        onClickDestroy={destroyDerivative}
-      />
+      {canDeriveSyntheticReadAloud && (
+        <SynthesizedAudio
+          derivative={synthesizedAudio}
+          onClickGenerate={generateDerivative}
+          onClickDestroy={destroyDerivative}
+        />
+      )}
     </>
   )
 }
