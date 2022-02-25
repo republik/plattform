@@ -13,6 +13,7 @@ const {
 
 const {
   canDerive: canDeriveSyntheticReadAloud,
+  applyAssetsAudioUrl,
 } = require('../../lib/Derivative/SyntheticReadAloud')
 
 module.exports = {
@@ -65,8 +66,13 @@ module.exports = {
       content: mdast,
     }
   },
-  derivatives: async (commit, args, context) =>
-    context.loaders.Derivative.byCommitId.load(commit.id),
+  derivatives: async (commit, args, context) => {
+    const derivatives = await context.loaders.Derivative.byCommitId.load(
+      commit.id,
+    )
+
+    return derivatives.map(applyAssetsAudioUrl)
+  },
   canDerive: async (commit, args) => {
     const { type } = args
 

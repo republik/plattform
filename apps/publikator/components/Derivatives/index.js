@@ -111,7 +111,7 @@ const SynthesizedAudio = withT(
             <div {...styles.audioPlayer}>
               <AudioPlayer
                 src={{
-                  mp3: derivative.result.audioUrl,
+                  mp3: derivative.result.audioAssetsUrl,
                 }}
                 closeHandler={() => setShowAudioPlayer(false)}
                 autoPlay
