@@ -3658,15 +3658,19 @@
     },
     {
       "key": "Share/chart/lead",
-      "value": "In den letzten vier Wochen haben sich nach dem Probelesen {soldMembership} Personen für die Republik entschieden."
+      "value": "Anzahl geteilter Zugriffe während der letzten {days} Tage"
     },
     {
-      "key": "Share/chart/labels/activeUnconverted",
-      "value": "Geteilte, aktive Probelesen"
+      "key": "Share/chart/after",
+      "value": "Seit dem {startDate} wurden {invites} Personen eingeladen, die Republik kennenzulernen. {claims} haben den Probezugriff eingelöst, und {pledges} durften wir in der Verlagsetage begrüssen – dank Ihrem Engagement."
     },
     {
-      "key": "Share/chart/labels/converted",
-      "value": "Gewonnene Verlegerinnen"
+      "key": "Share/chart/legend",
+      "value": "Es zählen Mitgliedschaften, Abos und Spenden innerhalb von 30 Tagen nach Probezugriff. Datenstand: {formattedDateTime}"
+    },
+    {
+      "key": "Share/chart/annotation/lastBucket",
+      "value": "Aktuell"
     },
     {
       "key": "notifications/pageTitle",
@@ -6570,7 +6574,11 @@
     },
     {
       "key": "pages/access/title",
-      "value": "Republik teilen"
+      "value": "Verschenken Sie vier Wochen Republik"
+    },
+    {
+      "key": "pages/access/description",
+      "value": "Laden Sie jetzt Ihre Freunde und Feinde ein, die Republik kennenzulernen. Damit ermöglichen Sie ihnen 28 Tage Probezugriff auf alle Inhalte der Republik."
     },
     {
       "key": "nav/crowdfunding2",
