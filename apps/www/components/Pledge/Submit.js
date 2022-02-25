@@ -41,12 +41,14 @@ import { loadStripe } from '../Payment/stripe'
 import { useFieldSetState } from './utils'
 
 import ErrorMessage, { ErrorContainer } from '../ErrorMessage'
-import { useIsApplePayAvailable } from '../Payment/Form/useIsApplePayAvailable'
+import {
+  useIsApplePayAvailable,
+  useIsGooglePayAvailable,
+} from '../Payment/Form/StripeWalletHelpers'
 import useStripePaymentRequest, {
   PaymentRequestStatus,
 } from '../Payment/PaymentRequest/useStripePaymentRequest'
 import { getPayerInformationFromEvent } from '../Payment/PaymentRequest/PaymentRequestEventHelper'
-import useIsGooglePayAvailable from '../Payment/Form/useIsGooglePayAvailable'
 
 const { H2, P } = Interaction
 
