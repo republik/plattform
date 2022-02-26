@@ -14,6 +14,10 @@ module.exports = async (_, { commitId }, context) => {
   ensureUserHasRole(user, 'editor')
 
   const commit = await loaders.Commit.byId.load(commitId)
+  if (!commit) {
+    throw new Error(t('api/publikator/generateDerivative/commit/404'))
+  }
+
   if (!canDeriveSyntheticReadAloud(commit.meta.template)) {
     throw new Error(t('api/publikator/generateDerivative/canNot'))
   }
