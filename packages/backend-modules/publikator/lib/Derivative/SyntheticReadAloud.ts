@@ -1,5 +1,6 @@
 import createDebug from 'debug'
 import moment from 'moment'
+import crypto from 'crypto'
 
 import { GraphqlContext } from '@orbiting/backend-modules-types'
 const {
@@ -8,7 +9,12 @@ const {
 
 import { DerivativeRow } from '../../loaders/Derivative'
 
-const { ASSETS_SERVER_BASE_URL, TTS_SERVER_BASE_URL, PUBLIC_URL } = process.env
+const {
+  ASSETS_SERVER_BASE_URL,
+  TTS_SERVER_BASE_URL,
+  TTS_SIGNATURE_SECRET,
+  PUBLIC_URL,
+} = process.env
 
 const debug = createDebug('publikator:lib:Derivative:SyntheticReadAloud')
 
@@ -120,6 +126,11 @@ export const derive = async (document: any, context: GraphqlContext) => {
     return
   }
 
+  if (!TTS_SIGNATURE_SECRET) {
+    handlerDebug('TTS_SIGNATURE_SECRET not set. skipping synthesizing.')
+    return
+  }
+
   if (!PUBLIC_URL) {
     handlerDebug('PUBLIC_URL not set. skipping synthesizing.')
     return
@@ -161,7 +172,21 @@ export const derive = async (document: any, context: GraphqlContext) => {
   const substitutesUrl = ''
   const lexiconUrl = ''
   const webhookUrl = `${PUBLIC_URL}/publikator/webhook/syntheticReadAloud`
-  const expireAt = new Date().toISOString
+  const expireAt = moment().add(15, 'minutes')
+
+  const body = {
+    document,
+    derivativeId: derivative.id,
+    substitutesUrl,
+    lexiconUrl,
+    webhookUrl,
+    expireAt,
+  }
+
+  const signature = crypto
+    .createHmac('sha256', TTS_SIGNATURE_SECRET)
+    .update(Buffer.from(JSON.stringify(body), 'utf-8'))
+    .digest('hex')
 
   const isOk = await fetch(`${TTS_SERVER_BASE_URL}/intake/document`, {
     method: 'POST',
@@ -169,12 +194,8 @@ export const derive = async (document: any, context: GraphqlContext) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      document,
-      derivativeId: derivative.id,
-      substitutesUrl,
-      lexiconUrl,
-      webhookUrl,
-      expireAt,
+      ...body,
+      signature,
     }),
   })
     .then(async (res) => {
