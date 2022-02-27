@@ -169,15 +169,32 @@ export const derive = async (document: any, context: GraphqlContext) => {
     status: 'Pending',
   })
 
-  const substitutesUrl = ''
-  const lexiconUrl = ''
+  const syntheticReadAloudSubstitution =
+    await context.pgdb.public.gsheets.findOneFieldOnly(
+      { name: 'syntheticReadAloudSubstitution' },
+      'data',
+    )
+
+  const substitutionUrl = syntheticReadAloudSubstitution
+    ? `${PUBLIC_URL}/publikator/syntheticReadAloud/substitution`
+    : ''
+
+  const syntheticReadAloudLexicon =
+    await context.pgdb.public.gsheets.findOneFieldOnly(
+      { name: 'syntheticReadAloudLexicon' },
+      'data',
+    )
+
+  const lexiconUrl = syntheticReadAloudLexicon
+    ? `${PUBLIC_URL}/publikator/syntheticReadAloud/lexicon?ts=${new Date().getTime()}`
+    : ''
   const webhookUrl = `${PUBLIC_URL}/publikator/webhook/syntheticReadAloud`
   const expireAt = moment().add(15, 'minutes')
 
   const body = {
     document,
     derivativeId: derivative.id,
-    substitutesUrl,
+    substitutionUrl,
     lexiconUrl,
     webhookUrl,
     expireAt,
@@ -187,6 +204,11 @@ export const derive = async (document: any, context: GraphqlContext) => {
     .createHmac('sha256', TTS_SIGNATURE_SECRET)
     .update(Buffer.from(JSON.stringify(body), 'utf-8'))
     .digest('hex')
+
+  handlerDebug('body with signature: %o', {
+    ...body,
+    signature,
+  })
 
   const isOk = await fetch(`${TTS_SERVER_BASE_URL}/intake/document`, {
     method: 'POST',
