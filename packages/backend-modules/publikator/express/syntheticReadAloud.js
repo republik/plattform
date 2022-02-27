@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 module.exports = (server, pgdb, t, redis, context) => {
   // Callback for assets which are ready
   server.get(
-    '/publikator/synthenticSpeakAloud/lexicon',
+    '/publikator/syntheticReadAloud/lexicon',
     bodyParser.json(),
     async (req, res) => {
       const { pgdb } = context
@@ -40,7 +40,7 @@ module.exports = (server, pgdb, t, redis, context) => {
   )
 
   server.get(
-    '/publikator/synthenticSpeakAloud/substitution',
+    '/publikator/syntheticReadAloud/substitution',
     bodyParser.json(),
     async (req, res) => {
       const { pgdb } = context
