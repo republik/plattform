@@ -1,5 +1,7 @@
 const bodyParser = require('body-parser')
 
+const { applyAssetsAudioUrl } = require('../lib/Derivative/SyntheticReadAloud')
+
 // await middleware(server, pgdb, t, redis, createGraphqlContext())
 module.exports = (server, pgdb, t, redis, context) => {
   // Callback for assets which are ready
@@ -41,7 +43,7 @@ module.exports = (server, pgdb, t, redis, context) => {
             repoId: commit.repoId,
             mutation: 'UPDATED',
             commit,
-            derivative,
+            derivative: applyAssetsAudioUrl(derivative),
           },
         })
       }

@@ -5,6 +5,7 @@ const {
 const {
   canDerive: canDeriveSyntheticReadAloud,
   derive: deriveSyntheticReadAloud,
+  applyAssetsAudioUrl,
 } = require('../../../lib/Derivative/SyntheticReadAloud')
 
 const { document: getDocument } = require('../Commit')
@@ -33,7 +34,7 @@ module.exports = async (_, { commitId }, context) => {
       repoId: commit.repoId,
       mutation: 'UPDATED',
       commit,
-      derivative,
+      derivative: applyAssetsAudioUrl(derivative),
     },
   })
 
