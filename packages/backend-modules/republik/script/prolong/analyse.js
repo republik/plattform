@@ -43,8 +43,12 @@ ConnectionContext.create(applicationName)
       GROUP BY 1
       -- ORDER BY COUNT(mp.id) DESC
     `)
+
+    // only consider expires until:
+    // - last period record
+    // - minus 14 days grace period
     const endOfRecords = await pgdb.queryOneField(
-      `SELECT MAX(GREATEST("updatedAt", "createdAt")) FROM "membershipPeriods"`,
+      `SELECT MAX(GREATEST("updatedAt", "createdAt")) - '14 days'::interval FROM "membershipPeriods"`,
     )
 
     console.log('users', users.length, 'endOfRecords', endOfRecords)
@@ -85,29 +89,25 @@ ConnectionContext.create(applicationName)
               period.beginDate - prevPeriod.endDate < 1000 * 60 * 60 * 24
             if (!gapless) {
               user.events.push({
-                type: 'break',
+                type: 'expire',
                 interval: prevPeriod.interval,
                 date: prevPeriod.endDate,
-                year: prevPeriod.endDate.getFullYear(),
+                age: prevAge,
+              })
+            } else if (prevPeriod.interval !== period.interval) {
+              user.events.push({
+                type: 'changeInterval',
+                interval: prevPeriod.interval,
+                date: prevPeriod.endDate,
                 age: prevAge,
               })
             }
 
-            if (prevPeriod.interval !== period.interval) {
-              user.events.push({
-                type: 'changeInterval',
-                interval: period.interval,
-                date: period.beginDate,
-                year: period.beginDate.getFullYear(),
-                age: prevAge,
-              })
-            }
             if (newAge > prevAge) {
               user.events.push({
                 type: gapless ? 'anniversary' : 'return',
                 interval: period.interval,
                 date: period.beginDate,
-                year: period.beginDate.getFullYear(),
                 age: prevAge,
               })
             }
@@ -115,10 +115,9 @@ ConnectionContext.create(applicationName)
           const nextPeriod = all[i + 1]
           if (!nextPeriod && period.endDate < endOfRecords) {
             user.events.push({
-              type: 'break',
+              type: 'expire',
               interval: period.interval,
               date: period.endDate,
-              year: period.endDate.getFullYear(),
               age: newAge,
             })
           }
@@ -132,12 +131,19 @@ ConnectionContext.create(applicationName)
 
     const allEvents = users.map((user) => user.events).flat()
 
+    const calculateRate = ({
+      anniversary = 0,
+      changeInterval = 0,
+      expire = 0,
+    }) =>
+      (anniversary + changeInterval) / (expire + anniversary + changeInterval)
+
     console.log(
       JSON.stringify(
         nest()
           .key((d) => d.age)
           .sortKeys(ascending)
-          .key((d) => d.year)
+          .key((d) => d.date.getFullYear())
           .sortKeys(ascending)
           .key((d) => d.interval)
           .key((d) => d.type)
@@ -155,8 +161,7 @@ ConnectionContext.create(applicationName)
                     },
                     { interval },
                   )
-                  object.rate =
-                    object.anniversary / (object.break + object.anniversary)
+                  object.rate = calculateRate(object)
                   return object
                 })
                 return {
