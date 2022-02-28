@@ -186,7 +186,7 @@ export const derive = async (document: any, context: GraphqlContext) => {
     )
 
   const lexiconUrl = syntheticReadAloudLexicon
-    ? `${PUBLIC_URL}/publikator/syntheticReadAloud/lexicon?ts=${new Date().getTime()}`
+    ? `${PUBLIC_URL}/publikator/syntheticReadAloud/lexicon`
     : ''
   const webhookUrl = `${PUBLIC_URL}/publikator/webhook/syntheticReadAloud`
   const expireAt = moment().add(15, 'minutes')
