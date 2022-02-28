@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { ReactElement, useEffect, useRef, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { css } from 'glamor'
@@ -11,7 +12,7 @@ import {
   CustomElementsType,
   CustomText,
   InsertButtonConfig,
-  TemplateType
+  TemplateType,
 } from '../../../custom-types'
 import { config as elConfig } from '../../elements'
 import { useSlate, ReactEditor } from 'slate-react'
@@ -36,11 +37,11 @@ const styles = {
     marginTop: -6,
     opacity: 0,
     display: 'flex',
-    transition: 'opacity 0.75s'
+    transition: 'opacity 0.75s',
   }),
   buttonGroup: css({
-    display: 'flex'
-  })
+    display: 'flex',
+  }),
 }
 
 const hasSelection = (editor: CustomEditor): boolean => {
@@ -50,7 +51,7 @@ const hasSelection = (editor: CustomEditor): boolean => {
 
 const hasUsableSelection = (
   editor: CustomEditor,
-  selectedNode?: NodeEntry<CustomElement>
+  selectedNode?: NodeEntry<CustomElement>,
 ): boolean => {
   const { selection } = editor
   return (
@@ -63,19 +64,19 @@ const hasTextSelection = (editor: CustomEditor): boolean =>
   !isEmpty(Editor.string(editor, editor.selection))
 
 const hasVoidSelection = (
-  selectedElement?: NodeEntry<CustomElement>
+  selectedElement?: NodeEntry<CustomElement>,
 ): boolean => selectedElement && elConfig[selectedElement[0].type].attrs?.isVoid
 
 const showMarks = (
   editor: CustomEditor,
-  selectedElement?: NodeEntry<CustomElement>
+  selectedElement?: NodeEntry<CustomElement>,
 ): boolean =>
   hasTextSelection(editor) &&
   selectedElement &&
   elConfig[selectedElement[0].type].attrs?.formatText
 
 const getTemplateTypes = (
-  nodeEntry?: NodeEntry<CustomDescendant>
+  nodeEntry?: NodeEntry<CustomDescendant>,
 ): TemplateType[] => {
   if (!nodeEntry) return []
   const node = nodeEntry[0]
@@ -86,49 +87,46 @@ const getTemplateTypes = (
 
 const getAllowedInlines = (
   editor: CustomEditor,
-  selectedNode?: NodeEntry<CustomText>
+  selectedNode?: NodeEntry<CustomText>,
 ): InsertButtonConfig[] => {
   if (!hasTextSelection(editor)) return []
   const templateTypes = getTemplateTypes(selectedNode)
   // console.log('getAllowedInlines', { selectedNode, templateTypes })
   return templateTypes
     .filter((t: TemplateType) => IMPLICIT_INLINES.indexOf(t) === -1)
-    .map(t => ({ type: t as CustomElementsType }))
+    .map((t) => ({ type: t as CustomElementsType }))
 }
 
 const getAllowedBlocks = (
   editor: CustomEditor,
   selectedNode?: NodeEntry<CustomElement>,
-  selectedContainer?: NodeEntry<CustomElement>
+  selectedContainer?: NodeEntry<CustomElement>,
 ): InsertButtonConfig[] => {
   if (selectedContainer) {
     return getAllowedBlocks(editor, selectedContainer)
   }
   const templateTypes = getTemplateTypes(selectedNode)
   const isInline = elConfig[selectedNode[0].type].attrs?.isInline
-  return templateTypes.map(t => {
+  return templateTypes.map((t) => {
     const isSelected = selectedNode && t === selectedNode[0].type
     return {
       type: t as CustomElementsType,
       disabled: !isInline && isSelected,
-      active: isInline && isSelected
+      active: isInline && isSelected,
     }
   })
 }
 
 const calcHoverPosition = (
   element: HTMLDivElement,
-  container: HTMLDivElement | null
+  container: HTMLDivElement | null,
 ): {
   top?: number
   left?: number
 } => {
   let rect
   try {
-    rect = window
-      .getSelection()
-      ?.getRangeAt(0)
-      ?.getBoundingClientRect()
+    rect = window.getSelection()?.getRangeAt(0)?.getBoundingClientRect()
   } catch (e) {
     return {}
   }
@@ -142,14 +140,14 @@ const calcHoverPosition = (
           element.getBoundingClientRect().width,
         Math.max(
           container.getBoundingClientRect().left, // left edge
-          centered
-        )
+          centered,
+        ),
       )
     : centered
 
   return {
     top,
-    left
+    left,
   }
 }
 
@@ -161,7 +159,7 @@ export const ToolbarButton: React.FC<{
 }> = ({ button, onClick, disabled, active }) => (
   <IconButton
     fillColorName={disabled ? 'divider' : active ? 'primary' : 'text'}
-    onMouseDown={event => {
+    onMouseDown={(event) => {
       event.preventDefault()
       onClick()
     }}
@@ -177,10 +175,10 @@ const ToolbarButtons: React.FC<{
 }> = ({ marks, inlines, blocks }) => (
   <>
     {marks && <Marks />}
-    {inlines.map(config => (
+    {inlines.map((config) => (
       <InsertButton key={config.type} config={config} />
     ))}
-    {blocks.map(config => (
+    {blocks.map((config) => (
       <InsertButton key={config.type} config={config} />
     ))}
   </>
@@ -198,14 +196,12 @@ const Toolbar: React.FC<{
   const [colorScheme] = useColorContext()
   const ref = useRef<HTMLDivElement>(null)
   const editor = useSlate()
-  const [isVoid, setVoid] = useState(false)
   const [isVisible, setVisible] = useState(false)
   const [marks, setMarks] = useState(false)
   const [inlines, setInlines] = useState<InsertButtonConfig[]>([])
   const [blocks, setBlocks] = useState<InsertButtonConfig[]>([])
 
   const reset = () => {
-    setVoid(false)
     setVisible(false)
     setMarks(false)
     setInlines([])
@@ -238,10 +234,11 @@ const Toolbar: React.FC<{
       return reset()
     }
     const { text, element, container } = getAncestry(editor)
-    // console.log({ text, element, container })
-    const voidMode = hasVoidSelection(element)
-    setVoid(voidMode)
-    if (hasUsableSelection(editor, element) || voidMode) {
+    console.log({ text, element, container })
+    if (
+      !!element &&
+      (hasUsableSelection(editor, element) || hasVoidSelection(element))
+    ) {
       setMarks(showMarks(editor, element))
       setInlines(getAllowedInlines(editor, text))
       const allowedBlocks = getAllowedBlocks(editor, element, container)

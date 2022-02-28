@@ -6,7 +6,7 @@ import {
   Node,
   NodeEntry,
   Transforms,
-  Point
+  Point,
 } from 'slate'
 import { ReactEditor } from 'slate-react'
 import { config as elConfig } from '../../elements'
@@ -19,17 +19,17 @@ export const CHAR_LIMIT = editorConfig.maxSigns
 const PSEUDO_EMPTY_STRING = '\u2060'
 
 export const getCharCount = (nodes: (Descendant | Node)[]): number =>
-  nodes.map(node => Node.string(node).length).reduce((a, b) => a + b, 0)
+  nodes.map((node) => Node.string(node).length).reduce((a, b) => a + b, 0)
 
 export const getCountDown = (editor: CustomEditor): number =>
   CHAR_LIMIT - getCharCount(editor.children)
 
 export const toTitle = (text = ''): string =>
-  text.replace(/([A-Z])/g, ' $1').replace(/^\w/, c => c.toUpperCase())
+  text.replace(/([A-Z])/g, ' $1').replace(/^\w/, (c) => c.toUpperCase())
 
 export const selectPlaceholder = (
   editor: CustomEditor,
-  node: NodeEntry<CustomText>
+  node: NodeEntry<CustomText>,
 ): void => {
   const at = node[1]
   // this is a hack so that the element is selected before the text change
@@ -39,7 +39,7 @@ export const selectPlaceholder = (
   Transforms.select(editor, at)
   setTimeout(() => {
     Transforms.insertText(editor, '', {
-      at
+      at,
     })
     Transforms.select(editor, at)
   })
@@ -48,34 +48,52 @@ export const selectPlaceholder = (
 export const isEmpty = (text?: string) =>
   !text || text === '' || text === PSEUDO_EMPTY_STRING
 
-
 export const createLinks: NormalizeFn<CustomText> = ([node, path], editor) => {
   const parent = Editor.parent(editor, path)
   const parentNode = parent[0]
 
   // regex should only return one link!
-  const regex = /(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})/gi;
+  const regex =
+    /(https?:\/\/(?:www\.|(?!www))[^\s.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})/gi
   const linkContent = node.text.match(regex)
-  
-  if(!!linkContent) {
+
+  if (linkContent) {
     console.log(linkContent)
-    if(SlateElement.isElement(parentNode) && parentNode.type !== 'link') {
+    if (SlateElement.isElement(parentNode) && parentNode.type !== 'link') {
       const linkStartPoint = node.text.indexOf(linkContent[0])
       const linkEndPoint = linkContent[0].length + linkStartPoint
+      const href = '' // TODO: don't forget www... -> http://wwww )
 
-      Transforms.wrapNodes(editor, { type: "link", children: [] }, { at: {anchor: { path, offset: linkStartPoint } , focus: { path, offset: linkEndPoint }}, split: true })
-      
-      if (!Point.equals({ path, offset: linkContent[0].length }, editor.selection.focus)) {
-        console.log({path})
-        const nextTextPath = path.map((p, idx) => idx !== path.length - 1 ? p : p + 2)
+      Transforms.wrapNodes(
+        editor,
+        { type: 'link', href, children: [] },
+        {
+          at: {
+            anchor: { path, offset: linkStartPoint },
+            focus: { path, offset: linkEndPoint },
+          },
+          split: true,
+        },
+      )
+
+      if (
+        !Point.equals(
+          { path, offset: linkContent[0].length },
+          editor.selection.focus,
+        )
+      ) {
+        // TODO: double check this clause
+        console.log({ path })
+        const nextTextPath = path.map((p, idx) =>
+          idx !== path.length - 1 ? p : p + 2,
+        )
         console.log('nextTextPath', nextTextPath)
-        setTimeout(() => { 
+        // same hack as for placeholders
+        setTimeout(() => {
           Transforms.select(editor, nextTextPath)
         })
-
       }
       //  -> setSelection (editor.select) at link path + 1 ^, offset: 0
-      
 
       // examples:
       // path = [1, 0] before wrapping
@@ -83,7 +101,7 @@ export const createLinks: NormalizeFn<CustomText> = ([node, path], editor) => {
       // path of link text: [1,1,0]
       // path of next text node [1,2] -> that's the one we target
       // so from [1,0] -> [1,2] /// [1,4,3,2] -> [1,4,3,4]
-      
+
       return true
     }
   }
@@ -92,7 +110,7 @@ export const createLinks: NormalizeFn<CustomText> = ([node, path], editor) => {
 
 export const handlePlaceholders: NormalizeFn<CustomText> = (
   [node, path],
-  editor
+  editor,
 ) => {
   const parent = Editor.parent(editor, path)
   const parentNode = parent[0]
@@ -118,9 +136,9 @@ export const handlePlaceholders: NormalizeFn<CustomText> = (
       Transforms.setNodes(
         editor,
         {
-          placeholder
+          placeholder,
         },
-        { at: path }
+        { at: path },
       )
     }
   }
