@@ -210,7 +210,8 @@ export const derive = async (document: any, context: GraphqlContext) => {
     signature,
   })
 
-  const isOk = await fetch(`${TTS_SERVER_BASE_URL}/intake/document`, {
+  const endpoint = `${TTS_SERVER_BASE_URL}/intake/document`
+  const posting = await fetch(endpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -222,29 +223,44 @@ export const derive = async (document: any, context: GraphqlContext) => {
   })
     .then(async (res) => {
       if (!res.ok) {
+        const { status, statusText } = res
         handlerDebug(
           'unable to fetch reader intake URL (HTTP Status Code: $d)',
-          res.status,
+          status,
         )
-        return false
+        return {
+          ok: false,
+          error: {
+            message: 'unable to fetch reader intake URL',
+            payload: { endpoint, status, statusText },
+          },
+        }
       }
 
       handlerDebug('intake URL call %o', await res.json())
 
-      return true
+      return { ok: true }
     })
     .catch((e) => {
       handlerDebug('unable to fetch reader intake URL: %s', e.message)
-      return false
+      return {
+        ok: false,
+        error: {
+          message: e.message,
+          payload: { endpoint },
+        },
+      }
     })
 
-  if (!isOk) {
+  if (posting?.error) {
+    const { error } = posting
     return context.pgdb.publikator.derivatives.updateAndGetOne(
       {
         id: derivative.id,
       },
       {
         status: 'Failure',
+        result: { error },
         updatedAt: new Date(),
         failedAt: new Date(),
       },

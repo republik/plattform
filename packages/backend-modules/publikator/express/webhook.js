@@ -15,21 +15,22 @@ module.exports = (server, pgdb, t, redis, context) => {
       res.status(200).json({ ok: true })
 
       const { body } = req
-      const { derivativeId, audioDuration, audioUrl, s3 } = body
+      const { derivativeId, error, audioDuration, s3 } = body
 
       const derivative = await pgdb.publikator.derivatives.updateAndGetOne(
         {
           id: derivativeId,
+          status: 'Pending',
         },
         {
-          status: 'Ready',
-          result: {
+          status: error ? 'Failure' : 'Ready',
+          result: (error && { error }) || {
             audioDuration,
-            audioUrl,
             s3,
           },
           updatedAt: new Date(),
-          readyAt: new Date(),
+          ...(!error && { readyAt: new Date() }),
+          ...(error && { failedAt: new Date() }),
         },
       )
 
