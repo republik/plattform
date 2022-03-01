@@ -18,6 +18,7 @@ const PublicationLink = ({ publication }) => {
       title={publication.document.meta.title}
       invert
       label={publication.prepublication ? 'Vorschau öffnen' : 'Beitrag öffnen'}
+      labelShort=''
       fillColorName='primary'
       href={`${FRONTEND_BASE_URL}${publication.document.meta.path}`}
       target='_blank'
