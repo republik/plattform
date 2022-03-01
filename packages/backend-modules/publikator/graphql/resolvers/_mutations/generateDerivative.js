@@ -38,5 +38,5 @@ module.exports = async (_, { commitId }, context) => {
     },
   })
 
-  return derivative
+  return applyAssetsAudioUrl(derivative)
 }
