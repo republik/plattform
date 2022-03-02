@@ -11,7 +11,7 @@ const {
 const { document: getDocument } = require('../Commit')
 
 module.exports = async (_, { commitId }, context) => {
-  const { user, loaders, pubsub, t } = context
+  const { user, pgdb, loaders, pubsub, t } = context
   ensureUserHasRole(user, 'editor')
 
   const commit = await loaders.Commit.byId.load(commitId)
@@ -24,7 +24,7 @@ module.exports = async (_, { commitId }, context) => {
   }
 
   const doc = await getDocument(commit, {}, context)
-  const derivative = await deriveSyntheticReadAloud(doc, context)
+  const derivative = await deriveSyntheticReadAloud(doc, pgdb, user)
   if (!derivative) {
     throw new Error(t('api/publikator/generateDerivative/unable'))
   }

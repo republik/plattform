@@ -102,7 +102,7 @@ export const applyAssetsAudioUrl = (derivative: DerivativeRow) => {
   }
 }
 
-export const onPublish = async (document: any, context: GraphqlContext) => {
+export const onPublish = async (document: any, pgdb: any, user?: any) => {
   const handlerDebug = debug.extend('onPublish')
 
   if (document.content?.meta?.audioSource) {
@@ -115,10 +115,10 @@ export const onPublish = async (document: any, context: GraphqlContext) => {
     return
   }
 
-  return derive(document, context)
+  return derive(document, pgdb, user)
 }
 
-export const derive = async (document: any, context: GraphqlContext) => {
+export const derive = async (document: any, pgdb: any, user?: any) => {
   const handlerDebug = debug.extend('derive')
 
   if (!TTS_SERVER_BASE_URL) {
@@ -139,7 +139,7 @@ export const derive = async (document: any, context: GraphqlContext) => {
   const { commitId } = getParsedDocumentId(document.id)
 
   // @TODO: Loader?
-  const derivatives = await context.pgdb.publikator.derivatives.find({
+  const derivatives = await pgdb.publikator.derivatives.find({
     commitId,
     type: 'SyntheticReadAloud',
     or: [
@@ -163,14 +163,21 @@ export const derive = async (document: any, context: GraphqlContext) => {
     return derivatives.slice(0, 1).pop()
   }
 
-  const derivative = await context.pgdb.publikator.derivatives.insertAndGet({
+  const derivative = await pgdb.publikator.derivatives.insertAndGet({
     commitId,
     type: 'SyntheticReadAloud',
     status: 'Pending',
+    userId: user?.id,
+    ...(user && {
+      author: {
+        name: user.name,
+        email: user.email,
+      },
+    }),
   })
 
   const syntheticReadAloudSubstitution =
-    await context.pgdb.public.gsheets.findOneFieldOnly(
+    await pgdb.public.gsheets.findOneFieldOnly(
       { name: 'syntheticReadAloudSubstitution' },
       'data',
     )
@@ -179,11 +186,10 @@ export const derive = async (document: any, context: GraphqlContext) => {
     ? `${PUBLIC_URL}/publikator/syntheticReadAloud/substitution`
     : ''
 
-  const syntheticReadAloudLexicon =
-    await context.pgdb.public.gsheets.findOneFieldOnly(
-      { name: 'syntheticReadAloudLexicon' },
-      'data',
-    )
+  const syntheticReadAloudLexicon = await pgdb.public.gsheets.findOneFieldOnly(
+    { name: 'syntheticReadAloudLexicon' },
+    'data',
+  )
 
   const lexiconUrl = syntheticReadAloudLexicon
     ? `${PUBLIC_URL}/publikator/syntheticReadAloud/lexicon`
@@ -254,7 +260,7 @@ export const derive = async (document: any, context: GraphqlContext) => {
 
   if (posting?.error) {
     const { error } = posting
-    return context.pgdb.publikator.derivatives.updateAndGetOne(
+    return pgdb.publikator.derivatives.updateAndGetOne(
       {
         id: derivative.id,
       },

@@ -81,10 +81,7 @@ const init = async (context) => {
             })
           }
 
-          await onPublishSyntheticReadAloud(doc, {
-            ...context,
-            pgdb: tx,
-          })
+          await onPublishSyntheticReadAloud(doc, tx)
 
           await tx.transactionCommit()
         } catch (e) {

@@ -230,7 +230,7 @@ module.exports = async (
     await handleRedirection(repoId, doc.content.meta, context)
   }
 
-  await onPublishSyntheticReadAloud(resolvedDoc, context)
+  await onPublishSyntheticReadAloud(resolvedDoc, context.pgdb, context.user)
 
   // get/create campaign on mailchimp
   // fail early if mailchimp not available

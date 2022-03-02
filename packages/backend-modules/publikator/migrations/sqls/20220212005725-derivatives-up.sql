@@ -24,6 +24,8 @@ CREATE TABLE "publikator"."derivatives" (
     "settings" jsonb, -- { images: false|true }, { voice: 'alpha' }
     "status" "derivativesStatusDomain" NOT NULL DEFAULT 'milestone'::"derivativesStatusDomain",
     "result" jsonb,
+    "userId" uuid REFERENCES users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    author jsonb,
     "createdAt" timestamp with time zone NOT NULL DEFAULT now(),
     "updatedAt" timestamp with time zone NOT NULL DEFAULT now(),
     "readyAt" timestamp with time zone,
