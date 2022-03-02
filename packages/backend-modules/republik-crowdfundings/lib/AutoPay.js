@@ -5,7 +5,7 @@ const {
 } = require('@orbiting/backend-modules-utils')
 
 const createCharge = require('./payments/stripe/createCharge')
-const { getCustomPackages } = require('./User')
+const { getPackages } = require('./User')
 const { getLastEndDate } = require('./utils')
 const createCache = require('./cache')
 
@@ -117,9 +117,9 @@ const suggest = async (membershipId, pgdb) => {
 
   // Pick package and options which may be used to submit and autopayment
   const user = await pgdb.public.users.findOne({ id: membership.userId })
-  const prolongPackage = (await getCustomPackages({ user, pgdb })).find(
-    (p) => p.name === 'PROLONG',
-  )
+  const prolongPackage = (
+    await getPackages({ pledger: user, custom: true, pgdb })
+  ).find((p) => p.name === 'PROLONG')
 
   const prolongOption =
     prolongPackage &&

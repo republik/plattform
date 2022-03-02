@@ -2,7 +2,7 @@ const Roles = require('../../../lib/Roles')
 const ensureSignedIn = require('../../../lib/ensureSignedIn')
 const { resolveUser } = require('../../../lib/Users')
 const userAccessRoles = ['admin', 'supporter']
-const transformUser = require('../../../lib/transformUser')
+const transformUser = require('../../../lib/transformUser').default
 
 module.exports = async (_, args, { pgdb, user: me, req }) => {
   ensureSignedIn(req)

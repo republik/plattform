@@ -1,6 +1,19 @@
 const debug = require('debug')('crowdfundings:resolver:PackageOption')
 
 module.exports = {
+  label (packageOption, args, { t }) {
+    const order = packageOption.order
+    const packageName = packageOption.package?.name
+    const rewardType = packageOption.reward?.type
+    const rewardName = packageOption.reward?.name
+
+    return t.first([
+      `api/package:${packageName}/option/reward:${rewardType}:${rewardName}/order:${order}`,
+      `api/package:${packageName}/option/reward:${rewardType}:${rewardName}`,
+      `api/package:${packageName}/option/order:${order}`,
+      `api/package/option/reward:${rewardType}:${rewardName}`,
+    ])
+  },
   async reward(packageOption, args, { pgdb }) {
     if (packageOption.reward) {
       debug('packageOption.reward present')

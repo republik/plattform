@@ -1,4 +1,4 @@
-const transformUser = require('../../../lib/transformUser')
+const transformUser = require('../../../lib/transformUser').default
 const { resolveUser } = require('../../../lib/Users')
 const Roles = require('../../../lib/Roles')
 

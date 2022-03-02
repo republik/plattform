@@ -13,7 +13,7 @@ export = {
   Roles: require('./Roles'),
   Sessions: require('./Sessions'),
   t: require('./t'),
-  transformUser: transfromUser,
+  transformUser: transfromUser.default,
   useragent: require('./useragent'),
   Users: require('./Users'),
 }

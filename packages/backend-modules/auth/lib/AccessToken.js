@@ -1,7 +1,7 @@
 const crypto = require('crypto')
 const base64u = require('@orbiting/backend-modules-base64u')
 const moment = require('moment')
-const transformUser = require('./transformUser')
+const transformUser = require('./transformUser').default
 const debug = require('debug')('auth:lib:AccessToken')
 
 const { newAuthError } = require('./AuthError')
