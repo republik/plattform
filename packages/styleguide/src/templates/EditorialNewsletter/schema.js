@@ -310,7 +310,7 @@ const createNewsletterSchema = ({
                 editorModule: 'variableCondition',
                 editorOptions: {
                   type: 'IF',
-                  insertBlock: 'greeting',
+                  insertBlocks: ['greeting', 'hasAccess'],
                   insertTypes: ['PARAGRAPH'],
                   fields: [
                     {
