@@ -318,6 +318,7 @@ const createNewsletterSchema = ({
                       items: [
                         { value: 'firstName', text: 'Vorname' },
                         { value: 'lastName', text: 'Nachname' },
+                        { value: 'hasAccess', text: 'Magazin-Zugriff' },
                       ],
                     },
                   ],

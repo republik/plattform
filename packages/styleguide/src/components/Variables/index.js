@@ -15,6 +15,15 @@ export const Variable = ({ variable, fallback }) => {
 export const If = ({ present, children }) => {
   const vars = useContext(VariableContext)
   if (vars._mergeTags) {
+    if (vars.groups?.[present]) {
+      return (
+        <>
+          {`*|INTERESTED:${vars.groups[present]}|*`}
+          {children}
+          {'*|END:INTERESTED|*'}
+        </>
+      )
+    }
     return (
       <>
         {`*|IF:${vars[present] || present}|*`}
