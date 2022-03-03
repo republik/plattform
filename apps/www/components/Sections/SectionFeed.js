@@ -6,9 +6,8 @@ import { Center } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
 
-import { onDocumentFragment as bookmarkOnDocumentFragment } from '../Bookmarks/fragments'
-
 import DocumentListContainer from '../Feed/DocumentListContainer'
+import { documentFragment } from '../Feed/fragments'
 
 const getFeedDocuments = gql`
   query getSectionDocuments(
@@ -30,59 +29,12 @@ const getFeedDocuments = gql`
       }
       nodes {
         entity {
-          ... on Document {
-            id
-            ...BookmarkOnDocument
-            meta {
-              credits
-              title
-              description
-              publishDate
-              path
-              template
-              format {
-                id
-                meta {
-                  kind
-                  color
-                  title
-                  path
-                }
-              }
-              estimatedReadingMinutes
-              estimatedConsumptionMinutes
-              indicateChart
-              indicateGallery
-              indicateVideo
-              audioSource {
-                mp3
-                aac
-                ogg
-                mediaId
-                durationMs
-              }
-              ownDiscussion {
-                id
-                closed
-                comments {
-                  totalCount
-                }
-              }
-              linkedDiscussion {
-                id
-                path
-                closed
-                comments {
-                  totalCount
-                }
-              }
-            }
-          }
+          ...FeedDocument
         }
       }
     }
   }
-  ${bookmarkOnDocumentFragment}
+  ${documentFragment}
 `
 
 const mapNodes = (node) => node.entity
