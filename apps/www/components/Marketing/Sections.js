@@ -16,18 +16,18 @@ import Link from 'next/link'
 
 const sectionContent = [
   {
-    name: 'covid19',
+    name: 'weekly',
     Paragraph: ({ t }) => (
       <Meta.P>
-        {t(`marketing/page/sections/description/covid19`)}{' '}
-        <Link href='/format/covid-19-uhr-newsletter' passHref>
-          <Editorial.A>{t(`marketing/page/sections/link/covid19`)}</Editorial.A>
+        {t(`marketing/page/sections/description/weekly`)}{' '}
+        <Link href='/format/wochenend-newsletter' passHref>
+          <Editorial.A>{t(`marketing/page/sections/link/weekly`)}</Editorial.A>
         </Link>
       </Meta.P>
     ),
-    href: '/format/covid-19-uhr-newsletter',
-    image: '/static/marketing/covid19_wave3.png?size=807x807',
-    color: '#D44438',
+    href: '/format/wochenend-newsletter',
+    // image: '/static/marketing/TK.png?size=WxH',
+    color: '#000000',
   },
   {
     name: 'briefings',
@@ -71,25 +71,27 @@ const Sections = ({ t }) => {
           {...styles.section}
           {...colorScheme.set('borderColor', 'divider')}
         >
-          <div {...styles.picture}>
-            <Link href={section.href} passHref>
-              <a {...styles.link}>
-                <FigureImage
-                  {...FigureImage.utils.getResizedSrcs(
-                    `${CDN_FRONTEND_BASE_URL}${section.image}`,
-                    80,
-                  )}
-                  dark={
-                    section.imageDark &&
-                    FigureImage.utils.getResizedSrcs(
-                      `${CDN_FRONTEND_BASE_URL}${section.imageDark}`,
+          {section.image && (
+            <div {...styles.picture}>
+              <Link href={section.href} passHref>
+                <a {...styles.link}>
+                  <FigureImage
+                    {...FigureImage.utils.getResizedSrcs(
+                      `${CDN_FRONTEND_BASE_URL}${section.image}`,
                       80,
-                    )
-                  }
-                />
-              </a>
-            </Link>
-          </div>
+                    )}
+                    dark={
+                      section.imageDark &&
+                      FigureImage.utils.getResizedSrcs(
+                        `${CDN_FRONTEND_BASE_URL}${section.imageDark}`,
+                        80,
+                      )
+                    }
+                  />
+                </a>
+              </Link>
+            </div>
+          )}
           <div {...styles.description}>
             <Meta.Subhead
               style={{ marginTop: 0 }}

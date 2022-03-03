@@ -461,18 +461,6 @@
       "value": "Die Republik ist eine Dienstleistung für interessierte Menschen in einer komplexen Welt. Wir recherchieren, fragen nach, ordnen ein und decken auf. Und liefern Ihnen Fakten und Zusammenhänge als Grundlage für Ihre eigenen Überlegungen und Entscheidungen."
     },
     {
-      "key": "marketing/page/sections/link/covid19",
-      "value": "Hier kostenlos abonnieren."
-    },
-    {
-      "key": "marketing/page/sections/description/covid19",
-      "value": "Brauchbares zur Pandemie – jeden Montag um 19 Uhr. Informationen für alle. Auch ohne Republik-Abo oder Mitgliedschaft."
-    },
-    {
-      "key": "marketing/page/sections/title/covid19",
-      "value": "Covid-19-Uhr-Newsletter"
-    },
-    {
       "key": "marketing/page/sections/description/briefings",
       "value": "Durch die Woche mit der Republik: Das Datenbriefing «Auf lange Sicht» am Montag, das Justiz-Briefing «Am Gericht» am Mittwoch, das «Briefing aus Bern» am Donnerstag und «Was diese Woche wichtig war» am Freitag."
     },
@@ -6242,11 +6230,23 @@
     },
     {
       "key": "section/feed/payNote",
-      "value": "Sie brauchen eine Mitgliedschaft oder Abo, um die Beiträge zu lesen."
+      "value": "Sie brauchen eine Mitgliedschaft oder Abo, um die Beiträge zu lesen."
     },
     {
       "key": "section/feed/payNote/sample",
-      "value": "Sie brauchen eine Mitgliedschaft oder Abo, um alle Beiträge zu lesen."
+      "value": "Sie brauchen eine Mitgliedschaft oder Abo, um alle Beiträge zu lesen."
+    },
+    {
+      "key": "marketing/page/sections/link/weekly",
+      "value": "Hier kostenlos abonnieren."
+    },
+    {
+      "key": "marketing/page/sections/description/weekly",
+      "value": "In Europa ist Krieg. Jetzt ist keine Zeit für Kleinlichkeiten. Die gesamte Berichterstattung der Republik zur Ukraine – frei lesbar, frei teilbar."
+    },
+    {
+      "key": "marketing/page/sections/title/weekly",
+      "value": "Republik am Wochenende"
     },
     {
       "key": "package/ABO/description",
