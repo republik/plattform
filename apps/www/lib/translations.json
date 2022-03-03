@@ -2993,10 +2993,6 @@
       "value": "{count} Beiträge"
     },
     {
-      "key": "section/feed/payNote",
-      "value": "Sie brauchen eine Mitgliedschaft, um die Beiträge zu lesen."
-    },
-    {
       "key": "article/payNote/ios/before",
       "value": "<b>Danke für Ihre Neugier!</b> Dieser Beitrag wurde grosszügigerweise für Sie von einer unserer Verlegerinnen und Verleger freigeschaltet."
     },
@@ -6243,6 +6239,14 @@
     {
       "key": "article/tryNote/thankYou",
       "value": "<b>Herzlich willkommen!</b> Sie können sich in den kommenden Tagen ohne Einschränkung bei uns umsehen."
+    },
+    {
+      "key": "section/feed/payNote",
+      "value": "Sie brauchen eine Mitgliedschaft oder Abo, um die Beiträge zu lesen."
+    },
+    {
+      "key": "section/feed/payNote/sample",
+      "value": "Sie brauchen eine Mitgliedschaft oder Abo, um alle Beiträge zu lesen."
     },
     {
       "key": "package/ABO/description",
