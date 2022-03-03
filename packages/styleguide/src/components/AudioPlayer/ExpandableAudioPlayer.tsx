@@ -77,7 +77,7 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     height: 54,
-    padding: '0 8px 0 4px',
+    padding: '0 10px 0 4px',
   }),
   button: css({
     ...plainButtonRule,

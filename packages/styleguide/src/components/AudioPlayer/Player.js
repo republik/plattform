@@ -340,7 +340,9 @@ class AudioPlayer extends Component {
     if (!this.audio || !this.audio.duration) {
       return
     }
-    this.formattedDuration = getFormattedTime(this.audio.duration)
+    this.formattedDuration = getFormattedTime(
+      this.audio.duration / this.state.playbackRate,
+    )
   }
   setPlaybackRate = (rate) => {
     if (this.audio) {
