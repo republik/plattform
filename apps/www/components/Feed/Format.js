@@ -15,15 +15,17 @@ import DocumentListContainer from './DocumentListContainer'
 const getFeedDocuments = gql`
   query getFeedDocuments(
     $cursor: String
+    $processor: SearchProcessor
     $filter: SearchFilterInput
     $filters: [SearchGenericFilterInput!]
   ) {
     documents: search(
-      filters: $filters
+      after: $cursor
+      processor: $processor
       filter: $filter
+      filters: $filters
       sort: { key: publishedAt, direction: DESC }
       first: 30
-      after: $cursor
     ) {
       totalCount
       pageInfo {
@@ -92,6 +94,7 @@ const FormatFeed = ({ t, formatId, variables: variablesObject }) => {
   }
 
   const variables = variablesObject || {
+    processor: 'formatFeedSamples',
     filter: { format: formatId, feed: true },
   }
 
