@@ -3,17 +3,12 @@ import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 
 import { ellipsize } from '../../lib/styleMixins'
-import { timeFormat } from '../../lib/timeFormat'
 import warn from '../../lib/warn'
 import globalState from '../../lib/globalMediaState'
 
 import { breakoutStyles } from '../Center'
 import { InlineSpinner } from '../Spinner'
-import {
-  sansSerifRegular12,
-  sansSerifRegular15,
-  sansSerifMedium16,
-} from '../Typography/styles'
+import { sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
 import { mUp } from '../../theme/mediaQueries'
 import {
   PlayIcon,
@@ -25,16 +20,17 @@ import {
 } from '../Icons'
 import { useColorContext } from '../Colors/useColorContext'
 
-const ZINDEX_AUDIOPLAYER_ICONS = 6
-const ZINDEX_AUDIOPLAYER_SCRUB = 3
-const ZINDEX_AUDIOPLAYER_PROGRESS = 2
-const ZINDEX_AUDIOPLAYER_BUFFER = 1
-const ZINDEX_AUDIOPLAYER_TOTAL = 0
-const PROGRESS_HEIGHT = 4
-const SLIDERTHUMB_SIZE = 12
+import Scrubber from './Scrubber'
+import ExpandableAudioPlayer from './ExpandableAudioPlayer'
 
-const hoursDurationFormat = timeFormat('%-H:%M:%S')
-const minutesDurationFormat = timeFormat('%-M:%S')
+import {
+  ZINDEX_AUDIOPLAYER_ICONS,
+  hoursDurationFormat,
+  minutesDurationFormat,
+  PROGRESS_HEIGHT,
+  DefaultLink,
+  progressbarStyle,
+} from './constants'
 
 const CONTROLS_HEIGHT = 25
 const ICON_SPACING = 8
@@ -45,13 +41,6 @@ const SIZE = {
   download: 22,
   forward: 22,
   replay: 22,
-}
-
-const barStyle = {
-  position: 'absolute',
-  height: PROGRESS_HEIGHT,
-  left: 0,
-  right: 0,
 }
 
 const buttonStyle = {
@@ -105,17 +94,6 @@ const styles = {
     marginTop: -10,
     textAlign: 'center',
   }),
-  playbackRate: css({
-    position: 'absolute',
-    top: '50%',
-    left: SIZE.play + SIZE.replay + SIZE.forward + SIZE.download + ICON_SPACING,
-    marginTop: -10,
-    textAlign: 'center',
-  }),
-  playbackRateButton: css({
-    ...buttonStyle,
-    ...sansSerifMedium16,
-  }),
   close: css({
     ...buttonStyle,
     position: 'absolute',
@@ -125,20 +103,14 @@ const styles = {
     textAlign: 'center',
   }),
   scrubberTop: css({
-    ...barStyle,
+    ...progressbarStyle,
     top: -PROGRESS_HEIGHT,
     zIndex: ZINDEX_AUDIOPLAYER_ICONS,
   }),
   scrubberBottom: css({
-    ...barStyle,
+    ...progressbarStyle,
     bottom: -PROGRESS_HEIGHT,
     zIndex: ZINDEX_AUDIOPLAYER_ICONS,
-  }),
-  progress: css({
-    position: 'absolute',
-    zIndex: ZINDEX_AUDIOPLAYER_PROGRESS,
-    left: 0,
-    height: PROGRESS_HEIGHT,
   }),
   uiText: css({
     position: 'absolute',
@@ -157,26 +129,6 @@ const styles = {
     fontFeatureSettings: '"tnum" 1, "kern" 1',
     fontSize: '19px',
   }),
-  scrub: css({
-    ...barStyle,
-    zIndex: ZINDEX_AUDIOPLAYER_SCRUB,
-    height: 20,
-    marginTop: -((20 + PROGRESS_HEIGHT) / 2),
-    paddingTop: 20 / 2 - PROGRESS_HEIGHT / 2,
-    cursor: 'ew-resize',
-  }),
-  buffer: css({
-    ...barStyle,
-    zIndex: ZINDEX_AUDIOPLAYER_BUFFER,
-  }),
-  totalDuration: css({
-    ...barStyle,
-    zIndex: ZINDEX_AUDIOPLAYER_TOTAL,
-  }),
-  timeRange: css({
-    position: 'absolute',
-    height: PROGRESS_HEIGHT,
-  }),
   sourceError: css({
     height: '25px',
     ...ellipsize,
@@ -190,22 +142,7 @@ const styles = {
   retry: css({
     cursor: 'pointer',
   }),
-  titlebox: css({
-    ...ellipsize,
-    position: 'absolute',
-  }),
-  sliderThumb: css({
-    zIndex: 2,
-    top: '-4px',
-    borderRadius: 6,
-    position: 'absolute',
-    width: SLIDERTHUMB_SIZE,
-    height: SLIDERTHUMB_SIZE,
-    transition: 'opacity ease-out 0.3s',
-  }),
 }
-
-const DefaultLink = ({ children }) => children
 
 export const getFormattedTime = (secs) => {
   let totalSeconds = secs
@@ -367,16 +304,6 @@ class AudioPlayer extends Component {
         }
       }
     }
-    this.handleplaybackRate = () => {
-      const { playbackRates } = this.props
-      const currentRateIndex = playbackRates.indexOf(this.state.playbackRate)
-      const isLast = playbackRates[currentRateIndex + 1] === undefined
-      const nextplaybackRate = isLast
-        ? playbackRates[0]
-        : playbackRates[currentRateIndex + 1]
-      this.setState({ playbackRate: nextplaybackRate })
-      this.audio.playbackRate = nextplaybackRate
-    }
   }
 
   play() {
@@ -414,6 +341,12 @@ class AudioPlayer extends Component {
       return
     }
     this.formattedDuration = getFormattedTime(this.audio.duration)
+  }
+  setPlaybackRate = (rate) => {
+    if (this.audio) {
+      this.setState({ playbackRate: rate })
+      this.audio.playbackRate = rate
+    }
   }
   componentDidMount() {
     globalState.instances.push(this.setInstanceState)
@@ -481,7 +414,6 @@ class AudioPlayer extends Component {
       fixed,
       sourcePath,
       colorScheme,
-      playbackRates,
       Link = DefaultLink,
     } = this.props
     const {
@@ -516,284 +448,267 @@ class AudioPlayer extends Component {
         timeRanges.push({ start: buffered.start(i), end: buffered.end(i) })
       }
     }
-    return (
-      <div
-        {...merge(styles.wrapper, breakoutStyles[size])}
-        ref={this.containerRef}
-        style={{ ...style, height: `${height}px` }}
-        tabIndex='0'
-        role='region'
-        aria-label={t('styleguide/AudioPlayer/aria')}
+
+    const playbackElement = isVideo ? (
+      <video
+        preload={autoPlay ? 'auto' : undefined}
+        {...styles.audio}
+        {...attributes}
+        ref={this.ref}
+        onLoadedMetadata={this.onCanPlay}
+        crossOrigin='anonymous'
+        playsInline
+        webkit-playsinline=''
       >
-        {!isVideo && (
-          <audio
-            preload={autoPlay ? 'auto' : undefined}
-            {...styles.audio}
-            {...attributes}
-            ref={this.ref}
-            onLoadedMetadata={this.onCanPlay}
-            crossOrigin='anonymous'
-          >
-            {src.mp3 && (
-              <source
-                src={src.mp3}
-                type='audio/mpeg'
-                onError={this.onSourceError}
-              />
-            )}
-            {src.aac && (
-              <source
-                src={src.aac}
-                type='audio/mp4'
-                onError={this.onSourceError}
-              />
-            )}
-            {src.ogg && (
-              <source
-                src={src.ogg}
-                type='audio/ogg'
-                onError={this.onSourceError}
-              />
-            )}
-          </audio>
+        {src.hls && (
+          <source
+            src={src.hls}
+            type='application/x-mpegURL'
+            onError={this.onSourceError}
+          />
         )}
-        {isVideo && (
-          <video
-            preload={autoPlay ? 'auto' : undefined}
-            {...styles.audio}
-            {...attributes}
-            ref={this.ref}
-            onLoadedMetadata={this.onCanPlay}
-            crossOrigin='anonymous'
-            playsInline
-            webkit-playsinline=''
-          >
-            {src.hls && (
-              <source
-                src={src.hls}
-                type='application/x-mpegURL'
-                onError={this.onSourceError}
-              />
-            )}
-            {src.mp4 && (
-              <source
-                src={src.mp4}
-                type='video/mp4'
-                onError={this.onSourceError}
-              />
-            )}
-          </video>
+        {src.mp4 && (
+          <source src={src.mp4} type='video/mp4' onError={this.onSourceError} />
         )}
+      </video>
+    ) : (
+      <audio
+        preload={autoPlay ? 'auto' : undefined}
+        {...styles.audio}
+        {...attributes}
+        ref={this.ref}
+        onLoadedMetadata={this.onCanPlay}
+        crossOrigin='anonymous'
+      >
+        {src.mp3 && (
+          <source
+            src={src.mp3}
+            type='audio/mpeg'
+            onError={this.onSourceError}
+          />
+        )}
+        {src.aac && (
+          <source src={src.aac} type='audio/mp4' onError={this.onSourceError} />
+        )}
+        {src.ogg && (
+          <source src={src.ogg} type='audio/ogg' onError={this.onSourceError} />
+        )}
+      </audio>
+    )
+
+    if (this.props.mode === 'overlay') {
+      return (
+        <ExpandableAudioPlayer
+          containerRef={this.containerRef}
+          scrubRef={this.scrubRef}
+          audio={this.audio}
+          playbackElement={playbackElement}
+          playing={playing}
+          playEnabled={playEnabled}
+          progress={progress}
+          loading={loading}
+          buffered={buffered}
+          sourceError={sourceError}
+          playbackRate={playbackRate}
+          setPlaybackRate={this.setPlaybackRate}
+          toggle={this.toggle}
+          reload={this.reload}
+          scrubStart={this.scrubStart}
+          scrub={this.scrub}
+          scrubEnd={this.scrubEnd}
+          timeRanges={timeRanges}
+          closeHandler={closeHandler}
+          t={t}
+          Link={Link}
+          title={title}
+          sourcePath={sourcePath}
+          formattedCurrentTime={this.formattedCurrentTime}
+          formattedDuration={this.formattedDuration}
+          setTime={this.setTime}
+        />
+      )
+    } else {
+      return (
         <div
-          {...styles.controls}
-          style={{
-            top: Math.ceil((height - CONTROLS_HEIGHT) / 2),
-            left: controlsPadding,
-            right: controlsPadding,
-          }}
+          {...merge(styles.wrapper, breakoutStyles[size])}
+          ref={this.containerRef}
+          style={{ ...style, height: `${height}px` }}
+          tabIndex='0'
+          role='region'
+          aria-label={t('styleguide/AudioPlayer/aria')}
         >
-          <div {...styles.buttons}>
-            <button
-              {...styles.button}
-              onClick={
-                playEnabled
-                  ? () => {
-                      this.setTime(this.audio.currentTime - 10)
-                    }
-                  : null
-              }
-              title={t('styleguide/AudioPlayer/partialrewind')}
-            >
-              <ReplayIcon
-                size={SIZE.replay}
-                {...(playEnabled && progress > 0
-                  ? colorScheme.set('fill', 'text')
-                  : colorScheme.set('fill', 'disabled'))}
-              />
-            </button>
-            <button
-              {...styles.button}
-              onClick={playEnabled ? this.toggle : null}
-              title={t(`styleguide/AudioPlayer/${playing ? 'pause' : 'play'}`)}
-              aria-live='assertive'
-            >
-              {!playing && (
-                <PlayIcon
-                  size={SIZE.play}
-                  {...(playEnabled
+          {playbackElement}
+          <div
+            {...styles.controls}
+            style={{
+              top: Math.ceil((height - CONTROLS_HEIGHT) / 2),
+              left: controlsPadding,
+              right: controlsPadding,
+            }}
+          >
+            <div {...styles.buttons}>
+              <button
+                {...styles.button}
+                onClick={
+                  playEnabled
+                    ? () => {
+                        this.setTime(this.audio.currentTime - 10)
+                      }
+                    : null
+                }
+                title={t('styleguide/AudioPlayer/partialrewind')}
+              >
+                <ReplayIcon
+                  size={SIZE.replay}
+                  {...(playEnabled && progress > 0
                     ? colorScheme.set('fill', 'text')
                     : colorScheme.set('fill', 'disabled'))}
                 />
-              )}
-              {playing && (
-                <PauseIcon
-                  size={SIZE.play}
-                  {...colorScheme.set('fill', 'text')}
-                />
-              )}
-            </button>
-            <button
-              {...styles.button}
-              onClick={
-                playEnabled
-                  ? () => {
-                      this.setTime(this.audio.currentTime + 30)
-                    }
-                  : null
-              }
-              title={t('styleguide/AudioPlayer/partialfastforward')}
-            >
-              <ForwardIcon
-                size={SIZE.forward}
-                {...(playEnabled && progress > 0
-                  ? colorScheme.set('fill', 'text')
-                  : colorScheme.set('fill', 'disabled'))}
-              />
-            </button>
-          </div>
-          {download && (
-            <div {...styles.download}>
-              {playEnabled && (
-                <a
-                  href={src.mp3 || src.aac || src.mp4}
-                  download
-                  title={t('styleguide/AudioPlayer/download')}
-                >
-                  <DownloadIcon
-                    size={SIZE.download}
+              </button>
+              <button
+                {...styles.button}
+                onClick={playEnabled ? this.toggle : null}
+                title={t(
+                  `styleguide/AudioPlayer/${playing ? 'pause' : 'play'}`,
+                )}
+                aria-live='assertive'
+              >
+                {!playing && (
+                  <PlayIcon
+                    size={SIZE.play}
+                    {...(playEnabled
+                      ? colorScheme.set('fill', 'text')
+                      : colorScheme.set('fill', 'disabled'))}
+                  />
+                )}
+                {playing && (
+                  <PauseIcon
+                    size={SIZE.play}
                     {...colorScheme.set('fill', 'text')}
                   />
-                </a>
-              )}
-              {!playEnabled && (
-                <DownloadIcon
-                  size={SIZE.download}
-                  {...colorScheme.set('fill', 'disabled')}
-                />
-              )}
-            </div>
-          )}
-          {!!playbackRates && (
-            <div {...styles.playbackRate}>
+                )}
+              </button>
               <button
-                {...styles.playbackRateButton}
-                onClick={this.handleplaybackRate}
-              >{`${playbackRate}x`}</button>
-            </div>
-          )}
-          {closeHandler && (
-            <button
-              title={t('styleguide/AudioPlayer/close')}
-              {...styles.close}
-              onClick={closeHandler}
-            >
-              <CloseIcon
-                size={SIZE.close}
-                {...colorScheme.set('fill', 'text')}
-              />
-            </button>
-          )}
-          <div
-            {...styles.uiText}
-            {...colorScheme.set('color', 'text')}
-            style={uiTextStyle}
-          >
-            {loading && (
-              <InlineSpinner
-                size={25}
-                title={t('styleguide/AudioPlayer/loading')}
-              />
-            )}
-            {!loading && title && fixed && (
-              <div {...styles.time}>
-                <Link href={sourcePath} passHref>
-                  <a
-                    {...colorScheme.set('color', 'text')}
-                    style={{ textDecoration: 'none' }}
-                    href={sourcePath}
-                  >
-                    {title}
-                  </a>
-                </Link>
-              </div>
-            )}
-            {!loading && (
-              <div
-                {...styles.time}
-                style={timeTextStyle}
-                {...colorScheme.set('color', 'textSoft')}
-                tabIndex='0'
+                {...styles.button}
+                onClick={
+                  playEnabled
+                    ? () => {
+                        this.setTime(this.audio.currentTime + 30)
+                      }
+                    : null
+                }
+                title={t('styleguide/AudioPlayer/partialfastforward')}
               >
-                {this.formattedCurrentTime && this.formattedCurrentTime}
-                {this.formattedCurrentTime && this.formattedDuration && ' / '}
-                {this.formattedDuration && this.formattedDuration}
-              </div>
-            )}
-            {sourceError && !loading && (
-              <div
-                {...styles.sourceError}
-                {...colorScheme.set('color', 'disabled')}
-              >
-                {t('styleguide/AudioPlayer/sourceError')}{' '}
-                <span onClick={() => this.reload()} {...styles.retry}>
-                  {t('styleguide/AudioPlayer/sourceErrorTryAgain')}
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
-        <div
-          {...(scrubberPosition === 'bottom'
-            ? styles.scrubberBottom
-            : styles.scrubberTop)}
-        >
-          <div
-            {...styles.progress}
-            {...colorScheme.set('backgroundColor', 'text')}
-            style={{ width: `${progress * 100}%` }}
-          />
-          <div
-            {...styles.sliderThumb}
-            {...colorScheme.set('backgroundColor', 'defaultInverted')}
-            style={{
-              opacity: playing || progress > 0 ? 1 : 0,
-              left: `calc(${progress * 100}% - ${
-                progress * SLIDERTHUMB_SIZE
-              }px)`,
-            }}
-          />
-          <div
-            {...styles.scrub}
-            ref={this.scrubRef}
-            onTouchStart={this.scrubStart}
-            onTouchMove={this.scrub}
-            onTouchEnd={this.scrubEnd}
-            onMouseDown={this.scrubStart}
-          />
-          <div
-            {...styles.buffer}
-            {...colorScheme.set('backgroundColor', 'divider')}
-          >
-            {this.audio &&
-              timeRanges.map(({ start, end }, index) => (
-                <span
-                  key={index}
-                  {...styles.timeRange}
-                  {...colorScheme.set('backgroundColor', 'dividerInverted')}
-                  style={{
-                    left: `${(start / this.audio.duration) * 100}%`,
-                    width: `${((end - start) / this.audio.duration) * 100}%`,
-                  }}
+                <ForwardIcon
+                  size={SIZE.forward}
+                  {...(playEnabled && progress > 0
+                    ? colorScheme.set('fill', 'text')
+                    : colorScheme.set('fill', 'disabled'))}
                 />
-              ))}
+              </button>
+            </div>
+            {download && (
+              <div {...styles.download}>
+                {playEnabled && (
+                  <a
+                    href={src.mp3 || src.aac || src.mp4}
+                    download
+                    title={t('styleguide/AudioPlayer/download')}
+                  >
+                    <DownloadIcon
+                      size={SIZE.download}
+                      {...colorScheme.set('fill', 'text')}
+                    />
+                  </a>
+                )}
+                {!playEnabled && (
+                  <DownloadIcon
+                    size={SIZE.download}
+                    {...colorScheme.set('fill', 'disabled')}
+                  />
+                )}
+              </div>
+            )}
+            {closeHandler && (
+              <button
+                title={t('styleguide/AudioPlayer/close')}
+                {...styles.close}
+                onClick={closeHandler}
+              >
+                <CloseIcon
+                  size={SIZE.close}
+                  {...colorScheme.set('fill', 'text')}
+                />
+              </button>
+            )}
+            <div
+              {...styles.uiText}
+              {...colorScheme.set('color', 'text')}
+              style={uiTextStyle}
+            >
+              {loading && (
+                <InlineSpinner
+                  size={25}
+                  title={t('styleguide/AudioPlayer/loading')}
+                />
+              )}
+              {!loading && title && fixed && (
+                <div {...styles.time}>
+                  <Link href={sourcePath} passHref>
+                    <a
+                      {...colorScheme.set('color', 'text')}
+                      style={{ textDecoration: 'none' }}
+                      href={sourcePath}
+                    >
+                      {title}
+                    </a>
+                  </Link>
+                </div>
+              )}
+              {!loading && (
+                <div
+                  {...styles.time}
+                  style={timeTextStyle}
+                  {...colorScheme.set('color', 'textSoft')}
+                  tabIndex='0'
+                >
+                  {this.formattedCurrentTime && this.formattedCurrentTime}
+                  {this.formattedCurrentTime && this.formattedDuration && ' / '}
+                  {this.formattedDuration && this.formattedDuration}
+                </div>
+              )}
+              {sourceError && !loading && (
+                <div
+                  {...styles.sourceError}
+                  {...colorScheme.set('color', 'disabled')}
+                >
+                  {t('styleguide/AudioPlayer/sourceError')}{' '}
+                  <span onClick={() => this.reload()} {...styles.retry}>
+                    {t('styleguide/AudioPlayer/sourceErrorTryAgain')}
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
           <div
-            {...styles.totalDuration}
-            {...colorScheme.set('backgroundColor', 'default')}
-          />
+            {...(scrubberPosition === 'bottom'
+              ? styles.scrubberBottom
+              : styles.scrubberTop)}
+          >
+            <Scrubber
+              ref={this.scrubRef}
+              progress={progress}
+              playing={playing}
+              scrubStart={this.scrubStart}
+              scrub={this.scrub}
+              scrubEnd={this.scrubEnd}
+              audio={this.audio}
+              timeRanges={timeRanges}
+            />
+          </div>
         </div>
-      </div>
-    )
+      )
+    }
   }
 }
 
@@ -815,7 +730,6 @@ AudioPlayer.propTypes = {
   scrubberPosition: PropTypes.oneOf(['top', 'bottom']),
   timePosition: PropTypes.oneOf(['left', 'right']),
   controlsPadding: PropTypes.number,
-  playbackRates: PropTypes.arrayOf(PropTypes.number),
 }
 
 AudioPlayer.defaultProps = {
@@ -827,7 +741,6 @@ AudioPlayer.defaultProps = {
   scrubberPosition: 'top',
   timePosition: 'right',
   controlsPadding: 0,
-  playbackRates: undefined,
 }
 
 AudioPlayer.contextTypes = {
