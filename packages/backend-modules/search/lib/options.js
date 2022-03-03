@@ -1,6 +1,10 @@
 const debug = require('debug')('search:lib:options')
 
-const { DOCUMENTS_SAMPLES_REPO_IDS, DOCUMENTS_SAMPLES } = process.env
+const { Roles } = require('@orbiting/backend-modules-auth')
+
+const { DOCUMENTS_SAMPLES_REPO_IDS, DOCUMENTS_SAMPLES = 3 } = process.env
+
+const sampleRepoIds = DOCUMENTS_SAMPLES_REPO_IDS?.split(',')
 
 const processors = {
   formatFeedSamples: (args, context) => {
@@ -8,10 +12,8 @@ const processors = {
     const { user } = context
 
     if (
-      DOCUMENTS_SAMPLES_REPO_IDS &&
-      !user?.roles?.includes('member') &&
-      filter?.format &&
-      DOCUMENTS_SAMPLES_REPO_IDS.split(',').includes(filter?.format)
+      !!sampleRepoIds?.includes(filter?.format) &&
+      !Roles.userHasRole(user, 'member')
     ) {
       return {
         filters: [
