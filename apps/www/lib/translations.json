@@ -3634,7 +3634,7 @@
     },
     {
       "key": "memberships/claim/personal/lead",
-      "value": "{name} schenkt Ihnen vier Wochen Republik"
+      "value": "{name} schenkt Ihnen einen Republik-Probezugang"
     },
     {
       "key": "memberships/claim/access/lead",
@@ -6574,11 +6574,11 @@
     },
     {
       "key": "pages/access/title",
-      "value": "Verschenken Sie vier Wochen Republik"
+      "value": "Verschenken Sie acht Wochen Republik"
     },
     {
       "key": "pages/access/description",
-      "value": "Laden Sie jetzt Ihre Freunde und Feinde ein, die Republik kennenzulernen. Damit ermöglichen Sie ihnen 28 Tage Probezugriff auf alle Inhalte der Republik."
+      "value": "Laden Sie jetzt Ihre Freunde und Feinde ein, die Republik kennenzulernen. Damit ermöglichen Sie ihnen acht Wochen Probezugriff auf alle Inhalte der Republik – und erlauben diesen auch, als Gäste am Republik-Dialog teilzunehmen. Sie können unbegrenzt Zugänge verschenken. Diese Aktion läuft bis Ende März 2022."
     },
     {
       "key": "nav/crowdfunding2",
