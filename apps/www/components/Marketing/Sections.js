@@ -71,8 +71,8 @@ const Sections = ({ t }) => {
           {...styles.section}
           {...colorScheme.set('borderColor', 'divider')}
         >
-          {section.image && (
-            <div {...styles.picture}>
+          <div {...styles.picture}>
+            {section.image && (
               <Link href={section.href} passHref>
                 <a {...styles.link}>
                   <FigureImage
@@ -90,8 +90,8 @@ const Sections = ({ t }) => {
                   />
                 </a>
               </Link>
-            </div>
-          )}
+            )}
+          </div>
           <div {...styles.description}>
             <Meta.Subhead
               style={{ marginTop: 0 }}

@@ -845,10 +845,6 @@
       "value": "Sie müssen angemeldet sein, um Ihre Newsletter-Einstellungen zu ändern."
     },
     {
-      "key": "account/newsletterSubscriptions/noMembership",
-      "value": "Journalismus kostet. Deshalb erhalten Sie die Republik-Newsletter erst wenn Sie eine aktive Mitgliedschaft oder ein aktives Abo haben."
-    },
-    {
       "key": "account/newsletterSubscriptions/unsubscribed",
       "value": "Sie haben alle Newsletter pausiert. Möchten Sie die Newsletter wieder erhalten?"
     },
@@ -879,18 +875,6 @@
     {
       "key": "account/newsletterSubscriptions/DAILY/description",
       "value": "Die aktuellsten Beiträge der Republik. Jeden Morgen in Ihrem virtuellen Briefkasten."
-    },
-    {
-      "key": "account/newsletterSubscriptions/WEEKLY/label",
-      "value": "Wochenend-Newsletter"
-    },
-    {
-      "key": "account/newsletterSubscriptions/WEEKLY/frequency",
-      "value": "Samstags um 5 Uhr"
-    },
-    {
-      "key": "account/newsletterSubscriptions/WEEKLY/description",
-      "value": "Lektüre für das Wochenende samt Rückblick auf die wichtigsten Geschichten der vergangenen Woche."
     },
     {
       "key": "account/newsletterSubscriptions/PROJECTR/label",
@@ -6229,6 +6213,10 @@
       "value": "<b>Herzlich willkommen!</b> Sie können sich in den kommenden Tagen ohne Einschränkung bei uns umsehen."
     },
     {
+      "key": "account/newsletterSubscriptions/noMembership",
+      "value": "Journalismus kostet. Deshalb erhalten Sie den 7-Uhr-Newsletter und das vollständige Programm am Wochenende erst wenn Sie eine aktive Mitgliedschaft oder ein aktives Abo haben."
+    },
+    {
       "key": "section/feed/payNote",
       "value": "Sie brauchen eine Mitgliedschaft oder Abo, um die Beiträge zu lesen."
     },
@@ -6247,6 +6235,18 @@
     {
       "key": "marketing/page/sections/title/weekly",
       "value": "Republik am Wochenende"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WEEKLY/label",
+      "value": "Republik am Wochenende"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WEEKLY/frequency",
+      "value": "Samstags um 5 Uhr"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WEEKLY/description",
+      "value": "Die gesamte Berichterstattung der Republik zur Ukraine – frei lesbar, frei teilbar. Und für Mitglieder und Abonnenten: wie gewohnt, samt Rückblick auf das ganze Programm der vergangenen Woche."
     },
     {
       "key": "package/ABO/description",
