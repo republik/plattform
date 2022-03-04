@@ -26,7 +26,7 @@ const sectionContent = [
       </Meta.P>
     ),
     href: '/format/wochenend-newsletter',
-    // image: '/static/marketing/TK.png?size=WxH',
+    image: '/static/marketing/ukraine.jpg?size=1000x750',
     color: '#000000',
   },
   {
