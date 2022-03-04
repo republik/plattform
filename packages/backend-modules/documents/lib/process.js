@@ -176,23 +176,22 @@ const processIfHasAccess = (mdast, user) => {
         (child) => child.identifier === 'ELSE',
       )
 
-      if (elseIndex >= 0) {
-        if (userIsInRoles(user, documentsRestrictToRoles)) {
-          // remove ELSE child
-          children = [
-            ...children.slice(0, elseIndex),
-            ...children.slice(elseIndex + 1),
-          ]
-        } else {
-          // unrwap ELSE children as nothing but that should be returned
-          children = node.children[elseIndex]?.children
-        }
+      if (elseIndex && userIsInRoles(user, documentsRestrictToRoles)) {
+        // remove ELSE child
+        children = [
+          ...children.slice(0, elseIndex),
+          ...children.slice(elseIndex + 1),
+        ]
+      } else {
+        // unrwap ELSE children as nothing but that should be returned.
+        // maybe undefined.
+        children = node.children[elseIndex]?.children
       }
 
       // unwrap into parent children
       parent.children = [
         ...parent.children.slice(0, index),
-        ...children,
+        ...(children || []),
         ...parent.children.slice(index + 1),
       ]
     }
