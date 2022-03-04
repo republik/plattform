@@ -45,20 +45,21 @@ const PreviewPage = ({ t, router, data = {} }) => {
 
   const notFound = !schema ? t('publish/preview/404') : undefined
 
+  const variableContextValue =
+    hasAccess === 'true'
+      ? {
+          firstName: 'Lois',
+          lastName: 'Lane',
+          hasAccess,
+        }
+      : {}
+
   return (
     <Frame.Body raw>
       <ColorContextProvider
         colorSchemeKey={darkmode === 'true' ? 'dark' : 'light'}
       >
-        <VariableContext.Provider
-          value={
-            hasAccess === 'true' && {
-              firstName: 'Lois',
-              lastName: 'Lane',
-              hasAccess,
-            }
-          }
-        >
+        <VariableContext.Provider value={variableContextValue}>
           <Loader
             loading={loading}
             error={error || notFound}
