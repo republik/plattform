@@ -41,7 +41,8 @@ const DocumentList = ({
   }
 
   const hasNoDocument = !documents.length
-  const hasSampleDocuments = totalCount > documents.length && !hasMore
+  const hasSampleDocuments =
+    !hasNoDocument && totalCount > documents.length && !hasMore
 
   return (
     <>
