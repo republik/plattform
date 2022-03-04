@@ -167,6 +167,35 @@ const processNodeModifiersInContent = (mdast, user) => {
   })
 }
 
+const processIfHasAccess = (mdast, user) => {
+  visit(mdast, 'zone', (node, index, parent) => {
+    if (node.identifier === 'IF' && node.data.present === 'hasAccess') {
+      let children = [...node.children]
+
+      const elseIndex = node.children.findIndex(
+        (child) => child.identifier === 'ELSE',
+      )
+
+      if (elseIndex >= 0) {
+        if (userIsInRoles(user, documentsRestrictToRoles)) {
+          children = [
+            ...children.slice(0, elseIndex),
+            ...children.slice(elseIndex + 1),
+          ]
+        } else {
+          children = node.children?.[elseIndex]?.children
+        }
+      }
+
+      parent.children = [
+        ...parent.children.slice(0, index),
+        ...children,
+        ...parent.children.slice(index + 1),
+      ]
+    }
+  })
+}
+
 module.exports = {
   processMembersOnlyZonesInContent,
   processRepoImageUrlsInContent,
@@ -174,4 +203,5 @@ module.exports = {
   processEmbedImageUrlsInContent,
   processEmbedsInContent,
   processNodeModifiersInContent,
+  processIfHasAccess,
 }
