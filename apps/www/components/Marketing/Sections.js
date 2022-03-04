@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { css } from 'glamor'
 
 import {
@@ -7,33 +7,29 @@ import {
   useColorContext,
   mediaQueries,
   FigureImage,
-  Editorial,
 } from '@project-r/styleguide'
 import SectionTitle from './Common/SectionTitle'
 import SectionContainer from './Common/SectionContainer'
 import { CDN_FRONTEND_BASE_URL } from '../../lib/constants'
 import Link from 'next/link'
+import NewsletterSignUp from '../Auth/NewsletterSignUp'
 
 const sectionContent = [
   {
     name: 'weekly',
-    Paragraph: ({ t }) => (
-      <Meta.P>
-        {t(`marketing/page/sections/description/weekly`)}{' '}
-        <Link href='/format/wochenend-newsletter' passHref>
-          <Editorial.A>{t(`marketing/page/sections/link/weekly`)}</Editorial.A>
-        </Link>
-      </Meta.P>
-    ),
+    after: <NewsletterSignUp skipTitle free name='WEEKLY' />,
     href: '/format/wochenend-newsletter',
     image: '/static/marketing/ukraine.jpg?size=1000x750',
+    imageFloatRight: true,
     color: '#000000',
+    borderTop: 'none',
   },
   {
     name: 'briefings',
     href: '/briefings',
     image: '/static/marketing/briefings.png?size=933x933',
     color: '#0A99B8',
+    borderTop: 'none',
   },
   {
     name: 'kolumnen',
@@ -65,52 +61,60 @@ const Sections = ({ t }) => {
         title={t('marketing/page/sections/title')}
         lead={t('marketing/page/sections/lead')}
       />
-      {sectionContent.map((section) => (
-        <div
-          key={section.name}
-          {...styles.section}
-          {...colorScheme.set('borderColor', 'divider')}
-        >
-          <div {...styles.picture}>
+      {sectionContent.map((section, i) => (
+        <>
+          <div
+            key={section.name}
+            {...styles.section}
+            {...colorScheme.set('borderColor', 'divider')}
+            style={{
+              borderTop: section.borderTop,
+              display: section.imageFloatRight ? 'block' : 'flex',
+            }}
+          >
             {section.image && (
-              <Link href={section.href} passHref>
-                <a {...styles.link}>
-                  <FigureImage
-                    {...FigureImage.utils.getResizedSrcs(
-                      `${CDN_FRONTEND_BASE_URL}${section.image}`,
-                      80,
-                    )}
-                    dark={
-                      section.imageDark &&
-                      FigureImage.utils.getResizedSrcs(
-                        `${CDN_FRONTEND_BASE_URL}${section.imageDark}`,
+              <div
+                {...(section.imageFloatRight
+                  ? styles.pictureFloatRight
+                  : styles.picture)}
+              >
+                <Link href={section.href} passHref>
+                  <a {...styles.link}>
+                    <FigureImage
+                      {...FigureImage.utils.getResizedSrcs(
+                        `${CDN_FRONTEND_BASE_URL}${section.image}`,
                         80,
-                      )
-                    }
-                  />
-                </a>
-              </Link>
+                      )}
+                      dark={
+                        section.imageDark &&
+                        FigureImage.utils.getResizedSrcs(
+                          `${CDN_FRONTEND_BASE_URL}${section.imageDark}`,
+                          80,
+                        )
+                      }
+                    />
+                  </a>
+                </Link>
+              </div>
             )}
-          </div>
-          <div {...styles.description}>
-            <Meta.Subhead
-              style={{ marginTop: 0 }}
-              {...colorScheme.set('color', section.color, 'format')}
-            >
-              <Link href={section.href} passHref>
-                <a {...styles.link}>
-                  {t(`marketing/page/sections/title/${section.name}`)}
-                </a>
-              </Link>
-            </Meta.Subhead>
-            {section.Paragraph && <section.Paragraph t={t} />}
-            {!section.Paragraph && (
+            <div {...styles.description}>
+              <Meta.Subhead
+                style={{ marginTop: 0 }}
+                {...colorScheme.set('color', section.color, 'format')}
+              >
+                <Link href={section.href} passHref>
+                  <a {...styles.link}>
+                    {t(`marketing/page/sections/title/${section.name}`)}
+                  </a>
+                </Link>
+              </Meta.Subhead>
               <Meta.P>
                 {t(`marketing/page/sections/description/${section.name}`)}
               </Meta.P>
-            )}
+              {section.after}
+            </div>
           </div>
-        </div>
+        </>
       ))}
     </SectionContainer>
   )
@@ -137,6 +141,15 @@ const styles = {
     [mediaQueries.mUp]: {
       marginRight: 36,
     },
+  }),
+  pictureFloatRight: css({
+    width: 90,
+    height: 80,
+    marginLeft: 16,
+    marginBottom: 16,
+    marginTop: 8,
+    objectFit: 'cover',
+    float: 'right',
   }),
   title: css({
     ...fontStyles.sansSerifRegular22,
