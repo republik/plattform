@@ -59,55 +59,53 @@ const Sections = ({ t }) => {
         title={t('marketing/page/sections/title')}
         lead={t('marketing/page/sections/lead')}
       />
-      {sectionContent.map((section, i) => (
-        <>
-          <div
-            key={section.name}
-            {...styles.section}
-            {...colorScheme.set('borderColor', 'divider')}
-            style={{
-              borderTop: section.borderTop,
-            }}
-          >
-            {section.image && (
-              <div {...styles.picture}>
-                <Link href={section.href} passHref>
-                  <a {...styles.link}>
-                    <FigureImage
-                      {...FigureImage.utils.getResizedSrcs(
-                        `${CDN_FRONTEND_BASE_URL}${section.image}`,
+      {sectionContent.map((section) => (
+        <div
+          key={section.name}
+          {...styles.section}
+          {...colorScheme.set('borderColor', 'divider')}
+          style={{
+            borderTop: section.borderTop,
+          }}
+        >
+          {section.image && (
+            <div {...styles.picture}>
+              <Link href={section.href} passHref>
+                <a {...styles.link}>
+                  <FigureImage
+                    {...FigureImage.utils.getResizedSrcs(
+                      `${CDN_FRONTEND_BASE_URL}${section.image}`,
+                      80,
+                    )}
+                    dark={
+                      section.imageDark &&
+                      FigureImage.utils.getResizedSrcs(
+                        `${CDN_FRONTEND_BASE_URL}${section.imageDark}`,
                         80,
-                      )}
-                      dark={
-                        section.imageDark &&
-                        FigureImage.utils.getResizedSrcs(
-                          `${CDN_FRONTEND_BASE_URL}${section.imageDark}`,
-                          80,
-                        )
-                      }
-                    />
-                  </a>
-                </Link>
-              </div>
-            )}
-            <div {...styles.description}>
-              <Meta.Subhead
-                style={{ marginTop: 0 }}
-                {...colorScheme.set('color', section.color, 'format')}
-              >
-                <Link href={section.href} passHref>
-                  <a {...styles.link}>
-                    {t(`marketing/page/sections/title/${section.name}`)}
-                  </a>
-                </Link>
-              </Meta.Subhead>
-              <Meta.P>
-                {t(`marketing/page/sections/description/${section.name}`)}
-              </Meta.P>
-              {section.after}
+                      )
+                    }
+                  />
+                </a>
+              </Link>
             </div>
+          )}
+          <div {...styles.description}>
+            <Meta.Subhead
+              style={{ marginTop: 0 }}
+              {...colorScheme.set('color', section.color, 'format')}
+            >
+              <Link href={section.href} passHref>
+                <a {...styles.link}>
+                  {t(`marketing/page/sections/title/${section.name}`)}
+                </a>
+              </Link>
+            </Meta.Subhead>
+            <Meta.P>
+              {t(`marketing/page/sections/description/${section.name}`)}
+            </Meta.P>
+            {section.after}
           </div>
-        </>
+        </div>
       ))}
     </SectionContainer>
   )
