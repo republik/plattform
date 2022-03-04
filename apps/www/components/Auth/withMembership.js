@@ -1,8 +1,6 @@
 import React, { Fragment } from 'react'
-import compose from 'lodash/flowRight'
 
 import { useTranslation } from '../../lib/withT'
-import withMe from '../../lib/apollo/withMe'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 
 import Frame from '../Frame'
@@ -110,45 +108,21 @@ const UnauthorizedPage = ({ meta, unauthorizedTexts }) => (
   </Frame>
 )
 
-export const WithoutMembership = withAuthorization(['member'])(
-  ({ isAuthorized, render }) => {
-    if (!isAuthorized) {
-      return render()
-    }
-    return null
-  },
-)
-
-export const WithoutActiveMembership = compose(
-  withMe,
-  withAuthorization(['member']),
-)(({ me, render }) => {
-  if (me && me.activeMembership) {
-    return null
-  }
-
-  return render()
-})
-
-export const WithMembership = withAuthorization(['member'])(
-  ({ isAuthorized, render }) => {
-    if (isAuthorized) {
-      return render()
-    }
-    return null
-  },
-)
-
-export const WithActiveMembership = compose(
-  withMe,
-  withAuthorization(['member']),
-)(({ me, render }) => {
-  if (me && me.activeMembership) {
+export const WithAccess = ({ render }) => {
+  const { hasAccess } = useMe()
+  if (hasAccess) {
     return render()
   }
-
   return null
-})
+}
+
+export const WithoutAccess = ({ render }) => {
+  const { hasAccess } = useMe()
+  if (!hasAccess) {
+    return render()
+  }
+  return null
+}
 
 export const enforceMembership =
   (meta, unauthorizedTexts) => (WrappedComponent) =>

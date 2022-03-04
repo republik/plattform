@@ -10,7 +10,7 @@ import Feed from './Feed'
 import ErrorMessage from '../ErrorMessage'
 
 import { useInfiniteScroll } from '../../lib/hooks/useInfiniteScroll'
-import { WithoutMembership } from '../Auth/withMembership'
+import { WithoutAccess } from '../Auth/withMembership'
 import Box from '../Frame/Box'
 
 const styles = {
@@ -61,7 +61,7 @@ const DocumentList = ({
         <Feed documents={documents} {...feedProps} />
       </div>
       {(hasNoDocument || hasSampleDocuments) && (
-        <WithoutMembership
+        <WithoutAccess
           render={() => (
             <Box style={{ marginBottom: 30, padding: '15px 20px' }}>
               <Interaction.P>
