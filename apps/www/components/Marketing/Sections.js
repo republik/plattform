@@ -19,8 +19,6 @@ const sectionContent = [
     name: 'weekly',
     after: <NewsletterSignUp skipTitle free name='WEEKLY' />,
     href: '/format/wochenend-newsletter',
-    image: '/static/marketing/ukraine.jpg?size=1000x750',
-    imageFloatRight: true,
     color: '#000000',
     borderTop: 'none',
   },
@@ -69,15 +67,10 @@ const Sections = ({ t }) => {
             {...colorScheme.set('borderColor', 'divider')}
             style={{
               borderTop: section.borderTop,
-              display: section.imageFloatRight ? 'block' : 'flex',
             }}
           >
             {section.image && (
-              <div
-                {...(section.imageFloatRight
-                  ? styles.pictureFloatRight
-                  : styles.picture)}
-              >
+              <div {...styles.picture}>
                 <Link href={section.href} passHref>
                   <a {...styles.link}>
                     <FigureImage
@@ -141,15 +134,6 @@ const styles = {
     [mediaQueries.mUp]: {
       marginRight: 36,
     },
-  }),
-  pictureFloatRight: css({
-    width: 90,
-    height: 80,
-    marginLeft: 16,
-    marginBottom: 16,
-    marginTop: 8,
-    objectFit: 'cover',
-    float: 'right',
   }),
   title: css({
     ...fontStyles.sansSerifRegular22,
