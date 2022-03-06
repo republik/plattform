@@ -17,6 +17,14 @@ ConnectionContext.create(applicationName)
   .then(async (context) => {
     const { pgdb } = context
 
+    // only consider expires until:
+    // - last period record
+    // - minus 14 days grace period
+    // const endOfRecords = await pgdb.queryOneField(
+    //   `SELECT MAX(GREATEST("updatedAt", "createdAt")) - '14 days'::interval FROM "membershipPeriods"`,
+    // )
+    const endOfRecords = new Date('2022-01-31T23:00:00.000Z')
+
     const users = await pgdb.query(`
       SELECT
         u.id,
@@ -45,13 +53,6 @@ ConnectionContext.create(applicationName)
       GROUP BY 1
       -- ORDER BY COUNT(mp.id) DESC
     `)
-
-    // only consider expires until:
-    // - last period record
-    // - minus 14 days grace period
-    const endOfRecords = await pgdb.queryOneField(
-      `SELECT MAX(GREATEST("updatedAt", "createdAt")) - '14 days'::interval FROM "membershipPeriods"`,
-    )
 
     console.log('users', users.length, 'endOfRecords', endOfRecords)
 
@@ -131,7 +132,10 @@ ConnectionContext.create(applicationName)
       // console.log('---')
     })
 
-    const allEvents = users.map((user) => user.events).flat()
+    const allEvents = users
+      .map((user) => user.events)
+      .flat()
+      .filter((event) => event.date < endOfRecords)
 
     const calculateRate = ({
       anniversary = 0,
@@ -143,9 +147,9 @@ ConnectionContext.create(applicationName)
     const groupData = ({ age, dateFormat = '%Y' } = {}) => {
       console.log('groupData', { age, dateFormat })
       const dateFormatter = timeFormat(dateFormat)
-      let groupFn = nest()
+      let nestFn = nest()
       if (age) {
-        groupFn = groupFn.key((d) => d.age).sortKeys(ascending)
+        nestFn = nestFn.key((d) => d.age).sortKeys(ascending)
       }
 
       const records = []
@@ -175,28 +179,25 @@ ConnectionContext.create(applicationName)
           }
         }
 
-      console.log(
-        JSON.stringify(
-          groupFn
-            .key((d) => dateFormatter(d.date))
-            .sortKeys(ascending)
-            .key((d) => d.interval)
-            .key((d) => d.type)
-            .rollup((values) => values.length)
-            .entries(allEvents)
-            .map(({ key, values }) => {
-              if (!age) {
-                return recordDatum()({ key, values })
-              }
-              return {
-                key,
-                values: values.map(recordDatum(age)),
-              }
-            }),
-          undefined,
-          2,
-        ),
-      )
+      nestFn = nestFn
+        .key((d) => dateFormatter(d.date))
+        .sortKeys(ascending)
+        .key((d) => d.interval)
+        .key((d) => d.type)
+        .rollup((values) => values.length)
+
+      const groupedData = nestFn.entries(allEvents).map(({ key, values }) => {
+        if (!age) {
+          return recordDatum()({ key, values })
+        }
+        return {
+          key,
+          values: values.map(recordDatum(age)),
+        }
+      })
+
+      console.log(groupedData)
+
       fs.writeFileSync(
         path.resolve(
           __dirname,
