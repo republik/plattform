@@ -154,7 +154,7 @@ ConnectionContext.create(applicationName)
 
       const records = []
       const recordDatum =
-        (age = 'all') =>
+        (age) =>
         ({ key: datum, values }) => {
           const intervals = values.map(({ key: interval, values }) => {
             const object = values.reduce(
@@ -169,6 +169,9 @@ ConnectionContext.create(applicationName)
               datum,
               age,
               interval,
+              group: age
+                ? `${age} Jahr${age !== 1 ? 'e' : ''} dabei`
+                : undefined,
               ...object,
             })
             return object
@@ -186,15 +189,24 @@ ConnectionContext.create(applicationName)
         .key((d) => d.type)
         .rollup((values) => values.length)
 
-      const groupedData = nestFn.entries(allEvents).map(({ key, values }) => {
-        if (!age) {
-          return recordDatum()({ key, values })
-        }
-        return {
-          key,
-          values: values.map(recordDatum(key)),
-        }
-      })
+      const groupedData = nestFn
+        .entries(
+          allEvents.filter(
+            age
+              ? Boolean
+              : // year event with age 0 are not real anniversaries or expires and should be ignored
+                (event) => !(event.interval === 'year' && event.age === 0),
+          ),
+        )
+        .map(({ key, values }) => {
+          if (!age) {
+            return recordDatum()({ key, values })
+          }
+          return {
+            key,
+            values: values.map(recordDatum(key)),
+          }
+        })
 
       console.log(groupedData)
 
