@@ -5,9 +5,11 @@ const {
 } = require('@orbiting/backend-modules-base')
 const { ascending } = require('d3-array')
 const { timeDay } = require('d3-time')
+const { timeFormat } = require('d3-time-format')
 const { nest } = require('d3-collection')
 const fs = require('fs')
 const path = require('path')
+const { csvFormat } = require('d3-dsv')
 
 const applicationName = 'backends republik script prolong analyse'
 
@@ -138,43 +140,80 @@ ConnectionContext.create(applicationName)
     }) =>
       (anniversary + changeInterval) / (expire + anniversary + changeInterval)
 
-    console.log(
-      JSON.stringify(
-        nest()
-          .key((d) => d.age)
-          .sortKeys(ascending)
-          .key((d) => d.date.getFullYear())
-          .sortKeys(ascending)
-          .key((d) => d.interval)
-          .key((d) => d.type)
-          .rollup((values) => values.length)
-          .entries(allEvents)
-          .map(({ key, values }) => {
-            return {
-              key,
-              values: values.map(({ key: year, values }) => {
-                const intervals = values.map(({ key: interval, values }) => {
-                  const object = values.reduce(
-                    (obj, { key, value }) => {
-                      obj[key] = value
-                      return obj
-                    },
-                    { interval },
-                  )
-                  object.rate = calculateRate(object)
-                  return object
-                })
-                return {
-                  key: year,
-                  intervals,
-                }
-              }),
-            }
-          }),
-        undefined,
-        2,
-      ),
-    )
+    const groupData = ({ age, dateFormat = '%Y' } = {}) => {
+      console.log('groupData', { age, dateFormat })
+      const dateFormatter = timeFormat(dateFormat)
+      let groupFn = nest()
+      if (age) {
+        groupFn = groupFn.key((d) => d.age).sortKeys(ascending)
+      }
+
+      const records = []
+      const recordDatum =
+        (age = 'all') =>
+        ({ key: datum, values }) => {
+          const intervals = values.map(({ key: interval, values }) => {
+            const object = values.reduce(
+              (obj, { key, value }) => {
+                obj[key] = value
+                return obj
+              },
+              { interval },
+            )
+            object.value = calculateRate(object)
+            records.push({
+              datum,
+              age,
+              interval,
+              ...object,
+            })
+            return object
+          })
+          return {
+            key: datum,
+            intervals,
+          }
+        }
+
+      console.log(
+        JSON.stringify(
+          groupFn
+            .key((d) => dateFormatter(d.date))
+            .sortKeys(ascending)
+            .key((d) => d.interval)
+            .key((d) => d.type)
+            .rollup((values) => values.length)
+            .entries(allEvents)
+            .map(({ key, values }) => {
+              if (!age) {
+                return recordDatum()({ key, values })
+              }
+              return {
+                key,
+                values: values.map(recordDatum(age)),
+              }
+            }),
+          undefined,
+          2,
+        ),
+      )
+      fs.writeFileSync(
+        path.resolve(
+          __dirname,
+          '..',
+          'data',
+          `prolong${age ? '-by-age' : ''}-datum-${dateFormat.replace(
+            /%/g,
+            '',
+          )}.csv`,
+        ),
+        csvFormat(records),
+      )
+    }
+    groupData({ age: true })
+    groupData({ age: true, dateFormat: '%Y-%m' })
+    groupData({ age: false })
+    groupData({ age: false, dateFormat: '%Y-%m' })
 
     console.log('usersWithOverlaps', usersWithOverlaps.size)
     console.log('usersWithSwallowed', usersWithSwallowed.size)
