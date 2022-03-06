@@ -192,7 +192,7 @@ ConnectionContext.create(applicationName)
         }
         return {
           key,
-          values: values.map(recordDatum(age)),
+          values: values.map(recordDatum(key)),
         }
       })
 
