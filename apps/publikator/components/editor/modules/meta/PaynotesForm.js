@@ -1,6 +1,12 @@
-import React from 'react'
-
-import { A, Radio, Label, RawHtml, Interaction } from '@project-r/styleguide'
+import React, { useState } from 'react'
+import {
+  A,
+  Radio,
+  Label,
+  RawHtml,
+  Interaction,
+  Dropdown,
+} from '@project-r/styleguide'
 import MdClose from 'react-icons/lib/md/close'
 import MdAdd from 'react-icons/lib/md/add'
 import MdInfoOutline from 'react-icons/lib/md/info-outline'
@@ -8,6 +14,7 @@ import { css } from 'glamor'
 
 import withT from '../../../../lib/withT'
 import PaynoteForm from './PaynoteForm'
+import UIForm from '../../UIForm'
 
 const styles = {
   title: css({
@@ -33,6 +40,13 @@ const styles = {
 
 const PAYNOTE_KEY = 'paynotes'
 const TARGETS = ['hasActiveMembership', 'isEligibleForTrial']
+const MODES = [
+  'auto',
+  'auto (nur Abo kaufen)',
+  'auto (nur Probelesen)',
+  'custom',
+  'kein',
+]
 
 const DEFAULT_TARGET = {
   hasActiveMembership: false,
@@ -53,7 +67,7 @@ const DEFAULT_PAYNOTE = {
 }
 
 const TargetForm = withT(({ t, data, onInputChange }) => (
-  <div>
+  <>
     <Interaction.H3>{t('metaData/paynote/form/target/title')}</Interaction.H3>
     {TARGETS.map((target, i) => {
       return (
@@ -75,11 +89,17 @@ const TargetForm = withT(({ t, data, onInputChange }) => (
         </div>
       )
     })}
-  </div>
+  </>
 ))
 
 export default withT(({ t, editor, node }) => {
+  const [mode, setMode] = useState('auto')
   const paynotes = node.data.get(PAYNOTE_KEY) || []
+
+  const modes = MODES.map((value) => ({
+    value,
+    text: value,
+  }))
 
   const onPaynotesChange = (newPaynotes) => {
     editor.change((change) => {
@@ -127,11 +147,16 @@ export default withT(({ t, editor, node }) => {
 
   return (
     <>
-      {!paynotes.length ? (
-        <A href='#add' onClick={addPaynote}>
-          <MdAdd /> {t('metaData/paynotes/add')}
-        </A>
-      ) : (
+      <UIForm getWidth={() => '50%'}>
+        <Dropdown
+          black
+          label='Störer'
+          items={modes}
+          value={mode || null}
+          onChange={({ value }) => setMode(value)}
+        />
+      </UIForm>
+      {mode === 'custom' && (
         <>
           <Label {...styles.title}>{t('metaData/paynotes/title')}</Label>
           {paynotes.map((paynote, i) => {
