@@ -121,9 +121,9 @@ const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
     throw new Error(error)
   }
 
-  if (message && message.length > 255) {
+  if (message && message.length > 500) {
     throw new Error(
-      t('api/access/grant/message/error/tooLong', { maxLength: 255 }),
+      t('api/access/grant/message/error/tooLong', { maxLength: 500 }),
     )
   }
 

@@ -20,6 +20,7 @@ class Feed extends Component {
     return doc ? (
       <TeaserFeed
         {...doc.meta}
+        format={this.props.skipFormat ? undefined : doc.meta.format}
         repoId={doc.repoId}
         title={doc.meta.shortTitle || doc.meta.title}
         description={!doc.meta.shortTitle && doc.meta.description}
