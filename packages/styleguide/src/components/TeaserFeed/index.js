@@ -52,6 +52,7 @@ export const TeaserFeed = ({
   template,
   format,
   path,
+  externalBaseUrl,
   repoId,
   title,
   description,
@@ -68,7 +69,10 @@ export const TeaserFeed = ({
   series,
 }) => {
   const formatMeta = (format && format.meta) || {}
-  const href = getTeaserHref(path, formatMeta.externalBaseUrl)
+  const href = getTeaserHref(
+    path,
+    externalBaseUrl || formatMeta.externalBaseUrl,
+  )
   const Headline =
     formatMeta.kind === 'meta' ||
     metaKind === 'meta' ||
