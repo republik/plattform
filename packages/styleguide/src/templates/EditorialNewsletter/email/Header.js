@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import colors from '../../../theme/colors'
 import { getFormatLine } from '../../../components/TeaserFeed/utils'
+import { matchProjectR } from './project-r/utils'
 
 export default ({ meta }) => {
   const { slug, path, format } = meta
@@ -13,6 +14,10 @@ export default ({ meta }) => {
     (typeof format === 'string' &&
       format.includes('format-covid-19-uhr-newsletter')) ||
     format?.repoId?.includes('format-covid-19-uhr-newsletter')
+
+  const isProjectR = matchProjectR(format)
+
+  if (isProjectR) return null
 
   const formatLine = useMemo(() => {
     return getFormatLine({
