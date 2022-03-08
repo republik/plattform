@@ -22,22 +22,30 @@ const footerLinkStyle = {
   lineHeight: '30px',
 }
 
-const ProjectRLogo = () => (
-  <a href='https://project-r.construction/' style={linkStyle}>
-    <img
-      src='https://assets.project-r.construction/images/project_r_logo_newsletter.png'
-      style={{
-        border: 0,
-        width: '50px !important',
-        height: '50px !important',
-        margin: 0,
-        maxWidth: '100% !important',
-      }}
-      width='50'
-      height='50'
-      alt=''
-    />
-  </a>
+const ProjectRFooter = () => (
+  <>
+    <a href='https://project-r.construction/' style={linkStyle}>
+      <img
+        src='https://assets.project-r.construction/images/project_r_logo_newsletter.png'
+        style={{
+          border: 0,
+          width: '50px !important',
+          height: '50px !important',
+          margin: 0,
+          maxWidth: '100% !important',
+        }}
+        width='50'
+        height='50'
+        alt=''
+      />
+    </a>
+    <p>
+      Project R Genossenschaft
+      <br />
+      Sihlhallenstrasse 1<br />
+      8004 Zürich
+    </p>
+  </>
 )
 
 const Footer = ({ meta }) => {
@@ -69,9 +77,8 @@ const Footer = ({ meta }) => {
         Sihlhallenstrasse 1<br />
         8004 Zürich
       </p>
+      {isProjectR && <ProjectRFooter />}
       <HR />
-      {isProjectR && <ProjectRLogo />}
-      {isProjectR && <HR />}
       <p style={footerParagraphStyle}>
         <a
           href={`${baseUrl}${path ? path : `/${slug}`}`}
@@ -83,14 +90,14 @@ const Footer = ({ meta }) => {
       <p style={footerParagraphStyle}>
         Um{' '}
         <a
-          href='https://www.republik.ch/konto#newsletter'
+          href='https://www.republik.ch/konto/newsletter'
           style={footerLinkStyle}
         >
           Ihre Newsletter-Einstellungen einzusehen und anzupassen
         </a>
         , öffnen Sie «Konto» in der Republik-App oder auf{' '}
         <a
-          href='https://www.republik.ch/konto#newsletter'
+          href='https://www.republik.ch/konto/newsletter'
           style={footerLinkStyle}
         >
           republik.ch
