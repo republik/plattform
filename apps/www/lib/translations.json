@@ -461,18 +461,6 @@
       "value": "Die Republik ist eine Dienstleistung für interessierte Menschen in einer komplexen Welt. Wir recherchieren, fragen nach, ordnen ein und decken auf. Und liefern Ihnen Fakten und Zusammenhänge als Grundlage für Ihre eigenen Überlegungen und Entscheidungen."
     },
     {
-      "key": "marketing/page/sections/link/covid19",
-      "value": "Hier kostenlos abonnieren."
-    },
-    {
-      "key": "marketing/page/sections/description/covid19",
-      "value": "Brauchbares zur Pandemie – jeden Montag um 19 Uhr. Informationen für alle. Auch ohne Republik-Abo oder Mitgliedschaft."
-    },
-    {
-      "key": "marketing/page/sections/title/covid19",
-      "value": "Covid-19-Uhr-Newsletter"
-    },
-    {
       "key": "marketing/page/sections/description/briefings",
       "value": "Durch die Woche mit der Republik: Das Datenbriefing «Auf lange Sicht» am Montag, das Justiz-Briefing «Am Gericht» am Mittwoch, das «Briefing aus Bern» am Donnerstag und «Was diese Woche wichtig war» am Freitag."
     },
@@ -857,10 +845,6 @@
       "value": "Sie müssen angemeldet sein, um Ihre Newsletter-Einstellungen zu ändern."
     },
     {
-      "key": "account/newsletterSubscriptions/noMembership",
-      "value": "Journalismus kostet. Deshalb erhalten Sie die Republik-Newsletter erst wenn Sie eine aktive Mitgliedschaft oder ein aktives Abo haben."
-    },
-    {
       "key": "account/newsletterSubscriptions/unsubscribed",
       "value": "Sie haben alle Newsletter pausiert. Möchten Sie die Newsletter wieder erhalten?"
     },
@@ -891,18 +875,6 @@
     {
       "key": "account/newsletterSubscriptions/DAILY/description",
       "value": "Die aktuellsten Beiträge der Republik. Jeden Morgen in Ihrem virtuellen Briefkasten."
-    },
-    {
-      "key": "account/newsletterSubscriptions/WEEKLY/label",
-      "value": "Wochenend-Newsletter"
-    },
-    {
-      "key": "account/newsletterSubscriptions/WEEKLY/frequency",
-      "value": "Samstags um 5 Uhr"
-    },
-    {
-      "key": "account/newsletterSubscriptions/WEEKLY/description",
-      "value": "Lektüre für das Wochenende samt Rückblick auf die wichtigsten Geschichten der vergangenen Woche."
     },
     {
       "key": "account/newsletterSubscriptions/PROJECTR/label",
@@ -1114,11 +1086,11 @@
     },
     {
       "key": "Account/Access/Campaigns/login/title",
-      "value": "Anmelden und Abo verschenken"
+      "value": "Anmelden und Republik verschenken"
     },
     {
       "key": "Account/Access/Campaigns/becomeMamber/title",
-      "value": "Mitglied werden und Abo verschenken"
+      "value": "Mitglied werden und Republik verschenken"
     },
     {
       "key": "Account/Access/Campaigns/Form/explanation/linkClaim",
@@ -2993,10 +2965,6 @@
       "value": "{count} Beiträge"
     },
     {
-      "key": "section/feed/payNote",
-      "value": "Sie brauchen eine Mitgliedschaft, um die Beiträge zu lesen."
-    },
-    {
       "key": "article/payNote/ios/before",
       "value": "<b>Danke für Ihre Neugier!</b> Dieser Beitrag wurde grosszügigerweise für Sie von einer unserer Verlegerinnen und Verleger freigeschaltet."
     },
@@ -3634,7 +3602,7 @@
     },
     {
       "key": "memberships/claim/personal/lead",
-      "value": "{name} schenkt Ihnen vier Wochen Republik"
+      "value": "{name} schenkt Ihnen einen Republik-Probezugang"
     },
     {
       "key": "memberships/claim/access/lead",
@@ -6245,6 +6213,38 @@
       "value": "<b>Herzlich willkommen!</b> Sie können sich in den kommenden Tagen ohne Einschränkung bei uns umsehen."
     },
     {
+      "key": "account/newsletterSubscriptions/noMembership",
+      "value": "Journalismus kostet. Deshalb erhalten Sie den 7-Uhr-Newsletter und das vollständige Programm im Wochenend-Newsletter erst wenn Sie eine aktive Mitgliedschaft oder ein aktives Abo haben."
+    },
+    {
+      "key": "section/feed/payNote",
+      "value": "Sie brauchen eine Mitgliedschaft oder Abo, um die Beiträge zu lesen."
+    },
+    {
+      "key": "section/feed/payNote/sample",
+      "value": "Sie brauchen eine Mitgliedschaft oder Abo, um alle Beiträge zu lesen."
+    },
+    {
+      "key": "marketing/page/sections/description/weekly",
+      "value": "In Europa ist Krieg. Jetzt ist keine Zeit für Kleinlichkeiten. Die gesamte Berichterstattung der Republik zur Ukraine – frei lesbar, frei teilbar."
+    },
+    {
+      "key": "marketing/page/sections/title/weekly",
+      "value": "Wochenend-Newsletter"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WEEKLY/label",
+      "value": "Wochenend-Newsletter"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WEEKLY/frequency",
+      "value": "Samstags um 5 Uhr"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WEEKLY/description",
+      "value": "Die gesamte Berichterstattung der Republik zur Ukraine – frei lesbar, frei teilbar. Und für Mitglieder und Abonnenten: wie gewohnt, samt Rückblick auf das ganze Programm der vergangenen Woche."
+    },
+    {
       "key": "package/ABO/description",
       "value": "Es freut uns, dass Sie dabei sind! Mit Ihrem jährlichen Beitrag sind Sie Mitglied der Project R Genossenschaft. Und damit zu einem kleinen Teil Verlegerin oder Verleger der Republik. Sie erhalten ab sofort unser Magazin."
     },
@@ -6574,11 +6574,11 @@
     },
     {
       "key": "pages/access/title",
-      "value": "Verschenken Sie vier Wochen Republik"
+      "value": "Verschenken Sie acht Wochen Republik"
     },
     {
       "key": "pages/access/description",
-      "value": "Laden Sie jetzt Ihre Freunde und Feinde ein, die Republik kennenzulernen. Damit ermöglichen Sie ihnen 28 Tage Probezugriff auf alle Inhalte der Republik."
+      "value": "Laden Sie jetzt Ihre Freunde und Feinde ein, die Republik kennenzulernen. Damit ermöglichen Sie ihnen acht Wochen Probezugriff auf alle Inhalte der Republik – und erlauben diesen auch, als Gäste am Republik-Dialog teilzunehmen. Sie können unbegrenzt Zugänge verschenken. Diese Aktion läuft bis Ende März 2022."
     },
     {
       "key": "nav/crowdfunding2",

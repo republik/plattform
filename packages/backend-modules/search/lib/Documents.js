@@ -414,6 +414,16 @@ const addRelatedDocs = async ({
 
   relatedDocs = relatedDocs.concat(variousRelatedDocs)
 
+  // resolve formats for all related docs
+  const { docs: relatedFormatDocs } = await loadLinkedMetaData({
+    context,
+    repoIds: relatedDocs.map((d) => getRepoId(d.meta.format).repoId),
+    scheduledAt,
+    ignorePrepublished,
+  })
+
+  relatedDocs = relatedDocs.concat(relatedFormatDocs)
+
   debug({
     numDocs: docs.length,
     numUserIds: userIds.length,

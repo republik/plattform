@@ -2,7 +2,7 @@ Guten Tag
 
 {{#unless RECIPIENT_HAS_MEMBERSHIPS}} {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
 
-{{GRANTER_NAME}} ({{GRANTER_EMAIL}} ) hat Ihnen 4 Wochen Republik geschenkt.
+{{GRANTER_NAME}} ({{GRANTER_EMAIL}} ) hat Ihnen acht Wochen Republik geschenkt.
 
 {{#if GRANTER_MESSAGE}}
 
@@ -15,7 +15,7 @@ Und uns eine Nachricht für Sie mitgegeben:
 Wir sind ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur
 – unabhängig und werbefrei. Wir heissen Sie als Gast herzlich willkommen an
 Bord. Entdecken Sie unser Magazin ganz unverbindlich – ausnahmsweise und bis im
-April für die Dauer von vier Wochen:
+Mai für die Dauer von acht Wochen:
 
 {{/if}}
 
@@ -33,7 +33,7 @@ und als Newsletter.
 Neben hintergründigen Recherchen und Reportagen finden Sie bei uns kurze
 Nachrichtenbriefings, meinungsstarke Kolumnen sowie Audio- und Bildbeiträge. Der
 Austausch mit unseren Leserinnen liegt uns besonders am Herzen. Machen Sie sich
-ein eigenes Bild von unserem Dialog und diskutieren Sie mit: Bis im April haben
+ein eigenes Bild von unserem Dialog und diskutieren Sie mit: Bis im Mai haben
 wir den Zugang anders als sonst auch für Gäste freigeschaltet.
 
 {{/unless}} {{#if RECIPIENT_HAS_MEMBERSHIPS}}

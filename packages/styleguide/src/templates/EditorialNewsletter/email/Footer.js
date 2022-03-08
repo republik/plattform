@@ -5,6 +5,8 @@ import colors from '../../../theme/colors'
 import { fontFamilies } from '../../../theme/fonts'
 
 import { paragraphStyle, linkStyle } from './Paragraph'
+import { matchProjectR } from './project-r/utils'
+import { Footer as ProjectRFooter } from './project-r/Footer'
 
 const footerParagraphStyle = {
   color: colors.text,
@@ -22,7 +24,11 @@ const footerLinkStyle = {
 }
 
 const Footer = ({ meta }) => {
-  const { slug, path } = meta
+  const { slug, path, format } = meta
+  const isProjectR = matchProjectR(format)
+
+  if (isProjectR) return <ProjectRFooter />
+
   return (
     <Center>
       <a href='https://www.republik.ch/' style={linkStyle}>
