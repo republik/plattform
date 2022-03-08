@@ -1,0 +1,319 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`process processIfHasAccess keeps member nodes if user has access 1`] = `
+Object {
+  "children": Array [
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "Hello",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "This ",
+        },
+        Object {
+          "children": Array [
+            Object {
+              "type": "text",
+              "value": "part",
+            },
+          ],
+          "type": "emphasis",
+        },
+        Object {
+          "type": "text",
+          "value": " is visible to ",
+        },
+        Object {
+          "children": Array [
+            Object {
+              "type": "text",
+              "value": "users w/ access",
+            },
+          ],
+          "type": "strong",
+        },
+        Object {
+          "type": "text",
+          "value": ".",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "In between.",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "Block only shows IF hasAccess === true",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "In between again.",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "Live long, and prosper.",
+        },
+      ],
+      "type": "paragraph",
+    },
+  ],
+  "data": Object {},
+  "identifier": "CENTER",
+  "type": "zone",
+}
+`;
+
+exports[`process processIfHasAccess keeps non-member nodes if user has no access 1`] = `
+Object {
+  "children": Array [
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "Hello",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "children": Array [
+            Object {
+              "type": "text",
+              "value": "Users lacking access, will see this.",
+            },
+          ],
+          "type": "strong",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "In between.",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "In between again.",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "Block visible to users w/o access in an empty IF hasAccess block.",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "Live long, and prosper.",
+        },
+      ],
+      "type": "paragraph",
+    },
+  ],
+  "data": Object {},
+  "identifier": "CENTER",
+  "type": "zone",
+}
+`;
+
+exports[`process processIfHasAccess removes member parts if user has no access 1`] = `
+Object {
+  "children": Array [
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "Hello",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "children": Array [
+            Object {
+              "type": "text",
+              "value": "Users lacking access, will see this.",
+            },
+          ],
+          "type": "strong",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "In between.",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "In between again.",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "Block visible to users w/o access in an empty IF hasAccess block.",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "Live long, and prosper.",
+        },
+      ],
+      "type": "paragraph",
+    },
+  ],
+  "data": Object {},
+  "identifier": "CENTER",
+  "type": "zone",
+}
+`;
+
+exports[`process processIfHasAccess removes non-member parts if user has access 1`] = `
+Object {
+  "children": Array [
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "Hello",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "This ",
+        },
+        Object {
+          "children": Array [
+            Object {
+              "type": "text",
+              "value": "part",
+            },
+          ],
+          "type": "emphasis",
+        },
+        Object {
+          "type": "text",
+          "value": " is visible to ",
+        },
+        Object {
+          "children": Array [
+            Object {
+              "type": "text",
+              "value": "users w/ access",
+            },
+          ],
+          "type": "strong",
+        },
+        Object {
+          "type": "text",
+          "value": ".",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "In between.",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "Block only shows IF hasAccess === true",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "In between again.",
+        },
+      ],
+      "type": "paragraph",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "type": "text",
+          "value": "Live long, and prosper.",
+        },
+      ],
+      "type": "paragraph",
+    },
+  ],
+  "data": Object {},
+  "identifier": "CENTER",
+  "type": "zone",
+}
+`;
