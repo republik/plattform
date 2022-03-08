@@ -6,7 +6,6 @@ import { fontFamilies } from '../../../theme/fonts'
 
 import { paragraphStyle, linkStyle } from './Paragraph'
 import { matchProjectR } from './project-r/utils'
-import { Footer as ProjectRFooter } from './project-r/Footer'
 
 const footerParagraphStyle = {
   color: colors.text,
@@ -23,12 +22,30 @@ const footerLinkStyle = {
   lineHeight: '30px',
 }
 
+const ProjectRLogo = () => (
+  <a href='https://project-r.construction/' style={linkStyle}>
+    <img
+      src='https://assets.project-r.construction/images/project_r_logo_newsletter.png'
+      style={{
+        border: 0,
+        width: '50px !important',
+        height: '50px !important',
+        margin: 0,
+        maxWidth: '100% !important',
+      }}
+      width='50'
+      height='50'
+      alt=''
+    />
+  </a>
+)
+
 const Footer = ({ meta }) => {
   const { slug, path, format } = meta
   const isProjectR = matchProjectR(format)
-
-  if (isProjectR) return <ProjectRFooter />
-
+  const baseUrl = isProjectR
+    ? 'https://project-r.construction/newsletter'
+    : 'https://www.republik.ch'
   return (
     <Center>
       <a href='https://www.republik.ch/' style={linkStyle}>
@@ -53,9 +70,11 @@ const Footer = ({ meta }) => {
         8004 Zürich
       </p>
       <HR />
+      {isProjectR && <ProjectRLogo />}
+      {isProjectR && <HR />}
       <p style={footerParagraphStyle}>
         <a
-          href={`https://www.republik.ch${path ? path : `/${slug}`}`}
+          href={`${baseUrl}${path ? path : `/${slug}`}`}
           style={footerLinkStyle}
         >
           Im Web lesen
