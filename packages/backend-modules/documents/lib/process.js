@@ -170,23 +170,13 @@ const processNodeModifiersInContent = (mdast, user) => {
 const processIfHasAccess = (mdast, user) => {
   visit(mdast, 'zone', (node, index, parent) => {
     if (node.identifier === 'IF' && node.data?.present === 'hasAccess') {
-      let children = [...node.children]
-
-      const elseIndex = node.children?.findIndex(
-        (child) => child.identifier === 'ELSE',
+      const elseIndex = node.children.findIndex(
+        ({ identifier }) => identifier === 'ELSE',
       )
 
-      if (elseIndex && userIsInRoles(user, documentsRestrictToRoles)) {
-        // remove ELSE child
-        children = [
-          ...children.slice(0, elseIndex),
-          ...children.slice(elseIndex + 1),
-        ]
-      } else {
-        // unrwap ELSE children as nothing but that should be returned.
-        // maybe undefined.
-        children = node.children[elseIndex]?.children
-      }
+      const children = userIsInRoles(user, documentsRestrictToRoles)
+        ? node.children.filter((_, index) => index !== elseIndex)
+        : node.children.find((_, index) => index === elseIndex)?.children
 
       // unwrap into parent children
       parent.children = [
