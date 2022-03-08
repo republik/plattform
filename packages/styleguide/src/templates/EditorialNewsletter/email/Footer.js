@@ -31,7 +31,7 @@ const ProjectRFooter = () => (
           border: 0,
           width: '50px !important',
           height: '50px !important',
-          margin: 0,
+          margin: '30px 0 20px',
           maxWidth: '100% !important',
         }}
         width='50'
@@ -39,7 +39,7 @@ const ProjectRFooter = () => (
         alt=''
       />
     </a>
-    <p>
+    <p style={{ ...paragraphStyle, marginTop: 0 }}>
       Project R Genossenschaft
       <br />
       Sihlhallenstrasse 1<br />
