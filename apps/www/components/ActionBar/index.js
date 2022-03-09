@@ -447,7 +447,8 @@ const ActionBar = ({
     <>
       <div
         {...styles.topRow}
-        {...(mode === 'articleOverlay' && { ...styles.overlay })}
+        {...(mode === 'articleOverlay' && styles.overlay)}
+        {...(mode === 'seriesEpisode' && styles.flexWrap)}
         {...(!!centered && { ...styles.centered })}
       >
         {ActionItems.filter(
@@ -520,6 +521,10 @@ const ActionBar = ({
 const styles = {
   topRow: css({
     display: 'flex',
+  }),
+  flexWrap: css({
+    flexWrap: 'wrap',
+    rowGap: 16,
   }),
   bottomRow: css({
     display: 'flex',
