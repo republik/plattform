@@ -422,7 +422,6 @@ class Submit extends Component {
         consents: getRequiredConsents(this.props),
       })
       .then(({ data }) => {
-        console.debug('submit-pledge success', data)
         if (data.submitPledge.emailVerify) {
           this.setState(() => ({
             loading: false,
@@ -451,7 +450,6 @@ class Submit extends Component {
         )
       })
       .catch((error) => {
-        console.debug('submit-pledge error', error)
         // Rethrow error in case STRIPE-WALLET is used
         // This needs to be done in order to call payment-request
         // complete handler with 'fail'
@@ -543,7 +541,6 @@ class Submit extends Component {
         makeDefault: this.getAutoPayValue(),
       })
       .then(({ data: { payPledge } }) => {
-        console.debug('pay-pledge success', payPledge)
         const baseQuery = {
           package: packageName,
           id: payPledge.pledgeId,
@@ -580,7 +577,6 @@ class Submit extends Component {
         }
       })
       .catch((error) => {
-        console.debug('pay-pledge error', data)
         this.setState(() => ({
           loading: false,
           paymentError: errorToString(error),
@@ -635,7 +631,6 @@ class Submit extends Component {
   }
 
   payWithWallet(pledgeId, paymentMethodObject) {
-    console.debug('payWithWallet', paymentMethodObject)
     const { t } = this.props
     const { values } = this.state
     this.setState(() => ({
