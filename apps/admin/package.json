@@ -71,7 +71,6 @@
     "@republik/eslint-config-frontend": "*",
     "glob": "^7.1.6",
     "gsheets": "^2.0.0",
-    "husky": "^4.3.8",
     "nodemon": "^2.0.6"
   }
 }

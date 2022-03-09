@@ -4,7 +4,7 @@ Supported props:
 - `bgColor` (string): Sets the carousel background color, (default: colorsScheme.default).
 - `color` (string): Sets the text color (default: text from colorScheme). Overrides tile text color if no color is set on tiles.
 - `outline` (string|bool): Sets tile outline color default (undefined = no outline, true = divider from colorScheme).
-- `bigger` (bool): use bigger style for cards
+- `bigger` (bool): use bigger style for cards. Removes padding of tiles. If bigger is used together with outline, a padding is applied to the text body, but not the image). 
 - `article` (bool): margin and smaller max width for tiles (optimised to align with article column)
 
 Below 4 tiles, each tile will use 33% of the space available, up to a maximum of 450 pixels.
@@ -254,6 +254,35 @@ And format colors are mapped:
       </TeaserCarouselHeadline.Editorial>
     </TeaserCarouselTile>
 
+  </TeaserCarouselTileContainer>
+</TeaserCarousel>
+```
+
+### Audio Page (bigger & outline)
+
+```react|responsive
+<TeaserCarousel outline bigger>
+  <TeaserCarouselTileContainer>
+    <TeaserCarouselTile
+      count={6}
+      image='/static/carousel/audio1.jpeg'
+      onClick={() => console.log("click on first tile")}
+    >
+      <TeaserCarouselHeadline.Editorial>Sprachnotiz von Nicoletta Cimmino</TeaserCarouselHeadline.Editorial>
+      <TeaserCarouselLead>
+        Alle zwei Wochen sinniert Republik-Autorin Nicoletta Cimmino in ihrer Sprach­notiz über Fundstücke aus dem Alltag.
+      </TeaserCarouselLead>
+    </TeaserCarouselTile>
+     <TeaserCarouselTile
+      count={6}
+      image='/static/carousel/audio2.png'
+      onClick={() => console.log("click on first tile")}
+    >
+      <TeaserCarouselHeadline.Editorial>Das monatliche Talk-Format</TeaserCarouselHeadline.Editorial>
+      <TeaserCarouselLead>
+        Roger de Weck empfängt Gäste – und spricht mit ihnen über Politik, Gesellschaft, Kultur oder Wirtschaft.
+      </TeaserCarouselLead>
+    </TeaserCarouselTile>
   </TeaserCarouselTileContainer>
 </TeaserCarousel>
 ```

@@ -41,6 +41,7 @@ const feedQuery = gql`
                 id
                 meta {
                   path
+                  externalBaseUrl
                   title
                   color
                   kind

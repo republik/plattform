@@ -8,6 +8,8 @@ export const swissNumbers = formatLocale({
   thousands: thousandSeparator,
   grouping: [3],
   currency: ['CHF\u00a0', ''],
+  minus: '\u2212',
+  percent: '\u2009%',
 })
 const chf4Format = swissNumbers.format('$.0f')
 const chf5Format = swissNumbers.format('$,.0f')

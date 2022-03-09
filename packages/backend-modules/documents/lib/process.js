@@ -14,6 +14,8 @@ const modifiers = require('./modifiers')
 
 const { DOCUMENTS_RESTRICT_TO_ROLES } = process.env
 
+const documentsRestrictToRoles = DOCUMENTS_RESTRICT_TO_ROLES?.split(',')
+
 const processRepoImageUrlsInContent = async (mdast, fn) => {
   const fns = []
 
@@ -141,16 +143,15 @@ const processEmbedsInContent = async (mdast, fn, context) => {
 }
 
 const processMembersOnlyZonesInContent = (mdast, user) => {
-  if (!DOCUMENTS_RESTRICT_TO_ROLES) {
+  if (!documentsRestrictToRoles) {
     return
   }
   visit(mdast, 'zone', (node) => {
-    if (node.data && node.data.membersOnly) {
-      const roles = DOCUMENTS_RESTRICT_TO_ROLES.split(',')
-
-      if (!userIsInRoles(user, roles)) {
-        node.children = []
-      }
+    if (
+      node.data?.membersOnly &&
+      !userIsInRoles(user, documentsRestrictToRoles)
+    ) {
+      node.children = []
     }
   })
 }

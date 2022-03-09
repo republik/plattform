@@ -2,24 +2,23 @@ Guten Tag
 
 {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}Am {{GRANT_BEGIN}} hat
 {{GRANTER_NAME}} mit Ihnen das Republik-Abonnement geteilt.{{else}}Bis zum
-{{GRANT_END}} durften wir Sie probeweise als Leserin oder Leser an Bord der
-Republik haben.{{/if}}
+{{GRANT_END}} waren Sie als Gast an Bord der Republik.{{/if}}
 
-Sie haben einen Einblick erhalten in unser unabhängiges, werbefreies digitales
-Magazin für Politik, Wirtschaft, Gesellschaft und Kultur.
+Sie haben einen Einblick erhalten in unser unabhängiges digitales Magazin für
+Politik, Wirtschaft, Gesellschaft und Kultur.
 
 Ganz gleich, wie oft Sie uns gelesen haben: Wir hoffen, dass wir Sie immer
-wieder erfolgreich überzeugen, herausfordern, informieren, ärgern und erfreuen
-konnten.
+wieder erfolgreich überzeugen, herausfordern, informieren, erfreuen und
+vielleicht das ein oder andere Mal ärgern konnten.
 
-Wie Sie wahrscheinlich wissen, finanziert sich die Republik als unabhängiges und
-werbefreies Magazin über ihre Leserinnen und Leser: Es kommt also wirklich auf
-jede einzelne Person an. Auch wenn Sie wenig zum Lesen kommen, leisten Sie also
-einen wichtigen Beitrag zur Medienvielfalt der Schweiz.
+Wie Sie wahrscheinlich wissen, finanziert sich die Republik als werbefreies
+Magazin über ihre Leserinnen und Leser: Es kommt also wirklich auf jede einzelne
+Person an. Gemeinsam leisten wir einen wichtigen Beitrag zur Medienvielfalt in
+der Schweiz und stärken die Rolle der vierten Gewalt in unserer Demokratie.
 
 Wenn Ihnen die Idee hinter unserem Projekt und unser Magazin gefallen, gibt es
-verschiedene Möglichkeiten, wie auch Sie ein Teil davon werden: Hier finden Sie
-die Abonnemente und Mitgliedschaften in der Übersicht.
+verschiedene Möglichkeiten, wie auch Sie ein Teil davon werden können: Hier
+finden Sie die Abonnemente und Mitgliedschaften in der Übersicht.
 
 Ich bin dabei {{link_offers_overview}}
 

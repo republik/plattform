@@ -625,6 +625,26 @@
       "value": "Hintergrund"
     },
     {
+      "key": "metaData/audio/source/kind",
+      "value": "Gattung"
+    },
+    {
+      "key": "metaData/audio/source/kind/null",
+      "value": "regulär"
+    },
+    {
+      "key": "metaData/audio/source/kind/podcast",
+      "value": "Podcast"
+    },
+    {
+      "key": "metaData/audio/source/kind/readAloud",
+      "value": "vorgelesen"
+    },
+    {
+      "key": "metaData/audio/source/kind/syntheticReadAloud",
+      "value": "automatisch vorgelesen"
+    },
+    {
       "key": "metaData/series/label",
       "value": "Serie"
     },
@@ -847,6 +867,10 @@
     {
       "key": "variable/insert/greeting",
       "value": "Begrüssung"
+    },
+    {
+      "key": "variable/insert/hasAccess",
+      "value": "Je-Nach-Zugriff-Block"
     },
     {
       "key": "variable/form/VARIABLE",

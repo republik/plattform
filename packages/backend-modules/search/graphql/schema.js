@@ -7,6 +7,8 @@ schema {
 type queries {
   search(
     search: String
+    # a processor may superseed other arguments
+    processor: SearchProcessor
     # specify specific filters
     # mixed with filters, SearchFilterInput takes precedence
     filter: SearchFilterInput
