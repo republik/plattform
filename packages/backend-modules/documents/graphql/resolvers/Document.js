@@ -7,7 +7,6 @@ const {
   processRepoImageUrlsInMeta,
   processEmbedImageUrlsInContent,
   processNodeModifiersInContent,
-  processIfHasAccess,
 } = require('../../lib/process')
 const { getMeta } = require('../../lib/meta')
 
@@ -79,7 +78,6 @@ module.exports = {
 
       processMembersOnlyZonesInContent(doc.content, context.user)
       processNodeModifiersInContent(doc.content, context.user)
-      processIfHasAccess(doc.content, context.user)
     }
     return doc.content
   },
@@ -160,7 +158,6 @@ module.exports = {
 
         processMembersOnlyZonesInContent(node, context.user)
         processNodeModifiersInContent(node, context.user)
-        processIfHasAccess(node, context.user)
 
         return extractIdsFromNode(node, doc.meta.repoId)
       })
