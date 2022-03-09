@@ -58,7 +58,6 @@
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "glamor": "^2.20.40",
     "gsheets": "^3.0.1",
-    "husky": "^7.0.4",
     "isomorphic-unfetch": "^3.1.0",
     "jest": "24.9.0",
     "lodash": "^4.17.21",

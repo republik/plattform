@@ -51,7 +51,6 @@
     "cross-env": "^7.0.3",
     "@republik/eslint-config-frontend": "*",
     "gsheets": "^3.0.1",
-    "husky": "^4.3.8",
     "jest": "^27.4.3",
     "nodemon": "^2.0.15",
     "react-test-renderer": "^17.0.2",
