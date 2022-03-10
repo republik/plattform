@@ -990,7 +990,15 @@
     },
     {
       "key": "account/pledges/payment/methods/unavailable",
-      "value": "Dieses Zahlungsmittel ist zur Zeit nicht verfügbar."
+      "value": "Dieses Zahlungsmittel steht zur Zeit nicht verfügbar."
+    },
+    {
+      "key": "account/pledges/payment/methods/initialization/error",
+      "value": "Fehler beim Aufbau der Zahlungsverbindung."
+    },
+    {
+      "key": "account/pledges/payment/methods/chose-another",
+      "value": "Bitte wählen Sie ein anderes Zahlungsmittel."
     },
     {
       "key": "account/pledges/payment/waiting",

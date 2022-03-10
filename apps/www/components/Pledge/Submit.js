@@ -29,7 +29,6 @@ import {
   Checkbox,
   InlineSpinner,
   Label,
-  Loader,
   A,
 } from '@project-r/styleguide'
 
@@ -277,7 +276,9 @@ class Submit extends Component {
           console.error('Wallet initialization error', error)
           this.setState(() => ({
             loading: false,
-            walletError: t('account/pledges/payment/methods/unavailable'),
+            walletError: t(
+              'account/pledges/payment/methods/initialization/error',
+            ),
           }))
         })
     } else if (
@@ -1028,7 +1029,10 @@ class Submit extends Component {
           <ErrorMessage style={{ margin: '0 0 40px' }} error={paymentError} />
         )}
         {!!walletError && (
-          <ErrorMessage style={{ margin: '0 0 40px' }} error={walletError} />
+          <ErrorMessage style={{ margin: '0 0 40px' }} error={walletError}>
+            <br />
+            <span>{t('account/pledges/payment/methods/chose-another')}</span>
+          </ErrorMessage>
         )}
         {!!signInError && (
           <ErrorMessage style={{ margin: '0 0 40px' }} error={signInError} />
