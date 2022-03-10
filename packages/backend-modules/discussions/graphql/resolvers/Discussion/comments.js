@@ -211,13 +211,6 @@ const getResolveOrderBy = (defaultOrder, orderBy, comments) => {
     : 'DATE'
 }
 
-const precomputeComment = (c) => ({
-  // precompute
-  ...c,
-  score: c.upVotes - c.downVotes,
-  isPublished: c.published && !c.adminUnpublished,
-})
-
 module.exports = async (discussion, args, context, info) => {
   const { pgdb, loaders } = context
   const requestedGraphqlFields = graphqlFields(info)
@@ -278,7 +271,14 @@ module.exports = async (discussion, args, context, info) => {
   // get comments
   const comments = await pgdb
     .query(commentsQuery, { discussionId: discussion.id })
-    .then((comments) => comments.map(precomputeComment))
+    .then((comments) =>
+      comments.map((c) => ({
+        // precompute
+        ...c,
+        score: c.upVotes - c.downVotes,
+        isPublished: c.published && !c.adminUnpublished,
+      })),
+    )
 
   const discussionTotalCount = comments.length
 
@@ -350,7 +350,12 @@ module.exports = async (discussion, args, context, info) => {
         .query(focusCommentQuery, {
           focusId,
         })
-        .then(precomputeComment)
+        .then((c) => ({
+          // precompute
+          ...c,
+          score: c.upVotes - c.downVotes,
+          isPublished: c.published && !c.adminUnpublished,
+        }))
 
       if (focusCommentResult) {
         focusComment = focusCommentResult
@@ -372,7 +377,12 @@ module.exports = async (discussion, args, context, info) => {
               .filter((parentId) => !comments.find((c) => c.id === parentId)) // Filter parents that might already be in the comments array
               .join(','),
           })
-          .then(precomputeComment)
+          .then((c) => ({
+            // precompute
+            ...c,
+            score: c.upVotes - c.downVotes,
+            isPublished: c.published && !c.adminUnpublished,
+          }))
 
         if (focusCommentParentResults) {
           comments.push(...focusCommentParentResults)
