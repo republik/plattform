@@ -341,6 +341,15 @@ module.exports = async (discussion, args, context, info) => {
       // children, which deepSortTree doesn't calculate a topValue for
       focusComment.topValue = topValue
 
+      // Assign a topValue to all parents of the focusComment
+      // to prevent them from being sliced out due to them not
+      // bubbling to the top
+      comments.forEach((c) => {
+        if (focusComment.parentIds.includes(c.id)) {
+          c.topValue = topValue
+        }
+      })
+
       // Set comment (and its parents as topIds), used later for sorting tree and
       // ensuring comment-tree bubbles to the very top.
       topIds = _([focusComment.id])
