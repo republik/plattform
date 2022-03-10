@@ -345,7 +345,7 @@ module.exports = async (discussion, args, context, info) => {
       // to prevent them from being sliced out due to them not
       // bubbling to the top
       comments.forEach((c) => {
-        if (focusComment.parentIds.includes(c.id)) {
+        if (focusComment.parentIds?.includes(c.id)) {
           c.topValue = topValue
         }
       })
