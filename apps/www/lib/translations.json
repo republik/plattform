@@ -986,7 +986,7 @@
     },
     {
       "key": "account/pledges/payment/methods/loading",
-      "value": "Zahlungsmittel wird geladen"
+      "value": "Zahlungsmittel werden geladen"
     },
     {
       "key": "account/pledges/payment/methods/unavailable",
@@ -1002,11 +1002,11 @@
     },
     {
       "key": "account/pledges/payment/waiting",
-      "value": "Warte auf Ausführung der Zahlung"
+      "value": "Warte auf Ausführung der Zahlung..."
     },
     {
       "key": "account/pledges/payment/canceled",
-      "value": "Die Zahlung wurde abgebrochen"
+      "value": "Die Zahlung wurde abgebrochen."
     },
     {
       "key": "account/pledges/payment/method/STRIPE",
