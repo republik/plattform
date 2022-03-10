@@ -347,6 +347,50 @@ module.exports = async (discussion, args, context, info) => {
         .concat(focusComment.parentIds)
         .compact()
         .value()
+    } else {
+      // In case the focused comment was not in the initial query result
+      // we fetch the comment as well as it's parents if there are any.
+
+      const focusCommentQuery = `
+        SELECT c.* FROM comments c
+        WHERE c.id = :focusId`
+
+      const focusCommentResult = await pgdb
+        .query(focusCommentQuery, {
+          focusId,
+        })
+        .then((c) => ({
+          // precompute
+          ...c,
+          score: c.upVotes - c.downVotes,
+          isPublished: c.published && !c.adminUnpublished,
+        }))
+
+      if (focusCommentResult) {
+        focusComment = focusCommentResult
+        comments.push(focusCommentResult)
+      }
+    }
+
+    if (focusComment && focusComment.parentIds?.length > 0) {
+      const focusCommentParentQuery = `
+      SELECT c.* FROM comments c
+      WHERE c.id IN (:parentIds)`
+
+      const focusCommentParentResults = await pgdb
+        .query(focusCommentParentQuery, {
+          parentIds: focusComment.parentIds.join(','),
+        })
+        .then((c) => ({
+          // precompute
+          ...c,
+          score: c.upVotes - c.downVotes,
+          isPublished: c.published && !c.adminUnpublished,
+        }))
+
+      if (focusCommentParentResults) {
+        comments.push(...focusCommentParentResults)
+      }
     }
   }
 
