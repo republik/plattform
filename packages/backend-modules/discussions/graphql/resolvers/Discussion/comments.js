@@ -335,25 +335,16 @@ module.exports = async (discussion, args, context, info) => {
   if (focusId) {
     focusComment = comments.find((c) => c.id === focusId)
 
-    if (focusComment) {
-      // topValue used for sorting
-      // we assign it here, because focusComment might be a node without
-      // children, which deepSortTree doesn't calculate a topValue for
-      focusComment.topValue = topValue
-
-      // Set comment (and its parents as topIds), used later for sorting tree and
-      // ensuring comment-tree bubbles to the very top.
-      topIds = _([focusComment.id])
-        .concat(focusComment.parentIds)
-        .compact()
-        .value()
-    } else {
+    if (!focusComment) {
       // In case the focused comment was not in the initial query result
       // we fetch the comment as well as it's parents if there are any.
 
-      const focusCommentQuery = `
-        SELECT c.* FROM comments c
-        WHERE c.id = :focusId`
+      const focusCommentQuery = [
+        'SELECT c.* FROM comments c',
+        'WHERE c.id = :focusId',
+      ]
+        .filter(Boolean)
+        .join(' ')
 
       const focusCommentResult = await pgdb
         .query(focusCommentQuery, {
@@ -370,27 +361,47 @@ module.exports = async (discussion, args, context, info) => {
         focusComment = focusCommentResult
         comments.push(focusCommentResult)
       }
+
+      // in case parent comments exists load them as well.
+      if (focusCommentResult && focusComment.parentIds?.length > 0) {
+        const focusCommentParentQuery = [
+          'SELECT c.* FROM comments c',
+          'WHERE c.id IN (:parentIds)',
+        ]
+          .filter(Boolean)
+          .join(' ')
+
+        const focusCommentParentResults = await pgdb
+          .query(focusCommentParentQuery, {
+            parentIds: focusComment.parentIds
+              .filter((parentId) => !comments.find((c) => c.id === parentId)) // Filter parents that might already be in the comments array
+              .join(','),
+          })
+          .then((c) => ({
+            // precompute
+            ...c,
+            score: c.upVotes - c.downVotes,
+            isPublished: c.published && !c.adminUnpublished,
+          }))
+
+        if (focusCommentParentResults) {
+          comments.push(...focusCommentParentResults)
+        }
+      }
     }
 
-    if (focusComment && focusComment.parentIds?.length > 0) {
-      const focusCommentParentQuery = `
-      SELECT c.* FROM comments c
-      WHERE c.id IN (:parentIds)`
+    if (focusComment) {
+      // topValue used for sorting
+      // we assign it here, because focusComment might be a node without
+      // children, which deepSortTree doesn't calculate a topValue for
+      focusComment.topValue = topValue
 
-      const focusCommentParentResults = await pgdb
-        .query(focusCommentParentQuery, {
-          parentIds: focusComment.parentIds.join(','),
-        })
-        .then((c) => ({
-          // precompute
-          ...c,
-          score: c.upVotes - c.downVotes,
-          isPublished: c.published && !c.adminUnpublished,
-        }))
-
-      if (focusCommentParentResults) {
-        comments.push(...focusCommentParentResults)
-      }
+      // Set comment (and its parents as topIds), used later for sorting tree and
+      // ensuring comment-tree bubbles to the very top.
+      topIds = _([focusComment.id])
+        .concat(focusComment.parentIds)
+        .compact()
+        .value()
     }
   }
 
