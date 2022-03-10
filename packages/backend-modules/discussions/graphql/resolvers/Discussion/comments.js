@@ -378,7 +378,9 @@ module.exports = async (discussion, args, context, info) => {
         parentId && tree.comments && tree.comments.nodes[0]
           ? tree.comments.nodes[0].depth + maxDepth
           : maxDepth
-      filterComments = filterComments.filter((c) => c.depth < maxDepthAbsolute)
+      filterComments = filterComments.filter(
+        (c) => c.depth < maxDepthAbsolute || c.id === focusId, // Ensure focus comment is not filtered
+      )
     }
     filterComments = filterComments.slice(0, first)
 
