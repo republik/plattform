@@ -42,3 +42,5 @@ docker-data
 # editor
 .idea
 
+playwright-report
+playwright-results
