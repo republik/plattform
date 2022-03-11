@@ -11,6 +11,7 @@
     "commit": "cz",
     "prepare": "husky install",
     "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e",
     "start": "scripts/start.sh",
     "start:scheduler": "cd apps/api && yarn start:scheduler",
     "build": "scripts/build.sh",
