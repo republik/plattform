@@ -73,7 +73,8 @@
     },
     "test:e2e": {
       "outputs": [
-        "playwright-report/**"
+        "playwright-report/**",
+        "playwright-results/**"
       ]
     }
   },
