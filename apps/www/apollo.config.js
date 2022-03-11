@@ -3,11 +3,12 @@ module.exports = {
     service: {
       name: 'republik-backend',
       url: 'http://localhost:5010/graphql',
+      localSchemaFile: './graphql-schema.gql',
     },
     includes: [
-      './components/**/*.{js,ts,tsx}',
-      './lib/**/*.{js,ts,tsx}',
-      './pages/**/*.{js,ts,tsx}',
+      './components/**/*.{ts,tsx}',
+      './lib/**/*.{ts,tsx}',
+      './pages/**/*.{ts,tsx}',
     ],
   },
 }

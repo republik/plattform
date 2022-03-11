@@ -56,7 +56,7 @@ const query = gql`
 `
 
 const greetingSubscription = gql`
-  subscription {
+  subscription greetingSubscription {
     greeting {
       id
       text

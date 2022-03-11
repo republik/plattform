@@ -20,8 +20,8 @@
     "translations": "npm run translations-raw && git add -p lib/translations.json && git checkout -- lib/translations.json",
     "translations-vote": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1oBlTiPKIon4p5aek5vEXluWMn0TRwrk-JftznGjTmdQ --title=live --pretty --out components/Vote/translations-vote.json",
     "analyze": "ANALYZE=true next build",
-    "apollo:download-schema": "npx apollo client:download-schema --endpoint=http://localhost:5010/graphql graphql-schema.json",
-    "apollo:generate-types": "npx apollo codegen:generate --localSchemaFile=graphql-schema.json --target=typescript --tagName=gql",
+    "apollo:download-schema": "yarn apollo client:download-schema --endpoint=http://localhost:5010/graphql graphql-schema.gql",
+    "apollo:codegen": "yarn apollo:download-schema && yarn apollo client:codegen --target=typescript --tagName=gql",
     "sg:link": "./scripts/sg_link.sh",
     "sg:unlink": "./scripts/sg_unlink.sh"
   },
