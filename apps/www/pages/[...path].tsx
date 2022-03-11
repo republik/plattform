@@ -36,7 +36,7 @@ export const getStaticProps = createGetStaticProps<Props, Params>(
       },
     })
 
-    if (article) {
+    if (article && !article.meta.format?.meta.externalBaseUrl) {
       return {
         props: {
           payNoteTryOrBuy: Math.random(),

@@ -6,6 +6,7 @@ import {
 } from '../Typography/styles'
 import { createTextGauger } from '../../lib/textGauger'
 import { useColorContext } from '../Colors/useColorContext'
+import { textAlignmentDict } from './utils'
 
 const valueGauger = createTextGauger(VALUE_FONT, {
   dimension: 'width',
@@ -15,12 +16,6 @@ const labelGauger = createTextGauger(LABEL_FONT, {
   dimension: 'width',
   html: true,
 })
-
-const textAlignmentDict = {
-  left: 'start',
-  center: 'middle',
-  right: 'end',
-}
 
 const styles = {
   annotationLine: css({

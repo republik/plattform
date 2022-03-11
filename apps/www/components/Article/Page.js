@@ -47,6 +47,7 @@ import Progress from './Progress'
 import PodcastButtons from './PodcastButtons'
 import { getDocument } from './graphql/getDocument'
 import withT from '../../lib/withT'
+import { parseJSONObject } from '../../lib/safeJSON'
 import { formatDate } from '../../lib/utils/format'
 import withInNativeApp, { postMessage } from '../../lib/withInNativeApp'
 import { splitByTitle } from '../../lib/utils/mdast'
@@ -550,6 +551,13 @@ const ArticlePage = ({
           const showNewsletterSignupBottom =
             isFreeNewsletter && !showNewsletterSignupTop
 
+          const rawContentMeta = articleContent.meta
+          const feedQueryVariables = rawContentMeta.feedQueryVariables
+            ? parseJSONObject(rawContentMeta.feedQueryVariables)
+            : undefined
+          const hideFeed = !!rawContentMeta.hideFeed
+          const hideSectionNav = !!rawContentMeta.hideSectionNav
+
           return (
             <>
               <FontSizeSync />
@@ -633,7 +641,7 @@ const ArticlePage = ({
                                 {actionBar}
                               </div>
                             )}
-                            {isSection && (
+                            {isSection && !hideSectionNav && (
                               <Breakout size='breakout'>
                                 <SectionNav
                                   color={sectionColor}
@@ -682,10 +690,7 @@ const ArticlePage = ({
                     discussionId={ownDiscussion.id}
                     isBoardRoot={ownDiscussion.isBoard}
                   >
-                    <Discussion
-                      documentMeta={articleContent.meta}
-                      showPayNotes
-                    />
+                    <Discussion documentMeta={rawContentMeta} showPayNotes />
                   </DiscussionContextProvider>
                 </Center>
               )}
@@ -736,17 +741,18 @@ const ArticlePage = ({
                   seriesDescription={false}
                 />
               )}
-              {isSection && (
+              {isSection && !hideFeed && (
                 <SectionFeed
                   key={`sectionFeed${article?.issuedForUserId}`}
                   formats={article.linkedDocuments.nodes.map((n) => n.id)}
-                  variablesAsString={article.content.meta.feedQueryVariables}
+                  variables={feedQueryVariables}
                 />
               )}
-              {isFormat && (
+              {isFormat && !hideFeed && (
                 <FormatFeed
                   key={`formatFeed${article?.issuedForUserId}`}
                   formatId={article.repoId}
+                  variables={feedQueryVariables}
                 />
               )}
               {(hasActiveMembership || isFormat) && (

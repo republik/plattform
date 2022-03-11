@@ -37,7 +37,17 @@
     "@orbiting/backend-modules-republik-crowdfundings#build": {
       "cache": false
     },
+    "@orbiting/www-app#build": {
+      "cache": false
+    },
+    "@orbiting/publikator-app#build": {
+      "cache": false
+    },
+    "@orbiting/admin-app#build": {
+      "cache": false
+    },
     "@project-r/styleguide#build": {
+      "cache": false,
       "dependsOn": [
         "^build",
         "$SERVER"
@@ -58,7 +68,7 @@
         "coverage/**"
       ],
       "dependsOn": [
-        "build"
+        "^build"
       ]
     }
   },

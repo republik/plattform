@@ -48,9 +48,7 @@
                       <strong
                         >{{GRANTER_NAME}} (<a href="mailto:{{GRANTER_EMAIL}}"
                           >{{GRANTER_EMAIL}}</a
-                        >) hat die Republik – ein unabhängiges und werbefreies
-                        digitales Magazin für Politik, Wirtschaft, Gesellschaft
-                        und Kultur – mit Ihnen geteilt.
+                        >) hat die Republik mit Ihnen geteilt.
                       </strong>
                     </p>
                     {{#if GRANTER_MESSAGE}}
@@ -62,8 +60,11 @@
                     </blockquote>
                     {{/if}} {{/if}} {{#if `RECIPIENT_EMAIL != GRANTER_EMAIL`}}
                     <p>
-                      Für {{CAMPAIGN_PERIOD}} sind Sie jetzt Gast an Bord der
-                      Republik und können unverbindlich unser Magazin entdecken.
+                      Wir sind ein digitales Magazin für Politik, Wirtschaft,
+                      Gesellschaft und Kultur – unabhängig und werbefrei. Wir
+                      heissen Sie als Gast herzlich willkommen an Bord.
+                      Entdecken Sie unser Magazin ganz unverbindlich für
+                      {{CAMPAIGN_PERIOD}}:
                     </p>
                     {{/if}}
 
@@ -91,7 +92,7 @@
                     </table>
                     <p>
                       Falls dieser Button nicht funktioniert: Öffnen Sie bitte
-                      <a href="{{LINK_CLAIM_PREFILLED}}"
+                      <a href="{{LINK_CLAIM_CONTEXTLESS}}"
                         >{{LINK_CLAIM_CONTEXTLESS}}</a
                       >, und geben Sie dann Ihren Namen, Ihre E-Mail-Adresse und
                       den folgenden Gutscheincode ein:
@@ -110,12 +111,9 @@
                     </p>
 
                     <p>
-                      Die Republik ist aber mehr als nur ein Magazin. Durch
-                      inhaltliche Debatten schaffen wir Verbindungen zwischen
-                      Expertinnen, Lesern und Journalistinnen. Wir ermöglichen
-                      eine Gemeinschaft und gestalten den Austausch mit
-                      verschiedenen Veranstaltungen zu Politik, Gesellschaft und
-                      Kultur.
+                      Neben hintergründigen Recherchen und Reportagen finden Sie
+                      bei uns kurze Nachrichtenbriefings, meinungsstarke
+                      Kolumnen sowie Audio- und Bildbeiträge.
                     </p>
                     {{/unless}} {{#if RECIPIENT_HAS_MEMBERSHIPS}}
                     <p>
@@ -136,9 +134,9 @@
                     </p>
                     {{/if}} {{#if RECIPIENT_HAS_CAMPAIGNS}}
                     <p>
-                      Sie können Ihr Abo auch
+                      In diesem Fall ein Hinweis: Auch Sie können Ihr Abonnement
                       <a href="{{LINK_ACCOUNT_SHARE}}"
-                        >mit anderen Personen teilen</a
+                        >mit Freunden und Feinden teilen</a
                       >. Die Empfänger erhalten eine persönliche Einladung per
                       E-Mail.
                     </p>
@@ -156,7 +154,7 @@
                                 <a
                                   href="{{LINK_ACCOUNT_SHARE}}"
                                   style="font-size:20px;{{sg_font_style_sans_serif_regular}}color:#ffffff;text-decoration:none;border-radius:0;padding:15px 30px 15px 30px;border:1px solid #3CAD00;display:inline-block;"
-                                  >Zugriff teilen</a
+                                  >Zugang teilen</a
                                 >
                               </td>
                             </tr>
@@ -172,10 +170,12 @@
                       >
                       zur Verfügung.
                     </p>
+                    {{#unless RECIPIENT_HAS_MEMBERSHIPS}}
                     <p>
                       Wir wünschen Ihnen viel Freude beim Lesen und
                       Ausprobieren!
                     </p>
+                    {{/unless}}
                     <p>Ihre Crew der Republik</p>
                   </td>
                 </tr>

@@ -175,6 +175,7 @@ const schema = {
     criteria: hasCriteriaBuilder('meta.audioSource'),
     agg: existsCountAggBuilder('meta.audioSource'),
   },
+  audioSourceKind: termEntry('meta.audioSource.kind'),
   hasAudio: countEntry('meta.hasAudio'),
   hasVideo: countEntry('meta.hasVideo'),
   isSeriesMaster: countEntry('meta.isSeriesMaster'),
@@ -412,6 +413,16 @@ const addRelatedDocs = async ({
   })
 
   relatedDocs = relatedDocs.concat(variousRelatedDocs)
+
+  // resolve formats for all related docs
+  const { docs: relatedFormatDocs } = await loadLinkedMetaData({
+    context,
+    repoIds: relatedDocs.map((d) => getRepoId(d.meta.format).repoId),
+    scheduledAt,
+    ignorePrepublished,
+  })
+
+  relatedDocs = relatedDocs.concat(relatedFormatDocs)
 
   debug({
     numDocs: docs.length,

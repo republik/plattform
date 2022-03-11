@@ -385,3 +385,9 @@ export const getColumnLayout = (
 
 // get last item from array
 export const isLastItem = (array, index) => array.length - 1 === index
+
+export const textAlignmentDict = {
+  left: 'start',
+  center: 'middle',
+  right: 'end',
+}

@@ -29,6 +29,7 @@ import {
   useColorContext,
 } from '@project-r/styleguide'
 import { withRouter } from 'next/router'
+import ErrorMessage from '../ErrorMessage'
 
 const { P } = Interaction
 
@@ -242,7 +243,7 @@ export class List extends Component {
         this.setState(() => ({
           columns,
           open: {
-            0: this.props.focus && this.props.statements[0].id,
+            0: this.props.focus,
           },
         }))
       }
@@ -330,6 +331,7 @@ export class List extends Component {
       minColumns,
       showCredentials,
       share,
+      serverContext,
     } = this.props
     const { columns, open } = this.state
 
@@ -347,7 +349,12 @@ export class List extends Component {
         render={() => {
           const items = []
           const lastIndex = statements.length - 1
-          const focusItem = focus && statements[0]
+          const focusItem = statements[0]?.id === focus && statements[0]
+
+          const hasNotFoundFocus = focus && !focusItem
+          if (hasNotFoundFocus && serverContext) {
+            serverContext.res.statusCode = 404
+          }
 
           const singleRowOpenItem =
             singleRow &&
@@ -453,6 +460,7 @@ export class List extends Component {
 
           return (
             <Fragment>
+              {hasNotFoundFocus && <ErrorMessage error={t('statement/404')} />}
               <div {...gridStyles} ref={this.ref}>
                 {!!isPage && <Meta data={metaData} />}
                 {items}
@@ -586,7 +594,7 @@ class Container extends Component {
     this.state = {}
   }
   render() {
-    const { t, id, isPage, router } = this.props
+    const { t, id, isPage, router, serverContext } = this.props
     const { query } = this.state
 
     const seed = this.state.seed || this.props.seed
@@ -611,6 +619,16 @@ class Container extends Component {
               this.setState(() => ({
                 seed: generateSeed(),
               }))
+              if (isPage && (id || this.state.clearedFocus)) {
+                this.setState(
+                  {
+                    clearedFocus: undefined,
+                  },
+                  () => {
+                    router.replace('/community', undefined, { shallow: true })
+                  },
+                )
+              }
             }}
           >
             {t('testimonial/search/seed')}
@@ -625,10 +643,10 @@ class Container extends Component {
               return
             }
             this.setState(
-              () => ({
+              {
                 // keep it around for the query
                 clearedFocus: id,
-              }),
+              },
               () => {
                 router.push('/community', undefined, { shallow: true })
               },
@@ -636,6 +654,7 @@ class Container extends Component {
           }}
           search={query}
           seed={seed}
+          serverContext={serverContext}
         />
       </div>
     )

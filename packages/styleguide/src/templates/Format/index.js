@@ -52,16 +52,20 @@ const createFormatSchema = ({
         key: 'color',
       },
       {
+        label: 'Externe Basis-URL',
+        key: 'externalBaseUrl',
+      },
+      {
+        label: 'Sharetafel Logo',
+        key: 'shareLogo',
+      },
+      {
         label: 'Sharebild (Hintergrund weiss)',
         key: 'shareBackgroundImage',
       },
       {
         label: 'Sharebild (mit Hintergrundfarbe)',
         key: 'shareBackgroundImageInverted',
-      },
-      {
-        label: 'Sharetafel Logo',
-        key: 'shareLogo',
       },
       {
         label: 'Dossier',

@@ -5,7 +5,7 @@ import { css } from 'glamor'
 import { line as lineShape, area as areaShape } from 'd3-shape'
 import { useColorContext } from '../Colors/useColorContext'
 
-import { subsup, isLastItem, isValuePresent } from './utils'
+import { subsup, isLastItem, isValuePresent, textAlignmentDict } from './utils'
 
 import {
   Y_CONNECTOR,
@@ -297,22 +297,26 @@ const LineGroup = (props) => {
 
         const fullWidth = width + (props.paddingRight || 0)
         let textAnchor = 'middle'
-        if (
-          x1 + (range ? x2 - x1 : 0) / 2 + annotation.labelSize / 2 >
-          fullWidth
-        ) {
-          textAnchor = 'end'
-          if ((range ? x2 : x1) - annotation.labelSize < 0) {
-            textAnchor = 'start'
-          }
-        }
         let tx = x1
-        if (range) {
-          if (textAnchor === 'end') {
-            tx = x2
+        if (textAlignmentDict[annotation.textAlignment]) {
+          textAnchor = textAlignmentDict[annotation.textAlignment]
+        } else {
+          if (
+            x1 + (range ? x2 - x1 : 0) / 2 + annotation.labelSize / 2 >
+            fullWidth
+          ) {
+            textAnchor = 'end'
+            if ((range ? x2 : x1) - annotation.labelSize < 0) {
+              textAnchor = 'start'
+            }
           }
-          if (textAnchor === 'middle') {
-            tx = x1 + (x2 - x1) / 2
+          if (range) {
+            if (textAnchor === 'end') {
+              tx = x2
+            }
+            if (textAnchor === 'middle') {
+              tx = x1 + (x2 - x1) / 2
+            }
           }
         }
 
@@ -352,16 +356,29 @@ const LineGroup = (props) => {
               dy={
                 showValue
                   ? isBottom
-                    ? '2.7em'
+                    ? '2.5em'
                     : '-1.8em'
                   : isBottom
-                  ? '1.4em'
-                  : '-0.5em'
+                  ? '0.1em'
+                  : '-0.1em'
               }
               {...styles.annotationText}
               {...colorScheme.set('fill', 'text')}
             >
-              {annotation.label}
+              {annotation.label?.split('\n').map((line, i, all) => (
+                <tspan
+                  key={i}
+                  x={tx}
+                  dy={showValue ? (isBottom ? '1.1em' : '-1.1em') : 0}
+                  y={
+                    isBottom
+                      ? `${0.1 + 1.1 * (i + 1)}em`
+                      : `-${0.5 + 1.1 * (all.length - i - 1)}em`
+                  }
+                >
+                  {line}
+                </tspan>
+              ))}
             </text>
             {showValue && (
               <text

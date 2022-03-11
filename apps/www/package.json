@@ -23,10 +23,7 @@
     "apollo:download-schema": "npx apollo client:download-schema --endpoint=http://localhost:5010/graphql graphql-schema.json",
     "apollo:generate-types": "npx apollo codegen:generate --localSchemaFile=graphql-schema.json --target=typescript --tagName=gql",
     "sg:link": "./scripts/sg_link.sh",
-    "sg:unlink": "./scripts/sg_unlink.sh",
-    "yaproxy": "CORS_ORIGIN=http://localhost:3010,http://localhost:3005,http://localhost:3006 PORT=5010 TARGET=https://api.republik.ch yaproxy",
-    "yaproxy:staging": "CORS_ORIGIN=http://localhost:3010,http://localhost:3005,http://localhost:3006 PORT=5010 TARGET=https://api.republik.love yaproxy",
-    "yaproxy-android": "COOKIE_DOMAIN_REWRITE=*:10.0.2.2 CORS_ORIGIN=http://10.0.2.2:3010 PORT=5010 TARGET=https://api.republik.ch yaproxy"
+    "sg:unlink": "./scripts/sg_unlink.sh"
   },
   "cacheDirectories": [
     "node_modules",
@@ -55,12 +52,10 @@
     "apollo": "^2.33.9",
     "cross-env": "^7.0.3",
     "gsheets": "^3.0.1",
-    "husky": "^4.3.8",
     "jest": "^27.4.3",
     "nodemon": "^2.0.15",
     "react-test-renderer": "^17.0.2",
-    "typescript": "^4.5.5",
-    "yaproxy": "^1.0.2"
+    "typescript": "^4.5.5"
   },
   "dependencies": {
     "@apollo/client": "^3.5.8",
