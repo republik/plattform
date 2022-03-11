@@ -5,9 +5,9 @@ module.exports = {
       url: 'http://localhost:5010/graphql',
     },
     includes: [
-      './components/**/*.{ts,tsx}',
-      './lib/**/*.{ts,tsx}',
-      './pages/**/*.{ts,tsx}',
+      './components/**/*.{js,ts,tsx}',
+      './lib/**/*.{js,ts,tsx}',
+      './pages/**/*.{js,ts,tsx}',
     ],
   },
 }
