@@ -149,7 +149,7 @@ const Item = ({ loading, error, t, statement }) => (
 )
 
 const query = gql`
-  query statements {
+  query statementsForTV {
     statements(first: 1) {
       totalCount
       nodes {

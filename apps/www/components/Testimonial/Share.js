@@ -204,7 +204,7 @@ const Item = ({
 }
 
 const query = gql`
-  query statements($focus: String!) {
+  query getStatementByUserSlug($focus: String!) {
     user(slug: $focus) {
       id
       name

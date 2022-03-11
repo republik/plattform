@@ -261,7 +261,10 @@ const unsubscribeFromDocumentMutation = gql`
   ${subInfo}
 `
 const subscribeToUserMutation = gql`
-  mutation subToUser($userId: ID!, $filters: [EventObjectType!]) {
+  mutation subscribeToUserWithFilteredEvents(
+    $userId: ID!
+    $filters: [EventObjectType!]
+  ) {
     subscribe(objectId: $userId, type: User, filters: $filters) {
       ...subInfo
     }

@@ -16,7 +16,7 @@ import ErrorFrame from './Frame'
 
 import { Interaction } from '@project-r/styleguide'
 
-const getRedirect = gql`
+export const GET_REDIRECTION = gql`
   query getRedirect($path: String!) {
     redirection(path: $path) {
       target
@@ -49,7 +49,7 @@ export default compose(
   withT,
   withInNativeApp,
   withRouter,
-  graphql(getRedirect, {
+  graphql(GET_REDIRECTION, {
     skip: (props) => props.statusCode !== 404 || !props.router.asPath,
     options: ({ router: { asPath } }) => ({
       variables: {

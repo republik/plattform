@@ -199,7 +199,7 @@ class ArticleQuestion extends Component {
 }
 
 const query = gql`
-  query getSearchResults(
+  query getSearchResultsForArticleQuestion(
     $search: String
     $after: String
     $sort: SearchSortInput

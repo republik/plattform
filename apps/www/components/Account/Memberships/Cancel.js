@@ -44,7 +44,7 @@ const cancellationCategories = gql`
   }
 `
 
-const cancelMembership = gql`
+const CANCEL_MEMBERSHIP = gql`
   mutation cancelMembership($id: ID!, $details: CancellationInput!) {
     cancelMembership(id: $id, details: $details) {
       id
@@ -267,7 +267,7 @@ const CancelMembership = ({
 }
 
 export default compose(
-  graphql(cancelMembership, {
+  graphql(CANCEL_MEMBERSHIP, {
     props: ({ mutate }) => ({
       cancel: (variables) => mutate({ variables }),
     }),

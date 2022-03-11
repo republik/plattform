@@ -181,8 +181,8 @@ const Actions = ({
   )
 }
 
-const cancelMembership = gql`
-  mutation cancelMembership($id: ID!, $reason: String) {
+const CANCEL_MEMBERSHIP_WITH_REASON = gql`
+  mutation cancelMembershipWithReason($id: ID!, $reason: String) {
     cancelMembership(id: $id, reason: $reason) {
       id
       active
@@ -212,7 +212,7 @@ const setMembershipAutoPay = gql`
 
 const ManageActions = compose(
   withT,
-  graphql(cancelMembership, {
+  graphql(CANCEL_MEMBERSHIP_WITH_REASON, {
     props: ({ mutate }) => ({
       cancel: (variables) => mutate({ variables }),
     }),

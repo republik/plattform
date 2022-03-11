@@ -2,8 +2,8 @@ import Article from '../components/Article/Page'
 import createGetStaticProps from '../lib/helpers/createGetStaticProps'
 import { GetStaticPaths } from 'next'
 import { ParsedUrlQuery } from 'querystring'
-import { gql } from '@apollo/client'
 import { getDocument } from '../components/Article/graphql/getDocument'
+import { GET_REDIRECTION } from '../components/StatusError/index'
 
 type Params = {
   path: string[]
@@ -49,14 +49,7 @@ export const getStaticProps = createGetStaticProps<Props, Params>(
     const {
       data: { redirection },
     } = await client.query({
-      query: gql`
-        query getRedirect($path: String!) {
-          redirection(path: $path) {
-            target
-            status
-          }
-        }
-      `,
+      query: GET_REDIRECTION,
       variables: {
         path,
       },
