@@ -6,6 +6,7 @@ import {
   RawHtml,
   Interaction,
   Dropdown,
+  Checkbox,
 } from '@project-r/styleguide'
 import MdClose from 'react-icons/lib/md/close'
 import MdAdd from 'react-icons/lib/md/add'
@@ -90,33 +91,51 @@ const isEmptyPaynotes = (paynotes) =>
   isEmptyPaynote(paynotes[0].after) &&
   Object.keys(paynotes[0].target).length === 0
 
-const TargetForm = withT(({ t, data, onInputChange }) => (
-  <>
-    <Interaction.H3>{t('metaData/paynote/form/target/title')}</Interaction.H3>
-    {TARGETS.map((target, i) => {
-      return (
-        <div key={i} style={{ marginBottom: 10 }}>
-          <Label style={{ display: 'block', marginBottom: 5 }}>
-            {t(`metaData/paynote/form/target/${target}`)}
-          </Label>
-          {[true, false, undefined].map((value) => (
-            <Radio
-              key={String(value)}
-              value={String(value)}
-              checked={data[target] === value}
-              onChange={() => onInputChange({ [target]: value })}
-              style={{ marginRight: 20 }}
-            >
-              {t(`metaData/paynote/form/target/value/${value}`)}
-            </Radio>
-          ))}
-        </div>
-      )
-    })}
-  </>
-))
+const TargetForm = withT(
+  ({ t, isFormat, target, inherit, onTargetChange, onInheritChange }) => (
+    <>
+      <Interaction.H3>{t('metaData/paynote/form/target/title')}</Interaction.H3>
+      {isFormat && (
+        <>
+          <br />
+          <Checkbox
+            checked={inherit}
+            onChange={(_, checked) => {
+              console.log({ checked })
+              onInheritChange(checked)
+            }}
+          >
+            Beitragstörer
+          </Checkbox>
+          <br />
+          <br />
+        </>
+      )}
+      {TARGETS.map((tgt, i) => {
+        return (
+          <div key={i} style={{ marginBottom: 10 }}>
+            <Label style={{ display: 'block', marginBottom: 5 }}>
+              {t(`metaData/paynote/form/target/${tgt}`)}
+            </Label>
+            {[true, false, undefined].map((value) => (
+              <Radio
+                key={String(value)}
+                value={String(value)}
+                checked={target[tgt] === value}
+                onChange={() => onTargetChange({ [tgt]: value })}
+                style={{ marginRight: 20 }}
+              >
+                {t(`metaData/paynote/form/target/value/${value}`)}
+              </Radio>
+            ))}
+          </div>
+        )
+      })}
+    </>
+  ),
+)
 
-export default withT(({ t, editor, node }) => {
+export default withT(({ t, editor, node, isFormat }) => {
   const [mode, setMode] = useState()
   const paynotes = node.data.get(PAYNOTE_KEY) || []
   const tryToBuyRatio = node.data.get(TRY_TO_BUY_RATIO_KEY)
@@ -158,14 +177,19 @@ export default withT(({ t, editor, node }) => {
     onPaynotesChange(paynotes.slice(0, i).concat(paynotes.slice(i + 1)))
   }
 
-  const editPaynote = (i, paynote, attr) => (newAttrs) => {
-    const editedPaynote = {
-      ...paynote,
-      [attr]: {
-        ...paynote[attr],
-        ...newAttrs,
-      },
-    }
+  const editPaynote = (i, paynote, attr, direct) => (newAttrs) => {
+    const editedPaynote = direct
+      ? {
+          ...paynote,
+          [attr]: newAttrs,
+        }
+      : {
+          ...paynote,
+          [attr]: {
+            ...paynote[attr],
+            ...newAttrs,
+          },
+        }
 
     onPaynotesChange(
       paynotes
@@ -274,9 +298,14 @@ export default withT(({ t, editor, node }) => {
                   <br />
                   <br />
                   <TargetForm
-                    data={paynote.target}
-                    onInputChange={editPaynote(i, paynote, 'target')}
+                    isFormat={isFormat}
+                    target={paynote.target}
+                    inherit={paynote.inherit}
+                    onTargetChange={editPaynote(i, paynote, 'target')}
+                    onInheritChange={editPaynote(i, paynote, 'inherit', true)}
                   />
+                  <br />
+                  <br />
                 </div>
                 <br />
                 <Interaction.H3>{t('metaData/paynotes/before')}</Interaction.H3>

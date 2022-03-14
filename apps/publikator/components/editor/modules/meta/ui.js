@@ -340,7 +340,13 @@ const MetaData = ({
         <br />
         <br />
         <br />
-        {!!paynotes && <PaynotesForm editor={editor} node={node} />}
+        {!!paynotes && (
+          <PaynotesForm
+            editor={editor}
+            node={node}
+            isFormat={titleData.meta.template === 'format'}
+          />
+        )}
       </div>
     </div>
   )
