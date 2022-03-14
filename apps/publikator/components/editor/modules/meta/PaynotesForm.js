@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   A,
   Radio,
@@ -39,22 +39,29 @@ const styles = {
 }
 
 const PAYNOTE_KEY = 'paynotes'
+const TRY_TO_BUY_RATIO_KEY = 'tryToBuyRatio'
 const TARGETS = ['hasActiveMembership', 'isEligibleForTrial']
+const MODE_KEYS = {
+  AUTO: 'auto',
+  BUY: 'auto (nur Abo kaufen)',
+  TRY: 'auto (nur Probelesen)',
+  CUSTOM: 'custom',
+  NONE: 'kein',
+}
 const MODES = [
-  'auto',
-  'auto (nur Abo kaufen)',
-  'auto (nur Probelesen)',
-  'custom',
-  'kein',
+  MODE_KEYS.AUTO,
+  MODE_KEYS.BUY,
+  MODE_KEYS.TRY,
+  MODE_KEYS.CUSTOM,
+  MODE_KEYS.NONE,
 ]
 
 const DEFAULT_TARGET = {
   hasActiveMembership: false,
 }
 
-const DEFAULT_PAYNOTE = {
+const EMPTY_PAYNOTE = {
   content: '',
-  cta: 'button',
   button: {
     label: '',
     link: '',
@@ -65,6 +72,20 @@ const DEFAULT_PAYNOTE = {
     link: '',
   },
 }
+
+const isEmptyPaynote = (paynote) =>
+  !paynote.content &&
+  !paynote.cta &&
+  !paynote.button.label &&
+  !paynote.button.link &&
+  !paynote.secondary.label &&
+  !paynote.secondary.link
+
+const isEmptyPaynotes = (paynotes) =>
+  paynotes?.length === 1 &&
+  isEmptyPaynote(paynotes[0].before) &&
+  isEmptyPaynote(paynotes[0].after) &&
+  Object.keys(paynotes[0].target).length === 0
 
 const TargetForm = withT(({ t, data, onInputChange }) => (
   <>
@@ -93,32 +114,38 @@ const TargetForm = withT(({ t, data, onInputChange }) => (
 ))
 
 export default withT(({ t, editor, node }) => {
-  const [mode, setMode] = useState('auto')
+  const [mode, setMode] = useState()
   const paynotes = node.data.get(PAYNOTE_KEY) || []
+  const tryToBuyRatio = node.data.get(TRY_TO_BUY_RATIO_KEY)
 
   const modes = MODES.map((value) => ({
     value,
     text: value,
   }))
 
-  const onPaynotesChange = (newPaynotes) => {
+  const onKeyChange = (key) => (value) => {
     editor.change((change) => {
       change.setNodeByKey(node.key, {
         data:
-          newPaynotes !== null && newPaynotes.length
-            ? node.data.set(PAYNOTE_KEY, newPaynotes)
-            : node.data.remove(PAYNOTE_KEY),
+          value === null ||
+          value === undefined ||
+          (Array.isArray(value) && value.length === 0)
+            ? node.data.remove(key)
+            : node.data.set(key, value),
       })
     })
   }
 
+  const onPaynotesChange = onKeyChange(PAYNOTE_KEY)
+  const onTryToBuyRatioChange = onKeyChange(TRY_TO_BUY_RATIO_KEY)
+
   const addPaynote = (e) => {
-    e.preventDefault()
+    e?.preventDefault()
     onPaynotesChange(
       paynotes.concat({
         target: DEFAULT_TARGET,
-        before: DEFAULT_PAYNOTE,
-        after: DEFAULT_PAYNOTE,
+        before: { ...EMPTY_PAYNOTE, cta: 'button' },
+        after: { ...EMPTY_PAYNOTE, cta: 'button' },
       }),
     )
   }
@@ -145,6 +172,76 @@ export default withT(({ t, editor, node }) => {
     )
   }
 
+  // set initial mode base on paynotes configuration
+  useEffect(() => {
+    if (!paynotes?.length) {
+      if (tryToBuyRatio === 0) {
+        setMode(MODE_KEYS.BUY)
+      } else if (tryToBuyRatio === 1) {
+        setMode(MODE_KEYS.TRY)
+      } else {
+        setMode(MODE_KEYS.AUTO)
+      }
+    } else {
+      if (isEmptyPaynotes(paynotes)) {
+        setMode(MODE_KEYS.NONE)
+      } else {
+        setMode(MODE_KEYS.CUSTOM)
+      }
+    }
+  }, [])
+
+  const onModeChange = (value) => {
+    setMode(value)
+    if (value === MODE_KEYS.AUTO) {
+      editor.change((change) => {
+        change.setNodeByKey(node.key, {
+          data: node.data.remove(PAYNOTE_KEY).remove(TRY_TO_BUY_RATIO_KEY),
+        })
+      })
+    } else if (value === MODE_KEYS.BUY) {
+      editor.change((change) => {
+        change.setNodeByKey(node.key, {
+          data: node.data.remove(PAYNOTE_KEY).set(TRY_TO_BUY_RATIO_KEY, 0),
+        })
+      })
+    } else if (value === MODE_KEYS.TRY) {
+      editor.change((change) => {
+        change.setNodeByKey(node.key, {
+          data: node.data.remove(PAYNOTE_KEY).set(TRY_TO_BUY_RATIO_KEY, 1),
+        })
+      })
+    } else if (value === MODE_KEYS.NONE) {
+      editor.change((change) => {
+        change.setNodeByKey(node.key, {
+          data: node.data
+            .set(PAYNOTE_KEY, [
+              {
+                target: {},
+                before: EMPTY_PAYNOTE,
+                after: EMPTY_PAYNOTE,
+              },
+            ])
+            .remove(TRY_TO_BUY_RATIO_KEY),
+        })
+      })
+    } else if (value === MODE_KEYS.CUSTOM) {
+      editor.change((change) => {
+        change.setNodeByKey(node.key, {
+          data: node.data
+            .set(PAYNOTE_KEY, [
+              {
+                target: DEFAULT_TARGET,
+                before: { ...EMPTY_PAYNOTE, cta: 'button' },
+                after: { ...EMPTY_PAYNOTE, cta: 'button' },
+              },
+            ])
+            .remove(TRY_TO_BUY_RATIO_KEY),
+        })
+      })
+    }
+  }
+
   return (
     <>
       <UIForm getWidth={() => '50%'}>
@@ -153,10 +250,12 @@ export default withT(({ t, editor, node }) => {
           label='Störer'
           items={modes}
           value={mode || null}
-          onChange={({ value }) => setMode(value)}
+          onChange={({ value }) => {
+            onModeChange(value)
+          }}
         />
       </UIForm>
-      {mode === 'custom' && (
+      {mode === MODE_KEYS.CUSTOM && (
         <>
           <Label {...styles.title}>{t('metaData/paynotes/title')}</Label>
           {paynotes.map((paynote, i) => {
