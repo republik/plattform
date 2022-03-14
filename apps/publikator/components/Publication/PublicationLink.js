@@ -11,6 +11,10 @@ const PublicationLink = ({ publication }) => {
     return null
   }
 
+  const baseUrl =
+    publication.document?.meta?.format?.meta?.externalBaseUrl ||
+    FRONTEND_BASE_URL
+
   return (
     <IconButton
       Icon={publication.prepublication ? LockIcon : PublicIcon}
@@ -20,7 +24,7 @@ const PublicationLink = ({ publication }) => {
       label={publication.prepublication ? 'Vorschau öffnen' : 'Beitrag öffnen'}
       labelShort=''
       fillColorName='primary'
-      href={`${FRONTEND_BASE_URL}${publication.document.meta.path}`}
+      href={`${baseUrl}${publication.document.meta.path}`}
       target='_blank'
     />
   )

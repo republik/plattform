@@ -805,6 +805,10 @@
       "value": "Sie haben keine Berechtigung, diesen Newsletter zu abonnieren."
     },
     {
+      "key": "api/newsletters/request/WEEKLY/subject",
+      "value": "Bestätigen Sie Ihre Anmeldung zum Wochenend-Newsletter."
+    },
+    {
       "key": "api/newsletters/request/COVID19/subject",
       "value": "Bestätigen Sie Ihre Anmeldung zum Covid-19-Uhr-Newsletter."
     },
@@ -1134,7 +1138,7 @@
     },
     {
       "key": "api/access/email/recipient/invitation_kampa202202/subject",
-      "value": "Einladung von {granterName} für vier Wochen Republik"
+      "value": "Einladung von {granterName} für acht Wochen Republik"
     },
     {
       "key": "api/access/email/recipient/invitation_gifted_membership/subject",
@@ -1146,7 +1150,7 @@
     },
     {
       "key": "api/access/email/recipient/onboarding_kampa202202/subject",
-      "value": "Ihr Republik-Probemonat: Willkommen!"
+      "value": "Ihr Republik-Probezugang: Willkommen!"
     },
     {
       "key": "api/access/email/recipient/onboarding_gifted_membership/subject",

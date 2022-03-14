@@ -127,7 +127,10 @@ const NewsletterSubscriptions = ({ t, isMember, free, onlyName }) => (
               {(mutate, { loading: mutating, error }) => {
                 return (
                   <>
-                    {onlyName && !subscribed && !mutating ? (
+                    {onlyName &&
+                    !subscribed &&
+                    status === 'subscribed' &&
+                    !mutating ? (
                       // renders just a button
                       <Button
                         primary

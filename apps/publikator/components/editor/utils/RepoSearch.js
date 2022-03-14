@@ -58,6 +58,7 @@ export const filterRepos = gql`
               description
               credits
               kind
+              externalBaseUrl
               color
               shareLogo
               shareBackgroundImage

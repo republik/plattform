@@ -65,6 +65,67 @@ const text = {
       ?
     </>
   ),
+  Februar: (p) => (
+    <>
+      Kommt nach{' '}
+      <Highlight {...p} ids={['B8eR_v-X3o']}>
+        dem Aus für das Mediengesetz
+      </Highlight>{' '}
+      nun{' '}
+      <Highlight {...p} ids={['kHQWM_3a6']}>
+        die Linksteuer für Tech-Konzerne
+      </Highlight>
+      ?{' '}
+      <Highlight {...p} ids={['dXctUkgc3']}>
+        Diese Frau fordert Big Democracy statt Big Tech
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['EkjkQu_m3']}>
+        Dem Hype um Kryptowährungen auf der Spur
+      </Highlight>{' '}
+      – und{' '}
+      <Highlight {...p} ids={['IGNTeb989']}>
+        warum sich Nationalbanken dafür interessieren
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['uSZvGVjt2']}>
+        So organisiert die Atomlobby ihr Comeback
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['wKiYzLAmv']}>
+        so argumentiert ein (un)kritisches Juristenkomitee
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['P5DAd9pZ0']}>
+        Wars das jetzt mit der Pandemie
+      </Highlight>
+      ? Und{' '}
+      <Highlight {...p} ids={['p_jTQ6-k3']}>
+        wie schlimm hat Corona die Weltwirtschaft getroffen
+      </Highlight>
+      ?{' '}
+      <Highlight {...p} ids={['s5XxZ2PL4']}>
+        Der längste jüdische Witz der Weltgeschichte
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['bCB5_21O2']}>
+        ein himmlisches Dessert
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['mEL6tLG-9']}>
+        Dada
+      </Highlight>
+      . Und plötzlich:{' '}
+      <Highlight {...p} ids={['zCVBDxz3K']}>
+        Erneutes Unheil
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['uPFPFBSTR']}>
+        Krieg in Europa
+      </Highlight>
+      .
+    </>
+  ),
 }
 
 const Overview2022 = (props) => <Page {...props} year={2022} text={text} />

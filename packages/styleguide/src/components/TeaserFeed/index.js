@@ -41,7 +41,10 @@ const creditSchema = {
   rules: [link, br],
 }
 
-const DefaultLink = ({ children, path }) => children
+const DefaultLink = ({ children, href }) => children
+
+export const getTeaserHref = (path, externalBaseUrl) =>
+  externalBaseUrl ? `${externalBaseUrl}${path}` : path
 
 export const TeaserFeed = ({
   kind: metaKind,
@@ -49,6 +52,7 @@ export const TeaserFeed = ({
   template,
   format,
   path,
+  externalBaseUrl,
   repoId,
   title,
   description,
@@ -65,6 +69,10 @@ export const TeaserFeed = ({
   series,
 }) => {
   const formatMeta = (format && format.meta) || {}
+  const href = getTeaserHref(
+    path,
+    externalBaseUrl || formatMeta.externalBaseUrl,
+  )
   const Headline =
     formatMeta.kind === 'meta' ||
     metaKind === 'meta' ||
@@ -94,20 +102,20 @@ export const TeaserFeed = ({
       Link={Link}
       menu={menu}
       repoId={repoId}
-      path={path}
+      href={href}
       title={title}
     >
       <Headline formatColor={titleColor}>
-        <Link href={path} passHref>
-          <a {...styles.link} href={path}>
+        <Link href={href} passHref>
+          <a {...styles.link} href={href}>
             {title}
           </a>
         </Link>
       </Headline>
       {!!description && (
         <Lead>
-          <Link href={path} passHref>
-            <a {...styles.link} href={path}>
+          <Link href={href} passHref>
+            <a {...styles.link} href={href}>
               {description}
             </a>
           </Link>
@@ -120,8 +128,8 @@ export const TeaserFeed = ({
       </Credit>
       {!!highlight && (
         <Highlight label={highlightLabel}>
-          <Link href={path} passHref>
-            <a {...styles.link} href={path}>
+          <Link href={href} passHref>
+            <a {...styles.link} href={href}>
               {highlight}
             </a>
           </Link>
