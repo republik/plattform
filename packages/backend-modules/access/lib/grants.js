@@ -361,6 +361,42 @@ const request = async (granter, campaignId, payload, t, pgdb, redis, mail) => {
   return grant
 }
 
+const checkin = async (campaign, grant, t, pgdb) => {
+  const now = moment()
+  const updateFields = {
+    checkinAt: now,
+    updatedAt: now,
+  }
+  const result = await pgdb.public.accessGrants.update(
+    { id: grant.id, checkinAt: null },
+    updateFields,
+  )
+  const recipient = await pgdb.public.users.findOne({
+    id: grant.recipientUserId,
+  })
+
+  if (recipient && !(await hasUserActiveMembership(recipient, pgdb))) {
+    const granter = await pgdb.public.users.findOne({ id: grant.granterUserId })
+    await mailLib.sendRecipientCheckin(
+      granter,
+      campaign,
+      recipient,
+      grant,
+      t,
+      pgdb,
+    )
+  }
+
+  debug('checkin', {
+    id: grant.id,
+    hasRecipient: !!grant.recipientUserId,
+    ...updateFields,
+    result,
+  })
+
+  return result > 0
+}
+
 const invalidate = async (grant, reason, t, pgdb, mail) => {
   const now = moment()
   const updateFields = {
@@ -589,6 +625,33 @@ const beginGrant = async (grant, payload, recipient, pgdb) => {
   return { ...result, granter, recipient, campaign }
 }
 
+const findEmptyCheckin = async (campaign, pgdb) => {
+  const beginBefore = moment()
+
+  Object.keys(campaign.emailCheckin).forEach((unit) =>
+    beginBefore.subtract(campaign.emailCheckin[unit], unit),
+  )
+
+  debug('findEmptyCheckin', { campaign: campaign.id })
+
+  const grants = await pgdb.public.accessGrants.find({
+    accessCampaignId: campaign.id,
+    'beginAt <': beginBefore,
+    checkinAt: null,
+  })
+
+  // for now we need to filter out 4 weeks grants because we
+  // changed the duration of one specific campaign where this
+  // new checkin transactional is introduced
+  // extra filtering can and should be removed later
+  return grants.filter((grant) => {
+    const grantDuration = moment.duration(
+      moment(grant.endAt).diff(moment(grant.beginAt)),
+    )
+    return grantDuration.asDays() > 30
+  })
+}
+
 const findEmptyFollowup = async (campaign, pgdb) => {
   const invalidateBefore = moment()
 
@@ -613,6 +676,7 @@ module.exports = {
   claim,
   request,
   revoke,
+  checkin,
   invalidate,
   followUp,
 
@@ -622,5 +686,6 @@ module.exports = {
 
   findUnassignedByEmail,
   findInvalid,
+  findEmptyCheckin,
   findEmptyFollowup,
 }

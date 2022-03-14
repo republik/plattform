@@ -86,6 +86,23 @@ const sendRecipientExpired = async (
     pgdb,
   })
 
+const sendRecipientCheckin = async (
+  granter,
+  campaign,
+  recipient,
+  grant,
+  t,
+  pgdb,
+) =>
+  sendMail(recipient.email, 'recipient', 'checkin', {
+    granter,
+    recipient,
+    campaign,
+    grant,
+    t,
+    pgdb,
+  })
+
 const sendRecipientFollowup = async (
   granter,
   campaign,
@@ -317,6 +334,9 @@ module.exports = {
 
   // Offboarding when access expired
   sendRecipientExpired,
+
+  // Checkin during access grant
+  sendRecipientCheckin,
 
   // Followup after access expired
   sendRecipientFollowup,

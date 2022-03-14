@@ -35,6 +35,7 @@ const init = async (context) => {
         1000 * intervalSecs,
       )
 
+      await checkinGrants(t, pgdb, mail)
       await expireGrants(t, pgdb, mail)
       await followupGrants(t, pgdb, mail)
       await updateStats(context)
@@ -80,6 +81,37 @@ const init = async (context) => {
 }
 
 module.exports = { init }
+
+/**
+ * Runs checkin on current grants (only on campaigns with checkin duration specified)
+ */
+
+const checkinGrants = async (t, pgdb, mail) => {
+  debug('checkinGrants...')
+  const queryConditions = {
+    'emailCheckin !=': null,
+  }
+  for (const campaign of await campaignsLib.findAllWithConditions(
+    pgdb,
+    queryConditions,
+  )) {
+    for (const grant of await grantsLib.findEmptyCheckin(campaign, pgdb)) {
+      const transaction = await pgdb.transactionBegin()
+
+      try {
+        await grantsLib.checkin(campaign, grant, t, transaction)
+        await transaction.transactionCommit()
+      } catch (e) {
+        await transaction.transactionRollback()
+
+        debug('rollback', { grant: grant.id })
+
+        throw e
+      }
+    }
+  }
+  debug('checkinGrants done')
+}
 
 /**
  * Renders expired grants invalid.
