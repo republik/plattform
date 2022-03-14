@@ -203,10 +203,13 @@ const runOnce = async () => {
     .filter(Boolean)
     .join(' ')
 
-  const createGraphQLContext = async () => {
+  const connectionContext = await ConnectionContext.create(applicationName)
+
+  const createGraphQLContext = async (defaultContext) => {
     const loaders = {}
     const context = {
-      ...(await ConnectionContext.create(applicationName)),
+      ...defaultContext,
+      ...connectionContext,
       t,
       mail,
       loaders,
@@ -217,7 +220,7 @@ const runOnce = async () => {
     return context
   }
 
-  const context = await createGraphQLContext()
+  const context = await createGraphQLContext({ scope: 'master' })
 
   const slackGreeter = await SlackGreeter.start()
 
