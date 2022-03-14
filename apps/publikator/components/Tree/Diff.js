@@ -65,7 +65,7 @@ export default function TreeDiff(props) {
     <>
       <IconButton
         size={24}
-        label='Differenz'
+        label='Änderungen'
         labelShort=''
         Icon={MdWrapText}
         onClick={handleOnClick}
