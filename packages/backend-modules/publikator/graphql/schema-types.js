@@ -176,7 +176,6 @@ type RepoChange {
   repo: Repo
   commit: Commit
   milestone: Milestone
-  derivative: Derivative
 }
 
 enum RepoChangeMutationType {

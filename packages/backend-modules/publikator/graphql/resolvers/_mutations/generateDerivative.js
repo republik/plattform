@@ -34,7 +34,6 @@ module.exports = async (_, { commitId }, context) => {
       repoId: commit.repoId,
       mutation: 'UPDATED',
       commit,
-      derivative: applyAssetsAudioUrl(derivative),
     },
   })
 

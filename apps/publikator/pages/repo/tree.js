@@ -50,6 +50,7 @@ export const getRepoHistory = gql`
       milestones {
         ...SimpleMilestone
         commit {
+          ...SimpleCommit
           derivatives {
             ...SimpleDerivative
           }
@@ -79,9 +80,13 @@ const treeRepoSubscription = gql`
       }
       milestone {
         ...SimpleMilestone
-      }
-      derivative {
-        ...SimpleDerivative
+        commit {
+          ...SimpleCommit
+          derivatives {
+            ...SimpleDerivative
+          }
+          canDeriveSyntheticReadAloud: canDerive(type: SyntheticReadAloud)
+        }
       }
     }
   }
@@ -127,7 +132,7 @@ class EditorPage extends Component {
             return prev
           }
 
-          const { mutation, repo, commit, milestone, derivative } =
+          const { mutation, repo, commit, milestone } =
             subscriptionData.data.repoChange
 
           const updatedRepo = { ...prev.repo, ...repo }
@@ -136,23 +141,7 @@ class EditorPage extends Component {
             ...prev.repo.commits.nodes.filter(
               (prevCommit) => prevCommit.id !== commit?.id,
             ),
-          ]
-            .filter(Boolean)
-            .map((prevCommit) => {
-              if (prevCommit.id !== commit?.id) {
-                return prevCommit
-              }
-
-              return {
-                ...prevCommit,
-                derivatives: [
-                  derivative,
-                  ...prevCommit.derivatives.filter(
-                    (perDerivative) => perDerivative.id !== derivative?.id,
-                  ),
-                ].filter(Boolean),
-              }
-            })
+          ].filter(Boolean)
           const updatedMilestones = [
             milestone,
             ...prev.repo.milestones.filter(
