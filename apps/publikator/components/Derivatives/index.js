@@ -3,10 +3,21 @@ import { keyframes, css } from 'glamor'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 import MdHearingIcon from 'react-icons/lib/md/hearing'
-import { IconButton, AudioPlayer, mediaQueries } from '@project-r/styleguide'
+import MdPlayArrow from 'react-icons/lib/md/play-arrow'
+import {
+  IconButton,
+  AudioPlayer,
+  mediaQueries,
+  Overlay,
+  OverlayBody,
+  OverlayToolbar,
+  Interaction,
+} from '@project-r/styleguide'
 
 import * as fragments from '../../lib/graphql/fragments'
 import withT from '../../lib/withT'
+
+const { P } = Interaction
 
 const GENERATE_DERIVATIVE = gql`
   mutation generateDerivative($commitId: ID!) {
@@ -29,8 +40,8 @@ const DESTROY_DERIVATIVE = gql`
 `
 
 const pulsate = keyframes({
-  '0%': { opacity: 0.7 },
-  '100%': { opacity: 0.1 },
+  '0%': { opacity: 1 },
+  '100%': { opacity: 0.2 },
 })
 
 const styles = {
@@ -57,6 +68,7 @@ const styles = {
 const SynthesizedAudio = withT(
   ({ t, derivative, onClickGenerate, onClickDestroy }) => {
     const [showAudioPlayer, setShowAudioPlayer] = useState(false)
+    const [showErrorMessage, setShowErrorMessage] = useState(false)
 
     return (
       <>
@@ -65,7 +77,7 @@ const SynthesizedAudio = withT(
             invert
             style={{ marginRight: 0 }}
             Icon={MdHearingIcon}
-            label='Audio generieren'
+            label='Audio-Version erzeugen'
             labelShort=''
             size={24}
             onClick={onClickGenerate}
@@ -78,30 +90,56 @@ const SynthesizedAudio = withT(
               animation: `${pulsate} 0.5s linear infinite alternate`,
             }}
             Icon={MdHearingIcon}
-            label='Wird generiert'
+            label='Audio-Version wird erzeugt'
             labelShort=''
             size={24}
             disabled
           />
         ) : derivative.status === 'Failure' ? (
-          <IconButton
-            invert
-            style={{ marginRight: 0 }}
-            fillColorName='error'
-            Icon={MdHearingIcon}
-            label='Fehler. Neu generieren'
-            labelShort=''
-            onClick={onClickGenerate}
-            size={24}
-          />
+          <>
+            <IconButton
+              invert
+              style={{ marginRight: 0 }}
+              fillColorName='error'
+              Icon={MdHearingIcon}
+              label='Audio-Version fehlerhaft'
+              labelShort='Fehler'
+              size={24}
+              onClick={() => setShowErrorMessage(true)}
+            />
+            {showErrorMessage && (
+              <Overlay onClose={() => setShowErrorMessage(false)}>
+                <OverlayToolbar
+                  title='Audio-Version fehlerhaft'
+                  onClose={() => setShowErrorMessage(false)}
+                />
+                <OverlayBody>
+                  <P>
+                    Fehlermeldung: {JSON.stringify(derivative.result.error)}
+                  </P>
+                  <P>Derivative-ID: {derivative.id}</P>
+                  <IconButton
+                    style={{ marginTop: 10 }}
+                    Icon={MdHearingIcon}
+                    label='Audio-Version erneut erzeugen'
+                    labelShort=''
+                    size={24}
+                    onClick={() => {
+                      onClickGenerate()
+                      setShowErrorMessage(false)
+                    }}
+                  />
+                </OverlayBody>
+              </Overlay>
+            )}
+          </>
         ) : (
           <IconButton
             invert
             style={{ marginRight: 0 }}
-            fillColorName='primary'
-            Icon={MdHearingIcon}
-            label='Abspielen'
-            labelShort=''
+            Icon={MdPlayArrow}
+            label='Audio-Version anhören'
+            labelShort='anhören'
             size={24}
             onClick={() => setShowAudioPlayer(true)}
           />
