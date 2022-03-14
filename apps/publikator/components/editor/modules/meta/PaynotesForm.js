@@ -17,11 +17,14 @@ import PaynoteForm from './PaynoteForm'
 import UIForm from '../../UIForm'
 
 const styles = {
+  paynotes: css({
+    paddingBottom: 300,
+  }),
   title: css({
     display: 'block',
     marginBottom: 5,
   }),
-  container: css({
+  paynote: css({
     backgroundColor: '#fff',
     padding: '5px 10px 15px',
     marginBottom: 15,
@@ -243,7 +246,7 @@ export default withT(({ t, editor, node }) => {
   }
 
   return (
-    <>
+    <div {...styles.paynotes}>
       <UIForm getWidth={() => '50%'}>
         <Dropdown
           black
@@ -260,7 +263,7 @@ export default withT(({ t, editor, node }) => {
           <Label {...styles.title}>{t('metaData/paynotes/title')}</Label>
           {paynotes.map((paynote, i) => {
             return (
-              <div key={i} {...styles.container}>
+              <div key={i} {...styles.paynote}>
                 <A href='#remove' onClick={removePaynote(i)} {...styles.close}>
                   <MdClose size={20} fill='#000' />
                 </A>
@@ -306,6 +309,6 @@ export default withT(({ t, editor, node }) => {
           </A>
         </>
       )}
-    </>
+    </div>
   )
 })

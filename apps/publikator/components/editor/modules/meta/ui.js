@@ -341,9 +341,6 @@ const MetaData = ({
         <br />
         <br />
         {!!paynotes && <PaynotesForm editor={editor} node={node} />}
-        <br />
-        <br />
-        <br />
       </div>
     </div>
   )
