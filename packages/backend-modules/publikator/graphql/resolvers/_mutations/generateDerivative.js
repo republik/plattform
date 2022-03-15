@@ -24,7 +24,12 @@ module.exports = async (_, { commitId }, context) => {
   }
 
   const doc = await getDocument(commit, {}, context)
-  const derivative = await deriveSyntheticReadAloud(doc, pgdb, user)
+  const derivative = await deriveSyntheticReadAloud(
+    doc,
+    { force: true },
+    pgdb,
+    user,
+  )
   if (!derivative) {
     throw new Error(t('api/publikator/generateDerivative/unable'))
   }

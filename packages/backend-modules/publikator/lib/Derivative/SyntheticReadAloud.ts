@@ -115,10 +115,19 @@ export const onPublish = async (document: any, pgdb: any, user?: any) => {
     return
   }
 
-  return derive(document, pgdb, user)
+  return derive(document, { force: false }, pgdb, user)
 }
 
-export const derive = async (document: any, pgdb: any, user?: any) => {
+interface DeriveOptions {
+  force: boolean
+}
+
+export const derive = async (
+  document: any,
+  options: DeriveOptions,
+  pgdb: any,
+  user?: any,
+) => {
   const handlerDebug = debug.extend('derive')
 
   if (!TTS_SERVER_BASE_URL) {
@@ -137,6 +146,7 @@ export const derive = async (document: any, pgdb: any, user?: any) => {
   }
 
   const { commitId } = getParsedDocumentId(document.id)
+  const { force } = options
 
   // @TODO: Loader?
   const derivatives = await pgdb.publikator.derivatives.find({
@@ -157,7 +167,7 @@ export const derive = async (document: any, pgdb: any, user?: any) => {
     ],
   })
 
-  if (derivatives.length) {
+  if (!force && derivatives.length) {
     handlerDebug('derviative found. skipping synthesizing.')
 
     return derivatives.slice(0, 1).pop()
