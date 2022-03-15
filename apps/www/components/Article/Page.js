@@ -510,6 +510,7 @@ const ArticlePage = ({
           const payNote = (
             <PayNote
               seed={payNoteSeed}
+              tryToBuyRatio={meta.tryToBuyRatio}
               tryOrBuy={payNoteTryOrBuy}
               documentId={documentId}
               repoId={repoId}

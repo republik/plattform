@@ -201,14 +201,13 @@ const getPayNote = (
   seed,
   tryOrBuy,
   customOnly,
-  customPayNotes = [],
+  customPayNotes,
+  tryToBuyRatio,
 ) => {
   const targetedCustomPaynotes = customPayNotes
     .map(generateKey)
     .map(disableForIOS)
     .filter(meetTarget(subject))
-
-  console.log({ subject, targetedCustomPaynotes })
 
   if (customOnly || targetedCustomPaynotes.length)
     return getElementFromSeed(targetedCustomPaynotes, seed)
@@ -224,7 +223,7 @@ const getPayNote = (
   if (!targetedPredefinedNotes.length) return null
 
   if (hasTryAndBuyCtas(targetedPredefinedNotes)) {
-    const desiredCta = tryOrBuy < TRY_TO_BUY_RATIO ? 'trialForm' : 'button'
+    const desiredCta = tryOrBuy < tryToBuyRatio ? 'trialForm' : 'button'
     const abPredefinedNotes = targetedPredefinedNotes.filter(hasCta(desiredCta))
     return getElementFromSeed(abPredefinedNotes, seed)
   }
@@ -402,10 +401,10 @@ export const PayNote = compose(
     documentId,
     repoId,
     position,
-    customPayNotes,
+    customPayNotes = [],
     customOnly,
+    tryToBuyRatio = TRY_TO_BUY_RATIO,
   }) => {
-    console.log({ customPayNotes })
     const [colorScheme] = useColorContext()
     const { query } = useRouter()
     const subject = {
@@ -419,6 +418,7 @@ export const PayNote = compose(
       tryOrBuy,
       customOnly,
       customPayNotes,
+      tryToBuyRatio,
     )
 
     if (!payNote) return null
