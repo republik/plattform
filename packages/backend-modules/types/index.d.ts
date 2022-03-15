@@ -12,6 +12,7 @@ export interface GraphqlContext extends ConnectionContext {
   mail: any
   scope?: 'request' | 'socket' | 'middleware' | 'master'
   loaders: any
+  user?: any
 }
 
 /**

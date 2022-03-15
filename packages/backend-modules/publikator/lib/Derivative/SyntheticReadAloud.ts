@@ -6,10 +6,14 @@ import { GraphqlContext } from '@orbiting/backend-modules-types'
 const {
   getParsedDocumentId,
 } = require('@orbiting/backend-modules-search/lib/Documents')
+const {
+  Roles: { userIsInRoles, userHasRole },
+} = require('@orbiting/backend-modules-auth')
 
 import { DerivativeRow } from '../../loaders/Derivative'
 
 const {
+  DOCUMENTS_RESTRICT_TO_ROLES,
   ASSETS_SERVER_BASE_URL,
   TTS_SERVER_BASE_URL,
   TTS_SIGNATURE_SECRET,
@@ -17,6 +21,8 @@ const {
 } = process.env
 
 const debug = createDebug('publikator:lib:Derivative:SyntheticReadAloud')
+
+const documentsRestrictToRoles = DOCUMENTS_RESTRICT_TO_ROLES?.split(',')
 
 export const canDerive = (template: string) =>
   ['article', 'discussion', 'editorialNewsletter', 'page'].includes(template)
@@ -26,6 +32,15 @@ export const processMeta = async (
   document: any,
   context: GraphqlContext,
 ) => {
+  if (!userIsInRoles(context.user, documentsRestrictToRoles)) {
+    return preprocessedMeta
+  }
+
+  // Feature only visible to users w/ editor role during test-run
+  if (!userHasRole(context.user, 'editor')) {
+    return preprocessedMeta
+  }
+
   if (preprocessedMeta.audioSource) {
     return preprocessedMeta
   }
@@ -41,9 +56,11 @@ export const processMeta = async (
 
   const derivatives: DerivativeRow[] =
     await context.loaders.Derivative.byCommitId.load(commitId)
+
   const synthesizedAudio = derivatives.find(
     (d) => d.type === 'SyntheticReadAloud' && d.status === 'Ready',
   )
+
   if (synthesizedAudio) {
     const { result } = synthesizedAudio
     if (!result) {
