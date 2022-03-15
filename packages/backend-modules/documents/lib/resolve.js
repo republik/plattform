@@ -303,8 +303,9 @@ const metaFieldResolver = (meta, allDocuments = [], errors) => {
 
   const format = resolver(meta.format)
 
-  const paynotes =
-    meta.paynotes || format?.meta.paynotes?.filter((p) => p.inherit)
+  const ownPaynotes = meta.paynotes?.filter((p) => !p.inherit)
+  const formatPaynotes = format?.meta.paynotes?.filter((p) => p.inherit)
+  const paynotes = ownPaynotes || formatPaynotes
 
   // object if this document is a series «master» itself
   let series = meta.series
