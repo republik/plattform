@@ -163,9 +163,46 @@ export const derive = async (
   }
 
   const { commitId } = getParsedDocumentId(document.id)
+
+  if (user) {
+    const pendingCount = await pgdb.publikator.derivatives.count({
+      status: 'Pending',
+      readyAt: null,
+      'createdAt >=': moment().subtract(15, 'minutes'),
+      userId: user.id,
+    })
+
+    if (pendingCount > 1) {
+      handlerDebug('too many pending derivatives. skipping synthesizing.', {
+        userId: user.id,
+      })
+
+      const error = {
+        message: 'too many pending derivatives',
+      }
+
+      const derivative = await pgdb.publikator.derivatives.insertAndGet({
+        commitId,
+        type: 'SyntheticReadAloud',
+        status: 'Failure',
+        result: { error },
+        userId: user?.id,
+        ...(user && {
+          author: {
+            name: user.name,
+            email: user.email,
+          },
+        }),
+        updatedAt: new Date(),
+        failedAt: new Date(),
+      })
+
+      return derivative
+    }
+  }
+
   const { force } = options
 
-  // @TODO: Loader?
   const derivatives = await pgdb.publikator.derivatives.find({
     commitId,
     type: 'SyntheticReadAloud',
