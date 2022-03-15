@@ -8,12 +8,10 @@ module.exports = (server, pgdb, t, redis, context) => {
     bodyParser.json(),
     async (req, res) => {
       const { pgdb, loaders } = context
-      console.log('/publikator/webhook/syntheticReadAloud', req.body)
-
-      res.status(200).json({ ok: true })
-
       const { body } = req
       const { derivativeId, error, audioDuration, s3 } = body
+
+      res.status(200).json({ ok: true })
 
       const derivative = await pgdb.publikator.derivatives.updateAndGetOne(
         {
