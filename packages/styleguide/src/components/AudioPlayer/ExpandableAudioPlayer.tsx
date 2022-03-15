@@ -107,20 +107,27 @@ const styles = {
     whiteSpace: 'nowrap',
     display: 'inline-block',
   }),
-  fixedControls: css({
+  leftControls: css({
+    display: 'flex',
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    gap: 16,
+    minWidth: 0,
+  }),
+  rightControls: css({
     display: 'flex',
     gap: 8,
-  }),
-  playbackButton: css({
-    ...sansSerifMedium14,
-    marginLeft: 12,
-    lineHeight: '18px',
   }),
   playBackRateButtons: css({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 6,
+    gap: 20,
+  }),
+  playbackRateButton: css({
+    ...sansSerifMedium14,
+    lineHeight: '18px',
   }),
 }
 
@@ -312,12 +319,12 @@ const ExpandableAudioPlayer = ({
             </div>
             {isPlaybackRateExpanded && (
               <div {...styles.playBackRateButtons}>
-                {[0.75, 1, 1.25].map((rate) => {
+                {[0.5, 0.75, 1, 1.5, 2].map((rate) => {
                   return (
                     <button
                       key={rate}
                       {...plainButtonRule}
-                      {...styles.playbackButton}
+                      {...styles.playbackRateButton}
                       style={{ opacity: rate === playbackRate ? 1 : 0.6 }}
                       onClick={() => {
                         setPlaybackRate(rate)
@@ -335,19 +342,12 @@ const ExpandableAudioPlayer = ({
       )}
       {playbackElement}
       <div {...styles.controls}>
-        <div
-          style={{
-            display: 'flex',
-            flex: 1,
-            justifyContent: 'flex-start',
-            gap: 16,
-            minWidth: 0,
-          }}
-        >
+        <div {...styles.leftControls}>
           {isExpanded ? (
             <button
               {...plainButtonRule}
-              {...styles.playbackButton}
+              {...styles.playbackRateButton}
+              style={{ marginLeft: 12 }}
               onClick={() => setIsPlaybackRateExpanded(!isPlaybackRateExpanded)}
             >
               {playbackRate}x
@@ -357,7 +357,6 @@ const ExpandableAudioPlayer = ({
               <button
                 {...styles.button}
                 {...plainButtonRule}
-                // style={{ marginLeft: playing ? -10.5 : -11.375 }}
                 onClick={playEnabled ? toggle : null}
                 title={t(
                   `styleguide/AudioPlayer/${playing ? 'pause' : 'play'}`,
@@ -390,7 +389,7 @@ const ExpandableAudioPlayer = ({
             </>
           )}
         </div>
-        <div {...styles.fixedControls}>
+        <div {...styles.rightControls}>
           <button
             title={t('styleguide/AudioPlayer/close')}
             onClick={() => setIsExpanded(!isExpanded)}
