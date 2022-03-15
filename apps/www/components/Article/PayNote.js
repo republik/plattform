@@ -129,7 +129,7 @@ const predefinedNotes = generateNotes(
   {
     hasActiveMembership: false,
     isEligibleForTrial: true,
-    inNativeIOSApp: true,
+    inNativeIOSApp: 'any',
   },
   'trialForm',
 )
@@ -212,13 +212,7 @@ const getPayNote = (
   if (customOnly || targetedCustomPaynotes.length)
     return getElementFromSeed(targetedCustomPaynotes, seed)
 
-  const targetedPredefinedNotes = predefinedNotes.filter(
-    meetTarget({
-      ...subject,
-      // tmp: disallow generic trials pending new strategie
-      isEligibleForTrial: subject.isEligibleForTrial && subject.inNativeIOSApp,
-    }),
-  )
+  const targetedPredefinedNotes = predefinedNotes.filter(meetTarget(subject))
 
   if (!targetedPredefinedNotes.length) return null
 
@@ -401,9 +395,9 @@ export const PayNote = compose(
     documentId,
     repoId,
     position,
-    customPayNotes = [],
+    customPayNotes,
     customOnly,
-    tryToBuyRatio = TRY_TO_BUY_RATIO,
+    tryToBuyRatio,
   }) => {
     const [colorScheme] = useColorContext()
     const { query } = useRouter()

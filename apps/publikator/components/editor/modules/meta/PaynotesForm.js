@@ -200,6 +200,7 @@ export default withT(({ t, editor, node, isFormat }) => {
   }
 
   // set initial mode base on paynotes configuration
+  // TODO: move in useState?
   useEffect(() => {
     if (!paynotes?.length) {
       if (tryToBuyRatio === 0) {
