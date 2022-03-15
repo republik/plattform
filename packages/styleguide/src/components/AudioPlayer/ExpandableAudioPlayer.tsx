@@ -13,7 +13,13 @@ import {
 } from '../Typography/styles'
 import { InlineSpinner } from '../Spinner'
 
-import { PlayIcon, PauseIcon, ForwardIcon, CloseIcon } from '../Icons'
+import {
+  PlayIcon,
+  PauseIcon,
+  ForwardIcon,
+  CloseIcon,
+  DownloadIcon,
+} from '../Icons'
 import Scrubber from './Scrubber'
 
 import {
@@ -54,6 +60,14 @@ interface ExtendePlayerProps extends AudioInfoProps {
   timeRanges: { start: number; end: number }[]
   closeHandler: () => void
   setTime: (time: number) => void
+  download: boolean
+  src: {
+    mp3: string
+    aac: string
+    ogg: string
+    hls: string
+    mp4: string
+  }
 }
 
 const styles = {
@@ -61,7 +75,7 @@ const styles = {
   expandedContainer: css({
     display: 'flex',
     flexDirection: 'column',
-    padding: 16,
+    padding: '16px 16px 0 16px',
     gap: 18,
   }),
   expandedPlayButton: css({
@@ -77,7 +91,6 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     height: 54,
-    padding: '0 10px 0 4px',
   }),
   button: css({
     ...plainButtonRule,
@@ -92,6 +105,12 @@ const styles = {
   }),
   ellipsize: css({
     ...ellipsize,
+  }),
+  expandedTitle: css({
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 2,
+    overflow: 'hidden',
   }),
   time: css({ ...sansSerifRegular14, margin: 0 }),
   scrubber: css({
@@ -168,7 +187,11 @@ const AudioInfo = ({
         <>
           {title && (
             <Link href={sourcePath} passHref>
-              <a {...colorScheme.set('color', 'text')} href={sourcePath}>
+              <a
+                {...(expanded && styles.expandedTitle)}
+                {...colorScheme.set('color', 'text')}
+                href={sourcePath}
+              >
                 {title}
               </a>
             </Link>
@@ -216,10 +239,11 @@ const ExpandableAudioPlayer = ({
   formattedDuration,
   setTime,
   setPlaybackRate,
+  download,
+  src,
 }: ExtendePlayerProps) => {
   const [colorScheme] = useColorContext()
   const [isExpanded, setIsExpanded] = useState(false)
-  const [isPlaybackRateExpanded, setIsPlaybackRateExpanded] = useState(false)
 
   return (
     <div
@@ -228,10 +252,7 @@ const ExpandableAudioPlayer = ({
       ref={containerRef}
     >
       {isExpanded && (
-        <div
-          {...styles.expandedContainer}
-          style={{ paddingBottom: isPlaybackRateExpanded ? 0 : 16 }}
-        >
+        <div {...styles.expandedContainer}>
           <>
             <AudioInfo
               expanded={true}
@@ -317,41 +338,57 @@ const ExpandableAudioPlayer = ({
                 timeRanges={timeRanges}
               />
             </div>
-            {isPlaybackRateExpanded && (
-              <div {...styles.playBackRateButtons}>
-                {[0.5, 0.75, 1, 1.5, 2].map((rate) => {
-                  return (
-                    <button
-                      key={rate}
-                      {...plainButtonRule}
-                      {...styles.playbackRateButton}
-                      style={{ opacity: rate === playbackRate ? 1 : 0.6 }}
-                      onClick={() => {
-                        setPlaybackRate(rate)
-                        setIsPlaybackRateExpanded(false)
-                      }}
-                    >
-                      {rate}x
-                    </button>
-                  )
-                })}
-              </div>
-            )}
+            <div {...styles.playBackRateButtons}>
+              {[0.5, 0.75, 1, 1.5, 2].map((rate) => {
+                return (
+                  <button
+                    key={rate}
+                    {...plainButtonRule}
+                    {...styles.playbackRateButton}
+                    style={{ opacity: rate === playbackRate ? 1 : 0.6 }}
+                    onClick={() => {
+                      setPlaybackRate(rate)
+                    }}
+                  >
+                    {rate}x
+                  </button>
+                )
+              })}
+            </div>
           </>
         </div>
       )}
       {playbackElement}
-      <div {...styles.controls}>
+      <div
+        {...styles.controls}
+        style={{ padding: `0 10px 0 ${isExpanded ? 10 : 4}px` }}
+      >
         <div {...styles.leftControls}>
           {isExpanded ? (
-            <button
-              {...plainButtonRule}
-              {...styles.playbackRateButton}
-              style={{ marginLeft: 12 }}
-              onClick={() => setIsPlaybackRateExpanded(!isPlaybackRateExpanded)}
-            >
-              {playbackRate}x
-            </button>
+            <>
+              {download && (
+                <button {...styles.button} {...plainButtonRule}>
+                  {playEnabled && (
+                    <a
+                      href={src.mp3 || src.aac || src.mp4}
+                      download
+                      title={t('styleguide/AudioPlayer/download')}
+                    >
+                      <DownloadIcon
+                        size={22}
+                        {...colorScheme.set('fill', 'text')}
+                      />
+                    </a>
+                  )}
+                  {!playEnabled && (
+                    <DownloadIcon
+                      size={22}
+                      {...colorScheme.set('fill', 'disabled')}
+                    />
+                  )}
+                </button>
+              )}
+            </>
           ) : (
             <>
               <button

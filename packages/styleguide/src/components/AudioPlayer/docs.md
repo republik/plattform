@@ -14,10 +14,10 @@ Props:
 
 - `mode`: sting, `inline` (default) or `overlay`. Determins the style of player. Overlay players include an expanded mode and thus support additional features, like playbackRate and in the future, playlists.
 - `closeHandler`: Function, optional for `inline` mode, required for `overlay` mode. Displays a close icon on the player in `inline` mode (wich is always present in the `overlay` mode), calls the handler on click.
+- `download`: Whether to display a download icon.
 
 The following props only have an effect when using the `inline` mode:
 
-- `download`: Whether to display a download icon.
 - `scrubberPosition`: string (optional), `top` (default) or `bottom`.
 - `timePosition`: string (optional), `right` (default) or `left`.
 - `height`: number (optional); The player height in pixels, defaults to 44.
@@ -48,7 +48,8 @@ Context:
         mp3: 'https://cdn.repub.ch/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
       }}
       mode='overlay'
-      title='Dies ist ein langer Titel eines Audio-Beitrags der Republik'
+      download
+      title='Vier Schriftstellerinnen schildern die jahrelange russische Bedrohung der Ukraine. Dazu: Der Wochenkommentar und eine neue Podcast-Folge.'
       t={t}
     />
   </div>
@@ -56,7 +57,6 @@ Context:
 ```
 
 ### Inline Player
-
 
 ```react
 <AudioPlayer

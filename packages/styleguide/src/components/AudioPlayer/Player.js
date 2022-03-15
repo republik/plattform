@@ -527,6 +527,8 @@ class AudioPlayer extends Component {
           formattedCurrentTime={this.formattedCurrentTime}
           formattedDuration={this.formattedDuration}
           setTime={this.setTime}
+          download={download}
+          src={src}
         />
       )
     } else {
