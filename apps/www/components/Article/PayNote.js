@@ -160,17 +160,14 @@ const isEmpty = (positionedNote) =>
     (positionedNote.cta === 'button' && !positionedNote.button.label)) &&
   !positionedNote.content
 
-const meetTarget = (target) => (payNote) => {
-  const targetKeys = new Set(Object.keys(payNote.target))
-  return Array.from(targetKeys).every(
-    (key) =>
+const meetTarget = (target) => (payNote) =>
+  Object.keys(payNote.target).every((key) => {
+    return (
       payNote.target[key] === 'any' ||
       payNote.target[key] ===
-        (typeof payNote.target[key] === 'boolean'
-          ? !!target[key]
-          : target[key]),
-  )
-}
+        (typeof payNote.target[key] === 'boolean' ? !!target[key] : target[key])
+    )
+  })
 
 const generateKey = (note, index) => {
   return { ...note, key: `custom-${index}` }
@@ -210,6 +207,8 @@ const getPayNote = (
     .map(generateKey)
     .map(disableForIOS)
     .filter(meetTarget(subject))
+
+  console.log({ subject, targetedCustomPaynotes })
 
   if (customOnly || targetedCustomPaynotes.length)
     return getElementFromSeed(targetedCustomPaynotes, seed)
@@ -406,6 +405,7 @@ export const PayNote = compose(
     customPayNotes,
     customOnly,
   }) => {
+    console.log({ customPayNotes })
     const [colorScheme] = useColorContext()
     const { query } = useRouter()
     const subject = {

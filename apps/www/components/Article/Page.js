@@ -513,7 +513,7 @@ const ArticlePage = ({
               tryOrBuy={payNoteTryOrBuy}
               documentId={documentId}
               repoId={repoId}
-              customPayNotes={article?.content?.meta?.paynotes}
+              customPayNotes={meta.paynotes}
               customOnly={isPage || isFormat}
               position='before'
             />

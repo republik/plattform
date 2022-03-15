@@ -48,6 +48,11 @@ type Newsletter {
   free: Boolean
 }
 
+type PaynoteTarget {
+  hasActiveMembership: Boolean
+  isEligibleForTrial: Boolean
+}
+
 type Meta {
   title: String
   shortTitle: String
@@ -103,6 +108,9 @@ type Meta {
   indicateChart: Boolean
   indicateGallery: Boolean
   indicateVideo: Boolean
+  
+  paynotes: [JSON]
+  tryToBuyRatio: Float
 }
 
 input DocumentInput {
