@@ -998,7 +998,7 @@
     },
     {
       "key": "account/pledges/payment/methods/google-pay/unavailable",
-      "value": "Google Pay ist auf ihrem Gerät nicht verfügbar.\nBitte zahlen Sie direkt mit ihrer Kreditkarte oder wählen Sie ein anderes Zahlungsmittel"
+      "value": "Google Pay ist auf Ihrem Gerät nicht verfügbar.\nBitte geben Sie Ihre Kreditkartendaten manuell ein oder wählen Sie ein anderes Zahlungsmittel"
     },
     {
       "key": "account/pledges/payment/methods/chose-another",

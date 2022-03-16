@@ -146,8 +146,7 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
 
   const [syncAddresses, setSyncAddresses] = useState(true)
   const [isApplePayAvailable] = useIsApplePayAvailable()
-  const [isGooglePayAvailable, setIsGooglePayAvailable] =
-    useIsGooglePayAvailable()
+  const [isGooglePayAvailable] = useIsGooglePayAvailable()
 
   // In case STRIPE is an accepted payment method,
   // add additional payment methods such as Apple or Google Pay if available
@@ -197,7 +196,6 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
       syncAddresses={props.requireShippingAddress && syncAddresses}
       setSyncAddresses={setSyncAddresses}
       paymentRequest={paymentRequest}
-      setIsGooglePayAvailable={setIsGooglePayAvailable}
     />
   )
 }
@@ -298,10 +296,6 @@ class Submit extends Component {
       // handle unavailable wallet
       if (this.state.values.paymentMethod === 'STRIPE-WALLET-GOOGLE-PAY') {
         // Special handling of Google Pay
-        if (this.props.setIsGooglePayAvailable) {
-          this.props.setIsGooglePayAvailable(false)
-        }
-
         this.setState(() => ({
           loading: false,
           unavailableError: t(
