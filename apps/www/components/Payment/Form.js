@@ -31,7 +31,7 @@ import * as PSPIcons from './PSPIcons'
 import { format } from 'd3-format'
 
 import StripeForm from './Form/Stripe'
-import ApplePayButton from './Form/ApplePayButton'
+import ApplePayMark from './Form/ApplePayMark'
 import GooglePayMark from './Form/GooglePayMark'
 import { WalletPaymentMethod } from './PaymentRequest/usePaymentRequest'
 
@@ -75,7 +75,7 @@ const PAYMENT_METHODS = [
   {
     disabled: inNativeAppBrowser,
     key: WalletPaymentMethod.APPLE_PAY,
-    Icon: ApplePayButton,
+    Icon: ApplePayMark,
   },
   {
     disabled: inNativeAppBrowser,

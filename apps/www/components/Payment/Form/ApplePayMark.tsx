@@ -13,6 +13,6 @@ const styles = {
   }),
 }
 
-const ApplePayButton = () => <span {...styles.button} />
+const ApplePayMark = () => <span {...styles.button} />
 
-export default ApplePayButton
+export default ApplePayMark
