@@ -108,14 +108,11 @@ const SyntheticAudio = ({ meta }: { meta: Meta }) => {
         />
         <div {...styles.textContainer}>
           <p {...styles.title} {...colorScheme.set('fill', 'text')}>
-            <HeadPhonesIcon />
-            Beitrag von synthetischen Stimme vorlesen lassen
+            Beitrag von synthetischen Stimme vorlesen lassen{' '}
+            <span style={{ color: '#E9A733' }}>(Interner Test)</span>
           </p>
           <p {...styles.lead}>
-            Ein Test, um die Republik zugänglicher zu machen.{' '}
-            <Editorial.A>
-              Wie schlecht finden Sie die Computerstimme?
-            </Editorial.A>
+            Ein Versuch, die Republik zugänglicher zu machen.
           </p>
         </div>
       </div>
