@@ -1,28 +1,26 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Stripe,
   PaymentRequest,
   PaymentRequestOptions,
   PaymentRequestPaymentMethodEvent,
-  CanMakePaymentResult,
   PaymentRequestWallet,
 } from '@stripe/stripe-js'
 import { loadStripe } from '../stripe'
 import { makePaymentRequestOptions } from './PaymentRequestOption.helper'
-import { withWarningSpy } from '@apollo/client/testing'
 
-export enum WalletPaymentMethods {
+export enum WalletPaymentMethod {
   APPLE_PAY = 'STRIPE-WALLET-APPLE-PAY',
   GOOGLE_PAY = 'STRIPE-WALLET-GOOGLE-PAY',
 }
 
 function getPaymentRequestWalletValue(
-  wallet: WalletPaymentMethods,
+  wallet: WalletPaymentMethod,
 ): PaymentRequestWallet {
   switch (wallet) {
-    case WalletPaymentMethods.APPLE_PAY:
+    case WalletPaymentMethod.APPLE_PAY:
       return 'applePay'
-    case WalletPaymentMethods.GOOGLE_PAY:
+    case WalletPaymentMethod.GOOGLE_PAY:
       return 'googlePay'
     default:
       return null
@@ -47,12 +45,12 @@ type PaymentCanceledHandler = () => void
 
 interface PaymentRequestValues {
   status: PaymentRequestStatus
-  initialize: (wallet: WalletPaymentMethods) => Promise<PaymentRequestStatus>
+  initialize: (wallet: WalletPaymentMethod) => Promise<PaymentRequestStatus>
   show: (
     handlePayment: PaymentHandler,
     handleCancel: PaymentCanceledHandler,
   ) => void
-  usedWallet: WalletPaymentMethods
+  usedWallet: WalletPaymentMethod
 }
 
 /**
@@ -61,7 +59,7 @@ interface PaymentRequestValues {
  *
  * @param options used to initialize the payment request
  */
-function useStripePaymentRequest(
+function usePaymentRequest(
   options: LeanPaymentRequestOptions,
 ): PaymentRequestValues {
   const [stripe, setStripe] = useState<Stripe>(null)
@@ -70,7 +68,7 @@ function useStripePaymentRequest(
     PaymentRequestStatus.IDLE,
   )
 
-  const [usedWallet, setUsedWallet] = useState<WalletPaymentMethods>(null)
+  const [usedWallet, setUsedWallet] = useState<WalletPaymentMethod>(null)
   const [lastOptions, setLastOptions] =
     useState<LeanPaymentRequestOptions>(null)
 
@@ -87,7 +85,7 @@ function useStripePaymentRequest(
   }, [paymentRequest, lastOptions, options])
 
   async function createPaymentRequest(
-    wallet: WalletPaymentMethods,
+    wallet: WalletPaymentMethod,
   ): Promise<PaymentRequestStatus> {
     let stripePromise = stripe
     if (!stripe) {
@@ -118,7 +116,7 @@ function useStripePaymentRequest(
   }
 
   async function initializePaymentRequest(
-    wallet: WalletPaymentMethods,
+    wallet: WalletPaymentMethod,
   ): Promise<PaymentRequestStatus> {
     setStatus(PaymentRequestStatus.LOADING)
     return createPaymentRequest(wallet)
@@ -166,4 +164,4 @@ function useStripePaymentRequest(
   }
 }
 
-export default useStripePaymentRequest
+export default usePaymentRequest

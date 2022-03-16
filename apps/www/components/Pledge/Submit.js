@@ -44,10 +44,10 @@ import {
   useIsApplePayAvailable,
   useIsGooglePayAvailable,
 } from '../Payment/Form/StripeWalletHelpers'
-import useStripePaymentRequest, {
+import usePaymentRequest, {
   PaymentRequestStatus,
-  WalletPaymentMethods,
-} from '../Payment/PaymentRequest/useStripePaymentRequest'
+  WalletPaymentMethod,
+} from '../Payment/PaymentRequest/usePaymentRequest'
 import { getPayerInformationFromEvent } from '../Payment/PaymentRequest/PaymentRequestEventHelper'
 import { css } from 'glamor'
 
@@ -156,13 +156,13 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
     }
 
     return [
-      isApplePayAvailable ? WalletPaymentMethods.APPLE_PAY : null,
-      isGooglePayAvailable ? WalletPaymentMethods.GOOGLE_PAY : null,
+      isApplePayAvailable ? WalletPaymentMethod.APPLE_PAY : null,
+      isGooglePayAvailable ? WalletPaymentMethod.GOOGLE_PAY : null,
       ...paymentMethods,
     ].filter(Boolean)
   }, [paymentMethods, isApplePayAvailable, isGooglePayAvailable])
 
-  const paymentRequest = useStripePaymentRequest({
+  const paymentRequest = usePaymentRequest({
     requestPayerEmail: !customMe,
     requestPayerName: !customMe || !customMe?.address,
     total: {

@@ -33,7 +33,7 @@ import { format } from 'd3-format'
 import StripeForm from './Form/Stripe'
 import ApplePayButton from './Form/ApplePayButton'
 import GooglePayMark from './Form/GooglePayMark'
-import { WalletPaymentMethods } from './PaymentRequest/useStripePaymentRequest'
+import { WalletPaymentMethod } from './PaymentRequest/usePaymentRequest'
 
 const pad2 = format('02')
 
@@ -74,12 +74,12 @@ const PAYMENT_METHODS = [
   },
   {
     disabled: inNativeAppBrowser,
-    key: WalletPaymentMethods.APPLE_PAY,
+    key: WalletPaymentMethod.APPLE_PAY,
     Icon: ApplePayButton,
   },
   {
     disabled: inNativeAppBrowser,
-    key: WalletPaymentMethods.GOOGLE_PAY,
+    key: WalletPaymentMethod.GOOGLE_PAY,
     Icon: GooglePayMark,
   },
   {
