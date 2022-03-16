@@ -1158,7 +1158,7 @@
     },
     {
       "key": "api/access/email/recipient/checkin/subject",
-      "value": "Checkin XYZ"
+      "value": "Leseempfehlungen aus der Republik"
     },
     {
       "key": "api/access/email/recipient/expired/subject",
