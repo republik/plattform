@@ -91,7 +91,7 @@ const recommendations = async (t, pgdb, mail) => {
   const queryConditions = {
     'emailRecommendations !=': null,
   }
-  for (const campaign of await campaignsLib.findAllWithConditions(
+  for (const campaign of await campaignsLib.findByConditions(
     pgdb,
     queryConditions,
   )) {
