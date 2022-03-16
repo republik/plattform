@@ -261,24 +261,37 @@ class Submit extends Component {
       this.props.paymentRequest.status === PaymentRequestStatus.UNAVAILABLE
 
     if (isUninitializedStripeWallet || isOutdatedStripeWallet) {
-      // Re-initialize the payment-request for the current wallet
-      this.setState(() => ({
-        loading: t('account/pledges/payment/methods/loading'),
-      }))
-
       const selectedPaymentMethod = this.state.values.paymentMethod
 
       // Create payment-request
       this.props.paymentRequest
         .initialize(selectedPaymentMethod)
         .then((status) => {
-          this.setState(() => ({
-            loading: false,
-            walletError:
-              status === PaymentRequestStatus.UNAVAILABLE
-                ? t('account/pledges/payment/methods/unavailable')
+          if (status !== PaymentRequestStatus.UNAVAILABLE) {
+            this.setState(() => ({
+              loading: false,
+              walletError: null,
+            }))
+          } else {
+            const isGooglePayPayment =
+              this.state.values?.paymentMethod ===
+              WalletPaymentMethod.GOOGLE_PAY
+
+            console.log('yeet', isGooglePayPayment, status)
+
+            this.setState((prevState) => ({
+              loading: false,
+              walletError: t('account/pledges/payment/methods/unavailable'),
+              stripeError: isGooglePayPayment
+                ? t('account/pledges/payment/methods/google-pay/unavailable')
                 : null,
-          }))
+              values: {
+                paymentMethod: isGooglePayPayment
+                  ? 'STRIPE'
+                  : prevState.values.paymentMethod,
+              },
+            }))
+          }
         })
         .catch((error) => {
           console.error('Wallet initialization error', error)
@@ -289,6 +302,11 @@ class Submit extends Component {
             ),
           }))
         })
+
+      // Re-initialize the payment-request for the current wallet
+      this.setState(() => ({
+        loading: t('account/pledges/payment/methods/loading'), // The loading state is tracked though paymentRequest.status
+      }))
     } else if (
       isUnavailableAndStripeWalletIsSelected &&
       !this.state.walletError
@@ -297,9 +315,14 @@ class Submit extends Component {
         loading: false,
         walletError: t('account/pledges/payment/methods/unavailable'),
       }))
-    } else if (!this.isStripeWalletPayment() && this.state.walletError) {
+    }
+    if (
+      this.state.values.paymentMethod &&
+      !this.state.values.paymentMethod.startsWith('STRIPE') &&
+      this.state.stripeError
+    ) {
       this.setState(() => ({
-        walletError: null,
+        stripeError: null,
       }))
     }
   }
@@ -830,6 +853,7 @@ class Submit extends Component {
       submitError,
       walletError,
       signInError,
+      stripeError,
       loading,
     } = this.state
     const {
@@ -849,6 +873,22 @@ class Submit extends Component {
       customMe,
       contactState,
     } = this.props
+
+    console.debug(
+      JSON.stringify(
+        {
+          paymentMethod: this.state.values.paymentMethod,
+          isStripeWalletPayment: this.isStripeWalletPayment(),
+          paymentError: paymentError,
+          submitError: submitError,
+          walletError: walletError,
+          stripeError: stripeError,
+          status: this.props.paymentRequest.status,
+        },
+        null,
+        2,
+      ),
+    )
 
     const errorMessages = this.getErrorMessages()
 
@@ -885,6 +925,39 @@ class Submit extends Component {
               )}
               <br />
             </>
+          )}
+          {me && (
+            <Interaction.P>
+              {t('pledge/contact/signedinAs', {
+                nameOrEmail: me.name
+                  ? `${me.name.trim()} (${me.email})`
+                  : me.email,
+              })}{' '}
+              <A
+                href='#'
+                onClick={(e) => {
+                  e.preventDefault()
+                  this.setState({ emailVerify: false })
+                  this.props.signOut().then(() => {
+                    contactState.onChange({
+                      values: {
+                        firstName: '',
+                        lastName: '',
+                        email: '',
+                      },
+                      dirty: {
+                        firstName: false,
+                        lastName: false,
+                        email: false,
+                      },
+                    })
+                    this.setState({ showSignIn: false })
+                  })
+                }}
+              >
+                {t('pledge/contact/signOut')}
+              </A>
+            </Interaction.P>
           )}
         </div>
         <div {...styles.topMargin}>
@@ -931,89 +1004,53 @@ class Submit extends Component {
             errors={this.state.errors}
             dirty={this.state.dirty}
           >
+            <p>Hello</p>
+            {stripeError && <ErrorMessage error={stripeError} />}
             {
               // Only render the browser API in case we're not using a browser payment API
-              this.state.values.paymentMethod && !this.isStripeWalletPayment() && (
-                <div {...styles.topMargin}>
-                  {contactPreface && (
-                    <div style={{ marginBottom: 40 }}>
-                      <P>{contactPreface}</P>
-                    </div>
-                  )}
-                  <Label>
-                    {t.first([
-                      `pledge/contact/title/${packageName}`,
-                      'pledge/contact/title',
-                    ])}
-                  </Label>
-                  <div style={{ marginTop: 10, marginBottom: 10 }}>
-                    {me && (
-                      <>
-                        <Interaction.P>
-                          {t('pledge/contact/signedinAs', {
-                            nameOrEmail: me.name
-                              ? `${me.name.trim()} (${me.email})`
-                              : me.email,
-                          })}{' '}
-                          <A
-                            href='#'
-                            onClick={(e) => {
-                              e.preventDefault()
-                              this.setState({ emailVerify: false })
-                              this.props.signOut().then(() => {
-                                contactState.onChange({
-                                  values: {
-                                    firstName: '',
-                                    lastName: '',
-                                    email: '',
-                                  },
-                                  dirty: {
-                                    firstName: false,
-                                    lastName: false,
-                                    email: false,
-                                  },
-                                })
-                                this.setState({ showSignIn: false })
-                              })
-                            }}
-                          >
-                            {t('pledge/contact/signOut')}
-                          </A>
-                        </Interaction.P>
-                        {/* TODO: add active membership info */}
-                      </>
+              !me &&
+                this.state.values.paymentMethod &&
+                !this.isStripeWalletPayment() && (
+                  <div {...styles.topMargin}>
+                    {contactPreface && (
+                      <div style={{ marginBottom: 40 }}>
+                        <P>{contactPreface}</P>
+                      </div>
                     )}
-                    {!showSignIn && (
-                      <>
-                        {customMe && !me ? (
-                          <>
-                            <Interaction.P>
-                              <Label>{t('pledge/contact/email/label')}</Label>
-                              <br />
-                              {customMe.email}
-                            </Interaction.P>
+                    <Label>
+                      {t.first([
+                        `pledge/contact/title/${packageName}`,
+                        'pledge/contact/title',
+                      ])}
+                    </Label>
+                    <div style={{ marginTop: 10, marginBottom: 10 }}>
+                      {customMe && !me ? (
+                        <>
+                          <Interaction.P>
+                            <Label>{t('pledge/contact/email/label')}</Label>
                             <br />
-                            <Link
-                              href={{
-                                pathname: '/angebote',
-                                query: {
-                                  package: packageName,
-                                },
-                              }}
-                              replace
-                              passHref
-                            >
-                              <A>{t('pledge/contact/signIn/wrongToken')}</A>
-                            </Link>
-                          </>
-                        ) : (
-                          <FieldSet {...contactState} />
-                        )}
-                      </>
-                    )}
+                            {customMe.email}
+                          </Interaction.P>
+                          <br />
+                          <Link
+                            href={{
+                              pathname: '/angebote',
+                              query: {
+                                package: packageName,
+                              },
+                            }}
+                            replace
+                            passHref
+                          >
+                            <A>{t('pledge/contact/signIn/wrongToken')}</A>
+                          </Link>
+                        </>
+                      ) : (
+                        <FieldSet {...contactState} />
+                      )}
+                    </div>
                   </div>
-                </div>
-              )
+                )
             }
           </PaymentForm>
         </div>
