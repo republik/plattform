@@ -17,7 +17,7 @@
     "test": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit --testPathPattern \"\\.(u)|(unit)\\.jest\"",
     "test:all": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit",
     "test:integration": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit --testPathPattern \"\\.(int)|(integration)\\.jest\"",
-    "test:dev": "yarn test:unit --watch",
+    "test:dev": "yarn test --watch",
     "test:cover": "TZ=Europe/Amsterdam jest --collectCoverage --detectOpenHandles --forceExit",
     "test:reportCover": "cat ./coverage/lcov.info | coveralls"
   },
