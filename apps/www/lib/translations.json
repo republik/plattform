@@ -1037,6 +1037,10 @@
       "value": "Rechnung"
     },
     {
+      "key": "account/pledges/payment/your-payment-data",
+      "value": "Ihre Kreditkartendaten"
+    },
+    {
       "key": "account/pledges/payment/status/generic/WAITING",
       "value": "{formattedTotal} ausstehend"
     },

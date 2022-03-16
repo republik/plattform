@@ -454,12 +454,9 @@ class PaymentForm extends Component {
             )
           }}
         />
-        {
-          // For example teh contact form is passed this way and should be rendered above the payment inputs
-          children
-        }
         {paymentMethodForm === 'PAYMENTSLIP' && (
           <div>
+            {children}
             <Label>{t('payment/paymentslip/explanation')}</Label>
             <br />
             <br />
@@ -534,6 +531,8 @@ class PaymentForm extends Component {
         {paymentMethodForm === 'STRIPE' && (
           <>
             {stripeNote && <Label>{stripeNote}</Label>}
+            {children}
+            <Label>{t('account/pledges/payment/your-payment-data')}</Label>
             <StripeForm
               t={t}
               onChange={onChange}
@@ -545,49 +544,55 @@ class PaymentForm extends Component {
           </>
         )}
         {paymentMethodForm === 'POSTFINANCECARD' && (
-          <form
-            ref={this.postFinanceFormRef}
-            method='post'
-            action={PF_FORM_ACTION}
-          >
-            {postfinance
-              .getParams({
-                userId: payload.userId,
-                orderId: payload.id,
-                amount: payload.total,
-                alias: payload.pfAliasId,
-                sha: payload.pfSHA,
-              })
-              .map((param) => (
-                <input
-                  key={param.key}
-                  type='hidden'
-                  name={param.key}
-                  value={param.value || ''}
-                />
-              ))}
-          </form>
+          <>
+            {children}
+            <form
+              ref={this.postFinanceFormRef}
+              method='post'
+              action={PF_FORM_ACTION}
+            >
+              {postfinance
+                .getParams({
+                  userId: payload.userId,
+                  orderId: payload.id,
+                  amount: payload.total,
+                  alias: payload.pfAliasId,
+                  sha: payload.pfSHA,
+                })
+                .map((param) => (
+                  <input
+                    key={param.key}
+                    type='hidden'
+                    name={param.key}
+                    value={param.value || ''}
+                  />
+                ))}
+            </form>
+          </>
         )}
         {paymentMethodForm === 'PAYPAL' && (
-          <form
-            ref={this.payPalFormRef}
-            method='post'
-            action={PAYPAL_FORM_ACTION}
-          >
-            {paypal
-              .getParams({
-                itemName: payload.id,
-                amount: payload.total,
-              })
-              .map((param) => (
-                <input
-                  key={param.key}
-                  type='hidden'
-                  name={param.key}
-                  value={param.value || ''}
-                />
-              ))}
-          </form>
+          <>
+            {children}
+            <form
+              ref={this.payPalFormRef}
+              method='post'
+              action={PAYPAL_FORM_ACTION}
+            >
+              {paypal
+                .getParams({
+                  itemName: payload.id,
+                  amount: payload.total,
+                })
+                .map((param) => (
+                  <input
+                    key={param.key}
+                    type='hidden'
+                    name={param.key}
+                    value={param.value || ''}
+                  />
+                ))}
+            </form>
+          </>
         )}
       </div>
     )
