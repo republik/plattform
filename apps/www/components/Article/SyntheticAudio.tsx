@@ -3,7 +3,7 @@ import { css } from 'glamor'
 import {
   IconButton,
   useColorContext,
-  PlayIcon,
+  AudioIcon,
   fontStyles,
   Editorial,
   mediaQueries,
@@ -95,7 +95,7 @@ const SyntheticAudio = ({ meta }: { meta: Meta }) => {
         <IconButton
           style={{ marginRight: 0 }}
           size={56}
-          Icon={PlayIcon}
+          Icon={AudioIcon}
           onClick={(e) => {
             e.preventDefault()
             trackEvent(['SyntheticAudio', 'audio', meta.url])
