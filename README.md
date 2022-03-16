@@ -201,10 +201,18 @@ tunnels:
     hostname: api.republik.eu.ngrok.io
 ```
 
-Before starting the frontend, update the following environment variables:
+Now you must update the following environment variables:
+
+### Frontend Environment Variables
 ```
 API_URL=https://api.republik.eu.ngrok.io/graphql
 API_WS_URL=wss://api.republik.eu.ngrok.io/graphql
+```
+
+### Backend Environment Variables
+```
+FRONTEND_BASE_URL=https://republik.eu.ngrok.io
+CORS_ALLOWLIST_URL=http://localhost:3003,http://localhost:3005,http://localhost:3006,http://localhost:3010,http://localhost:3000,https://republik.eu.ngrok.io
 ```
 
 Start your frontend and api using:
