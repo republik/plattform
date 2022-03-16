@@ -293,34 +293,13 @@ class Submit extends Component {
       isUnavailableAndStripeWalletIsSelected &&
       !this.state.walletError
     ) {
-      // handle unavailable wallet
-      if (this.state.values.paymentMethod === 'STRIPE-WALLET-GOOGLE-PAY') {
-        // Special handling of Google Pay
-        this.setState(() => ({
-          loading: false,
-          unavailableError: t(
-            'account/pledges/payment/methods/google-pay/unavailable',
-          ),
-          values: {
-            paymentMethod: 'STRIPE', // Default to Stripe in case Google Pay could not be loaded.
-          },
-        }))
-      } else {
-        this.setState(() => ({
-          loading: false,
-          walletError: t('account/pledges/payment/methods/unavailable'),
-        }))
-      }
+      this.setState(() => ({
+        loading: false,
+        walletError: t('account/pledges/payment/methods/unavailable'),
+      }))
     } else if (!this.isStripeWalletPayment() && this.state.walletError) {
       this.setState(() => ({
         walletError: null,
-      }))
-    } else if (
-      this.state.values.paymentMethod !== 'STRIPE' &&
-      this.state.unavailableError
-    ) {
-      this.setState(() => ({
-        unavailableError: null,
       }))
     }
   }
@@ -952,12 +931,6 @@ class Submit extends Component {
             errors={this.state.errors}
             dirty={this.state.dirty}
           >
-            {this.state.unavailableError && (
-              <ErrorMessage
-                style={{ margin: '0 0 16px' }}
-                error={this.state.unavailableError}
-              />
-            )}
             {
               // Only render the browser API in case we're not using a browser payment API
               this.state.values.paymentMethod && !this.isStripeWalletPayment() && (
