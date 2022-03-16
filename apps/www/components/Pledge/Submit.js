@@ -854,48 +854,6 @@ class Submit extends Component {
 
     return (
       <>
-        <PaymentForm
-          key={me && me.id}
-          ref={this.paymentRef}
-          t={t}
-          loadSources={!!me || !!query.token}
-          accessToken={query.token}
-          requireShippingAddress={requireShippingAddress}
-          payload={{
-            id: this.state.pledgeId,
-            userId: this.state.userId,
-            total: this.props.total,
-            pfAliasId: this.state.pfAliasId,
-            pfSHA: this.state.pfSHA,
-          }}
-          context={packageName}
-          allowedMethods={paymentMethods}
-          userName={userName}
-          userAddress={userAddress}
-          addressState={addressState}
-          shippingAddressState={shippingAddressState}
-          syncAddresses={syncAddresses}
-          packageGroup={packageGroup}
-          setSyncAddresses={setSyncAddresses}
-          onChange={(fields) => {
-            this.setState((state) => {
-              const nextState = FieldSet.utils.mergeFields(fields)(state)
-
-              if (
-                state.values.paymentMethod !== nextState.values.paymentMethod ||
-                state.values.paymentSource !== nextState.values.paymentSource
-              ) {
-                nextState.showErrors = false
-                nextState.errors = {}
-              }
-
-              return nextState
-            })
-          }}
-          values={this.state.values}
-          errors={this.state.errors}
-          dirty={this.state.dirty}
-        />
         {
           // Only render the browser API in case we're not using a browser payment API
           this.state.values.paymentMethod && !this.isStripeWalletPayment() && (
@@ -1008,8 +966,48 @@ class Submit extends Component {
             </>
           )
         }
-        <br />
-        <br />
+        <PaymentForm
+          key={me && me.id}
+          ref={this.paymentRef}
+          t={t}
+          loadSources={!!me || !!query.token}
+          accessToken={query.token}
+          requireShippingAddress={requireShippingAddress}
+          payload={{
+            id: this.state.pledgeId,
+            userId: this.state.userId,
+            total: this.props.total,
+            pfAliasId: this.state.pfAliasId,
+            pfSHA: this.state.pfSHA,
+          }}
+          context={packageName}
+          allowedMethods={paymentMethods}
+          userName={userName}
+          userAddress={userAddress}
+          addressState={addressState}
+          shippingAddressState={shippingAddressState}
+          syncAddresses={syncAddresses}
+          packageGroup={packageGroup}
+          setSyncAddresses={setSyncAddresses}
+          onChange={(fields) => {
+            this.setState((state) => {
+              const nextState = FieldSet.utils.mergeFields(fields)(state)
+
+              if (
+                state.values.paymentMethod !== nextState.values.paymentMethod ||
+                state.values.paymentSource !== nextState.values.paymentSource
+              ) {
+                nextState.showErrors = false
+                nextState.errors = {}
+              }
+
+              return nextState
+            })
+          }}
+          values={this.state.values}
+          errors={this.state.errors}
+          dirty={this.state.dirty}
+        />
         {emailVerify && !me && (
           <div style={{ marginBottom: 40 }}>
             <P style={{ marginBottom: 10 }}>
