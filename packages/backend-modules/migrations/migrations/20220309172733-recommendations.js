@@ -1,7 +1,7 @@
 const run = require('../run.js')
 
 const dir = 'packages/access/migrations/sqls'
-const file = '20220309172733-checkin'
+const file = '20220309172733-recommendations'
 
 exports.up = (db) => run(db, dir, `${file}-up.sql`)
 

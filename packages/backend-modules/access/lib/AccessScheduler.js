@@ -35,7 +35,7 @@ const init = async (context) => {
         1000 * intervalSecs,
       )
 
-      await checkinGrants(t, pgdb, mail)
+      await recommendations(t, pgdb, mail)
       await expireGrants(t, pgdb, mail)
       await followupGrants(t, pgdb, mail)
       await updateStats(context)
@@ -83,23 +83,26 @@ const init = async (context) => {
 module.exports = { init }
 
 /**
- * Runs checkin on current grants (only on campaigns with checkin duration specified)
+ * Sends recommendations on current grants (only for campaigns with active recommendations)
  */
 
-const checkinGrants = async (t, pgdb, mail) => {
-  debug('checkinGrants...')
+const recommendations = async (t, pgdb, mail) => {
+  debug('recommendations...')
   const queryConditions = {
-    'emailCheckin !=': null,
+    'emailRecommendations !=': null,
   }
   for (const campaign of await campaignsLib.findAllWithConditions(
     pgdb,
     queryConditions,
   )) {
-    for (const grant of await grantsLib.findEmptyCheckin(campaign, pgdb)) {
+    for (const grant of await grantsLib.findEmptyRecommendations(
+      campaign,
+      pgdb,
+    )) {
       const transaction = await pgdb.transactionBegin()
 
       try {
-        await grantsLib.checkin(campaign, grant, t, transaction)
+        await grantsLib.recommendations(campaign, grant, t, transaction)
         await transaction.transactionCommit()
       } catch (e) {
         await transaction.transactionRollback()
@@ -110,7 +113,7 @@ const checkinGrants = async (t, pgdb, mail) => {
       }
     }
   }
-  debug('checkinGrants done')
+  debug('recommendations done')
 }
 
 /**

@@ -1,9 +1,9 @@
 Guten Tag
 
-Seit XX Wochen sind Sie probehalber an Bord der Republik, das freut und ehrt
-uns. Aber wie gefällt es Ihnen? Haben Sie schon Ihren ersten Republik-Beitrag
-gelesen? Falls nicht (und auch sonst), freuen Sie sich vielleicht über einige
-Leseempfehlungen zum Einstieg:
+Seit {{CAMPAIGN_RECOMMENDATIONS_PERIOD}} sind Sie probehalber an Bord der
+Republik, das freut und ehrt uns. Aber wie gefällt es Ihnen? Haben Sie schon
+Ihren ersten Republik-Beitrag gelesen? Falls nicht (und auch sonst), freuen Sie
+sich vielleicht über einige Leseempfehlungen zum Einstieg:
 
 Die Analyse zu Russlands Cyber-Krieg gegen die Ukraine
 {{frontend_base_url}}/2022/03/07/wie-russland-fuer-den-cyber-krieg-aufgeruestet-hat
@@ -32,7 +32,7 @@ unser Unternehmen steht (was steht in unseren Geschäftsbüchern?
 ).
 
 Sie haben Wünsche oder Fragen? Dann lassen Sie es uns wissen: Schreiben Sie an
-kontakt@republik.ch.
+kontakt@republik.ch .
 
 Ihre Crew der Republik
 

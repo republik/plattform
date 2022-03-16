@@ -86,7 +86,7 @@ const sendRecipientExpired = async (
     pgdb,
   })
 
-const sendRecipientCheckin = async (
+const sendRecipientRecommendations = async (
   granter,
   campaign,
   recipient,
@@ -94,7 +94,7 @@ const sendRecipientCheckin = async (
   t,
   pgdb,
 ) =>
-  sendMail(recipient.email, 'recipient', 'checkin', {
+  sendMail(recipient.email, 'recipient', 'recommendations', {
     granter,
     recipient,
     campaign,
@@ -285,6 +285,12 @@ const getGlobalMergeVars = async (
       name: 'campaign_period',
       content: getHumanInterval(campaign.grantPeriodInterval, t),
     },
+    {
+      name: 'campaign_recommendations_period',
+      content:
+        !!campaign.emailRecommendations &&
+        getHumanInterval(campaign.emailRecommendations, t),
+    },
 
     // Links
     {
@@ -335,8 +341,8 @@ module.exports = {
   // Offboarding when access expired
   sendRecipientExpired,
 
-  // Checkin during access grant
-  sendRecipientCheckin,
+  // Recommendations during access grant
+  sendRecipientRecommendations,
 
   // Followup after access expired
   sendRecipientFollowup,

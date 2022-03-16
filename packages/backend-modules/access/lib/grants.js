@@ -361,14 +361,14 @@ const request = async (granter, campaignId, payload, t, pgdb, redis, mail) => {
   return grant
 }
 
-const checkin = async (campaign, grant, t, pgdb) => {
+const recommendations = async (campaign, grant, t, pgdb) => {
   const now = moment()
   const updateFields = {
-    checkinAt: now,
+    recommendationsAt: now,
     updatedAt: now,
   }
   const result = await pgdb.public.accessGrants.update(
-    { id: grant.id, checkinAt: null },
+    { id: grant.id, recommendationsAt: null },
     updateFields,
   )
   const recipient = await pgdb.public.users.findOne({
@@ -377,7 +377,7 @@ const checkin = async (campaign, grant, t, pgdb) => {
 
   if (recipient && !(await hasUserActiveMembership(recipient, pgdb))) {
     const granter = await pgdb.public.users.findOne({ id: grant.granterUserId })
-    await mailLib.sendRecipientCheckin(
+    await mailLib.sendRecipientRecommendations(
       granter,
       campaign,
       recipient,
@@ -387,7 +387,7 @@ const checkin = async (campaign, grant, t, pgdb) => {
     )
   }
 
-  debug('checkin', {
+  debug('recommendations', {
     id: grant.id,
     hasRecipient: !!grant.recipientUserId,
     ...updateFields,
@@ -625,24 +625,24 @@ const beginGrant = async (grant, payload, recipient, pgdb) => {
   return { ...result, granter, recipient, campaign }
 }
 
-const findEmptyCheckin = async (campaign, pgdb) => {
+const findEmptyRecommendations = async (campaign, pgdb) => {
   const beginBefore = moment()
 
-  Object.keys(campaign.emailCheckin).forEach((unit) =>
-    beginBefore.subtract(campaign.emailCheckin[unit], unit),
+  Object.keys(campaign.emailRecommendations).forEach((unit) =>
+    beginBefore.subtract(campaign.emailRecommendations[unit], unit),
   )
 
-  debug('findEmptyCheckin', { campaign: campaign.id })
+  debug('findEmptyRecommendations', { campaign: campaign.id })
 
   const grants = await pgdb.public.accessGrants.find({
     accessCampaignId: campaign.id,
     'beginAt <': beginBefore,
-    checkinAt: null,
+    recommendationsAt: null,
   })
 
   // for now we need to filter out 4 weeks grants because we
   // changed the duration of one specific campaign where this
-  // new checkin transactional is introduced
+  // new recommendations transactional is introduced
   // extra filtering can and should be removed later
   return grants.filter((grant) => {
     const grantDuration = moment.duration(
@@ -676,7 +676,7 @@ module.exports = {
   claim,
   request,
   revoke,
-  checkin,
+  recommendations,
   invalidate,
   followUp,
 
@@ -686,6 +686,6 @@ module.exports = {
 
   findUnassignedByEmail,
   findInvalid,
-  findEmptyCheckin,
+  findEmptyRecommendations,
   findEmptyFollowup,
 }

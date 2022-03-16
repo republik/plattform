@@ -1157,7 +1157,7 @@
       "value": "Willkommen an Bord"
     },
     {
-      "key": "api/access/email/recipient/checkin/subject",
+      "key": "api/access/email/recipient/recommendations/subject",
       "value": "Leseempfehlungen aus der Republik"
     },
     {
