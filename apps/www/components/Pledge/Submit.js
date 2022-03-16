@@ -146,7 +146,8 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
 
   const [syncAddresses, setSyncAddresses] = useState(true)
   const [isApplePayAvailable] = useIsApplePayAvailable()
-  const [isGooglePayAvailable] = useIsGooglePayAvailable()
+  const [isGooglePayAvailable, setIsGooglePayAvailable] =
+    useIsGooglePayAvailable()
 
   // In case STRIPE is an accepted payment method,
   // add additional payment methods such as Apple or Google Pay if available
@@ -196,6 +197,7 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
       syncAddresses={props.requireShippingAddress && syncAddresses}
       setSyncAddresses={setSyncAddresses}
       paymentRequest={paymentRequest}
+      setIsGooglePayAvailable={setIsGooglePayAvailable}
     />
   )
 }
@@ -261,6 +263,7 @@ class Submit extends Component {
       this.props.paymentRequest.status === PaymentRequestStatus.UNAVAILABLE
 
     if (isUninitializedStripeWallet || isOutdatedStripeWallet) {
+      // Re-initialize the payment-request for the current wallet
       this.setState(() => ({
         loading: t('account/pledges/payment/methods/loading'),
       }))
@@ -292,13 +295,38 @@ class Submit extends Component {
       isUnavailableAndStripeWalletIsSelected &&
       !this.state.walletError
     ) {
-      this.setState(() => ({
-        loading: false,
-        walletError: t('account/pledges/payment/methods/unavailable'),
-      }))
+      // handle unavailable wallet
+      if (this.state.values.paymentMethod === 'STRIPE-WALLET-GOOGLE-PAY') {
+        // Special handling of Google Pay
+        if (this.props.setIsGooglePayAvailable) {
+          this.props.setIsGooglePayAvailable(false)
+        }
+
+        this.setState(() => ({
+          loading: false,
+          unavailableError: t(
+            'account/pledges/payment/methods/google-pay/unavailable',
+          ),
+          values: {
+            paymentMethod: 'STRIPE', // Default to Stripe in case Google Pay could not be loaded.
+          },
+        }))
+      } else {
+        this.setState(() => ({
+          loading: false,
+          walletError: t('account/pledges/payment/methods/unavailable'),
+        }))
+      }
     } else if (!this.isStripeWalletPayment() && this.state.walletError) {
       this.setState(() => ({
         walletError: null,
+      }))
+    } else if (
+      this.state.values.paymentMethod !== 'STRIPE' &&
+      this.state.unavailableError
+    ) {
+      this.setState(() => ({
+        unavailableError: null,
       }))
     }
   }
@@ -930,6 +958,12 @@ class Submit extends Component {
             errors={this.state.errors}
             dirty={this.state.dirty}
           >
+            {this.state.unavailableError && (
+              <ErrorMessage
+                style={{ margin: '0 0 16px' }}
+                error={this.state.unavailableError}
+              />
+            )}
             {
               // Only render the browser API in case we're not using a browser payment API
               this.state.values.paymentMethod && !this.isStripeWalletPayment() && (

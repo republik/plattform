@@ -997,6 +997,10 @@
       "value": "Fehler beim Aufbau der Zahlungsverbindung."
     },
     {
+      "key": "account/pledges/payment/methods/google-pay/unavailable",
+      "value": "Google Pay ist auf ihrem Gerät nicht verfügbar.\nBitte zahlen Sie direkt mit ihrer Kreditkarte oder wählen Sie ein anderes Zahlungsmittel"
+    },
+    {
       "key": "account/pledges/payment/methods/chose-another",
       "value": "Bitte wählen Sie ein anderes Zahlungsmittel."
     },

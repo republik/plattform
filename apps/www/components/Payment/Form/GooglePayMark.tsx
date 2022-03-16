@@ -17,7 +17,7 @@ const styles = {
 }
 
 const GooglePayMark = () => (
-  <div {...styles.wrapper}>
+  <span {...styles.wrapper}>
     <svg
       fill='#A1A1A1'
       xmlns='http://www.w3.org/2000/svg'
@@ -45,7 +45,7 @@ const GooglePayMark = () => (
         fill='#ea4335'
       />
     </svg>
-  </div>
+  </span>
 )
 
 export default GooglePayMark
