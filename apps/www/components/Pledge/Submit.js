@@ -861,160 +861,161 @@ class Submit extends Component {
 
     return (
       <>
-        <PaymentForm
-          key={me && me.id}
-          ref={this.paymentRef}
-          t={t}
-          loadSources={!!me || !!query.token}
-          accessToken={query.token}
-          requireShippingAddress={requireShippingAddress}
-          payload={{
-            id: this.state.pledgeId,
-            userId: this.state.userId,
-            total: this.props.total,
-            pfAliasId: this.state.pfAliasId,
-            pfSHA: this.state.pfSHA,
-          }}
-          context={packageName}
-          allowedMethods={paymentMethods}
-          userName={userName}
-          userAddress={userAddress}
-          addressState={addressState}
-          shippingAddressState={shippingAddressState}
-          syncAddresses={syncAddresses}
-          packageGroup={packageGroup}
-          setSyncAddresses={setSyncAddresses}
-          onChange={(fields) => {
-            this.setState((state) => {
-              const nextState = FieldSet.utils.mergeFields(fields)(state)
-
-              if (
-                state.values.paymentMethod !== nextState.values.paymentMethod ||
-                state.values.paymentSource !== nextState.values.paymentSource
-              ) {
-                nextState.showErrors = false
-                nextState.errors = {}
-              }
-
-              return nextState
-            })
-          }}
-          values={this.state.values}
-          errors={this.state.errors}
-          dirty={this.state.dirty}
-        />
-        {
-          // Only render the browser API in case we're not using a browser payment API
-          this.state.values.paymentMethod && !this.isStripeWalletPayment() && (
+        <div {...styles.topMargin}>
+          {!customMe && (
             <>
-              {contactPreface && (
-                <div style={{ marginBottom: 40 }}>
-                  <P>{contactPreface}</P>
-                </div>
+              <A
+                href='#'
+                onClick={(e) => {
+                  e.preventDefault()
+                  this.setState(() => ({
+                    showSignIn: !showSignIn,
+                  }))
+                }}
+              >
+                {t(`pledge/contact/signIn/${showSignIn ? 'hide' : 'show'}`)}
+              </A>
+              {!!showSignIn && (
+                <>
+                  <br />
+                  <br />
+                  <SignIn context='pledge' />
+                </>
               )}
-              <H2>
-                {t.first([
-                  `pledge/contact/title/${packageName}`,
-                  'pledge/contact/title',
-                ])}
-              </H2>
-              <div style={{ marginTop: 10, marginBottom: 10 }}>
-                {me ? (
-                  <>
-                    <Interaction.P>
-                      {t('pledge/contact/signedinAs', {
-                        nameOrEmail: me.name
-                          ? `${me.name.trim()} (${me.email})`
-                          : me.email,
-                      })}{' '}
-                      <A
-                        href='#'
-                        onClick={(e) => {
-                          e.preventDefault()
-                          this.setState({ emailVerify: false })
-                          this.props.signOut().then(() => {
-                            contactState.onChange({
-                              values: {
-                                firstName: '',
-                                lastName: '',
-                                email: '',
-                              },
-                              dirty: {
-                                firstName: false,
-                                lastName: false,
-                                email: false,
-                              },
-                            })
-                            this.setState({ showSignIn: false })
-                          })
-                        }}
-                      >
-                        {t('pledge/contact/signOut')}
-                      </A>
-                    </Interaction.P>
-                    {/* TODO: add active membership info */}
-                  </>
-                ) : (
-                  !customMe && (
-                    <>
-                      <A
-                        href='#'
-                        onClick={(e) => {
-                          e.preventDefault()
-                          this.setState(() => ({
-                            showSignIn: !showSignIn,
-                          }))
-                        }}
-                      >
-                        {t(
-                          `pledge/contact/signIn/${
-                            showSignIn ? 'hide' : 'show'
-                          }`,
-                        )}
-                      </A>
-                      {!!showSignIn && (
-                        <>
-                          <br />
-                          <br />
-                          <SignIn context='pledge' />
-                        </>
-                      )}
-                      <br />
-                    </>
-                  )
-                )}
-                {!showSignIn && (
-                  <>
-                    {customMe && !me ? (
+              <br />
+            </>
+          )}
+        </div>
+        <div {...styles.topMargin}>
+          <PaymentForm
+            key={me && me.id}
+            ref={this.paymentRef}
+            t={t}
+            loadSources={!!me || !!query.token}
+            accessToken={query.token}
+            requireShippingAddress={requireShippingAddress}
+            payload={{
+              id: this.state.pledgeId,
+              userId: this.state.userId,
+              total: this.props.total,
+              pfAliasId: this.state.pfAliasId,
+              pfSHA: this.state.pfSHA,
+            }}
+            context={packageName}
+            allowedMethods={paymentMethods}
+            userName={userName}
+            userAddress={userAddress}
+            addressState={addressState}
+            shippingAddressState={shippingAddressState}
+            syncAddresses={syncAddresses}
+            packageGroup={packageGroup}
+            setSyncAddresses={setSyncAddresses}
+            onChange={(fields) => {
+              this.setState((state) => {
+                const nextState = FieldSet.utils.mergeFields(fields)(state)
+
+                if (
+                  state.values.paymentMethod !==
+                    nextState.values.paymentMethod ||
+                  state.values.paymentSource !== nextState.values.paymentSource
+                ) {
+                  nextState.showErrors = false
+                  nextState.errors = {}
+                }
+
+                return nextState
+              })
+            }}
+            values={this.state.values}
+            errors={this.state.errors}
+            dirty={this.state.dirty}
+          >
+            {
+              // Only render the browser API in case we're not using a browser payment API
+              this.state.values.paymentMethod && !this.isStripeWalletPayment() && (
+                <div {...styles.topMargin}>
+                  {contactPreface && (
+                    <div style={{ marginBottom: 40 }}>
+                      <P>{contactPreface}</P>
+                    </div>
+                  )}
+                  <Label>
+                    {t.first([
+                      `pledge/contact/title/${packageName}`,
+                      'pledge/contact/title',
+                    ])}
+                  </Label>
+                  <div style={{ marginTop: 10, marginBottom: 10 }}>
+                    {me && (
                       <>
                         <Interaction.P>
-                          <Label>{t('pledge/contact/email/label')}</Label>
-                          <br />
-                          {customMe.email}
+                          {t('pledge/contact/signedinAs', {
+                            nameOrEmail: me.name
+                              ? `${me.name.trim()} (${me.email})`
+                              : me.email,
+                          })}{' '}
+                          <A
+                            href='#'
+                            onClick={(e) => {
+                              e.preventDefault()
+                              this.setState({ emailVerify: false })
+                              this.props.signOut().then(() => {
+                                contactState.onChange({
+                                  values: {
+                                    firstName: '',
+                                    lastName: '',
+                                    email: '',
+                                  },
+                                  dirty: {
+                                    firstName: false,
+                                    lastName: false,
+                                    email: false,
+                                  },
+                                })
+                                this.setState({ showSignIn: false })
+                              })
+                            }}
+                          >
+                            {t('pledge/contact/signOut')}
+                          </A>
                         </Interaction.P>
-                        <br />
-                        <Link
-                          href={{
-                            pathname: '/angebote',
-                            query: {
-                              package: packageName,
-                            },
-                          }}
-                          replace
-                          passHref
-                        >
-                          <A>{t('pledge/contact/signIn/wrongToken')}</A>
-                        </Link>
+                        {/* TODO: add active membership info */}
                       </>
-                    ) : (
-                      <FieldSet {...contactState} />
                     )}
-                  </>
-                )}
-              </div>
-            </>
-          )
-        }
+                    {!showSignIn && (
+                      <>
+                        {customMe && !me ? (
+                          <>
+                            <Interaction.P>
+                              <Label>{t('pledge/contact/email/label')}</Label>
+                              <br />
+                              {customMe.email}
+                            </Interaction.P>
+                            <br />
+                            <Link
+                              href={{
+                                pathname: '/angebote',
+                                query: {
+                                  package: packageName,
+                                },
+                              }}
+                              replace
+                              passHref
+                            >
+                              <A>{t('pledge/contact/signIn/wrongToken')}</A>
+                            </Link>
+                          </>
+                        ) : (
+                          <FieldSet {...contactState} />
+                        )}
+                      </>
+                    )}
+                  </div>
+                </div>
+              )
+            }
+          </PaymentForm>
+        </div>
         {emailVerify && !me && (
           <div style={{ marginBottom: 40 }}>
             <P style={{ marginBottom: 10 }}>

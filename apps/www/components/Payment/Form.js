@@ -231,6 +231,7 @@ class PaymentForm extends Component {
   }
   render() {
     const {
+      children,
       t,
       allowedMethods,
       payload,
@@ -453,6 +454,10 @@ class PaymentForm extends Component {
             )
           }}
         />
+        {
+          // For example teh contact form is passed this way and should be rendered above the payment inputs
+          children
+        }
         {paymentMethodForm === 'PAYMENTSLIP' && (
           <div>
             <Label>{t('payment/paymentslip/explanation')}</Label>
