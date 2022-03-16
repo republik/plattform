@@ -2666,7 +2666,7 @@
     },
     {
       "key": "pledge/contact/signIn/show",
-      "value": "Schon mal ausgefüllt?\n"
+      "value": "Haben Sie bereits ein Konto? Melden Sie sich an.\n"
     },
     {
       "key": "pledge/contact/signIn/customMe",
