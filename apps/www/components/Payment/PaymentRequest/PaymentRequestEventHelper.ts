@@ -21,14 +21,14 @@ export function getPayerInformationFromEvent(
   event: PaymentRequestPaymentMethodEvent,
 ): PayerInformation {
   const name = event.payerName ?? ''
-  const [firstName, lastName] = name.split(' ').map((s) => s.trim())
+  const [firstName, ...lastNames] = name.split(' ')
 
   const billingAddress = event.paymentMethod.billing_details.address
 
   return {
     email: event.payerEmail,
-    firstName,
-    lastName,
+    firstName: firstName.trim(),
+    lastName: lastNames.join(' ').trim(),
     billingAddress: billingAddress
       ? {
           name: event.payerName,
