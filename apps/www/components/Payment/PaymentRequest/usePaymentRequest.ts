@@ -108,10 +108,14 @@ function usePaymentRequest(
 
     const canMakePaymentResult = await newPaymentRequest.canMakePayment()
 
+    const initializationStage = paymentRequest
+      ? 're-initialization'
+      : 'initialization'
+
     if (!canMakePaymentResult) {
       setStatus(PaymentRequestStatus.UNAVAILABLE)
       track([
-        `payment-request ${paymentRequestID} initialization failed`,
+        `payment-request: ${initializationStage} failed (${paymentRequestID})`,
         `wallet-type: ${wallet}`,
         `options: ${JSON.stringify(options)}`,
       ])
@@ -121,7 +125,7 @@ function usePaymentRequest(
     setPaymentRequest(newPaymentRequest)
     setStatus(PaymentRequestStatus.READY)
     track([
-      `payment-request ${paymentRequestID} initialization successful`,
+      `payment-request: ${initializationStage} successful (${paymentRequestID})`,
       `wallet-type: ${wallet}`,
       `options: ${JSON.stringify(options)}`,
     ])
@@ -149,7 +153,7 @@ function usePaymentRequest(
           ev.complete('success')
           setStatus(PaymentRequestStatus.SUCCEEDED)
           track([
-            `payment-request ${paymentRequestID} payment succeeded`,
+            `payment-request: payment succeeded (${paymentRequestID})`,
             `wallet-type: ${usedWallet}`,
             `options: ${JSON.stringify(options)}`,
           ])
@@ -158,7 +162,7 @@ function usePaymentRequest(
           ev.complete('fail')
           setStatus(PaymentRequestStatus.FAILED)
           track([
-            `payment-request ${paymentRequestID} payment failed`,
+            `payment-request: payment failed (${paymentRequestID})`,
             `wallet-type: ${usedWallet}`,
             `options: ${JSON.stringify(options)}`,
           ])
