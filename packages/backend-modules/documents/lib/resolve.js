@@ -298,9 +298,9 @@ const metaUrlResolver = (
       })
 
   if (
-    !DOCUMENTS_RESTRICT_TO_ROLES ||
     user === undefined ||
-    !userIsInRoles(user, DOCUMENTS_RESTRICT_TO_ROLES.split(','))
+    (DOCUMENTS_RESTRICT_TO_ROLES &&
+      !userIsInRoles(user, DOCUMENTS_RESTRICT_TO_ROLES.split(',')))
   ) {
     meta.suggestions = null
   }
