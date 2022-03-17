@@ -51,7 +51,7 @@ import usePaymentRequest, {
 import { getPayerInformationFromEvent } from '../Payment/PaymentRequest/PaymentRequestEventHelper'
 import { css } from 'glamor'
 
-const { H2, P } = Interaction
+const { P } = Interaction
 
 const styles = {
   topMargin: css({
@@ -162,6 +162,7 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
     ].filter(Boolean)
   }, [paymentMethods, isApplePayAvailable, isGooglePayAvailable])
 
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState()
   const paymentRequest = usePaymentRequest({
     requestPayerEmail: !customMe,
     requestPayerName: !customMe || !customMe?.address,
@@ -187,6 +188,8 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
   return (
     <Submit
       {...props}
+      selectedPaymentMethod={selectedPaymentMethod}
+      setSelectedPaymentMethod={setSelectedPaymentMethod}
       paymentMethods={enhancedPaymentMethods}
       userName={userName}
       userAddress={userAddress}
@@ -230,14 +233,11 @@ class Submit extends Component {
   }
 
   isStripeWalletPayment() {
-    return (
-      this.state.values.paymentMethod &&
-      this.state.values.paymentMethod?.startsWith('STRIPE-WALLET')
-    )
+    return this.props.selectedPaymentMethod?.startsWith('STRIPE-WALLET')
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    const { t } = this.props
+  componentDidUpdate() {
+    const { t, setSelectedPaymentMethod } = this.props
     // Skip if loading
     if (this.props.paymentRequest.status === PaymentRequestStatus.LOADING) {
       return
@@ -254,14 +254,14 @@ class Submit extends Component {
     const isOutdatedStripeWallet =
       this.isStripeWalletPayment() &&
       this.props.paymentRequest.status !== PaymentRequestStatus.IDLE &&
-      this.props.paymentRequest.usedWallet !== this.state.values?.paymentMethod
+      this.props.paymentRequest.usedWallet !== this.props.selectedPaymentMethod
 
     const isUnavailableAndStripeWalletIsSelected =
       this.isStripeWalletPayment() &&
       this.props.paymentRequest.status === PaymentRequestStatus.UNAVAILABLE
 
     if (isUninitializedStripeWallet || isOutdatedStripeWallet) {
-      const selectedPaymentMethod = this.state.values.paymentMethod
+      const selectedPaymentMethod = this.props.selectedPaymentMethod
 
       // Create payment-request
       this.props.paymentRequest
@@ -274,9 +274,12 @@ class Submit extends Component {
             }))
           } else {
             const isGooglePayPayment =
-              this.state.values?.paymentMethod ===
+              this.props.selectedPaymentMethod ===
               WalletPaymentMethod.GOOGLE_PAY
 
+            if (isGooglePayPayment) {
+              setSelectedPaymentMethod('STRIPE')
+            }
             this.setState((prevState) => ({
               ...prevState,
               loading: false,
@@ -286,12 +289,6 @@ class Submit extends Component {
               stripeError: isGooglePayPayment
                 ? t('account/pledges/payment/methods/google-pay/unavailable')
                 : null,
-              values: {
-                ...prevState.values,
-                paymentMethod: isGooglePayPayment
-                  ? 'STRIPE'
-                  : prevState.values.paymentMethod,
-              },
             }))
           }
         })
@@ -319,8 +316,8 @@ class Submit extends Component {
       }))
     }
     if (
-      this.state.values.paymentMethod &&
-      !this.state.values.paymentMethod.startsWith('STRIPE') &&
+      this.props.selectedPaymentMethod &&
+      !this.props.selectedPaymentMethod.startsWith('STRIPE') &&
       this.state.stripeError
     ) {
       this.setState(() => ({
@@ -375,7 +372,7 @@ class Submit extends Component {
     }
   }
 
-  submitPledge(paymentMethodObject) {
+  submitPledge(stripePaymentMethod) {
     const {
       t,
       query,
@@ -408,7 +405,7 @@ class Submit extends Component {
           return agg
         }, {}),
       })
-      if (this.state.values.paymentMethod === 'PAYMENTSLIP') {
+      if (this.props.selectedPaymentMethod === 'PAYMENTSLIP') {
         addressState.onChange({
           dirty: Object.keys(addressState.errors).reduce((agg, key) => {
             agg[key] = true
@@ -438,7 +435,7 @@ class Submit extends Component {
       // - we need a pledgeResponse with pfAliasId and pfSHA
       // - this can be missing if returning from a PSP redirect
       // - in those cases we create a new pledge
-      (this.state.values.paymentMethod !== 'POSTFINANCECARD' ||
+      (this.props.selectedPaymentMethod !== 'POSTFINANCECARD' ||
         this.state.pledgeResponse)
     ) {
       this.payPledge(this.state.pledgeId, this.state.pledgeResponse)
@@ -480,7 +477,7 @@ class Submit extends Component {
         return this.payPledge(
           data.submitPledge.pledgeId,
           data.submitPledge,
-          paymentMethodObject,
+          stripePaymentMethod,
         )
       })
       .catch((error) => {
@@ -502,18 +499,18 @@ class Submit extends Component {
       })
   }
 
-  payPledge(pledgeId, pledgeResponse, paymentMethodObject) {
-    const { paymentMethod } = this.state.values
+  payPledge(pledgeId, pledgeResponse, stripePaymentMethod) {
+    const { selectedPaymentMethod } = this.props
 
-    if (paymentMethod === 'PAYMENTSLIP') {
+    if (selectedPaymentMethod === 'PAYMENTSLIP') {
       this.payWithPaymentSlip(pledgeId)
-    } else if (paymentMethod === 'POSTFINANCECARD') {
+    } else if (selectedPaymentMethod === 'POSTFINANCECARD') {
       this.payWithPostFinance(pledgeId, pledgeResponse)
-    } else if (paymentMethod === 'STRIPE') {
+    } else if (selectedPaymentMethod === 'STRIPE') {
       this.payWithStripe(pledgeId)
     } else if (this.isStripeWalletPayment()) {
-      return this.payWithWallet(pledgeId, paymentMethodObject)
-    } else if (paymentMethod === 'PAYPAL') {
+      return this.payWithWallet(pledgeId, stripePaymentMethod)
+    } else if (selectedPaymentMethod === 'PAYPAL') {
       this.payWithPayPal(pledgeId)
     }
   }
@@ -644,7 +641,7 @@ class Submit extends Component {
 
     this.payment.stripe
       .createPaymentMethod()
-      .then((paymentMethod) => {
+      .then((stripePaymentMethod) => {
         this.setState({
           loading: false,
           paymentError: undefined,
@@ -652,8 +649,8 @@ class Submit extends Component {
         this.pay({
           pledgeId,
           method: 'STRIPE',
-          sourceId: paymentMethod.id,
-          pspPayload: paymentMethod,
+          sourceId: stripePaymentMethod.id,
+          pspPayload: stripePaymentMethod,
         })
       })
       .catch((error) => {
@@ -664,9 +661,8 @@ class Submit extends Component {
       })
   }
 
-  payWithWallet(pledgeId, paymentMethodObject) {
+  payWithWallet(pledgeId, stripePaymentMethod) {
     const { t } = this.props
-    const { values } = this.state
     this.setState(() => ({
       loading: t('pledge/submit/loading/stripe'),
     }))
@@ -674,8 +670,8 @@ class Submit extends Component {
     return this.pay({
       pledgeId,
       method: 'STRIPE',
-      sourceId: paymentMethodObject.id,
-      pspPayload: paymentMethodObject,
+      sourceId: stripePaymentMethod.id,
+      pspPayload: stripePaymentMethod,
     })
   }
 
@@ -731,7 +727,7 @@ class Submit extends Component {
   }
 
   getErrorMessages() {
-    const { consents, values } = this.state
+    const { consents } = this.state
     const {
       t,
       options,
@@ -740,6 +736,7 @@ class Submit extends Component {
       shippingAddressState,
       syncAddresses,
       contactState,
+      selectedPaymentMethod,
     } = this.props
 
     return [
@@ -752,7 +749,7 @@ class Submit extends Component {
           )
           .concat(objectValues(this.state.errors))
           .concat([
-            !values.paymentMethod && t('pledge/submit/payMethod/error'),
+            !selectedPaymentMethod && t('pledge/submit/payMethod/error'),
             getConsentsError(t, getRequiredConsents(this.props), consents),
           ])
           .filter(Boolean),
@@ -771,7 +768,7 @@ class Submit extends Component {
         category: t('pledge/address/payment/title'),
         messages: []
           .concat(
-            values.paymentMethod === 'PAYMENTSLIP' &&
+            selectedPaymentMethod === 'PAYMENTSLIP' &&
               !syncAddresses &&
               objectValues(addressState.errors),
           )
@@ -781,13 +778,10 @@ class Submit extends Component {
   }
 
   getAutoPayValue() {
-    const { forceAutoPay, options } = this.props
-    const {
-      values: { paymentMethod },
-      autoPay,
-    } = this.state
+    const { forceAutoPay, options, selectedPaymentMethod } = this.props
+    const { autoPay } = this.state
 
-    if (!paymentMethod || !paymentMethod.startsWith('STRIPE')) {
+    if (!selectedPaymentMethod || !selectedPaymentMethod.startsWith('STRIPE')) {
       return undefined
     }
     if (forceAutoPay) {
@@ -803,10 +797,8 @@ class Submit extends Component {
   }
 
   renderAutoPay() {
-    const {
-      values: { paymentMethod },
-    } = this.state
-    if (!paymentMethod || !paymentMethod.startsWith('STRIPE')) {
+    const { selectedPaymentMethod } = this.props
+    if (!selectedPaymentMethod || !selectedPaymentMethod.startsWith('STRIPE')) {
       return null
     }
     const { t, packageName, forceAutoPay, options } = this.props
@@ -862,6 +854,8 @@ class Submit extends Component {
       me,
       t,
       query,
+      selectedPaymentMethod,
+      setSelectedPaymentMethod,
       paymentMethods,
       packageName,
       requireShippingAddress,
@@ -971,12 +965,17 @@ class Submit extends Component {
             packageGroup={packageGroup}
             setSyncAddresses={setSyncAddresses}
             onChange={(fields) => {
+              const setPaymentMethod =
+                fields.values?.paymentMethod &&
+                fields.values.paymentMethod !== selectedPaymentMethod
+              if (setPaymentMethod) {
+                setSelectedPaymentMethod(fields.values.paymentMethod)
+              }
               this.setState((state) => {
                 const nextState = FieldSet.utils.mergeFields(fields)(state)
 
                 if (
-                  state.values.paymentMethod !==
-                    nextState.values.paymentMethod ||
+                  setPaymentMethod ||
                   state.values.paymentSource !== nextState.values.paymentSource
                 ) {
                   nextState.showErrors = false
@@ -986,7 +985,10 @@ class Submit extends Component {
                 return nextState
               })
             }}
-            values={this.state.values}
+            values={{
+              ...this.state.values,
+              paymentMethod: selectedPaymentMethod,
+            }}
             errors={this.state.errors}
             dirty={this.state.dirty}
           >
@@ -994,7 +996,7 @@ class Submit extends Component {
             {
               // Only render the browser API in case we're not using a browser payment API
               !me &&
-                this.state.values.paymentMethod &&
+                this.props.selectedPaymentMethod &&
                 !this.isStripeWalletPayment() && (
                   <div {...styles.topMargin}>
                     {contactPreface && (
