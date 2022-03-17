@@ -211,7 +211,8 @@ API_WS_URL=wss://api.republik.eu.ngrok.io/graphql
 
 ### Backend Environment Variables
 ```
-FRONTEND_BASE_URL=https://republik.eu.ngrok.io
+FRONTEND_BASE_URL=https://republik.eu.ngrok.io # optional
+COOKIE_DOMAIN=.republik.eu.ngrok.io
 CORS_ALLOWLIST_URL=http://localhost:3003,http://localhost:3005,http://localhost:3006,http://localhost:3010,http://localhost:3000,https://republik.eu.ngrok.io
 ```
 
