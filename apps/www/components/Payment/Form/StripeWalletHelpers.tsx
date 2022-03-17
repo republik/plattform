@@ -28,12 +28,8 @@ export function useIsApplePayAvailable(): [
   const [isAvailable, setIsAvailable] = useState(false)
 
   useEffect(() => {
-    try {
-      // Only check for Apple Pay on the client and when a secure connection is provided
-      setIsAvailable(isInSecureWindow() && isApplePayAvailable())
-    } catch (error) {
-      console.error('Error checking for Apple Pay availability', error)
-    }
+    // Only check for Apple Pay on the client and when a secure connection is provided
+    setIsAvailable(isInSecureWindow() && isApplePayAvailable())
   }, [])
 
   return [isAvailable, setIsAvailable]
@@ -59,12 +55,8 @@ export function useIsGooglePayAvailable(): [
   const [isAvailable, setIsAvailable] = useState(false)
 
   useEffect(() => {
-    try {
-      // Only check for Google Pay on the client and when a secure connection is provided
-      setIsAvailable(isInSecureWindow() && isGooglePayAvailable())
-    } catch (error) {
-      console.error('Error checking for Google Pay availability', error)
-    }
+    // Only check for Google Pay on the client and when a secure connection is provided
+    setIsAvailable(isInSecureWindow() && isGooglePayAvailable())
   }, [])
 
   return [isAvailable, setIsAvailable]
