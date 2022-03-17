@@ -270,37 +270,6 @@ class PaymentForm extends Component {
 
     return (
       <div>
-        {requireShippingAddress && !paymentMethod?.startsWith('STRIPE-WALLET') && (
-          <div style={{ marginBottom: 40 }}>
-            <H2 style={{ marginBottom: 10 }}>
-              {t('pledge/address/shipping/title')}
-            </H2>
-            <AddressForm
-              {...shippingAddressState}
-              afterEdit={
-                userAddress || packageGroup === 'GIVE' ? (
-                  <>
-                    <Checkbox
-                      checked={syncAddresses}
-                      onChange={(_, checked) => {
-                        setSyncAddresses(checked)
-                      }}
-                    >
-                      {t(
-                        `pledge/address/shipping/${
-                          userAddress ? 'updateAccount' : 'setAccount'
-                        }`,
-                      )}
-                    </Checkbox>
-                    <br style={{ clear: 'left' }} />
-                  </>
-                ) : undefined
-              }
-              existingAddress={userAddress}
-              name={userName}
-            />
-          </div>
-        )}
         <H3>
           {t.first(
             [
@@ -593,6 +562,37 @@ class PaymentForm extends Component {
                 ))}
             </form>
           </>
+        )}
+        {requireShippingAddress && !paymentMethod?.startsWith('STRIPE-WALLET') && (
+          <div style={{ marginBottom: 40 }}>
+            <H2 style={{ marginBottom: 10 }}>
+              {t('pledge/address/shipping/title')}
+            </H2>
+            <AddressForm
+              {...shippingAddressState}
+              afterEdit={
+                userAddress || packageGroup === 'GIVE' ? (
+                  <>
+                    <Checkbox
+                      checked={syncAddresses}
+                      onChange={(_, checked) => {
+                        setSyncAddresses(checked)
+                      }}
+                    >
+                      {t(
+                        `pledge/address/shipping/${
+                          userAddress ? 'updateAccount' : 'setAccount'
+                        }`,
+                      )}
+                    </Checkbox>
+                    <br style={{ clear: 'left' }} />
+                  </>
+                ) : undefined
+              }
+              existingAddress={userAddress}
+              name={userName}
+            />
+          </div>
         )}
       </div>
     )
