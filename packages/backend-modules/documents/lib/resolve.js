@@ -302,7 +302,7 @@ const metaUrlResolver = (
     (DOCUMENTS_RESTRICT_TO_ROLES &&
       !userIsInRoles(user, DOCUMENTS_RESTRICT_TO_ROLES.split(',')))
   ) {
-    meta.suggestions = null
+    meta.recommendations = null
   }
 }
 
@@ -327,14 +327,16 @@ const metaFieldResolver = (meta, allDocuments = [], errors) => {
     }
   }
 
-  const suggestionsNodes = meta.suggestions?.map(resolver).filter(Boolean)
-  const suggestions = suggestionsNodes?.length && {
-    nodes: suggestionsNodes,
+  const recommendationsNodes = meta.recommendations
+    ?.map(resolver)
+    .filter(Boolean)
+  const recommendations = recommendationsNodes?.length && {
+    nodes: recommendationsNodes,
     pageInfo: {
       hasNextPage: false,
       hasPreviousPage: false,
     },
-    totalCount: suggestionsNodes.length,
+    totalCount: recommendationsNodes.length,
   }
 
   return {
@@ -343,7 +345,7 @@ const metaFieldResolver = (meta, allDocuments = [], errors) => {
     format: resolver(meta.format),
     section: resolver(meta.section),
     discussion: resolver(meta.discussion),
-    suggestions,
+    recommendations,
   }
 }
 
