@@ -322,6 +322,15 @@ class Submit extends Component {
     }
     if (
       this.props.selectedPaymentMethod &&
+      !this.props.selectedPaymentMethod.startsWith('STRIPE-WALLET') &&
+      this.state.walletError
+    ) {
+      this.setState(() => ({
+        walletError: null,
+      }))
+    }
+    if (
+      this.props.selectedPaymentMethod &&
       !this.props.selectedPaymentMethod.startsWith('STRIPE') &&
       this.state.stripeError
     ) {
