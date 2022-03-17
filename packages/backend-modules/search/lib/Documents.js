@@ -361,6 +361,9 @@ const addRelatedDocs = async ({
     repoIds.push(getRepoId(meta.format).repoId)
     repoIds.push(getRepoId(meta.section).repoId)
     repoIds.push(getRepoId(meta.discussion).repoId)
+    meta.suggestions?.forEach((suggestion) => {
+      repoIds.push(getRepoId(suggestion).repoId)
+    })
     if (meta.series) {
       // If a string, probably a series master (tbc.)
       if (typeof meta.series === 'string') {
