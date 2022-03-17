@@ -2,6 +2,9 @@ const Promise = require('bluebird')
 const { hyphenate } = require('hyphen/de-ch-1901')
 
 const {
+  Roles: { userHasRole },
+} = require('@orbiting/backend-modules-auth')
+const {
   lib: {
     resolve,
     meta: { getAuthorUserIds },
@@ -103,11 +106,47 @@ const resolveAuthors = async (meta, args, context) => {
   return Promise.map(ids, (id) => loaders.User.byId.load(id)).filter(Boolean)
 }
 
+const resolveSuggestions = async (meta, args, context) => {
+  const { suggestions } = meta
+  const { user } = context
+
+  // If {suggestions} contains DocumentConnection shaped object, return that.
+  if (suggestions && suggestions.nodes?.length) {
+    return suggestions
+  }
+
+  // If {suggestions} is not an array, return null.
+  if (!Array.isArray(suggestions)) {
+    return null
+  }
+
+  // If user is not an editor, return null.
+  if (!userHasRole(user, 'editor')) {
+    return null
+  }
+
+  const suggestionsNodes = await Promise.map(suggestions, async (suggestion) =>
+    getDocFromMetaLink(suggestion, context),
+  ).filter(Boolean)
+
+  return (
+    suggestionsNodes?.length && {
+      nodes: suggestionsNodes,
+      pageInfo: {
+        hasNextPage: false,
+        hasPreviousPage: false,
+      },
+      totalCount: suggestionsNodes.length,
+    }
+  )
+}
+
 module.exports = {
   format: resolveRepoId('format'),
   section: resolveRepoId('section'),
   dossier: resolveRepoId('dossier'),
   series: resolveRepoId('series'),
+  suggestions: resolveSuggestions,
   path: resolvePath,
   authors: resolveAuthors,
 }
