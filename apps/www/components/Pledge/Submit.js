@@ -57,6 +57,11 @@ const styles = {
   topMargin: css({
     marginTop: '16px',
   }),
+  spaceBetweenChildren: css({
+    '> *:not(:first-child)': {
+      marginTop: '16px',
+    },
+  }),
 }
 
 const objectValues = (object) => Object.keys(object).map((key) => object[key])
@@ -362,8 +367,12 @@ class Submit extends Component {
           )
         : undefined,
       address: this.isStripeWalletPayment()
-        ? (customMe?.address ? undefined : addressState.values)
-        : (syncAddresses ? shippingAddress : undefined),
+        ? customMe?.address
+          ? undefined
+          : addressState.values
+        : syncAddresses
+        ? shippingAddress
+        : undefined,
       shippingAddress,
       accessToken:
         customMe && customMe.isUserOfCurrentSession ? undefined : accessToken,
@@ -1074,7 +1083,7 @@ class Submit extends Component {
             {loading}
           </div>
         ) : (
-          <div>
+          <div {...styles.topMargin} {...styles.spaceBetweenChildren}>
             {!!this.state.showErrors && errorMessages.length > 0 && (
               <ErrorContainer style={{ marginBottom: 40 }}>
                 {errorMessages.map(({ category, messages }, i) => (
@@ -1100,8 +1109,6 @@ class Submit extends Component {
               }}
             />
             {this.renderAutoPay()}
-            <br />
-            <br />
             <Button
               block
               primary={!errorMessages.length}
