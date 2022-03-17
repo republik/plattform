@@ -637,6 +637,7 @@ const findEmptyRecommendations = async (campaign, pgdb) => {
   const grants = await pgdb.public.accessGrants.find({
     accessCampaignId: campaign.id,
     'beginAt <': beginBefore,
+    invalidatedAt: null,
     recommendationsAt: null,
   })
 
