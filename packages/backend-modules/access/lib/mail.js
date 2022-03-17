@@ -285,12 +285,6 @@ const getGlobalMergeVars = async (
       name: 'campaign_period',
       content: getHumanInterval(campaign.grantPeriodInterval, t),
     },
-    {
-      name: 'campaign_recommendations_period',
-      content:
-        !!campaign.emailRecommendations &&
-        getHumanInterval(campaign.emailRecommendations, t),
-    },
 
     // Links
     {
