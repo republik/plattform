@@ -277,15 +277,15 @@ class Submit extends Component {
               this.state.values?.paymentMethod ===
               WalletPaymentMethod.GOOGLE_PAY
 
-            console.log('yeet', isGooglePayPayment, status)
-
             this.setState((prevState) => ({
+              ...prevState,
               loading: false,
               walletError: t('account/pledges/payment/methods/unavailable'),
               stripeError: isGooglePayPayment
                 ? t('account/pledges/payment/methods/google-pay/unavailable')
                 : null,
               values: {
+                ...prevState.values,
                 paymentMethod: isGooglePayPayment
                   ? 'STRIPE'
                   : prevState.values.paymentMethod,
@@ -873,22 +873,6 @@ class Submit extends Component {
       customMe,
       contactState,
     } = this.props
-
-    console.debug(
-      JSON.stringify(
-        {
-          paymentMethod: this.state.values.paymentMethod,
-          isStripeWalletPayment: this.isStripeWalletPayment(),
-          paymentError: paymentError,
-          submitError: submitError,
-          walletError: walletError,
-          stripeError: stripeError,
-          status: this.props.paymentRequest.status,
-        },
-        null,
-        2,
-      ),
-    )
 
     const errorMessages = this.getErrorMessages()
 
