@@ -280,7 +280,9 @@ class Submit extends Component {
             this.setState((prevState) => ({
               ...prevState,
               loading: false,
-              walletError: t('account/pledges/payment/methods/unavailable'),
+              walletError: !isGooglePayPayment
+                ? t('account/pledges/payment/methods/unavailable')
+                : null,
               stripeError: isGooglePayPayment
                 ? t('account/pledges/payment/methods/google-pay/unavailable')
                 : null,
@@ -988,7 +990,6 @@ class Submit extends Component {
             errors={this.state.errors}
             dirty={this.state.dirty}
           >
-            <p>Hello</p>
             {stripeError && <ErrorMessage error={stripeError} />}
             {
               // Only render the browser API in case we're not using a browser payment API

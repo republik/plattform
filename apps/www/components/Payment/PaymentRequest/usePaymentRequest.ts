@@ -8,6 +8,8 @@ import {
 } from '@stripe/stripe-js'
 import { loadStripe } from '../stripe'
 import { makePaymentRequestOptions } from './PaymentRequestOption.helper'
+import track from '../../../lib/matomo'
+import { v4 } from 'uuid'
 
 export enum WalletPaymentMethod {
   APPLE_PAY = 'STRIPE-WALLET-APPLE-PAY',
@@ -62,6 +64,7 @@ interface PaymentRequestValues {
 function usePaymentRequest(
   options: LeanPaymentRequestOptions,
 ): PaymentRequestValues {
+  const [paymentRequestID] = useState(v4())
   const [stripe, setStripe] = useState<Stripe>(null)
   const [paymentRequest, setPaymentRequest] = useState<PaymentRequest>(null)
   const [status, setStatus] = useState<PaymentRequestStatus>(
@@ -107,11 +110,21 @@ function usePaymentRequest(
 
     if (!canMakePaymentResult) {
       setStatus(PaymentRequestStatus.UNAVAILABLE)
+      track([
+        `payment-request ${paymentRequestID} initialization failed`,
+        `wallet-type: ${wallet}`,
+        `options: ${JSON.stringify(options)}`,
+      ])
       return PaymentRequestStatus.UNAVAILABLE
     }
 
     setPaymentRequest(newPaymentRequest)
     setStatus(PaymentRequestStatus.READY)
+    track([
+      `payment-request ${paymentRequestID} initialization successful`,
+      `wallet-type: ${wallet}`,
+      `options: ${JSON.stringify(options)}`,
+    ])
     return PaymentRequestStatus.READY
   }
 
@@ -135,10 +148,20 @@ function usePaymentRequest(
         .then(() => {
           ev.complete('success')
           setStatus(PaymentRequestStatus.SUCCEEDED)
+          track([
+            `payment-request ${paymentRequestID} payment succeeded`,
+            `wallet-type: ${usedWallet}`,
+            `options: ${JSON.stringify(options)}`,
+          ])
         })
         .catch((err) => {
           ev.complete('fail')
           setStatus(PaymentRequestStatus.FAILED)
+          track([
+            `payment-request ${paymentRequestID} payment failed`,
+            `wallet-type: ${usedWallet}`,
+            `options: ${JSON.stringify(options)}`,
+          ])
         })
     })
 
