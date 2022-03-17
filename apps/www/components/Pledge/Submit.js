@@ -1118,15 +1118,13 @@ class Submit extends Component {
                   this.props.paymentRequest?.status !==
                     PaymentRequestStatus.READY)
               }
-              onClick={(e) => {
-                e.preventDefault()
+              onClick={() => {
                 if (this.isStripeWalletPayment()) {
                   this.handleWalletPayIntent()
                 } else {
                   this.submitPledge()
                 }
               }}
-              type='submit'
             >
               {t('pledge/submit/button/pay', {
                 formattedChf: this.props.total
