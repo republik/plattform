@@ -361,11 +361,9 @@ class Submit extends Component {
             customMe ? { email: customMe.email } : {},
           )
         : undefined,
-      address: syncAddresses
-        ? shippingAddress
-        : this.isStripeWalletPayment() // in case of a wallet payment, enter based on billing address
-        ? addressState.values
-        : undefined,
+      address: this.isStripeWalletPayment()
+        ? (customMe?.address ? undefined : addressState.values)
+        : (syncAddresses ? shippingAddress : undefined),
       shippingAddress,
       accessToken:
         customMe && customMe.isUserOfCurrentSession ? undefined : accessToken,
