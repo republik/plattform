@@ -8,7 +8,7 @@ import {
 } from '@stripe/stripe-js'
 import { loadStripe } from '../stripe'
 import { makePaymentRequestOptions } from './PaymentRequestOption.helper'
-import track from '../../../lib/matomo'
+import { trackEvent } from '../../../lib/matomo'
 import { v4 } from 'uuid'
 
 export enum WalletPaymentMethod {
@@ -114,20 +114,22 @@ function usePaymentRequest(
 
     if (!canMakePaymentResult) {
       setStatus(PaymentRequestStatus.UNAVAILABLE)
-      track([
-        `payment-request: ${initializationStage} failed (${paymentRequestID})`,
-        `wallet-type: ${wallet}`,
-        `options: ${JSON.stringify(options)}`,
+      trackEvent([
+        'payment-request',
+        `${initializationStage} failed`,
+        wallet,
+        options.total.amount / 100,
       ])
       return PaymentRequestStatus.UNAVAILABLE
     }
 
     setPaymentRequest(newPaymentRequest)
     setStatus(PaymentRequestStatus.READY)
-    track([
-      `payment-request: ${initializationStage} successful (${paymentRequestID})`,
-      `wallet-type: ${wallet}`,
-      `options: ${JSON.stringify(options)}`,
+    trackEvent([
+      'payment-request',
+      `${initializationStage} successful`,
+      wallet,
+      options.total.amount / 100,
     ])
     return PaymentRequestStatus.READY
   }
@@ -152,19 +154,21 @@ function usePaymentRequest(
         .then(() => {
           ev.complete('success')
           setStatus(PaymentRequestStatus.SUCCEEDED)
-          track([
-            `payment-request: payment succeeded (${paymentRequestID})`,
-            `wallet-type: ${usedWallet}`,
-            `options: ${JSON.stringify(options)}`,
+          trackEvent([
+            'payment-request',
+            'payment succeeded',
+            usedWallet,
+            options.total.amount / 100,
           ])
         })
         .catch((err) => {
           ev.complete('fail')
           setStatus(PaymentRequestStatus.FAILED)
-          track([
-            `payment-request: payment failed (${paymentRequestID})`,
-            `wallet-type: ${usedWallet}`,
-            `options: ${JSON.stringify(options)}`,
+          trackEvent([
+            'payment-request',
+            'payment failed',
+            usedWallet,
+            options.total.amount / 100,
           ])
         })
     })
