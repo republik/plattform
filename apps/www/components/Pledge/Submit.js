@@ -169,25 +169,29 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState()
   const paymentRequest = usePaymentRequest({
-    requestPayerEmail: !customMe,
-    requestPayerName: !customMe || !customMe?.address,
-    total: {
-      amount: props.total ?? 0,
-      label: t.first([
-        `package/${props.query.package}/title`,
-        'package/choose',
-      ]),
+    selectedPaymentMethod,
+    setSelectedPaymentMethod,
+    options: {
+      requestPayerEmail: !customMe,
+      requestPayerName: !customMe || !customMe?.address,
+      total: {
+        amount: props.total ?? 0,
+        label: t.first([
+          `package/${props.query.package}/title`,
+          'package/choose',
+        ]),
+      },
+      requestShipping: props.requireShippingAddress || false,
+      shippingOptions: props.requireShippingAddress
+        ? [
+            {
+              id: 'default',
+              label: t('account/pledges/free-delivery'),
+              amount: 0,
+            },
+          ]
+        : undefined,
     },
-    requestShipping: props.requireShippingAddress || false,
-    shippingOptions: props.requireShippingAddress
-      ? [
-          {
-            id: 'default',
-            label: t('account/pledges/free-delivery'),
-            amount: 0,
-          },
-        ]
-      : undefined,
   })
 
   return (
@@ -239,101 +243,6 @@ class Submit extends Component {
 
   isStripeWalletPayment() {
     return this.props.selectedPaymentMethod?.startsWith('STRIPE-WALLET')
-  }
-
-  componentDidUpdate() {
-    const { t, setSelectedPaymentMethod } = this.props
-    // Skip if loading
-    if (this.props.paymentRequest.status === PaymentRequestStatus.LOADING) {
-      return
-    }
-
-    // Delay creation of a payment-request, which requires Stripe to be loaded,
-    // until a wallet payment-method is selected
-    const isUninitializedStripeWallet =
-      this.isStripeWalletPayment() &&
-      this.props.paymentRequest.status === PaymentRequestStatus.IDLE
-
-    // Since we don't want to always load all Payment Providers data,
-    // we must reinitialize when switching to a different wallet
-    const isOutdatedStripeWallet =
-      this.isStripeWalletPayment() &&
-      this.props.paymentRequest.status !== PaymentRequestStatus.IDLE &&
-      this.props.paymentRequest.usedWallet !== this.props.selectedPaymentMethod
-
-    const isUnavailableAndStripeWalletIsSelected =
-      this.isStripeWalletPayment() &&
-      this.props.paymentRequest.status === PaymentRequestStatus.UNAVAILABLE
-
-    if (isUninitializedStripeWallet || isOutdatedStripeWallet) {
-      const selectedPaymentMethod = this.props.selectedPaymentMethod
-
-      // Create payment-request
-      this.props.paymentRequest
-        .initialize(selectedPaymentMethod)
-        .then((status) => {
-          if (status === PaymentRequestStatus.UNAVAILABLE) {
-            setSelectedPaymentMethod('STRIPE')
-            this.setState((prevState) => ({
-              ...prevState,
-              loading: false,
-              stripeError: t(
-                'account/pledges/payment/methods/wallet-unavailable',
-                {
-                  wallet: t(
-                    'account/pledges/payment/method/' + selectedPaymentMethod,
-                  ),
-                },
-              ),
-            }))
-          } else {
-            this.setState(() => ({
-              loading: false,
-              walletError: null,
-            }))
-          }
-        })
-        .catch((error) => {
-          console.error('Wallet initialization error', error)
-          this.setState(() => ({
-            loading: false,
-            walletError: t(
-              'account/pledges/payment/methods/initialization/error',
-            ),
-          }))
-        })
-
-      // Re-initialize the payment-request for the current wallet
-      this.setState(() => ({
-        loading: t('account/pledges/payment/methods/loading'), // The loading state is tracked though paymentRequest.status
-      }))
-    } else if (
-      isUnavailableAndStripeWalletIsSelected &&
-      !this.state.walletError
-    ) {
-      this.setState(() => ({
-        loading: false,
-        walletError: t('account/pledges/payment/methods/unavailable'),
-      }))
-    }
-    if (
-      this.props.selectedPaymentMethod &&
-      !this.props.selectedPaymentMethod.startsWith('STRIPE-WALLET') &&
-      this.state.walletError
-    ) {
-      this.setState(() => ({
-        walletError: null,
-      }))
-    }
-    if (
-      this.props.selectedPaymentMethod &&
-      !this.props.selectedPaymentMethod.startsWith('STRIPE') &&
-      this.state.stripeError
-    ) {
-      this.setState(() => ({
-        stripeError: null,
-      }))
-    }
   }
 
   submitVariables(props) {
@@ -853,15 +762,8 @@ class Submit extends Component {
   }
 
   render() {
-    const {
-      emailVerify,
-      paymentError,
-      submitError,
-      walletError,
-      signInError,
-      stripeError,
-      loading,
-    } = this.state
+    const { emailVerify, paymentError, submitError, signInError, loading } =
+      this.state
     const {
       me,
       t,
@@ -880,6 +782,10 @@ class Submit extends Component {
       packageGroup,
       customMe,
       contactState,
+      paymentRequest: {
+        status: paymentRequestStatus,
+        errors: { walletError, stripeError },
+      },
     } = this.props
 
     const errorMessages = this.getErrorMessages()
@@ -891,6 +797,13 @@ class Submit extends Component {
     )
 
     const showSignIn = this.state.showSignIn && !me
+
+    const isPaymentRequestLoading =
+      this.isStripeWalletPayment() &&
+      paymentRequestStatus === PaymentRequestStatus.LOADING
+
+    const isStripePayment =
+      selectedPaymentMethod && selectedPaymentMethod.startsWith('STRIPE')
 
     return (
       <>
@@ -1009,7 +922,9 @@ class Submit extends Component {
             errors={this.state.errors}
             dirty={this.state.dirty}
           >
-            {stripeError && <ErrorMessage error={stripeError} />}
+            {isStripePayment && stripeError && (
+              <ErrorMessage error={stripeError} />
+            )}
             {
               // Only render the browser API in case we're not using a browser payment API
               !me &&
@@ -1072,7 +987,7 @@ class Submit extends Component {
         {!!paymentError && (
           <ErrorMessage style={{ margin: '0 0 40px' }} error={paymentError} />
         )}
-        {!!walletError && (
+        {this.isStripeWalletPayment() && !!walletError && (
           <ErrorMessage style={{ margin: '0 0 40px' }} error={walletError}>
             <br />
             <span>{t('account/pledges/payment/methods/chose-another')}</span>
@@ -1081,11 +996,13 @@ class Submit extends Component {
         {!!signInError && (
           <ErrorMessage style={{ margin: '0 0 40px' }} error={signInError} />
         )}
-        {loading ? (
+        {loading || isPaymentRequestLoading ? (
           <div style={{ textAlign: 'center' }}>
             <InlineSpinner />
             <br />
-            {loading}
+            {isPaymentRequestLoading
+              ? t('account/pledges/payment/methods/loading')
+              : loading}
           </div>
         ) : (
           <div {...styles.topMargin} {...styles.spaceBetweenChildren}>

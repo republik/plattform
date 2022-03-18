@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import {
   Stripe,
   PaymentRequest,
@@ -9,6 +9,7 @@ import {
 import { loadStripe } from '../stripe'
 import { makePaymentRequestOptions } from './PaymentRequestOption.helper'
 import { trackEvent } from '../../../lib/matomo'
+import { useTranslation } from '../../../lib/withT'
 
 export enum WalletPaymentMethod {
   APPLE_PAY = 'STRIPE-WALLET-APPLE-PAY',
@@ -44,6 +45,17 @@ type LeanPaymentRequestOptions = Pick<PaymentRequestOptions, 'total'>
 type PaymentHandler = (event: PaymentRequestPaymentMethodEvent) => Promise<void>
 type PaymentCanceledHandler = () => void
 
+type PaymentRequestErrors = {
+  walletError: string | null
+  stripeError: string | null
+}
+
+type PaymentRequestParameterObject = {
+  options: LeanPaymentRequestOptions
+  selectedPaymentMethod: string | null
+  setSelectedPaymentMethod: Dispatch<SetStateAction<string | null>>
+}
+
 interface PaymentRequestValues {
   status: PaymentRequestStatus
   initialize: (wallet: WalletPaymentMethod) => Promise<PaymentRequestStatus>
@@ -52,6 +64,10 @@ interface PaymentRequestValues {
     handleCancel: PaymentCanceledHandler,
   ) => void
   usedWallet: WalletPaymentMethod
+  errors: {
+    walletError: string | null
+    stripeError: string | null
+  }
 }
 
 /**
@@ -60,18 +76,26 @@ interface PaymentRequestValues {
  *
  * @param options used to initialize the payment request
  */
-function usePaymentRequest(
-  options: LeanPaymentRequestOptions,
-): PaymentRequestValues {
+function usePaymentRequest({
+  selectedPaymentMethod,
+  setSelectedPaymentMethod,
+  options,
+}: PaymentRequestParameterObject): PaymentRequestValues {
   const [stripe, setStripe] = useState<Stripe>(null)
   const [paymentRequest, setPaymentRequest] = useState<PaymentRequest>(null)
   const [status, setStatus] = useState<PaymentRequestStatus>(
     PaymentRequestStatus.IDLE,
   )
+  const [errors, setErrors] = useState<PaymentRequestErrors>({
+    walletError: null,
+    stripeError: null,
+  })
 
   const [usedWallet, setUsedWallet] = useState<WalletPaymentMethod>(null)
   const [lastOptions, setLastOptions] =
     useState<LeanPaymentRequestOptions>(null)
+
+  const { t } = useTranslation()
 
   useEffect(() => {
     // In case the input options have changed (f.e. shipping address is now required)
@@ -84,6 +108,81 @@ function usePaymentRequest(
       initializePaymentRequest(usedWallet)
     }
   }, [paymentRequest, lastOptions, options])
+
+  useEffect(() => {
+    console.debug(
+      JSON.stringify(
+        {
+          status,
+          usedWallet,
+          errors,
+          selectedPaymentMethod,
+        },
+        null,
+        2,
+      ),
+    )
+  })
+
+  useEffect(() => {
+    const selectPMIsStripeWallet =
+      selectedPaymentMethod && selectedPaymentMethod.startsWith('STRIPE-WALLET')
+
+    const isUninitialized =
+      selectPMIsStripeWallet && status === PaymentRequestStatus.IDLE
+
+    const initializedWalletIsOutdated =
+      selectPMIsStripeWallet && usedWallet !== selectedPaymentMethod
+
+    const stripeWalletIsUnavailable =
+      selectPMIsStripeWallet && status === PaymentRequestStatus.UNAVAILABLE
+
+    // Handle (re-)initialization of the payment request or switching payment method if unavailable
+    if (
+      (isUninitialized || initializedWalletIsOutdated) &&
+      !stripeWalletIsUnavailable
+    ) {
+      initializePaymentRequest(selectedPaymentMethod as WalletPaymentMethod)
+        .then((status) => {
+          console.debug('next-pm status', JSON.stringify({ status }))
+          if (status === PaymentRequestStatus.UNAVAILABLE) {
+            setSelectedPaymentMethod('STRIPE')
+            setErrors({
+              stripeError: t(
+                'account/pledges/payment/methods/wallet-unavailable',
+                {
+                  wallet: t(
+                    'account/pledges/payment/method/' + selectedPaymentMethod,
+                  ),
+                },
+              ),
+              walletError: t('account/pledges/payment/methods/unavailable'),
+            })
+          } else {
+            setErrors({
+              stripeError: null,
+              walletError: null,
+            })
+          }
+        })
+        .catch((error) => {
+          console.error('Wallet initialization error', error)
+          setErrors({
+            stripeError: null,
+            walletError: t(
+              'account/pledges/payment/methods/initialization/error',
+            ),
+          })
+        })
+    }
+
+    if (stripeWalletIsUnavailable) {
+      setErrors({
+        stripeError: null,
+        walletError: t('account/pledges/payment/methods/unavailable'),
+      })
+    }
+  }, [selectedPaymentMethod])
 
   async function createPaymentRequest(
     wallet: WalletPaymentMethod,
@@ -136,6 +235,10 @@ function usePaymentRequest(
     wallet: WalletPaymentMethod,
   ): Promise<PaymentRequestStatus> {
     setStatus(PaymentRequestStatus.LOADING)
+    setErrors({
+      walletError: null,
+      stripeError: null,
+    })
     return createPaymentRequest(wallet)
   }
 
@@ -190,6 +293,7 @@ function usePaymentRequest(
     initialize: initializePaymentRequest,
     show,
     usedWallet,
+    errors,
   }
 }
 
