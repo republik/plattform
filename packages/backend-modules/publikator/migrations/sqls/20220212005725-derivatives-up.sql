@@ -21,7 +21,6 @@ CREATE TABLE "publikator"."derivatives" (
     "id" uuid DEFAULT uuid_generate_v4(),
     "commitId" uuid,
     "type" "derivativesTypeDomain" NOT NULL DEFAULT 'milestone'::"derivativesTypeDomain",
-    "settings" jsonb, -- { images: false|true }, { voice: 'alpha' }
     "status" "derivativesStatusDomain" NOT NULL DEFAULT 'milestone'::"derivativesStatusDomain",
     "result" jsonb,
     "userId" uuid REFERENCES users(id) ON DELETE SET NULL ON UPDATE CASCADE,

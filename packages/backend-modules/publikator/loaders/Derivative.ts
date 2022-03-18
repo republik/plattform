@@ -6,14 +6,20 @@ import { GraphqlContext } from '@orbiting/backend-modules-types'
 export interface DerivativeRow {
   id: string
   commitId?: string
-  type: string
-  settings: string
-  status: string
-  result: any
+  type: 'SyntheticReadAloud'
+  status: 'Pending' | 'Ready' | 'Failure' | 'Destroyed'
+  result?: any
+  userId?: string
+  author: DerivativeAuthor
   createdAt: Date
+  updatedAt: Date
   readyAt?: Date
   failedAt?: Date
   destroyedAt?: Date
+}
+interface DerivativeAuthor {
+  name: string
+  email: string
 }
 
 export default module.exports = function (context: GraphqlContext) {
