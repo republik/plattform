@@ -12,8 +12,6 @@ import { ReactEditor } from 'slate-react'
 import { config as elConfig } from '../../elements'
 import editorConfig from '../../../config'
 import { isCorrect } from './structure'
-import { link } from 'fs'
-import { text } from 'stream/consumers'
 
 export const CHAR_LIMIT = editorConfig.maxSigns
 const PSEUDO_EMPTY_STRING = '\u2060'
@@ -58,11 +56,13 @@ export const createLinks: NormalizeFn<CustomText> = ([node, path], editor) => {
   const linkContent = node.text.match(regex)
 
   if (linkContent) {
-    console.log(linkContent)
     if (SlateElement.isElement(parentNode) && parentNode.type !== 'link') {
       const linkStartPoint = node.text.indexOf(linkContent[0])
       const linkEndPoint = linkContent[0].length + linkStartPoint
-      const href = '' // TODO: don't forget www... -> http://wwww )
+
+      const href = /^(https?:|\/|#)/.test(linkContent[0])
+        ? linkContent[0]
+        : 'http://' + linkContent[0]
 
       Transforms.wrapNodes(
         editor,
@@ -93,14 +93,6 @@ export const createLinks: NormalizeFn<CustomText> = ([node, path], editor) => {
           Transforms.select(editor, nextTextPath)
         })
       }
-      //  -> setSelection (editor.select) at link path + 1 ^, offset: 0
-
-      // examples:
-      // path = [1, 0] before wrapping
-      // path of link would be [1,1]
-      // path of link text: [1,1,0]
-      // path of next text node [1,2] -> that's the one we target
-      // so from [1,0] -> [1,2] /// [1,4,3,2] -> [1,4,3,4]
 
       return true
     }
