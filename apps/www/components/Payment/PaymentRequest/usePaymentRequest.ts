@@ -211,31 +211,26 @@ function usePaymentRequest({
       selectedPaymentMethod && selectedPaymentMethod.startsWith('STRIPE-WALLET')
 
     const isUninitialized =
-      selectPMIsStripeWallet && status === PaymentRequestStatus.IDLE
+      selectPMIsStripeWallet &&
+      (status === PaymentRequestStatus.IDLE ||
+        status === PaymentRequestStatus.UNAVAILABLE)
 
     const initializedWalletIsOutdated =
       selectPMIsStripeWallet && usedWallet !== selectedPaymentMethod
-
-    const stripeWalletIsUnavailable =
-      selectPMIsStripeWallet && status === PaymentRequestStatus.UNAVAILABLE
 
     const optionsUsedToInitializeHaveChanged =
       selectPMIsStripeWallet &&
       JSON.stringify(lastOptions) !== JSON.stringify(options)
 
     if (status === PaymentRequestStatus.LOADING) {
-      console.debug('Payment request is still loading')
       return
     }
-    console.debug('running hook')
     // Handle (re-)initialization of the payment request or switching payment method if unavailable
     if (
-      (isUninitialized ||
-        initializedWalletIsOutdated ||
-        optionsUsedToInitializeHaveChanged) &&
-      !stripeWalletIsUnavailable
+      isUninitialized ||
+      initializedWalletIsOutdated ||
+      optionsUsedToInitializeHaveChanged
     ) {
-      console.debug('reinitializing payment request')
       initializePaymentRequest(selectedPaymentMethod as WalletPaymentMethod)
         .then((status) => {
           if (status === PaymentRequestStatus.UNAVAILABLE) {
@@ -267,13 +262,6 @@ function usePaymentRequest({
             ),
           })
         })
-    }
-
-    if (stripeWalletIsUnavailable && !errors.walletError) {
-      setErrors({
-        stripeError: null,
-        walletError: t('account/pledges/payment/methods/unavailable'),
-      })
     }
   }, [
     errors.walletError,
