@@ -58,7 +58,6 @@ type PaymentRequestParameterObject = {
 
 interface PaymentRequestValues {
   status: PaymentRequestStatus
-  initialize: (wallet: WalletPaymentMethod) => Promise<PaymentRequestStatus>
   show: (
     handlePayment: PaymentHandler,
     handleCancel: PaymentCanceledHandler,
@@ -274,7 +273,6 @@ function usePaymentRequest({
 
   return {
     status,
-    initialize: initializePaymentRequest,
     show,
     usedWallet,
     errors,
