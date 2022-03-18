@@ -50,6 +50,7 @@ import usePaymentRequest, {
 } from '../Payment/PaymentRequest/usePaymentRequest'
 import { getPayerInformationFromEvent } from '../Payment/PaymentRequest/PaymentRequestEventHelper'
 import { css } from 'glamor'
+import { PAYMENT_METHODS } from '@orbiting/backend-modules-republik-crowdfundings/__tests__/helpers'
 
 const { P } = Interaction
 
@@ -272,28 +273,24 @@ class Submit extends Component {
       this.props.paymentRequest
         .initialize(selectedPaymentMethod)
         .then((status) => {
-          if (status !== PaymentRequestStatus.UNAVAILABLE) {
-            this.setState(() => ({
-              loading: false,
-              walletError: null,
-            }))
-          } else {
-            const isGooglePayPayment =
-              this.props.selectedPaymentMethod ===
-              WalletPaymentMethod.GOOGLE_PAY
-
-            if (isGooglePayPayment) {
-              setSelectedPaymentMethod('STRIPE')
-            }
+          if (status === PaymentRequestStatus.UNAVAILABLE) {
+            setSelectedPaymentMethod(PAYMENT_METHODS.STRIPE)
             this.setState((prevState) => ({
               ...prevState,
               loading: false,
-              walletError: !isGooglePayPayment
-                ? t('account/pledges/payment/methods/unavailable')
-                : null,
-              stripeError: isGooglePayPayment
-                ? t('account/pledges/payment/methods/google-pay/unavailable')
-                : null,
+              stripeError: t(
+                'account/pledges/payment/methods/wallet-unavailable',
+                {
+                  wallet: t(
+                    'account/pledges/payment/method/' + selectedPaymentMethod,
+                  ),
+                },
+              ),
+            }))
+          } else {
+            this.setState(() => ({
+              loading: false,
+              walletError: null,
             }))
           }
         })
@@ -957,6 +954,11 @@ class Submit extends Component {
           )}
         </div>
         <div {...styles.topMargin}>
+          {contactPreface && (
+            <div style={{ marginBottom: '16px' }}>
+              <P>{contactPreface}</P>
+            </div>
+          )}
           <PaymentForm
             key={me && me.id}
             ref={this.paymentRef}
@@ -1015,11 +1017,6 @@ class Submit extends Component {
                 this.props.selectedPaymentMethod &&
                 !this.isStripeWalletPayment() && (
                   <div {...styles.topMargin}>
-                    {contactPreface && (
-                      <div style={{ marginBottom: 40 }}>
-                        <P>{contactPreface}</P>
-                      </div>
-                    )}
                     <Label>
                       {t.first([
                         `pledge/contact/title/${packageName}`,
