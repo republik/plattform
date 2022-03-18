@@ -29,16 +29,6 @@ const GENERATE_DERIVATIVE = gql`
   ${fragments.SimpleDerivative}
 `
 
-const DESTROY_DERIVATIVE = gql`
-  mutation destroyDerivative($id: ID!) {
-    destroyDerivative(id: $id) {
-      ...SimpleDerivative
-    }
-  }
-
-  ${fragments.SimpleDerivative}
-`
-
 const pulsate = keyframes({
   '0%': { opacity: 1 },
   '100%': { opacity: 0.2 },
@@ -65,106 +55,102 @@ const styles = {
   }),
 }
 
-const SynthesizedAudio = withT(
-  ({ t, derivative, onClickGenerate, onClickDestroy }) => {
-    const [showAudioPlayer, setShowAudioPlayer] = useState(false)
-    const [showErrorMessage, setShowErrorMessage] = useState(false)
+const SynthesizedAudio = withT(({ t, derivative, onClickGenerate }) => {
+  const [showAudioPlayer, setShowAudioPlayer] = useState(false)
+  const [showErrorMessage, setShowErrorMessage] = useState(false)
 
-    return (
-      <>
-        {!derivative ? (
+  return (
+    <>
+      {!derivative ? (
+        <IconButton
+          invert
+          style={{ marginRight: 0 }}
+          Icon={MdHearingIcon}
+          label='Audio-Version erzeugen'
+          labelShort=''
+          size={24}
+          onClick={onClickGenerate}
+        />
+      ) : derivative.status === 'Pending' ? (
+        <IconButton
+          invert
+          style={{
+            marginRight: 0,
+            animation: `${pulsate} 0.5s linear infinite alternate`,
+          }}
+          Icon={MdHearingIcon}
+          label='Audio-Version wird erzeugt'
+          labelShort=''
+          size={24}
+          disabled
+        />
+      ) : derivative.status === 'Failure' ? (
+        <>
           <IconButton
             invert
             style={{ marginRight: 0 }}
+            fillColorName='error'
             Icon={MdHearingIcon}
-            label='Audio-Version erzeugen'
-            labelShort=''
+            label='Audio-Version fehlerhaft'
+            labelShort='Fehler'
             size={24}
-            onClick={onClickGenerate}
+            onClick={() => setShowErrorMessage(true)}
           />
-        ) : derivative.status === 'Pending' ? (
-          <IconButton
-            invert
-            style={{
-              marginRight: 0,
-              animation: `${pulsate} 0.5s linear infinite alternate`,
-            }}
-            Icon={MdHearingIcon}
-            label='Audio-Version wird erzeugt'
-            labelShort=''
-            size={24}
-            disabled
-          />
-        ) : derivative.status === 'Failure' ? (
-          <>
-            <IconButton
-              invert
-              style={{ marginRight: 0 }}
-              fillColorName='error'
-              Icon={MdHearingIcon}
-              label='Audio-Version fehlerhaft'
-              labelShort='Fehler'
-              size={24}
-              onClick={() => setShowErrorMessage(true)}
-            />
-            {showErrorMessage && (
-              <Overlay onClose={() => setShowErrorMessage(false)}>
-                <OverlayToolbar
-                  title='Audio-Version fehlerhaft'
-                  onClose={() => setShowErrorMessage(false)}
-                />
-                <OverlayBody>
-                  <P>
-                    Fehlermeldung: {JSON.stringify(derivative.result.error)}
-                  </P>
-                  <P>Derivative-ID: {derivative.id}</P>
-                  <IconButton
-                    style={{ marginTop: 10 }}
-                    Icon={MdHearingIcon}
-                    label='Audio-Version erneut erzeugen'
-                    labelShort=''
-                    size={24}
-                    onClick={() => {
-                      onClickGenerate()
-                      setShowErrorMessage(false)
-                    }}
-                  />
-                </OverlayBody>
-              </Overlay>
-            )}
-          </>
-        ) : (
-          <IconButton
-            invert
-            style={{ marginRight: 0 }}
-            Icon={MdPlayArrow}
-            label='Audio-Version anhören'
-            labelShort='anhören'
-            size={24}
-            onClick={() => setShowAudioPlayer(true)}
-          />
-        )}
-        {showAudioPlayer && (
-          <diy {...styles.audioPlayerContainer}>
-            <div {...styles.audioPlayer}>
-              <AudioPlayer
-                src={{
-                  mp3: derivative.result.audioAssetsUrl,
-                }}
-                closeHandler={() => setShowAudioPlayer(false)}
-                autoPlay
-                scrubberPosition='bottom'
-                t={t}
+          {showErrorMessage && (
+            <Overlay onClose={() => setShowErrorMessage(false)}>
+              <OverlayToolbar
+                title='Audio-Version fehlerhaft'
+                onClose={() => setShowErrorMessage(false)}
               />
-            </div>
-          </diy>
-        )}
-      </>
-    )
-  },
-)
+              <OverlayBody>
+                <P>Fehlermeldung: {JSON.stringify(derivative.result.error)}</P>
+                <P>Derivative-ID: {derivative.id}</P>
+                <IconButton
+                  style={{ marginTop: 10 }}
+                  Icon={MdHearingIcon}
+                  label='Audio-Version erneut erzeugen'
+                  labelShort=''
+                  size={24}
+                  onClick={() => {
+                    onClickGenerate()
+                    setShowErrorMessage(false)
+                  }}
+                />
+              </OverlayBody>
+            </Overlay>
+          )}
+        </>
+      ) : (
+        <IconButton
+          invert
+          style={{ marginRight: 0 }}
+          Icon={MdPlayArrow}
+          label='Audio-Version anhören'
+          labelShort='anhören'
+          size={24}
+          onClick={() => setShowAudioPlayer(true)}
+        />
+      )}
+      {showAudioPlayer && (
+        <diy {...styles.audioPlayerContainer}>
+          <div {...styles.audioPlayer}>
+            <AudioPlayer
+              src={{
+                mp3: derivative.result.audioAssetsUrl,
+              }}
+              closeHandler={() => setShowAudioPlayer(false)}
+              autoPlay
+              scrubberPosition='bottom'
+              t={t}
+            />
+          </div>
+        </diy>
+      )}
+    </>
+  )
+})
 
-const Derivatives = ({ commit, generateDerivative, destroyDerivative }) => {
+const Derivatives = ({ commit, generateDerivative }) => {
   if (!commit.derivatives) {
     return null
   }
@@ -189,7 +175,6 @@ const Derivatives = ({ commit, generateDerivative, destroyDerivative }) => {
         <SynthesizedAudio
           derivative={synthesizedAudio}
           onClickGenerate={generateDerivative}
-          onClickDestroy={destroyDerivative}
         />
       )}
     </>
@@ -210,13 +195,5 @@ export default compose(
           }),
       }
     },
-  }),
-  graphql(DESTROY_DERIVATIVE, {
-    props: ({ mutate }) => ({
-      destroyDerivative: (id) =>
-        mutate({
-          variables: { id },
-        }),
-    }),
   }),
 )(Derivatives)
