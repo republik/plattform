@@ -896,6 +896,11 @@ class Submit extends Component {
     return (
       <>
         <div {...styles.topMargin}>
+          {contactPreface && (
+            <div style={{ marginBottom: '16px' }}>
+              <P>{contactPreface}</P>
+            </div>
+          )}
           {!customMe && (
             <>
               <A
@@ -954,11 +959,6 @@ class Submit extends Component {
           )}
         </div>
         <div {...styles.topMargin}>
-          {contactPreface && (
-            <div style={{ marginBottom: '16px' }}>
-              <P>{contactPreface}</P>
-            </div>
-          )}
           <PaymentForm
             key={me && me.id}
             ref={this.paymentRef}
