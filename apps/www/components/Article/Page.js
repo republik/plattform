@@ -651,10 +651,7 @@ const ArticlePage = ({
                               </div>
                             )}
                             {!!syntheticAudioSource && (
-                              <SyntheticAudio
-                                audioSource={syntheticAudioSource}
-                                meta={meta}
-                              />
+                              <SyntheticAudio meta={meta} t={t} />
                             )}
                             {isSection && !hideSectionNav && (
                               <Breakout size='breakout'>
