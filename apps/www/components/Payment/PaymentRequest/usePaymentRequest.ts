@@ -246,15 +246,10 @@ function usePaymentRequest({
               ),
               walletError: t('account/pledges/payment/methods/unavailable'),
             })
-          } else {
-            setErrors({
-              stripeError: null,
-              walletError: null,
-            })
           }
         })
-        .catch((error) => {
-          console.error('Wallet initialization error', error)
+        .catch(() => {
+          setStatus(PaymentRequestStatus.UNAVAILABLE)
           setErrors({
             stripeError: null,
             walletError: t(
