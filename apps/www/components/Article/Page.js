@@ -82,6 +82,7 @@ import { Mutation, Query, Subscription } from '@apollo/client/react/components'
 import { useMe } from '../../lib/context/MeContext'
 import DiscussionContextProvider from '../Discussion/context/DiscussionContextProvider'
 import Discussion from '../Discussion/Discussion'
+import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
 
 const dynamicOptions = {
   loading: () => <SmallLoader loading />,
@@ -767,6 +768,8 @@ const ArticlePage = ({
                   variables={feedQueryVariables}
                 />
               )}
+              {/* TODO: add suggestions feed here */}
+              {true && <ArticleRecommendationsFeed path={cleanedPath} />}
               {(hasActiveMembership || isFormat) && (
                 <>
                   <br />
