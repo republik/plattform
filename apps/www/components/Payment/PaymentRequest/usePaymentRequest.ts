@@ -9,7 +9,6 @@ import {
 import { loadStripe } from '../stripe'
 import { makePaymentRequestOptions } from './PaymentRequestOption.helper'
 import { trackEvent } from '../../../lib/matomo'
-import { v4 } from 'uuid'
 
 export enum WalletPaymentMethod {
   APPLE_PAY = 'STRIPE-WALLET-APPLE-PAY',
@@ -64,7 +63,6 @@ interface PaymentRequestValues {
 function usePaymentRequest(
   options: LeanPaymentRequestOptions,
 ): PaymentRequestValues {
-  const [paymentRequestID] = useState(v4())
   const [stripe, setStripe] = useState<Stripe>(null)
   const [paymentRequest, setPaymentRequest] = useState<PaymentRequest>(null)
   const [status, setStatus] = useState<PaymentRequestStatus>(
