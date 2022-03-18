@@ -21,7 +21,7 @@ export function getPayerInformationFromEvent(
   event: PaymentRequestPaymentMethodEvent,
 ): PayerInformation {
   const name = event.payerName ?? ''
-  const [firstName, ...lastNames] = name.split(' ')
+  const [firstName, ...lastNames] = name.trim().split(' ')
 
   const billingAddress = event.paymentMethod.billing_details.address
 
