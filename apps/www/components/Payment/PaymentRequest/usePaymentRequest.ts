@@ -110,21 +110,6 @@ function usePaymentRequest({
   }, [paymentRequest, lastOptions, options])
 
   useEffect(() => {
-    console.debug(
-      JSON.stringify(
-        {
-          status,
-          usedWallet,
-          errors,
-          selectedPaymentMethod,
-        },
-        null,
-        2,
-      ),
-    )
-  })
-
-  useEffect(() => {
     const selectPMIsStripeWallet =
       selectedPaymentMethod && selectedPaymentMethod.startsWith('STRIPE-WALLET')
 
@@ -144,7 +129,6 @@ function usePaymentRequest({
     ) {
       initializePaymentRequest(selectedPaymentMethod as WalletPaymentMethod)
         .then((status) => {
-          console.debug('next-pm status', JSON.stringify({ status }))
           if (status === PaymentRequestStatus.UNAVAILABLE) {
             setSelectedPaymentMethod('STRIPE')
             setErrors({
