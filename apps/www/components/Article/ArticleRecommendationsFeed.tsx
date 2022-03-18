@@ -4,6 +4,7 @@ import { useArticleRecommendationsQuery } from './graphql/getArticleRecommendati
 import { css } from 'glamor'
 import Loader from '../Loader'
 import DocumentList from '../Feed/DocumentList'
+import { useTranslation } from '../../lib/withT'
 
 const styles = {
   heading: css({
@@ -16,19 +17,33 @@ type ArticleSuggestionsFeedProps = {
 }
 
 const ArticleRecommendationsFeed = ({ path }: ArticleSuggestionsFeedProps) => {
+  const { t } = useTranslation()
   const { data, loading } = useArticleRecommendationsQuery({
     variables: {
       path,
     },
   })
 
-  const containsTextArticles = useMemo(() => {
-    return false
+  const articleRecommendations = useMemo(() => {
+    if (!data || !data.article || !data.article.meta.recommendations) {
+      return []
+    }
+    return data.article.meta.recommendations.nodes
   }, [data])
 
-  const containsPodcasts = useMemo(() => {
-    return false
+  const amountOfPodcastsInRecommendations = useMemo(() => {
+    return articleRecommendations
+      ? articleRecommendations.filter(
+          (recommendation) => !!recommendation.meta?.audioSource,
+        ).length
+      : 0
   }, [data])
+
+  console.debug({
+    articleRecommendations,
+    amountOfPodcastsInRecommendations,
+    x: articleRecommendations.length - amountOfPodcastsInRecommendations,
+  })
 
   return (
     <Center>
@@ -39,7 +54,17 @@ const ArticleRecommendationsFeed = ({ path }: ArticleSuggestionsFeedProps) => {
             {data.article.meta.recommendations?.nodes.length > 0 && (
               <>
                 <Interaction.H3 {...styles.heading}>
-                  Lesen Sie auch:
+                  {articleRecommendations.length -
+                    amountOfPodcastsInRecommendations ==
+                  articleRecommendations.length
+                    ? t('articleRecommendations/article-recommendations')
+                    : articleRecommendations.length -
+                        amountOfPodcastsInRecommendations >
+                      0
+                    ? t(
+                        'articleRecommendations/article-and-podcast-recommendations',
+                      )
+                    : t('articleRecommendations/podcast-recommendations')}
                 </Interaction.H3>
                 <DocumentList
                   documents={data.article.meta.recommendations.nodes}
