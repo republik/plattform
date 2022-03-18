@@ -600,7 +600,6 @@ class Submit extends Component {
     const { t } = this.props
     this.setState(() => ({
       loading: t('account/pledges/payment/waiting'),
-      walletError: null,
     }))
 
     this.props.paymentRequest.show(

@@ -165,7 +165,7 @@ function usePaymentRequest({
         walletError: t('account/pledges/payment/methods/unavailable'),
       })
     }
-  }, [selectedPaymentMethod])
+  }, [selectedPaymentMethod, status, usedWallet])
 
   async function createPaymentRequest(
     wallet: WalletPaymentMethod,
