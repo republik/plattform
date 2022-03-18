@@ -77,6 +77,7 @@ export {
   MdFormatAlignLeft as ParagraphIcon,
   MdWallpaper as ImageIcon,
   MdFormatQuote as QuoteIcon,
+  MdStrikethroughS as StrikeThrough,
 } from 'react-icons/md'
 
 export {

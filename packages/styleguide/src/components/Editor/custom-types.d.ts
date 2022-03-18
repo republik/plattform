@@ -3,13 +3,14 @@ import { IconType } from '@react-icons/all-files/lib'
 import { BaseEditor, Path } from 'slate'
 import { ReactEditor } from 'slate-react'
 import { HistoryEditor } from 'slate-history'
-import {StyleAttribute} from "glamor";
+import { StyleAttribute } from 'glamor'
 
 type CustomMarks = {
   italic?: boolean
   bold?: boolean
   sub?: boolean
   sup?: boolean
+  strikethrough?: boolean
 }
 
 export type CustomMarksType = keyof CustomMarks
