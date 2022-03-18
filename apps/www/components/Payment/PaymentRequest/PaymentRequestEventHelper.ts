@@ -27,7 +27,7 @@ export function getPayerInformationFromEvent(
 
   return {
     email: event.payerEmail,
-    firstName: firstName.trim(),
+    firstName: firstName,
     lastName: lastNames.join(' ').trim(),
     billingAddress: billingAddress
       ? {
