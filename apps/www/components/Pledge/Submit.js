@@ -50,7 +50,6 @@ import usePaymentRequest, {
 } from '../Payment/PaymentRequest/usePaymentRequest'
 import { getPayerInformationFromEvent } from '../Payment/PaymentRequest/PaymentRequestEventHelper'
 import { css } from 'glamor'
-import { PAYMENT_METHODS } from '@orbiting/backend-modules-republik-crowdfundings/__tests__/helpers'
 
 const { P } = Interaction
 
@@ -274,7 +273,7 @@ class Submit extends Component {
         .initialize(selectedPaymentMethod)
         .then((status) => {
           if (status === PaymentRequestStatus.UNAVAILABLE) {
-            setSelectedPaymentMethod(PAYMENT_METHODS.STRIPE)
+            setSelectedPaymentMethod('STRIPE')
             this.setState((prevState) => ({
               ...prevState,
               loading: false,
