@@ -31,7 +31,7 @@ export function getPayerInformationFromEvent(
     lastName: lastNames.join(' ').trim(),
     billingAddress: billingAddress
       ? {
-          name: event.payerName,
+          name: event.paymentMethod.billing_details?.name ?? event.payerName,
           line1: billingAddress.line1,
           line2: billingAddress.line2,
           postalCode: billingAddress.postal_code,
