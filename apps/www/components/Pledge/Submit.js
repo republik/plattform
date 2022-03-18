@@ -996,7 +996,7 @@ class Submit extends Component {
           <ErrorMessage style={{ margin: '0 0 40px' }} error={signInError} />
         )}
         {loading || isPaymentRequestLoading ? (
-          <div style={{ textAlign: 'center' }}>
+          <div {...styles.topMargin} style={{ textAlign: 'center' }}>
             <InlineSpinner />
             <br />
             {isPaymentRequestLoading

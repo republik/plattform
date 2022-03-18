@@ -245,7 +245,7 @@ function usePaymentRequest({
             options.total.amount / 100,
           ])
         })
-        .catch((err) => {
+        .catch(() => {
           ev.complete('fail')
           setStatus(PaymentRequestStatus.FAILED)
           trackEvent([
