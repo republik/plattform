@@ -1,8 +1,5 @@
 require('@orbiting/backend-modules-env').config()
 
-/* import yargs from 'yargs'
-
-import fetch from 'node-fetch' */
 import moment from 'moment'
 import Promise from 'bluebird'
 import _debug from 'debug'
@@ -141,12 +138,12 @@ const handleBatch = async (rows: any[], count: number, pgdb: any) => {
           throw new Error('parent.identifier !== CENTER')
         }
 
-        const urls: any[] = []
-        visit(node, 'zone', (node, index, parent) => {
+        const urls: string[] = []
+        visit(node, 'zone', (node: any) => {
           if (node?.identifier === 'TEASER') {
             if (
               !node.data?.url &&
-              node?.children?.find((child) => child.depth === 1)?.children
+              node?.children?.find((child: any) => child.depth === 1)?.children
                 .length
             ) {
               debug('missing url on TEASER')
@@ -187,32 +184,36 @@ const handleBatch = async (rows: any[], count: number, pgdb: any) => {
 
     const recommendations: any = []
 
-    articleCollections.reverse().forEach((articleCollection, index) => {
-      if (!recommendations.length) {
-        recommendations.unshift(articleCollection)
-        return
-      }
+    articleCollections
+      .reverse()
+      .forEach((articleCollection: any, index: number) => {
+        if (!recommendations.length) {
+          recommendations.unshift(articleCollection)
+          return
+        }
 
-      if (
-        articleCollections[index - 1]?.index ===
-        articleCollection.index + 1
-      ) {
-        debug('using multiple ARTICLECOLLECTION zones as recommendations. done')
+        if (
+          articleCollections[index - 1]?.index ===
+          articleCollection.index + 1
+        ) {
+          debug(
+            'using multiple ARTICLECOLLECTION zones as recommendations. done',
+          )
+          console.log(
+            'using multiple ARTICLECOLLECTION zones as recommendation',
+            repoId,
+            `https://publikator.republik.ch/repo/${repoId}/tree`,
+          )
+          recommendations.unshift(articleCollection)
+          return
+        }
+
         console.log(
-          'using multiple ARTICLECOLLECTION zones as recommendation',
+          'ignoring some ARTICLECOLLECTION',
           repoId,
           `https://publikator.republik.ch/repo/${repoId}/tree`,
         )
-        recommendations.unshift(articleCollection)
-        return
-      }
-
-      console.log(
-        'ignoring some ARTICLECOLLECTION',
-        repoId,
-        `https://publikator.republik.ch/repo/${repoId}/tree`,
-      )
-    })
+      })
 
     if (!recommendations.length) {
       debug('no recommendations. done')
@@ -224,7 +225,7 @@ const handleBatch = async (rows: any[], count: number, pgdb: any) => {
       return
     }
 
-    const refs = recommendations.map((node) => node.ref)
+    const refs = recommendations.map((node: any) => node.ref)
 
     visit(mdast, 'zone', (node: any, index: number, parent: any) => {
       if (node?.identifier === 'ARTICLECOLLECTION' && refs.includes(node.ref)) {
@@ -252,7 +253,7 @@ const handleBatch = async (rows: any[], count: number, pgdb: any) => {
         meta: {
           ...meta,
           recommendations: recommendations
-            .map((recommendation) => recommendation.urls)
+            .map((recommendation: any) => recommendation.urls)
             .flat()
             .filter(Boolean),
         },
