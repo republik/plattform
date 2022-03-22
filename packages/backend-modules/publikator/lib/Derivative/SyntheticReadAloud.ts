@@ -7,7 +7,7 @@ const {
   getParsedDocumentId,
 } = require('@orbiting/backend-modules-search/lib/Documents')
 const {
-  Roles: { userIsInRoles, userHasRole },
+  Roles: { userIsInRoles },
 } = require('@orbiting/backend-modules-auth')
 
 import { DerivativeRow } from '../../loaders/Derivative'
@@ -36,8 +36,8 @@ export const processMeta = async (
     return preprocessedMeta
   }
 
-  // Feature only visible to users w/ editor role during test-run
-  if (!userHasRole(context.user, 'editor')) {
+  // Feature only visible to users w/ editor or tester.audio role during test-run
+  if (!userIsInRoles(context.user, ['editor', 'tester.audio'])) {
     return preprocessedMeta
   }
 
