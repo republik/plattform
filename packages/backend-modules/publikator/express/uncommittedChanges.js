@@ -34,15 +34,20 @@ const handleUncomittedChanges = async (req, res) => {
   return res.status(result.errors ? 400 : 200).end()
 }
 
-// this route exists because navigator.sendBeacon, used to clear uncommittedChanges on-close, doesn't allow json.https://bugs.chromium.org/p/chromium/issues/detail?id=490015
+// this route exists because navigator.sendBeacon, used to clear uncommittedChanges
+// on-close, doesn't allow json.
+// https://bugs.chromium.org/p/chromium/issues/detail?id=490015
 module.exports = (server) => {
   server.post(
-    '/uncommittedChanges', // @TODO: This route shall become deprecated
+    '/publikator/uncommittedChanges',
     bodyParser.json({ type: 'text/plain' }),
     handleUncomittedChanges,
   )
+
+  // @deprecated: "/uncommittedChanges" route deprecated. Safe to remove if no
+  // publikator app instance points to it, check ENV var API_UNCOMMITTED_CHANGES_URL
   server.post(
-    '/publikator/uncommittedChanges',
+    '/uncommittedChanges',
     bodyParser.json({ type: 'text/plain' }),
     handleUncomittedChanges,
   )
