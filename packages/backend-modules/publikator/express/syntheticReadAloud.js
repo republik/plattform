@@ -1,6 +1,5 @@
 const bodyParser = require('body-parser')
 
-// await middleware(server, pgdb, t, redis, createGraphqlContext())
 module.exports = (server, pgdb, t, redis, context) => {
   // Callback for assets which are ready
   server.get(
@@ -9,7 +8,7 @@ module.exports = (server, pgdb, t, redis, context) => {
     async (req, res) => {
       const { pgdb } = context
 
-      // [{"alias":"By the way","phoneme":null,"grapheme":"BTW"},{"phoneme":"ha.loːˈ","grapheme":"Hello"}]
+      // @example [{"alias":"By the way","phoneme":null,"grapheme":"BTW"},{"phoneme":"ha.loːˈ","grapheme":"Hello"}]
       const lexicon = await pgdb.public.gsheets.findOneFieldOnly(
         { name: 'syntheticReadAloudLexicon' },
         'data',
