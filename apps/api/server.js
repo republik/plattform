@@ -199,7 +199,7 @@ const run = async (workerId, config) => {
 }
 
 const runOnce = async () => {
-  const applicationName = ['backends', SERVER, DYNO, 'master']
+  const applicationName = ['backends', SERVER, DYNO, 'scheduler']
     .filter(Boolean)
     .join(' ')
 
@@ -220,7 +220,7 @@ const runOnce = async () => {
     return context
   }
 
-  const context = await createGraphQLContext({ scope: 'master' })
+  const context = await createGraphQLContext({ scope: 'scheduler' })
 
   const slackGreeter = await SlackGreeter.start()
 

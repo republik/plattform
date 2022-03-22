@@ -10,7 +10,7 @@ export interface GraphqlContext extends ConnectionContext {
   t: any
   signInHooks: any
   mail: any
-  scope?: 'request' | 'socket' | 'middleware' | 'master'
+  scope?: 'request' | 'socket' | 'middleware' | 'scheduler'
   loaders: any
   user?: any
 }
