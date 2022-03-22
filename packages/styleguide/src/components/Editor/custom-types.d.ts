@@ -78,6 +78,15 @@ export type PullQuoteSourceElement = SharedElement & {
   type: 'pullQuoteSource'
 }
 
+export type ListElement = SharedElement & {
+  type: 'list'
+  ordered?: boolean
+}
+
+export type ListItemElement = SharedElement & {
+  type: 'listItem'
+}
+
 export type CustomElement =
   | HeadlineElement
   | ParagraphElement
@@ -90,6 +99,8 @@ export type CustomElement =
   | PullQuoteElement
   | PullQuoteTextElement
   | PullQuoteSourceElement
+  | ListElement
+  | ListItemElement
 
 export type CustomDescendant = CustomElement | CustomText
 export type CustomAncestor = CustomElement | CustomEditor
@@ -108,6 +119,8 @@ export type CustomElementsType =
   | 'pullQuote'
   | 'pullQuoteText'
   | 'pullQuoteSource'
+  | 'list'
+  | 'listItem'
 
 interface ButtonI {
   icon: IconType

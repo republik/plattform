@@ -1,9 +1,19 @@
-import { ElementConfigI } from '../../../custom-types'
-import { PullQuote } from '../../../../PullQuote'
-import { QuoteIcon } from '../../../../Icons'
+import { ElementConfigI, ListElement } from '../../../custom-types'
+import { ListIcon } from '../../../../Icons'
+import React from 'react'
+import { List } from '../../../../List'
+
+const Component: React.FC<{
+  element: ListElement
+  [x: string]: unknown
+}> = ({ children, element, ...props }) => (
+  <List {...props} data={element}>
+    {children}
+  </List>
+)
 
 export const config: ElementConfigI = {
-  Component: PullQuote,
-  structure: [{ type: 'pullQuoteText' }, { type: 'pullQuoteSource' }],
-  button: { icon: QuoteIcon },
+  Component,
+  structure: [{ type: 'listItem', repeat: true }],
+  button: { icon: ListIcon },
 }

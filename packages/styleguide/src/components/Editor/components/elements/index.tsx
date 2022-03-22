@@ -10,6 +10,8 @@ import { config as figureByline } from './figure/byline'
 import { config as pullQuote } from './pullQuote/container'
 import { config as pullQuoteText } from './pullQuote/text'
 import { config as pullQuoteSource } from './pullQuote/source'
+import { config as list } from './list/container'
+import { config as listItem } from './list/item'
 
 export const config: ElementsConfig = {
   paragraph,
@@ -23,6 +25,8 @@ export const config: ElementsConfig = {
   pullQuoteText,
   pullQuoteSource,
   break: breakConfig,
+  list,
+  listItem,
 }
 
 // typesafe helper
