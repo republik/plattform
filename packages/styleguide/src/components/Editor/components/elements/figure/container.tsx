@@ -2,7 +2,7 @@ import React from 'react'
 import {
   ElementConfigI,
   ElementFormProps,
-  FigureElement
+  FigureElement,
 } from '../../../custom-types'
 import { ImageIcon } from '../../../../Icons'
 import { Interaction, Label } from '../../../../Typography'
@@ -22,7 +22,7 @@ const Component: React.FC<{
 //  a parent form accessed through clicking the child...
 const Form: React.FC<ElementFormProps<FigureElement>> = ({
   element,
-  onChange
+  onChange,
 }) => (
   <div>
     <Label>Size</Label>
@@ -50,5 +50,5 @@ export const config: ElementConfigI = {
   Component,
   Form,
   structure: [{ type: 'figureImage' }, { type: 'figureCaption' }],
-  button: { icon: ImageIcon }
+  button: { icon: ImageIcon },
 }

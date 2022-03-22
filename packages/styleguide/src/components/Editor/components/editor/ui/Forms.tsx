@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import {
   CustomEditor,
   CustomElement,
-  ElementFormProps
+  ElementFormProps,
 } from '../../../custom-types'
 import { Editor, Transforms, Element as SlateElement } from 'slate'
 import { config as elConfig } from '../../elements'
@@ -14,11 +14,11 @@ import { css } from 'glamor'
 
 const styles = {
   elementTitle: css({
-    marginBottom: 5
+    marginBottom: 5,
   }),
   elementForm: css({
-    marginBottom: 20
-  })
+    marginBottom: 20,
+  }),
 }
 
 type FormData = {
@@ -28,7 +28,7 @@ type FormData = {
 
 const getForm = (
   editor: CustomEditor,
-  path: number[]
+  path: number[],
 ): FormData | undefined => {
   const element = Editor.node(editor, path)[0]
   if (!SlateElement.isElement(element)) return
@@ -36,7 +36,7 @@ const getForm = (
   if (!Form) return
   return {
     element,
-    Form
+    Form,
   }
 }
 
@@ -53,7 +53,7 @@ export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
 
 export const FormOverlay = ({
   path,
-  onClose
+  onClose,
 }: {
   path: number[]
   onClose: () => void

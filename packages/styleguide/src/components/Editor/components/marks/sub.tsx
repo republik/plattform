@@ -4,5 +4,5 @@ import { SubIcon } from '../../../Icons'
 
 export const config: MarkConfigI = {
   styles: sub,
-  button: { icon: SubIcon, small: true }
+  button: { icon: SubIcon, small: true },
 }

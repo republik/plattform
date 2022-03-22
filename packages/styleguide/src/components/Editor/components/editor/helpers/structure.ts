@@ -9,7 +9,7 @@ import {
   KeyCombo,
   NodeTemplate,
   NormalizeFn,
-  TemplateType
+  TemplateType,
 } from '../../../custom-types'
 import {
   Editor,
@@ -17,7 +17,7 @@ import {
   Text,
   Transforms,
   Range,
-  Node
+  Node,
 } from 'slate'
 import {
   calculateSiblingPath,
@@ -27,7 +27,7 @@ import {
   getSiblingNode,
   hasNextSibling,
   selectAdjacent,
-  selectNode
+  selectNode,
 } from './tree'
 import { config as elConfig } from '../../elements'
 import { getCharCount } from './text'
@@ -37,15 +37,15 @@ const TEXT = { text: '' }
 
 const isAllowedType = (
   elType: TemplateType,
-  allowedTypes: TemplateType | TemplateType[]
+  allowedTypes: TemplateType | TemplateType[],
 ): boolean =>
   Array.isArray(allowedTypes)
-    ? allowedTypes.some(t => t === elType)
+    ? allowedTypes.some((t) => t === elType)
     : allowedTypes === elType
 
 export const isCorrect = (
   node: CustomDescendant | undefined,
-  template: NodeTemplate | undefined
+  template: NodeTemplate | undefined,
 ): boolean => {
   if (!node && !template) return true
   if (!node || !template) return false
@@ -56,7 +56,7 @@ export const isCorrect = (
 }
 
 const getTemplateType = (
-  template?: NodeTemplate
+  template?: NodeTemplate,
 ): CustomElementsType | undefined => {
   if (!template) return
   const nodeType = Array.isArray(template.type)
@@ -69,7 +69,7 @@ const buildTextNode = (isEnd: boolean): CustomText => {
   const end = isEnd ? { end: true } : {}
   return {
     ...TEXT,
-    ...end
+    ...end,
   }
 }
 
@@ -77,7 +77,7 @@ export const buildElement = (elKey: CustomElementsType): CustomElement => {
   const isVoid = elConfig[elKey].attrs?.isVoid
   return {
     type: elKey,
-    children: isVoid ? [TEXT] : []
+    children: isVoid ? [TEXT] : [],
   }
 }
 
@@ -90,7 +90,7 @@ const shouldRemove = (
   currentNode: CustomDescendant | undefined,
   nextNode: CustomDescendant | undefined,
   currentTemplate: NodeTemplate | undefined,
-  prevTemplate: NodeTemplate | undefined
+  prevTemplate: NodeTemplate | undefined,
 ) =>
   currentNode &&
   getCharCount([currentNode]) === 0 &&
@@ -100,14 +100,16 @@ const shouldRemove = (
 
 export const buildAndInsert = (
   editor: CustomEditor,
-  elKey: CustomElementsType
+  elKey: CustomElementsType,
 ): void => {
   const { selection } = editor
   if (!selection) return
   const isCollapsed = Range.isCollapsed(selection)
-  const { text: targetT, element: targetE, container: targetC } = getAncestry(
-    editor
-  )
+  const {
+    text: targetT,
+    element: targetE,
+    container: targetC,
+  } = getAncestry(editor)
   const element = buildElement(elKey)
   // console.log('insert', element)
   if (elConfig[elKey].attrs?.isInline) {
@@ -130,14 +132,14 @@ const insertMissingNode = (
   path: number[],
   currentTemplate: NodeTemplate,
   nextTemplate: NodeTemplate | undefined,
-  editor: CustomEditor
+  editor: CustomEditor,
 ): void => {
   // console.log('INSERT MISSING NODE', { node, path })
   if (!node || isCorrect(node, nextTemplate)) {
     const newNode = buildFromTemplate(currentTemplate)
     // console.log('insert new node and return', { newNode })
     return Transforms.insertNodes(editor, newNode, {
-      at: path
+      at: path,
     })
   }
   // console.log('convert current node')
@@ -166,10 +168,10 @@ const insertMissingNode = (
 const linkTemplate = (
   path: number[],
   template: NodeTemplate,
-  editor: CustomEditor
+  editor: CustomEditor,
 ): void => {
   const newProperties: Partial<CustomElement> = {
-    template
+    template,
   }
   Transforms.setNodes(editor, newProperties, { at: path })
 }
@@ -178,7 +180,7 @@ const deleteExcessChildren = (
   from: number,
   node: CustomAncestor,
   path: number[],
-  editor: CustomEditor
+  editor: CustomEditor,
 ): void => {
   // console.log('DELETE EXCESS', from, 'vs', node.children.length, node)
   for (let i = node.children.length - 1; i >= from; i--) {
@@ -190,7 +192,7 @@ const deleteExcessChildren = (
 
 const deleteParent = (
   editor: CustomEditor,
-  currentTemplate: NodeTemplate
+  currentTemplate: NodeTemplate,
 ): boolean => {
   const elementType = getTemplateType(currentTemplate)
   const lastOp = editor.operations[editor.operations.length - 1]
@@ -205,25 +207,24 @@ const deleteParent = (
 }
 
 export const fixStructure: (
-  structure?: NodeTemplate[]
-) => NormalizeFn<CustomAncestor> = (structure = DEFAULT_STRUCTURE) => (
-  [node, path],
-  editor
-) => {
-  // console.log('MATCH STRUCTURE')
-  let i = 0
-  let repeatOffset = 0
-  let loop = true
-  while (loop) {
-    const currentNode = node.children[i + repeatOffset]
-    const nextNode =
-      i + repeatOffset < node.children.length - 1 &&
-      node.children[i + repeatOffset + 1]
-    const currentPath = path.concat(i + repeatOffset)
-    const currentTemplate = structure[i]
-    const prevTemplate = i > 0 && structure[i - 1]
-    const nextTemplate = i < structure.length - 1 && structure[i + 1]
-    /*console.log({
+  structure?: NodeTemplate[],
+) => NormalizeFn<CustomAncestor> =
+  (structure = DEFAULT_STRUCTURE) =>
+  ([node, path], editor) => {
+    // console.log('MATCH STRUCTURE')
+    let i = 0
+    let repeatOffset = 0
+    let loop = true
+    while (loop) {
+      const currentNode = node.children[i + repeatOffset]
+      const nextNode =
+        i + repeatOffset < node.children.length - 1 &&
+        node.children[i + repeatOffset + 1]
+      const currentPath = path.concat(i + repeatOffset)
+      const currentTemplate = structure[i]
+      const prevTemplate = i > 0 && structure[i - 1]
+      const nextTemplate = i < structure.length - 1 && structure[i + 1]
+      /*console.log({
       i,
       repeatOffset,
       currentNode,
@@ -232,52 +233,51 @@ export const fixStructure: (
       prevTemplate,
       nextTemplate
     })*/
-    // TODO: min/max repeats
-    if (prevTemplate?.repeat && isCorrect(currentNode, prevTemplate)) {
-      // we use the template for switch between block types and onEnter insert
-      linkTemplate(currentPath, prevTemplate, editor)
-      repeatOffset += 1
-    } else if (
-      shouldRemove(currentNode, nextNode, currentTemplate, prevTemplate)
-    ) {
-      // this is here mostly to delete unwanted <br> elements
-      Transforms.removeNodes(editor, { at: currentPath })
-      return true
-    } else if (!currentTemplate) {
-      loop = false
-    } else if (isCorrect(currentNode, currentTemplate)) {
-      linkTemplate(currentPath, currentTemplate, editor)
-      i += 1
-    } else if (deleteParent(editor, currentTemplate)) {
-      Transforms.removeNodes(editor, { at: path })
-      return true
-    } else {
-      insertMissingNode(
-        currentNode,
-        currentPath,
-        currentTemplate,
-        nextTemplate,
-        editor
-      )
+      // TODO: min/max repeats
+      if (prevTemplate?.repeat && isCorrect(currentNode, prevTemplate)) {
+        // we use the template for switch between block types and onEnter insert
+        linkTemplate(currentPath, prevTemplate, editor)
+        repeatOffset += 1
+      } else if (
+        shouldRemove(currentNode, nextNode, currentTemplate, prevTemplate)
+      ) {
+        // this is here mostly to delete unwanted <br> elements
+        Transforms.removeNodes(editor, { at: currentPath })
+        return true
+      } else if (!currentTemplate) {
+        loop = false
+      } else if (isCorrect(currentNode, currentTemplate)) {
+        linkTemplate(currentPath, currentTemplate, editor)
+        i += 1
+      } else if (deleteParent(editor, currentTemplate)) {
+        Transforms.removeNodes(editor, { at: path })
+        return true
+      } else {
+        insertMissingNode(
+          currentNode,
+          currentPath,
+          currentTemplate,
+          nextTemplate,
+          editor,
+        )
+        return true
+      }
+    }
+    if (node.children.length > structure.length + repeatOffset) {
+      deleteExcessChildren(structure.length + repeatOffset, node, path, editor)
       return true
     }
+    return false
   }
-  if (node.children.length > structure.length + repeatOffset) {
-    deleteExcessChildren(structure.length + repeatOffset, node, path, editor)
-    return true
-  }
-  return false
-}
 
-export const insertOnKey = (keyCombo: KeyCombo, elKey: CustomElementsType) => (
-  editor: CustomEditor,
-  event: KeyboardEvent<HTMLDivElement>
-): void => {
-  if (event.key === keyCombo.name && event.shiftKey === !!keyCombo.shift) {
-    event.preventDefault()
-    buildAndInsert(editor, elKey)
+export const insertOnKey =
+  (keyCombo: KeyCombo, elKey: CustomElementsType) =>
+  (editor: CustomEditor, event: KeyboardEvent<HTMLDivElement>): void => {
+    if (event.key === keyCombo.name && event.shiftKey === !!keyCombo.shift) {
+      event.preventDefault()
+      buildAndInsert(editor, elKey)
+    }
   }
-}
 
 // struct allows repeats?
 //     |               |
@@ -321,7 +321,7 @@ const insertRepeat = (editor: CustomEditor): void => {
     Transforms.setNodes(
       editor,
       { type: getTemplateType(targetN.template) },
-      { at: splitP }
+      { at: splitP },
     )
     insertP = nextTarget ? targetP : calculateSiblingPath(targetP)
     Transforms.moveNodes(editor, { at: splitP, to: insertP })
@@ -331,7 +331,7 @@ const insertRepeat = (editor: CustomEditor): void => {
 
 export const handleInsert = (
   editor: CustomEditor,
-  event: KeyboardEvent<HTMLDivElement>
+  event: KeyboardEvent<HTMLDivElement>,
 ): void => {
   if (event.key === 'Enter' && event.shiftKey !== true) {
     event.preventDefault()

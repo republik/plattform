@@ -2,7 +2,7 @@ import React from 'react'
 import {
   ElementConfigI,
   ElementFormProps,
-  FigureImageElement
+  FigureImageElement,
 } from '../../../custom-types'
 import ImageInput from './ImageInput'
 import { FigureImage } from '../../../../Figure'
@@ -13,8 +13,8 @@ const styles = {
   container: css({
     display: 'grid',
     gridTemplateColumns: 'repeat(2, 1fr)',
-    gridColumnGap: 20
-  })
+    gridColumnGap: 20,
+  }),
 }
 
 const Component: React.FC<{
@@ -33,14 +33,14 @@ const Component: React.FC<{
 
 const Form: React.FC<ElementFormProps<FigureImageElement>> = ({
   element,
-  onChange
+  onChange,
 }) => (
   <div {...styles.container}>
     <div>
       <Label>Light mode</Label>
       <ImageInput
         src={element.src}
-        onChange={src => {
+        onChange={(src) => {
           onChange({ src })
         }}
       />
@@ -49,7 +49,7 @@ const Form: React.FC<ElementFormProps<FigureImageElement>> = ({
       <Label>Dark mode (optional)</Label>
       <ImageInput
         src={element.srcDark}
-        onChange={srcDark => {
+        onChange={(srcDark) => {
           onChange({ srcDark })
         }}
       />
@@ -62,6 +62,6 @@ export const config: ElementConfigI = {
   Form,
   attrs: {
     isVoid: true,
-    isMain: true
-  }
+    isMain: true,
+  },
 }

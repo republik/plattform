@@ -4,5 +4,5 @@ import { BoldIcon } from '../../../Icons'
 
 export const config: MarkConfigI = {
   styles: Editorial.emphasis,
-  button: { icon: BoldIcon }
+  button: { icon: BoldIcon },
 }

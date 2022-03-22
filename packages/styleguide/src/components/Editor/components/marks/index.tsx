@@ -11,10 +11,10 @@ export const config: MarksConfig = {
   bold,
   sup,
   sub,
-  strikethrough
+  strikethrough,
 }
 
 // typesafe helper
 export const configKeys: (keyof MarksConfig)[] = Object.keys(
-  config
+  config,
 ) as (keyof MarksConfig)[]

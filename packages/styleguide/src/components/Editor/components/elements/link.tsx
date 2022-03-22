@@ -2,7 +2,7 @@ import {
   ElementConfigI,
   ElementFormProps,
   LinkElement,
-  NormalizeFn
+  NormalizeFn,
 } from '../../custom-types'
 import { LinkIcon } from '../../../Icons'
 import { Editorial } from '../../../Typography'
@@ -12,7 +12,7 @@ import { Editor, Transforms } from 'slate'
 
 const Form: React.FC<ElementFormProps<LinkElement>> = ({
   element,
-  onChange
+  onChange,
 }) => (
   <Field
     label='URL'
@@ -35,7 +35,7 @@ export const config: ElementConfigI = {
   Form,
   attrs: {
     isInline: true,
-    formatText: true
+    formatText: true,
   },
-  button: { icon: LinkIcon }
+  button: { icon: LinkIcon },
 }

@@ -3,7 +3,7 @@ import React, {
   ReactElement,
   useEffect,
   useRef,
-  useState
+  useState,
 } from 'react'
 import { Editor } from 'slate'
 import { ReactEditor, useSlate } from 'slate-react'
@@ -11,13 +11,13 @@ import {
   config as mConfig,
   config,
   configKeys as mKeys,
-  configKeys
+  configKeys,
 } from '../../marks'
 import { ToolbarButton } from './Toolbar'
 import {
   CustomEditor,
   CustomMarksType,
-  CustomText
+  CustomText,
 } from '../../../custom-types'
 import { getTextNode } from '../helpers/tree'
 import { css } from 'glamor'
@@ -26,13 +26,13 @@ import { isEmpty, selectPlaceholder } from '../helpers/text'
 
 const styles = {
   leaf: css({
-    position: 'relative'
+    position: 'relative',
   }),
   placeholder: css({
     cursor: 'text',
     position: 'absolute',
-    whiteSpace: 'nowrap'
-  })
+    whiteSpace: 'nowrap',
+  }),
 }
 
 const isMarkActive = (editor: CustomEditor, mKey: CustomMarksType): boolean => {
@@ -67,8 +67,8 @@ const MarkButton: React.FC<{ mKey: CustomMarksType }> = ({ mKey }) => {
 export const Marks: React.FC = () => (
   <>
     {mKeys
-      .filter(mKey => mConfig[mKey]?.button)
-      .map(mKey => (
+      .filter((mKey) => mConfig[mKey]?.button)
+      .map((mKey) => (
         <MarkButton key={mKey} mKey={mKey} />
       ))}
   </>
@@ -90,7 +90,7 @@ export const LeafComponent: React.FC<{
   const node = getTextNode(parentNode, editor)
 
   const markStyles = configKeys
-    .filter(mKey => leaf[mKey])
+    .filter((mKey) => leaf[mKey])
     .reduce((acc, mKey) => {
       const mStyle = config[mKey].styles
       return { ...acc, ...mStyle }
@@ -104,7 +104,7 @@ export const LeafComponent: React.FC<{
     if (!placeholderEl || !showPlaceholder) return setPlaceholderStyle({})
     setPlaceholderStyle({
       width: placeholderEl.getBoundingClientRect().width,
-      display: 'inline-block'
+      display: 'inline-block',
     })
   }, [showPlaceholder])
 

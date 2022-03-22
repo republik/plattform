@@ -5,6 +5,6 @@ export const config: ElementConfigI = {
   Component: FigureByline,
   attrs: {
     formatText: true,
-    isInline: true
-  }
+    isInline: true,
+  },
 }

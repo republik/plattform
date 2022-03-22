@@ -7,9 +7,9 @@ export const config: ElementConfigI = {
     { type: ['text', 'link'], repeat: true },
     { type: 'figureByline' },
     // TODO: end node could/should be added automatically
-    { type: 'text', end: true }
+    { type: 'text', end: true },
   ],
   attrs: {
-    formatText: true
-  }
+    formatText: true,
+  },
 }

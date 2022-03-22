@@ -4,5 +4,5 @@ import { StrikeThrough } from '../../../Icons'
 
 export const config: MarkConfigI = {
   styles: css({ textDecoration: 'line-through' }),
-  button: { icon: StrikeThrough }
+  button: { icon: StrikeThrough },
 }

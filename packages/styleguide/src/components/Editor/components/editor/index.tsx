@@ -3,7 +3,7 @@ import React, {
   useCallback,
   useEffect,
   useRef,
-  useState
+  useState,
 } from 'react'
 import { createEditor, Editor, Transforms } from 'slate'
 import { withHistory } from 'slate-history'
@@ -20,7 +20,7 @@ import {
   CustomDescendant,
   CustomEditor,
   CustomElement,
-  NodeTemplate
+  NodeTemplate,
 } from '../../custom-types'
 import { navigateOnTab } from './helpers/tree'
 import { handleInsert, insertOnKey } from './helpers/structure'
@@ -36,10 +36,10 @@ const SlateEditor: React.FC<{
     () =>
       withInsert(CHAR_LIMIT)(
         withNormalizations(structure)(
-          withElAttrsConfig(withReact(withHistory(createEditor())))
-        )
+          withElAttrsConfig(withReact(withHistory(createEditor()))),
+        ),
       ),
-    []
+    [],
   )
   const [formElementPath, setFormElementPath] = useState<number[]>()
   const containerRef = useRef<HTMLDivElement>()
@@ -48,17 +48,19 @@ const SlateEditor: React.FC<{
     Editor.normalize(editor, { force: true })
   }, [])
 
-  const RenderedElement: React.FC<PropsWithChildren<{
-    element: CustomElement
-  }>> = props => {
+  const RenderedElement: React.FC<
+    PropsWithChildren<{
+      element: CustomElement
+    }>
+  > = (props) => {
     const config = elementsConfig[props.element.type]
     const Component = config.Component
     const path = ReactEditor.findPath(editor, props.element)
-    const showDataForm = e => {
+    const showDataForm = (e) => {
       e.stopPropagation()
       setFormElementPath(path)
     }
-    const selectVoid = e => {
+    const selectVoid = (e) => {
       if (config.attrs?.isVoid) {
         e.preventDefault()
         Transforms.select(editor, path)
@@ -79,7 +81,7 @@ const SlateEditor: React.FC<{
     ({ children, ...props }) => (
       <LeafComponent {...props}>{children}</LeafComponent>
     ),
-    []
+    [],
   )
 
   return (
@@ -87,9 +89,10 @@ const SlateEditor: React.FC<{
       <Slate
         editor={editor}
         value={value}
-        onChange={newValue => {
+        onChange={(newValue) => {
           console.log(newValue)
-          setValue(newValue)}}
+          setValue(newValue)
+        }}
       >
         <FormOverlay
           path={formElementPath}
@@ -99,7 +102,7 @@ const SlateEditor: React.FC<{
         <Editable
           renderElement={renderElement}
           renderLeaf={renderLeaf}
-          onKeyDown={event => {
+          onKeyDown={(event) => {
             // console.log('event', event.key, event.shiftKey)
             insertOnKey({ name: 'Enter', shift: true }, 'break')(editor, event)
             handleInsert(editor, event)

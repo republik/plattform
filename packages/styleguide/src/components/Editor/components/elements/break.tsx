@@ -14,6 +14,6 @@ export const config: ElementConfigI = {
   Component,
   attrs: {
     isInline: true,
-    isVoid: true
-  }
+    isVoid: true,
+  },
 }

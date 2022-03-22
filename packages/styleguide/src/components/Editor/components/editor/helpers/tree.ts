@@ -2,7 +2,7 @@ import {
   CustomDescendant,
   CustomEditor,
   CustomElement,
-  CustomText
+  CustomText,
 } from '../../../custom-types'
 import {
   Text,
@@ -12,7 +12,7 @@ import {
   Editor,
   Element as SlateElement,
   BasePoint,
-  Path
+  Path,
 } from 'slate'
 import { KeyboardEvent } from 'react'
 import { selectPlaceholder } from './text'
@@ -21,7 +21,7 @@ import { config as elConfig } from '../../elements'
 export const getTextNode = (
   nodeEntry: NodeEntry,
   editor: CustomEditor,
-  direction: 'next' | 'previous' = 'next'
+  direction: 'next' | 'previous' = 'next',
 ): NodeEntry<CustomText> => {
   // console.log('GET TEXT NODE')
   const [node, path] = nodeEntry
@@ -62,13 +62,13 @@ export const getTextNode = (
 
 export const findInsertTarget = (
   editor: CustomEditor,
-  at?: Path
+  at?: Path,
 ): NodeEntry<CustomElement> | undefined => {
   // console.log('find repeat node')
   let target
   for (const [n, p] of Editor.nodes(editor, {
     match: SlateElement.isElement,
-    at
+    at,
   })) {
     // console.log(n, p)
     if (n.template?.repeat) {
@@ -81,7 +81,7 @@ export const findInsertTarget = (
 const selectText = (
   editor: CustomEditor,
   node: NodeEntry<CustomText>,
-  direction: 'next' | 'previous' = 'next'
+  direction: 'next' | 'previous' = 'next',
 ): void => {
   const [textNode, textPath] = node
   if (!textNode.text) {
@@ -94,14 +94,14 @@ const selectText = (
 
 const isUnselectable = (
   editor: CustomEditor,
-  target: NodeEntry<CustomDescendant>
+  target: NodeEntry<CustomDescendant>,
 ): boolean =>
   Editor.isVoid(editor, target[0]) || (Text.isText(target[0]) && target[0].end)
 
 export const getSiblingNode = (
   editor: CustomEditor,
   direction: 'next' | 'previous' = 'next',
-  node?: NodeEntry<CustomDescendant>
+  node?: NodeEntry<CustomDescendant>,
 ): NodeEntry<CustomDescendant> | undefined => {
   let currentNode = node
   if (!currentNode) {
@@ -109,16 +109,17 @@ export const getSiblingNode = (
       direction === 'next'
         ? editor.selection.focus.path
         : editor.selection.anchor.path
-    currentNode = Editor.node(editor, lowLevelPath) as NodeEntry<
-      CustomDescendant
-    >
+    currentNode = Editor.node(
+      editor,
+      lowLevelPath,
+    ) as NodeEntry<CustomDescendant>
   }
   const edgeOfNode = Editor.edges(editor, currentNode[1])[
     direction === 'next' ? 1 : 0
   ]
   const findTarget = direction === 'next' ? Editor.next : Editor.previous
   let target = findTarget(editor, {
-    at: edgeOfNode
+    at: edgeOfNode,
   })
   if (target && isUnselectable(editor, target)) {
     target = getSiblingNode(editor, direction, target)
@@ -128,7 +129,7 @@ export const getSiblingNode = (
 
 export const calculateSiblingPath = (
   path: number[],
-  direction: 'next' | 'previous' = 'next'
+  direction: 'next' | 'previous' = 'next',
 ): number[] => {
   const offset = direction === 'next' ? 1 : -1
   return path.map((p, i) => (i === path.length - 1 ? p + offset : p))
@@ -136,7 +137,7 @@ export const calculateSiblingPath = (
 
 const getSiblingTextNode = (
   editor: CustomEditor,
-  direction: 'next' | 'previous' = 'next'
+  direction: 'next' | 'previous' = 'next',
 ): NodeEntry<CustomText> => {
   const node = getSiblingNode(editor, direction)
   if (node) {
@@ -149,7 +150,7 @@ const getCommonNode = (editor: CustomEditor): NodeEntry =>
 
 const getParent = (
   editor: CustomEditor,
-  node: NodeEntry<Node>
+  node: NodeEntry<Node>,
 ): NodeEntry<CustomElement> | undefined => {
   const parent = Editor.parent(editor, node[1])
   if (SlateElement.isElement(parent[0])) {
@@ -158,7 +159,7 @@ const getParent = (
 }
 
 export const getAncestry = (
-  editor: CustomEditor
+  editor: CustomEditor,
 ): {
   text?: NodeEntry<CustomText>
   element?: NodeEntry<CustomElement>
@@ -185,12 +186,12 @@ export const getAncestry = (
   return {
     text,
     element,
-    container
+    container,
   }
 }
 
 export const getSelectedElement = (
-  editor: CustomEditor
+  editor: CustomEditor,
 ): NodeEntry<CustomElement> => {
   let selectedNode = Editor.node(editor, editor.selection, { edge: 'end' })
   while (!SlateElement.isElement(selectedNode[0])) {
@@ -201,7 +202,7 @@ export const getSelectedElement = (
 
 export const hasNextSibling = (
   editor: CustomEditor,
-  isInline = false
+  isInline = false,
 ): boolean => {
   const currentPath = Editor.path(editor, editor.selection.focus)
   const nextNode = getSiblingTextNode(editor)
@@ -215,7 +216,7 @@ export const hasNextSibling = (
 export const selectNode = (
   editor: CustomEditor,
   target: BasePoint | Path,
-  direction: 'next' | 'previous' = 'next'
+  direction: 'next' | 'previous' = 'next',
 ): void => {
   const [targetNode, targetPath] = Editor.node(editor, target)
   const text = getTextNode([targetNode, targetPath], editor, direction)
@@ -225,7 +226,7 @@ export const selectNode = (
 // BUG: from figureCaption, doesnt jump to figureByline if it's empty
 export const selectAdjacent = (
   editor: CustomEditor,
-  direction: 'next' | 'previous' = 'next'
+  direction: 'next' | 'previous' = 'next',
 ): void => {
   const node = getSiblingNode(editor, direction)
   if (node) {
@@ -235,7 +236,7 @@ export const selectAdjacent = (
 
 export const navigateOnTab = (
   editor: CustomEditor,
-  event: KeyboardEvent<HTMLDivElement>
+  event: KeyboardEvent<HTMLDivElement>,
 ): void => {
   if (event.key === 'Tab') {
     event.preventDefault()

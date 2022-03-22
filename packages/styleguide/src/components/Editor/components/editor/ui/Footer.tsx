@@ -12,8 +12,8 @@ const styles = {
     borderTopWidth: 1,
     borderTopStyle: 'solid',
     paddingTop: 10,
-    marginTop: 20
-  })
+    marginTop: 20,
+  }),
 }
 
 const CharCount: React.FC<{ charLimit: number }> = ({ charLimit }) => {

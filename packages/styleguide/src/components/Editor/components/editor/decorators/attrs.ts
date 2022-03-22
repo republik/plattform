@@ -2,9 +2,9 @@ import { CustomEditor } from '../../../custom-types'
 import { config, coreEditorAttrs } from '../../elements'
 
 export const withElAttrsConfig = (editor: CustomEditor): CustomEditor => {
-  coreEditorAttrs.forEach(attr => {
+  coreEditorAttrs.forEach((attr) => {
     const editorCheck = editor[attr]
-    editor[attr] = element =>
+    editor[attr] = (element) =>
       (config[element.type]?.attrs || {})[attr] || editorCheck(element)
   })
   return editor

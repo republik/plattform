@@ -4,5 +4,5 @@ import { SupIcon } from '../../../Icons'
 
 export const config: MarkConfigI = {
   styles: sup,
-  button: { icon: SupIcon, small: true }
+  button: { icon: SupIcon, small: true },
 }

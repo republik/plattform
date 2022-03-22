@@ -1,7 +1,7 @@
 import {
   CustomEditor,
   CustomElement,
-  NodeTemplate
+  NodeTemplate,
 } from '../../../custom-types'
 import { config } from '../../elements'
 import { Element as SlateElement, Text, Transforms } from 'slate'
@@ -21,7 +21,7 @@ export const withNormalizations =
         // console.log('top level')
         rerun = fixStructure(topLevelStructure)(
           [node as CustomElement, path],
-          editor
+          editor,
         )
         if (rerun) return
       }
@@ -36,7 +36,7 @@ export const withNormalizations =
         rerun = fixStructure(elConfig.structure)([node, path], editor)
         if (rerun) return
         const customNormalizations = elConfig.normalizations || []
-        customNormalizations.forEach(normalizeFn => {
+        customNormalizations.forEach((normalizeFn) => {
           rerun = normalizeFn([node, path], editor)
           if (rerun) return
         })

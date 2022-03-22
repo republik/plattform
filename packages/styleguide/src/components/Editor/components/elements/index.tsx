@@ -22,12 +22,12 @@ export const config: ElementsConfig = {
   pullQuote,
   pullQuoteText,
   pullQuoteSource,
-  break: breakConfig
+  break: breakConfig,
 }
 
 // typesafe helper
 export const configKeys: (keyof ElementsConfig)[] = Object.keys(
-  config
+  config,
 ) as (keyof ElementsConfig)[]
 
 export const coreEditorAttrs: EditorAttr[] = ['isVoid', 'isInline']
