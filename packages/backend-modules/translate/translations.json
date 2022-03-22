@@ -2242,15 +2242,15 @@
     },
     {
       "key": "api/publikator/generateDerivative/commit/404",
-      "value": "Commit nicht gefunden"
+      "value": "Commit war nicht aufzufinden"
     },
     {
       "key": "api/publikator/generateDerivative/canNot",
-      "value": "Commit darf nicht als Derivat generiert werden"
+      "value": "Lässt sich so gar nicht für diesen Commit erzeugen"
     },
     {
       "key": "api/publikator/generateDerivative/unable",
-      "value": "Commit konnte nicht als Derivat generiert werden"
+      "value": "Ein Fehler verhinderte das Erzeugen für diesen Commit"
     }
   ]
 }
