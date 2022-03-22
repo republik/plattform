@@ -30,6 +30,19 @@ const findAll = async (pgdb) => {
   return campaigns
 }
 
+const findByConditions = async (pgdb, conditions) => {
+  debug('findByConditions')
+  const campaigns = await pgdb.public.accessCampaigns.find(
+    {
+      'beginAt <=': moment(),
+      ...conditions,
+    },
+    { orderBy: { beginAt: 'desc' } },
+  )
+
+  return campaigns
+}
+
 const findByGrant = (grant, pgdb) => {
   debug('findByGrant', { grant: grant.id })
   return pgdb.public.accessCampaigns.findOne({
@@ -61,6 +74,7 @@ const findForGranter = async (granter, { withPast, pgdb }) => {
 module.exports = {
   findAvailable,
   findAll,
+  findByConditions,
   findByGrant,
   findOne,
   findForGranter,

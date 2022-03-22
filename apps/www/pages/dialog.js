@@ -18,8 +18,8 @@ import Frame from '../components/Frame'
 import FontSizeSync from '../components/FontSize/Sync'
 import {
   UnauthorizedMessage,
-  WithMembership,
-  WithoutMembership,
+  WithAccess,
+  WithoutAccess,
 } from '../components/Auth/withMembership'
 import Link from 'next/link'
 import DiscussionTitle from '../components/Dialog/DiscussionTitle'
@@ -114,7 +114,7 @@ const DialogContent = ({ tab, activeDiscussionId, serverContext }) => {
             <>
               <Interaction.Headline>{t('feedback/title')}</Interaction.Headline>
               <br />
-              <WithMembership
+              <WithAccess
                 render={() => (
                   <>
                     <Interaction.P>{t('feedback/lead')}</Interaction.P>
@@ -156,7 +156,7 @@ const DialogContent = ({ tab, activeDiscussionId, serverContext }) => {
               <ActionBar discussion={activeDiscussionId} fontSize />
             </div>
           )}
-          <WithoutMembership
+          <WithoutAccess
             render={() => (
               <>
                 <UnauthorizedMessage
@@ -191,7 +191,7 @@ const DialogContent = ({ tab, activeDiscussionId, serverContext }) => {
                   <A>{t('marketing/community/link')}</A>
                 </Link>
               </div>
-              <WithMembership
+              <WithAccess
                 render={() => (
                   <Fragment>
                     <H3
@@ -216,7 +216,7 @@ const DialogContent = ({ tab, activeDiscussionId, serverContext }) => {
           )}
           {activeDiscussionId && <Discussion showPayNotes={false} />}
           {!tab && (
-            <WithMembership
+            <WithAccess
               render={() => (
                 <Fragment>
                   <H3>{t('feedback/latestComments/headline')}</H3>

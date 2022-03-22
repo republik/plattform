@@ -869,6 +869,10 @@
       "value": "Begrüssung"
     },
     {
+      "key": "variable/insert/hasAccess",
+      "value": "Je-Nach-Zugriff-Block"
+    },
+    {
       "key": "variable/form/VARIABLE",
       "value": "Variable"
     },

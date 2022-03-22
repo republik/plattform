@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import { withRouter } from 'next/router'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
-import { ColorContextProvider } from '@project-r/styleguide'
+import { ColorContextProvider, VariableContext } from '@project-r/styleguide'
 import { renderMdast } from 'mdast-react-render'
 
 import Loader from '../../components/Loader'
@@ -28,7 +28,7 @@ const getCommitById = gql`
 
 const PreviewPage = ({ t, router, data = {} }) => {
   const { loading, error, repo: { commit: { document } = {} } = {} } = data
-  const { repoId, commitId, darkmode } = router.query
+  const { repoId, commitId, darkmode, hasAccess } = router.query
 
   const storeKey = [repoId, commitId].join('/')
   const store = initLocalStore(storeKey)
@@ -45,42 +45,53 @@ const PreviewPage = ({ t, router, data = {} }) => {
 
   const notFound = !schema ? t('publish/preview/404') : undefined
 
+  const variableContextValue =
+    hasAccess === 'true'
+      ? {
+          firstName: 'Lois',
+          lastName: 'Lane',
+          hasAccess,
+        }
+      : {}
+
   return (
     <Frame.Body raw>
       <ColorContextProvider
         colorSchemeKey={darkmode === 'true' ? 'dark' : 'light'}
       >
-        <Loader
-          loading={loading}
-          error={error || notFound}
-          render={() => {
-            if (!schema) {
-              return null
-            }
-            return (
-              <>
-                {renderMdast(
-                  localState
-                    ? {
-                        ...localState,
-                        format: localState.meta?.format,
-                        section: localState.meta?.section,
-                        series: localState.meta?.series,
-                        repoId,
-                      }
-                    : {
-                        ...document.content,
-                        format: document.meta.format,
-                        section: document.meta.section,
-                        series: document.meta.series,
-                        repoId,
-                      },
-                  schema,
-                )}
-              </>
-            )
-          }}
-        />
+        <VariableContext.Provider value={variableContextValue}>
+          <Loader
+            loading={loading}
+            error={error || notFound}
+            render={() => {
+              if (!schema) {
+                return null
+              }
+              return (
+                <>
+                  {renderMdast(
+                    localState
+                      ? {
+                          ...localState,
+                          format: localState.meta?.format,
+                          section: localState.meta?.section,
+                          series: localState.meta?.series,
+                          repoId,
+                        }
+                      : {
+                          ...document.content,
+                          format: document.meta.format,
+                          section: document.meta.section,
+                          series: document.meta.series,
+                          repoId,
+                        },
+                    schema,
+                  )}
+                </>
+              )
+            }}
+          />
+        </VariableContext.Provider>
       </ColorContextProvider>
     </Frame.Body>
   )

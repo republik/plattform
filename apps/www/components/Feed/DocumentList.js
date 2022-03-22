@@ -1,16 +1,17 @@
 import React from 'react'
 import compose from 'lodash/flowRight'
 import { css } from 'glamor'
-import withT from '../../lib/withT'
 import PropTypes from 'prop-types'
-import withInNativeApp from '../../lib/withInNativeApp'
-
 import { A, Spinner, Interaction } from '@project-r/styleguide'
-import Feed from './Feed'
 
+import withT from '../../lib/withT'
+import withInNativeApp from '../../lib/withInNativeApp'
+import Feed from './Feed'
 import ErrorMessage from '../ErrorMessage'
 
 import { useInfiniteScroll } from '../../lib/hooks/useInfiniteScroll'
+import { WithoutAccess } from '../Auth/withMembership'
+import Box from '../Frame/Box'
 
 const styles = {
   more: css({
@@ -28,7 +29,6 @@ const DocumentList = ({
   feedProps,
   showTotal,
   help,
-  empty,
   t,
 }) => {
   const [
@@ -39,6 +39,10 @@ const DocumentList = ({
   if (totalCount < 1) {
     return null
   }
+
+  const hasNoDocument = !documents.length
+  const hasSampleDocuments =
+    !hasNoDocument && totalCount > documents.length && !hasMore
 
   return (
     <>
@@ -54,10 +58,22 @@ const DocumentList = ({
         </>
       )}
       {help}
-      {!documents.length && empty}
       <div ref={containerRef}>
         <Feed documents={documents} {...feedProps} />
       </div>
+      {(hasNoDocument || hasSampleDocuments) && (
+        <WithoutAccess
+          render={() => (
+            <Box style={{ marginBottom: 30, padding: '15px 20px' }}>
+              <Interaction.P>
+                {t(
+                  `section/feed/payNote${hasSampleDocuments ? '/sample' : ''}`,
+                )}
+              </Interaction.P>
+            </Box>
+          )}
+        />
+      )}
       <div {...styles.more}>
         {loadingMoreError && <ErrorMessage error={loadingMoreError} />}
         {loadingMore && <Spinner />}

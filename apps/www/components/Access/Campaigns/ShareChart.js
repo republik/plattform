@@ -5,7 +5,6 @@ import { graphql } from '@apollo/client/react/hoc'
 import {
   ChartTitle,
   ChartLead,
-  ChartLegend,
   Chart,
   Loader,
   Editorial,
@@ -84,7 +83,7 @@ const apiDateFormat = '%d.%m.%Y'
 const formatApiDate = swissTime.format(apiDateFormat)
 const parseApiDate = swissTime.parse(apiDateFormat)
 
-const chartTimeFormat = '%d. %B'
+const chartTimeFormat = '%-d. %B'
 const formatChartDate = swissTime.format(chartTimeFormat)
 const formatDateTime = swissTime.format('%d.%m.%Y %H:%M')
 
@@ -132,15 +131,22 @@ const ShareChart = ({ data, t }) => {
           if (!mergedEvolutionBuckets.length) {
             return null
           }
-          const maxBarValue = Math.max(
-            max(mergedEvolutionBuckets, (bucket) => bucket.active),
+          const firstBucket = mergedEvolutionBuckets[0]
+          const lastBucket = mergedEvolutionBuckets.slice(-1).pop()
+          const maxBarValue = max(
+            mergedEvolutionBuckets,
+            (bucket) => bucket.active,
+          )
+
+          const yMax = Math.max(
+            // 1.1x, ensure there is enough space for the latest/max annotation
+            maxBarValue * 1.1,
+            // ensure min 10 scale
             10,
           )
 
-          const yTicksNumber = maxBarValue > 100 ? 5 : 3
-          const yScale = scaleLinear()
-            .domain([0, maxBarValue])
-            .nice(yTicksNumber)
+          const yTicksNumber = yMax > 100 ? 5 : 3
+          const yScale = scaleLinear().domain([0, yMax]).nice(yTicksNumber)
 
           const chartValues = mergedEvolutionBuckets.map((bucket) => {
             return {
@@ -148,8 +154,6 @@ const ShareChart = ({ data, t }) => {
               value: bucket.active,
             }
           })
-          const firstBucket = mergedEvolutionBuckets[0]
-          const lastBucket = mergedEvolutionBuckets.slice(-1).pop()
 
           const eventSums = ['pledges', 'claims', 'invites'].reduce(
             (sums, key) => {
@@ -238,7 +242,7 @@ export default compose(
       return {
         variables: {
           max: formatApiDate(currentDay),
-          min: formatApiDate(timeDay.offset(currentDay, -59)),
+          min: '01.01.2022',
         },
       }
     },
