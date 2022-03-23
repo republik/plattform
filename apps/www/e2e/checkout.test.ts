@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 
 function getUserInput() {
   const date = new Date(Date.now())
-  const year = date.getFullYear() + 1 // next year
+  const nextYear = date.getFullYear() + 1
 
   return {
     userInfo: {
@@ -12,7 +12,7 @@ function getUserInput() {
     },
     card: {
       cardNumber: '4242 4242 4242 4242',
-      expiry: `01 / ${year.toString().slice(-2)}`,
+      expiry: `01 / ${nextYear.toString().slice(-2)}`,
       cvc: '123',
     },
   }
@@ -32,7 +32,7 @@ test.describe('checkout test-suite', () => {
 
     // Initialize Stripe by clicking on card field
     await page.locator('text=Kreditkartennummer').click()
-    console.log(userInput.card.expiry)
+
     for (const [key, value] of Object.entries(userInput.card)) {
       await page
         .frameLocator(`.StripeElement-${key} iframe`)
@@ -41,6 +41,14 @@ test.describe('checkout test-suite', () => {
     }
 
     // Accept AGB
+    // only works in Chrome, why?
+    // await page.locator('text=einverstanden').click()
+    // doesn't work
+    // await page.locator('label', {
+    //   hasText: 'einverstanden'
+    // }).locator('input').click()
+
+    // everywhere but unstable if dom changes
     await page.locator('div:nth-child(8) label span span >> nth=0').click()
 
     await page.locator('text=CHF 240 bezahlen').click()
