@@ -352,7 +352,7 @@ const ActionBar = ({
         }
       },
       label: !forceShortLabel ? t('article/actionbar/share') : '',
-      modes: ['articleTop', 'articleOverlay'],
+      modes: ['articleTop', 'articleOverlay', 'articleBottom'],
       show: true,
     },
     {
@@ -468,7 +468,7 @@ const ActionBar = ({
           ))}
         </div>
       )}
-      {(mode === 'articleBottom' || mode === 'seriesOverviewBottom') && (
+      {mode === 'seriesOverviewBottom' && (
         <>
           {!inNativeApp ? (
             <Interaction.P style={{ marginTop: 24 }}>
