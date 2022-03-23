@@ -39,12 +39,6 @@ const ArticleRecommendationsFeed = ({ path }: ArticleSuggestionsFeedProps) => {
       : 0
   }, [data])
 
-  console.debug({
-    articleRecommendations,
-    amountOfPodcastsInRecommendations,
-    x: articleRecommendations.length - amountOfPodcastsInRecommendations,
-  })
-
   return (
     <Center>
       <Loader
@@ -73,16 +67,6 @@ const ArticleRecommendationsFeed = ({ path }: ArticleSuggestionsFeedProps) => {
                   }}
                 />
               </>
-            )}
-            {data && (
-              <details>
-                <summary>Raw data</summary>
-                <div>
-                  <pre {...css({ overflowX: 'hidden' })}>
-                    {JSON.stringify(data, null, 2)}
-                  </pre>
-                </div>
-              </details>
             )}
           </>
         )}
