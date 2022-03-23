@@ -10,7 +10,6 @@ import withT from '../../lib/withT'
 import { swissTime } from '../../lib/utils/format'
 import { transformData } from './transformData'
 import Diff from './Diff'
-import Derivatives from '../Derivatives'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
@@ -67,7 +66,7 @@ const styles = {
   listItemWrapper: css({
     width: '100%',
     display: 'flex',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'space-between',
   }),
   svg: css({
@@ -364,16 +363,8 @@ class Tree extends Component {
                         </Interaction.P>
                       )}
                     </div>
-                    <div
-                      style={{
-                        margin: '8px 10px 0 0',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 8,
-                      }}
-                    >
+                    <div style={{ marginRight: 10 }}>
                       <Diff repoId={repoId} commit={commit} />
-                      <Derivatives commit={commit} />
                     </div>
                   </div>
                 </li>

@@ -61,7 +61,6 @@ import FontSizeSync from '../FontSize/Sync'
 import PageLoader from '../Loader'
 import Frame from '../Frame'
 import ActionBar from '../ActionBar'
-import SyntheticAudio from '../Article/SyntheticAudio'
 import { BrowserOnlyActionBar } from './BrowserOnly'
 import { AudioContext } from '../Audio/AudioProvider'
 import FormatFeed from '../Feed/Format'
@@ -294,11 +293,6 @@ const ArticlePage = ({
   const podcast =
     hasMeta &&
     (meta.podcast || (meta.audioSource && meta.format?.meta?.podcast))
-  const syntheticAudioSource =
-    hasMeta &&
-    meta.audioSource &&
-    meta.audioSource.kind === 'syntheticReadAloud' &&
-    meta.audioSource
   const newsletterMeta =
     hasMeta && (meta.newsletter || meta.format?.meta?.newsletter)
 
@@ -632,10 +626,7 @@ const ArticlePage = ({
                             </div>
                           </Center>
                         ) : null}
-                        {actionBar ||
-                        isSection ||
-                        showNewsletterSignupTop ||
-                        !!syntheticAudioSource ? (
+                        {actionBar || isSection || showNewsletterSignupTop ? (
                           <Center breakout={breakout}>
                             {actionBar && (
                               <div
@@ -650,9 +641,6 @@ const ArticlePage = ({
                               >
                                 {actionBar}
                               </div>
-                            )}
-                            {!!syntheticAudioSource && (
-                              <SyntheticAudio meta={meta} t={t} />
                             )}
                             {isSection && !hideSectionNav && (
                               <Breakout size='breakout'>

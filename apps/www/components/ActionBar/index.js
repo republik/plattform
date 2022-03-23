@@ -327,8 +327,7 @@ const ActionBar = ({
           ? null
           : t('PodcastButtons/play'),
       modes: ['feed', 'seriesEpisode'],
-      show:
-        !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud',
+      show: !!meta.audioSource,
     },
     {
       title: t('article/actionbar/share'),
@@ -429,8 +428,7 @@ const ActionBar = ({
         })
       },
       label: t('PodcastButtons/play'),
-      show:
-        !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud',
+      show: !!meta.audioSource,
       modes: ['articleTop'],
     },
     {

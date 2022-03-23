@@ -3161,14 +3161,6 @@
       "value": "Leseposition"
     },
     {
-      "key": "article/syntheticreadaloud/title",
-      "value": "Beitrag von synthetischen Stimme vorlesen lassen"
-    },
-    {
-      "key": "article/syntheticreadaloud/lead",
-      "value": "Ein Versuch, die Republik zugänglicher zu machen."
-    },
-    {
       "key": "article/series/episode",
       "value": "Episode {count}"
     },

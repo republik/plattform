@@ -24,10 +24,6 @@ const {
   loadLinkedMetaData,
 } = require('@orbiting/backend-modules-search/lib/Documents')
 
-const {
-  processMeta: processSyntheticReadAloudInMeta,
-} = require('@orbiting/backend-modules-publikator/lib/Derivative/SyntheticReadAloud')
-
 const addTeaserContentHash = (nodes) => {
   nodes.forEach((node) => {
     if (
@@ -71,7 +67,7 @@ module.exports = {
         doc._all,
         doc._usernames,
         undefined,
-        urlPrefix, // https://www.republik.ch bei Newslettern?
+        urlPrefix,
         searchString,
         context.user || null,
       )
@@ -102,8 +98,7 @@ module.exports = {
 
       await processRepoImageUrlsInMeta(doc.content, addFormatAuto)
     }
-
-    return processSyntheticReadAloudInMeta(meta, doc, context)
+    return meta
   },
   async children(
     doc,

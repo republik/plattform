@@ -120,9 +120,7 @@ const run = async (workerId, config) => {
     require('@orbiting/backend-modules-republik-crowdfundings/express/paymentWebhooks'),
     require('@orbiting/backend-modules-gsheets/express/gsheets'),
     require('@orbiting/backend-modules-mail/express/mandrill'),
-    require('@orbiting/backend-modules-publikator/express/syntheticReadAloud'),
     require('@orbiting/backend-modules-publikator/express/uncommittedChanges'),
-    require('@orbiting/backend-modules-publikator/express/webhook'),
     require('@orbiting/backend-modules-invoices/express'),
   ]
 
@@ -199,17 +197,14 @@ const run = async (workerId, config) => {
 }
 
 const runOnce = async () => {
-  const applicationName = ['backends', SERVER, DYNO, 'scheduler']
+  const applicationName = ['backends', SERVER, DYNO, 'master']
     .filter(Boolean)
     .join(' ')
 
-  const connectionContext = await ConnectionContext.create(applicationName)
-
-  const createGraphQLContext = async (defaultContext) => {
+  const createGraphQLContext = async () => {
     const loaders = {}
     const context = {
-      ...defaultContext,
-      ...connectionContext,
+      ...(await ConnectionContext.create(applicationName)),
       t,
       mail,
       loaders,
@@ -220,7 +215,7 @@ const runOnce = async () => {
     return context
   }
 
-  const context = await createGraphQLContext({ scope: 'scheduler' })
+  const context = await createGraphQLContext()
 
   const slackGreeter = await SlackGreeter.start()
 

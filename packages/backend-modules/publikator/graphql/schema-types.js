@@ -143,8 +143,6 @@ type Commit {
   date: DateTime!
   markdown: String!
   document: Document!
-  derivatives: [Derivative!]
-  canDerive(type: DerivativeType!): Boolean!
   repo: Repo!
 }
 
@@ -197,29 +195,6 @@ type Memo {
   published: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
-}
-
-type Derivative {
-  id: ID!
-  type: DerivativeType!
-  status: DerivativeStatus!
-  result: JSON
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  readyAt: DateTime
-  failedAt: DateTime
-  destroyedAt: DateTime
-}
-
-enum DerivativeType {
-  SyntheticReadAloud
-}
-
-enum DerivativeStatus {
-  Pending
-  Ready
-  Failure
-  Destroyed
 }
 
 `

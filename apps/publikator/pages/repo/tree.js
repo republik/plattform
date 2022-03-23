@@ -41,26 +41,14 @@ export const getRepoHistory = gql`
         }
         nodes {
           ...SimpleCommit
-          derivatives {
-            ...SimpleDerivative
-          }
-          canDeriveSyntheticReadAloud: canDerive(type: SyntheticReadAloud)
         }
       }
       milestones {
         ...SimpleMilestone
-        commit {
-          ...SimpleCommit
-          derivatives {
-            ...SimpleDerivative
-          }
-          canDeriveSyntheticReadAloud: canDerive(type: SyntheticReadAloud)
-        }
       }
     }
   }
   ${fragments.SimpleMilestone}
-  ${fragments.SimpleDerivative}
   ${fragments.SimpleCommit}
 `
 
@@ -73,26 +61,14 @@ const treeRepoSubscription = gql`
       }
       commit {
         ...SimpleCommit
-        derivatives {
-          ...SimpleDerivative
-        }
-        canDeriveSyntheticReadAloud: canDerive(type: SyntheticReadAloud)
       }
       milestone {
         ...SimpleMilestone
-        commit {
-          ...SimpleCommit
-          derivatives {
-            ...SimpleDerivative
-          }
-          canDeriveSyntheticReadAloud: canDerive(type: SyntheticReadAloud)
-        }
       }
     }
   }
   ${fragments.SimpleCommit}
   ${fragments.SimpleMilestone}
-  ${fragments.SimpleDerivative}
 `
 
 const styles = {
@@ -138,16 +114,9 @@ class EditorPage extends Component {
           const updatedRepo = { ...prev.repo, ...repo }
           const updatedCommitNodes = [
             commit,
-            ...prev.repo.commits.nodes.filter(
-              (prevCommit) => prevCommit.id !== commit?.id,
-            ),
+            ...prev.repo.commits.nodes,
           ].filter(Boolean)
-          const updatedMilestones = [
-            milestone,
-            ...prev.repo.milestones.filter(
-              (prevMilestone) => prevMilestone.name !== milestone?.name,
-            ),
-          ]
+          const updatedMilestones = [milestone, ...prev.repo.milestones]
             .filter(Boolean)
             .filter(
               (m) =>

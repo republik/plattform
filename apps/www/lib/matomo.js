@@ -21,7 +21,7 @@ const track = (...args) => {
 
 export default track
 
-export const trackEvent = ([category, action, name, value = undefined]) => {
+export const trackEvent = ([category, action, name, value]) => {
   track(['trackEvent', category, action, name, value])
   payload.record('events', { category, action, name, value })
 }

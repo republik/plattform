@@ -131,11 +131,6 @@ const createSchema = ({
       ref: 'bool',
     },
     {
-      label: 'Kein synthetisches Vorlesen',
-      key: 'suppressSyntheticReadAloud',
-      ref: 'bool',
-    },
-    {
       label: 'Diskussion geschlossen',
       key: 'discussionClosed',
       ref: 'bool',
@@ -187,6 +182,7 @@ const createSchema = ({
   CommentLink = DefaultLink,
   ActionBar = DefaultActionBar,
   PayNote,
+  hasEmailTemplate = true,
 } = {}) => {
   const base = createBase({ metaBody, metaHeadlines })
   const blocks = createBlocks({
@@ -398,7 +394,7 @@ const createSchema = ({
                     return null
                   }
                   const Lead = metaBody ? Meta.Lead : Editorial.Lead
-                  return <Lead {...props}>{children}</Lead>
+                  return <Lead children={children} {...props} />
                 },
                 editorModule: 'paragraph',
                 editorOptions: {
@@ -442,7 +438,7 @@ const createSchema = ({
                     {children}
                   </Button>
                 ),
-                props: (node) => {
+                props: (node, index, parent, { ancestors }) => {
                   const link =
                     (node.children[0] && node.children[0].children[0]) || {}
 
@@ -478,7 +474,7 @@ const createSchema = ({
               },
               {
                 matchMdast: matchZone('EMBEDTWITTER'),
-                component: ({ attributes, data }) => (
+                component: ({ attributes, data, url }) => (
                   <Tweet
                     attributes={attributes}
                     {...data}
@@ -500,7 +496,7 @@ const createSchema = ({
               blocks.logbook,
               {
                 matchMdast: matchZone('EMBEDVIDEO'),
-                component: ({ attributes, data }) => {
+                component: ({ attributes, data, url }) => {
                   if (data.forceAudio && data.src) {
                     return (
                       <AudioPlayer attributes={attributes} {...data} t={t} />

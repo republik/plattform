@@ -1,5 +1,4 @@
 lib/cache/**/*.js
-lib/Derivative/**/*.js
 lib/phases.js
 loaders/**/*.js
 script/*.js

@@ -189,7 +189,7 @@ const createNewsletterSchema = ({
       type: 'CENTERFIGURE',
       plainOption: true,
     },
-    props: (node) => {
+    props: (node, index, parent) => {
       return node.data
     },
     rules: [
@@ -218,7 +218,7 @@ const createNewsletterSchema = ({
   }
 
   const cover = {
-    matchMdast: (node, index) => {
+    matchMdast: (node, index, parent) => {
       return matchFigure(node) && index === 0
     },
     component: Cover,
@@ -274,11 +274,6 @@ const createNewsletterSchema = ({
             editorModule: 'meta',
             editorOptions: {
               customFields: [
-                {
-                  label: 'Kein synthetisches Vorlesen',
-                  key: 'suppressSyntheticReadAloud',
-                  ref: 'bool',
-                },
                 {
                   label: 'Format',
                   key: 'format',
@@ -340,7 +335,7 @@ const createNewsletterSchema = ({
               {
                 matchMdast: matchZone('BUTTON'),
                 component: Button,
-                props: (node) => {
+                props: (node, index, parent, { ancestors }) => {
                   const link =
                     (node.children[0] && node.children[0].children[0]) || {}
 

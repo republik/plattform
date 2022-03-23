@@ -18,8 +18,6 @@ const styles = {
     ':last-child': {
       borderBottom: `1px solid ${colors.divider}`,
     },
-    display: 'flex',
-    justifyContent: 'space-between',
   }),
   highlight: css({
     fontFamily: fontFamilies.sansSerifMedium,
