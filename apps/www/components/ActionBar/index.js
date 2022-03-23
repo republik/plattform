@@ -445,6 +445,20 @@ const ActionBar = ({
       show: !!podcast && meta.template !== 'format',
       modes: ['articleTop'],
     },
+    {
+      title: t('article/actionbar/discussion'),
+      element: (
+        <DiscussionLinkButton
+          t={t}
+          document={document}
+          isOnArticlePage={true}
+          customLabel={t('article/actionbar/discussion/with-count')}
+          useCallToActionLabel
+        />
+      ),
+      modes: ['articleBottom'],
+      show: !!discussionId,
+    },
   ]
 
   const shouldRenderActionItem = (actionItem) =>
