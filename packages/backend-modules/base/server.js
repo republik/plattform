@@ -137,7 +137,13 @@ const start = async (
   graphiql(server)
 
   for (const middleware of middlewares) {
-    await middleware(server, pgdb, t, redis, createGraphqlContext())
+    await middleware(
+      server,
+      pgdb,
+      t,
+      redis,
+      createGraphqlContext({ scope: 'middleware' }),
+    )
   }
 
   let closed = false

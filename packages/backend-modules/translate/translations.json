@@ -2239,6 +2239,18 @@
     {
       "key": "api/publikator/memo/notPublished/author/email",
       "value": "zurückgezogen"
+    },
+    {
+      "key": "api/publikator/generateDerivative/commit/404",
+      "value": "Commit war nicht aufzufinden"
+    },
+    {
+      "key": "api/publikator/generateDerivative/canNot",
+      "value": "Lässt sich so gar nicht für diesen Commit erzeugen"
+    },
+    {
+      "key": "api/publikator/generateDerivative/unable",
+      "value": "Ein Fehler verhinderte das Erzeugen für diesen Commit"
     }
   ]
 }

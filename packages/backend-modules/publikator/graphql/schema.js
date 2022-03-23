@@ -73,6 +73,10 @@ type mutations {
     repoId: ID!
   ): Boolean!
 
+  generateDerivative(
+    commitId: ID!
+  ): Derivative!
+
   # Inform about my uncommitted changes in the repo
   uncommittedChanges(
     repoId: ID!
