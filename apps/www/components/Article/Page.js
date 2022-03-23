@@ -756,8 +756,9 @@ const ArticlePage = ({
                   variables={feedQueryVariables}
                 />
               )}
-              {/* TODO: add suggestions feed here */}
-              {true && <ArticleRecommendationsFeed path={cleanedPath} />}
+              {me && hasActiveMembership && (
+                <ArticleRecommendationsFeed path={cleanedPath} />
+              )}
               {(hasActiveMembership || isFormat) && (
                 <>
                   <br />
