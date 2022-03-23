@@ -401,6 +401,7 @@ const ActionBar = ({
       label: readingTimeLabel,
       labelShort: readingTimeLabelShort,
       show: showReadingTime,
+      modes: ['articleTop'],
     },
     {
       title: t('article/actionbar/userprogress'),
@@ -412,6 +413,7 @@ const ActionBar = ({
         />
       ),
       show: !!document,
+      modes: ['articleTop'],
     },
     {
       title: t('PodcastButtons/play'),
@@ -427,6 +429,7 @@ const ActionBar = ({
       },
       label: t('PodcastButtons/play'),
       show: !!meta.audioSource,
+      modes: ['articleTop'],
     },
     {
       title: t('PodcastButtons/title'),
@@ -438,11 +441,17 @@ const ActionBar = ({
       },
       label: t('PodcastButtons/title'),
       show: !!podcast && meta.template !== 'format',
+      modes: ['articleTop'],
     },
   ]
+
+  const shouldRenderActionItem = (actionItem) =>
+    actionItem.show && actionItem.modes.includes(mode)
+
   const hasSecondaryActionItems = !!ActionItemsSecondary.filter(
-    (item) => item.show,
+    shouldRenderActionItem,
   ).length
+
   return (
     <>
       <div
@@ -451,17 +460,15 @@ const ActionBar = ({
         {...(mode === 'seriesEpisode' && styles.flexWrap)}
         {...(!!centered && { ...styles.centered })}
       >
-        {ActionItems.filter(
-          (item) => item.show && item.modes.includes(mode),
-        ).map((props) => (
+        {ActionItems.filter(shouldRenderActionItem).map((props) => (
           <Fragment key={props.title}>
             {props.element || <IconButton {...props} />}
           </Fragment>
         ))}
       </div>
-      {mode === 'articleTop' && hasSecondaryActionItems && (
+      {hasSecondaryActionItems && (
         <div {...styles.bottomRow} {...(!!centered && { ...styles.centered })}>
-          {ActionItemsSecondary.filter((item) => item.show).map((props) => (
+          {ActionItemsSecondary.filter(shouldRenderActionItem).map((props) => (
             <Fragment key={props.title}>
               {props.element || <IconButton {...props} />}
             </Fragment>
