@@ -3149,6 +3149,14 @@
       "value": "Zum Dialog"
     },
     {
+      "key": "article/actionbar/discussion/call-to-action/empty",
+      "value": "Reden Sie mit"
+    },
+    {
+      "key": "article/actionbar/discussion/call-to-action",
+      "value": "Reden Sie mit: {count} Dialog Beiträge"
+    },
+    {
       "key": "article/actionbar/userprogress",
       "value": "Leseposition"
     },
