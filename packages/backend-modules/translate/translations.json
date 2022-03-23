@@ -1157,6 +1157,10 @@
       "value": "Willkommen an Bord"
     },
     {
+      "key": "api/access/email/recipient/recommendations/subject",
+      "value": "Leseempfehlungen aus der Republik"
+    },
+    {
       "key": "api/access/email/recipient/expired/subject",
       "value": "Ihre Reise ist beendet"
     },
