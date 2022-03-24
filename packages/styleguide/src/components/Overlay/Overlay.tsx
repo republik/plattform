@@ -2,12 +2,11 @@ import React, {
   useState,
   useEffect,
   useRef,
-  MutableRefObject,
   ReactNode,
   MouseEventHandler,
+  RefObject,
 } from 'react'
 import ReactDOM from 'react-dom'
-import PropTypes, { Validator } from 'prop-types'
 import { css, merge } from 'glamor'
 import zIndex from '../../theme/zIndex'
 import { mUp } from '../../theme/mediaQueries'
@@ -114,11 +113,6 @@ const Overlay: React.FC<OverlayProps> = ({ onClose, children, mUpStyle }) => {
   return element
 }
 
-Overlay.propTypes = {
-  children: PropTypes.node.isRequired,
-  onClose: PropTypes.func.isRequired,
-}
-
 export default Overlay
 
 type MUpStyle = {
@@ -133,7 +127,7 @@ export const OverlayRenderer: React.FC<
   OverlayProps & {
     isVisible: boolean
     ssrMode?: boolean
-    scrollRef?: MutableRefObject<HTMLDivElement>
+    scrollRef?: RefObject<HTMLDivElement>
   }
 > = ({ isVisible, mUpStyle, children, onClose, ssrMode, scrollRef }) => {
   const close = (e) => {
@@ -161,19 +155,4 @@ export const OverlayRenderer: React.FC<
       </div>
     </div>
   )
-}
-
-OverlayRenderer.propTypes = {
-  mUpStyle: PropTypes.shape({
-    maxWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    marginTop: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    marginBottom: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  }),
-  children: PropTypes.node.isRequired,
-  isVisible: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  ssrMode: PropTypes.bool,
-  scrollRef: PropTypes.shape({
-    current: PropTypes.instanceOf(HTMLDivElement).isRequired,
-  }) as Validator<MutableRefObject<HTMLDivElement>>,
 }
