@@ -989,6 +989,10 @@
       "value": "Zahlungsmittel werden geladen"
     },
     {
+      "key": "account/pledges/payment/methods/wallet/loading",
+      "value": "{wallet} lädt noch."
+    },
+    {
       "key": "account/pledges/payment/methods/wallet/unavailable",
       "value": "{wallet} ist nicht verfügbar."
     },

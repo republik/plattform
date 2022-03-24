@@ -663,13 +663,22 @@ class Submit extends Component {
       selectedPaymentMethod,
     } = this.props
 
+    const isStripeWalletPayment = this.isStripeWalletPayment()
+
     return [
       {
         category: t('pledge/submit/error/title'),
         messages: [options.length < 1 && t('pledge/submit/package/error')]
           .concat(objectValues(this.props.errors))
+          .concat(!isStripeWalletPayment && objectValues(contactState.errors))
           .concat(
-            !this.isStripeWalletPayment() && objectValues(contactState.errors),
+            isStripeWalletPayment &&
+              this.props.paymentRequest.status !== PaymentRequestStatus.READY &&
+              t('account/pledges/payment/methods/wallet/loading', {
+                wallet: t(
+                  `account/pledges/payment/method/${this.props.paymentRequest.usedWallet}`,
+                ),
+              }),
           )
           .concat(objectValues(this.state.errors))
           .concat([
@@ -683,7 +692,7 @@ class Submit extends Component {
         messages: []
           .concat(
             requireShippingAddress &&
-              !this.isStripeWalletPayment() &&
+              !isStripeWalletPayment &&
               objectValues(shippingAddressState.errors),
           )
           .filter(Boolean),
@@ -1030,29 +1039,25 @@ class Submit extends Component {
               }}
             />
             {this.renderAutoPay()}
-            <Button
-              block
-              primary={!errorMessages.length}
-              disabled={
-                errorMessages?.length > 0 ||
-                (this.isStripeWalletPayment() &&
-                  this.props.paymentRequest?.status !==
-                    PaymentRequestStatus.READY)
-              }
-              onClick={() => {
-                if (this.isStripeWalletPayment()) {
-                  this.handleWalletPayIntent()
-                } else {
-                  this.submitPledge()
-                }
-              }}
-            >
-              {t('pledge/submit/button/pay', {
-                formattedChf: this.props.total
-                  ? chfFormat(this.props.total / 100)
-                  : '',
-              })}
-            </Button>
+            <div style={{ opacity: errorMessages.length ? 0.5 : 1 }}>
+              <Button
+                block
+                primary={!errorMessages.length}
+                onClick={() => {
+                  if (!errorMessages.length && this.isStripeWalletPayment()) {
+                    this.handleWalletPayIntent()
+                  } else {
+                    this.submitPledge()
+                  }
+                }}
+              >
+                {t('pledge/submit/button/pay', {
+                  formattedChf: this.props.total
+                    ? chfFormat(this.props.total / 100)
+                    : '',
+                })}
+              </Button>
+            </div>
           </div>
         )}
       </>
