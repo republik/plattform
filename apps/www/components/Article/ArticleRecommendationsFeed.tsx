@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { Center, Interaction } from '@project-r/styleguide'
+import { Center, Interaction, fontStyles } from '@project-r/styleguide'
 import { useArticleRecommendationsQuery } from './graphql/getArticleRecommendations.graphql'
 import { css } from 'glamor'
 import Loader from '../Loader'
@@ -9,6 +9,7 @@ import { useTranslation } from '../../lib/withT'
 const styles = {
   heading: css({
     marginBottom: 15,
+    ...fontStyles.sansSerifMedium16,
   }),
 }
 
@@ -47,7 +48,7 @@ const ArticleRecommendationsFeed = ({ path }: ArticleSuggestionsFeedProps) => {
           <>
             {data.article.meta.recommendations?.nodes.length > 0 && (
               <>
-                <Interaction.H3 {...styles.heading}>
+                <Interaction.P {...styles.heading}>
                   {articleRecommendations.length -
                     amountOfPodcastsInRecommendations ==
                   articleRecommendations.length
@@ -59,7 +60,7 @@ const ArticleRecommendationsFeed = ({ path }: ArticleSuggestionsFeedProps) => {
                         'articleRecommendations/article-and-podcast-recommendations',
                       )
                     : t('articleRecommendations/podcast-recommendations')}
-                </Interaction.H3>
+                </Interaction.P>
                 <DocumentList
                   documents={data.article.meta.recommendations.nodes}
                   feedProps={{
