@@ -6989,16 +6989,8 @@
       "value": "APK direkt herunterladen"
     },
     {
-      "key": "articleRecommendations/article-recommendations",
-      "value": "Lesen Sie auch:"
-    },
-    {
-      "key": "articleRecommendations/podcast-recommendations",
-      "value": "Hören Sie auch:"
-    },
-    {
-      "key": "articleRecommendations/article-and-podcast-recommendations",
-      "value": "Lesen und Hören Sie auch:"
+      "key": "articleRecommendations/heading",
+      "value": "Von der Redaktion für Sie empfohlen:"
     },
     {
       "key": "darkmode/switch/label",
