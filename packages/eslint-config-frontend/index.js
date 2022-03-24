@@ -41,6 +41,9 @@ module.exports = {
         'plugin:prettier/recommended',
       ],
       parser: '@typescript-eslint/parser',
+      rules: {
+        'react/prop-types': 0,
+      },
     },
   ],
 }
