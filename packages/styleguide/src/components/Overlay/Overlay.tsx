@@ -7,7 +7,7 @@ import React, {
   MouseEventHandler,
 } from 'react'
 import ReactDOM from 'react-dom'
-import PropTypes from 'prop-types'
+import PropTypes, { Validator } from 'prop-types'
 import { css, merge } from 'glamor'
 import zIndex from '../../theme/zIndex'
 import { mUp } from '../../theme/mediaQueries'
@@ -74,11 +74,27 @@ const Overlay: React.FC<OverlayProps> = ({ onClose, children, mUpStyle }) => {
       document.body.removeChild(rootDom.current)
     }
   }, [])
+
   useEffect(() => {
     if (ssrMode) {
       setSsrMode(false)
     }
   }, [ssrMode])
+
+  useEffect(() => {
+    const handleEscClick = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose(null)
+      }
+    }
+
+    document.addEventListener('keyup', handleEscClick)
+
+    return () => {
+      document.removeEventListener('keyup', handleEscClick)
+    }
+  }, [onClose])
+
   const [scrollRef] = useBodyScrollLock(!ssrMode)
   const element = (
     <OverlayRenderer
@@ -156,4 +172,8 @@ OverlayRenderer.propTypes = {
   children: PropTypes.node.isRequired,
   isVisible: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  ssrMode: PropTypes.bool,
+  scrollRef: PropTypes.shape({
+    current: PropTypes.instanceOf(HTMLDivElement).isRequired,
+  }) as Validator<MutableRefObject<HTMLDivElement>>,
 }
