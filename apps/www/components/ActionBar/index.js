@@ -374,11 +374,22 @@ const ActionBar = ({
         <DiscussionLinkButton
           t={t}
           document={document}
-          isOnArticlePage={['articleTop', 'articleOverlay'].includes(mode)}
+          isOnArticlePage={[
+            'articleTop',
+            'articleOverlay',
+            'articleBottom',
+          ].includes(mode)}
+          useCallToActionLabel={mode === 'articleBottom'}
           forceShortLabel={forceShortLabel}
         />
       ),
-      modes: ['articleTop', 'articleOverlay', 'feed', 'seriesEpisode'],
+      modes: [
+        'articleTop',
+        'articleOverlay',
+        'articleBottom',
+        'feed',
+        'seriesEpisode',
+      ],
       show: !!discussionId,
     },
     {
@@ -426,20 +437,6 @@ const ActionBar = ({
       ...PodcastButtonActionItem,
       modes: ['articleTop'],
     },
-    {
-      title: t('article/actionbar/discussion'),
-      element: (
-        <DiscussionLinkButton
-          t={t}
-          document={document}
-          isOnArticlePage={true}
-          customLabel={t('article/actionbar/discussion/with-count')}
-          useCallToActionLabel
-        />
-      ),
-      modes: ['articleBottom'],
-      show: !!discussionId,
-    },
   ]
 
   const shouldRenderActionItem = (actionItem) =>
@@ -454,7 +451,8 @@ const ActionBar = ({
       <div
         {...styles.topRow}
         {...(mode === 'articleOverlay' && styles.overlay)}
-        {...(mode === 'seriesEpisode' && styles.flexWrap)}
+        {...((mode === 'seriesEpisode' || mode === 'articleBottom') &&
+          styles.flexWrap)}
         {...(!!centered && { ...styles.centered })}
       >
         {ActionItems.filter(shouldRenderActionItem).map((props) => (
