@@ -72,7 +72,7 @@ export PGUSER=postgres
 <details><summary>Native Setup with Homebrew</summary>
 <p>
 
-```
+```bash
 brew install postgresql@12 elasticsearch@6 redis nvm
 nvm install 14
 nvm alias default 14
@@ -134,7 +134,7 @@ For more about the available env variables see the individual readme of the apps
 
 ### Database Setup
 
-```
+```bash
 yarn install
 yarn build
 yarn dev:setup
@@ -144,7 +144,7 @@ yarn dev:setup
 
 To develop all apps and packages, run the following command:
 
-```
+```bash
 yarn dev
 ```
 
@@ -217,7 +217,10 @@ CORS_ALLOWLIST_URL=http://localhost:3003,http://localhost:3005,http://localhost:
 ```
 
 Start your frontend and api using:
-`yarn dev --scope="@orbiting/www-app" --scope="@orbiting/api-app"`
+
+```bash
+yarn dev --scope="@orbiting/www-app" --scope="@orbiting/api-app"
+```
 
 
 Now run `yarn ngrok:start` in a new terminal inside the workspace-root.
