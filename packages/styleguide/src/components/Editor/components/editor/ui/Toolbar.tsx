@@ -27,6 +27,7 @@ const IMPLICIT_INLINES: TemplateType[] = ['text', 'break']
 const styles = {
   hoveringToolbar: css({
     padding: '8px 7px 6px',
+    position: 'absolute',
     zIndex: 10,
     top: 0,
     left: 0,
