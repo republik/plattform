@@ -68,7 +68,6 @@ import FormatFeed from '../Feed/Format'
 import StatusError from '../StatusError'
 import NewsletterSignUp from '../Auth/NewsletterSignUp'
 import ArticleGallery from '../Gallery/ArticleGallery'
-import AutoDiscussionTeaser from './AutoDiscussionTeaser'
 import SectionNav from '../Sections/SectionNav'
 import SectionFeed from '../Sections/SectionFeed'
 import HrefLink from '../Link/Href'
@@ -687,16 +686,6 @@ const ArticlePage = ({
                   </ActionBarOverlay>
                 </ProgressComponent>
               </ArticleGallery>
-              {meta.template === 'article' &&
-                ownDiscussion &&
-                !ownDiscussion.closed &&
-                !linkedDiscussion &&
-                !isSeriesOverview &&
-                hasAccess && (
-                  <Center breakout={breakout}>
-                    <AutoDiscussionTeaser discussionId={ownDiscussion.id} />
-                  </Center>
-                )}
               {meta.template === 'discussion' && ownDiscussion && (
                 <Center breakout={breakout}>
                   <DiscussionContextProvider
