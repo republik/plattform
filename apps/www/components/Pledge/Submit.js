@@ -781,10 +781,7 @@ class Submit extends Component {
       packageGroup,
       customMe,
       contactState,
-      paymentRequest: {
-        status: paymentRequestStatus,
-        errors: { walletError, stripeError },
-      },
+      paymentRequest: { usedWallet, status: paymentRequestStatus, setupError },
     } = this.props
 
     const errorMessages = this.getErrorMessages()
@@ -886,6 +883,7 @@ class Submit extends Component {
             }}
             context={packageName}
             allowedMethods={paymentMethods}
+            erroredMethods={setupError ? [usedWallet] : undefined}
             userName={userName}
             userAddress={userAddress}
             addressState={addressState}
@@ -921,8 +919,11 @@ class Submit extends Component {
             errors={this.state.errors}
             dirty={this.state.dirty}
           >
-            {isStripePayment && stripeError && (
-              <ErrorMessage error={stripeError} />
+            {isStripePayment && !!setupError && (
+              <ErrorMessage error={setupError}>
+                {' '}
+                {t('account/pledges/payment/methods/wallet/setupHint')}
+              </ErrorMessage>
             )}
             {
               // Only render the browser API in case we're not using a browser payment API
@@ -985,12 +986,6 @@ class Submit extends Component {
         )}
         {!!paymentError && (
           <ErrorMessage style={{ margin: '0 0 40px' }} error={paymentError} />
-        )}
-        {this.isStripeWalletPayment() && !!walletError && (
-          <ErrorMessage style={{ margin: '0 0 40px' }} error={walletError}>
-            <br />
-            <span>{t('account/pledges/payment/methods/chose-another')}</span>
-          </ErrorMessage>
         )}
         {!!signInError && (
           <ErrorMessage style={{ margin: '0 0 40px' }} error={signInError} />

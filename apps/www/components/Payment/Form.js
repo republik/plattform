@@ -234,6 +234,7 @@ class PaymentForm extends Component {
       children,
       t,
       allowedMethods,
+      erroredMethods = [],
       payload,
       values,
       errors,
@@ -389,6 +390,7 @@ class PaymentForm extends Component {
                         (paymentMethod === pm.key && !values.paymentSource) ||
                         !values.paymentMethod
                       }
+                      error={erroredMethods.includes(pm.key)}
                     >
                       <input
                         type='radio'

@@ -989,24 +989,20 @@
       "value": "Zahlungsmittel werden geladen"
     },
     {
-      "key": "account/pledges/payment/methods/unavailable",
-      "value": "Dieses Zahlungsmittel ist zur Zeit nicht verfügbar."
+      "key": "account/pledges/payment/methods/wallet/unavailable",
+      "value": "{wallet} ist nicht verfügbar."
     },
     {
-      "key": "account/pledges/payment/methods/initialization/error",
-      "value": "Fehler beim Aufbau der Zahlungsverbindung."
+      "key": "account/pledges/payment/methods/wallet/initialisationException",
+      "value": "{wallet} konnte nicht geladen werden."
     },
     {
-      "key": "account/pledges/payment/methods/wallet-unavailable",
-      "value": "{wallet} ist auf Ihrem Gerät nicht verfügbar.\nBitte geben Sie Ihre Kreditkartendaten manuell ein oder wählen Sie ein anderes Zahlungsmittel"
-    },
-    {
-      "key": "account/pledges/payment/methods/chose-another",
-      "value": "Bitte wählen Sie ein anderes Zahlungsmittel."
+      "key": "account/pledges/payment/methods/wallet/setupHint",
+      "value": "Überprüfen Sie Ihre Einstellungen, geben Sie Ihre Kreditkarte von Hand ein oder wählen Sie ein anderes Zahlungsmittel."
     },
     {
       "key": "account/pledges/payment/waiting",
-      "value": "Warte auf Ausführung der Zahlung..."
+      "value": "Warte auf Ausführung der Zahlung…"
     },
     {
       "key": "account/pledges/payment/canceled",
