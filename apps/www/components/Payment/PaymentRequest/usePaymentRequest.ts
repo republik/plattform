@@ -6,7 +6,6 @@ import {
   useState,
 } from 'react'
 import {
-  Stripe,
   PaymentRequest,
   PaymentRequestOptions,
   PaymentRequestPaymentMethodEvent,
@@ -96,6 +95,11 @@ function usePaymentRequest({
     async (wallet: WalletPaymentMethod): Promise<PaymentRequestStatus> => {
       setStatus(PaymentRequestStatus.LOADING)
       setSetupError(null)
+      // Track used options to prevent useless re-initializations
+      setLastOptions(options)
+      // Track the wallet in case the previous payment request was initialized with a different one
+      setUsedWallet(wallet)
+
       const stripe = await loadStripe()
       const newPaymentRequest = await stripe.paymentRequest(
         makePaymentRequestOptions(
@@ -104,18 +108,18 @@ function usePaymentRequest({
         ),
       )
 
-      // Track used options to prevent useless re-initializations
-      setLastOptions(options)
-      // Track the wallet in case the previous payment request was initialized with a different one
-      setUsedWallet(wallet)
-
       const canMakePaymentResult = await newPaymentRequest.canMakePayment()
-
       const initializationStage = paymentRequest
         ? 're-initialization'
         : 'initialization'
 
       if (!canMakePaymentResult) {
+        setSelectedPaymentMethod('STRIPE')
+        setSetupError(
+          t('account/pledges/payment/methods/wallet/unavailable', {
+            wallet: t(`account/pledges/payment/method/${wallet}`),
+          }),
+        )
         setStatus(PaymentRequestStatus.UNAVAILABLE)
         trackEvent([
           'payment-request',
@@ -136,7 +140,7 @@ function usePaymentRequest({
       ])
       return PaymentRequestStatus.READY
     },
-    [options, paymentRequest],
+    [options, paymentRequest, setSelectedPaymentMethod, t],
   )
 
   function show(
@@ -211,33 +215,25 @@ function usePaymentRequest({
       initializedWalletIsOutdated ||
       optionsUsedToInitializeHaveChanged
     ) {
-      initializePaymentRequest(selectedPaymentMethod as WalletPaymentMethod)
-        .then((status) => {
-          if (status === PaymentRequestStatus.UNAVAILABLE) {
-            setSelectedPaymentMethod('STRIPE')
-            setSetupError(
-              t('account/pledges/payment/methods/wallet/unavailable', {
-                wallet: t(
-                  `account/pledges/payment/method/${selectedPaymentMethod}`,
-                ),
-              }),
-            )
-          }
-        })
-        .catch(() => {
-          setStatus(PaymentRequestStatus.UNAVAILABLE)
-          setSelectedPaymentMethod('STRIPE')
-          setSetupError(
-            t(
-              'account/pledges/payment/methods/wallet/initialisationException',
-              {
-                wallet: t(
-                  `account/pledges/payment/method/${selectedPaymentMethod}`,
-                ),
-              },
+      initializePaymentRequest(
+        selectedPaymentMethod as WalletPaymentMethod,
+      ).catch(() => {
+        setSelectedPaymentMethod('STRIPE')
+        setStatus(PaymentRequestStatus.UNAVAILABLE)
+        setSetupError(
+          t('account/pledges/payment/methods/wallet/initialisationException', {
+            wallet: t(
+              `account/pledges/payment/method/${selectedPaymentMethod}`,
             ),
-          )
-        })
+          }),
+        )
+        trackEvent([
+          'payment-request',
+          'exception',
+          usedWallet,
+          options.total.amount / 100,
+        ])
+      })
     }
   }, [
     setupError,
