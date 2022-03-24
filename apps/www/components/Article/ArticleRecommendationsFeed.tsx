@@ -25,21 +25,6 @@ const ArticleRecommendationsFeed = ({ path }: ArticleSuggestionsFeedProps) => {
     },
   })
 
-  const articleRecommendations = useMemo(() => {
-    if (!data || !data.article || !data.article.meta.recommendations) {
-      return []
-    }
-    return data.article.meta.recommendations.nodes
-  }, [data])
-
-  const amountOfPodcastsInRecommendations = useMemo(() => {
-    return articleRecommendations
-      ? articleRecommendations.filter(
-          (recommendation) => !!recommendation.meta?.audioSource,
-        ).length
-      : 0
-  }, [data])
-
   return (
     <Center>
       <Loader
@@ -49,17 +34,7 @@ const ArticleRecommendationsFeed = ({ path }: ArticleSuggestionsFeedProps) => {
             {data.article.meta.recommendations?.nodes.length > 0 && (
               <>
                 <Interaction.P {...styles.heading}>
-                  {articleRecommendations.length -
-                    amountOfPodcastsInRecommendations ==
-                  articleRecommendations.length
-                    ? t('articleRecommendations/article-recommendations')
-                    : articleRecommendations.length -
-                        amountOfPodcastsInRecommendations >
-                      0
-                    ? t(
-                        'articleRecommendations/article-and-podcast-recommendations',
-                      )
-                    : t('articleRecommendations/podcast-recommendations')}
+                  {t('articleRecommendations/heading')}
                 </Interaction.P>
                 <DocumentList
                   documents={data.article.meta.recommendations.nodes}
