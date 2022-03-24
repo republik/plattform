@@ -599,9 +599,12 @@ class Submit extends Component {
 
   handleWalletPayIntent() {
     const { t } = this.props
-    this.setState(() => ({
-      loading: t('account/pledges/payment/waiting'),
-    }))
+    this.setState({
+      loading: t(
+        `account/pledges/payment/method/${this.props.paymentRequest.usedWallet}`,
+      ),
+      paymentError: undefined,
+    })
 
     this.props.paymentRequest.show(
       // Payment success handler
@@ -639,10 +642,10 @@ class Submit extends Component {
       },
       // Cancel Handler
       () => {
-        this.setState(() => ({
+        this.setState({
           loading: false,
-          submitError: t('account/pledges/payment/canceled'),
-        }))
+          paymentError: t('account/pledges/payment/canceled'),
+        })
       },
     )
   }
@@ -908,6 +911,7 @@ class Submit extends Component {
                 ) {
                   nextState.showErrors = false
                   nextState.errors = {}
+                  nextState.paymentError = undefined
                 }
 
                 return nextState

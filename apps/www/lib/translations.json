@@ -1001,10 +1001,6 @@
       "value": "Überprüfen Sie Ihre Einstellungen, geben Sie Ihre Kreditkarte von Hand ein oder wählen Sie ein anderes Zahlungsmittel."
     },
     {
-      "key": "account/pledges/payment/waiting",
-      "value": "Warte auf Ausführung der Zahlung…"
-    },
-    {
       "key": "account/pledges/payment/canceled",
       "value": "Die Zahlung wurde abgebrochen."
     },
