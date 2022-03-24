@@ -711,14 +711,6 @@ const ArticlePage = ({
                   newsletterMeta.free)) && (
                 <Center breakout={breakout}>
                   <div ref={bottomActionBarRef}>{actionBarEnd}</div>
-                  {!!podcast && meta.template === 'article' && (
-                    <>
-                      <Interaction.H3>
-                        {t(`PodcastButtons/title`)}
-                      </Interaction.H3>
-                      <PodcastButtons {...podcast} />
-                    </>
-                  )}
                 </Center>
               )}
               {!!podcast && meta.template !== 'article' && (
