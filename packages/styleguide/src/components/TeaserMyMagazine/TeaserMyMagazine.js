@@ -5,7 +5,7 @@ import { mUp } from '../../theme/mediaQueries'
 import * as Headlines from '../TeaserFeed/Headline'
 import { sansSerifMedium14, sansSerifMedium16 } from '../Typography/styles'
 import { TeaserSectionTitle } from '../TeaserShared'
-import { TeaserFeed } from '../TeaserFeed'
+import { getTeaserHref, TeaserFeed } from '../TeaserFeed'
 import colors from '../../theme/colors'
 import { useColorContext } from '../Colors/useColorContext'
 import { convertStyleToRem } from '../Typography/utils'
@@ -23,7 +23,6 @@ const TeaserMyMagazine = ({
   latestProgressOrBookmarkedArticles,
   ActionBar,
   bookmarksUrl,
-  title,
   bookmarksLabel,
   notificationsUrl,
   notificationsLabel,
@@ -69,6 +68,7 @@ const TeaserMyMagazine = ({
                 const formatMeta = doc.meta.format?.meta
                 const formatTitle = formatMeta?.title
                 const formatPath = formatMeta?.path
+                const href = getTeaserHref(path, formatMeta?.externalBaseUrl)
 
                 const formatColor = formatMeta?.title
                   ? colorScheme.set(
@@ -110,7 +110,7 @@ const TeaserMyMagazine = ({
                       </Link>
                     ) : null}
                     <Headline>
-                      <Link href={path} passHref>
+                      <Link href={href} passHref>
                         <a
                           {...styles.tileHeadline}
                           {...colorScheme.set('color', 'text')}
@@ -301,6 +301,7 @@ WrappedTeaserMyMagazine.data = {
                   id
                   meta {
                     path
+                    externalBaseUrl
                     title
                     color
                     kind
@@ -335,6 +336,7 @@ WrappedTeaserMyMagazine.data = {
                     title
                     color
                     kind
+                    externalBaseUrl
                   }
                 }
               }

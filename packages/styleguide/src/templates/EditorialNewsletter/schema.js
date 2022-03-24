@@ -189,7 +189,7 @@ const createNewsletterSchema = ({
       type: 'CENTERFIGURE',
       plainOption: true,
     },
-    props: (node, index, parent) => {
+    props: (node) => {
       return node.data
     },
     rules: [
@@ -218,7 +218,7 @@ const createNewsletterSchema = ({
   }
 
   const cover = {
-    matchMdast: (node, index, parent) => {
+    matchMdast: (node, index) => {
       return matchFigure(node) && index === 0
     },
     component: Cover,
@@ -275,6 +275,11 @@ const createNewsletterSchema = ({
             editorOptions: {
               customFields: [
                 {
+                  label: 'Kein synthetisches Vorlesen',
+                  key: 'suppressSyntheticReadAloud',
+                  ref: 'bool',
+                },
+                {
                   label: 'Format',
                   key: 'format',
                   ref: 'repo',
@@ -310,7 +315,7 @@ const createNewsletterSchema = ({
                 editorModule: 'variableCondition',
                 editorOptions: {
                   type: 'IF',
-                  insertBlock: 'greeting',
+                  insertBlocks: ['greeting', 'hasAccess'],
                   insertTypes: ['PARAGRAPH'],
                   fields: [
                     {
@@ -318,6 +323,7 @@ const createNewsletterSchema = ({
                       items: [
                         { value: 'firstName', text: 'Vorname' },
                         { value: 'lastName', text: 'Nachname' },
+                        { value: 'hasAccess', text: 'Magazin-Zugriff' },
                       ],
                     },
                   ],
@@ -334,7 +340,7 @@ const createNewsletterSchema = ({
               {
                 matchMdast: matchZone('BUTTON'),
                 component: Button,
-                props: (node, index, parent, { ancestors }) => {
+                props: (node) => {
                   const link =
                     (node.children[0] && node.children[0].children[0]) || {}
 

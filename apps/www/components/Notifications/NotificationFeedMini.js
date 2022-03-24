@@ -9,6 +9,7 @@ import {
   mediaQueries,
   fontStyles,
   Loader,
+  getTeaserHref,
 } from '@project-r/styleguide'
 
 import { notificationsMiniQuery } from './enhancers'
@@ -67,7 +68,13 @@ const NotificationFeedMini = ({
                             />
                           )}
 
-                          <Link href={path} passHref>
+                          <Link
+                            href={getTeaserHref(
+                              path,
+                              node.object?.meta?.format?.meta.externalBaseUrl,
+                            )}
+                            passHref
+                          >
                             <a
                               {...styles.cleanLink}
                               onClick={() => closeHandler()}

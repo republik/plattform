@@ -13,6 +13,15 @@ export const SimpleCommit = gql`
   }
 `
 
+export const SimpleDerivative = gql`
+  fragment SimpleDerivative on Derivative {
+    id
+    type
+    status
+    result
+  }
+`
+
 export const CommitWithDocument = gql`
   fragment CommitWithDocument on Commit {
     ...SimpleCommit
@@ -33,6 +42,7 @@ export const CommitWithDocument = gql`
             color
             kind
             image
+            externalBaseUrl
             shareLogo
             shareBackgroundImage
             shareBackgroundImageInverted

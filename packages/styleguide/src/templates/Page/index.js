@@ -3,13 +3,11 @@ import createArticleSchema from '../Article'
 const DefaultLink = ({ children }) => children
 
 const createPageSchema = ({
-  documentEditorOptions,
   customMetaFields = [],
   series = false,
   darkMode,
   paynotes = true,
   Link = DefaultLink,
-  titleBlockPrepend = null,
   getPath = ({ slug }) => `/${(slug || '').split('/').pop()}`,
   metaHeadlines = true,
   skipContainer = false,
@@ -34,6 +32,11 @@ const createPageSchema = ({
       {
         label: 'Action Bar ausblenden',
         key: 'disableActionBar',
+        ref: 'bool',
+      },
+      {
+        label: 'Kein synthetisches Vorlesen',
+        key: 'suppressSyntheticReadAloud',
         ref: 'bool',
       },
       ...customMetaFields,

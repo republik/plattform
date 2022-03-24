@@ -11,6 +11,7 @@ const {
   addRelatedDocs,
 } = require('../../../lib/Documents')
 const { schema: documentZoneSchema } = require('../../../lib/DocumentZones')
+const { encodeCursor, getOptions } = require('../../../lib/options')
 const {
   filterReducer,
   getFilterValue,
@@ -303,26 +304,6 @@ const mapAggregations = (result, t) => {
   })
 }
 
-const cleanOptions = (options) => ({
-  ...options,
-  after: undefined,
-  before: undefined,
-  filter: undefined,
-  trackingId: undefined,
-})
-
-const stringifyOptions = (options) =>
-  Buffer.from(JSON.stringify(options)).toString('base64')
-
-const parseOptions = (options) => {
-  try {
-    return JSON.parse(Buffer.from(options, 'base64').toString())
-  } catch (e) {
-    console.warn('failed to parse options:', options, e)
-  }
-  return {}
-}
-
 const MAX_NODES = 10000 // Limit, but exceedingly high
 
 const getFirst = (first, filter, user, recursive, forceUnrestricted) => {
@@ -376,8 +357,6 @@ const search = async (__, args, context, info) => {
   const cache = createCache(redis)
 
   const {
-    after,
-    before,
     recursive = false,
     unrestricted = false,
     scheduledAt,
@@ -396,27 +375,16 @@ const search = async (__, args, context, info) => {
     withoutChildren = withoutContent && !hasFieldRequested('children', info)
   }
 
-  /**
-   * If cursors {after} (1) or {before} (2) are provided, their contents
-   * replace options provided: Changing search term or {first} won't have
-   * any effect.
-   */
-  const options =
-    (after && parseOptions(after)) || (before && parseOptions(before)) || args
-
+  const options = getOptions(args, context)
   const {
     search,
-    filter: filterObj = {},
-    filters: filterArray = [],
-    sort = {
-      key: 'relevance',
-      direction: 'DESC',
-    },
-    first: _first = 40,
-    from = 0,
+    filter: filterObj,
+    filters: filterArray,
+    sort,
+    first: _first,
+    from,
+    samples,
   } = options
-
-  debug('options', JSON.stringify(options))
 
   /**
    * {filterObj} is a shorthand for adding items to {filterArray}.
@@ -443,9 +411,9 @@ const search = async (__, args, context, info) => {
 
   const filter = reduceFilters(filterArray)
 
-  debug('filter', JSON.stringify(filter))
-
-  const first = getFirst(_first, filter, user, recursive, unrestricted)
+  const first =
+    (samples !== false && samples) ||
+    getFirst(_first, filter, user, recursive, unrestricted)
 
   const indicesList = getIndicesList(filter)
   const query = {
@@ -478,8 +446,9 @@ const search = async (__, args, context, info) => {
   const { total } = result.hits
   const totalCount = Number.isFinite(total?.value) ? total.value : total
 
-  const hasNextPage = first > 0 && totalCount > from + first
-  const hasPreviousPage = from > 0
+  const hasNextPage =
+    samples !== false ? false : first > 0 && totalCount > from + first
+  const hasPreviousPage = samples !== false ? false : from > 0
 
   const response = {
     nodes: result.hits.hits.map(mapHit),
@@ -488,25 +457,21 @@ const search = async (__, args, context, info) => {
     pageInfo: {
       hasNextPage,
       endCursor: hasNextPage
-        ? stringifyOptions(
-            cleanOptions({
-              ...options,
-              filters: filterArray,
-              first,
-              from: from + first,
-            }),
-          )
+        ? encodeCursor({
+            ...options,
+            filters: filterArray,
+            first,
+            from: from + first,
+          })
         : null,
       hasPreviousPage,
       startCursor: hasPreviousPage
-        ? stringifyOptions(
-            cleanOptions({
-              ...options,
-              filters: filterArray,
-              first,
-              from: from - first,
-            }),
-          )
+        ? encodeCursor({
+            ...options,
+            filters: filterArray,
+            first,
+            from: from - first,
+          })
         : null,
     },
     trackingId,

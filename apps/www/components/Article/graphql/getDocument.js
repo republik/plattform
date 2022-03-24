@@ -80,6 +80,7 @@ export const getDocument = gql`
           id
           meta {
             path
+            externalBaseUrl
             title
             color
             kind
@@ -158,6 +159,7 @@ export const getDocument = gql`
                   ogg
                   mediaId
                   durationMs
+                  kind
                 }
                 ownDiscussion {
                   id
@@ -185,6 +187,7 @@ export const getDocument = gql`
           ogg
           mediaId
           durationMs
+          kind
         }
         podcast {
           podigeeSlug

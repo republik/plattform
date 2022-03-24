@@ -7,6 +7,7 @@ const {
   processRepoImageUrlsInMeta,
   processEmbedImageUrlsInContent,
   processNodeModifiersInContent,
+  processIfHasAccess,
 } = require('../../lib/process')
 const { getMeta } = require('../../lib/meta')
 
@@ -22,6 +23,10 @@ const {
   extractIdsFromNode,
   loadLinkedMetaData,
 } = require('@orbiting/backend-modules-search/lib/Documents')
+
+const {
+  processMeta: processSyntheticReadAloudInMeta,
+} = require('@orbiting/backend-modules-publikator/lib/Derivative/SyntheticReadAloud')
 
 const addTeaserContentHash = (nodes) => {
   nodes.forEach((node) => {
@@ -66,7 +71,7 @@ module.exports = {
         doc._all,
         doc._usernames,
         undefined,
-        urlPrefix,
+        urlPrefix, // https://www.republik.ch bei Newslettern?
         searchString,
         context.user || null,
       )
@@ -78,6 +83,7 @@ module.exports = {
 
       processMembersOnlyZonesInContent(doc.content, context.user)
       processNodeModifiersInContent(doc.content, context.user)
+      processIfHasAccess(doc.content, context.user)
     }
     return doc.content
   },
@@ -96,7 +102,8 @@ module.exports = {
 
       await processRepoImageUrlsInMeta(doc.content, addFormatAuto)
     }
-    return meta
+
+    return processSyntheticReadAloudInMeta(meta, doc, context)
   },
   async children(
     doc,
@@ -158,6 +165,7 @@ module.exports = {
 
         processMembersOnlyZonesInContent(node, context.user)
         processNodeModifiersInContent(node, context.user)
+        processIfHasAccess(node, context.user)
 
         return extractIdsFromNode(node, doc.meta.repoId)
       })

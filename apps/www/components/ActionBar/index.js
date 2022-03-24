@@ -327,7 +327,8 @@ const ActionBar = ({
           ? null
           : t('PodcastButtons/play'),
       modes: ['feed', 'seriesEpisode'],
-      show: !!meta.audioSource,
+      show:
+        !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud',
     },
     {
       title: t('article/actionbar/share'),
@@ -426,7 +427,8 @@ const ActionBar = ({
         })
       },
       label: t('PodcastButtons/play'),
-      show: !!meta.audioSource,
+      show:
+        !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud',
     },
     {
       title: t('PodcastButtons/title'),
@@ -447,7 +449,8 @@ const ActionBar = ({
     <>
       <div
         {...styles.topRow}
-        {...(mode === 'articleOverlay' && { ...styles.overlay })}
+        {...(mode === 'articleOverlay' && styles.overlay)}
+        {...(mode === 'seriesEpisode' && styles.flexWrap)}
         {...(!!centered && { ...styles.centered })}
       >
         {ActionItems.filter(
@@ -520,6 +523,10 @@ const ActionBar = ({
 const styles = {
   topRow: css({
     display: 'flex',
+  }),
+  flexWrap: css({
+    flexWrap: 'wrap',
+    rowGap: 16,
   }),
   bottomRow: css({
     display: 'flex',

@@ -55,8 +55,8 @@ const populate = async (context, resultFn) => {
 
   // Generate date for range
   const result = await pgdb.query(query, {
-    min: moment().subtract(60, 'days'),
-    max: moment().add(1, 'day'),
+    min: moment('2022-01-01'),
+    max: moment().add(60, 'day'),
     TZ: process.env.TZ || 'Europe/Zurich',
   })
 
