@@ -205,6 +205,19 @@ const ActionBar = ({
     (displayMinutes > 0 || displayHours > 0) &&
     (meta.template === 'article' || meta.template === 'editorialNewsletter')
 
+  const PodcastButtonActionItem = {
+    title: t('PodcastButtons/title'),
+    Icon: PodcastIcon,
+    onClick: (e) => {
+      e.preventDefault()
+      trackEvent(['ActionBar', 'podcasts', meta.url])
+      setPodcastOverlayVisible(!podcastOverlayVisible)
+    },
+    label: t('PodcastButtons/title'),
+    show: !!podcast && meta.template !== 'format',
+    modes: ['articleTop'],
+  }
+
   const ActionItems = [
     {
       title: readingTimeTitle,
@@ -361,22 +374,16 @@ const ActionBar = ({
         <DiscussionLinkButton
           t={t}
           document={document}
-          isOnArticlePage={[
-            'articleTop',
-            'articleBottom',
-            'articleOverlay',
-          ].includes(mode)}
+          isOnArticlePage={['articleTop', 'articleOverlay'].includes(mode)}
           forceShortLabel={forceShortLabel}
         />
       ),
-      modes: [
-        'articleTop',
-        'articleBottom',
-        'articleOverlay',
-        'feed',
-        'seriesEpisode',
-      ],
+      modes: ['articleTop', 'articleOverlay', 'feed', 'seriesEpisode'],
       show: !!discussionId,
+    },
+    {
+      ...PodcastButtonActionItem,
+      modes: ['articleBottom'],
     },
     {
       title: t('feed/actionbar/edit'),
@@ -416,31 +423,7 @@ const ActionBar = ({
       modes: ['articleTop'],
     },
     {
-      title: t('PodcastButtons/play'),
-      Icon: PlayCircleIcon,
-      onClick: (e) => {
-        e.preventDefault()
-        trackEvent(['ActionBar', 'audio', meta.url])
-        toggleAudioPlayer({
-          audioSource: meta.audioSource,
-          title: meta.title,
-          path: meta.path,
-        })
-      },
-      label: t('PodcastButtons/play'),
-      show: !!meta.audioSource,
-      modes: ['articleTop'],
-    },
-    {
-      title: t('PodcastButtons/title'),
-      Icon: PodcastIcon,
-      onClick: (e) => {
-        e.preventDefault()
-        trackEvent(['ActionBar', 'podcasts', meta.url])
-        setPodcastOverlayVisible(!podcastOverlayVisible)
-      },
-      label: t('PodcastButtons/title'),
-      show: !!podcast && meta.template !== 'format',
+      ...PodcastButtonActionItem,
       modes: ['articleTop'],
     },
     {
