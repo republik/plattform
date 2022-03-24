@@ -23,20 +23,20 @@ export function getPayerInformationFromEvent(
   const name = event.payerName ?? ''
   const [firstName, ...lastNames] = name.trim().split(' ')
 
-  const billingAddress = event.paymentMethod.billing_details.address
+  const billingDetails = event.paymentMethod.billing_details
 
   return {
     email: event.payerEmail,
     firstName: firstName,
     lastName: lastNames.join(' ').trim(),
-    billingAddress: billingAddress
+    billingAddress: billingDetails?.address
       ? {
-          name: event.paymentMethod.billing_details?.name ?? event.payerName,
-          line1: billingAddress.line1,
-          line2: billingAddress.line2,
-          postalCode: billingAddress.postal_code,
-          city: billingAddress.city,
-          country: billingAddress.country,
+          name: billingDetails.name ?? '', // required but backend allows empty strings
+          line1: billingDetails.address.line1,
+          line2: billingDetails.address.line2,
+          postalCode: billingDetails.address.postal_code,
+          city: billingDetails.address.city,
+          country: billingDetails.address.country,
         }
       : undefined,
     shippingAddress: event.shippingAddress
@@ -45,7 +45,7 @@ export function getPayerInformationFromEvent(
           line1:
             event.shippingAddress.addressLine.length > 0
               ? event.shippingAddress.addressLine[0]
-              : '',
+              : '', // required but backend allows empty strings
           line2:
             event.shippingAddress.addressLine.length > 1
               ? event.shippingAddress.addressLine.slice(1).join(', ')
