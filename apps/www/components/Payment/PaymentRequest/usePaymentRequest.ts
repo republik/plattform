@@ -80,7 +80,6 @@ function usePaymentRequest({
   setSelectedPaymentMethod: setSelectedPaymentMethod,
   options,
 }: PaymentRequestParameterObject): PaymentRequestValues {
-  const [stripe, setStripe] = useState<Stripe>(null)
   const [paymentRequest, setPaymentRequest] = useState<PaymentRequest>(null)
   const [status, setStatus] = useState<PaymentRequestStatus>(
     PaymentRequestStatus.IDLE,
@@ -97,14 +96,8 @@ function usePaymentRequest({
     async (wallet: WalletPaymentMethod): Promise<PaymentRequestStatus> => {
       setStatus(PaymentRequestStatus.LOADING)
       setSetupError(null)
-      let stripePromise = stripe
-      if (!stripe) {
-        const globalStripePromise = await loadStripe()
-        setStripe(globalStripePromise)
-        stripePromise = globalStripePromise
-      }
-
-      const newPaymentRequest = await stripePromise.paymentRequest(
+      const stripe = await loadStripe()
+      const newPaymentRequest = await stripe.paymentRequest(
         makePaymentRequestOptions(
           options,
           getPaymentRequestWalletValue(wallet),
@@ -143,7 +136,7 @@ function usePaymentRequest({
       ])
       return PaymentRequestStatus.READY
     },
-    [options, paymentRequest, stripe],
+    [options, paymentRequest],
   )
 
   function show(
