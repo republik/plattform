@@ -161,9 +161,10 @@ const SubmitWithHooks = ({ paymentMethods, ...props }) => {
     }
 
     return [
+      'STRIPE', // the first option is sometimes auto selected and should not be a wallet
       isApplePayAvailable ? WalletPaymentMethod.APPLE_PAY : null,
       isGooglePayAvailable ? WalletPaymentMethod.GOOGLE_PAY : null,
-      ...paymentMethods,
+      ...paymentMethods.filter((pm) => pm !== 'STRIPE'),
     ].filter(Boolean)
   }, [paymentMethods, isApplePayAvailable, isGooglePayAvailable])
 
