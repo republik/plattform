@@ -415,7 +415,6 @@ class AudioPlayer extends Component {
       controlsPadding,
       autoPlay,
       title,
-      fixed,
       sourcePath,
       colorScheme,
       Link = DefaultLink,
@@ -440,10 +439,7 @@ class AudioPlayer extends Component {
       maxWidth: `calc(100% - ${leftIconsWidth + rightIconsWidth + 20}px)`,
       left: timePosition === 'left' ? leftIconsWidth + 10 : 'auto',
       right: timePosition === 'right' ? rightIconsWidth + 10 : 'auto',
-      top: loading ? '0px' : fixed ? '-12px' : '1px',
-    }
-    const timeTextStyle = {
-      fontSize: fixed ? '16px' : '19px',
+      top: loading ? '0px' : '1px',
     }
 
     let timeRanges = []
@@ -659,23 +655,9 @@ class AudioPlayer extends Component {
                   title={t('styleguide/AudioPlayer/loading')}
                 />
               )}
-              {!loading && title && fixed && (
-                <div {...styles.time}>
-                  <Link href={sourcePath} passHref>
-                    <a
-                      {...colorScheme.set('color', 'text')}
-                      style={{ textDecoration: 'none' }}
-                      href={sourcePath}
-                    >
-                      {title}
-                    </a>
-                  </Link>
-                </div>
-              )}
               {!loading && (
                 <div
                   {...styles.time}
-                  style={timeTextStyle}
                   {...colorScheme.set('color', 'textSoft')}
                   tabIndex='0'
                 >
