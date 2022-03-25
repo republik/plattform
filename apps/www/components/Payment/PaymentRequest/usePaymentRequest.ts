@@ -204,7 +204,6 @@ function usePaymentRequest({
     }
   }, [
     selectedPaymentMethod,
-    setSelectedPaymentMethod,
     setupError,
     loading,
     paymentRequest,
@@ -212,7 +211,6 @@ function usePaymentRequest({
     lastOptions,
     options,
     initializePaymentRequest,
-    t,
   ])
 
   return {
