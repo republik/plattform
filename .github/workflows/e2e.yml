@@ -25,6 +25,7 @@ jobs:
         id: playwright-browser-cache
         uses: actions/cache@v2
         with:
+          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
           path: |
             ~/.cache/ms-playwright
 
