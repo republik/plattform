@@ -35,6 +35,7 @@ const init = async (context) => {
         1000 * intervalSecs,
       )
 
+      await recommendations(t, pgdb, mail)
       await expireGrants(t, pgdb, mail)
       await followupGrants(t, pgdb, mail)
       await updateStats(context)
@@ -80,6 +81,40 @@ const init = async (context) => {
 }
 
 module.exports = { init }
+
+/**
+ * Sends recommendations on current grants (only for campaigns with active recommendations)
+ */
+
+const recommendations = async (t, pgdb, mail) => {
+  debug('recommendations...')
+  const queryConditions = {
+    'emailRecommendations !=': null,
+  }
+  for (const campaign of await campaignsLib.findByConditions(
+    pgdb,
+    queryConditions,
+  )) {
+    for (const grant of await grantsLib.findEmptyRecommendations(
+      campaign,
+      pgdb,
+    )) {
+      const transaction = await pgdb.transactionBegin()
+
+      try {
+        await grantsLib.recommendations(campaign, grant, t, transaction)
+        await transaction.transactionCommit()
+      } catch (e) {
+        await transaction.transactionRollback()
+
+        debug('rollback', { grant: grant.id })
+
+        throw e
+      }
+    }
+  }
+  debug('recommendations done')
+}
 
 /**
  * Renders expired grants invalid.

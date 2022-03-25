@@ -150,6 +150,18 @@ yarn dev
 
 Please be patient on boot. It might take a minute for everything to compile and a few nodemon restarts before everything runs smoothly.
 
+### Developing with a specified scope
+
+If you don't want all apps to run when using the `dev` script, you can use the scope flag on the to run only that package in dev mode.
+For example when developing www and api `yarn dev --scope="@orbiting/www-app" --scope="@orbiting/api-app"`
+
+### Include dependencies
+
+If you are developing on a package in a scoped mode, you might want to also pass the `--include-dependencies` flag to ensure that your dependencies are also running.
+
+For example, if you are developing on `@orbiting/api-app` and you need all backend-modules to run `tsc` in watch mode run the following command:
+`yarn dev --scope="@orbiting/api-app" --include-dependencies`
+
 ### Commit Message Format
 
 ```
