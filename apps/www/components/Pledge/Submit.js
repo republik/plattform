@@ -947,10 +947,7 @@ class Submit extends Component {
             dirty={this.state.dirty}
           >
             {isStripePayment && !!setupError && (
-              <ErrorMessage error={setupError}>
-                {' '}
-                {t('account/pledges/payment/methods/wallet/setupHint')}
-              </ErrorMessage>
+              <ErrorMessage error={setupError} />
             )}
             {
               // Only render the browser API in case we're not using a browser payment API

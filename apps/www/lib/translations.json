@@ -994,15 +994,11 @@
     },
     {
       "key": "account/pledges/payment/methods/wallet/unavailable",
-      "value": "{wallet} ist nicht verfügbar."
+      "value": "{wallet} ist nicht verfügbar. Bitte überprüfen Sie Ihre Einstellungen, geben Sie Ihre Kreditkarte von Hand ein oder wählen Sie eine andere Zahlungsart."
     },
     {
-      "key": "account/pledges/payment/methods/wallet/initialisationException",
-      "value": "{wallet} konnte nicht geladen werden."
-    },
-    {
-      "key": "account/pledges/payment/methods/wallet/setupHint",
-      "value": "Überprüfen Sie Ihre Einstellungen, geben Sie Ihre Kreditkarte von Hand ein oder wählen Sie ein anderes Zahlungsmittel."
+      "key": "account/pledges/payment/methods/wallet/exception",
+      "value": "{wallet} konnte nicht geladen werden. Mögliche Ursachen: eine wackelige Internetverbindung, ein temporärer Ausfall, ein VPN oder Ihre Browsererweiterungen. Wählen Sie bitte eine andere Zahlungsart oder versuchen Sie es in einigen Sekunden erneut."
     },
     {
       "key": "account/pledges/payment/canceled",
