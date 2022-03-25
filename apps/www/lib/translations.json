@@ -478,7 +478,7 @@
     },
     {
       "key": "marketing/page/sections/description/kolumnen",
-      "value": "Regelmässig eine Kolumne – am Dienstag von Daniel Strassberg und jeden Samstag von Daniel Binswanger. Dazu alle zwei Wochen dienstags Nicoletta Cimminos Audio-Kolumne «Sprachnotizen»."
+      "value": "Regelmässig eine Kolumne: am Dienstag von Daniel Strassberg oder Kunsthistorikerin Kia Vahland. Jeden Samstag von Daniel Binswanger. Und dazu alle zwei Wochen Nicoletta Cimminos Audiokolumne «Sprachnotizen»."
     },
     {
       "key": "marketing/page/sections/title/kolumnen",
@@ -3151,6 +3151,14 @@
     {
       "key": "article/actionbar/userprogress",
       "value": "Leseposition"
+    },
+    {
+      "key": "article/syntheticreadaloud/title",
+      "value": "Beitrag von synthetischen Stimme vorlesen lassen"
+    },
+    {
+      "key": "article/syntheticreadaloud/lead",
+      "value": "Ein Versuch, die Republik zugänglicher zu machen."
     },
     {
       "key": "article/series/episode",

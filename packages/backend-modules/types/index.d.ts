@@ -10,10 +10,12 @@ export interface GraphqlContext extends ConnectionContext {
   t: any
   signInHooks: any
   mail: any
+  scope?: 'request' | 'socket' | 'middleware' | 'scheduler'
   loaders: any
+  user?: any
 }
 
 /**
  * @deprecated Use `ConnectionContext` instead
  */
-export interface Context extends GraphqlContext {}
+export type Context = GraphqlContext
