@@ -9,7 +9,9 @@ import {
   sansSerifRegular12,
   sansSerifRegular14,
   sansSerifRegular15,
-  sansSerifMedium14,
+  sansSerifMedium16,
+  sansSerifRegular16,
+  sansSerifRegular17,
 } from '../Typography/styles'
 import { InlineSpinner } from '../Spinner'
 
@@ -68,10 +70,10 @@ interface ExtendePlayerProps extends AudioInfoProps {
     hls: string
     mp4: string
   }
+  height: number
 }
 
 const styles = {
-  container: css({}),
   expandedContainer: css({
     display: 'flex',
     flexDirection: 'column',
@@ -107,12 +109,14 @@ const styles = {
     ...ellipsize,
   }),
   expandedTitle: css({
+    ...sansSerifRegular17,
     display: '-webkit-box',
     WebkitBoxOrient: 'vertical',
     WebkitLineClamp: 2,
     overflow: 'hidden',
   }),
   time: css({ ...sansSerifRegular14, margin: 0 }),
+  expandedTime: css({ ...sansSerifRegular16, margin: 0 }),
   scrubber: css({
     ...progressbarStyle,
     bottom: -PROGRESS_HEIGHT,
@@ -143,10 +147,24 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     gap: 20,
+    marginTop: 8,
   }),
   playbackRateButton: css({
-    ...sansSerifMedium14,
     lineHeight: '18px',
+    '::after': {
+      ...sansSerifMedium16,
+      display: 'block',
+      content: 'attr(title)',
+      height: 0,
+      overflow: 'hidden',
+      visibility: 'hidden',
+    },
+  }),
+  playbackRateButtonActive: css({
+    ...sansSerifMedium16,
+  }),
+  playbackRateButtonInActive: css({
+    ...sansSerifRegular16,
   }),
 }
 
@@ -167,7 +185,9 @@ const AudioInfo = ({
     <div
       {...styles.textArea}
       {...(!sourceError && !expanded && styles.ellipsize)}
-      style={{ textAlign: expanded ? 'center' : 'left' }}
+      style={{
+        textAlign: expanded ? 'center' : 'left',
+      }}
       {...colorScheme.set('color', 'text')}
     >
       {loading ? (
@@ -197,7 +217,7 @@ const AudioInfo = ({
             </Link>
           )}
           <p
-            {...styles.time}
+            {...(expanded ? styles.expandedTime : styles.time)}
             style={{ marginTop: expanded ? 8 : 0 }}
             {...colorScheme.set('color', 'textSoft')}
             tabIndex={0}
@@ -241,16 +261,13 @@ const ExpandableAudioPlayer = ({
   setPlaybackRate,
   download,
   src,
+  height = 68,
 }: ExtendePlayerProps) => {
   const [colorScheme] = useColorContext()
   const [isExpanded, setIsExpanded] = useState(false)
 
   return (
-    <div
-      {...styles.container}
-      {...colorScheme.set('backgroundColor', 'overlay')}
-      ref={containerRef}
-    >
+    <div {...colorScheme.set('backgroundColor', 'overlay')} ref={containerRef}>
       {isExpanded && (
         <div {...styles.expandedContainer}>
           <>
@@ -339,18 +356,29 @@ const ExpandableAudioPlayer = ({
               />
             </div>
             <div {...styles.playBackRateButtons}>
-              {[0.5, 0.75, 1, 1.5, 2].map((rate) => {
+              {[
+                { speed: 0.5, label: '0,5×' },
+                { speed: 0.75, label: '0,75×' },
+                { speed: 1, label: '1×' },
+                { speed: 1.5, label: '1,5×' },
+                { speed: 2, label: '2×' },
+              ].map((rate) => {
                 return (
                   <button
-                    key={rate}
+                    key={rate.speed}
                     {...plainButtonRule}
                     {...styles.playbackRateButton}
-                    style={{ opacity: rate === playbackRate ? 1 : 0.6 }}
+                    {...(rate.speed === playbackRate
+                      ? styles.playbackRateButtonActive
+                      : styles.playbackRateButtonInActive)}
+                    style={{
+                      opacity: rate.speed === playbackRate ? 1 : 0.6,
+                    }}
                     onClick={() => {
-                      setPlaybackRate(rate)
+                      setPlaybackRate(rate.speed)
                     }}
                   >
-                    {rate}x
+                    {rate.label}
                   </button>
                 )
               })}
@@ -361,7 +389,7 @@ const ExpandableAudioPlayer = ({
       {playbackElement}
       <div
         {...styles.controls}
-        style={{ padding: `0 10px 0 ${isExpanded ? 10 : 4}px` }}
+        style={{ padding: `0 10px 0 ${isExpanded ? 10 : 4}px`, height: height }}
       >
         <div {...styles.leftControls}>
           {isExpanded ? (
@@ -394,6 +422,7 @@ const ExpandableAudioPlayer = ({
               <button
                 {...styles.button}
                 {...plainButtonRule}
+                style={{ width: 42, paddingLeft: playing ? 4 : 0 }}
                 onClick={playEnabled ? toggle : null}
                 title={t(
                   `styleguide/AudioPlayer/${playing ? 'pause' : 'play'}`,

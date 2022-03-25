@@ -26,21 +26,15 @@ const AudioPlayerFrontend = ({ t }) => {
               <BottomPanel wide foreground={true} visible={audioPlayerVisible}>
                 <ProgressComponent isArticle={false}>
                   <AudioPlayer
-                    key={audioState.mediaId || audioState.url}
-                    mediaId={audioState.mediaId}
-                    durationMs={audioState.audioSource.durationMs}
+                    mode='overlay'
                     src={audioState.audioSource}
                     title={audioState.title}
                     sourcePath={audioState.sourcePath}
                     closeHandler={onCloseAudioPlayer}
                     autoPlay={autoPlayActive}
                     download
-                    scrubberPosition='bottom'
                     t={t}
-                    fixed
-                    timePosition='left'
                     height={AUDIO_PLAYER_HEIGHT}
-                    controlsPadding={18}
                     Link={Link}
                   />
                 </ProgressComponent>

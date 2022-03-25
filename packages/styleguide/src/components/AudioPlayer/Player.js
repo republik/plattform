@@ -531,6 +531,7 @@ class AudioPlayer extends Component {
           setTime={this.setTime}
           download={download}
           src={src}
+          height={height}
         />
       )
     } else {

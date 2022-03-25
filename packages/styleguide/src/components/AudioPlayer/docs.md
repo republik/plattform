@@ -2,17 +2,17 @@ An `<AudioPlayer />` is a responsive click-to-play audio player.
 
 Props:
 
-- `src`: An object representing the audio's source with these keys:
+- `src`: An object (required) representing the audio's source with these keys:
   -- `mp3`: The mp3 source URL of the audio.
   -- `aac`: The aac source URL of the audio.
   -- `ogg`: The ogg source URL of the audio.
   -- `hls`: The hls source URL (when using a video).
   -- `mp4`: The mp4 source URL (when using a video).
-- `autoPlay`: Boolean, trigger play once after the source and context start time is ready
+- `autoPlay`: Boolean (optional), trigger play once after the source and context start time is ready
 - `attributes`: Object, arbitrary attributes mapped to the audio tag.
 - `t`: translate function
-
-- `mode`: sting, `inline` (default) or `overlay`. Determins the style of player. Overlay players include an expanded mode and thus support additional features, like playbackRate and in the future, playlists.
+- `mode`: string, `inline` (default) or `overlay`. Determines the style of player. Overlay players include an expanded mode and thus support additional features, like setting playbackRates.
+- `height`: number, The player height in pixels, defaults to 44 in the inline and 68 in overlay mode.
 - `closeHandler`: Function, optional for `inline` mode, required for `overlay` mode. Displays a close icon on the player in `inline` mode (wich is always present in the `overlay` mode), calls the handler on click.
 - `download`: Whether to display a download icon.
 
@@ -20,7 +20,6 @@ The following props only have an effect when using the `inline` mode:
 
 - `scrubberPosition`: string (optional), `top` (default) or `bottom`.
 - `timePosition`: string (optional), `right` (default) or `left`.
-- `height`: number (optional); The player height in pixels, defaults to 44.
 - `controlsPadding`: number (optional); The horizontal padding between controls and container, defaults to 0.
 
 Context:
