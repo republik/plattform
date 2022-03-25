@@ -1,0 +1,35 @@
+name: CI - end-to-end tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  e2e-tests:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+
+      - name: Run your tests
+        run: yarn test:e2e
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: playwright-results
+          path: ./e2e/artifacts
