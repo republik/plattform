@@ -16,7 +16,7 @@
     "test:watch": "jest --watch",
     "test:e2e": "npx playwright test",
     "test:e2e:watch": "npx playwright test --watch",
-    "test:e2e:generate": "npx playwright codegen --save-storage=playwright-storage.snapshot.json",
+    "test:e2e:generate": "npx playwright codegen --save-storage=./e2e/playwright-storage.snapshot.json",
     "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./.next*\" | xargs wc -l",
     "lint": "next lint",
     "translations-raw": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1a-8RESf0Yjo2Mu15Q4SGWTmnY3ifuFbCVSD7WyYRhT0 --title=live --pretty --out lib/translations.json",

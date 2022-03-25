@@ -34,9 +34,8 @@ const config: PlaywrightTestConfig = {
     actionTimeout: 0,
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: process.env.PLAYWRIGHT_BASE_URL || process.env.PUBLIC_BASE_URL,
-
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'retain-on-failure',
+    trace: 'on-first-retry',
   },
 
   /* Configure projects for major browsers */
@@ -75,7 +74,7 @@ const config: PlaywrightTestConfig = {
   ],
 
   /* Folder for test artifacts such as screenshots, videos, traces, etc. */
-  outputDir: 'playwright-results/',
+  outputDir: './e2e/results/',
 
   /* Run your local dev server before starting the tests */
   // webServer: {
