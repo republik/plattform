@@ -96,7 +96,6 @@ function usePaymentRequest({
 
       let newPaymentRequest
       let canMakePaymentResult
-
       try {
         const stripe = await loadStripe()
         newPaymentRequest = await stripe.paymentRequest(prOptions)
@@ -110,9 +109,10 @@ function usePaymentRequest({
 
       if (!canMakePaymentResult) {
         const failureCause =
-          newPaymentRequest && canMakePaymentResult === false
+          newPaymentRequest && canMakePaymentResult === null
             ? 'unavailable'
             : 'exception'
+
         setSelectedPaymentMethod('STRIPE')
         setSetupError(
           t(`account/pledges/payment/methods/wallet/${failureCause}`, {
