@@ -74,7 +74,7 @@ const config: PlaywrightTestConfig = {
   ],
 
   /* Folder for test artifacts such as screenshots, videos, traces, etc. */
-  outputDir: './e2e/results/',
+  outputDir: './e2e/artifacts/',
 
   /* Run your local dev server before starting the tests */
   // webServer: {

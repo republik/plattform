@@ -1,4 +1,4 @@
-name: CI - end-to-end tests
+name: e2e tests
 
 on:
   push:
@@ -32,4 +32,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: playwright-results
-          path: ./e2e/artifacts
+          path: ./apps/*/e2e/artifacts
