@@ -21,7 +21,7 @@ blockquoteModule.name = 'blockquote'
 
 const serializer = blockquoteModule.helpers.serializer
 
-describe(() => {
+describe('blockquote serializer test-suite', () => {
   it('blockquote serialization', () => {
     const value = serializer.deserialize(parse('> A test'))
     const node = value.document.nodes.first()
