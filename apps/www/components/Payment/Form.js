@@ -73,12 +73,10 @@ const PAYMENT_METHODS = [
     },
   },
   {
-    disabled: inNativeAppBrowser,
     key: WalletPaymentMethod.APPLE_PAY,
     Icon: ApplePayMark,
   },
   {
-    disabled: inNativeAppBrowser,
     key: WalletPaymentMethod.GOOGLE_PAY,
     Icon: GooglePayMark,
   },

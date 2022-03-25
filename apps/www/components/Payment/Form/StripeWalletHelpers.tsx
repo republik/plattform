@@ -1,5 +1,4 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { useInNativeApp } from '../../../lib/withInNativeApp'
 
 // Check if the website is running in a secure document.
 function isInSecureWindow(): boolean {
@@ -38,7 +37,7 @@ export function useIsApplePayAvailable(): [
 
 // ---- Google Pay ----
 
-function isGooglePayAvailable(inNativeApp?: boolean): boolean {
+function isGooglePayAvailable(): boolean {
   if (!isInSecureWindow()) {
     return false
   }
@@ -47,20 +46,19 @@ function isGooglePayAvailable(inNativeApp?: boolean): boolean {
   const isChrome =
     /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor)
 
-  return isAndroid && (isChrome || inNativeApp)
+  return isAndroid && isChrome
 }
 
 export function useIsGooglePayAvailable(): [
   boolean,
   Dispatch<SetStateAction<boolean>>,
 ] {
-  const { isInNativeApp } = useInNativeApp()
   const [isAvailable, setIsAvailable] = useState(false)
 
   useEffect(() => {
     // Only check for Google Pay on the client and when a secure connection is provided
-    setIsAvailable(isInSecureWindow() && isGooglePayAvailable(isInNativeApp))
-  }, [isInNativeApp])
+    setIsAvailable(isInSecureWindow() && isGooglePayAvailable())
+  }, [])
 
   return [isAvailable, setIsAvailable]
 }
