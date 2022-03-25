@@ -34,17 +34,6 @@ function getPaymentRequestWalletValue(
   }
 }
 
-export enum PaymentRequestStatus {
-  IDLE = 'IDLE',
-  LOADING = 'LOADING',
-  READY = 'READY',
-  SHOWING = 'SHOWING',
-  CANCELED = 'CANCELED',
-  SUCCEEDED = 'SUCCEEDED',
-  FAILED = 'FAILED',
-  UNAVAILABLE = 'UNAVAILABLE',
-}
-
 type LeanPaymentRequestOptions = Pick<PaymentRequestOptions, 'total'>
 
 type PaymentHandler = (event: PaymentRequestPaymentMethodEvent) => Promise<void>
@@ -57,7 +46,7 @@ type PaymentRequestParameterObject = {
 }
 
 interface PaymentRequestValues {
-  status: PaymentRequestStatus
+  loading: boolean
   show: (
     handlePayment: PaymentHandler,
     handleCancel: PaymentCanceledHandler,
@@ -80,9 +69,8 @@ function usePaymentRequest({
   options,
 }: PaymentRequestParameterObject): PaymentRequestValues {
   const [paymentRequest, setPaymentRequest] = useState<PaymentRequest>(null)
-  const [status, setStatus] = useState<PaymentRequestStatus>(
-    PaymentRequestStatus.IDLE,
-  )
+  const [loading, setLoading] = useState<boolean>(false)
+
   const [setupError, setSetupError] = useState<string>(null)
 
   const [usedWallet, setUsedWallet] = useState<WalletPaymentMethod>(null)
@@ -92,8 +80,9 @@ function usePaymentRequest({
   const { t } = useTranslation()
 
   const initializePaymentRequest = useCallback(
-    async (wallet: WalletPaymentMethod): Promise<PaymentRequestStatus> => {
-      setStatus(PaymentRequestStatus.LOADING)
+    async (wallet: WalletPaymentMethod): Promise<void> => {
+      setLoading(true)
+      setPaymentRequest(null)
       setSetupError(null)
       // Track used options to prevent useless re-initializations
       setLastOptions(options)
@@ -120,25 +109,22 @@ function usePaymentRequest({
             wallet: t(`account/pledges/payment/method/${wallet}`),
           }),
         )
-        setStatus(PaymentRequestStatus.UNAVAILABLE)
         trackEvent([
           'payment-request',
           `${initializationStage} failed`,
           wallet,
           options.total.amount / 100,
         ])
-        return PaymentRequestStatus.UNAVAILABLE
+      } else {
+        setPaymentRequest(newPaymentRequest)
+        trackEvent([
+          'payment-request',
+          `${initializationStage} successful`,
+          wallet,
+          options.total.amount / 100,
+        ])
       }
-
-      setPaymentRequest(newPaymentRequest)
-      setStatus(PaymentRequestStatus.READY)
-      trackEvent([
-        'payment-request',
-        `${initializationStage} successful`,
-        wallet,
-        options.total.amount / 100,
-      ])
-      return PaymentRequestStatus.READY
+      setLoading(false)
     },
     [options, paymentRequest, setSelectedPaymentMethod, t],
   )
@@ -155,7 +141,6 @@ function usePaymentRequest({
       handlePayment(ev)
         .then(() => {
           ev.complete('success')
-          setStatus(PaymentRequestStatus.SUCCEEDED)
           trackEvent([
             'payment-request',
             'payment succeeded',
@@ -165,7 +150,6 @@ function usePaymentRequest({
         })
         .catch(() => {
           ev.complete('fail')
-          setStatus(PaymentRequestStatus.FAILED)
           trackEvent([
             'payment-request',
             'payment failed',
@@ -176,7 +160,6 @@ function usePaymentRequest({
     })
 
     paymentRequest.on('cancel', () => {
-      setStatus(PaymentRequestStatus.CANCELED)
       setPaymentRequest(null)
       handleCancel()
 
@@ -186,7 +169,6 @@ function usePaymentRequest({
     })
 
     paymentRequest.show()
-    setStatus(PaymentRequestStatus.SHOWING)
   }
 
   useEffect(() => {
@@ -198,28 +180,20 @@ function usePaymentRequest({
       return
     }
 
-    if (status === PaymentRequestStatus.LOADING) {
+    if (loading) {
       return
     }
 
-    const isUninitialized =
-      status === PaymentRequestStatus.IDLE ||
-      status === PaymentRequestStatus.UNAVAILABLE
-    const initializedWalletIsOutdated = usedWallet !== selectedPaymentMethod
-    const optionsUsedToInitializeHaveChanged =
-      JSON.stringify(lastOptions) !== JSON.stringify(options)
-
     // Handle (re-)initialization of the payment request or switching payment method if unavailable
     if (
-      isUninitialized ||
-      initializedWalletIsOutdated ||
-      optionsUsedToInitializeHaveChanged
+      !paymentRequest ||
+      usedWallet !== selectedPaymentMethod ||
+      JSON.stringify(lastOptions) !== JSON.stringify(options)
     ) {
       initializePaymentRequest(
         selectedPaymentMethod as WalletPaymentMethod,
       ).catch(() => {
         setSelectedPaymentMethod('STRIPE')
-        setStatus(PaymentRequestStatus.UNAVAILABLE)
         setSetupError(
           t('account/pledges/payment/methods/wallet/initialisationException', {
             wallet: t(
@@ -233,22 +207,24 @@ function usePaymentRequest({
           usedWallet,
           options.total.amount / 100,
         ])
+        setLoading(false)
       })
     }
   }, [
-    setupError,
-    initializePaymentRequest,
-    lastOptions,
-    options,
     selectedPaymentMethod,
     setSelectedPaymentMethod,
-    status,
-    t,
+    setupError,
+    loading,
+    paymentRequest,
     usedWallet,
+    lastOptions,
+    options,
+    initializePaymentRequest,
+    t,
   ])
 
   return {
-    status,
+    loading,
     show,
     usedWallet,
     setupError,

@@ -45,7 +45,6 @@ import {
   useIsGooglePayAvailable,
 } from '../Payment/Form/StripeWalletHelpers'
 import usePaymentRequest, {
-  PaymentRequestStatus,
   WalletPaymentMethod,
 } from '../Payment/PaymentRequest/usePaymentRequest'
 import { getPayerInformationFromEvent } from '../Payment/PaymentRequest/PaymentRequestEventHelper'
@@ -360,8 +359,11 @@ class Submit extends Component {
       (this.props.selectedPaymentMethod !== 'POSTFINANCECARD' ||
         this.state.pledgeResponse)
     ) {
-      this.payPledge(this.state.pledgeId, this.state.pledgeResponse)
-      return
+      return this.payPledge(
+        this.state.pledgeId,
+        this.state.pledgeResponse,
+        stripePaymentMethod,
+      )
     }
 
     this.setState(() => ({
@@ -673,7 +675,7 @@ class Submit extends Component {
           .concat(!isStripeWalletPayment && objectValues(contactState.errors))
           .concat(
             isStripeWalletPayment &&
-              this.props.paymentRequest.status !== PaymentRequestStatus.READY &&
+              this.props.paymentRequest.loading &&
               t('account/pledges/payment/methods/wallet/loading', {
                 wallet: t(
                   `account/pledges/payment/method/${this.props.paymentRequest.usedWallet}`,
@@ -774,8 +776,13 @@ class Submit extends Component {
   }
 
   render() {
-    const { emailVerify, paymentError, submitError, signInError, loading } =
-      this.state
+    const {
+      emailVerify,
+      paymentError,
+      submitError,
+      signInError,
+      loading: loadingState,
+    } = this.state
     const {
       me,
       t,
@@ -794,8 +801,18 @@ class Submit extends Component {
       packageGroup,
       customMe,
       contactState,
-      paymentRequest: { usedWallet, status: paymentRequestStatus, setupError },
+      paymentRequest: {
+        usedWallet,
+        loading: paymentRequestLoading,
+        setupError,
+      },
     } = this.props
+
+    const loading =
+      (this.isStripeWalletPayment() &&
+        paymentRequestLoading &&
+        t('account/pledges/payment/methods/loading')) ||
+      loadingState
 
     const errorMessages = this.getErrorMessages()
 
@@ -806,10 +823,6 @@ class Submit extends Component {
     )
 
     const showSignIn = this.state.showSignIn && !me
-
-    const isPaymentRequestLoading =
-      this.isStripeWalletPayment() &&
-      paymentRequestStatus === PaymentRequestStatus.LOADING
 
     const isStripePayment =
       selectedPaymentMethod && selectedPaymentMethod.startsWith('STRIPE')
@@ -1004,13 +1017,11 @@ class Submit extends Component {
         {!!signInError && (
           <ErrorMessage style={{ margin: '0 0 40px' }} error={signInError} />
         )}
-        {loading || isPaymentRequestLoading ? (
+        {loading ? (
           <div {...styles.topMargin} style={{ textAlign: 'center' }}>
             <InlineSpinner />
             <br />
-            {isPaymentRequestLoading
-              ? t('account/pledges/payment/methods/loading')
-              : loading}
+            {loading}
           </div>
         ) : (
           <div {...styles.topMargin} {...styles.spaceBetweenChildren}>
