@@ -168,7 +168,6 @@ class AudioPlayer extends Component {
       loading: false,
       buffered: null,
       sourceError: false,
-      playbackRate: 1,
     }
 
     this.updateProgress = () => {
@@ -306,6 +305,11 @@ class AudioPlayer extends Component {
         }
       }
     }
+    this.setAudioPlaybackRate = () => {
+      if (this.audio) {
+        this.audio.playbackRate = this.props.playbackRate
+      }
+    }
   }
 
   play() {
@@ -346,12 +350,7 @@ class AudioPlayer extends Component {
       this.audio.duration / this.state.playbackRate,
     )
   }
-  setPlaybackRate = (rate) => {
-    if (this.audio) {
-      this.setState({ playbackRate: rate })
-      this.audio.playbackRate = rate
-    }
-  }
+
   componentDidMount() {
     globalState.instances.push(this.setInstanceState)
     if (!this.audio) {
@@ -383,6 +382,7 @@ class AudioPlayer extends Component {
   }
   componentDidUpdate() {
     this.setFormattedTimes()
+    this.setAudioPlaybackRate()
   }
   componentWillUnmount() {
     globalState.instances = globalState.instances.filter(
@@ -418,16 +418,11 @@ class AudioPlayer extends Component {
       sourcePath,
       colorScheme,
       Link = DefaultLink,
-    } = this.props
-    const {
-      playEnabled,
-      playing,
-      progress,
-      loading,
-      buffered,
-      sourceError,
       playbackRate,
-    } = this.state
+      setPlaybackRate,
+    } = this.props
+    const { playEnabled, playing, progress, loading, buffered, sourceError } =
+      this.state
     const isVideo = src.mp4 || src.hls
     const leftIconsWidth =
       SIZE.play +
@@ -510,7 +505,7 @@ class AudioPlayer extends Component {
           buffered={buffered}
           sourceError={sourceError}
           playbackRate={playbackRate}
-          setPlaybackRate={this.setPlaybackRate}
+          setPlaybackRate={setPlaybackRate}
           toggle={this.toggle}
           reload={this.reload}
           scrubStart={this.scrubStart}

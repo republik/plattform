@@ -30,6 +30,7 @@ import {
   progressbarStyle,
   DefaultLink,
 } from './constants'
+import { AiOutlineConsoleSql } from 'react-icons/ai'
 
 type AudioInfoProps = {
   expanded: boolean
@@ -242,7 +243,6 @@ const ExpandableAudioPlayer = ({
   loading,
   buffered,
   sourceError,
-  playbackRate,
   toggle,
   reload,
   scrubStart,
@@ -258,6 +258,7 @@ const ExpandableAudioPlayer = ({
   formattedCurrentTime,
   formattedDuration,
   setTime,
+  playbackRate,
   setPlaybackRate,
   download,
   src,
@@ -265,7 +266,6 @@ const ExpandableAudioPlayer = ({
 }: ExtendePlayerProps) => {
   const [colorScheme] = useColorContext()
   const [isExpanded, setIsExpanded] = useState(false)
-
   return (
     <div {...colorScheme.set('backgroundColor', 'overlay')} ref={containerRef}>
       {isExpanded && (
@@ -374,9 +374,7 @@ const ExpandableAudioPlayer = ({
                     style={{
                       opacity: rate.speed === playbackRate ? 1 : 0.6,
                     }}
-                    onClick={() => {
-                      setPlaybackRate(rate.speed)
-                    }}
+                    onClick={() => setPlaybackRate(rate.speed)}
                   >
                     {rate.label}
                   </button>
