@@ -21,7 +21,12 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Install Playwright
+      - name: Install Playwright Browsers
+        id: playwright-browser-cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/ms-playwright
         run: npx playwright install --with-deps
 
       - name: Run your tests
