@@ -41,11 +41,7 @@ function isGooglePayAvailable(): boolean {
   if (!isInSecureWindow()) {
     return false
   }
-  const isChrome =
-    /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor)
-  const isAndroid = /Android/.test(navigator.userAgent)
-
-  return isChrome || isAndroid
+  return /Android/.test(navigator.userAgent)
 }
 
 export function useIsGooglePayAvailable(): [
