@@ -19,5 +19,9 @@ yarn-error.log*
 
 dump.rdb
 
-/e2e/artifacts
+# Playwright
+
 /e2e/playwright-storage.snapshot.json
+/e2e/artifacts
+playwright-report
+playwright-results
