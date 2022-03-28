@@ -165,7 +165,12 @@ module.exports = async (
     searchString,
   )
 
-  metaFieldResolver(resolvedDoc.content.meta, _all, unresolvedRepoIds)
+  metaFieldResolver(
+    resolvedDoc.content.meta,
+    _all,
+    _usernames,
+    unresolvedRepoIds,
+  )
 
   unresolvedRepoIds = uniq(unresolvedRepoIds).filter(
     (unresolvedRepoId) => unresolvedRepoId !== repoId,

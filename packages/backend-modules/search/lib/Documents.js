@@ -340,30 +340,27 @@ const addRelatedDocs = async ({
   let userIds = []
   let repoIds = []
   const seriesRepoIds = []
+
   docs.forEach((doc) => {
     // from content
-    if (!withoutContent) {
-      const extractedIds = extractIdsFromNode(doc.content, doc.repoId)
-      userIds = userIds.concat(extractedIds.users)
-      repoIds = repoIds.concat(extractedIds.repos)
-    } else {
-      const extractedIds = extractIdsFromNode(
-        { children: doc.meta.credits },
-        doc.repoId,
-      )
-      userIds = userIds.concat(extractedIds.users)
-      repoIds = repoIds.concat(extractedIds.repos)
-    }
-    // from meta
-    const meta = doc.content.meta
-    // TODO get keys from packages/documents/lib/resolve.js
+    const { users, repos } = extractIdsFromNode(
+      withoutContent ? { children: doc.meta.credits } : doc.content,
+      doc.repoId,
+    )
+    userIds = userIds.concat(users)
+    repoIds = repoIds.concat(repos)
+
+    const meta = withoutContent ? doc.meta : doc.content.meta
+
     repoIds.push(getRepoId(meta.dossier).repoId)
     repoIds.push(getRepoId(meta.format).repoId)
     repoIds.push(getRepoId(meta.section).repoId)
     repoIds.push(getRepoId(meta.discussion).repoId)
+
     meta.recommendations?.forEach((recommendation) => {
       repoIds.push(getRepoId(recommendation).repoId)
     })
+
     if (meta.series) {
       // If a string, probably a series master (tbc.)
       if (typeof meta.series === 'string') {
@@ -407,20 +404,37 @@ const addRelatedDocs = async ({
     })
   }
 
-  const { docs: variousRelatedDocs, usernames } = await loadLinkedMetaData({
+  const { docs: variousRelatedDocs } = await loadLinkedMetaData({
     context,
     repoIds,
-    userIds,
     scheduledAt,
     ignorePrepublished,
   })
 
   relatedDocs = relatedDocs.concat(variousRelatedDocs)
 
-  // resolve formats for all related docs
-  const { docs: relatedFormatDocs } = await loadLinkedMetaData({
+  const relatedFormatRepoIds = []
+
+  relatedDocs.forEach((doc) => {
+    const { users } = extractIdsFromNode(
+      withoutContent ? { children: doc.meta.credits } : doc.content,
+      doc.repoId,
+    )
+    userIds = userIds.concat(users)
+
+    const meta = withoutContent ? doc.meta : doc.content.meta
+
+    relatedFormatRepoIds.push(getRepoId(meta.dossier).repoId)
+    relatedFormatRepoIds.push(getRepoId(meta.format).repoId)
+    relatedFormatRepoIds.push(getRepoId(meta.section).repoId)
+    relatedFormatRepoIds.push(getRepoId(meta.discussion).repoId)
+  })
+
+  // Resolve format repoIds and all userIds.
+  const { docs: relatedFormatDocs, usernames } = await loadLinkedMetaData({
     context,
-    repoIds: relatedDocs.map((d) => getRepoId(d.meta.format).repoId),
+    repoIds: relatedFormatRepoIds,
+    userIds,
     scheduledAt,
     ignorePrepublished,
   })
