@@ -39,6 +39,13 @@ const styles = {
     display: 'flex',
     transition: 'opacity 0.75s',
   }),
+  stickyToolbar: css({
+    marginBottom: '10px',
+    overflow: 'hidden',
+    display: 'flex',
+    minHeight: '19px',
+    transition: 'opacity 0.75s',
+  }),
   buttonGroup: css({
     display: 'flex',
   }),
@@ -192,7 +199,8 @@ export const Portal: React.FC<{ children: ReactElement }> = ({ children }) => {
 
 const Toolbar: React.FC<{
   containerRef: React.RefObject<HTMLDivElement>
-}> = ({ containerRef }) => {
+  mode: string
+}> = ({ containerRef, mode }) => {
   const [colorScheme] = useColorContext()
   const ref = useRef<HTMLDivElement>(null)
   const editor = useSlate()
@@ -200,6 +208,7 @@ const Toolbar: React.FC<{
   const [marks, setMarks] = useState(false)
   const [inlines, setInlines] = useState<InsertButtonConfig[]>([])
   const [blocks, setBlocks] = useState<InsertButtonConfig[]>([])
+  const isSticky = mode === 'sticky'
 
   const reset = () => {
     setVisible(false)
@@ -211,6 +220,7 @@ const Toolbar: React.FC<{
   useEffect(() => {
     const el = ref.current
     if (!el) return
+    if (isSticky) return
     if (marks || !!inlines.length || !!blocks.length) {
       el.style.opacity = '1'
       el.style.width = 'auto'
@@ -248,7 +258,11 @@ const Toolbar: React.FC<{
     }
   }, [editor.selection])
 
-  return (
+  return isSticky ? (
+    <div ref={ref} {...styles.stickyToolbar}>
+      <ToolbarButtons marks={marks} inlines={inlines} blocks={blocks} />
+    </div>
+  ) : (
     <Portal>
       <div
         ref={ref}
