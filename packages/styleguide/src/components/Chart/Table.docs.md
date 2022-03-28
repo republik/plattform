@@ -92,6 +92,7 @@ Energie,-0.52
   <ChartTitle>Öffentlich, privat – oder beides?</ChartTitle>
   <ChartLead>Welche Angebote in den einzelnen europäischen Ländern dominieren</ChartLead>
   <CsvChart
+    t={t}
     config={{
       "type": "Table",
       "tableColumns": [
