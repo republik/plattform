@@ -280,8 +280,6 @@ export const defaultProps = {
   Table: {
     numberFormat: 's',
     tableColumns: [],
-    collapsedState: 'full',
-    collapsedHeight: { mobile: 180, desktop: 240 },
   },
 }
 

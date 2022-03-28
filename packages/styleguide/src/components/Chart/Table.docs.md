@@ -112,7 +112,7 @@ Energie,-0.52
         "Öffentliche und private": "#fc8d62",
         "Private Angebote dominieren": "#8da0cb"
         },
-        "collapsedState": "auto"
+        "collapsable": true
     }}
     values={`
 Land,E-ID-Angebote

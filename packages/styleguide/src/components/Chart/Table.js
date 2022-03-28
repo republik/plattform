@@ -54,8 +54,7 @@ const Table = (props) => {
     defaultSortColumn,
     thresholds,
     tableColumns,
-    collapsedState,
-    collapsedHeight,
+    collapsable,
     t,
   } = props
   const columns = values.columns || Object.keys(values[0] || {})
@@ -135,11 +134,7 @@ const Table = (props) => {
   }
 
   return (
-    <Collapsable
-      initialVisibility={collapsedState || Table.defaultProps.collapsedState}
-      height={collapsedHeight || Table.defaultProps.collapsedHeight}
-      t={t}
-    >
+    <Collapsable collapsable={collapsable} t={t}>
       <div {...styles.container}>
         <table {...styles.table}>
           <thead>
@@ -223,10 +218,7 @@ export const propTypes = {
     sequential3: PropTypes.array.isRequired,
     discrete: PropTypes.array.isRequired,
   }).isRequired,
-  collapsedHeight: PropTypes.shape({
-    mobile: PropTypes.number,
-    desktop: PropTypes.number,
-  }),
+  collapsable: PropTypes.bool,
 }
 
 Table.defaultProps = defaultProps.Table
