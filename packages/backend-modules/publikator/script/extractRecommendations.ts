@@ -21,7 +21,7 @@ const debug = _debug('publikator:script:extractRecommendations')
 
 const applicationName = 'backends publikator script extractRecommendations'
 
-const author = { name: 'Publikator', email: 'tech@republik.ch' }
+const author = { name: 'Publikator Bot', email: 'tech@republik.ch' }
 
 const handleBatch = async (rows: any[], count: number, pgdb: any) => {
   debug('handleBatch begin. rows: %i', rows?.length)
