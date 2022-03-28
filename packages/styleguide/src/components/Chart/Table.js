@@ -12,6 +12,7 @@ import { defaultProps } from './ChartContext'
 import { sansSerifRegular18 } from '../Typography/styles'
 import { PADDING } from '../Center'
 import { getColorMapper } from './colorMaps'
+import { Collapsable } from '../Collapsable'
 
 const styles = {
   container: css({
@@ -53,6 +54,9 @@ const Table = (props) => {
     defaultSortColumn,
     thresholds,
     tableColumns,
+    collapsedState,
+    collapsedHeight,
+    t,
   } = props
   const columns = values.columns || Object.keys(values[0] || {})
   const numberFormatter = getFormat(numberFormat)
@@ -131,62 +135,72 @@ const Table = (props) => {
   }
 
   return (
-    <div {...styles.container}>
-      <table {...styles.table}>
-        <thead>
-          <tr>
-            {columns.map((tableHead, index) => (
-              <th
-                {...styles.header}
-                {...colorScheme.set('borderBottomColor', 'text')}
-                style={{
-                  textAlign: numberColumns.includes(tableHead)
-                    ? 'right'
-                    : 'left',
-                  cursor: 'pointer',
-                  whiteSpace: sortBy.key === tableHead ? 'nowrap' : undefined,
-                }}
-                key={index}
-                onClick={() => setSort(columns[index])}
-              >
-                {tableHead}
-                {sortBy.key &&
-                  sortBy.key === tableHead &&
-                  (sortBy.order === 'desc' ? (
-                    <ExpandMoreIcon style={{ paddingLeft: '2px' }} />
-                  ) : (
-                    <ExpandLessIcon style={{ paddingLeft: '2px' }} />
-                  ))}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody style={{ marginTop: '5px' }}>
-          {parsedData.map((row, rowIndex) => (
-            <tr
-              key={rowIndex}
-              {...(rowIndex % 2 !== 0 &&
-                colorScheme.set('backgroundColor', 'hover'))}
-            >
-              {columns.map((cellKey, cellIndex) => (
-                <Cell
-                  key={cellIndex}
-                  type={tableColumns.find((d) => d.column === cellKey)?.type}
-                  width={tableColumns.find((d) => d.column === cellKey)?.width}
-                  color={tableColumns.find((d) => d.column === cellKey)?.color}
-                  value={row[cellKey]}
-                  colorScale={colorScale}
+    <Collapsable
+      initialVisibility={collapsedState || Table.defaultProps.collapsedState}
+      height={collapsedHeight || Table.defaultProps.collapsedHeight}
+      t={t}
+    >
+      <div {...styles.container}>
+        <table {...styles.table}>
+          <thead>
+            <tr>
+              {columns.map((tableHead, index) => (
+                <th
+                  {...styles.header}
+                  {...colorScheme.set('borderBottomColor', 'text')}
+                  style={{
+                    textAlign: numberColumns.includes(tableHead)
+                      ? 'right'
+                      : 'left',
+                    cursor: 'pointer',
+                    whiteSpace: sortBy.key === tableHead ? 'nowrap' : undefined,
+                  }}
+                  key={index}
+                  onClick={() => setSort(columns[index])}
                 >
-                  {numberColumns.includes(cellKey)
-                    ? numberFormatter(row[cellKey])
-                    : row[cellKey]}
-                </Cell>
+                  {tableHead}
+                  {sortBy.key &&
+                    sortBy.key === tableHead &&
+                    (sortBy.order === 'desc' ? (
+                      <ExpandMoreIcon style={{ paddingLeft: '2px' }} />
+                    ) : (
+                      <ExpandLessIcon style={{ paddingLeft: '2px' }} />
+                    ))}
+                </th>
               ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody style={{ marginTop: '5px' }}>
+            {parsedData.map((row, rowIndex) => (
+              <tr
+                key={rowIndex}
+                {...(rowIndex % 2 !== 0 &&
+                  colorScheme.set('backgroundColor', 'hover'))}
+              >
+                {columns.map((cellKey, cellIndex) => (
+                  <Cell
+                    key={cellIndex}
+                    type={tableColumns.find((d) => d.column === cellKey)?.type}
+                    width={
+                      tableColumns.find((d) => d.column === cellKey)?.width
+                    }
+                    color={
+                      tableColumns.find((d) => d.column === cellKey)?.color
+                    }
+                    value={row[cellKey]}
+                    colorScale={colorScale}
+                  >
+                    {numberColumns.includes(cellKey)
+                      ? numberFormatter(row[cellKey])
+                      : row[cellKey]}
+                  </Cell>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </Collapsable>
   )
 }
 
@@ -209,6 +223,10 @@ export const propTypes = {
     sequential3: PropTypes.array.isRequired,
     discrete: PropTypes.array.isRequired,
   }).isRequired,
+  collapsedHeight: PropTypes.shape({
+    mobile: PropTypes.number,
+    desktop: PropTypes.number,
+  }),
 }
 
 Table.defaultProps = defaultProps.Table
