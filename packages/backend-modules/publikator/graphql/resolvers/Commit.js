@@ -77,7 +77,7 @@ module.exports = {
     const { type } = args
 
     if (type === 'SyntheticReadAloud') {
-      return canDeriveSyntheticReadAloud(commit.meta.template)
+      return canDeriveSyntheticReadAloud(commit.meta)
     }
 
     return false
