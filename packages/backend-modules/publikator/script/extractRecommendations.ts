@@ -153,7 +153,11 @@ const handleBatch = async (rows: any[], count: number, pgdb: any) => {
                 `https://publikator.republik.ch/repo/${repoId}/tree`,
               )
             }
-            urls.push(node.data?.url)
+
+            const url = new URL(node.data?.url)
+            url.searchParams.delete('autoSlug')
+
+            urls.push(url.toString())
           }
         })
 
