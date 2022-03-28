@@ -249,7 +249,7 @@ const Toolbar: React.FC<{
       !!element &&
       (hasUsableSelection(editor, element) || hasVoidSelection(element))
     ) {
-      setMarks(showMarks(editor, element))
+      setMarks(isSticky ? true : showMarks(editor, element))
       setInlines(getAllowedInlines(editor, text))
       const allowedBlocks = getAllowedBlocks(editor, element, container)
       setBlocks(allowedBlocks.length >= 2 ? allowedBlocks : [])
