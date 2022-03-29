@@ -38,7 +38,7 @@ const styles = {
   cell: css({
     padding: '8px 10px',
   }),
-  cellNumber: css({
+  cellNumeric: css({
     textAlign: 'right',
     fontFeatureSettings: '"tnum", "kern"',
   }),
@@ -68,6 +68,10 @@ const Table = (props) => {
   const numberColumns = tableColumns
     .filter((d) => d.type === 'number')
     .map((d) => d.column)
+  const numericColumns = numberColumns.concat(
+    tableColumns.filter((d) => d.type === 'numeric').map((d) => d.column),
+  )
+
   const parsedData = numberColumns.length
     ? values.map((row) => {
         let parsedRow = { ...row }
@@ -143,7 +147,7 @@ const Table = (props) => {
                 {...styles.header}
                 {...colorScheme.set('borderBottomColor', 'text')}
                 style={{
-                  textAlign: numberColumns.includes(tableHead)
+                  textAlign: numericColumns.includes(tableHead)
                     ? 'right'
                     : 'left',
                   cursor: 'pointer',
@@ -174,9 +178,8 @@ const Table = (props) => {
               {columns.map((cellKey, cellIndex) => (
                 <Cell
                   key={cellIndex}
-                  type={tableColumns.find((d) => d.column === cellKey)?.type}
-                  width={tableColumns.find((d) => d.column === cellKey)?.width}
-                  color={tableColumns.find((d) => d.column === cellKey)?.color}
+                  {...tableColumns.find((d) => d.column === cellKey)}
+                  isNumeric={numericColumns.includes(cellKey)}
                   value={row[cellKey]}
                   colorScale={colorScale}
                 >
@@ -236,10 +239,10 @@ Table.propTypes = propTypes
 export default Table
 
 const Cell = (props) => {
-  const { type, width, color, colorScale, value, children } = props
+  const { type, width, color, colorScale, value, children, isNumeric } = props
   return (
     <td
-      {...(type === 'number' && styles.cellNumber)}
+      {...(isNumeric && styles.cellNumeric)}
       {...styles.cell}
       style={{
         width: width !== undefined ? +width : undefined,

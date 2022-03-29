@@ -164,7 +164,8 @@ Zypern,Öffentliche Angebote dominieren
           "color": true
         },
         {
-          "column": "Eintragsdatum"
+          "column": "Eintragsdatum",
+          "type": "numeric"
         }
       ],
       "defaultSortColumn": "Programm",
