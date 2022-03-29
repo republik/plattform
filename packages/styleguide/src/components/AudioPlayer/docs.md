@@ -17,13 +17,17 @@ Props:
 - `download`: Whether to display a download icon.
 
 Overlay mode specific props:
+
 - `sourcePath`: sting (required): path of the article the auio files is embedded in.
 - `title`: sting (required): title of the audiofile.
+- `playbackRate`: number (required):
+- `setPlaybackRate`: function (required):
 
 Inline mode speficic props:
+
 - `scrubberPosition`: string (optional), `top` (default) or `bottom`.
 - `timePosition`: string (optional), `right` (default) or `left`.
-- `controlsPadding`: number (optional),  The horizontal padding between controls and container, defaults to 0.
+- `controlsPadding`: number (optional), The horizontal padding between controls and container, defaults to 0.
 - `style`: style (optional), styles applied to the outer most container of the player.
 - `size`: string (optional) = 'narow' | 'tiny | 'breakout', see breakoutStyles object for more info.
 
@@ -35,6 +39,8 @@ Context:
 ### Overlay Player
 
 ```react|responsive
+state: {playbackRate: 1}
+---
 <div
   style={{
     position: 'fixed',
@@ -51,6 +57,8 @@ Context:
       src={{
         mp3: 'https://cdn.repub.ch/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
       }}
+      playbackRate={state.playbackRate}
+      setPlaybackRate={(rate) => setState({playbackRate: rate})}
       mode='overlay'
       download
       title='Vier Schriftstellerinnen schildern die jahrelange russische Bedrohung der Ukraine. Dazu: Der Wochenkommentar und eine neue Podcast-Folge.'

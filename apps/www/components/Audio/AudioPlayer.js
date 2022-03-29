@@ -10,6 +10,7 @@ import Link from '../Link/Href'
 import BottomPanel from '../Frame/BottomPanel'
 import { useMe } from '../../lib/context/MeContext'
 import { usePlaybackRate } from '../../lib/playbackRate'
+import { trackEvent } from '../../lib/matomo'
 
 const AudioPlayerFrontend = ({ t }) => {
   const { meLoading } = useMe()
@@ -34,7 +35,10 @@ const AudioPlayerFrontend = ({ t }) => {
                     title={audioState.title}
                     sourcePath={audioState.sourcePath}
                     closeHandler={onCloseAudioPlayer}
-                    setPlaybackRate={(rate) => setPlaybackRate(rate)}
+                    setPlaybackRate={(rate) => {
+                      trackEvent(['AudioPlayer', 'playbackRate', rate])
+                      setPlaybackRate(rate)
+                    }}
                     playbackRate={playbackRate}
                     autoPlay={autoPlayActive}
                     download
