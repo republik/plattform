@@ -133,70 +133,74 @@ const Table = (props) => {
     colorScale = getColorMapper(props, colorValues)
   }
 
-  return (
-    <Collapsable collapsable={collapsable} t={t}>
-      <div {...styles.container}>
-        <table {...styles.table}>
-          <thead>
-            <tr>
-              {columns.map((tableHead, index) => (
-                <th
-                  {...styles.header}
-                  {...colorScheme.set('borderBottomColor', 'text')}
-                  style={{
-                    textAlign: numberColumns.includes(tableHead)
-                      ? 'right'
-                      : 'left',
-                    cursor: 'pointer',
-                    whiteSpace: sortBy.key === tableHead ? 'nowrap' : undefined,
-                  }}
-                  key={index}
-                  onClick={() => setSort(columns[index])}
+  const content = (
+    <div {...styles.container}>
+      <table {...styles.table}>
+        <thead>
+          <tr>
+            {columns.map((tableHead, index) => (
+              <th
+                {...styles.header}
+                {...colorScheme.set('borderBottomColor', 'text')}
+                style={{
+                  textAlign: numberColumns.includes(tableHead)
+                    ? 'right'
+                    : 'left',
+                  cursor: 'pointer',
+                  whiteSpace: sortBy.key === tableHead ? 'nowrap' : undefined,
+                }}
+                key={index}
+                onClick={() => setSort(columns[index])}
+              >
+                {tableHead}
+                {sortBy.key &&
+                  sortBy.key === tableHead &&
+                  (sortBy.order === 'desc' ? (
+                    <ExpandMoreIcon style={{ paddingLeft: '2px' }} />
+                  ) : (
+                    <ExpandLessIcon style={{ paddingLeft: '2px' }} />
+                  ))}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody style={{ marginTop: '5px' }}>
+          {parsedData.map((row, rowIndex) => (
+            <tr
+              key={rowIndex}
+              {...(rowIndex % 2 !== 0 &&
+                colorScheme.set('backgroundColor', 'hover'))}
+            >
+              {columns.map((cellKey, cellIndex) => (
+                <Cell
+                  key={cellIndex}
+                  type={tableColumns.find((d) => d.column === cellKey)?.type}
+                  width={tableColumns.find((d) => d.column === cellKey)?.width}
+                  color={tableColumns.find((d) => d.column === cellKey)?.color}
+                  value={row[cellKey]}
+                  colorScale={colorScale}
                 >
-                  {tableHead}
-                  {sortBy.key &&
-                    sortBy.key === tableHead &&
-                    (sortBy.order === 'desc' ? (
-                      <ExpandMoreIcon style={{ paddingLeft: '2px' }} />
-                    ) : (
-                      <ExpandLessIcon style={{ paddingLeft: '2px' }} />
-                    ))}
-                </th>
+                  {numberColumns.includes(cellKey)
+                    ? numberFormatter(row[cellKey])
+                    : row[cellKey]}
+                </Cell>
               ))}
             </tr>
-          </thead>
-          <tbody style={{ marginTop: '5px' }}>
-            {parsedData.map((row, rowIndex) => (
-              <tr
-                key={rowIndex}
-                {...(rowIndex % 2 !== 0 &&
-                  colorScheme.set('backgroundColor', 'hover'))}
-              >
-                {columns.map((cellKey, cellIndex) => (
-                  <Cell
-                    key={cellIndex}
-                    type={tableColumns.find((d) => d.column === cellKey)?.type}
-                    width={
-                      tableColumns.find((d) => d.column === cellKey)?.width
-                    }
-                    color={
-                      tableColumns.find((d) => d.column === cellKey)?.color
-                    }
-                    value={row[cellKey]}
-                    colorScale={colorScale}
-                  >
-                    {numberColumns.includes(cellKey)
-                      ? numberFormatter(row[cellKey])
-                      : row[cellKey]}
-                  </Cell>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </Collapsable>
+          ))}
+        </tbody>
+      </table>
+    </div>
   )
+
+  if (collapsable) {
+    const height = 40 * 6
+    return (
+      <Collapsable height={{ mobile: height, desktop: height }} t={t}>
+        {content}
+      </Collapsable>
+    )
+  }
+  return content
 }
 
 export const propTypes = {

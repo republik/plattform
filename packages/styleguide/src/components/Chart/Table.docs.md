@@ -50,7 +50,7 @@ You can set the default sorting to a specific column by setting `defaultSortColu
       "type": "Table",
       "colorRange": [
         "#762a83", "#af8dc3", "#e7d4e8", "#d9f0d3", "#7fbf7b", "#1b7837"
-        ],
+      ],
       "thresholds": [-0.5, -0.3, 0, 0.3, 0.5],
       "tableColumns": [
         {
@@ -111,8 +111,7 @@ Energie,-0.52
         "Öffentliche Angebote dominieren": "#66c2a5",
         "Öffentliche und private": "#fc8d62",
         "Private Angebote dominieren": "#8da0cb"
-        },
-        "collapsable": true
+      }
     }}
     values={`
 Land,E-ID-Angebote
@@ -143,5 +142,76 @@ Finnland,Öffentliche und private
 Zypern,Öffentliche Angebote dominieren
     `.trim()} />
   <ChartLegend></ChartLegend>
+</div>
+```
+
+## Collapsable
+
+
+```react
+<div>
+  <ChartTitle>Von der EU sanktioniert – von der Schweiz unbehelligt</ChartTitle>
+  <CsvChart
+    t={t}
+    config={{
+      "type": "Table",
+      "tableColumns": [
+        {
+          "column": "Name"
+        },
+        {
+          "column": "Programm",
+          "color": true
+        },
+        {
+          "column": "Eintragsdatum"
+        }
+      ],
+      "defaultSortColumn": "Programm",
+      "colorMap": {
+        "CYB": "#1f77b4",
+        "CHEM": "#ff7f0e",
+        "HR": "#2ca02c",
+        "UKR": "#d62728"
+      },
+      "collapsable": true
+    }}
+    values={`
+Name,Eintragsdatum,Programm
+Ruslan BOSHIROV,21.01.2019,CHEM
+Wiktor Fedorowytsch Janukowytsch,05.03.2019,UKR
+"SEREBRIAKOV, Evgenii Mikhaylovich",30.07.2020,CYB
+Main Centre for Special Technologies (GTsST) of the Main Directorate of the General Staff of the Armed Forces of the Russian Federation (GU/GRU) ('SANDWORM'),30.07.2020,CYB
+Viktor Ivanovych RATUSHNIAK,05.03.2019,UKR
+Pawel Anatoljewitsch Popow,15.10.2020,CHEM
+GRU 85th Main Special Service Centre (GTsSS) (APT 28),22.10.2020,CYB
+Gruppe Wagner,13.12.2021,HR
+Stanislav Evgenievitch DYCHKO,13.12.2021,HR
+Valeriy Nikolaevich ZAKHAROV,13.12.2021,HR
+Volfovitj Aleksandr GRIGORJEVITJ,25.02.2022,UKR
+State Research Institute of Organic Chemistry and Technology,15.10.2020,CHEM
+Igor Olegovich KOSTYUKOV,21.01.2019,CHEM
+Alexandr Petrovich KALASHNIKOV,02.03.2021,HR
+Igor Wiktorowitsch Krasnow,02.03.2021,HR
+Aiub Vakhaevich KATAEV,07.12.2021,HR
+Vladimir Stepanovich ALEXSEYEV,21.01.2019,CHEM
+Vitaly Yuryevich ZAKHARCHENKO,05.03.2019,UKR
+Dmitry Sergeyevich BADIN,22.10.2020,CYB
+Aleksei Sergeyvic MORENETS,30.07.2020,CYB
+Alexey Valeryevich MININ,30.07.2020,CYB
+Aleksei Yurievich KRIVORUCHKO,15.10.2020,CHEM
+Viktor Pavlovych PSHONKA,05.03.2019,UKR
+Oleg Mikhaylovich SOTNIKOV,30.07.2020,CYB
+Oleksandr Viktorovych YANUKOVYCH,05.03.2019,UKR
+Serhiy Vitaliyovych KURCHENKO,05.03.2019,UKR
+Igor Olegovich KOSTYUKOV,22.10.2020,CYB
+Sergei Vladilenovich KIRIYENKO,15.10.2020,CHEM
+Alexander Yevgeniyevich Mishkin,21.01.2019,CHEM
+Andrei Veniaminovich YARIN,15.10.2020,CHEM
+Alexandr Ivanovich BASTRYKIN,02.03.2021,HR
+Viktor Vasiljevitj ZOLOTOV,07.12.2021,HR
+Abuzaid Dzhandarovich VISMURADOV,07.12.2021,HR
+    `.trim()} />
+  <ChartLegend>Die Tabelle zeigt Personen und Organisationen, die auf der Sanktionsliste der EU, aber nicht auf der Seco-Liste auftauchen. Die Abkürzungen in der Spalte «Programm» beziehen sich auf unterschiedliche Sanktionsprogramme der EU. CYB: Cyberangriffe. CHEM: Chemische Waffen. HR: Menschenrechte. UKR: Ukraine. Quelle: OpenSanctions.</ChartLegend>
 </div>
 ```
