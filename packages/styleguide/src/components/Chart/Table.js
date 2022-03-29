@@ -195,7 +195,11 @@ const Table = (props) => {
   if (collapsable) {
     const height = 40 * 6
     return (
-      <Collapsable height={{ mobile: height, desktop: height }} t={t}>
+      <Collapsable
+        labelPrefix='table'
+        height={{ mobile: height, desktop: height }}
+        t={t}
+      >
         {content}
       </Collapsable>
     )

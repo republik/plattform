@@ -59,6 +59,7 @@ const Collapsable = ({
   alwaysCollapsed,
   editorPreview,
   isOnOverlay,
+  labelPrefix,
 }) => {
   /**
    * Measuring the body size (height), so we can determine whether to collapse
@@ -92,7 +93,12 @@ const Collapsable = ({
   const collapsed =
     bodyVisibility === 'auto' ? undefined : bodyVisibility === 'preview'
   const collapseLabel =
-    t && t(`styleguide/Collapsable/${collapsed ? 'expand' : 'collapse'}`)
+    t &&
+    t(
+      `styleguide/Collapsable/${labelPrefix ? `${labelPrefix}/` : ''}${
+        collapsed ? 'expand' : 'collapse'
+      }`,
+    )
 
   const root = useRef()
   const onToggleCollapsed = React.useCallback(
