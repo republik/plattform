@@ -58,7 +58,7 @@ module.exports = {
     // - this is easiest detectable by _all being present from documents resolver
     // - alt check info.path for documents / document being the root
     //   https://gist.github.com/tpreusse/f79833a023706520da53647f9c61c7f6
-    if (doc._all) {
+    if (doc._all || doc._usernames) {
       // add content hash before mutating children by resolving
       addTeaserContentHash(doc.content.children || [])
 
@@ -85,7 +85,7 @@ module.exports = {
   },
   async meta(doc, { urlPrefix, searchString }, context, info) {
     const meta = getMeta(doc)
-    if (doc._all) {
+    if (doc._all || doc._usernames) {
       metaUrlResolver(
         meta,
         doc._all,
