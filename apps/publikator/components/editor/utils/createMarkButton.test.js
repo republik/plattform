@@ -1,6 +1,4 @@
 import React from 'react'
-import test from 'tape'
-import spy from 'spy'
 import { shallow } from '../../../test/utils/enzyme'
 import createMarkButton from './createMarkButton'
 import { Value } from 'slate'
@@ -58,290 +56,251 @@ const initialState = Value.fromJSON({
 const Button = () => <span />
 const MarkButton = createMarkButton({ type: 'bold' })(Button)
 
-test('utils.createMarkButton: blurred', (assert) => {
-  assert.plan(1)
-  const value = initialState
+describe('createMarkButton test-suite', () => {
+  it('utils.createMarkButton: blurred', () => {
+    const value = initialState
 
-  const wrapper = shallow(<MarkButton value={value} />)
+    const wrapper = shallow(<MarkButton value={value} />)
 
-  assert.equal(
-    !wrapper.find('Button').prop('active') &&
-      wrapper.find('Button').prop('disabled'),
-    true,
-    'renders as disabled and inactive',
-  )
-})
+    // renders as disabled and inactive
+    expect(
+      !wrapper.find('Button').prop('active') &&
+        wrapper.find('Button').prop('disabled'),
+    ).toBeTruthy()
+  })
 
-test('utils.createMarkButton: focused cursor on text without marks', (assert) => {
-  assert.plan(1)
+  it('utils.createMarkButton: focused cursor on text without marks', () => {
+    const value = initialState
+      .change()
+      .select({
+        anchorKey: initialState.document.nodes.get(0).nodes.first().key,
+        anchorOffset: 2,
+        focusKey: initialState.document.nodes.get(0).nodes.first().key,
+        focusOffset: 2,
+      })
+      .focus().value
 
-  const value = initialState
-    .change()
-    .select({
-      anchorKey: initialState.document.nodes.get(0).nodes.first().key,
-      anchorOffset: 2,
-      focusKey: initialState.document.nodes.get(0).nodes.first().key,
-      focusOffset: 2,
-    })
-    .focus().value
+    const wrapper = shallow(<MarkButton value={value} />)
 
-  const wrapper = shallow(<MarkButton value={value} />)
+    // renders as disabled and inactive
+    expect(
+      !wrapper.find('Button').prop('active') &&
+        wrapper.find('Button').prop('disabled'),
+    ).toBeTruthy()
+  })
 
-  assert.equal(
-    !wrapper.find('Button').prop('active') &&
-      wrapper.find('Button').prop('disabled'),
-    true,
-    'renders as disabled and inactive',
-  )
-})
+  it('utils.createMarkButton: focused cursor on text with the given mark', () => {
+    const value = initialState
+      .change()
+      .select({
+        anchorKey: initialState.document.nodes.get(1).nodes.first().key,
+        anchorOffset: 2,
+        focusKey: initialState.document.nodes.get(1).nodes.first().key,
+        focusOffset: 6,
+      })
+      .toggleMark('bold')
+      .select({
+        anchorKey: initialState.document.nodes.get(1).nodes.first().key,
+        anchorOffset: 4,
+        focusKey: initialState.document.nodes.get(1).nodes.first().key,
+        focusOffset: 4,
+      })
+      .focus().value
 
-test('utils.createMarkButton: focused cursor on text with the given mark', (assert) => {
-  assert.plan(1)
+    const wrapper = shallow(<MarkButton value={value} />)
 
-  const value = initialState
-    .change()
-    .select({
-      anchorKey: initialState.document.nodes.get(1).nodes.first().key,
-      anchorOffset: 2,
-      focusKey: initialState.document.nodes.get(1).nodes.first().key,
-      focusOffset: 6,
-    })
-    .toggleMark('bold')
-    .select({
-      anchorKey: initialState.document.nodes.get(1).nodes.first().key,
-      anchorOffset: 4,
-      focusKey: initialState.document.nodes.get(1).nodes.first().key,
-      focusOffset: 4,
-    })
-    .focus().value
+    // renders as enabled and active
+    expect(
+      wrapper.find('Button').prop('active') &&
+        !wrapper.find('Button').prop('disabled'),
+    ).toBeTruthy()
+  })
 
-  const wrapper = shallow(<MarkButton value={value} />)
+  it('utils.createMarkButton: selection containing text without any marks', () => {
+    const value = initialState
+      .change()
+      .select({
+        anchorKey: initialState.document.nodes.get(1).nodes.first().key,
+        anchorOffset: 2,
+        focusKey: initialState.document.nodes.get(1).nodes.first().key,
+        focusOffset: 6,
+      })
+      .focus().value
 
-  assert.equal(
-    wrapper.find('Button').prop('active') &&
-      !wrapper.find('Button').prop('disabled'),
-    true,
-    'renders as enabled and active',
-  )
-})
+    const wrapper = shallow(<MarkButton value={value} />)
 
-test('utils.createMarkButton: selection containing text without any marks', (assert) => {
-  assert.plan(1)
+    // renders as enabled and inactive
+    expect(
+      !wrapper.find('Button').prop('active') &&
+        !wrapper.find('Button').prop('disabled'),
+    ).toBeTruthy()
+  })
 
-  const value = initialState
-    .change()
-    .select({
-      anchorKey: initialState.document.nodes.get(1).nodes.first().key,
-      anchorOffset: 2,
-      focusKey: initialState.document.nodes.get(1).nodes.first().key,
-      focusOffset: 6,
-    })
-    .focus().value
+  it('utils.createMarkButton: selection containing text with offset 0', () => {
+    const value = initialState
+      .change()
+      .select({
+        anchorKey: initialState.document.nodes.get(1).nodes.first().key,
+        anchorOffset: 0,
+        focusKey: initialState.document.nodes.get(1).nodes.first().key,
+        focusOffset: 6,
+      })
+      .focus().value
 
-  const wrapper = shallow(<MarkButton value={value} />)
+    const wrapper = shallow(<MarkButton value={value} />)
 
-  assert.equal(
-    !wrapper.find('Button').prop('active') &&
-      !wrapper.find('Button').prop('disabled'),
-    true,
-    'renders as enabled and inactive',
-  )
-})
+    // renders as enabled
+    expect(wrapper.find('Button').prop('disabled')).toBeFalsy()
+  })
 
-test('utils.createMarkButton: selection containing text with offset 0', (assert) => {
-  const value = initialState
-    .change()
-    .select({
-      anchorKey: initialState.document.nodes.get(1).nodes.first().key,
-      anchorOffset: 0,
-      focusKey: initialState.document.nodes.get(1).nodes.first().key,
-      focusOffset: 6,
-    })
-    .focus().value
+  it('utils.createMarkButton: selection containing text with the given mark', () => {
+    const value = initialState
+      .change()
+      .select({
+        anchorKey: initialState.document.nodes.get(1).nodes.first().key,
+        anchorOffset: 2,
+        focusKey: initialState.document.nodes.get(1).nodes.first().key,
+        focusOffset: 6,
+      })
+      .toggleMark('bold')
+      .select({
+        anchorKey: initialState.document.nodes.get(1).nodes.first().key,
+        anchorOffset: 4,
+        focusKey: initialState.document.nodes.get(1).nodes.first().key,
+        focusOffset: 8,
+      })
+      .focus().value
 
-  const wrapper = shallow(<MarkButton value={value} />)
+    const wrapper = shallow(<MarkButton value={value} />)
 
-  assert.equal(
-    wrapper.find('Button').prop('disabled'),
-    false,
-    'renders as enabled',
-  )
+    // renders as enabled and active
+    expect(
+      wrapper.find('Button').prop('active') &&
+        !wrapper.find('Button').prop('disabled'),
+    ).toBeTruthy()
+  })
 
-  assert.end()
-})
+  it('utils.createMarkButton: action on selection containing text without any marks', () => {
+    const value = initialState
+      .change()
+      .select({
+        anchorKey: initialState.document.nodes.get(1).nodes.first().key,
+        anchorOffset: 2,
+        focusKey: initialState.document.nodes.get(1).nodes.first().key,
+        focusOffset: 6,
+      })
+      .focus().value
 
-test('utils.createMarkButton: selection containing text with the given mark', (assert) => {
-  assert.plan(1)
+    const onChange = (change) => {
+      // adds marks to all text nodes in the selection
+      expect(change.value.marks.size > 0).toBeTruthy()
+    }
 
-  const value = initialState
-    .change()
-    .select({
-      anchorKey: initialState.document.nodes.get(1).nodes.first().key,
-      anchorOffset: 2,
-      focusKey: initialState.document.nodes.get(1).nodes.first().key,
-      focusOffset: 6,
-    })
-    .toggleMark('bold')
-    .select({
-      anchorKey: initialState.document.nodes.get(1).nodes.first().key,
-      anchorOffset: 4,
-      focusKey: initialState.document.nodes.get(1).nodes.first().key,
-      focusOffset: 8,
-    })
-    .focus().value
+    const event = {
+      preventDefault: jest.fn(),
+    }
 
-  const wrapper = shallow(<MarkButton value={value} />)
+    const wrapper = shallow(<MarkButton value={value} onChange={onChange} />)
 
-  assert.equal(
-    wrapper.find('Button').prop('active') &&
-      !wrapper.find('Button').prop('disabled'),
-    true,
-    'renders as enabled and active',
-  )
-})
+    wrapper.find('Button').simulate('mousedown', event)
+  })
 
-test('utils.createMarkButton: action on selection containing text without any marks', (assert) => {
-  assert.plan(1)
+  it('utils.createMarkButton: action on cursor over a text with marks', () => {
+    const value = initialState
+      .change()
+      .select({
+        anchorKey: initialState.document.nodes.get(1).nodes.first().key,
+        anchorOffset: 2,
+        focusKey: initialState.document.nodes.get(1).nodes.first().key,
+        focusOffset: 6,
+      })
+      .toggleMark('bold')
+      .select({
+        anchorKey: initialState.document.nodes.get(1).nodes.first().key,
+        anchorOffset: 4,
+        focusKey: initialState.document.nodes.get(1).nodes.first().key,
+        focusOffset: 4,
+      })
+      .focus().value
 
-  const value = initialState
-    .change()
-    .select({
-      anchorKey: initialState.document.nodes.get(1).nodes.first().key,
-      anchorOffset: 2,
-      focusKey: initialState.document.nodes.get(1).nodes.first().key,
-      focusOffset: 6,
-    })
-    .focus().value
+    const onChange = (change) => {
+      // removes all marks on direct siblings of the text node under the cursor
+      expect(change.value.marks.size).toBe(0)
+    }
 
-  const onChange = (change) => {
-    assert.equal(
-      change.value.marks.size > 0,
-      true,
-      'adds marks to all text nodes in the selection',
-    )
-  }
+    const event = {
+      preventDefault: jest.fn(),
+    }
 
-  const event = {
-    preventDefault: spy(),
-  }
+    const wrapper = shallow(<MarkButton value={value} onChange={onChange} />)
 
-  const wrapper = shallow(<MarkButton value={value} onChange={onChange} />)
+    wrapper.find('Button').simulate('mousedown', event)
+  })
 
-  wrapper.find('Button').simulate('mousedown', event)
-})
+  it('utils.createMarkButton: action on selection containing mixed ranges with mixed marks', () => {
+    const value = initialState
+      .change()
+      .select({
+        anchorKey: initialState.document.nodes.get(1).nodes.first().key,
+        anchorOffset: 2,
+        focusKey: initialState.document.nodes.get(1).nodes.first().key,
+        focusOffset: 6,
+      })
+      .toggleMark('bold')
+      .moveOffsetsTo(4, 10)
+      .focus().value
 
-test('utils.createMarkButton: action on cursor over a text with marks', (assert) => {
-  assert.plan(1)
+    const onChange = (change) => {
+      // extends the given mark to all text nodes in the selection
+      expect(change.value.marks.size).toBe(1)
+    }
 
-  const value = initialState
-    .change()
-    .select({
-      anchorKey: initialState.document.nodes.get(1).nodes.first().key,
-      anchorOffset: 2,
-      focusKey: initialState.document.nodes.get(1).nodes.first().key,
-      focusOffset: 6,
-    })
-    .toggleMark('bold')
-    .select({
-      anchorKey: initialState.document.nodes.get(1).nodes.first().key,
-      anchorOffset: 4,
-      focusKey: initialState.document.nodes.get(1).nodes.first().key,
-      focusOffset: 4,
-    })
-    .focus().value
+    const event = {
+      preventDefault: jest.fn(),
+    }
 
-  const onChange = (change) => {
-    assert.equal(
-      change.value.marks.size,
-      0,
-      'removes all marks on direct siblings of the text node under the cursor',
-    )
-  }
+    const wrapper = shallow(<MarkButton value={value} onChange={onChange} />)
 
-  const event = {
-    preventDefault: spy(),
-  }
+    // renders as enabled and active
+    expect(
+      wrapper.find('Button').prop('active') &&
+        !wrapper.find('Button').prop('disabled'),
+    ).toBeTruthy()
 
-  const wrapper = shallow(<MarkButton value={value} onChange={onChange} />)
+    wrapper.find('Button').simulate('mousedown', event)
+  })
 
-  wrapper.find('Button').simulate('mousedown', event)
-})
+  it('utils.createMarkButton: action on selection containing only ranges with the given mark', () => {
+    const value = initialState
+      .change()
+      .select({
+        anchorKey: initialState.document.nodes.get(1).nodes.first().key,
+        anchorOffset: 2,
+        focusKey: initialState.document.nodes.get(1).nodes.first().key,
+        focusOffset: 6,
+      })
+      .toggleMark('bold')
+      .moveStart(1)
+      .moveEnd(-1)
+      .focus().value
 
-test('utils.createMarkButton: action on selection containing mixed ranges with mixed marks', (assert) => {
-  assert.plan(2)
+    const onChange = (change) => {
+      // removes the mark only from ranges in the selection
+      expect(change.value.marks.size).toBe(0)
+    }
 
-  const value = initialState
-    .change()
-    .select({
-      anchorKey: initialState.document.nodes.get(1).nodes.first().key,
-      anchorOffset: 2,
-      focusKey: initialState.document.nodes.get(1).nodes.first().key,
-      focusOffset: 6,
-    })
-    .toggleMark('bold')
-    .moveOffsetsTo(4, 10)
-    .focus().value
+    const event = {
+      preventDefault: jest.fn(),
+    }
 
-  const onChange = (change) => {
-    assert.equal(
-      change.value.marks.size,
-      1,
-      'extends the given mark to all text nodes in the selection',
-    )
-  }
+    const wrapper = shallow(<MarkButton value={value} onChange={onChange} />)
 
-  const event = {
-    preventDefault: spy(),
-  }
+    // renders as enabled and active
+    expect(
+      wrapper.find('Button').prop('active') &&
+        !wrapper.find('Button').prop('disabled'),
+    ).toBeTruthy()
 
-  const wrapper = shallow(<MarkButton value={value} onChange={onChange} />)
-
-  assert.equal(
-    wrapper.find('Button').prop('active') &&
-      !wrapper.find('Button').prop('disabled'),
-    true,
-    'renders as enabled and active',
-  )
-
-  wrapper.find('Button').simulate('mousedown', event)
-})
-
-test('utils.createMarkButton: action on selection containing only ranges with the given mark', (assert) => {
-  assert.plan(2)
-
-  const value = initialState
-    .change()
-    .select({
-      anchorKey: initialState.document.nodes.get(1).nodes.first().key,
-      anchorOffset: 2,
-      focusKey: initialState.document.nodes.get(1).nodes.first().key,
-      focusOffset: 6,
-    })
-    .toggleMark('bold')
-    .moveStart(1)
-    .moveEnd(-1)
-    .focus().value
-
-  const onChange = (change) => {
-    assert.equal(
-      change.value.marks.size,
-      0,
-      'removes the mark only from ranges in the selection',
-    )
-  }
-
-  const event = {
-    preventDefault: spy(),
-  }
-
-  const wrapper = shallow(<MarkButton value={value} onChange={onChange} />)
-
-  assert.equal(
-    wrapper.find('Button').prop('active') &&
-      !wrapper.find('Button').prop('disabled'),
-    true,
-    'renders as enabled and active',
-  )
-
-  wrapper.find('Button').simulate('mousedown', event)
+    wrapper.find('Button').simulate('mousedown', event)
+  })
 })
