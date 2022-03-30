@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react';
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import Router, { withRouter } from 'next/router'

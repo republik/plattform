@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { IconButton } from '@project-r/styleguide'
 import { DiscussionIcon } from '@project-r/styleguide'
 import { focusSelector } from '../../lib/utils/scroll'

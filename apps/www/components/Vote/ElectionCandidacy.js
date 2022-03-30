@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Component, Fragment } from 'react';
 import { withRouter } from 'next/router'
 import ErrorMessage from '../ErrorMessage'
 import voteT from './voteT'
@@ -160,7 +160,7 @@ const styles = {
   }),
 }
 
-class ElectionCandidacy extends React.Component {
+class ElectionCandidacy extends Component {
   constructor(props) {
     super(props)
     this.state = {

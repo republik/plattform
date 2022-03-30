@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import { forwardRef, useEffect, useMemo, useState } from 'react';
 import { css } from 'glamor'
 
 import {
@@ -36,7 +36,7 @@ const fieldElements = [
   { key: 'cvc', Element: CardCvcElement },
 ]
 
-const Form = React.forwardRef(
+const Form = forwardRef(
   (
     {
       onChange,
@@ -145,7 +145,7 @@ const setupStripe = () => {
 // setup initially
 globalStripeState = setupStripe()
 
-const PrivacyWrapper = React.forwardRef((props, ref) => {
+const PrivacyWrapper = forwardRef((props, ref) => {
   const [colorScheme] = useColorContext()
   const { t } = props
   const [unlockFieldKey, setUnlockFieldKey] = useState(

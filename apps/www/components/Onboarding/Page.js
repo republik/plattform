@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { createRef, Component, Fragment } from 'react';
 import compose from 'lodash/flowRight'
 import { Query } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
@@ -111,31 +111,31 @@ class Page extends Component {
       {
         component: Newsletter,
         name: 'newsletter',
-        ref: React.createRef(),
+        ref: createRef(),
         visited: false,
       },
       {
         component: Subscriptions,
         name: 'notifications', // this also gets into the url—we have to avoid «script» in urls
-        ref: React.createRef(),
+        ref: createRef(),
         visited: false,
       },
       !inNativeApp && {
         component: AppLogin,
         name: 'app-login',
-        ref: React.createRef(),
+        ref: createRef(),
         visited: false,
       },
       {
         component: Usability,
         name: 'usability',
-        ref: React.createRef(),
+        ref: createRef(),
         visited: false,
       },
       context !== 'card' && {
         component: Profile,
         name: 'profile',
-        ref: React.createRef(),
+        ref: createRef(),
         visited: false,
       },
     ].filter(Boolean)

@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-unfetch'
-import React from 'react'
+import { Component } from 'react';
 
 let lastError
 
@@ -19,7 +19,7 @@ export const reportError = (context, error) => {
   lastError = error
 }
 
-export class ErrorBoundary extends React.Component {
+export class ErrorBoundary extends Component {
   componentDidCatch(error, info) {
     reportError(
       'componentDidCatch',

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react';
 import { gql } from '@apollo/client'
 import compose from 'lodash/flowRight'
 import { withApollo } from '@apollo/client/react/hoc'

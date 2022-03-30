@@ -1,4 +1,4 @@
-import React from 'react'
+import { forwardRef } from 'react';
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'
@@ -44,7 +44,7 @@ const UserProgress = (
 ) => {
   // Renders the Progress Consent Form as a Callout in the Article Top Actionbar
   if (showConsentPrompt && !noCallout) {
-    const ProgressConsentIcon = React.forwardRef((props, ref) => (
+    const ProgressConsentIcon = forwardRef((props, ref) => (
       <IconButton
         Icon={() => <ProgressCircle progress={66} />}
         label={t('article/progressprompt/headline')}
@@ -84,7 +84,7 @@ const UserProgress = (
   const { percentage, updatedAt } = userProgress
   const percent = Math.round(percentage * 100)
 
-  const ReadIcon = React.forwardRef((props, ref) => (
+  const ReadIcon = forwardRef((props, ref) => (
     <IconButton
       Icon={OutlinedReadIcon}
       label={!forceShortLabel && t('article/actionbar/progress/read')}
@@ -97,7 +97,7 @@ const UserProgress = (
     />
   ))
 
-  const MarkAsReadIcon = React.forwardRef((props, ref) => (
+  const MarkAsReadIcon = forwardRef((props, ref) => (
     <IconButton
       Icon={CheckSmallIcon}
       title={t('article/actionbar/progress/markasread')}

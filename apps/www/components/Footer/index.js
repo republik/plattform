@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react';
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import Link from 'next/link'

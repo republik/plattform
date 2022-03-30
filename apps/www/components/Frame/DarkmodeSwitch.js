@@ -1,4 +1,4 @@
-import React from 'react'
+import { forwardRef } from 'react';
 import {
   CalloutMenu,
   IconButton,
@@ -23,7 +23,7 @@ const DarkmodeSwitch = ({ t }) => {
       ? t('darkmode/switch/on')
       : t('darkmode/switch/auto')
 
-  const Icon = React.forwardRef((props, ref) => (
+  const Icon = forwardRef((props, ref) => (
     <IconButton
       Icon={DarkmodeIcon}
       label={t('darkmode/switch/label', {

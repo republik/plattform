@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react';
 import { TeaserFeed, useColorContext } from '@project-r/styleguide'
 import ActionBar from '../ActionBar'
 import Link from '../Link/Href'

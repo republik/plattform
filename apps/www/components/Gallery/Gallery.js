@@ -1,4 +1,4 @@
-import React from 'react'
+import { useRef, useEffect } from 'react';
 import compose from 'lodash/flowRight'
 import PhotoSwipe from 'photoswipe'
 import PhotoSwipeUIDefault from 'photoswipe/dist/photoswipe-ui-default'
@@ -13,9 +13,9 @@ import { removeQuery } from '../../lib/utils/link'
 const MAX_SPREAD_ZOOM = 2
 
 const Gallery = ({ items, onClose, startItemSrc, children, t }) => {
-  const galleryRef = React.useRef(null)
+  const galleryRef = useRef(null)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (galleryRef) {
       const startIndex = items.findIndex(
         (i) => removeQuery(i.src) === removeQuery(startItemSrc),

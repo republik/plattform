@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useRef } from 'react'
+import { forwardRef, useMemo, useEffect, useRef } from 'react';
 import { css } from 'glamor'
 
 import {
@@ -42,7 +42,7 @@ const styles = {
   }),
 }
 
-export const NavA = React.forwardRef(
+export const NavA = forwardRef(
   (
     {
       inline,

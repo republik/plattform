@@ -2,7 +2,7 @@
 // License MIT
 // Author Stelios Constantinides <sconstantinides@gmail.com>
 
-import React, { Fragment } from 'react'
+import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import {
@@ -43,7 +43,7 @@ const Container = (props) => {
   )
 }
 
-class Pullable extends React.Component {
+class Pullable extends Component {
   constructor(props) {
     super(props)
 

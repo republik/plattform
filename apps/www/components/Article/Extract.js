@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Children, Fragment } from 'react';
 import PropTypes from 'prop-types'
 import Head from 'next/head'
 import { renderMdast } from 'mdast-react-render'
@@ -37,9 +37,9 @@ const Extract = ({ schema, mdast, ranges, unpack, isEditor }) => {
 
   const unpackChildren = (children, level) => {
     if (level > 0) {
-      return React.Children.toArray(children)
+      return Children.toArray(children)
         .map((child) => unpackChildren(child.props.children, level - 1))
-        .reduce((all, someChildren) => all.concat(someChildren), [])
+        .reduce((all, someChildren) => all.concat(someChildren), []);
     }
     return children
   }

@@ -1,4 +1,3 @@
-import React from 'react'
 import { gql } from '@apollo/client'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'

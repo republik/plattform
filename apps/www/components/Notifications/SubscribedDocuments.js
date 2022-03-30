@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useMemo, useState, useEffect } from 'react';
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { possibleSubscriptions } from './enhancers'
@@ -48,7 +48,7 @@ const SubscribedDocuments = ({ t, data: { sections }, isMember }) => {
   const [showAll, setShowAll] = useState(false)
   const [colorScheme] = useColorContext()
   const sectionNodes = sections && sections.nodes
-  const sectionsWithFormat = React.useMemo(() => {
+  const sectionsWithFormat = useMemo(() => {
     return sectionNodes
       ? sectionNodes.filter((s) => s.formats.nodes.length > 0)
       : []

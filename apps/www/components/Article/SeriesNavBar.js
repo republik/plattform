@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 import compose from 'lodash/flowRight'
 import { withRouter } from 'next/router'
 import { css } from 'glamor'

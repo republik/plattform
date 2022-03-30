@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types'
 import Gallery from './Gallery'
 import { imageSizeInfo } from 'mdast-react-render/lib/utils'

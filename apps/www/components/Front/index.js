@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo, useEffect, useState } from 'react'
+import { Fragment, useMemo, useEffect, useState } from 'react';
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'

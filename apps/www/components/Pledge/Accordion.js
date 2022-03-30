@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { forwardRef, Component, Fragment } from 'react';
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 import { graphql } from '@apollo/client/react/hoc'
@@ -141,7 +141,7 @@ const query = gql`
   }
 `
 
-export const PackageItem = React.forwardRef(
+export const PackageItem = forwardRef(
   (
     { t, hover, setHover, crowdfundingName, name, title, price, onClick, href },
     ref,

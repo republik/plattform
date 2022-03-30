@@ -1,4 +1,3 @@
-import React from 'react'
 import { Item } from '../Testimonial/List'
 import Link from 'next/link'
 

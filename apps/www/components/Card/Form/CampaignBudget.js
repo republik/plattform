@@ -1,4 +1,3 @@
-import React from 'react'
 import AutosizeInput from 'react-textarea-autosize'
 
 import { Field, Interaction } from '@project-r/styleguide'

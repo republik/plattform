@@ -1,9 +1,9 @@
-import React from 'react'
+import { Component } from 'react';
 
 import Frame from '../components/Frame'
 import StatusError from '../components/StatusError'
 
-class ErrorPage extends React.Component {
+class ErrorPage extends Component {
   static getInitialProps({ res, err }) {
     const statusCode = res ? res.statusCode : err ? err.statusCode : null
     return { statusCode }

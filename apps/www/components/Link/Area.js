@@ -1,4 +1,4 @@
-import React, { Component, Children } from 'react'
+import { cloneElement, Component, Children } from 'react';
 import PropTypes from 'prop-types'
 import { scrollTop } from '../../lib/utils/link'
 import { withRouter } from 'next/router'
@@ -57,7 +57,7 @@ class AreaLink extends Component {
       onClick: this.linkClicked,
     }
 
-    return React.cloneElement(child, props)
+    return cloneElement(child, props);
   }
 }
 

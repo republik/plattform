@@ -1,4 +1,3 @@
-import React from 'react'
 import { GENERAL_FEEDBACK_DISCUSSION_ID } from '../../../lib/constants'
 import Link from 'next/link'
 

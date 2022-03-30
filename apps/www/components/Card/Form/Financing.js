@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react'
+import { useState, Fragment } from 'react';
 import AutosizeInput from 'react-textarea-autosize'
 import compose from 'lodash/flowRight'
 import { withRouter } from 'next/router'

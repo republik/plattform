@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import { Component, Fragment, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'
 import { withApollo } from '@apollo/client/react/hoc'
@@ -27,7 +27,7 @@ export const getFeatureDescription = (t) =>
     ) : null,
   })
 
-class ProgressContextProvider extends React.Component {
+class ProgressContextProvider extends Component {
   getChildContext() {
     return {
       getMediaProgress: this.props.value.getMediaProgress,
@@ -37,7 +37,7 @@ class ProgressContextProvider extends React.Component {
     }
   }
   render() {
-    return <React.Fragment>{this.props.children}</React.Fragment>
+    return <Fragment>{this.props.children}</Fragment>;
   }
 }
 

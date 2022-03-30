@@ -1,4 +1,3 @@
-import React from 'react'
 import { AudioContext } from './AudioProvider'
 import { AudioPlayer } from '@project-r/styleguide'
 import ProgressComponent from '../../components/Article/Progress'

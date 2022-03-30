@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react';
 import { css } from 'glamor'
 
 import { DoneIcon } from '@project-r/styleguide'

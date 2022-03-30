@@ -1,4 +1,4 @@
-import React from 'react'
+import { Fragment } from 'react';
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { nest } from 'd3-collection'
@@ -42,58 +42,56 @@ const NotificationFeedMini = ({
         if (!nodes) return
         const newNodes = nodes.filter((node) => isNew(node))
 
-        return (
-          <>
-            {newNodes &&
-              groupByDate.entries(newNodes).map(({ key, values }) => {
-                return (
-                  <React.Fragment key={key}>
-                    {values.map((node, j) => {
-                      const { object } = node
-                      const path = parse(node.content.url).path
-                      if (
-                        !object ||
-                        (object.__typename === 'Comment' && !object.published)
-                      ) {
-                        return (
-                          <p key={j}>{t('Notifications/unpublished/label')}</p>
-                        )
-                      }
+        return <>
+          {newNodes &&
+            groupByDate.entries(newNodes).map(({ key, values }) => {
+              return (
+                <Fragment key={key}>
+                  {values.map((node, j) => {
+                    const { object } = node
+                    const path = parse(node.content.url).path
+                    if (
+                      !object ||
+                      (object.__typename === 'Comment' && !object.published)
+                    ) {
                       return (
-                        <div {...styles.notificationItem} key={j}>
-                          {isNew(node) && (
-                            <div
-                              {...styles.unreadDot}
-                              {...colorScheme.set('borderColor', 'default')}
-                            />
-                          )}
-
-                          <Link
-                            href={getTeaserHref(
-                              path,
-                              node.object?.meta?.format?.meta.externalBaseUrl,
-                            )}
-                            passHref
-                          >
-                            <a
-                              {...styles.cleanLink}
-                              onClick={() => closeHandler()}
-                            >
-                              {dateFormat(new Date(node.createdAt))}{' '}
-                              {node.content.title}
-                            </a>
-                          </Link>
-                        </div>
+                        <p key={j}>{t('Notifications/unpublished/label')}</p>
                       )
-                    })}
-                  </React.Fragment>
-                )
-              })}
-          </>
-        )
+                    }
+                    return (
+                      <div {...styles.notificationItem} key={j}>
+                        {isNew(node) && (
+                          <div
+                            {...styles.unreadDot}
+                            {...colorScheme.set('borderColor', 'default')}
+                          />
+                        )}
+
+                        <Link
+                          href={getTeaserHref(
+                            path,
+                            node.object?.meta?.format?.meta.externalBaseUrl,
+                          )}
+                          passHref
+                        >
+                          <a
+                            {...styles.cleanLink}
+                            onClick={() => closeHandler()}
+                          >
+                            {dateFormat(new Date(node.createdAt))}{' '}
+                            {node.content.title}
+                          </a>
+                        </Link>
+                      </div>
+                    )
+                  })}
+                </Fragment>
+              );
+            })}
+        </>;
       }}
     />
-  )
+  );
 }
 
 const styles = {

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react';
 import Frame from '../Frame'
 import withT from '../../lib/withT'
 import SignIn from './SignIn'
