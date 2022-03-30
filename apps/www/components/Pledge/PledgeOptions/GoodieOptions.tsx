@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import { Interaction } from '@project-r/styleguide'
 import Goodie from './Goodie'
