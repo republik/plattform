@@ -1,4 +1,4 @@
-import React from 'react'
+import { Children } from 'react'
 import { css } from 'glamor'
 
 const defaultGetWidth = () => '100%'
@@ -25,7 +25,7 @@ const styles = {
 }
 
 export default ({ children, getWidth = defaultGetWidth, ...props }) => {
-  const wrappedChildren = React.Children.map(children, (child, index) => (
+  const wrappedChildren = Children.map(children, (child, index) => (
     <div key={`input-${index}`} {...styles.span} style={{ width: getWidth() }}>
       {child}
     </div>

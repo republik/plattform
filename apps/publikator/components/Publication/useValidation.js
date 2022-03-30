@@ -1,4 +1,4 @@
-import React from 'react'
+import { useMemo } from 'react'
 import visit from 'unist-util-visit'
 import isUUID from 'is-uuid'
 import { parse } from 'url'
@@ -11,7 +11,7 @@ import { SOCIAL_MEDIA } from '../editor/modules/meta/ShareImageForm'
 const FRONTEND_HOSTNAME = FRONTEND_BASE_URL && parse(FRONTEND_BASE_URL).hostname
 
 const useValidation = ({ meta, content, t, updateMailchimp }) => {
-  const links = React.useMemo(() => {
+  const links = useMemo(() => {
     const all = []
     visit(content, 'link', (node) => {
       const urlObject = parse(node.url)

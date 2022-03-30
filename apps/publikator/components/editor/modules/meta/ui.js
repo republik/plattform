@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import { Map, Set } from 'immutable'
 import { nest } from 'd3-collection'

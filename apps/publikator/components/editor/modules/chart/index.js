@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { Block } from 'slate'
 

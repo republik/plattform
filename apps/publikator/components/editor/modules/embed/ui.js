@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react'
 import { Checkbox, Radio, Label, Field } from '@project-r/styleguide'
 import { createPropertyForm, matchBlock } from '../../utils'
 import AutosizeInput from 'react-textarea-autosize'

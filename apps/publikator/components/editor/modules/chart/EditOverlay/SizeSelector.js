@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react'
 import { Radio, Interaction, Label } from '@project-r/styleguide'
 import { sizes } from './config'
 

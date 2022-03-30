@@ -1,4 +1,3 @@
-import React from 'react'
 import { Document as SlateDocument } from 'slate'
 import { parse } from '@orbiting/remark-preset'
 import { slug } from '@project-r/styleguide'

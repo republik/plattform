@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import withT from '../../lib/withT'
 import { Button, A, colors, mediaQueries } from '@project-r/styleguide'

@@ -1,4 +1,3 @@
-import React from 'react'
 import { buttonStyles } from '../../utils'
 import invisibleDecoratorPlugin from './invisibleDecoratorPlugin'
 

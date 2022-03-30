@@ -1,4 +1,3 @@
-import React from 'react'
 import { Radio, Label } from '@project-r/styleguide'
 
 import { buttonStyles, createPropertyForm, matchBlock } from '../../utils'

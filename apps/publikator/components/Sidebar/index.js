@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Children, Component } from 'react'
 import { css } from 'glamor'
 import { HEADER_HEIGHT, ZINDEX_SIDEBAR } from '../Frame/constants'
 import { colors, Label } from '@project-r/styleguide'
@@ -106,7 +106,7 @@ export default class Sidebar extends Component {
     const { prependChildren, children, isOpen, isDisabled } = this.props
     const { selectedTabId } = this.state
 
-    const cleanChildren = React.Children.toArray(children)
+    const cleanChildren = Children.toArray(children)
       .filter(Boolean)
       .filter((c) => Boolean(c.props))
     const tabProperties = cleanChildren.map((child) => child.props)

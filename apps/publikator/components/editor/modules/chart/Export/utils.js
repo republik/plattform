@@ -1,4 +1,4 @@
-import React from 'react'
+import { cloneElement } from 'react'
 import ReactDOMServer from 'react-dom/server'
 
 export const getSvgNode = (chartElement, width = 660) => {
@@ -39,7 +39,7 @@ export const getSvgNode = (chartElement, width = 660) => {
 
 export const getSvgNodes = (chartElement, width) => {
   const html = ReactDOMServer.renderToStaticMarkup(
-    React.cloneElement(chartElement, {
+    cloneElement(chartElement, {
       width,
       allowCanvasRendering: false,
       config: {

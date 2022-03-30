@@ -1,4 +1,3 @@
-import React from 'react'
 import withMe from '../../lib/withMe'
 import withT from '../../lib/withT'
 import Me from './Me'

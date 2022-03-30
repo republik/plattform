@@ -1,4 +1,3 @@
-import React from 'react'
 import { colors } from '@project-r/styleguide'
 import { Block } from 'slate'
 

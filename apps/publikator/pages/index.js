@@ -1,4 +1,3 @@
-import React from 'react'
 import { withRouter } from 'next/router'
 import { compose } from 'react-apollo'
 import { css } from 'glamor'

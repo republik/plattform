@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import { Label } from '@project-r/styleguide'
 import withT from '../../../lib/withT'

@@ -1,4 +1,3 @@
-import React from 'react'
 import test from 'tape'
 import spy from 'spy'
 import { shallow } from '../../../test/utils/enzyme'

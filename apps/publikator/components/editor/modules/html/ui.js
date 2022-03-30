@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { createPropertyForm, buttonStyles } from '../../utils'
 import injectBlock from '../../utils/injectBlock'
 

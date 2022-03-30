@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { css } from 'glamor'
 import { Label, A } from '@project-r/styleguide'
 import { descending } from 'd3-array'

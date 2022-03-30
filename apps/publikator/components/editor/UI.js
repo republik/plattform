@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { getFromModules } from './'
 import { Interaction, Label, colors } from '@project-r/styleguide'
 import PropTypes from 'prop-types'
