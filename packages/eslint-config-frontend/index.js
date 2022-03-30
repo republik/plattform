@@ -1,10 +1,6 @@
 module.exports = {
   plugins: ['react', 'react-hooks'],
-  extends: [
-    'eslint:recommended',
-    'plugin:react/recommended',
-    'plugin:prettier/recommended',
-  ],
+  extends: ['eslint:recommended', 'plugin:react/recommended'],
   parser: '@babel/eslint-parser',
   parserOptions: {
     requireConfigFile: false,
@@ -28,7 +24,7 @@ module.exports = {
     'no-empty': 'warn',
     // Rules to no longer require React to be imported (React >=17)
     'react/jsx-uses-react': 'off',
-    // 'react/react-in-jsx-scope': 'off',
+    // 'react/react-in-jsx-scope': 'off', # TODO: Readd when code
   },
   settings: {
     react: {
@@ -38,9 +34,16 @@ module.exports = {
   overrides: [
     {
       files: ['*.ts', '*.tsx'],
-      extends: ['plugin:@typescript-eslint/recommended'],
+      extends: [
+        'eslint:recommended',
+        'plugin:react/recommended',
+        'plugin:@typescript-eslint/recommended',
+        'plugin:prettier/recommended',
+      ],
       parser: '@typescript-eslint/parser',
-      rules: {},
+      rules: {
+        'react/prop-types': 0,
+      },
     },
   ],
 }

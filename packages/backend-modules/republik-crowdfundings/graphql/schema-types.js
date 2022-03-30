@@ -325,15 +325,6 @@ type PledgePayments {
   count: Int!
 }
 
-enum PaymentSourceWallet {
-  amex_express_checkout
-  apple_pay
-  google_pay
-  masterpass
-  samsung_pay
-  visa_checkout
-}
-
 enum PaymentSourceStatus {
   CANCELED
   CHARGEABLE
@@ -351,7 +342,6 @@ type PaymentSource {
   # is always CHARGEABLE for PaymentSources
   status: PaymentSourceStatus!
   brand: String!
-  wallet: PaymentSourceWallet
   last4: String!
   expMonth: Int!
   expYear: Int!

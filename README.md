@@ -72,7 +72,7 @@ export PGUSER=postgres
 <details><summary>Native Setup with Homebrew</summary>
 <p>
 
-```bash
+```
 brew install postgresql@12 elasticsearch@6 redis nvm
 nvm install 14
 nvm alias default 14
@@ -134,7 +134,7 @@ For more about the available env variables see the individual readme of the apps
 
 ### Database Setup
 
-```bash
+```
 yarn install
 yarn build
 yarn dev:setup
@@ -144,7 +144,7 @@ yarn dev:setup
 
 To develop all apps and packages, run the following command:
 
-```bash
+```
 yarn dev
 ```
 
@@ -192,56 +192,3 @@ The environment variable `SERVER` is used to determine which app to build and ru
 A `heroku-prebuild` script runs `scripts/prune.sh` which runs `turbo prune` with the correct scope and moved the pruned apps and packages to the root directory.
 
 A `heroku-postbuild` script is used to add a `Procfile` for running the scheduler on heroku for the `api` app.
-
-## Development in a secure context (HTTPS tunnels with NGROK)
-
-Install the `ngrok` cli: `brew install --cask ngrok`
-
-Login to ngrok with `ngrok authtoken <token>` (You can find your token at https://dashboard.ngrok.com/auth)
-
-After adding the authtoken, you must now add the following tunnels to your ngrok configuration file:
-(Default config path is `~/.ngrok2/ngrok.yml`)
-```yaml
-tunnels:
-  republik-frontend:
-    proto: http
-    addr: 3010
-    hostname: republik.eu.ngrok.io
-  republik-backend:
-    proto: http
-    addr: 5010
-    hostname: api.republik.eu.ngrok.io
-```
-
-Now you must update the following environment variables:
-
-### Frontend Environment Variables
-```
-API_URL=https://api.republik.eu.ngrok.io/graphql
-API_WS_URL=wss://api.republik.eu.ngrok.io/graphql
-```
-
-### Backend Environment Variables
-```
-FRONTEND_BASE_URL=https://republik.eu.ngrok.io # optional
-COOKIE_DOMAIN=.republik.eu.ngrok.io
-CORS_ALLOWLIST_URL=http://localhost:3003,http://localhost:3005,http://localhost:3006,http://localhost:3010,http://localhost:3000,https://republik.eu.ngrok.io
-```
-
-Start your frontend and api using:
-
-```bash
-yarn dev --scope="@orbiting/www-app" --scope="@orbiting/api-app"
-```
-
-
-Now run `yarn ngrok:start` in a new terminal inside the workspace-root.
-
-Your local development servers are now relayed to the following ngrok tunnels.
-
-| local-address | ngrok-address                    |
-| :------------ |:---------------------------------|
-| http://localhost:3010 | https://republik.eu.ngrok.io     |
-| http://localhost:5010 | https://api.republik.eu.ngrok.io |
-
-With this you're now able to test payment-options (such as Apple Pay) that are only available in a secure context.

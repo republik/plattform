@@ -60,7 +60,6 @@ const getPaymentSources = async (userId, pgdb, acceptCachedData = false) => {
     isDefault: source.id === stripeCustomer.default_source,
     status: source.status.toUpperCase(),
     brand: mapCardBrand(source.card.brand),
-    wallet: source.card.wallet.type,
     last4: source.card.last4,
     expMonth: source.card.exp_month,
     expYear: source.card.exp_year,

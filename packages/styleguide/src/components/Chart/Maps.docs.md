@@ -511,6 +511,21 @@ feature,value
 </div>
 ```
 
+```
+npm i -g shapefile ndjson-cli d3-geo-projection topojson-simplify topojson-server topojson-client d3-dsv 
+
+shp2json --encoding utf8 -n ~/Desktop/world-map/world-wo-antarctic.shp \
+  | ndjson-map 'i = d.properties.ISO_N3, d.id = i === "-99" ? (d.properties.SOV_A3 === "NOR" ? "578" : d.properties.SOV_A3) : i, d.properties = {name: d.properties.NAME}, d' \
+  > ~/Desktop/world-map/world-wo-antarctic.ndjson
+
+geo2topo -q 1e5 -n countries=<( \
+    ndjson-join 'd.id' <(cat ~/Desktop/world-map/world-wo-antarctic.ndjson) <(csv2json -n public/static/geo/country-names.csv) \
+    | ndjson-map 'd[0].properties.name = d[1].name, d[0]' \
+    | geostitch -n) \
+  | topomerge land=countries \
+  > public/static/geo/world-atlas-110m-without-antarctic.json
+```
+
 ## ProjectedMap
 
 Want a special projection? Use `ProjectedMap` to render an pre-projected topojson file. `d3.geoIdentity` is used to fit the map into the viewport.

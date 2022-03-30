@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import React, { Component } from 'react'
 import { withRouter } from 'next/router'
 
 import { NarrowContainer } from '@project-r/styleguide'
