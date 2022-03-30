@@ -136,6 +136,7 @@ const Chart = (props) => {
     width: fixedWidth,
     config,
     tLabel,
+    t,
     // allowCanvasRendering might be set to false when exporting SVGs
     allowCanvasRendering = true,
   } = props
@@ -212,6 +213,7 @@ const Chart = (props) => {
             // make colorScheme available for class components—maps
             colorScheme={colorScheme}
             tLabel={tLabel}
+            t={t}
             colorRanges={colorRanges}
             width={width}
             values={props.values}

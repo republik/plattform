@@ -1309,6 +1309,14 @@
       "value": "Weniger"
     },
     {
+      "key": "styleguide/Collapsable/table/expand",
+      "value": "Alles anzeigen"
+    },
+    {
+      "key": "styleguide/Collapsable/table/collapse",
+      "value": "Weniger"
+    },
+    {
       "key": "timeago/justNow/other",
       "value": "gerade eben"
     },
