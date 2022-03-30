@@ -37,6 +37,16 @@
     "@orbiting/backend-modules-republik-crowdfundings#build": {
       "cache": false
     },
+    "@project-r/styleguide#build": {
+      "dependsOn": [
+        "^build",
+        "$SERVER"
+      ],
+      "outputs": [
+        "dist/**",
+        "build/**"
+      ]
+    },
     "lint": {
       "outputs": []
     },
