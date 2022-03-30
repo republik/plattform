@@ -1,5 +1,4 @@
 import React from 'react'
-import spy from 'spy'
 import { shallow } from '../../../test/utils/enzyme'
 import createBlockButton from './createBlockButton'
 import { Value } from 'slate'
@@ -147,7 +146,7 @@ describe('createBlockButton test-suite', () => {
     }
 
     const event = {
-      preventDefault: spy(),
+      preventDefault: jest.fn(),
     }
 
     const wrapper = shallow(<BlockButton value={value} onChange={onChange} />)
@@ -171,7 +170,7 @@ describe('createBlockButton test-suite', () => {
       expect(value.document.nodes.get(0).type).toBe('lead')
 
     const event = {
-      preventDefault: spy(),
+      preventDefault: jest.fn(),
     }
 
     const wrapper = shallow(<BlockButton value={value} onChange={onChange} />)
