@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react';
 import Input from './Input'
 import moment from 'moment'
 

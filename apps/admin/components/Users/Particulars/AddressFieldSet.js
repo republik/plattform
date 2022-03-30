@@ -1,4 +1,3 @@
-import React from 'react'
 import withT from '../../../lib/withT'
 import { FieldSet } from '@project-r/styleguide'
 

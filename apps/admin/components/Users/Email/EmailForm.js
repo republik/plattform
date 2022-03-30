@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react';
 import { Field, Button } from '@project-r/styleguide'
 import isEmail from 'validator/lib/isEmail'
 import { errorToString } from '../../../lib/utils/errors'

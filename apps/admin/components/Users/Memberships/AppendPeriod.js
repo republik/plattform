@@ -1,4 +1,4 @@
-import React from 'react'
+import { Component } from 'react';
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 
@@ -33,7 +33,7 @@ const APPEND_PERIOD = gql`
   }
 `
 
-class AppendPeriod extends React.Component {
+class AppendPeriod extends Component {
   constructor(props) {
     super(props)
     this.state = {

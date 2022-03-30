@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react';
 import { withRouter } from 'next/router'
 import { compose } from 'react-apollo'
 
