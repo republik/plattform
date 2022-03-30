@@ -57,7 +57,7 @@ export function useIsGooglePayAvailable(): [
 
   useEffect(() => {
     // Only check for Google Pay on the client and when a secure connection is provided
-    setIsAvailable(isInSecureWindow() && isGooglePayAvailable())
+    setIsAvailable(isGooglePayAvailable())
   }, [])
 
   return [isAvailable, setIsAvailable]
