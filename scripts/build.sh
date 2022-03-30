@@ -1,5 +1,5 @@
 SERVER=${SERVER:-api}
-
+echo "Building $SERVER"
 if [ "$SERVER" == "styleguide" ]
 then
   yarn turbo run build \
