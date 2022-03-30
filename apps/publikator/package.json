@@ -12,10 +12,7 @@
     "start": "node server/index.js",
     "build": "next build",
     "tape": "cross-env NODE_ENV=test babel-tape-runner",
-    "test": "npm run test:unit && npm run test:jsdom",
-    "test:unit": "cross-env NODE_ENV=test babel-tape-runner \"?(lib|pages|components)/**/*.test.js\" | tap-summary",
-    "test:jsdom": "cross-env NODE_ENV=test babel-tape-runner test/jsdom/setup.js \"test/jsdom/**/*.test.js\" | tap-summary",
-    "test:jest": "jest",
+    "test": "jest",
     "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./.next*\" | xargs wc -l",
     "lint": "eslint --fix .",
     "translations-raw": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1qPubCKz2YzbcFkRfF0MrgRqD0KLsgRPxoZfG5G3tHOA --title=live --pretty --out lib/translations.json",
@@ -49,11 +46,7 @@
     "jest": "^27.4.3",
     "jsdom": "^12.0.0",
     "nodemon": "^2.0.4",
-    "raf": "^3.4.0",
-    "react-test-renderer": "^16.13.1",
-    "spy": "^1.0.0",
-    "tap-summary": "^4.0.0",
-    "tape": "^4.13.3"
+    "raf": "^3.4.0"
   },
   "dependencies": {
     "@orbiting/remark-preset": "^1.2.4",
