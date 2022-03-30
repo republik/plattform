@@ -435,6 +435,23 @@ const ActionBar = ({
       modes: ['articleTop'],
     },
     {
+      title: t('PodcastButtons/play'),
+      Icon: PlayCircleIcon,
+      onClick: (e) => {
+        e.preventDefault()
+        trackEvent(['ActionBar', 'audio', meta.url])
+        toggleAudioPlayer({
+          audioSource: meta.audioSource,
+          title: meta.title,
+          path: meta.path,
+        })
+      },
+      label: t('PodcastButtons/play'),
+      show:
+        !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud',
+      modes: ['articleTop'],
+    },
+    {
       ...PodcastButtonActionItem,
       modes: ['articleTop'],
     },
