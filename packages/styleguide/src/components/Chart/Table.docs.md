@@ -175,7 +175,8 @@ Zypern,Öffentliche Angebote dominieren
         "UKR": "#d62728"
       },
       "collapsable": true,
-      "dateFormat": "%d.%m.%Y",
+      "timeFormat": "%d.%m.%Y",
+      "timeParse": "%d.%m.%Y",
     }}
     values={`
 Name,Eintragsdatum,Programm

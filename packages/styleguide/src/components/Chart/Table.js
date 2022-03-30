@@ -50,7 +50,6 @@ const Table = (props) => {
   const {
     values,
     numberFormat,
-    dateFormat,
     colorRanges,
     colorRange,
     defaultSortColumn,
@@ -61,8 +60,8 @@ const Table = (props) => {
   } = props
   const columns = values.columns || Object.keys(values[0] || {})
   const numberFormatter = getFormat(numberFormat)
-  const dateParser = timeParse(dateFormat)
-  const dateFormatter = timeFormat(dateFormat)
+  const dateParser = timeParse(props.timeParse)
+  const dateFormatter = timeFormat(props.timeFormat)
 
   const [sortBy, setSortBy] = useState({
     key: defaultSortColumn,
@@ -73,7 +72,7 @@ const Table = (props) => {
     .filter((d) => d.type === 'number')
     .map((d) => d.column)
   const numericColumns = numberColumns.concat(
-    tableColumns.filter((d) => d.type === 'numeric').map((d) => d.column),
+    tableColumns.filter((d) => d.type === 'date').map((d) => d.column),
   )
 
   const dateColumns = tableColumns
