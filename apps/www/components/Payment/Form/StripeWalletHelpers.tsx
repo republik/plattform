@@ -29,7 +29,7 @@ export function useIsApplePayAvailable(): [
 
   useEffect(() => {
     // Only check for Apple Pay on the client and when a secure connection is provided
-    setIsAvailable(isInSecureWindow() && isApplePayAvailable())
+    setIsAvailable(isApplePayAvailable())
   }, [])
 
   return [isAvailable, setIsAvailable]
