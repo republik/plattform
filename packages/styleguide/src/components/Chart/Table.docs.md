@@ -147,7 +147,6 @@ Zypern,Öffentliche Angebote dominieren
 
 ## Collapsable
 
-
 ```react
 <div>
   <ChartTitle>Von der EU sanktioniert – von der Schweiz unbehelligt</ChartTitle>
@@ -165,7 +164,7 @@ Zypern,Öffentliche Angebote dominieren
         },
         {
           "column": "Eintragsdatum",
-          "type": "numeric"
+          "type": "date",
         }
       ],
       "defaultSortColumn": "Programm",
@@ -175,7 +174,8 @@ Zypern,Öffentliche Angebote dominieren
         "HR": "#2ca02c",
         "UKR": "#d62728"
       },
-      "collapsable": true
+      "collapsable": true,
+      "dateFormat": "%d.%m.%Y",
     }}
     values={`
 Name,Eintragsdatum,Programm
