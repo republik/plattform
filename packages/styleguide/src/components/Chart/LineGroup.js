@@ -236,20 +236,22 @@ const LineGroup = (props) => {
           )
         },
       )}
-      {yLines.map(({ tick, label, base }, i) => (
+      {yLines.map(({ tick, label, base, dy = '-3px', opacity }, i) => (
         <g data-axis key={`y${tick}`} transform={`translate(0,${y(tick)})`}>
           <line
             {...styles.axisYLine}
             {...colorScheme.set('stroke', 'text')}
             x2={width}
             style={{
-              opacity: base || (base === undefined && tick === 0) ? 0.8 : 0.17,
+              opacity:
+                opacity ??
+                (base || (base === undefined && tick === 0) ? 0.8 : 0.17),
             }}
           />
           <text
             {...styles.axisLabel}
             {...colorScheme.set('fill', 'text')}
-            dy='-3px'
+            dy={dy}
           >
             {subsup.svg(label ?? yAxisFormat(tick, isLastItem(yLines, i)))}
           </text>
