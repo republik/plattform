@@ -157,17 +157,9 @@ const Derivatives = ({ commit, generateDerivative }) => {
 
   const { derivatives, canDeriveSyntheticReadAloud } = commit
 
-  const synthesizedAudio = derivatives
-    .filter((d) => d.type === 'SyntheticReadAloud')
-    .reduce(
-      (prev, curr) =>
-        (!prev && curr) ||
-        (curr.status === 'Ready' && curr) ||
-        (curr.status !== 'Ready' && prev.status === 'Ready' && prev) ||
-        (curr.status !== 'Ready' && prev.status === 'Pending' && prev) ||
-        (curr.status !== 'Ready' && prev.status !== 'Ready' && curr),
-      null,
-    )
+  const synthesizedAudio = derivatives.find(
+    (d) => d.type === 'SyntheticReadAloud',
+  )
 
   return (
     <>

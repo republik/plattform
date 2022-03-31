@@ -18,8 +18,19 @@ const {
 
 const debug = createDebug('publikator:lib:Derivative:SyntheticReadAloud')
 
-export const canDerive = (template: string) =>
-  ['article', 'discussion', 'editorialNewsletter', 'page'].includes(template)
+export const canDerive = (meta: any) => {
+  const isEnabledTemplate = [
+    'article',
+    'discussion',
+    'editorialNewsletter',
+    'page',
+  ].includes(meta.template)
+
+  const hasNoAudioSource =
+    !meta.audioSourceMp3 && !meta.audioSourceAac && !meta.audioSourceOgg
+
+  return isEnabledTemplate && hasNoAudioSource
+}
 
 export const processMeta = async (
   preprocessedMeta: any,
@@ -112,7 +123,7 @@ export const onPublish = async (document: any, pgdb: any, user?: any) => {
     return
   }
 
-  if (!canDerive(document.content?.meta?.template)) {
+  if (!canDerive(document.content?.meta)) {
     handlerDebug('can not derive synthetic read aloud. skipping synthesizing.')
     return
   }
