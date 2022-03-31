@@ -122,8 +122,16 @@ const styles = {
     WebkitLineClamp: 2,
     overflow: 'hidden',
   }),
-  time: css({ ...sansSerifRegular14, margin: 0 }),
-  expandedTime: css({ ...sansSerifRegular16, margin: 0 }),
+  time: css({
+    ...sansSerifRegular14,
+    fontFeatureSettings: '"tnum" 1, "kern" 1',
+    margin: 0,
+  }),
+  expandedTime: css({
+    ...sansSerifRegular16,
+    fontFeatureSettings: '"tnum" 1, "kern" 1',
+    margin: 0,
+  }),
   scrubber: css({
     ...progressbarStyle,
     bottom: -PROGRESS_HEIGHT,
