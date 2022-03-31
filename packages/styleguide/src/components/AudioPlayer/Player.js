@@ -184,7 +184,7 @@ class AudioPlayer extends Component {
         buffered: audio.buffered,
       })
       this.formattedCurrentTime = getFormattedTime(
-        audio.currentTime / this.state.playbackRate,
+        audio.currentTime / this.props.playbackRate,
       )
     }
     this.syncProgress = () => {
@@ -347,7 +347,7 @@ class AudioPlayer extends Component {
       return
     }
     this.formattedDuration = getFormattedTime(
-      this.audio.duration / this.state.playbackRate,
+      this.audio.duration / this.props.playbackRate,
     )
   }
 
