@@ -61,7 +61,6 @@ type Props = {
   overlay?: boolean
 }
 
-// eslint-disable-next-line react/display-name
 const Scrubber = (
   {
     progress,

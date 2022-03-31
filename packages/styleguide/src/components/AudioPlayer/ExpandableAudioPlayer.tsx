@@ -30,7 +30,6 @@ import {
   progressbarStyle,
   DefaultLink,
 } from './constants'
-import { AiOutlineConsoleSql } from 'react-icons/ai'
 
 type AudioInfoProps = {
   expanded: boolean
@@ -95,8 +94,7 @@ const styles = {
     alignItems: 'center',
     height: 54,
   }),
-  button: css({
-    ...plainButtonRule,
+  button: css(plainButtonRule, {
     display: 'block',
   }),
   textArea: css({

@@ -15,7 +15,7 @@ import { trackEvent } from '../../lib/matomo'
 const AudioPlayerFrontend = ({ t }) => {
   const { meLoading } = useMe()
   const [playbackRate, setPlaybackRate] = usePlaybackRate(1)
-  console.log(playbackRate)
+
   return (
     <AudioContext.Consumer>
       {({
