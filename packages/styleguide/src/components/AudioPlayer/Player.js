@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 
 import { ellipsize } from '../../lib/styleMixins'
-import { timeFormat } from '../../lib/timeFormat'
 import warn from '../../lib/warn'
 import globalState from '../../lib/globalMediaState'
 
@@ -21,16 +20,17 @@ import {
 } from '../Icons'
 import { useColorContext } from '../Colors/useColorContext'
 
-const ZINDEX_AUDIOPLAYER_ICONS = 6
-const ZINDEX_AUDIOPLAYER_SCRUB = 3
-const ZINDEX_AUDIOPLAYER_PROGRESS = 2
-const ZINDEX_AUDIOPLAYER_BUFFER = 1
-const ZINDEX_AUDIOPLAYER_TOTAL = 0
-const PROGRESS_HEIGHT = 4
-const SLIDERTHUMB_SIZE = 12
+import Scrubber from './Scrubber'
+import ExpandableAudioPlayer from './ExpandableAudioPlayer'
 
-const hoursDurationFormat = timeFormat('%-H:%M:%S')
-const minutesDurationFormat = timeFormat('%-M:%S')
+import {
+  ZINDEX_AUDIOPLAYER_ICONS,
+  hoursDurationFormat,
+  minutesDurationFormat,
+  PROGRESS_HEIGHT,
+  DefaultLink,
+  progressbarStyle,
+} from './constants'
 
 const CONTROLS_HEIGHT = 25
 const ICON_SPACING = 8
@@ -41,13 +41,6 @@ const SIZE = {
   download: 22,
   forward: 22,
   replay: 22,
-}
-
-const barStyle = {
-  position: 'absolute',
-  height: PROGRESS_HEIGHT,
-  left: 0,
-  right: 0,
 }
 
 const buttonStyle = {
@@ -110,20 +103,14 @@ const styles = {
     textAlign: 'center',
   }),
   scrubberTop: css({
-    ...barStyle,
+    ...progressbarStyle,
     top: -PROGRESS_HEIGHT,
     zIndex: ZINDEX_AUDIOPLAYER_ICONS,
   }),
   scrubberBottom: css({
-    ...barStyle,
+    ...progressbarStyle,
     bottom: -PROGRESS_HEIGHT,
     zIndex: ZINDEX_AUDIOPLAYER_ICONS,
-  }),
-  progress: css({
-    position: 'absolute',
-    zIndex: ZINDEX_AUDIOPLAYER_PROGRESS,
-    left: 0,
-    height: PROGRESS_HEIGHT,
   }),
   uiText: css({
     position: 'absolute',
@@ -142,26 +129,6 @@ const styles = {
     fontFeatureSettings: '"tnum" 1, "kern" 1',
     fontSize: '19px',
   }),
-  scrub: css({
-    ...barStyle,
-    zIndex: ZINDEX_AUDIOPLAYER_SCRUB,
-    height: 20,
-    marginTop: -((20 + PROGRESS_HEIGHT) / 2),
-    paddingTop: 20 / 2 - PROGRESS_HEIGHT / 2,
-    cursor: 'ew-resize',
-  }),
-  buffer: css({
-    ...barStyle,
-    zIndex: ZINDEX_AUDIOPLAYER_BUFFER,
-  }),
-  totalDuration: css({
-    ...barStyle,
-    zIndex: ZINDEX_AUDIOPLAYER_TOTAL,
-  }),
-  timeRange: css({
-    position: 'absolute',
-    height: PROGRESS_HEIGHT,
-  }),
   sourceError: css({
     height: '25px',
     ...ellipsize,
@@ -175,22 +142,7 @@ const styles = {
   retry: css({
     cursor: 'pointer',
   }),
-  titlebox: css({
-    ...ellipsize,
-    position: 'absolute',
-  }),
-  sliderThumb: css({
-    zIndex: 2,
-    top: '-4px',
-    borderRadius: 6,
-    position: 'absolute',
-    width: SLIDERTHUMB_SIZE,
-    height: SLIDERTHUMB_SIZE,
-    transition: 'opacity ease-out 0.3s',
-  }),
 }
-
-const DefaultLink = ({ children }) => children
 
 export const getFormattedTime = (secs) => {
   let totalSeconds = secs
@@ -231,7 +183,9 @@ class AudioPlayer extends Component {
         progress,
         buffered: audio.buffered,
       })
-      this.formattedCurrentTime = getFormattedTime(audio.currentTime)
+      this.formattedCurrentTime = getFormattedTime(
+        audio.currentTime / this.props.playbackRate,
+      )
     }
     this.syncProgress = () => {
       this.readTimeout = setTimeout(() => {
@@ -351,7 +305,13 @@ class AudioPlayer extends Component {
         }
       }
     }
+    this.setAudioPlaybackRate = () => {
+      if (this.audio) {
+        this.audio.playbackRate = this.props.playbackRate
+      }
+    }
   }
+
   play() {
     const { audio } = this
     const playPromise = audio && audio.play()
@@ -386,8 +346,11 @@ class AudioPlayer extends Component {
     if (!this.audio || !this.audio.duration) {
       return
     }
-    this.formattedDuration = getFormattedTime(this.audio.duration)
+    this.formattedDuration = getFormattedTime(
+      this.audio.duration / this.props.playbackRate,
+    )
   }
+
   componentDidMount() {
     globalState.instances.push(this.setInstanceState)
     if (!this.audio) {
@@ -416,9 +379,13 @@ class AudioPlayer extends Component {
     if (this.audio.readyState >= 1) {
       this.onSeekable()
     }
+    this.setAudioPlaybackRate()
   }
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     this.setFormattedTimes()
+    if (prevProps.playbackRate != this.props.playbackRate) {
+      this.setAudioPlaybackRate()
+    }
   }
   componentWillUnmount() {
     globalState.instances = globalState.instances.filter(
@@ -443,7 +410,7 @@ class AudioPlayer extends Component {
       attributes = {},
       style,
       t,
-      height,
+      height: heightProp,
       closeHandler,
       download,
       scrubberPosition,
@@ -451,10 +418,11 @@ class AudioPlayer extends Component {
       controlsPadding,
       autoPlay,
       title,
-      fixed,
       sourcePath,
       colorScheme,
       Link = DefaultLink,
+      playbackRate,
+      setPlaybackRate,
     } = this.props
     const { playEnabled, playing, progress, loading, buffered, sourceError } =
       this.state
@@ -469,10 +437,7 @@ class AudioPlayer extends Component {
       maxWidth: `calc(100% - ${leftIconsWidth + rightIconsWidth + 20}px)`,
       left: timePosition === 'left' ? leftIconsWidth + 10 : 'auto',
       right: timePosition === 'right' ? rightIconsWidth + 10 : 'auto',
-      top: loading ? '0px' : fixed ? '-12px' : '1px',
-    }
-    const timeTextStyle = {
-      fontSize: fixed ? '16px' : '19px',
+      top: loading ? '0px' : '1px',
     }
 
     let timeRanges = []
@@ -481,6 +446,91 @@ class AudioPlayer extends Component {
         timeRanges.push({ start: buffered.start(i), end: buffered.end(i) })
       }
     }
+
+    const playbackElement = isVideo ? (
+      <video
+        preload={autoPlay ? 'auto' : undefined}
+        {...styles.audio}
+        {...attributes}
+        ref={this.ref}
+        onLoadedMetadata={this.onCanPlay}
+        crossOrigin='anonymous'
+        playsInline
+        webkit-playsinline=''
+      >
+        {src.hls && (
+          <source
+            src={src.hls}
+            type='application/x-mpegURL'
+            onError={this.onSourceError}
+          />
+        )}
+        {src.mp4 && (
+          <source src={src.mp4} type='video/mp4' onError={this.onSourceError} />
+        )}
+      </video>
+    ) : (
+      <audio
+        preload={autoPlay ? 'auto' : undefined}
+        {...styles.audio}
+        {...attributes}
+        ref={this.ref}
+        onLoadedMetadata={this.onCanPlay}
+        crossOrigin='anonymous'
+      >
+        {src.mp3 && (
+          <source
+            src={src.mp3}
+            type='audio/mpeg'
+            onError={this.onSourceError}
+          />
+        )}
+        {src.aac && (
+          <source src={src.aac} type='audio/mp4' onError={this.onSourceError} />
+        )}
+        {src.ogg && (
+          <source src={src.ogg} type='audio/ogg' onError={this.onSourceError} />
+        )}
+      </audio>
+    )
+
+    if (this.props.mode === 'overlay') {
+      return (
+        <ExpandableAudioPlayer
+          containerRef={this.containerRef}
+          scrubRef={this.scrubRef}
+          audio={this.audio}
+          playbackElement={playbackElement}
+          playing={playing}
+          playEnabled={playEnabled}
+          progress={progress}
+          loading={loading}
+          buffered={buffered}
+          sourceError={sourceError}
+          playbackRate={playbackRate}
+          setPlaybackRate={setPlaybackRate}
+          toggle={this.toggle}
+          reload={this.reload}
+          scrubStart={this.scrubStart}
+          scrub={this.scrub}
+          scrubEnd={this.scrubEnd}
+          timeRanges={timeRanges}
+          closeHandler={closeHandler}
+          t={t}
+          Link={Link}
+          title={title}
+          sourcePath={sourcePath}
+          formattedCurrentTime={this.formattedCurrentTime}
+          formattedDuration={this.formattedDuration}
+          setTime={this.setTime}
+          download={download}
+          src={src}
+          height={height}
+        />
+      )
+    }
+
+    const height = heightProp || 44
     return (
       <div
         {...merge(styles.wrapper, breakoutStyles[size])}
@@ -490,65 +540,7 @@ class AudioPlayer extends Component {
         role='region'
         aria-label={t('styleguide/AudioPlayer/aria')}
       >
-        {!isVideo && (
-          <audio
-            preload={autoPlay ? 'auto' : undefined}
-            {...styles.audio}
-            {...attributes}
-            ref={this.ref}
-            onLoadedMetadata={this.onCanPlay}
-            crossOrigin='anonymous'
-          >
-            {src.mp3 && (
-              <source
-                src={src.mp3}
-                type='audio/mpeg'
-                onError={this.onSourceError}
-              />
-            )}
-            {src.aac && (
-              <source
-                src={src.aac}
-                type='audio/mp4'
-                onError={this.onSourceError}
-              />
-            )}
-            {src.ogg && (
-              <source
-                src={src.ogg}
-                type='audio/ogg'
-                onError={this.onSourceError}
-              />
-            )}
-          </audio>
-        )}
-        {isVideo && (
-          <video
-            preload={autoPlay ? 'auto' : undefined}
-            {...styles.audio}
-            {...attributes}
-            ref={this.ref}
-            onLoadedMetadata={this.onCanPlay}
-            crossOrigin='anonymous'
-            playsInline
-            webkit-playsinline=''
-          >
-            {src.hls && (
-              <source
-                src={src.hls}
-                type='application/x-mpegURL'
-                onError={this.onSourceError}
-              />
-            )}
-            {src.mp4 && (
-              <source
-                src={src.mp4}
-                type='video/mp4'
-                onError={this.onSourceError}
-              />
-            )}
-          </video>
-        )}
+        {playbackElement}
         <div
           {...styles.controls}
           style={{
@@ -661,23 +653,9 @@ class AudioPlayer extends Component {
                 title={t('styleguide/AudioPlayer/loading')}
               />
             )}
-            {!loading && title && fixed && (
-              <div {...styles.time}>
-                <Link href={sourcePath} passHref>
-                  <a
-                    {...colorScheme.set('color', 'text')}
-                    style={{ textDecoration: 'none' }}
-                    href={sourcePath}
-                  >
-                    {title}
-                  </a>
-                </Link>
-              </div>
-            )}
             {!loading && (
               <div
                 {...styles.time}
-                style={timeTextStyle}
                 {...colorScheme.set('color', 'textSoft')}
                 tabIndex='0'
               >
@@ -704,49 +682,15 @@ class AudioPlayer extends Component {
             ? styles.scrubberBottom
             : styles.scrubberTop)}
         >
-          <div
-            {...styles.progress}
-            {...colorScheme.set('backgroundColor', 'text')}
-            style={{ width: `${progress * 100}%` }}
-          />
-          <div
-            {...styles.sliderThumb}
-            {...colorScheme.set('backgroundColor', 'defaultInverted')}
-            style={{
-              opacity: playing || progress > 0 ? 1 : 0,
-              left: `calc(${progress * 100}% - ${
-                progress * SLIDERTHUMB_SIZE
-              }px)`,
-            }}
-          />
-          <div
-            {...styles.scrub}
+          <Scrubber
             ref={this.scrubRef}
-            onTouchStart={this.scrubStart}
-            onTouchMove={this.scrub}
-            onTouchEnd={this.scrubEnd}
-            onMouseDown={this.scrubStart}
-          />
-          <div
-            {...styles.buffer}
-            {...colorScheme.set('backgroundColor', 'divider')}
-          >
-            {this.audio &&
-              timeRanges.map(({ start, end }, index) => (
-                <span
-                  key={index}
-                  {...styles.timeRange}
-                  {...colorScheme.set('backgroundColor', 'dividerInverted')}
-                  style={{
-                    left: `${(start / this.audio.duration) * 100}%`,
-                    width: `${((end - start) / this.audio.duration) * 100}%`,
-                  }}
-                />
-              ))}
-          </div>
-          <div
-            {...styles.totalDuration}
-            {...colorScheme.set('backgroundColor', 'default')}
+            progress={progress}
+            playing={playing}
+            scrubStart={this.scrubStart}
+            scrub={this.scrub}
+            scrubEnd={this.scrubEnd}
+            audio={this.audio}
+            timeRanges={timeRanges}
           />
         </div>
       </div>
@@ -777,12 +721,12 @@ AudioPlayer.propTypes = {
 AudioPlayer.defaultProps = {
   autoPlay: false,
   size: undefined,
-  height: 44,
   style: {},
   download: false,
   scrubberPosition: 'top',
   timePosition: 'right',
   controlsPadding: 0,
+  playbackRate: 1,
 }
 
 AudioPlayer.contextTypes = {

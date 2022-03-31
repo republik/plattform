@@ -1,25 +1,74 @@
 An `<AudioPlayer />` is a responsive click-to-play audio player.
 
 Props:
-- `src`: An object representing the audio's source with these keys:
--- `mp3`: The mp3 source URL of the audio.
--- `aac`: The aac source URL of the audio.
--- `ogg`: The ogg source URL of the audio.
--- `hls`: The hls source URL (when using a video).
--- `mp4`: The mp4 source URL (when using a video).
-- `autoPlay`: Boolean, trigger play once after the source and context start time is ready
-- `size`: optional, `narrow` or `tiny`.
+
+- `mode`: string, `inline` (default) or `overlay`. Determines the style of player. Overlay players include an expanded mode and support additional features, like setting the playback rate.
+- `src`: An object (required) representing the audio's source with these keys:
+  -- `mp3`: The mp3 source URL of the audio.
+  -- `aac`: The aac source URL of the audio.
+  -- `ogg`: The ogg source URL of the audio.
+  -- `hls`: The hls source URL (when using a video).
+  -- `mp4`: The mp4 source URL (when using a video).
+- `autoPlay`: Boolean (optional), trigger play once after the source and context start time is ready
 - `attributes`: Object, arbitrary attributes mapped to the audio tag.
-- `closeHandler`: Function; If provided, a close icon is displayed that calls the handler on click.
+- `t`: translate function
+- `height`: number, The player height in pixels, defaults to 44 in the inline and 68 in overlay mode.
+- `closeHandler`: Function, optional for `inline` mode, required for `overlay` mode. Displays a close icon on the player in `inline` mode (wich is always present in the `overlay` mode), calls the handler on click.
 - `download`: Whether to display a download icon.
-- `scrubberPosition`: `top` (default) or `bottom`.
-- `timePosition`: `right` (default) or `left`.
-- `height`: number; The player height in pixels.
-- `controlsPadding`: number; The horizontal padding between controls and container, defaults to 0.
+
+Overlay mode specific props:
+
+- `sourcePath`: sting (required): path of the article the auio files is embedded in.
+- `title`: sting (required): title of the audiofile.
+- `playbackRate`: number (required):
+- `setPlaybackRate`: function (required):
+
+Inline mode speficic props:
+
+- `scrubberPosition`: string (optional), `top` (default) or `bottom`.
+- `timePosition`: string (optional), `right` (default) or `left`.
+- `controlsPadding`: number (optional), The horizontal padding between controls and container, defaults to 0.
+- `style`: style (optional), styles applied to the outer most container of the player.
+- `size`: string (optional) = 'narow' | 'tiny | 'breakout', see breakoutStyles object for more info.
 
 Context:
+
 - `getMediaProgress(props)`: a function that is expected to return a `Promise` of a `Number`. If present it will be called with the component props to retrieve the start time on `componentDidMount` from it.
 - `saveMediaProgress(props, HTMLMediaElement)`: will be constantly called during playback if present.
+
+### Overlay Player
+
+```react|responsive
+state: {playbackRate: 1}
+---
+<div
+  style={{
+    position: 'fixed',
+    width: '100%',
+    maxWidth: 414,
+    bottom: 44,
+    right: 0,
+    padding: '0 16px',
+    zIndex: 50,
+    transition: 'all ease-out 0.3s',
+}}>
+  <div style={{backgroundColor: 'white', boxShadow: '0 0 15px rgba(0,0,0,0.1)'}}>
+    <AudioPlayer
+      src={{
+        mp3: 'https://cdn.repub.ch/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
+      }}
+      playbackRate={state.playbackRate}
+      setPlaybackRate={(rate) => setState({playbackRate: rate})}
+      mode='overlay'
+      download
+      title='Vier Schriftstellerinnen schildern die jahrelange russische Bedrohung der Ukraine. Dazu: Der Wochenkommentar und eine neue Podcast-Folge.'
+      t={t}
+    />
+  </div>
+</div>
+```
+
+### Inline Player
 
 ```react
 <AudioPlayer
@@ -159,37 +208,6 @@ Context:
   download
   scrubberPosition='bottom'
 />
-```
-
-```react|responsive
-<div 
-  style={{
-    position: 'fixed',
-    width: '100%',
-    maxWidth: 414,
-    bottom: 44,
-    right: 0,
-    padding: '0 16px',
-    zIndex: 50,
-    transition: 'all ease-out 0.3s',
-}}>
-  <div style={{backgroundColor: 'white', boxShadow: '0 0 15px rgba(0,0,0,0.1)'}}>
-    <AudioPlayer
-      src={{
-        mp3: 'https://cdn.repub.ch/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
-      }}
-      title="Audio Title Long"
-      fixed
-      timePosition='left'
-      t={t}
-      closeHandler={() => {console.log('Close button clicked')}}
-      download
-      scrubberPosition='bottom'
-      height={68}
-      controlsPadding={18}
-    />
-  </div>
-</div>
 ```
 
 The `<AudioPlayer />` may also be used to play from video sources when visual content doesn't matter.
