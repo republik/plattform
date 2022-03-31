@@ -107,8 +107,9 @@ const Scrubber = (
             <span
               key={index}
               {...styles.timeRange}
-              {...colorScheme.set('backgroundColor', 'dividerInverted')}
+              {...colorScheme.set('backgroundColor', 'defaultInverted')}
               style={{
+                opacity: 0.25,
                 left: `${(start / audio.duration) * 100}%`,
                 width: `${((end - start) / audio.duration) * 100}%`,
               }}
