@@ -30,7 +30,11 @@ const AudioPlayerFrontend = ({ t }) => {
               <BottomPanel wide foreground={true} visible={audioPlayerVisible}>
                 <ProgressComponent isArticle={false}>
                   <AudioPlayer
+                    // when the audio src changes we need to remount the component
                     key={audioState.mediaId || audioState.url}
+                    // mediaId and durationMs is neccessary for media progress to work
+                    mediaId={audioState.mediaId}
+                    durationMs={audioState.audioSource.durationMs}
                     mode='overlay'
                     src={audioState.audioSource}
                     title={audioState.title}
