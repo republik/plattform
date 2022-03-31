@@ -107,6 +107,14 @@ const styles = {
   ellipsize: css({
     ...ellipsize,
   }),
+  title: css({
+    textDecoration: 'none',
+    '@media (hover)': {
+      ':hover': {
+        ...underline,
+      },
+    },
+  }),
   expandedTitle: css({
     ...sansSerifRegular17,
     display: '-webkit-box',
@@ -207,6 +215,7 @@ const AudioInfo = ({
           {title && (
             <Link href={sourcePath} passHref>
               <a
+                {...styles.title}
                 {...(expanded && styles.expandedTitle)}
                 {...colorScheme.set('color', 'text')}
                 href={sourcePath}
