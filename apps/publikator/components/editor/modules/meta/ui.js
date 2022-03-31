@@ -23,7 +23,7 @@ import AudioForm from './AudioForm'
 import UIForm from '../../UIForm'
 import ShareImageForm from './ShareImageForm'
 import GooglePreview from './GooglePreview'
-import ArticleSuggestions from './ArticleRecommendations'
+import ArticleRecommendations from './ArticleRecommendations'
 
 const styles = {
   container: css({
@@ -341,11 +341,12 @@ const MetaData = ({
         <br />
         <br />
         <br />
+        <ArticleRecommendations editor={editor} node={node} />
+        <br />
+        <br />
+        <br />
         {!!paynotes && <PaynotesForm editor={editor} node={node} />}
-        <br />
-        <br />
-        <br />
-        <ArticleSuggestions editor={editor} node={node} />
+
         <br />
         <br />
         <br />

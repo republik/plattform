@@ -1,9 +1,41 @@
 import React from 'react'
 import RepoSearch from '../../utils/RepoSearch'
 import withT from '../../../../lib/withT'
-import { Label } from '@project-r/styleguide'
+import {
+  Label,
+  IconButton,
+  ArrowUpIcon,
+  ArrowDownIcon,
+  CloseIcon,
+} from '@project-r/styleguide'
+import { css } from 'glamor'
 
 const ARTICLE_RECOMMENDATIONS_KEY = 'recommendations'
+
+const styles = {
+  wrapper: css({
+    display: 'inline-block',
+  }),
+  recommendationList: css({
+    margin: '1rem 0',
+    padding: 0,
+  }),
+  recommendationItem: css({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+    padding: '0.5rem 1rem',
+    '&:not(:first-child)': {
+      marginTop: '0.5rem',
+      borderTop: '1px solid #ccc',
+    },
+  }),
+  arrowWrapper: css({
+    display: 'inline-flex',
+    flexDirection: 'column',
+  }),
+}
 
 const ArticleRecommendations = ({ t, editor, node }) => {
   const recommendedArticles = node.data.get(ARTICLE_RECOMMENDATIONS_KEY) || []
@@ -53,32 +85,34 @@ const ArticleRecommendations = ({ t, editor, node }) => {
   console.debug('article suggestions', recommendedArticles)
 
   return (
-    <div>
-      <h2>Article recommendations Heading</h2>
+    <div className={styles.wrapper}>
+      <h2>Vorgeschlagene Artikel</h2>
+      <div>
+        <Label>Artikel hinzufügen</Label>
+        <RepoSearch onChange={addSuggestion} />
+      </div>
       {recommendedArticles && recommendedArticles.length > 0 && (
-        <ul>
+        <ul className={styles.recommendationList}>
           {recommendedArticles.map((val, index) => (
-            <li key={val}>
+            <li key={val} className={styles.recommendationItem}>
+              <div className={styles.arrowWrapper}>
+                <IconButton
+                  Icon={ArrowUpIcon}
+                  onClick={() => swapArrayElements(index, index - 1)}
+                  disabled={index === 0}
+                />
+                <IconButton
+                  Icon={ArrowDownIcon}
+                  onClick={() => swapArrayElements(index, index + 1)}
+                  disabled={index === recommendedArticles.length - 1}
+                />
+              </div>
               <span>{JSON.stringify(val, null, 2)}</span>
-              <button onClick={() => remove(index)}>remove</button>
-              <button
-                onClick={() => swapArrayElements(index, index - 1)}
-                disabled={index == 0}
-              >
-                up
-              </button>
-              <button
-                onClick={() => swapArrayElements(index, index + 1)}
-                disabled={index === recommendedArticles.length - 1}
-              >
-                down
-              </button>
+              <IconButton Icon={CloseIcon} onClick={() => remove(index)} />
             </li>
           ))}
         </ul>
       )}
-      <Label>Add recommendation</Label>
-      <RepoSearch onChange={addSuggestion} />
     </div>
   )
 }
