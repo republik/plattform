@@ -58,7 +58,7 @@ type Props = {
   scrubEnd: (event) => void
   timeRanges: Array<{ start: number; end: number }>
   audio: HTMLAudioElement
-  overlay?: boolean
+  noThumb?: boolean
 }
 
 const Scrubber = (
@@ -70,11 +70,12 @@ const Scrubber = (
     scrubEnd,
     audio,
     timeRanges,
-    overlay = false,
+    noThumb,
   }: Props,
   ref: Ref<HTMLDivElement>,
 ) => {
   const [colorScheme] = useColorContext()
+
   return (
     <>
       <div
@@ -82,14 +83,16 @@ const Scrubber = (
         {...colorScheme.set('backgroundColor', 'text')}
         style={{ width: `${progress * 100}%` }}
       />
-      <div
-        {...styles.sliderThumb}
-        {...colorScheme.set('backgroundColor', 'defaultInverted')}
-        style={{
-          opacity: playing || progress > 0 ? 1 : 0,
-          left: `calc(${progress * 100}% - ${progress * SLIDERTHUMB_SIZE}px)`,
-        }}
-      />
+      {!noThumb && (
+        <div
+          {...styles.sliderThumb}
+          {...colorScheme.set('backgroundColor', 'defaultInverted')}
+          style={{
+            opacity: playing || progress > 0 ? 1 : 0,
+            left: `calc(${progress * 100}% - ${progress * SLIDERTHUMB_SIZE}px)`,
+          }}
+        />
+      )}
       <div
         {...styles.scrub}
         ref={ref}

@@ -26,7 +26,6 @@ import Scrubber from './Scrubber'
 
 import {
   ZINDEX_AUDIOPLAYER_ICONS,
-  PROGRESS_HEIGHT,
   progressbarStyle,
   DefaultLink,
 } from './constants'
@@ -134,7 +133,7 @@ const styles = {
   }),
   scrubber: css({
     ...progressbarStyle,
-    bottom: -PROGRESS_HEIGHT,
+    bottom: 0,
     zIndex: ZINDEX_AUDIOPLAYER_ICONS,
   }),
   sourceError: css({
@@ -504,6 +503,7 @@ const ExpandableAudioPlayer = ({
               scrubEnd={scrubEnd}
               audio={audio}
               timeRanges={timeRanges}
+              noThumb
             />
           </div>
         </div>
