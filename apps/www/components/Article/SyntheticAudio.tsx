@@ -6,6 +6,7 @@ import {
   AudioIcon,
   fontStyles,
   mediaQueries,
+  RawHtml,
 } from '@project-r/styleguide'
 
 import { AudioContext } from '../Audio/AudioProvider'
@@ -92,9 +93,14 @@ const SyntheticAudio = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
         <div {...styles.textContainer}>
           <p {...styles.title} {...colorScheme.set('fill', 'text')}>
             {t('article/syntheticreadaloud/title')}
-            <span style={{ color: '#E9A733' }}> (Interner Test)</span>
           </p>
-          <p {...styles.lead}>{t('article/syntheticreadaloud/lead')}</p>
+          <p {...styles.lead}>
+            <RawHtml
+              dangerouslySetInnerHTML={{
+                __html: t('article/syntheticreadaloud/lead'),
+              }}
+            />
+          </p>
         </div>
       </div>
 
