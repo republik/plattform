@@ -6,14 +6,10 @@ import { GraphqlContext } from '@orbiting/backend-modules-types'
 const {
   getParsedDocumentId,
 } = require('@orbiting/backend-modules-search/lib/Documents')
-const {
-  Roles: { userIsInRoles },
-} = require('@orbiting/backend-modules-auth')
 
 import { DerivativeRow } from '../../loaders/Derivative'
 
 const {
-  DOCUMENTS_RESTRICT_TO_ROLES,
   ASSETS_SERVER_BASE_URL,
   TTS_SERVER_BASE_URL,
   TTS_SIGNATURE_SECRET,
@@ -21,8 +17,6 @@ const {
 } = process.env
 
 const debug = createDebug('publikator:lib:Derivative:SyntheticReadAloud')
-
-const documentsRestrictToRoles = DOCUMENTS_RESTRICT_TO_ROLES?.split(',')
 
 export const canDerive = (meta: any) => {
   const isEnabledTemplate = [
@@ -43,15 +37,6 @@ export const processMeta = async (
   document: any,
   context: GraphqlContext,
 ) => {
-  if (!userIsInRoles(context.user, documentsRestrictToRoles)) {
-    return preprocessedMeta
-  }
-
-  // Feature only visible to users w/ editor or tester.audio role during test-run
-  if (!userIsInRoles(context.user, ['editor', 'tester.audio'])) {
-    return preprocessedMeta
-  }
-
   if (preprocessedMeta.audioSource) {
     return preprocessedMeta
   }
