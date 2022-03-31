@@ -7,11 +7,13 @@ import { descending, ascending } from 'd3-array'
 
 import { useColorContext } from '../Colors/ColorContext'
 import { getFormat, getTextColor, deduplicate } from './utils'
+import { timeFormat, timeParse } from '../../lib/timeFormat'
 import { ExpandMoreIcon, ExpandLessIcon } from '../Icons'
 import { defaultProps } from './ChartContext'
 import { sansSerifRegular18 } from '../Typography/styles'
 import { PADDING } from '../Center'
 import { getColorMapper } from './colorMaps'
+import { Collapsable } from '../Collapsable'
 
 const styles = {
   container: css({
@@ -37,7 +39,7 @@ const styles = {
   cell: css({
     padding: '8px 10px',
   }),
-  cellNumber: css({
+  cellNumeric: css({
     textAlign: 'right',
     fontFeatureSettings: '"tnum", "kern"',
   }),
@@ -53,9 +55,13 @@ const Table = (props) => {
     defaultSortColumn,
     thresholds,
     tableColumns,
+    collapsable,
+    t,
   } = props
   const columns = values.columns || Object.keys(values[0] || {})
   const numberFormatter = getFormat(numberFormat)
+  const dateParser = timeParse(props.timeParse)
+  const dateFormatter = timeFormat(props.timeFormat)
 
   const [sortBy, setSortBy] = useState({
     key: defaultSortColumn,
@@ -65,17 +71,31 @@ const Table = (props) => {
   const numberColumns = tableColumns
     .filter((d) => d.type === 'number')
     .map((d) => d.column)
-  const parsedData = numberColumns.length
-    ? values.map((row) => {
-        let parsedRow = { ...row }
-        numberColumns.forEach((key) => {
-          if (parsedRow[key] !== undefined) {
-            parsedRow[key] = +parsedRow[key]
-          }
+  const numericColumns = numberColumns.concat(
+    tableColumns.filter((d) => d.type === 'date').map((d) => d.column),
+  )
+
+  const dateColumns = tableColumns
+    .filter((d) => d.type === 'date')
+    .map((d) => d.column)
+
+  const parsedData =
+    numberColumns.length || dateColumns.length
+      ? values.map((row) => {
+          let parsedRow = { ...row }
+          numberColumns.forEach((key) => {
+            if (parsedRow[key] !== undefined) {
+              parsedRow[key] = +parsedRow[key]
+            }
+          })
+          dateColumns.forEach((key) => {
+            if (parsedRow[key] !== undefined) {
+              parsedRow[key] = dateParser(parsedRow[key])
+            }
+          })
+          return parsedRow
         })
-        return parsedRow
-      })
-    : [].concat(values)
+      : [].concat(values)
 
   if (sortBy.key) {
     parsedData.sort((a, b) => {
@@ -130,7 +150,7 @@ const Table = (props) => {
     colorScale = getColorMapper(props, colorValues)
   }
 
-  return (
+  const content = (
     <div {...styles.container}>
       <table {...styles.table}>
         <thead>
@@ -140,7 +160,7 @@ const Table = (props) => {
                 {...styles.header}
                 {...colorScheme.set('borderBottomColor', 'text')}
                 style={{
-                  textAlign: numberColumns.includes(tableHead)
+                  textAlign: numericColumns.includes(tableHead)
                     ? 'right'
                     : 'left',
                   cursor: 'pointer',
@@ -171,14 +191,15 @@ const Table = (props) => {
               {columns.map((cellKey, cellIndex) => (
                 <Cell
                   key={cellIndex}
-                  type={tableColumns.find((d) => d.column === cellKey)?.type}
-                  width={tableColumns.find((d) => d.column === cellKey)?.width}
-                  color={tableColumns.find((d) => d.column === cellKey)?.color}
+                  {...tableColumns.find((d) => d.column === cellKey)}
+                  isNumeric={numericColumns.includes(cellKey)}
                   value={row[cellKey]}
                   colorScale={colorScale}
                 >
                   {numberColumns.includes(cellKey)
                     ? numberFormatter(row[cellKey])
+                    : dateColumns.includes(cellKey)
+                    ? dateFormatter(row[cellKey])
                     : row[cellKey]}
                 </Cell>
               ))}
@@ -188,6 +209,20 @@ const Table = (props) => {
       </table>
     </div>
   )
+
+  if (collapsable) {
+    const height = 40 * 6
+    return (
+      <Collapsable
+        labelPrefix='table'
+        height={{ mobile: height, desktop: height }}
+        t={t}
+      >
+        {content}
+      </Collapsable>
+    )
+  }
+  return content
 }
 
 export const propTypes = {
@@ -209,6 +244,7 @@ export const propTypes = {
     sequential3: PropTypes.array.isRequired,
     discrete: PropTypes.array.isRequired,
   }).isRequired,
+  collapsable: PropTypes.bool,
 }
 
 Table.defaultProps = defaultProps.Table
@@ -218,10 +254,10 @@ Table.propTypes = propTypes
 export default Table
 
 const Cell = (props) => {
-  const { type, width, color, colorScale, value, children } = props
+  const { type, width, color, colorScale, value, children, isNumeric } = props
   return (
     <td
-      {...(type === 'number' && styles.cellNumber)}
+      {...(isNumeric && styles.cellNumeric)}
       {...styles.cell}
       style={{
         width: width !== undefined ? +width : undefined,
