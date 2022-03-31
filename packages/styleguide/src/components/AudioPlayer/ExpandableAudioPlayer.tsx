@@ -305,7 +305,7 @@ const ExpandableAudioPlayer = ({
                 onClick={
                   playEnabled
                     ? () => {
-                        setTime(audio.currentTime - 10)
+                        setTime(audio.currentTime - 10 * playbackRate)
                       }
                     : null
                 }
@@ -344,7 +344,7 @@ const ExpandableAudioPlayer = ({
                 onClick={
                   playEnabled
                     ? () => {
-                        setTime(audio.currentTime + 30)
+                        setTime(audio.currentTime + 30 * playbackRate)
                       }
                     : null
                 }
