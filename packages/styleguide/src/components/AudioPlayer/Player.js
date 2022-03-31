@@ -410,7 +410,7 @@ class AudioPlayer extends Component {
       attributes = {},
       style,
       t,
-      height,
+      height: heightProp,
       closeHandler,
       download,
       scrubberPosition,
@@ -529,6 +529,8 @@ class AudioPlayer extends Component {
         />
       )
     }
+
+    const height = heightProp || 44
     return (
       <div
         {...merge(styles.wrapper, breakoutStyles[size])}
@@ -719,7 +721,6 @@ AudioPlayer.propTypes = {
 AudioPlayer.defaultProps = {
   autoPlay: false,
   size: undefined,
-  height: 44,
   style: {},
   download: false,
   scrubberPosition: 'top',
