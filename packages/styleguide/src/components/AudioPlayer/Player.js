@@ -528,174 +528,171 @@ class AudioPlayer extends Component {
           height={height}
         />
       )
-    } else {
-      return (
+    }
+    return (
+      <div
+        {...merge(styles.wrapper, breakoutStyles[size])}
+        ref={this.containerRef}
+        style={{ ...style, height: `${height}px` }}
+        tabIndex='0'
+        role='region'
+        aria-label={t('styleguide/AudioPlayer/aria')}
+      >
+        {playbackElement}
         <div
-          {...merge(styles.wrapper, breakoutStyles[size])}
-          ref={this.containerRef}
-          style={{ ...style, height: `${height}px` }}
-          tabIndex='0'
-          role='region'
-          aria-label={t('styleguide/AudioPlayer/aria')}
+          {...styles.controls}
+          style={{
+            top: Math.ceil((height - CONTROLS_HEIGHT) / 2),
+            left: controlsPadding,
+            right: controlsPadding,
+          }}
         >
-          {playbackElement}
-          <div
-            {...styles.controls}
-            style={{
-              top: Math.ceil((height - CONTROLS_HEIGHT) / 2),
-              left: controlsPadding,
-              right: controlsPadding,
-            }}
-          >
-            <div {...styles.buttons}>
-              <button
-                {...styles.button}
-                onClick={
-                  playEnabled
-                    ? () => {
-                        this.setTime(this.audio.currentTime - 10)
-                      }
-                    : null
-                }
-                title={t('styleguide/AudioPlayer/partialrewind')}
-              >
-                <ReplayIcon
-                  size={SIZE.replay}
-                  {...(playEnabled && progress > 0
+          <div {...styles.buttons}>
+            <button
+              {...styles.button}
+              onClick={
+                playEnabled
+                  ? () => {
+                      this.setTime(this.audio.currentTime - 10)
+                    }
+                  : null
+              }
+              title={t('styleguide/AudioPlayer/partialrewind')}
+            >
+              <ReplayIcon
+                size={SIZE.replay}
+                {...(playEnabled && progress > 0
+                  ? colorScheme.set('fill', 'text')
+                  : colorScheme.set('fill', 'disabled'))}
+              />
+            </button>
+            <button
+              {...styles.button}
+              onClick={playEnabled ? this.toggle : null}
+              title={t(`styleguide/AudioPlayer/${playing ? 'pause' : 'play'}`)}
+              aria-live='assertive'
+            >
+              {!playing && (
+                <PlayIcon
+                  size={SIZE.play}
+                  {...(playEnabled
                     ? colorScheme.set('fill', 'text')
                     : colorScheme.set('fill', 'disabled'))}
                 />
-              </button>
-              <button
-                {...styles.button}
-                onClick={playEnabled ? this.toggle : null}
-                title={t(
-                  `styleguide/AudioPlayer/${playing ? 'pause' : 'play'}`,
-                )}
-                aria-live='assertive'
-              >
-                {!playing && (
-                  <PlayIcon
-                    size={SIZE.play}
-                    {...(playEnabled
-                      ? colorScheme.set('fill', 'text')
-                      : colorScheme.set('fill', 'disabled'))}
-                  />
-                )}
-                {playing && (
-                  <PauseIcon
-                    size={SIZE.play}
-                    {...colorScheme.set('fill', 'text')}
-                  />
-                )}
-              </button>
-              <button
-                {...styles.button}
-                onClick={
-                  playEnabled
-                    ? () => {
-                        this.setTime(this.audio.currentTime + 30)
-                      }
-                    : null
-                }
-                title={t('styleguide/AudioPlayer/partialfastforward')}
-              >
-                <ForwardIcon
-                  size={SIZE.forward}
-                  {...(playEnabled && progress > 0
-                    ? colorScheme.set('fill', 'text')
-                    : colorScheme.set('fill', 'disabled'))}
-                />
-              </button>
-            </div>
-            {download && (
-              <div {...styles.download}>
-                {playEnabled && (
-                  <a
-                    href={src.mp3 || src.aac || src.mp4}
-                    download
-                    title={t('styleguide/AudioPlayer/download')}
-                  >
-                    <DownloadIcon
-                      size={SIZE.download}
-                      {...colorScheme.set('fill', 'text')}
-                    />
-                  </a>
-                )}
-                {!playEnabled && (
-                  <DownloadIcon
-                    size={SIZE.download}
-                    {...colorScheme.set('fill', 'disabled')}
-                  />
-                )}
-              </div>
-            )}
-            {closeHandler && (
-              <button
-                title={t('styleguide/AudioPlayer/close')}
-                {...styles.close}
-                onClick={closeHandler}
-              >
-                <CloseIcon
-                  size={SIZE.close}
+              )}
+              {playing && (
+                <PauseIcon
+                  size={SIZE.play}
                   {...colorScheme.set('fill', 'text')}
                 />
-              </button>
-            )}
-            <div
-              {...styles.uiText}
-              {...colorScheme.set('color', 'text')}
-              style={uiTextStyle}
+              )}
+            </button>
+            <button
+              {...styles.button}
+              onClick={
+                playEnabled
+                  ? () => {
+                      this.setTime(this.audio.currentTime + 30)
+                    }
+                  : null
+              }
+              title={t('styleguide/AudioPlayer/partialfastforward')}
             >
-              {loading && (
-                <InlineSpinner
-                  size={25}
-                  title={t('styleguide/AudioPlayer/loading')}
+              <ForwardIcon
+                size={SIZE.forward}
+                {...(playEnabled && progress > 0
+                  ? colorScheme.set('fill', 'text')
+                  : colorScheme.set('fill', 'disabled'))}
+              />
+            </button>
+          </div>
+          {download && (
+            <div {...styles.download}>
+              {playEnabled && (
+                <a
+                  href={src.mp3 || src.aac || src.mp4}
+                  download
+                  title={t('styleguide/AudioPlayer/download')}
+                >
+                  <DownloadIcon
+                    size={SIZE.download}
+                    {...colorScheme.set('fill', 'text')}
+                  />
+                </a>
+              )}
+              {!playEnabled && (
+                <DownloadIcon
+                  size={SIZE.download}
+                  {...colorScheme.set('fill', 'disabled')}
                 />
               )}
-              {!loading && (
-                <div
-                  {...styles.time}
-                  {...colorScheme.set('color', 'textSoft')}
-                  tabIndex='0'
-                >
-                  {this.formattedCurrentTime && this.formattedCurrentTime}
-                  {this.formattedCurrentTime && this.formattedDuration && ' / '}
-                  {this.formattedDuration && this.formattedDuration}
-                </div>
-              )}
-              {sourceError && !loading && (
-                <div
-                  {...styles.sourceError}
-                  {...colorScheme.set('color', 'disabled')}
-                >
-                  {t('styleguide/AudioPlayer/sourceError')}{' '}
-                  <span onClick={() => this.reload()} {...styles.retry}>
-                    {t('styleguide/AudioPlayer/sourceErrorTryAgain')}
-                  </span>
-                </div>
-              )}
             </div>
-          </div>
+          )}
+          {closeHandler && (
+            <button
+              title={t('styleguide/AudioPlayer/close')}
+              {...styles.close}
+              onClick={closeHandler}
+            >
+              <CloseIcon
+                size={SIZE.close}
+                {...colorScheme.set('fill', 'text')}
+              />
+            </button>
+          )}
           <div
-            {...(scrubberPosition === 'bottom'
-              ? styles.scrubberBottom
-              : styles.scrubberTop)}
+            {...styles.uiText}
+            {...colorScheme.set('color', 'text')}
+            style={uiTextStyle}
           >
-            <Scrubber
-              ref={this.scrubRef}
-              progress={progress}
-              playing={playing}
-              scrubStart={this.scrubStart}
-              scrub={this.scrub}
-              scrubEnd={this.scrubEnd}
-              audio={this.audio}
-              timeRanges={timeRanges}
-            />
+            {loading && (
+              <InlineSpinner
+                size={25}
+                title={t('styleguide/AudioPlayer/loading')}
+              />
+            )}
+            {!loading && (
+              <div
+                {...styles.time}
+                {...colorScheme.set('color', 'textSoft')}
+                tabIndex='0'
+              >
+                {this.formattedCurrentTime && this.formattedCurrentTime}
+                {this.formattedCurrentTime && this.formattedDuration && ' / '}
+                {this.formattedDuration && this.formattedDuration}
+              </div>
+            )}
+            {sourceError && !loading && (
+              <div
+                {...styles.sourceError}
+                {...colorScheme.set('color', 'disabled')}
+              >
+                {t('styleguide/AudioPlayer/sourceError')}{' '}
+                <span onClick={() => this.reload()} {...styles.retry}>
+                  {t('styleguide/AudioPlayer/sourceErrorTryAgain')}
+                </span>
+              </div>
+            )}
           </div>
         </div>
-      )
-    }
+        <div
+          {...(scrubberPosition === 'bottom'
+            ? styles.scrubberBottom
+            : styles.scrubberTop)}
+        >
+          <Scrubber
+            ref={this.scrubRef}
+            progress={progress}
+            playing={playing}
+            scrubStart={this.scrubStart}
+            scrub={this.scrub}
+            scrubEnd={this.scrubEnd}
+            audio={this.audio}
+            timeRanges={timeRanges}
+          />
+        </div>
+      </div>
+    )
   }
 }
 
