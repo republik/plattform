@@ -16,15 +16,16 @@ import withT from '../../../lib/withT'
 import { scaleLinear } from 'd3-scale'
 
 const CAMPAIGN_IDS = {
-  old: 'e3568e03-b6b3-46c5-b07a-e9afeea92023', // "Teilen Sie Ihr Abonnement"
-  new: 'b86c78c5-b36b-4de6-8656-44d5e1ba410b', // "Verschenken"
+  first: 'e3568e03-b6b3-46c5-b07a-e9afeea92023', // "Teilen Sie Ihr Abonnement"
+  second: 'b86c78c5-b36b-4de6-8656-44d5e1ba410b', // "Verschenken"
+  third: '7a3bf369-e220-4061-b1e4-d5e99da15d71', // Teilen Sie Ihr Abonnement
 }
 
 const accessGrantQuery = gql`
   query accessGrantQuery($min: Date!, $max: Date!) {
     accessGrantStats {
       evolution(
-        accessCampaignId: "${CAMPAIGN_IDS.old}"
+        accessCampaignId: "${CAMPAIGN_IDS.first}"
         min: $min
         max: $max
       ) {
@@ -37,7 +38,7 @@ const accessGrantQuery = gql`
         updatedAt
       }
       events(
-        accessCampaignId: "${CAMPAIGN_IDS.old}"
+        accessCampaignId: "${CAMPAIGN_IDS.first}"
         min: $min
         max: $max
       ) {
@@ -51,7 +52,7 @@ const accessGrantQuery = gql`
     }
     accessGrantStats2: accessGrantStats {
       evolution(
-        accessCampaignId: "${CAMPAIGN_IDS.new}"
+        accessCampaignId: "${CAMPAIGN_IDS.second}"
         min: $min
         max: $max
       ) {
@@ -64,7 +65,34 @@ const accessGrantQuery = gql`
         updatedAt
       }
       events(
-        accessCampaignId: "${CAMPAIGN_IDS.new}"
+        accessCampaignId: "${CAMPAIGN_IDS.second}"
+        min: $min
+        max: $max
+      ) {
+        buckets {
+          pledges
+          claims
+          invites
+        }
+        updatedAt
+      }
+    }
+    accessGrantStats3: accessGrantStats {
+      evolution(
+        accessCampaignId: "${CAMPAIGN_IDS.third}"
+        min: $min
+        max: $max
+      ) {
+        buckets {
+          date
+          active
+          activeUnconverted
+          converted
+        }
+        updatedAt
+      }
+      events(
+        accessCampaignId: "${CAMPAIGN_IDS.third}"
         min: $min
         max: $max
       ) {
@@ -100,14 +128,23 @@ const ShareChart = ({ data, t }) => {
           const { events: events2, evolution: evolution2 } =
             data.accessGrantStats2
 
+          const { events: events3, evolution: evolution3 } =
+            data.accessGrantStats3
+
           const mergedEvolutionBuckets = evolution.buckets
             .map((bucket) => {
               const bucket2 = evolution2.buckets.find(
                 (bucket2) => bucket.date === bucket2.date,
               )
+              const bucket3 = evolution3.buckets.find(
+                (bucket3) => bucket.date === bucket3.date,
+              )
               return {
                 date: bucket.date,
-                active: bucket.active + (bucket2 ? bucket2.active : 0),
+                active:
+                  bucket.active +
+                  (bucket2 ? bucket2.active : 0) +
+                  (bucket3 ? bucket3.active : 0),
               }
             })
             .concat(
@@ -115,6 +152,14 @@ const ShareChart = ({ data, t }) => {
                 (bucket) =>
                   !evolution.buckets.find(
                     (bucket2) => bucket.date === bucket2.date,
+                  ),
+              ),
+            )
+            .concat(
+              evolution3.buckets.filter(
+                (bucket) =>
+                  !evolution.buckets.find(
+                    (bucket3) => bucket.date === bucket3.date,
                   ),
               ),
             )
@@ -159,7 +204,8 @@ const ShareChart = ({ data, t }) => {
             (sums, key) => {
               sums[key] =
                 sum(events.buckets, (bucket) => bucket[key]) +
-                sum(events2.buckets, (bucket) => bucket[key])
+                sum(events2.buckets, (bucket) => bucket[key]) +
+                sum(events3.buckets, (bucket) => bucket[key])
               return sums
             },
             {},
@@ -221,8 +267,10 @@ const ShareChart = ({ data, t }) => {
                     min([
                       new Date(evolution.updatedAt),
                       new Date(evolution2.updatedAt),
+                      new Date(evolution3.updatedAt),
                       new Date(events.updatedAt),
                       new Date(events2.updatedAt),
+                      new Date(events3.updatedAt),
                     ]),
                   ),
                 })}
