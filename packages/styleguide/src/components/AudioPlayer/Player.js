@@ -379,10 +379,13 @@ class AudioPlayer extends Component {
     if (this.audio.readyState >= 1) {
       this.onSeekable()
     }
-  }
-  componentDidUpdate() {
-    this.setFormattedTimes()
     this.setAudioPlaybackRate()
+  }
+  componentDidUpdate(prevProps) {
+    this.setFormattedTimes()
+    if (prevProps.playbackRate != this.props.playbackRate) {
+      this.setAudioPlaybackRate()
+    }
   }
   componentWillUnmount() {
     globalState.instances = globalState.instances.filter(
@@ -725,6 +728,7 @@ AudioPlayer.defaultProps = {
   scrubberPosition: 'top',
   timePosition: 'right',
   controlsPadding: 0,
+  playbackRate: 1,
 }
 
 AudioPlayer.contextTypes = {
