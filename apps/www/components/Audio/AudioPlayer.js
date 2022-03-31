@@ -30,6 +30,7 @@ const AudioPlayerFrontend = ({ t }) => {
               <BottomPanel wide foreground={true} visible={audioPlayerVisible}>
                 <ProgressComponent isArticle={false}>
                   <AudioPlayer
+                    key={audioState.mediaId || audioState.url}
                     mode='overlay'
                     src={audioState.audioSource}
                     title={audioState.title}
