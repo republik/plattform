@@ -162,7 +162,7 @@ class AudioPlayer extends Component {
     super(props)
 
     this.state = {
-      playEnabled: false,
+      canSetTime: false,
       playing: false,
       progress: 0,
       loading: false,
@@ -235,9 +235,14 @@ class AudioPlayer extends Component {
     this.isSeekable = new Promise((resolve) => {
       this.onSeekable = resolve
     })
-    this.onCanPlay = () => {
+    this.onMetaData = () => {
       this.setState(() => ({
-        playEnabled: true,
+        loading: false,
+      }))
+    }
+    this.onCanSeek = () => {
+      this.setState(() => ({
+        canSetTime: true,
         loading: false,
         sourceError: false,
       }))
@@ -362,24 +367,34 @@ class AudioPlayer extends Component {
     this.audio.addEventListener('play', this.onPlay)
     this.audio.addEventListener('pause', this.onPause)
     this.audio.addEventListener('loadstart', this.onLoadStart)
-    this.audio.addEventListener('canplay', this.onCanPlay)
-    this.audio.addEventListener('canplaythrough', this.onCanPlay)
-    // iOS won't fire canPlay, so rely on meta data.
-    this.audio.addEventListener('loadedmetadata', this.onCanPlay)
+    this.audio.addEventListener('canplay', this.onCanSeek)
+    this.audio.addEventListener('canplaythrough', this.onCanSeek)
+    this.audio.addEventListener('loadedmetadata', this.onMetaData)
 
-    Promise.all([this.getStartTime(), this.isSeekable]).then(([startTime]) => {
-      if (startTime !== undefined) {
-        this.setTime(startTime)
+    this.getStartTime().then((startTime) => {
+      const hasStartTime = startTime !== undefined && startTime !== null
+      const runInitialCmds = () => {
+        this.setAudioPlaybackRate()
+        if (hasStartTime) {
+          this.setTime(startTime)
+        }
+        if (this.props.autoPlay) {
+          this.container && this.container.focus()
+          this.play()
+        }
       }
-      if (this.props.autoPlay) {
-        this.container && this.container.focus()
-
-        this.play()
+      if (this.state.canSetTime) {
+        runInitialCmds()
+      } else {
+        this.isSeekable.then(runInitialCmds)
+        if (hasStartTime || this.props.autoPlay) {
+          // ensure load process is started e.g. on battery devices
+          this.audio.load()
+        }
       }
     })
-
     if (this.audio.readyState >= 1) {
-      this.onSeekable()
+      this.onCanSeek()
     }
     this.setAudioPlaybackRate()
   }
@@ -402,9 +417,9 @@ class AudioPlayer extends Component {
     this.audio.removeEventListener('pause', this.onPause)
     this.audio.removeEventListener('loadstart', this.onLoadStart)
     this.audio.removeEventListener('progress', this.onProgress)
-    this.audio.removeEventListener('canplay', this.onCanPlay)
-    this.audio.removeEventListener('canplaythrough', this.onCanPlay)
-    this.audio.removeEventListener('loadedmetadata', this.onCanPlay)
+    this.audio.removeEventListener('canplay', this.onCanSeek)
+    this.audio.removeEventListener('canplaythrough', this.onCanSeek)
+    this.audio.removeEventListener('loadedmetadata', this.onMetaData)
   }
   render() {
     const {
@@ -427,7 +442,7 @@ class AudioPlayer extends Component {
       playbackRate,
       setPlaybackRate,
     } = this.props
-    const { playEnabled, playing, progress, loading, buffered, sourceError } =
+    const { canSetTime, playing, progress, loading, buffered, sourceError } =
       this.state
     const isVideo = src.mp4 || src.hls
     const leftIconsWidth =
@@ -456,7 +471,6 @@ class AudioPlayer extends Component {
         {...styles.audio}
         {...attributes}
         ref={this.ref}
-        onLoadedMetadata={this.onCanPlay}
         crossOrigin='anonymous'
         playsInline
         webkit-playsinline=''
@@ -478,7 +492,6 @@ class AudioPlayer extends Component {
         {...styles.audio}
         {...attributes}
         ref={this.ref}
-        onLoadedMetadata={this.onCanPlay}
         crossOrigin='anonymous'
       >
         {src.mp3 && (
@@ -505,7 +518,7 @@ class AudioPlayer extends Component {
           audio={this.audio}
           playbackElement={playbackElement}
           playing={playing}
-          playEnabled={playEnabled}
+          canSetTime={canSetTime}
           progress={progress}
           loading={loading}
           sourceError={sourceError}
@@ -555,7 +568,7 @@ class AudioPlayer extends Component {
             <button
               {...styles.button}
               onClick={
-                playEnabled
+                canSetTime
                   ? () => {
                       this.setTime(this.audio.currentTime - 10)
                     }
@@ -565,23 +578,21 @@ class AudioPlayer extends Component {
             >
               <ReplayIcon
                 size={SIZE.replay}
-                {...(playEnabled && progress > 0
+                {...(canSetTime && progress > 0
                   ? colorScheme.set('fill', 'text')
                   : colorScheme.set('fill', 'disabled'))}
               />
             </button>
             <button
               {...styles.button}
-              onClick={playEnabled ? this.toggle : null}
+              onClick={this.toggle}
               title={t(`styleguide/AudioPlayer/${playing ? 'pause' : 'play'}`)}
               aria-live='assertive'
             >
               {!playing && (
                 <PlayIcon
                   size={SIZE.play}
-                  {...(playEnabled
-                    ? colorScheme.set('fill', 'text')
-                    : colorScheme.set('fill', 'disabled'))}
+                  {...colorScheme.set('fill', 'text')}
                 />
               )}
               {playing && (
@@ -594,7 +605,7 @@ class AudioPlayer extends Component {
             <button
               {...styles.button}
               onClick={
-                playEnabled
+                canSetTime
                   ? () => {
                       this.setTime(this.audio.currentTime + 30)
                     }
@@ -604,7 +615,7 @@ class AudioPlayer extends Component {
             >
               <ForwardIcon
                 size={SIZE.forward}
-                {...(playEnabled && progress > 0
+                {...(canSetTime && progress > 0
                   ? colorScheme.set('fill', 'text')
                   : colorScheme.set('fill', 'disabled'))}
               />
@@ -612,24 +623,16 @@ class AudioPlayer extends Component {
           </div>
           {download && (
             <div {...styles.download}>
-              {playEnabled && (
-                <a
-                  href={src.mp3 || src.aac || src.mp4}
-                  download
-                  title={t('styleguide/AudioPlayer/download')}
-                >
-                  <DownloadIcon
-                    size={SIZE.download}
-                    {...colorScheme.set('fill', 'text')}
-                  />
-                </a>
-              )}
-              {!playEnabled && (
+              <a
+                href={src.mp3 || src.aac || src.mp4}
+                download
+                title={t('styleguide/AudioPlayer/download')}
+              >
                 <DownloadIcon
                   size={SIZE.download}
-                  {...colorScheme.set('fill', 'disabled')}
+                  {...colorScheme.set('fill', 'text')}
                 />
-              )}
+              </a>
             </div>
           )}
           {closeHandler && (

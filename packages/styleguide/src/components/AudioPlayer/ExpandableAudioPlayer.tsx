@@ -49,7 +49,7 @@ interface ExtendePlayerProps extends AudioInfoProps {
   scrubRef: React.Ref<HTMLDivElement>
   containerRef: React.Ref<HTMLDivElement>
   playing: boolean
-  playEnabled: boolean
+  canSetTime: boolean
   progress: number
   playbackRate: number
   setPlaybackRate: (rate: number) => void
@@ -251,7 +251,7 @@ const ExpandableAudioPlayer = ({
   scrubRef,
   playbackElement,
   playing,
-  playEnabled,
+  canSetTime,
   progress,
   loading,
   sourceError,
@@ -300,7 +300,7 @@ const ExpandableAudioPlayer = ({
                 {...styles.button}
                 {...plainButtonRule}
                 onClick={
-                  playEnabled
+                  canSetTime
                     ? () => {
                         setTime(audio.currentTime - 10 * playbackRate)
                       }
@@ -310,7 +310,7 @@ const ExpandableAudioPlayer = ({
               >
                 <MdReplay10
                   size={24}
-                  {...(playEnabled && progress > 0
+                  {...(canSetTime && progress > 0
                     ? colorScheme.set('fill', 'text')
                     : colorScheme.set('fill', 'disabled'))}
                 />
@@ -318,7 +318,7 @@ const ExpandableAudioPlayer = ({
               <button
                 {...styles.button}
                 {...plainButtonRule}
-                onClick={playEnabled ? toggle : null}
+                onClick={toggle}
                 title={t(
                   `styleguide/AudioPlayer/${playing ? 'pause' : 'play'}`,
                 )}
@@ -327,19 +327,14 @@ const ExpandableAudioPlayer = ({
                 {playing ? (
                   <PauseIcon size={54} {...colorScheme.set('fill', 'text')} />
                 ) : (
-                  <PlayIcon
-                    size={54}
-                    {...(playEnabled
-                      ? colorScheme.set('fill', 'text')
-                      : colorScheme.set('fill', 'disabled'))}
-                  />
+                  <PlayIcon size={54} {...colorScheme.set('fill', 'text')} />
                 )}
               </button>
               <button
                 {...styles.button}
                 {...plainButtonRule}
                 onClick={
-                  playEnabled
+                  canSetTime
                     ? () => {
                         setTime(audio.currentTime + 30 * playbackRate)
                       }
@@ -349,7 +344,7 @@ const ExpandableAudioPlayer = ({
               >
                 <ForwardIcon
                   size={24}
-                  {...(playEnabled && progress > 0
+                  {...(canSetTime && progress > 0
                     ? colorScheme.set('fill', 'text')
                     : colorScheme.set('fill', 'disabled'))}
                 />
@@ -406,24 +401,16 @@ const ExpandableAudioPlayer = ({
             <>
               {download && (
                 <button {...styles.button} {...plainButtonRule}>
-                  {playEnabled && (
-                    <a
-                      href={src.mp3 || src.aac || src.mp4}
-                      download
-                      title={t('styleguide/AudioPlayer/download')}
-                    >
-                      <DownloadIcon
-                        size={22}
-                        {...colorScheme.set('fill', 'text')}
-                      />
-                    </a>
-                  )}
-                  {!playEnabled && (
+                  <a
+                    href={src.mp3 || src.aac || src.mp4}
+                    download
+                    title={t('styleguide/AudioPlayer/download')}
+                  >
                     <DownloadIcon
                       size={22}
-                      {...colorScheme.set('fill', 'disabled')}
+                      {...colorScheme.set('fill', 'text')}
                     />
-                  )}
+                  </a>
                 </button>
               )}
             </>
@@ -433,7 +420,7 @@ const ExpandableAudioPlayer = ({
                 {...styles.button}
                 {...plainButtonRule}
                 style={{ width: 42, paddingLeft: playing ? 4 : 0 }}
-                onClick={playEnabled ? toggle : null}
+                onClick={toggle}
                 title={t(
                   `styleguide/AudioPlayer/${playing ? 'pause' : 'play'}`,
                 )}
@@ -442,12 +429,7 @@ const ExpandableAudioPlayer = ({
                 {playing ? (
                   <PauseIcon size={42} {...colorScheme.set('fill', 'text')} />
                 ) : (
-                  <PlayIcon
-                    size={42}
-                    {...(playEnabled
-                      ? colorScheme.set('fill', 'text')
-                      : colorScheme.set('fill', 'disabled'))}
-                  />
+                  <PlayIcon size={42} {...colorScheme.set('fill', 'text')} />
                 )}
               </button>
               <AudioInfo
