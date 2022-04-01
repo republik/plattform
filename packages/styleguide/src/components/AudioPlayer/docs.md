@@ -38,33 +38,55 @@ Context:
 
 ### Overlay Player
 
-```react|responsive
+```react
 state: {playbackRate: 1}
 ---
-<div
-  style={{
-    position: 'fixed',
-    width: '100%',
-    maxWidth: 414,
-    bottom: 44,
-    right: 0,
-    padding: '0 16px',
-    zIndex: 50,
-    transition: 'all ease-out 0.3s',
-}}>
-  <div style={{backgroundColor: 'white', boxShadow: '0 0 15px rgba(0,0,0,0.1)'}}>
-    <AudioPlayer
-      src={{
-        mp3: 'https://cdn.repub.ch/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
-      }}
-      playbackRate={state.playbackRate}
-      setPlaybackRate={(rate) => setState({playbackRate: rate})}
-      mode='overlay'
-      download
-      title='Vier Schriftstellerinnen schildern die jahrelange russische Bedrohung der Ukraine. Dazu: Der Wochenkommentar und eine neue Podcast-Folge.'
-      t={t}
-    />
+<div style={{ minHeight: 360, position: 'relative' }}>
+  <div
+    style={{
+      position: 'absolute', // normally fixed
+      width: '100%',
+      maxWidth: 414,
+      bottom: 20,
+      right: 0,
+      padding: '0 16px',
+      zIndex: 50,
+      transition: 'all ease-out 0.3s',
+  }}>
+    <div style={{backgroundColor: 'white', boxShadow: '0 0 15px rgba(0,0,0,0.1)'}}>
+      <AudioPlayer
+        src={{
+          mp3: 'https://cdn.repub.ch/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
+        }}
+        playbackRate={state.playbackRate}
+        setPlaybackRate={(rate) => setState({playbackRate: rate})}
+        mode='overlay'
+        download
+        title='Vier Schriftstellerinnen schildern die jahrelange russische Bedrohung der Ukraine. Dazu: Der Wochenkommentar und eine neue Podcast-Folge.'
+        t={t}
+      />
+    </div>
   </div>
+</div>
+```
+
+Missing File
+
+```react
+state: {playbackRate: 1}
+---
+<div style={{backgroundColor: 'white', boxShadow: '0 0 15px rgba(0,0,0,0.1)'}}>
+  <AudioPlayer
+    src={{
+      mp3: '/static/non-existing-sample.mp3'
+    }}
+    playbackRate={state.playbackRate}
+    setPlaybackRate={(rate) => setState({playbackRate: rate})}
+    mode='overlay'
+    download
+    title='Vier Schriftstellerinnen schildern die jahrelange russische Bedrohung der Ukraine. Dazu: Der Wochenkommentar und eine neue Podcast-Folge.'
+    t={t}
+  />
 </div>
 ```
 

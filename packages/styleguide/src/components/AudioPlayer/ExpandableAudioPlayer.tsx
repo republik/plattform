@@ -49,7 +49,7 @@ interface ExtendePlayerProps extends AudioInfoProps {
   scrubRef: React.Ref<HTMLDivElement>
   containerRef: React.Ref<HTMLDivElement>
   playing: boolean
-  playEnabled: boolean
+  canSetTime: boolean
   progress: number
   playbackRate: number
   setPlaybackRate: (rate: number) => void
@@ -137,6 +137,7 @@ const styles = {
   }),
   sourceError: css({
     ...sansSerifRegular12,
+    margin: '4px 0 0 0',
   }),
   sourceErrorButton: css({
     ...underline,
@@ -197,7 +198,7 @@ const AudioInfo = ({
   return (
     <div
       {...styles.textArea}
-      {...(!sourceError && !expanded && styles.ellipsize)}
+      {...(!expanded && styles.ellipsize)}
       style={{
         textAlign: expanded ? 'center' : 'left',
       }}
@@ -205,17 +206,6 @@ const AudioInfo = ({
     >
       {loading ? (
         <InlineSpinner size={25} />
-      ) : sourceError ? (
-        <div {...styles.sourceError} {...colorScheme.set('color', 'disabled')}>
-          {t('styleguide/AudioPlayer/sourceError')}{' '}
-          <button
-            {...plainButtonRule}
-            {...styles.sourceErrorButton}
-            onClick={() => reload()}
-          >
-            {t('styleguide/AudioPlayer/sourceErrorTryAgain')}
-          </button>
-        </div>
       ) : (
         <>
           {title && (
@@ -230,16 +220,29 @@ const AudioInfo = ({
               </a>
             </Link>
           )}
-          <p
-            {...(expanded ? styles.expandedTime : styles.time)}
-            style={{ marginTop: expanded ? 8 : 0 }}
-            {...colorScheme.set('color', 'textSoft')}
-            tabIndex={0}
-          >
-            {formattedCurrentTime && formattedCurrentTime}
-            {formattedCurrentTime && formattedDuration && ' / '}
-            {formattedDuration && formattedDuration}
-          </p>
+          {sourceError ? (
+            <p {...styles.sourceError} {...colorScheme.set('color', 'error')}>
+              {t('styleguide/AudioPlayer/sourceError')}{' '}
+              <button
+                {...plainButtonRule}
+                {...styles.sourceErrorButton}
+                onClick={() => reload()}
+              >
+                {t('styleguide/AudioPlayer/sourceErrorTryAgain')}
+              </button>
+            </p>
+          ) : (
+            <p
+              {...(expanded ? styles.expandedTime : styles.time)}
+              style={{ marginTop: expanded ? 8 : 0 }}
+              {...colorScheme.set('color', 'textSoft')}
+              tabIndex={0}
+            >
+              {formattedCurrentTime && formattedCurrentTime}
+              {formattedCurrentTime && formattedDuration && ' / '}
+              {formattedDuration && formattedDuration}
+            </p>
+          )}
         </>
       )}
     </div>
@@ -251,7 +254,7 @@ const ExpandableAudioPlayer = ({
   scrubRef,
   playbackElement,
   playing,
-  playEnabled,
+  canSetTime,
   progress,
   loading,
   sourceError,
@@ -300,7 +303,7 @@ const ExpandableAudioPlayer = ({
                 {...styles.button}
                 {...plainButtonRule}
                 onClick={
-                  playEnabled
+                  canSetTime
                     ? () => {
                         setTime(audio.currentTime - 10 * playbackRate)
                       }
@@ -310,7 +313,7 @@ const ExpandableAudioPlayer = ({
               >
                 <MdReplay10
                   size={24}
-                  {...(playEnabled && progress > 0
+                  {...(canSetTime && progress > 0
                     ? colorScheme.set('fill', 'text')
                     : colorScheme.set('fill', 'disabled'))}
                 />
@@ -318,20 +321,27 @@ const ExpandableAudioPlayer = ({
               <button
                 {...styles.button}
                 {...plainButtonRule}
-                onClick={playEnabled ? toggle : null}
+                onClick={toggle}
                 title={t(
                   `styleguide/AudioPlayer/${playing ? 'pause' : 'play'}`,
                 )}
                 aria-live='assertive'
               >
                 {playing ? (
-                  <PauseIcon size={54} {...colorScheme.set('fill', 'text')} />
+                  <PauseIcon
+                    size={54}
+                    {...colorScheme.set(
+                      'fill',
+                      sourceError ? 'disabled' : 'text',
+                    )}
+                  />
                 ) : (
                   <PlayIcon
                     size={54}
-                    {...(playEnabled
-                      ? colorScheme.set('fill', 'text')
-                      : colorScheme.set('fill', 'disabled'))}
+                    {...colorScheme.set(
+                      'fill',
+                      sourceError ? 'disabled' : 'text',
+                    )}
                   />
                 )}
               </button>
@@ -339,7 +349,7 @@ const ExpandableAudioPlayer = ({
                 {...styles.button}
                 {...plainButtonRule}
                 onClick={
-                  playEnabled
+                  canSetTime
                     ? () => {
                         setTime(audio.currentTime + 30 * playbackRate)
                       }
@@ -349,7 +359,7 @@ const ExpandableAudioPlayer = ({
               >
                 <ForwardIcon
                   size={24}
-                  {...(playEnabled && progress > 0
+                  {...(canSetTime && progress > 0
                     ? colorScheme.set('fill', 'text')
                     : colorScheme.set('fill', 'disabled'))}
                 />
@@ -404,26 +414,18 @@ const ExpandableAudioPlayer = ({
         <div {...styles.leftControls}>
           {isExpanded ? (
             <>
-              {download && (
+              {download && !sourceError && (
                 <button {...styles.button} {...plainButtonRule}>
-                  {playEnabled && (
-                    <a
-                      href={src.mp3 || src.aac || src.mp4}
-                      download
-                      title={t('styleguide/AudioPlayer/download')}
-                    >
-                      <DownloadIcon
-                        size={22}
-                        {...colorScheme.set('fill', 'text')}
-                      />
-                    </a>
-                  )}
-                  {!playEnabled && (
+                  <a
+                    href={src.mp3 || src.aac || src.mp4}
+                    download
+                    title={t('styleguide/AudioPlayer/download')}
+                  >
                     <DownloadIcon
                       size={22}
-                      {...colorScheme.set('fill', 'disabled')}
+                      {...colorScheme.set('fill', 'text')}
                     />
-                  )}
+                  </a>
                 </button>
               )}
             </>
@@ -433,20 +435,27 @@ const ExpandableAudioPlayer = ({
                 {...styles.button}
                 {...plainButtonRule}
                 style={{ width: 42, paddingLeft: playing ? 4 : 0 }}
-                onClick={playEnabled ? toggle : null}
+                onClick={toggle}
                 title={t(
                   `styleguide/AudioPlayer/${playing ? 'pause' : 'play'}`,
                 )}
                 aria-live='assertive'
               >
                 {playing ? (
-                  <PauseIcon size={42} {...colorScheme.set('fill', 'text')} />
+                  <PauseIcon
+                    size={42}
+                    {...colorScheme.set(
+                      'fill',
+                      sourceError ? 'disabled' : 'text',
+                    )}
+                  />
                 ) : (
                   <PlayIcon
                     size={42}
-                    {...(playEnabled
-                      ? colorScheme.set('fill', 'text')
-                      : colorScheme.set('fill', 'disabled'))}
+                    {...colorScheme.set(
+                      'fill',
+                      sourceError ? 'disabled' : 'text',
+                    )}
                   />
                 )}
               </button>
