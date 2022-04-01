@@ -23,7 +23,7 @@ import AudioForm from './AudioForm'
 import UIForm from '../../UIForm'
 import ShareImageForm from './ShareImageForm'
 import GooglePreview from './GooglePreview'
-import ArticleRecommendations from './ArticleRecommendations'
+import ArticleRecommendations from './ArticleRecommendations/ArticleRecommendations'
 
 const styles = {
   container: css({

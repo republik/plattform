@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import RepoSearch from '../../utils/RepoSearch'
-import withT from '../../../../lib/withT'
+import RepoSearch from '../../../utils/RepoSearch'
+import withT from '../../../../../lib/withT'
 import { Label, A, Interaction } from '@project-r/styleguide'
 import { css } from 'glamor'
 import MdAdd from 'react-icons/lib/md/add'
-import ArticleRecommendationItem from './ArticleRecommendations/ArticleRecommendationItem'
+import ArticleRecommendationItem from './ArticleRecommendationItem'
+import { createAbsolutRepoUrl } from './RepoLinkUtility'
 const ARTICLE_RECOMMENDATIONS_KEY = 'recommendations'
 
 const styles = {
@@ -45,7 +46,7 @@ const ArticleRecommendations = ({ t, editor, node }) => {
   }
 
   const addSuggestion = (suggestion, index = -1) => {
-    const prefixedSuggestionURL = `https://github.com/${suggestion.value.id}`
+    const prefixedSuggestionURL = createAbsolutRepoUrl(suggestion.value.id)
     if (index == -1) {
       handleSuggestionsChange([...recommendedArticles, prefixedSuggestionURL])
     } else {
@@ -97,6 +98,8 @@ const ArticleRecommendations = ({ t, editor, node }) => {
               handleDown={() => swapArrayElements(index, index + 1)}
               isFirst={index === 0}
               isLast={index === recommendedArticles.length - 1}
+              isDuplicate={recommendedArticles.indexOf(val) !== index}
+              isRedundant={false} // TODO: pass down repoId of current article
             />
           ))}
           {showRepoSearch && (

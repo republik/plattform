@@ -3206,11 +3206,11 @@
     },
     {
       "key": "article/syntheticreadaloud/title",
-      "value": "Beitrag von synthetischen Stimme vorlesen lassen"
+      "value": "Beitrag von synthetischer Stimme vorlesen lassen"
     },
     {
       "key": "article/syntheticreadaloud/lead",
-      "value": "Ein Versuch, die Republik zugänglicher zu machen."
+      "value": "Ein Versuch, die Republik zugänglicher zu machen. <a href=\"/2022/04/01/synthetische-stimme/diskussion\">Geben Sie uns Feedback</a>."
     },
     {
       "key": "article/series/episode",
@@ -3662,7 +3662,7 @@
     },
     {
       "key": "memberships/claim/personal/lead",
-      "value": "{name} schenkt Ihnen einen Republik-Probezugang"
+      "value": "{name} schenkt Ihnen acht Wochen Republik"
     },
     {
       "key": "memberships/claim/access/lead",
@@ -6289,6 +6289,10 @@
       "value": "In Europa ist Krieg. Jetzt ist keine Zeit für Kleinlichkeiten. Die gesamte Berichterstattung der Republik zur Ukraine – frei lesbar, frei teilbar."
     },
     {
+      "key": "account/newsletterSubscriptions/WEEKLY/description",
+      "value": "Die gesamte Berichterstattung der Republik zur Ukraine – frei lesbar, frei teilbar. Und für Mitglieder und Abonnenten: wie gewohnt, samt Rückblick auf das ganze Programm der vergangenen Woche."
+    },
+    {
       "key": "marketing/page/sections/title/weekly",
       "value": "Wochenend-Newsletter"
     },
@@ -6299,10 +6303,6 @@
     {
       "key": "account/newsletterSubscriptions/WEEKLY/frequency",
       "value": "Samstags um 5 Uhr"
-    },
-    {
-      "key": "account/newsletterSubscriptions/WEEKLY/description",
-      "value": "Die gesamte Berichterstattung der Republik zur Ukraine – frei lesbar, frei teilbar. Und für Mitglieder und Abonnenten: wie gewohnt, samt Rückblick auf das ganze Programm der vergangenen Woche."
     },
     {
       "key": "package/ABO/description",

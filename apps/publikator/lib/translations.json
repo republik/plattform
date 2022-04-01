@@ -889,6 +889,14 @@
       "value": "Veröffentlicht am: {date}"
     },
     {
+      "key": "metaData/recommendations/duplicate",
+      "value": "Dieser Beitrag ist bereits in den vorgeschlagenen Beiträgen enthalten."
+    },
+    {
+      "key": "metaData/recommendations/redundant",
+      "value": "Der Artikel ist auf sich selbst verlinkt."
+    },
+    {
       "key": "variable/insert/greeting",
       "value": "Begrüssung"
     },

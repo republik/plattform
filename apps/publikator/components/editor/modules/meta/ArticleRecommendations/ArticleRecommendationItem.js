@@ -8,12 +8,14 @@ import {
   A,
   fontStyles,
   InlineSpinner,
+  useColorContext,
 } from '@project-r/styleguide'
 import withT from '../../../../../lib/withT'
 import { compose, graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 import PublicIcon from 'react-icons/lib/md/public'
 import { FRONTEND_BASE_URL } from '../../../../../lib/settings'
+import { createRelativeRepoUrl } from './RepoLinkUtility'
 
 const styles = {
   recommendationItem: css({
@@ -50,25 +52,33 @@ const styles = {
       marginRight: '.5rem',
     },
   }),
+  errorLine: css({
+    marginTop: '.5rem',
+    display: 'inline-flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  }),
 }
 
 const ArticleRecommendationItem = ({
-  repoId: value,
+  data: { loading, repoData },
+  t,
   handleRemove,
   handleUp,
   handleDown,
   isFirst,
   isLast,
-  data: { loading, repoData },
-  t,
+  isDuplicate,
+  isRedundant,
 }) => {
+  const [colorScheme] = useColorContext()
   const metaData = repoData?.latestPublications[0]?.document?.meta
   const authors = metaData?.authors
     ?.map((a) => a.firstName + ' ' + a.lastName)
     .join(', ')
 
   return (
-    <li key={value} {...styles.recommendationItem}>
+    <li {...styles.recommendationItem}>
       <div {...styles.arrowWrapper}>
         <IconButton
           Icon={ArrowUpIcon}
@@ -110,6 +120,20 @@ const ArticleRecommendationItem = ({
                 })}
               </span>
             </div>
+            {(isDuplicate || isRedundant) && (
+              <div {...styles.errorLine}>
+                {isDuplicate && (
+                  <span {...colorScheme.set('color', 'error')}>
+                    {t('metaData/recommendations/duplicate')}
+                  </span>
+                )}
+                {isRedundant && (
+                  <span {...colorScheme.set('color', 'error')}>
+                    {t('metaData/recommendations/redundant')}
+                  </span>
+                )}
+              </div>
+            )}
           </>
         )}
       </div>
@@ -149,7 +173,7 @@ export default compose(
     {
       options: ({ repoId }) => ({
         variables: {
-          id: repoId.replace('https://github.com/', ''),
+          id: createRelativeRepoUrl(repoId),
         },
       }),
     },
