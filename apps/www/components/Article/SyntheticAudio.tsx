@@ -62,6 +62,7 @@ const styles = {
   }),
   title: css({
     ...fontStyles.sansSerifMedium15,
+    cursor: 'pointer',
     margin: '0px 0 4px 0',
     padding: 0,
   }),
@@ -91,7 +92,19 @@ const SyntheticAudio = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
           }}
         />
         <div {...styles.textContainer}>
-          <p {...styles.title} {...colorScheme.set('fill', 'text')}>
+          <p
+            onClick={(e) => {
+              e.preventDefault()
+              trackEvent(['SyntheticAudio', 'audio', meta.url])
+              toggleAudioPlayer({
+                audioSource: meta.audioSource,
+                title: meta.title,
+                path: meta.path,
+              })
+            }}
+            {...styles.title}
+            {...colorScheme.set('fill', 'text')}
+          >
             {t('article/syntheticreadaloud/title')}
           </p>
           <p {...styles.lead}>
