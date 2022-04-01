@@ -16,6 +16,7 @@ import gql from 'graphql-tag'
 import PublicIcon from 'react-icons/lib/md/public'
 import { FRONTEND_BASE_URL } from '../../../../../lib/settings'
 import { createRelativeRepoUrl } from './RepoLinkUtility'
+import { errorToString } from '../../../../../lib/utils/errors'
 
 const styles = {
   recommendationItem: css({
@@ -53,15 +54,18 @@ const styles = {
     },
   }),
   errorLine: css({
-    marginTop: '.5rem',
+    marginTop: '.25rem',
     display: 'inline-flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
+    '& > *': {
+      ...fontStyles.sansSerifRegular14,
+    },
   }),
 }
 
 const ArticleRecommendationItem = ({
-  data: { loading, repoData },
+  data: { loading, repoData, errors },
   t,
   handleRemove,
   handleUp,
@@ -130,6 +134,11 @@ const ArticleRecommendationItem = ({
                 {isRedundant && (
                   <span {...colorScheme.set('color', 'error')}>
                     {t('metaData/recommendations/redundant')}
+                  </span>
+                )}
+                {errors && (
+                  <span {...colorScheme.set('color', 'error')}>
+                    {errorToString(errors)}
                   </span>
                 )}
               </div>
