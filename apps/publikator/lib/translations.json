@@ -865,6 +865,30 @@
       "value": "Dunkles Farbschema forcieren"
     },
     {
+      "key": "metaData/recommendations/heading",
+      "value": "Vorgeschlagene Beiträge"
+    },
+    {
+      "key": "metaData/recommendations/info",
+      "value": "Die hier ausgewählten Beiträge werden unter dem Artikel in einem Feed aufgelistet."
+    },
+    {
+      "key": "metaData/recommendations/add",
+      "value": "Beitrag hinzufügen"
+    },
+    {
+      "key": "metaData/recommendations/search",
+      "value": "Beitrag suchen"
+    },
+    {
+      "key": "metaData/recommendations/author",
+      "value": "Von: {authors}"
+    },
+    {
+      "key": "metaData/recommendations/publishedAt",
+      "value": "Veröffentlicht am: {date}"
+    },
+    {
       "key": "variable/insert/greeting",
       "value": "Begrüssung"
     },

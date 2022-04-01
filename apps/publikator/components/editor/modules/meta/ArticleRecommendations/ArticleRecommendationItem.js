@@ -43,6 +43,13 @@ const styles = {
     display: 'inline-flex',
     alignItems: 'center',
   }),
+  metaLine: css({
+    display: 'inline-flex',
+    alignItems: 'center',
+    '& > *': {
+      marginRight: '.5rem',
+    },
+  }),
 }
 
 const ArticleRecommendationItem = ({
@@ -52,23 +59,13 @@ const ArticleRecommendationItem = ({
   handleDown,
   isFirst,
   isLast,
-  data: { loading, errors, repoData, ...data },
-  ...props
+  data: { loading, repoData },
+  t,
 }) => {
   const metaData = repoData?.latestPublications[0]?.document?.meta
   const authors = metaData?.authors
     ?.map((a) => a.firstName + ' ' + a.lastName)
     .join(', ')
-  const articleLink = ``
-
-  console.debug(
-    'ey',
-    JSON.stringify(
-      { repoData, metaData, loading, errors, data, props },
-      null,
-      2,
-    ),
-  )
 
   return (
     <li key={value} {...styles.recommendationItem}>
@@ -99,12 +96,18 @@ const ArticleRecommendationItem = ({
                 <PublicIcon />
               </A>
             </div>
-            <div {...styles.content2ndLine}>
+            <div {...styles.metaLine}>
               <span>
-                Von: {authors}, veröffentlicht am:{' '}
-                {new Date(Date.parse(metaData.publishDate)).toLocaleDateString(
-                  'de-CH',
-                )}
+                {t('metaData/recommendations/author', {
+                  authors,
+                })}
+              </span>
+              <span>
+                {t('metaData/recommendations/publishedAt', {
+                  date: new Date(
+                    Date.parse(metaData.publishDate),
+                  ).toLocaleDateString('de-CH'),
+                })}
               </span>
             </div>
           </>

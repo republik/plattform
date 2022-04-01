@@ -81,20 +81,16 @@ const ArticleRecommendations = ({ t, editor, node }) => {
     handleSuggestionsChange(nextState)
   }
 
-  console.debug('article suggestions', recommendedArticles)
-
   return (
     <div className={styles.wrapper}>
-      <Interaction.H3>Vorgeschlagene Beiträge</Interaction.H3>
-      <p>
-        Die hier ausgewählten Beiträge werden unten am Aritkel, in der gleichen
-        Reihenfolge, im Von der Redaktion für Sie empfohlen-Feed angezeigt.
-      </p>
+      <Interaction.H3>{t('metaData/recommendations/heading')}</Interaction.H3>
+      <p>{t('metaData/recommendations/info')}</p>
       {recommendedArticles && recommendedArticles.length > 0 && (
         <ul className={styles.recommendationList}>
           {recommendedArticles.map((val, index) => (
             <ArticleRecommendationItem
               key={val}
+              t={t}
               repoId={val}
               handleRemove={() => remove(index)}
               handleUp={() => swapArrayElements(index, index - 1)}
@@ -106,7 +102,7 @@ const ArticleRecommendations = ({ t, editor, node }) => {
           {showRepoSearch && (
             <li>
               <div {...styles.repoSearchWrapper}>
-                <Label>Beitrag suchen</Label>
+                <Label>{t('metaData/recommendations/search')}</Label>
                 <RepoSearch
                   onChange={(value) => {
                     setShowRepoSearch(false)
@@ -119,7 +115,7 @@ const ArticleRecommendations = ({ t, editor, node }) => {
         </ul>
       )}
       <A href='#add' onClick={() => setShowRepoSearch(true)} {...styles.add}>
-        <MdAdd /> Beitrag hinzufügen
+        <MdAdd /> {t('metaData/recommendations/add')}
       </A>
     </div>
   )
