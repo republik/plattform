@@ -188,10 +188,11 @@ class AudioPlayer extends Component {
       )
     }
     this.syncProgress = () => {
+      clearTimeout(this.readTimeout)
       this.readTimeout = setTimeout(() => {
         this.updateProgress()
         this.syncProgress()
-      }, 16)
+      }, 250)
     }
     this.containerRef = (ref) => {
       this.container = ref
@@ -216,6 +217,7 @@ class AudioPlayer extends Component {
         playing: false,
       }))
       clearTimeout(this.readTimeout)
+      this.updateProgress()
       this.props.onPause && this.props.onPause()
     }
     this.onLoadStart = () => {
@@ -388,6 +390,7 @@ class AudioPlayer extends Component {
     }
   }
   componentWillUnmount() {
+    clearTimeout(this.readTimeout)
     globalState.instances = globalState.instances.filter(
       (setter) => setter !== this.setInstanceState,
     )
@@ -505,7 +508,6 @@ class AudioPlayer extends Component {
           playEnabled={playEnabled}
           progress={progress}
           loading={loading}
-          buffered={buffered}
           sourceError={sourceError}
           playbackRate={playbackRate}
           setPlaybackRate={setPlaybackRate}

@@ -51,7 +51,6 @@ interface ExtendePlayerProps extends AudioInfoProps {
   playing: boolean
   playEnabled: boolean
   progress: number
-  buffered: any
   playbackRate: number
   setPlaybackRate: (rate: number) => void
   toggle: () => void
@@ -255,7 +254,6 @@ const ExpandableAudioPlayer = ({
   playEnabled,
   progress,
   loading,
-  buffered,
   sourceError,
   toggle,
   reload,
