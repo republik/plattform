@@ -137,6 +137,7 @@ const styles = {
   }),
   sourceError: css({
     ...sansSerifRegular12,
+    margin: '4px 0 0 0',
   }),
   sourceErrorButton: css({
     ...underline,
@@ -197,7 +198,7 @@ const AudioInfo = ({
   return (
     <div
       {...styles.textArea}
-      {...(!sourceError && !expanded && styles.ellipsize)}
+      {...(!expanded && styles.ellipsize)}
       style={{
         textAlign: expanded ? 'center' : 'left',
       }}
@@ -205,17 +206,6 @@ const AudioInfo = ({
     >
       {loading ? (
         <InlineSpinner size={25} />
-      ) : sourceError ? (
-        <div {...styles.sourceError} {...colorScheme.set('color', 'disabled')}>
-          {t('styleguide/AudioPlayer/sourceError')}{' '}
-          <button
-            {...plainButtonRule}
-            {...styles.sourceErrorButton}
-            onClick={() => reload()}
-          >
-            {t('styleguide/AudioPlayer/sourceErrorTryAgain')}
-          </button>
-        </div>
       ) : (
         <>
           {title && (
@@ -230,16 +220,29 @@ const AudioInfo = ({
               </a>
             </Link>
           )}
-          <p
-            {...(expanded ? styles.expandedTime : styles.time)}
-            style={{ marginTop: expanded ? 8 : 0 }}
-            {...colorScheme.set('color', 'textSoft')}
-            tabIndex={0}
-          >
-            {formattedCurrentTime && formattedCurrentTime}
-            {formattedCurrentTime && formattedDuration && ' / '}
-            {formattedDuration && formattedDuration}
-          </p>
+          {sourceError ? (
+            <p {...styles.sourceError} {...colorScheme.set('color', 'error')}>
+              {t('styleguide/AudioPlayer/sourceError')}{' '}
+              <button
+                {...plainButtonRule}
+                {...styles.sourceErrorButton}
+                onClick={() => reload()}
+              >
+                {t('styleguide/AudioPlayer/sourceErrorTryAgain')}
+              </button>
+            </p>
+          ) : (
+            <p
+              {...(expanded ? styles.expandedTime : styles.time)}
+              style={{ marginTop: expanded ? 8 : 0 }}
+              {...colorScheme.set('color', 'textSoft')}
+              tabIndex={0}
+            >
+              {formattedCurrentTime && formattedCurrentTime}
+              {formattedCurrentTime && formattedDuration && ' / '}
+              {formattedDuration && formattedDuration}
+            </p>
+          )}
         </>
       )}
     </div>
@@ -325,9 +328,21 @@ const ExpandableAudioPlayer = ({
                 aria-live='assertive'
               >
                 {playing ? (
-                  <PauseIcon size={54} {...colorScheme.set('fill', 'text')} />
+                  <PauseIcon
+                    size={54}
+                    {...colorScheme.set(
+                      'fill',
+                      sourceError ? 'disabled' : 'text',
+                    )}
+                  />
                 ) : (
-                  <PlayIcon size={54} {...colorScheme.set('fill', 'text')} />
+                  <PlayIcon
+                    size={54}
+                    {...colorScheme.set(
+                      'fill',
+                      sourceError ? 'disabled' : 'text',
+                    )}
+                  />
                 )}
               </button>
               <button
@@ -399,7 +414,7 @@ const ExpandableAudioPlayer = ({
         <div {...styles.leftControls}>
           {isExpanded ? (
             <>
-              {download && (
+              {download && !sourceError && (
                 <button {...styles.button} {...plainButtonRule}>
                   <a
                     href={src.mp3 || src.aac || src.mp4}
@@ -427,9 +442,21 @@ const ExpandableAudioPlayer = ({
                 aria-live='assertive'
               >
                 {playing ? (
-                  <PauseIcon size={42} {...colorScheme.set('fill', 'text')} />
+                  <PauseIcon
+                    size={42}
+                    {...colorScheme.set(
+                      'fill',
+                      sourceError ? 'disabled' : 'text',
+                    )}
+                  />
                 ) : (
-                  <PlayIcon size={42} {...colorScheme.set('fill', 'text')} />
+                  <PlayIcon
+                    size={42}
+                    {...colorScheme.set(
+                      'fill',
+                      sourceError ? 'disabled' : 'text',
+                    )}
+                  />
                 )}
               </button>
               <AudioInfo

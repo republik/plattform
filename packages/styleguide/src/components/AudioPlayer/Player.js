@@ -317,6 +317,16 @@ class AudioPlayer extends Component {
         this.audio.playbackRate = this.props.playbackRate
       }
     }
+
+    this.reload = () => {
+      const { audio } = this
+      if (audio) {
+        this.setState(() => ({
+          loading: true,
+        }))
+        audio.load()
+      }
+    }
   }
 
   play() {
@@ -324,6 +334,9 @@ class AudioPlayer extends Component {
     const playPromise = audio && audio.play()
     if (playPromise) {
       playPromise.catch((e) => {
+        if (this.state.playing) {
+          this.setState({ playing: false })
+        }
         warn('[AudioPlayer]', e.message)
       })
     }
@@ -332,19 +345,10 @@ class AudioPlayer extends Component {
     const { audio } = this
     audio && audio.pause()
   }
-  reload() {
-    const { audio } = this
-    if (audio) {
-      this.setState(() => ({
-        loading: true,
-      }))
-      audio.load()
-    }
-  }
   getStartTime() {
     if (this.context.getMediaProgress) {
       return this.context.getMediaProgress(this.props).catch(() => {
-        return undefined // ignore errors
+        return // ignore errors
       })
     }
     return Promise.resolve()
@@ -589,16 +593,21 @@ class AudioPlayer extends Component {
               title={t(`styleguide/AudioPlayer/${playing ? 'pause' : 'play'}`)}
               aria-live='assertive'
             >
-              {!playing && (
-                <PlayIcon
-                  size={SIZE.play}
-                  {...colorScheme.set('fill', 'text')}
-                />
-              )}
-              {playing && (
+              {playing ? (
                 <PauseIcon
                   size={SIZE.play}
-                  {...colorScheme.set('fill', 'text')}
+                  {...colorScheme.set(
+                    'fill',
+                    sourceError ? 'disabled' : 'text',
+                  )}
+                />
+              ) : (
+                <PlayIcon
+                  size={SIZE.play}
+                  {...colorScheme.set(
+                    'fill',
+                    sourceError ? 'disabled' : 'text',
+                  )}
                 />
               )}
             </button>
@@ -621,7 +630,7 @@ class AudioPlayer extends Component {
               />
             </button>
           </div>
-          {download && (
+          {download && !sourceError && (
             <div {...styles.download}>
               <a
                 href={src.mp3 || src.aac || src.mp4}
@@ -652,13 +661,22 @@ class AudioPlayer extends Component {
             {...colorScheme.set('color', 'text')}
             style={uiTextStyle}
           >
-            {loading && (
+            {loading ? (
               <InlineSpinner
                 size={25}
                 title={t('styleguide/AudioPlayer/loading')}
               />
-            )}
-            {!loading && (
+            ) : sourceError ? (
+              <div
+                {...styles.sourceError}
+                {...colorScheme.set('color', 'error')}
+              >
+                {t('styleguide/AudioPlayer/sourceError')}{' '}
+                <span onClick={() => this.reload()} {...styles.retry}>
+                  {t('styleguide/AudioPlayer/sourceErrorTryAgain')}
+                </span>
+              </div>
+            ) : (
               <div
                 {...styles.time}
                 {...colorScheme.set('color', 'textSoft')}
@@ -667,17 +685,6 @@ class AudioPlayer extends Component {
                 {this.formattedCurrentTime && this.formattedCurrentTime}
                 {this.formattedCurrentTime && this.formattedDuration && ' / '}
                 {this.formattedDuration && this.formattedDuration}
-              </div>
-            )}
-            {sourceError && !loading && (
-              <div
-                {...styles.sourceError}
-                {...colorScheme.set('color', 'disabled')}
-              >
-                {t('styleguide/AudioPlayer/sourceError')}{' '}
-                <span onClick={() => this.reload()} {...styles.retry}>
-                  {t('styleguide/AudioPlayer/sourceErrorTryAgain')}
-                </span>
               </div>
             )}
           </div>
