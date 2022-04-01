@@ -1,44 +1,36 @@
-import React from 'react'
+import React, { useState } from 'react'
 import RepoSearch from '../../utils/RepoSearch'
 import withT from '../../../../lib/withT'
-import {
-  Label,
-  IconButton,
-  ArrowUpIcon,
-  ArrowDownIcon,
-  CloseIcon,
-} from '@project-r/styleguide'
+import { Label, A } from '@project-r/styleguide'
 import { css } from 'glamor'
-
+import MdAdd from 'react-icons/lib/md/add'
+import ArticleRecommendationItem from './ArticleRecommendations/ArticleRecommendationItem'
 const ARTICLE_RECOMMENDATIONS_KEY = 'recommendations'
 
 const styles = {
   wrapper: css({
-    display: 'inline-block',
+    display: 'block',
   }),
   recommendationList: css({
     margin: '1rem 0',
     padding: 0,
-  }),
-  recommendationItem: css({
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'row',
-    padding: '0.5rem 1rem',
-    '&:not(:first-child)': {
-      marginTop: '0.5rem',
-      borderTop: '1px solid #ccc',
+    '> li': {
+      listStyle: 'none',
+      '&:not(:first-child)': {
+        borderTop: '1px solid #ccc',
+      },
     },
   }),
-  arrowWrapper: css({
-    display: 'inline-flex',
-    flexDirection: 'column',
+
+  repoSearchWrapper: css({
+    marginTop: '1rem',
+    width: '100%',
   }),
 }
 
 const ArticleRecommendations = ({ t, editor, node }) => {
   const recommendedArticles = node.data.get(ARTICLE_RECOMMENDATIONS_KEY) || []
+  const [showRepoSearch, setShowRepoSearch] = useState(false)
 
   const handleSuggestionsChange = (nextState) => {
     editor.change((change) => {
@@ -51,9 +43,15 @@ const ArticleRecommendations = ({ t, editor, node }) => {
     })
   }
 
-  const addSuggestion = (suggestion) => {
+  const addSuggestion = (suggestion, index = -1) => {
     const prefixedSuggestionURL = `https://github.com/${suggestion.value.id}`
-    handleSuggestionsChange([...recommendedArticles, prefixedSuggestionURL])
+    if (index == -1) {
+      handleSuggestionsChange([...recommendedArticles, prefixedSuggestionURL])
+    } else {
+      handleSuggestionsChange(
+        [...recommendedArticles].splice(index, 0, prefixedSuggestionURL),
+      )
+    }
   }
 
   const remove = (index) => {
@@ -86,33 +84,39 @@ const ArticleRecommendations = ({ t, editor, node }) => {
 
   return (
     <div className={styles.wrapper}>
-      <h2>Vorgeschlagene Artikel</h2>
-      <div>
-        <Label>Artikel hinzufügen</Label>
-        <RepoSearch onChange={addSuggestion} />
-      </div>
+      <h2>Vorgeschlagene Beiträge</h2>
+
       {recommendedArticles && recommendedArticles.length > 0 && (
         <ul className={styles.recommendationList}>
           {recommendedArticles.map((val, index) => (
-            <li key={val} className={styles.recommendationItem}>
-              <div className={styles.arrowWrapper}>
-                <IconButton
-                  Icon={ArrowUpIcon}
-                  onClick={() => swapArrayElements(index, index - 1)}
-                  disabled={index === 0}
-                />
-                <IconButton
-                  Icon={ArrowDownIcon}
-                  onClick={() => swapArrayElements(index, index + 1)}
-                  disabled={index === recommendedArticles.length - 1}
+            <ArticleRecommendationItem
+              key={val}
+              repoId={val}
+              handleRemove={() => remove(index)}
+              handleUp={() => swapArrayElements(index, index - 1)}
+              handleDown={() => swapArrayElements(index, index + 1)}
+              isFirst={index === 0}
+              isLast={index === recommendedArticles.length - 1}
+            />
+          ))}
+          {showRepoSearch && (
+            <li>
+              <div {...styles.repoSearchWrapper}>
+                <Label>Beitrag suchen</Label>
+                <RepoSearch
+                  onChange={(value) => {
+                    setShowRepoSearch(false)
+                    addSuggestion(value)
+                  }}
                 />
               </div>
-              <span>{JSON.stringify(val, null, 2)}</span>
-              <IconButton Icon={CloseIcon} onClick={() => remove(index)} />
             </li>
-          ))}
+          )}
         </ul>
       )}
+      <A href='#add' onClick={() => setShowRepoSearch(true)} {...styles.add}>
+        <MdAdd /> Beitrag hinzufügen
+      </A>
     </div>
   )
 }
