@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import RepoSearch from '../../utils/RepoSearch'
 import withT from '../../../../lib/withT'
-import { Label, A } from '@project-r/styleguide'
+import { Label, A, Interaction } from '@project-r/styleguide'
 import { css } from 'glamor'
 import MdAdd from 'react-icons/lib/md/add'
 import ArticleRecommendationItem from './ArticleRecommendations/ArticleRecommendationItem'
@@ -16,15 +16,16 @@ const styles = {
     padding: 0,
     '> li': {
       listStyle: 'none',
-      '&:not(:first-child)': {
-        borderTop: '1px solid #ccc',
-      },
+      borderTop: '1px solid #ccc',
     },
   }),
 
   repoSearchWrapper: css({
     marginTop: '1rem',
     width: '100%',
+    '& label': {
+      paddingTop: 0,
+    },
   }),
 }
 
@@ -84,8 +85,11 @@ const ArticleRecommendations = ({ t, editor, node }) => {
 
   return (
     <div className={styles.wrapper}>
-      <h2>Vorgeschlagene Beiträge</h2>
-
+      <Interaction.H3>Vorgeschlagene Beiträge</Interaction.H3>
+      <p>
+        Die hier ausgewählten Beiträge werden unten am Aritkel, in der gleichen
+        Reihenfolge, im Von der Redaktion für Sie empfohlen-Feed angezeigt.
+      </p>
       {recommendedArticles && recommendedArticles.length > 0 && (
         <ul className={styles.recommendationList}>
           {recommendedArticles.map((val, index) => (
