@@ -977,12 +977,44 @@
       "value": "Die Funktion ist nur für Mitglieder und Abonnentinnen die Republik zugänglich."
     },
     {
+      "key": "account/pledges/free-delivery",
+      "value": "Kostenlose Lieferung"
+    },
+    {
       "key": "account/pledges/title",
       "value": "Einkäufe"
     },
     {
+      "key": "account/pledges/payment/methods/loading",
+      "value": "Zahlungsmittel werden geladen"
+    },
+    {
+      "key": "account/pledges/payment/methods/wallet/loading",
+      "value": "{wallet} lädt noch."
+    },
+    {
+      "key": "account/pledges/payment/methods/wallet/unavailable",
+      "value": "{wallet} ist nicht verfügbar. Bitte überprüfen Sie Ihre Einstellungen, geben Sie Ihre Kreditkarte von Hand ein oder wählen Sie eine andere Zahlungsart."
+    },
+    {
+      "key": "account/pledges/payment/methods/wallet/exception",
+      "value": "{wallet} konnte nicht geladen werden. Mögliche Ursachen: eine wackelige Internetverbindung, ein temporärer Ausfall, ein VPN oder Ihre Browsererweiterungen. Wählen Sie bitte eine andere Zahlungsart oder versuchen Sie es in einigen Sekunden erneut."
+    },
+    {
+      "key": "account/pledges/payment/canceled",
+      "value": "Die Zahlung wurde abgebrochen."
+    },
+    {
       "key": "account/pledges/payment/method/STRIPE",
       "value": "Kreditkarte"
+    },
+    {
+      "key": "account/pledges/payment/method/STRIPE-WALLET-APPLE-PAY",
+      "value": "Apple Pay"
+    },
+    {
+      "key": "account/pledges/payment/method/STRIPE-WALLET-GOOGLE-PAY",
+      "value": "Google Pay"
     },
     {
       "key": "account/pledges/payment/method/POSTFINANCECARD",
@@ -995,6 +1027,10 @@
     {
       "key": "account/pledges/payment/method/PAYMENTSLIP",
       "value": "Rechnung"
+    },
+    {
+      "key": "account/pledges/payment/your-payment-data",
+      "value": "Ihre Kreditkartendaten"
     },
     {
       "key": "account/pledges/payment/status/generic/WAITING",
@@ -2638,7 +2674,7 @@
     },
     {
       "key": "pledge/contact/signIn/show",
-      "value": "Schon mal ausgefüllt?\n"
+      "value": "Haben Sie bereits ein Konto? Melden Sie sich an.\n"
     },
     {
       "key": "pledge/contact/signIn/customMe",
@@ -3162,11 +3198,11 @@
     },
     {
       "key": "article/syntheticreadaloud/title",
-      "value": "Beitrag von synthetischen Stimme vorlesen lassen"
+      "value": "Beitrag von synthetischer Stimme vorlesen lassen"
     },
     {
       "key": "article/syntheticreadaloud/lead",
-      "value": "Ein Versuch, die Republik zugänglicher zu machen."
+      "value": "Ein Versuch, die Republik zugänglicher zu machen. <a href=\"/2022/04/01/synthetische-stimme/diskussion\">Geben Sie uns Feedback</a>."
     },
     {
       "key": "article/series/episode",
@@ -6590,11 +6626,11 @@
     },
     {
       "key": "pages/access/title",
-      "value": "Verschenken Sie acht Wochen Republik"
+      "value": "Teilen Sie die Republik"
     },
     {
       "key": "pages/access/description",
-      "value": "Laden Sie jetzt Ihre Freunde und Feinde ein, die Republik kennenzulernen. Damit ermöglichen Sie ihnen acht Wochen Probezugriff auf alle Inhalte der Republik – und erlauben diesen auch, als Gäste am Republik-Dialog teilzunehmen. Sie können unbegrenzt Zugänge verschenken. Diese Aktion läuft bis Ende März 2022."
+      "value": "Laden Sie Ihre Freunde und Feinde ein, die Republik zu testen. Ermöglicht den Empfangenden einen 21-tägigen Probezugriff zur Republik."
     },
     {
       "key": "nav/crowdfunding2",

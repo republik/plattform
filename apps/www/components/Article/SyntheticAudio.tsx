@@ -6,6 +6,7 @@ import {
   AudioIcon,
   fontStyles,
   mediaQueries,
+  RawHtml,
 } from '@project-r/styleguide'
 
 import { AudioContext } from '../Audio/AudioProvider'
@@ -61,6 +62,7 @@ const styles = {
   }),
   title: css({
     ...fontStyles.sansSerifMedium15,
+    cursor: 'pointer',
     margin: '0px 0 4px 0',
     padding: 0,
   }),
@@ -90,11 +92,28 @@ const SyntheticAudio = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
           }}
         />
         <div {...styles.textContainer}>
-          <p {...styles.title} {...colorScheme.set('fill', 'text')}>
+          <p
+            onClick={(e) => {
+              e.preventDefault()
+              trackEvent(['SyntheticAudio', 'audio', meta.url])
+              toggleAudioPlayer({
+                audioSource: meta.audioSource,
+                title: meta.title,
+                path: meta.path,
+              })
+            }}
+            {...styles.title}
+            {...colorScheme.set('fill', 'text')}
+          >
             {t('article/syntheticreadaloud/title')}
-            <span style={{ color: '#E9A733' }}> (Interner Test)</span>
           </p>
-          <p {...styles.lead}>{t('article/syntheticreadaloud/lead')}</p>
+          <p {...styles.lead}>
+            <RawHtml
+              dangerouslySetInnerHTML={{
+                __html: t('article/syntheticreadaloud/lead'),
+              }}
+            />
+          </p>
         </div>
       </div>
 

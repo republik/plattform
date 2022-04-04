@@ -42,6 +42,7 @@ export const filterRepos = gql`
         }
         latestPublications {
           document {
+            id
             meta {
               publishDate
             }
