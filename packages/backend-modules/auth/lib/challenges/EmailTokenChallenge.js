@@ -1,23 +1,40 @@
 const querystring = require('querystring')
 const { v4: uuid } = require('uuid')
-const t = require('../t')
 
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const { encode } = require('@orbiting/backend-modules-base64u')
 
+const t = require('../t')
+const { newAuthError } = require('../AuthError')
+
+const TokensExceededError = newAuthError(
+  'email-token-challenge-tokens-exceeded',
+  'api/auth/emailToken/tokensExceeded',
+)
+
 const { FRONTEND_BASE_URL, DEFAULT_MAIL_FROM_ADDRESS } = process.env
 
-const MIN_IN_MS = 1000 * 60
-const HOUR_IN_MS = MIN_IN_MS * 60
-const TTL = HOUR_IN_MS
+const MAX_VALID_TOKENS = 5
+const TTL = 1000 * 60 * 60 // 60 minutes
 const Type = 'EMAIL_TOKEN'
 
 module.exports = {
   Type,
-  generateNewToken: async ({ pgdb, session }) => {
-    const payload = uuid()
-    const expiresAt = new Date(new Date().getTime() + TTL)
-    return { payload, expiresAt }
+  generateNewToken: async ({ email, pgdb }) => {
+    const tokenCount = await pgdb.public.tokens.count({
+      type: Type,
+      email,
+      'expiresAt >=': new Date(),
+    })
+
+    if (tokenCount >= MAX_VALID_TOKENS) {
+      console.error(
+        'Unable to generate a new token: Found too many valid tokens.',
+      )
+      throw new TokensExceededError({ email, MAX_VALID_TOKENS })
+    }
+
+    return { payload: uuid(), expiresAt: new Date(new Date().getTime() + TTL) }
   },
   startChallenge: async ({ email, context, token, country, phrase, pgdb }) => {
     const geoString = country === 'Schweiz' ? 'der Schweiz' : country
@@ -56,7 +73,7 @@ module.exports = {
       { pgdb },
     )
   },
-  validateChallenge: async ({ pgdb, user }, { payload }) => {
+  validateChallenge: async ({ pgdb }, { payload }) => {
     const foundToken = await pgdb.public.tokens.findOne({
       type: Type,
       payload,

@@ -1,11 +1,16 @@
 const querystring = require('querystring')
 const { v4: uuid } = require('uuid')
-const t = require('../t')
 
-const { newAuthError } = require('../AuthError')
 const { app } = require('@orbiting/backend-modules-push-notifications/lib')
 const { encode } = require('@orbiting/backend-modules-base64u')
 
+const t = require('../t')
+const { newAuthError } = require('../AuthError')
+
+const TokensExceededError = newAuthError(
+  'app-challenge-tokens-exceeded',
+  'api/auth/app/tokensExceeded',
+)
 const UserMissingError = newAuthError(
   'app-challenge-user-missing',
   'api/users/404',
@@ -19,8 +24,8 @@ const { FRONTEND_BASE_URL, DEFAULT_MAIL_FROM_ADDRESS } = process.env
 
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 
-const MIN_IN_MS = 1000 * 60
-const TTL = 10 * MIN_IN_MS
+const MAX_VALID_TOKENS = 5
+const TTL = 1000 * 60 * 10 // 10 minutes
 const Type = 'APP'
 
 const getNotification = ({ email, token, context }) => {
@@ -47,10 +52,21 @@ const getNotification = ({ email, token, context }) => {
 
 module.exports = {
   Type,
-  generateNewToken: async ({ pgdb, session }) => {
-    const payload = uuid()
-    const expiresAt = new Date(new Date().getTime() + TTL)
-    return { payload, expiresAt }
+  generateNewToken: async ({ email, pgdb }) => {
+    const tokenCount = await pgdb.public.tokens.count({
+      type: Type,
+      email,
+      'expiresAt >=': new Date(),
+    })
+
+    if (tokenCount >= MAX_VALID_TOKENS) {
+      console.error(
+        'Unable to generate a new token: Found too many valid tokens.',
+      )
+      throw new TokensExceededError({ email, MAX_VALID_TOKENS })
+    }
+
+    return { payload: uuid(), expiresAt: new Date(new Date().getTime() + TTL) }
   },
   startChallenge: async ({ email, context, token, user, pgdb }) => {
     if (!user) {
