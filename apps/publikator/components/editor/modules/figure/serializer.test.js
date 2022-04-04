@@ -71,9 +71,11 @@ Caption_Byline_
     expect(node.getIn(['data', 'excludeFromGallery'])).toBe(false)
     const image = node.nodes.first()
     expect(image.kind).toBe('block')
+    expect(image.type).toBe('FIGURE_IMAGE')
     expect(image.getIn(['data', 'src'])).toBe('example.com/img.jpg')
     const caption = node.nodes.get(1)
     expect(caption.kind).toBe('block')
+    expect(caption.type).toBe('FIGURE_CAPTION')
     expect(stringify(serializer.serialize(value)).trimRight()).toBe(md)
   })
 
@@ -87,6 +89,7 @@ B**_Caption_
     const node = value.document.nodes.first()
 
     expect(node.kind).toBe('block')
+    expect(node.type).toBe('FIGURE_CAPTION')
     expect(stringify(serializer.serialize(value))).toBe(md)
   })
 })
