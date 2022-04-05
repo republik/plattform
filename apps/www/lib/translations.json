@@ -3198,11 +3198,11 @@
     },
     {
       "key": "article/syntheticreadaloud/title",
-      "value": "Beitrag von synthetischen Stimme vorlesen lassen"
+      "value": "Beitrag von synthetischer Stimme vorlesen lassen"
     },
     {
       "key": "article/syntheticreadaloud/lead",
-      "value": "Ein Versuch, die Republik zugänglicher zu machen."
+      "value": "Ein Versuch, die Republik zugänglicher zu machen. <a href=\"/2022/04/01/synthetische-stimme/diskussion\">Geben Sie uns Feedback</a>."
     },
     {
       "key": "article/series/episode",
@@ -6626,11 +6626,11 @@
     },
     {
       "key": "pages/access/title",
-      "value": "Verschenken Sie acht Wochen Republik"
+      "value": "Teilen Sie die Republik"
     },
     {
       "key": "pages/access/description",
-      "value": "Laden Sie jetzt Ihre Freunde und Feinde ein, die Republik kennenzulernen. Damit ermöglichen Sie ihnen acht Wochen Probezugriff auf alle Inhalte der Republik – und erlauben diesen auch, als Gäste am Republik-Dialog teilzunehmen. Sie können unbegrenzt Zugänge verschenken. Diese Aktion läuft bis Ende März 2022."
+      "value": "Laden Sie Ihre Freunde und Feinde ein, die Republik zu testen. Ermöglicht den Empfangenden einen 21-tägigen Probezugriff zur Republik."
     },
     {
       "key": "nav/crowdfunding2",

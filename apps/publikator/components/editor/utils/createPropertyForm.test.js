@@ -1,21 +1,18 @@
-import test from 'tape'
-import { shallow } from '../../../test/utils/enzyme'
+import React from 'react'
 import createPropertyForm from './createPropertyForm'
+import { render } from '@testing-library/react'
 
-test('utils.createPropertyForm', (assert) => {
-  assert.plan(1)
+describe('createPropertyForm test-suite', () => {
+  it('utils.createPropertyForm', () => {
+    const Form = () => <span data-testid='form' />
 
-  const Form = () => <span />
+    const PropertyForm = createPropertyForm({
+      isDisabled: ({ value }) => value.disabled,
+    })(Form)
 
-  const PropertyForm = createPropertyForm({
-    isDisabled: ({ value }) => value.disabled,
-  })(Form)
+    const { container } = render(<PropertyForm value={{ disabled: true }} />)
 
-  const wrapper = shallow(<PropertyForm value={{ disabled: true }} />)
-
-  assert.equal(
-    wrapper.find('[disabled=true]').exists(),
-    true,
-    'passes `disabled` property according to response from `options.isDisabled`',
-  )
+    // passes `disabled` property according to response from `options.isDisabled`
+    expect(container.querySelector('[disabled=true]')).toBeDefined()
+  })
 })

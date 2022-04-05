@@ -1,5 +1,4 @@
-import test from 'tape'
-import spy from 'spy'
+import React from 'react'
 import { shallow } from '../../../test/utils/enzyme'
 import createBlockButton from './createBlockButton'
 import { Value } from 'slate'
@@ -57,143 +56,125 @@ const initialState = Value.fromJSON({
 const Button = () => <span />
 const BlockButton = createBlockButton({ type: 'lead' })(Button)
 
-test('utils.createBlockButton: blurred', (assert) => {
-  assert.plan(1)
-  const value = initialState
+describe('createBlockButton test-suite', () => {
+  it('utils.createBlockButton: blurred', () => {
+    const value = initialState
 
-  const wrapper = shallow(<BlockButton value={value} />)
+    const wrapper = shallow(<BlockButton value={value} />)
 
-  assert.equal(
-    !wrapper.find('Button').prop('active') &&
-      wrapper.find('Button').prop('disabled'),
-    true,
-    'renders as disabled and inactive',
-  )
-})
+    // renders as disabled and inactive
+    expect(
+      !wrapper.find('Button').prop('active') &&
+        wrapper.find('Button').prop('disabled'),
+    ).toBeTruthy()
+  })
 
-test('utils.createBlockButton: focused cursor', (assert) => {
-  assert.plan(1)
+  it('utils.createBlockButton: focused cursor', () => {
+    const value = initialState
+      .change()
+      .select({
+        anchorKey: initialState.document.nodes.get(0).nodes.first().key,
+        anchorOffset: 2,
+        focusKey: initialState.document.nodes.get(0).nodes.first().key,
+        focusOffset: 2,
+      })
+      .focus().value
 
-  const value = initialState
-    .change()
-    .select({
-      anchorKey: initialState.document.nodes.get(0).nodes.first().key,
-      anchorOffset: 2,
-      focusKey: initialState.document.nodes.get(0).nodes.first().key,
-      focusOffset: 2,
-    })
-    .focus().value
+    const wrapper = shallow(<BlockButton value={value} />)
 
-  const wrapper = shallow(<BlockButton value={value} />)
+    // renders as enabled and inactive
+    expect(
+      !wrapper.find('Button').prop('active') &&
+        !wrapper.find('Button').prop('disabled'),
+    ).toBeTruthy()
+  })
 
-  assert.equal(
-    !wrapper.find('Button').prop('active') &&
-      !wrapper.find('Button').prop('disabled'),
-    true,
-    'renders as enabled and inactive',
-  )
-})
+  it('utils.createBlockButton: focused cursor on `blockType`', () => {
+    const value = initialState
+      .change()
+      .select({
+        anchorKey: initialState.document.nodes.get(1).nodes.first().key,
+        anchorOffset: 2,
+        focusKey: initialState.document.nodes.get(1).nodes.first().key,
+        focusOffset: 2,
+      })
+      .focus().value
 
-test('utils.createBlockButton: focused cursor on `blockType`', (assert) => {
-  assert.plan(1)
+    const wrapper = shallow(<BlockButton value={value} />)
 
-  const value = initialState
-    .change()
-    .select({
-      anchorKey: initialState.document.nodes.get(1).nodes.first().key,
-      anchorOffset: 2,
-      focusKey: initialState.document.nodes.get(1).nodes.first().key,
-      focusOffset: 2,
-    })
-    .focus().value
+    // renders as disabled and active
+    expect(
+      wrapper.find('Button').prop('active') &&
+        wrapper.find('Button').prop('disabled'),
+    ).toBeTruthy()
+  })
 
-  const wrapper = shallow(<BlockButton value={value} />)
+  it('utils.createBlockButton: focused selection of mixed block types', () => {
+    const value = initialState
+      .change()
+      .select({
+        anchorKey: initialState.document.nodes.get(0).nodes.first().key,
+        anchorOffset: 5,
+        focusKey: initialState.document.nodes.get(1).nodes.first().key,
+        focusOffset: 2,
+      })
+      .focus().value
 
-  assert.equal(
-    wrapper.find('Button').prop('active') &&
-      wrapper.find('Button').prop('disabled'),
-    true,
-    'renders as disabled and active',
-  )
-})
+    const wrapper = shallow(<BlockButton value={value} />)
 
-test('utils.createBlockButton: focused selection of mixed block types', (assert) => {
-  assert.plan(1)
+    // renders as enabled and active
+    expect(
+      wrapper.find('Button').prop('active') &&
+        !wrapper.find('Button').prop('disabled'),
+    ).toBeTruthy()
+  })
 
-  const value = initialState
-    .change()
-    .select({
-      anchorKey: initialState.document.nodes.get(0).nodes.first().key,
-      anchorOffset: 5,
-      focusKey: initialState.document.nodes.get(1).nodes.first().key,
-      focusOffset: 2,
-    })
-    .focus().value
+  it('utils.createBlockButton: action on focused cursor', () => {
+    const value = initialState
+      .change()
+      .select({
+        anchorKey: initialState.document.nodes.get(0).nodes.first().key,
+        anchorOffset: 2,
+        focusKey: initialState.document.nodes.get(0).nodes.first().key,
+        focusOffset: 2,
+      })
+      .focus().value
 
-  const wrapper = shallow(<BlockButton value={value} />)
+    const onChange = ({ value }) => {
+      // 'sets the block at the cursor to `blockType`',
+      expect(value.document.nodes.get(0).type).toBe('lead')
+    }
 
-  assert.equal(
-    wrapper.find('Button').prop('active') &&
-      !wrapper.find('Button').prop('disabled'),
-    true,
-    'renders as enabled and active',
-  )
-})
+    const event = {
+      preventDefault: jest.fn(),
+    }
 
-test('utils.createBlockButton: action on focused cursor', (assert) => {
-  assert.plan(1)
+    const wrapper = shallow(<BlockButton value={value} onChange={onChange} />)
 
-  const value = initialState
-    .change()
-    .select({
-      anchorKey: initialState.document.nodes.get(0).nodes.first().key,
-      anchorOffset: 2,
-      focusKey: initialState.document.nodes.get(0).nodes.first().key,
-      focusOffset: 2,
-    })
-    .focus().value
+    wrapper.find('Button').simulate('mousedown', event)
+  })
 
-  const onChange = ({ value }) =>
-    assert.equal(
-      value.document.nodes.get(0).type,
-      'lead',
-      'sets the block at the cursor to `blockType`',
-    )
+  it('utils.createBlockButton: action on mixed selection', () => {
+    const value = initialState
+      .change()
+      .select({
+        anchorKey: initialState.document.nodes.get(0).nodes.first().key,
+        anchorOffset: 2,
+        focusKey: initialState.document.nodes.get(1).nodes.first().key,
+        focusOffset: 5,
+      })
+      .focus().value
 
-  const event = {
-    preventDefault: spy(),
-  }
+    const onChange = ({ value }) =>
+      // sets all blocks in the selection that were not of type `blockType` to it
+      expect(value.document.nodes.get(0).type).toBe('lead')
 
-  const wrapper = shallow(<BlockButton value={value} onChange={onChange} />)
+    const event = {
+      preventDefault: jest.fn(),
+    }
 
-  wrapper.find('Button').simulate('mousedown', event)
-})
+    const wrapper = shallow(<BlockButton value={value} onChange={onChange} />)
 
-test('utils.createBlockButton: action on mixed selection', (assert) => {
-  assert.plan(1)
-
-  const value = initialState
-    .change()
-    .select({
-      anchorKey: initialState.document.nodes.get(0).nodes.first().key,
-      anchorOffset: 2,
-      focusKey: initialState.document.nodes.get(1).nodes.first().key,
-      focusOffset: 5,
-    })
-    .focus().value
-
-  const onChange = ({ value }) =>
-    assert.equal(
-      value.document.nodes.get(0).type,
-      'lead',
-      'sets all blocks in the selection that were not of type `blockType` to it',
-    )
-
-  const event = {
-    preventDefault: spy(),
-  }
-
-  const wrapper = shallow(<BlockButton value={value} onChange={onChange} />)
-
-  wrapper.find('Button').simulate('mousedown', event)
+    wrapper.find('Button').simulate('mousedown', event)
+  })
 })

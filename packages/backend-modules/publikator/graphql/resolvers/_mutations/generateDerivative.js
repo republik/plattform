@@ -19,7 +19,7 @@ module.exports = async (_, { commitId }, context) => {
     throw new Error(t('api/publikator/generateDerivative/commit/404'))
   }
 
-  if (!canDeriveSyntheticReadAloud(commit.meta.template)) {
+  if (!canDeriveSyntheticReadAloud(commit.meta)) {
     throw new Error(t('api/publikator/generateDerivative/canNot'))
   }
 
