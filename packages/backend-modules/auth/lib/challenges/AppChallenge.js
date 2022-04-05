@@ -53,12 +53,16 @@ const getNotification = ({ email, token, context }) => {
 module.exports = {
   Type,
   generateNewToken: async ({ email, pgdb }) => {
+    // Find tokens matching Type and email, which have not expired yet.
     const tokenCount = await pgdb.public.tokens.count({
       type: Type,
       email,
       'expiresAt >=': new Date(),
     })
 
+    // Throw an error if there are {MAX_VALID_TOKENS} or more tokens returned,
+    // as having more than a certain number of unexpired tokens is an unwarrented
+    // auth behaviour.
     if (tokenCount >= MAX_VALID_TOKENS) {
       console.error(
         'Unable to generate a new token: Found too many valid tokens.',

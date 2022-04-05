@@ -21,12 +21,19 @@ module.exports = {
       throw new AccessTokenMissingError({ email })
     }
 
+    // Find tokens matching Type, email and payload (and ignoring expiry date
+    // willfully). A payload is unqiue and thus neither Type nor email is
+    // necessary to query but helps speeding up querying, and validating an
+    // AccessToken in payload would fail if email does not match.
     const tokenCount = await pgdb.public.tokens.count({
       type: Type,
       email,
       payload,
     })
 
+    // Since AccessTokens in tokens.payload are unique and should not be present
+    // in tokens at all, we throw an error if there are any returned which is an
+    // unwarrented auth behaviour.
     if (tokenCount >= MAX_VALID_TOKENS) {
       console.error(
         'Unable to generate a new token: Found too many valid tokens.',
