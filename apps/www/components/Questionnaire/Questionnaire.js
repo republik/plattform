@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component } from 'react'
 import Loader from '../Loader'
 
 import { css } from 'glamor'

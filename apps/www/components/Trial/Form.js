@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'

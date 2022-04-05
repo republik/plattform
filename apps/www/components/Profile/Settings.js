@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment } from 'react'
 import { Label, Checkbox, A } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'

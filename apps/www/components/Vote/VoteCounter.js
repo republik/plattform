@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { css, merge } from 'glamor'

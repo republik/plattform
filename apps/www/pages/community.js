@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component } from 'react'
 import compose from 'lodash/flowRight'
 import { withRouter } from 'next/router'
 import Frame from '../components/Frame'

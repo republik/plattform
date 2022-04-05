@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { forwardRef } from 'react'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'

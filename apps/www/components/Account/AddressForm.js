@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 import { FieldSet, Interaction, A, usePrevious } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'

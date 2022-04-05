@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 import { css } from 'glamor'
 
 import { Interaction, A, Field } from '@project-r/styleguide'

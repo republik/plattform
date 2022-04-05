@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 import { VariableContext } from '@project-r/styleguide'
 
 import withMe from '../../lib/apollo/withMe'

@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component } from 'react'
 import { css } from 'glamor'
 import AutosizeInput from 'react-textarea-autosize'
 

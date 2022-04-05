@@ -1,4 +1,4 @@
-import { cloneElement, useRef, useEffect, useMemo, useContext } from 'react';
+import { cloneElement, useRef, useEffect, useMemo, useContext } from 'react'
 import { css } from 'glamor'
 import Link from 'next/link'
 import { useRouter } from 'next/router'

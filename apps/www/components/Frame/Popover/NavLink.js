@@ -1,4 +1,4 @@
-import { forwardRef, useMemo, useEffect, useRef } from 'react';
+import { forwardRef, useMemo, useEffect, useRef } from 'react'
 import { css } from 'glamor'
 
 import {

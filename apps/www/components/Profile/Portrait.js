@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect } from 'react'
 import { css, merge } from 'glamor'
 import Dropzone from 'react-dropzone'
 

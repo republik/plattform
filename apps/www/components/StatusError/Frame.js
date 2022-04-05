@@ -1,6 +1,6 @@
 // Derived from https://github.com/facebook/immutable-js/blob/7f4e61601d92fc874c99ccf7734d6f33239cec8c/pages/src/src/Header.js#L2
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react'
 import { css } from 'glamor'
 import { range } from 'd3-array'
 

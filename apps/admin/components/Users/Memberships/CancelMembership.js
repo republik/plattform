@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react'
 import { Mutation, Query } from 'react-apollo'
 import gql from 'graphql-tag'
 import TextareaAutosize from 'react-autosize-textarea'

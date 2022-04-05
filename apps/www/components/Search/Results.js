@@ -1,4 +1,4 @@
-import { createElement, Fragment } from 'react';
+import { createElement, Fragment } from 'react'
 import compose from 'lodash/flowRight'
 import { css } from 'glamor'
 import withT from '../../lib/withT'

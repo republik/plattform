@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component } from 'react'
 import { css } from 'glamor'
 import questionStyles from './questionStyles'
 import { nest } from 'd3-collection'

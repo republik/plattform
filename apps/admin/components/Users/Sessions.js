@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component } from 'react'
 import { css } from 'glamor'
 import { compose } from 'react-apollo'
 import { graphql } from 'react-apollo'

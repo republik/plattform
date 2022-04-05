@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 import ActionBar from '../ActionBar'
 
 let defaultIstMounted = undefined

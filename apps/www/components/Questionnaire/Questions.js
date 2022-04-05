@@ -1,4 +1,4 @@
-import { createElement } from 'react';
+import { createElement } from 'react'
 
 import compose from 'lodash/flowRight'
 

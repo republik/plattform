@@ -1,4 +1,4 @@
-import { createElement } from 'react';
+import { createElement } from 'react'
 import { css } from 'glamor'
 import mergeClassNames from '../../lib/mergeClassNames'
 

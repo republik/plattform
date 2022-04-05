@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 import InfiniteScroller from 'react-infinite-scroller'

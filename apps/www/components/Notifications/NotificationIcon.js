@@ -1,5 +1,5 @@
 import { css } from 'glamor'
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 import compose from 'lodash/flowRight'
 import { useColorContext, mediaQueries } from '@project-r/styleguide'
 

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react'
 import { css } from 'glamor'
 import Head from 'next/head'
 import Router, { withRouter } from 'next/router'

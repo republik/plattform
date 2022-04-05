@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react'
 import { Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
 import { css, merge } from 'glamor'

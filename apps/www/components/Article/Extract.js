@@ -1,4 +1,4 @@
-import { Children, Fragment } from 'react';
+import { Children, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import Head from 'next/head'
 import { renderMdast } from 'mdast-react-render'

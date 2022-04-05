@@ -1,4 +1,4 @@
-import { Component, useState } from 'react';
+import { Component, useState } from 'react'
 import withT from '../../lib/withT'
 import compose from 'lodash/flowRight'
 import withInNativeApp from '../../lib/withInNativeApp'

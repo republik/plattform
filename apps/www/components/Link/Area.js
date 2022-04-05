@@ -1,4 +1,4 @@
-import { cloneElement, Component, Children } from 'react';
+import { cloneElement, Component, Children } from 'react'
 import PropTypes from 'prop-types'
 import { scrollTop } from '../../lib/utils/link'
 import { withRouter } from 'next/router'

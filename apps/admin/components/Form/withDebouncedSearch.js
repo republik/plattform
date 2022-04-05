@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component } from 'react'
 import debounce from 'lodash.debounce'
 
 const withDebouncedSearch = (BaseComponent) =>

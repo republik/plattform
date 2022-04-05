@@ -1,4 +1,4 @@
-import { createRef, Component, Fragment } from 'react';
+import { createRef, Component, Fragment } from 'react'
 import compose from 'lodash/flowRight'
 import { Query } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'

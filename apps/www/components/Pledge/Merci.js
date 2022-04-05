@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component } from 'react'
 import compose from 'lodash/flowRight'
 import { format } from 'url'
 

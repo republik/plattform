@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 import copyToClipboard from 'clipboard-copy'
 import { css } from 'glamor'
 import { IconButton } from '@project-r/styleguide'

@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react'
 import { withRouter } from 'next/router'
 import ErrorMessage from '../ErrorMessage'
 import voteT from './voteT'

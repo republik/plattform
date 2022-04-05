@@ -1,4 +1,4 @@
-import { Component, Fragment, useRef, useEffect } from 'react';
+import { Component, Fragment, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'
 import { withApollo } from '@apollo/client/react/hoc'

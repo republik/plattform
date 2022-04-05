@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { forwardRef } from 'react'
 import { css } from 'glamor'
 import { mediaQueries } from '@project-r/styleguide'
 

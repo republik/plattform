@@ -2,7 +2,7 @@
 // License MIT
 // Author Stelios Constantinides <sconstantinides@gmail.com>
 
-import { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import {

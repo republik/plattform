@@ -1,4 +1,4 @@
-import { createElement, useMemo } from 'react';
+import { createElement, useMemo } from 'react'
 import { css } from 'glamor'
 
 import { ArrowDownIcon, ArrowUpIcon } from '@project-r/styleguide'

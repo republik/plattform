@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import Frame from '../Frame'

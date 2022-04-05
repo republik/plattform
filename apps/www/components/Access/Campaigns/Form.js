@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react'
 import compose from 'lodash/flowRight'
 import isEmail from 'validator/lib/isEmail'
 

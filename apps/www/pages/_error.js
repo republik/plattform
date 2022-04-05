@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component } from 'react'
 
 import Frame from '../components/Frame'
 import StatusError from '../components/StatusError'

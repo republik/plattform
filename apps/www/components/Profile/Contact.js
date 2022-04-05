@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment } from 'react'
 import { isURL } from 'validator'
 import compose from 'lodash/flowRight'
 import { css } from 'glamor'

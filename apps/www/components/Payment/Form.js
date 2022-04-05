@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'

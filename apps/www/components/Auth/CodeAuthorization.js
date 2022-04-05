@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react'
 import compose from 'lodash/flowRight'
 import { merge, css } from 'glamor'
 

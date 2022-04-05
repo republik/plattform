@@ -1,4 +1,4 @@
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef, useMemo } from 'react'
 import {
   DEFAULT_FONT_SIZE,
   Overlay,

@@ -1,5 +1,5 @@
-import { Fragment } from 'react';
-import * as React from 'react';
+import { Fragment } from 'react'
+import * as React from 'react'
 import { css } from 'glamor'
 import { Query, Mutation } from 'react-apollo'
 import gql from 'graphql-tag'

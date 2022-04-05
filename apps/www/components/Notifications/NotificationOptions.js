@@ -1,4 +1,4 @@
-import { Component, Fragment, useState } from 'react';
+import { Component, Fragment, useState } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'

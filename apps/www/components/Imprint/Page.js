@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment } from 'react'
 
 import Employees from './Employees'
 import { A, Interaction } from '@project-r/styleguide'

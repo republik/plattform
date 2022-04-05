@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component } from 'react'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import gql from 'graphql-tag'

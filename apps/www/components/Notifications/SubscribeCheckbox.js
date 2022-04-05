@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from 'react'
 import { Checkbox, mediaQueries } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
 import {

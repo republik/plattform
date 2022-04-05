@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component } from 'react'
 import { Button } from '@project-r/styleguide'
 import AddressFieldSet from './AddressFieldSet'
 import ParticularsFieldSet from './ParticularsFieldSet'

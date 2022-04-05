@@ -1,4 +1,4 @@
-import { forwardRef, Component, Fragment } from 'react';
+import { forwardRef, Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 import { graphql } from '@apollo/client/react/hoc'

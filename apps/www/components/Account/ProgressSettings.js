@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react'
 import compose from 'lodash/flowRight'
 import { css } from 'glamor'
 import { withMembership } from '../Auth/checkRoles'

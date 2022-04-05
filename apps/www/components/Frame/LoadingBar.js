@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component } from 'react'
 import Router from 'next/router'
 
 import { css } from 'glamor'

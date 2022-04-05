@@ -25,7 +25,7 @@ import Link from 'next/link'
 import DiscussionTitle from '../components/Dialog/DiscussionTitle'
 import ActionBar from '../components/ActionBar'
 import { ListWithQuery as TestimonialList } from '../components/Testimonial/List'
-import { Fragment } from 'react';
+import { Fragment } from 'react'
 import ActiveDiscussions from '../components/Dialog/ActiveDiscussions'
 import LatestComments from '../components/Dialog/LatestComments'
 import { useTranslation } from '../lib/withT'

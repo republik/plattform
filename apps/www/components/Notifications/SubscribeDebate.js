@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 import { css } from 'glamor'
 import withT from '../../lib/withT'
 import { Radio, inQuotes } from '@project-r/styleguide'

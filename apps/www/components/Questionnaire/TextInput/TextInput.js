@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { colors, fontStyles, Field } from '@project-r/styleguide'

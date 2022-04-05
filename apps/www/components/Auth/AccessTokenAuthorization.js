@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 import compose from 'lodash/flowRight'
 
 import { Loader } from '@project-r/styleguide'

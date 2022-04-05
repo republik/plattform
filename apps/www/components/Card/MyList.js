@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from 'react'
 import { csvFormat } from 'd3-dsv'
 import { gql } from '@apollo/client'
 import compose from 'lodash/flowRight'

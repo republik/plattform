@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect } from 'react'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import { useRouter } from 'next/router'

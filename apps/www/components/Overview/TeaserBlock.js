@@ -1,4 +1,4 @@
-import { createRef, Component } from 'react';
+import { createRef, Component } from 'react'
 import { css } from 'glamor'
 import debounce from 'lodash/debounce'
 
