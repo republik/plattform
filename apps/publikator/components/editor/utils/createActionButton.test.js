@@ -1,4 +1,3 @@
-import React from 'react'
 import { shallow } from '../../../test/utils/enzyme'
 import createActionButton from './createActionButton'
 
