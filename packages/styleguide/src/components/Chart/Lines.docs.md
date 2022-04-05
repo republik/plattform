@@ -7537,6 +7537,132 @@ CDU/CSU,2021,4.529556628,sozioökonomisch
 </div>
 ```
 
+### Custom Y Lines
+
+`yLines` in line charts also support custom y label position via `dy`, mapped to the svg text element `dy` attribute. And custom `opacity`, including for invisible text only lines, by default it's `0.8` for base lines and `0.17` for regular lines, in most cases the boolean `base` should be used instead of custom `opacity`.
+
+```react
+<div>
+  <ChartTitle>Die Stufen zur Autokratie</ChartTitle>
+  <ChartLead>Freiheits­index von Freedom House</ChartLead>
+  <CsvChart
+    config={{
+      "type": "Line",
+      "numberFormat": "s",
+      "xTicks": [
+        1972,
+        1981,
+        1991,
+        2001,
+        2011,
+        2021
+      ],
+      "endLabel": false,
+      "endValue": false,
+      "yNice": 0,
+      "yLines": [
+        {
+          "tick": 7.04,
+          "dy": "1em"
+        },
+        {
+          "tick": 6.25,
+          "label": "unfrei",
+          "dy": "0.3em",
+          "opacity": 0
+        },
+        {
+          "tick": 5.46,
+          "label": "5,5"
+        },
+        {
+          "tick": 4,
+          "label": "teilweise frei",
+          "dy": "0.3em",
+          "opacity": 0
+        },
+        {
+          "tick": 2.54,
+          "label": "2,5",
+          "dy": "1em"
+        },
+        {
+          "tick": 1.75,
+          "label": "frei",
+          "dy": "0.3em",
+          "opacity": 0
+        },
+        {
+          "tick": 1
+        }
+      ],
+      "color": "country",
+      "colorSort": "descending",
+      "colorMap": {
+        "Sowjetunion": "#d62728",
+        "Russland": "#1f77b4"
+      }
+    }}
+    values={`
+year,country,value,pr,cl,status
+1991,Russland,3,3,3,PF
+1992,Russland,3.5,3,4,PF
+1993,Russland,3.5,3,4,PF
+1994,Russland,3.5,3,4,PF
+1995,Russland,3.5,3,4,PF
+1996,Russland,3.5,3,4,PF
+1997,Russland,3.5,3,4,PF
+1998,Russland,4,4,4,PF
+1999,Russland,4.5,4,5,PF
+2000,Russland,5,5,5,PF
+2001,Russland,5,5,5,PF
+2002,Russland,5,5,5,PF
+2003,Russland,5,5,5,PF
+2004,Russland,5.5,6,5,NF
+2005,Russland,5.5,6,5,NF
+2006,Russland,5.5,6,5,NF
+2007,Russland,5.5,6,5,NF
+2008,Russland,5.5,6,5,NF
+2009,Russland,5.5,6,5,NF
+2010,Russland,5.5,6,5,NF
+2011,Russland,5.5,6,5,NF
+2012,Russland,5.5,6,5,NF
+2013,Russland,5.5,6,5,NF
+2014,Russland,6,6,6,NF
+2015,Russland,6,6,6,NF
+2016,Russland,6.5,7,6,NF
+2017,Russland,6.5,7,6,NF
+2018,Russland,6.5,7,6,NF
+2019,Russland,6.5,7,6,NF
+2020,Russland,6.5,7,6,NF
+2021,Russland,6.5,7,6,NF
+1972,Sowjetunion,6,6,6,NF
+1973,Sowjetunion,6,6,6,NF
+1974,Sowjetunion,6,6,6,NF
+1975,Sowjetunion,6.5,7,6,NF
+1976,Sowjetunion,6.5,7,6,NF
+1977,Sowjetunion,6.5,7,6,NF
+1978,Sowjetunion,6,6,6,NF
+1979,Sowjetunion,6,6,6,NF
+1980,Sowjetunion,6.5,6,7,NF
+1981,Sowjetunion,6.5,6,7,NF
+1982,Sowjetunion,6.5,6,7,NF
+1983,Sowjetunion,7,7,7,NF
+1984,Sowjetunion,7,7,7,NF
+1985,Sowjetunion,7,7,7,NF
+1986,Sowjetunion,6.5,7,6,NF
+1987,Sowjetunion,5.5,6,5,NF
+1988,Sowjetunion,5.5,6,5,NF
+1990,Sowjetunion,4.5,5,4,PF
+1991,Sowjetunion,4,4,4,PF
+    `.trim()}
+    />
+  <ChartLegend>
+    Dargestellt ist das «Freedom Rating»: frei (1 bis und mit 2,5), teilweise frei (3 bis 5,5) und unfrei (5,5 bis 7). Quelle: Freedom House.
+  </ChartLegend>
+</div>
+```
+
 ## Multiline Annotations
 
 ```react
