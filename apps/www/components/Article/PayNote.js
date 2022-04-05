@@ -16,7 +16,7 @@ import { getElementFromSeed } from '../../lib/utils/helpers'
 import { trackEvent, trackEventOnClick } from '../../lib/matomo'
 import { useRouter } from 'next/router'
 import compose from 'lodash/flowRight'
-import { t } from '../../lib/withT'
+import withT, { t } from '../../lib/withT'
 import withInNativeApp from '../../lib/withInNativeApp'
 import withMe from '../../lib/apollo/withMe'
 import { shouldIgnoreClick } from '../../lib/utils/link'
@@ -62,8 +62,8 @@ const styles = {
 
 export const TRY_TO_BUY_RATIO = 0.5
 
-const TRY_VARIATIONS = ['tryNote/211027-v1']
-const BUY_VARIATIONS = ['payNote/200313-v1']
+const TRY_VARIATIONS = ['tryNote/220404-v1', 'tryNote/220404-v2']
+const BUY_VARIATIONS = ['payNote/220404-v1', 'payNote/220404-v2']
 const IOS_VARIATIONS = ['payNote/ios']
 
 const DEFAULT_BUTTON_TARGET = '/angebote?package=ABO'
@@ -225,7 +225,7 @@ const getPayNote = (
   return getElementFromSeed(targetedPredefinedNotes, seed)
 }
 
-const BuyButton = ({ payNote, payload }) => {
+const BuyButton = withT(({ payNote, payload, t }) => {
   const router = useRouter()
   return (
     <Button
@@ -236,12 +236,12 @@ const BuyButton = ({ payNote, payload }) => {
         () => router.push(payNote.button.link),
       )}
     >
-      {payNote.button.label}
+      {payNote.button.label || t('article/payNote/default/button')}
     </Button>
   )
-}
+})
 
-const SecondaryCta = ({ payNote, payload }) => {
+const SecondaryCta = withT(({ t, payNote, payload }) => {
   const [colorScheme] = useColorContext()
   const router = useRouter()
   const linkRule = useMemo(
@@ -259,30 +259,31 @@ const SecondaryCta = ({ payNote, payload }) => {
       }),
     [colorScheme],
   )
+  const secondaryLink =
+    (payNote.secondary && payNote.secondary.link) ||
+    '/angebote?package=MONTHLY_ABO'
   return (
-    <>
-      {payNote.secondary && payNote.secondary.link ? (
-        <div
-          {...styles.aside}
-          {...colorScheme.set('color', 'textSoft')}
-          {...linkRule}
-        >
-          <span>{payNote.secondary.prefix} </span>
-          <a
-            key='secondary'
-            href={payNote.secondary.link}
-            onClick={trackEventOnClick(
-              ['PayNote', `secondary ${payload.position}`, payload.variation],
-              () => router.push(payNote.secondary.link),
-            )}
-          >
-            {payNote.secondary.label}
-          </a>
-        </div>
-      ) : null}
-    </>
+    <div
+      {...styles.aside}
+      {...colorScheme.set('color', 'textSoft')}
+      {...linkRule}
+    >
+      <span>{payNote.secondary.prefix} </span>
+      <a
+        key='secondary'
+        href={secondaryLink}
+        onClick={trackEventOnClick(
+          ['PayNote', `secondary ${payload.position}`, payload.variation],
+          () => router.push(secondaryLink),
+        )}
+        {...linkRule}
+      >
+        {payNote.secondary.label ||
+          t('article/payNote/default/secondary/label')}
+      </a>
+    </div>
   )
-}
+})
 
 const BuyNoteCta = ({ payNote, payload }) => (
   <div {...styles.actions}>
@@ -304,8 +305,11 @@ const TryNoteCta = ({ payload }) => {
   )
 }
 
-const PayNoteCta = ({ payNote, payload, hasAccess }) => {
+const PayNoteCta = withT(({ payNote, payload, hasAccess, t }) => {
   const router = useRouter()
+  const infoNote =
+    payNote.note ||
+    (payNote.cta === 'button' && t('article/payNote/default/note'))
   return (
     <>
       {payNote.cta ? (
@@ -315,7 +319,7 @@ const PayNoteCta = ({ payNote, payload, hasAccess }) => {
           ) : (
             <BuyNoteCta payNote={payNote} payload={payload} />
           )}
-          {payNote.note && (
+          {infoNote && (
             <div
               style={{ marginTop: 10, marginBottom: 5 }}
               onClick={(e) => {
@@ -339,8 +343,8 @@ const PayNoteCta = ({ payNote, payload, hasAccess }) => {
                 dangerouslySetInnerHTML={{
                   __html: hasAccess
                     ? // use about for more info instead of index which is magazin front with access
-                      payNote.note.replace('href="/"', 'href="/about"')
-                    : payNote.note,
+                      infoNote.replace('href="/"', 'href="/about"')
+                    : infoNote,
                 }}
               />
             </div>
@@ -349,7 +353,7 @@ const PayNoteCta = ({ payNote, payload, hasAccess }) => {
       ) : null}
     </>
   )
-}
+})
 
 const PayNoteP = ({ content }) => (
   <Interaction.P
