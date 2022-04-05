@@ -758,7 +758,7 @@
     },
     {
       "key": "metaData/paynotes/help",
-      "value": "Anzahl Mitglieder mit <b>{count}</b> und B-Tags für <b>&lt;b&gt;gefettet&lt;/b&gt;</b>. Für einen neuen Paragraf, eine leere Zeile – doppelter Umbruch."
+      "value": "B-Tags für <b>&lt;b&gt;gefettet&lt;/b&gt;</b>. Für einen neuen Paragraf, eine leere Zeile – doppelter Umbruch."
     },
     {
       "key": "metaData/paynote/form/target/title",
