@@ -379,9 +379,9 @@ const ExpandableAudioPlayer = ({
             </div>
             <div {...styles.playBackRateButtons}>
               {[
-                { speed: 0.5, label: '0,5×' },
                 { speed: 0.75, label: '0,75×' },
                 { speed: 1, label: '1×' },
+                { speed: 1.25, label: '1,25×' },
                 { speed: 1.5, label: '1,5×' },
                 { speed: 2, label: '2×' },
               ].map((rate) => {
