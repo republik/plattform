@@ -3570,7 +3570,7 @@
     },
     {
       "key": "memberships/latestPeriod/renew/true/autoPay/false",
-      "value": "Erneuerung vor dem {formattedEndDate} nötig"
+      "value": "Erneuerung am {formattedEndDate} fällig"
     },
     {
       "key": "memberships/MONTHLY_ABO/latestPeriod/renew/true/autoPay/false",
