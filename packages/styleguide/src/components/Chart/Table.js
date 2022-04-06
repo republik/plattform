@@ -7,6 +7,7 @@ import { descending, ascending } from 'd3-array'
 
 import { useColorContext } from '../Colors/ColorContext'
 import { getFormat, getTextColor, deduplicate } from './utils'
+import { timeFormat, timeParse } from '../../lib/timeFormat'
 import { ExpandMoreIcon, ExpandLessIcon } from '../Icons'
 import { defaultProps } from './ChartContext'
 import { sansSerifRegular18 } from '../Typography/styles'
@@ -59,6 +60,8 @@ const Table = (props) => {
   } = props
   const columns = values.columns || Object.keys(values[0] || {})
   const numberFormatter = getFormat(numberFormat)
+  const dateParser = timeParse(props.timeParse)
+  const dateFormatter = timeFormat(props.timeFormat)
 
   const [sortBy, setSortBy] = useState({
     key: defaultSortColumn,
@@ -69,20 +72,30 @@ const Table = (props) => {
     .filter((d) => d.type === 'number')
     .map((d) => d.column)
   const numericColumns = numberColumns.concat(
-    tableColumns.filter((d) => d.type === 'numeric').map((d) => d.column),
+    tableColumns.filter((d) => d.type === 'date').map((d) => d.column),
   )
 
-  const parsedData = numberColumns.length
-    ? values.map((row) => {
-        let parsedRow = { ...row }
-        numberColumns.forEach((key) => {
-          if (parsedRow[key] !== undefined) {
-            parsedRow[key] = +parsedRow[key]
-          }
+  const dateColumns = tableColumns
+    .filter((d) => d.type === 'date')
+    .map((d) => d.column)
+
+  const parsedData =
+    numberColumns.length || dateColumns.length
+      ? values.map((row) => {
+          let parsedRow = { ...row }
+          numberColumns.forEach((key) => {
+            if (parsedRow[key] !== undefined) {
+              parsedRow[key] = +parsedRow[key]
+            }
+          })
+          dateColumns.forEach((key) => {
+            if (parsedRow[key] !== undefined) {
+              parsedRow[key] = dateParser(parsedRow[key])
+            }
+          })
+          return parsedRow
         })
-        return parsedRow
-      })
-    : [].concat(values)
+      : [].concat(values)
 
   if (sortBy.key) {
     parsedData.sort((a, b) => {
@@ -185,6 +198,8 @@ const Table = (props) => {
                 >
                   {numberColumns.includes(cellKey)
                     ? numberFormatter(row[cellKey])
+                    : dateColumns.includes(cellKey)
+                    ? dateFormatter(row[cellKey])
                     : row[cellKey]}
                 </Cell>
               ))}

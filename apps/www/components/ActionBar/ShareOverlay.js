@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Overlay, OverlayBody, OverlayToolbar } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'

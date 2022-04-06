@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Label, Interaction } from '@project-r/styleguide'
 
 import { countFormat } from '../lib/utils/format'

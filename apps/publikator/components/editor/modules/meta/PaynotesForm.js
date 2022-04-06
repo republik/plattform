@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { A, Radio, Label, RawHtml, Interaction } from '@project-r/styleguide'
 import MdClose from 'react-icons/lib/md/close'
 import MdAdd from 'react-icons/lib/md/add'

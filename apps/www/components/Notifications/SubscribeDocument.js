@@ -1,4 +1,3 @@
-import React from 'react'
 import SubscribeCheckbox from './SubscribeCheckbox'
 import withT from '../../lib/withT'
 import SubscribeCalloutTitle from './SubscribeCalloutTitle'

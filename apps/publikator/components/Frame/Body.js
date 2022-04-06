@@ -1,4 +1,3 @@
-import React from 'react'
 import { HEADER_HEIGHT } from './constants'
 import { NarrowContainer } from '@project-r/styleguide'
 

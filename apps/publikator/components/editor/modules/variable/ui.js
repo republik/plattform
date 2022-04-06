@@ -1,4 +1,3 @@
-import React from 'react'
 import { Map } from 'immutable'
 import { parse } from '@orbiting/remark-preset'
 import { Block, Inline } from 'slate'

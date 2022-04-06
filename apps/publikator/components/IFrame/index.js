@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { styleSheet } from 'glamor'
 import Frame from 'react-frame-component'
 import PropTypes from 'prop-types'

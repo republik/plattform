@@ -1,4 +1,3 @@
-import React from 'react'
 import Router from 'next/router'
 import { parseJSONObject } from './safeJSON'
 import { matchIOSUserAgent, useUserAgent } from './context/UserAgentContext'

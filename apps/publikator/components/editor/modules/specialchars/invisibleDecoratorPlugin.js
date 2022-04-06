@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 
 const INVALID_CONTROL_TYPE = 'SPECIALCHARS_INVALID_CONTROL'

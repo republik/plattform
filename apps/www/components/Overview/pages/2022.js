@@ -1,4 +1,3 @@
-import React from 'react'
 import { Highlight } from '../Elements'
 import Page from '../Page'
 
@@ -122,6 +121,80 @@ const text = {
       und{' '}
       <Highlight {...p} ids={['uPFPFBSTR']}>
         Krieg in Europa
+      </Highlight>
+      .
+    </>
+  ),
+  März: (p) => (
+    <>
+      Bilder aus Kiew: zwischen{' '}
+      <Highlight {...p} ids={['28JAcEpAF']}>
+        Angst
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['2NcmznuQi']}>
+        Normalität
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['d-ygbxtow']}>
+        leiser Hoffnung
+      </Highlight>
+      . Für{' '}
+      <Highlight {...p} ids={['n4WNvC9fm']}>
+        diese ukrainischen Schriftsteller war der Kriegsbeginn keine
+        Überraschung
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['EUKAMRblD']}>
+        Wer finanziert eigentlich Atomwaffen
+      </Highlight>
+      ? Die weitreichenden Auswirkungen des russischen Angriffs:{' '}
+      <Highlight {...p} ids={['YyAFtFJyi']}>
+        auf die Weltwirtschaft
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['CNYV3xNt2']}>
+        auf den Kampf gegen die Klimakrise
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['eKDy7ROax']}>
+        auf die Rolle der Politik
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['nv8NVedaG']}>
+        Ein Nachruf auf den unabhängigen russischen Journalismus
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['WBGdVMewT']}>
+        ein Hoch auf die Macht des stillen Protests
+      </Highlight>
+      . Was die Schweiz (nicht) leistet:{' '}
+      <Highlight {...p} ids={['bFBk9mLOT']}>
+        im Umgang mit Geflüchteten
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['ndpEaBjZ9']}>
+        im Umgang mit Oligarchen
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['2scguFUDq']}>
+        im Umgang mit Sanktionen
+      </Highlight>
+      . Ausserdem:{' '}
+      <Highlight {...p} ids={['gmTtFIY7M']}>
+        Putzfrauen im Film
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['4qQMAR9NR']}>
+        Neues von Stromae
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['AnkDlrE03']}>
+        ein True-Crime-Podcast
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['tqxg8Rnnb']}>
+        ein Blick ins Geschäft der Republik
       </Highlight>
       .
     </>

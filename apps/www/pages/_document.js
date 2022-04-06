@@ -1,4 +1,4 @@
-import React from 'react'
+import { Children } from 'react'
 import Document, {
   Html,
   Head as DefaultHead,
@@ -33,9 +33,9 @@ class NoJsHead extends DefaultHead {
           ...node,
           props: {
             ...node.props,
-            children: React.Children.map(node.props.children, transform),
+            children: Children.map(node.props.children, transform),
           },
-        }
+        };
       }
       if (Array.isArray(node)) {
         return node.map(transform)

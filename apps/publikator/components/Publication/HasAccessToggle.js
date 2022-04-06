@@ -1,4 +1,3 @@
-import React from 'react'
 import { useColorContext, plainButtonRule } from '@project-r/styleguide'
 import Person from 'react-icons/lib/io/ios-person'
 import PersonOutline from 'react-icons/lib/io/ios-person-outline'

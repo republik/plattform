@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import { compose } from 'react-apollo'
 import { createContainer, createTile } from './Grid'

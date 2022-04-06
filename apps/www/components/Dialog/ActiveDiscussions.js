@@ -1,4 +1,4 @@
-import React, { Component, useMemo } from 'react'
+import { Component, useMemo } from 'react'
 import { css, merge } from 'glamor'
 import compose from 'lodash/flowRight'
 

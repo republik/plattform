@@ -94,7 +94,7 @@ const getPaymentMethods = async ({
     status: 'CHARGEABLE',
     card: {
       brand: pm.card.brand,
-      wallet: pm.card.wallet.type,
+      wallet: pm.card.wallet?.type,
       last4: pm.card.last4,
       expMonth: pm.card.exp_month,
       expYear: pm.card.exp_year,

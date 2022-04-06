@@ -28,7 +28,7 @@ module.exports = {
     'no-empty': 'warn',
     // Rules to no longer require React to be imported (React >=17)
     'react/jsx-uses-react': 'off',
-    // 'react/react-in-jsx-scope': 'off',
+    'react/react-in-jsx-scope': 'off',
   },
   settings: {
     react: {

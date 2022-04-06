@@ -1,4 +1,3 @@
-import React from 'react'
 import { ApolloProvider } from 'react-apollo'
 import initApollo from '../../lib/apollo/initApollo'
 

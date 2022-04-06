@@ -1,5 +1,3 @@
-import React from 'react'
-
 export const Visa = () => (
   <svg
     style={{ verticalAlign: 'middle', padding: '0px 0' }}

@@ -1,4 +1,3 @@
-import React from 'react'
 import EmptyDiscussion from './shared/EmptyDiscussion'
 import StatementContainer from './CommentContainers/StatementContainer'
 import CommentContainer from './CommentContainers/CommentContainer'

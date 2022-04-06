@@ -1,4 +1,3 @@
-import React from 'react'
 import { chartTypes } from './config'
 import { Tab } from './Tabs'
 import { css } from 'glamor'

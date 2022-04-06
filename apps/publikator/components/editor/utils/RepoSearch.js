@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 import {
@@ -42,6 +42,7 @@ export const filterRepos = gql`
         }
         latestPublications {
           document {
+            id
             meta {
               publishDate
             }

@@ -1,4 +1,3 @@
-import React from 'react'
 import withDefaultSSR from '../../lib/hocs/withDefaultSSR'
 import ArticlePage from '../../components/Article/Page'
 

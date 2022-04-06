@@ -1,4 +1,3 @@
-import React from 'react'
 import { getFormatter } from './utils/translate'
 
 import translations from './translations.json'
