@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useMemo, useContext } from 'react'
+import { cloneElement, useRef, useEffect, useMemo, useContext } from 'react'
 import { css } from 'glamor'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -373,13 +373,13 @@ const ArticlePage = ({
     />
   )
   const actionBarEnd = actionBar
-    ? React.cloneElement(actionBar, {
+    ? cloneElement(actionBar, {
         mode: isSeriesOverview ? 'seriesOverviewBottom' : 'articleBottom',
       })
     : undefined
 
   const actionBarOverlay = actionBar
-    ? React.cloneElement(actionBar, {
+    ? cloneElement(actionBar, {
         mode: 'articleOverlay',
       })
     : undefined
@@ -525,7 +525,7 @@ const ArticlePage = ({
             />
           )
           const payNoteAfter =
-            payNote && React.cloneElement(payNote, { position: 'after' })
+            payNote && cloneElement(payNote, { position: 'after' })
 
           const ownDiscussion = meta.ownDiscussion
           const linkedDiscussion =
@@ -781,7 +781,7 @@ const ArticlePage = ({
         }}
       />
     </Frame>
-  )
+  );
 }
 
 const styles = {

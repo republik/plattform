@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode } from 'react'
+import { ReactElement, ReactNode } from 'react'
 import { useDiscussion } from '../context/DiscussionContext'
 import { useInNativeApp } from '../../../lib/withInNativeApp'
 import { useMe } from '../../../lib/context/MeContext'

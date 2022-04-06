@@ -1,5 +1,3 @@
-import React from 'react'
-
 import isEmail from 'validator/lib/isEmail'
 
 import { Interaction, Button } from '@project-r/styleguide'

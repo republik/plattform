@@ -1,6 +1,5 @@
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { Block } from 'slate'
-import React from 'react'
 import { matchBlock, buttonStyles } from '../../utils'
 
 import { Label, Interaction } from '@project-r/styleguide'

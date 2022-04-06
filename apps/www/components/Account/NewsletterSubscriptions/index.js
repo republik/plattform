@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react'
 import compose from 'lodash/flowRight'
 import { Query, Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'

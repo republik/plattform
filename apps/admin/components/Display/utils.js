@@ -1,4 +1,3 @@
-import React from 'react'
 import { css, merge } from 'glamor'
 import { fontStyles, colors } from '@project-r/styleguide'
 import { swissTime } from '../../lib/utils/formats'

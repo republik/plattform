@@ -1,4 +1,3 @@
-import React from 'react'
 import compose from 'lodash/flowRight'
 import { enforceMembership } from '../../components/Auth/withMembership'
 import { CDN_FRONTEND_BASE_URL } from '../../lib/constants'

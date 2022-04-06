@@ -1,4 +1,3 @@
-import React from 'react'
 import { css, merge } from 'glamor'
 import { Link } from '../../lib/routes'
 import { withRouter } from 'next/router'

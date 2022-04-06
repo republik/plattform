@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useContext } from 'react'
+import { useMemo, useState, useContext } from 'react'
 import { compose } from 'react-apollo'
 
 import {

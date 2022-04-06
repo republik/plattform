@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { colors, A, Label, Field } from '@project-r/styleguide'
 
 import withDebouncedSearch from '../../Form/withDebouncedSearch'

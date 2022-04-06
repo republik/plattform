@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 
 import { formatLocale } from 'd3-format'

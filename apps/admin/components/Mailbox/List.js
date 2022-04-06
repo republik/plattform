@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { css, merge } from 'glamor'
 import { MdError as ProblemIcon } from 'react-icons/md'
 import { MdCallReceived as ReceivedIcon } from 'react-icons/md'

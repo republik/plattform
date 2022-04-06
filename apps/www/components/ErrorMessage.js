@@ -1,4 +1,3 @@
-import React from 'react'
 import { errorToString } from '../lib/utils/errors'
 
 import { useColorContext, Interaction, Label } from '@project-r/styleguide'

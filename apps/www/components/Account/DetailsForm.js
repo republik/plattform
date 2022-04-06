@@ -1,4 +1,3 @@
-import React from 'react'
 import { Interaction, Loader, useColorContext } from '@project-r/styleguide'
 import AddressForm from './AddressForm'
 import FieldSet from '../FieldSet'

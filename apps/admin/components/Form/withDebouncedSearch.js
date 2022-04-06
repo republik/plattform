@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import debounce from 'lodash.debounce'
 
 const withDebouncedSearch = (BaseComponent) =>
-  class WithDebouncedSearch extends Component {
+  (class WithDebouncedSearch extends Component {
     constructor(props) {
       super(props)
       this.state = {
@@ -28,6 +28,6 @@ const withDebouncedSearch = (BaseComponent) =>
         />
       )
     }
-  }
+  })
 
 export default withDebouncedSearch

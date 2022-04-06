@@ -1,4 +1,3 @@
-import React from 'react'
 import { CloseIcon, SearchMenuIcon } from '@project-r/styleguide'
 import {
   mediaQueries,

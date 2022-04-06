@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { matchMark, createMarkButton, buttonStyles } from '../../utils'
 
 import BoldIcon from 'react-icons/lib/fa/bold'

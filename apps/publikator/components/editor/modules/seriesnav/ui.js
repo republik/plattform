@@ -1,4 +1,3 @@
-import React from 'react'
 import { buttonStyles, createPropertyForm, matchBlock } from '../../utils'
 import { Checkbox, Label } from '@project-r/styleguide'
 

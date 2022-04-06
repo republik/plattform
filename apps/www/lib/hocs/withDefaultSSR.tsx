@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   APOLLO_STATE_PROP_NAME,
   initializeApollo,

@@ -1,4 +1,3 @@
-import React from 'react'
 import { CommentTeaser, useColorContext } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
 import withT from '../../lib/withT'

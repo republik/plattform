@@ -1,4 +1,3 @@
-import React from 'react'
 import Head from 'next/head'
 
 import { imageSizeInfo, imageResizeUrl } from 'mdast-react-render/lib/utils'
