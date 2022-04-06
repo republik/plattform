@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { css } from 'glamor'
 
 import { useColorContext, mediaQueries, zIndex } from '@project-r/styleguide'

@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react'
+import { createContext, useState, useEffect, useRef } from 'react'
 
 import createPersistedState from '../../lib/hooks/use-persisted-state'
 import { useInNativeApp, postMessage } from '../../lib/withInNativeApp'
 
 import { useMediaProgress } from './MediaProgress'
 
-export const AudioContext = React.createContext({
+export const AudioContext = createContext({
   audioSource: {},
   audioPlayerVisible: false,
   toggleAudioPlayer: () => {},

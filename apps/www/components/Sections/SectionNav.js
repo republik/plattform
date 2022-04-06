@@ -1,4 +1,3 @@
-import React from 'react'
 import { mediaQueries, fontStyles, FormatTag } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { ascending } from 'd3-array'

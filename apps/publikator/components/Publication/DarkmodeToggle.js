@@ -1,4 +1,3 @@
-import React from 'react'
 import { useColorContext, plainButtonRule } from '@project-r/styleguide'
 import MoonOutline from 'react-icons/lib/io/ios-moon-outline'
 import Moon from 'react-icons/lib/io/ios-moon'

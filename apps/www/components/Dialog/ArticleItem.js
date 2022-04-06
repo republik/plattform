@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 
 import { Interaction, useColorContext } from '@project-r/styleguide'

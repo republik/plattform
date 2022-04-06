@@ -1,4 +1,3 @@
-import React from 'react'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { parse } from '@orbiting/remark-preset'
 import { Set, is } from 'immutable'

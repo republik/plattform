@@ -1,5 +1,3 @@
-import React from 'react'
-
 const SvgNidwalden = (props) => (
   <svg
     width={props.size}

@@ -1,4 +1,3 @@
-import React from 'react'
 import VideoCover from '../VideoCover'
 import ReasonsCover from './ReasonsCover'
 import { CDN_FRONTEND_BASE_URL } from '../../lib/constants'

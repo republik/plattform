@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { compose } from 'react-apollo'
 import { css } from 'glamor'
 import MarkdownSerializer from 'slate-mdast-serializer'

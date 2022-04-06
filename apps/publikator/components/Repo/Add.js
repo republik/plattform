@@ -1,4 +1,4 @@
-import React, { Component, useState, useMemo } from 'react'
+import { Component, useState, useMemo } from 'react'
 import { Router } from '../../lib/routes'
 import { slug as slugify } from '@project-r/styleguide'
 import schemas from '../Templates'

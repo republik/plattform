@@ -1,4 +1,3 @@
-import React from 'react'
 import Frame from '../../components/Frame'
 import NotificationsSettings from '../../components/Notifications/Settings'
 import withT from '../../lib/withT'

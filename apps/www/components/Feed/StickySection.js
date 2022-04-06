@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import compose from 'lodash/flowRight'
 
 import { ZINDEX_FEED_STICKY_SECTION_LABEL } from '../constants'

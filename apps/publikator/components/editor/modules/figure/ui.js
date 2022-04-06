@@ -1,4 +1,3 @@
-import React from 'react'
 import { Map } from 'immutable'
 import { Radio, Label, Checkbox } from '@project-r/styleguide'
 import withT from '../../../../lib/withT'

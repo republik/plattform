@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react'
 import { Set, Map } from 'immutable'
 import { css } from 'glamor'
 import {

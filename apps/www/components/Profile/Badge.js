@@ -1,4 +1,3 @@
-import React from 'react'
 import { merge } from 'glamor'
 import { IconButton, useColorContext } from '@project-r/styleguide'
 import withT from '../../lib/withT'

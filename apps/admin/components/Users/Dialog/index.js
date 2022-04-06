@@ -1,4 +1,3 @@
-import React from 'react'
 import Credentials from './Credentials'
 import Suspensions from './DiscussionSuspensions'
 

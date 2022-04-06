@@ -1,4 +1,3 @@
-import React from 'react'
 import Employees from '../Imprint/Employees'
 
 const EmployeesRow = (props) => <Employees filter={(e) => e.title} {...props} />

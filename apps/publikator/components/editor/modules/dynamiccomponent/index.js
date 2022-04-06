@@ -1,4 +1,4 @@
-import React, { cloneElement, useContext } from 'react'
+import { cloneElement, useContext } from 'react'
 import { Block } from 'slate'
 
 import { matchBlock } from '../../utils'
