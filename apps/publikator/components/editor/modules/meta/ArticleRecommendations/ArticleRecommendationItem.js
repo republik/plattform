@@ -160,7 +160,6 @@ const ArticleRecommendationItem = ({
             </div>
           </>
         )}
-
         <div {...styles.errorLine}>
           {!error && (isDuplicate || isRedundant) && (
             <>
