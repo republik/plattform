@@ -9,6 +9,8 @@ import {
   fontStyles,
   InlineSpinner,
   useColorContext,
+  convertStyleToRem,
+  mediaQueries,
 } from '@project-r/styleguide'
 import withT from '../../../../../lib/withT'
 import { compose, graphql } from 'react-apollo'
@@ -39,8 +41,18 @@ const styles = {
     padding: '.5rem',
   }),
   title: css({
-    ...fontStyles.sansSerifMedium18,
     marginRight: '.5rem',
+    ...convertStyleToRem(fontStyles.serifTitle20),
+    [mediaQueries.mUp]: {
+      ...convertStyleToRem(fontStyles.serifTitle22),
+    },
+  }),
+  lead: css({
+    ...convertStyleToRem(fontStyles.serifRegular17),
+    margin: '0 0 5px 0',
+    [mediaQueries.mUp]: {
+      ...convertStyleToRem(fontStyles.serifRegular19),
+    },
   }),
   titleLine: css({
     display: 'inline-flex',
@@ -66,7 +78,7 @@ const styles = {
 }
 
 const ArticleRecommendationItem = ({
-  data: { loading, repoData, errors },
+  data: { loading, repoData, error },
   t,
   handleRemove,
   handleUp,
@@ -86,6 +98,8 @@ const ArticleRecommendationItem = ({
     .join(', ')
   const isPublished = !!metaData?.publishDate
   const isScheduled = !!latestPublication?.scheduledAt
+
+  if (!loading && !repoData) console.log(JSON.stringify(error, null, 2))
 
   return (
     <li {...styles.recommendationItem}>
@@ -118,6 +132,11 @@ const ArticleRecommendationItem = ({
                 </A>
               )}
             </div>
+            <div>
+              {metaData?.description && (
+                <p {...styles.lead}>{metaData.description}</p>
+              )}
+            </div>
             <div {...styles.metaLine}>
               <span>
                 {t('metaData/recommendations/author', {
@@ -139,34 +158,35 @@ const ArticleRecommendationItem = ({
                       }))}
               </span>
             </div>
-            <div {...styles.errorLine}>
-              {(isDuplicate || isRedundant) && (
-                <>
-                  {isDuplicate && (
-                    <span {...colorScheme.set('color', 'error')}>
-                      {t('metaData/recommendations/duplicate')}
-                    </span>
-                  )}
-                  {isRedundant && (
-                    <span {...colorScheme.set('color', 'error')}>
-                      {t('metaData/recommendations/redundant')}
-                    </span>
-                  )}
-                </>
-              )}
-              {errors && (
-                <span {...colorScheme.set('color', 'error')}>
-                  {errorToString(errors)}
-                </span>
-              )}
-              {!isPublished && !isScheduled && (
-                <span {...colorScheme.set('color', 'error')}>
-                  {t('metaData/recommendations/notPublished')}
-                </span>
-              )}
-            </div>
           </>
         )}
+
+        <div {...styles.errorLine}>
+          {!error && (isDuplicate || isRedundant) && (
+            <>
+              {isDuplicate && (
+                <span {...colorScheme.set('color', 'error')}>
+                  {t('metaData/recommendations/duplicate')}
+                </span>
+              )}
+              {isRedundant && (
+                <span {...colorScheme.set('color', 'error')}>
+                  {t('metaData/recommendations/redundant')}
+                </span>
+              )}
+            </>
+          )}
+          {error && (
+            <span {...colorScheme.set('color', 'error')}>
+              {errorToString(error)}
+            </span>
+          )}
+          {!error && !isPublished && !isScheduled && (
+            <span {...colorScheme.set('color', 'error')}>
+              {t('metaData/recommendations/notPublished')}
+            </span>
+          )}
+        </div>
       </div>
       <IconButton Icon={CloseIcon} onClick={handleRemove} disabled={loading} />
     </li>
@@ -206,6 +226,7 @@ export default compose(
         meta {
           path
           title
+          description
           publishDate
           authors {
             firstName
