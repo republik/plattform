@@ -48,9 +48,10 @@ const styles = {
   }),
   metaLine: css({
     display: 'inline-flex',
-    alignItems: 'center',
-    '& > *': {
-      marginRight: '.5rem',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    '& > *:not(:first-child)': {
+      marginTop: '.25rem',
     },
   }),
   errorLine: css({
@@ -76,10 +77,15 @@ const ArticleRecommendationItem = ({
   isRedundant,
 }) => {
   const [colorScheme] = useColorContext()
-  const metaData = repoData?.latestPublications[0]?.document?.meta
+  const latestPublication = repoData?.latestPublications[0]
+  const documentData =
+    latestPublication?.document ?? repoData?.latestCommit?.document
+  const metaData = documentData?.meta
   const authors = metaData?.authors
-    ?.map((a) => a.firstName + ' ' + a.lastName)
+    ?.map((author) => author.firstName + ' ' + author.lastName)
     .join(', ')
+  const isPublished = !!latestPublication?.publishedAt
+  const isScheduled = !!latestPublication?.scheduledAt
 
   return (
     <li {...styles.recommendationItem}>
@@ -117,11 +123,17 @@ const ArticleRecommendationItem = ({
                 })}
               </span>
               <span>
-                {t('metaData/recommendations/publishedAt', {
-                  date: new Date(
-                    Date.parse(metaData.publishDate),
-                  ).toLocaleDateString('de-CH'),
-                })}
+                {latestPublication.live
+                  ? t('metaData/recommendations/publishedAt', {
+                      date: new Date(
+                        Date.parse(metaData.publishDate),
+                      ).toLocaleDateString('de-CH'),
+                    })
+                  : t('metaData/recommendations/scheduledAt', {
+                      date: new Date(
+                        Date.parse(latestPublication.scheduledAt),
+                      ).toLocaleDateString('de-CH'),
+                    })}
               </span>
             </div>
             {(isDuplicate || isRedundant) && (
@@ -141,6 +153,11 @@ const ArticleRecommendationItem = ({
                     {errorToString(errors)}
                   </span>
                 )}
+                {(!isPublished || !isScheduled) && (
+                  <span {...colorScheme.set('color', 'error')}>
+                    {t('metaData/recommendations/notPublished')}
+                  </span>
+                )}
               </div>
             )}
           </>
@@ -155,25 +172,43 @@ export default compose(
   withT,
   graphql(
     gql`
-      query getLastPublishedMetaForRepoId($id: ID!) {
+      query getRecommendationMeta($id: ID!) {
         repoData: repo(id: $id) {
           id
           latestPublications {
+            live
+            prepublication
+            scheduledAt
             document {
-              meta {
-                path
-                title
-                publishDate
-                authors {
-                  firstName
-                  lastName
-                }
-                format {
-                  meta {
-                    externalBaseUrl
-                  }
-                }
-              }
+              ...MetaForRepoId
+            }
+          }
+
+          meta {
+            publishDate
+          }
+          latestCommit {
+            id
+            document {
+              ...MetaForRepoId
+            }
+          }
+        }
+      }
+
+      fragment MetaForRepoId on Document {
+        id
+        meta {
+          path
+          title
+          publishDate
+          authors {
+            firstName
+            lastName
+          }
+          format {
+            meta {
+              externalBaseUrl
             }
           }
         }
