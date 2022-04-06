@@ -6561,6 +6561,10 @@
       "value": "Erhalten Sie für 21 Tage kostenlos und unverbindlich Zugang zu allen Beiträgen der Republik – im Web, in der Republik-App oder als Newsletter:"
     },
     {
+      "key": "profile/buyNote/content",
+      "value": "Um die Beiträge von {name} zu lesen, benötigen Sie eine Mitgliedschaft oder ein Monatsabonnement. Sie wollen uns erst kennenlernen? Dann lesen Sie die Republik jetzt unverbindlich und kostenlos 21 Tage Probe."
+    },
+    {
       "key": "option/ABO/accessGranted/label/other",
       "value": "Wachstums-Mitgliedschaften"
     },

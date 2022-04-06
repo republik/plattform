@@ -66,9 +66,9 @@ const TRY_VARIATIONS = ['tryNote/220404-v1', 'tryNote/220404-v2']
 const BUY_VARIATIONS = ['payNote/220404-v1', 'payNote/220404-v2']
 const IOS_VARIATIONS = ['payNote/ios']
 
-const DEFAULT_BUTTON_TARGET = '/angebote?package=ABO'
+export const DEFAULT_BUTTON_TARGET = '/angebote?package=ABO'
 
-const generatePositionedNote = (variation, target, cta, position) => {
+export const generatePositionedNote = (variation, cta, position) => {
   return {
     [position]: {
       content: t(`article/${variation}/${position}`, undefined, ''),
@@ -116,8 +116,8 @@ const generateNote = (variation, target, cta) => {
   return {
     key: variation,
     target: target,
-    ...generatePositionedNote(variation, target, cta, 'before'),
-    ...generatePositionedNote(variation, target, cta, 'after'),
+    ...generatePositionedNote(variation, cta, 'before'),
+    ...generatePositionedNote(variation, cta, 'after'),
   }
 }
 
@@ -385,6 +385,39 @@ const withDarkContextWhenBefore = (WrappedComponent) => (props) => {
   return <WrappedComponent {...props} />
 }
 
+export const PaynoteBanner = ({
+  payNote,
+  trackingPayload,
+  hasAccess,
+  overwriteContent,
+  position,
+  CustomContainer,
+  style,
+}) => {
+  const [colorScheme] = useColorContext()
+  const Container = CustomContainer || Center
+  return (
+    <div
+      data-hide-if-active-membership='true'
+      {...styles.banner}
+      style={style}
+      {...colorScheme.set(
+        'backgroundColor',
+        position === 'before' ? 'hover' : 'alert',
+      )}
+    >
+      <Container>
+        <PayNoteContent content={overwriteContent || payNote.content} />
+        <PayNoteCta
+          payNote={payNote}
+          payload={trackingPayload}
+          hasAccess={hasAccess}
+        />
+      </Container>
+    </div>
+  )
+}
+
 export const PayNote = compose(
   withInNativeApp,
   withMe,
@@ -404,7 +437,6 @@ export const PayNote = compose(
     customCta,
     customOnly,
   }) => {
-    const [colorScheme] = useColorContext()
     const { query } = useRouter()
     const subject = {
       inNativeIOSApp,
@@ -432,28 +464,19 @@ export const PayNote = compose(
       variation: payNote.key,
       position,
     }
-    const isBefore = position === 'before'
-
-    const content =
-      positionedNote.cta === 'trialForm' && query.trialSignup === 'success'
-        ? t('article/tryNote/thankYou')
-        : positionedNote.content
 
     return (
-      <div
-        data-hide-if-active-membership='true'
-        {...styles.banner}
-        {...colorScheme.set('backgroundColor', isBefore ? 'hover' : 'alert')}
-      >
-        <Center>
-          <PayNoteContent content={content} />
-          <PayNoteCta
-            payNote={positionedNote}
-            payload={payload}
-            hasAccess={hasAccess}
-          />
-        </Center>
-      </div>
+      <PaynoteBanner
+        payNote={positionedNote}
+        overwriteContent={
+          positionedNote.cta === 'trialForm' &&
+          query.trialSignup === 'success' &&
+          t('article/tryNote/thankYou')
+        }
+        trackingPayload={payload}
+        hasAccess={hasAccess}
+        position={position}
+      />
     )
   },
 )

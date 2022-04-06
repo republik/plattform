@@ -5,7 +5,7 @@ import { gql } from '@apollo/client'
 import { css } from 'glamor'
 import { withRouter } from 'next/router'
 
-import withT from '../../lib/withT'
+import withT, { t } from '../../lib/withT'
 import withMe from '../../lib/apollo/withMe'
 
 import Loader from '../Loader'
@@ -42,6 +42,11 @@ import {
 import ElectionBallotRow from '../Vote/ElectionBallotRow'
 import { documentListQueryFragment } from '../Feed/DocumentListContainer'
 import Link from 'next/link'
+import {
+  PaynoteBanner,
+  DEFAULT_BUTTON_TARGET,
+  generatePositionedNote,
+} from '../Article/PayNote'
 
 const SIDEBAR_TOP = 20
 const PORTRAIT_SIZE_M = TESTIMONIAL_IMAGE_SIZE
@@ -373,6 +378,7 @@ const LoadedProfile = (props) => {
   const {
     t,
     me,
+    hasAccess,
     data: { user, fetchMore },
     card,
     metaData,
@@ -423,6 +429,9 @@ const LoadedProfile = (props) => {
     overlayTitle: t('profile/share/overlayTitle'),
   }
   const [colorScheme] = useColorContext()
+  const paynote = generatePositionedNote('', 'trialForm', 'after')
+  const paynoteContent = t('profile/buyNote/content', { name: user.name })
+
   return (
     <Fragment>
       {!user.hasPublicProfile && (
@@ -623,6 +632,17 @@ const LoadedProfile = (props) => {
           <div style={{ clear: 'both' }} />
         </div>
       </MainContainer>
+      {!me && (
+        <PaynoteBanner
+          payNote={paynote.after}
+          overwriteContent={paynoteContent}
+          trackingPayload={{}}
+          position='after'
+          CustomContainer={MainContainer}
+          hasAccess={hasAccess}
+          style={{ zIndex: 10, padding: '15px 0', position: 'relative' }}
+        />
+      )}
     </Fragment>
   )
 }
