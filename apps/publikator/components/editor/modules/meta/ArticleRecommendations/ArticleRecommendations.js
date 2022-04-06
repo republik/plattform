@@ -10,6 +10,9 @@ import { useRouter } from 'next/router'
 const ARTICLE_RECOMMENDATIONS_KEY = 'recommendations'
 
 const styles = {
+  title: css({
+    marginBottom: '1rem',
+  }),
   wrapper: css({
     display: 'block',
   }),
@@ -21,7 +24,6 @@ const styles = {
       borderTop: '1px solid #ccc',
     },
   }),
-
   repoSearchWrapper: css({
     marginTop: '1rem',
     width: '100%',
@@ -89,38 +91,42 @@ const ArticleRecommendations = ({ t, editor, node }) => {
 
   return (
     <div className={styles.wrapper}>
-      <Interaction.H3>{t('metaData/recommendations/heading')}</Interaction.H3>
-      <p>{t('metaData/recommendations/info')}</p>
-      {recommendedArticles && recommendedArticles.length > 0 && (
-        <ul className={styles.recommendationList}>
-          {recommendedArticles.map((val, index) => (
-            <ArticleRecommendationItem
-              key={val + index}
-              t={t}
-              repoId={val}
-              handleRemove={() => remove(index)}
-              handleUp={() => swapArrayElements(index, index - 1)}
-              handleDown={() => swapArrayElements(index, index + 1)}
-              isFirst={index === 0}
-              isLast={index === recommendedArticles.length - 1}
-              isDuplicate={recommendedArticles.indexOf(val) !== index}
-              isRedundant={val === ownRepoId}
-            />
-          ))}
-          {showRepoSearch && (
-            <li>
-              <div {...styles.repoSearchWrapper}>
-                <Label>{t('metaData/recommendations/search')}</Label>
-                <RepoSearch
-                  onChange={(value) => {
-                    setShowRepoSearch(false)
-                    addSuggestion(value)
-                  }}
-                />
-              </div>
-            </li>
-          )}
-        </ul>
+      <Interaction.H3 {...styles.title}>
+        {t('metaData/recommendations/heading')}
+      </Interaction.H3>
+      {(recommendedArticles?.length > 0 || showRepoSearch) && (
+        <>
+          <p>{t('metaData/recommendations/info')}</p>
+          <ul className={styles.recommendationList}>
+            {recommendedArticles.map((val, index) => (
+              <ArticleRecommendationItem
+                key={val + index}
+                t={t}
+                repoId={val}
+                handleRemove={() => remove(index)}
+                handleUp={() => swapArrayElements(index, index - 1)}
+                handleDown={() => swapArrayElements(index, index + 1)}
+                isFirst={index === 0}
+                isLast={index === recommendedArticles.length - 1}
+                isDuplicate={recommendedArticles.indexOf(val) !== index}
+                isRedundant={val === ownRepoId}
+              />
+            ))}
+            {showRepoSearch && (
+              <li>
+                <div {...styles.repoSearchWrapper}>
+                  <Label>{t('metaData/recommendations/search')}</Label>
+                  <RepoSearch
+                    onChange={(value) => {
+                      setShowRepoSearch(false)
+                      addSuggestion(value)
+                    }}
+                  />
+                </div>
+              </li>
+            )}
+          </ul>
+        </>
       )}
       <A href='#add' onClick={() => setShowRepoSearch(true)} {...styles.add}>
         <MdAdd /> {t('metaData/recommendations/add')}
