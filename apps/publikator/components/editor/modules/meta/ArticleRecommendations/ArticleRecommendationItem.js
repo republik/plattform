@@ -84,7 +84,7 @@ const ArticleRecommendationItem = ({
   const authors = metaData?.authors
     ?.map((author) => author.firstName + ' ' + author.lastName)
     .join(', ')
-  const isPublished = !!latestPublication?.publishedAt
+  const isPublished = !!metaData?.publishDate
   const isScheduled = !!latestPublication?.scheduledAt
 
   return (
@@ -107,14 +107,16 @@ const ArticleRecommendationItem = ({
           <>
             <div {...styles.titleLine}>
               <span {...styles.title}>{metaData.title}</span>
-              <A
-                href={`${
-                  metaData?.format?.meta?.externalBaseUrl || FRONTEND_BASE_URL
-                }${metaData.path}`}
-                target='_blank'
-              >
-                <PublicIcon />
-              </A>
+              {isPublished && (
+                <A
+                  href={`${
+                    metaData?.format?.meta?.externalBaseUrl || FRONTEND_BASE_URL
+                  }${metaData.path}`}
+                  target='_blank'
+                >
+                  <PublicIcon />
+                </A>
+              )}
             </div>
             <div {...styles.metaLine}>
               <span>
@@ -123,43 +125,46 @@ const ArticleRecommendationItem = ({
                 })}
               </span>
               <span>
-                {latestPublication.live
-                  ? t('metaData/recommendations/publishedAt', {
-                      date: new Date(
-                        Date.parse(metaData.publishDate),
-                      ).toLocaleDateString('de-CH'),
-                    })
-                  : t('metaData/recommendations/scheduledAt', {
-                      date: new Date(
-                        Date.parse(latestPublication.scheduledAt),
-                      ).toLocaleDateString('de-CH'),
-                    })}
+                {(isPublished || isScheduled) &&
+                  (latestPublication?.live
+                    ? t('metaData/recommendations/publishedAt', {
+                        date: new Date(
+                          Date.parse(metaData.publishDate),
+                        ).toLocaleDateString('de-CH'),
+                      })
+                    : t('metaData/recommendations/scheduledAt', {
+                        date: new Date(
+                          Date.parse(latestPublication.scheduledAt),
+                        ).toLocaleDateString('de-CH'),
+                      }))}
               </span>
             </div>
-            {(isDuplicate || isRedundant) && (
-              <div {...styles.errorLine}>
-                {isDuplicate && (
-                  <span {...colorScheme.set('color', 'error')}>
-                    {t('metaData/recommendations/duplicate')}
-                  </span>
-                )}
-                {isRedundant && (
-                  <span {...colorScheme.set('color', 'error')}>
-                    {t('metaData/recommendations/redundant')}
-                  </span>
-                )}
-                {errors && (
-                  <span {...colorScheme.set('color', 'error')}>
-                    {errorToString(errors)}
-                  </span>
-                )}
-                {(!isPublished || !isScheduled) && (
-                  <span {...colorScheme.set('color', 'error')}>
-                    {t('metaData/recommendations/notPublished')}
-                  </span>
-                )}
-              </div>
-            )}
+            <div {...styles.errorLine}>
+              {(isDuplicate || isRedundant) && (
+                <>
+                  {isDuplicate && (
+                    <span {...colorScheme.set('color', 'error')}>
+                      {t('metaData/recommendations/duplicate')}
+                    </span>
+                  )}
+                  {isRedundant && (
+                    <span {...colorScheme.set('color', 'error')}>
+                      {t('metaData/recommendations/redundant')}
+                    </span>
+                  )}
+                </>
+              )}
+              {errors && (
+                <span {...colorScheme.set('color', 'error')}>
+                  {errorToString(errors)}
+                </span>
+              )}
+              {!isPublished && !isScheduled && (
+                <span {...colorScheme.set('color', 'error')}>
+                  {t('metaData/recommendations/notPublished')}
+                </span>
+              )}
+            </div>
           </>
         )}
       </div>
