@@ -11,8 +11,7 @@ import PaynoteForm from './PaynoteForm'
 
 const styles = {
   title: css({
-    display: 'block',
-    marginBottom: 5,
+    marginBottom: '1rem',
   }),
   container: css({
     backgroundColor: '#fff',
@@ -127,13 +126,15 @@ export default withT(({ t, editor, node }) => {
 
   return (
     <>
+      <Interaction.H3 {...styles.title}>
+        {t('metaData/paynotes/title')}
+      </Interaction.H3>
       {!paynotes.length ? (
         <A href='#add' onClick={addPaynote}>
           <MdAdd /> {t('metaData/paynotes/add')}
         </A>
       ) : (
         <>
-          <Label {...styles.title}>{t('metaData/paynotes/title')}</Label>
           {paynotes.map((paynote, i) => {
             return (
               <div key={i} {...styles.container}>
