@@ -1746,7 +1746,7 @@
     },
     {
       "key": "api/auth/emailCode/tokensExceeded",
-      "value": "Anzahl der gleichzeitig gültigen Tokens überschritten"
+      "value": "Zu viele Anmeldeversuche. Probieren Sie es in einer Stunde erneut."
     },
     {
       "key": "api/auth/emailCode/collison",
@@ -1758,7 +1758,15 @@
     },
     {
       "key": "api/auth/accessToken/tokensExceeded",
-      "value": "Anzahl der gleichzeitig gültigen Tokens überschritten"
+      "value": "Zu viele Anmeldeversuche. Probieren Sie es in einigen Minuten erneut."
+    },
+    {
+      "key": "api/auth/app/tokensExceeded",
+      "value": "Zu viele Anmeldeversuche. Probieren Sie es in 10 Minuten erneut."
+    },
+    {
+      "key": "api/auth/emailToken/tokensExceeded",
+      "value": "Zu viele Anmeldeversuche. Probieren Sie es in einer Stunde erneut."
     },
     {
       "key": "api/commit/templateTitle/required",
