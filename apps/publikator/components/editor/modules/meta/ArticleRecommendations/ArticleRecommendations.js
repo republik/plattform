@@ -34,7 +34,7 @@ const styles = {
 const ArticleRecommendations = ({ t, editor, node }) => {
   const { asPath } = useRouter()
   const ownRepoId = createAbsolutRepoUrl(
-    asPath.slice(0, asPath.indexOf('/edit?commitId')).replace('/repo/', ''),
+    asPath?.slice(0, asPath.indexOf('/edit?commitId')).replace('/repo/', ''),
   )
   const recommendedArticles = node.data.get(ARTICLE_RECOMMENDATIONS_KEY) || []
   const [showRepoSearch, setShowRepoSearch] = useState(false)
