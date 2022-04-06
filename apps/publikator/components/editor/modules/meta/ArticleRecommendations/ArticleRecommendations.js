@@ -6,6 +6,7 @@ import { css } from 'glamor'
 import MdAdd from 'react-icons/lib/md/add'
 import ArticleRecommendationItem from './ArticleRecommendationItem'
 import { createAbsolutRepoUrl } from './RepoLinkUtility'
+import { useRouter } from 'next/router'
 const ARTICLE_RECOMMENDATIONS_KEY = 'recommendations'
 
 const styles = {
@@ -31,6 +32,10 @@ const styles = {
 }
 
 const ArticleRecommendations = ({ t, editor, node }) => {
+  const { asPath } = useRouter()
+  const ownRepoId = createAbsolutRepoUrl(
+    asPath.slice(0, asPath.indexOf('/edit?commitId')).replace('/repo/', ''),
+  )
   const recommendedArticles = node.data.get(ARTICLE_RECOMMENDATIONS_KEY) || []
   const [showRepoSearch, setShowRepoSearch] = useState(false)
 
@@ -90,7 +95,7 @@ const ArticleRecommendations = ({ t, editor, node }) => {
         <ul className={styles.recommendationList}>
           {recommendedArticles.map((val, index) => (
             <ArticleRecommendationItem
-              key={val}
+              key={val + index}
               t={t}
               repoId={val}
               handleRemove={() => remove(index)}
@@ -99,7 +104,7 @@ const ArticleRecommendations = ({ t, editor, node }) => {
               isFirst={index === 0}
               isLast={index === recommendedArticles.length - 1}
               isDuplicate={recommendedArticles.indexOf(val) !== index}
-              isRedundant={false} // TODO: pass down repoId of current article
+              isRedundant={val === ownRepoId}
             />
           ))}
           {showRepoSearch && (
