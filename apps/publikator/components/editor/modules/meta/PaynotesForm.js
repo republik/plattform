@@ -47,8 +47,8 @@ const PAYNOTE_CTA_KEY = 'paynoteCta'
 const TARGETS = ['hasActiveMembership', 'isEligibleForTrial']
 const MODE_KEYS = {
   AUTO: 'auto',
-  BUY: 'buy',
-  TRY: 'try',
+  BUY: 'button',
+  TRY: 'trialForm',
   CUSTOM: 'custom',
   NONE: 'none',
 }

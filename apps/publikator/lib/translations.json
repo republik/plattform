@@ -741,11 +741,11 @@
       "value": "auto"
     },
     {
-      "key": "metaData/paynotes/mode/buy",
+      "key": "metaData/paynotes/mode/button",
       "value": "auto (nur Abo kaufen)"
     },
     {
-      "key": "metaData/paynotes/mode/try",
+      "key": "metaData/paynotes/mode/trialForm",
       "value": "auto (nur Probelesen)"
     },
     {
