@@ -48,11 +48,6 @@ type Newsletter {
   free: Boolean
 }
 
-type PaynoteTarget {
-  hasActiveMembership: Boolean
-  isEligibleForTrial: Boolean
-}
-
 enum PaynoteCta {
   button
   trialForm
