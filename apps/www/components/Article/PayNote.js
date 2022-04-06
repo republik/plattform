@@ -60,7 +60,7 @@ const styles = {
   }),
 }
 
-export const TRY_TO_BUY_RATIO = 0.5
+const TRY_TO_BUY_RATIO = 0.5
 
 const TRY_VARIATIONS = ['tryNote/220404-v1', 'tryNote/220404-v2']
 const BUY_VARIATIONS = ['payNote/220404-v1', 'payNote/220404-v2']
@@ -202,7 +202,7 @@ const getPayNote = (
   tryOrBuy,
   customOnly,
   customPayNotes,
-  tryToBuyRatio,
+  customCta,
 ) => {
   const targetedCustomPaynotes = customPayNotes
     .map(generateKey)
@@ -217,7 +217,8 @@ const getPayNote = (
   if (!targetedPredefinedNotes.length) return null
 
   if (hasTryAndBuyCtas(targetedPredefinedNotes)) {
-    const desiredCta = tryOrBuy < tryToBuyRatio ? 'trialForm' : 'button'
+    const desiredCta =
+      customCta ?? (tryOrBuy < TRY_TO_BUY_RATIO ? 'trialForm' : 'button')
     const abPredefinedNotes = targetedPredefinedNotes.filter(hasCta(desiredCta))
     return getElementFromSeed(abPredefinedNotes, seed)
   }
@@ -400,8 +401,8 @@ export const PayNote = compose(
     repoId,
     position,
     customPayNotes,
+    customCta,
     customOnly,
-    tryToBuyRatio,
   }) => {
     const [colorScheme] = useColorContext()
     const { query } = useRouter()
@@ -416,7 +417,7 @@ export const PayNote = compose(
       tryOrBuy,
       customOnly,
       customPayNotes,
-      tryToBuyRatio,
+      customCta,
     )
 
     if (!payNote) return null

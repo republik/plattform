@@ -53,6 +53,11 @@ type PaynoteTarget {
   isEligibleForTrial: Boolean
 }
 
+enum PaynoteCta {
+  button
+  trialForm
+} 
+
 type Meta {
   title: String
   shortTitle: String
@@ -110,7 +115,7 @@ type Meta {
   indicateVideo: Boolean
   
   paynotes: [JSON]
-  tryToBuyRatio: Float
+  paynoteCta: PaynoteCta
 }
 
 input DocumentInput {

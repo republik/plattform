@@ -516,15 +516,11 @@ const ArticlePage = ({
           const payNote = (
             <PayNote
               seed={payNoteSeed}
-              tryToBuyRatio={
-                meta.tryToBuyRatio !== null
-                  ? meta.tryToBuyRatio
-                  : TRY_TO_BUY_RATIO
-              }
               tryOrBuy={payNoteTryOrBuy}
               documentId={documentId}
               repoId={repoId}
-              customPayNotes={meta.paynotes !== null ? meta.paynotes : []}
+              customPayNotes={meta.paynotes ?? []}
+              customCta={meta.paynoteCta}
               customOnly={isPage || isFormat}
               position='before'
             />
