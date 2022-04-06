@@ -43,14 +43,14 @@ const styles = {
 }
 
 const PAYNOTE_KEY = 'paynotes'
-const TRY_TO_BUY_RATIO_KEY = 'tryToBuyRatio'
+const PAYNOTE_CTA_KEY = 'paynoteCta'
 const TARGETS = ['hasActiveMembership', 'isEligibleForTrial']
 const MODE_KEYS = {
   AUTO: 'auto',
-  BUY: 'auto (nur Abo kaufen)',
-  TRY: 'auto (nur Probelesen)',
+  BUY: 'buy',
+  TRY: 'try',
   CUSTOM: 'custom',
-  NONE: 'kein',
+  NONE: 'none',
 }
 const MODES = [
   MODE_KEYS.AUTO,
@@ -136,13 +136,13 @@ const TargetForm = withT(
 )
 
 export default withT(({ t, editor, node, isFormat }) => {
-  const [mode, setMode] = useState()
   const paynotes = node.data.get(PAYNOTE_KEY) || []
-  const tryToBuyRatio = node.data.get(TRY_TO_BUY_RATIO_KEY)
+  const paynotesCta = node.data.get(PAYNOTE_CTA_KEY)
+  const [mode, setMode] = useState()
 
   const modes = MODES.map((value) => ({
     value,
-    text: value,
+    text: t(`metaData/paynotes/mode/${value}`),
   }))
 
   const onKeyChange = (key) => (value) => {
@@ -159,7 +159,6 @@ export default withT(({ t, editor, node, isFormat }) => {
   }
 
   const onPaynotesChange = onKeyChange(PAYNOTE_KEY)
-  const onTryToBuyRatioChange = onKeyChange(TRY_TO_BUY_RATIO_KEY)
 
   const addPaynote = (e) => {
     e?.preventDefault()
@@ -200,16 +199,12 @@ export default withT(({ t, editor, node, isFormat }) => {
   }
 
   // set initial mode base on paynotes configuration
-  // TODO: move in useState?
   useEffect(() => {
-    if (!paynotes?.length) {
-      if (tryToBuyRatio === 0) {
-        setMode(MODE_KEYS.BUY)
-      } else if (tryToBuyRatio === 1) {
-        setMode(MODE_KEYS.TRY)
-      } else {
-        setMode(MODE_KEYS.AUTO)
-      }
+    if (paynotesCta) {
+      // 'try' or 'buy'
+      setMode(paynotesCta)
+    } else if (!paynotes?.length) {
+      setMode(MODE_KEYS.AUTO)
     } else {
       if (isEmptyPaynotes(paynotes)) {
         setMode(MODE_KEYS.NONE)
@@ -224,19 +219,19 @@ export default withT(({ t, editor, node, isFormat }) => {
     if (value === MODE_KEYS.AUTO) {
       editor.change((change) => {
         change.setNodeByKey(node.key, {
-          data: node.data.remove(PAYNOTE_KEY).remove(TRY_TO_BUY_RATIO_KEY),
+          data: node.data.remove(PAYNOTE_KEY).remove(PAYNOTE_CTA_KEY),
         })
       })
     } else if (value === MODE_KEYS.BUY) {
       editor.change((change) => {
         change.setNodeByKey(node.key, {
-          data: node.data.remove(PAYNOTE_KEY).set(TRY_TO_BUY_RATIO_KEY, 0),
+          data: node.data.remove(PAYNOTE_KEY).set(PAYNOTE_CTA_KEY, value),
         })
       })
     } else if (value === MODE_KEYS.TRY) {
       editor.change((change) => {
         change.setNodeByKey(node.key, {
-          data: node.data.remove(PAYNOTE_KEY).set(TRY_TO_BUY_RATIO_KEY, 1),
+          data: node.data.remove(PAYNOTE_KEY).set(PAYNOTE_CTA_KEY, value),
         })
       })
     } else if (value === MODE_KEYS.NONE) {
@@ -250,7 +245,7 @@ export default withT(({ t, editor, node, isFormat }) => {
                 after: EMPTY_PAYNOTE,
               },
             ])
-            .remove(TRY_TO_BUY_RATIO_KEY),
+            .remove(PAYNOTE_CTA_KEY),
         })
       })
     } else if (value === MODE_KEYS.CUSTOM) {
@@ -264,7 +259,7 @@ export default withT(({ t, editor, node, isFormat }) => {
                 after: { ...EMPTY_PAYNOTE, cta: 'button' },
               },
             ])
-            .remove(TRY_TO_BUY_RATIO_KEY),
+            .remove(PAYNOTE_CTA_KEY),
         })
       })
     }
@@ -275,7 +270,7 @@ export default withT(({ t, editor, node, isFormat }) => {
       <UIForm getWidth={() => '50%'}>
         <Dropdown
           black
-          label='Störer'
+          label={t('metaData/paynotes/dropdown')}
           items={modes}
           value={mode || null}
           onChange={({ value }) => {
