@@ -18,7 +18,7 @@ import gql from 'graphql-tag'
 import PublicIcon from 'react-icons/lib/md/public'
 import { FRONTEND_BASE_URL } from '../../../../../lib/settings'
 import { createRelativeRepoUrl } from './RepoLinkUtility'
-import { errorToString } from '../../../../../lib/utils/errors'
+import PublicationLink from '../../../../Publication/PublicationLink'
 
 const styles = {
   recommendationItem: css({
@@ -172,31 +172,25 @@ const ArticleRecommendationItem = ({
                   })}
                 </span>
               )}
-              <span>
-                {isPublishedForPublic &&
-                  t('metaData/recommendations/publishedAt', {
+              {isPublishedForPublic && (
+                <span>
+                  {' '}
+                  {t('metaData/recommendations/publishedAt', {
                     date: new Date(
                       Date.parse(metaData.publishDate),
                     ).toLocaleDateString('de-CH'),
                   })}
-                {isScheduledForPublication &&
-                  t('metaData/recommendations/scheduledAt', {
+                </span>
+              )}
+              {isScheduledForPublication && (
+                <span>
+                  {t('metaData/recommendations/scheduledAt', {
                     date: new Date(
                       Date.parse(latestPublication.scheduledAt),
                     ).toLocaleDateString('de-CH'),
                   })}
-                {isPublishedForPublic && (
-                  <A
-                    href={`${
-                      metaData?.format?.meta?.externalBaseUrl ||
-                      FRONTEND_BASE_URL
-                    }${metaData.path}`}
-                    target='_blank'
-                  >
-                    <PublicIcon />
-                  </A>
-                )}
-              </span>
+                </span>
+              )}
             </div>
           </>
         )}
@@ -233,6 +227,11 @@ const ArticleRecommendationItem = ({
             </span>
           )}
         </div>
+        {(isPublishedForPublic || isInternallyPublished) && (
+          <div>
+            <PublicationLink publication={latestPublication} />
+          </div>
+        )}
       </div>
       <div {...styles.closeWrapper}>
         <IconButton
