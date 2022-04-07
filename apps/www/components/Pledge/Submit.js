@@ -827,6 +827,9 @@ class Submit extends Component {
     const isStripePayment =
       selectedPaymentMethod && selectedPaymentMethod.startsWith('STRIPE')
 
+    // In case of Probelesen, a user might have an account, but first and lastname are missing
+    const requireFAndLName = me && (!me.firstName || !me.lastName)
+
     return (
       <>
         <div {...styles.topMargin}>
@@ -951,7 +954,7 @@ class Submit extends Component {
             )}
             {
               // Only render the browser API in case we're not using a browser payment API
-              !me &&
+              (!me || requireFAndLName) &&
                 this.props.selectedPaymentMethod &&
                 !this.isStripeWalletPayment() && (
                   <div {...styles.topMargin}>
@@ -962,7 +965,7 @@ class Submit extends Component {
                       ])}
                     </Label>
                     <div style={{ marginTop: 10, marginBottom: 10 }}>
-                      {customMe && !me ? (
+                      {customMe && !requireFAndLName ? (
                         <>
                           <Interaction.P>
                             <Label>{t('pledge/contact/email/label')}</Label>
