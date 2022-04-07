@@ -76,14 +76,14 @@ const ArticleRecommendations = ({ t, editor, node }) => {
   }
 
   return (
-    <div className={styles.wrapper}>
+    <div {...styles.wrapper}>
       <Interaction.H3 {...styles.title}>
         {t('metaData/recommendations/heading')}
       </Interaction.H3>
       {(recommendedArticles?.length > 0 || showRepoSearch) && (
         <>
           <p>{t('metaData/recommendations/info')}</p>
-          <ul className={styles.recommendationList}>
+          <ul {...styles.recommendationList}>
             {recommendedArticles.map((val, index) => (
               <ArticleRecommendationItem
                 key={val + index}
