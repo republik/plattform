@@ -827,8 +827,8 @@ class Submit extends Component {
     const isStripePayment =
       selectedPaymentMethod && selectedPaymentMethod.startsWith('STRIPE')
 
-    // In case of Probelesen, a user might have an account, but first and lastname are missing
-    const requireFAndLName = me && (!me.firstName || !me.lastName)
+    // even with token or when signed in we still need name fields
+    const requireContactData = contactState.fields.length > 0
 
     return (
       <>
@@ -954,7 +954,7 @@ class Submit extends Component {
             )}
             {
               // Only render the browser API in case we're not using a browser payment API
-              (!me || requireFAndLName) &&
+              requireContactData &&
                 this.props.selectedPaymentMethod &&
                 !this.isStripeWalletPayment() && (
                   <div {...styles.topMargin}>
@@ -965,7 +965,7 @@ class Submit extends Component {
                       ])}
                     </Label>
                     <div style={{ marginTop: 10, marginBottom: 10 }}>
-                      {customMe && !requireFAndLName ? (
+                      {customMe && !me && (
                         <>
                           <Interaction.P>
                             <Label>{t('pledge/contact/email/label')}</Label>
@@ -986,9 +986,8 @@ class Submit extends Component {
                             <A>{t('pledge/contact/signIn/wrongToken')}</A>
                           </Link>
                         </>
-                      ) : (
-                        <FieldSet {...contactState} />
                       )}
+                      {requireContactData && <FieldSet {...contactState} />}
                     </div>
                   </div>
                 )
