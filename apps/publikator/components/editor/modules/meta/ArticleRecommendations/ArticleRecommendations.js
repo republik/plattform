@@ -1,12 +1,14 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import RepoSearch from '../../../utils/RepoSearch'
 import withT from '../../../../../lib/withT'
-import { Label, A, Interaction } from '@project-r/styleguide'
+import { A, Interaction } from '@project-r/styleguide'
 import { css } from 'glamor'
 import MdAdd from 'react-icons/lib/md/add'
 import ArticleRecommendationItem from './ArticleRecommendationItem'
-import { createAbsolutRepoUrl } from './RepoLinkUtility'
+import { getAbsoluteRepoUrl } from './util/RepoLinkUtility'
 import { useRouter } from 'next/router'
+import { swapArrayElements } from './util/ArraySwapElementsUtility'
+
 const ARTICLE_RECOMMENDATIONS_KEY = 'recommendations'
 
 const styles = {
@@ -32,7 +34,7 @@ const styles = {
 
 const ArticleRecommendations = ({ t, editor, node }) => {
   const { asPath } = useRouter()
-  const ownRepoId = createAbsolutRepoUrl(
+  const ownRepoId = getAbsoluteRepoUrl(
     asPath?.slice(0, asPath.indexOf('/edit?commitId')).replace('/repo/', ''),
   )
   const recommendedArticles = node.data.get(ARTICLE_RECOMMENDATIONS_KEY) || []
@@ -50,7 +52,7 @@ const ArticleRecommendations = ({ t, editor, node }) => {
   }
 
   const addSuggestion = (suggestion, index = -1) => {
-    const prefixedSuggestionURL = createAbsolutRepoUrl(suggestion.value.id)
+    const prefixedSuggestionURL = getAbsoluteRepoUrl(suggestion.value.id)
     if (index == -1) {
       handleSuggestionsChange([...recommendedArticles, prefixedSuggestionURL])
     } else {
@@ -64,25 +66,12 @@ const ArticleRecommendations = ({ t, editor, node }) => {
     handleSuggestionsChange(recommendedArticles.filter((_, i) => i !== index))
   }
 
-  const swapArrayElements = (indexA, indexB) => {
-    const nextState = [...recommendedArticles]
-
-    const smallIndex = Math.min(indexA, indexB)
-    const largeIndex = Math.max(indexA, indexB)
-
-    if (
-      recommendedArticles.length < 2 ||
-      smallIndex === largeIndex ||
-      smallIndex < 0 ||
-      largeIndex > nextState.length - 1
-    ) {
-      return
-    }
-
-    const a = nextState[smallIndex]
-    const b = nextState[largeIndex]
-    nextState[smallIndex] = b
-    nextState[largeIndex] = a
+  const exchangeElements = (indexA, indexB) => {
+    const nextState = swapArrayElements(
+      [...recommendedArticles],
+      indexA,
+      indexB,
+    )
     handleSuggestionsChange(nextState)
   }
 
@@ -101,8 +90,8 @@ const ArticleRecommendations = ({ t, editor, node }) => {
                 t={t}
                 repoId={val}
                 handleRemove={() => remove(index)}
-                handleUp={() => swapArrayElements(index, index - 1)}
-                handleDown={() => swapArrayElements(index, index + 1)}
+                handleUp={() => exchangeElements(index, index - 1)}
+                handleDown={() => exchangeElements(index, index + 1)}
                 isFirst={index === 0}
                 isLast={index === recommendedArticles.length - 1}
                 isDuplicate={recommendedArticles.indexOf(val) !== index}
@@ -112,8 +101,8 @@ const ArticleRecommendations = ({ t, editor, node }) => {
             {showRepoSearch && (
               <li>
                 <div {...styles.repoSearchWrapper}>
-                  <Label>{t('metaData/recommendations/search')}</Label>
                   <RepoSearch
+                    label={t('metaData/recommendations/search')}
                     onChange={(value) => {
                       setShowRepoSearch(false)
                       addSuggestion(value)

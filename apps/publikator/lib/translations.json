@@ -878,10 +878,10 @@
     },
     {
       "key": "metaData/recommendations/search",
-      "value": "Dokument suchen"
+      "value": "Beitrag suchen"
     },
     {
-      "key": "metaData/recommendations/plannedPublication",
+      "key": "metaData/recommendations/publicationPlannedFor",
       "value": "Geplantes Publikationsdatum: {date}"
     },
     {

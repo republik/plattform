@@ -15,9 +15,9 @@ import {
 import withT from '../../../../../lib/withT'
 import { compose, graphql } from 'react-apollo'
 import gql from 'graphql-tag'
-import { createRelativeRepoUrl } from './RepoLinkUtility'
+import { getRelativeRepoUrl } from './util/RepoLinkUtility'
 import PublicationLink from '../../../../Publication/PublicationLink'
-import { creditsToString } from './CreditLineUtility'
+import { creditsToString } from './util/CreditLineUtility'
 
 const styles = {
   recommendationItem: css({
@@ -141,7 +141,7 @@ const ArticleRecommendationItem = ({
           <>
             <div {...styles.titleLine}>
               <A
-                href={`/repo/${createRelativeRepoUrl(repoId)}/tree`}
+                href={`/repo/${getRelativeRepoUrl(repoId)}/tree`}
                 target='_blank'
               >
                 <span {...styles.title} {...colorScheme.set('color', 'text')}>
@@ -269,7 +269,7 @@ export default compose(
     {
       options: ({ repoId }) => ({
         variables: {
-          id: createRelativeRepoUrl(repoId),
+          id: getRelativeRepoUrl(repoId),
         },
       }),
     },
