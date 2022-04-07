@@ -24,24 +24,28 @@ const styles = {
   recommendationItem: css({
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     flexDirection: 'row',
   }),
   arrowWrapper: css({
     display: 'inline-flex',
     flexDirection: 'column',
+    marginTop: '0.5rem',
     '& > button': {
       marginRight: 0,
     },
+  }),
+  closeWrapper: css({
+    marginTop: '1rem',
   }),
   contentWrapper: css({
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
-    padding: '.5rem',
+    padding: '1rem 0.5rem',
   }),
   title: css({
-    marginRight: '.5rem',
+    marginRight: '0.5rem',
     ...convertStyleToRem(fontStyles.serifTitle20),
     [mediaQueries.mUp]: {
       ...convertStyleToRem(fontStyles.serifTitle22),
@@ -63,11 +67,11 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'flex-start',
     '& > *:not(:first-child)': {
-      marginTop: '.25rem',
+      marginTop: '0.25rem',
     },
   }),
   errorLine: css({
-    marginTop: '.25rem',
+    marginTop: '0.25rem',
     display: 'inline-flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
@@ -78,6 +82,7 @@ const styles = {
 }
 
 const ArticleRecommendationItem = ({
+  repoId,
   data: { loading, repoData, error },
   t,
   handleRemove,
@@ -96,7 +101,10 @@ const ArticleRecommendationItem = ({
   const authors = metaData?.authors
     ?.map((author) => author.firstName + ' ' + author.lastName)
     .join(', ')
-  const isPublished = !!metaData?.publishDate
+  const isPublishedForPublic =
+    !!metaData?.publishDate && !!latestPublication.live
+  const isInternallyPublished =
+    !!metaData?.publishDate && !latestPublication.live
   const isScheduled = !!latestPublication?.scheduledAt
 
   if (!loading && !repoData) console.log(JSON.stringify(error, null, 2))
@@ -120,17 +128,14 @@ const ArticleRecommendationItem = ({
         {metaData && (
           <>
             <div {...styles.titleLine}>
-              <span {...styles.title}>{metaData.title}</span>
-              {isPublished && (
-                <A
-                  href={`${
-                    metaData?.format?.meta?.externalBaseUrl || FRONTEND_BASE_URL
-                  }${metaData.path}`}
-                  target='_blank'
-                >
-                  <PublicIcon />
-                </A>
-              )}
+              <A
+                href={`/repo/${createRelativeRepoUrl(repoId)}/tree`}
+                target='_blank'
+              >
+                <span {...styles.title} {...colorScheme.set('color', 'text')}>
+                  {metaData.title}
+                </span>
+              </A>
             </div>
             <div>
               {metaData?.description && (
@@ -144,19 +149,31 @@ const ArticleRecommendationItem = ({
                 })}
               </span>
               <span>
-                {(isPublished || isScheduled) &&
-                  (latestPublication?.live
-                    ? t('metaData/recommendations/publishedAt', {
-                        date: new Date(
-                          Date.parse(metaData.publishDate),
-                        ).toLocaleDateString('de-CH'),
-                      })
-                    : t('metaData/recommendations/scheduledAt', {
-                        date: new Date(
-                          Date.parse(latestPublication.scheduledAt),
-                        ).toLocaleDateString('de-CH'),
-                      }))}
+                {isPublishedForPublic &&
+                  t('metaData/recommendations/publishedAt', {
+                    date: new Date(
+                      Date.parse(metaData.publishDate),
+                    ).toLocaleDateString('de-CH'),
+                  })}
+                {isInternallyPublished &&
+                  t('metaData/recommendations/scheduledAt', {
+                    date: new Date(
+                      Date.parse(latestPublication.scheduledAt),
+                    ).toLocaleDateString('de-CH'),
+                  })}
+                {isInternallyPublished &&
+                  'Internally published, not yet published for public'}
               </span>
+              {isPublishedForPublic && (
+                <A
+                  href={`${
+                    metaData?.format?.meta?.externalBaseUrl || FRONTEND_BASE_URL
+                  }${metaData.path}`}
+                  target='_blank'
+                >
+                  <PublicIcon />
+                </A>
+              )}
             </div>
           </>
         )}
@@ -180,14 +197,20 @@ const ArticleRecommendationItem = ({
               {errorToString(error)}
             </span>
           )}
-          {!error && !isPublished && !isScheduled && (
+          {!error && !isPublishedForPublic && !isScheduled && (
             <span {...colorScheme.set('color', 'error')}>
               {t('metaData/recommendations/notPublished')}
             </span>
           )}
         </div>
       </div>
-      <IconButton Icon={CloseIcon} onClick={handleRemove} disabled={loading} />
+      <div {...styles.closeWrapper}>
+        <IconButton
+          Icon={CloseIcon}
+          onClick={handleRemove}
+          disabled={loading}
+        />
+      </div>
     </li>
   )
 }

@@ -27,9 +27,6 @@ const styles = {
   repoSearchWrapper: css({
     marginTop: '1rem',
     width: '100%',
-    '& label': {
-      paddingTop: 0,
-    },
   }),
 }
 
