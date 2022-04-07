@@ -155,11 +155,13 @@ const handleBatch = async (rows: any[], count: number, pgdb: any) => {
               )
             }
 
-            const parsedUrl = new URL(node.data.url)
-            parsedUrl.searchParams.forEach((_, name) => {
-              parsedUrl.searchParams.delete(name)
-            })
-            urls.push(parsedUrl.toString())
+            if (node.data?.url) {
+              const parsedUrl = new URL(node.data.url)
+              parsedUrl.searchParams.forEach((_, name) => {
+                parsedUrl.searchParams.delete(name)
+              })
+              urls.push(parsedUrl.toString())
+            }
           }
         })
 
