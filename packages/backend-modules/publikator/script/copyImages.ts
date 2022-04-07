@@ -2,7 +2,7 @@ require('@orbiting/backend-modules-env').config()
 
 import yargs from 'yargs'
 import Promise from 'bluebird'
-import fetch from 'isomorphic-unfetch'
+import { RequestInfo, RequestInit } from 'node-fetch'
 import moment from 'moment'
 import _debug from 'debug'
 
@@ -31,6 +31,9 @@ import { Repo } from '../loaders/Repo'
 import { Commit } from '../loaders/Commit'
 
 const debug = _debug('publikator:script:copyImages')
+
+const fetch = (url: RequestInfo, init?: RequestInit) =>
+  import('node-fetch').then(({ default: fetch }) => fetch(url, init))
 
 const fetchToBlob = (url: string) =>
   fetch(url).then((res) => {
