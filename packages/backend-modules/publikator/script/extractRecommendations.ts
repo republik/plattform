@@ -5,6 +5,7 @@ import Promise from 'bluebird'
 import _debug from 'debug'
 import visit from 'unist-util-visit'
 import { v4 } from 'uuid'
+import { URL } from 'url'
 
 import { ConnectionContext } from '@orbiting/backend-modules-types'
 const {
@@ -153,7 +154,12 @@ const handleBatch = async (rows: any[], count: number, pgdb: any) => {
                 `https://publikator.republik.ch/repo/${repoId}/tree`,
               )
             }
-            urls.push(node.data?.url)
+
+            const parsedUrl = new URL(node.data.url)
+            parsedUrl.searchParams.forEach((_, name) => {
+              parsedUrl.searchParams.delete(name)
+            })
+            urls.push(parsedUrl.toString())
           }
         })
 
