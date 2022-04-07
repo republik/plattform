@@ -42,7 +42,7 @@
     "jsonwebtoken": "^8.2.1",
     "lodash": "^4.17.19",
     "mdast-util-to-string": "^1.1.0",
-    "node-fetch": "^3.2.0",
+    "node-fetch": "^2.0.0",
     "pogi": "^2.11.1",
     "redis": "^3.0.2",
     "redlock": "^4.1.0",
@@ -55,6 +55,7 @@
   "devDependencies": {
     "@orbiting/backend-modules-types": "*",
     "@types/debug": "^4.1.5",
+    "@types/node-fetch": "^2.0.0",
     "gsheets": "^3.0.0",
     "nodemon": "^2.0.4",
     "ws": "^7.4.6"
