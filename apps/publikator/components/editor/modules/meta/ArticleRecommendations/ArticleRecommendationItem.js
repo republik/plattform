@@ -101,13 +101,35 @@ const ArticleRecommendationItem = ({
   const authors = metaData?.authors
     ?.map((author) => author.firstName + ' ' + author.lastName)
     .join(', ')
-  const isPublishedForPublic =
-    !!metaData?.publishDate && !!latestPublication.live
-  const isInternallyPublished =
-    !!metaData?.publishDate && !latestPublication.live
-  const isScheduled = !!latestPublication?.scheduledAt
 
-  if (!loading && !repoData) console.log(JSON.stringify(error, null, 2))
+  const isPublishedForPublic =
+    latestPublication &&
+    latestPublication.live &&
+    !latestPublication.prepublication
+
+  const isInternallyPublished =
+    latestPublication &&
+    latestPublication.live &&
+    latestPublication.prepublication
+
+  const isScheduledForPublication =
+    latestPublication &&
+    !latestPublication.live &&
+    !latestPublication.prepublication &&
+    !!latestPublication.scheduledAt
+
+  const documentNotFound = !repoData && !!error
+
+  console.log(
+    JSON.stringify(
+      {
+        repoId,
+        documentNotFound,
+      },
+      null,
+      2,
+    ),
+  )
 
   return (
     <li {...styles.recommendationItem}>
@@ -155,7 +177,7 @@ const ArticleRecommendationItem = ({
                       Date.parse(metaData.publishDate),
                     ).toLocaleDateString('de-CH'),
                   })}
-                {isInternallyPublished &&
+                {isScheduledForPublication &&
                   t('metaData/recommendations/scheduledAt', {
                     date: new Date(
                       Date.parse(latestPublication.scheduledAt),
@@ -163,21 +185,27 @@ const ArticleRecommendationItem = ({
                   })}
                 {isInternallyPublished &&
                   'Internally published, not yet published for public'}
+                {isPublishedForPublic && (
+                  <A
+                    href={`${
+                      metaData?.format?.meta?.externalBaseUrl ||
+                      FRONTEND_BASE_URL
+                    }${metaData.path}`}
+                    target='_blank'
+                  >
+                    <PublicIcon />
+                  </A>
+                )}
               </span>
-              {isPublishedForPublic && (
-                <A
-                  href={`${
-                    metaData?.format?.meta?.externalBaseUrl || FRONTEND_BASE_URL
-                  }${metaData.path}`}
-                  target='_blank'
-                >
-                  <PublicIcon />
-                </A>
-              )}
             </div>
           </>
         )}
         <div {...styles.errorLine}>
+          {!error && !latestPublication && (
+            <span {...colorScheme.set('color', 'error')}>
+              {t('metaData/recommendations/notPublished')}
+            </span>
+          )}
           {!error && (isDuplicate || isRedundant) && (
             <>
               {isDuplicate && (
@@ -195,11 +223,6 @@ const ArticleRecommendationItem = ({
           {error && (
             <span {...colorScheme.set('color', 'error')}>
               {errorToString(error)}
-            </span>
-          )}
-          {!error && !isPublishedForPublic && !isScheduled && (
-            <span {...colorScheme.set('color', 'error')}>
-              {t('metaData/recommendations/notPublished')}
             </span>
           )}
         </div>
