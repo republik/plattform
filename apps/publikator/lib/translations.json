@@ -894,7 +894,11 @@
     },
     {
       "key": "metaData/recommendations/notPublished",
-      "value": "Dieser Beitrag wurde noch nicht veröffnetlicht und es ist keine Publikation terminiert."
+      "value": "Dieser Beitrag wurde noch nicht veröffentlicht oder terminiert."
+    },
+    {
+      "key": "metaData/recommendations/internalPublication",
+      "value": "Dieser Beitrag wurde nur intern veröffentlicht."
     },
     {
       "key": "metaData/recommendations/duplicate",
@@ -902,7 +906,11 @@
     },
     {
       "key": "metaData/recommendations/redundant",
-      "value": "Der Artikel ist auf sich selbst verlinkt."
+      "value": "Der Beitrag verlinkt auf sich selbst."
+    },
+    {
+      "key": "metaData/recommendations/notFound",
+      "value": "Der Beitrag ({repoId}) konnte nicht gefunden werden."
     },
     {
       "key": "variable/insert/greeting",

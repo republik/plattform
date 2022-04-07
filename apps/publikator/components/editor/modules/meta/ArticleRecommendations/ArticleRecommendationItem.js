@@ -165,11 +165,13 @@ const ArticleRecommendationItem = ({
               )}
             </div>
             <div {...styles.metaLine}>
-              <span>
-                {t('metaData/recommendations/author', {
-                  authors,
-                })}
-              </span>
+              {authors && (
+                <span>
+                  {t('metaData/recommendations/author', {
+                    authors,
+                  })}
+                </span>
+              )}
               <span>
                 {isPublishedForPublic &&
                   t('metaData/recommendations/publishedAt', {
@@ -183,8 +185,6 @@ const ArticleRecommendationItem = ({
                       Date.parse(latestPublication.scheduledAt),
                     ).toLocaleDateString('de-CH'),
                   })}
-                {isInternallyPublished &&
-                  'Internally published, not yet published for public'}
                 {isPublishedForPublic && (
                   <A
                     href={`${
@@ -201,12 +201,17 @@ const ArticleRecommendationItem = ({
           </>
         )}
         <div {...styles.errorLine}>
-          {!error && !latestPublication && (
+          {!latestPublication && repoData && (
             <span {...colorScheme.set('color', 'error')}>
               {t('metaData/recommendations/notPublished')}
             </span>
           )}
-          {!error && (isDuplicate || isRedundant) && (
+          {isInternallyPublished && (
+            <span {...colorScheme.set('color', 'error')}>
+              {t('metaData/recommendations/internalPublication')}
+            </span>
+          )}
+          {(isDuplicate || isRedundant) && (
             <>
               {isDuplicate && (
                 <span {...colorScheme.set('color', 'error')}>
@@ -220,9 +225,11 @@ const ArticleRecommendationItem = ({
               )}
             </>
           )}
-          {error && (
+          {!loading && !repoData && (
             <span {...colorScheme.set('color', 'error')}>
-              {errorToString(error)}
+              {t('metaData/recommendations/notFound', {
+                repoId,
+              })}
             </span>
           )}
         </div>
