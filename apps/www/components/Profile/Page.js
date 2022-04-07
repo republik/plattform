@@ -702,11 +702,12 @@ export default compose(
       if (slug === 'me') {
         redirect = me
       }
-      if (!data.loading) {
-        const username = data.user && data.user.username
-        if (username && username !== slug) {
-          redirect = data.user
-        }
+      // redirect id slug to username if available
+      // - data.loading might be false during query transition
+      // - to avoid race conditions we limit it to the slug being the id
+      // - old slugs are handled by the 404 StatusError component
+      if (!data.loading && data.user?.username && data.user?.id === slug) {
+        redirect = data.user
       }
       if (redirect) {
         const targetSlug = redirect.username || redirect.id
