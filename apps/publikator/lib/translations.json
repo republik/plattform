@@ -878,19 +878,11 @@
     },
     {
       "key": "metaData/recommendations/search",
-      "value": "Beitrag suchen"
+      "value": "Dokument suchen"
     },
     {
-      "key": "metaData/recommendations/author",
-      "value": "Von: {authors}"
-    },
-    {
-      "key": "metaData/recommendations/publishedAt",
-      "value": "Veröffentlicht am: {date}"
-    },
-    {
-      "key": "metaData/recommendations/scheduledAt",
-      "value": "Terminiert für den: {date}"
+      "key": "metaData/recommendations/plannedPublication",
+      "value": "Geplantes Publikationsdatum: {date}"
     },
     {
       "key": "metaData/recommendations/notPublished",

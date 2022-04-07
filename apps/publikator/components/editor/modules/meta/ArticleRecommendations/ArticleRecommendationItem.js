@@ -1,4 +1,4 @@
-import React from 'react'
+import { useMemo } from 'react'
 import { css } from 'glamor'
 import {
   IconButton,
@@ -15,10 +15,9 @@ import {
 import withT from '../../../../../lib/withT'
 import { compose, graphql } from 'react-apollo'
 import gql from 'graphql-tag'
-import PublicIcon from 'react-icons/lib/md/public'
-import { FRONTEND_BASE_URL } from '../../../../../lib/settings'
 import { createRelativeRepoUrl } from './RepoLinkUtility'
 import PublicationLink from '../../../../Publication/PublicationLink'
+import { creditsToString } from './CreditLineUtility'
 
 const styles = {
   recommendationItem: css({
@@ -83,7 +82,7 @@ const styles = {
 
 const ArticleRecommendationItem = ({
   repoId,
-  data: { loading, repoData, error },
+  data: { loading, repoData },
   t,
   handleRemove,
   handleUp,
@@ -98,9 +97,13 @@ const ArticleRecommendationItem = ({
   const documentData =
     latestPublication?.document ?? repoData?.latestCommit?.document
   const metaData = documentData?.meta
-  const authors = metaData?.authors
-    ?.map((author) => author.firstName + ' ' + author.lastName)
-    .join(', ')
+
+  const credits = useMemo(() => {
+    if (!metaData || !metaData?.credits) {
+      return null
+    }
+    return creditsToString(metaData.credits)
+  }, [metaData])
 
   const isPublishedForPublic =
     latestPublication &&
@@ -117,19 +120,6 @@ const ArticleRecommendationItem = ({
     !latestPublication.live &&
     !latestPublication.prepublication &&
     !!latestPublication.scheduledAt
-
-  const documentNotFound = !repoData && !!error
-
-  console.log(
-    JSON.stringify(
-      {
-        repoId,
-        documentNotFound,
-      },
-      null,
-      2,
-    ),
-  )
 
   return (
     <li {...styles.recommendationItem}>
@@ -165,28 +155,12 @@ const ArticleRecommendationItem = ({
               )}
             </div>
             <div {...styles.metaLine}>
-              {authors && (
-                <span>
-                  {t('metaData/recommendations/author', {
-                    authors,
-                  })}
-                </span>
-              )}
-              {isPublishedForPublic && (
-                <span>
-                  {' '}
-                  {t('metaData/recommendations/publishedAt', {
+              {credits && <span>{credits}</span>}
+              {(isPublishedForPublic || isScheduledForPublication) && (
+                <span {...colorScheme.set('color', 'textSoft')}>
+                  {t('metaData/recommendations/plannedPublication', {
                     date: new Date(
                       Date.parse(metaData.publishDate),
-                    ).toLocaleDateString('de-CH'),
-                  })}
-                </span>
-              )}
-              {isScheduledForPublication && (
-                <span>
-                  {t('metaData/recommendations/scheduledAt', {
-                    date: new Date(
-                      Date.parse(latestPublication.scheduledAt),
                     ).toLocaleDateString('de-CH'),
                   })}
                 </span>
@@ -279,6 +253,7 @@ export default compose(
           title
           description
           publishDate
+          credits
           authors {
             firstName
             lastName
