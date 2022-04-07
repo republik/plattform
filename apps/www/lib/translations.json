@@ -2657,10 +2657,6 @@
       "value": "Kontaktinformationen des Zahlenden"
     },
     {
-      "key": "pledge/contact/signedinAs",
-      "value": "Sie sind angemeldet als: {nameOrEmail}"
-    },
-    {
       "key": "pledge/contact/pastPledges/1",
       "value": "Sie haben bereits einmal mitgemacht."
     },
