@@ -861,38 +861,51 @@ class Submit extends Component {
               <br />
             </>
           )}
-          {me && (
-            <Interaction.P>
-              {t('pledge/contact/signedinAs', {
-                nameOrEmail: me.name
-                  ? `${me.name.trim()} (${me.email})`
-                  : me.email,
-              })}{' '}
-              <A
-                href='#'
-                onClick={(e) => {
-                  e.preventDefault()
-                  this.setState({ emailVerify: false })
-                  this.props.signOut().then(() => {
-                    contactState.onChange({
-                      values: {
-                        firstName: '',
-                        lastName: '',
-                        email: '',
-                      },
-                      dirty: {
-                        firstName: false,
-                        lastName: false,
-                        email: false,
-                      },
+          {customMe && (
+            <>
+              <Label>{t('pledge/contact/email/label')}</Label>
+              <Interaction.P>{customMe.email}</Interaction.P>
+              <br />
+              {me ? (
+                <A
+                  href='#'
+                  onClick={(e) => {
+                    e.preventDefault()
+                    this.setState({ emailVerify: false })
+                    this.props.signOut().then(() => {
+                      contactState.onChange({
+                        values: {
+                          firstName: '',
+                          lastName: '',
+                          email: '',
+                        },
+                        dirty: {
+                          firstName: false,
+                          lastName: false,
+                          email: false,
+                        },
+                      })
+                      this.setState({ showSignIn: false })
                     })
-                    this.setState({ showSignIn: false })
-                  })
-                }}
-              >
-                {t('pledge/contact/signOut')}
-              </A>
-            </Interaction.P>
+                  }}
+                >
+                  {t('pledge/contact/signOut')}
+                </A>
+              ) : (
+                <Link
+                  href={{
+                    pathname: '/angebote',
+                    query: {
+                      package: packageName,
+                    },
+                  }}
+                  replace
+                  passHref
+                >
+                  <A>{t('pledge/contact/signIn/wrongToken')}</A>
+                </Link>
+              )}
+            </>
           )}
         </div>
         <div {...styles.topMargin}>
@@ -965,28 +978,6 @@ class Submit extends Component {
                       ])}
                     </Label>
                     <div style={{ marginTop: 10, marginBottom: 10 }}>
-                      {customMe && !me && (
-                        <>
-                          <Interaction.P>
-                            <Label>{t('pledge/contact/email/label')}</Label>
-                            <br />
-                            {customMe.email}
-                          </Interaction.P>
-                          <br />
-                          <Link
-                            href={{
-                              pathname: '/angebote',
-                              query: {
-                                package: packageName,
-                              },
-                            }}
-                            replace
-                            passHref
-                          >
-                            <A>{t('pledge/contact/signIn/wrongToken')}</A>
-                          </Link>
-                        </>
-                      )}
                       {requireContactData && <FieldSet {...contactState} />}
                     </div>
                   </div>
