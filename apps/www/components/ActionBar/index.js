@@ -378,6 +378,10 @@ const ActionBar = ({
       show: true,
     },
     {
+      ...PodcastButtonActionItem,
+      modes: ['articleBottom'],
+    },
+    {
       title: t('article/actionbar/discussion'),
       element: (
         <DiscussionLinkButton
@@ -400,10 +404,6 @@ const ActionBar = ({
         'seriesEpisode',
       ],
       show: !!discussionId,
-    },
-    {
-      ...PodcastButtonActionItem,
-      modes: ['articleBottom'],
     },
     {
       title: t('feed/actionbar/edit'),
