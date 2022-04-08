@@ -7,13 +7,14 @@ import {
   fontStyles,
   mediaQueries,
   RawHtml,
+  PodcastIcon,
 } from '@project-r/styleguide'
 
 import { AudioContext } from '../Audio/AudioProvider'
 import { trackEvent } from '../../lib/matomo'
 
 type AudioSource = {
-  kind: 'syntheticReadAloud'
+  kind: 'syntheticReadAloud' | 'readAloud'
   mp3?: string
   aac?: string
   ogg?: string
@@ -72,7 +73,8 @@ const styles = {
 const SyntheticAudio = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
   const { toggleAudioPlayer } = useContext<AudioContextType>(AudioContext)
   const [colorScheme] = useColorContext()
-
+  const { kind } = meta.audioSource
+  const Icon = kind === 'syntheticReadAloud' ? AudioIcon : PodcastIcon
   return (
     <div>
       <hr {...styles.hr} {...colorScheme.set('backgroundColor', 'divider')} />
@@ -80,10 +82,10 @@ const SyntheticAudio = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
         <IconButton
           style={{ marginRight: 0 }}
           size={56}
-          Icon={AudioIcon}
+          Icon={Icon}
           onClick={(e) => {
             e.preventDefault()
-            trackEvent(['SyntheticAudio', 'audio', meta.url])
+            trackEvent([kind, 'audio', meta.url])
             toggleAudioPlayer({
               audioSource: meta.audioSource,
               title: meta.title,
@@ -95,7 +97,7 @@ const SyntheticAudio = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
           <p
             onClick={(e) => {
               e.preventDefault()
-              trackEvent(['SyntheticAudio', 'audio', meta.url])
+              trackEvent([kind, 'audio', meta.url])
               toggleAudioPlayer({
                 audioSource: meta.audioSource,
                 title: meta.title,
@@ -105,12 +107,12 @@ const SyntheticAudio = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
             {...styles.title}
             {...colorScheme.set('fill', 'text')}
           >
-            {t('article/syntheticreadaloud/title')}
+            {t(`article/${kind}/title`)}
           </p>
           <p {...styles.lead}>
             <RawHtml
               dangerouslySetInnerHTML={{
-                __html: t('article/syntheticreadaloud/lead'),
+                __html: t(`article/${kind}/lead`),
               }}
             />
           </p>
