@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import RepoSearch from '../../../utils/RepoSearch'
 import withT from '../../../../../lib/withT'
-import { A, Interaction } from '@project-r/styleguide'
+import { A, Interaction, useColorContext } from '@project-r/styleguide'
 import { css } from 'glamor'
 import MdAdd from 'react-icons/lib/md/add'
 import ArticleRecommendationItem from './ArticleRecommendationItem'
@@ -33,12 +33,28 @@ const styles = {
 }
 
 const ArticleRecommendations = ({ t, editor, node }) => {
+  const [colorScheme] = useColorContext()
   const { asPath } = useRouter()
   const ownRepoId = getAbsoluteRepoUrl(
     asPath?.slice(0, asPath.indexOf('/edit?commitId')).replace('/repo/', ''),
   )
-  const recommendedArticles = node.data.get(ARTICLE_RECOMMENDATIONS_KEY) || []
+  const recommendationsMetaData = node.data.get(ARTICLE_RECOMMENDATIONS_KEY)
+  const recommendedArticles = recommendationsMetaData || []
   const [showRepoSearch, setShowRepoSearch] = useState(false)
+
+  const isSeries = !!node.data.get('series')
+  const usedTemplate = node.data.get('template')
+  const isSupportedTemplate =
+    usedTemplate === 'article' || usedTemplate === 'page'
+  const shouldBeEnabled = isSupportedTemplate && !isSeries
+
+  console.debug(
+    JSON.stringify(
+      { isSeries, isSupportedTemplate, templateValue: usedTemplate },
+      null,
+      2,
+    ),
+  )
 
   const handleSuggestionsChange = (nextState) => {
     editor.change((change) => {
@@ -80,43 +96,60 @@ const ArticleRecommendations = ({ t, editor, node }) => {
       <Interaction.H3 {...styles.title}>
         {t('metaData/recommendations/heading')}
       </Interaction.H3>
-      {(recommendedArticles?.length > 0 || showRepoSearch) && (
-        <>
-          <p>{t('metaData/recommendations/info')}</p>
-          <ul {...styles.recommendationList}>
-            {recommendedArticles.map((val, index) => (
-              <ArticleRecommendationItem
-                key={val + index}
-                t={t}
-                repoId={val}
-                handleRemove={() => remove(index)}
-                handleUp={() => exchangeElements(index, index - 1)}
-                handleDown={() => exchangeElements(index, index + 1)}
-                isFirst={index === 0}
-                isLast={index === recommendedArticles.length - 1}
-                isDuplicate={recommendedArticles.indexOf(val) !== index}
-                isRedundant={val === ownRepoId}
-              />
-            ))}
-            {showRepoSearch && (
-              <li>
-                <div {...styles.repoSearchWrapper}>
-                  <RepoSearch
-                    label={t('metaData/recommendations/search')}
-                    onChange={(value) => {
-                      setShowRepoSearch(false)
-                      addSuggestion(value)
-                    }}
-                  />
-                </div>
-              </li>
+      {
+        // Even if recommended-articles shouldn't be available based on the article type,
+        // one can override it by manually adding the recommended-articles key into the source-code
+        shouldBeEnabled ||
+        (recommendationsMetaData && Array.isArray(recommendationsMetaData)) ? (
+          <>
+            {(recommendedArticles?.length > 0 || showRepoSearch) && (
+              <>
+                <p>{t('metaData/recommendations/info')}</p>
+                <ul {...styles.recommendationList}>
+                  {recommendedArticles.map((val, index) => (
+                    <ArticleRecommendationItem
+                      key={val + index}
+                      t={t}
+                      repoId={val}
+                      handleRemove={() => remove(index)}
+                      handleUp={() => exchangeElements(index, index - 1)}
+                      handleDown={() => exchangeElements(index, index + 1)}
+                      isFirst={index === 0}
+                      isLast={index === recommendedArticles.length - 1}
+                      isDuplicate={recommendedArticles.indexOf(val) !== index}
+                      isRedundant={val === ownRepoId}
+                    />
+                  ))}
+                  {showRepoSearch && (
+                    <li>
+                      <div {...styles.repoSearchWrapper}>
+                        <RepoSearch
+                          label={t('metaData/recommendations/search')}
+                          onChange={(value) => {
+                            setShowRepoSearch(false)
+                            addSuggestion(value)
+                          }}
+                        />
+                      </div>
+                    </li>
+                  )}
+                </ul>
+              </>
             )}
-          </ul>
-        </>
-      )}
-      <A href='#add' onClick={() => setShowRepoSearch(true)} {...styles.add}>
-        <MdAdd /> {t('metaData/recommendations/add')}
-      </A>
+            <A
+              href='#add'
+              onClick={() => setShowRepoSearch(true)}
+              {...styles.add}
+            >
+              <MdAdd /> {t('metaData/recommendations/add')}
+            </A>
+          </>
+        ) : (
+          <p {...colorScheme.set('color', 'textSoft')}>
+            {t('metaData/recommendations/disabled')}
+          </p>
+        )
+      }
     </div>
   )
 }

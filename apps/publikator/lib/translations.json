@@ -873,6 +873,10 @@
       "value": "Die hier ausgewählten Beiträge werden unter dem Artikel in einem Feed aufgelistet."
     },
     {
+      "key": "metaData/recommendations/disabled",
+      "value": "Vorgeschlagene Beiträge werden in dieser Beitrag Art {type} nicht unterstützt."
+    },
+    {
       "key": "metaData/recommendations/add",
       "value": "Beitrag hinzufügen"
     },
