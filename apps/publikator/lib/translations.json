@@ -874,7 +874,7 @@
     },
     {
       "key": "metaData/recommendations/disabled",
-      "value": "Vorgeschlagene Beiträge werden in dieser Beitrag Art {type} nicht unterstützt."
+      "value": "Dieses Feature steht bei dieser Beitragsart nicht zur Verfügung."
     },
     {
       "key": "metaData/recommendations/add",
