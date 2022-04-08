@@ -74,7 +74,9 @@ const SyntheticAudio = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
   const { toggleAudioPlayer } = useContext<AudioContextType>(AudioContext)
   const [colorScheme] = useColorContext()
   const { kind } = meta.audioSource
-  const Icon = kind === 'syntheticReadAloud' ? AudioIcon : PodcastIcon
+  const isSynthetic = kind === 'syntheticReadAloud'
+  const Icon = isSynthetic ? AudioIcon : PodcastIcon
+  const eventCategory = isSynthetic ? 'SyntheticAudio' : 'ReadAloudAudio'
   return (
     <div>
       <hr {...styles.hr} {...colorScheme.set('backgroundColor', 'divider')} />
@@ -85,7 +87,7 @@ const SyntheticAudio = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
           Icon={Icon}
           onClick={(e) => {
             e.preventDefault()
-            trackEvent([kind, 'audio', meta.url])
+            trackEvent([eventCategory, 'audio', meta.url])
             toggleAudioPlayer({
               audioSource: meta.audioSource,
               title: meta.title,
@@ -97,7 +99,7 @@ const SyntheticAudio = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
           <p
             onClick={(e) => {
               e.preventDefault()
-              trackEvent([kind, 'audio', meta.url])
+              trackEvent([eventCategory, 'audio', meta.url])
               toggleAudioPlayer({
                 audioSource: meta.audioSource,
                 title: meta.title,
