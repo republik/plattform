@@ -55,7 +55,7 @@ const DiscussionLinkButton = ({
       <IconButton
         Icon={DiscussionIcon}
         label={getLabel()}
-        labelShort={discussionCount || ''}
+        labelShort={useCallToActionLabel ? getLabel() : discussionCount}
         fillColorName='primary'
         onClick={
           isDiscussionPage && isOnArticlePage

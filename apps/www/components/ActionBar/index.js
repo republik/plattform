@@ -205,6 +205,8 @@ const ActionBar = ({
     (displayMinutes > 0 || displayHours > 0) &&
     (meta.template === 'article' || meta.template === 'editorialNewsletter')
 
+  const isArticleBottom = mode === 'articleBottom'
+
   const PodcastButtonActionItem = {
     title: t('PodcastButtons/title'),
     Icon: PodcastIcon,
@@ -285,6 +287,7 @@ const ActionBar = ({
           discussionId={isDiscussion && meta.ownDiscussion?.id}
           subscriptions={document?.subscribedBy?.nodes}
           label={t('SubscribeMenu/title')}
+          labelShort={isArticleBottom ? t('SubscribeMenu/title') : undefined}
           padded
           loading={meLoading || documentLoading}
           attributes={{ ['data-show-if-me']: true }}
@@ -308,6 +311,9 @@ const ActionBar = ({
           bookmarked={document && !!document.userBookmark}
           documentId={document.id}
           label={!forceShortLabel ? t('bookmark/label') : ''}
+          labelShort={
+            !forceShortLabel && isArticleBottom ? t('bookmark/label') : ''
+          }
           disabled={meLoading || documentLoading}
           attributes={{ ['data-show-if-active-membership']: true }}
         />
@@ -366,6 +372,8 @@ const ActionBar = ({
         }
       },
       label: !forceShortLabel ? t('article/actionbar/share') : '',
+      labelShort:
+        !forceShortLabel && isArticleBottom ? t('article/actionbar/share') : '',
       modes: ['articleTop', 'articleOverlay', 'articleBottom'],
       show: true,
     },
