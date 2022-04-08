@@ -48,14 +48,6 @@ const ArticleRecommendations = ({ t, editor, node }) => {
     usedTemplate === 'article' || usedTemplate === 'page'
   const shouldBeEnabled = isSupportedTemplate && !isSeries
 
-  console.debug(
-    JSON.stringify(
-      { isSeries, isSupportedTemplate, templateValue: usedTemplate },
-      null,
-      2,
-    ),
-  )
-
   const handleSuggestionsChange = (nextState) => {
     editor.change((change) => {
       change.setNodeByKey(node.key, {
