@@ -11,6 +11,9 @@ const styles = {
     marginBottom: 15,
     ...fontStyles.sansSerifMedium16,
   }),
+  wrapper: css({
+    marginTop: 44,
+  }),
 }
 
 type ArticleSuggestionsFeedProps = {
@@ -32,7 +35,7 @@ const ArticleRecommendationsFeed = ({ path }: ArticleSuggestionsFeedProps) => {
         render={() => (
           <>
             {data.article.meta.recommendations?.nodes.length > 0 && (
-              <>
+              <section {...styles.wrapper}>
                 <Interaction.P {...styles.heading}>
                   {t('articleRecommendations/heading')}
                 </Interaction.P>
@@ -42,7 +45,7 @@ const ArticleRecommendationsFeed = ({ path }: ArticleSuggestionsFeedProps) => {
                     showHeader: false,
                   }}
                 />
-              </>
+              </section>
             )}
           </>
         )}
