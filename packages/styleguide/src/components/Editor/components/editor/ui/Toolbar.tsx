@@ -22,9 +22,14 @@ import IconButton from '../../../../IconButton'
 import { getAncestry } from '../helpers/tree'
 import { isEmpty } from '../helpers/text'
 
-const IMPLICIT_INLINES: TemplateType[] = ['text', 'break']
 const INLINE_BUTTONS: TemplateType[] = ['link']
 const BLOCKS: TemplateType[] = ['paragraph', 'headline', 'pullQuote']
+
+const getInitialButtons = (buttons: TemplateType[]): InsertButtonConfig[] =>
+  buttons.map((t) => ({
+    type: t as CustomElementsType,
+    disabled: true,
+  }))
 
 const styles = {
   hoveringToolbar: css({
@@ -119,12 +124,13 @@ const getAllowedBlocks = (
   }
   const templateTypes = getTemplateTypes(selectedNode)
   const isInline = elConfig[selectedNode[0].type].attrs?.isInline
-  return templateTypes.map((t) => {
+  return BLOCKS.map((t) => {
     const isSelected = selectedNode && t === selectedNode[0].type
+    console.log({ t, isSelected: selectedNode[0].type })
     return {
       type: t as CustomElementsType,
-      disabled: !isInline && isSelected,
-      active: isInline && isSelected,
+      disabled: (!isInline && isSelected) || templateTypes.indexOf(t) === -1,
+      active: isSelected,
     }
   })
 }
@@ -170,7 +176,7 @@ export const ToolbarButton: React.FC<{
   active?: boolean
 }> = ({ button, onClick, disabled, active }) => (
   <IconButton
-    fillColorName={disabled ? 'divider' : active ? 'primary' : 'text'}
+    fillColorName={active ? 'primary' : disabled ? 'divider' : 'text'}
     onMouseDown={(event) => {
       event.preventDefault()
       onClick()
@@ -184,17 +190,29 @@ const ToolbarButtons: React.FC<{
   marks: boolean
   inlines: InsertButtonConfig[]
   blocks: InsertButtonConfig[]
-}> = ({ marks, inlines, blocks }) => (
-  <>
-    {marks && <Marks />}
-    {inlines.map((config) => (
-      <InsertButton key={config.type} config={config} />
-    ))}
-    {blocks.map((config) => (
-      <InsertButton key={config.type} config={config} />
-    ))}
-  </>
-)
+}> = ({ marks, inlines, blocks }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <>
+      {marks && <Marks />}
+      {inlines.map((config) => (
+        <InsertButton key={config.type} config={config} />
+      ))}
+      <span
+        style={{
+          boxSizing: 'border-box',
+          marginRight: '20px',
+          borderRightWidth: '2px',
+          borderRightStyle: 'solid',
+        }}
+        {...colorScheme.set('borderColor', 'divider')}
+      />
+      {blocks.map((config) => (
+        <InsertButton key={config.type} config={config} />
+      ))}
+    </>
+  )
+}
 
 export const Portal: React.FC<{ children: ReactElement }> = ({ children }) => {
   return typeof document === 'object'
@@ -209,13 +227,18 @@ const Toolbar: React.FC<{
   const [colorScheme] = useColorContext()
   const ref = useRef<HTMLDivElement>(null)
   const editor = useSlate()
-  const [isVisible, setVisible] = useState(false)
-  const [marks, setMarks] = useState(false)
-  const [inlines, setInlines] = useState<InsertButtonConfig[]>([])
-  const [blocks, setBlocks] = useState<InsertButtonConfig[]>([])
   const isSticky = mode === 'sticky'
 
-  console.log({ marks })
+  const [isVisible, setVisible] = useState(isSticky)
+  const [marks, setMarks] = useState(isSticky)
+  const [inlines, setInlines] = useState<InsertButtonConfig[]>(
+    isSticky ? getInitialButtons(INLINE_BUTTONS) : [],
+  )
+  const [blocks, setBlocks] = useState<InsertButtonConfig[]>(
+    isSticky ? getInitialButtons(BLOCKS) : [],
+  )
+
+  console.log({ marks, isVisible })
 
   const reset = () => {
     setVisible(false)
@@ -247,7 +270,8 @@ const Toolbar: React.FC<{
 
   useEffect(() => {
     const el = ref.current
-    if (!isSticky || !el || !hasSelection(editor)) {
+    if (!el || !hasSelection(editor)) {
+      if (isSticky) return
       return reset()
     }
     const { text, element, container } = getAncestry(editor)
@@ -260,6 +284,7 @@ const Toolbar: React.FC<{
       setInlines(getAllowedInlines(editor, text))
       const allowedBlocks = getAllowedBlocks(editor, element, container)
       setBlocks(allowedBlocks.length >= 2 ? allowedBlocks : [])
+      console.log(blocks)
     } else if (!isSticky) {
       reset()
     }
