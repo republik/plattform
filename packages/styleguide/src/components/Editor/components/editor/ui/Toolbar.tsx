@@ -47,7 +47,7 @@ const styles = {
     transition: 'opacity 0.75s',
   }),
   stickyToolbar: css({
-    marginBottom: '10px',
+    marginBottom: '15px',
     overflow: 'hidden',
     display: 'flex',
     minHeight: '19px',
@@ -101,8 +101,11 @@ const getTemplateTypes = (
 
 const getAllowedInlines = (
   editor: CustomEditor,
+  skipNoSelect: boolean,
   selectedNode?: NodeEntry<CustomText>,
 ): InsertButtonConfig[] => {
+  if (skipNoSelect && !hasTextSelection(editor)) return []
+
   // make it link icon grey in sticky mode
   const activeInlines = !hasTextSelection(editor)
     ? []
@@ -116,17 +119,18 @@ const getAllowedInlines = (
 
 const getAllowedBlocks = (
   editor: CustomEditor,
+  showAllBlocks: boolean,
   selectedNode?: NodeEntry<CustomElement>,
   selectedContainer?: NodeEntry<CustomElement>,
 ): InsertButtonConfig[] => {
   if (selectedContainer) {
-    return getAllowedBlocks(editor, selectedContainer)
+    return getAllowedBlocks(editor, showAllBlocks, selectedContainer)
   }
   const templateTypes = getTemplateTypes(selectedNode)
+  const blocksToUse = showAllBlocks ? BLOCKS : templateTypes
   const isInline = elConfig[selectedNode[0].type].attrs?.isInline
-  return BLOCKS.map((t) => {
+  return blocksToUse.map((t) => {
     const isSelected = selectedNode && t === selectedNode[0].type
-    console.log({ t, isSelected: selectedNode[0].type })
     return {
       type: t as CustomElementsType,
       disabled: (!isInline && isSelected) || templateTypes.indexOf(t) === -1,
@@ -198,15 +202,17 @@ const ToolbarButtons: React.FC<{
       {inlines.map((config) => (
         <InsertButton key={config.type} config={config} />
       ))}
-      <span
-        style={{
-          boxSizing: 'border-box',
-          marginRight: '20px',
-          borderRightWidth: '2px',
-          borderRightStyle: 'solid',
-        }}
-        {...colorScheme.set('borderColor', 'divider')}
-      />
+      {marks && (
+        <span
+          style={{
+            boxSizing: 'border-box',
+            marginRight: '20px',
+            borderRightWidth: '2px',
+            borderRightStyle: 'solid',
+          }}
+          {...colorScheme.set('borderColor', 'divider')}
+        />
+      )}
       {blocks.map((config) => (
         <InsertButton key={config.type} config={config} />
       ))}
@@ -281,8 +287,13 @@ const Toolbar: React.FC<{
       (hasUsableSelection(editor, element) || hasVoidSelection(element))
     ) {
       setMarks(isSticky ? true : showMarks(editor, element))
-      setInlines(getAllowedInlines(editor, text))
-      const allowedBlocks = getAllowedBlocks(editor, element, container)
+      setInlines(getAllowedInlines(editor, !isSticky, text))
+      const allowedBlocks = getAllowedBlocks(
+        editor,
+        isSticky,
+        element,
+        container,
+      )
       setBlocks(allowedBlocks.length >= 2 ? allowedBlocks : [])
       console.log(blocks)
     } else if (!isSticky) {
