@@ -23,6 +23,8 @@ import { getAncestry } from '../helpers/tree'
 import { isEmpty } from '../helpers/text'
 
 const IMPLICIT_INLINES: TemplateType[] = ['text', 'break']
+const INLINE_BUTTONS: TemplateType[] = ['link']
+const BLOCKS: TemplateType[] = ['paragraph', 'headline', 'pullQuote']
 
 const styles = {
   hoveringToolbar: css({
@@ -96,12 +98,15 @@ const getAllowedInlines = (
   editor: CustomEditor,
   selectedNode?: NodeEntry<CustomText>,
 ): InsertButtonConfig[] => {
-  if (!hasTextSelection(editor)) return []
-  const templateTypes = getTemplateTypes(selectedNode)
-  // console.log('getAllowedInlines', { selectedNode, templateTypes })
-  return templateTypes
-    .filter((t: TemplateType) => IMPLICIT_INLINES.indexOf(t) === -1)
-    .map((t) => ({ type: t as CustomElementsType }))
+  // make it link icon grey in sticky mode
+  const activeInlines = !hasTextSelection(editor)
+    ? []
+    : getTemplateTypes(selectedNode)
+  // console.log('getAllowedInlines', { selectedNode, activeInlines })
+  return INLINE_BUTTONS.map((t) => ({
+    type: t as CustomElementsType,
+    disabled: activeInlines.indexOf(t) === -1,
+  }))
 }
 
 const getAllowedBlocks = (
@@ -210,6 +215,8 @@ const Toolbar: React.FC<{
   const [blocks, setBlocks] = useState<InsertButtonConfig[]>([])
   const isSticky = mode === 'sticky'
 
+  console.log({ marks })
+
   const reset = () => {
     setVisible(false)
     setMarks(false)
@@ -240,7 +247,7 @@ const Toolbar: React.FC<{
 
   useEffect(() => {
     const el = ref.current
-    if (!el || !hasSelection(editor)) {
+    if (!isSticky || !el || !hasSelection(editor)) {
       return reset()
     }
     const { text, element, container } = getAncestry(editor)
@@ -253,7 +260,7 @@ const Toolbar: React.FC<{
       setInlines(getAllowedInlines(editor, text))
       const allowedBlocks = getAllowedBlocks(editor, element, container)
       setBlocks(allowedBlocks.length >= 2 ? allowedBlocks : [])
-    } else {
+    } else if (!isSticky) {
       reset()
     }
   }, [editor.selection])
