@@ -311,8 +311,13 @@ const insertRepeat = (editor: CustomEditor): void => {
     Object.keys(target[0]).length <= 3 // at least 3 attributes: children, type, template
   // console.log({ target, emptyTarget, editor })
   if (emptyTarget) {
-    const hasSibling = getSiblingNode(editor)
+    const nextNode = getSiblingNode(editor)
+    const hasSibling =
+      nextNode &&
+      SlateElement.isElement(nextNode[0]) &&
+      nextNode[0].type === target[0].type
     const parent = getParent(editor, target)
+    // console.log({ nextNode, target })
     if (!hasSibling && parent) {
       // console.log({ parent })
       deleteP = target[1]

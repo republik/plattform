@@ -57,11 +57,12 @@ const SlateEditor: React.FC<{
     const Component = config.Component
     const path = ReactEditor.findPath(editor, props.element)
     const showDataForm = (e) => {
+      console.log('showDataForm()')
       e.stopPropagation()
-      console.log('show data form')
       setFormElementPath(path)
     }
     const selectVoid = (e) => {
+      console.log('selectVoid()')
       if (config.attrs?.isVoid) {
         e.preventDefault()
         Transforms.select(editor, path)

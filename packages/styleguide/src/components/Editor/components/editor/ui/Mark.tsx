@@ -112,7 +112,10 @@ export const LeafComponent: React.FC<{
           {...colorScheme.set('color', 'disabled')}
           style={{ userSelect: 'none' }}
           contentEditable={false}
-          onClick={() => selectPlaceholder(editor, node)}
+          onClick={(e) => {
+            selectPlaceholder(editor, node)
+            return e
+          }}
         >
           {leaf.placeholder}
         </span>
