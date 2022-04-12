@@ -381,36 +381,21 @@ const withDarkContextWhenBefore = (WrappedComponent) => (props) => {
   return <WrappedComponent {...props} />
 }
 
-export const PaynoteBanner = ({
+export const InnerPaynote = ({
   payNote,
   trackingPayload,
   hasAccess,
   overwriteContent,
-  position,
-  CustomContainer,
-  style,
 }) => {
-  const [colorScheme] = useColorContext()
-  const Container = CustomContainer || Center
   return (
-    <div
-      data-hide-if-active-membership='true'
-      {...styles.banner}
-      style={style}
-      {...colorScheme.set(
-        'backgroundColor',
-        position === 'before' ? 'hover' : 'alert',
-      )}
-    >
-      <Container>
-        <PayNoteContent content={overwriteContent || payNote.content} />
-        <PayNoteCta
-          payNote={payNote}
-          payload={trackingPayload}
-          hasAccess={hasAccess}
-        />
-      </Container>
-    </div>
+    <>
+      <PayNoteContent content={overwriteContent || payNote.content} />
+      <PayNoteCta
+        payNote={payNote}
+        payload={trackingPayload}
+        hasAccess={hasAccess}
+      />
+    </>
   )
 }
 
@@ -433,6 +418,7 @@ export const PayNote = compose(
     customCta,
     customOnly,
   }) => {
+    const [colorScheme] = useColorContext()
     const { query } = useRouter()
     const subject = {
       inNativeIOSApp,
@@ -462,17 +448,28 @@ export const PayNote = compose(
     }
 
     return (
-      <PaynoteBanner
-        payNote={positionedNote}
-        overwriteContent={
-          positionedNote.cta === 'trialForm' &&
-          query.trialSignup === 'success' &&
-          t('article/tryNote/thankYou')
-        }
-        trackingPayload={payload}
-        hasAccess={hasAccess}
-        position={position}
-      />
+      <div
+        data-hide-if-active-membership='true'
+        {...styles.banner}
+        {...colorScheme.set(
+          'backgroundColor',
+          position === 'before' ? 'hover' : 'alert',
+        )}
+      >
+        <Center>
+          <InnerPaynote
+            payNote={positionedNote}
+            overwriteContent={
+              positionedNote.cta === 'trialForm' &&
+              query.trialSignup === 'success' &&
+              t('article/tryNote/thankYou')
+            }
+            trackingPayload={payload}
+            hasAccess={hasAccess}
+            position={position}
+          />
+        </Center>
+      </div>
     )
   },
 )

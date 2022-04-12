@@ -42,11 +42,7 @@ import {
 import ElectionBallotRow from '../Vote/ElectionBallotRow'
 import { documentListQueryFragment } from '../Feed/DocumentListContainer'
 import Link from 'next/link'
-import {
-  PaynoteBanner,
-  DEFAULT_BUTTON_TARGET,
-  generatePositionedNote,
-} from '../Article/PayNote'
+import { InnerPaynote } from '../Article/PayNote'
 
 const SIDEBAR_TOP = 20
 const PORTRAIT_SIZE_M = TESTIMONIAL_IMAGE_SIZE
@@ -429,6 +425,7 @@ const LoadedProfile = (props) => {
     overlayTitle: t('profile/share/overlayTitle'),
   }
   const [colorScheme] = useColorContext()
+  const showPaynote = !me && !!user.documents?.totalCount
   return (
     <Fragment>
       {!user.hasPublicProfile && (
@@ -608,6 +605,7 @@ const LoadedProfile = (props) => {
               </div>
             ))}
             <Documents
+              customStyles={showPaynote && css({ marginBottom: 0 })}
               documents={user.documents}
               loadMore={makeLoadMore(fetchMore, 'documents', {
                 firstComments: 0,
@@ -616,34 +614,32 @@ const LoadedProfile = (props) => {
                   user.documents.panfo && user.documents.pageInfo.endCursor,
               })}
             />
-            <Comments
-              comments={user.comments}
-              loadMore={makeLoadMore(fetchMore, 'comments', {
-                firstDocuments: 0,
-                firstComments: 40,
-                afterComment:
-                  user.comments.pageInfo && user.comments.pageInfo.endCursor,
-              })}
-            />
+            {showPaynote ? (
+              <InnerPaynote
+                payNote={{
+                  cta: 'trialForm',
+                  content: t('profile/tryNote/content', { name: user.name }),
+                }}
+                trackingPayload={{
+                  profile: user.id,
+                }}
+                hasAccess={hasAccess}
+              />
+            ) : (
+              <Comments
+                comments={user.comments}
+                loadMore={makeLoadMore(fetchMore, 'comments', {
+                  firstDocuments: 0,
+                  firstComments: 40,
+                  afterComment:
+                    user.comments.pageInfo && user.comments.pageInfo.endCursor,
+                })}
+              />
+            )}
           </div>
           <div style={{ clear: 'both' }} />
         </div>
       </MainContainer>
-      {!me && (
-        <PaynoteBanner
-          payNote={{
-            cta: 'trialForm',
-            content: t('profile/tryNote/content', { name: user.name }),
-          }}
-          trackingPayload={{
-            profile: user.id,
-          }}
-          position='after'
-          CustomContainer={MainContainer}
-          hasAccess={hasAccess}
-          style={{ zIndex: 10, padding: '15px 0', position: 'relative' }}
-        />
-      )}
     </Fragment>
   )
 }
