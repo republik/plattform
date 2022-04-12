@@ -56,25 +56,13 @@ const SlateEditor: React.FC<{
     const config = elementsConfig[props.element.type]
     const Component = config.Component
     const path = ReactEditor.findPath(editor, props.element)
-    const showDataForm = (e) => {
-      console.log('showDataForm()')
-      e.stopPropagation()
-      setFormElementPath(path)
-    }
     const selectVoid = (e) => {
-      console.log('selectVoid()')
       if (config.attrs?.isVoid) {
         e.preventDefault()
         Transforms.select(editor, path)
       }
     }
-    return (
-      <Component
-        {...props}
-        onMouseDown={selectVoid}
-        onDoubleClick={showDataForm}
-      />
-    )
+    return <Component {...props} onMouseDown={selectVoid} />
   }
 
   const renderElement = useCallback(RenderedElement, [])
@@ -109,6 +97,10 @@ const SlateEditor: React.FC<{
             insertOnKey({ name: 'Enter', shift: true }, 'break')(editor, event)
             handleInsert(editor, event)
             navigateOnTab(editor, event)
+          }}
+          onDoubleClick={() => {
+            // used by Forms UI
+            setFormElementPath(editor.selection.anchor.path)
           }}
         />
         <Footer charLimit={CHAR_LIMIT} />
