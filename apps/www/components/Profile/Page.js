@@ -429,9 +429,6 @@ const LoadedProfile = (props) => {
     overlayTitle: t('profile/share/overlayTitle'),
   }
   const [colorScheme] = useColorContext()
-  const paynote = generatePositionedNote('', 'trialForm', 'after')
-  const paynoteContent = t('profile/tryNote/content', { name: user.name })
-
   return (
     <Fragment>
       {!user.hasPublicProfile && (
@@ -616,7 +613,7 @@ const LoadedProfile = (props) => {
                 firstComments: 0,
                 firstDocuments: 20,
                 afterDocument:
-                  user.documents.pageInfo && user.documents.pageInfo.endCursor,
+                  user.documents.panfo && user.documents.pageInfo.endCursor,
               })}
             />
             <Comments
@@ -634,11 +631,13 @@ const LoadedProfile = (props) => {
       </MainContainer>
       {!me && (
         <PaynoteBanner
-          payNote={paynote.after}
-          overwriteContent={paynoteContent}
+          payNote={{
+            cta: 'trialForm',
+            content: t('profile/tryNote/content', { name: user.name }),
+          }}
           trackingPayload={{
-           profile: user.id
-         }}
+            profile: user.id,
+          }}
           position='after'
           CustomContainer={MainContainer}
           hasAccess={hasAccess}
