@@ -78,6 +78,7 @@ export {
   MdWallpaper as ImageIcon,
   MdFormatQuote as QuoteIcon,
   MdStrikethroughS as StrikeThrough,
+  MdTitle as TitleIcon,
 } from 'react-icons/md'
 
 export {

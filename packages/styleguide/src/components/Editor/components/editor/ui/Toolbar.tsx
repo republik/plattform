@@ -22,7 +22,14 @@ import IconButton from '../../../../IconButton'
 import { getAncestry } from '../helpers/tree'
 import { isEmpty } from '../helpers/text'
 
-const IMPLICIT_INLINES: TemplateType[] = ['text', 'break']
+const INLINE_BUTTONS: TemplateType[] = ['link']
+const BLOCKS: TemplateType[] = ['paragraph', 'headline', 'pullQuote']
+
+const getInitialButtons = (buttons: TemplateType[]): InsertButtonConfig[] =>
+  buttons.map((t) => ({
+    type: t as CustomElementsType,
+    disabled: true,
+  }))
 
 const styles = {
   hoveringToolbar: css({
@@ -40,7 +47,7 @@ const styles = {
     transition: 'opacity 0.75s',
   }),
   stickyToolbar: css({
-    marginBottom: '10px',
+    marginBottom: '15px',
     overflow: 'hidden',
     display: 'flex',
     minHeight: '19px',
@@ -94,32 +101,40 @@ const getTemplateTypes = (
 
 const getAllowedInlines = (
   editor: CustomEditor,
+  skipNoSelect: boolean,
   selectedNode?: NodeEntry<CustomText>,
 ): InsertButtonConfig[] => {
-  if (!hasTextSelection(editor)) return []
-  const templateTypes = getTemplateTypes(selectedNode)
-  // console.log('getAllowedInlines', { selectedNode, templateTypes })
-  return templateTypes
-    .filter((t: TemplateType) => IMPLICIT_INLINES.indexOf(t) === -1)
-    .map((t) => ({ type: t as CustomElementsType }))
+  if (skipNoSelect && !hasTextSelection(editor)) return []
+
+  // make it link icon grey in sticky mode
+  const activeInlines = !hasTextSelection(editor)
+    ? []
+    : getTemplateTypes(selectedNode)
+  // console.log('getAllowedInlines', { selectedNode, activeInlines })
+  return INLINE_BUTTONS.map((t) => ({
+    type: t as CustomElementsType,
+    disabled: activeInlines.indexOf(t) === -1,
+  }))
 }
 
 const getAllowedBlocks = (
   editor: CustomEditor,
+  showAllBlocks: boolean,
   selectedNode?: NodeEntry<CustomElement>,
   selectedContainer?: NodeEntry<CustomElement>,
 ): InsertButtonConfig[] => {
   if (selectedContainer) {
-    return getAllowedBlocks(editor, selectedContainer)
+    return getAllowedBlocks(editor, showAllBlocks, selectedContainer)
   }
   const templateTypes = getTemplateTypes(selectedNode)
+  const blocksToUse = showAllBlocks ? BLOCKS : templateTypes
   const isInline = elConfig[selectedNode[0].type].attrs?.isInline
-  return templateTypes.map((t) => {
+  return blocksToUse.map((t) => {
     const isSelected = selectedNode && t === selectedNode[0].type
     return {
       type: t as CustomElementsType,
-      disabled: !isInline && isSelected,
-      active: isInline && isSelected,
+      disabled: (!isInline && isSelected) || templateTypes.indexOf(t) === -1,
+      active: isSelected,
     }
   })
 }
@@ -165,7 +180,7 @@ export const ToolbarButton: React.FC<{
   active?: boolean
 }> = ({ button, onClick, disabled, active }) => (
   <IconButton
-    fillColorName={disabled ? 'divider' : active ? 'primary' : 'text'}
+    fillColorName={active ? 'primary' : disabled ? 'divider' : 'text'}
     onMouseDown={(event) => {
       event.preventDefault()
       onClick()
@@ -179,17 +194,31 @@ const ToolbarButtons: React.FC<{
   marks: boolean
   inlines: InsertButtonConfig[]
   blocks: InsertButtonConfig[]
-}> = ({ marks, inlines, blocks }) => (
-  <>
-    {marks && <Marks />}
-    {inlines.map((config) => (
-      <InsertButton key={config.type} config={config} />
-    ))}
-    {blocks.map((config) => (
-      <InsertButton key={config.type} config={config} />
-    ))}
-  </>
-)
+}> = ({ marks, inlines, blocks }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <>
+      {marks && <Marks />}
+      {inlines.map((config) => (
+        <InsertButton key={config.type} config={config} />
+      ))}
+      {marks && (
+        <span
+          style={{
+            boxSizing: 'border-box',
+            marginRight: '20px',
+            borderRightWidth: '2px',
+            borderRightStyle: 'solid',
+          }}
+          {...colorScheme.set('borderColor', 'divider')}
+        />
+      )}
+      {blocks.map((config) => (
+        <InsertButton key={config.type} config={config} />
+      ))}
+    </>
+  )
+}
 
 export const Portal: React.FC<{ children: ReactElement }> = ({ children }) => {
   return typeof document === 'object'
@@ -204,11 +233,18 @@ const Toolbar: React.FC<{
   const [colorScheme] = useColorContext()
   const ref = useRef<HTMLDivElement>(null)
   const editor = useSlate()
-  const [isVisible, setVisible] = useState(false)
-  const [marks, setMarks] = useState(false)
-  const [inlines, setInlines] = useState<InsertButtonConfig[]>([])
-  const [blocks, setBlocks] = useState<InsertButtonConfig[]>([])
   const isSticky = mode === 'sticky'
+
+  const [isVisible, setVisible] = useState(isSticky)
+  const [marks, setMarks] = useState(isSticky)
+  const [inlines, setInlines] = useState<InsertButtonConfig[]>(
+    isSticky ? getInitialButtons(INLINE_BUTTONS) : [],
+  )
+  const [blocks, setBlocks] = useState<InsertButtonConfig[]>(
+    isSticky ? getInitialButtons(BLOCKS) : [],
+  )
+
+  console.log({ marks, isVisible })
 
   const reset = () => {
     setVisible(false)
@@ -241,6 +277,7 @@ const Toolbar: React.FC<{
   useEffect(() => {
     const el = ref.current
     if (!el || !hasSelection(editor)) {
+      if (isSticky) return
       return reset()
     }
     const { text, element, container } = getAncestry(editor)
@@ -249,11 +286,17 @@ const Toolbar: React.FC<{
       !!element &&
       (hasUsableSelection(editor, element) || hasVoidSelection(element))
     ) {
-      setMarks(showMarks(editor, element))
-      setInlines(getAllowedInlines(editor, text))
-      const allowedBlocks = getAllowedBlocks(editor, element, container)
+      setMarks(isSticky ? true : showMarks(editor, element))
+      setInlines(getAllowedInlines(editor, !isSticky, text))
+      const allowedBlocks = getAllowedBlocks(
+        editor,
+        isSticky,
+        element,
+        container,
+      )
       setBlocks(allowedBlocks.length >= 2 ? allowedBlocks : [])
-    } else {
+      console.log(blocks)
+    } else if (!isSticky) {
       reset()
     }
   }, [editor.selection])
