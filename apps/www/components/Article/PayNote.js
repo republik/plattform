@@ -242,7 +242,7 @@ const BuyButton = withT(({ payNote, payload, t }) => {
   )
 })
 
-const SecondaryCta = withT(({ t, payNote, payload }) => {
+const SecondaryCta = ({ payNote, payload }) => {
   const [colorScheme] = useColorContext()
   const router = useRouter()
   const linkRule = useMemo(
@@ -260,31 +260,30 @@ const SecondaryCta = withT(({ t, payNote, payload }) => {
       }),
     [colorScheme],
   )
-  const secondaryLink =
-    (payNote.secondary && payNote.secondary.link) ||
-    '/angebote?package=MONTHLY_ABO'
   return (
-    <div
-      {...styles.aside}
-      {...colorScheme.set('color', 'textSoft')}
-      {...linkRule}
-    >
-      <span>{payNote.secondary.prefix} </span>
-      <a
-        key='secondary'
-        href={secondaryLink}
-        onClick={trackEventOnClick(
-          ['PayNote', `secondary ${payload.position}`, payload.variation],
-          () => router.push(secondaryLink),
-        )}
-        {...linkRule}
-      >
-        {payNote.secondary.label ||
-          t('article/payNote/default/secondary/label')}
-      </a>
-    </div>
+    <>
+      {payNote.secondary && payNote.secondary.link ? (
+        <div
+          {...styles.aside}
+          {...colorScheme.set('color', 'textSoft')}
+          {...linkRule}
+        >
+          <span>{payNote.secondary.prefix} </span>
+          <a
+            key='secondary'
+            href={payNote.secondary.link}
+            onClick={trackEventOnClick(
+              ['PayNote', `secondary ${payload.position}`, payload.variation],
+              () => router.push(payNote.secondary.link),
+            )}
+          >
+            {payNote.secondary.label}
+          </a>
+        </div>
+      ) : null}
+    </>
   )
-})
+}
 
 const BuyNoteCta = ({ payNote, payload }) => (
   <div {...styles.actions}>
@@ -306,11 +305,8 @@ const TryNoteCta = ({ payload }) => {
   )
 }
 
-const PayNoteCta = withT(({ payNote, payload, hasAccess, t }) => {
+const PayNoteCta = ({ payNote, payload, hasAccess }) => {
   const router = useRouter()
-  const infoNote =
-    payNote.note ||
-    (payNote.cta === 'button' && t('article/payNote/default/note'))
   return (
     <>
       {payNote.cta ? (
@@ -320,7 +316,7 @@ const PayNoteCta = withT(({ payNote, payload, hasAccess, t }) => {
           ) : (
             <BuyNoteCta payNote={payNote} payload={payload} />
           )}
-          {infoNote && (
+          {payNote.note && (
             <div
               style={{ marginTop: 10, marginBottom: 5 }}
               onClick={(e) => {
@@ -344,8 +340,8 @@ const PayNoteCta = withT(({ payNote, payload, hasAccess, t }) => {
                 dangerouslySetInnerHTML={{
                   __html: hasAccess
                     ? // use about for more info instead of index which is magazin front with access
-                      infoNote.replace('href="/"', 'href="/about"')
-                    : infoNote,
+                      payNote.note.replace('href="/"', 'href="/about"')
+                    : payNote.note,
                 }}
               />
             </div>
@@ -354,7 +350,7 @@ const PayNoteCta = withT(({ payNote, payload, hasAccess, t }) => {
       ) : null}
     </>
   )
-})
+}
 
 const PayNoteP = ({ content }) => (
   <Interaction.P

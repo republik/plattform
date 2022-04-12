@@ -430,7 +430,7 @@ const LoadedProfile = (props) => {
   }
   const [colorScheme] = useColorContext()
   const paynote = generatePositionedNote('', 'trialForm', 'after')
-  const paynoteContent = t('profile/buyNote/content', { name: user.name })
+  const paynoteContent = t('profile/tryNote/content', { name: user.name })
 
   return (
     <Fragment>
