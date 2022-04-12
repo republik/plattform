@@ -41,5 +41,6 @@ export const BLOCK_BUTTONS: TemplateType[] = [
   'headline',
   'paragraph',
   'pullQuote',
+  'figure',
   'list',
 ]

@@ -98,7 +98,7 @@ const SlateEditor: React.FC<{
           path={formElementPath}
           onClose={() => setFormElementPath(undefined)}
         />
-        <Toolbar containerRef={containerRef} mode='floating' />
+        <Toolbar containerRef={containerRef} mode='sticky' />
         <Editable
           renderElement={renderElement}
           renderLeaf={renderLeaf}

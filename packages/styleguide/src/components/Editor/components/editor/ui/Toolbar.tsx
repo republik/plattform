@@ -21,7 +21,7 @@ import {
   BLOCK_BUTTONS,
 } from '../../elements'
 import { configKeys as mKeys, MARKS_WHITELIST } from '../../marks'
-import { useSlate, ReactEditor } from 'slate-react'
+import { useSlate, ReactEditor, useFocused } from 'slate-react'
 import { Editor, Range, NodeEntry } from 'slate'
 import { useColorContext } from '../../../../Colors/ColorContext'
 import IconButton from '../../../../IconButton'
@@ -248,27 +248,28 @@ const Toolbar: React.FC<{
   mode: ToolbarMode
 }> = ({ containerRef, mode }) => {
   const [colorScheme] = useColorContext()
+  const focused = useFocused()
   const ref = useRef<HTMLDivElement>(null)
   const editor = useSlate()
   const isSticky = mode === 'sticky'
 
   const [isVisible, setVisible] = useState(false)
-  const [marks, setMarks] = useState<ButtonConfig[]>(
-    isSticky ? getInitialButtons(mKeys) : [],
-  )
-  const [inlines, setInlines] = useState<ButtonConfig[]>(
-    isSticky ? getInitialButtons(INLINE_BUTTONS) : [],
-  )
-  const [blocks, setBlocks] = useState<ButtonConfig[]>(
-    isSticky ? getInitialButtons(BLOCK_BUTTONS) : [],
-  )
+  const [marks, setMarks] = useState<ButtonConfig[]>([])
+  const [inlines, setInlines] = useState<ButtonConfig[]>([])
+  const [blocks, setBlocks] = useState<ButtonConfig[]>([])
 
   const reset = () => {
     setVisible(false)
-    setMarks([])
-    setInlines([])
-    setBlocks([])
+    setMarks(isSticky ? getInitialButtons(mKeys) : [])
+    setInlines(isSticky ? getInitialButtons(INLINE_BUTTONS) : [])
+    setBlocks(isSticky ? getInitialButtons(BLOCK_BUTTONS) : [])
   }
+
+  useEffect(() => {
+    if (!focused) {
+      reset()
+    }
+  }, [focused])
 
   useEffect(() => {
     const el = ref.current
