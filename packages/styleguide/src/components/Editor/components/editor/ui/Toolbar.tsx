@@ -272,9 +272,11 @@ const Toolbar: React.FC<{
   }, [focused])
 
   useEffect(() => {
+    if (isSticky) return
+
     const el = ref.current
     if (!el) return
-    if (isSticky) return
+
     if (!!marks.length || !!inlines.length || !!blocks.length) {
       el.style.opacity = '1'
       el.style.width = 'auto'
@@ -292,29 +294,26 @@ const Toolbar: React.FC<{
     }
   })
 
+  const setButtons = (text, element, container) => {
+    setMarks(getAllowedMarks(editor, isSticky, element))
+    setInlines(getAllowedInlines(editor, isSticky, text))
+    const allowedBlocks = getAllowedBlocks(editor, isSticky, element, container)
+    setBlocks(allowedBlocks.length >= 2 ? allowedBlocks : [])
+  }
+
   useEffect(() => {
-    const el = ref.current
-    if (!el || !hasSelection(editor)) {
-      if (isSticky) return
+    if (!hasSelection(editor) || (!isSticky && !ref.current)) {
       return reset()
     }
     const { text, element, container } = getAncestry(editor)
-    // console.log({ text, element, container })
     if (
       !!element &&
-      (hasUsableSelection(editor, element) || hasVoidSelection(element))
+      (isSticky ||
+        hasUsableSelection(editor, element) ||
+        hasVoidSelection(element))
     ) {
-      setMarks(getAllowedMarks(editor, isSticky, element))
-      setInlines(getAllowedInlines(editor, isSticky, text))
-      const allowedBlocks = getAllowedBlocks(
-        editor,
-        isSticky,
-        element,
-        container,
-      )
-      setBlocks(allowedBlocks.length >= 2 ? allowedBlocks : [])
-      // console.log(marks, inlines, blocks)
-    } else if (!isSticky) {
+      setButtons(text, element, container)
+    } else {
       reset()
     }
   }, [editor.selection])
