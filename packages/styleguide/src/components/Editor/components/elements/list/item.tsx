@@ -11,5 +11,8 @@ const Component: React.FC<{
 
 export const config: ElementConfigI = {
   Component,
-  structure: [{ type: ['text', 'link', 'list'], repeat: true }],
+  structure: [{ type: ['text', 'link'], repeat: true }],
+  attrs: {
+    formatText: true,
+  },
 }

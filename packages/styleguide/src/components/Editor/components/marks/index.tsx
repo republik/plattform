@@ -9,12 +9,15 @@ import { MarksConfig } from '../../custom-types'
 export const config: MarksConfig = {
   italic,
   bold,
+  strikethrough,
   sup,
   sub,
-  strikethrough,
 }
 
 // typesafe helper
 export const configKeys: (keyof MarksConfig)[] = Object.keys(
   config,
 ) as (keyof MarksConfig)[]
+
+// "marks" which aren't a style per se
+export const MARKS_WHITELIST = ['sup', 'sub']

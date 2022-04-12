@@ -194,11 +194,13 @@ export type KeyCombo = {
   shift?: boolean
 }
 
-export type InsertButtonConfig = {
-  type: CustomElementsType
+export type ButtonConfig = {
+  type: CustomElementsType | CustomMarksType
   disabled?: boolean
   active?: boolean
 }
+
+export type ToolbarMode = 'sticky' | 'floating'
 
 export type CustomEditor = BaseEditor & ReactEditor & HistoryEditor
 

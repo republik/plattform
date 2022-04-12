@@ -1,8 +1,7 @@
-/* eslint-disable react/prop-types */
 import React, { ReactElement, useEffect, useRef, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { css } from 'glamor'
-import { Marks } from './Mark'
+import { MarkButton } from './Mark'
 import { InsertButton } from './Element'
 import {
   ButtonI,
@@ -10,26 +9,24 @@ import {
   CustomEditor,
   CustomElement,
   CustomElementsType,
+  CustomMarksType,
   CustomText,
-  InsertButtonConfig,
+  ButtonConfig,
   TemplateType,
+  ToolbarMode,
 } from '../../../custom-types'
-import { config as elConfig } from '../../elements'
+import {
+  config as elConfig,
+  INLINE_BUTTONS,
+  BLOCK_BUTTONS,
+} from '../../elements'
+import { configKeys as mKeys, MARKS_WHITELIST } from '../../marks'
 import { useSlate, ReactEditor } from 'slate-react'
 import { Editor, Range, NodeEntry } from 'slate'
 import { useColorContext } from '../../../../Colors/ColorContext'
 import IconButton from '../../../../IconButton'
 import { getAncestry } from '../helpers/tree'
 import { isEmpty } from '../helpers/text'
-
-const INLINE_BUTTONS: TemplateType[] = ['link']
-const BLOCKS: TemplateType[] = ['paragraph', 'headline', 'pullQuote']
-
-const getInitialButtons = (buttons: TemplateType[]): InsertButtonConfig[] =>
-  buttons.map((t) => ({
-    type: t as CustomElementsType,
-    disabled: true,
-  }))
 
 const styles = {
   hoveringToolbar: css({
@@ -58,6 +55,14 @@ const styles = {
   }),
 }
 
+const getInitialButtons = (
+  buttons: (TemplateType | CustomMarksType)[],
+): ButtonConfig[] =>
+  buttons.map((t) => ({
+    type: t as CustomElementsType,
+    disabled: true,
+  }))
+
 const hasSelection = (editor: CustomEditor): boolean => {
   const { selection } = editor
   return !!selection && ReactEditor.isFocused(editor)
@@ -81,13 +86,24 @@ const hasVoidSelection = (
   selectedElement?: NodeEntry<CustomElement>,
 ): boolean => selectedElement && elConfig[selectedElement[0].type].attrs?.isVoid
 
-const showMarks = (
+const getAllowedMarks = (
   editor: CustomEditor,
+  showAll: boolean,
   selectedElement?: NodeEntry<CustomElement>,
-): boolean =>
-  hasTextSelection(editor) &&
-  selectedElement &&
-  elConfig[selectedElement[0].type].attrs?.formatText
+): ButtonConfig[] => {
+  if (!showAll && !hasTextSelection(editor)) return []
+  const allowedMarks =
+    selectedElement && elConfig[selectedElement[0].type].attrs?.formatText
+      ? mKeys
+      : selectedElement
+      ? MARKS_WHITELIST
+      : []
+  const buttons = showAll ? mKeys : allowedMarks
+  return buttons.map((t) => ({
+    type: t as CustomMarksType,
+    disabled: allowedMarks.indexOf(t) === -1,
+  }))
+}
 
 const getTemplateTypes = (
   nodeEntry?: NodeEntry<CustomDescendant>,
@@ -101,19 +117,19 @@ const getTemplateTypes = (
 
 const getAllowedInlines = (
   editor: CustomEditor,
-  skipNoSelect: boolean,
+  showAllInlines: boolean,
   selectedNode?: NodeEntry<CustomText>,
-): InsertButtonConfig[] => {
-  if (skipNoSelect && !hasTextSelection(editor)) return []
+): ButtonConfig[] => {
+  if (!showAllInlines && !hasTextSelection(editor)) return []
 
   // make it link icon grey in sticky mode
-  const activeInlines = !hasTextSelection(editor)
+  const allowedTemplates = !hasTextSelection(editor)
     ? []
     : getTemplateTypes(selectedNode)
-  // console.log('getAllowedInlines', { selectedNode, activeInlines })
+  // console.log('getAllowedInlines', { selectedNode, allowedTemplates })
   return INLINE_BUTTONS.map((t) => ({
     type: t as CustomElementsType,
-    disabled: activeInlines.indexOf(t) === -1,
+    disabled: allowedTemplates.indexOf(t) === -1,
   }))
 }
 
@@ -122,18 +138,17 @@ const getAllowedBlocks = (
   showAllBlocks: boolean,
   selectedNode?: NodeEntry<CustomElement>,
   selectedContainer?: NodeEntry<CustomElement>,
-): InsertButtonConfig[] => {
+): ButtonConfig[] => {
   if (selectedContainer) {
     return getAllowedBlocks(editor, showAllBlocks, selectedContainer)
   }
-  const templateTypes = getTemplateTypes(selectedNode)
-  const blocksToUse = showAllBlocks ? BLOCKS : templateTypes
-  const isInline = elConfig[selectedNode[0].type].attrs?.isInline
+  const allowedTemplates = getTemplateTypes(selectedNode)
+  const blocksToUse = showAllBlocks ? BLOCK_BUTTONS : allowedTemplates
   return blocksToUse.map((t) => {
     const isSelected = selectedNode && t === selectedNode[0].type
     return {
       type: t as CustomElementsType,
-      disabled: (!isInline && isSelected) || templateTypes.indexOf(t) === -1,
+      disabled: allowedTemplates.indexOf(t) === -1,
       active: isSelected,
     }
   })
@@ -191,18 +206,20 @@ export const ToolbarButton: React.FC<{
 )
 
 const ToolbarButtons: React.FC<{
-  marks: boolean
-  inlines: InsertButtonConfig[]
-  blocks: InsertButtonConfig[]
+  marks: ButtonConfig[]
+  inlines: ButtonConfig[]
+  blocks: ButtonConfig[]
 }> = ({ marks, inlines, blocks }) => {
   const [colorScheme] = useColorContext()
   return (
     <>
-      {marks && <Marks />}
+      {marks.map((config) => (
+        <MarkButton key={config.type} config={config} />
+      ))}
       {inlines.map((config) => (
         <InsertButton key={config.type} config={config} />
       ))}
-      {marks && (
+      {!!marks.length && !!blocks.length && (
         <span
           style={{
             boxSizing: 'border-box',
@@ -228,27 +245,27 @@ export const Portal: React.FC<{ children: ReactElement }> = ({ children }) => {
 
 const Toolbar: React.FC<{
   containerRef: React.RefObject<HTMLDivElement>
-  mode: string
+  mode: ToolbarMode
 }> = ({ containerRef, mode }) => {
   const [colorScheme] = useColorContext()
   const ref = useRef<HTMLDivElement>(null)
   const editor = useSlate()
   const isSticky = mode === 'sticky'
 
-  const [isVisible, setVisible] = useState(isSticky)
-  const [marks, setMarks] = useState(isSticky)
-  const [inlines, setInlines] = useState<InsertButtonConfig[]>(
+  const [isVisible, setVisible] = useState(false)
+  const [marks, setMarks] = useState<ButtonConfig[]>(
+    isSticky ? getInitialButtons(mKeys) : [],
+  )
+  const [inlines, setInlines] = useState<ButtonConfig[]>(
     isSticky ? getInitialButtons(INLINE_BUTTONS) : [],
   )
-  const [blocks, setBlocks] = useState<InsertButtonConfig[]>(
-    isSticky ? getInitialButtons(BLOCKS) : [],
+  const [blocks, setBlocks] = useState<ButtonConfig[]>(
+    isSticky ? getInitialButtons(BLOCK_BUTTONS) : [],
   )
-
-  console.log({ marks, isVisible })
 
   const reset = () => {
     setVisible(false)
-    setMarks(false)
+    setMarks([])
     setInlines([])
     setBlocks([])
   }
@@ -257,7 +274,7 @@ const Toolbar: React.FC<{
     const el = ref.current
     if (!el) return
     if (isSticky) return
-    if (marks || !!inlines.length || !!blocks.length) {
+    if (!!marks.length || !!inlines.length || !!blocks.length) {
       el.style.opacity = '1'
       el.style.width = 'auto'
       el.style.height = 'auto'
@@ -281,13 +298,13 @@ const Toolbar: React.FC<{
       return reset()
     }
     const { text, element, container } = getAncestry(editor)
-    console.log({ text, element, container })
+    // console.log({ text, element, container })
     if (
       !!element &&
       (hasUsableSelection(editor, element) || hasVoidSelection(element))
     ) {
-      setMarks(isSticky ? true : showMarks(editor, element))
-      setInlines(getAllowedInlines(editor, !isSticky, text))
+      setMarks(getAllowedMarks(editor, isSticky, element))
+      setInlines(getAllowedInlines(editor, isSticky, text))
       const allowedBlocks = getAllowedBlocks(
         editor,
         isSticky,
@@ -295,7 +312,7 @@ const Toolbar: React.FC<{
         container,
       )
       setBlocks(allowedBlocks.length >= 2 ? allowedBlocks : [])
-      console.log(blocks)
+      // console.log(marks, inlines, blocks)
     } else if (!isSticky) {
       reset()
     }

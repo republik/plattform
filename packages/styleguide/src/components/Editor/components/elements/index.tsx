@@ -1,4 +1,4 @@
-import { EditorAttr, ElementsConfig } from '../../custom-types'
+import { EditorAttr, ElementsConfig, TemplateType } from '../../custom-types'
 import { config as link } from './link'
 import { config as paragraph } from './paragraph'
 import { config as headline } from './headline'
@@ -35,3 +35,11 @@ export const configKeys: (keyof ElementsConfig)[] = Object.keys(
 ) as (keyof ElementsConfig)[]
 
 export const coreEditorAttrs: EditorAttr[] = ['isVoid', 'isInline']
+
+export const INLINE_BUTTONS: TemplateType[] = ['link']
+export const BLOCK_BUTTONS: TemplateType[] = [
+  'headline',
+  'paragraph',
+  'pullQuote',
+  'list',
+]

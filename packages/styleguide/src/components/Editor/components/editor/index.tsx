@@ -90,7 +90,7 @@ const SlateEditor: React.FC<{
         editor={editor}
         value={value}
         onChange={(newValue) => {
-          console.log(newValue)
+          // console.log(newValue)
           setValue(newValue)
         }}
       >
@@ -98,7 +98,7 @@ const SlateEditor: React.FC<{
           path={formElementPath}
           onClose={() => setFormElementPath(undefined)}
         />
-        <Toolbar containerRef={containerRef} mode='sticky' />
+        <Toolbar containerRef={containerRef} mode='floating' />
         <Editable
           renderElement={renderElement}
           renderLeaf={renderLeaf}

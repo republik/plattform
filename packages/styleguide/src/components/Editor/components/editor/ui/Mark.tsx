@@ -7,14 +7,10 @@ import React, {
 } from 'react'
 import { Editor } from 'slate'
 import { ReactEditor, useSlate } from 'slate-react'
-import {
-  config as mConfig,
-  config,
-  configKeys as mKeys,
-  configKeys,
-} from '../../marks'
+import { config as mConfig, configKeys as mKeys } from '../../marks'
 import { ToolbarButton } from './Toolbar'
 import {
+  ButtonConfig,
   CustomEditor,
   CustomMarksType,
   CustomText,
@@ -49,30 +45,24 @@ const toggleMark = (editor: CustomEditor, mKey: CustomMarksType): void => {
   }
 }
 
-const MarkButton: React.FC<{ mKey: CustomMarksType }> = ({ mKey }) => {
+export const MarkButton: React.FC<{
+  config: ButtonConfig
+}> = ({ config }) => {
   const editor = useSlate()
-  const mark = config[mKey]
+  const mKey = config.type as CustomMarksType
+  const mark = mConfig[mKey]
   if (!mark.button) {
     return null
   }
   return (
     <ToolbarButton
       button={mark.button}
+      disabled={config.disabled}
       active={isMarkActive(editor, mKey)}
       onClick={() => toggleMark(editor, mKey)}
     />
   )
 }
-
-export const Marks: React.FC = () => (
-  <>
-    {mKeys
-      .filter((mKey) => mConfig[mKey]?.button)
-      .map((mKey) => (
-        <MarkButton key={mKey} mKey={mKey} />
-      ))}
-  </>
-)
 
 export const LeafComponent: React.FC<{
   attributes: Attributes
@@ -89,10 +79,10 @@ export const LeafComponent: React.FC<{
   const parentNode = Editor.node(editor, parentPath)
   const node = getTextNode(parentNode, editor)
 
-  const markStyles = configKeys
+  const markStyles = mKeys
     .filter((mKey) => leaf[mKey])
     .reduce((acc, mKey) => {
-      const mStyle = config[mKey].styles
+      const mStyle = mConfig[mKey].styles
       return { ...acc, ...mStyle }
     }, {})
 
