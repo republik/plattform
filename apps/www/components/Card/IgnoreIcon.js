@@ -1,5 +1,3 @@
-import React from 'react'
-
 const Icon = ({ size, fill = 'currentColor' }) => (
   <svg
     width={size}

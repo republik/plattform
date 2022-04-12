@@ -1,5 +1,3 @@
-import React from 'react'
-
 const SvgJura = (props) => (
   <svg
     width={props.size}

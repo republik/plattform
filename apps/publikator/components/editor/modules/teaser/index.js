@@ -1,4 +1,3 @@
-import React from 'react'
 import { matchBlock } from '../../utils'
 import { createRemoveEmptyKeyHandler } from '../../utils/keyHandlers'
 import { Block } from 'slate'

@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import { Fragment, useState } from 'react'
 import { A } from '@project-r/styleguide'
 
 import routes from '../../server/routes'

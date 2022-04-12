@@ -1,4 +1,3 @@
-import React from 'react'
 import { Query } from 'react-apollo'
 import { css } from 'glamor'
 import gql from 'graphql-tag'

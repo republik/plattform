@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import Frame from '../../components/Frame'
 import RepoNav from '../../components/Repo/Nav'
 import initLocalStore from '../../lib/utils/localStorage'

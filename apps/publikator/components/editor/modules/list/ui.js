@@ -1,4 +1,3 @@
-import React from 'react'
 import { Label, Checkbox } from '@project-r/styleguide'
 import {
   matchBlock,

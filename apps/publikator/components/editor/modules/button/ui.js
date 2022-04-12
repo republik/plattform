@@ -1,4 +1,4 @@
-import React, { useRef, Fragment } from 'react'
+import { useRef, Fragment } from 'react'
 import { createBlockButton, buttonStyles, matchBlock } from '../../utils'
 import injectBlock from '../../utils/injectBlock'
 import { Text, Block } from 'slate'

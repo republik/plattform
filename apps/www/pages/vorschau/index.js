@@ -1,4 +1,3 @@
-import React from 'react'
 import Front from '../../components/Front'
 import { useRouter } from 'next/router'
 import withDefaultSSR from '../../lib/hocs/withDefaultSSR'

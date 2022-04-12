@@ -1,4 +1,4 @@
-import React, { Fragment, Component, useMemo, useState } from 'react'
+import { Fragment, Component, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
@@ -827,6 +827,9 @@ class Submit extends Component {
     const isStripePayment =
       selectedPaymentMethod && selectedPaymentMethod.startsWith('STRIPE')
 
+    // even with token or when signed in we still need name fields
+    const requireContactData = contactState.fields.length > 0
+
     return (
       <>
         <div {...styles.topMargin}>
@@ -858,38 +861,51 @@ class Submit extends Component {
               <br />
             </>
           )}
-          {me && (
-            <Interaction.P>
-              {t('pledge/contact/signedinAs', {
-                nameOrEmail: me.name
-                  ? `${me.name.trim()} (${me.email})`
-                  : me.email,
-              })}{' '}
-              <A
-                href='#'
-                onClick={(e) => {
-                  e.preventDefault()
-                  this.setState({ emailVerify: false })
-                  this.props.signOut().then(() => {
-                    contactState.onChange({
-                      values: {
-                        firstName: '',
-                        lastName: '',
-                        email: '',
-                      },
-                      dirty: {
-                        firstName: false,
-                        lastName: false,
-                        email: false,
-                      },
+          {customMe && (
+            <>
+              <Label>{t('pledge/contact/email/label')}</Label>
+              <Interaction.P>{customMe.email}</Interaction.P>
+              <br />
+              {me ? (
+                <A
+                  href='#'
+                  onClick={(e) => {
+                    e.preventDefault()
+                    this.setState({ emailVerify: false })
+                    this.props.signOut().then(() => {
+                      contactState.onChange({
+                        values: {
+                          firstName: '',
+                          lastName: '',
+                          email: '',
+                        },
+                        dirty: {
+                          firstName: false,
+                          lastName: false,
+                          email: false,
+                        },
+                      })
+                      this.setState({ showSignIn: false })
                     })
-                    this.setState({ showSignIn: false })
-                  })
-                }}
-              >
-                {t('pledge/contact/signOut')}
-              </A>
-            </Interaction.P>
+                  }}
+                >
+                  {t('pledge/contact/signOut')}
+                </A>
+              ) : (
+                <Link
+                  href={{
+                    pathname: '/angebote',
+                    query: {
+                      package: packageName,
+                    },
+                  }}
+                  replace
+                  passHref
+                >
+                  <A>{t('pledge/contact/signIn/wrongToken')}</A>
+                </Link>
+              )}
+            </>
           )}
         </div>
         <div {...styles.topMargin}>
@@ -951,7 +967,7 @@ class Submit extends Component {
             )}
             {
               // Only render the browser API in case we're not using a browser payment API
-              !me &&
+              requireContactData &&
                 this.props.selectedPaymentMethod &&
                 !this.isStripeWalletPayment() && (
                   <div {...styles.topMargin}>
@@ -962,30 +978,7 @@ class Submit extends Component {
                       ])}
                     </Label>
                     <div style={{ marginTop: 10, marginBottom: 10 }}>
-                      {customMe && !me ? (
-                        <>
-                          <Interaction.P>
-                            <Label>{t('pledge/contact/email/label')}</Label>
-                            <br />
-                            {customMe.email}
-                          </Interaction.P>
-                          <br />
-                          <Link
-                            href={{
-                              pathname: '/angebote',
-                              query: {
-                                package: packageName,
-                              },
-                            }}
-                            replace
-                            passHref
-                          >
-                            <A>{t('pledge/contact/signIn/wrongToken')}</A>
-                          </Link>
-                        </>
-                      ) : (
-                        <FieldSet {...contactState} />
-                      )}
+                      {requireContactData && <FieldSet {...contactState} />}
                     </div>
                   </div>
                 )

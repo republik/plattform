@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { css } from 'glamor'
 import LocalIcon from 'react-icons/lib/md/lock-open'
 import CheckIcon from 'react-icons/lib/md/check'

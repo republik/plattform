@@ -1,4 +1,4 @@
-import React, { ReactElement, useMemo, useState } from 'react'
+import { ReactElement, useMemo, useState } from 'react'
 import { StatementNode } from '@project-r/styleguide'
 import Link from 'next/link'
 import { useDiscussion } from '../context/DiscussionContext'

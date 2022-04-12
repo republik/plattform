@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import OverlayFormManager from '../../../utils/OverlayFormManager'
 import Export from '../Export'
 import ChartEditor from './ChartEditor'

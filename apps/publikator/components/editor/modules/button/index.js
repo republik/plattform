@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { matchBlock } from '../../utils'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { createStaticKeyHandler } from '../../utils/keyHandlers'

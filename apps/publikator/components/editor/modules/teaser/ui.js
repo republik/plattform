@@ -7,7 +7,7 @@ import {
   P,
   useColorContext,
 } from '@project-r/styleguide'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { css } from 'glamor'
 import { buttonStyles, createPropertyForm, matchBlock } from '../../utils'
 import { allBlocks, parent, childIndex, depth } from '../../utils/selection'

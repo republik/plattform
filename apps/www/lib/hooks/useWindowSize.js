@@ -1,9 +1,9 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 
 export const useWindowSize = () => {
-  const [size, setSize] = React.useState([])
+  const [size, setSize] = useState([])
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleResize = () => {
       if (
         navigator.userAgent &&

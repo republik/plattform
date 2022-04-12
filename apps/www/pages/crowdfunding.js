@@ -1,4 +1,3 @@
-import React from 'react'
 import md from 'markdown-in-js'
 import Router, { withRouter } from 'next/router'
 import { css } from 'glamor'

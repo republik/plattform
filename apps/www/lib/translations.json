@@ -662,7 +662,7 @@
     },
     {
       "key": "Account/Update/email/hint",
-      "value": "Achtung: Wenn Sie Ihre E-Mail-Adresse ändern, werden Sie auf allen Geräten abgemeldet und Sie können sich danach ausschliesslich mit der neuen E-Mail anmelden!"
+      "value": "Achtung: Wenn Sie Ihre E-Mail-Adresse ändern, werden Sie auf allen Geräten abgemeldet und Sie können sich danach ausschliesslich mit der neuen E-Mail-Adresse anmelden!"
     },
     {
       "key": "Account/Update/email/error/invalid",
@@ -2657,10 +2657,6 @@
       "value": "Kontaktinformationen des Zahlenden"
     },
     {
-      "key": "pledge/contact/signedinAs",
-      "value": "Sie sind angemeldet als: {nameOrEmail}"
-    },
-    {
       "key": "pledge/contact/pastPledges/1",
       "value": "Sie haben bereits einmal mitgemacht."
     },
@@ -2702,15 +2698,15 @@
     },
     {
       "key": "pledge/contact/email/label",
-      "value": "Ihre E-Mail"
+      "value": "Ihre E-Mail-Adresse"
     },
     {
       "key": "pledge/contact/email/error/empty",
-      "value": "E-Mail fehlt"
+      "value": "E-Mail-Adresse fehlt"
     },
     {
       "key": "pledge/contact/email/error/invalid",
-      "value": "E-Mail ungültig"
+      "value": "E-Mail-Adresse ungültig"
     },
     {
       "key": "pledge/submit/package/error",
@@ -2754,7 +2750,7 @@
     },
     {
       "key": "pledge/submit/emailVerify/note",
-      "value": "Diese E-Mail-Adresse wurde schon einmal verwendet. Falls das Ihre E-Mail ist, klicken Sie bitte auf «anmelden»."
+      "value": "Diese E-Mail-Adresse wurde schon einmal verwendet. Falls das Ihre E-Mail-Adresse ist, klicken Sie bitte auf «anmelden»."
     },
     {
       "key": "pledge/submit/emailVerify/done",
@@ -3197,12 +3193,20 @@
       "value": "Leseposition"
     },
     {
-      "key": "article/syntheticreadaloud/title",
+      "key": "article/syntheticReadAloud/title",
       "value": "Beitrag von synthetischer Stimme vorlesen lassen"
     },
     {
-      "key": "article/syntheticreadaloud/lead",
+      "key": "article/syntheticReadAloud/lead",
       "value": "Ein Versuch, die Republik zugänglicher zu machen. <a href=\"/2022/04/01/synthetische-stimme/diskussion\">Geben Sie uns Feedback</a>."
+    },
+    {
+      "key": "article/readAloud/title",
+      "value": "Beitrag vorlesen lassen"
+    },
+    {
+      "key": "article/readAloud/lead",
+      "value": "Diesen Beitrag können Sie sich im Rahmen unseres Angebotes «<a href=\"/format/vorgelesen\">Vorgelesen</a>» anhören."
     },
     {
       "key": "article/series/episode",
@@ -3570,7 +3574,7 @@
     },
     {
       "key": "memberships/latestPeriod/renew/true/autoPay/false",
-      "value": "Bezahlt bis am {formattedEndDate}"
+      "value": "Erneuerung am {formattedEndDate} fällig"
     },
     {
       "key": "memberships/MONTHLY_ABO/latestPeriod/renew/true/autoPay/false",

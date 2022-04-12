@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { createRef, Component } from 'react'
 import { css } from 'glamor'
 import debounce from 'lodash/debounce'
 
@@ -32,7 +32,7 @@ const styles = {
 class TeaserBlock extends Component {
   constructor(props, ...args) {
     super(props, ...args)
-    this.blockRef = React.createRef()
+    this.blockRef = createRef()
     this.state = {}
   }
   measure = debounce(() => {

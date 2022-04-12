@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 
 import { FacebookIcon, TwitterIcon, InstagramIcon } from '@project-r/styleguide'
