@@ -71,7 +71,7 @@ export const findInsertTarget = (
     at,
   })) {
     // console.log(n, p)
-    if (n.template?.repeat) {
+    if (n.template?.repeat && (!at || p.length <= at.length)) {
       target = [n, p]
     }
   }
@@ -148,7 +148,7 @@ const getSiblingTextNode = (
 const getCommonNode = (editor: CustomEditor): NodeEntry =>
   Node.common(editor, editor.selection.anchor.path, editor.selection.focus.path)
 
-const getParent = (
+export const getParent = (
   editor: CustomEditor,
   node: NodeEntry<Node>,
 ): NodeEntry<CustomElement> | undefined => {

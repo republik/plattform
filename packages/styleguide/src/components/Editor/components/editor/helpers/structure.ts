@@ -23,6 +23,7 @@ import {
   calculateSiblingPath,
   findInsertTarget,
   getAncestry,
+  getParent,
   getSelectedElement,
   getSiblingNode,
   hasNextSibling,
@@ -289,7 +290,10 @@ export const insertOnKey =
 const insertRepeat = (editor: CustomEditor): void => {
   let target = findInsertTarget(editor)
   let nextTarget = false
-  // look if the next sibling has a target
+  let deleteP
+
+  // if no target found: look if the next sibling has a target
+  // (e.g. paragraph when pressing "enter" in a headline)
   if (!target) {
     const nextNode = getSiblingNode(editor)
     if (nextNode) {
@@ -297,10 +301,31 @@ const insertRepeat = (editor: CustomEditor): void => {
       nextTarget = true
     }
   }
+
+  // if the current target is empty, and has no sibling:
+  // jump out of element altogether
+  // (e.g. after pressing "enter" on the last item of a list when empty)
+  const emptyTarget =
+    target &&
+    getCharCount([target[0]]) === 0 &&
+    Object.keys(target[0]).length <= 3 // at least 3 attributes: children, type, template
+  // console.log({ target, emptyTarget, editor })
+  if (emptyTarget) {
+    const hasSibling = getSiblingNode(editor)
+    const parent = getParent(editor, target)
+    if (!hasSibling && parent) {
+      // console.log({ parent })
+      deleteP = target[1]
+      target = findInsertTarget(editor, parent[1]) // fall back to the parent
+      // console.log({ newTarget: target })
+    }
+  }
+
   // if insert doesn't make sense, we jump to the next element instead
   if (!target) {
     return selectAdjacent(editor)
   }
+
   const isInline = Editor.isInline(editor, target[0])
   const selectionP = getSelectedElement(editor)[1]
   const [targetN, targetP] = target
@@ -325,6 +350,9 @@ const insertRepeat = (editor: CustomEditor): void => {
     )
     insertP = nextTarget ? targetP : calculateSiblingPath(targetP)
     Transforms.moveNodes(editor, { at: splitP, to: insertP })
+    if (deleteP) {
+      Transforms.removeNodes(editor, { at: deleteP })
+    }
   })
   selectNode(editor, insertP)
 }
