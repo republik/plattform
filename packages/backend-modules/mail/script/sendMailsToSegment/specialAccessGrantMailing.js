@@ -17,7 +17,7 @@ PgDb.connect().then(async (pgdb) => {
   }
 
   const mail = {
-    subject: 'Reden Sie mit!',
+    subject: 'Reden Sie mit – und treffen Sie unsere Redaktion am 23. April',
     templateName: 'access_recipient_dialog_kampa202202',
   }
 
