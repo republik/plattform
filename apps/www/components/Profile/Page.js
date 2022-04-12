@@ -636,7 +636,9 @@ const LoadedProfile = (props) => {
         <PaynoteBanner
           payNote={paynote.after}
           overwriteContent={paynoteContent}
-          trackingPayload={{}}
+          trackingPayload={{
+           profile: user.id
+         }}
           position='after'
           CustomContainer={MainContainer}
           hasAccess={hasAccess}
