@@ -205,6 +205,7 @@ export const ToolbarButton: React.FC<{
   />
 )
 
+// @Felix check why no pointer cursor on buttons
 const ToolbarButtons: React.FC<{
   marks: ButtonConfig[]
   inlines: ButtonConfig[]

@@ -256,7 +256,9 @@ export const navigateOnTab = (
     selectAdjacent(editor, event.shiftKey ? 'previous' : 'next')
   }
 
-  // if (key = delete AND text is empty (getChartCount + selection->"editor.selection.anchor.path")):
+  // if (key = delete AND text is empty (getChartCount + selection->"editor.selection.anchor.path")
+  // AND can't delete (how do we check that??? in normalisation?):
+  // is there a can delete function? in normalisation process
   // selectAdjacent(editor, 'previous')
 
   // if (enter) -> if buggy

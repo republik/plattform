@@ -109,6 +109,8 @@ export const buildAndInsert = (
   const {
     text: targetT,
     element: targetE,
+    // @Felix: maybe try using topLevelContainer instaead of container
+    // and test if this fixes the block conversion
     container: targetC,
   } = getAncestry(editor)
   const element = buildElement(elKey)
