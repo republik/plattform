@@ -1,8 +1,8 @@
 ## Editor
 
 ```react
-state: { 
-    value: [ 
+state: {
+    value: [
         {
            type: 'paragraph',
            children: [{ text: '' }]
@@ -13,7 +13,7 @@ state: {
             type: 'headline'
         },
         {
-            type: ['paragraph', 'pullQuote', 'figure', 'list'],
+            type: ['paragraph', 'pullQuote', 'figure', 'list', 'blockQuote'],
             repeat: true
         }
     ]

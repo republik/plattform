@@ -104,6 +104,8 @@ export {
   IoLogoFacebook as FacebookIcon,
 } from 'react-icons/io5'
 
+export { BsBlockquoteLeft as BlockQuoteIcon } from 'react-icons/bs'
+
 export { ShareIcon } from './CustomIcons/ShareIcon'
 export { MarkdownIcon } from './CustomIcons/MarkdownIcon'
 export { BackIcon } from './CustomIcons/BackIcon'

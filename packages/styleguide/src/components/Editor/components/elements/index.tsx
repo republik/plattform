@@ -10,6 +10,8 @@ import { config as figureByline } from './figure/byline'
 import { config as pullQuote } from './pullQuote/container'
 import { config as pullQuoteText } from './pullQuote/text'
 import { config as pullQuoteSource } from './pullQuote/source'
+import { config as blockQuote } from './blockQuote/container'
+import { config as blockQuoteText } from './blockQuote/text'
 import { config as list } from './list/container'
 import { config as listItem } from './list/item'
 
@@ -24,6 +26,8 @@ export const config: ElementsConfig = {
   pullQuote,
   pullQuoteText,
   pullQuoteSource,
+  blockQuote,
+  blockQuoteText,
   break: breakConfig,
   list,
   listItem,
@@ -43,4 +47,5 @@ export const BLOCK_BUTTONS: TemplateType[] = [
   'pullQuote',
   'figure',
   'list',
+  'blockQuote',
 ]

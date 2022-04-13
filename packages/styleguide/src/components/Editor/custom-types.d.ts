@@ -78,6 +78,14 @@ export type PullQuoteSourceElement = SharedElement & {
   type: 'pullQuoteSource'
 }
 
+export type BlockQuoteElement = SharedElement & {
+  type: 'blockQuote'
+}
+
+export type BlockQuoteTextElement = SharedElement & {
+  type: 'blockQuoteText'
+}
+
 export type ListElement = SharedElement & {
   type: 'list'
   ordered?: boolean
@@ -99,6 +107,8 @@ export type CustomElement =
   | PullQuoteElement
   | PullQuoteTextElement
   | PullQuoteSourceElement
+  | BlockQuoteElement
+  | BlockQuoteTextElement
   | ListElement
   | ListItemElement
 
@@ -119,6 +129,8 @@ export type CustomElementsType =
   | 'pullQuote'
   | 'pullQuoteText'
   | 'pullQuoteSource'
+  | 'blockQuote'
+  | 'blockQuoteText'
   | 'list'
   | 'listItem'
 
