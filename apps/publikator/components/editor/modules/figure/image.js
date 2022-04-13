@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import { colors } from '@project-r/styleguide'
 

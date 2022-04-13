@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import compose from 'lodash/flowRight'
 import { nest } from 'd3-collection'
 import { timeFormat } from '../../lib/utils/format'

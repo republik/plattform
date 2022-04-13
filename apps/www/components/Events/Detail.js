@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 
 import { parseDate, swissTime } from '../../lib/utils/format'

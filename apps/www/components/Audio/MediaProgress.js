@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { createContext, useContext } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql, withApollo } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
@@ -8,7 +8,7 @@ import throttle from 'lodash/throttle'
 
 import withMe from '../../lib/apollo/withMe'
 
-const MediaProgressContext = React.createContext()
+const MediaProgressContext = createContext()
 
 export const useMediaProgress = () => useContext(MediaProgressContext)
 

@@ -1,4 +1,3 @@
-import React from 'react'
 import { matchInline } from '../../utils'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { colors } from '@project-r/styleguide'

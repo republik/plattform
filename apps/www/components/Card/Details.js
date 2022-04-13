@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 
 import { mediaQueries, Editorial } from '@project-r/styleguide'

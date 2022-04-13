@@ -1,4 +1,3 @@
-import React from 'react'
 import { A, Spinner } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 import { countFormat } from '../../lib/utils/format'

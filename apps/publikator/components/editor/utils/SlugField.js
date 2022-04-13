@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Field, slug } from '@project-r/styleguide'
 import withT from '../../../lib/withT'
 

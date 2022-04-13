@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import AddressForm, { COUNTRIES } from '../Account/AddressForm'
 import FieldSet from '../FieldSet'
 import { gql } from '@apollo/client'

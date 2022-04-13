@@ -1,5 +1,3 @@
-import React from 'react'
-
 const SvgSanktGallen = (props) => (
   <svg
     width={props.size}

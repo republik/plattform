@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useColorContext, Loader } from '@project-r/styleguide'
 
 import { SIDEBAR_WIDTH } from '../Sidebar'

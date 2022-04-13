@@ -1,4 +1,3 @@
-import React from 'react'
 import { Interaction, TeaserFeed } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 import HrefLink from '../Link/Href'

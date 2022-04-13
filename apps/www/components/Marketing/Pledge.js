@@ -1,4 +1,3 @@
-import React from 'react'
 import { withRouter } from 'next/router'
 import { CROWDFUNDING_PLEDGE } from '../../lib/constants'
 

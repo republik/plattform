@@ -1,4 +1,4 @@
-import React from 'react'
+import { cloneElement, Children } from 'react'
 import newsletterSchema from '@project-r/template-newsletter'
 import neutrumSchema from './Neutrum'
 
@@ -21,7 +21,7 @@ import * as withArticleData from './withArticleData'
 import * as withFrontData from './withFrontData'
 
 const NoOpLink = ({ children }) =>
-  React.cloneElement(React.Children.only(children), {
+  cloneElement(Children.only(children), {
     onClick: (e) => {
       e.preventDefault()
     },

@@ -1,4 +1,3 @@
-import React from 'react'
 import { parse, format } from 'url'
 
 import {

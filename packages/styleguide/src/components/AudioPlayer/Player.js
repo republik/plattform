@@ -183,9 +183,6 @@ class AudioPlayer extends Component {
         progress,
         buffered: audio.buffered,
       })
-      this.formattedCurrentTime = getFormattedTime(
-        audio.currentTime / this.props.playbackRate,
-      )
     }
     this.syncProgress = () => {
       clearTimeout(this.readTimeout)
@@ -353,14 +350,6 @@ class AudioPlayer extends Component {
     }
     return Promise.resolve()
   }
-  setFormattedTimes() {
-    if (!this.audio || !this.audio.duration) {
-      return
-    }
-    this.formattedDuration = getFormattedTime(
-      this.audio.duration / this.props.playbackRate,
-    )
-  }
 
   componentDidMount() {
     globalState.instances.push(this.setInstanceState)
@@ -403,7 +392,6 @@ class AudioPlayer extends Component {
     this.setAudioPlaybackRate()
   }
   componentDidUpdate(prevProps) {
-    this.setFormattedTimes()
     if (prevProps.playbackRate != this.props.playbackRate) {
       this.setAudioPlaybackRate()
     }
@@ -468,6 +456,13 @@ class AudioPlayer extends Component {
         timeRanges.push({ start: buffered.start(i), end: buffered.end(i) })
       }
     }
+
+    const formattedCurrentTime =
+      !!this.audio?.currentTime &&
+      getFormattedTime(this.audio.currentTime / this.props.playbackRate)
+    const formattedDuration =
+      !!this.audio?.duration &&
+      getFormattedTime(this.audio.duration / this.props.playbackRate)
 
     const playbackElement = isVideo ? (
       <video
@@ -539,8 +534,8 @@ class AudioPlayer extends Component {
           Link={Link}
           title={title}
           sourcePath={sourcePath}
-          formattedCurrentTime={this.formattedCurrentTime}
-          formattedDuration={this.formattedDuration}
+          formattedCurrentTime={formattedCurrentTime}
+          formattedDuration={formattedDuration}
           setTime={this.setTime}
           download={download}
           src={src}
@@ -682,9 +677,9 @@ class AudioPlayer extends Component {
                 {...colorScheme.set('color', 'textSoft')}
                 tabIndex='0'
               >
-                {this.formattedCurrentTime && this.formattedCurrentTime}
-                {this.formattedCurrentTime && this.formattedDuration && ' / '}
-                {this.formattedDuration && this.formattedDuration}
+                {formattedCurrentTime}
+                {formattedCurrentTime && formattedDuration && ' / '}
+                {formattedDuration}
               </div>
             )}
           </div>

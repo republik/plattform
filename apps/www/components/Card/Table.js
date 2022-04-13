@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react'
 import { css, merge } from 'glamor'
 import { nest } from 'd3-collection'
 import { ascending, descending } from 'd3-array'

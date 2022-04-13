@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react'
 import { css } from 'glamor'
 import { useColorContext } from '@project-r/styleguide'
 import Link from 'next/link'

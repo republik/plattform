@@ -1,10 +1,10 @@
-import React from 'react'
+import { Component } from 'react'
 import initApollo from './initApollo'
 import Head from 'next/head'
 import { getDataFromTree } from 'react-apollo'
 
 const WithApolloClient = (App) => {
-  return class withApolloClient extends React.Component {
+  return class withApolloClient extends Component {
     static displayName = `withApolloClient(${
       App.displayName || App.name || 'App'
     })`
@@ -80,7 +80,7 @@ const WithApolloClient = (App) => {
       const { apolloState, ...props } = this.props
       return <App {...props} apolloClient={this.apolloClient} />
     }
-  }
+  };
 }
 
 export default WithApolloClient

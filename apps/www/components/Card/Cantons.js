@@ -1,4 +1,3 @@
-import React from 'react'
 import Aargau from './Cantons/Aargau'
 import AppenzellAusserrhoden from './Cantons/AppenzellAusserrhoden'
 import AppenzellInnerrhoden from './Cantons/AppenzellInnerrhoden'

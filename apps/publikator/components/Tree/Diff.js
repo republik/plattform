@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { css } from 'glamor'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'

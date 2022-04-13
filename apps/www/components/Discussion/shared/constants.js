@@ -1,4 +1,3 @@
-import React from 'react'
 import { APP_OPTIONS } from '../../../lib/constants'
 import { Label } from '@project-r/styleguide'
 

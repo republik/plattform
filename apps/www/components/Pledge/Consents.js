@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import PropTypes from 'prop-types'
 import { ascending } from 'd3-array'
 import { Checkbox, RawHtml } from '@project-r/styleguide'

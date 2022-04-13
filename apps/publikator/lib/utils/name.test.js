@@ -1,46 +1,43 @@
-import test from 'tape'
 import { getName, getInitials } from './name'
 
-test('lib.utils.clean.getName', (assert) => {
-  assert.equal(
-    getName({
-      name: ' John Doe ',
-    }),
-    'John Doe',
-    'Name trimmed',
-  )
-  assert.equal(
-    getName({
-      email: 'john.doe@project-r.construction',
-    }),
-    'John Doe',
-    'Name extracted from email',
-  )
-  assert.end()
-})
+describe('name util test-suite', () => {
+  it('lib.utils.clean.getName', () => {
+    // Name trimmed
+    expect(
+      getName({
+        name: ' John Doe ',
+      }),
+    ).toBe('John Doe')
 
-test('lib.utils.clean.getInitials', (assert) => {
-  assert.equal(
-    getInitials({
-      name: 'John Doe',
-    }),
-    'JD',
-    'Initials extracted from name',
-  )
-  assert.equal(
-    getInitials({
-      name: ' ',
-      email: 'john.doe@project-r.construction',
-    }),
-    'JD',
-    'Initials extracted from email when name is blank',
-  )
-  assert.equal(
-    getInitials({
-      email: 'john.doe@project-r.construction',
-    }),
-    'JD',
-    'Initials extracted from email',
-  )
-  assert.end()
+    // Name extracted from email
+    expect(
+      getName({
+        email: 'john.doe@project-r.construction',
+      }),
+    ).toBe('John Doe')
+  })
+
+  it('lib.utils.clean.getInitials', () => {
+    // Initials extracted from name
+    expect(
+      getInitials({
+        name: 'John Doe',
+      }),
+    ).toBe('JD')
+
+    // Initials extracted from email when name is blank
+    expect(
+      getInitials({
+        name: ' ',
+        email: 'john.doe@project-r.construction',
+      }),
+    ).toBe('JD')
+
+    // Initials extracted from email
+    expect(
+      getInitials({
+        email: 'john.doe@project-r.construction',
+      }),
+    ).toBe('JD')
+  })
 })

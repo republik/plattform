@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { tsvParse, csvFormat } from 'd3-dsv'
 import { JSONEditor, PlainEditor } from '../../../utils/CodeEditorFields'
 import SizeSelector from './SizeSelector'

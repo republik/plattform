@@ -1,4 +1,3 @@
-import React from 'react'
 import { Interaction, Label, fontStyles, Chart } from '@project-r/styleguide'
 import { css } from 'glamor'
 import voteT from './voteT'

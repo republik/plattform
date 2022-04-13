@@ -1,4 +1,3 @@
-import React from 'react'
 import compose from 'lodash/flowRight'
 import { useRouter } from 'next/router'
 import isEmail from 'validator/lib/isEmail'

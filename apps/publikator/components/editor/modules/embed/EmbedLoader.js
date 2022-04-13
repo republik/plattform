@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import Loader from '../../../Loader'
 import { colors } from '@project-r/styleguide'
 import { parse } from '@orbiting/remark-preset'

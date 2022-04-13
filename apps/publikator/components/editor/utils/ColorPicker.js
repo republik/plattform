@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { ChromePicker } from 'react-color'
 import { Label } from '@project-r/styleguide'
 

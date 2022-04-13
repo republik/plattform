@@ -1,4 +1,3 @@
-import React from 'react'
 import { Label } from '@project-r/styleguide'
 import { timeFormat } from 'd3-time-format'
 

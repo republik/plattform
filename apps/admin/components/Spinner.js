@@ -1,4 +1,3 @@
-import React from 'react'
 import { css, keyframes } from 'glamor'
 
 const containerStyle = css({
