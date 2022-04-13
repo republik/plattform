@@ -68,6 +68,8 @@ const IOS_VARIATIONS = ['payNote/ios']
 
 export const DEFAULT_BUTTON_TARGET = '/angebote?package=ABO'
 
+// 1. defaults
+// 2. test iOS
 export const generatePositionedNote = (variation, cta, position) => {
   return {
     [position]: {
@@ -79,18 +81,18 @@ export const generatePositionedNote = (variation, cta, position) => {
       ),
       cta: cta,
       button: {
-        label: t(`article/${variation}/${position}/buy/button`, undefined, ''),
+        label: t(
+          `article/${variation}/${position}/buy/button`,
+          undefined,
+          t('article/payNote/default/button'),
+        ),
         link: t(
           `article/${variation}/${position}/buy/button/link`,
           undefined,
           DEFAULT_BUTTON_TARGET,
         ),
       },
-      secondary: t(
-        `article/${variation}/${position}/secondary/label`,
-        undefined,
-        '',
-      ) && {
+      secondary: cta === 'button' && {
         prefix: t(
           `article/${variation}/${position}/secondary/prefix`,
           undefined,
@@ -99,15 +101,21 @@ export const generatePositionedNote = (variation, cta, position) => {
         label: t(
           `article/${variation}/${position}/secondary/label`,
           undefined,
-          '',
+          t('article/payNote/default/secondary/label'),
         ),
         link: t(
           `article/${variation}/${position}/secondary/link`,
           undefined,
-          '',
+          t('article/payNote/default/secondary/link'),
         ),
       },
-      note: t(`article/${variation}/${position}/note`, undefined, ''),
+      note:
+        cta === 'button' &&
+        t(
+          `article/${variation}/${position}/note`,
+          undefined,
+          t('article/payNote/default/note'),
+        ),
     },
   }
 }
@@ -228,6 +236,7 @@ const getPayNote = (
 
 const BuyButton = withT(({ payNote, payload, t }) => {
   const router = useRouter()
+  if (!payNote.button?.link || !payNote.button?.label) return null
   return (
     <Button
       primary
@@ -237,7 +246,7 @@ const BuyButton = withT(({ payNote, payload, t }) => {
         () => router.push(payNote.button.link),
       )}
     >
-      {payNote.button.label || t('article/payNote/default/button')}
+      {payNote.button.label}
     </Button>
   )
 })
@@ -260,28 +269,25 @@ const SecondaryCta = ({ payNote, payload }) => {
       }),
     [colorScheme],
   )
+  if (!payNote.secondary?.link || !payNote.secondary?.label) return null
   return (
-    <>
-      {payNote.secondary && payNote.secondary.link ? (
-        <div
-          {...styles.aside}
-          {...colorScheme.set('color', 'textSoft')}
-          {...linkRule}
-        >
-          <span>{payNote.secondary.prefix} </span>
-          <a
-            key='secondary'
-            href={payNote.secondary.link}
-            onClick={trackEventOnClick(
-              ['PayNote', `secondary ${payload.position}`, payload.variation],
-              () => router.push(payNote.secondary.link),
-            )}
-          >
-            {payNote.secondary.label}
-          </a>
-        </div>
-      ) : null}
-    </>
+    <div
+      {...styles.aside}
+      {...colorScheme.set('color', 'textSoft')}
+      {...linkRule}
+    >
+      <span>{payNote.secondary.prefix} </span>
+      <a
+        key='secondary'
+        href={payNote.secondary.link}
+        onClick={trackEventOnClick(
+          ['PayNote', `secondary ${payload.position}`, payload.variation],
+          () => router.push(payNote.secondary.link),
+        )}
+      >
+        {payNote.secondary.label}
+      </a>
+    </div>
   )
 }
 
