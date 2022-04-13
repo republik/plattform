@@ -294,10 +294,15 @@ const Toolbar: React.FC<{
     }
   })
 
-  const setButtons = (text, element, container) => {
+  const setButtons = (text, element, topLevelContainer) => {
     setMarks(getAllowedMarks(editor, isSticky, element))
     setInlines(getAllowedInlines(editor, isSticky, text))
-    const allowedBlocks = getAllowedBlocks(editor, isSticky, element, container)
+    const allowedBlocks = getAllowedBlocks(
+      editor,
+      isSticky,
+      element,
+      topLevelContainer,
+    )
     setBlocks(allowedBlocks.length >= 2 ? allowedBlocks : [])
   }
 
@@ -305,14 +310,14 @@ const Toolbar: React.FC<{
     if (!hasSelection(editor) || (!isSticky && !ref.current)) {
       return reset()
     }
-    const { text, element, container } = getAncestry(editor)
+    const { text, element, topLevelContainer } = getAncestry(editor)
     if (
       !!element &&
       (isSticky ||
         hasUsableSelection(editor, element) ||
         hasVoidSelection(element))
     ) {
-      setButtons(text, element, container)
+      setButtons(text, element, topLevelContainer)
     } else {
       reset()
     }

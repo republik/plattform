@@ -164,11 +164,13 @@ export const getAncestry = (
   text?: NodeEntry<CustomText>
   element?: NodeEntry<CustomElement>
   container?: NodeEntry<CustomElement>
+  topLevelContainer?: NodeEntry<CustomElement>
 } => {
   const parent = getCommonNode(editor)
   let text: NodeEntry<CustomText>
   let element: NodeEntry<CustomElement>
   let container: NodeEntry<CustomElement>
+  let topLevelContainer: NodeEntry<CustomElement>
   if (Text.isText(parent[0])) {
     text = parent as NodeEntry<CustomText>
     element = getParent(editor, parent)
@@ -177,16 +179,25 @@ export const getAncestry = (
   } else {
     return {}
   }
+
   if (elConfig[element[0].type].attrs?.isMain) {
     container = element
   }
   while (container && elConfig[container[0].type].attrs?.isMain) {
     container = getParent(editor, container)
   }
+
+  for (const [n, p] of Node.ancestors(editor, element[1], { reverse: true })) {
+    if (SlateElement.isElement(n)) {
+      topLevelContainer = [n as CustomElement, p]
+    }
+  }
+
   return {
     text,
     element,
     container,
+    topLevelContainer,
   }
 }
 
