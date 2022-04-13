@@ -50,7 +50,7 @@ PgDb.connect().then(async (pgdb) => {
     ]
       .filter(Boolean)
       .join(' '),
-  ) /*  */
+  )
 
   const emailAddressGrantIdMap = new Map(
     result.map((resultEntry) => {
