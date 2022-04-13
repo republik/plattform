@@ -108,7 +108,6 @@ const TargetForm = withT(
           <Checkbox
             checked={inherit}
             onChange={(_, checked) => {
-              console.log({ checked })
               onInheritChange(checked)
             }}
           >
