@@ -7,7 +7,7 @@ const argv = yargs
   .option('dry-run', {
     default: true,
   })
-  .option('limit')
+  .option('limit', { number: true })
   .help()
   .version().argv
 
