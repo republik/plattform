@@ -230,7 +230,7 @@ export default withT(({ t, editor, node, isFormat }) => {
   }
 
   const dropdownMode =
-    paynotesMode || paynotes?.length ? MODE_KEYS.CUSTOM : MODE_KEYS.AUTO
+    paynotesMode || (paynotes?.length ? MODE_KEYS.CUSTOM : MODE_KEYS.AUTO)
 
   return (
     <div {...styles.paynotes}>
