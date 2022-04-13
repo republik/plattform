@@ -611,7 +611,7 @@ const LoadedProfile = (props) => {
                 firstComments: 0,
                 firstDocuments: 20,
                 afterDocument:
-                  user.documents.panfo && user.documents.pageInfo.endCursor,
+                  user.documents.pageInfo && user.documents.pageInfo.endCursor,
               })}
             />
             {showPaynote ? (
