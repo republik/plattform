@@ -1881,8 +1881,12 @@
       "value": "10 Sekunden zurück"
     },
     {
-      "key": "styleguide/AudioPlayer/open",
-      "value": "Audioplayer öffnen"
+      "key": "styleguide/AudioPlayer/expand",
+      "value": "Audioplayer vergrössern"
+    },
+    {
+      "key": "styleguide/AudioPlayer/shrink",
+      "value": "Audioplayer minimieren"
     },
     {
       "key": "styleguide/AudioPlayer/close",
