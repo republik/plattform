@@ -25,7 +25,7 @@ Three optional command line arguments can be used:
 
 This script was used to send an email about dialogue and a Republik event to all grant recipients of a special access campaign on a specific date.
 
-Run `node script/sendMailsToSegment/specialAccessGrantMailing.js`.
+Run `node script/sendMailsToSegment/specialAccessCampaignMailing_kampa202202.js`.
 Two optional command line arguments can be used:
 
 - `--no-dry-run`: used to really send emails, defaults to `--dry-run` which queries segment but no mails will be sent or mail log entries will be created

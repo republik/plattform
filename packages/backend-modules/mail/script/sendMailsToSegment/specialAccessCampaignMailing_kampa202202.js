@@ -40,6 +40,7 @@ PgDb.connect().then(async (pgdb) => {
       `AND ag."beginAt" IS NOT NULL`,
       `AND ag."endAt" > now()`,
       `AND ag."invalidatedAt" IS NULL`,
+      `AND ag."createdAt" >= '2022-03-03 11:00+01'`,
       `AND ag.id NOT IN (
         SELECT "accessGrantId" 
         FROM "accessEvents" 
@@ -49,20 +50,20 @@ PgDb.connect().then(async (pgdb) => {
     ]
       .filter(Boolean)
       .join(' '),
-  ) /* AND ag."createdAt" >= '2022-03-03 11:00+01' */
+  ) /*  */
 
-  const accessEventMap = new Map(
+  const emailAddressGrantIdMap = new Map(
     result.map((resultEntry) => {
       return [resultEntry.email, resultEntry.id]
     }),
   )
-  const emailAddresses = [...accessEventMap.keys()]
+  const emailAddresses = [...emailAddressGrantIdMap.keys()]
 
   await sendMailsToSegment(emailAddresses, mail, {
     pgdb,
     argv,
-    accessEventInfo: {
-      accessEventMap,
+    accessEventData: {
+      emailAddressGrantIdMap,
       event: 'email.recipient.dialog.kampa202202',
     },
   })
