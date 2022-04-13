@@ -126,10 +126,7 @@ class Profile extends Component {
         {...this.props}
       >
         <P {...styles.p}>
-          {t('Onboarding/Sections/Profile/paragraph1', null, '')}
-        </P>
-        <P {...styles.p}>
-          {t('Onboarding/Sections/Profile/paragraph2', null, '')}
+          {t('Onboarding/Sections/Profile/paragraph', null, '')}
         </P>
         <div {...merge(styles.portrait)}>
           <Portrait

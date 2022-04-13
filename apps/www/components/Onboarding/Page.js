@@ -327,6 +327,33 @@ class Page extends Component {
                 </P>
 
                 <P {...styles.p}>
+                  {t.elements('Onboarding/Sections/Profile/dialogParagraph', {
+                    linkHowTo: (
+                      <Link
+                        key='mitdebattieren-leicht-gemacht'
+                        href='/2022/02/08/mitdebattieren-leicht-gemacht'
+                        passHref
+                      >
+                        <A>
+                          {t(
+                            'Onboarding/Sections/Profile/dialogParagraph/linkHowTo',
+                          )}
+                        </A>
+                      </Link>
+                    ),
+                    linkToDialog: (
+                      <Link key='dialog' href='/dialog' passHref>
+                        <A>
+                          {t(
+                            'Onboarding/Sections/Profile/dialogParagraph/linkToDialog',
+                          )}
+                        </A>
+                      </Link>
+                    ),
+                  })}
+                </P>
+
+                <P {...styles.p}>
                   {t.first.elements(
                     [
                       `Onboarding/Page/${context}/more/questions`,

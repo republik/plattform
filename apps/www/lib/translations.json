@@ -5225,12 +5225,8 @@
       "value": "Profil"
     },
     {
-      "key": "Onboarding/Sections/Profile/paragraph1",
-      "value": "Das Profil ist Ihre Visitenkarte bei der Republik."
-    },
-    {
-      "key": "Onboarding/Sections/Profile/paragraph2",
-      "value": "Wir verlinken Ihr Profil zum Beispiel bei Ihren Dialogbeiträgen."
+      "key": "Onboarding/Sections/Profile/paragraph",
+      "value": "Das Profil ist Ihre Visitenkarte bei der Republik. Wir verlinken Ihr Profil zum Beispiel bei Ihren Dialogbeiträgen."
     },
     {
       "key": "Onboarding/Sections/Profile/button/save",
@@ -5239,6 +5235,18 @@
     {
       "key": "Onboarding/Sections/Profile/button/continue",
       "value": "Später"
+    },
+    {
+      "key": "Onboarding/Sections/Profile/dialogParagraph",
+      "value": "Teilen Sie Ihre Meinung, Ihre Kritik und Ihre Fragen mit der Community! Eine anschauliche Übersicht über alle Funktionen finden Sie in der {linkHowTo}, und auf der {linkToDialog} sehen Sie, was aktuell bei der Republik zu reden gibt. "
+    },
+    {
+      "key": "Onboarding/Sections/Profile/dialogParagraph/linkHowTo",
+      "value": "Dialog-Anleitung"
+    },
+    {
+      "key": "Onboarding/Sections/Profile/dialogParagraph/linkToDialog",
+      "value": "Dialog-Übersicht"
     },
     {
       "key": "Trial/Form/withAccess/button/label",
