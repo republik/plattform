@@ -68,8 +68,6 @@ const IOS_VARIATIONS = ['payNote/ios']
 
 export const DEFAULT_BUTTON_TARGET = '/angebote?package=ABO'
 
-// 1. defaults
-// 2. test iOS
 export const generatePositionedNote = (variation, cta, position) => {
   return {
     [position]: {
