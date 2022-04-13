@@ -1,5 +1,10 @@
 const bodyParser = require('body-parser')
 const moment = require('moment')
+const debug = require('debug')('mail:express:mailchimp')
+
+const {
+  enforceSubscriptions,
+} = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail')
 
 const { MAIL_EXPRESS_MAILCHIMP_SECRET } = process.env
 
@@ -31,6 +36,7 @@ module.exports = async (server, pgdb) => {
       switch (type) {
         case 'subscribe':
           Object.assign(record, handleSubscribe(data))
+          await maybeRestoreInterests(record, pgdb)
           break
         case 'unsubscribe':
           Object.assign(record, handleUnsubscribe(data))
@@ -168,7 +174,7 @@ const handleCleaned = (data) => {
 const getGroups = (name, data) => {
   const groupings = data?.merges?.GROUPINGS
 
-  if (!groupings && !groupings.length) {
+  if (!groupings?.length) {
     return
   }
 
@@ -178,4 +184,52 @@ const getGroups = (name, data) => {
     .split(',')
     .map((g) => g.trim())
     .filter(Boolean)
+}
+
+/**
+ * If latest record in mailchimLog for an email address is type "cleaned", it
+ * will call enforceSubscription and thus updating and restoring interests.
+ */
+const maybeRestoreInterests = async (record, pgdb) => {
+  try {
+    const { email } = record
+    if (!email) {
+      debug('unable to restore interests: email missing')
+      console.warn('maybeRestoreInterests: email missing')
+      return
+    }
+
+    const mailchimpLogType = await pgdb.public.mailchimpLog.findOneFieldOnly(
+      { email },
+      'type',
+      { orderBy: { firedAt: 'DESC' }, limit: 1 },
+    )
+
+    if (mailchimpLogType === 'cleaned') {
+      const userId = await pgdb.public.users.findOneFieldOnly({ email }, 'id')
+      if (userId) {
+        debug(
+          'restore interests for %s (mailchimpLog.type: %s, user.id: %s)',
+          email,
+          mailchimpLogType,
+          userId,
+        )
+        await enforceSubscriptions({ pgdb, userId, email })
+      } else {
+        debug(
+          'do not restore interests for %s: user.id not found',
+          email,
+          mailchimpLogType,
+        )
+      }
+    } else {
+      debug(
+        'do not restore interests for %s (mailchimpLog.type: %s)',
+        email,
+        mailchimpLogType,
+      )
+    }
+  } catch (e) {
+    console.warn('maybeRestoreInterests failed:', e)
+  }
 }
