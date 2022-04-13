@@ -1881,6 +1881,10 @@
       "value": "10 Sekunden zurück"
     },
     {
+      "key": "styleguide/AudioPlayer/open",
+      "value": "Audioplayer öffnen"
+    },
+    {
       "key": "styleguide/AudioPlayer/close",
       "value": "Audioplayer schliessen"
     },

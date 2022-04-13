@@ -476,7 +476,7 @@ const ExpandableAudioPlayer = ({
         </div>
         <div {...styles.rightControls}>
           <button
-            title={t('styleguide/AudioPlayer/close')}
+            title={t(`styleguide/AudioPlayer/${isExpanded ? 'close' : 'open'}`)}
             onClick={() => setIsExpanded(!isExpanded)}
             {...plainButtonRule}
           >
