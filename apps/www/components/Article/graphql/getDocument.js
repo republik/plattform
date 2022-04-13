@@ -206,7 +206,7 @@ export const getDocument = gql`
         indicateVideo
         prepublication
         paynotes
-        paynoteCta
+        paynoteMode
       }
     }
   }

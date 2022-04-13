@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import {
   A,
   Radio,
@@ -43,14 +43,14 @@ const styles = {
 }
 
 const PAYNOTE_KEY = 'paynotes'
-const PAYNOTE_CTA_KEY = 'paynoteCta'
+const PAYNOTE_MODE_KEY = 'paynoteMode'
 const TARGETS = ['hasActiveMembership', 'isEligibleForTrial']
 const MODE_KEYS = {
   AUTO: 'auto',
   BUY: 'button',
   TRY: 'trialForm',
   CUSTOM: 'custom',
-  NONE: 'none',
+  NONE: 'noPaynote',
 }
 const MODES = [
   MODE_KEYS.AUTO,
@@ -76,6 +76,14 @@ const EMPTY_PAYNOTE = {
     link: '',
   },
 }
+
+const EMPTY_DEFAULT_PAYNOTE = [
+  {
+    target: DEFAULT_TARGET,
+    before: { ...EMPTY_PAYNOTE, cta: 'button' },
+    after: { ...EMPTY_PAYNOTE, cta: 'button' },
+  },
+]
 
 const isEmptyPaynote = (paynote) =>
   !paynote.content &&
@@ -137,8 +145,7 @@ const TargetForm = withT(
 
 export default withT(({ t, editor, node, isFormat }) => {
   const paynotes = node.data.get(PAYNOTE_KEY) || []
-  const paynotesCta = node.data.get(PAYNOTE_CTA_KEY)
-  const [mode, setMode] = useState()
+  const paynotesMode = node.data.get(PAYNOTE_MODE_KEY)
 
   const modes = MODES.map((value) => ({
     value,
@@ -198,72 +205,33 @@ export default withT(({ t, editor, node, isFormat }) => {
     )
   }
 
-  // set initial mode base on paynotes configuration
-  useEffect(() => {
-    if (paynotesCta) {
-      // 'try' or 'buy'
-      setMode(paynotesCta)
-    } else if (!paynotes?.length) {
-      setMode(MODE_KEYS.AUTO)
-    } else {
-      if (isEmptyPaynotes(paynotes)) {
-        setMode(MODE_KEYS.NONE)
-      } else {
-        setMode(MODE_KEYS.CUSTOM)
-      }
-    }
-  }, [])
-
   const onModeChange = (value) => {
-    setMode(value)
     if (value === MODE_KEYS.AUTO) {
       editor.change((change) => {
         change.setNodeByKey(node.key, {
-          data: node.data.remove(PAYNOTE_KEY).remove(PAYNOTE_CTA_KEY),
-        })
-      })
-    } else if (value === MODE_KEYS.BUY) {
-      editor.change((change) => {
-        change.setNodeByKey(node.key, {
-          data: node.data.remove(PAYNOTE_KEY).set(PAYNOTE_CTA_KEY, value),
-        })
-      })
-    } else if (value === MODE_KEYS.TRY) {
-      editor.change((change) => {
-        change.setNodeByKey(node.key, {
-          data: node.data.remove(PAYNOTE_KEY).set(PAYNOTE_CTA_KEY, value),
-        })
-      })
-    } else if (value === MODE_KEYS.NONE) {
-      editor.change((change) => {
-        change.setNodeByKey(node.key, {
-          data: node.data
-            .set(PAYNOTE_KEY, [
-              {
-                target: {},
-                before: EMPTY_PAYNOTE,
-                after: EMPTY_PAYNOTE,
-              },
-            ])
-            .remove(PAYNOTE_CTA_KEY),
+          data: node.data.remove(PAYNOTE_KEY).remove(PAYNOTE_MODE_KEY),
         })
       })
     } else if (value === MODE_KEYS.CUSTOM) {
       editor.change((change) => {
         change.setNodeByKey(node.key, {
           data: node.data
-            .set(PAYNOTE_KEY, [
-              {
-                target: DEFAULT_TARGET,
-                before: { ...EMPTY_PAYNOTE, cta: 'button' },
-                after: { ...EMPTY_PAYNOTE, cta: 'button' },
-              },
-            ])
-            .remove(PAYNOTE_CTA_KEY),
+            .set(PAYNOTE_KEY, EMPTY_DEFAULT_PAYNOTE)
+            .remove(PAYNOTE_MODE_KEY),
+        })
+      })
+    } else {
+      // button, trialForm, none
+      editor.change((change) => {
+        change.setNodeByKey(node.key, {
+          data: node.data.remove(PAYNOTE_KEY).set(PAYNOTE_MODE_KEY, value),
         })
       })
     }
   }
+
+  const dropdownMode =
+    paynotesMode || paynotes?.length ? MODE_KEYS.CUSTOM : MODE_KEYS.AUTO
 
   return (
     <div {...styles.paynotes}>
@@ -272,13 +240,13 @@ export default withT(({ t, editor, node, isFormat }) => {
           black
           label={t('metaData/paynotes/dropdown')}
           items={modes}
-          value={mode || null}
+          value={dropdownMode || null}
           onChange={({ value }) => {
             onModeChange(value)
           }}
         />
       </UIForm>
-      {mode === MODE_KEYS.CUSTOM && (
+      {dropdownMode === MODE_KEYS.CUSTOM && (
         <>
           <Label {...styles.title}>{t('metaData/paynotes/title')}</Label>
           {paynotes.map((paynote, i) => {

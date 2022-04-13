@@ -48,9 +48,10 @@ type Newsletter {
   free: Boolean
 }
 
-enum PaynoteCta {
+enum PaynoteMode {
   button
   trialForm
+  noPaynote
 } 
 
 type Meta {
@@ -110,7 +111,7 @@ type Meta {
   indicateVideo: Boolean
   
   paynotes: [JSON]
-  paynoteCta: PaynoteCta
+  paynoteMode: PaynoteMode
 }
 
 input DocumentInput {

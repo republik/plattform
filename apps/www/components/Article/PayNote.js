@@ -202,7 +202,7 @@ const getPayNote = (
   tryOrBuy,
   customOnly,
   customPayNotes,
-  customCta,
+  customMode,
 ) => {
   const targetedCustomPaynotes = customPayNotes
     .map(generateKey)
@@ -218,7 +218,7 @@ const getPayNote = (
 
   if (hasTryAndBuyCtas(targetedPredefinedNotes)) {
     const desiredCta =
-      customCta ?? (tryOrBuy < TRY_TO_BUY_RATIO ? 'trialForm' : 'button')
+      customMode ?? (tryOrBuy < TRY_TO_BUY_RATIO ? 'trialForm' : 'button')
     const abPredefinedNotes = targetedPredefinedNotes.filter(hasCta(desiredCta))
     return getElementFromSeed(abPredefinedNotes, seed)
   }
@@ -415,11 +415,14 @@ export const PayNote = compose(
     repoId,
     position,
     customPayNotes,
-    customCta,
+    customMode,
     customOnly,
   }) => {
     const [colorScheme] = useColorContext()
     const { query } = useRouter()
+
+    if (customMode === 'noPaynote') return null
+
     const subject = {
       inNativeIOSApp,
       isEligibleForTrial: !me || !!query.trialSignup,
@@ -431,7 +434,7 @@ export const PayNote = compose(
       tryOrBuy,
       customOnly,
       customPayNotes,
-      customCta,
+      customMode,
     )
 
     if (!payNote) return null

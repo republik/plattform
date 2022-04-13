@@ -520,7 +520,7 @@ const ArticlePage = ({
               documentId={documentId}
               repoId={repoId}
               customPayNotes={meta.paynotes ?? []}
-              customCta={meta.paynoteCta}
+              customMode={meta.paynoteMode}
               customOnly={isPage || isFormat}
               position='before'
             />
