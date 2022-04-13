@@ -245,6 +245,8 @@ export const selectAdjacent = (
   }
 }
 
+// @Felix
+// rename
 export const navigateOnTab = (
   editor: CustomEditor,
   event: KeyboardEvent<HTMLDivElement>,
@@ -253,4 +255,10 @@ export const navigateOnTab = (
     event.preventDefault()
     selectAdjacent(editor, event.shiftKey ? 'previous' : 'next')
   }
+
+  // if (key = delete AND text is empty (getChartCount + selection->"editor.selection.anchor.path")):
+  // selectAdjacent(editor, 'previous')
+
+  // if (enter) -> if buggy
+  // selectAdjacent(editor, 'next')
 }
