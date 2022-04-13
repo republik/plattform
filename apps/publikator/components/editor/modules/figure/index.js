@@ -1,4 +1,3 @@
-import React from 'react'
 import { Block } from 'slate'
 
 import { matchBlock } from '../../utils'

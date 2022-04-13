@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { css, merge } from 'glamor'
 import buttonStyles from './buttonStyles'
 import { parent } from './selection'

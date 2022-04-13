@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Subscription } from 'react-apollo'
 import NewerVersionIcon from 'react-icons/lib/md/call-split'
 

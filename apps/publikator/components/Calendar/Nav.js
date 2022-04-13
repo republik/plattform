@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import BackIcon from 'react-icons/lib/md/chevron-left'
 import ForthIcon from 'react-icons/lib/md/chevron-right'

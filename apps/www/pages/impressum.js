@@ -1,4 +1,3 @@
-import React from 'react'
 import Frame from '../components/Frame'
 import Page from '../components/Imprint/Page'
 import withDefaultSSR from '../lib/hocs/withDefaultSSR'

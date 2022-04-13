@@ -1,4 +1,3 @@
-import React from 'react'
 import setupData from '../../../utils/setupData'
 import { mount } from '../../../utils/enzyme'
 

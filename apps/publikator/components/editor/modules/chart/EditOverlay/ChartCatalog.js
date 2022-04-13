@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import gql from 'graphql-tag'
 import { compose, graphql } from 'react-apollo'
 import { getSchema } from '../../../../Templates'

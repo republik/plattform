@@ -1,4 +1,3 @@
-import React from 'react'
 import compose from 'lodash/flowRight'
 import { css } from 'glamor'
 import { fontStyles, mediaQueries, RawHtml } from '@project-r/styleguide'

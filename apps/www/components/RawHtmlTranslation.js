@@ -1,4 +1,3 @@
-import React from 'react'
 import PropTypes from 'prop-types'
 import { RawHtml } from '@project-r/styleguide'
 import withT from '../lib/withT'

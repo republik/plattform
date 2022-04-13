@@ -1,4 +1,3 @@
-import React from 'react'
 import { range, max } from 'd3-array'
 import { color } from 'd3-color'
 import { fontStyles, useColorContext } from '@project-r/styleguide'

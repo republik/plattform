@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { css, merge } from 'glamor'
 
 import { fontFamilies, RawHtml, useColorContext } from '@project-r/styleguide'

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react'
 import withMe from '../../lib/withMe'
 import withT from '../../lib/withT'
 import SignIn from './SignIn'

@@ -1,4 +1,4 @@
-import React from 'react'
+import { forwardRef } from 'react'
 import { css } from 'glamor'
 import { mediaQueries } from '@project-r/styleguide'
 
@@ -26,6 +26,6 @@ const styles = {
   }),
 }
 
-export default React.forwardRef((props, ref) => (
+export default forwardRef((props, ref) => (
   <a ref={ref} {...styles.pad} {...props} />
 ))

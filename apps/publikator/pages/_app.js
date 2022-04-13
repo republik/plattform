@@ -1,5 +1,4 @@
 import App from 'next/app'
-import React from 'react'
 import { ApolloProvider } from 'react-apollo'
 import Head from 'next/head'
 

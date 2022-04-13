@@ -1,4 +1,3 @@
-import React from 'react'
 import { Map } from 'immutable'
 
 import { Label } from '@project-r/styleguide'

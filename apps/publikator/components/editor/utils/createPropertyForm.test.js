@@ -1,4 +1,3 @@
-import React from 'react'
 import createPropertyForm from './createPropertyForm'
 import { render } from '@testing-library/react'
 

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { Component, Fragment } from 'react'
 import { fromJS } from 'immutable'
 import debounce from 'lodash/debounce'
 

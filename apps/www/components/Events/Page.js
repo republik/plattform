@@ -1,4 +1,3 @@
-import React from 'react'
 import Frame from '../Frame'
 import List from './List'
 

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { css } from 'glamor'
 import { Label, Button } from '@project-r/styleguide'
 

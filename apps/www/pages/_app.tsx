@@ -1,6 +1,5 @@
 import '../lib/polyfill'
 
-import React from 'react'
 import { ApolloProvider, NormalizedCacheObject } from '@apollo/client'
 import Head from 'next/head'
 

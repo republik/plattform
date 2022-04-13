@@ -1,4 +1,3 @@
-import React from 'react'
 import LockIcon from 'react-icons/lib/md/lock'
 import PublicIcon from 'react-icons/lib/md/public'
 import { renderMdast } from 'mdast-react-render'

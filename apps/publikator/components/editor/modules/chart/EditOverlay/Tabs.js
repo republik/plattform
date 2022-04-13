@@ -1,4 +1,3 @@
-import React from 'react'
 import { plainButtonRule, fontStyles } from '@project-r/styleguide'
 import { css } from 'glamor'
 

@@ -1,5 +1,3 @@
-import React from 'react'
-
 const SvgNeuchatel = (props) => (
   <svg width={props.size} height={props.size} viewBox='0 0 540 540' {...props}>
     <path fill='#e8423f' d='M0 0h540v540H0z' />

@@ -1,4 +1,3 @@
-import React from 'react'
 import Link from '../Link/Href'
 import { inQuotes, A } from '@project-r/styleguide'
 import { useDiscussion } from '../Discussion/context/DiscussionContext'

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { Component, Fragment } from 'react'
 import { withRouter } from 'next/router'
 import { css } from 'glamor'
 import { graphql, compose } from 'react-apollo'

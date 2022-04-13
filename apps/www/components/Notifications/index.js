@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import Loader from '../Loader'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
