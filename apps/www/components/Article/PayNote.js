@@ -16,7 +16,7 @@ import { getElementFromSeed } from '../../lib/utils/helpers'
 import { trackEvent, trackEventOnClick } from '../../lib/matomo'
 import { useRouter } from 'next/router'
 import compose from 'lodash/flowRight'
-import { t } from '../../lib/withT'
+import withT, { t } from '../../lib/withT'
 import withInNativeApp from '../../lib/withInNativeApp'
 import withMe from '../../lib/apollo/withMe'
 import { shouldIgnoreClick } from '../../lib/utils/link'
@@ -60,15 +60,15 @@ const styles = {
   }),
 }
 
-export const TRY_TO_BUY_RATIO = 0.5
+const TRY_TO_BUY_RATIO = 0.5
 
-const TRY_VARIATIONS = ['tryNote/211027-v1']
-const BUY_VARIATIONS = ['payNote/200313-v1']
+const TRY_VARIATIONS = ['tryNote/220404-v1', 'tryNote/220404-v2']
+const BUY_VARIATIONS = ['payNote/220404-v1', 'payNote/220404-v2']
 const IOS_VARIATIONS = ['payNote/ios']
 
-const DEFAULT_BUTTON_TARGET = '/angebote?package=ABO'
+export const DEFAULT_BUTTON_TARGET = '/angebote?package=ABO'
 
-const generatePositionedNote = (variation, target, cta, position) => {
+export const generatePositionedNote = (variation, cta, position) => {
   return {
     [position]: {
       content: t(`article/${variation}/${position}`, undefined, ''),
@@ -79,18 +79,18 @@ const generatePositionedNote = (variation, target, cta, position) => {
       ),
       cta: cta,
       button: {
-        label: t(`article/${variation}/${position}/buy/button`, undefined, ''),
+        label: t(
+          `article/${variation}/${position}/buy/button`,
+          undefined,
+          t('article/payNote/default/button'),
+        ),
         link: t(
           `article/${variation}/${position}/buy/button/link`,
           undefined,
           DEFAULT_BUTTON_TARGET,
         ),
       },
-      secondary: t(
-        `article/${variation}/${position}/secondary/label`,
-        undefined,
-        '',
-      ) && {
+      secondary: cta === 'button' && {
         prefix: t(
           `article/${variation}/${position}/secondary/prefix`,
           undefined,
@@ -99,15 +99,21 @@ const generatePositionedNote = (variation, target, cta, position) => {
         label: t(
           `article/${variation}/${position}/secondary/label`,
           undefined,
-          '',
+          t('article/payNote/default/secondary/label'),
         ),
         link: t(
           `article/${variation}/${position}/secondary/link`,
           undefined,
-          '',
+          t('article/payNote/default/secondary/link'),
         ),
       },
-      note: t(`article/${variation}/${position}/note`, undefined, ''),
+      note:
+        cta === 'button' &&
+        t(
+          `article/${variation}/${position}/note`,
+          undefined,
+          t('article/payNote/default/note'),
+        ),
     },
   }
 }
@@ -116,8 +122,8 @@ const generateNote = (variation, target, cta) => {
   return {
     key: variation,
     target: target,
-    ...generatePositionedNote(variation, target, cta, 'before'),
-    ...generatePositionedNote(variation, target, cta, 'after'),
+    ...generatePositionedNote(variation, cta, 'before'),
+    ...generatePositionedNote(variation, cta, 'after'),
   }
 }
 
@@ -129,7 +135,7 @@ const predefinedNotes = generateNotes(
   {
     hasActiveMembership: false,
     isEligibleForTrial: true,
-    inNativeIOSApp: true,
+    inNativeIOSApp: 'any',
   },
   'trialForm',
 )
@@ -160,17 +166,14 @@ const isEmpty = (positionedNote) =>
     (positionedNote.cta === 'button' && !positionedNote.button.label)) &&
   !positionedNote.content
 
-const meetTarget = (target) => (payNote) => {
-  const targetKeys = new Set(Object.keys(payNote.target))
-  return Array.from(targetKeys).every(
-    (key) =>
+const meetTarget = (target) => (payNote) =>
+  Object.keys(payNote.target).every((key) => {
+    return (
       payNote.target[key] === 'any' ||
       payNote.target[key] ===
-        (typeof payNote.target[key] === 'boolean'
-          ? !!target[key]
-          : target[key]),
-  )
-}
+        (typeof payNote.target[key] === 'boolean' ? !!target[key] : target[key])
+    )
+  })
 
 const generateKey = (note, index) => {
   return { ...note, key: `custom-${index}` }
@@ -204,7 +207,8 @@ const getPayNote = (
   seed,
   tryOrBuy,
   customOnly,
-  customPayNotes = [],
+  customPayNotes,
+  customMode,
 ) => {
   const targetedCustomPaynotes = customPayNotes
     .map(generateKey)
@@ -214,18 +218,13 @@ const getPayNote = (
   if (customOnly || targetedCustomPaynotes.length)
     return getElementFromSeed(targetedCustomPaynotes, seed)
 
-  const targetedPredefinedNotes = predefinedNotes.filter(
-    meetTarget({
-      ...subject,
-      // tmp: disallow generic trials pending new strategie
-      isEligibleForTrial: subject.isEligibleForTrial && subject.inNativeIOSApp,
-    }),
-  )
+  const targetedPredefinedNotes = predefinedNotes.filter(meetTarget(subject))
 
   if (!targetedPredefinedNotes.length) return null
 
   if (hasTryAndBuyCtas(targetedPredefinedNotes)) {
-    const desiredCta = tryOrBuy < TRY_TO_BUY_RATIO ? 'trialForm' : 'button'
+    const desiredCta =
+      customMode ?? (tryOrBuy < TRY_TO_BUY_RATIO ? 'trialForm' : 'button')
     const abPredefinedNotes = targetedPredefinedNotes.filter(hasCta(desiredCta))
     return getElementFromSeed(abPredefinedNotes, seed)
   }
@@ -233,8 +232,9 @@ const getPayNote = (
   return getElementFromSeed(targetedPredefinedNotes, seed)
 }
 
-const BuyButton = ({ payNote, payload }) => {
+const BuyButton = withT(({ payNote, payload, t }) => {
   const router = useRouter()
+  if (!payNote.button?.link || !payNote.button?.label) return null
   return (
     <Button
       primary
@@ -247,7 +247,7 @@ const BuyButton = ({ payNote, payload }) => {
       {payNote.button.label}
     </Button>
   )
-}
+})
 
 const SecondaryCta = ({ payNote, payload }) => {
   const [colorScheme] = useColorContext()
@@ -267,28 +267,25 @@ const SecondaryCta = ({ payNote, payload }) => {
       }),
     [colorScheme],
   )
+  if (!payNote.secondary?.link || !payNote.secondary?.label) return null
   return (
-    <>
-      {payNote.secondary && payNote.secondary.link ? (
-        <div
-          {...styles.aside}
-          {...colorScheme.set('color', 'textSoft')}
-          {...linkRule}
-        >
-          <span>{payNote.secondary.prefix} </span>
-          <a
-            key='secondary'
-            href={payNote.secondary.link}
-            onClick={trackEventOnClick(
-              ['PayNote', `secondary ${payload.position}`, payload.variation],
-              () => router.push(payNote.secondary.link),
-            )}
-          >
-            {payNote.secondary.label}
-          </a>
-        </div>
-      ) : null}
-    </>
+    <div
+      {...styles.aside}
+      {...colorScheme.set('color', 'textSoft')}
+      {...linkRule}
+    >
+      <span>{payNote.secondary.prefix} </span>
+      <a
+        key='secondary'
+        href={payNote.secondary.link}
+        onClick={trackEventOnClick(
+          ['PayNote', `secondary ${payload.position}`, payload.variation],
+          () => router.push(payNote.secondary.link),
+        )}
+      >
+        {payNote.secondary.label}
+      </a>
+    </div>
   )
 }
 
@@ -388,6 +385,24 @@ const withDarkContextWhenBefore = (WrappedComponent) => (props) => {
   return <WrappedComponent {...props} />
 }
 
+export const InnerPaynote = ({
+  payNote,
+  trackingPayload,
+  hasAccess,
+  overwriteContent,
+}) => {
+  return (
+    <>
+      <PayNoteContent content={overwriteContent || payNote.content} />
+      <PayNoteCta
+        payNote={payNote}
+        payload={trackingPayload}
+        hasAccess={hasAccess}
+      />
+    </>
+  )
+}
+
 export const PayNote = compose(
   withInNativeApp,
   withMe,
@@ -404,10 +419,14 @@ export const PayNote = compose(
     repoId,
     position,
     customPayNotes,
+    customMode,
     customOnly,
   }) => {
     const [colorScheme] = useColorContext()
     const { query } = useRouter()
+
+    if (customMode === 'noPaynote') return null
+
     const subject = {
       inNativeIOSApp,
       isEligibleForTrial: !me || !!query.trialSignup,
@@ -419,6 +438,7 @@ export const PayNote = compose(
       tryOrBuy,
       customOnly,
       customPayNotes,
+      customMode,
     )
 
     if (!payNote) return null
@@ -433,25 +453,27 @@ export const PayNote = compose(
       variation: payNote.key,
       position,
     }
-    const isBefore = position === 'before'
-
-    const content =
-      positionedNote.cta === 'trialForm' && query.trialSignup === 'success'
-        ? t('article/tryNote/thankYou')
-        : positionedNote.content
 
     return (
       <div
         data-hide-if-active-membership='true'
         {...styles.banner}
-        {...colorScheme.set('backgroundColor', isBefore ? 'hover' : 'alert')}
+        {...colorScheme.set(
+          'backgroundColor',
+          position === 'before' ? 'hover' : 'alert',
+        )}
       >
         <Center>
-          <PayNoteContent content={content} />
-          <PayNoteCta
+          <InnerPaynote
             payNote={positionedNote}
-            payload={payload}
+            overwriteContent={
+              positionedNote.cta === 'trialForm' &&
+              query.trialSignup === 'success' &&
+              t('article/tryNote/thankYou')
+            }
+            trackingPayload={payload}
             hasAccess={hasAccess}
+            position={position}
           />
         </Center>
       </div>
