@@ -1,4 +1,3 @@
-import React from 'react'
 import AreaLink from './Area'
 import Link from 'next/link'
 

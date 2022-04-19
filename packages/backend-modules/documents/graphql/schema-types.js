@@ -48,6 +48,12 @@ type Newsletter {
   free: Boolean
 }
 
+enum PaynoteMode {
+  button
+  trialForm
+  noPaynote
+} 
+
 type Meta {
   title: String
   shortTitle: String
@@ -74,6 +80,7 @@ type Meta {
   lastPublishedAt: DateTime
   feed: Boolean
   gallery: Boolean
+  externalBaseUrl: String
   kind: String
   color: String
   series: Series
@@ -102,6 +109,9 @@ type Meta {
   indicateChart: Boolean
   indicateGallery: Boolean
   indicateVideo: Boolean
+  
+  paynotes: [JSON]
+  paynoteMode: PaynoteMode
 }
 
 input DocumentInput {

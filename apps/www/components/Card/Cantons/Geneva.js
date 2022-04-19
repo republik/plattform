@@ -1,5 +1,3 @@
-import React from 'react'
-
 const SvgGeneva = (props) => (
   <svg
     width={props.size}

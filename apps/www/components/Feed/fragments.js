@@ -28,6 +28,7 @@ export const documentFragment = `
         ogg
         mediaId
         durationMs
+        kind
       }
       dossier {
         id
@@ -39,6 +40,7 @@ export const documentFragment = `
           title
           color
           kind
+          externalBaseUrl
         }
       }
       ownDiscussion {

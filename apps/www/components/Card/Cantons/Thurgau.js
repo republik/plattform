@@ -1,5 +1,3 @@
-import React from 'react'
-
 const SvgThurgau = (props) => (
   <svg
     width={props.size}

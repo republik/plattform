@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { Component, Fragment } from 'react'
 import compose from 'lodash/flowRight'
 import isEmail from 'validator/lib/isEmail'
 
@@ -24,11 +24,11 @@ class Form extends Component {
 
     this.state = {
       isMutating: false,
-      hideForm: true,
       mutationError: null,
-      isUsed: props.campaign.slots.used > 0,
       showErrors: false,
-      values: {},
+      values: {
+        message: props.campaign.defaultMessage,
+      },
       errors: {},
       dirty: {},
     }
@@ -36,8 +36,10 @@ class Form extends Component {
     this.hasMutated = () => {
       this.setState({
         isMutating: false,
-        hideForm: true,
-        values: {},
+        values: {
+          message: props.campaign.defaultMessage || '',
+          email: '',
+        },
       })
     }
 
@@ -45,17 +47,6 @@ class Form extends Component {
       this.setState({
         isMutating: false,
         mutationError: error,
-      })
-    }
-
-    this.onClickReset = (event) => {
-      event.preventDefault()
-
-      this.setState({
-        hideForm: false,
-        values: {},
-        errors: {},
-        dirty: {},
       })
     }
 
@@ -79,10 +70,8 @@ class Form extends Component {
   render() {
     const { campaign, givingMemberships, t } = this.props
 
-    const { isMutating, mutationError, hideForm, values, errors, dirty } =
-      this.state
+    const { isMutating, mutationError, values, errors, dirty } = this.state
 
-    const isUsed = campaign.slots.used > 0
     const errorMessages = Object.keys(errors)
       .map((key) => errors[key])
       .filter(Boolean)
@@ -92,26 +81,20 @@ class Form extends Component {
         name: 'email',
         type: 'email',
         label: t('Account/Access/Campaigns/Form/input/email/label'),
-        error: dirty.email && errors.email,
-        value: values.email,
         validator: (email) =>
           (email.trim().length <= 0 &&
-            this.props.t(
-              'Account/Access/Campaigns/Form/input/email/missing',
-            )) ||
+            t('Account/Access/Campaigns/Form/input/email/missing')) ||
           (!isEmail(email) &&
-            this.props.t('Account/Access/Campaigns/Form/input/email/invalid')),
+            t('Account/Access/Campaigns/Form/input/email/invalid')),
       },
       {
         name: 'message',
         type: 'text',
         label: t('Account/Access/Campaigns/Form/input/message/label'),
-        error: dirty.message && errors.message,
-        value: values.message,
         validator: (message) =>
-          message.trim().length > 3000 &&
-          this.props.t('Account/Access/Campaigns/Form/input/message/tooLong', {
-            maxLength: 3000,
+          message.trim().length > 500 &&
+          t('Account/Access/Campaigns/Form/input/message/tooLong', {
+            maxLength: 500,
           }),
         autoSize: true,
       },
@@ -119,21 +102,8 @@ class Form extends Component {
 
     return (
       <form onSubmit={this.onSubmit}>
-        {hideForm && isUsed ? (
-          <Fragment>
-            {campaign.slots.free > 0 && (
-              <A href='#' onClick={this.onClickReset}>
-                {t(
-                  `Account/Access/Campaigns/Form${
-                    givingMemberships ? '/givingMemberships' : ''
-                  }/reset`,
-                )}
-              </A>
-            )}
-            {campaign.slots.total > 1 && campaign.slots.free < 1 && (
-              <Label>{t('Account/Access/Campaigns/Form/freeSlots/0')}</Label>
-            )}
-          </Fragment>
+        {campaign.slots.total > 1 && campaign.slots.free < 1 ? (
+          <Label>{t('Account/Access/Campaigns/Form/freeSlots/0')}</Label>
         ) : (
           <Fragment>
             <H3 style={{ marginTop: 30 }}>

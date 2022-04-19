@@ -1,4 +1,3 @@
-import React from 'react'
 import withMe, { checkRoles } from '../../lib/apollo/withMe'
 
 export const withAuthorization =

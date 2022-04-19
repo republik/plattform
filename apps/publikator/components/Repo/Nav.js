@@ -1,4 +1,3 @@
-import React from 'react'
 import Head from 'next/head'
 import { compose } from 'react-apollo'
 import { withRouter } from 'next/router'

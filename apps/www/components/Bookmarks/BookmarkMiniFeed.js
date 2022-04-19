@@ -1,4 +1,3 @@
-import React from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { css } from 'glamor'
@@ -7,6 +6,7 @@ import {
   mediaQueries,
   Loader,
   useColorContext,
+  getTeaserHref,
 } from '@project-r/styleguide'
 
 import BookmarkButton from '../ActionBar/BookmarkButton'
@@ -40,8 +40,12 @@ const BookmarkMiniFeed = ({ data, closeHandler, style }) => {
               .slice(0, 3)
               .map((node) => {
                 const { userProgress, userBookmark, id } = node.document
-                const { estimatedReadingMinutes, title, path } =
-                  node.document.meta
+                const meta = node.document.meta
+                const { estimatedReadingMinutes, title, path } = meta
+                const href = getTeaserHref(
+                  path,
+                  meta.format?.meta.externalBaseUrl,
+                )
                 return (
                   <div
                     {...styles.tile}
@@ -49,7 +53,7 @@ const BookmarkMiniFeed = ({ data, closeHandler, style }) => {
                     key={node.id}
                   >
                     <div {...styles.tileHeadlineContainer}>
-                      <Link href={path} passHref>
+                      <Link href={href} passHref>
                         <a
                           onClick={() => closeHandler()}
                           {...styles.tileHeadline}

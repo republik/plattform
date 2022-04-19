@@ -1,4 +1,3 @@
-import React from 'react'
 import { Interaction } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
 

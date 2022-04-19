@@ -1,4 +1,3 @@
-import React from 'react'
 import { Mutation, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 import Router, { withRouter } from 'next/router'

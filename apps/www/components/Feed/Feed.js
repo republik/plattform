@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import compose from 'lodash/flowRight'
 import { nest } from 'd3-collection'
 import { timeFormat } from '../../lib/utils/format'
@@ -20,6 +20,8 @@ class Feed extends Component {
     return doc ? (
       <TeaserFeed
         {...doc.meta}
+        format={this.props.skipFormat ? undefined : doc.meta.format}
+        externalBaseUrl={doc.meta.format?.meta.externalBaseUrl}
         repoId={doc.repoId}
         title={doc.meta.shortTitle || doc.meta.title}
         description={!doc.meta.shortTitle && doc.meta.description}

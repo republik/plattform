@@ -1,4 +1,3 @@
-import React from 'react'
 import { A, Label, colors } from '@project-r/styleguide'
 import { chfFormat } from '../../../lib/utils/formats'
 import routes from '../../../server/routes'

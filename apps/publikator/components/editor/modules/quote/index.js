@@ -1,4 +1,3 @@
-import React from 'react'
 import MarkdownSerializer from 'slate-mdast-serializer'
 
 import { matchBlock } from '../../utils'

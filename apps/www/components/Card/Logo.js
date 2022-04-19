@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default ({ size = 169.4, style }) => (
   <svg
     width={(size * 145.4) / 169.4}

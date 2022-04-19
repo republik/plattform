@@ -1,4 +1,3 @@
-import React from 'react'
 import { withRouter } from 'next/router'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'

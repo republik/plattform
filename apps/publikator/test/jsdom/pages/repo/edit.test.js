@@ -1,5 +1,3 @@
-import React from 'react'
-import test from 'tape'
 import setupData from '../../../utils/setupData'
 import { mount } from '../../../utils/enzyme'
 
@@ -44,7 +42,7 @@ const router = {
   },
 }
 
-test('EditorPage is write-able', (assert) => {
+it('EditorPage is write-able', () => {
   const wrapper = mount(
     <RouterContext.Provider value={router}>
       <EditorPageWithTestData
@@ -112,7 +110,6 @@ Text
 
   const page = wrapper.find(EditorPage).instance()
 
-  assert.equal(page.state.readOnly, false, 'is not readOnly when alone')
-
-  assert.end()
+  // is not readOnly when alone
+  expect(page.state.readOnly).toBeFalsy()
 })

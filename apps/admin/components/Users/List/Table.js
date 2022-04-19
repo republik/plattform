@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Label } from '@project-r/styleguide'
 
 import { Link } from '../../../server/routes'

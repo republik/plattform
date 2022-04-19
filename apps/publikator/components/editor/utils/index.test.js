@@ -1,40 +1,22 @@
-import test from 'tape'
 import { match, matchDocument } from './'
 
-test('utils.match', (assert) => {
-  assert.plan(3)
+describe('match util test-suite', () => {
+  it('utils.match', () => {
+    // returns true if both kind and type of the passed object match the premise
+    expect(match('foo')('bar')({ kind: 'foo', type: 'bar' })).toBeTruthy()
 
-  assert.equal(
-    match('foo')('bar')({ kind: 'foo', type: 'bar' }),
-    true,
-    'returns true if both kind and type of the passed object match the premise',
-  )
+    // returns false if kind doesn't match the premise
+    expect(match('foo')('bar')({ kind: 'bar', type: 'bar' })).toBeFalsy()
 
-  assert.equal(
-    match('foo')('bar')({ kind: 'bar', type: 'bar' }),
-    false,
-    "returns false if kind doesn't match the premise",
-  )
+    // returns false if type doesn't match the premise
+    expect(match('foo')('bar')({ kind: 'foo', type: 'foo' })).toBeFalsy()
+  })
 
-  assert.equal(
-    match('foo')('bar')({ kind: 'foo', type: 'foo' }),
-    false,
-    "returns false if type doesn't match the premise",
-  )
-})
+  it('utils.matchDocument', () => {
+    // returns true if kind is `document
+    expect(matchDocument({ kind: 'document' })).toBeTruthy()
 
-test('utils.matchDocument', (assert) => {
-  assert.plan(2)
-
-  assert.equal(
-    matchDocument({ kind: 'document' }),
-    true,
-    'returns true if kind is `document`',
-  )
-
-  assert.equal(
-    matchDocument({ kind: 'foo' }),
-    false,
-    'returns false if kind is not `document`',
-  )
+    // returns false if kind is not `document
+    expect(matchDocument({ kind: 'foo' })).toBeFalsy()
+  })
 })

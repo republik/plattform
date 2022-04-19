@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { css } from 'glamor'
 import LocalIcon from 'react-icons/lib/md/lock-open'
 import CheckIcon from 'react-icons/lib/md/check'
@@ -10,6 +10,7 @@ import withT from '../../lib/withT'
 import { swissTime } from '../../lib/utils/format'
 import { transformData } from './transformData'
 import Diff from './Diff'
+import Derivatives from '../Derivatives'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
@@ -66,7 +67,7 @@ const styles = {
   listItemWrapper: css({
     width: '100%',
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
   }),
   svg: css({
@@ -363,8 +364,16 @@ class Tree extends Component {
                         </Interaction.P>
                       )}
                     </div>
-                    <div style={{ marginRight: 10 }}>
+                    <div
+                      style={{
+                        margin: '8px 10px 0 0',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 8,
+                      }}
+                    >
                       <Diff repoId={repoId} commit={commit} />
+                      <Derivatives commit={commit} />
                     </div>
                   </div>
                 </li>

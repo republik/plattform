@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import { Map, Set } from 'immutable'
 import { nest } from 'd3-collection'
@@ -340,10 +339,13 @@ const MetaData = ({
         <br />
         <br />
         <br />
-        {!!paynotes && <PaynotesForm editor={editor} node={node} />}
-        <br />
-        <br />
-        <br />
+        {!!paynotes && (
+          <PaynotesForm
+            editor={editor}
+            node={node}
+            isFormat={titleData.meta.template === 'format'}
+          />
+        )}
       </div>
     </div>
   )

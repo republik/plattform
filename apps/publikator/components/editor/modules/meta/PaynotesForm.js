@@ -1,6 +1,12 @@
-import React from 'react'
-
-import { A, Radio, Label, RawHtml, Interaction } from '@project-r/styleguide'
+import {
+  A,
+  Radio,
+  Label,
+  RawHtml,
+  Interaction,
+  Dropdown,
+  Checkbox,
+} from '@project-r/styleguide'
 import MdClose from 'react-icons/lib/md/close'
 import MdAdd from 'react-icons/lib/md/add'
 import MdInfoOutline from 'react-icons/lib/md/info-outline'
@@ -8,13 +14,17 @@ import { css } from 'glamor'
 
 import withT from '../../../../lib/withT'
 import PaynoteForm from './PaynoteForm'
+import UIForm from '../../UIForm'
 
 const styles = {
+  paynotes: css({
+    paddingBottom: 300,
+  }),
   title: css({
     display: 'block',
     marginBottom: 5,
   }),
-  container: css({
+  paynote: css({
     backgroundColor: '#fff',
     padding: '5px 10px 15px',
     marginBottom: 15,
@@ -32,15 +42,29 @@ const styles = {
 }
 
 const PAYNOTE_KEY = 'paynotes'
+const PAYNOTE_MODE_KEY = 'paynoteMode'
 const TARGETS = ['hasActiveMembership', 'isEligibleForTrial']
+const MODE_KEYS = {
+  AUTO: 'auto',
+  BUY: 'button',
+  TRY: 'trialForm',
+  CUSTOM: 'custom',
+  NONE: 'noPaynote',
+}
+const MODES = [
+  MODE_KEYS.AUTO,
+  MODE_KEYS.BUY,
+  MODE_KEYS.TRY,
+  MODE_KEYS.CUSTOM,
+  MODE_KEYS.NONE,
+]
 
 const DEFAULT_TARGET = {
   hasActiveMembership: false,
 }
 
-const DEFAULT_PAYNOTE = {
+const EMPTY_PAYNOTE = {
   content: '',
-  cta: 'button',
   button: {
     label: '',
     link: '',
@@ -52,53 +76,102 @@ const DEFAULT_PAYNOTE = {
   },
 }
 
-const TargetForm = withT(({ t, data, onInputChange }) => (
-  <div>
-    <Interaction.H3>{t('metaData/paynote/form/target/title')}</Interaction.H3>
-    {TARGETS.map((target, i) => {
-      return (
-        <div key={i} style={{ marginBottom: 10 }}>
-          <Label style={{ display: 'block', marginBottom: 5 }}>
-            {t(`metaData/paynote/form/target/${target}`)}
-          </Label>
-          {[true, false, undefined].map((value) => (
-            <Radio
-              key={String(value)}
-              value={String(value)}
-              checked={data[target] === value}
-              onChange={() => onInputChange({ [target]: value })}
-              style={{ marginRight: 20 }}
-            >
-              {t(`metaData/paynote/form/target/value/${value}`)}
-            </Radio>
-          ))}
-        </div>
-      )
-    })}
-  </div>
-))
+const EMPTY_DEFAULT_PAYNOTE = [
+  {
+    target: DEFAULT_TARGET,
+    before: { ...EMPTY_PAYNOTE, cta: 'button' },
+    after: { ...EMPTY_PAYNOTE, cta: 'button' },
+  },
+]
 
-export default withT(({ t, editor, node }) => {
+const isEmptyPaynote = (paynote) =>
+  !paynote.content &&
+  !paynote.cta &&
+  !paynote.button.label &&
+  !paynote.button.link &&
+  !paynote.secondary.label &&
+  !paynote.secondary.link
+
+const isEmptyPaynotes = (paynotes) =>
+  paynotes?.length === 1 &&
+  isEmptyPaynote(paynotes[0].before) &&
+  isEmptyPaynote(paynotes[0].after) &&
+  Object.keys(paynotes[0].target).length === 0
+
+const TargetForm = withT(
+  ({ t, isFormat, target, inherit, onTargetChange, onInheritChange }) => (
+    <>
+      <Interaction.H3>{t('metaData/paynote/form/target/title')}</Interaction.H3>
+      {isFormat && (
+        <>
+          <br />
+          <Checkbox
+            checked={inherit}
+            onChange={(_, checked) => {
+              onInheritChange(checked)
+            }}
+          >
+            Beitragstörer
+          </Checkbox>
+          <br />
+          <br />
+        </>
+      )}
+      {TARGETS.map((tgt, i) => {
+        return (
+          <div key={i} style={{ marginBottom: 10 }}>
+            <Label style={{ display: 'block', marginBottom: 5 }}>
+              {t(`metaData/paynote/form/target/${tgt}`)}
+            </Label>
+            {[true, false, undefined].map((value) => (
+              <Radio
+                key={String(value)}
+                value={String(value)}
+                checked={target[tgt] === value}
+                onChange={() => onTargetChange({ [tgt]: value })}
+                style={{ marginRight: 20 }}
+              >
+                {t(`metaData/paynote/form/target/value/${value}`)}
+              </Radio>
+            ))}
+          </div>
+        )
+      })}
+    </>
+  ),
+)
+
+export default withT(({ t, editor, node, isFormat }) => {
   const paynotes = node.data.get(PAYNOTE_KEY) || []
+  const paynotesMode = node.data.get(PAYNOTE_MODE_KEY)
 
-  const onPaynotesChange = (newPaynotes) => {
+  const modes = MODES.map((value) => ({
+    value,
+    text: t(`metaData/paynotes/mode/${value}`),
+  }))
+
+  const onKeyChange = (key) => (value) => {
     editor.change((change) => {
       change.setNodeByKey(node.key, {
         data:
-          newPaynotes !== null && newPaynotes.length
-            ? node.data.set(PAYNOTE_KEY, newPaynotes)
-            : node.data.remove(PAYNOTE_KEY),
+          value === null ||
+          value === undefined ||
+          (Array.isArray(value) && value.length === 0)
+            ? node.data.remove(key)
+            : node.data.set(key, value),
       })
     })
   }
 
+  const onPaynotesChange = onKeyChange(PAYNOTE_KEY)
+
   const addPaynote = (e) => {
-    e.preventDefault()
+    e?.preventDefault()
     onPaynotesChange(
       paynotes.concat({
         target: DEFAULT_TARGET,
-        before: DEFAULT_PAYNOTE,
-        after: DEFAULT_PAYNOTE,
+        before: { ...EMPTY_PAYNOTE, cta: 'button' },
+        after: { ...EMPTY_PAYNOTE, cta: 'button' },
       }),
     )
   }
@@ -108,14 +181,19 @@ export default withT(({ t, editor, node }) => {
     onPaynotesChange(paynotes.slice(0, i).concat(paynotes.slice(i + 1)))
   }
 
-  const editPaynote = (i, paynote, attr) => (newAttrs) => {
-    const editedPaynote = {
-      ...paynote,
-      [attr]: {
-        ...paynote[attr],
-        ...newAttrs,
-      },
-    }
+  const editPaynote = (i, paynote, attr, direct) => (newAttrs) => {
+    const editedPaynote = direct
+      ? {
+          ...paynote,
+          [attr]: newAttrs,
+        }
+      : {
+          ...paynote,
+          [attr]: {
+            ...paynote[attr],
+            ...newAttrs,
+          },
+        }
 
     onPaynotesChange(
       paynotes
@@ -125,18 +203,53 @@ export default withT(({ t, editor, node }) => {
     )
   }
 
+  const onModeChange = (value) => {
+    if (value === MODE_KEYS.AUTO) {
+      editor.change((change) => {
+        change.setNodeByKey(node.key, {
+          data: node.data.remove(PAYNOTE_KEY).remove(PAYNOTE_MODE_KEY),
+        })
+      })
+    } else if (value === MODE_KEYS.CUSTOM) {
+      editor.change((change) => {
+        change.setNodeByKey(node.key, {
+          data: node.data
+            .set(PAYNOTE_KEY, EMPTY_DEFAULT_PAYNOTE)
+            .remove(PAYNOTE_MODE_KEY),
+        })
+      })
+    } else {
+      // button, trialForm, none
+      editor.change((change) => {
+        change.setNodeByKey(node.key, {
+          data: node.data.remove(PAYNOTE_KEY).set(PAYNOTE_MODE_KEY, value),
+        })
+      })
+    }
+  }
+
+  const dropdownMode =
+    paynotesMode || (paynotes?.length ? MODE_KEYS.CUSTOM : MODE_KEYS.AUTO)
+
   return (
-    <>
-      {!paynotes.length ? (
-        <A href='#add' onClick={addPaynote}>
-          <MdAdd /> {t('metaData/paynotes/add')}
-        </A>
-      ) : (
+    <div {...styles.paynotes}>
+      <UIForm getWidth={() => '50%'}>
+        <Dropdown
+          black
+          label={t('metaData/paynotes/dropdown')}
+          items={modes}
+          value={dropdownMode || null}
+          onChange={({ value }) => {
+            onModeChange(value)
+          }}
+        />
+      </UIForm>
+      {dropdownMode === MODE_KEYS.CUSTOM && (
         <>
           <Label {...styles.title}>{t('metaData/paynotes/title')}</Label>
           {paynotes.map((paynote, i) => {
             return (
-              <div key={i} {...styles.container}>
+              <div key={i} {...styles.paynote}>
                 <A href='#remove' onClick={removePaynote(i)} {...styles.close}>
                   <MdClose size={20} fill='#000' />
                 </A>
@@ -147,9 +260,14 @@ export default withT(({ t, editor, node }) => {
                   <br />
                   <br />
                   <TargetForm
-                    data={paynote.target}
-                    onInputChange={editPaynote(i, paynote, 'target')}
+                    isFormat={isFormat}
+                    target={paynote.target}
+                    inherit={paynote.inherit}
+                    onTargetChange={editPaynote(i, paynote, 'target')}
+                    onInheritChange={editPaynote(i, paynote, 'inherit', true)}
                   />
+                  <br />
+                  <br />
                 </div>
                 <br />
                 <Interaction.H3>{t('metaData/paynotes/before')}</Interaction.H3>
@@ -182,6 +300,6 @@ export default withT(({ t, editor, node }) => {
           </A>
         </>
       )}
-    </>
+    </div>
   )
 })

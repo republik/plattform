@@ -1,6 +1,10 @@
 module.exports = {
   plugins: ['react', 'react-hooks'],
-  extends: ['eslint:recommended', 'plugin:react/recommended'],
+  extends: [
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:prettier/recommended',
+  ],
   parser: '@babel/eslint-parser',
   parserOptions: {
     requireConfigFile: false,
@@ -34,13 +38,9 @@ module.exports = {
   overrides: [
     {
       files: ['*.ts', '*.tsx'],
-      extends: [
-        'eslint:recommended',
-        'plugin:react/recommended',
-        'plugin:@typescript-eslint/recommended',
-        'plugin:prettier/recommended',
-      ],
+      extends: ['plugin:@typescript-eslint/recommended'],
       parser: '@typescript-eslint/parser',
+      rules: {},
     },
   ],
 }

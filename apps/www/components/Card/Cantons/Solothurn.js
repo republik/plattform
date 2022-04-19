@@ -1,5 +1,3 @@
-import React from 'react'
-
 const SvgSolothurn = (props) => (
   <svg
     width={props.size}

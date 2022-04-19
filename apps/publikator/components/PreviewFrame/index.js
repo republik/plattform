@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useColorContext, Loader } from '@project-r/styleguide'
 
 import { SIDEBAR_WIDTH } from '../Sidebar'
@@ -30,6 +30,7 @@ const PreviewFrame = ({
   commitId,
   repoId,
   darkmode,
+  hasAccess,
   sideBarWidth,
 }) => {
   const [scaleFactor, setScaleFactor] = useState(1)
@@ -38,7 +39,7 @@ const PreviewFrame = ({
   const [colorScheme] = useColorContext()
   const iframeRef = useRef()
 
-  const iframeSrc = `/repo/${repoId}/preview?commitId=${commitId}&darkmode=${darkmode}`
+  const iframeSrc = `/repo/${repoId}/preview?commitId=${commitId}&darkmode=${darkmode}&hasAccess=${hasAccess}`
   const currentSideBarWidth = sideBarWidth || SIDEBAR_WIDTH
 
   useEffect(() => {

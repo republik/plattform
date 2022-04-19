@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { css } from 'glamor'
 import { Label } from '@project-r/styleguide'
 import MessageForm from './MessageForm'

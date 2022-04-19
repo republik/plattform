@@ -1,4 +1,3 @@
-import React from 'react'
 import { matchBlock } from '../../utils'
 import { findOrCreate } from '../../utils/serialization'
 import { gray2x1 } from '../../utils/placeholder'

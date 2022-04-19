@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import Loader from '../Loader'
 import DocumentList from './DocumentList'
@@ -73,7 +73,6 @@ const DocumentListContainer = ({
   mapNodes,
   placeholder,
   help,
-  empty,
   feedProps,
   refetchOnUnmount,
   showTotal,
@@ -89,9 +88,6 @@ const DocumentListContainer = ({
       }
     }
   }, [refetchOnUnmount])
-  if (process.browser) {
-    window.refetch = refetch
-  }
 
   return (
     <Loader
@@ -120,7 +116,6 @@ const DocumentListContainer = ({
               feedProps={feedProps}
               showTotal={showTotal}
               help={help}
-              empty={empty}
               variables={variables}
             />
           )

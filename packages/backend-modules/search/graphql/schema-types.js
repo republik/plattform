@@ -1,3 +1,5 @@
+const { getProcessorsList } = require('../lib/options')
+
 module.exports = `
 
 scalar Date
@@ -5,6 +7,10 @@ scalar Date
 enum OrderDirection {
   ASC
   DESC
+}
+
+enum SearchProcessor {
+${getProcessorsList().join('\n')}
 }
 
 enum SearchSortKey {

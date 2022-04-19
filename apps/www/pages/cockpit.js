@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import Router, { withRouter } from 'next/router'
@@ -542,9 +542,9 @@ Die Grundlage dafür ist ein Geschäftsmodell für werbefreien, unabhängigen, l
                   und&nbsp;Abonnentinnen
                 </ChartTitle>
                 <ChartLead>
-                  Entwicklung vom Crowdfunding im April 2017 bis heute.{' '}
+                  Entwicklung vom Crowdfunding im April 2017 bis heute
                   {missingCount > 0 &&
-                    `Es fehlen ${countFormat(missingCount)} Mitglieder.`}
+                    `. Es fehlen ${countFormat(missingCount)} Mitglieder.`}
                 </ChartLead>
                 <Chart
                   config={{
@@ -556,7 +556,13 @@ Die Grundlage dafür ist ein Geschäftsmodell für werbefreien, unabhängigen, l
                     timeParse: '%Y-%m',
                     timeFormat: '%Y',
                     xInterval: 'month',
-                    xTicks: ['2018-01', '2019-01', '2020-01', '2021-01'],
+                    xTicks: [
+                      '2018-01',
+                      '2019-01',
+                      '2020-01',
+                      '2021-01',
+                      '2022-01',
+                    ],
                     height: 300,
                     domain: [minValue, maxValue + 2000],
                     yTicks: [-5000, 0, 5000, 10000, 15000, 20000, 25000, 30000],
@@ -582,7 +588,7 @@ Die Grundlage dafür ist ein Geschäftsmodell für werbefreien, unabhängigen, l
                   anstehende Verläng&shy;erungen in den nächsten&nbsp;Monaten
                 </ChartTitle>
                 <ChartLead>
-                  Anzahl Mitgliedschaften und Abos per Monatsende.
+                  Anzahl Mitgliedschaften und Abos per Monatsende
                 </ChartLead>
                 <Chart
                   config={{
@@ -633,7 +639,7 @@ Mit ${countFormat(
 
 Diese Zahl leitet sich aus dem aktuellen Budget 2021/22 ab. [Erfahren Sie, wofür wir das Geld ausgeben und wie sich das Budget über die Zeit entwickelt hat](/2021/10/08/werfen-sie-einen-blick-in-unsere-geschaeftsbuecher).
 
-## ${countFormat(lastSeen)} Mitglieder sind monatlich&nbsp;aktiv
+## ${countFormat(lastSeen)} Verlegerinnen sind monatlich&nbsp;aktiv
 
 Der beste Journalismus nützt nichts, wenn ihn niemand sieht. Für ein gesundes Unternehmen braucht es eine aktive und interessierte Verlegerschaft.
 
@@ -644,7 +650,7 @@ Der beste Journalismus nützt nichts, wenn ihn niemand sieht. Für ein gesundes 
                   Wie beliebt sind Dialog, Lesezeichen und Leseposition?
                 </ChartTitle>
                 <ChartLead>
-                  Anzahl Mitglieder, welche pro Monat eine Funktion benutzen.
+                  Anzahl Verleger, welche pro Monat eine Funktion benutzen.
                 </ChartLead>
                 <Chart
                   config={{
@@ -661,6 +667,7 @@ Der beste Journalismus nützt nichts, wenn ihn niemand sieht. Für ein gesundes 
                       '2019-01',
                       '2020-01',
                       '2021-01',
+                      '2022-01',
                       // lastSeenBucket.key
                     ],
                     yNice: 0,

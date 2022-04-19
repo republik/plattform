@@ -1,4 +1,3 @@
-import React from 'react'
 import Frame from '../components/Frame'
 
 import MatomoOptOut from '../components/Matomo/OptOut'

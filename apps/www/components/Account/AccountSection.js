@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import { mediaQueries, Interaction } from '@project-r/styleguide'
 import { HEADER_HEIGHT_MOBILE, HEADER_HEIGHT } from '../constants'

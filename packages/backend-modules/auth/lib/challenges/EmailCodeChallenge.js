@@ -22,6 +22,7 @@ const { DEFAULT_MAIL_FROM_ADDRESS } = process.env
 module.exports = {
   Type,
   generateNewToken: async ({ email, pgdb }) => {
+    // Find tokens matching Type and email, which have not expired yet.
     const existingPayloads = (
       await pgdb.public.tokens.find({
         type: Type,
@@ -30,6 +31,9 @@ module.exports = {
       })
     ).map((token) => token.payload)
 
+    // Throw an error if there are {MAX_VALID_TOKENS} or more tokens returned,
+    // as having more than a certain number of unexpired tokens is an unwarrented
+    // auth behaviour.
     if (existingPayloads.length >= MAX_VALID_TOKENS) {
       console.error(
         'Unable to generate a new token: Found too many valid tokens.',

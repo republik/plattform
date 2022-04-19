@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { createElement, Fragment } from 'react'
 import compose from 'lodash/flowRight'
 import { css } from 'glamor'
 import withT from '../../lib/withT'
@@ -47,19 +47,17 @@ const styles = {
 const ResultsList = ({ nodes }) => {
   const nodeType = nodes[0].entity.__typename
 
-  return (
-    <>
-      {nodes.map((node, index) => {
-        return (
-          <Fragment key={index}>
-            {React.createElement(RESULT_COMPONENTS[nodeType], {
-              node: node,
-            })}
-          </Fragment>
-        )
-      })}
-    </>
-  )
+  return <>
+    {nodes.map((node, index) => {
+      return (
+        <Fragment key={index}>
+          {createElement(RESULT_COMPONENTS[nodeType], {
+            node: node,
+          })}
+        </Fragment>
+      );
+    })}
+  </>;
 }
 
 const ResultsFooter = compose(withT)(

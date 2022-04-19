@@ -1,4 +1,3 @@
-import React from 'react'
 import { CommentTeaser, Interaction } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 import CommentLink from '../Discussion/shared/CommentLink'

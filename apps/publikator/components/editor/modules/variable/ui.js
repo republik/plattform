@@ -1,4 +1,3 @@
-import React from 'react'
 import { Map } from 'immutable'
 import { parse } from '@orbiting/remark-preset'
 import { Block, Inline } from 'slate'
@@ -38,6 +37,36 @@ Guten Tag <span data-variable="firstName"></span> <span data-variable="lastName"
 <section><h6>ELSE</h6>
 
 Willkommen
+
+<hr /></section>
+
+<hr /></section>
+
+<hr /></section>
+`.trim(),
+        ),
+      )
+      .document.nodes.first()
+      .nodes.first()
+  },
+  hasAccess: ({ context }) => {
+    return context.rootSerializer
+      .deserialize(
+        parse(
+          `
+<section><h6>CENTER</h6>
+
+<section><h6>IF</h6>
+
+\`\`\`
+{"present": "hasAccess"}
+\`\`\`
+
+Nur sichtbar mit Magazin-Zugriff – für Mitglieder, Abonnentinnen oder Probeleser.
+
+<section><h6>ELSE</h6>
+
+Nur ohne Magazin-Zugriff sichtbar – als Gast.
 
 <hr /></section>
 
@@ -99,38 +128,42 @@ const createForm = (options) =>
   })
 
 const createUI = ({ TYPE, editorOptions, context }) => {
-  const { insertBlock, insertVar } = editorOptions
+  const { insertBlocks = [], insertVar } = editorOptions
 
   const From = editorOptions.fields && createForm({ TYPE, editorOptions })
-
-  const newBlock = blockFactories[insertBlock]
   const insertTypes = editorOptions.insertTypes || []
 
-  const InsertButton =
-    newBlock &&
-    withT(({ t, value, onChange }) => {
-      const disabled =
-        value.isBlurred ||
-        !value.blocks.every((n) => insertTypes.includes(n.type))
-
+  const insertButtons = insertBlocks
+    .map((insertBlock) => {
+      const newBlock = blockFactories[insertBlock]
       return (
-        <span
-          {...buttonStyles.insert}
-          data-disabled={disabled}
-          data-visible
-          onMouseDown={(event) => {
-            event.preventDefault()
-            if (!disabled) {
-              const change = value.change()
-              change.call(injectBlock, newBlock({ context }))
-              return onChange(change)
-            }
-          }}
-        >
-          {t(`variable/insert/${insertBlock}`, undefined, insertBlock)}
-        </span>
+        newBlock &&
+        withT(({ t, value, onChange }) => {
+          const disabled =
+            value.isBlurred ||
+            !value.blocks.every((n) => insertTypes.includes(n.type))
+
+          return (
+            <span
+              {...buttonStyles.insert}
+              data-disabled={disabled}
+              data-visible
+              onMouseDown={(event) => {
+                event.preventDefault()
+                if (!disabled) {
+                  const change = value.change()
+                  change.call(injectBlock, newBlock({ context }))
+                  return onChange(change)
+                }
+              }}
+            >
+              {t(`variable/insert/${insertBlock}`, undefined, insertBlock)}
+            </span>
+          )
+        })
       )
     })
+    .filter(Boolean)
 
   const textButton =
     insertVar &&
@@ -170,7 +203,7 @@ const createUI = ({ TYPE, editorOptions, context }) => {
 
   return {
     forms: [From],
-    insertButtons: [InsertButton],
+    insertButtons,
     textFormatButtons: [textButton],
   }
 }

@@ -161,10 +161,11 @@ class VideoPlayer extends Component {
       this.setState({ progress })
     }
     this.syncProgress = () => {
+      clearTimeout(this.readTimeout)
       this.readTimeout = setTimeout(() => {
         this.updateProgress()
         this.syncProgress()
-      }, 16)
+      }, 250)
     }
     this.ref = (ref) => {
       this.video = ref
@@ -447,6 +448,7 @@ class VideoPlayer extends Component {
     this.setTextTracksMode()
   }
   componentWillUnmount() {
+    clearTimeout(this.readTimeout)
     globalState.instances = globalState.instances.filter(
       (setter) => setter !== this.setInstanceState,
     )

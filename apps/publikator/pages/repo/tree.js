@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { Component, Fragment } from 'react'
 import { withRouter } from 'next/router'
 import { css } from 'glamor'
 import { graphql, compose } from 'react-apollo'
@@ -41,14 +41,26 @@ export const getRepoHistory = gql`
         }
         nodes {
           ...SimpleCommit
+          derivatives {
+            ...SimpleDerivative
+          }
+          canDeriveSyntheticReadAloud: canDerive(type: SyntheticReadAloud)
         }
       }
       milestones {
         ...SimpleMilestone
+        commit {
+          ...SimpleCommit
+          derivatives {
+            ...SimpleDerivative
+          }
+          canDeriveSyntheticReadAloud: canDerive(type: SyntheticReadAloud)
+        }
       }
     }
   }
   ${fragments.SimpleMilestone}
+  ${fragments.SimpleDerivative}
   ${fragments.SimpleCommit}
 `
 
@@ -61,14 +73,26 @@ const treeRepoSubscription = gql`
       }
       commit {
         ...SimpleCommit
+        derivatives {
+          ...SimpleDerivative
+        }
+        canDeriveSyntheticReadAloud: canDerive(type: SyntheticReadAloud)
       }
       milestone {
         ...SimpleMilestone
+        commit {
+          ...SimpleCommit
+          derivatives {
+            ...SimpleDerivative
+          }
+          canDeriveSyntheticReadAloud: canDerive(type: SyntheticReadAloud)
+        }
       }
     }
   }
   ${fragments.SimpleCommit}
   ${fragments.SimpleMilestone}
+  ${fragments.SimpleDerivative}
 `
 
 const styles = {
@@ -114,9 +138,16 @@ class EditorPage extends Component {
           const updatedRepo = { ...prev.repo, ...repo }
           const updatedCommitNodes = [
             commit,
-            ...prev.repo.commits.nodes,
+            ...prev.repo.commits.nodes.filter(
+              (prevCommit) => prevCommit.id !== commit?.id,
+            ),
           ].filter(Boolean)
-          const updatedMilestones = [milestone, ...prev.repo.milestones]
+          const updatedMilestones = [
+            milestone,
+            ...prev.repo.milestones.filter(
+              (prevMilestone) => prevMilestone.name !== milestone?.name,
+            ),
+          ]
             .filter(Boolean)
             .filter(
               (m) =>

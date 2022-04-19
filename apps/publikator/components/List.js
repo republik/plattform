@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 
 import { colors, fontFamilies } from '@project-r/styleguide'
@@ -18,6 +17,8 @@ const styles = {
     ':last-child': {
       borderBottom: `1px solid ${colors.divider}`,
     },
+    display: 'flex',
+    justifyContent: 'space-between',
   }),
   highlight: css({
     fontFamily: fontFamilies.sansSerifMedium,

@@ -1,4 +1,3 @@
-import React from 'react'
 import LockIcon from 'react-icons/lib/md/lock'
 import PublicIcon from 'react-icons/lib/md/public'
 import { renderMdast } from 'mdast-react-render'
@@ -39,11 +38,14 @@ const PublicationLink =
   ({
     name,
     document: {
-      meta: { path },
+      meta: { path, format },
     },
   }) =>
     (
-      <a key={name} href={`${FRONTEND_BASE_URL}${path}`}>
+      <a
+        key={name}
+        href={`${format?.meta.externalBaseUrl || FRONTEND_BASE_URL}${path}`}
+      >
         <Icon color={colors.primary} />
       </a>
     )

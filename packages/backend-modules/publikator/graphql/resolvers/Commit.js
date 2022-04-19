@@ -11,6 +11,11 @@ const {
   },
 } = require('@orbiting/backend-modules-documents')
 
+const {
+  canDerive: canDeriveSyntheticReadAloud,
+  applyAssetsAudioUrl,
+} = require('../../lib/Derivative/SyntheticReadAloud')
+
 module.exports = {
   author: async (commit, args, context) => {
     const user =
@@ -54,9 +59,27 @@ module.exports = {
     ])
 
     return {
-      id: Buffer.from(`repo:${commit.repoId}:${commit.id}`).toString('base64'),
+      id: Buffer.from(`${commit.repoId}/${commit.id}/preview`).toString(
+        'base64',
+      ),
       repoId,
       content: mdast,
     }
+  },
+  derivatives: async (commit, args, context) => {
+    const derivatives = await context.loaders.Derivative.byCommitId.load(
+      commit.id,
+    )
+
+    return derivatives.map(applyAssetsAudioUrl)
+  },
+  canDerive: async (commit, args) => {
+    const { type } = args
+
+    if (type === 'SyntheticReadAloud') {
+      return canDeriveSyntheticReadAloud(commit.meta)
+    }
+
+    return false
   },
 }

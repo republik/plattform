@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
@@ -31,6 +31,9 @@ import * as PSPIcons from './PSPIcons'
 import { format } from 'd3-format'
 
 import StripeForm from './Form/Stripe'
+import ApplePayMark from './Form/ApplePayMark'
+import GooglePayMark from './Form/GooglePayMark'
+import { WalletPaymentMethod } from './PaymentRequest/usePaymentRequest'
 
 const pad2 = format('02')
 
@@ -68,6 +71,16 @@ const PAYMENT_METHODS = [
         </span>
       )
     },
+  },
+  {
+    disabled: inNativeAppBrowser,
+    key: WalletPaymentMethod.APPLE_PAY,
+    Icon: ApplePayMark,
+  },
+  {
+    disabled: inNativeAppBrowser,
+    key: WalletPaymentMethod.GOOGLE_PAY,
+    Icon: GooglePayMark,
   },
   {
     disabled: inNativeAppBrowser,
@@ -218,8 +231,10 @@ class PaymentForm extends Component {
   }
   render() {
     const {
+      children,
       t,
       allowedMethods,
+      erroredMethods = [],
       payload,
       values,
       errors,
@@ -256,37 +271,6 @@ class PaymentForm extends Component {
 
     return (
       <div>
-        {requireShippingAddress && (
-          <div style={{ marginBottom: 40 }}>
-            <H2 style={{ marginBottom: 10 }}>
-              {t('pledge/address/shipping/title')}
-            </H2>
-            <AddressForm
-              {...shippingAddressState}
-              afterEdit={
-                userAddress || packageGroup === 'GIVE' ? (
-                  <>
-                    <Checkbox
-                      checked={syncAddresses}
-                      onChange={(_, checked) => {
-                        setSyncAddresses(checked)
-                      }}
-                    >
-                      {t(
-                        `pledge/address/shipping/${
-                          userAddress ? 'updateAccount' : 'setAccount'
-                        }`,
-                      )}
-                    </Checkbox>
-                    <br style={{ clear: 'left' }} />
-                  </>
-                ) : undefined
-              }
-              existingAddress={userAddress}
-              name={userName}
-            />
-          </div>
-        )}
         <H3>
           {t.first(
             [
@@ -302,7 +286,7 @@ class PaymentForm extends Component {
         </div>
         <Loader
           style={{ minHeight: PAYMENT_METHOD_HEIGHT * 2 }}
-          loading={loadingPaymentSource}
+          loading={loadingPaymentSource || false}
           render={() => {
             const hasPaymentSource = !!paymentSource
             const PaymentSourceIcon =
@@ -406,6 +390,7 @@ class PaymentForm extends Component {
                         (paymentMethod === pm.key && !values.paymentSource) ||
                         !values.paymentMethod
                       }
+                      error={erroredMethods.includes(pm.key)}
                     >
                       <input
                         type='radio'
@@ -442,6 +427,7 @@ class PaymentForm extends Component {
         />
         {paymentMethodForm === 'PAYMENTSLIP' && (
           <div>
+            {children}
             <Label>{t('payment/paymentslip/explanation')}</Label>
             <br />
             <br />
@@ -516,6 +502,8 @@ class PaymentForm extends Component {
         {paymentMethodForm === 'STRIPE' && (
           <>
             {stripeNote && <Label>{stripeNote}</Label>}
+            {children}
+            <Label>{t('account/pledges/payment/your-payment-data')}</Label>
             <StripeForm
               t={t}
               onChange={onChange}
@@ -527,49 +515,86 @@ class PaymentForm extends Component {
           </>
         )}
         {paymentMethodForm === 'POSTFINANCECARD' && (
-          <form
-            ref={this.postFinanceFormRef}
-            method='post'
-            action={PF_FORM_ACTION}
-          >
-            {postfinance
-              .getParams({
-                userId: payload.userId,
-                orderId: payload.id,
-                amount: payload.total,
-                alias: payload.pfAliasId,
-                sha: payload.pfSHA,
-              })
-              .map((param) => (
-                <input
-                  key={param.key}
-                  type='hidden'
-                  name={param.key}
-                  value={param.value || ''}
-                />
-              ))}
-          </form>
+          <>
+            {children}
+            <form
+              ref={this.postFinanceFormRef}
+              method='post'
+              action={PF_FORM_ACTION}
+            >
+              {postfinance
+                .getParams({
+                  userId: payload.userId,
+                  orderId: payload.id,
+                  amount: payload.total,
+                  alias: payload.pfAliasId,
+                  sha: payload.pfSHA,
+                })
+                .map((param) => (
+                  <input
+                    key={param.key}
+                    type='hidden'
+                    name={param.key}
+                    value={param.value || ''}
+                  />
+                ))}
+            </form>
+          </>
         )}
         {paymentMethodForm === 'PAYPAL' && (
-          <form
-            ref={this.payPalFormRef}
-            method='post'
-            action={PAYPAL_FORM_ACTION}
-          >
-            {paypal
-              .getParams({
-                itemName: payload.id,
-                amount: payload.total,
-              })
-              .map((param) => (
-                <input
-                  key={param.key}
-                  type='hidden'
-                  name={param.key}
-                  value={param.value || ''}
-                />
-              ))}
-          </form>
+          <>
+            {children}
+            <form
+              ref={this.payPalFormRef}
+              method='post'
+              action={PAYPAL_FORM_ACTION}
+            >
+              {paypal
+                .getParams({
+                  itemName: payload.id,
+                  amount: payload.total,
+                })
+                .map((param) => (
+                  <input
+                    key={param.key}
+                    type='hidden'
+                    name={param.key}
+                    value={param.value || ''}
+                  />
+                ))}
+            </form>
+          </>
+        )}
+        {requireShippingAddress && !paymentMethod?.startsWith('STRIPE-WALLET') && (
+          <div style={{ marginBottom: 40 }}>
+            <Label style={{ marginBottom: 10 }}>
+              {t('pledge/address/shipping/title')}
+            </Label>
+            <AddressForm
+              {...shippingAddressState}
+              afterEdit={
+                userAddress || packageGroup === 'GIVE' ? (
+                  <>
+                    <Checkbox
+                      checked={syncAddresses}
+                      onChange={(_, checked) => {
+                        setSyncAddresses(checked)
+                      }}
+                    >
+                      {t(
+                        `pledge/address/shipping/${
+                          userAddress ? 'updateAccount' : 'setAccount'
+                        }`,
+                      )}
+                    </Checkbox>
+                    <br style={{ clear: 'left' }} />
+                  </>
+                ) : undefined
+              }
+              existingAddress={userAddress}
+              name={userName}
+            />
+          </div>
         )}
       </div>
     )

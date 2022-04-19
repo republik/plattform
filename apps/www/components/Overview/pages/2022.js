@@ -1,4 +1,3 @@
-import React from 'react'
 import { Highlight } from '../Elements'
 import Page from '../Page'
 
@@ -63,6 +62,141 @@ const text = {
         Was haben Sie von Angela Merkel gelernt, Kevin Kühnert
       </Highlight>
       ?
+    </>
+  ),
+  Februar: (p) => (
+    <>
+      Kommt nach{' '}
+      <Highlight {...p} ids={['B8eR_v-X3o']}>
+        dem Aus für das Mediengesetz
+      </Highlight>{' '}
+      nun{' '}
+      <Highlight {...p} ids={['kHQWM_3a6']}>
+        die Linksteuer für Tech-Konzerne
+      </Highlight>
+      ?{' '}
+      <Highlight {...p} ids={['dXctUkgc3']}>
+        Diese Frau fordert Big Democracy statt Big Tech
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['EkjkQu_m3']}>
+        Dem Hype um Kryptowährungen auf der Spur
+      </Highlight>{' '}
+      – und{' '}
+      <Highlight {...p} ids={['IGNTeb989']}>
+        warum sich Nationalbanken dafür interessieren
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['uSZvGVjt2']}>
+        So organisiert die Atomlobby ihr Comeback
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['wKiYzLAmv']}>
+        so argumentiert ein (un)kritisches Juristenkomitee
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['P5DAd9pZ0']}>
+        Wars das jetzt mit der Pandemie
+      </Highlight>
+      ? Und{' '}
+      <Highlight {...p} ids={['p_jTQ6-k3']}>
+        wie schlimm hat Corona die Weltwirtschaft getroffen
+      </Highlight>
+      ?{' '}
+      <Highlight {...p} ids={['s5XxZ2PL4']}>
+        Der längste jüdische Witz der Weltgeschichte
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['bCB5_21O2']}>
+        ein himmlisches Dessert
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['mEL6tLG-9']}>
+        Dada
+      </Highlight>
+      . Und plötzlich:{' '}
+      <Highlight {...p} ids={['zCVBDxz3K']}>
+        Erneutes Unheil
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['uPFPFBSTR']}>
+        Krieg in Europa
+      </Highlight>
+      .
+    </>
+  ),
+  März: (p) => (
+    <>
+      Bilder aus Kiew: zwischen{' '}
+      <Highlight {...p} ids={['28JAcEpAF']}>
+        Angst
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['2NcmznuQi']}>
+        Normalität
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['d-ygbxtow']}>
+        leiser Hoffnung
+      </Highlight>
+      . Für{' '}
+      <Highlight {...p} ids={['n4WNvC9fm']}>
+        diese ukrainischen Schriftsteller war der Kriegsbeginn keine
+        Überraschung
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['EUKAMRblD']}>
+        Wer finanziert eigentlich Atomwaffen
+      </Highlight>
+      ? Die weitreichenden Auswirkungen des russischen Angriffs:{' '}
+      <Highlight {...p} ids={['YyAFtFJyi']}>
+        auf die Weltwirtschaft
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['CNYV3xNt2']}>
+        auf den Kampf gegen die Klimakrise
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['eKDy7ROax']}>
+        auf die Rolle der Politik
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['nv8NVedaG']}>
+        Ein Nachruf auf den unabhängigen russischen Journalismus
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['WBGdVMewT']}>
+        ein Hoch auf die Macht des stillen Protests
+      </Highlight>
+      . Was die Schweiz (nicht) leistet:{' '}
+      <Highlight {...p} ids={['bFBk9mLOT']}>
+        im Umgang mit Geflüchteten
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['ndpEaBjZ9']}>
+        im Umgang mit Oligarchen
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['2scguFUDq']}>
+        im Umgang mit Sanktionen
+      </Highlight>
+      . Ausserdem:{' '}
+      <Highlight {...p} ids={['gmTtFIY7M']}>
+        Putzfrauen im Film
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['4qQMAR9NR']}>
+        Neues von Stromae
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['AnkDlrE03']}>
+        ein True-Crime-Podcast
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['tqxg8Rnnb']}>
+        ein Blick ins Geschäft der Republik
+      </Highlight>
+      .
     </>
   ),
 }

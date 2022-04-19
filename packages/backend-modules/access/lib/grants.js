@@ -121,9 +121,9 @@ const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
     throw new Error(error)
   }
 
-  if (message && message.length > 255) {
+  if (message && message.length > 500) {
     throw new Error(
-      t('api/access/grant/message/error/tooLong', { maxLength: 255 }),
+      t('api/access/grant/message/error/tooLong', { maxLength: 500 }),
     )
   }
 
@@ -361,6 +361,42 @@ const request = async (granter, campaignId, payload, t, pgdb, redis, mail) => {
   return grant
 }
 
+const recommendations = async (campaign, grant, t, pgdb) => {
+  const now = moment()
+  const updateFields = {
+    recommendationsAt: now,
+    updatedAt: now,
+  }
+  const result = await pgdb.public.accessGrants.update(
+    { id: grant.id, recommendationsAt: null },
+    updateFields,
+  )
+  const recipient = await pgdb.public.users.findOne({
+    id: grant.recipientUserId,
+  })
+
+  if (recipient && !(await hasUserActiveMembership(recipient, pgdb))) {
+    const granter = await pgdb.public.users.findOne({ id: grant.granterUserId })
+    await mailLib.sendRecipientRecommendations(
+      granter,
+      campaign,
+      recipient,
+      grant,
+      t,
+      pgdb,
+    )
+  }
+
+  debug('recommendations', {
+    id: grant.id,
+    hasRecipient: !!grant.recipientUserId,
+    ...updateFields,
+    result,
+  })
+
+  return result > 0
+}
+
 const invalidate = async (grant, reason, t, pgdb, mail) => {
   const now = moment()
   const updateFields = {
@@ -589,6 +625,34 @@ const beginGrant = async (grant, payload, recipient, pgdb) => {
   return { ...result, granter, recipient, campaign }
 }
 
+const findEmptyRecommendations = async (campaign, pgdb) => {
+  const beginBefore = moment()
+
+  Object.keys(campaign.emailRecommendations).forEach((unit) =>
+    beginBefore.subtract(campaign.emailRecommendations[unit], unit),
+  )
+
+  debug('findEmptyRecommendations', { campaign: campaign.id })
+
+  const grants = await pgdb.public.accessGrants.find({
+    accessCampaignId: campaign.id,
+    'beginAt <': beginBefore,
+    invalidatedAt: null,
+    recommendationsAt: null,
+  })
+
+  // for now we need to filter out 4 weeks grants because we
+  // changed the duration of one specific campaign where this
+  // new recommendations transactional is introduced
+  // extra filtering can and should be removed later
+  return grants.filter((grant) => {
+    const grantDuration = moment.duration(
+      moment(grant.endAt).diff(moment(grant.beginAt)),
+    )
+    return grantDuration.asDays() > 30
+  })
+}
+
 const findEmptyFollowup = async (campaign, pgdb) => {
   const invalidateBefore = moment()
 
@@ -613,6 +677,7 @@ module.exports = {
   claim,
   request,
   revoke,
+  recommendations,
   invalidate,
   followUp,
 
@@ -622,5 +687,6 @@ module.exports = {
 
   findUnassignedByEmail,
   findInvalid,
+  findEmptyRecommendations,
   findEmptyFollowup,
 }

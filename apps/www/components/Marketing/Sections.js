@@ -1,4 +1,3 @@
-import React, { useMemo } from 'react'
 import { css } from 'glamor'
 
 import {
@@ -7,33 +6,27 @@ import {
   useColorContext,
   mediaQueries,
   FigureImage,
-  Editorial,
 } from '@project-r/styleguide'
 import SectionTitle from './Common/SectionTitle'
 import SectionContainer from './Common/SectionContainer'
 import { CDN_FRONTEND_BASE_URL } from '../../lib/constants'
 import Link from 'next/link'
+import NewsletterSignUp from '../Auth/NewsletterSignUp'
 
 const sectionContent = [
   {
-    name: 'covid19',
-    Paragraph: ({ t }) => (
-      <Meta.P>
-        {t(`marketing/page/sections/description/covid19`)}{' '}
-        <Link href='/format/covid-19-uhr-newsletter' passHref>
-          <Editorial.A>{t(`marketing/page/sections/link/covid19`)}</Editorial.A>
-        </Link>
-      </Meta.P>
-    ),
-    href: '/format/covid-19-uhr-newsletter',
-    image: '/static/marketing/covid19_wave3.png?size=807x807',
-    color: '#D44438',
+    name: 'weekly',
+    after: <NewsletterSignUp skipTitle free name='WEEKLY' />,
+    href: '/format/wochenend-newsletter',
+    color: '#000000',
+    borderTop: 'none',
   },
   {
     name: 'briefings',
     href: '/briefings',
     image: '/static/marketing/briefings.png?size=933x933',
     color: '#0A99B8',
+    borderTop: 'none',
   },
   {
     name: 'kolumnen',
@@ -70,26 +63,31 @@ const Sections = ({ t }) => {
           key={section.name}
           {...styles.section}
           {...colorScheme.set('borderColor', 'divider')}
+          style={{
+            borderTop: section.borderTop,
+          }}
         >
-          <div {...styles.picture}>
-            <Link href={section.href} passHref>
-              <a {...styles.link}>
-                <FigureImage
-                  {...FigureImage.utils.getResizedSrcs(
-                    `${CDN_FRONTEND_BASE_URL}${section.image}`,
-                    80,
-                  )}
-                  dark={
-                    section.imageDark &&
-                    FigureImage.utils.getResizedSrcs(
-                      `${CDN_FRONTEND_BASE_URL}${section.imageDark}`,
+          {section.image && (
+            <div {...styles.picture}>
+              <Link href={section.href} passHref>
+                <a {...styles.link}>
+                  <FigureImage
+                    {...FigureImage.utils.getResizedSrcs(
+                      `${CDN_FRONTEND_BASE_URL}${section.image}`,
                       80,
-                    )
-                  }
-                />
-              </a>
-            </Link>
-          </div>
+                    )}
+                    dark={
+                      section.imageDark &&
+                      FigureImage.utils.getResizedSrcs(
+                        `${CDN_FRONTEND_BASE_URL}${section.imageDark}`,
+                        80,
+                      )
+                    }
+                  />
+                </a>
+              </Link>
+            </div>
+          )}
           <div {...styles.description}>
             <Meta.Subhead
               style={{ marginTop: 0 }}
@@ -101,12 +99,10 @@ const Sections = ({ t }) => {
                 </a>
               </Link>
             </Meta.Subhead>
-            {section.Paragraph && <section.Paragraph t={t} />}
-            {!section.Paragraph && (
-              <Meta.P>
-                {t(`marketing/page/sections/description/${section.name}`)}
-              </Meta.P>
-            )}
+            <Meta.P>
+              {t(`marketing/page/sections/description/${section.name}`)}
+            </Meta.P>
+            {section.after}
           </div>
         </div>
       ))}

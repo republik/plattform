@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import SlatePropTypes from 'slate-prop-types'
 import OverlayForm from './OverlayForm'

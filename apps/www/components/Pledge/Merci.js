@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import compose from 'lodash/flowRight'
 import { format } from 'url'
 
@@ -7,7 +7,7 @@ import withMe from '../../lib/apollo/withMe'
 
 import Poller from '../Auth/Poller'
 import { withSignIn } from '../Auth/SignIn'
-import { WithMembership } from '../Auth/withMembership'
+import { WithAccess } from '../Auth/withMembership'
 import ErrorMessage from '../ErrorMessage'
 
 import ClaimPledge from './Claim'
@@ -261,7 +261,7 @@ class Merci extends Component {
             <Meta.Lead>{lead}</Meta.Lead>
           </div>
         ))}
-        <WithMembership
+        <WithAccess
           render={() => (
             <>
               <Link href='/' passHref>

@@ -1,5 +1,3 @@
-import React from 'react'
-
 const SvgSchaffhausen = (props) => (
   <svg
     width={props.size}
