@@ -56,23 +56,9 @@ const handleBatch = async (rows: any[], count: number, pgdb: any) => {
     const isPublished = !!publication
     debug('isPublished: %o', isPublished)
 
-    const scheduledPublication = await pgdb.publikator.milestones.findOne({
-      repoId,
-      scope: 'publication',
-      scheduledAt: null,
-      publishedAt: null,
-      revokedAt: null,
-    })
-    debug('scheduledPublication: %s', scheduledPublication?.id)
-
-    const isScheduled = !!scheduledPublication
-    debug('isScheduled: %o', isScheduled)
-
     const publicationCommit =
-      (isPublished || isScheduled) &&
-      (await pgdb.publikator.commits.findOne({
-        id: publication.commitId || scheduledPublication.commitId,
-      }))
+      isPublished &&
+      (await pgdb.publikator.commits.findOne({ id: publication.commitId }))
     debug('publicationCommit: %s', publicationCommit?.id)
 
     const latestCommit = await pgdb.publikator.commits.findOne(
