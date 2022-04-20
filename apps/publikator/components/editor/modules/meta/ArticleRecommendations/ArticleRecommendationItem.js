@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import { css } from 'glamor'
 import {
   IconButton,
@@ -11,13 +10,16 @@ import {
   useColorContext,
   convertStyleToRem,
   mediaQueries,
+  TeaserFeed,
 } from '@project-r/styleguide'
+import NextLink from 'next/link'
 import withT from '../../../../../lib/withT'
 import { compose, graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 import { getRelativeRepoUrl } from './util/RepoLinkUtility'
 import PublicationLink from '../../../../Publication/PublicationLink'
-import { creditsToString } from './util/CreditLineUtility'
+import { FRONTEND_BASE_URL } from '../../../../../lib/settings'
+import { useEffect } from 'react'
 
 const styles = {
   recommendationItem: css({
@@ -80,6 +82,23 @@ const styles = {
   }),
 }
 
+const ExternalLink = ({ href, children, ...rest }) => {
+  if (!href) {
+    return children
+  }
+
+  return (
+    <NextLink
+      href={`${FRONTEND_BASE_URL}${href}`}
+      target='_blank'
+      rel='noopener noreferrer'
+      passHref
+    >
+      {children}
+    </NextLink>
+  )
+}
+
 const ArticleRecommendationItem = ({
   repoId,
   data: { loading, repoData },
@@ -97,13 +116,6 @@ const ArticleRecommendationItem = ({
   const documentData =
     latestPublication?.document ?? repoData?.latestCommit?.document
   const metaData = documentData?.meta
-
-  const credits = useMemo(() => {
-    if (!metaData || !metaData?.credits) {
-      return null
-    }
-    return creditsToString(metaData.credits)
-  }, [metaData])
 
   const isPublishedForPublic =
     latestPublication &&
@@ -139,33 +151,18 @@ const ArticleRecommendationItem = ({
         {loading && <InlineSpinner size={20} />}
         {metaData && (
           <>
-            <div {...styles.titleLine}>
-              <A
-                href={`/repo/${getRelativeRepoUrl(repoId)}/tree`}
-                target='_blank'
-              >
-                <span {...styles.title} {...colorScheme.set('color', 'text')}>
-                  {metaData.title}
-                </span>
-              </A>
-            </div>
-            <div>
-              {metaData?.description && (
-                <p {...styles.lead}>{metaData.description}</p>
-              )}
-            </div>
-            <div {...styles.metaLine}>
-              {credits && <span>{credits}</span>}
-              {(isPublishedForPublic || isScheduledForPublication) && (
-                <span {...colorScheme.set('color', 'textSoft')}>
-                  {t('metaData/recommendations/plannedPublication', {
-                    date: new Date(
-                      Date.parse(metaData.publishDate),
-                    ).toLocaleDateString('de-CH'),
-                  })}
-                </span>
-              )}
-            </div>
+            <TeaserFeed
+              path={metaData.path}
+              title={metaData?.shortTitle ?? metaData?.title}
+              description={!metaData?.shortTitle ? metaData?.description : null}
+              credits={metaData?.credits}
+              format={metaData?.format}
+              t={t}
+              prepublication={isInternallyPublished}
+              dense
+              externalBaseUrl={FRONTEND_BASE_URL}
+              Link={ExternalLink}
+            />
           </>
         )}
         <div {...styles.errorLine}>
@@ -251,6 +248,7 @@ export default compose(
         meta {
           path
           title
+          shortTitle
           description
           publishDate
           credits
@@ -260,6 +258,8 @@ export default compose(
           }
           format {
             meta {
+              title
+              color
               externalBaseUrl
             }
           }

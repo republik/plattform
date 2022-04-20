@@ -23,7 +23,6 @@ const styles = {
     padding: 0,
     '> li': {
       listStyle: 'none',
-      borderTop: '1px solid #ccc',
     },
   }),
   repoSearchWrapper: css({
