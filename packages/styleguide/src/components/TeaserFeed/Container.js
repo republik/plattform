@@ -26,6 +26,10 @@ const styles = {
     color: 'inherit',
     textDecoration: 'none',
   }),
+  dense: css({
+    paddingBottom: 8,
+    paddingTop: 8,
+  }),
 }
 
 const MoreIconWithProps = (props) => (
@@ -43,6 +47,7 @@ const Teaser = ({
   Link,
   highlighted,
   menu,
+  dense,
 }) => {
   const [colorScheme] = useColorContext()
 
@@ -57,6 +62,7 @@ const Teaser = ({
   return (
     <div
       {...styles.main}
+      {...(dense && styles.dense)}
       {...colorScheme.set('borderColor', formatColor || 'text', 'format')}
       {...(highlighted && colorScheme.set('backgroundColor', 'alert'))}
     >

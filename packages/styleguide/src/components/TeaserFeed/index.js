@@ -67,6 +67,7 @@ export const TeaserFeed = ({
   menu,
   highlighted,
   series,
+  dense = false,
 }) => {
   const formatMeta = (format && format.meta) || {}
   const href = getTeaserHref(
@@ -104,6 +105,7 @@ export const TeaserFeed = ({
       repoId={repoId}
       href={href}
       title={title}
+      dense={dense}
     >
       <Headline formatColor={titleColor}>
         <Link href={href} passHref>
