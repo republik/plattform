@@ -113,8 +113,8 @@ const ArticleRecommendationItem = ({
         {metaData && (
           <>
             <TeaserFeed
-              title={metaData?.shortTitle ?? metaData?.title}
-              description={!metaData?.shortTitle ? metaData?.description : null}
+              title={metaData?.title}
+              description={metaData?.description}
               credits={metaData?.credits}
               format={metaData?.format}
               t={t}
@@ -204,7 +204,7 @@ export default compose(
             prepublication
             scheduledAt
             document {
-              ...MetaForRepoId
+              ...MetaDataForRepoId
             }
           }
 
@@ -214,25 +214,20 @@ export default compose(
           latestCommit {
             id
             document {
-              ...MetaForRepoId
+              ...MetaDataForRepoId
             }
           }
         }
       }
 
-      fragment MetaForRepoId on Document {
+      fragment MetaDataForRepoId on Document {
         id
         meta {
           path
           title
-          shortTitle
           description
           publishDate
           credits
-          authors {
-            firstName
-            lastName
-          }
           format {
             meta {
               title
