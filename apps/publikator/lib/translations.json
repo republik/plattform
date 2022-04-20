@@ -933,6 +933,10 @@
       "value": "Der Beitrag ({repoId}) konnte nicht gefunden werden."
     },
     {
+      "key": "metaData/recommendations/releaseScheduledFor",
+      "value": "Die Publikation ist für {date} geplant."
+    },
+    {
       "key": "variable/insert/greeting",
       "value": "Begrüssung"
     },

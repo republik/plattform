@@ -125,6 +125,18 @@ const ArticleRecommendationItem = ({
           </>
         )}
         <div {...styles.errorLine}>
+          {isScheduledForPublication && (
+            <span {...colorScheme.set('color', 'textSoft')}>
+              {t('metaData/recommendations/releaseScheduledFor', {
+                date: () => {
+                  const date = new Date(
+                    Date.parse(latestPublication?.scheduledAt),
+                  )
+                  return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+                },
+              })}
+            </span>
+          )}
           {!latestPublication && repoData && (
             <span {...colorScheme.set('color', 'error')}>
               {t('metaData/recommendations/notPublished')}
