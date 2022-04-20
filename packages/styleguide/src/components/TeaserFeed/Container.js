@@ -48,6 +48,7 @@ const Teaser = ({
   highlighted,
   menu,
   dense,
+  nonInteractive,
 }) => {
   const [colorScheme] = useColorContext()
 
@@ -79,11 +80,15 @@ const Teaser = ({
       )}
       {formatLine.title && (
         <Format color={formatColor}>
-          <Link href={formatLine.path} passHref>
-            <a {...styles.link} href={formatLine.path}>
-              {formatLine.title}
-            </a>
-          </Link>
+          {!nonInteractive ? (
+            <Link href={formatLine.path} passHref>
+              <a {...styles.link} href={formatLine.path}>
+                {formatLine.title}
+              </a>
+            </Link>
+          ) : (
+            formatLine.title
+          )}
         </Format>
       )}
       {children}
