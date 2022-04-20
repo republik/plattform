@@ -87,6 +87,7 @@ type Meta {
   section: Document
   format: Document
   dossier: Document
+  recommendations: DocumentConnection
   shareLogo: String
   shareBackgroundImage: String
   shareBackgroundImageInverted: String

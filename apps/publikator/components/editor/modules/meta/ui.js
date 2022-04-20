@@ -22,6 +22,7 @@ import AudioForm from './AudioForm'
 import UIForm from '../../UIForm'
 import ShareImageForm from './ShareImageForm'
 import GooglePreview from './GooglePreview'
+import ArticleRecommendations from './ArticleRecommendations/ArticleRecommendations'
 
 const styles = {
   container: css({
@@ -336,6 +337,10 @@ const MetaData = ({
         <br />
         <br />
         <AudioForm editor={editor} node={node} onInputChange={onInputChange} />
+        <br />
+        <br />
+        <br />
+        <ArticleRecommendations editor={editor} node={node} />
         <br />
         <br />
         <br />

@@ -8,6 +8,7 @@ const DiscussionLinkButton = ({
   t,
   document,
   forceShortLabel,
+  useCallToActionLabel = false,
   isOnArticlePage,
 }) => {
   const meta = document && document.meta
@@ -24,6 +25,25 @@ const DiscussionLinkButton = ({
     meta.path,
   )
 
+  const getLabel = () => {
+    if (useCallToActionLabel) {
+      if (discussionCount > 0) {
+        return t('article/actionbar/discussion/call-to-action', {
+          count: discussionCount,
+        })
+      }
+      return t('article/actionbar/discussion/call-to-action/empty')
+    }
+
+    if (forceShortLabel) {
+      return discussionCount
+    }
+
+    return t('profile/documents/title/other', {
+      count: discussionCount || '',
+    })
+  }
+
   return (
     <Link
       href={{
@@ -34,14 +54,8 @@ const DiscussionLinkButton = ({
     >
       <IconButton
         Icon={DiscussionIcon}
-        label={
-          forceShortLabel
-            ? discussionCount
-            : t('profile/documents/title/other', {
-                count: discussionCount || '',
-              })
-        }
-        labelShort={discussionCount || ''}
+        label={getLabel()}
+        labelShort={useCallToActionLabel ? getLabel() : discussionCount}
         fillColorName='primary'
         onClick={
           isDiscussionPage && isOnArticlePage

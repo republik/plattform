@@ -68,7 +68,6 @@ import FormatFeed from '../Feed/Format'
 import StatusError from '../StatusError'
 import NewsletterSignUp from '../Auth/NewsletterSignUp'
 import ArticleGallery from '../Gallery/ArticleGallery'
-import AutoDiscussionTeaser from './AutoDiscussionTeaser'
 import SectionNav from '../Sections/SectionNav'
 import SectionFeed from '../Sections/SectionFeed'
 import HrefLink from '../Link/Href'
@@ -82,6 +81,7 @@ import { Mutation, Query, Subscription } from '@apollo/client/react/components'
 import { useMe } from '../../lib/context/MeContext'
 import DiscussionContextProvider from '../Discussion/context/DiscussionContextProvider'
 import Discussion from '../Discussion/Discussion'
+import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
 
 const dynamicOptions = {
   loading: () => <SmallLoader loading />,
@@ -692,16 +692,6 @@ const ArticlePage = ({
                   </ActionBarOverlay>
                 </ProgressComponent>
               </ArticleGallery>
-              {meta.template === 'article' &&
-                ownDiscussion &&
-                !ownDiscussion.closed &&
-                !linkedDiscussion &&
-                !isSeriesOverview &&
-                hasAccess && (
-                  <Center breakout={breakout}>
-                    <AutoDiscussionTeaser discussionId={ownDiscussion.id} />
-                  </Center>
-                )}
               {meta.template === 'discussion' && ownDiscussion && (
                 <Center breakout={breakout}>
                   <DiscussionContextProvider
@@ -728,14 +718,6 @@ const ArticlePage = ({
                   newsletterMeta.free)) && (
                 <Center breakout={breakout}>
                   <div ref={bottomActionBarRef}>{actionBarEnd}</div>
-                  {!!podcast && meta.template === 'article' && (
-                    <>
-                      <Interaction.H3>
-                        {t(`PodcastButtons/title`)}
-                      </Interaction.H3>
-                      <PodcastButtons {...podcast} />
-                    </>
-                  )}
                 </Center>
               )}
               {!!podcast && meta.template !== 'article' && (
@@ -772,6 +754,9 @@ const ArticlePage = ({
                   formatId={article.repoId}
                   variables={feedQueryVariables}
                 />
+              )}
+              {me && hasActiveMembership && (
+                <ArticleRecommendationsFeed path={cleanedPath} />
               )}
               {(hasActiveMembership || isFormat) && (
                 <>

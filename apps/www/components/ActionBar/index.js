@@ -205,6 +205,21 @@ const ActionBar = ({
     (displayMinutes > 0 || displayHours > 0) &&
     (meta.template === 'article' || meta.template === 'editorialNewsletter')
 
+  const isArticleBottom = mode === 'articleBottom'
+
+  const PodcastButtonActionItem = {
+    title: t('PodcastButtons/title'),
+    Icon: PodcastIcon,
+    onClick: (e) => {
+      e.preventDefault()
+      trackEvent(['ActionBar', 'podcasts', meta.url])
+      setPodcastOverlayVisible(!podcastOverlayVisible)
+    },
+    label: t('PodcastButtons/title'),
+    show: !!podcast && meta.template !== 'format',
+    modes: ['articleTop'],
+  }
+
   const ActionItems = [
     {
       title: readingTimeTitle,
@@ -272,6 +287,7 @@ const ActionBar = ({
           discussionId={isDiscussion && meta.ownDiscussion?.id}
           subscriptions={document?.subscribedBy?.nodes}
           label={t('SubscribeMenu/title')}
+          labelShort={isArticleBottom ? t('SubscribeMenu/title') : undefined}
           padded
           loading={meLoading || documentLoading}
           attributes={{ ['data-show-if-me']: true }}
@@ -295,6 +311,9 @@ const ActionBar = ({
           bookmarked={document && !!document.userBookmark}
           documentId={document.id}
           label={!forceShortLabel ? t('bookmark/label') : ''}
+          labelShort={
+            !forceShortLabel && isArticleBottom ? t('bookmark/label') : ''
+          }
           disabled={meLoading || documentLoading}
           attributes={{ ['data-show-if-active-membership']: true }}
         />
@@ -353,8 +372,14 @@ const ActionBar = ({
         }
       },
       label: !forceShortLabel ? t('article/actionbar/share') : '',
-      modes: ['articleTop', 'articleOverlay'],
+      labelShort:
+        !forceShortLabel && isArticleBottom ? t('article/actionbar/share') : '',
+      modes: ['articleTop', 'articleOverlay', 'articleBottom'],
       show: true,
+    },
+    {
+      ...PodcastButtonActionItem,
+      modes: ['articleBottom'],
     },
     {
       title: t('article/actionbar/discussion'),
@@ -364,16 +389,17 @@ const ActionBar = ({
           document={document}
           isOnArticlePage={[
             'articleTop',
-            'articleBottom',
             'articleOverlay',
+            'articleBottom',
           ].includes(mode)}
+          useCallToActionLabel={isArticleBottom}
           forceShortLabel={forceShortLabel}
         />
       ),
       modes: [
         'articleTop',
-        'articleBottom',
         'articleOverlay',
+        'articleBottom',
         'feed',
         'seriesEpisode',
       ],
@@ -402,6 +428,7 @@ const ActionBar = ({
       label: readingTimeLabel,
       labelShort: readingTimeLabelShort,
       show: showReadingTime,
+      modes: ['articleTop'],
     },
     {
       title: t('article/actionbar/userprogress'),
@@ -413,6 +440,7 @@ const ActionBar = ({
         />
       ),
       show: !!document,
+      modes: ['articleTop'],
     },
     {
       title: t('PodcastButtons/play'),
@@ -429,48 +457,46 @@ const ActionBar = ({
       label: t('PodcastButtons/play'),
       show:
         !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud',
+      modes: ['articleTop'],
     },
     {
-      title: t('PodcastButtons/title'),
-      Icon: PodcastIcon,
-      onClick: (e) => {
-        e.preventDefault()
-        trackEvent(['ActionBar', 'podcasts', meta.url])
-        setPodcastOverlayVisible(!podcastOverlayVisible)
-      },
-      label: t('PodcastButtons/title'),
-      show: !!podcast && meta.template !== 'format',
+      ...PodcastButtonActionItem,
+      modes: ['articleTop'],
     },
   ]
+
+  const shouldRenderActionItem = (actionItem) =>
+    actionItem.show && actionItem.modes.includes(mode)
+
   const hasSecondaryActionItems = !!ActionItemsSecondary.filter(
-    (item) => item.show,
+    shouldRenderActionItem,
   ).length
+
   return (
     <>
       <div
         {...styles.topRow}
         {...(mode === 'articleOverlay' && styles.overlay)}
-        {...(mode === 'seriesEpisode' && styles.flexWrap)}
+        {...((mode === 'seriesEpisode' || mode === 'articleBottom') &&
+          styles.flexWrap)}
         {...(!!centered && { ...styles.centered })}
       >
-        {ActionItems.filter(
-          (item) => item.show && item.modes.includes(mode),
-        ).map((props) => (
+        {ActionItems.filter(shouldRenderActionItem).map((props) => (
           <Fragment key={props.title}>
             {props.element || <IconButton {...props} />}
           </Fragment>
         ))}
       </div>
-      {mode === 'articleTop' && hasSecondaryActionItems && (
+      {hasSecondaryActionItems && (
         <div {...styles.bottomRow} {...(!!centered && { ...styles.centered })}>
-          {ActionItemsSecondary.filter((item) => item.show).map((props) => (
+          {ActionItemsSecondary.filter(shouldRenderActionItem).map((props) => (
             <Fragment key={props.title}>
               {props.element || <IconButton {...props} />}
             </Fragment>
           ))}
         </div>
       )}
-      {(mode === 'articleBottom' || mode === 'seriesOverviewBottom') && (
+      {mode === 'seriesOverviewBottom' && (
         <>
           {!inNativeApp ? (
             <Interaction.P style={{ marginTop: 24 }}>

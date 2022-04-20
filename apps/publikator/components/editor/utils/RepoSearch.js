@@ -135,7 +135,7 @@ const createRepoItem = (repo) => {
     repo.latestCommit.document.meta.title ||
     repo.id.replace([GITHUB_ORG, REPO_PREFIX || ''].join('/'), '')
   const publishDate =
-    repo.latestPublications[0]?.document.meta.publishDate ||
+    repo.latestPublications[0]?.document?.meta.publishDate ||
     repo.meta.publishDate
 
   return {

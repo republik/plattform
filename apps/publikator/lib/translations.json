@@ -889,6 +889,54 @@
       "value": "Dunkles Farbschema forcieren"
     },
     {
+      "key": "metaData/recommendations/heading",
+      "value": "Vorgeschlagene Beiträge"
+    },
+    {
+      "key": "metaData/recommendations/info",
+      "value": "Die hier ausgewählten Beiträge werden unter dem Artikel in einem Feed aufgelistet."
+    },
+    {
+      "key": "metaData/recommendations/disabled",
+      "value": "Dieses Feature steht bei dieser Beitragsart nicht zur Verfügung."
+    },
+    {
+      "key": "metaData/recommendations/add",
+      "value": "Beitrag hinzufügen"
+    },
+    {
+      "key": "metaData/recommendations/search",
+      "value": "Beitrag suchen"
+    },
+    {
+      "key": "metaData/recommendations/plannedPublication",
+      "value": "Geplantes Publikationsdatum: {date}"
+    },
+    {
+      "key": "metaData/recommendations/notPublished",
+      "value": "Dieser Beitrag wurde noch nicht veröffentlicht oder terminiert."
+    },
+    {
+      "key": "metaData/recommendations/internalPublication",
+      "value": "Dieser Beitrag wurde nur intern veröffentlicht."
+    },
+    {
+      "key": "metaData/recommendations/duplicate",
+      "value": "Dieser Beitrag ist bereits in den vorgeschlagenen Beiträgen enthalten."
+    },
+    {
+      "key": "metaData/recommendations/redundant",
+      "value": "Der Beitrag verlinkt auf sich selbst."
+    },
+    {
+      "key": "metaData/recommendations/notFound",
+      "value": "Der Beitrag ({repoId}) konnte nicht gefunden werden."
+    },
+    {
+      "key": "metaData/recommendations/releaseScheduledFor",
+      "value": "Die Publikation ist für {date} geplant."
+    },
+    {
       "key": "variable/insert/greeting",
       "value": "Begrüssung"
     },
