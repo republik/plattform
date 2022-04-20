@@ -42,7 +42,7 @@ import ActionBarOverlay from './ActionBarOverlay'
 import SeriesNavBar from './SeriesNavBar'
 import TrialPayNoteMini from './TrialPayNoteMini'
 import Extract from './Extract'
-import { PayNote } from './PayNote'
+import { PayNote, TRY_TO_BUY_RATIO } from './PayNote'
 import Progress from './Progress'
 import PodcastButtons from './PodcastButtons'
 import { getDocument } from './graphql/getDocument'
@@ -524,7 +524,8 @@ const ArticlePage = ({
               tryOrBuy={payNoteTryOrBuy}
               documentId={documentId}
               repoId={repoId}
-              customPayNotes={article?.content?.meta?.paynotes}
+              customPayNotes={meta.paynotes ?? []}
+              customMode={meta.paynoteMode}
               customOnly={isPage || isFormat}
               position='before'
             />

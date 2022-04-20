@@ -317,6 +317,12 @@ const metaUrlResolver = (
 const metaFieldResolver = (meta, _all = [], _usernames = [], errors) => {
   const resolver = createResolver(_all, _usernames, errors)
 
+  const format = resolver(meta.format)
+
+  const ownPaynotes = meta.paynotes?.filter((p) => !p.inherit)
+  const formatPaynotes = format?.meta.paynotes?.filter((p) => p.inherit)
+  const paynotes = ownPaynotes || formatPaynotes
+
   // object if this document is a series «master» itself
   let series = meta.series
   // string, aka github url if this document belongs to a series
@@ -350,9 +356,10 @@ const metaFieldResolver = (meta, _all = [], _usernames = [], errors) => {
   return {
     series,
     dossier: resolver(meta.dossier),
-    format: resolver(meta.format),
+    format,
     section: resolver(meta.section),
     discussion: resolver(meta.discussion),
+    paynotes,
     recommendations,
   }
 }

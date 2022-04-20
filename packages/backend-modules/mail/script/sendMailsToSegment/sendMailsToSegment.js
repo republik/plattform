@@ -17,7 +17,7 @@ const {
 } = process.env
 
 module.exports = async (segment, mail, context) => {
-  const { argv, pgdb } = context
+  const { argv, pgdb, accessEventData } = context
   const tags = []
     .concat(SEND_MAILS_TAGS && SEND_MAILS_TAGS.split(','))
     .concat(mail.templateName && mail.templateName)
@@ -98,11 +98,19 @@ module.exports = async (segment, mail, context) => {
       return
     }
 
+    const accessEvent =
+      accessEventData &&
+      (await pgdb.public.accessEvents.insertAndGet({
+        accessGrantId: accessEventData.emailAddressGrantIdMap.get(emailAddress),
+        event: accessEventData.event,
+      }))
+
     console.log(
       mail.templateName,
       emailAddress,
       sentData.mailLogId,
       sentData.result,
+      accessEvent?.id,
     )
   })
 }
