@@ -41,6 +41,10 @@ const ArticleRecommendations = ({ t, editor, node }) => {
   const recommendedArticles = recommendationsMetaData || []
   const [showRepoSearch, setShowRepoSearch] = useState(false)
 
+  // By default, the article-recommendations can only be set on
+  // the page and article template.
+  // This can be overridden by setting the recommendations key manually
+  // inside the article-meta-data.
   const isSeries = !!node.data.get('series')
   const usedTemplate = node.data.get('template')
   const isSupportedTemplate =

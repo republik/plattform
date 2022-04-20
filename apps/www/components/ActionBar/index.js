@@ -392,7 +392,7 @@ const ActionBar = ({
             'articleOverlay',
             'articleBottom',
           ].includes(mode)}
-          useCallToActionLabel={mode === 'articleBottom'}
+          useCallToActionLabel={isArticleBottom}
           forceShortLabel={forceShortLabel}
         />
       ),
