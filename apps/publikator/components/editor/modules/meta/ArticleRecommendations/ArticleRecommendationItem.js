@@ -4,7 +4,6 @@ import {
   ArrowUpIcon,
   ArrowDownIcon,
   CloseIcon,
-  A,
   fontStyles,
   InlineSpinner,
   useColorContext,
@@ -12,14 +11,12 @@ import {
   mediaQueries,
   TeaserFeed,
 } from '@project-r/styleguide'
-import NextLink from 'next/link'
 import withT from '../../../../../lib/withT'
 import { compose, graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 import { getRelativeRepoUrl } from './util/RepoLinkUtility'
 import PublicationLink from '../../../../Publication/PublicationLink'
 import { FRONTEND_BASE_URL } from '../../../../../lib/settings'
-import { useEffect } from 'react'
 
 const styles = {
   recommendationItem: css({
@@ -80,23 +77,6 @@ const styles = {
       ...fontStyles.sansSerifRegular14,
     },
   }),
-}
-
-const ExternalLink = ({ href, children, ...rest }) => {
-  if (!href) {
-    return children
-  }
-
-  return (
-    <NextLink
-      href={`${FRONTEND_BASE_URL}${href}`}
-      target='_blank'
-      rel='noopener noreferrer'
-      passHref
-    >
-      {children}
-    </NextLink>
-  )
 }
 
 const ArticleRecommendationItem = ({
@@ -161,7 +141,6 @@ const ArticleRecommendationItem = ({
               prepublication={isInternallyPublished}
               dense
               externalBaseUrl={FRONTEND_BASE_URL}
-              Link={ExternalLink}
             />
           </>
         )}
