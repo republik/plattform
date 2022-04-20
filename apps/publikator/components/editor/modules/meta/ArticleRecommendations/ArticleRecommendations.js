@@ -21,7 +21,7 @@ const styles = {
   recommendationList: css({
     margin: '1rem 0',
     padding: 0,
-    '> li': {
+    '& > li': {
       listStyle: 'none',
     },
   }),

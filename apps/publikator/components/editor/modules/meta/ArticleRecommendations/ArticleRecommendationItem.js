@@ -7,9 +7,8 @@ import {
   fontStyles,
   InlineSpinner,
   useColorContext,
-  convertStyleToRem,
-  mediaQueries,
   TeaserFeed,
+  EditIcon,
 } from '@project-r/styleguide'
 import withT from '../../../../../lib/withT'
 import { compose, graphql } from 'react-apollo'
@@ -42,30 +41,13 @@ const styles = {
     flexGrow: 1,
     padding: '1rem 0.5rem',
   }),
-  title: css({
-    marginRight: '0.5rem',
-    ...convertStyleToRem(fontStyles.serifTitle20),
-    [mediaQueries.mUp]: {
-      ...convertStyleToRem(fontStyles.serifTitle22),
-    },
-  }),
-  lead: css({
-    ...convertStyleToRem(fontStyles.serifRegular17),
-    margin: '0 0 5px 0',
-    [mediaQueries.mUp]: {
-      ...convertStyleToRem(fontStyles.serifRegular19),
-    },
-  }),
-  titleLine: css({
-    display: 'inline-flex',
+  linkWrapper: css({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
     alignItems: 'center',
-  }),
-  metaLine: css({
-    display: 'inline-flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
     '& > *:not(:first-child)': {
-      marginTop: '0.25rem',
+      marginLeft: '0.5rem',
     },
   }),
   errorLine: css({
@@ -177,11 +159,17 @@ const ArticleRecommendationItem = ({
             </span>
           )}
         </div>
-        {(isPublishedForPublic || isInternallyPublished) && (
-          <div>
+        <div {...styles.linkWrapper}>
+          {(isPublishedForPublic || isInternallyPublished) && (
             <PublicationLink publication={latestPublication} />
-          </div>
-        )}
+          )}
+          <IconButton
+            href={`/repo/${getRelativeRepoUrl(repoId)}/tree`}
+            target='_blank'
+            Icon={EditIcon}
+            fill='#E9A733'
+          />
+        </div>
       </div>
       <div {...styles.closeWrapper}>
         <IconButton
