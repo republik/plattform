@@ -15,7 +15,6 @@ import { compose, graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 import { getRelativeRepoUrl } from './util/RepoLinkUtility'
 import PublicationLink from '../../../../Publication/PublicationLink'
-import { FRONTEND_BASE_URL } from '../../../../../lib/settings'
 
 const styles = {
   recommendationItem: css({
@@ -114,7 +113,6 @@ const ArticleRecommendationItem = ({
         {metaData && (
           <>
             <TeaserFeed
-              path={metaData.path}
               title={metaData?.shortTitle ?? metaData?.title}
               description={!metaData?.shortTitle ? metaData?.description : null}
               credits={metaData?.credits}
@@ -122,7 +120,7 @@ const ArticleRecommendationItem = ({
               t={t}
               prepublication={isInternallyPublished}
               dense
-              externalBaseUrl={FRONTEND_BASE_URL}
+              nonInteractive
             />
           </>
         )}
