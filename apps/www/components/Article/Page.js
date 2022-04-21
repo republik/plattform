@@ -85,6 +85,11 @@ import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
 
 const LoadingComponent = () => <SmallLoader loading />
 
+const MatomoOptOut = dynamic(() => import('../Matomo/OptOut'), {
+  loading: LoadingComponent,
+  ssr: false,
+})
+
 const Manifest = dynamic(() => import('../About/Manifest'), {
   ssr: true,
 })
@@ -349,6 +354,7 @@ const ArticlePage = ({
           : undefined,
         dynamicComponentRequire,
         dynamicComponentIdentifiers: {
+          MATOMO_OPT_OUT: MatomoOptOut,
           MANIFEST: Manifest,
           TEAM_TEASER: TeamTeaser,
           REASONS_VIDEO: ReasonsVideo,
