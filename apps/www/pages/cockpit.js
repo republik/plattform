@@ -20,7 +20,6 @@ import {
 } from '@project-r/styleguide'
 
 import Frame from '../components/Frame'
-import { light as mdComponents } from '../lib/utils/mdComponents'
 import { countFormat } from '../lib/utils/format'
 
 import { PackageItem, PackageBuffer } from '../components/Pledge/Accordion'
@@ -663,19 +662,6 @@ const Page = ({
                   interessierte Verlegerschaft.
                 </P>
               </>
-              {/*md(mdComponents)`
-
-Mit ${countFormat(
-                numMembersNeeded,
-              )} Abonnentinnen und Mitgliedern haben wir genügend Einnahmen, um den gesamten Betrieb zu finanzieren. Und wir haben die Mittel, um Neues auszuprobieren und Experimente zu machen.
-
-Diese Zahl leitet sich aus dem aktuellen Budget 2021/22 ab. [Erfahren Sie, wofür wir das Geld ausgeben und wie sich das Budget über die Zeit entwickelt hat](/2021/10/08/werfen-sie-einen-blick-in-unsere-geschaeftsbuecher).
-
-## ${countFormat(lastSeen)} Verlegerinnen sind monatlich&nbsp;aktiv
-
-Der beste Journalismus nützt nichts, wenn ihn niemand sieht. Für ein gesundes Unternehmen braucht es eine aktive und interessierte Verlegerschaft.
-
-`*/}
 
               <div style={{ marginTop: 20 }}>
                 <ChartTitle>
@@ -728,13 +714,9 @@ Der beste Journalismus nützt nichts, wenn ihn niemand sieht. Für ein gesundes 
                 defaultBenefactor={defaultBenefactor}
                 questionnaire={questionnaire}
               />
-              <>Text3</>
-              {/*md(mdComponents)`
-
-
-
-## ${countFormat(activeCount)} sind dabei.`*/}
-
+              <>
+                <H2>{countFormat(activeCount)} sind dabei.</H2>
+              </>
               <LazyLoad>
                 <TestimonialList
                   ssr={false}
@@ -744,25 +726,21 @@ Der beste Journalismus nützt nichts, wenn ihn niemand sieht. Für ein gesundes 
                 />
               </LazyLoad>
               <br />
-              <>Text4</>
-              {/*md(mdComponents)`
-[Alle anschauen](/community)${
-                me && me.activeMembership ? (
-                  <Fragment>
-                    {'\u00a0– '}
-                    <Editorial.A
-                      style={{ color: colors.negative.text }}
-                      href='/einrichten'
-                    >
-                      Ihr Profil einrichten
-                    </Editorial.A>
-                  </Fragment>
-                ) : (
-                  ''
-                )
-              }
-      `*/}
-
+              <>
+                <P>
+                  <Editorial.A href='/community'>Alle anschauen</Editorial.A>
+                  {me && me.activeMembership ? (
+                    <>
+                      {'\u00a0– '}
+                      <Editorial.A href='/einrichten'>
+                        Ihr Profil einrichten
+                      </Editorial.A>
+                    </>
+                  ) : (
+                    ''
+                  )}
+                </P>
+              </>
               <br />
               <br />
             </>
