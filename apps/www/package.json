@@ -5,6 +5,11 @@
   "engines": {
     "node": "^14.4.0"
   },
+  "browserslist": [
+    "defaults",
+    "ie >= 11",
+    "iOS 9"
+  ],
   "description": "",
   "main": "server/index.js",
   "scripts": {
@@ -48,6 +53,7 @@
     "@types/react": "^17.0.38",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.6",
     "abab": "^2.0.5",
+    "browserslist": "^4.20.2",
     "cross-env": "^7.0.3",
     "@republik/eslint-config-frontend": "*",
     "gsheets": "^3.0.1",
