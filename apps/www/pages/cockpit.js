@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import Router, { withRouter } from 'next/router'
@@ -7,20 +7,17 @@ import { gql } from '@apollo/client'
 import { timeMonth } from 'd3-time'
 
 import {
+  P,
+  H2,
   Editorial,
   Interaction,
   Loader,
-  colors,
   LazyLoad,
-} from '@project-r/styleguide'
-import {
   ChartTitle,
   ChartLead,
   ChartLegend,
   Chart,
 } from '@project-r/styleguide'
-
-import md from 'markdown-in-js'
 
 import Frame from '../components/Frame'
 import { light as mdComponents } from '../lib/utils/mdComponents'
@@ -528,13 +525,20 @@ const Page = ({
               <Interaction.Headline style={{ marginBottom: 20 }}>
                 Das Cockpit zum Stand unseres Unternehmens
               </Interaction.Headline>
-              {md(mdComponents)`
-
-Die Aufgabe der Republik ist, brauchbaren Journalismus zu machen. Einen, der die Köpfe klarer, das Handeln mutiger, die Entscheidungen klüger macht. Und der das Gemeinsame stärkt: die Freiheit, den Rechtsstaat, die Demokratie.
-
-Die Grundlage dafür ist ein Geschäftsmodell für werbefreien, unabhängigen, leserfinanzierten Journalismus. Damit die Republik einen entscheidenden Unterschied im Mediensystem machen kann, muss sie selbsttragend sein.
-
-`}
+              <>
+                <P>
+                  Die Aufgabe der Republik ist, brauchbaren Journalismus zu
+                  machen. Einen, der die Köpfe klarer, das Handeln mutiger, die
+                  Entscheidungen klüger macht. Und der das Gemeinsame stärkt:
+                  die Freiheit, den Rechtsstaat, die Demokratie.
+                </P>
+                <P>
+                  Die Grundlage dafür ist ein Geschäftsmodell für werbefreien,
+                  unabhängigen, leserfinanzierten Journalismus. Damit die
+                  Republik einen entscheidenden Unterschied im Mediensystem
+                  machen kann, muss sie selbsttragend sein.
+                </P>
+              </>
 
               <div style={{ marginTop: 20 }}>
                 <ChartTitle>
@@ -630,8 +634,36 @@ Die Grundlage dafür ist ein Geschäftsmodell für werbefreien, unabhängigen, l
                   {formatDateTime(new Date(updatedAt))}
                 </ChartLegend>
               </div>
-
-              {md(mdComponents)`
+              <>
+                <P>
+                  Mit {countFormat(numMembersNeeded)} Abonnentinnen und
+                  Mitgliedern haben wir genügend Einnahmen, um den gesamten
+                  Betrieb zu finanzieren. Und wir haben die Mittel, um Neues
+                  auszuprobieren und Experimente zu machen.
+                </P>
+                <P>
+                  Diese Zahl leitet sich aus dem aktuellen Budget 2021/22 ab.{' '}
+                  <Link
+                    href='/2021/10/08/werfen-sie-einen-blick-in-unsere-geschaeftsbuecher'
+                    passHref
+                  >
+                    <Editorial.A>
+                      Erfahren Sie, wofür wir das Geld ausgeben und wie sich das
+                      Budget über die Zeit entwickelt hat.
+                    </Editorial.A>
+                  </Link>
+                </P>
+                <H2>
+                  {countFormat(lastSeen)} Verlegerinnen sind
+                  monatlich&nbsp;aktiv
+                </H2>
+                <P>
+                  Der beste Journalismus nützt nichts, wenn ihn niemand sieht.
+                  Für ein gesundes Unternehmen braucht es eine aktive und
+                  interessierte Verlegerschaft.
+                </P>
+              </>
+              {/*md(mdComponents)`
 
 Mit ${countFormat(
                 numMembersNeeded,
@@ -643,7 +675,7 @@ Diese Zahl leitet sich aus dem aktuellen Budget 2021/22 ab. [Erfahren Sie, wofü
 
 Der beste Journalismus nützt nichts, wenn ihn niemand sieht. Für ein gesundes Unternehmen braucht es eine aktive und interessierte Verlegerschaft.
 
-`}
+`*/}
 
               <div style={{ marginTop: 20 }}>
                 <ChartTitle>
@@ -696,12 +728,12 @@ Der beste Journalismus nützt nichts, wenn ihn niemand sieht. Für ein gesundes 
                 defaultBenefactor={defaultBenefactor}
                 questionnaire={questionnaire}
               />
+              <>Text3</>
+              {/*md(mdComponents)`
 
-              {md(mdComponents)`
 
 
-
-## ${countFormat(activeCount)} sind dabei.`}
+## ${countFormat(activeCount)} sind dabei.`*/}
 
               <LazyLoad>
                 <TestimonialList
@@ -712,8 +744,8 @@ Der beste Journalismus nützt nichts, wenn ihn niemand sieht. Für ein gesundes 
                 />
               </LazyLoad>
               <br />
-
-              {md(mdComponents)`
+              <>Text4</>
+              {/*md(mdComponents)`
 [Alle anschauen](/community)${
                 me && me.activeMembership ? (
                   <Fragment>
@@ -729,7 +761,7 @@ Der beste Journalismus nützt nichts, wenn ihn niemand sieht. Für ein gesundes 
                   ''
                 )
               }
-      `}
+      `*/}
 
               <br />
               <br />
