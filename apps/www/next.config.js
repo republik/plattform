@@ -7,6 +7,11 @@ const { NODE_ENV, CDN_FRONTEND_BASE_URL } = process.env
 
 module.exports = withTM(
   withBundleAnalyzer({
+    compiler: {
+      reactRemoveProperties: {
+        properties: ['^data-test'],
+      },
+    },
     webpack5: true,
     webpack: (config) => {
       config.externals = config.externals || {}
