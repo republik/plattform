@@ -83,36 +83,55 @@ import DiscussionContextProvider from '../Discussion/context/DiscussionContextPr
 import Discussion from '../Discussion/Discussion'
 import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
 
-const dynamicOptions = {
-  loading: () => <SmallLoader loading />,
-  ssr: false,
-}
+const LoadingComponent = () => <SmallLoader loading />
+
 const Manifest = dynamic(() => import('../About/Manifest'), {
   ssr: true,
 })
-const TeamTeaser = dynamic(() => import('../About/TeamTeaser'), dynamicOptions)
+const TeamTeaser = dynamic(() => import('../About/TeamTeaser'), {
+  loading: LoadingComponent,
+  ssr: false,
+})
 const TestimonialList = dynamic(
   () => import('../Testimonial/List').then((m) => m.ListWithQuery),
-  dynamicOptions,
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
 )
 const ReasonsVideo = dynamic(() => import('../About/ReasonsVideo'), {
   ssr: true,
 })
-const Votebox = dynamic(() => import('../Vote/Voting'), dynamicOptions)
-const VoteCounter = dynamic(() => import('../Vote/VoteCounter'), dynamicOptions)
-const VoteResult = dynamic(() => import('../Vote/VoteResult'), dynamicOptions)
-const ElectionCandidacy = dynamic(
-  () => import('../Vote/ElectionCandidacy'),
-  dynamicOptions,
-)
-const Election = dynamic(() => import('../Vote/Election'), dynamicOptions)
-const ElectionResult = dynamic(
-  () => import('../Vote/ElectionResult'),
-  dynamicOptions,
-)
+const Votebox = dynamic(() => import('../Vote/Voting'), {
+  loading: LoadingComponent,
+  ssr: false,
+})
+const VoteCounter = dynamic(() => import('../Vote/VoteCounter'), {
+  loading: LoadingComponent,
+  ssr: false,
+})
+const VoteResult = dynamic(() => import('../Vote/VoteResult'), {
+  loading: LoadingComponent,
+  ssr: false,
+})
+const ElectionCandidacy = dynamic(() => import('../Vote/ElectionCandidacy'), {
+  loading: LoadingComponent,
+  ssr: false,
+})
+const Election = dynamic(() => import('../Vote/Election'), {
+  loading: LoadingComponent,
+  ssr: false,
+})
+const ElectionResult = dynamic(() => import('../Vote/ElectionResult'), {
+  loading: LoadingComponent,
+  ssr: false,
+})
 const ElectionResultDiversity = dynamic(
   () => import('../Vote/ElectionDiversity'),
-  dynamicOptions,
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
 )
 
 const schemaCreators = {
