@@ -449,11 +449,13 @@ const Page = ({
             bestmöglich erledigen können:
           </P>
           <P>
-            **Wir sind unabhängig.** Und komplett werbefrei. So können wir uns
-            auf unseren einzigen Kunden konzentrieren: Sie. Und müssen weder
-            möglichst viele Klicks generieren noch Sie mit nervigen Anzeigen
-            belästigen. Und wir verkaufen Ihre persönlichen Daten niemals
-            weiter.
+            <strong style={{ ...fontStyles.serifBold }}>
+              Wir sind unabhängig.
+            </strong>{' '}
+            Und komplett werbefrei. So können wir uns auf unseren einzigen
+            Kunden konzentrieren: Sie. Und müssen weder möglichst viele Klicks
+            generieren noch Sie mit nervigen Anzeigen belästigen. Und wir
+            verkaufen Ihre persönlichen Daten niemals weiter.
           </P>
           <P>
             <strong>
