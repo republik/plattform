@@ -3249,6 +3249,14 @@
       "value": "mit {count} Bildern"
     },
     {
+      "key": "article/pdf/size/A4",
+      "value": "A4"
+    },
+    {
+      "key": "article/pdf/size/A5",
+      "value": "A5 (Beta)"
+    },
+    {
       "key": "article/autodiscussionteaser/title",
       "value": "Jetzt sind Sie dran!"
     },
