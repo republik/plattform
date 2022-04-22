@@ -1,7 +1,4 @@
 {
-  "plugins": [
-    "markdown-in-js/babel"
-  ],
   "env": {
     "development": {
       "presets": [
