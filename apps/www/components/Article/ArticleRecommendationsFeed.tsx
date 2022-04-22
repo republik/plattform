@@ -34,7 +34,7 @@ const ArticleRecommendationsFeed = ({ path }: ArticleSuggestionsFeedProps) => {
         loading={loading}
         render={() => (
           <>
-            {data.article.meta.recommendations?.nodes.length > 0 && (
+            {data?.article?.meta?.recommendations?.nodes.length > 0 && (
               <section {...styles.wrapper}>
                 <Interaction.P {...styles.heading}>
                   {t('articleRecommendations/heading')}
