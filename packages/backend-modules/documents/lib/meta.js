@@ -147,10 +147,21 @@ const isReadingMinutesSuppressed = (fields, resolvedFields) =>
         resolvedFields.format.meta.repoId,
       )))
 
-const getEstimatedConsumptionMinutes = (doc, estimatedReadingMinutes) =>
-  doc.meta && doc.meta.audioSource && doc.meta.audioSource.durationMs
-    ? Math.round(doc.meta.audioSource.durationMs / 1000 / 60)
-    : estimatedReadingMinutes
+const getEstimatedConsumptionMinutes = (doc, estimatedReadingMinutes) => {
+  const durationMs = doc.meta?.audioSource?.durationMs
+  const kind = doc.meta?.audioSource?.kind
+
+  // Return audio duration in minutes if audioSource provides duration in ms and
+  // audioSource.kind is neither "readAloud" or "syntheticReadAloud". As their an
+  // audio representation of written content, these should not be counted towards
+  // consumption time.
+  const audioDurationMinutes =
+    !!durationMs &&
+    !['readAloud', 'syntheticReadAloud'].includes(kind) &&
+    Math.round(durationMs / (1000 * 60))
+
+  return Math.max(audioDurationMinutes, estimatedReadingMinutes)
+}
 
 // _meta is present on unpublished docs
 // { repo { publication { commit { document } } } }
