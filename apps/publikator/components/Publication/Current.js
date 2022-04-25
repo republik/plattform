@@ -49,6 +49,7 @@ export const getRepoWithPublications = gql`
           meta {
             path
             format {
+              id
               meta {
                 externalBaseUrl
               }

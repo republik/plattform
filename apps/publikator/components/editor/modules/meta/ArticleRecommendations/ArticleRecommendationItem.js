@@ -229,6 +229,7 @@ export default compose(
           publishDate
           credits
           format {
+            id
             meta {
               title
               color
