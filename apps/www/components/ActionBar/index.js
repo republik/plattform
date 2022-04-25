@@ -151,13 +151,9 @@ const ActionBar = ({
     meta.path,
   )
 
-  const readingMinutes = Math.max(
-    meta.estimatedConsumptionMinutes,
-    meta.estimatedReadingMinutes,
-  )
+  const displayMinutes = meta.estimatedConsumptionMinutes % 60
+  const displayHours = Math.floor(meta.estimatedConsumptionMinutes / 60)
 
-  const displayMinutes = readingMinutes % 60
-  const displayHours = Math.floor(readingMinutes / 60)
   const forceShortLabel =
     mode === 'articleOverlay' ||
     mode === 'feed' ||
