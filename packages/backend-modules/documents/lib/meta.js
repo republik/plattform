@@ -84,26 +84,6 @@ const getAudioSource = (doc) => {
   return audioSource
 }
 
-const getTotalMediaDurationMinutes = (doc) => {
-  let total = 0
-  if (doc.meta && doc.meta.audioSource && doc.meta.audioSource.durationMs) {
-    total += doc.meta.audioSource.durationMs
-  }
-  const ids = {}
-  visit(doc.content, 'zone', (node, i, parent) => {
-    if (
-      node.identifier === 'EMBEDVIDEO' &&
-      node.data &&
-      node.data.durationMs &&
-      !ids[node.data.id]
-    ) {
-      total += node.data.durationMs
-      ids[node.data.id] = true
-    }
-  })
-  return total && Math.round(total / 1000 / 60)
-}
-
 /**
  * Getter of WORDS_PER_MINUTE
  *
@@ -147,10 +127,21 @@ const isReadingMinutesSuppressed = (fields, resolvedFields) =>
         resolvedFields.format.meta.repoId,
       )))
 
-const getEstimatedConsumptionMinutes = (doc, estimatedReadingMinutes) =>
-  doc.meta && doc.meta.audioSource && doc.meta.audioSource.durationMs
-    ? Math.round(doc.meta.audioSource.durationMs / 1000 / 60)
-    : estimatedReadingMinutes
+const getEstimatedConsumptionMinutes = (doc, estimatedReadingMinutes) => {
+  const durationMs = doc.meta?.audioSource?.durationMs
+  const kind = doc.meta?.audioSource?.kind
+
+  // Return audio duration in minutes if audioSource provides duration in ms and
+  // audioSource.kind is neither "readAloud" or "syntheticReadAloud". As their an
+  // audio representation of written content, these should not be counted towards
+  // consumption time.
+  const audioDurationMinutes =
+    !!durationMs &&
+    !['readAloud', 'syntheticReadAloud'].includes(kind) &&
+    Math.round(durationMs / (1000 * 60))
+
+  return Math.max(audioDurationMinutes, estimatedReadingMinutes)
+}
 
 // _meta is present on unpublished docs
 // { repo { publication { commit { document } } } }
@@ -202,24 +193,18 @@ const getMeta = (doc) => {
       ? metaFieldResolver(doc.content.meta, doc._all, doc._usernames)
       : {}
 
-  const readingMinutesSuppressed = isReadingMinutesSuppressed(
-    doc.content.meta,
-    resolvedFields,
-  )
-  const estimatedReadingMinutes = !readingMinutesSuppressed
-    ? getEstimatedReadingMinutes(doc)
-    : null
+  const times = {
+    estimatedReadingMinutes: null,
+    estimatedConsumptionMinutes: null,
+  }
 
-  const times = !readingMinutesSuppressed
-    ? {
-        estimatedReadingMinutes,
-        totalMediaMinutes: getTotalMediaDurationMinutes(doc),
-        estimatedConsumptionMinutes: getEstimatedConsumptionMinutes(
-          doc,
-          estimatedReadingMinutes,
-        ),
-      }
-    : {}
+  if (!isReadingMinutesSuppressed(doc.content.meta, resolvedFields)) {
+    times.estimatedReadingMinutes = getEstimatedReadingMinutes(doc)
+    times.estimatedConsumptionMinutes = getEstimatedConsumptionMinutes(
+      doc,
+      times.estimatedReadingMinutes,
+    )
+  }
 
   // Populate {doc._meta}. Is used to recognize provided {doc} for which meta
   // information was retrieved already.
