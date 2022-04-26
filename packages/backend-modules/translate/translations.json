@@ -813,6 +813,10 @@
       "value": "Bestätigen Sie Ihre Anmeldung zum Covid-19-Uhr-Newsletter."
     },
     {
+      "key": "api/newsletters/request/PROJECTR/subject",
+      "value": "Bestätigen Sie Ihre Anmeldung zum Project-R-Newsletter."
+    },
+    {
       "key": "api/newsletters/request/notSupported",
       "value": "Diese Art der Anmeldung zum gewählten Newsletter wird noch nicht unterstützt."
     },
