@@ -205,6 +205,8 @@ export const getDocument = gql`
         indicateGallery
         indicateVideo
         prepublication
+        paynotes
+        paynoteMode
       }
     }
   }

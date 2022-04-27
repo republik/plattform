@@ -238,6 +238,14 @@
       "value": "Schliessen"
     },
     {
+      "key": "styleguide/AudioPlayer/expand",
+      "value": "Vergrössern"
+    },
+    {
+      "key": "styleguide/AudioPlayer/shrink",
+      "value": "Minimieren"
+    },
+    {
       "key": "styleguide/AudioPlayer/loading",
       "value": "Wird geladen …"
     },

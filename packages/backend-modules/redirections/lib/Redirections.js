@@ -324,8 +324,8 @@ const maybeApplyBaseUrl = (externalBaseUrl, context) => {
         return normalizeTarget(redirection)
       }
 
-      const { _all, ...doc } = node.entity
-      const formatDoc = createResolver(_all)(doc.meta?.format)
+      const { _all, _usernames, ...doc } = node.entity
+      const formatDoc = createResolver(_all, _usernames)(doc.meta?.format)
 
       // If {externalBaseUrl} and a document format externalBaseUrl match
       // return record without normalizing it.

@@ -48,6 +48,12 @@ type Newsletter {
   free: Boolean
 }
 
+enum PaynoteMode {
+  button
+  trialForm
+  noPaynote
+} 
+
 type Meta {
   title: String
   shortTitle: String
@@ -81,6 +87,7 @@ type Meta {
   section: Document
   format: Document
   dossier: Document
+  recommendations: DocumentConnection
   shareLogo: String
   shareBackgroundImage: String
   shareBackgroundImageInverted: String
@@ -94,7 +101,6 @@ type Meta {
   disableActionBar: Boolean
 
   estimatedReadingMinutes: Int
-  totalMediaMinutes: Int
   estimatedConsumptionMinutes: Int
 
   # template of the article
@@ -103,6 +109,9 @@ type Meta {
   indicateChart: Boolean
   indicateGallery: Boolean
   indicateVideo: Boolean
+  
+  paynotes: [JSON]
+  paynoteMode: PaynoteMode
 }
 
 input DocumentInput {

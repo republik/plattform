@@ -29,16 +29,24 @@ const br = {
   component: () => <br />,
   isVoid: true,
 }
-const link = {
-  matchMdast: matchType('link'),
-  props: (node) => ({
-    title: node.title,
-    href: node.url,
-  }),
-  component: Editorial.A,
+
+function getLinkRule(isInteractive) {
+  return {
+    matchMdast: matchType('link'),
+    props: (node) => ({
+      title: node.title,
+      href: isInteractive ? node.url : undefined,
+    }),
+    component: isInteractive
+      ? Editorial.A
+      : ({ children }) => <span>{children}</span>,
+  }
 }
-const creditSchema = {
-  rules: [link, br],
+
+function getCreditsSchema(isInteractive = true) {
+  return {
+    rules: [getLinkRule(isInteractive), br],
+  }
 }
 
 const DefaultLink = ({ children, href }) => children
@@ -67,6 +75,8 @@ export const TeaserFeed = ({
   menu,
   highlighted,
   series,
+  dense = false,
+  nonInteractive = false,
 }) => {
   const formatMeta = (format && format.meta) || {}
   const href = getTeaserHref(
@@ -104,26 +114,36 @@ export const TeaserFeed = ({
       repoId={repoId}
       href={href}
       title={title}
+      dense={dense}
+      nonInteractive={nonInteractive}
     >
       <Headline formatColor={titleColor}>
-        <Link href={href} passHref>
-          <a {...styles.link} href={href}>
-            {title}
-          </a>
-        </Link>
+        {!nonInteractive ? (
+          <Link href={href} passHref>
+            <a {...styles.link} href={href}>
+              {title}
+            </a>
+          </Link>
+        ) : (
+          title
+        )}
       </Headline>
       {!!description && (
         <Lead>
-          <Link href={href} passHref>
-            <a {...styles.link} href={href}>
-              {description}
-            </a>
-          </Link>
+          {!nonInteractive ? (
+            <Link href={href} passHref>
+              <a {...styles.link} href={href}>
+                {description}
+              </a>
+            </Link>
+          ) : (
+            description
+          )}
         </Lead>
       )}
       <Credit>
         {credits && credits.length > 0
-          ? renderMdast(credits, creditSchema)
+          ? renderMdast(credits, getCreditsSchema(!nonInteractive))
           : !!publishDate && dateFormat(new Date(publishDate))}
       </Credit>
       {!!highlight && (

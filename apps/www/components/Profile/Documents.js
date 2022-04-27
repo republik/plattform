@@ -3,7 +3,7 @@ import withT from '../../lib/withT'
 import HrefLink from '../Link/Href'
 import ActionBar from '../ActionBar'
 import InfiniteScroll from '../Frame/InfiniteScroll'
-import { css } from 'glamor'
+import { css, merge } from 'glamor'
 
 const styles = {
   loadMore: css({
@@ -12,7 +12,7 @@ const styles = {
   }),
 }
 
-const Documents = ({ t, documents, loadMore }) => {
+const Documents = ({ t, documents, loadMore, customStyles }) => {
   if (!documents || !documents.totalCount) {
     return null
   }
@@ -27,7 +27,7 @@ const Documents = ({ t, documents, loadMore }) => {
       loadMore={loadMore}
       totalCount={totalCount}
       currentCount={currentCount}
-      loadMoreStyles={styles.loadMore}
+      loadMoreStyles={merge(styles.loadMore, customStyles)}
     >
       <Interaction.H3 style={{ marginBottom: 20 }}>
         {t.pluralize('profile/documents/title', {

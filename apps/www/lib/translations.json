@@ -662,7 +662,7 @@
     },
     {
       "key": "Account/Update/email/hint",
-      "value": "Achtung: Wenn Sie Ihre E-Mail-Adresse ändern, werden Sie auf allen Geräten abgemeldet und Sie können sich danach ausschliesslich mit der neuen E-Mail anmelden!"
+      "value": "Achtung: Wenn Sie Ihre E-Mail-Adresse ändern, werden Sie auf allen Geräten abgemeldet und Sie können sich danach ausschliesslich mit der neuen E-Mail-Adresse anmelden!"
     },
     {
       "key": "Account/Update/email/error/invalid",
@@ -1881,6 +1881,14 @@
       "value": "10 Sekunden zurück"
     },
     {
+      "key": "styleguide/AudioPlayer/expand",
+      "value": "Audioplayer vergrössern"
+    },
+    {
+      "key": "styleguide/AudioPlayer/shrink",
+      "value": "Audioplayer minimieren"
+    },
+    {
       "key": "styleguide/AudioPlayer/close",
       "value": "Audioplayer schliessen"
     },
@@ -2657,10 +2665,6 @@
       "value": "Kontaktinformationen des Zahlenden"
     },
     {
-      "key": "pledge/contact/signedinAs",
-      "value": "Sie sind angemeldet als: {nameOrEmail}"
-    },
-    {
       "key": "pledge/contact/pastPledges/1",
       "value": "Sie haben bereits einmal mitgemacht."
     },
@@ -2702,15 +2706,15 @@
     },
     {
       "key": "pledge/contact/email/label",
-      "value": "Ihre E-Mail"
+      "value": "Ihre E-Mail-Adresse"
     },
     {
       "key": "pledge/contact/email/error/empty",
-      "value": "E-Mail fehlt"
+      "value": "E-Mail-Adresse fehlt"
     },
     {
       "key": "pledge/contact/email/error/invalid",
-      "value": "E-Mail ungültig"
+      "value": "E-Mail-Adresse ungültig"
     },
     {
       "key": "pledge/submit/package/error",
@@ -2754,7 +2758,7 @@
     },
     {
       "key": "pledge/submit/emailVerify/note",
-      "value": "Diese E-Mail-Adresse wurde schon einmal verwendet. Falls das Ihre E-Mail ist, klicken Sie bitte auf «anmelden»."
+      "value": "Diese E-Mail-Adresse wurde schon einmal verwendet. Falls das Ihre E-Mail-Adresse ist, klicken Sie bitte auf «anmelden»."
     },
     {
       "key": "pledge/submit/emailVerify/done",
@@ -3193,16 +3197,32 @@
       "value": "Zum Dialog"
     },
     {
+      "key": "article/actionbar/discussion/call-to-action/empty",
+      "value": "Reden Sie mit"
+    },
+    {
+      "key": "article/actionbar/discussion/call-to-action",
+      "value": "Reden Sie mit: {count} Dialog-Beiträge"
+    },
+    {
       "key": "article/actionbar/userprogress",
       "value": "Leseposition"
     },
     {
-      "key": "article/syntheticreadaloud/title",
+      "key": "article/syntheticReadAloud/title",
       "value": "Beitrag von synthetischer Stimme vorlesen lassen"
     },
     {
-      "key": "article/syntheticreadaloud/lead",
+      "key": "article/syntheticReadAloud/lead",
       "value": "Ein Versuch, die Republik zugänglicher zu machen. <a href=\"/2022/04/01/synthetische-stimme/diskussion\">Geben Sie uns Feedback</a>."
+    },
+    {
+      "key": "article/readAloud/title",
+      "value": "Beitrag vorlesen lassen"
+    },
+    {
+      "key": "article/readAloud/lead",
+      "value": "Diesen Beitrag können Sie sich im Rahmen unseres Angebotes «<a href=\"/format/vorgelesen\">Vorgelesen</a>» anhören."
     },
     {
       "key": "article/series/episode",
@@ -3227,6 +3247,14 @@
     {
       "key": "article/pdf/images/other",
       "value": "mit {count} Bildern"
+    },
+    {
+      "key": "article/pdf/size/A4",
+      "value": "A4"
+    },
+    {
+      "key": "article/pdf/size/A5",
+      "value": "A5 (Beta)"
     },
     {
       "key": "article/autodiscussionteaser/title",
@@ -6266,7 +6294,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/noMembership",
-      "value": "Journalismus kostet. Deshalb erhalten Sie den 7-Uhr-Newsletter und das vollständige Programm im Wochenend-Newsletter erst wenn Sie eine aktive Mitgliedschaft oder ein aktives Abo haben."
+      "value": "Journalismus kostet. Deshalb erhalten Sie den 7-Uhr-Newsletter und den Wochenend-Newsletter erst wenn Sie eine aktive Mitgliedschaft oder ein aktives Abo haben."
     },
     {
       "key": "section/feed/payNote",
@@ -6277,8 +6305,8 @@
       "value": "Sie brauchen eine Mitgliedschaft oder Abo, um alle Beiträge zu lesen."
     },
     {
-      "key": "marketing/page/sections/description/weekly",
-      "value": "In Europa ist Krieg. Jetzt ist keine Zeit für Kleinlichkeiten. Die gesamte Berichterstattung der Republik zur Ukraine – frei lesbar, frei teilbar."
+      "key": "account/newsletterSubscriptions/WEEKLY/description",
+      "value": "Lektüre für das Wochenende samt Rückblick auf die Geschichten der vergangenen Woche."
     },
     {
       "key": "marketing/page/sections/title/weekly",
@@ -6291,10 +6319,6 @@
     {
       "key": "account/newsletterSubscriptions/WEEKLY/frequency",
       "value": "Samstags um 5 Uhr"
-    },
-    {
-      "key": "account/newsletterSubscriptions/WEEKLY/description",
-      "value": "Die gesamte Berichterstattung der Republik zur Ukraine – frei lesbar, frei teilbar. Und für Mitglieder und Abonnenten: wie gewohnt, samt Rückblick auf das ganze Programm der vergangenen Woche."
     },
     {
       "key": "package/ABO/description",
@@ -6509,52 +6533,56 @@
       "value": "Google"
     },
     {
-      "key": "article/tryNote/211027-v1/before",
-      "value": "<b>Testen Sie die Republik 21 Tage lang gratis und unverbindlich.</b>"
-    },
-    {
-      "key": "article/tryNote/211027-v1/after",
-      "value": "Erhalten Sie für 21 Tage kostenlos und unverbindlich Zugang zu allen Beiträgen der Republik – im Web, in der Republik-App oder als Newsletter:"
-    },
-    {
-      "key": "article/payNote/200313-v1/before",
-      "value": "Unabhängiger Journalismus kostet. Die Republik ist werbefrei und wird finanziert von ihren Leserinnen. Trotzdem können Sie diesen Beitrag lesen.\n\n<b>Wenn Sie weiterhin unabhängigen Journalismus wie diesen lesen wollen, handeln Sie jetzt: Kommen Sie an Bord!</b>"
-    },
-    {
-      "key": "article/payNote/200313-v1/before/buy/button",
+      "key": "article/payNote/default/button",
       "value": "Jahresmitgliedschaft"
     },
     {
-      "key": "article/payNote/200313-v1/before/secondary/label",
+      "key": "article/payNote/default/secondary/label",
       "value": "Einen Monat für 22.–"
     },
     {
-      "key": "article/payNote/200313-v1/before/secondary/link",
+      "key": "article/payNote/default/secondary/link",
       "value": "/angebote?package=MONTHLY_ABO"
     },
     {
-      "key": "article/payNote/200313-v1/before/note",
-      "value": "<a href=\"/\">Mehr Informationen zur Republik.</a>"
+      "key": "article/payNote/default/note",
+      "value": "<a href=\\\"/\\\">Mehr Informationen zur Republik.</a>"
     },
     {
-      "key": "article/payNote/200313-v1/after",
+      "key": "article/payNote/220404-v1/before",
+      "value": "Journalismus kostet. Dass Sie diesen Beitrag trotzdem lesen können, verdanken Sie den über 28'000 Leserinnen, die die Republik schon finanzieren. Wenn auch Sie unabhängigen Journalismus möglich machen wollen: Kommen Sie an Bord!"
+    },
+    {
+      "key": "article/payNote/220404-v1/after",
       "value": "Wenn Sie weiterhin unabhängigen Journalismus wie diesen lesen wollen, handeln Sie jetzt: Kommen Sie an Bord!"
     },
     {
-      "key": "article/payNote/200313-v1/after/buy/button",
-      "value": "Jahresmitgliedschaft"
+      "key": "article/payNote/220404-v2/before",
+      "value": "Die Republik ist ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur – finanziert von seinen Leserinnen. Es ist komplett werbefrei und unabhängig. Lösen Sie jetzt ein Abo oder eine Mitgliedschaft!"
     },
     {
-      "key": "article/payNote/200313-v1/after/secondary/label",
-      "value": "Einen Monat für 22.–"
+      "key": "article/payNote/220404-v2/after",
+      "value": "Unterstützen Sie unabhängigen Journalismus mit einem Monatsabonnement oder einer Jahresmitgliedschaft!"
     },
     {
-      "key": "article/payNote/200313-v1/after/secondary/link",
-      "value": "/angebote?package=MONTHLY_ABO"
+      "key": "article/tryNote/220404-v1/before",
+      "value": "Journalismus, der Ihnen hilft, Entscheidungen zu treffen. Und der das Gemeinsame stärkt: die Freiheit, den Rechtsstaat, die Demokratie. Lernen Sie uns jetzt 21 Tage lang kostenlos und unverbindlich kennen:"
     },
     {
-      "key": "article/payNote/200313-v1/after/note",
-      "value": "<a href=\"/\">Mehr Informationen zur Republik.</a>"
+      "key": "article/tryNote/220404-v1/after",
+      "value": "Über 28'000 Menschen machen die Republik heute schon möglich. Lernen Sie uns jetzt auch kennen – 21 Tage lang, kostenlos und unverbindlich:"
+    },
+    {
+      "key": "article/tryNote/220404-v2/before",
+      "value": "Die Republik ist ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur – finanziert von seinen Leserinnen. Es ist komplett werbefrei und unabhängig. Überzeugen Sie sich selber: Lesen Sie 21 Tage lang kostenlos und unverbindlich Probe:"
+    },
+    {
+      "key": "article/tryNote/220404-v2/after",
+      "value": "Sie sind sich immer noch nicht sicher, ob die Republik etwas für Sie ist? Dann testen Sie uns! Für 21 Tage, kostenlos und unverbindlich:"
+    },
+    {
+      "key": "profile/tryNote/content",
+      "value": "Um die Beiträge von {name} zu lesen, benötigen Sie eine Mitgliedschaft oder ein Monatsabonnement. Sie wollen uns erst kennenlernen? Dann lesen Sie die Republik jetzt unverbindlich und kostenlos 21 Tage Probe."
     },
     {
       "key": "option/ABO/accessGranted/label/other",
@@ -6979,6 +7007,10 @@
     {
       "key": "components/outdatedAppVersion/android/secondaryAction",
       "value": "APK direkt herunterladen"
+    },
+    {
+      "key": "articleRecommendations/heading",
+      "value": "Von der Redaktion für Sie empfohlen:"
     },
     {
       "key": "darkmode/switch/label",

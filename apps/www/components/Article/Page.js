@@ -42,7 +42,7 @@ import ActionBarOverlay from './ActionBarOverlay'
 import SeriesNavBar from './SeriesNavBar'
 import TrialPayNoteMini from './TrialPayNoteMini'
 import Extract from './Extract'
-import { PayNote } from './PayNote'
+import { PayNote, TRY_TO_BUY_RATIO } from './PayNote'
 import Progress from './Progress'
 import PodcastButtons from './PodcastButtons'
 import { getDocument } from './graphql/getDocument'
@@ -61,14 +61,13 @@ import FontSizeSync from '../FontSize/Sync'
 import PageLoader from '../Loader'
 import Frame from '../Frame'
 import ActionBar from '../ActionBar'
-import SyntheticAudio from '../Article/SyntheticAudio'
+import ReadAloudInline from './ReadAloudInline'
 import { BrowserOnlyActionBar } from './BrowserOnly'
 import { AudioContext } from '../Audio/AudioProvider'
 import FormatFeed from '../Feed/Format'
 import StatusError from '../StatusError'
 import NewsletterSignUp from '../Auth/NewsletterSignUp'
 import ArticleGallery from '../Gallery/ArticleGallery'
-import AutoDiscussionTeaser from './AutoDiscussionTeaser'
 import SectionNav from '../Sections/SectionNav'
 import SectionFeed from '../Sections/SectionFeed'
 import HrefLink from '../Link/Href'
@@ -82,6 +81,7 @@ import { Mutation, Query, Subscription } from '@apollo/client/react/components'
 import { useMe } from '../../lib/context/MeContext'
 import DiscussionContextProvider from '../Discussion/context/DiscussionContextProvider'
 import Discussion from '../Discussion/Discussion'
+import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
 
 const dynamicOptions = {
   loading: () => <SmallLoader loading />,
@@ -297,6 +297,11 @@ const ArticlePage = ({
     hasMeta &&
     meta.audioSource &&
     meta.audioSource.kind === 'syntheticReadAloud' &&
+    meta.audioSource
+  const readAloudSource =
+    hasMeta &&
+    meta.audioSource &&
+    meta.audioSource.kind === 'readAloud' &&
     meta.audioSource
   const newsletterMeta =
     hasMeta && (meta.newsletter || meta.format?.meta?.newsletter)
@@ -519,7 +524,8 @@ const ArticlePage = ({
               tryOrBuy={payNoteTryOrBuy}
               documentId={documentId}
               repoId={repoId}
-              customPayNotes={article?.content?.meta?.paynotes}
+              customPayNotes={meta.paynotes ?? []}
+              customMode={meta.paynoteMode}
               customOnly={isPage || isFormat}
               position='before'
             />
@@ -650,8 +656,8 @@ const ArticlePage = ({
                                 {actionBar}
                               </div>
                             )}
-                            {!!syntheticAudioSource && (
-                              <SyntheticAudio meta={meta} t={t} />
+                            {(!!syntheticAudioSource || !!readAloudSource) && (
+                              <ReadAloudInline meta={meta} t={t} />
                             )}
                             {isSection && !hideSectionNav && (
                               <Breakout size='breakout'>
@@ -686,16 +692,6 @@ const ArticlePage = ({
                   </ActionBarOverlay>
                 </ProgressComponent>
               </ArticleGallery>
-              {meta.template === 'article' &&
-                ownDiscussion &&
-                !ownDiscussion.closed &&
-                !linkedDiscussion &&
-                !isSeriesOverview &&
-                hasAccess && (
-                  <Center breakout={breakout}>
-                    <AutoDiscussionTeaser discussionId={ownDiscussion.id} />
-                  </Center>
-                )}
               {meta.template === 'discussion' && ownDiscussion && (
                 <Center breakout={breakout}>
                   <DiscussionContextProvider
@@ -722,14 +718,6 @@ const ArticlePage = ({
                   newsletterMeta.free)) && (
                 <Center breakout={breakout}>
                   <div ref={bottomActionBarRef}>{actionBarEnd}</div>
-                  {!!podcast && meta.template === 'article' && (
-                    <>
-                      <Interaction.H3>
-                        {t(`PodcastButtons/title`)}
-                      </Interaction.H3>
-                      <PodcastButtons {...podcast} />
-                    </>
-                  )}
                 </Center>
               )}
               {!!podcast && meta.template !== 'article' && (
@@ -767,6 +755,9 @@ const ArticlePage = ({
                   variables={feedQueryVariables}
                 />
               )}
+              {me && hasActiveMembership && (
+                <ArticleRecommendationsFeed path={cleanedPath} />
+              )}
               {(hasActiveMembership || isFormat) && (
                 <>
                   <br />
@@ -781,7 +772,7 @@ const ArticlePage = ({
         }}
       />
     </Frame>
-  );
+  )
 }
 
 const styles = {

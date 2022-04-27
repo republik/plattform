@@ -19,19 +19,23 @@ module.exports = async function queryInBatches(
   let count = 0
   let rows = []
 
-  stream.on('data', async (row) => {
-    count++
-    rows.push(row)
-
-    if (rows.length >= size) {
-      stream.pause()
-      await handleFn(rows, count, this)
-      rows = []
-      stream.resume()
-    }
-  })
-
   await new Promise((resolve, reject) => {
+    stream.on('data', async (row) => {
+      try {
+        count++
+        rows.push(row)
+
+        if (rows.length >= size) {
+          stream.pause()
+          await handleFn(rows, count, this)
+          rows = []
+          stream.resume()
+        }
+      } catch (e) {
+        reject(e)
+      }
+    })
+
     stream.on('end', async () => {
       if (rows.length > 0) {
         await handleFn(rows, count, this)
@@ -39,6 +43,7 @@ module.exports = async function queryInBatches(
 
       return resolve()
     })
+
     stream.on('error', reject)
   })
 }

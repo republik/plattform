@@ -5,7 +5,7 @@ import { gql } from '@apollo/client'
 import { css } from 'glamor'
 import { withRouter } from 'next/router'
 
-import withT from '../../lib/withT'
+import withT, { t } from '../../lib/withT'
 import withMe from '../../lib/apollo/withMe'
 
 import Loader from '../Loader'
@@ -42,6 +42,7 @@ import {
 import ElectionBallotRow from '../Vote/ElectionBallotRow'
 import { documentListQueryFragment } from '../Feed/DocumentListContainer'
 import Link from 'next/link'
+import { InnerPaynote } from '../Article/PayNote'
 
 const SIDEBAR_TOP = 20
 const PORTRAIT_SIZE_M = TESTIMONIAL_IMAGE_SIZE
@@ -373,6 +374,7 @@ const LoadedProfile = (props) => {
   const {
     t,
     me,
+    hasAccess,
     data: { user, fetchMore },
     card,
     metaData,
@@ -423,6 +425,7 @@ const LoadedProfile = (props) => {
     overlayTitle: t('profile/share/overlayTitle'),
   }
   const [colorScheme] = useColorContext()
+  const showPaynote = !me && !!user.documents?.totalCount
   return (
     <Fragment>
       {!user.hasPublicProfile && (
@@ -602,6 +605,7 @@ const LoadedProfile = (props) => {
               </div>
             ))}
             <Documents
+              customStyles={showPaynote && css({ marginBottom: 0 })}
               documents={user.documents}
               loadMore={makeLoadMore(fetchMore, 'documents', {
                 firstComments: 0,
@@ -610,15 +614,28 @@ const LoadedProfile = (props) => {
                   user.documents.pageInfo && user.documents.pageInfo.endCursor,
               })}
             />
-            <Comments
-              comments={user.comments}
-              loadMore={makeLoadMore(fetchMore, 'comments', {
-                firstDocuments: 0,
-                firstComments: 40,
-                afterComment:
-                  user.comments.pageInfo && user.comments.pageInfo.endCursor,
-              })}
-            />
+            {showPaynote ? (
+              <InnerPaynote
+                payNote={{
+                  cta: 'trialForm',
+                  content: t('profile/tryNote/content', { name: user.name }),
+                }}
+                trackingPayload={{
+                  profile: user.id,
+                }}
+                hasAccess={hasAccess}
+              />
+            ) : (
+              <Comments
+                comments={user.comments}
+                loadMore={makeLoadMore(fetchMore, 'comments', {
+                  firstDocuments: 0,
+                  firstComments: 40,
+                  afterComment:
+                    user.comments.pageInfo && user.comments.pageInfo.endCursor,
+                })}
+              />
+            )}
           </div>
           <div style={{ clear: 'both' }} />
         </div>
@@ -702,11 +719,12 @@ export default compose(
       if (slug === 'me') {
         redirect = me
       }
-      if (!data.loading) {
-        const username = data.user && data.user.username
-        if (username && username !== slug) {
-          redirect = data.user
-        }
+      // redirect id slug to username if available
+      // - data.loading might be false during query transition
+      // - to avoid race conditions we limit it to the slug being the id
+      // - old slugs are handled by the 404 StatusError component
+      if (!data.loading && data.user?.username && data.user?.id === slug) {
+        redirect = data.user
       }
       if (redirect) {
         const targetSlug = redirect.username || redirect.id
