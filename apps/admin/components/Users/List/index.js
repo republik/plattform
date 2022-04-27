@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 import InfiniteScroller from 'react-infinite-scroller'

@@ -511,21 +511,6 @@ feature,value
 </div>
 ```
 
-```
-npm i -g shapefile ndjson-cli d3-geo-projection topojson-simplify topojson-server topojson-client d3-dsv 
-
-shp2json --encoding utf8 -n ~/Desktop/world-map/world-wo-antarctic.shp \
-  | ndjson-map 'i = d.properties.ISO_N3, d.id = i === "-99" ? (d.properties.SOV_A3 === "NOR" ? "578" : d.properties.SOV_A3) : i, d.properties = {name: d.properties.NAME}, d' \
-  > ~/Desktop/world-map/world-wo-antarctic.ndjson
-
-geo2topo -q 1e5 -n countries=<( \
-    ndjson-join 'd.id' <(cat ~/Desktop/world-map/world-wo-antarctic.ndjson) <(csv2json -n public/static/geo/country-names.csv) \
-    | ndjson-map 'd[0].properties.name = d[1].name, d[0]' \
-    | geostitch -n) \
-  | topomerge land=countries \
-  > public/static/geo/world-atlas-110m-without-antarctic.json
-```
-
 ## ProjectedMap
 
 Want a special projection? Use `ProjectedMap` to render an pre-projected topojson file. `d3.geoIdentity` is used to fit the map into the viewport.
@@ -663,22 +648,26 @@ npx -p topojson toposimplify -p 1 < nuts-topo.json > nuts2013-20m-l2-custom-gdp.
 #### Ordinal Colors
 
 ```
-# npm i -g ndjson-cli d3-dsv topojson d3-geo-projection
+# npm i -g ndjson-cli d3-dsv topojson d3-geo-projection@2.7.1 shapefile
+
+shp2json CNTR_RG_20M_2020_4326.shp > countries.json
 
 geoproject 'd3.geoIdentity().clipExtent([[-24.5,33.870416],[35.156250,71.910888]])' < countries.json > countries-clipped.json
 
-geoproject 'd3.geoConicConformal().rotate([-10, -53]).parallels([0, 60]).fitSize([960, 960], d)' < countries-clipped.json > countries-projected.json
+geostitch countries-clipped.json \
+  | geoproject 'd3.geoConicConformal().rotate([-10, -53]).parallels([0, 60]).fitSize([960, 960], d)' \
+  > countries-projected.json
 
 ndjson-split 'd.features' \
   < countries-projected.json \
   > countries-projected.ndjson
 
-ndjson-filter 'd.geometry && !["MA","DZ","TN","GL","SJ","RU","UA","TR","BY","MD"].includes(d.properties.CNTR_ID)' \
+ndjson-filter 'd.geometry && !["MA","DZ","TN","GL","SJ","RU","UA","TR","BY","MD","RS","MK","AL","ME","BA"].includes(d.properties.CNTR_ID)' \
   < countries-projected.ndjson \
-  | ndjson-map 'd.id = d.properties.CNTR_ID, d.properties = {name: d.properties.NAME_ENGL}, d' \
+  | ndjson-map 'd.id = d.properties.CNTR_ID, d.properties = {name: d.properties.NAME_ENGL.trim()}, d' \
   > countries-projected-filered.ndjson
 
-ndjson-join --left 'd.id' <(cat countries-projected-filered.ndjson) <(csv2json -n names.csv) \
+ndjson-join --left 'd.id' <(cat countries-projected-filered.ndjson) <(csv2json -n europa-names.csv) \
   | ndjson-map 'd[1] && (d[0].properties.name = d[1].name), d[0]' \
   > countries-projected-clean.ndjson
 
@@ -688,7 +677,7 @@ ndjson-reduce 'p.features.push(d), p' '{type: "FeatureCollection", features: []}
 
 geo2topo countries=countries-projected-clean.json > countries-topo.json
 
-toposimplify -p 1 < countries-topo.json > countries2016-20m-europe.json
+toposimplify -p 1 < countries-topo.json > countries2020-20m-europe.json
 ```
 
 ```react
@@ -705,7 +694,7 @@ toposimplify -p 1 < countries-topo.json > countries2016-20m-europe.json
       "legendTitle": "E-ID-Angebote",
       "missingDataLegend": "Nicht untersucht",
       "features": {
-        "url": "/static/geo/countries2016-20m-europe.json",
+        "url": "/static/geo/countries2020-20m-europe.json",
         "object": "countries"
       }
     }}
@@ -736,20 +725,8 @@ CZ,Tschechien,Öffentliche und private
 SI,Slowenien,Öffentliche und private
 FI,Finnland,Öffentliche und private
 CY,Zypern,Öffentliche Angebote dominieren
-HU,Ungarn,
-BA,Bosnien und Herzegowina,
-AL,Albanien,
-BG,Bulgarien,
-IE,Irland,
-IS,Island,
-EL,Griechenland,
-LI,Liechtenstein,
-ME,Montenegro,
-MK,Nord Mazedonien,
-RO,Rumänien,
-RS,Serbien,
     `.trim()} />
-  <ChartLegend>Geobasis: <Editorial.A href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/countries">Eurostat Countries 2016 20M</Editorial.A></ChartLegend>
+  <ChartLegend>Geobasis: <Editorial.A href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/countries">Eurostat Countries 2020 20M</Editorial.A></ChartLegend>
 </div>
 ```
 

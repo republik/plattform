@@ -1,4 +1,3 @@
-import React from 'react'
 import { Editorial, mediaQueries } from '@project-r/styleguide'
 import SectionContainer from './Common/SectionContainer'
 import { css } from 'glamor'

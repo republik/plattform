@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from 'react'
+import { Fragment, Component } from 'react'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'

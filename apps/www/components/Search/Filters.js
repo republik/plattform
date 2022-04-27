@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { withAggregations } from './enhancers'
 import compose from 'lodash/flowRight'
 import withSearchRouter from './withSearchRouter'

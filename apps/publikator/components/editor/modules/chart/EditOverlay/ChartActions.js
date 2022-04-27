@@ -1,4 +1,3 @@
-import React from 'react'
 import { Button, A, Interaction } from '@project-r/styleguide'
 import { css } from 'glamor'
 

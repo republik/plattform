@@ -1,4 +1,3 @@
-import React from 'react'
 import { Block } from 'slate'
 
 import { Radio, Label, A } from '@project-r/styleguide'

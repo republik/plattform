@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { inQuotes } from '@project-r/styleguide'
 
 import { useDiscussion } from '../DiscussionContext'

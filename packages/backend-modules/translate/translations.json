@@ -813,6 +813,10 @@
       "value": "Bestätigen Sie Ihre Anmeldung zum Covid-19-Uhr-Newsletter."
     },
     {
+      "key": "api/newsletters/request/PROJECTR/subject",
+      "value": "Bestätigen Sie Ihre Anmeldung zum Project-R-Newsletter."
+    },
+    {
       "key": "api/newsletters/request/notSupported",
       "value": "Diese Art der Anmeldung zum gewählten Newsletter wird noch nicht unterstützt."
     },
@@ -1746,7 +1750,7 @@
     },
     {
       "key": "api/auth/emailCode/tokensExceeded",
-      "value": "Anzahl der gleichzeitig gültigen Tokens überschritten"
+      "value": "Zu viele Anmeldeversuche. Probieren Sie es in einer Stunde erneut."
     },
     {
       "key": "api/auth/emailCode/collison",
@@ -1758,7 +1762,15 @@
     },
     {
       "key": "api/auth/accessToken/tokensExceeded",
-      "value": "Anzahl der gleichzeitig gültigen Tokens überschritten"
+      "value": "Zu viele Anmeldeversuche. Probieren Sie es in einigen Minuten erneut."
+    },
+    {
+      "key": "api/auth/app/tokensExceeded",
+      "value": "Zu viele Anmeldeversuche. Probieren Sie es in 10 Minuten erneut."
+    },
+    {
+      "key": "api/auth/emailToken/tokensExceeded",
+      "value": "Zu viele Anmeldeversuche. Probieren Sie es in einer Stunde erneut."
     },
     {
       "key": "api/commit/templateTitle/required",
@@ -2239,6 +2251,18 @@
     {
       "key": "api/publikator/memo/notPublished/author/email",
       "value": "zurückgezogen"
+    },
+    {
+      "key": "api/publikator/generateDerivative/commit/404",
+      "value": "Commit war nicht aufzufinden"
+    },
+    {
+      "key": "api/publikator/generateDerivative/canNot",
+      "value": "Lässt sich so gar nicht für diesen Commit erzeugen"
+    },
+    {
+      "key": "api/publikator/generateDerivative/unable",
+      "value": "Ein Fehler verhinderte das Erzeugen für diesen Commit"
     }
   ]
 }

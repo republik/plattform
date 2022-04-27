@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import { Controlled as CodeMirror } from 'react-codemirror2'

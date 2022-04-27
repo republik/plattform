@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 import {
@@ -42,6 +42,7 @@ export const filterRepos = gql`
         }
         latestPublications {
           document {
+            id
             meta {
               publishDate
             }
@@ -134,7 +135,7 @@ const createRepoItem = (repo) => {
     repo.latestCommit.document.meta.title ||
     repo.id.replace([GITHUB_ORG, REPO_PREFIX || ''].join('/'), '')
   const publishDate =
-    repo.latestPublications[0]?.document.meta.publishDate ||
+    repo.latestPublications[0]?.document?.meta.publishDate ||
     repo.meta.publishDate
 
   return {

@@ -1014,6 +1014,11 @@ const Styleguide = () => {
                       src: require('./components/Chart/Maps.docs.md'),
                     },
                     {
+                      path: '/charts/maps/data',
+                      title: 'Maps Data',
+                      src: require('./components/Chart/Maps.data.docs.md'),
+                    },
+                    {
                       path: '/charts/hemicycle',
                       title: 'Hemicycle',
                       imports: {

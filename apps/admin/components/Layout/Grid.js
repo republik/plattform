@@ -1,4 +1,4 @@
-import React from 'react'
+import { createElement } from 'react'
 import { css } from 'glamor'
 import mergeClassNames from '../../lib/mergeClassNames'
 
@@ -36,7 +36,7 @@ export const createTile =
   (flexDefaults = {}, defaultProps = {}) =>
   (Component) =>
   ({ className, style, domRef, children, flex, ...props }) =>
-    React.createElement(
+    createElement(
       Component,
       {
         className: mergeClassNames(
@@ -69,7 +69,7 @@ export const createContainer =
     wrap,
     ...props
   }) =>
-    React.createElement(
+    createElement(
       Component,
       {
         className: mergeClassNames(

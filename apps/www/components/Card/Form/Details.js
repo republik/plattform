@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Interaction } from '@project-r/styleguide'
 
 const { H2, H3, P } = Interaction

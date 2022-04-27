@@ -1,4 +1,3 @@
-import React from 'react'
 import { useRouter } from 'next/router'
 import Frame from '../../components/Frame'
 import withT from '../../lib/withT'

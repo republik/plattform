@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { createContext, useContext } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql, withApollo } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
@@ -7,9 +7,8 @@ import debounce from 'lodash/debounce'
 import throttle from 'lodash/throttle'
 
 import withMe from '../../lib/apollo/withMe'
-import createPersistedState from '../../lib/hooks/use-persisted-state'
 
-const MediaProgressContext = React.createContext()
+const MediaProgressContext = createContext()
 
 export const useMediaProgress = () => useContext(MediaProgressContext)
 
@@ -33,9 +32,22 @@ const upsertMediaProgressMutation = gql`
   }
 `
 
-const useLocalMediaProgressState = createPersistedState(
-  'republik-progress-media',
-)
+const localStorageKey = 'republik-progress-media'
+
+let fallbackStore
+const getLocalMediaProgress = () => {
+  let value = fallbackStore
+  try {
+    value = JSON.parse(window.localStorage.getItem(localStorageKey))
+  } catch (e) {}
+  return value
+}
+const setLocalMediaProgress = (data) => {
+  fallbackStore = data
+  try {
+    window.localStorage.setItem(localStorageKey, JSON.stringify(data))
+  } catch (e) {}
+}
 
 const MediaProgressProvider = ({
   children,
@@ -44,8 +56,6 @@ const MediaProgressProvider = ({
   upsertMediaProgress,
 }) => {
   const isTrackingAllowed = me && me.progressConsent === true
-  const [localMediaProgress, setLocalMediaProgress] =
-    useLocalMediaProgressState()
 
   const saveMediaProgressNotPlaying = debounce((mediaId, currentTime) => {
     // Fires on pause, on scrub, on end of video.
@@ -101,8 +111,11 @@ const MediaProgressProvider = ({
             return secs - 2
           }
         })
-    } else if (localMediaProgress && localMediaProgress.mediaId === mediaId) {
-      return Promise.resolve(localMediaProgress.currentTime - 2)
+    } else {
+      const localMediaProgress = getLocalMediaProgress()
+      if (localMediaProgress?.mediaId === mediaId) {
+        return Promise.resolve(localMediaProgress.currentTime - 2)
+      }
     }
     return Promise.resolve()
   }

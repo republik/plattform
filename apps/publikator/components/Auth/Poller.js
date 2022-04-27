@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { compose, graphql } from 'react-apollo'
 import { meQuery } from '../../lib/withMe'

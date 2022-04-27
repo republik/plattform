@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState } from 'react'
 import { css } from 'glamor'
 
 import { Container, mediaQueries } from '@project-r/styleguide'
@@ -34,7 +34,7 @@ export const Content = ({ children }) => (
 )
 
 const ContainerWithSidebar = ({ sidebarProps, children }) => {
-  const [sticky, setSticky] = React.useState({})
+  const [sticky, setSticky] = useState({})
 
   return (
     <Container>

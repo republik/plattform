@@ -1,4 +1,3 @@
-import React from 'react'
 import compose from 'lodash/flowRight'
 import Frame from '../components/Frame'
 import Index from '../components/Sections/Index'

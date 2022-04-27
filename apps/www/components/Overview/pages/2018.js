@@ -1,4 +1,3 @@
-import React from 'react'
 import { Highlight, A } from '../Elements'
 import Page from '../Page'
 

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useMemo, useContext } from 'react'
+import { cloneElement, useRef, useEffect, useMemo, useContext } from 'react'
 import { css } from 'glamor'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -42,7 +42,7 @@ import ActionBarOverlay from './ActionBarOverlay'
 import SeriesNavBar from './SeriesNavBar'
 import TrialPayNoteMini from './TrialPayNoteMini'
 import Extract from './Extract'
-import { PayNote } from './PayNote'
+import { PayNote, TRY_TO_BUY_RATIO } from './PayNote'
 import Progress from './Progress'
 import PodcastButtons from './PodcastButtons'
 import { getDocument } from './graphql/getDocument'
@@ -61,13 +61,13 @@ import FontSizeSync from '../FontSize/Sync'
 import PageLoader from '../Loader'
 import Frame from '../Frame'
 import ActionBar from '../ActionBar'
+import ReadAloudInline from './ReadAloudInline'
 import { BrowserOnlyActionBar } from './BrowserOnly'
 import { AudioContext } from '../Audio/AudioProvider'
 import FormatFeed from '../Feed/Format'
 import StatusError from '../StatusError'
 import NewsletterSignUp from '../Auth/NewsletterSignUp'
 import ArticleGallery from '../Gallery/ArticleGallery'
-import AutoDiscussionTeaser from './AutoDiscussionTeaser'
 import SectionNav from '../Sections/SectionNav'
 import SectionFeed from '../Sections/SectionFeed'
 import HrefLink from '../Link/Href'
@@ -81,6 +81,7 @@ import { Mutation, Query, Subscription } from '@apollo/client/react/components'
 import { useMe } from '../../lib/context/MeContext'
 import DiscussionContextProvider from '../Discussion/context/DiscussionContextProvider'
 import Discussion from '../Discussion/Discussion'
+import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
 
 const dynamicOptions = {
   loading: () => <SmallLoader loading />,
@@ -292,6 +293,16 @@ const ArticlePage = ({
   const podcast =
     hasMeta &&
     (meta.podcast || (meta.audioSource && meta.format?.meta?.podcast))
+  const syntheticAudioSource =
+    hasMeta &&
+    meta.audioSource &&
+    meta.audioSource.kind === 'syntheticReadAloud' &&
+    meta.audioSource
+  const readAloudSource =
+    hasMeta &&
+    meta.audioSource &&
+    meta.audioSource.kind === 'readAloud' &&
+    meta.audioSource
   const newsletterMeta =
     hasMeta && (meta.newsletter || meta.format?.meta?.newsletter)
 
@@ -367,13 +378,13 @@ const ArticlePage = ({
     />
   )
   const actionBarEnd = actionBar
-    ? React.cloneElement(actionBar, {
+    ? cloneElement(actionBar, {
         mode: isSeriesOverview ? 'seriesOverviewBottom' : 'articleBottom',
       })
     : undefined
 
   const actionBarOverlay = actionBar
-    ? React.cloneElement(actionBar, {
+    ? cloneElement(actionBar, {
         mode: 'articleOverlay',
       })
     : undefined
@@ -513,13 +524,14 @@ const ArticlePage = ({
               tryOrBuy={payNoteTryOrBuy}
               documentId={documentId}
               repoId={repoId}
-              customPayNotes={article?.content?.meta?.paynotes}
+              customPayNotes={meta.paynotes ?? []}
+              customMode={meta.paynoteMode}
               customOnly={isPage || isFormat}
               position='before'
             />
           )
           const payNoteAfter =
-            payNote && React.cloneElement(payNote, { position: 'after' })
+            payNote && cloneElement(payNote, { position: 'after' })
 
           const ownDiscussion = meta.ownDiscussion
           const linkedDiscussion =
@@ -625,7 +637,10 @@ const ArticlePage = ({
                             </div>
                           </Center>
                         ) : null}
-                        {actionBar || isSection || showNewsletterSignupTop ? (
+                        {actionBar ||
+                        isSection ||
+                        showNewsletterSignupTop ||
+                        !!syntheticAudioSource ? (
                           <Center breakout={breakout}>
                             {actionBar && (
                               <div
@@ -640,6 +655,9 @@ const ArticlePage = ({
                               >
                                 {actionBar}
                               </div>
+                            )}
+                            {(!!syntheticAudioSource || !!readAloudSource) && (
+                              <ReadAloudInline meta={meta} t={t} />
                             )}
                             {isSection && !hideSectionNav && (
                               <Breakout size='breakout'>
@@ -674,16 +692,6 @@ const ArticlePage = ({
                   </ActionBarOverlay>
                 </ProgressComponent>
               </ArticleGallery>
-              {meta.template === 'article' &&
-                ownDiscussion &&
-                !ownDiscussion.closed &&
-                !linkedDiscussion &&
-                !isSeriesOverview &&
-                hasAccess && (
-                  <Center breakout={breakout}>
-                    <AutoDiscussionTeaser discussionId={ownDiscussion.id} />
-                  </Center>
-                )}
               {meta.template === 'discussion' && ownDiscussion && (
                 <Center breakout={breakout}>
                   <DiscussionContextProvider
@@ -710,14 +718,6 @@ const ArticlePage = ({
                   newsletterMeta.free)) && (
                 <Center breakout={breakout}>
                   <div ref={bottomActionBarRef}>{actionBarEnd}</div>
-                  {!!podcast && meta.template === 'article' && (
-                    <>
-                      <Interaction.H3>
-                        {t(`PodcastButtons/title`)}
-                      </Interaction.H3>
-                      <PodcastButtons {...podcast} />
-                    </>
-                  )}
                 </Center>
               )}
               {!!podcast && meta.template !== 'article' && (
@@ -754,6 +754,9 @@ const ArticlePage = ({
                   formatId={article.repoId}
                   variables={feedQueryVariables}
                 />
+              )}
+              {me && hasActiveMembership && (
+                <ArticleRecommendationsFeed path={cleanedPath} />
               )}
               {(hasActiveMembership || isFormat) && (
                 <>

@@ -1,5 +1,3 @@
-import React from 'react'
-
 import injectBlock from '../../utils/injectBlock'
 import { buttonStyles } from '../../utils'
 

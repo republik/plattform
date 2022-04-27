@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 

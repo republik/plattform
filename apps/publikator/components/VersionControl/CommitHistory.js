@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Link } from '../../lib/routes'
 import { colors, A, Interaction } from '@project-r/styleguide'
 import { css } from 'glamor'

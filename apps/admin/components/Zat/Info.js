@@ -1,4 +1,3 @@
-import React from 'react'
 import { A } from '@project-r/styleguide'
 
 import { styles } from './utils'

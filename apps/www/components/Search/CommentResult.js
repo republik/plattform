@@ -1,4 +1,3 @@
-import React from 'react'
 import CommentLink from '../Discussion/shared/CommentLink'
 import { CommentTeaser } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'

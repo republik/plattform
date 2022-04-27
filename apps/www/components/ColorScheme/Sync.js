@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { COLOR_SCHEME_KEY, OS_COLOR_SCHEME_KEY, useColorSchemeKey } from './lib'
 import NextHead from 'next/head'
 

@@ -1,4 +1,3 @@
-import React from 'react'
 import { compose } from 'react-apollo'
 import Router, { withRouter } from 'next/router'
 import { BrandMark, Interaction, mediaQueries } from '@project-r/styleguide'

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { createElement, useMemo } from 'react'
 import { css } from 'glamor'
 
 import { ArrowDownIcon, ArrowUpIcon } from '@project-r/styleguide'
@@ -97,12 +97,12 @@ const SortToggle = compose(withT)(({ t, sort, urlSort, getSearchParams }) => {
             role='button'
             title={t(`search/sort/${direction}/aria`)}
           >
-            {React.createElement(SORT_DIRECTION_ICONS[direction])}
+            {createElement(SORT_DIRECTION_ICONS[direction])}
           </span>
         )}
       </a>
     </Link>
-  )
+  );
 })
 
 const Sort = compose(withSearchRouter)(

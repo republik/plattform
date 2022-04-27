@@ -1,4 +1,3 @@
-import React from 'react'
 import Frame from '../components/Frame'
 
 import md from 'markdown-in-js'

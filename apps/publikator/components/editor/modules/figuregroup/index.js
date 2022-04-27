@@ -1,6 +1,5 @@
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { Block } from 'slate'
-import React from 'react'
 import { FigureGroupButton, FigureGroupForm, isFigureGroup } from './ui'
 import { matchBlock } from '../../utils'
 import { createRemoveEmptyKeyHandler } from '../../utils/keyHandlers'
