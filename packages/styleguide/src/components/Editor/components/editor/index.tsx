@@ -26,6 +26,7 @@ import { navigateOnTab } from './helpers/tree'
 import { handleInsert, insertOnKey } from './helpers/structure'
 import { CHAR_LIMIT } from './helpers/text'
 import { withInsert } from './decorators/insert'
+import { withDelete } from './decorators/delete'
 
 const SlateEditor: React.FC<{
   value: CustomDescendant[]
@@ -35,8 +36,10 @@ const SlateEditor: React.FC<{
   const editor = useMemoOne<CustomEditor>(
     () =>
       withInsert(CHAR_LIMIT)(
-        withNormalizations(structure)(
-          withElAttrsConfig(withReact(withHistory(createEditor()))),
+        withDelete(
+          withNormalizations(structure)(
+            withElAttrsConfig(withReact(withHistory(createEditor()))),
+          ),
         ),
       ),
     [],

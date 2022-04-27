@@ -224,16 +224,15 @@ export const fixStructure: (
       const currentTemplate = structure[i]
       const prevTemplate = i > 0 && structure[i - 1]
       const nextTemplate = i < structure.length - 1 && structure[i + 1]
-      /*console.log({
-      i,
-      repeatOffset,
-      currentNode,
-      nextNode,
-      currentTemplate,
-      prevTemplate,
-      nextTemplate
-    })*/
-      // TODO: min/max repeats
+      /* console.log({
+        i,
+        repeatOffset,
+        currentNode,
+        nextNode,
+        currentTemplate,
+        prevTemplate,
+        nextTemplate,
+      }) */
       if (prevTemplate?.repeat && isCorrect(currentNode, prevTemplate)) {
         // we use the template for switch between block types and onEnter insert
         linkTemplate(currentPath, prevTemplate, editor)
@@ -304,12 +303,12 @@ const insertRepeat = (editor: CustomEditor): void => {
   // if the current target is empty, and has no sibling:
   // jump out of element altogether
   // (e.g. after pressing "enter" on the last item of a list when empty)
-  const emptyTarget =
+  const isEmptyTarget =
     target &&
     getCharCount([target[0]]) === 0 &&
     Object.keys(target[0]).length <= 3 // at least 3 attributes: children, type, template
-  // console.log({ target, emptyTarget, editor })
-  if (emptyTarget) {
+  // console.log({ target, isEmptyTarget, editor })
+  if (isEmptyTarget) {
     const nextNode = getSiblingNode(editor)
     const hasSibling =
       nextNode &&
@@ -330,15 +329,19 @@ const insertRepeat = (editor: CustomEditor): void => {
     return selectAdjacent(editor)
   }
 
-  const isInline = Editor.isInline(editor, target[0])
-  const selectionP = getSelectedElement(editor)[1]
   const [targetN, targetP] = target
-  if (
-    selectionP.length !== targetP.length &&
-    hasNextSibling(editor, isInline)
-  ) {
-    return selectAdjacent(editor)
+
+  if (!deleteP) {
+    const isInline = Editor.isInline(editor, target[0])
+    const selectionP = getSelectedElement(editor)[1]
+    if (
+      selectionP.length !== targetP.length &&
+      hasNextSibling(editor, isInline)
+    ) {
+      return selectAdjacent(editor)
+    }
   }
+
   let insertP
   Editor.withoutNormalizing(editor, () => {
     // console.log('insert', { target })
@@ -354,11 +357,13 @@ const insertRepeat = (editor: CustomEditor): void => {
     )
     insertP = nextTarget ? targetP : calculateSiblingPath(targetP)
     Transforms.moveNodes(editor, { at: splitP, to: insertP })
-    if (deleteP) {
-      Transforms.removeNodes(editor, { at: deleteP })
-    }
   })
-  selectNode(editor, insertP)
+  if (deleteP) {
+    Transforms.removeNodes(editor, { at: deleteP })
+    // TODO: select correct adjacent node
+  } else {
+    selectNode(editor, insertP)
+  }
 }
 
 export const handleInsert = (
