@@ -198,7 +198,7 @@ export const ToolbarButton: React.FC<{
     fillColorName={active ? 'primary' : disabled ? 'divider' : 'text'}
     onMouseDown={(event) => {
       event.preventDefault()
-      onClick()
+      !disabled && onClick()
     }}
     Icon={button.icon}
     size={button.small ? 12 : 19}

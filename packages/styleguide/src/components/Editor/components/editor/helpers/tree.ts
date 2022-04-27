@@ -260,7 +260,4 @@ export const navigateOnTab = (
   // AND can't delete (how do we check that??? in normalisation?):
   // is there a can delete function? in normalisation process
   // selectAdjacent(editor, 'previous')
-
-  // if (enter) -> if buggy
-  // selectAdjacent(editor, 'next')
 }
