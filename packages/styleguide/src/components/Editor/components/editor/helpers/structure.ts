@@ -109,12 +109,9 @@ export const buildAndInsert = (
   const {
     text: targetT,
     element: targetE,
-    // @Felix: maybe try using topLevelContainer instaead of container
-    // and test if this fixes the block conversion
-    container: targetC,
+    topLevelContainer: targetC,
   } = getAncestry(editor)
   const element = buildElement(elKey)
-  // console.log('insert', element)
   if (elConfig[elKey].attrs?.isInline) {
     if (!targetT) return
     if (isCollapsed) {
