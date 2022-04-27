@@ -3249,6 +3249,14 @@
       "value": "mit {count} Bildern"
     },
     {
+      "key": "article/pdf/size/A4",
+      "value": "A4"
+    },
+    {
+      "key": "article/pdf/size/A5",
+      "value": "A5 (Beta)"
+    },
+    {
       "key": "article/autodiscussionteaser/title",
       "value": "Jetzt sind Sie dran!"
     },
@@ -3674,7 +3682,7 @@
     },
     {
       "key": "memberships/claim/personal/lead",
-      "value": "{name} schenkt Ihnen acht Wochen Republik"
+      "value": "{name} schenkt Ihnen einen Republik-Probezugang"
     },
     {
       "key": "memberships/claim/access/lead",
@@ -6286,7 +6294,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/noMembership",
-      "value": "Journalismus kostet. Deshalb erhalten Sie den 7-Uhr-Newsletter und das vollständige Programm im Wochenend-Newsletter erst wenn Sie eine aktive Mitgliedschaft oder ein aktives Abo haben."
+      "value": "Journalismus kostet. Deshalb erhalten Sie den 7-Uhr-Newsletter und den Wochenend-Newsletter erst wenn Sie eine aktive Mitgliedschaft oder ein aktives Abo haben."
     },
     {
       "key": "section/feed/payNote",
@@ -6297,12 +6305,8 @@
       "value": "Sie brauchen eine Mitgliedschaft oder Abo, um alle Beiträge zu lesen."
     },
     {
-      "key": "marketing/page/sections/description/weekly",
-      "value": "In Europa ist Krieg. Jetzt ist keine Zeit für Kleinlichkeiten. Die gesamte Berichterstattung der Republik zur Ukraine – frei lesbar, frei teilbar."
-    },
-    {
       "key": "account/newsletterSubscriptions/WEEKLY/description",
-      "value": "Die gesamte Berichterstattung der Republik zur Ukraine – frei lesbar, frei teilbar. Und für Mitglieder und Abonnenten: wie gewohnt, samt Rückblick auf das ganze Programm der vergangenen Woche."
+      "value": "Lektüre für das Wochenende samt Rückblick auf die Geschichten der vergangenen Woche."
     },
     {
       "key": "marketing/page/sections/title/weekly",

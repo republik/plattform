@@ -264,6 +264,28 @@ const handleBatch = async (rows: any[], count: number, pgdb: any) => {
       )
 
       if (isPublished) {
+        const latestDerivative = await tx.publikator.derivatives.findOne(
+          {
+            commitId: workingCommit.id,
+            status: 'Ready',
+          },
+          { orderBy: { readyAt: 'DESC' }, limit: 1 },
+        )
+
+        if (latestDerivative) {
+          delete latestDerivative.id
+          const derivative = await tx.publikator.derivatives.insertAndGet({
+            ...latestDerivative,
+            commitId: commit.id,
+          })
+          debug('inserted derivative: %s', derivative.id)
+          console.log(
+            'inserted derivative',
+            repoId,
+            `https://publikator.republik.ch/repo/${repoId}/tree`,
+          )
+        }
+
         const now = moment()
         const versionName = `v${+publication.name.replace(/\D/g, '') + 1}`
         const milestone = await tx.publikator.milestones.insertAndGet({

@@ -3,10 +3,10 @@ import { makeQueryHook } from '../../../lib/helpers/AbstractApolloGQLHooks.helpe
 import { documentFragment } from '../../Feed/fragments'
 
 type GetArticleRecommendationsData = {
-  article: {
+  article?: {
     id: string
     meta: {
-      recommendations: {
+      recommendations?: {
         nodes: any[]
       }
     }

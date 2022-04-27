@@ -101,7 +101,6 @@ type Meta {
   disableActionBar: Boolean
 
   estimatedReadingMinutes: Int
-  totalMediaMinutes: Int
   estimatedConsumptionMinutes: Int
 
   # template of the article

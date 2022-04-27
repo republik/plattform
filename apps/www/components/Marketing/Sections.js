@@ -11,16 +11,16 @@ import SectionTitle from './Common/SectionTitle'
 import SectionContainer from './Common/SectionContainer'
 import { CDN_FRONTEND_BASE_URL } from '../../lib/constants'
 import Link from 'next/link'
-import NewsletterSignUp from '../Auth/NewsletterSignUp'
+// import NewsletterSignUp from '../Auth/NewsletterSignUp'
 
 const sectionContent = [
-  {
-    name: 'weekly',
-    after: <NewsletterSignUp skipTitle free name='WEEKLY' />,
-    href: '/format/wochenend-newsletter',
-    color: '#000000',
-    borderTop: 'none',
-  },
+  // {
+  //   name: 'weekly',
+  //   after: <NewsletterSignUp skipTitle free name='WEEKLY' />,
+  //   href: '/format/wochenend-newsletter',
+  //   color: '#000000',
+  //   borderTop: 'none',
+  // },
   {
     name: 'briefings',
     href: '/briefings',
