@@ -159,7 +159,7 @@ const ConnectedAutoComplete = graphql(filterRepos, {
     return {
       data: props.data,
       items: nodes.map(createRepoItem),
-      autoFocus: props?.autoFocus,
+      autoFocus: props.autoFocus,
     }
   },
 })((props) => {
@@ -251,7 +251,7 @@ export default class RepoSearch extends Component {
         items={[]}
         onChange={this.changeHandler}
         onFilterChange={this.filterChangeHandler}
-        autoFocus={this.props?.autoFocus}
+        autoFocus={this.props.autoFocus}
       />
     )
   }
