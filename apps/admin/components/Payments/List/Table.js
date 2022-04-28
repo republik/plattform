@@ -70,7 +70,7 @@ const Table = ({ items, sort, onSort, ...props }) => {
             <Label>Name</Label>
           </th>
           <th {...styles.left}>
-            <Label>Adresse</Label>
+            <Label>Anschrift</Label>
           </th>
           <th
             {...styles.interactive}
@@ -102,6 +102,8 @@ const Table = ({ items, sort, onSort, ...props }) => {
             user: { address },
           } = payment
 
+          const name = user.name || `${user.firstName} ${user.lastName}`
+
           return (
             <tr key={`payment-${index}`} {...styles.row}>
               <td>{displayDate(payment.createdAt)}</td>
@@ -109,19 +111,19 @@ const Table = ({ items, sort, onSort, ...props }) => {
               <td>{payment.method}</td>
               <td>
                 <Link route='user' params={{ userId: user.id }}>
-                  <a {...styles.link}>
-                    {user.name || `${user.firstName} ${user.lastName}`}
-                  </a>
+                  <a {...styles.link}>{name}</a>
                 </Link>
               </td>
               <td>
                 {address &&
                   [
+                    name !== address.name && address.name,
                     address.line1,
                     address.line2,
-                    [address.postalCode, address.city].join(' '),
+                    [address.postalCode, address.city].join(' ').trim(),
                   ]
                     .filter(Boolean)
+                    .map((string) => string.trim())
                     .join(', ')}
               </td>
               <td>{chfFormat(payment.total / 100)}</td>
