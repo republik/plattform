@@ -124,6 +124,7 @@ const ArticleRecommendations = ({ t, editor, node }) => {
                             setShowRepoSearch(false)
                             addSuggestion(value)
                           }}
+                          autoFocus
                         />
                       </div>
                     </li>
