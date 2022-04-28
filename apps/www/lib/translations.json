@@ -3210,19 +3210,11 @@
     },
     {
       "key": "article/syntheticReadAloud/title",
-      "value": "Beitrag von synthetischer Stimme vorlesen lassen"
-    },
-    {
-      "key": "article/syntheticReadAloud/lead",
-      "value": "Ein Versuch, die Republik zugänglicher zu machen. <a href=\"/2022/04/01/synthetische-stimme/diskussion\">Geben Sie uns Feedback</a>."
+      "value": "Beitrag von synthetischer Stimme vorlesen lassen. <a href=\"/2022/04/01/synthetische-stimme/diskussion\">Fehler melden</a>."
     },
     {
       "key": "article/readAloud/title",
       "value": "Beitrag vorlesen lassen"
-    },
-    {
-      "key": "article/readAloud/lead",
-      "value": "Diesen Beitrag können Sie sich im Rahmen unseres Angebotes «<a href=\"/format/vorgelesen\">Vorgelesen</a>» anhören."
     },
     {
       "key": "article/series/episode",
