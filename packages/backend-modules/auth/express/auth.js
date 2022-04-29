@@ -77,6 +77,8 @@ exports.configure = ({
         .then(transformUser)
     }
 
+    // TODO: Set additional cookie containing JWT with user roles
+
     // Check if a user has more than one role and let session expire after a
     // shorter period of time
     if (req.user && userIsInRoles(req.user, specialRoles)) {
