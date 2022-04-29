@@ -4,6 +4,7 @@ const PgSession = require('connect-pg-simple')(session)
 const transformUser = require('../lib/transformUser')
 const basicAuthMiddleware = require('./basicAuth')
 const { specialRoles, userIsInRoles } = require('../lib/Roles')
+const { getJWTForUser } = require('../lib/jwt')
 
 const DEFAULT_MAX_AGE_IN_MS = 60000 * 60 * 24 * 365 // 1 year
 const SHORT_MAX_AGE_IN_MS = 60000 * 60 * 24 * 7 // 1 week
@@ -77,7 +78,17 @@ exports.configure = ({
         .then(transformUser)
     }
 
-    // TODO: Set additional cookie containing JWT with user roles
+    if (req.session && req.user) {
+      // TODO: Set additional cookie containing JWT with user roles
+      const token = getJWTForUser(req.user, req.sessionID)
+      console.log(token)
+      res.cookie('jwt', token, {
+        maxAge: maxAge,
+        domain,
+        sameSite: !dev && 'none',
+        secure: !dev,
+      })
+    }
 
     // Check if a user has more than one role and let session expire after a
     // shorter period of time
