@@ -4,7 +4,7 @@ const PgSession = require('connect-pg-simple')(session)
 const transformUser = require('../lib/transformUser')
 const basicAuthMiddleware = require('./basicAuth')
 const { specialRoles, userIsInRoles } = require('../lib/Roles')
-const { getJWTForUser } = require('../lib/jwt')
+const { JWTMiddleware } = require('../lib/middlewares/JWTMiddleware')
 
 const DEFAULT_MAX_AGE_IN_MS = 60000 * 60 * 24 * 365 // 1 year
 const SHORT_MAX_AGE_IN_MS = 60000 * 60 * 24 * 7 // 1 week
@@ -18,6 +18,8 @@ exports.configure = ({
   domain = undefined,
   // name of the session ID cookie to set in the response (and read from request)
   cookieName = 'connect.sid',
+  // name of the jwt cookie sent when a user is logged in
+  jwtCookieName = 'republik-token',
   // Max session age in ms
   // NB: With 'rolling: true' passed to session() the session expiry time will
   // be reset every time a user visits the site again before it expires.
@@ -78,18 +80,6 @@ exports.configure = ({
         .then(transformUser)
     }
 
-    if (req.session && req.user) {
-      // TODO: Set additional cookie containing JWT with user roles
-      const token = getJWTForUser(req.user, req.sessionID)
-      console.log(token)
-      res.cookie('jwt', token, {
-        maxAge: maxAge,
-        domain,
-        sameSite: !dev && 'none',
-        secure: !dev,
-      })
-    }
-
     // Check if a user has more than one role and let session expire after a
     // shorter period of time
     if (req.user && userIsInRoles(req.user, specialRoles)) {
@@ -98,6 +88,8 @@ exports.configure = ({
 
     return next()
   })
+
+  server.use(JWTMiddleware({ dev, maxAge, domain, jwtCookieName }))
 
   const close = () => {
     return store.close()
