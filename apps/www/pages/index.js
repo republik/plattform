@@ -51,4 +51,12 @@ const IndexPage = ({ t, isMember, router }) => {
 
 const EnhancedPage = compose(withMembership, withT, withRouter)(IndexPage)
 
-export default withDefaultSSR(EnhancedPage)
+// export default withDefaultSSR(EnhancedPage)
+
+const MarketingPage = () => (
+  <Frame>
+    <h1>Someday this will be the statically generated marketing page</h1>
+  </Frame>
+)
+
+export default MarketingPage
