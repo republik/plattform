@@ -12,6 +12,7 @@ const {
   isInCandidacyInElectionPhase,
   hasCards,
 } = require('../../../lib/profile')
+const { upsertAddress } = require('../../../lib/address')
 const {
   Redirections: { upsert: upsertRedirection, delete: deleteRedirection },
 } = require('@orbiting/backend-modules-redirections')
@@ -319,23 +320,17 @@ module.exports = async (_, args, context) => {
     }
 
     if (address) {
-      if (me._raw.addressId) {
-        // update address of user
-        await transaction.public.addresses.updateOne(
-          { id: me._raw.addressId },
-          {
-            ...address,
-            updatedAt: now,
-          },
-        )
-      } else {
-        // user has no address yet
-        const userAddress = await transaction.public.addresses.insertAndGet(
-          address,
-        )
+      const { id: addressId } = upsertAddress(
+        { ...address, id: me._raw?.addressId },
+        transaction,
+        t,
+      )
+
+      if (!me._raw.addressId) {
+        // link upserted address to user
         await transaction.public.users.updateOne(
           { id: me.id },
-          { addressId: userAddress.id, updatedAt: now },
+          { addressId, updatedAt: now },
         )
       }
     }

@@ -921,6 +921,10 @@
       "value": "Verfügbarkeit"
     },
     {
+      "key": "address/name/tooLong",
+      "value": "Name, maximal 70 Zeichen"
+    },
+    {
       "key": "pledge/contact/firstName/label",
       "value": "Ihr Vorname"
     },
