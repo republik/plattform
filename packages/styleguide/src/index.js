@@ -323,6 +323,16 @@ const Styleguide = () => {
                       },
                       src: require('./components/Tabs/docs.md'),
                     },
+                    {
+                      path: '/expandablelink',
+                      title: 'Expandable Link',
+                      imports: {
+                        t,
+                        ...require('./components/Typography'),
+                        ...require('./components/ExpandableLink'),
+                      },
+                      src: require('./components/ExpandableLink/docs.md'),
+                    },
                   ],
                 },
                 {

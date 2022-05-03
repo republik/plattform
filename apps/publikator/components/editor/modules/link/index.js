@@ -10,22 +10,36 @@ export default ({ rule, subModules, TYPE }) => {
   const link = {
     match: matchInline(TYPE),
     matchMdast: rule.matchMdast,
-    fromMdast: (node, index, parent, { visitChildren, context }) => ({
-      kind: 'inline',
-      type: TYPE,
-      data: {
-        title: node.title,
-        href: node.url,
-        color: context.color,
-      },
-      nodes: visitChildren(node),
-    }),
-    toMdast: (object, index, parent, { visitChildren }) => ({
-      type: 'link',
-      title: object.data.title,
-      url: object.data.href,
-      children: visitChildren(object),
-    }),
+    fromMdast: (node, index, parent, { visitChildren, context }) => {
+      const [title, description] = (node.title || '').split('%%')
+      console.log({ title, description })
+      return {
+        kind: 'inline',
+        type: TYPE,
+        data: {
+          title,
+          href: node.url,
+          description,
+          color: context.color,
+        },
+        nodes: visitChildren(node),
+      }
+    },
+    toMdast: (object, index, parent, { visitChildren }) => {
+      console.log({
+        title: object.data.title,
+        mash: [object.data.title || '', object.data.description].join('%%'),
+      })
+      return {
+        type: 'link',
+        title: object.data.description
+          ? [object.data.title || '', object.data.description].join('%%')
+          : object.data.title,
+        description: object.data.description,
+        url: object.data.href,
+        children: visitChildren(object),
+      }
+    },
   }
 
   const serializer = new MarkdownSerializer({

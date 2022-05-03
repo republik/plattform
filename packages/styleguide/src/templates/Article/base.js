@@ -35,20 +35,28 @@ import {
   matchImagesParagraph,
 } from './utils'
 import { MIN_GALLERY_IMG_WIDTH } from '../../components/Figure/Image'
+import { ExpandableLink } from '../../components/ExpandableLink'
+import { LinkInfoContextProvider } from '../../components/ExpandableLink/LinkInfoContext'
+import { LinkInfoBox } from '../../components/ExpandableLink/LinkInfoBox'
 
 const createBase = ({ metaBody, metaHeadlines }) => {
   const link = {
     matchMdast: matchType('link'),
-    props: (node) => ({
-      title: node.title,
-      href: node.url,
-    }),
+    props: (node) => {
+      const [title, description] = (node.title || '').split('%%')
+      return {
+        title,
+        description,
+        href: node.url,
+      }
+    },
     component: (props) => {
-      const { href } = props
+      const { href, description } = props
+      const LinkComponent = description ? ExpandableLink : Editorial.A
       // workaround app issues with hash url by handling them ourselves and preventing the default behaviour
       if (href && href.slice(0, 3) === '#t=') {
         return (
-          <Editorial.A
+          <LinkComponent
             {...props}
             onClick={(e) => {
               const time = parseTimeHash(href)
@@ -62,7 +70,7 @@ const createBase = ({ metaBody, metaHeadlines }) => {
       }
       if (href && href[0] === '#') {
         return (
-          <Editorial.A
+          <LinkComponent
             {...props}
             onClick={(e) => {
               const ele = document.getElementById(href.substr(1))
@@ -74,7 +82,7 @@ const createBase = ({ metaBody, metaHeadlines }) => {
           />
         )
       }
-      return <Editorial.A {...props} />
+      return <LinkComponent {...props} />
     },
     editorModule: 'link',
     rules: globalInlines,
@@ -118,7 +126,12 @@ const createBase = ({ metaBody, metaHeadlines }) => {
 
   const paragraph = {
     matchMdast: matchParagraph,
-    component: Typography.P,
+    component: (props) => (
+      <LinkInfoContextProvider>
+        <Typography.P {...props} />
+        <LinkInfoBox />
+      </LinkInfoContextProvider>
+    ),
     editorModule: 'paragraph',
     editorOptions: {
       formatButtonText: 'Paragraph',

@@ -17,6 +17,7 @@ import gql from 'graphql-tag'
 import debounce from 'lodash/debounce'
 
 import { createInlineButton, matchInline, buttonStyles } from '../../utils'
+import AutosizeInput from 'react-textarea-autosize'
 
 const getUsers = gql`
   query getUsers($search: String!) {
@@ -221,6 +222,15 @@ export const LinkForm = withT(
                 label={t(`metaData/field/title`, undefined, 'title')}
                 value={node.data.get('title')}
                 onChange={onInputChange('title')}
+              />
+              // TODO (@expandable): translation string
+              <Field
+                label='LINK DESCRIPTION'
+                value={node.data.get('description')}
+                onChange={onInputChange('description')}
+                renderInput={({ ref, ...inputProps }) => (
+                  <AutosizeInput {...inputProps} inputRef={ref} />
+                )}
               />
               <SearchUserForm onChange={authorChange(onChange, value, node)} />
               <RepoSearch

@@ -22,7 +22,7 @@ paragraphModule.name = 'paragraph'
 const serializer = paragraphModule.helpers.serializer
 
 describe('link serializer test-suite', () => {
-  it('link serialization', () => {
+  it('simple link serialization', () => {
     const value = serializer.deserialize(parse('[Test](example.com)'))
     const node = value.document.nodes.first()
 
