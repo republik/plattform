@@ -1,12 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useColorContext } from '../Colors/ColorContext'
 import { css } from 'glamor'
 import { useLinkInfoContext } from './LinkInfoContext'
+import { underline } from '../../lib/styleMixins'
 
 const link = css({
   cursor: 'pointer',
   padding: '0 2px',
   textDecoration: 'none',
+  ...underline,
 })
 
 const ExpandableLink = ({ children, attributes, title, description, href }) => {
@@ -14,20 +16,23 @@ const ExpandableLink = ({ children, attributes, title, description, href }) => {
   const [expandedLinks, setExpandedLinks] = useLinkInfoContext()
   const [isOpen, setOpen] = useState(false)
 
+  useEffect(() => {
+    setOpen(expandedLinks.find((link) => link.href === href))
+  }, [expandedLinks])
+
   const toggleLinkInfoBox = () => {
-    const currentlyOpen = expandedLinks.find((link) => link.href === href)
-    if (currentlyOpen) {
+    if (isOpen) {
       setExpandedLinks(expandedLinks.filter((link) => link.href !== href))
     } else {
       setExpandedLinks(expandedLinks.concat({ title, description, href }))
     }
-    setOpen(!currentlyOpen)
+    setOpen(!isOpen)
   }
 
   return (
     <a
       {...colorScheme.set('color', 'text')}
-      {...colorScheme.set('background', 'accentColorOppinion')}
+      {...colorScheme.set('background', 'divider')}
       {...attributes}
       {...link}
       onClick={toggleLinkInfoBox}

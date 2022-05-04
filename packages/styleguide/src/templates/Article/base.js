@@ -42,16 +42,20 @@ import { LinkInfoBox } from '../../components/ExpandableLink/LinkInfoBox'
 const createBase = ({ metaBody, metaHeadlines }) => {
   const link = {
     matchMdast: matchType('link'),
-    props: (node) => {
+    props: (node, index, parent, { ancestors }) => {
+      console.log({ ancestors })
+      const allowsExpandable = ancestors.find(matchParagraph)
+      console.log({ allowsExpandable })
       const [title, description] = (node.title || '').split('%%')
       return {
         title,
         description,
         href: node.url,
+        allowsExpandable,
       }
     },
     component: (props) => {
-      const { href, description } = props
+      const { href, description, allowsExpandable } = props
       const LinkComponent = description ? ExpandableLink : Editorial.A
       // workaround app issues with hash url by handling them ourselves and preventing the default behaviour
       if (href && href.slice(0, 3) === '#t=') {
