@@ -193,13 +193,14 @@ export const ToolbarButton: React.FC<{
   onClick: () => void
   disabled?: boolean
   active?: boolean
-}> = ({ button, onClick, disabled, active }) => (
+  disableWhenActive?: boolean
+}> = ({ button, onClick, disabled, active, disableWhenActive }) => (
   <IconButton
     disabled={disabled}
     fillColorName={active ? 'primary' : 'text'}
     onMouseDown={(event) => {
       event.preventDefault()
-      !disabled && !active && onClick()
+      !disabled && !(disableWhenActive && active) && onClick()
     }}
     Icon={button.icon}
     size={button.small ? 12 : 19}

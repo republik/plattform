@@ -24,6 +24,7 @@ export const InsertButton: React.FC<{
       button={element.button}
       disabled={config.disabled}
       active={config.active}
+      disableWhenActive={true}
       onClick={() => {
         buildAndInsert(editor, config.type as CustomElementsType)
       }}

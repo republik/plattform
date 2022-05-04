@@ -1,23 +1,14 @@
-import React, {
-  Attributes,
-  ReactElement,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
+import React, { Attributes, ReactElement, useMemo, useRef } from 'react'
 import { Editor, NodeEntry } from 'slate'
-import { ReactEditor, useSlate } from 'slate-react'
+import { useSlate } from 'slate-react'
 import { config as mConfig, configKeys as mKeys } from '../../marks'
 import { ToolbarButton } from './Toolbar'
 import {
   ButtonConfig,
   CustomEditor,
-  CustomElement,
   CustomMarksType,
-  CustomNode,
   CustomText,
 } from '../../../custom-types'
-import { getTextNode } from '../helpers/tree'
 import { css } from 'glamor'
 import { useColorContext } from '../../../../Colors/ColorContext'
 import { isEmpty, selectPlaceholder } from '../helpers/text'
@@ -41,6 +32,7 @@ const isMarkActive = (editor: CustomEditor, mKey: CustomMarksType): boolean => {
 const toggleMark = (editor: CustomEditor, mKey: CustomMarksType): void => {
   const isActive = isMarkActive(editor, mKey)
   if (isActive) {
+    console.log('remove')
     Editor.removeMark(editor, mKey)
   } else {
     Editor.addMark(editor, mKey, true)
@@ -74,7 +66,6 @@ export const LeafComponent: React.FC<{
 }> = ({ attributes, children, leaf, node }) => {
   const [colorScheme] = useColorContext()
   const editor = useSlate()
-  const [placeholderStyle, setPlaceholderStyle] = useState({})
 
   const markStyles = mKeys
     .filter((mKey) => leaf[mKey])
@@ -86,13 +77,13 @@ export const LeafComponent: React.FC<{
   const showPlaceholder = isEmpty(leaf.text) && !leaf.end
   const placeholderRef = useRef<HTMLSpanElement>()
 
-  useEffect(() => {
+  const placeholderStyle = useMemo(() => {
     const placeholderEl = placeholderRef.current
-    if (!placeholderEl || !showPlaceholder) return setPlaceholderStyle({})
-    setPlaceholderStyle({
+    if (!placeholderEl || !showPlaceholder) return {}
+    return {
       width: placeholderEl.getBoundingClientRect().width,
       display: 'inline-block',
-    })
+    }
   }, [showPlaceholder])
 
   return (
