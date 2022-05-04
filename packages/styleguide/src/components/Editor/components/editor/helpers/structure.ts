@@ -238,7 +238,7 @@ export const fixStructure: (
 ) => NormalizeFn<CustomAncestor> =
   (structure = DEFAULT_STRUCTURE) =>
   ([node, path], editor) => {
-    console.log('MATCH STRUCTURE')
+    // console.log('MATCH STRUCTURE')
     let i = 0
     let repeatOffset = 0
     let loop = true
@@ -251,7 +251,7 @@ export const fixStructure: (
       const currentTemplate = structure[i]
       const prevTemplate = i > 0 && structure[i - 1]
       const nextTemplate = i < structure.length - 1 && structure[i + 1]
-      console.log({
+      /* console.log({
         i,
         repeatOffset,
         currentNode,
@@ -259,7 +259,7 @@ export const fixStructure: (
         currentTemplate,
         prevTemplate,
         nextTemplate,
-      })
+      }) */
       if (prevTemplate?.repeat && isCorrect(currentNode, prevTemplate)) {
         // we use the template for switch between block types and onEnter insert
         linkTemplate(currentPath, prevTemplate, editor)
