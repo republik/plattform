@@ -32,13 +32,16 @@ const SlateEditor: React.FC<{
   value: CustomDescendant[]
   setValue: (t: CustomDescendant[]) => void
   structure?: NodeTemplate[]
-}> = ({ value, setValue, structure }) => {
+  editor?: CustomEditor
+}> = ({ value, setValue, structure, editor: mockEditor }) => {
   const editor = useMemoOne<CustomEditor>(
     () =>
       withInsert(CHAR_LIMIT)(
         withDelete(
           withNormalizations(structure)(
-            withElAttrsConfig(withReact(withHistory(createEditor()))),
+            withElAttrsConfig(
+              withReact(withHistory(mockEditor ?? createEditor())),
+            ),
           ),
         ),
       ),
@@ -93,6 +96,7 @@ const SlateEditor: React.FC<{
         />
         <Toolbar containerRef={containerRef} mode='sticky' />
         <Editable
+          data-testid='slate-content-editable'
           renderElement={renderElement}
           renderLeaf={renderLeaf}
           onKeyDown={(event) => {
