@@ -39,15 +39,8 @@ describe('Editor test-suite', () => {
     })
 
     expect(editor.children).toEqual(value)
-    expect(editor.children).toEqual([
-      {
-        type: 'headline',
-        children: [{ text: '' }],
-      },
-      {
-        type: 'paragraph',
-        children: [{ text: '' }],
-      },
-    ])
+    expect(value.length).toBe(2)
+    expect(value[0].type).toEqual('headline')
+    expect(value[1].type).toEqual('paragraph')
   })
 })
