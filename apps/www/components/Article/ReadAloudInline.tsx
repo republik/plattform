@@ -83,7 +83,7 @@ const SyntheticAudio = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
       <div {...styles.container}>
         <IconButton
           style={{ marginRight: 0 }}
-          size={56}
+          size={32}
           Icon={Icon}
           onClick={(e) => {
             e.preventDefault()
@@ -109,12 +109,9 @@ const SyntheticAudio = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
             {...styles.title}
             {...colorScheme.set('fill', 'text')}
           >
-            {t(`article/${kind}/title`)}
-          </p>
-          <p {...styles.lead}>
             <RawHtml
               dangerouslySetInnerHTML={{
-                __html: t(`article/${kind}/lead`),
+                __html: t(`article/${kind}/title`),
               }}
             />
           </p>
