@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useMemo } from 'react'
 import {
   CustomEditor,
   CustomElement,
@@ -31,7 +31,9 @@ const getForm = (
   path: number[],
 ): FormData | undefined => {
   const element = Editor.node(editor, path)[0]
+  console.log({ element })
   if (!SlateElement.isElement(element)) return
+  console.log({ element, config: elConfig[element.type] })
   const Form = elConfig[element.type].Form
   if (!Form) return
   return {
@@ -45,6 +47,7 @@ export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
   return path
     .reduce((forms, p, i) => {
       const currentPath = path.slice(0, i ? -i : undefined)
+      console.log({ currentPath })
       const currentForm = getForm(editor, currentPath)
       return forms.concat(currentForm)
     }, [])
@@ -59,17 +62,9 @@ export const FormOverlay = ({
   onClose: () => void
 }): ReactElement => {
   const editor = useSlate()
-  const [forms, setForms] = useState<FormData[]>([])
+  const forms = useMemo(() => getForms(editor, path), [path])
 
-  useEffect(() => {
-    !forms.length && onClose()
-  }, [forms])
-
-  useEffect(() => {
-    setForms(getForms(editor, path))
-  }, [path, onClose])
-
-  if (!path) return null
+  if (!forms.length || !path) return null
 
   return (
     <Overlay onClose={onClose}>

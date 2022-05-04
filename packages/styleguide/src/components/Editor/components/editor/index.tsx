@@ -7,7 +7,13 @@ import React, {
 } from 'react'
 import { createEditor, Editor, Transforms } from 'slate'
 import { withHistory } from 'slate-history'
-import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
+import {
+  Slate,
+  Editable,
+  withReact,
+  ReactEditor,
+  useSelected,
+} from 'slate-react'
 import { useMemoOne } from 'use-memo-one'
 import { withNormalizations } from './decorators/normalization'
 import { withElAttrsConfig } from './decorators/attrs'
@@ -27,6 +33,7 @@ import { handleInsert, insertOnKey } from './helpers/structure'
 import { CHAR_LIMIT } from './helpers/text'
 import { withInsert } from './decorators/insert'
 import { withDelete } from './decorators/delete'
+import { useColorContext } from '../../../Colors/ColorContext'
 
 const SlateEditor: React.FC<{
   value: CustomDescendant[]
@@ -59,16 +66,32 @@ const SlateEditor: React.FC<{
       element: CustomElement
     }>
   > = (props) => {
+    const [colorScheme] = useColorContext()
+    const isSelected = useSelected()
     const config = elementsConfig[props.element.type]
+    const isVoid = config.attrs?.isVoid
     const Component = config.Component
     const path = ReactEditor.findPath(editor, props.element)
     const selectVoid = (e) => {
-      if (config.attrs?.isVoid) {
+      if (isVoid) {
         e.preventDefault()
         Transforms.select(editor, path)
       }
     }
-    return <Component {...props} onMouseDown={selectVoid} />
+    return (
+      <Component
+        {...colorScheme.set('borderColor', 'primary')}
+        style={
+          isSelected && isVoid ? { borderWidth: 2, borderStyle: 'solid' } : {}
+        }
+        {...props}
+        onMouseDown={selectVoid}
+        onDoubleClick={(e) => {
+          e.stopPropagation()
+          setFormElementPath(path)
+        }}
+      />
+    )
   }
 
   const renderElement = useCallback(RenderedElement, [])
@@ -104,10 +127,6 @@ const SlateEditor: React.FC<{
             insertOnKey({ name: 'Enter', shift: true }, 'break')(editor, event)
             handleInsert(editor, event)
             navigateOnTab(editor, event)
-          }}
-          onDoubleClick={() => {
-            // used by Forms UI
-            setFormElementPath(editor.selection.anchor.path)
           }}
         />
         <Footer charLimit={CHAR_LIMIT} />
