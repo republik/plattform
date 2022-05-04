@@ -343,13 +343,13 @@ const insertRepeat = (editor: CustomEditor): void => {
   }
 
   let insertP
-  const splitP = getSelectedElement(editor)[1]
   Editor.withoutNormalizing(editor, () => {
     // console.log('insert', { target })
     // split nodes at selection and move the second half of the split
     // in the first position where repeats are allowed
     Transforms.splitNodes(editor, { always: true })
     // since the node got split, splitP != selectionP
+    const splitP = getSelectedElement(editor)[1]
     Transforms.setNodes(
       editor,
       { type: getTemplateType(targetN.template) },
