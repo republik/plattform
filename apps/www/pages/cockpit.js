@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import Router, { withRouter } from 'next/router'
@@ -7,23 +7,19 @@ import { gql } from '@apollo/client'
 import { timeMonth } from 'd3-time'
 
 import {
+  P,
+  H2,
   Editorial,
   Interaction,
   Loader,
-  colors,
   LazyLoad,
-} from '@project-r/styleguide'
-import {
   ChartTitle,
   ChartLead,
   ChartLegend,
   Chart,
 } from '@project-r/styleguide'
 
-import md from 'markdown-in-js'
-
 import Frame from '../components/Frame'
-import { light as mdComponents } from '../lib/utils/mdComponents'
 import { countFormat } from '../lib/utils/format'
 
 import { PackageItem, PackageBuffer } from '../components/Pledge/Accordion'
@@ -528,13 +524,18 @@ const Page = ({
               <Interaction.Headline style={{ marginBottom: 20 }}>
                 Das Cockpit zum Stand unseres Unternehmens
               </Interaction.Headline>
-              {md(mdComponents)`
-
-Die Aufgabe der Republik ist, brauchbaren Journalismus zu machen. Einen, der die Köpfe klarer, das Handeln mutiger, die Entscheidungen klüger macht. Und der das Gemeinsame stärkt: die Freiheit, den Rechtsstaat, die Demokratie.
-
-Die Grundlage dafür ist ein Geschäftsmodell für werbefreien, unabhängigen, leserfinanzierten Journalismus. Damit die Republik einen entscheidenden Unterschied im Mediensystem machen kann, muss sie selbsttragend sein.
-
-`}
+              <P>
+                Die Aufgabe der Republik ist, brauchbaren Journalismus zu
+                machen. Einen, der die Köpfe klarer, das Handeln mutiger, die
+                Entscheidungen klüger macht. Und der das Gemeinsame stärkt: die
+                Freiheit, den Rechtsstaat, die Demokratie.
+              </P>
+              <P>
+                Die Grundlage dafür ist ein Geschäftsmodell für werbefreien,
+                unabhängigen, leserfinanzierten Journalismus. Damit die Republik
+                einen entscheidenden Unterschied im Mediensystem machen kann,
+                muss sie selbsttragend sein.
+              </P>
 
               <div style={{ marginTop: 20 }}>
                 <ChartTitle>
@@ -630,20 +631,32 @@ Die Grundlage dafür ist ein Geschäftsmodell für werbefreien, unabhängigen, l
                   {formatDateTime(new Date(updatedAt))}
                 </ChartLegend>
               </div>
-
-              {md(mdComponents)`
-
-Mit ${countFormat(
-                numMembersNeeded,
-              )} Abonnentinnen und Mitgliedern haben wir genügend Einnahmen, um den gesamten Betrieb zu finanzieren. Und wir haben die Mittel, um Neues auszuprobieren und Experimente zu machen.
-
-Diese Zahl leitet sich aus dem aktuellen Budget 2021/22 ab. [Erfahren Sie, wofür wir das Geld ausgeben und wie sich das Budget über die Zeit entwickelt hat](/2021/10/08/werfen-sie-einen-blick-in-unsere-geschaeftsbuecher).
-
-## ${countFormat(lastSeen)} Verlegerinnen sind monatlich&nbsp;aktiv
-
-Der beste Journalismus nützt nichts, wenn ihn niemand sieht. Für ein gesundes Unternehmen braucht es eine aktive und interessierte Verlegerschaft.
-
-`}
+              <P>
+                Mit {countFormat(numMembersNeeded)} Abonnentinnen und
+                Mitgliedern haben wir genügend Einnahmen, um den gesamten
+                Betrieb zu finanzieren. Und wir haben die Mittel, um Neues
+                auszuprobieren und Experimente zu machen.
+              </P>
+              <P>
+                Diese Zahl leitet sich aus dem aktuellen Budget 2021/22 ab.{' '}
+                <Link
+                  href='/2021/10/08/werfen-sie-einen-blick-in-unsere-geschaeftsbuecher'
+                  passHref
+                >
+                  <Editorial.A>
+                    Erfahren Sie, wofür wir das Geld ausgeben und wie sich das
+                    Budget über die Zeit entwickelt hat.
+                  </Editorial.A>
+                </Link>
+              </P>
+              <H2>
+                {countFormat(lastSeen)} Verlegerinnen sind monatlich&nbsp;aktiv
+              </H2>
+              <P>
+                Der beste Journalismus nützt nichts, wenn ihn niemand sieht. Für
+                ein gesundes Unternehmen braucht es eine aktive und
+                interessierte Verlegerschaft.
+              </P>
 
               <div style={{ marginTop: 20 }}>
                 <ChartTitle>
@@ -696,13 +709,7 @@ Der beste Journalismus nützt nichts, wenn ihn niemand sieht. Für ein gesundes 
                 defaultBenefactor={defaultBenefactor}
                 questionnaire={questionnaire}
               />
-
-              {md(mdComponents)`
-
-
-
-## ${countFormat(activeCount)} sind dabei.`}
-
+              <H2>{countFormat(activeCount)} sind dabei.</H2>
               <LazyLoad>
                 <TestimonialList
                   ssr={false}
@@ -712,25 +719,19 @@ Der beste Journalismus nützt nichts, wenn ihn niemand sieht. Für ein gesundes 
                 />
               </LazyLoad>
               <br />
-
-              {md(mdComponents)`
-[Alle anschauen](/community)${
-                me && me.activeMembership ? (
-                  <Fragment>
+              <P>
+                <Editorial.A href='/community'>Alle anschauen</Editorial.A>
+                {me && me.activeMembership ? (
+                  <>
                     {'\u00a0– '}
-                    <Editorial.A
-                      style={{ color: colors.negative.text }}
-                      href='/einrichten'
-                    >
+                    <Editorial.A href='/einrichten'>
                       Ihr Profil einrichten
                     </Editorial.A>
-                  </Fragment>
+                  </>
                 ) : (
                   ''
-                )
-              }
-      `}
-
+                )}
+              </P>
               <br />
               <br />
             </>

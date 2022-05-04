@@ -20,6 +20,7 @@ const Autocomplete = ({
   onFilterChange,
   icon,
   autoComplete,
+  autoFocus = false,
 }) => {
   return (
     <Downshift
@@ -65,6 +66,7 @@ const Autocomplete = ({
                         }
                       },
                       autoComplete,
+                      autoFocus,
                       placeholder: selectedItem
                         ? itemToString(selectedItem)
                         : '',

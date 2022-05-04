@@ -209,12 +209,17 @@ const maybeRestoreInterests = async (record, pgdb) => {
       const userId = await pgdb.public.users.findOneFieldOnly({ email }, 'id')
       if (userId) {
         debug(
-          'restore interests for %s (mailchimpLog.type: %s, user.id: %s)',
+          'enforce interests for %s (mailchimpLog.type: %s, user.id: %s)',
           email,
           mailchimpLogType,
           userId,
         )
-        await enforceSubscriptions({ pgdb, userId, email })
+        await enforceSubscriptions({
+          pgdb,
+          userId,
+          email,
+          subscribeToEditorialNewsletters: true,
+        })
       } else {
         debug(
           'do not restore interests for %s: user.id not found',

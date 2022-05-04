@@ -169,17 +169,19 @@ const ArticleRecommendationItem = ({
             </span>
           )}
         </div>
-        <div {...styles.linkWrapper}>
-          {(isPublishedForPublic || isInternallyPublished) && (
-            <PublicationLink publication={latestPublication} />
-          )}
-          <IconButton
-            href={`/repo/${getRelativeRepoUrl(repoId)}/tree`}
-            target='_blank'
-            Icon={EditIcon}
-            fill='#E9A733'
-          />
-        </div>
+        {repoData && (
+          <div {...styles.linkWrapper}>
+            {(isPublishedForPublic || isInternallyPublished) && (
+              <PublicationLink publication={latestPublication} />
+            )}
+            <IconButton
+              href={`/repo/${getRelativeRepoUrl(repoId)}/tree`}
+              target='_blank'
+              Icon={EditIcon}
+              fill='#E9A733'
+            />
+          </div>
+        )}
       </div>
       <div {...styles.closeWrapper}>
         <IconButton
