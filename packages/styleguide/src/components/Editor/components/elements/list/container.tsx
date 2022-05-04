@@ -2,6 +2,7 @@ import {
   ElementConfigI,
   ElementFormProps,
   ListElement,
+  NodeTemplate,
 } from '../../../custom-types'
 import { UlIcon, OlIcon } from '../../../../Icons'
 import React from 'react'
@@ -31,15 +32,22 @@ const Form: React.FC<ElementFormProps<ListElement>> = ({
   </div>
 )
 
+const structure: NodeTemplate[] = [{ type: 'listItem', repeat: true }]
+
 export const ulConfig: ElementConfigI = {
   Component,
   Form,
-  structure: [{ type: 'listItem', repeat: true }],
+  structure,
   button: { icon: UlIcon },
+  defaultProps: {
+    ordered: false,
+  },
 }
 
 export const olConfig: ElementConfigI = {
-  ...ulConfig,
+  Component,
+  Form,
+  structure,
   button: { icon: OlIcon },
   defaultProps: {
     ordered: true,

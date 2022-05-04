@@ -138,9 +138,20 @@ export const buildAndInsert = (
     }
   }
   const target = targetC || targetE
+  const targetConfig = elConfig[target[0].type]
   Editor.withoutNormalizing(editor, () => {
+    if (
+      config.Component.name === targetConfig.Component.name &&
+      config.defaultProps
+    ) {
+      return Transforms.setNodes(
+        editor,
+        { type: elKey, ...config.defaultProps },
+        { at: target[1] },
+      )
+    }
     const mainElKey = getMainElement(config.structure)
-    const targetMainElKey = getMainElement(elConfig[target[0].type].structure)
+    const targetMainElKey = getMainElement(targetConfig.structure)
     if (targetMainElKey) {
       Transforms.unwrapNodes(editor, { at: target[1] })
     }
