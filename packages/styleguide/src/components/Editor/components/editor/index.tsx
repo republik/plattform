@@ -28,7 +28,7 @@ import {
   CustomElement,
   NodeTemplate,
 } from '../../custom-types'
-import { navigateOnTab } from './helpers/tree'
+import { getTextNode, navigateOnTab } from './helpers/tree'
 import { handleInsert, insertOnKey } from './helpers/structure'
 import { CHAR_LIMIT } from './helpers/text'
 import { withInsert } from './decorators/insert'
@@ -96,12 +96,26 @@ const SlateEditor: React.FC<{
 
   const renderElement = useCallback(RenderedElement, [])
 
-  const renderLeaf = useCallback(
-    ({ children, ...props }) => (
-      <LeafComponent {...props}>{children}</LeafComponent>
-    ),
-    [],
-  )
+  const renderLeaf = useCallback(({ children, ...props }) => {
+    // ReactEditor cannot find the path of a leaf directly.
+    // That's not so great if the placeholder isn't the last text child
+    const parentPath = ReactEditor.findPath(editor, children.props.parent)
+    const parentNode = Editor.node(editor, parentPath)
+    const node = getTextNode(parentNode, editor)
+    return (
+      <LeafComponent
+        {...props}
+        node={node}
+        onDoubleClick={(e) => {
+          e.stopPropagation()
+          console.log({ parentPath })
+          setFormElementPath(parentPath)
+        }}
+      >
+        {children}
+      </LeafComponent>
+    )
+  }, [])
 
   return (
     <div ref={containerRef}>

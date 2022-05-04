@@ -5,14 +5,16 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { Editor } from 'slate'
+import { Editor, NodeEntry } from 'slate'
 import { ReactEditor, useSlate } from 'slate-react'
 import { config as mConfig, configKeys as mKeys } from '../../marks'
 import { ToolbarButton } from './Toolbar'
 import {
   ButtonConfig,
   CustomEditor,
+  CustomElement,
   CustomMarksType,
+  CustomNode,
   CustomText,
 } from '../../../custom-types'
 import { getTextNode } from '../helpers/tree'
@@ -68,16 +70,11 @@ export const LeafComponent: React.FC<{
   attributes: Attributes
   children: ReactElement
   leaf: CustomText
-}> = ({ attributes, children, leaf }) => {
+  node: NodeEntry<CustomText>
+}> = ({ attributes, children, leaf, node }) => {
   const [colorScheme] = useColorContext()
   const editor = useSlate()
   const [placeholderStyle, setPlaceholderStyle] = useState({})
-
-  // ReactEditor cannot find the path of a leaf directly.
-  // That's not so great if the placeholder isn't the last text child
-  const parentPath = ReactEditor.findPath(editor, children.props.parent)
-  const parentNode = Editor.node(editor, parentPath)
-  const node = getTextNode(parentNode, editor)
 
   const markStyles = mKeys
     .filter((mKey) => leaf[mKey])

@@ -12,7 +12,7 @@ import { config as pullQuoteText } from './pullQuote/text'
 import { config as pullQuoteSource } from './pullQuote/source'
 import { config as blockQuote } from './blockQuote/container'
 import { config as blockQuoteText } from './blockQuote/text'
-import { config as list } from './list/container'
+import { ulConfig as ul, olConfig as ol } from './list/container'
 import { config as listItem } from './list/item'
 
 export const config: ElementsConfig = {
@@ -29,7 +29,8 @@ export const config: ElementsConfig = {
   blockQuote,
   blockQuoteText,
   break: breakConfig,
-  list,
+  ul,
+  ol,
   listItem,
 }
 
@@ -44,8 +45,9 @@ export const INLINE_BUTTONS: TemplateType[] = ['link']
 export const BLOCK_BUTTONS: TemplateType[] = [
   'headline',
   'paragraph',
-  'pullQuote',
-  'figure',
-  'list',
+  // 'pullQuote',
+  // 'figure',
   'blockQuote',
+  'ul',
+  'ol',
 ]

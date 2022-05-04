@@ -87,7 +87,7 @@ export type BlockQuoteTextElement = SharedElement & {
 }
 
 export type ListElement = SharedElement & {
-  type: 'list'
+  type: 'ul' | 'ol'
   ordered?: boolean
 }
 
@@ -131,7 +131,8 @@ export type CustomElementsType =
   | 'pullQuoteSource'
   | 'blockQuote'
   | 'blockQuoteText'
-  | 'list'
+  | 'ul'
+  | 'ol'
   | 'listItem'
 
 interface ButtonI {
@@ -185,6 +186,7 @@ export interface ElementConfigI {
   structure?: NodeTemplate[]
   Form?: React.FC<ElementFormProps<CustomElement>>
   button?: ButtonI
+  defaultProps?: any
 }
 
 export type ElementsConfig = {

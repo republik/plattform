@@ -51,6 +51,8 @@ export {
   MdRotateLeft as RotateLeftIcon,
   MdRotateLeft as RevertIcon,
   MdList as ListIcon,
+  MdFormatListBulleted as UlIcon,
+  MdFormatListNumbered as OlIcon,
   MdFilterList as FilterListIcon,
   MdAdd as AddIcon,
   MdRemove as RemoveIcon,
@@ -74,7 +76,6 @@ export {
   MdFormatBold as BoldIcon,
   MdFormatItalic as ItalicIcon,
   MdKeyboardReturn as BreakIcon,
-  MdFormatAlignLeft as ParagraphIcon,
   MdWallpaper as ImageIcon,
   MdFormatQuote as QuoteIcon,
   MdStrikethroughS as StrikeThrough,
@@ -90,6 +91,7 @@ export {
 export { AiFillInstagram as InstagramIcon } from 'react-icons/ai'
 export { SiThreema as ThreemaIcon } from 'react-icons/si'
 export { DiOpensource as OpenSourceIcon } from 'react-icons/di'
+export { BiParagraph as ParagraphIcon } from 'react-icons/bi'
 
 // Separately export io icons to prevent a re-export conflict
 // caused by react-icons export both io4 and io5 on the /all path.

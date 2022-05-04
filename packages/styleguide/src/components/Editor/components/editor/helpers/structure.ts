@@ -74,10 +74,14 @@ const buildTextNode = (isEnd: boolean): CustomText => {
   }
 }
 
-export const buildElement = (elKey: CustomElementsType): CustomElement => {
+export const buildElement = (
+  elKey: CustomElementsType,
+  props = {},
+): CustomElement => {
   const isVoid = elConfig[elKey].attrs?.isVoid
   return {
     type: elKey,
+    ...props,
     children: isVoid ? [TEXT] : [],
   }
 }
@@ -122,8 +126,8 @@ export const buildAndInsert = (
     element: targetE,
     topLevelContainer: targetC,
   } = getAncestry(editor)
-  const element = buildElement(elKey)
   const config = elConfig[elKey]
+  const element = buildElement(elKey, config.defaultProps)
   if (config.attrs?.isInline) {
     if (!targetT) return
     if (isCollapsed) {

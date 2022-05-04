@@ -3,7 +3,7 @@ import {
   ElementFormProps,
   ListElement,
 } from '../../../custom-types'
-import { ListIcon } from '../../../../Icons'
+import { UlIcon, OlIcon } from '../../../../Icons'
 import React from 'react'
 import { List } from '../../../../List'
 import Checkbox from '../../../../Form/Checkbox'
@@ -31,9 +31,17 @@ const Form: React.FC<ElementFormProps<ListElement>> = ({
   </div>
 )
 
-export const config: ElementConfigI = {
+export const ulConfig: ElementConfigI = {
   Component,
   Form,
   structure: [{ type: 'listItem', repeat: true }],
-  button: { icon: ListIcon },
+  button: { icon: UlIcon },
+}
+
+export const olConfig: ElementConfigI = {
+  ...ulConfig,
+  button: { icon: OlIcon },
+  defaultProps: {
+    ordered: true,
+  },
 }
