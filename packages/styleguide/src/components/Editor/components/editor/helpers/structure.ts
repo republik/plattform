@@ -99,6 +99,17 @@ const shouldRemove = (
   (isCorrect(nextNode, currentTemplate) ||
     (prevTemplate?.repeat && isCorrect(nextNode, prevTemplate)))
 
+const getMainElement = (
+  structure?: NodeTemplate[],
+): CustomElementsType | undefined => {
+  if (!structure) return
+  for (let i = 0; i < structure.length; i++) {
+    const elType = getTemplateType(structure[i])
+    // console.log({ elType, isMain: elType && elConfig[elType].attrs?.isMain })
+    if (elType && elConfig[elType].attrs?.isMain) return elType
+  }
+}
+
 export const buildAndInsert = (
   editor: CustomEditor,
   elKey: CustomElementsType,
@@ -112,7 +123,8 @@ export const buildAndInsert = (
     topLevelContainer: targetC,
   } = getAncestry(editor)
   const element = buildElement(elKey)
-  if (elConfig[elKey].attrs?.isInline) {
+  const config = elConfig[elKey]
+  if (config.attrs?.isInline) {
     if (!targetT) return
     if (isCollapsed) {
       return Transforms.insertNodes(editor, element)
@@ -122,7 +134,22 @@ export const buildAndInsert = (
     }
   }
   const target = targetC || targetE
-  Transforms.setNodes(editor, { type: elKey }, { at: target[1] })
+  Editor.withoutNormalizing(editor, () => {
+    const mainElKey = getMainElement(config.structure)
+    const targetMainElKey = getMainElement(elConfig[target[0].type].structure)
+    if (targetMainElKey) {
+      Transforms.unwrapNodes(editor, { at: target[1] })
+    }
+    if (mainElKey) {
+      Transforms.wrapNodes(editor, element, { at: target[1] })
+      return Transforms.setNodes(
+        editor,
+        { type: mainElKey },
+        { at: target[1].concat(0) },
+      )
+    }
+    Transforms.setNodes(editor, { type: elKey }, { at: target[1] })
+  })
   Transforms.select(editor, target[1])
   Transforms.collapse(editor, { edge: 'start' })
 }
@@ -211,7 +238,7 @@ export const fixStructure: (
 ) => NormalizeFn<CustomAncestor> =
   (structure = DEFAULT_STRUCTURE) =>
   ([node, path], editor) => {
-    // console.log('MATCH STRUCTURE')
+    console.log('MATCH STRUCTURE')
     let i = 0
     let repeatOffset = 0
     let loop = true
@@ -224,7 +251,7 @@ export const fixStructure: (
       const currentTemplate = structure[i]
       const prevTemplate = i > 0 && structure[i - 1]
       const nextTemplate = i < structure.length - 1 && structure[i + 1]
-      /* console.log({
+      console.log({
         i,
         repeatOffset,
         currentNode,
@@ -232,7 +259,7 @@ export const fixStructure: (
         currentTemplate,
         prevTemplate,
         nextTemplate,
-      }) */
+      })
       if (prevTemplate?.repeat && isCorrect(currentNode, prevTemplate)) {
         // we use the template for switch between block types and onEnter insert
         linkTemplate(currentPath, prevTemplate, editor)
