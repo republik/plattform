@@ -17,8 +17,8 @@ function getJWTForUser(user, sessionId) {
   }
 
   const expiresIn = userIsInRoles(user, specialRoles)
-    ? DEFAULT_MAX_AGE_IN_MS
-    : SHORT_MAX_AGE_IN_MS
+    ? SHORT_MAX_AGE_IN_MS
+    : DEFAULT_MAX_AGE_IN_MS
 
   const userToken = jwt.sign(
     {

@@ -1,12 +1,21 @@
 const { getJWTForUser } = require('../jwt')
+const { userIsInRoles, specialRoles } = require('../Roles')
 
-function JWTMiddleware({ maxAge, dev, domain, jwtCookieName }) {
+function JWTMiddleware({
+  maxAge,
+  maxAgeSpecialRoles,
+  dev,
+  domain,
+  jwtCookieName,
+}) {
   return (req, res, next) => {
     // In case a session and user object exist on the request set the JWT cookie
     if (req.session && req.user) {
       const token = getJWTForUser(req.user, req.sessionID)
       res.cookie(jwtCookieName, token, {
-        maxAge: maxAge,
+        maxAge: userIsInRoles(req.user, specialRoles)
+          ? maxAgeSpecialRoles
+          : maxAge,
         domain,
         sameSite: !dev && 'none',
         secure: !dev,

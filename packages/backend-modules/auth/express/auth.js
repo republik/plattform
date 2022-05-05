@@ -24,6 +24,7 @@ exports.configure = ({
   // NB: With 'rolling: true' passed to session() the session expiry time will
   // be reset every time a user visits the site again before it expires.
   maxAge = DEFAULT_MAX_AGE_IN_MS, // 1 year
+  maxAgeSpecialRoles = SHORT_MAX_AGE_IN_MS, // 1 week
   // is the server running in development
   dev = false,
 } = {}) => {
@@ -89,7 +90,9 @@ exports.configure = ({
     return next()
   })
 
-  server.use(JWTMiddleware({ dev, maxAge, domain, jwtCookieName }))
+  server.use(
+    JWTMiddleware({ dev, maxAge, maxAgeSpecialRoles, domain, jwtCookieName }),
+  )
 
   const close = () => {
     return store.close()
