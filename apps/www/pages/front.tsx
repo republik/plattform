@@ -1,11 +1,17 @@
-import Frame from '../components/Frame'
+import withDefaultSSR from '../lib/hocs/withDefaultSSR'
+import { useRouter } from 'next/router'
+import Front from '../components/Front'
 
 const FrontPage = () => {
+  const router = useRouter()
   return (
-    <Frame>
-      <h1>Some day you will see the statically generated front 🔥🔥🔥</h1>
-    </Frame>
+    <Front
+      shouldAutoRefetch
+      hasOverviewNav
+      extractId={router.query.extractId}
+      finite
+    />
   )
 }
 
-export default FrontPage
+export default withDefaultSSR(FrontPage)

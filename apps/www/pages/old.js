@@ -6,7 +6,7 @@ import { useInNativeApp } from '../lib/withInNativeApp'
 import SignInPage from './anmelden'
 import Front from '../components/Front'
 import Marketing from '../components/Marketing'
-import withT from '../lib/withT'
+import withT, { useTranslation } from '../lib/withT'
 import withMembership from '../components/Auth/withMembership'
 
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
@@ -42,6 +42,7 @@ const IndexPage = ({ t, isMember, router }) => {
     image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
     url: `${PUBLIC_BASE_URL}/`,
   }
+
   return (
     <Frame raw meta={meta} isOnMarketingPage={true}>
       <Marketing />
@@ -51,12 +52,4 @@ const IndexPage = ({ t, isMember, router }) => {
 
 const EnhancedPage = compose(withMembership, withT, withRouter)(IndexPage)
 
-// export default withDefaultSSR(EnhancedPage)
-
-const MarketingPage = () => (
-  <Frame>
-    <h1>Someday this will be the statically generated marketing page</h1>
-  </Frame>
-)
-
-export default MarketingPage
+export default withDefaultSSR(EnhancedPage)
