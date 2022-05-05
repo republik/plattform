@@ -43,7 +43,7 @@ async function verifyJWT(token: string): Promise<Payload> {
 export async function parseAndVerifyJWT(
   req: NextRequest,
 ): Promise<Payload | null> {
-  const sessionCookie = req.cookies?.['connect-sid']
+  const sessionCookie = req.cookies?.['connect.sid']
   const jwtCookie = req.cookies?.['republik-token']
   if (!sessionCookie || !jwtCookie) {
     return null

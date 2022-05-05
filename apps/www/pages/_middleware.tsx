@@ -1,5 +1,5 @@
 import { NextFetchEvent, NextRequest, NextResponse } from 'next/server'
-import { parseAndVerifyJWT } from '../lib/middlewares/JWT/JWTHelper'
+import { parseAndVerifyJWT } from '../lib/auth/JWT/JWTHelper'
 
 /**
  * Middleware used to conditionally redirect between the marketing- and front-page
