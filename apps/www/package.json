@@ -87,11 +87,11 @@
     "express": "^4.17.2",
     "express-basic-auth": "^1.2.1",
     "express-rate-limit": "^5.5.1",
-    "jsonwebtoken": "^8.5.1",
     "glamor": "^2.20.40",
     "graphql": "^15.3.0",
     "helmet": "^3.23.3",
     "immer": "^9.0.12",
+    "jose": "^4.8.1",
     "isomorphic-unfetch": "^3.1.0",
     "load-script": "^1.0.0",
     "lodash": "^4.17.21",
@@ -113,6 +113,7 @@
     "topojson": "^3.0.2",
     "useragent": "^2.3.0",
     "uuid": "^3.4.0",
-    "validator": "^13.7.0"
+    "validator": "^13.7.0",
+    "yup": "^0.32.11"
   }
 }
