@@ -6,38 +6,48 @@ import {
   Payload,
 } from './Payload'
 
-const rawPublicKey = process.env.JWT_PUBLIC_KEY
-  ? Buffer.from(process.env.JWT_PUBLIC_KEY, 'base64').toString()
-  : null
-const issuer = process.env.JWT_ISSUER
-
-async function verifyJWT(token: string): Promise<Payload> {
-  console.log('Raw public key:', rawPublicKey)
+/**
+ * Load the public key from env-variables and parse to work with `jose`
+ */
+async function loadPublicKey() {
+  const rawPublicKey = process.env.JWT_PUBLIC_KEY
+    ? Buffer.from(process.env.JWT_PUBLIC_KEY, 'base64').toString()
+    : null
   const publicKey = await jose.importSPKI(rawPublicKey, 'RS256')
   if (!publicKey) {
     throw new Error('JWT_PUBLIC_KEY is not defined')
   }
+  return publicKey
+}
+
+/**
+ * Verify the JWT token and validate the payloads shape
+ * @param token
+ */
+async function verifyJWT(token: string): Promise<Payload> {
+  const publicKey = await loadPublicKey()
   const { payload } = await jose.jwtVerify(token, publicKey, {
-    issuer: issuer,
+    issuer: process.env.JWT_ISSUER,
   })
-  console.log('Payload', payload)
   if (!isValidJWTPayload(payload)) {
     throw new JWTPayloadValidationError('Invalid JWT payload')
   }
   return payload
 }
 
+/**
+ * Check if both the session cookie and the JWT are present.
+ * If both are present, check if the JWT is valid and return the payload
+ * @param req
+ */
 export async function parseAndVerifyJWT(
   req: NextRequest,
 ): Promise<Payload | null> {
-  try {
-    const jwtCookie = req.cookies?.['republik-token']
-    if (!jwtCookie) {
-      return null
-    }
-    const payload = await verifyJWT(jwtCookie)
-    return payload
-  } catch (err) {
+  const sessionCookie = req.cookies?.['connect-sid']
+  const jwtCookie = req.cookies?.['republik-token']
+  if (!sessionCookie || !jwtCookie) {
     return null
   }
+  const payload = await verifyJWT(jwtCookie)
+  return payload
 }
