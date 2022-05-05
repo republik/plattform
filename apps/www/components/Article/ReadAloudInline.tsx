@@ -64,6 +64,7 @@ const styles = {
   }),
   title: css({
     ...fontStyles.sansSerifMedium15,
+    textDecoration: 'none',
     cursor: 'pointer',
     margin: '0px 0 4px 0',
     padding: 0,
@@ -97,6 +98,7 @@ const SyntheticAudio = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
         />
         <p {...styles.text}>
           <a
+            href='#'
             onClick={(e) => {
               e.preventDefault()
               trackEvent([eventCategory, 'audio', meta.url])
@@ -106,6 +108,7 @@ const SyntheticAudio = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
                 path: meta.path,
               })
             }}
+            {...colorScheme.set('color', 'text')}
             {...styles.title}
           >
             {t(`article/${kind}/title`)}
