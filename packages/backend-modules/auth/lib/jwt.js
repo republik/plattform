@@ -20,6 +20,8 @@ function getJWTForUser(user, sessionId) {
     ? SHORT_MAX_AGE_IN_MS
     : DEFAULT_MAX_AGE_IN_MS
 
+  const expiresInSecondsFromNow = Math.round((Date.now() + expiresIn) / 1000)
+
   const userToken = jwt.sign(
     {
       email: user.email,
@@ -33,7 +35,7 @@ function getJWTForUser(user, sessionId) {
       jwtid: sessionId,
       algorithm: 'RS256',
       issuer: process.env.JWT_ISSUER,
-      expiresIn: (Date.now() + expiresIn) * 1000, // expiresIn is in seconds
+      expiresIn: expiresInSecondsFromNow,
     },
   )
 
