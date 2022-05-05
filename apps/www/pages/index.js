@@ -28,16 +28,14 @@ const MarketingPage = () => {
 
 export default MarketingPage
 
-export const getStaticProps: GetStaticProps = createGetStaticProps(
-  async (client, params) => {
-    const data = await client.query({
-      query: MarketingPageQuery,
-    })
-    return {
-      props: {
-        data,
-      },
-      revalidate: 60 * 5,
-    }
-  },
-)
+export const getStaticProps = createGetStaticProps(async (client, params) => {
+  const data = await client.query({
+    query: MarketingPageQuery,
+  })
+  return {
+    props: {
+      data,
+    },
+    revalidate: 60 * 5,
+  }
+})
