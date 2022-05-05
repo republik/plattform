@@ -25,7 +25,6 @@ function JWTMiddleware({
 
     // In case no session exists on the request, delete the JWT cookie
     if (!req.session || !req.user) {
-      console.log('JWT destroyed')
       res.clearCookie(jwtCookieName)
       res.clearCookie('connect.sid')
     }
