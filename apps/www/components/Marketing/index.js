@@ -20,28 +20,41 @@ import Logo from './Logo'
 import MiniFront from './MiniFront'
 import Community from './Community'
 import Pledge from './Pledge'
+import { useMarketingPageQuery } from './graphql/MarketingPageQuery.graphql'
 
-const Marketing = ({ t, data: { loading, error, meGuidance } }) => {
+const Marketing = ({
+  t,
+  data: { loading: meLoading, error: meError, meGuidance },
+}) => {
   const hasActiveMembership = meGuidance && !!meGuidance.activeMembership
   const { inNativeApp, inNativeIOSApp } = useInNativeApp()
+
+  const { data, loading, error } = useMarketingPageQuery()
+
   return (
     <>
-      {!loading && meGuidance && !hasActiveMembership && !inNativeIOSApp && (
+      {!meLoading && meGuidance && !hasActiveMembership && !inNativeIOSApp && (
         <Box>
           <MainContainer>
             <UserGuidance />
           </MainContainer>
         </Box>
       )}
-      {error && <ErrorMessage error={error} style={{ textAlign: 'center' }} />}
+      {meError && (
+        <ErrorMessage error={meError} style={{ textAlign: 'center' }} />
+      )}
       <Lead t={t} />
-      <MiniFront t={t} />
-      <Carpet t={t} />
+      <MiniFront loading={loading} error={error} front={data.miniFront} />
+      <Carpet loading={loading} front={data.carpet} />
       <Reasons t={t} inNativeApp={inNativeApp} />
       {inNativeApp && <MarketingTrialForm t={t} />}
       <Sections t={t} />
-      <Team t={t} />
-      <Community t={t} />
+      <Team loading={loading} error={error} employees={data.team} />
+      <Community
+        loading={loading}
+        error={error}
+        featuredComments={data.featuredComments}
+      />
       <Vision t={t} />
       {inNativeApp ? <MarketingTrialForm t={t} /> : <Pledge />}
       <Logo />

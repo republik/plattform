@@ -85,4 +85,4 @@ export const MarketingPageQuery = gql`
   }
 `
 
-const useMarketingPageQuery = makeQueryHook(MarketingPageQuery)
+export const useMarketingPageQuery = makeQueryHook(MarketingPageQuery)
