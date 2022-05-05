@@ -1,4 +1,3 @@
-import { GetStaticProps } from 'next'
 import Frame from '../components/Frame'
 import Marketing from '../components/Marketing'
 import { useTranslation } from '../lib/withT'
