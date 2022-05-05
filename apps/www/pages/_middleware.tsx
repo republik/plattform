@@ -16,7 +16,6 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
     }
     // Parse and verify JWT to decide about redirection
     const jwtBody = await parseAndVerifyJWT(req)
-    console.log('Validated payload', jwtBody)
     if (jwtBody) {
       url.pathname = jwtBody.roles.includes('member') ? '/front' : '/'
       return NextResponse.rewrite(url)
