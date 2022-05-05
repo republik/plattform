@@ -262,7 +262,7 @@ Use `inlineLabel`, `inlineSecondaryLabel` and `inlineLabelPosition`. Valid posit
       "inlineLabel": "inline",
       "inlineSecondaryLabel": "inline_country",
       "inlineLabelPosition": "inline_pos",
-      "size": "vote_abs",
+      "pointSize": "vote_abs",
       "sizeRangeMax": 40,
       "sizeUnit": "Stimmen",
       "sizeNumberFormat": ".2s",

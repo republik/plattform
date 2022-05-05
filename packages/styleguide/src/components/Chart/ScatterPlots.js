@@ -60,8 +60,7 @@ const ScatterPlot = ({
   colorMap,
   colorSort,
   colorDarkMapping,
-  size,
-  sizeRange,
+  pointSize,
   sizeRangeMax,
   sizeUnit,
   sizeNumberFormat,
@@ -86,16 +85,18 @@ const ScatterPlot = ({
   minInnerWidth,
   annotations,
   allowCanvasRendering,
+  ...props
 }) => {
   const data = values
     .filter((d) => d[x] && d[x].length > 0 && d[y] && d[y].length > 0)
     .map((d) => {
-      const dSize = d[size]
+      const sizeDataColumn = pointSize || props.size || 'size'
+      const dSize = d[sizeDataColumn]
       return {
         datum: d,
         x: +d[x],
         y: +d[y],
-        size: dSize === undefined ? 1 : +d[size] || 0,
+        size: dSize === undefined ? 1 : +d[sizeDataColumn] || 0,
       }
     })
 
@@ -207,8 +208,8 @@ const ScatterPlot = ({
     .domain([0, max(data, (d) => d.size)])
     .range([
       0,
-      sizeRange
-        ? sizeRange[1] // backwards compatible
+      props.sizeRange // backwards compatible, sizeRangeMax has default value
+        ? props.sizeRange[1]
         : sizeRangeMax,
     ])
 
@@ -323,7 +324,7 @@ export const propTypes = {
   }).isRequired,
   colorMap: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   colorSort: sortPropType,
-  size: PropTypes.string.isRequired,
+  pointSize: PropTypes.string.isRequired,
   sizeRangeMax: PropTypes.number.isRequired,
   sizeUnit: PropTypes.string,
   sizeNumberFormat: PropTypes.string,
