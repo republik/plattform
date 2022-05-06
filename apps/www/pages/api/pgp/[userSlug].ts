@@ -14,7 +14,7 @@ export default withReqMethodGuard(
     }
 
     if (!userSlugWithSuffix || !userSlugWithSuffix?.endsWith('.asc')) {
-      return res.status(400).end()
+      return res.status(404).end()
     }
     const userSlug = userSlugWithSuffix.replace('.asc', '')
 
