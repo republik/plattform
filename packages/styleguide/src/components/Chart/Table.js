@@ -321,7 +321,6 @@ const Cell = (props) => {
           !isBarColumn && color ? colorScale(value) : 'transparent',
         color: !isBarColumn && color && getTextColor(colorScale(value)),
         whiteSpace: isBarColumn && 'nowrap',
-        display: isBarColumn && 'inline-block',
       }}
     >
       {isBarColumn ? (
@@ -346,37 +345,46 @@ const BarComponent = (props) => {
   const labelSize = labelGauger(label)
   const BAR_LABEL_PADDING = 10
 
+  const isLabelOutside = labelSize > +barWidth - BAR_LABEL_PADDING
+
   return (
-    <div style={{ height: '30px', position: 'relative' }}>
-      <div
+    <>
+      <span
         style={{
-          position: 'absolute',
-          height: '100%',
+          display: 'inline-block',
+          position: 'relative',
+          verticalAlign: 'middle',
           width: +barWidth,
           backgroundColor: color && colorScale(columnName),
-          display: 'inline-block',
-        }}
-      ></div>
-      <div
-        style={{
-          width:
-            labelSize > +barWidth - BAR_LABEL_PADDING &&
-            parentWidth - +barWidth,
-          left:
-            labelSize > +barWidth - BAR_LABEL_PADDING
-              ? BAR_LABEL_PADDING + +barWidth
-              : BAR_LABEL_PADDING,
-          color:
-            labelSize < +barWidth - BAR_LABEL_PADDING &&
-            color &&
-            getTextColor(columnName),
-          whiteSpace: 'nowrap',
-          position: 'absolute',
-          lineHeight: '30px',
+          height: '30px',
         }}
       >
-        {label}
-      </div>
-    </div>
+        {!isLabelOutside && (
+          <span
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: BAR_LABEL_PADDING,
+              lineHeight: '30px',
+              color: color && getTextColor(columnName),
+            }}
+          >
+            {label}
+          </span>
+        )}
+      </span>
+      {isLabelOutside && (
+        <span
+          style={{
+            display: 'inline-block',
+            verticalAlign: 'middle',
+            paddingLeft: BAR_LABEL_PADDING,
+            lineHeight: '30px',
+          }}
+        >
+          {label}
+        </span>
+      )}
+    </>
   )
 }
