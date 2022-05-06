@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 import { css } from 'glamor'
@@ -297,13 +297,6 @@ const Cell = (props) => {
     numberFormatter,
   } = props
 
-  // const [parentWidth, setParentWidth] = useState(null)
-  // const parentCell = useCallback((node) => {
-  //   if (node !== null) {
-  //     setParentWidth(node.getBoundingClientRect().width)
-  //   }
-  // })
-
   const parentWidth = Math.max(width, 100)
 
   const barScale = scaleLinear()
@@ -312,7 +305,6 @@ const Cell = (props) => {
 
   return (
     <td
-      // ref={parentCell}
       {...(isNumeric && styles.cellNumeric)}
       {...styles.cell}
       style={{
@@ -340,7 +332,7 @@ const Cell = (props) => {
 }
 
 const BarComponent = (props) => {
-  const { parentWidth, barWidth, color, label, columnName, colorScale } = props
+  const { barWidth, color, label, columnName, colorScale } = props
 
   const labelSize = labelGauger(label)
   const BAR_LABEL_PADDING = 10
