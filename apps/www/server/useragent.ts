@@ -1,8 +1,8 @@
-const useragent = require('useragent')
+import useragent from 'useragent'
 
 const appRegex = /RepublikApp\/(\S+)/
 
-module.exports = (ua) => {
+export default (ua) => {
   if (!ua) {
     return
   }
