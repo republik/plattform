@@ -42,8 +42,6 @@ export default withReqMethodGuard(
       },
     })
 
-    console.log('response', response)
-
     if (response.errors) {
       return res.status(503).end()
     }
