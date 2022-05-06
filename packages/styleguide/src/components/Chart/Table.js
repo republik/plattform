@@ -297,11 +297,11 @@ const Cell = (props) => {
     numberFormatter,
   } = props
 
-  const parentWidth = Math.max(width, 100)
+  const maxWidth = Math.max(width, 100)
 
   const barScale = scaleLinear()
     .domain(barChartExtent)
-    .range([5, parentWidth - PADDING])
+    .range([0, maxWidth - PADDING])
 
   return (
     <td
@@ -317,9 +317,8 @@ const Cell = (props) => {
     >
       {isBarColumn ? (
         <BarComponent
-          parentWidth={parentWidth - PADDING}
           colorScale={colorScale}
-          barWidth={barScale(value)}
+          barWidth={Math.ceil(barScale(value))}
           label={numberFormatter(value)}
           columnName={columnName}
           color={color}
@@ -335,9 +334,9 @@ const BarComponent = (props) => {
   const { barWidth, color, label, columnName, colorScale } = props
 
   const labelSize = labelGauger(label)
-  const BAR_LABEL_PADDING = 10
+  const BAR_LABEL_PADDING = 5
 
-  const isLabelOutside = labelSize > +barWidth - BAR_LABEL_PADDING
+  const isLabelOutside = labelSize > barWidth
 
   return (
     <>
@@ -346,7 +345,7 @@ const BarComponent = (props) => {
           display: 'inline-block',
           position: 'relative',
           verticalAlign: 'middle',
-          width: +barWidth,
+          width: barWidth,
           backgroundColor: color && colorScale(columnName),
           height: '30px',
         }}
@@ -370,7 +369,7 @@ const BarComponent = (props) => {
           style={{
             display: 'inline-block',
             verticalAlign: 'middle',
-            paddingLeft: BAR_LABEL_PADDING,
+            paddingLeft: barWidth > 0 && BAR_LABEL_PADDING,
             lineHeight: '30px',
           }}
         >
