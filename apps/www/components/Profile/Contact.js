@@ -207,7 +207,7 @@ const Contact = ({
       {!inNativeIOSApp && user.pgpPublicKeyId && (
         <div {...styles.contactRow}>
           <IconButton
-            href={`/api/pgp/${user.username || user.id}.asc`}
+            href={`/pgp/${user.username || user.id}.asc`}
             Icon={VpnKeyIcon}
             label={user.pgpPublicKeyId.toUpperCase()}
             labelShort={user.pgpPublicKeyId.toUpperCase()}
