@@ -10,13 +10,13 @@ import { getFormat, getTextColor, deduplicate } from './utils'
 import { timeFormat, timeParse } from '../../lib/timeFormat'
 import { ExpandMoreIcon, ExpandLessIcon } from '../Icons'
 import { defaultProps } from './ChartContext'
-import { sansSerifRegular18, sansSerifRegular14 } from '../Typography/styles'
+import { sansSerifRegular18 } from '../Typography/styles'
 import { PADDING } from '../Center'
 import { getColorMapper } from './colorMaps'
 import { Collapsable } from '../Collapsable'
 import { createTextGauger } from '../../lib/textGauger'
 
-const labelGauger = createTextGauger(sansSerifRegular14, {
+const labelGauger = createTextGauger(sansSerifRegular18, {
   dimension: 'width',
   html: true,
 })
