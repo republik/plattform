@@ -227,7 +227,7 @@ Abuzaid Dzhandarovich VISMURADOV,07.12.2021,HR
     t={t}
     config={{
   "type": "Table",
-  "numberFormat": "s",
+  "numberFormat": ".2s",
   "tableColumns": [
     {
       "column": "Jahr",
