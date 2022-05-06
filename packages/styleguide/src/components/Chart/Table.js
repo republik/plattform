@@ -1,23 +1,29 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
 
 import { css } from 'glamor'
-import { scaleThreshold } from 'd3-scale'
-import { descending, ascending } from 'd3-array'
+import { scaleThreshold, scaleLinear } from 'd3-scale'
+import { descending, ascending, extent } from 'd3-array'
 
 import { useColorContext } from '../Colors/ColorContext'
 import { getFormat, getTextColor, deduplicate } from './utils'
 import { timeFormat, timeParse } from '../../lib/timeFormat'
 import { ExpandMoreIcon, ExpandLessIcon } from '../Icons'
 import { defaultProps } from './ChartContext'
-import { sansSerifRegular18 } from '../Typography/styles'
+import { sansSerifRegular18, sansSerifRegular14 } from '../Typography/styles'
 import { PADDING } from '../Center'
 import { getColorMapper } from './colorMaps'
 import { Collapsable } from '../Collapsable'
+import { createTextGauger } from '../../lib/textGauger'
+
+const labelGauger = createTextGauger(sansSerifRegular14, {
+  dimension: 'width',
+  html: true,
+})
 
 const styles = {
   container: css({
-    overflowX: 'auto',
+    overflowX: 'scroll',
     overflowY: 'hidden',
     marginLeft: -PADDING,
     marginRight: -PADDING,
@@ -59,7 +65,7 @@ const Table = (props) => {
     t,
   } = props
   const columns = values.columns || Object.keys(values[0] || {})
-  const numberFormatter = getFormat(numberFormat)
+  const numberFormatter = getFormat(numberFormat, props.tLabel)
   const dateParser = timeParse(props.timeParse)
   const dateFormatter = timeFormat(props.timeFormat)
 
@@ -79,6 +85,10 @@ const Table = (props) => {
     .filter((d) => d.type === 'date')
     .map((d) => d.column)
 
+  const barColumns = tableColumns
+    .filter((d) => d.type === 'bar')
+    .map((d) => d.column)
+
   const parsedData =
     numberColumns.length || dateColumns.length
       ? values.map((row) => {
@@ -96,6 +106,19 @@ const Table = (props) => {
           return parsedRow
         })
       : [].concat(values)
+
+  const barChartData = []
+  barColumns.length &&
+    values.map((row) => {
+      barColumns.forEach((key) => {
+        if (row[key] !== undefined) {
+          row[key] = +row[key]
+        }
+        barChartData.push(row[key])
+      })
+    })
+
+  const barChartExtent = extent(barChartData)
 
   if (sortBy.key) {
     parsedData.sort((a, b) => {
@@ -165,6 +188,9 @@ const Table = (props) => {
                     : 'left',
                   cursor: 'pointer',
                   whiteSpace: sortBy.key === tableHead ? 'nowrap' : undefined,
+                  width: tableColumns.find((d) => d.column === tableHead)
+                    ? tableColumns.find((d) => d.column === tableHead).width
+                    : undefined,
                 }}
                 key={index}
                 onClick={() => setSort(columns[index])}
@@ -191,10 +217,14 @@ const Table = (props) => {
               {columns.map((cellKey, cellIndex) => (
                 <Cell
                   key={cellIndex}
+                  barChartExtent={barChartExtent}
                   {...tableColumns.find((d) => d.column === cellKey)}
                   isNumeric={numericColumns.includes(cellKey)}
                   value={row[cellKey]}
                   colorScale={colorScale}
+                  columnName={cellKey}
+                  isBarColumn={barColumns.includes(cellKey)}
+                  numberFormatter={numberFormatter}
                 >
                   {numberColumns.includes(cellKey)
                     ? numberFormatter(row[cellKey])
@@ -254,18 +284,96 @@ Table.propTypes = propTypes
 export default Table
 
 const Cell = (props) => {
-  const { type, width, color, colorScale, value, children, isNumeric } = props
+  const {
+    columnName,
+    width,
+    color,
+    colorScale,
+    value,
+    children,
+    isNumeric,
+    isBarColumn,
+    barChartExtent,
+    numberFormatter,
+  } = props
+
+  const [parentWidth, setParentWidth] = useState(null)
+  const parentCell = useCallback((node) => {
+    if (node !== null) {
+      setParentWidth(node.getBoundingClientRect().width)
+    }
+  })
+
+  const barScale = scaleLinear()
+    .domain(barChartExtent)
+    .range([5, parentWidth - PADDING])
+
   return (
     <td
+      ref={parentCell}
       {...(isNumeric && styles.cellNumeric)}
       {...styles.cell}
       style={{
         width: width !== undefined ? +width : undefined,
-        backgroundColor: color ? colorScale(value) : 'transparent',
-        color: color && getTextColor(colorScale(value)),
+        backgroundColor:
+          !isBarColumn && color ? colorScale(value) : 'transparent',
+        color: !isBarColumn && color && getTextColor(colorScale(value)),
       }}
     >
-      {children}
+      {isBarColumn ? (
+        <BarComponent
+          parentWidth={parentWidth - PADDING}
+          colorScale={colorScale}
+          barWidth={barScale(value)}
+          label={numberFormatter(value)}
+          columnName={columnName}
+          color={color}
+        />
+      ) : (
+        children
+      )}
     </td>
+  )
+}
+
+const BarComponent = (props) => {
+  const { parentWidth, barWidth, color, label, columnName, colorScale } = props
+
+  const labelSize = labelGauger(label)
+  const BAR_LABEL_PADDING = 10
+
+  return (
+    <div style={{ height: '30px', position: 'relative' }}>
+      <div
+        style={{
+          position: 'absolute',
+          height: '100%',
+          width: +barWidth,
+          backgroundColor: color && colorScale(columnName),
+        }}
+      ></div>
+      <div
+        style={{
+          width:
+            labelSize > +barWidth - BAR_LABEL_PADDING &&
+            parentWidth - +barWidth,
+          left:
+            labelSize > +barWidth - BAR_LABEL_PADDING
+              ? BAR_LABEL_PADDING + +barWidth
+              : BAR_LABEL_PADDING,
+          color:
+            labelSize < +barWidth - BAR_LABEL_PADDING &&
+            color &&
+            getTextColor(columnName),
+          overflow: 'hidden',
+          whiteSpace: 'nowrap',
+          textOverflow: 'ellipsis',
+          position: 'absolute',
+          lineHeight: '30px',
+        }}
+      >
+        {label}
+      </div>
+    </div>
   )
 }
