@@ -14,7 +14,7 @@ function withReqMethodGuard(
   return async (req: NextApiRequest, res: NextApiResponse) => {
     // If the request method is not accepted, reject the request
     // HTTPMethod has string values therefor we can use `as HTTPMethods`
-    if (!req.method || !acceptedMethods.includes(req.method as HTTPMethods)) {
+    if (!acceptedMethods.includes(req.method as HTTPMethods)) {
       return res.status(405).end()
     } else {
       return handler(req, res)
