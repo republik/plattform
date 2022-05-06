@@ -14,7 +14,6 @@ if (DEV || process.env.DOTENV) {
   dotenv.config()
 }
 
-const pgp = require('./pgp')
 const useragent = require('./useragent')
 
 const PORT = process.env.PORT || 3005
@@ -119,8 +118,6 @@ app.prepare().then(() => {
       }),
     )
   }
-
-  server.use(pgp)
 
   // tmp unavailable
   server.get('/vote', (req, res) => {

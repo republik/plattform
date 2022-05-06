@@ -1,0 +1,62 @@
+import { NextApiRequest, NextApiResponse } from 'next'
+import withReqMethodGuard from '../../../lib/api/withReqMethodGuard'
+import HTTPMethods from '../../../lib/api/HTTPMethods'
+import { createApolloFetch } from 'apollo-fetch'
+
+export default withReqMethodGuard(
+  async function (req: NextApiRequest, res: NextApiResponse) {
+    const apolloFetch = createApolloFetch({
+      uri: process.env.API_URL,
+    })
+    let { userSlug: userSlugWithSuffix } = req.query
+    if (Array.isArray(userSlugWithSuffix)) {
+      userSlugWithSuffix = userSlugWithSuffix.join('')
+    }
+
+    if (!userSlugWithSuffix || !userSlugWithSuffix?.endsWith('.asc')) {
+      return res.status(400).end()
+    }
+    const userSlug = userSlugWithSuffix.replace('.asc', '')
+
+    apolloFetch.use(({ request, options }, next) => {
+      if (!options.headers) {
+        options.headers = {}
+      }
+      options.headers['cookie'] = req.headers.cookie
+
+      next()
+    })
+
+    const response = await apolloFetch({
+      query: `
+      query pgpPublicKey($slug: String!) {
+        user(slug: $slug) {
+          username
+          name
+          pgpPublicKey
+        }
+      }
+    `,
+      variables: {
+        slug: userSlug,
+      },
+    })
+
+    console.log('response', response)
+
+    if (response.errors) {
+      return res.status(503).end()
+    }
+    const { user } = response.data
+    if (!user || !user.pgpPublicKey) {
+      return res.status(404).end()
+    }
+
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="${user.username || user.name}.asc"`,
+    )
+    return res.send(user.pgpPublicKey)
+  },
+  [HTTPMethods.GET],
+)
