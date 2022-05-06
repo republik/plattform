@@ -321,6 +321,7 @@ const Cell = (props) => {
           !isBarColumn && color ? colorScale(value) : 'transparent',
         color: !isBarColumn && color && getTextColor(colorScale(value)),
         whiteSpace: isBarColumn && 'nowrap',
+        display: isBarColumn && 'inline-block',
       }}
     >
       {isBarColumn ? (
