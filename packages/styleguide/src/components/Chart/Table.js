@@ -358,7 +358,7 @@ const BarComponent = (props) => {
               top: 0,
               left: BAR_LABEL_PADDING,
               lineHeight: '30px',
-              color: color && getTextColor(columnName),
+              color: color && getTextColor(colorScale(columnName)),
             }}
           >
             {label}
