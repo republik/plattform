@@ -241,7 +241,8 @@ Abuzaid Dzhandarovich VISMURADOV,07.12.2021,HR
     {
       "column": "Preisgeld",
       "type": "bar",
-      "color": true
+      "color": true,
+      "width": "175"
     }
   ],
   "defaultSortColumn": "Preisgeld",

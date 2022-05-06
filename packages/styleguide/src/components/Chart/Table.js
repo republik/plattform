@@ -23,7 +23,7 @@ const labelGauger = createTextGauger(sansSerifRegular18, {
 
 const styles = {
   container: css({
-    overflowX: 'scroll',
+    overflowX: 'auto',
     overflowY: 'hidden',
     marginLeft: -PADDING,
     marginRight: -PADDING,
@@ -297,12 +297,14 @@ const Cell = (props) => {
     numberFormatter,
   } = props
 
-  const [parentWidth, setParentWidth] = useState(null)
-  const parentCell = useCallback((node) => {
-    if (node !== null) {
-      setParentWidth(node.getBoundingClientRect().width)
-    }
-  })
+  // const [parentWidth, setParentWidth] = useState(null)
+  // const parentCell = useCallback((node) => {
+  //   if (node !== null) {
+  //     setParentWidth(node.getBoundingClientRect().width)
+  //   }
+  // })
+
+  const parentWidth = Math.max(width, 100)
 
   const barScale = scaleLinear()
     .domain(barChartExtent)
@@ -310,7 +312,7 @@ const Cell = (props) => {
 
   return (
     <td
-      ref={parentCell}
+      // ref={parentCell}
       {...(isNumeric && styles.cellNumeric)}
       {...styles.cell}
       style={{
@@ -318,6 +320,7 @@ const Cell = (props) => {
         backgroundColor:
           !isBarColumn && color ? colorScale(value) : 'transparent',
         color: !isBarColumn && color && getTextColor(colorScale(value)),
+        whiteSpace: isBarColumn && 'nowrap',
       }}
     >
       {isBarColumn ? (
@@ -350,6 +353,7 @@ const BarComponent = (props) => {
           height: '100%',
           width: +barWidth,
           backgroundColor: color && colorScale(columnName),
+          display: 'inline-block',
         }}
       ></div>
       <div
@@ -365,9 +369,7 @@ const BarComponent = (props) => {
             labelSize < +barWidth - BAR_LABEL_PADDING &&
             color &&
             getTextColor(columnName),
-          overflow: 'hidden',
           whiteSpace: 'nowrap',
-          textOverflow: 'ellipsis',
           position: 'absolute',
           lineHeight: '30px',
         }}
