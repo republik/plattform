@@ -21,13 +21,11 @@ const isValidApiKey = (key) => {
   return !!key && apiKeys.some((apiKey) => apiKey.key === key)
 }
 
-const restrictToRoles = () =>
-  (DOCUMENTS_RESTRICT_TO_ROLES || false) &&
-  DOCUMENTS_RESTRICT_TO_ROLES.length &&
-  DOCUMENTS_RESTRICT_TO_ROLES.split(',')
+const restrictToRoles =
+  !!DOCUMENTS_RESTRICT_TO_ROLES && DOCUMENTS_RESTRICT_TO_ROLES.split(',')
 
 const isUserUnrestricted = (user) =>
-  !restrictToRoles() || userIsInRoles(user, restrictToRoles())
+  !restrictToRoles || userIsInRoles(user, restrictToRoles)
 
 const includesUnrestrictedChildRepoId = (repoIds) =>
   (repoIds || false) &&
@@ -39,7 +37,6 @@ const includesUnrestrictedChildRepoId = (repoIds) =>
 
 module.exports = {
   isValidApiKey,
-  restrictToRoles,
   isUserUnrestricted,
   includesUnrestrictedChildRepoId,
 }

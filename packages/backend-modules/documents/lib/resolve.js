@@ -3,7 +3,7 @@ const visit = require('unist-util-visit')
 const {
   Roles: { userIsInRoles },
 } = require('@orbiting/backend-modules-auth')
-const { isValidApiKey } = require('./restrictions')
+const { isValidApiKey, isUserUnrestricted } = require('./restrictions')
 
 checkEnv(['FRONTEND_BASE_URL'])
 
@@ -213,12 +213,12 @@ const contentUrlResolver = (
   )
 
   const stripDocLinks =
-    DOCUMENTS_RESTRICT_TO_ROLES &&
     DOCUMENTS_LINKS_RESTRICTED &&
-    doc?.meta?.path && // not present during publish
-    DOCUMENTS_LINKS_RESTRICTED.split(',').includes(doc.meta.path) &&
+    DOCUMENTS_LINKS_RESTRICTED.split(',').includes(doc.meta?.path) &&
+    // user is undefined during publish -> no stripping
+    // null during document delivery -> strip unless authorized
     user !== undefined &&
-    !userIsInRoles(user, DOCUMENTS_RESTRICT_TO_ROLES.split(',')) &&
+    !isUserUnrestricted(user) &&
     !isValidApiKey(doc._apiKey)
 
   visit(doc.content, 'link', (node) => {
