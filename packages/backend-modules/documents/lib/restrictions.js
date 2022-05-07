@@ -21,11 +21,10 @@ const isValidApiKey = (key) => {
   return !!key && apiKeys.some((apiKey) => apiKey.key === key)
 }
 
-const restrictToRoles =
-  !!DOCUMENTS_RESTRICT_TO_ROLES && DOCUMENTS_RESTRICT_TO_ROLES.split(',')
+const documentsRestrictToRoles = DOCUMENTS_RESTRICT_TO_ROLES?.split(',')
 
 const isUserUnrestricted = (user) =>
-  !restrictToRoles || userIsInRoles(user, restrictToRoles)
+  !documentsRestrictToRoles || userIsInRoles(user, documentsRestrictToRoles)
 
 const includesUnrestrictedChildRepoId = (repoIds) =>
   (repoIds || false) &&

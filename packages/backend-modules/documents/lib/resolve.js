@@ -1,8 +1,5 @@
 const checkEnv = require('check-env')
 const visit = require('unist-util-visit')
-const {
-  Roles: { userIsInRoles },
-} = require('@orbiting/backend-modules-auth')
 const { isValidApiKey, isUserUnrestricted } = require('./restrictions')
 
 checkEnv(['FRONTEND_BASE_URL'])
@@ -11,7 +8,6 @@ const {
   GITHUB_LOGIN,
   GITHUB_ORGS = GITHUB_LOGIN,
   FRONTEND_BASE_URL,
-  DOCUMENTS_RESTRICT_TO_ROLES,
   DOCUMENTS_LINKS_RESTRICTED,
 } = process.env
 
@@ -290,9 +286,8 @@ const metaUrlResolver = (
       index <= 1 ||
       !episode.document?.meta?.path ||
       episode.document.meta.path === meta.path ||
-      !DOCUMENTS_RESTRICT_TO_ROLES ||
       user === undefined ||
-      userIsInRoles(user, DOCUMENTS_RESTRICT_TO_ROLES.split(','))
+      isUserUnrestricted(user)
     ) {
       return
     }
@@ -307,11 +302,7 @@ const metaUrlResolver = (
         c.url = urlReplacer(c.url)
       })
 
-  if (
-    user === undefined ||
-    (DOCUMENTS_RESTRICT_TO_ROLES &&
-      !userIsInRoles(user, DOCUMENTS_RESTRICT_TO_ROLES.split(',')))
-  ) {
+  if (user === undefined || !isUserUnrestricted(user)) {
     meta.recommendations = null
   }
 }
