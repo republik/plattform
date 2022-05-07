@@ -374,6 +374,7 @@ const search = async (__, args, context, info) => {
     withoutContent: _withoutContent,
     withoutRelatedDocs = false,
     withoutAggs = false,
+    apiKey,
   } = args
 
   // detect if Document.content is requested
@@ -422,7 +423,7 @@ const search = async (__, args, context, info) => {
 
   const first =
     (samples !== false && samples) ||
-    getFirst(_first, filter, user, recursive, unrestricted, args.apiKey)
+    getFirst(_first, filter, user, recursive, unrestricted, apiKey)
 
   const indicesList = getIndicesList(filter)
   const query = {
@@ -495,6 +496,7 @@ const search = async (__, args, context, info) => {
       connection: response,
       context,
       withoutContent,
+      apiKey,
     })
   }
 

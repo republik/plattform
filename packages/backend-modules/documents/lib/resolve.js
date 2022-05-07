@@ -3,6 +3,7 @@ const visit = require('unist-util-visit')
 const {
   Roles: { userIsInRoles },
 } = require('@orbiting/backend-modules-auth')
+const { isValidApiKey } = require('./restrictions')
 
 checkEnv(['FRONTEND_BASE_URL'])
 
@@ -217,7 +218,8 @@ const contentUrlResolver = (
     doc?.meta?.path && // not present during publish
     DOCUMENTS_LINKS_RESTRICTED.split(',').includes(doc.meta.path) &&
     user !== undefined &&
-    !userIsInRoles(user, DOCUMENTS_RESTRICT_TO_ROLES.split(','))
+    !userIsInRoles(user, DOCUMENTS_RESTRICT_TO_ROLES.split(',')) &&
+    !isValidApiKey(doc._apiKey)
 
   visit(doc.content, 'link', (node) => {
     node.url = urlReplacer(node.url, stripDocLinks)
