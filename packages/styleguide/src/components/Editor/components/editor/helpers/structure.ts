@@ -117,18 +117,25 @@ const getMainElement = (
   }
 }
 
-const insertInline = (editor: CustomEditor, element: CustomElement): void => {
+const insertInline = (
+  editor: CustomEditor,
+  element: CustomElement,
+  setFormPath?: (path: number[]) => void,
+): void => {
   const { selection } = editor
   if (!selection) return
   const { text: target } = getAncestry(editor)
   if (!target) return
   const isCollapsed = Range.isCollapsed(selection)
   if (isCollapsed) {
-    return Transforms.insertNodes(editor, element)
+    Transforms.insertNodes(editor, element)
   } else {
     Transforms.wrapNodes(editor, element, { split: true })
-    return Transforms.collapse(editor, { edge: 'end' })
+    Transforms.collapse(editor, { edge: 'end' })
   }
+  console.log({ editor, setFormPath })
+
+  setFormPath && setFormPath(selection.anchor.path)
 }
 
 const setChildren = (
@@ -199,12 +206,14 @@ const insertBlock = (
   }
 
   Transforms.select(editor, target[1])
+  // set fp target1
   Transforms.collapse(editor, { edge: 'focus' })
 }
 
 export const buildAndInsert = (
   editor: CustomEditor,
   elKey: CustomElementsType,
+  setFormPath?: (path: number[]) => void,
 ): void => {
   const { selection } = editor
   if (!selection) return
@@ -213,7 +222,7 @@ export const buildAndInsert = (
   const element = buildElement(elKey, config.defaultProps)
 
   if (config.attrs?.isInline) {
-    return insertInline(editor, element)
+    return insertInline(editor, element, setFormPath)
   }
 
   insertBlock(editor, element, elKey, config)
