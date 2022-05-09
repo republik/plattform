@@ -1,4 +1,10 @@
-import React, { ReactElement, useMemo } from 'react'
+import React, {
+  createContext,
+  useContext,
+  ReactElement,
+  useMemo,
+  useState,
+} from 'react'
 import {
   CustomEditor,
   CustomElement,
@@ -19,6 +25,19 @@ const styles = {
   elementForm: css({
     marginBottom: 20,
   }),
+}
+
+const FormContext = createContext([])
+
+export const useFormContext = () => useContext(FormContext)
+
+export const FormContextProvider = ({ children }) => {
+  const [formPath, setFormPath] = useState<number[]>()
+  return (
+    <FormContext.Provider value={[formPath, setFormPath]}>
+      {children}
+    </FormContext.Provider>
+  )
 }
 
 type FormData = {
@@ -54,21 +73,16 @@ export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
     .filter(Boolean)
 }
 
-export const FormOverlay = ({
-  path,
-  onClose,
-}: {
-  path: number[]
-  onClose: () => void
-}): ReactElement => {
+export const FormOverlay = (): ReactElement => {
+  const [path, setPath] = useFormContext()
   const editor = useSlate()
   const forms = useMemo(() => getForms(editor, path), [path])
 
   if (!forms.length || !path) return null
 
   return (
-    <Overlay onClose={onClose}>
-      <OverlayToolbar title='Edit' onClose={onClose} />
+    <Overlay onClose={() => setPath(undefined)}>
+      <OverlayToolbar title='Edit' onClose={() => setPath(undefined)} />
       <OverlayBody>
         {forms.map(({ Form, element }, i) => (
           <div key={i} {...styles.elementForm}>
