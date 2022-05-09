@@ -18,25 +18,10 @@ const ListComponent: React.FC<{
   </List>
 )
 
-const Form: React.FC<ElementFormProps<ListElement>> = ({
-  element,
-  onChange,
-}) => (
-  <div>
-    <Checkbox
-      checked={element.ordered}
-      onChange={(_, checked) => onChange({ ordered: checked })}
-    >
-      Ordered List
-    </Checkbox>
-  </div>
-)
-
 const structure: NodeTemplate[] = [{ type: 'listItem', repeat: true }]
 
 export const ulConfig: ElementConfigI = {
   Component: ListComponent,
-  Form,
   structure,
   button: { icon: UlIcon },
   defaultProps: {
@@ -46,7 +31,6 @@ export const ulConfig: ElementConfigI = {
 
 export const olConfig: ElementConfigI = {
   Component: ListComponent,
-  Form,
   structure,
   button: { icon: OlIcon },
   defaultProps: {
