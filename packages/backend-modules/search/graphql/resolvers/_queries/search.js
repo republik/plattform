@@ -3,8 +3,7 @@ const {
   Roles: { userHasRole },
 } = require('@orbiting/backend-modules-auth')
 const {
-  isUserUnrestricted,
-  isValidApiKey,
+  hasFullDocumentAccess,
   includesUnrestrictedChildRepoId,
 } = require('@orbiting/backend-modules-documents/lib/restrictions')
 const {
@@ -327,8 +326,7 @@ const getFirst = (
   const unrestricted = includesUnrestrictedChildRepoId(format)
 
   if (
-    !isUserUnrestricted(user) &&
-    !isValidApiKey(apiKey) &&
+    !hasFullDocumentAccess(user, apiKey) &&
     !recursive &&
     !path &&
     !oneRepoId &&

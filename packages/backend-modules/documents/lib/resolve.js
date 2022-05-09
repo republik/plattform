@@ -1,6 +1,6 @@
 const checkEnv = require('check-env')
 const visit = require('unist-util-visit')
-const { isValidApiKey, isUserUnrestricted } = require('./restrictions')
+const { hasFullDocumentAccess } = require('./restrictions')
 
 checkEnv(['FRONTEND_BASE_URL'])
 
@@ -214,8 +214,7 @@ const contentUrlResolver = (
     // user is undefined during publish -> no stripping
     // null during document delivery -> strip unless authorized
     user !== undefined &&
-    !isUserUnrestricted(user) &&
-    !isValidApiKey(doc._apiKey)
+    !hasFullDocumentAccess(user, doc._apiKey)
 
   visit(doc.content, 'link', (node) => {
     node.url = urlReplacer(node.url, stripDocLinks)
@@ -272,6 +271,7 @@ const metaUrlResolver = (
   urlPrefix,
   searchString,
   user,
+  apiKey,
 ) => {
   const urlReplacer = createUrlReplacer(
     _all,
@@ -287,7 +287,7 @@ const metaUrlResolver = (
       !episode.document?.meta?.path ||
       episode.document.meta.path === meta.path ||
       user === undefined ||
-      isUserUnrestricted(user)
+      hasFullDocumentAccess(user, apiKey)
     ) {
       return
     }
@@ -302,7 +302,7 @@ const metaUrlResolver = (
         c.url = urlReplacer(c.url)
       })
 
-  if (user === undefined || !isUserUnrestricted(user)) {
+  if (user === undefined || !hasFullDocumentAccess(user, apiKey)) {
     meta.recommendations = null
   }
 }
