@@ -50,9 +50,9 @@ const getForm = (
   path: number[],
 ): FormData | undefined => {
   const element = Editor.node(editor, path)[0]
-  console.log({ element })
+  // console.log({ element })
   if (!SlateElement.isElement(element)) return
-  console.log({ element, config: elConfig[element.type] })
+  // console.log({ element, config: elConfig[element.type] })
   const Form = elConfig[element.type].Form
   if (!Form) return
   return {
@@ -66,7 +66,7 @@ export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
   return path
     .reduce((forms, p, i) => {
       const currentPath = path.slice(0, i ? -i : undefined)
-      console.log({ currentPath })
+      // console.log({ currentPath })
       const currentForm = getForm(editor, currentPath)
       return forms.concat(currentForm)
     }, [])
@@ -74,15 +74,17 @@ export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
 }
 
 export const FormOverlay = (): ReactElement => {
-  const [path, setPath] = useFormContext()
+  const [formPath, setFormPath] = useFormContext()
   const editor = useSlate()
-  const forms = useMemo(() => getForms(editor, path), [path])
+  const forms = useMemo(() => getForms(editor, formPath), [formPath])
 
-  if (!forms.length || !path) return null
+  console.log({ formPath })
+
+  if (!forms.length || !formPath) return null
 
   return (
-    <Overlay onClose={() => setPath(undefined)}>
-      <OverlayToolbar title='Edit' onClose={() => setPath(undefined)} />
+    <Overlay onClose={() => setFormPath(undefined)}>
+      <OverlayToolbar title='Edit' onClose={() => setFormPath(undefined)} />
       <OverlayBody>
         {forms.map(({ Form, element }, i) => (
           <div key={i} {...styles.elementForm}>
