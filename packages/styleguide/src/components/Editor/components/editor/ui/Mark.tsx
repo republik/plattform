@@ -2,23 +2,26 @@ import React, {
   Attributes,
   Dispatch,
   ReactElement,
+  MouseEvent,
   useEffect,
   useRef,
   useState,
 } from 'react'
-import { Editor, NodeEntry } from 'slate'
-import { useSlate } from 'slate-react'
+import { Editor } from 'slate'
+import { ReactEditor, useSlate } from 'slate-react'
 import { config as mConfig, configKeys as mKeys } from '../../marks'
 import { ToolbarButton } from './Toolbar'
 import {
   ButtonConfig,
   CustomEditor,
+  CustomElement,
   CustomMarksType,
   CustomText,
 } from '../../../custom-types'
 import { css } from 'glamor'
 import { useColorContext } from '../../../../Colors/ColorContext'
 import { isEmpty, selectPlaceholder } from '../helpers/text'
+import { getTextNode } from '../helpers/tree'
 
 const styles = {
   leaf: css({
@@ -66,11 +69,12 @@ export const MarkButton: React.FC<{
 }
 
 const Placeholder: React.FC<{
-  onClick: (MouseEvent) => undefined
   setStyle: Dispatch<any>
   text: string
-}> = ({ onClick, setStyle, text }) => {
+  parent: CustomElement
+}> = ({ text, setStyle, parent }) => {
   const [colorScheme] = useColorContext()
+  const editor = useSlate()
   const placeholderRef = useRef<HTMLSpanElement>()
 
   useEffect(() => {
@@ -82,6 +86,14 @@ const Placeholder: React.FC<{
       setStyle({})
     }
   }, [])
+
+  const onClick = (e: MouseEvent<HTMLSpanElement>) => {
+    const parentPath = ReactEditor.findPath(editor, parent)
+    const parentNode = Editor.node(editor, parentPath)
+    const node = getTextNode(parentNode, editor)
+    selectPlaceholder(editor, node)
+    return e
+  }
 
   return (
     <span
@@ -98,13 +110,13 @@ const Placeholder: React.FC<{
 }
 
 export const LeafComponent: React.FC<{
+  setFormElementPath: Dispatch<any>
   attributes: Attributes
   children: ReactElement
   leaf: CustomText
-  node: NodeEntry<CustomText>
-}> = ({ attributes, children, leaf, node }) => {
-  const editor = useSlate()
+}> = ({ attributes, children, leaf, setFormElementPath }) => {
   const [placeholderStyle, setPlaceholderStyle] = useState()
+  const editor = useSlate()
 
   const markStyles = mKeys
     .filter((mKey) => leaf[mKey])
@@ -113,11 +125,13 @@ export const LeafComponent: React.FC<{
       return { ...acc, ...mStyle }
     }, {})
 
-  const showPlaceholder = isEmpty(leaf.text) && !leaf.end
-  const onPlaceholderClick = (e) => {
-    selectPlaceholder(editor, node)
-    return e
+  const onDoubleClick = (e: MouseEvent<HTMLSpanElement>) => {
+    const parentPath = ReactEditor.findPath(editor, children.props.parent)
+    e.stopPropagation()
+    setFormElementPath(parentPath)
   }
+
+  const showPlaceholder = isEmpty(leaf.text) && !leaf.end
 
   return (
     <span
@@ -125,12 +139,13 @@ export const LeafComponent: React.FC<{
       {...styles.leaf}
       style={placeholderStyle}
       {...attributes}
+      onDoubleClick={onDoubleClick}
     >
       {showPlaceholder && (
         <Placeholder
-          onClick={onPlaceholderClick}
           setStyle={setPlaceholderStyle}
           text={leaf.placeholder}
+          parent={children.props.parent}
         />
       )}
       {children}
