@@ -28,7 +28,7 @@ import {
   CustomElement,
   NodeTemplate,
 } from '../../custom-types'
-import { getTextNode, navigateOnTab } from './helpers/tree'
+import { navigateOnTab } from './helpers/tree'
 import { handleInsert, insertOnKey } from './helpers/structure'
 import { CHAR_LIMIT } from './helpers/text'
 import { withInsert } from './decorators/insert'

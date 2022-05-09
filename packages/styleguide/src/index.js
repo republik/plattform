@@ -1052,17 +1052,19 @@ const Styleguide = () => {
                     {
                       path: '/editor',
                       title: 'Docs',
-                      src: require('./components/Editor/docs.md')
+                      src: require('./components/Editor/docs.md'),
                     },
                     {
                       path: '/editor/examples',
                       title: 'Examples',
                       imports: {
-                        Editor: require('./components/Editor')
+                        ...require('./components/Editor/examples.imports'),
+                        Editor: require('./components/Editor'),
+                        SlateRender: require('./components/Editor/components/render'),
                       },
-                      src: require('./components/Editor/examples.md')
-                    }
-                  ]
+                      src: require('./components/Editor/examples.md'),
+                    },
+                  ],
                 },
                 {
                   title: 'Development',

@@ -27,3 +27,9 @@ state: {
     structure={state.structure}
 />
 ```
+
+## Read-only Rendering
+
+```react
+<SlateRender value={tree1} />
+```
