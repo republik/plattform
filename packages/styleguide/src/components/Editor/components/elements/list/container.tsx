@@ -9,7 +9,7 @@ import React from 'react'
 import { List } from '../../../../List'
 import Checkbox from '../../../../Form/Checkbox'
 
-const Component: React.FC<{
+const ListComponent: React.FC<{
   element: ListElement
   [x: string]: unknown
 }> = ({ children, element, ...props }) => (
@@ -35,7 +35,7 @@ const Form: React.FC<ElementFormProps<ListElement>> = ({
 const structure: NodeTemplate[] = [{ type: 'listItem', repeat: true }]
 
 export const ulConfig: ElementConfigI = {
-  Component,
+  Component: ListComponent,
   Form,
   structure,
   button: { icon: UlIcon },
@@ -45,7 +45,7 @@ export const ulConfig: ElementConfigI = {
 }
 
 export const olConfig: ElementConfigI = {
-  Component,
+  Component: ListComponent,
   Form,
   structure,
   button: { icon: OlIcon },

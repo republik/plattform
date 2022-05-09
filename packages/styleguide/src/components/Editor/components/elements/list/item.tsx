@@ -2,7 +2,7 @@ import { ElementConfigI, ListItemElement } from '../../../custom-types'
 import React from 'react'
 import { ListItem } from '../../../../List'
 
-const Component: React.FC<{
+const ListItemComponent: React.FC<{
   element: ListItemElement
   [x: string]: unknown
 }> = ({ children, element, ...props }) => (
@@ -10,7 +10,7 @@ const Component: React.FC<{
 )
 
 export const config: ElementConfigI = {
-  Component,
+  Component: ListItemComponent,
   structure: [{ type: ['text', 'link'], repeat: true }],
   attrs: {
     formatText: true,

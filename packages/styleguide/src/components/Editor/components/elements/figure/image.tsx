@@ -17,7 +17,7 @@ const styles = {
   }),
 }
 
-const Component: React.FC<{
+const ImageComponent: React.FC<{
   element: FigureImageElement
   [x: string]: unknown
 }> = ({ children, element, ...props }) => (
@@ -58,7 +58,7 @@ const Form: React.FC<ElementFormProps<FigureImageElement>> = ({
 )
 
 export const config: ElementConfigI = {
-  Component,
+  Component: ImageComponent,
   Form,
   attrs: {
     isVoid: true,

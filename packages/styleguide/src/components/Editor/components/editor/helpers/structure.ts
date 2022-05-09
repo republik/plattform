@@ -5,7 +5,9 @@ import {
   CustomEditor,
   CustomElement,
   CustomElementsType,
+  CustomNode,
   CustomText,
+  ElementConfigI,
   KeyCombo,
   NodeTemplate,
   NormalizeFn,
@@ -18,6 +20,7 @@ import {
   Transforms,
   Range,
   Node,
+  NodeEntry,
 } from 'slate'
 import {
   calculateSiblingPath,
@@ -76,12 +79,12 @@ const buildTextNode = (isEnd: boolean): CustomText => {
 
 export const buildElement = (
   elKey: CustomElementsType,
-  props = {},
+  config?: ElementConfigI,
 ): CustomElement => {
   const isVoid = elConfig[elKey].attrs?.isVoid
   return {
     type: elKey,
-    ...props,
+    ...(config?.defaultProps || {}),
     children: isVoid ? [TEXT] : [],
   }
 }
@@ -114,59 +117,106 @@ const getMainElement = (
   }
 }
 
+const insertInline = (editor: CustomEditor, element: CustomElement): void => {
+  const { selection } = editor
+  if (!selection) return
+  const { text: target } = getAncestry(editor)
+  if (!target) return
+  const isCollapsed = Range.isCollapsed(selection)
+  if (isCollapsed) {
+    return Transforms.insertNodes(editor, element)
+  } else {
+    Transforms.wrapNodes(editor, element, { split: true })
+    return Transforms.collapse(editor, { edge: 'end' })
+  }
+}
+
+const setChildren = (
+  editor: CustomEditor,
+  node: NodeEntry<CustomElement>,
+  props: Partial<Node>,
+  match?: (node: CustomNode) => boolean,
+): void => {
+  for (let i = 0; i < node[0].children.length; i++) {
+    if (!match || match(node[0].children[i])) {
+      Transforms.setNodes(editor, props, { at: node[1].concat(i) })
+    }
+  }
+}
+
+const insertBlock = (
+  editor: CustomEditor,
+  element: CustomElement,
+  elKey: CustomElementsType,
+  insertConfig: ElementConfigI,
+) => {
+  const { element: targetE, topLevelContainer: targetC } = getAncestry(editor)
+  const target = targetC || targetE
+
+  const targetConfig = elConfig[target[0].type]
+
+  if (
+    insertConfig.Component.name === targetConfig.Component.name &&
+    insertConfig.defaultProps
+  ) {
+    return Transforms.setNodes(
+      editor,
+      { type: elKey, ...insertConfig.defaultProps },
+      { at: target[1] },
+    )
+  }
+
+  const mainElKey = getMainElement(insertConfig.structure)
+  const targetMainElKey = getMainElement(targetConfig.structure)
+
+  if (targetMainElKey && mainElKey) {
+    Editor.withoutNormalizing(editor, () => {
+      Transforms.setNodes(editor, { type: elKey }, { at: target[1] })
+      setChildren(
+        editor,
+        target,
+        { type: mainElKey },
+        (n) => SlateElement.isElement(n) && n.type === targetMainElKey,
+      )
+    })
+  } else if (targetMainElKey) {
+    Editor.withoutNormalizing(editor, () => {
+      setChildren(
+        editor,
+        target,
+        { type: elKey },
+        (n) => SlateElement.isElement(n) && n.type === targetMainElKey,
+      )
+      Transforms.unwrapNodes(editor, { at: target[1] })
+    })
+  } else if (mainElKey) {
+    Editor.withoutNormalizing(editor, () => {
+      Transforms.setNodes(editor, { type: mainElKey }, { at: target[1] })
+      Transforms.wrapNodes(editor, element, { at: target[1] })
+    })
+  } else {
+    Transforms.setNodes(editor, { type: elKey }, { at: target[1] })
+  }
+
+  Transforms.select(editor, target[1])
+  Transforms.collapse(editor, { edge: 'focus' })
+}
+
 export const buildAndInsert = (
   editor: CustomEditor,
   elKey: CustomElementsType,
 ): void => {
   const { selection } = editor
   if (!selection) return
-  const isCollapsed = Range.isCollapsed(selection)
-  const {
-    text: targetT,
-    element: targetE,
-    topLevelContainer: targetC,
-  } = getAncestry(editor)
+
   const config = elConfig[elKey]
   const element = buildElement(elKey, config.defaultProps)
+
   if (config.attrs?.isInline) {
-    if (!targetT) return
-    if (isCollapsed) {
-      return Transforms.insertNodes(editor, element)
-    } else {
-      Transforms.wrapNodes(editor, element, { split: true })
-      return Transforms.collapse(editor, { edge: 'end' })
-    }
+    return insertInline(editor, element)
   }
-  const target = targetC || targetE
-  const targetConfig = elConfig[target[0].type]
-  Editor.withoutNormalizing(editor, () => {
-    if (
-      config.Component.name === targetConfig.Component.name &&
-      config.defaultProps
-    ) {
-      return Transforms.setNodes(
-        editor,
-        { type: elKey, ...config.defaultProps },
-        { at: target[1] },
-      )
-    }
-    const mainElKey = getMainElement(config.structure)
-    const targetMainElKey = getMainElement(targetConfig.structure)
-    if (targetMainElKey) {
-      Transforms.unwrapNodes(editor, { at: target[1] })
-    }
-    if (mainElKey) {
-      Transforms.wrapNodes(editor, element, { at: target[1] })
-      return Transforms.setNodes(
-        editor,
-        { type: mainElKey },
-        { at: target[1].concat(0) },
-      )
-    }
-    Transforms.setNodes(editor, { type: elKey }, { at: target[1] })
-  })
-  Transforms.select(editor, target[1])
-  Transforms.collapse(editor, { edge: 'start' })
+
+  insertBlock(editor, element, elKey, config)
 }
 
 const insertMissingNode = (
