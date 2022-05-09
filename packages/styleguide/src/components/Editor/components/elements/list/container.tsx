@@ -1,13 +1,11 @@
 import {
   ElementConfigI,
-  ElementFormProps,
   ListElement,
   NodeTemplate,
 } from '../../../custom-types'
 import { UlIcon, OlIcon } from '../../../../Icons'
 import React from 'react'
 import { List } from '../../../../List'
-import Checkbox from '../../../../Form/Checkbox'
 
 const ListComponent: React.FC<{
   element: ListElement
