@@ -18,7 +18,7 @@ import { useMemoOne } from 'use-memo-one'
 import { withNormalizations } from './decorators/normalization'
 import { withElAttrsConfig } from './decorators/attrs'
 import Footer from './ui/Footer'
-import { FormOverlay } from './ui/Forms'
+import { FormContextProvider, FormOverlay, useFormContext } from './ui/Forms'
 import Toolbar from './ui/Toolbar'
 import { config as elementsConfig } from '../elements'
 import { LeafComponent } from './ui/Mark'
@@ -54,7 +54,6 @@ const SlateEditor: React.FC<{
       ),
     [],
   )
-  const [formElementPath, setFormElementPath] = useState<number[]>()
   const containerRef = useRef<HTMLDivElement>()
 
   useEffect(() => {
@@ -67,6 +66,7 @@ const SlateEditor: React.FC<{
     }>
   > = (props) => {
     const [colorScheme] = useColorContext()
+    const [formPath, setFormPath] = useFormContext()
     const isSelected = useSelected()
     const config = elementsConfig[props.element.type]
     const isVoid = config.attrs?.isVoid
@@ -88,7 +88,7 @@ const SlateEditor: React.FC<{
         onMouseDown={selectVoid}
         onDoubleClick={(e) => {
           e.stopPropagation()
-          setFormElementPath(path)
+          setFormPath(path)
         }}
       />
     )
@@ -98,41 +98,41 @@ const SlateEditor: React.FC<{
 
   const renderLeaf = useCallback(
     ({ children, ...props }) => (
-      <LeafComponent {...props} setFormElementPath={setFormElementPath}>
-        {children}
-      </LeafComponent>
+      <LeafComponent {...props}>{children}</LeafComponent>
     ),
     [],
   )
 
   return (
     <div ref={containerRef}>
-      <Slate
-        editor={editor}
-        value={value}
-        onChange={(newValue) => {
-          // console.log(newValue)
-          setValue(newValue)
-        }}
-      >
-        <FormOverlay
-          path={formElementPath}
-          onClose={() => setFormElementPath(undefined)}
-        />
-        <Toolbar containerRef={containerRef} mode='sticky' />
-        <Editable
-          data-testid='slate-content-editable'
-          renderElement={renderElement}
-          renderLeaf={renderLeaf}
-          onKeyDown={(event) => {
-            // console.log('event', event.key, event.shiftKey)
-            insertOnKey({ name: 'Enter', shift: true }, 'break')(editor, event)
-            handleInsert(editor, event)
-            navigateOnTab(editor, event)
+      <FormContextProvider>
+        <Slate
+          editor={editor}
+          value={value}
+          onChange={(newValue) => {
+            // console.log(newValue)
+            setValue(newValue)
           }}
-        />
-        <Footer charLimit={CHAR_LIMIT} />
-      </Slate>
+        >
+          <FormOverlay />
+          <Toolbar containerRef={containerRef} mode='sticky' />
+          <Editable
+            data-testid='slate-content-editable'
+            renderElement={renderElement}
+            renderLeaf={renderLeaf}
+            onKeyDown={(event) => {
+              // console.log('event', event.key, event.shiftKey)
+              insertOnKey({ name: 'Enter', shift: true }, 'break')(
+                editor,
+                event,
+              )
+              handleInsert(editor, event)
+              navigateOnTab(editor, event)
+            }}
+          />
+          <Footer charLimit={CHAR_LIMIT} />
+        </Slate>
+      </FormContextProvider>
     </div>
   )
 }

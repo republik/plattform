@@ -110,13 +110,11 @@ const Placeholder: React.FC<{
 }
 
 export const LeafComponent: React.FC<{
-  setFormElementPath: Dispatch<any>
   attributes: Attributes
   children: ReactElement
   leaf: CustomText
-}> = ({ attributes, children, leaf, setFormElementPath }) => {
+}> = ({ attributes, children, leaf }) => {
   const [placeholderStyle, setPlaceholderStyle] = useState()
-  const editor = useSlate()
 
   const markStyles = mKeys
     .filter((mKey) => leaf[mKey])
@@ -124,12 +122,6 @@ export const LeafComponent: React.FC<{
       const mStyle = mConfig[mKey].styles
       return { ...acc, ...mStyle }
     }, {})
-
-  const onDoubleClick = (e: MouseEvent<HTMLSpanElement>) => {
-    const parentPath = ReactEditor.findPath(editor, children.props.parent)
-    e.stopPropagation()
-    setFormElementPath(parentPath)
-  }
 
   const showPlaceholder = isEmpty(leaf.text) && !leaf.end
 
@@ -139,7 +131,6 @@ export const LeafComponent: React.FC<{
       {...styles.leaf}
       style={placeholderStyle}
       {...attributes}
-      onDoubleClick={onDoubleClick}
     >
       {showPlaceholder && (
         <Placeholder
