@@ -1,4 +1,11 @@
-import React, { Attributes, ReactElement, useMemo, useRef } from 'react'
+import React, {
+  Attributes,
+  Dispatch,
+  ReactElement,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { Editor, NodeEntry } from 'slate'
 import { useSlate } from 'slate-react'
 import { config as mConfig, configKeys as mKeys } from '../../marks'
@@ -29,10 +36,10 @@ const isMarkActive = (editor: CustomEditor, mKey: CustomMarksType): boolean => {
   return !!marks && !!marks[mKey]
 }
 
+// TODO: handle toggle when selection is collapsed
 const toggleMark = (editor: CustomEditor, mKey: CustomMarksType): void => {
   const isActive = isMarkActive(editor, mKey)
   if (isActive) {
-    console.log('remove')
     Editor.removeMark(editor, mKey)
   } else {
     Editor.addMark(editor, mKey, true)
@@ -58,14 +65,46 @@ export const MarkButton: React.FC<{
   )
 }
 
+const Placeholder: React.FC<{
+  onClick: (MouseEvent) => undefined
+  setStyle: Dispatch<any>
+  text: string
+}> = ({ onClick, setStyle, text }) => {
+  const [colorScheme] = useColorContext()
+  const placeholderRef = useRef<HTMLSpanElement>()
+
+  useEffect(() => {
+    setStyle({
+      width: placeholderRef.current?.getBoundingClientRect().width,
+      display: 'inline-block',
+    })
+    return () => {
+      setStyle({})
+    }
+  }, [])
+
+  return (
+    <span
+      ref={placeholderRef}
+      {...styles.placeholder}
+      {...colorScheme.set('color', 'disabled')}
+      style={{ userSelect: 'none' }}
+      contentEditable={false}
+      onClick={onClick}
+    >
+      {text}
+    </span>
+  )
+}
+
 export const LeafComponent: React.FC<{
   attributes: Attributes
   children: ReactElement
   leaf: CustomText
   node: NodeEntry<CustomText>
 }> = ({ attributes, children, leaf, node }) => {
-  const [colorScheme] = useColorContext()
   const editor = useSlate()
+  const [placeholderStyle, setPlaceholderStyle] = useState()
 
   const markStyles = mKeys
     .filter((mKey) => leaf[mKey])
@@ -75,16 +114,10 @@ export const LeafComponent: React.FC<{
     }, {})
 
   const showPlaceholder = isEmpty(leaf.text) && !leaf.end
-  const placeholderRef = useRef<HTMLSpanElement>()
-
-  const placeholderStyle = useMemo(() => {
-    const placeholderEl = placeholderRef.current
-    if (!placeholderEl || !showPlaceholder) return {}
-    return {
-      width: placeholderEl.getBoundingClientRect().width,
-      display: 'inline-block',
-    }
-  }, [showPlaceholder])
+  const onPlaceholderClick = (e) => {
+    selectPlaceholder(editor, node)
+    return e
+  }
 
   return (
     <span
@@ -94,19 +127,11 @@ export const LeafComponent: React.FC<{
       {...attributes}
     >
       {showPlaceholder && (
-        <span
-          ref={placeholderRef}
-          {...styles.placeholder}
-          {...colorScheme.set('color', 'disabled')}
-          style={{ userSelect: 'none' }}
-          contentEditable={false}
-          onClick={(e) => {
-            selectPlaceholder(editor, node)
-            return e
-          }}
-        >
-          {leaf.placeholder}
-        </span>
+        <Placeholder
+          onClick={onPlaceholderClick}
+          setStyle={setPlaceholderStyle}
+          text={leaf.placeholder}
+        />
       )}
       {children}
     </span>
