@@ -12,6 +12,7 @@ import { ReactEditor } from 'slate-react'
 import { config as elConfig } from '../../elements'
 import editorConfig from '../../../config'
 import { isCorrect } from './structure'
+import { config as mConfig, configKeys as mKeys } from '../../marks'
 
 export const CHAR_LIMIT = editorConfig.maxSigns
 const PSEUDO_EMPTY_STRING = '\u2060'
@@ -21,6 +22,14 @@ export const getCharCount = (nodes: (Descendant | Node)[]): number =>
 
 export const getCountDown = (editor: CustomEditor): number =>
   CHAR_LIMIT - getCharCount(editor.children)
+
+export const getMarkStyles = (node: CustomText): any =>
+  mKeys
+    .filter((mKey) => node[mKey])
+    .reduce((acc, mKey) => {
+      const mStyle = mConfig[mKey].styles
+      return { ...acc, ...mStyle }
+    }, {})
 
 export const toTitle = (text = ''): string =>
   text.replace(/([A-Z])/g, ' $1').replace(/^\w/, (c) => c.toUpperCase())

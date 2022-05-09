@@ -3,7 +3,7 @@ export const tree1 = [
     type: 'headline',
     children: [
       {
-        text: 'Hello',
+        text: 'La vie de château',
       },
     ],
   },
@@ -74,7 +74,7 @@ export const tree1 = [
         type: 'figureCaption',
         children: [
           {
-            text: 'Peasant 1 ',
+            text: 'As the peasants say',
           },
           {
             type: 'figureByline',

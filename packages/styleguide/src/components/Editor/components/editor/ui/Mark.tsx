@@ -9,7 +9,7 @@ import React, {
 } from 'react'
 import { Editor } from 'slate'
 import { ReactEditor, useSlate } from 'slate-react'
-import { config as mConfig, configKeys as mKeys } from '../../marks'
+import { config as mConfig } from '../../marks'
 import { ToolbarButton } from './Toolbar'
 import {
   ButtonConfig,
@@ -20,7 +20,7 @@ import {
 } from '../../../custom-types'
 import { css } from 'glamor'
 import { useColorContext } from '../../../../Colors/ColorContext'
-import { isEmpty, selectPlaceholder } from '../helpers/text'
+import { getMarkStyles, isEmpty, selectPlaceholder } from '../helpers/text'
 import { getTextNode } from '../helpers/tree'
 
 const styles = {
@@ -115,14 +115,7 @@ export const LeafComponent: React.FC<{
   leaf: CustomText
 }> = ({ attributes, children, leaf }) => {
   const [placeholderStyle, setPlaceholderStyle] = useState()
-
-  const markStyles = mKeys
-    .filter((mKey) => leaf[mKey])
-    .reduce((acc, mKey) => {
-      const mStyle = mConfig[mKey].styles
-      return { ...acc, ...mStyle }
-    }, {})
-
+  const markStyles = getMarkStyles(leaf)
   const showPlaceholder = isEmpty(leaf.text) && !leaf.end
 
   return (
