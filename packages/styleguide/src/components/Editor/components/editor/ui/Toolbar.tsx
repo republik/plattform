@@ -1,4 +1,10 @@
-import React, { ReactElement, useEffect, useRef, useState } from 'react'
+import React, {
+  MouseEvent,
+  ReactElement,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import ReactDOM from 'react-dom'
 import { css } from 'glamor'
 import { MarkButton } from './Mark'
@@ -309,7 +315,7 @@ const Toolbar: React.FC<{
     setBlocks(allowedBlocks.length >= 2 ? allowedBlocks : [])
   }
 
-  useEffect(() => {
+  const onChange = (e?: MouseEvent<HTMLDivElement>) => {
     if (!hasSelection(editor) || (!isSticky && !ref.current)) {
       return reset()
     }
@@ -324,10 +330,14 @@ const Toolbar: React.FC<{
     } else {
       reset()
     }
+  }
+
+  useEffect(() => {
+    onChange()
   }, [editor.selection])
 
   return isSticky ? (
-    <div ref={ref} {...styles.stickyToolbar}>
+    <div ref={ref} {...styles.stickyToolbar} onClick={(e) => onChange(e)}>
       <ToolbarButtons marks={marks} inlines={inlines} blocks={blocks} />
     </div>
   ) : (
