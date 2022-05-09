@@ -297,7 +297,7 @@ const Cell = (props) => {
     numberFormatter,
   } = props
 
-  const maxWidth = Math.max(width, 100)
+  const maxWidth = isBarColumn && (width || 100)
 
   const barScale = scaleLinear()
     .domain(barChartExtent)
