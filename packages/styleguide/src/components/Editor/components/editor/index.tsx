@@ -1,10 +1,4 @@
-import React, {
-  PropsWithChildren,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
+import React, { PropsWithChildren, useCallback, useEffect, useRef } from 'react'
 import { createEditor, Editor, Transforms } from 'slate'
 import { withHistory } from 'slate-history'
 import {
