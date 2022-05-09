@@ -1,3 +1,8 @@
+jest.mock('@orbiting/backend-modules-auth', () => ({
+  Roles: {
+    userIsInRoles: jest.fn(),
+  },
+}))
 jest.mock('./restrictions', () => ({
   hasFullDocumentAccess: jest.fn(),
 }))
