@@ -201,7 +201,9 @@ const getContributorUserLinks = (meta, { loaders }) => {
 
 const getContributorUserIds = (meta, context) =>
   meta.authorUserIds || // legacy in redis and elastic search caches
-  getContributorUserLinks(meta, context).then((link) => link.id)
+  getContributorUserLinks(meta, context).then((userLinks) =>
+    userLinks.map((userLink) => userLink.id),
+  )
 
 /**
  * Prepares meta information and resolves linked documents in meta which are

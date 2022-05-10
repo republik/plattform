@@ -101,7 +101,7 @@ type Meta {
   credits: JSON
   
   authors: [User!]! @deprecated(reason: "use \`Meta.contributors\` instead")
-  contributors: [Contributor!]
+  contributors: [Contributor!]!
   audioSource: AudioSource
   podcast: Podcast
 
