@@ -77,10 +77,7 @@ export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
 export const FormOverlay = (): ReactElement => {
   const [formPath, setFormPath] = useFormContext()
   const editor = useSlate()
-  const forms = useMemo(() => {
-    console.log('formMemo', { editor, formPath })
-    return getForms(editor, formPath)
-  }, [formPath])
+  const forms = useMemo(() => getForms(editor, formPath), [formPath])
 
   if (!forms.length || !formPath) return null
 
