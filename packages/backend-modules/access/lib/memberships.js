@@ -21,6 +21,22 @@ const addRole = async (grant, user, pgdb, role) => {
   return false
 }
 
+const removeRole = async (grant, user, pgdb, role) => {
+  debug(`remove ${role} role`, { grant: grant.id, user: user.id })
+
+  if (Roles.userHasRole(user, role)) {
+    await Roles.removeMemberRole(user.id, role, pgdb)
+    await eventsLib.log(grant, `role.${role}.remove`, pgdb)
+
+    debug(`role "${role}" was removed`, user.id)
+
+    return true
+  } else {
+    await eventsLib.log(grant, `role.${role}.notPresent`, pgdb)
+  }
+  return false
+}
+
 const addMemberRole = async (grant, user, pgdb) => {
   const hasMembership = await hasUserActiveMembership(user, pgdb)
 
@@ -85,5 +101,6 @@ module.exports = {
   addMemberRole,
   removeMemberRole,
   addRole,
+  removeRole,
   findGiftableMemberships,
 }
