@@ -10,10 +10,10 @@ import { Figure } from '../../../../Figure'
 import Radio from '../../../../Form/Radio'
 
 const Component: React.FC<{
-  element: FigureElement
-  [x: string]: unknown
-}> = ({ children, element, ...props }) => (
-  <Figure {...{ ...props, element }} size={element.size}>
+  size: string
+  attributes: any
+}> = ({ children, size, attributes }) => (
+  <Figure {...attributes} size={size}>
     {children}
   </Figure>
 )

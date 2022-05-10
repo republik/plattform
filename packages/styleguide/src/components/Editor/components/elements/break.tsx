@@ -2,9 +2,9 @@ import React from 'react'
 import { ElementConfigI } from '../../custom-types'
 
 const BreakComponent: React.FC<{
-  [x: string]: unknown
-}> = ({ children, ...props }) => (
-  <span {...props}>
+  attributes: any
+}> = ({ children, attributes }) => (
+  <span {...attributes}>
     <br style={{ userSelect: 'none' }} contentEditable={false} />
     {children}
   </span>

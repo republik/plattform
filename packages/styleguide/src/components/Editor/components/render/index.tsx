@@ -14,12 +14,11 @@ const RenderedLeaf: React.FC<{
 const RenderedElement: React.FC<{
   element: CustomElement
 }> = ({ element }) => {
-  const { type, children, ...rest } = element
+  const { type, children, ...customElProps } = element
   const config = elementsConfig[type]
   const Component = config.Component
-  // TODO: either always pass element or spread props, not both
   return (
-    <Component element={rest} {...rest}>
+    <Component {...customElProps}>
       {children.map((node: CustomDescendant, i) =>
         SlateElement.isElement(node) ? (
           <RenderedElement element={node} key={i} />

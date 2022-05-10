@@ -18,14 +18,20 @@ const styles = {
 }
 
 const ImageComponent: React.FC<{
-  element: FigureImageElement
-  [x: string]: unknown
-}> = ({ children, element, ...props }) => (
-  <div {...props}>
+  src?: string
+  srcDark?: string
+  alt?: string
+  attributes: any
+}> = ({
+  children,
+  src = '/static/placeholder.png',
+  srcDark,
+  alt,
+  attributes,
+}) => (
+  <div {...attributes}>
     <div contentEditable={false}>
-      <FigureImage
-        {...{ src: element.src || '/static/placeholder.png', ...element }}
-      />
+      <FigureImage src={src} dark={{ src: srcDark }} alt={alt} />
     </div>
     {children}
   </div>

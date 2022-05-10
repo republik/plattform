@@ -1,17 +1,13 @@
-import {
-  ElementConfigI,
-  ListElement,
-  NodeTemplate,
-} from '../../../custom-types'
+import { ElementConfigI, NodeTemplate } from '../../../custom-types'
 import { UlIcon, OlIcon } from '../../../../Icons'
 import React from 'react'
 import { List } from '../../../../List'
 
 const ListComponent: React.FC<{
-  element: ListElement
-  [x: string]: unknown
-}> = ({ children, element, ...props }) => (
-  <List {...props} data={element}>
+  ordered: boolean
+  attributes: any
+}> = ({ children, ordered, attributes }) => (
+  <List {...attributes} data={{ ordered }}>
     {children}
   </List>
 )

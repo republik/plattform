@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { createEditor, Editor, Transforms } from 'slate'
 import { withHistory } from 'slate-history'
 import {
@@ -54,19 +54,18 @@ const SlateEditor: React.FC<{
     Editor.normalize(editor, { force: true })
   }, [])
 
-  const RenderedElement: React.FC<
-    PropsWithChildren<{
-      element: CustomElement
-    }>
-  > = (props) => {
+  const RenderedElement: React.FC<{
+    element: CustomElement
+    attributes: any
+  }> = ({ element, children, attributes }) => {
     const [colorScheme] = useColorContext()
     const setFormPath = useFormContext()[1]
     const isSelected = useSelected()
-    const config = elementsConfig[props.element.type]
+    const config = elementsConfig[element.type]
     const isVoid = config.attrs?.isVoid
     const highlightSelected = config.attrs?.highlightSelected
     const Component = config.Component
-    const path = ReactEditor.findPath(editor, props.element)
+    const path = ReactEditor.findPath(editor, element)
     const selectVoid = (e) => {
       if (isVoid) {
         e.preventDefault()
@@ -81,13 +80,16 @@ const SlateEditor: React.FC<{
             ? { borderWidth: 2, borderStyle: 'solid' }
             : {}
         }
-        {...props}
+        {...element}
+        attributes={attributes}
         onMouseDown={selectVoid}
         onDoubleClick={(e) => {
           e.stopPropagation()
           setFormPath(path)
         }}
-      />
+      >
+        {children}
+      </Component>
     )
   }
 
@@ -107,7 +109,7 @@ const SlateEditor: React.FC<{
           editor={editor}
           value={value}
           onChange={(newValue) => {
-            console.log({ newValue })
+            // console.log({ newValue })
             setValue(newValue)
           }}
         >
