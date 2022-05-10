@@ -143,6 +143,7 @@ interface ButtonI {
 interface EditorAttrsI {
   isVoid?: boolean
   isInline?: boolean
+  highlightSelected?: boolean
 }
 
 interface ElementAttrsI extends EditorAttrsI {

@@ -82,10 +82,11 @@ export const buildElement = (
   config?: ElementConfigI,
 ): CustomElement => {
   const isVoid = elConfig[elKey].attrs?.isVoid
+  const defaultProps = config?.defaultProps || {}
   return {
     type: elKey,
-    ...(config?.defaultProps || {}),
     children: isVoid ? [TEXT] : [],
+    ...defaultProps,
   }
 }
 
@@ -117,11 +118,26 @@ const getMainElement = (
   }
 }
 
+const setChildren = (
+  editor: CustomEditor,
+  node: NodeEntry<CustomElement>,
+  props: Partial<Node>,
+  match?: (node: CustomNode) => boolean,
+): number => {
+  let updatedChildren = 0
+  for (let i = 0; i < node[0].children.length; i++) {
+    if (!match || match(node[0].children[i])) {
+      Transforms.setNodes(editor, props, { at: node[1].concat(i) })
+      updatedChildren++
+    }
+  }
+  return updatedChildren
+}
+
 const insertInline = (
   editor: CustomEditor,
   element: CustomElement,
-  setFormPath?: (path: number[]) => void,
-): void => {
+): number[] => {
   const { selection } = editor
   if (!selection) return
   const { text: target } = getAncestry(editor)
@@ -131,24 +147,8 @@ const insertInline = (
     Transforms.insertNodes(editor, element)
   } else {
     Transforms.wrapNodes(editor, element, { split: true })
-    Transforms.collapse(editor, { edge: 'end' })
   }
-  console.log({ editor, setFormPath })
-
-  setFormPath && setFormPath(selection.anchor.path)
-}
-
-const setChildren = (
-  editor: CustomEditor,
-  node: NodeEntry<CustomElement>,
-  props: Partial<Node>,
-  match?: (node: CustomNode) => boolean,
-): void => {
-  for (let i = 0; i < node[0].children.length; i++) {
-    if (!match || match(node[0].children[i])) {
-      Transforms.setNodes(editor, props, { at: node[1].concat(i) })
-    }
-  }
+  return calculateSiblingPath(selection.focus.path)
 }
 
 const insertBlock = (
@@ -156,76 +156,85 @@ const insertBlock = (
   element: CustomElement,
   elKey: CustomElementsType,
   insertConfig: ElementConfigI,
-) => {
+): number[] => {
   const { element: targetE, topLevelContainer: targetC } = getAncestry(editor)
   const target = targetC || targetE
 
   const targetConfig = elConfig[target[0].type]
+  const insertPartial = { type: elKey, ...(insertConfig.defaultProps || {}) }
 
   if (
     insertConfig.Component.name === targetConfig.Component.name &&
     insertConfig.defaultProps
   ) {
-    return Transforms.setNodes(
-      editor,
-      { type: elKey, ...insertConfig.defaultProps },
-      { at: target[1] },
-    )
+    Transforms.setNodes(editor, insertPartial, { at: target[1] })
+    return target[1]
   }
 
   const mainElKey = getMainElement(insertConfig.structure)
+  const mainElPartial = mainElKey && {
+    type: mainElKey,
+    ...(elConfig[mainElKey].defaultProps || {}),
+  }
   const targetMainElKey = getMainElement(targetConfig.structure)
 
-  if (targetMainElKey && mainElKey) {
-    Editor.withoutNormalizing(editor, () => {
-      Transforms.setNodes(editor, { type: elKey }, { at: target[1] })
-      setChildren(
+  let insertPath = target[1]
+  const getMainEls = (n) =>
+    SlateElement.isElement(n) && n.type === targetMainElKey
+
+  Editor.withoutNormalizing(editor, () => {
+    if (targetMainElKey && mainElKey) {
+      Transforms.setNodes(editor, insertPartial, { at: target[1] })
+      const updatedChildren = setChildren(
         editor,
         target,
-        { type: mainElKey },
-        (n) => SlateElement.isElement(n) && n.type === targetMainElKey,
+        mainElPartial,
+        getMainEls,
       )
-    })
-  } else if (targetMainElKey) {
-    Editor.withoutNormalizing(editor, () => {
-      setChildren(
+      insertPath = target[1].concat(updatedChildren - 1)
+    } else if (targetMainElKey) {
+      const updatedChildren = setChildren(
         editor,
         target,
-        { type: elKey },
-        (n) => SlateElement.isElement(n) && n.type === targetMainElKey,
+        insertPartial,
+        getMainEls,
       )
       Transforms.unwrapNodes(editor, { at: target[1] })
-    })
-  } else if (mainElKey) {
-    Editor.withoutNormalizing(editor, () => {
-      Transforms.setNodes(editor, { type: mainElKey }, { at: target[1] })
+      insertPath = calculateSiblingPath(target[1], 'next', updatedChildren - 1)
+    } else if (mainElKey) {
+      insertPath = target[1].concat(0)
+      Transforms.setNodes(editor, mainElPartial, { at: target[1] })
       Transforms.wrapNodes(editor, element, { at: target[1] })
-    })
-  } else {
-    Transforms.setNodes(editor, { type: elKey }, { at: target[1] })
-  }
-
-  Transforms.select(editor, target[1])
-  // set fp target1
-  Transforms.collapse(editor, { edge: 'focus' })
+    } else {
+      Transforms.setNodes(editor, insertPartial, { at: target[1] })
+    }
+  })
+  // console.log({ insertPath })
+  return insertPath
 }
 
 export const buildAndInsert = (
   editor: CustomEditor,
   elKey: CustomElementsType,
-  setFormPath?: (path: number[]) => void,
-): void => {
+): number[] => {
   const { selection } = editor
   if (!selection) return
 
   const config = elConfig[elKey]
-  const element = buildElement(elKey, config.defaultProps)
+  const element = buildElement(elKey, config)
 
-  if (config.attrs?.isInline) {
-    return insertInline(editor, element, setFormPath)
+  let insertPath: number[]
+
+  const isInline = config.attrs?.isInline
+  if (isInline) {
+    insertPath = insertInline(editor, element)
+  } else {
+    insertPath = insertBlock(editor, element, elKey, config)
   }
 
-  insertBlock(editor, element, elKey, config)
+  Transforms.select(editor, insertPath)
+  Transforms.collapse(editor, { edge: 'focus' })
+  return insertPath
 }
 
 const insertMissingNode = (
@@ -295,6 +304,7 @@ const deleteParent = (
   editor: CustomEditor,
   currentTemplate: NodeTemplate,
 ): boolean => {
+  // console.log('DELETE PARENT')
   const elementType = getTemplateType(currentTemplate)
   const lastOp = editor.operations[editor.operations.length - 1]
   return (

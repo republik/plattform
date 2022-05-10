@@ -92,11 +92,11 @@ export const createLinks: NormalizeFn<CustomText> = ([node, path], editor) => {
         )
       ) {
         // TODO: double check this clause
-        console.log({ path })
+        // console.log({ path })
         const nextTextPath = path.map((p, idx) =>
           idx !== path.length - 1 ? p : p + 2,
         )
-        console.log('nextTextPath', nextTextPath)
+        // console.log('nextTextPath', nextTextPath)
         // same hack as for placeholders
         setTimeout(() => {
           Transforms.select(editor, nextTextPath)

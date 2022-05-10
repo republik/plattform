@@ -60,10 +60,11 @@ const SlateEditor: React.FC<{
     }>
   > = (props) => {
     const [colorScheme] = useColorContext()
-    const [formPath, setFormPath] = useFormContext()
+    const setFormPath = useFormContext()[1]
     const isSelected = useSelected()
     const config = elementsConfig[props.element.type]
     const isVoid = config.attrs?.isVoid
+    const highlightSelected = config.attrs?.highlightSelected
     const Component = config.Component
     const path = ReactEditor.findPath(editor, props.element)
     const selectVoid = (e) => {
@@ -76,7 +77,9 @@ const SlateEditor: React.FC<{
       <Component
         {...colorScheme.set('borderColor', 'primary')}
         style={
-          isSelected && isVoid ? { borderWidth: 2, borderStyle: 'solid' } : {}
+          isSelected && highlightSelected
+            ? { borderWidth: 2, borderStyle: 'solid' }
+            : {}
         }
         {...props}
         onMouseDown={selectVoid}
@@ -104,7 +107,7 @@ const SlateEditor: React.FC<{
           editor={editor}
           value={value}
           onChange={(newValue) => {
-            // console.log(newValue)
+            console.log({ newValue })
             setValue(newValue)
           }}
         >

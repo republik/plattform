@@ -8,7 +8,6 @@ const RenderedLeaf: React.FC<{
   leaf: CustomText
 }> = ({ leaf }) => {
   const markStyles = getMarkStyles(leaf)
-
   return <span {...markStyles}>{leaf.text}</span>
 }
 

@@ -130,8 +130,10 @@ export const getSiblingNode = (
 export const calculateSiblingPath = (
   path: number[],
   direction: 'next' | 'previous' = 'next',
+  by?: number,
 ): number[] => {
-  const offset = direction === 'next' ? 1 : -1
+  if (by === 0) return path
+  const offset = by || (direction === 'next' ? 1 : -1)
   return path.map((p, i) => (i === path.length - 1 ? p + offset : p))
 }
 
@@ -245,8 +247,6 @@ export const selectAdjacent = (
   }
 }
 
-// @Felix
-// rename
 export const navigateOnTab = (
   editor: CustomEditor,
   event: KeyboardEvent<HTMLDivElement>,

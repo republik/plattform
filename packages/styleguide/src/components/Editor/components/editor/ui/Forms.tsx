@@ -68,6 +68,7 @@ export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
       const currentPath = path.slice(0, i ? -i : undefined)
       // console.log({ currentPath })
       const currentForm = getForm(editor, currentPath)
+      // console.log({ currentForm })
       return forms.concat(currentForm)
     }, [])
     .filter(Boolean)
@@ -76,9 +77,10 @@ export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
 export const FormOverlay = (): ReactElement => {
   const [formPath, setFormPath] = useFormContext()
   const editor = useSlate()
-  const forms = useMemo(() => getForms(editor, formPath), [formPath])
-
-  console.log({ formPath })
+  const forms = useMemo(() => {
+    console.log('formMemo', { editor, formPath })
+    return getForms(editor, formPath)
+  }, [formPath])
 
   if (!forms.length || !formPath) return null
 

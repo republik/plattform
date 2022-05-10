@@ -63,5 +63,6 @@ export const config: ElementConfigI = {
   attrs: {
     isVoid: true,
     isMain: true,
+    highlightSelected: true,
   },
 }

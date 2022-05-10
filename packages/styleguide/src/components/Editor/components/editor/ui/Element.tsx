@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSlate } from 'slate-react'
 import { config as elConfig } from '../../elements'
 import { ToolbarButton } from './Toolbar'
@@ -16,11 +16,24 @@ export const InsertButton: React.FC<{
   config: ButtonConfig
 }> = ({ config }) => {
   const editor = useSlate()
-  const [formPath, setFormPath] = useFormContext()
+  const setFormPath = useFormContext()[1]
+  const [pendingFormPath, setPendingFormPath] = useState<number[]>()
   const element = elConfig[config.type]
+
+  // slightly cleaner hack than the use of timeout
+  // to update formPath AFTER the insert has completed
+  // and the value was updated.
+  useEffect(() => {
+    if (pendingFormPath) {
+      setFormPath(pendingFormPath)
+      setPendingFormPath(undefined)
+    }
+  }, [editor.children])
+
   if (!element?.button) {
     return null
   }
+
   return (
     <ToolbarButton
       button={element.button}
@@ -28,7 +41,11 @@ export const InsertButton: React.FC<{
       active={config.active}
       disableWhenActive={true}
       onClick={() => {
-        buildAndInsert(editor, config.type as CustomElementsType, setFormPath)
+        const insertPath = buildAndInsert(
+          editor,
+          config.type as CustomElementsType,
+        )
+        setPendingFormPath(insertPath)
       }}
     />
   )
