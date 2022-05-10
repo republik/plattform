@@ -28,7 +28,7 @@ export class Lexer {
         .rule(/\((.+?)\)/, (ctx, match) => {
           ctx.accept(TokenType.KIND, match[1])
         })
-        .rule(/[,:]/, (ctx) => {
+        .rule(/[,:;]/, (ctx) => {
           ctx.accept(TokenType.PUNCTUATION)
         })
         .rule(/[&]/, (ctx) => {

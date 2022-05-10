@@ -105,12 +105,22 @@ export class Analyzer {
       }
     })
 
-    this.contributors.forEach((c, index, contributors) => {
+    const contributors = this.contributors.filter(
+      ({ name }) =>
+        name !== 'Update' &&
+        !name.includes('letztes Update') &&
+        !name.includes('Update um') &&
+        !name.includes('Update Uhr')
+    )
+    contributors.forEach((c, index, all) => {
       if (!c.kind) {
-        contributors[index] = { ...c, kind: 'Text' }
+        all[index] = { ...c, kind: 'Text' }
       }
     })
 
-    return { string, contributors: this.contributors }
+    return {
+      string,
+      contributors,
+    }
   }
 }
