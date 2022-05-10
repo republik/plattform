@@ -6,8 +6,9 @@ import { List } from '../../../../List'
 const ListComponent: React.FC<{
   ordered: boolean
   attributes: any
-}> = ({ children, ordered, attributes }) => (
-  <List {...attributes} data={{ ordered }}>
+  [x: string]: unknown
+}> = ({ children, ordered, attributes, ...props }) => (
+  <List {...attributes} {...props} data={{ ordered }}>
     {children}
   </List>
 )

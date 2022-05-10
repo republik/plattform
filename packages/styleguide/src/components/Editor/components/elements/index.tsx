@@ -42,11 +42,12 @@ export const configKeys: (keyof ElementsConfig)[] = Object.keys(
 export const coreEditorAttrs: EditorAttr[] = ['isVoid', 'isInline']
 
 export const INLINE_BUTTONS: TemplateType[] = ['link']
+
 export const BLOCK_BUTTONS: TemplateType[] = [
   'headline',
   'paragraph',
   // 'pullQuote',
-  'figure',
+  // 'figure',
   'blockQuote',
   'ul',
   'ol',

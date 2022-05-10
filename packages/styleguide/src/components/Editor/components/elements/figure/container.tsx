@@ -12,8 +12,9 @@ import Radio from '../../../../Form/Radio'
 const Component: React.FC<{
   size: string
   attributes: any
-}> = ({ children, size, attributes }) => (
-  <Figure {...attributes} size={size}>
+  [x: string]: unknown
+}> = ({ children, size, attributes, ...props }) => (
+  <Figure {...attributes} size={size} {...props}>
     {children}
   </Figure>
 )

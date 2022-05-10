@@ -9,6 +9,8 @@ import { FigureImage } from '../../../../Figure'
 import { Label } from '../../../../Typography'
 import { css } from 'glamor'
 
+const PLACEHOLDER = '/static/placeholder.png'
+
 const styles = {
   container: css({
     display: 'grid',
@@ -22,14 +24,16 @@ const ImageComponent: React.FC<{
   srcDark?: string
   alt?: string
   attributes: any
+  [x: string]: unknown
 }> = ({
   children,
-  src = '/static/placeholder.png',
-  srcDark,
+  src = PLACEHOLDER,
+  srcDark = PLACEHOLDER,
   alt,
   attributes,
+  ...props
 }) => (
-  <div {...attributes}>
+  <div {...attributes} {...props}>
     <div contentEditable={false}>
       <FigureImage src={src} dark={{ src: srcDark }} alt={alt} />
     </div>
