@@ -182,6 +182,7 @@ const insertBlock = (
   const getMainEls = (n) =>
     SlateElement.isElement(n) && n.type === targetMainElKey
 
+  // TODO: insert path when mainElKey doesn't allow for repeats
   Editor.withoutNormalizing(editor, () => {
     if (targetMainElKey && mainElKey) {
       Transforms.setNodes(editor, insertPartial, { at: target[1] })
@@ -471,7 +472,7 @@ const insertRepeat = (editor: CustomEditor): void => {
   })
   if (deleteP) {
     Transforms.removeNodes(editor, { at: deleteP })
-    // TODO: select correct adjacent node
+    // TODO: select correct adjacent node (now it creates a new node when jumping out)
   } else {
     selectNode(editor, insertP)
   }

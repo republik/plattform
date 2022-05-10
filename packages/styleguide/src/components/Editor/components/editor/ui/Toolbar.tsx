@@ -334,7 +334,7 @@ const Toolbar: React.FC<{
 
   useEffect(() => {
     onChange()
-  }, [editor.selection])
+  }, [editor.selection, focused])
 
   return isSticky ? (
     <div ref={ref} {...styles.stickyToolbar} onClick={(e) => onChange(e)}>
