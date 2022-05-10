@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react'
 import Frame from '../Frame'
 import withT from '../../lib/withT'
 import SignIn from './SignIn'
@@ -14,8 +14,8 @@ const styles = {
     width: '100%',
     maxWidth: 600,
     margin: '10vh auto',
-    padding: 20
-  })
+    padding: 20,
+  }),
 }
 export const PageCenter = ({ children }) => (
   <div {...styles.center}>{children}</div>
@@ -35,7 +35,7 @@ const UnauthorizedPage = withT(({ t, me, roles = [] }) => (
           <Interaction.H1>{t('withAuthorization/title')}</Interaction.H1>
           <Interaction.P>
             {t('withAuthorization/authorizedRoles', {
-              roles: roles.join(', ')
+              roles: roles.join(', '),
             })}
             <br />
           </Interaction.P>
@@ -47,7 +47,7 @@ const UnauthorizedPage = withT(({ t, me, roles = [] }) => (
   </Frame>
 ))
 
-export const enforceAuthorization = roles => WrappedComponent =>
+export const enforceAuthorization = (roles) => (WrappedComponent) =>
   withAuthorization(roles)(({ isAuthorized, me, ...props }) => {
     if (isAuthorized) {
       return <WrappedComponent {...props} />

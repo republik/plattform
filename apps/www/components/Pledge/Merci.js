@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import compose from 'lodash/flowRight'
 import { format } from 'url'
 
@@ -7,7 +7,7 @@ import withMe from '../../lib/apollo/withMe'
 
 import Poller from '../Auth/Poller'
 import { withSignIn } from '../Auth/SignIn'
-import { WithMembership } from '../Auth/withMembership'
+import { WithAccess } from '../Auth/withMembership'
 import ErrorMessage from '../ErrorMessage'
 
 import ClaimPledge from './Claim'
@@ -20,7 +20,7 @@ import {
   InlineSpinner,
   Button,
   Loader,
-  Meta
+  Meta,
 } from '@project-r/styleguide'
 
 import RawHtmlTranslation from '../RawHtmlTranslation'
@@ -29,7 +29,7 @@ import Link from 'next/link'
 
 const { P, H1 } = Interaction
 
-export const gotoMerci = query => {
+export const gotoMerci = (query) => {
   // workaround for apollo cache issues
   // - can't manage to clear all query caches
   // - couldn't clear myAddress query,
@@ -37,18 +37,18 @@ export const gotoMerci = query => {
   // - good reset if sign in / out status changed during purchasing / claiming
   window.location = format({
     pathname: '/konto',
-    query
+    query,
   })
 }
 
 export const encodeSignInResponseQuery = ({
   phrase,
   tokenType,
-  alternativeFirstFactors
+  alternativeFirstFactors,
 }) => {
   const query = {
     phrase,
-    tokenType
+    tokenType,
   }
   if (alternativeFirstFactors && alternativeFirstFactors.length) {
     query.aff = alternativeFirstFactors.join(',')
@@ -56,18 +56,18 @@ export const encodeSignInResponseQuery = ({
   return query
 }
 
-const parseSignInResponseQuery = query => {
+const parseSignInResponseQuery = (query) => {
   if (query.signInError) {
     return {
-      signInError: query.signInError
+      signInError: query.signInError,
     }
   }
   return {
     signInResponse: {
       phrase: query.phrase,
       tokenType: query.tokenType || 'EMAIL_TOKEN',
-      alternativeFirstFactors: query.aff ? query.aff.split(',') : []
-    }
+      alternativeFirstFactors: query.aff ? query.aff.split(',') : [],
+    },
   }
 }
 
@@ -79,7 +79,7 @@ class Merci extends Component {
     this.state = {
       polling: !!(query.email && query.phrase),
       email: query.email,
-      ...parseSignInResponseQuery(query)
+      ...parseSignInResponseQuery(query),
     }
   }
 
@@ -98,23 +98,18 @@ class Merci extends Component {
       router.replace(
         {
           pathname: '/einrichten',
-          query: { context: 'pledge', package: query.package }
+          query: { context: 'pledge', package: query.package },
         },
         undefined,
-        { shallow: true }
+        { shallow: true },
       )
     }
   }
 
   render() {
     const { me, t, query, children } = this.props
-    const {
-      polling,
-      email,
-      signInResponse,
-      signInError,
-      signInLoading
-    } = this.state
+    const { polling, email, signInResponse, signInError, signInLoading } =
+      this.state
 
     if (query.claim) {
       return <ClaimPledge t={t} me={me} id={query.claim} pkg={query.package} />
@@ -130,7 +125,7 @@ class Merci extends Component {
             alternativeFirstFactors={signInResponse.alternativeFirstFactors}
             onSuccess={() => {
               this.setState({
-                polling: false
+                polling: false,
               })
             }}
           />
@@ -139,7 +134,7 @@ class Merci extends Component {
               <Link
                 href={{
                   pathname: '/konto',
-                  query: { claim: query.id, package: query.package }
+                  query: { claim: query.id, package: query.package },
                 }}
                 passHref
               >
@@ -168,18 +163,18 @@ class Merci extends Component {
                   <A
                     key='contact'
                     href={`mailto:${EMAIL_CONTACT}?subject=${encodeURIComponent(
-                      t('merci/postpay/signInError/email/subject')
+                      t('merci/postpay/signInError/email/subject'),
                     )}&body=${encodeURIComponent(
                       t('merci/postpay/signInError/email/body', {
                         pledgeId: query.id,
                         email: email,
-                        error: signInError
-                      })
+                        error: signInError,
+                      }),
                     )}`}
                   >
                     {EMAIL_CONTACT}
                   </A>
-                )
+                ),
               }}
             />
           </P>
@@ -196,7 +191,7 @@ class Merci extends Component {
                     return
                   }
                   this.setState(() => ({
-                    signInLoading: true
+                    signInLoading: true,
                   }))
                   this.props
                     .signIn(email)
@@ -204,13 +199,13 @@ class Merci extends Component {
                       this.setState(() => ({
                         polling: true,
                         signInLoading: false,
-                        signInResponse: data.signIn
+                        signInResponse: data.signIn,
                       }))
                     })
-                    .catch(error => {
+                    .catch((error) => {
                       this.setState(() => ({
                         signInError: error,
-                        signInLoading: false
+                        signInLoading: false,
                       }))
                     })
                 }}
@@ -222,7 +217,7 @@ class Merci extends Component {
           <Link
             href={{
               pathname: '/konto',
-              query: { claim: query.id }
+              query: { claim: query.id },
             }}
             passHref
           >
@@ -254,11 +249,11 @@ class Merci extends Component {
           {t.first(
             [
               `merci/title/package/${query.package || 'UNKOWN'}${noNameSuffix}`,
-              `merci/title${noNameSuffix}`
+              `merci/title${noNameSuffix}`,
             ],
             {
-              name: me?.name
-            }
+              name: me?.name,
+            },
           )}
         </H1>
         {leads.map((lead, i) => (
@@ -266,7 +261,7 @@ class Merci extends Component {
             <Meta.Lead>{lead}</Meta.Lead>
           </div>
         ))}
-        <WithMembership
+        <WithAccess
           render={() => (
             <>
               <Link href='/' passHref>

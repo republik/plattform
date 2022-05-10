@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react'
 import { css, merge } from 'glamor'
 import { nest } from 'd3-collection'
 import { ascending, descending } from 'd3-array'
@@ -11,7 +11,7 @@ import {
   Editorial,
   plainButtonRule,
   InlineSpinner,
-  colors
+  colors,
 } from '@project-r/styleguide'
 
 import { countFormat } from '../../lib/utils/format'
@@ -23,7 +23,7 @@ const PADDING = 10
 
 const mdCheckProps = {
   style: { marginTop: -4, marginRight: 5 },
-  fill: colors.primary
+  fill: colors.primary,
 }
 
 const td = css({
@@ -32,12 +32,12 @@ const td = css({
   paddingTop: 5,
   paddingBottom: 5,
   paddingLeft: PADDING,
-  paddingRight: PADDING
+  paddingRight: PADDING,
 })
 
 const num = merge(td, {
   textAlign: 'right',
-  fontFeatureSettings: '"tnum" 1, "kern" 1'
+  fontFeatureSettings: '"tnum" 1, "kern" 1',
 })
 
 const styles = {
@@ -48,31 +48,31 @@ const styles = {
     paddingRight: 0,
     minWidth: '100%',
     '@media (max-width: 600px)': {
-      fontSize: 14
+      fontSize: 14,
     },
     '& th': {
-      ...fontStyles.sansSerifMedium
-    }
+      ...fontStyles.sansSerifMedium,
+    },
   }),
   td,
   num,
   titleTd: css(td, {
     paddingTop: 10,
     'tr:first-child > &': {
-      paddingTop: 5
-    }
+      paddingTop: 5,
+    },
   }),
   highlight: css({
-    ...fontStyles.sansSerifMedium
+    ...fontStyles.sansSerifMedium,
   }),
   actionButton: css(plainButtonRule, {
     lineHeight: 0,
     borderRadius: '50%',
     padding: 4,
     '& + &': {
-      marginLeft: 3
-    }
-  })
+      marginLeft: 3,
+    },
+  }),
 }
 
 export const Table = ({ children }) => (
@@ -81,7 +81,7 @@ export const Table = ({ children }) => (
       overflowX: 'auto',
       overflowY: 'hidden',
       marginLeft: -PADDING,
-      marginRight: -PADDING
+      marginRight: -PADDING,
     }}
   >
     <table {...styles.table}>
@@ -109,7 +109,7 @@ export const CardRows = ({ nodes, revertCard, ignoreCard, followCard, t }) => (
           : payload.councilOfStates.candidacy &&
             payload.councilOfStates.secondBallotNecessary
           ? 'Noch offen:'
-          : 'Nicht gewählt sind:'
+          : 'Nicht gewählt sind:',
       )
       .sortKeys((a, b) => ascending(keySort.indexOf(a), keySort.indexOf(b)))
       .sortValues(
@@ -117,17 +117,17 @@ export const CardRows = ({ nodes, revertCard, ignoreCard, followCard, t }) => (
           descending(
             Math.max(
               a.card.payload.nationalCouncil.votes || 0,
-              a.card.payload.councilOfStates.votes || 0
+              a.card.payload.councilOfStates.votes || 0,
             ),
             Math.max(
               b.card.payload.nationalCouncil.votes || 0,
-              b.card.payload.councilOfStates.votes || 0
-            )
+              b.card.payload.councilOfStates.votes || 0,
+            ),
           ) ||
           ascending(
             a.card.payload.nationalCouncil.listNumbers[0],
-            b.card.payload.nationalCouncil.listNumbers[0]
-          )
+            b.card.payload.nationalCouncil.listNumbers[0],
+          ),
       )
       .entries(nodes)
       .map(({ key, values: cards }) => (
@@ -137,7 +137,7 @@ export const CardRows = ({ nodes, revertCard, ignoreCard, followCard, t }) => (
               {...styles.td}
               style={{
                 paddingTop: 10,
-                paddingBottom: 5
+                paddingBottom: 5,
               }}
             >
               {key}
@@ -146,7 +146,7 @@ export const CardRows = ({ nodes, revertCard, ignoreCard, followCard, t }) => (
               {...styles.num}
               style={{
                 paddingTop: 10,
-                paddingBottom: 5
+                paddingBottom: 5,
               }}
             >
               Stimmen
@@ -161,7 +161,7 @@ export const CardRows = ({ nodes, revertCard, ignoreCard, followCard, t }) => (
               <tr
                 key={`entity${i}`}
                 style={{
-                  background: i % 2 ? colors.secondaryBg : undefined
+                  background: i % 2 ? colors.secondaryBg : undefined,
                 }}
               >
                 <td {...styles.td}>
@@ -210,7 +210,7 @@ export const CardRows = ({ nodes, revertCard, ignoreCard, followCard, t }) => (
                     whiteSpace: 'nowrap',
                     width: 85,
                     paddingTop: 3,
-                    paddingBottom: 3
+                    paddingBottom: 3,
                   }}
                 >
                   {pending ? (
@@ -220,12 +220,12 @@ export const CardRows = ({ nodes, revertCard, ignoreCard, followCard, t }) => (
                       <button
                         {...styles.actionButton}
                         title={t('components/Card/Group/revert')}
-                        onClick={e => {
+                        onClick={(e) => {
                           e.preventDefault()
                           revertCard(card)
                         }}
                         style={{
-                          backgroundColor: cardColors.revert
+                          backgroundColor: cardColors.revert,
                         }}
                       >
                         <RevertIcon fill='#fff' size={14} />
@@ -233,7 +233,7 @@ export const CardRows = ({ nodes, revertCard, ignoreCard, followCard, t }) => (
                       <button
                         {...styles.actionButton}
                         title={t('components/Card/Group/ignore')}
-                        onClick={e => {
+                        onClick={(e) => {
                           e.preventDefault()
                           ignoreCard && ignoreCard(card)
                         }}
@@ -241,7 +241,7 @@ export const CardRows = ({ nodes, revertCard, ignoreCard, followCard, t }) => (
                           backgroundColor: ignoreCard
                             ? cardColors.left
                             : colors.disabled,
-                          cursor: ignoreCard ? 'pointer' : 'default'
+                          cursor: ignoreCard ? 'pointer' : 'default',
                         }}
                       >
                         <IgnoreIcon fill='#fff' size={14} />
@@ -249,7 +249,7 @@ export const CardRows = ({ nodes, revertCard, ignoreCard, followCard, t }) => (
                       <button
                         {...styles.actionButton}
                         title={t('components/Card/Group/follow')}
-                        onClick={e => {
+                        onClick={(e) => {
                           e.preventDefault()
                           followCard && followCard(card)
                         }}
@@ -257,7 +257,7 @@ export const CardRows = ({ nodes, revertCard, ignoreCard, followCard, t }) => (
                           backgroundColor: followCard
                             ? cardColors.right
                             : colors.disabled,
-                          cursor: followCard ? 'pointer' : 'default'
+                          cursor: followCard ? 'pointer' : 'default',
                         }}
                       >
                         <FollowIcon fill='#fff' size={14} />

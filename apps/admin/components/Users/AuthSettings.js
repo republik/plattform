@@ -1,17 +1,10 @@
-import React, { Component, Fragment } from 'react'
+import { Component, Fragment } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 
-import {
-  InlineSpinner,
-  Loader,
-  Radio
-} from '@project-r/styleguide'
+import { InlineSpinner, Loader, Radio } from '@project-r/styleguide'
 
-import {
-  InteractiveSection,
-  SectionTitle
-} from '../Display/utils'
+import { InteractiveSection, SectionTitle } from '../Display/utils'
 
 import withT from '../../lib/withT'
 
@@ -29,10 +22,7 @@ export const UPDATE_PREFERRED_FRIST_FACTOR = gql`
     $userId: ID!
     $tokenType: SignInTokenType!
   ) {
-    preferredFirstFactor(
-      userId: $userId
-      tokenType: $tokenType
-    ) {
+    preferredFirstFactor(userId: $userId, tokenType: $tokenType) {
       id
       ...FirstFactors
     }
@@ -55,20 +45,16 @@ class UpdatePreferredFirstFactor extends Component {
     super(props)
 
     this.state = {
-      value: this.props.user.preferredFirstFactor
+      value: this.props.user.preferredFirstFactor,
     }
   }
 
   render() {
     const {
-      user: {
-        id: userId,
-        enabledFirstFactors,
-        preferredFirstFactor
-      },
-      t
+      user: { id: userId, enabledFirstFactors, preferredFirstFactor },
+      t,
     } = this.props
-    
+
     return (
       <Mutation
         mutation={UPDATE_PREFERRED_FRIST_FACTOR}
@@ -82,26 +68,23 @@ class UpdatePreferredFirstFactor extends Component {
                   <InlineSpinner size={32} />
                 </span>
               )}
-              <SectionTitle>
-                Bevorzugte Anmeldeart
-              </SectionTitle>
+              <SectionTitle>Bevorzugte Anmeldeart</SectionTitle>
               <form>
-                {SUPPORTED_TOKEN_TYPES.map(tokenType => {
+                {SUPPORTED_TOKEN_TYPES.map((tokenType) => {
                   const disabled = !enabledFirstFactors.includes(tokenType)
-                  
+
                   return (
                     <Fragment key={tokenType}>
                       <Radio
                         checked={tokenType === preferredFirstFactor}
                         disabled={disabled || loading}
                         onChange={() => {
-                          this.setState(
-                            { value: tokenType },
-                            mutation
-                          )
+                          this.setState({ value: tokenType }, mutation)
                         }}
                       >
-                        {t(`account/authSettings/firstfactor/${tokenType}/label`)}
+                        {t(
+                          `account/authSettings/firstfactor/${tokenType}/label`,
+                        )}
                       </Radio>
                       <br />
                     </Fragment>
@@ -125,9 +108,7 @@ const AuthSettings = ({ t, userId }) => (
         render={() => {
           const { user } = data
 
-          return (
-            <UpdatePreferredFirstFactor user={user} t={t} />
-          )
+          return <UpdatePreferredFirstFactor user={user} t={t} />
         }}
       />
     )}

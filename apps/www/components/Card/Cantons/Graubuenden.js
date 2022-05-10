@@ -1,6 +1,4 @@
-import React from 'react'
-
-const SvgGraubuenden = props => (
+const SvgGraubuenden = (props) => (
   <svg
     width={props.size}
     height={(props.size * 470.791) / 469.269}

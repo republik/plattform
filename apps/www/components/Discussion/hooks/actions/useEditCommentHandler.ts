@@ -5,7 +5,7 @@ import { toRejectedString } from '../../graphql/utils'
 export type EditCommentHandler = (
   commentId: string,
   content: string,
-  tags: string[]
+  tags: string[],
 ) => Promise<unknown>
 
 function useEditCommentHandler(): EditCommentHandler {
@@ -16,8 +16,8 @@ function useEditCommentHandler(): EditCommentHandler {
       variables: {
         commentId,
         content,
-        tags
-      }
+        tags,
+      },
     }).catch(toRejectedString)
   }
 

@@ -26,8 +26,8 @@ const centerRule = {
     pullQuoteRule,
     noteRule,
     infoBoxRule,
-    articleCollectionRule
-  ]
+    articleCollectionRule,
+  ],
 }
 
 export default centerRule

@@ -7,13 +7,13 @@ export const paragraphStyle = {
   color: colors.text,
   fontSize: '19px',
   lineHeight: '158%',
-  fontFamily: fontFamilies.serifRegular
+  fontFamily: fontFamilies.serifRegular,
 }
 
 export const linkStyle = {
   color: colors.text,
   textDecoration: 'underline',
-  textDecorationSkip: 'ink'
+  textDecorationSkip: 'ink',
 }
 
 export const Br = () => <br />

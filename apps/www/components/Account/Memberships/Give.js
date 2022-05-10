@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 
 import withT from '../../../lib/withT'
 
@@ -19,8 +19,8 @@ class MembershipGiver extends Component {
 
     const isGivePackage = pkg.group === 'GIVE'
 
-    const giveable = memberships.filter(m => m.voucherCode)
-    const given = memberships.filter(m => m.claimerName)
+    const giveable = memberships.filter((m) => m.voucherCode)
+    const given = memberships.filter((m) => m.claimerName)
 
     const hasGiveable = !!giveable.length
     const hasGiven = !!given.length
@@ -34,7 +34,7 @@ class MembershipGiver extends Component {
         {!isGivePackage && hasGiveable && (
           <A
             href='#'
-            onClick={e => {
+            onClick={(e) => {
               e.preventDefault()
               this.setState(() => ({ showGiveable: !showGiveable }))
             }}
@@ -55,12 +55,12 @@ class MembershipGiver extends Component {
                         `memberships/give/${pkg.name}/description/before/${giveable.length}`,
                         `memberships/give/${pkg.name}/description/before/other`,
                         `memberships/give/description/before/${giveable.length}`,
-                        `memberships/give/description/before/other`
+                        `memberships/give/description/before/other`,
                       ],
                       {
-                        count: giveable.length
-                      }
-                    )
+                        count: giveable.length,
+                      },
+                    ),
               }}
             />
             <List>
@@ -76,8 +76,8 @@ class MembershipGiver extends Component {
               dangerouslySetInnerHTML={{
                 __html: t.first([
                   `memberships/give/${pkg.name}/description/after`,
-                  'memberships/give/description/after'
-                ])
+                  'memberships/give/description/after',
+                ]),
               }}
             />
           </div>
@@ -85,14 +85,14 @@ class MembershipGiver extends Component {
         {hasGiven && (
           <A
             href='#'
-            onClick={e => {
+            onClick={(e) => {
               e.preventDefault()
               this.setState(() => ({ showGiven: !showGiven }))
             }}
           >
             {isGivePackage
               ? t.pluralize('memberships/giver/given', {
-                  count: given.length
+                  count: given.length,
                 })
               : t('memberships/giver/given/notGive')}
           </A>
@@ -102,7 +102,7 @@ class MembershipGiver extends Component {
             <RawHtml
               type={P}
               dangerouslySetInnerHTML={{
-                __html: t('memberships/giver/description')
+                __html: t('memberships/giver/description'),
               }}
             />
             <List>

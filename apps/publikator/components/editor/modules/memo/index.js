@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { compose } from 'react-apollo'
 import { css } from 'glamor'
 import MarkdownSerializer from 'slate-mdast-serializer'
@@ -10,7 +10,7 @@ import {
   Overlay,
   OverlayToolbar,
   OverlayBody,
-  IconButton
+  IconButton,
 } from '@project-r/styleguide'
 
 import withT from '../../../../lib/withT'
@@ -24,17 +24,17 @@ const styles = {
   tooling: css({
     display: 'flex',
     alignItems: 'center',
-    paddingBottom: 40
-  })
+    paddingBottom: 40,
+  }),
 }
 
-const getMarker = name => {
+const getMarker = (name) => {
   return markers[name] || standard
 }
 
 const Memo = compose(
   withT,
-  withRouter
+  withRouter,
 )(({ t, editor, node, children, isSelected, router }) => {
   const [showModal, setShowModal] = useState()
 
@@ -45,35 +45,35 @@ const Memo = compose(
   }, [])
 
   const persistData = (key, value) =>
-    editor.change(change => {
+    editor.change((change) => {
       change.setNodeByKey(node.key, {
-        data: node.data.set(key, value)
+        data: node.data.set(key, value),
       })
     })
 
-  const pickMarker = name => e => {
+  const pickMarker = (name) => (e) => {
     e?.preventDefault()
     persistData('marker', name)
   }
 
-  const open = e => {
+  const open = (e) => {
     e?.preventDefault()
     setShowModal(true)
   }
 
-  const close = e => {
+  const close = (e) => {
     e?.preventDefault()
     setShowModal(false)
   }
 
-  const remove = e => {
+  const remove = (e) => {
     e?.preventDefault()
-    editor.change(change => {
+    editor.change((change) => {
       change.unwrapInline(node.type)
     })
   }
 
-  const onPublished = memo => {
+  const onPublished = (memo) => {
     const isRoot = !memo.parentIds.length
     if (isRoot) {
       persistData('parentId', memo.id)
@@ -98,8 +98,8 @@ const Memo = compose(
             </Editorial.P>
             <div {...styles.tooling}>
               {Object.keys(markers)
-                .filter(name => name !== 'default')
-                .map(name => {
+                .filter((name) => name !== 'default')
+                .map((name) => {
                   const { Picker } = getMarker(name)
                   return (
                     <Picker
@@ -144,34 +144,34 @@ const MemoModule = ({ rule, TYPE, context }) => {
       type: TYPE,
       data: {
         ...node.data,
-        noOpen: true
+        noOpen: true,
       },
-      nodes: visitChildren(node)
+      nodes: visitChildren(node),
     }),
     toMdast: (object, index, parent, { visitChildren }) => ({
       type: 'span',
       data: {
         type: TYPE,
         parentId: object.data?.parentId,
-        marker: object.data?.marker
+        marker: object.data?.marker,
       },
-      children: visitChildren(object)
-    })
+      children: visitChildren(object),
+    }),
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [memo]
+    rules: [memo],
   })
 
   return {
     TYPE,
     helpers: {
-      serializer
+      serializer,
     },
     ui: {
       textFormatButtons: [
         createInlineButton({
-          type: TYPE
+          type: TYPE,
         })(({ active, disabled, visible, ...props }) => {
           if (context.isTemplate) {
             return null
@@ -188,8 +188,8 @@ const MemoModule = ({ rule, TYPE, context }) => {
               <MemoIcon />
             </span>
           )
-        })
-      ]
+        }),
+      ],
     },
     plugins: [
       {
@@ -197,9 +197,9 @@ const MemoModule = ({ rule, TYPE, context }) => {
           const { node } = props
           if (!memo.match(node)) return
           return <Memo {...props} />
-        }
-      }
-    ]
+        },
+      },
+    ],
   }
 }
 

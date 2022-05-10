@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { Component, Fragment } from 'react'
 import { fromJS } from 'immutable'
 import debounce from 'lodash/debounce'
 
@@ -20,7 +20,7 @@ class Form extends Component {
         this.autoHtmlObserver = undefined
       }
     }
-    this.setAutoHtmlRef = ref => {
+    this.setAutoHtmlRef = (ref) => {
       this.clearAutoHtmlObserver()
       this.autoHtmlRef = ref
       if (ref) {
@@ -38,7 +38,7 @@ class Form extends Component {
           attributes: true,
           childList: true,
           characterData: true,
-          subtree: true
+          subtree: true,
         })
         afterMutations()
       }
@@ -60,49 +60,49 @@ class Form extends Component {
               props: { size: undefined },
               parent: {
                 kinds: ['document', 'block'],
-                types: ['CENTER']
+                types: ['CENTER'],
               },
-              unwrap: true
+              unwrap: true,
             },
             {
               label: 'Gross',
               props: { size: 'breakout' },
               parent: {
                 kinds: ['document', 'block'],
-                types: ['CENTER']
+                types: ['CENTER'],
               },
-              wrap: 'CENTER'
+              wrap: 'CENTER',
             },
             {
               label: 'Normal',
               props: { size: undefined },
               parent: {
                 kinds: ['document', 'block'],
-                types: ['CENTER']
+                types: ['CENTER'],
               },
-              wrap: 'CENTER'
+              wrap: 'CENTER',
             },
             {
               label: 'Klein',
               props: { size: 'narrow' },
               parent: {
                 kinds: ['document', 'block'],
-                types: ['CENTER']
+                types: ['CENTER'],
               },
-              wrap: 'CENTER'
+              wrap: 'CENTER',
             },
             {
               label: 'Links',
               props: { size: 'floatTiny' },
               parent: {
                 kinds: ['document', 'block'],
-                types: ['CENTER']
+                types: ['CENTER'],
               },
-              wrap: 'CENTER'
-            }
-          ].map(size => {
+              wrap: 'CENTER',
+            },
+          ].map((size) => {
             let checked = Object.keys(size.props).every(
-              key => data.get(key) === size.props[key]
+              (key) => data.get(key) === size.props[key],
             )
             if (size.unwrap) {
               checked = checked && parent.kind === 'document'
@@ -115,15 +115,15 @@ class Form extends Component {
               <Radio
                 key={size.label}
                 checked={checked}
-                onChange={event => {
+                onChange={(event) => {
                   event.preventDefault()
                   if (checked) {
                     return
                   }
 
-                  editor.change(change => {
+                  editor.change((change) => {
                     change.setNodeByKey(node.key, {
-                      data: data.merge(size.props)
+                      data: data.merge(size.props),
                     })
                     if (size.unwrap) {
                       for (
@@ -135,7 +135,7 @@ class Form extends Component {
                       }
                     } else if (size.wrap && parent.type !== size.wrap) {
                       change = change.wrapBlockByKey(node.key, {
-                        type: size.wrap
+                        type: size.wrap,
                       })
                     }
                   })
@@ -151,7 +151,7 @@ class Form extends Component {
           <JSONEditor
             label='Config'
             config={config}
-            onChange={value => {
+            onChange={(value) => {
               onChange(fromJS(value).set('html', html))
               if (value.autoHtml) {
                 this.setState({ autoHtml: true })
@@ -164,7 +164,7 @@ class Form extends Component {
             label='SSR-HTML'
             value={html}
             mode='htmlmixed'
-            onChange={value => {
+            onChange={(value) => {
               let newData = data.set('html', value)
               if (newData.get('autoHtml')) {
                 newData = newData.set('autoHtml', false)
@@ -184,11 +184,11 @@ class Form extends Component {
   }
 }
 
-const EditOverlay = props => {
-  const onChange = data => {
-    props.editor.change(change => {
+const EditOverlay = (props) => {
+  const onChange = (data) => {
+    props.editor.change((change) => {
       change.setNodeByKey(props.node.key, {
-        data
+        data,
       })
     })
   }

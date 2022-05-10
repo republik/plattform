@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import { colors } from '@project-r/styleguide'
 import { Block } from 'slate'
@@ -17,9 +16,9 @@ const styles = {
     transition: 'outline-color 0.2s',
     marginTop: -30,
     '&[data-active="true"]': {
-      outlineColor: colors.primary
-    }
-  })
+      outlineColor: colors.primary,
+    },
+  }),
 }
 
 export default ({ rule, subModules, TYPE }) => {
@@ -33,25 +32,25 @@ export default ({ rule, subModules, TYPE }) => {
         kind: 'block',
         type: TYPE,
         isVoid: true,
-        nodes: []
+        nodes: [],
       }
     },
     toMdast: () => ({
-      type: 'thematicBreak'
-    })
+      type: 'thematicBreak',
+    }),
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [schemaRule]
+    rules: [schemaRule],
   })
 
   const { insertButtonText, insertTypes = [] } = rule.editorOptions || {}
 
-  const insertButtonClickHandler = (value, onChange) => event => {
+  const insertButtonClickHandler = (value, onChange) => (event) => {
     event.preventDefault()
 
     return onChange(
-      value.change().call(injectBlock, Block.fromJSON(schemaRule.fromMdast()))
+      value.change().call(injectBlock, Block.fromJSON(schemaRule.fromMdast())),
     )
   }
   const InsertButton =
@@ -59,7 +58,7 @@ export default ({ rule, subModules, TYPE }) => {
     (({ value, onChange }) => {
       const disabled =
         value.isBlurred ||
-        !value.blocks.every(n => insertTypes.includes(n.type))
+        !value.blocks.every((n) => insertTypes.includes(n.type))
       return (
         <span
           {...buttonStyles.insert}
@@ -75,11 +74,11 @@ export default ({ rule, subModules, TYPE }) => {
   return {
     TYPE,
     helpers: {
-      serializer
+      serializer,
     },
     changes: {},
     ui: {
-      insertButtons: [InsertButton]
+      insertButtons: [InsertButton],
     },
     plugins: [
       {
@@ -87,7 +86,7 @@ export default ({ rule, subModules, TYPE }) => {
           const { node, editor, attributes } = props
           if (node.type !== TYPE) return
           const active = editor.value.blocks.some(
-            block => block.key === node.key
+            (block) => block.key === node.key,
           )
           return (
             <span {...styles.border} {...attributes} data-active={active}>
@@ -98,11 +97,11 @@ export default ({ rule, subModules, TYPE }) => {
         schema: {
           blocks: {
             [TYPE]: {
-              isVoid: true
-            }
-          }
-        }
-      }
-    ]
+              isVoid: true,
+            },
+          },
+        },
+      },
+    ],
   }
 }

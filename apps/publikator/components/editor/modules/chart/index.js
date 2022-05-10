@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { Block } from 'slate'
 
@@ -10,7 +10,7 @@ import MdEdit from 'react-icons/lib/md/edit'
 import { matchSubmodules } from '../../utils/matchers'
 import {
   OverlayFormContext,
-  OverlayFormContextProvider
+  OverlayFormContextProvider,
 } from '../../utils/OverlayFormContext'
 
 const CustomUi = ({ editor, node, TYPE, subModules }) => {
@@ -19,7 +19,7 @@ const CustomUi = ({ editor, node, TYPE, subModules }) => {
     <InlineUI
       node={node}
       editor={editor}
-      isMatch={value => value.blocks.some(matchSubmodules(TYPE, subModules))}
+      isMatch={(value) => value.blocks.some(matchSubmodules(TYPE, subModules))}
     >
       <MarkButton onMouseDown={() => setShowModal(true)}>
         <MdEdit size={20} />
@@ -29,7 +29,7 @@ const CustomUi = ({ editor, node, TYPE, subModules }) => {
 }
 
 export default ({ rule, subModules, TYPE }) => {
-  const canvasModule = subModules.find(m => m.name === 'chartCanvas')
+  const canvasModule = subModules.find((m) => m.name === 'chartCanvas')
   if (!canvasModule) {
     throw new Error('Missing chartCanvas submodule')
   }
@@ -41,11 +41,11 @@ export default ({ rule, subModules, TYPE }) => {
       .reduce(
         (a, m) =>
           a.concat(
-            m.helpers && m.helpers.serializer && m.helpers.serializer.rules
+            m.helpers && m.helpers.serializer && m.helpers.serializer.rules,
           ),
-        []
+        [],
       )
-      .filter(Boolean)
+      .filter(Boolean),
   })
 
   const Container = rule.component
@@ -58,7 +58,7 @@ export default ({ rule, subModules, TYPE }) => {
         kind: 'block',
         type: TYPE,
         data: node.data,
-        nodes: childSerializer.fromMdast(node.children, 0, node, rest)
+        nodes: childSerializer.fromMdast(node.children, 0, node, rest),
       }
     },
     toMdast: (object, index, parent, rest) => {
@@ -68,18 +68,18 @@ export default ({ rule, subModules, TYPE }) => {
         type: 'zone',
         identifier: 'CHART',
         data: canvas.data.config,
-        children: childSerializer.toMdast(object.nodes, 0, object, rest)
+        children: childSerializer.toMdast(object.nodes, 0, object, rest),
       }
-    }
+    },
   }
   const serializer = new MarkdownSerializer({
-    rules: [serializerRule]
+    rules: [serializerRule],
   })
 
   const newBlock = () =>
     Block.create({
       type: TYPE,
-      nodes: subModules.map(m =>
+      nodes: subModules.map((m) =>
         Block.create({
           type: m.TYPE,
           data:
@@ -87,26 +87,26 @@ export default ({ rule, subModules, TYPE }) => {
               ? {
                   isNew: true,
                   config: {},
-                  values: ''
+                  values: '',
                 }
-              : undefined
-        })
-      )
+              : undefined,
+        }),
+      ),
     })
 
-  const isEmpty = node => !node.text.trim()
+  const isEmpty = (node) => !node.text.trim()
 
   return {
     TYPE,
     helpers: {
       serializer,
-      newBlock
+      newBlock,
     },
     ui: createUi({
       TYPE,
       CANVAS_TYPE,
       newBlock,
-      editorOptions: rule.editorOptions
+      editorOptions: rule.editorOptions,
     }),
     plugins: [
       {
@@ -130,32 +130,32 @@ export default ({ rule, subModules, TYPE }) => {
         schema: {
           blocks: {
             [TYPE]: {
-              nodes: subModules.map(m => ({
+              nodes: subModules.map((m) => ({
                 kinds: ['block'],
                 types: [m.TYPE],
                 min: 1,
-                max: 1
+                max: 1,
               })),
               normalize: (change, reason, { node, index, child }) => {
                 if (
                   reason === 'child_required' ||
                   (reason === 'child_type_invalid' &&
-                    subModules.find(m => m.TYPE === child.type) &&
+                    subModules.find((m) => m.TYPE === child.type) &&
                     node.nodes.filter(matchBlock(child.type)).size === 1)
                 ) {
                   change.insertNodeByKey(node.key, index, {
                     kind: 'block',
-                    type: subModules[index].TYPE
+                    type: subModules[index].TYPE,
                   })
                 }
                 if (reason === 'child_unknown') {
                   change.unwrapNodeByKey(child.key)
                 }
-              }
-            }
-          }
-        }
-      }
-    ]
+              },
+            },
+          },
+        },
+      },
+    ],
   }
 }

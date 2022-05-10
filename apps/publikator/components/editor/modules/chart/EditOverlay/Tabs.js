@@ -1,4 +1,3 @@
-import React from 'react'
 import { plainButtonRule, fontStyles } from '@project-r/styleguide'
 import { css } from 'glamor'
 
@@ -9,14 +8,14 @@ const styles = {
     ...fontStyles.sansSerifRegular,
     '@media (hover)': {
       ':hover': {
-        textDecoration: 'underline'
-      }
+        textDecoration: 'underline',
+      },
     },
     '&.is-active': {
       ...fontStyles.sansSerifMedium,
-      lineHeight: '16px'
-    }
-  })
+      lineHeight: '16px',
+    },
+  }),
 }
 
 export const Tab = ({ tabKey, label, setTab, isActive, style }) => {

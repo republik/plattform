@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Overlay, OverlayBody, OverlayToolbar } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
@@ -12,7 +10,7 @@ const ShareOverlay = ({
   emailSubject,
   emailBody,
   emailAttachUrl,
-  onClose
+  onClose,
 }) => (
   <Overlay onClose={onClose} mUpStyle={{ maxWidth: 400, minHeight: 0 }}>
     <OverlayToolbar title={title} onClose={onClose} />

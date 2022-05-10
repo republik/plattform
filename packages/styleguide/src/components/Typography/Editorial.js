@@ -12,7 +12,7 @@ export {
   List,
   UnorderedList as UL,
   OrderedList as OL,
-  ListItem as LI
+  ListItem as LI,
 } from '../List'
 
 export { editorialFontRule as fontRule } from './fontRules'
@@ -22,14 +22,14 @@ const headline = css({
   margin: '0 0 12px 0',
   [mUp]: {
     ...convertStyleToRem(styles.serifTitle58),
-    margin: '0 0 12px 0'
+    margin: '0 0 12px 0',
   },
   ':first-child': {
-    marginTop: 0
+    marginTop: 0,
   },
   ':last-child': {
-    marginBottom: 0
-  }
+    marginBottom: 0,
+  },
 })
 
 export const Headline = ({ children, attributes, ...props }) => {
@@ -51,8 +51,8 @@ const subhead = css({
   margin: '36px 0 8px 0',
   [mUp]: {
     ...convertStyleToRem(styles.serifBold24),
-    margin: '46px 0 12px 0'
-  }
+    margin: '46px 0 12px 0',
+  },
 })
 
 export const Subhead = ({ children, attributes, ...props }) => {
@@ -75,8 +75,8 @@ const lead = css({
   margin: '0 0 10px 0',
   [mUp]: {
     ...convertStyleToRem(styles.serifRegular23),
-    margin: '0 0 20px 0'
-  }
+    margin: '0 0 20px 0',
+  },
 })
 
 export const Lead = ({ children, attributes, ...props }) => {
@@ -101,20 +101,20 @@ const subjectStyle = {
   ...convertStyleToRem(styles.sansSerifRegular19),
   [mUp]: {
     ...convertStyleToRem(styles.sansSerifRegular23),
-    lineHeight: '27px'
-  }
+    lineHeight: '27px',
+  },
 }
 
 const subject = css({
-  ...subjectStyle
+  ...subjectStyle,
 })
 
 const subjectWithChildren = css({
   ...subjectStyle,
   paddingRight: '.2em',
   '&::after': {
-    content: ' '
-  }
+    content: ' ',
+  },
 })
 
 export const Subject = ({ children, attributes, ...props }) => {
@@ -131,8 +131,8 @@ const credit = css({
   ...convertStyleToRem(styles.sansSerifRegular14),
   [mUp]: {
     ...convertStyleToRem(styles.sansSerifRegular15),
-    margin: '20px 0 0 0'
-  }
+    margin: '20px 0 0 0',
+  },
 })
 
 export const Credit = ({ children, attributes, ...props }) => {
@@ -155,8 +155,8 @@ const format = css({
   margin: '0 0 18px 0',
   [mUp]: {
     ...convertStyleToRem(styles.sansSerifMedium20),
-    margin: '0 0 28px 0'
-  }
+    margin: '0 0 28px 0',
+  },
 })
 
 export const Format = ({ children, color, attributes, ...props }) => {
@@ -178,17 +178,17 @@ const paragraph = css({
   ...convertStyleToRem(styles.serifRegular17),
   [mUp]: {
     ...convertStyleToRem(styles.serifRegular19),
-    margin: `${pxToRem(30)} 0 ${pxToRem(30)} 0`
+    margin: `${pxToRem(30)} 0 ${pxToRem(30)} 0`,
   },
   ':first-child': {
-    marginTop: 0
+    marginTop: 0,
   },
   ':last-child': {
-    marginBottom: 0
+    marginBottom: 0,
   },
   'h2 + &': {
-    marginTop: 0
-  }
+    marginTop: 0,
+  },
 })
 export const P = ({ children, attributes, ...props }) => {
   const [colorScheme] = useColorContext()
@@ -211,8 +211,8 @@ const question = css({
   [mUp]: {
     ...convertStyleToRem(styles.serifBold19),
     lineHeight: '30px',
-    margin: '46px 0 -18px 0'
-  }
+    margin: '46px 0 -18px 0',
+  },
 })
 export const Question = ({ children, attributes, ...props }) => {
   const [colorScheme] = useColorContext()
@@ -246,7 +246,7 @@ export const Cursive = ({ children, attributes, ...props }) => (
 )
 
 const strikeThrough = css({
-  textDecoration: 'line-through'
+  textDecoration: 'line-through',
 })
 export const StrikeThrough = ({ children, attributes, ...props }) => (
   <span {...attributes} {...props} {...strikeThrough}>
@@ -256,7 +256,7 @@ export const StrikeThrough = ({ children, attributes, ...props }) => (
 
 export const link = css({
   ...underline,
-  cursor: 'pointer'
+  cursor: 'pointer',
 })
 export const A = React.forwardRef(({ children, attributes, ...props }, ref) => {
   const [colorScheme] = useColorContext()
@@ -265,11 +265,11 @@ export const A = React.forwardRef(({ children, attributes, ...props }, ref) => {
       css({
         '@media (hover)': {
           ':hover': {
-            color: colorScheme.getCSSColor('textSoft')
-          }
-        }
+            color: colorScheme.getCSSColor('textSoft'),
+          },
+        },
       }),
-    [colorScheme]
+    [colorScheme],
   )
   return (
     <a
@@ -290,8 +290,8 @@ const note = css({
   margin: '22px 0',
   [mUp]: {
     ...convertStyleToRem(styles.sansSerifRegular15),
-    margin: '30px 0'
-  }
+    margin: '30px 0',
+  },
 })
 
 export const Note = ({ children, attributes, ...props }) => {

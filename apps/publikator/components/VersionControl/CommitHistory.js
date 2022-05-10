@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Link } from '../../lib/routes'
 import { colors, A, Interaction } from '@project-r/styleguide'
 import { css } from 'glamor'
@@ -12,23 +12,23 @@ const { P } = Interaction
 const styles = {
   container: css({
     fontSize: '13px',
-    marginBottom: '20px'
+    marginBottom: '20px',
   }),
   commits: css({
     borderTop: `1px solid ${colors.divider}`,
     listStyleType: 'none',
     margin: '5px 0',
-    padding: 0
+    padding: 0,
   }),
   commit: css({
     borderBottom: `1px solid ${colors.divider}`,
     padding: '5px 0',
-    position: 'relative'
+    position: 'relative',
   }),
   date: css({
     display: 'block',
-    fontSize: '11px'
-  })
+    fontSize: '11px',
+  }),
 }
 
 class CommitHistory extends Component {
@@ -41,7 +41,7 @@ class CommitHistory extends Component {
       return (
         <div {...styles.container}>
           <ul {...styles.commits}>
-            {commits.slice(0, numItems).map(commit => (
+            {commits.slice(0, numItems).map((commit) => (
               <li key={commit.id} {...styles.commit}>
                 {commit.id !== commitId ? (
                   <Link
@@ -49,7 +49,7 @@ class CommitHistory extends Component {
                     route='repo/edit'
                     params={{
                       repoId: repoPath,
-                      commitId: commit.id
+                      commitId: commit.id,
                     }}
                   >
                     <A>{commit.message}</A>

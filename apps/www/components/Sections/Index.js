@@ -1,4 +1,3 @@
-import React from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { ascending } from 'd3-array'
@@ -13,7 +12,7 @@ import {
   mediaQueries,
   TeaserSectionTitle,
   useColorContext,
-  colors
+  colors,
 } from '@project-r/styleguide'
 
 const SPACE = 15
@@ -23,25 +22,25 @@ const styles = {
   sectionTitle: css({
     marginBottom: SPACE / 2,
     [mediaQueries.mUp]: {
-      marginBottom: SPACE_BIG / 2
-    }
+      marginBottom: SPACE_BIG / 2,
+    },
   }),
   section: css({
     paddingTop: SPACE,
     marginBottom: SPACE,
     '& + &': {
       borderTopWidth: 1,
-      borderTopStyle: 'solid'
+      borderTopStyle: 'solid',
     },
     [mediaQueries.mUp]: {
       paddingTop: SPACE_BIG,
-      marginBottom: SPACE_BIG
-    }
+      marginBottom: SPACE_BIG,
+    },
   }),
   link: css({
     color: 'inherit',
-    textDecoration: 'none'
-  })
+    textDecoration: 'none',
+  }),
 }
 
 const getSections = gql`
@@ -91,14 +90,14 @@ const SectionIndex = ({ data: { loading, error, sections }, t }) => {
                   {...styles.section}
                   {...colorScheme.set('borderColor', 'divider')}
                   style={{
-                    paddingBottom: hasFormats ? 5 : 0
+                    paddingBottom: hasFormats ? 5 : 0,
                   }}
                   key={id}
                 >
                   <div
                     {...styles.sectionTitle}
                     style={{
-                      color: hasFormats ? '#979797' : undefined
+                      color: hasFormats ? '#979797' : undefined,
                     }}
                   >
                     <Link href={meta.path} passHref>

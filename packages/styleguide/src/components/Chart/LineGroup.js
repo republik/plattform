@@ -5,61 +5,61 @@ import { css } from 'glamor'
 import { line as lineShape, area as areaShape } from 'd3-shape'
 import { useColorContext } from '../Colors/useColorContext'
 
-import { subsup, isLastItem, isValuePresent } from './utils'
+import { subsup, isLastItem, isValuePresent, textAlignmentDict } from './utils'
 
 import {
   Y_CONNECTOR,
   Y_CONNECTOR_PADDING,
-  Y_LABEL_HEIGHT
+  Y_LABEL_HEIGHT,
 } from './Layout.constants'
 
 import {
   sansSerifRegular12 as LABEL_FONT,
   sansSerifMedium12 as VALUE_FONT,
   sansSerifMedium14,
-  sansSerifMedium22
+  sansSerifMedium22,
 } from '../Typography/styles'
 
 const styles = {
   columnTitle: css({
-    ...sansSerifMedium14
+    ...sansSerifMedium14,
   }),
   axisLabel: css({
-    ...LABEL_FONT
+    ...LABEL_FONT,
   }),
   axisYLine: css({
     strokeWidth: '1px',
-    shapeRendering: 'crispEdges'
+    shapeRendering: 'crispEdges',
   }),
   axisXLine: css({
     strokeWidth: '1px',
-    shapeRendering: 'crispEdges'
+    shapeRendering: 'crispEdges',
   }),
   annotationLine: css({
     strokeWidth: '1px',
     fillRule: 'evenodd',
     strokeLinecap: 'round',
     strokeDasharray: '1,3',
-    strokeLinejoin: 'round'
+    strokeLinejoin: 'round',
   }),
   annotationText: css({
-    ...LABEL_FONT
+    ...LABEL_FONT,
   }),
   annotationValue: css({
-    ...VALUE_FONT
+    ...VALUE_FONT,
   }),
   value: css({
-    ...VALUE_FONT
+    ...VALUE_FONT,
   }),
   valueMini: css({
-    ...sansSerifMedium22
+    ...sansSerifMedium22,
   }),
   label: css({
-    ...LABEL_FONT
-  })
+    ...LABEL_FONT,
+  }),
 }
 
-const LineGroup = props => {
+const LineGroup = (props) => {
   const {
     lines,
     mini,
@@ -80,33 +80,33 @@ const LineGroup = props => {
     areaOpacity = 1,
     endDy,
     xAccessor,
-    xAxisElement
+    xAxisElement,
   } = props
   const [colorScheme] = useColorContext()
 
   const [height] = y.range()
 
   const pathGenerator = lineShape()
-    .x(d => x(xAccessor(d)))
-    .y(d => y(d.value))
+    .x((d) => x(xAccessor(d)))
+    .y((d) => y(d.value))
 
   const bandArea = areaShape()
-    .x(d => x(xAccessor(d)))
-    .y0(d => y(+d.datum[`${band}_lower`]))
-    .y1(d => y(+d.datum[`${band}_upper`]))
+    .x((d) => x(xAccessor(d)))
+    .y0((d) => y(+d.datum[`${band}_lower`]))
+    .y1((d) => y(+d.datum[`${band}_upper`]))
 
   const lineArea = areaShape()
-    .x(d => x(xAccessor(d)))
-    .y0(d => y(+d.datum[`${area}_lower`]))
-    .y1(d => y(+d.datum[`${area}_upper`]))
+    .x((d) => x(xAccessor(d)))
+    .y0((d) => y(+d.datum[`${area}_lower`]))
+    .y1((d) => y(+d.datum[`${area}_upper`]))
 
-  const linesWithLayout = lines.map(line => {
+  const linesWithLayout = lines.map((line) => {
     return {
       ...line,
       startX: x(xAccessor(line.start)),
       // we always render at end label outside of the chart area
       // even if the line ends in the middle of the graph
-      endX: width
+      endX: width,
     }
   })
 
@@ -149,9 +149,9 @@ const LineGroup = props => {
             endX,
             endY,
             endLabelY,
-            lineColor
+            lineColor,
           },
-          i
+          i,
         ) => {
           return (
             <g key={`line${endLabel}${i}`}>
@@ -177,21 +177,21 @@ const LineGroup = props => {
                   </text>
                 </g>
               )}
-              {band && line.find(d => d.datum[`${band}_lower`]) && (
+              {band && line.find((d) => d.datum[`${band}_lower`]) && (
                 <path
                   {...colorScheme.set('fill', lineColor, 'charts')}
                   fillOpacity='0.2'
                   d={bandArea(line)}
                 />
               )}
-              {area && line.find(d => d.datum[`${area}_lower`]) && (
+              {area && line.find((d) => d.datum[`${area}_lower`]) && (
                 <path
                   {...colorScheme.set('fill', lineColor, 'charts')}
                   fillOpacity={areaOpacity}
                   d={lineArea(line)}
                 />
               )}
-              {line.find(d => isValuePresent(d.value)) && (
+              {line.find((d) => isValuePresent(d.value)) && (
                 <path
                   fill='none'
                   {...colorScheme.set('stroke', lineColor, 'charts')}
@@ -234,26 +234,24 @@ const LineGroup = props => {
               )}
             </g>
           )
-        }
+        },
       )}
-      {yLines.map(({ tick, label, base }, i) => (
-        <g
-          data-axis
-          key={`y${tick}`}
-          transform={`translate(0,${y(tick)})`}
-        >
+      {yLines.map(({ tick, label, base, dy = '-3px', opacity }, i) => (
+        <g data-axis key={`y${tick}`} transform={`translate(0,${y(tick)})`}>
           <line
             {...styles.axisYLine}
             {...colorScheme.set('stroke', 'text')}
             x2={width}
             style={{
-              opacity: base || (base === undefined && tick === 0) ? 0.8 : 0.17
+              opacity:
+                opacity ??
+                (base || (base === undefined && tick === 0) ? 0.8 : 0.17),
             }}
           />
           <text
             {...styles.axisLabel}
             {...colorScheme.set('fill', 'text')}
-            dy='-3px'
+            dy={dy}
           >
             {subsup.svg(label ?? yAxisFormat(tick, isLastItem(yLines, i)))}
           </text>
@@ -301,22 +299,26 @@ const LineGroup = props => {
 
         const fullWidth = width + (props.paddingRight || 0)
         let textAnchor = 'middle'
-        if (
-          x1 + (range ? x2 - x1 : 0) / 2 + annotation.labelSize / 2 >
-          fullWidth
-        ) {
-          textAnchor = 'end'
-          if ((range ? x2 : x1) - annotation.labelSize < 0) {
-            textAnchor = 'start'
-          }
-        }
         let tx = x1
-        if (range) {
-          if (textAnchor === 'end') {
-            tx = x2
+        if (textAlignmentDict[annotation.textAlignment]) {
+          textAnchor = textAlignmentDict[annotation.textAlignment]
+        } else {
+          if (
+            x1 + (range ? x2 - x1 : 0) / 2 + annotation.labelSize / 2 >
+            fullWidth
+          ) {
+            textAnchor = 'end'
+            if ((range ? x2 : x1) - annotation.labelSize < 0) {
+              textAnchor = 'start'
+            }
           }
-          if (textAnchor === 'middle') {
-            tx = x1 + (x2 - x1) / 2
+          if (range) {
+            if (textAnchor === 'end') {
+              tx = x2
+            }
+            if (textAnchor === 'middle') {
+              tx = x1 + (x2 - x1) / 2
+            }
           }
         }
 
@@ -356,16 +358,29 @@ const LineGroup = props => {
               dy={
                 showValue
                   ? isBottom
-                    ? '2.7em'
+                    ? '2.5em'
                     : '-1.8em'
                   : isBottom
-                  ? '1.4em'
-                  : '-0.5em'
+                  ? '0.1em'
+                  : '-0.1em'
               }
               {...styles.annotationText}
               {...colorScheme.set('fill', 'text')}
             >
-              {annotation.label}
+              {annotation.label?.split('\n').map((line, i, all) => (
+                <tspan
+                  key={i}
+                  x={tx}
+                  dy={showValue ? (isBottom ? '1.1em' : '-1.1em') : 0}
+                  y={
+                    isBottom
+                      ? `${0.1 + 1.1 * (i + 1)}em`
+                      : `-${0.5 + 1.1 * (all.length - i - 1)}em`
+                  }
+                >
+                  {line}
+                </tspan>
+              ))}
             </text>
             {showValue && (
               <text
@@ -391,8 +406,8 @@ LineGroup.propTypes = {
     PropTypes.shape({
       line: PropTypes.arrayOf(
         PropTypes.shape({
-          value: PropTypes.number
-        })
+          value: PropTypes.number,
+        }),
       ),
       start: PropTypes.shape({ value: PropTypes.number }),
       end: PropTypes.shape({ value: PropTypes.number }),
@@ -402,8 +417,8 @@ LineGroup.propTypes = {
       startValue: PropTypes.oneOfType([PropTypes.bool, PropTypes.string])
         .isRequired,
       endValue: PropTypes.oneOfType([PropTypes.bool, PropTypes.string])
-        .isRequired
-    })
+        .isRequired,
+    }),
   ),
   mini: PropTypes.bool,
   title: PropTypes.string,
@@ -417,14 +432,14 @@ LineGroup.propTypes = {
       value: PropTypes.number.isRequired,
       label: PropTypes.string,
       x: PropTypes.date,
-      dy: PropTypes.string
-    })
+      dy: PropTypes.string,
+    }),
   ),
   x: PropTypes.func.isRequired,
   xAccessor: PropTypes.func.isRequired,
   endDy: PropTypes.string.isRequired,
   width: PropTypes.number.isRequired,
-  band: PropTypes.string
+  band: PropTypes.string,
 }
 
 export default LineGroup

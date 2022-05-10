@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
@@ -9,7 +9,7 @@ import { IconButton } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 import {
   onDocumentFragment,
-  BOOKMARKS_COLLECTION_NAME
+  BOOKMARKS_COLLECTION_NAME,
 } from '../Bookmarks/fragments'
 import { getRefetchQueries } from '../Bookmarks/queries'
 
@@ -22,8 +22,9 @@ const Bookmark = ({
   skipRefetch,
   router,
   label,
+  labelShort,
   disabled,
-  attributes
+  attributes,
 }) => {
   const [mutating, setMutating] = useState(false)
   const [error, setError] = useState(undefined)
@@ -55,6 +56,7 @@ const Bookmark = ({
       Icon={Icon}
       title={title}
       label={label}
+      labelShort={labelShort}
       onClick={() => toggle()}
       fillColorName={error ? 'error' : mutating ? 'disabled' : 'text'}
       disabled={disabled}
@@ -107,11 +109,11 @@ export default compose(
         mutate({
           variables: {
             documentId,
-            collectionName: BOOKMARKS_COLLECTION_NAME
+            collectionName: BOOKMARKS_COLLECTION_NAME,
           },
-          refetchQueries: update ? getRefetchQueries() : []
-        })
-    })
+          refetchQueries: update ? getRefetchQueries() : [],
+        }),
+    }),
   }),
   graphql(removeMutation, {
     props: ({ mutate }) => ({
@@ -119,12 +121,12 @@ export default compose(
         mutate({
           variables: {
             documentId,
-            collectionName: BOOKMARKS_COLLECTION_NAME
+            collectionName: BOOKMARKS_COLLECTION_NAME,
           },
-          refetchQueries: update ? getRefetchQueries() : []
-        })
-    })
+          refetchQueries: update ? getRefetchQueries() : [],
+        }),
+    }),
   }),
   withT,
-  withRouter
+  withRouter,
 )(Bookmark)

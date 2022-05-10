@@ -1,4 +1,4 @@
-import React, { Fragment, useRef } from 'react'
+import { Fragment, useRef } from 'react'
 import { withRouter } from 'next/router'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
@@ -154,8 +154,8 @@ const specialGroups = {
   bundesversammlung: {
     name: 'Neue Bundesversammlung',
     slug: 'bundesversammlung',
-    forcedVariables: { elected: true }
-  }
+    forcedVariables: { elected: true },
+  },
 }
 
 const Inner = ({
@@ -167,7 +167,7 @@ const Inner = ({
   variables,
   mySmartspider,
   medianSmartspider,
-  query
+  query,
 }) => {
   const loading =
     (subscribedByMeData && subscribedByMeData.loading) ||
@@ -204,24 +204,24 @@ const Inner = ({
                 title: t.first(
                   [
                     `pages/cardGroup/title/${data.cardGroup.slug}`,
-                    'pages/cardGroup/title'
+                    'pages/cardGroup/title',
                   ],
                   {
-                    name: data.cardGroup.name
-                  }
+                    name: data.cardGroup.name,
+                  },
                 ),
                 description: t.first(
                   [
                     `pages/cardGroup/description/${data.cardGroup.slug}`,
-                    'pages/cardGroup/description'
+                    'pages/cardGroup/description',
                   ],
                   {
                     name: data.cardGroup.name,
-                    count: data.cardGroup.cards.totalCount
-                  }
+                    count: data.cardGroup.cards.totalCount,
+                  },
                 ),
                 url: `${PUBLIC_BASE_URL}/wahltindaer/${data.cardGroup.slug}`,
-                image: `${CDN_FRONTEND_BASE_URL}/static/social-media/republik-wahltindaer-09.png`
+                image: `${CDN_FRONTEND_BASE_URL}/static/social-media/republik-wahltindaer-09.png`,
               }}
             />
           )
@@ -249,32 +249,32 @@ const Inner = ({
 const Query = compose(
   withT,
   graphql(subscribedByMeQuery, {
-    skip: props => !props.me || specialGroups[props.variables.slug],
+    skip: (props) => !props.me || specialGroups[props.variables.slug],
     options: ({ variables: { slug } }) => ({
       fetchPolicy: 'network-only',
       variables: {
-        slug
-      }
+        slug,
+      },
     }),
     props: ({ data }) => ({
       subscribedByMeData: {
         loading: data.loading,
         error: data.error,
-        cards: data.cardGroup && data.cardGroup.cards.nodes
-      }
-    })
+        cards: data.cardGroup && data.cardGroup.cards.nodes,
+      },
+    }),
   }),
   graphql(query, {
-    skip: props => specialGroups[props.variables.slug],
+    skip: (props) => specialGroups[props.variables.slug],
     options: ({ variables }) => ({
-      variables
+      variables,
     }),
     props: ({ data }) => ({
       data,
       fetchMore: ({ endCursor }) =>
         data.fetchMore({
           variables: {
-            after: endCursor
+            after: endCursor,
           },
           updateQuery: (previousResult, { fetchMoreResult }) => {
             return {
@@ -288,45 +288,45 @@ const Query = compose(
                   ...fetchMoreResult.cardGroup.cards,
                   nodes: [
                     ...previousResult.cardGroup.cards.nodes,
-                    ...fetchMoreResult.cardGroup.cards.nodes
+                    ...fetchMoreResult.cardGroup.cards.nodes,
                   ].filter(
                     (value, index, all) =>
-                      index === all.findIndex(other => value.id === other.id)
-                  )
-                }
-              }
+                      index === all.findIndex((other) => value.id === other.id),
+                  ),
+                },
+              },
             }
-          }
-        })
-    })
+          },
+        }),
+    }),
   }),
   graphql(subscribedByMeSpecialQuery, {
-    skip: props => !props.me || !specialGroups[props.variables.slug],
+    skip: (props) => !props.me || !specialGroups[props.variables.slug],
     options: ({ variables: { slug } }) => ({
       fetchPolicy: 'network-only',
-      variables: specialGroups[slug].forcedVariables
+      variables: specialGroups[slug].forcedVariables,
     }),
     props: ({ data }) => ({
       subscribedByMeData: {
         loading: data.loading,
         error: data.error,
-        cards: data.cards && data.cards.nodes
-      }
-    })
+        cards: data.cards && data.cards.nodes,
+      },
+    }),
   }),
   graphql(specialQuery, {
-    skip: props => !specialGroups[props.variables.slug],
+    skip: (props) => !specialGroups[props.variables.slug],
     options: ({ variables: { slug, ...variables } }) => ({
       variables: {
         ...variables,
-        ...specialGroups[slug].forcedVariables
-      }
+        ...specialGroups[slug].forcedVariables,
+      },
     }),
     props: ({
       data,
       ownProps: {
-        variables: { slug }
-      }
+        variables: { slug },
+      },
     }) => ({
       data: {
         ...data,
@@ -334,13 +334,13 @@ const Query = compose(
           special: true,
           ...specialGroups[slug],
           cards: data.cards,
-          all: data.all
-        }
+          all: data.all,
+        },
       },
       fetchMore: ({ endCursor }) =>
         data.fetchMore({
           variables: {
-            after: endCursor
+            after: endCursor,
           },
           updateQuery: (previousResult, { fetchMoreResult }) => {
             return {
@@ -351,26 +351,26 @@ const Query = compose(
                 ...fetchMoreResult.cards,
                 nodes: [
                   ...previousResult.cards.nodes,
-                  ...fetchMoreResult.cards.nodes
+                  ...fetchMoreResult.cards.nodes,
                 ].filter(
                   (value, index, all) =>
-                    index === all.findIndex(other => value.id === other.id)
-                )
-              }
+                    index === all.findIndex((other) => value.id === other.id),
+                ),
+              },
             }
-          }
-        })
-    })
-  })
+          },
+        }),
+    }),
+  }),
 )(Inner)
 
 const Page = ({
   serverContext,
   router: {
     query,
-    query: { group, top, stale, party }
+    query: { group, top, stale, party },
   },
-  me
+  me,
 }) => {
   const [preferences] = useCardPreferences({})
   const [slowPreferences] = useDebounce(preferences, 500)
@@ -384,7 +384,7 @@ const Page = ({
   }
 
   const medianSmartspider =
-    party && medianSmartspiders.find(m => m.value === party)
+    party && medianSmartspiders.find((m) => m.value === party)
 
   return (
     <Frame footer={false} pullable={false} raw pageColorSchemeKey='light'>
@@ -402,13 +402,13 @@ const Page = ({
             slowPreferences.portrait && 'portrait',
             slowPreferences.smartspider && 'smartspider',
             slowPreferences.statement && 'statement',
-            slowPreferences.financing && 'financing'
+            slowPreferences.financing && 'financing',
           ].filter(Boolean),
           smartspider: medianSmartspider
             ? medianSmartspider.smartspider
             : slowPreferences.mySmartspider && slowPreferences.mySmartspiderSort
             ? slowPreferences.mySmartspider
-            : undefined
+            : undefined,
         }}
       />
     </Frame>

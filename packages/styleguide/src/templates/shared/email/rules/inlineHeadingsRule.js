@@ -6,8 +6,8 @@ const inlineHeadingsRules = [
   {
     matchMdast: matchHeading(2),
     component: Heading2,
-    rules: inlineRules
-  }
+    rules: inlineRules,
+  },
 ]
 
 export default inlineHeadingsRules

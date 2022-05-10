@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { FieldSet, Interaction, A, usePrevious } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
@@ -9,44 +9,45 @@ export const COUNTRIES = ['Schweiz', 'Deutschland', 'Österreich']
 
 export const DEFAULT_COUNTRY = COUNTRIES[0]
 
-export const fields = t => [
+export const fields = (t) => [
   {
     label: t('Account/AddressForm/name/label'),
     name: 'name',
     autoComplete: 'name',
-    validator: value => !value && t('Account/AddressForm/name/error/empty'),
-    explanation: <Hint t={t} tKey={'Account/AddressForm/name/explanation'} />
+    validator: (value) => !value && t('Account/AddressForm/name/error/empty'),
+    explanation: <Hint t={t} tKey={'Account/AddressForm/name/explanation'} />,
   },
   {
     label: t('Account/AddressForm/line1/label'),
     name: 'line1',
     autoComplete: 'address-line1',
-    validator: value => !value && t('Account/AddressForm/line1/error/empty')
+    validator: (value) => !value && t('Account/AddressForm/line1/error/empty'),
   },
   {
     label: t('Account/AddressForm/line2/label'),
     name: 'line2',
-    autoComplete: 'address-line2'
+    autoComplete: 'address-line2',
   },
   {
     label: t('Account/AddressForm/postalCode/label'),
     name: 'postalCode',
     autoComplete: 'postal-code',
-    validator: value =>
-      !value && t('Account/AddressForm/postalCode/error/empty')
+    validator: (value) =>
+      !value && t('Account/AddressForm/postalCode/error/empty'),
   },
   {
     label: t('Account/AddressForm/city/label'),
     name: 'city',
     autoComplete: 'address-level2',
-    validator: value => !value && t('Account/AddressForm/city/error/empty')
+    validator: (value) => !value && t('Account/AddressForm/city/error/empty'),
   },
   {
     label: t('Account/AddressForm/country/label'),
     name: 'country',
     autoComplete: 'country-name',
-    validator: value => !value && t('Account/AddressForm/country/error/empty')
-  }
+    validator: (value) =>
+      !value && t('Account/AddressForm/country/error/empty'),
+  },
 ]
 
 export const isEmptyAddress = (values, me) => {
@@ -56,7 +57,7 @@ export const isEmptyAddress = (values, me) => {
     values.line2,
     values.postalCode,
     values.city,
-    values.country
+    values.country,
   ]
     .join('')
     .trim()
@@ -84,11 +85,11 @@ export const AddressView = ({ values }) => {
           values.line1,
           values.line2,
           `${values.postalCode} ${values.city}`,
-          values.country
+          values.country,
         ].filter(Boolean),
         (_, i) => (
           <br key={i} />
-        )
+        ),
       )}
     </Interaction.P>
   )
@@ -104,7 +105,7 @@ export const AutoForm = withT(
     existingAddress,
     name,
     t,
-    afterEdit
+    afterEdit,
   }) => {
     const [mode, setMode] = useState(existingAddress ? 'view' : 'edit')
 
@@ -120,9 +121,9 @@ export const AutoForm = withT(
         onChange({
           values: { name },
           dirty: {
-            name: false
+            name: false,
           },
-          errors: FieldSet.utils.getErrors(fields, { ...values, name })
+          errors: FieldSet.utils.getErrors(fields, { ...values, name }),
         })
       }
     }, [previousName, currentName, name, dirtyName])
@@ -134,7 +135,7 @@ export const AutoForm = withT(
           <br />
           <A
             href='#'
-            onClick={e => {
+            onClick={(e) => {
               e.preventDefault()
               setMode('edit')
             }}
@@ -160,11 +161,11 @@ export const AutoForm = withT(
             <br />
             <A
               href='#'
-              onClick={e => {
+              onClick={(e) => {
                 e.preventDefault()
                 onChange({
                   values: existingAddress,
-                  errors: FieldSet.utils.getErrors(fields, existingAddress)
+                  errors: FieldSet.utils.getErrors(fields, existingAddress),
                 })
                 setMode('view')
               }}
@@ -175,7 +176,7 @@ export const AutoForm = withT(
         )}
       </>
     )
-  }
+  },
 )
 
 export default withT(Form)

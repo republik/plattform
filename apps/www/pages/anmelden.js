@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 
 import SignIn from '../components/Auth/SignIn'
@@ -21,7 +21,7 @@ const SigninPage = () => {
   }, [me])
 
   const meta = {
-    title: t('pages/signin/title')
+    title: t('pages/signin/title'),
   }
 
   return (

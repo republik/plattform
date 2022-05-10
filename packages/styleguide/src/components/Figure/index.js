@@ -10,7 +10,7 @@ import {
   PADDED_MAX_WIDTH,
   MAX_WIDTH,
   PADDING,
-  BREAKOUT_SIZES
+  BREAKOUT_SIZES,
 } from '../Center'
 
 import { plainButtonRule } from '../Button'
@@ -24,7 +24,7 @@ const styles = {
     margin: 0,
     marginBottom: 15,
     padding: 0,
-    width: '100%'
+    width: '100%',
   }),
   figureGroup: css({
     margin: 0,
@@ -32,25 +32,25 @@ const styles = {
     position: 'relative',
     '& noscript': {
       display: 'block',
-      width: '100%'
+      width: '100%',
     },
     [mUp]: {
       display: 'flex',
       flexWrap: 'wrap',
-      justifyContent: 'space-between'
-    }
+      justifyContent: 'space-between',
+    },
   }),
   cover: css({
-    position: 'relative'
+    position: 'relative',
   }),
   coverSize: css({
     marginTop: 30,
-    marginBottom: 20
+    marginBottom: 20,
   }),
   coverBreakout: css({
     margin: '30px auto 20px auto',
     maxWidth: PADDED_MAX_WIDTH,
-    padding: PADDING
+    padding: PADDING,
   }),
   coverText: css({
     position: 'absolute',
@@ -59,14 +59,14 @@ const styles = {
     textAlign: 'center',
     display: 'none',
     [mUp]: {
-      display: 'block'
-    }
+      display: 'block',
+    },
   }),
   coverTextTitleBlockHeadline: css({
     display: 'block',
     [mUp]: {
-      display: 'none'
-    }
+      display: 'none',
+    },
   }),
   coverAudio: css(plainButtonRule, {
     position: 'absolute',
@@ -82,41 +82,41 @@ const styles = {
       top: '25%',
       left: '25%',
       width: '50%',
-      height: '50%'
+      height: '50%',
     },
     [mUp]: {
       marginLeft: -75,
       marginTop: -75,
       width: 150,
-      height: 150
+      height: 150,
     },
     '@media (hover)': {
       ':hover': {
-        animationIterationCount: 'infinite'
-      }
-    }
+        animationIterationCount: 'infinite',
+      },
+    },
   }),
   col2: css({
     [mUp]: {
       '& figure': {
-        maxWidth: `calc(${100 / 2}% - 8px)`
-      }
-    }
+        maxWidth: `calc(${100 / 2}% - 8px)`,
+      },
+    },
   }),
   col3: css({
     [mUp]: {
       '& figure': {
-        maxWidth: `calc(${100 / 3}% - 10px)`
-      }
-    }
+        maxWidth: `calc(${100 / 3}% - 10px)`,
+      },
+    },
   }),
   col4: css({
     [mUp]: {
       '& figure': {
-        maxWidth: `calc(${100 / 4}% - 12px)`
-      }
-    }
-  })
+        maxWidth: `calc(${100 / 4}% - 12px)`,
+      },
+    },
+  }),
 }
 
 const figureBreakout = {
@@ -126,13 +126,13 @@ const figureBreakout = {
     padding: PADDING,
     marginLeft: 'auto',
     marginRight: 'auto',
-    marginBottom: 0
-  })
+    marginBottom: 0,
+  }),
 }
 
 export const FIGURE_SIZES = {
   ...BREAKOUT_SIZES,
-  center: MAX_WIDTH
+  center: MAX_WIDTH,
 }
 
 export const Figure = ({ children, attributes, size }) => (
@@ -144,7 +144,7 @@ export const Figure = ({ children, attributes, size }) => (
 Figure.propTypes = {
   children: PropTypes.node.isRequired,
   size: PropTypes.oneOf(Object.keys(figureBreakout)),
-  attributes: PropTypes.object
+  attributes: PropTypes.object,
 }
 
 const textPosStyle = ({ anchor, offset }) => {
@@ -153,19 +153,19 @@ const textPosStyle = ({ anchor, offset }) => {
       position: 'absolute',
       top: '50%',
       transform: 'translate(-, -50%)',
-      marginTop: offset
+      marginTop: offset,
     }
   }
   if (anchor === 'top') {
     return {
       position: 'absolute',
-      top: offset
+      top: offset,
     }
   }
   if (anchor === 'bottom') {
     return {
       position: 'absolute',
-      bottom: offset
+      bottom: offset,
     }
   }
 }
@@ -180,7 +180,7 @@ const AudioButton = ({ color, backgroundColor, onClick, meta }) => {
   const pulse = css.keyframes({
     '0%': { boxShadow: `0 0 0 0 ${backgroundColor}` },
     '70%': { boxShadow: `0 0 0 10px transparent` },
-    '100%': { boxShadow: `0 0 0 0 transparent` }
+    '100%': { boxShadow: `0 0 0 0 transparent` },
   })
 
   return (
@@ -191,10 +191,10 @@ const AudioButton = ({ color, backgroundColor, onClick, meta }) => {
       }}
       style={{
         color,
-        backgroundColor
+        backgroundColor,
       }}
       {...css({
-        animation: `${pulse} 2s 3`
+        animation: `${pulse} 2s 3`,
       })}
     >
       <AudioIcon />
@@ -238,9 +238,9 @@ FigureGroup.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
   size: PropTypes.oneOf(Object.keys(breakoutStyles)),
-  columns: PropTypes.oneOf([1, 2, 3, 4]).isRequired
+  columns: PropTypes.oneOf([1, 2, 3, 4]).isRequired,
 }
 
 FigureGroup.defaultProps = {
-  columns: 2
+  columns: 2,
 }

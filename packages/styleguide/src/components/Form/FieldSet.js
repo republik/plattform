@@ -14,32 +14,34 @@ const getErrors = (fields, values) => {
 
 const fieldsState = ({ field, value, error, dirty }) => ({
   values: {
-    [field]: value
+    [field]: value,
   },
   errors: {
-    [field]: error
+    [field]: error,
   },
   dirty: {
-    [field]: dirty
-  }
+    [field]: dirty,
+  },
 })
 
-const mergeFields = ({ values, errors, dirty }) => state => ({
-  values: {
-    ...state.values,
-    ...values
-  },
-  errors: {
-    ...state.errors,
-    ...errors
-  },
-  dirty: {
-    ...state.dirty,
-    ...dirty
-  }
-})
+const mergeFields =
+  ({ values, errors, dirty }) =>
+  (state) => ({
+    values: {
+      ...state.values,
+      ...values,
+    },
+    errors: {
+      ...state.errors,
+      ...errors,
+    },
+    dirty: {
+      ...state.dirty,
+      ...dirty,
+    },
+  })
 
-const mergeField = field => state => mergeFields(fieldsState(field))(state)
+const mergeField = (field) => (state) => mergeFields(fieldsState(field))(state)
 
 class FieldSet extends Component {
   componentDidMount() {
@@ -54,31 +56,19 @@ class FieldSet extends Component {
     onChange(
       {
         values,
-        errors
+        errors,
       },
-      true
+      true,
     )
   }
   render() {
-    const {
-      fields,
-      values,
-      errors,
-      dirty,
-      onChange,
-      additionalFieldProps
-    } = this.props
+    const { fields, values, errors, dirty, onChange, additionalFieldProps } =
+      this.props
     return (
       <Fragment>
-        {fields.map(field => {
-          const {
-            label,
-            type,
-            autoComplete,
-            name,
-            validator,
-            explanation
-          } = field
+        {fields.map((field) => {
+          const { label, type, autoComplete, name, validator, explanation } =
+            field
 
           return (
             <Fragment key={name}>
@@ -93,16 +83,16 @@ class FieldSet extends Component {
                 onChange={(_, value, shouldValidate) => {
                   onChange({
                     values: {
-                      [name]: value
+                      [name]: value,
                     },
                     errors: validator
                       ? {
-                          [name]: validator(value)
+                          [name]: validator(value),
                         }
                       : {},
                     dirty: {
-                      [name]: shouldValidate
-                    }
+                      [name]: shouldValidate,
+                    },
                   })
                 }}
               />
@@ -124,21 +114,21 @@ FieldSet.propTypes = {
       type: PropTypes.string,
       validator: PropTypes.func,
       autoComplete: PropTypes.string,
-      explanation: PropTypes.node
-    })
+      explanation: PropTypes.node,
+    }),
   ).isRequired,
-  onFieldChange: PropTypes.func
+  onFieldChange: PropTypes.func,
 }
 
 FieldSet.defaultProps = {
-  additionalFieldProps: () => {}
+  additionalFieldProps: () => {},
 }
 
 FieldSet.utils = {
   fieldsState,
   getErrors,
   mergeFields,
-  mergeField
+  mergeField,
 }
 
 export default FieldSet

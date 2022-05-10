@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { css } from 'glamor'
 
 import { Interaction, colors, IconButton } from '@project-r/styleguide'
@@ -25,7 +25,7 @@ const PADDING = 15
 
 const mdCheckProps = {
   style: { marginTop: -4, marginLeft: 5 },
-  fill: colors.primary
+  fill: colors.primary,
 }
 
 export const styles = {
@@ -37,7 +37,7 @@ export const styles = {
     minHeight: 340,
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   }),
   cardInner: css({
     position: 'relative',
@@ -46,7 +46,7 @@ export const styles = {
     borderRadius: 10,
     overflow: 'hidden',
     boxShadow:
-      '0 12px 50px -10px rgba(0, 0, 0, 0.4), 0 10px 10px -10px rgba(0, 0, 0, 0.1)'
+      '0 12px 50px -10px rgba(0, 0, 0, 0.4), 0 10px 10px -10px rgba(0, 0, 0, 0.1)',
   }),
   bottomText: css({
     position: 'absolute',
@@ -60,8 +60,8 @@ export const styles = {
     [`@media (min-width: ${MEDIUM_MIN_WIDTH}px)`]: {
       padding: `10px ${PADDING}px`,
       fontSize: 16,
-      lineHeight: '20px'
-    }
+      lineHeight: '20px',
+    },
   }),
   bottomTextVotes: css({
     paddingTop: 5,
@@ -73,45 +73,45 @@ export const styles = {
     marginBottom: -5,
     marginTop: 5,
     [`@media (min-width: ${MEDIUM_MIN_WIDTH}px)`]: {
-      marginBottom: -10
+      marginBottom: -10,
     },
-    fontFeatureSettings: '"tnum" 1, "kern" 1'
+    fontFeatureSettings: '"tnum" 1, "kern" 1',
   }),
   icons: css({
     zIndex: 1,
     position: 'absolute',
     top: -16,
-    right: PADDING
+    right: PADDING,
   }),
   portrait: css({
     height: '100%',
-    backgroundSize: 'cover'
+    backgroundSize: 'cover',
   }),
   occupation: css({
     display: 'block',
     maxHeight: 40,
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
-    overflow: 'hidden'
+    overflow: 'hidden',
   }),
   centerContent: css({
     width: 280,
     margin: '0 auto',
     paddingTop: PADDING - 2,
     [`@media (min-width: ${MEDIUM_MIN_WIDTH}px)`]: {
-      paddingTop: PADDING + 3
-    }
+      paddingTop: PADDING + 3,
+    },
   }),
   opacityHover: css({
     '@media(hover)': {
       '[href]:hover > *': {
-        opacity: 0.8
-      }
-    }
-  })
+        opacity: 0.8,
+      },
+    },
+  }),
 }
 
-const getTextColor = bgColor => {
+const getTextColor = (bgColor) => {
   const color = rgb(bgColor)
   const yiq = (color.r * 299 + color.g * 587 + color.b * 114) / 1000
   return yiq >= 128 ? 'black' : 'white'
@@ -132,11 +132,11 @@ const Card = ({
   medianSmartspiderQuery,
   firstSlideOnly,
   onSlide,
-  noEmoji
+  noEmoji,
 }) => {
   const [slide, setSlide] = useState(0)
 
-  const gotoSlide = nextSlide => {
+  const gotoSlide = (nextSlide) => {
     if (nextSlide !== slide) {
       setSlide(nextSlide)
       if (onSlide) {
@@ -147,8 +147,8 @@ const Card = ({
       postMessage({
         type: 'haptic',
         payload: {
-          type: nextSlide !== slide ? 'impactLight' : 'impactHeavy'
-        }
+          type: nextSlide !== slide ? 'impactLight' : 'impactHeavy',
+        },
       })
     }
   }
@@ -165,7 +165,7 @@ const Card = ({
         {...styles.portrait}
         style={{
           backgroundImage: `url(${user.portrait})`,
-          height: `calc(100% - ${16 * textLines + 10}px)`
+          height: `calc(100% - ${16 * textLines + 10}px)`,
         }}
       />
     ),
@@ -186,7 +186,7 @@ const Card = ({
     ),
     <div key='finance' {...styles.centerContent} style={{ width: innerWidth }}>
       <Finance payload={payload} width={innerWidth} />
-    </div>
+    </div>,
   ]
     .filter(Boolean)
     .slice(0, firstSlideOnly ? 1 : undefined)
@@ -198,7 +198,7 @@ const Card = ({
     t(
       `components/Card/electionPlausibility/${electionPlausibility}/emoji`,
       undefined,
-      ''
+      '',
     )
   const dualCandidacy =
     !!nationalCouncil.candidacy && !!councilOfStates.candidacy
@@ -218,7 +218,7 @@ const Card = ({
         color: colors.text,
         borderBottom: hasVotes ? undefined : `10px solid ${partyColor}`,
         position: 'relative',
-        overflow: 'hidden'
+        overflow: 'hidden',
       }}
     >
       {slides[slide]}
@@ -228,7 +228,7 @@ const Card = ({
             position: 'absolute',
             top: 8,
             left: 10,
-            right: 10
+            right: 10,
           }}
         >
           {slides.map((_, i) => (
@@ -240,7 +240,7 @@ const Card = ({
                 width: `${100 / totalSlides - 2}%`,
                 height: 3,
                 borderRadius: 1,
-                backgroundColor: i === slide ? '#fff' : 'rgba(0, 0, 0, 0.2)'
+                backgroundColor: i === slide ? '#fff' : 'rgba(0, 0, 0, 0.2)',
               }}
             />
           ))}
@@ -259,9 +259,9 @@ const Card = ({
                     focus: statement.id,
                     ...medianSmartspiderQuery,
                     ...(differentContext && {
-                      discussion: group.discussion.id
-                    })
-                  }
+                      discussion: group.discussion.id,
+                    }),
+                  },
                 }}
                 passHref
               >
@@ -276,7 +276,7 @@ const Card = ({
           {!!onDetail && (
             <a
               href={`/~${user.slug}`}
-              onClick={e => {
+              onClick={(e) => {
                 if (shouldIgnoreClick(e)) {
                   return
                 }
@@ -296,7 +296,7 @@ const Card = ({
               {t(
                 `components/Card/candidacy/${
                   nationalCouncil.candidacy ? 'sr_nr' : 'sr'
-                }`
+                }`,
               )}
               <br />
             </>
@@ -322,7 +322,7 @@ const Card = ({
                 ? t(
                     `components/Card/${
                       councilOfStates.incumbent ? 're' : ''
-                    }elected/sr`
+                    }elected/sr`,
                   )
                 : t.first(
                     [
@@ -335,14 +335,14 @@ const Card = ({
                         }elected/silent`,
                       `components/Card/${
                         councilOfStates.incumbent ? 're' : ''
-                      }elected`
-                    ].filter(Boolean)
+                      }elected`,
+                    ].filter(Boolean),
                   )
               : nationalCouncil.elected
               ? t(
                   `components/Card/${
                     nationalCouncil.incumbent ? 're' : ''
-                  }elected/nr`
+                  }elected/nr`,
                 )
               : councilOfStates.incumbent
               ? t('components/Card/incumbent')
@@ -354,12 +354,12 @@ const Card = ({
               ? t(
                   `components/Card/${
                     nationalCouncil.incumbent ? 're' : ''
-                  }elected/nr`
+                  }elected/nr`,
                 )
               : t(
                   `components/Card/${
                     nationalCouncil.incumbent ? 're' : ''
-                  }elected`
+                  }elected`,
                 )
             : nationalCouncil.incumbent
             ? t('components/Card/incumbent')
@@ -368,7 +368,7 @@ const Card = ({
         {listPlaces && !!listPlaces.length && (
           <>
             {`, ${t(
-              'components/Card/listPlaces'
+              'components/Card/listPlaces',
             ).trim()}${'\u00a0'}${listPlaces.join(' & ')}`}
             {!!plausibilityEmoji && `${'\u00a0'}${plausibilityEmoji}`}
           </>
@@ -379,7 +379,7 @@ const Card = ({
           <div
             style={{
               backgroundColor: partyColor,
-              color: getTextColor(partyColor)
+              color: getTextColor(partyColor),
             }}
             {...styles.bottomTextVotes}
           >
@@ -388,7 +388,7 @@ const Card = ({
                 {dualCandidacy && 'SR: '}
                 {t.pluralize('components/Card/votes', {
                   count: councilOfStates.votes,
-                  formattedCount: countFormat(councilOfStates.votes)
+                  formattedCount: countFormat(councilOfStates.votes),
                 })}
                 {councilOfStates.elected && <CheckIcon {...mdCheckProps} />}
                 {!!councilOfStates.secondBallotNecessary &&
@@ -403,7 +403,7 @@ const Card = ({
                 {nationalCouncil.candidacy &&
                   t.pluralize('components/Card/votes', {
                     count: nationalCouncil.votes,
-                    formattedCount: countFormat(nationalCouncil.votes)
+                    formattedCount: countFormat(nationalCouncil.votes),
                   })}
                 {nationalCouncil.elected && <CheckIcon {...mdCheckProps} />}
               </>
@@ -417,7 +417,7 @@ const Card = ({
           bottom: 0,
           top: 0,
           left: 0,
-          width: '50%'
+          width: '50%',
         }}
         onClick={() => {
           if (dragTime && dragTime.current > 100) {
@@ -432,7 +432,7 @@ const Card = ({
           bottom: 0,
           top: 0,
           right: 0,
-          width: '50%'
+          width: '50%',
         }}
         onClick={() => {
           if (dragTime && dragTime.current > 100) {

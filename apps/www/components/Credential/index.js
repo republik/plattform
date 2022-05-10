@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import { CheckIcon } from '@project-r/styleguide'
 import { useColorContext } from '@project-r/styleguide'
@@ -9,8 +8,8 @@ const styles = {
   check: css({
     display: 'inline-block',
     marginLeft: 4,
-    marginTop: -2
-  })
+    marginTop: -2,
+  }),
 }
 
 const Credential = ({ description, verified, t, textColor }) => {

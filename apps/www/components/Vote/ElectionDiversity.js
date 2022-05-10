@@ -1,4 +1,3 @@
-import React from 'react'
 import { Interaction, Label, fontStyles, Chart } from '@project-r/styleguide'
 import { css } from 'glamor'
 import voteT from './voteT'
@@ -8,33 +7,33 @@ const { P } = Interaction
 
 const styles = {
   container: css({
-    textAlign: 'center'
+    textAlign: 'center',
   }),
   charts: css({
     margin: '0 auto',
-    maxWidth: 360
+    maxWidth: 360,
   }),
   text: css({
     textAlign: 'center',
     width: '80%',
-    margin: '30px auto 15px auto'
+    margin: '30px auto 15px auto',
   }),
   chart: css({
-    marginBottom: 20
+    marginBottom: 20,
   }),
   mapLegend: css({
     ...fontStyles.sansSerifRegular12,
     fontFeatureSettings: '"tnum" 1, "kern" 1',
-    padding: '3px 0 6px'
-  })
+    padding: '3px 0 6px',
+  }),
 }
 
 const MembersLocation = ({ members, isElected }) => {
   const values = members
-    .filter(member => member.postalCodeGeo?.countryCode === 'CH')
+    .filter((member) => member.postalCodeGeo?.countryCode === 'CH')
     .reduce((acc, { postalCodeGeo, city }) => {
       const currentLocation = acc.find(
-        point => point.postalCode === postalCodeGeo.postalCode
+        (point) => point.postalCode === postalCodeGeo.postalCode,
       )
       if (currentLocation) {
         currentLocation.count += 1
@@ -42,20 +41,20 @@ const MembersLocation = ({ members, isElected }) => {
         acc.push({
           ...postalCodeGeo,
           city,
-          count: 1
+          count: 1,
         })
       }
       return acc
     }, [])
-    .map(point => ({
+    .map((point) => ({
       ...point,
       lat: String(point.lat),
       lon: String(point.lon),
-      value: String(point.count)
+      value: String(point.count),
     }))
 
   const outsideSwitzerland = members.filter(
-    c => c.postalCodeGeo?.countryCode !== 'CH'
+    (c) => c.postalCodeGeo?.countryCode !== 'CH',
   )
 
   return (
@@ -65,16 +64,15 @@ const MembersLocation = ({ members, isElected }) => {
           type: 'SwissMap',
           heightRatio: 0.63,
           features: {
-            url:
-              'https://cdn.repub.ch/s3/republik-assets/assets/geo/ch-cantons-wo-lakes.json',
-            object: 'cantons'
+            url: 'https://cdn.repub.ch/s3/republik-assets/assets/geo/ch-cantons-wo-lakes.json',
+            object: 'cantons',
           },
           points: true,
           sizeRangeMax: 150,
           opacity: 0.5,
           colorLegend: false,
           tooltipLabel: '{city}, {postalCode}',
-          tooltipBody: `${isElected ? 'Rätinnen' : 'Kandidatinnen'}: {count}`
+          tooltipBody: `${isElected ? 'Rätinnen' : 'Kandidatinnen'}: {count}`,
         }}
         values={values}
       />
@@ -88,7 +86,7 @@ const MembersLocation = ({ members, isElected }) => {
               }`}{' '}
           ausserhalb der Schweiz in{' '}
           {outsideSwitzerland
-            .map(c => `${c.city} (${c.postalCodeGeo.countryName})`)
+            .map((c) => `${c.city} (${c.postalCodeGeo.countryName})`)
             .filter(deduplicate)
             .join(', ')}
           .
@@ -98,35 +96,35 @@ const MembersLocation = ({ members, isElected }) => {
   )
 }
 
-const getPercentString = total => item => ({
+const getPercentString = (total) => (item) => ({
   ...item,
-  value: String(item.value / total)
+  value: String(item.value / total),
 })
 
 const GENDER = {
   weiblich: '#9467bd',
   divers: 'neutral',
-  ['männlich']: '#2ca02c'
+  ['männlich']: '#2ca02c',
 }
 
 const MembersGender = voteT(({ members, vt }) => {
-  const membersWithGender = members.filter(member => member?.user?.gender)
+  const membersWithGender = members.filter((member) => member?.user?.gender)
   if (!membersWithGender.length) return null
 
   const values = membersWithGender
     .reduce(
       (acc, member) =>
-        acc.map(item =>
+        acc.map((item) =>
           item.key ===
           (GENDER[member.user.gender] ? member.user.gender : 'divers')
             ? { ...item, value: item.value + 1 }
-            : item
+            : item,
         ),
       Object.keys(GENDER).map((key, idx) => ({
         key,
         value: 0,
-        pos: idx === 0 ? 'left' : 'right'
-      }))
+        pos: idx === 0 ? 'left' : 'right',
+      })),
     )
     .map(getPercentString(membersWithGender.length))
 
@@ -147,26 +145,26 @@ const MembersGender = voteT(({ members, vt }) => {
           domain: [0, 1],
           sort: 'none',
           inlineValue: true,
-          inlineLabelPosition: 'pos'
+          inlineLabelPosition: 'pos',
         }}
-        values={values.filter(v => v.value !== '0')}
+        values={values.filter((v) => v.value !== '0')}
       />
     </div>
   )
 })
 
-const getAge = birthYear => new Date().getFullYear() - birthYear
+const getAge = (birthYear) => new Date().getFullYear() - birthYear
 
 const AGES = {
   ['jünger als 30']: '#1f77b4',
   ['30 bis 39']: '#ff7f0e',
   ['40 bis 49']: '#2ca02c',
   ['50 bis 59']: '#d62728',
-  ['60 Jahre und älter']: '#9467bd'
+  ['60 Jahre und älter']: '#9467bd',
 }
 const AGE_KEYS = Object.keys(AGES)
 
-const getLabel = age =>
+const getLabel = (age) =>
   age < 30
     ? AGE_KEYS[0]
     : age < 40
@@ -178,18 +176,18 @@ const getLabel = age =>
     : AGE_KEYS[4]
 
 const MembersAge = voteT(({ members, vt }) => {
-  const membersWithBirthday = members.filter(member => member.yearOfBirth)
+  const membersWithBirthday = members.filter((member) => member.yearOfBirth)
   if (!membersWithBirthday.length) return null
 
   const values = membersWithBirthday
     .reduce(
       (acc, member) =>
-        acc.map(item =>
+        acc.map((item) =>
           item.key === getLabel(getAge(member.yearOfBirth))
             ? { ...item, value: item.value + 1 }
-            : item
+            : item,
         ),
-      AGE_KEYS.map(key => ({ key, value: 0 }))
+      AGE_KEYS.map((key) => ({ key, value: 0 })),
     )
     .map(getPercentString(membersWithBirthday.length))
 
@@ -209,9 +207,9 @@ const MembersAge = voteT(({ members, vt }) => {
           colorLegendValues: AGE_KEYS,
           domain: [0, 1],
           sort: 'none',
-          inlineValue: true
+          inlineValue: true,
         }}
-        values={values.filter(v => v.value !== '0')}
+        values={values.filter((v) => v.value !== '0')}
       />
     </div>
   )
@@ -221,7 +219,7 @@ export const ElectionDiversity = ({
   title,
   members = [],
   text,
-  isElected = true
+  isElected = true,
 }) => (
   <div {...styles.container}>
     {title && (

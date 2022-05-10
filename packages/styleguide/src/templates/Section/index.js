@@ -9,7 +9,7 @@ import createArticleSchema, { COVER_TYPE } from '../Article'
 import {
   matchZone,
   matchHeading,
-  matchParagraph
+  matchParagraph,
 } from 'mdast-react-render/lib/utils'
 
 const DefaultLink = ({ children }) => children
@@ -41,19 +41,19 @@ const createSectionSchema = ({
           { value: 'editorial', text: 'Editorial' },
           { value: 'meta', text: 'Meta' },
           { value: 'scribble', text: 'Ameise' },
-          { value: 'opinion', text: 'Kolumne' }
-        ]
+          { value: 'opinion', text: 'Kolumne' },
+        ],
       },
       {
         label: 'Color',
-        key: 'color'
+        key: 'color',
       },
       {
         label: 'Diskussion',
         key: 'discussion',
-        ref: 'repo'
+        ref: 'repo',
       },
-      ...customMetaFields
+      ...customMetaFields,
     ],
     series,
     darkMode,
@@ -69,7 +69,7 @@ const createSectionSchema = ({
       ),
       editorModule: 'title',
       editorOptions: {
-        coverType: COVER_TYPE
+        coverType: COVER_TYPE,
       },
       rules: [
         {
@@ -83,25 +83,25 @@ const createSectionSchema = ({
             type: 'H1',
             placeholder: 'Titel',
             depth: 1,
-            isStatic: true
-          }
+            isStatic: true,
+          },
         },
         {
           matchMdast: matchParagraph,
-          component: () => null
-        }
-      ]
+          component: () => null,
+        },
+      ],
     },
-    previewTeaser: props => (
+    previewTeaser: (props) => (
       <div
         style={{
           backgroundColor: '#fff',
-          padding: '30px'
+          padding: '30px',
         }}
       >
         <SectionTitle
           href='/'
-          onClick={e => {
+          onClick={(e) => {
             e.preventDefault()
           }}
         >
@@ -109,7 +109,7 @@ const createSectionSchema = ({
         </SectionTitle>
       </div>
     ),
-    ...args
+    ...args,
   })
 }
 

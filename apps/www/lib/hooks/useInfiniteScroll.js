@@ -1,4 +1,4 @@
-import React from 'react'
+import { useRef, useState, useEffect } from 'react'
 
 /**
  * Usage
@@ -11,12 +11,12 @@ import React from 'react'
  * </div>)
  */
 export const useInfiniteScroll = ({ hasMore, loadMore }) => {
-  const containerRef = React.useRef()
-  const [infiniteScroll, setInfiniteScroll] = React.useState(false)
-  const [loadingMore, setLoadingMore] = React.useState(false)
-  const [loadingMoreError, setLoadingMoreError] = React.useState(undefined)
+  const containerRef = useRef()
+  const [infiniteScroll, setInfiniteScroll] = useState(false)
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [loadingMoreError, setLoadingMoreError] = useState(undefined)
 
-  React.useEffect(() => {
+  useEffect(() => {
     let startedLoadingMore = false
     const onScroll = () => {
       if (containerRef.current && !startedLoadingMore) {
@@ -31,7 +31,7 @@ export const useInfiniteScroll = ({ hasMore, loadMore }) => {
               setLoadingMore(false)
               setLoadingMoreError(undefined)
             })
-            .catch(error => {
+            .catch((error) => {
               setLoadingMore(false)
               setInfiniteScroll(false)
               setLoadingMoreError(error)
@@ -51,8 +51,8 @@ export const useInfiniteScroll = ({ hasMore, loadMore }) => {
       containerRef,
       infiniteScroll,
       loadingMore,
-      loadingMoreError
+      loadingMoreError,
     },
-    setInfiniteScroll
+    setInfiniteScroll,
   ]
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { css, merge } from 'glamor'
 import { MdError as ProblemIcon } from 'react-icons/md'
 import { MdCallReceived as ReceivedIcon } from 'react-icons/md'
@@ -21,11 +21,11 @@ const styles = {
     marginRight: 5,
     marginBottom: '-0.2em',
     fontSize: '1.2em',
-    color: colors.text
+    color: colors.text,
   }),
   error: css({
-    color: colors.error
-  })
+    color: colors.error,
+  }),
 }
 
 export const Date = ({ mail }) => displayDateTime(mail.date)
@@ -52,12 +52,12 @@ const Row = ({ mail, narrow }) => {
     mail.from?.address && !self.includes(mail.from.address) && mail.from
   const to = mail.to?.filter(({ address }) => !self.includes(address))
 
-  const show = e => {
+  const show = (e) => {
     e?.preventDefault()
     setShowEmail(true)
   }
 
-  const hide = e => {
+  const hide = (e) => {
     e?.preventDefault()
     setShowEmail(false)
   }
@@ -106,7 +106,7 @@ const List = ({ nodes, narrow = false }) => (
       </colgroup>
     )}
     <tbody>
-      {nodes.map(mail => (
+      {nodes.map((mail) => (
         <Row key={mail.id} mail={mail} narrow={narrow} />
       ))}
     </tbody>

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { Component, Fragment } from 'react'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 
@@ -9,7 +9,7 @@ import {
   OverlayToolbar,
   Interaction,
   Label,
-  Loader
+  Loader,
 } from '@project-r/styleguide'
 
 import SearchUser from '../../Form/SearchUser'
@@ -28,7 +28,7 @@ export default class MovePledge extends Component {
     super(props)
     this.state = {
       isOpen: false,
-      user: null
+      user: null,
     }
 
     this.userChangeHandler = ({ value }) => {
@@ -39,12 +39,12 @@ export default class MovePledge extends Component {
       this.setState(() => ({ user: null, isOpen: false }))
     }
 
-    this.submitHandler = mutation => () => {
+    this.submitHandler = (mutation) => () => {
       return mutation({
         variables: {
           pledgeId: this.props.pledge.id,
-          userId: this.state.user.id
-        }
+          userId: this.state.user.id,
+        },
       }).then(() => this.setState(() => ({ user: null, isOpen: false })))
     }
   }

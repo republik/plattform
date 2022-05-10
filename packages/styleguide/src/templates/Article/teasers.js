@@ -7,7 +7,7 @@ import {
   matchType,
   matchZone,
   matchParagraph,
-  matchHeading
+  matchHeading,
 } from 'mdast-react-render/lib/utils'
 
 import {
@@ -17,7 +17,7 @@ import {
   extractImages,
   globalInlines,
   skipMdastImage,
-  styles
+  styles,
 } from './utils'
 
 import {
@@ -25,7 +25,7 @@ import {
   TeaserFrontCreditLink,
   TeaserFrontLead,
   TeaserFrontTile,
-  TeaserFrontTileRow
+  TeaserFrontTileRow,
 } from '../../components/TeaserFront'
 
 import {
@@ -35,7 +35,7 @@ import {
   TeaserCarouselFormat,
   TeaserCarouselHeadline,
   TeaserCarouselSubject,
-  TeaserCarouselLead
+  TeaserCarouselLead,
 } from '../../components/TeaserCarousel'
 
 import { TeaserSectionTitle } from '../../components/TeaserShared'
@@ -56,9 +56,9 @@ const articleTileSubject = {
     const teaser = ancestors.find(matchTeaser)
     return {
       color: teaser && teaser.data.color ? teaser.data.color : '#000',
-      columns: 3
+      columns: 3,
     }
-  }
+  },
 }
 
 const createTeasers = ({
@@ -66,7 +66,7 @@ const createTeasers = ({
   Link,
   ActionBar,
   PayNote,
-  plattformUnauthorizedZoneText
+  plattformUnauthorizedZoneText,
 }) => {
   const teaserTitle = (type, Headline) => ({
     matchMdast: matchHeading(1),
@@ -83,7 +83,7 @@ const createTeasers = ({
         kind:
           parent.data.kind === 'feuilleton' ? 'editorial' : parent.data.kind,
         titleSize: parent.data.titleSize,
-        href: teaser ? teaser.data.url : undefined
+        href: teaser ? teaser.data.url : undefined,
       }
     },
     editorModule: 'headline',
@@ -91,9 +91,9 @@ const createTeasers = ({
       type,
       placeholder: 'Titel',
       isStatic: true,
-      depth: 1
+      depth: 1,
     },
-    rules: globalInlines
+    rules: globalInlines,
   })
 
   const articleTileLead = {
@@ -109,9 +109,9 @@ const createTeasers = ({
       placeholder: 'Lead',
       isStatic: true,
       depth: 4,
-      optional: true
+      optional: true,
     },
-    rules: globalInlines
+    rules: globalInlines,
   }
 
   const teaserFormat = {
@@ -142,7 +142,7 @@ const createTeasers = ({
             ? colors[data.kind]
             : undefined
           : undefined,
-        href: data ? data.formatUrl : undefined
+        href: data ? data.formatUrl : undefined,
       }
     },
     editorModule: 'headline',
@@ -151,9 +151,9 @@ const createTeasers = ({
       placeholder: 'Format',
       isStatic: true,
       depth: 6,
-      optional: true
+      optional: true,
     },
-    rules: globalInlines
+    rules: globalInlines,
   }
 
   const teaserCredit = {
@@ -165,16 +165,16 @@ const createTeasers = ({
     editorOptions: {
       type: 'FRONTCREDIT',
       placeholder: 'Credit',
-      isStatic: true
+      isStatic: true,
     },
     rules: [
       ...globalInlines,
       {
         matchMdast: matchType('link'),
-        props: node => {
+        props: (node) => {
           return {
             title: node.title,
-            href: node.url
+            href: node.url,
           }
         },
         component: ({ children, data, ...props }) => (
@@ -185,13 +185,13 @@ const createTeasers = ({
         editorModule: 'link',
         editorOptions: {
           type: 'FRONTLINK',
-          formatTypes: ['FRONTCREDIT']
-        }
-      }
-    ]
+          formatTypes: ['FRONTCREDIT'],
+        },
+      },
+    ],
   }
 
-  const getSingleColumn = ancestors => {
+  const getSingleColumn = (ancestors) => {
     const collection = ancestors.find(matchZone('ARTICLECOLLECTION'))
     return collection && collection.data.singleColumn
   }
@@ -215,7 +215,7 @@ const createTeasers = ({
     props: (node, index, parent, { ancestors }) => ({
       singleColumn: getSingleColumn(ancestors),
       ...extractImages(node.children[0], 'image'),
-      ...node.data
+      ...node.data,
     }),
     editorModule: 'teaser',
     editorOptions: {
@@ -228,8 +228,8 @@ const createTeasers = ({
         'showImage',
         'image',
         'imageDark',
-        'kind'
-      ]
+        'kind',
+      ],
     },
     rules: [
       skipMdastImage,
@@ -245,12 +245,12 @@ const createTeasers = ({
       articleTileSubject,
       articleTileLead,
       teaserFormat,
-      teaserCredit
-    ]
+      teaserCredit,
+    ],
   }
 
   const articleTileRow = {
-    matchMdast: node => {
+    matchMdast: (node) => {
       return matchZone('TEASERGROUP')(node)
     },
     component: ({ children, attributes, singleColumn, ...props }) => {
@@ -266,13 +266,13 @@ const createTeasers = ({
       )
     },
     props: (node, index, parent, { ancestors }) => ({
-      singleColumn: getSingleColumn(ancestors)
+      singleColumn: getSingleColumn(ancestors),
     }),
     editorModule: 'articleGroup',
     editorOptions: {
-      type: 'ARTICLETILEROW'
+      type: 'ARTICLETILEROW',
     },
-    rules: [articleTile]
+    rules: [articleTile],
   }
 
   const credit = {
@@ -284,7 +284,7 @@ const createTeasers = ({
     editorOptions: {
       type: 'FRONTCREDIT',
       placeholder: 'Credit',
-      isStatic: true
+      isStatic: true,
     },
     rules: [
       ...globalInlines,
@@ -297,7 +297,7 @@ const createTeasers = ({
             href: node.url,
             color: teaser ? teaser.data.color : colors.primary,
             collapsedColor:
-              teaser && teaser.data.feuilleton ? '#000' : undefined
+              teaser && teaser.data.feuilleton ? '#000' : undefined,
           }
         },
         component: ({ children, data, ...props }) => (
@@ -307,10 +307,10 @@ const createTeasers = ({
         ),
         editorModule: 'link',
         editorOptions: {
-          type: 'FRONTLINK'
-        }
-      }
-    ]
+          type: 'FRONTLINK',
+        },
+      },
+    ],
   }
   const title = (type, Headline) => ({
     matchMdast: matchHeading(1),
@@ -328,7 +328,7 @@ const createTeasers = ({
         kind: parent.data.kind,
         titleSize: parent.data.titleSize,
         href: teaser ? teaser.data.url : undefined,
-        columns: teaserGroup ? teaserGroup.data.columns : undefined
+        columns: teaserGroup ? teaserGroup.data.columns : undefined,
       }
     },
     editorModule: 'headline',
@@ -336,9 +336,9 @@ const createTeasers = ({
       type,
       placeholder: 'Titel',
       depth: 1,
-      isStatic: true
+      isStatic: true,
     },
-    rules: globalInlines
+    rules: globalInlines,
   })
 
   const carouselSubject = {
@@ -351,7 +351,7 @@ const createTeasers = ({
     props: (node, index, parent, { ancestors }) => {
       const teaser = ancestors.find(matchTeaser)
       return {
-        color: teaser && teaser.data.color
+        color: teaser && teaser.data.color,
       }
     },
     editorModule: 'headline',
@@ -359,9 +359,9 @@ const createTeasers = ({
       type: 'CAROUSELSUBJECT',
       placeholder: 'Subject',
       depth: 2,
-      isStatic: true
+      isStatic: true,
     },
-    rules: globalInlines
+    rules: globalInlines,
   }
   const carouselTileLead = {
     matchMdast: matchHeading(4),
@@ -376,9 +376,9 @@ const createTeasers = ({
       placeholder: 'Lead',
       isStatic: true,
       depth: 4,
-      optional: true
+      optional: true,
     },
-    rules: globalInlines
+    rules: globalInlines,
   }
 
   const carouselFormat = {
@@ -396,7 +396,7 @@ const createTeasers = ({
       const teaser = ancestors.find(matchTeaser)
       return {
         href: teaser ? teaser.data.formatUrl : undefined,
-        formatColor: teaser ? teaser.data.formatColor : undefined
+        formatColor: teaser ? teaser.data.formatColor : undefined,
       }
     },
     editorModule: 'headline',
@@ -404,9 +404,9 @@ const createTeasers = ({
       type: 'FRONTCAROUSEFORMAT',
       placeholder: 'Format',
       depth: 6,
-      isStatic: true
+      isStatic: true,
     },
-    rules: globalInlines
+    rules: globalInlines,
   }
   const carouselTile = {
     matchMdast: matchTeaserType('articleTile'),
@@ -419,9 +419,9 @@ const createTeasers = ({
         </Link>
       )
     },
-    props: node => ({
+    props: (node) => ({
       ...extractImages(node.children[0], 'image'),
-      ...node.data
+      ...node.data,
     }),
     editorModule: 'teaser',
     editorOptions: {
@@ -439,13 +439,13 @@ const createTeasers = ({
         'bgColor',
         'outline',
         'formatColor',
-        'count'
+        'count',
       ],
       defaultValues: {
         // default to context provided values
         color: undefined,
-        bgColor: undefined
-      }
+        bgColor: undefined,
+      },
     },
     rules: [
       skipMdastImage,
@@ -461,8 +461,8 @@ const createTeasers = ({
       carouselSubject,
       carouselTileLead,
       carouselFormat,
-      credit
-    ]
+      credit,
+    ],
   }
 
   const carouselRow = {
@@ -476,9 +476,9 @@ const createTeasers = ({
     },
     editorModule: 'articleGroup',
     editorOptions: {
-      type: 'CAROUSELROW'
+      type: 'CAROUSELROW',
     },
-    rules: [carouselTile]
+    rules: [carouselTile],
   }
 
   const carousel = {
@@ -490,8 +490,8 @@ const createTeasers = ({
         </TeaserCarousel>
       )
     },
-    props: node => ({
-      ...node.data
+    props: (node) => ({
+      ...node.data,
     }),
     editorModule: 'carousel',
     editorOptions: {
@@ -501,8 +501,8 @@ const createTeasers = ({
       formTitle: 'Carousel',
       formOptions: ['noAdapt', 'color', 'bgColor', 'outline', 'bigger', 'grid'],
       defaultValues: {
-        outline: true
-      }
+        outline: true,
+      },
     },
     rules: [
       {
@@ -517,11 +517,11 @@ const createTeasers = ({
           type: 'CAROUSELTITLE',
           placeholder: 'Titel',
           isStatic: true,
-          depth: 2
-        }
+          depth: 2,
+        },
       },
-      carouselRow
-    ]
+      carouselRow,
+    ],
   }
 
   const seriesNav = {
@@ -537,15 +537,15 @@ const createTeasers = ({
         inline: !node.data.grid,
         ActionBar: ActionBar,
         PayNote: PayNote,
-        Link: Link
+        Link: Link,
       }
     },
     rules: [],
     editorModule: 'seriesNav',
     editorOptions: {
-      insertTypes: ['PARAGRAPH']
+      insertTypes: ['PARAGRAPH'],
     },
-    isVoid: true
+    isVoid: true,
   }
 
   return {
@@ -558,7 +558,7 @@ const createTeasers = ({
         attributes,
         unauthorized,
         unauthorizedText,
-        singleColumn
+        singleColumn,
       }) => {
         if (unauthorized) {
           if (unauthorizedText) {
@@ -567,7 +567,7 @@ const createTeasers = ({
               <div
                 style={{
                   backgroundColor: colors.primaryBg,
-                  padding: '10px 20px'
+                  padding: '10px 20px',
                 }}
               >
                 <RawHtml
@@ -588,17 +588,17 @@ const createTeasers = ({
           </Breakout>
         )
       },
-      props: node => ({
+      props: (node) => ({
         unauthorized: node.data.membersOnly && !node.children.length,
         unauthorizedText: node.data.unauthorizedText,
-        singleColumn: node.data.singleColumn
+        singleColumn: node.data.singleColumn,
       }),
       editorModule: 'articleCollection',
       editorOptions: {
         type: 'ARTICLECOLLECTION',
         insertButtonText: 'Artikelsammlung',
         insertTypes: ['PARAGRAPH'],
-        formOptions: []
+        formOptions: [],
       },
       rules: [
         {
@@ -612,19 +612,19 @@ const createTeasers = ({
             </DossierSubheader>
           ),
           props: (node, index, parent, { ancestors }) => ({
-            singleColumn: getSingleColumn(ancestors)
+            singleColumn: getSingleColumn(ancestors),
           }),
           editorModule: 'headline',
           editorOptions: {
             type: 'ARTICLECOLLECTIONSUBHEADER',
             placeholder: 'Artikelsammlung',
             depth: 2,
-            isStatic: true
-          }
+            isStatic: true,
+          },
         },
-        articleTileRow
-      ]
-    }
+        articleTileRow,
+      ],
+    },
   }
 }
 

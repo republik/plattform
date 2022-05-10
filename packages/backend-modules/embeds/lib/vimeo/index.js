@@ -71,7 +71,9 @@ const getVimeoVideoById = async (id) => {
     userName: response.user.name,
     thumbnail,
     title: response.name,
-    userProfileImageUrl: response.user.pictures?.sizes?.find((v) => v.width > 75)?.link,
+    userProfileImageUrl: response.user.pictures?.sizes?.find(
+      (v) => v.width > 75,
+    )?.link,
     aspectRatio,
     src:
       mp4 && !isLiveOrScheduled
@@ -88,7 +90,8 @@ const getVimeoVideoById = async (id) => {
 
 module.exports = {
   TYPE: 'VimeoEmbed',
-  REGEX: /^(?:http|https)?:\/\/(?:www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^/]*)\/videos\/|)(\d+)(?:|\/\?)/,
+  REGEX:
+    /^(?:http|https)?:\/\/(?:www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^/]*)\/videos\/|)(\d+)(?:|\/\?)/,
   get: getVimeoVideoById,
   // manually keep in sync with backend-modules/packages/documents/lib/process.js
   // until embeds are in their own module

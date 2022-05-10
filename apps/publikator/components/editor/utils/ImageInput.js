@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import { Label } from '@project-r/styleguide'
 import withT from '../../../lib/withT'
@@ -7,21 +6,21 @@ import MdClose from 'react-icons/lib/md/close'
 const styles = {
   label: css({
     display: 'block',
-    marginBottom: 5
+    marginBottom: 5,
   }),
   input: css({
-    display: 'none'
+    display: 'none',
   }),
   close: css({
     position: 'absolute',
     background: 'rgba(255, 255, 255, 0.5)',
     right: 7,
     marginTop: 7,
-    cursor: 'pointer'
-  })
+    cursor: 'pointer',
+  }),
 }
 
-const readImage = (onChange, t) => e => {
+const readImage = (onChange, t) => (e) => {
   const files = e.target.files
 
   if (files.length < 1) {
@@ -48,8 +47,8 @@ const readImage = (onChange, t) => e => {
           sizeInMb: Math.round(sizeInMb * 10) / 10,
           jpegMb,
           restMb,
-          format: format.toUpperCase()
-        })
+          format: format.toUpperCase(),
+        }),
       )
     ) {
       return
@@ -72,7 +71,7 @@ const ImageInput = ({
   placeholder,
   maxWidth = 200,
   width,
-  height
+  height,
 }) => (
   <div style={{ position: 'relative' }}>
     <label>
@@ -80,7 +79,7 @@ const ImageInput = ({
       {src && (
         <MdClose
           {...styles.close}
-          onClick={e => {
+          onClick={(e) => {
             e.preventDefault()
             onChange(e, undefined)
           }}
@@ -96,7 +95,7 @@ const ImageInput = ({
           objectPosition: 'center',
           width: width || (src ? undefined : '100%'),
           height,
-          backgroundColor: dark ? '#1F1F1F' : '#fff'
+          backgroundColor: dark ? '#1F1F1F' : '#fff',
         }}
         alt=''
       />

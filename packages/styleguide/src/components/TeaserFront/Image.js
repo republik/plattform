@@ -13,41 +13,41 @@ const containerStyle = {
   margin: 0,
   zIndex: zIndex.frontImage,
   [tUp]: {
-    background: 'none'
-  }
+    background: 'none',
+  },
 }
 
 const styles = {
   container: css({
-    ...containerStyle
+    ...containerStyle,
   }),
   containerFeuilleton: css({
     ...containerStyle,
     margin: '15px',
     [mUp]: {
       background: 'none',
-      margin: '50px 5%'
-    }
+      margin: '50px 5%',
+    },
   }),
   textContainer: css({
     overflow: 'hidden', // Hides unpositioned content on mobile.
     padding: '15px 15px 40px 15px',
     [mUp]: {
-      padding: '40px 15% 70px 15%'
-    }
+      padding: '40px 15% 70px 15%',
+    },
   }),
   textContainerFeuilleton: css({
     overflow: 'hidden', // Hides unpositioned content on mobile.
     padding: '15px 0 40px 0',
     [mUp]: {
-      padding: '40px 0 70px 0'
-    }
+      padding: '40px 0 70px 0',
+    },
   }),
   textContainerOnTop: css({
     [tUp]: {
-      padding: 0
-    }
-  })
+      padding: 0,
+    },
+  }),
 }
 
 const ImageBlock = ({
@@ -64,7 +64,7 @@ const ImageBlock = ({
   center,
   aboveTheFold,
   onlyImage,
-  feuilleton
+  feuilleton,
 }) => {
   const background = bgColor || ''
   const isTextOnTop = textPosition !== 'underneath'
@@ -76,14 +76,14 @@ const ImageBlock = ({
       onClick={onClick}
       style={{
         background,
-        cursor: onClick ? 'pointer' : 'default'
+        cursor: onClick ? 'pointer' : 'default',
       }}
     >
       <div
         style={{
           position: 'relative',
           maxWidth,
-          margin: maxWidth ? '0 auto' : undefined
+          margin: maxWidth ? '0 auto' : undefined,
         }}
       >
         <div style={{ position: 'relative', fontSize: 0 }}>
@@ -92,7 +92,7 @@ const ImageBlock = ({
             {...FigureImage.utils.getResizedSrcs(
               image,
               maxWidth || 1500,
-              false
+              false,
             )}
             maxWidth={maxWidth}
             alt={alt}
@@ -146,16 +146,16 @@ ImageBlock.propTypes = {
     'top',
     'middle',
     'bottom',
-    'underneath'
+    'underneath',
   ]),
   onlyImage: PropTypes.bool,
-  feuilleton: PropTypes.bool
+  feuilleton: PropTypes.bool,
 }
 
 ImageBlock.defaultProps = {
   textPosition: 'topleft',
   alt: '',
-  onlyImage: false
+  onlyImage: false,
 }
 
 export default ImageBlock

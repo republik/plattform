@@ -1,4 +1,3 @@
-import React from 'react'
 import Head from 'next/head'
 import { fontFamilies } from '@project-r/styleguide'
 import { css } from 'glamor'
@@ -15,7 +14,7 @@ css.global('html', { boxSizing: 'border-box' })
 css.global('*, *:before, *:after', { boxSizing: 'inherit' })
 
 css.global('body', {
-  fontFamily: fontFamilies.sansSerifRegular
+  fontFamily: fontFamilies.sansSerifRegular,
 })
 
 const Frame = ({ t, children }) => (

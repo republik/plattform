@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { css } from 'glamor'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
@@ -99,6 +99,12 @@ export const filterAndOrderRepos = gql`
             id
             meta {
               path
+              format {
+                id
+                meta {
+                  externalBaseUrl
+                }
+              }
             }
           }
         }
@@ -123,25 +129,25 @@ export const filterAndOrderRepos = gql`
 const styles = {
   filterBar: css({
     paddingBottom: 15,
-    borderBottom: `1px solid ${colors.divider}`
+    borderBottom: `1px solid ${colors.divider}`,
   }),
   pageInfo: css({
     marginTop: 10,
-    textAlign: 'right'
-  })
+    textAlign: 'right',
+  }),
 }
 
 const orderFields = [
   {
     field: 'pushed',
     width: '28%',
-    accessor: repo => new Date(repo.latestCommit.date)
+    accessor: (repo) => new Date(repo.latestCommit.date),
   },
   {
     field: 'published',
     width: '10%',
-    accessor: repo => new Date(repo.meta.publishDate)
-  }
+    accessor: (repo) => new Date(repo.meta.publishDate),
+  },
 ]
 
 const PageInfo = withT(({ t, repos, loading, fetchMore }) => {
@@ -150,17 +156,17 @@ const PageInfo = withT(({ t, repos, loading, fetchMore }) => {
       <Label>
         {repos.nodes.length === repos.totalCount
           ? t('repo/table/pageInfo/total', {
-              count: repos.totalCount
+              count: repos.totalCount,
             })
           : t('repo/table/pageInfo/loadedTotal', {
               loaded: repos.nodes.length,
-              total: repos.totalCount
+              total: repos.totalCount,
             })}
         <br />
         {!loading && repos.pageInfo.hasNextPage && (
           <A
             href='#'
-            onClick={e => {
+            onClick={(e) => {
               e.preventDefault()
               fetchMore({ after: repos.pageInfo.endCursor })
             }}
@@ -178,9 +184,9 @@ const RepoList = ({
   data = {},
   router: {
     query,
-    query: { q, phase, view, orderBy = `${orderFields[0].field}-DESC` }
+    query: { q, phase, view, orderBy = `${orderFields[0].field}-DESC` },
   },
-  fetchMore
+  fetchMore,
 }) => {
   const [showLoader, setLoader] = useState(false)
 
@@ -197,17 +203,19 @@ const RepoList = ({
   const [orderField, orderDirection] = orderBy.split('-').filter(Boolean)
   const orderCompare = orderDirection === 'DESC' ? descending : ascending
 
-  const getOrder = field =>
+  const getOrder = (field) =>
     [
       field,
       orderField === field
         ? orderDirection === 'DESC'
           ? 'ASC'
           : 'DESC'
-        : orderDirection
+        : orderDirection,
     ].join('-')
 
-  const activeOrderField = orderFields.find(order => order.field === orderField)
+  const activeOrderField = orderFields.find(
+    (order) => order.field === orderField,
+  )
 
   const orderAccessor = activeOrderField
     ? activeOrderField.accessor
@@ -257,7 +265,7 @@ const RepoList = ({
             data.repos &&
             data.repos.nodes
               .sort((a, b) => orderCompare(orderAccessor(a), orderAccessor(b)))
-              .map(repo => (
+              .map((repo) => (
                 <RepoRow key={repo.id} repo={repo} showPhases={showPhases} />
               ))}
           {(data.loading || data.error) && (
@@ -294,8 +302,10 @@ const RepoListWithQuery = compose(
         orderBy: { field: 'PUSHED_AT', direction: 'DESC' },
         isTemplate: router.query.view === 'templates',
         ...(router.query?.phase &&
-          router.query.view !== 'templates' && { phases: [router.query.phase] })
-      }
+          router.query.view !== 'templates' && {
+            phases: [router.query.phase],
+          }),
+      },
     }),
     props: ({ data, ownProps }) => ({
       data,
@@ -303,19 +313,19 @@ const RepoListWithQuery = compose(
         data.fetchMore({
           variables: {
             after,
-            search: ownProps.search
+            search: ownProps.search,
           },
           updateQuery: (
             previousResult,
-            { fetchMoreResult, queryVariables }
+            { fetchMoreResult, queryVariables },
           ) => {
             const nodes = [
               ...previousResult.repos.nodes,
-              ...fetchMoreResult.repos.nodes
+              ...fetchMoreResult.repos.nodes,
             ].filter(
               ({ id }, i, all) =>
                 // deduplicate by id
-                i === all.findIndex(repo => repo.id === id)
+                i === all.findIndex((repo) => repo.id === id),
             )
             return {
               ...previousResult,
@@ -325,13 +335,13 @@ const RepoListWithQuery = compose(
               repos: {
                 ...previousResult.repos,
                 ...fetchMoreResult.repos,
-                nodes
-              }
+                nodes,
+              },
             }
-          }
-        })
-    })
-  })
+          },
+        }),
+    }),
+  }),
 )(RepoList)
 
 export default RepoListWithQuery

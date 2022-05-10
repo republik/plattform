@@ -6,7 +6,7 @@ import {
   EditIcon,
   FeaturedIcon,
   ReportIcon,
-  UnpublishIcon
+  UnpublishIcon,
 } from '@project-r/styleguide'
 import { timeFormat } from 'd3-time-format'
 
@@ -30,7 +30,7 @@ function getCommentActions({
   comment,
   setEditMode,
   roles,
-  actions
+  actions,
 }: Options) {
   const items = []
 
@@ -44,7 +44,7 @@ function getCommentActions({
       label:
         comment.numReports && comment.numReports > 0
           ? t('styleguide/CommentActions/reportWithAmount', {
-              amount: comment.numReports
+              amount: comment.numReports,
             })
           : comment.userReportedAt
           ? t('styleguide/CommentActions/reported')
@@ -54,7 +54,7 @@ function getCommentActions({
         if (window.confirm(t('styleguide/CommentActions/reportMessage'))) {
           await actions.reportCommentHandler(comment.id)
         }
-      }
+      },
     })
   }
 
@@ -68,12 +68,12 @@ function getCommentActions({
       label: comment.featuredAt
         ? t('styleguide/CommentActions/featured', {
             date: dateFormat(new Date(comment.featuredAt)),
-            time: hmFormat(new Date(comment.featuredAt))
+            time: hmFormat(new Date(comment.featuredAt)),
           })
         : t('styleguide/CommentActions/feature'),
       onClick: async () => {
         await actions.featureCommentHandler(comment)
-      }
+      },
     })
   }
 
@@ -81,7 +81,7 @@ function getCommentActions({
     items.push({
       icon: EditIcon,
       label: t('styleguide/CommentActions/edit'),
-      onClick: () => setEditMode(true)
+      onClick: () => setEditMode(true),
     })
   }
 
@@ -102,15 +102,15 @@ function getCommentActions({
             comment.userCanEdit ? '' : '/admin'
           }`,
           {
-            name: comment.displayAuthor.name
-          }
+            name: comment.displayAuthor.name,
+          },
         )
         if (!window.confirm(message)) {
           return
         } else {
           return await actions.unpublishCommentHandler(comment.id)
         }
-      }
+      },
     })
   }
 

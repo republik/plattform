@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 
 import CloseIcon from 'react-icons/lib/md/close'
@@ -13,20 +12,20 @@ const styles = {
     marginBottom: 12,
     borderBottom: '1px solid #000',
     paddingRight: 20,
-    position: 'relative'
+    position: 'relative',
   }),
   valueText: css({
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     fontSize: 22,
-    lineHeight: '40px'
+    lineHeight: '40px',
   }),
   x: css({
     position: 'absolute',
     right: 0,
-    bottom: 7
-  })
+    bottom: 7,
+  }),
 }
 
 export default ({
@@ -35,13 +34,13 @@ export default ({
   isSeriesMaster,
   isSeriesEpisode,
   value,
-  onChange
+  onChange,
 }) => {
-  const onRefChange = item => {
+  const onRefChange = (item) => {
     onChange(
       undefined,
       item ? `https://github.com/${item.value.id}` : null,
-      item
+      item,
     )
   }
   if (value) {
@@ -56,7 +55,7 @@ export default ({
         <div {...styles.valueText}>
           <RepoLink
             value={value}
-            invalid={info => (
+            invalid={(info) => (
               <span style={{ color: colors.error }}>{value}</span>
             )}
           />
@@ -64,7 +63,7 @@ export default ({
         <A
           href='#remove'
           {...styles.x}
-          onClick={e => {
+          onClick={(e) => {
             e.preventDefault()
             onRefChange(null)
           }}

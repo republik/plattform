@@ -2,7 +2,7 @@ import { css } from 'glamor'
 import { A, pxToRem, Scroller, TabButton } from '@project-r/styleguide'
 import { useDiscussion } from '../context/DiscussionContext'
 import { getFocusHref, getFocusUrl } from '../shared/CommentLink'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { rerouteDiscussion } from '../shared/DiscussionLink'
@@ -13,8 +13,8 @@ const styles = {
     display: 'flex',
     flexDirection: 'row-reverse',
     lineHeight: pxToRem('25px'),
-    fontSize: pxToRem('16px')
-  })
+    fontSize: pxToRem('16px'),
+  }),
 }
 
 type Props = {
@@ -44,13 +44,13 @@ const DiscussionOptions = ({ documentMeta }: Props) => {
     return items
   }, [discussionType, board])
 
-  const handleReload = async e => {
+  const handleReload = async (e) => {
     e.preventDefault()
     const href = getFocusHref(discussion)
     if (href) {
       await router.replace(href)
       await refetch({
-        focusId: undefined
+        focusId: undefined,
       })
     } else {
       await refetch()
@@ -60,11 +60,11 @@ const DiscussionOptions = ({ documentMeta }: Props) => {
   return (
     <div>
       <Scroller>
-        {availableOrderBy.map(item => {
+        {availableOrderBy.map((item) => {
           return (
             <Link
               href={rerouteDiscussion(router, {
-                order: item
+                order: item,
               })}
               scroll={false}
               passHref

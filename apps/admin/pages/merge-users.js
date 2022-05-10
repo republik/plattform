@@ -1,4 +1,3 @@
-import React from 'react'
 import { compose } from 'react-apollo'
 import { withRouter } from 'next/router'
 
@@ -10,7 +9,7 @@ import MergeUsers from '../components/Users/Merge'
 
 export default compose(
   withRouter,
-  enforceAuthorization(['supporter'])
+  enforceAuthorization(['supporter']),
 )(() => {
   return (
     <App>

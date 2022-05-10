@@ -85,16 +85,17 @@ const extractUserUrl = (url) => {
 
 const createUrlReplacer =
   (
-    allDocuments = [],
-    usernames = [],
+    _all = [],
+    _usernames = [],
     errors = [],
     urlPrefix = '',
     searchString = '',
+    externalBaseUrl,
   ) =>
   (url, stripDocLinks) => {
     const userInfo = extractUserPath(url)
     if (userInfo) {
-      const user = usernames.find((u) => u.id === userInfo.id)
+      const user = _usernames.find((u) => u.id === userInfo.id)
       if (user) {
         return [
           urlPrefix,
@@ -115,12 +116,20 @@ const createUrlReplacer =
       return ''
     }
 
-    const linkedDoc = allDocuments.find((d) => d.meta.repoId === repoId)
+    const linkedDoc = _all.find((d) => d.meta.repoId === repoId)
 
     if (linkedDoc) {
+      const linkedFormat = createResolver(
+        _all,
+        _usernames,
+      )(linkedDoc.meta?.format)
+      const formatExternalBaseUrl = linkedFormat?.meta?.externalBaseUrl
+
+      const baseUrl = formatExternalBaseUrl || urlPrefix || ''
+
       // Stitch and parse simple URL version including arguments {urlPrefix}, {searchString}
       const resolvedUrl = new URL(
-        `${urlPrefix}${linkedDoc.content.meta.path}${searchString}`,
+        `${baseUrl}${linkedDoc.content.meta.path}${searchString}`,
         FRONTEND_BASE_URL,
       )
 
@@ -139,7 +148,16 @@ const createUrlReplacer =
         return resolvedUrl.toString()
       }
 
-      // If {urlPrefix} is not set, replace {FRONTEND_BASE_URL} to return relative URLs.
+      // If {externalBaseUrl} is given, replace {externalBaseUrl} to return
+      // relative URLs.
+      if (externalBaseUrl) {
+        const externalBasePath = new URL(externalBaseUrl)?.pathname
+        return resolvedUrl
+          .toString()
+          .replace(new RegExp(`^${externalBaseUrl}`), externalBasePath)
+      }
+
+      // Strip {FRONTEND_BASE_URL} to return relative URLs.
       return resolvedUrl
         .toString()
         .replace(new RegExp(`^${FRONTEND_BASE_URL}`), '')
@@ -152,38 +170,46 @@ const createUrlReplacer =
   }
 
 const createResolver =
-  (allDocuments, errors = []) =>
+  (_all, _usernames, errors = []) =>
   (url) => {
     const { repoId } = getRepoId(url)
     if (!repoId) {
       return null
     }
-    const linkedDoc = allDocuments.find((d) => d.meta.repoId === repoId)
+
+    const linkedDoc = _all?.find((d) => d.meta.repoId === repoId)
     if (linkedDoc) {
-      return linkedDoc
-    } else {
-      errors.push(repoId)
+      return {
+        ...linkedDoc,
+        _all,
+        _usernames,
+      }
     }
+
+    errors.push(repoId)
     return null
   }
 
 const contentUrlResolver = (
   doc,
-  allDocuments = [],
-  usernames = [],
+  _all = [],
+  _usernames = [],
   errors,
   urlPrefix,
   searchString,
   user,
 ) => {
+  const docResolver = createResolver(_all, _usernames, errors)
+  const externalBaseUrl = docResolver(doc.meta?.format)?.meta?.externalBaseUrl
+
   const urlReplacer = createUrlReplacer(
-    allDocuments,
-    usernames,
+    _all,
+    _usernames,
     errors,
     urlPrefix,
     searchString,
+    externalBaseUrl,
   )
-  const docResolver = createResolver(allDocuments, errors)
 
   const stripDocLinks =
     DOCUMENTS_RESTRICT_TO_ROLES &&
@@ -242,16 +268,16 @@ const contentUrlResolver = (
 
 const metaUrlResolver = (
   meta,
-  allDocuments = [],
-  usernames = [],
+  _all = [],
+  _usernames = [],
   errors,
   urlPrefix,
   searchString,
   user,
 ) => {
   const urlReplacer = createUrlReplacer(
-    allDocuments,
-    usernames,
+    _all,
+    _usernames,
     errors,
     urlPrefix,
     searchString,
@@ -278,10 +304,24 @@ const metaUrlResolver = (
       .forEach((c) => {
         c.url = urlReplacer(c.url)
       })
+
+  if (
+    user === undefined ||
+    (DOCUMENTS_RESTRICT_TO_ROLES &&
+      !userIsInRoles(user, DOCUMENTS_RESTRICT_TO_ROLES.split(',')))
+  ) {
+    meta.recommendations = null
+  }
 }
 
-const metaFieldResolver = (meta, allDocuments = [], errors) => {
-  const resolver = createResolver(allDocuments, errors)
+const metaFieldResolver = (meta, _all = [], _usernames = [], errors) => {
+  const resolver = createResolver(_all, _usernames, errors)
+
+  const format = resolver(meta.format)
+
+  const ownPaynotes = meta.paynotes?.filter((p) => !p.inherit)
+  const formatPaynotes = format?.meta.paynotes?.filter((p) => p.inherit)
+  const paynotes = ownPaynotes || formatPaynotes
 
   // object if this document is a series «master» itself
   let series = meta.series
@@ -301,12 +341,26 @@ const metaFieldResolver = (meta, allDocuments = [], errors) => {
     }
   }
 
+  const recommendationsNodes = meta.recommendations
+    ?.map(resolver)
+    .filter(Boolean)
+  const recommendations = recommendationsNodes?.length && {
+    nodes: recommendationsNodes,
+    pageInfo: {
+      hasNextPage: false,
+      hasPreviousPage: false,
+    },
+    totalCount: recommendationsNodes.length,
+  }
+
   return {
     series,
     dossier: resolver(meta.dossier),
-    format: resolver(meta.format),
+    format,
     section: resolver(meta.section),
     discussion: resolver(meta.discussion),
+    paynotes,
+    recommendations,
   }
 }
 

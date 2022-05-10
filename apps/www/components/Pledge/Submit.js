@@ -1,4 +1,4 @@
-import React, { Fragment, Component, useMemo, useState } from 'react'
+import { Fragment, Component, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
@@ -29,7 +29,7 @@ import {
   Checkbox,
   InlineSpinner,
   Label,
-  A
+  A,
 } from '@project-r/styleguide'
 
 import PaymentForm from '../Payment/Form'
@@ -40,13 +40,33 @@ import { loadStripe } from '../Payment/stripe'
 import { useFieldSetState } from './utils'
 
 import ErrorMessage, { ErrorContainer } from '../ErrorMessage'
+import {
+  useIsApplePayAvailable,
+  useIsGooglePayAvailable,
+} from '../Payment/Form/StripeWalletHelpers'
+import usePaymentRequest, {
+  WalletPaymentMethod,
+} from '../Payment/PaymentRequest/usePaymentRequest'
+import { getPayerInformationFromEvent } from '../Payment/PaymentRequest/PaymentRequestEventHelper'
+import { css } from 'glamor'
 
-const { H2, P } = Interaction
+const { P } = Interaction
 
-const objectValues = object => Object.keys(object).map(key => object[key])
+const styles = {
+  topMargin: css({
+    marginTop: '16px',
+  }),
+  spaceBetweenChildren: css({
+    '> *:not(:first-child)': {
+      marginTop: '16px',
+    },
+  }),
+}
+
+const objectValues = (object) => Object.keys(object).map((key) => object[key])
 const simpleHash = (object, delimiter = '|') => {
   return objectValues(object)
-    .map(value => {
+    .map((value) => {
       if (value && typeof value === 'object') {
         return simpleHash(value, delimiter === '|' ? '$' : `$${delimiter}`)
       }
@@ -58,36 +78,36 @@ const simpleHash = (object, delimiter = '|') => {
 const getRequiredConsents = ({ requiresStatutes }) =>
   ['PRIVACY', 'TOS', requiresStatutes && 'STATUTE'].filter(Boolean)
 
-const getContactFields = t => [
+const getContactFields = (t) => [
   {
     label: t('pledge/contact/firstName/label'),
     name: 'firstName',
-    validator: value =>
-      value.trim().length <= 0 && t('pledge/contact/firstName/error/empty')
+    validator: (value) =>
+      value.trim().length <= 0 && t('pledge/contact/firstName/error/empty'),
   },
   {
     label: t('pledge/contact/lastName/label'),
     name: 'lastName',
-    validator: value =>
-      value.trim().length <= 0 && t('pledge/contact/lastName/error/empty')
+    validator: (value) =>
+      value.trim().length <= 0 && t('pledge/contact/lastName/error/empty'),
   },
   {
     label: t('pledge/contact/email/label'),
     name: 'email',
     type: 'email',
-    validator: value =>
+    validator: (value) =>
       (value.trim().length <= 0 && t('pledge/contact/email/error/empty')) ||
-      (!isEmail(value) && t('pledge/contact/email/error/invalid'))
-  }
+      (!isEmail(value) && t('pledge/contact/email/error/invalid')),
+  },
 ]
 
-const SubmitWithHooks = props => {
+const SubmitWithHooks = ({ paymentMethods, ...props }) => {
   const { t, basePledge, customMe, me } = props
   const addressFields = useMemo(() => getAddressFields(t), [t])
   const contactFields = useMemo(
     () =>
-      getContactFields(t).filter(field => !customMe || !customMe[field.name]),
-    [t, customMe]
+      getContactFields(t).filter((field) => !customMe || !customMe[field.name]),
+    [t, customMe],
   )
 
   const defaultContactState = useMemo(() => {
@@ -95,7 +115,7 @@ const SubmitWithHooks = props => {
     return {
       firstName: prefillMe.firstName,
       lastName: prefillMe.lastName,
-      email: prefillMe.email
+      email: prefillMe.email,
     }
   }, [me, customMe, basePledge])
   const contactState = useFieldSetState(contactFields, defaultContactState)
@@ -115,24 +135,71 @@ const SubmitWithHooks = props => {
             line2: userAddress.line2,
             postalCode: userAddress.postalCode,
             city: userAddress.city,
-            country: userAddress.country
+            country: userAddress.country,
           }
-        : {})
+        : {}),
     }),
-    [userAddress]
+    [userAddress],
   )
 
   const addressState = useFieldSetState(addressFields, defaultAddress)
   const shippingAddressState = useFieldSetState(
     addressFields,
-    props.basePledge?.pledgeShippingAddress || defaultAddress
+    props.basePledge?.pledgeShippingAddress || defaultAddress,
   )
 
   const [syncAddresses, setSyncAddresses] = useState(true)
+  const [isApplePayAvailable] = useIsApplePayAvailable()
+  const [isGooglePayAvailable] = useIsGooglePayAvailable()
+
+  // In case STRIPE is an accepted payment method,
+  // add additional payment methods such as Apple or Google Pay if available
+  const enhancedPaymentMethods = useMemo(() => {
+    if (!paymentMethods.includes('STRIPE')) {
+      return paymentMethods
+    }
+
+    return [
+      'STRIPE', // the first option is sometimes auto selected and should not be a wallet
+      isApplePayAvailable ? WalletPaymentMethod.APPLE_PAY : null,
+      isGooglePayAvailable ? WalletPaymentMethod.GOOGLE_PAY : null,
+      ...paymentMethods.filter((pm) => pm !== 'STRIPE'),
+    ].filter(Boolean)
+  }, [paymentMethods, isApplePayAvailable, isGooglePayAvailable])
+
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState()
+  const paymentRequest = usePaymentRequest({
+    selectedPaymentMethod,
+    setSelectedPaymentMethod,
+    options: {
+      requestPayerEmail: !customMe,
+      requestPayerName: !customMe || !customMe?.address,
+      total: {
+        amount: props.total ?? 0,
+        label: t.first([
+          `package/${props.query.package}/title`,
+          'package/choose',
+        ]),
+      },
+      requestShipping: props.requireShippingAddress || false,
+      shippingOptions: props.requireShippingAddress
+        ? [
+            {
+              id: 'default',
+              label: t('account/pledges/free-delivery'),
+              amount: 0,
+            },
+          ]
+        : undefined,
+    },
+  })
 
   return (
     <Submit
       {...props}
+      selectedPaymentMethod={selectedPaymentMethod}
+      setSelectedPaymentMethod={setSelectedPaymentMethod}
+      paymentMethods={enhancedPaymentMethods}
       userName={userName}
       userAddress={userAddress}
       addressState={addressState}
@@ -140,6 +207,7 @@ const SubmitWithHooks = props => {
       shippingAddressState={shippingAddressState}
       syncAddresses={props.requireShippingAddress && syncAddresses}
       setSyncAddresses={setSyncAddresses}
+      paymentRequest={paymentRequest}
     />
   )
 }
@@ -153,12 +221,12 @@ class Submit extends Component {
       values: {},
       errors: {},
       dirty: {},
-      loading: false
+      loading: false,
     }
     if (props.basePledge) {
       const variables = this.submitVariables({
         ...props,
-        ...props.basePledge
+        ...props.basePledge,
       })
       const hash = simpleHash(variables)
 
@@ -167,11 +235,16 @@ class Submit extends Component {
       this.state.pledgeHash = hash
       this.state.pledgeId = props.basePledge.id
     }
-    this.paymentRef = ref => {
+    this.paymentRef = (ref) => {
       this.payment =
         ref && ref.getWrappedInstance ? ref.getWrappedInstance() : ref
     }
   }
+
+  isStripeWalletPayment() {
+    return this.props.selectedPaymentMethod?.startsWith('STRIPE-WALLET')
+  }
+
   submitVariables(props) {
     const {
       contactState,
@@ -180,9 +253,10 @@ class Submit extends Component {
       reason,
       accessToken,
       customMe,
+      addressState,
       requireShippingAddress,
       shippingAddressState,
-      syncAddresses
+      syncAddresses,
     } = props
 
     const shippingAddress = requireShippingAddress
@@ -191,10 +265,10 @@ class Submit extends Component {
 
     return {
       total,
-      options: options.map(option => ({
+      options: options.map((option) => ({
         ...option,
         autoPay:
-          option.autoPay !== undefined ? this.getAutoPayValue() : undefined
+          option.autoPay !== undefined ? this.getAutoPayValue() : undefined,
       })),
       reason,
       user: contactState.fields.length
@@ -203,54 +277,61 @@ class Submit extends Component {
               user[field.name] = contactState.values[field.name]
               return user
             },
-            customMe ? { email: customMe.email } : {}
+            customMe ? { email: customMe.email } : {},
           )
         : undefined,
-      address: syncAddresses ? shippingAddress : undefined,
+      address: this.isStripeWalletPayment()
+        ? customMe?.address
+          ? undefined
+          : addressState.values
+        : syncAddresses
+        ? shippingAddress
+        : undefined,
       shippingAddress,
       accessToken:
-        customMe && customMe.isUserOfCurrentSession ? undefined : accessToken
+        customMe && customMe.isUserOfCurrentSession ? undefined : accessToken,
     }
   }
-  submitPledge() {
+
+  submitPledge(stripePaymentMethod) {
     const {
       t,
       query,
       addressState,
       shippingAddressState,
       requireShippingAddress,
-      contactState
+      contactState,
     } = this.props
     const errorMessages = this.getErrorMessages()
 
-    if (errorMessages.length) {
+    if (errorMessages.length > 0) {
       this.props.onError()
-      this.setState(state => {
+      this.setState((state) => {
         const dirty = {
-          ...state.dirty
+          ...state.dirty,
         }
-        Object.keys(state.errors).forEach(field => {
+        Object.keys(state.errors).forEach((field) => {
           if (state.errors[field]) {
             dirty[field] = true
           }
         })
         return {
           dirty,
-          showErrors: true
+          showErrors: true,
         }
       })
       contactState.onChange({
         dirty: Object.keys(contactState.errors).reduce((agg, key) => {
           agg[key] = true
           return agg
-        }, {})
+        }, {}),
       })
-      if (this.state.values.paymentMethod === 'PAYMENTSLIP') {
+      if (this.props.selectedPaymentMethod === 'PAYMENTSLIP') {
         addressState.onChange({
           dirty: Object.keys(addressState.errors).reduce((agg, key) => {
             agg[key] = true
             return agg
-          }, {})
+          }, {}),
         })
       }
       if (requireShippingAddress) {
@@ -258,7 +339,7 @@ class Submit extends Component {
           dirty: Object.keys(shippingAddressState.errors).reduce((agg, key) => {
             agg[key] = true
             return agg
-          }, {})
+          }, {}),
         })
       }
       return
@@ -275,28 +356,39 @@ class Submit extends Component {
       // - we need a pledgeResponse with pfAliasId and pfSHA
       // - this can be missing if returning from a PSP redirect
       // - in those cases we create a new pledge
-      (this.state.values.paymentMethod !== 'POSTFINANCECARD' ||
+      (this.props.selectedPaymentMethod !== 'POSTFINANCECARD' ||
         this.state.pledgeResponse)
     ) {
-      this.payPledge(this.state.pledgeId, this.state.pledgeResponse)
-      return
+      return this.payPledge(
+        this.state.pledgeId,
+        this.state.pledgeResponse,
+        stripePaymentMethod,
+      )
     }
 
     this.setState(() => ({
-      loading: t('pledge/submit/loading/submit')
+      loading: t('pledge/submit/loading/submit'),
     }))
-    this.props
+
+    return this.props
       .submit({
         ...variables,
         payload: getConversionPayload(query),
-        consents: getRequiredConsents(this.props)
+        consents: getRequiredConsents(this.props),
       })
       .then(({ data }) => {
         if (data.submitPledge.emailVerify) {
           this.setState(() => ({
             loading: false,
-            emailVerify: true
+            emailVerify: true,
           }))
+
+          // Rethrow error in case STRIPE-WALLET is used
+          // This needs to be done in order to call payment-request
+          // complete handler with 'fail'
+          if (this.isStripeWalletPayment()) {
+            throw new Error('Email verification required')
+          }
           return
         }
         this.setState(() => ({
@@ -304,47 +396,63 @@ class Submit extends Component {
           pledgeId: data.submitPledge.pledgeId,
           pledgeHash: hash,
           pledgeResponse: data.submitPledge,
-          submitError: undefined
+          submitError: undefined,
         }))
-        this.payPledge(data.submitPledge.pledgeId, data.submitPledge)
+        return this.payPledge(
+          data.submitPledge.pledgeId,
+          data.submitPledge,
+          stripePaymentMethod,
+        )
       })
-      .catch(error => {
+      .catch((error) => {
+        // Rethrow error in case STRIPE-WALLET is used
+        // This needs to be done in order to call payment-request
+        // complete handler with 'fail'
+        if (this.isStripeWalletPayment()) {
+          throw error
+        }
+
         const submitError = errorToString(error)
 
         this.setState(() => ({
           loading: false,
           pledgeId: undefined,
           pledgeHash: undefined,
-          submitError
+          submitError,
         }))
       })
   }
-  payPledge(pledgeId, pledgeResponse) {
-    const { paymentMethod } = this.state.values
 
-    if (paymentMethod === 'PAYMENTSLIP') {
+  payPledge(pledgeId, pledgeResponse, stripePaymentMethod) {
+    const { selectedPaymentMethod } = this.props
+
+    if (selectedPaymentMethod === 'PAYMENTSLIP') {
       this.payWithPaymentSlip(pledgeId)
-    } else if (paymentMethod === 'POSTFINANCECARD') {
+    } else if (selectedPaymentMethod === 'POSTFINANCECARD') {
       this.payWithPostFinance(pledgeId, pledgeResponse)
-    } else if (paymentMethod === 'STRIPE') {
+    } else if (selectedPaymentMethod === 'STRIPE') {
       this.payWithStripe(pledgeId)
-    } else if (paymentMethod === 'PAYPAL') {
+    } else if (this.isStripeWalletPayment()) {
+      return this.payWithWallet(pledgeId, stripePaymentMethod)
+    } else if (selectedPaymentMethod === 'PAYPAL') {
       this.payWithPayPal(pledgeId)
     }
   }
+
   payWithPayPal(pledgeId) {
     const { t } = this.props
 
     this.setState(
       () => ({
         loading: t('pledge/submit/loading/paypal'),
-        pledgeId: pledgeId
+        pledgeId: pledgeId,
       }),
       () => {
         this.payment.payPalForm.submit()
-      }
+      },
     )
   }
+
   payWithPostFinance(pledgeId, pledgeResponse) {
     const { t } = this.props
 
@@ -354,13 +462,14 @@ class Submit extends Component {
         pledgeId: pledgeId,
         userId: pledgeResponse.userId,
         pfAliasId: pledgeResponse.pfAliasId,
-        pfSHA: pledgeResponse.pfSHA
+        pfSHA: pledgeResponse.pfSHA,
       }),
       () => {
         this.payment.postFinanceForm.submit()
-      }
+      },
     )
   }
+
   payWithPaymentSlip(pledgeId) {
     const { values } = this.state
     const { addressState, shippingAddressState, syncAddresses } = this.props
@@ -368,25 +477,28 @@ class Submit extends Component {
       pledgeId,
       method: 'PAYMENTSLIP',
       paperInvoice: values.paperInvoice || false,
-      address: syncAddresses ? shippingAddressState.values : addressState.values
+      address: syncAddresses
+        ? shippingAddressState.values
+        : addressState.values,
     })
   }
+
   pay(data) {
     const { t, me, customMe, packageName, contactState } = this.props
 
     const email = customMe ? customMe.email : contactState.values.email
     this.setState(() => ({
-      loading: t('pledge/submit/loading/pay')
+      loading: t('pledge/submit/loading/pay'),
     }))
-    this.props
+    return this.props
       .pay({
         ...data,
-        makeDefault: this.getAutoPayValue()
+        makeDefault: this.getAutoPayValue(),
       })
       .then(({ data: { payPledge } }) => {
         const baseQuery = {
           package: packageName,
-          id: payPledge.pledgeId
+          id: payPledge.pledgeId,
         }
         if (customMe && customMe.isListed) {
           baseQuery.statement = customMe.id
@@ -395,7 +507,7 @@ class Submit extends Component {
           if (customMe || packageName === 'PROLONG') {
             gotoMerci({
               ...baseQuery,
-              email
+              email,
             })
             return
           }
@@ -405,67 +517,143 @@ class Submit extends Component {
               gotoMerci({
                 ...baseQuery,
                 email: email,
-                ...encodeSignInResponseQuery(signIn)
-              })
+                ...encodeSignInResponseQuery(signIn),
+              }),
             )
-            .catch(error =>
+            .catch((error) =>
               gotoMerci({
                 ...baseQuery,
                 email: email,
-                signInError: errorToString(error)
-              })
+                signInError: errorToString(error),
+              }),
             )
         } else {
           gotoMerci(baseQuery)
         }
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState(() => ({
           loading: false,
-          paymentError: errorToString(error)
+          paymentError: errorToString(error),
         }))
+
+        // Rethrow error in case STRIPE-WALLET is used
+        // This needs to be done in order to call payment-request
+        // complete handler with 'fail'
+        if (this.isStripeWalletPayment()) {
+          throw error
+        }
       })
   }
+
   payWithStripe(pledgeId) {
     const { t } = this.props
     const { values } = this.state
 
     this.setState(() => ({
-      loading: t('pledge/submit/loading/stripe')
+      loading: t('pledge/submit/loading/stripe'),
     }))
 
     if (values.paymentSource) {
       this.pay({
         pledgeId,
         method: 'STRIPE',
-        sourceId: values.paymentSource
+        sourceId: values.paymentSource,
       })
       return
     }
 
     this.payment.stripe
       .createPaymentMethod()
-      .then(paymentMethod => {
+      .then((stripePaymentMethod) => {
         this.setState({
           loading: false,
-          paymentError: undefined
+          paymentError: undefined,
         })
         this.pay({
           pledgeId,
           method: 'STRIPE',
-          sourceId: paymentMethod.id,
-          pspPayload: paymentMethod
+          sourceId: stripePaymentMethod.id,
+          pspPayload: stripePaymentMethod,
         })
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({
           loading: false,
-          paymentError: error
+          paymentError: error,
         })
       })
   }
+
+  payWithWallet(pledgeId, stripePaymentMethod) {
+    const { t } = this.props
+    this.setState(() => ({
+      loading: t('pledge/submit/loading/stripe'),
+    }))
+
+    return this.pay({
+      pledgeId,
+      method: 'STRIPE',
+      sourceId: stripePaymentMethod.id,
+      pspPayload: stripePaymentMethod,
+    })
+  }
+
+  handleWalletPayIntent() {
+    const { t } = this.props
+    this.setState({
+      loading: t(
+        `account/pledges/payment/method/${this.props.paymentRequest.usedWallet}`,
+      ),
+      paymentError: undefined,
+    })
+
+    this.props.paymentRequest.show(
+      // Payment success handler
+      async (ev) => {
+        const payerInformation = getPayerInformationFromEvent(ev)
+
+        this.props.contactState.onChange({
+          values: {
+            firstName: payerInformation.firstName || null,
+            lastName: payerInformation.lastName || null,
+            email: this.props.customMe?.email ?? payerInformation.email,
+          },
+          errors: {
+            firstName: null,
+            lastName: null,
+            email: null,
+          },
+        })
+
+        if (!this.props.customMe?.address && payerInformation.billingAddress) {
+          this.props.addressState.onChange({
+            values: payerInformation.billingAddress,
+            errors: {},
+          })
+        }
+
+        if (payerInformation.shippingAddress) {
+          this.props.shippingAddressState.onChange({
+            values: payerInformation.shippingAddress,
+            errors: {},
+          })
+        }
+
+        return this.submitPledge(ev.paymentMethod)
+      },
+      // Cancel Handler
+      () => {
+        this.setState({
+          loading: false,
+          paymentError: t('account/pledges/payment/canceled'),
+        })
+      },
+    )
+  }
+
   getErrorMessages() {
-    const { consents, values } = this.state
+    const { consents } = this.state
     const {
       t,
       options,
@@ -473,50 +661,62 @@ class Submit extends Component {
       requireShippingAddress,
       shippingAddressState,
       syncAddresses,
-      contactState
+      contactState,
+      selectedPaymentMethod,
     } = this.props
+
+    const isStripeWalletPayment = this.isStripeWalletPayment()
 
     return [
       {
         category: t('pledge/submit/error/title'),
         messages: [options.length < 1 && t('pledge/submit/package/error')]
           .concat(objectValues(this.props.errors))
-          .concat(objectValues(contactState.errors))
+          .concat(!isStripeWalletPayment && objectValues(contactState.errors))
+          .concat(
+            isStripeWalletPayment &&
+              this.props.paymentRequest.loading &&
+              t('account/pledges/payment/methods/wallet/loading', {
+                wallet: t(
+                  `account/pledges/payment/method/${this.props.paymentRequest.usedWallet}`,
+                ),
+              }),
+          )
           .concat(objectValues(this.state.errors))
           .concat([
-            !values.paymentMethod && t('pledge/submit/payMethod/error'),
-            getConsentsError(t, getRequiredConsents(this.props), consents)
+            !selectedPaymentMethod && t('pledge/submit/payMethod/error'),
+            getConsentsError(t, getRequiredConsents(this.props), consents),
           ])
-          .filter(Boolean)
+          .filter(Boolean),
       },
       {
         category: t('pledge/address/shipping/title'),
         messages: []
           .concat(
-            requireShippingAddress && objectValues(shippingAddressState.errors)
+            requireShippingAddress &&
+              !isStripeWalletPayment &&
+              objectValues(shippingAddressState.errors),
           )
-          .filter(Boolean)
+          .filter(Boolean),
       },
       {
         category: t('pledge/address/payment/title'),
         messages: []
           .concat(
-            values.paymentMethod === 'PAYMENTSLIP' &&
+            selectedPaymentMethod === 'PAYMENTSLIP' &&
               !syncAddresses &&
-              objectValues(addressState.errors)
+              objectValues(addressState.errors),
           )
-          .filter(Boolean)
-      }
-    ].filter(d => d.messages.length)
+          .filter(Boolean),
+      },
+    ].filter((d) => d.messages.length)
   }
-  getAutoPayValue() {
-    const { forceAutoPay, options } = this.props
-    const {
-      values: { paymentMethod },
-      autoPay
-    } = this.state
 
-    if (paymentMethod !== 'STRIPE') {
+  getAutoPayValue() {
+    const { forceAutoPay, options, selectedPaymentMethod } = this.props
+    const { autoPay } = this.state
+
+    if (!selectedPaymentMethod || !selectedPaymentMethod.startsWith('STRIPE')) {
       return undefined
     }
     if (forceAutoPay) {
@@ -524,36 +724,35 @@ class Submit extends Component {
     }
     if (autoPay === undefined) {
       return (
-        options.every(option => option.autoPay !== false) &&
-        options.some(option => option.autoPay)
+        options.every((option) => option.autoPay !== false) &&
+        options.some((option) => option.autoPay)
       )
     }
     return autoPay
   }
+
   renderAutoPay() {
-    const {
-      values: { paymentMethod }
-    } = this.state
-    if (paymentMethod !== 'STRIPE') {
+    const { selectedPaymentMethod } = this.props
+    if (!selectedPaymentMethod || !selectedPaymentMethod.startsWith('STRIPE')) {
       return null
     }
     const { t, packageName, forceAutoPay, options } = this.props
 
-    if (options.every(option => option.autoPay === undefined)) {
+    if (options.every((option) => option.autoPay === undefined)) {
       return null
     }
 
     const label = t.first([
       `pledge/submit/${packageName}/autoPay`,
-      'pledge/submit/autoPay'
+      'pledge/submit/autoPay',
     ])
     const note = t.first(
       [
         `pledge/submit/${packageName}/autoPay/note`,
-        'pledge/submit/autoPay/note'
+        'pledge/submit/autoPay/note',
       ],
       undefined,
-      null
+      null,
     )
 
     return (
@@ -575,18 +774,21 @@ class Submit extends Component {
       </div>
     )
   }
+
   render() {
     const {
       emailVerify,
       paymentError,
       submitError,
       signInError,
-      loading
+      loading: loadingState,
     } = this.state
     const {
       me,
       t,
       query,
+      selectedPaymentMethod,
+      setSelectedPaymentMethod,
       paymentMethods,
       packageName,
       requireShippingAddress,
@@ -598,44 +800,76 @@ class Submit extends Component {
       setSyncAddresses,
       packageGroup,
       customMe,
-      contactState
+      contactState,
+      paymentRequest: {
+        usedWallet,
+        loading: paymentRequestLoading,
+        setupError,
+      },
     } = this.props
+
+    const loading =
+      (this.isStripeWalletPayment() &&
+        paymentRequestLoading &&
+        t('account/pledges/payment/methods/loading')) ||
+      loadingState
 
     const errorMessages = this.getErrorMessages()
 
     const contactPreface = t.first(
       [`pledge/contact/preface/${packageName}`, 'pledge/contact/preface'],
       undefined,
-      ''
+      '',
     )
 
     const showSignIn = this.state.showSignIn && !me
 
+    const isStripePayment =
+      selectedPaymentMethod && selectedPaymentMethod.startsWith('STRIPE')
+
+    // even with token or when signed in we still need name fields
+    const requireContactData = contactState.fields.length > 0
+
     return (
       <>
-        {contactPreface && (
-          <div style={{ marginBottom: 40 }}>
-            <P>{contactPreface}</P>
-          </div>
-        )}
-        <H2>
-          {t.first([
-            `pledge/contact/title/${packageName}`,
-            'pledge/contact/title'
-          ])}
-        </H2>
-        <div style={{ marginTop: 10, marginBottom: 40 }}>
-          {me ? (
+        <div {...styles.topMargin}>
+          {contactPreface && (
+            <div style={{ marginBottom: '16px' }}>
+              <P>{contactPreface}</P>
+            </div>
+          )}
+          {!customMe && (
             <>
-              <Interaction.P>
-                {t('pledge/contact/signedinAs', {
-                  nameOrEmail: me.name
-                    ? `${me.name.trim()} (${me.email})`
-                    : me.email
-                })}{' '}
+              <A
+                href='#'
+                onClick={(e) => {
+                  e.preventDefault()
+                  this.setState(() => ({
+                    showSignIn: !showSignIn,
+                  }))
+                }}
+              >
+                {t(`pledge/contact/signIn/${showSignIn ? 'hide' : 'show'}`)}
+              </A>
+              {!!showSignIn && (
+                <>
+                  <br />
+                  <br />
+                  <SignIn context='pledge' />
+                </>
+              )}
+              <br />
+            </>
+          )}
+          {customMe && (
+            <>
+              <Label>{t('pledge/contact/email/label')}</Label>
+              <Interaction.P>{customMe.email}</Interaction.P>
+              <br />
+              {me ? (
                 <A
                   href='#'
-                  onClick={e => {
+                  onClick={(e) => {
                     e.preventDefault()
                     this.setState({ emailVerify: false })
                     this.props.signOut().then(() => {
@@ -643,13 +877,13 @@ class Submit extends Component {
                         values: {
                           firstName: '',
                           lastName: '',
-                          email: ''
+                          email: '',
                         },
                         dirty: {
                           firstName: false,
                           lastName: false,
-                          email: false
-                        }
+                          email: false,
+                        },
                       })
                       this.setState({ showSignIn: false })
                     })
@@ -657,107 +891,100 @@ class Submit extends Component {
                 >
                   {t('pledge/contact/signOut')}
                 </A>
-              </Interaction.P>
-              {/* TODO: add active membership info */}
-            </>
-          ) : (
-            !customMe && (
-              <>
-                <A
-                  href='#'
-                  onClick={e => {
-                    e.preventDefault()
-                    this.setState(() => ({
-                      showSignIn: !showSignIn
-                    }))
-                  }}
-                >
-                  {t(`pledge/contact/signIn/${showSignIn ? 'hide' : 'show'}`)}
-                </A>
-                {!!showSignIn && (
-                  <>
-                    <br />
-                    <br />
-                    <SignIn context='pledge' />
-                  </>
-                )}
-                <br />
-              </>
-            )
-          )}
-          {!showSignIn && (
-            <>
-              {customMe && !me ? (
-                <>
-                  <Interaction.P>
-                    <Label>{t('pledge/contact/email/label')}</Label>
-                    <br />
-                    {customMe.email}
-                  </Interaction.P>
-                  <br />
-                  <Link
-                    href={{
-                      pathname: '/angebote',
-                      query: {
-                        package: packageName
-                      }
-                    }}
-                    replace
-                    passHref
-                  >
-                    <A>{t('pledge/contact/signIn/wrongToken')}</A>
-                  </Link>
-                </>
               ) : (
-                <FieldSet {...contactState} />
+                <Link
+                  href={{
+                    pathname: '/angebote',
+                    query: {
+                      package: packageName,
+                    },
+                  }}
+                  replace
+                  passHref
+                >
+                  <A>{t('pledge/contact/signIn/wrongToken')}</A>
+                </Link>
               )}
             </>
           )}
         </div>
-        <PaymentForm
-          key={me && me.id}
-          ref={this.paymentRef}
-          t={t}
-          loadSources={!!me || !!query.token}
-          accessToken={query.token}
-          requireShippingAddress={requireShippingAddress}
-          payload={{
-            id: this.state.pledgeId,
-            userId: this.state.userId,
-            total: this.props.total,
-            pfAliasId: this.state.pfAliasId,
-            pfSHA: this.state.pfSHA
-          }}
-          context={packageName}
-          allowedMethods={paymentMethods}
-          userName={userName}
-          userAddress={userAddress}
-          addressState={addressState}
-          shippingAddressState={shippingAddressState}
-          syncAddresses={syncAddresses}
-          packageGroup={packageGroup}
-          setSyncAddresses={setSyncAddresses}
-          onChange={fields => {
-            this.setState(state => {
-              const nextState = FieldSet.utils.mergeFields(fields)(state)
-
-              if (
-                state.values.paymentMethod !== nextState.values.paymentMethod ||
-                state.values.paymentSource !== nextState.values.paymentSource
-              ) {
-                nextState.showErrors = false
-                nextState.errors = {}
+        <div {...styles.topMargin}>
+          <PaymentForm
+            key={me && me.id}
+            ref={this.paymentRef}
+            t={t}
+            loadSources={!!me || !!query.token}
+            accessToken={query.token}
+            requireShippingAddress={requireShippingAddress}
+            payload={{
+              id: this.state.pledgeId,
+              userId: this.state.userId,
+              total: this.props.total,
+              pfAliasId: this.state.pfAliasId,
+              pfSHA: this.state.pfSHA,
+            }}
+            context={packageName}
+            allowedMethods={paymentMethods}
+            erroredMethods={setupError ? [usedWallet] : undefined}
+            userName={userName}
+            userAddress={userAddress}
+            addressState={addressState}
+            shippingAddressState={shippingAddressState}
+            syncAddresses={syncAddresses}
+            packageGroup={packageGroup}
+            setSyncAddresses={setSyncAddresses}
+            onChange={(fields) => {
+              const setPaymentMethod =
+                fields.values?.paymentMethod &&
+                fields.values.paymentMethod !== selectedPaymentMethod
+              if (setPaymentMethod) {
+                setSelectedPaymentMethod(fields.values.paymentMethod)
               }
+              this.setState((state) => {
+                const nextState = FieldSet.utils.mergeFields(fields)(state)
 
-              return nextState
-            })
-          }}
-          values={this.state.values}
-          errors={this.state.errors}
-          dirty={this.state.dirty}
-        />
-        <br />
-        <br />
+                if (
+                  setPaymentMethod ||
+                  state.values.paymentSource !== nextState.values.paymentSource
+                ) {
+                  nextState.showErrors = false
+                  nextState.errors = {}
+                  nextState.paymentError = undefined
+                }
+
+                return nextState
+              })
+            }}
+            values={{
+              ...this.state.values,
+              paymentMethod: selectedPaymentMethod,
+            }}
+            errors={this.state.errors}
+            dirty={this.state.dirty}
+          >
+            {isStripePayment && !!setupError && (
+              <ErrorMessage error={setupError} />
+            )}
+            {
+              // Only render the browser API in case we're not using a browser payment API
+              requireContactData &&
+                this.props.selectedPaymentMethod &&
+                !this.isStripeWalletPayment() && (
+                  <div {...styles.topMargin}>
+                    <Label>
+                      {t.first([
+                        `pledge/contact/title/${packageName}`,
+                        'pledge/contact/title',
+                      ])}
+                    </Label>
+                    <div style={{ marginTop: 10, marginBottom: 10 }}>
+                      {requireContactData && <FieldSet {...contactState} />}
+                    </div>
+                  </div>
+                )
+            }
+          </PaymentForm>
+        </div>
         {emailVerify && !me && (
           <div style={{ marginBottom: 40 }}>
             <P style={{ marginBottom: 10 }}>
@@ -781,13 +1008,13 @@ class Submit extends Component {
           <ErrorMessage style={{ margin: '0 0 40px' }} error={signInError} />
         )}
         {loading ? (
-          <div style={{ textAlign: 'center' }}>
+          <div {...styles.topMargin} style={{ textAlign: 'center' }}>
             <InlineSpinner />
             <br />
             {loading}
           </div>
         ) : (
-          <div>
+          <div {...styles.topMargin} {...styles.spaceBetweenChildren}>
             {!!this.state.showErrors && errorMessages.length > 0 && (
               <ErrorContainer style={{ marginBottom: 40 }}>
                 {errorMessages.map(({ category, messages }, i) => (
@@ -806,27 +1033,29 @@ class Submit extends Component {
             <Consents
               required={getRequiredConsents(this.props)}
               accepted={this.state.consents}
-              onChange={keys => {
+              onChange={(keys) => {
                 this.setState(() => ({
-                  consents: keys
+                  consents: keys,
                 }))
               }}
             />
             {this.renderAutoPay()}
-            <br />
-            <br />
             <div style={{ opacity: errorMessages.length ? 0.5 : 1 }}>
               <Button
                 block
                 primary={!errorMessages.length}
                 onClick={() => {
-                  this.submitPledge()
+                  if (!errorMessages.length && this.isStripeWalletPayment()) {
+                    this.handleWalletPayIntent()
+                  } else {
+                    this.submitPledge()
+                  }
                 }}
               >
                 {t('pledge/submit/button/pay', {
                   formattedChf: this.props.total
                     ? chfFormat(this.props.total / 100)
-                    : ''
+                    : '',
                 })}
               </Button>
             </div>
@@ -846,7 +1075,7 @@ Submit.propTypes = {
   options: PropTypes.array.isRequired,
   submit: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
-  onError: PropTypes.func.isRequired
+  onError: PropTypes.func.isRequired,
 }
 
 const submitPledge = gql`
@@ -928,37 +1157,37 @@ const syncPaymentIntentMutation = gql`
 `
 
 let pendingOrder
-const setPendingOrder = order => {
+const setPendingOrder = (order) => {
   pendingOrder = order
 }
 
-export const withPay = Component => {
+export const withPay = (Component) => {
   const EnhancedComponent = compose(
     graphql(syncPaymentIntentMutation, {
       props: ({ mutate }) => ({
-        syncPaymentIntent: variables => {
+        syncPaymentIntent: (variables) => {
           return mutate({
-            variables
+            variables,
           })
-        }
-      })
+        },
+      }),
     }),
     graphql(payPledge, {
       props: ({ mutate, ownProps: { syncPaymentIntent } }) => ({
-        pay: variables =>
+        pay: (variables) =>
           mutate({
             variables,
-            refetchQueries: [{ query: addressQuery }]
-          }).then(async response => {
+            refetchQueries: [{ query: addressQuery }],
+          }).then(async (response) => {
             const {
-              data: { payPledge }
+              data: { payPledge },
             } = response
             if (payPledge.stripeClientSecret) {
               const stripeClient = await loadStripe(
-                payPledge.stripePublishableKey
+                payPledge.stripePublishableKey,
               )
               const confirmResult = await stripeClient.confirmCardPayment(
-                payPledge.stripeClientSecret
+                payPledge.stripeClientSecret,
               )
               if (confirmResult.error) {
                 throw confirmResult.error.message
@@ -967,15 +1196,15 @@ export const withPay = Component => {
             await Promise.all(
               [
                 pendingOrder &&
-                  new Promise(resolve => {
-                    pendingOrder.options.forEach(option => {
+                  new Promise((resolve) => {
+                    pendingOrder.options.forEach((option) => {
                       track([
                         'addEcommerceItem',
                         option.templateId, // (required) SKU: Product unique identifier
                         undefined, // (optional) Product name
                         undefined, // (optional) Product category
                         option.price / 100, // (recommended) Product price
-                        option.amount // (optional, default to 1) Product quantity
+                        option.amount, // (optional, default to 1) Product quantity
                       ])
                     })
                     track([
@@ -985,42 +1214,42 @@ export const withPay = Component => {
                       undefined, // (optional) Order sub total (excludes shipping)
                       undefined, // (optional) Tax amount
                       undefined, // (optional) Shipping amount
-                      !!pendingOrder.reason // (optional) Discount offered (set to false for unspecified parameter)
+                      !!pendingOrder.reason, // (optional) Discount offered (set to false for unspecified parameter)
                     ])
                     // give matomo half a second to track
                     setTimeout(() => {
                       resolve()
                     }, 500)
                   }),
-                payPledge.stripePaymentIntentId && syncPaymentIntent(payPledge)
-              ].filter(Boolean)
+                payPledge.stripePaymentIntentId && syncPaymentIntent(payPledge),
+              ].filter(Boolean),
             )
 
             return response
-          })
-      })
+          }),
+      }),
     }),
-    withSignIn
+    withSignIn,
   )(Component)
-  return props => <EnhancedComponent {...props} />
+  return (props) => <EnhancedComponent {...props} />
 }
 
 const SubmitWithMutations = compose(
   graphql(submitPledge, {
     props: ({ mutate }) => ({
-      submit: variables => {
+      submit: (variables) => {
         setPendingOrder(variables)
 
         return mutate({
-          variables
+          variables,
         })
-      }
-    })
+      },
+    }),
   }),
   withSignOut,
   withPay,
   withMe,
-  withT
+  withT,
 )(SubmitWithHooks)
 
 export default SubmitWithMutations

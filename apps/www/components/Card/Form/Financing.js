@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react'
+import { useState, Fragment } from 'react'
 import AutosizeInput from 'react-textarea-autosize'
 import compose from 'lodash/flowRight'
 import { withRouter } from 'next/router'
@@ -14,35 +14,35 @@ const { H2, H3, P } = Interaction
 const styles = {
   headline: css({
     marginTop: 40,
-    marginBottom: 40
+    marginBottom: 40,
   }),
   section: css({
-    marginTop: 40
+    marginTop: 40,
   }),
   questionContainer: css({
     [mediaQueries.mUp]: {
       display: 'flex',
       justifyContent: 'space-between',
-      paddingTop: 20
-    }
+      paddingTop: 20,
+    },
   }),
   textQuestionContainer: css({
     [mediaQueries.mUp]: {
-      paddingTop: 20
-    }
+      paddingTop: 20,
+    },
   }),
   question: css({
     [mediaQueries.mUp]: {
-      paddingRight: 40
-    }
+      paddingRight: 40,
+    },
   }),
   field: css({
     paddingBottom: 20,
     [mediaQueries.mUp]: {
       flexBasis: 200,
-      minWidth: 200
-    }
-  })
+      minWidth: 200,
+    },
+  }),
 }
 
 const sections = [1, 2, 3]
@@ -50,78 +50,78 @@ const sections = [1, 2, 3]
 const questions = [
   {
     id: '1',
-    section: 1
+    section: 1,
   },
   {
     id: '1a',
     section: 1,
-    requires: ['1']
+    requires: ['1'],
   },
   {
     id: '1b',
     section: 1,
-    requires: ['1']
+    requires: ['1'],
   },
   {
     id: '1bI',
     section: 1,
-    requires: ['1', '1b']
+    requires: ['1', '1b'],
   },
   {
     id: '1c',
     section: 1,
-    requires: ['1']
+    requires: ['1'],
   },
   {
     id: '1cI',
     section: 1,
     type: 'text',
-    transform: v => v,
-    requires: ['1', '1c']
+    transform: (v) => v,
+    requires: ['1', '1c'],
   },
   {
     id: '1cII',
     section: 1,
-    requires: ['1', '1c']
+    requires: ['1', '1c'],
   },
   {
     id: '1d',
     section: 1,
-    requires: ['1']
+    requires: ['1'],
   },
   {
     id: '2',
-    section: 2
+    section: 2,
   },
   {
     id: '2a',
     section: 2,
-    requires: ['2']
+    requires: ['2'],
   },
   {
     id: '2b',
     section: 2,
-    requires: ['2']
+    requires: ['2'],
   },
   {
     id: '2c',
     section: 2,
-    requires: ['2']
+    requires: ['2'],
   },
   {
     id: '2d',
     section: 2,
-    requires: ['2']
+    requires: ['2'],
   },
   {
     id: '3',
     section: 3,
     type: 'text',
-    transform: v => v
-  }
+    transform: (v) => v,
+  },
 ]
 
-const FinancingQuestion = props => {
+const FinancingQuestion = (props) => {
   const { locale, t } = props
   const { id, type, transform, requires } = props.question
   const { value, error, dirty } = props.financing.value[id] || {}
@@ -130,7 +130,7 @@ const FinancingQuestion = props => {
     id,
     value: value || '',
     error: error || false,
-    dirty: dirty || true
+    dirty: dirty || true,
   })
 
   const handleQuestion = (value, shouldValidate) => {
@@ -138,7 +138,7 @@ const FinancingQuestion = props => {
       ...financingQuestion,
       value: (transform && transform(value)) || value.replace(/[^0-9]/g, ''),
       error: false,
-      dirty: shouldValidate
+      dirty: shouldValidate,
     }
 
     setFinancingQuestion(updateFinancingQuestion)
@@ -150,7 +150,7 @@ const FinancingQuestion = props => {
     requires &&
     !value &&
     !requires.every(
-      id => props.financing.value[id] && +props.financing.value[id].value
+      (id) => props.financing.value[id] && +props.financing.value[id].value,
     )
   ) {
     return null
@@ -163,7 +163,7 @@ const FinancingQuestion = props => {
           <P>
             {t.first([
               `components/Card/Form/Financing/question/${id}/${locale}`,
-              `components/Card/Form/Financing/question/${id}`
+              `components/Card/Form/Financing/question/${id}`,
             ])}
           </P>
         </div>
@@ -173,7 +173,7 @@ const FinancingQuestion = props => {
               `components/Card/Form/Financing/question/${id}/label/${locale}`,
               `components/Card/Form/Financing/question/${id}/label`,
               `components/Card/Form/Financing/question/label/${locale}`,
-              'components/Card/Form/Financing/question/label'
+              'components/Card/Form/Financing/question/label',
             ])}
             renderInput={({ ref, ...inputProps }) => (
               <AutosizeInput
@@ -200,7 +200,7 @@ const FinancingQuestion = props => {
         <P>
           {t.first([
             `components/Card/Form/Financing/question/${id}/${locale}`,
-            `components/Card/Form/Financing/question/${id}`
+            `components/Card/Form/Financing/question/${id}`,
           ])}
         </P>
       </div>
@@ -210,7 +210,7 @@ const FinancingQuestion = props => {
             `components/Card/Form/Financing/question/${id}/label/${locale}`,
             `components/Card/Form/Financing/question/${id}/label`,
             `components/Card/Form/Financing/question/label/${locale}`,
-            'components/Card/Form/Financing/question/label'
+            'components/Card/Form/Financing/question/label',
           ])}
           value={financingQuestion.value}
           error={financingQuestion.dirty && financingQuestion.error}
@@ -224,27 +224,27 @@ const FinancingQuestion = props => {
   )
 }
 
-const Financing = props => {
+const Financing = (props) => {
   const {
     router: {
-      query: { locale }
+      query: { locale },
     },
-    t
+    t,
   } = props
 
   const [financing, setFinancing] = useState(props.financing || {})
 
-  const handleFinancingQuestion = value => {
+  const handleFinancingQuestion = (value) => {
     const { id, error, dirty, ...response } = value
 
     const updatedFinancing = {
       ...financing,
       value: {
         ...financing.value,
-        [value.id]: response
+        [value.id]: response,
       },
       error: false,
-      dirty: false
+      dirty: false,
     }
 
     setFinancing(updatedFinancing)
@@ -257,21 +257,21 @@ const Financing = props => {
       <H2 {...styles.headline}>
         {t.first([
           `components/Card/Form/Financing/headline/${locale}`,
-          'components/Card/Form/Financing/headline'
+          'components/Card/Form/Financing/headline',
         ])}
       </H2>
 
-      {sections.map(section => (
+      {sections.map((section) => (
         <Fragment key={`financing-section-${section}`}>
           <H3 {...styles.section}>
             {t.first([
               `components/Card/Form/Financing/section/${section}/${locale}`,
-              `components/Card/Form/Financing/section/${section}`
+              `components/Card/Form/Financing/section/${section}`,
             ])}
           </H3>
           {questions
-            .filter(q => q.section === section)
-            .map(question => (
+            .filter((q) => q.section === section)
+            .map((question) => (
               <FinancingQuestion
                 key={`financing-question-${question.id}`}
                 question={question}

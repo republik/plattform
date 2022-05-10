@@ -1,11 +1,10 @@
-import React from 'react'
 import { css } from 'glamor'
 import {
   A,
   Button,
   Center,
   Interaction,
-  mediaQueries
+  mediaQueries,
 } from '@project-r/styleguide'
 import Box from './Box'
 import { useInNativeApp } from '../../lib/withInNativeApp'
@@ -18,23 +17,23 @@ const styles = {
     alignItems: 'center',
     width: '100%',
     '> *:not(:last-child)': {
-      marginBottom: 16
+      marginBottom: 16,
     },
     [mediaQueries.mUp]: {
       width: 'auto',
       flexDirection: 'row',
       '> *:not(:last-child)': {
         marginBottom: 0,
-        marginRight: 16
-      }
-    }
+        marginRight: 16,
+      },
+    },
   }),
   primaryAction: css({
     width: '100%',
     [mediaQueries.mUp]: {
-      width: 'auto'
-    }
-  })
+      width: 'auto',
+    },
+  }),
 }
 
 const LegacyAppNoticeBox = ({ t }) => {

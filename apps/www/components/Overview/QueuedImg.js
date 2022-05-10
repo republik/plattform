@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 
 const queue = []
 
@@ -17,8 +17,8 @@ const loadEnded = () => {
 }
 
 const loadedSrcs = new Set()
-const loadImage = src => {
-  return new Promise(resolve => {
+const loadImage = (src) => {
+  return new Promise((resolve) => {
     const job = () => {
       const img = new window.Image()
       img.onerror = () => {
@@ -41,7 +41,7 @@ class QueuedImg extends Component {
   constructor(props, ...args) {
     super(props, ...args)
     this.state = {}
-    this.loadSrc = src => {
+    this.loadSrc = (src) => {
       if (!loadedSrcs.has(src)) {
         loadImage(src).then(() => {
           if (!this.ignore) {

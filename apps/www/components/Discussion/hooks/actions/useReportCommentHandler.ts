@@ -10,8 +10,8 @@ function useReportCommentHandler(): ReportCommentHandler {
   function reportCommentHandler(commentId) {
     return reportCommentMutation({
       variables: {
-        commentId: commentId
-      }
+        commentId: commentId,
+      },
     }).catch(toRejectedString)
   }
 

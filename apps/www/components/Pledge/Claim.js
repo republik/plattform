@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import PropTypes from 'prop-types'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
@@ -15,7 +15,7 @@ class ClaimPledge extends Component {
     super(props)
     this.state = {
       loading: false,
-      error: undefined
+      error: undefined,
     }
   }
   claim() {
@@ -26,20 +26,20 @@ class ClaimPledge extends Component {
       return
     }
     this.setState(() => ({
-      loading: true
+      loading: true,
     }))
     this.props
       .claim(id)
       .then(() => {
         gotoMerci({
           id,
-          package: pkg
+          package: pkg,
         })
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState(() => ({
           loading: false,
-          error
+          error,
         }))
       })
   }
@@ -77,7 +77,7 @@ class ClaimPledge extends Component {
 ClaimPledge.propTypes = {
   me: PropTypes.object,
   id: PropTypes.string.isRequired,
-  t: PropTypes.func.isRequired
+  t: PropTypes.func.isRequired,
 }
 
 const claimPledge = gql`
@@ -88,11 +88,11 @@ const claimPledge = gql`
 
 export default graphql(claimPledge, {
   props: ({ mutate }) => ({
-    claim: pledgeId =>
+    claim: (pledgeId) =>
       mutate({
         variables: {
-          pledgeId
-        }
-      })
-  })
+          pledgeId,
+        },
+      }),
+  }),
 })(ClaimPledge)

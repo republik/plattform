@@ -116,7 +116,7 @@ export const getRandomReason = () => {
     text: d.description,
     order: randomIndex,
     metadata: {
-      originLong: d.originLong
-    }
+      originLong: d.originLong,
+    },
   }
 }

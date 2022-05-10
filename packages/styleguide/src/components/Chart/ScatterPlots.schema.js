@@ -3,7 +3,7 @@ export const scatterPlotEditorSchema = ({
   defaults,
   colorDropdownItems,
   chartSizes,
-  columnAmount
+  columnAmount,
 }) => {
   return {
     defaultProps: defaults,
@@ -15,14 +15,14 @@ export const scatterPlotEditorSchema = ({
             color: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: optionalDataColumnEnum
+              enum: optionalDataColumnEnum,
             },
             colorRange: {
               title: 'Farbschema auswählen',
               type: 'string',
-              enum: colorDropdownItems
-            }
-          }
+              enum: colorDropdownItems,
+            },
+          },
         },
         layout: {
           title: 'Aufteilen in mehrere Charts',
@@ -30,15 +30,15 @@ export const scatterPlotEditorSchema = ({
             column: {
               title: 'Spalte auswählen',
               type: 'string',
-              enum: optionalDataColumnEnum
+              enum: optionalDataColumnEnum,
             },
             columns: {
               title: 'Anzahl Spalten pro Zeile',
               type: 'number',
-              enum: columnAmount
-            }
-          }
-        }
+              enum: columnAmount,
+            },
+          },
+        },
       },
       advanced: {
         layout: {
@@ -47,11 +47,11 @@ export const scatterPlotEditorSchema = ({
             size: {
               title: 'Darstellung im Beitrag',
               type: 'string',
-              enum: chartSizes
-            }
-          }
-        }
-      }
-    }
+              enum: chartSizes,
+            },
+          },
+        },
+      },
+    },
   }
 }

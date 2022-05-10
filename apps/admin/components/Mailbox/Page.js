@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 import InfiniteScroller from 'react-infinite-scroller'
@@ -47,8 +47,8 @@ const Page = withT(({ params, onChange }) => {
   }, [params])
 
   const debounceOnChange = useCallback(
-    debounce(current => onChange({ ...params, ...current }), 400),
-    []
+    debounce((current) => onChange({ ...params, ...current }), 400),
+    [],
   )
 
   const onChangeSearch = (_, value) => {
@@ -56,7 +56,7 @@ const Page = withT(({ params, onChange }) => {
     setSearch(value)
   }
 
-  const toggleFilterErrornous = e => {
+  const toggleFilterErrornous = (e) => {
     e?.preventDefault()
     onChange({ ...params, hasError: !params?.hasError ? true : null })
   }
@@ -67,7 +67,7 @@ const Page = withT(({ params, onChange }) => {
       variables={{
         hasError: !!params?.hasError,
         search: params?.search,
-        id: params?.mailId
+        id: params?.mailId,
       }}
     >
       {({ loading, error, data, fetchMore }) => {
@@ -75,7 +75,7 @@ const Page = withT(({ params, onChange }) => {
           fetchMore({
             variables: {
               after: data.mailbox.pageInfo.endCursor,
-              hasError: !!params?.hasError
+              hasError: !!params?.hasError,
             },
             updateQuery: (previousResult, { fetchMoreResult }) => {
               const previousNodes = previousResult.mailbox.nodes
@@ -89,10 +89,10 @@ const Page = withT(({ params, onChange }) => {
                 mailbox: {
                   __typename,
                   nodes: [...previousNodes, ...fetchedNodes],
-                  pageInfo: newPageInfo
-                }
+                  pageInfo: newPageInfo,
+                },
               }
-            }
+            },
           })
 
         return (

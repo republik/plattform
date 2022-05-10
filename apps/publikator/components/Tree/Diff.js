@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { css } from 'glamor'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
@@ -10,14 +10,9 @@ import {
   Overlay,
   OverlayToolbar,
   OverlayBody,
-  Loader
+  Loader,
+  IconButton,
 } from '@project-r/styleguide'
-
-const styles = {
-  linkDiff: css({
-    cursor: 'pointer'
-  })
-}
 
 export const TREE_DIFF_QUERY = gql`
   query TreeDiff($repoId: ID!, $commitId: ID!, $parentCommitId: ID!) {
@@ -56,19 +51,27 @@ export default function TreeDiff(props) {
   const variables = {
     repoId: props.repoId,
     commitId: props.commit.id,
-    parentCommitId: props.commit.parentIds?.[0]
+    parentCommitId: props.commit.parentIds?.[0],
   }
 
   const newStyles = {
     diffContainer: { wordBreak: 'break-word' },
     wordDiff: { display: 'inline' },
     wordAdded: { display: 'inline' },
-    wordRemoved: { display: 'inline' }
+    wordRemoved: { display: 'inline' },
   }
 
   return (
     <>
-      <MdWrapText size={18} {...styles.linkDiff} onClick={handleOnClick} />
+      <IconButton
+        size={24}
+        label='Änderungen'
+        labelShort=''
+        Icon={MdWrapText}
+        onClick={handleOnClick}
+        invert
+        style={{ marginRight: 0 }}
+      />
       {isVisible && (
         <Query query={TREE_DIFF_QUERY} variables={variables}>
           {({ loading, error, data }) => (

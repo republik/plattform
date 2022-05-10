@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
@@ -11,7 +11,7 @@ import {
   colors,
   FormatTag,
   fontStyles,
-  mediaQueries
+  mediaQueries,
 } from '@project-r/styleguide'
 import NavLink from './NavLink'
 import Link from 'next/link'
@@ -55,7 +55,7 @@ const Panel = ({
   closeHandler,
   color,
   meta,
-  formats
+  formats,
 }) => {
   const panelRef = useRef(null)
   const [panelHeight, setPanelHeight] = useState()
@@ -76,7 +76,7 @@ const Panel = ({
         isMobile
           ? {
               height: isActivePanel ? `${panelHeight}px` : 0,
-              opacity: isActivePanel ? 1 : 0
+              opacity: isActivePanel ? 1 : 0,
             }
           : {}
       }
@@ -118,7 +118,7 @@ const SectionNav = ({
   data: { loading, error, sections },
   active,
   closeHandler,
-  dark
+  dark,
 }) => {
   const [isMobile, setIsMobile] = useState(false)
   const [activePanel, setActivePanel] = useState(null)
@@ -194,7 +194,7 @@ const SectionNav = ({
                             transition: 'transform 0.3s ease-out',
                             transform: isActivePanel
                               ? 'rotate(270deg)'
-                              : 'rotate(90deg)'
+                              : 'rotate(90deg)',
                           }}
                         />
                       </div>
@@ -227,14 +227,14 @@ const styles = {
     marginTop: 0,
     marginBottom: 24,
     [mediaQueries.mUp]: {
-      flexDirection: 'row'
+      flexDirection: 'row',
     },
     '& a': {
       ...fontStyles.sansSerifMedium20,
       [mediaQueries.mUp]: {
-        ...fontStyles.sansSerifMedium22
-      }
-    }
+        ...fontStyles.sansSerifMedium22,
+      },
+    },
   }),
   formatLink: css({
     color: 'inherit',
@@ -243,32 +243,32 @@ const styles = {
     '& div': {
       ...fontStyles.sansSerifMedium16,
       [mediaQueries.mUp]: {
-        ...fontStyles.sansSerifMedium20
-      }
-    }
+        ...fontStyles.sansSerifMedium20,
+      },
+    },
   }),
   sectionLink: css({
     '& a': {
       margin: '0 20px 5px 0',
       ...fontStyles.sansSerifMedium20,
       [mediaQueries.mUp]: {
-        ...fontStyles.sansSerifMedium22
-      }
-    }
+        ...fontStyles.sansSerifMedium22,
+      },
+    },
   }),
   accordionHead: css({
     display: 'flex',
     justifyContent: 'space-between',
     cursor: 'pointer',
-    [mediaQueries.mUp]: {}
+    [mediaQueries.mUp]: {},
   }),
   accordionBody: css({
     overflow: 'hidden',
     transition: 'height 0.2s ease-out, opacity 0.3s ease-out',
     [mediaQueries.mUp]: {
-      overflow: 'initial'
-    }
-  })
+      overflow: 'initial',
+    },
+  }),
 }
 
 export default compose(graphql(getSectionNav))(SectionNav)

@@ -1,4 +1,3 @@
-import React from 'react'
 import dynamic from 'next/dynamic'
 
 import {
@@ -7,7 +6,7 @@ import {
   OverlayToolbar,
   OverlayToolbarClose,
   Interaction,
-  A
+  A,
 } from '@project-r/styleguide'
 
 import Loader from '../Loader'
@@ -21,25 +20,19 @@ import { createPageSchema } from '@project-r/styleguide'
 const pages = [
   {
     href: '/agb',
-    content: dynamic(
-      () => import('../../pages/agb.js').then(mod => mod.Content),
-      { loading: () => <Loader /> }
-    )
+    content: false, // in Publikator since April 2022
   },
   {
     href: '/datenschutz',
-    content: dynamic(
-      () => import('../../pages/datenschutz.js').then(mod => mod.Content),
-      { loading: () => <Loader /> }
-    )
+    content: false, // in Publikator since April 2022
   },
   {
     href: '/statuten',
-    content: false // loads from Publikator
-  }
+    content: false, // loads from Publikator
+  },
 ]
 
-export const SUPPORTED_HREFS = pages.map(p => p.href)
+export const SUPPORTED_HREFS = pages.map((p) => p.href)
 
 const RenderArticle = ({ data }) => (
   <Loader
@@ -53,19 +46,19 @@ const RenderArticle = ({ data }) => (
       const splitContent = article && splitByTitle(article.content)
       const schema = createPageSchema({
         skipContainer: true,
-        skipCenter: true
+        skipCenter: true,
       })
-      const renderSchema = content =>
+      const renderSchema = (content) =>
         renderMdast(
           {
             ...content,
             format: undefined,
             section: undefined,
             series: undefined,
-            repoId: article.repoId
+            repoId: article.repoId,
           },
           schema,
-          { MissingNode: ({ children }) => children }
+          { MissingNode: ({ children }) => children },
         )
 
       return renderSchema(splitContent.main)
@@ -74,7 +67,7 @@ const RenderArticle = ({ data }) => (
 )
 
 const LegalOverlay = ({ onClose, href, title, data }) => {
-  const page = pages.find(p => p.href === href)
+  const page = pages.find((p) => p.href === href)
 
   return (
     <Overlay mUpStyle={{ maxWidth: 720, minHeight: 0 }} onClose={onClose}>
@@ -98,11 +91,11 @@ const LegalOverlay = ({ onClose, href, title, data }) => {
 
 export default compose(
   graphql(getDocument, {
-    skip: props => pages.find(p => p.href === props.href && p.content),
-    options: props => ({
+    skip: (props) => pages.find((p) => p.href === props.href && p.content),
+    options: (props) => ({
       variables: {
-        path: props.href
-      }
-    })
-  })
+        path: props.href,
+      },
+    }),
+  }),
 )(LegalOverlay)

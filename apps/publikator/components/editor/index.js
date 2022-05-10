@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Editor as SlateEditor } from 'slate-react'
 import { css } from 'glamor'
@@ -27,7 +27,7 @@ import createTeaserGroupModule from './modules/teasergroup'
 import {
   createEmbedVideoModule,
   createEmbedTwitterModule,
-  createEmbedCommentModule
+  createEmbedCommentModule,
 } from './modules/embed'
 import createBlockQuoteModule from './modules/blockquote'
 import createLogbookModule from './modules/logbook'
@@ -99,7 +99,7 @@ const moduleCreators = {
   button: createButtonModule,
   variable: createVariableModule,
   variableCondition: createVariableConditionModule,
-  seriesNav: createSeriesNavModule
+  seriesNav: createSeriesNavModule,
 }
 const initModule = (rule, context = {}) => {
   const { editorModule, editorOptions = {} } = rule
@@ -110,13 +110,13 @@ const initModule = (rule, context = {}) => {
     }
     const TYPE = (editorOptions.type || editorModule).toUpperCase()
     const subModules = (rule.rules || [])
-      .map(r => initModule(r, context))
+      .map((r) => initModule(r, context))
       .filter(Boolean)
     const module = create({
       TYPE,
       rule,
       subModules: subModules,
-      context
+      context,
     })
 
     module.TYPE = TYPE
@@ -126,12 +126,12 @@ const initModule = (rule, context = {}) => {
     return module
   }
 }
-const getAllModules = module =>
+const getAllModules = (module) =>
   [module].concat(
     (module.subModules || []).reduce(
       (collector, subModule) => collector.concat(getAllModules(subModule)),
-      []
-    )
+      [],
+    ),
   )
 export const getFromModules = (modules, accessor) =>
   modules
@@ -141,12 +141,12 @@ export const getFromModules = (modules, accessor) =>
 const styles = {
   container: css({
     width: '100%',
-    position: 'relative'
+    position: 'relative',
   }),
   document: css({
     display: 'block',
-    width: '100%'
-  })
+    width: '100%',
+  }),
 }
 
 const Container = ({ children, hide }) => (
@@ -162,7 +162,7 @@ const Document = ({ children, readOnly }) => (
       readOnly
         ? {
             pointerEvents: 'none',
-            opacity: 0.6
+            opacity: 0.6,
           }
         : {}
     }
@@ -174,7 +174,7 @@ const Document = ({ children, readOnly }) => (
 class Editor extends Component {
   constructor(props) {
     super(props)
-    this.onChange = change => {
+    this.onChange = (change) => {
       const { value, onChange, onDocumentChange } = this.props
 
       if (change.value !== value) {
@@ -193,7 +193,7 @@ class Editor extends Component {
     const context = {
       mdastSchema: schema,
       meta: props.meta,
-      isTemplate: props.isTemplate
+      isTemplate: props.isTemplate,
     }
     const rootModule = initModule(rootRule, context)
 
@@ -202,13 +202,13 @@ class Editor extends Component {
 
     const allModules = getAllModules(rootModule)
     const uniqModules = allModules.filter(
-      (m, i, a) => a.findIndex(mm => mm.TYPE === m.TYPE) === i
+      (m, i, a) => a.findIndex((mm) => mm.TYPE === m.TYPE) === i,
     )
 
     this.uniqModules = uniqModules
-    this.plugins = [...getFromModules(uniqModules, m => m.plugins)]
+    this.plugins = [...getFromModules(uniqModules, (m) => m.plugins)]
 
-    this.slateRef = ref => {
+    this.slateRef = (ref) => {
       this.slate = ref
     }
   }
@@ -255,12 +255,12 @@ Editor.propTypes = {
   value: PropTypes.object,
   readOnly: PropTypes.bool,
   onChange: PropTypes.func,
-  onDocumentChange: PropTypes.func
+  onDocumentChange: PropTypes.func,
 }
 
 Editor.defaultProps = {
   onChange: () => true,
-  onDocumentChange: () => true
+  onDocumentChange: () => true,
 }
 
 export default Editor

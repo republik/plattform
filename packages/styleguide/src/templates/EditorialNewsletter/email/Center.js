@@ -23,7 +23,7 @@ export default ({ children }) => {
             maxWidth: 600,
             color: '#000',
             fontSize: 19,
-            fontFamily: fontFamilies.serifRegular
+            fontFamily: fontFamilies.serifRegular,
           }}
         >
           <tbody>

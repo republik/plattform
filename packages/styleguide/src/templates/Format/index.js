@@ -12,7 +12,7 @@ import { styles } from '../Article/utils'
 import {
   matchZone,
   matchHeading,
-  matchParagraph
+  matchParagraph,
 } from 'mdast-react-render/lib/utils'
 
 const DefaultLink = ({ children }) => children
@@ -44,41 +44,45 @@ const createFormatSchema = ({
           { value: 'editorial', text: 'Editorial' },
           { value: 'meta', text: 'Meta' },
           { value: 'scribble', text: 'Ameise' },
-          { value: 'opinion', text: 'Kolumne' }
-        ]
+          { value: 'opinion', text: 'Kolumne' },
+        ],
       },
       {
         label: 'Color',
-        key: 'color'
+        key: 'color',
       },
       {
-        label: 'Sharebild (Hintergrund weiss)',
-        key: 'shareBackgroundImage'
-      },
-      {
-        label: 'Sharebild (mit Hintergrundfarbe)',
-        key: 'shareBackgroundImageInverted'
+        label: 'Externe Basis-URL',
+        key: 'externalBaseUrl',
       },
       {
         label: 'Sharetafel Logo',
-        key: 'shareLogo'
+        key: 'shareLogo',
+      },
+      {
+        label: 'Sharebild (Hintergrund weiss)',
+        key: 'shareBackgroundImage',
+      },
+      {
+        label: 'Sharebild (mit Hintergrundfarbe)',
+        key: 'shareBackgroundImageInverted',
       },
       {
         label: 'Dossier',
         key: 'dossier',
-        ref: 'repo'
+        ref: 'repo',
       },
       {
         label: 'Diskussion',
         key: 'discussion',
-        ref: 'repo'
+        ref: 'repo',
       },
       {
         label: 'Rubrik',
         key: 'section',
-        ref: 'repo'
+        ref: 'repo',
       },
-      ...customMetaFields
+      ...customMetaFields,
     ],
     series,
     darkMode,
@@ -106,11 +110,11 @@ const createFormatSchema = ({
       ),
       props: (node, index, parent, { ancestors }) => ({
         ...node.data,
-        section: ancestors[ancestors.length - 1].section
+        section: ancestors[ancestors.length - 1].section,
       }),
       editorModule: 'title',
       editorOptions: {
-        coverType: COVER_TYPE
+        coverType: COVER_TYPE,
       },
       rules: [
         {
@@ -124,20 +128,20 @@ const createFormatSchema = ({
             type: 'H1',
             placeholder: 'Titel',
             depth: 1,
-            isStatic: true
-          }
+            isStatic: true,
+          },
         },
         {
           matchMdast: matchParagraph,
-          component: () => null
-        }
-      ]
+          component: () => null,
+        },
+      ],
     },
-    previewTeaser: props => (
+    previewTeaser: (props) => (
       <div
         style={{
           backgroundColor: '#fff',
-          padding: '30px'
+          padding: '30px',
         }}
       >
         <FormatTag
@@ -153,7 +157,7 @@ const createFormatSchema = ({
         />
       </div>
     ),
-    ...args
+    ...args,
   })
 }
 

@@ -16,14 +16,14 @@ const styles = {
     paddingLeft: DEFAULT_PADDING,
     paddingRight: DEFAULT_PADDING,
     ':first-child': {
-      paddingLeft: 0
+      paddingLeft: 0,
     },
     ':last-child': {
-      paddingRight: 0
+      paddingRight: 0,
     },
     '@media print': {
-      display: 'none'
-    }
+      display: 'none',
+    },
   }),
   text: css({
     display: 'inline-block',
@@ -32,13 +32,13 @@ const styles = {
     verticalAlign: 'middle',
     marginTop: -1,
     paddingLeft: 4,
-    ...sansSerifMedium16
+    ...sansSerifMedium16,
   }),
   icon: css({
     display: 'inline-block',
     marginBottom: -2,
-    verticalAlign: 'middle'
-  })
+    verticalAlign: 'middle',
+  }),
 }
 
 export const IconLink = React.forwardRef(
@@ -49,7 +49,7 @@ export const IconLink = React.forwardRef(
     const lineHeight = small ? '20px' : undefined
     const patchedStyle = {
       marginLeft: small ? 0 : 20,
-      ...style
+      ...style,
     }
     const linkStyleRule = useMemo(
       () =>
@@ -59,11 +59,11 @@ export const IconLink = React.forwardRef(
           '@media (hover)': {
             ':hover': {
               color: colorScheme.getCSSColor('primaryHover'),
-              fill: colorScheme.getCSSColor('primaryHover')
-            }
-          }
+              fill: colorScheme.getCSSColor('primaryHover'),
+            },
+          },
         }),
-      [colorScheme]
+      [colorScheme],
     )
 
     return (
@@ -85,7 +85,7 @@ export const IconLink = React.forwardRef(
         )}
       </a>
     )
-  }
+  },
 )
 
 IconLink.propTypes = {
@@ -93,7 +93,7 @@ IconLink.propTypes = {
   onClick: PropTypes.func,
   discussionCommentsCount: PropTypes.number,
   style: PropTypes.object,
-  small: PropTypes.bool
+  small: PropTypes.bool,
 }
 
 const Icon = ({ size, ...props }) => (

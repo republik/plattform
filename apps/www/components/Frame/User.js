@@ -1,15 +1,14 @@
-import React from 'react'
 import { css } from 'glamor'
 import {
   mediaQueries,
   fontStyles,
   plainButtonRule,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import {
   HEADER_HEIGHT,
   HEADER_HEIGHT_MOBILE,
-  HEADER_HORIZONTAL_PADDING
+  HEADER_HORIZONTAL_PADDING,
 } from '../constants'
 import { AccountBoxIcon } from '@project-r/styleguide'
 import withT from '../../lib/withT'
@@ -20,7 +19,7 @@ const BUTTON_SIZE_MOBILE = 26
 const BUTTON_PADDING = (HEADER_HEIGHT - BUTTON_SIZE) / 2
 const BUTTON_PADDING_MOBILE = (HEADER_HEIGHT_MOBILE - BUTTON_SIZE_MOBILE) / 2
 
-export const getInitials = me =>
+export const getInitials = (me) =>
   (me.name && me.name.trim()
     ? me.name.split(' ').filter((n, i, all) => i === 0 || all.length - 1 === i)
     : me.email
@@ -30,7 +29,7 @@ export const getInitials = me =>
   )
     .slice(0, 2)
     .filter(Boolean)
-    .map(s => s[0])
+    .map((s) => s[0])
     .join('')
 
 const User = ({ t, me, title, backButton, onClick, isOnMarketingPage }) => {
@@ -43,7 +42,7 @@ const User = ({ t, me, title, backButton, onClick, isOnMarketingPage }) => {
         style={{
           paddingLeft: backButton
             ? BUTTON_PADDING_MOBILE / 2
-            : HEADER_HORIZONTAL_PADDING
+            : HEADER_HORIZONTAL_PADDING,
         }}
       >
         {!me && (
@@ -74,8 +73,8 @@ const User = ({ t, me, title, backButton, onClick, isOnMarketingPage }) => {
                   '}else if(a){',
                   'document.querySelector("[data-temporary-initials]").setAttribute("data-initials",a);',
                   '}',
-                  '}catch(e){}'
-                ].join('')
+                  '}catch(e){}',
+                ].join(''),
               }}
             />
           </>
@@ -120,16 +119,16 @@ const styles = {
     width: 'auto',
     [mediaQueries.mUp]: {
       height: HEADER_HEIGHT,
-      width: 'auto'
-    }
+      width: 'auto',
+    },
   }),
   button: css({
     display: 'inline-block',
     textDecoration: 'none',
     padding: `${BUTTON_PADDING_MOBILE}px`,
     [mediaQueries.mUp]: {
-      padding: `${BUTTON_PADDING}px`
-    }
+      padding: `${BUTTON_PADDING}px`,
+    },
   }),
   portrait: css({
     position: 'relative',
@@ -146,20 +145,20 @@ const styles = {
       fontSize: BUTTON_SIZE / 2,
       lineHeight: `${BUTTON_SIZE + 5}px`,
       height: `${BUTTON_SIZE}px`,
-      width: `${BUTTON_SIZE}px`
-    }
+      width: `${BUTTON_SIZE}px`,
+    },
   }),
   temporaryInitals: css({
     ':before': {
       // textContent is replaced by React while meLoading, we use a before element to work around that
-      content: 'attr(data-initials)'
-    }
+      content: 'attr(data-initials)',
+    },
   }),
   temporaryPortrait: css({
     display: 'none',
     '&[src]': {
-      display: 'inline-block'
-    }
+      display: 'inline-block',
+    },
   }),
   anonymous: css({
     display: 'inline-block',
@@ -168,22 +167,22 @@ const styles = {
       height: BUTTON_SIZE_MOBILE,
       [mediaQueries.mUp]: {
         width: BUTTON_SIZE,
-        height: BUTTON_SIZE
-      }
-    }
+        height: BUTTON_SIZE,
+      },
+    },
   }),
   labelMarketing: css({
     display: 'inline-block',
     verticalAlign: 'middle',
-    marginLeft: 5
+    marginLeft: 5,
   }),
   labelDefault: css({
     display: 'none',
     verticalAlign: 'middle',
     marginLeft: 5,
     [mediaQueries.mUp]: {
-      display: 'inline-block'
-    }
+      display: 'inline-block',
+    },
   }),
   stack: css({
     position: 'relative',
@@ -191,12 +190,12 @@ const styles = {
     width: `${BUTTON_SIZE_MOBILE}px`,
     [mediaQueries.mUp]: {
       height: `${BUTTON_SIZE}px`,
-      width: `${BUTTON_SIZE}px`
+      width: `${BUTTON_SIZE}px`,
     },
     '& > *': {
-      position: 'absolute'
-    }
-  })
+      position: 'absolute',
+    },
+  }),
 }
 
 export default withT(User)

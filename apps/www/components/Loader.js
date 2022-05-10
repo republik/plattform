@@ -1,8 +1,7 @@
-import React from 'react'
 import { HEADER_HEIGHT } from './constants'
 import { Loader, NarrowContainer } from '@project-r/styleguide'
 
-const PageLoader = props => (
+const PageLoader = (props) => (
   <Loader
     ErrorContainer={NarrowContainer}
     {...props}

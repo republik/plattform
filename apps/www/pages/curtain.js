@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import Head from 'next/head'
 import { withRouter } from 'next/router'
@@ -7,7 +6,7 @@ import {
   NarrowContainer,
   Logo,
   mediaQueries,
-  fontStyles
+  fontStyles,
 } from '@project-r/styleguide'
 
 import { SPACE } from '../components/Frame/PureFooter'
@@ -18,14 +17,14 @@ import {
   CDN_FRONTEND_BASE_URL,
   CURTAIN_MESSAGE,
   CURTAIN_META,
-  CURTAIN_COLORS
+  CURTAIN_COLORS,
 } from '../lib/constants'
 import withDefaultSSR from '../lib/hocs/withDefaultSSR'
 
 const colors = {
   color: '#fff',
   backgroundColor: '#000',
-  ...parseJSONObject(CURTAIN_COLORS)
+  ...parseJSONObject(CURTAIN_COLORS),
 }
 
 const styles = {
@@ -36,8 +35,8 @@ const styles = {
     WebkitFontSmoothing: 'antialiased',
     '& ::selection': {
       color: colors.backgroundColor,
-      backgroundColor: colors.color
-    }
+      backgroundColor: colors.color,
+    },
   }),
   logoContainer: css({
     textAlign: 'center',
@@ -47,8 +46,8 @@ const styles = {
     marginRight: 'auto',
     [mediaQueries.mUp]: {
       width: 280,
-      paddingTop: SPACE * 2
-    }
+      paddingTop: SPACE * 2,
+    },
   }),
   message: css({
     textAlign: 'center',
@@ -58,9 +57,9 @@ const styles = {
     '& a': {
       color: colors.color,
       textDecoration: 'underline',
-      textDecorationSkip: 'ink'
-    }
-  })
+      textDecorationSkip: 'ink',
+    },
+  }),
 }
 
 const Page = ({ router }) => {
@@ -69,7 +68,7 @@ const Page = ({ router }) => {
     description: CURTAIN_MESSAGE,
     image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
     ...parseJSONObject(CURTAIN_META),
-    url: `${PUBLIC_BASE_URL}${router.asPath.split('#')[0]}`
+    url: `${PUBLIC_BASE_URL}${router.asPath.split('#')[0]}`,
   }
 
   return (
@@ -94,7 +93,7 @@ const Page = ({ router }) => {
         <div
           {...styles.message}
           dangerouslySetInnerHTML={{
-            __html: CURTAIN_MESSAGE
+            __html: CURTAIN_MESSAGE,
           }}
         />
       </NarrowContainer>

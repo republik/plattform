@@ -1,5 +1,4 @@
-import React from 'react'
-import { compose } from 'react-apollo'
+import { compose } from 'react-apollo'
 
 import withMe from '../../lib/withMe'
 import withT from '../../lib/withT'

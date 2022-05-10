@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 
 import { parseDate, swissTime } from '../../lib/utils/format'
@@ -11,7 +10,7 @@ import {
   RawHtml,
   fontFamilies,
   mediaQueries,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 
 import ActionBar from '../ActionBar'
@@ -24,7 +23,7 @@ const BLOCK_PADDING_TOP = 10
 
 const styles = {
   container: css({
-    marginBottom: 60
+    marginBottom: 60,
   }),
   block: css({
     padding: `${BLOCK_PADDING_TOP}px 0`,
@@ -33,17 +32,17 @@ const styles = {
     position: 'relative',
     wordWrap: 'break-word',
     [mediaQueries.mUp]: {
-      paddingLeft: EVENT_PADDING
-    }
+      paddingLeft: EVENT_PADDING,
+    },
   }),
   hr: css({
     height: 0,
     border: 0,
     borderTopWidth: 1,
-    borderTopStyle: 'solid'
+    borderTopStyle: 'solid',
   }),
   title: css({
-    marginBottom: 15
+    marginBottom: 15,
   }),
   label: css({
     fontSize: 17,
@@ -52,9 +51,9 @@ const styles = {
       lineHeight: '25px',
       position: 'absolute',
       left: 0,
-      top: BLOCK_PADDING_TOP + 3
-    }
-  })
+      top: BLOCK_PADDING_TOP + 3,
+    },
+  }),
 }
 
 const Label = ({ children }) => <div {...styles.label}>{children}</div>
@@ -74,8 +73,8 @@ const Event = withT(
       time,
       where,
       locationLink,
-      slug
-    }
+      slug,
+    },
   }) => {
     const [colorScheme] = useColorContext()
     const date = parseDate(rawDate)
@@ -94,7 +93,7 @@ const Event = withT(
       emailSubject: title,
       tweet: title,
       shareOverlayTitle: t('events/share/title'),
-      label: t('events/share/title')
+      label: t('events/share/title'),
     }
     const borderRule = colorScheme.set('borderTopColor', 'divider')
 
@@ -107,7 +106,7 @@ const Event = withT(
             type={P}
             key={slug}
             dangerouslySetInnerHTML={{
-              __html: description.split('\n').join('<br />')
+              __html: description.split('\n').join('<br />'),
             }}
           />
           {!!link && (
@@ -134,7 +133,7 @@ const Event = withT(
         </div>
       </div>
     )
-  }
+  },
 )
 
 export default Event

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
@@ -18,7 +18,7 @@ const SignUp = ({
   t,
   requestSubscription,
   context = 'newsletter',
-  skipTitle
+  skipTitle,
 }) => {
   const [state, setState] = useState(() => checkEmail({ value: '', t }))
   const [serverState, setServerState] = useState({})
@@ -42,7 +42,7 @@ const SignUp = ({
       {...state}
       label={t('Auth/NewsletterSignUp/submit')}
       onChange={setState}
-      onSubmit={e => {
+      onSubmit={(e) => {
         e.preventDefault()
         if (state.error) {
           setState({ ...state, dirty: true })
@@ -58,13 +58,13 @@ const SignUp = ({
           variables: {
             name,
             email: state.email,
-            context
-          }
+            context,
+          },
         })
           .then(() => {
             setServerState({ loading: false, success: true })
           })
-          .catch(error => {
+          .catch((error) => {
             setServerState({ loading: false, error })
           })
       }}
@@ -89,7 +89,7 @@ export default compose(
   withMe,
   graphql(signUpMutation, {
     props: ({ mutate }) => ({
-      requestSubscription: mutate
-    })
-  })
+      requestSubscription: mutate,
+    }),
+  }),
 )(SignUp)

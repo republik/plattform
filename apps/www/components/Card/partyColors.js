@@ -90,5 +90,5 @@ const map = {
   PF: '#B5B5B6',
   SLB: '#B5B5B7',
   DU: '#9D9D9D',
-  UNABH: '#B5B5B8'
+  UNABH: '#B5B5B8',
 }

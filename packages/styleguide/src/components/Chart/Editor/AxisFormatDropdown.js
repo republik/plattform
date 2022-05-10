@@ -3,7 +3,7 @@ import CustomValueDropdown from './CustomValueDropdown'
 
 import { numberFormats, timeFormats, timeParsing } from './utils'
 
-export const AxisFormatDropdown = props => {
+export const AxisFormatDropdown = (props) => {
   const {
     property,
     context,
@@ -12,7 +12,7 @@ export const AxisFormatDropdown = props => {
     timeParse,
     xNumberFormat,
     parent,
-    defaultProps
+    defaultProps,
   } = props
   if (context === 'time') {
     return (

@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import { colors } from '@project-r/styleguide'
 
@@ -14,9 +13,9 @@ const styles = {
     lineHeight: 0,
     transition: 'outline-color 0.2s',
     '&[data-active="true"]': {
-      outlineColor: colors.primary
-    }
-  })
+      outlineColor: colors.primary,
+    },
+  }),
 }
 
 export default ({ rule, subModules, TYPE }) => {
@@ -25,25 +24,25 @@ export default ({ rule, subModules, TYPE }) => {
   const figureImage = {
     match: matchBlock(TYPE),
     matchMdast: rule.matchMdast,
-    fromMdast: node => {
-      const imageNodes = node.children.filter(child => child.type === 'image')
+    fromMdast: (node) => {
+      const imageNodes = node.children.filter((child) => child.type === 'image')
       return {
         kind: 'block',
         type: TYPE,
         data: {
           alt: imageNodes[0].alt,
           src: imageNodes[0].url,
-          srcDark: imageNodes.length === 2 ? imageNodes[1].url : null
+          srcDark: imageNodes.length === 2 ? imageNodes[1].url : null,
         },
         isVoid: true,
-        nodes: []
+        nodes: [],
       }
     },
-    toMdast: object => {
+    toMdast: (object) => {
       const mainImage = {
         type: 'image',
         alt: object.data.alt,
-        url: object.data.src
+        url: object.data.src,
       }
       return {
         type: 'paragraph',
@@ -51,21 +50,21 @@ export default ({ rule, subModules, TYPE }) => {
           ? [
               mainImage,
               { type: 'text', value: ' ' },
-              { type: 'image', alt: object.data.alt, url: object.data.srcDark }
+              { type: 'image', alt: object.data.alt, url: object.data.srcDark },
             ]
-          : [mainImage]
+          : [mainImage],
       }
-    }
+    },
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [figureImage]
+    rules: [figureImage],
   })
 
   return {
     TYPE,
     helpers: {
-      serializer
+      serializer,
     },
     changes: {},
     plugins: [
@@ -74,7 +73,7 @@ export default ({ rule, subModules, TYPE }) => {
           const { node, editor, attributes } = props
           if (node.type !== TYPE) return
           const active = editor.value.blocks.some(
-            block => block.key === node.key
+            (block) => block.key === node.key,
           )
 
           return (
@@ -83,7 +82,7 @@ export default ({ rule, subModules, TYPE }) => {
                 src={node.data.get('src') || gray2x1}
                 dark={{
                   src:
-                    node.data.get('srcDark') || node.data.get('src') || gray2x1
+                    node.data.get('srcDark') || node.data.get('src') || gray2x1,
                 }}
                 alt={node.data.get('alt')}
               />
@@ -93,11 +92,11 @@ export default ({ rule, subModules, TYPE }) => {
         schema: {
           blocks: {
             [TYPE]: {
-              isVoid: true
-            }
-          }
-        }
-      }
-    ]
+              isVoid: true,
+            },
+          },
+        },
+      },
+    ],
   }
 }

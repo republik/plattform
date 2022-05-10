@@ -1,4 +1,3 @@
-import React from 'react'
 import compose from 'lodash/flowRight'
 import { withRouter } from 'next/router'
 
@@ -41,7 +40,7 @@ const IndexPage = ({ t, isMember, router }) => {
     title: t('pages/index/title'),
     description: t('pages/index/description'),
     image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
-    url: `${PUBLIC_BASE_URL}/`
+    url: `${PUBLIC_BASE_URL}/`,
   }
   return (
     <Frame raw meta={meta} isOnMarketingPage={true}>

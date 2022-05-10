@@ -26,7 +26,7 @@ const Icon = ({ size, fill, off }) => {
 Icon.defaultProps = {
   size: 24,
   fill: '#fff',
-  off: true
+  off: true,
 }
 
 export default Icon

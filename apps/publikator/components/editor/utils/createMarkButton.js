@@ -2,13 +2,17 @@ import { Mark } from 'slate'
 import { matchMark } from './'
 import createFormatButton from './createFormatButton'
 
-const isDisabled = markType => ({ value }) =>
-  value.isBlurred || (value.isEmpty && !isActive(markType)({ value }))
+const isDisabled =
+  (markType) =>
+  ({ value }) =>
+    value.isBlurred || (value.isEmpty && !isActive(markType)({ value }))
 
-const isActive = markType => ({ value }) =>
-  value.marks.some(matchMark(markType))
+const isActive =
+  (markType) =>
+  ({ value }) =>
+    value.marks.some(matchMark(markType))
 
-const reducer = markType => props => event => {
+const reducer = (markType) => (props) => (event) => {
   const { onChange, value } = props
   event.preventDefault()
   if (value.isEmpty) {
@@ -33,7 +37,7 @@ const reducer = markType => props => event => {
     return onChange(
       value
         .change()
-        .removeMarkByKey(key, start, length, Mark.create({ type: markType }))
+        .removeMarkByKey(key, start, length, Mark.create({ type: markType })),
     )
   } else {
     let change = value.change()
@@ -47,15 +51,17 @@ const reducer = markType => props => event => {
   }
 }
 
-const defaultOptions = markType => ({
+const defaultOptions = (markType) => ({
   isDisabled: isDisabled(markType),
   isActive: isActive(markType),
-  reducer: reducer(markType)
+  reducer: reducer(markType),
 })
 
-const createMarkButton = ({ type, ...options }) => Component =>
-  createFormatButton({
-    ...defaultOptions(type),
-    ...options
-  })(Component)
+const createMarkButton =
+  ({ type, ...options }) =>
+  (Component) =>
+    createFormatButton({
+      ...defaultOptions(type),
+      ...options,
+    })(Component)
 export default createMarkButton

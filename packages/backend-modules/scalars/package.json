@@ -20,7 +20,7 @@
     "link": "yarn link"
   },
   "dependencies": {
-    "apollo-modules-node": "^0.1.4",
+    "apollo-modules-node": "*",
     "graphql": "^15.3.0",
     "graphql-type-json": "^0.3.2"
   }

@@ -1,4 +1,3 @@
-import test from 'tape'
 import { transformData } from './transformData'
 
 const mockCommits = [
@@ -9,8 +8,8 @@ const mockCommits = [
     message: 'Initial version',
     author: {
       email: 'uxengine@users.noreply.github.com',
-      name: 'Daniel Pfänder'
-    }
+      name: 'Daniel Pfänder',
+    },
   },
   {
     id: 'id2',
@@ -19,8 +18,8 @@ const mockCommits = [
     message: 'Added lead',
     author: {
       email: 'patte@users.noreply.github.com',
-      name: 'Patrick Recher'
-    }
+      name: 'Patrick Recher',
+    },
   },
   {
     id: 'id3',
@@ -29,8 +28,8 @@ const mockCommits = [
     message: 'Tried something',
     author: {
       email: 'uxengine@users.noreply.github.com',
-      name: 'Daniel Pfänder'
-    }
+      name: 'Daniel Pfänder',
+    },
   },
   {
     id: 'id4',
@@ -39,8 +38,8 @@ const mockCommits = [
     message: 'Added dates and times',
     author: {
       email: 'uxengine@users.noreply.github.com',
-      name: 'Daniel Pfänder'
-    }
+      name: 'Daniel Pfänder',
+    },
   },
   {
     id: 'id5',
@@ -49,8 +48,8 @@ const mockCommits = [
     message: 'Tried more',
     author: {
       email: 'uxengine@users.noreply.github.com',
-      name: 'Daniel Pfänder'
-    }
+      name: 'Daniel Pfänder',
+    },
   },
   {
     id: 'id6',
@@ -59,8 +58,8 @@ const mockCommits = [
     message: 'Some more changes',
     author: {
       email: 'uxengine@users.noreply.github.com',
-      name: 'Daniel Pfänder'
-    }
+      name: 'Daniel Pfänder',
+    },
   },
   {
     id: 'id7',
@@ -69,8 +68,8 @@ const mockCommits = [
     message: 'Removed stuff',
     author: {
       email: 'uxengine@users.noreply.github.com',
-      name: 'Daniel Pfänder'
-    }
+      name: 'Daniel Pfänder',
+    },
   },
   {
     id: 'id8',
@@ -79,8 +78,8 @@ const mockCommits = [
     message: 'More changes',
     author: {
       email: 'uxengine@users.noreply.github.com',
-      name: 'Daniel Pfänder'
-    }
+      name: 'Daniel Pfänder',
+    },
   },
   {
     id: 'id9',
@@ -89,8 +88,8 @@ const mockCommits = [
     message: 'Corrected facts',
     author: {
       email: 'uxengine@users.noreply.github.com',
-      name: 'Daniel Pfänder'
-    }
+      name: 'Daniel Pfänder',
+    },
   },
   {
     id: 'id10',
@@ -99,25 +98,25 @@ const mockCommits = [
     message: 'Almost ready',
     author: {
       email: 'uxengine@users.noreply.github.com',
-      name: 'Daniel Pfänder'
-    }
-  }
+      name: 'Daniel Pfänder',
+    },
+  },
 ]
 
-test('components.Tree.transformData', assert => {
+it('components.Tree.transformData', () => {
   const assertCommit = (commit, id, slotIndex) => {
-    assert.equal(commit.id, id, 'commit id')
-    assert.equal(commit.data.slotIndex, slotIndex, 'commit slotIndex ' + id)
+    expect(commit.id).toBe(id)
+    expect(commit.data.slotIndex).toBe(slotIndex)
   }
 
   const assertLink = (link, sourceId, destinationId) => {
-    assert.equal(link.sourceId, sourceId, 'link sourceId')
-    assert.equal(link.destinationId, destinationId, 'link destinationId')
+    expect(link.sourceId).toBe(sourceId)
+    expect(link.destinationId).toBe(destinationId)
   }
 
   const { commits, links } = transformData({
     commits: mockCommits,
-    milestones: []
+    milestones: [],
   })
 
   // Verify the commits' order and assigned slotIndeces.
@@ -143,6 +142,4 @@ test('components.Tree.transformData', assert => {
   assertLink(links[7], 'id8', 'id9')
   assertLink(links[8], 'id6', 'id9')
   assertLink(links[9], 'id9', 'id10')
-
-  assert.end()
 })

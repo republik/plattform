@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import { Editorial, renderCommentMdast } from '@project-r/styleguide'
 
@@ -11,21 +10,21 @@ const styles = {
     marginBottom: 60,
     '& p': {
       fontSize: '1.1875rem',
-      lineHeight: '1.875rem'
-    }
-  })
+      lineHeight: '1.875rem',
+    },
+  }),
 }
 
-const fields = t => [
+const fields = (t) => [
   {
     label: t('profile/biography/label'),
     name: 'biography',
     autoSize: true,
-    validator: value =>
+    validator: (value) =>
       value &&
       value.trim().length >= 1500 &&
-      t('profile/biography/label/tooLong')
-  }
+      t('profile/biography/label/tooLong'),
+  },
 ]
 
 export default withT(({ user, isEditing, t, ...props }) => {

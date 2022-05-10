@@ -1,4 +1,3 @@
-import React from 'react'
 import compose from 'lodash/flowRight'
 
 import withT from '../../lib/withT'
@@ -14,7 +13,7 @@ const SettingsPage = ({ t }) => {
   return (
     <Frame
       meta={{
-        title: t('pages/account/newsletter/title')
+        title: t('pages/account/newsletter/title'),
       }}
     >
       <AccountEnforceMe>

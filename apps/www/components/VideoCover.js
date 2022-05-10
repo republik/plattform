@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { css } from 'glamor'
 import { VideoPlayer, mediaQueries } from '@project-r/styleguide'
 import { PlayIcon } from '@project-r/styleguide'
@@ -8,11 +8,11 @@ import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE, ZINDEX_HEADER } from './constants'
 
 const blinkBg = css.keyframes({
   'from, to': {
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
   },
   '50%': {
-    backgroundColor: 'white'
-  }
+    backgroundColor: 'white',
+  },
 })
 
 const MAX_HEIGHT = 0.7
@@ -26,8 +26,8 @@ const styles = {
     backgroundColor: '#000',
     transition: 'height 200ms',
     '& > div': {
-      height: '100%'
-    }
+      height: '100%',
+    },
   }),
   cover: css({
     position: 'absolute',
@@ -35,18 +35,18 @@ const styles = {
     zIndex: 1,
     left: 0,
     top: 0,
-    right: 0
+    right: 0,
   }),
   maxWidth: css({
     position: 'relative',
     margin: '0 auto',
     maxWidth: `${MAX_HEIGHT_VH * ASPECT_RATIO}vh`,
     overflow: 'hidden',
-    textAlign: 'center'
+    textAlign: 'center',
   }),
   poster: css({
     width: 'auto',
-    height: `${(1 / ASPECT_RATIO) * 100}vw`
+    height: `${(1 / ASPECT_RATIO) * 100}vw`,
   }),
   cursor: css({
     position: 'absolute',
@@ -56,15 +56,15 @@ const styles = {
     width: '0.3%',
     minWidth: 1,
     maxWidth: 2,
-    animation: `1s ${blinkBg} step-end infinite`
+    animation: `1s ${blinkBg} step-end infinite`,
   }),
   play: css({
     position: 'absolute',
     top: '60%',
     left: '5%',
     right: '5%',
-    textAlign: 'center'
-  })
+    textAlign: 'center',
+  }),
 }
 
 class VideoCover extends Component {
@@ -73,7 +73,7 @@ class VideoCover extends Component {
 
     this.state = {
       playing: undefined,
-      cover: !props.backgroundAutoPlay
+      cover: !props.backgroundAutoPlay,
     }
     this.measure = () => {
       this.setState(() => {
@@ -83,11 +83,11 @@ class VideoCover extends Component {
         return {
           mobile: windowWidth < mediaQueries.mBreakPoint,
           windowHeight,
-          videoHeight
+          videoHeight,
         }
       })
     }
-    this.ref = ref => {
+    this.ref = (ref) => {
       this.player = ref
     }
   }
@@ -98,7 +98,7 @@ class VideoCover extends Component {
       this.setState(() => {
         this.player.play()
         return {
-          cover: false
+          cover: false,
         }
       })
     }
@@ -118,28 +118,22 @@ class VideoCover extends Component {
       muted,
       loop,
       playTop,
-      customCover
+      customCover,
     } = this.props
-    const {
-      playing,
-      ended,
-      videoHeight,
-      windowHeight,
-      mobile,
-      cover
-    } = this.state
+    const { playing, ended, videoHeight, windowHeight, mobile, cover } =
+      this.state
 
     const limitedHeight = !!limited || !playing || !videoHeight
     const heightStyle = {
       height: playing && !ended && !limitedHeight ? windowHeight : videoHeight,
-      maxHeight: limitedHeight ? `${MAX_HEIGHT_VH}vh` : undefined
+      maxHeight: limitedHeight ? `${MAX_HEIGHT_VH}vh` : undefined,
     }
     return (
       <div
         {...styles.wrapper}
         style={{
           ...heightStyle,
-          zIndex: !limitedHeight ? ZINDEX_HEADER + 1 : undefined
+          zIndex: !limitedHeight ? ZINDEX_HEADER + 1 : undefined,
         }}
       >
         <div
@@ -150,7 +144,7 @@ class VideoCover extends Component {
               this.player.toggle()
               return {
                 clicked: true,
-                cover: false
+                cover: false,
               }
             })
           }}
@@ -178,7 +172,7 @@ class VideoCover extends Component {
               ? {
                   ...src,
                   thumbnail:
-                    'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs='
+                    'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=',
                 }
               : src
           }
@@ -188,7 +182,7 @@ class VideoCover extends Component {
             backgroundAutoPlay
               ? {
                   playsInline: true,
-                  'webkit-playsinline': ''
+                  'webkit-playsinline': '',
                 }
               : {}
           }
@@ -200,16 +194,16 @@ class VideoCover extends Component {
               scrollIt(window.pageYOffset + top, 400)
             }
             this.setState(() => ({
-              playing: true
+              playing: true,
             }))
           }}
           onPause={() => {
             this.setState(() => ({
               ended: false,
-              playing: false
+              playing: false,
             }))
           }}
-          onProgress={progress => {
+          onProgress={(progress) => {
             if (loop) {
               return
             }
@@ -237,18 +231,18 @@ class VideoCover extends Component {
                     top +
                       Math.min(
                         this.state.videoHeight,
-                        this.state.windowHeight * MAX_HEIGHT
+                        this.state.windowHeight * MAX_HEIGHT,
                       ) -
                       topFixed +
                       10,
-                    duration
+                    duration,
                   )
                   setTimeout(() => {
                     this.setState(() => ({
-                      playing: false
+                      playing: false,
                     }))
                   }, duration / 2)
-                }
+                },
               )
             }
             if (progress > 0.999 && !cover) {

@@ -100,7 +100,7 @@ module.exports = {
       // Adopted filter when role "editor" is present
       editor: ({ scheduledAt, ignorePrepublished, id, ids } = {}) => {
         const should = []
-        
+
         if (ignorePrepublished) {
           // Filter documents which are published
           should.push({ term: { '__state.published': true } })
@@ -338,6 +338,9 @@ module.exports = {
             },
             audioSource: {
               properties: {
+                kind: {
+                  type: 'keyword',
+                },
                 mp3: {
                   type: 'keyword',
                 },

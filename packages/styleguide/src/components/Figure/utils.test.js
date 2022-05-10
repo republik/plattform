@@ -25,10 +25,10 @@ describe('Figure util test-suite', () => {
     expect(props.src).toBe('image.jpg?size=4500x2500&resize=2000x')
     expect(props.size).toStrictEqual({
       width: 4500,
-      height: 2500
+      height: 2500,
     })
     expect(props.srcSet).toBe(
-      'image.jpg?size=4500x2500&resize=1000x 1000w,image.jpg?size=4500x2500&resize=2000x 2000w,image.jpg?size=4500x2500&resize=4000x 4000w'
+      'image.jpg?size=4500x2500&resize=1000x 1000w,image.jpg?size=4500x2500&resize=2000x 2000w,image.jpg?size=4500x2500&resize=4000x 4000w',
     )
     expect(props.maxWidth).toBe(4500)
   })
@@ -38,10 +38,10 @@ describe('Figure util test-suite', () => {
     expect(props.src).toBe('image.jpg?size=4500x2500&resize=2000x')
     expect(props.size).toStrictEqual({
       width: 4500,
-      height: 2500
+      height: 2500,
     })
     expect(props.srcSet).toBe(
-      'image.jpg?size=4500x2500&resize=1000x 1000w,image.jpg?size=4500x2500&resize=2000x 2000w,image.jpg?size=4500x2500&resize=4000x 4000w'
+      'image.jpg?size=4500x2500&resize=1000x 1000w,image.jpg?size=4500x2500&resize=2000x 2000w,image.jpg?size=4500x2500&resize=4000x 4000w',
     )
     expect(props.maxWidth).toBeUndefined()
   })
@@ -51,11 +51,11 @@ describe('Figure util test-suite', () => {
     expect(props.src).toBe('image.jpg?size=2000x1500&resize=2000x')
     expect(props.size).toStrictEqual({
       width: 2000,
-      height: 1500
+      height: 1500,
     })
     // no retina if it would be bigger or equal to the source
     expect(props.srcSet).toBe(
-      'image.jpg?size=2000x1500&resize=1000x 1000w,image.jpg?size=2000x1500&resize=2000x 2000w'
+      'image.jpg?size=2000x1500&resize=1000x 1000w,image.jpg?size=2000x1500&resize=2000x 2000w',
     )
     expect(props.maxWidth).toBe(2000)
   })
@@ -65,11 +65,11 @@ describe('Figure util test-suite', () => {
     expect(props.src).toBe('image.jpg?size=3000x1500&resize=2000x')
     expect(props.size).toStrictEqual({
       width: 3000,
-      height: 1500
+      height: 1500,
     })
     // no retina if it would be bigger or equal to the source
     expect(props.srcSet).toBe(
-      'image.jpg?size=3000x1500&resize=1000x 1000w,image.jpg?size=3000x1500&resize=2000x 2000w,image.jpg?size=3000x1500&resize=3000x 3000w'
+      'image.jpg?size=3000x1500&resize=1000x 1000w,image.jpg?size=3000x1500&resize=2000x 2000w,image.jpg?size=3000x1500&resize=3000x 3000w',
     )
     expect(props.maxWidth).toBe(3000)
   })
@@ -79,7 +79,7 @@ describe('Figure util test-suite', () => {
     expect(props.src).toBe('image.svg?size=2x1')
     expect(props.size).toStrictEqual({
       width: 2,
-      height: 1
+      height: 1,
     })
     expect(props.srcSet).toBeUndefined()
   })

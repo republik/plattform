@@ -23,6 +23,6 @@
     "dotenv": "^8.2.0"
   },
   "dependencies": {
-    "apollo-modules-node": "^0.1.4"
+    "apollo-modules-node": "*"
   }
 }

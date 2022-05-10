@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { Component, Fragment } from 'react'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import Textarea from 'react-textarea-autosize'
@@ -11,7 +11,7 @@ import {
   OverlayToolbar,
   Interaction,
   Field,
-  Loader
+  Loader,
 } from '@project-r/styleguide'
 
 import { TextButton } from '../../Display/utils'
@@ -30,7 +30,7 @@ export default class ResolvePledgeToPayment extends Component {
     super(props)
     this.state = {
       isOpen: false,
-      reason: ''
+      reason: '',
     }
 
     this.reasonChangeHandler = (_, value) => {
@@ -41,12 +41,12 @@ export default class ResolvePledgeToPayment extends Component {
       this.setState(() => ({ isOpen: false }))
     }
 
-    this.submitHandler = mutation => () => {
+    this.submitHandler = (mutation) => () => {
       return mutation({
         variables: {
           pledgeId: this.props.pledge.id,
-          reason: this.state.reason
-        }
+          reason: this.state.reason,
+        },
       }).then(() => this.setState(() => ({ reason: '', isOpen: false })))
     }
   }
@@ -83,13 +83,13 @@ export default class ResolvePledgeToPayment extends Component {
                           <Field
                             label='Grund'
                             value={reason}
-                            renderInput={inputProps => (
+                            renderInput={(inputProps) => (
                               <Textarea
                                 {...inputProps}
                                 {...css({
                                   minHeight: 40,
                                   paddingTop: '7px !important',
-                                  paddingBottom: '6px !important'
+                                  paddingBottom: '6px !important',
                                 })}
                               />
                             )}

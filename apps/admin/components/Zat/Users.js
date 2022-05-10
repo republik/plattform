@@ -1,13 +1,12 @@
-import React from 'react'
 import gql from 'graphql-tag'
 import { A } from '@project-r/styleguide'
 
 import Memberships, { fragments as UserMemberships } from './User/Memberships'
 import AccessGrants, {
-  fragments as UserAccessGrants
+  fragments as UserAccessGrants,
 } from './User/AccessGrants'
 import NewsletterSettings, {
-  fragments as UserNewsletterSettings
+  fragments as UserNewsletterSettings,
 } from './User/NewsletterSettings'
 import Sessions, { fragments as UserSessions } from './User/Sessions'
 
@@ -33,7 +32,7 @@ export const fragments = gql`
 `
 
 const Users = ({ email, name, users, t }) => {
-  const matchingUser = users?.find(u => u.email === email)
+  const matchingUser = users?.find((u) => u.email === email)
   const hasMatchingUsers = !!matchingUser
 
   return (
@@ -70,7 +69,7 @@ const Users = ({ email, name, users, t }) => {
           memberships,
           accessGrants,
           newsletterSettings,
-          sessions
+          sessions,
         }) => (
           <div key={id} {...styles.item}>
             {/* Name, email address */}
@@ -88,7 +87,7 @@ const Users = ({ email, name, users, t }) => {
             <NewsletterSettings newsletterSettings={newsletterSettings} />
             <Sessions sessions={sessions} />
           </div>
-        )
+        ),
       )}
     </>
   )

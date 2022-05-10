@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import { colors } from '@project-r/styleguide'
 import SortIndicator from '../SortIndicator'
@@ -6,24 +5,24 @@ import SortIndicator from '../SortIndicator'
 export const tableStyles = {
   table: css({
     width: '100%',
-    borderSpacing: 0
+    borderSpacing: 0,
   }),
   link: css({
     textDecoration: 'none',
     color: colors.primary,
     ':visited': {
-      color: colors.primary
+      color: colors.primary,
     },
     ':hover': {
-      color: colors.secondary
+      color: colors.secondary,
     },
-    cursor: 'pointer'
+    cursor: 'pointer',
   }),
   row: css({
     height: '35px',
     '&:nth-child(odd)': {
-      backgroundColor: colors.secondaryBg
-    }
+      backgroundColor: colors.secondaryBg,
+    },
   }),
   headRow: css({
     height: '40px',
@@ -33,77 +32,75 @@ export const tableStyles = {
       background: 'white',
       position: 'sticky',
       top: -20,
-      zIndex: 10
-    }
+      zIndex: 10,
+    },
   }),
   selectableRow: css({
     '& td': {
       transition: 'border-color 0.2s',
       borderTop: `1px solid ${colors.secondary}00`,
-      borderBottom: `1px solid ${colors.secondary}00`
+      borderBottom: `1px solid ${colors.secondary}00`,
     },
     '&[data-active="true"] td': {
       transition: 'none',
-      borderColor: colors.secondary
+      borderColor: colors.secondary,
     },
     '&:hover, &[data-active="true"]': {
-      color: colors.primary
+      color: colors.primary,
     },
     transition: 'color 0.2s',
-    cursor: 'pointer'
+    cursor: 'pointer',
   }),
   emphasisedRow: css({
     '& td': {
-      borderBottom: `1px solid ${colors.text}`
-    }
+      borderBottom: `1px solid ${colors.text}`,
+    },
   }),
   left: css({
-    textAlign: 'left'
+    textAlign: 'left',
   }),
   right: css({
-    textAlign: 'right'
+    textAlign: 'right',
   }),
   center: css({
-    textAlign: 'center'
+    textAlign: 'center',
   }),
   paddedCell: css({
-    padding: '15px 2px'
-  })
+    padding: '15px 2px',
+  }),
 }
 
-const identity = v => v
+const identity = (v) => v
 
-export const createChangeHandler = (params, handler) => (
-  fieldName,
-  serializer
-) => value => {
-  const s = serializer || identity
-  if (value) {
-    handler({
-      ...params,
-      ...{ [fieldName]: s(value) }
-    })
-  } else {
-    delete params[fieldName]
-    handler(params)
+export const createChangeHandler =
+  (params, handler) => (fieldName, serializer) => (value) => {
+    const s = serializer || identity
+    if (value) {
+      handler({
+        ...params,
+        ...{ [fieldName]: s(value) },
+      })
+    } else {
+      delete params[fieldName]
+      handler(params)
+    }
   }
-}
 
-export const createSortHandler = (sort, handler) => fieldName => () => {
+export const createSortHandler = (sort, handler) => (fieldName) => () => {
   if (sort.field !== fieldName) {
     return handler({
       field: fieldName,
-      direction: 'ASC'
+      direction: 'ASC',
     })
   } else {
     return handler({
       field: sort.field,
-      direction: sort.direction === 'ASC' ? 'DESC' : 'ASC'
+      direction: sort.direction === 'ASC' ? 'DESC' : 'ASC',
     })
   }
 }
 
-export const createSortIndicator = sort => fieldName => {
+export const createSortIndicator = (sort) => (fieldName) => {
   if (sort.field === fieldName) {
     return <SortIndicator sortDirection={sort.direction} />
   } else {
@@ -111,17 +108,17 @@ export const createSortIndicator = sort => fieldName => {
   }
 }
 
-export const deserializeOrderBy = str => {
+export const deserializeOrderBy = (str) => {
   if (!str) {
     return {
       field: 'createdAt',
-      direction: 'DESC'
+      direction: 'DESC',
     }
   }
   const [field, direction] = str.split('-')
   return {
     field: field.toString(),
-    direction
+    direction,
   }
 }
 

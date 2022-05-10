@@ -1,11 +1,5 @@
-import React from 'react'
 import App from '../components/App'
-import {
-  Body,
-  Content,
-  Header,
-  Footer
-} from '../components/Layout'
+import { Body, Content, Header, Footer } from '../components/Layout'
 
 const Layout = () => {
   return (
@@ -19,6 +13,6 @@ const Layout = () => {
       </Body>
     </App>
   )
-};
+}
 
-export default Layout;
+export default Layout

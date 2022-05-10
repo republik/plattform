@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react'
 import { css } from 'glamor'
 import { useColorContext } from '@project-r/styleguide'
 import Link from 'next/link'
@@ -9,8 +9,8 @@ const styles = {
     position: 'absolute',
     top: 0,
     bottom: 0,
-    transition: 'background-color 400ms'
-  })
+    transition: 'background-color 400ms',
+  }),
 }
 
 const TeaserNodes = ({ nodes, highlight, noClick, backgroundColor }) => {
@@ -29,7 +29,7 @@ const TeaserNodes = ({ nodes, highlight, noClick, backgroundColor }) => {
               left: `${nodeWidth * i}%`,
               right: `${nodeWidth * (maxIndex - i)}%`,
               opacity: highlight && !highlight(node.data) ? '0.6' : '0',
-              backgroundColor
+              backgroundColor,
             }}
             {...colorScheme.set('backgroundColor', 'default')}
           />

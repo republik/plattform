@@ -2,13 +2,13 @@ import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 import withMe from '../../../../lib/withMe'
 
-export const getDisplayAuthor = author => {
+export const getDisplayAuthor = (author) => {
   const user = author.user || author
 
   const displayAuthor = {
     id: author.name,
     name: author.name,
-    anonymity: false
+    anonymity: false,
   }
 
   if (user) {
@@ -16,15 +16,15 @@ export const getDisplayAuthor = author => {
       id: user.id,
       name: user.name,
       profilePicture: user.portrait,
-      slug: user.slug
+      slug: user.slug,
     })
   }
 
   return displayAuthor
 }
 
-const asTree = nodes => {
-  const toComment = node => ({
+const asTree = (nodes) => {
+  const toComment = (node) => ({
     ...node,
     tags: [],
     displayAuthor: getDisplayAuthor(node.author),
@@ -32,18 +32,20 @@ const asTree = nodes => {
     comments: {
       ...node.comments,
       nodes: childrenOfComment(node.id),
-      totalCount: descendantsOfComment(node.id)?.length || 0
-    }
+      totalCount: descendantsOfComment(node.id)?.length || 0,
+    },
   })
 
-  const descendantsOfComment = id =>
-    nodes.filter(n => n.parentIds.indexOf(id) !== -1).map(toComment)
+  const descendantsOfComment = (id) =>
+    nodes.filter((n) => n.parentIds.indexOf(id) !== -1).map(toComment)
 
-  const childrenOfComment = id =>
-    nodes.filter(n => n.parentIds[n.parentIds.length - 1] === id).map(toComment)
+  const childrenOfComment = (id) =>
+    nodes
+      .filter((n) => n.parentIds[n.parentIds.length - 1] === id)
+      .map(toComment)
 
   return {
-    nodes: nodes.filter(n => n.parentIds.length === 0).map(toComment)
+    nodes: nodes.filter((n) => n.parentIds.length === 0).map(toComment),
   }
 }
 
@@ -112,14 +114,14 @@ export const withMemos = compose(
   graphql(REPO_MEMOS, {
     options: ({ repoId }) => ({
       variables: { repoId },
-      fetchPolicy: 'cache-and-network'
+      fetchPolicy: 'cache-and-network',
     }),
     props: ({ data }) => {
       // @TODO: CHeck why it's reloading often
       return {
-        memos: !data.loading && !!data.repo?.memos && asTree(data.repo.memos)
+        memos: !data.loading && !!data.repo?.memos && asTree(data.repo.memos),
       }
-    }
+    },
   }),
   graphql(REPO_MEMO_PUBLISH, {
     props: ({ mutate }) => {
@@ -128,19 +130,19 @@ export const withMemos = compose(
           mutate({
             variables: { repoId, parentId, text },
             refetchQueries: ['RepoMemos'],
-            awaitRefetchQueries: true
-          })
+            awaitRefetchQueries: true,
+          }),
       }
-    }
+    },
   }),
   graphql(REPO_MEMO_EDIT, {
     props: ({ mutate }) => ({
-      edit: (id, text) => mutate({ variables: { id, text } })
-    })
+      edit: (id, text) => mutate({ variables: { id, text } }),
+    }),
   }),
   graphql(REPO_MEMO_UNPUBLISH, {
     props: ({ mutate }) => ({
-      unpublish: id => mutate({ variables: { id } })
-    })
-  })
+      unpublish: (id) => mutate({ variables: { id } }),
+    }),
+  }),
 )

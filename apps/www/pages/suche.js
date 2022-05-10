@@ -1,4 +1,3 @@
-import React from 'react'
 import compose from 'lodash/flowRight'
 import { withRouter } from 'next/router'
 import Frame from '../components/Frame'
@@ -12,7 +11,7 @@ import withDefaultSSR from '../lib/hocs/withDefaultSSR'
 const SearchPage = ({ router, t }) => {
   const meta = {
     title: t('pages/search/title'),
-    image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`
+    image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
   }
   return (
     <Frame raw meta={meta}>
@@ -22,5 +21,5 @@ const SearchPage = ({ router, t }) => {
 }
 
 export default withDefaultSSR(
-  compose(enforceMembership(), withT, withRouter)(SearchPage)
+  compose(enforceMembership(), withT, withRouter)(SearchPage),
 )

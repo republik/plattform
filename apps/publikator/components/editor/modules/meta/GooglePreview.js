@@ -1,4 +1,3 @@
-import React from 'react'
 import { Label } from '@project-r/styleguide'
 import { timeFormat } from 'd3-time-format'
 
@@ -11,13 +10,7 @@ const formatDate = timeFormat('%d.%m.%Y')
 
 function wordTrim(text, length) {
   if (text.length > length) {
-    return (
-      text
-        .slice(0, length)
-        .split(' ')
-        .slice(0, -1)
-        .join(' ') + ' ...'
-    )
+    return text.slice(0, length).split(' ').slice(0, -1).join(' ') + ' ...'
   }
   return text
 }
@@ -27,7 +20,7 @@ const GooglePreview = ({
   description = '',
   path = '',
   publishDate,
-  t
+  t,
 }) => {
   let pathSegments = path.split('/').filter(Boolean)
 
@@ -35,12 +28,12 @@ const GooglePreview = ({
   if (hasDateSegement) {
     pathSegments = [
       pathSegments.slice(0, 3).join('/'),
-      ...pathSegments.slice(3)
+      ...pathSegments.slice(3),
     ]
   }
   let remainingPathChars = 25
   pathSegments = pathSegments
-    .map(segment => {
+    .map((segment) => {
       if (remainingPathChars <= 0) {
         return
       }
@@ -66,7 +59,7 @@ const GooglePreview = ({
           lineHeight: 1.58,
           color: '#5f6368',
           backgroundColor: '#fff',
-          padding: 10
+          padding: 10,
         }}
       >
         <a style={{ margin: 0, lineHeight: 1.3 }}>
@@ -82,7 +75,7 @@ const GooglePreview = ({
             fontSize: 20,
             fontWeight: 'normal',
             lineHeight: 1.3,
-            color: 'rgb(26, 13, 171)'
+            color: 'rgb(26, 13, 171)',
           }}
         >
           {wordTrim(title, 65)}

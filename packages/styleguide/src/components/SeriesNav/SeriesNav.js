@@ -6,7 +6,7 @@ import {
   InfoBox,
   InfoBoxTitle,
   InfoBoxText,
-  INFOBOX_IMAGE_SIZES
+  INFOBOX_IMAGE_SIZES,
 } from '../InfoBox'
 import { Figure, FigureImage } from '../Figure'
 import { ColorContextLocalExtension } from '../Colors/ColorContext'
@@ -21,20 +21,20 @@ const styles = {
   container: css({
     maxWidth: PADDED_MAX_WIDTH_BREAKOUT,
     margin: '0 auto',
-    padding: 0
+    padding: 0,
   }),
   containerInline: css({
     margin: '0 auto',
     padding: 0,
-    width: '100%'
+    width: '100%',
   }),
   description: css({
-    padding: '0px 15px'
+    padding: '0px 15px',
   }),
   plainlink: css({
     textDecoration: 'none',
-    color: 'inherit'
-  })
+    color: 'inherit',
+  }),
 }
 
 const DefaultLink = ({ children }) => children
@@ -51,13 +51,13 @@ function SeriesNav({
   PayNote,
   onEpisodeClick,
   aboveTheFold,
-  seriesDescription
+  seriesDescription,
 }) {
   const showSeriesDescripion = seriesDescription ?? (inline ? true : undefined)
 
   const currentTile =
     repoId &&
-    series.episodes.find(episode => episode.document?.repoId === repoId)
+    series.episodes.find((episode) => episode.document?.repoId === repoId)
   const currentTileIndex = currentTile && series.episodes.indexOf(currentTile)
 
   // add paynote after current episode or to third card if no current episode
@@ -69,7 +69,7 @@ function SeriesNav({
       ? [
           ...series.episodes.slice(0, payNotePosition),
           { isPayNote: true }, // placeholder object to trigger special tile
-          ...series.episodes.slice(payNotePosition)
+          ...series.episodes.slice(payNotePosition),
         ]
       : [...series.episodes]
 
@@ -81,14 +81,14 @@ function SeriesNav({
     FigureImage.utils.getResizedSrcs(
       series.logo,
       INFOBOX_IMAGE_SIZES.XXS,
-      false
+      false,
     )
   const logoDarkProps =
     series.logoDark &&
     FigureImage.utils.getResizedSrcs(
       series.logoDark,
       INFOBOX_IMAGE_SIZES.XXS,
-      false
+      false,
     )
 
   return (
@@ -127,7 +127,7 @@ function SeriesNav({
                           {t('styleguide/SeriesNav/seriesoverview')}
                         </Editorial.A>
                       </Link>
-                    )
+                    ),
                   })}
               </InfoBoxText>
             )}
@@ -186,7 +186,7 @@ SeriesNav.propTypes = {
   height: PropTypes.number,
   onEpisodeClick: PropTypes.func,
   t: PropTypes.func.isRequired,
-  seriesDescription: PropTypes.bool
+  seriesDescription: PropTypes.bool,
 }
 
 export default SeriesNav

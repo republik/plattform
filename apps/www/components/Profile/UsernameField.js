@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { Component, Fragment } from 'react'
 import compose from 'lodash/flowRight'
 import { withApollo } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
@@ -14,20 +14,20 @@ const diacritics = [
   { base: 'i', letters: ['î', 'ï'] },
   { base: 'o', letters: ['ö', 'ô'] },
   { base: 'u', letters: ['ü', 'ù', 'û'] },
-  { base: 'ss', letters: ['ß'] }
+  { base: 'ss', letters: ['ß'] },
 ]
 
 const diacriticsMap = diacritics.reduce((map, diacritic) => {
-  diacritic.letters.forEach(letter => {
+  diacritic.letters.forEach((letter) => {
     map[letter] = diacritic.base
   })
   return map
 }, {})
 
-const toUsername = string =>
+const toUsername = (string) =>
   string
     .toLowerCase() // eslint-disable-next-line no-control-regex
-    .replace(/[^\u0000-\u007E]/g, a => diacriticsMap[a] || a)
+    .replace(/[^\u0000-\u007E]/g, (a) => diacriticsMap[a] || a)
     .replace(/[^.0-9a-z]+/g, ' ')
     .trim()
     .replace(/\s+/g, '.')
@@ -48,21 +48,21 @@ class UsernameField extends Component {
       .query({
         query,
         variables: {
-          value: values.username
-        }
+          value: values.username,
+        },
       })
       .then(({ data }) => {
         onChange({
           errors: {
-            username: undefined
-          }
+            username: undefined,
+          },
         })
       })
-      .catch(error => {
+      .catch((error) => {
         onChange({
           errors: {
-            username: errorToString(error)
-          }
+            username: errorToString(error),
+          },
         })
       })
   }
@@ -75,14 +75,14 @@ class UsernameField extends Component {
       const username = toUsername(
         [user.firstName && user.firstName[0], user.lastName]
           .filter(Boolean)
-          .join('')
+          .join(''),
       )
 
       if (username) {
         onChange({
           values: {
-            username: username
-          }
+            username: username,
+          },
         })
       }
     }
@@ -104,8 +104,8 @@ class UsernameField extends Component {
           onChange={(_, value) => {
             onChange({
               values: {
-                username: value ? toUsername(value) : null
-              }
+                username: value ? toUsername(value) : null,
+              },
             })
           }}
         />

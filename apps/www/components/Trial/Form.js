@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'
@@ -24,7 +24,7 @@ import {
   useColorContext,
   Interaction,
   RawHtml,
-  A
+  A,
 } from '@project-r/styleguide'
 import { withRouter } from 'next/router'
 import { getConversionPayload } from '../../lib/utils/track'
@@ -32,13 +32,13 @@ import { TRIAL_CAMPAIGN } from '../../lib/constants'
 
 const styles = {
   errorMessages: css({
-    marginTop: 40
+    marginTop: 40,
   }),
   switchBoard: css({
-    marginTop: 40
+    marginTop: 40,
   }),
   switchBoardMinimal: css({
-    marginTop: 0
+    marginTop: 0,
   }),
   completeContainer: css({
     display: 'flex',
@@ -47,19 +47,19 @@ const styles = {
     flexWrap: 'wrap',
     alignItems: 'center',
     '> *': {
-      marginBottom: 16
-    }
+      marginBottom: 16,
+    },
   }),
   circleButton: css(plainButtonRule, {
     padding: 4,
     borderRadius: '50%',
-    lineHeight: 0
-  })
+    lineHeight: 0,
+  }),
 }
 
 const REQUIRED_CONSENTS = ['PRIVACY']
 
-const Form = props => {
+const Form = (props) => {
   const {
     payload,
     router,
@@ -75,7 +75,7 @@ const Form = props => {
     minimal,
     initialEmail,
     campaign,
-    isInSeriesNav
+    isInSeriesNav,
   } = props
   const { query } = router
 
@@ -104,11 +104,11 @@ const Form = props => {
         ((!value || value.trim().length <= 0) &&
           t('Trial/Form/email/error/empty')) ||
         (!isEmail(value) && t('Trial/Form/email/error/invalid')),
-      dirty: shouldValidate
+      dirty: shouldValidate,
     })
   }
 
-  const requestAccess = e => {
+  const requestAccess = (e) => {
     e && e.preventDefault && e.preventDefault()
 
     setLoading(true)
@@ -126,10 +126,10 @@ const Form = props => {
       router.replace(
         {
           pathname: router.pathname,
-          query: { ...router.query, trialSignup: 'pending' }
+          query: { ...router.query, trialSignup: 'pending' },
         },
         router.asPath,
-        { shallow: true }
+        { shallow: true },
       )
       if (onBeforeSignIn) {
         onBeforeSignIn()
@@ -140,7 +140,7 @@ const Form = props => {
         .then(({ data: { signIn } }) => {
           setSwitchBoardProps({
             ...signIn,
-            accessToken: query.token
+            accessToken: query.token,
           })
 
           setLoading(false)
@@ -155,22 +155,22 @@ const Form = props => {
     if (!isMember) {
       props
         .requestAccess({
-          payload: { ...getConversionPayload(query), ...payload }
+          payload: { ...getConversionPayload(query), ...payload },
         })
         .then(() => {
           router.replace(
             {
               pathname: router.pathname,
-              query: { ...router.query, trialSignup: 'success' }
+              query: { ...router.query, trialSignup: 'success' },
             },
             router.asPath,
-            { shallow: true }
+            { shallow: true },
           )
           const shouldRedirect = onSuccess ? onSuccess() : true
           if (shouldRedirect) {
             window.location = format({
               pathname: `/einrichten`,
-              query: { context: 'trial' }
+              query: { context: 'trial' },
             })
           } else {
             minimal && setShowButtons(true)
@@ -181,12 +181,12 @@ const Form = props => {
     }
   }
 
-  const catchError = error => {
+  const catchError = (error) => {
     setServerError(error)
     reset()
   }
 
-  const reset = e => {
+  const reset = (e) => {
     e && e.preventDefault && e.preventDefault()
 
     setLoading(false)
@@ -194,17 +194,17 @@ const Form = props => {
     onReset && onReset()
   }
 
-  const close = e => {
+  const close = (e) => {
     e && e.preventDefault && e.preventDefault()
     // remove trialSignup from router query
     const { trialSignup: _, ...newQuery } = router.query
     router.replace(
       {
         pathname: router.pathname,
-        query: newQuery
+        query: newQuery,
       },
       router.asPath,
-      { shallow: true }
+      { shallow: true },
     )
   }
 
@@ -222,15 +222,15 @@ const Form = props => {
             __html: t(
               `Trial/Form/${
                 isComplete ? 'completed' : isSigningIn ? 'waiting' : 'initial'
-              }/title`
-            )
+              }/title`,
+            ),
           }}
         />
       </Interaction.H2>
       {!isSigningIn && (
         <Interaction.P>
           {t(
-            `Trial/Form/initial/${isComplete ? 'afterSignIn' : 'beforeSignIn'}`
+            `Trial/Form/initial/${isComplete ? 'afterSignIn' : 'beforeSignIn'}`,
           )}
         </Interaction.P>
       )}
@@ -244,7 +244,7 @@ const Form = props => {
         <div
           style={{
             marginTop: narrow || minimal ? 20 : 40,
-            marginBottom: !isInSeriesNav && minimal ? 10 : undefined
+            marginBottom: !isInSeriesNav && minimal ? 10 : undefined,
           }}
           {...styles.completeContainer}
         >
@@ -266,7 +266,7 @@ const Form = props => {
                 onClick={() =>
                   router.push({
                     pathname: '/einrichten',
-                    query: { context: 'trial' }
+                    query: { context: 'trial' },
                   })
                 }
               >
@@ -298,7 +298,7 @@ const Form = props => {
             <div
               style={{
                 opacity: isSigningIn ? 0.6 : 1,
-                marginTop: narrow || minimal ? 0 : 20
+                marginTop: narrow || minimal ? 0 : 20,
               }}
             >
               <Field
@@ -319,7 +319,7 @@ const Form = props => {
                         styles.circleButton,
                         !!email.value &&
                           !email.error &&
-                          colorScheme.set('backgroundColor', 'primary')
+                          colorScheme.set('backgroundColor', 'primary'),
                       )}
                     >
                       <ArrowForwardIcon
@@ -382,8 +382,8 @@ const Form = props => {
                         `Trial/Form/${campaign}/button/signedIn`,
                       campaign && `Trial/Form/${campaign}/button`,
                       me && `Trial/Form/button/signedIn`,
-                      `Trial/Form/button`
-                    ].filter(Boolean)
+                      `Trial/Form/button`,
+                    ].filter(Boolean),
                   )}
                 </Button>
               )}
@@ -417,7 +417,7 @@ Form.propTypes = {
   campaign: PropTypes.string,
   accessCampaignId: PropTypes.string,
   onBeforeSignIn: PropTypes.func,
-  narrow: PropTypes.bool
+  narrow: PropTypes.bool,
 }
 
 const REQUEST_ACCESS = gql`
@@ -435,10 +435,10 @@ const withRequestAccess = graphql(REQUEST_ACCESS, {
       mutate({
         variables: {
           campaignId: accessCampaignId || TRIAL_CAMPAIGN,
-          payload
-        }
-      })
-  })
+          payload,
+        },
+      }),
+  }),
 })
 
 export default compose(
@@ -447,5 +447,5 @@ export default compose(
   withSignIn,
   withRouter,
   withMe,
-  withT
+  withT,
 )(Form)

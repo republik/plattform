@@ -1,4 +1,3 @@
-import React from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
@@ -7,7 +6,7 @@ import {
   CommentTeaser,
   mediaQueries,
   SHARE_IMAGE_WIDTH,
-  SHARE_IMAGE_HEIGHT
+  SHARE_IMAGE_HEIGHT,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
 
@@ -29,7 +28,7 @@ const Community = ({ t, data: { loading, error, featured } }) => {
         style={{ minHeight: 400 }}
         render={() => (
           <div {...styles.row}>
-            {featured.nodes.map(comment => {
+            {featured.nodes.map((comment) => {
               const image =
                 comment.discussion?.document?.meta?.image ||
                 (comment.discussion?.document?.meta?.shareText
@@ -38,9 +37,9 @@ const Community = ({ t, data: { loading, error, featured } }) => {
                         comment.discussion.document.meta.format
                           ? `-${comment.discussion.document.meta.format.id}`
                           : ''
-                      }`
+                      }`,
                     )}&url=${encodeURIComponent(
-                      `${PUBLIC_BASE_URL}${comment.discussion.document.meta.path}?extract=share`
+                      `${PUBLIC_BASE_URL}${comment.discussion.document.meta.path}?extract=share`,
                     )}`
                   : undefined)
 
@@ -51,8 +50,8 @@ const Community = ({ t, data: { loading, error, featured } }) => {
                       ...comment,
                       discussion: {
                         ...comment.discussion,
-                        image
-                      }
+                        image,
+                      },
                     }}
                     CommentLink={CommentLink}
                     t={t}
@@ -74,8 +73,8 @@ const styles = {
     maxWidth: 1280,
     [mediaQueries.mUp]: {
       flexDirection: 'row',
-      justifyContent: 'space-between'
-    }
+      justifyContent: 'space-between',
+    },
   }),
   comment: css({
     margin: '0 auto',
@@ -84,9 +83,9 @@ const styles = {
     padding: 0,
     [mediaQueries.mUp]: {
       width: '50%',
-      padding: '0 15px'
-    }
-  })
+      padding: '0 15px',
+    },
+  }),
 }
 
 const query = gql`

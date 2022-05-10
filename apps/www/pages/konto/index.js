@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import { useRouter } from 'next/router'
@@ -25,15 +25,15 @@ const styles = {
     flexDirection: 'column',
     [mediaQueries.mUp]: {
       flexDirection: 'row',
-      gap: 32
-    }
+      gap: 32,
+    },
   }),
-  column: css({ flex: 1 })
+  column: css({ flex: 1 }),
 }
 
 const AccountPage = ({ t, hasAccess, hasActiveMembership }) => {
   const meta = {
-    title: t('pages/account/title')
+    title: t('pages/account/title'),
   }
   const router = useRouter()
   const { query } = router
@@ -72,7 +72,7 @@ const AccountPage = ({ t, hasAccess, hasActiveMembership }) => {
                         <Emphasis>{t('Account/Onboarding/link')}</Emphasis>
                       </A>
                     </Link>
-                  )
+                  ),
                 })}
               </HintArea>
             </AccountSection>
@@ -93,7 +93,7 @@ const AccountPage = ({ t, hasAccess, hasActiveMembership }) => {
                         <Emphasis>{t('Account/Access/link')}</Emphasis>
                       </A>
                     </Link>
-                  )
+                  ),
                 })}
               </HintArea>
             </AccountSection>

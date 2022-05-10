@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import md from 'markdown-in-js'
+import { useState, useEffect } from 'react'
 import { withRouter } from 'next/router'
 import { css } from 'glamor'
 
@@ -9,7 +8,6 @@ import { gql } from '@apollo/client'
 
 import { countFormat } from '../lib/utils/format'
 
-import mdComponents from '../lib/utils/mdComponents'
 import withInNativeApp from '../lib/withInNativeApp'
 import withMe from '../lib/apollo/withMe'
 import withT from '../lib/withT'
@@ -21,17 +19,17 @@ import ShareButtons from '../components/ActionBar/ShareButtons'
 import List, { Highlight } from '../components/List'
 import { ListWithQuery as TestimonialList } from '../components/Testimonial/List'
 import ContainerWithSidebar, {
-  Content
+  Content,
 } from '../components/Crowdfunding/ContainerWithSidebar'
 import withSurviveStatus, {
   userSurviveActionsFragment,
-  mapActionData
+  mapActionData,
 } from '../components/Crowdfunding/withSurviveStatus'
 
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
 
 import TeaserBlock, {
-  GAP as TEASER_BLOCK_GAP
+  GAP as TEASER_BLOCK_GAP,
 } from '../components/Overview/TeaserBlock'
 import { getTeasersFromDocument } from '../components/Overview/utils'
 
@@ -42,10 +40,14 @@ import {
   Button,
   Lead,
   A,
+  P,
+  H2,
   colors,
   Interaction,
   mediaQueries,
-  LazyLoad
+  LazyLoad,
+  fontStyles,
+  Editorial,
 } from '@project-r/styleguide'
 import ReasonsVideo from '../components/About/ReasonsVideo'
 import Link from 'next/link'
@@ -86,14 +88,14 @@ const styles = {
 
     paddingTop: 420,
     marginTop: -400,
-    marginBottom: 20
+    marginBottom: 20,
   }),
   overviewContainer: css({
     position: 'relative',
     zIndex: 1,
     padding: '30px 0 0',
     backgroundColor: colors.negative.containerBg,
-    color: colors.negative.text
+    color: colors.negative.text,
   }),
   overviewBottomShadow: css({
     position: 'absolute',
@@ -103,7 +105,7 @@ const styles = {
     right: 0,
     background:
       'linear-gradient(0deg, rgba(17,17,17,0.9) 0%, rgba(17,17,17,0.8) 30%, rgba(17,17,17,0) 100%)',
-    pointerEvents: 'none'
+    pointerEvents: 'none',
   }),
   overviewTopShadow: css({
     position: 'absolute',
@@ -116,15 +118,15 @@ const styles = {
       'linear-gradient(180deg, rgba(17,17,17,0.9) 0%, rgba(17,17,17,0.8) 67%, rgba(17,17,17,0) 100%)',
     pointerEvents: 'none',
     [mediaQueries.mUp]: {
-      display: 'none'
-    }
+      display: 'none',
+    },
   }),
   stretchLead: css({
-    margin: '20px 0 0'
+    margin: '20px 0 0',
   }),
   stretchP: css({
     fontSize: 17,
-    lineHeight: '25px'
+    lineHeight: '25px',
   }),
   cards: css({
     position: 'relative',
@@ -132,12 +134,12 @@ const styles = {
     background: colors.light.defaultInverted,
     margin: '30px 0',
     [mediaQueries.mUp]: {
-      margin: '50px 0'
-    }
+      margin: '50px 0',
+    },
   }),
   tnum: css({
-    fontFeatureSettings: '"tnum" 1, "kern" 1'
-  })
+    fontFeatureSettings: '"tnum" 1, "kern" 1',
+  }),
 }
 
 const Page = ({
@@ -150,7 +152,7 @@ const Page = ({
   activeMembership,
   actionsLoading,
   t,
-  router
+  router,
 }) => {
   const { query } = router
   useEffect(() => {
@@ -159,15 +161,15 @@ const Page = ({
         `/maerzkampagne?token=${encodeURIComponent(query.token)}`,
         '/maerzkampagne',
         {
-          shallow: true
-        }
+          shallow: true,
+        },
       )
     }
   }, [query.token])
 
   const [highlight, setHighlight] = useState()
   // ensure the highlighFunction is not dedected as an state update function
-  const onHighlight = highlighFunction => setHighlight(() => highlighFunction)
+  const onHighlight = (highlighFunction) => setHighlight(() => highlighFunction)
 
   const tokenParams = query.token ? { token: query.token } : {}
   const primaryQuery = shouldBuyProlong
@@ -190,16 +192,16 @@ const Page = ({
     !activeMembership && {
       href: {
         pathname: '/angebote',
-        query: { package: 'ABO', userPrice: 1 }
+        query: { package: 'ABO', userPrice: 1 },
       },
-      text: 'Sie können sich den Betrag nicht leisten?'
+      text: 'Sie können sich den Betrag nicht leisten?',
     },
     {
       href: `mailto:ir@republik.ch?subject=${encodeURIComponent(
-        'Investitionsmöglichkeiten bei der Republik AG'
+        'Investitionsmöglichkeiten bei der Republik AG',
       )}`,
-      text: 'Sie wollen investieren?'
-    }
+      text: 'Sie wollen investieren?',
+    },
   ].filter(Boolean)
   const packages = actionsLoading
     ? []
@@ -209,18 +211,18 @@ const Page = ({
           name: 'PROLONG',
           title: isReactivating ? 'Zurückkehren' : 'Verlängern',
           params: tokenParams,
-          price: 24000
+          price: 24000,
         },
         {
           name: 'PROLONG-BEN',
           params: {
             package: 'PROLONG',
             membershipType: 'BENEFACTOR_ABO',
-            ...tokenParams
+            ...tokenParams,
           },
           title: defaultBenefactor ? 'Gönner bleiben' : 'Gönner werden',
-          price: 100000
-        }
+          price: 100000,
+        },
       ]
     : activeMembership
     ? []
@@ -228,18 +230,18 @@ const Page = ({
         {
           name: 'MONTHLY_ABO',
           title: 'Monats-Abo',
-          price: 2200
+          price: 2200,
         },
         {
           name: 'ABO',
           title: 'Jahresmitgliedschaft',
-          price: 24000
+          price: 24000,
         },
         {
           name: 'BENEFACTOR',
           title: 'Gönner-Mitgliedschaft',
-          price: 100000
-        }
+          price: 100000,
+        },
       ]
 
   const shareProps = {
@@ -248,7 +250,7 @@ const Page = ({
     emailBody: '',
     emailAttachUrl: true,
     emailSubject: '101 Gründe, die Republik jetzt zu unterstützen.',
-    eventCategory: 'March2020'
+    eventCategory: 'March2020',
   }
 
   return (
@@ -261,7 +263,7 @@ const Page = ({
         title: '101 Gründe, die Republik jetzt zu unterstützen.',
         description:
           'Unabhängiger Journalismus ohne Bullshit. Transparent. Werbefrei. Finanziert von den Leserinnen und Lesern.',
-        image: `${CDN_FRONTEND_BASE_URL}/static/social-media/march20.jpg`
+        image: `${CDN_FRONTEND_BASE_URL}/static/social-media/march20.jpg`,
       }}
       cover={<ReasonsVideo />}
     >
@@ -274,15 +276,15 @@ const Page = ({
               status: crowdfunding.status && {
                 memberships: crowdfunding.status.memberships,
                 people: crowdfunding.status.people,
-                money: crowdfunding.status.money
-              }
+                money: crowdfunding.status.money,
+              },
             },
           links,
           packages,
           primaryQuery,
           statusProps: {
-            memberships: true
-          }
+            memberships: true,
+          },
         }}
         raw
       >
@@ -297,15 +299,19 @@ const Page = ({
         <Lead>
           Unabhängiger Journalismus ohne Bullshit: Willkommen bei der Republik.
         </Lead>
-        {md(mdComponents)`
 
-Damit Sie uns vertrauen können, machen wir ein paar Dinge anders. Zum Beispiel sind wir komplett werbefrei. Und kompromisslos in der Qualität.
+        <P>
+          Damit Sie uns vertrauen können, machen wir ein paar Dinge anders. Zum
+          Beispiel sind wir komplett werbefrei. Und kompromisslos in der
+          Qualität.
+        </P>
+        <P>
+          Unser Ziel: Journalismus, der die Köpfe klarer, das Handeln mutiger,
+          die Entscheidungen klüger macht. Und der das Gemeinsame stärkt: die
+          Freiheit, den Rechtsstaat, die Demokratie.
+        </P>
 
-Unser Ziel: Journalismus, der die Köpfe klarer, das Handeln mutiger, die Entscheidungen klüger macht. Und der das Gemeinsame stärkt: die Freiheit, den Rechtsstaat, die Demokratie.
-
-${pledgeLink}
-  `}
-
+        <P>{pledgeLink}</P>
         <div style={{ margin: '15px 0 0' }}>
           <Label style={{ display: 'block', marginBottom: 5 }}>
             Teilen Sie diese Seite mit Ihren Freunden:
@@ -404,7 +410,7 @@ ${pledgeLink}
                     </Interaction.P>
                     <List>
                       {goals
-                        .filter(g => g.description)
+                        .filter((g) => g.description)
                         .map((goal, i) => (
                           <List.Item key={i}>{goal.description}</List.Item>
                         ))}
@@ -422,65 +428,147 @@ ${pledgeLink}
           }}
         />
 
-        {md(mdComponents)`
-<br />
+        <H2>Was ist die Republik?</H2>
+        <P>
+          Die Republik ist eine Dienstleistung für interessierte Menschen in
+          einer grossen, faszinierenden und komplexen Welt.
+        </P>
+        <P>
+          Wir recherchieren, fragen nach, ordnen ein und decken auf. Und liefern
+          Ihnen Fakten und Zusammenhänge als Grundlage für Ihre eigenen
+          Überlegungen und Entscheidungen.
+        </P>
+        <P>
+          Das ist eine heikle Aufgabe. Denn Journalismus ist alles andere als
+          harmlos: Es ist entscheidend, welche Geschichten erzählt werden.
+        </P>
+        <P>
+          Weil Vertrauen im Journalismus die härteste Währung ist, haben wir die
+          Republik so aufgestellt, dass wir diese Aufgabe für Sie bestmöglich
+          erledigen können:
+        </P>
+        <P>
+          <strong style={{ ...fontStyles.serifBold }}>
+            Wir sind unabhängig.
+          </strong>{' '}
+          Und komplett werbefrei. So können wir uns auf unseren einzigen Kunden
+          konzentrieren: Sie. Und müssen weder möglichst viele Klicks generieren
+          noch Sie mit nervigen Anzeigen belästigen. Und wir verkaufen Ihre
+          persönlichen Daten niemals weiter.
+        </P>
+        <P>
+          <strong style={{ ...fontStyles.serifBold }}>
+            Wir sind das transparenteste Medienunternehmen (das wir kennen).
+          </strong>
+          Wir legen alles offen: unsere Finanzen, Besitzverhältnisse,
+          Arbeitsweisen, Fehler, Löhne – weil wir überzeugt sind, dass es
+          wichtig ist zu zeigen, unter welchen Bedingungen Journalismus
+          hergestellt wird.
+        </P>
 
-## Was ist die Republik?
+        <P>
+          <strong style={{ ...fontStyles.serifBold }}>
+            Wir gehören niemandem – aber Ihnen ein bisschen.
+          </strong>{' '}
+          Mit einer Mitgliedschaft werden Sie auch Genossenschafter und damit
+          der Republik. Das ist für Sie ohne Risiko, dafür mit Einblick und
+          Einfluss verbunden: Wir erklären, was wir tun – und Sie können
+          mitentscheiden.
+        </P>
 
-Die Republik ist eine Dienstleistung für interessierte Menschen in einer grossen, faszinierenden und komplexen Welt.
+        <P>
+          <strong style={{ ...fontStyles.serifBold }}>
+            Wir sind kompromisslos in der Qualität.
+          </strong>{' '}
+          Unsere Reporter und Journalistinnen haben Zeit, um ein Thema mit der
+          angebrachten Sorgfalt und Hartnäckigkeit zu recherchieren. Und es gibt
+          drei Dinge, an denen uns besonders viel liegt: Gute Sprache. Gute
+          Bilder. Und gutes Design.
+        </P>
+        <P>
+          <strong style={{ ...fontStyles.serifBold }}>
+            Wir stehen mit Ihnen im Dialog.
+          </strong>{' '}
+          Und lieben es! Das Internet ermöglicht nicht nur viele neue Formen,
+          wie wir Geschichten erzählen können, sondern auch den direkten Dialog
+          mit Ihnen. Damit die Republik mit Ihrer Stimme vielfältiger,
+          interessanter und reflektierter wird.
+        </P>
+        <P>{!activeMembership ? pledgeLink : ''}</P>
+        <H2>Worum geht es?</H2>
+        <P>
+          Die Republik ist 2018 gestartet. Als Rebellion für den Journalismus.
+          Und gegen den Einheitsbrei und die Vermischung von Journalismus und
+          Werbung bei grossen Medienkonzernen.
+        </P>
 
-Wir recherchieren, fragen nach, ordnen ein und decken auf. Und liefern Ihnen Fakten und Zusammenhänge als Grundlage für Ihre eigenen Überlegungen und Entscheidungen.
+        <P>
+          Wir haben nur einen einzigen Kunden: Sie. Als Leserinnen. Als Bürger.
+          Als Menschen, die bereit sind, etwas Geld in unabhängigen Journalismus
+          zu investieren.
+        </P>
 
-Das ist eine heikle Aufgabe. Denn Journalismus ist alles andere als harmlos: Es ist entscheidend, welche Geschichten erzählt werden.
+        <P>
+          Um ein tragfähiges Modell für unabhängigen, werbefreien und
+          leserfinanzierten Journalismus zu entwickeln, braucht die Republik
+          rund 24’000 Mitglieder. Dieses Ziel wollen wir in den nächsten Jahren
+          gemeinsam mit möglichst vielen von Ihnen erreichen.
+        </P>
+        <P>
+          Wir sind überzeugt, das zu schaffen. Weil wir schon weit gekommen
+          sind:
+        </P>
+        <Editorial.OL>
+          <Editorial.LI>
+            Wir liefern guten Journalismus. Die meisten Abonnenten bleiben der
+            Republik treu, und viele haben ihre Mitgliedschaft jetzt schon zum
+            zweiten Mal erneuert.
+          </Editorial.LI>
 
-Weil Vertrauen im Journalismus die härteste Währung ist, haben wir die Republik so aufgestellt, dass wir diese Aufgabe für Sie bestmöglich erledigen können:
+          <Editorial.LI>
+            Wir haben öffentliche Wirkung: Mit investigativen Recherchen – zum
+            Beispiel zum Bündner Baukartell oder zu Missständen bei der grössten
+            Kita-Kette der Schweiz – löst die Republik nicht nur Debatten aus,
+            sondern auch konkrete politische Reaktionen.
+          </Editorial.LI>
 
-**Wir sind unabhängig.** Und komplett werbefrei. So können wir uns auf unseren einzigen Kunden konzentrieren: Sie. Und müssen weder möglichst viele Klicks generieren noch Sie mit nervigen Anzeigen belästigen. Und wir verkaufen Ihre persönlichen Daten niemals weiter.
+          <Editorial.LI>
+            Wir sind von einer starken Community getragen. Von unseren
+            Leserinnen lernen wir jeden Tag, wie wir besser werden können. Und
+            über 1000 Freunde und Komplizen helfen mit, unseren Journalismus in
+            jeden Winkel der Schweiz zu bringen.
+          </Editorial.LI>
+        </Editorial.OL>
+        <P>
+          Damit die Republik in Zukunft bestehen kann, brauchen wir einen
+          Wachstumsschub. Deshalb haben wir uns überlebenswichtige Ziele
+          gesetzt: Bis Ende März mindestens 19’000 Mitglieder zu haben und 2,2
+          Millionen Franken zu finden.
+        </P>
 
-**Wir sind das transparenteste Medienunternehmen (das wir kennen).** Wir legen alles offen: unsere Finanzen, Besitzverhältnisse, Arbeitsweisen, Fehler, Löhne – weil wir überzeugt sind, dass es wichtig ist zu zeigen, unter welchen Bedingungen Journalismus hergestellt wird. 
+        <P>Erreichen wir die Ziele nicht, beenden wir das Projekt.</P>
 
-**Wir gehören niemandem – aber Ihnen ein bisschen.** Mit einer Mitgliedschaft werden Sie auch Genossenschafter und damit Verlegerin der Republik. Das ist für Sie ohne Risiko, dafür mit Einblick und Einfluss verbunden: Wir erklären, was wir tun – und Sie können mitentscheiden.
+        <P>
+          Den grösseren Teil des Geldes haben wir durch die Grosszügigkeit
+          unserer Mitglieder und Investorinnen bereits gefunden. Jetzt geht es
+          darum, möglichst viele neue Leute von der Republik zu begeistern.
+        </P>
 
-**Wir sind kompromisslos in der Qualität.** Unsere Reporter und Journalistinnen haben Zeit, um ein Thema mit der angebrachten Sorgfalt und Hartnäckigkeit zu recherchieren. Und es gibt drei Dinge, an denen uns besonders viel liegt: Gute Sprache. Gute Bilder. Und gutes Design.
+        <P>
+          Wenn Sie mitmachen und wir es nicht schaffen, bekommen Sie Ihr Geld
+          zurück. Wenn wir es schaffen, bekommen Sie nicht nur vernünftigen
+          Journalismus, sondern haben auch einen entscheidenden Beitrag zur
+          Medienvielfalt in der Schweiz geleistet.
+        </P>
 
-**Wir stehen mit Ihnen im Dialog.** Und lieben es! Das Internet ermöglicht nicht nur viele neue Formen, wie wir Geschichten erzählen können, sondern auch den direkten Dialog mit Ihnen. Damit die Republik mit Ihrer Stimme vielfältiger, interessanter und reflektierter wird.
-
-${!activeMembership ? pledgeLink : ''}
-
-## Worum geht es?
-
-Die Republik ist 2018 gestartet. Als Rebellion für den Journalismus. Und gegen den Einheitsbrei und die Vermischung von Journalismus und Werbung bei grossen Medienkonzernen.
-
-Wir haben nur einen einzigen Kunden: Sie. Als Leserinnen. Als Bürger. Als Menschen, die bereit sind, etwas Geld in unabhängigen Journalismus zu investieren.
-
-Um ein tragfähiges Modell für unabhängigen, werbefreien und leserfinanzierten Journalismus zu entwickeln, braucht die Republik rund 24’000 Mitglieder. Dieses Ziel wollen wir in den nächsten Jahren gemeinsam mit möglichst vielen von Ihnen erreichen. 
-
-Wir sind überzeugt, das zu schaffen. Weil wir schon weit gekommen sind:
-
-1. Wir liefern guten Journalismus. Die meisten Abonnenten bleiben der Republik treu, und viele haben ihre Mitgliedschaft jetzt schon zum zweiten Mal erneuert.
-
-2. Wir haben öffentliche Wirkung: Mit investigativen Recherchen – zum Beispiel zum Bündner Baukartell oder zu Missständen bei der grössten Kita-Kette der Schweiz – löst die Republik nicht nur Debatten aus, sondern auch konkrete politische Reaktionen.
-
-3. Wir sind von einer starken Community getragen. Von unseren Leserinnen lernen wir jeden Tag, wie wir besser werden können. Und über 1000 Freunde und Komplizen helfen mit, unseren Journalismus in jeden Winkel der Schweiz zu bringen.
-
-Damit die Republik in Zukunft bestehen kann, brauchen wir einen Wachstumsschub. Deshalb haben wir uns überlebenswichtige Ziele gesetzt: Bis Ende März mindestens 19’000 Mitglieder zu haben und 2,2 Millionen Franken zu finden.
-
-Erreichen wir die Ziele nicht, beenden wir das Projekt.
-
-Den grösseren Teil des Geldes haben wir durch die Grosszügigkeit unserer Mitglieder und Investorinnen bereits gefunden. Jetzt geht es darum, möglichst viele neue Leute von der Republik zu begeistern.
-
-Wenn Sie mitmachen und wir es nicht schaffen, bekommen Sie Ihr Geld zurück. Wenn wir es schaffen, bekommen Sie nicht nur vernünftigen Journalismus, sondern haben auch einen entscheidenden Beitrag zur Medienvielfalt in der Schweiz geleistet.
-
-${!activeMembership ? pledgeLink : ''}
-
-        `}
+        <P>{!activeMembership ? pledgeLink : ''}</P>
       </ContainerWithSidebar>
       <div {...styles.overviewOverflow}>
         <div {...styles.overviewContainer}>
           <Container
             style={{
               maxWidth: 1200,
-              padding: 0
+              padding: 0,
             }}
           >
             <div style={{ padding: `0 ${TEASER_BLOCK_GAP}px` }}>
@@ -506,31 +594,68 @@ ${!activeMembership ? pledgeLink : ''}
       </div>
       <Container>
         <Content>
-          {md(mdComponents)`
+          <H2>Was bekomme ich für mein Geld?</H2>
 
-## Was bekomme ich für mein Geld?
+          <P>
+            Sie erhalten täglich eine bis drei neue Geschichten. Als Newsletter,
+            im Web oder in der App. Das Konzept ist einfach: Einordnung und
+            Vertiefung statt einer Flut von Nachrichten.
+          </P>
 
-Sie erhalten täglich eine bis drei neue Geschichten. Als Newsletter, im Web oder in der App. Das Konzept ist einfach: Einordnung und Vertiefung statt einer Flut von Nachrichten.
+          <P>
+            Sie lesen und hören in der Republik zu allem, was aktuell,
+            verworren, komplex – und für viele gerade wichtig ist. Derzeit
+            beschäftigen uns Klima, Digitalisierung, Kinderbetreuung und
+            besonders intensiv die Folgen des Aufstiegs autoritärer Politik für
+            die Demokratie.
+          </P>
 
-Sie lesen und hören in der Republik zu allem, was aktuell, verworren, komplex – und für viele gerade wichtig ist. Derzeit beschäftigen uns Klima, Digitalisierung, Kinderbetreuung und besonders intensiv die Folgen des Aufstiegs autoritärer Politik für die Demokratie.
+          <P>
+            Wir liefern Ihnen Recherchen, Analysen, Reportagen und
+            Erklärartikel. Aufgemacht als digitales Magazin, mit ausgewählten
+            Bildern, Illustrationen, Grafiken. Manchmal interaktiv. Manchmal als
+            Podcast. Oder auch als Veranstaltung.
+          </P>
 
-Wir liefern Ihnen Recherchen, Analysen, Reportagen und Erklärartikel. Aufgemacht als digitales Magazin, mit ausgewählten Bildern, Illustrationen, Grafiken. Manchmal interaktiv. Manchmal als Podcast. Oder auch als Veranstaltung.
+          <P>
+            Statt täglichen News fassen wir einmal pro Woche in Briefings das
+            Wichtigste aus der Schweiz und der Welt zusammen, kompakt und
+            übersichtlich – damit Sie nichts verpassen.
+          </P>
 
-Statt täglichen News fassen wir einmal pro Woche in Briefings das Wichtigste aus der Schweiz und der Welt zusammen, kompakt und übersichtlich – damit Sie nichts verpassen.
+          <P>
+            Die Republik bietet ein vielfältiges Programm an Themen, Autorinnen
+            und Formaten. Und Sie entscheiden selbst, wie Sie die Republik
+            nutzen möchten: täglich, wöchentlich oder unregelmässig; alles oder
+            nur ausgewählte Beiträge, aktiv im Dialog mit anderen oder einfach
+            ganz für sich allein einen Podcast geniessen.
+          </P>
 
-Die Republik bietet ein vielfältiges Programm an Themen, Autorinnen und Formaten. Und Sie entscheiden selbst, wie Sie die Republik nutzen möchten: täglich, wöchentlich oder unregelmässig; alles oder nur ausgewählte Beiträge, aktiv im Dialog mit anderen oder einfach ganz für sich allein einen Podcast geniessen.
+          <P>
+            Sie können Beiträge, die Sie besonders freuen oder ärgern, jederzeit
+            mit Ihren Freunden teilen, selbst wenn diese kein Abo haben. Alle
+            Beiträge der Republik sind frei teilbar, damit unser Journalismus
+            möglichst viele Menschen erreicht.
+          </P>
 
-Sie können Beiträge, die Sie besonders freuen oder ärgern, jederzeit mit Ihren Freunden teilen, selbst wenn diese kein Abo haben. Alle Beiträge der Republik sind frei teilbar, damit unser Journalismus möglichst viele Menschen erreicht. 
+          <P>
+            Und einen entscheidenden Unterschied machen kann. Die Republik ist
+            politisch nicht festgelegt, aber keineswegs neutral: Sie steht gegen
+            die Diktatur der Angst. Und für die Werte der Aufklärung: für
+            Klarheit im Stil, Treue zu Fakten, für Lösungen von Fall zu Fall,
+            für Offenheit gegenüber Kritik, Respektlosigkeit vor der Macht und
+            Respekt vor dem Menschen.
+          </P>
 
-Und einen entscheidenden Unterschied machen kann. Die Republik ist politisch nicht festgelegt, aber keineswegs neutral: Sie steht gegen die Diktatur der Angst. Und für die Werte der Aufklärung: für Klarheit im Stil, Treue zu Fakten, für Lösungen von Fall zu Fall, für Offenheit gegenüber Kritik, Respektlosigkeit vor der Macht und Respekt vor dem Menschen.
+          <P>{!activeMembership ? pledgeLink : ''}</P>
 
-${!activeMembership ? pledgeLink : ''}
+          <H2>Wer macht die Republik?</H2>
 
-## Wer macht die Republik?
-
-Unsere Crew besteht aus kompetenten Profis. Den besten, die wir finden konnten. Sehen Sie selbst und blättern Sie durch unsere Redaktion.
-
-`}
+          <P>
+            Unsere Crew besteht aus kompetenten Profis. Den besten, die wir
+            finden konnten. Sehen Sie selbst und blättern Sie durch unsere
+            Redaktion.
+          </P>
         </Content>
       </Container>
 
@@ -543,7 +668,7 @@ Unsere Crew besteht aus kompetenten Profis. Den besten, die wir finden konnten. 
             data.employees ? (
               <Employees
                 employees={data.employees}
-                filter={e => e.group === 'Redaktion'}
+                filter={(e) => e.group === 'Redaktion'}
               />
             ) : null
           }
@@ -554,29 +679,69 @@ Unsere Crew besteht aus kompetenten Profis. Den besten, die wir finden konnten. 
 
       <Container>
         <Content>
-          {md(mdComponents)`
+          <H2>Warum das alles wichtig ist</H2>
 
-## Warum das alles wichtig ist
+          <P>
+            Bei der Republik und beim Journalismus überhaupt geht es nicht nur
+            um den individuellen Nutzen. Es geht auch darum, eine wichtige
+            Funktion in einer Demokratie auszuüben: den Mächtigen auf die Finger
+            zu schauen, unabhängig zu recherchieren und Missstände aufzudecken.
+          </P>
 
-Bei der Republik und beim Journalismus überhaupt geht es nicht nur um den individuellen Nutzen. Es geht auch darum, eine wichtige Funktion in einer Demokratie auszuüben: den Mächtigen auf die Finger zu schauen, unabhängig zu recherchieren und Missstände aufzudecken.
+          <P>
+            Traditionelle Medien haben das Problem, dass mit dem Internet ihr
+            Geschäftsmodell zusammengebrochen ist. Sie haben ihre
+            Monopolstellung verloren, fast alles ist gratis im Netz verfügbar.
+            Die Bereitschaft, für Journalismus zu bezahlen, ist gesunken.
+            Parallel dazu wanderten die Werbeeinnahmen fast vollständig zu
+            Google, Facebook und Co. ab.
+          </P>
 
-Traditionelle Medien haben das Problem, dass mit dem Internet ihr Geschäftsmodell zusammengebrochen ist. Sie haben ihre Monopolstellung verloren, fast alles ist gratis im Netz verfügbar. Die Bereitschaft, für Journalismus zu bezahlen, ist gesunken. Parallel dazu wanderten die Werbeeinnahmen fast vollständig zu Google, Facebook und Co. ab.
+          <P>
+            Die Folgen davon sind unübersehbar: ein massiver Abbau bei
+            Redaktionen auf Kosten der Qualität und Vielfalt. Seit 2011 sind in
+            der Schweiz unter dem Strich mehr als 3000 Stellen im Journalismus
+            verschwunden. (Das ist viel: damit könnte man 100 Republiken machen.
+          </P>
 
-Die Folgen davon sind unübersehbar: ein massiver Abbau bei Redaktionen auf Kosten der Qualität und Vielfalt. Seit 2011 sind in der Schweiz unter dem Strich mehr als 3000 Stellen im Journalismus verschwunden. (Das ist viel: damit könnte man 100 Republiken machen.)
+          <P>
+            Zeitungen fusionieren, Redaktionen werden zusammengelegt, es gibt
+            immer weniger Vielfalt im Schweizer Medienmarkt. In der
+            Deutschschweiz verfügen Tamedia, Ringier und die NZZ mit ihren
+            Zeitungen bereits über 80% Marktanteil.
+          </P>
 
-Zeitungen fusionieren, Redaktionen werden zusammengelegt, es gibt immer weniger Vielfalt im Schweizer Medienmarkt. In der Deutschschweiz verfügen Tamedia, Ringier und die NZZ mit ihren Zeitungen bereits über 80% Marktanteil.
+          <P>
+            Und als neueste Entwicklung, um den sinkenden Werbeeinnahmen
+            entgegenzuwirken, gehen die Verlage immer dreistere Deals mit
+            Werbekunden ein. Die Grenze zwischen redaktionellen Beiträgen und
+            Werbung verwischt. Der Presserat kritisiert in einem Leiturteil
+            diese Grenzüberschreitungen der Verlage. Damit werde das Publikum
+            getäuscht und irregeführt. Die Medien schaden so ihrer eigenen
+            Glaubwürdigkeit als unabhängige Berichterstatter.
+          </P>
 
-Und als neueste Entwicklung, um den sinkenden Werbeeinnahmen entgegenzuwirken, gehen die Verlage immer dreistere Deals mit Werbekunden ein. Die Grenze zwischen redaktionellen Beiträgen und Werbung verwischt. Der Presserat kritisiert in einem Leiturteil diese Grenzüberschreitungen der Verlage. Damit werde das Publikum getäuscht und irregeführt. Die Medien schaden so ihrer eigenen Glaubwürdigkeit als unabhängige Berichterstatter.
+          <P>
+            Kurz: Es steht nicht unbedingt gut um die Medienbranche und die
+            Zukunft des Journalismus.
+          </P>
 
-Kurz: Es steht nicht unbedingt gut um die Medienbranche und die Zukunft des Journalismus.
+          <P>
+            Als Antwort auf diese Entwicklungen – und aus Leidenschaft für guten
+            Journalismus – bauen wir die Republik auf.
+          </P>
 
-Als Antwort auf diese Entwicklungen – und aus Leidenschaft für guten Journalismus – bauen wir die Republik auf.
+          <P>
+            Einerseits als konkreten Beitrag zur Vielfalt. Mit einem Medium, das
+            Unabhängigkeit konsequent ernst nimmt. Andererseits auch als Labor
+            für den Journalismus des 21. Jahrhunderts. Dafür ist es notwendig,
+            ein funktionierendes Geschäftsmodell zu entwickeln.
+          </P>
 
-Einerseits als konkreten Beitrag zur Vielfalt. Mit einem Medium, das Unabhängigkeit konsequent ernst nimmt. Andererseits auch als Labor für den Journalismus des 21. Jahrhunderts. Dafür ist es notwendig, ein funktionierendes Geschäftsmodell zu entwickeln.
-
-Eine Republik baut niemand alleine, sondern nur viele gemeinsam. Wir mit Ihnen?
-
-  `}
+          <P>
+            Eine Republik baut niemand alleine, sondern nur viele gemeinsam. Wir
+            mit Ihnen?
+          </P>
           <br />
           {inNativeIOSApp ? (
             <Interaction.P
@@ -606,13 +771,12 @@ Eine Republik baut niemand alleine, sondern nur viele gemeinsam. Wir mit Ihnen?
             <ShareButtons {...shareProps} />
           </div>
 
-          {md(mdComponents)`
-
-## ${countFormat(
-            (crowdfunding && crowdfunding.status.people) || 'Unsere'
-          )} Verlegerinnen und Verleger
-
-  `}
+          <H2>
+            {countFormat(
+              (crowdfunding && crowdfunding.status.people) || 'Unsere',
+            )}{' '}
+            Verlegerinnen und Verleger
+          </H2>
           {crowdfunding && (
             <div style={{ margin: '20px 0' }}>
               <LazyLoad>
@@ -644,20 +808,20 @@ const EnhancedPage = compose(
   withMe,
   withRouter,
   graphql(query, {
-    props: args => {
+    props: (args) => {
       return {
         ...mapActionData(args),
-        data: args.data
+        data: args.data,
       }
     },
     options: ({ router: { query } }) => ({
       variables: {
-        accessToken: query.token
-      }
-    })
+        accessToken: query.token,
+      },
+    }),
   }),
   withInNativeApp,
-  withT
+  withT,
 )(Page)
 
 export default withDefaultSSR(EnhancedPage)

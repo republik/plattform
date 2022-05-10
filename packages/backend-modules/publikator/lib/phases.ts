@@ -53,7 +53,7 @@ const phases: Phase[] = [
   },
   {
     key: 'tc',
-    color: 'Orange', 
+    color: 'Orange',
     lock: false,
     tags: ['startTC'],
   },

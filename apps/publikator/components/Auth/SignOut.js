@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import PropTypes from 'prop-types'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
@@ -12,7 +12,7 @@ class SignOut extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: false
+      loading: false,
     }
   }
   render() {
@@ -23,32 +23,32 @@ class SignOut extends Component {
       <span>
         <A
           href='#'
-          onClick={e => {
+          onClick={(e) => {
             e.preventDefault()
             if (loading) {
               return
             }
             this.setState(() => ({
-              loading: true
+              loading: true,
             }))
             this.props
               .signOut()
               .then(({ data }) => {
                 if (data) {
                   this.setState(() => ({
-                    loading: false
+                    loading: false,
                   }))
                 } else {
                   this.setState(() => ({
                     error: t('signOut/error'),
-                    loading: false
+                    loading: false,
                   }))
                 }
               })
-              .catch(error => {
+              .catch((error) => {
                 this.setState(() => ({
                   error: errorToString(error),
-                  loading: false
+                  loading: false,
                 }))
               })
           }}
@@ -63,7 +63,7 @@ class SignOut extends Component {
 }
 
 SignOut.propTypes = {
-  signOut: PropTypes.func.isRequired
+  signOut: PropTypes.func.isRequired,
 }
 
 const signOutMutation = gql`
@@ -79,15 +79,12 @@ export const withSignOut = compose(
         mutate({
           refetchQueries: [
             {
-              query: meQuery
-            }
-          ]
-        })
-    })
-  })
+              query: meQuery,
+            },
+          ],
+        }),
+    }),
+  }),
 )
 
-export default compose(
-  withSignOut,
-  withT
-)(SignOut)
+export default compose(withSignOut, withT)(SignOut)

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { Checkbox, colors, A } from '@project-r/styleguide'
@@ -55,15 +55,15 @@ const styles = {
     clear: 'left',
     display: 'block',
     fontSize: '11px',
-    lineHeight: '1.3em'
+    lineHeight: '1.3em',
   }),
   commit: css({
     borderTop: `1px solid ${colors.divider}`,
     display: 'block',
     fontSize: '11px',
     marginTop: '3px',
-    paddingTop: '3px'
-  })
+    paddingTop: '3px',
+  }),
 }
 
 const checklistMilestones = [
@@ -77,14 +77,14 @@ const checklistMilestones = [
   'numbersOk',
   'imagesOk',
   'factCheckOk',
-  'finalControl'
+  'finalControl',
 ]
 
 class Checklist extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      mutating: {}
+      mutating: {},
     }
   }
 
@@ -97,7 +97,7 @@ class Checklist extends Component {
       t,
       placeMilestone,
       removeMilestone,
-      disabled
+      disabled,
     } = this.props
     const { mutating } = this.state
     return (
@@ -105,9 +105,9 @@ class Checklist extends Component {
         loading={loading}
         error={error}
         render={() => {
-          const allMilestones = checklistMilestones.map(name => ({
+          const allMilestones = checklistMilestones.map((name) => ({
             name,
-            ...milestones.find(m => m.name === name)
+            ...milestones.find((m) => m.name === name),
           }))
 
           return (
@@ -118,27 +118,27 @@ class Checklist extends Component {
                     checked={!!author}
                     disabled={disabled || mutating[name]}
                     onChange={(_, checked) => {
-                      this.setState(state => ({
+                      this.setState((state) => ({
                         mutating: {
                           ...state.mutating,
-                          [name]: true
-                        }
+                          [name]: true,
+                        },
                       }))
                       const finish = () => {
-                        this.setState(state => ({
+                        this.setState((state) => ({
                           mutating: {
                             ...state.mutating,
-                            [name]: false
-                          }
+                            [name]: false,
+                          },
                         }))
                       }
                       checked
                         ? placeMilestone({
                             name,
-                            message: ' ' // ToDo: consider prompting for message
+                            message: ' ', // ToDo: consider prompting for message
                           }).then(finish)
                         : removeMilestone({
-                            name
+                            name,
                           }).then(finish)
                     }}
                   >
@@ -156,7 +156,7 @@ class Checklist extends Component {
                         route='repo/edit'
                         params={{
                           repoId: repoId.split('/'),
-                          commitId: commit.id
+                          commitId: commit.id,
                         }}
                       >
                         <A>{commit.message}</A>
@@ -184,7 +184,7 @@ class Checklist extends Component {
 
 Checklist.propTypes = {
   repoId: PropTypes.string.isRequired,
-  commitId: PropTypes.string.isRequired
+  commitId: PropTypes.string.isRequired,
 }
 
 export default compose(
@@ -193,8 +193,8 @@ export default compose(
     props: ({ data, ownProps: { name } }) => ({
       loading: data.loading,
       error: data.error,
-      milestones: data.repo && data.repo.milestones
-    })
+      milestones: data.repo && data.repo.milestones,
+    }),
   }),
   graphql(placeMilestone, {
     props: ({ mutate, ownProps: { repoId, commitId } }) => ({
@@ -204,15 +204,15 @@ export default compose(
             repoId,
             commitId,
             name,
-            message
+            message,
           },
           update: (proxy, { data: { placeMilestone } }) => {
             const variables = {
-              repoId
+              repoId,
             }
             const data = proxy.readQuery({
               query: getMilestones,
-              variables
+              variables,
             })
             proxy.writeQuery({
               query: getMilestones,
@@ -221,13 +221,13 @@ export default compose(
                 ...data,
                 repo: {
                   ...data.repo,
-                  milestones: data.repo.milestones.concat(placeMilestone)
-                }
-              }
+                  milestones: data.repo.milestones.concat(placeMilestone),
+                },
+              },
             })
-          }
-        })
-    })
+          },
+        }),
+    }),
   }),
   graphql(removeMilestone, {
     props: ({ mutate, ownProps: { repoId } }) => ({
@@ -235,15 +235,15 @@ export default compose(
         mutate({
           variables: {
             repoId: repoId,
-            name
+            name,
           },
           update: (proxy, { data: { removeMilestone } }) => {
             const variables = {
-              repoId
+              repoId,
             }
             const data = proxy.readQuery({
               query: getMilestones,
-              variables
+              variables,
             })
             proxy.writeQuery({
               query: getMilestones,
@@ -254,22 +254,22 @@ export default compose(
                   ...data.repo,
                   milestones: removeMilestone
                     ? data.repo.milestones.filter(
-                        milestone => milestone.name !== name
+                        (milestone) => milestone.name !== name,
                       )
-                    : data.repo.milestones
-                }
-              }
+                    : data.repo.milestones,
+                },
+              },
             })
           },
           refetchQueries: [
             {
               query: getMilestones,
               variables: {
-                repoId
-              }
-            }
-          ]
-        })
-    })
-  })
+                repoId,
+              },
+            },
+          ],
+        }),
+    }),
+  }),
 )(Checklist)

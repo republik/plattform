@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'
 import { graphql, withApollo } from '@apollo/client/react/hoc'
@@ -14,7 +14,7 @@ import {
   InlineSpinner,
   Interaction,
   RawHtml,
-  Editorial
+  Editorial,
 } from '@project-r/styleguide'
 
 import Poller from './Poller'
@@ -33,19 +33,19 @@ class SignIn extends Component {
             ? props.email[0]
             : props.email
           : '',
-        t: props.t
+        t: props.t,
       }),
       polling: false,
       loading: false,
-      success: undefined
+      success: undefined,
     }
 
-    this.onFormSubmit = event => {
+    this.onFormSubmit = (event) => {
       event.preventDefault()
       this.signIn()
     }
 
-    this.signIn = tokenType => {
+    this.signIn = (tokenType) => {
       const { loading, error, email } = this.state
       const { signIn, context, acceptedConsents } = this.props
 
@@ -67,13 +67,13 @@ class SignIn extends Component {
             loading: false,
             phrase: data.signIn.phrase,
             tokenType: data.signIn.tokenType,
-            alternativeFirstFactors: data.signIn.alternativeFirstFactors
+            alternativeFirstFactors: data.signIn.alternativeFirstFactors,
           }))
         })
-        .catch(error => {
+        .catch((error) => {
           this.setState(() => ({
             serverError: error,
-            loading: false
+            loading: false,
           }))
         })
     }
@@ -115,7 +115,7 @@ class SignIn extends Component {
       error,
       dirty,
       email,
-      serverError
+      serverError,
     } = this.state
 
     if (polling) {
@@ -129,18 +129,18 @@ class SignIn extends Component {
           alternativeFirstFactors={alternativeFirstFactors}
           onCancel={() => {
             this.setState(() => ({
-              polling: false
+              polling: false,
             }))
           }}
-          onTokenTypeChange={altTokenType => {
+          onTokenTypeChange={(altTokenType) => {
             this.signIn(altTokenType)
           }}
-          onSuccess={me => {
+          onSuccess={(me) => {
             this.setState(() => ({
               polling: false,
               success: t('signIn/success', {
-                nameOrEmail: me.name || me.email
-              })
+                nameOrEmail: me.name || me.email,
+              }),
             }))
             this.reloadOnSuccess()
           }}
@@ -158,7 +158,7 @@ class SignIn extends Component {
           <RawHtml
             type={Interaction.P}
             dangerouslySetInnerHTML={{
-              __html: t('cookies/disabled/error/explanation')
+              __html: t('cookies/disabled/error/explanation'),
             }}
           />
         </Fragment>
@@ -172,7 +172,7 @@ class SignIn extends Component {
         email={email}
         dirty={dirty}
         error={error}
-        onChange={state => this.setState(state)}
+        onChange={(state) => this.setState(state)}
         onSubmit={this.onFormSubmit}
         loading={loading}
         serverError={serverError}
@@ -200,7 +200,7 @@ class SignIn extends Component {
 
 SignIn.propTypes = {
   signIn: PropTypes.func.isRequired,
-  noReload: PropTypes.bool
+  noReload: PropTypes.bool,
 }
 
 const signInMutation = gql`
@@ -229,9 +229,9 @@ export const withSignIn = graphql(signInMutation, {
   props: ({ mutate }) => ({
     signIn: (email, context = 'signIn', consents, tokenType, accessToken) =>
       mutate({
-        variables: { email, context, consents, tokenType, accessToken }
-      })
-  })
+        variables: { email, context, consents, tokenType, accessToken },
+      }),
+  }),
 })
 
 export default compose(withApollo, withSignIn, withT, withInNativeApp)(SignIn)

@@ -12,19 +12,19 @@ const startTimer = () => {
   clearTimeout(timeout)
   timeout = setTimeout(() => {
     const now = Date.now()
-    setters.forEach(setter => setter(now))
+    setters.forEach((setter) => setter(now))
     startTimer()
   }, msToNextRun)
 }
 
-const addSetter = setter => {
+const addSetter = (setter) => {
   setters.push(setter)
   if (timeout === null) {
     startTimer()
   }
 }
-const rmSetter = setter => {
-  setters = setters.filter(s => s !== setter)
+const rmSetter = (setter) => {
+  setters = setters.filter((s) => s !== setter)
   if (!setter.length) {
     clearTimeout(timeout)
     timeout = null

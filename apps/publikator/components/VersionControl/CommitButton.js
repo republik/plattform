@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import withT from '../../lib/withT'
 import { Button, A, colors, mediaQueries } from '@project-r/styleguide'
@@ -11,7 +10,7 @@ const Text = ({
   hasUncommittedChanges,
   didUnlock,
   onRevert,
-  onLock
+  onLock,
 }) => {
   if (isNew) {
     if (isTemplate) {
@@ -39,15 +38,9 @@ const Text = ({
   return t('commit/status/committed')
 }
 
-const CommitButton = props => {
-  const {
-    t,
-    hasUncommittedChanges,
-    isNew,
-    readOnly,
-    onCommit,
-    onUnlock
-  } = props
+const CommitButton = (props) => {
+  const { t, hasUncommittedChanges, isNew, readOnly, onCommit, onUnlock } =
+    props
   return (
     <div {...css({ width: 100, [mediaQueries.mUp]: { width: 180 } })}>
       <div
@@ -63,7 +56,7 @@ const CommitButton = props => {
           height: 40,
           fontSize: '16px',
           backgroundColor: readOnly ? colors.error : undefined,
-          borderColor: readOnly ? colors.error : undefined
+          borderColor: readOnly ? colors.error : undefined,
         }}
         primary
         block

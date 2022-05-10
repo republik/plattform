@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { Component, Fragment } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
@@ -16,12 +16,12 @@ const styles = {
     marginLeft: 15,
     verticalAlign: 'middle',
     '& > span': {
-      display: 'inline'
-    }
+      display: 'inline',
+    },
   }),
   container: css({
-    marginTop: 20
-  })
+    marginTop: 20,
+  }),
 }
 
 class AuthSettings extends Component {
@@ -29,25 +29,20 @@ class AuthSettings extends Component {
     super(props)
     this.state = {
       mutating: false,
-      serverError: null
+      serverError: null,
     }
 
-    this.catchServerError = error => {
+    this.catchServerError = (error) => {
       this.setState(() => ({
         mutating: false,
-        serverError: error
+        serverError: error,
       }))
     }
   }
 
   render() {
-    const {
-      t,
-      authSettings,
-      loading,
-      error,
-      updatePreferredFirstFactor
-    } = this.props
+    const { t, authSettings, loading, error, updatePreferredFirstFactor } =
+      this.props
 
     return (
       <Loader
@@ -67,7 +62,7 @@ class AuthSettings extends Component {
                   </span>
                 )}
               </P>
-              {SUPPORTED_TOKEN_TYPES.map(tokenType => {
+              {SUPPORTED_TOKEN_TYPES.map((tokenType) => {
                 const disabled = enabledFirstFactors.indexOf(tokenType) === -1
                 return (
                   <Fragment key={tokenType}>
@@ -75,16 +70,16 @@ class AuthSettings extends Component {
                       checked={tokenType === preferredFirstFactor}
                       disabled={mutating}
                       onChange={(_, checked) => {
-                        this.setState(state => ({
-                          mutating: true
+                        this.setState((state) => ({
+                          mutating: true,
                         }))
                         const finish = () => {
-                          this.setState(state => ({
-                            mutating: false
+                          this.setState((state) => ({
+                            mutating: false,
                           }))
                         }
                         updatePreferredFirstFactor({
-                          tokenType
+                          tokenType,
                         })
                           .then(finish)
                           .catch(this.catchServerError)
@@ -97,7 +92,7 @@ class AuthSettings extends Component {
                       <Fragment>
                         <Label>
                           {t(
-                            `account/authSettings/firstfactor/${tokenType}/disabled`
+                            `account/authSettings/firstfactor/${tokenType}/disabled`,
                           )}
                         </Label>
                         <br />
@@ -141,18 +136,18 @@ export default compose(
       updatePreferredFirstFactor: ({ tokenType }) =>
         mutate({
           variables: {
-            tokenType
-          }
-        })
-    })
+            tokenType,
+          },
+        }),
+    }),
   }),
   graphql(query, {
     props: ({ data, errors }) => ({
       data,
       loading: data.loading || !data.authSettings,
       error: data.error,
-      authSettings: data.loading ? undefined : data.authSettings
-    })
+      authSettings: data.loading ? undefined : data.authSettings,
+    }),
   }),
-  withT
+  withT,
 )(AuthSettings)

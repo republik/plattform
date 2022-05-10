@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import Head from 'next/head'
 
@@ -18,7 +17,7 @@ import {
   LOGO_WIDTH,
   LOGO_PADDING,
   LOGO_WIDTH_MOBILE,
-  LOGO_PADDING_MOBILE
+  LOGO_PADDING_MOBILE,
 } from '../components/constants'
 
 import AuthNotification from '../components/Auth/Notification'
@@ -32,7 +31,7 @@ import {
   A,
   mediaQueries,
   useColorContext,
-  ColorHtmlBodyColors
+  ColorHtmlBodyColors,
 } from '@project-r/styleguide'
 import Link from 'next/link'
 import withDefaultSSR from '../lib/hocs/withDefaultSSR'
@@ -46,27 +45,27 @@ const styles = {
     textAlign: 'center',
     height: HEADER_HEIGHT_MOBILE,
     [mediaQueries.mUp]: {
-      height: HEADER_HEIGHT
+      height: HEADER_HEIGHT,
     },
     '@media print': {
       position: 'absolute',
-      backgroundColor: 'transparent'
+      backgroundColor: 'transparent',
     },
     borderBottomWidth: 1,
-    borderBottomStyle: 'solid'
+    borderBottomStyle: 'solid',
   }),
   padHeader: css({
     // minus 1px for first sticky hr from header
     // - otherwise there is a jump when scroll 0 and opening hamburger
     paddingTop: HEADER_HEIGHT_MOBILE - 1,
     [mediaQueries.mUp]: {
-      paddingTop: HEADER_HEIGHT - 1
-    }
+      paddingTop: HEADER_HEIGHT - 1,
+    },
   }),
   close: css({
     position: 'fixed',
     right: 15,
-    top: 5
+    top: 5,
   }),
   logoRepublik: css({
     position: 'relative',
@@ -75,36 +74,36 @@ const styles = {
     width: LOGO_WIDTH_MOBILE + LOGO_PADDING_MOBILE * 2,
     [mediaQueries.mUp]: {
       padding: LOGO_PADDING,
-      width: LOGO_WIDTH + LOGO_PADDING * 2
+      width: LOGO_WIDTH + LOGO_PADDING * 2,
     },
-    verticalAlign: 'middle'
+    verticalAlign: 'middle',
   }),
   logoProjectR: css({
     display: 'block',
     margin: '26px auto -16px',
     maxWidth: 520,
-    textAlign: 'left'
+    textAlign: 'left',
   }),
   text: css({
     margin: '30px auto',
     maxWidth: 520,
     [mediaQueries.mUp]: {
-      margin: '60px auto 120px'
-    }
+      margin: '60px auto 120px',
+    },
   }),
   link: css({
-    marginTop: 20
-  })
+    marginTop: 20,
+  }),
 }
 
 const hasCurtain = !!CURTAIN_MESSAGE
 
 const { P } = Interaction
 
-const fixAmpsInQuery = rawQuery => {
+const fixAmpsInQuery = (rawQuery) => {
   let query = {}
 
-  Object.keys(rawQuery).forEach(key => {
+  Object.keys(rawQuery).forEach((key) => {
     query[key.replace(/^amp;/, '')] = rawQuery[key]
   })
 
@@ -121,8 +120,8 @@ const Page = ({ router: { query: rawQuery }, t, me, inNativeApp }) => {
       context === 'pledge' &&
       type !== 'token-authorization' && {
         pathname: '/konto',
-        label: t('notifications/links/merci')
-      }
+        label: t('notifications/links/merci'),
+      },
   ].filter(Boolean)
 
   const isProjectR = context === 'projectr'
@@ -133,7 +132,7 @@ const Page = ({ router: { query: rawQuery }, t, me, inNativeApp }) => {
     // Deprecated (superseeded by "newsletter")
     // Workaround to handle "script" replacements in email clients
     'newsletter-subscript-disabledion',
-    'newsletter'
+    'newsletter',
   ].includes(type)
     ? '_blank'
     : undefined
@@ -187,7 +186,7 @@ const Page = ({ router: { query: rawQuery }, t, me, inNativeApp }) => {
           {...styles.text}
           {...(stickyBar ? styles.padHeader : undefined)}
           style={{
-            marginTop: inNativeApp ? 15 : undefined
+            marginTop: inNativeApp ? 15 : undefined,
           }}
         >
           <AuthNotification query={query} />
@@ -199,7 +198,7 @@ const Page = ({ router: { query: rawQuery }, t, me, inNativeApp }) => {
                     key={i}
                     href={{
                       pathname: link.pathname,
-                      query: link.query
+                      query: link.query,
                     }}
                     params={link.params}
                     passHref
@@ -207,7 +206,7 @@ const Page = ({ router: { query: rawQuery }, t, me, inNativeApp }) => {
                     <A>{link.label}</A>
                   </Link>
                 )),
-                () => ' – '
+                () => ' – ',
               )}
             </P>
           )}
@@ -218,5 +217,5 @@ const Page = ({ router: { query: rawQuery }, t, me, inNativeApp }) => {
 }
 
 export default withDefaultSSR(
-  compose(withMe, withT, withRouter, withInNativeApp)(Page)
+  compose(withMe, withT, withRouter, withInNativeApp)(Page),
 )

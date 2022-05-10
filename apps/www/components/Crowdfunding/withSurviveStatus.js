@@ -100,14 +100,14 @@ const actionsQuery = gql`
 
 export const mapActionData = ({
   data: { loading, actionMe, questionnaire },
-  ownProps: { me }
+  ownProps: { me },
 }) => {
-  const isOptionWithOwn = o =>
+  const isOptionWithOwn = (o) =>
     o.membership && o.membership.user && o.membership.user.id === actionMe.id
   const customPackageWithOwn =
     actionMe &&
     actionMe.customPackages &&
-    actionMe.customPackages.find(p => p.options.some(isOptionWithOwn))
+    actionMe.customPackages.find((p) => p.options.some(isOptionWithOwn))
   const ownMembership =
     customPackageWithOwn &&
     customPackageWithOwn.options.find(isOptionWithOwn).membership
@@ -131,7 +131,7 @@ export const mapActionData = ({
         questionnaire &&
         questionnaire.userIsEligible &&
         !questionnaire.userHasSubmitted &&
-        !qHasEnded
+        !qHasEnded,
     },
     activeMembership,
     shouldBuyProlong,
@@ -139,14 +139,14 @@ export const mapActionData = ({
       ownMembership && new Date(ownMembership.graceEndDate) < new Date(),
     defaultBenefactor:
       !!customPackageWithOwn &&
-      actionMe.customPackages.some(p =>
+      actionMe.customPackages.some((p) =>
         p.options.some(
-          o =>
+          (o) =>
             isOptionWithOwn(o) &&
             o.defaultAmount === 1 &&
-            o.reward.name === 'BENEFACTOR_ABO'
-        )
-      )
+            o.reward.name === 'BENEFACTOR_ABO',
+        ),
+      ),
   }
 }
 
@@ -157,17 +157,17 @@ export const withSurviveActions = compose(
     props: mapActionData,
     options: ({ router: { query } }) => ({
       variables: {
-        accessToken: query.token
-      }
-    })
-  })
+        accessToken: query.token,
+      },
+    }),
+  }),
 )
 
 const withSurviveStatus = compose(
   withInNativeApp,
   graphql(statusQuery, {
     options: {
-      pollInterval: +STATUS_POLL_INTERVAL_MS
+      pollInterval: +STATUS_POLL_INTERVAL_MS,
     },
     props: ({ data, ownProps: { questionnaire } }) => {
       const { evolution, count, marchCount } = data.membershipStats || {}
@@ -189,12 +189,12 @@ const withSurviveStatus = compose(
               support:
                 questionnaire && questionnaire.turnout
                   ? questionnaire.turnout.submitted
-                  : undefined
-            }
-          }
+                  : undefined,
+            },
+          },
       }
-    }
-  })
+    },
+  }),
 )
 
 export default withSurviveStatus

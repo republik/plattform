@@ -1,9 +1,8 @@
-import React from 'react'
 import { Highlight } from '../Elements'
 import Page from '../Page'
 
 const text = {
-  Januar: p => (
+  Januar: (p) => (
     <>
       Das Jahr beginnt mit einer{' '}
       <Highlight {...p} ids={['pMR-ZsG_j']}>
@@ -48,7 +47,7 @@ const text = {
       die Welt auf.
     </>
   ),
-  Februar: p => (
+  Februar: (p) => (
     <>
       Das Interview zum Fall Julian Assange geht um die Welt. Was kommt nach dem
       Brexit jetzt auf{' '}
@@ -78,7 +77,7 @@ const text = {
       .
     </>
   ),
-  März: p => (
+  März: (p) => (
     <>
       Was ist zu tun im Fall von{' '}
       <Highlight {...p} ids={['QR9AH3qG3']}>
@@ -106,7 +105,7 @@ const text = {
       .
     </>
   ),
-  April: p => (
+  April: (p) => (
     <>
       <Highlight {...p} series='republik/article-master-indien'>
         Auftakt der Reportageserie über die hinduistisch-nationalistische
@@ -140,7 +139,7 @@ const text = {
       .
     </>
   ),
-  Mai: p => (
+  Mai: (p) => (
     <>
       Die{' '}
       <Highlight {...p} series='republik/article-kmu-serie'>
@@ -166,7 +165,7 @@ const text = {
       .
     </>
   ),
-  Juni: p => (
+  Juni: (p) => (
     <>
       Über die{' '}
       <Highlight {...p} ids={['u6gPQgw3Q']}>
@@ -199,7 +198,7 @@ const text = {
       und Daniel Binswanger.
     </>
   ),
-  Juli: p => (
+  Juli: (p) => (
     <>
       <Highlight {...p} ids={['dQLQTuH4j']}>
         «Nau.ch» und die Kurzarbeit
@@ -237,7 +236,7 @@ const text = {
       .
     </>
   ),
-  August: p => (
+  August: (p) => (
     <>
       Cornel West, einer der führenden schwarzen Intellektuellen in den USA,{' '}
       <Highlight {...p} ids={['ndqLkhEdI']}>
@@ -274,7 +273,7 @@ const text = {
       über einen vermeintlichen Schundroman.
     </>
   ),
-  September: p => (
+  September: (p) => (
     <>
       <Highlight {...p} ids={['f94RWb5Bs']}>
         Sexismus-Vorwürfe
@@ -318,7 +317,7 @@ const text = {
       .
     </>
   ),
-  Oktober: p => (
+  Oktober: (p) => (
     <>
       Grundsätzliches: Sollten Affen, Hunde und Schweine{' '}
       <Highlight {...p} ids={['m2LZ4JMTX']}>
@@ -359,7 +358,7 @@ const text = {
       .
     </>
   ),
-  November: p => (
+  November: (p) => (
     <>
       Blick nach aussen:{' '}
       <Highlight {...p} ids={['YpwBdE4EQ']}>
@@ -420,7 +419,7 @@ const text = {
       .
     </>
   ),
-  Dezember: p => (
+  Dezember: (p) => (
     <>
       Die grosse Serie über den{' '}
       <Highlight {...p} series='republik/article-auftakt-tamedia-serie-1-13'>
@@ -469,9 +468,9 @@ const text = {
       </Highlight>
       .
     </>
-  )
+  ),
 }
 
-const Overview2020 = props => <Page {...props} year={2020} text={text} />
+const Overview2020 = (props) => <Page {...props} year={2020} text={text} />
 
 export default Overview2020

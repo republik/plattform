@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import ActionBar from '../ActionBar'
 
 let defaultIstMounted = undefined
@@ -19,7 +19,7 @@ const BrowserOnly = ({ Component, height, componentProps }) => {
 
 export default BrowserOnly
 
-export const BrowserOnlyActionBar = props => {
+export const BrowserOnlyActionBar = (props) => {
   return (
     <BrowserOnly Component={ActionBar} componentProps={props} height={24} />
   )

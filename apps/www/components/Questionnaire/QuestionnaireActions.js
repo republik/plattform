@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { css, merge } from 'glamor'
 import compose from 'lodash/flowRight'
 
@@ -10,22 +8,22 @@ import withT from '../../lib/withT'
 const styles = {
   actions: css({
     textAlign: 'center',
-    margin: '20px auto 20px auto'
+    margin: '20px auto 20px auto',
   }),
   actionsLeft: css({
-    textAlign: 'left'
+    textAlign: 'left',
   }),
   reset: css({
     textAlign: 'center',
-    marginTop: 10
+    marginTop: 10,
   }),
   resetLeft: css({
     display: 'inline-block',
     textAlign: 'left',
     lineHeight: '60px',
     marginTop: 10,
-    marginLeft: 20
-  })
+    marginLeft: 20,
+  }),
 }
 
 export default compose(withT)(
@@ -50,7 +48,7 @@ export default compose(withT)(
             ) : (
               <A
                 href='#'
-                onClick={e => {
+                onClick={(e) => {
                   e.preventDefault()
                   onReset()
                 }}
@@ -62,5 +60,5 @@ export default compose(withT)(
         )}
       </div>
     )
-  }
+  },
 )

@@ -8,7 +8,7 @@ export const BlockQuoteParagraph = ({ children }) => (
     style={{
       ...paragraphStyle,
       margin: 0,
-      padding: '10px 0'
+      padding: '10px 0',
     }}
   >
     {children}
@@ -21,7 +21,7 @@ export const BlockQuoteNested = ({ children }) => (
       backgroundColor: '#f7f7f7',
       borderLeft: `2px solid ${colors.divider}`,
       margin: '20px auto',
-      padding: '20px 25px'
+      padding: '20px 25px',
     }}
   >
     {children}
@@ -33,7 +33,7 @@ export default ({ children }) => (
     style={{
       backgroundColor: '#f7f7f7',
       margin: '20px auto',
-      padding: '20px 25px'
+      padding: '20px 25px',
     }}
   >
     {children}

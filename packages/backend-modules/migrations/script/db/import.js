@@ -23,7 +23,7 @@ const handleFetchError = (e) => {
   return false
 }
 
-const handleRunError = e => {
+const handleRunError = (e) => {
   console.error('Unable to run SQL statement(s). Error:', e.message)
   console.log(
     'Import may have failed because schema differs or file is corrupted.',

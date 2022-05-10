@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 import {
   Autocomplete,
   InlineSpinner,
   Label,
-  Interaction
+  Interaction,
 } from '@project-r/styleguide'
 import debounce from 'lodash/debounce'
 
@@ -42,6 +42,7 @@ export const filterRepos = gql`
         }
         latestPublications {
           document {
+            id
             meta {
               publishDate
             }
@@ -58,6 +59,7 @@ export const filterRepos = gql`
               description
               credits
               kind
+              externalBaseUrl
               color
               shareLogo
               shareBackgroundImage
@@ -128,38 +130,39 @@ const RepoElement = withT(({ t, title, publishDate }) => {
   )
 })
 
-const createRepoItem = repo => {
+const createRepoItem = (repo) => {
   const text =
     repo.latestCommit.document.meta.title ||
     repo.id.replace([GITHUB_ORG, REPO_PREFIX || ''].join('/'), '')
   const publishDate =
-    repo.latestPublications[0]?.document.meta.publishDate ||
+    repo.latestPublications[0]?.document?.meta.publishDate ||
     repo.meta.publishDate
 
   return {
     value: repo,
     text,
-    element: <RepoElement title={text} publishDate={publishDate} />
+    element: <RepoElement title={text} publishDate={publishDate} />,
   }
 }
 
 const ConnectedAutoComplete = graphql(filterRepos, {
-  skip: props => !props.filter,
+  skip: (props) => !props.filter,
   options: ({ search, template, isSeriesEpisode, isSeriesMaster }) => ({
     fetchPolicy: 'no-cache',
-    variables: { search, template, isSeriesEpisode, isSeriesMaster }
+    variables: { search, template, isSeriesEpisode, isSeriesMaster },
   }),
-  props: props => {
+  props: (props) => {
     if (props.data.loading) return { data: props.data, items: [] }
     const {
-      data: { repos: { nodes = [] } = {} }
+      data: { repos: { nodes = [] } = {} },
     } = props
     return {
       data: props.data,
-      items: nodes.map(createRepoItem)
+      items: nodes.map(createRepoItem),
+      autoFocus: props.autoFocus,
     }
-  }
-})(props => {
+  },
+})((props) => {
   const showLoader = props.data && props.data.loading
   return (
     <span style={{ position: 'relative', display: 'block' }}>
@@ -170,7 +173,7 @@ const ConnectedAutoComplete = graphql(filterRepos, {
             position: 'absolute',
             top: '21px',
             right: '0px',
-            zIndex: 500
+            zIndex: 500,
           }}
         >
           <InlineSpinner size={35} />
@@ -180,7 +183,7 @@ const ConnectedAutoComplete = graphql(filterRepos, {
   )
 })
 
-const safeValue = value =>
+const safeValue = (value) =>
   typeof value === 'string' ? { value, text: value } : null
 
 export default class RepoSearch extends Component {
@@ -190,7 +193,7 @@ export default class RepoSearch extends Component {
       items: [],
       filter: '',
       search: '',
-      value: safeValue(props.value)
+      value: safeValue(props.value),
     }
 
     this.filterChangeHandler = this.filterChangeHandler.bind(this)
@@ -200,7 +203,7 @@ export default class RepoSearch extends Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({
-      value: safeValue(nextProps.value)
+      value: safeValue(nextProps.value),
     })
   }
 
@@ -210,26 +213,26 @@ export default class RepoSearch extends Component {
 
   setSearchValue() {
     this.setState({
-      search: this.state.filter
+      search: this.state.filter,
     })
   }
 
   filterChangeHandler(value) {
     this.setState(
-      state => ({
-        filter: value
+      (state) => ({
+        filter: value,
       }),
-      this.setSearchValue
+      this.setSearchValue,
     )
   }
 
   changeHandler(value) {
     this.setState(
-      state => ({
+      (state) => ({
         value: null,
-        filter: null
+        filter: null,
       }),
-      () => this.props.onChange(value)
+      () => this.props.onChange(value),
     )
   }
 
@@ -248,6 +251,7 @@ export default class RepoSearch extends Component {
         items={[]}
         onChange={this.changeHandler}
         onFilterChange={this.filterChangeHandler}
+        autoFocus={this.props.autoFocus}
       />
     )
   }

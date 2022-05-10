@@ -2,23 +2,31 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 import { css } from 'glamor'
-import { scaleThreshold } from 'd3-scale'
-import { descending, ascending } from 'd3-array'
+import { scaleThreshold, scaleLinear } from 'd3-scale'
+import { descending, ascending, extent } from 'd3-array'
 
 import { useColorContext } from '../Colors/ColorContext'
 import { getFormat, getTextColor, deduplicate } from './utils'
+import { timeFormat, timeParse } from '../../lib/timeFormat'
 import { ExpandMoreIcon, ExpandLessIcon } from '../Icons'
 import { defaultProps } from './ChartContext'
 import { sansSerifRegular18 } from '../Typography/styles'
 import { PADDING } from '../Center'
 import { getColorMapper } from './colorMaps'
+import { Collapsable } from '../Collapsable'
+import { createTextGauger } from '../../lib/textGauger'
+
+const labelGauger = createTextGauger(sansSerifRegular18, {
+  dimension: 'width',
+  html: true,
+})
 
 const styles = {
   container: css({
     overflowX: 'auto',
     overflowY: 'hidden',
     marginLeft: -PADDING,
-    marginRight: -PADDING
+    marginRight: -PADDING,
   }),
   table: css({
     ...sansSerifRegular18,
@@ -26,24 +34,24 @@ const styles = {
     minWidth: '100%',
     borderSpacing: '0 2px',
     borderCollapse: 'separate',
-    padding: `0 ${PADDING - 10}px` // 10 cell padding on first and last cell in a row
+    padding: `0 ${PADDING - 10}px`, // 10 cell padding on first and last cell in a row
   }),
   header: css({
     borderBottomWidth: '1px',
     borderBottomStyle: 'solid',
     padding: '8px 10px',
-    userSelect: 'none'
+    userSelect: 'none',
   }),
   cell: css({
-    padding: '8px 10px'
+    padding: '8px 10px',
   }),
-  cellNumber: css({
+  cellNumeric: css({
     textAlign: 'right',
-    fontFeatureSettings: '"tnum", "kern"'
-  })
+    fontFeatureSettings: '"tnum", "kern"',
+  }),
 }
 
-const Table = props => {
+const Table = (props) => {
   const [colorScheme] = useColorContext()
   const {
     values,
@@ -52,30 +60,65 @@ const Table = props => {
     colorRange,
     defaultSortColumn,
     thresholds,
-    tableColumns
+    tableColumns,
+    collapsable,
+    t,
   } = props
   const columns = values.columns || Object.keys(values[0] || {})
-  const numberFormatter = getFormat(numberFormat)
+  const numberFormatter = getFormat(numberFormat, props.tLabel)
+  const dateParser = timeParse(props.timeParse)
+  const dateFormatter = timeFormat(props.timeFormat)
 
   const [sortBy, setSortBy] = useState({
     key: defaultSortColumn,
-    order: 'desc'
+    order: 'desc',
   })
 
   const numberColumns = tableColumns
-    .filter(d => d.type === 'number')
-    .map(d => d.column)
-  const parsedData = numberColumns.length
-    ? values.map(row => {
-        let parsedRow = { ...row }
-        numberColumns.forEach(key => {
-          if (parsedRow[key] !== undefined) {
-            parsedRow[key] = +parsedRow[key]
-          }
+    .filter((d) => d.type === 'number')
+    .map((d) => d.column)
+  const numericColumns = numberColumns.concat(
+    tableColumns.filter((d) => d.type === 'date').map((d) => d.column),
+  )
+
+  const dateColumns = tableColumns
+    .filter((d) => d.type === 'date')
+    .map((d) => d.column)
+
+  const barColumns = tableColumns
+    .filter((d) => d.type === 'bar')
+    .map((d) => d.column)
+
+  const parsedData =
+    numberColumns.length || dateColumns.length
+      ? values.map((row) => {
+          let parsedRow = { ...row }
+          numberColumns.forEach((key) => {
+            if (parsedRow[key] !== undefined) {
+              parsedRow[key] = +parsedRow[key]
+            }
+          })
+          dateColumns.forEach((key) => {
+            if (parsedRow[key] !== undefined) {
+              parsedRow[key] = dateParser(parsedRow[key])
+            }
+          })
+          return parsedRow
         })
-        return parsedRow
+      : [].concat(values)
+
+  const barChartData = []
+  barColumns.length &&
+    values.map((row) => {
+      barColumns.forEach((key) => {
+        if (row[key] !== undefined) {
+          row[key] = +row[key]
+        }
+        barChartData.push(row[key])
       })
-    : [].concat(values)
+    })
+
+  const barChartExtent = extent(barChartData)
 
   if (sortBy.key) {
     parsedData.sort((a, b) => {
@@ -86,15 +129,15 @@ const Table = props => {
   }
 
   // helper function that toggles order (desc/asc) or sets new sort by key (order: desc)
-  const setSort = key => {
+  const setSort = (key) => {
     if (sortBy.key === key) {
       setSortBy(
         sortBy.order === 'asc'
           ? {}
           : {
               key,
-              order: sortBy.order === 'desc' ? 'asc' : 'desc'
-            }
+              order: sortBy.order === 'desc' ? 'asc' : 'desc',
+            },
       )
     } else {
       setSortBy({ key, order: 'desc' })
@@ -109,15 +152,17 @@ const Table = props => {
       .range(
         colorRanges[colorRange] ||
           colorRange ||
-          colorRanges.sequential.slice(0, thresholds.length + 1)
+          colorRanges.sequential.slice(0, thresholds.length + 1),
       )
   } else {
-    const colorColumns = tableColumns.filter(c => c.color).map(c => c.column)
+    const colorColumns = tableColumns
+      .filter((c) => c.color)
+      .map((c) => c.column)
     const colorValues = !colorColumns.length
       ? []
       : parsedData
           .reduce((values, row) => {
-            colorColumns.forEach(key => {
+            colorColumns.forEach((key) => {
               values.push(row[key])
             })
             return values
@@ -128,7 +173,7 @@ const Table = props => {
     colorScale = getColorMapper(props, colorValues)
   }
 
-  return (
+  const content = (
     <div {...styles.container}>
       <table {...styles.table}>
         <thead>
@@ -138,11 +183,14 @@ const Table = props => {
                 {...styles.header}
                 {...colorScheme.set('borderBottomColor', 'text')}
                 style={{
-                  textAlign: numberColumns.includes(tableHead)
+                  textAlign: numericColumns.includes(tableHead)
                     ? 'right'
                     : 'left',
                   cursor: 'pointer',
-                  whiteSpace: sortBy.key === tableHead ? 'nowrap' : undefined
+                  whiteSpace: sortBy.key === tableHead ? 'nowrap' : undefined,
+                  width: tableColumns.find((d) => d.column === tableHead)
+                    ? tableColumns.find((d) => d.column === tableHead).width
+                    : undefined,
                 }}
                 key={index}
                 onClick={() => setSort(columns[index])}
@@ -169,14 +217,19 @@ const Table = props => {
               {columns.map((cellKey, cellIndex) => (
                 <Cell
                   key={cellIndex}
-                  type={tableColumns.find(d => d.column === cellKey)?.type}
-                  width={tableColumns.find(d => d.column === cellKey)?.width}
-                  color={tableColumns.find(d => d.column === cellKey)?.color}
+                  barChartExtent={barChartExtent}
+                  {...tableColumns.find((d) => d.column === cellKey)}
+                  isNumeric={numericColumns.includes(cellKey)}
                   value={row[cellKey]}
                   colorScale={colorScale}
+                  columnName={cellKey}
+                  isBarColumn={barColumns.includes(cellKey)}
+                  numberFormatter={numberFormatter}
                 >
                   {numberColumns.includes(cellKey)
                     ? numberFormatter(row[cellKey])
+                    : dateColumns.includes(cellKey)
+                    ? dateFormatter(row[cellKey])
                     : row[cellKey]}
                 </Cell>
               ))}
@@ -186,6 +239,20 @@ const Table = props => {
       </table>
     </div>
   )
+
+  if (collapsable) {
+    const height = 40 * 6
+    return (
+      <Collapsable
+        labelPrefix='table'
+        height={{ mobile: height, desktop: height }}
+        t={t}
+      >
+        {content}
+      </Collapsable>
+    )
+  }
+  return content
 }
 
 export const propTypes = {
@@ -195,8 +262,8 @@ export const propTypes = {
       column: PropTypes.string,
       type: PropTypes.string,
       width: PropTypes.string,
-      color: PropTypes.bool
-    })
+      color: PropTypes.bool,
+    }),
   ),
   numberFormat: PropTypes.string.isRequired,
   defaultSortColumn: PropTypes.string,
@@ -205,8 +272,9 @@ export const propTypes = {
   colorRanges: PropTypes.shape({
     diverging2: PropTypes.array.isRequired,
     sequential3: PropTypes.array.isRequired,
-    discrete: PropTypes.array.isRequired
-  }).isRequired
+    discrete: PropTypes.array.isRequired,
+  }).isRequired,
+  collapsable: PropTypes.bool,
 }
 
 Table.defaultProps = defaultProps.Table
@@ -215,19 +283,99 @@ Table.propTypes = propTypes
 
 export default Table
 
-const Cell = props => {
-  const { type, width, color, colorScale, value, children } = props
+const Cell = (props) => {
+  const {
+    columnName,
+    width,
+    color,
+    colorScale,
+    value,
+    children,
+    isNumeric,
+    isBarColumn,
+    barChartExtent,
+    numberFormatter,
+  } = props
+
+  const maxWidth = isBarColumn && (width || 100)
+
+  const barScale = scaleLinear()
+    .domain(barChartExtent)
+    .range([0, maxWidth - PADDING])
+
   return (
     <td
-      {...(type === 'number' && styles.cellNumber)}
+      {...(isNumeric && styles.cellNumeric)}
       {...styles.cell}
       style={{
         width: width !== undefined ? +width : undefined,
-        backgroundColor: color ? colorScale(value) : 'transparent',
-        color: color && getTextColor(colorScale(value))
+        backgroundColor:
+          !isBarColumn && color ? colorScale(value) : 'transparent',
+        color: !isBarColumn && color && getTextColor(colorScale(value)),
+        whiteSpace: isBarColumn && 'nowrap',
       }}
     >
-      {children}
+      {isBarColumn ? (
+        <BarComponent
+          colorScale={colorScale}
+          barWidth={Math.ceil(barScale(value))}
+          label={numberFormatter(value)}
+          columnName={columnName}
+          color={color}
+        />
+      ) : (
+        children
+      )}
     </td>
+  )
+}
+
+const BarComponent = (props) => {
+  const { barWidth, color, label, columnName, colorScale } = props
+
+  const labelSize = labelGauger(label)
+  const BAR_LABEL_PADDING = 5
+
+  const isLabelOutside = labelSize > barWidth
+
+  return (
+    <>
+      <span
+        style={{
+          display: 'inline-block',
+          position: 'relative',
+          verticalAlign: 'middle',
+          width: barWidth,
+          backgroundColor: color && colorScale(columnName),
+          height: '30px',
+        }}
+      >
+        {!isLabelOutside && (
+          <span
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: BAR_LABEL_PADDING,
+              lineHeight: '30px',
+              color: color && getTextColor(colorScale(columnName)),
+            }}
+          >
+            {label}
+          </span>
+        )}
+      </span>
+      {isLabelOutside && (
+        <span
+          style={{
+            display: 'inline-block',
+            verticalAlign: 'middle',
+            paddingLeft: barWidth > 0 && BAR_LABEL_PADDING,
+            lineHeight: '30px',
+          }}
+        >
+          {label}
+        </span>
+      )}
+    </>
   )
 }

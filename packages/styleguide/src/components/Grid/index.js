@@ -15,7 +15,7 @@ const styles = {
     padding: `0 ${CONTENT_PADDING}px`,
     maxWidth: CONTENT_MAX_WIDTH,
     marginLeft: 'auto',
-    marginRight: 'auto'
+    marginRight: 'auto',
   }),
   narrowContainer: css({
     boxSizing: 'border-box',
@@ -23,8 +23,8 @@ const styles = {
     padding: `0 ${CONTENT_PADDING}px`,
     maxWidth: NARROW_CONTENT_MAX_WIDTH,
     marginLeft: 'auto',
-    marginRight: 'auto'
-  })
+    marginRight: 'auto',
+  }),
 }
 
 export const Container = ({ children, ...props }) => (
@@ -35,7 +35,7 @@ export const Container = ({ children, ...props }) => (
 
 Container.propTypes = {
   children: PropTypes.node,
-  className: PropTypes.any
+  className: PropTypes.any,
 }
 
 export const NarrowContainer = ({ children, ...props }) => (
@@ -45,5 +45,5 @@ export const NarrowContainer = ({ children, ...props }) => (
 )
 
 NarrowContainer.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 }

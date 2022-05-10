@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import PropTypes from 'prop-types'
 
 // save headers in a global when receiving them in the browser
 let savedHeaders
 
 export class HeadersProvider extends Component {
-  constructor (props, ...rest) {
+  constructor(props, ...rest) {
     super(props, ...rest)
     // write headers to a global when the first page renders in the client
     // - browser only to ensure that it isn't shared between connections (which would be bad)
@@ -13,27 +13,27 @@ export class HeadersProvider extends Component {
       savedHeaders = props.headers
     }
   }
-  getChildContext () {
+  getChildContext() {
     return {
-      headers: this.props.headers || savedHeaders
+      headers: this.props.headers || savedHeaders,
     }
   }
-  render () {
+  render() {
     return this.props.children
   }
 }
 
 HeadersProvider.childContextTypes = {
-  headers: PropTypes.object
+  headers: PropTypes.object,
 }
 
-const withHeaders = WrappedComponent => {
+const withHeaders = (WrappedComponent) => {
   const WithHeaders = (props, context) => (
     <WrappedComponent {...props} headers={context.headers} />
   )
 
   WithHeaders.contextTypes = {
-    headers: PropTypes.object
+    headers: PropTypes.object,
   }
 
   return WithHeaders

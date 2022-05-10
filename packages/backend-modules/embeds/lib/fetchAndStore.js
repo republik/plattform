@@ -166,14 +166,7 @@ const fetchEmbed = async ({ url, forceRefetch = false }, context) => {
 }
 
 const transformDBEntry = (dbEntry) => {
-  const {
-    id,
-    url,
-    contentId,
-    content,
-    updatedAt,
-    type: __typename
-  } = dbEntry
+  const { id, url, contentId, content, updatedAt, type: __typename } = dbEntry
 
   const proxyfiedContent = applyProxyUrls(content, __typename)
 
@@ -184,7 +177,7 @@ const transformDBEntry = (dbEntry) => {
     __typename,
     ...proxyfiedContent,
   }
-} 
+}
 
 const getEmbedByUrl = async (rawUrl, context, forceRefetch = false) => {
   if (!rawUrl) {

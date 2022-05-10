@@ -14,10 +14,15 @@ import {
   groupInColumns,
   getColumnLayout,
   xAccessor,
-  yAccessor
+  yAccessor,
 } from './utils'
 import { getColorMapper } from './colorMaps'
-import { aggregateValues, getPlot, tickAccessor, scales } from './ScatterPlots.utils'
+import {
+  aggregateValues,
+  getPlot,
+  tickAccessor,
+  scales,
+} from './ScatterPlots.utils'
 import ScatterPlotGroup from './ScatterPlotGroup'
 import { defaultProps } from './ChartContext'
 
@@ -55,8 +60,7 @@ const ScatterPlot = ({
   colorMap,
   colorSort,
   colorDarkMapping,
-  size,
-  sizeRange,
+  pointSize,
   sizeRangeMax,
   sizeUnit,
   sizeNumberFormat,
@@ -80,17 +84,19 @@ const ScatterPlot = ({
   columns,
   minInnerWidth,
   annotations,
-  allowCanvasRendering
+  allowCanvasRendering,
+  ...props
 }) => {
   const data = values
-    .filter(d => d[x] && d[x].length > 0 && d[y] && d[y].length > 0)
-    .map(d => {
-      const dSize = d[size]
+    .filter((d) => d[x] && d[x].length > 0 && d[y] && d[y].length > 0)
+    .map((d) => {
+      const sizeDataColumn = pointSize || props.size || 'size'
+      const dSize = d[sizeDataColumn]
       return {
         datum: d,
         x: +d[x],
         y: +d[y],
-        size: dSize === undefined ? 1 : +d[size] || 0
+        size: dSize === undefined ? 1 : +d[sizeDataColumn] || 0,
       }
     })
 
@@ -102,26 +108,27 @@ const ScatterPlot = ({
     groupedData,
     width - paddingLeft - paddingRight,
     minInnerWidth,
-    innerWidth => (userHeight || innerWidth * heightRatio) + columnTitleHeight,
+    (innerWidth) =>
+      (userHeight || innerWidth * heightRatio) + columnTitleHeight,
     columnSort,
     paddingTop,
     paddingRight + COLUMN_PADDING / 2,
     paddingBottom,
     paddingLeft + COLUMN_PADDING / 2,
     COLUMN_PADDING,
-    true
+    true,
   )
 
   // setup x axis
   const xValues = aggregateValues(data, xAccessor, xTicks, xLines)
-    .concat(annotations.map(annotation => annotation.x1))
-    .concat(annotations.map(annotation => annotation.x2))
+    .concat(annotations.map((annotation) => annotation.x1))
+    .concat(annotations.map((annotation) => annotation.x2))
   const plotX = getPlot(
     xScale,
     xValues,
     [paddingLeft, innerWidth + paddingLeft],
     xNice,
-    innerWidth
+    innerWidth,
   )
   const xAxis = calculateAxis(
     xNumberFormat || numberFormat,
@@ -129,27 +136,27 @@ const ScatterPlot = ({
     plotX.domain(),
     undefined,
     {
-      ticks: xLines ? xLines.map(tickAccessor) : xTicks
-    }
+      ticks: xLines ? xLines.map(tickAccessor) : xTicks,
+    },
   ) // xUnit is rendered separately
   const plotXLines =
     xLines ||
     (
       xTicks || (xScale === 'log' ? get3EqualDistTicks(plotX) : xAxis.ticks)
-    ).map(tick => ({ tick }))
+    ).map((tick) => ({ tick }))
   // ensure highest value is last: the last value is labelled with the unit
   plotXLines.sort((a, b) => ascending(a.tick, b.tick))
 
   // setup y axis
   const yValues = aggregateValues(data, yAccessor, yTicks, yLines)
-    .concat(annotations.map(annotation => annotation.y1))
-    .concat(annotations.map(annotation => annotation.y2))
+    .concat(annotations.map((annotation) => annotation.y1))
+    .concat(annotations.map((annotation) => annotation.y2))
   const plotY = getPlot(
     yScale,
     yValues,
     [innerHeight + paddingTop, paddingTop + columnTitleHeight],
     yNice,
-    innerHeight
+    innerHeight,
   )
   const yAxis = calculateAxis(
     yNumberFormat || numberFormat,
@@ -157,19 +164,19 @@ const ScatterPlot = ({
     plotY.domain(),
     tLabel(yUnit),
     {
-      ticks: yLines ? yLines.map(tickAccessor) : yTicks
-    }
+      ticks: yLines ? yLines.map(tickAccessor) : yTicks,
+    },
   )
   const plotYLines =
     yLines ||
     (
       yTicks || (yScale === 'log' ? get3EqualDistTicks(plotY) : yAxis.ticks)
-    ).map(tick => ({ tick }))
+    ).map((tick) => ({ tick }))
   // ensure highest value is last: the last value is labled with the unit
   plotYLines.sort((a, b) => ascending(a.tick, b.tick))
   const maxYLine = plotYLines[plotYLines.length - 1]
 
-  const colorAccessor = d => d.datum[color]
+  const colorAccessor = (d) => d.datum[color]
   const colorValues = []
     .concat(data.map(colorAccessor))
     .concat(colorLegendValues)
@@ -179,7 +186,7 @@ const ScatterPlot = ({
 
   const colorMapper = getColorMapper(
     { colorMap, colorRanges, colorRange },
-    colorValues
+    colorValues,
   )
 
   const yLinesPaddingLeft = paddingLeft < 2 ? paddingLeft : 0
@@ -189,21 +196,21 @@ const ScatterPlot = ({
     ? []
         .concat(
           colorLegend &&
-            (colorLegendValues || colorValues).map(colorValue => ({
+            (colorLegendValues || colorValues).map((colorValue) => ({
               color: colorMapper(colorValue),
-              label: colorValue
-            }))
+              label: colorValue,
+            })),
         )
         .filter(Boolean)
     : []
 
   const rSize = scaleSqrt()
-    .domain([0, max(data, d => d.size)])
+    .domain([0, max(data, (d) => d.size)])
     .range([
       0,
-      sizeRange
-        ? sizeRange[1] // backwards compatible
-        : sizeRangeMax
+      props.sizeRange // backwards compatible, sizeRangeMax has default value
+        ? props.sizeRange[1]
+        : sizeRangeMax,
     ])
 
   const contextBoxProps = {
@@ -217,7 +224,7 @@ const ScatterPlot = ({
     yUnit,
     xUnit,
     sizeUnit,
-    sizeFormat: getFormat(sizeNumberFormat || numberFormat, tLabel)
+    sizeFormat: getFormat(sizeNumberFormat || numberFormat, tLabel),
   }
 
   return (
@@ -225,7 +232,7 @@ const ScatterPlot = ({
       <ColorLegend inline values={displayedColorLegendValues} />
       <div style={{ position: 'relative', width, height }}>
         {groupedData.map(({ values, key }) => {
-          const filterByColumn = d => !d.column || d.column === key
+          const filterByColumn = (d) => !d.column || d.column === key
           return (
             <div
               key={key || 1}
@@ -254,7 +261,7 @@ const ScatterPlot = ({
                 xAxis={xAxis}
                 yAxis={yAxis}
                 maxYLine={maxYLine}
-                getColor={d => colorMapper(colorAccessor(d))}
+                getColor={(d) => colorMapper(colorAccessor(d))}
                 xUnit={xUnit}
                 annotations={annotations.filter(filterByColumn)}
                 contextBoxProps={contextBoxProps}
@@ -284,8 +291,8 @@ export const propTypes = {
       tick: PropTypes.number.isRequired,
       label: PropTypes.string,
       base: PropTypes.bool,
-      textAnchor: PropTypes.string
-    }).isRequired
+      textAnchor: PropTypes.string,
+    }).isRequired,
   ),
   xScale: PropTypes.oneOf(Object.keys(scales)),
   xNumberFormat: PropTypes.string,
@@ -299,8 +306,8 @@ export const propTypes = {
       column: PropTypes.string,
       tick: PropTypes.number.isRequired,
       label: PropTypes.string,
-      base: PropTypes.bool
-    }).isRequired
+      base: PropTypes.bool,
+    }).isRequired,
   ),
   yScale: PropTypes.oneOf(Object.keys(scales)),
   yNumberFormat: PropTypes.string,
@@ -313,11 +320,11 @@ export const propTypes = {
   colorRange: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   colorRanges: PropTypes.shape({
     sequential3: PropTypes.array.isRequired,
-    discrete: PropTypes.array.isRequired
+    discrete: PropTypes.array.isRequired,
   }).isRequired,
   colorMap: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   colorSort: sortPropType,
-  size: PropTypes.string.isRequired,
+  pointSize: PropTypes.string.isRequired,
   sizeRangeMax: PropTypes.number.isRequired,
   sizeUnit: PropTypes.string,
   sizeNumberFormat: PropTypes.string,
@@ -340,8 +347,8 @@ export const propTypes = {
   columnFilter: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string.isRequired,
-      test: PropTypes.string.isRequired
-    })
+      test: PropTypes.string.isRequired,
+    }),
   ),
   columns: PropTypes.number.isRequired,
   minInnerWidth: PropTypes.number.isRequired,
@@ -352,9 +359,9 @@ export const propTypes = {
       x2: PropTypes.string.isRequired,
       y1: PropTypes.string.isRequired,
       y2: PropTypes.string.isRequired,
-      label: PropTypes.string
-    }).isRequired
-  ).isRequired
+      label: PropTypes.string,
+    }).isRequired,
+  ).isRequired,
 }
 
 ScatterPlot.defaultProps = defaultProps.ScatterPlot

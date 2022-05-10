@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
@@ -33,7 +33,7 @@ const Memberships = ({
   hasMemberships,
   hasActiveMemberships,
   hasAccessGrants,
-  paymentMethodCompany
+  paymentMethodCompany,
 }) => {
   const { query } = useRouter()
   const { inNativeIOSApp } = useInNativeApp()
@@ -97,20 +97,20 @@ export default compose(
       const hasMemberships =
         isReady && data.me.memberships && !!data.me.memberships.length
       const hasActiveMemberships =
-        isReady && hasMemberships && data.me.memberships.some(m => m.active)
+        isReady && hasMemberships && data.me.memberships.some((m) => m.active)
       const monthlyMembership =
         isReady &&
         hasMemberships &&
-        data.me.memberships.find(m => m.type.name === 'MONTHLY_ABO')
+        data.me.memberships.find((m) => m.type.name === 'MONTHLY_ABO')
       const hasAccessGrants =
         isReady && data.me.accessGrants && !!data.me.accessGrants.length
       const autoPayMembership =
         (hasMemberships &&
           data.me.memberships.find(
-            m =>
+            (m) =>
               m.active &&
               m.renew &&
-              (m.type.name === 'MONTHLY_ABO' || m.autoPay)
+              (m.type.name === 'MONTHLY_ABO' || m.autoPay),
           )) ||
         (!hasActiveMemberships && monthlyMembership)
 
@@ -122,8 +122,8 @@ export default compose(
         hasMemberships,
         hasActiveMemberships,
         hasAccessGrants,
-        paymentMethodCompany
+        paymentMethodCompany,
       }
-    }
-  })
+    },
+  }),
 )(Memberships)

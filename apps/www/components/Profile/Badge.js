@@ -1,4 +1,3 @@
-import React from 'react'
 import { merge } from 'glamor'
 import { IconButton, useColorContext } from '@project-r/styleguide'
 import withT from '../../lib/withT'
@@ -18,9 +17,9 @@ const styles = {
     display: 'inline-block',
     textAlign: 'center',
     '& + &': {
-      marginLeft: '10px'
-    }
-  }
+      marginLeft: '10px',
+    },
+  },
 }
 
 const Badge = ({ t, badge, size }) => {
@@ -34,7 +33,7 @@ const Badge = ({ t, badge, size }) => {
       {...merge(styles.badge, {
         height: `${size}px`,
         width: `${size}px`,
-        borderRadius: `${size}px`
+        borderRadius: `${size}px`,
       })}
       {...colorScheme.set('backgroundColor', 'divider')}
       {...colorScheme.set('borderColor', 'textSoft')}

@@ -3,14 +3,14 @@ import { Br } from './email/Paragraph'
 import HR from './email/HR'
 import Blockquote, {
   BlockquoteText,
-  BlockquoteSource
+  BlockquoteSource,
 } from './email/Blockquote'
 
 import {
   matchType,
   matchZone,
   matchHeading,
-  matchParagraph
+  matchParagraph,
 } from 'mdast-react-render/lib/utils'
 
 import { FigureImage } from '../../components/Figure'
@@ -21,7 +21,7 @@ import {
   getDatePath,
   matchFigure,
   matchImagesParagraph,
-  matchSpanType
+  matchSpanType,
 } from '../Article/utils'
 
 const matchLast = (node, index, parent) => index === parent.children.length - 1
@@ -45,42 +45,42 @@ const createNewsletterSchema = ({
   ListItem,
   ListP,
   variableContext,
-  A
+  A,
 } = {}) => {
   const matchSpan = matchType('span')
   const globalInlines = [
     {
       matchMdast: matchType('break'),
       component: Br,
-      isVoid: true
+      isVoid: true,
     },
     {
       matchMdast: matchType('sub'),
       component: Sub,
       editorModule: 'mark',
       editorOptions: {
-        type: 'sub'
-      }
+        type: 'sub',
+      },
     },
     {
       matchMdast: matchType('sup'),
       component: Sup,
       editorModule: 'mark',
       editorOptions: {
-        type: 'sup'
-      }
+        type: 'sup',
+      },
     },
     {
       matchMdast: matchSpanType('MEMO'),
       component: Memo,
       editorModule: 'memo',
       editorOptions: {
-        type: 'MEMO'
-      }
+        type: 'MEMO',
+      },
     },
     {
-      matchMdast: node => matchSpan(node) && node.data?.variable,
-      props: node => node.data,
+      matchMdast: (node) => matchSpan(node) && node.data?.variable,
+      props: (node) => node.data,
       component: Variable,
       editorModule: 'variable',
       editorOptions: {
@@ -91,35 +91,35 @@ const createNewsletterSchema = ({
             key: 'variable',
             items: [
               { value: 'firstName', text: 'Vorname' },
-              { value: 'lastName', text: 'Nachname' }
-            ]
+              { value: 'lastName', text: 'Nachname' },
+            ],
           },
           {
-            key: 'fallback'
-          }
-        ]
-      }
-    }
+            key: 'fallback',
+          },
+        ],
+      },
+    },
   ]
 
   const link = {
     matchMdast: matchType('link'),
     component: A,
-    props: node => ({
+    props: (node) => ({
       title: node.title,
-      href: node.url
+      href: node.url,
     }),
-    editorModule: 'link'
+    editorModule: 'link',
   }
 
-  const createParagraphRule = customComponent => {
+  const createParagraphRule = (customComponent) => {
     return {
       matchMdast: matchParagraph,
       component: customComponent || Paragraph,
       editorModule: 'paragraph',
       editorOptions: {
         formatButtonText: 'Paragraph',
-        type: customComponent ? 'LISTP' : undefined
+        type: customComponent ? 'LISTP' : undefined,
       },
       rules: [
         ...globalInlines,
@@ -132,8 +132,8 @@ const createNewsletterSchema = ({
           editorModule: 'mark',
           editorOptions: {
             type: 'STRONG',
-            mdastType: 'strong'
-          }
+            mdastType: 'strong',
+          },
         },
         {
           matchMdast: matchType('emphasis'),
@@ -143,10 +143,10 @@ const createNewsletterSchema = ({
           editorModule: 'mark',
           editorOptions: {
             type: 'EMPHASIS',
-            mdastType: 'emphasis'
-          }
-        }
-      ]
+            mdastType: 'emphasis',
+          },
+        },
+      ],
     }
   }
 
@@ -161,7 +161,7 @@ const createNewsletterSchema = ({
       isStatic: true,
       afterType: 'PARAGRAPH',
       insertAfterType: 'CENTER',
-      placeholder: 'Legende'
+      placeholder: 'Legende',
     },
     rules: [
       {
@@ -170,12 +170,12 @@ const createNewsletterSchema = ({
         editorModule: 'paragraph',
         editorOptions: {
           type: 'BYLINE',
-          placeholder: 'Credit'
-        }
+          placeholder: 'Credit',
+        },
       },
       link,
-      ...globalInlines
-    ]
+      ...globalInlines,
+    ],
   }
 
   const figure = {
@@ -187,9 +187,9 @@ const createNewsletterSchema = ({
       insertButtonText: 'Bild',
       insertTypes: ['PARAGRAPH'],
       type: 'CENTERFIGURE',
-      plainOption: true
+      plainOption: true,
     },
-    props: (node, index, parent) => {
+    props: (node) => {
       return node.data
     },
     rules: [
@@ -207,18 +207,18 @@ const createNewsletterSchema = ({
               srcDark &&
               FigureImage.utils.getResizedSrcs(srcDark, displayWidth),
             alt: node.children[0].alt,
-            plain
+            plain,
           }
         },
         editorModule: 'figureImage',
-        isVoid: true
+        isVoid: true,
       },
-      figureCaption
-    ]
+      figureCaption,
+    ],
   }
 
   const cover = {
-    matchMdast: (node, index, parent) => {
+    matchMdast: (node, index) => {
       return matchFigure(node) && index === 0
     },
     component: Cover,
@@ -226,7 +226,7 @@ const createNewsletterSchema = ({
     editorOptions: {
       type: 'COVERFIGURE',
       afterType: 'PARAGRAPH',
-      pixelNote: 'Auflösung: min. 2000x (proportionaler Schnitt)'
+      pixelNote: 'Auflösung: min. 2000x (proportionaler Schnitt)',
     },
     rules: [
       {
@@ -242,17 +242,17 @@ const createNewsletterSchema = ({
             dark:
               srcDark &&
               FigureImage.utils.getResizedSrcs(srcDark, displayWidth),
-            alt: node.children[0].alt
+            alt: node.children[0].alt,
           }
         },
         editorModule: 'figureImage',
         editorOptions: {
-          type: 'COVERFIGUREIMAGE'
+          type: 'COVERFIGUREIMAGE',
         },
-        isVoid: true
+        isVoid: true,
       },
-      figureCaption
-    ]
+      figureCaption,
+    ],
   }
 
   return {
@@ -264,9 +264,9 @@ const createNewsletterSchema = ({
         matchMdast: matchType('root'),
         component: Container,
         editorModule: 'documentPlain',
-        props: node => ({
+        props: (node) => ({
           meta: node.meta || {},
-          variableContext
+          variableContext,
         }),
         rules: [
           {
@@ -275,13 +275,18 @@ const createNewsletterSchema = ({
             editorOptions: {
               customFields: [
                 {
+                  label: 'Kein synthetisches Vorlesen',
+                  key: 'suppressSyntheticReadAloud',
+                  ref: 'bool',
+                },
+                {
                   label: 'Format',
                   key: 'format',
-                  ref: 'repo'
-                }
+                  ref: 'repo',
+                },
               ],
-              additionalFields: ['emailSubject']
-            }
+              additionalFields: ['emailSubject'],
+            },
           },
           cover,
           {
@@ -298,50 +303,51 @@ const createNewsletterSchema = ({
                 editorOptions: {
                   type: 'h2',
                   depth: 2,
-                  formatButtonText: 'Zwischentitel'
-                }
+                  formatButtonText: 'Zwischentitel',
+                },
               },
               {
                 matchMdast: matchZone('IF'),
                 component: If,
-                props: node => ({
-                  present: node.data.present
+                props: (node) => ({
+                  present: node.data.present,
                 }),
                 editorModule: 'variableCondition',
                 editorOptions: {
                   type: 'IF',
-                  insertBlock: 'greeting',
+                  insertBlocks: ['greeting', 'hasAccess'],
                   insertTypes: ['PARAGRAPH'],
                   fields: [
                     {
                       key: 'present',
                       items: [
                         { value: 'firstName', text: 'Vorname' },
-                        { value: 'lastName', text: 'Nachname' }
-                      ]
-                    }
-                  ]
-                }
+                        { value: 'lastName', text: 'Nachname' },
+                        { value: 'hasAccess', text: 'Magazin-Zugriff' },
+                      ],
+                    },
+                  ],
+                },
               },
               {
                 matchMdast: matchZone('ELSE'),
                 component: Else,
                 editorModule: 'variableCondition',
                 editorOptions: {
-                  type: 'ELSE'
-                }
+                  type: 'ELSE',
+                },
               },
               {
                 matchMdast: matchZone('BUTTON'),
                 component: Button,
-                props: (node, index, parent, { ancestors }) => {
+                props: (node) => {
                   const link =
                     (node.children[0] && node.children[0].children[0]) || {}
 
                   return {
                     ...node.data,
                     title: link.title,
-                    href: link.url
+                    href: link.url,
                   }
                 },
                 rules: globalInlines.concat({
@@ -351,18 +357,18 @@ const createNewsletterSchema = ({
                     {
                       matchMdast: matchType('link'),
                       component: ({ children }) => children,
-                      rules: globalInlines
-                    }
-                  ]
+                      rules: globalInlines,
+                    },
+                  ],
                 }),
-                editorModule: 'button'
+                editorModule: 'button',
               },
               {
                 matchMdast: matchZone('QUOTE'),
                 component: Blockquote,
                 editorModule: 'quote',
                 editorOptions: {
-                  insertButtonText: 'Zitat'
+                  insertButtonText: 'Zitat',
                 },
                 rules: [
                   {
@@ -373,9 +379,9 @@ const createNewsletterSchema = ({
                     editorModule: 'paragraph',
                     editorOptions: {
                       type: 'QUOTEP',
-                      placeholder: 'Zitat'
+                      placeholder: 'Zitat',
                     },
-                    rules: [paragraph]
+                    rules: [paragraph],
                   },
                   {
                     matchMdast: (node, index, parent) =>
@@ -384,20 +390,20 @@ const createNewsletterSchema = ({
                     editorModule: 'paragraph',
                     editorOptions: {
                       type: 'QUOTECITE',
-                      placeholder: 'Quellenangabe / Autor'
+                      placeholder: 'Quellenangabe / Autor',
                     },
-                    rules: [paragraph]
-                  }
-                ]
+                    rules: [paragraph],
+                  },
+                ],
               },
               {
                 matchMdast: matchType('list'),
                 component: List,
-                props: node => ({
+                props: (node) => ({
                   data: {
                     ordered: node.ordered,
-                    start: node.start
-                  }
+                    start: node.start,
+                  },
                 }),
                 editorModule: 'list',
                 rules: [
@@ -405,9 +411,9 @@ const createNewsletterSchema = ({
                     matchMdast: matchType('listItem'),
                     component: ListItem,
                     editorModule: 'listItem',
-                    rules: [listParagraph]
-                  }
-                ]
+                    rules: [listParagraph],
+                  },
+                ],
               },
               {
                 matchMdast: matchType('thematicBreak'),
@@ -415,19 +421,19 @@ const createNewsletterSchema = ({
                 editorModule: 'line',
                 editorOptions: {
                   insertButtonText: 'Trennlinie',
-                  insertTypes: ['PARAGRAPH']
+                  insertTypes: ['PARAGRAPH'],
                 },
-                isVoid: true
-              }
-            ]
+                isVoid: true,
+              },
+            ],
           },
           {
             matchMdast: () => false,
-            editorModule: 'specialchars'
-          }
-        ]
-      }
-    ]
+            editorModule: 'specialchars',
+          },
+        ],
+      },
+    ],
   }
 }
 

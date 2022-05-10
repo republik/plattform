@@ -1,4 +1,3 @@
-import React from 'react'
 import { Interaction, Loader, useColorContext } from '@project-r/styleguide'
 import AddressForm from './AddressForm'
 import FieldSet from '../FieldSet'
@@ -6,11 +5,11 @@ import { useTranslation } from '../../lib/withT'
 
 const { H2 } = Interaction
 
-const fields = t => [
+const fields = (t) => [
   {
     label: t('Account/Update/phone/label/alt'),
-    name: 'phoneNumber'
-  }
+    name: 'phoneNumber',
+  },
 ]
 
 const DetailsForm = ({
@@ -21,7 +20,7 @@ const DetailsForm = ({
   onChange,
   errorMessages,
   showErrors,
-  style
+  style,
 }) => {
   const [colorScheme] = useColorContext()
   const { t } = useTranslation()
@@ -64,7 +63,7 @@ const DetailsForm = ({
                 <div
                   {...colorScheme.set('color', 'error')}
                   style={{
-                    marginBottom: 40
+                    marginBottom: 40,
                   }}
                 >
                   {t('pledge/submit/error/title')}

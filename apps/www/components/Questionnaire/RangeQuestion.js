@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import compose from 'lodash/flowRight'
 import { withApollo } from '@apollo/client/react/hoc'
 import { css, merge } from 'glamor'
@@ -17,12 +17,12 @@ const thumbStyle = {
   width: thumbSize,
   height: thumbSize,
   background: colors.primary,
-  outline: 'none'
+  outline: 'none',
 }
 
 const trackStyle = {
   background: colors.secondaryBg,
-  height: 5
+  height: 5,
 }
 
 const styles = {
@@ -30,7 +30,7 @@ const styles = {
     position: 'relative',
     minHeight: 30,
     maxHeight: 50,
-    width: '100%'
+    width: '100%',
   }),
   slider: css({
     WebkitAppearance: 'none',
@@ -38,53 +38,53 @@ const styles = {
     background: 'transparent',
     outline: 'none',
     ':focus': {
-      outline: 'none'
+      outline: 'none',
     },
     // thumb
     '::-webkit-slider-thumb': {
       ...thumbStyle,
       WebkitAppearance: 'none',
-      marginTop: -9
+      marginTop: -9,
     },
     '::-moz-range-thumb': {
-      ...thumbStyle
+      ...thumbStyle,
     },
     '::-ms-thumb': {
-      ...thumbStyle
+      ...thumbStyle,
     },
     // track
     '::-webkit-slider-runnable-track': {
       ...trackStyle,
-      width: '100%'
+      width: '100%',
     },
     '::-moz-range-track': {
       ...trackStyle,
-      width: '100%'
+      width: '100%',
     },
     '::-ms-track': {
       width: '100%',
       borderColor: 'transparent',
       color: 'transparent',
       background: 'transparent',
-      height: thumbSize
+      height: thumbSize,
     },
     '::-ms-fill-lower': {
-      ...trackStyle
+      ...trackStyle,
     },
     '::-ms-fill-upper': {
-      ...trackStyle
-    }
+      ...trackStyle,
+    },
   }),
   sliderEmpty: css({
     '::-webkit-slider-thumb': {
-      background: colors.disabled
+      background: colors.disabled,
     },
     '::-moz-range-thumb': {
-      background: colors.disabled
+      background: colors.disabled,
     },
     '::-ms-thumb': {
-      background: colors.disabled
-    }
+      background: colors.disabled,
+    },
   }),
   ticks: css({
     display: 'flex',
@@ -94,13 +94,13 @@ const styles = {
     paddingLeft: 0,
     '& div:first-child': {
       textAlign: 'left',
-      paddingRight: 5
+      paddingRight: 5,
     },
     '& div:last-child': {
       textAlign: 'right',
-      paddingLeft: 5
-    }
-  })
+      paddingLeft: 5,
+    },
+  }),
 }
 
 const sliderDefault = merge(styles.slider, styles.sliderEmpty)
@@ -111,7 +111,7 @@ class RangeQuestion extends Component {
     this.state = {
       answerId:
         (props.question.userAnswer && props.question.userAnswer.id) || uuid(),
-      ...this.deriveStateFromProps(props)
+      ...this.deriveStateFromProps(props),
     }
   }
 
@@ -129,10 +129,10 @@ class RangeQuestion extends Component {
 
   renderInput = () => {
     const {
-      question: { ticks, kind }
+      question: { ticks, kind },
     } = this.props
     const { value } = this.state
-    const tickValues = ticks.map(t => t.value)
+    const tickValues = ticks.map((t) => t.value)
     const max = Math.max(...tickValues)
     const min = Math.min(...tickValues)
 
@@ -156,7 +156,7 @@ class RangeQuestion extends Component {
           max={max}
           step={step}
           value={value === null ? defaultValue : value}
-          onChange={e => this.handleChange(+e.target.value)}
+          onChange={(e) => this.handleChange(+e.target.value)}
           onMouseDownCapture={() =>
             value === null && this.handleChange(defaultValue)
           }
@@ -167,11 +167,11 @@ class RangeQuestion extends Component {
 
   renderLabels = () => {
     const {
-      question: { ticks }
+      question: { ticks },
     } = this.props
     return (
       <div {...styles.ticks}>
-        {ticks.map(t => (
+        {ticks.map((t) => (
           <div key={t.label} style={{ width: `${100 / ticks.length}%` }}>
             {t.label}
           </div>
@@ -182,7 +182,7 @@ class RangeQuestion extends Component {
 
   onChangeDebounced = debounce(this.props.onChange, 500)
 
-  handleChange = value => {
+  handleChange = (value) => {
     const { answerId } = this.state
     this.setState({ value })
     this.onChangeDebounced(answerId, value)
@@ -190,7 +190,7 @@ class RangeQuestion extends Component {
 
   render() {
     const {
-      question: { text }
+      question: { text },
     } = this.props
     return (
       <div>

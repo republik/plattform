@@ -1,4 +1,3 @@
-import React from 'react'
 import AutosizeInput from 'react-textarea-autosize'
 
 import { Field, Interaction } from '@project-r/styleguide'
@@ -11,7 +10,7 @@ const CampaignBudget = ({
   budget,
   handleBudget,
   budgetComment,
-  handleBudgetComment
+  handleBudgetComment,
 }) => (
   <>
     <H2>Wahlkampf-Budget</H2>

@@ -7,7 +7,7 @@ import {
   sansSerifMedium14,
   sansSerifMedium16,
   sansSerifRegular16,
-  sansSerifRegular18
+  sansSerifRegular18,
 } from '../Typography/styles'
 import { useColorContext } from '../Colors/useColorContext'
 
@@ -16,15 +16,15 @@ const styles = {
     ...convertStyleToRem(sansSerifRegular16),
     margin: '10px 0 5px 0',
     [mUp]: {
-      ...convertStyleToRem(sansSerifRegular18)
-    }
+      ...convertStyleToRem(sansSerifRegular18),
+    },
   }),
   label: css({
     ...convertStyleToRem(sansSerifMedium14),
     [mUp]: {
-      ...convertStyleToRem(sansSerifMedium16)
-    }
-  })
+      ...convertStyleToRem(sansSerifMedium16),
+    },
+  }),
 }
 
 const Highlight = ({ children, label }) => {
@@ -42,7 +42,7 @@ const Highlight = ({ children, label }) => {
 }
 
 Highlight.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
 }
 
 export default Highlight

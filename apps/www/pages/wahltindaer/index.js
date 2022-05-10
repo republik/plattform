@@ -1,4 +1,3 @@
-import React from 'react'
 import { withRouter } from 'next/router'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
@@ -16,14 +15,14 @@ import Loader from '../../components/Loader'
 import Container from '../../components/Card/Container'
 import Cantons, {
   nSeatsPerCanton,
-  sSeatsPerCanton
+  sSeatsPerCanton,
 } from '../../components/Card/Cantons'
 import Logo from '../../components/Card/Logo'
 import {
   Editorial,
   Interaction,
   colors,
-  IconButton
+  IconButton,
 } from '@project-r/styleguide'
 import { DiscussionIcon } from '@project-r/styleguide'
 import Link from 'next/link'
@@ -71,7 +70,7 @@ const styles = {
   cantons: css({
     maxWidth: WIDTH * 3 + MARGIN * 2 * 3,
     margin: '0 auto',
-    textAlign: 'center'
+    textAlign: 'center',
   }),
   canton: css(Interaction.fontRule, {
     verticalAlign: 'top',
@@ -84,10 +83,10 @@ const styles = {
     margin: MARGIN,
     textAlign: 'left',
     width: WIDTH,
-    height: SIZE + 20
+    height: SIZE + 20,
   }),
   cardCount: css({
-    fontFeatureSettings: '"tnum" 1, "kern" 1'
+    fontFeatureSettings: '"tnum" 1, "kern" 1',
   }),
   cardsLink: css({
     display: 'inline-block',
@@ -96,31 +95,31 @@ const styles = {
     textDecoration: 'none',
     '@media(hover)': {
       '[href]:hover > *': {
-        opacity: 0.8
-      }
-    }
+        opacity: 0.8,
+      },
+    },
   }),
   discussionLink: css({
     position: 'relative',
     top: 3,
     display: 'inline-block',
     paddingLeft: 10,
-    verticalAlign: 'top'
+    verticalAlign: 'top',
   }),
   flag: css({
     position: 'absolute',
     left: 0,
-    top: 0
+    top: 0,
   }),
   discussionFeedHeadline: css({
     marginTop: 20,
-    marginBottom: 30
-  })
+    marginBottom: 30,
+  }),
 }
 
 const mdCheckProps = {
   style: { marginTop: -4 },
-  fill: colors.primary
+  fill: colors.primary,
 }
 
 const Page = ({ data, data: { cardGroups }, router, t }) => (
@@ -132,7 +131,7 @@ const Page = ({ data, data: { cardGroups }, router, t }) => (
       title: t('pages/cardGroups/pageTitle'),
       description: t('pages/cardGroups/description'),
       url: `${PUBLIC_BASE_URL}/wahltindaer`,
-      image: `${CDN_FRONTEND_BASE_URL}/static/social-media/republik-wahltindaer-09.png`
+      image: `${CDN_FRONTEND_BASE_URL}/static/social-media/republik-wahltindaer-09.png`,
     }}
   >
     <Container imprint={false}>
@@ -141,7 +140,7 @@ const Page = ({ data, data: { cardGroups }, router, t }) => (
           padding: 10,
           maxWidth: 700,
           margin: '40px auto 0',
-          textAlign: 'center'
+          textAlign: 'center',
         }}
       >
         <Editorial.Headline>
@@ -149,7 +148,7 @@ const Page = ({ data, data: { cardGroups }, router, t }) => (
           <Logo
             style={{
               marginLeft: 20,
-              marginBottom: -20
+              marginBottom: -20,
             }}
             size={80}
           />
@@ -161,7 +160,7 @@ const Page = ({ data, data: { cardGroups }, router, t }) => (
               data.nElected && data.nElected.totalCount === 200
                 ? 'complete'
                 : 'pending'
-            }`
+            }`,
           )}
           <br />
           <Editorial.A href='/wahltindaer/meta'>
@@ -177,7 +176,7 @@ const Page = ({ data, data: { cardGroups }, router, t }) => (
             .concat(cardGroups.nodes)
             .sort((a, b) => descending(a.cards.totalCount, b.cards.totalCount))
           const partyQuery = router.query.party && {
-            party: router.query.party
+            party: router.query.party,
           }
           const AllFlag = Cantons.bundesversammlung || null
 
@@ -202,13 +201,13 @@ const Page = ({ data, data: { cardGroups }, router, t }) => (
                     padding: 10,
                     paddingLeft: 10 + SIZE + 10,
                     width: 10 + WIDTH + 10,
-                    margin: 0
+                    margin: 0,
                   }}
                 >
                   <Link
                     href={{
                       pathname: '/wahltindaer/[group]',
-                      query: { group: 'bundesversammlung', ...partyQuery }
+                      query: { group: 'bundesversammlung', ...partyQuery },
                     }}
                     passHref
                   >
@@ -238,22 +237,22 @@ const Page = ({ data, data: { cardGroups }, router, t }) => (
                     padding: 10,
                     margin: '10px auto',
                     fontSize: 16,
-                    textAlign: 'center'
+                    textAlign: 'center',
                   }}
                 >
                   {t('pages/cardGroups/elected/open', {
                     nationalCouncil: t.pluralize(
                       'pages/cardGroups/elected/open/nationalCouncil',
                       {
-                        count: 200 - (data.nElected.totalCount || 0)
-                      }
+                        count: 200 - (data.nElected.totalCount || 0),
+                      },
                     ),
                     councilOfStates: t.pluralize(
                       'pages/cardGroups/elected/open/councilOfStates',
                       {
-                        count: 46 - (data.sElected.totalCount || 0)
-                      }
-                    )
+                        count: 46 - (data.sElected.totalCount || 0),
+                      },
+                    ),
                   })}
                 </Interaction.P>
               )}
@@ -263,7 +262,7 @@ const Page = ({ data, data: { cardGroups }, router, t }) => (
                 <strong>{t('pages/cardGroups/choose')}</strong>
               </Interaction.P>
               <div {...styles.cantons} style={{ opacity: 1 }}>
-                {groups.map(cardGroup => {
+                {groups.map((cardGroup) => {
                   const Flag = Cantons[cardGroup.slug] || null
                   const commentCount = cardGroup.discussion.comments.totalCount
                   const nSeats = nSeatsPerCanton[cardGroup.slug]
@@ -279,7 +278,7 @@ const Page = ({ data, data: { cardGroups }, router, t }) => (
                       <Link
                         href={{
                           pathname: '/wahltindaer/[group]',
-                          query: { group: cardGroup.slug, ...partyQuery }
+                          query: { group: cardGroup.slug, ...partyQuery },
                         }}
                         passHref
                       >
@@ -327,8 +326,8 @@ const Page = ({ data, data: { cardGroups }, router, t }) => (
                               query: {
                                 group: cardGroup.slug,
                                 suffix: 'diskussion',
-                                ...partyQuery
-                              }
+                                ...partyQuery,
+                              },
                             }}
                             passHref
                           >

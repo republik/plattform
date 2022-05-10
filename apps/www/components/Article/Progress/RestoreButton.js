@@ -1,4 +1,3 @@
-import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { CloseIcon, ArrowDownwardIcon } from '@project-r/styleguide'
@@ -14,7 +13,7 @@ import {
   zIndex,
   ProgressCircle,
   mediaQueries,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 
 const RADIUS = 16
@@ -26,12 +25,12 @@ const PADDING = 16
 const RestoreButton = ({ t, onClick, onClose, opacity, userProgress }) => {
   const [colorScheme] = useColorContext()
   const title = t('progress/restore/title', {
-    percent: formatPercent(userProgress.percentage)
+    percent: formatPercent(userProgress.percentage),
   })
 
   return (
     <AudioContext.Consumer>
-      {value => (
+      {(value) => (
         <div
           {...styles.container}
           {...colorScheme.set('color', 'text')}
@@ -67,7 +66,7 @@ const RestoreButton = ({ t, onClick, onClose, opacity, userProgress }) => {
                   {datetime(
                     t,
                     new Date(userProgress.updatedAt),
-                    'progress/restore'
+                    'progress/restore',
                   )}
                 </div>
               </div>
@@ -91,7 +90,7 @@ const RestoreButton = ({ t, onClick, onClose, opacity, userProgress }) => {
 const styles = {
   container: css({
     '@media print': {
-      display: 'none'
+      display: 'none',
     },
     cursor: 'pointer',
     position: 'fixed',
@@ -103,20 +102,20 @@ const styles = {
     zIndex: zIndex.callout,
     transition: 'all ease-out 0.3s',
     [mediaQueries.mUp]: {
-      right: PADDING
-    }
+      right: PADDING,
+    },
   }),
   buttonBox: css({
     backgroundColor: 'white',
     boxShadow: '0 0 15px rgba(0,0,0,0.1)',
-    height: '100%'
+    height: '100%',
   }),
   buttonBoxContent: css({
     position: 'absolute',
     left: PADDING * 2,
     right: PADDING * 2,
     top: 0,
-    bottom: 0
+    bottom: 0,
   }),
   button: css({
     display: 'flex',
@@ -133,15 +132,15 @@ const styles = {
     [mediaQueries.mUp]: {
       left: 0,
       top: '50%',
-      marginTop: -16
-    }
+      marginTop: -16,
+    },
   }),
   buttonIcon: css({
     position: 'absolute',
     width: BUTTON_ICON_SIZE,
     height: BUTTON_ICON_SIZE,
     top: `calc(50% - ${BUTTON_ICON_SIZE / 2}px)`,
-    left: `calc(50% - ${BUTTON_ICON_SIZE / 2}px)`
+    left: `calc(50% - ${BUTTON_ICON_SIZE / 2}px)`,
   }),
   textBox: css({
     position: 'absolute',
@@ -150,8 +149,8 @@ const styles = {
     left: 0,
     [mediaQueries.mUp]: {
       left: BUTTON_ICON_SIZE + 16 + PADDING,
-      marginTop: -24
-    }
+      marginTop: -24,
+    },
   }),
   close: css({
     background: 'none',
@@ -163,26 +162,26 @@ const styles = {
     right: 0,
     top: '50%',
     marginTop: -14,
-    textAlign: 'center'
+    textAlign: 'center',
   }),
   label: css({
     marginBottom: 2,
     fontSize: 16,
     [mediaQueries.mUp]: {
       right: 19,
-      marginBottom: 5
-    }
+      marginBottom: 5,
+    },
   }),
   note: css({
-    fontSize: 16
-  })
+    fontSize: 16,
+  }),
 }
 
 RestoreButton.propTypes = {
   t: PropTypes.func,
   onClick: PropTypes.func,
   style: PropTypes.object,
-  updatedAt: PropTypes.string
+  updatedAt: PropTypes.string,
 }
 
 export default withT(RestoreButton)

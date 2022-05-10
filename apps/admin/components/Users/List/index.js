@@ -1,37 +1,35 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 import InfiniteScroller from 'react-infinite-scroller'
 
 import { Loader, Interaction } from '@project-r/styleguide'
 
-import {
-  createChangeHandler
-} from '../../Tables/utils'
+import { createChangeHandler } from '../../Tables/utils'
 
 import Table from './Table'
 import TableForm from './TableForm'
 
-const { P } = Interaction
+const { P } = Interaction
 const USERS_LIMIT = 100
 
-const Users = props => {
+const Users = (props) => {
   const {
     data,
     data: { users },
     params,
     loadMoreUsers,
-    onChange
+    onChange,
   } = props
 
-  const changeHandler = createChangeHandler(
-    params,
-    onChange
-  )
+  const changeHandler = createChangeHandler(params, onChange)
 
   return (
     <Fragment>
-      <TableForm defaultSearch={params.search} onSearch={changeHandler('search')} />
+      <TableForm
+        defaultSearch={params.search}
+        onSearch={changeHandler('search')}
+      />
       <Loader
         error={data.error}
         loading={data.loading}
@@ -57,16 +55,8 @@ const Users = props => {
 }
 
 const usersQuery = gql`
-  query users(
-    $limit: Int!
-    $offset: Int
-    $search: String
-  ) {
-    users: adminUsers(
-      limit: $limit
-      offset: $offset
-      search: $search
-    ) {
+  query users($limit: Int!, $offset: Int, $search: String) {
+    users: adminUsers(limit: $limit, offset: $offset, search: $search) {
       count
       items {
         id
@@ -93,8 +83,8 @@ export default graphql(usersQuery, {
       variables: {
         limit: USERS_LIMIT,
         offset: 0,
-        search
-      }
+        search,
+      },
     }
   },
   props: ({ data }) => ({
@@ -102,12 +92,9 @@ export default graphql(usersQuery, {
     loadMoreUsers: () => {
       return data.fetchMore({
         variables: {
-          offset: data.users.items.length
+          offset: data.users.items.length,
         },
-        updateQuery: (
-          previousResult,
-          { fetchMoreResult }
-        ) => {
+        updateQuery: (previousResult, { fetchMoreResult }) => {
           if (!fetchMoreResult) {
             return previousResult
           }
@@ -119,13 +106,13 @@ export default graphql(usersQuery, {
                 ...fetchMoreResult.users,
                 items: [
                   ...previousResult.users.items,
-                  ...fetchMoreResult.users.items
-                ]
-              }
-            }
+                  ...fetchMoreResult.users.items,
+                ],
+              },
+            },
           }
-        }
+        },
       })
-    }
-  })
+    },
+  }),
 })(Users)

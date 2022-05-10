@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { withAggregations } from './enhancers'
 import compose from 'lodash/flowRight'
 import withSearchRouter from './withSearchRouter'
@@ -6,13 +6,13 @@ import {
   LATEST_SORT,
   SUPPORTED_FILTERS,
   isSameFilter,
-  findAggregation
+  findAggregation,
 } from './constants'
 import { css } from 'glamor'
 import {
   fontStyles,
   mediaQueries,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 
 import { countFormat } from '../../lib/utils/format'
@@ -22,7 +22,7 @@ const styles = {
   list: css({
     listStyle: 'none',
     padding: '0 0 40px',
-    margin: 0
+    margin: 0,
   }),
   listItem: css({
     display: 'inline-block',
@@ -30,21 +30,21 @@ const styles = {
     ...fontStyles.sansSerifRegular16,
     [mediaQueries.mUp]: {
       ...fontStyles.sansSerifRegular18,
-      marginRight: 40
-    }
+      marginRight: 40,
+    },
   }),
   linkRegular: css({
-    textDecoration: 'none'
+    textDecoration: 'none',
   }),
   linkSelected: css({
     textDecoration: 'underline',
-    textDecorationSkip: 'ink'
-  })
+    textDecorationSkip: 'ink',
+  }),
 }
 
 const Filters = compose(
   withSearchRouter,
-  withAggregations
+  withAggregations,
 )(({ dataAggregations, urlFilter, getSearchParams, startState }) => {
   const { search, loading, error } = dataAggregations
   const [colorScheme] = useColorContext()
@@ -52,9 +52,9 @@ const Filters = compose(
     return css({
       '@media (hover)': {
         ':hover': {
-          color: colorScheme.getCSSColor('textSoft')
-        }
-      }
+          color: colorScheme.getCSSColor('textSoft'),
+        },
+      },
     })
   }, [colorScheme])
 
@@ -87,8 +87,8 @@ const Filters = compose(
                   pathname: '/suche',
                   query: getSearchParams({
                     filter,
-                    sort: startState ? LATEST_SORT : undefined
-                  })
+                    sort: startState ? LATEST_SORT : undefined,
+                  }),
                 }}
                 passHref
               >

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react'
 import { Set, Map } from 'immutable'
 
 import { Label, Field, Dropdown } from '@project-r/styleguide'
@@ -8,29 +8,41 @@ import withT from '../../../../lib/withT'
 
 import UIForm from '../../UIForm'
 
+// @see GraphQL schema-types enum AudioSourceKind
+const AUDIO_SOURCE_KINDS = [
+  // 'podcast', // not in use (yet)
+  'readAloud',
+  // 'syntheticReadAloud', // not in use (yet)
+]
+
 export default withT(({ t, editor, node, onInputChange }) => {
-  const audioCoverAnchors = [null, 'middle'].map(value => ({
+  const audioCoverAnchors = [null, 'middle'].map((value) => ({
     value,
-    text: t(`metaData/audio/cover/anchor/${value}`)
+    text: t(`metaData/audio/cover/anchor/${value}`),
+  }))
+  const audioSourceKinds = [null, ...AUDIO_SOURCE_KINDS].map((value) => ({
+    value,
+    text: t(`metaData/audio/source/kind/${value}`),
   }))
 
-  const onChange = key => newValue => {
-    editor.change(change => {
+  const onChange = (key) => (newValue) => {
+    editor.change((change) => {
       change.setNodeByKey(node.key, {
         data:
           newValue !== null
             ? node.data.set(key, newValue)
-            : node.data.remove(key)
+            : node.data.remove(key),
       })
     })
   }
 
   const audioCover = node.data.get('audioCover')
+  const audioSourceKind = node.data.get('audioSourceKind')
 
   const audioSourceKeys = Set(['audioSourceMp3', 'audioSourceAac'])
-  const audioDefaultValues = Map(audioSourceKeys.map(key => [key, '']))
+  const audioDefaultValues = Map(audioSourceKeys.map((key) => [key, '']))
   const audioSourceData = audioDefaultValues.merge(
-    node.data.filter((_, key) => audioSourceKeys.has(key))
+    node.data.filter((_, key) => audioSourceKeys.has(key)),
   )
 
   return (
@@ -46,6 +58,13 @@ export default withT(({ t, editor, node, onInputChange }) => {
       <UIForm getWidth={() => '25%'}>
         <Dropdown
           black
+          label={t('metaData/audio/source/kind')}
+          items={audioSourceKinds}
+          value={audioSourceKind || null}
+          onChange={({ value }) => onChange('audioSourceKind')(value)}
+        />
+        <Dropdown
+          black
           label={t('metaData/audio/cover/anchor')}
           items={audioCoverAnchors}
           value={audioCover ? audioCover.anchor : null}
@@ -56,8 +75,8 @@ export default withT(({ t, editor, node, onInputChange }) => {
                 color: (audioCover && audioCover.color) || '#fff',
                 backgroundColor:
                   (audioCover && audioCover.backgroundColor) ||
-                  'rgba(255,255,255,0.3)'
-              }
+                  'rgba(255,255,255,0.3)',
+              },
             )
           }
         />
@@ -69,7 +88,7 @@ export default withT(({ t, editor, node, onInputChange }) => {
             onChange={(_, color) => {
               onChange('audioCover')({
                 ...audioCover,
-                color
+                color,
               })
             }}
           />
@@ -82,7 +101,7 @@ export default withT(({ t, editor, node, onInputChange }) => {
             onChange={(_, backgroundColor) => {
               onChange('audioCover')({
                 ...audioCover,
-                backgroundColor
+                backgroundColor,
               })
             }}
           />

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { Component, Fragment } from 'react'
 import { compose, graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 import {
@@ -8,7 +8,7 @@ import {
   InlineSpinner,
   Button,
   Field,
-  A
+  A,
 } from '@project-r/styleguide'
 
 import remark from 'remark'
@@ -20,10 +20,7 @@ import withMe from '../../lib/withMe'
 
 import ErrorMessage from '../ErrorMessage'
 
-import {
-  Section,
-  SectionTitle
-} from '../Display/utils'
+import { Section, SectionTitle } from '../Display/utils'
 
 const getAdminNotes = gql`
   query user($userId: String) {
@@ -35,29 +32,21 @@ const getAdminNotes = gql`
 `
 
 const updateAdminNotesMutation = gql`
-  mutation updateAdminNotes(
-    $notes: String
-    $userId: ID!
-  ) {
-    updateAdminNotes(
-      notes: $notes
-      userId: $userId
-    ) {
+  mutation updateAdminNotes($notes: String, $userId: ID!) {
+    updateAdminNotes(notes: $notes, userId: $userId) {
       id
       adminNotes
     }
   }
 `
 
-const dateTimeFormat = swissTime.format(
-  '%e. %B %Y %H.%M Uhr'
-)
+const dateTimeFormat = swissTime.format('%e. %B %Y %H.%M Uhr')
 
 class AdminNotes extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      message: ''
+      message: '',
     }
   }
   renderText(text) {
@@ -68,20 +57,20 @@ class AdminNotes extends Component {
             <Label
               style={{
                 display: 'block',
-                marginTop: '10px'
+                marginTop: '10px',
               }}
             >
               {children}
             </Label>
           ),
           p: Interaction.P,
-          a: A
-        }
+          a: A,
+        },
       })
       .processSync(text).contents
   }
 
-  changeHandler = e => {
+  changeHandler = (e) => {
     this.setState({ message: e.target.value })
   }
 
@@ -92,9 +81,7 @@ class AdminNotes extends Component {
     }
 
     const notes = `
-###### ${this.props.me.name} am ${dateTimeFormat(
-        new Date()
-      )}
+###### ${this.props.me.name} am ${dateTimeFormat(new Date())}
 
 ${this.state.message}
 
@@ -102,18 +89,19 @@ ${this.props.data.user.adminNotes || ''}
     `.trim()
 
     this.setState({ saving: true })
-    this.props.updateAdminNotes(notes)
+    this.props
+      .updateAdminNotes(notes)
       .then(() => {
         this.setState({
           saving: false,
           saveError: undefined,
-          message: ''
+          message: '',
         })
       })
       .catch((error) => {
         this.setState({
           saving: false,
-          saveError: error
+          saveError: error,
         })
       })
   }
@@ -123,36 +111,37 @@ ${this.props.data.user.adminNotes || ''}
     const { saveError, saving } = this.state
     return (
       <Section>
-        <SectionTitle>
-          Interne Anmerkungen
-        </SectionTitle>
+        <SectionTitle>Interne Anmerkungen</SectionTitle>
         <Loader
           loading={data.loading}
-          error={data.error || (!data.loading && !data.user && 'Benutzer nicht gefunden')}
+          error={
+            data.error ||
+            (!data.loading && !data.user && 'Benutzer nicht gefunden')
+          }
           render={() => (
             <Fragment>
-              {this.renderText(
-                data.user.adminNotes || ''
-              )}
+              {this.renderText(data.user.adminNotes || '')}
               <Field
                 value={this.state.message}
                 label={'Anmerkungen'}
                 onChange={this.changeHandler}
-                renderInput={props => (
-                  <TextareaAutosize
-                    {...props}
-                    style={{ lineHeight: '30px' }}
-                  />
+                renderInput={(props) => (
+                  <TextareaAutosize {...props} style={{ lineHeight: '30px' }} />
                 )}
               />
               <div style={{ textAlign: 'right' }}>
-              {saving ? <InlineSpinner /> : <A href='#' onClick={this.submitHandler}>
-                hinzufügen
-              </A>}
+                {saving ? (
+                  <InlineSpinner />
+                ) : (
+                  <A href='#' onClick={this.submitHandler}>
+                    hinzufügen
+                  </A>
+                )}
               </div>
               {!!saveError && <ErrorMessage error={saveError} />}
             </Fragment>
-          )} />
+          )}
+        />
       </Section>
     )
   }
@@ -164,13 +153,15 @@ export default compose(
   graphql(updateAdminNotesMutation, {
     props: ({
       mutate,
-      ownProps: { data: { user } }
+      ownProps: {
+        data: { user },
+      },
     }) => ({
-      updateAdminNotes: notes => {
+      updateAdminNotes: (notes) => {
         return mutate({
-          variables: { notes, userId: user.id }
+          variables: { notes, userId: user.id },
         })
-      }
-    })
-  })
+      },
+    }),
+  }),
 )(AdminNotes)

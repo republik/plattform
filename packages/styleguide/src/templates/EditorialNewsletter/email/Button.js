@@ -8,7 +8,7 @@ export const Button = ({
   primary,
   block,
   children,
-  attributes
+  attributes,
 }) => {
   const styles = {
     fontSize: '20px',
@@ -17,16 +17,16 @@ export const Button = ({
     borderRadius: 0,
     display: 'inline-block',
     minWidth: 160,
-    color: primary ? '#ffffff' : colors.secondary
+    color: primary ? '#ffffff' : colors.secondary,
   }
 
   const tableStylesPrimary = {
-    backgroundColor: colors.primary
+    backgroundColor: colors.primary,
   }
 
   const tableStylesSecondary = {
     backgroundColor: '#ffffff',
-    border: `1px solid ${colors.secondary}`
+    border: `1px solid ${colors.secondary}`,
   }
 
   return (
@@ -42,7 +42,7 @@ export const Button = ({
                 cellPadding={primary ? '18' : '17'}
                 style={{
                   ...(primary ? tableStylesPrimary : tableStylesSecondary),
-                  borderCollapse: 'collapse'
+                  borderCollapse: 'collapse',
                 }}
               >
                 <tbody>

@@ -1,7 +1,6 @@
-if [ -z "$SERVER" ]
-then
-  cd apps/api
-elif [ "$SERVER" = "styleguide" ]
+SERVER=${SERVER:-api}
+
+if [ "$SERVER" = "styleguide" ]
 then
   cd packages/styleguide
 else

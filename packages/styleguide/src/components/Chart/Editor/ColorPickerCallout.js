@@ -2,9 +2,7 @@ import React from 'react'
 import { BlockPicker as ColorPicker } from 'react-color'
 import { plainButtonRule } from '../../Button'
 import CalloutMenu from '../../Callout/CalloutMenu'
-import {
-  useColorContext
-} from '../../Colors/ColorContext'
+import { useColorContext } from '../../Colors/ColorContext'
 
 const ColorPickerCallout = ({ mode, pickableColors, color, onChange }) => {
   const [colorScheme] = useColorContext()
@@ -15,11 +13,11 @@ const ColorPickerCallout = ({ mode, pickableColors, color, onChange }) => {
       {...colorScheme.set('backgroundColor', 'default')}
       style={{
         padding: 4,
-        lineHeight: 0
+        lineHeight: 0,
       }}
     >
       <CalloutMenu
-        Element={props => (
+        Element={(props) => (
           <button
             {...plainButtonRule}
             {...colorScheme.set('backgroundColor', color, 'charts')}
@@ -28,7 +26,7 @@ const ColorPickerCallout = ({ mode, pickableColors, color, onChange }) => {
               ...props.style,
               width: mode ? 15 : 30,
               height: 15,
-              borderRadius: 4
+              borderRadius: 4,
             }}
           />
         )}

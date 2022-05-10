@@ -1,4 +1,3 @@
-import React from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
@@ -12,7 +11,7 @@ import {
   NarrowContainer,
   Interaction,
   A,
-  mediaQueries
+  mediaQueries,
 } from '@project-r/styleguide'
 
 import { Content } from '../Frame'
@@ -32,9 +31,9 @@ const styles = {
   sectionTitle: css({
     marginBottom: 15,
     [mediaQueries.mUp]: {
-      paddingLeft: EVENT_PADDING
-    }
-  })
+      paddingLeft: EVENT_PADDING,
+    },
+  }),
 }
 
 const query = gql`
@@ -61,31 +60,31 @@ const Overview = compose(
       data,
       ownProps: {
         router: {
-          query: { slug }
-        }
-      }
+          query: { slug },
+        },
+      },
     }) => {
       const error = data.error
       const events =
         data.events &&
-        data.events.map(event => ({
+        data.events.map((event) => ({
           ...event,
-          __parsedDate: parseDate(event.date)
+          __parsedDate: parseDate(event.date),
         }))
       let event
 
       if (slug && events && !error) {
-        event = events.find(event => event.slug === slug) || 404
+        event = events.find((event) => event.slug === slug) || 404
       }
 
       return {
         loading: data.loading,
         events,
         event,
-        error
+        error,
       }
-    }
-  })
+    },
+  }),
 )(({ events, event, t, loading, error, serverContext }) => (
   <Loader
     loading={loading}
@@ -103,7 +102,7 @@ const Overview = compose(
                   title: event.title,
                   description: event.metaDescription,
                   url: `${PUBLIC_BASE_URL}/veranstaltung/${event.slug}`,
-                  image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`
+                  image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
                 }}
               />
               <Event data={event} />
@@ -117,10 +116,10 @@ const Overview = compose(
 
       const today = timeDay.floor(new Date())
       const upcoming = events
-        .filter(event => today <= event.__parsedDate)
+        .filter((event) => today <= event.__parsedDate)
         .sort((a, b) => ascending(a.__parsedDate, b.__parsedDate))
       const past = events
-        .filter(event => today > event.__parsedDate)
+        .filter((event) => today > event.__parsedDate)
         .sort((a, b) => descending(a.__parsedDate, b.__parsedDate))
 
       return (
@@ -131,19 +130,19 @@ const Overview = compose(
                 title: t('events/pageTitle'),
                 description: t('events/metaDescription'),
                 url: `${PUBLIC_BASE_URL}/events`,
-                image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`
+                image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
               }}
             />
             {!!upcoming.length && (
               <H3 {...styles.sectionTitle}>{t('events/upcoming')}</H3>
             )}
-            {upcoming.map(event => (
+            {upcoming.map((event) => (
               <Event key={event.slug} data={event} />
             ))}
             {!!past.length && (
               <H3 {...styles.sectionTitle}>{t('events/past')}</H3>
             )}
-            {past.map(event => (
+            {past.map((event) => (
               <Event key={event.slug} data={event} />
             ))}
           </Content>

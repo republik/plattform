@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import { Interaction } from '@project-r/styleguide'
 import Goodie from './Goodie'
@@ -38,7 +37,7 @@ type FieldsType = {
 }
 
 const styles = {
-  goodieContainer: css({ marginBottom: 24 })
+  goodieContainer: css({ marginBottom: 24 }),
 }
 
 function GoodieOptions({ fields, values, onChange, t }: FieldsType) {
@@ -51,7 +50,7 @@ function GoodieOptions({ fields, values, onChange, t }: FieldsType) {
       <Interaction.H3>{t('Goodies/title')}</Interaction.H3>
 
       <div {...styles.goodieContainer}>
-        {fields.map(field => {
+        {fields.map((field) => {
           const value =
             values[field.key] === undefined ? field.default : values[field.key]
 
@@ -60,14 +59,14 @@ function GoodieOptions({ fields, values, onChange, t }: FieldsType) {
               key={field.key}
               option={field.option}
               value={value}
-              onChange={value =>
+              onChange={(value) =>
                 onChange(
                   FieldSet.utils.fieldsState({
                     field: field.key,
                     value,
                     error: undefined,
-                    dirty: true
-                  })
+                    dirty: true,
+                  }),
                 )
               }
               t={t}

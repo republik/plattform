@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from 'react'
+import { Fragment, Component } from 'react'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
@@ -12,7 +12,7 @@ import {
   Label,
   fontFamilies,
   colors,
-  FieldSet
+  FieldSet,
 } from '@project-r/styleguide'
 
 import Consents, { getConsentsError } from '../Pledge/Consents'
@@ -33,9 +33,9 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     '& button': {
-      width: ['48%', 'calc(50% - 5px)']
-    }
-  })
+      width: ['48%', 'calc(50% - 5px)'],
+    },
+  }),
 }
 
 const { P } = Interaction
@@ -58,7 +58,7 @@ class TokenAuthorization extends Component {
     this.state = {
       values: {},
       errors: {},
-      dirty: {}
+      dirty: {},
     }
   }
 
@@ -70,7 +70,7 @@ class TokenAuthorization extends Component {
     }
     router.replace({
       pathname: '/mitteilung',
-      query: { type, email, context }
+      query: { type, email, context },
     })
   }
 
@@ -83,7 +83,7 @@ class TokenAuthorization extends Component {
 
     this.setState(
       {
-        authorizing: true
+        authorizing: true,
       },
       () => {
         authorizeSession({
@@ -93,16 +93,16 @@ class TokenAuthorization extends Component {
           requiredFields:
             Object.keys(this.state.values).length > 0
               ? this.state.values
-              : undefined
+              : undefined,
         })
           .then(() => this.goTo('email-confirmed', email, context))
-          .catch(error => {
+          .catch((error) => {
             this.setState({
               authorizing: false,
-              authorizeError: error
+              authorizeError: error,
             })
           })
-      }
+      },
     )
   }
   deny() {
@@ -114,18 +114,18 @@ class TokenAuthorization extends Component {
 
     this.setState(
       {
-        authorizing: true
+        authorizing: true,
       },
       () => {
         deny()
           .then(() => this.goTo('session-denied', email, context))
-          .catch(error => {
+          .catch((error) => {
             this.setState({
               authorizing: false,
-              authorizeError: error
+              authorizeError: error,
             })
           })
-      }
+      },
     )
   }
   autoAuthorize() {
@@ -140,15 +140,8 @@ class TokenAuthorization extends Component {
     this.autoAuthorize()
   }
   render() {
-    const {
-      t,
-      target,
-      echo,
-      email,
-      error,
-      loading,
-      noAutoAuthorize
-    } = this.props
+    const { t, target, echo, email, error, loading, noAutoAuthorize } =
+      this.props
 
     if (error) {
       return (
@@ -169,24 +162,18 @@ class TokenAuthorization extends Component {
           if (!target) {
             reportError(
               'TokenAuthorization !target',
-              JSON.stringify(this.props.data, null, 2)
+              JSON.stringify(this.props.data, null, 2),
             )
           }
           const { authorizeError, consents, values, dirty, errors } = this.state
 
           const errorMessages = Object.keys(errors)
-            .map(key => errors[key])
+            .map((key) => errors[key])
             .concat(getConsentsError(t, target.requiredConsents, consents))
             .filter(Boolean)
 
-          const {
-            country,
-            city,
-            ipAddress,
-            userAgent,
-            phrase,
-            isCurrent
-          } = target.session
+          const { country, city, ipAddress, userAgent, phrase, isCurrent } =
+            target.session
           const showSessionInfo = !isCurrent || noAutoAuthorize
           return (
             <Fragment>
@@ -198,7 +185,7 @@ class TokenAuthorization extends Component {
                       : target.newUser
                       ? 'new'
                       : 'existing'
-                  }`
+                  }`,
                 )}
               </P>
               {showSessionInfo && (
@@ -208,7 +195,7 @@ class TokenAuthorization extends Component {
                       fontFamily:
                         userAgent !== echo.userAgent
                           ? fontFamilies.sansSerifMedium
-                          : undefined
+                          : undefined,
                     }}
                   >
                     {userAgent}
@@ -222,7 +209,7 @@ class TokenAuthorization extends Component {
                           fontFamily:
                             city !== echo.city
                               ? fontFamilies.sansSerifMedium
-                              : undefined
+                              : undefined,
                         }}
                       >
                         {city}
@@ -234,7 +221,7 @@ class TokenAuthorization extends Component {
                         country !== echo.country
                           ? {
                               fontFamily: fontFamilies.sansSerifMedium,
-                              color: colors.error
+                              color: colors.error,
                             }
                           : {}
                       }
@@ -264,7 +251,7 @@ class TokenAuthorization extends Component {
                     style={{
                       fontFamily: !isCurrent
                         ? fontFamilies.sansSerifMedium
-                        : undefined
+                        : undefined,
                     }}
                   >
                     {phrase}
@@ -280,18 +267,18 @@ class TokenAuthorization extends Component {
                     values={values}
                     errors={errors}
                     dirty={dirty}
-                    onChange={fields => {
-                      this.setState(state => ({
+                    onChange={(fields) => {
+                      this.setState((state) => ({
                         authorizeError: undefined,
-                        ...FieldSet.utils.mergeFields(fields)(state)
+                        ...FieldSet.utils.mergeFields(fields)(state),
                       }))
                     }}
-                    fields={target.requiredFields.map(field => ({
+                    fields={target.requiredFields.map((field) => ({
                       label: t(`tokenAuthorization/fields/label/${field}`),
                       name: field,
-                      validator: value =>
+                      validator: (value) =>
                         value.trim().length <= 0 &&
-                        t(`tokenAuthorization/fields/error/${field}/missing`)
+                        t(`tokenAuthorization/fields/error/${field}/missing`),
                     }))}
                   />
                 </div>
@@ -301,10 +288,10 @@ class TokenAuthorization extends Component {
                   <Consents
                     accepted={consents}
                     required={target.requiredConsents}
-                    onChange={keys => {
+                    onChange={(keys) => {
                       this.setState({
                         consents: keys,
-                        authorizeError: undefined
+                        authorizeError: undefined,
                       })
                     }}
                   />
@@ -330,13 +317,13 @@ class TokenAuthorization extends Component {
                   <Button
                     style={{
                       minWidth: 80,
-                      opacity: errorMessages.length ? 0.5 : 1
+                      opacity: errorMessages.length ? 0.5 : 1,
                     }}
                     primary
                     block
                     onClick={() => {
                       if (errorMessages.length) {
-                        this.setState(state =>
+                        this.setState((state) =>
                           Object.keys(state.errors).reduce(
                             (nextState, key) => {
                               nextState.dirty[key] = true
@@ -344,9 +331,9 @@ class TokenAuthorization extends Component {
                             },
                             {
                               showErrors: true,
-                              dirty: {}
-                            }
-                          )
+                              dirty: {},
+                            },
+                          ),
                         )
                         return
                       }
@@ -357,7 +344,7 @@ class TokenAuthorization extends Component {
                   </Button>
                   <Button
                     style={{
-                      minWidth: 80
+                      minWidth: 80,
                     }}
                     block
                     onClick={() => {
@@ -428,11 +415,11 @@ export default compose(
         mutate({
           variables: {
             email,
-            token: { type: tokenType, payload: token }
+            token: { type: tokenType, payload: token },
           },
-          refetchQueries: [{ query: meQuery }]
-        })
-    })
+          refetchQueries: [{ query: meQuery }],
+        }),
+    }),
   }),
   graphql(unauthorizedSessionQuery, {
     props: ({ data }) => {
@@ -441,12 +428,12 @@ export default compose(
         target: data.target,
         echo: data.echo,
         loading: data.loading,
-        error: data.error
+        error: data.error,
       }
     },
     options: {
       // no server rendering for proper echo
-      ssr: false
-    }
-  })
+      ssr: false,
+    },
+  }),
 )(TokenAuthorization)

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 import ErrorMessage from '../../ErrorMessage'
@@ -11,7 +11,7 @@ import StringArray from '../../Form/StringArray'
 import {
   serializeOrderBy,
   deserializeOrderBy,
-  createChangeHandler
+  createChangeHandler,
 } from '../../Tables/utils'
 
 import TableForm from './TableForm'
@@ -19,7 +19,7 @@ import Table from './Table'
 
 const PAYMENTS_LIMIT = 200
 
-const Payments = props => {
+const Payments = (props) => {
   if (props.data.error) {
     return <ErrorMessage error={props.data.error} />
   } else if (!props.data.payments) {
@@ -30,13 +30,10 @@ const Payments = props => {
     data: { payments },
     params,
     loadMorePayments,
-    onChange
+    onChange,
   } = props
 
-  const changeHandler = createChangeHandler(
-    params,
-    onChange
-  )
+  const changeHandler = createChangeHandler(params, onChange)
 
   return (
     <Fragment>
@@ -44,11 +41,8 @@ const Payments = props => {
         defaultSearch={params.search}
         onSearch={changeHandler('search')}
         dateRange={params.dateRange}
-        onDateRange={changeHandler(
-          'dateRange',
-          DateRange.serialize
-        )}
-        onStringArray={change => {
+        onDateRange={changeHandler('dateRange', DateRange.serialize)}
+        onStringArray={(change) => {
           changeHandler('stringArray')(change && StringArray.serialize(change))
         }}
       />
@@ -64,10 +58,7 @@ const Payments = props => {
             <Table
               items={payments.items}
               sort={deserializeOrderBy(params.orderBy)}
-              onSort={changeHandler(
-                'orderBy',
-                serializeOrderBy
-              )}
+              onSort={changeHandler('orderBy', serializeOrderBy)}
             />
           </InfiniteScroller>
         )}
@@ -125,9 +116,7 @@ const paymentsQuery = gql`
 `
 
 export default graphql(paymentsQuery, {
-  options: ({
-    params: { orderBy, search, dateRange, stringArray }
-  }) => {
+  options: ({ params: { orderBy, search, dateRange, stringArray } }) => {
     return {
       variables: {
         limit: PAYMENTS_LIMIT,
@@ -135,8 +124,8 @@ export default graphql(paymentsQuery, {
         orderBy: deserializeOrderBy(orderBy),
         dateRange: DateRange.parse(dateRange),
         stringArray: StringArray.parse(stringArray),
-        search
-      }
+        search,
+      },
     }
   },
   props: ({ data }) => ({
@@ -147,12 +136,9 @@ export default graphql(paymentsQuery, {
       }
       return data.fetchMore({
         variables: {
-          offset: data.payments.items.length
+          offset: data.payments.items.length,
         },
-        updateQuery: (
-          previousResult,
-          { fetchMoreResult }
-        ) => {
+        updateQuery: (previousResult, { fetchMoreResult }) => {
           if (!fetchMoreResult) {
             return previousResult
           }
@@ -164,13 +150,13 @@ export default graphql(paymentsQuery, {
                 ...fetchMoreResult.payments,
                 items: [
                   ...previousResult.payments.items,
-                  ...fetchMoreResult.payments.items
-                ]
-              }
-            }
+                  ...fetchMoreResult.payments.items,
+                ],
+              },
+            },
           }
-        }
+        },
       })
-    }
-  })
+    },
+  }),
 })(Payments)

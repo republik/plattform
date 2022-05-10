@@ -54,7 +54,7 @@ const swissPartyColors = {
   AUTO: '#9D9D9D',
   FPS: '#9D9D9D',
   NONE: '#B8B8B8',
-  OTHER: '#B8B8B8'
+  OTHER: '#B8B8B8',
 }
 
 export const colorMaps = { swissPartyColors }

@@ -225,7 +225,8 @@ const buildQueries = (tableName) => {
 
     const where = [
       allowedRoles && 'u.roles ?| :roles',
-      allowedMembershipsQuery && `((${allowedMembershipsQuery}) AND m.active = TRUE)`,
+      allowedMembershipsQuery &&
+        `((${allowedMembershipsQuery}) AND m.active = TRUE)`,
       userId && 'u.id = :userId',
     ]
       .filter(Boolean)

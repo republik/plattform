@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Query, compose } from 'react-apollo'
 import { withRouter } from 'next/router'
 import gql from 'graphql-tag'
@@ -27,7 +27,7 @@ export const GET_ZAT_SEARCH = gql`
   ${MailsFragments}
 `
 
-const Zat = props => {
+const Zat = (props) => {
   const [zafClient, setZafClient] = useState(null)
   const [zafContext, setZafContext] = useState(null)
   const [zafUser, setZafUser] = useState(null)

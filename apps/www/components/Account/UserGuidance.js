@@ -1,4 +1,3 @@
-import React from 'react'
 import compose from 'lodash/flowRight'
 import { css } from 'glamor'
 
@@ -14,9 +13,9 @@ import Link from 'next/link'
 const styles = {
   list: css({
     '& li + li': {
-      marginTop: 10
-    }
-  })
+      marginTop: 10,
+    },
+  }),
 }
 
 const ISSUES = [
@@ -24,7 +23,7 @@ const ISSUES = [
   { issue: 2, hideInNativeIOSApp: true },
   { issue: 3, hideInNativeIOSApp: true },
   { issue: 4, hideInNativeIOSApp: true },
-  { issue: 5, hideInNativeIOSApp: true }
+  { issue: 5, hideInNativeIOSApp: true },
 ]
 
 const UserGuidance = ({ t, inNativeIOSApp, signOut }) => (
@@ -51,7 +50,7 @@ const UserGuidance = ({ t, inNativeIOSApp, signOut }) => (
                   <Editorial.A
                     key='signOut'
                     href='#abmelden'
-                    onClick={e => {
+                    onClick={(e) => {
                       e.preventDefault()
                       signOut()
                     }}
@@ -77,7 +76,7 @@ const UserGuidance = ({ t, inNativeIOSApp, signOut }) => (
                       {t('Account/noActiveMembership/claimLink')}
                     </Editorial.A>
                   </Link>
-                )
+                ),
               })}
             </P>
           </li>

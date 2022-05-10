@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { Component, Fragment } from 'react'
 import { css } from 'glamor'
 import { rgb } from 'd3-color'
 
@@ -10,10 +10,10 @@ import {
   getSvgNode,
   getAbstractSvg,
   createSvgBackgrounder,
-  DEFAULT_BG
+  DEFAULT_BG,
 } from './utils'
 
-const textColor = color => {
+const textColor = (color) => {
   const yiq = (color.r * 299 + color.g * 587 + color.b * 114) / 1000
   return yiq >= 128 ? 'black' : 'white'
 }
@@ -28,16 +28,16 @@ const styles = {
     textAlign: 'center',
     width: 80,
     '::placeholder': {
-      color: '#ccc'
-    }
-  })
+      color: '#ccc',
+    },
+  }),
 }
 
 class Export extends Component {
   constructor(...args) {
     super(...args)
     this.state = {
-      color: DEFAULT_BG
+      color: DEFAULT_BG,
     }
   }
   render() {
@@ -45,7 +45,7 @@ class Export extends Component {
     const { color } = this.state
     const rgbColor = rgb(color)
     const backgrounder = createSvgBackgrounder({
-      color: rgbColor.displayable() ? color : undefined
+      color: rgbColor.displayable() ? color : undefined,
     })
 
     return (
@@ -57,7 +57,7 @@ class Export extends Component {
           download='chart.svg'
           onClick={downloadBlobOnClick(() => {
             return new window.Blob([getSvgNode(chart).outerHTML], {
-              type: 'text/svg'
+              type: 'text/svg',
             })
           })}
         >
@@ -71,7 +71,7 @@ class Export extends Component {
           download='teaser.svg'
           onClick={downloadBlobOnClick(() => {
             return new window.Blob([getAbstractSvg(chart).svg.outerHTML], {
-              type: 'text/svg'
+              type: 'text/svg',
             })
           })}
         >
@@ -97,17 +97,17 @@ class Export extends Component {
                 ? {
                     color: textColor(rgbColor),
                     backgroundColor: color,
-                    borderColor: 'transparent'
+                    borderColor: 'transparent',
                   }
                 : undefined
             }
-            onBlur={e => {
+            onBlur={(e) => {
               !rgb(e.target.value).displayable() &&
                 this.setState({
-                  color: DEFAULT_BG
+                  color: DEFAULT_BG,
                 })
             }}
-            onChange={e => {
+            onChange={(e) => {
               this.setState({ color: e.target.value })
             }}
           />
@@ -119,7 +119,7 @@ class Export extends Component {
           onClick={downloadBlobOnClick(() => {
             return new window.Blob(
               [backgrounder(getAbstractSvg(chart)).svg.outerHTML],
-              { type: 'text/svg' }
+              { type: 'text/svg' },
             )
           })}
         >

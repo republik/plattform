@@ -7,7 +7,7 @@ import {
   cursiveTitle26,
   cursiveTitle32,
   sansSerifMedium26,
-  sansSerifMedium32
+  sansSerifMedium32,
 } from '../Typography/styles'
 import { convertStyleToRem } from '../Typography/utils'
 
@@ -16,27 +16,27 @@ const styles = {
     margin: 0,
     marginBottom: '16px',
     [tUp]: {
-      marginBottom: '25px'
-    }
+      marginBottom: '25px',
+    },
   }),
   editorial: css({
     ...convertStyleToRem(serifTitle26),
     [tUp]: {
-      ...convertStyleToRem(serifTitle32)
-    }
+      ...convertStyleToRem(serifTitle32),
+    },
   }),
   interaction: css({
     ...convertStyleToRem(sansSerifMedium26),
     [tUp]: {
-      ...convertStyleToRem(sansSerifMedium32)
-    }
+      ...convertStyleToRem(sansSerifMedium32),
+    },
   }),
   scribble: css({
     ...convertStyleToRem(cursiveTitle26),
     [tUp]: {
-      ...convertStyleToRem(cursiveTitle32)
-    }
-  })
+      ...convertStyleToRem(cursiveTitle32),
+    },
+  }),
 }
 
 export const Editorial = ({ children }) => {

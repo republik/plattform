@@ -1,6 +1,4 @@
-import React from 'react'
-
-const SvgUri = props => (
+const SvgUri = (props) => (
   <svg
     width={props.size}
     height={(props.size * 471.449) / 469.863}

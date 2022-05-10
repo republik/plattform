@@ -120,7 +120,9 @@ const run = async (workerId, config) => {
     require('@orbiting/backend-modules-republik-crowdfundings/express/paymentWebhooks'),
     require('@orbiting/backend-modules-gsheets/express/gsheets'),
     require('@orbiting/backend-modules-mail/express/mandrill'),
+    require('@orbiting/backend-modules-publikator/express/syntheticReadAloud'),
     require('@orbiting/backend-modules-publikator/express/uncommittedChanges'),
+    require('@orbiting/backend-modules-publikator/express/webhook'),
     require('@orbiting/backend-modules-invoices/express'),
   ]
 
@@ -197,14 +199,17 @@ const run = async (workerId, config) => {
 }
 
 const runOnce = async () => {
-  const applicationName = ['backends', SERVER, DYNO, 'master']
+  const applicationName = ['backends', SERVER, DYNO, 'scheduler']
     .filter(Boolean)
     .join(' ')
 
-  const createGraphQLContext = async () => {
+  const connectionContext = await ConnectionContext.create(applicationName)
+
+  const createGraphQLContext = async (defaultContext) => {
     const loaders = {}
     const context = {
-      ...(await ConnectionContext.create(applicationName)),
+      ...defaultContext,
+      ...connectionContext,
       t,
       mail,
       loaders,
@@ -215,7 +220,7 @@ const runOnce = async () => {
     return context
   }
 
-  const context = await createGraphQLContext()
+  const context = await createGraphQLContext({ scope: 'scheduler' })
 
   const slackGreeter = await SlackGreeter.start()
 
@@ -270,10 +275,10 @@ const runOnce = async () => {
     DATABROOM_SCHEDULER === 'false' ||
     (DEV && DATABROOM_SCHEDULER !== 'true')
   ) {
-    console.log(
-      'DATABROOM_SCHEDULER prevented scheduler from being started',
-      { DATABROOM_SCHEDULER, DEV },
-    )
+    console.log('DATABROOM_SCHEDULER prevented scheduler from being started', {
+      DATABROOM_SCHEDULER,
+      DEV,
+    })
   } else {
     databroomScheduler = await DatabroomScheduler.init(context).catch(
       (error) => {

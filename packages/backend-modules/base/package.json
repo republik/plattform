@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.13.0",
-    "apollo-modules-node": "^0.1.4",
+    "apollo-modules-node": "*",
     "apollo-server": "^2.25.3",
     "apollo-server-core": "^2.15.1",
     "apollo-server-express": "^2.15.1",

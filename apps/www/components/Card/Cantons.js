@@ -1,4 +1,3 @@
-import React from 'react'
 import Aargau from './Cantons/Aargau'
 import AppenzellAusserrhoden from './Cantons/AppenzellAusserrhoden'
 import AppenzellInnerrhoden from './Cantons/AppenzellInnerrhoden'
@@ -26,7 +25,7 @@ import Vaud from './Cantons/Vaud'
 import Zuerich from './Cantons/Zuerich'
 import Zug from './Cantons/Zug'
 
-const Parlament = props => (
+const Parlament = (props) => (
   <svg
     width={props.size}
     height={props.size}
@@ -74,7 +73,7 @@ export default {
   wallis: Valais,
   waadt: Vaud,
   zuerich: Zuerich,
-  zug: Zug
+  zug: Zug,
 }
 
 export const nSeatsPerCanton = {
@@ -103,7 +102,7 @@ export const nSeatsPerCanton = {
   wallis: 8,
   waadt: 19,
   zuerich: 35,
-  zug: 3
+  zug: 3,
 }
 
 export const sSeatsPerCanton = {
@@ -132,5 +131,5 @@ export const sSeatsPerCanton = {
   wallis: 2,
   waadt: 2,
   zuerich: 2,
-  zug: 2
+  zug: 2,
 }

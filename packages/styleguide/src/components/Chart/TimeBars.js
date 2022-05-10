@@ -11,7 +11,7 @@ import { ChartContext } from './ChartContext'
 import { PADDING_TOP } from './Layout.constants'
 import { defaultProps } from './ChartContext'
 
-const TimeBarChart = props => {
+const TimeBarChart = (props) => {
   const {
     width,
     tLabel,
@@ -21,19 +21,19 @@ const TimeBarChart = props => {
     xUnit,
     yScaleInvert,
     type,
-    height: innerHeight
+    height: innerHeight,
   } = props
 
   const chartContext = React.useContext(ChartContext)
   const { groupPosition, yAxis, xAxis } = chartContext
 
-  chartContext.groupedData.forEach(group => {
-    group.bars.forEach(bar => {
+  chartContext.groupedData.forEach((group) => {
+    group.bars.forEach((bar) => {
       let upValue = 0
       let upPos = yAxis.scale(0)
       let downValue = 0
       let downPos = yAxis.scale(0)
-      bar.segments.forEach(segment => {
+      bar.segments.forEach((segment) => {
         const isPositive = yScaleInvert ? segment.value < 0 : segment.value > 0
         const baseValue = isPositive ? upValue : downValue
         const y0 = yAxis.scale(baseValue)
@@ -68,17 +68,19 @@ const TimeBarChart = props => {
             <g
               key={key || 1}
               transform={`translate(${groupPosition.x(key)},${groupPosition.y(
-                key
+                key,
               )})`}
             >
               <TimeBarGroup
                 bars={bars}
                 title={key}
                 xAnnotations={xAnnotations.filter(
-                  annotation => !annotation.column || annotation.column === key
+                  (annotation) =>
+                    !annotation.column || annotation.column === key,
                 )}
                 yAnnotations={yAnnotations.filter(
-                  annotation => !annotation.column || annotation.column === key
+                  (annotation) =>
+                    !annotation.column || annotation.column === key,
                 )}
                 yTicks={yTicks}
                 x={xAxis.scale}
@@ -93,7 +95,7 @@ const TimeBarChart = props => {
                     : innerHeight + PADDING_TOP + groupPosition.titleHeight
                 }
                 tLabel={tLabel}
-                color={d => chartContext.color(chartContext.colorAccessor(d))}
+                color={(d) => chartContext.color(chartContext.colorAccessor(d))}
                 yScaleInvert={yScaleInvert}
               />
             </g>
@@ -116,12 +118,12 @@ export const propTypes = {
   colorLegendValues: PropTypes.arrayOf(PropTypes.string),
   colorRanges: PropTypes.shape({
     sequential3: PropTypes.array.isRequired,
-    discrete: PropTypes.array.isRequired
+    discrete: PropTypes.array.isRequired,
   }).isRequired,
   colorMap: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   domain: PropTypes.arrayOf(PropTypes.number),
   yTicks: PropTypes.arrayOf(
-    PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   ),
   yAnnotations: PropTypes.arrayOf(
     PropTypes.shape({
@@ -131,8 +133,8 @@ export const propTypes = {
       label: PropTypes.string.isRequired,
       x: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       dy: PropTypes.string,
-      showValue: PropTypes.bool
-    })
+      showValue: PropTypes.bool,
+    }),
   ).isRequired,
   timeParse: PropTypes.string.isRequired,
   timeFormat: PropTypes.string,
@@ -140,7 +142,7 @@ export const propTypes = {
   x: PropTypes.string.isRequired,
   xInterval: PropTypes.oneOf(Object.keys(intervals)),
   xTicks: PropTypes.arrayOf(
-    PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+    PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   ),
   xScale: PropTypes.oneOf(['time', 'ordinal', 'linear']),
   xAnnotations: PropTypes.arrayOf(
@@ -156,8 +158,8 @@ export const propTypes = {
       x2: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       ghost: PropTypes.bool,
       position: PropTypes.oneOf(['top', 'bottom']),
-      showValue: PropTypes.bool
-    })
+      showValue: PropTypes.bool,
+    }),
   ).isRequired,
   unit: PropTypes.string,
   xUnit: PropTypes.string,
@@ -170,12 +172,12 @@ export const propTypes = {
   columnFilter: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string.isRequired,
-      test: PropTypes.string.isRequired
-    })
+      test: PropTypes.string.isRequired,
+    }),
   ),
   columns: PropTypes.number.isRequired,
   minInnerWidth: PropTypes.number.isRequired,
-  yScaleInvert: PropTypes.bool
+  yScaleInvert: PropTypes.bool,
 }
 
 TimeBarChart.propTypes = propTypes

@@ -16,6 +16,8 @@ build
 # misc
 .DS_Store
 *.pem
+local/
+.idea
 
 # debug
 npm-debug.log*
@@ -35,3 +37,7 @@ yarn-error.log*
 
 # docker
 docker-data
+
+# editor
+.idea
+

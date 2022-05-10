@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { css, merge } from 'glamor'
@@ -11,7 +11,7 @@ import {
   pxToRem,
   P,
   Loader,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 
 import { gql } from '@apollo/client'
@@ -26,10 +26,10 @@ const styles = {
     height: 8,
     marginTop: -20,
     marginBottom: 30,
-    position: 'relative'
+    position: 'relative',
   }),
   barInner: css({
-    height: '100%'
+    height: '100%',
   }),
   goal: css({
     position: 'absolute',
@@ -39,10 +39,10 @@ const styles = {
     backgroundColor: 'transparent',
     boxSizing: 'content-box',
     borderRightWidth: 2,
-    borderRightStyle: 'solid'
+    borderRightStyle: 'solid',
   }),
   currentGoal: css({
-    borderRight: 'none'
+    borderRight: 'none',
   }),
   goalNumber: css({
     fontFamily: fontFamilies.sansSerifMedium,
@@ -52,13 +52,13 @@ const styles = {
     borderRightStyle: 'solid',
     textAlign: 'right',
     paddingTop: 12,
-    paddingRight: 4
+    paddingRight: 4,
   }),
   goalBar: css({
     position: 'absolute',
     top: 0,
     left: 0,
-    height: 8
+    height: 8,
   }),
   box: css({
     position: 'absolute',
@@ -68,7 +68,7 @@ const styles = {
     fontFamily: fontFamilies.sansSerifMedium,
     fontSize: 14,
     lineHeight: '19px',
-    padding: '12px 17px'
+    padding: '12px 17px',
   }),
   arrow: css({
     position: 'absolute',
@@ -80,28 +80,28 @@ const styles = {
     borderWidth: '0 4px 8px 4px',
     borderTopColor: 'transparent',
     borderLeftColor: 'transparent',
-    borderRightColor: 'transparent'
+    borderRightColor: 'transparent',
   }),
   noInteraction: css({
-    pointerEvents: 'none'
+    pointerEvents: 'none',
   }),
   primaryNumber: css({
     display: 'block',
     marginBottom: -6,
     [mediaQueries.mUp]: {
-      marginBottom: -8
+      marginBottom: -8,
     },
     fontSize: 80,
     ...fontStyles.sansSerifRegular,
-    lineHeight: 1
+    lineHeight: 1,
   }),
   label: css(Interaction.fontRule, {
     display: 'block',
     fontSize: pxToRem(14),
     lineHeight: pxToRem(20),
     paddingTop: 8,
-    paddingBottom: 8
-  })
+    paddingBottom: 8,
+  }),
 }
 
 const query = gql`
@@ -127,7 +127,7 @@ const GoalBar = ({
   caption,
   showCountdown,
   countdownCaption,
-  countdownOver
+  countdownOver,
 }) => {
   const [hover, setHover] = useState(undefined)
   const [colorScheme] = useColorContext()
@@ -141,13 +141,13 @@ const GoalBar = ({
         const { submitted, eligible } = voting.groupTurnout
 
         const sortedGoals = goals
-          .map(g => ({
+          .map((g) => ({
             number: g.number || Math.round(eligible * g.percent),
-            ...g
+            ...g,
           }))
           .filter(
             (d, i, numericGoals) =>
-              i === numericGoals.findIndex(g => g.number === d.number)
+              i === numericGoals.findIndex((g) => g.number === d.number),
           )
           .reduce((currentGoals, goal) => {
             if (!currentGoals.length) return currentGoals.concat(goal)
@@ -175,14 +175,14 @@ const GoalBar = ({
                 {...styles.bar}
                 {...colorScheme.set('backgroundColor', 'divider')}
                 style={{
-                  zIndex: hover ? 1 : 0
+                  zIndex: hover ? 1 : 0,
                 }}
               >
                 <div
                   {...styles.barInner}
                   {...colorScheme.set('backgroundColor', 'primary')}
                   style={{
-                    width: widthForGoal(endGoal.number, submitted)
+                    width: widthForGoal(endGoal.number, submitted),
                   }}
                 />
                 {goals.length >= 1 &&
@@ -193,9 +193,9 @@ const GoalBar = ({
                       {...colorScheme.set('borderBottomColor', 'secondaryBg')}
                       {...colorScheme.set('borderRightColor', 'default')}
                       style={{
-                        width: widthForGoal(endGoal.number, currentGoal.number)
+                        width: widthForGoal(endGoal.number, currentGoal.number),
                       }}
-                      onTouchStart={e => {
+                      onTouchStart={(e) => {
                         e.preventDefault()
                         setHover(currentGoal)
                       }}
@@ -209,7 +209,10 @@ const GoalBar = ({
                             {...styles.goalBar}
                             {...colorScheme.set('backgroundColor', 'secondary')}
                             style={{
-                              width: widthForGoal(currentGoal.number, submitted)
+                              width: widthForGoal(
+                                currentGoal.number,
+                                submitted,
+                              ),
                             }}
                           />
                           <div
@@ -217,7 +220,7 @@ const GoalBar = ({
                             {...colorScheme.set('color', 'secondary')}
                             {...colorScheme.set(
                               'borderRightColor',
-                              'secondary'
+                              'secondary',
                             )}
                           >
                             {countFormat(currentGoal.number)}
@@ -227,7 +230,7 @@ const GoalBar = ({
                               {...styles.arrow}
                               {...colorScheme.set(
                                 'borderBottomColor',
-                                'secondary'
+                                'secondary',
                               )}
                             />
                           )}
@@ -245,8 +248,8 @@ const GoalBar = ({
                       dangerouslySetInnerHTML={{
                         __html: hover.description.replace(
                           '{count}',
-                          countFormat(hover.number)
-                        )
+                          countFormat(hover.number),
+                        ),
                       }}
                     />
                   </div>
@@ -270,7 +273,7 @@ const GoalBar = ({
 export default compose(
   graphql(query, {
     options: ({ pollInterval }) => ({
-      pollInterval: pollInterval || 0
-    })
-  })
+      pollInterval: pollInterval || 0,
+    }),
+  }),
 )(GoalBar)

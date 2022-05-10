@@ -10,26 +10,26 @@ import { useColorContext } from '../Colors/useColorContext'
 const styles = {
   container: css({
     width: 600,
-    margin: 0
+    margin: 0,
   }),
   controlsContainer: css({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   }),
   controlItem: css({
     margin: '0 32px 0 0',
     maxWidth: 170,
     '&:last-of-type ': {
-      margin: 0
-    }
+      margin: 0,
+    },
   }),
   checkboxContainer: css({
     minHeight: 60,
     display: 'flex',
     alignItems: 'center',
-    paddingTop: 8
+    paddingTop: 8,
   }),
   textArea: css({
     display: 'block',
@@ -41,14 +41,14 @@ const styles = {
     background: 'transparent',
     border: '1px solid',
     outline: 'none',
-    boxSizing: 'border-box'
-  })
+    boxSizing: 'border-box',
+  }),
 }
 
 export const PLACEHOLDER_TEXT = 'Text für Sharebild'
 
-const getFormatType = format => format?.section?.meta?.title
-export const hasCustomFontStyle = format =>
+const getFormatType = (format) => format?.section?.meta?.title
+export const hasCustomFontStyle = (format) =>
   !format || getFormatType(format) === 'Dialog'
 
 const ShareImageGenerator = ({
@@ -62,7 +62,7 @@ const ShareImageGenerator = ({
   inverted,
   onInvertedChange,
   text,
-  onTextChange
+  onTextChange,
 }) => {
   const [colorScheme] = useColorContext()
 
@@ -71,10 +71,10 @@ const ShareImageGenerator = ({
       css({
         color: colorScheme.getCSSColor('textSoft'),
         '::-webkit-input-placeholder': {
-          color: colorScheme.getCSSColor('textSoft')
-        }
+          color: colorScheme.getCSSColor('textSoft'),
+        },
       }),
-    [colorScheme]
+    [colorScheme],
   )
 
   return (
@@ -96,7 +96,7 @@ const ShareImageGenerator = ({
               items={[
                 { value: 'top', text: 'Oben' },
                 { value: 'center', text: 'Mitte' },
-                { value: 'bottom', text: 'Unten' }
+                { value: 'bottom', text: 'Unten' },
               ]}
               value={textPosition}
               onChange={onTextPositionChange}

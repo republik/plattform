@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from 'react'
+import { forwardRef, Fragment, Component } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
@@ -17,7 +17,7 @@ import Detail from './Detail'
 import {
   PUBLIC_BASE_URL,
   CDN_FRONTEND_BASE_URL,
-  ASSETS_SERVER_BASE_URL
+  ASSETS_SERVER_BASE_URL,
 } from '../../lib/constants'
 
 import {
@@ -26,9 +26,10 @@ import {
   fontFamilies,
   Field,
   A,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import { withRouter } from 'next/router'
+import ErrorMessage from '../ErrorMessage'
 
 const { P } = Interaction
 
@@ -38,7 +39,7 @@ const SIZES = [
   { minWidth: 400, columns: 3 },
   { minWidth: 600, columns: 4 },
   { minWidth: 880, columns: 5 },
-  { minWidth: 1050, columns: 6 }
+  { minWidth: 1050, columns: 6 },
 ]
 
 const PADDING = 5
@@ -47,8 +48,8 @@ const getItemStyles = (singleRow, minColumns = 1, maxColumns = 5) => {
   const sizes = [
     { minWidth: 0, columns: minColumns },
     ...SIZES.filter(
-      ({ minWidth, columns }) => columns > minColumns && columns <= maxColumns
-    )
+      ({ minWidth, columns }) => columns > minColumns && columns <= maxColumns,
+    ),
   ]
   return css({
     display: 'block',
@@ -60,13 +61,13 @@ const getItemStyles = (singleRow, minColumns = 1, maxColumns = 5) => {
       const width = `${100 / size.columns}%`
       if (size.minWidth) {
         styles[`@media only screen and (min-width: ${size.minWidth}px)`] = {
-          width
+          width,
         }
       } else {
         styles.width = width
       }
       return styles
-    }, {})
+    }, {}),
   })
 }
 
@@ -75,11 +76,11 @@ const styles = {
     margin: '0 -5px',
     display: 'flex',
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   }),
   singleRowGrid: css({
     flexWrap: 'nowrap',
-    overflow: 'hidden'
+    overflow: 'hidden',
   }),
   item: getItemStyles(false),
   singleRowItem: getItemStyles(true),
@@ -89,13 +90,13 @@ const styles = {
     paddingBottom: '100%',
     overflow: 'hidden',
     position: 'relative',
-    backgroundColor: '#ccc'
+    backgroundColor: '#ccc',
   }),
   aspectImg: css({
     position: 'absolute',
     top: 0,
     left: 0,
-    width: '100%'
+    width: '100%',
   }),
   aspectFade: css({
     position: 'absolute',
@@ -103,7 +104,7 @@ const styles = {
     left: 0,
     top: 0,
     right: 0,
-    bottom: 0
+    bottom: 0,
   }),
   previewImage: css({
     filter: 'grayscale(1)',
@@ -114,7 +115,7 @@ const styles = {
     left: 0,
     right: 0,
     bottom: 0,
-    display: 'block'
+    display: 'block',
   }),
   itemArrow: css({
     position: 'absolute',
@@ -124,7 +125,7 @@ const styles = {
     width: 0,
     height: 0,
     borderStyle: 'solid',
-    borderWidth: '0 12.5px 17px 12.5px'
+    borderWidth: '0 12.5px 17px 12.5px',
   }),
   name: css({
     position: 'absolute',
@@ -135,26 +136,26 @@ const styles = {
     lineHeight: '15px',
     [mediaQueries.mUp]: {
       fontSize: 16,
-      lineHeight: '21px'
+      lineHeight: '21px',
     },
     color: '#fff',
-    fontFamily: fontFamilies.sansSerifMedium
+    fontFamily: fontFamilies.sansSerifMedium,
   }),
   play: css({
     position: 'absolute',
     right: PADDING + 5,
-    top: PADDING + 5
+    top: PADDING + 5,
   }),
   more: css({
     marginTop: 15,
-    padding: PADDING
+    padding: PADDING,
   }),
   options: css({
-    marginBottom: 15
-  })
+    marginBottom: 15,
+  }),
 }
 
-export const Item = React.forwardRef(
+export const Item = forwardRef(
   (
     {
       previewImage,
@@ -166,9 +167,9 @@ export const Item = React.forwardRef(
       singleRow,
       minColumns,
       maxColumns,
-      style
+      style,
     },
-    ref
+    ref,
   ) => {
     const [colorScheme] = useColorContext()
 
@@ -186,7 +187,7 @@ export const Item = React.forwardRef(
         {...itemStyles}
         style={{
           ...style,
-          cursor: href ? 'pointer' : undefined
+          cursor: href ? 'pointer' : undefined,
         }}
         onClick={href && onClick}
       >
@@ -195,7 +196,7 @@ export const Item = React.forwardRef(
             <span
               {...styles.previewImage}
               style={{
-                backgroundImage: `url(${previewImage})`
+                backgroundImage: `url(${previewImage})`,
               }}
             />
           ) : (
@@ -210,13 +211,13 @@ export const Item = React.forwardRef(
             {...css({
               borderColor: []
                 .concat(colorScheme.getCSSColor('default'))
-                .map(color => `transparent transparent ${color} transparent`)
+                .map((color) => `transparent transparent ${color} transparent`),
             })}
           />
         )}
       </Element>
     )
-  }
+  },
 )
 
 const AUTO_INFINITE = 300
@@ -228,13 +229,13 @@ export class List extends Component {
       seed: props.seed || generateSeed(),
       columns: 3,
       open: {
-        0: props.focus
-      }
+        0: props.focus,
+      },
     }
     this.measure = () => {
       const maxColumns = this.getMaxColumns()
       const sizeIndex = max(SIZES, (d, i) =>
-        d.minWidth <= window.innerWidth && maxColumns >= d.columns ? i : -1
+        d.minWidth <= window.innerWidth && maxColumns >= d.columns ? i : -1,
       )
       const size = SIZES[sizeIndex]
       const columns = size.columns
@@ -242,13 +243,13 @@ export class List extends Component {
         this.setState(() => ({
           columns,
           open: {
-            0: this.props.focus && this.props.statements[0].id
-          }
+            0: this.props.focus,
+          },
         }))
       }
       this.onScroll()
     }
-    this.ref = ref => {
+    this.ref = (ref) => {
       this.container = ref
     }
     this.onScroll = () => {
@@ -267,31 +268,31 @@ export class List extends Component {
           }
           this.setState(
             () => ({
-              isFetchingMore: true
+              isFetchingMore: true,
             }),
             () => {
               const query = (this.query = [
                 this.props.seed,
                 this.props.focus,
-                this.props.query
+                this.props.query,
               ].join('_'))
               this.props.loadMore().then(({ data }) => {
                 if (query !== this.query) {
                   this.setState(
                     () => ({
-                      isFetchingMore: false
+                      isFetchingMore: false,
                     }),
                     () => {
                       this.onScroll()
-                    }
+                    },
                   )
                   return
                 }
                 this.setState(() => ({
-                  isFetchingMore: false
+                  isFetchingMore: false,
                 }))
               })
-            }
+            },
           )
         }
       }
@@ -329,7 +330,8 @@ export class List extends Component {
       singleRow,
       minColumns,
       showCredentials,
-      share
+      share,
+      serverContext,
     } = this.props
     const { columns, open } = this.state
 
@@ -347,12 +349,17 @@ export class List extends Component {
         render={() => {
           const items = []
           const lastIndex = statements.length - 1
-          const focusItem = focus && statements[0]
+          const focusItem = statements[0]?.id === focus && statements[0]
+
+          const hasNotFoundFocus = focus && !focusItem
+          if (hasNotFoundFocus && serverContext) {
+            serverContext.res.statusCode = 404
+          }
 
           const singleRowOpenItem =
             singleRow &&
             open[0] &&
-            statements.find(statement => statement.id === open[0])
+            statements.find((statement) => statement.id === open[0])
 
           statements.forEach(({ id, portrait, name, credentials }, i) => {
             const row = singleRow ? 0 : Math.floor(i / columns)
@@ -360,7 +367,7 @@ export class List extends Component {
             const openId = open[row - 1]
             if (!singleRow && openId && offset === 0) {
               const openItem = statements.find(
-                statement => statement.id === openId
+                (statement) => statement.id === openId,
               )
               if (openItem) {
                 items.push(
@@ -369,7 +376,7 @@ export class List extends Component {
                     share={share}
                     t={t}
                     data={openItem}
-                  />
+                  />,
                 )
               }
             }
@@ -392,7 +399,7 @@ export class List extends Component {
                 minColumns={minColumns}
                 maxColumns={this.getMaxColumns()}
                 href={id && `/community?id=${id}`}
-                onClick={e => {
+                onClick={(e) => {
                   if (shouldIgnoreClick(e)) {
                     return
                   }
@@ -400,20 +407,20 @@ export class List extends Component {
                   if (onSelect && onSelect(id) === false) {
                     return
                   }
-                  this.setState(state => ({
+                  this.setState((state) => ({
                     open: {
                       ...state.open,
-                      [row]: state.open[row] === id ? undefined : id
-                    }
+                      [row]: state.open[row] === id ? undefined : id,
+                    },
                   }))
                 }}
-              />
+              />,
             )
 
             const lastOpenId = open[row]
             if (!singleRow && i === lastIndex && lastOpenId) {
               const openItem = statements.find(
-                statement => statement.id === lastOpenId
+                (statement) => statement.id === lastOpenId,
               )
               if (openItem) {
                 items.push(
@@ -422,7 +429,7 @@ export class List extends Component {
                     share={share}
                     t={t}
                     data={openItem}
-                  />
+                  />,
                 )
               }
             }
@@ -434,25 +441,26 @@ export class List extends Component {
                 title: t('testimonial/meta/single/title', focusItem),
                 description: t(
                   'testimonial/meta/single/description',
-                  focusItem
+                  focusItem,
                 ),
                 url: `${PUBLIC_BASE_URL}/community?id=${focusItem.id}`,
                 image: `${ASSETS_SERVER_BASE_URL}/render?viewport=1200x628&updatedAt=${encodeURIComponent(
-                  focusItem.updatedAt
+                  focusItem.updatedAt,
                 )}&url=${encodeURIComponent(
-                  `${PUBLIC_BASE_URL}/community?share=${focusItem.id}`
-                )}`
+                  `${PUBLIC_BASE_URL}/community?share=${focusItem.id}`,
+                )}`,
               }
             : {
                 pageTitle: t('testimonial/meta/pageTitle'),
                 title: t('testimonial/meta/title'),
                 description: t('testimonial/meta/description'),
                 url: `${PUBLIC_BASE_URL}/community`,
-                image: `${CDN_FRONTEND_BASE_URL}/static/social-media/community.jpg`
+                image: `${CDN_FRONTEND_BASE_URL}/static/social-media/community.jpg`,
               }
 
           return (
             <Fragment>
+              {hasNotFoundFocus && <ErrorMessage error={t('statement/404')} />}
               <div {...gridStyles} ref={this.ref}>
                 {!!isPage && <Meta data={metaData} />}
                 {items}
@@ -463,21 +471,21 @@ export class List extends Component {
                     <P {...styles.more}>
                       <A
                         href='#'
-                        onClick={e => {
+                        onClick={(e) => {
                           e.preventDefault()
                           this.setState(
                             () => ({
-                              endless: true
+                              endless: true,
                             }),
                             () => {
                               this.onScroll()
-                            }
+                            },
                           )
                         }}
                       >
                         {t('testimonial/infinite/endless', {
                           count: AUTO_INFINITE,
-                          remaining: totalCount - AUTO_INFINITE
+                          remaining: totalCount - AUTO_INFINITE,
                         })}
                       </A>
                     </P>
@@ -485,7 +493,7 @@ export class List extends Component {
                 {!hasMore && hasEndText && (
                   <P {...styles.more}>
                     {t('testimonial/infinite/end', {
-                      count: statements.length
+                      count: statements.length,
                     })}
                   </P>
                 )}
@@ -533,7 +541,7 @@ export const ListWithQuery = compose(
   withT,
   graphql(query, {
     options: ({ ssr }) => ({
-      ssr
+      ssr,
     }),
     props: ({ data }) => {
       return {
@@ -546,11 +554,11 @@ export const ListWithQuery = compose(
           return data.fetchMore({
             updateQuery: (
               previousResult,
-              { fetchMoreResult, queryVariables }
+              { fetchMoreResult, queryVariables },
             ) => {
               const nodes = [
                 ...previousResult.statements.nodes,
-                ...fetchMoreResult.statements.nodes
+                ...fetchMoreResult.statements.nodes,
               ]
               return {
                 ...fetchMoreResult,
@@ -558,24 +566,24 @@ export const ListWithQuery = compose(
                   ...fetchMoreResult.statements,
                   nodes: nodes.filter(
                     ({ id }, index, all) =>
-                      index === all.findIndex(node => node.id === id)
-                  )
-                }
+                      index === all.findIndex((node) => node.id === id),
+                  ),
+                },
               }
             },
             variables: {
-              after: data.statements.pageInfo.endCursor
-            }
+              after: data.statements.pageInfo.endCursor,
+            },
           })
-        }
+        },
       }
-    }
-  })
+    },
+  }),
 )(List)
 
 ListWithQuery.defaultProps = {
   seed: null,
-  first: 50
+  first: 50,
 }
 
 export const generateSeed = () => Math.random() * 2 - 1
@@ -586,7 +594,7 @@ class Container extends Component {
     this.state = {}
   }
   render() {
-    const { t, id, isPage, router } = this.props
+    const { t, id, isPage, router, serverContext } = this.props
     const { query } = this.state
 
     const seed = this.state.seed || this.props.seed
@@ -600,7 +608,7 @@ class Container extends Component {
           autoComplete='off'
           onChange={(_, value) => {
             this.setState(() => ({
-              query: value
+              query: value,
             }))
           }}
         />
@@ -609,8 +617,18 @@ class Container extends Component {
             style={{ float: 'right', cursor: 'pointer' }}
             onClick={() => {
               this.setState(() => ({
-                seed: generateSeed()
+                seed: generateSeed(),
               }))
+              if (isPage && (id || this.state.clearedFocus)) {
+                this.setState(
+                  {
+                    clearedFocus: undefined,
+                  },
+                  () => {
+                    router.replace('/community', undefined, { shallow: true })
+                  },
+                )
+              }
             }}
           >
             {t('testimonial/search/seed')}
@@ -625,17 +643,18 @@ class Container extends Component {
               return
             }
             this.setState(
-              () => ({
+              {
                 // keep it around for the query
-                clearedFocus: id
-              }),
+                clearedFocus: id,
+              },
               () => {
                 router.push('/community', undefined, { shallow: true })
-              }
+              },
             )
           }}
           search={query}
           seed={seed}
+          serverContext={serverContext}
         />
       </div>
     )

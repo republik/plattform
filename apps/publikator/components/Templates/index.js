@@ -1,4 +1,4 @@
-import React from 'react'
+import { cloneElement, Children } from 'react'
 import newsletterSchema from '@project-r/template-newsletter'
 import neutrumSchema from './Neutrum'
 
@@ -10,7 +10,7 @@ import {
   createFormatSchema,
   createSectionSchema,
   createDiscussionSchema,
-  createDossierSchema
+  createDossierSchema,
 } from '@project-r/styleguide'
 
 import { t } from '../../lib/withT'
@@ -21,17 +21,17 @@ import * as withArticleData from './withArticleData'
 import * as withFrontData from './withFrontData'
 
 const NoOpLink = ({ children }) =>
-  React.cloneElement(React.Children.only(children), {
-    onClick: e => {
+  cloneElement(Children.only(children), {
+    onClick: (e) => {
       e.preventDefault()
-    }
+    },
   })
 
 const articleSchemaParams = {
   t,
   dynamicComponentRequire,
   dynamicComponentIdentifiers,
-  ...withArticleData
+  ...withArticleData,
 }
 
 const schemas = {
@@ -46,16 +46,16 @@ const schemas = {
     CommentLink: NoOpLink,
     DiscussionLink: NoOpLink,
     t,
-    ...withFrontData
+    ...withFrontData,
   }),
   format: createFormatSchema(articleSchemaParams),
   section: createSectionSchema(articleSchemaParams),
   discussion: createDiscussionSchema(articleSchemaParams),
   dossier: createDossierSchema(articleSchemaParams),
-  page: createPageSchema(articleSchemaParams)
+  page: createPageSchema(articleSchemaParams),
 }
 
-export const getSchema = template => {
+export const getSchema = (template) => {
   const key = template || Object.keys(schemas)[0]
   const schema = schemas[key] || (key === 'editorial' && schemas.article)
 

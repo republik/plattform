@@ -1,4 +1,3 @@
-import React from 'react'
 import compose from 'lodash/flowRight'
 import { enforceMembership } from '../../components/Auth/withMembership'
 import { CDN_FRONTEND_BASE_URL } from '../../lib/constants'
@@ -20,7 +19,7 @@ const meta = {
   twitterTitle: t('pages/meta/questionnaire/socialTitle'),
   twitterDescription: t('pages/meta/questionnaire/socialDescription'),
   facebookImage: `${CDN_FRONTEND_BASE_URL}/static/social-media/umfrage/2018/facebookImage.png`,
-  twitterImage: `${CDN_FRONTEND_BASE_URL}/static/social-media/umfrage/2018/twitterImage.png`
+  twitterImage: `${CDN_FRONTEND_BASE_URL}/static/social-media/umfrage/2018/twitterImage.png`,
 }
 
 export const description = t.elements('pages/meta/questionnaire/unauthorized', {
@@ -28,10 +27,10 @@ export const description = t.elements('pages/meta/questionnaire/unauthorized', {
     <Link href='/angebote' key='pledge' passHref>
       <A>{t('pages/meta/questionnaire/unauthorized/buyText')}</A>
     </Link>
-  )
+  ),
 })
 
-const QuestionnairePage = props => {
+const QuestionnairePage = (props) => {
   return (
     <Frame meta={meta}>
       <Questionnaire {...props} />
@@ -42,10 +41,9 @@ const QuestionnairePage = props => {
 export default withDefaultSSR(
   compose(
     withRouter,
-    WrappedComponent => props => (
-      <WrappedComponent {...props} slug={props.router.query.slug} />
-    ),
+    (WrappedComponent) => (props) =>
+      <WrappedComponent {...props} slug={props.router.query.slug} />,
     withQuestionnaire,
-    enforceMembership(meta, { title: t('questionnaire/title'), description })
-  )(QuestionnairePage)
+    enforceMembership(meta, { title: t('questionnaire/title'), description }),
+  )(QuestionnairePage),
 )

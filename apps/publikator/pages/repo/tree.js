@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { Component, Fragment } from 'react'
 import { withRouter } from 'next/router'
 import { css } from 'glamor'
 import { graphql, compose } from 'react-apollo'
@@ -18,7 +18,7 @@ import {
   NarrowContainer,
   A,
   InlineSpinner,
-  Interaction
+  Interaction,
 } from '@project-r/styleguide'
 import { getKeys as getLocalStorageKeys } from '../../lib/utils/localStorage'
 import * as fragments from '../../lib/graphql/fragments'
@@ -41,14 +41,26 @@ export const getRepoHistory = gql`
         }
         nodes {
           ...SimpleCommit
+          derivatives {
+            ...SimpleDerivative
+          }
+          canDeriveSyntheticReadAloud: canDerive(type: SyntheticReadAloud)
         }
       }
       milestones {
         ...SimpleMilestone
+        commit {
+          ...SimpleCommit
+          derivatives {
+            ...SimpleDerivative
+          }
+          canDeriveSyntheticReadAloud: canDerive(type: SyntheticReadAloud)
+        }
       }
     }
   }
   ${fragments.SimpleMilestone}
+  ${fragments.SimpleDerivative}
   ${fragments.SimpleCommit}
 `
 
@@ -61,30 +73,42 @@ const treeRepoSubscription = gql`
       }
       commit {
         ...SimpleCommit
+        derivatives {
+          ...SimpleDerivative
+        }
+        canDeriveSyntheticReadAloud: canDerive(type: SyntheticReadAloud)
       }
       milestone {
         ...SimpleMilestone
+        commit {
+          ...SimpleCommit
+          derivatives {
+            ...SimpleDerivative
+          }
+          canDeriveSyntheticReadAloud: canDerive(type: SyntheticReadAloud)
+        }
       }
     }
   }
   ${fragments.SimpleCommit}
   ${fragments.SimpleMilestone}
+  ${fragments.SimpleDerivative}
 `
 
 const styles = {
   publishContainer: css({
-    marginTop: '24px'
+    marginTop: '24px',
   }),
   loadMoreButton: css({
-    cursor: 'pointer'
+    cursor: 'pointer',
   }),
   loadMore: css({
     positon: 'relative',
     textAlign: 'center',
     width: '100%',
     marginTop: '24px',
-    height: '64px'
-  })
+    height: '64px',
+  }),
 }
 
 class EditorPage extends Component {
@@ -101,31 +125,34 @@ class EditorPage extends Component {
       this.unsubscribe = this.props.data.subscribeToMore({
         document: treeRepoSubscription,
         variables: {
-          repoId: this.props.router.query.repoId
+          repoId: this.props.router.query.repoId,
         },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) {
             return prev
           }
 
-          const {
-            mutation,
-            repo,
-            commit,
-            milestone
-          } = subscriptionData.data.repoChange
+          const { mutation, repo, commit, milestone } =
+            subscriptionData.data.repoChange
 
           const updatedRepo = { ...prev.repo, ...repo }
           const updatedCommitNodes = [
             commit,
-            ...prev.repo.commits.nodes
+            ...prev.repo.commits.nodes.filter(
+              (prevCommit) => prevCommit.id !== commit?.id,
+            ),
           ].filter(Boolean)
-          const updatedMilestones = [milestone, ...prev.repo.milestones]
+          const updatedMilestones = [
+            milestone,
+            ...prev.repo.milestones.filter(
+              (prevMilestone) => prevMilestone.name !== milestone?.name,
+            ),
+          ]
             .filter(Boolean)
             .filter(
-              m =>
+              (m) =>
                 (mutation === 'DELETED' && m.name !== milestone.name) ||
-                mutation !== 'DELETED'
+                mutation !== 'DELETED',
             )
 
           return {
@@ -134,12 +161,12 @@ class EditorPage extends Component {
               ...updatedRepo,
               commits: {
                 ...prev.repo.commits,
-                nodes: updatedCommitNodes
+                nodes: updatedCommitNodes,
               },
-              milestones: updatedMilestones
-            }
+              milestones: updatedMilestones,
+            },
           }
-        }
+        },
       })
     }
   }
@@ -154,8 +181,8 @@ class EditorPage extends Component {
     const { repoId } = router.query
 
     const localStorageCommitIds = getLocalStorageKeys()
-      .filter(key => key.startsWith(repoId))
-      .map(key => key.split('/').pop())
+      .filter((key) => key.startsWith(repoId))
+      .map((key) => key.split('/').pop())
     return (
       <Frame>
         <Frame.Header isTemplate={repo?.isTemplate}>
@@ -199,17 +226,22 @@ class EditorPage extends Component {
                   isTemplate={repo.isTemplate}
                   repoId={repoId}
                 />
-                {/* Load more commits */
-                hasMore && (
-                  <Interaction.P {...styles.loadMore}>
-                    {loading && <InlineSpinner size={40} />}
-                    {!loading && (
-                      <A {...styles.loadMoreButton} onClick={() => fetchMore()}>
-                        Ältere laden
-                      </A>
-                    )}
-                  </Interaction.P>
-                )}
+                {
+                  /* Load more commits */
+                  hasMore && (
+                    <Interaction.P {...styles.loadMore}>
+                      {loading && <InlineSpinner size={40} />}
+                      {!loading && (
+                        <A
+                          {...styles.loadMoreButton}
+                          onClick={() => fetchMore()}
+                        >
+                          Ältere laden
+                        </A>
+                      )}
+                    </Interaction.P>
+                  )
+                }
               </Fragment>
             )}
           />
@@ -228,10 +260,10 @@ export default compose(
       return {
         variables: {
           repoId: router.query.repoId,
-          first: COMMIT_LIMIT
+          first: COMMIT_LIMIT,
         },
         notifyOnNetworkStatusChange: true,
-        fetchPolicy: 'cache-and-network'
+        fetchPolicy: 'cache-and-network',
       }
     },
     props: ({ data, ownProps }) => {
@@ -248,7 +280,7 @@ export default compose(
             variables: {
               repoId: data.repo.id,
               first: COMMIT_LIMIT,
-              after: data.repo.commits.pageInfo.endCursor
+              after: data.repo.commits.pageInfo.endCursor,
             },
             updateQuery: (previousResult, { fetchMoreResult }) => {
               return {
@@ -260,19 +292,19 @@ export default compose(
                     ...fetchMoreResult.repo.commits,
                     nodes: [
                       ...previousResult.repo.commits.nodes,
-                      ...fetchMoreResult.repo.commits.nodes
+                      ...fetchMoreResult.repo.commits.nodes,
                     ].filter(
                       ({ id }, i, all) =>
                         // deduplicate by id
-                        i === all.findIndex(repo => repo.id === id)
-                    )
-                  }
-                }
+                        i === all.findIndex((repo) => repo.id === id),
+                    ),
+                  },
+                },
               }
-            }
+            },
           })
-        }
+        },
       }
-    }
-  })
+    },
+  }),
 )(EditorPage)

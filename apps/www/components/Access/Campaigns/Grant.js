@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react'
 import compose from 'lodash/flowRight'
 
 import { Interaction } from '@project-r/styleguide'
@@ -34,7 +34,7 @@ const Grants = ({ grant, givingMemberships, revokeAccess, t }) => {
       <Emphasis key={`grant-end-${grant.id}`}>
         {dayFormat(new Date(grant.endAt))}
       </Emphasis>
-    )
+    ),
   }
 
   return (

@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { matchBlock } from '../../utils'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { createStaticKeyHandler } from '../../utils/keyHandlers'
@@ -11,10 +9,10 @@ export default ({ rule, subModules, TYPE }) => {
     rules: subModules.reduce(
       (a, m) =>
         a.concat(
-          m.helpers && m.helpers.serializer && m.helpers.serializer.rules
+          m.helpers && m.helpers.serializer && m.helpers.serializer.rules,
         ),
-      []
-    )
+      [],
+    ),
   })
 
   const schemaRule = {
@@ -29,9 +27,9 @@ export default ({ rule, subModules, TYPE }) => {
         data: {
           ...node.data,
           href: link.url,
-          title: link.title
+          title: link.title,
         },
-        nodes: inlineSerializer.fromMdast(link.children || [], 0, node, rest)
+        nodes: inlineSerializer.fromMdast(link.children || [], 0, node, rest),
       }
     },
     toMdast: (object, index, parent, rest) => {
@@ -53,32 +51,32 @@ export default ({ rule, subModules, TYPE }) => {
                   object.nodes,
                   0,
                   object,
-                  rest
-                )
-              }
-            ]
-          }
-        ]
+                  rest,
+                ),
+              },
+            ],
+          },
+        ],
       }
-    }
+    },
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [schemaRule]
+    rules: [schemaRule],
   })
 
   const Component = rule.component
 
   const staticHandle = createStaticKeyHandler({
     TYPE: TYPE,
-    rule: { editorOptions: {} }
+    rule: { editorOptions: {} },
   })
 
   return {
     TYPE,
     rule,
     helpers: {
-      serializer
+      serializer,
     },
     changes: {},
     ui: createUi({ TYPE }),
@@ -104,18 +102,18 @@ export default ({ rule, subModules, TYPE }) => {
             [TYPE]: {
               nodes: [
                 {
-                  kinds: ['inline', 'text']
-                }
+                  kinds: ['inline', 'text'],
+                },
               ],
               normalize: (change, reason, { node, index, child }) => {
                 if (reason === 'child_kind_invalid') {
                   change.unwrapBlockByKey(child.key)
                 }
-              }
-            }
-          }
-        }
-      }
-    ]
+              },
+            },
+          },
+        },
+      },
+    ],
   }
 }

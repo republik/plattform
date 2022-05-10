@@ -1,4 +1,3 @@
-import React from 'react'
 import Document, { Html, Head, Main, NextScript } from 'next/document'
 import { renderStatic } from 'glamor/server'
 import { fontFaces } from '@project-r/styleguide'
@@ -10,7 +9,7 @@ export default class MyDocument extends Document {
     return {
       ...page,
       ...styles,
-      env: require('../lib/settings')
+      env: require('../lib/settings'),
     }
   }
   constructor(props) {
@@ -23,7 +22,7 @@ export default class MyDocument extends Document {
   render() {
     const {
       css,
-      env: { PIWIK_URL_BASE, PIWIK_SITE_ID }
+      env: { PIWIK_URL_BASE, PIWIK_SITE_ID },
     } = this.props
     const piwik = !!PIWIK_URL_BASE && !!PIWIK_SITE_ID
     return (
@@ -32,7 +31,7 @@ export default class MyDocument extends Document {
           <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
           <style
             dangerouslySetInnerHTML={{
-              __html: fontFaces()
+              __html: fontFaces(),
             }}
           />
           {css ? <style dangerouslySetInnerHTML={{ __html: css }} /> : null}
@@ -41,7 +40,7 @@ export default class MyDocument extends Document {
         <body>
           <script
             dangerouslySetInnerHTML={{
-              __html: `var _paq = _paq || [];`
+              __html: `var _paq = _paq || [];`,
             }}
           />
           <Main />
@@ -56,7 +55,7 @@ export default class MyDocument extends Document {
               _paq.push(['setSiteId', '${PIWIK_SITE_ID}']);
               var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
               g.type='text/javascript'; g.async=true; g.defer=true; g.src='${PIWIK_URL_BASE}/piwik.js'; s.parentNode.insertBefore(g,s);
-            })();`
+            })();`,
               }}
             />
           )}

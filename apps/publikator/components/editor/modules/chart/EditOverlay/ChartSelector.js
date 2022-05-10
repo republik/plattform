@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import {
   Label,
   fontStyles,
   plainButtonRule,
   Interaction,
-  mediaQueries
+  mediaQueries,
 } from '@project-r/styleguide'
 import { baseCharts } from './config'
 import { css, merge } from 'glamor'
@@ -20,12 +20,12 @@ const styles = {
     gridRowGap: 20,
     [mediaQueries.mUp]: {
       gridTemplateColumns: 'repeat(4, 1fr)',
-      gridRowGap: 40
-    }
+      gridRowGap: 40,
+    },
   }),
   chartButtonContainer: css({
     height: '100%',
-    display: 'flex'
+    display: 'flex',
   }),
   chartButton: css({
     height: 80,
@@ -38,32 +38,32 @@ const styles = {
     alignItems: 'center',
     margin: '0 auto',
     ':hover': {
-      textDecoration: 'underline'
+      textDecoration: 'underline',
     },
     [mediaQueries.mUp]: {
-      marginLeft: 0
-    }
+      marginLeft: 0,
+    },
   }),
   chartImage: css({
     maxWidth: 60,
     maxHeight: 30,
-    marginTop: 'auto'
+    marginTop: 'auto',
   }),
   chartImageLarge: css({
     maxWidth: 130,
-    maxHeight: 50
+    maxHeight: 50,
   }),
   chartButtonText: css({
     display: 'block',
     marginTop: 'auto',
     ':hover': {
-      textDecoration: 'underline'
-    }
+      textDecoration: 'underline',
+    },
   }),
   discreteButton: css({
     display: 'block',
-    marginBottom: 30
-  })
+    marginBottom: 30,
+  }),
 }
 
 const ChartPreview = ({ CsvChart, chart }) => {
@@ -109,7 +109,7 @@ const ChartSelector = ({ data, CsvChart, onChartSelect }) => {
         onSelect={onChartSelect}
         config={{
           ...preselected.config,
-          size: config.size
+          size: config.size,
         }}
         values={preselected.values.trim()}
         cleanup={() => preselect(undefined)}
@@ -118,7 +118,7 @@ const ChartSelector = ({ data, CsvChart, onChartSelect }) => {
     </>
   ) : (
     <div {...styles.chartWrapper}>
-      {baseCharts.map(chart => {
+      {baseCharts.map((chart) => {
         return (
           <div
             key={chart.name}
@@ -129,9 +129,9 @@ const ChartSelector = ({ data, CsvChart, onChartSelect }) => {
                 : onChartSelect(
                     {
                       ...chart.config,
-                      size: config.size
+                      size: config.size,
                     },
-                    chart.values.trim()
+                    chart.values.trim(),
                   )
             }
           >
@@ -139,7 +139,7 @@ const ChartSelector = ({ data, CsvChart, onChartSelect }) => {
               src={chart.screenshot}
               {...merge(
                 styles.chartImage,
-                chart.large && styles.chartImageLarge
+                chart.large && styles.chartImageLarge,
               )}
             />
             <span {...styles.chartButtonText}>{chart.name}</span>

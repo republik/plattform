@@ -45,6 +45,13 @@ export const notificationsMiniQuery = gql`
           }
           ... on Document {
             id
+            meta {
+              format {
+                meta {
+                  externalBaseUrl
+                }
+              }
+            }
           }
         }
         content {
@@ -281,7 +288,7 @@ export const notificationSubscription = gql`
 `
 
 export const withNotificationCount = graphql(notificationCountQuery, {
-  name: 'countData'
+  name: 'countData',
 })
 
 const alreadyMarkedAsReadIds = []
@@ -289,61 +296,61 @@ export const withMarkAsReadMutation = graphql(
   MARK_NOTIFICATION_AS_READ_MUTATION,
   {
     props: ({ mutate }) => ({
-      markAsReadMutation: id => {
+      markAsReadMutation: (id) => {
         if (alreadyMarkedAsReadIds.includes(id)) {
           return Promise.resolve()
         }
         alreadyMarkedAsReadIds.push(id)
         return mutate({
           variables: {
-            id
-          }
+            id,
+          },
         })
-      }
-    })
-  }
+      },
+    }),
+  },
 )
 
 export const withMarkAllAsReadMutation = graphql(markAllAsReadMutation, {
   props: ({ mutate }) => ({
     markAllAsReadMutation: () => {
       return mutate()
-    }
-  })
+    },
+  }),
 })
 
 export const withSubToDoc = graphql(subscribeToDocumentMutation, {
   props: ({ mutate }) => ({
-    subToDoc: variables =>
+    subToDoc: (variables) =>
       mutate({
-        variables
-      })
-  })
+        variables,
+      }),
+  }),
 })
 
 export const withSubToUser = graphql(subscribeToUserMutation, {
   props: ({ mutate }) => ({
-    subToUser: variables =>
+    subToUser: (variables) =>
       mutate({
-        variables
-      })
-  })
+        variables,
+      }),
+  }),
 })
 
 export const withUnsubFromUser = graphql(unsubscribeFromUserMutation, {
   props: ({ mutate }) => ({
-    unsubFromUser: variables =>
+    unsubFromUser: (variables) =>
       mutate({
-        variables
-      })
-  })
+        variables,
+      }),
+  }),
 })
 
 export const withUnsubFromDoc = graphql(unsubscribeFromDocumentMutation, {
   props: ({ mutate }) => ({
-    unsubFromDoc: variables =>
+    unsubFromDoc: (variables) =>
       mutate({
-        variables
-      })
-  })
+        variables,
+      }),
+  }),
 })

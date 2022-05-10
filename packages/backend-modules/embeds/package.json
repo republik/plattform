@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/orbiting/backends#readme",
   "dependencies": {
-    "apollo-modules-node": "^0.1.4",
+    "apollo-modules-node": "*",
     "autolinker": "^3.14.1",
     "cheerio": "^1.0.0-rc.3",
     "d3-array": "^2.4.0",

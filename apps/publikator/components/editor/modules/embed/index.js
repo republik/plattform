@@ -1,4 +1,3 @@
-import React from 'react'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { withApollo } from 'react-apollo'
 
@@ -99,69 +98,73 @@ const getCommentEmbed = gql`
   }
 `
 
-const fromMdast = ({ TYPE }) => node => {
-  const deepNodes = node.children.reduce(
-    (children, child) => children.concat(child).concat(child.children),
-    []
-  )
-  const link = findOrCreate(deepNodes, {
-    type: 'link'
-  })
-  return {
-    kind: 'block',
-    type: TYPE,
-    isVoid: true,
-    data: {
-      ...node.data,
-      ...(node.data.__typename === 'Comment' && {
-        content: stringify(node.data.content)
-      }),
-      url: link.url
+const fromMdast =
+  ({ TYPE }) =>
+  (node) => {
+    const deepNodes = node.children.reduce(
+      (children, child) => children.concat(child).concat(child.children),
+      [],
+    )
+    const link = findOrCreate(deepNodes, {
+      type: 'link',
+    })
+    return {
+      kind: 'block',
+      type: TYPE,
+      isVoid: true,
+      data: {
+        ...node.data,
+        ...(node.data.__typename === 'Comment' && {
+          content: stringify(node.data.content),
+        }),
+        url: link.url,
+      },
     }
   }
-}
 
-const toMdast = ({ TYPE }) => node => {
-  const { url, ...data } = node.data
-  return {
-    type: 'zone',
-    identifier: TYPE,
-    data: {
-      ...data,
-      ...(node.data.__typename === 'Comment' && {
-        content: parse(node.data.content)
-      })
-    },
-    children: [
-      {
-        type: 'paragraph',
-        children: [
-          {
-            type: 'link',
-            url,
-            children: [
-              {
-                type: 'text',
-                value: url
-              }
-            ]
-          }
-        ]
-      }
-    ]
+const toMdast =
+  ({ TYPE }) =>
+  (node) => {
+    const { url, ...data } = node.data
+    return {
+      type: 'zone',
+      identifier: TYPE,
+      data: {
+        ...data,
+        ...(node.data.__typename === 'Comment' && {
+          content: parse(node.data.content),
+        }),
+      },
+      children: [
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'link',
+              url,
+              children: [
+                {
+                  type: 'text',
+                  value: url,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    }
   }
-}
 
-const getSerializer = options =>
+const getSerializer = (options) =>
   new MarkdownSerializer({
     rules: [
       {
         match: matchBlock(options.TYPE),
         matchMdast: options.rule.matchMdast,
         fromMdast: fromMdast(options),
-        toMdast: toMdast(options)
-      }
-    ]
+        toMdast: toMdast(options),
+      },
+    ],
   })
 
 const embedPlugin = ({ query, ...options }) => {
@@ -181,7 +184,7 @@ const embedPlugin = ({ query, ...options }) => {
           <InlineUI
             node={node}
             editor={editor}
-            isMatch={value => value.blocks.some(matchBlock(options.TYPE))}
+            isMatch={(value) => value.blocks.some(matchBlock(options.TYPE))}
           />
           <Component {...props} />
         </div>
@@ -190,83 +193,88 @@ const embedPlugin = ({ query, ...options }) => {
     schema: {
       blocks: {
         [options.TYPE]: {
-          isVoid: true
-        }
-      }
+          isVoid: true,
+        },
+      },
+    },
+  }
+}
+
+const moduleFactory =
+  ({ query, matchUrl, getQueryParams }) =>
+  (options) => {
+    const { rule, TYPE } = options
+    return {
+      helpers: {
+        serializer: getSerializer(options),
+      },
+      changes: {},
+      ui: createUi({ TYPE, editorOptions: rule.editorOptions }),
+      plugins: [
+        embedPlugin({ query, ...options }),
+        embedFromUrlPlugin({
+          matchUrl,
+          getQueryParams,
+          matchSource: matchBlock(rule.editorOptions.lookupType.toUpperCase()),
+          TYPE,
+        }),
+      ],
     }
   }
-}
-
-const moduleFactory = ({ query, matchUrl, getQueryParams }) => options => {
-  const { rule, TYPE } = options
-  return {
-    helpers: {
-      serializer: getSerializer(options)
-    },
-    changes: {},
-    ui: createUi({ TYPE, editorOptions: rule.editorOptions }),
-    plugins: [
-      embedPlugin({ query, ...options }),
-      embedFromUrlPlugin({
-        matchUrl,
-        getQueryParams,
-        matchSource: matchBlock(rule.editorOptions.lookupType.toUpperCase()),
-        TYPE
-      })
-    ]
-  }
-}
 
 // One capturing group at match[1] that catches the status id
-const TWITTER_REGEX = /^https?:\/\/twitter\.com\/(?:#!\/)?\w+\/status(?:es)?\/(\d+)$/
+const TWITTER_REGEX =
+  /^https?:\/\/twitter\.com\/(?:#!\/)?\w+\/status(?:es)?\/(\d+)$/
 
 // One capturing group at match[1] that catches the video id
-const YOUTUBE_REGEX = /^http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-_]*)(&[^\s]*)*$/
+const YOUTUBE_REGEX =
+  /^http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-_]*)(&[^\s]*)*$/
 
 // One capturing group at match[1] that catches the video id
-const VIMEO_REGEX = /^(?:http|https)?:\/\/(?:www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^/]*)\/videos\/|)(\d+)(?:|\/\?)$/
+const VIMEO_REGEX =
+  /^(?:http|https)?:\/\/(?:www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^/]*)\/videos\/|)(\d+)(?:|\/\?)$/
 
 const COMMENT_REGEX = new RegExp(
-  `^${FRONTEND_BASE_URL}\\/.+[?&]focus=([a-f\\d-]{36})`
+  `^${FRONTEND_BASE_URL}\\/.+[?&]focus=([a-f\\d-]{36})`,
 )
 
-const matchVideoUrl = url => YOUTUBE_REGEX.test(url) || VIMEO_REGEX.test(url)
+const matchVideoUrl = (url) => YOUTUBE_REGEX.test(url) || VIMEO_REGEX.test(url)
 
-const getVideoQueryParams = url => {
+const getVideoQueryParams = (url) => {
   if (YOUTUBE_REGEX.test(url)) {
     return {
       embedType: 'YoutubeEmbed',
-      id: YOUTUBE_REGEX.exec(url)[1]
+      id: YOUTUBE_REGEX.exec(url)[1],
     }
   }
   if (VIMEO_REGEX.test(url)) {
     return {
       embedType: 'VimeoEmbed',
-      id: VIMEO_REGEX.exec(url)[1]
+      id: VIMEO_REGEX.exec(url)[1],
     }
   }
   throw new Error(`No valid video embed URL: ${url}`)
 }
 
-const matchTwitterUrl = url => TWITTER_REGEX.test(url)
+const matchTwitterUrl = (url) => TWITTER_REGEX.test(url)
 
-const getTwitterQueryParams = url => {
+const getTwitterQueryParams = (url) => {
   if (TWITTER_REGEX.test(url)) {
     return {
       embedType: 'TwitterEmbed',
-      id: TWITTER_REGEX.exec(url)[1]
+      id: TWITTER_REGEX.exec(url)[1],
     }
   }
   throw new Error(`No valid twitter embed URL: ${url}`)
 }
 
-const matchCommentUrl = url => COMMENT_REGEX.test(url)
+const matchCommentUrl = (url) => COMMENT_REGEX.test(url)
 
-const getCommentQueryParams = url => {
+const getCommentQueryParams = (url) => {
   if (COMMENT_REGEX.test(url)) {
     return {
       embedType: 'CommentEmbed',
-      id: COMMENT_REGEX.exec(url)[1]
+      id: COMMENT_REGEX.exec(url)[1],
     }
   }
   throw new Error(`No valid comment embed URL: ${url}`)
@@ -275,17 +283,17 @@ const getCommentQueryParams = url => {
 export const createEmbedVideoModule = moduleFactory({
   matchUrl: matchVideoUrl,
   getQueryParams: getVideoQueryParams,
-  query: getVideoEmbed
+  query: getVideoEmbed,
 })
 
 export const createEmbedTwitterModule = moduleFactory({
   matchUrl: matchTwitterUrl,
   getQueryParams: getTwitterQueryParams,
-  query: getTwitterEmbed
+  query: getTwitterEmbed,
 })
 
 export const createEmbedCommentModule = moduleFactory({
   matchUrl: matchCommentUrl,
   getQueryParams: getCommentQueryParams,
-  query: getCommentEmbed
+  query: getCommentEmbed,
 })

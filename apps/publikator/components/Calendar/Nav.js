@@ -1,33 +1,32 @@
-import React from 'react'
 import { css } from 'glamor'
 import BackIcon from 'react-icons/lib/md/chevron-left'
 import ForthIcon from 'react-icons/lib/md/chevron-right'
 import {
   IconButton,
   fontFamilies,
-  plainButtonRule
+  plainButtonRule,
 } from '@project-r/styleguide'
 import { datePickerFormat, reformatUrlDate } from '../../lib/utils/calendar'
 import withT from '../../lib/withT'
 
 const styles = {
   navigation: css({
-    padding: '15px 0'
+    padding: '15px 0',
   }),
   currentDates: css({
     margin: '0 20px',
-    fontFamily: fontFamilies.sansSerifMedium
+    fontFamily: fontFamilies.sansSerifMedium,
   }),
   navButton: {
     display: 'inline-block',
-    margin: 0
+    margin: 0,
   },
   resetButton: css({
     marginLeft: 20,
     ':hover': {
-      textDecoration: 'underline'
-    }
-  })
+      textDecoration: 'underline',
+    },
+  }),
 }
 
 export const Nav = ({ children }) => (
@@ -50,7 +49,7 @@ export const ResetLink = withT(({ t, reset }) => (
 ))
 
 export const CurrentDates = ({ from, until }) => {
-  const displayDate = date => reformatUrlDate(date, datePickerFormat)
+  const displayDate = (date) => reformatUrlDate(date, datePickerFormat)
   return (
     <span {...styles.currentDates}>
       {displayDate(from)} - {displayDate(until)}

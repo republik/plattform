@@ -7,9 +7,9 @@ import { underline } from '../../lib/styleMixins'
 const styles = {
   default: css({
     '& ul, & ol': {
-      overflow: 'hidden'
-    }
-  })
+      overflow: 'hidden',
+    },
+  }),
 }
 
 const RawHtml = ({ type: Type, dangerouslySetInnerHTML, error }) => {
@@ -23,12 +23,12 @@ const RawHtml = ({ type: Type, dangerouslySetInnerHTML, error }) => {
           color: colorScheme.getCSSColor(error ? 'error' : 'text'),
           '@media (hover)': {
             ':hover': {
-              color: colorScheme.getCSSColor(error ? 'error' : 'textSoft')
-            }
-          }
-        }
+              color: colorScheme.getCSSColor(error ? 'error' : 'textSoft'),
+            },
+          },
+        },
       }),
-    [colorScheme, error]
+    [colorScheme, error],
   )
 
   return (
@@ -41,11 +41,11 @@ const RawHtml = ({ type: Type, dangerouslySetInnerHTML, error }) => {
 }
 
 RawHtml.defaultProps = {
-  type: 'span'
+  type: 'span',
 }
 
 RawHtml.propTypes = {
-  type: PropTypes.oneOfType([PropTypes.string, PropTypes.func])
+  type: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 }
 
 export default RawHtml

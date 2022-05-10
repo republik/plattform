@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react'
 import compose from 'lodash/flowRight'
 import { withRouter } from 'next/router'
 
@@ -17,7 +17,7 @@ const CancelMembershipPage = ({ router, me, t }) => {
 
   const meta = {
     title: t('memberships/cancel/title'),
-    description: ''
+    description: '',
   }
 
   return (
@@ -43,5 +43,5 @@ const CancelMembershipPage = ({ router, me, t }) => {
 }
 
 export default withDefaultSSR(
-  compose(withRouter, withT, withMe)(CancelMembershipPage)
+  compose(withRouter, withT, withMe)(CancelMembershipPage),
 )

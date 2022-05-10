@@ -1,80 +1,73 @@
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { Block } from 'slate'
-import React from 'react'
 import { matchBlock } from '../../utils'
 import shortId from 'shortid'
 
 import { TeaserInlineUI } from '../teaser/ui'
 import { TeaserGroupButton, TeaserGroupForm } from './ui'
 
-export const getData = data => ({
+export const getData = (data) => ({
   columns: 2,
   id: (data && data.id) || shortId(),
-  ...(data || {})
+  ...(data || {}),
 })
 
-export const getNewBlock = options => () => {
+export const getNewBlock = (options) => () => {
   const [teaserModule] = options.subModules
 
   const data = getData({
-    teaserType: options.rule.editorOptions.teaserType
+    teaserType: options.rule.editorOptions.teaserType,
   })
 
   return Block.create({
     type: options.TYPE,
     data: {
       ...data,
-      module: 'teasergroup'
+      module: 'teasergroup',
     },
-    nodes: [teaserModule.helpers.newItem(), teaserModule.helpers.newItem()]
+    nodes: [teaserModule.helpers.newItem(), teaserModule.helpers.newItem()],
   })
 }
 
-export const fromMdast = ({ TYPE, subModules }) => (
-  node,
-  index,
-  parent,
-  { visitChildren, context }
-) => {
-  const [teaserModule] = subModules
+export const fromMdast =
+  ({ TYPE, subModules }) =>
+  (node, index, parent, { visitChildren, context }) => {
+    const [teaserModule] = subModules
 
-  const teaserSerializer = teaserModule.helpers.serializer
+    const teaserSerializer = teaserModule.helpers.serializer
 
-  const { module, ...data } = getData(node.data)
+    const { module, ...data } = getData(node.data)
 
-  const result = {
-    kind: 'block',
-    type: TYPE,
-    data: {
-      ...data,
-      module: 'teasergroup'
-    },
-    nodes: node.children.map(v => teaserSerializer.fromMdast(v))
+    const result = {
+      kind: 'block',
+      type: TYPE,
+      data: {
+        ...data,
+        module: 'teasergroup',
+      },
+      nodes: node.children.map((v) => teaserSerializer.fromMdast(v)),
+    }
+    return result
   }
-  return result
-}
 
-export const toMdast = ({ TYPE, subModules }) => (
-  node,
-  index,
-  parent,
-  { visitChildren, context }
-) => {
-  const [teaserModule] = subModules
+export const toMdast =
+  ({ TYPE, subModules }) =>
+  (node, index, parent, { visitChildren, context }) => {
+    const [teaserModule] = subModules
 
-  const mdastChildren = node.nodes.map(v =>
-    teaserModule.helpers.serializer.toMdast(v)
-  )
-  const { module, ...data } = node.data
-  return {
-    type: 'zone',
-    identifier: 'TEASERGROUP',
-    children: mdastChildren,
-    data
+    const mdastChildren = node.nodes.map((v) =>
+      teaserModule.helpers.serializer.toMdast(v),
+    )
+    const { module, ...data } = node.data
+    return {
+      type: 'zone',
+      identifier: 'TEASERGROUP',
+      children: mdastChildren,
+      data,
+    }
   }
-}
 
-const teaserGroupPlugin = options => {
+const teaserGroupPlugin = (options) => {
   const { TYPE, rule } = options
 
   const TeaserGroup = rule.component
@@ -90,7 +83,7 @@ const teaserGroupPlugin = options => {
       const teaser = editor.value.blocks.reduce(
         (memo, node) =>
           memo || editor.value.document.getFurthest(node.key, matchBlock(TYPE)),
-        undefined
+        undefined,
       )
 
       const isSelected = teaser === node && !editor.value.isBlurred
@@ -106,7 +99,7 @@ const teaserGroupPlugin = options => {
         ),
         <TeaserGroup key='teaser' {...node.data.toJS()} attributes={attributes}>
           {children}
-        </TeaserGroup>
+        </TeaserGroup>,
       ]
     },
     validateNode(node, ...args) {
@@ -120,14 +113,14 @@ const teaserGroupPlugin = options => {
       }
       if (numNodes > wantedNodes) {
         const keyToRemove = node.nodes.last().key
-        return change => change.removeNodeByKey(keyToRemove)
+        return (change) => change.removeNodeByKey(keyToRemove)
       } else {
         const keyToInsertAt = node.key
-        return change =>
+        return (change) =>
           change.insertNodeByKey(
             keyToInsertAt,
             1,
-            teaserModule.helpers.newItem()
+            teaserModule.helpers.newItem(),
           )
       }
     },
@@ -136,37 +129,37 @@ const teaserGroupPlugin = options => {
         [TYPE]: {
           nodes: [
             {
-              blocks: options.subModules.map(m => m.TYPE)
-            }
-          ]
-        }
-      }
-    }
+              blocks: options.subModules.map((m) => m.TYPE),
+            },
+          ],
+        },
+      },
+    },
   }
 }
 
-const getSerializer = options => {
+const getSerializer = (options) => {
   return new MarkdownSerializer({
     rules: [
       {
         match: matchBlock(options.TYPE),
         matchMdast: options.rule.matchMdast,
         fromMdast: fromMdast(options),
-        toMdast: toMdast(options)
-      }
-    ]
+        toMdast: toMdast(options),
+      },
+    ],
   })
 }
 
-export default options => ({
+export default (options) => ({
   helpers: {
     serializer: getSerializer(options),
-    newItem: getNewBlock(options)
+    newItem: getNewBlock(options),
   },
   rule: getSerializer(options).rules[0],
   plugins: [teaserGroupPlugin(options)],
   ui: {
     insertButtons: [TeaserGroupButton(options)],
-    forms: [TeaserGroupForm(options)]
-  }
+    forms: [TeaserGroupForm(options)],
+  },
 })

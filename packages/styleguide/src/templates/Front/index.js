@@ -4,7 +4,7 @@ import {
   matchType,
   matchZone,
   matchParagraph,
-  matchHeading
+  matchHeading,
 } from 'mdast-react-render/lib/utils'
 
 import colors from '../../theme/colors'
@@ -24,7 +24,7 @@ import {
   TeaserFrontCredit,
   TeaserFrontCreditLink,
   TeaserFrontSubject,
-  TeaserFrontLogo
+  TeaserFrontLogo,
 } from '../../components/TeaserFront'
 
 import {
@@ -34,7 +34,7 @@ import {
   TeaserCarouselFormat,
   TeaserCarouselHeadline,
   TeaserCarouselSubject,
-  TeaserCarouselLead
+  TeaserCarouselLead,
 } from '../../components/TeaserCarousel'
 
 import { TeaserSectionTitle } from '../../components/TeaserShared'
@@ -47,7 +47,7 @@ import {
   extractImage,
   extractImages,
   globalInlines,
-  styles
+  styles,
 } from '../Article/utils'
 
 import createLiveTeasers from './liveTeasers'
@@ -66,7 +66,7 @@ export const subject = {
     return {
       color: teaser && teaser.data.color,
       collapsedColor: teaser && teaser.data.feuilleton && '#000',
-      columns: teaserGroup ? teaserGroup.data.columns : undefined
+      columns: teaserGroup ? teaserGroup.data.columns : undefined,
     }
   },
   editorModule: 'headline',
@@ -74,9 +74,9 @@ export const subject = {
     type: 'FRONTSUBJECT',
     placeholder: 'Subject',
     depth: 2,
-    isStatic: true
+    isStatic: true,
   },
-  rules: globalInlines
+  rules: globalInlines,
 }
 
 const DefaultLink = ({ children }) => children
@@ -95,7 +95,7 @@ const createFrontSchema = ({
     editorOptions: {
       type: 'FRONTCREDIT',
       placeholder: 'Credit',
-      isStatic: true
+      isStatic: true,
     },
     rules: [
       ...globalInlines,
@@ -108,7 +108,7 @@ const createFrontSchema = ({
             href: node.url,
             color: teaser ? teaser.data.color : colors.primary,
             collapsedColor:
-              teaser && teaser.data.feuilleton ? '#000' : undefined
+              teaser && teaser.data.feuilleton ? '#000' : undefined,
           }
         },
         component: ({ children, data, ...props }) => (
@@ -118,10 +118,10 @@ const createFrontSchema = ({
         ),
         editorModule: 'link',
         editorOptions: {
-          type: 'FRONTLINK'
-        }
-      }
-    ]
+          type: 'FRONTLINK',
+        },
+      },
+    ],
   }
 
   const title = (type, Headline) => ({
@@ -140,7 +140,7 @@ const createFrontSchema = ({
         kind: parent.data.kind,
         titleSize: parent.data.titleSize,
         href: teaser ? teaser.data.url : undefined,
-        columns: teaserGroup ? teaserGroup.data.columns : undefined
+        columns: teaserGroup ? teaserGroup.data.columns : undefined,
       }
     },
     editorModule: 'headline',
@@ -148,9 +148,9 @@ const createFrontSchema = ({
       type,
       placeholder: 'Titel',
       depth: 1,
-      isStatic: true
+      isStatic: true,
     },
-    rules: globalInlines
+    rules: globalInlines,
   })
 
   const lead = {
@@ -163,7 +163,7 @@ const createFrontSchema = ({
     props: (node, index, parent, { ancestors }) => {
       const teaserGroup = ancestors.find(matchTeaserGroup)
       return {
-        columns: teaserGroup ? teaserGroup.data.columns : undefined
+        columns: teaserGroup ? teaserGroup.data.columns : undefined,
       }
     },
     editorModule: 'headline',
@@ -171,9 +171,9 @@ const createFrontSchema = ({
       type: 'FRONTLEAD',
       placeholder: 'Lead',
       depth: 4,
-      isStatic: true
+      isStatic: true,
     },
-    rules: globalInlines
+    rules: globalInlines,
   }
 
   const format = {
@@ -184,7 +184,7 @@ const createFrontSchema = ({
       href,
       logo,
       color,
-      collapsedColor
+      collapsedColor,
     }) => (
       <>
         {logo && (
@@ -217,7 +217,7 @@ const createFrontSchema = ({
           teaser.data.feuilleton &&
           teaser.data.teaserType === 'frontImage'
             ? '#000'
-            : undefined
+            : undefined,
       }
     },
     editorModule: 'headline',
@@ -225,9 +225,9 @@ const createFrontSchema = ({
       type: 'FRONTFORMAT',
       placeholder: 'Format',
       depth: 6,
-      isStatic: true
+      isStatic: true,
     },
-    rules: globalInlines
+    rules: globalInlines,
   }
 
   const frontImageTeaser = {
@@ -235,7 +235,7 @@ const createFrontSchema = ({
     props: (node, i) => ({
       image: extractImage(node.children[0]),
       aboveTheFold: i < 2,
-      ...node.data
+      ...node.data,
     }),
     component: ({ children, attributes, ...props }) => (
       <Link href={props.url}>
@@ -262,8 +262,8 @@ const createFrontSchema = ({
         'byline',
         'maxWidth',
         'onlyImage',
-        'feuilleton'
-      ]
+        'feuilleton',
+      ],
     },
     rules: [
       skipMdastImage,
@@ -275,7 +275,7 @@ const createFrontSchema = ({
         const sizes = {
           medium: titleSize === 'medium',
           large: titleSize === 'large',
-          small: titleSize === 'small'
+          small: titleSize === 'small',
         }
         return (
           <Component attributes={attributes} {...sizes}>
@@ -286,8 +286,8 @@ const createFrontSchema = ({
       subject,
       lead,
       format,
-      credit
-    ]
+      credit,
+    ],
   }
 
   const frontSplitTeaser = {
@@ -302,7 +302,7 @@ const createFrontSchema = ({
     props: (node, i) => ({
       image: extractImage(node.children[0]),
       aboveTheFold: i < 2,
-      ...node.data
+      ...node.data,
     }),
     editorModule: 'teaser',
     editorOptions: {
@@ -321,8 +321,8 @@ const createFrontSchema = ({
         'titleSize',
         'reverse',
         'portrait',
-        'feuilleton'
-      ]
+        'feuilleton',
+      ],
     },
     rules: [
       skipMdastImage,
@@ -333,7 +333,7 @@ const createFrontSchema = ({
             : TeaserFrontSplitHeadline.Interaction
         const sizes = {
           medium: titleSize === 'medium',
-          large: titleSize === 'large'
+          large: titleSize === 'large',
         }
         return (
           <Component attributes={attributes} {...sizes}>
@@ -344,8 +344,8 @@ const createFrontSchema = ({
       subject,
       lead,
       format,
-      credit
-    ]
+      credit,
+    ],
   }
 
   const frontTypoTeaser = {
@@ -372,8 +372,8 @@ const createFrontSchema = ({
         'bgColor',
         'kind',
         'titleSize',
-        'feuilleton'
-      ]
+        'feuilleton',
+      ],
     },
     rules: [
       skipMdastImage,
@@ -385,7 +385,7 @@ const createFrontSchema = ({
         const sizes = {
           medium: titleSize === 'medium',
           large: titleSize === 'large',
-          small: titleSize === 'small'
+          small: titleSize === 'small',
         }
         return (
           <Component attributes={attributes} {...sizes}>
@@ -396,8 +396,8 @@ const createFrontSchema = ({
       subject,
       lead,
       format,
-      credit
-    ]
+      credit,
+    ],
   }
 
   const frontTileTeaser = {
@@ -416,7 +416,7 @@ const createFrontSchema = ({
       return {
         image: extractImage(node.children[0]),
         aboveTheFold,
-        ...node.data
+        ...node.data,
       }
     },
     editorModule: 'teaser',
@@ -436,8 +436,8 @@ const createFrontSchema = ({
         'image',
         'byline',
         'kind',
-        'feuilleton'
-      ]
+        'feuilleton',
+      ],
     },
     rules: [
       skipMdastImage,
@@ -451,20 +451,20 @@ const createFrontSchema = ({
               ? TeaserFrontTileHeadline.Scribble
               : TeaserFrontTileHeadline.Interaction
           const sizes = {
-            medium: titleSize === 'medium'
+            medium: titleSize === 'medium',
           }
           return (
             <Component attributes={attributes} columns={columns} {...sizes}>
               {children}
             </Component>
           )
-        }
+        },
       ),
       subject,
       lead,
       format,
-      credit
-    ]
+      credit,
+    ],
   }
 
   const carouselSubject = {
@@ -477,7 +477,7 @@ const createFrontSchema = ({
     props: (node, index, parent, { ancestors }) => {
       const teaser = ancestors.find(matchTeaser)
       return {
-        color: teaser && teaser.data.color
+        color: teaser && teaser.data.color,
       }
     },
     editorModule: 'headline',
@@ -485,9 +485,9 @@ const createFrontSchema = ({
       type: 'CAROUSELSUBJECT',
       placeholder: 'Subject',
       depth: 2,
-      isStatic: true
+      isStatic: true,
     },
-    rules: globalInlines
+    rules: globalInlines,
   }
   const carouselTileLead = {
     matchMdast: matchHeading(4),
@@ -502,9 +502,9 @@ const createFrontSchema = ({
       placeholder: 'Lead',
       isStatic: true,
       depth: 4,
-      optional: true
+      optional: true,
     },
-    rules: globalInlines
+    rules: globalInlines,
   }
 
   const carouselFormat = {
@@ -522,7 +522,7 @@ const createFrontSchema = ({
       const teaser = ancestors.find(matchTeaser)
       return {
         href: teaser ? teaser.data.formatUrl : undefined,
-        formatColor: teaser ? teaser.data.formatColor : undefined
+        formatColor: teaser ? teaser.data.formatColor : undefined,
       }
     },
     editorModule: 'headline',
@@ -530,9 +530,9 @@ const createFrontSchema = ({
       type: 'FRONTCAROUSEFORMAT',
       placeholder: 'Format',
       depth: 6,
-      isStatic: true
+      isStatic: true,
     },
-    rules: globalInlines
+    rules: globalInlines,
   }
   const carouselTile = {
     matchMdast: matchTeaserType('articleTile'),
@@ -545,9 +545,9 @@ const createFrontSchema = ({
         </Link>
       )
     },
-    props: node => ({
+    props: (node) => ({
       ...extractImages(node.children[0], 'image'),
-      ...node.data
+      ...node.data,
     }),
     editorModule: 'teaser',
     editorOptions: {
@@ -565,13 +565,13 @@ const createFrontSchema = ({
         'bgColor',
         'outline',
         'formatColor',
-        'count'
+        'count',
       ],
       defaultValues: {
         // default to context provided values
         color: undefined,
-        bgColor: undefined
-      }
+        bgColor: undefined,
+      },
     },
     rules: [
       skipMdastImage,
@@ -587,8 +587,8 @@ const createFrontSchema = ({
       carouselSubject,
       carouselTileLead,
       carouselFormat,
-      credit
-    ]
+      credit,
+    ],
   }
 
   const carouselRow = {
@@ -602,9 +602,9 @@ const createFrontSchema = ({
     },
     editorModule: 'articleGroup',
     editorOptions: {
-      type: 'CAROUSELROW'
+      type: 'CAROUSELROW',
     },
-    rules: [carouselTile]
+    rules: [carouselTile],
   }
 
   const carousel = {
@@ -616,8 +616,8 @@ const createFrontSchema = ({
         </TeaserCarousel>
       )
     },
-    props: node => ({
-      ...node.data
+    props: (node) => ({
+      ...node.data,
     }),
     editorModule: 'carousel',
     editorOptions: {
@@ -627,8 +627,8 @@ const createFrontSchema = ({
       formTitle: 'Carousel',
       formOptions: ['noAdapt', 'color', 'bgColor', 'outline', 'bigger'],
       defaultValues: {
-        outline: true
-      }
+        outline: true,
+      },
     },
     rules: [
       {
@@ -641,18 +641,18 @@ const createFrontSchema = ({
           </Link>
         ),
         props: (node, index, parent) => ({
-          url: parent.data.url
+          url: parent.data.url,
         }),
         editorModule: 'headline',
         editorOptions: {
           type: 'CAROUSELTITLE',
           placeholder: 'Titel',
           isStatic: true,
-          depth: 2
-        }
+          depth: 2,
+        },
       },
-      carouselRow
-    ]
+      carouselRow,
+    ],
   }
 
   const schema = {
@@ -665,7 +665,7 @@ const createFrontSchema = ({
           <div
             style={{
               width: '100%',
-              overflow: 'hidden'
+              overflow: 'hidden',
             }}
           >
             {children}
@@ -675,18 +675,18 @@ const createFrontSchema = ({
         rules: [
           {
             matchMdast: () => false,
-            editorModule: 'meta'
+            editorModule: 'meta',
           },
           frontImageTeaser,
           frontTypoTeaser,
           frontSplitTeaser,
           {
-            matchMdast: node => {
+            matchMdast: (node) => {
               return matchZone('TEASERGROUP')(node)
             },
-            props: node => ({
+            props: (node) => ({
               columns: node.data.columns,
-              mobileColumns: node.data.mobileColumns
+              mobileColumns: node.data.mobileColumns,
             }),
             component: ({ children, attributes, ...props }) => {
               return (
@@ -698,23 +698,23 @@ const createFrontSchema = ({
             editorModule: 'teasergroup',
             editorOptions: {
               type: 'FRONTTILEROW',
-              insertButton: 'Front Tile Row'
+              insertButton: 'Front Tile Row',
             },
-            rules: [frontTileTeaser]
+            rules: [frontTileTeaser],
           },
           carousel,
           ...createLiveTeasers({
             Link,
             t,
-            ...rest
+            ...rest,
           }),
           {
             matchMdast: () => false,
-            editorModule: 'specialchars'
-          }
-        ]
-      }
-    ]
+            editorModule: 'specialchars',
+          },
+        ],
+      },
+    ],
   }
 
   return schema

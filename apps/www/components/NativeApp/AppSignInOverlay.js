@@ -1,10 +1,9 @@
-import React from 'react'
 import {
   Overlay,
   OverlayToolbar,
   OverlayToolbarClose,
   Interaction,
-  OverlayBody
+  OverlayBody,
 } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 import AuthNotification from '../Auth/Notification'

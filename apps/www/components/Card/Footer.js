@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 
@@ -8,7 +7,7 @@ import {
   colors,
   fontStyles,
   Editorial,
-  mediaQueries
+  mediaQueries,
 } from '@project-r/styleguide'
 import Link from 'next/link'
 
@@ -24,22 +23,22 @@ const styles = {
     color: colors.text,
     [mediaQueries.mUp]: {
       fontSize: 14,
-      lineHeight: '24px'
-    }
+      lineHeight: '24px',
+    },
   }),
   right: css({
     position: 'absolute',
     bottom: 0,
     right: 0,
     maxWidth: '60vw',
-    textAlign: 'right'
+    textAlign: 'right',
   }),
   left: css({
     position: 'absolute',
     bottom: 0,
     left: 0,
-    maxWidth: '40vw'
-  })
+    maxWidth: '40vw',
+  }),
 }
 
 const Footer = ({ t, zIndex, imprint = true }) => {

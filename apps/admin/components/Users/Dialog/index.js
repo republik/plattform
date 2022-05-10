@@ -1,4 +1,3 @@
-import React from 'react'
 import Credentials from './Credentials'
 import Suspensions from './DiscussionSuspensions'
 
@@ -6,11 +5,11 @@ import { css } from 'glamor'
 
 const styles = {
   row: css({
-    display: 'flex'
+    display: 'flex',
   }),
   fifty: css({
-    width: '50%'
-  })
+    width: '50%',
+  }),
 }
 
 const Dialog = ({ userId }) => {

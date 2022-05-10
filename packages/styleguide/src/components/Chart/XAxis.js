@@ -13,13 +13,13 @@ const styles = {
   axisLabel: css(LABEL_FONT),
   axisXLine: css({
     strokeWidth: '1px',
-    shapeRendering: 'crispEdges'
-  })
+    shapeRendering: 'crispEdges',
+  }),
 }
 
 const tickGauger = createTextGauger(LABEL_FONT, {
   dimension: 'width',
-  html: true
+  html: true,
 })
 
 const XAxis = ({ xUnit, yScaleInvert, type, lines: customLines }) => {
@@ -36,10 +36,11 @@ const XAxis = ({ xUnit, yScaleInvert, type, lines: customLines }) => {
   let currentTextAnchor
   let currentX
 
-  const lines = customLines?.map(line => ({
-    ...line,
-    tick: chartContext.xNormalizer(line.tick)
-  })) || xAxis.ticks.map(tick => ({ tick }))
+  const lines =
+    customLines?.map((line) => ({
+      ...line,
+      tick: chartContext.xNormalizer(line.tick),
+    })) || xAxis.ticks.map((tick) => ({ tick }))
 
   return (
     <g data-axis>

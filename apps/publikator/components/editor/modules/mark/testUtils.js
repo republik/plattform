@@ -4,57 +4,57 @@ import createParagraphModule from '../paragraph'
 export const boldModule = createMarkModule({
   TYPE: 'STRONG',
   rule: {
-    matchMdast: node => node.type === 'strong',
+    matchMdast: (node) => node.type === 'strong',
     editorOptions: {
-      type: 'strong'
-    }
+      type: 'strong',
+    },
   },
-  subModules: []
+  subModules: [],
 })
 export const emphasisModule = createMarkModule({
   TYPE: 'EMPHASIS',
   rule: {
-    matchMdast: node => node.type === 'emphasis',
+    matchMdast: (node) => node.type === 'emphasis',
     editorOptions: {
-      type: 'emphasis'
-    }
+      type: 'emphasis',
+    },
   },
-  subModules: []
+  subModules: [],
 })
 export const deleteModule = createMarkModule({
   TYPE: 'DELETE',
   rule: {
-    matchMdast: node => node.type === 'delete',
+    matchMdast: (node) => node.type === 'delete',
     editorOptions: {
-      type: 'delete'
-    }
+      type: 'delete',
+    },
   },
-  subModules: []
+  subModules: [],
 })
 export const subModule = createMarkModule({
   TYPE: 'SUB',
   rule: {
-    matchMdast: node => node.type === 'sub',
+    matchMdast: (node) => node.type === 'sub',
     editorOptions: {
-      type: 'sub'
-    }
+      type: 'sub',
+    },
   },
-  subModules: []
+  subModules: [],
 })
 export const supModule = createMarkModule({
   TYPE: 'SUP',
   rule: {
-    matchMdast: node => node.type === 'sup',
+    matchMdast: (node) => node.type === 'sup',
     editorOptions: {
-      type: 'sup'
-    }
+      type: 'sup',
+    },
   },
-  subModules: []
+  subModules: [],
 })
 
 export const paragraphModule = createParagraphModule({
   TYPE: 'P',
   rule: {},
-  subModules: [boldModule, emphasisModule, deleteModule, subModule, supModule]
+  subModules: [boldModule, emphasisModule, deleteModule, subModule, supModule],
 })
 paragraphModule.name = 'paragraph'

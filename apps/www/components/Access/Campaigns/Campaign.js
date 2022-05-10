@@ -1,4 +1,3 @@
-import React from 'react'
 import { Interaction } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
 
@@ -21,14 +20,14 @@ const Campaign = ({ campaign, grantAccess, revokeAccess, t }) => {
           {t.pluralize(
             'Account/Access/Campaigns/Campaign/giftableMemberships',
             {
-              count: campaign.perks.giftableMemberships
-            }
+              count: campaign.perks.giftableMemberships,
+            },
           )}{' '}
           {t.pluralize(
             'Account/Access/Campaigns/Campaign/giftableMemberships/slots',
             {
-              count: campaign.slots.free
-            }
+              count: campaign.slots.free,
+            },
           )}
         </P>
       )}

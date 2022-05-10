@@ -40,14 +40,15 @@ module.exports = async (_, { id, autoPay }, context) => {
       return membership
     }
 
-    const updatedMembership = await transaction.public.memberships.updateAndGetOne(
-      {
-        id,
-      },
-      {
-        autoPay,
-      },
-    )
+    const updatedMembership =
+      await transaction.public.memberships.updateAndGetOne(
+        {
+          id,
+        },
+        {
+          autoPay,
+        },
+      )
 
     await transaction.transactionCommit()
 

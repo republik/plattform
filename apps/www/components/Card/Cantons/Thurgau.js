@@ -1,6 +1,4 @@
-import React from 'react'
-
-const SvgThurgau = props => (
+const SvgThurgau = (props) => (
   <svg
     width={props.size}
     height={(props.size * 471.43) / 469.879}

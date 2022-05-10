@@ -1,4 +1,4 @@
-import React from 'react'
+import { forwardRef } from 'react'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'
@@ -9,21 +9,21 @@ import datetime from '../Article/Progress/datetime'
 import {
   HighlightOffIcon,
   CheckSmallIcon,
-  ReadIcon as OutlinedReadIcon
+  ReadIcon as OutlinedReadIcon,
 } from '@project-r/styleguide'
 import { withProgressApi } from '../Article/Progress/api'
 import {
   ProgressCircle,
   IconButton,
   CalloutMenu,
-  Label
+  Label,
 } from '@project-r/styleguide'
 import { getFeatureDescription } from '../Article/Progress'
 
 const styles = {
   consent: css({
-    marginTop: 16
-  })
+    marginTop: 16,
+  }),
 }
 
 const UserProgress = (
@@ -38,13 +38,13 @@ const UserProgress = (
     forceShortLabel,
     noCallout,
     noScroll,
-    displayMinutes
+    displayMinutes,
   },
-  { restoreArticleProgress, showConsentPrompt }
+  { restoreArticleProgress, showConsentPrompt },
 ) => {
   // Renders the Progress Consent Form as a Callout in the Article Top Actionbar
   if (showConsentPrompt && !noCallout) {
-    const ProgressConsentIcon = React.forwardRef((props, ref) => (
+    const ProgressConsentIcon = forwardRef((props, ref) => (
       <IconButton
         Icon={() => <ProgressCircle progress={66} />}
         label={t('article/progressprompt/headline')}
@@ -84,7 +84,7 @@ const UserProgress = (
   const { percentage, updatedAt } = userProgress
   const percent = Math.round(percentage * 100)
 
-  const ReadIcon = React.forwardRef((props, ref) => (
+  const ReadIcon = forwardRef((props, ref) => (
     <IconButton
       Icon={OutlinedReadIcon}
       label={!forceShortLabel && t('article/actionbar/progress/read')}
@@ -97,7 +97,7 @@ const UserProgress = (
     />
   ))
 
-  const MarkAsReadIcon = React.forwardRef((props, ref) => (
+  const MarkAsReadIcon = forwardRef((props, ref) => (
     <IconButton
       Icon={CheckSmallIcon}
       title={t('article/actionbar/progress/markasread')}
@@ -150,14 +150,14 @@ const UserProgress = (
           forceShortLabel
             ? `${percent}%`
             : t('progress/restore/title', {
-                percent: `${percent}%`
+                percent: `${percent}%`,
               })
         }
         labelShort={
           forceShortLabel
             ? `${percent}%`
             : t('progress/restore/titleShort', {
-                percent: `${percent}%`
+                percent: `${percent}%`,
               })
         }
         style={{ marginRight: 10 }}
@@ -183,7 +183,7 @@ const UserProgress = (
 
 UserProgress.contextTypes = {
   restoreArticleProgress: PropTypes.func,
-  showConsentPrompt: PropTypes.bool
+  showConsentPrompt: PropTypes.bool,
 }
 
 export default compose(withT, withProgressApi)(UserProgress)

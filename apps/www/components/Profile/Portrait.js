@@ -1,27 +1,26 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { css, merge } from 'glamor'
 import Dropzone from 'react-dropzone'
 
 import withT from '../../lib/withT'
 
-import { CloseIcon } from '@project-r/styleguide'
+import { CloseIcon, useColorContext } from '@project-r/styleguide'
 
 const styles = {
   img: css({
     display: 'block',
-    backgroundColor: '#E2E8E6',
     width: '100%',
     height: '100%',
     backgroundSize: 'cover',
-    backgroundPosition: 'center'
+    backgroundPosition: 'center',
   }),
   preview: css({
-    filter: 'grayscale(1)'
+    filter: 'grayscale(1)',
   }),
   dropzone: css({
     position: 'relative',
     width: '100%',
-    height: '100%'
+    height: '100%',
   }),
   note: css({
     position: 'absolute',
@@ -30,7 +29,7 @@ const styles = {
     right: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
     padding: '5px 10px',
-    color: '#fff'
+    color: '#fff',
   }),
   remove: css({
     position: 'absolute',
@@ -38,14 +37,14 @@ const styles = {
     right: 0,
     padding: 5,
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    color: '#fff'
-  })
+    color: '#fff',
+  }),
 }
 
-const readFile = file => {
+const readFile = (file) => {
   return new Promise((resolve, reject) => {
     const fileReader = new window.FileReader()
-    fileReader.addEventListener('load', event => {
+    fileReader.addEventListener('load', (event) => {
       const url = event.target.result
 
       // Strip out the information about the mime type of the file and the encoding
@@ -55,11 +54,11 @@ const readFile = file => {
       resolve({
         filename: file.name,
         url,
-        content
+        content,
       })
     })
 
-    fileReader.addEventListener('error', error => {
+    fileReader.addEventListener('error', (error) => {
       reject(error)
     })
 
@@ -77,17 +76,19 @@ const PortraitSelector = withT(
     isMe,
     values,
     errors,
-    onChange
+    onChange,
   }) => {
     useEffect(() => {
       if (isMandadory && !values.portrait && !user.portrait) {
         onChange({
           errors: {
-            portrait: t('profile/portrait/empty')
-          }
+            portrait: t('profile/portrait/empty'),
+          },
         })
       }
     }, [isMandadory])
+
+    const [colorScheme] = useColorContext()
 
     const preview = isEditing && values.portraitPreview
     const imgUrl =
@@ -95,9 +96,10 @@ const PortraitSelector = withT(
     const img = (
       <span
         {...styles.img}
+        {...colorScheme.set('backgroundColor', 'hover')}
         {...(preview && merge(styles.preview, propStyles.preview))}
         style={{
-          backgroundImage: imgUrl ? `url(${imgUrl})` : undefined
+          backgroundImage: imgUrl ? `url(${imgUrl})` : undefined,
         }}
       />
     )
@@ -127,7 +129,7 @@ const PortraitSelector = withT(
         disabled={disabled}
         className={styles.dropzone.toString()}
         style={{
-          cursor: isEditing ? 'pointer' : 'auto'
+          cursor: isEditing ? 'pointer' : 'auto',
         }}
         accept='image/jpeg, image/png, image/gif'
         onDrop={(accepted, rejected) => {
@@ -136,8 +138,8 @@ const PortraitSelector = withT(
             if (file.size && file.size > 6.5 * 1024 * 1024) {
               onChange({
                 errors: {
-                  portrait: t('profile/portrait/tooBig')
-                }
+                  portrait: t('profile/portrait/tooBig'),
+                },
               })
               return
             }
@@ -146,25 +148,25 @@ const PortraitSelector = withT(
                 onChange({
                   values: {
                     portrait: content,
-                    portraitPreview: url
+                    portraitPreview: url,
                   },
                   errors: {
-                    portrait: undefined
-                  }
+                    portrait: undefined,
+                  },
                 })
               })
               .catch(() => {
                 onChange({
                   errors: {
-                    portrait: t('profile/portrait/readError')
-                  }
+                    portrait: t('profile/portrait/readError'),
+                  },
                 })
               })
           } else if (rejected.length) {
             onChange({
               errors: {
-                portrait: t('profile/portrait/invalidType')
-              }
+                portrait: t('profile/portrait/invalidType'),
+              },
             })
           }
         }}
@@ -172,19 +174,19 @@ const PortraitSelector = withT(
         {isEditing && imgUrl && (
           <div
             {...styles.remove}
-            onClick={e => {
+            onClick={(e) => {
               e.preventDefault()
               e.stopPropagation()
               onChange({
                 values: {
                   portrait: null,
-                  portraitPreview: undefined
+                  portraitPreview: undefined,
                 },
                 errors: {
                   portrait: isMandadory
                     ? t('profile/portrait/empty')
-                    : undefined
-                }
+                    : undefined,
+                },
               })
             }}
           >
@@ -195,7 +197,7 @@ const PortraitSelector = withT(
         {note && <div {...styles.note}>{note}</div>}
       </Dropzone>
     )
-  }
+  },
 )
 
 export default PortraitSelector

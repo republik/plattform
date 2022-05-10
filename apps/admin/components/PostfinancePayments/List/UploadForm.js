@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import ErrorMessage from '../../ErrorMessage'
 
-const readFile = file => {
+const readFile = (file) => {
   return new Promise((resolve, reject) => {
     const fileReader = new FileReader()
-    fileReader.addEventListener('load', event => {
+    fileReader.addEventListener('load', (event) => {
       const url = event.target.result
       // Strip out the information
       // about the mime type of the file and the encoding
@@ -13,23 +13,20 @@ const readFile = file => {
       resolve({
         filename: file.name,
         content,
-        url
+        url,
       })
     })
 
-    fileReader.addEventListener(
-      'error',
-      error => {
-        reject(error)
-      }
-    )
+    fileReader.addEventListener('error', (error) => {
+      reject(error)
+    })
 
     fileReader.readAsDataURL(file)
   })
 }
 
 const getInitialState = () => ({
-  error: false
+  error: false,
 })
 
 export default class UploadForm extends Component {
@@ -40,34 +37,34 @@ export default class UploadForm extends Component {
     this.state = getInitialState(props)
   }
 
-  fileHandler = e => {
+  fileHandler = (e) => {
     this.setState(() => ({
       ...this.state,
-      error: false
+      error: false,
     }))
     const file = e.target.files[0]
     if (file.type.indexOf('csv') < 0) {
       this.setState(() => ({
         ...this.state,
-        error: new Error('Das ist kein CSV.')
+        error: new Error('Das ist kein CSV.'),
       }))
     } else {
       readFile(file)
         .then(({ content }) => {
           this.setState(() => ({
-            csv: content
+            csv: content,
           }))
         })
-        .catch(err => {
+        .catch((err) => {
           this.setState(() => ({
             ...this.state,
-            error: err
+            error: err,
           }))
         })
     }
   }
 
-  submitHandler = e => {
+  submitHandler = (e) => {
     e.preventDefault()
     if (this.props.onUpload) {
       this.props.onUpload({ csv: this.state.csv })
@@ -80,25 +77,16 @@ export default class UploadForm extends Component {
     return (
       <div>
         <form onSubmit={this.submitHandler}>
-          {error && (
-            <ErrorMessage error={error} />
-          )}
+          {error && <ErrorMessage error={error} />}
           <input
-            type="file"
-            accept="application/csv"
-            ref={ref => {
+            type='file'
+            accept='application/csv'
+            ref={(ref) => {
               this.fileInput = ref
             }}
-            onChange={event =>
-              this.fileHandler(event)
-            }
+            onChange={(event) => this.fileHandler(event)}
           />
-          <button
-            type="submit"
-            disabled={
-              this.state.error || this.state.error
-            }
-          >
+          <button type='submit' disabled={this.state.error || this.state.error}>
             Upload
           </button>
         </form>

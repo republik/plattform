@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { css } from 'glamor'
@@ -18,9 +18,9 @@ const styles = {
     paddingTop: 15,
     paddingBottom: 120,
     [mediaQueries.mUp]: {
-      paddingTop: 40
-    }
-  })
+      paddingTop: 40,
+    },
+  }),
 }
 
 const query = gql`
@@ -72,10 +72,10 @@ const Feed = ({
     greeting,
     documents: connection,
     fetchMore,
-    subscribeToMore
-  }
+    subscribeToMore,
+  },
 }) => {
-  const mapNodes = node => node.entity
+  const mapNodes = (node) => node.entity
 
   useEffect(() => {
     if (!subscribeToMore) {
@@ -92,13 +92,13 @@ const Feed = ({
           return {
             ...prev,
             greeting: {
-              ...greeting
-            }
+              ...greeting,
+            },
           }
         } else {
           return prev
         }
-      }
+      },
     })
     return () => {
       unsubscribe()
@@ -127,7 +127,7 @@ const Feed = ({
                   loadMore={makeLoadMore({
                     fetchMore,
                     connection,
-                    mapNodes
+                    mapNodes,
                   })}
                 />
               </>

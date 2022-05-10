@@ -1,11 +1,9 @@
-import React from 'react'
-
 import { Label, Interaction } from '@project-r/styleguide'
 
 import { countFormat } from '../lib/utils/format'
 import withT from '../lib/withT'
 
-const safeTextLength = value =>
+const safeTextLength = (value) =>
   value && value.document && value.document.text && value.document.text.length
 
 export default withT(({ value, t }) => (

@@ -1,4 +1,3 @@
-import React from 'react'
 import { matchInline } from '../../utils'
 import MarkdownSerializer from 'slate-mdast-serializer'
 
@@ -17,26 +16,26 @@ export default ({ rule, subModules, TYPE }) => {
       data: {
         title: node.title,
         href: node.url,
-        color: context.color
+        color: context.color,
       },
-      nodes: visitChildren(node)
+      nodes: visitChildren(node),
     }),
     toMdast: (object, index, parent, { visitChildren }) => ({
       type: 'link',
       title: object.data.title,
       url: object.data.href,
-      children: visitChildren(object)
-    })
+      children: visitChildren(object),
+    }),
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [link]
+    rules: [link],
   })
 
   return {
     TYPE,
     helpers: {
-      serializer
+      serializer,
     },
     changes: {},
     ui: createUi({ TYPE, parentTypes: formatTypes }),
@@ -49,8 +48,8 @@ export default ({ rule, subModules, TYPE }) => {
               {children}
             </Link>
           )
-        }
-      }
-    ]
+        },
+      },
+    ],
   }
 }

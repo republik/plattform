@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { getFromModules } from './'
 import { Interaction, Label, colors } from '@project-r/styleguide'
 import PropTypes from 'prop-types'
@@ -9,7 +9,7 @@ const Sidebar = ({
   insertButtons,
   propertyForms,
   value,
-  onChange
+  onChange,
 }) => (
   <div>
     <Interaction.P>
@@ -36,7 +36,7 @@ const Sidebar = ({
         marginTop: 10,
         marginBottom: 250,
         paddingTop: 20,
-        borderTop: `1px solid ${colors.divider}`
+        borderTop: `1px solid ${colors.divider}`,
       }}
     >
       {propertyForms.map((Form, i) => (
@@ -54,20 +54,20 @@ class UISidebar extends Component {
 
     this.textFormatButtons = getFromModules(
       uniqModules,
-      m => m.ui && m.ui.textFormatButtons
+      (m) => m.ui && m.ui.textFormatButtons,
     )
 
     this.blockFormatButtons = getFromModules(
       uniqModules,
-      m => m.ui && m.ui.blockFormatButtons
+      (m) => m.ui && m.ui.blockFormatButtons,
     )
 
     this.insertButtons = getFromModules(
       uniqModules,
-      m => m.ui && m.ui.insertButtons
+      (m) => m.ui && m.ui.insertButtons,
     )
 
-    this.propertyForms = getFromModules(uniqModules, m => m.ui && m.ui.forms)
+    this.propertyForms = getFromModules(uniqModules, (m) => m.ui && m.ui.forms)
   }
 
   render() {
@@ -91,9 +91,9 @@ UISidebar.propTypes = {
   editorRef: PropTypes.shape({
     uniqModules: PropTypes.array.isRequired,
     slate: PropTypes.shape({
-      change: PropTypes.func.isRequired
-    }).isRequired
-  }).isRequired
+      change: PropTypes.func.isRequired,
+    }).isRequired,
+  }).isRequired,
 }
 
 export default UISidebar

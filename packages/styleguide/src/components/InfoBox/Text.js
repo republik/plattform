@@ -13,12 +13,12 @@ const styles = {
     ...convertStyleToRem(sansSerifRegular15),
     lineHeight: pxToRem('24px'),
     [mUp]: {
-      ...convertStyleToRem(sansSerifRegular18)
+      ...convertStyleToRem(sansSerifRegular18),
     },
     ':nth-of-type(2)': {
-      marginTop: 0
-    }
-  })
+      marginTop: 0,
+    },
+  }),
 }
 
 export const Text = ({ children, attributes }) => {
@@ -38,7 +38,7 @@ export const Text = ({ children, attributes }) => {
 
 Text.propTypes = {
   children: PropTypes.node.isRequired,
-  attributes: PropTypes.object
+  attributes: PropTypes.object,
 }
 
 export default Text

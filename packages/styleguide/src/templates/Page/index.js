@@ -3,13 +3,11 @@ import createArticleSchema from '../Article'
 const DefaultLink = ({ children }) => children
 
 const createPageSchema = ({
-  documentEditorOptions,
   customMetaFields = [],
   series = false,
   darkMode,
   paynotes = true,
   Link = DefaultLink,
-  titleBlockPrepend = null,
   getPath = ({ slug }) => `/${(slug || '').split('/').pop()}`,
   metaHeadlines = true,
   skipContainer = false,
@@ -20,7 +18,7 @@ const createPageSchema = ({
   return createArticleSchema({
     documentEditorOptions: {
       skipCredits: true,
-      titleCenter: true
+      titleCenter: true,
     },
     repoPrefix: 'page-',
     getPath,
@@ -29,14 +27,19 @@ const createPageSchema = ({
       {
         label: 'Diskussion',
         key: 'discussion',
-        ref: 'repo'
+        ref: 'repo',
       },
       {
         label: 'Action Bar ausblenden',
         key: 'disableActionBar',
-        ref: 'bool'
+        ref: 'bool',
       },
-      ...customMetaFields
+      {
+        label: 'Kein synthetisches Vorlesen',
+        key: 'suppressSyntheticReadAloud',
+        ref: 'bool',
+      },
+      ...customMetaFields,
     ],
     series,
     darkMode,
@@ -45,7 +48,7 @@ const createPageSchema = ({
     metaHeadlines,
     skipContainer,
     skipCenter,
-    ...args
+    ...args,
   })
 }
 

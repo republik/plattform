@@ -1,4 +1,3 @@
-import React from 'react'
 import Frame from '../../components/Frame'
 import NotificationsSettings from '../../components/Notifications/Settings'
 import withT from '../../lib/withT'
@@ -12,7 +11,7 @@ const NotificationsSettingsPage = ({ t }) => {
   return (
     <Frame
       meta={{
-        title: t('pages/account/notifications/title')
+        title: t('pages/account/notifications/title'),
       }}
     >
       <AccountEnforceMe>

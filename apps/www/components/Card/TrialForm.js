@@ -1,4 +1,3 @@
-import React from 'react'
 import compose from 'lodash/flowRight'
 import { withRouter } from 'next/router'
 
@@ -22,11 +21,11 @@ const Form = ({ router, redirect }) => (
           query: {
             group: router.query.group,
             suffix: router.query.suffix,
-            stale: 1
-          }
+            stale: 1,
+          },
         },
         router.asPath,
-        { shallow: true }
+        { shallow: true },
       )
     }}
     onSuccess={() => {
@@ -34,10 +33,10 @@ const Form = ({ router, redirect }) => (
         router.replace(
           {
             pathname: '/wahltindaer/[group]/[suffix]',
-            query: { group: router.query.group, suffix: router.query.suffix }
+            query: { group: router.query.group, suffix: router.query.suffix },
           },
           undefined,
-          { shallow: true }
+          { shallow: true },
         )
         return false
       }

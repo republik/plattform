@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { mediaQueries, useMediaQuery } from '@project-r/styleguide'
 import { AUDIO_PLAYER_HEIGHT } from '../constants'
 
@@ -39,7 +39,7 @@ const ActionBarOverlay = ({ children, audioPlayerVisible }) => {
         setOverlayVisible(
           articleActionBarVisible || footerOverlap || diff.current < 30
             ? false
-            : true
+            : true,
         )
       }
       lastY.current = y

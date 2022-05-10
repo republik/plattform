@@ -9,7 +9,7 @@ import {
   unsafeDatumFn,
   calculateAxis,
   runSort,
-  sortBy
+  sortBy,
 } from './utils'
 
 import {
@@ -20,7 +20,7 @@ import {
   appendAnnotations,
   valueGauger,
   labelGauger,
-  addLabels
+  addLabels,
 } from './Lines.utils'
 
 import {
@@ -32,7 +32,7 @@ import {
   Y_CONNECTOR,
   Y_CONNECTOR_PADDING,
   Y_GROUP_MARGIN,
-  Y_END_LABEL_SPACE
+  Y_END_LABEL_SPACE,
 } from './Layout.constants'
 
 export const linesProcesser = ({
@@ -43,7 +43,7 @@ export const linesProcesser = ({
   colorValues,
   xValuesUnformatted,
   xFormat,
-  xParser
+  xParser,
 }) => {
   let groupedData = groupInColumns(data, props.column, props.columnFilter)
 
@@ -77,20 +77,18 @@ export const linesProcesser = ({
   yValues = appendAnnotations(yValues, props.xAnnotations)
 
   if (props.band) {
-    const dataWithBand = data.filter(d => d.datum[`${props.band}_lower`])
+    const dataWithBand = data.filter((d) => d.datum[`${props.band}_lower`])
     yValues = yValues
-      .concat(dataWithBand.map(d => +d.datum[`${props.band}_lower`]))
-      .concat(dataWithBand.map(d => +d.datum[`${props.band}_upper`]))
+      .concat(dataWithBand.map((d) => +d.datum[`${props.band}_lower`]))
+      .concat(dataWithBand.map((d) => +d.datum[`${props.band}_upper`]))
   }
   if (props.area) {
-    const dataWithArea = data.filter(d => d.datum[`${props.area}_lower`])
+    const dataWithArea = data.filter((d) => d.datum[`${props.area}_lower`])
     yValues = yValues
-      .concat(dataWithArea.map(d => +d.datum[`${props.area}_lower`]))
-      .concat(dataWithArea.map(d => +d.datum[`${props.area}_upper`]))
+      .concat(dataWithArea.map((d) => +d.datum[`${props.area}_lower`]))
+      .concat(dataWithArea.map((d) => +d.datum[`${props.area}_upper`]))
   }
-  const yTicks = props.yLines
-    ? props.yLines.map(d => d.tick)
-    : props.yTicks
+  const yTicks = props.yLines ? props.yLines.map((d) => d.tick) : props.yTicks
   if (yTicks) {
     yValues = yValues.concat(yTicks)
   }
@@ -111,8 +109,8 @@ export const linesProcesser = ({
     y.domain(),
     props.unit,
     {
-      ticks: yTicks
-    }
+      ticks: yTicks,
+    },
   )
   const { format: yFormat } = yAxis
 
@@ -132,7 +130,7 @@ export const linesProcesser = ({
     .map(groupByLines(props.color, props.category))
     .map(({ values: lines, key }) => {
       const linesWithLabels = lines.map(
-        addLabels(color, colorAccessor, labelFilter, yFormat, y, props)
+        addLabels(color, colorAccessor, labelFilter, yFormat, y, props),
       )
       let labelsMoved = 0
       labelsMoved += calculateAndMoveLabelY(linesWithLabels, 'start')
@@ -142,29 +140,31 @@ export const linesProcesser = ({
 
       if (startValue) {
         startValueSizes = startValueSizes.concat(
-          linesWithLabels.map(line =>
-            line.startValue ? valueGauger(line.startValue) : 0
-          )
+          linesWithLabels.map((line) =>
+            line.startValue ? valueGauger(line.startValue) : 0,
+          ),
         )
       }
       if (!props.mini) {
         endValueSizes = endValueSizes.concat(
-          linesWithLabels.map(line =>
-            line.endValue ? valueGauger(line.endValue) : 0
-          )
+          linesWithLabels.map((line) =>
+            line.endValue ? valueGauger(line.endValue) : 0,
+          ),
         )
         if (endLabel) {
           endLabelSizes = endLabelSizes.concat(
-            linesWithLabels.map(line =>
-              line.endLabel ? labelGauger(line.endLabel) + Y_END_LABEL_SPACE : 0
-            )
+            linesWithLabels.map((line) =>
+              line.endLabel
+                ? labelGauger(line.endLabel) + Y_END_LABEL_SPACE
+                : 0,
+            ),
           )
         }
       }
 
       return {
         key,
-        values: linesWithLabels
+        values: linesWithLabels,
       }
     })
 
@@ -197,7 +197,7 @@ export const linesProcesser = ({
       if (startValueSize + endLabelWidth > props.width - props.minInnerWidth) {
         colorLegend = true
         groupedData.forEach(({ values: lines }) => {
-          lines.forEach(line => {
+          lines.forEach((line) => {
             line.endLabel = false
           })
         })
@@ -218,7 +218,7 @@ export const linesProcesser = ({
 
   const colorValuesForLegend = colorLegend
     ? data
-        .filter(d => labelFilter(d.datum))
+        .filter((d) => labelFilter(d.datum))
         .map(colorAccessor)
         .filter(deduplicate)
         .filter(Boolean)
@@ -236,16 +236,16 @@ export const linesProcesser = ({
     paddingRight,
     0,
     paddingLeft,
-    Y_GROUP_MARGIN
+    Y_GROUP_MARGIN,
   )
 
   let x
   let xTicks = props.xTicks && props.xTicks.map(xParser)
   let xDomain
   if (props.xScale === 'time') {
-    const xTimes = xValuesUnformatted.map(d => d.getTime())
+    const xTimes = xValuesUnformatted.map((d) => d.getTime())
     const domainTime = [min(xTimes), max(xTimes)]
-    const domain = domainTime.map(d => new Date(d))
+    const domain = domainTime.map((d) => new Date(d))
     x = scaleTime().domain(domain)
     xDomain = domain
 
@@ -257,12 +257,12 @@ export const linesProcesser = ({
 
       xTicks = [
         domainTime[0],
-        sortBy(xTimes, d => Math.abs(d - time1))[0],
-        sortBy(xTimes, d => Math.abs(d - time2))[0],
-        domainTime[1]
+        sortBy(xTimes, (d) => Math.abs(d - time1))[0],
+        sortBy(xTimes, (d) => Math.abs(d - time2))[0],
+        domainTime[1],
       ]
         .filter(deduplicate)
-        .map(d => new Date(d))
+        .map((d) => new Date(d))
     }
   } else if (props.xScale === 'linear') {
     const domain = [min(xValuesUnformatted), max(xValuesUnformatted)]
@@ -279,7 +279,7 @@ export const linesProcesser = ({
         domain[0],
         domain[Math.round(maxIndex * 0.33)],
         domain[Math.round(maxIndex * 0.66)],
-        domain[maxIndex]
+        domain[maxIndex],
       ].filter(deduplicate)
     } else if (!xTicks) {
       xTicks = domain
@@ -290,19 +290,25 @@ export const linesProcesser = ({
   }
   x.range([0, innerWidth])
 
-  const translatedYAnnotations = (props.yAnnotations || []).map(d => ({
-    formattedValue: yFormat(d.value),
-    ...d,
-    x: d.x ? xParser(d.x) : undefined
-  }))
-  const translatedXAnnotations = (props.xAnnotations || []).map(d => ({
+  const translatedYAnnotations = (props.yAnnotations || []).map((d) => ({
     formattedValue: yFormat(d.value),
     ...d,
     x: d.x ? xParser(d.x) : undefined,
-    x1: d.x1 ? xParser(d.x1) : undefined,
-    x2: d.x2 ? xParser(d.x2) : undefined,
-    labelSize: d.label ? labelGauger(d.label) : 0
   }))
+  const translatedXAnnotations = (props.xAnnotations || []).map((d) => {
+    const longestLabel =
+      d.label &&
+      d.label.split('\n').reduce((a, b) => (a.length > b.length ? a : b))
+
+    return {
+      formattedValue: yFormat(d.value),
+      ...d,
+      x: d.x ? xParser(d.x) : undefined,
+      x1: d.x1 ? xParser(d.x1) : undefined,
+      x2: d.x2 ? xParser(d.x2) : undefined,
+      labelSize: d.label ? labelGauger(longestLabel) : 0,
+    }
+  })
 
   return {
     groupedData,
@@ -311,14 +317,14 @@ export const linesProcesser = ({
     groupPosition: { y: gy, x: gx },
     yAxis: {
       ...yAxis,
-      scale: y
+      scale: y,
     },
     xAxis: {
       scale: x,
       domain: xDomain,
       ticks: xTicks,
       format: xFormat,
-      axisFormat: xFormat
+      axisFormat: xFormat,
     },
     yLayout: { yCut, yCutHeight, yNeedsConnectors, yConnectorSize },
     paddingLeft,
@@ -326,6 +332,6 @@ export const linesProcesser = ({
     columnHeight,
     yAnnotations: translatedYAnnotations,
     xAnnotations: translatedXAnnotations,
-    colorValuesForLegend
+    colorValuesForLegend,
   }
 }

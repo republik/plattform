@@ -171,7 +171,7 @@ Von Sonderkorrespondent [Lukas Bünger](<>)
 }
 \`\`\`
 
-![](https://assets.republik.ch/cf_gui/static/team/christof_moser.jpg?size=1000x563)
+![](/static/christof_moser.jpg?size=500x500)
 
 ###### Kluge Gedanken von alten Männern
 
@@ -220,8 +220,6 @@ Von [Christof Moser](/~6556e282-4ac4-4129-8f8f-d20f28170c39 "Christof Moser")
 }
 \`\`\`
 
-![](https://cdn.repub.ch/github/republik/mag-20-playground/images/0e2664aaa948430dfb25005c829fd28eb8c382e5.png?size=1181x1181)
-
 ###### Was diese Woche wichtig war
 
 # Kein Frieden in Afghanistan, Hoffnung für Flüchtlings­schiffe – und Unheil für Uber
@@ -255,8 +253,6 @@ Von [Christof Moser](/~6556e282-4ac4-4129-8f8f-d20f28170c39 "Christof Moser")
   "showImage": true
 }
 \`\`\`
-
-![](https://cdn.repub.ch/github/republik/mag-20-playground/images/175fcbe4fcb26c0cdcb31b62d6dae351345c16be.png?size=1181x1181)
 
 ###### Briefing aus Bern
 
@@ -292,8 +288,6 @@ Von [Christof Moser](/~6556e282-4ac4-4129-8f8f-d20f28170c39 "Christof Moser")
 }
 \`\`\`
 
-![](https://cdn.repub.ch/github/republik/mag-20-playground/images/45b8bb4d600e977e888f996915d34abf9705a524.jpeg?size=284x284)
-
 ###### Am Gericht
 
 # Wenn Alltagsdramen vor dem Richter enden
@@ -328,8 +322,6 @@ Von [Christof Moser](/~6556e282-4ac4-4129-8f8f-d20f28170c39 "Christof Moser")
 }
 \`\`\`
 
-![](https://cdn.repub.ch/github/republik/mag-20-playground/images/84f90b070563d2bb1289f2728c1794f98b69e5f0.png?size=1357x602)
-
 ###### Auf lange Sicht
 
 # Afrika ist die Zukunft
@@ -350,6 +342,7 @@ Von [Christof Moser](/~6556e282-4ac4-4129-8f8f-d20f28170c39 "Christof Moser")
   "color": null,
   "teaserType": "articleTile",
   "byline": null,
+  "formatColor": "#08809a",
   "onlyImage": false,
   "url": "https://github.com/republik/article-wdwww-w36?autoSlug",
   "kind": "editorial",
@@ -362,8 +355,6 @@ Von [Christof Moser](/~6556e282-4ac4-4129-8f8f-d20f28170c39 "Christof Moser")
   "showImage": true
 }
 \`\`\`
-
-![](https://cdn.repub.ch/github/republik/mag-20-playground/images/f6fb1a3c8ae679aa496463e08a82d8bc53f57765.jpeg?size=284x284)
 
 ###### Was diese Woche wichtig war
 

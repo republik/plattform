@@ -62,13 +62,13 @@ export const withFeedData = graphql(feedQuery, {
     priorRepoIds,
     excludeRepoIds: excludeRepoIdsCS = '',
     specificRepoIds = [],
-    minPublishDate
+    minPublishDate,
   }) => {
     const excludeRepoIds = [
       ...priorRepoIds,
       ...(typeof excludeRepoIdsCS === 'string'
         ? excludeRepoIdsCS.split(',')
-        : excludeRepoIdsCS)
+        : excludeRepoIdsCS),
     ].filter(Boolean)
 
     return {
@@ -76,35 +76,35 @@ export const withFeedData = graphql(feedQuery, {
         ? { specificRepoIds }
         : {
             minPublishDate: minPublishDate && {
-              from: minPublishDate
+              from: minPublishDate,
             },
             first: 2,
             filters: [
               { key: 'template', not: true, value: 'section' },
               { key: 'template', not: true, value: 'format' },
-              { key: 'template', not: true, value: 'front' }
+              { key: 'template', not: true, value: 'front' },
             ].concat(
-              excludeRepoIds.map(repoId => ({
+              excludeRepoIds.map((repoId) => ({
                 key: 'repoId',
                 not: true,
-                value: repoId
-              }))
-            )
-          }
+                value: repoId,
+              })),
+            ),
+          },
     }
-  }
+  },
 })
 
 export const withDiscussionsData = graphql(
   gql`
     ${TeaserActiveDebates.data.query}
   `,
-  TeaserActiveDebates.data.config
+  TeaserActiveDebates.data.config,
 )
 
 export const withMyMagazineData = graphql(
   gql`
     ${TeaserMyMagazine.data.query}
   `,
-  TeaserMyMagazine.data.config
+  TeaserMyMagazine.data.config,
 )

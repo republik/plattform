@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Overlay, OverlayBody, OverlayToolbar } from '@project-r/styleguide'
 
 import Beta from './Beta'
@@ -9,7 +7,7 @@ const CardOverlay = ({
   title,
   children,
   beta = false,
-  maxWidth = 720
+  maxWidth = 720,
 }) => {
   return (
     <Overlay onClose={onClose} mUpStyle={{ maxWidth, minHeight: 0 }}>
@@ -19,7 +17,7 @@ const CardOverlay = ({
             style={{
               position: 'absolute',
               right: 60,
-              top: 9
+              top: 9,
             }}
           />
         )}

@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import Link from 'next/link'
 import { fontStyles, P, useColorContext } from '@project-r/styleguide'
@@ -13,11 +12,11 @@ const styles = {
       textDecoration: 'none',
       '@media (hover)': {
         ':hover': {
-          textDecoration: 'underline'
-        }
-      }
-    }
-  })
+          textDecoration: 'underline',
+        },
+      },
+    },
+  }),
 }
 
 const Address = ({ t }) => {

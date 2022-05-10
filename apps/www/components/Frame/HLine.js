@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import { useColorContext } from '@project-r/styleguide'
 
@@ -16,7 +15,7 @@ const HLine = ({ formatColor }) => {
         ? colorScheme.set('color', formatColor, 'format')
         : colorScheme.set('color', 'divider'))}
       style={{
-        height: formatColor ? 3 : 1
+        height: formatColor ? 3 : 1,
       }}
     />
   )
@@ -30,6 +29,6 @@ const styles = {
     display: 'block',
     border: 0,
     width: '100%',
-    zIndex: ZINDEX_POPOVER + 2
-  })
+    zIndex: ZINDEX_POPOVER + 2,
+  }),
 }

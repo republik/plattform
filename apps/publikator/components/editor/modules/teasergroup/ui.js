@@ -1,4 +1,3 @@
-import React from 'react'
 import { Radio, Label } from '@project-r/styleguide'
 
 import { buttonStyles, createPropertyForm, matchBlock } from '../../utils'
@@ -18,7 +17,7 @@ const Form = ({ node, onChange }) => {
       <Radio
         value={3}
         checked={node.data.get('columns') === 3}
-        onChange={event =>
+        onChange={(event) =>
           onChange('columns', null, Number(event.target.value))
         }
       >
@@ -27,7 +26,7 @@ const Form = ({ node, onChange }) => {
       <Radio
         value={2}
         checked={node.data.get('columns') === 2}
-        onChange={event =>
+        onChange={(event) =>
           onChange('columns', null, Number(event.target.value))
         }
       >
@@ -36,7 +35,7 @@ const Form = ({ node, onChange }) => {
       <Radio
         value={1}
         checked={node.data.get('columns') === 1}
-        onChange={event =>
+        onChange={(event) =>
           onChange('columns', null, Number(event.target.value))
         }
       >
@@ -47,7 +46,7 @@ const Form = ({ node, onChange }) => {
       <Radio
         value={2}
         checked={node.data.get('mobileColumns') === 2}
-        onChange={event =>
+        onChange={(event) =>
           onChange('mobileColumns', null, Number(event.target.value))
         }
       >
@@ -59,7 +58,7 @@ const Form = ({ node, onChange }) => {
           !node.data.get('mobileColumns') ||
           node.data.get('mobileColumns') === 1
         }
-        onChange={event =>
+        onChange={(event) =>
           onChange('mobileColumns', null, Number(event.target.value))
         }
       >
@@ -69,18 +68,18 @@ const Form = ({ node, onChange }) => {
   )
 }
 
-export const TeaserGroupForm = options => {
+export const TeaserGroupForm = (options) => {
   const { TYPE } = options
   return createPropertyForm({
     isDisabled: ({ value }) => {
       const teaser = value.blocks.reduce(
         (memo, node) =>
           memo || value.document.getFurthest(node.key, matchBlock(TYPE)),
-        undefined
+        undefined,
       )
 
       return !teaser
-    }
+    },
   })(({ disabled, onChange, value }) => {
     if (disabled) {
       return null
@@ -89,7 +88,7 @@ export const TeaserGroupForm = options => {
     const teaser = value.blocks.reduce(
       (memo, node) =>
         memo || value.document.getFurthest(node.key, matchBlock(TYPE)),
-      undefined
+      undefined,
     )
 
     const handlerFactory = createOnFieldChange(onChange, value, teaser)
@@ -102,12 +101,12 @@ export const TeaserGroupForm = options => {
   })
 }
 
-export const TeaserGroupButton = options => {
-  const mouseDownHandler = (disabled, value, onChange) => event => {
+export const TeaserGroupButton = (options) => {
+  const mouseDownHandler = (disabled, value, onChange) => (event) => {
     event.preventDefault()
     const nodes = allBlocks(value)
-      .filter(n => depth(value, n.key) < 2)
-      .filter(n => {
+      .filter((n) => depth(value, n.key) < 2)
+      .filter((n) => {
         return ['teaser', 'teasergroup'].includes(n.data.get('module'))
       })
     const node = nodes.first()
@@ -118,8 +117,8 @@ export const TeaserGroupButton = options => {
           .insertNodeByKey(
             parent(value, node.key).key,
             childIndex(value, node.key),
-            getNewBlock(options)()
-          )
+            getNewBlock(options)(),
+          ),
       )
     }
   }

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { css } from 'glamor'
 import Head from 'next/head'
 import { withRouter } from 'next/router'
@@ -15,7 +15,7 @@ import {
   fontFamilies,
   mediaQueries,
   useColorContext,
-  ColorHtmlBodyColors
+  ColorHtmlBodyColors,
 } from '@project-r/styleguide'
 import { BackIcon } from '@project-r/styleguide'
 
@@ -25,7 +25,7 @@ import withDefaultSSR from '../lib/hocs/withDefaultSSR'
 
 const pRule = css({
   fontFamily: fontFamilies.sansSerifRegular,
-  fontSize: 18
+  fontSize: 18,
 })
 
 const P = ({ children, ...props }) => (
@@ -41,48 +41,48 @@ export const styles = {
     fontSize: 20,
     marginTop: 9 + 4,
     marginBottom: -20,
-    display: 'block'
+    display: 'block',
   }),
   text: css({
     marginTop: SPACE / 2,
     marginBottom: SPACE,
     fontFamily: fontFamilies.serifRegular,
     fontSize: 18,
-    lineHeight: '27px'
+    lineHeight: '27px',
   }),
   highlight: css({
     fontFamily: fontFamilies.serifBold,
     fontSize: 24,
-    lineHeight: '36px'
+    lineHeight: '36px',
   }),
   strong: css({
-    fontFamily: fontFamilies.serifBold
+    fontFamily: fontFamilies.serifBold,
   }),
   logoContainer: css({
     textAlign: 'center',
-    marginBottom: SPACE
+    marginBottom: SPACE,
   }),
   column: css({
     maxWidth: 500,
-    margin: `${SPACE}px auto`
+    margin: `${SPACE}px auto`,
   }),
   nav: css({
     marginTop: SPACE,
     marginBottom: SPACE,
     [mediaQueries.mUp]: {
       marginTop: SPACE,
-      marginBottom: SPACE * 2
-    }
+      marginBottom: SPACE * 2,
+    },
   }),
   mainNav: css({
     fontFamily: fontFamilies.sansSerifRegular,
     fontSize: 44,
-    lineHeight: '60px'
+    lineHeight: '60px',
   }),
   address: css({
     lineHeight: 1.6,
-    fontStyle: 'normal'
-  })
+    fontStyle: 'normal',
+  }),
 }
 
 export const Highlight = ({ children, ...props }) => (
@@ -115,17 +115,17 @@ const Page = ({ router }) => {
       css({
         '& ::selection': {
           color: colorScheme.getCSSColor('default'),
-          background: colorScheme.getCSSColor('accentColorMeta')
-        }
+          background: colorScheme.getCSSColor('accentColorMeta'),
+        },
       }),
-    [colorScheme]
+    [colorScheme],
   )
 
   const meta = {
     title: 'Das Project-R-Manifest für die Republik',
     description: 'Jetzt Mitglied und Abonnentin werden.',
     image: `${CDN_FRONTEND_BASE_URL}/static/social-media/manifest.png`,
-    url: `${PUBLIC_BASE_URL}${router.pathname}`
+    url: `${PUBLIC_BASE_URL}${router.pathname}`,
   }
 
   const shareObject = {
@@ -138,7 +138,7 @@ Für diesen Journalismus steht Project R: ${meta.url}
 Jetzt Mitglied und Abonnentin werden:
 ${PUBLIC_BASE_URL}
 `,
-    overlayTitle: 'Manifest teilen'
+    overlayTitle: 'Manifest teilen',
   }
 
   return (

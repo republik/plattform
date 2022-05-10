@@ -1,4 +1,3 @@
-import React from 'react'
 import { compose } from 'react-apollo'
 import Router, { withRouter } from 'next/router'
 import { BrandMark, Interaction, mediaQueries } from '@project-r/styleguide'
@@ -12,36 +11,36 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     [mediaQueries.onlyS]: {
-      fontSize: 14
-    }
+      fontSize: 14,
+    },
   }),
   navContent: css({
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
   }),
   appLink: css({
     color: 'inherit',
-    textDecoration: 'none'
+    textDecoration: 'none',
   }),
   logo: css({
     width: 38,
     marginRight: 20,
-    marginTop: 4
+    marginTop: 4,
   }),
   logoWithChildren: css({
     [mediaQueries.onlyS]: {
-      display: 'none'
-    }
+      display: 'none',
+    },
   }),
   repoName: css({
     marginLeft: 8,
     display: 'inline-block',
-    fontSize: 22
-  })
+    fontSize: 22,
+  }),
 }
 
 export const Nav = ({ t, router, children }) => {
-  const onLogoClick = e => {
+  const onLogoClick = (e) => {
     if (
       e.currentTarget.nodeName === 'A' &&
       (e.metaKey ||

@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 
 import { mediaQueries, Editorial } from '@project-r/styleguide'
@@ -20,9 +19,9 @@ const styles = {
       float: 'right',
       width: SPIDER_SIZE,
       marginLeft: 10,
-      marginBottom: 10
-    }
-  })
+      marginBottom: 10,
+    },
+  }),
 }
 
 const Details = ({ card, t, mySmartspider, skipSpider, postElection }) => {
@@ -32,12 +31,12 @@ const Details = ({ card, t, mySmartspider, skipSpider, postElection }) => {
   const plausibilityText = t(
     `components/Card/electionPlausibility/${electionPlausibility}`,
     undefined,
-    ''
+    '',
   )
   const plausibilityEmoji = t(
     `components/Card/electionPlausibility/${electionPlausibility}/emoji`,
     undefined,
-    ''
+    '',
   )
 
   const linkSmartvote =
@@ -74,7 +73,7 @@ const Details = ({ card, t, mySmartspider, skipSpider, postElection }) => {
             <>
               {t('components/Card/electionPlausibility/title', {
                 text: plausibilityText,
-                emoji: plausibilityEmoji
+                emoji: plausibilityEmoji,
               })}
             </>
           )}

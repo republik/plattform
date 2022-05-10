@@ -12,25 +12,25 @@ const X_TICK_HEIGHT = 6
 
 const styles = {
   columnTitle: css({
-    ...sansSerifMedium14
+    ...sansSerifMedium14,
   }),
   axisLabel: css({
-    ...sansSerifRegular12
+    ...sansSerifRegular12,
   }),
   axisLine: css({
     strokeWidth: '1px',
-    shapeRendering: 'crispEdges'
+    shapeRendering: 'crispEdges',
   }),
   annotationLine: css({
     strokeWidth: '1px',
     fillRule: 'evenodd',
     strokeLinecap: 'round',
     strokeDasharray: '1,3',
-    strokeLinejoin: 'round'
+    strokeLinejoin: 'round',
   }),
   annotationText: css({
-    ...sansSerifRegular12
-  })
+    ...sansSerifRegular12,
+  }),
 }
 
 const ScatterPlotGroup = ({
@@ -60,7 +60,7 @@ const ScatterPlotGroup = ({
   xUnit,
   annotations,
   contextBoxProps,
-  allowCanvasRendering
+  allowCanvasRendering,
 }) => {
   const [hover, setHover] = useState([])
   const [hoverTouch, setHoverTouch] = useState()
@@ -80,14 +80,14 @@ const ScatterPlotGroup = ({
           value,
           cx: plotX(value.x),
           cy: plotY(value.y),
-          r: rSize(value.size)
+          r: rSize(value.size),
         }
       }),
-    [values, plotX, plotY, rSize]
+    [values, plotX, plotY, rSize],
   )
 
   const focusRef = useRef()
-  const focus = (focusRef.current = event => {
+  const focus = (focusRef.current = (event) => {
     if (!symbols) {
       return
     }
@@ -102,21 +102,21 @@ const ScatterPlotGroup = ({
     const focusX = currentEvent.clientX - left
     const focusY = currentEvent.clientY - top
 
-    const withDistance = symbols.map(symbol => {
+    const withDistance = symbols.map((symbol) => {
       return {
         symbol,
         distance:
           Math.sqrt(
-            Math.pow(symbol.cx - focusX, 2) + Math.pow(symbol.cy - focusY, 2)
-          ) - symbol.r
+            Math.pow(symbol.cx - focusX, 2) + Math.pow(symbol.cy - focusY, 2),
+          ) - symbol.r,
       }
     })
     let hoverItems = withDistance.filter(({ distance }) => distance < 1)
     if (hoverItems.length === 0) {
-      const minDistance = min(withDistance, d => d.distance)
+      const minDistance = min(withDistance, (d) => d.distance)
       if (minDistance < 10) {
         hoverItems = withDistance.filter(
-          ({ distance }) => distance === minDistance
+          ({ distance }) => distance === minDistance,
         )
       }
     }
@@ -132,19 +132,19 @@ const ScatterPlotGroup = ({
   }
 
   useEffect(() => {
-    const focusCallback = event => focusRef.current(event)
+    const focusCallback = (event) => focusRef.current(event)
     const blurCallback = () => {
       setHover([])
     }
     const rect = hoverRectRef.current
     rect.addEventListener('touchstart', focusCallback, {
-      passive: false
+      passive: false,
     })
     rect.addEventListener('touchmove', focusCallback)
     rect.addEventListener('touchend', blurCallback)
     return () => {
       rect.removeEventListener('touchstart', focusCallback, {
-        passive: false
+        passive: false,
       })
       rect.removeEventListener('touchmove', focusCallback)
       rect.removeEventListener('touchend', blurCallback)
@@ -178,7 +178,7 @@ const ScatterPlotGroup = ({
           </text>
         )}
         {!allowCanvasRendering &&
-          symbols.map(symbol => (
+          symbols.map((symbol) => (
             <circle
               key={symbol.key}
               fillOpacity={opacity}
@@ -192,9 +192,9 @@ const ScatterPlotGroup = ({
           symbols
             .filter(
               ({ value: { datum } }) =>
-                datum[inlineLabel] || datum[inlineSecondaryLabel]
+                datum[inlineLabel] || datum[inlineSecondaryLabel],
             )
-            .map(symbol => (
+            .map((symbol) => (
               <Fragment key={`inlineLabel${symbol.key}`}>
                 <InlineLabel
                   symbol={symbol}
@@ -204,7 +204,7 @@ const ScatterPlotGroup = ({
                 />
               </Fragment>
             ))}
-        {hover.map(symbol => (
+        {hover.map((symbol) => (
           <circle
             key={`hover${symbol.key}`}
             fill='none'
@@ -225,7 +225,8 @@ const ScatterPlotGroup = ({
               {...colorScheme.set('stroke', 'text')}
               x2={width + paddingLeft - yLinesPaddingLeft}
               style={{
-                opacity: base || (base === undefined && tick === 0) ? 0.8 : 0.17
+                opacity:
+                  base || (base === undefined && tick === 0) ? 0.8 : 0.17,
               }}
             />
             <text
@@ -251,9 +252,9 @@ const ScatterPlotGroup = ({
             <g
               data-axis
               key={`x${tick}`}
-              transform={`translate(${plotX(tick)},${paddingTop +
-                height +
-                X_TICK_HEIGHT})`}
+              transform={`translate(${plotX(tick)},${
+                paddingTop + height + X_TICK_HEIGHT
+              })`}
             >
               <line
                 {...styles.axisLine}
@@ -267,7 +268,7 @@ const ScatterPlotGroup = ({
                 }
                 style={{
                   opacity:
-                    base || (base === undefined && tick === 0) ? 0.8 : 0.17
+                    base || (base === undefined && tick === 0) ? 0.8 : 0.17,
                 }}
               />
               <text
@@ -278,7 +279,7 @@ const ScatterPlotGroup = ({
                 textAnchor={textAnchor}
               >
                 {subsup.svg(
-                  label ?? xAxis.axisFormat(tick, last(plotXLines, i))
+                  label ?? xAxis.axisFormat(tick, last(plotXLines, i)),
                 )}
               </text>
             </g>
@@ -301,7 +302,7 @@ const ScatterPlotGroup = ({
 
           const xSortedPoints = [
             [x1, y1],
-            [x2, y2]
+            [x2, y2],
           ].sort((a, b) => ascending(a[0], b[0]))
 
           return (
@@ -351,9 +352,9 @@ const ScatterPlotGroup = ({
           fill='transparent'
           width={plotWidth}
           height={plotHeight}
-          onMouseEnter={e => focus(e)}
-          onMouseMove={e => focus(e)}
-          onMouseLeave={e => blur(e)}
+          onMouseEnter={(e) => focus(e)}
+          onMouseMove={(e) => focus(e)}
+          onMouseLeave={(e) => blur(e)}
           ref={
             /* touch events are added via ref for { passive: false } on touchstart
              * react does not support setting passive, which defaults to true in newer browsers

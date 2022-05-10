@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import { Component, Fragment, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'
 import { withApollo } from '@apollo/client/react/hoc'
@@ -18,26 +18,26 @@ import Link from 'next/link'
 
 const MIN_INDEX = 2
 
-export const getFeatureDescription = t =>
+export const getFeatureDescription = (t) =>
   t.elements('article/progressprompt/description/feature', {
     link: PROGRESS_EXPLAINER_PATH ? (
       <Link href={PROGRESS_EXPLAINER_PATH} key='link' passHref>
         <A>{t('article/progressprompt/description/feature/link')}</A>
       </Link>
-    ) : null
+    ) : null,
   })
 
-class ProgressContextProvider extends React.Component {
+class ProgressContextProvider extends Component {
   getChildContext() {
     return {
       getMediaProgress: this.props.value.getMediaProgress,
       saveMediaProgress: this.props.value.saveMediaProgress,
       restoreArticleProgress: this.props.value.restoreArticleProgress,
-      showConsentPrompt: this.props.value.showConsentPrompt
+      showConsentPrompt: this.props.value.showConsentPrompt,
     }
   }
   render() {
-    return <React.Fragment>{this.props.children}</React.Fragment>
+    return <Fragment>{this.props.children}</Fragment>;
   }
 }
 
@@ -45,7 +45,7 @@ ProgressContextProvider.childContextTypes = {
   getMediaProgress: PropTypes.func,
   saveMediaProgress: PropTypes.func,
   restoreArticleProgress: PropTypes.func,
-  showConsentPrompt: PropTypes.bool
+  showConsentPrompt: PropTypes.bool,
 }
 
 const Progress = ({
@@ -54,7 +54,7 @@ const Progress = ({
   article,
   isArticle,
   router,
-  upsertDocumentProgress
+  upsertDocumentProgress,
 }) => {
   const refContainer = useRef()
   const lastClosestIndex = useRef()
@@ -74,10 +74,10 @@ const Progress = ({
     return progressElements
   }
 
-  const getClosestElement = progressElements => {
-    const getDistanceForIndex = index => {
+  const getClosestElement = (progressElements) => {
+    const getDistanceForIndex = (index) => {
       return Math.abs(
-        progressElements[index].getBoundingClientRect().top - headerHeight()
+        progressElements[index].getBoundingClientRect().top - headerHeight(),
       )
     }
 
@@ -110,11 +110,11 @@ const Progress = ({
 
     return {
       nodeId: progressElements[closestIndex].getAttribute('data-pos'),
-      index: closestIndex
+      index: closestIndex,
     }
   }
 
-  const getPercentage = progressElements => {
+  const getPercentage = (progressElements) => {
     const lastElement = progressElements[progressElements.length - 1]
     const { bottom } = lastElement.getBoundingClientRect()
     const { top } = refContainer.current.getBoundingClientRect()
@@ -165,7 +165,7 @@ const Progress = ({
     }
   }, 300)
 
-  const restoreArticleProgress = e => {
+  const restoreArticleProgress = (e) => {
     if (e) {
       e.preventDefault()
     }
@@ -174,7 +174,7 @@ const Progress = ({
     const progressElements = getProgressElements()
     const progressElement =
       !!nodeId &&
-      progressElements.find(element => {
+      progressElements.find((element) => {
         if (element.getAttribute('data-pos') === nodeId) {
           return true
         }
@@ -189,7 +189,7 @@ const Progress = ({
       if (!mobile() || !isInViewport) {
         scrollIt(
           window.pageYOffset + top - headerHeight() - (mobile() ? 10 : 20),
-          400
+          400,
         )
       }
       return
@@ -228,7 +228,7 @@ const Progress = ({
         getMediaProgress,
         saveMediaProgress,
         restoreArticleProgress,
-        showConsentPrompt
+        showConsentPrompt,
       }}
     >
       <div ref={refContainer}>{children}</div>
@@ -239,20 +239,20 @@ const Progress = ({
 Progress.propTypes = {
   children: PropTypes.node,
   me: PropTypes.shape({
-    progressConsent: PropTypes.bool
+    progressConsent: PropTypes.bool,
   }),
   revokeConsent: PropTypes.func,
   submitConsent: PropTypes.func,
-  isArticle: PropTypes.bool
+  isArticle: PropTypes.bool,
 }
 
 Progress.defaultProps = {
-  isArticle: true
+  isArticle: true,
 }
 
 export default compose(
   withApollo,
   withProgressApi,
   withMe,
-  withRouter
+  withRouter,
 )(Progress)

@@ -5,7 +5,7 @@ import { mUp } from '../../theme/mediaQueries'
 import * as Headlines from '../TeaserFeed/Headline'
 import { sansSerifMedium14, sansSerifMedium16 } from '../Typography/styles'
 import { TeaserSectionTitle } from '../TeaserShared'
-import { TeaserFeed } from '../TeaserFeed'
+import { getTeaserHref, TeaserFeed } from '../TeaserFeed'
 import colors from '../../theme/colors'
 import { useColorContext } from '../Colors/useColorContext'
 import { convertStyleToRem } from '../Typography/utils'
@@ -23,12 +23,11 @@ const TeaserMyMagazine = ({
   latestProgressOrBookmarkedArticles,
   ActionBar,
   bookmarksUrl,
-  title,
   bookmarksLabel,
   notificationsUrl,
   notificationsLabel,
   Link = DefaultLink,
-  placeholder = null
+  placeholder = null,
 }) => {
   const [colorScheme] = useColorContext()
 
@@ -57,30 +56,31 @@ const TeaserMyMagazine = ({
                   {bookmarksLabel}
                 </TeaserSectionTitle>
               </Link>
-              {latestProgressOrBookmarkedArticles.map(doc => {
+              {latestProgressOrBookmarkedArticles.map((doc) => {
                 const { id } = doc
                 const {
                   path,
                   title,
                   template,
                   kind: metaKind,
-                  color: metaColor
+                  color: metaColor,
                 } = doc.meta
                 const formatMeta = doc.meta.format?.meta
                 const formatTitle = formatMeta?.title
                 const formatPath = formatMeta?.path
+                const href = getTeaserHref(path, formatMeta?.externalBaseUrl)
 
                 const formatColor = formatMeta?.title
                   ? colorScheme.set(
                       'color',
                       formatMeta.color || colors[formatMeta.kind],
-                      'format'
+                      'format',
                     )
                   : template === 'format'
                   ? colorScheme.set(
                       'color',
                       metaColor || colors[metaKind],
-                      'format'
+                      'format',
                     )
                   : colorScheme.set('color', 'text')
 
@@ -110,7 +110,7 @@ const TeaserMyMagazine = ({
                       </Link>
                     ) : null}
                     <Headline>
-                      <Link href={path} passHref>
+                      <Link href={href} passHref>
                         <a
                           {...styles.tileHeadline}
                           {...colorScheme.set('color', 'text')}
@@ -140,7 +140,7 @@ const TeaserMyMagazine = ({
                   {notificationsLabel}
                 </TeaserSectionTitle>
               </Link>
-              {latestSubscribedArticles.map(doc => {
+              {latestSubscribedArticles.map((doc) => {
                 const {
                   format,
                   path,
@@ -148,7 +148,7 @@ const TeaserMyMagazine = ({
                   credits,
                   publishDate,
                   emailSubject,
-                  color
+                  color,
                 } = doc.meta
 
                 return (
@@ -178,8 +178,8 @@ const styles = {
     maxWidth: 1300,
     padding: '40px 15px 10px',
     [mUp]: {
-      padding: '50px 15px 40px'
-    }
+      padding: '50px 15px 40px',
+    },
   }),
   row: css({
     display: 'flex',
@@ -187,29 +187,29 @@ const styles = {
     [mUp]: {
       flexDirection: 'row',
       justifyContent: 'center',
-      alignItems: 'flex-start'
-    }
+      alignItems: 'flex-start',
+    },
   }),
   left: css({
     marginBottom: 32,
     [mUp]: {
       flex: 1,
       marginRight: 16,
-      marginBottom: 0
-    }
+      marginBottom: 0,
+    },
   }),
   right: css({
     [mUp]: {
       flex: 1,
-      marginLeft: 16
-    }
+      marginLeft: 16,
+    },
   }),
   center: css({
     marginBottom: 0,
     [mUp]: {
       width: '50%',
-      marginBottom: 0
-    }
+      marginBottom: 0,
+    },
   }),
   tile: css({
     padding: '16px 8px 12px 8px',
@@ -223,18 +223,18 @@ const styles = {
     ':last-child': {
       marginBottom: 30,
       [mUp]: {
-        marginBottom: 40
-      }
+        marginBottom: 40,
+      },
     },
     [mUp]: {
-      padding: '12px 8px'
-    }
+      padding: '12px 8px',
+    },
   }),
   tileHeadline: css({
     textDecoration: 'none',
     cursor: 'pointer',
     wordWrap: 'break-word',
-    width: '100%'
+    width: '100%',
   }),
   formatAnchor: css({
     color: 'inherit',
@@ -242,17 +242,17 @@ const styles = {
     marginBottom: 4,
     ...convertStyleToRem(sansSerifMedium14),
     [mUp]: {
-      ...convertStyleToRem(sansSerifMedium16)
-    }
-  })
+      ...convertStyleToRem(sansSerifMedium16),
+    },
+  }),
 }
 
 TeaserMyMagazine.propTypes = {
   latestSubscribedArticles: PropTypes.array,
-  latestProgressOrBookmarkedArticles: PropTypes.array
+  latestProgressOrBookmarkedArticles: PropTypes.array,
 }
 
-const WrappedTeaserMyMagazine = props => <TeaserMyMagazine {...props} />
+const WrappedTeaserMyMagazine = (props) => <TeaserMyMagazine {...props} />
 
 export default WrappedTeaserMyMagazine
 
@@ -260,9 +260,9 @@ WrappedTeaserMyMagazine.data = {
   config: {
     options: ({ first = 2 }) => ({
       variables: {
-        first: +first
+        first: +first,
       },
-      ssr: false
+      ssr: false,
     }),
     props: ({ data }) => {
       return {
@@ -270,14 +270,14 @@ WrappedTeaserMyMagazine.data = {
           loading: data.loading,
           error: data.error,
           latestSubscribedArticles: data.notifications?.nodes
-            .map(i => i.object)
+            .map((i) => i.object)
             .filter(Boolean),
           latestProgressOrBookmarkedArticles: data.me?.bookmarkAndProgress.nodes
-            .map(i => i.document)
-            .filter(Boolean)
-        }
+            .map((i) => i.document)
+            .filter(Boolean),
+        },
       }
-    }
+    },
   },
   query: `
     query getMyMagazineDocuments {
@@ -301,6 +301,7 @@ WrappedTeaserMyMagazine.data = {
                   id
                   meta {
                     path
+                    externalBaseUrl
                     title
                     color
                     kind
@@ -335,6 +336,7 @@ WrappedTeaserMyMagazine.data = {
                     title
                     color
                     kind
+                    externalBaseUrl
                   }
                 }
               }
@@ -358,5 +360,5 @@ WrappedTeaserMyMagazine.data = {
         }
       }
     }
-  `
+  `,
 }

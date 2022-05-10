@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   Button,
   Interaction,
   InlineSpinner,
   FigureImage,
   Figure,
-  useHeaderHeight
+  useHeaderHeight,
 } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
@@ -35,8 +35,8 @@ const styles = {
   confirm: css({
     textAlign: 'center',
     width: '80%',
-    margin: '10px auto 15px auto'
-  })
+    margin: '10px auto 15px auto',
+  }),
 }
 
 const ElectionConfirm = compose(
@@ -47,12 +47,12 @@ const ElectionConfirm = compose(
         return mutate({
           variables: {
             electionId,
-            candidacyIds
-          }
+            candidacyIds,
+          },
         })
-      }
-    })
-  })
+      },
+    }),
+  }),
 )(
   ({
     election,
@@ -61,7 +61,7 @@ const ElectionConfirm = compose(
     submitElectionBallot,
     resetVote,
     goBack,
-    vt
+    vt,
   }) => {
     const [isUpdating, setUpdating] = useState(false)
     const [error, setError] = useState(null)
@@ -75,8 +75,8 @@ const ElectionConfirm = compose(
       window.scroll(0, target)
     }, [])
 
-    const selectedCandidates = candidates.filter(candidate =>
-      isSelected(candidate, vote)
+    const selectedCandidates = candidates.filter((candidate) =>
+      isSelected(candidate, vote),
     )
 
     const submitBallot = async () => {
@@ -87,7 +87,7 @@ const ElectionConfirm = compose(
           setError(null)
           resetVote()
         })
-        .catch(error => {
+        .catch((error) => {
           setUpdating(false)
           setError(error)
         })
@@ -103,11 +103,11 @@ const ElectionConfirm = compose(
           ? vt.pluralize('vote/election/labelConfirmCount', {
               count: givenVotes,
               numSeats,
-              remaining: remainingVotes
+              remaining: remainingVotes,
             })
           : vt.pluralize('vote/election/labelConfirmAll', {
               numSeats,
-              count: givenVotes
+              count: givenVotes,
             })}
       </P>
     )
@@ -150,7 +150,7 @@ const ElectionConfirm = compose(
         <div {...sharedStyles.hint}>{vt('vote/common/help/final')}</div>
       </ElectionActions>
     )
-  }
+  },
 )
 
 export default ElectionConfirm

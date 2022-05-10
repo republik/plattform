@@ -9,31 +9,31 @@ type Replacements = { [key: string]: ReactNode }
 type FormatterFunction = (
   key: string,
   replacements?: Replacements,
-  missingValue?: string
+  missingValue?: string,
 ) => string
 
 type FirstFunction = (
   keys: string[],
   replacements?: Replacements,
-  missingValue?: string
+  missingValue?: string,
 ) => string
 
 type PluralizeFunction = (
   baseKey: string,
   replacements?: Replacements,
-  missingValue?: string
+  missingValue?: string,
 ) => string
 
 type ElementsFunction = (
   key: string,
   replacements?: Replacements,
-  missingValue?: string
+  missingValue?: string,
 ) => ReactNode
 
 type FirstElementsFunction = (
   key: string | string[],
   replacements?: Replacements,
-  missingValue?: string
+  missingValue?: string,
 ) => ReactNode
 
 type CreateFormatter = (translations: Translations) => Formatter
@@ -46,10 +46,10 @@ export type Formatter = FormatterFunction & {
 
 export const replaceKeys = (message, replacements) => {
   let withReplacements = message
-  Object.keys(replacements).forEach(replacementKey => {
+  Object.keys(replacements).forEach((replacementKey) => {
     withReplacements = withReplacements.replace(
       `{${replacementKey}}`,
-      replacements[replacementKey]
+      replacements[replacementKey],
     )
   })
   return withReplacements
@@ -65,13 +65,13 @@ export const createPlaceholderFormatter = (placeholder = '') => {
   return formatter
 }
 
-export const createFormatter: CreateFormatter = translations => {
+export const createFormatter: CreateFormatter = (translations) => {
   const index = translations.reduce((accumulator, translation) => {
     accumulator[translation.key] = translation.value
     return accumulator
   }, {})
 
-  const formatter = <Formatter>function(key, replacements, missingValue) {
+  const formatter = <Formatter>function (key, replacements, missingValue) {
     let message =
       index[key] || (missingValue !== undefined ? missingValue : `TK(${key})`)
     if (replacements) {
@@ -80,11 +80,11 @@ export const createFormatter: CreateFormatter = translations => {
     return message
   }
 
-  const firstKey = keys =>
-    keys.find(k => index[k] !== undefined) || keys[keys.length - 1]
+  const firstKey = (keys) =>
+    keys.find((k) => index[k] !== undefined) || keys[keys.length - 1]
   const pluralizationKeys = (baseKey, replacements) => [
     `${baseKey}/${replacements.count}`,
-    `${baseKey}/other`
+    `${baseKey}/other`,
   ]
 
   formatter.first = (keys, replacements, missingValue) => {
@@ -94,11 +94,11 @@ export const createFormatter: CreateFormatter = translations => {
     return formatter.first(
       pluralizationKeys(baseKey, replacements),
       replacements,
-      missingValue
+      missingValue,
     )
   }
 
-  const createReplacementReducer = replacements => (r, part) => {
+  const createReplacementReducer = (replacements) => (r, part) => {
     if (part[0] === '{') {
       r.push(replacements[part.slice(1, -1)] || '')
     } else {
@@ -119,7 +119,7 @@ export const createFormatter: CreateFormatter = translations => {
     return formatter.first.elements(
       pluralizationKeys(baseKey, replacements),
       replacements,
-      missingValue
+      missingValue,
     )
   }
 

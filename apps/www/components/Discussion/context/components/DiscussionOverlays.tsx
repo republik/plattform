@@ -1,4 +1,3 @@
-import React from 'react'
 import { useRouter } from 'next/router'
 import PropTypes from 'prop-types'
 
@@ -12,25 +11,21 @@ import { RootCommentOverlay } from '../../overlays/RootCommentOverlay'
 import { getFocusHref } from '../../shared/CommentLink'
 
 const propTypes = {
-  isBoardRoot: PropTypes.bool
+  isBoardRoot: PropTypes.bool,
 }
 
 const DiscussionOverlays = ({
-  isBoardRoot
+  isBoardRoot,
 }: PropTypes.InferProps<typeof propTypes>) => {
   const router = useRouter()
   const { t } = useTranslation()
   const {
     id,
     discussion,
-    overlays: { shareOverlay, preferencesOverlay, featureOverlay }
+    overlays: { shareOverlay, preferencesOverlay, featureOverlay },
   } = useDiscussion()
-  const {
-    preferences,
-    loading,
-    error,
-    updateDiscussionPreferencesHandler
-  } = useDiscussionPreferences(id)
+  const { preferences, loading, error, updateDiscussionPreferencesHandler } =
+    useDiscussionPreferences(id)
 
   return (
     <>
@@ -41,7 +36,7 @@ const DiscussionOverlays = ({
           discussionPreferences={{
             ...preferences,
             loading,
-            error
+            error,
           }}
           setDiscussionPreferences={updateDiscussionPreferencesHandler}
           onClose={preferencesOverlay.handleClose}

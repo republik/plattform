@@ -1,4 +1,3 @@
-import React from 'react'
 import gql from 'graphql-tag'
 import { Query } from 'react-apollo'
 import {
@@ -8,7 +7,7 @@ import {
   SectionSubhead,
   DT,
   DD,
-  dateDiff
+  dateDiff,
 } from '../../Display/utils'
 import { Loader, Label } from '@project-r/styleguide'
 import List, { Item } from '../../List'

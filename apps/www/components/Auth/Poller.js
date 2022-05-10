@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
@@ -18,17 +18,17 @@ const { H3, P } = Interaction
 
 const Icons = {
   EMAIL_TOKEN: MailOutlineIcon,
-  APP: PhonelinkIcon
+  APP: PhonelinkIcon,
 }
 
 const styles = {
   group: css({
-    marginTop: '.5em'
+    marginTop: '.5em',
   }),
   hint: css({
     marginTop: '.2em',
-    lineHeight: '1em'
-  })
+    lineHeight: '1em',
+  }),
 }
 
 class Poller extends Component {
@@ -37,13 +37,13 @@ class Poller extends Component {
     const now = new Date().getTime()
     this.state = {
       now,
-      start: now
+      start: now,
     }
     this.tick = () => {
       clearTimeout(this.tickTimeout)
       this.tickTimeout = setTimeout(() => {
         this.setState(() => ({
-          now: new Date().getTime()
+          now: new Date().getTime(),
         }))
         this.tick()
       }, 1000)
@@ -57,7 +57,7 @@ class Poller extends Component {
   componentDidUpdate() {
     const {
       data: { me },
-      onSuccess
+      onSuccess,
     } = this.props
     if (me) {
       clearTimeout(this.tickTimeout)
@@ -73,7 +73,7 @@ class Poller extends Component {
   render() {
     const {
       data: { error, me },
-      t
+      t,
     } = this.props
     if (me) {
       return null
@@ -90,7 +90,7 @@ class Poller extends Component {
           <RawHtml
             type={Interaction.P}
             dangerouslySetInnerHTML={{
-              __html: t('cookies/disabled/error/explanation')
+              __html: t('cookies/disabled/error/explanation'),
             }}
           />
         </Fragment>
@@ -103,7 +103,7 @@ class Poller extends Component {
       onCancel,
       phrase,
       alternativeFirstFactors,
-      onTokenTypeChange
+      onTokenTypeChange,
     } = this.props
 
     const { showPhraseHint } = this.state
@@ -120,7 +120,7 @@ class Poller extends Component {
               style={{
                 verticalAlign: 'baseline',
                 marginRight: 6,
-                marginBottom: '-0.2em'
+                marginBottom: '-0.2em',
               }}
             />
           )}
@@ -130,16 +130,16 @@ class Poller extends Component {
           type={P}
           {...styles.group}
           dangerouslySetInnerHTML={{
-            __html: t(`signIn/polling/${tokenType}/text`)
+            __html: t(`signIn/polling/${tokenType}/text`),
           }}
         />
         {!!onTokenTypeChange &&
-          alternativeFirstFactors.map(altTokenType => (
+          alternativeFirstFactors.map((altTokenType) => (
             <P key={altTokenType} {...styles.group}>
               <Label>
                 <A
                   href='#'
-                  onClick={e => {
+                  onClick={(e) => {
                     e.preventDefault()
                     onTokenTypeChange(altTokenType)
                   }}
@@ -158,7 +158,7 @@ class Poller extends Component {
             <Label>
               <A
                 href='#'
-                onClick={e => {
+                onClick={(e) => {
                   e.preventDefault()
                   onCancel()
                 }}
@@ -178,7 +178,7 @@ class Poller extends Component {
             <Label>
               <A
                 href='#'
-                onClick={e => {
+                onClick={(e) => {
                   e.preventDefault()
                   this.setState({ showPhraseHint: true })
                 }}
@@ -203,15 +203,15 @@ Poller.propTypes = {
   email: PropTypes.string.isRequired,
   phrase: PropTypes.string.isRequired,
   alternativeFirstFactors: PropTypes.arrayOf(
-    PropTypes.oneOf(SUPPORTED_TOKEN_TYPES)
+    PropTypes.oneOf(SUPPORTED_TOKEN_TYPES),
   ).isRequired,
   onSuccess: PropTypes.func,
   onCancel: PropTypes.func,
-  onTokenTypeChange: PropTypes.func
+  onTokenTypeChange: PropTypes.func,
 }
 
 Poller.defaultProps = {
-  alternativeFirstFactors: []
+  alternativeFirstFactors: [],
 }
 
 export default compose(graphql(meQuery), withT)(Poller)

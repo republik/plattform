@@ -17,31 +17,42 @@ const dateFormat = timeFormat('%d.%m.%Y')
 const styles = {
   link: css({
     color: 'inherit',
-    textDecoration: 'none'
+    textDecoration: 'none',
   }),
   bar: css({
-    marginTop: 10
-  })
+    marginTop: 10,
+  }),
 }
 
 const br = {
   matchMdast: matchType('break'),
   component: () => <br />,
-  isVoid: true
-}
-const link = {
-  matchMdast: matchType('link'),
-  props: node => ({
-    title: node.title,
-    href: node.url
-  }),
-  component: Editorial.A
-}
-const creditSchema = {
-  rules: [link, br]
+  isVoid: true,
 }
 
-const DefaultLink = ({ children, path }) => children
+function getLinkRule(isInteractive) {
+  return {
+    matchMdast: matchType('link'),
+    props: (node) => ({
+      title: node.title,
+      href: isInteractive ? node.url : undefined,
+    }),
+    component: isInteractive
+      ? Editorial.A
+      : ({ children }) => <span>{children}</span>,
+  }
+}
+
+function getCreditsSchema(isInteractive = true) {
+  return {
+    rules: [getLinkRule(isInteractive), br],
+  }
+}
+
+const DefaultLink = ({ children, href }) => children
+
+export const getTeaserHref = (path, externalBaseUrl) =>
+  externalBaseUrl ? `${externalBaseUrl}${path}` : path
 
 export const TeaserFeed = ({
   kind: metaKind,
@@ -49,6 +60,7 @@ export const TeaserFeed = ({
   template,
   format,
   path,
+  externalBaseUrl,
   repoId,
   title,
   description,
@@ -62,9 +74,15 @@ export const TeaserFeed = ({
   Link = DefaultLink,
   menu,
   highlighted,
-  series
+  series,
+  dense = false,
+  nonInteractive = false,
 }) => {
   const formatMeta = (format && format.meta) || {}
+  const href = getTeaserHref(
+    path,
+    externalBaseUrl || formatMeta.externalBaseUrl,
+  )
   const Headline =
     formatMeta.kind === 'meta' ||
     metaKind === 'meta' ||
@@ -94,34 +112,44 @@ export const TeaserFeed = ({
       Link={Link}
       menu={menu}
       repoId={repoId}
-      path={path}
+      href={href}
       title={title}
+      dense={dense}
+      nonInteractive={nonInteractive}
     >
       <Headline formatColor={titleColor}>
-        <Link href={path} passHref>
-          <a {...styles.link} href={path}>
-            {title}
-          </a>
-        </Link>
+        {!nonInteractive ? (
+          <Link href={href} passHref>
+            <a {...styles.link} href={href}>
+              {title}
+            </a>
+          </Link>
+        ) : (
+          title
+        )}
       </Headline>
       {!!description && (
         <Lead>
-          <Link href={path} passHref>
-            <a {...styles.link} href={path}>
-              {description}
-            </a>
-          </Link>
+          {!nonInteractive ? (
+            <Link href={href} passHref>
+              <a {...styles.link} href={href}>
+                {description}
+              </a>
+            </Link>
+          ) : (
+            description
+          )}
         </Lead>
       )}
       <Credit>
         {credits && credits.length > 0
-          ? renderMdast(credits, creditSchema)
+          ? renderMdast(credits, getCreditsSchema(!nonInteractive))
           : !!publishDate && dateFormat(new Date(publishDate))}
       </Credit>
       {!!highlight && (
         <Highlight label={highlightLabel}>
-          <Link href={path} passHref>
-            <a {...styles.link} href={path}>
+          <Link href={href} passHref>
+            <a {...styles.link} href={href}>
               {highlight}
             </a>
           </Link>

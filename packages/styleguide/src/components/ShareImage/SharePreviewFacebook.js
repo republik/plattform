@@ -12,7 +12,7 @@ const styles = {
     maxHeight: 120,
     overflow: 'hidden',
     fontFamily:
-      'system-ui, -apple-system, system-ui, ".SFNSText-Regular", sans-serif'
+      'system-ui, -apple-system, system-ui, ".SFNSText-Regular", sans-serif',
   }),
   title: css({
     fontSize: 16,
@@ -22,7 +22,7 @@ const styles = {
     overflow: 'hidden',
     marginBottom: 3,
     wordWrap: 'break-word',
-    color: 'rgb(5, 5, 5)'
+    color: 'rgb(5, 5, 5)',
   }),
   description: css({
     fontFamily: 'sans-serif',
@@ -31,7 +31,7 @@ const styles = {
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    color: 'rgb(101, 103, 107)'
+    color: 'rgb(101, 103, 107)',
   }),
   domain: css({
     fontFamily: 'sans-serif',
@@ -39,8 +39,8 @@ const styles = {
     lineHeight: '1.23em',
     textTransform: 'uppercase',
     color: 'rgb(101, 103, 107)',
-    paddingBottom: 4
-  })
+    paddingBottom: 4,
+  }),
 }
 
 const SharePreviewFacebook = ({ title, description }) => (

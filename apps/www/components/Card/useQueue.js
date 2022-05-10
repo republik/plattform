@@ -7,23 +7,23 @@ const useQueueState = createPersistedState('republik-card-group-queue')
 export const useQueue = ({ me, subToUser, unsubFromUser }) => {
   const [queue, setQueue] = useQueueState({ statePerUserId: {}, pending: [] })
   const addToQueue = (userId, sub) =>
-    setQueue(queue => {
+    setQueue((queue) => {
       if (!sub && !queue.statePerUserId[userId]) {
         // only rm pending subs
         return {
           ...queue,
-          pending: queue.pending.filter(item => item.userId !== userId)
+          pending: queue.pending.filter((item) => item.userId !== userId),
         }
       }
       return {
         ...queue,
         pending: queue.pending
-          .filter(item => item.userId !== userId)
-          .concat({ sub, userId: userId })
+          .filter((item) => item.userId !== userId)
+          .concat({ sub, userId: userId }),
       }
     })
-  const replaceStatePerUserId = statePerUserId => {
-    setQueue(queue => ({
+  const replaceStatePerUserId = (statePerUserId) => {
+    setQueue((queue) => ({
       ...queue,
       statePerUserId: {
         ...statePerUserId,
@@ -32,21 +32,21 @@ export const useQueue = ({ me, subToUser, unsubFromUser }) => {
             wipState[key] = queue.statePerUserId[key]
           }
           return wipState
-        }, {})
-      }
+        }, {}),
+      },
     }))
   }
   const clearPending = () => {
-    setQueue(queue => ({
+    setQueue((queue) => ({
       ...queue,
-      pending: []
+      pending: [],
     }))
   }
 
   useEffect(() => {
     if (me && queue && queue.pending && queue.pending.length) {
       const timeout = setTimeout(() => {
-        setQueue(queue => {
+        setQueue((queue) => {
           const item = queue.pending[0]
           if (!item) {
             return queue
@@ -62,7 +62,7 @@ export const useQueue = ({ me, subToUser, unsubFromUser }) => {
             return { ...queue }
           }
           const clearOwn = () => {
-            setQueue(queue => {
+            setQueue((queue) => {
               const statePerUserId = { ...queue.statePerUserId }
               if (
                 statePerUserId[userId] &&
@@ -72,7 +72,7 @@ export const useQueue = ({ me, subToUser, unsubFromUser }) => {
               }
               return {
                 ...queue,
-                statePerUserId
+                statePerUserId,
               }
             })
           }
@@ -80,12 +80,12 @@ export const useQueue = ({ me, subToUser, unsubFromUser }) => {
           if (item.sub) {
             subToUser({ userId })
               .then(({ data: { subscribe: sub } }) => {
-                setQueue(queue => ({
+                setQueue((queue) => ({
                   ...queue,
                   statePerUserId: {
                     ...queue.statePerUserId,
-                    [userId]: { id: sub.id }
-                  }
+                    [userId]: { id: sub.id },
+                  },
                 }))
               })
               .catch(() => {
@@ -98,10 +98,10 @@ export const useQueue = ({ me, subToUser, unsubFromUser }) => {
                 ...queue.statePerUserId,
                 [userId]: {
                   ...currentState,
-                  wip: now
-                }
+                  wip: now,
+                },
               },
-              pending: queue.pending.slice(1)
+              pending: queue.pending.slice(1),
             }
           } else {
             if (currentState && currentState.id) {
@@ -116,10 +116,10 @@ export const useQueue = ({ me, subToUser, unsubFromUser }) => {
                   ...queue.statePerUserId,
                   [userId]: {
                     ...currentState,
-                    wip: now
-                  }
+                    wip: now,
+                  },
                 },
-                pending: queue.pending.slice(1)
+                pending: queue.pending.slice(1),
               }
             }
             // never subscribed in this browser
@@ -127,9 +127,9 @@ export const useQueue = ({ me, subToUser, unsubFromUser }) => {
               ...queue,
               statePerUserId: {
                 ...queue.statePerUserId,
-                [userId]: undefined
+                [userId]: undefined,
               },
-              pending: queue.pending.slice(1)
+              pending: queue.pending.slice(1),
             }
           }
         })

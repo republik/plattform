@@ -1,4 +1,4 @@
-import React from 'react'
+import { useMemo } from 'react'
 import visit from 'unist-util-visit'
 import isUUID from 'is-uuid'
 import { parse } from 'url'
@@ -11,9 +11,9 @@ import { SOCIAL_MEDIA } from '../editor/modules/meta/ShareImageForm'
 const FRONTEND_HOSTNAME = FRONTEND_BASE_URL && parse(FRONTEND_BASE_URL).hostname
 
 const useValidation = ({ meta, content, t, updateMailchimp }) => {
-  const links = React.useMemo(() => {
+  const links = useMemo(() => {
     const all = []
-    visit(content, 'link', node => {
+    visit(content, 'link', (node) => {
       const urlObject = parse(node.url)
       const warnings = []
       const errors = []
@@ -57,7 +57,7 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
         url: node.url,
         text: mdastToString(node),
         warnings,
-        errors
+        errors,
       })
     })
     return all
@@ -69,15 +69,15 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
       t('publish/validation/slug/empty'),
     updateMailchimp &&
       !meta.emailSubject &&
-      t('publish/validation/emailSubject/empty')
+      t('publish/validation/emailSubject/empty'),
   ].filter(Boolean)
 
   const socialWarnings = SOCIAL_MEDIA.map(
-    socialKey =>
+    (socialKey) =>
       !meta.shareText &&
       !meta[`${socialKey}Image`] &&
       !meta.image &&
-      t(`publish/validation/${socialKey}Image/empty`)
+      t(`publish/validation/${socialKey}Image/empty`),
   )
 
   const warnings = []
@@ -85,11 +85,11 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
       meta.template !== 'front'
         ? [
             !meta.title && t('publish/validation/title/empty'),
-            !meta.description && t('publish/validation/description/empty')
+            !meta.description && t('publish/validation/description/empty'),
           ]
             .concat(socialWarnings)
             .filter(Boolean)
-        : []
+        : [],
     )
     .concat(
       links
@@ -97,7 +97,7 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
         .reduce(
           (all, link) =>
             all.concat(
-              link.warnings.map(warning =>
+              link.warnings.map((warning) =>
                 t.elements('publish/validation/link/warning', {
                   text: link.text,
                   link: (
@@ -109,12 +109,12 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
                       {link.url}
                     </Editorial.A>
                   ),
-                  reason: t(`publish/validation/link/issue/${warning}`)
-                })
-              )
+                  reason: t(`publish/validation/link/issue/${warning}`),
+                }),
+              ),
             ),
-          []
-        )
+          [],
+        ),
     )
     // to start we do not block any publication
     .concat(
@@ -123,7 +123,7 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
         .reduce(
           (all, link) =>
             all.concat(
-              link.errors.map(error =>
+              link.errors.map((error) =>
                 t.elements('publish/validation/link/error', {
                   text: link.text,
                   link: (
@@ -135,12 +135,12 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
                       {link.url}
                     </Editorial.A>
                   ),
-                  reason: t(`publish/validation/link/issue/${error}`)
-                })
-              )
+                  reason: t(`publish/validation/link/issue/${error}`),
+                }),
+              ),
             ),
-          []
-        )
+          [],
+        ),
     )
 
   return { errors, warnings, links }

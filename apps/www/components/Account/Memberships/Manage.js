@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
@@ -22,7 +22,7 @@ const Actions = ({
   activeMembership,
   hasWaitingMemberships,
   reactivate,
-  setAutoPay
+  setAutoPay,
 }) => {
   const [{ updating, remoteError }, setState] = useState({})
 
@@ -36,14 +36,14 @@ const Actions = ({
         <P>
           <TokenPackageLink
             params={{
-              package: 'PROLONG'
+              package: 'PROLONG',
             }}
             passHref
           >
             <A>
               {t.first([
                 `memberships/${membership.type.name}/manage/prolong/link`,
-                'memberships/manage/prolong/link'
+                'memberships/manage/prolong/link',
               ])}
             </A>
           </TokenPackageLink>
@@ -57,31 +57,31 @@ const Actions = ({
           <P>
             <A
               href='#reactivate'
-              onClick={e => {
+              onClick={(e) => {
                 e.preventDefault()
                 setState({
-                  updating: true
+                  updating: true,
                 })
                 reactivate({
-                  id: membership.id
+                  id: membership.id,
                 })
                   .then(() => {
                     setState({
                       updating: false,
-                      remoteError: undefined
+                      remoteError: undefined,
                     })
                   })
-                  .catch(error => {
+                  .catch((error) => {
                     setState({
                       updating: false,
-                      remoteError: errorToString(error)
+                      remoteError: errorToString(error),
                     })
                   })
               }}
             >
               {t.first([
                 `memberships/${membership.type.name}/manage/reactivate`,
-                'memberships/manage/reactivate'
+                'memberships/manage/reactivate',
               ])}
             </A>
           </P>
@@ -95,7 +95,7 @@ const Actions = ({
                   <Link
                     href={{
                       pathname: '/angebote',
-                      query: { package: 'ABO' }
+                      query: { package: 'ABO' },
                     }}
                     passHref
                   >
@@ -103,7 +103,7 @@ const Actions = ({
                       {t('memberships/MONTHLY_ABO/manage/upgrade/link/buyText')}
                     </A>
                   </Link>
-                )
+                ),
               })}
             </P>
           )}
@@ -115,25 +115,25 @@ const Actions = ({
                     <P>
                       <A
                         href='#autoPay'
-                        onClick={e => {
+                        onClick={(e) => {
                           e.preventDefault()
                           setState({
-                            updating: true
+                            updating: true,
                           })
                           setAutoPay({
                             id: membership.id,
-                            autoPay: !membership.autoPay
+                            autoPay: !membership.autoPay,
                           })
                             .then(() => {
                               setState({
                                 updating: false,
-                                remoteError: undefined
+                                remoteError: undefined,
                               })
                             })
-                            .catch(error => {
+                            .catch((error) => {
                               setState({
                                 updating: false,
-                                remoteError: errorToString(error)
+                                remoteError: errorToString(error),
                               })
                             })
                         }}
@@ -144,7 +144,7 @@ const Actions = ({
                           }`,
                           `memberships/manage/autoPay/${
                             membership.autoPay ? 'disable' : 'enable'
-                          }`
+                          }`,
                         ])}
                       </A>
                     </P>
@@ -153,14 +153,14 @@ const Actions = ({
                     <Link
                       href={{
                         pathname: '/abgang',
-                        query: { membershipId: membership.id }
+                        query: { membershipId: membership.id },
                       }}
                       passHref
                     >
                       <A>
                         {t.first([
                           `memberships/${membership.type.name}/manage/cancel/link`,
-                          'memberships/manage/cancel/link'
+                          'memberships/manage/cancel/link',
                         ])}
                       </A>
                     </Link>
@@ -214,19 +214,19 @@ const ManageActions = compose(
   withT,
   graphql(cancelMembership, {
     props: ({ mutate }) => ({
-      cancel: variables => mutate({ variables })
-    })
+      cancel: (variables) => mutate({ variables }),
+    }),
   }),
   graphql(reactivateMembership, {
     props: ({ mutate }) => ({
-      reactivate: variables => mutate({ variables })
-    })
+      reactivate: (variables) => mutate({ variables }),
+    }),
   }),
   graphql(setMembershipAutoPay, {
     props: ({ mutate }) => ({
-      setAutoPay: variables => mutate({ variables })
-    })
-  })
+      setAutoPay: (variables) => mutate({ variables }),
+    }),
+  }),
 )(Actions)
 
 const Manage = ({
@@ -237,7 +237,7 @@ const Manage = ({
   hasWaitingMemberships,
   title,
   compact,
-  actions
+  actions,
 }) => {
   const createdAt = new Date(membership.createdAt)
   const latestPeriod = membership.periods?.[0]
@@ -254,7 +254,7 @@ const Manage = ({
       title={
         title ||
         t(`memberships/title/${membership.type.name}`, {
-          sequenceNumber: membership.sequenceNumber
+          sequenceNumber: membership.sequenceNumber,
         })
       }
     >
@@ -265,10 +265,10 @@ const Manage = ({
             t.first(
               [
                 `memberships/${membership.type.name}/latestPeriod/renew/${membership.renew}/autoPay/${membership.autoPay}`,
-                `memberships/latestPeriod/renew/${membership.renew}/autoPay/${membership.autoPay}`
+                `memberships/latestPeriod/renew/${membership.renew}/autoPay/${membership.autoPay}`,
               ],
               { formattedEndDate },
-              ''
+              '',
             )}
         </P>
       )}
@@ -277,9 +277,9 @@ const Manage = ({
           {t.first(
             [
               `memberships/${membership.type.name}/latestPeriod/overdue`,
-              'memberships/latestPeriod/overdue'
+              'memberships/latestPeriod/overdue',
             ],
-            { formattedEndDate }
+            { formattedEndDate },
           )}
         </P>
       )}
@@ -288,9 +288,9 @@ const Manage = ({
           {t.first(
             [
               `memberships/${membership.type.name}/ended`,
-              'memberships/latestPeriod/ended'
+              'memberships/latestPeriod/ended',
             ],
-            { formattedEndDate }
+            { formattedEndDate },
           )}
         </P>
       )}
@@ -308,11 +308,11 @@ const Manage = ({
 Manage.propTypes = {
   title: PropTypes.string,
   membership: PropTypes.object.isRequired,
-  actions: PropTypes.bool.isRequired
+  actions: PropTypes.bool.isRequired,
 }
 
 Manage.defaultProps = {
-  actions: true
+  actions: true,
 }
 
 export default compose(withT)(Manage)

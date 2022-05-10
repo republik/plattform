@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
@@ -10,7 +10,7 @@ import {
   useColorContext,
   FavoriteIcon,
   StarsIcon,
-  ChevronRightIcon
+  ChevronRightIcon,
 } from '@project-r/styleguide'
 import { Strong } from './text'
 import CandidateCard from './CandidateCard'
@@ -20,8 +20,8 @@ const styles = {
     width: '100%',
     padding: '4px 0',
     [mediaQueries.mUp]: {
-      padding: '7px 0'
-    }
+      padding: '7px 0',
+    },
   }),
   summary: css({
     width: '100%',
@@ -30,22 +30,22 @@ const styles = {
     alignItems: 'center',
     ...fontStyles.sansSerifRegular16,
     lineHeight: 1.3,
-    overflowWrap: 'break-word'
+    overflowWrap: 'break-word',
   }),
   summaryInfo: css({
     display: 'flex',
     alignItems: 'center',
-    cursor: 'pointer'
+    cursor: 'pointer',
   }),
   summaryDetail: css({
     [mediaQueries.mUp]: {
-      display: 'inline-block'
-    }
+      display: 'inline-block',
+    },
   }),
   summaryDesktop: css({
     [mediaQueries.onlyS]: {
-      display: 'none'
-    }
+      display: 'none',
+    },
   }),
   icon: css({
     marginLeft: 'auto',
@@ -53,16 +53,16 @@ const styles = {
     transition: 'transform 0.3s',
     display: 'flex',
     '& :not(:first-child)': {
-      marginLeft: 8
-    }
+      marginLeft: 8,
+    },
   }),
   selection: css({
     marginLeft: 24,
-    paddingRight: 10
-  })
+    paddingRight: 10,
+  }),
 }
 
-const ElectionBallotRow = props => {
+const ElectionBallotRow = (props) => {
   const [colorScheme] = useColorContext()
   const [expanded, setExpanded] = useState(props.expanded || false)
   const {
@@ -75,20 +75,20 @@ const ElectionBallotRow = props => {
     showMeta,
     discussionPath,
     discussionTag,
-    odd
+    odd,
   } = props
 
-  const toggleExpanded = e => {
+  const toggleExpanded = (e) => {
     e.preventDefault()
     e.stopPropagation()
-    setExpanded(expanded => !expanded)
+    setExpanded((expanded) => !expanded)
   }
 
   const SelectionComponent = maxVotes > 1 ? Checkbox : Radio
 
   const { user: d } = candidate
   const summary = [candidate.yearOfBirth, d.gender, candidate.city].filter(
-    Boolean
+    Boolean,
   )
   const showSummary = !!summary.length
 
@@ -155,7 +155,7 @@ ElectionBallotRow.propTypes = {
   candidate: PropTypes.object.isRequired,
   showMeta: PropTypes.bool,
   discussionPath: PropTypes.string,
-  discussionTag: PropTypes.string
+  discussionTag: PropTypes.string,
 }
 
 ElectionBallotRow.defaultProps = {
@@ -163,7 +163,7 @@ ElectionBallotRow.defaultProps = {
   disabled: false,
   maxVotes: 1,
   expanded: false,
-  showMeta: true
+  showMeta: true,
 }
 
 export default ElectionBallotRow

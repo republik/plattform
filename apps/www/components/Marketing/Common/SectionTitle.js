@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import { fontStyles, Editorial } from '@project-r/styleguide'
 
@@ -18,9 +17,9 @@ const styles = {
     margin: '0 auto',
     maxWidth: 720,
     textAlign: 'center',
-    marginBottom: '2em'
+    marginBottom: '2em',
   }),
   title: css({
-    ...fontStyles.sansSerifMedium30
-  })
+    ...fontStyles.sansSerifMedium30,
+  }),
 }

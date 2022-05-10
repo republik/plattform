@@ -2,7 +2,7 @@ export const getDiscussionLinkProps = (
   linkedDiscussion,
   ownDiscussion,
   template,
-  path
+  path,
 ) => {
   const isLinkedDiscussion =
     linkedDiscussion &&
@@ -43,6 +43,6 @@ export const getDiscussionLinkProps = (
     discussionPath,
     discussionQuery,
     discussionCount,
-    isDiscussionPage
+    isDiscussionPage,
   }
 }

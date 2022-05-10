@@ -1,4 +1,3 @@
-import React from 'react'
 import withMe from '../../lib/withMe'
 import withT from '../../lib/withT'
 import Me from './Me'
@@ -11,22 +10,22 @@ const styles = {
     width: '100%',
     maxWidth: '540px',
     margin: '20vh auto',
-    padding: 20
+    padding: 20,
   }),
   brandMark: css({
     maxWidth: 40,
-    marginBottom: 20
-  })
+    marginBottom: 20,
+  }),
 }
 
-const withAuthorization = authorizedRoles => Component =>
+const withAuthorization = (authorizedRoles) => (Component) =>
   withT(
-    withMe(props => {
+    withMe((props) => {
       const { me, t } = props
       if (
         me &&
         me.roles &&
-        me.roles.some(role => authorizedRoles.indexOf(role) !== -1)
+        me.roles.some((role) => authorizedRoles.indexOf(role) !== -1)
       ) {
         return <Component {...props} />
       }
@@ -39,7 +38,7 @@ const withAuthorization = authorizedRoles => Component =>
           {me && (
             <Interaction.P>
               {t('withAuthorization/authorizedRoles', {
-                roles: authorizedRoles.join(', ')
+                roles: authorizedRoles.join(', '),
               })}
               <br />
             </Interaction.P>
@@ -48,7 +47,7 @@ const withAuthorization = authorizedRoles => Component =>
           <Me />
         </div>
       )
-    })
+    }),
   )
 
 export default withAuthorization

@@ -10,8 +10,8 @@ const styles = {
     WebkitFontSmoothing: 'antialiased',
     width: '100%',
     margin: 0,
-    padding: 0
-  }
+    padding: 0,
+  },
 }
 
 export default ({ children, attributes = {} }) => {

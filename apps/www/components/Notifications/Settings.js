@@ -1,4 +1,3 @@
-import React from 'react'
 import { Interaction } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
 import SubscribedDocuments from './SubscribedDocuments'
@@ -11,7 +10,7 @@ import AccountSection from '../../components/Account/AccountSection'
 
 export default compose(
   withT,
-  withMembership
+  withMembership,
 )(({ t, isMember }) => {
   return (
     <>

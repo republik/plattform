@@ -29,9 +29,10 @@ PgDb.connect()
         u.id
     `)
 
-      const benefactorMembershipType = await transaction.public.membershipTypes.findOne(
-        { name: 'BENEFACTOR_ABO' },
-      )
+      const benefactorMembershipType =
+        await transaction.public.membershipTypes.findOne({
+          name: 'BENEFACTOR_ABO',
+        })
 
       let max = 0
       const beginDate = new Date('2018-01-15T12:00:00.000+01:00')

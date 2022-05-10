@@ -1,24 +1,24 @@
 import React from 'react'
 import BlockQuote, {
   Paragraph,
-  ParagraphWrapper
+  ParagraphWrapper,
 } from '../components/BlockQuote'
 import {
   matchParagraph,
   matchType,
-  matchZone
+  matchZone,
 } from 'mdast-react-render/lib/utils'
 import legendRule from './legendRules'
 import { inlineInteractionParagraphRules } from './paragraphRule'
 
 const blockQuoteRule = {
   matchMdast: matchZone('BLOCKQUOTE'),
-  props: node => {
+  props: (node) => {
     return {
       isEmpty:
         node.children &&
         node.children.length === 1 &&
-        !node.children[0].children
+        !node.children[0].children,
     }
   },
   component: ({ children, isEmpty }) => {
@@ -33,12 +33,12 @@ const blockQuoteRule = {
         {
           matchMdast: matchParagraph,
           component: Paragraph,
-          rules: inlineInteractionParagraphRules
-        }
-      ]
+          rules: inlineInteractionParagraphRules,
+        },
+      ],
     },
-    legendRule
-  ]
+    legendRule,
+  ],
 }
 
 export default blockQuoteRule

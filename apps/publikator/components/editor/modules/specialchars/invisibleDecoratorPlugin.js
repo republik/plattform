@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 
 const INVALID_CONTROL_TYPE = 'SPECIALCHARS_INVALID_CONTROL'
@@ -13,32 +12,32 @@ const CHARS = [
   ['\u2027', INVALID_TYPE], // HYPHENATION POINT
   ['\u2423', INVALID_TYPE], // OPEN BOX
   ['\u00ad', HYPHEN_TYPE], // SOFT HYPHEN
-  ['\u00a0', NBSP_TYPE] // NO-BREAK SPACE
+  ['\u00a0', NBSP_TYPE], // NO-BREAK SPACE
 ]
 
 const styles = {
   [INVALID_CONTROL_TYPE]: css({
     ':before': {
       color: 'red',
-      content: '•' // BULLET \u2022
-    }
+      content: '•', // BULLET \u2022
+    },
   }),
   [INVALID_TYPE]: css({
-    color: 'red'
+    color: 'red',
   }),
   [HYPHEN_TYPE]: css({
     ':before': {
       color: '#1E90FF',
-      content: '‧' // HYPHENATION POINT \u2027
-    }
+      content: '‧', // HYPHENATION POINT \u2027
+    },
   }),
   [NBSP_TYPE]: css({
     ':before': {
       color: '#1E90FF',
       marginRight: '-0.25em',
-      content: '␣' // OPEN BOX \u2423
-    }
-  })
+      content: '␣', // OPEN BOX \u2423
+    },
+  }),
 }
 
 const createDecoration = (key, index, type) => ({
@@ -46,7 +45,7 @@ const createDecoration = (key, index, type) => ({
   anchorOffset: index,
   focusKey: key,
   focusOffset: index + 1,
-  marks: [{ type }]
+  marks: [{ type }],
   // ToDo: After slate 0.39.0+ upgrade, use code below:
   // anchor: {
   //   key: key,
@@ -71,7 +70,7 @@ export default () => {
       }
     },
     decorateNode(node) {
-      const texts = node.nodes.filter(child => child.kind === 'text')
+      const texts = node.nodes.filter((child) => child.kind === 'text')
       if (!texts.size) return
 
       const decorations = texts.reduce((decs, textNode) => {
@@ -88,6 +87,6 @@ export default () => {
       }, [])
 
       return decorations
-    }
+    },
   }
 }

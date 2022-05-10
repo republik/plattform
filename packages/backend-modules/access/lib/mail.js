@@ -4,7 +4,7 @@ const escape = require('escape-html')
 
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const { timeFormat } = require('@orbiting/backend-modules-formats')
-const { transformUser } = require('@orbiting/backend-modules-auth')
+const { transformUser, AccessToken } = require('@orbiting/backend-modules-auth')
 const base64u = require('@orbiting/backend-modules-base64u')
 const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
 
@@ -18,7 +18,12 @@ const { FRONTEND_BASE_URL } = process.env
 const sendRecipientInvitation = async (granter, campaign, grant, t, pgdb) => {
   debug('sendRecipientInvitation')
 
-  const recipient = await pgdb.public.users.findOne({ email: grant.email })
+  let recipient = await pgdb.public.users.findOne({ email: grant.email })
+  if (!recipient) {
+    recipient = await pgdb.public.users.insertAndGet({
+      email: grant.email,
+    })
+  }
 
   return sendMail(grant.email, 'recipient', 'invitation', {
     granter,
@@ -73,6 +78,23 @@ const sendRecipientExpired = async (
   pgdb,
 ) =>
   sendMail(recipient.email, 'recipient', 'expired', {
+    granter,
+    recipient,
+    campaign,
+    grant,
+    t,
+    pgdb,
+  })
+
+const sendRecipientRecommendations = async (
+  granter,
+  campaign,
+  recipient,
+  grant,
+  t,
+  pgdb,
+) =>
+  sendMail(recipient.email, 'recipient', 'recommendations', {
     granter,
     recipient,
     campaign,
@@ -172,6 +194,9 @@ const getGlobalMergeVars = async (
     !!recipient && (await hasUserActiveMembership(recipient, pgdb))
 
   const email = recipient ? recipient.email : grant.email
+  const accessToken =
+    !!recipient &&
+    (await AccessToken.generateForUser(recipient, 'AUTHORIZE_SESSION'))
 
   const pledgerName =
     grant.perks &&
@@ -238,7 +263,7 @@ const getGlobalMergeVars = async (
       content: !!recipient && recipientHasMemberships,
     },
     {
-      name: 'recipent_has_campaigns',
+      name: 'recipient_has_campaigns',
       content:
         !!recipient && !!recipientCampaigns && recipientCampaigns.length > 0,
     },
@@ -270,7 +295,7 @@ const getGlobalMergeVars = async (
       name: 'link_claim_prefilled',
       content: `${FRONTEND_BASE_URL}/abholen?code=${grant.voucherCode}&email=${
         email ? base64u.encode(email) : ''
-      }&context=access`,
+      }&id=${grant.id}&token=${accessToken}&context=access`,
     },
 
     // Perk "gift membership"
@@ -309,6 +334,9 @@ module.exports = {
 
   // Offboarding when access expired
   sendRecipientExpired,
+
+  // Recommendations during access grant
+  sendRecipientRecommendations,
 
   // Followup after access expired
   sendRecipientFollowup,

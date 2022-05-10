@@ -23,19 +23,20 @@ PgDb.connect()
     const transaction = await pgdb.transactionBegin()
 
     for (const country of postalCodesByCountry) {
-      const existingCountry = await transaction.public.statisticsGeoCountry.findOne(
-        {
+      const existingCountry =
+        await transaction.public.statisticsGeoCountry.findOne({
           code: country.country,
-        },
-      )
+        })
       if (existingCountry) {
         console.log(`${new Date()}: Processing ${existingCountry.name}...`)
         const postalCodes = country.postalCodes
         for (const postalCode of postalCodes) {
           const { code, lat, lon } = postalCode
-          const existingPostalCode = await transaction.public.statisticsGeoPostalCode.findOne(
-            { countryCode: existingCountry.code, postalCode: code },
-          )
+          const existingPostalCode =
+            await transaction.public.statisticsGeoPostalCode.findOne({
+              countryCode: existingCountry.code,
+              postalCode: code,
+            })
 
           if (existingPostalCode) {
             await transaction.public.statisticsGeoPostalCode.update(

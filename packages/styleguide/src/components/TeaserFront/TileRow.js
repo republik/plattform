@@ -14,7 +14,7 @@ const styles = {
     flexDirection: 'column',
     [mUp]: {
       flexDirection: 'row',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
     '& .tile': {
       margin: '0 auto',
@@ -26,19 +26,19 @@ const styles = {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '60px 0'
-      }
-    }
+        padding: '60px 0',
+      },
+    },
   }),
   mobileReverse: css({
-    flexDirection: 'column-reverse'
+    flexDirection: 'column-reverse',
   }),
 
   // One column
   mobileCol1: css({
     '& .tile': {
-      width: '100%'
-    }
+      width: '100%',
+    },
   }),
 
   // Two Columns
@@ -47,7 +47,7 @@ const styles = {
     justifyContent: 'space-between',
     flexWrap: 'wrap',
     [mUp]: {
-      flexWrap: 'nowrap'
+      flexWrap: 'nowrap',
     },
     '& .tile': {
       display: 'flex',
@@ -56,28 +56,28 @@ const styles = {
       justifyContent: 'center',
       width: '50%',
       [mUp]: {
-        width: '100%'
-      }
+        width: '100%',
+      },
     },
     '& .tile:nth-child(3)': {
-      width: '100%'
-    }
+      width: '100%',
+    },
   }),
   col1: css({}),
   col2: css({
     [mUp]: {
       '& .tile': {
-        width: '50%'
+        width: '50%',
       },
       '& img': {
-        ...sizeSmall
-      }
+        ...sizeSmall,
+      },
     },
     [breakoutUp]: {
       '& img': {
-        ...sizeMedium
-      }
-    }
+        ...sizeMedium,
+      },
+    },
   }),
   col3: css({
     [mUp]: {
@@ -85,26 +85,26 @@ const styles = {
       '& .tile': {
         width: '33.33%',
         margin: 0,
-        padding: '60px 0'
+        padding: '60px 0',
       },
       '& .tile:nth-child(2n+1)': {
-        borderLeft: 'none'
+        borderLeft: 'none',
       },
       '& .tile:nth-child(3)': {
-        width: '33.33%'
+        width: '33.33%',
       },
       '& img': {
-        ...sizeSmall
-      }
+        ...sizeSmall,
+      },
     },
     [breakoutUp]: {
       '& .tile': {
-        width: '33.33%'
+        width: '33.33%',
       },
       '& img': {
-        ...sizeSmall
-      }
-    }
+        ...sizeSmall,
+      },
+    },
   }),
   autoColumns: css({
     [mUp]: {
@@ -113,27 +113,27 @@ const styles = {
         width: '50%',
         borderTop: 'none',
         margin: '0 0 50px 0',
-        padding: '20px 0'
+        padding: '20px 0',
       },
       '& .tile:nth-child(2n+1)': {
-        borderLeft: 'none'
+        borderLeft: 'none',
       },
       '& img': {
-        ...sizeSmall
-      }
+        ...sizeSmall,
+      },
     },
     [breakoutUp]: {
       '& .tile': {
-        width: '33.33%'
+        width: '33.33%',
       },
       '& .tile:nth-child(3n+1)': {
-        borderLeft: 'none'
+        borderLeft: 'none',
       },
       '& img': {
-        ...sizeSmall
-      }
-    }
-  })
+        ...sizeSmall,
+      },
+    },
+  }),
 }
 
 export const TeaserFrontTileRow = ({
@@ -143,29 +143,29 @@ export const TeaserFrontTileRow = ({
   singleColumn,
   autoColumns,
   mobileReverse,
-  mobileColumns
+  mobileColumns,
 }) => {
   const [colorScheme] = useColorContext()
   const autoBorders = css({
     '& .tile': {
       borderTopWidth: 1,
       borderTopStyle: 'solid',
-      borderTopColor: colorScheme.getCSSColor('divider')
+      borderTopColor: colorScheme.getCSSColor('divider'),
     },
     [mUp]: {
       '& .tile': {
         borderLeftWidth: 1,
         borderLeftStyle: 'solid',
-        borderLeftColor: colorScheme.getCSSColor('divider')
-      }
+        borderLeftColor: colorScheme.getCSSColor('divider'),
+      },
     },
     [breakoutUp]: {
       '& .tile:nth-child(2n+1)': {
         borderLeftWidth: 1,
         borderLeftStyle: 'solid',
-        borderLeftColor: colorScheme.getCSSColor('divider')
-      }
-    }
+        borderLeftColor: colorScheme.getCSSColor('divider'),
+      },
+    },
   })
 
   const rowStyles = merge(
@@ -183,17 +183,17 @@ export const TeaserFrontTileRow = ({
             borderTopColor: colorScheme.getCSSColor('divider'),
             padding: '25px 0',
             [mUp]: {
-              padding: '25px 0'
-            }
+              padding: '25px 0',
+            },
           },
           [mUp]: {
             flexWrap: 'wrap',
             '& .tile': {
-              alignItems: 'start'
-            }
-          }
+              alignItems: 'start',
+            },
+          },
         })
-      : styles[`mobileCol${mobileColumns}`]
+      : styles[`mobileCol${mobileColumns}`],
   )
   return (
     <div role='group' {...attributes} {...rowStyles}>
@@ -208,12 +208,12 @@ TeaserFrontTileRow.propTypes = {
   mobileReverse: PropTypes.bool,
   autoColumns: PropTypes.bool,
   columns: PropTypes.oneOf([1, 2, 3]).isRequired,
-  mobileColumns: PropTypes.oneOf([1, 2]).isRequired
+  mobileColumns: PropTypes.oneOf([1, 2]).isRequired,
 }
 
 TeaserFrontTileRow.defaultProps = {
   columns: 1,
-  mobileColumns: 1
+  mobileColumns: 1,
 }
 
 export default TeaserFrontTileRow

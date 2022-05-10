@@ -1,11 +1,10 @@
-import React from 'react'
 import { css } from 'glamor'
 import {
   Container,
   Logo,
   mediaQueries,
   Editorial,
-  fontStyles
+  fontStyles,
 } from '@project-r/styleguide'
 
 export default function LeadSection({ t }) {
@@ -30,7 +29,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   }),
   lead: css({
     ...fontStyles.serifRegular,
@@ -42,17 +41,17 @@ const styles = {
     marginBottom: 0,
     [mediaQueries.mUp]: {
       fontSize: 36,
-      lineHeight: '48px'
-    }
+      lineHeight: '48px',
+    },
   }),
   logo: css({
     width: 200,
     [mediaQueries.mUp]: {
-      width: 400
-    }
+      width: 400,
+    },
   }),
   description: css({
     textAlign: 'center',
-    margin: '16px auto'
-  })
+    margin: '16px auto',
+  }),
 }

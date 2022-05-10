@@ -17,19 +17,19 @@ const styles = {
     ...sansSerifMedium15,
     display: 'flex',
     justifyContent: 'space-between',
-    position: 'relative'
+    position: 'relative',
   }),
   linkUnderline: css({
     color: 'inherit',
     textDecoration: 'none',
     '@media (hover)': {
-      '[href]:hover': underline
-    }
+      '[href]:hover': underline,
+    },
   }),
   timeago: css({
     flexShrink: 0,
-    paddingLeft: 10
-  })
+    paddingLeft: 10,
+  }),
 }
 
 const DefaultLink = ({ children }) => children
@@ -41,7 +41,7 @@ export const DiscussionFooter = ({ t, CommentLink = DefaultLink, comment }) => {
   const commentCount = discussion?.comments?.totalCount
   const clock = {
     t,
-    isDesktop
+    isDesktop,
   }
   return (
     <div {...styles.footer}>
@@ -69,7 +69,7 @@ export const DiscussionFooter = ({ t, CommentLink = DefaultLink, comment }) => {
                     style={{
                       marginTop: -2,
                       paddingRight: 0,
-                      verticalAlign: 'top'
+                      verticalAlign: 'top',
                     }}
                   />
                 </CommentLink>
@@ -83,8 +83,8 @@ export const DiscussionFooter = ({ t, CommentLink = DefaultLink, comment }) => {
                 >
                   <A>{inQuotes(discussion.title)}</A>
                 </CommentLink>
-              )
-            }
+              ),
+            },
           )}
         </div>
       )}

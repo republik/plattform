@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { tsvParse, csvFormat } from 'd3-dsv'
 import { JSONEditor, PlainEditor } from '../../../utils/CodeEditorFields'
 import SizeSelector from './SizeSelector'
@@ -10,12 +10,12 @@ const tabs = [
   { value: 'basic', text: 'Grundeinstellungen' },
   {
     value: 'advanced',
-    text: 'Erweiterte Optionen'
+    text: 'Erweiterte Optionen',
   },
   {
     value: 'json',
-    text: 'JSON'
-  }
+    text: 'JSON',
+  },
 ]
 
 const ChartEditorWrapper = ({ data, onChange }) => {
@@ -27,9 +27,9 @@ const ChartEditorWrapper = ({ data, onChange }) => {
       <PlainEditor
         label='CSV Daten'
         value={data.get('values')}
-        onChange={value => onChange(data.set('values', value))}
+        onChange={(value) => onChange(data.set('values', value))}
         linesShown={10}
-        onPaste={e => {
+        onPaste={(e) => {
           const clipboardData = e.clipboardData || window.clipboardData
           let parsedTsv
           try {
@@ -69,7 +69,7 @@ const ChartEditorWrapper = ({ data, onChange }) => {
           <ChartEditor
             data={data.get('values')}
             value={data.get('config')}
-            onChange={newConfig => {
+            onChange={(newConfig) => {
               onChange(data.set('config', newConfig))
             }}
             activeTab={activeTab}
@@ -81,7 +81,7 @@ const ChartEditorWrapper = ({ data, onChange }) => {
           <JSONEditor
             label='Einstellungen'
             config={data.get('config')}
-            onChange={newConfig => {
+            onChange={(newConfig) => {
               onChange(data.set('config', newConfig))
             }}
           />

@@ -1,4 +1,3 @@
-import React from 'react'
 import { withRouter } from 'next/router'
 import { compose } from 'react-apollo'
 import { css } from 'glamor'
@@ -16,8 +15,8 @@ import RepoAdd from '../components/Repo/Add'
 
 const styles = {
   defaultContainer: css({
-    padding: 20
-  })
+    padding: 20,
+  }),
 }
 
 const IndexNavLink = ({ isActive, route, params, label }) =>
@@ -31,7 +30,7 @@ const IndexNavLink = ({ isActive, route, params, label }) =>
 
 const IndexNav = compose(
   withRouter,
-  withT
+  withT,
 )(({ router: { query }, t }) => {
   const views = ['templates', 'calendar']
 
@@ -43,7 +42,7 @@ const IndexNav = compose(
         label={t('repo/table/nav/documents')}
         isActive={!query.view}
       />
-      {views.map(view => (
+      {views.map((view) => (
         <span key={view}>
           <span>&nbsp;</span>
           <IndexNavLink
@@ -60,8 +59,8 @@ const IndexNav = compose(
 
 const Index = ({
   router: {
-    query: { view }
-  }
+    query: { view },
+  },
 }) => (
   <Frame>
     <Frame.Header>

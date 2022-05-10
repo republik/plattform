@@ -30,13 +30,12 @@ const dateRangeParser = (value) => {
   }
 }
 
-const createEntry = (criteriaBuilder, aggBuilder, additionals) => (
-  fieldPath,
-) => ({
-  criteria: criteriaBuilder(fieldPath),
-  agg: aggBuilder(fieldPath),
-  ...additionals,
-})
+const createEntry =
+  (criteriaBuilder, aggBuilder, additionals) => (fieldPath) => ({
+    criteria: criteriaBuilder(fieldPath),
+    agg: aggBuilder(fieldPath),
+    ...additionals,
+  })
 
 const termEntry = createEntry(termCriteriaBuilder, termsAggBuilder)
 const countEntry = createEntry(termCriteriaBuilder, trueCountAggBuilder, {

@@ -1,4 +1,3 @@
-import test from 'tape'
 import { parse, stringify } from '@orbiting/remark-preset'
 
 import createLinkModule from './'
@@ -7,37 +6,37 @@ import createParagraphModule from '../paragraph'
 const linkModule = createLinkModule({
   TYPE: 'LINK',
   rule: {
-    matchMdast: node => node.type === 'link'
+    matchMdast: (node) => node.type === 'link',
   },
-  subModules: []
+  subModules: [],
 })
 linkModule.name = 'link'
 
 const paragraphModule = createParagraphModule({
   TYPE: 'PARAGRAPH',
   rule: {},
-  subModules: [linkModule]
+  subModules: [linkModule],
 })
 paragraphModule.name = 'paragraph'
 
 const serializer = paragraphModule.helpers.serializer
 
-test('link serialization', assert => {
-  const value = serializer.deserialize(parse('[Test](example.com)'))
-  const node = value.document.nodes.first()
+describe('link serializer test-suite', () => {
+  it('link serialization', () => {
+    const value = serializer.deserialize(parse('[Test](example.com)'))
+    const node = value.document.nodes.first()
 
-  assert.equal(node.kind, 'block')
-  assert.equal(node.type, 'PARAGRAPH')
-  assert.equal(node.text, 'Test')
+    expect(node.kind).toBe('block')
+    expect(node.type).toBe('PARAGRAPH')
+    expect(node.text).toBe('Test')
 
-  const link = node.nodes.find(node => node.type === 'LINK')
-  assert.ok(link)
+    const link = node.nodes.find((node) => node.type === 'LINK')
+    expect(link).toBeTruthy()
 
-  assert.equal(link.getIn(['data', 'href']), 'example.com')
+    expect(link.getIn(['data', 'href'])).toBe('example.com')
 
-  assert.equal(
-    stringify(serializer.serialize(value)).trimRight(),
-    '[Test](example.com)'
-  )
-  assert.end()
+    expect(stringify(serializer.serialize(value)).trimRight()).toBe(
+      '[Test](example.com)',
+    )
+  })
 })

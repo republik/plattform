@@ -7,7 +7,7 @@ import {
   Items,
   Inner,
   styles,
-  itemToString
+  itemToString,
 } from './VirtualDropdown'
 import Field from './Field'
 
@@ -19,16 +19,17 @@ const Autocomplete = ({
   filter,
   onFilterChange,
   icon,
-  autoComplete
+  autoComplete,
+  autoFocus = false,
 }) => {
   return (
     <Downshift
       {...{
         onChange,
         selectedItem: value,
-        onInputValueChange: nextFilter => onFilterChange(nextFilter || ''),
+        onInputValueChange: (nextFilter) => onFilterChange(nextFilter || ''),
         itemToString,
-        inputValue: filter
+        inputValue: filter,
       }}
     >
       {({
@@ -38,7 +39,7 @@ const Autocomplete = ({
         selectedItem,
         highlightedIndex,
         isOpen,
-        openMenu
+        openMenu,
       }) => {
         return (
           <div {...styles.root}>
@@ -47,7 +48,7 @@ const Autocomplete = ({
                 label={label}
                 value={isOpen ? filter : (value && value.text) || ''}
                 icon={icon}
-                renderInput={fieldProps => (
+                renderInput={(fieldProps) => (
                   <input
                     {...getInputProps({
                       ...fieldProps,
@@ -65,9 +66,10 @@ const Autocomplete = ({
                         }
                       },
                       autoComplete,
+                      autoFocus,
                       placeholder: selectedItem
                         ? itemToString(selectedItem)
-                        : ''
+                        : '',
                     })}
                   />
                 )}
@@ -79,7 +81,7 @@ const Autocomplete = ({
                       items,
                       selectedItem,
                       highlightedIndex,
-                      getItemProps
+                      getItemProps,
                     }}
                   />
                 </ItemsContainer>
@@ -96,22 +98,22 @@ Autocomplete.propTypes = {
   items: PropTypes.arrayOf(
     PropTypes.shape({
       text: PropTypes.string,
-      value: PropTypes.any
-    })
+      value: PropTypes.any,
+    }),
   ).isRequired,
   value: PropTypes.shape({
     text: PropTypes.string,
-    value: PropTypes.any
+    value: PropTypes.any,
   }),
   filter: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   onFilterChange: PropTypes.func.isRequired,
   icon: PropTypes.object,
-  autoComplete: PropTypes.string
+  autoComplete: PropTypes.string,
 }
 
 Autocomplete.defaultProps = {
-  autoComplete: 'off'
+  autoComplete: 'off',
 }
 
 export default Autocomplete

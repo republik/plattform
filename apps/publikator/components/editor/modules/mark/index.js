@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { matchMark, createMarkButton, buttonStyles } from '../../utils'
 
 import BoldIcon from 'react-icons/lib/fa/bold'
@@ -15,7 +13,7 @@ const icons = {
   emphasis: ItalicIcon,
   delete: StrikethroughIcon,
   sub: SubIcon,
-  sup: SupIcon
+  sup: SupIcon,
 }
 
 export default ({ rule, subModules, TYPE }) => {
@@ -36,16 +34,16 @@ export default ({ rule, subModules, TYPE }) => {
     fromMdast: (node, index, parent, { visitChildren }) => ({
       kind: 'mark',
       type: TYPE,
-      nodes: visitChildren(node)
+      nodes: visitChildren(node),
     }),
     toMdast: (mark, index, parent, { visitChildren }) => ({
       type: mdastType,
-      children: visitChildren(mark)
-    })
+      children: visitChildren(mark),
+    }),
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [markRule]
+    rules: [markRule],
   })
 
   const Mark = rule.component
@@ -53,13 +51,13 @@ export default ({ rule, subModules, TYPE }) => {
   return {
     TYPE,
     helpers: {
-      serializer
+      serializer,
     },
     changes: {},
     ui: {
       textFormatButtons: [
         createMarkButton({
-          type: TYPE
+          type: TYPE,
         })(({ active, disabled, visible, ...props }) => (
           <span
             {...buttonStyles.mark}
@@ -70,8 +68,8 @@ export default ({ rule, subModules, TYPE }) => {
           >
             <Icon />
           </span>
-        ))
-      ]
+        )),
+      ],
     },
     plugins: [
       {
@@ -79,8 +77,8 @@ export default ({ rule, subModules, TYPE }) => {
           if (!markRule.match(mark)) return
 
           return <Mark attributes={attributes}>{children}</Mark>
-        }
-      }
-    ]
+        },
+      },
+    ],
   }
 }

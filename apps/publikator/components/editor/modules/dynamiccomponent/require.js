@@ -12,5 +12,5 @@ import * as graphqlTag from 'graphql-tag'
 
 export default createRequire().alias({
   'react-apollo': reactApollo,
-  'graphql-tag': graphqlTag
+  'graphql-tag': graphqlTag,
 })

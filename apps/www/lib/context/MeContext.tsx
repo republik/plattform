@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useMemo
-} from 'react'
+import { createContext, ReactNode, useContext, useEffect, useMemo } from 'react'
 import NextHead from 'next/head'
 import { ApolloError, useQuery } from '@apollo/client'
 import { checkRoles, meQuery } from '../apollo/withMe'
@@ -19,33 +13,33 @@ export const ME_PORTRAIT_STORAGE_KEY = 'me.portraitOrInitials'
 
 // Rule to hide elements while a statically generated page is fetching the active-user
 css.global(`[${ME_PORTRAIT_ATTRIBUTE}="true"] [data-hide-if-me="true"]`, {
-  display: 'none'
+  display: 'none',
 })
 
 css.global('[data-show-if-me="true"]', {
-  display: 'none'
+  display: 'none',
 })
 
 css.global(`[${ME_PORTRAIT_ATTRIBUTE}="true"] [data-show-if-me="true"]`, {
-  display: 'block'
+  display: 'block',
 })
 
 css.global(
   `[${HAS_ACTIVE_MEMBERSHIP_ATTRIBUTE}="true"] [data-hide-if-active-membership="true"]`,
   {
-    display: 'none'
-  }
+    display: 'none',
+  },
 )
 
 css.global('[data-show-if-active-membership="true"]', {
-  display: 'none'
+  display: 'none',
 })
 
 css.global(
   `[${HAS_ACTIVE_MEMBERSHIP_ATTRIBUTE}="true"] [data-show-if-active-membership="true"]`,
   {
-    display: 'block'
-  }
+    display: 'block',
+  },
 )
 
 type Me = {
@@ -115,7 +109,7 @@ const MeContextProvider = ({ children }: Props) => {
     if (hasActiveMembership) {
       document.documentElement.setAttribute(
         HAS_ACTIVE_MEMBERSHIP_ATTRIBUTE,
-        'true'
+        'true',
       )
     } else {
       document.documentElement.removeAttribute(HAS_ACTIVE_MEMBERSHIP_ATTRIBUTE)
@@ -131,7 +125,7 @@ const MeContextProvider = ({ children }: Props) => {
       if (hasActiveMembership) {
         localStorage.setItem(
           HAS_ACTIVE_MEMBERSHIP_STORAGE_KEY,
-          String(hasActiveMembership)
+          String(hasActiveMembership),
         )
       } else {
         localStorage.removeItem(HAS_ACTIVE_MEMBERSHIP_STORAGE_KEY)
@@ -150,7 +144,7 @@ const MeContextProvider = ({ children }: Props) => {
         meRefetch: refetch,
         hasActiveMembership,
         hasAccess: isMember,
-        isEditor: checkRoles(me, ['editor'])
+        isEditor: checkRoles(me, ['editor']),
       }}
     >
       <NextHead>
@@ -163,8 +157,8 @@ const MeContextProvider = ({ children }: Props) => {
               `document.documentElement.setAttribute("${HAS_ACTIVE_MEMBERSHIP_ATTRIBUTE}", value);`,
               `if (localStorage.getItem("${ME_PORTRAIT_STORAGE_KEY}"))`,
               `document.documentElement.setAttribute("${ME_PORTRAIT_ATTRIBUTE}", "true");`,
-              '} catch(e) {}'
-            ].join('')
+              '} catch(e) {}',
+            ].join(''),
           }}
         />
       </NextHead>

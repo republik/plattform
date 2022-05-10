@@ -4,13 +4,13 @@ import { toRejectedString } from '../../graphql/utils'
 import Optional from '../../../../lib/types/Optional'
 import {
   SubmitCommentMutationResult,
-  useSubmitCommentMutation
+  useSubmitCommentMutation,
 } from '../../graphql/mutations/SubmitCommentMutation.graphql'
 import { useDiscussion } from '../../context/DiscussionContext'
 import {
   DISCUSSION_QUERY,
   DiscussionQuery,
-  DiscussionQueryVariables
+  DiscussionQueryVariables,
 } from '../../graphql/queries/DiscussionQuery.graphql'
 import produce from 'immer'
 import { mergeComment } from '../../graphql/store'
@@ -21,7 +21,7 @@ export type SubmitCommentHandlerFunction = (
   options: {
     discussionId: string
     parentId: Optional<string>
-  }
+  },
 ) => Promise<FetchResult<SubmitCommentMutationResult>>
 
 function useSubmitCommentHandler(): SubmitCommentHandlerFunction {
@@ -34,11 +34,11 @@ function useSubmitCommentHandler(): SubmitCommentHandlerFunction {
     tags: string[],
     {
       discussionId,
-      parentId
+      parentId,
     }: {
       discussionId: string
       parentId: Optional<string>
-    }
+    },
   ) => {
     const id = uuid()
 
@@ -48,7 +48,7 @@ function useSubmitCommentHandler(): SubmitCommentHandlerFunction {
         content,
         discussionId,
         parentId,
-        tags
+        tags,
       },
       // Write the result of the query into the DiscussionQuery cache
       update: (cache, { data: { submitComment: comment } }) => {
@@ -57,7 +57,7 @@ function useSubmitCommentHandler(): SubmitCommentHandlerFunction {
           orderBy: orderBy,
           depth: depth,
           focusId: focusId,
-          activeTag: activeTag
+          activeTag: activeTag,
         }
 
         const readQueries = cache.readQuery<
@@ -73,11 +73,11 @@ function useSubmitCommentHandler(): SubmitCommentHandlerFunction {
             mergeComment({
               comment,
               activeTag: activeTag,
-              initialParentId: parentId
-            })
-          )
+              initialParentId: parentId,
+            }),
+          ),
         })
-      }
+      },
     }).catch(toRejectedString)
   }
 }

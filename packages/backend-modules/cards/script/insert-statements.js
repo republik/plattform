@@ -52,9 +52,11 @@ PgDb.connect().then(async (pgdb) => {
         isListed: true,
       })
 
-      const discussionPreference = await transaction.public.discussionPreferences.findOne(
-        { discussionId, userId: card.userId },
-      )
+      const discussionPreference =
+        await transaction.public.discussionPreferences.findOne({
+          discussionId,
+          userId: card.userId,
+        })
 
       if (!discussionPreference) {
         await transaction.public.discussionPreferences.insert({

@@ -12,11 +12,11 @@ const overlayBodyStyle = css({
   paddingBottom: 120,
   [mUp]: {
     padding: `${height + PADDING}px ${PADDING}px`,
-    paddingBottom: PADDING
-  }
+    paddingBottom: PADDING,
+  },
 })
 
-const OverlayBody = props => <div {...overlayBodyStyle} {...props} />
+const OverlayBody = (props) => <div {...overlayBodyStyle} {...props} />
 
 OverlayBody.PADDING = PADDING
 

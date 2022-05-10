@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { css } from 'glamor'
 
 import withT from '../../lib/withT'
@@ -10,11 +10,11 @@ import { fontFamilies, mediaQueries, inQuotes } from '@project-r/styleguide'
 const styles = {
   quote: {
     fontFamily: fontFamilies.serifTitle,
-    lineHeight: 1.2
-  }
+    lineHeight: 1.2,
+  },
 }
 
-const fontSizeBoost = length => {
+const fontSizeBoost = (length) => {
   if (length < 40) {
     return 26
   }
@@ -33,21 +33,21 @@ const fontSizeBoost = length => {
   return 0
 }
 
-const fields = t => [
+const fields = (t) => [
   {
     label: t('profile/statement/label'),
     name: 'statement',
     autoSize: true,
-    validator: value =>
-      value.trim().length >= 140 && t('profile/statement/tooLong')
-  }
+    validator: (value) =>
+      value.trim().length >= 140 && t('profile/statement/tooLong'),
+  },
 ]
 
 class Statement extends Component {
   constructor(...args) {
     super(...args)
     this.state = {
-      isMobile: true
+      isMobile: true,
     }
 
     this.handleResize = () => {

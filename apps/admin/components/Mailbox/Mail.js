@@ -1,4 +1,3 @@
-import React from 'react'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 import { css, merge } from 'glamor'
@@ -10,7 +9,7 @@ import {
   Overlay,
   OverlayToolbar,
   OverlayBody,
-  colors
+  colors,
 } from '@project-r/styleguide'
 
 import { displayDateTime } from '../Display/utils'
@@ -33,17 +32,17 @@ const styles = {
   headerLine: css({
     marginBottom: 10,
     overflowWrap: 'anywhere',
-    whiteSpace: 'normal'
+    whiteSpace: 'normal',
   }),
   errornous: css({
-    color: colors.error
+    color: colors.error,
   }),
   contentFrame: css({
     marginTop: 10,
     marginBottom: 10,
     width: '100%',
-    height: '500px'
-  })
+    height: '500px',
+  }),
 }
 
 const HeaderLine = ({ label, errornous, children }) => {
@@ -114,7 +113,7 @@ export const Body = ({ mail }) => (
         {mail.error}
       </HeaderLine>
     )}
-    {mail.links?.map(link => (
+    {mail.links?.map((link) => (
       <HeaderLine key={link.id} label='Link'>
         <A href={link.url} target='_blank'>
           {link.label}
@@ -126,7 +125,7 @@ export const Body = ({ mail }) => (
   </>
 )
 
-const Mail = props => {
+const Mail = (props) => {
   const { mail, onClose } = props
 
   return (

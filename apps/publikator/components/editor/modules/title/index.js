@@ -1,4 +1,3 @@
-import React from 'react'
 import MarkdownSerializer from 'slate-mdast-serializer'
 
 import { findNode } from '../../utils/serialization'
@@ -17,11 +16,11 @@ export default ({ rule, subModules, TYPE }) => {
       .reduce(
         (a, m) =>
           a.concat(
-            m.helpers && m.helpers.serializer && m.helpers.serializer.rules
+            m.helpers && m.helpers.serializer && m.helpers.serializer.rules,
           ),
-        []
+        [],
       )
-      .filter(Boolean)
+      .filter(Boolean),
   })
 
   const Container = rule.component
@@ -38,7 +37,7 @@ export default ({ rule, subModules, TYPE }) => {
         writableNode.children.splice(1, 0, {
           type: 'heading',
           depth: 2,
-          children: []
+          children: [],
         })
       }
 
@@ -46,7 +45,7 @@ export default ({ rule, subModules, TYPE }) => {
         writableNode.children,
         0,
         writableNode,
-        rest
+        rest,
       )
       const { format, section, series, repoId } = rest.context
       // skip coverText for now
@@ -54,9 +53,9 @@ export default ({ rule, subModules, TYPE }) => {
       if (format || section || meta || series) {
         // enhance all immediate children with format and section
         // - needed for headline
-        nodes = nodes.map(node => ({
+        nodes = nodes.map((node) => ({
           ...node,
-          data: { ...node.data, meta, format, section, series }
+          data: { ...node.data, meta, format, section, series },
         }))
       }
 
@@ -69,9 +68,9 @@ export default ({ rule, subModules, TYPE }) => {
           format,
           section,
           series,
-          repoId
+          repoId,
         },
-        nodes
+        nodes,
       }
     },
     toMdast: (object, index, parent, rest) => {
@@ -81,25 +80,25 @@ export default ({ rule, subModules, TYPE }) => {
         type: 'zone',
         identifier,
         data,
-        children: childSerializer.toMdast(object.nodes, 0, object, rest)
+        children: childSerializer.toMdast(object.nodes, 0, object, rest),
       }
-    }
+    },
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [serializerRule]
+    rules: [serializerRule],
   })
 
   return {
     TYPE,
     helpers: {
-      serializer
+      serializer,
     },
     changes: {},
     ui: createUi({
       TYPE,
       subModules,
-      editorOptions
+      editorOptions,
     }),
     plugins: [
       {
@@ -123,27 +122,27 @@ export default ({ rule, subModules, TYPE }) => {
         schema: {
           blocks: {
             [TYPE]: {
-              nodes: subModules.map(module => ({
+              nodes: subModules.map((module) => ({
                 types: [module.TYPE],
                 kinds: ['block'],
                 min: 1,
-                max: 1
+                max: 1,
               })),
               normalize: (change, reason, { node, index, child }) => {
                 if (reason === 'child_required') {
                   change.insertNodeByKey(node.key, index, {
                     kind: 'block',
-                    type: subModules[index].TYPE
+                    type: subModules[index].TYPE,
                   })
                 }
                 if (reason === 'child_kind_invalid') {
                   change.wrapBlockByKey(child.key, {
-                    type: subModules[index].TYPE
+                    type: subModules[index].TYPE,
                   })
                 }
                 if (reason === 'child_type_invalid') {
                   change.setNodeByKey(child.key, {
-                    type: subModules[index].TYPE
+                    type: subModules[index].TYPE,
                   })
                 }
                 if (reason === 'child_unknown') {
@@ -151,11 +150,11 @@ export default ({ rule, subModules, TYPE }) => {
                     change.unwrapNodeByKey(child.key)
                   }
                 }
-              }
-            }
-          }
-        }
-      }
-    ]
+              },
+            },
+          },
+        },
+      },
+    ],
   }
 }

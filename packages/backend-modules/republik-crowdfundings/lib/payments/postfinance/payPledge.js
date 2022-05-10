@@ -72,13 +72,12 @@ module.exports = async ({
   })
 
   if (pspPayload.ALIAS) {
-    const paymentSourceExists = !!(await transaction.public.paymentSources.findFirst(
-      {
+    const paymentSourceExists =
+      !!(await transaction.public.paymentSources.findFirst({
         userId,
         pspId: pspPayload.ALIAS,
         method: 'POSTFINANCECARD',
-      },
-    ))
+      }))
     if (!paymentSourceExists) {
       // save alias to user
       await transaction.public.paymentSources.insert({

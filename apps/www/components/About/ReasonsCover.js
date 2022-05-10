@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 
 import { css } from 'glamor'
 
@@ -14,15 +14,15 @@ const styles = {
     height: 0,
     width: '100%',
     paddingBottom: `${(HEIGHT / WIDTH) * 100}%`,
-    background: 'black'
+    background: 'black',
   }),
   svg: css({
     position: 'absolute',
     height: '100%',
     width: '100%',
     left: 0,
-    top: 0
-  })
+    top: 0,
+  }),
 }
 
 const ReasonsCover = () => {
@@ -30,7 +30,7 @@ const ReasonsCover = () => {
   const [formatting, setFormatting] = useState({
     lines: [],
     textHeight: 0,
-    topOffset: HEIGHT / 2
+    topOffset: HEIGHT / 2,
   })
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const ReasonsCover = () => {
     }, [])
     const maxLineLength = lines.reduce(
       (n, line) => Math.max(n, line.join(' ').length),
-      0
+      0,
     )
     const fontSize =
       text.length > 70
@@ -78,7 +78,7 @@ const ReasonsCover = () => {
       lines,
       fontSize,
       topOffset,
-      textHeight
+      textHeight,
     })
   }, [])
 
@@ -122,9 +122,9 @@ const ReasonsCover = () => {
         )}
 
         <g
-          transform={`translate(${WIDTH / 2 - 13} ${formatting.topOffset +
-            formatting.textHeight +
-            20}) scale(1.5)`}
+          transform={`translate(${WIDTH / 2 - 13} ${
+            formatting.topOffset + formatting.textHeight + 20
+          }) scale(1.5)`}
         >
           <path d='M25.956 18.188L.894 35.718V.66' fill='#fff' />
         </g>

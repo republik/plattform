@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react'
 import { isURL } from 'validator'
 import compose from 'lodash/flowRight'
 import { css } from 'glamor'
@@ -9,7 +9,7 @@ import {
   LanguageIcon,
   MailOutlineIcon,
   NoteAddIcon,
-  VpnKeyIcon
+  VpnKeyIcon,
 } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 import withInNativeApp from '../../lib/withInNativeApp'
@@ -19,34 +19,34 @@ import FieldSet, { styles as fieldSetStyles } from '../FieldSet'
 
 import { DEFAULT_VALUES } from './Page'
 
-const isHTTPUrl = url =>
+const isHTTPUrl = (url) =>
   isURL(url, { require_protocol: true, protocols: ['http', 'https'] })
 
-const fields = t => [
+const fields = (t) => [
   {
     label: t('profile/contact/facebook/label'),
-    name: 'facebookId'
+    name: 'facebookId',
   },
   {
     label: t('profile/contact/twitter/label'),
-    name: 'twitterHandle'
+    name: 'twitterHandle',
   },
   {
     label: t('profile/contact/publicUrl/label'),
     name: 'publicUrl',
-    validator: value =>
+    validator: (value) =>
       !!value &&
       !isHTTPUrl(value) &&
       value !== DEFAULT_VALUES.publicUrl &&
-      t('profile/contact/publicUrl/error')
-  }
+      t('profile/contact/publicUrl/error'),
+  },
 ]
 
 const AccessRoleDropdown = ({ t, ...props }) => (
   <Dropdown
-    items={['ADMIN', 'EDITOR', 'MEMBER', 'PUBLIC'].map(value => ({
+    items={['ADMIN', 'EDITOR', 'MEMBER', 'PUBLIC'].map((value) => ({
       value: value,
-      text: t(`profile/contact/access/${value}`)
+      text: t(`profile/contact/access/${value}`),
     }))}
     {...props}
   />
@@ -63,7 +63,7 @@ const Contact = ({
   showSupportLink,
   isSupporter,
   inNativeIOSApp,
-  electionBallot
+  electionBallot,
 }) => {
   if (isEditing) {
     return (
@@ -79,11 +79,11 @@ const Contact = ({
           t={t}
           label={t('profile/contact/email/access/label')}
           value={values.emailAccessRole}
-          onChange={item => {
+          onChange={(item) => {
             onChange({
               values: {
-                emailAccessRole: item.value
-              }
+                emailAccessRole: item.value,
+              },
             })
           }}
         />
@@ -91,13 +91,13 @@ const Contact = ({
           values={values}
           errors={errors}
           dirty={dirty}
-          onChange={fields => {
+          onChange={(fields) => {
             const { pgpPublicKey } = fields.values
             if (pgpPublicKey && pgpPublicKey.match(/PGP PRIVATE KEY/)) {
               onChange({
                 values: {
-                  pgpPublicKey: ''
-                }
+                  pgpPublicKey: '',
+                },
               })
               window.alert(t('profile/contact/pgpPublicKey/error/private'))
               return
@@ -106,16 +106,16 @@ const Contact = ({
           }}
           additionalFieldProps={() => {
             return {
-              renderInput: props => (
+              renderInput: (props) => (
                 <textarea row={1} {...fieldSetStyles.autoSize} {...props} />
-              )
+              ),
             }
           }}
           fields={[
             {
               label: t('profile/contact/pgpPublicKey/label'),
-              name: 'pgpPublicKey'
-            }
+              name: 'pgpPublicKey',
+            },
           ]}
         />
         {!!user.phoneNumber && (
@@ -128,23 +128,23 @@ const Contact = ({
               fields={[
                 {
                   label: t('profile/contact/phoneNumber/label'),
-                  name: 'phoneNumber'
+                  name: 'phoneNumber',
                 },
                 {
                   label: t('profile/contact/phoneNumberNote/label'),
-                  name: 'phoneNumberNote'
-                }
+                  name: 'phoneNumberNote',
+                },
               ]}
             />
             <AccessRoleDropdown
               t={t}
               label={t('profile/contact/phoneNumber/access/label')}
               value={values.phoneNumberAccessRole}
-              onChange={item => {
+              onChange={(item) => {
                 onChange({
                   values: {
-                    phoneNumberAccessRole: item.value
-                  }
+                    phoneNumberAccessRole: item.value,
+                  },
                 })
               }}
             />
@@ -187,7 +187,7 @@ const Contact = ({
                 electionBallot
                   ? {
                       marginRight: 0,
-                      marginBottom: 0
+                      marginBottom: 0,
                     }
                   : undefined
               }
@@ -220,9 +220,9 @@ const Contact = ({
             {t(
               `profile/contact/access/${user.emailAccessRole}/note`,
               {
-                field: t('profile/contact/email/label')
+                field: t('profile/contact/email/label'),
               },
-              ''
+              '',
             )}
           </Label>
         </div>
@@ -244,9 +244,9 @@ const Contact = ({
             {t(
               `profile/contact/access/${user.phoneNumberAccessRole}/note`,
               {
-                field: t('profile/contact/phoneNumber/label')
+                field: t('profile/contact/phoneNumber/label'),
               },
-              ''
+              '',
             )}
           </Label>
         </div>
@@ -257,11 +257,11 @@ const Contact = ({
 
 const styles = {
   icons: css({
-    display: 'flex'
+    display: 'flex',
   }),
   contactRow: css({
-    marginTop: 16
-  })
+    marginTop: 16,
+  }),
 }
 
 export default compose(withT, withInNativeApp, withSupporter)(Contact)

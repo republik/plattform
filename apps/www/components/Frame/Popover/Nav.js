@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import compose from 'lodash/flowRight'
 import { css } from 'glamor'
 
@@ -7,7 +7,7 @@ import {
   Center,
   Button,
   useColorContext,
-  Label
+  Label,
 } from '@project-r/styleguide'
 import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../../constants'
 
@@ -31,7 +31,8 @@ const Nav = ({
   inIOS,
   inNativeIOSApp,
   isMember,
-  onSearchSubmit
+  hasAccess,
+  onSearchSubmit,
 }) => {
   const [colorScheme] = useColorContext()
   const active = router.asPath
@@ -58,7 +59,7 @@ const Nav = ({
                 </Button>
               </Link>
             )}
-            {me && (
+            {hasAccess && (
               <SearchForm
                 emptyState={
                   <Label>
@@ -141,7 +142,7 @@ const Nav = ({
                 {...styles.navLinks}
                 style={{
                   // ensures last item is visible in iOS safari
-                  marginBottom: inIOS && !inNativeApp ? 64 : 24
+                  marginBottom: inIOS && !inNativeApp ? 64 : 24,
                 }}
               >
                 <NavLink
@@ -183,39 +184,39 @@ const styles = {
   container: css({
     [mediaQueries.mUp]: {
       marginTop: '40px',
-      marginBottom: '40px'
-    }
+      marginBottom: '40px',
+    },
   }),
   hr: css({
     margin: 0,
     display: 'block',
     border: 0,
     height: 1,
-    width: '100%'
+    width: '100%',
   }),
   hrFixed: css({
     position: 'fixed',
     top: HEADER_HEIGHT_MOBILE,
     [mediaQueries.mUp]: {
-      top: HEADER_HEIGHT
-    }
+      top: HEADER_HEIGHT,
+    },
   }),
   signInBlock: css({
-    display: 'block'
+    display: 'block',
   }),
   navSection: css({
     display: 'flex',
     flexDirection: 'column',
-    margin: '24px 0px'
+    margin: '24px 0px',
   }),
   navLinks: css({
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
     [mediaQueries.mUp]: {
-      flexDirection: 'row'
-    }
-  })
+      flexDirection: 'row',
+    },
+  }),
 }
 
 export default compose(withT, withInNativeApp, withMembership)(Nav)

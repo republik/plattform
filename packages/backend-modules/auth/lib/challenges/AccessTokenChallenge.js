@@ -1,11 +1,11 @@
 const { newAuthError } = require('../AuthError')
 
 const AccessTokenMissingError = newAuthError(
-  'authorize-token-challenge-access-token-missing',
+  'access-token-challenge-access-token-missing',
   'api/auth/accessToken/accessTokenMissing',
 )
 const TokensExceededError = newAuthError(
-  'authorize-token-challenge-tokens-exceeded',
+  'access-token-challenge-tokens-exceeded',
   'api/auth/accessToken/tokensExceeded',
 )
 
@@ -21,21 +21,27 @@ module.exports = {
       throw new AccessTokenMissingError({ email })
     }
 
-    const existingPayloads = await pgdb.public.tokens.find({
+    // Find tokens matching Type, email and payload (and ignoring expiry date
+    // willfully). A payload is unqiue and thus neither Type nor email is
+    // necessary to query but helps speeding up querying, and validating an
+    // AccessToken in payload would fail if email does not match.
+    const tokenCount = await pgdb.public.tokens.count({
       type: Type,
       email,
       payload,
     })
 
-    if (existingPayloads.length >= MAX_VALID_TOKENS) {
+    // Since AccessTokens in tokens.payload are unique and should not be present
+    // in tokens at all, we throw an error if there are any returned which is an
+    // unwarrented auth behaviour.
+    if (tokenCount >= MAX_VALID_TOKENS) {
       console.error(
         'Unable to generate a new token: Found too many valid tokens.',
       )
       throw new TokensExceededError({ email, MAX_VALID_TOKENS })
     }
 
-    const expiresAt = new Date(new Date().getTime() + TTL)
-    return { payload, expiresAt }
+    return { payload, expiresAt: new Date(new Date().getTime() + TTL) }
   },
   startChallenge: () => {}, // accessToken is generated and validated elsewhere
   validateChallenge: async ({ email, session, req, pgdb }, { payload }) => {

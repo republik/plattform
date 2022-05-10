@@ -1,4 +1,4 @@
-const localStorage = storeKey => {
+const localStorage = (storeKey) => {
   const readStore = () => {
     let content
     try {
@@ -16,13 +16,13 @@ const localStorage = storeKey => {
       getAll: () => {},
       set: () => {},
       clear: () => {},
-      supported
+      supported,
     }
   }
 
   return {
     key: storeKey,
-    get: key => readStore()[key],
+    get: (key) => readStore()[key],
     getAll: () => readStore(),
     set: (key, value) => {
       try {
@@ -30,8 +30,8 @@ const localStorage = storeKey => {
           storeKey,
           JSON.stringify({
             ...readStore(),
-            [key]: value
-          })
+            [key]: value,
+          }),
         )
       } catch (e) {}
     },
@@ -40,7 +40,7 @@ const localStorage = storeKey => {
         window.localStorage.removeItem(storeKey)
       } catch (e) {}
     },
-    supported
+    supported,
   }
 }
 

@@ -17,22 +17,22 @@ export const groupBy = (array, key) => {
     return o
   }, {})
 
-  return keys.map(k => ({
+  return keys.map((k) => ({
     key: k,
-    values: object[k]
+    values: object[k],
   }))
 }
 
 export const sortPropType = PropTypes.oneOf(['none', 'ascending', 'descending'])
 
-export const runSort = (cmd, array, accessor = d => d) => {
+export const runSort = (cmd, array, accessor = (d) => d) => {
   if (cmd !== 'none') {
     const compare = cmd === 'descending' ? descending : ascending
     const original = [].concat(array)
     array.sort(
       (a, b) =>
         compare(accessor(a), accessor(b)) ||
-        ascending(original.indexOf(a), original.indexOf(b)) // stable sort
+        ascending(original.indexOf(a), original.indexOf(b)), // stable sort
     )
   }
 }
@@ -41,7 +41,7 @@ export const sortBy = (array, accessor) =>
   [].concat(array).sort(
     (a, b) =>
       ascending(accessor(a), accessor(b)) ||
-      ascending(array.indexOf(a), array.indexOf(b)) // stable sort
+      ascending(array.indexOf(a), array.indexOf(b)), // stable sort
   )
 
 const thousandSeparator = '\u2019'
@@ -51,31 +51,31 @@ const swissNumbers = formatLocale({
   grouping: [3],
   currency: ['CHF\u00a0', ''],
   minus: '\u2212',
-  percent: '\u2009%'
+  percent: '\u2009%',
 })
 
 const formatPow = (tLabel, baseValue) => {
   const decimalFormat = swissNumbers.format('.0f')
   let [n] = decimalFormat(baseValue).split('.')
-  let scale = value => value
+  let scale = (value) => value
   let suffix = ''
   if (n.length > 9) {
-    scale = value => value / Math.pow(10, 9)
+    scale = (value) => value / Math.pow(10, 9)
     suffix = tLabel(' Mrd.')
   } else if (n.length > 6) {
-    scale = value => value / Math.pow(10, 6)
+    scale = (value) => value / Math.pow(10, 6)
     suffix = tLabel(' Mio.')
   }
   return {
     scale,
-    suffix
+    suffix,
   }
 }
 
 const sFormat = (tLabel, precision = 4, pow, type = 'r') => {
   const numberFormat4 = swissNumbers.format('d')
   const numberFormat5 = swissNumbers.format(',d')
-  const numberFormat = value => {
+  const numberFormat = (value) => {
     if (String(Math.abs(Math.round(value))).length > 4) {
       return numberFormat5(value)
     }
@@ -84,13 +84,13 @@ const sFormat = (tLabel, precision = 4, pow, type = 'r') => {
   // we only round suffixed values to precision
   const numberFormatWithSuffix4 = swissNumbers.format(`.${precision}${type}`)
   const numberFormatWithSuffix5 = swissNumbers.format(`,.${precision}${type}`)
-  const numberFormatWithSuffix = value => {
+  const numberFormatWithSuffix = (value) => {
     if (String(Math.abs(Math.round(value))).length > 4) {
       return numberFormatWithSuffix5(value)
     }
     return numberFormatWithSuffix4(value)
   }
-  return value => {
+  return (value) => {
     let fPow = pow || formatPow(tLabel, value)
     if (fPow.suffix) {
       return numberFormatWithSuffix(fPow.scale(value)) + fPow.suffix
@@ -109,7 +109,7 @@ export const getFormat = (numberFormat, tLabel) => {
     const numberFormat5 = swissNumbers.format(specifier.toString())
     specifier.comma = false
     const numberFormat4 = swissNumbers.format(specifier)
-    return value => {
+    return (value) => {
       if (String(Math.abs(Math.round(value))).length > 4) {
         return numberFormat5(value)
       }
@@ -126,14 +126,14 @@ export const calculateAxis = (
   tLabel,
   domain,
   unit = '',
-  { ticks: predefinedTicks } = {}
+  { ticks: predefinedTicks } = {},
 ) => {
   const [min, max] = domain
   const step = (max - min) / 2
   const ticks = predefinedTicks || [
     min,
     min < 0 && max > 0 ? 0 : min + step,
-    max
+    max,
   ]
   const format = swissNumbers.format
 
@@ -145,12 +145,12 @@ export const calculateAxis = (
     let fullStep = +(ticks[1] * 100).toFixed(specifier.precision)
     let fullMax = +(max * 100).toFixed(specifier.precision)
     specifier.precision = precisionFixed(
-      fullStep - Math.floor(fullStep) || fullMax - Math.floor(fullMax)
+      fullStep - Math.floor(fullStep) || fullMax - Math.floor(fullMax),
     )
     lastFormat = format(specifier.toString())
     specifier.type = 'f'
     const regularFormatInner = format(specifier.toString())
-    regularFormat = value => regularFormatInner(value * 100)
+    regularFormat = (value) => regularFormatInner(value * 100)
   } else if (specifier.type === 's') {
     const magnitude = d3Max([max - (min > 0 ? min : 0), min].map(Math.abs))
     let pow = formatPow(tLabel, Math.max(0, min) + magnitude / 2)
@@ -158,8 +158,8 @@ export const calculateAxis = (
       ticks.reduce(
         (precision, value) =>
           precision || pow.scale(value) - Math.floor(pow.scale(value)),
-        0
-      )
+        0,
+      ),
     )
 
     lastFormat = sFormat(tLabel, specifier.precision, pow, 'f')
@@ -167,16 +167,16 @@ export const calculateAxis = (
       tLabel,
       specifier.precision,
       { scale: pow.scale, suffix: '' },
-      'f'
+      'f',
     )
   } else {
     specifier.precision = d3Max(
       ticks.map((tick, i) =>
         Math.max(
           i && precisionFixed(tick - ticks[i - 1]),
-          precisionFixed(tick - Math.floor(tick))
-        )
-      )
+          precisionFixed(tick - Math.floor(tick)),
+        ),
+      ),
     )
     lastFormat = regularFormat = getFormat(specifier.toString())
   }
@@ -187,21 +187,21 @@ export const calculateAxis = (
     ticks,
     format: formatter,
     axisFormat,
-    domain
+    domain,
   }
 }
 
-export const get3EqualDistTicks = scale => {
+export const get3EqualDistTicks = (scale) => {
   const range = scale.range()
   return [
     scale.invert(range[0]),
     scale.invert(range[0] + (range[1] - range[0]) / 2),
-    scale.invert(range[1])
+    scale.invert(range[1]),
   ]
 }
 
-const subSupSplitter = createTag => {
-  return input => {
+const subSupSplitter = (createTag) => {
+  return (input) => {
     if (!input) {
       return input
     }
@@ -214,7 +214,7 @@ const subSupSplitter = createTag => {
         } else {
           if (elements.nextElement) {
             elements.push(
-              createTag(elements.nextElement, elements.nextElement + i, text)
+              createTag(elements.nextElement, elements.nextElement + i, text),
             )
             elements.nextElement = null
           } else {
@@ -227,7 +227,7 @@ const subSupSplitter = createTag => {
 }
 
 export const subsup = subSupSplitter((tag, key, text) =>
-  createElement(tag, { key }, text)
+  createElement(tag, { key }, text),
 )
 subsup.svg = subSupSplitter((tag, key, text) => {
   const dy = tag === 'sub' ? '0.25em' : '-0.5em'
@@ -254,23 +254,23 @@ export const deduplicate = (d, i, all) => all.indexOf(d) === i
 // - all props that are passed to unsafeDatumFn should not be user defined
 //   currently: filter, columnFilter.test, category, highlight
 // eslint-disable-next-line no-new-func
-export const unsafeDatumFn = code => new Function('datum', `return ${code}`)
+export const unsafeDatumFn = (code) => new Function('datum', `return ${code}`)
 
-export const getTextColor = bgColor => {
+export const getTextColor = (bgColor) => {
   const color = rgb(bgColor)
   const yiq = (color.r * 299 + color.g * 587 + color.b * 114) / 1000
   return yiq >= 128 ? 'black' : 'white'
 }
 
-export const xAccessor = d => d.x
+export const xAccessor = (d) => d.x
 
-export const yAccessor = d => d.y
+export const yAccessor = (d) => d.y
 
-export const isValuePresent = value => value?.toString()?.length > 0
+export const isValuePresent = (value) => value?.toString()?.length > 0
 
-export const identityFn = x => x
+export const identityFn = (x) => x
 
-export const getDataFilter = userFilter =>
+export const getDataFilter = (userFilter) =>
   userFilter ? unsafeDatumFn(userFilter) : identityFn
 
 export const groupInColumns = (data, column, columnFilter) =>
@@ -280,11 +280,11 @@ export const groupInColumns = (data, column, columnFilter) =>
           const filter = unsafeDatumFn(test)
           return {
             key: title,
-            values: data.filter(d => filter(d.datum))
+            values: data.filter((d) => filter(d.datum)),
           }
         })
         .reduce((all, group) => all.concat(group.values), [])
-    : groupBy(data, d => d.datum[column])
+    : groupBy(data, (d) => d.datum[column])
 
 const getColumnCount = (
   itemCount,
@@ -293,11 +293,11 @@ const getColumnCount = (
   minWidth,
   paddingLeft,
   paddingRight,
-  skipRowPadding
+  skipRowPadding,
 ) => {
   const possibleColumns = Math.floor(
     (width + (skipRowPadding ? paddingLeft + paddingRight : 0)) /
-      (minWidth + paddingLeft + paddingRight)
+      (minWidth + paddingLeft + paddingRight),
   )
   let columns = userColumns
   if (possibleColumns < userColumns) {
@@ -317,19 +317,19 @@ const xTranslateFn = (groups, columns, innerWidth, paddingLeft, paddingRight) =>
   scaleOrdinal()
     .domain(groups)
     .range(
-      range(columns).map(d => {
+      range(columns).map((d) => {
         return d * (innerWidth + paddingRight + paddingLeft)
-      })
+      }),
     )
 
 const yTranslateFn = (groups, columns, columnHeight, columnMargin) =>
   scaleOrdinal()
     .domain(groups)
     .range(
-      range(groups.length).map(d => {
+      range(groups.length).map((d) => {
         const row = Math.floor(d / columns)
         return row * columnHeight + row * columnMargin
-      })
+      }),
     )
 
 export const getColumnLayout = (
@@ -344,7 +344,7 @@ export const getColumnLayout = (
   paddingBottom,
   paddingLeft,
   columnMargin,
-  skipRowPadding
+  skipRowPadding,
 ) => {
   const itemCount = groupedData.length
   const columns = getColumnCount(
@@ -354,7 +354,7 @@ export const getColumnLayout = (
     minWidth,
     paddingLeft,
     paddingRight,
-    skipRowPadding
+    skipRowPadding,
   )
   const rows = Math.ceil(itemCount / columns)
   // account for start and end of columns missing padding when skipping row padding
@@ -363,20 +363,20 @@ export const getColumnLayout = (
       (width -
         (paddingLeft + paddingRight) *
           (skipRowPadding ? columns - 1 : columns)) /
-        columns
+        columns,
     ) - 1
   const innerHeight = getHeight(innerWidth)
   const columnHeight = innerHeight + paddingBottom + paddingTop
   const height = rows * columnHeight + (rows - 1) * columnMargin
 
-  let groups = groupedData.map(g => g.key)
+  let groups = groupedData.map((g) => g.key)
   runSort(columnSort, groups)
   const gx = xTranslateFn(
     groups,
     columns,
     innerWidth,
     paddingLeft,
-    paddingRight
+    paddingRight,
   )
   const gy = yTranslateFn(groups, columns, columnHeight, columnMargin)
 
@@ -385,3 +385,9 @@ export const getColumnLayout = (
 
 // get last item from array
 export const isLastItem = (array, index) => array.length - 1 === index
+
+export const textAlignmentDict = {
+  left: 'start',
+  center: 'middle',
+  right: 'end',
+}

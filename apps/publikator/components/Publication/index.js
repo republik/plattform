@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 import withT from '../../lib/withT'
@@ -6,6 +6,7 @@ import { Loader, ColorContextProvider } from '@project-r/styleguide'
 import { css } from 'glamor'
 
 import DarkmodeToggle from './DarkmodeToggle'
+import HasAccessToggle from './HasAccessToggle'
 import PublicationForm from './PublicationForm'
 
 import PreviewFrame from '../PreviewFrame'
@@ -63,6 +64,7 @@ export const getRepoWithCommit = gql`
                 title
                 color
                 kind
+                externalBaseUrl
               }
             }
             section {
@@ -118,7 +120,7 @@ export const getRepoWithCommit = gql`
 
 const styles = {
   container: css({
-    display: 'flex'
+    display: 'flex',
   }),
   formContainer: css({
     position: 'fixed',
@@ -127,10 +129,10 @@ const styles = {
     width: '500px',
     backgroundColor: 'white',
     overflow: 'scroll',
-    overscrollBehavior: 'contain'
+    overscrollBehavior: 'contain',
   }),
   column: css({
-    padding: '1em'
+    padding: '1em',
   }),
   darkmodeButton: css({
     position: 'absolute',
@@ -138,20 +140,29 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
-  })
+    alignItems: 'center',
+  }),
+  hasPreviewButton: css({
+    position: 'absolute',
+    margin: '-26px 0 0 64px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }),
 }
 
 const Preview = ({ commit }) => {
   const [previewScreenSize, setPreviewScreenSize] = useState('phone')
   const [previewDarkmode, setPreviewDarkmode] = useState(false)
+  const [previewHasAccess, setPreviewHasAccess] = useState(true)
   return (
     <ColorContextProvider colorSchemeKey={previewDarkmode ? 'dark' : 'light'}>
       <div style={{ paddingTop: 40 }}>
         <div style={{ marginRight: PUBLICATION_COLUMN_WIDTH }}>
           <ScreeenSizePicker
             selectedScreenSize={previewScreenSize}
-            onSelect={screenSize => {
+            onSelect={(screenSize) => {
               setPreviewScreenSize(screenSize)
             }}
             inline={true}
@@ -162,6 +173,12 @@ const Preview = ({ commit }) => {
               onToggle={() => setPreviewDarkmode(!previewDarkmode)}
             />
           </div>
+          <div {...styles.hasPreviewButton}>
+            <HasAccessToggle
+              previewHasAccess={previewHasAccess}
+              onToggle={() => setPreviewHasAccess(!previewHasAccess)}
+            />
+          </div>
         </div>
         <div>
           <PreviewFrame
@@ -169,6 +186,7 @@ const Preview = ({ commit }) => {
             repoId={commit.document.repoId}
             commitId={commit.id}
             darkmode={previewDarkmode}
+            hasAccess={previewHasAccess}
             sideBarWidth={PUBLICATION_COLUMN_WIDTH}
           />
         </div>

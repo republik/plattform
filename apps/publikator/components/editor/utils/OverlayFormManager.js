@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import SlatePropTypes from 'slate-prop-types'
 import OverlayForm from './OverlayForm'
@@ -14,16 +14,16 @@ const OverlayFormManager = ({
   extra,
   showPreview,
   title,
-  children
+  children,
 }) => {
   const { showModal, setShowModal } = useContext(OverlayFormContext)
   const isNew = node.data.get('isNew')
   useEffect(() => {
     if (isNew) {
       setShowModal(true)
-      editor.change(change => {
+      editor.change((change) => {
         change.setNodeByKey(node.key, {
-          data: node.data.delete('isNew')
+          data: node.data.delete('isNew'),
         })
       })
     }
@@ -57,9 +57,9 @@ OverlayFormManager.propTypes = {
   extra: PropTypes.node,
   attributes: PropTypes.object,
   editor: PropTypes.shape({
-    change: PropTypes.func.isRequired
+    change: PropTypes.func.isRequired,
   }).isRequired,
-  node: SlatePropTypes.node.isRequired
+  node: SlatePropTypes.node.isRequired,
 }
 
 export default OverlayFormManager

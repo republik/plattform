@@ -7,81 +7,81 @@ import { convertStyleToRem, pxToRem } from '../Typography/utils'
 const size = {
   s: {
     fontSize: pxToRem('38px'),
-    lineHeight: pxToRem('43px')
+    lineHeight: pxToRem('43px'),
   },
   m: {
     fontSize: pxToRem('60px'),
-    lineHeight: pxToRem('70px')
+    lineHeight: pxToRem('70px'),
   },
   l: {
     fontSize: pxToRem('80px'),
-    lineHeight: pxToRem('90px')
+    lineHeight: pxToRem('90px'),
   },
   xl: {
     fontSize: pxToRem('100px'),
-    lineHeight: pxToRem('110px')
+    lineHeight: pxToRem('110px'),
   },
   xxl: {
     fontSize: pxToRem('125px'),
-    lineHeight: pxToRem('135px')
-  }
+    lineHeight: pxToRem('135px'),
+  },
 }
 
 const sizes = {
   large: css({
     ...size.s,
     [mUp]: {
-      ...size.l
+      ...size.l,
     },
     [tUp]: {
-      ...size.xl
+      ...size.xl,
     },
     [dUp]: {
-      ...size.xxl
-    }
+      ...size.xxl,
+    },
   }),
   medium: css({
     ...size.s,
     [mUp]: {
-      ...size.m
+      ...size.m,
     },
     [tUp]: {
-      ...size.l
+      ...size.l,
     },
     [dUp]: {
-      ...size.xl
-    }
+      ...size.xl,
+    },
   }),
   default: css({
     ...size.s,
     [tUp]: {
-      ...size.m
+      ...size.m,
     },
     [dUp]: {
-      ...size.l
-    }
-  })
+      ...size.l,
+    },
+  }),
 }
 
 const styles = {
   base: css({
     margin: '0 0 15px 0',
     [mUp]: {
-      marginBottom: '30px'
-    }
+      marginBottom: '30px',
+    },
   }),
   editorial: css({
-    ...convertStyleToRem(serifTitle20)
+    ...convertStyleToRem(serifTitle20),
   }),
   interaction: css({
-    ...convertStyleToRem(sansSerifMedium20)
-  })
+    ...convertStyleToRem(sansSerifMedium20),
+  }),
 }
 
 export const Editorial = ({ children, large, medium }) => {
   const sizedStyle = css(
     styles.editorial,
-    (large && sizes.large) || (medium && sizes.medium) || sizes.default
+    (large && sizes.large) || (medium && sizes.medium) || sizes.default,
   )
   return (
     <h1 {...styles.base} {...sizedStyle}>
@@ -93,7 +93,7 @@ export const Editorial = ({ children, large, medium }) => {
 export const Interaction = ({ children, large, medium }) => {
   const sizedStyle = css(
     styles.interaction,
-    (large && sizes.large) || (medium && sizes.medium) || sizes.default
+    (large && sizes.large) || (medium && sizes.medium) || sizes.default,
   )
   return (
     <h1 {...styles.base} {...sizedStyle}>

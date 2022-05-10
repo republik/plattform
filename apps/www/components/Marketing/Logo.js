@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import { Logo, mediaQueries } from '@project-r/styleguide'
 
@@ -22,14 +21,14 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    margin: '8em 0'
+    margin: '8em 0',
   }),
   logo: css({
     width: 290,
     [mediaQueries.mUp]: {
-      width: 350
-    }
-  })
+      width: 350,
+    },
+  }),
 }
 
 export default LogoSection

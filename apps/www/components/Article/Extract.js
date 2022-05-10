@@ -1,12 +1,12 @@
-import React, { Fragment } from 'react'
+import { Children, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import Head from 'next/head'
 import { renderMdast } from 'mdast-react-render'
 import { withEditor } from '../Auth/checkRoles'
 
 // convert string into array of slice arguments, see tests
-export const parseSliceRanges = ranges =>
-  ranges.split(':').map(range => {
+export const parseSliceRanges = (ranges) =>
+  ranges.split(':').map((range) => {
     let [start, end] = range.split('...')
     start = +start || 0
 
@@ -28,8 +28,8 @@ const Extract = ({ schema, mdast, ranges, unpack, isEditor }) => {
     return {
       ...tree,
       children: childRanges.length
-        ? children.map(child => sliceNode(child, childRanges))
-        : children
+        ? children.map((child) => sliceNode(child, childRanges))
+        : children,
     }
   }
 
@@ -37,16 +37,16 @@ const Extract = ({ schema, mdast, ranges, unpack, isEditor }) => {
 
   const unpackChildren = (children, level) => {
     if (level > 0) {
-      return React.Children.toArray(children)
-        .map(child => unpackChildren(child.props.children, level - 1))
-        .reduce((all, someChildren) => all.concat(someChildren), [])
+      return Children.toArray(children)
+        .map((child) => unpackChildren(child.props.children, level - 1))
+        .reduce((all, someChildren) => all.concat(someChildren), []);
     }
     return children
   }
   const MissingNode = isEditor ? undefined : ({ children }) => children
   const children = unpackChildren(
     renderMdast(part, schema, { MissingNode }),
-    +unpack
+    +unpack,
   )
 
   return (
@@ -64,7 +64,7 @@ Extract.propTypes = {
   mdast: PropTypes.object.isRequired,
   ranges: PropTypes.string.isRequired,
   unpack: PropTypes.string,
-  isEditor: PropTypes.bool
+  isEditor: PropTypes.bool,
 }
 
 export default withEditor(Extract)

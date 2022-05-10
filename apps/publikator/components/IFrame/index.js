@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { styleSheet } from 'glamor'
 import Frame from 'react-frame-component'
 import PropTypes from 'prop-types'
@@ -12,15 +12,15 @@ class IFrame extends Component {
     super(...args)
 
     this.state = {
-      css: ''
+      css: '',
     }
-    this.containerRef = ref => {
+    this.containerRef = (ref) => {
       this.container = ref
     }
 
     this.measure = () => {
       this.setState(() => ({
-        width: this.container && this.container.getBoundingClientRect().width
+        width: this.container && this.container.getBoundingClientRect().width,
       }))
     }
   }
@@ -34,12 +34,12 @@ class IFrame extends Component {
   transferCSS() {
     const css = styleSheet
       .rules()
-      .map(r => r.cssText)
+      .map((r) => r.cssText)
       .join('')
     if (css !== this.state.css) {
       debug('transfer css', { css })
       this.setState({
-        css
+        css,
       })
     }
   }
@@ -56,7 +56,7 @@ class IFrame extends Component {
             width: size.width,
             transformOrigin: '0% 0%',
             transform: `scale(${scale})`,
-            ...style
+            ...style,
           }}
         >
           <Frame
@@ -66,7 +66,7 @@ class IFrame extends Component {
             head={[<style key='glamor'>{css}</style>]}
             style={{
               width: '100%',
-              height: size.height
+              height: size.height,
             }}
           >
             <ColorContextProvider colorSchemeKey={dark ? 'dark' : 'light'}>
@@ -82,8 +82,8 @@ class IFrame extends Component {
 IFrame.propTypes = {
   size: PropTypes.shape({
     width: PropTypes.number.isRequired,
-    height: PropTypes.number.isRequired
-  }).isRequired
+    height: PropTypes.number.isRequired,
+  }).isRequired,
 }
 
 export default IFrame

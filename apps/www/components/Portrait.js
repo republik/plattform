@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 
 import {
@@ -7,7 +6,7 @@ import {
   A,
   Label,
   mediaQueries,
-  slug
+  slug,
 } from '@project-r/styleguide'
 
 import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from './constants'
@@ -16,19 +15,19 @@ const portraitStyle = css({
   position: 'relative',
   marginBottom: 30,
   [mediaQueries.mUp]: {
-    marginBottom: 60
+    marginBottom: 60,
   },
   '& img': {
-    maxWidth: '100%'
-  }
+    maxWidth: '100%',
+  },
 })
 
 const anchorStyle = css({
   position: 'absolute',
   top: -(HEADER_HEIGHT_MOBILE + 10),
   [mediaQueries.mUp]: {
-    top: -(HEADER_HEIGHT + 10)
-  }
+    top: -(HEADER_HEIGHT + 10),
+  },
 })
 
 const portraitImageLeftStyle = css({
@@ -37,8 +36,8 @@ const portraitImageLeftStyle = css({
     width: '60%',
     marginTop: 3,
     marginRight: 20,
-    marginBottom: 10
-  }
+    marginBottom: 10,
+  },
 })
 const portraitImageRightStyle = css({
   [mediaQueries.mUp]: {
@@ -46,8 +45,8 @@ const portraitImageRightStyle = css({
     width: '60%',
     marginTop: 3,
     marginLeft: 20,
-    marginBottom: 10
-  }
+    marginBottom: 10,
+  },
 })
 
 const Portrait = ({ odd, image, description, name, age, title, email }) => (

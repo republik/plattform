@@ -10,35 +10,35 @@ const styles = {
   container: css({
     margin: '40px auto',
     [mUp]: {
-      margin: '60px auto'
-    }
+      margin: '60px auto',
+    },
   }),
   containerFloat: css({
     // Vertical desktop margins are currently handled in Center.
     marginLeft: 'auto',
     marginRight: 'auto',
     [onlyS]: {
-      margin: '40px auto'
-    }
+      margin: '40px auto',
+    },
   }),
   figure: css({
     '& figure': {
-      width: IMAGE_SIZE
+      width: IMAGE_SIZE,
     },
     [mUp]: {
       paddingLeft: 170,
       '& figure': {
         marginLeft: -170,
         marginRight: 15,
-        float: 'left'
-      }
-    }
+        float: 'left',
+      },
+    },
   }),
   clear: css({
     [mUp]: {
-      clear: 'both'
-    }
-  })
+      clear: 'both',
+    },
+  }),
 }
 
 const getBreakoutSize = (size, hasFigure) => {
@@ -73,7 +73,7 @@ const PullQuote = ({ children, attributes, hasFigure, size }) => {
 PullQuote.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
-  size: PropTypes.oneOf(['narrow', 'float', 'breakout'])
+  size: PropTypes.oneOf(['narrow', 'float', 'breakout']),
 }
 
 export default PullQuote

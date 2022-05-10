@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useSprings, animated, interpolate } from 'react-spring/web.cjs'
 import { useGesture } from 'react-use-gesture/dist/index.js'
 import { css } from 'glamor'
@@ -8,7 +8,7 @@ import {
   Interaction,
   mediaQueries,
   usePrevious,
-  ColorContextProvider
+  ColorContextProvider,
 } from '@project-r/styleguide'
 import { shuffle } from 'd3-array'
 
@@ -25,7 +25,7 @@ const styles = {
     width: '100%',
     height: 960,
     [mediaQueries.mUp]: {
-      height: 840
+      height: 840,
     },
     textAlign: 'center',
     '& > div': {
@@ -33,12 +33,12 @@ const styles = {
       willChange: 'transform',
       display: 'flex',
       alignItems: 'flex-start',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
     '& > div > div': {
       cursor: 'grab',
       '&:active': {
-        cursor: 'grabbing'
+        cursor: 'grabbing',
       },
       backgroundColor: '#fff',
       backgroundSize: 'auto 85%',
@@ -50,20 +50,20 @@ const styles = {
       boxShadow:
         '0 12px 50px -10px rgba(0, 0, 0, 0.4), 0 10px 10px -10px rgba(0, 0, 0, 0.1)',
       overflow: 'hidden',
-      padding: '20px 15px 15px 15px'
+      padding: '20px 15px 15px 15px',
     },
     '& *': {
-      userSelect: 'none'
+      userSelect: 'none',
     },
     '& > div > div > *': {
-      pointerEvents: 'none'
-    }
-  })
+      pointerEvents: 'none',
+    },
+  }),
 }
 
-const tt = key => t(`marketing/cards/${key}`)
+const tt = (key) => t(`marketing/cards/${key}`)
 
-const cardWidthDesktop = innerWidth =>
+const cardWidthDesktop = (innerWidth) =>
   Math.min(Math.max(MAX_WIDTH, innerWidth) / 2, 480)
 
 const xDesktop = (i, innerWidth, cardWidth) =>
@@ -76,7 +76,7 @@ const toMobile = (i, innerWidth, cardWidth) => ({
   y: 30 + 50 * i,
   scale: 1,
   rot: randomRotation(),
-  delay: i * 100
+  delay: i * 100,
 })
 
 const toDesktop = (i, innerWidth, cardWidth) => {
@@ -85,16 +85,15 @@ const toDesktop = (i, innerWidth, cardWidth) => {
     y: 35 + (i - (i % 2)) * 25,
     scale: 1,
     rot: randomRotation(),
-    delay: i * 100
+    delay: i * 100,
   }
 }
 
 const trans = (r, s) => `rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`
 
 const Cards = ({ employees, filter, slice }) => {
-  const [
-    width = typeof window !== 'undefined' && window.innerWidth
-  ] = useWindowSize()
+  const [width = typeof window !== 'undefined' && window.innerWidth] =
+    useWindowSize()
   const prevWidth = usePrevious(width)
   const isDesktop = width >= mediaQueries.mBreakPoint
   const cardWidth = cardWidthDesktop(width)
@@ -105,16 +104,19 @@ const Cards = ({ employees, filter, slice }) => {
     employees
       .slice(0, promi) // promis get returned first by backend
       .concat(shuffle(employees.slice(promi)))
-      .filter(d => d.user && d.user.portrait)
+      .filter((d) => d.user && d.user.portrait)
       .filter(filter)
       .slice(0, CARD_NUMBER)
       .reverse()
   const [cards, setCards] = useState(shuffleCards(4))
-  const setTopIndex = topIndex => {
-    setZIndexes(indexes => [...indexes.filter(i => i !== topIndex), topIndex])
+  const setTopIndex = (topIndex) => {
+    setZIndexes((indexes) => [
+      ...indexes.filter((i) => i !== topIndex),
+      topIndex,
+    ])
   }
-  const [props, set] = useSprings(CARD_NUMBER, i => ({
-    from: { ...to(i, width, cardWidth), x: i % 2 ? width + 1000 : -1000 }
+  const [props, set] = useSprings(CARD_NUMBER, (i) => ({
+    from: { ...to(i, width, cardWidth), x: i % 2 ? width + 1000 : -1000 },
   }))
   const [inView, setInView] = useState(undefined)
   useEffect(() => {
@@ -124,14 +126,14 @@ const Cards = ({ employees, filter, slice }) => {
 
     gone.clear()
     setZIndexes([])
-    set(i => ({
+    set((i) => ({
       ...to(i, window.innerWidth, cardWidth),
       ...(prevWidth !== width
         ? {
             delay: undefined,
-            config: { friction: 50, tension: 1000 }
+            config: { friction: 50, tension: 1000 },
           }
-        : undefined)
+        : undefined),
     }))
   }, [width, prevWidth, inView])
   const rootRef = useRef()
@@ -155,7 +157,7 @@ const Cards = ({ employees, filter, slice }) => {
     }
   }, [inView])
   const animateCard = (index, { down, xDelta, dir } = {}) => {
-    set(i => {
+    set((i) => {
       if (index !== i) return
       const isGone = gone.has(index)
       const xPos = isDesktop ? xDesktop(i, window.innerWidth, cardWidth) : 0
@@ -171,7 +173,7 @@ const Cards = ({ employees, filter, slice }) => {
         rot,
         scale,
         delay: undefined,
-        config: { friction: 50, tension: down ? 800 : isGone ? 200 : 500 }
+        config: { friction: 50, tension: down ? 800 : isGone ? 200 : 500 },
       }
     })
   }
@@ -181,7 +183,7 @@ const Cards = ({ employees, filter, slice }) => {
         gone.clear()
         setZIndexes([])
         setCards(shuffleCards())
-        set(i => to(i, window.innerWidth, cardWidth))
+        set((i) => to(i, window.innerWidth, cardWidth))
       }, 600)
     }
   }
@@ -201,7 +203,7 @@ const Cards = ({ employees, filter, slice }) => {
       if (!down) {
         maybeRestoreCards()
       }
-    }
+    },
   )
 
   return (
@@ -215,17 +217,17 @@ const Cards = ({ employees, filter, slice }) => {
               style={{
                 transform: interpolate(
                   [x, y],
-                  (x, y) => `translate3d(${x}px,${y}px,0)`
+                  (x, y) => `translate3d(${x}px,${y}px,0)`,
                 ),
                 zIndex: zIndexes.indexOf(i) + 1,
-                width: isDesktop ? cardWidth - PADDING * 4 : '100%'
+                width: isDesktop ? cardWidth - PADDING * 4 : '100%',
               }}
             >
               <animated.div
                 {...bind(i)}
                 style={{
                   transform: interpolate([rot, scale], trans),
-                  maxWidth: isDesktop ? undefined : 350
+                  maxWidth: isDesktop ? undefined : 350,
                 }}
                 onDoubleClick={() => {
                   gone.add(i)

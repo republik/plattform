@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react'
 import compose from 'lodash/flowRight'
 
 import { Interaction } from '@project-r/styleguide'
@@ -23,8 +23,8 @@ const Grants = ({ campaign, givingMemberships, revokeAccess, t }) => {
               givingMemberships ? '/givingMemberships' : ''
             }/title`,
             {
-              count: campaign.slots.used
-            }
+              count: campaign.slots.used,
+            },
           )}
         </H3>
       }

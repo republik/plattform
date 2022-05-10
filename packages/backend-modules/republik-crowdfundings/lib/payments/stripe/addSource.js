@@ -78,10 +78,10 @@ module.exports = async ({
 
     let connectedSource
     if (existingSource) {
-      const connectedCustomerStripe = await connectedAccount.stripe.customers.retrieve(
-        connectedCustomer.id,
-        { expand: ['sources'] },
-      )
+      const connectedCustomerStripe =
+        await connectedAccount.stripe.customers.retrieve(connectedCustomer.id, {
+          expand: ['sources'],
+        })
       connectedSource = connectedCustomerStripe.sources.data.find(
         (s) =>
           s.metadata &&

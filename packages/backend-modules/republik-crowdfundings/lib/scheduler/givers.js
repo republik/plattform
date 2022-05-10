@@ -112,14 +112,15 @@ const inform = async (args, context) => {
       const informClaimersDays =
         minLastEndDateDiff - OWNERS_DAYS_BEFORE_END_DATE
 
-      const templatePayload = await context.mail.prepareMembershipGiversProlongNotice(
-        {
-          userId,
-          membershipIds,
-          informClaimersDays,
-        },
-        context,
-      )
+      const templatePayload =
+        await context.mail.prepareMembershipGiversProlongNotice(
+          {
+            userId,
+            membershipIds,
+            informClaimersDays,
+          },
+          context,
+        )
 
       return sendMailTemplate(templatePayload, context, {
         onceFor: {

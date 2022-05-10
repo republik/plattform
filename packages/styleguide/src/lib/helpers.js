@@ -7,11 +7,11 @@ export const intersperse = (list, separator) => {
     (items, item, i) => {
       return items.concat([separator(item, i), item])
     },
-    [list[0]]
+    [list[0]],
   )
 }
 
-export const rafDebounce = fn => {
+export const rafDebounce = (fn) => {
   let next
 
   return (...args) => {

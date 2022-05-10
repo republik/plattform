@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react'
 import { withRouter } from 'next/router'
 import { compose } from 'react-apollo'
 
@@ -30,12 +30,12 @@ const styles = {
     flexDirection: 'row',
     flexWrap: 'wrap',
     '& > *': {
-      flex: '0 0 25%'
-    }
+      flex: '0 0 25%',
+    },
   }),
   fifty: css({
-    flex: '0 0 50%'
-  })
+    flex: '0 0 50%',
+  }),
 }
 
 const SectionSwitch = ({ userId, section }) => {
@@ -84,8 +84,8 @@ const SectionSwitch = ({ userId, section }) => {
 
 export default compose(
   withRouter,
-  enforceAuthorization(['supporter'])
-)(props => {
+  enforceAuthorization(['supporter']),
+)((props) => {
   const { userId, section = 'index' } = props.router.query
   return (
     <App>

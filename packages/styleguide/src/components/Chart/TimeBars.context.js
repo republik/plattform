@@ -6,7 +6,7 @@ import {
   processSegments,
   getMax,
   getMin,
-  getXTicks
+  getXTicks,
 } from './TimeBars.utils'
 
 import {
@@ -14,7 +14,7 @@ import {
   AXIS_BOTTOM_HEIGHT,
   PADDING_TOP,
   COLUMN_PADDING,
-  PADDING_SIDES
+  PADDING_SIDES,
 } from './Layout.constants'
 
 export const timeBarsProcesser = ({
@@ -25,12 +25,12 @@ export const timeBarsProcesser = ({
   xFormat,
   xParser,
   xParserFormat,
-  xNormalizer
+  xNormalizer,
 }) => {
   const groupedData = groupInColumns(
     data,
     props.column,
-    props.columnFilter
+    props.columnFilter,
   ).map(processSegments)
 
   const paddingTop =
@@ -61,12 +61,12 @@ export const timeBarsProcesser = ({
     0,
     PADDING_SIDES,
     COLUMN_PADDING,
-    true
+    true,
   )
 
   let y = scaleLinear()
     .domain(
-      props.domain ? props.domain : [getMin(groupedData), getMax(groupedData)]
+      props.domain ? props.domain : [getMin(groupedData), getMax(groupedData)],
     )
     .range(barRange)
 
@@ -88,7 +88,7 @@ export const timeBarsProcesser = ({
     props.xIntervalStep,
     xParser,
     xParserFormat,
-    x
+    x,
   )
 
   x.domain(xDomain).round(true)
@@ -101,8 +101,8 @@ export const timeBarsProcesser = ({
     y.domain(),
     props.unit,
     {
-      ticks: props.yTicks
-    }
+      ticks: props.yTicks,
+    },
   )
 
   return {
@@ -117,12 +117,12 @@ export const timeBarsProcesser = ({
       domain: xDomain,
       ticks: xTicks,
       format: xFormat,
-      axisFormat: x => xFormat(xParser(x))
+      axisFormat: (x) => xFormat(xParser(x)),
     },
     yAxis: {
       ...yAxis,
-      scale: y
+      scale: y,
     },
-    colorValuesForLegend: colorValues
+    colorValuesForLegend: colorValues,
   }
 }

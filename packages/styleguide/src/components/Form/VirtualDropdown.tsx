@@ -14,7 +14,7 @@ export const styles = {
   root: css({
     position: 'relative',
     minHeight: LABEL_HEIGHT + FIELD_HEIGHT,
-    marginBottom: 12
+    marginBottom: 12,
   }),
   inner: css({
     position: 'absolute',
@@ -23,51 +23,51 @@ export const styles = {
     right: 0,
     margin: '0 -12px',
     padding: '0 12px',
-    transition: 'box-shadow .12s, background .12s'
+    transition: 'box-shadow .12s, background .12s',
   }),
   innerFocus: css({
-    zIndex: zIndex.dropdown
+    zIndex: zIndex.dropdown,
   }),
   items: css({
     overflow: 'hidden',
     margin: '0 -12px',
-    transition: 'opacity .2s, height .12s'
+    transition: 'opacity .2s, height .12s',
   }),
   item: css({
     ...sansSerifRegular21,
     lineHeight: '27px',
     padding: '17px 12px',
     cursor: 'pointer',
-    transition: 'background .12s'
+    transition: 'background .12s',
   }),
   itemSeparator: css({
     margin: '-1px 12px 0',
     borderTopWidth: 1,
     borderTopStyle: 'solid',
-    transition: 'border-color .12s'
+    transition: 'border-color .12s',
   }),
   hiddenItemSeparator: css({
-    borderColor: 'transparent'
+    borderColor: 'transparent',
   }),
   arrowDown: css({
     position: 'absolute',
     right: 0,
     top: 28,
-    pointerEvents: 'none'
-  })
+    pointerEvents: 'none',
+  }),
 }
 
-export const itemToString = item => (item ? item.text : null)
+export const itemToString = (item) => (item ? item.text : null)
 
 export const VirtualDropdown = ({
   label,
   items,
   onChange,
-  value
+  value,
 }: DropdownProps) => {
   const [focus, setFocus] = useState(false)
   const [colorScheme] = useColorContext()
-  const selectedItem = items.find(item => item.value === value)
+  const selectedItem = items.find((item) => item.value === value)
   return (
     <Downshift
       onChange={onChange}
@@ -80,7 +80,7 @@ export const VirtualDropdown = ({
         isOpen,
         inputValue,
         selectedItem,
-        highlightedIndex
+        highlightedIndex,
       }) => (
         <div {...styles.root}>
           {/* ensure the height for selected multiline values (<Inner> is absolute) */}
@@ -170,13 +170,15 @@ export const ItemsContainer = ({ isOpen, children }) => {
 
 const isSameItem = (itemA, itemB) =>
   itemA === itemB ||
-  (itemA && itemB && Object.keys(itemA).every(key => itemA[key] === itemB[key]))
+  (itemA &&
+    itemB &&
+    Object.keys(itemA).every((key) => itemA[key] === itemB[key]))
 
 export const Items = ({
   items,
   selectedItem,
   highlightedIndex,
-  getItemProps
+  getItemProps,
 }) =>
   items.map((item, index) => {
     const i = (
@@ -201,7 +203,7 @@ export const Items = ({
           (highlightedIndex === index || highlightedIndex + 1 === index)
         }
       />,
-      i
+      i,
     ]
   })
 
@@ -213,7 +215,7 @@ const Item = ({ selected, highlighted, ...props }) => {
       {...(selected && colorScheme.set('color', 'primary'))}
       {...(highlighted && colorScheme.set('backgroundColor', 'hover'))}
       {...props}
-      onMouseDown={e => {
+      onMouseDown={(e) => {
         e.preventDefault()
       }}
     />

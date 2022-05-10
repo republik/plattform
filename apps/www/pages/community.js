@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import compose from 'lodash/flowRight'
 import { withRouter } from 'next/router'
 import Frame from '../components/Frame'
@@ -11,13 +11,14 @@ import withDefaultSSR from '../lib/hocs/withDefaultSSR'
 class CommunityPage extends Component {
   static async getInitialProps(ctx) {
     return {
-      seed: generateSeed()
+      seed: generateSeed(),
     }
   }
   render() {
     const {
       router: { query },
-      seed
+      seed,
+      serverContext,
     } = this.props
 
     if (query.share) {
@@ -43,7 +44,7 @@ class CommunityPage extends Component {
 
     return (
       <Frame>
-        <List seed={seed} id={query.id} isPage />
+        <List seed={seed} id={query.id} isPage serverContext={serverContext} />
       </Frame>
     )
   }

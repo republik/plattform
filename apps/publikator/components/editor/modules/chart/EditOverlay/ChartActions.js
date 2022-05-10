@@ -1,4 +1,3 @@
-import React from 'react'
 import { Button, A, Interaction } from '@project-r/styleguide'
 import { css } from 'glamor'
 
@@ -7,8 +6,8 @@ const styles = {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 15
-  })
+    marginTop: 15,
+  }),
 }
 
 const ChartActions = ({ onSelect, values, config, cleanup, buttonText }) => {

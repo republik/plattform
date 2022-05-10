@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { css } from 'glamor'
 import { CheckIcon } from '@project-r/styleguide'
 
@@ -6,7 +6,7 @@ import {
   Editorial,
   fontStyles,
   mediaQueries,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import { findHighlight } from '../../lib/utils/mdast'
 import { formatExcerpt } from '../../lib/utils/format'
@@ -23,13 +23,13 @@ const styles = {
     borderTopWidth: 1,
     borderTopStyle: 'solid',
     margin: '0 0 40px 0',
-    paddingTop: 12
+    paddingTop: 12,
   }),
   highlight: css({
     '& em': {
       fontStyle: 'inherit',
-      fontFamily: 'inherit'
-    }
+      fontFamily: 'inherit',
+    },
   }),
   profilePicture: css({
     display: 'block',
@@ -37,14 +37,14 @@ const styles = {
     flexGrow: 0,
     flexShrink: 0,
     height: `${profilePictureSize + 2 * profilePictureBorderSize}px`,
-    marginRight: 15
+    marginRight: 15,
   }),
   meta: css({
     alignSelf: 'stretch',
     display: 'block',
     flexDirection: 'column',
     justifyContent: 'center',
-    width: `calc(100% - ${profilePictureSize + profilePictureMargin}px)`
+    width: `calc(100% - ${profilePictureSize + profilePictureMargin}px)`,
   }),
   name: css({
     ...fontStyles.sansSerifMedium20,
@@ -53,8 +53,8 @@ const styles = {
     alignItems: 'center',
     marginBottom: 2,
     [mediaQueries.mUp]: {
-      ...fontStyles.sansSerifMedium22
-    }
+      ...fontStyles.sansSerifMedium22,
+    },
   }),
   description: css({
     ...fontStyles.sansSerifRegular14,
@@ -62,40 +62,40 @@ const styles = {
     alignItems: 'center',
     [mediaQueries.mUp]: {
       ...fontStyles.sansSerifRegular18,
-      lineHeight: '24px'
-    }
+      lineHeight: '24px',
+    },
   }),
   verifiedCheck: css({
     flexShrink: 0,
     display: 'inline-block',
     marginLeft: 4,
-    marginTop: -2
+    marginTop: -2,
   }),
   link: css({
     color: 'inherit',
-    textDecoration: 'none'
-  })
+    textDecoration: 'none',
+  }),
 }
 
 export const UserResult = ({ node }) => {
   const {
-    entity: { id, slug, firstName, lastName, credentials, portrait }
+    entity: { id, slug, firstName, lastName, credentials, portrait },
   } = node
   // TODO: show comments/article count on search page
   const nameHighlight = findHighlight(node, 'name')
   const textHighlight =
     findHighlight(node, 'biography') || findHighlight(node, 'statement')
-  const credential = credentials && credentials.find(c => c.isListed)
+  const credential = credentials && credentials.find((c) => c.isListed)
   const [colorScheme] = useColorContext()
   const highlightEMRule = useMemo(
     () =>
       css({
         '& em': {
           background: colorScheme.getCSSColor('overlayInverted'),
-          color: colorScheme.getCSSColor('textInverted')
-        }
+          color: colorScheme.getCSSColor('textInverted'),
+        },
       }),
-    [colorScheme]
+    [colorScheme],
   )
   return (
     <div>
@@ -121,7 +121,7 @@ export const UserResult = ({ node }) => {
                   dangerouslySetInnerHTML={{
                     __html: nameHighlight
                       ? nameHighlight.fragments[0]
-                      : `${firstName} ${lastName}`
+                      : `${firstName} ${lastName}`,
                   }}
                 />
               </a>
@@ -133,7 +133,7 @@ export const UserResult = ({ node }) => {
                 {...styles.descriptionText}
                 {...colorScheme.set(
                   'color',
-                  credential.verified ? 'text' : 'textSoft'
+                  credential.verified ? 'text' : 'textSoft',
                 )}
               >
                 {credential.description}
@@ -153,7 +153,7 @@ export const UserResult = ({ node }) => {
           <span
             {...styles.highlight}
             dangerouslySetInnerHTML={{
-              __html: formatExcerpt(textHighlight.fragments[0])
+              __html: formatExcerpt(textHighlight.fragments[0]),
             }}
           />
         </Editorial.P>

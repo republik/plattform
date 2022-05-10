@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { css } from 'glamor'
 import { useRouter } from 'next/router'
 import compose from 'lodash/flowRight'
@@ -14,19 +14,19 @@ import {
   Label,
   fontStyles,
   useColorContext,
-  plainButtonRule
+  plainButtonRule,
 } from '@project-r/styleguide'
 
 const styles = {
   p: css({
     margin: 0,
-    ...fontStyles.sansSerifRegular18
+    ...fontStyles.sansSerifRegular18,
   }),
   container: css({
     '&:not(:last-child)': css({
-      marginBottom: 24
-    })
-  })
+      marginBottom: 24,
+    }),
+  }),
 }
 
 const { H3 } = Interaction
@@ -42,7 +42,7 @@ export const Item = withT(
         {...styles.container}
         {...colorScheme.set(
           'backgroundColor',
-          highlighted ? 'alert' : 'default'
+          highlighted ? 'alert' : 'default',
         )}
         style={{ marginBottom: compact ? 0 : undefined }}
       >
@@ -52,7 +52,7 @@ export const Item = withT(
             <Label>
               {t('account/item/label', {
                 formattedDate: dayFormat(createdAt),
-                formattedTime: hourFormat(createdAt)
+                formattedTime: hourFormat(createdAt),
               })}
             </Label>
             <br />
@@ -61,7 +61,7 @@ export const Item = withT(
         {children}
       </div>
     )
-  }
+  },
 )
 
 export const EditButton = ({ children, onClick }) => {
@@ -73,11 +73,11 @@ export const EditButton = ({ children, onClick }) => {
         color: colorScheme.getCSSColor('primary'),
         '@media (hover)': {
           ':hover': {
-            color: colorScheme.getCSSColor('primaryHover')
-          }
-        }
+            color: colorScheme.getCSSColor('primaryHover'),
+          },
+        },
       }),
-    [colorScheme]
+    [colorScheme],
   )
   return (
     <button {...buttonStyleRules} onClick={onClick}>
@@ -99,7 +99,7 @@ export const Hint = ({ t, tKey }) => {
       style={{
         marginTop: -12,
         marginBottom: 12,
-        display: 'block'
+        display: 'block',
       }}
     >
       <span {...colorScheme.set('color', 'textSoft')}>{t(tKey)}</span>
@@ -121,7 +121,7 @@ export const HintArea = ({ children }) => {
 
 export const AccountEnforceMe = compose(
   withT,
-  withMe
+  withMe,
 )(({ t, me, children }) => {
   const { query } = useRouter()
 

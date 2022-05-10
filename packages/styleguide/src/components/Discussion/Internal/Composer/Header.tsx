@@ -3,7 +3,7 @@ import { css } from 'glamor'
 import { CheckIcon } from '../../../Icons'
 import {
   sansSerifMedium16,
-  sansSerifRegular14
+  sansSerifRegular14,
 } from '../../../Typography/styles'
 import { ellipsize } from '../../../../lib/styleMixins'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
@@ -16,7 +16,7 @@ const buttonStyle = {
   border: 'none',
   cursor: 'pointer',
   outline: 'none',
-  padding: 0
+  padding: 0,
 }
 
 const styles = {
@@ -24,24 +24,24 @@ const styles = {
     ...buttonStyle,
     textAlign: 'left',
     padding: '8px',
-    width: '100%'
+    width: '100%',
   }),
   root: css({
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
   }),
   profileRoot: css({
     display: 'inline-flex',
     alignItems: 'center',
     flexGrow: 1,
-    overflowX: 'clip'
+    overflowX: 'clip',
   }),
   profilePicture: css({
     display: 'block',
     width: pxToRem(40),
     flex: `0 0 40px`,
     height: pxToRem(40),
-    marginRight: '8px'
+    marginRight: '8px',
   }),
   center: css({
     alignSelf: 'stretch',
@@ -49,7 +49,7 @@ const styles = {
     flexDirection: 'column',
     justifyContent: 'center',
     flexGrow: 1,
-    minWidth: 0
+    minWidth: 0,
   }),
   name: css({
     ...convertStyleToRem(sansSerifMedium16),
@@ -57,29 +57,29 @@ const styles = {
     minWidth: 0,
     flexGrow: 0,
     flexShrink: 1,
-    ...ellipsize
+    ...ellipsize,
   }),
   meta: css({
     ...convertStyleToRem(sansSerifRegular14),
     lineHeight: pxToRem('20px'),
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
   }),
   credential: css({
     display: 'flex',
     alignItems: 'center',
     flexGrow: 0,
     flexShrink: 1,
-    minWidth: 0
+    minWidth: 0,
   }),
   descriptionText: css({
-    ...ellipsize
+    ...ellipsize,
   }),
   verifiedCheck: css({
     flexShrink: 0,
     display: 'inline-block',
     marginLeft: 4,
-    marginTop: -2
+    marginTop: -2,
   }),
   action: css({
     ...buttonStyle,
@@ -91,21 +91,21 @@ const styles = {
     '& svg': {
       display: 'inline-block',
       margin: '8px',
-      verticalAlign: 'middle'
-    }
-  })
+      verticalAlign: 'middle',
+    },
+  }),
 }
 
 const commentHeaderProfilePropTypes = {
   t: PropTypes.func.isRequired,
   displayAuthor: DisplayAuthorPropType.isRequired,
-  canEditRole: PropTypes.bool
+  canEditRole: PropTypes.bool,
 }
 
 export const CommentHeaderProfile = ({
   t,
   displayAuthor,
-  canEditRole
+  canEditRole,
 }: InferProps<typeof commentHeaderProfilePropTypes>) => {
   const { name, profilePicture, credential } = displayAuthor || {}
 
@@ -161,13 +161,13 @@ CommentHeaderProfile.propTypes = commentHeaderProfilePropTypes
 const headerPropTypes = {
   t: PropTypes.func.isRequired,
   displayAuthor: DisplayAuthorPropType.isRequired,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
 }
 
 export const Header = ({
   t,
   displayAuthor,
-  onClick
+  onClick,
 }: InferProps<typeof headerPropTypes>) => {
   const [colorScheme] = useColorContext()
 
@@ -176,11 +176,11 @@ export const Header = ({
       css({
         '@media(hover)': {
           '&:hover': {
-            backgroundColor: colorScheme.getCSSColor('alert')
-          }
-        }
+            backgroundColor: colorScheme.getCSSColor('alert'),
+          },
+        },
       }),
-    [colorScheme]
+    [colorScheme],
   )
 
   return (

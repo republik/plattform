@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react'
+import { createContext, useState, useEffect, useRef } from 'react'
 
 import createPersistedState from '../../lib/hooks/use-persisted-state'
 import { useInNativeApp, postMessage } from '../../lib/withInNativeApp'
 
 import { useMediaProgress } from './MediaProgress'
 
-export const AudioContext = React.createContext({
+export const AudioContext = createContext({
   audioSource: {},
   audioPlayerVisible: false,
   toggleAudioPlayer: () => {},
   onCloseAudioPlayer: () => {},
   audioState: {},
-  autoPlayActive: false
+  autoPlayActive: false,
 })
 
 const useAudioState = createPersistedState('republik-audioplayer-audiostate')
@@ -20,7 +20,7 @@ const AudioProvider = ({ children }) => {
   const { inNativeApp, inNativeIOSApp } = useInNativeApp()
   const [audioState, setAudioState] = useAudioState(undefined)
   const [audioPlayerVisible, setAudioPlayerVisible] = useState(false)
-  const [autoPlayActive, setAutoPlayActive] = useState(false)
+  const [autoPlayAudioState, setAutoPlayAudioState] = useState(false)
   const clearTimeoutId = useRef()
 
   const { getMediaProgress } = useMediaProgress()
@@ -40,7 +40,7 @@ const AudioProvider = ({ children }) => {
       url,
       title,
       sourcePath: path,
-      mediaId
+      mediaId,
     }
     if (inNativeApp) {
       let currentTime
@@ -51,19 +51,18 @@ const AudioProvider = ({ children }) => {
         type: 'play-audio',
         payload: {
           ...payload,
-          currentTime
-        }
+          currentTime,
+        },
       })
       return
     }
     setAudioState(payload)
-    setAutoPlayActive(true)
+    setAutoPlayAudioState(payload)
     clearTimeout(clearTimeoutId.current)
   }
 
   const onCloseAudioPlayer = () => {
     setAudioPlayerVisible(false)
-    setAutoPlayActive(false)
     clearTimeoutId.current = setTimeout(() => {
       setAudioState(undefined)
     }, 300)
@@ -71,10 +70,6 @@ const AudioProvider = ({ children }) => {
 
   useEffect(() => {
     setAudioPlayerVisible(!!audioState)
-    // ensure auto play is disabled when e.g. closed through another tab (local storage sync)
-    if (!audioState) {
-      setAutoPlayActive(false)
-    }
   }, [audioState])
 
   return (
@@ -84,7 +79,7 @@ const AudioProvider = ({ children }) => {
         onCloseAudioPlayer,
         audioPlayerVisible,
         audioState,
-        autoPlayActive
+        autoPlayActive: autoPlayAudioState === audioState,
       }}
     >
       {children}

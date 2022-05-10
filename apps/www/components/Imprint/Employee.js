@@ -1,4 +1,3 @@
-import React from 'react'
 import { Item } from '../Testimonial/List'
 import Link from 'next/link'
 
@@ -17,7 +16,7 @@ const Employee = ({
   style,
   minColumns,
   maxColumns,
-  singleRow
+  singleRow,
 }) => {
   const displayName = name + (title ? `, ${title}` : '')
   const columnProps = { minColumns, maxColumns, singleRow }

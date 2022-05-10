@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
@@ -13,8 +13,8 @@ const styles = {
     position: 'fixed',
     top: 0,
     left: 0,
-    width: '100%'
-  })
+    width: '100%',
+  }),
 }
 
 class Image extends Component {
@@ -37,8 +37,8 @@ class Image extends Component {
         ...query,
         sequenceNumber: error
           ? undefined
-          : statement && statement.sequenceNumber
-      }
+          : statement && statement.sequenceNumber,
+      },
     }
     Router.push(to, to, { shallow: true })
   }
@@ -95,8 +95,8 @@ export default compose(
       return {
         loading: data.loading,
         error: data.error,
-        statement: data.nextStatement
+        statement: data.nextStatement,
       }
-    }
-  })
+    },
+  }),
 )(Image)

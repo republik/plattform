@@ -9,7 +9,7 @@ const fontStyles = {
   fontFamily: fontFamilies.sansSerifRegular,
   fontHeading: fontFamilies.sansSerifMedium,
   fontMono: fontFamilies.monospaceRegular,
-  baseFontSize: 18
+  baseFontSize: 18,
 }
 
 export default {
@@ -52,13 +52,13 @@ export default {
       script: { color: 'rgb(8, 48, 107)' },
       function: { color: 'rgb(187,21,26)' },
       keyword: { color: 'rgb(24, 100, 170)' },
-      string: { color: 'rgb(75, 151, 201)' }
+      string: { color: 'rgb(75, 151, 201)' },
     },
 
     checkerboardPatternLight: LIGHT_CHECKBOARD,
     checkerboardPatternDark: DARK_CHECKBOARD,
 
-    ...fontStyles
+    ...fontStyles,
   },
   dark: {
     background: '#292929',
@@ -99,12 +99,12 @@ export default {
       script: { color: 'rgb(24, 100, 170)' },
       function: { color: 'rgb(239,69,51)' },
       keyword: { color: 'rgb(75, 151, 201)' },
-      string: { color: 'rgb(147, 195, 223)' }
+      string: { color: 'rgb(147, 195, 223)' },
     },
 
     checkerboardPatternDark: LIGHT_CHECKBOARD,
     checkerboardPatternLight: DARK_CHECKBOARD,
 
-    ...fontStyles
-  }
+    ...fontStyles,
+  },
 }

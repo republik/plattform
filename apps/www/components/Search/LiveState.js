@@ -1,4 +1,3 @@
-import React from 'react'
 import compose from 'lodash/flowRight'
 import withT from '../../lib/withT'
 import { Interaction, A, useColorContext } from '@project-r/styleguide'
@@ -12,12 +11,12 @@ const ResultCount = compose(withT)(
     searchQuery,
     getSearchParams,
     dataAggregations,
-    onClickSearchResults
+    onClickSearchResults,
   }) => {
     const totalCount =
       dataAggregations.search && dataAggregations.search.totalCount
     const results = t.pluralize('search/pageInfo/total', {
-      count: countFormat(totalCount)
+      count: countFormat(totalCount),
     })
     const [colorScheme] = useColorContext()
     return (
@@ -27,7 +26,7 @@ const ResultCount = compose(withT)(
             <Link
               href={{
                 pathname: '/suche',
-                query: getSearchParams({ q: searchQuery })
+                query: getSearchParams({ q: searchQuery }),
               }}
               passHref
             >
@@ -49,7 +48,7 @@ const ResultCount = compose(withT)(
         )}
       </Interaction.P>
     )
-  }
+  },
 )
 
 export default ResultCount

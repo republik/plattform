@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react'
+import { Component, useState } from 'react'
 import withT from '../../lib/withT'
 import compose from 'lodash/flowRight'
 import withInNativeApp from '../../lib/withInNativeApp'
@@ -21,8 +21,8 @@ const styles = {
   container: css({
     paddingTop: 10,
     [mediaQueries.onlyS]: {
-      marginBottom: 30
-    }
+      marginBottom: 30,
+    },
   }),
   sticky: css({
     display: 'none',
@@ -31,28 +31,28 @@ const styles = {
       position: 'fixed',
       zIndex: 1,
       width: SIDEBAR_WIDTH,
-      top: HEADER_HEIGHT
-    }
+      top: HEADER_HEIGHT,
+    },
   }),
   button: css({
     marginBottom: 10,
     [mediaQueries.onlyS]: {
-      display: 'none'
-    }
+      display: 'none',
+    },
   }),
   links: css({
     lineHeight: '24px',
     marginTop: 13,
-    fontSize: 16
+    fontSize: 16,
   }),
   packages: css({
     fontSize: 19,
     lineHeight: '28px',
-    marginBottom: 15
-  })
+    marginBottom: 15,
+  }),
 }
 
-const SidebarInner = props => {
+const SidebarInner = (props) => {
   const { t, crowdfunding, title, links, packages, primaryQuery } = props
 
   const [hover, setHover] = useState()
@@ -60,13 +60,13 @@ const SidebarInner = props => {
   return (
     <div {...styles.container}>
       <div {...styles.packages}>{title}</div>
-      {packages.map(pack => {
+      {packages.map((pack) => {
         return (
           <Link
             key={pack.name}
             href={{
               pathname: '/angebote',
-              query: { ...pack.params, package: pack.name }
+              query: { ...pack.params, package: pack.name },
             }}
             passHref
           >
@@ -86,7 +86,7 @@ const SidebarInner = props => {
           <Link
             href={{
               pathname: '/angebote',
-              query: primaryQuery
+              query: primaryQuery,
             }}
             passHref
           >
@@ -141,11 +141,11 @@ class Sidebar extends Component {
       if (sticky.status !== status || sticky.sidebar !== sidebar) {
         setSticky({
           status,
-          sidebar
+          sidebar,
         })
       }
     }
-    this.innerRef = ref => {
+    this.innerRef = (ref) => {
       this.inner = ref
     }
     this.measure = () => {
@@ -159,7 +159,7 @@ class Sidebar extends Component {
 
         if (right !== this.state.right) {
           this.setState(() => ({
-            right
+            right,
           }))
         }
       }
@@ -189,10 +189,10 @@ class Sidebar extends Component {
       links,
       packages,
       statusProps,
-      inNativeIOSApp
+      inNativeIOSApp,
     } = this.props
 
-    const onChange = state => this.setState(() => state)
+    const onChange = (state) => this.setState(() => state)
 
     if (!crowdfunding) {
       return null
@@ -214,7 +214,7 @@ class Sidebar extends Component {
             <div
               ref={this.innerRef}
               style={{
-                visibility: sticky.sidebar ? 'hidden' : 'visible'
+                visibility: sticky.sidebar ? 'hidden' : 'visible',
               }}
             >
               <SidebarInner

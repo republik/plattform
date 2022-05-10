@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import { createContext, useState } from 'react'
 
-export const OverlayFormContext = React.createContext()
+export const OverlayFormContext = createContext()
 
 export const OverlayFormContextProvider = ({ children }) => {
   const [showModal, setShowModal] = useState(false)
@@ -8,7 +8,7 @@ export const OverlayFormContextProvider = ({ children }) => {
     <OverlayFormContext.Provider
       value={{
         showModal,
-        setShowModal
+        setShowModal,
       }}
     >
       {children}

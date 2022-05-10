@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { css } from 'glamor'
 import { Label } from '@project-r/styleguide'
 import MessageForm from './MessageForm'
@@ -8,20 +8,18 @@ import { displayDate } from '../../Display/utils'
 import {
   tableStyles as styles,
   createSortHandler,
-  createSortIndicator
+  createSortIndicator,
 } from '../../Tables/utils'
 
-const Table = (
-  {
-    items,
-    sort,
-    onSort,
-    onMessage,
-    onMatch,
-    onHide,
-    ...props
-  }
-) => {
+const Table = ({
+  items,
+  sort,
+  onSort,
+  onMessage,
+  onMatch,
+  onHide,
+  ...props
+}) => {
   const sortHandler = createSortHandler(sort || {}, onSort)
   const indicator = createSortIndicator(sort || {})
   return (
@@ -59,10 +57,7 @@ const Table = (
           >
             <Label>Konto{indicator('konto')}</Label>
           </th>
-          <th
-            {...styles.interactive}
-            {...styles.left}
-          >
+          <th {...styles.interactive} {...styles.left}>
             <Label>Avisierungstext</Label>
           </th>
           <th
@@ -72,10 +67,7 @@ const Table = (
           >
             <Label>Gutschrift{indicator('gutschrift')}</Label>
           </th>
-          <th
-            {...styles.interactive}
-            {...styles.left}
-          >
+          <th {...styles.interactive} {...styles.left}>
             <Label>Mitteilung</Label>
           </th>
           <th
@@ -96,8 +88,9 @@ const Table = (
         </tr>
       </thead>
       <tbody>
-        {items.filter(v => v.hidden !== true).map(
-          (postfinancePayment, index) => (
+        {items
+          .filter((v) => v.hidden !== true)
+          .map((postfinancePayment, index) => (
             <tr key={`postfinancePayment-${index}`} {...styles.row}>
               <td>{displayDate(postfinancePayment.createdAt)}</td>
               <td>{postfinancePayment.valuta}</td>
@@ -105,55 +98,66 @@ const Table = (
               <td>
                 {postfinancePayment.avisierungstext}
                 {postfinancePayment.image ? (
-                  <Einzahlungsschein {...postfinancePayment}></Einzahlungsschein>
-                ) : ''}
+                  <Einzahlungsschein
+                    {...postfinancePayment}
+                  ></Einzahlungsschein>
+                ) : (
+                  ''
+                )}
               </td>
-              <td>{chfFormat(
-                postfinancePayment.gutschrift /
-                  100
-              )}</td>
-              <td>{
-                !postfinancePayment.matched
-                  ? <MessageForm
+              <td>{chfFormat(postfinancePayment.gutschrift / 100)}</td>
+              <td>
+                {!postfinancePayment.matched ? (
+                  <MessageForm
                     message={postfinancePayment.mitteilung}
-                    onSubmit={(message) => onMessage({
-                      id: postfinancePayment.id,
-                      message
-                    })}
+                    onSubmit={(message) =>
+                      onMessage({
+                        id: postfinancePayment.id,
+                        message,
+                      })
+                    }
                   />
-                  : postfinancePayment.mitteilung
-              }</td>
+                ) : (
+                  postfinancePayment.mitteilung
+                )}
+              </td>
               <td>{postfinancePayment.matched ? 'Yes' : 'No'}</td>
               <td>{postfinancePayment.buchungsdatum}</td>
-              <td>{!postfinancePayment.matched && (
-                <span>
-                  <a
-                    {...styles.link}
-                    onClick={() => onHide({
-                      id: postfinancePayment.id
-                    })}
-                  >
-                    Verstecken
-                  </a>
-                  <br />
-                  <a
-                    {...styles.link}
-                    onClick={() => onMatch({
-                      id: postfinancePayment.id
-                    })}
-                  >
-                    Matchen
-                  </a>
-                </span>
-              )}</td>
+              <td>
+                {!postfinancePayment.matched && (
+                  <span>
+                    <a
+                      {...styles.link}
+                      onClick={() =>
+                        onHide({
+                          id: postfinancePayment.id,
+                        })
+                      }
+                    >
+                      Verstecken
+                    </a>
+                    <br />
+                    <a
+                      {...styles.link}
+                      onClick={() =>
+                        onMatch({
+                          id: postfinancePayment.id,
+                        })
+                      }
+                    >
+                      Matchen
+                    </a>
+                  </span>
+                )}
+              </td>
             </tr>
           ))}
       </tbody>
     </table>
   )
-};
+}
 
-function Einzahlungsschein ({image}) {
+function Einzahlungsschein({ image }) {
   const [isSmall, setIsSmall] = useState(true)
   const size = isSmall ? 1 : 8
   const imgStyles = css({
@@ -161,7 +165,7 @@ function Einzahlungsschein ({image}) {
     display: 'block',
     border: '1px solid black',
     borderColor: isSmall ? 'black' : 'transparent',
-    transform: `scale(${size}, ${size})`
+    transform: `scale(${size}, ${size})`,
   })
   const linkStyle = css({
     display: 'block',
@@ -171,12 +175,10 @@ function Einzahlungsschein ({image}) {
     setIsSmall(!isSmall)
   }
   return (
-    <a href="#" {...{onClick}}
-      {...linkStyle}
-    >
+    <a href='#' {...{ onClick }} {...linkStyle}>
       <img src={'data:image/png;base64, ' + image} {...imgStyles}></img>
     </a>
   )
 }
 
-export default Table;
+export default Table

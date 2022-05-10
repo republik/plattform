@@ -1,4 +1,3 @@
-import React from 'react'
 import gql from 'graphql-tag'
 
 import { displayDate } from '../../Display/utils'
@@ -23,14 +22,14 @@ export const fragments = gql`
   }
 `
 
-const getLastPeriod = periods =>
+const getLastPeriod = (periods) =>
   periods?.reduce((accumulator, currentValue) => {
     return !accumulator || currentValue.endDate > accumulator.endDate
       ? currentValue
       : accumulator
   }, false)
 
-const getFirstPeriod = periods =>
+const getFirstPeriod = (periods) =>
   periods?.reduce((accumulator, currentValue) => {
     return !accumulator || currentValue.beginDate < accumulator.beginDate
       ? currentValue
@@ -38,7 +37,7 @@ const getFirstPeriod = periods =>
   }, false)
 
 export const Memberships = ({ activeMembership, memberships }) => {
-  const periods = memberships?.map(m => m.periods).flat()
+  const periods = memberships?.map((m) => m.periods).flat()
 
   const lastPeriod = getLastPeriod(periods)
 

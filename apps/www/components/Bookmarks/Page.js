@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import Frame from '../Frame'
@@ -14,21 +14,21 @@ import {
   Center,
   Interaction,
   A,
-  plainButtonRule
+  plainButtonRule,
 } from '@project-r/styleguide'
 import { BookmarkBorderIcon } from '@project-r/styleguide'
 import { getCollectionItems, registerQueryVariables } from './queries'
 import Link from 'next/link'
 
-const getConnection = data => data.me.collectionItems
+const getConnection = (data) => data.me.collectionItems
 
 const mergeConnection = (data, connection) => {
   return {
     ...data,
     me: {
       ...data.me,
-      collectionItems: connection
-    }
+      collectionItems: connection,
+    },
   }
 }
 
@@ -43,18 +43,18 @@ const Page = ({ t, me }) => {
       if (filter === 'read') {
         return {
           collections: ['progress', 'bookmarks'],
-          progress: 'FINISHED'
+          progress: 'FINISHED',
         }
       }
       if (filter === 'continue') {
         return {
           collections: ['progress', 'bookmarks'],
-          progress: 'UNFINISHED'
+          progress: 'UNFINISHED',
         }
       }
     }
     return {
-      collections: ['bookmarks']
+      collections: ['bookmarks'],
     }
   }, [filter, showProgressTabs])
   registerQueryVariables(variables)
@@ -62,7 +62,7 @@ const Page = ({ t, me }) => {
   return (
     <Frame
       meta={{
-        title: t('nav/bookmarks')
+        title: t('nav/bookmarks'),
       }}
       raw
     >
@@ -71,14 +71,14 @@ const Page = ({ t, me }) => {
         {showProgressTabs ? (
           <div {...styles.filter}>
             <Interaction.P>
-              {['continue', 'bookmarks', 'read'].map(key => (
+              {['continue', 'bookmarks', 'read'].map((key) => (
                 <button
                   key={key}
                   onClick={() => setFilter(key)}
                   {...plainButtonRule}
                   {...styles.filterItem}
                   style={{
-                    textDecoration: filter === key ? 'underline' : 'none'
+                    textDecoration: filter === key ? 'underline' : 'none',
                   }}
                 >
                   {t(`pages/bookmarks/tab/${key}`)}
@@ -94,14 +94,14 @@ const Page = ({ t, me }) => {
           refetchOnUnmount
           getConnection={getConnection}
           mergeConnection={mergeConnection}
-          mapNodes={node => node.document}
+          mapNodes={(node) => node.document}
           feedProps={{ showHeader: false, showSubscribe: true }}
           placeholder={
             <Interaction.P style={{ marginBottom: 60 }}>
               {t.first.elements(
                 [
                   showProgressTabs && `pages/bookmarks/placeholder/${filter}`,
-                  'pages/bookmarks/placeholder'
+                  'pages/bookmarks/placeholder',
                 ].filter(Boolean),
                 {
                   feedLink: (
@@ -109,8 +109,8 @@ const Page = ({ t, me }) => {
                       <A>{t('pages/bookmarks/placeholder/feedText')}</A>
                     </Link>
                   ),
-                  bookmarkIcon
-                }
+                  bookmarkIcon,
+                },
               )}
             </Interaction.P>
           }
@@ -119,8 +119,8 @@ const Page = ({ t, me }) => {
               {t.first(
                 [
                   showProgressTabs && `pages/bookmarks/help/${filter}`,
-                  'pages/bookmarks/help'
-                ].filter(Boolean)
+                  'pages/bookmarks/help',
+                ].filter(Boolean),
               )}
             </Interaction.P>
           }
@@ -138,21 +138,21 @@ const styles = {
     marginBottom: 80,
     [mediaQueries.onlyS]: {
       ...fontStyles.sansSerifMedium40,
-      marginBottom: 50
-    }
+      marginBottom: 50,
+    },
   }),
   filter: css({
     display: 'flex',
-    marginBottom: 16
+    marginBottom: 16,
   }),
   filterItem: css({
     marginRight: 24,
-    textAlign: 'left'
+    textAlign: 'left',
   }),
   helpText: css({
     ...fontStyles.sansSerifRegular16,
-    marginBottom: 36
-  })
+    marginBottom: 36,
+  }),
 }
 
 export default compose(withT, withMe, enforceMembership(), withTester)(Page)

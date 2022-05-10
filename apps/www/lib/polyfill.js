@@ -23,9 +23,9 @@ if (process.browser) {
     !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').style
   if (!svgSupport) {
     Object.defineProperty(Element.prototype, 'style', {
-      get: function() {
+      get: function () {
         return {}
-      }
+      },
     })
   }
 }

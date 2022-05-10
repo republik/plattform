@@ -1,4 +1,3 @@
-import React from 'react'
 import gql from 'graphql-tag'
 import { A } from '@project-r/styleguide'
 
@@ -24,7 +23,7 @@ const Mails = ({ mails }) => {
 
   return (
     <div>
-      {mails.map(mail => {
+      {mails.map((mail) => {
         return (
           <div key={mail.id} {...styles.mail}>
             <div>

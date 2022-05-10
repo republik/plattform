@@ -1,18 +1,20 @@
-import React from 'react'
-
 import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { createStaticKeyHandler } from '../../utils/keyHandlers'
 
 export default ({ rule, subModules, TYPE }) => {
-  const paragraphModule = subModules.find(m => m.name === 'paragraph')
+  const paragraphModule = subModules.find((m) => m.name === 'paragraph')
   if (!paragraphModule) {
     throw new Error('Missing paragraph submodule')
   }
   const paragraphSerializer = paragraphModule.helpers.serializer
 
-  const { mdastType = 'blockquote', formatButtonText, identifier, isStatic } =
-    rule.editorOptions || {}
+  const {
+    mdastType = 'blockquote',
+    formatButtonText,
+    identifier,
+    isStatic,
+  } = rule.editorOptions || {}
 
   const schemaRule = {
     match: matchBlock(TYPE),
@@ -21,18 +23,18 @@ export default ({ rule, subModules, TYPE }) => {
       kind: 'block',
       type: TYPE,
       data: node.data,
-      nodes: paragraphSerializer.fromMdast(node.children, 0, node, rest)
+      nodes: paragraphSerializer.fromMdast(node.children, 0, node, rest),
     }),
     toMdast: (object, index, parent, rest) => ({
       type: mdastType,
       identifier,
       data: object.data,
-      children: paragraphSerializer.toMdast(object.nodes, 0, object, rest)
-    })
+      children: paragraphSerializer.toMdast(object.nodes, 0, object, rest),
+    }),
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [schemaRule]
+    rules: [schemaRule],
   })
 
   const Component = rule.component
@@ -44,14 +46,14 @@ export default ({ rule, subModules, TYPE }) => {
     TYPE,
     rule,
     helpers: {
-      serializer
+      serializer,
     },
     changes: {},
     ui: {
       blockFormatButtons: [
         formatButtonText &&
           createBlockButton({
-            type: TYPE
+            type: TYPE,
           })(({ active, disabled, visible, ...props }) => (
             <span
               {...buttonStyles.block}
@@ -62,8 +64,8 @@ export default ({ rule, subModules, TYPE }) => {
             >
               {formatButtonText}
             </span>
-          ))
-      ]
+          )),
+      ],
     },
     plugins: [
       {
@@ -82,7 +84,7 @@ export default ({ rule, subModules, TYPE }) => {
           const { value } = change
           const inBlock = value.document.getClosest(
             value.startBlock.key,
-            matchBlock(TYPE)
+            matchBlock(TYPE),
           )
           if (!inBlock) return
 
@@ -111,8 +113,8 @@ export default ({ rule, subModules, TYPE }) => {
                 {
                   kinds: ['block'],
                   types: [paragraphModule.TYPE],
-                  min: 1
-                }
+                  min: 1,
+                },
               ],
               normalize: (change, reason, { node, index, child }) => {
                 if (reason === 'child_type_invalid') {
@@ -120,14 +122,14 @@ export default ({ rule, subModules, TYPE }) => {
                 }
                 if (reason === 'child_kind_invalid') {
                   change.wrapBlockByKey(child.key, {
-                    type: paragraphModule.TYPE
+                    type: paragraphModule.TYPE,
                   })
                 }
-              }
-            }
-          }
-        }
-      }
-    ]
+              },
+            },
+          },
+        },
+      },
+    ],
   }
 }

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import questionStyles from './questionStyles'
 import debounce from 'lodash/debounce'
 import uuid from 'uuid/v4'
@@ -14,7 +14,7 @@ class TextQuestion extends Component {
     this.state = {
       answerId:
         (props.question.userAnswer && props.question.userAnswer.id) || uuid(),
-      ...this.deriveStateFromProps(props)
+      ...this.deriveStateFromProps(props),
     }
   }
 
@@ -32,9 +32,9 @@ class TextQuestion extends Component {
 
   onChangeDebounced = debounce(this.props.onChange, 1000)
 
-  handleChange = ev => {
+  handleChange = (ev) => {
     const {
-      question: { maxLength }
+      question: { maxLength },
     } = this.props
     const { answerId } = this.state
 
@@ -48,7 +48,7 @@ class TextQuestion extends Component {
   render() {
     const {
       question: { text, maxLength },
-      t
+      t,
     } = this.props
     const { value } = this.state
     return (

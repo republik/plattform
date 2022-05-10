@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import { mediaQueries } from '@project-r/styleguide'
 
@@ -15,6 +14,6 @@ export const sectionContainerStyle = css({
   marginTop: '5em',
   padding: '0px 15px',
   [mediaQueries.mUp]: {
-    marginTop: '8em'
-  }
+    marginTop: '8em',
+  },
 })

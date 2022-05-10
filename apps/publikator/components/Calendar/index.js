@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { css } from 'glamor'
 import { compose, graphql } from 'react-apollo'
 import { withRouter } from 'next/router'
@@ -10,7 +10,7 @@ import {
   isCurrentWeek,
   isPast,
   now,
-  offsetUrlWeek
+  offsetUrlWeek,
 } from '../../lib/utils/calendar'
 import { DateHeading, ReposByTemplate } from './Day'
 import { CurrentDates, Nav, NavButton, ResetLink } from './Nav'
@@ -23,23 +23,23 @@ const styles = {
     padding: 20,
     minWidth: 1200,
     maxWidth: 2200,
-    overflow: 'scroll'
+    overflow: 'scroll',
   }),
   calendar: css({
     marginTop: 15,
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
   }),
   calendarByTemplate: css({
-    display: 'flex'
+    display: 'flex',
   }),
   day: css({
     flexGrow: 1,
     flexBasis: 0,
     display: 'flex',
     flexDirection: 'column',
-    overflow: 'hidden'
-  })
+    overflow: 'hidden',
+  }),
 }
 
 const CalendarByTemplate = ({
@@ -47,11 +47,11 @@ const CalendarByTemplate = ({
   calendar,
   isNewsletter,
   withHeading,
-  currentWeek
+  currentWeek,
 }) => {
   return (
     <div {...styles.calendarByTemplate}>
-      {calendar.map(day => {
+      {calendar.map((day) => {
         const { date, repos } = day
         return (
           <div
@@ -77,27 +77,27 @@ const CalendarByTemplate = ({
 const Calendar = ({
   router: {
     query,
-    query: { from, until }
+    query: { from, until },
   },
-  data = {}
+  data = {},
 }) => {
   useEffect(() => {
     !(from && until) && resetDates()
   }, [])
 
-  const changeDates = dates =>
+  const changeDates = (dates) =>
     Router.replaceRoute('index', { ...query, ...dates })
 
-  const offsetDates = offset => () =>
+  const offsetDates = (offset) => () =>
     changeDates({
       from: offsetUrlWeek(from, offset),
-      until: offsetUrlWeek(until, offset)
+      until: offsetUrlWeek(until, offset),
     })
 
   const resetDates = () =>
     changeDates({
       from: getUrlWeekStart(now),
-      until: getUrlWeekEnd(now)
+      until: getUrlWeekEnd(now),
     })
 
   const { loading, error, reposSearch } = data
@@ -116,20 +116,20 @@ const Calendar = ({
         error={error}
         height={300}
         render={() => {
-          const reposByTemplate = group(reposSearch?.nodes || [], repo =>
+          const reposByTemplate = group(reposSearch?.nodes || [], (repo) =>
             repo.latestCommit.document.meta.template === 'editorialNewsletter'
               ? 'newsletter'
-              : 'other'
+              : 'other',
           )
           const newslettersCalendar = getPublicationCalendar(
             from,
             until,
-            reposByTemplate.get('newsletter')
+            reposByTemplate.get('newsletter'),
           )
           const articlesCalendar = getPublicationCalendar(
             from,
             until,
-            reposByTemplate.get('other')
+            reposByTemplate.get('other'),
           )
           return (
             <div {...styles.calendar}>
@@ -158,21 +158,21 @@ export default compose(
   graphql(reposPerWeek, {
     options: ({
       router: {
-        query: { from, until }
-      }
+        query: { from, until },
+      },
     }) => ({
       fetchPolicy: 'network-only',
       variables: {
         publishDateRange: {
           from,
-          until
-        }
-      }
+          until,
+        },
+      },
     }),
     skip: ({
       router: {
-        query: { from, until }
-      }
-    }) => !from || !until
-  })
+        query: { from, until },
+      },
+    }) => !from || !until,
+  }),
 )(Calendar)

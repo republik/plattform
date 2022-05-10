@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { withRouter } from 'next/router'
@@ -13,11 +13,11 @@ const checkIfSubscribedToAny = ({ data, subscriptions, showAuthorFilter }) =>
   //checks if any of the subscription nodes is set to active
   (subscriptions &&
     subscriptions.some(
-      subscription =>
+      (subscription) =>
         subscription.active &&
         (showAuthorFilter ||
           subscription.object?.__typename !== 'User' ||
-          subscription.filters.includes('Document'))
+          subscription.filters.includes('Document')),
     )) ||
   // or if a discussion is being followed
   (data && getSelectedDiscussionPreference(data) !== 'NONE')
@@ -33,7 +33,7 @@ const SubscribeMenu = ({
   labelShort,
   padded,
   loading,
-  attributes
+  attributes,
 }) => {
   const [animate, setAnimate] = useState(false)
 
@@ -46,26 +46,25 @@ const SubscribeMenu = ({
     }
   }, [animate])
 
-  const {
-    isSubscribedToAny,
-    formatSubscriptions,
-    authorSubscriptions
-  } = useMemo(
-    () => ({
-      isSubscribedToAny: checkIfSubscribedToAny({
-        data,
-        subscriptions,
-        showAuthorFilter
+  const { isSubscribedToAny, formatSubscriptions, authorSubscriptions } =
+    useMemo(
+      () => ({
+        isSubscribedToAny: checkIfSubscribedToAny({
+          data,
+          subscriptions,
+          showAuthorFilter,
+        }),
+        formatSubscriptions:
+          subscriptions &&
+          subscriptions.filter(
+            (node) => node.object?.__typename === 'Document',
+          ),
+        authorSubscriptions:
+          subscriptions &&
+          subscriptions.filter((node) => node.object?.__typename === 'User'),
       }),
-      formatSubscriptions:
-        subscriptions &&
-        subscriptions.filter(node => node.object?.__typename === 'Document'),
-      authorSubscriptions:
-        subscriptions &&
-        subscriptions.filter(node => node.object?.__typename === 'User')
-    }),
-    [data, subscriptions]
-  )
+      [data, subscriptions],
+    )
 
   // ensure icon is only shown if there is something to subscribe to
   if (
@@ -96,7 +95,7 @@ const SubscribeMenu = ({
       elementProps={{
         Icon,
         label,
-        labelShort
+        labelShort,
       }}
       initiallyOpen={!!router.query.mute}
       attributes={attributes}
@@ -115,8 +114,8 @@ const SubscribeMenu = ({
 
 export default compose(
   graphql(DISCUSSION_PREFERENCES_QUERY, {
-    skip: props => !props.discussionId
+    skip: (props) => !props.discussionId,
   }),
   withRouter,
-  withMe
+  withMe,
 )(SubscribeMenu)

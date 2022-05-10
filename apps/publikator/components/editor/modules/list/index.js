@@ -1,8 +1,7 @@
-import React from 'react'
 import { matchBlock } from '../../utils'
 
 import {
-  createListButton
+  createListButton,
   // #TODO Enable Form with compact modus
   // ListForm
 } from './ui'
@@ -16,10 +15,10 @@ export default ({ rule, subModules, TYPE }) => {
   const {
     formatButtonText = 'Liste',
     formatButtonTextOrdered = 'Aufzählung',
-    formatTypes
+    formatTypes,
   } = rule.editorOptions || {}
 
-  const itemModule = subModules.find(m => m.name === 'listItem')
+  const itemModule = subModules.find((m) => m.name === 'listItem')
   if (!itemModule) {
     throw new Error('Missing listItem submodule')
   }
@@ -31,7 +30,7 @@ export default ({ rule, subModules, TYPE }) => {
 
   const list = {
     match: matchBlock(TYPE),
-    matchMdast: node => node.type === 'list',
+    matchMdast: (node) => node.type === 'list',
     fromMdast: (node, index, parent, rest) => {
       const isNewsletter =
         rest &&
@@ -44,9 +43,9 @@ export default ({ rule, subModules, TYPE }) => {
         data: {
           ordered: node.ordered,
           start: node.start,
-          compact: !node.loose && !isNewsletter
+          compact: !node.loose && !isNewsletter,
         },
-        nodes: itemSerializer.fromMdast(node.children, 0, node, rest)
+        nodes: itemSerializer.fromMdast(node.children, 0, node, rest),
       }
     },
     toMdast: (object, index, parent, rest) => {
@@ -55,14 +54,14 @@ export default ({ rule, subModules, TYPE }) => {
         loose: !object.data.compact,
         ordered: object.data.ordered,
         start: object.data.start || 1,
-        children: itemSerializer.toMdast(object.nodes, 0, object, rest)
+        children: itemSerializer.toMdast(object.nodes, 0, object, rest),
       }
       return res
-    }
+    },
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [list]
+    rules: [list],
   })
 
   const newBlock = ({ ordered = false, compact = true }) =>
@@ -76,20 +75,20 @@ export default ({ rule, subModules, TYPE }) => {
             children: [
               {
                 type: 'paragraph',
-                children: []
-              }
-            ]
-          }
+                children: [],
+              },
+            ],
+          },
         ],
-        data: {}
-      })
+        data: {},
+      }),
     )
 
   return {
     TYPE,
     helpers: {
       serializer,
-      newBlock
+      newBlock,
     },
     changes: {},
     ui: {
@@ -99,20 +98,20 @@ export default ({ rule, subModules, TYPE }) => {
           ordered: false,
           label: formatButtonText,
           parentTypes: formatTypes,
-          newBlock
+          newBlock,
         }),
         createListButton({
           TYPE,
           ordered: true,
           label: formatButtonTextOrdered,
           parentTypes: formatTypes,
-          newBlock
-        })
+          newBlock,
+        }),
       ],
       forms: [
         // #TODO Enable and implement compact modus
         // ListForm({ TYPE })
-      ]
+      ],
     },
     plugins: [
       {
@@ -138,7 +137,7 @@ export default ({ rule, subModules, TYPE }) => {
           const { value } = change
           const inList = value.document.getClosest(
             value.startBlock.key,
-            matchBlock(TYPE)
+            matchBlock(TYPE),
           )
           if (!inList) return
 
@@ -146,7 +145,7 @@ export default ({ rule, subModules, TYPE }) => {
 
           const inItem = value.document.getClosest(
             value.startBlock.key,
-            matchBlock(LI)
+            matchBlock(LI),
           )
           const isEmpty = !inItem || !inItem.text
 
@@ -176,11 +175,11 @@ export default ({ rule, subModules, TYPE }) => {
                     change.wrapBlockByKey(child.key, LI)
                   }
                 }
-              }
-            }
-          }
-        }
-      }
-    ]
+              },
+            },
+          },
+        },
+      },
+    ],
   }
 }

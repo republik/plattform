@@ -3,7 +3,7 @@ import HorizontalRule from '../components/HorizontalRule'
 
 const hrRule = {
   matchMdast: matchType('thematicBreak'),
-  component: HorizontalRule
+  component: HorizontalRule,
 }
 
 export default hrRule

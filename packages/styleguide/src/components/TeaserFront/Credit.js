@@ -9,7 +9,7 @@ const Credit = ({ children }) => {
 }
 
 Credit.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
 }
 
 export default Credit

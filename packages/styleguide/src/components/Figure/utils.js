@@ -4,19 +4,19 @@ import { MAX_WIDTH_MOBILE } from '../Center'
 export const getResizedSrcs = (src, displayWidth, setMaxWidth = true) => {
   if (!src) {
     return {
-      size: null
+      size: null,
     }
   }
   const sizeInfo = imageSizeInfo(src)
   if (!sizeInfo) {
     return {
       src,
-      size: null
+      size: null,
     }
   }
   const size = {
     width: +sizeInfo.width,
-    height: +sizeInfo.height
+    height: +sizeInfo.height,
   }
 
   const maxWidth = size.width
@@ -26,7 +26,7 @@ export const getResizedSrcs = (src, displayWidth, setMaxWidth = true) => {
     // no maxWidth because svgs can always be blown up
     return {
       src,
-      size
+      size,
     }
   }
 
@@ -34,9 +34,9 @@ export const getResizedSrcs = (src, displayWidth, setMaxWidth = true) => {
     Math.max(
       displayWidth,
       // images could always be shown full width on mobile
-      MAX_WIDTH_MOBILE
+      MAX_WIDTH_MOBILE,
     ),
-    maxWidth
+    maxWidth,
   )
 
   const resizedSrc = imageResizeUrl(src, `${defaultWidth}x`)
@@ -46,16 +46,16 @@ export const getResizedSrcs = (src, displayWidth, setMaxWidth = true) => {
   const srcSet = [
     Math.round(defaultWidth * 0.5),
     defaultWidth,
-    defaultWidth < maxWidth && (isHighRes ? defaultWidth * 2 : maxWidth)
+    defaultWidth < maxWidth && (isHighRes ? defaultWidth * 2 : maxWidth),
   ]
     .filter(Boolean)
-    .map(size => [imageResizeUrl(src, `${size}x`), `${size}w`].join(' '))
+    .map((size) => [imageResizeUrl(src, `${size}x`), `${size}w`].join(' '))
     .join(',')
 
   return {
     src: resizedSrc,
     srcSet,
     maxWidth: setMaxWidth ? maxWidth : undefined,
-    size
+    size,
   }
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { css } from 'glamor'
@@ -7,7 +7,7 @@ import {
   Loader,
   LazyLoad,
   Editorial,
-  mediaQueries
+  mediaQueries,
 } from '@project-r/styleguide'
 
 import TeaserBlock, { GAP } from '../Overview/TeaserBlock'
@@ -41,7 +41,7 @@ const Carpet = ({ t, data: { loading, front } }) => {
   }, [])
 
   // ensure the highlighFunction is not dedected as an state update function
-  const onHighlight = highlighFunction => setHighlight(() => highlighFunction)
+  const onHighlight = (highlighFunction) => setHighlight(() => highlighFunction)
   return (
     <LazyLoad offset={1}>
       <div style={{ position: 'relative' }}>
@@ -52,7 +52,7 @@ const Carpet = ({ t, data: { loading, front } }) => {
             zIndex: 2,
             width: '100%',
             height: 150,
-            backgroundImage: 'linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0))'
+            backgroundImage: 'linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0))',
           }}
         />
         <Loader
@@ -63,7 +63,7 @@ const Carpet = ({ t, data: { loading, front } }) => {
                 opacity: 0.6,
                 maxWidth: 1600,
                 margin: '0 auto',
-                padding: `0 ${GAP}px`
+                padding: `0 ${GAP}px`,
               }}
             >
               <TeaserBlock
@@ -94,8 +94,8 @@ const styles = {
     textAlign: 'center',
     padding: '0 15px',
     marginTop: '4em',
-    [mediaQueries.mUp]: { marginTop: '4em' }
-  })
+    [mediaQueries.mUp]: { marginTop: '4em' },
+  }),
 }
 
 export default compose(graphql(query))(Carpet)

@@ -1,4 +1,3 @@
-import React from 'react'
 import { matchBlock } from '../../utils'
 import { createRemoveEmptyKeyHandler } from '../../utils/keyHandlers'
 import { Block } from 'slate'
@@ -9,7 +8,7 @@ import { getSerializer, getSubmodules } from './serializer'
 
 import { TeaserButton, TeaserInlineUI, TeaserForm } from './ui'
 
-export const getData = data => ({
+export const getData = (data) => ({
   url: null,
   textPosition: 'topleft',
   center: false,
@@ -23,56 +22,56 @@ export const getData = data => ({
   showImage: true,
   onlyImage: false,
   id: (data && data.id) || shortId(),
-  ...(data || {})
+  ...(data || {}),
 })
 
-export const getNewBlock = options => () => {
+export const getNewBlock = (options) => () => {
   const {
     titleModule,
     subjectModule,
     leadModule,
     formatModule,
-    paragraphModule
+    paragraphModule,
   } = getSubmodules(options)
 
   const data = getData({
     teaserType: options.rule.editorOptions.teaserType,
-    ...options.rule.editorOptions.defaultValues
+    ...options.rule.editorOptions.defaultValues,
   })
 
   const res = Block.create({
     type: options.TYPE,
     data: {
       ...data,
-      module: 'teaser'
+      module: 'teaser',
     },
     nodes: [
       Block.create({
         type: formatModule.TYPE,
-        data
+        data,
       }),
       Block.create({
         type: titleModule.TYPE,
-        data
+        data,
       }),
       Block.create({
         type: subjectModule.TYPE,
-        data
+        data,
       }),
       Block.create({
         type: leadModule.TYPE,
-        data
+        data,
       }),
       Block.create({
         type: paragraphModule.TYPE,
-        data
-      })
-    ]
+        data,
+      }),
+    ],
   })
   return res
 }
 
-const teaserPlugin = options => {
+const teaserPlugin = (options) => {
   const { TYPE, rule } = options
   const Teaser = rule.component
 
@@ -102,7 +101,7 @@ const teaserPlugin = options => {
       const teaser = editor.value.blocks.reduce(
         (memo, node) =>
           memo || editor.value.document.getFurthest(node.key, matchBlock(TYPE)),
-        undefined
+        undefined,
       )
 
       const isSelected = teaser === node && !editor.value.isBlurred
@@ -116,28 +115,28 @@ const teaserPlugin = options => {
             serializer={getSerializer(options)}
           />
         ),
-        compiledTeaser
+        compiledTeaser,
       ]
     },
     onKeyDown: createRemoveEmptyKeyHandler({
       TYPE,
-      isEmpty: node => !node.text.trim() && !node.data.get('image')
-    })
+      isEmpty: (node) => !node.text.trim() && !node.data.get('image'),
+    }),
   }
 }
 
-export default options => {
+export default (options) => {
   return {
     helpers: {
       serializer: getSerializer(options),
-      newItem: getNewBlock(options)
+      newItem: getNewBlock(options),
     },
     plugins: [teaserPlugin(options)],
     ui: {
       insertButtons: options.rule.editorOptions.insertButtonText
         ? [TeaserButton(options)]
         : [],
-      forms: [TeaserForm(options)]
-    }
+      forms: [TeaserForm(options)],
+    },
   }
 }

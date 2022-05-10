@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import { colors, fontStyles } from '@project-r/styleguide'
 
@@ -14,8 +13,8 @@ const styles = {
     ...fontStyles.sansSerifMedium,
     color: '#fff',
     pointerEvents: 'none',
-    backgroundColor: colors.secondary
-  })
+    backgroundColor: colors.secondary,
+  }),
 }
 
 export default ({ style }) => (

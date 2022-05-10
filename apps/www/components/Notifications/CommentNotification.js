@@ -1,4 +1,3 @@
-import React from 'react'
 import { CommentTeaser, useColorContext } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
 import withT from '../../lib/withT'
@@ -12,7 +11,7 @@ export default compose(withT)(({ t, node, isNew }) => {
       <CommentTeaser
         {...node.object}
         context={{
-          title: node.object.discussion.title
+          title: node.object.discussion.title,
         }}
         preview={node.object.preview}
         CommentLink={CommentLink}

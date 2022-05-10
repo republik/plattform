@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
@@ -8,7 +8,7 @@ import {
   Button,
   Interaction,
   Loader,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 
 import { swissTime } from '../../lib/utils/format'
@@ -28,7 +28,7 @@ const knownYears = {
   2018: { path: '/2018' },
   2019: { path: '/2019' },
   2020: { path: '/2020' },
-  2021: { path: '/' }
+  2021: { path: '/' },
 }
 
 const getAll = gql`
@@ -53,11 +53,11 @@ const getKnownYear = gql`
 `
 
 const formatWeekRaw = swissTime.format('%W')
-const formatWeek = date => `Woche ${+formatWeekRaw(date) + 1}`
+const formatWeek = (date) => `Woche ${+formatWeekRaw(date) + 1}`
 
 const formatByInterval = {
   wochen: formatWeek,
-  monate: swissTime.format('%B')
+  monate: swissTime.format('%B'),
 }
 
 const FrontOverview = ({
@@ -74,7 +74,7 @@ const FrontOverview = ({
   const [highlight, setHighlight] = useState()
   const [colorScheme] = useColorContext()
 
-  const onHighlight = highlighFunction => setHighlight(() => highlighFunction)
+  const onHighlight = (highlighFunction) => setHighlight(() => highlighFunction)
 
   if (query.extractId) {
     return (
@@ -93,25 +93,25 @@ const FrontOverview = ({
         `overview/${year}/meta/title/${interval}`,
         `overview/meta/title/${interval}`,
         `overview/${year}/meta/title`,
-        'overview/meta/title'
+        'overview/meta/title',
       ],
       {
-        year
-      }
+        year,
+      },
     ),
     description: t.first(
       [
         `overview/${year}/meta/description/${interval}`,
         `overview/meta/description/${interval}`,
         `overview/${year}/meta/description`,
-        'overview/meta/description'
+        'overview/meta/description',
       ],
       { year },
-      ''
+      '',
     ),
     image: [2018, 2019].includes(year)
       ? `${CDN_FRONTEND_BASE_URL}/static/social-media/overview${year}.png`
-      : `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`
+      : `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
   }
 
   const teasers = getTeasersFromDocument(data.front)
@@ -119,11 +119,11 @@ const FrontOverview = ({
     .filter((teaser, i, all) => {
       const publishDates = teaser.nodes
         .map(
-          node =>
+          (node) =>
             node.data.urlMeta &&
             // workaround for «aufdatierte» tutorials and meta texts
             node.data.urlMeta.format !== 'republik/format-aus-der-redaktion' &&
-            new Date(node.data.urlMeta.publishDate)
+            new Date(node.data.urlMeta.publishDate),
         )
         .filter(Boolean)
 
@@ -152,7 +152,7 @@ const FrontOverview = ({
     ([all, last], teaser) => {
       const key = formatDate(teaser.publishDate)
       if (!last || key !== last.key) {
-        const existingGroup = all.find(d => d.key === key)
+        const existingGroup = all.find((d) => d.key === key)
         if (existingGroup) {
           existingGroup.values.push(teaser)
           return [all, existingGroup]
@@ -165,7 +165,7 @@ const FrontOverview = ({
       last.values.push(teaser)
       return [all, last]
     },
-    [[]]
+    [[]],
   )[0]
 
   // WANT ALL TEASERS AS HIGH RES IMAGES?
@@ -195,7 +195,7 @@ const FrontOverview = ({
     (!knownYears[year].after && !knownYears[year].path)
   ) {
     groupedTeasers.reverse()
-    groupedTeasers.forEach(m => m.values.reverse())
+    groupedTeasers.forEach((m) => m.values.reverse())
   }
 
   return (
@@ -209,9 +209,9 @@ const FrontOverview = ({
             `overview/${year}/title/${interval}`,
             `overview/title/${interval}`,
             `overview/${year}/title`,
-            'overview/title'
+            'overview/title',
           ],
-          { year }
+          { year },
         )}
       </Interaction.H1>
 
@@ -245,7 +245,7 @@ const FrontOverview = ({
                 <Interaction.H2
                   style={{
                     marginBottom: 5,
-                    marginTop: 0
+                    marginTop: 0,
                   }}
                   {...colorScheme.set('color', 'text')}
                 >
@@ -283,25 +283,25 @@ const FrontOverview = ({
 export default compose(
   withRouter,
   graphql(getAll, {
-    skip: props => {
+    skip: (props) => {
       const knownYear = knownYears[props.year]
       return knownYear && !knownYear.path && !props.router.query.extractId
     },
-    options: props => ({
+    options: (props) => ({
       variables: knownYears[props.year] || {
-        path: '/'
-      }
-    })
+        path: '/',
+      },
+    }),
   }),
   graphql(getKnownYear, {
-    skip: props => {
+    skip: (props) => {
       const knownYear = knownYears[props.year]
       return (!knownYear || knownYear.path) && !props.router.query.extractId
     },
-    options: props => ({
-      variables: knownYears[props.year]
-    })
+    options: (props) => ({
+      variables: knownYears[props.year],
+    }),
   }),
   withMembership,
-  withT
+  withT,
 )(FrontOverview)

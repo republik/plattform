@@ -23,11 +23,18 @@ type Episode {
 
 type AudioSource implements PlayableMedia {
   mediaId: ID!
+  kind: AudioSourceKind
   mp3: String
   aac: String
   ogg: String
   durationMs: Int!
 }
+
+enum AudioSourceKind {
+  podcast
+  readAloud
+  syntheticReadAloud
+} 
 
 type Podcast {
   podigeeSlug: String
@@ -40,6 +47,12 @@ type Newsletter {
   name: String
   free: Boolean
 }
+
+enum PaynoteMode {
+  button
+  trialForm
+  noPaynote
+} 
 
 type Meta {
   title: String
@@ -67,12 +80,14 @@ type Meta {
   lastPublishedAt: DateTime
   feed: Boolean
   gallery: Boolean
+  externalBaseUrl: String
   kind: String
   color: String
   series: Series
   section: Document
   format: Document
   dossier: Document
+  recommendations: DocumentConnection
   shareLogo: String
   shareBackgroundImage: String
   shareBackgroundImageInverted: String
@@ -86,7 +101,6 @@ type Meta {
   disableActionBar: Boolean
 
   estimatedReadingMinutes: Int
-  totalMediaMinutes: Int
   estimatedConsumptionMinutes: Int
 
   # template of the article
@@ -95,6 +109,9 @@ type Meta {
   indicateChart: Boolean
   indicateGallery: Boolean
   indicateVideo: Boolean
+  
+  paynotes: [JSON]
+  paynoteMode: PaynoteMode
 }
 
 input DocumentInput {

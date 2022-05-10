@@ -1,17 +1,16 @@
-import React from 'react'
 import { Label, Checkbox } from '@project-r/styleguide'
 import {
   matchBlock,
   createBlockButton,
   buttonStyles,
-  createPropertyForm
+  createPropertyForm,
 } from '../../utils'
 import createOnFieldChange from '../../utils/createOnFieldChange'
 import injectBlock from '../../utils/injectBlock'
 import UIForm from '../../UIForm'
 import { matchAncestor } from '../../utils/matchers'
 
-export const ListForm = options => {
+export const ListForm = (options) => {
   const Form = ({ disabled, value, onChange, t }) => {
     if (disabled) {
       return null
@@ -40,7 +39,7 @@ export const ListForm = options => {
     isDisabled: ({ value }) => {
       const list = matchAncestor(options.TYPE)(value)
       return !list
-    }
+    },
   })(Form)
 }
 
@@ -49,32 +48,32 @@ export const createListButton = ({
   ordered,
   label,
   parentTypes,
-  newBlock
+  newBlock,
 }) =>
   createBlockButton({
     type: TYPE,
     parentTypes,
-    reducer: props => event => {
+    reducer: (props) => (event) => {
       const { onChange, value } = props
       event.preventDefault()
 
       const inList = value.document.getClosest(
         value.startBlock.key,
-        matchBlock(TYPE)
+        matchBlock(TYPE),
       )
 
       if (inList) {
         return onChange(
           value.change().setNodeByKey(inList.key, {
             data: inList.data.merge({
-              ordered
-            })
-          })
+              ordered,
+            }),
+          }),
         )
       }
 
       return onChange(value.change().call(injectBlock, newBlock({ ordered })))
-    }
+    },
   })(({ active, disabled, visible, ...props }) => (
     <span
       {...buttonStyles.block}

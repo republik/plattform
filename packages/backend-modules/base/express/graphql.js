@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const util = require('util')
 
-const { NODE_ENV, WS_KEEPALIVE_INTERVAL } = process.env
+const { NODE_ENV, COOKIE_NAME, WS_KEEPALIVE_INTERVAL } = process.env
 
 module.exports = (
   server,
@@ -22,9 +22,10 @@ module.exports = (
     },
   })
 
-  const createContext = ({ user, ...rest } = {}) => {
+  const createContext = ({ scope = undefined, user, ...rest } = {}) => {
     const context = createGraphqlContext({
       ...rest,
+      scope,
       user: global && global.testUser !== undefined ? global.testUser : user,
     })
     // prime User dataloader with me
@@ -42,7 +43,9 @@ module.exports = (
   const apolloServer = new ApolloServer({
     schema: executableSchema,
     context: ({ req, connection }) =>
-      connection ? connection.context : createContext({ user: req.user, req }),
+      connection
+        ? connection.context
+        : createContext({ user: req.user, req, scope: 'request' }),
     debug: true,
     introspection: true,
     playground: false, // see ./graphiql.js
@@ -56,10 +59,10 @@ module.exports = (
               ? connectionParams.cookies
               : websocket.upgradeReq.headers.cookie
           if (!cookiesRaw) {
-            return createContext()
+            return createContext({ scope: 'socket' })
           }
           const cookies = cookie.parse(cookiesRaw)
-          const authCookie = cookies['connect.sid']
+          const authCookie = cookies[COOKIE_NAME || 'connect.sid']
           const sid =
             authCookie &&
             cookieParser.signedCookie(authCookie, process.env.SESSION_SECRET)
@@ -74,10 +77,11 @@ module.exports = (
               id: session.sess.passport.user,
             })
             return createContext({
+              scope: 'socket',
               user: transformUser(user),
             })
           }
-          return createContext()
+          return createContext({ scope: 'socket' })
         } catch (e) {
           console.error('error in subscriptions.onConnect', e)
           // throwing inside onConnect disconnects the client

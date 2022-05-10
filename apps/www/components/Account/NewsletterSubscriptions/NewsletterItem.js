@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import {
   InlineSpinner,
@@ -6,7 +5,7 @@ import {
   mediaQueries,
   Interaction,
   fontStyles,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 
 const GAP_SIZE = 24
@@ -21,25 +20,25 @@ const styles = {
     gap: GAP_SIZE,
     [mediaQueries.mUp]: {
       flexDirection: 'row',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
     },
     ':not(:last-child)': {
       borderBottomWidth: 1,
-      borderBottomStyle: 'solid'
-    }
+      borderBottomStyle: 'solid',
+    },
   }),
   iconTextCol: css({
     display: 'flex',
     alignItems: 'flex-start',
     flex: 1,
-    gap: GAP_SIZE
+    gap: GAP_SIZE,
   }),
   description: css({
     ...fontStyles.sansSerifRegular16,
-    margin: '4px 0 8px 0'
+    margin: '4px 0 8px 0',
   }),
   frequency: css({
-    ...fontStyles.sansSerifMedium14
+    ...fontStyles.sansSerifMedium14,
   }),
   spinnerWrapper: css({
     width: 24,
@@ -48,15 +47,15 @@ const styles = {
     marginLeft: 15,
     verticalAlign: 'middle',
     '& > span': {
-      display: 'inline'
-    }
+      display: 'inline',
+    },
   }),
   checkbox: css({
     [mediaQueries.mUp]: {
       width: 148,
-      paddingTop: 6
-    }
-  })
+      paddingTop: 6,
+    },
+  }),
 }
 
 const NewsletterItem = ({
@@ -66,7 +65,7 @@ const NewsletterItem = ({
   name,
   t,
   onlyName,
-  status
+  status,
 }) => {
   const [colorScheme] = useColorContext()
 
@@ -80,7 +79,7 @@ const NewsletterItem = ({
         {t(
           `account/newsletterSubscriptions/onlyName/${
             subscribed ? 'subscribed' : 'subscribe'
-          }`
+          }`,
         )}
         <span {...styles.spinnerWrapper}>
           {mutating && <InlineSpinner size={24} />}

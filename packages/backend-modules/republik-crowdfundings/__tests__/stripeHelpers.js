@@ -8,18 +8,27 @@ const t = (text) => text
 
 const invoicePaymentSuccess = async (
   { chargeId, paymentIntentId },
-  pgdb, context, companyId
+  pgdb,
+  context,
+  companyId,
 ) => {
   const event = {
     id: `INVOICE_PAYMENT_${chargeId}`,
     data: {
       object: {
         charge: chargeId,
-        payment_intent: paymentIntentId
+        payment_intent: paymentIntentId,
       },
     },
   }
-  await invoicePaymentSucceeded.handle(event, pgdb, t, context.redis, context, companyId)
+  await invoicePaymentSucceeded.handle(
+    event,
+    pgdb,
+    t,
+    context.redis,
+    context,
+    companyId,
+  )
 }
 
 const invoicePaymentFail = async ({ pledgeId }, pgdb) => {
@@ -84,10 +93,8 @@ const cancelSubscription = async ({ pledgeId, status, atPeriodEnd }, pgdb) => {
 
 const resetCustomers = async (pgdb) => {
   const Promise = require('bluebird')
-  const {
-    STRIPE_SECRET_KEY_COMPANY_ONE,
-    STRIPE_SECRET_KEY_COMPANY_TWO,
-  } = process.env
+  const { STRIPE_SECRET_KEY_COMPANY_ONE, STRIPE_SECRET_KEY_COMPANY_TWO } =
+    process.env
 
   await pgdb.public.stripeCustomers.truncate({ cascade: true })
 

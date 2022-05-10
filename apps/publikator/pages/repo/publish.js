@@ -1,4 +1,3 @@
-import React from 'react'
 import { compose } from 'react-apollo'
 import { withRouter } from 'next/router'
 
@@ -12,10 +11,10 @@ import withT from '../../lib/withT'
 
 const Page = ({
   router: {
-    query: { repoId, commitId }
+    query: { repoId, commitId },
   },
   data,
-  t
+  t,
 }) => {
   return (
     <Frame>

@@ -1,6 +1,4 @@
-import React from 'react'
-
-const SvgGlarus = props => (
+const SvgGlarus = (props) => (
   <svg
     width={props.size}
     height={(props.size * 471.439) / 469.862}

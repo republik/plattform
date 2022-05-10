@@ -1,4 +1,3 @@
-import React from 'react'
 import { HEADER_HEIGHT } from './Frame/constants'
 import { NarrowContainer, Loader } from '@project-r/styleguide'
 
@@ -10,7 +9,7 @@ const ErrorContainer = ({ children }) => (
   </NarrowContainer>
 )
 
-const LoaderWithHeaderHeight = props => (
+const LoaderWithHeaderHeight = (props) => (
   <Loader
     ErrorContainer={ErrorContainer}
     {...props}

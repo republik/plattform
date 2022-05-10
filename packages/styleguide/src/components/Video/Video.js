@@ -18,8 +18,8 @@ const styles = {
     marginBottom: 36,
     [mUp]: {
       marginTop: 45,
-      marginBottom: 45
-    }
+      marginBottom: 45,
+    },
   }),
   thumbnail: css({
     cursor: 'pointer',
@@ -33,8 +33,8 @@ const styles = {
       content: ' ',
       height: '100%',
       width: '100%',
-      zIndex: 9
-    }
+      zIndex: 9,
+    },
   }),
   playIcon: css({
     color: '#fff',
@@ -42,7 +42,7 @@ const styles = {
     position: 'absolute',
     left: 'calc(50% - 13px)',
     top: 'calc(50% - 18px)',
-    zIndex: 9
+    zIndex: 9,
   }),
   playNote: css({
     position: 'absolute',
@@ -55,21 +55,21 @@ const styles = {
     padding: 10,
     lineHeight: 1.2,
     textAlign: 'center',
-    zIndex: 9
+    zIndex: 9,
   }),
   embedContainer: css({
     position: 'relative',
     height: 0,
     width: '100%',
-    marginBottom: '5px'
+    marginBottom: '5px',
   }),
   embedIframe: css({
     position: 'absolute',
     height: '100%',
     width: '100%',
     left: 0,
-    top: 0
-  })
+    top: 0,
+  }),
 }
 
 const Embed = ({ id, platform, aspectRatio, title }) => {
@@ -83,7 +83,7 @@ const Embed = ({ id, platform, aspectRatio, title }) => {
   return (
     <div
       {...css(styles.embedContainer, {
-        paddingBottom: `${100 / aspectRatio}%`
+        paddingBottom: `${100 / aspectRatio}%`,
       })}
     >
       <iframe
@@ -102,7 +102,7 @@ class Video extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      embedIframe: false
+      embedIframe: false,
     }
 
     this.handleClick = this.handleClick.bind(this)
@@ -128,7 +128,7 @@ class Video extends Component {
       userUrl,
       userProfileImageUrl,
       date,
-      attributes
+      attributes,
     } = this.props
     const { embedIframe } = this.state
 
@@ -145,7 +145,7 @@ class Video extends Component {
             <span {...styles.playNote}>
               {t('styleguide/video/dnt/note', {
                 player: t(`styleguide/video/dnt/player/${platform}`),
-                platform: t(`styleguide/video/dnt/player/${platform}`)
+                platform: t(`styleguide/video/dnt/player/${platform}`),
               })}
             </span>
             <Image src={thumbnail} alt='' aspectRatio={aspectRatio} />
@@ -188,14 +188,14 @@ Video.propTypes = {
   userName: PropTypes.string,
   userUrl: PropTypes.string,
   userProfileImageUrl: PropTypes.string,
-  date: PropTypes.object
+  date: PropTypes.object,
 }
 
 Video.defaultProps = {
   t: () => '',
   platform: 'youtube',
   size: undefined,
-  showMeta: false
+  showMeta: false,
 }
 
 export default Video

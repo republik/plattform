@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { forwardRef, Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 import { graphql } from '@apollo/client/react/hoc'
@@ -14,14 +14,14 @@ import {
   Loader,
   mediaQueries,
   Editorial,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import Link from 'next/link'
 
 const styles = {
   packageHeader: css({
     position: 'relative',
-    paddingRight: 25
+    paddingRight: 25,
   }),
   package: css({
     display: 'block',
@@ -32,12 +32,12 @@ const styles = {
     paddingBottom: 9,
     [mediaQueries.mUp]: {
       paddingTop: 10,
-      paddingBottom: 16
+      paddingBottom: 16,
     },
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
     borderTopWidth: 1,
-    borderTopStyle: 'solid'
+    borderTopStyle: 'solid',
   }),
   packageHighlighted: css({
     position: 'relative',
@@ -52,11 +52,11 @@ const styles = {
     paddingBottom: 10,
     [mediaQueries.mUp]: {
       paddingTop: 11,
-      paddingBottom: 17
+      paddingBottom: 17,
     },
     width: 'calc(100% + 20px)',
     borderBottom: 'none',
-    borderTop: 'none'
+    borderTop: 'none',
   }),
   groupTitle: css({
     marginTop: 40,
@@ -66,8 +66,8 @@ const styles = {
     lineHeight: '28px',
     [mediaQueries.mUp]: {
       fontSize: 25,
-      lineHeight: '33px'
-    }
+      lineHeight: '33px',
+    },
   }),
   packageTitle: css({
     ...fontStyles.sansSerifMedium,
@@ -75,8 +75,8 @@ const styles = {
     lineHeight: '24px',
     [mediaQueries.mUp]: {
       fontSize: 22,
-      lineHeight: '30px'
-    }
+      lineHeight: '30px',
+    },
   }),
   packagePrice: css({
     marginTop: 0,
@@ -84,28 +84,28 @@ const styles = {
     lineHeight: '24px',
     [mediaQueries.mUp]: {
       fontSize: 22,
-      lineHeight: '30px'
-    }
+      lineHeight: '30px',
+    },
   }),
   packageIcon: css({
     position: 'absolute',
     right: 0,
     top: '50%',
-    marginTop: '-10px'
+    marginTop: '-10px',
   }),
   packageContent: css({
     fontSize: 17,
-    lineHeight: '25px'
+    lineHeight: '25px',
   }),
   buffer: css({
     // catch negative margin from last package
-    marginTop: -1
+    marginTop: -1,
   }),
   links: css({
     lineHeight: '24px',
     marginTop: 13,
-    fontSize: 16
-  })
+    fontSize: 16,
+  }),
 }
 
 const query = gql`
@@ -141,10 +141,10 @@ const query = gql`
   }
 `
 
-export const PackageItem = React.forwardRef(
+export const PackageItem = forwardRef(
   (
     { t, hover, setHover, crowdfundingName, name, title, price, onClick, href },
-    ref
+    ref,
   ) => {
     const [colorScheme] = useColorContext()
     return (
@@ -165,7 +165,7 @@ export const PackageItem = React.forwardRef(
             {title ||
               t.first([
                 `package/${crowdfundingName}/${name}/title`,
-                `package/${name}/title`
+                `package/${name}/title`,
               ])}
           </div>
           {!!price && (
@@ -174,7 +174,7 @@ export const PackageItem = React.forwardRef(
               {...colorScheme.set('color', 'primary')}
             >
               {t.first([`package/${name}/price`, 'package/price'], {
-                formattedCHF: `CHF ${price / 100}`
+                formattedCHF: `CHF ${price / 100}`,
               })}
             </div>
           )}
@@ -184,7 +184,7 @@ export const PackageItem = React.forwardRef(
         </div>
       </a>
     )
-  }
+  },
 )
 
 export const PackageBuffer = () => <div {...styles.buffer} />
@@ -193,7 +193,7 @@ class Accordion extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      hover: undefined
+      hover: undefined,
     }
   }
   render() {
@@ -206,27 +206,23 @@ class Accordion extends Component {
 
     const { hover } = this.state
 
-    const {
-      t,
-      packages,
-      filter,
-      group,
-      crowdfundingName,
-      renderIntro
-    } = this.props
+    const { t, packages, filter, group, crowdfundingName, renderIntro } =
+      this.props
 
     const groups = nest()
-      .key(d => d.group)
-      .entries(packages.filter(filter ? p => filter.includes(p.name) : Boolean))
+      .key((d) => d.group)
+      .entries(
+        packages.filter(filter ? (p) => filter.includes(p.name) : Boolean),
+      )
 
     if (group) {
       groups.sort(
         ({ key: a }, { key: b }) =>
           ascending(+(a !== group), +(b !== group)) ||
           ascending(
-            groups.findIndex(d => d.key === a),
-            groups.findIndex(d => d.key === b)
-          )
+            groups.findIndex((d) => d.key === a),
+            groups.findIndex((d) => d.key === b),
+          ),
       )
     }
 
@@ -239,45 +235,45 @@ class Accordion extends Component {
               group === 'ME' && {
                 pathname: '/angebote',
                 query: { package: 'ABO', userPrice: 1 },
-                text: t('package/ABO/userPrice/teaser')
-              }
+                text: t('package/ABO/userPrice/teaser'),
+              },
             ].filter(Boolean)
 
-            const setHover = hover => this.setState({ hover })
+            const setHover = (hover) => this.setState({ hover })
 
-            let pkgItems = pkgs.map(pkg => {
+            let pkgItems = pkgs.map((pkg) => {
               let price = pkg.options.reduce(
                 (amount, option) => amount + option.price * option.minAmount,
-                0
+                0,
               )
               if (!price && pkg.name !== 'PROLONG') {
                 price =
                   min(
                     pkg.options
                       .filter(
-                        o =>
-                          o.reward && o.reward.__typename === 'MembershipType'
+                        (o) =>
+                          o.reward && o.reward.__typename === 'MembershipType',
                       )
                       .map(
-                        option =>
+                        (option) =>
                           option.price *
                           (option.minAmount ||
                             option.defaultAmount ||
-                            Math.min(1, option.maxAmount))
-                      )
+                            Math.min(1, option.maxAmount)),
+                      ),
                   ) || 0
               }
               return {
                 pathname: '/angebote',
                 query: { package: pkg.name },
                 name: pkg.name,
-                price
+                price,
               }
             })
 
             if (group === 'ME') {
               const benefactorIndex = pkgItems.findIndex(
-                item => item.name === 'BENEFACTOR'
+                (item) => item.name === 'BENEFACTOR',
               )
               // TMP Marketing Trial for Students
               if (benefactorIndex !== -1) {
@@ -287,17 +283,17 @@ class Accordion extends Component {
                     package: 'ABO',
                     userPrice: 1,
                     price: 14000,
-                    reason: t('marketing/offers/students/reasonTemplate')
+                    reason: t('marketing/offers/students/reasonTemplate'),
                   },
                   name: 'students',
                   title: t('marketing/offers/students'),
-                  price: 14000
+                  price: 14000,
                 })
               }
               pkgItems.push({
                 pathname: '/abholen',
                 name: 'claim',
-                title: t('marketing/offers/claim')
+                title: t('marketing/offers/claim'),
               })
             }
 
@@ -346,18 +342,18 @@ class Accordion extends Component {
 }
 
 Accordion.propTypes = {
-  t: PropTypes.func.isRequired
+  t: PropTypes.func.isRequired,
 }
 
 const AccordionWithQuery = graphql(query, {
-  skip: props => !!props.packages,
+  skip: (props) => !!props.packages,
   props: ({ data }) => {
     return {
       loading: data.loading,
       error: data.error,
-      packages: data.crowdfunding && data.crowdfunding.packages
+      packages: data.crowdfunding && data.crowdfunding.packages,
     }
-  }
+  },
 })(Accordion)
 
 export default withT(AccordionWithQuery)

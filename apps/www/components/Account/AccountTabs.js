@@ -1,17 +1,17 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { css } from 'glamor'
 import Link from 'next/link'
 import {
   Scroller,
   TabButton,
   mediaQueries,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import { useRouter } from 'next/router'
 
 import {
   FRAME_CONTENT_PADDING,
-  FRAME_CONTENT_PADDING_MOBILE
+  FRAME_CONTENT_PADDING_MOBILE,
 } from '../constants'
 import withT from '../../lib/withT'
 
@@ -19,9 +19,9 @@ const styles = {
   container: css({
     margin: `0 -15px ${FRAME_CONTENT_PADDING_MOBILE}px -15px`,
     [mediaQueries.mUp]: {
-      margin: `0 -15px ${FRAME_CONTENT_PADDING}px -15px`
-    }
-  })
+      margin: `0 -15px ${FRAME_CONTENT_PADDING}px -15px`,
+    },
+  }),
 }
 
 const TabArray = [
@@ -29,13 +29,13 @@ const TabArray = [
   { path: '/konto/newsletter', name: 'NEWSLETTER' },
   { path: '/konto/benachrichtigungen', name: 'NOTIFICATIONS' },
   { path: '/konto/einstellungen', name: 'SETTINGS' },
-  { path: '/konto/transaktionen', name: 'TRANSACTIONS' }
+  { path: '/konto/transaktionen', name: 'TRANSACTIONS' },
 ]
 
 const AccountTabs = ({ t }) => {
   const { pathname } = useRouter()
   const [activeChildIndex, setActiveChildIndex] = useState(
-    TabArray.findIndex(item => item.path === pathname)
+    TabArray.findIndex((item) => item.path === pathname),
   )
   const [colorScheme] = useColorContext()
   return (

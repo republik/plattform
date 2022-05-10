@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import {
   BrandMark as R,
   fontFamilies,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
 
@@ -12,22 +12,22 @@ const styles = {
   highlight: css({
     fontFamily: fontFamilies.serifBold,
     fontSize: 24,
-    lineHeight: '36px'
+    lineHeight: '36px',
   }),
   strong: css({
-    fontFamily: fontFamilies.serifBold
+    fontFamily: fontFamilies.serifBold,
   }),
   column: css({
     maxWidth: 500,
-    margin: `${SPACE}px auto`
+    margin: `${SPACE}px auto`,
   }),
   text: css({
     marginTop: SPACE / 2,
     marginBottom: SPACE,
     fontFamily: fontFamilies.serifRegular,
     fontSize: 18,
-    lineHeight: '27px'
-  })
+    lineHeight: '27px',
+  }),
 }
 
 const Highlight = ({ children, ...props }) => (
@@ -46,17 +46,17 @@ const Manifest = () => {
         background: colorScheme.getCSSColor('accentColorMeta'),
         '& ::selection': {
           color: colorScheme.getCSSColor('accentColorMeta'),
-          background: colorScheme.getCSSColor('default')
-        }
+          background: colorScheme.getCSSColor('default'),
+        },
       }),
-    [colorScheme]
+    [colorScheme],
   )
   return (
     <div
       style={{
         padding: 20,
         marginTop: SPACE,
-        marginBottom: SPACE
+        marginBottom: SPACE,
       }}
       {...colorRule}
     >

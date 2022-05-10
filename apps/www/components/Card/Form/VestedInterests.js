@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { css } from 'glamor'
 
 import { Interaction, A, Field } from '@project-r/styleguide'
@@ -7,11 +7,11 @@ const { H2, P } = Interaction
 
 const styles = {
   form: css({
-    marginBottom: 40
-  })
+    marginBottom: 40,
+  }),
 }
 
-const Form = props => {
+const Form = (props) => {
   const [name, setName] = useState({ value: props.name })
   const [entity, setEntity] = useState({ value: props.entity })
   const [position, setPosition] = useState({ value: props.position })
@@ -21,7 +21,7 @@ const Form = props => {
       ...name,
       value,
       error: value.trim().length === 0 && 'Name fehlt',
-      dirty: shouldValidate
+      dirty: shouldValidate,
     })
   }
 
@@ -30,7 +30,7 @@ const Form = props => {
       ...entity,
       value,
       error: value.trim().length === 0 && 'Rechtsform fehlt',
-      dirty: shouldValidate
+      dirty: shouldValidate,
     })
   }
 
@@ -39,11 +39,11 @@ const Form = props => {
       ...position,
       value,
       error: value.trim().length === 0 && 'Position fehlt',
-      dirty: shouldValidate
+      dirty: shouldValidate,
     })
   }
 
-  const commit = e => {
+  const commit = (e) => {
     e && e.preventDefault && e.preventDefault()
 
     handleName(name.value, true)
@@ -59,11 +59,11 @@ const Form = props => {
     props.onCommit(props.id, {
       name: name.value,
       entity: entity.value,
-      position: position.value
+      position: position.value,
     })
   }
 
-  const cancel = e => {
+  const cancel = (e) => {
     e && e.preventDefault && e.preventDefault()
 
     props.onCancel(props.id)
@@ -118,7 +118,7 @@ const VestedInterests = ({ vestedInterests, handleVestedInterests }) => {
 
   useEffect(() => handleVestedInterests(interests, false), [interests])
 
-  const addInterest = e => {
+  const addInterest = (e) => {
     e && e.preventDefault && e.preventDefault()
 
     const id = `interest${counter}`
@@ -129,8 +129,8 @@ const VestedInterests = ({ vestedInterests, handleVestedInterests }) => {
         id,
         name: '',
         entity: '',
-        position: ''
-      }
+        position: '',
+      },
     ])
 
     setCounter(counter + 1)
@@ -141,7 +141,7 @@ const VestedInterests = ({ vestedInterests, handleVestedInterests }) => {
     e && e.preventDefault && e.preventDefault()
 
     const updatedInterests = [...interests].filter(
-      interest => interest.id !== id
+      (interest) => interest.id !== id,
     )
     setInterests([...updatedInterests])
   }
@@ -154,7 +154,7 @@ const VestedInterests = ({ vestedInterests, handleVestedInterests }) => {
 
   const replaceInterest = (id, interest) => {
     const updatedInterests = [...interests]
-    const index = updatedInterests.findIndex(interest => interest.id === id)
+    const index = updatedInterests.findIndex((interest) => interest.id === id)
 
     if (index < 0) {
       return
@@ -174,7 +174,7 @@ const VestedInterests = ({ vestedInterests, handleVestedInterests }) => {
     <>
       <H2>Interessenbindungen</H2>
       <ul>
-        {interests.map(interest => {
+        {interests.map((interest) => {
           return (
             <li key={interest.id}>
               {interest.id === isEditing ? (
@@ -191,13 +191,13 @@ const VestedInterests = ({ vestedInterests, handleVestedInterests }) => {
                   <P>
                     <A
                       href='#aendern'
-                      onClick={e => editInterest(e, interest.id)}
+                      onClick={(e) => editInterest(e, interest.id)}
                     >
                       Ändern
                     </A>{' '}
                     <A
                       href='#entfernen'
-                      onClick={e => removeInterest(e, interest.id)}
+                      onClick={(e) => removeInterest(e, interest.id)}
                     >
                       Entfernen
                     </A>

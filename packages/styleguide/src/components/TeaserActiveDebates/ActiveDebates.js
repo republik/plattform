@@ -11,28 +11,28 @@ const styles = {
     maxWidth: 1300,
     padding: '40px 15px 10px',
     [mUp]: {
-      padding: '50px 15px 40px'
-    }
+      padding: '50px 15px 40px',
+    },
   }),
   row: css({}),
   withoutHighlight: css({
     [mUp]: {
       columns: '2 auto',
       columnGap: 30,
-      '> *': { breakInside: 'avoid-column' }
-    }
+      '> *': { breakInside: 'avoid-column' },
+    },
   }),
   withHighlight: css({
     [mUp]: {
-      display: 'flex'
-    }
+      display: 'flex',
+    },
   }),
   left: css({
     [mUp]: {
       width: '50%',
       flexGrow: 1,
-      marginRight: 16
-    }
+      marginRight: 16,
+    },
   }),
   right: css({
     [mUp]: {
@@ -40,9 +40,9 @@ const styles = {
       display: 'flex',
       flexDirection: 'column',
       flexGrow: 1,
-      marginLeft: 16
-    }
-  })
+      marginLeft: 16,
+    },
+  }),
 }
 
 const ActiveDebates = ({
@@ -50,20 +50,20 @@ const ActiveDebates = ({
   t,
   CommentLink,
   DiscussionLink,
-  children
+  children,
 }) => {
   const [colorScheme] = useColorContext()
-  const highlighted = discussions.filter(discussion =>
-    discussion.comments.nodes.some(comment =>
-      comment.hasOwnProperty('highlight')
-    )
+  const highlighted = discussions.filter((discussion) =>
+    discussion.comments.nodes.some((comment) =>
+      comment.hasOwnProperty('highlight'),
+    ),
   )
   if (highlighted.length) {
     const notHighlighted = discussions.filter(
-      discussion =>
-        !discussion.comments.nodes.some(comment =>
-          comment.hasOwnProperty('highlight')
-        )
+      (discussion) =>
+        !discussion.comments.nodes.some((comment) =>
+          comment.hasOwnProperty('highlight'),
+        ),
     )
 
     return (
@@ -75,7 +75,7 @@ const ActiveDebates = ({
         {children}
         <div role='group' {...css(styles.row, styles.withHighlight)}>
           <div {...styles.left}>
-            {highlighted.map(discussion => (
+            {highlighted.map((discussion) => (
               <ActiveDebateTeaser
                 key={discussion.id}
                 discussion={discussion}
@@ -86,7 +86,7 @@ const ActiveDebates = ({
             ))}
           </div>
           <div {...styles.right}>
-            {notHighlighted.map(discussion => (
+            {notHighlighted.map((discussion) => (
               <ActiveDebateTeaser
                 key={discussion.id}
                 discussion={discussion}
@@ -104,7 +104,7 @@ const ActiveDebates = ({
     <section {...styles.section}>
       {children}
       <div role='group' {...css(styles.row, styles.withoutHighlight)}>
-        {discussions.map(discussion => (
+        {discussions.map((discussion) => (
           <ActiveDebateTeaser
             key={discussion.id}
             discussion={discussion}
@@ -122,7 +122,7 @@ export default ActiveDebates
 
 ActiveDebates.propTypes = {
   discussions: PropTypes.array,
-  children: PropTypes.node
+  children: PropTypes.node,
 }
 
 ActiveDebates.data = {
@@ -131,24 +131,24 @@ ActiveDebates.data = {
       variables: {
         lastDays: +lastDays,
         first: +first,
-        featured: +featured
+        featured: +featured,
       },
-      ssr: false
+      ssr: false,
     }),
     props: ({ data, ownProps: { first = 4 } }) => {
       let discussions
       if (!data.loading && !data.error) {
-        discussions = data.activeDiscussions.map(a => a.discussion)
+        discussions = data.activeDiscussions.map((a) => a.discussion)
 
-        data.featured.nodes.forEach(featuredComment => {
+        data.featured.nodes.forEach((featuredComment) => {
           const highlightComment = {
             ...featuredComment,
             highlight: featuredComment.featuredText,
-            discussion: undefined
+            discussion: undefined,
           }
           // ensure first discussion is the one with the highlight
           let highlightDiscussion = discussions.find(
-            d => d.id === featuredComment.discussion.id
+            (d) => d.id === featuredComment.discussion.id,
           )
           if (highlightDiscussion) {
             discussions.splice(discussions.indexOf(highlightDiscussion), 1)
@@ -160,9 +160,9 @@ ActiveDebates.data = {
             comments: {
               totalCount: highlightDiscussion.comments.totalCount,
               nodes: [highlightComment].concat(
-                highlightDiscussion.comments.nodes || []
-              )
-            }
+                highlightDiscussion.comments.nodes || [],
+              ),
+            },
           })
         })
 
@@ -174,7 +174,7 @@ ActiveDebates.data = {
           // get comments from never before seen names
           // - max 5 in total
           // - max 2 for first discussion, max 1 for the rest
-          const nodes = discussion.comments.nodes.filter(comment => {
+          const nodes = discussion.comments.nodes.filter((comment) => {
             if (
               !comment.published ||
               (!comment.preview && !comment.highlight) ||
@@ -195,8 +195,8 @@ ActiveDebates.data = {
               ...discussion,
               comments: {
                 ...discussion.comments,
-                nodes
-              }
+                nodes,
+              },
             })
           }
 
@@ -207,10 +207,10 @@ ActiveDebates.data = {
         data: {
           loading: data.loading,
           error: data.error,
-          discussions
-        }
+          discussions,
+        },
       }
-    }
+    },
   },
   query: `
 query getFrontDiscussions($lastDays: Int!, $first: Int!, $featured: Int!) {
@@ -289,5 +289,5 @@ fragment DiscussionMetaData on Discussion {
     }
   }
 }
-  `
+  `,
 }

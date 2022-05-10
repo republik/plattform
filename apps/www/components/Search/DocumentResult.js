@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { TeaserFeed, useColorContext } from '@project-r/styleguide'
 import ActionBar from '../ActionBar'
 import Link from '../Link/Href'
@@ -28,10 +28,10 @@ export default withT(({ t, node }) => {
         '& em': {
           background: colorScheme.getCSSColor('alert'),
           color: colorScheme.getCSSColor('text'),
-          fontStyle: 'inherit'
-        }
+          fontStyle: 'inherit',
+        },
       }),
-    [colorScheme]
+    [colorScheme],
   )
   return (
     <TeaserFeed
@@ -42,7 +42,7 @@ export default withT(({ t, node }) => {
             {...highlightStyle}
             {...colorScheme.set('color', 'text')}
             dangerouslySetInnerHTML={{
-              __html: titleHighlight.fragments[0]
+              __html: titleHighlight.fragments[0],
             }}
           />
         ) : (
@@ -55,7 +55,7 @@ export default withT(({ t, node }) => {
           <span
             {...highlightStyle}
             dangerouslySetInnerHTML={{
-              __html: descHighlight.fragments[0]
+              __html: descHighlight.fragments[0],
             }}
           />
         ) : (
@@ -67,7 +67,7 @@ export default withT(({ t, node }) => {
           <span
             {...highlightStyle}
             dangerouslySetInnerHTML={{
-              __html: formatExcerpt(textHighlight.fragments[0])
+              __html: formatExcerpt(textHighlight.fragments[0]),
             }}
           />
         )

@@ -23,6 +23,12 @@ The frontends are Next.js apps, the backends use Express.js.
 
 All packages and apps support [TypeScript](https://www.typescriptlang.org/) and plain ECMAScript.
 
+### Licenses
+
+The logo and fonts are the property of their owners (logo—Project R, GT America—GrilliType and Rubis—Nootype), and may not be reproduced without permission.
+
+The `www`, `publikator` app and `styleguide` are BSD-3-Clause licensed. The `api`, `assets` app and all `backend-modules` are AGPL-3.0 licensed. See respective license files in subfolders.
+
 ### Utilities
 
 This turborepo has some additional tools already setup for you:
@@ -72,7 +78,7 @@ export PGUSER=postgres
 <details><summary>Native Setup with Homebrew</summary>
 <p>
 
-```
+```bash
 brew install postgresql@12 elasticsearch@6 redis nvm
 nvm install 14
 nvm alias default 14
@@ -134,7 +140,7 @@ For more about the available env variables see the individual readme of the apps
 
 ### Database Setup
 
-```
+```bash
 yarn install
 yarn build
 yarn dev:setup
@@ -144,11 +150,23 @@ yarn dev:setup
 
 To develop all apps and packages, run the following command:
 
-```
+```bash
 yarn dev
 ```
 
 Please be patient on boot. It might take a minute for everything to compile and a few nodemon restarts before everything runs smoothly.
+
+### Developing with a specified scope
+
+If you don't want all apps to run when using the `dev` script, you can use the scope flag on the to run only that package in dev mode.
+For example when developing www and api `yarn dev --scope="@orbiting/www-app" --scope="@orbiting/api-app"`
+
+### Include dependencies
+
+If you are developing on a package in a scoped mode, you might want to also pass the `--include-dependencies` flag to ensure that your dependencies are also running.
+
+For example, if you are developing on `@orbiting/api-app` and you need all backend-modules to run `tsc` in watch mode run the following command:
+`yarn dev --scope="@orbiting/api-app" --include-dependencies`
 
 ### Commit Message Format
 
@@ -177,6 +195,59 @@ Scope is optional.
 
 The environment variable `SERVER` is used to determine which app to build and run on deploy. If `SERVER` is missing the api app is run.
 
-A `heroku-postbuild` script is used to add a `Procfile` for running the scheduler on heroku.
+A `heroku-prebuild` script runs `scripts/prune.sh` which runs `turbo prune` with the correct scope and moved the pruned apps and packages to the root directory.
 
-You may use a `heroku-prebuild` script to run `scripts/prune.sh` which runs `turbo prune` with the correct scope. Watch out running this locally will wipe your `.env` files and create a git mess.
+A `heroku-postbuild` script is used to add a `Procfile` for running the scheduler on heroku for the `api` app.
+
+## Development in a secure context (HTTPS tunnels with NGROK)
+
+Install the `ngrok` cli: `brew install --cask ngrok`
+
+Login to ngrok with `ngrok authtoken <token>` (You can find your token at https://dashboard.ngrok.com/auth)
+
+After adding the authtoken, you must now add the following tunnels to your ngrok configuration file:
+(Default config path is `~/.ngrok2/ngrok.yml`)
+```yaml
+tunnels:
+  republik-frontend:
+    proto: http
+    addr: 3010
+    hostname: republik.eu.ngrok.io
+  republik-backend:
+    proto: http
+    addr: 5010
+    hostname: api.republik.eu.ngrok.io
+```
+
+Now you must update the following environment variables:
+
+### Frontend Environment Variables
+```
+API_URL=https://api.republik.eu.ngrok.io/graphql
+API_WS_URL=wss://api.republik.eu.ngrok.io/graphql
+```
+
+### Backend Environment Variables
+```
+FRONTEND_BASE_URL=https://republik.eu.ngrok.io # optional
+COOKIE_DOMAIN=.republik.eu.ngrok.io
+CORS_ALLOWLIST_URL=http://localhost:3003,http://localhost:3005,http://localhost:3006,http://localhost:3010,http://localhost:3000,https://republik.eu.ngrok.io
+```
+
+Start your frontend and api using:
+
+```bash
+yarn dev --scope="@orbiting/www-app" --scope="@orbiting/api-app"
+```
+
+
+Now run `yarn ngrok:start` in a new terminal inside the workspace-root.
+
+Your local development servers are now relayed to the following ngrok tunnels.
+
+| local-address | ngrok-address                    |
+| :------------ |:---------------------------------|
+| http://localhost:3010 | https://republik.eu.ngrok.io     |
+| http://localhost:5010 | https://api.republik.eu.ngrok.io |
+
+With this you're now able to test payment-options (such as Apple Pay) that are only available in a secure context.

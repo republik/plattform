@@ -8,7 +8,7 @@ module.exports = async (_, args, context) => {
   const tx = await pgdb.transactionBegin()
   try {
     const memo = await loaders.Memo.byId.load(id)
-    
+
     if (!memo) {
       throw new Error(t('api/publikator/editMemo/error/404'))
     }

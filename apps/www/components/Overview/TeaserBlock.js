@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { createRef, Component } from 'react'
 import { css } from 'glamor'
 import debounce from 'lodash/debounce'
 
@@ -15,7 +15,7 @@ const SIZES = [
   { minWidth: 690, columns: 5 },
   { minWidth: 810, columns: 6 },
   { minWidth: 930, columns: 7 },
-  { minWidth: 1150, columns: 8 }
+  { minWidth: 1150, columns: 8 },
 ]
 
 export const GAP = 10
@@ -25,14 +25,14 @@ const styles = {
     display: 'block',
     columnGap: GAP,
     width: '100%',
-    lineHeight: 0
-  })
+    lineHeight: 0,
+  }),
 }
 
 class TeaserBlock extends Component {
   constructor(props, ...args) {
     super(props, ...args)
-    this.blockRef = React.createRef()
+    this.blockRef = createRef()
     this.state = {}
   }
   measure = debounce(() => {
@@ -48,7 +48,7 @@ class TeaserBlock extends Component {
 
     const { left, top, width } = parent.getBoundingClientRect()
 
-    this.measurements = teaserElements.map(teaser => {
+    this.measurements = teaserElements.map((teaser) => {
       const rect = teaser.getBoundingClientRect()
 
       return {
@@ -57,7 +57,7 @@ class TeaserBlock extends Component {
         y: rect.top - top,
         height: rect.height - GAP, // substract unbreakable margin, see below
         width: rect.width,
-        left: rect.left
+        left: rect.left,
       }
     })
     if (this.state.width !== width) {
@@ -86,7 +86,7 @@ class TeaserBlock extends Component {
       maxColumns = 6,
       noHover,
       backgroundColor,
-      teasers
+      teasers,
     } = this.props
 
     const hoverOff = () => {
@@ -105,7 +105,7 @@ class TeaserBlock extends Component {
         style={{
           position: 'relative',
           marginTop: maxHeight ? -50 : 0,
-          bottom: maxHeight ? -50 : 0
+          bottom: maxHeight ? -50 : 0,
         }}
       >
         <LazyLoad
@@ -114,7 +114,7 @@ class TeaserBlock extends Component {
           attributes={{
             ...styles.container,
             ...css({
-              ...SIZES.filter(s => s.columns <= maxColumns).reduce(
+              ...SIZES.filter((s) => s.columns <= maxColumns).reduce(
                 (styles, size) => {
                   // SSR approximation
                   const minHeight = maxHeight
@@ -125,7 +125,7 @@ class TeaserBlock extends Component {
                       `@media only screen and (min-width: ${size.minWidth}px)`
                     ] = {
                       minHeight,
-                      columns: `${size.columns} auto`
+                      columns: `${size.columns} auto`,
                     }
                   } else {
                     styles.minHeight = minHeight
@@ -133,23 +133,23 @@ class TeaserBlock extends Component {
                   }
                   return styles
                 },
-                {}
-              )
-            })
+                {},
+              ),
+            }),
           }}
           style={{
             height: maxHeight,
-            overflowX: maxHeight ? 'hidden' : undefined
+            overflowX: maxHeight ? 'hidden' : undefined,
           }}
         >
-          {teasers.map(teaser => {
+          {teasers.map((teaser) => {
             let touch
-            const focus = event => {
+            const focus = (event) => {
               if (!this.measurements) {
                 return
               }
               const measurement = this.measurements.find(
-                m => m.id === teaser.id
+                (m) => m.id === teaser.id,
               )
               if (!measurement) {
                 return
@@ -172,8 +172,8 @@ class TeaserBlock extends Component {
                   hover: {
                     touch,
                     teaser,
-                    measurement
-                  }
+                    measurement,
+                  },
                 },
                 () => {
                   const index = Math.floor(x * teaser.nodes.length)
@@ -182,18 +182,18 @@ class TeaserBlock extends Component {
 
                   if (urlMeta.format) {
                     onHighlight(
-                      data =>
-                        data.urlMeta && data.urlMeta.format === urlMeta.format
+                      (data) =>
+                        data.urlMeta && data.urlMeta.format === urlMeta.format,
                     )
                   } else if (urlMeta.series) {
                     onHighlight(
-                      data =>
-                        data.urlMeta && data.urlMeta.series === urlMeta.series
+                      (data) =>
+                        data.urlMeta && data.urlMeta.series === urlMeta.series,
                     )
                   } else if (activeNode) {
-                    onHighlight(data => data.id === activeNode.data.id)
+                    onHighlight((data) => data.id === activeNode.data.id)
                   }
-                }
+                },
               )
             }
 
@@ -226,7 +226,7 @@ class TeaserBlock extends Component {
                     // unbreakable margin
                     // GAP needs to be with an inline-block to prevent
                     // the browser from breaking the margin between columns
-                    display: 'inline-block'
+                    display: 'inline-block',
                   }}
                   data-teaser={teaser.id}
                 >
@@ -236,7 +236,7 @@ class TeaserBlock extends Component {
                     style={{
                       display: 'block',
                       marginBottom: GAP,
-                      width: '100%'
+                      width: '100%',
                     }}
                   />
                   <TeaserNodes

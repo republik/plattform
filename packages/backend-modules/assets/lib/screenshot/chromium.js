@@ -1,11 +1,7 @@
 const fetch = require('isomorphic-unfetch')
 
-const {
-  CHROMIUM_LAMBDA_URL,
-  RENDER_COOKIE,
-  BASIC_AUTH_USER,
-  BASIC_AUTH_PASS,
-} = process.env
+const { CHROMIUM_LAMBDA_URL, RENDER_COOKIE, BASIC_AUTH_USER, BASIC_AUTH_PASS } =
+  process.env
 
 if (!CHROMIUM_LAMBDA_URL) {
   console.warn(

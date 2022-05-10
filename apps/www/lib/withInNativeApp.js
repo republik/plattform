@@ -1,9 +1,8 @@
-import React from 'react'
 import Router from 'next/router'
 import { parseJSONObject } from './safeJSON'
 import { matchIOSUserAgent, useUserAgent } from './context/UserAgentContext'
 
-const getNativeAppVersion = value => {
+const getNativeAppVersion = (value) => {
   const matches = value?.match(/RepublikApp\/([.0-9]+)/)
   return matches ? matches[1] : undefined
 }
@@ -12,7 +11,7 @@ export const inNativeAppBrowserAppVersion = process.browser
   ? getNativeAppVersion(navigator.userAgent)
   : undefined
 
-const isLegacyApp = version => parseFloat(version) < 2
+const isLegacyApp = (version) => parseFloat(version) < 2
 
 const isNewerVersion = (oldVer, newVer) => {
   const oldParts = oldVer.split('.')
@@ -29,7 +28,7 @@ const isNewerVersion = (oldVer, newVer) => {
 }
 
 export const inNativeAppBrowserLegacy = isLegacyApp(
-  inNativeAppBrowserAppVersion
+  inNativeAppBrowserAppVersion,
 )
 
 export const inNativeAppBrowser = !!inNativeAppBrowserAppVersion
@@ -37,7 +36,7 @@ export const inNativeIOSAppBrowser =
   inNativeAppBrowser && matchIOSUserAgent(navigator.userAgent)
 
 const runInNativeAppBrowser = inNativeAppBrowser
-  ? callback => callback()
+  ? (callback) => callback()
   : () => {}
 
 runInNativeAppBrowser(() => {
@@ -48,7 +47,7 @@ runInNativeAppBrowser(() => {
     window.location.pathname + window.location.search + window.location.hash
   const orgTime = Date.now()
   // Accept push-route and scroll-to-top from app
-  document.addEventListener('message', function(event) {
+  document.addEventListener('message', function (event) {
     const message = parseJSONObject(event.data)
 
     if (message.type === 'scroll-to-top') {
@@ -78,7 +77,7 @@ runInNativeAppBrowser(() => {
   let isReactNativePostMessageReady = !!window.originalPostMessage
   const queue = []
 
-  let currentPostMessageFn = message => {
+  let currentPostMessageFn = (message) => {
     queue.push(message)
   }
 
@@ -93,7 +92,7 @@ runInNativeAppBrowser(() => {
         currentPostMessageFn = fn
         isReactNativePostMessageReady = true
         setTimeout(sendQueue, 0)
-      }
+      },
     })
   }
 
@@ -105,19 +104,19 @@ runInNativeAppBrowser(() => {
 export const postMessage = !inNativeAppBrowser
   ? () => {} // does nothing outside of app, e.g. gallery full screen message
   : inNativeAppBrowserLegacy
-  ? msg =>
+  ? (msg) =>
       window.postMessage(
         typeof msg === 'string' ? msg : JSON.stringify(msg),
-        '*'
+        '*',
       )
   : window.ReactNativeWebView
-  ? msg =>
+  ? (msg) =>
       window.ReactNativeWebView.postMessage(
-        typeof msg === 'string' ? msg : JSON.stringify(msg)
+        typeof msg === 'string' ? msg : JSON.stringify(msg),
       )
-  : msg => console.warn('postMessage unavailable', msg)
+  : (msg) => console.warn('postMessage unavailable', msg)
 
-const getIOSVersion = userAgent => {
+const getIOSVersion = (userAgent) => {
   const matches = userAgent.match(/ OS ([\d_]+) /)
   return matches ? parseFloat(matches[1]) : undefined
 }
@@ -132,16 +131,16 @@ export const useInNativeApp = () => {
     inNativeApp,
     inNativeAppLegacy: isLegacyApp(inNativeAppVersion),
     inNativeAppVersion,
-    isMinimalNativeAppVersion: minVersion =>
+    isMinimalNativeAppVersion: (minVersion) =>
       isNewerVersion(minVersion, inNativeAppVersion),
     inIOS: isIOS,
     inIOSVersion: isIOS ? getIOSVersion(userAgent) : undefined,
-    inNativeIOSApp: inNativeApp && isIOS
+    inNativeIOSApp: inNativeApp && isIOS,
   }
 }
 
-const withInNativeApp = WrappedComponent => {
-  const WithInNativeApp = props => {
+const withInNativeApp = (WrappedComponent) => {
+  const WithInNativeApp = (props) => {
     const inProps = useInNativeApp()
     return <WrappedComponent {...inProps} {...props} />
   }

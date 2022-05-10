@@ -1,19 +1,18 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import Input from './Input'
 
-export const parse = str => {
+export const parse = (str) => {
   if (!str) {
     return
   }
   const [field, v] = str.split('_')
   return {
     field: field.toString(),
-    value: v === 'true'
+    value: v === 'true',
   }
 }
 
-export const serialize = ({ field, value }) =>
-  `${field}_${value.toString()}`
+export const serialize = ({ field, value }) => `${field}_${value.toString()}`
 
 const getInitialState = ({ bool, ...props }) =>
   bool
@@ -22,8 +21,8 @@ const getInitialState = ({ bool, ...props }) =>
         enabled: false,
         bool: {
           field: props.fields[0],
-          value: false
-        }
+          value: false,
+        },
       }
 
 export class Form extends Component {
@@ -32,56 +31,59 @@ export class Form extends Component {
     this.state = getInitialState(props)
   }
 
-  fieldChangeHandler = event => {
+  fieldChangeHandler = (event) => {
     const field = event.target.value
     this.setState(
       () => ({
         ...this.state,
         bool: {
           ...this.state.bool,
-          field
-        }
+          field,
+        },
       }),
-      this.emitChange
+      this.emitChange,
     )
   }
 
-  enabledChangeHandler = event => {
+  enabledChangeHandler = (event) => {
     const enabled = event.target.checked
 
     this.setState(
       () => ({
         ...this.state,
-        enabled
+        enabled,
       }),
-      this.emitChange
+      this.emitChange,
     )
   }
 
-  changeHandler = event => {
+  changeHandler = (event) => {
     const value = event.target.checked
     this.setState(
       () => ({
         ...this.state,
         bool: {
           ...this.state.bool,
-          value
-        }
+          value,
+        },
       }),
-      this.emitChange
+      this.emitChange,
     )
   }
 
   emitChange = () => {
     if (this.props.onChange) {
-      const { enabled, bool: { field, value } } = this.state
+      const {
+        enabled,
+        bool: { field, value },
+      } = this.state
       this.props.onChange(
         enabled
           ? {
               field,
-              value
+              value,
             }
-          : undefined
+          : undefined,
       )
     }
   }
@@ -92,14 +94,17 @@ export class Form extends Component {
 
   render() {
     const { fields } = this.props
-    const { enabled, bool: { field, value } } = this.state
+    const {
+      enabled,
+      bool: { field, value },
+    } = this.state
 
     return (
       <div>
         <Input
-          type="checkbox"
+          type='checkbox'
           checked={enabled}
-          label="Filter"
+          label='Filter'
           onChange={this.enabledChangeHandler}
         />
         {fields.length > 1 ? (
@@ -108,7 +113,7 @@ export class Form extends Component {
             disabled={!enabled}
             onChange={this.fieldChangeHandler}
           >
-            {fields.map(fieldName => (
+            {fields.map((fieldName) => (
               <option key={fieldName} value={fieldName}>
                 {fieldName}
               </option>
@@ -117,7 +122,7 @@ export class Form extends Component {
         ) : null}
         <Input
           label={field}
-          type="checkbox"
+          type='checkbox'
           disabled={!enabled}
           onChange={this.changeHandler}
           checked={value}
@@ -130,5 +135,5 @@ export class Form extends Component {
 export default {
   Form,
   parse,
-  serialize
+  serialize,
 }

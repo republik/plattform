@@ -14,6 +14,8 @@ const modifiers = require('./modifiers')
 
 const { DOCUMENTS_RESTRICT_TO_ROLES } = process.env
 
+const documentsRestrictToRoles = DOCUMENTS_RESTRICT_TO_ROLES?.split(',')
+
 const processRepoImageUrlsInContent = async (mdast, fn) => {
   const fns = []
 
@@ -141,16 +143,15 @@ const processEmbedsInContent = async (mdast, fn, context) => {
 }
 
 const processMembersOnlyZonesInContent = (mdast, user) => {
-  if (!DOCUMENTS_RESTRICT_TO_ROLES) {
+  if (!documentsRestrictToRoles) {
     return
   }
   visit(mdast, 'zone', (node) => {
-    if (node.data && node.data.membersOnly) {
-      const roles = DOCUMENTS_RESTRICT_TO_ROLES.split(',')
-
-      if (!userIsInRoles(user, roles)) {
-        node.children = []
-      }
+    if (
+      node.data?.membersOnly &&
+      !userIsInRoles(user, documentsRestrictToRoles)
+    ) {
+      node.children = []
     }
   })
 }
@@ -166,6 +167,30 @@ const processNodeModifiersInContent = (mdast, user) => {
   })
 }
 
+const processIfHasAccess = (mdast, user) => {
+  visit(mdast, 'zone', (node, index, parent) => {
+    if (node.identifier === 'IF' && node.data?.present === 'hasAccess') {
+      const elseIndex = node.children.findIndex(
+        ({ identifier }) => identifier === 'ELSE',
+      )
+
+      const children = userIsInRoles(user, documentsRestrictToRoles)
+        ? node.children.filter((_, index) => index !== elseIndex)
+        : node.children.find((_, index) => index === elseIndex)?.children || []
+
+      // unwrap into parent children
+      parent.children = [
+        ...parent.children.slice(0, index),
+        ...children,
+        ...parent.children.slice(index + 1),
+      ]
+
+      // revisit entry index again as children may contain an IF block
+      return index
+    }
+  })
+}
+
 module.exports = {
   processMembersOnlyZonesInContent,
   processRepoImageUrlsInContent,
@@ -173,4 +198,5 @@ module.exports = {
   processEmbedImageUrlsInContent,
   processEmbedsInContent,
   processNodeModifiersInContent,
+  processIfHasAccess,
 }

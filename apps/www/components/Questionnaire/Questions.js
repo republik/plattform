@@ -1,4 +1,4 @@
-import React from 'react'
+import { createElement } from 'react'
 
 import compose from 'lodash/flowRight'
 
@@ -12,29 +12,27 @@ const QUESTION_TYPES = {
   QuestionTypeDocument: ArticleQuestion,
   QuestionTypeText: TextQuestion,
   QuestionTypeChoice: ChoiceQuestion,
-  QuestionTypeRange: RangeQuestion
+  QuestionTypeRange: RangeQuestion,
 }
 
 const QuestionList = compose(withAnswerMutation)(
   ({ submitAnswer, processSubmit, questions, disabled }) => {
-    const createHandleChange = questionId => (answerId, value) => {
+    const createHandleChange = (questionId) => (answerId, value) => {
       const payload = value !== null ? { value } : null
       processSubmit(submitAnswer, questionId, payload, answerId)
     }
 
-    return (
-      <>
-        {questions.map(q =>
-          React.createElement(QUESTION_TYPES[q.__typename], {
-            onChange: createHandleChange(q.id),
-            question: q,
-            key: q.id,
-            disabled
-          })
-        )}
-      </>
-    )
-  }
+    return <>
+      {questions.map((q) =>
+        createElement(QUESTION_TYPES[q.__typename], {
+          onChange: createHandleChange(q.id),
+          question: q,
+          key: q.id,
+          disabled,
+        }),
+      )}
+    </>;
+  },
 )
 
 export default ({
@@ -43,7 +41,7 @@ export default ({
   disabled,
   sliceAt,
   showSlice2,
-  slug
+  slug,
 }) => {
   const questions1 = sliceAt ? questions.slice(0, sliceAt) : questions
   const questions2 = sliceAt && questions.slice(sliceAt)

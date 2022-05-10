@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { Component, Fragment } from 'react'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 import InfiniteScroller from 'react-infinite-scroller'
@@ -11,7 +11,7 @@ import ErrorMessage from '../../ErrorMessage'
 import {
   serializeOrderBy,
   deserializeOrderBy,
-  createChangeHandler
+  createChangeHandler,
 } from '../../Tables/utils'
 
 import TableForm from './TableForm'
@@ -21,24 +21,23 @@ const PAYMENTS_LIMIT = 200
 
 const getInitialState = () => ({
   error: false,
-  feedback: false
+  feedback: false,
 })
 
 class PostfinancePayments extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = getInitialState(props)
 
-    this.handleError = e =>
-      this.setState({ error: e })
+    this.handleError = (e) => this.setState({ error: e })
 
     this.uploadHandler = ({ csv }) => {
       this.props
         .uploadCSV({ csv })
-        .then(v =>
+        .then((v) =>
           this.setState({
-            feedback: v.data.importPostfinanceCSV
-          })
+            feedback: v.data.importPostfinanceCSV,
+          }),
         )
         .catch(this.handleError)
     }
@@ -46,27 +45,23 @@ class PostfinancePayments extends Component {
     this.rematchHandler = () => {
       this.props
         .rematchPayments()
-        .then(v =>
+        .then((v) =>
           this.setState({
-            feedback: v.data.rematchPayments
-          })
+            feedback: v.data.rematchPayments,
+          }),
         )
         .catch(this.handleError)
     }
   }
 
-  render () {
+  render() {
     const props = this.props
     const renderErrors = () => {
       if (props.data.error || this.state.error) {
         return (
           <div>
-            {props.data.error && (
-              <ErrorMessage error={props.data.error} />
-            )}
-            {this.state.error && (
-              <ErrorMessage error={this.state.error} />
-            )}
+            {props.data.error && <ErrorMessage error={props.data.error} />}
+            {this.state.error && <ErrorMessage error={this.state.error} />}
           </div>
         )
       }
@@ -80,13 +75,10 @@ class PostfinancePayments extends Component {
       updatePostfinancePayment,
       hidePostfinancePayment,
       manuallyMatchPostfinancePayment,
-      onChange
+      onChange,
     } = props
 
-    const changeHandler = createChangeHandler(
-      params,
-      onChange
-    )
+    const changeHandler = createChangeHandler(params, onChange)
 
     if (!props.data.postfinancePayments) {
       return <div>Loading</div>
@@ -98,38 +90,38 @@ class PostfinancePayments extends Component {
           defaultSearch={params.search}
           onSearch={changeHandler('search')}
           dateRange={DateRange.parse(params.dateRange)}
-          onDateRange={changeHandler(
-            'dateRange',
-            DateRange.serialize
-          )}
+          onDateRange={changeHandler('dateRange', DateRange.serialize)}
           bool={Bool.parse(params.bool)}
           onBool={changeHandler('bool', Bool.serialize)}
           onUpload={this.uploadHandler}
           onRematch={this.rematchHandler}
         />
         {renderErrors()}
-        {this.state.feedback && (
-          <div>{this.state.feedback}</div>
-        )}
+        {this.state.feedback && <div>{this.state.feedback}</div>}
         <Loader
           error={data.error}
           loading={data.loading}
           render={() => (
             <InfiniteScroller
               loadMore={loadMorePostfinancePayments}
-              hasMore={postfinancePayments.count > postfinancePayments.items.length}
+              hasMore={
+                postfinancePayments.count > postfinancePayments.items.length
+              }
               useWindow={false}
             >
               <Table
                 items={postfinancePayments.items}
                 sort={deserializeOrderBy(params.orderBy)}
-                onSort={changeHandler(
-                  'orderBy',
-                  serializeOrderBy
-                )}
-                onMessage={v => updatePostfinancePayment(v).catch(this.handleError)}
-                onHide={v => hidePostfinancePayment(v).catch(this.handleError)}
-                onMatch={v => manuallyMatchPostfinancePayment(v).catch(this.handleError)}
+                onSort={changeHandler('orderBy', serializeOrderBy)}
+                onMessage={(v) =>
+                  updatePostfinancePayment(v).catch(this.handleError)
+                }
+                onHide={(v) =>
+                  hidePostfinancePayment(v).catch(this.handleError)
+                }
+                onMatch={(v) =>
+                  manuallyMatchPostfinancePayment(v).catch(this.handleError)
+                }
               />
             </InfiniteScroller>
           )}
@@ -177,14 +169,8 @@ const postfinancePaymentsQuery = gql`
 `
 
 const updatePostfinancePaymentMutation = gql`
-  mutation updatePostfinancePayment(
-    $id: ID!
-    $message: String!
-  ) {
-    updatePostfinancePayment(
-      pfpId: $id
-      mitteilung: $message
-    ) {
+  mutation updatePostfinancePayment($id: ID!, $message: String!) {
+    updatePostfinancePayment(pfpId: $id, mitteilung: $message) {
       id
       hidden
     }
@@ -223,9 +209,7 @@ const manuallyMatchPostfinancePaymentMutation = gql`
 
 export default compose(
   graphql(postfinancePaymentsQuery, {
-    options: ({
-      params: { orderBy, search, dateRange, bool }
-    }) => {
+    options: ({ params: { orderBy, search, dateRange, bool } }) => {
       return {
         variables: {
           limit: PAYMENTS_LIMIT,
@@ -233,8 +217,8 @@ export default compose(
           orderBy: deserializeOrderBy(orderBy),
           dateRange: DateRange.parse(dateRange),
           bool: Bool.parse(bool),
-          search
-        }
+          search,
+        },
       }
     },
     props: ({ data }) => {
@@ -246,12 +230,9 @@ export default compose(
           }
           return data.fetchMore({
             variables: {
-              offset: data.postfinancePayments.items.length
+              offset: data.postfinancePayments.items.length,
             },
-            updateQuery: (
-              previousResult,
-              { fetchMoreResult }
-            ) => {
+            updateQuery: (previousResult, { fetchMoreResult }) => {
               if (!fetchMoreResult) {
                 return previousResult
               }
@@ -262,26 +243,24 @@ export default compose(
                     ...previousResult.postfinancePayments,
                     ...fetchMoreResult.postfinancePayments,
                     items: [
-                      ...previousResult.postfinancePayments
-                        .items,
-                      ...fetchMoreResult.postfinancePayments
-                        .items
-                    ]
-                  }
-                }
+                      ...previousResult.postfinancePayments.items,
+                      ...fetchMoreResult.postfinancePayments.items,
+                    ],
+                  },
+                },
               }
-            }
+            },
           })
-        }
+        },
       }
-    }
+    },
   }),
   graphql(updatePostfinancePaymentMutation, {
     props: ({
       mutate,
       ownProps: {
-        params: { orderBy, search, dateRange, bool }
-      }
+        params: { orderBy, search, dateRange, bool },
+      },
     }) => ({
       updatePostfinancePayment: ({ id, message }) => {
         if (mutate) {
@@ -296,32 +275,32 @@ export default compose(
                   orderBy: deserializeOrderBy(orderBy),
                   dateRange: DateRange.parse(dateRange),
                   bool: Bool.parse(bool),
-                  search
-                }
-              }
-            ]
+                  search,
+                },
+              },
+            ],
           })
         }
-      }
-    })
+      },
+    }),
   }),
   graphql(uploadMutation, {
     props: ({ mutate }) => ({
       uploadCSV: ({ csv }) => {
         if (mutate) {
           return mutate({
-            variables: { csv }
+            variables: { csv },
           })
         }
-      }
-    })
+      },
+    }),
   }),
   graphql(hidePostfinancePaymentMutation, {
     props: ({
       mutate,
       ownProps: {
-        params: { orderBy, search, dateRange, bool }
-      }
+        params: { orderBy, search, dateRange, bool },
+      },
     }) => ({
       hidePostfinancePayment: ({ id }) => {
         if (mutate) {
@@ -336,21 +315,21 @@ export default compose(
                   orderBy: deserializeOrderBy(orderBy),
                   dateRange: DateRange.parse(dateRange),
                   bool: Bool.parse(bool),
-                  search
-                }
-              }
-            ]
+                  search,
+                },
+              },
+            ],
           })
         }
-      }
-    })
+      },
+    }),
   }),
   graphql(manuallyMatchPostfinancePaymentMutation, {
     props: ({
       mutate,
       ownProps: {
-        params: { orderBy, search, dateRange, bool }
-      }
+        params: { orderBy, search, dateRange, bool },
+      },
     }) => ({
       manuallyMatchPostfinancePayment: ({ id }) => {
         if (mutate) {
@@ -365,21 +344,21 @@ export default compose(
                   orderBy: deserializeOrderBy(orderBy),
                   dateRange: DateRange.parse(dateRange),
                   bool: Bool.parse(bool),
-                  search
-                }
-              }
-            ]
+                  search,
+                },
+              },
+            ],
           })
         }
-      }
-    })
+      },
+    }),
   }),
   graphql(rematchMutation, {
     props: ({
       mutate,
       ownProps: {
-        params: { orderBy, search, dateRange, bool }
-      }
+        params: { orderBy, search, dateRange, bool },
+      },
     }) => ({
       rematchPayments: () => {
         if (mutate) {
@@ -393,13 +372,13 @@ export default compose(
                   orderBy: deserializeOrderBy(orderBy),
                   dateRange: DateRange.parse(dateRange),
                   bool: Bool.parse(bool),
-                  search
-                }
-              }
-            ]
+                  search,
+                },
+              },
+            ],
           })
         }
-      }
-    })
-  })
+      },
+    }),
+  }),
 )(PostfinancePayments)

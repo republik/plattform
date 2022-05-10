@@ -1,11 +1,10 @@
-import React from 'react'
 import { css } from 'glamor'
 import { fontStyles } from '@project-r/styleguide'
 import {
   columnDateFormat,
   getPlaceholders,
   reformatPlaceholder,
-  reformatUrlDate
+  reformatUrlDate,
 } from '../../lib/utils/calendar'
 import { containsRepoFromTemplate } from '../../lib/utils/repo'
 import Repo, { Placeholder } from './Repo'
@@ -18,28 +17,28 @@ const styles = {
   dateHeading: css({
     display: 'block',
     marginBottom: 10,
-    ...fontStyles.sansSerifMedium14
+    ...fontStyles.sansSerifMedium14,
   }),
   templateHeading: css({
     display: 'block',
     marginBottom: 10,
-    ...fontStyles.sansSerifRegular14
+    ...fontStyles.sansSerifRegular14,
   }),
   templateContainer: css({
-    padding: '10px 0 0'
-  })
+    padding: '10px 0 0',
+  }),
 }
 
 const Repos = ({ repos, isNewsletter, ...props }) => {
   const sortedRepos = repos.sort((repo1, repo2) =>
     ascending(
       new Date(repo1.meta.publishDate),
-      new Date(repo2.meta.publishDate)
-    )
+      new Date(repo2.meta.publishDate),
+    ),
   )
   return (
     <div {...styles.templateContainer}>
-      {sortedRepos.map(repo =>
+      {sortedRepos.map((repo) =>
         repo.isPlaceholder ? (
           <Placeholder
             key={repo.repoId}
@@ -55,7 +54,7 @@ const Repos = ({ repos, isNewsletter, ...props }) => {
             isNewsletter={isNewsletter}
             {...props}
           />
-        )
+        ),
       )}
     </div>
   )
@@ -66,7 +65,7 @@ export const ReposByTemplate = ({
   repos = [],
   date,
   isPast,
-  isNewsletter
+  isNewsletter,
 }) => {
   const reposAndPlaceholders = isPast
     ? repos
@@ -77,7 +76,7 @@ export const ReposByTemplate = ({
             ? acc
             : acc.concat(reformatPlaceholder(placeholder, date))
         },
-        repos
+        repos,
       )
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useContext } from 'react'
+import { useState, Fragment, useContext } from 'react'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import {
@@ -13,7 +13,7 @@ import {
   EditIcon,
   EtiquetteIcon,
   IconButton,
-  Interaction
+  Interaction,
 } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 import withInNativeApp, { postMessage } from '../../lib/withInNativeApp'
@@ -46,7 +46,7 @@ const ActionBar = ({
   download,
   discussion,
   fontSize,
-  isCentered
+  isCentered,
 }) => {
   const { me, meLoading, hasAccess, isEditor } = useMe()
   const [pdfOverlayVisible, setPdfOverlayVisible] = useState(false)
@@ -64,7 +64,7 @@ const ActionBar = ({
         {fontSize && (
           <IconButton
             Icon={FontSizeIcon}
-            onClick={e => {
+            onClick={(e) => {
               e.preventDefault()
               setFontSizeOverlayVisible(!fontSizeOverlayVisible)
             }}
@@ -90,7 +90,7 @@ const ActionBar = ({
             label={share.label || ''}
             Icon={ShareIcon}
             href={share.url}
-            onClick={e => {
+            onClick={(e) => {
               e.preventDefault()
               trackEvent(['ActionBar', 'share', share.url])
               if (inNativeApp) {
@@ -100,8 +100,8 @@ const ActionBar = ({
                     title: share.title,
                     url: share.url,
                     subject: share.emailSubject || '',
-                    dialogTitle: t('article/share/title')
-                  }
+                    dialogTitle: t('article/share/title'),
+                  },
                 })
                 e.target.blur()
               } else {
@@ -130,7 +130,7 @@ const ActionBar = ({
 
   const meta = document && {
     ...document.meta,
-    url: `${PUBLIC_BASE_URL}${document.meta.path}`
+    url: `${PUBLIC_BASE_URL}${document.meta.path}`,
   }
 
   const podcast =
@@ -142,22 +142,18 @@ const ActionBar = ({
   const notBookmarkable = meta && meta.template === 'page'
   const isDiscussion = meta && meta.template === 'discussion'
   const emailSubject = t('article/share/emailSubject', {
-    title: document.meta.title
+    title: document.meta.title,
   })
   const { discussionId } = getDiscussionLinkProps(
     meta.linkedDiscussion,
     meta.ownDiscussion,
     meta.template,
-    meta.path
+    meta.path,
   )
 
-  const readingMinutes = Math.max(
-    meta.estimatedConsumptionMinutes,
-    meta.estimatedReadingMinutes
-  )
+  const displayMinutes = meta.estimatedConsumptionMinutes % 60
+  const displayHours = Math.floor(meta.estimatedConsumptionMinutes / 60)
 
-  const displayMinutes = readingMinutes % 60
-  const displayHours = Math.floor(readingMinutes / 60)
   const forceShortLabel =
     mode === 'articleOverlay' ||
     mode === 'feed' ||
@@ -182,19 +178,19 @@ const ActionBar = ({
   const minutes =
     displayMinutes > 0
       ? t.pluralize('feed/actionbar/readingTime/minutes', {
-          count: displayMinutes
+          count: displayMinutes,
         })
       : ''
   const minutesShort =
     displayMinutes > 0
       ? t.pluralize('feed/actionbar/readingTime/minutesShort', {
-          count: displayMinutes
+          count: displayMinutes,
         })
       : ''
 
   const readingTimeTitle = t('feed/actionbar/readingTime/title', {
     minutes,
-    hours
+    hours,
   })
   const readingTimeLabel = !forceShortLabel
     ? `${hours}${minutes}`
@@ -205,6 +201,21 @@ const ActionBar = ({
     (displayMinutes > 0 || displayHours > 0) &&
     (meta.template === 'article' || meta.template === 'editorialNewsletter')
 
+  const isArticleBottom = mode === 'articleBottom'
+
+  const PodcastButtonActionItem = {
+    title: t('PodcastButtons/title'),
+    Icon: PodcastIcon,
+    onClick: (e) => {
+      e.preventDefault()
+      trackEvent(['ActionBar', 'podcasts', meta.url])
+      setPodcastOverlayVisible(!podcastOverlayVisible)
+    },
+    label: t('PodcastButtons/title'),
+    show: !!podcast && meta.template !== 'format',
+    modes: ['articleTop'],
+  }
+
   const ActionItems = [
     {
       title: readingTimeTitle,
@@ -212,7 +223,7 @@ const ActionBar = ({
       label: readingTimeLabel,
       labelShort: readingTimeLabelShort,
       modes: ['feed', 'seriesEpisode'],
-      show: showReadingTime
+      show: showReadingTime,
     },
     {
       title: t('article/actionbar/userprogress'),
@@ -231,19 +242,19 @@ const ActionBar = ({
         />
       ),
       modes: ['articleOverlay', 'feed', 'bookmark', 'seriesEpisode'],
-      show: !!document
+      show: !!document,
     },
     {
       title: t('feed/actionbar/chart'),
       Icon: ChartIcon,
       modes: ['feed'],
-      show: meta && meta.indicateChart
+      show: meta && meta.indicateChart,
     },
     {
       title: t('article/actionbar/pdf/options'),
       Icon: PdfIcon,
       href: hasPdf ? getPdfUrl(meta) : undefined,
-      onClick: e => {
+      onClick: (e) => {
         if (shouldIgnoreClick(e)) {
           return
         }
@@ -251,18 +262,18 @@ const ActionBar = ({
         setPdfOverlayVisible(!pdfOverlayVisible)
       },
       modes: ['articleTop', 'articleBottom'],
-      show: hasPdf
+      show: hasPdf,
     },
     {
       title: t('article/actionbar/fontSize/title'),
       Icon: FontSizeIcon,
       href: meta.url,
-      onClick: e => {
+      onClick: (e) => {
         e.preventDefault()
         setFontSizeOverlayVisible(!fontSizeOverlayVisible)
       },
       modes: ['articleTop'],
-      show: true
+      show: true,
     },
     // The subscription menu is available for all logged-in users
     {
@@ -272,6 +283,7 @@ const ActionBar = ({
           discussionId={isDiscussion && meta.ownDiscussion?.id}
           subscriptions={document?.subscribedBy?.nodes}
           label={t('SubscribeMenu/title')}
+          labelShort={isArticleBottom ? t('SubscribeMenu/title') : undefined}
           padded
           loading={meLoading || documentLoading}
           attributes={{ ['data-show-if-me']: true }}
@@ -285,7 +297,7 @@ const ActionBar = ({
           meta.format ||
           meta.authors?.length) &&
         // and signed in or loading me
-        (me || meLoading)
+        (me || meLoading),
     },
     // The subscription menu is available for all users with an active-membership.
     {
@@ -295,6 +307,9 @@ const ActionBar = ({
           bookmarked={document && !!document.userBookmark}
           documentId={document.id}
           label={!forceShortLabel ? t('bookmark/label') : ''}
+          labelShort={
+            !forceShortLabel && isArticleBottom ? t('bookmark/label') : ''
+          }
           disabled={meLoading || documentLoading}
           attributes={{ ['data-show-if-active-membership']: true }}
         />
@@ -305,20 +320,20 @@ const ActionBar = ({
         'articleOverlay',
         'feed',
         'bookmark',
-        'seriesEpisode'
+        'seriesEpisode',
       ],
-      show: !notBookmarkable && (meLoading || hasAccess)
+      show: !notBookmarkable && (meLoading || hasAccess),
     },
     {
       title: t('PodcastButtons/play'),
       Icon: PlayCircleIcon,
-      onClick: e => {
+      onClick: (e) => {
         e.preventDefault()
         trackEvent(['ActionBar', 'audio', meta.url])
         toggleAudioPlayer({
           audioSource: meta.audioSource,
           title: meta.title,
-          path: meta.path
+          path: meta.path,
         })
       },
       label:
@@ -327,13 +342,14 @@ const ActionBar = ({
           ? null
           : t('PodcastButtons/play'),
       modes: ['feed', 'seriesEpisode'],
-      show: !!meta.audioSource
+      show:
+        !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud',
     },
     {
       title: t('article/actionbar/share'),
       Icon: ShareIcon,
       href: meta.url,
-      onClick: e => {
+      onClick: (e) => {
         e.preventDefault()
         trackEvent(['ActionBar', 'share', meta.url])
         if (inNativeApp) {
@@ -343,8 +359,8 @@ const ActionBar = ({
               title: document.title,
               url: meta.url,
               subject: emailSubject,
-              dialogTitle: t('article/share/title')
-            }
+              dialogTitle: t('article/share/title'),
+            },
           })
           e.target.blur()
         } else {
@@ -352,8 +368,14 @@ const ActionBar = ({
         }
       },
       label: !forceShortLabel ? t('article/actionbar/share') : '',
-      modes: ['articleTop', 'articleOverlay'],
-      show: true
+      labelShort:
+        !forceShortLabel && isArticleBottom ? t('article/actionbar/share') : '',
+      modes: ['articleTop', 'articleOverlay', 'articleBottom'],
+      show: true,
+    },
+    {
+      ...PodcastButtonActionItem,
+      modes: ['articleBottom'],
     },
     {
       title: t('article/actionbar/discussion'),
@@ -363,20 +385,21 @@ const ActionBar = ({
           document={document}
           isOnArticlePage={[
             'articleTop',
+            'articleOverlay',
             'articleBottom',
-            'articleOverlay'
           ].includes(mode)}
+          useCallToActionLabel={isArticleBottom}
           forceShortLabel={forceShortLabel}
         />
       ),
       modes: [
         'articleTop',
-        'articleBottom',
         'articleOverlay',
+        'articleBottom',
         'feed',
-        'seriesEpisode'
+        'seriesEpisode',
       ],
-      show: !!discussionId
+      show: !!discussionId,
     },
     {
       title: t('feed/actionbar/edit'),
@@ -390,8 +413,8 @@ const ActionBar = ({
         />
       ),
       modes: ['articleTop'],
-      show: document?.repoId && isEditor
-    }
+      show: document?.repoId && isEditor,
+    },
   ]
 
   const ActionItemsSecondary = [
@@ -400,7 +423,8 @@ const ActionBar = ({
       Icon: ReadingTimeIcon,
       label: readingTimeLabel,
       labelShort: readingTimeLabelShort,
-      show: showReadingTime
+      show: showReadingTime,
+      modes: ['articleTop'],
     },
     {
       title: t('article/actionbar/userprogress'),
@@ -411,63 +435,64 @@ const ActionBar = ({
           displayMinutes={displayMinutes}
         />
       ),
-      show: !!document
+      show: !!document,
+      modes: ['articleTop'],
     },
     {
       title: t('PodcastButtons/play'),
       Icon: PlayCircleIcon,
-      onClick: e => {
+      onClick: (e) => {
         e.preventDefault()
         trackEvent(['ActionBar', 'audio', meta.url])
         toggleAudioPlayer({
           audioSource: meta.audioSource,
           title: meta.title,
-          path: meta.path
+          path: meta.path,
         })
       },
       label: t('PodcastButtons/play'),
-      show: !!meta.audioSource
+      show:
+        !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud',
+      modes: ['articleTop'],
     },
     {
-      title: t('PodcastButtons/title'),
-      Icon: PodcastIcon,
-      onClick: e => {
-        e.preventDefault()
-        trackEvent(['ActionBar', 'podcasts', meta.url])
-        setPodcastOverlayVisible(!podcastOverlayVisible)
-      },
-      label: t('PodcastButtons/title'),
-      show: !!podcast && meta.template !== 'format'
-    }
+      ...PodcastButtonActionItem,
+      modes: ['articleTop'],
+    },
   ]
+
+  const shouldRenderActionItem = (actionItem) =>
+    actionItem.show && actionItem.modes.includes(mode)
+
   const hasSecondaryActionItems = !!ActionItemsSecondary.filter(
-    item => item.show
+    shouldRenderActionItem,
   ).length
+
   return (
     <>
       <div
         {...styles.topRow}
-        {...(mode === 'articleOverlay' && { ...styles.overlay })}
+        {...(mode === 'articleOverlay' && styles.overlay)}
+        {...((mode === 'seriesEpisode' || mode === 'articleBottom') &&
+          styles.flexWrap)}
         {...(!!centered && { ...styles.centered })}
       >
-        {ActionItems.filter(item => item.show && item.modes.includes(mode)).map(
-          props => (
-            <Fragment key={props.title}>
-              {props.element || <IconButton {...props} />}
-            </Fragment>
-          )
-        )}
+        {ActionItems.filter(shouldRenderActionItem).map((props) => (
+          <Fragment key={props.title}>
+            {props.element || <IconButton {...props} />}
+          </Fragment>
+        ))}
       </div>
-      {mode === 'articleTop' && hasSecondaryActionItems && (
+      {hasSecondaryActionItems && (
         <div {...styles.bottomRow} {...(!!centered && { ...styles.centered })}>
-          {ActionItemsSecondary.filter(item => item.show).map(props => (
+          {ActionItemsSecondary.filter(shouldRenderActionItem).map((props) => (
             <Fragment key={props.title}>
               {props.element || <IconButton {...props} />}
             </Fragment>
           ))}
         </div>
       )}
-      {(mode === 'articleBottom' || mode === 'seriesOverviewBottom') && (
+      {mode === 'seriesOverviewBottom' && (
         <>
           {!inNativeApp ? (
             <Interaction.P style={{ marginTop: 24 }}>
@@ -519,25 +544,29 @@ const ActionBar = ({
 
 const styles = {
   topRow: css({
-    display: 'flex'
+    display: 'flex',
+  }),
+  flexWrap: css({
+    flexWrap: 'wrap',
+    rowGap: 16,
   }),
   bottomRow: css({
     display: 'flex',
-    marginTop: 24
+    marginTop: 24,
   }),
   overlay: css({
     marginTop: 0,
     width: '100%',
     padding: '12px 16px',
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   }),
   centered: css({
-    justifyContent: 'center'
+    justifyContent: 'center',
   }),
   shareTitle: css({
-    margin: '16px 0 0 0'
-  })
+    margin: '16px 0 0 0',
+  }),
 }
 
 export default compose(withT, withInNativeApp)(ActionBar)

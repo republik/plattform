@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { css } from 'glamor'
 import AutosizeInput from 'react-textarea-autosize'
 
@@ -11,12 +9,12 @@ const styles = {
     minHeight: 40,
     paddingTop: '7px !important',
     paddingBottom: '6px !important',
-    background: 'transparent'
+    background: 'transparent',
   }),
   ctaLabel: css({
     display: 'block',
-    paddingBottom: 5
-  })
+    paddingBottom: 5,
+  }),
 }
 
 const SelectCta = withT(({ t, cta, setCta }) => {
@@ -48,7 +46,7 @@ export default withT(({ t, data, onInputChange }) => {
         value={data.content}
         onChange={(e, value) =>
           onInputChange({
-            content: value
+            content: value,
           })
         }
         renderInput={({ ref, ...inputProps }) => (
@@ -57,7 +55,7 @@ export default withT(({ t, data, onInputChange }) => {
       />
       <SelectCta
         cta={data.cta}
-        setCta={cta => {
+        setCta={(cta) => {
           onInputChange({ cta })
         }}
       />
@@ -71,8 +69,8 @@ export default withT(({ t, data, onInputChange }) => {
               onInputChange({
                 button: {
                   ...data.button,
-                  label: value
-                }
+                  label: value,
+                },
               })
             }
           />
@@ -84,8 +82,8 @@ export default withT(({ t, data, onInputChange }) => {
               onInputChange({
                 button: {
                   ...data.button,
-                  link: value
-                }
+                  link: value,
+                },
               })
             }
           />
@@ -99,8 +97,8 @@ export default withT(({ t, data, onInputChange }) => {
               onInputChange({
                 secondary: {
                   ...data.secondary,
-                  prefix: value
-                }
+                  prefix: value,
+                },
               })
             }
           />
@@ -112,8 +110,8 @@ export default withT(({ t, data, onInputChange }) => {
               onInputChange({
                 secondary: {
                   ...data.secondary,
-                  label: value
-                }
+                  label: value,
+                },
               })
             }
           />
@@ -125,8 +123,8 @@ export default withT(({ t, data, onInputChange }) => {
               onInputChange({
                 secondary: {
                   ...data.secondary,
-                  link: value
-                }
+                  link: value,
+                },
               })
             }
           />

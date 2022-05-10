@@ -1,4 +1,3 @@
-import React from 'react'
 import EmptyDiscussion from './shared/EmptyDiscussion'
 import StatementContainer from './CommentContainers/StatementContainer'
 import CommentContainer from './CommentContainers/CommentContainer'
@@ -17,7 +16,7 @@ const DiscussionCommentTreeRenderer = ({
   comments = [],
   documentMeta,
   inRootCommentOverlay,
-  discussion
+  discussion,
 }: Props) => {
   if (comments.length === 0) {
     return <EmptyDiscussion />
@@ -28,7 +27,7 @@ const DiscussionCommentTreeRenderer = ({
 
     return (
       <>
-        {comments.map(comment => (
+        {comments.map((comment) => (
           <StatementContainer
             key={comment.id}
             comment={comment}
@@ -42,7 +41,7 @@ const DiscussionCommentTreeRenderer = ({
   if (discussion.isBoard && !inRootCommentOverlay) {
     return (
       <>
-        {comments.map(comment => (
+        {comments.map((comment) => (
           <CommentContainer
             key={comment.id}
             CommentComponent={BoardComment}

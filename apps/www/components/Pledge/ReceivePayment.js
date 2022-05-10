@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
@@ -20,7 +20,7 @@ import { A } from '@project-r/styleguide'
 
 // ToDo: query autoPay
 const pledgeQuery = gql`
-  query($pledgeId: ID!) {
+  query ($pledgeId: ID!) {
     pledge(id: $pledgeId) {
       id
       package {
@@ -66,8 +66,8 @@ class PledgeReceivePayment extends Component {
           method: 'pay',
           argument: {
             method: 'POSTFINANCECARD',
-            pspPayload: query
-          }
+            pspPayload: query,
+          },
         }
       } else {
         // https://e-payment-postfinance.v-psp.com/de/guides/user%20guides/statuses-and-errors
@@ -79,18 +79,18 @@ class PledgeReceivePayment extends Component {
               key='mailto'
               href={`mailto:${EMAIL_PAYMENT}?subject=${encodeURIComponent(
                 t('pledge/recievePayment/pf/mailto/subject', {
-                  status: query.STATUS || ''
-                })
+                  status: query.STATUS || '',
+                }),
               )}&body=${encodeURIComponent(
                 t('pledge/recievePayment/pf/mailto/body', {
                   pledgeId: query.orderID,
-                  payload: JSON.stringify(query, null, 2)
-                })
+                  payload: JSON.stringify(query, null, 2),
+                }),
               )}`}
             >
               {EMAIL_PAYMENT}
             </A>
-          )
+          ),
         }
 
         switch (query.STATUS) {
@@ -157,8 +157,8 @@ class PledgeReceivePayment extends Component {
           method: 'pay',
           argument: {
             method: 'PAYPAL',
-            pspPayload: query
-          }
+            pspPayload: query,
+          },
         }
       } else {
         // https://developer.paypal.com/docs/classic/ipn/integration-guide/IPNandPDTVariables/#id091EB04C0HS
@@ -169,18 +169,18 @@ class PledgeReceivePayment extends Component {
               key='mailto'
               href={`mailto:${EMAIL_PAYMENT}?subject=${encodeURIComponent(
                 t('pledge/recievePayment/paypal/mailto/subject', {
-                  status: query.st || ''
-                })
+                  status: query.st || '',
+                }),
               )}&body=${encodeURIComponent(
                 t('pledge/recievePayment/paypal/mailto/body', {
                   pledgeId: query.item_name,
-                  payload: JSON.stringify(query, null, 2)
-                })
+                  payload: JSON.stringify(query, null, 2),
+                }),
               )}`}
             >
               {EMAIL_PAYMENT}
             </A>
-          )
+          ),
         }
         switch (query.st) {
           case 'Cancel':
@@ -232,7 +232,7 @@ class PledgeReceivePayment extends Component {
       const { pledge } = this.props
 
       const query = {
-        package: pledge.package.name
+        package: pledge.package.name,
       }
       if (pledge.donation < 0) {
         query.userPrice = '1'
@@ -247,17 +247,17 @@ class PledgeReceivePayment extends Component {
       .pay({
         pledgeId,
         method,
-        pspPayload
+        pspPayload,
       })
       .then(() => {
         if (!pledge || (!pledge.user && !me)) {
           gotoMerci({
-            id: pledgeId
+            id: pledgeId,
           })
           return
         }
         const baseQuery = {
-          id: pledgeId
+          id: pledgeId,
         }
         if (pledge.package) {
           baseQuery.package = pledge.package.name
@@ -266,7 +266,7 @@ class PledgeReceivePayment extends Component {
           if (baseQuery.package === 'PROLONG') {
             gotoMerci({
               ...baseQuery,
-              email: pledge.user.email
+              email: pledge.user.email,
             })
             return
           }
@@ -276,24 +276,24 @@ class PledgeReceivePayment extends Component {
               gotoMerci({
                 ...baseQuery,
                 email: pledge.user.email,
-                ...encodeSignInResponseQuery(signIn)
-              })
+                ...encodeSignInResponseQuery(signIn),
+              }),
             )
-            .catch(error =>
+            .catch((error) =>
               gotoMerci({
                 ...baseQuery,
                 email: pledge.user.email,
-                signInError: errorToString(error)
-              })
+                signInError: errorToString(error),
+              }),
             )
         } else {
           gotoMerci(baseQuery)
         }
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState(() => ({
           processing: false,
-          receiveError: errorToString(error)
+          receiveError: errorToString(error),
         }))
       })
   }
@@ -325,7 +325,7 @@ class PledgeReceivePayment extends Component {
         render={() => {
           const queryWithData = {
             ...query,
-            ...this.queryFromPledge()
+            ...this.queryFromPledge(),
           }
 
           // ToDo: access token?
@@ -350,18 +350,18 @@ const PledgeReceivePaymentById = compose(
       let error = data.error
       if (data.pledge === null) {
         error = ownProps.t('pledge/recievePayment/noPledge', {
-          pledgeId: ownProps.pledgeId
+          pledgeId: ownProps.pledgeId,
         })
       }
       return {
         loading: data.loading,
         error,
-        pledge: data.pledge
+        pledge: data.pledge,
       }
-    }
+    },
   }),
   withPay,
-  withMe
+  withMe,
 )(PledgeReceivePayment)
 
 export default PledgeReceivePaymentById

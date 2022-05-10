@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Checkbox, mediaQueries } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
 import {
   withSubToDoc,
   withUnsubFromDoc,
   withSubToUser,
-  withUnsubFromUser
+  withUnsubFromUser,
 } from './enhancers'
 import { css } from 'glamor'
 import withT from '../../lib/withT'
@@ -16,20 +16,20 @@ const styles = {
     marginBottom: 8,
     width: '100%',
     [mediaQueries.mUp]: {
-      width: '50%'
-    }
+      width: '50%',
+    },
   }),
   checkboxCallout: css({
     '& label': {
       fontSize: 16,
       display: 'flex',
       textAlign: 'left',
-      alignItems: 'center'
-    }
+      alignItems: 'center',
+    },
   }),
   checkboxLabelCallout: css({
-    marginTop: -6
-  })
+    marginTop: -6,
+  }),
 }
 
 const SubscribeCheckbox = ({
@@ -42,7 +42,7 @@ const SubscribeCheckbox = ({
   setAnimate,
   callout,
   filterName,
-  filterLabel
+  filterLabel,
 }) => {
   const [isMutating, setIsMutating] = useState(false)
   const [serverError, setServerError] = useState()
@@ -66,20 +66,20 @@ const SubscribeCheckbox = ({
       if (subscription.active) {
         unsubFromDoc({ subscriptionId: subscription.id })
           .then(toggleCallback)
-          .catch(err => setServerError(err))
+          .catch((err) => setServerError(err))
       } else {
         subToDoc({ documentId: subscription.object.id })
           .then(toggleCallback)
-          .catch(err => setServerError(err))
+          .catch((err) => setServerError(err))
       }
     } else if (isCurrentActive) {
       // Case where user can choose filter
       unsubFromUser({
         subscriptionId: subscription.id,
-        filters: [filterName]
+        filters: [filterName],
       })
         .then(toggleCallback)
-        .catch(err => setServerError(err))
+        .catch((err) => setServerError(err))
     } else {
       subToUser({
         userId: subscription.object.id,
@@ -87,10 +87,10 @@ const SubscribeCheckbox = ({
         filters:
           activeFilters.indexOf(filterName) === -1
             ? activeFilters.concat(filterName)
-            : activeFilters
+            : activeFilters,
       })
         .then(toggleCallback)
-        .catch(err => setServerError(err))
+        .catch((err) => setServerError(err))
     }
   }
 
@@ -119,5 +119,5 @@ export default compose(
   withSubToDoc,
   withUnsubFromDoc,
   withSubToUser,
-  withUnsubFromUser
+  withUnsubFromUser,
 )(SubscribeCheckbox)

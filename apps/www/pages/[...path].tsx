@@ -17,7 +17,7 @@ type Props = {
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
   return {
     paths: [],
-    fallback: 'blocking'
+    fallback: 'blocking',
   }
 }
 
@@ -28,26 +28,26 @@ export const getStaticProps = createGetStaticProps<Props, Params>(
     const path = '/' + params.path.join('/')
 
     const {
-      data: { article }
+      data: { article },
     } = await client.query({
       query: getDocument,
       variables: {
-        path
-      }
+        path,
+      },
     })
 
-    if (article) {
+    if (article && !article.meta.format?.meta.externalBaseUrl) {
       return {
         props: {
           payNoteTryOrBuy: Math.random(),
-          payNoteSeed: Math.random()
+          payNoteSeed: Math.random(),
         },
-        revalidate: REVALIDATE_SECONDS
+        revalidate: REVALIDATE_SECONDS,
       }
     }
 
     const {
-      data: { redirection }
+      data: { redirection },
     } = await client.query({
       query: gql`
         query getRedirect($path: String!) {
@@ -58,8 +58,8 @@ export const getStaticProps = createGetStaticProps<Props, Params>(
         }
       `,
       variables: {
-        path
-      }
+        path,
+      },
     })
 
     if (redirection) {
@@ -67,16 +67,16 @@ export const getStaticProps = createGetStaticProps<Props, Params>(
         revalidate: REVALIDATE_SECONDS,
         redirect: {
           destination: redirection.target,
-          statusCode: redirection.status
-        }
+          statusCode: redirection.status,
+        },
       }
     }
 
     return {
       notFound: true,
-      revalidate: REVALIDATE_SECONDS
+      revalidate: REVALIDATE_SECONDS,
     }
-  }
+  },
 )
 
 export default Article

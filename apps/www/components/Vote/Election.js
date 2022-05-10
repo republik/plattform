@@ -1,10 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   A,
   Button,
   Interaction,
   RawHtml,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
@@ -98,22 +98,22 @@ const styles = {
   wrapper: css({
     width: '100%',
     position: 'relative',
-    minHeight: 200
+    minHeight: 200,
   }),
   header: css({
-    padding: '13px 0'
+    padding: '13px 0',
   }),
   actions: css({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   }),
   message: css({
     padding: 20,
     marginBottom: 20,
-    textAlign: 'center'
-  })
+    textAlign: 'center',
+  }),
 }
 
 const sortNames = (c1, c2) => {
@@ -159,7 +159,7 @@ const ElectionAlert = ({ children }) => {
   )
 }
 
-const sortCandidates = candidates =>
+const sortCandidates = (candidates) =>
   candidates.sort((c1, c2) => {
     if (
       (c1.recommendation && !c2.recommendation) ||
@@ -175,12 +175,12 @@ const sortCandidates = candidates =>
   })
 
 export const isSelected = (candidate, vote) =>
-  vote.find(v => v === candidate.id)
+  vote.find((v) => v === candidate.id)
 
 const Election = compose(
   voteT,
   withMe,
-  withAddressData
+  withAddressData,
 )(
   ({
     election,
@@ -189,16 +189,16 @@ const Election = compose(
     me,
     discussionTag,
     mandatoryCandidates,
-    showMeta
+    showMeta,
   }) => {
     const electionId = election.id
     const useGenElection = useMemo(
       () => createPersistedState(`republik-election-${electionId}`),
-      [electionId]
+      [electionId],
     )
     const [rawVote, setRawVote] = useGenElection()
     const vote = useMemo(() => rawVote || [], [rawVote])
-    const setVote = ids => {
+    const setVote = (ids) => {
       setRawVote(ids?.length ? ids : undefined)
     }
     const [isDirty, setDirty] = useState(false)
@@ -208,18 +208,18 @@ const Election = compose(
       setDirty(vote.length > 0)
     }, [vote])
 
-    const toggleCandidate = candidate => {
+    const toggleCandidate = (candidate) => {
       if (election.numSeats === 1) {
         return setVote([candidate.id])
       }
       setVote(
         isSelected(candidate, vote)
-          ? vote.filter(v => v !== candidate.id)
-          : vote.concat(candidate.id)
+          ? vote.filter((v) => v !== candidate.id)
+          : vote.concat(candidate.id),
       )
     }
 
-    const resetVote = event => {
+    const resetVote = (event) => {
       if (event) {
         event.preventDefault()
       }
@@ -231,13 +231,13 @@ const Election = compose(
     let showSignIn
     if (election.userHasSubmitted) {
       dangerousDisabledHTML = vt('vote/voting/thankyou', {
-        submissionDate: messageDateFormat(new Date(election.userSubmitDate))
+        submissionDate: messageDateFormat(new Date(election.userSubmitDate)),
       })
     } else if (Date.now() > new Date(election.endDate)) {
       dangerousDisabledHTML = vt('vote/election/ended')
     } else if (!me) {
       dangerousDisabledHTML = vt('vote/election/notSignedIn', {
-        beginDate: timeFormat('%d.%m.%Y')(new Date(election.beginDate))
+        beginDate: timeFormat('%d.%m.%Y')(new Date(election.beginDate)),
       })
       showSignIn = true
     } else if (!election.userIsEligible) {
@@ -265,7 +265,7 @@ const Election = compose(
             candidates={candidates}
             vote={vote}
             resetVote={resetVote}
-            goBack={e => {
+            goBack={(e) => {
               e?.preventDefault()
               setConfirm(false)
             }}
@@ -275,7 +275,7 @@ const Election = compose(
             {showHeader && (
               <ElectionHeader>
                 {vt('vote/election/votesAvailable', {
-                  count: numSeats
+                  count: numSeats,
                 })}
               </ElectionHeader>
             )}
@@ -285,7 +285,7 @@ const Election = compose(
                   <RawHtml
                     type={P}
                     dangerouslySetInnerHTML={{
-                      __html: dangerousDisabledHTML
+                      __html: dangerousDisabledHTML,
                     }}
                   />
                 </div>
@@ -325,7 +325,7 @@ const Election = compose(
                       ? vt('vote/common/help/blank')
                       : vt('vote/election/votesRemaining', {
                           count: remainingVotes,
-                          max: numSeats
+                          max: numSeats,
                         })}
                   </div>
                 </ElectionActions>
@@ -335,17 +335,17 @@ const Election = compose(
         )}
       </div>
     )
-  }
+  },
 )
 
 const ElectionLoader = compose(
   graphql(query, {
     options: ({ slug }) => ({
       variables: {
-        slug
-      }
-    })
-  })
+        slug,
+      },
+    }),
+  }),
 )(({ data, discussionTag, mandatoryCandidates = [], showMeta = true }) => (
   <Loader
     loading={data.loading}

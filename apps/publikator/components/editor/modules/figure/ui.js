@@ -1,4 +1,3 @@
-import React from 'react'
 import { Map } from 'immutable'
 import { Radio, Label, Checkbox } from '@project-r/styleguide'
 import withT from '../../../../lib/withT'
@@ -13,9 +12,9 @@ function createUI({
   FIGURE_CAPTION,
   newBlock,
   editorOptions,
-  t
+  t,
 }) {
-  const isFigureBlock = block =>
+  const isFigureBlock = (block) =>
     block.type === FIGURE_IMAGE || block.type === FIGURE_CAPTION
 
   const {
@@ -23,13 +22,13 @@ function createUI({
     captionRight = false,
     plainOption = false,
     pixelNote = false,
-    insertButtonText
+    insertButtonText,
   } = editorOptions || {}
 
   const FigureForm = createPropertyForm({
     isDisabled: ({ value }) => {
       return !value.blocks.some(isFigureBlock)
-    }
+    },
   })(
     withT(({ disabled, value, onChange, t }) => {
       if (disabled) {
@@ -39,39 +38,41 @@ function createUI({
         <div>
           {value.blocks
             .filter(isFigureBlock)
-            .map(block =>
-              block.type === TYPE ? block : value.document.getParent(block.key)
+            .map((block) =>
+              block.type === TYPE ? block : value.document.getParent(block.key),
             )
-            .filter(block => block.type === TYPE)
+            .filter((block) => block.type === TYPE)
             .filter((block, index, all) => all.indexOf(block) === index)
             .map((block, i) => {
               const parent = value.document.getParent(block.key)
-              const imageBlock = block.nodes.find(n => n.type === FIGURE_IMAGE)
-              const captionBlock = block.nodes.find(
-                n => n.type === FIGURE_CAPTION
+              const imageBlock = block.nodes.find(
+                (n) => n.type === FIGURE_IMAGE,
               )
-              const onInputChange = subject => key => (_, val) => {
+              const captionBlock = block.nodes.find(
+                (n) => n.type === FIGURE_CAPTION,
+              )
+              const onInputChange = (subject) => (key) => (_, val) => {
                 onChange(
                   value.change().setNodeByKey(subject.key, {
                     data: val
                       ? subject.data.set(key, val)
-                      : subject.data.remove(key)
-                  })
+                      : subject.data.remove(key),
+                  }),
                 )
               }
 
-              const applicableSizes = sizes.filter(size => {
+              const applicableSizes = sizes.filter((size) => {
                 if (size.parent) {
                   if (
                     size.parent.kinds &&
-                    !size.parent.kinds.find(kind => kind === parent.kind)
+                    !size.parent.kinds.find((kind) => kind === parent.kind)
                   ) {
                     return false
                   }
                   if (
                     parent.type &&
                     size.parent.types &&
-                    !size.parent.types.find(type => type === parent.type)
+                    !size.parent.types.find((type) => type === parent.type)
                   ) {
                     return false
                   }
@@ -84,7 +85,7 @@ function createUI({
                   <MetaForm
                     data={Map({
                       src: '',
-                      alt: ''
+                      alt: '',
                     }).merge(imageBlock.data.remove('srcDark'))}
                     onInputChange={onInputChange(imageBlock)}
                   />
@@ -92,7 +93,7 @@ function createUI({
                     <>
                       <MetaForm
                         data={Map({
-                          srcDark: imageBlock.data.get('srcDark') || ''
+                          srcDark: imageBlock.data.get('srcDark') || '',
                         })}
                         onInputChange={onInputChange(imageBlock)}
                       />
@@ -103,7 +104,7 @@ function createUI({
                     <MetaForm
                       data={Map({
                         captionRight:
-                          captionBlock.data.get('captionRight') || false
+                          captionBlock.data.get('captionRight') || false,
                       })}
                       onInputChange={onInputChange(captionBlock)}
                     />
@@ -111,7 +112,7 @@ function createUI({
                   {plainOption && (
                     <MetaForm
                       data={Map({
-                        plain: block.data.get('plain') || false
+                        plain: block.data.get('plain') || false,
                       })}
                       onInputChange={onInputChange(block)}
                     />
@@ -122,7 +123,7 @@ function createUI({
                       <br />
                       {applicableSizes.map((size, i) => {
                         let checked = Object.keys(size.props).every(
-                          key => block.data.get(key) === size.props[key]
+                          (key) => block.data.get(key) === size.props[key],
                         )
                         if (size.unwrap) {
                           checked = checked && parent.kind === 'document'
@@ -135,14 +136,14 @@ function createUI({
                           <Radio
                             key={`radio${i}`}
                             checked={checked}
-                            onChange={event => {
+                            onChange={(event) => {
                               event.preventDefault()
                               if (checked) return
 
                               let change = value
                                 .change()
                                 .setNodeByKey(block.key, {
-                                  data: block.data.merge(size.props)
+                                  data: block.data.merge(size.props),
                                 })
 
                               if (size.unwrap) {
@@ -158,7 +159,7 @@ function createUI({
                                 parent.type !== size.wrap
                               ) {
                                 change = change.wrapBlockByKey(block.key, {
-                                  type: size.wrap
+                                  type: size.wrap,
                                 })
                               }
 
@@ -167,7 +168,7 @@ function createUI({
                           >
                             {size.label}
                           </Radio>,
-                          <br key={`br${i}`} />
+                          <br key={`br${i}`} />,
                         ]
                       })}
                     </p>
@@ -184,7 +185,7 @@ function createUI({
                   )}
                   {pixelNote && [
                     <Label key='pixelNote'>{pixelNote}</Label>,
-                    <br key='pixelNoteBr' />
+                    <br key='pixelNoteBr' />,
                   ]}
                   <br />
                 </div>
@@ -192,10 +193,10 @@ function createUI({
             })}
         </div>
       )
-    })
+    }),
   )
 
-  const figureButtonClickHandler = (disabled, value, onChange) => event => {
+  const figureButtonClickHandler = (disabled, value, onChange) => (event) => {
     event.preventDefault()
     if (!disabled) {
       return onChange(value.change().call(injectBlock, newBlock()))
@@ -205,7 +206,8 @@ function createUI({
 
   const FigureButton = ({ value, onChange }) => {
     const disabled =
-      value.isBlurred || !value.blocks.every(n => insertTypes.includes(n.type))
+      value.isBlurred ||
+      !value.blocks.every((n) => insertTypes.includes(n.type))
 
     return (
       <span
@@ -221,7 +223,7 @@ function createUI({
 
   return {
     forms: [FigureForm],
-    insertButtons: [insertButtonText && FigureButton]
+    insertButtons: [insertButtonText && FigureButton],
   }
 }
 

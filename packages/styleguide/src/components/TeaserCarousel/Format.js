@@ -7,7 +7,7 @@ import CarouselContext, { defaultValue } from './Context'
 
 const styles = css({
   ...sansSerifMedium14,
-  margin: '0 0 10px 0'
+  margin: '0 0 10px 0',
 })
 
 const Format = ({ children, color }) => {
@@ -26,5 +26,5 @@ export default Format
 
 Format.propTypes = {
   children: PropTypes.node,
-  color: PropTypes.string
+  color: PropTypes.string,
 }

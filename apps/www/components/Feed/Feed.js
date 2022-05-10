@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import compose from 'lodash/flowRight'
 import { nest } from 'd3-collection'
 import { timeFormat } from '../../lib/utils/format'
@@ -13,13 +13,15 @@ import { TeaserFeed } from '@project-r/styleguide'
 
 const dateFormat = timeFormat('%A,\n%d.%m.%Y')
 
-const groupByDate = nest().key(d => dateFormat(new Date(d.meta.publishDate)))
+const groupByDate = nest().key((d) => dateFormat(new Date(d.meta.publishDate)))
 
 class Feed extends Component {
-  renderFeedItem = doc => {
+  renderFeedItem = (doc) => {
     return doc ? (
       <TeaserFeed
         {...doc.meta}
+        format={this.props.skipFormat ? undefined : doc.meta.format}
+        externalBaseUrl={doc.meta.format?.meta.externalBaseUrl}
         repoId={doc.repoId}
         title={doc.meta.shortTitle || doc.meta.title}
         description={!doc.meta.shortTitle && doc.meta.description}
@@ -60,17 +62,17 @@ Feed.propTypes = {
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       meta: PropTypes.shape({
-        publishDate: PropTypes.string.isRequired
+        publishDate: PropTypes.string.isRequired,
       }),
       showHeader: PropTypes.bool,
-      showSubscribe: PropTypes.bool
-    }).isRequired
-  ).isRequired
+      showSubscribe: PropTypes.bool,
+    }).isRequired,
+  ).isRequired,
 }
 
 Feed.defaultProps = {
   showHeader: true,
-  documents: []
+  documents: [],
 }
 
 export default compose(withT)(Feed)

@@ -1,4 +1,3 @@
-import React from 'react'
 import { gql } from '@apollo/client'
 import { css } from 'glamor'
 
@@ -12,8 +11,8 @@ const { P } = Interaction
 
 const styles = {
   p: css({
-    marginBottom: 20
-  })
+    marginBottom: 20,
+  }),
 }
 
 export const fragments = {
@@ -24,10 +23,10 @@ export const fragments = {
         id
       }
     }
-  `
+  `,
 }
 
-const AppLogin = props => {
+const AppLogin = (props) => {
   const { user, t } = props
   const hasDevices = user && user.devices && !!user.devices.length
 
@@ -41,30 +40,30 @@ const AppLogin = props => {
         {t.first(
           [
             `Onboarding/Sections/AppLogin/hasDevice/${!!hasDevices}/paragraph1`,
-            'Onboarding/Sections/AppLogin/paragraph1'
+            'Onboarding/Sections/AppLogin/paragraph1',
           ],
           null,
-          ''
+          '',
         )}
       </P>
       <P {...styles.p}>
         {t.first(
           [
             `Onboarding/Sections/AppLogin/hasDevice/${!!hasDevices}/paragraph2`,
-            'Onboarding/Sections/AppLogin/paragraph2'
+            'Onboarding/Sections/AppLogin/paragraph2',
           ],
           null,
-          ''
+          '',
         )}
       </P>
       <P {...styles.p}>
         {t.first(
           [
             `Onboarding/Sections/AppLogin/hasDevice/${!!hasDevices}/paragraph3`,
-            'Onboarding/Sections/AppLogin/paragraph3'
+            'Onboarding/Sections/AppLogin/paragraph3',
           ],
           null,
-          ''
+          '',
         )}
       </P>
       <P {...styles.p}>

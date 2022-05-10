@@ -1,5 +1,3 @@
-import React from 'react'
-
 import MetaData from './ui'
 import { ColorContextProvider } from '@project-r/styleguide'
 
@@ -28,8 +26,8 @@ export default ({ rule, TYPE, context = {} }) => {
               </ColorContextProvider>
             </div>
           )
-        }
-      }
-    ]
+        },
+      },
+    ],
   }
 }

@@ -1,9 +1,8 @@
-import React from 'react'
 import { CloseIcon, SearchMenuIcon } from '@project-r/styleguide'
 import {
   mediaQueries,
   plainButtonRule,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
 
@@ -12,7 +11,7 @@ import {
   HEADER_HEIGHT_MOBILE,
   HEADER_HORIZONTAL_PADDING,
   ZINDEX_FRAME_TOGGLE,
-  TRANSITION_MS
+  TRANSITION_MS,
 } from '../constants'
 
 const SIZE = 28
@@ -26,7 +25,7 @@ const Toggle = ({ expanded, onClick, ...props }) => {
       <SearchMenuIcon
         style={{
           opacity: expanded ? 0.000001 : 1, // hacky fix for browser rendering issue in FF
-          transition: `opacity ${TRANSITION_MS}ms ease-out`
+          transition: `opacity ${TRANSITION_MS}ms ease-out`,
         }}
         {...colorScheme.set('fill', 'text')}
         size={SIZE}
@@ -54,8 +53,8 @@ const styles = {
     paddingRight: HEADER_HORIZONTAL_PADDING + 4,
     lineHeight: 0,
     [mediaQueries.mUp]: {
-      padding: PADDING_DESKTOP
-    }
+      padding: PADDING_DESKTOP,
+    },
   }),
   closeButton: css({
     position: 'absolute',
@@ -64,9 +63,9 @@ const styles = {
     top: PADDING_MOBILE,
     transition: `opacity ${TRANSITION_MS}ms ease-out`,
     [mediaQueries.mUp]: {
-      top: PADDING_DESKTOP
-    }
-  })
+      top: PADDING_DESKTOP,
+    },
+  }),
 }
 
 export default Toggle

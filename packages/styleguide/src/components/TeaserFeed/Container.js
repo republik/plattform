@@ -19,16 +19,20 @@ const styles = {
     margin: 0,
     [mUp]: {
       paddingBottom: 40,
-      paddingTop: '10px'
-    }
+      paddingTop: '10px',
+    },
   }),
   link: css({
     color: 'inherit',
-    textDecoration: 'none'
-  })
+    textDecoration: 'none',
+  }),
+  dense: css({
+    paddingBottom: 8,
+    paddingTop: 8,
+  }),
 }
 
-const MoreIconWithProps = props => (
+const MoreIconWithProps = (props) => (
   <IconButton title='Mehr' Icon={MoreIcon} {...props} />
 )
 
@@ -39,10 +43,12 @@ const Teaser = ({
   series,
   repoId,
   title,
-  path,
+  href,
   Link,
   highlighted,
-  menu
+  menu,
+  dense,
+  nonInteractive,
 }) => {
   const [colorScheme] = useColorContext()
 
@@ -50,20 +56,21 @@ const Teaser = ({
     format,
     series,
     repoId,
-    path,
-    title
+    path: href,
+    title,
   })
 
   return (
     <div
       {...styles.main}
+      {...(dense && styles.dense)}
       {...colorScheme.set('borderColor', formatColor || 'text', 'format')}
       {...(highlighted && colorScheme.set('backgroundColor', 'alert'))}
     >
       {menu && (
         <div
           style={{
-            float: 'right'
+            float: 'right',
           }}
         >
           <CalloutMenu Element={MoreIconWithProps} align='right'>
@@ -73,11 +80,15 @@ const Teaser = ({
       )}
       {formatLine.title && (
         <Format color={formatColor}>
-          <Link href={formatLine.path} passHref>
-            <a {...styles.link} href={formatLine.path}>
-              {formatLine.title}
-            </a>
-          </Link>
+          {!nonInteractive ? (
+            <Link href={formatLine.path} passHref>
+              <a {...styles.link} href={formatLine.path}>
+                {formatLine.title}
+              </a>
+            </Link>
+          ) : (
+            formatLine.title
+          )}
         </Format>
       )}
       {children}
@@ -90,7 +101,7 @@ Teaser.propTypes = {
   color: PropTypes.string,
   format: PropTypes.object,
   interaction: PropTypes.bool,
-  Link: PropTypes.func.isRequired // a react component
+  Link: PropTypes.func.isRequired, // a react component
 }
 
 export default Teaser

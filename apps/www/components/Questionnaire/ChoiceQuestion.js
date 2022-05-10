@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { css } from 'glamor'
 import questionStyles from './questionStyles'
 import { nest } from 'd3-collection'
@@ -8,7 +8,7 @@ import {
   Interaction,
   mediaQueries,
   Checkbox,
-  Radio
+  Radio,
 } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 const { H2, H3, P } = Interaction
@@ -18,30 +18,30 @@ const styles = {
     display: 'flex',
     width: '100%',
     flexWrap: 'wrap',
-    marginTop: 20
+    marginTop: 20,
   }),
   optionGroup: css({
-    width: '100%'
+    width: '100%',
   }),
   optionGroupHeader: css({
     marginTop: 5,
-    marginBottom: 15
+    marginBottom: 15,
   }),
   optionList: css({
     columnCount: 1,
     [mediaQueries.mUp]: {
-      columnCount: 2
+      columnCount: 2,
     },
     [mediaQueries.lUp]: {
-      columnCount: 3
-    }
+      columnCount: 3,
+    },
   }),
   option: css({
     marginTop: 0,
     marginBottom: 5,
     display: 'table',
-    breakInside: 'avoid-column'
-  })
+    breakInside: 'avoid-column',
+  }),
 }
 
 class ChoiceQuestion extends Component {
@@ -49,13 +49,13 @@ class ChoiceQuestion extends Component {
     super(props)
     this.state = {
       answerId:
-        (props.question.userAnswer && props.question.userAnswer.id) || uuid()
+        (props.question.userAnswer && props.question.userAnswer.id) || uuid(),
     }
   }
-  handleChange = value => {
+  handleChange = (value) => {
     const {
       onChange,
-      question: { userAnswer, cardinality }
+      question: { userAnswer, cardinality },
     } = this.props
     const nextValue = new Set(userAnswer ? userAnswer.payload.value : [])
 
@@ -78,12 +78,12 @@ class ChoiceQuestion extends Component {
   render() {
     const {
       question: { text, userAnswer, cardinality, options },
-      t
+      t,
     } = this.props
     const multipleAllowed = cardinality === 0 || cardinality > 1
     const OptionComponent = multipleAllowed ? Checkbox : Radio
     const optionGroups = nest()
-      .key(o => o.category)
+      .key((o) => o.category)
       .entries(options)
     const userAnswerValues = userAnswer ? userAnswer.payload.value : []
 
@@ -106,7 +106,7 @@ class ChoiceQuestion extends Component {
                   <div key={i} {...styles.option}>
                     <OptionComponent
                       onChange={() => this.handleChange(o.value)}
-                      checked={userAnswerValues.some(v => v === o.value)}
+                      checked={userAnswerValues.some((v) => v === o.value)}
                     >
                       {o.label}
                     </OptionComponent>

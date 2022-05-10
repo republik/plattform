@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import { Controlled as CodeMirror } from 'react-codemirror2'
@@ -27,7 +27,7 @@ const CodeMirrorField = ({
   options,
   onFocus,
   onBlur,
-  linesShown
+  linesShown,
 }) => {
   const [colorScheme] = useColorContext()
   const showLabel = label || linesShown || error
@@ -41,17 +41,17 @@ const CodeMirrorField = ({
           height: 'auto',
           ...fontStyles.monospaceRegular,
           fontSize: 14,
-          color: colorScheme.getCSSColor('text')
+          color: colorScheme.getCSSColor('text'),
         },
         '& .CodeMirror-lines': {
-          backgroundColor: colorScheme.getCSSColor('hover')
+          backgroundColor: colorScheme.getCSSColor('hover'),
         },
         '& .CodeMirror-cursor': {
           width: 1,
-          background: colorScheme.getCSSColor('text')
-        }
+          background: colorScheme.getCSSColor('text'),
+        },
       }),
-    [colorScheme]
+    [colorScheme],
   )
 
   return (
@@ -72,7 +72,7 @@ const CodeMirrorField = ({
           linesShown
             ? {
                 maxHeight: Math.round(LINE_HEIGHT * linesShown),
-                overflowY: 'scroll'
+                overflowY: 'scroll',
               }
             : null
         }
@@ -85,7 +85,7 @@ const CodeMirrorField = ({
             lineNumbers: true,
             line: true,
             lineWrapping: true,
-            ...options
+            ...options,
           }}
           onBeforeChange={(_, __, value) => {
             onChange(value)
@@ -112,7 +112,7 @@ export const PlainEditor = ({
   onPaste,
   mode,
   linesShown,
-  readOnly
+  readOnly,
 }) => {
   return (
     <CodeMirrorField
@@ -121,7 +121,7 @@ export const PlainEditor = ({
       linesShown={linesShown}
       options={{
         mode: mode || 'text',
-        readOnly
+        readOnly,
       }}
       onChange={onChange}
       onPaste={onPaste}
@@ -129,8 +129,8 @@ export const PlainEditor = ({
   )
 }
 
-const stringify = json => (json ? JSON.stringify(json, null, 2) : '')
-const safeParse = string => {
+const stringify = (json) => (json ? JSON.stringify(json, null, 2) : '')
+const safeParse = (string) => {
   let json
   try {
     json = JSON.parse(string)
@@ -143,7 +143,7 @@ export const JSONEditor = ({
   config,
   onChange,
   linesShown,
-  readOnly
+  readOnly,
 }) => {
   const [isEditing, setEditing] = useState()
   const [stateValue, setStateValue] = useState(stringify(config))
@@ -164,7 +164,7 @@ export const JSONEditor = ({
         onChangeRef.current(validJsonRef.current)
       }
     }, 500),
-    []
+    [],
   )
 
   // set editor text with well formatted config from saved state when not isEditing
@@ -196,9 +196,9 @@ export const JSONEditor = ({
         matchBrackets: true,
         autoCloseBrackets: true,
         autofocus: true,
-        readOnly
+        readOnly,
       }}
-      onChange={newValue => {
+      onChange={(newValue) => {
         setStateValue(newValue)
         validJsonRef.current = safeParse(newValue)
         slowSave()
@@ -210,5 +210,5 @@ export const JSONEditor = ({
 CodeMirrorField.propTypes = {
   label: PropTypes.string.isRequired,
   value: PropTypes.object,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
 }

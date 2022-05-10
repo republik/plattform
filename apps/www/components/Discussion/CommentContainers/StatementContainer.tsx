@@ -1,4 +1,4 @@
-import React, { ReactElement, useMemo, useState } from 'react'
+import { ReactElement, useMemo, useState } from 'react'
 import { StatementNode } from '@project-r/styleguide'
 import Link from 'next/link'
 import { useDiscussion } from '../context/DiscussionContext'
@@ -26,14 +26,11 @@ const StatementContainer = ({ comment, tagMappings }: Props): ReactElement => {
 
   const {
     discussion,
-    overlays: { shareOverlay }
+    overlays: { shareOverlay },
   } = useDiscussion()
   const { shareHandler } = shareOverlay
-  const {
-    upVoteCommentHandler,
-    downVoteCommentHandler,
-    unVoteCommentHandler
-  } = useVoteCommentHandlers()
+  const { upVoteCommentHandler, downVoteCommentHandler, unVoteCommentHandler } =
+    useVoteCommentHandlers()
   const unpublishCommentHandler = useUnpublishCommentHandler()
   const reportCommentHandler = useReportCommentHandler()
 
@@ -42,11 +39,11 @@ const StatementContainer = ({ comment, tagMappings }: Props): ReactElement => {
       comment,
       actions: {
         unpublishCommentHandler,
-        reportCommentHandler
+        reportCommentHandler,
       },
       roles: me?.roles ?? [],
       t,
-      setEditMode
+      setEditMode,
     })
   }, [comment, me?.roles, t, unpublishCommentHandler, reportCommentHandler])
 
@@ -73,23 +70,18 @@ const StatementContainer = ({ comment, tagMappings }: Props): ReactElement => {
       comment={comment}
       t={t}
       actions={{
+        handleShare: shareHandler,
+      }}
+      voteActions={{
         handleUpVote: upVoteCommentHandler,
         handleDownVote: downVoteCommentHandler,
         handleUnVote: unVoteCommentHandler,
-        handleShare: shareHandler
       }}
       menuItems={menuItems}
       tagMappings={tagMappings}
       isHighlighted={isFocused}
       disableVoting={!discussion.userCanComment}
-      Link={Link}
       CommentLink={CommentLink}
-      focusHref={format(getFocusHref(discussion, comment))}
-      profileHref={
-        comment?.displayAuthor?.slug
-          ? `~${comment.displayAuthor.slug}`
-          : undefined
-      }
     />
   )
 }

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Map } from 'immutable'
 import MetaForm from '../../utils/MetaForm'
 import {
@@ -12,7 +12,7 @@ import {
   SHARE_IMAGE_DEFAULTS,
   SHARE_IMAGE_HEIGHT,
   SHARE_IMAGE_WIDTH,
-  Radio
+  Radio,
 } from '@project-r/styleguide'
 import ImageInput from '../../utils/ImageInput'
 import withT from '../../../../lib/withT'
@@ -23,16 +23,16 @@ const imageHeightRatio = SHARE_IMAGE_HEIGHT / SHARE_IMAGE_WIDTH
 
 const previews = {
   facebook: SharePreviewFacebook,
-  twitter: SharePreviewTwitter
+  twitter: SharePreviewTwitter,
 }
 
 const BaseForm = ({ socialKey, data, onInputChange }) => {
   const initValues = Map([
     [socialKey + 'Title', ''],
-    [socialKey + 'Description', '']
+    [socialKey + 'Description', ''],
   ])
   const initData = initValues.merge(
-    data.filter((_, key) => initValues.has(key))
+    data.filter((_, key) => initValues.has(key)),
   )
   return (
     <MetaForm
@@ -76,21 +76,21 @@ const GenerateImage = ({ data, onInputChange, format }) => (
     onFontSizeInc={() =>
       onInputChange('shareFontSize')(
         undefined,
-        (data.get('shareFontSize') || 60) + 1
+        (data.get('shareFontSize') || 60) + 1,
       )
     }
     onFontSizeDec={() =>
       onInputChange('shareFontSize')(
         undefined,
-        Math.max(data.get('shareFontSize') - 1, 0)
+        Math.max(data.get('shareFontSize') - 1, 0),
       )
     }
     inverted={data.get('shareInverted')}
     onInvertedChange={onInputChange('shareInverted')}
     text={data.get('shareText')}
-    onTextChange={e => onInputChange('shareText')(undefined, e.target.value)}
+    onTextChange={(e) => onInputChange('shareText')(undefined, e.target.value)}
     textPosition={data.get('shareTextPosition')}
-    onTextPositionChange={item =>
+    onTextPositionChange={(item) =>
       onInputChange('shareTextPosition')(undefined, item.value)
     }
   />
@@ -115,30 +115,30 @@ const ShareImageForm = withT(({ t, editor, node, onInputChange, format }) => {
     node.data.get('shareTextPosition')
   )
 
-  const setGenerated = generated => {
+  const setGenerated = (generated) => {
     if (generated) {
-      editor.change(change => {
+      editor.change((change) => {
         change.setNodeByKey(node.key, {
           data: node.data
             .set(
               'shareTextPosition',
               node.data.get('shareTextPosition') ||
-                SHARE_IMAGE_DEFAULTS.textPosition
+                SHARE_IMAGE_DEFAULTS.textPosition,
             )
             .set(
               'shareFontSize',
-              node.data.get('shareFontSize') || SHARE_IMAGE_DEFAULTS.fontSize
-            )
+              node.data.get('shareFontSize') || SHARE_IMAGE_DEFAULTS.fontSize,
+            ),
         })
       })
     } else {
-      editor.change(change => {
+      editor.change((change) => {
         change.setNodeByKey(node.key, {
           data: node.data
             .remove('shareInverted')
             .remove('shareTextPosition')
             .remove('shareFontSize')
-            .remove('shareText')
+            .remove('shareText'),
         })
       })
     }
@@ -171,7 +171,7 @@ const ShareImageForm = withT(({ t, editor, node, onInputChange, format }) => {
           />
         </>
       )}
-      {SOCIAL_MEDIA.map(socialKey => (
+      {SOCIAL_MEDIA.map((socialKey) => (
         <Fragment key={socialKey}>
           <BaseForm
             socialKey={socialKey}

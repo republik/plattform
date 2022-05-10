@@ -1,4 +1,3 @@
-import React from 'react'
 import { range, max } from 'd3-array'
 import { color } from 'd3-color'
 import { fontStyles, useColorContext } from '@project-r/styleguide'
@@ -23,7 +22,7 @@ export const axes = [
   { rot: 0, text: 'Restriktive\nMigrationspolitik' },
   { rot: base * 2, text: 'Ausgebauter\nUmweltschutz' },
   { rot: -base * 4, text: 'Ausgebauter\nSozialstaat' },
-  { rot: -base * 2, text: 'Liberale\nGesellschaft' }
+  { rot: -base * 2, text: 'Liberale\nGesellschaft' },
 ]
 const nAxes = axes.length
 
@@ -33,7 +32,7 @@ const Spider = ({
   fillOpacity = 0.7,
   size,
   reference,
-  label = true
+  label = true,
 }) => {
   const [colorScheme] = useColorContext()
 
@@ -45,7 +44,7 @@ const Spider = ({
     return {
       x: getHorizontalPosition(i, cx, (d / maxDomain) * factor),
       y: getVerticalPosition(i, cy, (d / maxDomain) * factor),
-      value: d
+      value: d,
     }
   })
 
@@ -55,15 +54,15 @@ const Spider = ({
     max(reference.map((d, i) => (d < 0 ? 0 : Math.abs(d - data[i]))))
 
   const radius = factor * Math.min(cx, cy)
-  const levelFactors = range(0, levels).map(level => {
+  const levelFactors = range(0, levels).map((level) => {
     return radius * ((level + 1) / levels)
   })
 
   return (
     <svg width={size} height={size}>
-      {levelFactors.map(levelFactor => (
+      {levelFactors.map((levelFactor) => (
         <g key={levelFactor}>
-          {range(0, nAxes).map(i => (
+          {range(0, nAxes).map((i) => (
             <line
               key={i}
               {...colorScheme.set('stroke', 'text')}
@@ -110,7 +109,7 @@ const Spider = ({
                 {...colorScheme.set('fill', 'text')}
                 style={{
                   ...fontStyles[highlight ? 'sansSerifMedium' : 'sansSerif'],
-                  fontSize: highlight ? 11 : 10
+                  fontSize: highlight ? 11 : 10,
                 }}
                 textAnchor='middle'
               >
@@ -137,7 +136,7 @@ const Spider = ({
         stroke={fill}
         strokeWidth='1'
         points={points
-          .map(p => {
+          .map((p) => {
             return [p.x, p.y].join(',')
           })
           .join(' ')}
@@ -156,13 +155,13 @@ const Spider = ({
                     getHorizontalPosition(
                       i + 0.9,
                       cx,
-                      (nd / maxDomain) * factor
+                      (nd / maxDomain) * factor,
                     ),
-                    getVerticalPosition(i + 0.9, cy, (nd / maxDomain) * factor)
+                    getVerticalPosition(i + 0.9, cy, (nd / maxDomain) * factor),
                   ]
                 : [
                     getHorizontalPosition(i, cx, (d / maxDomain) * factor),
-                    getVerticalPosition(i, cy, (d / maxDomain) * factor)
+                    getVerticalPosition(i, cy, (d / maxDomain) * factor),
                   ]
 
             const np =
@@ -171,13 +170,13 @@ const Spider = ({
                     getHorizontalPosition(
                       i + 0.1,
                       cx,
-                      (d / maxDomain) * factor
+                      (d / maxDomain) * factor,
                     ),
-                    getVerticalPosition(i + 0.1, cy, (d / maxDomain) * factor)
+                    getVerticalPosition(i + 0.1, cy, (d / maxDomain) * factor),
                   ]
                 : [
                     getHorizontalPosition(i + 1, cx, (nd / maxDomain) * factor),
-                    getVerticalPosition(i + 1, cy, (nd / maxDomain) * factor)
+                    getVerticalPosition(i + 1, cy, (nd / maxDomain) * factor),
                   ]
 
             return (
@@ -214,7 +213,7 @@ const Spider = ({
               <text
                 style={{
                   ...fontStyles.sansSerifMedium,
-                  fontSize: 11
+                  fontSize: 11,
                 }}
                 fill={color(fill).darker(1.5)}
                 textAnchor='middle'

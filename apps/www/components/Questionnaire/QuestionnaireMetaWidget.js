@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { Component, Fragment } from 'react'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
@@ -17,7 +17,7 @@ import {
   TeaserFrontTileRow,
   TeaserFrontTile,
   TeaserFrontTileHeadline,
-  TeaserFrontLead
+  TeaserFrontLead,
 } from '@project-r/styleguide'
 import { countFormat } from '../../lib/utils/format'
 import withT from '../../lib/withT'
@@ -33,11 +33,11 @@ const styles = {
     fontSize: 80,
     [mediaQueries.lUp]: {
       lineHeight: '140px',
-      fontSize: 116
-    }
+      fontSize: 116,
+    },
   }),
   lead: css({
-    ...fontStyles.sansSerifRegular23
+    ...fontStyles.sansSerifRegular23,
   }),
   big: css({
     fontFamily: fontFamilies.sansSerifMedium,
@@ -48,9 +48,9 @@ const styles = {
     [mediaQueries.lUp]: {
       marginBottom: 35,
       lineHeight: '72px',
-      fontSize: 64
-    }
-  })
+      fontSize: 64,
+    },
+  }),
 }
 
 const ThankYouTile = ({ t }) => (
@@ -102,8 +102,8 @@ class QuestionnaireMetaWidget extends Component {
             questionnaire: {
               endDate,
               userHasSubmitted,
-              turnout: { submitted }
-            }
+              turnout: { submitted },
+            },
           } = data
 
           const hasEnded = new Date() > new Date(endDate)
@@ -161,7 +161,7 @@ export default compose(
   withT,
   graphql(query, {
     options: {
-      pollInterval: STATUS_POLL_INTERVAL_MS
-    }
-  })
+      pollInterval: STATUS_POLL_INTERVAL_MS,
+    },
+  }),
 )(QuestionnaireMetaWidget)

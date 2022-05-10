@@ -8,7 +8,7 @@ export default ({
   target,
   primary,
   block,
-  attributes
+  attributes,
 }) => (
   <>
     <Button

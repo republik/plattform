@@ -461,18 +461,6 @@
       "value": "Die Republik ist eine Dienstleistung für interessierte Menschen in einer komplexen Welt. Wir recherchieren, fragen nach, ordnen ein und decken auf. Und liefern Ihnen Fakten und Zusammenhänge als Grundlage für Ihre eigenen Überlegungen und Entscheidungen."
     },
     {
-      "key": "marketing/page/sections/link/covid19",
-      "value": "Hier kostenlos abonnieren."
-    },
-    {
-      "key": "marketing/page/sections/description/covid19",
-      "value": "Brauchbares zur Pandemie – jeden Montag um 19 Uhr. Informationen für alle. Auch ohne Republik-Abo oder Mitgliedschaft."
-    },
-    {
-      "key": "marketing/page/sections/title/covid19",
-      "value": "Covid-19-Uhr-Newsletter"
-    },
-    {
       "key": "marketing/page/sections/description/briefings",
       "value": "Durch die Woche mit der Republik: Das Datenbriefing «Auf lange Sicht» am Montag, das Justiz-Briefing «Am Gericht» am Mittwoch, das «Briefing aus Bern» am Donnerstag und «Was diese Woche wichtig war» am Freitag."
     },
@@ -490,7 +478,7 @@
     },
     {
       "key": "marketing/page/sections/description/kolumnen",
-      "value": "Regelmässig eine Kolumne – am Dienstag von Daniel Strassberg und jeden Samstag von Daniel Binswanger. Dazu alle zwei Wochen dienstags Nicoletta Cimminos Audio-Kolumne «Sprachnotizen»."
+      "value": "Regelmässig eine Kolumne: am Dienstag von Daniel Strassberg oder Kunsthistorikerin Kia Vahland. Jeden Samstag von Daniel Binswanger. Und dazu alle zwei Wochen Nicoletta Cimminos Audiokolumne «Sprachnotizen»."
     },
     {
       "key": "marketing/page/sections/title/kolumnen",
@@ -674,7 +662,7 @@
     },
     {
       "key": "Account/Update/email/hint",
-      "value": "Achtung: Wenn Sie Ihre E-Mail-Adresse ändern, werden Sie auf allen Geräten abgemeldet und Sie können sich danach ausschliesslich mit der neuen E-Mail anmelden!"
+      "value": "Achtung: Wenn Sie Ihre E-Mail-Adresse ändern, werden Sie auf allen Geräten abgemeldet und Sie können sich danach ausschliesslich mit der neuen E-Mail-Adresse anmelden!"
     },
     {
       "key": "Account/Update/email/error/invalid",
@@ -857,10 +845,6 @@
       "value": "Sie müssen angemeldet sein, um Ihre Newsletter-Einstellungen zu ändern."
     },
     {
-      "key": "account/newsletterSubscriptions/noMembership",
-      "value": "Journalismus kostet. Deshalb erhalten Sie die Republik-Newsletter erst wenn Sie eine aktive Mitgliedschaft oder ein aktives Abo haben."
-    },
-    {
       "key": "account/newsletterSubscriptions/unsubscribed",
       "value": "Sie haben alle Newsletter pausiert. Möchten Sie die Newsletter wieder erhalten?"
     },
@@ -891,18 +875,6 @@
     {
       "key": "account/newsletterSubscriptions/DAILY/description",
       "value": "Die aktuellsten Beiträge der Republik. Jeden Morgen in Ihrem virtuellen Briefkasten."
-    },
-    {
-      "key": "account/newsletterSubscriptions/WEEKLY/label",
-      "value": "Wochenend-Newsletter"
-    },
-    {
-      "key": "account/newsletterSubscriptions/WEEKLY/frequency",
-      "value": "Samstags um 5 Uhr"
-    },
-    {
-      "key": "account/newsletterSubscriptions/WEEKLY/description",
-      "value": "Lektüre für das Wochenende samt Rückblick auf die wichtigsten Geschichten der vergangenen Woche."
     },
     {
       "key": "account/newsletterSubscriptions/PROJECTR/label",
@@ -1005,12 +977,44 @@
       "value": "Die Funktion ist nur für Mitglieder und Abonnentinnen die Republik zugänglich."
     },
     {
+      "key": "account/pledges/free-delivery",
+      "value": "Kostenlose Lieferung"
+    },
+    {
       "key": "account/pledges/title",
       "value": "Einkäufe"
     },
     {
+      "key": "account/pledges/payment/methods/loading",
+      "value": "Zahlungsmittel werden geladen"
+    },
+    {
+      "key": "account/pledges/payment/methods/wallet/loading",
+      "value": "{wallet} lädt noch."
+    },
+    {
+      "key": "account/pledges/payment/methods/wallet/unavailable",
+      "value": "{wallet} ist nicht verfügbar. Bitte überprüfen Sie Ihre Einstellungen, geben Sie Ihre Kreditkarte von Hand ein oder wählen Sie eine andere Zahlungsart."
+    },
+    {
+      "key": "account/pledges/payment/methods/wallet/exception",
+      "value": "{wallet} konnte nicht geladen werden. Mögliche Ursachen: eine wackelige Internetverbindung, ein temporärer Ausfall, ein VPN oder Ihre Browsererweiterungen. Wählen Sie bitte eine andere Zahlungsart oder versuchen Sie es in einigen Sekunden erneut."
+    },
+    {
+      "key": "account/pledges/payment/canceled",
+      "value": "Die Zahlung wurde abgebrochen."
+    },
+    {
       "key": "account/pledges/payment/method/STRIPE",
       "value": "Kreditkarte"
+    },
+    {
+      "key": "account/pledges/payment/method/STRIPE-WALLET-APPLE-PAY",
+      "value": "Apple Pay"
+    },
+    {
+      "key": "account/pledges/payment/method/STRIPE-WALLET-GOOGLE-PAY",
+      "value": "Google Pay"
     },
     {
       "key": "account/pledges/payment/method/POSTFINANCECARD",
@@ -1023,6 +1027,10 @@
     {
       "key": "account/pledges/payment/method/PAYMENTSLIP",
       "value": "Rechnung"
+    },
+    {
+      "key": "account/pledges/payment/your-payment-data",
+      "value": "Ihre Kreditkartendaten"
     },
     {
       "key": "account/pledges/payment/status/generic/WAITING",
@@ -1102,7 +1110,7 @@
     },
     {
       "key": "Account/Access/Campaigns/Form/title/0",
-      "value": "Zugriff teilen"
+      "value": "Gäste einladen"
     },
     {
       "key": "Account/Access/Campaigns/Form/title/other",
@@ -1110,7 +1118,15 @@
     },
     {
       "key": "Account/Access/Campaigns/Form/explanation",
-      "value": "Beschenkte erhalten eine Einladungs-E-Mail mit Ihrem Namen und Ihrer E-Mail-Adresse, einem Gutscheincode und {linkClaim}-Link, mit dem der Gutscheincode eingelöst werden kann."
+      "value": "Ihre Gäste erhalten eine Einladungs-E-Mail mit Ihrem Namen und Ihrer E-Mail-Adresse sowie einen Link, über den sie ihren Probezugriff einlösen können."
+    },
+    {
+      "key": "Account/Access/Campaigns/login/title",
+      "value": "Anmelden und Republik verschenken"
+    },
+    {
+      "key": "Account/Access/Campaigns/becomeMamber/title",
+      "value": "Mitglied werden und Republik verschenken"
     },
     {
       "key": "Account/Access/Campaigns/Form/explanation/linkClaim",
@@ -1134,7 +1150,7 @@
     },
     {
       "key": "Account/Access/Campaigns/Form/button/submit",
-      "value": "Teilen"
+      "value": "Jetzt einladen"
     },
     {
       "key": "Account/Access/Campaigns/Form/input/email/label",
@@ -1865,6 +1881,14 @@
       "value": "10 Sekunden zurück"
     },
     {
+      "key": "styleguide/AudioPlayer/expand",
+      "value": "Audioplayer vergrössern"
+    },
+    {
+      "key": "styleguide/AudioPlayer/shrink",
+      "value": "Audioplayer minimieren"
+    },
+    {
       "key": "styleguide/AudioPlayer/close",
       "value": "Audioplayer schliessen"
     },
@@ -1998,6 +2022,14 @@
     },
     {
       "key": "styleguide/Collapsable/collapse",
+      "value": "Weniger"
+    },
+    {
+      "key": "styleguide/Collapsable/table/expand",
+      "value": "Alles anzeigen"
+    },
+    {
+      "key": "styleguide/Collapsable/table/collapse",
       "value": "Weniger"
     },
     {
@@ -2633,10 +2665,6 @@
       "value": "Kontaktinformationen des Zahlenden"
     },
     {
-      "key": "pledge/contact/signedinAs",
-      "value": "Sie sind angemeldet als: {nameOrEmail}"
-    },
-    {
       "key": "pledge/contact/pastPledges/1",
       "value": "Sie haben bereits einmal mitgemacht."
     },
@@ -2650,7 +2678,7 @@
     },
     {
       "key": "pledge/contact/signIn/show",
-      "value": "Schon mal ausgefüllt?\n"
+      "value": "Haben Sie bereits ein Konto? Melden Sie sich an.\n"
     },
     {
       "key": "pledge/contact/signIn/customMe",
@@ -2678,15 +2706,15 @@
     },
     {
       "key": "pledge/contact/email/label",
-      "value": "Ihre E-Mail"
+      "value": "Ihre E-Mail-Adresse"
     },
     {
       "key": "pledge/contact/email/error/empty",
-      "value": "E-Mail fehlt"
+      "value": "E-Mail-Adresse fehlt"
     },
     {
       "key": "pledge/contact/email/error/invalid",
-      "value": "E-Mail ungültig"
+      "value": "E-Mail-Adresse ungültig"
     },
     {
       "key": "pledge/submit/package/error",
@@ -2730,7 +2758,7 @@
     },
     {
       "key": "pledge/submit/emailVerify/note",
-      "value": "Diese E-Mail-Adresse wurde schon einmal verwendet. Falls das Ihre E-Mail ist, klicken Sie bitte auf «anmelden»."
+      "value": "Diese E-Mail-Adresse wurde schon einmal verwendet. Falls das Ihre E-Mail-Adresse ist, klicken Sie bitte auf «anmelden»."
     },
     {
       "key": "pledge/submit/emailVerify/done",
@@ -2985,10 +3013,6 @@
       "value": "{count} Beiträge"
     },
     {
-      "key": "section/feed/payNote",
-      "value": "Sie brauchen eine Mitgliedschaft, um die Beiträge zu lesen."
-    },
-    {
       "key": "article/payNote/ios/before",
       "value": "<b>Danke für Ihre Neugier!</b> Dieser Beitrag wurde grosszügigerweise für Sie von einer unserer Verlegerinnen und Verleger freigeschaltet."
     },
@@ -3173,8 +3197,28 @@
       "value": "Zum Dialog"
     },
     {
+      "key": "article/actionbar/discussion/call-to-action/empty",
+      "value": "Reden Sie mit"
+    },
+    {
+      "key": "article/actionbar/discussion/call-to-action",
+      "value": "Reden Sie mit: {count} Dialog-Beiträge"
+    },
+    {
       "key": "article/actionbar/userprogress",
       "value": "Leseposition"
+    },
+    {
+      "key": "article/syntheticReadAloud/title",
+      "value": "Beitrag von synthetischer Stimme vorlesen lassen."
+    },
+    {
+      "key": "article/syntheticReadAloud/errorLink",
+      "value": "Fehler melden"
+    },
+    {
+      "key": "article/readAloud/title",
+      "value": "Beitrag vorlesen lassen"
     },
     {
       "key": "article/series/episode",
@@ -3199,6 +3243,14 @@
     {
       "key": "article/pdf/images/other",
       "value": "mit {count} Bildern"
+    },
+    {
+      "key": "article/pdf/size/A4",
+      "value": "A4"
+    },
+    {
+      "key": "article/pdf/size/A5",
+      "value": "A5 (Beta)"
     },
     {
       "key": "article/autodiscussionteaser/title",
@@ -3542,7 +3594,7 @@
     },
     {
       "key": "memberships/latestPeriod/renew/true/autoPay/false",
-      "value": "Bezahlt bis am {formattedEndDate}"
+      "value": "Erneuerung am {formattedEndDate} fällig"
     },
     {
       "key": "memberships/MONTHLY_ABO/latestPeriod/renew/true/autoPay/false",
@@ -3625,6 +3677,10 @@
       "value": "überprüfen"
     },
     {
+      "key": "memberships/claim/personal/lead",
+      "value": "{name} schenkt Ihnen einen Republik-Probezugang"
+    },
+    {
       "key": "memberships/claim/access/lead",
       "value": "Geteilten Zugriff aktivieren"
     },
@@ -3639,6 +3695,26 @@
     {
       "key": "memberships/sequenceNumber/label",
       "value": "Abo #{sequenceNumber}"
+    },
+    {
+      "key": "Share/chart/title",
+      "value": "Aktuell lesen {currentActiveAccessGrants} Personen die Republik mit einem geteilten Abo"
+    },
+    {
+      "key": "Share/chart/lead",
+      "value": "Anzahl geteilter Zugriffe während der letzten {days} Tage"
+    },
+    {
+      "key": "Share/chart/after",
+      "value": "Seit dem {startDate} wurden {invites} Personen eingeladen, die Republik kennenzulernen. {claims} haben den Probezugriff eingelöst, und {pledges} durften wir in der Verlagsetage begrüssen – dank Ihrem Engagement."
+    },
+    {
+      "key": "Share/chart/legend",
+      "value": "Es zählen Mitgliedschaften, Abos und Spenden innerhalb von 30 Tagen nach Probezugriff. Datenstand: {formattedDateTime}"
+    },
+    {
+      "key": "Share/chart/annotation/lastBucket",
+      "value": "Aktuell"
     },
     {
       "key": "notifications/pageTitle",
@@ -4567,6 +4643,10 @@
     {
       "key": "statement/viewLive",
       "value": "ansehen"
+    },
+    {
+      "key": "statement/404",
+      "value": "Das gewünschte Statement ist zurzeit nicht verfügbar."
     },
     {
       "key": "statement/share/overlayTitle",
@@ -6209,6 +6289,34 @@
       "value": "<b>Herzlich willkommen!</b> Sie können sich in den kommenden Tagen ohne Einschränkung bei uns umsehen."
     },
     {
+      "key": "account/newsletterSubscriptions/noMembership",
+      "value": "Journalismus kostet. Deshalb erhalten Sie den 7-Uhr-Newsletter und den Wochenend-Newsletter erst wenn Sie eine aktive Mitgliedschaft oder ein aktives Abo haben."
+    },
+    {
+      "key": "section/feed/payNote",
+      "value": "Sie brauchen eine Mitgliedschaft oder Abo, um die Beiträge zu lesen."
+    },
+    {
+      "key": "section/feed/payNote/sample",
+      "value": "Sie brauchen eine Mitgliedschaft oder Abo, um alle Beiträge zu lesen."
+    },
+    {
+      "key": "account/newsletterSubscriptions/WEEKLY/description",
+      "value": "Lektüre für das Wochenende samt Rückblick auf die Geschichten der vergangenen Woche."
+    },
+    {
+      "key": "marketing/page/sections/title/weekly",
+      "value": "Wochenend-Newsletter"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WEEKLY/label",
+      "value": "Wochenend-Newsletter"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WEEKLY/frequency",
+      "value": "Samstags um 5 Uhr"
+    },
+    {
       "key": "package/ABO/description",
       "value": "Es freut uns, dass Sie dabei sind! Mit Ihrem jährlichen Beitrag sind Sie Mitglied der Project R Genossenschaft. Und damit zu einem kleinen Teil Verlegerin oder Verleger der Republik. Sie erhalten ab sofort unser Magazin."
     },
@@ -6421,52 +6529,56 @@
       "value": "Google"
     },
     {
-      "key": "article/tryNote/211027-v1/before",
-      "value": "<b>Testen Sie die Republik 21 Tage lang gratis und unverbindlich.</b>"
-    },
-    {
-      "key": "article/tryNote/211027-v1/after",
-      "value": "Erhalten Sie für 21 Tage kostenlos und unverbindlich Zugang zu allen Beiträgen der Republik – im Web, in der Republik-App oder als Newsletter:"
-    },
-    {
-      "key": "article/payNote/200313-v1/before",
-      "value": "Unabhängiger Journalismus kostet. Die Republik ist werbefrei und wird finanziert von ihren Leserinnen. Trotzdem können Sie diesen Beitrag lesen.\n\n<b>Wenn Sie weiterhin unabhängigen Journalismus wie diesen lesen wollen, handeln Sie jetzt: Kommen Sie an Bord!</b>"
-    },
-    {
-      "key": "article/payNote/200313-v1/before/buy/button",
+      "key": "article/payNote/default/button",
       "value": "Jahresmitgliedschaft"
     },
     {
-      "key": "article/payNote/200313-v1/before/secondary/label",
+      "key": "article/payNote/default/secondary/label",
       "value": "Einen Monat für 22.–"
     },
     {
-      "key": "article/payNote/200313-v1/before/secondary/link",
+      "key": "article/payNote/default/secondary/link",
       "value": "/angebote?package=MONTHLY_ABO"
     },
     {
-      "key": "article/payNote/200313-v1/before/note",
-      "value": "<a href=\"/\">Mehr Informationen zur Republik.</a>"
+      "key": "article/payNote/default/note",
+      "value": "<a href=\\\"/\\\">Mehr Informationen zur Republik.</a>"
     },
     {
-      "key": "article/payNote/200313-v1/after",
+      "key": "article/payNote/220404-v1/before",
+      "value": "Journalismus kostet. Dass Sie diesen Beitrag trotzdem lesen können, verdanken Sie den über 28'000 Leserinnen, die die Republik schon finanzieren. Wenn auch Sie unabhängigen Journalismus möglich machen wollen: Kommen Sie an Bord!"
+    },
+    {
+      "key": "article/payNote/220404-v1/after",
       "value": "Wenn Sie weiterhin unabhängigen Journalismus wie diesen lesen wollen, handeln Sie jetzt: Kommen Sie an Bord!"
     },
     {
-      "key": "article/payNote/200313-v1/after/buy/button",
-      "value": "Jahresmitgliedschaft"
+      "key": "article/payNote/220404-v2/before",
+      "value": "Die Republik ist ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur – finanziert von seinen Leserinnen. Es ist komplett werbefrei und unabhängig. Lösen Sie jetzt ein Abo oder eine Mitgliedschaft!"
     },
     {
-      "key": "article/payNote/200313-v1/after/secondary/label",
-      "value": "Einen Monat für 22.–"
+      "key": "article/payNote/220404-v2/after",
+      "value": "Unterstützen Sie unabhängigen Journalismus mit einem Monatsabonnement oder einer Jahresmitgliedschaft!"
     },
     {
-      "key": "article/payNote/200313-v1/after/secondary/link",
-      "value": "/angebote?package=MONTHLY_ABO"
+      "key": "article/tryNote/220404-v1/before",
+      "value": "Journalismus, der Ihnen hilft, Entscheidungen zu treffen. Und der das Gemeinsame stärkt: die Freiheit, den Rechtsstaat, die Demokratie. Lernen Sie uns jetzt 21 Tage lang kostenlos und unverbindlich kennen:"
     },
     {
-      "key": "article/payNote/200313-v1/after/note",
-      "value": "<a href=\"/\">Mehr Informationen zur Republik.</a>"
+      "key": "article/tryNote/220404-v1/after",
+      "value": "Über 28'000 Menschen machen die Republik heute schon möglich. Lernen Sie uns jetzt auch kennen – 21 Tage lang, kostenlos und unverbindlich:"
+    },
+    {
+      "key": "article/tryNote/220404-v2/before",
+      "value": "Die Republik ist ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur – finanziert von seinen Leserinnen. Es ist komplett werbefrei und unabhängig. Überzeugen Sie sich selber: Lesen Sie 21 Tage lang kostenlos und unverbindlich Probe:"
+    },
+    {
+      "key": "article/tryNote/220404-v2/after",
+      "value": "Sie sind sich immer noch nicht sicher, ob die Republik etwas für Sie ist? Dann testen Sie uns! Für 21 Tage, kostenlos und unverbindlich:"
+    },
+    {
+      "key": "profile/tryNote/content",
+      "value": "Um die Beiträge von {name} zu lesen, benötigen Sie eine Mitgliedschaft oder ein Monatsabonnement. Sie wollen uns erst kennenlernen? Dann lesen Sie die Republik jetzt unverbindlich und kostenlos 21 Tage Probe."
     },
     {
       "key": "option/ABO/accessGranted/label/other",
@@ -6538,7 +6650,11 @@
     },
     {
       "key": "pages/access/title",
-      "value": "Republik teilen"
+      "value": "Teilen Sie die Republik"
+    },
+    {
+      "key": "pages/access/description",
+      "value": "Laden Sie Ihre Freunde und Feinde ein, die Republik zu testen. Ermöglicht den Empfangenden einen 21-tägigen Probezugriff zur Republik."
     },
     {
       "key": "nav/crowdfunding2",
@@ -6887,6 +7003,10 @@
     {
       "key": "components/outdatedAppVersion/android/secondaryAction",
       "value": "APK direkt herunterladen"
+    },
+    {
+      "key": "articleRecommendations/heading",
+      "value": "Von der Redaktion für Sie empfohlen:"
     },
     {
       "key": "darkmode/switch/label",

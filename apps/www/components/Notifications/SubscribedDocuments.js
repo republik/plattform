@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { possibleSubscriptions } from './enhancers'
@@ -7,7 +7,7 @@ import {
   plainButtonRule,
   A,
   Interaction,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
 import SubscribeCheckbox from './SubscribeCheckbox'
@@ -17,8 +17,8 @@ import { withMembership } from '../Auth/checkRoles'
 
 const styles = {
   checkboxes: css({
-    margin: '8px 0 16px'
-  })
+    margin: '8px 0 16px',
+  }),
 }
 
 const SECTIONS_ALWAYS_SHOWN = ONBOARDING_SECTIONS_REPO_IDS
@@ -33,34 +33,34 @@ const FormatCheckboxes = ({ formats }) => (
   </div>
 )
 
-const getSubscriptionCount = section =>
-  section.formats.nodes.filter(f => f.subscribedByMe.active).length
+const getSubscriptionCount = (section) =>
+  section.formats.nodes.filter((f) => f.subscribedByMe.active).length
 
 const getVisibleSections = (sections, prevShown = []) =>
   sections.filter(
-    section =>
-      prevShown.find(s => s.id === section.id) ||
+    (section) =>
+      prevShown.find((s) => s.id === section.id) ||
       getSubscriptionCount(section) ||
-      SECTIONS_ALWAYS_SHOWN.find(repoId => repoId === section.repoId)
+      SECTIONS_ALWAYS_SHOWN.find((repoId) => repoId === section.repoId),
   )
 
 const SubscribedDocuments = ({ t, data: { sections }, isMember }) => {
   const [showAll, setShowAll] = useState(false)
   const [colorScheme] = useColorContext()
   const sectionNodes = sections && sections.nodes
-  const sectionsWithFormat = React.useMemo(() => {
+  const sectionsWithFormat = useMemo(() => {
     return sectionNodes
-      ? sectionNodes.filter(s => s.formats.nodes.length > 0)
+      ? sectionNodes.filter((s) => s.formats.nodes.length > 0)
       : []
   }, [sectionNodes])
 
   const [visibleSections, setVisibleSections] = useState(
-    getVisibleSections(sectionsWithFormat || [])
+    getVisibleSections(sectionsWithFormat || []),
   )
 
   useEffect(() => {
-    setVisibleSections(prevShown =>
-      getVisibleSections(sectionsWithFormat, prevShown)
+    setVisibleSections((prevShown) =>
+      getVisibleSections(sectionsWithFormat, prevShown),
     )
   }, [sectionsWithFormat])
 
@@ -68,7 +68,7 @@ const SubscribedDocuments = ({ t, data: { sections }, isMember }) => {
     sectionsWithFormat &&
     sectionsWithFormat.reduce(
       (reducer, section) => reducer + getSubscriptionCount(section),
-      0
+      0,
     )
 
   if (!sectionsWithFormat || !sectionsWithFormat.length) return null
@@ -77,12 +77,16 @@ const SubscribedDocuments = ({ t, data: { sections }, isMember }) => {
     <>
       <Interaction.P style={{ marginBottom: 16 }}>
         {t.pluralize('Notifications/settings/formats/summary', {
-          count: totalSubs
+          count: totalSubs,
         })}
       </Interaction.P>
-      {(showAll ? sectionsWithFormat : visibleSections).map(section => (
+      {(showAll ? sectionsWithFormat : visibleSections).map((section) => (
         <div
-          {...colorScheme.set('color', section.meta?.color || 'textSoft')}
+          {...colorScheme.set(
+            'color',
+            section.meta?.color || 'textSoft',
+            'format',
+          )}
           key={section.id}
         >
           <TeaserSectionTitle small>{section.meta.title}</TeaserSectionTitle>
@@ -109,5 +113,5 @@ const SubscribedDocuments = ({ t, data: { sections }, isMember }) => {
 export default compose(
   withT,
   withMembership,
-  graphql(possibleSubscriptions)
+  graphql(possibleSubscriptions),
 )(SubscribedDocuments)

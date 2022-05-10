@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import { Fragment, useState } from 'react'
 import { graphql, compose } from 'react-apollo'
 import { css } from 'glamor'
 import gql from 'graphql-tag'
@@ -21,7 +21,7 @@ import {
   Checkbox,
   A,
   HR,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 
 import MaskedInput from 'react-maskedinput'
@@ -57,18 +57,18 @@ const publishMutation = gql`
 
 const styles = {
   scrollContainer: css({
-    padding: '16px 24px 100px 24px'
+    padding: '16px 24px 100px 24px',
   }),
   mask: css({
     '::placeholder': {
-      color: 'transparent'
+      color: 'transparent',
     },
     ':focus': {
       '::placeholder': {
-        color: '#ccc'
-      }
-    }
-  })
+        color: '#ccc',
+      },
+    },
+  }),
 }
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
@@ -82,21 +82,21 @@ const Form = ({
   repo,
   commit,
   commit: {
-    document: { meta, content }
+    document: { meta, content },
   },
-  publish
+  publish,
 }) => {
   const hasBeenPublished = !!repo.latestPublications.find(
-    pub => !pub.prepublication && pub.live
+    (pub) => !pub.prepublication && pub.live,
   )
   const [state, setCompleteState] = useState({
     prepublication: true,
     scheduled: false,
     updateMailchimp: false,
-    notifySubscribers: !hasBeenPublished
+    notifySubscribers: !hasBeenPublished,
   })
-  const setState = newState =>
-    setCompleteState(state => ({ ...state, ...newState }))
+  const setState = (newState) =>
+    setCompleteState((state) => ({ ...state, ...newState }))
 
   const {
     prepublication,
@@ -104,7 +104,7 @@ const Form = ({
     notifySubscribers,
     scheduled,
     scheduledAt,
-    publishing
+    publishing,
   } = state
 
   const schema = getSchema(meta.template)
@@ -113,7 +113,7 @@ const Form = ({
     meta,
     content,
     t,
-    updateMailchimp
+    updateMailchimp,
   })
   const [colorScheme] = useColorContext()
   const hasErrors = errors.length > 0
@@ -145,7 +145,7 @@ const Form = ({
           <Link
             route='repo/tree'
             params={{
-              repoId: repo.id.split('/')
+              repoId: repo.id.split('/'),
             }}
             passHref
           >
@@ -162,12 +162,15 @@ const Form = ({
           {t('publish/meta/path/label')}
           {': '}
         </strong>
-        {FRONTEND_BASE_URL.replace(/https?:\/\/(www\.)?/, '')}
+        {(meta.format?.meta.externalBaseUrl || FRONTEND_BASE_URL).replace(
+          /https?:\/\/(www\.)?/,
+          '',
+        )}
         {content.meta.path ||
           (schema.getPath
             ? schema.getPath({
                 ...meta,
-                publishDate: designatedPublishDate
+                publishDate: designatedPublishDate,
               })
             : `/${meta.slug}`)}
       </Label>
@@ -222,7 +225,7 @@ const Form = ({
           <Interaction.P>
             <Editorial.A
               href='#'
-              onClick={e => {
+              onClick={(e) => {
                 e.preventDefault()
                 setState({ showLinks: !state.showLinks })
               }}
@@ -241,7 +244,7 @@ const Form = ({
                         ? 'error'
                         : link.warnings.length
                         ? '#e0aa14'
-                        : undefined
+                        : undefined,
                     )}
                   >
                     {t.elements('publish/validation/link', {
@@ -254,7 +257,7 @@ const Form = ({
                         >
                           {link.url}
                         </Editorial.A>
-                      )
+                      ),
                     })}
                   </Interaction.P>
                 </li>
@@ -270,7 +273,7 @@ const Form = ({
         checked={prepublication}
         onChange={(_, value) => {
           setState({
-            prepublication: value
+            prepublication: value,
           })
         }}
       >
@@ -283,12 +286,12 @@ const Form = ({
         checked={!prepublication && notifySubscribers}
         onChange={(_, value) => {
           setState({
-            notifySubscribers: value
+            notifySubscribers: value,
           })
         }}
       >
         {t.pluralize('publish/label/notifySubscribers', {
-          count: commit.document.subscribedBy.totalCount
+          count: commit.document.subscribedBy.totalCount,
         })}
       </Checkbox>
       <br />
@@ -299,7 +302,7 @@ const Form = ({
             checked={updateMailchimp}
             onChange={(_, value) => {
               setState({
-                updateMailchimp: value
+                updateMailchimp: value,
               })
             }}
           >
@@ -329,12 +332,12 @@ const Form = ({
               nextDate.setMinutes(0)
             }
             setState({
-              scheduledAt: scheduledAtFormater(nextDate)
+              scheduledAt: scheduledAtFormater(nextDate),
             })
           }
 
           setState({
-            scheduled: value
+            scheduled: value,
           })
         }}
       >
@@ -343,7 +346,7 @@ const Form = ({
 
       {scheduled && (
         <Field
-          renderInput={inputProps => (
+          renderInput={(inputProps) => (
             <MaskedInput
               {...inputProps}
               {...styles.mask}
@@ -356,7 +359,7 @@ const Form = ({
           error={scheduledAtError}
           onChange={(_, value) => {
             setState({
-              scheduledAt: value
+              scheduledAt: value,
             })
           }}
         />
@@ -377,12 +380,12 @@ const Form = ({
             <Fragment>
               <ErrorMessage error={t('publish/error/unresolvedRepoIds')} />
               <ul>
-                {state.unresolvedRepoIds.map(repoId => (
+                {state.unresolvedRepoIds.map((repoId) => (
                   <li key={repoId}>
                     <Link
                       route='repo/tree'
                       params={{
-                        repoId: repoId.split('/')
+                        repoId: repoId.split('/'),
                       }}
                       passHref
                     >
@@ -400,7 +403,7 @@ const Form = ({
                   checked={!!state.ignoreUnresolvedRepoIds}
                   onChange={(_, value) => {
                     setState({
-                      ignoreUnresolvedRepoIds: value
+                      ignoreUnresolvedRepoIds: value,
                     })
                   }}
                 >
@@ -427,27 +430,27 @@ const Form = ({
                 updateMailchimp,
                 notifySubscribers: notifySubscribers && !prepublication,
                 scheduledAt: scheduled ? scheduledAtDate : undefined,
-                ignoreUnresolvedRepoIds: state.ignoreUnresolvedRepoIds
+                ignoreUnresolvedRepoIds: state.ignoreUnresolvedRepoIds,
               })
                 .then(({ data }) => {
                   if (data.publish.publication) {
                     Router.pushRoute('repo/tree', {
-                      repoId: repo.id.split('/')
+                      repoId: repo.id.split('/'),
                     })
                   } else {
                     setState({
                       publishing: false,
                       ignoreUnresolvedRepoIds: undefined,
-                      unresolvedRepoIds: data.publish.unresolvedRepoIds
+                      unresolvedRepoIds: data.publish.unresolvedRepoIds,
                     })
                   }
                 })
-                .catch(error => {
+                .catch((error) => {
                   setState({
                     publishing: false,
                     unresolvedRepoIds: undefined,
                     ignoreUnresolvedRepoIds: undefined,
-                    error: error
+                    error: error,
                   })
                 })
             }}
@@ -463,7 +466,7 @@ const Form = ({
 export default compose(
   graphql(publishMutation, {
     props: ({ mutate, ownProps }) => ({
-      publish: variables =>
+      publish: (variables) =>
         mutate({
           variables,
           refetchQueries: [
@@ -471,17 +474,17 @@ export default compose(
               query: getRepoHistory,
               variables: {
                 repoId: ownProps.repo?.id,
-                first: COMMIT_LIMIT
-              }
+                first: COMMIT_LIMIT,
+              },
             },
             {
               query: getRepoWithPublications,
               variables: {
-                repoId: ownProps.repo?.id
-              }
-            }
-          ]
-        })
-    })
-  })
+                repoId: ownProps.repo?.id,
+              },
+            },
+          ],
+        }),
+    }),
+  }),
 )(Form)

@@ -1,4 +1,3 @@
-import React from 'react'
 import compose from 'lodash/flowRight'
 import { sum } from 'd3-array'
 
@@ -47,29 +46,29 @@ const VOTE_BAR_CONFIG = {
   sort: 'none',
   inlineValue: true,
   inlineLabel: 'option',
-  inlineSecondaryLabel: 'votes'
+  inlineSecondaryLabel: 'votes',
 }
 
 const VoteResult = compose(
   voteT,
-  withT
+  withT,
 )(({ data, vt, t, options = {}, messages = {} }) => {
-  const results = data.result.options.filter(result => result.option)
-  const winner = results.find(result => result.winner)
-  const filledCount = sum(results, r => r.count)
-  const values = results.map(result => ({
+  const results = data.result.options.filter((result) => result.option)
+  const winner = results.find((result) => result.winner)
+  const filledCount = sum(results, (r) => r.count)
+  const values = results.map((result) => ({
     value: String(result.count / filledCount),
     option: vt(`vote/voting/option${result.option.label}`),
     votes: messages.chartLabelVotes
       ? messages.chartLabelVotes.replace(
           '{formattedCount}',
-          countFormat(result.count)
+          countFormat(result.count),
         )
       : vt('vote/votes', {
-          formattedCount: countFormat(result.count)
-        })
+          formattedCount: countFormat(result.count),
+        }),
   }))
-  const empty = data.result.options.find(result => !result.option)
+  const empty = data.result.options.find((result) => !result.option)
   const emptyVotes = empty ? empty.count : 0
   const { eligible, submitted } = data.turnout
 
@@ -81,10 +80,10 @@ const VoteResult = compose(
           {messages.chartLead
             ? messages.chartLead.replace(
                 '{formattedPercent}',
-                percentFormat(winner.count / filledCount)
+                percentFormat(winner.count / filledCount),
               )
             : vt(`vote/voting/winner/${winner.option.label}`, {
-                formattedPercent: percentFormat(winner.count / filledCount)
+                formattedPercent: percentFormat(winner.count / filledCount),
               })}
         </ChartLead>
       )}
@@ -94,11 +93,11 @@ const VoteResult = compose(
           ? messages.footnote
               .replace(
                 '{formattedPercent}',
-                percentFormat(submitted / eligible)
+                percentFormat(submitted / eligible),
               )
               .replace(
                 '{formattedCount}',
-                countFormat(emptyVotes + filledCount)
+                countFormat(emptyVotes + filledCount),
               )
               .replace('{formattedEmptyCount}', countFormat(emptyVotes))
           : vt(
@@ -108,8 +107,8 @@ const VoteResult = compose(
               {
                 formattedPercent: percentFormat(submitted / eligible),
                 formattedCount: countFormat(emptyVotes + filledCount),
-                formattedEmptyCount: countFormat(emptyVotes)
-              }
+                formattedEmptyCount: countFormat(emptyVotes),
+              },
             )}
       </Editorial.Note>
     </div>

@@ -1,4 +1,3 @@
-import React from 'react'
 import LockIcon from 'react-icons/lib/md/lock'
 import PublicIcon from 'react-icons/lib/md/public'
 import { renderMdast } from 'mdast-react-render'
@@ -18,32 +17,38 @@ import {
   getLabel,
   getTitle,
   isPrepublished,
-  isPublished
+  isPublished,
 } from '../../lib/utils/repo'
 import { displayDateTime } from '../../lib/utils/calendar'
 
 const link = {
   matchMdast: matchType('link'),
-  props: node => ({
+  props: (node) => ({
     title: node.title,
-    href: node.url
+    href: node.url,
   }),
-  component: A
+  component: A,
 }
 const creditSchema = {
-  rules: [link]
+  rules: [link],
 }
 
-const PublicationLink = Icon => ({
-  name,
-  document: {
-    meta: { path }
-  }
-}) => (
-  <a key={name} href={`${FRONTEND_BASE_URL}${path}`}>
-    <Icon color={colors.primary} />
-  </a>
-)
+const PublicationLink =
+  (Icon) =>
+  ({
+    name,
+    document: {
+      meta: { path, format },
+    },
+  }) =>
+    (
+      <a
+        key={name}
+        href={`${format?.meta.externalBaseUrl || FRONTEND_BASE_URL}${path}`}
+      >
+        <Icon color={colors.primary} />
+      </a>
+    )
 
 const RepoRow = ({ repo, showPhases }) => {
   const {
@@ -53,9 +58,9 @@ const RepoRow = ({ repo, showPhases }) => {
       date,
       author: { name: authorName },
       message,
-      document: { meta }
+      document: { meta },
     },
-    currentPhase
+    currentPhase,
   } = repo
   const label = getLabel(repo)
   return (
@@ -75,7 +80,7 @@ const RepoRow = ({ repo, showPhases }) => {
         {meta.credits &&
           intersperse(
             renderMdast(meta.credits.filter(link.matchMdast), creditSchema),
-            () => ', '
+            () => ', ',
           )}
       </Td>
       <TdNum>

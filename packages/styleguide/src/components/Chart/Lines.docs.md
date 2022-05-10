@@ -7536,3 +7536,330 @@ CDU/CSU,2021,4.529556628,sozioökonomisch
   </ChartLegend>
 </div>
 ```
+
+### Custom Y Lines
+
+`yLines` in line charts also support custom y label position via `dy`, mapped to the svg text element `dy` attribute. And custom `opacity`, including for invisible text only lines, by default it's `0.8` for base lines and `0.17` for regular lines, in most cases the boolean `base` should be used instead of custom `opacity`.
+
+```react
+<div>
+  <ChartTitle>Die Stufen zur Autokratie</ChartTitle>
+  <ChartLead>Freiheits­index von Freedom House</ChartLead>
+  <CsvChart
+    config={{
+      "type": "Line",
+      "numberFormat": "s",
+      "xTicks": [
+        1972,
+        1981,
+        1991,
+        2001,
+        2011,
+        2021
+      ],
+      "endLabel": false,
+      "endValue": false,
+      "yNice": 0,
+      "yLines": [
+        {
+          "tick": 7.04,
+          "dy": "1em"
+        },
+        {
+          "tick": 6.25,
+          "label": "unfrei",
+          "dy": "0.3em",
+          "opacity": 0
+        },
+        {
+          "tick": 5.46,
+          "label": "5,5"
+        },
+        {
+          "tick": 4,
+          "label": "teilweise frei",
+          "dy": "0.3em",
+          "opacity": 0
+        },
+        {
+          "tick": 2.54,
+          "label": "2,5",
+          "dy": "1em"
+        },
+        {
+          "tick": 1.75,
+          "label": "frei",
+          "dy": "0.3em",
+          "opacity": 0
+        },
+        {
+          "tick": 1
+        }
+      ],
+      "color": "country",
+      "colorSort": "descending",
+      "colorMap": {
+        "Sowjetunion": "#d62728",
+        "Russland": "#1f77b4"
+      }
+    }}
+    values={`
+year,country,value,pr,cl,status
+1991,Russland,3,3,3,PF
+1992,Russland,3.5,3,4,PF
+1993,Russland,3.5,3,4,PF
+1994,Russland,3.5,3,4,PF
+1995,Russland,3.5,3,4,PF
+1996,Russland,3.5,3,4,PF
+1997,Russland,3.5,3,4,PF
+1998,Russland,4,4,4,PF
+1999,Russland,4.5,4,5,PF
+2000,Russland,5,5,5,PF
+2001,Russland,5,5,5,PF
+2002,Russland,5,5,5,PF
+2003,Russland,5,5,5,PF
+2004,Russland,5.5,6,5,NF
+2005,Russland,5.5,6,5,NF
+2006,Russland,5.5,6,5,NF
+2007,Russland,5.5,6,5,NF
+2008,Russland,5.5,6,5,NF
+2009,Russland,5.5,6,5,NF
+2010,Russland,5.5,6,5,NF
+2011,Russland,5.5,6,5,NF
+2012,Russland,5.5,6,5,NF
+2013,Russland,5.5,6,5,NF
+2014,Russland,6,6,6,NF
+2015,Russland,6,6,6,NF
+2016,Russland,6.5,7,6,NF
+2017,Russland,6.5,7,6,NF
+2018,Russland,6.5,7,6,NF
+2019,Russland,6.5,7,6,NF
+2020,Russland,6.5,7,6,NF
+2021,Russland,6.5,7,6,NF
+1972,Sowjetunion,6,6,6,NF
+1973,Sowjetunion,6,6,6,NF
+1974,Sowjetunion,6,6,6,NF
+1975,Sowjetunion,6.5,7,6,NF
+1976,Sowjetunion,6.5,7,6,NF
+1977,Sowjetunion,6.5,7,6,NF
+1978,Sowjetunion,6,6,6,NF
+1979,Sowjetunion,6,6,6,NF
+1980,Sowjetunion,6.5,6,7,NF
+1981,Sowjetunion,6.5,6,7,NF
+1982,Sowjetunion,6.5,6,7,NF
+1983,Sowjetunion,7,7,7,NF
+1984,Sowjetunion,7,7,7,NF
+1985,Sowjetunion,7,7,7,NF
+1986,Sowjetunion,6.5,7,6,NF
+1987,Sowjetunion,5.5,6,5,NF
+1988,Sowjetunion,5.5,6,5,NF
+1990,Sowjetunion,4.5,5,4,PF
+1991,Sowjetunion,4,4,4,PF
+    `.trim()}
+    />
+  <ChartLegend>
+    Dargestellt ist das «Freedom Rating»: frei (1 bis und mit 2,5), teilweise frei (3 bis 5,5) und unfrei (5,5 bis 7). Quelle: Freedom House.
+  </ChartLegend>
+</div>
+```
+
+## Multiline Annotations
+
+```react
+<div>
+  <ChartTitle>Saisonaler Beat</ChartTitle>
+  <ChartLead>Anzahl Geburten in der Schweiz</ChartLead>
+  <CsvChart
+    config={{
+      "type": "Line",
+      "x": "date",
+      "timeParse": "%Y-%m",
+      "numberFormat": "s",
+      "endValue": false,
+      "colorRange": [
+        "#d21919"
+      ],
+      "size": "breakout",
+      "zero": false,
+      "yNice": 0,
+      "yTicks": [
+        5500,
+        7000,
+        8500
+      ],
+      "xTicks": [
+        "2010-01",
+        "2014-01",
+        "2018-01",
+        "2022-01"
+      ],
+      "xAnnotations": [
+        {
+          "x": "2019-7",
+          "value": 8071,
+          "label": "Im Juli 2019 \n kamen 8071 Babies zur Welt.",
+          "showValue": false,
+          "textAlignment": "right",
+        },
+        {
+          "x": "2013-2",
+          "value": 6091,
+          "position": "bottom",
+          "showValue": false,
+          "textAlignment": "left",
+          "label": "Im Februar 2013 \n kamen 6091 Babies zur Welt."
+        }
+      ],
+      "height": 120
+      }}
+    values={`
+date,value
+2010-1,6680
+2010-2,6095
+2010-3,6700
+2010-4,6379
+2010-5,6610
+2010-6,6744
+2010-7,6986
+2010-8,6843
+2010-9,7006
+2010-10,7106
+2010-11,6507
+2010-12,6634
+2011-1,6646
+2011-2,6131
+2011-3,6603
+2011-4,6492
+2011-5,6987
+2011-6,6922
+2011-7,7341
+2011-8,6943
+2011-9,7070
+2011-10,6767
+2011-11,6500
+2012-12,6406
+2012-1,6808
+2012-2,6413
+2012-3,6677
+2012-4,6518
+2012-5,6826
+2012-6,6811
+2012-7,7433
+2012-8,7278
+2012-9,7236
+2012-10,6993
+2013-11,6568
+2013-12,6603
+2013-1,6721
+2013-2,6091
+2013-3,6813
+2013-4,6594
+2013-5,7088
+2013-6,6853
+2013-7,7587
+2013-8,7358
+2013-9,7256
+2014-10,7098
+2014-11,6476
+2014-12,6796
+2014-1,7068
+2014-2,6404
+2014-3,6896
+2014-4,6902
+2014-5,7225
+2014-6,7153
+2014-7,7631
+2014-8,7382
+2015-9,7579
+2015-10,7373
+2015-11,6825
+2015-12,6849
+2015-1,7169
+2015-2,6402
+2015-3,7153
+2015-4,6984
+2015-5,7358
+2015-6,7436
+2015-7,7596
+2016-8,7506
+2016-9,7826
+2016-10,7298
+2016-11,6860
+2016-12,6971
+2016-1,7193
+2016-2,6791
+2016-3,7361
+2016-4,6830
+2016-5,7490
+2016-6,7489
+2017-7,7981
+2017-8,7749
+2017-9,7880
+2017-10,7354
+2017-11,6798
+2017-12,6967
+2017-1,7078
+2017-2,6610
+2017-3,7184
+2017-4,7059
+2017-5,7604
+2018-6,7369
+2018-7,7802
+2018-8,7659
+2018-9,7508
+2018-10,7447
+2018-11,7001
+2018-12,7060
+2018-1,7254
+2018-2,6512
+2018-3,7169
+2018-4,7014
+2019-5,7494
+2019-6,7521
+2019-7,8071
+2019-8,8054
+2019-9,7644
+2019-10,7365
+2019-11,6962
+2019-12,6791
+2019-1,7246
+2019-2,6398
+2019-3,7031
+2020-4,7124
+2020-5,7439
+2020-6,7332
+2020-7,7902
+2020-8,7485
+2020-9,7418
+2020-10,7168
+2020-11,6826
+2020-12,6803
+2020-1,7108
+2020-2,6738
+2021-3,7071
+2021-4,7060
+2021-5,7369
+2021-6,7324
+2021-7,7810
+2021-8,7375
+2021-9,7440
+2021-10,7250
+2021-11,6494
+2021-12,6875
+2021-1,6861
+2022-2,6399
+2022-3,6817
+2022-4,6453
+2022-5,6636
+2022-6,6786
+2022-7,7441
+2022-8,7306
+2022-9,7423
+2022-10,7423
+2022-11,6737
+    `.trim()}
+    />
+  <ChartLegend>
+  </ChartLegend>
+</div>
+```

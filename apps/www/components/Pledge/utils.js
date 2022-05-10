@@ -14,16 +14,16 @@ export const useFieldSetState = (fields, defaultValues) => {
     return {
       values,
       errors: FieldSet.utils.getErrors(fields, values),
-      dirty: {}
+      dirty: {},
     }
   })
 
-  const onChange = useCallback(newState => {
+  const onChange = useCallback((newState) => {
     setState(FieldSet.utils.mergeFields(newState))
   }, [])
 
   useEffect(() => {
-    setState(state => {
+    setState((state) => {
       const isDirty = fields.some(({ name }) => state.dirty[name])
       const isPresent = fields.some(({ name }) => state.values[name])
       if (isDirty && isPresent) {
@@ -32,7 +32,7 @@ export const useFieldSetState = (fields, defaultValues) => {
       const values = getValues(fields, defaultValues)
       return FieldSet.utils.mergeFields({
         values,
-        errors: FieldSet.utils.getErrors(fields, values)
+        errors: FieldSet.utils.getErrors(fields, values),
       })(state)
     })
   }, [fields, defaultValues])
@@ -42,8 +42,8 @@ export const useFieldSetState = (fields, defaultValues) => {
       ...state,
       fields,
       onChange,
-      isValid: !fields.some(({ name }) => state.errors[name])
+      isValid: !fields.some(({ name }) => state.errors[name]),
     }),
-    [fields, state, onChange]
+    [fields, state, onChange],
   )
 }

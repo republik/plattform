@@ -1,4 +1,3 @@
-import React from 'react'
 import compose from 'lodash/flowRight'
 
 import withSurviveStatus from './withSurviveStatus'
@@ -24,8 +23,8 @@ const SurviveStatus = ({ t, crowdfunding, hasActiveMembership }) => {
             status: crowdfunding.status && {
               memberships: crowdfunding.status.memberships,
               people: crowdfunding.status.people,
-              money: crowdfunding.status.money
-            }
+              money: crowdfunding.status.money,
+            },
           }
         }
         memberships

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useColorContext, Loader } from '@project-r/styleguide'
 
 import { SIDEBAR_WIDTH } from '../Sidebar'
@@ -9,20 +9,20 @@ const PREVIEW_MARGIN = 16
 const screenSizes = {
   phone: {
     width: 320,
-    height: 568
+    height: 568,
   },
   tablet: {
     width: 768,
-    height: 1024
+    height: 1024,
   },
   laptop: {
     width: 1280,
-    height: 800
+    height: 800,
   },
   desktop: {
     width: 1920,
-    height: 1080
-  }
+    height: 1080,
+  },
 }
 
 const PreviewFrame = ({
@@ -30,7 +30,8 @@ const PreviewFrame = ({
   commitId,
   repoId,
   darkmode,
-  sideBarWidth
+  hasAccess,
+  sideBarWidth,
 }) => {
   const [scaleFactor, setScaleFactor] = useState(1)
   const [leftSpace, setLeftSpace] = useState(0)
@@ -38,7 +39,7 @@ const PreviewFrame = ({
   const [colorScheme] = useColorContext()
   const iframeRef = useRef()
 
-  const iframeSrc = `/repo/${repoId}/preview?commitId=${commitId}&darkmode=${darkmode}`
+  const iframeSrc = `/repo/${repoId}/preview?commitId=${commitId}&darkmode=${darkmode}&hasAccess=${hasAccess}`
   const currentSideBarWidth = sideBarWidth || SIDEBAR_WIDTH
 
   useEffect(() => {
@@ -55,7 +56,7 @@ const PreviewFrame = ({
       const currentScaleFactor = Math.min(
         widthScaleFactor,
         heightScaleFactor,
-        1
+        1,
       )
       setScaleFactor(currentScaleFactor)
 
@@ -83,7 +84,7 @@ const PreviewFrame = ({
     border: 'none',
     resize: 'both',
     margin: PREVIEW_MARGIN,
-    marginLeft: PREVIEW_MARGIN + leftSpace
+    marginLeft: PREVIEW_MARGIN + leftSpace,
   }
   return (
     <>
@@ -91,7 +92,7 @@ const PreviewFrame = ({
         style={{
           ...iframeStyle,
           position: 'absolute',
-          zIndex: iframeLoading ? 2 : -1
+          zIndex: iframeLoading ? 2 : -1,
         }}
         {...colorScheme.set('backgroundColor', 'default')}
       >
@@ -101,7 +102,7 @@ const PreviewFrame = ({
         ref={iframeRef}
         onLoad={() => setIframeLoading(false)}
         style={{
-          ...iframeStyle
+          ...iframeStyle,
         }}
         {...colorScheme.set('backgroundColor', 'default')}
         src={iframeSrc}
@@ -113,7 +114,7 @@ const PreviewFrame = ({
           position: 'fixed',
           top: 0,
           right: 0,
-          zIndex: -1
+          zIndex: -1,
         }}
         {...colorScheme.set('backgroundColor', 'hover')}
       />

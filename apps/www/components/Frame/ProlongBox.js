@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import { Fragment } from 'react'
 import { useRouter } from 'next/router'
 import { timeDay } from 'd3-time'
 
@@ -8,7 +8,7 @@ import {
   mediaQueries,
   Button,
   Center,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 
 import { css } from 'glamor'
@@ -20,15 +20,15 @@ import Link from 'next/link'
 
 const styles = {
   box: css({
-    padding: 15
+    padding: 15,
   }),
   singleLine: css({
     textAlign: 'center',
     fontSize: 13,
     [mediaQueries.mUp]: {
-      fontSize: 16
-    }
-  })
+      fontSize: 16,
+    },
+  }),
 }
 
 const SingleLine = ({ children }) => (
@@ -66,7 +66,7 @@ const ProlongBox = ({ t, prolongBeforeDate, membership }) => {
 
     const prefixTranslationKeys = [
       `prolongNecessary/${membership.type.name}/${key}`,
-      `prolongNecessary/${key}`
+      `prolongNecessary/${key}`,
     ]
 
     const endDate = new Date(membership.endDate)
@@ -75,36 +75,36 @@ const ProlongBox = ({ t, prolongBeforeDate, membership }) => {
     const styleTextColor = colorScheme.set('color', 'text')
 
     const explanation = t.first.elements(
-      prefixTranslationKeys.map(k => `${k}/explanation`),
+      prefixTranslationKeys.map((k) => `${k}/explanation`),
       {
         cancelLink: (
           <Link key='cancelLink' href='/abgang' passHref>
             <Editorial.A {...styleTextColor}>
               {t.first(
-                prefixTranslationKeys.map(k => `${k}/explanation/cancelText`),
+                prefixTranslationKeys.map((k) => `${k}/explanation/cancelText`),
                 undefined,
-                ''
+                '',
               )}
             </Editorial.A>
           </Link>
         ),
         daysAgo: t.pluralize('prolongNecessary/days', {
-          count: Math.abs(numberOfDays)
+          count: Math.abs(numberOfDays),
         }),
         prolongBeforeDate: dayFormat(date),
         endDate: dayFormat(endDate),
-        graceEndDate: dayFormat(graceEndDate)
+        graceEndDate: dayFormat(graceEndDate),
       },
-      ''
+      '',
     )
     const hasExplanation = !!explanation.length
     const Title = hasExplanation ? Interaction.H2 : Fragment
     const Wrapper = hasExplanation ? Center : SingleLine
 
     const buttonText = t.first(
-      prefixTranslationKeys.map(k => `${k}/button`),
+      prefixTranslationKeys.map((k) => `${k}/button`),
       undefined,
-      ''
+      '',
     )
 
     return (
@@ -119,10 +119,10 @@ const ProlongBox = ({ t, prolongBeforeDate, membership }) => {
               link: (
                 <TokenPackageLink key='link' params={{ package: 'PROLONG' }}>
                   <Editorial.A {...styleTextColor}>
-                    {t.first(prefixTranslationKeys.map(k => `${k}/linkText`))}
+                    {t.first(prefixTranslationKeys.map((k) => `${k}/linkText`))}
                   </Editorial.A>
                 </TokenPackageLink>
-              )
+              ),
             })}
           </Title>
           {buttonText && (

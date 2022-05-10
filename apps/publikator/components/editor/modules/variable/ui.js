@@ -1,4 +1,3 @@
-import React from 'react'
 import { Map } from 'immutable'
 import { parse } from '@orbiting/remark-preset'
 import { Block, Inline } from 'slate'
@@ -16,7 +15,7 @@ import {
   createInlineButton,
   buttonStyles,
   matchBlock,
-  matchInline
+  matchInline,
 } from '../../utils'
 
 const blockFactories = {
@@ -44,15 +43,45 @@ Willkommen
 <hr /></section>
 
 <hr /></section>
-`.trim()
-        )
+`.trim(),
+        ),
       )
       .document.nodes.first()
       .nodes.first()
-  }
+  },
+  hasAccess: ({ context }) => {
+    return context.rootSerializer
+      .deserialize(
+        parse(
+          `
+<section><h6>CENTER</h6>
+
+<section><h6>IF</h6>
+
+\`\`\`
+{"present": "hasAccess"}
+\`\`\`
+
+Nur sichtbar mit Magazin-Zugriff – für Mitglieder, Abonnentinnen oder Probeleser.
+
+<section><h6>ELSE</h6>
+
+Nur ohne Magazin-Zugriff sichtbar – als Gast.
+
+<hr /></section>
+
+<hr /></section>
+
+<hr /></section>
+`.trim(),
+        ),
+      )
+      .document.nodes.first()
+      .nodes.first()
+  },
 }
 
-const createForm = options =>
+const createForm = (options) =>
   withT(({ t, value, onChange }) => {
     const { TYPE, editorOptions } = options
 
@@ -63,33 +92,33 @@ const createForm = options =>
       .filter(matchInlineType)
       .concat(
         value.blocks
-          .map(node => value.document.getFurthest(node.key, matchBlockType))
-          .filter(Boolean)
+          .map((node) => value.document.getFurthest(node.key, matchBlockType))
+          .filter(Boolean),
       )
 
     if (!nodes.size) {
       return null
     }
 
-    const onInputChange = node => key => (_, inputValue) => {
+    const onInputChange = (node) => (key) => (_, inputValue) => {
       onChange(
         value.change().setNodeByKey(node.key, {
           data: inputValue
             ? node.data.set(key, inputValue)
-            : node.data.remove(key)
-        })
+            : node.data.remove(key),
+        }),
       )
     }
 
     return (
       <div>
         <Label>{t(`variable/form/${TYPE}`, undefined, TYPE)}</Label>
-        {nodes.map(node => (
+        {nodes.map((node) => (
           <MetaForm
             key={node.key}
-            data={Map(editorOptions.fields.map(field => [field.key, ''])).merge(
-              node.data
-            )}
+            data={Map(
+              editorOptions.fields.map((field) => [field.key, '']),
+            ).merge(node.data)}
             onInputChange={onInputChange(node)}
             customFields={editorOptions.fields}
           />
@@ -99,38 +128,42 @@ const createForm = options =>
   })
 
 const createUI = ({ TYPE, editorOptions, context }) => {
-  const { insertBlock, insertVar } = editorOptions
+  const { insertBlocks = [], insertVar } = editorOptions
 
   const From = editorOptions.fields && createForm({ TYPE, editorOptions })
-
-  const newBlock = blockFactories[insertBlock]
   const insertTypes = editorOptions.insertTypes || []
 
-  const InsertButton =
-    newBlock &&
-    withT(({ t, value, onChange }) => {
-      const disabled =
-        value.isBlurred ||
-        !value.blocks.every(n => insertTypes.includes(n.type))
-
+  const insertButtons = insertBlocks
+    .map((insertBlock) => {
+      const newBlock = blockFactories[insertBlock]
       return (
-        <span
-          {...buttonStyles.insert}
-          data-disabled={disabled}
-          data-visible
-          onMouseDown={event => {
-            event.preventDefault()
-            if (!disabled) {
-              const change = value.change()
-              change.call(injectBlock, newBlock({ context }))
-              return onChange(change)
-            }
-          }}
-        >
-          {t(`variable/insert/${insertBlock}`, undefined, insertBlock)}
-        </span>
+        newBlock &&
+        withT(({ t, value, onChange }) => {
+          const disabled =
+            value.isBlurred ||
+            !value.blocks.every((n) => insertTypes.includes(n.type))
+
+          return (
+            <span
+              {...buttonStyles.insert}
+              data-disabled={disabled}
+              data-visible
+              onMouseDown={(event) => {
+                event.preventDefault()
+                if (!disabled) {
+                  const change = value.change()
+                  change.call(injectBlock, newBlock({ context }))
+                  return onChange(change)
+                }
+              }}
+            >
+              {t(`variable/insert/${insertBlock}`, undefined, insertBlock)}
+            </span>
+          )
+        })
       )
     })
+    .filter(Boolean)
 
   const textButton =
     insertVar &&
@@ -138,7 +171,7 @@ const createUI = ({ TYPE, editorOptions, context }) => {
       type: TYPE,
       parentTypes: insertTypes,
       isDisabled: ({ value }) => value.isExpanded,
-      reducer: props => event => {
+      reducer: (props) => (event) => {
         event.preventDefault()
         const { onChange, value } = props
 
@@ -151,11 +184,11 @@ const createUI = ({ TYPE, editorOptions, context }) => {
                   data[field.key] = field.items[0].value
                 }
                 return data
-              }, {})
-            })
-          )
+              }, {}),
+            }),
+          ),
         )
-      }
+      },
     })(({ active, disabled, visible, ...props }) => (
       <span
         {...buttonStyles.mark}
@@ -170,8 +203,8 @@ const createUI = ({ TYPE, editorOptions, context }) => {
 
   return {
     forms: [From],
-    insertButtons: [InsertButton],
-    textFormatButtons: [textButton]
+    insertButtons,
+    textFormatButtons: [textButton],
   }
 }
 

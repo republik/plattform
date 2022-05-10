@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { graphql, compose } from 'react-apollo'
 import { meQuery } from '../../lib/withMe'
@@ -12,61 +12,56 @@ import { SUPPORTED_TOKEN_TYPES } from '../constants'
 
 import {
   MdPhonelink as AppTokenIcon,
-  MdMailOutline as EmailTokenIcon
+  MdMailOutline as EmailTokenIcon,
 } from 'react-icons/md'
 
-import {
-  Label,
-  Interaction,
-  RawHtml,
-  linkRule
-} from '@project-r/styleguide'
+import { Label, Interaction, RawHtml, linkRule } from '@project-r/styleguide'
 
 const { H3, P } = Interaction
 
 const Icons = {
   EMAIL_TOKEN: EmailTokenIcon,
-  APP: AppTokenIcon
+  APP: AppTokenIcon,
 }
 
 const styles = {
   group: css({
-    marginTop: '.5em'
+    marginTop: '.5em',
   }),
   hint: css({
     marginTop: '.2em',
-    lineHeight: '1em'
-  })
+    lineHeight: '1em',
+  }),
 }
 
 class Poller extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
-    const now = (new Date()).getTime()
+    const now = new Date().getTime()
     this.state = {
       now,
-      start: now
+      start: now,
     }
     this.tick = () => {
       clearTimeout(this.tickTimeout)
-      this.tickTimeout = setTimeout(
-        () => {
-          this.setState(() => ({
-            now: (new Date()).getTime()
-          }))
-          this.tick()
-        },
-        1000
-      )
+      this.tickTimeout = setTimeout(() => {
+        this.setState(() => ({
+          now: new Date().getTime(),
+        }))
+        this.tick()
+      }, 1000)
     }
   }
-  componentDidMount () {
+  componentDidMount() {
     this.props.data.startPolling(1000)
     this.tick()
     this.setState({ cookiesDisabled: !navigator.cookieEnabled })
   }
-  componentDidUpdate () {
-    const {data: {me}, onSuccess} = this.props
+  componentDidUpdate() {
+    const {
+      data: { me },
+      onSuccess,
+    } = this.props
     if (me) {
       clearTimeout(this.tickTimeout)
       const elapsedMs = this.state.now - this.state.start
@@ -75,11 +70,14 @@ class Poller extends Component {
       onSuccess && onSuccess(me, elapsedMs)
     }
   }
-  componentWillUnmount () {
+  componentWillUnmount() {
     clearTimeout(this.tickTimeout)
   }
-  render () {
-    const { data: { error, me }, t } = this.props
+  render() {
+    const {
+      data: { error, me },
+      t,
+    } = this.props
     if (me) {
       return null
     }
@@ -92,9 +90,12 @@ class Poller extends Component {
       return (
         <Fragment>
           <ErrorMessage error={t('cookies/disabled/error')} />
-          <RawHtml type={Interaction.P} dangerouslySetInnerHTML={{
-            __html: t('cookies/disabled/error/explanation')
-          }} />
+          <RawHtml
+            type={Interaction.P}
+            dangerouslySetInnerHTML={{
+              __html: t('cookies/disabled/error/explanation'),
+            }}
+          />
         </Fragment>
       )
     }
@@ -105,88 +106,101 @@ class Poller extends Component {
       onCancel,
       phrase,
       alternativeFirstFactors,
-      onTokenTypeChange
+      onTokenTypeChange,
     } = this.props
 
-    const {
-      showPhraseHint
-    } = this.state
+    const { showPhraseHint } = this.state
 
     const Icon = Icons[tokenType]
 
-    return (<Fragment>
-      <H3>
-        {!!Icon && <Icon fill='inherit' size='1.2em' style={{
-          verticalAlign: 'baseline',
-          marginRight: 6,
-          marginBottom: '-0.2em'
-        }} />}
-        {t(`signIn/polling/${tokenType}/title`)}
-      </H3>
-      <RawHtml
-        type={P}
-        {...styles.group}
-        dangerouslySetInnerHTML={{
-          __html: t(`signIn/polling/${tokenType}/text`)
-        }}
-      />
-      {!!onTokenTypeChange && alternativeFirstFactors.map(altTokenType => (
-        <P key={altTokenType} {...styles.group}>
-          <Label>
-            <a {...linkRule}
-              href='#'
-              onClick={(e) => {
-                e.preventDefault()
-                onTokenTypeChange(altTokenType)
+    return (
+      <Fragment>
+        <H3>
+          {!!Icon && (
+            <Icon
+              fill='inherit'
+              size='1.2em'
+              style={{
+                verticalAlign: 'baseline',
+                marginRight: 6,
+                marginBottom: '-0.2em',
               }}
-            >
-              {t(`signIn/polling/switch/${altTokenType}`)}
-            </a>
-          </Label>
+            />
+          )}
+          {t(`signIn/polling/${tokenType}/title`)}
+        </H3>
+        <RawHtml
+          type={P}
+          {...styles.group}
+          dangerouslySetInnerHTML={{
+            __html: t(`signIn/polling/${tokenType}/text`),
+          }}
+        />
+        {!!onTokenTypeChange &&
+          alternativeFirstFactors.map((altTokenType) => (
+            <P key={altTokenType} {...styles.group}>
+              <Label>
+                <a
+                  {...linkRule}
+                  href='#'
+                  onClick={(e) => {
+                    e.preventDefault()
+                    onTokenTypeChange(altTokenType)
+                  }}
+                >
+                  {t(`signIn/polling/switch/${altTokenType}`)}
+                </a>
+              </Label>
+            </P>
+          ))}
+        <P {...styles.group}>
+          <Label>{t('signIn/polling/email')}</Label>
+          <br />
+          {email}
+          <br />
+          {!!onCancel && (
+            <Label>
+              <a
+                {...linkRule}
+                href='#'
+                onClick={(e) => {
+                  e.preventDefault()
+                  onCancel()
+                }}
+              >
+                {t('signIn/polling/cancel')}
+              </a>
+            </Label>
+          )}
         </P>
-      ))}
-      <P {...styles.group}>
-        <Label>{t('signIn/polling/email')}</Label><br />
-        {email}<br />
-        {!!onCancel && (
-          <Label>
-            <a {...linkRule}
-              href='#'
-              onClick={(e) => {
-                e.preventDefault()
-                onCancel()
-              }}
-            >
-              {t('signIn/polling/cancel')}
-            </a>
-          </Label>
-        )}
-      </P>
-      <P {...styles.group}>
-        <Label>{t('signIn/polling/phrase')}</Label><br />
-        {phrase}
-      </P>
-      <P {...styles.hint}>
-        {!showPhraseHint && (
-          <Label>
-            <a {...linkRule}
-              href='#'
-              onClick={(e) => {
-                e.preventDefault()
-                this.setState({ showPhraseHint: true })
-              }}
-            >
-              {t('signIn/polling/phrase/hint/show')}
-            </a>
-          </Label>
-        )}
-        {showPhraseHint && (
-          <Label {...styles.hint}>
-            {t(`signIn/polling/phrase/${tokenType}/hint`)}
-          </Label>
-        )}
-      </P>
-    </Fragment>)
+        <P {...styles.group}>
+          <Label>{t('signIn/polling/phrase')}</Label>
+          <br />
+          {phrase}
+        </P>
+        <P {...styles.hint}>
+          {!showPhraseHint && (
+            <Label>
+              <a
+                {...linkRule}
+                href='#'
+                onClick={(e) => {
+                  e.preventDefault()
+                  this.setState({ showPhraseHint: true })
+                }}
+              >
+                {t('signIn/polling/phrase/hint/show')}
+              </a>
+            </Label>
+          )}
+          {showPhraseHint && (
+            <Label {...styles.hint}>
+              {t(`signIn/polling/phrase/${tokenType}/hint`)}
+            </Label>
+          )}
+        </P>
+      </Fragment>
+    )
   }
 }
 
@@ -195,18 +209,15 @@ Poller.propTypes = {
   email: PropTypes.string.isRequired,
   phrase: PropTypes.string.isRequired,
   alternativeFirstFactors: PropTypes.arrayOf(
-    PropTypes.oneOf(SUPPORTED_TOKEN_TYPES)
+    PropTypes.oneOf(SUPPORTED_TOKEN_TYPES),
   ).isRequired,
   onSuccess: PropTypes.func,
   onCancel: PropTypes.func,
-  onTokenTypeChange: PropTypes.func
+  onTokenTypeChange: PropTypes.func,
 }
 
 Poller.defaultProps = {
-  alternativeFirstFactors: []
+  alternativeFirstFactors: [],
 }
 
-export default compose(
-  graphql(meQuery),
-  withT
-)(Poller)
+export default compose(graphql(meQuery), withT)(Poller)

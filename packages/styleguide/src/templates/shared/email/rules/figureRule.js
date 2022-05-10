@@ -46,18 +46,18 @@ export const getImageRules = ({ forceWidth, isCover } = {}) => [
         plain,
         width: width,
         // If the width is a relative size make sure the src is resized to the display-width
-        resize: isRelativeSize(width) ? displayWidth : undefined
+        resize: isRelativeSize(width) ? displayWidth : undefined,
       }
     },
-    isVoid: true
+    isVoid: true,
   },
-  legendRule
+  legendRule,
 ]
 
 export const figureRule = {
   matchMdast: matchZone('FIGURE'),
   component: Figure,
-  rules: getImageRules()
+  rules: getImageRules(),
 }
 
 export const coverRule = {
@@ -69,7 +69,7 @@ export const coverRule = {
       </td>
     </tr>
   ),
-  rules: getImageRules({ isCover: true })
+  rules: getImageRules({ isCover: true }),
 }
 
 export const edgeToEdgeFigureRule = {
@@ -81,5 +81,5 @@ export const edgeToEdgeFigureRule = {
       </td>
     </tr>
   ),
-  rules: getImageRules()
+  rules: getImageRules(),
 }

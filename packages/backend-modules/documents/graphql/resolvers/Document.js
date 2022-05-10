@@ -7,6 +7,7 @@ const {
   processRepoImageUrlsInMeta,
   processEmbedImageUrlsInContent,
   processNodeModifiersInContent,
+  processIfHasAccess,
 } = require('../../lib/process')
 const { getMeta } = require('../../lib/meta')
 
@@ -22,6 +23,10 @@ const {
   extractIdsFromNode,
   loadLinkedMetaData,
 } = require('@orbiting/backend-modules-search/lib/Documents')
+
+const {
+  processMeta: processSyntheticReadAloudInMeta,
+} = require('@orbiting/backend-modules-publikator/lib/Derivative/SyntheticReadAloud')
 
 const addTeaserContentHash = (nodes) => {
   nodes.forEach((node) => {
@@ -49,15 +54,15 @@ module.exports = {
         .join('/')
     )
   },
-  issuedForUserId(doc, args, context) {  
-    return context.user?.id|| null
+  issuedForUserId(doc, args, context) {
+    return context.user?.id || null
   },
   async content(doc, { urlPrefix, searchString }, context, info) {
     // we only do auto slugging when in a published documents context
     // - this is easiest detectable by _all being present from documents resolver
     // - alt check info.path for documents / document being the root
     //   https://gist.github.com/tpreusse/f79833a023706520da53647f9c61c7f6
-    if (doc._all) {
+    if (doc._all || doc._usernames) {
       // add content hash before mutating children by resolving
       addTeaserContentHash(doc.content.children || [])
 
@@ -66,7 +71,7 @@ module.exports = {
         doc._all,
         doc._usernames,
         undefined,
-        urlPrefix,
+        urlPrefix, // https://www.republik.ch bei Newslettern?
         searchString,
         context.user || null,
       )
@@ -78,12 +83,13 @@ module.exports = {
 
       processMembersOnlyZonesInContent(doc.content, context.user)
       processNodeModifiersInContent(doc.content, context.user)
+      processIfHasAccess(doc.content, context.user)
     }
     return doc.content
   },
   async meta(doc, { urlPrefix, searchString }, context, info) {
     const meta = getMeta(doc)
-    if (doc._all) {
+    if (doc._all || doc._usernames) {
       metaUrlResolver(
         meta,
         doc._all,
@@ -96,7 +102,8 @@ module.exports = {
 
       await processRepoImageUrlsInMeta(doc.content, addFormatAuto)
     }
-    return meta
+
+    return processSyntheticReadAloudInMeta(meta, doc, context)
   },
   async children(
     doc,
@@ -158,6 +165,7 @@ module.exports = {
 
         processMembersOnlyZonesInContent(node, context.user)
         processNodeModifiersInContent(node, context.user)
+        processIfHasAccess(node, context.user)
 
         return extractIdsFromNode(node, doc.meta.repoId)
       })

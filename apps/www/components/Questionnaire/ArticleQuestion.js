@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { gql } from '@apollo/client'
 import compose from 'lodash/flowRight'
 import { withApollo } from '@apollo/client/react/hoc'
@@ -12,7 +12,7 @@ import {
   colors,
   fontStyles,
   Interaction,
-  mediaQueries
+  mediaQueries,
 } from '@project-r/styleguide'
 
 import questionStyles from './questionStyles'
@@ -20,7 +20,7 @@ import withT from '../../lib/withT'
 
 const { H2, H3, P } = Interaction
 
-const renderCredits = node => {
+const renderCredits = (node) => {
   if (node.type === 'text') {
     return node.value
   } else {
@@ -33,14 +33,14 @@ const renderCredits = node => {
 const styles = {
   previewTitle: css({
     ...fontStyles.sansSerifMedium22,
-    lineHeight: '24px'
+    lineHeight: '24px',
   }),
   previewCredits: css({
     ...fontStyles.sansSerifRegular14,
     [mediaQueries.mUp]: {
-      ...fontStyles.sansSerifRegular16
-    }
-  })
+      ...fontStyles.sansSerifRegular16,
+    },
+  }),
 }
 
 const ArticleItem = ({ title, credits }) => (
@@ -60,16 +60,16 @@ class ArticleQuestion extends Component {
       items: [],
       answerId:
         (props.question.userAnswer && props.question.userAnswer.id) || uuid(),
-      ...this.deriveStateFromProps(props)
+      ...this.deriveStateFromProps(props),
     }
   }
 
-  handleChange = value => {
+  handleChange = (value) => {
     const { onChange } = this.props
     const { answerId } = this.state
     if (!value) {
       this.setState({ value: null, document: {} }, () =>
-        onChange(answerId, null)
+        onChange(answerId, null),
       )
     } else {
       this.setState({ ...value }, () => onChange(answerId, value.value))
@@ -98,13 +98,13 @@ class ArticleQuestion extends Component {
           alignItems: 'center',
           marginTop: 20,
           paddingBottom: 15,
-          borderBottom: `1px solid ${colors.disabled}`
+          borderBottom: `1px solid ${colors.disabled}`,
         })}
       >
         <ArticleItem title={document.title} credits={document.credits} />
         <div
           {...css({
-            width: 24
+            width: 24,
           })}
           onClick={() => this.handleChange(null)}
         >
@@ -114,7 +114,7 @@ class ArticleQuestion extends Component {
     )
   }
 
-  handleFilterChange = filter => {
+  handleFilterChange = (filter) => {
     this.performSearch.cancel()
     if (filter.length < 3) {
       this.setState({ filter, items: [] })
@@ -123,7 +123,7 @@ class ArticleQuestion extends Component {
     }
   }
 
-  performSearch = debounce(search => {
+  performSearch = debounce((search) => {
     const { client } = this.props
     client
       .query({
@@ -131,29 +131,29 @@ class ArticleQuestion extends Component {
         variables: {
           search,
           sort: {
-            key: 'relevance'
+            key: 'relevance',
           },
           filters: [
             {
               key: 'template',
-              value: 'article'
+              value: 'article',
             },
             {
               key: 'template',
               value: 'front',
-              not: true
-            }
-          ]
-        }
+              not: true,
+            },
+          ],
+        },
       })
-      .then(res => {
+      .then((res) => {
         const items = res.data
           ? res.data.search.nodes
-              .filter(n => n.entity)
-              .map(n => ({
+              .filter((n) => n.entity)
+              .map((n) => ({
                 document: {
                   title: n.entity.meta.title,
-                  credits: n.entity.meta.credits
+                  credits: n.entity.meta.credits,
                 },
                 text: (
                   <ArticleItem
@@ -161,7 +161,7 @@ class ArticleQuestion extends Component {
                     credits={n.entity.meta.credits || []}
                   />
                 ),
-                value: n.entity.meta.path
+                value: n.entity.meta.path,
               }))
           : []
         this.setState({ items })
@@ -171,7 +171,7 @@ class ArticleQuestion extends Component {
   render() {
     const {
       question: { text },
-      t
+      t,
     } = this.props
     const { value, items } = this.state
     return (

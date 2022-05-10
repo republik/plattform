@@ -1,10 +1,9 @@
-import React from 'react'
 import { css } from 'glamor'
 
 import {
   fontFamilies,
   fontStyles,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 
 const styles = {
@@ -12,7 +11,7 @@ const styles = {
     ...fontStyles.sansSerifRegular16,
     listStyle: 'none',
     margin: '10px 0',
-    padding: 0
+    padding: 0,
   }),
   item: css({
     borderTopWidth: 1,
@@ -20,13 +19,13 @@ const styles = {
     padding: '5px 0',
     ':last-child': {
       borderBottomWidth: 1,
-      borderBottomStyle: 'solid'
-    }
+      borderBottomStyle: 'solid',
+    },
   }),
   highlight: css({
     fontFamily: fontFamilies.sansSerifMedium,
-    fontWeight: 'normal'
-  })
+    fontWeight: 'normal',
+  }),
 }
 
 export const Item = ({ children }) => {

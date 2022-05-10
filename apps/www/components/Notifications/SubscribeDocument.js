@@ -1,4 +1,3 @@
-import React from 'react'
 import SubscribeCheckbox from './SubscribeCheckbox'
 import withT from '../../lib/withT'
 import SubscribeCalloutTitle from './SubscribeCalloutTitle'
@@ -9,7 +8,7 @@ const SubscribeDocument = ({ t, subscriptions, setAnimate }) => {
       <SubscribeCalloutTitle>
         {t('SubscribeDocument/title')}
       </SubscribeCalloutTitle>
-      {subscriptions.map(subscription => (
+      {subscriptions.map((subscription) => (
         <SubscribeCheckbox
           key={subscription.id}
           subscription={subscription}

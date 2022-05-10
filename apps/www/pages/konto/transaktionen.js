@@ -1,4 +1,3 @@
-import React from 'react'
 import { useRouter } from 'next/router'
 import Frame from '../../components/Frame'
 import withT from '../../lib/withT'
@@ -12,7 +11,7 @@ const TransactionPage = ({ t }) => {
   return (
     <Frame
       meta={{
-        title: t('pages/account/transactions/title')
+        title: t('pages/account/transactions/title'),
       }}
     >
       <AccountEnforceMe>

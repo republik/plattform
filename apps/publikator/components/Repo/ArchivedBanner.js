@@ -1,4 +1,3 @@
-import React from 'react'
 import { compose } from 'react-apollo'
 import { css } from 'glamor'
 
@@ -10,11 +9,11 @@ const styles = {
   container: css({
     backgroundColor: colors.social,
     padding: '12px 24px',
-    marginBottom: '12px'
+    marginBottom: '12px',
   }),
   notice: css({
-    color: 'white'
-  })
+    color: 'white',
+  }),
 }
 
 const RepoArchivedBanner = ({ t, isTemplate }) => {

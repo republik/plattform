@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 
 import { useColorContext } from '@project-r/styleguide'
@@ -6,8 +5,8 @@ import { useColorContext } from '@project-r/styleguide'
 const styles = {
   box: css({
     paddingTop: 30,
-    paddingBottom: 30
-  })
+    paddingBottom: 30,
+  }),
 }
 
 const Box = ({ children, style }) => {

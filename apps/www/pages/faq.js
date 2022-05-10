@@ -1,5 +1,3 @@
-import React from 'react'
-
 import Frame from '../components/Frame'
 
 import FaqList, { H2 } from '../components/Faq/List'
@@ -18,7 +16,7 @@ const Page = ({ t }) => (
       title: t('faq/title'),
       description: t('faq/metaDescription'),
       url: `${PUBLIC_BASE_URL}/faq`,
-      image: `${CDN_FRONTEND_BASE_URL}/static/social-media/faq.png`
+      image: `${CDN_FRONTEND_BASE_URL}/static/social-media/faq.png`,
     }}
   >
     <H2>{t('faq/before/title')}</H2>
@@ -26,7 +24,7 @@ const Page = ({ t }) => (
     <RawHtml
       type={Interaction.P}
       dangerouslySetInnerHTML={{
-        __html: t('faq/before/support/text')
+        __html: t('faq/before/support/text'),
       }}
     />
     <br />

@@ -16,40 +16,40 @@ const styles = {
     ...convertStyleToRem(sansSerifRegular14),
     lineHeight: pxToRem(20),
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
   }),
   credential: css({
     display: 'flex',
     alignItems: 'center',
     flexGrow: 0,
     flexShrink: 1,
-    minWidth: 0
+    minWidth: 0,
   }),
   descriptionText: css({
-    ...ellipsize
+    ...ellipsize,
   }),
   verifiedCheck: css({
     flexShrink: 0,
     display: 'inline-block',
     marginLeft: pxToRem(4),
-    marginTop: pxToRem(2)
+    marginTop: pxToRem(2),
   }),
   linkUnderline: css({
     color: 'inherit',
     textDecoration: 'none',
     '@media (hover)': {
-      ':hover': underline
-    }
+      ':hover': underline,
+    },
   }),
   timeago: css({
     flexShrink: 0,
     flexGrow: 0,
-    whiteSpace: 'pre'
-  })
+    whiteSpace: 'pre',
+  }),
 }
 
 const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
-const titleDate = string => dateTimeFormat(new Date(string))
+const titleDate = (string) => dateTimeFormat(new Date(string))
 
 /**
  * Render the meta line of the comment-header
@@ -63,7 +63,7 @@ const HeaderMetaLine = ({ t, comment, discussion, CommentLink, isPreview }) => {
     createdAt,
     updatedAt,
     published,
-    displayAuthor: { credential }
+    displayAuthor: { credential },
   } = comment
 
   const isUpdated = updatedAt && updatedAt !== createdAt
@@ -79,7 +79,7 @@ const HeaderMetaLine = ({ t, comment, discussion, CommentLink, isPreview }) => {
                 ? t(
                     'styleguide/comment/header/verifiedCredential',
                     undefined,
-                    ''
+                    '',
                   )
                 : undefined
             }
@@ -88,7 +88,7 @@ const HeaderMetaLine = ({ t, comment, discussion, CommentLink, isPreview }) => {
               {...styles.descriptionText}
               {...colorScheme.set(
                 'color',
-                credential.verified ? 'text' : 'textSoft'
+                credential.verified ? 'text' : 'textSoft',
               )}
             >
               {credential.description}
@@ -131,7 +131,7 @@ const HeaderMetaLine = ({ t, comment, discussion, CommentLink, isPreview }) => {
 HeaderMetaLine.propTypes = {
   t: PropTypes.func.isRequired,
   comment: PropTypes.object.isRequired,
-  CommentLink: PropTypes.elementType.isRequired
+  CommentLink: PropTypes.elementType.isRequired,
 }
 
 export default HeaderMetaLine

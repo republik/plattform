@@ -13,8 +13,8 @@ const styles = {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '70px 5%'
-    }
+      padding: '70px 5%',
+    },
   }),
   containerFeuilleton: css({
     margin: 0,
@@ -23,36 +23,36 @@ const styles = {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '50px 5%'
-    }
+      padding: '50px 5%',
+    },
   }),
   containerPortrait: css({
     [mUp]: {
       padding: 0,
-      alignItems: 'flex-start'
-    }
+      alignItems: 'flex-start',
+    },
   }),
   content: css({
     padding: '15px 15px 40px 15px',
     [mUp]: {
       padding: '0 0 0 5%',
-      width: '50%'
-    }
+      width: '50%',
+    },
   }),
   contentReverse: css({
     [mUp]: {
-      padding: '0 5% 0 0'
-    }
+      padding: '0 5% 0 0',
+    },
   }),
   contentPortrait: css({
     padding: '15px 15px 40px 15px',
     [mUp]: {
       padding: '40px 5%',
-      width: '60%'
+      width: '60%',
     },
     [dUp]: {
-      padding: '40px 5%'
-    }
+      padding: '40px 5%',
+    },
   }),
   imageContainer: css({
     position: 'relative',
@@ -60,8 +60,8 @@ const styles = {
       flexShrink: 0,
       fontSize: 0, // Removes the small flexbox space.
       height: 'auto',
-      width: '50%'
-    }
+      width: '50%',
+    },
   }),
   imageContainerFeuilleton: css({
     padding: '15px 15px 0 15px',
@@ -71,19 +71,19 @@ const styles = {
       flexShrink: 0,
       fontSize: 0, // Removes the small flexbox space.
       height: 'auto',
-      width: '50%'
-    }
+      width: '50%',
+    },
   }),
   imageContainerPortrait: css({
     [mUp]: {
       width: '40%',
-      padding: 0
-    }
+      padding: 0,
+    },
   }),
   image: css({
     height: 'auto',
-    maxWidth: '100%'
-  })
+    maxWidth: '100%',
+  }),
 }
 
 const Split = ({
@@ -99,7 +99,7 @@ const Split = ({
   reverse,
   portrait,
   aboveTheFold,
-  feuilleton
+  feuilleton,
 }) => {
   const background = bgColor || ''
   const flexDirection = reverse ? 'row-reverse' : ''
@@ -115,19 +115,19 @@ const Split = ({
       {...attributes}
       {...css(
         feuilleton ? styles.containerFeuilleton : styles.container,
-        portrait ? styles.containerPortrait : {}
+        portrait ? styles.containerPortrait : {},
       )}
       onClick={onClick}
       style={{
         background,
         flexDirection,
-        cursor: onClick ? 'pointer' : 'default'
+        cursor: onClick ? 'pointer' : 'default',
       }}
     >
       <div
         {...css(
           feuilleton ? styles.imageContainerFeuilleton : styles.imageContainer,
-          portrait ? styles.imageContainerPortrait : {}
+          portrait ? styles.imageContainerPortrait : {},
         )}
       >
         <FigureImage
@@ -148,7 +148,7 @@ const Split = ({
             ? styles.contentPortrait
             : reverse
             ? styles.contentReverse
-            : {}
+            : {},
         )}
       >
         <Text color={color} center={center} feuilleton={feuilleton}>
@@ -168,11 +168,11 @@ Split.propTypes = {
   color: PropTypes.string,
   bgColor: PropTypes.string,
   center: PropTypes.bool,
-  reverse: PropTypes.bool
+  reverse: PropTypes.bool,
 }
 
 Split.defaultProps = {
-  alt: ''
+  alt: '',
 }
 
 export default Split

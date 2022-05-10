@@ -1,4 +1,3 @@
-import React from 'react'
 import { Block } from 'slate'
 
 import { matchBlock } from '../../utils'
@@ -23,21 +22,21 @@ const SeriesNavPlugin = ({ rule, subModules, TYPE }) => {
         data: {
           identifier: node.identifier,
           ...node.data,
-          series
+          series,
         },
-        isVoid: true
+        isVoid: true,
       }
     },
-    toMdast: object => {
+    toMdast: (object) => {
       // omit series
       const { identifier, series: _, ...data } = object.data
       return {
         type: 'zone',
         identifier,
         data: data,
-        children: []
+        children: [],
       }
-    }
+    },
   }
 
   const newBlock = (context, nodeData = {}) =>
@@ -46,18 +45,18 @@ const SeriesNavPlugin = ({ rule, subModules, TYPE }) => {
         {
           type: 'zone',
           identifier: 'SERIES_NAV',
-          data: nodeData
+          data: nodeData,
         },
         0,
         undefined,
         {
-          context
-        }
-      )
+          context,
+        },
+      ),
     )
 
   const serializer = new MarkdownSerializer({
-    rules: [zone]
+    rules: [zone],
   })
 
   const SeriesNav = rule.component
@@ -66,7 +65,7 @@ const SeriesNavPlugin = ({ rule, subModules, TYPE }) => {
     TYPE,
     helpers: {
       serializer,
-      newBlock
+      newBlock,
     },
     changes: {},
     ui: createUi({ TYPE, newBlock, zone }),
@@ -76,7 +75,7 @@ const SeriesNavPlugin = ({ rule, subModules, TYPE }) => {
           if (!zone.match(node)) return
 
           const titleNode = value.document.findDescendant(
-            node => node.type === 'TITLE'
+            (node) => node.type === 'TITLE',
           )
           return (
             <div {...attributes}>
@@ -96,11 +95,11 @@ const SeriesNavPlugin = ({ rule, subModules, TYPE }) => {
         },
         schema: {
           [TYPE]: {
-            isVoid: true
-          }
-        }
-      }
-    ]
+            isVoid: true,
+          },
+        },
+      },
+    ],
   }
 }
 

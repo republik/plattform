@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import compose from 'lodash/flowRight'
 import { withRouter } from 'next/router'
 import { css } from 'glamor'
@@ -12,7 +12,7 @@ import {
   useColorContext,
   useBodyScrollLock,
   useHeaderHeight,
-  SeriesNav
+  SeriesNav,
 } from '@project-r/styleguide'
 import { cleanAsPath, shouldIgnoreClick } from '../../lib/utils/link'
 import TrialPayNoteMini from './TrialPayNoteMini'
@@ -27,7 +27,7 @@ const styles = {
     textDecoration: 'none',
     color: 'inherit',
     display: 'inline-block',
-    cursor: 'pointer'
+    cursor: 'pointer',
   }),
   menu: css({
     ...fontStyles.sansSerifRegular,
@@ -41,7 +41,7 @@ const styles = {
     '&[aria-expanded=true]': {
       opacity: 1,
       visibility: 'visible',
-      transition: 'opacity 0.2s ease-in-out'
+      transition: 'opacity 0.2s ease-in-out',
     },
     display: 'flex',
     boxSizing: 'border-box',
@@ -49,7 +49,7 @@ const styles = {
     width: '100vw',
     flexDirection: 'column',
     padding: 0,
-    paddingTop: 20
+    paddingTop: 20,
   }),
   title: css({
     fontSize: 15,
@@ -62,13 +62,13 @@ const styles = {
     position: 'relative',
     textOverflow: 'ellipsis',
     [mediaQueries.mUp]: {
-      fontSize: 18
-    }
+      fontSize: 18,
+    },
   }),
   logo: css({
     height: 24,
-    marginRight: 6
-  })
+    marginRight: 6,
+  }),
 }
 
 const SeriesNavBar = ({ t, me, showInlinePaynote, series, router, repoId }) => {
@@ -79,7 +79,7 @@ const SeriesNavBar = ({ t, me, showInlinePaynote, series, router, repoId }) => {
   const episodes = series && series.episodes
   const currentPath = cleanAsPath(router.asPath)
   const currentEpisode = episodes.find(
-    episode => episode.document && episode.document.meta.path === currentPath
+    (episode) => episode.document && episode.document.meta.path === currentPath,
   )
 
   const titlePath =
@@ -90,7 +90,7 @@ const SeriesNavBar = ({ t, me, showInlinePaynote, series, router, repoId }) => {
       return
     }
     const currentEpisodeElement = window.document.querySelector(
-      `[data-repo-id='${repoId}']`
+      `[data-repo-id='${repoId}']`,
     )
     if (!currentEpisodeElement) {
       return
@@ -108,7 +108,7 @@ const SeriesNavBar = ({ t, me, showInlinePaynote, series, router, repoId }) => {
       <a
         {...styles.button}
         href={titlePath}
-        onClick={e => {
+        onClick={(e) => {
           if (shouldIgnoreClick(e)) {
             return
           }
@@ -124,7 +124,7 @@ const SeriesNavBar = ({ t, me, showInlinePaynote, series, router, repoId }) => {
                 src={imageResizeUrl(series.logo, 'x48')}
                 {...colorScheme.set(
                   'display',
-                  series.logoDark ? 'displayLight' : 'block'
+                  series.logoDark ? 'displayLight' : 'block',
                 )}
               />
               {series.logoDark && (
@@ -156,7 +156,7 @@ const SeriesNavBar = ({ t, me, showInlinePaynote, series, router, repoId }) => {
       <div
         style={{
           top: headerHeight + 1, // 1px for border bottom
-          height: `calc(100vh - ${headerHeight}px)`
+          height: `calc(100vh - ${headerHeight}px)`,
         }}
         {...colorScheme.set('backgroundColor', 'default')}
         {...colorScheme.set('color', 'text')}

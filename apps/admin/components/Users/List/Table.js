@@ -1,12 +1,10 @@
-import React from 'react'
-
 import { Label } from '@project-r/styleguide'
 
 import { Link } from '../../../server/routes'
 import { displayDate } from '../../Display/utils'
 import { tableStyles as styles } from '../../Tables/utils'
 
-const Table = ({ items,...props }) => {
+const Table = ({ items, ...props }) => {
   return (
     <table {...props} {...styles.table}>
       <colgroup>
@@ -40,20 +38,20 @@ const Table = ({ items,...props }) => {
           <tr key={`user-${user.id}`} {...styles.row}>
             <td>
               <Link route='user' params={{ userId: user.id }}>
-                <a {...styles.link}>
-                  {user.email}
-                </a>
+                <a {...styles.link}>{user.email}</a>
               </Link>
             </td>
             <td>{user.firstName}</td>
             <td>{user.lastName}</td>
-            <td {...styles.center}>{user.activeMembership && user.activeMembership.type.name}</td>
+            <td {...styles.center}>
+              {user.activeMembership && user.activeMembership.type.name}
+            </td>
             <td {...styles.center}>{displayDate(user.createdAt)}</td>
           </tr>
         ))}
       </tbody>
     </table>
   )
-};
+}
 
-export default Table;
+export default Table

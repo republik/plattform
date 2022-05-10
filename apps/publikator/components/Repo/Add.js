@@ -1,4 +1,4 @@
-import React, { Component, useState, useMemo } from 'react'
+import { Component, useState, useMemo } from 'react'
 import { Router } from '../../lib/routes'
 import { slug as slugify } from '@project-r/styleguide'
 import schemas from '../Templates'
@@ -15,14 +15,14 @@ import {
   mediaQueries,
   colors,
   Loader,
-  A
+  A,
 } from '@project-r/styleguide'
 
 import {
   GITHUB_ORG,
   TEMPLATES,
   REPO_PREFIX,
-  TEMPLATE_PREFIX
+  TEMPLATE_PREFIX,
 } from '../../lib/settings'
 import gql from 'graphql-tag'
 import { compose, graphql } from 'react-apollo'
@@ -55,7 +55,7 @@ const getTemplateRepos = gql`
 let schemaKeys = Object.keys(schemas)
 if (TEMPLATES) {
   const allowedSchemas = TEMPLATES.split(',')
-  schemaKeys = schemaKeys.filter(key => allowedSchemas.indexOf(key) !== -1)
+  schemaKeys = schemaKeys.filter((key) => allowedSchemas.indexOf(key) !== -1)
 }
 
 const templateSchemas = ['article', 'editorialNewsletter']
@@ -63,39 +63,39 @@ const templateSchemas = ['article', 'editorialNewsletter']
 const styles = {
   new: css({
     maxWidth: 600,
-    paddingBottom: 60
+    paddingBottom: 60,
   }),
   form: css({
     display: 'flex',
     justifyContent: 'space-between',
     flexFlow: 'row wrap',
-    margin: '0 auto'
+    margin: '0 auto',
   }),
   select: css({
     width: '100%',
-    marginTop: 10
+    marginTop: 10,
   }),
   input: css({
     width: '100%',
     [mediaQueries.mUp]: {
       marginRight: 10,
       marginBottom: 0,
-      width: '58%'
-    }
+      width: '58%',
+    },
   }),
   button: css({
     width: '100%',
     [mediaQueries.mUp]: {
       width: '38%',
-      minWidth: 160
-    }
+      minWidth: 160,
+    },
   }),
   infoLink: css({
     display: 'inline-block',
     verticalAlign: 'top',
     marginLeft: '0.6em',
-    fontSize: '0.6em'
-  })
+    fontSize: '0.6em',
+  }),
 }
 
 const TemplatePicker = compose(
@@ -103,46 +103,46 @@ const TemplatePicker = compose(
   withRouter,
   graphql(getTemplateRepos, {
     options: () => ({
-      fetchPolicy: 'network-only'
+      fetchPolicy: 'network-only',
     }),
-    skip: ({ isTemplate }) => isTemplate
-  })
+    skip: ({ isTemplate }) => isTemplate,
+  }),
 )(({ t, data, schema, onChange, isTemplate }) => {
   const [templateFilter, setTemplateFilter] = useState('')
   const [template, setTemplate] = useState({
     value: schema,
-    text: t(`repo/add/template/${schema}`, null, schema)
+    text: t(`repo/add/template/${schema}`, null, schema),
   })
 
   const schemaOptions = useMemo(
     () =>
       schemaKeys
-        .filter(key => !isTemplate || templateSchemas.includes(key))
-        .map(key => ({
+        .filter((key) => !isTemplate || templateSchemas.includes(key))
+        .map((key) => ({
           value: key,
-          text: t(`repo/add/template/${key}`, null, key)
+          text: t(`repo/add/template/${key}`, null, key),
         })),
-    [isTemplate]
+    [isTemplate],
   )
   const templateOptions = useMemo(() => {
     return schemaOptions
       .concat(
         (data?.reposSearch?.nodes || [])
-          .map(repo => ({
+          .map((repo) => ({
             value: repo.latestCommit.document.meta.template,
             text: repo.latestCommit.document.meta.title,
             repoId: repo.id,
-            slug: repo.latestCommit.document.meta.slug
+            slug: repo.latestCommit.document.meta.slug,
           }))
           .sort((repo1, repo2) =>
-            ascending(repo1.text?.toLowerCase(), repo2.text?.toLowerCase())
-          )
+            ascending(repo1.text?.toLowerCase(), repo2.text?.toLowerCase()),
+          ),
       )
       .filter(
         ({ text }) =>
           !templateFilter ||
           !text ||
-          text.toLowerCase().includes(templateFilter.toLowerCase())
+          text.toLowerCase().includes(templateFilter.toLowerCase()),
       )
   }, [data, templateFilter, schemaOptions])
 
@@ -151,11 +151,11 @@ const TemplatePicker = compose(
       label='Vorlage'
       items={schemaOptions}
       value={schema}
-      onChange={item => {
+      onChange={(item) => {
         onChange({
           schema: item.value,
           templateRepoId: undefined,
-          templateRepoPrefix: undefined
+          templateRepoPrefix: undefined,
         })
       }}
     />
@@ -169,7 +169,7 @@ const TemplatePicker = compose(
           value={template}
           filter={templateFilter}
           items={templateOptions}
-          onChange={newTemplate => {
+          onChange={(newTemplate) => {
             setTemplate(newTemplate)
             setTemplateFilter('')
             onChange({
@@ -177,10 +177,10 @@ const TemplatePicker = compose(
               templateRepoId: newTemplate.repoId,
               templateRepoPrefix: newTemplate.slug
                 ? newTemplate.slug + '-'
-                : undefined
+                : undefined,
             })
           }}
-          onFilterChange={newFilter => {
+          onFilterChange={(newFilter) => {
             if (!template || template.text !== newFilter) {
               setTemplateFilter(newFilter)
             }
@@ -198,15 +198,16 @@ class RepoAdd extends Component {
     const schema = schemaKeys.includes('article') ? 'article' : schemaKeys[0]
     this.state = {
       schema,
-      title: ''
+      title: '',
     }
   }
   getSlug() {
     const { title, schema, templateRepoPrefix } = this.state
     const { isTemplate } = this.props
-    const prefix = (isTemplate
-      ? [REPO_PREFIX, TEMPLATE_PREFIX]
-      : [REPO_PREFIX, templateRepoPrefix || schemas[schema]?.repoPrefix]
+    const prefix = (
+      isTemplate
+        ? [REPO_PREFIX, TEMPLATE_PREFIX]
+        : [REPO_PREFIX, templateRepoPrefix || schemas[schema]?.repoPrefix]
     )
       .filter(Boolean)
       .join('')
@@ -222,7 +223,7 @@ class RepoAdd extends Component {
       title,
       schema,
       templateRepoId,
-      isTemplate
+      isTemplate,
     }).then(() => {
       window.scrollTo(0, 0)
     })
@@ -251,7 +252,7 @@ class RepoAdd extends Component {
       dirty: shouldValidate,
       error:
         (value.trim().length <= 0 && t('repo/add/titleField/error')) ||
-        (slug.length > 100 && t('repo/add/titleField/error/tooLong'))
+        (slug.length > 100 && t('repo/add/titleField/error/tooLong')),
     })
   }
   render() {
@@ -274,8 +275,8 @@ class RepoAdd extends Component {
         </Interaction.H2>
         <form
           {...styles.form}
-          onSubmit={e => this.onSubmit(e)}
-          onKeyPress={e => {
+          onSubmit={(e) => this.onSubmit(e)}
+          onKeyPress={(e) => {
             if (e.key === 'Enter') {
               this.onSubmit(e)
             }

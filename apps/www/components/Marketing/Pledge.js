@@ -1,4 +1,3 @@
-import React from 'react'
 import { withRouter } from 'next/router'
 import { CROWDFUNDING_PLEDGE } from '../../lib/constants'
 
@@ -9,7 +8,7 @@ import SectionContainer from './Common/SectionContainer'
 
 const Pledge = ({ router, serverContext }) => {
   const { query } = router
-  const queryKey = PSP_PLEDGE_ID_QUERY_KEYS.find(key => query[key])
+  const queryKey = PSP_PLEDGE_ID_QUERY_KEYS.find((key) => query[key])
   const pledgeId = queryKey && query[queryKey].split('_')[0]
 
   if (query.goto === 'cockpit') {
@@ -18,7 +17,7 @@ const Pledge = ({ router, serverContext }) => {
         302,
         `/cockpit${query.token ? `?token=${query.token}` : ''}${
           query.hash ? `#${query.hash}` : ''
-        }`
+        }`,
       )
       throw new Error('redirect')
     } else if (process.browser) {
@@ -32,14 +31,14 @@ const Pledge = ({ router, serverContext }) => {
         302,
         `/maerzkampagne${query.token ? `?token=${query.token}` : ''}${
           query.hash ? `#${query.hash}` : ''
-        }`
+        }`,
       )
       throw new Error('redirect')
     } else if (process.browser) {
       // SSR does two two-passes: data (with serverContext) & render (without)
       router.replace({
         pathname: '/maerzkampagne',
-        query: { token: query.token }
+        query: { token: query.token },
       })
     }
   }
@@ -49,14 +48,14 @@ const Pledge = ({ router, serverContext }) => {
         302,
         `/konto${query.token ? `?token=${query.token}` : ''}${
           query.hash ? `#${query.hash}` : ''
-        }`
+        }`,
       )
       throw new Error('redirect')
     } else if (process.browser) {
       // SSR does two two-passes: data (with serverContext) & render (without)
       router.replace({
         pathname: '/konto',
-        query: { token: query.token }
+        query: { token: query.token },
       })
     }
   }

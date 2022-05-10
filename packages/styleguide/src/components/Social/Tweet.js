@@ -25,19 +25,19 @@ const styles = {
     maxWidth: '455px',
     [mUp]: {
       margin: '45px auto',
-      paddingTop: '10px'
-    }
+      paddingTop: '10px',
+    },
   }),
   text: css({
     wordWrap: 'break-word',
     ...convertStyleToRem(sansSerifRegular15),
     [mUp]: {
-      ...convertStyleToRem(sansSerifRegular18)
-    }
+      ...convertStyleToRem(sansSerifRegular18),
+    },
   }),
   mediaContainer: css({
     display: 'inline-block',
-    position: 'relative'
+    position: 'relative',
   }),
   playIcon: css({
     color: '#fff',
@@ -45,11 +45,11 @@ const styles = {
     position: 'absolute',
     fontSize: '80px',
     left: 'calc(50% - 40px)',
-    top: 'calc(50% - 40px)'
-  })
+    top: 'calc(50% - 40px)',
+  }),
 }
 
-const Text = props => <p {...styles.text} {...props} />
+const Text = (props) => <p {...styles.text} {...props} />
 
 const Tweet = ({
   attributes,
@@ -61,7 +61,7 @@ const Tweet = ({
   userProfileImageUrl,
   image,
   more,
-  playable
+  playable,
 }) => {
   const [colorScheme] = useColorContext()
   return (
@@ -109,11 +109,11 @@ Tweet.propTypes = {
   date: PropTypes.object.isRequired,
   image: PropTypes.string,
   more: PropTypes.string,
-  playable: PropTypes.bool
+  playable: PropTypes.bool,
 }
 
 Tweet.defaultProps = {
-  platform: 'twitter'
+  platform: 'twitter',
 }
 
 export default Tweet

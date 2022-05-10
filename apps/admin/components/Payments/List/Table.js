@@ -1,4 +1,3 @@
-import React from 'react'
 import { A, Label, colors } from '@project-r/styleguide'
 import { chfFormat } from '../../../lib/utils/formats'
 import routes from '../../../server/routes'
@@ -8,25 +7,19 @@ import { displayDate } from '../../Display/utils'
 import {
   tableStyles as styles,
   createSortHandler,
-  createSortIndicator
+  createSortIndicator,
 } from '../../Tables/utils'
 
 const { Link } = routes
 
-const getDueDate = (
-  status,
-  dueDate
-) => {
+const getDueDate = (status, dueDate) => {
   if (!dueDate) {
     return ''
-  } else if (
-    new Date(dueDate) < new Date() &&
-    status !== 'PAID'
-  ) {
+  } else if (new Date(dueDate) < new Date() && status !== 'PAID') {
     return (
       <span
         style={{
-          color: colors.error
+          color: colors.error,
         }}
       >
         {displayDate(dueDate)}
@@ -73,15 +66,11 @@ const Table = ({ items, sort, onSort, ...props }) => {
           >
             <Label>Zahlungsart{indicator('method')}</Label>
           </th>
-          <th
-            {...styles.left}
-          >
+          <th {...styles.left}>
             <Label>Name</Label>
           </th>
-          <th
-            {...styles.left}
-          >
-            <Label>Adresse</Label>
+          <th {...styles.left}>
+            <Label>Anschrift</Label>
           </th>
           <th
             {...styles.interactive}
@@ -108,27 +97,34 @@ const Table = ({ items, sort, onSort, ...props }) => {
       </thead>
       <tbody>
         {items.map((payment, index) => {
-          const { user, user: { address } } = payment
+          const {
+            user,
+            user: { address },
+          } = payment
+
+          const name = user.name || `${user.firstName} ${user.lastName}`
 
           return (
             <tr key={`payment-${index}`} {...styles.row}>
               <td>{displayDate(payment.createdAt)}</td>
-              <td>{
-                getDueDate(payment.status, payment.dueDate)
-              }</td>
+              <td>{getDueDate(payment.status, payment.dueDate)}</td>
               <td>{payment.method}</td>
               <td>
-                <Link
-                  route='user'
-                  params={{ userId: user.id }}
-                >
-                  <a {...styles.link}>
-                    {user.name || (`${user.firstName} ${user.lastName}`)}
-                  </a>
+                <Link route='user' params={{ userId: user.id }}>
+                  <a {...styles.link}>{name}</a>
                 </Link>
               </td>
               <td>
-                {address && [address.line1, address.line2, [address.postalCode, address.city].join(' ')].filter(Boolean).join(', ')}
+                {address &&
+                  [
+                    name !== address.name && address.name,
+                    address.line1,
+                    address.line2,
+                    [address.postalCode, address.city].join(' ').trim(),
+                  ]
+                    .filter(Boolean)
+                    .map((string) => string.trim())
+                    .join(', ')}
               </td>
               <td>{chfFormat(payment.total / 100)}</td>
               <td>{payment.hrid}</td>
@@ -139,6 +135,6 @@ const Table = ({ items, sort, onSort, ...props }) => {
       </tbody>
     </table>
   )
-};
+}
 
-export default Table;
+export default Table

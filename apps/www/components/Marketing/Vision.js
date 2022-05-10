@@ -1,4 +1,3 @@
-import React from 'react'
 import { Editorial, mediaQueries } from '@project-r/styleguide'
 import SectionContainer from './Common/SectionContainer'
 import { css } from 'glamor'
@@ -13,9 +12,9 @@ const styles = {
     [mediaQueries.mUp]: {
       fontSize: 39,
       lineHeight: '52px',
-      marginBottom: 30
-    }
-  })
+      marginBottom: 30,
+    },
+  }),
 }
 
 const Vision = ({ t }) => {

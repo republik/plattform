@@ -1,4 +1,3 @@
-import React from 'react'
 import compose from 'lodash/flowRight'
 import withT from '../lib/withT'
 import Frame from '../components/Frame'
@@ -15,7 +14,7 @@ const ShareholderPage = ({ t }) => {
   const meta = {
     title: t('shareholder/pageTitle'),
     description: t('shareholder/description'),
-    image: `${CDN_FRONTEND_BASE_URL}/static/social-media/aktionariat.png`
+    image: `${CDN_FRONTEND_BASE_URL}/static/social-media/aktionariat.png`,
   }
 
   return (

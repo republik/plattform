@@ -1,4 +1,3 @@
-import React from 'react'
 import { AudioContext } from './AudioProvider'
 import { AudioPlayer } from '@project-r/styleguide'
 import ProgressComponent from '../../components/Article/Progress'
@@ -9,16 +8,20 @@ import Link from '../Link/Href'
 
 import BottomPanel from '../Frame/BottomPanel'
 import { useMe } from '../../lib/context/MeContext'
+import { usePlaybackRate } from '../../lib/playbackRate'
+import { trackEvent } from '../../lib/matomo'
 
 const AudioPlayerFrontend = ({ t }) => {
   const { meLoading } = useMe()
+  const [playbackRate, setPlaybackRate] = usePlaybackRate(1)
+
   return (
     <AudioContext.Consumer>
       {({
         audioPlayerVisible,
         onCloseAudioPlayer,
         audioState,
-        autoPlayActive
+        autoPlayActive,
       }) => {
         return (
           <>
@@ -26,21 +29,25 @@ const AudioPlayerFrontend = ({ t }) => {
               <BottomPanel wide foreground={true} visible={audioPlayerVisible}>
                 <ProgressComponent isArticle={false}>
                   <AudioPlayer
+                    // when the audio src changes we need to remount the component
                     key={audioState.mediaId || audioState.url}
+                    // mediaId and durationMs is neccessary for media progress to work
                     mediaId={audioState.mediaId}
                     durationMs={audioState.audioSource.durationMs}
+                    mode='overlay'
                     src={audioState.audioSource}
                     title={audioState.title}
                     sourcePath={audioState.sourcePath}
                     closeHandler={onCloseAudioPlayer}
+                    setPlaybackRate={(rate) => {
+                      trackEvent(['AudioPlayer', 'playbackRate', rate])
+                      setPlaybackRate(rate)
+                    }}
+                    playbackRate={playbackRate}
                     autoPlay={autoPlayActive}
                     download
-                    scrubberPosition='bottom'
                     t={t}
-                    fixed
-                    timePosition='left'
                     height={AUDIO_PLAYER_HEIGHT}
-                    controlsPadding={18}
                     Link={Link}
                   />
                 </ProgressComponent>

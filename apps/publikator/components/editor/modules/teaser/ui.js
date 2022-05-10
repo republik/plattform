@@ -5,9 +5,9 @@ import {
   Checkbox,
   Label,
   P,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { css } from 'glamor'
 import { buttonStyles, createPropertyForm, matchBlock } from '../../utils'
 import { allBlocks, parent, childIndex, depth } from '../../utils/selection'
@@ -49,27 +49,27 @@ const textPositions = [
   { value: 'topright', text: 'Top Right' },
   { value: 'bottomleft', text: 'Bottom Left' },
   { value: 'bottomright', text: 'Bottom Right' },
-  { value: 'underneath', text: 'Underneath' }
+  { value: 'underneath', text: 'Underneath' },
 ]
 
 const titleSizes = [
   { value: 'medium', text: 'Medium' },
   { value: 'small', text: 'Small' },
   { value: 'large', text: 'Large' },
-  { value: 'standard', text: 'Standard' }
+  { value: 'standard', text: 'Standard' },
 ]
 
 const kinds = [
   { value: 'editorial', text: 'Editorial' },
   { value: 'meta', text: 'Meta' },
-  { value: 'scribble', text: 'Ameise' }
+  { value: 'scribble', text: 'Ameise' },
 ]
 
 const styles = {
   uiContainer: css({
     position: 'relative',
     height: 0,
-    overflow: 'visible'
+    overflow: 'visible',
   }),
   ui: css({
     position: 'absolute',
@@ -79,25 +79,25 @@ const styles = {
     top: 0,
     left: 0,
     right: 0,
-    overflow: 'hidden'
+    overflow: 'hidden',
   }),
   uiInlineRow: css({
     backgroundColor: '#fff',
     border: `1px solid ${colors.divider}`,
     padding: '5px',
     display: 'inline-block',
-    margin: 0
-  })
+    margin: 0,
+  }),
 }
 
-const cloneWithRepoData = options => (node, repoData) => {
+const cloneWithRepoData = (options) => (node, repoData) => {
   const {
     titleModule,
     subjectModule,
     leadModule,
     formatModule,
     paragraphModule,
-    linkModule
+    linkModule,
   } = getSubmodules(options)
 
   let data = node.data.set('url', `https://github.com/${repoData.id}?autoSlug`)
@@ -110,7 +110,7 @@ const cloneWithRepoData = options => (node, repoData) => {
     data = data
       .set(
         'kind',
-        formatMeta.kind === 'feuilleton' ? 'editorial' : formatMeta.kind
+        formatMeta.kind === 'feuilleton' ? 'editorial' : formatMeta.kind,
       )
       .set('formatUrl', `https://github.com/${meta.format.repoId}?autoSlug`)
     if (isArticleTile || node.type === 'CAROUSELTILE') {
@@ -120,7 +120,7 @@ const cloneWithRepoData = options => (node, repoData) => {
           ? formatMeta.color
           : formatMeta.kind
           ? colors[formatMeta.kind]
-          : undefined
+          : undefined,
       )
     } else {
       data = data.set('color', formatMeta.color)
@@ -141,10 +141,10 @@ const cloneWithRepoData = options => (node, repoData) => {
 
   const credit = paragraphModule.helpers.serializer.fromMdast({
     type: 'paragraph',
-    children: credits
+    children: credits,
   })
 
-  credit.nodes = credit.nodes.map(v => {
+  credit.nodes = credit.nodes.map((v) => {
     if (v.type === linkModule.TYPE) {
       v.data.color = data.get('color')
     }
@@ -158,36 +158,36 @@ const cloneWithRepoData = options => (node, repoData) => {
       Block.create({
         type: formatModule.TYPE,
         data,
-        nodes: [Text.create(formatMeta ? formatMeta.title : '')]
+        nodes: [Text.create(formatMeta ? formatMeta.title : '')],
       }),
       Block.create({
         type: titleModule.TYPE,
         data,
-        nodes: [Text.create(title)]
+        nodes: [Text.create(title)],
       }),
       Block.create({
         type: subjectModule.TYPE,
         data: isArticleTile ? data.set('columns', 3) : data,
-        nodes: meta.subject ? [Text.create(meta.subject)] : []
+        nodes: meta.subject ? [Text.create(meta.subject)] : [],
       }),
       Block.create({
         type: leadModule.TYPE,
         data,
-        nodes: description ? [Text.create(description)] : []
+        nodes: description ? [Text.create(description)] : [],
       }),
-      credit
-    ]
+      credit,
+    ],
   })
 
   return res
 }
 
-export const TeaserButton = options => {
-  const mouseDownHandler = (disabled, value, onChange) => event => {
+export const TeaserButton = (options) => {
+  const mouseDownHandler = (disabled, value, onChange) => (event) => {
     event.preventDefault()
     const nodes = allBlocks(value)
-      .filter(n => depth(value, n.key) < 2)
-      .filter(n => {
+      .filter((n) => depth(value, n.key) < 2)
+      .filter((n) => {
         return ['teaser', 'teasergroup'].includes(n.data.get('module'))
       })
     const node = nodes.first()
@@ -198,8 +198,8 @@ export const TeaserButton = options => {
           .insertNodeByKey(
             parent(value, node.key).key,
             childIndex(value, node.key),
-            getNewBlock(options)()
-          )
+            getNewBlock(options)(),
+          ),
       )
     }
   }
@@ -300,7 +300,7 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
         <ColorPicker
           label='Textfarbe'
           value={node.data.get('color')}
-          onChange={color => {
+          onChange={(color) => {
             onChange('color', null, color)
           }}
         />
@@ -309,7 +309,7 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
         <ColorPicker
           label='Hintergrundfarbe'
           value={node.data.get('bgColor')}
-          onChange={color => {
+          onChange={(color) => {
             onChange('bgColor', null, color)
           }}
         />
@@ -332,7 +332,7 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
                     ? undefined
                     : node.data.get('outline')
                 }
-                onChange={color => {
+                onChange={(color) => {
                   onChange('outline', null, color || true)
                 }}
               />
@@ -344,7 +344,7 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
         <ColorPicker
           label='Formatfarbe'
           value={node.data.get('formatColor')}
-          onChange={color => {
+          onChange={(color) => {
             onChange('formatColor', null, color)
           }}
         />
@@ -451,7 +451,7 @@ export const TeaserForm = ({ subModuleResolver, ...options }) => {
   const { linkModule } = subModules
 
   const moduleTypes = Object.keys(subModules)
-    .map(k => subModules[k] && subModules[k].TYPE)
+    .map((k) => subModules[k] && subModules[k].TYPE)
     .filter(Boolean)
 
   return createPropertyForm({
@@ -463,11 +463,11 @@ export const TeaserForm = ({ subModuleResolver, ...options }) => {
       const teaser = value.blocks.reduce(
         (memo, node) =>
           memo || value.document.getFurthest(node.key, matchBlock(TYPE)),
-        undefined
+        undefined,
       )
 
       return !teaser
-    }
+    },
   })(({ disabled, onChange, value }) => {
     if (disabled) {
       return null
@@ -478,21 +478,21 @@ export const TeaserForm = ({ subModuleResolver, ...options }) => {
       : value.blocks.reduce(
           (memo, node) =>
             memo || value.document.getFurthest(node.key, matchBlock(TYPE)),
-          undefined
+          undefined,
         )
 
     const handlerFactory = createOnFieldChange(
-      change => {
+      (change) => {
         const newTeaser = change.value.document.getDescendant(teaser.key)
         const newTeaserData = newTeaser.data.remove('module')
-        const dataRecipients = newTeaser.filterDescendants(n =>
-          moduleTypes.includes(n.type)
+        const dataRecipients = newTeaser.filterDescendants((n) =>
+          moduleTypes.includes(n.type),
         )
 
         const newChange = dataRecipients.reduce((t, node) => {
           if (linkModule && node.type === linkModule.TYPE) {
             return t.setNodeByKey(node.key, {
-              data: node.data.set('color', newTeaserData.get('color'))
+              data: node.data.set('color', newTeaserData.get('color')),
             })
           } else {
             return t.setNodeByKey(node.key, { data: newTeaserData })
@@ -501,12 +501,12 @@ export const TeaserForm = ({ subModuleResolver, ...options }) => {
         return onChange(newChange)
       },
       value,
-      teaser
+      teaser,
     )
 
     const clone = cloneWithRepoData(options)
 
-    const handleRepo = repoData => {
+    const handleRepo = (repoData) => {
       const newNode = clone(teaser, repoData.value)
       return onChange(value.change().replaceNodeByKey(teaser.key, newNode))
     }
@@ -520,9 +520,9 @@ export const TeaserForm = ({ subModuleResolver, ...options }) => {
             type: !teaser.data.get('onlyImage') ? `${TYPE}_VOID` : TYPE,
             nodes: !teaser.data.get('onlyImage')
               ? []
-              : getNewBlock(options)().nodes
-          })
-        )
+              : getNewBlock(options)().nodes,
+          }),
+        ),
       )
     }
 
@@ -531,17 +531,19 @@ export const TeaserForm = ({ subModuleResolver, ...options }) => {
     const group = parent(value, teaser.key)
     const existingIndex = group.nodes.indexOf(teaser)
 
-    const createMoveNode = (diff = 1) => () => {
-      onChange(
-        value
-          .change()
-          .moveNodeByKey(
-            teaser.key,
-            group.key,
-            Math.min(Math.max(0, existingIndex + diff), group.nodes.size)
-          )
-      )
-    }
+    const createMoveNode =
+      (diff = 1) =>
+      () => {
+        onChange(
+          value
+            .change()
+            .moveNodeByKey(
+              teaser.key,
+              group.key,
+              Math.min(Math.max(0, existingIndex + diff), group.nodes.size),
+            ),
+        )
+      }
 
     return (
       <div>
@@ -586,18 +588,18 @@ export const TeaserForm = ({ subModuleResolver, ...options }) => {
   })
 }
 
-const MarkButton = props => <span {...buttonStyles.mark} {...props} />
+const MarkButton = (props) => <span {...buttonStyles.mark} {...props} />
 
 const CopyMdButton = ({ node, serializer }) => {
   const [success, setSuccess] = useState(false)
   const [colorScheme] = useColorContext()
-  const copyMd = event => {
+  const copyMd = (event) => {
     event.preventDefault()
     const mdast = serializer.serialize({ document: node })
     const md = stringify({
       type: 'root',
       meta: {},
-      children: [mdast]
+      children: [mdast],
     })
     copyToClipboard(md).then(() => setSuccess(true))
   }
@@ -621,7 +623,7 @@ export const TeaserInlineUI = ({
   node,
   serializer,
   removable = true,
-  copyable = true
+  copyable = true,
 }) => {
   const parentNode = parent(editor.state.value, node.key)
   const index = parentNode.nodes.indexOf(node)
@@ -630,17 +632,17 @@ export const TeaserInlineUI = ({
   const isLastChild = index === parentNode.nodes.size - 1
   const isOnlyChild = parentNode.nodes.size === 1
 
-  const removeHandler = event => {
+  const removeHandler = (event) => {
     event.preventDefault()
-    editor.change(t => t.removeNodeByKey(node.key))
+    editor.change((t) => t.removeNodeByKey(node.key))
   }
 
-  const moveHandler = dir => event => {
+  const moveHandler = (dir) => (event) => {
     event.preventDefault()
-    editor.change(t => t.moveNodeByKey(node.key, parentNode.key, index + dir))
+    editor.change((t) => t.moveNodeByKey(node.key, parentNode.key, index + dir))
   }
 
-  const endIndex = parentNode.nodes.findIndex(n => n.data.get('id') === 'end')
+  const endIndex = parentNode.nodes.findIndex((n) => n.data.get('id') === 'end')
 
   const nextNode = parentNode.nodes.get(index + 1)
   const intoTarget =
@@ -649,7 +651,7 @@ export const TeaserInlineUI = ({
     node.type !== 'CAROUSEL' &&
     nextNode.nodes.get(1)
 
-  const copyIntoHandler = event => {
+  const copyIntoHandler = (event) => {
     event.preventDefault()
 
     const sourceNodes =
@@ -657,10 +659,10 @@ export const TeaserInlineUI = ({
 
     const template = intoTarget.nodes.get(0)
 
-    editor.change(t => {
+    editor.change((t) => {
       sourceNodes
-        .filter(n => n.text.trim())
-        .forEach(sourceNode => {
+        .filter((n) => n.text.trim())
+        .forEach((sourceNode) => {
           const data = template.data.merge({
             id: shortId(),
             formatUrl: sourceNode.data.get('url'),
@@ -668,7 +670,7 @@ export const TeaserInlineUI = ({
             url: sourceNode.data.get('url'),
             image: sourceNode.data.get('image'),
             byline: sourceNode.data.get('byline'),
-            kind: sourceNode.data.get('kind')
+            kind: sourceNode.data.get('kind'),
           })
           t.insertNodeByKey(
             intoTarget.key,
@@ -681,10 +683,10 @@ export const TeaserInlineUI = ({
                 return Block.create({
                   type: tn.type,
                   data: data.remove('id').remove('module'),
-                  nodes: sourceChild ? sourceChild.toJSON().nodes : []
+                  nodes: sourceChild ? sourceChild.toJSON().nodes : [],
                 })
-              })
-            })
+              }),
+            }),
           )
         })
     })

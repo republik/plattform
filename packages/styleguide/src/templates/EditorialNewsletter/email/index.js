@@ -32,8 +32,11 @@ const createNewsletterEmailSchema = ({ ...args } = {}) => {
     variableContext: args.variableContext || {
       firstName: 'FNAME',
       lastName: 'LNAME',
-      _mergeTags: true
-    }
+      groups: {
+        hasAccess: 'Customer:Member,Geteilter Zugriff',
+      },
+      _mergeTags: true,
+    },
   })
 }
 

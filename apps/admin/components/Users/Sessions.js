@@ -1,20 +1,16 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { css } from 'glamor'
-import { compose } from 'react-apollo'
+import { compose } from 'react-apollo'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
-import {
-  Label,
-  Interaction,
-  colors
-} from '@project-r/styleguide'
+import { Label, Interaction, colors } from '@project-r/styleguide'
 import List, { Item } from '../List'
 
 import {
   displayDateTime,
   Section,
   SectionTitle,
-  TextButton
+  TextButton,
 } from '../Display/utils'
 
 const sessionQuery = gql`
@@ -34,14 +30,8 @@ const sessionQuery = gql`
 `
 
 const clearSessionMutation = gql`
-  mutation clearSession(
-    $sessionId: ID!
-    $userId: ID!
-  ) {
-    clearSession(
-      sessionId: $sessionId
-      userId: $userId
-    )
+  mutation clearSession($sessionId: ID!, $userId: ID!) {
+    clearSession(sessionId: $sessionId, userId: $userId)
   }
 `
 
@@ -54,8 +44,8 @@ const clearSessionsMutation = gql`
 const styles = {
   session: css({
     padding: 10,
-    backgroundColor: colors.secondaryBg
-  })
+    backgroundColor: colors.secondaryBg,
+  }),
 }
 
 class SessionOverview extends Component {
@@ -72,20 +62,16 @@ class SessionOverview extends Component {
           {sessions.map((session, index) => (
             <Item key={`session-${index}`}>
               <div {...styles.session}>
-                <Label>
-                  Gültig bis {displayDateTime(session.expiresAt)}
-                </Label>
+                <Label>Gültig bis {displayDateTime(session.expiresAt)}</Label>
                 <Interaction.P>
                   {session.city} {session.country}
                 </Interaction.P>
-                <Interaction.P>
-                  {session.userAgent}
-                </Interaction.P>
+                <Interaction.P>{session.userAgent}</Interaction.P>
                 <TextButton
                   onClick={() => {
                     this.props.clearSession({
                       userId: this.props.data.user.id,
-                      sessionId: session.id
+                      sessionId: session.id,
                     })
                   }}
                 >
@@ -98,7 +84,7 @@ class SessionOverview extends Component {
             disabled={sessions.length === 0}
             onClick={() => {
               this.props.clearSessions({
-                userId: this.props.data.user.id
+                userId: this.props.data.user.id,
               })
             }}
           >
@@ -113,7 +99,7 @@ class SessionOverview extends Component {
 const WrappedSessionOverview = compose(
   graphql(clearSessionMutation, {
     props: ({ mutate, ownProps: { userId } }) => ({
-      clearSession: variables => {
+      clearSession: (variables) => {
         if (mutate) {
           return mutate({
             variables,
@@ -121,18 +107,18 @@ const WrappedSessionOverview = compose(
               {
                 query: sessionQuery,
                 variables: {
-                  id: userId
-                }
-              }
-            ]
+                  id: userId,
+                },
+              },
+            ],
           })
         }
-      }
-    })
+      },
+    }),
   }),
   graphql(clearSessionsMutation, {
     props: ({ mutate, ownProps: { userId } }) => ({
-      clearSessions: variables => {
+      clearSessions: (variables) => {
         if (mutate) {
           return mutate({
             variables,
@@ -140,24 +126,24 @@ const WrappedSessionOverview = compose(
               {
                 query: sessionQuery,
                 variables: {
-                  id: userId
-                }
-              }
-            ]
+                  id: userId,
+                },
+              },
+            ],
           })
         }
-      }
-    })
+      },
+    }),
   }),
   graphql(sessionQuery, {
     options: ({ userId }) => {
       return {
         variables: {
-          id: userId
-        }
+          id: userId,
+        },
       }
-    }
-  })
+    },
+  }),
 )(SessionOverview)
 
 export default WrappedSessionOverview

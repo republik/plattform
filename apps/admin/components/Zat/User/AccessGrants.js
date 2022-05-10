@@ -1,4 +1,3 @@
-import React from 'react'
 import gql from 'graphql-tag'
 
 import { displayDate } from '../../Display/utils'
@@ -14,7 +13,7 @@ export const fragments = gql`
 `
 
 export const AccessGrants = ({ accessGrants }) =>
-  accessGrants?.map(accessGrant => {
+  accessGrants?.map((accessGrant) => {
     const { id, endAt } = accessGrant
 
     return (

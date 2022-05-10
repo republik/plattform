@@ -1,4 +1,3 @@
-import React from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
@@ -15,10 +14,10 @@ import {
   Interaction,
   Logo,
   P,
-  inQuotes
+  inQuotes,
 } from '@project-r/styleguide'
 
-const toViewport = px => `${px / 18}vw`
+const toViewport = (px) => `${px / 18}vw`
 
 const MIDDLE = 56.25
 
@@ -27,27 +26,27 @@ const styles = {
     position: 'relative',
     width: '100%',
     paddingBottom: `${(9 / 16) * 100}%`,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   }),
   screen: css({
     position: 'absolute',
     height: '100%',
     width: '100%',
     left: 0,
-    top: 0
+    top: 0,
   }),
   logo: css({
     position: 'absolute',
     left: `${MIDDLE + 5}%`,
     right: '5%',
-    bottom: '5%'
+    bottom: '5%',
   }),
   image: css({
     position: 'absolute',
     top: 0,
     left: 0,
     bottom: 0,
-    width: `${MIDDLE}%`
+    width: `${MIDDLE}%`,
   }),
   text: css({
     position: 'absolute',
@@ -55,29 +54,29 @@ const styles = {
     left: `${MIDDLE + 5}%`,
     right: '5%',
     bottom: `${10 + 5}%`,
-    wordWrap: 'break-word'
+    wordWrap: 'break-word',
   }),
   quote: css({
     fontSize: toViewport(27),
-    lineHeight: 1.42
+    lineHeight: 1.42,
   }),
   number: css({
     fontSize: toViewport(30),
-    fontFamily: fontFamilies.sansSerifMedium
+    fontFamily: fontFamilies.sansSerifMedium,
   }),
   name: css({
     fontSize: toViewport(60),
     lineHeight: 1.25,
-    marginBottom: toViewport(20)
+    marginBottom: toViewport(20),
   }),
   role: css({
     fontSize: toViewport(30),
     lineHeight: 1.25,
-    marginBottom: toViewport(20)
-  })
+    marginBottom: toViewport(20),
+  }),
 }
 
-const fontSizeBoost = length => {
+const fontSizeBoost = (length) => {
   if (length < 40) {
     return 26
   }
@@ -106,7 +105,7 @@ const Item = ({ loading, error, t, statement }) => (
         portrait,
         name,
         role,
-        sequenceNumber
+        sequenceNumber,
       } = statement
       return (
         <div {...styles.container}>
@@ -123,8 +122,8 @@ const Item = ({ loading, error, t, statement }) => (
                   {...styles.quote}
                   style={{
                     fontSize: toViewport(
-                      24 + fontSizeBoost(statementString.length)
-                    )
+                      24 + fontSizeBoost(statementString.length),
+                    ),
                   }}
                 >
                   {inQuotes(statementString)}
@@ -133,7 +132,7 @@ const Item = ({ loading, error, t, statement }) => (
               {!!sequenceNumber && (
                 <div {...styles.number}>
                   {t('memberships/sequenceNumber/label', {
-                    sequenceNumber
+                    sequenceNumber,
                   })}
                 </div>
               )}
@@ -171,11 +170,11 @@ export default compose(
         loading: data.loading,
         error: data.error,
         statement:
-          data.statements && data.statements.nodes && data.statements.nodes[0]
+          data.statements && data.statements.nodes && data.statements.nodes[0],
       }
     },
     options: ({ duration }) => ({
-      pollInterval: duration
-    })
-  })
+      pollInterval: duration,
+    }),
+  }),
 )(Item)

@@ -1,4 +1,3 @@
-import React from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
@@ -8,7 +7,7 @@ import {
   InlineSpinner,
   Button,
   useColorContext,
-  A
+  A,
 } from '@project-r/styleguide'
 
 import { DEFAULT_VALUES } from './Page'
@@ -20,18 +19,18 @@ import { errorToString } from '../../lib/utils/errors'
 const styles = {
   container: css({
     marginTop: 15,
-    marginBottom: 15
+    marginBottom: 15,
   }),
   editLink: css({
     display: 'block',
-    marginTop: 5
-  })
+    marginTop: 5,
+  }),
 }
 
 const EditLink = ({ children, onClick, ...props }) => (
   <A
     href='#edit'
-    onClick={e => {
+    onClick={(e) => {
       e.preventDefault()
       onClick(e)
     }}
@@ -73,7 +72,7 @@ const Edit = ({ me, user, t, state, setState, startEditing, update }) => {
   }
 
   const errorMessages = Object.keys(state.errors)
-    .map(key => state.errors[key])
+    .map((key) => state.errors[key])
     .filter(Boolean)
 
   return (
@@ -102,7 +101,7 @@ const Edit = ({ me, user, t, state, setState, startEditing, update }) => {
       )}
       <div
         style={{
-          opacity: errorMessages.length ? 0.5 : 1
+          opacity: errorMessages.length ? 0.5 : 1,
         }}
       >
         <Button
@@ -110,7 +109,7 @@ const Edit = ({ me, user, t, state, setState, startEditing, update }) => {
           primary
           onClick={() => {
             if (errorMessages.length) {
-              setState(state =>
+              setState((state) =>
                 Object.keys(state.errors).reduce(
                   (nextState, key) => {
                     nextState.dirty[key] = true
@@ -118,9 +117,9 @@ const Edit = ({ me, user, t, state, setState, startEditing, update }) => {
                   },
                   {
                     showErrors: true,
-                    dirty: {}
-                  }
-                )
+                    dirty: {},
+                  },
+                ),
               )
               return
             }
@@ -129,14 +128,14 @@ const Edit = ({ me, user, t, state, setState, startEditing, update }) => {
               publicUrl:
                 state.values.publicUrl === DEFAULT_VALUES.publicUrl
                   ? ''
-                  : state.values.publicUrl
+                  : state.values.publicUrl,
             })
           }}
         >
           {t(
             state.values.hasPublicProfile && !user.hasPublicProfile
               ? 'profile/edit/publish'
-              : 'profile/edit/save'
+              : 'profile/edit/save',
           )}
         </Button>
       </div>
@@ -145,7 +144,7 @@ const Edit = ({ me, user, t, state, setState, startEditing, update }) => {
           setState({
             isEditing: false,
             values: {},
-            errors: {}
+            errors: {},
           })
         }}
       >
@@ -162,7 +161,7 @@ Edit.propTypes = {
   setState: PropTypes.func.isRequired,
   startEditing: PropTypes.func.isRequired,
   update: PropTypes.func.isRequired,
-  t: PropTypes.func.isRequired
+  t: PropTypes.func.isRequired,
 }
 
 export const mutation = gql`
@@ -236,56 +235,57 @@ const publishCredential = gql`
 export default compose(
   graphql(publishCredential, {
     props: ({ mutate, ownProps: { setState } }) => ({
-      publishCredential: description => {
+      publishCredential: (description) => {
         return mutate({
           variables: {
-            description
-          }
+            description,
+          },
         })
-      }
-    })
+      },
+    }),
   }),
   graphql(mutation, {
     props: ({
       mutate,
-      ownProps: { setState, publishCredential, user, ...rest }
+      ownProps: { setState, publishCredential, user, ...rest },
     }) => ({
-      update: async variables => {
+      update: async (variables) => {
         setState({ updating: true })
 
-        const credential = (user.credentials || []).find(c => c.isListed) || {}
+        const credential =
+          (user.credentials || []).find((c) => c.isListed) || {}
         if (variables.credential !== credential.description) {
           try {
             await publishCredential(variables.credential || null)
           } catch (error) {
             setState(() => ({
               updating: false,
-              error: errorToString(error)
+              error: errorToString(error),
             }))
             return
           }
         }
 
         return mutate({
-          variables
+          variables,
         })
           .then(() => {
             setState(() => ({
               updating: false,
               isEditing: false,
               error: undefined,
-              values: {}
+              values: {},
             }))
           })
-          .catch(error => {
+          .catch((error) => {
             setState(() => ({
               updating: false,
-              error: errorToString(error)
+              error: errorToString(error),
             }))
           })
-      }
-    })
+      },
+    }),
   }),
   withMe,
-  withT
+  withT,
 )(Edit)

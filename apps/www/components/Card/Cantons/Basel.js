@@ -1,6 +1,4 @@
-import React from 'react'
-
-const SvgBasel = props => (
+const SvgBasel = (props) => (
   <svg
     width={props.size}
     height={(props.size * 472.418) / 470.844}

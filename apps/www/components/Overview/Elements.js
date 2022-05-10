@@ -1,21 +1,21 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 
 import { css } from 'glamor'
 import {
   fontStyles,
   mediaQueries,
   Editorial,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 
 const styles = {
   p: css({
     ...fontStyles.sansSerifRegular16,
     [mediaQueries.mUp]: {
-      ...fontStyles.sansSerifRegular21
+      ...fontStyles.sansSerifRegular21,
     },
-    margin: 0
-  })
+    margin: 0,
+  }),
 }
 
 export const P = ({ children, ...props }) => {
@@ -37,11 +37,11 @@ export const Highlight = ({
   series,
   children,
   highlight: highlightProps,
-  onHighlight
+  onHighlight,
 }) => {
   const [colorScheme] = useColorContext()
   const highlight = useMemo(
-    () => data => {
+    () => (data) => {
       if (ids && ids.includes(data.id)) {
         return true
       }
@@ -54,7 +54,7 @@ export const Highlight = ({
         }
       }
     },
-    [ids && ids.join('|'), format, series]
+    [ids && ids.join('|'), format, series],
   )
   const isHighlighted = highlight === highlightProps
   return (
@@ -63,7 +63,7 @@ export const Highlight = ({
         textDecoration: 'none',
         borderBottomWidth: 1,
         borderBottomStyle: 'dotted',
-        cursor: 'default'
+        cursor: 'default',
       }}
       {...colorScheme.set('color', isHighlighted ? 'textSoft' : 'text')}
       {...colorScheme.set('borderColor', isHighlighted ? 'textSoft' : 'text')}

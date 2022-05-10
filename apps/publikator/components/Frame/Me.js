@@ -1,4 +1,3 @@
-import React from 'react'
 import { css } from 'glamor'
 import withMe from '../../lib/withMe'
 import SignOut from '../Auth/SignOut'
@@ -12,9 +11,9 @@ const styles = {
     whiteSpace: 'normal',
     [mediaQueries.onlyS]: {
       marginRight: 15,
-      fontSize: 12
-    }
-  })
+      fontSize: 12,
+    },
+  }),
 }
 
 export const Me = ({ me }) => (

@@ -3,7 +3,7 @@ export { default as BlockCode } from './BlockCode'
 export {
   default as BlockQuote,
   BlockQuoteNested,
-  BlockQuoteParagraph
+  BlockQuoteParagraph,
 } from './Blockquote'
 
 export { default as Container } from './Container'
@@ -16,5 +16,5 @@ export {
   Definition,
   Heading,
   Link,
-  StrikeThrough
+  StrikeThrough,
 } from './Paragraph'

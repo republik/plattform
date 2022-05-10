@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { matchBlock } from '../../utils'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import withT from '../../../../lib/withT'
@@ -20,26 +18,26 @@ export default ({ rule, subModules, TYPE }) => {
         type: TYPE,
         data: {
           config: parent.data,
-          values: node.value
+          values: node.value,
         },
         isVoid: true,
-        nodes: []
+        nodes: [],
       }
     },
-    toMdast: object => ({
+    toMdast: (object) => ({
       type: 'code',
-      value: object.data.values
-    })
+      value: object.data.values,
+    }),
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [mdastRule]
+    rules: [mdastRule],
   })
 
   return {
     TYPE,
     helpers: {
-      serializer
+      serializer,
     },
     changes: {},
     plugins: [
@@ -64,7 +62,7 @@ export default ({ rule, subModules, TYPE }) => {
             <CsvChart
               key={JSON.stringify({
                 values,
-                config
+                config,
               })}
               showException
               values={values}
@@ -79,11 +77,11 @@ export default ({ rule, subModules, TYPE }) => {
         schema: {
           blocks: {
             [TYPE]: {
-              isVoid: true
-            }
-          }
-        }
-      }
-    ]
+              isVoid: true,
+            },
+          },
+        },
+      },
+    ],
   }
 }

@@ -1,4 +1,3 @@
-import React from 'react'
 import { css, merge } from 'glamor'
 import { Link } from '../../lib/routes'
 import { withRouter } from 'next/router'
@@ -10,12 +9,12 @@ const styles = {
     padding: '3px 6px',
     display: 'inline-block',
     ...fontStyles.sansSerifRegular14,
-    letterSpacing: 0.5
+    letterSpacing: 0.5,
   }),
   phaseLarge: css({
     margin: '0 6px 6px 0',
-    ...fontStyles.sansSerifRegular16
-  })
+    ...fontStyles.sansSerifRegular16,
+  }),
 }
 
 export const Phase = ({ phase, onClick, disabled, isActive, large, style }) => (
@@ -25,7 +24,7 @@ export const Phase = ({ phase, onClick, disabled, isActive, large, style }) => (
       backgroundColor: disabled ? 'gray' : phase.color,
       cursor: onClick ? 'pointer' : 'default',
       opacity: phase.count === 0 && !isActive ? 0.5 : 1,
-      ...style
+      ...style,
     }}
     onClick={onClick}
   >
@@ -38,11 +37,11 @@ const PhaseFilter = withRouter(
     phases,
     router: {
       query,
-      query: { phase }
-    }
+      query: { phase },
+    },
   }) => (
     <div {...styles.filterBar}>
-      {phases.map(p => {
+      {phases.map((p) => {
         const isActive = phase && phase === p.key
 
         return (
@@ -67,7 +66,7 @@ const PhaseFilter = withRouter(
         )
       })}
     </div>
-  )
+  ),
 )
 
 export default PhaseFilter

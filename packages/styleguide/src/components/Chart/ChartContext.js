@@ -13,7 +13,7 @@ import {
   getFormat,
   subsup,
   runSort,
-  isValuePresent
+  isValuePresent,
 } from './utils'
 
 import { timeBarsProcesser } from './TimeBars.context'
@@ -22,20 +22,20 @@ import { linesProcesser } from './Lines.context'
 import {
   categorizeData,
   normalizeData,
-  getAnnotationsXValues
+  getAnnotationsXValues,
 } from './ChartContext.utils'
 
 const dataProcesser = {
   TimeBar: timeBarsProcesser,
   Line: linesProcesser,
-  Slope: linesProcesser
+  Slope: linesProcesser,
 }
 
 const chartsToUseContext = ['TimeBar', 'Line', 'Slope']
 
 export const ChartContext = createContext()
 
-export const ChartContextProvider = plainProps => {
+export const ChartContextProvider = (plainProps) => {
   if (chartsToUseContext.indexOf(plainProps.type) === -1) {
     return plainProps.children
   }
@@ -50,13 +50,13 @@ export const ChartContextProvider = plainProps => {
     xParserFormat = timeFormat(props.timeParse)
     xFormat = timeFormat(props.timeFormat || props.timeParse)
   } else if (xScale === 'linear') {
-    xParser = x => +x
-    xFormat = x => `${x}`
-    xParserFormat = x => x.toString()
+    xParser = (x) => +x
+    xFormat = (x) => `${x}`
+    xParserFormat = (x) => x.toString()
     if (type === 'Line') {
       xFormat = getFormat(
         props.xNumberFormat || props.numberFormat,
-        props.tLabel
+        props.tLabel,
       )
     }
   }
@@ -64,7 +64,7 @@ export const ChartContextProvider = plainProps => {
   let xCompareAccessor = identityFn
   if (type === 'TimeBar') {
     // time bar always uses a band scale and needs strings on the x axis
-    xNormalizer = d => xParserFormat(xParser(d)).toString()
+    xNormalizer = (d) => xParserFormat(xParser(d)).toString()
     xCompareAccessor = xParser
   }
 
@@ -72,21 +72,21 @@ export const ChartContextProvider = plainProps => {
     .filter(getDataFilter(props.filter))
     .filter(
       props.area
-        ? d =>
+        ? (d) =>
             isValuePresent(d.value) || isValuePresent(d[`${props.area}_lower`])
-        : d => isValuePresent(d.value)
+        : (d) => isValuePresent(d.value),
     )
     .map(normalizeData(props.x, xNormalizer, props.area))
     .map(categorizeData(props.category))
 
   const shouldXSort = props.xSort || xScale === 'time' || xScale === 'linear'
   if (shouldXSort) {
-    runSort(props.xSort, data, d => xCompareAccessor(xAccessor(d)))
+    runSort(props.xSort, data, (d) => xCompareAccessor(xAccessor(d)))
   }
 
   const colorAccessor = props.color
-    ? d => d.datum[props.color]
-    : d => d.category
+    ? (d) => d.datum[props.color]
+    : (d) => d.category
 
   const colorValues = []
     .concat(data.map(colorAccessor))
@@ -100,8 +100,8 @@ export const ChartContextProvider = plainProps => {
     .map(xAccessor)
     .concat(
       props.xLines || props.xTicks
-        ? (props.xLines?.map(d => d.tick) || props.xTicks).map(xNormalizer)
-        : []
+        ? (props.xLines?.map((d) => d.tick) || props.xTicks).map(xNormalizer)
+        : [],
     )
     .concat(getAnnotationsXValues(xAnnotations, xNormalizer))
     .filter(deduplicate)
@@ -119,16 +119,16 @@ export const ChartContextProvider = plainProps => {
     xFormat,
     xParser,
     xParserFormat,
-    xNormalizer
+    xNormalizer,
   })
 
   const colorLegendValues =
     props.colorLegend !== false
       ? (props.colorLegendValues || processedData.colorValuesForLegend).map(
-          colorValue => ({
+          (colorValue) => ({
             color: color(colorValue),
-            label: subsup(colorValue)
-          })
+            label: subsup(colorValue),
+          }),
         )
       : []
 
@@ -137,7 +137,7 @@ export const ChartContextProvider = plainProps => {
     colorAccessor,
     color,
     colorLegendValues,
-    xNormalizer
+    xNormalizer,
   }
 
   return (
@@ -152,7 +152,7 @@ const defaultPropsBar = {
   minInnerWidth: 140,
   barStyle: 'small',
   numberFormat: 's',
-  sort: 'ascending'
+  sort: 'ascending',
 }
 
 const defaultPropsMap = {
@@ -173,7 +173,7 @@ const defaultPropsMap = {
   shape: 'circle',
   sizeRangeMax: 10,
   getProjection: () => geoEqualEarth().rotate([-10, 0]),
-  opacity: 0.6
+  opacity: 0.6,
 }
 
 export const defaultProps = {
@@ -193,7 +193,7 @@ export const defaultProps = {
     yAnnotations: [],
     xAnnotations: [],
     columns: 1,
-    minInnerWidth: 240
+    minInnerWidth: 240,
   },
   Line: {
     x: 'year',
@@ -211,7 +211,7 @@ export const defaultProps = {
     minInnerWidth: 110,
     columns: 1,
     height: 240,
-    yNice: 3
+    yNice: 3,
   },
   Slope: {
     x: 'year',
@@ -229,12 +229,12 @@ export const defaultProps = {
     minInnerWidth: 90,
     columns: 2,
     height: 240,
-    yNice: 3
+    yNice: 3,
   },
   Bar: defaultPropsBar,
   Lollipop: {
     ...defaultPropsBar,
-    barStyle: 'lollipop'
+    barStyle: 'lollipop',
   },
   ScatterPlot: {
     x: 'value',
@@ -250,37 +250,36 @@ export const defaultProps = {
     paddingRight: 1,
     paddingBottom: 50,
     paddingLeft: 30,
-    size: 'size',
     sizeRangeMax: 4,
     label: 'label',
     heightRatio: 1,
     sizeShowValue: false,
     columns: 1,
     minInnerWidth: 240,
-    annotations: []
+    annotations: [],
   },
   GenericMap: defaultPropsMap,
   ProjectedMap: {
     ...defaultPropsMap,
-    getProjection: () => geoIdentity()
+    getProjection: () => geoIdentity(),
   },
   SwissMap: {
     ...defaultPropsMap,
     getProjection: () =>
       geoMercator().rotate([-7.439583333333333, -46.95240555555556]),
-    heightRatio: 0.63
+    heightRatio: 0.63,
   },
   Hemicycle: {
     color: 'label',
     group: 'year',
     inlineLabelThreshold: 10,
     padding: 0,
-    colorMap: 'swissPartyColors'
+    colorMap: 'swissPartyColors',
   },
   Table: {
     numberFormat: 's',
-    tableColumns: []
-  }
+    tableColumns: [],
+  },
 }
 
 const axisPropType = PropTypes.shape({
@@ -288,7 +287,7 @@ const axisPropType = PropTypes.shape({
   domain: PropTypes.array.isRequired,
   ticks: PropTypes.array.isRequired,
   format: PropTypes.func.isRequired,
-  axisFormat: PropTypes.func.isRequired
+  axisFormat: PropTypes.func.isRequired,
 })
 
 const propTypes = {
@@ -296,7 +295,7 @@ const propTypes = {
   groupPosition: PropTypes.shape({
     y: PropTypes.func.isRequired,
     x: PropTypes.func.isRequired,
-    titleHeight: PropTypes.number // timebar only
+    titleHeight: PropTypes.number, // timebar only
   }).isRequired,
   height: PropTypes.number.isRequired,
   innerWidth: PropTypes.number.isRequired,
@@ -309,8 +308,8 @@ const propTypes = {
   colorLegendValues: PropTypes.arrayOf(
     PropTypes.shape({
       color: PropTypes.string.isRequired,
-      label: PropTypes.node.isRequired
-    })
+      label: PropTypes.node.isRequired,
+    }),
   ).isRequired,
   xNormalizer: PropTypes.func.isRequired, // only used by timebar
   // line only
@@ -319,12 +318,12 @@ const propTypes = {
     yCut: PropTypes.string,
     yCutHeight: PropTypes.number,
     yNeedsConnectors: PropTypes.bool,
-    yConnectorSize: PropTypes.number
+    yConnectorSize: PropTypes.number,
   }),
   yAnnotations: PropTypes.array,
-  xAnnotations: PropTypes.array
+  xAnnotations: PropTypes.array,
 }
 
 ChartContext.Provider.propTypes = {
-  value: PropTypes.shape(propTypes).isRequired
+  value: PropTypes.shape(propTypes).isRequired,
 }

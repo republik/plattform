@@ -1,4 +1,4 @@
-const createStorage = provider => ({
+const createStorage = (provider) => ({
   get(key, defaultValue) {
     const json = provider.getItem(key)
     // eslint-disable-next-line no-nested-ternary
@@ -14,7 +14,7 @@ const createStorage = provider => ({
     } else {
       provider.setItem(key, JSON.stringify(value))
     }
-  }
+  },
 })
 
 export default createStorage

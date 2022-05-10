@@ -32,7 +32,7 @@ const {
   addPaymentMethod,
   getDefaultPaymentSource,
   setDefaultPaymentMethod,
-  syncPaymentIntent
+  syncPaymentIntent,
 } = require('./helpers')
 const seedCrowdfundings = require('../seeds/seedCrowdfundings')
 
@@ -646,7 +646,9 @@ describe('addPaymentMethod', () => {
 
     const defaultPaymentSource1 = await getDefaultPaymentSource()
     // for new customers on addPaymentMethod it's made the default
-    expect(defaultPaymentSource1.data?.me?.defaultPaymentSource?.id).toBe(pm1.id)
+    expect(defaultPaymentSource1.data?.me?.defaultPaymentSource?.id).toBe(
+      pm1.id,
+    )
 
     const pm2 = await createPaymentMethod({ card: Cards.AuthFirst })
     const addResult2 = await addPaymentMethod({
@@ -657,21 +659,27 @@ describe('addPaymentMethod', () => {
     expect(addResult2.data?.addPaymentMethod?.stripeClientSecret).toBeTruthy()
 
     const defaultPaymentSource2 = await getDefaultPaymentSource()
-    expect(defaultPaymentSource2.data?.me?.defaultPaymentSource?.id).toBe(pm1.id)
+    expect(defaultPaymentSource2.data?.me?.defaultPaymentSource?.id).toBe(
+      pm1.id,
+    )
 
     await setDefaultPaymentMethod({
-      paymentMethodId: pm2.id
+      paymentMethodId: pm2.id,
     })
 
     const defaultPaymentSource3 = await getDefaultPaymentSource()
-    expect(defaultPaymentSource3.data?.me?.defaultPaymentSource?.id).toBe(pm2.id)
+    expect(defaultPaymentSource3.data?.me?.defaultPaymentSource?.id).toBe(
+      pm2.id,
+    )
 
     await setDefaultPaymentMethod({
-      paymentMethodId: pm1.id
+      paymentMethodId: pm1.id,
     })
 
     const defaultPaymentSource4 = await getDefaultPaymentSource()
-    expect(defaultPaymentSource4.data?.me?.defaultPaymentSource?.id).toBe(pm1.id)
+    expect(defaultPaymentSource4.data?.me?.defaultPaymentSource?.id).toBe(
+      pm1.id,
+    )
 
     await signOut()
   })
@@ -693,13 +701,11 @@ describe('payPledge (paymentMethod)', () => {
     expect(payPledgeResult.data?.payPledge?.stripePaymentIntentId).toBeTruthy()
     expect(payPledgeResult.data?.payPledge?.companyId).toBe(PLATFORM_COMPANY_ID)
 
-    const {
-      stripePaymentIntentId: paymentIntentId,
-      companyId
-    } = payPledgeResult.data.payPledge
+    const { stripePaymentIntentId: paymentIntentId, companyId } =
+      payPledgeResult.data.payPledge
 
     const pledge1 = await pgDatabase().public.pledges.findOne({
-      id: pledgeId
+      id: pledgeId,
     })
     expect(pledge1).toBeTruthy()
     expect(pledge1.status).toBe('DRAFT')
@@ -710,7 +716,7 @@ describe('payPledge (paymentMethod)', () => {
 
     const syncResult = await syncPaymentIntent({
       paymentIntentId,
-      companyId
+      companyId,
     })
     expect(syncResult.errors).toBeFalsy()
     expect(syncResult.data?.syncPaymentIntent?.pledgeStatus).toBe('SUCCESSFUL')
@@ -758,13 +764,11 @@ describe('payPledge (paymentMethod)', () => {
     expect(payPledgeResult.data?.payPledge?.stripePaymentIntentId).toBeTruthy()
     expect(payPledgeResult.data?.payPledge?.companyId).toBe(PLATFORM_COMPANY_ID)
 
-    const {
-      stripePaymentIntentId: paymentIntentId,
-      companyId
-    } = payPledgeResult.data.payPledge
+    const { stripePaymentIntentId: paymentIntentId, companyId } =
+      payPledgeResult.data.payPledge
 
     const pledge1 = await pgDatabase().public.pledges.findOne({
-      id: pledgeId
+      id: pledgeId,
     })
     expect(pledge1).toBeTruthy()
     expect(pledge1.status).toBe('DRAFT')
@@ -775,7 +779,7 @@ describe('payPledge (paymentMethod)', () => {
 
     const syncResult = await syncPaymentIntent({
       paymentIntentId,
-      companyId
+      companyId,
     })
     expect(syncResult.errors).toBeFalsy()
     expect(syncResult.data?.syncPaymentIntent?.pledgeStatus).toBe('DRAFT')
@@ -808,7 +812,9 @@ describe('payPledge (paymentMethod)', () => {
       limit: 4,
     })
     expect(paymentIntents.data?.length).toBeTruthy()
-    const ourPaymentIntent = paymentIntents.data.find(pi => pi.customer === customer.id)
+    const ourPaymentIntent = paymentIntents.data.find(
+      (pi) => pi.customer === customer.id,
+    )
     expect(ourPaymentIntent).toBeTruthy()
     const chargeId = ourPaymentIntent.charges.data[0].id
     expect(chargeId).toBeTruthy()
@@ -817,25 +823,26 @@ describe('payPledge (paymentMethod)', () => {
     await invoicePaymentSuccess(
       {
         chargeId,
-        paymentIntentId: ourPaymentIntent.id
+        paymentIntentId: ourPaymentIntent.id,
       },
       pgDatabase(),
       global.instance.context,
-      companyId
+      companyId,
     )
 
     const payPledgeResult = await payPledgePromise
     expect(payPledgeResult.errors).toBeFalsy()
     expect(payPledgeResult.data?.payPledge?.pledgeId).toBe(pledgeId)
     expect(payPledgeResult.data?.payPledge?.stripeClientSecret).toBeFalsy()
-    expect(payPledgeResult.data?.payPledge?.stripePaymentIntentId).toBe(ourPaymentIntent.id)
+    expect(payPledgeResult.data?.payPledge?.stripePaymentIntentId).toBe(
+      ourPaymentIntent.id,
+    )
     expect(payPledgeResult.data?.payPledge?.companyId).toBe(companyId)
-    const {
-      stripePaymentIntentId: paymentIntentId,
-    } = payPledgeResult.data.payPledge
+    const { stripePaymentIntentId: paymentIntentId } =
+      payPledgeResult.data.payPledge
 
     const pledge = await pgDatabase().public.pledges.findOne({
-      id: pledgeId
+      id: pledgeId,
     })
     expect(pledge).toBeTruthy()
     expect(pledge.status).toBe('SUCCESSFUL')
@@ -868,7 +875,7 @@ describe('payPledge (paymentMethod)', () => {
 
     const syncResult = await syncPaymentIntent({
       paymentIntentId,
-      companyId
+      companyId,
     })
     expect(syncResult.errors).toBeFalsy()
     expect(syncResult.data?.syncPaymentIntent?.pledgeStatus).toBe('SUCCESSFUL')
@@ -880,7 +887,6 @@ describe('payPledge (paymentMethod)', () => {
     })
     expect(status).toBe('REFUNDED')
   })
-
 })
 
 describe('payPledge (source)', () => {
@@ -963,9 +969,8 @@ describe('payPledge (source)', () => {
     })
     expect(result.errors).toBeFalsy()
 
-    const pledgePaymentBeforeCharge = await pgDatabase().public.pledgePayments.findOne(
-      { pledgeId },
-    )
+    const pledgePaymentBeforeCharge =
+      await pgDatabase().public.pledgePayments.findOne({ pledgeId })
     expect(pledgePaymentBeforeCharge).toBeFalsy()
 
     const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY_COMPANY_TWO)

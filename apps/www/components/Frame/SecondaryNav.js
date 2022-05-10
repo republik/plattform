@@ -1,11 +1,10 @@
-import React from 'react'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import {
   colors,
   mediaQueries,
   fontStyles,
-  useColorContext
+  useColorContext,
 } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
@@ -14,7 +13,7 @@ import NavLink from './Popover/NavLink'
 import {
   SUBHEADER_HEIGHT,
   ZINDEX_HEADER,
-  HEADER_HORIZONTAL_PADDING
+  HEADER_HORIZONTAL_PADDING,
 } from '../constants'
 import { useRouter } from 'next/router'
 
@@ -23,45 +22,45 @@ const sections = [
     title: 'Meta',
     href: '/meta',
     color: '#000',
-    kind: null
+    kind: null,
   },
   {
     title: 'Briefings',
     href: '/briefings',
     color: '#07809a',
-    kind: 'editorial'
+    kind: 'editorial',
   },
   {
     title: 'Kolumnen',
     href: '/kolumnen',
     color: '#D2933C',
-    kind: null
+    kind: null,
   },
   {
     title: 'Formate',
     href: '/formate',
     color: '#d44438',
-    kind: 'scribble'
+    kind: 'scribble',
   },
   {
     title: 'Audio',
     href: '/audio',
     color: null,
-    kind: null
+    kind: null,
   },
   {
     title: 'Serien',
     href: '/serien',
     color: null,
-    kind: null
-  }
+    kind: null,
+  },
 ]
 
 export const SecondaryNav = ({
   secondaryNav,
   hasOverviewNav,
   isSecondarySticky,
-  t
+  t,
 }) => {
   const [colorScheme] = useColorContext()
   const router = useRouter()
@@ -73,13 +72,13 @@ export const SecondaryNav = ({
           {...styles.miniNav}
           {...colorScheme.set('backgroundColor', 'default')}
           {...colorScheme.set('borderColor', 'divider')}
-          onTouchStart={e => {
+          onTouchStart={(e) => {
             // prevent touchstart from bubbling to Pullable
             e.stopPropagation()
           }}
           style={{
             borderTopWidth: isSecondarySticky ? 0 : 1,
-            borderTopStyle: 'solid'
+            borderTopStyle: 'solid',
           }}
         >
           <NavLink href='/' active={active} minifeed title={t('navbar/front')}>
@@ -103,7 +102,7 @@ export const SecondaryNav = ({
           >
             {t('navbar/discussion')}
           </NavLink>
-          {sections.map(section => {
+          {sections.map((section) => {
             const color = section.color || colors[section.kind]
             return (
               <NavLink
@@ -129,7 +128,7 @@ export const SecondaryNav = ({
             style={{
               borderTopWidth: isSecondarySticky ? 0 : 1,
               borderTopStyle: 'solid',
-              transition: 'opacity 0.2s ease-out'
+              transition: 'opacity 0.2s ease-out',
             }}
           >
             {secondaryNav}
@@ -150,8 +149,8 @@ const styles = {
     justifyContent: 'flex-start',
     padding: `0px 15px`,
     [mediaQueries.mUp]: {
-      justifyContent: 'center'
-    }
+      justifyContent: 'center',
+    },
   }),
   miniNav: css({
     overflowY: 'hidden',
@@ -165,10 +164,10 @@ const styles = {
     scrollbarWidth: 'none' /* Firefox */,
     msOverflowStyle: 'none' /* IE 10+ */,
     '::-webkit-scrollbar': {
-      display: 'none'
+      display: 'none',
     },
     [mediaQueries.mUp]: {
-      textAlign: 'center'
+      textAlign: 'center',
     },
     '& a': {
       display: 'inline-block',
@@ -182,32 +181,32 @@ const styles = {
         content: 'attr(title)',
         height: 0,
         overflow: 'hidden',
-        visibility: 'hidden'
+        visibility: 'hidden',
       },
       ':first-child': {
         marginLeft: HEADER_HORIZONTAL_PADDING,
-        scrollMarginLeft: HEADER_HORIZONTAL_PADDING
+        scrollMarginLeft: HEADER_HORIZONTAL_PADDING,
       },
       ':last-child': {
         marginRight: HEADER_HORIZONTAL_PADDING,
         scrollMarginRight: HEADER_HORIZONTAL_PADDING,
         [mediaQueries.mUp]: {
-          paddingRight: 0
-        }
+          paddingRight: 0,
+        },
       },
       '&.is-active': {
         ...fontStyles.sansSerifMedium,
         lineHeight: '16px',
-        marginTop: -1
-      }
+        marginTop: -1,
+      },
     },
     '@media print': {
-      display: 'none'
-    }
+      display: 'none',
+    },
   }),
   linkItem: css({
-    height: SUBHEADER_HEIGHT
-  })
+    height: SUBHEADER_HEIGHT,
+  }),
 }
 
 export default compose(withT)(SecondaryNav)

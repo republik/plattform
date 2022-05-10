@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import { MdDone as SaveIcon } from 'react-icons/md'
@@ -8,7 +8,7 @@ import {
   InteractiveSection,
   Section,
   SectionTitle,
-  TextButton
+  TextButton,
 } from '../../Display/utils'
 
 const GET_CREDENTIALS = gql`
@@ -42,10 +42,10 @@ const REMOVE_CREDENTIAL_VERIFICATION = gql`
 `
 const UpdateCredential = ({
   credential: { id: credentialId, description, verified, isListed },
-  user: { id: userId }
+  user: { id: userId },
 }) => {
   const [value, setValue] = useState(verified)
-  const handleSubmit = mutation => event => {
+  const handleSubmit = (mutation) => (event) => {
     event.preventDefault()
     mutation()
   }
@@ -57,9 +57,9 @@ const UpdateCredential = ({
         {
           query: GET_CREDENTIALS,
           variables: {
-            id: userId
-          }
-        }
+            id: userId,
+          },
+        },
       ]}
     >
       {(mutation, { loading }) => {
@@ -103,11 +103,11 @@ const Credentials = ({ userId }) => {
               const { user } = data
               const { credentials } = user
               const profileRole = credentials.find(
-                credential => credential.isListed
+                (credential) => credential.isListed,
               )
               if (profileRole) {
                 credentials.unshift(
-                  credentials.splice(credentials.indexOf(profileRole), 1)[0]
+                  credentials.splice(credentials.indexOf(profileRole), 1)[0],
                 )
               }
 
@@ -115,7 +115,7 @@ const Credentials = ({ userId }) => {
                 return (
                   <InteractiveSection>
                     <SectionTitle>Rollen verifizieren</SectionTitle>
-                    {credentials.map(credential => (
+                    {credentials.map((credential) => (
                       <UpdateCredential
                         key={`${credential.description}-${credential.verified}`}
                         user={user}

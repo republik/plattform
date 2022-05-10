@@ -1,4 +1,3 @@
-import React from 'react'
 import { withRouter } from 'next/router'
 import Head from 'next/head'
 
@@ -21,7 +20,7 @@ const Page = ({ router, t }) => {
           data={{
             title: t('pages/cardSetup/title'),
             description: t('pages/cardSetup/description'),
-            image: `${CDN_FRONTEND_BASE_URL}/static/social-media/republik-wahltindaer-09.png`
+            image: `${CDN_FRONTEND_BASE_URL}/static/social-media/republik-wahltindaer-09.png`,
           }}
         />
         <Head>
@@ -37,7 +36,7 @@ const Page = ({ router, t }) => {
       <Meta
         data={{
           title: t('pages/cardSetup/title'),
-          description: t('pages/cardSetup/description')
+          description: t('pages/cardSetup/description'),
         }}
       />
       <Head>

@@ -1,4 +1,4 @@
-import React, { useRef, Fragment } from 'react'
+import { useRef, Fragment } from 'react'
 import { createBlockButton, buttonStyles, matchBlock } from '../../utils'
 import injectBlock from '../../utils/injectBlock'
 import { Text, Block } from 'slate'
@@ -10,7 +10,7 @@ import { Checkbox, Label } from '@project-r/styleguide'
 export default ({ TYPE }) => {
   const InsertButton = createBlockButton({
     type: TYPE,
-    reducer: props => event => {
+    reducer: (props) => (event) => {
       const { onChange, value } = props
       event.preventDefault()
 
@@ -21,11 +21,11 @@ export default ({ TYPE }) => {
             kind: 'block',
             type: TYPE,
             data: { primary: true },
-            nodes: [Text.create('Text')]
-          })
-        )
+            nodes: [Text.create('Text')],
+          }),
+        ),
       )
-    }
+    },
   })(({ active, disabled, visible, ...props }) => {
     return (
       <span
@@ -48,9 +48,9 @@ export default ({ TYPE }) => {
       <div style={{ margin: '10px 0', textTransform: 'capitalize' }}>
         <Checkbox
           checked={checked.current}
-          onChange={_ => {
+          onChange={(_) => {
             let change = value.change().setNodeByKey(node.key, {
-              data: node.data.merge({ [label]: !checked.current })
+              data: node.data.merge({ [label]: !checked.current }),
             })
             onChange(change)
           }}
@@ -100,6 +100,6 @@ export default ({ TYPE }) => {
 
   return {
     forms: [Form],
-    insertButtons: [InsertButton]
+    insertButtons: [InsertButton],
   }
 }

@@ -30,7 +30,7 @@ function useOverlay<T>(): OverlayState<T> {
     open,
     setOpen,
     handleOpen,
-    handleClose
+    handleClose,
   }
 }
 

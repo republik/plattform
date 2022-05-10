@@ -1,5 +1,5 @@
 import { css } from 'glamor'
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import compose from 'lodash/flowRight'
 import { useColorContext, mediaQueries } from '@project-r/styleguide'
 
@@ -22,14 +22,14 @@ const styles = {
     right: 15,
     [mediaQueries.mUp]: {
       top: 12,
-      right: 19
-    }
-  })
+      right: 19,
+    },
+  }),
 }
 
 export default compose(
   withT,
-  withNotificationCount
+  withNotificationCount,
 )(({ countData: { notifications, subscribeToMore, refetch } }) => {
   const [hasUnread, setUnread] = useState(containsUnread(notifications))
   const subscribe = () =>
@@ -44,11 +44,11 @@ export default compose(
           notifications: {
             ...prev.notifications,
             nodes: [subscriptionData.data.notification].concat(
-              prev.notifications.nodes
-            )
-          }
+              prev.notifications.nodes,
+            ),
+          },
         }
-      }
+      },
     })
 
   useEffect(() => {

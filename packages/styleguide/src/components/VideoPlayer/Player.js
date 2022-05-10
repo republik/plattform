@@ -33,12 +33,12 @@ const styles = {
     backgroundColor: '#000',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   }),
   wrapper: css({
     position: 'relative',
     lineHeight: 0,
-    marginBottom: PROGRESS_HEIGHT
+    marginBottom: PROGRESS_HEIGHT,
   }),
   video: css({
     width: '100%',
@@ -46,17 +46,17 @@ const styles = {
     transition: 'height 200ms',
     outline: 'none',
     '::-webkit-media-controls-panel': {
-      display: 'none !important'
+      display: 'none !important',
     },
     '::--webkit-media-controls-play-button': {
-      display: 'none !important'
+      display: 'none !important',
     },
     '::-webkit-media-controls-start-playback-button': {
-      display: 'none !important'
+      display: 'none !important',
     },
     ':focus': {
-      outline: 'none'
-    }
+      outline: 'none',
+    },
   }),
   videoFullscreen: css({
     width: '100%',
@@ -64,11 +64,11 @@ const styles = {
     outline: 'none',
     transition: 'height 200ms',
     '::-webkit-media-controls-volume-slider': {
-      display: 'none !important'
+      display: 'none !important',
     },
     '::-webkit-media-controls-download-button': {
-      display: 'none !important'
-    }
+      display: 'none !important',
+    },
   }),
   controls: css({
     position: 'absolute',
@@ -78,7 +78,7 @@ const styles = {
     bottom: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
     cursor: 'pointer',
-    transition: 'opacity 200ms'
+    transition: 'opacity 200ms',
   }),
   play: css({
     position: 'absolute',
@@ -87,7 +87,7 @@ const styles = {
     right: '5%',
     marginTop: -18,
     textAlign: 'center',
-    transition: 'opacity 200ms'
+    transition: 'opacity 200ms',
   }),
   progress: css({
     position: 'absolute',
@@ -95,7 +95,7 @@ const styles = {
     bottom: -PROGRESS_HEIGHT,
     left: 0,
     height: PROGRESS_HEIGHT,
-    transition: 'bottom 200ms'
+    transition: 'bottom 200ms',
   }),
   iconsLeft: css({
     position: 'absolute',
@@ -105,19 +105,19 @@ const styles = {
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
-    height: 24
+    height: 24,
   }),
   iconsRight: css({
     position: 'absolute',
     zIndex: ZINDEX_VIDEOPLAYER_ICONS,
     right: 10,
     bottom: 10,
-    cursor: 'pointer'
+    cursor: 'pointer',
   }),
   time: css({
     color: '#fff',
     padding: 6,
-    ...sansSerifRegular18
+    ...sansSerifRegular18,
   }),
   scrub: css({
     zIndex: ZINDEX_VIDEOPLAYER_SCRUB,
@@ -126,8 +126,8 @@ const styles = {
     bottom: -PROGRESS_HEIGHT,
     left: 0,
     right: 0,
-    cursor: 'ew-resize'
-  })
+    cursor: 'ew-resize',
+  }),
 }
 
 class VideoPlayer extends Component {
@@ -140,7 +140,7 @@ class VideoPlayer extends Component {
       muted: globalState.muted,
       subtitles: props.subtitles || globalState.subtitles,
       loading: false,
-      isFull: false
+      isFull: false,
     }
 
     this.getCurrentTime = () => {
@@ -161,12 +161,13 @@ class VideoPlayer extends Component {
       this.setState({ progress })
     }
     this.syncProgress = () => {
+      clearTimeout(this.readTimeout)
       this.readTimeout = setTimeout(() => {
         this.updateProgress()
         this.syncProgress()
-      }, 16)
+      }, 250)
     }
-    this.ref = ref => {
+    this.ref = (ref) => {
       this.video = ref
     }
     this.onPlay = () => {
@@ -178,7 +179,7 @@ class VideoPlayer extends Component {
       }
       this.setState(() => ({
         playing: true,
-        loading: false
+        loading: false,
       }))
       if (this.pendingTime !== undefined) {
         // ensure it starts playing at the right time
@@ -195,7 +196,7 @@ class VideoPlayer extends Component {
     }
     this.onPause = () => {
       this.setState(() => ({
-        playing: false
+        playing: false,
       }))
       clearTimeout(this.readTimeout)
       this.props.onPause && this.props.onPause()
@@ -203,7 +204,7 @@ class VideoPlayer extends Component {
     }
     this.onLoadStart = () => {
       this.setState(() => ({
-        loading: true
+        loading: true,
       }))
     }
     this.setTime = (time = 0) => {
@@ -219,20 +220,20 @@ class VideoPlayer extends Component {
         this.updateProgress()
       }
     }
-    this.isSeekable = new Promise(resolve => {
+    this.isSeekable = new Promise((resolve) => {
       this.onSeekable = resolve
     })
     this.onCanPlay = () => {
       this.setState(() => ({
         loading: false,
-        startTimeSet: true
+        startTimeSet: true,
       }))
       this.onSeekable()
     }
     this.onLoadedMetaData = () => {
       this.setTextTracksMode()
       this.setState(() => ({
-        loading: false
+        loading: false,
       }))
       this.onSeekable()
     }
@@ -245,10 +246,10 @@ class VideoPlayer extends Component {
         this.setMuted(this.video.muted)
       }
     }
-    this.scrubRef = ref => {
+    this.scrubRef = (ref) => {
       this.scrubber = ref
     }
-    this.scrub = event => {
+    this.scrub = (event) => {
       const { scrubber, video } = this
       if (this.scrubbing && scrubber && video && video.duration) {
         event.preventDefault()
@@ -267,15 +268,15 @@ class VideoPlayer extends Component {
 
         const progress = Math.min(
           1,
-          Math.max((currentEvent.clientX - rect.left) / rect.width, 0)
+          Math.max((currentEvent.clientX - rect.left) / rect.width, 0),
         )
         this.setTime(video.duration * progress)
       }
     }
-    this.scrubStart = event => {
+    this.scrubStart = (event) => {
       this.scrubbing = true
       if (event.type === 'mousedown') {
-        const up = e => {
+        const up = (e) => {
           this.scrubEnd(e)
           document.removeEventListener('mousemove', this.scrub)
           document.removeEventListener('mouseup', up)
@@ -285,14 +286,14 @@ class VideoPlayer extends Component {
       }
       this.scrub(event)
     }
-    this.scrubEnd = event => {
+    this.scrubEnd = (event) => {
       this.scrub(event)
       this.scrubbing = false
     }
-    this.setInstanceState = state => {
+    this.setInstanceState = (state) => {
       this.setState(state)
     }
-    this.setInstanceState.setTime = time => {
+    this.setInstanceState.setTime = (time) => {
       if (this.props.primary) {
         this.setTime(time)
         if (this.video && this.video.paused) {
@@ -301,7 +302,7 @@ class VideoPlayer extends Component {
         }
       }
     }
-    this.handleKeyDown = event => {
+    this.handleKeyDown = (event) => {
       if (
         event.key === 'k' ||
         (!this.state.isFull && event.keyCode === 32) // 32: spacebar
@@ -319,7 +320,7 @@ class VideoPlayer extends Component {
         this.toggleFullscreen(event)
       }
     }
-    this.toggleFullscreen = e => {
+    this.toggleFullscreen = (e) => {
       e.preventDefault()
       e.stopPropagation()
       const { fullscreen, isFull } = this.state
@@ -357,7 +358,7 @@ class VideoPlayer extends Component {
     const { video } = this
     const playPromise = video && video.play()
     if (playPromise) {
-      playPromise.catch(e => {
+      playPromise.catch((e) => {
         warn('[VideoPlayer]', e.message)
       })
     }
@@ -396,10 +397,10 @@ class VideoPlayer extends Component {
   }
   setMuted(muted) {
     const next = {
-      muted
+      muted,
     }
     globalState.muted = next.muted
-    globalState.instances.forEach(setter => {
+    globalState.instances.forEach((setter) => {
       setter(next)
     })
   }
@@ -412,8 +413,8 @@ class VideoPlayer extends Component {
           this.setState({ isFull: shouldBeFull })
           onFull && onFull(shouldBeFull, true)
         },
-        video: this.video
-      })
+        video: this.video,
+      }),
     })
 
     globalState.instances.push(this.setInstanceState)
@@ -431,7 +432,7 @@ class VideoPlayer extends Component {
 
     this.setTextTracksMode()
 
-    this.getStartTime().then(startTime => {
+    this.getStartTime().then((startTime) => {
       if (startTime !== undefined) {
         this.setTime(startTime)
         this.isSeekable.then(() => {
@@ -447,8 +448,9 @@ class VideoPlayer extends Component {
     this.setTextTracksMode()
   }
   componentWillUnmount() {
+    clearTimeout(this.readTimeout)
     globalState.instances = globalState.instances.filter(
-      setter => setter !== this.setInstanceState
+      (setter) => setter !== this.setInstanceState,
     )
     if (globalState.playingRef === this.video) {
       globalState.playingRef = undefined
@@ -474,17 +476,10 @@ class VideoPlayer extends Component {
       loop,
       cinemagraph,
       hideTime,
-      attributes = {}
+      attributes = {},
     } = this.props
-    const {
-      playing,
-      progress,
-      muted,
-      subtitles,
-      loading,
-      fullscreen,
-      isFull
-    } = this.state
+    const { playing, progress, muted, subtitles, loading, fullscreen, isFull } =
+      this.state
 
     const cinemagraphAttributes = cinemagraph
       ? {
@@ -492,7 +487,7 @@ class VideoPlayer extends Component {
           muted: true,
           autoPlay: true,
           playsInline: true,
-          'webkit-playsinline': ''
+          'webkit-playsinline': '',
         }
       : {}
 
@@ -543,7 +538,7 @@ class VideoPlayer extends Component {
           <div
             {...styles.play}
             style={{
-              opacity: !showPlay || playing ? 0 : 1
+              opacity: !showPlay || playing ? 0 : 1,
             }}
           >
             <Play />
@@ -551,7 +546,7 @@ class VideoPlayer extends Component {
           {!hideTime && !cinemagraph && (
             <div {...styles.iconsLeft}>
               <div
-                onClick={e => {
+                onClick={(e) => {
                   e.stopPropagation()
                   enableRewind && this.setTime(0)
                 }}
@@ -571,14 +566,14 @@ class VideoPlayer extends Component {
               <span
                 role='button'
                 title={`Untertitel ${subtitles ? 'an' : 'aus'}`}
-                onClick={e => {
+                onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
                   const next = {
-                    subtitles: !subtitles
+                    subtitles: !subtitles,
                   }
                   globalState.subtitles = next.subtitles
-                  globalState.instances.forEach(setter => {
+                  globalState.instances.forEach((setter) => {
                     setter(next)
                   })
                 }}
@@ -590,7 +585,7 @@ class VideoPlayer extends Component {
               <span
                 role='button'
                 title={`Audio ${muted ? 'aus' : 'an'}`}
-                onClick={e => {
+                onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
                   this.setMuted(!muted)
@@ -614,7 +609,7 @@ class VideoPlayer extends Component {
               {...styles.progress}
               style={{
                 width: `${progress * 100}%`,
-                bottom: fullWindow && !playing ? 0 : undefined
+                bottom: fullWindow && !playing ? 0 : undefined,
               }}
             />
             <div
@@ -643,10 +638,10 @@ VideoPlayer.propTypes = {
         return new Error(
           `Invalid prop \`${propName}\` supplied to
 \`${componentName}\`. Subtitles should be loaded from a relative or absolute path.
-CrossOrigin subtitles do not work in older browsers.'`
+CrossOrigin subtitles do not work in older browsers.'`,
         )
       }
-    }
+    },
   }),
   size: PropTypes.oneOf(Object.keys(breakoutStyles)),
   showPlay: PropTypes.bool,
@@ -661,17 +656,17 @@ CrossOrigin subtitles do not work in older browsers.'`
   fullWindow: PropTypes.bool,
   onFull: PropTypes.func,
   // listen to url and global setTime
-  primary: PropTypes.bool
+  primary: PropTypes.bool,
 }
 
 VideoPlayer.contextTypes = {
   getMediaProgress: PropTypes.func,
-  saveMediaProgress: PropTypes.func
+  saveMediaProgress: PropTypes.func,
 }
 
 VideoPlayer.defaultProps = {
   showPlay: true,
-  size: undefined
+  size: undefined,
 }
 
 export default VideoPlayer

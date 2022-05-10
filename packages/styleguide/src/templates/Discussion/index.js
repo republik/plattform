@@ -3,7 +3,7 @@ import { getDatePath } from '../Article/utils'
 
 const createDiscussionSchema = ({
   customMetaFields = [],
-  getPath = args => `${getDatePath(args)}/diskussion`,
+  getPath = (args) => `${getDatePath(args)}/diskussion`,
   hasEmailTemplate = false,
   ...args
 } = {}) => {
@@ -14,11 +14,11 @@ const createDiscussionSchema = ({
     customMetaFields: [
       {
         label: 'Beitrag-Maximallänge',
-        key: 'commentsMaxLength'
+        key: 'commentsMaxLength',
       },
       {
         label: 'Beitrag-Interval (ms)',
-        key: 'commentsMinInterval'
+        key: 'commentsMinInterval',
       },
       {
         label: 'Anonymity',
@@ -26,46 +26,51 @@ const createDiscussionSchema = ({
         items: [
           { value: 'ALLOWED', text: 'Erlaubt' },
           { value: 'ENFORCED', text: 'Zwingend' },
-          { value: 'FORBIDDEN', text: 'Verboten' }
-        ]
+          { value: 'FORBIDDEN', text: 'Verboten' },
+        ],
       },
       {
         label: 'Board',
         key: 'board',
-        ref: 'bool'
+        ref: 'bool',
       },
       {
         label: 'Format',
         key: 'format',
-        ref: 'repo'
+        ref: 'repo',
       },
       {
         label: 'Dossier',
         key: 'dossier',
-        ref: 'repo'
+        ref: 'repo',
+      },
+      {
+        label: 'Kein synthetisches Vorlesen',
+        key: 'suppressSyntheticReadAloud',
+        ref: 'bool',
       },
       {
         label: 'Diskussion geschlossen',
         key: 'discussionClosed',
-        ref: 'bool'
+        ref: 'bool',
       },
       {
         label: 'Lange Beiträge zuklappen',
         key: 'collapsable',
-        ref: 'bool'
+        ref: 'bool',
       },
       {
         label: 'Tag obligatorisch für neuen root-Beitrag',
         key: 'tagRequired',
-        ref: 'bool'
+        ref: 'bool',
       },
       {
         label: 'Tags (kommasepariert)',
-        key: 'tags'
+        key: 'tags',
       },
-      ...customMetaFields
+      ...customMetaFields,
     ],
-    ...args
+    ...args,
   })
 }
 

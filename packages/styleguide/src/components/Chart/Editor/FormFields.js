@@ -16,15 +16,15 @@ const styles = {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
     gap: '20px 20px',
-    margin: '20px 0'
+    margin: '20px 0',
   }),
   box: css({
     padding: '10px',
-    border: '1px solid #c0c0c0'
-  })
+    border: '1px solid #c0c0c0',
+  }),
 }
 
-export const FormFields = props => {
+export const FormFields = (props) => {
   const {
     fields,
     onFieldsChange,
@@ -33,20 +33,20 @@ export const FormFields = props => {
     createOnNumberFieldChange,
     value,
     chartData,
-    defaultProps
+    defaultProps,
   } = props
   const fieldsKeys = Object.keys(fields)
 
   return (
     <div {...styles.gridContainer}>
-      {fieldsKeys.map(group => {
+      {fieldsKeys.map((group) => {
         const groupObject = fields[group].properties
         return (
           <div {...styles.box} key={group}>
             <Interaction.P>
               <strong>{fields[group].title}</strong>
             </Interaction.P>
-            {Object.keys(fields[group].properties).map(property => {
+            {Object.keys(fields[group].properties).map((property) => {
               if (property === 'colorRange') {
                 return (
                   <ColorField
@@ -73,7 +73,7 @@ export const FormFields = props => {
                     context={determineAxisContext(
                       groupObject[property].parent,
                       value,
-                      defaultProps
+                      defaultProps,
                     )}
                     parent={groupObject[property].parent}
                     xNumberFormat={value.xNumberFormat}
@@ -104,7 +104,7 @@ export const FormFields = props => {
                     context={determineAxisContext(
                       property,
                       value,
-                      defaultProps
+                      defaultProps,
                     )}
                     timeParseDefault={defaultProps.timeParse}
                   />

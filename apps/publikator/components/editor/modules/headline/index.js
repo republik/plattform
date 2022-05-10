@@ -1,11 +1,9 @@
-import React from 'react'
-
 import MarkdownSerializer from 'slate-mdast-serializer'
 import Placeholder from '../../Placeholder'
 import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
 import {
   createStaticKeyHandler,
-  createInsertAfterKeyHandler
+  createInsertAfterKeyHandler,
 } from '../../utils/keyHandlers'
 
 export default ({ rule, subModules, TYPE }) => {
@@ -14,7 +12,7 @@ export default ({ rule, subModules, TYPE }) => {
     placeholder,
     formatButtonText,
     formatTypes,
-    isStatic = false
+    isStatic = false,
   } = rule.editorOptions || {}
 
   const inlineSerializer = new MarkdownSerializer({
@@ -22,40 +20,40 @@ export default ({ rule, subModules, TYPE }) => {
       .reduce(
         (a, m) =>
           a.concat(
-            m.helpers && m.helpers.serializer && m.helpers.serializer.rules
+            m.helpers && m.helpers.serializer && m.helpers.serializer.rules,
           ),
-        []
+        [],
       )
-      .filter(Boolean)
+      .filter(Boolean),
   })
 
   const title = {
     match: matchBlock(TYPE),
-    matchMdast: node => node.type === 'heading' && node.depth === depth,
+    matchMdast: (node) => node.type === 'heading' && node.depth === depth,
     fromMdast: (node, index, parent, rest) => {
       return {
         kind: 'block',
         type: TYPE,
-        nodes: inlineSerializer.fromMdast(node.children, 0, node, rest)
+        nodes: inlineSerializer.fromMdast(node.children, 0, node, rest),
       }
     },
     toMdast: (object, index, parent, rest) => {
       return {
         type: 'heading',
         depth,
-        children: inlineSerializer.toMdast(object.nodes, 0, object, rest)
+        children: inlineSerializer.toMdast(object.nodes, 0, object, rest),
       }
-    }
+    },
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [title]
+    rules: [title],
   })
 
   return {
     TYPE,
     helpers: {
-      serializer
+      serializer,
     },
     changes: {},
     rule: title,
@@ -64,7 +62,7 @@ export default ({ rule, subModules, TYPE }) => {
         formatButtonText &&
           createBlockButton({
             type: TYPE,
-            parentTypes: formatTypes
+            parentTypes: formatTypes,
           })(({ active, disabled, visible, ...props }) => (
             <span
               {...buttonStyles.block}
@@ -75,8 +73,8 @@ export default ({ rule, subModules, TYPE }) => {
             >
               {formatButtonText}
             </span>
-          ))
-      ]
+          )),
+      ],
     },
     plugins: [
       {
@@ -98,14 +96,14 @@ export default ({ rule, subModules, TYPE }) => {
             <rule.component
               attributes={{
                 ...attributes,
-                style: { position: 'relative' }
+                style: { position: 'relative' },
               }}
               {...node.data.toJS()}
             >
               <span
                 style={{
                   position: 'relative',
-                  display: 'block'
+                  display: 'block',
                 }}
               >
                 {children}
@@ -116,11 +114,11 @@ export default ({ rule, subModules, TYPE }) => {
         schema: {
           blocks: {
             [TYPE]: {
-              nodes: [{ kinds: ['inline', 'text'] }]
-            }
-          }
-        }
-      }
-    ]
+              nodes: [{ kinds: ['inline', 'text'] }],
+            },
+          },
+        },
+      },
+    ],
   }
 }

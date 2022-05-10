@@ -25,14 +25,13 @@ const floatStyle = {
   marginBottom: FLOAT_MARGIN / 2,
   width: '100%',
   '[data-can-breakout=true] &': {
-    marginLeft: -BREAKOUT
-  }
+    marginLeft: -BREAKOUT,
+  },
 }
 
-export const breakoutUp = `@media only screen and (min-width: ${MAX_WIDTH +
-  BREAKOUT * 2 +
-  PADDING * 2 +
-  PADDING}px)`
+export const breakoutUp = `@media only screen and (min-width: ${
+  MAX_WIDTH + BREAKOUT * 2 + PADDING * 2 + PADDING
+}px)`
 
 export const BREAKOUT_SIZES = {
   narrow: NARROW_WIDTH,
@@ -41,17 +40,17 @@ export const BREAKOUT_SIZES = {
   breakoutLeft: MAX_WIDTH + BREAKOUT,
   float: NARROW_WIDTH,
   floatSmall: SMALL_WIDTH,
-  floatTiny: TINY_WIDTH
+  floatTiny: TINY_WIDTH,
 }
 
 export const breakoutStyles = {
   narrow: css({
     margin: '0 auto',
-    maxWidth: NARROW_WIDTH
+    maxWidth: NARROW_WIDTH,
   }),
   tiny: css({
     margin: '0 auto',
-    maxWidth: TINY_WIDTH
+    maxWidth: TINY_WIDTH,
   }),
   // explicit no breakout
   normal: css({}),
@@ -60,35 +59,35 @@ export const breakoutStyles = {
       '[data-can-breakout=true] &': {
         marginLeft: -BREAKOUT,
         marginRight: -BREAKOUT,
-        width: `calc(100% + ${BREAKOUT * 2}px)`
-      }
-    }
+        width: `calc(100% + ${BREAKOUT * 2}px)`,
+      },
+    },
   }),
   breakoutLeft: css({
     [breakoutUp]: {
       '[data-can-breakout=true] &': {
         marginLeft: -BREAKOUT,
-        width: `calc(100% + ${BREAKOUT}px)`
-      }
-    }
+        width: `calc(100% + ${BREAKOUT}px)`,
+      },
+    },
   }),
   float: css({
     [breakoutUp]: {
-      ...floatStyle
-    }
+      ...floatStyle,
+    },
   }),
   floatSmall: css({
     [breakoutUp]: {
       ...floatStyle,
-      maxWidth: SMALL_WIDTH
-    }
+      maxWidth: SMALL_WIDTH,
+    },
   }),
   floatTiny: css({
     [breakoutUp]: {
       ...floatStyle,
-      maxWidth: TINY_WIDTH
-    }
-  })
+      maxWidth: TINY_WIDTH,
+    },
+  }),
 }
 
 export const PADDED_MAX_WIDTH = MAX_WIDTH + PADDING * 2
@@ -101,15 +100,15 @@ const centerStyles = {
     '&:after': {
       content: '""',
       display: 'table',
-      clear: 'both'
-    }
+      clear: 'both',
+    },
   }),
   regular: css({
-    maxWidth: PADDED_MAX_WIDTH
+    maxWidth: PADDED_MAX_WIDTH,
   }),
   breakout: css({
-    maxWidth: PADDED_MAX_WIDTH_BREAKOUT
-  })
+    maxWidth: PADDED_MAX_WIDTH_BREAKOUT,
+  }),
 }
 
 const Center = ({ children, attributes = {}, breakout, ...props }) => (
@@ -133,7 +132,7 @@ export const Breakout = ({ size, children, attributes = {}, ...props }) => (
 
 Breakout.propTypes = {
   size: PropTypes.oneOf(Object.keys(breakoutStyles)),
-  attributes: PropTypes.object
+  attributes: PropTypes.object,
 }
 
 export default Center

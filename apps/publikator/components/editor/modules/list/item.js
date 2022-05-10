@@ -1,9 +1,8 @@
-import React from 'react'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { matchBlock } from '../../utils'
 
 export default ({ rule, subModules, TYPE }) => {
-  const paragraphModule = subModules.find(m => m.name === 'paragraph')
+  const paragraphModule = subModules.find((m) => m.name === 'paragraph')
   if (!paragraphModule) {
     throw new Error('Missing paragraph submodule')
   }
@@ -12,29 +11,29 @@ export default ({ rule, subModules, TYPE }) => {
 
   const listItem = {
     match: matchBlock(TYPE),
-    matchMdast: node => node.type === 'listItem',
+    matchMdast: (node) => node.type === 'listItem',
     fromMdast: (node, index, parent, rest) => ({
       kind: 'block',
       type: TYPE,
-      nodes: paragraphSerializer.fromMdast(node.children, 0, node, rest)
+      nodes: paragraphSerializer.fromMdast(node.children, 0, node, rest),
     }),
     toMdast: (object, index, parent, rest) => ({
       type: 'listItem',
       loose: !parent.data.compact,
-      children: paragraphSerializer.toMdast(object.nodes, 0, object, rest)
-    })
+      children: paragraphSerializer.toMdast(object.nodes, 0, object, rest),
+    }),
   }
 
   const ListItem = rule.component
 
   const serializer = new MarkdownSerializer({
-    rules: [listItem]
+    rules: [listItem],
   })
 
   return {
     TYPE,
     helpers: {
-      serializer
+      serializer,
     },
     changes: {},
     plugins: [
@@ -55,11 +54,11 @@ export default ({ rule, subModules, TYPE }) => {
                     change.wrapBlockByKey(child.key, PARAGRAPH)
                   }
                 }
-              }
-            }
-          }
-        }
-      }
-    ]
+              },
+            },
+          },
+        },
+      },
+    ],
   }
 }

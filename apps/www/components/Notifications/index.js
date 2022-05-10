@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import Loader from '../Loader'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import {
   notificationsQuery,
   withMarkAllAsReadMutation,
-  withNotificationCount
+  withNotificationCount,
 } from './enhancers'
 import { css } from 'glamor'
 import NotificationFeed from './NotificationFeed'
@@ -14,23 +14,23 @@ export const containsUnread = (notifications, after) =>
   notifications &&
   notifications.nodes &&
   notifications.nodes
-    .filter(n => !after || new Date(n.createdAt) > after)
-    .filter(n => !n.readAt).length
+    .filter((n) => !after || new Date(n.createdAt) > after)
+    .filter((n) => !n.readAt).length
 
 const Notifications = compose(
   graphql(notificationsQuery),
   withMarkAllAsReadMutation,
-  withNotificationCount
+  withNotificationCount,
 )(
   ({
     data: { error, loading, notifications, me, fetchMore, refetch },
     countData,
-    markAllAsReadMutation
+    markAllAsReadMutation,
   }) => {
     const [loadedAt, setLoadedAt] = useState(new Date())
     const futureNotifications = containsUnread(
       countData.notifications,
-      loadedAt
+      loadedAt,
     )
 
     const latestNotificationId = notifications?.nodes[0]?.id
@@ -65,7 +65,7 @@ const Notifications = compose(
         }
       />
     )
-  }
+  },
 )
 
 export default Notifications

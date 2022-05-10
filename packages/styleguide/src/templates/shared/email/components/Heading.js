@@ -7,7 +7,7 @@ export const Heading2 = ({ children }) => (
       ...fontStyles.serifBold,
       fontSize: '24px',
       lineHeight: '30px',
-      margin: '46px 0 12px 0'
+      margin: '46px 0 12px 0',
     }}
   >
     {children}
