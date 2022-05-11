@@ -22,7 +22,7 @@ const Form: React.FC<ElementFormProps<LinkElement>> = ({
 )
 
 const unlinkWhenEmpty: NormalizeFn<LinkElement> = ([node, path], editor) => {
-  if (!node.href && Editor.string(editor, path) === '') {
+  if (Editor.string(editor, path) === '') {
     Transforms.unwrapNodes(editor, { at: path })
     return true
   }
@@ -32,6 +32,9 @@ const unlinkWhenEmpty: NormalizeFn<LinkElement> = ([node, path], editor) => {
 export const config: ElementConfigI = {
   Component: Editorial.A,
   normalizations: [unlinkWhenEmpty],
+  defaultProps: {
+    href: 'https://',
+  },
   Form,
   attrs: {
     isInline: true,

@@ -1,9 +1,10 @@
 import React from 'react'
 import Editor from './components/editor/index'
 import { buildTestHarness } from 'slate-test-utils'
-import { createEditor } from 'slate'
+import { createEditor, Transforms } from 'slate'
 import { cleanup, fireEvent, getByTestId } from '@testing-library/react'
 import { cleanupTree } from './components/editor/helpers/tree'
+import { handleEnds } from './components/editor/helpers/ends'
 describe('Slate Editor', () => {
   function getMockEditor() {
     return createEditor()
@@ -129,7 +130,7 @@ describe('Slate Editor', () => {
   })
 
   describe('Normalisation', () => {
-    describe('Structure', () => {
+    describe('fixStructure()', () => {
       it('should insert missing nodes at the end of the tree', async () => {
         value = [
           {
@@ -333,7 +334,7 @@ describe('Slate Editor', () => {
           },
         ])
       })
-      it('should delete illegal node in the middle', async () => {
+      it('should delete illegal node in the middle of the tree', async () => {
         value = [
           {
             type: 'headline',
@@ -594,19 +595,310 @@ describe('Slate Editor', () => {
         expect(value[0].children[1].children[1].children[0].end).toBe(undefined)
         expect(value[0].children[1].children[2].end).toBe(true)
       })
+      it('should delete mismatched nested nodes but keep content when possible', async () => {
+        value = [
+          {
+            type: 'paragraph',
+            children: [
+              {
+                type: 'blockQuoteText',
+                children: [{ text: 'Stately, plump Buck Mulligan' }],
+              },
+              {
+                type: 'figureCaption',
+                children: [
+                  { text: 'Ulysses' },
+                  { type: 'figureByline', children: [{ text: 'Jame' }] },
+                  { text: ' Joyce' },
+                ],
+              },
+            ],
+          },
+        ]
+        const structure = [
+          {
+            type: 'paragraph',
+          },
+        ]
+        await setup(structure)
+        expect(cleanupTree(value)).toEqual([
+          {
+            type: 'paragraph',
+            children: [{ text: 'Stately, plump Buck Mulligan' }],
+          },
+        ])
+      })
     })
 
-    describe('Ends', () => {
-      it('should move text inputed after the end node back in the end node', async () => {})
+    describe('handleEnds()', () => {
+      it('should move text inputed after the end node back in the end node', async () => {
+        value = [
+          {
+            type: 'blockQuote',
+            children: [
+              {
+                type: 'blockQuoteText',
+                children: [{ text: 'Stately, plump Buck Mulligan' }],
+              },
+              {
+                type: 'figureCaption',
+                children: [
+                  { text: 'Ulysses' },
+                  { type: 'figureByline', children: [{ text: 'Jame' }] },
+                  { text: ' Joyce' },
+                ],
+              },
+            ],
+          },
+        ]
+        const structure = [
+          {
+            type: 'blockQuote',
+          },
+        ]
+        await setup(structure)
+        expect(cleanupTree(value)).toEqual([
+          {
+            type: 'blockQuote',
+            children: [
+              {
+                type: 'blockQuoteText',
+                children: [{ text: 'Stately, plump Buck Mulligan' }],
+              },
+              {
+                type: 'figureCaption',
+                children: [
+                  { text: 'Ulysses' },
+                  { type: 'figureByline', children: [{ text: 'Jame Joyce' }] },
+                  { text: '' },
+                ],
+              },
+            ],
+          },
+        ])
+      })
     })
 
-    describe('Links', () => {
-      it('should autolink links in text', async () => {})
-      it('should remove links with no text', async () => {})
+    describe('createLinks()', () => {
+      it('should autolink links in text – http...', async () => {
+        value = [
+          {
+            type: 'paragraph',
+            children: [
+              { text: 'Read the rest of the story on https://www.republik.ch' },
+            ],
+          },
+        ]
+        const structure = [
+          {
+            type: 'paragraph',
+          },
+        ]
+        await setup(structure)
+        expect(cleanupTree(value)).toEqual([
+          {
+            type: 'paragraph',
+            children: [
+              { text: 'Read the rest of the story on ' },
+              {
+                type: 'link',
+                href: 'https://www.republik.ch',
+                children: [{ text: 'https://www.republik.ch' }],
+              },
+              { text: '' },
+            ],
+          },
+        ])
+      })
+      it('should autolink links in text – wwww...', async () => {
+        value = [
+          {
+            type: 'paragraph',
+            children: [
+              { text: 'Read the rest of the story on www.republik.ch' },
+            ],
+          },
+        ]
+        const structure = [
+          {
+            type: 'paragraph',
+          },
+        ]
+        await setup(structure)
+        expect(cleanupTree(value)).toEqual([
+          {
+            type: 'paragraph',
+            children: [
+              { text: 'Read the rest of the story on ' },
+              {
+                type: 'link',
+                href: 'http://www.republik.ch',
+                children: [{ text: 'www.republik.ch' }],
+              },
+              { text: '' },
+            ],
+          },
+        ])
+      })
     })
 
-    describe('Placeholders', () => {
-      it('should add placeholders on correct elements', async () => {})
+    describe('handlePlaceholders()', () => {
+      it('should add placeholders on single empty text node', async () => {
+        value = [
+          {
+            type: 'paragraph',
+            children: [{ text: '' }],
+          },
+        ]
+        const structure = [
+          {
+            type: 'paragraph',
+          },
+        ]
+        await setup(structure)
+        expect(value[0].children[0].placeholder).toEqual('Paragraph  ')
+      })
+      it('should not add placeholder on empty text node followed or preceded by another of equal status (same place in structure)', async () => {
+        value = [
+          {
+            type: 'paragraph',
+            children: [
+              { text: '' },
+              {
+                type: 'link',
+                href: 'http://www.republik.ch',
+                children: [{ text: 'www.republik.ch' }],
+              },
+              { text: '' },
+            ],
+          },
+        ]
+        const structure = [
+          {
+            type: 'paragraph',
+          },
+        ]
+        await setup(structure)
+        expect(value[0].children[0].placeholder).toBe(undefined)
+        expect(value[0].children[2].placeholder).toBe(undefined)
+      })
+      it('should add placeholder on empty text node followed or preceded by another of different status (other place in the structure)', async () => {
+        value = [
+          {
+            type: 'figure',
+            children: [
+              {
+                type: 'figureImage',
+                children: [{ text: '' }],
+              },
+              {
+                type: 'figureCaption',
+                children: [
+                  { text: '' },
+                  { type: 'figureByline', children: [{ text: '' }] },
+                  { text: '' },
+                ],
+              },
+            ],
+          },
+        ]
+        const structure = [
+          {
+            type: 'figure',
+          },
+        ]
+        await setup(structure)
+        expect(value[0].children[1].children[0].placeholder).toEqual(
+          'Figure Caption  ',
+        )
+      })
+      it('should not add placeholder on end node', async () => {
+        value = [
+          {
+            type: 'figure',
+            children: [
+              {
+                type: 'figureImage',
+                children: [{ text: '' }],
+              },
+              {
+                type: 'figureCaption',
+                children: [
+                  { text: '' },
+                  { type: 'figureByline', children: [{ text: '' }] },
+                  { text: '' },
+                ],
+              },
+            ],
+          },
+        ]
+        const structure = [
+          {
+            type: 'figure',
+          },
+        ]
+        await setup(structure)
+        expect(value[0].children[1].children[2].placeholder).toBe(undefined)
+      })
+      it('should not add placeholder on void node', async () => {
+        value = [
+          {
+            type: 'figure',
+            children: [
+              {
+                type: 'figureImage',
+                children: [{ text: '' }],
+              },
+              {
+                type: 'figureCaption',
+                children: [
+                  { text: '' },
+                  { type: 'figureByline', children: [{ text: '' }] },
+                  { text: '' },
+                ],
+              },
+            ],
+          },
+        ]
+        const structure = [
+          {
+            type: 'figure',
+          },
+        ]
+        await setup(structure)
+        expect(value[0].children[0].placeholder).toBe(undefined)
+      })
+    })
+
+    describe('Custom', () => {
+      it('should remove links with no text', async () => {
+        value = [
+          {
+            type: 'paragraph',
+            children: [
+              { text: 'Read the rest of the story on ' },
+              {
+                type: 'link',
+                href: 'http://www.republik.ch',
+                children: [{ text: '' }],
+              },
+              { text: '' },
+            ],
+          },
+        ]
+        const structure = [
+          {
+            type: 'paragraph',
+          },
+        ]
+        await setup(structure)
+        expect(cleanupTree(value)).toEqual([
+          {
+            type: 'paragraph',
+            children: [{ text: 'Read the rest of the story on ' }],
+          },
+        ])
+      })
     })
   })
 })

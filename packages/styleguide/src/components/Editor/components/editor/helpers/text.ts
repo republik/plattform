@@ -86,6 +86,7 @@ export const createLinks: NormalizeFn<CustomText> = ([node, path], editor) => {
       )
 
       if (
+        editor.selection &&
         !Point.equals(
           { path, offset: linkContent[0].length },
           editor.selection.focus,
