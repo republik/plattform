@@ -209,7 +209,6 @@ const insertBlock = (
       Transforms.setNodes(editor, insertPartial, { at: target[1] })
     }
   })
-  // console.log({ insertPath })
   return insertPath
 }
 
