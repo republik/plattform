@@ -5,7 +5,7 @@ import { useTranslation } from '../lib/withT'
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
 
 import createGetStaticProps from '../lib/helpers/createGetStaticProps'
-import { MarketingPageQuery } from '../components/Marketing/graphql/MarketingPageQuery.graphql'
+import { MARKETING_PAGE_QUERY } from '../components/Marketing/graphql/MarketingPageQuery.graphql'
 
 const MarketingPage = () => {
   const { t } = useTranslation()
@@ -29,7 +29,7 @@ export default MarketingPage
 
 export const getStaticProps = createGetStaticProps(async (client, params) => {
   const data = await client.query({
-    query: MarketingPageQuery,
+    query: MARKETING_PAGE_QUERY,
   })
   return {
     props: {

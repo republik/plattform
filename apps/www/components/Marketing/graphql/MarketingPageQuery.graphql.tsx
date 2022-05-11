@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 import { makeQueryHook } from '../../../lib/helpers/AbstractApolloGQLHooks.helper'
 
-export const MarketingPageQuery = gql`
+export const MARKETING_PAGE_QUERY = gql`
   query MarketingPage {
     # Used in MinifFront.js
     miniFront: document(path: "/marketing") {
@@ -85,4 +85,4 @@ export const MarketingPageQuery = gql`
   }
 `
 
-export const useMarketingPageQuery = makeQueryHook(MarketingPageQuery)
+export const useMarketingPageQuery = makeQueryHook(MARKETING_PAGE_QUERY)
