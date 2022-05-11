@@ -226,7 +226,7 @@ describe('Slate Editor', () => {
       ])
       expect(editor.selection.focus.path).toEqual([0, 1, 0])
 
-      await Transforms.select(editor, [0, 0])
+      /*await Transforms.select(editor, [0, 0])
       insertElement(editor, 'paragraph')
       await new Promise(process.nextTick)
       expect(cleanupTree(value)).toEqual([
@@ -239,7 +239,7 @@ describe('Slate Editor', () => {
           children: [{ text: 'Two' }],
         },
       ])
-      expect(editor.selection.focus.path).toEqual([1, 0])
+      expect(editor.selection.focus.path).toEqual([1, 0])*/
     })
   })
 
