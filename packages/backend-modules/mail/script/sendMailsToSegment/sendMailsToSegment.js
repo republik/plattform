@@ -76,8 +76,13 @@ module.exports = async (segment, mail, context) => {
       console.log(mail.templateName, emailAddress)
       return
     }
+
+    const onceFor = argv.onceFor
+      ? { type: mail.templateName, email: emailAddress }
+      : false
+
     const sentData = await send({
-      log: { onceFor: { type: mail.templateName, email: emailAddress } },
+      log: { onceFor },
       sendFunc,
       message: {
         ...message,

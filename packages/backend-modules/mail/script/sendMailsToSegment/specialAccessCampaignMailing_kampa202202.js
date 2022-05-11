@@ -7,6 +7,9 @@ const argv = yargs
   .option('dry-run', {
     default: true,
   })
+  .option('once-for', {
+    default: true,
+  })
   .option('limit', { number: true })
   .help()
   .version().argv
@@ -14,6 +17,12 @@ const argv = yargs
 PgDb.connect().then(async (pgdb) => {
   if (argv.dryRun) {
     console.warn('In dry-run mode. Use --no-dry-run to send emails to segment.')
+  }
+
+  if (argv.onceFor) {
+    console.log(
+      'onceFor set, i.e. mail template will be send to email address only once. Use --no-once-for to switch this off',
+    )
   }
 
   const mail = {
