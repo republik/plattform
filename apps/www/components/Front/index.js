@@ -1,7 +1,4 @@
 import { Fragment, useMemo, useEffect, useState } from 'react'
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
-import { gql } from '@apollo/client'
 import { css } from 'glamor'
 import {
   colors,
@@ -9,14 +6,12 @@ import {
   InlineSpinner,
   Interaction,
 } from '@project-r/styleguide'
-import { withRouter } from 'next/router'
 import StatusError from '../StatusError'
 import Head from 'next/head'
 import { createFrontSchema } from '@project-r/styleguide'
 import { CheckCircleIcon } from '@project-r/styleguide'
 
-import { withEditor, withTester } from '../Auth/checkRoles'
-import withT from '../../lib/withT'
+import { useTranslation } from '../../lib/withT'
 import Loader from '../Loader'
 import Frame from '../Frame'
 import HrefLink from '../Link/Href'
@@ -34,47 +29,8 @@ import { intersperse } from '../../lib/utils/helpers'
 import * as withData from './withData'
 import { cleanAsPath } from '../../lib/utils/link'
 import Link from 'next/link'
-
-const getDocument = gql`
-  query getFront(
-    $path: String!
-    $first: Int!
-    $after: ID
-    $before: ID
-    $only: ID
-  ) {
-    front: document(path: $path) {
-      id
-      children(first: $first, after: $after, before: $before, only: $only) {
-        totalCount
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-          endCursor
-          startCursor
-        }
-        nodes {
-          id
-          body
-        }
-      }
-      meta {
-        path
-        title
-        description
-        image
-        facebookDescription
-        facebookImage
-        facebookTitle
-        twitterDescription
-        twitterImage
-        twitterTitle
-        prepublication
-        lastPublishedAt
-      }
-    }
-  }
-`
+import { useGetFrontQuery } from './graphql/getFrontQuery.graphql'
+import { useRouter } from 'next/router'
 
 const styles = {
   prepublicationNotice: css({
@@ -89,7 +45,8 @@ const styles = {
   }),
 }
 
-export const RenderFront = ({ t, isEditor, front, nodes }) => {
+export const RenderFront = ({ isEditor, front, nodes }) => {
+  const { t } = useTranslation()
   const schema = useMemo(
     () =>
       createFrontSchema({
@@ -122,10 +79,6 @@ export const RenderFront = ({ t, isEditor, front, nodes }) => {
 let lastMountAt = undefined
 
 const Front = ({
-  data,
-  fetchMore,
-  data: { front, refetch },
-  t,
   renderBefore,
   renderAfter,
   containerStyle,
@@ -136,6 +89,8 @@ const Front = ({
   hasOverviewNav,
   shouldAutoRefetch,
 }) => {
+  const { t } = useTranslation()
+  const router = useRouter()
   const now = new Date()
   const dailyUpdateTime = new Date(
     now.getFullYear(),
@@ -143,6 +98,30 @@ const Front = ({
     now.getDate(),
     5,
   )
+  console.log('cleaned as path', cleanAsPath(router.asPath))
+  const {
+    data,
+    loading,
+    error,
+    refetch,
+    fetchMore: nativeFetchMore,
+  } = useGetFrontQuery({
+    variables: {
+      path: cleanAsPath(router.asPath),
+      first: finite ? 1000 : 15,
+      before: finite ? 'end' : undefined,
+      only: extractId,
+    },
+  })
+  const { front } = data ?? {}
+
+  useEffect(() => {
+    setTimeout(() => {
+      alert('refetch')
+      refetch()
+    }, 2500)
+  }, [refetch])
+
   const shouldRefetch = shouldAutoRefetch && lastMountAt < dailyUpdateTime
   const [isRefetching, setIsRefetching] = useState(shouldRefetch)
 
@@ -161,6 +140,34 @@ const Front = ({
     url: `${PUBLIC_BASE_URL}${front.meta.path}`,
   }
 
+  const fetchMore = () => {
+    return nativeFetchMore({
+      variables: {
+        first: 15,
+        after: data.front && data.front.children.pageInfo.endCursor,
+        before: undefined,
+      },
+      updateQuery: (previousResult = {}, { fetchMoreResult = {} }) => {
+        const previousSearch = previousResult.front.children || {}
+        const currentSearch = fetchMoreResult.front.children || {}
+        const previousNodes = previousSearch.nodes || []
+        const currentNodes = currentSearch.nodes || []
+        const res = {
+          ...previousResult,
+          front: {
+            ...previousResult.front,
+            children: {
+              ...previousResult.front.children,
+              nodes: [...previousNodes, ...currentNodes],
+              pageInfo: currentSearch.pageInfo,
+            },
+          },
+        }
+        return res
+      },
+    }).catch((error) => console.error(error))
+  }
+
   const hasMore = front && front.children.pageInfo.hasNextPage
   const [
     { containerRef, infiniteScroll, loadingMore, loadingMoreError },
@@ -173,8 +180,8 @@ const Front = ({
   if (extractId) {
     return (
       <Loader
-        loading={data.loading || isRefetching}
-        error={data.error}
+        loading={loading || isRefetching}
+        error={error}
         render={() => {
           if (!front) {
             return (
@@ -199,12 +206,14 @@ const Front = ({
     )
   }
 
+  console.log('SSG FRONT', data)
+
   return (
     <Frame hasOverviewNav={hasOverviewNav} raw meta={meta}>
       {renderBefore && renderBefore(meta)}
       <Loader
-        loading={data.loading || isRefetching}
-        error={data.error}
+        loading={loading || isRefetching}
+        error={error}
         message={t('pages/magazine/title')}
         render={() => {
           if (!front) {
@@ -310,62 +319,4 @@ const Front = ({
   )
 }
 
-export default compose(
-  withEditor,
-  withT,
-  withRouter,
-  withTester,
-  graphql(getDocument, {
-    options: (props) => ({
-      variables: {
-        path: props.path || cleanAsPath(props.router.asPath),
-        first: props.finite ? 1000 : 15,
-        before: props.finite ? 'end' : undefined,
-        only: props.extractId,
-      },
-    }),
-    props: ({ data, ownProps: { serverContext, isPreview } }) => {
-      if (serverContext && !data.loading && !data.front) {
-        if (isPreview) {
-          serverContext.res.redirect(302, '/')
-          throw new Error('redirect')
-        } else {
-          serverContext.res.statusCode = 503
-        }
-      }
-
-      return {
-        data,
-        fetchMore: () => {
-          return data
-            .fetchMore({
-              variables: {
-                first: 15,
-                after: data.front && data.front.children.pageInfo.endCursor,
-                before: undefined,
-              },
-              updateQuery: (previousResult = {}, { fetchMoreResult = {} }) => {
-                const previousSearch = previousResult.front.children || {}
-                const currentSearch = fetchMoreResult.front.children || {}
-                const previousNodes = previousSearch.nodes || []
-                const currentNodes = currentSearch.nodes || []
-                const res = {
-                  ...previousResult,
-                  front: {
-                    ...previousResult.front,
-                    children: {
-                      ...previousResult.front.children,
-                      nodes: [...previousNodes, ...currentNodes],
-                      pageInfo: currentSearch.pageInfo,
-                    },
-                  },
-                }
-                return res
-              },
-            })
-            .catch((error) => console.error(error))
-        },
-      }
-    },
-  }),
-)(Front)
+export default Front
