@@ -47,6 +47,10 @@ module.exports = withTM(
             },
           ],
         },
+        {
+          source: '/pgp/:userSlug',
+          destination: '/api/pgp/:userSlug',
+        },
       ]
     },
     async redirects() {

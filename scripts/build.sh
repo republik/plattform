@@ -1,6 +1,6 @@
 SERVER=${SERVER:-api}
 
-if [ "$SERVER" == "styleguide" ]
+if [ "$SERVER" = "styleguide" ]
 then
   yarn turbo run build \
     --scope="@project-r/styleguide" \

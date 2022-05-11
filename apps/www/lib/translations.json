@@ -3210,7 +3210,11 @@
     },
     {
       "key": "article/syntheticReadAloud/title",
-      "value": "Beitrag von synthetischer Stimme vorlesen lassen. <a href=\"/2022/05/04/helfen-sie-uns-die-synthetische-stimme-zu-verbessern/diskussion\">Fehler melden</a>."
+      "value": "Beitrag von synthetischer Stimme vorlesen lassen."
+    },
+    {
+      "key": "article/syntheticReadAloud/errorLink",
+      "value": "Fehler melden"
     },
     {
       "key": "article/readAloud/title",
