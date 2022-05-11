@@ -4,7 +4,9 @@ import { buildTestHarness } from 'slate-test-utils'
 import { createEditor, Transforms } from 'slate'
 import { cleanup, fireEvent, getByTestId } from '@testing-library/react'
 import { cleanupTree } from './components/editor/helpers/tree'
-import { handleEnds } from './components/editor/helpers/ends'
+import { insertElement } from './components/editor/helpers/structure'
+import { act } from 'react-dom/test-utils'
+
 describe('Slate Editor', () => {
   function getMockEditor() {
     return createEditor()
@@ -62,15 +64,62 @@ describe('Slate Editor', () => {
     it('should disable "impossible" block types (according to structure)', async () => {})
     it('should be disabled if editor is deselected', async () => {})
 
-    // test insert function directly
     it('should convert simple block types (P) to complex types (Quote, List) – no text', async () => {
-      // P to Quote to UL to OL to UL to Quote to P
+      value = [
+        {
+          type: 'paragraph',
+          children: [{ text: '' }],
+        },
+      ]
+      const structure = [
+        {
+          type: ['paragraph', 'blockQuote', 'ul', 'ol'],
+        },
+      ]
+      const editor = await setup(structure)
+      await Transforms.select(editor, { path: [0, 0], offset: 0 })
+
+      await act(() => {
+        insertElement(editor, 'blockQuote')
+      })
+      expect(value.length).toBe(1)
+      expect(value[0].type).toBe('blockQuote')
+
+      await act(() => {
+        insertElement(editor, 'ul')
+      })
+      expect(value.length).toBe(1)
+      expect(value[0].type).toBe('ul')
+
+      await act(() => {
+        insertElement(editor, 'ol')
+      })
+      expect(value.length).toBe(1)
+      expect(value[0].type).toBe('ol')
+
+      await act(() => {
+        insertElement(editor, 'ul')
+      })
+      expect(value.length).toBe(1)
+      expect(value[0].type).toBe('ul')
+
+      await act(() => {
+        insertElement(editor, 'blockQuote')
+      })
+      expect(value.length).toBe(1)
+      expect(value[0].type).toBe('blockQuote')
+
+      await act(() => {
+        insertElement(editor, 'paragraph')
+      })
+      expect(value.length).toBe(1)
+      expect(value[0].type).toBe('paragraph')
     })
-    it('should convert simple block types (P) to complex types (Quote, List) – with multiple nested elements', async () => {
+    it('should convert simple block types (P) to complex types (Quote, List) – with formatting/links', async () => {})
+    it('should convert simple block types (P) to complex types (Quote, List) – with multiple nested elements and move cursor', async () => {
       // P with text to UL
       // UL with a few elements to Quote to OL to UL to P
     })
-    it('should convert simple block types (P) to complex types (Quote, List) – with formatting/links', async () => {})
   })
 
   describe('Inline Buttons (atm only link)', () => {
@@ -109,11 +158,8 @@ describe('Slate Editor', () => {
 
   describe('On Tab', () => {
     it('should allow forward and backward navigation', async () => {})
+    it('should navigate into nested elements', async () => {})
     it('should still work after inserts/converts', async () => {})
-  })
-
-  describe('On Paste', () => {
-    it('should generate autolink when text ressembles URL', async () => {})
   })
 
   describe('Data Form', () => {

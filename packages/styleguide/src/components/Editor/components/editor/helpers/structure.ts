@@ -213,7 +213,7 @@ const insertBlock = (
   return insertPath
 }
 
-export const buildAndInsert = (
+export const insertElement = (
   editor: CustomEditor,
   elKey: CustomElementsType,
 ): number[] => {
@@ -385,7 +385,7 @@ export const insertOnKey =
   (editor: CustomEditor, event: KeyboardEvent<HTMLDivElement>): void => {
     if (event.key === keyCombo.name && event.shiftKey === !!keyCombo.shift) {
       event.preventDefault()
-      buildAndInsert(editor, elKey)
+      insertElement(editor, elKey)
     }
   }
 

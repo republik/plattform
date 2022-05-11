@@ -3,7 +3,7 @@ import { useSlate } from 'slate-react'
 import { config as elConfig } from '../../elements'
 import { ToolbarButton } from './Toolbar'
 import { CustomElementsType, ButtonConfig } from '../../../custom-types'
-import { buildAndInsert } from '../helpers/structure'
+import { insertElement } from '../helpers/structure'
 import { useFormContext } from './Forms'
 
 export const ContainerComponent: React.FC<{
@@ -41,7 +41,7 @@ export const InsertButton: React.FC<{
       active={config.active}
       disableWhenActive={true}
       onClick={() => {
-        const insertPath = buildAndInsert(
+        const insertPath = insertElement(
           editor,
           config.type as CustomElementsType,
         )
