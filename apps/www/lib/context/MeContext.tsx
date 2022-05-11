@@ -42,7 +42,7 @@ css.global(
   },
 )
 
-type Me = {
+export type MeObjectType = {
   id: string
   username: string
   name: string
@@ -69,11 +69,11 @@ type Me = {
 }
 
 type MeResponse = {
-  me: Me | null
+  me: MeObjectType | null
 }
 
 type MeContextValues = {
-  me?: Me
+  me?: MeObjectType
   meLoading: boolean
   meError?: ApolloError
   meRefetch: any
