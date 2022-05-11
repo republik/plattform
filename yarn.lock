@@ -4447,6 +4447,11 @@
   resolved "https://registry.yarnpkg.com/@types/unist/-/unist-2.0.6.tgz#250a7b16c3b91f672a24552ec64678eeb1d3a08d"
   integrity sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==
 
+"@types/useragent@2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@types/useragent/-/useragent-2.3.1.tgz#c971243faa04f50df399da35d77538ab5fabae20"
+  integrity sha512-w70ziElAVDD8lEOQ2Id3YBDE0sn2DTVA1zLB59H4kFngYoOJAIlnMkndiZFrzzHE0jmFDZ9AEWNvmeTm6Rvj9A==
+
 "@types/uuid@^8.3.0":
   version "8.3.4"
   resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.4.tgz#bd86a43617df0594787d38b735f55c805becf1bc"
