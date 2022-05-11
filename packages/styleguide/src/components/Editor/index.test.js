@@ -2,7 +2,8 @@ import React from 'react'
 import Editor from './components/editor/index'
 import { buildTestHarness } from 'slate-test-utils'
 import { createEditor } from 'slate'
-import { fireEvent, getByTestId } from '@testing-library/react'
+import { cleanup, fireEvent, getByTestId } from '@testing-library/react'
+import { cleanupTree } from './components/editor/helpers/tree'
 describe('Slate Editor', () => {
   function getMockEditor() {
     return createEditor()
@@ -11,17 +12,17 @@ describe('Slate Editor', () => {
 
   let value
 
-  async function setup() {
-    const structure = [
-      {
-        type: 'headline',
-      },
-      {
-        type: ['paragraph', 'blockQuote', 'ul', 'ol'],
-        repeat: true,
-      },
-    ]
+  const defaultStructure = [
+    {
+      type: 'headline',
+    },
+    {
+      type: ['paragraph', 'blockQuote', 'ul', 'ol'],
+      repeat: true,
+    },
+  ]
 
+  async function setup(structure = defaultStructure) {
     const mock = getMockEditor()
     const [editor] = await buildTestHarness(Editor)({
       editor: mock,
@@ -42,15 +43,25 @@ describe('Slate Editor', () => {
         children: [{ text: '' }],
       },
     ]
-    const editor = await setup(value)
-    expect(value.length).toBe(2)
-    expect(value[0].type).toEqual('headline')
-    expect(value[1].type).toEqual('paragraph')
+    await setup()
+    expect(cleanupTree(value)).toEqual([
+      {
+        type: 'headline',
+        children: [{ text: '' }],
+      },
+      {
+        type: 'paragraph',
+        children: [{ text: '' }],
+      },
+    ])
   })
 
   describe('Block Buttons (Block Type Conversion)', () => {
     it('should highlight selected block type', async () => {})
     it('should disable "impossible" block types (according to structure)', async () => {})
+    it('should be disabled if editor is deselected', async () => {})
+
+    // test insert function directly
     it('should convert simple block types (P) to complex types (Quote, List) – no text', async () => {
       // P to Quote to UL to OL to UL to Quote to P
     })
@@ -59,7 +70,6 @@ describe('Slate Editor', () => {
       // UL with a few elements to Quote to OL to UL to P
     })
     it('should convert simple block types (P) to complex types (Quote, List) – with formatting/links', async () => {})
-    it('should be disabled if editor is deselected', async () => {})
   })
 
   describe('Inline Buttons (atm only link)', () => {
@@ -98,6 +108,7 @@ describe('Slate Editor', () => {
 
   describe('On Tab', () => {
     it('should allow forward and backward navigation', async () => {})
+    it('should still work after inserts/converts', async () => {})
   })
 
   describe('On Paste', () => {
@@ -117,5 +128,485 @@ describe('Slate Editor', () => {
     it('should allow to edit the element data', async () => {})
   })
 
-  // ends (figure caption)
+  describe('Normalisation', () => {
+    describe('Structure', () => {
+      it('should insert missing nodes at the end of the tree', async () => {
+        value = [
+          {
+            type: 'headline',
+            children: [{ text: 'Hello' }],
+          },
+        ]
+        const structure = [
+          {
+            type: 'headline',
+          },
+          {
+            type: 'figure',
+          },
+          {
+            type: ['paragraph', 'blockQuote'],
+            repeat: true,
+          },
+        ]
+        await setup(structure)
+        expect(cleanupTree(value)).toEqual([
+          {
+            type: 'headline',
+            children: [{ text: 'Hello' }],
+          },
+          {
+            type: 'figure',
+            children: [
+              {
+                type: 'figureImage',
+                children: [{ text: '' }],
+              },
+              {
+                type: 'figureCaption',
+                children: [
+                  { text: '' },
+                  { type: 'figureByline', children: [{ text: '' }] },
+                  { text: '' },
+                ],
+              },
+            ],
+          },
+          {
+            type: 'paragraph',
+            children: [{ text: '' }],
+          },
+        ])
+      })
+      it('should insert missing node in the middle of the tree (without erasing subsequent ones)', async () => {
+        value = [
+          {
+            type: 'headline',
+            children: [{ text: 'Hello' }],
+          },
+          {
+            type: 'blockQuote',
+            children: [
+              {
+                type: 'blockQuoteText',
+                children: [{ text: 'Stately, plump Buck Mulligan...' }],
+              },
+              {
+                type: 'figureCaption',
+                children: [
+                  { text: 'Ulysses' },
+                  { type: 'figureByline', children: [{ text: 'Jame Joyce' }] },
+                  { text: '' },
+                ],
+              },
+            ],
+          },
+        ]
+        const structure = [
+          {
+            type: 'headline',
+          },
+          {
+            type: 'figure',
+          },
+          {
+            type: ['paragraph', 'blockQuote'],
+            repeat: true,
+          },
+        ]
+        await setup(structure)
+        expect(cleanupTree(value)).toEqual([
+          {
+            type: 'headline',
+            children: [{ text: 'Hello' }],
+          },
+          {
+            type: 'figure',
+            children: [
+              {
+                type: 'figureImage',
+                children: [{ text: '' }],
+              },
+              {
+                type: 'figureCaption',
+                children: [
+                  { text: '' },
+                  { type: 'figureByline', children: [{ text: '' }] },
+                  { text: '' },
+                ],
+              },
+            ],
+          },
+          {
+            type: 'blockQuote',
+            children: [
+              {
+                type: 'blockQuoteText',
+                children: [{ text: 'Stately, plump Buck Mulligan...' }],
+              },
+              {
+                type: 'figureCaption',
+                children: [
+                  { text: 'Ulysses' },
+                  { type: 'figureByline', children: [{ text: 'Jame Joyce' }] },
+                  { text: '' },
+                ],
+              },
+            ],
+          },
+        ])
+      })
+      it('should delete illegal node at the end of the tree', async () => {
+        value = [
+          {
+            type: 'headline',
+            children: [{ text: 'Hello' }],
+          },
+          {
+            type: 'paragraph',
+            children: [{ text: 'Once upon a time' }],
+          },
+          {
+            type: 'blockQuote',
+            children: [
+              {
+                type: 'blockQuoteText',
+                children: [{ text: 'Stately, plump Buck Mulligan...' }],
+              },
+              {
+                type: 'figureCaption',
+                children: [
+                  { text: 'Ulysses' },
+                  { type: 'figureByline', children: [{ text: 'Jame Joyce' }] },
+                  { text: '' },
+                ],
+              },
+            ],
+          },
+        ]
+        const structure = [
+          {
+            type: 'headline',
+          },
+          {
+            type: 'paragraph',
+            repeat: true,
+          },
+        ]
+        await setup(structure)
+        expect(cleanupTree(value)).toEqual([
+          {
+            type: 'headline',
+            children: [{ text: 'Hello' }],
+          },
+          {
+            type: 'paragraph',
+            children: [{ text: 'Once upon a time' }],
+          },
+        ])
+      })
+      it('should delete illegal repeat nodes at the end of the tree', async () => {
+        value = [
+          {
+            type: 'paragraph',
+            children: [{ text: 'Once upon a time' }],
+          },
+          {
+            type: 'paragraph',
+            children: [{ text: 'In a faraway land' }],
+          },
+          {
+            type: 'paragraph',
+            children: [{ text: 'Lived a bearded bard' }],
+          },
+        ]
+        const structure = [
+          {
+            type: 'paragraph',
+          },
+        ]
+        await setup(structure)
+        expect(cleanupTree(value)).toEqual([
+          {
+            type: 'paragraph',
+            children: [{ text: 'Once upon a time' }],
+          },
+        ])
+      })
+      it('should delete illegal node in the middle', async () => {
+        value = [
+          {
+            type: 'headline',
+            children: [{ text: 'Hello' }],
+          },
+          {
+            type: 'paragraph',
+            children: [{ text: 'Once upon a time' }],
+          },
+          {
+            type: 'blockQuote',
+            children: [
+              {
+                type: 'blockQuoteText',
+                children: [{ text: 'Stately, plump Buck Mulligan...' }],
+              },
+              {
+                type: 'figureCaption',
+                children: [
+                  { text: 'Ulysses' },
+                  { type: 'figureByline', children: [{ text: 'Jame Joyce' }] },
+                  { text: '' },
+                ],
+              },
+            ],
+          },
+        ]
+        const structure = [
+          {
+            type: 'headline',
+          },
+          {
+            type: 'blockQuote',
+          },
+        ]
+        await setup(structure)
+        expect(cleanupTree(value)).toEqual([
+          {
+            type: 'headline',
+            children: [{ text: 'Hello' }],
+          },
+          {
+            type: 'blockQuote',
+            children: [
+              {
+                type: 'blockQuoteText',
+                children: [{ text: 'Stately, plump Buck Mulligan...' }],
+              },
+              {
+                type: 'figureCaption',
+                children: [
+                  { text: 'Ulysses' },
+                  { type: 'figureByline', children: [{ text: 'Jame Joyce' }] },
+                  { text: '' },
+                ],
+              },
+            ],
+          },
+        ])
+      })
+      it('should not delete legal repeated nodes', async () => {
+        value = [
+          {
+            type: 'headline',
+            children: [{ text: 'Hello' }],
+          },
+          {
+            type: 'paragraph',
+            children: [{ text: 'Once upon a time' }],
+          },
+          {
+            type: 'paragraph',
+            children: [{ text: 'In a faraway land' }],
+          },
+          {
+            type: 'paragraph',
+            children: [{ text: 'Lived a bearded bard' }],
+          },
+          {
+            type: 'blockQuote',
+            children: [
+              {
+                type: 'blockQuoteText',
+                children: [{ text: 'Stately, plump Buck Mulligan...' }],
+              },
+              {
+                type: 'figureCaption',
+                children: [
+                  { text: 'Ulysses' },
+                  { type: 'figureByline', children: [{ text: 'Jame Joyce' }] },
+                  { text: '' },
+                ],
+              },
+            ],
+          },
+        ]
+        const initialValue = JSON.parse(JSON.stringify(value))
+        const structure = [
+          {
+            type: 'headline',
+          },
+          {
+            type: 'paragraph',
+            repeat: true,
+          },
+          {
+            type: 'blockQuote',
+          },
+        ]
+        await setup(structure)
+        expect(cleanupTree(value)).toEqual(initialValue)
+      })
+      it('should delete parent when main child node was deleted by user', async () => {
+        value = [
+          {
+            type: 'blockQuote',
+            children: [
+              {
+                type: 'blockQuoteText',
+                children: [{ text: 'Stately, plump Buck Mulligan' }],
+              },
+              {
+                type: 'figureCaption',
+                children: [
+                  { text: 'Ulysses' },
+                  { type: 'figureByline', children: [{ text: 'Jame Joyce' }] },
+                  { text: '' },
+                ],
+              },
+            ],
+          },
+          {
+            type: 'paragraph',
+            children: [{ text: 'Hello world' }],
+          },
+        ]
+        const structure = [
+          {
+            type: ['paragraph', 'blockQuote'],
+            repeat: true,
+          },
+        ]
+        const editor = await setup(structure)
+        await editor.apply({
+          type: 'remove_node',
+          path: [0, 0],
+          node: {
+            type: 'blockQuoteText',
+            children: [{ text: 'Stately, plump Buck Mulligan' }],
+          },
+        })
+        expect(cleanupTree(value)).toEqual([
+          {
+            type: 'paragraph',
+            children: [{ text: 'Hello world' }],
+          },
+        ])
+      })
+      it('should insert main child node if missing (not deleted by user)', async () => {
+        value = [
+          {
+            type: 'blockQuote',
+            children: [
+              {
+                type: 'figureCaption',
+                children: [
+                  { text: 'Ulysses' },
+                  { type: 'figureByline', children: [{ text: 'Jame Joyce' }] },
+                  { text: '' },
+                ],
+              },
+            ],
+          },
+        ]
+        const structure = [
+          {
+            type: 'blockQuote',
+          },
+        ]
+        await setup(structure)
+        expect(cleanupTree(value)).toEqual([
+          {
+            type: 'blockQuote',
+            children: [
+              {
+                type: 'blockQuoteText',
+                children: [{ text: '' }],
+              },
+              {
+                type: 'figureCaption',
+                children: [
+                  { text: 'Ulysses' },
+                  { type: 'figureByline', children: [{ text: 'Jame Joyce' }] },
+                  { text: '' },
+                ],
+              },
+            ],
+          },
+        ])
+      })
+      it('should link appropriate templates', async () => {
+        value = [
+          {
+            type: 'headline',
+            children: [{ text: 'Hello' }],
+          },
+          {
+            type: 'paragraph',
+            children: [{ text: 'World' }],
+          },
+        ]
+        const structure = [
+          {
+            type: 'headline',
+          },
+          {
+            type: ['paragraph', 'blockQuote'],
+            repeat: true,
+          },
+        ]
+        await setup(structure)
+        expect(value.length).toBe(2)
+        expect(value[0].template).toEqual({
+          type: 'headline',
+        })
+        expect(value[1].template).toEqual({
+          type: ['paragraph', 'blockQuote'],
+          repeat: true,
+        })
+      })
+      it('should mark end nodes as end if appropriate', async () => {
+        value = [
+          {
+            type: 'figure',
+            children: [
+              {
+                type: 'figureImage',
+                children: [{ text: '' }],
+              },
+              {
+                type: 'figureCaption',
+                children: [
+                  { text: '' },
+                  { type: 'figureByline', children: [{ text: '' }] },
+                  { text: '' },
+                ],
+              },
+            ],
+          },
+        ]
+        const structure = [
+          {
+            type: 'figure',
+          },
+        ]
+        await setup(structure)
+        expect(value[0].children[1].children[0].end).toBe(undefined)
+        expect(value[0].children[1].children[1].children[0].end).toBe(undefined)
+        expect(value[0].children[1].children[2].end).toBe(true)
+      })
+    })
+
+    describe('Ends', () => {
+      it('should move text inputed after the end node back in the end node', async () => {})
+    })
+
+    describe('Links', () => {
+      it('should autolink links in text', async () => {})
+      it('should remove links with no text', async () => {})
+    })
+
+    describe('Placeholders', () => {
+      it('should add placeholders on correct elements', async () => {})
+    })
+  })
 })

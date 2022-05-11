@@ -18,6 +18,22 @@ import { KeyboardEvent } from 'react'
 import { selectPlaceholder } from './text'
 import { config as elConfig } from '../../elements'
 
+// remove attributes using by working editor
+export const cleanupTree = (value: CustomDescendant[]): CustomDescendant[] => {
+  return value.map((node) => {
+    if (SlateElement.isElement(node)) {
+      const { template, children, ...rest } = node
+      return {
+        children: cleanupTree(children),
+        ...rest,
+      }
+    } else if (Text.isText(node)) {
+      const { template, placeholder, end, ...rest } = node
+      return rest
+    }
+  })
+}
+
 export const getTextNode = (
   nodeEntry: NodeEntry,
   editor: CustomEditor,

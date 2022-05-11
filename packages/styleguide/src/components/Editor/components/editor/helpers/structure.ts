@@ -100,9 +100,8 @@ const shouldRemove = (
   nextNode: CustomDescendant | undefined,
   currentTemplate: NodeTemplate | undefined,
   prevTemplate: NodeTemplate | undefined,
-) =>
+): boolean =>
   currentNode &&
-  getCharCount([currentNode]) === 0 &&
   !isCorrect(currentNode, currentTemplate) &&
   (isCorrect(nextNode, currentTemplate) ||
     (prevTemplate?.repeat && isCorrect(nextNode, prevTemplate)))
