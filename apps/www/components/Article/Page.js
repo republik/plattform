@@ -22,8 +22,6 @@ import {
   TitleBlock,
   Editorial,
   TeaserEmbedComment,
-  SHARE_IMAGE_HEIGHT,
-  SHARE_IMAGE_WIDTH,
   IconButton,
   SeriesNav,
   Loader as SmallLoader,
@@ -51,11 +49,7 @@ import { parseJSONObject } from '../../lib/safeJSON'
 import { formatDate } from '../../lib/utils/format'
 import withInNativeApp, { postMessage } from '../../lib/withInNativeApp'
 import { splitByTitle } from '../../lib/utils/mdast'
-import {
-  ASSETS_SERVER_BASE_URL,
-  PUBLIC_BASE_URL,
-  PUBLIKATOR_BASE_URL,
-} from '../../lib/constants'
+import { PUBLIKATOR_BASE_URL } from '../../lib/constants'
 import ShareImage from './ShareImage'
 import FontSizeSync from '../FontSize/Sync'
 import PageLoader from '../Loader'
@@ -82,7 +76,7 @@ import { useMe } from '../../lib/context/MeContext'
 import DiscussionContextProvider from '../Discussion/context/DiscussionContextProvider'
 import Discussion from '../Discussion/Discussion'
 import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
-import { deduplicate } from '../../lib/utils/helpers'
+import { getMetaData, runMetaFromQuery } from './metadata'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -194,80 +188,6 @@ const getSchemaCreator = (template) => {
     }
   }
   return schema
-}
-
-const runMetaFromQuery = (code, query) => {
-  if (!code) {
-    return undefined
-  }
-  let fn
-  try {
-    /* eslint-disable-next-line */
-    fn = new Function('query', code)
-    return fn(query)
-  } catch (e) {
-    typeof console !== 'undefined' &&
-      console.warn &&
-      console.warn('meta.fromQuery exploded', e)
-  }
-  return undefined
-}
-
-const getJSONLDs = (meta) => {
-  if (meta.template === 'article') {
-    const headline = meta.seoTitle || meta.twitterTitle || meta.title
-    return [
-      {
-        '@context': 'https://schema.org',
-        '@type': 'NewsArticle',
-        headline,
-        alternativeHeadline: headline !== meta.title ? meta.title : undefined,
-        image: [meta.image, meta.twitterImage, meta.facebookImage].filter(
-          deduplicate,
-        ),
-        datePublished: meta.publishDate,
-        dateModified: meta.lastPublishedAt,
-        author: meta.contributors.map(({ user, name }) => ({
-          '@type': 'Person',
-          name,
-          url: user?.username
-            ? `${PUBLIC_BASE_URL}/~${user.username}`
-            : undefined,
-          sameAs: user
-            ? [
-                user.publicUrl,
-                user.twitterHandle &&
-                  `https://twitter.com/${user.twitterHandle}`,
-                user.facebookId &&
-                  `https://www.facebook.com/${user.facebookId}`,
-              ].filter(Boolean)
-            : undefined,
-        })),
-      },
-    ]
-  }
-}
-
-const getMetaData = (documentId, meta) => {
-  const shareImage =
-    meta.shareText &&
-    `${ASSETS_SERVER_BASE_URL}/render?width=${SHARE_IMAGE_WIDTH}&height=${SHARE_IMAGE_HEIGHT}&updatedAt=${encodeURIComponent(
-      `${documentId}${meta.format ? `-${meta.format.id}` : ''}`,
-    )}&url=${encodeURIComponent(
-      `${PUBLIC_BASE_URL}${meta.path}?extract=share`,
-    )}`
-
-  const metaWithUrls = {
-    ...meta,
-    facebookImage: shareImage || meta.facebookImage,
-    twitterImage: shareImage || meta.twitterImage,
-    url: `${PUBLIC_BASE_URL}${meta.path}`,
-  }
-
-  return {
-    ...metaWithUrls,
-    jsonLds: getJSONLDs(metaWithUrls),
-  }
 }
 
 const EmptyComponent = ({ children }) => children
