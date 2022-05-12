@@ -26,14 +26,16 @@ type ApolloSSGQueryFunc<P, Q extends ParsedUrlQuery> = (
  */
 function createGetStaticProps<P, Q extends ParsedUrlQuery = ParsedUrlQuery>(
   queryFunc: ApolloSSGQueryFunc<P, Q>,
+  headers?: { [key: string]: string },
 ): GetStaticProps<BasePageProps<P>> {
   return async (
     ctx: GetStaticPropsContext<Q>,
   ): Promise<GetStaticPropsResult<BasePageProps<P>>> => {
-    const apolloClient = initializeApollo()
+    const apolloClient = initializeApollo(null, {
+      headers,
+    })
     const result = await queryFunc(apolloClient, ctx.params)
 
-    // If the result has
     if ('props' in result) {
       result.props[APOLLO_STATE_PROP_NAME] = apolloClient.cache.extract()
     }

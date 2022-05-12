@@ -24,20 +24,25 @@ const FrontPage = () => {
 
 export default FrontPage
 
-export const getStaticProps = createGetStaticProps(async (client, params) => {
-  await client.query({
-    query: FRONT_QUERY,
-    variables: {
-      path: FRONT_PATH,
-      // first: finite ? 1000 : 15,
-      first: 1000,
-      // before: finite ? 'end' : undefined,
-      before: 'end',
-      only: params?.extractId,
-    },
-  })
-  return {
-    props: {},
-    revalidate: 60 * 5,
-  }
-})
+export const getStaticProps = createGetStaticProps(
+  async (client, params) => {
+    await client.query({
+      query: FRONT_QUERY,
+      variables: {
+        path: FRONT_PATH,
+        // first: finite ? 1000 : 15,
+        first: 1000,
+        // before: finite ? 'end' : undefined,
+        before: 'end',
+        only: params?.extractId,
+      },
+    })
+    return {
+      props: {},
+      revalidate: 60 * 5,
+    }
+  },
+  {
+    authorization: process.env.SSG_API_KEY,
+  },
+)
