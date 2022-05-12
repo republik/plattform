@@ -8,6 +8,7 @@ import { errorToString } from '../../lib/utils/errors'
 import { meQuery } from '../../lib/apollo/withMe'
 
 import { A, InlineSpinner } from '@project-r/styleguide'
+import { withRouter } from 'next/router'
 
 class SignOut extends Component {
   constructor(props) {
@@ -17,7 +18,7 @@ class SignOut extends Component {
     }
   }
   render() {
-    const { t, Link = A } = this.props
+    const { t, Link = A, router } = this.props
     const { loading, error } = this.state
 
     return (
@@ -42,7 +43,8 @@ class SignOut extends Component {
                   // re-load after sign in
                   // - clear apollo cache
                   // - clears potentially authenticated ws conntection
-                  window.location.reload()
+                  //window.location.reload()
+                  router.reload()
                 } else {
                   this.setState(() => ({
                     error: t('signOut/error'),
@@ -92,4 +94,4 @@ export const withSignOut = compose(
   }),
 )
 
-export default compose(withSignOut, withT)(SignOut)
+export default compose(withSignOut, withRouter, withT)(SignOut)
