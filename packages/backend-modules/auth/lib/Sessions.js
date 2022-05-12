@@ -12,11 +12,15 @@ const InitiateSessionError = newAuthError(
 )
 const NoSessionError = newAuthError('no-session', 'api/token/invalid')
 
-const destroySession = async (req) => {
+const destroySession = async (req, res) => {
   return new Promise((resolve, reject) => {
     req.session.destroy((error) => {
       if (error) {
         return reject(new DestroySessionError({ headers: req.headers, error }))
+      }
+      if (res) {
+        res.clearCookie(process.env.COOKIE_NAME ?? 'connect.sid') // clear session cookie
+        res.clearCookie(process.env.JWT_COOKIE_NAME ?? 'republik-token') // clear jwt cookie
       }
       return resolve()
     })

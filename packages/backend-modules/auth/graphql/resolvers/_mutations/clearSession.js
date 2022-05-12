@@ -4,7 +4,7 @@ const { clearUserSession, destroySession } = require('../../../lib/Sessions')
 const { resolveUser } = require('../../../lib/Users')
 const userAccessRoles = ['admin', 'supporter']
 
-module.exports = async (_, args, { pgdb, user: me, req }) => {
+module.exports = async (_, args, { pgdb, user: me, req, res }) => {
   ensureSignedIn(req)
 
   const { userId: foreignUserId, sessionId } = args
@@ -14,7 +14,7 @@ module.exports = async (_, args, { pgdb, user: me, req }) => {
 
   if (session.id === sessionId) {
     // current session, normal logout
-    await destroySession(req)
+    await destroySession(req, res)
     return true
   }
   if (Roles.userIsMeOrInRoles(user, me, userAccessRoles)) {
