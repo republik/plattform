@@ -117,7 +117,6 @@ const Front = ({
 
   useEffect(() => {
     setTimeout(() => {
-      alert('refetch')
       refetch()
     }, 2500)
   }, [refetch])

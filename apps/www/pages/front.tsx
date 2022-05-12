@@ -3,7 +3,7 @@ import Front from '../components/Front'
 import createGetStaticProps from '../lib/helpers/createGetStaticProps'
 import { FRONT_QUERY } from '../components/Front/graphql/getFrontQuery.graphql'
 
-const FRONT_PATH = '/front'
+const FRONT_PATH = '/'
 
 const FrontPage = () => {
   const router = useRouter()
