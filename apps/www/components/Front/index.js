@@ -206,8 +206,6 @@ const Front = ({
     )
   }
 
-  console.log('SSG FRONT', data)
-
   return (
     <Frame hasOverviewNav={hasOverviewNav} raw meta={meta}>
       {renderBefore && renderBefore(meta)}

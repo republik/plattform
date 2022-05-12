@@ -1,5 +1,6 @@
 import * as jose from 'jose'
 import { NextRequest } from 'next/server'
+import * as cookie from 'cookie'
 import {
   isValidJWTPayload,
   JWTPayloadValidationError,
@@ -43,11 +44,26 @@ async function verifyJWT(token: string): Promise<Payload> {
 export async function parseAndVerifyJWT(
   req: NextRequest,
 ): Promise<Payload | null> {
-  const sessionCookie = req.cookies?.['connect.sid']
-  const jwtCookie = req.cookies?.['republik-token']
-  if (!sessionCookie || !jwtCookie) {
+  try {
+    const sessionCookieString = req.cookies?.['connect.sid']
+    const jwtCookieString = req.cookies?.['republik-token']
+
+    console.log(
+      'Cookie check',
+      !sessionCookieString,
+      !jwtCookieString,
+      !sessionCookieString || !jwtCookieString,
+    )
+
+    // TODO: validate that both cookies have a max-age of >= now
+    if (!sessionCookieString || !jwtCookieString) {
+      return null
+    }
+
+    const payload = await verifyJWT(jwtCookieString)
+    return payload
+  } catch (error) {
+    console.error(error)
     return null
   }
-  const payload = await verifyJWT(jwtCookie)
-  return payload
 }
