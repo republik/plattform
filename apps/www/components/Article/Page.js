@@ -82,6 +82,7 @@ import { useMe } from '../../lib/context/MeContext'
 import DiscussionContextProvider from '../Discussion/context/DiscussionContextProvider'
 import Discussion from '../Discussion/Discussion'
 import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
+import { deduplicate } from '../../lib/utils/helpers'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -212,6 +213,63 @@ const runMetaFromQuery = (code, query) => {
   return undefined
 }
 
+const getJSONLDs = (meta) => {
+  if (meta.template === 'article') {
+    const headline = meta.seoTitle || meta.twitterTitle || meta.title
+    return [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'NewsArticle',
+        headline,
+        alternativeHeadline: headline !== meta.title ? meta.title : undefined,
+        image: [meta.image, meta.twitterImage, meta.facebookImage].filter(
+          deduplicate,
+        ),
+        datePublished: meta.publishDate,
+        dateModified: meta.lastPublishedAt,
+        author: meta.contributors.map(({ user, name }) => ({
+          '@type': 'Person',
+          name,
+          url: user?.username
+            ? `${PUBLIC_BASE_URL}/~${user.username}`
+            : undefined,
+          sameAs: user
+            ? [
+                user.publicUrl,
+                user.twitterHandle &&
+                  `https://twitter.com/${user.twitterHandle}`,
+                user.facebookId &&
+                  `https://www.facebook.com/${user.facebookId}`,
+              ].filter(Boolean)
+            : undefined,
+        })),
+      },
+    ]
+  }
+}
+
+const getMetaData = (documentId, meta) => {
+  const shareImage =
+    meta.shareText &&
+    `${ASSETS_SERVER_BASE_URL}/render?width=${SHARE_IMAGE_WIDTH}&height=${SHARE_IMAGE_HEIGHT}&updatedAt=${encodeURIComponent(
+      `${documentId}${meta.format ? `-${meta.format.id}` : ''}`,
+    )}&url=${encodeURIComponent(
+      `${PUBLIC_BASE_URL}${meta.path}?extract=share`,
+    )}`
+
+  const metaWithUrls = {
+    ...meta,
+    facebookImage: shareImage || meta.facebookImage,
+    twitterImage: shareImage || meta.twitterImage,
+    url: `${PUBLIC_BASE_URL}${meta.path}`,
+  }
+
+  return {
+    ...metaWithUrls,
+    jsonLds: getJSONLDs(metaWithUrls),
+  }
+}
+
 const EmptyComponent = ({ children }) => children
 
 const ArticlePage = ({
@@ -246,6 +304,8 @@ const ArticlePage = ({
   })
 
   const article = articleData?.article
+  const documentId = article?.id
+  const repoId = article?.repoId
 
   const articleMeta = article?.meta
   const articleContent = article?.content
@@ -269,7 +329,7 @@ const ArticlePage = ({
     needsRefetch,
     // ensure effect is run when article or me changes
     me?.id,
-    article?.id,
+    documentId,
   ])
 
   if (isPreview && !articleLoading && !article && serverContext) {
@@ -304,8 +364,7 @@ const ArticlePage = ({
     () =>
       articleMeta &&
       articleContent && {
-        ...articleMeta,
-        url: `${PUBLIC_BASE_URL}${articleMeta.path}`,
+        ...getMetaData(documentId, articleMeta),
         ...(metaJSONStringFromQuery
           ? JSON.parse(metaJSONStringFromQuery)
           : undefined),
@@ -330,7 +389,7 @@ const ArticlePage = ({
   const newsletterMeta =
     hasMeta && (meta.newsletter || meta.format?.meta?.newsletter)
 
-  const isSeriesOverview = hasMeta && meta.series?.overview?.id === article?.id
+  const isSeriesOverview = hasMeta && meta.series?.overview?.id === documentId
   const showSeriesNav = hasMeta && !!meta.series && !isSeriesOverview
   const titleBreakout = isSeriesOverview
 
@@ -389,9 +448,6 @@ const ArticlePage = ({
       }),
     [template, inNativeIOSApp, inNativeApp, showInlinePaynote, titleBreakout],
   )
-
-  const documentId = article?.id
-  const repoId = article?.repoId
 
   const isEditorialNewsletter = template === 'editorialNewsletter'
   const disableActionBar = meta?.disableActionBar
@@ -487,23 +543,11 @@ const ArticlePage = ({
   const hasOverviewNav = meta ? meta.template === 'section' : true // show/keep around while loading meta
   const colorSchemeKey = darkMode ? 'dark' : 'auto'
 
-  const shareImage =
-    article &&
-    `${ASSETS_SERVER_BASE_URL}/render?width=${SHARE_IMAGE_WIDTH}&height=${SHARE_IMAGE_HEIGHT}&updatedAt=${encodeURIComponent(
-      `${article.id}${meta?.format ? `-${meta.format.id}` : ''}`,
-    )}&url=${encodeURIComponent(
-      `${PUBLIC_BASE_URL}${articleMeta.path}?extract=share`,
-    )}`
-
   const metaWithSocialImages =
     (meta?.ownDiscussion?.id && router.query.focus) ||
     (meta?.ownDiscussion?.isBoard && router.query.parent)
       ? undefined
-      : meta && {
-          ...meta,
-          facebookImage: meta?.shareText ? shareImage : meta?.facebookImage,
-          twitterImage: meta?.shareText ? shareImage : meta?.twitterImage,
-        }
+      : meta
 
   return (
     <Frame
