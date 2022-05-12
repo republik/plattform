@@ -2,19 +2,13 @@ const visit = require('unist-util-visit')
 const Promise = require('bluebird')
 
 const {
-  Roles: { userIsInRoles },
-} = require('@orbiting/backend-modules-auth')
-const {
   imageKeys: embedImageKeys,
   getEmbedByUrl,
   canGetEmbedType,
 } = require('@orbiting/backend-modules-embeds')
 
 const modifiers = require('./modifiers')
-
-const { DOCUMENTS_RESTRICT_TO_ROLES } = process.env
-
-const documentsRestrictToRoles = DOCUMENTS_RESTRICT_TO_ROLES?.split(',')
+const { hasFullDocumentAccess } = require('./restrictions')
 
 const processRepoImageUrlsInContent = async (mdast, fn) => {
   const fns = []
@@ -142,15 +136,9 @@ const processEmbedsInContent = async (mdast, fn, context) => {
   return Promise.all(fns.map((fn) => fn()))
 }
 
-const processMembersOnlyZonesInContent = (mdast, user) => {
-  if (!documentsRestrictToRoles) {
-    return
-  }
+const processMembersOnlyZonesInContent = (mdast, user, apiKey) => {
   visit(mdast, 'zone', (node) => {
-    if (
-      node.data?.membersOnly &&
-      !userIsInRoles(user, documentsRestrictToRoles)
-    ) {
+    if (node.data?.membersOnly && !hasFullDocumentAccess(user, apiKey)) {
       node.children = []
     }
   })
@@ -167,14 +155,14 @@ const processNodeModifiersInContent = (mdast, user) => {
   })
 }
 
-const processIfHasAccess = (mdast, user) => {
+const processIfHasAccess = (mdast, user, apiKey) => {
   visit(mdast, 'zone', (node, index, parent) => {
     if (node.identifier === 'IF' && node.data?.present === 'hasAccess') {
       const elseIndex = node.children.findIndex(
         ({ identifier }) => identifier === 'ELSE',
       )
 
-      const children = userIsInRoles(user, documentsRestrictToRoles)
+      const children = hasFullDocumentAccess(user, apiKey)
         ? node.children.filter((_, index) => index !== elseIndex)
         : node.children.find((_, index) => index === elseIndex)?.children || []
 
