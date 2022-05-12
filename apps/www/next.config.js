@@ -62,6 +62,12 @@ module.exports = withTM(
           destination: '/',
           permanent: true,
         },
+        // Don't allow accessing legacy marketing-/front-page
+        {
+          source: '/_ssr/',
+          destination: '/',
+          permanent: true,
+        },
         {
           source: '/_ssr/:path*',
           destination: '/:path*',

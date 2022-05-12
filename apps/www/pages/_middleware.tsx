@@ -20,6 +20,16 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
     const jwtBody = await parseAndVerifyJWT(req)
     const isMember = jwtBody?.roles.includes('member')
 
+    // Redirect to legacy-ssr page to generate page for tep
+    if (
+      !req.nextUrl.searchParams.has('marketing') &&
+      req.nextUrl.searchParams.has('extractId')
+    ) {
+      console.log('Redirecting to legacy-ssr page')
+      url.pathname = '/ssr/'
+      return NextResponse.rewrite(url)
+    }
+
     if (isMember) {
       url.pathname = '/front'
       return NextResponse.rewrite(url)
