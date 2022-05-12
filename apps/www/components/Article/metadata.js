@@ -80,7 +80,10 @@ const getJSONLDs = (meta) => {
             'https://twitter.com/RepublikMagazin',
             'https://www.facebook.com/RepublikMagazin',
             'https://www.instagram.com/republikmagazin/',
+            'https://de.wikipedia.org/wiki/Republik_(Magazin)',
+            'https://www.wikidata.org/wiki/Q56293828',
           ],
+          foundingDate: '2018',
           masthead: `${PUBLIC_BASE_URL}/impressum`,
           ownershipFundingInfo: `${PUBLIC_BASE_URL}/aktionariat`,
           logo: {
