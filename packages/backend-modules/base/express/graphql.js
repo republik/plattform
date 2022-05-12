@@ -8,6 +8,8 @@ const util = require('util')
 
 const { NODE_ENV, COOKIE_NAME, WS_KEEPALIVE_INTERVAL } = process.env
 
+const documentApiKeyScheme = 'DocumentApiKey'
+
 module.exports = (
   server,
   httpServer,
@@ -22,10 +24,17 @@ module.exports = (
     },
   })
 
-  const createContext = ({ scope = undefined, user, ...rest } = {}) => {
+  const createContext = ({ scope = undefined, user, req, ...rest } = {}) => {
+    const authorization = req?.get('Authorization')
+    const documentApiKey = authorization?.startsWith(documentApiKeyScheme)
+      ? authorization.slice(documentApiKeyScheme.length + 1)
+      : null
+
     const context = createGraphqlContext({
       ...rest,
+      req,
       scope,
+      documentApiKey,
       user: global && global.testUser !== undefined ? global.testUser : user,
     })
     // prime User dataloader with me
