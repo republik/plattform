@@ -51,10 +51,10 @@ module.exports = (
 
   const apolloServer = new ApolloServer({
     schema: executableSchema,
-    context: ({ req, connection }) =>
+    context: ({ req, res, connection }) =>
       connection
         ? connection.context
-        : createContext({ user: req.user, req, scope: 'request' }),
+        : createContext({ user: req.user, req, res, scope: 'request' }),
     debug: true,
     introspection: true,
     playground: false, // see ./graphiql.js
