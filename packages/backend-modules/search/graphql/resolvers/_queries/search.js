@@ -362,6 +362,7 @@ const hasFieldRequested = (fieldName, GraphQLResolveInfo) => {
 const search = async (__, args, context, info) => {
   const { user, elastic, t, redis } = context
   const cache = createCache(redis)
+  const apiKey = args.apiKey || context.documentApiKey
 
   const {
     recursive = false,
@@ -372,7 +373,6 @@ const search = async (__, args, context, info) => {
     withoutContent: _withoutContent,
     withoutRelatedDocs = false,
     withoutAggs = false,
-    apiKey,
   } = args
 
   // detect if Document.content is requested
