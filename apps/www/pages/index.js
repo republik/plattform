@@ -7,6 +7,8 @@ import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
 import createGetStaticProps from '../lib/helpers/createGetStaticProps'
 import { MARKETING_PAGE_QUERY } from '../components/Marketing/graphql/MarketingPageQuery.graphql'
 
+const MARKETING_PAGE_SSG_REVALIDATE = 3 * 60 // revalidate every 3 minutes
+
 const MarketingPage = () => {
   const { t } = useTranslation()
 
@@ -35,6 +37,6 @@ export const getStaticProps = createGetStaticProps(async (client, params) => {
     props: {
       data,
     },
-    revalidate: 60 * 5,
+    revalidate: MARKETING_PAGE_SSG_REVALIDATE,
   }
 })
