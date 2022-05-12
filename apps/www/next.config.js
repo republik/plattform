@@ -55,6 +55,13 @@ module.exports = withTM(
     },
     async redirects() {
       return [
+        // '/front' must not be reachable directly!
+        // if a user is authenticated, '/' will be rewritten to '/front'
+        {
+          source: '/front',
+          destination: '/',
+          permanent: true,
+        },
         {
           source: '/_ssr/:path*',
           destination: '/:path*',

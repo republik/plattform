@@ -18,6 +18,7 @@ const FrontPage = () => {
       containerStyle={undefined}
       serverContext={undefined}
       isEditor={undefined}
+      documentPath={FRONT_PATH}
     />
   )
 }
@@ -26,23 +27,30 @@ export default FrontPage
 
 export const getStaticProps = createGetStaticProps(
   async (client, params) => {
-    await client.query({
-      query: FRONT_QUERY,
-      variables: {
-        path: FRONT_PATH,
-        // first: finite ? 1000 : 15,
-        first: 1000,
-        // before: finite ? 'end' : undefined,
-        before: 'end',
-        only: params?.extractId,
-      },
-    })
-    return {
-      props: {},
-      revalidate: 60 * 5,
+    try {
+      const test = await client.query({
+        query: FRONT_QUERY,
+        variables: {
+          path: FRONT_PATH,
+          // first: finite ? 1000 : 15,
+          first: 1000,
+          // before: finite ? 'end' : undefined,
+          before: 'end',
+          only: params?.extractId,
+        },
+      })
+
+      console.debug('test', test)
+
+      return {
+        props: {},
+        revalidate: 60 * 5,
+      }
+    } catch (e) {
+      console.error(e)
     }
   },
   {
-    authorization: process.env.SSG_API_KEY,
+    authorization: `DocumentApiKey ${process.env.SSG_API_KEY}`,
   },
 )

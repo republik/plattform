@@ -88,6 +88,7 @@ const Front = ({
   finite,
   hasOverviewNav,
   shouldAutoRefetch,
+  documentPath,
 }) => {
   const { t } = useTranslation()
   const router = useRouter()
@@ -98,7 +99,7 @@ const Front = ({
     now.getDate(),
     5,
   )
-  console.log('cleaned as path', cleanAsPath(router.asPath))
+  console.log('path', documentPath ?? cleanAsPath(router.asPath))
   const {
     data,
     loading,
@@ -107,7 +108,7 @@ const Front = ({
     fetchMore: nativeFetchMore,
   } = useGetFrontQuery({
     variables: {
-      path: cleanAsPath(router.asPath),
+      path: documentPath ?? cleanAsPath(router.asPath),
       first: finite ? 1000 : 15,
       before: finite ? 'end' : undefined,
       only: extractId,
