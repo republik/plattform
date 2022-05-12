@@ -14,6 +14,7 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
     if (url.pathname !== '/') {
       return NextResponse.next()
     }
+
     // Parse and verify JWT to decide about redirection
     const jwtBody = await parseAndVerifyJWT(req)
     if (jwtBody) {
@@ -23,6 +24,7 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
       url.pathname = '/'
       return NextResponse.rewrite(url)
     }
+
     return NextResponse.next()
   } catch (err) {
     url.pathname = '/500'

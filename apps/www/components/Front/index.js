@@ -99,7 +99,7 @@ const Front = ({
     now.getDate(),
     5,
   )
-  console.log('path', documentPath ?? cleanAsPath(router.asPath))
+
   const {
     data,
     loading,
