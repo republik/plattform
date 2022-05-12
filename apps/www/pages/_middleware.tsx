@@ -27,12 +27,16 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
     ) {
       console.log('Redirecting to legacy-ssr page')
       url.pathname = '/ssr/'
-      return NextResponse.rewrite(url)
+      const res = NextResponse.rewrite(url)
+      console.log('Cache-control ssr', res.headers.get('cache-control'))
+      return res
     }
 
     if (isMember) {
       url.pathname = '/front'
-      return NextResponse.rewrite(url)
+      const res = NextResponse.rewrite(url)
+      console.log('Cache-control front', res.headers.get('cache-control'))
+      return res
     }
     // Render marketing-page
     const userAgent = req.headers.get('user-agent')
@@ -51,7 +55,9 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
     } else {
       url.pathname = '/'
     }
-    return NextResponse.rewrite(url)
+    const res = NextResponse.rewrite(url)
+    console.log('Cache control marketing', res.headers.get('cache-control'))
+    return res
   } catch (err) {
     url.pathname = '/500'
     // TODO: log middleware errors
