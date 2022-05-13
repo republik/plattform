@@ -3,7 +3,7 @@ import { ParsedUrlQuery } from 'querystring'
 import createGetServerSideProps from '../../../lib/helpers/createGetServerSideProps'
 import Front from '../../../components/Front'
 import { FRONT_QUERY } from '../../../components/Front/graphql/getFrontQuery.graphql'
-import { errorToString } from '../../../lib/utils/errors'
+import reportError from '../../../lib/errors/reportError'
 
 type Props = {
   id: string | string[]
@@ -35,21 +35,17 @@ interface Params extends ParsedUrlQuery {
 export const getServerSideProps: GetServerSideProps = createGetServerSideProps<
   unknown,
   Params
->(async (client, params) => {
+>(async (client, params, _, ctx) => {
   try {
-    const data = await client.query({
+    await client.query({
       query: FRONT_QUERY,
       variables: {
         path: '/',
         only: Array.isArray(params.id) ? params.id[0] : params.id,
-        // first: finite ? 1000 : 15,
         first: 1000,
-        // before: finite ? 'end' : undefined,
         before: 'end',
       },
     })
-
-    console.log('data', JSON.stringify(data, null, 2))
 
     return {
       props: {
@@ -57,7 +53,7 @@ export const getServerSideProps: GetServerSideProps = createGetServerSideProps<
       },
     }
   } catch (error) {
-    console.error(errorToString(error), params.id)
+    reportError(ctx.req.headers['user-agent'], error)
     return {
       notFound: true,
     }
