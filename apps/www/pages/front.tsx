@@ -5,7 +5,7 @@ import createGetStaticProps from '../lib/helpers/createGetStaticProps'
 import { FRONT_QUERY } from '../components/Front/graphql/getFrontQuery.graphql'
 import { useMe } from '../lib/context/MeContext'
 
-const FRONT_PAGE_SSG_REVALIDATE = 3 * 60 // revalidate every 3 minutes
+const FRONT_PAGE_SSG_REVALIDATE = 60 // revalidate every minute
 const FRONT_PATH = '/'
 
 const FrontPage = () => {

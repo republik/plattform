@@ -11,7 +11,7 @@ import createGetStaticProps from '../lib/helpers/createGetStaticProps'
 import { MARKETING_PAGE_QUERY } from '../components/Marketing/graphql/MarketingPageQuery.graphql'
 import { useMe } from '../lib/context/MeContext'
 
-const MARKETING_PAGE_SSG_REVALIDATE = 3 * 60 // revalidate every 3 minutes
+const MARKETING_PAGE_SSG_REVALIDATE = 60 // revalidate every minute
 
 const MarketingPage = () => {
   const { t } = useTranslation()
