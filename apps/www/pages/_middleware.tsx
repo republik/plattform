@@ -54,7 +54,6 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
     }
     return NextResponse.rewrite(resUrl)
   } catch (err) {
-    console.log('Forwarding error to api route')
     ev.waitUntil(
       new Promise((resolve) => {
         fetch(`${req.nextUrl.protocol}//${req.nextUrl.host}/api/reportError`, {
