@@ -1,13 +1,26 @@
+import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Front from '../components/Front'
 import createGetStaticProps from '../lib/helpers/createGetStaticProps'
 import { FRONT_QUERY } from '../components/Front/graphql/getFrontQuery.graphql'
+import { useMe } from '../lib/context/MeContext'
 
 const FRONT_PAGE_SSG_REVALIDATE = 3 * 60 // revalidate every 3 minutes
 const FRONT_PATH = '/'
 
 const FrontPage = () => {
   const router = useRouter()
+  const { me, meLoading, hasActiveMembership } = useMe()
+
+  useEffect(() => {
+    if (meLoading) return
+    // In case the user isn't logged in or has no active membership,
+    // reload to re-trigger the middleware to rewrite to the marketing-page
+    if (!me || !hasActiveMembership) {
+      router.reload()
+    }
+  }, [me, meLoading, hasActiveMembership, router])
+
   return (
     <Front
       shouldAutoRefetch
