@@ -21,7 +21,7 @@ const { CURTAIN_MESSAGE } = process.env
 const app = next({
   dev: DEV,
   port: PORT,
-  hostname: 'localhost', // TODO: add hostname from env, required for middleware to work
+  hostname: process.env.NEXTJS_SERVER_HOSTNAME ?? DEV ? 'localhost' : null,
 })
 const handler = app.getRequestHandler()
 
