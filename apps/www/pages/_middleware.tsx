@@ -28,7 +28,7 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
       !req.nextUrl.searchParams.has('marketing') &&
       req.nextUrl.searchParams.has('extractId')
     ) {
-      resUrl.pathname = '/ssr/'
+      resUrl.pathname = '/_ssr/'
       return NextResponse.rewrite(resUrl)
     }
 
