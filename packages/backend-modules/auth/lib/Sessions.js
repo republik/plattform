@@ -12,6 +12,8 @@ const InitiateSessionError = newAuthError(
 )
 const NoSessionError = newAuthError('no-session', 'api/token/invalid')
 
+const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
+
 const destroySession = async (req, res) => {
   return new Promise((resolve, reject) => {
     req.session.destroy((error) => {
@@ -19,8 +21,17 @@ const destroySession = async (req, res) => {
         return reject(new DestroySessionError({ headers: req.headers, error }))
       }
       if (res) {
-        res.clearCookie(process.env.COOKIE_NAME ?? 'connect.sid') // clear session cookie
-        res.clearCookie(process.env.JWT_COOKIE_NAME ?? 'republik-token') // clear jwt cookie
+        const cookieOptions = {
+          domain: process.env.COOKIE_DOMAIN ?? undefined,
+          httpOnly: true,
+          sameSite: !DEV && 'none',
+          secure: !DEV,
+        }
+        res.clearCookie(process.env.COOKIE_NAME ?? 'connect.sid', cookieOptions) // clear session cookie
+        res.clearCookie(
+          process.env.JWT_COOKIE_NAME ?? 'republik-token',
+          cookieOptions,
+        ) // clear jwt cookie
       }
       return resolve()
     })
