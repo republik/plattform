@@ -12,6 +12,7 @@ import {
 } from '../apollo/apolloClient'
 import { meQuery } from '../apollo/withMe'
 import { MeObjectType } from '../context/MeContext'
+import { IncomingMessage } from 'http'
 
 /**
  * Type of function that can be passed to `createGetServerSideProps`
@@ -20,6 +21,7 @@ type ApolloSSRQueryFunc<P, Q extends ParsedUrlQuery> = (
   client: ApolloClient<NormalizedCacheObject>,
   params: Q,
   user: MeObjectType | null,
+  ctx: GetServerSidePropsContext<Q>,
 ) => Promise<GetServerSidePropsResult<P>>
 
 function createGetServerSideProps<P, Q extends ParsedUrlQuery = ParsedUrlQuery>(
@@ -42,7 +44,7 @@ function createGetServerSideProps<P, Q extends ParsedUrlQuery = ParsedUrlQuery>(
       query: meQuery,
     })
 
-    const result = await queryFunc(apolloClient, context.params, me)
+    const result = await queryFunc(apolloClient, context.params, me, context)
 
     if ('props' in result) {
       result.props[APOLLO_STATE_PROP_NAME] = apolloClient.cache.extract()
