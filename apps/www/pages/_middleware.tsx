@@ -16,6 +16,8 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
       return NextResponse.next()
     }
 
+    console.log('Headers', req.headers)
+
     // Parse and verify JWT to decide about redirection
     const jwtBody = await parseAndVerifyJWT(req)
     const isMember = jwtBody?.roles.includes('member')
