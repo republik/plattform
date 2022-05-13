@@ -116,12 +116,6 @@ const Front = ({
   })
   const { front } = data ?? {}
 
-  useEffect(() => {
-    setTimeout(() => {
-      refetch()
-    }, 2500)
-  }, [refetch])
-
   const shouldRefetch = shouldAutoRefetch && lastMountAt < dailyUpdateTime
   const [isRefetching, setIsRefetching] = useState(shouldRefetch)
 
