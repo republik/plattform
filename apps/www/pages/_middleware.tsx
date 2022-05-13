@@ -23,12 +23,18 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
     const jwtBody = await parseAndVerifyJWT(req)
     const isMember = jwtBody?.roles.includes('member')
 
-    // Redirect to legacy-ssr page to generate page for yearly view
+    // Redirect to front-preview ssr to generate article front-preview
+    // used in the yearly overview
     if (
       !req.nextUrl.searchParams.has('marketing') &&
       req.nextUrl.searchParams.has('extractId')
     ) {
-      resUrl.pathname = '/_ssr/'
+      // Remap extractId query param to id-slug
+      const extractId = req.nextUrl.searchParams.get('extractId')
+      resUrl.searchParams.delete('extractId')
+
+      resUrl.pathname = `/_ssr/front-preview/${extractId}`
+
       return NextResponse.rewrite(resUrl)
     }
 

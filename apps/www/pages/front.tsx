@@ -46,7 +46,7 @@ export const getStaticProps = createGetStaticProps(
       throw new Error('Missing SSG_API_KEY environment variable')
     }
 
-    const test = await client.query({
+    await client.query({
       query: FRONT_QUERY,
       variables: {
         path: FRONT_PATH,
