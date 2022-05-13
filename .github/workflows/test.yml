@@ -15,6 +15,10 @@ jobs:
       matrix:
         node-version: [14.x]
 
+    env:
+      API_URL: ${{ secrets.API_URL }}
+      SSG_API_KEY: ${{ secrets.SSG_API_KEY }}
+
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
