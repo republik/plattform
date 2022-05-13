@@ -1,4 +1,12 @@
-import { createContext, ReactNode, useContext, useEffect, useMemo } from 'react'
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import NextHead from 'next/head'
 import { ApolloError, useQuery } from '@apollo/client'
 import { checkRoles, meQuery } from '../apollo/withMe'
@@ -41,6 +49,8 @@ css.global(
     display: 'block',
   },
 )
+
+const AUTH_STATE_CHANGE_BROADCAST_STORAGE_KEY = 'authStateChangeBroadcast'
 
 export type MeObjectType = {
   id: string
@@ -90,13 +100,54 @@ type Props = {
   children: ReactNode
 }
 
+type AuthState = 'loading' | 'logged-in' | 'logged-out'
+
 const MeContextProvider = ({ children }: Props) => {
   const { data, loading, error, refetch } = useQuery<MeResponse>(meQuery, {})
+
+  const getAuthState = useCallback((): AuthState => {
+    if (data && data.me) {
+      return 'logged-in'
+    }
+    return 'logged-out'
+  }, [data])
+
+  const [authState, setAuthState] = useState(getAuthState())
 
   const me = data?.me
   const isMember = checkRoles(me, ['member'])
   const hasActiveMembership = !!me?.activeMembership
   const portraitOrInitials = me ? me.portrait ?? getInitials(me) : false
+
+  const broadcastAuthenticationChange = (nextState) => {
+    console.log('broadcastAuthenticationChange')
+    localStorage.setItem(AUTH_STATE_CHANGE_BROADCAST_STORAGE_KEY, nextState)
+    localStorage.removeItem(AUTH_STATE_CHANGE_BROADCAST_STORAGE_KEY)
+  }
+
+  const handleAuthenticationChangeBroadcast = useCallback(
+    async (event: StorageEvent) => {
+      console.log('Event:', event)
+
+      // Ignore all events that aren't meant to broadcast auth-change and
+      // ignore localStorage.removeItem
+      if (
+        event.key !== AUTH_STATE_CHANGE_BROADCAST_STORAGE_KEY ||
+        event.newValue === null
+      ) {
+        return
+      }
+
+      if (
+        (authState === 'logged-in' && event.newValue === 'logged-out') ||
+        (authState === 'logged-out' && event.newValue === 'logged-in')
+      ) {
+        await refetch()
+        return
+      }
+    },
+    [authState, refetch],
+  )
 
   useEffect(() => {
     if (loading) return
@@ -134,6 +185,25 @@ const MeContextProvider = ({ children }: Props) => {
       // eslint-disable-next-line no-empty
     } catch (e) {}
   }, [loading, portraitOrInitials, hasActiveMembership])
+
+  // Sync loggedIn state between multiple tabs by observing localStorage changes
+  useEffect(() => {
+    const newAuthState = getAuthState()
+    // In case the new authState diverges from the current authState,
+    // broadcast to other tabs to update their state
+    if (authState !== newAuthState) {
+      setAuthState(newAuthState)
+      broadcastAuthenticationChange(newAuthState)
+    }
+  }, [getAuthState])
+
+  // Register a storage-event listener
+  useEffect(() => {
+    window.addEventListener('storage', handleAuthenticationChangeBroadcast)
+    return () => {
+      window.removeEventListener('storage', handleAuthenticationChangeBroadcast)
+    }
+  }, [handleAuthenticationChangeBroadcast])
 
   return (
     <MeContext.Provider
