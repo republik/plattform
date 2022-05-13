@@ -45,15 +45,16 @@ export async function parseAndVerifyJWT(
   req: NextRequest,
 ): Promise<Payload | null> {
   try {
-    const sessionCookieString = req.cookies?.['connect.sid']
-    const jwtCookieString = req.cookies?.['republik-token']
+    const sessionCookieName = process.env.COOKIE_NAME ?? 'connect.sid'
+    const jwtCookieName = process.env.JWT_COOKIE_NAME ?? 'republik-token'
+    const sessionCookieString = req.cookies?.[sessionCookieName]
+    const jwtCookieString = req.cookies?.[jwtCookieName]
 
     if (!sessionCookieString || !jwtCookieString) {
       return null
     }
 
-    const payload = await verifyJWT(jwtCookieString)
-    return payload
+    return await verifyJWT(jwtCookieString)
   } catch (error) {
     console.error(error)
     return null
