@@ -48,14 +48,6 @@ export async function parseAndVerifyJWT(
     const sessionCookieString = req.cookies?.['connect.sid']
     const jwtCookieString = req.cookies?.['republik-token']
 
-    console.log(
-      'Cookie check',
-      !sessionCookieString,
-      !jwtCookieString,
-      !sessionCookieString || !jwtCookieString,
-    )
-
-    // TODO: validate that both cookies have a max-age of >= now
     if (!sessionCookieString || !jwtCookieString) {
       return null
     }
