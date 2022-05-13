@@ -1,6 +1,7 @@
 import { NextFetchEvent, NextRequest, NextResponse } from 'next/server'
 import { parseAndVerifyJWT } from '../lib/auth/JWT/JWTHelper'
 import { NativeAppHelpers } from '../lib/withInNativeApp'
+import reportError from '../lib/errors/reportError'
 
 /**
  * Middleware used to conditionally redirect between the marketing- and front-page
@@ -9,35 +10,33 @@ import { NativeAppHelpers } from '../lib/withInNativeApp'
  * @param ev
  */
 export async function middleware(req: NextRequest, ev: NextFetchEvent) {
-  const url = req.nextUrl.clone()
+  const resUrl = req.nextUrl.clone()
+  const userAgent = req.headers.get('user-agent')
+
   try {
     // Don't run the middleware unless on home-page
-    if (url.pathname !== '/') {
+    if (req.nextUrl.pathname !== '/') {
       return NextResponse.next()
     }
-
-    console.log('Headers', req.headers)
 
     // Parse and verify JWT to decide about redirection
     const jwtBody = await parseAndVerifyJWT(req)
     const isMember = jwtBody?.roles.includes('member')
 
-    // Redirect to legacy-ssr page to generate page for tep
+    // Redirect to legacy-ssr page to generate page for yearly view
     if (
       !req.nextUrl.searchParams.has('marketing') &&
       req.nextUrl.searchParams.has('extractId')
     ) {
-      console.log('Redirecting to legacy-ssr page')
-      url.pathname = '/ssr/'
-      return NextResponse.rewrite(url)
+      resUrl.pathname = '/ssr/'
+      return NextResponse.rewrite(resUrl)
     }
 
     if (isMember) {
-      url.pathname = '/front'
-      return NextResponse.rewrite(url)
+      resUrl.pathname = '/front'
+      return NextResponse.rewrite(resUrl)
     }
     // Render marketing-page
-    const userAgent = req.headers.get('user-agent')
     const isInNativeIOSApp =
       !!NativeAppHelpers.getIOSVersion(userAgent) &&
       !!NativeAppHelpers.getNativeAppVersion(userAgent)
@@ -49,14 +48,27 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
         NativeAppHelpers.getNativeAppVersion(userAgent),
       )
     ) {
-      url.pathname = '/anmelden'
+      resUrl.pathname = '/anmelden'
     } else {
-      url.pathname = '/'
+      resUrl.pathname = '/'
     }
-    return NextResponse.rewrite(url)
+    return NextResponse.rewrite(resUrl)
   } catch (err) {
-    url.pathname = '/500'
-    // TODO: log middleware errors
-    return NextResponse.rewrite(url)
+    console.log('Forwarding error to api route')
+    ev.waitUntil(
+      new Promise((resolve) => {
+        fetch(`${req.nextUrl.protocol}//${req.nextUrl.host}/api/reportError`, {
+          headers: {
+            'user-agent': userAgent, // Forward the client user agent
+          },
+          method: 'POST',
+          body: err.stack,
+        })
+          .catch((err) =>
+            console.log('Failed to report error in middleware', err, resUrl),
+          )
+          .finally(() => resolve(null))
+      }),
+    )
   }
 }
