@@ -5,10 +5,23 @@ import { timeHour } from 'd3-time'
 
 import withReqMethodGuard from '../../lib/api/withReqMethodGuard'
 import HTTPMethods from '../../lib/api/HTTPMethods'
-import { PUBLIC_BASE_URL } from '../../lib/constants'
+import { PUBLIC_BASE_URL, SCHEMA_PUBLISHER } from '../../lib/constants'
+import { parseJSONObject } from '../../lib/safeJSON'
+
+const publisher = parseJSONObject(SCHEMA_PUBLISHER)
 
 export default withReqMethodGuard(
   async (req: NextApiRequest, res: NextApiResponse) => {
+    if (!publisher.name || !publisher.knowsLanguage) {
+      console.warn(
+        '[sitemap-news]',
+        'SCHEMA_PUBLISHER incomplete',
+        `publisher.name=${publisher.name}`,
+        `publisher.knowsLanguage=${publisher.knowsLanguage}`,
+      )
+      return res.status(404).end()
+    }
+
     const apolloFetch = createApolloFetch({
       uri: process.env.API_URL,
     })
@@ -54,7 +67,7 @@ export default withReqMethodGuard(
     })
 
     if (response.errors) {
-      console.error('[sitemap news]', response.errors)
+      console.error('[sitemap-news]', response.errors)
       return res.status(503).end()
     }
     const {
@@ -62,7 +75,7 @@ export default withReqMethodGuard(
     } = response.data
 
     if (!nodes.length && totalCount > 0) {
-      console.log('[sitemap news]', 'unauthorized request', `apiKey=${apiKey}`)
+      console.log('[sitemap-news]', 'unauthorized request', `apiKey=${apiKey}`)
       return res.status(403).end()
     }
 
@@ -80,8 +93,8 @@ export default withReqMethodGuard(
               loc: `${PUBLIC_BASE_URL}${meta.path}`,
               ['news:news']: {
                 ['news:publication']: {
-                  ['news:name']: 'Republik',
-                  ['news:language']: 'de',
+                  ['news:name']: publisher.name,
+                  ['news:language']: publisher.knowsLanguage,
                 },
                 ['news:publication_date']: meta.publishDate,
                 ['news:title']:

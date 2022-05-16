@@ -2,11 +2,13 @@ import { SHARE_IMAGE_HEIGHT, SHARE_IMAGE_WIDTH } from '@project-r/styleguide'
 
 import {
   ASSETS_SERVER_BASE_URL,
-  CDN_FRONTEND_BASE_URL,
   PUBLIC_BASE_URL,
+  SCHEMA_PUBLISHER,
 } from '../../lib/constants'
-
+import { parseJSONObject } from '../../lib/safeJSON'
 import { deduplicate } from '../../lib/utils/helpers'
+
+const publisher = parseJSONObject(SCHEMA_PUBLISHER)
 
 export const runMetaFromQuery = (code, query) => {
   if (!code) {
@@ -64,35 +66,7 @@ const getJSONLDs = (meta) => {
         contributor: meta.contributors
           .filter((c) => c.kind !== 'Text')
           .map(mapContributor),
-        publisher: {
-          '@type': 'NewsMediaOrganization',
-          name: 'Republik',
-          email: 'kontakt@republik.ch',
-          telephone: '+41 44 505 67 80',
-          address: {
-            '@type': 'PostalAddress',
-            streetAddress: 'Sihlhallenstrasse 1',
-            postalCode: '8004',
-            addressLocality: 'Zürich',
-            addressCountry: 'CH',
-          },
-          sameAs: [
-            'https://twitter.com/RepublikMagazin',
-            'https://www.facebook.com/RepublikMagazin',
-            'https://www.instagram.com/republikmagazin/',
-            'https://de.wikipedia.org/wiki/Republik_(Magazin)',
-            'https://www.wikidata.org/wiki/Q56293828',
-          ],
-          foundingDate: '2018',
-          masthead: `${PUBLIC_BASE_URL}/impressum`,
-          ownershipFundingInfo: `${PUBLIC_BASE_URL}/aktionariat`,
-          logo: {
-            '@type': 'ImageObject',
-            url: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
-            width: 1200,
-            height: 628,
-          },
-        },
+        publisher: publisher.name && publisher, // skip empty objects or if name is missing
       },
     ]
   }
