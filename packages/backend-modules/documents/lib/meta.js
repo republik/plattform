@@ -158,7 +158,7 @@ const getContributorUserLinks = (meta, { loaders }) => {
   const { contributorUserLinks, credits, path } = meta
   if (contributorUserLinks) {
     // computed on publish
-    return contributorUserLinks
+    return Promise.resolve(contributorUserLinks)
   }
   return Promise.map(
     credits.filter((c) => c.type === 'link'),
@@ -200,7 +200,7 @@ const getContributorUserLinks = (meta, { loaders }) => {
 }
 
 const getContributorUserIds = (meta, context) =>
-  meta.authorUserIds || // legacy in redis and elastic search caches
+  (meta.authorUserIds && Promise.resolve(meta.authorUserIds)) || // legacy in redis and elastic search caches
   getContributorUserLinks(meta, context).then((userLinks) =>
     userLinks.map((userLink) => userLink.id),
   )
