@@ -14,9 +14,6 @@ if (DEV || process.env.DOTENV) {
   dotenv.config()
 }
 
-const pgp = require('./pgp')
-const useragent = require('./useragent')
-
 const PORT = process.env.PORT || 3005
 
 const { CURTAIN_MESSAGE } = process.env
@@ -120,8 +117,6 @@ app.prepare().then(() => {
     )
   }
 
-  server.use(pgp)
-
   // tmp unavailable
   server.get('/vote', (req, res) => {
     res.statusCode = 503
@@ -135,20 +130,6 @@ app.prepare().then(() => {
   // PayPal donate return url can be posted to
   server.post('/en', (req, res) => {
     return app.render(req, res, '/en', req.query)
-  })
-
-  // Report Error
-  server.post('/api/reportError', bodyParser.text(), (req, res) => {
-    console.warn(
-      chalk.yellow(
-        'reportError from',
-        useragent(req.get('User-Agent')),
-        req.body,
-      ),
-    )
-    res.statusCode = 200
-    res.setHeader('Content-Type', 'application/json')
-    res.end(JSON.stringify({ ack: true }))
   })
 
   // iOS app universal links setup
