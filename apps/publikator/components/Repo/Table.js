@@ -54,7 +54,14 @@ export const filterAndOrderRepos = gql`
             meta {
               template
               title
-              credits
+              contributors {
+                name
+                kind
+                user {
+                  id
+                  username
+                }
+              }
               series {
                 title
                 overview {
