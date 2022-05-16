@@ -13,11 +13,14 @@ const Component: React.FC<{
   size: string
   attributes: any
   [x: string]: unknown
-}> = ({ children, size, attributes, ...props }) => (
-  <Figure {...attributes} size={size} {...props}>
-    {children}
-  </Figure>
-)
+}> = ({ children, size, attributes, ...props }) => {
+  const { ref, ...attrs } = attributes
+  return (
+    <Figure {...attrs} size={size} {...props}>
+      {children}
+    </Figure>
+  )
+}
 
 // TODO: not the best code – just meant as an example of
 //  a parent form accessed through clicking the child...

@@ -7,7 +7,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { Editor } from 'slate'
+import { Editor, Text } from 'slate'
 import { ReactEditor, useSlate } from 'slate-react'
 import { config as mConfig } from '../../marks'
 import { ToolbarButton } from './Toolbar'
@@ -35,6 +35,12 @@ const styles = {
 }
 
 const isMarkActive = (editor: CustomEditor, mKey: CustomMarksType): boolean => {
+  // the two guards clauses are needed for the tests
+  if (!editor.selection) return
+
+  const node = Editor.node(editor, editor.selection)
+  if (!Text.isText(node[0])) return
+
   const marks = Editor.marks(editor)
   return !!marks && !!marks[mKey]
 }
