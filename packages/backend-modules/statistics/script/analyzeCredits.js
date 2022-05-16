@@ -96,7 +96,7 @@ PgDb.connect()
         const credits = mdastToString({ children: meta.credits })
 
         const analysis = new Analyzer().getAnalysis(credits)
-        console.log(analysis)
+        // console.log(analysis)
 
         const { contributors } = analysis
 
@@ -210,6 +210,8 @@ PgDb.connect()
       '(f-n)+b%': (1 / stats['a-n']) * (stats.f + stats.b),
     })
 
+    console.warn('THIS SCRIPT IS FOR DEVELOPMENT PURPOSES ONLY.')
+    console.log('(Verify stats using ./determineAuthorshipGender.js)')
     console.log(stats)
 
     await pgdb.close()
