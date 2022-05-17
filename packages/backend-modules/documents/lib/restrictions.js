@@ -18,7 +18,7 @@ try {
 }
 
 const isValidApiKey = (key) => {
-  return !!key && apiKeys.some((apiKey) => apiKey.key === key)
+  return !!key && apiKeys.some((apiKey) => apiKey.value === key)
 }
 
 const documentsRestrictToRoles = DOCUMENTS_RESTRICT_TO_ROLES?.split(',')

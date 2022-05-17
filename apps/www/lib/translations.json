@@ -6542,7 +6542,7 @@
     },
     {
       "key": "article/payNote/default/note",
-      "value": "<a href=\\\"/\\\">Mehr Informationen zur Republik.</a>"
+      "value": "<a href=\"/\">Mehr Informationen zur Republik.</a>"
     },
     {
       "key": "article/payNote/220404-v1/before",
