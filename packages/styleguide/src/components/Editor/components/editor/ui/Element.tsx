@@ -12,7 +12,7 @@ export const ContainerComponent: React.FC<{
   return <div {...props}>{children}</div>
 }
 
-export const InsertButton: React.FC<{
+export const ElementButton: React.FC<{
   config: ButtonConfig
 }> = ({ config }) => {
   const editor = useSlate()
@@ -36,6 +36,7 @@ export const InsertButton: React.FC<{
 
   return (
     <ToolbarButton
+      title={`convert-to-${config.type}`}
       button={element.button}
       disabled={config.disabled}
       active={config.active}

@@ -1,8 +1,6 @@
-import React from 'react'
 import Editor from '../editor'
 import { buildTestHarness } from 'slate-test-utils'
 import { createEditor, Transforms } from 'slate'
-import { fireEvent, getByTestId } from '@testing-library/react'
 import { cleanupTree } from '../editor/helpers/tree'
 import { insertElement } from '../editor/helpers/structure'
 
@@ -14,17 +12,7 @@ describe('Slate Editor: Block Conversion', () => {
 
   let value
 
-  const defaultStructure = [
-    {
-      type: 'headline',
-    },
-    {
-      type: ['paragraph', 'blockQuote', 'ul', 'ol'],
-      repeat: true,
-    },
-  ]
-
-  async function setup(structure = defaultStructure) {
+  async function setup(structure) {
     const mock = getMockEditor()
     const [editor] = await buildTestHarness(Editor)({
       editor: mock,
@@ -86,7 +74,7 @@ describe('Slate Editor: Block Conversion', () => {
   it('should preserve formatting/links during conversion', async () => {
     const formattedText = [
       { text: 'CO' },
-      { text: '2', sup: true },
+      { text: '2', sub: true },
       { text: 'levels are ' },
       {
         type: 'link',
@@ -256,16 +244,19 @@ describe('Slate Editor: Block Conversion', () => {
     expect(editor.selection.focus.path).toEqual([1, 0])
   })
 
+  // TODO: Buttons Logic
+  /*
   describe('Buttons', () => {
+    it('should convert to possible type on click', async () => {})
     it('should highlight selected block type', async () => {
       value = [
         {
           type: 'headline',
-          children: [{ text: '' }],
+          children: [{ text: 'Hello' }],
         },
         {
           type: 'paragraph',
-          children: [{ text: '' }],
+          children: [{ text: 'World' }],
         },
       ]
       const structure = [
@@ -278,11 +269,19 @@ describe('Slate Editor: Block Conversion', () => {
         },
       ]
       const editor = await setup(structure)
-      await Transforms.select(editor, { path: [0, 0], offset: 0 })
+      act(() => {
+        Transforms.select(editor, { path: [1, 0], offset: 3 })
+      })
+
+      const activeButton = screen
+        .getByTitle('convert-to-paragraph')
+        .querySelector('svg')
+      const styles = getComputedStyle(activeButton)
+      expect(styles.fill).toBe(colors.light.primary)
     })
     it('should show possible block types', async () => {})
     it('should disable "impossible" block types', async () => {})
     it('should be disabled if editor is deselected', async () => {})
     it('should be disabled if many blocks are selected at once', async () => {})
-  })
+  }) */
 })

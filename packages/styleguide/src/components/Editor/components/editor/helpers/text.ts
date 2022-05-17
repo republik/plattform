@@ -7,6 +7,7 @@ import {
   NodeEntry,
   Transforms,
   Point,
+  Range,
 } from 'slate'
 import { ReactEditor } from 'slate-react'
 import { config as elConfig } from '../../elements'
@@ -89,7 +90,7 @@ export const createLinks: NormalizeFn<CustomText> = ([node, path], editor) => {
         editor.selection &&
         !Point.equals(
           { path, offset: linkContent[0].length },
-          editor.selection.focus,
+          Range.end(editor.selection),
         )
       ) {
         // TODO: double check this clause

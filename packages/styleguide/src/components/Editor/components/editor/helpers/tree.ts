@@ -13,6 +13,7 @@ import {
   Element as SlateElement,
   BasePoint,
   Path,
+  Range,
 } from 'slate'
 import { KeyboardEvent } from 'react'
 import { selectPlaceholder } from './text'
@@ -121,10 +122,8 @@ export const getSiblingNode = (
 ): NodeEntry<CustomDescendant> | undefined => {
   let currentNode = node
   if (!currentNode) {
-    const lowLevelPath =
-      direction === 'next'
-        ? editor.selection.focus.path
-        : editor.selection.anchor.path
+    const getPath = direction === 'next' ? Range.end : Range.start
+    const lowLevelPath = getPath(editor.selection).path
     currentNode = Editor.node(
       editor,
       lowLevelPath,
@@ -142,6 +141,11 @@ export const getSiblingNode = (
   }
   return target
 }
+
+export const isDescendant = (
+  parent: NodeEntry<CustomDescendant>,
+  child: NodeEntry<CustomDescendant>,
+): boolean => parent[1].every((p, i) => p === child[1][i])
 
 export const calculateSiblingPath = (
   path: number[],
@@ -175,6 +179,9 @@ export const getParent = (
     return parent as NodeEntry<CustomElement>
   }
 }
+
+export const spansManyElements = (editor: CustomEditor): boolean =>
+  Node.fragment(editor, editor.selection).length > 1
 
 export const getAncestry = (
   editor: CustomEditor,
@@ -233,7 +240,7 @@ export const hasNextSibling = (
   editor: CustomEditor,
   isInline = false,
 ): boolean => {
-  const currentPath = Editor.path(editor, editor.selection.focus)
+  const currentPath = Range.end(editor.selection).path
   const nextNode = getSiblingTextNode(editor)
   if (!nextNode) return
   const nextPath = nextNode[1]

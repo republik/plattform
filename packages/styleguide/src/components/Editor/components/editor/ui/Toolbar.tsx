@@ -1,4 +1,5 @@
 import React, {
+  Attributes,
   MouseEvent,
   ReactElement,
   useEffect,
@@ -8,7 +9,7 @@ import React, {
 import ReactDOM from 'react-dom'
 import { css } from 'glamor'
 import { MarkButton } from './Mark'
-import { InsertButton } from './Element'
+import { ElementButton } from './Element'
 import {
   ButtonI,
   CustomDescendant,
@@ -200,7 +201,8 @@ export const ToolbarButton: React.FC<{
   disabled?: boolean
   active?: boolean
   disableWhenActive?: boolean
-}> = ({ button, onClick, disabled, active, disableWhenActive }) => (
+  title?: string
+}> = ({ button, onClick, disabled, active, disableWhenActive, title }) => (
   <IconButton
     disabled={disabled}
     fillColorName={active ? 'primary' : 'text'}
@@ -210,6 +212,7 @@ export const ToolbarButton: React.FC<{
     }}
     Icon={button.icon}
     size={button.small ? 12 : 19}
+    title={title}
   />
 )
 
@@ -226,7 +229,7 @@ const ToolbarButtons: React.FC<{
         <MarkButton key={config.type} config={config} />
       ))}
       {inlines.map((config) => (
-        <InsertButton key={config.type} config={config} />
+        <ElementButton key={config.type} config={config} />
       ))}
       {!!marks.length && !!blocks.length && (
         <span
@@ -240,7 +243,7 @@ const ToolbarButtons: React.FC<{
         />
       )}
       {blocks.map((config) => (
-        <InsertButton key={config.type} config={config} />
+        <ElementButton key={config.type} config={config} />
       ))}
     </>
   )

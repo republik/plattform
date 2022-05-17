@@ -1,4 +1,3 @@
-import React from 'react'
 import Editor from '../editor'
 import { buildTestHarness } from 'slate-test-utils'
 import { createEditor } from 'slate'
@@ -12,17 +11,7 @@ describe('Slate Editor: Normalisation', () => {
 
   let value
 
-  const defaultStructure = [
-    {
-      type: 'headline',
-    },
-    {
-      type: ['paragraph', 'blockQuote', 'ul', 'ol'],
-      repeat: true,
-    },
-  ]
-
-  async function setup(structure = defaultStructure) {
+  async function setup(structure) {
     const mock = getMockEditor()
     const [editor] = await buildTestHarness(Editor)({
       editor: mock,
@@ -44,7 +33,16 @@ describe('Slate Editor: Normalisation', () => {
           children: [{ text: '' }],
         },
       ]
-      await setup()
+      const structure = [
+        {
+          type: 'headline',
+        },
+        {
+          type: ['paragraph', 'blockQuote', 'ul', 'ol'],
+          repeat: true,
+        },
+      ]
+      await setup(structure)
       expect(cleanupTree(value)).toEqual([
         {
           type: 'headline',

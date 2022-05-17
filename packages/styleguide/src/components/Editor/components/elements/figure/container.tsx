@@ -13,7 +13,7 @@ const Component: React.FC<{
   size: string
   attributes: any
   [x: string]: unknown
-}> = ({ children, size, attributes, ...props }) => {
+}> = ({ children, size, attributes = {}, ...props }) => {
   const { ref, ...attrs } = attributes
   return (
     <Figure {...attrs} size={size} {...props}>

@@ -58,22 +58,6 @@ describe('Slate Editor', () => {
     it('should support multiple marks at once', async () => {})
   })
 
-  describe('On Enter (New Elements Insertion)', () => {
-    it('should create a new element of the same type if possible (repeatable)', async () => {})
-    it('should split the element in two if cursor is somewhere in the middle', async () => {
-      // with formatting/links
-    })
-    it('should fallback on next repeatable element', async () => {})
-    it('should split the element in two and fallback if cursor is somewhere in a non-repeatable element', async () => {})
-    it('should fallback successfully on next repeatable element from within nested structure', async () => {
-      // figure caption
-    })
-    it('should create new nested repeatable blocks if we are inside a nested repeatable structure', async () => {})
-    it('should exit nested repeatable structure if current block is the last repeated element and empty', async () => {})
-    it('should not exit nested repeatable structure if current block is not the last element', async () => {})
-    it('should navigate to the next element if neither the current nor the next element are repeatable', async () => {})
-  })
-
   describe('On Tab', () => {
     it('should allow forward and backward navigation', async () => {})
     it('should navigate into nested elements', async () => {})

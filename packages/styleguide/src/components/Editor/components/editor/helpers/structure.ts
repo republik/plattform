@@ -30,8 +30,9 @@ import {
   getSelectedElement,
   getSiblingNode,
   hasNextSibling,
+  isDescendant,
   selectAdjacent,
-  selectNode,
+  spansManyElements,
 } from './tree'
 import { config as elConfig } from '../../elements'
 import { getCharCount } from './text'
@@ -147,7 +148,7 @@ const insertInline = (
   } else {
     Transforms.wrapNodes(editor, element, { split: true })
   }
-  return calculateSiblingPath(selection.focus.path)
+  return calculateSiblingPath(Range.end(selection).path)
 }
 
 const insertBlock = (
@@ -395,7 +396,9 @@ export const insertOnKey =
 // type in struct      |               |
 //                    NO              YES
 //                  selectAdjacent    escalate to parent (if not root)
-const insertRepeat = (editor: CustomEditor): void => {
+export const insertRepeat = (editor: CustomEditor): void => {
+  const currentElement = getSelectedElement(editor)
+  const multiElementSelection = spansManyElements(editor)
   let target = findInsertTarget(editor)
   let nextTarget = false
   let deleteP
@@ -403,7 +406,7 @@ const insertRepeat = (editor: CustomEditor): void => {
   // if no target found: look if the next sibling has a target
   // (e.g. paragraph when pressing "enter" in a headline)
   if (!target) {
-    const nextNode = getSiblingNode(editor)
+    const nextNode = getSiblingNode(editor, 'next', currentElement)
     if (nextNode) {
       target = findInsertTarget(editor, nextNode[1])
       nextTarget = true
@@ -413,13 +416,12 @@ const insertRepeat = (editor: CustomEditor): void => {
   // if the current target is empty, and has no sibling:
   // jump out of element altogether
   // (e.g. after pressing "enter" on the last item of a list when empty)
-  const isEmptyTarget =
-    target &&
-    getCharCount([target[0]]) === 0 &&
-    Object.keys(target[0]).length <= 3 // at least 3 attributes: children, type, template
+  const isEmptyTarget = target && getCharCount([target[0]]) === 0
   // console.log({ target, isEmptyTarget, editor })
   if (isEmptyTarget) {
-    const nextNode = getSiblingNode(editor)
+    const nextPath = calculateSiblingPath(currentElement[1])
+    const nextNode = Node.has(editor, nextPath) && Editor.node(editor, nextPath)
+    // console.log({ nextNode })
     const hasSibling =
       nextNode &&
       SlateElement.isElement(nextNode[0]) &&
@@ -429,8 +431,12 @@ const insertRepeat = (editor: CustomEditor): void => {
     if (!hasSibling && parent) {
       // console.log({ parent })
       deleteP = target[1]
+      const nextNode = getSiblingNode(editor, 'next', target)
+      const deleteImmediately = nextNode && isDescendant(parent, nextNode)
       target = findInsertTarget(editor, parent[1]) // fall back to the parent
-      // console.log({ newTarget: target })
+      if (deleteImmediately) {
+        return Transforms.removeNodes(editor, { at: deleteP })
+      }
     }
   }
 
@@ -465,14 +471,17 @@ const insertRepeat = (editor: CustomEditor): void => {
       { type: getTemplateType(targetN.template) },
       { at: splitP },
     )
-    insertP = nextTarget ? targetP : calculateSiblingPath(targetP)
+    insertP =
+      nextTarget || multiElementSelection
+        ? targetP
+        : calculateSiblingPath(targetP)
     Transforms.moveNodes(editor, { at: splitP, to: insertP })
+    Transforms.select(editor, insertP)
+    Transforms.collapse(editor, { edge: 'start' })
   })
   if (deleteP) {
     Transforms.removeNodes(editor, { at: deleteP })
     // TODO: select correct adjacent node (now it creates a new node when jumping out)
-  } else {
-    selectNode(editor, insertP)
   }
 }
 
