@@ -13,7 +13,7 @@ import {
 import { Editor, Transforms, Element as SlateElement, NodeEntry } from 'slate'
 import { config as elConfig } from '../../schema/elements'
 import { Overlay, OverlayBody, OverlayToolbar } from '../../../../Overlay'
-import { useSlate } from 'slate-react'
+import { ReactEditor, useSlate } from 'slate-react'
 import { toTitle } from '../helpers/text'
 import { Interaction } from '../../../../Typography'
 import { css } from 'glamor'
@@ -102,9 +102,14 @@ export const FormOverlay = (): ReactElement => {
 
   if (!forms.length || !formPath) return null
 
+  const onClose = () => {
+    setFormPath(undefined)
+    ReactEditor.focus(editor)
+  }
+
   return (
-    <Overlay onClose={() => setFormPath(undefined)}>
-      <OverlayToolbar title='Edit' onClose={() => setFormPath(undefined)} />
+    <Overlay onClose={onClose}>
+      <OverlayToolbar title='Edit' onClose={onClose} />
       <OverlayBody>
         {forms.map((formData, i) => (
           <ElementForm {...formData} key={i} />

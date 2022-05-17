@@ -2,7 +2,7 @@ import Editor from '../editor'
 import { buildTestHarness } from 'slate-test-utils'
 import { createEditor, Transforms } from 'slate'
 import { cleanupTree } from '../editor/helpers/tree'
-import { insertElement } from '../editor/helpers/structure'
+import { createElement } from '../editor/helpers/structure'
 
 describe('Slate Editor: Block Conversion', () => {
   function getMockEditor() {
@@ -41,32 +41,32 @@ describe('Slate Editor: Block Conversion', () => {
     const editor = await setup(structure)
     await Transforms.select(editor, { path: [0, 0], offset: 0 })
 
-    insertElement(editor, 'blockQuote')
+    createElement(editor, 'blockQuote')
     await new Promise(process.nextTick)
     expect(value.length).toBe(1)
     expect(value[0].type).toBe('blockQuote')
 
-    insertElement(editor, 'ul')
+    createElement(editor, 'ul')
     await new Promise(process.nextTick)
     expect(value.length).toBe(1)
     expect(value[0].type).toBe('ul')
 
-    insertElement(editor, 'ol')
+    createElement(editor, 'ol')
     await new Promise(process.nextTick)
     expect(value.length).toBe(1)
     expect(value[0].type).toBe('ol')
 
-    insertElement(editor, 'ul')
+    createElement(editor, 'ul')
     await new Promise(process.nextTick)
     expect(value.length).toBe(1)
     expect(value[0].type).toBe('ul')
 
-    insertElement(editor, 'blockQuote')
+    createElement(editor, 'blockQuote')
     await new Promise(process.nextTick)
     expect(value.length).toBe(1)
     expect(value[0].type).toBe('blockQuote')
 
-    insertElement(editor, 'paragraph')
+    createElement(editor, 'paragraph')
     await new Promise(process.nextTick)
     expect(value.length).toBe(1)
     expect(value[0].type).toBe('paragraph')
@@ -98,19 +98,19 @@ describe('Slate Editor: Block Conversion', () => {
     const editor = await setup(structure)
     await Transforms.select(editor, { path: [0, 0], offset: 0 })
 
-    insertElement(editor, 'blockQuote')
+    createElement(editor, 'blockQuote')
     await new Promise(process.nextTick)
     expect(cleanupTree(value[0].children[0].children)).toEqual(formattedText)
 
-    insertElement(editor, 'ul')
+    createElement(editor, 'ul')
     await new Promise(process.nextTick)
     expect(cleanupTree(value[0].children[0].children)).toEqual(formattedText)
 
-    insertElement(editor, 'ol')
+    createElement(editor, 'ol')
     await new Promise(process.nextTick)
     expect(cleanupTree(value[0].children[0].children)).toEqual(formattedText)
 
-    insertElement(editor, 'paragraph')
+    createElement(editor, 'paragraph')
     await new Promise(process.nextTick)
     expect(cleanupTree(value[0].children)).toEqual(formattedText)
   })
@@ -135,7 +135,7 @@ describe('Slate Editor: Block Conversion', () => {
     const editor = await setup(structure)
     await Transforms.select(editor, { path: [1, 0], offset: 0 })
 
-    insertElement(editor, 'ol')
+    createElement(editor, 'ol')
     await new Promise(process.nextTick)
     expect(cleanupTree(value)).toEqual([
       {
@@ -182,7 +182,7 @@ describe('Slate Editor: Block Conversion', () => {
     const editor = await setup(structure)
     await Transforms.select(editor, { path: [0, 0], offset: 0 })
 
-    insertElement(editor, 'blockQuote')
+    createElement(editor, 'blockQuote')
     await new Promise(process.nextTick)
     expect(cleanupTree(value)).toEqual([
       {
@@ -211,7 +211,7 @@ describe('Slate Editor: Block Conversion', () => {
     expect(editor.selection.focus.path).toEqual([0, 1, 0])
 
     await Transforms.select(editor, [0, 0, 0])
-    insertElement(editor, 'ol')
+    createElement(editor, 'ol')
     await new Promise(process.nextTick)
     expect(cleanupTree(value)).toEqual([
       {
@@ -232,7 +232,7 @@ describe('Slate Editor: Block Conversion', () => {
     expect(editor.selection.focus.path).toEqual([0, 1, 0])
 
     await Transforms.select(editor, [0, 0])
-    insertElement(editor, 'paragraph')
+    createElement(editor, 'paragraph')
     await new Promise(process.nextTick)
     expect(cleanupTree(value)).toEqual([
       {
@@ -246,49 +246,4 @@ describe('Slate Editor: Block Conversion', () => {
     ])
     expect(editor.selection.focus.path).toEqual([1, 0])
   })
-
-  // TODO: Buttons Logic
-  /*
-  describe('Buttons', () => {
-    it('should convert to possible type on click', async () => {})
-    it('should highlight selected block type', async () => {
-      value = [
-        {
-          type: 'headline',
-          children: [{ text: 'Hello' }],
-        },
-        {
-          type: 'paragraph',
-          children: [{ text: 'World' }],
-        },
-      ]
-      const structure = [
-        {
-          type: 'headline',
-        },
-        {
-          type: ['paragraph', 'blockQuote'],
-          repeat: true,
-        },
-      ]
-      const editor = await setup(structure)
-      act(() => {
-        Transforms.select(editor, { path: [1, 0], offset: 3 })
-      })
-
-      const activeButton = screen
-        .getByTitle('convert-to-paragraph')
-        .querySelector('svg')
-      const styles = getComputedStyle(activeButton)
-      expect(styles.fill).toBe(colors.light.primary)
-    })
-
-    it('should show possible block types', async () => {})
-
-    it('should disable "impossible" block types', async () => {})
-
-    it('should be disabled if editor is deselected', async () => {})
-
-    it('should be disabled if many blocks are selected at once', async () => {})
-  }) */
 })

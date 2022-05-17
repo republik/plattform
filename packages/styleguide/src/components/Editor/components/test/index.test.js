@@ -4,7 +4,7 @@ import { buildTestHarness } from 'slate-test-utils'
 import { createEditor, Transforms } from 'slate'
 import { fireEvent, getByTestId } from '@testing-library/react'
 import { cleanupTree } from '../editor/helpers/tree'
-import { insertElement } from '../editor/helpers/structure'
+import { createElement } from '../editor/helpers/structure'
 import { act } from 'react-dom/test-utils'
 
 describe('Slate Editor', () => {
@@ -42,8 +42,8 @@ describe('Slate Editor', () => {
   describe('Inline Buttons (atm only link)', () => {
     it('should be disabled unless text is selected', async () => {})
     it('should wrap a link around selected text and open form to set url', async () => {})
-    it('should be active when cursor is in a link', async () => {})
     it('should remove an active link if cursor is in it', async () => {})
+    it('should open edit modal automatically', async () => {})
   })
 
   describe('Mark Buttons', () => {
@@ -51,7 +51,6 @@ describe('Slate Editor', () => {
     it('sub/sup should be allowed regardless of block type', async () => {})
     it('should apply formatting style to selected text', async () => {})
     it('should apply formatting from cursor position and on if selection is collapsed', async () => {})
-    it('should show which marks are currently active', async () => {})
     it('should remove active mark from cursor position and on if selection is collapsed', async () => {})
     it('should remove active mark from corresponding selected position', async () => {})
     it('should apply mark to whole selection, even if selection already include part with active mark', async () => {})

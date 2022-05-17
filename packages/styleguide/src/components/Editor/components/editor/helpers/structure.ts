@@ -213,7 +213,7 @@ const insertBlock = (
   return insertPath
 }
 
-export const insertElement = (
+export const createElement = (
   editor: CustomEditor,
   elKey: CustomElementsType,
 ): number[] => {
@@ -233,7 +233,7 @@ export const insertElement = (
   }
 
   Transforms.select(editor, insertPath)
-  Transforms.collapse(editor, { edge: 'focus' })
+  Transforms.collapse(editor, { edge: 'end' })
   return insertPath
 }
 
@@ -294,8 +294,6 @@ const deleteExcessChildren = (
 ): void => {
   // console.log('DELETE EXCESS', from, 'vs', node.children.length, node)
   for (let i = node.children.length - 1; i >= from; i--) {
-    // console.log('delete', path.concat(i))
-    // console.log(node.children[i])
     Transforms.removeNodes(editor, { at: path.concat(i) })
   }
 }
@@ -385,7 +383,7 @@ export const insertOnKey =
   (editor: CustomEditor, event: KeyboardEvent<HTMLDivElement>): void => {
     if (event.key === keyCombo.name && event.shiftKey === !!keyCombo.shift) {
       event.preventDefault()
-      insertElement(editor, elKey)
+      createElement(editor, elKey)
     }
   }
 
@@ -481,7 +479,6 @@ export const insertRepeat = (editor: CustomEditor): void => {
   })
   if (deleteP) {
     Transforms.removeNodes(editor, { at: deleteP })
-    // TODO: select correct adjacent node (now it creates a new node when jumping out)
   }
 }
 

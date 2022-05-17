@@ -1,7 +1,8 @@
 import Editor from '../editor'
 import { buildTestHarness } from 'slate-test-utils'
 import { createEditor, Transforms } from 'slate'
-import { cleanupTree, selectAdjacent } from '../editor/helpers/tree'
+import { selectAdjacent } from '../editor/helpers/tree'
+import { createElement, insertRepeat } from '../editor/helpers/structure'
 
 describe('Slate Editor: Navigation (On Tab)', () => {
   function getMockEditor() {
@@ -93,7 +94,6 @@ describe('Slate Editor: Navigation (On Tab)', () => {
       offset: 3,
     })
 
-    // TODO: select image too
     selectAdjacent(editor, 'next')
     await new Promise(process.nextTick)
     expect(editor.selection.focus).toEqual({ path: [1, 0, 0], offset: 0 })
@@ -266,23 +266,83 @@ describe('Slate Editor: Navigation (On Tab)', () => {
     ]
     const structure = [
       {
-        type: 'headline',
-      },
-      {
-        type: ['paragraph', 'blockQuote', 'ul', 'ol', 'figure'],
+        type: ['paragraph', 'figure', 'ul'],
         repeat: true,
       },
     ]
-    await setup(structure)
-    expect(cleanupTree(value)).toEqual([
-      {
-        type: 'headline',
-        children: [{ text: '' }],
-      },
-      {
-        type: 'paragraph',
-        children: [{ text: '' }],
-      },
-    ])
+    const editor = await setup(structure)
+
+    // build tree
+    await Transforms.select(editor, [0, 0])
+    insertRepeat(editor)
+    await new Promise(process.nextTick)
+
+    createElement(editor, 'figure')
+    await new Promise(process.nextTick)
+
+    await Transforms.select(editor, [1, 1, 1, 0])
+    insertRepeat(editor)
+    await new Promise(process.nextTick)
+
+    insertRepeat(editor)
+    await new Promise(process.nextTick)
+
+    await Transforms.select(editor, [3])
+    createElement(editor, 'ul')
+    await new Promise(process.nextTick)
+
+    await Transforms.select(editor, [0])
+
+    selectAdjacent(editor, 'next')
+    await new Promise(process.nextTick)
+    expect(editor.selection.focus.path).toEqual([1, 0, 0])
+
+    // forward tab nav
+    selectAdjacent(editor, 'next')
+    await new Promise(process.nextTick)
+    expect(editor.selection.focus.path).toEqual([1, 1, 0])
+
+    selectAdjacent(editor, 'next')
+    await new Promise(process.nextTick)
+    expect(editor.selection.focus.path).toEqual([1, 1, 1, 0])
+
+    selectAdjacent(editor, 'next')
+    await new Promise(process.nextTick)
+    expect(editor.selection.focus.path).toEqual([2, 0])
+
+    selectAdjacent(editor, 'next')
+    await new Promise(process.nextTick)
+    expect(editor.selection.focus.path).toEqual([3, 0, 0])
+
+    // we cannot go any further
+    selectAdjacent(editor, 'next')
+    await new Promise(process.nextTick)
+    expect(editor.selection.focus.path).toEqual([3, 0, 0])
+
+    // backward tab nav
+    selectAdjacent(editor, 'previous')
+    await new Promise(process.nextTick)
+    expect(editor.selection.focus.path).toEqual([2, 0])
+
+    selectAdjacent(editor, 'previous')
+    await new Promise(process.nextTick)
+    expect(editor.selection.focus.path).toEqual([1, 1, 1, 0])
+
+    selectAdjacent(editor, 'previous')
+    await new Promise(process.nextTick)
+    expect(editor.selection.focus.path).toEqual([1, 1, 0])
+
+    selectAdjacent(editor, 'previous')
+    await new Promise(process.nextTick)
+    expect(editor.selection.focus.path).toEqual([1, 0, 0])
+
+    selectAdjacent(editor, 'previous')
+    await new Promise(process.nextTick)
+    expect(editor.selection.focus.path).toEqual([0, 0])
+
+    // we cannot go any further
+    selectAdjacent(editor, 'previous')
+    await new Promise(process.nextTick)
+    expect(editor.selection.focus.path).toEqual([0, 0])
   })
 })

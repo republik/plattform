@@ -8,11 +8,12 @@ import React, {
   useState,
 } from 'react'
 import { Editor, Text, Node } from 'slate'
-import { ReactEditor, useSlate } from 'slate-react'
+import { ReactEditor, useSelected, useSlate } from 'slate-react'
 import { config as mConfig } from '../../schema/marks'
 import { ToolbarButton } from './Toolbar'
 import {
   ButtonConfig,
+  CustomAncestor,
   CustomEditor,
   CustomElement,
   CustomMarksType,
@@ -21,7 +22,7 @@ import {
 import { css } from 'glamor'
 import { useColorContext } from '../../../../Colors/ColorContext'
 import { getMarkStyles, isEmpty, selectPlaceholder } from '../helpers/text'
-import { getTextNode } from '../helpers/tree'
+import { getTextNode, selectAdjacent, selectText } from '../helpers/tree'
 
 const styles = {
   leaf: css({

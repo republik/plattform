@@ -631,6 +631,64 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
   })
 
   it('should set cursor to the newly created element even if the cursor in an end node', async () => {
-    // TODO: bug fix
+    value = [
+      {
+        type: 'figure',
+        children: [
+          {
+            type: 'figureImage',
+            children: [{ text: '' }],
+          },
+          {
+            type: 'figureCaption',
+            children: [
+              { text: 'A butterfly' },
+              {
+                type: 'figureByline',
+                children: [{ text: 'lands on a branch' }],
+              },
+              { text: '' },
+            ],
+          },
+        ],
+      },
+    ]
+    const structure = [
+      {
+        type: ['paragraph', 'figure'],
+        repeat: true,
+      },
+    ]
+    const editor = await setup(structure)
+    await Transforms.select(editor, { path: [0, 1, 2], offset: 0 })
+    insertRepeat(editor)
+    await new Promise(process.nextTick)
+    expect(cleanupTree(value)).toEqual([
+      {
+        type: 'figure',
+        children: [
+          {
+            type: 'figureImage',
+            children: [{ text: '' }],
+          },
+          {
+            type: 'figureCaption',
+            children: [
+              { text: 'A butterfly' },
+              {
+                type: 'figureByline',
+                children: [{ text: 'lands on a branch' }],
+              },
+              { text: '' },
+            ],
+          },
+        ],
+      },
+      {
+        type: 'paragraph',
+        children: [{ text: '' }],
+      },
+    ])
+    expect(editor.selection.focus).toEqual({ path: [1, 0], offset: 0 })
   })
 })

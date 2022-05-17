@@ -324,6 +324,31 @@ describe('Slate Editor: Normalisation', () => {
       ])
     })
 
+    it('should delete illegal inline node', async () => {
+      value = [
+        {
+          type: 'headline',
+          children: [
+            { text: 'Hello' },
+            { type: 'break', children: [{ text: '' }] },
+            { text: 'World' },
+          ],
+        },
+      ]
+      const structure = [
+        {
+          type: 'headline',
+        },
+      ]
+      await setup(structure)
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'headline',
+          children: [{ text: 'HelloWorld' }],
+        },
+      ])
+    })
+
     it('should not delete legal repeated nodes', async () => {
       value = [
         {
@@ -529,6 +554,58 @@ describe('Slate Editor: Normalisation', () => {
       expect(value[0].children[1].children[2].end).toBe(true)
     })
 
+    // TODO: this is not supported atm – needs some thinking... maybe support repeated end nodes?
+    xit('should preserve overspill text if possible', async () => {
+      value = [
+        {
+          type: 'figure',
+          children: [
+            {
+              type: 'figureImage',
+              children: [{ text: '' }],
+            },
+            {
+              type: 'figureCaption',
+              children: [
+                { text: 'A picture' },
+                { type: 'figureByline', children: [{ text: 'by an artist ' }] },
+                { text: '', end: true },
+                { text: 'whose name i forgot' },
+              ],
+            },
+          ],
+        },
+      ]
+      const structure = [
+        {
+          type: 'figure',
+        },
+      ]
+      await setup(structure)
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'figure',
+          children: [
+            {
+              type: 'figureImage',
+              children: [{ text: '' }],
+            },
+            {
+              type: 'figureCaption',
+              children: [
+                { text: 'A picture' },
+                {
+                  type: 'figureByline',
+                  children: [{ text: 'by an artist whose name i forgot' }],
+                },
+                { text: '', end: true },
+              ],
+            },
+          ],
+        },
+      ])
+    })
+
     it('should delete mismatched nested nodes but keep content when possible', async () => {
       value = [
         {
@@ -603,7 +680,10 @@ describe('Slate Editor: Normalisation', () => {
               type: 'figureCaption',
               children: [
                 { text: 'Ulysses' },
-                { type: 'figureByline', children: [{ text: 'Jame Joyce' }] },
+                {
+                  type: 'figureByline',
+                  children: [{ text: 'Jame' }, { text: ' Joyce' }],
+                },
                 { text: '' },
               ],
             },
