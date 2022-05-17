@@ -16036,6 +16036,11 @@ jsprim@^1.2.2:
     json-schema "0.4.0"
     verror "1.10.0"
 
+jstoxml@^3.2.3:
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/jstoxml/-/jstoxml-3.2.3.tgz#2627c193f61b413bb54991130f07e0c7c25ed558"
+  integrity sha512-IxoZkdFcKm1dO4g+JcZBB7z1p/vPXEZPV3APRDd3/zcVtthg2kfTmpzKNZMl37/MrE/Uoc2p6ZnLnv3P5HVMTw==
+
 jsx-ast-utils@^2.2.1, jsx-ast-utils@^2.2.3:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/jsx-ast-utils/-/jsx-ast-utils-2.4.1.tgz#1114a4c1209481db06c690c2b4f488cc665f657e"
