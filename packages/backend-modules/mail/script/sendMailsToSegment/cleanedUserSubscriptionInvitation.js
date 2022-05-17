@@ -78,6 +78,8 @@ PgDb.connect().then(async (pgdb) => {
     { from: argv.from, to: argv.to },
   )
 
+  console.log(`${emailAddresses.length} email addresses found`)
+
   await sendMailsToSegment(emailAddresses, mail, {
     pgdb,
     argv,
