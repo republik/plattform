@@ -10,7 +10,7 @@ const {
   Redirections: { upsert: upsertRedirection },
 } = require('@orbiting/backend-modules-redirections')
 const {
-  getAuthorUserIds,
+  getContributorUserLinks,
 } = require('@orbiting/backend-modules-documents/lib/meta')
 
 const { upsert: upsertDiscussion } = require('./Discussion')
@@ -163,11 +163,13 @@ const prepareMetaForPublish = async ({
     }
   })
 
-  const authors = credits
-    .filter((c) => c.type === 'link')
-    .map((a) => a.children[0].value)
-
-  const authorUserIds = await getAuthorUserIds(null, context, credits)
+  const contributorUserLinks = await getContributorUserLinks(
+    {
+      path,
+      credits,
+    },
+    context,
+  )
 
   const isSeriesMaster = typeof docMeta.series === 'object'
   const isSeriesEpisode = typeof docMeta.series === 'string'
@@ -206,8 +208,7 @@ const prepareMetaForPublish = async ({
     creditsString,
     credits,
     audioSource,
-    authors,
-    authorUserIds,
+    contributorUserLinks,
     isSeriesMaster,
     isSeriesEpisode,
     seriesEpisodes,
