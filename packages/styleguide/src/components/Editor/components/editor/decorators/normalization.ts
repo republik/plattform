@@ -3,7 +3,7 @@ import {
   CustomElement,
   NodeTemplate,
 } from '../../../custom-types'
-import { config } from '../../elements'
+import { config } from '../../schema/elements'
 import { Element as SlateElement, Text, Transforms } from 'slate'
 import { fixStructure } from '../helpers/structure'
 import { handleEnds } from '../helpers/ends'

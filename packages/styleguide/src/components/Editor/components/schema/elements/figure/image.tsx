@@ -3,10 +3,10 @@ import {
   ElementConfigI,
   ElementFormProps,
   FigureImageElement,
-} from '../../../custom-types'
+} from '../../../../custom-types'
 import ImageInput from './ImageInput'
-import { FigureImage } from '../../../../Figure'
-import { Label } from '../../../../Typography'
+import { FigureImage } from '../../../../../Figure'
+import { Label } from '../../../../../Typography'
 import { css } from 'glamor'
 
 const PLACEHOLDER = '/static/placeholder.png'

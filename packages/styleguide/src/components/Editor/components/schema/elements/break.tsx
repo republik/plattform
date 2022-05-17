@@ -1,5 +1,5 @@
 import React from 'react'
-import { ElementConfigI } from '../../custom-types'
+import { ElementConfigI } from '../../../custom-types'
 
 const BreakComponent: React.FC<{
   attributes: any

@@ -4,7 +4,7 @@ import { createEditor, Transforms } from 'slate'
 import { cleanupTree } from '../editor/helpers/tree'
 import { insertRepeat } from '../editor/helpers/structure'
 
-describe('Slate Editor: Block Insertion (on enter)', () => {
+describe('Slate Editor: Block Insertion (On Enter)', () => {
   function getMockEditor() {
     return createEditor()
   }
@@ -628,5 +628,9 @@ describe('Slate Editor: Block Insertion (on enter)', () => {
       },
     ])
     expect(editor.selection.focus).toEqual({ path: [0, 1, 1, 0], offset: 0 })
+  })
+
+  it('should set cursor to the newly created element even if the cursor in an end node', async () => {
+    // TODO: bug fix
   })
 })

@@ -1,8 +1,8 @@
-import { ElementConfigI } from '../../../custom-types'
-import { BlockQuoteParagraph } from '../../../../BlockQuote'
+import { ElementConfigI } from '../../../../custom-types'
+import { ListItem } from '../../../../../List'
 
 export const config: ElementConfigI = {
-  Component: BlockQuoteParagraph,
+  Component: ListItem,
   structure: [{ type: ['text', 'link'], repeat: true }],
   attrs: {
     formatText: true,

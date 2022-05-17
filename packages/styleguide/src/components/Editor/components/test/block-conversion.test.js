@@ -71,6 +71,7 @@ describe('Slate Editor: Block Conversion', () => {
     expect(value.length).toBe(1)
     expect(value[0].type).toBe('paragraph')
   })
+
   it('should preserve formatting/links during conversion', async () => {
     const formattedText = [
       { text: 'CO' },
@@ -113,6 +114,7 @@ describe('Slate Editor: Block Conversion', () => {
     await new Promise(process.nextTick)
     expect(cleanupTree(value[0].children)).toEqual(formattedText)
   })
+
   it('should convert paragraph where selection is', async () => {
     value = [
       {
@@ -153,6 +155,7 @@ describe('Slate Editor: Block Conversion', () => {
     ])
     expect(editor.selection.focus.path).toEqual([1, 0, 0])
   })
+
   it('should convert multiple nested elements and move cursor to the last main (nested) element', async () => {
     value = [
       {
@@ -279,9 +282,13 @@ describe('Slate Editor: Block Conversion', () => {
       const styles = getComputedStyle(activeButton)
       expect(styles.fill).toBe(colors.light.primary)
     })
+
     it('should show possible block types', async () => {})
+
     it('should disable "impossible" block types', async () => {})
+
     it('should be disabled if editor is deselected', async () => {})
+
     it('should be disabled if many blocks are selected at once', async () => {})
   }) */
 })

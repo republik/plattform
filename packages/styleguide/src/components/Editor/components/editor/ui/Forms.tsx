@@ -11,7 +11,7 @@ import {
   ElementFormProps,
 } from '../../../custom-types'
 import { Editor, Transforms, Element as SlateElement, NodeEntry } from 'slate'
-import { config as elConfig } from '../../elements'
+import { config as elConfig } from '../../schema/elements'
 import { Overlay, OverlayBody, OverlayToolbar } from '../../../../Overlay'
 import { useSlate } from 'slate-react'
 import { toTitle } from '../helpers/text'

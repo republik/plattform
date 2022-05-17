@@ -34,7 +34,7 @@ import {
   selectAdjacent,
   spansManyElements,
 } from './tree'
-import { config as elConfig } from '../../elements'
+import { config as elConfig } from '../../schema/elements'
 import { getCharCount } from './text'
 
 const DEFAULT_STRUCTURE: NodeTemplate[] = [{ type: ['text'], repeat: true }]

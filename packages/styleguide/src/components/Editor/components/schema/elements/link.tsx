@@ -3,11 +3,11 @@ import {
   ElementFormProps,
   LinkElement,
   NormalizeFn,
-} from '../../custom-types'
-import { LinkIcon } from '../../../Icons'
-import { Editorial } from '../../../Typography'
+} from '../../../custom-types'
+import { LinkIcon } from '../../../../Icons'
+import { Editorial } from '../../../../Typography'
 import React from 'react'
-import Field from '../../../Form/Field'
+import Field from '../../../../Form/Field'
 import { Editor, Transforms } from 'slate'
 
 const Form: React.FC<ElementFormProps<LinkElement>> = ({

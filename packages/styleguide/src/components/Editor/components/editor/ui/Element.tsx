@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSlate } from 'slate-react'
-import { config as elConfig } from '../../elements'
+import { config as elConfig } from '../../schema/elements'
 import { ToolbarButton } from './Toolbar'
 import { CustomElementsType, ButtonConfig } from '../../../custom-types'
 import { insertElement } from '../helpers/structure'

@@ -1,7 +1,7 @@
-import { ElementConfigI, NodeTemplate } from '../../../custom-types'
-import { UlIcon, OlIcon } from '../../../../Icons'
+import { ElementConfigI, NodeTemplate } from '../../../../custom-types'
+import { UlIcon, OlIcon } from '../../../../../Icons'
 import React from 'react'
-import { List } from '../../../../List'
+import { List } from '../../../../../List'
 
 const ListComponent: React.FC<{
   ordered: boolean

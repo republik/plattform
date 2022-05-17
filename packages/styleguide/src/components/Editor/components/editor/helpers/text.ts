@@ -10,10 +10,10 @@ import {
   Range,
 } from 'slate'
 import { ReactEditor } from 'slate-react'
-import { config as elConfig } from '../../elements'
+import { config as elConfig } from '../../schema/elements'
 import editorConfig from '../../../config'
 import { isCorrect } from './structure'
-import { config as mConfig, configKeys as mKeys } from '../../marks'
+import { config as mConfig, configKeys as mKeys } from '../../schema/marks'
 
 export const CHAR_LIMIT = editorConfig.maxSigns
 const PSEUDO_EMPTY_STRING = '\u2060'

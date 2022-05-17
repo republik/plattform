@@ -1,6 +1,6 @@
-import { ElementConfigI } from '../../../custom-types'
-import { PullQuote } from '../../../../PullQuote'
-import { QuoteIcon } from '../../../../Icons'
+import { ElementConfigI } from '../../../../custom-types'
+import { PullQuote } from '../../../../../PullQuote'
+import { QuoteIcon } from '../../../../../Icons'
 
 export const config: ElementConfigI = {
   Component: PullQuote,

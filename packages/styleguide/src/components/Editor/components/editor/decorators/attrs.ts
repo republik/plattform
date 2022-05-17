@@ -1,5 +1,5 @@
 import { CustomEditor } from '../../../custom-types'
-import { config, coreEditorAttrs } from '../../elements'
+import { config, coreEditorAttrs } from '../../schema/elements'
 
 export const withElAttrsConfig = (editor: CustomEditor): CustomEditor => {
   coreEditorAttrs.forEach((attr) => {

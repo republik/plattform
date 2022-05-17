@@ -1,5 +1,5 @@
-import { ElementConfigI } from '../../../custom-types'
-import { FigureCaption } from '../../../../Figure'
+import { ElementConfigI } from '../../../../custom-types'
+import { FigureCaption } from '../../../../../Figure'
 
 export const config: ElementConfigI = {
   Component: FigureCaption,

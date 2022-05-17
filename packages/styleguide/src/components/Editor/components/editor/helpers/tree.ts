@@ -17,7 +17,7 @@ import {
 } from 'slate'
 import { KeyboardEvent } from 'react'
 import { selectPlaceholder } from './text'
-import { config as elConfig } from '../../elements'
+import { config as elConfig } from '../../schema/elements'
 
 // remove attributes using by working editor
 export const cleanupTree = (value: CustomDescendant[]): CustomDescendant[] => {
@@ -109,11 +109,20 @@ const selectText = (
   Transforms.collapse(editor, { edge: direction === 'next' ? 'start' : 'end' })
 }
 
-const isUnselectable = (
+const isUnselectableVoid = (
   editor: CustomEditor,
   target: NodeEntry<CustomDescendant>,
 ): boolean =>
-  Editor.isVoid(editor, target[0]) || (Text.isText(target[0]) && target[0].end)
+  Editor.isVoid(editor, target[0]) &&
+  !elConfig[target[0].type].attrs?.highlightSelected
+
+const isEnd = (target: NodeEntry<CustomDescendant>): boolean =>
+  Text.isText(target[0]) && target[0].end
+
+const isUnselectable = (
+  editor: CustomEditor,
+  target: NodeEntry<CustomDescendant>,
+): boolean => isUnselectableVoid(editor, target) || isEnd(target)
 
 export const getSiblingNode = (
   editor: CustomEditor,

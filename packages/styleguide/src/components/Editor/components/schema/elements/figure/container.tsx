@@ -3,11 +3,11 @@ import {
   ElementConfigI,
   ElementFormProps,
   FigureElement,
-} from '../../../custom-types'
-import { ImageIcon } from '../../../../Icons'
-import { Interaction, Label } from '../../../../Typography'
-import { Figure } from '../../../../Figure'
-import Radio from '../../../../Form/Radio'
+} from '../../../../custom-types'
+import { ImageIcon } from '../../../../../Icons'
+import { Interaction, Label } from '../../../../../Typography'
+import { Figure } from '../../../../../Figure'
+import Radio from '../../../../../Form/Radio'
 
 const Component: React.FC<{
   size: string

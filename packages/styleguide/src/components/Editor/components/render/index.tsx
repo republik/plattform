@@ -1,6 +1,6 @@
 import React from 'react'
 import { CustomDescendant, CustomElement, CustomText } from '../../custom-types'
-import { config as elementsConfig } from '../elements'
+import { config as elementsConfig } from '../schema/elements'
 import { Element as SlateElement } from 'slate'
 import { getMarkStyles } from '../editor/helpers/text'
 

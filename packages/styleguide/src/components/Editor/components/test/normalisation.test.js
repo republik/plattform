@@ -54,6 +54,7 @@ describe('Slate Editor: Normalisation', () => {
         },
       ])
     })
+
     it('should insert missing nodes at the end of the tree', async () => {
       value = [
         {
@@ -102,6 +103,7 @@ describe('Slate Editor: Normalisation', () => {
         },
       ])
     })
+
     it('should insert missing node in the middle of the tree (without erasing subsequent ones)', async () => {
       value = [
         {
@@ -180,6 +182,7 @@ describe('Slate Editor: Normalisation', () => {
         },
       ])
     })
+
     it('should delete illegal node at the end of the tree', async () => {
       value = [
         {
@@ -229,6 +232,7 @@ describe('Slate Editor: Normalisation', () => {
         },
       ])
     })
+
     it('should delete illegal repeat nodes at the end of the tree', async () => {
       value = [
         {
@@ -257,6 +261,7 @@ describe('Slate Editor: Normalisation', () => {
         },
       ])
     })
+
     it('should delete illegal node in the middle of the tree', async () => {
       value = [
         {
@@ -318,6 +323,7 @@ describe('Slate Editor: Normalisation', () => {
         },
       ])
     })
+
     it('should not delete legal repeated nodes', async () => {
       value = [
         {
@@ -370,6 +376,7 @@ describe('Slate Editor: Normalisation', () => {
       await setup(structure)
       expect(cleanupTree(value)).toEqual(initialValue)
     })
+
     it('should delete parent when main child node was deleted by user', async () => {
       value = [
         {
@@ -416,6 +423,7 @@ describe('Slate Editor: Normalisation', () => {
         },
       ])
     })
+
     it('should insert main child node if missing (not deleted by user)', async () => {
       value = [
         {
@@ -458,6 +466,7 @@ describe('Slate Editor: Normalisation', () => {
         },
       ])
     })
+
     it('should link appropriate templates', async () => {
       value = [
         {
@@ -488,6 +497,7 @@ describe('Slate Editor: Normalisation', () => {
         repeat: true,
       })
     })
+
     it('should mark end nodes as end if appropriate', async () => {
       value = [
         {
@@ -518,6 +528,7 @@ describe('Slate Editor: Normalisation', () => {
       expect(value[0].children[1].children[1].children[0].end).toBe(undefined)
       expect(value[0].children[1].children[2].end).toBe(true)
     })
+
     it('should delete mismatched nested nodes but keep content when possible', async () => {
       value = [
         {

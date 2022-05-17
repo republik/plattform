@@ -58,12 +58,6 @@ describe('Slate Editor', () => {
     it('should support multiple marks at once', async () => {})
   })
 
-  describe('On Tab', () => {
-    it('should allow forward and backward navigation', async () => {})
-    it('should navigate into nested elements', async () => {})
-    it('should still work after inserts/converts', async () => {})
-  })
-
   describe('Data Form', () => {
     it('should open attached form on double click on inline element', async () => {
       // link

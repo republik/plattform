@@ -4,7 +4,7 @@ import { config as sup } from './sup'
 import { config as sub } from './sub'
 import { config as strikethrough } from './strikethrough'
 
-import { MarksConfig } from '../../custom-types'
+import { MarksConfig } from '../../../custom-types'
 
 export const config: MarksConfig = {
   italic,

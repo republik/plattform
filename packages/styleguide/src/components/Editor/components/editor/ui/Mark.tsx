@@ -9,7 +9,7 @@ import React, {
 } from 'react'
 import { Editor, Text, Node } from 'slate'
 import { ReactEditor, useSlate } from 'slate-react'
-import { config as mConfig } from '../../marks'
+import { config as mConfig } from '../../schema/marks'
 import { ToolbarButton } from './Toolbar'
 import {
   ButtonConfig,

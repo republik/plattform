@@ -1,6 +1,6 @@
-import { Editorial } from '../../../Typography'
-import { ElementConfigI } from '../../custom-types'
-import { ParagraphIcon } from '../../../Icons'
+import { Editorial } from '../../../../Typography'
+import { ElementConfigI } from '../../../custom-types'
+import { ParagraphIcon } from '../../../../Icons'
 
 export const config: ElementConfigI = {
   Component: Editorial.P,
