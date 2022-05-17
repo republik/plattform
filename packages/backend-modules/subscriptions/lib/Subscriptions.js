@@ -2,7 +2,7 @@ const { getObjectByIdAndType } = require('./genericObject')
 const Promise = require('bluebird')
 const { uuidForObject } = require('@orbiting/backend-modules-utils')
 const {
-  isUserUnrestricted,
+  hasFullDocumentAccess,
   includesUnrestrictedChildRepoId,
 } = require('@orbiting/backend-modules-documents/lib/restrictions')
 const uniq = require('lodash/uniq')
@@ -329,7 +329,7 @@ const subscriptionIsEligibleForNotifications = async (
   ])
   if (object.__typename === 'Document') {
     return (
-      isUserUnrestricted(user) ||
+      hasFullDocumentAccess(user) ||
       includesUnrestrictedChildRepoId([object.objectId])
     )
   }

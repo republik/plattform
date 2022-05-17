@@ -333,6 +333,7 @@ const addRelatedDocs = async ({
   ignorePrepublished,
   context,
   withoutContent,
+  apiKey,
 }) => {
   const docs = getDocsForConnection(connection)
 
@@ -455,6 +456,7 @@ const addRelatedDocs = async ({
     // - including the usernames
     doc._all = [...(doc._all ? doc._all : []), ...relatedDocs, ...docs]
     doc._usernames = usernames
+    doc._apiKey = apiKey
   })
 }
 
