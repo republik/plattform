@@ -5,9 +5,10 @@ const transformUser = require('../lib/transformUser')
 const basicAuthMiddleware = require('./basicAuth')
 const { specialRoles, userIsInRoles } = require('../lib/Roles')
 const { JWTMiddleware } = require('../lib/middlewares/JWTMiddleware')
-
-const DEFAULT_MAX_AGE_IN_MS = 60000 * 60 * 24 * 365 // 1 year
-const SHORT_MAX_AGE_IN_MS = 60000 * 60 * 24 * 7 // 1 week
+const {
+  CookieExpirationTimeInMS,
+  getCookieOptions,
+} = require('../lib/CookieOptions')
 
 exports.configure = ({
   server = null, // Express Server
@@ -23,8 +24,8 @@ exports.configure = ({
   // Max session age in ms
   // NB: With 'rolling: true' passed to session() the session expiry time will
   // be reset every time a user visits the site again before it expires.
-  maxAge = DEFAULT_MAX_AGE_IN_MS, // 1 year
-  maxAgeSpecialRoles = SHORT_MAX_AGE_IN_MS, // 1 week
+  maxAge = CookieExpirationTimeInMS.DEFAULT_MAX_AGE_IN_MS, // 1 year
+  maxAgeSpecialRoles = CookieExpirationTimeInMS.SHORT_MAX_AGE_IN_MS, // 1 week
   // is the server running in development
   dev = false,
 } = {}) => {
@@ -47,6 +48,8 @@ exports.configure = ({
     pruneSessionInterval: 60 * 10, // 10mins
   })
 
+  const cookieOptions = getCookieOptions()
+
   // Configure sessions
   server.use(
     session({
@@ -60,8 +63,8 @@ exports.configure = ({
       cookie: {
         domain,
         maxAge: maxAge,
-        sameSite: !dev && 'none',
-        secure: !dev,
+        sameSite: cookieOptions.sameSite,
+        secure: cookieOptions.secure,
       },
     }),
   )
@@ -84,15 +87,13 @@ exports.configure = ({
     // Check if a user has more than one role and let session expire after a
     // shorter period of time
     if (req.user && userIsInRoles(req.user, specialRoles)) {
-      req.session.cookie.maxAge = SHORT_MAX_AGE_IN_MS
+      req.session.cookie.maxAge = maxAgeSpecialRoles
     }
 
     return next()
   })
 
-  server.use(
-    JWTMiddleware({ dev, maxAge, maxAgeSpecialRoles, domain, jwtCookieName }),
-  )
+  server.use(JWTMiddleware({ dev, domain, jwtCookieName }))
 
   const close = () => {
     return store.close()
