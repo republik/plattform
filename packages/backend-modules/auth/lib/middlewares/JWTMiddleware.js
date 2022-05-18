@@ -25,8 +25,15 @@ function JWTMiddleware({
 
     // In case no session exists on the request, delete the JWT cookie
     if (!req.session || !req.user) {
-      res.clearCookie(jwtCookieName)
-      res.clearCookie('connect.sid')
+      const DEV = process.env.NODE_ENV
+        ? process.env.NODE_ENV !== 'production'
+        : true
+      res.clearCookie(jwtCookieName, {
+        domain: process.env.COOKIE_DOMAIN ?? undefined,
+        httpOnly: true,
+        sameSite: !DEV && 'none',
+        secure: !DEV,
+      })
     }
 
     next()
