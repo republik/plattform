@@ -4,6 +4,10 @@ import Front from '../components/Front'
 import createGetStaticProps from '../lib/helpers/createGetStaticProps'
 import { FRONT_QUERY } from '../components/Front/graphql/getFrontQuery.graphql'
 import { useMe } from '../lib/context/MeContext'
+import {
+  FRONT_FEED_QUERY,
+  getFrontFeedOptions,
+} from '../components/Front/withData'
 
 const FRONT_PAGE_SSG_REVALIDATE = 60 // revalidate every minute
 const FRONT_PATH = '/'
@@ -46,7 +50,7 @@ export const getStaticProps = createGetStaticProps(
       throw new Error('Missing SSG_API_KEY environment variable')
     }
 
-    await client.query({
+    const frontQueryResult = await client.query({
       query: FRONT_QUERY,
       variables: {
         path: FRONT_PATH,
@@ -57,6 +61,38 @@ export const getStaticProps = createGetStaticProps(
         only: params?.extractId,
       },
     })
+    const front = frontQueryResult.data?.front
+    const feedNode = front?.children?.nodes.find((c) => c.id === 'feed')
+
+    if (feedNode) {
+      // Start query options - (identical to code in www/components/Front/withData.js)
+      const feedNodeIndex =
+        frontQueryResult.data.front.children.nodes.indexOf(feedNode)
+
+      const priorRepoIds = front.children.nodes
+        .slice(0, feedNodeIndex)
+        .map((node) => {
+          console.log('Add to prior repo id', JSON.stringify(node.body.data))
+          return node?.body?.data?.urlMeta?.repoId
+        })
+        .filter(Boolean)
+
+      const options = getFrontFeedOptions({
+        lastPublishedAt: frontQueryResult.data.front.lastPublishedAt,
+        priorRepoIds,
+        ...feedNode.body.data,
+      })
+      // End query options
+
+      console.log(
+        'Fetching front feed in SSG with options: ',
+        JSON.stringify(options, null, 2),
+      )
+      await client.query({
+        query: FRONT_FEED_QUERY,
+        variables: options.variables,
+      })
+    }
 
     return {
       props: {},
