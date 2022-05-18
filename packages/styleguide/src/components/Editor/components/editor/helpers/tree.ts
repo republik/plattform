@@ -1,8 +1,10 @@
 import {
+  CustomAncestor,
   CustomDescendant,
   CustomEditor,
   CustomElement,
   CustomText,
+  NormalizeFn,
 } from '../../../custom-types'
 import {
   Text,
@@ -18,8 +20,10 @@ import {
 import { KeyboardEvent } from 'react'
 import { selectPlaceholder } from './text'
 import { config as elConfig } from '../../schema/elements'
+import { TEXT } from './structure'
 
 // remove attributes using by working editor
+// TODO: delete empty nodes
 export const cleanupTree = (value: CustomDescendant[]): CustomDescendant[] => {
   return value.map((node) => {
     if (SlateElement.isElement(node)) {
@@ -33,6 +37,18 @@ export const cleanupTree = (value: CustomDescendant[]): CustomDescendant[] => {
       return rest
     }
   })
+}
+
+export const cleanupVoids: NormalizeFn<CustomElement> = (
+  [node, path],
+  editor,
+) => {
+  if (!Editor.isVoid(editor, node)) return false
+  if (Text.isText(node.children[0]) && node.children[0].text !== '') {
+    Transforms.insertText(editor, '', { at: path.concat(0), voids: true })
+    return true
+  }
+  return false
 }
 
 export const getTextNode = (

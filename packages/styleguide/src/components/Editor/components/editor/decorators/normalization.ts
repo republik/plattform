@@ -9,6 +9,7 @@ import { fixStructure } from '../helpers/structure'
 import { handleEnds } from '../helpers/ends'
 import { createLinks, handlePlaceholders } from '../helpers/text'
 import { resetSelection } from '../helpers/selection'
+import { cleanupVoids } from '../helpers/tree'
 
 let originalSelection: Range
 
@@ -18,10 +19,6 @@ export const withNormalizations =
     const { normalizeNode } = editor
 
     editor.normalizeNode = ([node, path]) => {
-      // console.log('selection:', editor.selection?.anchor.path)
-      if (!originalSelection) {
-        originalSelection = JSON.parse(JSON.stringify(editor.selection))
-      }
       // console.log('normalize', { editor, node, path })
       let rerun
       // top-level normalization
@@ -35,6 +32,11 @@ export const withNormalizations =
       }
       // element normalization
       if (SlateElement.isElement(node)) {
+        // console.log('selection:', editor.selection?.anchor.path)
+        if (!originalSelection) {
+          originalSelection = JSON.parse(JSON.stringify(editor.selection))
+        }
+
         // console.log(node, node.type)
         const elConfig = config[node.type]
         if (!elConfig) {
@@ -48,13 +50,15 @@ export const withNormalizations =
           rerun = normalizeFn([node, path], editor)
           if (rerun) return
         })
-      }
+        rerun = cleanupVoids([node, path], editor)
+        if (rerun) return
 
-      // if elements got replaced, try to restore previous selection
-      rerun = resetSelection(originalSelection)([node, path], editor)
-      originalSelection = undefined
-      if (rerun) {
-        return
+        // if elements got replaced, try to restore previous selection
+        rerun = resetSelection(originalSelection)([node, path], editor)
+        originalSelection = undefined
+        if (rerun) {
+          return
+        }
       }
 
       // text normalization

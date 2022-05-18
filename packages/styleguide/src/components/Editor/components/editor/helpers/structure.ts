@@ -35,10 +35,11 @@ import {
   spansManyElements,
 } from './tree'
 import { config as elConfig } from '../../schema/elements'
-import { getCharCount } from './text'
+import { getCharCount, selectNearestWord } from './text'
 
 const DEFAULT_STRUCTURE: NodeTemplate[] = [{ type: ['text'], repeat: true }]
-const TEXT = { text: '' }
+const VOID_STRUCTURE: NodeTemplate[] = [{ type: 'text' }]
+export const TEXT = { text: '' }
 
 const isAllowedType = (
   elType: TemplateType,
@@ -134,24 +135,31 @@ const setChildren = (
   return updatedChildren
 }
 
-const insertInline = (
+const toggleInline = (
   editor: CustomEditor,
   element: CustomElement,
-): number[] => {
+): number[] | undefined => {
   const { selection } = editor
   if (!selection) return
-  const { text: target } = getAncestry(editor)
+  const { text: target, element: parent } = getAncestry(editor)
+  if (parent[0].type === element.type) {
+    Transforms.unwrapNodes(editor, { at: parent[1], voids: true })
+    return
+  }
   if (!target) return
   const isCollapsed = Range.isCollapsed(selection)
-  if (isCollapsed) {
+  if (isCollapsed && elConfig[element.type].attrs?.isVoid) {
     Transforms.insertNodes(editor, element)
+  } else if (isCollapsed) {
+    const retry = selectNearestWord(editor)
+    return retry ? toggleInline(editor, element) : undefined
   } else {
     Transforms.wrapNodes(editor, element, { split: true })
   }
   return calculateSiblingPath(Range.end(selection).path)
 }
 
-const insertBlock = (
+const convertBlock = (
   editor: CustomEditor,
   element: CustomElement,
   elKey: CustomElementsType,
@@ -182,7 +190,7 @@ const insertBlock = (
   const getMainEls = (n) =>
     SlateElement.isElement(n) && n.type === targetMainElKey
 
-  // TODO: insert path when mainElKey doesn't allow for repeats
+  // TODO: insert path when mainElKey doesn't allow for repeats (no use case atm)
   Editor.withoutNormalizing(editor, () => {
     if (targetMainElKey && mainElKey) {
       Transforms.setNodes(editor, insertPartial, { at: target[1] })
@@ -213,7 +221,7 @@ const insertBlock = (
   return insertPath
 }
 
-export const createElement = (
+export const toggleElement = (
   editor: CustomEditor,
   elKey: CustomElementsType,
 ): number[] => {
@@ -223,18 +231,20 @@ export const createElement = (
   const config = elConfig[elKey]
   const element = buildElement(elKey, config)
 
-  let insertPath: number[]
+  let elementPath: number[]
 
   const isInline = config.attrs?.isInline
   if (isInline) {
-    insertPath = insertInline(editor, element)
+    elementPath = toggleInline(editor, element)
   } else {
-    insertPath = insertBlock(editor, element, elKey, config)
+    elementPath = convertBlock(editor, element, elKey, config)
   }
 
-  Transforms.select(editor, insertPath)
-  Transforms.collapse(editor, { edge: 'end' })
-  return insertPath
+  if (elementPath) {
+    Transforms.select(editor, elementPath)
+    Transforms.collapse(editor, { edge: 'end' })
+  }
+  return elementPath
 }
 
 const insertMissingNode = (
@@ -286,18 +296,6 @@ const linkTemplate = (
   Transforms.setNodes(editor, newProperties, { at: path })
 }
 
-const deleteExcessChildren = (
-  from: number,
-  node: CustomAncestor,
-  path: number[],
-  editor: CustomEditor,
-): void => {
-  // console.log('DELETE EXCESS', from, 'vs', node.children.length, node)
-  for (let i = node.children.length - 1; i >= from; i--) {
-    Transforms.removeNodes(editor, { at: path.concat(i) })
-  }
-}
-
 const deleteParent = (
   editor: CustomEditor,
   currentTemplate: NodeTemplate,
@@ -315,12 +313,28 @@ const deleteParent = (
   )
 }
 
+const deleteExcessChildren = (
+  from: number,
+  node: CustomAncestor,
+  path: number[],
+  editor: CustomEditor,
+): void => {
+  // console.log('DELETE EXCESS', from, 'vs', node.children.length, node)
+  for (let i = node.children.length - 1; i >= from; i--) {
+    // console.log(i)
+    Transforms.removeNodes(editor, { at: path.concat(i) })
+  }
+}
+
 export const fixStructure: (
-  structure?: NodeTemplate[],
+  nodeStructure?: NodeTemplate[],
 ) => NormalizeFn<CustomAncestor> =
-  (structure = DEFAULT_STRUCTURE) =>
+  (nodeStructure = DEFAULT_STRUCTURE) =>
   ([node, path], editor) => {
     // console.log('MATCH STRUCTURE')
+    const structure =
+      nodeStructure ||
+      (Editor.isVoid(editor, node) ? VOID_STRUCTURE : DEFAULT_STRUCTURE)
     let i = 0
     let repeatOffset = 0
     let loop = true
@@ -383,7 +397,7 @@ export const insertOnKey =
   (editor: CustomEditor, event: KeyboardEvent<HTMLDivElement>): void => {
     if (event.key === keyCombo.name && event.shiftKey === !!keyCombo.shift) {
       event.preventDefault()
-      createElement(editor, elKey)
+      toggleElement(editor, elKey)
     }
   }
 

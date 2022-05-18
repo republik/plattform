@@ -109,7 +109,7 @@ export const FormOverlay = (): ReactElement => {
 
   return (
     <Overlay onClose={onClose}>
-      <OverlayToolbar title='Edit' onClose={onClose} />
+      <OverlayToolbar title='Edit Data' onClose={onClose} />
       <OverlayBody>
         {forms.map((formData, i) => (
           <ElementForm {...formData} key={i} />

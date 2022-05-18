@@ -2,7 +2,7 @@ import Editor from '../editor'
 import { buildTestHarness } from 'slate-test-utils'
 import { createEditor, Transforms } from 'slate'
 import { selectAdjacent } from '../editor/helpers/tree'
-import { createElement, insertRepeat } from '../editor/helpers/structure'
+import { toggleElement, insertRepeat } from '../editor/helpers/structure'
 
 describe('Slate Editor: Navigation (On Tab)', () => {
   function getMockEditor() {
@@ -277,7 +277,7 @@ describe('Slate Editor: Navigation (On Tab)', () => {
     insertRepeat(editor)
     await new Promise(process.nextTick)
 
-    createElement(editor, 'figure')
+    toggleElement(editor, 'figure')
     await new Promise(process.nextTick)
 
     await Transforms.select(editor, [1, 1, 1, 0])
@@ -288,7 +288,7 @@ describe('Slate Editor: Navigation (On Tab)', () => {
     await new Promise(process.nextTick)
 
     await Transforms.select(editor, [3])
-    createElement(editor, 'ul')
+    toggleElement(editor, 'ul')
     await new Promise(process.nextTick)
 
     await Transforms.select(editor, [0])

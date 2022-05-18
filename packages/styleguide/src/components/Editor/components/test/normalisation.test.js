@@ -639,6 +639,8 @@ describe('Slate Editor: Normalisation', () => {
         },
       ])
     })
+
+    it('formatting (except sub/sup) should be removed unless parent block has formatText flag in config', async () => {})
   })
 
   describe('handleEnds()', () => {

@@ -53,6 +53,20 @@ export const selectPlaceholder = (
   })
 }
 
+export const selectNearestWord = (
+  editor: CustomEditor,
+  dryRun?: boolean,
+): boolean => {
+  if (!editor.selection || !Range.isCollapsed(editor.selection)) return false
+  const anchor = Editor.before(editor, editor.selection, { unit: 'word' })
+  const focus = Editor.after(editor, editor.selection, { unit: 'word' })
+  if (Editor.string(editor, { anchor, focus }).split(' ').length === 1) {
+    !dryRun && Transforms.select(editor, { anchor, focus })
+    return true
+  }
+  return false
+}
+
 export const isEmpty = (text?: string) =>
   !text || text === '' || text === PSEUDO_EMPTY_STRING
 
