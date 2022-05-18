@@ -16,7 +16,7 @@ import { OpenSourceIcon } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 import withMe from '../../lib/apollo/withMe'
 import { withSignOut } from '../Auth/SignOut'
-import withInNativeApp from '../../lib/withInNativeApp'
+import withInNativeApp, { useInNativeApp } from '../../lib/withInNativeApp'
 import { shouldIgnoreClick } from '../../lib/utils/link'
 import { ZINDEX_FOOTER } from '../constants'
 
@@ -123,6 +123,8 @@ const Footer = ({
   hasActiveMembership,
 }) => {
   const [colorScheme] = useColorContext()
+  const { inNativeApp, inNativeAppVersion } = useInNativeApp()
+
   const navLinkStyle = useMemo(
     () =>
       css({
@@ -337,7 +339,13 @@ const Footer = ({
             <Address t={t} />
           </div>
         </div>
-        <div style={{ textAlign: 'right' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'end',
+          }}
+        >
           <span
             style={{ ...fontStyles.sansSerifRegular14 }}
             {...colorScheme.set('color', 'text')}
@@ -357,6 +365,14 @@ const Footer = ({
               {t('footer/opensource')}
             </a>
           </span>
+          {inNativeApp && (
+            <span
+              {...navLinkStyle}
+              style={{ ...fontStyles.sansSerifRegular14 }}
+            >
+              v{inNativeAppVersion}
+            </span>
+          )}
         </div>
       </div>
     </div>
