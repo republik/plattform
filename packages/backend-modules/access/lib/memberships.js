@@ -25,7 +25,7 @@ const removeRole = async (grant, user, pgdb, role) => {
   debug(`remove ${role} role`, { grant: grant.id, user: user.id })
 
   if (Roles.userHasRole(user, role)) {
-    await Roles.removeMemberRole(user.id, role, pgdb)
+    await Roles.removeUserFromRole(user.id, role, pgdb)
     await eventsLib.log(grant, `role.${role}.remove`, pgdb)
 
     debug(`role "${role}" was removed`, user.id)
