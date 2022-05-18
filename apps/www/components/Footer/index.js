@@ -111,6 +111,11 @@ const styles = {
       },
     },
   }),
+  devInfo: css({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'end',
+  }),
 }
 
 const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
@@ -331,13 +336,7 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
             <Address t={t} />
           </div>
         </div>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'end',
-          }}
-        >
+        <div {...styles.devInfo}>
           <span
             style={{ ...fontStyles.sansSerifRegular14 }}
             {...colorScheme.set('color', 'text')}
