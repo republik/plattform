@@ -98,11 +98,16 @@ export const useMe = (): MeContextValues => useContext(MeContext)
 
 type Props = {
   children: ReactNode
+  /**
+   * Assumes that a memberships exists, even before me is loaded.
+   * All values returned from the context that correlate to a membership will be set to true.
+   */
+  assumeMembership?: boolean
 }
 
 type AuthState = 'loading' | 'logged-in' | 'logged-out'
 
-const MeContextProvider = ({ children }: Props) => {
+const MeContextProvider = ({ children, assumeMembership = false }: Props) => {
   const { data, loading, error, refetch } = useQuery<MeResponse>(meQuery, {})
 
   const getAuthState = useCallback((): AuthState => {
@@ -116,7 +121,8 @@ const MeContextProvider = ({ children }: Props) => {
 
   const me = data?.me
   const isMember = checkRoles(me, ['member'])
-  const hasActiveMembership = !!me?.activeMembership
+  const hasActiveMembership =
+    !data && assumeMembership ? assumeMembership : !!me?.activeMembership
   const portraitOrInitials = me ? me.portrait ?? getInitials(me) : false
 
   const broadcastAuthenticationChange = (nextState) => {

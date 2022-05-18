@@ -49,6 +49,11 @@ export type BasePageProps<P = unknown> = {
    * Shared cache between the client and server
    */
   [APOLLO_STATE_PROP_NAME]?: NormalizedCacheObject
+  /**
+   * When rendering a member-page in SSG, this value is passed to the me-context
+   * to allow elements, which are only visible to members, to be rendered.
+   */
+  assumeMembership?: boolean
 } & P // All other props given in a page
 
 const WebApp = ({ Component, pageProps }: AppProps<BasePageProps>) => {
@@ -57,6 +62,7 @@ const WebApp = ({ Component, pageProps }: AppProps<BasePageProps>) => {
     providedApolloClient = undefined,
     providedUserAgent = undefined,
     serverContext = undefined,
+    assumeMembership = false,
     ...otherPageProps
   } = pageProps
   const apolloClient = useApollo(otherPageProps, providedApolloClient)
@@ -64,7 +70,7 @@ const WebApp = ({ Component, pageProps }: AppProps<BasePageProps>) => {
   return (
     <ErrorBoundary>
       <ApolloProvider client={apolloClient}>
-        <MeContextProvider>
+        <MeContextProvider assumeMembership={assumeMembership}>
           <UserAgentProvider providedValue={providedUserAgent}>
             <MediaProgressContext>
               <IconContextProvider

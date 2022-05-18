@@ -36,11 +36,21 @@ function createGetStaticProps<P, Q extends ParsedUrlQuery = ParsedUrlQuery>(
     })
     const result = await queryFunc(apolloClient, ctx.params)
 
-    if ('props' in result) {
-      result.props[APOLLO_STATE_PROP_NAME] = apolloClient.cache.extract()
+    // Return result directly if not successful getStaticProps-result
+    if ('redirect' in result || 'notFound' in result) {
+      return result
     }
 
-    return result
+    result.props[APOLLO_STATE_PROP_NAME] = apolloClient.cache.extract()
+
+    return {
+      props: {
+        ...result.props,
+        [APOLLO_STATE_PROP_NAME]: apolloClient.cache.extract(),
+        assumeMembership: !!headers?.authorization,
+      },
+      revalidate: result.revalidate,
+    }
   }
 }
 
