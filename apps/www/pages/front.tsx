@@ -50,6 +50,7 @@ export const getStaticProps = createGetStaticProps(
       throw new Error('Missing SSG_API_KEY environment variable')
     }
 
+    // Query the front-document
     const frontQueryResult = await client.query({
       query: FRONT_QUERY,
       variables: {
@@ -64,6 +65,7 @@ export const getStaticProps = createGetStaticProps(
     const front = frontQueryResult.data?.front
     const feedNode = front?.children?.nodes.find((c) => c.id === 'feed')
 
+    // Query front-feed if present
     if (feedNode) {
       // Start query options - (identical to code in www/components/Front/withData.js)
       const feedNodeIndex =
@@ -84,10 +86,6 @@ export const getStaticProps = createGetStaticProps(
       })
       // End query options
 
-      console.log(
-        'Fetching front feed in SSG with options: ',
-        JSON.stringify(options, null, 2),
-      )
       await client.query({
         query: FRONT_FEED_QUERY,
         variables: options.variables,
