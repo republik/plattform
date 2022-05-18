@@ -73,10 +73,7 @@ export const getStaticProps = createGetStaticProps(
 
       const priorRepoIds = front.children.nodes
         .slice(0, feedNodeIndex)
-        .map((node) => {
-          console.log('Add to prior repo id', JSON.stringify(node.body.data))
-          return node?.body?.data?.urlMeta?.repoId
-        })
+        .map((node) => node?.body?.data?.urlMeta?.repoId)
         .filter(Boolean)
 
       const options = getFrontFeedOptions({
