@@ -120,15 +120,12 @@ const MeContextProvider = ({ children }: Props) => {
   const portraitOrInitials = me ? me.portrait ?? getInitials(me) : false
 
   const broadcastAuthenticationChange = (nextState) => {
-    console.log('broadcastAuthenticationChange')
     localStorage.setItem(AUTH_STATE_CHANGE_BROADCAST_STORAGE_KEY, nextState)
     localStorage.removeItem(AUTH_STATE_CHANGE_BROADCAST_STORAGE_KEY)
   }
 
   const handleAuthenticationChangeBroadcast = useCallback(
     async (event: StorageEvent) => {
-      console.log('Event:', event)
-
       // Ignore all events that aren't meant to broadcast auth-change and
       // ignore localStorage.removeItem
       if (
