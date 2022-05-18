@@ -8,6 +8,7 @@ import {
   FRONT_FEED_QUERY,
   getFrontFeedOptions,
 } from '../components/Front/withData'
+import { reportError } from '../lib/errors'
 
 const FRONT_PAGE_SSG_REVALIDATE = 60 // revalidate every minute
 const FRONT_PATH = '/'
@@ -21,6 +22,7 @@ const FrontPage = () => {
     // In case the user isn't logged in or has no active membership,
     // reload to re-trigger the middleware to rewrite to the marketing-page
     if (!me || !hasActiveMembership) {
+      reportError('Front', new Error('Reloading from front page'))
       router.reload()
     }
   }, [me, meLoading, hasActiveMembership, router])

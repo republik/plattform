@@ -10,6 +10,7 @@ import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
 import createGetStaticProps from '../lib/helpers/createGetStaticProps'
 import { MARKETING_PAGE_QUERY } from '../components/Marketing/graphql/MarketingPageQuery.graphql'
 import { useMe } from '../lib/context/MeContext'
+import { reportError } from '../lib/errors'
 
 const MARKETING_PAGE_SSG_REVALIDATE = 60 // revalidate every minute
 
@@ -23,6 +24,7 @@ const MarketingPage = () => {
     // In case the user is logged in and has an active membership,
     // reload the page to rewrite from '/' to '/front'
     if (me && hasActiveMembership) {
+      reportError('Marketing-Page', new Error('Reloading from marketing-page'))
       router.reload()
     }
   }, [me, meLoading, hasActiveMembership, router])
