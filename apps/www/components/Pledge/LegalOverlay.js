@@ -20,17 +20,11 @@ import { createPageSchema } from '@project-r/styleguide'
 const pages = [
   {
     href: '/agb',
-    content: dynamic(
-      () => import('../../pages/agb.js').then((mod) => mod.Content),
-      { loading: () => <Loader /> },
-    ),
+    content: false, // in Publikator since April 2022
   },
   {
     href: '/datenschutz',
-    content: dynamic(
-      () => import('../../pages/datenschutz.js').then((mod) => mod.Content),
-      { loading: () => <Loader /> },
-    ),
+    content: false, // in Publikator since April 2022
   },
   {
     href: '/statuten',

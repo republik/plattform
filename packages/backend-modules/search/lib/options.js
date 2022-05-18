@@ -1,14 +1,11 @@
 const debug = require('debug')('search:lib:options')
 
-const { Roles } = require('@orbiting/backend-modules-auth')
-
 const {
-  DOCUMENTS_RESTRICT_TO_ROLES,
-  DOCUMENTS_SAMPLES_REPO_IDS,
-  DOCUMENTS_SAMPLES = 3,
-} = process.env
+  hasFullDocumentAccess,
+} = require('@orbiting/backend-modules-documents/lib/restrictions')
 
-const documentsRestrictToRoles = DOCUMENTS_RESTRICT_TO_ROLES?.split(',')
+const { DOCUMENTS_SAMPLES_REPO_IDS, DOCUMENTS_SAMPLES = 3 } = process.env
+
 const sampleRepoIds = DOCUMENTS_SAMPLES_REPO_IDS?.split(',')
 
 const processors = {
@@ -18,7 +15,7 @@ const processors = {
 
     if (
       !!sampleRepoIds?.includes(filter?.format) &&
-      !Roles.userIsInRoles(user, documentsRestrictToRoles)
+      !hasFullDocumentAccess(user, args.apiKey)
     ) {
       return {
         filters: [

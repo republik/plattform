@@ -18,7 +18,8 @@ type queries {
     sort: SearchSortInput
     first: Int
     after: String
-    before: String,
+    before: String
+    apiKey: String
     # used to (anonymously) track subsequent searches
     # provide the ID from the previous SearchConnection
     trackingId: ID
