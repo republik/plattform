@@ -93,6 +93,7 @@
     "immer": "^9.0.12",
     "isomorphic-unfetch": "^3.1.0",
     "jose": "^4.8.1",
+    "jstoxml": "^3.2.3",
     "load-script": "^1.0.0",
     "lodash": "^4.17.21",
     "lru-cache": "^4.1.3",
