@@ -152,7 +152,7 @@ export const OverlayRenderer: React.FC<
       style={{ opacity: isVisible ? 1 : 0 }}
       ref={scrollRef}
     >
-      <div {...styles.backdrop} onMouseDown={close} />
+      <div {...styles.backdrop} onClick={close} />
       <div
         {...merge(styles.inner, mUpStyle && { [mUp]: mUpStyle })}
         {...colorScheme.set('backgroundColor', 'overlay')}
