@@ -7,22 +7,26 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { Editor, Text, Node } from 'slate'
-import { ReactEditor, useSelected, useSlate } from 'slate-react'
+import { Editor } from 'slate'
+import { ReactEditor, useSlate } from 'slate-react'
 import { config as mConfig } from '../../schema/marks'
 import { ToolbarButton } from './Toolbar'
 import {
   ButtonConfig,
-  CustomAncestor,
-  CustomEditor,
   CustomElement,
   CustomMarksType,
   CustomText,
 } from '../../../custom-types'
 import { css } from 'glamor'
 import { useColorContext } from '../../../../Colors/ColorContext'
-import { getMarkStyles, isEmpty, selectPlaceholder } from '../helpers/text'
-import { getTextNode, selectAdjacent, selectText } from '../helpers/tree'
+import {
+  getMarkStyles,
+  isEmpty,
+  isMarkActive,
+  selectPlaceholder,
+  toggleMark,
+} from '../helpers/text'
+import { getTextNode } from '../helpers/tree'
 
 const styles = {
   leaf: css({
@@ -33,27 +37,6 @@ const styles = {
     position: 'absolute',
     whiteSpace: 'nowrap',
   }),
-}
-
-const isMarkActive = (editor: CustomEditor, mKey: CustomMarksType): boolean => {
-  // try-catch clause needed for the tests
-  let marks
-  try {
-    marks = Editor.marks(editor)
-  } catch (e) {
-    // console.warn(e)
-  }
-  return !!marks && !!marks[mKey]
-}
-
-// TODO: handle toggle when selection is collapsed
-const toggleMark = (editor: CustomEditor, mKey: CustomMarksType): void => {
-  const isActive = isMarkActive(editor, mKey)
-  if (isActive) {
-    Editor.removeMark(editor, mKey)
-  } else {
-    Editor.addMark(editor, mKey, true)
-  }
 }
 
 export const MarkButton: React.FC<{

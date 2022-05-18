@@ -24,6 +24,7 @@ import {
 } from 'slate'
 import {
   calculateSiblingPath,
+  deleteExcessChildren,
   findInsertTarget,
   getAncestry,
   getParent,
@@ -38,7 +39,6 @@ import { config as elConfig } from '../../schema/elements'
 import { getCharCount, selectNearestWord } from './text'
 
 const DEFAULT_STRUCTURE: NodeTemplate[] = [{ type: ['text'], repeat: true }]
-const VOID_STRUCTURE: NodeTemplate[] = [{ type: 'text' }]
 export const TEXT = { text: '' }
 
 const isAllowedType = (
@@ -52,13 +52,21 @@ const isAllowedType = (
 export const isCorrect = (
   node: CustomDescendant | undefined,
   template: NodeTemplate | undefined,
+  approximate?: boolean,
 ): boolean => {
   if (!node && !template) return true
   if (!node || !template) return false
-  if (Text.isText(node))
-    return isAllowedType('text', template.type) && node.end === template.end
-  if (SlateElement.isElement(node))
-    return isAllowedType(node.type, template.type)
+  const elType =
+    Text.isText(node) ||
+    (approximate &&
+      SlateElement.isElement(node) &&
+      elConfig[node.type].attrs.isInline)
+      ? 'text'
+      : node.type
+  return (
+    isAllowedType(elType, template.type) &&
+    (!Text.isText(node) || node.end === template.end)
+  )
 }
 
 const getTemplateType = (
@@ -162,14 +170,20 @@ const toggleInline = (
 const convertBlock = (
   editor: CustomEditor,
   element: CustomElement,
-  elKey: CustomElementsType,
-  insertConfig: ElementConfigI,
+  customTarget?: NodeEntry<CustomNode>,
 ): number[] => {
-  const { element: targetE, topLevelContainer: targetC } = getAncestry(editor)
+  const { element: targetE, topLevelContainer: targetC } = getAncestry(
+    editor,
+    customTarget,
+  )
   const target = targetC || targetE
 
   const targetConfig = elConfig[target[0].type]
-  const insertPartial = { type: elKey, ...(insertConfig.defaultProps || {}) }
+  const insertConfig = elConfig[element.type]
+  const insertPartial = {
+    type: element.type,
+    ...(insertConfig.defaultProps || {}),
+  }
 
   if (
     insertConfig.Component.name === targetConfig.Component.name &&
@@ -237,49 +251,71 @@ export const toggleElement = (
   if (isInline) {
     elementPath = toggleInline(editor, element)
   } else {
-    elementPath = convertBlock(editor, element, elKey, config)
+    elementPath = convertBlock(editor, element)
   }
 
   if (elementPath) {
     Transforms.select(editor, elementPath)
     Transforms.collapse(editor, { edge: 'end' })
   }
+
   return elementPath
 }
 
-const insertMissingNode = (
+// TODO: evaluate if this makes sense // maybe unwrap on paste is better
+const tryConvert = (
+  node: CustomNode | undefined,
+  template: NodeTemplate,
+): boolean => {
+  const templateType = getTemplateType(template)
+  if (Text.isText(node) && !templateType) return true
+
+  const structure = elConfig[templateType].structure || DEFAULT_STRUCTURE
+  if (structure?.length !== 1) return false
+  const childrenTemplate = structure[0]
+
+  return (
+    SlateElement.isElement(node) &&
+    node.children.every((child) => isCorrect(child, childrenTemplate))
+  )
+}
+
+const fixNode = (
   node: CustomDescendant | undefined,
   path: number[],
   currentTemplate: NodeTemplate,
   nextTemplate: NodeTemplate | undefined,
   editor: CustomEditor,
 ): void => {
-  // console.log('INSERT MISSING NODE', { node, path })
-  if (!node || isCorrect(node, nextTemplate)) {
-    const newNode = buildFromTemplate(currentTemplate)
-    // console.log('insert new node and return', { newNode })
+  const newNode = buildFromTemplate(currentTemplate)
+  // console.log('FIX NODE', { node, path, currentTemplate, newNode })
+
+  if (
+    !node ||
+    (isCorrect(node, nextTemplate) && !tryConvert(node, currentTemplate))
+  ) {
+    // console.log('insert node')
     return Transforms.insertNodes(editor, newNode, {
       at: path,
     })
   }
-  // console.log('convert current node')
-  // TODO: what if the current node is an inline element
-  //  and the template is a block?
-  if (SlateElement.isElement(node)) {
-    // console.log('unwrap')
-    Transforms.unwrapNodes(editor, { at: path })
+
+  if (SlateElement.isElement(node) && SlateElement.isElement(newNode)) {
+    // console.log('convert node')
+    convertBlock(editor, newNode, [node, path])
+    return
   }
-  const templateType = getTemplateType(currentTemplate)
-  const isVoid = templateType && elConfig[templateType].attrs?.isVoid
-  const newNode = buildFromTemplate(currentTemplate)
-  // console.log({ newNode })
-  if (SlateElement.isElement(newNode) && !isVoid) {
-    // console.log('wrap')
+
+  if (Text.isText(node) && SlateElement.isElement(newNode)) {
+    // console.log('wrap node')
     return Transforms.wrapNodes(editor, newNode, { at: path })
   }
+
   if (Text.isText(newNode)) {
+    // console.log('set text')
     newNode.text = Node.string(node)
   }
+
   Transforms.removeNodes(editor, { at: path })
   Transforms.insertNodes(editor, newNode, { at: path })
 }
@@ -313,28 +349,12 @@ const deleteParent = (
   )
 }
 
-const deleteExcessChildren = (
-  from: number,
-  node: CustomAncestor,
-  path: number[],
-  editor: CustomEditor,
-): void => {
-  // console.log('DELETE EXCESS', from, 'vs', node.children.length, node)
-  for (let i = node.children.length - 1; i >= from; i--) {
-    // console.log(i)
-    Transforms.removeNodes(editor, { at: path.concat(i) })
-  }
-}
-
 export const fixStructure: (
-  nodeStructure?: NodeTemplate[],
+  structure?: NodeTemplate[],
 ) => NormalizeFn<CustomAncestor> =
-  (nodeStructure = DEFAULT_STRUCTURE) =>
+  (structure = DEFAULT_STRUCTURE) =>
   ([node, path], editor) => {
-    // console.log('MATCH STRUCTURE')
-    const structure =
-      nodeStructure ||
-      (Editor.isVoid(editor, node) ? VOID_STRUCTURE : DEFAULT_STRUCTURE)
+    // console.log('MATCH STRUCTURE', { structure })
     let i = 0
     let repeatOffset = 0
     let loop = true
@@ -375,13 +395,7 @@ export const fixStructure: (
         Transforms.removeNodes(editor, { at: path })
         return true
       } else {
-        insertMissingNode(
-          currentNode,
-          currentPath,
-          currentTemplate,
-          nextTemplate,
-          editor,
-        )
+        fixNode(currentNode, currentPath, currentTemplate, nextTemplate, editor)
         return true
       }
     }

@@ -7,7 +7,7 @@ import { config } from '../../schema/elements'
 import { Element as SlateElement, Text, Transforms, Range } from 'slate'
 import { fixStructure } from '../helpers/structure'
 import { handleEnds } from '../helpers/ends'
-import { createLinks, handlePlaceholders } from '../helpers/text'
+import { cleanupMarks, createLinks, handlePlaceholders } from '../helpers/text'
 import { resetSelection } from '../helpers/selection'
 import { cleanupVoids } from '../helpers/tree'
 
@@ -19,7 +19,7 @@ export const withNormalizations =
     const { normalizeNode } = editor
 
     editor.normalizeNode = ([node, path]) => {
-      // console.log('normalize', { editor, node, path })
+      // console.log('normalize', { node, path })
       let rerun
       // top-level normalization
       if (path.length === 0) {
@@ -64,6 +64,8 @@ export const withNormalizations =
       // text normalization
       if (Text.isText(node)) {
         // console.log('text node')
+        rerun = cleanupMarks([node, path], editor)
+        if (rerun) return
         rerun = handleEnds([node, path], editor)
         if (rerun) return
         rerun = createLinks([node, path], editor)

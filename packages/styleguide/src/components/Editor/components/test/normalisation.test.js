@@ -183,6 +183,39 @@ describe('Slate Editor: Normalisation', () => {
       ])
     })
 
+    it('should convert node types before inserting new nodes if children types are compatible', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          children: [{ text: 'Hello' }],
+        },
+        {
+          type: 'paragraph',
+          children: [{ text: 'World' }],
+        },
+      ]
+      const structure = [
+        {
+          type: 'headline',
+        },
+        {
+          type: ['paragraph'],
+          repeat: true,
+        },
+      ]
+      await setup(structure)
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'headline',
+          children: [{ text: 'Hello' }],
+        },
+        {
+          type: 'paragraph',
+          children: [{ text: 'World' }],
+        },
+      ])
+    })
+
     it('should delete illegal node at the end of the tree', async () => {
       value = [
         {
@@ -640,7 +673,59 @@ describe('Slate Editor: Normalisation', () => {
       ])
     })
 
-    it('formatting (except sub/sup) should be removed unless parent block has formatText flag in config', async () => {})
+    it('formatting (except sub/sup) should be removed unless parent block has formatText flag in config', async () => {
+      value = [
+        {
+          type: 'headline',
+          children: [
+            { text: 'CO' },
+            { text: '2', sub: true },
+            { text: 'levels are ' },
+            { text: 'crazy', bold: true },
+            { text: '!!!' },
+          ],
+        },
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'CO' },
+            { text: '2', sub: true },
+            { text: 'levels are ' },
+            { text: 'crazy', bold: true },
+            { text: '!!!' },
+          ],
+        },
+      ]
+      const structure = [
+        {
+          type: 'headline',
+        },
+        {
+          type: 'paragraph',
+        },
+      ]
+      const editor = await setup(structure)
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'headline',
+          children: [
+            { text: 'CO' },
+            { text: '2', sub: true },
+            { text: 'levels are crazy!!!' },
+          ],
+        },
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'CO' },
+            { text: '2', sub: true },
+            { text: 'levels are ' },
+            { text: 'crazy', bold: true },
+            { text: '!!!' },
+          ],
+        },
+      ])
+    })
   })
 
   describe('handleEnds()', () => {

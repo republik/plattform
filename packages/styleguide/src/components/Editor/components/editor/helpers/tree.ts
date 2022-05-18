@@ -3,6 +3,7 @@ import {
   CustomDescendant,
   CustomEditor,
   CustomElement,
+  CustomNode,
   CustomText,
   NormalizeFn,
 } from '../../../custom-types'
@@ -39,6 +40,19 @@ export const cleanupTree = (value: CustomDescendant[]): CustomDescendant[] => {
   })
 }
 
+export const deleteExcessChildren = (
+  from: number,
+  node: CustomAncestor,
+  path: number[],
+  editor: CustomEditor,
+): void => {
+  // console.log('DELETE EXCESS', from, 'vs', node.children.length, node)
+  for (let i = node.children.length - 1; i >= from; i--) {
+    // console.log(i)
+    Transforms.removeNodes(editor, { at: path.concat(i), voids: true })
+  }
+}
+
 export const cleanupVoids: NormalizeFn<CustomElement> = (
   [node, path],
   editor,
@@ -47,6 +61,9 @@ export const cleanupVoids: NormalizeFn<CustomElement> = (
   if (Text.isText(node.children[0]) && node.children[0].text !== '') {
     Transforms.insertText(editor, '', { at: path.concat(0), voids: true })
     return true
+  }
+  if (node.children.length > 1) {
+    deleteExcessChildren(1, node, path, editor)
   }
   return false
 }
@@ -210,13 +227,14 @@ export const spansManyElements = (editor: CustomEditor): boolean =>
 
 export const getAncestry = (
   editor: CustomEditor,
+  customNode?: NodeEntry<CustomNode>,
 ): {
   text?: NodeEntry<CustomText>
   element?: NodeEntry<CustomElement>
   container?: NodeEntry<CustomElement>
   topLevelContainer?: NodeEntry<CustomElement>
 } => {
-  const parent = getCommonNode(editor)
+  const parent = customNode || getCommonNode(editor)
   let text: NodeEntry<CustomText>
   let element: NodeEntry<CustomElement>
   let container: NodeEntry<CustomElement>

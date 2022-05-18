@@ -1,4 +1,9 @@
-import { CustomEditor, CustomText, NormalizeFn } from '../../../custom-types'
+import {
+  CustomEditor,
+  CustomMarksType,
+  CustomText,
+  NormalizeFn,
+} from '../../../custom-types'
 import {
   Descendant,
   Editor,
@@ -13,7 +18,11 @@ import { ReactEditor } from 'slate-react'
 import { config as elConfig } from '../../schema/elements'
 import editorConfig from '../../../config'
 import { isCorrect } from './structure'
-import { config as mConfig, configKeys as mKeys } from '../../schema/marks'
+import {
+  config as mConfig,
+  configKeys as mKeys,
+  MARKS_WHITELIST,
+} from '../../schema/marks'
 
 export const CHAR_LIMIT = editorConfig.maxSigns
 const PSEUDO_EMPTY_STRING = '\u2060'
@@ -23,6 +32,70 @@ export const getCharCount = (nodes: (Descendant | Node)[]): number =>
 
 export const getCountDown = (editor: CustomEditor): number =>
   CHAR_LIMIT - getCharCount(editor.children)
+
+export const cleanupMarks: NormalizeFn<CustomText> = ([node, path], editor) => {
+  const parent = Editor.parent(editor, path)[0]
+  const formatText =
+    SlateElement.isElement(parent) && elConfig[parent.type].attrs?.formatText
+  if (formatText) return false
+  mKeys.forEach((mKey) => {
+    if (MARKS_WHITELIST.includes(mKey)) return
+    if (node[mKey]) {
+      Transforms.unsetNodes(editor, mKey, { at: path })
+    }
+  })
+}
+
+export const selectNearestWord = (
+  editor: CustomEditor,
+  dryRun?: boolean,
+): boolean => {
+  if (!editor.selection || !Range.isCollapsed(editor.selection)) return false
+  const anchor = Editor.before(editor, editor.selection, { unit: 'word' })
+  const focus = Editor.after(editor, editor.selection, { unit: 'word' })
+  if (
+    anchor &&
+    focus &&
+    Editor.string(editor, { anchor, focus }).split(' ').length === 1
+  ) {
+    !dryRun && Transforms.select(editor, { anchor, focus })
+    return true
+  }
+  return false
+}
+
+export const isMarkActive = (
+  editor: CustomEditor,
+  mKey: CustomMarksType,
+): boolean => {
+  // try-catch clause needed for the tests
+  let marks
+  try {
+    marks = Editor.marks(editor)
+  } catch (e) {
+    // console.warn(e)
+  }
+  return !!marks && !!marks[mKey]
+}
+
+export const toggleMark = (
+  editor: CustomEditor,
+  mKey: CustomMarksType,
+): void => {
+  const { selection } = editor
+  const isCollapsed = selection && Range.isCollapsed(selection)
+  if (isCollapsed) {
+    const retry = selectNearestWord(editor)
+    if (retry) return toggleMark(editor, mKey)
+  }
+
+  const isActive = isMarkActive(editor, mKey)
+  if (isActive) {
+    Editor.removeMark(editor, mKey)
+  } else {
+    Editor.addMark(editor, mKey, true)
+  }
+}
 
 export const getMarkStyles = (node: CustomText): any =>
   mKeys
@@ -51,20 +124,6 @@ export const selectPlaceholder = (
     })
     Transforms.select(editor, at)
   })
-}
-
-export const selectNearestWord = (
-  editor: CustomEditor,
-  dryRun?: boolean,
-): boolean => {
-  if (!editor.selection || !Range.isCollapsed(editor.selection)) return false
-  const anchor = Editor.before(editor, editor.selection, { unit: 'word' })
-  const focus = Editor.after(editor, editor.selection, { unit: 'word' })
-  if (Editor.string(editor, { anchor, focus }).split(' ').length === 1) {
-    !dryRun && Transforms.select(editor, { anchor, focus })
-    return true
-  }
-  return false
 }
 
 export const isEmpty = (text?: string) =>
