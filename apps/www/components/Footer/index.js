@@ -4,7 +4,6 @@ import compose from 'lodash/flowRight'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import {
-  BrandMark,
   Logo,
   mediaQueries,
   fontStyles,
@@ -16,7 +15,7 @@ import { OpenSourceIcon } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 import withMe from '../../lib/apollo/withMe'
 import { withSignOut } from '../Auth/SignOut'
-import withInNativeApp, { useInNativeApp } from '../../lib/withInNativeApp'
+import { useInNativeApp } from '../../lib/withInNativeApp'
 import { shouldIgnoreClick } from '../../lib/utils/link'
 import { ZINDEX_FOOTER } from '../constants'
 
@@ -114,16 +113,9 @@ const styles = {
   }),
 }
 
-const Footer = ({
-  t,
-  me,
-  signOut,
-  inNativeIOSApp,
-  isOnMarketingPage,
-  hasActiveMembership,
-}) => {
+const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
   const [colorScheme] = useColorContext()
-  const { inNativeApp, inNativeAppVersion } = useInNativeApp()
+  const { inNativeApp, inNativeAppVersion, inNativeIOSApp } = useInNativeApp()
 
   const navLinkStyle = useMemo(
     () =>
@@ -387,9 +379,4 @@ const FooterWithStaticColorContext = (props) => {
   )
 }
 
-export default compose(
-  withT,
-  withMe,
-  withSignOut,
-  withInNativeApp,
-)(FooterWithStaticColorContext)
+export default compose(withT, withMe, withSignOut)(FooterWithStaticColorContext)
