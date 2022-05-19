@@ -46,8 +46,8 @@ export default FrontPage
 export const getStaticProps = createGetStaticProps(
   async (client, params) => {
     // Throw error to fail build if the key is not defined
-    if (!process.env.SSG_API_KEY) {
-      throw new Error('Missing SSG_API_KEY environment variable')
+    if (!process.env.SSG_DOCUMENTS_API_KEY) {
+      throw new Error('Missing SSG_DOCUMENTS_API_KEY environment variable')
     }
 
     // Query the front-document
@@ -95,6 +95,6 @@ export const getStaticProps = createGetStaticProps(
     }
   },
   {
-    authorization: `DocumentApiKey ${process.env.SSG_API_KEY}`,
+    authorization: `DocumentApiKey ${process.env.SSG_DOCUMENTS_API_KEY}`,
   },
 )
