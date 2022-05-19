@@ -21,7 +21,7 @@ function getJWTForUser(user, sessionId) {
 
   const userToken = jwt.sign(
     {
-      email: user.email,
+      id: user.id,
       roles: user.roles,
     },
     {
