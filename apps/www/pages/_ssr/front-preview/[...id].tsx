@@ -3,7 +3,6 @@ import { ParsedUrlQuery } from 'querystring'
 import createGetServerSideProps from '../../../lib/helpers/createGetServerSideProps'
 import Front from '../../../components/Front'
 import { FRONT_QUERY } from '../../../components/Front/graphql/getFrontQuery.graphql'
-import reportError from '../../../lib/errors/reportError'
 
 type Props = {
   id: string | string[]
