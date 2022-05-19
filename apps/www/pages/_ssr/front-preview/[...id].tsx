@@ -36,26 +36,19 @@ export const getServerSideProps: GetServerSideProps = createGetServerSideProps<
   unknown,
   Params
 >(async (client, params, _, ctx) => {
-  try {
-    await client.query({
-      query: FRONT_QUERY,
-      variables: {
-        path: '/',
-        only: Array.isArray(params.id) ? params.id[0] : params.id,
-        first: 1000,
-        before: 'end',
-      },
-    })
+  await client.query({
+    query: FRONT_QUERY,
+    variables: {
+      path: '/',
+      only: Array.isArray(params.id) ? params.id[0] : params.id,
+      first: 1000,
+      before: 'end',
+    },
+  })
 
-    return {
-      props: {
-        id: params.id,
-      },
-    }
-  } catch (error) {
-    reportError(ctx.req.headers['user-agent'], error)
-    return {
-      notFound: true,
-    }
+  return {
+    props: {
+      id: params.id,
+    },
   }
 })
