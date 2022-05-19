@@ -47,7 +47,7 @@ function createGetStaticProps<P, Q extends ParsedUrlQuery = ParsedUrlQuery>(
       props: {
         ...result.props,
         [APOLLO_STATE_PROP_NAME]: apolloClient.cache.extract(),
-        assumeMembership: !!headers?.authorization,
+        assumeAccess: !!headers?.authorization,
       },
       revalidate: result.revalidate,
     }

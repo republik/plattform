@@ -108,9 +108,9 @@ const Frame = ({
 }) => {
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
   const { t } = useTranslation()
-  const { me, hasActiveMembership } = useMe()
+  const { me, hasAccess } = useMe()
 
-  const hasOverviewNav = hasActiveMembership && wantOverviewNav
+  const hasOverviewNav = hasAccess && wantOverviewNav
   const hasSecondaryNav = !!(secondaryNav || hasOverviewNav)
   const padHeaderRule = useMemo(() => {
     return css({

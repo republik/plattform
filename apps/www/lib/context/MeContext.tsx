@@ -102,12 +102,12 @@ type Props = {
    * Assumes that a memberships exists, even before me is loaded.
    * All values returned from the context that correlate to a membership will be set to true.
    */
-  assumeMembership?: boolean
+  assumeAccess?: boolean
 }
 
 type AuthState = 'loading' | 'logged-in' | 'logged-out'
 
-const MeContextProvider = ({ children, assumeMembership = false }: Props) => {
+const MeContextProvider = ({ children, assumeAccess = false }: Props) => {
   const { data, loading, error, refetch } = useQuery<MeResponse>(meQuery, {})
 
   const getAuthState = useCallback((): AuthState => {
@@ -121,8 +121,7 @@ const MeContextProvider = ({ children, assumeMembership = false }: Props) => {
 
   const me = data?.me
   const isMember = checkRoles(me, ['member'])
-  const hasActiveMembership =
-    !data && assumeMembership ? assumeMembership : !!me?.activeMembership
+  const hasActiveMembership = !!me?.activeMembership
   const portraitOrInitials = me ? me.portrait ?? getInitials(me) : false
 
   const broadcastAuthenticationChange = (nextState) => {
@@ -216,7 +215,7 @@ const MeContextProvider = ({ children, assumeMembership = false }: Props) => {
         meError: error,
         meRefetch: refetch,
         hasActiveMembership,
-        hasAccess: isMember,
+        hasAccess: !data && assumeAccess ? assumeAccess : isMember,
         isEditor: checkRoles(me, ['editor']),
       }}
     >
