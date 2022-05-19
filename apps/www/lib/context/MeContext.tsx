@@ -50,8 +50,6 @@ css.global(
   },
 )
 
-const AUTH_STATE_CHANGE_BROADCAST_STORAGE_KEY = 'authStateChangeBroadcast'
-
 export type MeObjectType = {
   id: string
   username: string
@@ -124,33 +122,6 @@ const MeContextProvider = ({ children, assumeAccess = false }: Props) => {
   const hasActiveMembership = !!me?.activeMembership
   const portraitOrInitials = me ? me.portrait ?? getInitials(me) : false
 
-  const broadcastAuthenticationChange = (nextState) => {
-    localStorage.setItem(AUTH_STATE_CHANGE_BROADCAST_STORAGE_KEY, nextState)
-    localStorage.removeItem(AUTH_STATE_CHANGE_BROADCAST_STORAGE_KEY)
-  }
-
-  const handleAuthenticationChangeBroadcast = useCallback(
-    async (event: StorageEvent) => {
-      // Ignore all events that aren't meant to broadcast auth-change and
-      // ignore localStorage.removeItem
-      if (
-        event.key !== AUTH_STATE_CHANGE_BROADCAST_STORAGE_KEY ||
-        event.newValue === null
-      ) {
-        return
-      }
-
-      if (
-        (authState === 'logged-in' && event.newValue === 'logged-out') ||
-        (authState === 'logged-out' && event.newValue === 'logged-in')
-      ) {
-        await refetch()
-        return
-      }
-    },
-    [authState, refetch],
-  )
-
   useEffect(() => {
     if (loading) return
 
@@ -187,25 +158,6 @@ const MeContextProvider = ({ children, assumeAccess = false }: Props) => {
       // eslint-disable-next-line no-empty
     } catch (e) {}
   }, [loading, portraitOrInitials, hasActiveMembership])
-
-  // Sync loggedIn state between multiple tabs by observing localStorage changes
-  useEffect(() => {
-    const newAuthState = getAuthState()
-    // In case the new authState diverges from the current authState,
-    // broadcast to other tabs to update their state
-    if (authState !== newAuthState) {
-      setAuthState(newAuthState)
-      broadcastAuthenticationChange(newAuthState)
-    }
-  }, [getAuthState])
-
-  // Register a storage-event listener
-  useEffect(() => {
-    window.addEventListener('storage', handleAuthenticationChangeBroadcast)
-    return () => {
-      window.removeEventListener('storage', handleAuthenticationChangeBroadcast)
-    }
-  }, [handleAuthenticationChangeBroadcast])
 
   return (
     <MeContext.Provider
