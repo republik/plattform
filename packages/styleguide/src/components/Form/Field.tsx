@@ -12,6 +12,7 @@ import {
   FIELD_HEIGHT,
 } from './constants'
 import { IconType } from 'react-icons/lib/esm/iconBase'
+import { CloseIcon } from '../Icons'
 
 const styles = {
   container: css({
@@ -65,6 +66,12 @@ const styles = {
   }),
   arrow: css({
     position: 'absolute',
+    right: 0,
+    cursor: 'pointer',
+  }),
+  secondaryActionCenter: css({
+    position: 'absolute',
+    top: '50%',
     right: 0,
     cursor: 'pointer',
   }),
@@ -135,6 +142,7 @@ const Field = React.forwardRef<
     error?: string | boolean
     onInc?: () => void
     onDec?: () => void
+    onClear?: () => void
     icon?: IconType
     simulate?: string
     renderInput: React.FC<Record<string, unknown>>
@@ -151,6 +159,7 @@ const Field = React.forwardRef<
       error,
       onInc,
       onDec,
+      onClear,
       icon,
       disabled,
       value,
@@ -272,6 +281,23 @@ const Field = React.forwardRef<
               e.preventDefault()
               e.stopPropagation()
               onInc()
+              if (inputRef.current) {
+                inputRef.current.focus()
+              }
+            }}
+          />
+        )}
+        {!disabled && !!onClear && (
+          <CloseIcon
+            {...styles.secondaryActionCenter}
+            {...(isFocused
+              ? colorScheme.set('fill', 'text')
+              : colorScheme.set('fill', 'disabled'))}
+            size={FIELD_HEIGHT / 2}
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              onClear()
               if (inputRef.current) {
                 inputRef.current.focus()
               }
