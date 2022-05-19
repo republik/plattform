@@ -66,6 +66,14 @@ const cases = [
     contributors: [{ name: 'Ihrem Expeditionsteam', kind: 'Text' }],
     text: 'Von Ihrem Expeditionsteam, 11.05.2022, letztes Update: 24.11.2020',
   },
+  {
+    name: 'double credit',
+    contributors: [
+      { name: 'Lesha Berezovskiy', kind: 'Text und Bilder' },
+      { name: 'Annette Keller', kind: 'Bildredaktion und Übersetzung' },
+    ],
+    text: 'Von Lesha Berezovskiy (Text und Bilder) und Annette Keller (Bildredaktion und Übersetzung), 18.05.2022',
+  },
 ]
 
 describe('Analyzer', () => {
