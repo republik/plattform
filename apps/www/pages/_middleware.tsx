@@ -1,6 +1,5 @@
 import { NextFetchEvent, NextRequest, NextResponse } from 'next/server'
 import { parseAndVerifyJWT } from '../lib/auth/JWT/JWTHelper'
-import reportError from '../lib/errors/reportError'
 
 /**
  * Middleware used to conditionally redirect between the marketing- and front-page
