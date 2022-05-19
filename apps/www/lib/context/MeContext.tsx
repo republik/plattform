@@ -108,14 +108,6 @@ type AuthState = 'loading' | 'logged-in' | 'logged-out'
 const MeContextProvider = ({ children, assumeAccess = false }: Props) => {
   const { data, loading, error, refetch } = useQuery<MeResponse>(meQuery, {})
 
-  const getAuthState = useCallback((): AuthState => {
-    if (data && data.me) {
-      return 'logged-in'
-    }
-    return 'logged-out'
-  }, [data])
-
-  const [authState, setAuthState] = useState(getAuthState())
 
   const me = data?.me
   const isMember = checkRoles(me, ['member'])
