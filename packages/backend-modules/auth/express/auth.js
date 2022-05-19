@@ -15,8 +15,6 @@ exports.configure = ({
   pgdb = null, // pogi connection
   // Secret used to encrypt session data on the server
   secret = null,
-  // Specifies the value for the Domain Set-Cookie attribute
-  domain = undefined,
   // name of the session ID cookie to set in the response (and read from request)
   cookieName = 'connect.sid',
   // name of the jwt cookie sent when a user is logged in
@@ -61,10 +59,8 @@ exports.configure = ({
       httpOnly: true,
       name: cookieName,
       cookie: {
-        domain,
         maxAge: maxAge,
-        sameSite: cookieOptions.sameSite,
-        secure: cookieOptions.secure,
+        ...cookieOptions,
       },
     }),
   )
@@ -93,7 +89,7 @@ exports.configure = ({
     return next()
   })
 
-  server.use(JWTMiddleware({ dev, domain, jwtCookieName }))
+  server.use(JWTMiddleware({ jwtCookieName }))
 
   const close = () => {
     return store.close()

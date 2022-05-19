@@ -5,7 +5,9 @@ const {
   CookieExpirationTimeInMS,
 } = require('../CookieOptions')
 
-function JWTMiddleware({ dev, domain, jwtCookieName }) {
+function JWTMiddleware({ jwtCookieName }) {
+  const cookieOptions = getCookieOptions()
+
   return (req, res, next) => {
     // In case a session and user object exist on the request set the JWT cookie
     if (req.session && req.user) {
@@ -14,16 +16,12 @@ function JWTMiddleware({ dev, domain, jwtCookieName }) {
         maxAge: userIsInRoles(req.user, specialRoles)
           ? CookieExpirationTimeInMS.SHORT_MAX_AGE_IN_MS
           : CookieExpirationTimeInMS.DEFAULT_MAX_AGE_IN_MS,
-        domain,
-        sameSite: !dev && 'none',
-        secure: !dev,
-        httpOnly: true,
+        ...cookieOptions,
       })
     }
 
     // In case no session exists on the request, delete the JWT cookie
     if (!req.session || !req.user) {
-      const cookieOptions = getCookieOptions()
       res.clearCookie(jwtCookieName, cookieOptions)
     }
 

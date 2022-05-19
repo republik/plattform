@@ -19,7 +19,6 @@ const {
   HOST = '::',
   CORS_ALLOWLIST_URL,
   SESSION_SECRET,
-  COOKIE_DOMAIN,
   COOKIE_NAME,
   IGNORE_SSL_HOSTNAME,
   RES_KEEPALIVE_INTERVALS_SECS,
@@ -126,7 +125,6 @@ const start = async (
   const auth = Auth.configure({
     server,
     secret: SESSION_SECRET,
-    domain: COOKIE_DOMAIN || undefined,
     cookieName: COOKIE_NAME,
     dev: DEV,
     pgdb,
