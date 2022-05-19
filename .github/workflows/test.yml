@@ -17,7 +17,7 @@ jobs:
 
     env:
       API_URL: ${{ secrets.API_URL }}
-      SSG_API_KEY: ${{ secrets.SSG_API_KEY }}
+      SSG_DOCUMENTS_API_KEY: ${{ secrets.SSG_DOCUMENTS_API_KEY }}
 
     steps:
     - uses: actions/checkout@v2
