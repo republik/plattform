@@ -21,7 +21,9 @@ const { CURTAIN_MESSAGE } = process.env
 const app = next({
   dev: DEV,
   port: PORT,
-  hostname: process.env.NEXTJS_SERVER_HOSTNAME ?? DEV ? 'localhost' : null,
+  hostname: process.env.PUBLIC_BASE_URL
+    ? new URL(process.env.PUBLIC_BASE_URL).hostname
+    : 'localhost',
 })
 const handler = app.getRequestHandler()
 
