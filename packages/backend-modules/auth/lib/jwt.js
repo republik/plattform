@@ -1,9 +1,6 @@
 const jwt = require('jsonwebtoken')
 const { userIsInRoles, specialRoles } = require('./Roles')
-
-// TODO: copy of code in express/auth.js move these vars to constants-file
-const DEFAULT_MAX_AGE_IN_MS = 60000 * 60 * 24 * 365 // 1 year
-const SHORT_MAX_AGE_IN_MS = 60000 * 60 * 24 * 7 // 1 week
+const { CookieExpirationTimeInMS } = require('./CookieOptions')
 
 let privateKey = null
 
@@ -17,8 +14,8 @@ function getJWTForUser(user, sessionId) {
   }
 
   const expiresIn = userIsInRoles(user, specialRoles)
-    ? SHORT_MAX_AGE_IN_MS
-    : DEFAULT_MAX_AGE_IN_MS
+    ? CookieExpirationTimeInMS.SHORT_MAX_AGE_IN_MS
+    : CookieExpirationTimeInMS.DEFAULT_MAX_AGE_IN_MS
 
   const expiresInSecondsFromNow = Math.round((Date.now() + expiresIn) / 1000)
 
