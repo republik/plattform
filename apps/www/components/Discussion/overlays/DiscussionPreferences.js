@@ -277,12 +277,7 @@ const DiscussionPreferencesEditor = ({
                 credential: val,
               }))
             }}
-            onClear={(e) =>
-              setState((curr) => ({
-                ...curr,
-                credential: '',
-              }))
-            }
+            showClearIcon
           />
           {isListedCredential && state.anonymity && (
             <div style={{ marginBottom: 10 }}>

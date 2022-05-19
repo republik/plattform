@@ -13,6 +13,7 @@ import {
 } from './constants'
 import { IconType } from 'react-icons/lib/esm/iconBase'
 import { CloseIcon } from '../Icons'
+import { plainButtonRule } from '../Button'
 
 const styles = {
   container: css({
@@ -142,7 +143,7 @@ const Field = React.forwardRef<
     error?: string | boolean
     onInc?: () => void
     onDec?: () => void
-    onClear?: () => void
+    showClearIcon?: boolean
     icon?: IconType
     simulate?: string
     renderInput: React.FC<Record<string, unknown>>
@@ -159,7 +160,7 @@ const Field = React.forwardRef<
       error,
       onInc,
       onDec,
-      onClear,
+      showClearIcon,
       icon,
       disabled,
       value,
@@ -188,7 +189,7 @@ const Field = React.forwardRef<
       fieldValue !== null &&
       String(fieldValue).length !== 0
     const browserIconStyle =
-      hasIncrease || icon ? styles.noBrowserIcon : undefined
+      hasIncrease || showClearIcon || icon ? styles.noBrowserIcon : undefined
     const iconStyle = icon ? styles.fieldIcon : undefined
 
     const styleRules = useMemo(() => {
@@ -287,22 +288,26 @@ const Field = React.forwardRef<
             }}
           />
         )}
-        {!disabled && !!onClear && (
-          <CloseIcon
+        {!disabled && showClearIcon && hasValue && (
+          <button
             {...styles.secondaryActionCenter}
-            {...(isFocused
-              ? colorScheme.set('fill', 'text')
-              : colorScheme.set('fill', 'disabled'))}
-            size={FIELD_HEIGHT / 2}
+            {...plainButtonRule}
             onClick={(e) => {
               e.preventDefault()
               e.stopPropagation()
-              onClear()
+              onChange(null, '', true)
               if (inputRef.current) {
                 inputRef.current.focus()
               }
             }}
-          />
+          >
+            <CloseIcon
+              {...(isFocused
+                ? colorScheme.set('fill', 'text')
+                : colorScheme.set('fill', 'disabled'))}
+              size={FIELD_HEIGHT / 2}
+            />
+          </button>
         )}
         {icon && <span {...styles.iconWrapper}>{icon}</span>}
       </label>
