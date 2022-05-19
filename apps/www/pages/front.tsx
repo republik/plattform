@@ -13,6 +13,7 @@ const FRONT_PAGE_SSG_REVALIDATE = 60 // revalidate every minute
 const FRONT_PATH = '/'
 
 const FrontPage = () => {
+  const router = useRouter()
   const { meLoading, hasAccess } = useMe()
 
   useEffect(() => {
