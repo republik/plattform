@@ -62,6 +62,9 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
   } catch (err) {
     ev.waitUntil(
       new Promise((resolve) => {
+        // Sending the error to the api-route since the user-agent can not be
+        // parsed in the middleware. However, we want the user-agent to be parsed
+        // in order to have consistent logs.
         fetch(`${req.nextUrl.protocol}//${req.nextUrl.host}/api/reportError`, {
           headers: {
             'user-agent': userAgent, // Forward the client user agent
