@@ -1,6 +1,5 @@
 import * as jose from 'jose'
 import { NextRequest } from 'next/server'
-import * as cookie from 'cookie'
 import {
   isValidJWTPayload,
   JWTPayloadValidationError,
