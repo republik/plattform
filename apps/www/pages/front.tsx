@@ -13,17 +13,15 @@ const FRONT_PAGE_SSG_REVALIDATE = 60 // revalidate every minute
 const FRONT_PATH = '/'
 
 const FrontPage = () => {
-  const router = useRouter()
-  const { me, meLoading, hasActiveMembership } = useMe()
+  const { meLoading, hasAccess } = useMe()
 
   useEffect(() => {
     if (meLoading) return
-    // In case the user isn't logged in or has no active membership,
     // reload to re-trigger the middleware to rewrite to the marketing-page
-    if (!me || !hasActiveMembership) {
-      router.reload()
+    if (!hasAccess) {
+      window.location.reload()
     }
-  }, [me, meLoading, hasActiveMembership, router])
+  }, [meLoading, hasAccess])
 
   return (
     <Front
