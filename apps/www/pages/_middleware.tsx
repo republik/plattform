@@ -38,6 +38,11 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
     if (isMember) {
       resUrl.pathname = '/front'
       return NextResponse.rewrite(resUrl)
+    } else {
+      const sessionCookieString = req.cookies?.[process.env.COOKIE_NAME]
+      if (sessionCookieString) {
+        resUrl.searchParams.append('syncUser', '1')
+      }
     }
   } catch (err) {
     console.error('JWT Verification Error', err)
