@@ -8,7 +8,6 @@ import { errorToString } from '../../lib/utils/errors'
 import { meQuery } from '../../lib/apollo/withMe'
 
 import { A, InlineSpinner } from '@project-r/styleguide'
-import { withRouter } from 'next/router'
 
 class SignOut extends Component {
   constructor(props) {
@@ -93,4 +92,4 @@ export const withSignOut = compose(
   }),
 )
 
-export default compose(withSignOut, withRouter, withT)(SignOut)
+export default compose(withSignOut, withT)(SignOut)
