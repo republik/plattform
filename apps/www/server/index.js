@@ -14,9 +14,9 @@ if (DEV || process.env.DOTENV) {
 
 const PORT = process.env.PORT || 3005
 
-const { CURTAIN_MESSAGE } = process.env
+const { CURTAIN_MESSAGE, PUBLIC_BASE_URL } = process.env
 
-if (!process.env.PUBLIC_BASE_URL) {
+if (!PUBLIC_BASE_URL) {
   throw new Error(
     'missing PUBLIC_BASE_URL environment variable, but is required by next-js middleware.',
   )
@@ -25,9 +25,7 @@ if (!process.env.PUBLIC_BASE_URL) {
 const app = next({
   dev: DEV,
   port: PORT,
-  hostname: process.env.PUBLIC_BASE_URL
-    ? new URL(process.env.PUBLIC_BASE_URL).hostname
-    : undefined,
+  hostname: new URL(PUBLIC_BASE_URL).hostname
 })
 const handler = app.getRequestHandler()
 
