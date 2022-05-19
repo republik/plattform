@@ -5,8 +5,6 @@ const dotenv = require('dotenv')
 const next = require('next')
 const compression = require('compression')
 const helmet = require('helmet')
-const bodyParser = require('body-parser')
-const chalk = require('chalk')
 const rateLimit = require('express-rate-limit')
 
 const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
@@ -18,12 +16,18 @@ const PORT = process.env.PORT || 3005
 
 const { CURTAIN_MESSAGE } = process.env
 
+if (!process.env.PUBLIC_BASE_URL) {
+  throw new Error(
+    'missing PUBLIC_BASE_URL environment variable, but is required by next-js middleware.',
+  )
+}
+
 const app = next({
   dev: DEV,
   port: PORT,
   hostname: process.env.PUBLIC_BASE_URL
     ? new URL(process.env.PUBLIC_BASE_URL).hostname
-    : 'localhost',
+    : undefined,
 })
 const handler = app.getRequestHandler()
 
