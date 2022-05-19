@@ -159,7 +159,7 @@ const Front = ({
         }
         return res
       },
-    }).catch((error) => console.error(error))
+    })
   }
 
   const hasMore = front && front.children.pageInfo.hasNextPage
