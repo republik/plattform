@@ -1,7 +1,5 @@
 import { NextFetchEvent, NextRequest, NextResponse } from 'next/server'
 import { parseAndVerifyJWT } from '../lib/auth/JWT/JWTHelper'
-import { NativeAppHelpers } from '../lib/withInNativeApp'
-import reportError from '../lib/errors/reportError'
 
 /**
  * Middleware used to conditionally redirect between the marketing- and front-page
@@ -42,22 +40,8 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
       resUrl.pathname = '/front'
       return NextResponse.rewrite(resUrl)
     }
-    // Render marketing-page
-    const isInNativeIOSApp =
-      !!NativeAppHelpers.getIOSVersion(userAgent) &&
-      !!NativeAppHelpers.getNativeAppVersion(userAgent)
-    // Show login instead of marketing page in native app on IOS if version < 2.1.0
-    if (
-      isInNativeIOSApp &&
-      !NativeAppHelpers.isNewerVersion(
-        '2.1.0',
-        NativeAppHelpers.getNativeAppVersion(userAgent),
-      )
-    ) {
-      resUrl.pathname = '/anmelden'
-    } else {
-      resUrl.pathname = '/'
-    }
+
+    resUrl.pathname = '/'
     return NextResponse.rewrite(resUrl)
   } catch (err) {
     ev.waitUntil(
