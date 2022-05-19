@@ -356,6 +356,11 @@ const DiscussionPreferencesEditor = ({
                   setState((curr) => ({
                     ...curr,
                     anonymity: val,
+                    credential:
+                      val === false // if not anonymous set credential
+                        ? userPreference?.credential?.description ??
+                          autoCredential?.description
+                        : '',
                   }))
                 }}
               >
