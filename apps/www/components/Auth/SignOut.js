@@ -18,7 +18,7 @@ class SignOut extends Component {
     }
   }
   render() {
-    const { t, Link = A, router } = this.props
+    const { t, Link = A } = this.props
     const { loading, error } = this.state
 
     return (
@@ -43,8 +43,7 @@ class SignOut extends Component {
                   // re-load after sign in
                   // - clear apollo cache
                   // - clears potentially authenticated ws conntection
-                  //window.location.reload()
-                  router.reload()
+                  window.location.reload()
                 } else {
                   this.setState(() => ({
                     error: t('signOut/error'),
