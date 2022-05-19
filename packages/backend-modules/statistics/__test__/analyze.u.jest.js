@@ -74,6 +74,19 @@ const cases = [
     ],
     text: 'Von Lesha Berezovskiy (Text und Bilder) und Annette Keller (Bildredaktion und Übersetzung), 18.05.2022',
   },
+  {
+    name: 'allow XX in dates for drafts',
+    contributors: [{ name: 'Solmaz Khorsand', kind: 'Text' }],
+    text: 'Von Solmaz Khorsand, XX.XX.2022',
+  },
+  {
+    name: 'allow XY in dates for drafts',
+    contributors: [
+      { name: 'Philipp Albrecht', kind: 'Text' },
+      { name: 'Andrea Ventura', kind: 'Illustration' },
+    ],
+    text: 'Von Philipp Albrecht (Text) und Andrea Ventura (Illustration), XY.05.2022',
+  },
 ]
 
 describe('Analyzer', () => {
