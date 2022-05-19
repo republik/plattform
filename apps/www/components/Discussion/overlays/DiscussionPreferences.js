@@ -287,7 +287,7 @@ const DiscussionPreferencesEditor = ({
               </Label>
             </div>
           )}
-          {credentialSuggestions && (
+          {credentialSuggestions && credentialSuggestions.length > 0 && (
             <div {...styles.suggestedCredentialsWrapper}>
               <Label>
                 {t('components/DiscussionPreferences/existingCredentialLabel')}
