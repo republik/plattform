@@ -103,7 +103,6 @@ type Props = {
   assumeAccess?: boolean
 }
 
-type AuthState = 'loading' | 'logged-in' | 'logged-out'
 
 const MeContextProvider = ({ children, assumeAccess = false }: Props) => {
   const { data, loading, error, refetch } = useQuery<MeResponse>(meQuery, {})
