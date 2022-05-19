@@ -7,7 +7,6 @@ export type Payload = {
 
 export function isValidJWTPayload(payload: JWTPayload): payload is Payload {
   return (
-    typeof payload.email === 'string' &&
     Array.isArray(payload.roles) &&
     payload.roles.every((role) => typeof role === 'string')
   )
