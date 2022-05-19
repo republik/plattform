@@ -41,8 +41,7 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
       return NextResponse.rewrite(resUrl)
     }
   } catch (err) {
-    reportError(null, 'JWT Verification Error')
-    console.error(err)
+    console.error('JWT Verification Error', err)
     // Render marketing-page. Once me is fetched the new JWT will be available
     // And if the user has access he will be rewritten to /front
   }
