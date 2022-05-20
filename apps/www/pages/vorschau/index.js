@@ -17,7 +17,6 @@ const FrontPreviewPage = () => {
       renderAfter={undefined}
       containerStyle={undefined}
       serverContext={undefined}
-      isEditor={undefined}
     />
   )
 }

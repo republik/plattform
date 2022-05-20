@@ -34,7 +34,6 @@ const FrontPage = () => {
       renderAfter={undefined}
       containerStyle={undefined}
       serverContext={undefined}
-      isEditor={undefined}
       documentPath={FRONT_PATH}
     />
   )

@@ -20,7 +20,6 @@ const FrontPreviewPage: NextPage<Props> = ({ id }) => (
     renderAfter={undefined}
     containerStyle={undefined}
     serverContext={undefined}
-    isEditor={undefined}
   />
 )
 

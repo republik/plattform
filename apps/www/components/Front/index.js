@@ -31,6 +31,7 @@ import { cleanAsPath } from '../../lib/utils/link'
 import Link from 'next/link'
 import { useGetFrontQuery } from './graphql/getFrontQuery.graphql'
 import { useRouter } from 'next/router'
+import { useMe } from '../../lib/context/MeContext'
 
 const styles = {
   prepublicationNotice: css({
@@ -84,7 +85,6 @@ const Front = ({
   containerStyle,
   extractId,
   serverContext,
-  isEditor,
   finite,
   hasOverviewNav,
   shouldAutoRefetch,
@@ -92,6 +92,8 @@ const Front = ({
 }) => {
   const { t } = useTranslation()
   const router = useRouter()
+  const { isEditor } = useMe()
+
   const now = new Date()
   const dailyUpdateTime = new Date(
     now.getFullYear(),
