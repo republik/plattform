@@ -20,38 +20,10 @@ const MarketingPage = () => {
   const { meLoading, hasAccess } = useMe()
 
   useEffect(() => {
-    if (router.query.syncUser !== '1' || meLoading) {
-      console.log(
-        'xxx skip unsetting sync user',
-        router.query.syncUser,
-        meLoading,
-      )
+    if (meLoading || router.query?.syncUser === '1') {
       return
     }
-    alert('SETTING TIMEOUT')
-    const timeout = setTimeout(() => {
-      // Get rid of the sycnUser query param after 1.5sec
-      console.log('xxx unsetting sync since meLoading is done')
-      router.replace(router.asPath, null, { shallow: true })
-    }, 10000)
-
-    return () => clearTimeout(timeout)
-  }, [router, meLoading, hasAccess])
-
-  useEffect(() => {
-    // eslint-disable-next-line no-constant-condition
-    if (meLoading || router.query?.syncUser === '1' || true) {
-      console.log(
-        'xxx exiting page reload',
-        meLoading,
-        router.query?.syncUser === '1',
-      )
-      return
-    }
-    alert('RELOADING Logic')
-    // reload the page to rewrite from '/' to '/front' via middleware
     if (hasAccess) {
-      console.log('xxx reloading page')
       window.location.reload()
     }
   }, [meLoading, hasAccess, router.query])
