@@ -98,7 +98,7 @@ export const getFrontFeedOptions = ({
 }
 
 export const withFeedData = graphql(FRONT_FEED_QUERY, {
-  options: (params) => getFrontFeedOptions(params),
+  options: getFrontFeedOptions,
 })
 
 export const withDiscussionsData = graphql(
