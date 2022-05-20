@@ -41,8 +41,6 @@ function createGetStaticProps<P, Q extends ParsedUrlQuery = ParsedUrlQuery>(
       return result
     }
 
-    result.props[APOLLO_STATE_PROP_NAME] = apolloClient.cache.extract()
-
     return {
       props: {
         ...result.props,
