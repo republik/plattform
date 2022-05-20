@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import {
+  getJWTCookieValue,
   getSessionCookieValue,
   parseAndVerifyJWT,
 } from '../lib/auth/JWT/JWTHelper'
@@ -19,10 +20,7 @@ export async function middleware(req: NextRequest) {
 
   // Redirect to front-preview ssr to generate article front-preview
   // used in the yearly overview
-  if (
-    !resUrl.searchParams.has('marketing') &&
-    resUrl.searchParams.has('extractId')
-  ) {
+  if (resUrl.searchParams.has('extractId')) {
     // Remap extractId query param to id-slug
     const extractId = resUrl.searchParams.get('extractId')
     resUrl.searchParams.delete('extractId')
@@ -49,8 +47,8 @@ export async function middleware(req: NextRequest) {
   }
 
   if (syncUser) {
-    resUrl.searchParams.append('syncUser', '1')
-    return NextResponse.redirect(resUrl)
+    resUrl.pathname = '/_ssr/gateway'
+    return NextResponse.rewrite(resUrl)
   }
 
   return NextResponse.next()
