@@ -4,15 +4,19 @@ import createGetServerSideProps from '../../../lib/helpers/createGetServerSidePr
 import Front from '../../../components/Front'
 import { FRONT_QUERY } from '../../../components/Front/graphql/getFrontQuery.graphql'
 
-type Props = {
-  id: string | string[]
+function paramToString(param: string | string[]): string {
+  return Array.isArray(param) ? param[0] : param
 }
 
-const FrontPreviewPage: NextPage<Props> = ({ id }) => (
+type Props = {
+  extractId: string
+}
+
+const FrontPreviewPage: NextPage<Props> = ({ extractId }) => (
   <Front
     shouldAutoRefetch
     hasOverviewNav
-    extractId={Array.isArray(id) ? id[0] : id}
+    extractId={paramToString(extractId)}
     documentPath={'/'}
     finite
     // Thank you very much legacy component :)
@@ -26,19 +30,20 @@ const FrontPreviewPage: NextPage<Props> = ({ id }) => (
 export default FrontPreviewPage
 
 interface Params extends ParsedUrlQuery {
-  id: string | string[]
+  extractId: string
 }
 
-// Caching is done by asset-server, therefore caching via SSG or ISR would be unnecessary
 export const getServerSideProps: GetServerSideProps = createGetServerSideProps<
-  unknown,
+  Props,
   Params
 >(async (client, params, _, ctx) => {
+  const extractId = paramToString(params.extractId)
+
   await client.query({
     query: FRONT_QUERY,
     variables: {
       path: '/',
-      only: Array.isArray(params.id) ? params.id[0] : params.id,
+      only: extractId,
       first: 1000,
       before: 'end',
     },
@@ -46,7 +51,7 @@ export const getServerSideProps: GetServerSideProps = createGetServerSideProps<
 
   return {
     props: {
-      id: params.id,
+      extractId,
     },
   }
 })

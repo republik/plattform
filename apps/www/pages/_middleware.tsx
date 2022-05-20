@@ -28,7 +28,7 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
     const extractId = req.nextUrl.searchParams.get('extractId')
     resUrl.searchParams.delete('extractId')
 
-    resUrl.pathname = `/_ssr/front-preview/${extractId}`
+    resUrl.pathname = `/_ssr/front/${extractId}`
 
     return NextResponse.rewrite(resUrl)
   }

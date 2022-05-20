@@ -74,7 +74,7 @@ module.exports = withTM(
           permanent: true,
         },
         {
-          source: '/_ssr/front-preview/:id*',
+          source: '/_ssr/front/:id*',
           destination: '/',
           permanent: true,
         },
