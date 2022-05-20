@@ -14,8 +14,8 @@ function JWTMiddleware({ jwtCookieName }) {
       const token = getJWTForUser(req.user, req.sessionID)
       res.cookie(jwtCookieName, token, {
         maxAge: userIsInRoles(req.user, specialRoles)
-          ? CookieExpirationTimeInMS.SHORT_MAX_AGE_IN_MS
-          : CookieExpirationTimeInMS.DEFAULT_MAX_AGE_IN_MS,
+          ? CookieExpirationTimeInMS.SHORT_MAX_AGE
+          : CookieExpirationTimeInMS.DEFAULT_MAX_AGE,
         ...cookieOptions,
       })
     }

@@ -12,8 +12,8 @@ function getCookieOptions() {
 }
 
 const CookieExpirationTimeInMS = {
-  DEFAULT_MAX_AGE_IN_MS: 60000 * 60 * 24 * 365, // 1 year
-  SHORT_MAX_AGE_IN_MS: 60000 * 60 * 24 * 7, // 1 week
+  DEFAULT_MAX_AGE: 60000 * 60 * 24 * 365, // 1 year
+  SHORT_MAX_AGE: 60000 * 60 * 24 * 7, // 1 week
 }
 
 module.exports = {

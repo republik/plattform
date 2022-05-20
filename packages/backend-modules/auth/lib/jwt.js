@@ -14,8 +14,8 @@ function getJWTForUser(user, sessionId) {
   }
 
   const expiresIn = userIsInRoles(user, specialRoles)
-    ? CookieExpirationTimeInMS.SHORT_MAX_AGE_IN_MS
-    : CookieExpirationTimeInMS.DEFAULT_MAX_AGE_IN_MS
+    ? CookieExpirationTimeInMS.SHORT_MAX_AGE
+    : CookieExpirationTimeInMS.DEFAULT_MAX_AGE
 
   const expiresInSecondsFromNow = Math.round((Date.now() + expiresIn) / 1000)
 

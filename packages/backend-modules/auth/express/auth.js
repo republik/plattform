@@ -22,8 +22,8 @@ exports.configure = ({
   // Max session age in ms
   // NB: With 'rolling: true' passed to session() the session expiry time will
   // be reset every time a user visits the site again before it expires.
-  maxAge = CookieExpirationTimeInMS.DEFAULT_MAX_AGE_IN_MS, // 1 year
-  maxAgeSpecialRoles = CookieExpirationTimeInMS.SHORT_MAX_AGE_IN_MS, // 1 week
+  maxAge = CookieExpirationTimeInMS.DEFAULT_MAX_AGE, // 1 year
+  maxAgeSpecialRoles = CookieExpirationTimeInMS.SHORT_MAX_AGE, // 1 week
   // is the server running in development
   dev = false,
 } = {}) => {
