@@ -43,22 +43,16 @@ export async function middleware(req: NextRequest) {
       }
     } else if (getSessionCookieValue(req)) {
       console.log('No JWT found, but session cookie found - must sync')
-      resUrl.searchParams.append('syncUser', '1')
     }
   } catch (err) {
     console.error('JWT Verification Error', err)
     // JWT is faulty and must be synced
-    resUrl.searchParams.append('syncUser', '1')
+    resUrl.pathname = '/anmelden'
+    return NextResponse.rewrite(resUrl)
   }
 
   resUrl.pathname = '/'
   console.log('Marketing page', resUrl.toString())
-
-  console.log(
-    'redirecting to url',
-    resUrl.search,
-    JSON.stringify(resUrl, null, 2),
-  )
 
   return NextResponse.rewrite(resUrl)
 }

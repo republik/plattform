@@ -20,13 +20,13 @@ const MarketingPage = () => {
   const { meLoading, hasAccess } = useMe()
 
   useEffect(() => {
-    if (meLoading || router.query?.syncUser === '1') {
+    if (meLoading) {
       return
     }
     if (hasAccess) {
       window.location.reload()
     }
-  }, [meLoading, hasAccess, router.query])
+  }, [meLoading, hasAccess])
 
   const meta = {
     pageTitle: t('pages/index/pageTitle'),
@@ -38,11 +38,7 @@ const MarketingPage = () => {
 
   return (
     <Frame raw meta={meta} isOnMarketingPage={true}>
-      <Loader
-        loading={router.query?.syncUser === '1'}
-        style={{ minHeight: `calc(90vh)` }}
-        render={() => <Marketing />}
-      />
+      <Marketing />
     </Frame>
   )
 }
