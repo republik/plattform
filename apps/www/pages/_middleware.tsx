@@ -8,9 +8,8 @@ import {
  * Middleware used to conditionally redirect between the marketing- and front-page
  * depending on the user authentication status and roles.
  * @param req
- * @param ev
  */
-export async function middleware(req: NextRequest, ev: NextFetchEvent) {
+export async function middleware(req: NextRequest) {
   const resUrl = req.nextUrl.clone()
 
   // Don't run the middleware unless on home-page
@@ -36,22 +35,23 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
   try {
     // Parse and verify JWT to decide about redirection
     const jwtBody = await parseAndVerifyJWT(req)
-    const isMember = jwtBody?.roles?.includes('member')
 
-    if (isMember) {
-      resUrl.pathname = '/front'
-      return NextResponse.rewrite(resUrl)
-    } else {
-      if (getSessionCookieValue(req)) {
-        resUrl.searchParams.append('syncUser', '1')
+    if (jwtBody) {
+      if (jwtBody?.roles?.includes('member')) {
+        resUrl.pathname = '/front'
+        return NextResponse.rewrite(resUrl)
       }
+    } else if (getSessionCookieValue(req)) {
+      console.log('No JWT found, but session cookie found - must sync')
+      resUrl.searchParams.append('syncUser', '1')
     }
   } catch (err) {
     console.error('JWT Verification Error', err)
-    // Render marketing-page. Once me is fetched the new JWT will be available
-    // And if the user has access he will be rewritten to /front
+    // JWT is faulty and must be synced
+    resUrl.searchParams.append('syncUser', '1')
   }
 
   resUrl.pathname = '/'
+  console.log('Marketing page', resUrl.toString())
   return NextResponse.rewrite(resUrl)
 }

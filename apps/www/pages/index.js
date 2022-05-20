@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 
 import Frame from '../components/Frame'
@@ -18,24 +18,43 @@ const MarketingPage = () => {
   const { t } = useTranslation()
   const router = useRouter()
   const { meLoading, hasAccess } = useMe()
-  const [syncingUser, setSyncingUser] = useState(false)
 
   useEffect(() => {
-    if ((router.query.syncUser = '1' && meLoading)) {
-      setSyncingUser(true)
-    } else if (syncingUser && !meLoading) {
-      router.replace(router.pathname, null, { shallow: true })
-      setSyncingUser(false)
+    if (router.query.syncUser !== '1' || meLoading) {
+      console.log(
+        'xxx skip unsetting sync user',
+        router.query.syncUser,
+        meLoading,
+      )
+      return
     }
-  }, [router.query, meLoading])
+    alert('SETTING TIMEOUT')
+    const timeout = setTimeout(() => {
+      // Get rid of the sycnUser query param after 1.5sec
+      console.log('xxx unsetting sync since meLoading is done')
+      router.replace(router.asPath, null, { shallow: true })
+    }, 10000)
+
+    return () => clearTimeout(timeout)
+  }, [router, meLoading, hasAccess])
 
   useEffect(() => {
-    if (meLoading || syncingUser) return
+    // eslint-disable-next-line no-constant-condition
+    if (meLoading || router.query?.syncUser === '1' || true) {
+      console.log(
+        'xxx exiting page reload',
+        meLoading,
+        router.query?.syncUser === '1',
+      )
+      return
+    }
+    alert('RELOADING Logic')
     // reload the page to rewrite from '/' to '/front' via middleware
     if (hasAccess) {
+      console.log('xxx reloading page')
       window.location.reload()
     }
-  }, [meLoading, hasAccess, syncingUser])
+  }, [meLoading, hasAccess, router.query])
 
   const meta = {
     pageTitle: t('pages/index/pageTitle'),
@@ -48,7 +67,7 @@ const MarketingPage = () => {
   return (
     <Frame raw meta={meta} isOnMarketingPage={true}>
       <Loader
-        loading={syncingUser}
+        loading={router.query?.syncUser === '1'}
         style={{ minHeight: `calc(90vh)` }}
         render={() => <Marketing />}
       />
@@ -58,7 +77,7 @@ const MarketingPage = () => {
 
 export default MarketingPage
 
-export const getStaticProps = createGetStaticProps(async (client, params) => {
+export const getStaticProps = createGetStaticProps(async (client) => {
   const data = await client.query({
     query: MARKETING_PAGE_QUERY,
   })
