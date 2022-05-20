@@ -20,10 +20,14 @@ function getJWTForUser(user, sessionId) {
   const expiresInSecondsFromNow = Math.round((Date.now() + expiresIn) / 1000)
 
   const userToken = jwt.sign(
-    {
-      id: user.id,
-      roles: user.roles,
-    },
+    user
+      ? {
+          id: user.id,
+          roles: user.roles,
+        }
+      : {
+          roles: [],
+        },
     {
       key: privateKey,
       passphrase: 'secret',

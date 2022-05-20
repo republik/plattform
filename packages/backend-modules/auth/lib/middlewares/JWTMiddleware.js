@@ -5,12 +5,20 @@ const {
   CookieExpirationTimeInMS,
 } = require('../CookieOptions')
 
-function JWTMiddleware({ jwtCookieName }) {
+function checkIfCookieIsPresent(req, cookieName) {
+  return req.headers?.cookie?.includes(`${cookieName}=`)
+}
+
+function JWTMiddleware({ sessionCookieName, jwtCookieName }) {
   const cookieOptions = getCookieOptions()
 
   return (req, res, next) => {
-    // In case a session and user object exist on the request set the JWT cookie
-    if (req.session && req.user) {
+    console.log({
+      sessionPresent: checkIfCookieIsPresent(req, sessionCookieName),
+      jwtPresent: checkIfCookieIsPresent(req, jwtCookieName),
+      cookies: req.headers?.cookie,
+    })
+    if (req.user || checkIfCookieIsPresent(req, sessionCookieName)) {
       const token = getJWTForUser(req.user, req.sessionID)
       res.cookie(jwtCookieName, token, {
         maxAge: userIsInRoles(req.user, specialRoles)
@@ -18,10 +26,8 @@ function JWTMiddleware({ jwtCookieName }) {
           : CookieExpirationTimeInMS.DEFAULT_MAX_AGE,
         ...cookieOptions,
       })
-    }
-
-    // In case no session exists on the request, delete the JWT cookie
-    if (!req.session || !req.user) {
+    } else if (checkIfCookieIsPresent(req, jwtCookieName)) {
+      // In case no session cookie exists on the request, delete the JWT cookie
       res.clearCookie(jwtCookieName, cookieOptions)
     }
 

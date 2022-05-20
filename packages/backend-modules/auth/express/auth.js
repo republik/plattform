@@ -89,7 +89,12 @@ exports.configure = ({
     return next()
   })
 
-  server.use(JWTMiddleware({ jwtCookieName }))
+  server.use(
+    JWTMiddleware({
+      sessionCookieName: cookieName,
+      jwtCookieName,
+    }),
+  )
 
   const close = () => {
     return store.close()
