@@ -19,7 +19,6 @@ const FrontPreviewPage: NextPage<Props> = ({ extractId }) => (
     extractId={paramToString(extractId)}
     documentPath={'/'}
     finite
-    // Thank you very much legacy component :)
     renderBefore={undefined}
     renderAfter={undefined}
     containerStyle={undefined}
