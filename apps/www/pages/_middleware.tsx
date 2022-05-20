@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import {
-  getJWTCookieValue,
   getSessionCookieValue,
   parseAndVerifyJWT,
 } from '../lib/auth/JWT/JWTHelper'
