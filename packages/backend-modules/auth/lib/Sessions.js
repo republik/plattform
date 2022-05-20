@@ -21,11 +21,11 @@ const destroySession = async (req, res) => {
       }
       if (res) {
         const cookieOptions = getCookieOptions()
-        res.clearCookie(process.env.COOKIE_NAME ?? 'connect.sid', cookieOptions) // clear session cookie
+        res.clearCookie(process.env.COOKIE_NAME ?? 'connect.sid', cookieOptions)
         res.clearCookie(
           process.env.JWT_COOKIE_NAME ?? 'republik-token',
           cookieOptions,
-        ) // clear jwt cookie
+        )
       }
       return resolve()
     })
