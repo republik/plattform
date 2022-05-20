@@ -9,6 +9,9 @@ const {
   CookieExpirationTimeInMS,
   getCookieOptions,
 } = require('../lib/CookieOptions')
+const {
+  CookieCleanMiddleware,
+} = require('../lib/middlewares/CookieCleanMiddleware')
 
 exports.configure = ({
   server = null, // Express Server
@@ -89,6 +92,7 @@ exports.configure = ({
     return next()
   })
 
+  server.use(CookieCleanMiddleware(cookieName))
   server.use(JWTMiddleware({ jwtCookieName }))
 
   const close = () => {
