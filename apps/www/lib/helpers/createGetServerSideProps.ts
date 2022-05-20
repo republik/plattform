@@ -34,6 +34,14 @@ function createGetServerSideProps<P, Q extends ParsedUrlQuery = ParsedUrlQuery>(
     const apolloClient = initializeApollo(null, {
       // Pass headers of the client-request to the apollo-link
       headers: context.req.headers,
+      onResponse: (response) => {
+        // headers.raw() is a node-fetch specific API and apparently the only way to get multiple cookies
+        // https://github.com/bitinn/node-fetch/issues/251
+        const cookies = response.headers.raw()['set-cookie']
+        if (cookies) {
+          context.res.setHeader('Set-Cookie', cookies)
+        }
+      },
     })
 
     // Request the user object to attach it to the query-func
