@@ -19,14 +19,31 @@ const MarketingPage = () => {
   const router = useRouter()
   const { meLoading, hasAccess } = useMe()
 
+  const isUserSync = router.query?.syncUser === '1'
+
   useEffect(() => {
-    if (meLoading) {
+    console.log('[MarketingPage]', meLoading, isUserSync)
+    if (meLoading || !isUserSync) return
+    alert(`Setting timeout: ${meLoading}`)
+    const timeOut = setTimeout(() => {
+      router.replace(router.pathname, undefined, { shallow: true }).then(() => {
+        if (hasAccess) {
+          window.location.reload()
+        }
+      })
+    }, 2500)
+
+    return () => clearTimeout(timeOut)
+  }, [router, isUserSync, meLoading])
+
+  useEffect(() => {
+    if (meLoading || isUserSync) {
       return
     }
     if (hasAccess) {
       window.location.reload()
     }
-  }, [meLoading, hasAccess])
+  }, [meLoading, hasAccess, isUserSync])
 
   const meta = {
     pageTitle: t('pages/index/pageTitle'),
@@ -37,8 +54,12 @@ const MarketingPage = () => {
   }
 
   return (
-    <Frame raw meta={meta} isOnMarketingPage={true}>
-      <Marketing />
+    <Frame raw meta={meta} isOnMarketingPage={!isUserSync}>
+      <Loader
+        loading={isUserSync}
+        style={{ minHeight: `calc(90vh)` }}
+        render={() => <Marketing />}
+      />
     </Frame>
   )
 }
