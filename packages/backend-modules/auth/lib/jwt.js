@@ -5,7 +5,7 @@ const { CookieExpirationTimeInMS } = require('./CookieOptions')
 let privateKey = null
 
 function getJWTForUser(user, sessionId) {
-  if (!privateKey && process.env.JWT_PRIVATE_KEY) {
+  if (!privateKey) {
     if (!process.env.JWT_PRIVATE_KEY) {
       throw new Error('env variableJWT_PRIVATE_KEY is missing')
     }
