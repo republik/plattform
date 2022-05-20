@@ -1,4 +1,4 @@
-import { NextFetchEvent, NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import {
   getSessionCookieValue,
   parseAndVerifyJWT,
@@ -10,7 +10,7 @@ import {
  * @param req
  */
 export async function middleware(req: NextRequest) {
-  const resUrl = req.nextUrl.clone()
+  const resUrl = req.nextUrl
 
   // Don't run the middleware unless on home-page
   if (req.nextUrl.pathname !== '/') {
@@ -53,5 +53,12 @@ export async function middleware(req: NextRequest) {
 
   resUrl.pathname = '/'
   console.log('Marketing page', resUrl.toString())
+
+  console.log(
+    'redirecting to url',
+    resUrl.search,
+    JSON.stringify(resUrl, null, 2),
+  )
+
   return NextResponse.rewrite(resUrl)
 }
