@@ -1,5 +1,8 @@
 import { NextFetchEvent, NextRequest, NextResponse } from 'next/server'
-import { parseAndVerifyJWT } from '../lib/auth/JWT/JWTHelper'
+import {
+  getSessionCookieValue,
+  parseAndVerifyJWT,
+} from '../lib/auth/JWT/JWTHelper'
 
 /**
  * Middleware used to conditionally redirect between the marketing- and front-page
@@ -39,8 +42,7 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
       resUrl.pathname = '/front'
       return NextResponse.rewrite(resUrl)
     } else {
-      const sessionCookieString = req.cookies?.[process.env.COOKIE_NAME]
-      if (sessionCookieString) {
+      if (getSessionCookieValue(req)) {
         resUrl.searchParams.append('syncUser', '1')
       }
     }

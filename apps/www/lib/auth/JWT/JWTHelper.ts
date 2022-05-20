@@ -6,6 +6,16 @@ import {
   Payload,
 } from './Payload'
 
+export function getSessionCookieValue(req: NextRequest) {
+  const sessionCookieName = process.env.COOKIE_NAME ?? 'connect.sid'
+  return req.cookies[sessionCookieName]
+}
+
+function getJWTCookieValue(req: NextRequest) {
+  const jwtCookieName = process.env.JWT_COOKIE_NAME ?? 'republik-token'
+  return req.cookies[jwtCookieName]
+}
+
 /**
  * Load the public key from env-variables and parse to work with `jose`
  */
@@ -43,14 +53,12 @@ async function verifyJWT(token: string): Promise<Payload> {
 export async function parseAndVerifyJWT(
   req: NextRequest,
 ): Promise<Payload | null> {
-  const sessionCookieName = process.env.COOKIE_NAME ?? 'connect.sid'
-  const jwtCookieName = process.env.JWT_COOKIE_NAME ?? 'republik-token'
-  const sessionCookieString = req.cookies?.[sessionCookieName]
-  const jwtCookieString = req.cookies?.[jwtCookieName]
+  const sessionCookie = getSessionCookieValue(req)
+  const jwtCookie = getJWTCookieValue(req)
 
-  if (!sessionCookieString || !jwtCookieString) {
+  if (!sessionCookie || !jwtCookie) {
     return null
   }
 
-  return await verifyJWT(jwtCookieString)
+  return await verifyJWT(jwtCookie)
 }
