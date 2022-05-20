@@ -3,7 +3,7 @@ import { makeQueryHook } from '../../../lib/helpers/AbstractApolloGQLHooks.helpe
 
 export const MARKETING_PAGE_QUERY = gql`
   query MarketingPage {
-    # Used in MinifFront.js
+    # Used in MiniFront.js
     miniFront: document(path: "/marketing") {
       id
       children {
