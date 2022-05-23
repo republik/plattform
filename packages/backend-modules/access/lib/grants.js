@@ -318,7 +318,7 @@ const request = async (granter, campaignId, payload, t, pgdb, redis, mail) => {
 
   await eventsLib.log(grant, 'request', pgdb)
 
-  const perks = grantPerks(grant, granter, campaign, t, pgdb, redis, mail)
+  const perks = await grantPerks(grant, granter, campaign, t, pgdb, redis, mail)
   if (perks.length > 0) {
     grant.perks = {}
 
