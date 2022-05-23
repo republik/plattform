@@ -190,7 +190,15 @@ const claim = async (voucherCode, payload, user, t, pgdb, redis, mail) => {
 
   const { granter, recipient, campaign } = grant
 
-  const perks = grantPerks(grant, recipient, campaign, t, pgdb, redis, mail)
+  const perks = await grantPerks(
+    grant,
+    recipient,
+    campaign,
+    t,
+    pgdb,
+    redis,
+    mail,
+  )
   if (perks.length > 0) {
     grant.perks = {}
 
