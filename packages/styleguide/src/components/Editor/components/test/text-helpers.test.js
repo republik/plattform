@@ -26,20 +26,21 @@ describe('Slate Editor', () => {
   }
 
   describe('selectNearestWord()', () => {
-    value = [
-      {
-        type: 'paragraph',
-        children: [{ text: 'Lorem ipsum dolor sit amet.' }],
-      },
-    ]
     const structure = [
       {
         type: 'paragraph',
+        repeat: true,
       },
     ]
     let changedSelection
 
     it('should change selection to word inside which the cursor is', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          children: [{ text: 'Lorem ipsum dolor sit amet.' }],
+        },
+      ]
       const editor = await setup(structure)
 
       await Transforms.select(editor, { path: [0, 0], offset: 9 })
@@ -53,6 +54,12 @@ describe('Slate Editor', () => {
     })
 
     it('should not select words if cursor is outside', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          children: [{ text: 'Lorem ipsum dolor sit amet.' }],
+        },
+      ]
       const editor = await setup(structure)
 
       await Transforms.select(editor, { path: [0, 0], offset: 6 })
@@ -74,7 +81,35 @@ describe('Slate Editor', () => {
       expect(changedSelection).toBe(false)
     })
 
+    it('should not select across elements', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          children: [{ text: 'Lorem' }],
+        },
+        {
+          type: 'paragraph',
+          children: [{ text: '' }],
+        },
+      ]
+      const editor = await setup(structure)
+
+      await Transforms.select(editor, { path: [0, 0], offset: 5 })
+      changedSelection = selectNearestWord(editor)
+      await new Promise(process.nextTick)
+      expect(editor.selection).toEqual({
+        anchor: { path: [0, 0], offset: 5 },
+        focus: { path: [0, 0], offset: 5 },
+      })
+    })
+
     it('should support dry run mode', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          children: [{ text: 'Lorem ipsum dolor sit amet.' }],
+        },
+      ]
       const editor = await setup(structure)
 
       await Transforms.select(editor, { path: [0, 0], offset: 9 })

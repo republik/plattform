@@ -245,5 +245,38 @@ describe('Slate Editor: Inline Insertion', () => {
         },
       ])
     })
+
+    it('should not change anything if the element is not allowed', async () => {
+      value = [
+        {
+          type: 'headline',
+          children: [{ text: 'Lorem ipsum dolor sit amet.' }],
+        },
+      ]
+      const structure = [
+        {
+          type: 'headline',
+        },
+      ]
+      const editor = await setup(structure)
+
+      await Transforms.select(editor, {
+        anchor: { path: [0, 0], offset: 6 },
+        focus: { path: [0, 0], offset: 11 },
+      })
+      toggleElement(editor, 'break')
+      await new Promise(process.nextTick)
+
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'headline',
+          children: [{ text: 'Lorem ipsum dolor sit amet.' }],
+        },
+      ])
+      expect(editor.selection).toEqual({
+        anchor: { path: [0, 0], offset: 6 },
+        focus: { path: [0, 0], offset: 11 },
+      })
+    })
   })
 })

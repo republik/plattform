@@ -23,6 +23,7 @@ import {
   configKeys as mKeys,
   MARKS_WHITELIST,
 } from '../../schema/marks'
+import { overlaps } from './tree'
 
 export const CHAR_LIMIT = editorConfig.maxSigns
 const PSEUDO_EMPTY_STRING = '\u2060'
@@ -56,6 +57,8 @@ export const selectNearestWord = (
   if (
     anchor &&
     focus &&
+    anchor.path.length === focus.path.length &&
+    overlaps(anchor.path, focus.path) &&
     Editor.string(editor, { anchor, focus }).split(' ').length === 1
   ) {
     !dryRun && Transforms.select(editor, { anchor, focus })
@@ -97,11 +100,11 @@ export const toggleMark = (
   }
 }
 
-export const getMarkStyles = (node: CustomText): any =>
+export const getMarkStyles = (node: CustomText): object =>
   mKeys
     .filter((mKey) => node[mKey])
     .reduce((acc, mKey) => {
-      const mStyle = mConfig[mKey].styles
+      const mStyle = mConfig[mKey].styles || {}
       return { ...acc, ...mStyle }
     }, {})
 

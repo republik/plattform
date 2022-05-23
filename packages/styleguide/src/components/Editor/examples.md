@@ -13,7 +13,7 @@ state: {
             type: 'headline'
         },
         {
-            type: ['paragraph', 'ul', 'ol', 'figure'],
+            type: ['paragraph', 'ul', 'ol', 'figure', 'blockQuote'],
             repeat: true
         }
     ]

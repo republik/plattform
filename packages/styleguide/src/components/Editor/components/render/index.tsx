@@ -2,14 +2,11 @@ import React from 'react'
 import { CustomDescendant, CustomElement, CustomText } from '../../custom-types'
 import { config as elementsConfig } from '../schema/elements'
 import { Element as SlateElement } from 'slate'
-import { getMarkStyles } from '../editor/helpers/text'
+import { Marks } from '../editor/ui/Mark'
 
 const RenderedLeaf: React.FC<{
   leaf: CustomText
-}> = ({ leaf }) => {
-  const markStyles = getMarkStyles(leaf)
-  return <span {...markStyles}>{leaf.text}</span>
-}
+}> = ({ leaf }) => <Marks leaf={leaf}>{leaf.text}</Marks>
 
 const RenderedElement: React.FC<{
   element: CustomElement

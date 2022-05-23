@@ -1,8 +1,8 @@
 import { MarkConfigI } from '../../../custom-types'
-import { sub } from '../../../../Typography'
+import { Sub } from '../../../../Typography'
 import { SubIcon } from '../../../../Icons'
 
 export const config: MarkConfigI = {
-  styles: sub,
+  Component: Sub,
   button: { icon: SubIcon, small: true },
 }

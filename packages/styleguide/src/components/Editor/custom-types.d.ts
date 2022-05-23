@@ -156,7 +156,8 @@ export type EditorAttr = keyof EditorAttrsI
 export type NormalizeFn<E> = (entry: [E, Path], editor: CustomEditor) => boolean
 
 export interface MarkConfigI {
-  styles: StyleAttribute
+  styles?: StyleAttribute
+  Component?: React.FC<{ attributes: any; children: any }>
   button?: ButtonI
 }
 

@@ -40,7 +40,7 @@ export const ElementButton: React.FC<{
       button={element.button}
       disabled={config.disabled}
       active={config.active}
-      disableWhenActive={true}
+      disableWhenActive={!elConfig[config.type]?.attrs?.isInline}
       onClick={() => {
         const insertPath = toggleElement(
           editor,

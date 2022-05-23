@@ -5,7 +5,6 @@ export const config: ElementConfigI = {
   Component: BlockQuoteParagraph,
   structure: [{ type: ['text', 'link'], repeat: true }],
   attrs: {
-    formatText: true,
     isMain: true,
   },
 }

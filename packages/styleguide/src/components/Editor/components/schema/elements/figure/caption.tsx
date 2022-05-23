@@ -10,7 +10,4 @@ export const config: ElementConfigI = {
     // TODO: repeat ends nodes to prevent text deletion
     { type: 'text', end: true },
   ],
-  attrs: {
-    formatText: true,
-  },
 }

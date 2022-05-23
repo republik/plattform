@@ -9,7 +9,7 @@ import React, {
 } from 'react'
 import { Editor } from 'slate'
 import { ReactEditor, useSlate } from 'slate-react'
-import { config as mConfig } from '../../schema/marks'
+import { config as mConfig, configKeys as mKeys } from '../../schema/marks'
 import { ToolbarButton } from './Toolbar'
 import {
   ButtonConfig,
@@ -100,30 +100,55 @@ const Placeholder: React.FC<{
   )
 }
 
+const Recurse: React.FC<{
+  components?: React.FC[]
+  customStyles?: any
+}> = ({ children, components = [], customStyles = {} }) => {
+  if (!components.length) {
+    return <span {...customStyles}>{children}</span>
+  }
+  const [Component, ...rest] = components
+  return (
+    <Recurse components={rest} customStyles={customStyles}>
+      <Component>{children}</Component>
+    </Recurse>
+  )
+}
+
+export const Marks: React.FC<{
+  leaf: CustomText
+}> = ({ children, leaf }) => {
+  const mComponents = mKeys
+    .filter((mKey) => leaf[mKey] && mConfig[mKey].Component)
+    .map((mKey) => mConfig[mKey].Component)
+  const markStyles = getMarkStyles(leaf)
+  return (
+    <Recurse components={mComponents} customStyles={markStyles}>
+      {children}
+    </Recurse>
+  )
+}
+
 export const LeafComponent: React.FC<{
   attributes: Attributes
   children: ReactElement
   leaf: CustomText
 }> = ({ attributes, children, leaf }) => {
   const [placeholderStyle, setPlaceholderStyle] = useState()
-  const markStyles = getMarkStyles(leaf)
   const showPlaceholder = isEmpty(leaf.text) && !leaf.end
 
   return (
-    <span
-      {...markStyles}
-      {...styles.leaf}
-      style={placeholderStyle}
-      {...attributes}
-    >
-      {showPlaceholder && (
-        <Placeholder
-          setStyle={setPlaceholderStyle}
-          text={leaf.placeholder}
-          parent={children.props.parent}
-        />
-      )}
-      {children}
+    <span {...styles.leaf} style={placeholderStyle} {...attributes}>
+      <Marks leaf={leaf}>
+        {showPlaceholder && (
+          <Placeholder
+            setStyle={setPlaceholderStyle}
+            text={leaf.placeholder}
+            parent={children.props.parent}
+          />
+        )}
+        {children}
+      </Marks>
     </span>
   )
 }

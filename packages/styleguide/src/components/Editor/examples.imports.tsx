@@ -1,4 +1,6 @@
-export const tree1 = [
+import { CustomDescendant } from './custom-types'
+
+export const tree1: CustomDescendant[] = [
   {
     type: 'headline',
     children: [
@@ -23,6 +25,8 @@ export const tree1 = [
       {
         text: 'bold',
         bold: true,
+        italic: true,
+        strikethrough: true,
       },
       {
         text: ' lady. She was responsible for:',

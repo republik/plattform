@@ -21,7 +21,6 @@ import {
 import { KeyboardEvent } from 'react'
 import { selectPlaceholder } from './text'
 import { config as elConfig } from '../../schema/elements'
-import { TEXT } from './structure'
 
 // remove attributes using by working editor
 // TODO: delete empty nodes
@@ -184,10 +183,13 @@ export const getSiblingNode = (
   return target
 }
 
+export const overlaps = (path1: number[], path2: number[]): boolean =>
+  path1.every((p, i) => p === path2[i])
+
 export const isDescendant = (
   parent: NodeEntry<CustomDescendant>,
   child: NodeEntry<CustomDescendant>,
-): boolean => parent[1].every((p, i) => p === child[1][i])
+): boolean => overlaps(parent[1], child[1])
 
 export const calculateSiblingPath = (
   path: number[],
@@ -234,16 +236,16 @@ export const getAncestry = (
   container?: NodeEntry<CustomElement>
   topLevelContainer?: NodeEntry<CustomElement>
 } => {
-  const parent = customNode || getCommonNode(editor)
+  const common = customNode || getCommonNode(editor)
   let text: NodeEntry<CustomText>
   let element: NodeEntry<CustomElement>
   let container: NodeEntry<CustomElement>
   let topLevelContainer: NodeEntry<CustomElement>
-  if (Text.isText(parent[0])) {
-    text = parent as NodeEntry<CustomText>
-    element = getParent(editor, parent)
-  } else if (SlateElement.isElement(parent[0])) {
-    element = parent as NodeEntry<CustomElement>
+  if (Text.isText(common[0])) {
+    text = common as NodeEntry<CustomText>
+    element = getParent(editor, common)
+  } else if (SlateElement.isElement(common[0])) {
+    element = common as NodeEntry<CustomElement>
   } else {
     return {}
   }

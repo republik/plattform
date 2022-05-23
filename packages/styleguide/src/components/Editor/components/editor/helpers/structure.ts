@@ -154,7 +154,14 @@ const toggleInline = (
     Transforms.unwrapNodes(editor, { at: parent[1], voids: true })
     return
   }
-  if (!target) return
+  const allowedTemplates = target[0].template
+  if (
+    !target ||
+    !allowedTemplates ||
+    !isAllowedType(element.type, allowedTemplates.type)
+  ) {
+    return
+  }
   const isCollapsed = Range.isCollapsed(selection)
   if (isCollapsed && elConfig[element.type].attrs?.isVoid) {
     Transforms.insertNodes(editor, element)

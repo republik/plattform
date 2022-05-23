@@ -1,5 +1,4 @@
 import React, {
-  Attributes,
   MouseEvent,
   ReactElement,
   useEffect,
@@ -33,7 +32,7 @@ import { Editor, Range, NodeEntry } from 'slate'
 import { useColorContext } from '../../../../Colors/ColorContext'
 import IconButton from '../../../../IconButton'
 import { getAncestry } from '../helpers/tree'
-import { isEmpty } from '../helpers/text'
+import { isEmpty, selectNearestWord } from '../helpers/text'
 
 const styles = {
   hoveringToolbar: css({
@@ -86,8 +85,9 @@ const hasUsableSelection = (
   )
 }
 
-const hasTextSelection = (editor: CustomEditor): boolean =>
-  !isEmpty(Editor.string(editor, editor.selection))
+const noWordSelected = (editor: CustomEditor): boolean =>
+  isEmpty(Editor.string(editor, editor.selection)) &&
+  !selectNearestWord(editor, true)
 
 const hasVoidSelection = (
   selectedElement?: NodeEntry<CustomElement>,
@@ -98,7 +98,7 @@ const getAllowedMarks = (
   showAll: boolean,
   selectedElement?: NodeEntry<CustomElement>,
 ): ButtonConfig[] => {
-  if (!showAll && !hasTextSelection(editor)) return []
+  if (!showAll && noWordSelected(editor)) return []
   const allowedMarks =
     selectedElement && elConfig[selectedElement[0].type].attrs?.formatText
       ? mKeys
@@ -108,7 +108,7 @@ const getAllowedMarks = (
   const buttons = showAll ? mKeys : allowedMarks
   return buttons.map((t) => ({
     type: t as CustomMarksType,
-    disabled: allowedMarks.indexOf(t) === -1,
+    disabled: allowedMarks.indexOf(t) === -1, // only useful in fixed mode
   }))
 }
 
@@ -125,19 +125,23 @@ const getTemplateTypes = (
 const getAllowedInlines = (
   editor: CustomEditor,
   showAllInlines: boolean,
-  selectedNode?: NodeEntry<CustomText>,
+  selectedText?: NodeEntry<CustomText>,
+  selectedElement?: NodeEntry<CustomElement>,
 ): ButtonConfig[] => {
-  if (!showAllInlines && !hasTextSelection(editor)) return []
+  if (!showAllInlines && noWordSelected(editor)) return []
 
   // make it link icon grey in sticky mode
-  const allowedTemplates = !hasTextSelection(editor)
+  const allowedTemplates = noWordSelected(editor)
     ? []
-    : getTemplateTypes(selectedNode)
-  // console.log('getAllowedInlines', { selectedNode, allowedTemplates })
-  return INLINE_BUTTONS.map((t) => ({
-    type: t as CustomElementsType,
-    disabled: allowedTemplates.indexOf(t) === -1,
-  }))
+    : getTemplateTypes(selectedText)
+  return INLINE_BUTTONS.map((t) => {
+    const isSelected = selectedElement && t === selectedElement[0].type
+    return {
+      type: t as CustomElementsType,
+      disabled: !isSelected && allowedTemplates.indexOf(t) === -1,
+      active: isSelected,
+    }
+  })
 }
 
 const getAllowedBlocks = (
@@ -308,7 +312,7 @@ const Toolbar: React.FC<{
 
   const setButtons = (text, element, topLevelContainer) => {
     setMarks(getAllowedMarks(editor, isSticky, element))
-    setInlines(getAllowedInlines(editor, isSticky, text))
+    setInlines(getAllowedInlines(editor, isSticky, text, element))
     const allowedBlocks = getAllowedBlocks(
       editor,
       isSticky,
