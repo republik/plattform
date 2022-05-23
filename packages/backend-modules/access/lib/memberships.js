@@ -50,8 +50,6 @@ const addMemberRole = async (grant, user, pgdb) => {
 }
 
 const removeMemberRole = async (grant, user, findFn, pgdb) => {
-  debug('removeMemberRole', { grant: grant.id, user: user.id })
-
   const hasMembership = await hasUserActiveMembership(user, pgdb)
 
   const allRecipientGrants = await findFn(user, { pgdb })
@@ -59,17 +57,8 @@ const removeMemberRole = async (grant, user, findFn, pgdb) => {
     (otherGrant) => otherGrant.id !== grant.id,
   )
 
-  if (
-    !hasMembership &&
-    allOtherRecipientGrants.length < 1 &&
-    Roles.userHasRole(user, 'member')
-  ) {
-    await Roles.removeUserFromRole(user.id, 'member', pgdb)
-    await eventsLib.log(grant, 'role.member.remove', pgdb)
-
-    debug('role "member" unwarranted, removing', user.id)
-
-    return true
+  if (!hasMembership && allOtherRecipientGrants.length < 1) {
+    return await removeRole(grant, user, pgdb, 'member')
   } else {
     await eventsLib.log(grant, 'role.member.keep', pgdb)
   }

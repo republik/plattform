@@ -52,67 +52,59 @@ const evaluateConstraints = async (granter, campaign, email, t, pgdb) => {
   return { errors }
 }
 
-const grantPerks = async (grant, recipient, campaign, t, pgdb, redis, mail) =>
-  Promise.map(
-    campaign.config.perks || [],
-    async (perk) => {
-      const name = Object.keys(perk).shift()
+const grantPerks = (grant, recipient, campaign, t, pgdb, redis, mail) =>
+  Promise.mapSeries(campaign.config.perks || [], async (perk) => {
+    const name = Object.keys(perk).shift()
 
-      if (!perks[name]) {
-        throw new Error(`Unable to find perk "${name}"`)
-      }
+    if (!perks[name]) {
+      throw new Error(`Unable to find perk "${name}"`)
+    }
 
-      const settings = perk[name]
-      const { eventLogExtend, ...result } = await perks[name].give(
-        campaign,
-        grant,
-        recipient,
-        settings,
-        t,
-        pgdb,
-        redis,
-        mail,
-      )
+    const settings = perk[name]
+    const { eventLogExtend, ...result } = await perks[name].give(
+      campaign,
+      grant,
+      recipient,
+      settings,
+      t,
+      pgdb,
+      redis,
+      mail,
+    )
 
-      debug('grantPerks', {
-        accessCampaignId: campaign.id,
-        perk: name,
-        recipient: recipient.id,
-        settings,
-      })
-      return { name, settings, eventLogExtend, result }
-    },
-    { concurrency: 1 },
-  )
+    debug('grantPerks', {
+      accessCampaignId: campaign.id,
+      perk: name,
+      recipient: recipient.id,
+      settings,
+    })
+    return { name, settings, eventLogExtend, result }
+  })
 
-const revokePerks = async (grant, recipient, campaign, pgdb) =>
-  Promise.map(
-    campaign.config.perks || [],
-    async (perk) => {
-      const name = Object.keys(perk).shift()
+const revokePerks = (grant, recipient, campaign, pgdb) =>
+  Promise.mapSeries(campaign.config.perks || [], async (perk) => {
+    const name = Object.keys(perk).shift()
 
-      if (!perks[name]) {
-        throw new Error(`Unable to find perk "${name}"`)
-      }
+    if (!perks[name]) {
+      throw new Error(`Unable to find perk "${name}"`)
+    }
 
-      const settings = perk[name]
-      const { eventLogExtend, ...result } = await perks[name].revoke(
-        grant,
-        recipient,
-        settings,
-        pgdb,
-      )
+    const settings = perk[name]
+    const { eventLogExtend, ...result } = await perks[name].revoke(
+      grant,
+      recipient,
+      settings,
+      pgdb,
+    )
 
-      debug('revokePerks', {
-        accessCampaignId: campaign.id,
-        perk: name,
-        recipient: recipient.id,
-        settings,
-      })
-      return { name, settings, eventLogExtend, result }
-    },
-    { concurrency: 1 },
-  )
+    debug('revokePerks', {
+      accessCampaignId: campaign.id,
+      perk: name,
+      recipient: recipient.id,
+      settings,
+    })
+    return { name, settings, eventLogExtend, result }
+  })
 
 const insert = async (granter, campaignId, grants = [], pgdb) => {
   const campaign = await campaignsLib.findOne(campaignId, pgdb)
@@ -198,15 +190,7 @@ const claim = async (voucherCode, payload, user, t, pgdb, redis, mail) => {
 
   const { granter, recipient, campaign } = grant
 
-  const perks = await grantPerks(
-    grant,
-    recipient,
-    campaign,
-    t,
-    pgdb,
-    redis,
-    mail,
-  )
+  const perks = grantPerks(grant, recipient, campaign, t, pgdb, redis, mail)
   if (perks.length > 0) {
     grant.perks = {}
 
@@ -334,7 +318,7 @@ const request = async (granter, campaignId, payload, t, pgdb, redis, mail) => {
 
   await eventsLib.log(grant, 'request', pgdb)
 
-  const perks = await grantPerks(grant, granter, campaign, t, pgdb, redis, mail)
+  const perks = grantPerks(grant, granter, campaign, t, pgdb, redis, mail)
   if (perks.length > 0) {
     grant.perks = {}
 
@@ -465,12 +449,12 @@ const invalidate = async (grant, reason, t, pgdb, mail) => {
         })
       }
 
-      const perks = await revokePerks(grant, recipient, campaign, pgdb)
+      const perks = revokePerks(grant, recipient, campaign, pgdb)
       if (perks.length > 0) {
         grant.perks = {}
 
         await Promise.map(perks, (perk) => {
-          eventsLib.log(grant, `perk.${perk.name} revoked`, pgdb)
+          eventsLib.log(grant, `perk.${perk.name}.revoked`, pgdb)
         })
       }
 
