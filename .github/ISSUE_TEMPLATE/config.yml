@@ -1,1 +1,5 @@
 blank_issues_enabled: true
+contact_links:
+  - name: Republik FAQ / Support
+    url: https://republik.ch/faq
+    about: Got a question / problem about your account or membership? VIsit the FAQ or contact us.
