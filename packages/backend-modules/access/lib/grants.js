@@ -449,7 +449,7 @@ const invalidate = async (grant, reason, t, pgdb, mail) => {
         })
       }
 
-      const perks = revokePerks(grant, recipient, campaign, pgdb)
+      const perks = await revokePerks(grant, recipient, campaign, pgdb)
       if (perks.length > 0) {
         grant.perks = {}
 
