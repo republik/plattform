@@ -183,11 +183,15 @@ describe('Slate Editor: Normalisation', () => {
       ])
     })
 
-    it('should convert node types before inserting new nodes if children types are compatible', async () => {
+    it('should unwrap incorrect inline node types', async () => {
       value = [
         {
-          type: 'paragraph',
-          children: [{ text: 'Hello' }],
+          type: 'headline',
+          children: [
+            { text: 'Hello ' },
+            { type: 'link', children: [{ text: 'my' }] },
+            { text: ' dear' },
+          ],
         },
         {
           type: 'paragraph',
@@ -207,7 +211,7 @@ describe('Slate Editor: Normalisation', () => {
       expect(cleanupTree(value)).toEqual([
         {
           type: 'headline',
-          children: [{ text: 'Hello' }],
+          children: [{ text: 'Hello my dear' }],
         },
         {
           type: 'paragraph',

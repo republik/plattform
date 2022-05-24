@@ -269,24 +269,6 @@ export const toggleElement = (
   return elementPath
 }
 
-// TODO: evaluate if this makes sense // maybe unwrap on paste is better
-const tryConvert = (
-  node: CustomNode | undefined,
-  template: NodeTemplate,
-): boolean => {
-  const templateType = getTemplateType(template)
-  if (Text.isText(node) && !templateType) return true
-
-  const structure = elConfig[templateType].structure || DEFAULT_STRUCTURE
-  if (structure?.length !== 1) return false
-  const childrenTemplate = structure[0]
-
-  return (
-    SlateElement.isElement(node) &&
-    node.children.every((child) => isCorrect(child, childrenTemplate))
-  )
-}
-
 const fixNode = (
   node: CustomDescendant | undefined,
   path: number[],
@@ -297,10 +279,7 @@ const fixNode = (
   const newNode = buildFromTemplate(currentTemplate)
   // console.log('FIX NODE', { node, path, currentTemplate, newNode })
 
-  if (
-    !node ||
-    (isCorrect(node, nextTemplate) && !tryConvert(node, currentTemplate))
-  ) {
+  if (!node || isCorrect(node, nextTemplate)) {
     // console.log('insert node')
     return Transforms.insertNodes(editor, newNode, {
       at: path,
@@ -356,6 +335,21 @@ const deleteParent = (
   )
 }
 
+const removeNode = (
+  editor: CustomEditor,
+  currentNode: CustomNode,
+  currentPath: number[],
+): void => {
+  if (
+    SlateElement.isElement(currentNode) &&
+    Editor.isInline(editor, currentNode) &&
+    !Editor.isVoid(editor, currentNode)
+  ) {
+    return Transforms.unwrapNodes(editor, { at: currentPath })
+  }
+  Transforms.removeNodes(editor, { at: currentPath })
+}
+
 export const fixStructure: (
   structure?: NodeTemplate[],
 ) => NormalizeFn<CustomAncestor> =
@@ -390,8 +384,7 @@ export const fixStructure: (
       } else if (
         shouldRemove(currentNode, nextNode, currentTemplate, prevTemplate)
       ) {
-        // this is here mostly to delete unwanted <br> elements
-        Transforms.removeNodes(editor, { at: currentPath })
+        removeNode(editor, currentNode, currentPath)
         return true
       } else if (!currentTemplate) {
         loop = false
@@ -515,6 +508,29 @@ export const insertRepeat = (editor: CustomEditor): void => {
   if (deleteP) {
     Transforms.removeNodes(editor, { at: deleteP })
   }
+}
+
+// unwrap on paste if simple block with inline children
+export const unwrapOnPaste = (
+  editor: CustomEditor,
+  data: DataTransfer,
+): boolean => {
+  const slateData = data.getData('application/x-slate-fragment')
+  if (slateData) {
+    const fragment = JSON.parse(decodeURIComponent(window.atob(slateData)))
+    // console.log('paste fragment', fragment)
+    const unwrappedFragment =
+      fragment && fragment.length === 1 && fragment[0].children
+    if (
+      Editor.isInline(editor, unwrappedFragment[0]) ||
+      Text.isText(unwrappedFragment[0])
+    ) {
+      // console.log('paste this one instead', unwrappedFragment)
+      Transforms.insertFragment(editor, unwrappedFragment)
+      return true
+    }
+  }
+  return false
 }
 
 export const handleInsert = (

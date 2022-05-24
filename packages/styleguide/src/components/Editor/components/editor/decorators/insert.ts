@@ -1,10 +1,11 @@
 import { CustomEditor } from '../../../custom-types'
 import { getCharCount } from '../helpers/text'
+import { unwrapOnPaste } from '../helpers/structure'
 
 export const withInsert =
   (charLimit: number) =>
   (editor: CustomEditor): CustomEditor => {
-    const { insertText, insertFragment, insertNode } = editor
+    const { insertText, insertFragment, insertNode, insertData } = editor
 
     editor.insertText = (text) => {
       if (getCharCount(editor.children) >= charLimit) {
@@ -27,6 +28,11 @@ export const withInsert =
       }
       // console.log('insert node', node)
       insertNode(node)
+    }
+
+    editor.insertData = (data: DataTransfer) => {
+      if (unwrapOnPaste(editor, data)) return
+      insertData(data)
     }
 
     return editor
