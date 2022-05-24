@@ -15,9 +15,9 @@ import {
   Range,
 } from 'slate'
 import { ReactEditor } from 'slate-react'
-import { config as elConfig } from '../../config/elements'
+import { config as elConfig } from '../../../config/elements'
 import { isCorrect } from './structure'
-import { configKeys as mKeys, MARKS_WHITELIST } from '../../config/marks'
+import { configKeys as mKeys, MARKS_WHITELIST } from '../../../config/marks'
 import { overlaps } from './tree'
 
 const PSEUDO_EMPTY_STRING = '\u2060'

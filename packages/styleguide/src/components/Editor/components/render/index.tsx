@@ -5,7 +5,7 @@ import {
   CustomText,
   SchemaConfig,
 } from '../../custom-types'
-import { config as elementsConfig } from '../config/elements'
+import { config as elementsConfig } from '../../config/elements'
 import { Element as SlateElement } from 'slate'
 import { Marks } from '../editor/ui/Mark'
 

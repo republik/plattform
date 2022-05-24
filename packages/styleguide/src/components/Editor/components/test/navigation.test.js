@@ -3,7 +3,7 @@ import { buildTestHarness } from 'slate-test-utils'
 import { createEditor, Transforms } from 'slate'
 import { selectAdjacent } from '../editor/helpers/tree'
 import { toggleElement, insertRepeat } from '../editor/helpers/structure'
-import schema from '../schema/article'
+import schema from '../../schema/article'
 
 describe('Slate Editor: Navigation (On Tab)', () => {
   function getMockEditor() {

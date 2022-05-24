@@ -20,7 +20,7 @@ import {
 } from 'slate'
 import { KeyboardEvent } from 'react'
 import { selectPlaceholder } from './text'
-import { config as elConfig } from '../../config/elements'
+import { config as elConfig } from '../../../config/elements'
 
 // remove attributes using by working editor
 // TODO: delete empty nodes

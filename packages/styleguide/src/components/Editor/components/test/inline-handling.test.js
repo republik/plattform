@@ -3,7 +3,7 @@ import { buildTestHarness } from 'slate-test-utils'
 import { createEditor, Transforms } from 'slate'
 import { toggleElement } from '../editor/helpers/structure'
 import { cleanupTree } from '../editor/helpers/tree'
-import schema from '../schema/article'
+import schema from '../../schema/article'
 
 describe('Slate Editor: Inline Insertion', () => {
   function getMockEditor() {

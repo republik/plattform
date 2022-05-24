@@ -3,7 +3,7 @@ import { buildTestHarness } from 'slate-test-utils'
 import { createEditor, Transforms } from 'slate'
 import { cleanupTree } from '../editor/helpers/tree'
 import { toggleMark } from '../editor/helpers/text'
-import schema from '../schema/article'
+import schema from '../../schema/article'
 
 describe('Slate Editor: Marks Handling', () => {
   function getMockEditor() {

@@ -14,7 +14,7 @@ import { withElAttrsConfig } from './decorators/attrs'
 import Footer from './ui/Footer'
 import { FormContextProvider, FormOverlay, useFormContext } from './ui/Forms'
 import Toolbar from './ui/Toolbar'
-import { config as elementsConfig } from '../config/elements'
+import { config as elementsConfig } from '../../config/elements'
 import { LeafComponent } from './ui/Mark'
 import {
   CustomDescendant,

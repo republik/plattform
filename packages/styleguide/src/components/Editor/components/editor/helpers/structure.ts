@@ -35,7 +35,7 @@ import {
   selectAdjacent,
   spansManyElements,
 } from './tree'
-import { config as elConfig } from '../../config/elements'
+import { config as elConfig } from '../../../config/elements'
 import { getCharCount, selectNearestWord } from './text'
 
 const DEFAULT_STRUCTURE: NodeTemplate[] = [{ type: ['text'], repeat: true }]

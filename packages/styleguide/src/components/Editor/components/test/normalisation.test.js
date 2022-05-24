@@ -2,7 +2,7 @@ import Editor from '../editor'
 import { buildTestHarness } from 'slate-test-utils'
 import { createEditor } from 'slate'
 import { cleanupTree } from '../editor/helpers/tree'
-import schema from '../schema/article'
+import schema from '../../schema/article'
 
 describe('Slate Editor: Normalisation', () => {
   function getMockEditor() {
