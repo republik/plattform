@@ -3,6 +3,7 @@ import {
   CustomMarksType,
   CustomText,
   NormalizeFn,
+  SchemaType,
 } from '../../../custom-types'
 import {
   Descendant,
@@ -15,24 +16,23 @@ import {
   Range,
 } from 'slate'
 import { ReactEditor } from 'slate-react'
-import { config as elConfig } from '../../schema/elements'
-import editorConfig from '../../../config'
+import { config as elConfig } from '../../config/elements'
 import { isCorrect } from './structure'
 import {
   config as mConfig,
   configKeys as mKeys,
   MARKS_WHITELIST,
-} from '../../schema/marks'
+} from '../../config/marks'
 import { overlaps } from './tree'
+import { StyleAttribute } from 'glamor'
 
-export const CHAR_LIMIT = editorConfig.maxSigns
 const PSEUDO_EMPTY_STRING = '\u2060'
 
 export const getCharCount = (nodes: (Descendant | Node)[]): number =>
   nodes.map((node) => Node.string(node).length).reduce((a, b) => a + b, 0)
 
-export const getCountDown = (editor: CustomEditor): number =>
-  CHAR_LIMIT - getCharCount(editor.children)
+export const getCountDown = (editor: CustomEditor, maxSigns: number): number =>
+  maxSigns - getCharCount(editor.children)
 
 export const cleanupMarks: NormalizeFn<CustomText> = ([node, path], editor) => {
   const parent = Editor.parent(editor, path)[0]
@@ -100,11 +100,15 @@ export const toggleMark = (
   }
 }
 
-export const getMarkStyles = (node: CustomText): object =>
+export const getMarkStyles = (
+  node: CustomText,
+  schema: SchemaType,
+): StyleAttribute =>
   mKeys
     .filter((mKey) => node[mKey])
     .reduce((acc, mKey) => {
-      const mStyle = mConfig[mKey].styles || {}
+      const mStyle =
+        (mConfig[mKey].styles && mConfig[mKey].styles[schema]) || {}
       return { ...acc, ...mStyle }
     }, {})
 

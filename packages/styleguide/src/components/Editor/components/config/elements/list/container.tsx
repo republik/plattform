@@ -19,7 +19,9 @@ const ListComponent: React.FC<{
 const structure: NodeTemplate[] = [{ type: 'listItem', repeat: true }]
 
 export const ulConfig: ElementConfigI = {
-  Component: ListComponent,
+  Component: {
+    article: ListComponent,
+  },
   structure,
   button: { icon: UlIcon },
   defaultProps: {
@@ -28,7 +30,9 @@ export const ulConfig: ElementConfigI = {
 }
 
 export const olConfig: ElementConfigI = {
-  Component: ListComponent,
+  Component: {
+    article: ListComponent,
+  },
   structure,
   button: { icon: OlIcon },
   defaultProps: {

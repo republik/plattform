@@ -3,7 +3,8 @@ import { useSlate } from 'slate-react'
 import { useColorContext } from '../../../../Colors/ColorContext'
 import { css } from 'glamor'
 import { Label } from '../../../../Typography'
-import { getCharCount } from '../helpers/text'
+import { getCountDown } from '../helpers/text'
+import { EditorConfig } from '../../../custom-types'
 
 const styles = {
   container: css({
@@ -16,10 +17,10 @@ const styles = {
   }),
 }
 
-const CharCount: React.FC<{ charLimit: number }> = ({ charLimit }) => {
+const Countdown: React.FC<{ maxSigns: number }> = ({ maxSigns }) => {
   const editor = useSlate()
   const [colorScheme] = useColorContext()
-  const countdown = charLimit - getCharCount(editor.children)
+  const countdown = getCountDown(editor, maxSigns)
   return (
     <Label>
       <span
@@ -31,14 +32,14 @@ const CharCount: React.FC<{ charLimit: number }> = ({ charLimit }) => {
   )
 }
 
-const Footer: React.FC<{ charLimit: number }> = ({ charLimit }) => {
+const Footer: React.FC<{ config: EditorConfig }> = ({ config }) => {
   const [colorScheme] = useColorContext()
   return (
     <div
       {...styles.container}
       {...colorScheme.set('borderTopColor', 'divider')}
     >
-      <CharCount charLimit={charLimit} />
+      {config.maxSigns && <Countdown maxSigns={config.maxSigns} />}
     </div>
   )
 }

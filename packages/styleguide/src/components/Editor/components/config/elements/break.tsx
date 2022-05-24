@@ -12,7 +12,9 @@ const BreakComponent: React.FC<{
 )
 
 export const config: ElementConfigI = {
-  Component: BreakComponent,
+  Component: {
+    article: BreakComponent,
+  },
   attrs: {
     isInline: true,
     isVoid: true,

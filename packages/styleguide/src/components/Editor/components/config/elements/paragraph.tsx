@@ -3,7 +3,9 @@ import { ElementConfigI } from '../../../custom-types'
 import { ParagraphIcon } from '../../../../Icons'
 
 export const config: ElementConfigI = {
-  Component: Editorial.P,
+  Component: {
+    article: Editorial.P,
+  },
   structure: [{ type: ['text', 'link', 'break'], repeat: true }],
   attrs: {
     formatText: true,

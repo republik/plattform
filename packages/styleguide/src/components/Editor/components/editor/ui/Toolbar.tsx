@@ -25,8 +25,8 @@ import {
   config as elConfig,
   INLINE_BUTTONS,
   BLOCK_BUTTONS,
-} from '../../schema/elements'
-import { configKeys as mKeys, MARKS_WHITELIST } from '../../schema/marks'
+} from '../../config/elements'
+import { configKeys as mKeys, MARKS_WHITELIST } from '../../config/marks'
 import { useSlate, ReactEditor, useFocused } from 'slate-react'
 import { Editor, Range, NodeEntry } from 'slate'
 import { useColorContext } from '../../../../Colors/ColorContext'

@@ -3,6 +3,8 @@ import { Sup } from '../../../../Typography'
 import { SupIcon } from '../../../../Icons'
 
 export const config: MarkConfigI = {
-  Component: Sup,
+  Component: {
+    article: Sup,
+  },
   button: { icon: SupIcon, small: true },
 }

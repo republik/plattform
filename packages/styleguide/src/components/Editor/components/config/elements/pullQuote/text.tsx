@@ -1,8 +1,10 @@
 import { ElementConfigI } from '../../../../custom-types'
-import { BlockQuoteParagraph } from '../../../../../BlockQuote'
+import { PullQuoteText } from '../../../../../PullQuote'
 
 export const config: ElementConfigI = {
-  Component: BlockQuoteParagraph,
+  Component: {
+    article: PullQuoteText,
+  },
   attrs: {
     isMain: true,
   },

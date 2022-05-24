@@ -9,15 +9,16 @@ import React, {
 } from 'react'
 import { Editor } from 'slate'
 import { ReactEditor, useSlate } from 'slate-react'
-import { config as mConfig, configKeys as mKeys } from '../../schema/marks'
+import { config as mConfig, configKeys as mKeys } from '../../config/marks'
 import { ToolbarButton } from './Toolbar'
 import {
   ButtonConfig,
   CustomElement,
   CustomMarksType,
   CustomText,
+  SchemaType,
 } from '../../../custom-types'
-import { css } from 'glamor'
+import { css, StyleAttribute } from 'glamor'
 import { useColorContext } from '../../../../Colors/ColorContext'
 import {
   getMarkStyles,
@@ -102,7 +103,7 @@ const Placeholder: React.FC<{
 
 const Recurse: React.FC<{
   components?: React.FC[]
-  customStyles?: any
+  customStyles?: StyleAttribute
 }> = ({ children, components = [], customStyles = {} }) => {
   if (!components.length) {
     return <span {...customStyles}>{children}</span>
@@ -117,11 +118,12 @@ const Recurse: React.FC<{
 
 export const Marks: React.FC<{
   leaf: CustomText
-}> = ({ children, leaf }) => {
+  schema: SchemaType
+}> = ({ children, leaf, schema }) => {
   const mComponents = mKeys
     .filter((mKey) => leaf[mKey] && mConfig[mKey].Component)
-    .map((mKey) => mConfig[mKey].Component)
-  const markStyles = getMarkStyles(leaf)
+    .map((mKey) => mConfig[mKey].Component[schema])
+  const markStyles = getMarkStyles(leaf, schema)
   return (
     <Recurse components={mComponents} customStyles={markStyles}>
       {children}
@@ -135,11 +137,12 @@ export const LeafComponent: React.FC<{
   leaf: CustomText
 }> = ({ attributes, children, leaf }) => {
   const [placeholderStyle, setPlaceholderStyle] = useState()
+  const editor = useSlate()
   const showPlaceholder = isEmpty(leaf.text) && !leaf.end
 
   return (
     <span {...styles.leaf} style={placeholderStyle} {...attributes}>
-      <Marks leaf={leaf}>
+      <Marks leaf={leaf} schema={editor.customConfig.schema}>
         {showPlaceholder && (
           <Placeholder
             setStyle={setPlaceholderStyle}

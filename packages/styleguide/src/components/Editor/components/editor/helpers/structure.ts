@@ -35,7 +35,7 @@ import {
   selectAdjacent,
   spansManyElements,
 } from './tree'
-import { config as elConfig } from '../../schema/elements'
+import { config as elConfig } from '../../config/elements'
 import { getCharCount, selectNearestWord } from './text'
 
 const DEFAULT_STRUCTURE: NodeTemplate[] = [{ type: ['text'], repeat: true }]
@@ -192,10 +192,11 @@ const convertBlock = (
     ...(insertConfig.defaultProps || {}),
   }
 
-  if (
-    insertConfig.Component.name === targetConfig.Component.name &&
-    insertConfig.defaultProps
-  ) {
+  const insertConfigName =
+    insertConfig.Component[editor.customConfig.schema].name
+  const targetConfigName =
+    targetConfig.Component[editor.customConfig.schema].name
+  if (insertConfigName === targetConfigName && insertConfig.defaultProps) {
     Transforms.setNodes(editor, insertPartial, { at: target[1] })
     return target[1]
   }

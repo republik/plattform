@@ -12,13 +12,16 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
 
   let value
 
-  async function setup(structure) {
+  const defaultConfig = { schema: 'article' }
+
+  async function setup(structure, config = defaultConfig) {
     const mock = getMockEditor()
     const [editor] = await buildTestHarness(Editor)({
       editor: mock,
       initialValue: value,
       componentProps: {
         structure,
+        config,
         value,
         setValue: (val) => (value = val),
       },

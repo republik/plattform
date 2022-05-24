@@ -5,6 +5,8 @@ import { ReactEditor } from 'slate-react'
 import { HistoryEditor } from 'slate-history'
 import { StyleAttribute } from 'glamor'
 
+export type SchemaType = 'article' | 'comment' | 'email'
+
 type CustomMarks = {
   italic?: boolean
   bold?: boolean
@@ -155,9 +157,23 @@ export type EditorAttr = keyof EditorAttrsI
 
 export type NormalizeFn<E> = (entry: [E, Path], editor: CustomEditor) => boolean
 
+type StylesConfig = {
+  [K in SchemaType]?: StyleAttribute
+}
+
+type ComponentConfig = {
+  [K in SchemaType]?:
+    | React.FC<{
+        attributes: any
+        children: any
+        [x: string]: unknown
+      }>
+    | ForwardRefExoticComponent
+}
+
 export interface MarkConfigI {
-  styles?: StyleAttribute
-  Component?: React.FC<{ attributes: any; children: any }>
+  styles?: StylesConfig
+  Component?: ComponentConfig
   button?: ButtonI
 }
 
@@ -181,7 +197,7 @@ export type NodeTemplate = {
 }
 
 export interface ElementConfigI {
-  Component: React.FC | ForwardRefExoticComponent
+  Component: ComponentConfig
   attrs?: ElementAttrsI
   dataRequired?: dataRequiredType
   normalizations?: NormalizeFn[]
@@ -202,7 +218,8 @@ export interface DraftI {
 }
 
 export type EditorConfig = {
-  maxSigns: number
+  schema: SchemaType
+  maxSigns?: number
 }
 
 export type KeyCombo = {
@@ -218,7 +235,9 @@ export type ButtonConfig = {
 
 export type ToolbarMode = 'sticky' | 'floating'
 
-export type CustomEditor = BaseEditor & ReactEditor & HistoryEditor
+export type CustomEditor = BaseEditor &
+  ReactEditor &
+  HistoryEditor & { customConfig?: EditorConfig }
 
 declare module 'slate' {
   interface CustomTypes {

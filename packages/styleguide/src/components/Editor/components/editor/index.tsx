@@ -14,34 +14,38 @@ import { withElAttrsConfig } from './decorators/attrs'
 import Footer from './ui/Footer'
 import { FormContextProvider, FormOverlay, useFormContext } from './ui/Forms'
 import Toolbar from './ui/Toolbar'
-import { config as elementsConfig } from '../schema/elements'
+import { config as elementsConfig } from '../config/elements'
 import { LeafComponent } from './ui/Mark'
 import {
   CustomDescendant,
   CustomEditor,
   CustomElement,
+  EditorConfig,
   NodeTemplate,
 } from '../../custom-types'
 import { navigateOnTab } from './helpers/tree'
 import { handleInsert, insertOnKey } from './helpers/structure'
-import { CHAR_LIMIT } from './helpers/text'
 import { withInsert } from './decorators/insert'
 import { withDelete } from './decorators/delete'
 import { useColorContext } from '../../../Colors/ColorContext'
+import { withCustomConfig } from './decorators/config'
 
 const SlateEditor: React.FC<{
   value: CustomDescendant[]
   setValue: (t: CustomDescendant[]) => void
   structure?: NodeTemplate[]
   editor?: CustomEditor
-}> = ({ value, setValue, structure, editor: mockEditor }) => {
+  config: EditorConfig
+}> = ({ value, setValue, structure, editor: mockEditor, config }) => {
   const editor = useMemoOne<CustomEditor>(
     () =>
-      withInsert(CHAR_LIMIT)(
+      withInsert(config)(
         withDelete(
           withNormalizations(structure)(
             withElAttrsConfig(
-              withReact(withHistory(mockEditor ?? createEditor())),
+              withCustomConfig(config)(
+                withReact(withHistory(mockEditor ?? createEditor())),
+              ),
             ),
           ),
         ),
@@ -64,7 +68,7 @@ const SlateEditor: React.FC<{
     const config = elementsConfig[element.type]
     const isVoid = config.attrs?.isVoid
     const highlightSelected = config.attrs?.highlightSelected
-    const Component = config.Component
+    const Component = config.Component[editor.customConfig.schema]
     const path = ReactEditor.findPath(editor, element)
     const selectVoid = (e) => {
       if (isVoid) {
@@ -129,7 +133,7 @@ const SlateEditor: React.FC<{
               navigateOnTab(editor, event)
             }}
           />
-          <Footer charLimit={CHAR_LIMIT} />
+          <Footer config={config} />
         </Slate>
       </FormContextProvider>
     </div>

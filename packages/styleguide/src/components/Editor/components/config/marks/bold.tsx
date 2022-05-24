@@ -3,6 +3,8 @@ import { Editorial } from '../../../../Typography'
 import { BoldIcon } from '../../../../Icons'
 
 export const config: MarkConfigI = {
-  Component: Editorial.Emphasis,
+  Component: {
+    article: Editorial.Emphasis,
+  },
   button: { icon: BoldIcon },
 }

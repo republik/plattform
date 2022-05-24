@@ -68,7 +68,9 @@ const Form: React.FC<ElementFormProps<FigureImageElement>> = ({
 )
 
 export const config: ElementConfigI = {
-  Component: ImageComponent,
+  Component: {
+    article: ImageComponent,
+  },
   Form,
   attrs: {
     isVoid: true,

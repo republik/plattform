@@ -3,7 +3,9 @@ import { PullQuote } from '../../../../../PullQuote'
 import { QuoteIcon } from '../../../../../Icons'
 
 export const config: ElementConfigI = {
-  Component: PullQuote,
+  Component: {
+    article: PullQuote,
+  },
   structure: [{ type: 'pullQuoteText' }, { type: 'pullQuoteSource' }],
   button: { icon: QuoteIcon },
 }

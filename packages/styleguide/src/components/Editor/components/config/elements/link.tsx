@@ -30,7 +30,9 @@ const unlinkWhenEmpty: NormalizeFn<LinkElement> = ([node, path], editor) => {
 }
 
 export const config: ElementConfigI = {
-  Component: Editorial.A,
+  Component: {
+    article: Editorial.A,
+  },
   normalizations: [unlinkWhenEmpty],
   defaultProps: {
     href: 'https://',

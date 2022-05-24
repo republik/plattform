@@ -25,11 +25,12 @@ state: {
         setState({value: newValue})
     }}
     structure={state.structure}
+    config={{ maxSigns: 3000, schema: 'article' }}
 />
 ```
 
 ## Read-only Rendering
 
 ```react
-<SlateRender value={tree1} />
+<SlateRender value={tree1} schema='article' />
 ```

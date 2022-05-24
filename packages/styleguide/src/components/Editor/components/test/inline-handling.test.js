@@ -12,6 +12,8 @@ describe('Slate Editor: Inline Insertion', () => {
 
   let value
 
+  const defaultConfig = { schema: 'article' }
+
   const defaultStructure = [
     {
       type: 'headline',
@@ -22,13 +24,14 @@ describe('Slate Editor: Inline Insertion', () => {
     },
   ]
 
-  async function setup(structure = defaultStructure) {
+  async function setup(structure = defaultStructure, config = defaultConfig) {
     const mock = getMockEditor()
     const [editor] = await buildTestHarness(Editor)({
       editor: mock,
       initialValue: value,
       componentProps: {
         structure,
+        config,
         value,
         setValue: (val) => (value = val),
       },

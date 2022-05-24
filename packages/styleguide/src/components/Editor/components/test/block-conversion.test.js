@@ -12,13 +12,16 @@ describe('Slate Editor: Block Conversion', () => {
 
   let value
 
-  async function setup(structure) {
+  const defaultConfig = { schema: 'article' }
+
+  async function setup(structure, config = defaultConfig) {
     const mock = getMockEditor()
     const [editor] = await buildTestHarness(Editor)({
       editor: mock,
       initialValue: value,
       componentProps: {
         structure,
+        config,
         value,
         setValue: (val) => (value = val),
       },
@@ -72,7 +75,7 @@ describe('Slate Editor: Block Conversion', () => {
     expect(value[0].type).toBe('paragraph')
   })
 
-  it('should preserve formatting/links during conversion', async () => {
+  it('should preserve formatting/links during conversion but remove illegal inlines', async () => {
     const formattedText = [
       { text: 'CO' },
       { text: '2', sub: true },
@@ -98,10 +101,6 @@ describe('Slate Editor: Block Conversion', () => {
     const editor = await setup(structure)
     await Transforms.select(editor, { path: [0, 0], offset: 0 })
 
-    toggleElement(editor, 'blockQuote')
-    await new Promise(process.nextTick)
-    expect(cleanupTree(value[0].children[0].children)).toEqual(formattedText)
-
     toggleElement(editor, 'ul')
     await new Promise(process.nextTick)
     expect(cleanupTree(value[0].children[0].children)).toEqual(formattedText)
@@ -110,9 +109,21 @@ describe('Slate Editor: Block Conversion', () => {
     await new Promise(process.nextTick)
     expect(cleanupTree(value[0].children[0].children)).toEqual(formattedText)
 
+    toggleElement(editor, 'blockQuote')
+    await new Promise(process.nextTick)
+    expect(cleanupTree(value[0].children[0].children)).toEqual([
+      { text: 'CO' },
+      { text: '2', sub: true },
+      { text: 'levels are increasing' },
+    ])
+
     toggleElement(editor, 'paragraph')
     await new Promise(process.nextTick)
-    expect(cleanupTree(value[0].children)).toEqual(formattedText)
+    expect(cleanupTree(value[0].children)).toEqual([
+      { text: 'CO' },
+      { text: '2', sub: true },
+      { text: 'levels are increasing' },
+    ])
   })
 
   it('should convert paragraph where selection is', async () => {

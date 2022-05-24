@@ -3,7 +3,9 @@ import { BlockQuote } from '../../../../../BlockQuote'
 import { BlockQuoteIcon } from '../../../../../Icons'
 
 export const config: ElementConfigI = {
-  Component: BlockQuote,
+  Component: {
+    article: BlockQuote,
+  },
   structure: [
     { type: 'blockQuoteText', repeat: true },
     { type: 'figureCaption' },

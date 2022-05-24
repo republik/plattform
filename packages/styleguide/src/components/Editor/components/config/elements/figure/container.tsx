@@ -51,7 +51,9 @@ const Form: React.FC<ElementFormProps<FigureElement>> = ({
 )
 
 export const config: ElementConfigI = {
-  Component,
+  Component: {
+    article: Component,
+  },
   Form,
   structure: [{ type: 'figureImage' }, { type: 'figureCaption' }],
   button: { icon: ImageIcon },
