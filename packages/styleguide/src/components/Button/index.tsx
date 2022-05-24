@@ -67,6 +67,7 @@ const Button = React.forwardRef<
     attributes?: Attributes
     naked?: boolean
     small?: boolean
+    children?: any
   }
 >(
   (

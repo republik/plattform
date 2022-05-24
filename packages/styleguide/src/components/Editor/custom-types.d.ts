@@ -216,6 +216,7 @@ export interface DraftI {
 export type EditorConfig = {
   schema: SchemaConfig
   maxSigns?: number
+  debug?: boolean
 }
 
 export type KeyCombo = {
