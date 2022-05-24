@@ -1,4 +1,3 @@
-import React from 'react'
 import { SchemaConfig } from '../../custom-types'
 import {
   CommentBodyBlockQuote,
@@ -10,19 +9,26 @@ import { List } from '../config/elements/list/container'
 import { ListItem } from '../../../CommentBody/web/List'
 import { Break } from '../config/elements/break'
 import { Editorial, Sub, Sup } from '../../../Typography'
+import { FigureByline, FigureCaption } from '../../../Figure'
+import { Bold } from '../config/marks/bold'
+import { Italic } from '../config/marks/italic'
 
-export const commentSchema: SchemaConfig = {
+const schema: SchemaConfig = {
   blockQuote: CommentBodyBlockQuote,
   blockQuoteText: CommentBodyBlockQuoteParagraph,
+  figureByline: FigureByline,
+  figureCaption: FigureCaption,
   list: List,
   listItem: ListItem,
   break: Break,
   headline: CommentBodyHeading,
   link: Editorial.A,
   paragraph: CommentBodyParagraph,
-  bold: (props) => <strong {...props} />,
-  italic: (props) => <em {...props} />,
+  bold: Bold,
+  italic: Italic,
   strikethrough: Editorial.StrikeThrough,
   sub: Sub,
   sup: Sup,
 }
+
+export default schema

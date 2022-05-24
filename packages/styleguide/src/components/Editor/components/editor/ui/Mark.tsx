@@ -107,7 +107,6 @@ const Recurse: React.FC<{
     return <>{children}</>
   }
   const [Component, ...rest] = components
-  console.log('leaf', { Component })
   return (
     <Recurse components={rest}>
       <Component>{children}</Component>
@@ -122,7 +121,6 @@ export const Marks: React.FC<{
   const mComponents = mKeys
     .filter((mKey) => leaf[mKey])
     .map((mKey) => schema[mConfig[mKey].component])
-  console.log({ mComponents })
   return <Recurse components={mComponents}>{children}</Recurse>
 }
 

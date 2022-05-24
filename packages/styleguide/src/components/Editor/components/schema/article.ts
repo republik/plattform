@@ -9,7 +9,7 @@ import { PullQuote, PullQuoteSource, PullQuoteText } from '../../../PullQuote'
 import { Break } from '../config/elements/break'
 import { Editorial, Sub, Sup } from '../../../Typography'
 
-export const articleSchema: SchemaConfig = {
+const schema: SchemaConfig = {
   blockQuote: BlockQuote,
   blockQuoteText: BlockQuoteParagraph,
   figureByline: FigureByline,
@@ -31,3 +31,5 @@ export const articleSchema: SchemaConfig = {
   sub: Sub,
   sup: Sup,
 }
+
+export default schema

@@ -1,7 +1,4 @@
 import { CustomDescendant } from './custom-types'
-import { commentSchema } from './components/schema/comment'
-
-export const schema = commentSchema
 
 export const tree1: CustomDescendant[] = [
   {
@@ -81,13 +78,13 @@ export const tree1: CustomDescendant[] = [
         type: 'figureCaption',
         children: [
           {
-            text: 'As the peasants say',
+            text: 'As the peasants say ',
           },
           {
             type: 'figureByline',
             children: [
               {
-                text: '',
+                text: '(True that.)',
               },
             ],
           },

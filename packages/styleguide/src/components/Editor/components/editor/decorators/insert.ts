@@ -14,7 +14,9 @@ export const withInsert =
     }
 
     editor.insertText = (text) => {
+      // console.log('insert text', maxSigns)
       if (maxSigns && getCharCount(editor.children) >= maxSigns) {
+        // console.log('max reached')
         return
       }
       insertText(text)

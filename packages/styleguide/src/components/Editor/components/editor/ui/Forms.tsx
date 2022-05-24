@@ -98,7 +98,7 @@ const ElementForm: React.FC<FormData> = ({ node, Form }) => {
 export const FormOverlay = (): ReactElement => {
   const [formPath, setFormPath] = useFormContext()
   const editor = useSlate()
-  const forms = useMemo(() => getForms(editor, formPath), [formPath])
+  const forms = useMemo(() => getForms(editor, formPath), [editor, formPath])
 
   if (!forms.length || !formPath) return null
 

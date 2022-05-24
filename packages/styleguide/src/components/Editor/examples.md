@@ -25,12 +25,26 @@ state: {
         setState({value: newValue})
     }}
     structure={state.structure}
-    config={{ maxSigns: 3000, schema }}
+    config={{ maxSigns: 120, schema: schemaComment }}
 />
 ```
 
 ## Read-only Rendering
 
+#### Article
+
 ```react
-<SlateRender value={tree1} schema={schema} />
+<SlateRender value={tree1} schema={schemaArticle} />
+```
+
+#### Comment (Web)
+
+```react
+<SlateRender value={tree1} schema={schemaComment} />
+```
+
+#### Comment (Email)
+
+```react
+<SlateRender value={tree1} schema={schemaCommentEmail} />
 ```

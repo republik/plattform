@@ -25,7 +25,10 @@ const RenderedElement: React.FC<{
   const { type, children, ...customElProps } = element
   const config = elementsConfig[type]
   const Component = schema[config.component]
-  console.log('render element', { type: element.type, Component })
+  if (!Component) {
+    console.warn('Component for', element.type, 'missing')
+    return null
+  }
   return (
     <Component {...customElProps}>
       {children.map((node: CustomDescendant, i) =>
