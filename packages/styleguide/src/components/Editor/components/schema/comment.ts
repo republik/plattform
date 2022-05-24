@@ -4,6 +4,7 @@ import {
   CommentBodyBlockQuoteParagraph,
   CommentBodyHeading,
   CommentBodyParagraph,
+  CommentBodyContainer,
 } from '../../../CommentBody/web'
 import { List } from '../config/elements/list/container'
 import { ListItem } from '../../../CommentBody/web/List'
@@ -14,6 +15,7 @@ import { Bold } from '../config/marks/bold'
 import { Italic } from '../config/marks/italic'
 
 const schema: SchemaConfig = {
+  container: CommentBodyContainer,
   blockQuote: CommentBodyBlockQuote,
   blockQuoteText: CommentBodyBlockQuoteParagraph,
   figureByline: FigureByline,

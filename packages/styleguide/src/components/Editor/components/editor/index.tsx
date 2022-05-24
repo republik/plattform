@@ -29,6 +29,7 @@ import { withInsert } from './decorators/insert'
 import { withDelete } from './decorators/delete'
 import { useColorContext } from '../../../Colors/ColorContext'
 import { withCustomConfig } from './decorators/config'
+import { LayoutContainer } from './ui/Layout'
 
 const SlateEditor: React.FC<{
   value: CustomDescendant[]
@@ -119,20 +120,22 @@ const SlateEditor: React.FC<{
         >
           <FormOverlay />
           <Toolbar containerRef={containerRef} mode='sticky' />
-          <Editable
-            data-testid='slate-content-editable'
-            renderElement={renderElement}
-            renderLeaf={renderLeaf}
-            onKeyDown={(event) => {
-              // console.log('event', event.key, event.shiftKey)
-              insertOnKey({ name: 'Enter', shift: true }, 'break')(
-                editor,
-                event,
-              )
-              handleInsert(editor, event)
-              navigateOnTab(editor, event)
-            }}
-          />
+          <LayoutContainer config={config}>
+            <Editable
+              data-testid='slate-content-editable'
+              renderElement={renderElement}
+              renderLeaf={renderLeaf}
+              onKeyDown={(event) => {
+                // console.log('event', event.key, event.shiftKey)
+                insertOnKey({ name: 'Enter', shift: true }, 'break')(
+                  editor,
+                  event,
+                )
+                handleInsert(editor, event)
+                navigateOnTab(editor, event)
+              }}
+            />
+          </LayoutContainer>
           <Footer config={config} />
         </Slate>
       </FormContextProvider>

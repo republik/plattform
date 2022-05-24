@@ -132,8 +132,9 @@ export type CustomElementsType =
   | 'ol'
   | 'listItem'
 
-// include overlaps
-export type ExtendedElementType = CustomElementsType | 'list'
+// include overlapping types (e.g. ol and ul both want to render 'list'
+// include 'container' type
+export type ExtendedElementType = CustomElementsType | 'list' | 'container'
 
 interface ButtonI {
   icon: IconType

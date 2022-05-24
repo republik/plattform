@@ -3,6 +3,7 @@ import { SchemaConfig } from '../../custom-types'
 import { Break } from '../config/elements/break'
 import { Sub, Sup } from '../../../Typography'
 import {
+  Container,
   BlockQuote,
   BlockQuoteParagraph,
   Heading,
@@ -28,6 +29,7 @@ const List: React.FC<{
 )
 
 const schema: SchemaConfig = {
+  container: Container,
   blockQuote: BlockQuote,
   blockQuoteText: BlockQuoteParagraph,
   figureByline: Byline,
