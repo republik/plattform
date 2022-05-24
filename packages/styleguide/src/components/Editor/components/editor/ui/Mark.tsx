@@ -16,12 +16,11 @@ import {
   CustomElement,
   CustomMarksType,
   CustomText,
-  SchemaType,
+  SchemaConfig,
 } from '../../../custom-types'
-import { css, StyleAttribute } from 'glamor'
+import { css } from 'glamor'
 import { useColorContext } from '../../../../Colors/ColorContext'
 import {
-  getMarkStyles,
   isEmpty,
   isMarkActive,
   selectPlaceholder,
@@ -103,14 +102,14 @@ const Placeholder: React.FC<{
 
 const Recurse: React.FC<{
   components?: React.FC[]
-  customStyles?: StyleAttribute
-}> = ({ children, components = [], customStyles = {} }) => {
+}> = ({ children, components = [] }) => {
   if (!components.length) {
-    return <span {...customStyles}>{children}</span>
+    return <>{children}</>
   }
   const [Component, ...rest] = components
+  console.log('leaf', { Component })
   return (
-    <Recurse components={rest} customStyles={customStyles}>
+    <Recurse components={rest}>
       <Component>{children}</Component>
     </Recurse>
   )
@@ -118,17 +117,13 @@ const Recurse: React.FC<{
 
 export const Marks: React.FC<{
   leaf: CustomText
-  schema: SchemaType
+  schema: SchemaConfig
 }> = ({ children, leaf, schema }) => {
   const mComponents = mKeys
-    .filter((mKey) => leaf[mKey] && mConfig[mKey].Component)
-    .map((mKey) => mConfig[mKey].Component[schema])
-  const markStyles = getMarkStyles(leaf, schema)
-  return (
-    <Recurse components={mComponents} customStyles={markStyles}>
-      {children}
-    </Recurse>
-  )
+    .filter((mKey) => leaf[mKey])
+    .map((mKey) => schema[mConfig[mKey].component])
+  console.log({ mComponents })
+  return <Recurse components={mComponents}>{children}</Recurse>
 }
 
 export const LeafComponent: React.FC<{

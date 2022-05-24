@@ -3,16 +3,11 @@ import { IconType } from '@react-icons/all-files/lib'
 import { BaseEditor, Path } from 'slate'
 import { ReactEditor } from 'slate-react'
 import { HistoryEditor } from 'slate-history'
-import { StyleAttribute } from 'glamor'
 
-export type SchemaType = 'article' | 'comment' | 'email'
+type MarkType = 'italic' | 'bold' | 'sub' | 'sup' | 'strikethrough'
 
 type CustomMarks = {
-  italic?: boolean
-  bold?: boolean
-  sub?: boolean
-  sup?: boolean
-  strikethrough?: boolean
+  [K in MarkType]?: boolean
 }
 
 export type CustomMarksType = keyof CustomMarks
@@ -137,6 +132,9 @@ export type CustomElementsType =
   | 'ol'
   | 'listItem'
 
+// include overlaps
+export type ExtendedElementType = CustomElementsType | 'list'
+
 interface ButtonI {
   icon: IconType
   small?: boolean
@@ -157,23 +155,20 @@ export type EditorAttr = keyof EditorAttrsI
 
 export type NormalizeFn<E> = (entry: [E, Path], editor: CustomEditor) => boolean
 
-type StylesConfig = {
-  [K in SchemaType]?: StyleAttribute
-}
+type SchemaComponent =
+  | React.FC<{
+      attributes: any
+      children: any
+      [x: string]: unknown
+    }>
+  | ForwardRefExoticComponent
 
-type ComponentConfig = {
-  [K in SchemaType]?:
-    | React.FC<{
-        attributes: any
-        children: any
-        [x: string]: unknown
-      }>
-    | ForwardRefExoticComponent
+type SchemaConfig = {
+  [K in CustomMarksType | ExtendedElementType]?: SchemaComponent
 }
 
 export interface MarkConfigI {
-  styles?: StylesConfig
-  Component?: ComponentConfig
+  component: MarkType
   button?: ButtonI
 }
 
@@ -197,7 +192,7 @@ export type NodeTemplate = {
 }
 
 export interface ElementConfigI {
-  Component: ComponentConfig
+  component: ExtendedElementType
   attrs?: ElementAttrsI
   dataRequired?: dataRequiredType
   normalizations?: NormalizeFn[]
@@ -218,7 +213,7 @@ export interface DraftI {
 }
 
 export type EditorConfig = {
-  schema: SchemaType
+  schema: SchemaConfig
   maxSigns?: number
 }
 

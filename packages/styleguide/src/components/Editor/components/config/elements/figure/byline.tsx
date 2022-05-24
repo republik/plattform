@@ -1,10 +1,7 @@
 import { ElementConfigI } from '../../../../custom-types'
-import { FigureByline } from '../../../../../Figure'
 
 export const config: ElementConfigI = {
-  Component: {
-    article: FigureByline,
-  },
+  component: 'figureByline',
   attrs: {
     formatText: true,
     isInline: true,

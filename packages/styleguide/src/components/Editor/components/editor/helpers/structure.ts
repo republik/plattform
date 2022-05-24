@@ -192,11 +192,10 @@ const convertBlock = (
     ...(insertConfig.defaultProps || {}),
   }
 
-  const insertConfigName =
-    insertConfig.Component[editor.customConfig.schema].name
-  const targetConfigName =
-    targetConfig.Component[editor.customConfig.schema].name
-  if (insertConfigName === targetConfigName && insertConfig.defaultProps) {
+  if (
+    insertConfig.component === targetConfig.component &&
+    insertConfig.defaultProps
+  ) {
     Transforms.setNodes(editor, insertPartial, { at: target[1] })
     return target[1]
   }

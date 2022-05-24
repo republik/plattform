@@ -1,7 +1,7 @@
 import React from 'react'
 import { ElementConfigI } from '../../../custom-types'
 
-const BreakComponent: React.FC<{
+export const Break: React.FC<{
   attributes: any
   [x: string]: unknown
 }> = ({ children, attributes, ...props }) => (
@@ -12,9 +12,7 @@ const BreakComponent: React.FC<{
 )
 
 export const config: ElementConfigI = {
-  Component: {
-    article: BreakComponent,
-  },
+  component: 'break',
   attrs: {
     isInline: true,
     isVoid: true,

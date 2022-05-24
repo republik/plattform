@@ -1,27 +1,25 @@
 import { ElementConfigI, NodeTemplate } from '../../../../custom-types'
 import { UlIcon, OlIcon } from '../../../../../Icons'
 import React from 'react'
-import { List } from '../../../../../List'
+import { List as InnerList } from '../../../../../List'
 
-const ListComponent: React.FC<{
+export const List: React.FC<{
   ordered: boolean
   attributes: any
   [x: string]: unknown
 }> = ({ children, ordered, attributes = {}, ...props }) => {
   const { ref, ...attrs } = attributes
   return (
-    <List {...attrs} {...props} data={{ ordered }}>
+    <InnerList {...attrs} {...props} data={{ ordered }}>
       {children}
-    </List>
+    </InnerList>
   )
 }
 
 const structure: NodeTemplate[] = [{ type: 'listItem', repeat: true }]
 
 export const ulConfig: ElementConfigI = {
-  Component: {
-    article: ListComponent,
-  },
+  component: 'list',
   structure,
   button: { icon: UlIcon },
   defaultProps: {
@@ -30,9 +28,7 @@ export const ulConfig: ElementConfigI = {
 }
 
 export const olConfig: ElementConfigI = {
-  Component: {
-    article: ListComponent,
-  },
+  component: 'list',
   structure,
   button: { icon: OlIcon },
   defaultProps: {

@@ -2,6 +2,7 @@ import Editor from '../editor'
 import { buildTestHarness } from 'slate-test-utils'
 import { createEditor, Transforms } from 'slate'
 import { selectNearestWord } from '../editor/helpers/text'
+import schema from '../schema/article'
 
 describe('Slate Editor', () => {
   function getMockEditor() {
@@ -11,7 +12,7 @@ describe('Slate Editor', () => {
 
   let value
 
-  const defaultConfig = { schema: 'article' }
+  const defaultConfig = { schema }
 
   async function setup(structure, config = defaultConfig) {
     const mock = getMockEditor()

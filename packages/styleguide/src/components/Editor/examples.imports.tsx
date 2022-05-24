@@ -1,4 +1,7 @@
 import { CustomDescendant } from './custom-types'
+import { commentSchema } from './components/schema/comment'
+
+export const schema = commentSchema
 
 export const tree1: CustomDescendant[] = [
   {

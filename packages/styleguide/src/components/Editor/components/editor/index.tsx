@@ -68,7 +68,7 @@ const SlateEditor: React.FC<{
     const config = elementsConfig[element.type]
     const isVoid = config.attrs?.isVoid
     const highlightSelected = config.attrs?.highlightSelected
-    const Component = config.Component[editor.customConfig.schema]
+    const Component = editor.customConfig.schema[config.component]
     const path = ReactEditor.findPath(editor, element)
     const selectVoid = (e) => {
       if (isVoid) {

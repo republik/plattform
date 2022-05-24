@@ -3,7 +3,6 @@ import {
   CustomMarksType,
   CustomText,
   NormalizeFn,
-  SchemaType,
 } from '../../../custom-types'
 import {
   Descendant,
@@ -18,13 +17,8 @@ import {
 import { ReactEditor } from 'slate-react'
 import { config as elConfig } from '../../config/elements'
 import { isCorrect } from './structure'
-import {
-  config as mConfig,
-  configKeys as mKeys,
-  MARKS_WHITELIST,
-} from '../../config/marks'
+import { configKeys as mKeys, MARKS_WHITELIST } from '../../config/marks'
 import { overlaps } from './tree'
-import { StyleAttribute } from 'glamor'
 
 const PSEUDO_EMPTY_STRING = '\u2060'
 
@@ -99,18 +93,6 @@ export const toggleMark = (
     Editor.addMark(editor, mKey, true)
   }
 }
-
-export const getMarkStyles = (
-  node: CustomText,
-  schema: SchemaType,
-): StyleAttribute =>
-  mKeys
-    .filter((mKey) => node[mKey])
-    .reduce((acc, mKey) => {
-      const mStyle =
-        (mConfig[mKey].styles && mConfig[mKey].styles[schema]) || {}
-      return { ...acc, ...mStyle }
-    }, {})
 
 export const toTitle = (text = ''): string =>
   text.replace(/([A-Z])/g, ' $1').replace(/^\w/, (c) => c.toUpperCase())

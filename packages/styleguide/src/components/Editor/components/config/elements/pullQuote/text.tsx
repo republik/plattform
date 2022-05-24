@@ -1,10 +1,7 @@
 import { ElementConfigI } from '../../../../custom-types'
-import { PullQuoteText } from '../../../../../PullQuote'
 
 export const config: ElementConfigI = {
-  Component: {
-    article: PullQuoteText,
-  },
+  component: 'pullQuoteText',
   attrs: {
     isMain: true,
   },

@@ -5,7 +5,7 @@ import {
   FigureImageElement,
 } from '../../../../custom-types'
 import ImageInput from './ImageInput'
-import { FigureImage } from '../../../../../Figure'
+import { FigureImage as InnerFigureImage } from '../../../../../Figure'
 import { Label } from '../../../../../Typography'
 import { css } from 'glamor'
 
@@ -19,7 +19,7 @@ const styles = {
   }),
 }
 
-const ImageComponent: React.FC<{
+export const FigureImage: React.FC<{
   src?: string
   srcDark?: string
   alt?: string
@@ -35,7 +35,7 @@ const ImageComponent: React.FC<{
 }) => (
   <div {...attributes} {...props}>
     <div contentEditable={false}>
-      <FigureImage src={src} dark={{ src: srcDark }} alt={alt} />
+      <InnerFigureImage src={src} dark={{ src: srcDark }} alt={alt} />
     </div>
     {children}
   </div>
@@ -68,9 +68,7 @@ const Form: React.FC<ElementFormProps<FigureImageElement>> = ({
 )
 
 export const config: ElementConfigI = {
-  Component: {
-    article: ImageComponent,
-  },
+  component: 'figureImage',
   Form,
   attrs: {
     isVoid: true,

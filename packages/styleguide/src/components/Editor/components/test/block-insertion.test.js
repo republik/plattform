@@ -3,6 +3,7 @@ import { buildTestHarness } from 'slate-test-utils'
 import { createEditor, Transforms } from 'slate'
 import { cleanupTree } from '../editor/helpers/tree'
 import { insertRepeat } from '../editor/helpers/structure'
+import schema from '../schema/article'
 
 describe('Slate Editor: Block Insertion (On Enter)', () => {
   function getMockEditor() {
@@ -12,7 +13,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
 
   let value
 
-  const defaultConfig = { schema: 'article' }
+  const defaultConfig = { schema }
 
   async function setup(structure, config = defaultConfig) {
     const mock = getMockEditor()

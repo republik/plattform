@@ -2,6 +2,7 @@ import Editor from '../editor'
 import { buildTestHarness } from 'slate-test-utils'
 import { createEditor } from 'slate'
 import { cleanupTree } from '../editor/helpers/tree'
+import schema from '../schema/article'
 
 describe('Slate Editor: Normalisation', () => {
   function getMockEditor() {
@@ -11,7 +12,7 @@ describe('Slate Editor: Normalisation', () => {
 
   let value
 
-  const defaultConfig = { schema: 'article' }
+  const defaultConfig = { schema }
 
   async function setup(structure, config = defaultConfig) {
     const mock = getMockEditor()

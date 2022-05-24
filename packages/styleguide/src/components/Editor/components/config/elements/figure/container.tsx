@@ -9,7 +9,7 @@ import { Interaction, Label } from '../../../../../Typography'
 import { Figure } from '../../../../../Figure'
 import Radio from '../../../../../Form/Radio'
 
-const Component: React.FC<{
+export const FigureContainer: React.FC<{
   size: string
   attributes: any
   [x: string]: unknown
@@ -51,9 +51,7 @@ const Form: React.FC<ElementFormProps<FigureElement>> = ({
 )
 
 export const config: ElementConfigI = {
-  Component: {
-    article: Component,
-  },
+  component: 'figure',
   Form,
   structure: [{ type: 'figureImage' }, { type: 'figureCaption' }],
   button: { icon: ImageIcon },

@@ -3,6 +3,7 @@ import { buildTestHarness } from 'slate-test-utils'
 import { createEditor, Transforms } from 'slate'
 import { cleanupTree } from '../editor/helpers/tree'
 import { toggleElement } from '../editor/helpers/structure'
+import schema from '../schema/article'
 
 describe('Slate Editor: Block Conversion', () => {
   function getMockEditor() {
@@ -12,7 +13,7 @@ describe('Slate Editor: Block Conversion', () => {
 
   let value
 
-  const defaultConfig = { schema: 'article' }
+  const defaultConfig = { schema }
 
   async function setup(structure, config = defaultConfig) {
     const mock = getMockEditor()

@@ -3,7 +3,7 @@ import {
   CustomDescendant,
   CustomElement,
   CustomText,
-  SchemaType,
+  SchemaConfig,
 } from '../../custom-types'
 import { config as elementsConfig } from '../config/elements'
 import { Element as SlateElement } from 'slate'
@@ -11,7 +11,7 @@ import { Marks } from '../editor/ui/Mark'
 
 const RenderedLeaf: React.FC<{
   leaf: CustomText
-  schema: SchemaType
+  schema: SchemaConfig
 }> = ({ leaf, schema }) => (
   <Marks leaf={leaf} schema={schema}>
     {leaf.text}
@@ -20,11 +20,12 @@ const RenderedLeaf: React.FC<{
 
 const RenderedElement: React.FC<{
   element: CustomElement
-  schema: SchemaType
+  schema: SchemaConfig
 }> = ({ element, schema }) => {
   const { type, children, ...customElProps } = element
   const config = elementsConfig[type]
-  const Component = config.Component[schema]
+  const Component = schema[config.component]
+  console.log('render element', { type: element.type, Component })
   return (
     <Component {...customElProps}>
       {children.map((node: CustomDescendant, i) =>
@@ -40,7 +41,7 @@ const RenderedElement: React.FC<{
 
 const SlateRender: React.FC<{
   value: CustomDescendant[]
-  schema: SchemaType
+  schema: SchemaConfig
 }> = ({ value, schema }) => {
   return (
     <div>

@@ -5,7 +5,6 @@ import {
   NormalizeFn,
 } from '../../../custom-types'
 import { LinkIcon } from '../../../../Icons'
-import { Editorial } from '../../../../Typography'
 import React from 'react'
 import Field from '../../../../Form/Field'
 import { Editor, Transforms } from 'slate'
@@ -30,9 +29,7 @@ const unlinkWhenEmpty: NormalizeFn<LinkElement> = ([node, path], editor) => {
 }
 
 export const config: ElementConfigI = {
-  Component: {
-    article: Editorial.A,
-  },
+  component: 'link',
   normalizations: [unlinkWhenEmpty],
   defaultProps: {
     href: 'https://',
