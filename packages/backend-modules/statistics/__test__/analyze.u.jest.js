@@ -38,6 +38,7 @@ const cases = [
     text: 'De Brigitte Hürlimann (texte), QuickHoney (illustrations), Anna Traussnig (interactions) et Marta Czarska (traduction), 13.02.2020',
   },
   {
+    name: 'skip update',
     contributors: [
       { name: 'Daniel Binswanger', kind: 'Text' },
       { name: 'Daniel Graf', kind: 'Text' },
@@ -46,12 +47,12 @@ const cases = [
     text: 'Von Daniel Binswanger, Daniel Graf und Patrick Recher, 22.02.2020, Update: 12.03.2020',
   },
   {
-    name: 'skip update',
+    name: 'skip update 2',
     contributors: [
       { name: 'Elia Blülle', kind: 'Text' },
       { name: 'Anne Gabriel-Jürgens', kind: 'Bilder' },
     ],
-    text: 'Eine Reportage von Elia Blülle (Text) und Anne Gabriel-Jürgens (Bilder), Update: 16.03.2022',
+    text: 'Eine Reportage von Elia Blülle (Text) und Anne Gabriel-Jürgens (Bilder), 08.03.2022, Update: 16.03.2022',
   },
   {
     name: 'skip update hour',
@@ -59,7 +60,7 @@ const cases = [
       { name: 'Antje Stahl', kind: 'Text' },
       { name: 'Karla Hiraldo Voleau', kind: 'Bilder' },
     ],
-    text: 'Von Antje Stahl (Text) und Karla Hiraldo Voleau (Bilder), Update um 11.00 Uhr',
+    text: 'Von Antje Stahl (Text) und Karla Hiraldo Voleau (Bilder), 20.04.2022, Update um 11.00 Uhr',
   },
   {
     name: 'skip last update',
