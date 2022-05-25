@@ -4,7 +4,7 @@ import { List, ListItem as CommentListItem } from '../../List'
 
 export const ListItem = ({ children, attributes }) => (
   <CommentListItem
-    {...attributes}
+    attributes={attributes}
     style={{
       fontSize: 'inherit',
       lineHeight: 'inherit',

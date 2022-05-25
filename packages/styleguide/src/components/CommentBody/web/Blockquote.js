@@ -34,14 +34,17 @@ const styles = {
   }),
 }
 
-export const BlockQuoteParagraph = ({ children }) => (
-  <p {...styles.paragraph}>{children}</p>
+export const BlockQuoteParagraph = ({ attributes, children }) => (
+  <p {...attributes} {...styles.paragraph}>
+    {children}
+  </p>
 )
 
-export const BlockQuoteNested = ({ children }) => {
+export const BlockQuoteNested = ({ attributes, children }) => {
   const [colorScheme] = useColorContext()
   return (
     <div
+      {...attributes}
       {...styles.blockquote}
       {...styles.nestedBlockQuote}
       {...colorScheme.set('backgroundColor', 'hover')}
@@ -52,10 +55,11 @@ export const BlockQuoteNested = ({ children }) => {
   )
 }
 
-export default ({ children }) => {
+export default ({ attributes, children }) => {
   const [colorScheme] = useColorContext()
   return (
     <div
+      {...attributes}
       {...styles.blockquote}
       {...colorScheme.set('backgroundColor', 'hover')}
     >
