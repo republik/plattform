@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 
-let { generateKeyPair } = require('crypto');
+const { generateKeyPair } = require('crypto')
 
-generateKeyPair('rsa', {
-  modulusLength: 4096,
+// alg: ES256
+// @see https://datatracker.ietf.org/doc/html/rfc7518#section-3.1
+generateKeyPair('ec', {
+  namedCurve: 'prime256v1',
   publicKeyEncoding: {
     type: 'spki',
     format: 'pem'
@@ -11,8 +13,6 @@ generateKeyPair('rsa', {
   privateKeyEncoding: {
     type: 'pkcs8',
     format: 'pem',
-    cipher: 'aes-256-cbc',
-    passphrase: 'secret'
   }
 }, (err, publicKey, privateKey) => {
   // Handle errors and use the generated key pair.
@@ -25,5 +25,6 @@ generateKeyPair('rsa', {
   const b64PrivateKey = Buffer.from(privateKey).toString('base64');
 
   console.log(`Public key: ${b64PublicKey}`);
+  console.log('--')
   console.log(`Private key: ${b64PrivateKey}`);
 });
