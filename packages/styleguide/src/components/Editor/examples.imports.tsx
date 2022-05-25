@@ -74,7 +74,15 @@ export const tree1: CustomDescendant[] = [
         type: 'blockQuoteText',
         children: [
           {
-            text: 'Basically lots of shit',
+            text: 'Basically lots of',
+          },
+        ],
+      },
+      {
+        type: 'blockQuoteText',
+        children: [
+          {
+            text: 'shit',
           },
         ],
       },
