@@ -1,6 +1,11 @@
 import * as jose from 'jose'
 import { NextRequest } from 'next/server'
 
+// Extend jose JWTPayload with our expected payload properties
+export type JWTPayload = jose.JWTPayload & {
+  roles?: string[]
+}
+
 export function getSessionCookieValue(req: NextRequest) {
   const sessionCookieName = process.env.COOKIE_NAME ?? 'connect.sid'
   return req.cookies[sessionCookieName]
@@ -29,7 +34,7 @@ async function loadPublicKey() {
  * Verify the JWT token and validate the payloads shape
  * @param token
  */
-async function verifyJWT(token: string): Promise<jose.JWTPayload> {
+async function verifyJWT(token: string): Promise<JWTPayload> {
   const publicKey = await loadPublicKey()
   const { payload } = await jose.jwtVerify(token, publicKey, {
     issuer: process.env.JWT_ISSUER,
@@ -45,7 +50,7 @@ async function verifyJWT(token: string): Promise<jose.JWTPayload> {
  */
 export async function parseAndVerifyJWT(
   req: NextRequest,
-): Promise<jose.JWTPayload | null> {
+): Promise<JWTPayload | null> {
   const sessionCookie = getSessionCookieValue(req)
   const jwtCookie = getJWTCookieValue(req)
 
