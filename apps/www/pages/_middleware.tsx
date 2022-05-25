@@ -3,6 +3,7 @@ import {
   getSessionCookieValue,
   parseAndVerifyJWT,
 } from '../lib/auth/JWT/JWTHelper'
+import updateUserCookies from '../lib/helpers/middleware/UpdateUserCookies'
 
 /**
  * Middleware used to conditionally redirect between the marketing and front page
@@ -27,6 +28,15 @@ export async function middleware(req: NextRequest) {
     return NextResponse.rewrite(resUrl)
   }
 
+  async function updateUserCookiesAndReRun(): Promise<NextResponse> {
+    // Rewrite to gateway in order to fetch a JWT
+    const cookies = await updateUserCookies(req)
+    resUrl.pathname = '/'
+    const response = NextResponse.redirect(resUrl)
+    response.headers.set('Set-Cookie', cookies)
+    return response
+  }
+
   try {
     // Parse and verify JWT to decide about redirection
     const jwtBody = await parseAndVerifyJWT(req)
@@ -37,15 +47,12 @@ export async function middleware(req: NextRequest) {
         return NextResponse.rewrite(resUrl)
       }
     } else if (getSessionCookieValue(req)) {
-      // Rewrite to gateway in order to fetch a JWT
-      resUrl.pathname = '/_ssr/gateway'
-      return NextResponse.rewrite(resUrl)
+      return updateUserCookiesAndReRun()
     }
   } catch (err) {
     // Rewrite to gateway to fetch a new valid JWT
     console.error('JWT Verification Error', err)
-    resUrl.pathname = '/_ssr/gateway'
-    return NextResponse.rewrite(resUrl)
+    return updateUserCookiesAndReRun()
   }
 
   return NextResponse.next()
