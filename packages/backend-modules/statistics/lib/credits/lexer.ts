@@ -16,7 +16,8 @@ export class Lexer {
   getLexerInstance(): Tokenizr {
     return (
       new Tokenizr()
-        .rule(/\d{1,2}\.\d{1,2}\.\d{2,4}/, (ctx) => {
+        .rule(/[\dXY]{1,2}\.[\dXY]{1,2}\.\d{2,4}/, (ctx) => {
+          // XY for drafts without fixed publish date
           ctx.accept(TokenType.DATE)
         })
         .rule(/\d{1,2}[.:]\d{1,2}/, (ctx) => {

@@ -61,10 +61,10 @@ const getJSONLDs = (meta) => {
         datePublished: meta.publishDate,
         dateModified: meta.lastPublishedAt,
         author: meta.contributors
-          .filter((c) => c.kind === 'Text')
+          .filter((c) => c.kind?.includes('Text'))
           .map(mapContributor),
         contributor: meta.contributors
-          .filter((c) => c.kind !== 'Text')
+          .filter((c) => !c.kind?.includes('Text'))
           .map(mapContributor),
         publisher: publisher.name && publisher, // skip empty objects or if name is missing
       },
