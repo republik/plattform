@@ -11,7 +11,7 @@ export function getSessionCookieValue(req: NextRequest) {
   return req.cookies[sessionCookieName]
 }
 
-function getJWTCookieValue(req: NextRequest) {
+export function getJWTCookieValue(req: NextRequest) {
   const jwtCookieName = process.env.JWT_COOKIE_NAME ?? 'republik-token'
   return req.cookies[jwtCookieName]
 }
@@ -34,29 +34,11 @@ async function loadPublicKey() {
  * Verify the JWT token and validate the payloads shape
  * @param token
  */
-async function verifyJWT(token: string): Promise<JWTPayload> {
+export async function verifyJWT(token: string): Promise<JWTPayload> {
   const publicKey = await loadPublicKey()
   const { payload } = await jose.jwtVerify(token, publicKey, {
     issuer: process.env.JWT_ISSUER,
   })
 
   return payload
-}
-
-/**
- * Check if both the session cookie and the JWT are present.
- * If both are present, check if the JWT is valid and return the payload
- * @param req
- */
-export async function parseAndVerifyJWT(
-  req: NextRequest,
-): Promise<JWTPayload | null> {
-  const sessionCookie = getSessionCookieValue(req)
-  const jwtCookie = getJWTCookieValue(req)
-
-  if (!sessionCookie || !jwtCookie) {
-    return null
-  }
-
-  return await verifyJWT(jwtCookie)
 }

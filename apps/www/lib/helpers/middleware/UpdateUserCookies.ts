@@ -1,6 +1,8 @@
 import { NextRequest } from 'next/server'
 
-async function updateUserCookies(req: NextRequest): Promise<string> {
+async function fetchUserObject(
+  req: NextRequest,
+): Promise<{ me: null | { roles: string[] }; cookie: string }> {
   const response = await fetch(process.env.API_URL, {
     method: 'POST',
     body: 'query { user { id } }',
@@ -9,9 +11,24 @@ async function updateUserCookies(req: NextRequest): Promise<string> {
       cookie: req.headers.get('cookie'),
     },
   })
+
   console.log('new cookie values', response.headers.get('set-cookie'))
+
+  if (response.ok) {
+    const { me } = await response.json()
+    if (me instanceof Object && 'roles' in me) {
+      return {
+        me,
+        cookie: response.headers.get('set-cookie'),
+      }
+    }
+  }
+
   // Return the updated cookie-header
-  return response.headers.get('set-cookie')
+  return {
+    me: null,
+    cookie: response.headers.get('set-cookie'),
+  }
 }
 
-export default updateUserCookies
+export default fetchUserObject

@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import {
+  getJWTCookieValue,
   getSessionCookieValue,
-  parseAndVerifyJWT,
+  verifyJWT,
 } from '../lib/auth/JWT/JWTHelper'
-import updateUserCookies from '../lib/helpers/middleware/UpdateUserCookies'
+import fetchUserObject from '../lib/helpers/middleware/UpdateUserCookies'
 
 /**
  * Middleware used to conditionally redirect between the marketing and front page
@@ -28,31 +29,72 @@ export async function middleware(req: NextRequest) {
     return NextResponse.rewrite(resUrl)
   }
 
-  async function updateUserCookiesAndReRun(): Promise<NextResponse> {
-    // Rewrite to gateway in order to fetch a JWT
-    const cookies = await updateUserCookies(req)
-    resUrl.pathname = '/'
-    const response = NextResponse.redirect(resUrl)
-    response.headers.set('Set-Cookie', cookies)
+  /* ------------ Logic to handle SSG front- & marketing-page ------------ */
+
+  /**
+   * Rewrite to the front if the user is a memeber
+   * @param roles Roles of the user
+   * @returns NextResponse
+   */
+  async function rewriteBasedOnRoles(
+    roles: string[] = [],
+  ): Promise<NextResponse> {
+    if (roles?.includes('member')) {
+      resUrl.pathname = '/front'
+      return NextResponse.rewrite(resUrl)
+    }
+    return NextResponse.next()
+  }
+
+  /**
+   *
+   * @param req
+   * @returns
+   */
+  async function rewriteBasedOnMe(req: NextRequest): Promise<NextResponse> {
+    const { me, cookie } = await fetchUserObject(req)
+    const response: NextResponse =
+      me && me.roles ? await rewriteBasedOnRoles(me.roles) : NextResponse.next()
+
+    response.headers.set('Set-Cookie', cookie)
     return response
   }
 
-  try {
-    // Parse and verify JWT to decide about redirection
-    const jwtBody = await parseAndVerifyJWT(req)
+  /**
+   * Redirect based on the jwt-token after it was successfully validated
+   * @param token JWT found in the cookie header
+   * @returns NextResponse
+   */
+  async function rewriteBasedOnToken(token: string): Promise<NextResponse> {
+    try {
+      // Parse and verify JWT to decide about redirection
+      const jwtBody = await verifyJWT(token)
 
-    if (jwtBody) {
-      if (jwtBody.roles?.includes('member')) {
-        resUrl.pathname = '/front'
-        return NextResponse.rewrite(resUrl)
+      if (jwtBody && jwtBody.roles) {
+        return rewriteBasedOnRoles(jwtBody.roles)
+      } else {
+        // in case of empty jwt-payload -> expired session-cookie
+        return NextResponse.next()
       }
-    } else if (getSessionCookieValue(req)) {
-      return updateUserCookiesAndReRun()
+    } catch (err) {
+      // Rewrite to gateway to fetch a new valid JWT
+      console.error('JWT Verification Error', err)
+      // Rewrite based on fetched me object
+      return rewriteBasedOnMe(req)
     }
-  } catch (err) {
-    // Rewrite to gateway to fetch a new valid JWT
-    console.error('JWT Verification Error', err)
-    return updateUserCookiesAndReRun()
+  }
+
+  const sessionCookie = getSessionCookieValue(req)
+  const tokenCookie = getJWTCookieValue(req)
+
+  if (sessionCookie && tokenCookie) {
+    // Rewrite based on token
+    console.log('Rewriting based on session and token')
+    return rewriteBasedOnToken(tokenCookie)
+  } else if (sessionCookie) {
+    // Rewrite if no JWT is present
+    console.log('Rewriting based on session')
+    return rewriteBasedOnMe(req)
   }
 
   return NextResponse.next()
