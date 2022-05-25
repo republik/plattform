@@ -54,10 +54,11 @@ function createGetServerSideProps<P, Q extends ParsedUrlQuery = ParsedUrlQuery>(
 
     const result = await queryFunc(apolloClient, context.params, me, context)
 
-    if ('props' in result) {
-      result.props[APOLLO_STATE_PROP_NAME] = apolloClient.cache.extract()
+    if ('redirect' in result || 'notFound' in result) {
+      return result
     }
 
+    result.props[APOLLO_STATE_PROP_NAME] = apolloClient.cache.extract()
     return result
   }
 }
