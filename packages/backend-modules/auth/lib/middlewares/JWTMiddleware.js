@@ -1,9 +1,5 @@
 const { getJWTForUser } = require('../jwt')
-const { userIsInRoles, specialRoles } = require('../Roles')
-const {
-  getCookieOptions,
-  CookieExpirationTimeInMS,
-} = require('../CookieOptions')
+const { getCookieOptions } = require('../CookieOptions')
 
 function checkIfCookieIsPresent(req, cookieName) {
   return req.headers?.cookie?.includes(`${cookieName}=`)
@@ -13,12 +9,14 @@ function JWTMiddleware({ sessionCookieName, jwtCookieName }) {
   const cookieOptions = getCookieOptions()
 
   return (req, res, next) => {
-    if (req.user || checkIfCookieIsPresent(req, sessionCookieName)) {
-      const token = getJWTForUser(req.user, req.sessionID)
-      res.cookie(jwtCookieName, token, {
-        maxAge: userIsInRoles(req.user, specialRoles)
-          ? CookieExpirationTimeInMS.SHORT_MAX_AGE
-          : CookieExpirationTimeInMS.DEFAULT_MAX_AGE,
+    const { user, sessionID } = req
+
+    if (user || checkIfCookieIsPresent(req, sessionCookieName)) {
+      const { webTokenString, payload } = getJWTForUser(user, sessionID)
+      const { expiresIn: maxAge } = payload
+
+      res.cookie(jwtCookieName, webTokenString, {
+        maxAge,
         ...cookieOptions,
       })
     } else if (checkIfCookieIsPresent(req, jwtCookieName)) {

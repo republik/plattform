@@ -1,46 +1,37 @@
 const jwt = require('jsonwebtoken')
-const { userIsInRoles, specialRoles } = require('./Roles')
+
+const { userIsInRoles, specialRoles, exposableRoles } = require('./Roles')
 const { CookieExpirationTimeInMS } = require('./CookieOptions')
 
-let privateKey = null
+const privateKey =
+  process.env.JWT_PRIVATE_KEY &&
+  Buffer.from(process.env.JWT_PRIVATE_KEY, 'base64').toString()
 
-function getJWTForUser(user, sessionId) {
+const getJWTForUser = (user, sessionId) => {
   if (!privateKey) {
-    if (!process.env.JWT_PRIVATE_KEY) {
-      throw new Error('env variableJWT_PRIVATE_KEY is missing')
-    }
-
-    privateKey = Buffer.from(process.env.JWT_PRIVATE_KEY, 'base64').toString()
+    throw new Error('env variable JWT_PRIVATE_KEY is missing')
   }
 
+  if (user && !sessionId) {
+    throw new Error('JWT arg sessionId is missing')
+  }
+
+  const id = user?.id
+  const roles = user?.roles?.filter((role) => exposableRoles.includes(role))
   const expiresIn = userIsInRoles(user, specialRoles)
     ? CookieExpirationTimeInMS.SHORT_MAX_AGE
     : CookieExpirationTimeInMS.DEFAULT_MAX_AGE
+  const issuer = process.env.JWT_ISSUER
+  const jwtid = sessionId
 
-  const expiresInSecondsFromNow = Math.round((Date.now() + expiresIn) / 1000)
+  const webTokenString = jwt.sign({ id, roles }, privateKey, {
+    algorithm: 'ES256',
+    expiresIn: `${expiresIn}ms`,
+    issuer,
+    jwtid,
+  })
 
-  const userToken = jwt.sign(
-    user
-      ? {
-          id: user.id,
-          roles: user.roles,
-        }
-      : {
-          roles: [],
-        },
-    {
-      key: privateKey,
-      passphrase: 'secret',
-    },
-    {
-      jwtid: sessionId,
-      algorithm: 'RS256',
-      issuer: process.env.JWT_ISSUER,
-      expiresIn: expiresInSecondsFromNow,
-    },
-  )
-
-  return userToken
+  return { webTokenString, payload: { id, roles, expiresIn, issuer, jwtid } }
 }
 
 exports.getJWTForUser = getJWTForUser
