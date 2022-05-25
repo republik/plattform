@@ -1,10 +1,5 @@
 import * as jose from 'jose'
 import { NextRequest } from 'next/server'
-import {
-  isValidJWTPayload,
-  JWTPayloadValidationError,
-  Payload,
-} from './Payload'
 
 export function getSessionCookieValue(req: NextRequest) {
   const sessionCookieName = process.env.COOKIE_NAME ?? 'connect.sid'
@@ -23,7 +18,7 @@ async function loadPublicKey() {
   const rawPublicKey = process.env.JWT_PUBLIC_KEY
     ? Buffer.from(process.env.JWT_PUBLIC_KEY, 'base64').toString()
     : null
-  const publicKey = await jose.importSPKI(rawPublicKey, 'RS256')
+  const publicKey = await jose.importSPKI(rawPublicKey, 'ES256')
   if (!publicKey) {
     throw new Error('JWT_PUBLIC_KEY is not defined')
   }
@@ -34,14 +29,12 @@ async function loadPublicKey() {
  * Verify the JWT token and validate the payloads shape
  * @param token
  */
-async function verifyJWT(token: string): Promise<Payload> {
+async function verifyJWT(token: string): Promise<jose.JWTPayload> {
   const publicKey = await loadPublicKey()
   const { payload } = await jose.jwtVerify(token, publicKey, {
     issuer: process.env.JWT_ISSUER,
   })
-  if (!isValidJWTPayload(payload)) {
-    throw new JWTPayloadValidationError('Invalid JWT payload')
-  }
+
   return payload
 }
 
@@ -52,7 +45,7 @@ async function verifyJWT(token: string): Promise<Payload> {
  */
 export async function parseAndVerifyJWT(
   req: NextRequest,
-): Promise<Payload | null> {
+): Promise<jose.JWTPayload | null> {
   const sessionCookie = getSessionCookieValue(req)
   const jwtCookie = getJWTCookieValue(req)
 
