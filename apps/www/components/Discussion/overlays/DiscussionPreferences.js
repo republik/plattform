@@ -361,7 +361,8 @@ const DiscussionPreferencesEditor = ({
                       val === false // if not anonymous keep or set saved credential
                         ? state.credential ||
                           userPreference?.credential?.description ||
-                          autoCredential?.description
+                          autoCredential?.description ||
+                          ''
                         : '',
                   }))
                 }}
