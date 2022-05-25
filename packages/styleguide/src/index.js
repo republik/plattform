@@ -1061,6 +1061,7 @@ const Styleguide = () => {
                         ...require('./components/Editor/examples.imports'),
                         Editor: require('./components/Editor'),
                         SlateRender: require('./components/Editor/components/render'),
+                        renderAsText: require('./components/Editor/components/render/text'),
                         schemaArticle: require('./components/Editor/schema/article'),
                         schemaComment: require('./components/Editor/schema/comment'),
                         schemaCommentEmail: require('./components/Editor/schema/commentEmail'),

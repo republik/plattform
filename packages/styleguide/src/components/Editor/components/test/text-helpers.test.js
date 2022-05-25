@@ -3,6 +3,7 @@ import { buildTestHarness } from 'slate-test-utils'
 import { createEditor, Transforms } from 'slate'
 import { selectNearestWord } from '../editor/helpers/text'
 import schema from '../../schema/article'
+import { tree1 } from '../../examples.imports'
 
 describe('Slate Editor', () => {
   function getMockEditor() {

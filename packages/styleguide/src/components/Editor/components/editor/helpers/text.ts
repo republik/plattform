@@ -1,4 +1,5 @@
 import {
+  CustomDescendant,
   CustomEditor,
   CustomMarksType,
   CustomText,

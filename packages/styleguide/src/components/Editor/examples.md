@@ -1,4 +1,4 @@
-## Editor
+## Community Editor
 
 ```react
 state: {
@@ -26,22 +26,24 @@ state: {
 />
 ```
 
-## Read-only Rendering
+## Comment Rendering
 
-#### Article
-
-```react
-<SlateRender value={tree1} schema={schemaArticle} />
-```
-
-#### Comment (Web)
+#### Web
 
 ```react
 <SlateRender value={tree1} schema={schemaComment} />
 ```
 
-#### Comment (Email)
+#### Email
 
 ```react
 <SlateRender value={tree1} schema={schemaCommentEmail} />
+```
+
+### Plain Text
+
+```react
+<div>
+    {renderAsText(tree1)}
+</div>
 ```

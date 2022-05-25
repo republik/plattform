@@ -2,10 +2,11 @@ import React from 'react'
 import {
   CustomDescendant,
   CustomElement,
+  CustomNode,
   CustomText,
   SchemaConfig,
 } from '../../custom-types'
-import { config as elementsConfig } from '../../config/elements'
+import { config as elConfig } from '../../config/elements'
 import { Element as SlateElement } from 'slate'
 import { Marks } from '../editor/ui/Mark'
 
@@ -18,12 +19,27 @@ const RenderedLeaf: React.FC<{
   </Marks>
 )
 
+const RenderNodes: React.FC<{
+  nodes: CustomNode[]
+  schema: SchemaConfig
+}> = ({ nodes, schema }) => (
+  <>
+    {nodes.map((node: CustomDescendant, i) =>
+      SlateElement.isElement(node) ? (
+        <RenderedElement element={node} schema={schema} key={i} />
+      ) : (
+        <RenderedLeaf leaf={node} schema={schema} key={i} />
+      ),
+    )}
+  </>
+)
+
 const RenderedElement: React.FC<{
   element: CustomElement
   schema: SchemaConfig
 }> = ({ element, schema }) => {
   const { type, children, ...customElProps } = element
-  const config = elementsConfig[type]
+  const config = elConfig[type]
   const Component = schema[config.component]
   if (!Component) {
     console.warn('Component for', element.type, 'missing')
@@ -31,13 +47,7 @@ const RenderedElement: React.FC<{
   }
   return (
     <Component {...customElProps}>
-      {children.map((node: CustomDescendant, i) =>
-        SlateElement.isElement(node) ? (
-          <RenderedElement element={node} schema={schema} key={i} />
-        ) : (
-          <RenderedLeaf leaf={node} schema={schema} key={i} />
-        ),
-      )}
+      <RenderNodes nodes={children} schema={schema} />
     </Component>
   )
 }
@@ -48,9 +58,7 @@ const SlateRender: React.FC<{
 }> = ({ value, schema }) => {
   return (
     <div>
-      {value.map((element: CustomElement, i) => (
-        <RenderedElement key={i} element={element} schema={schema} />
-      ))}
+      <RenderNodes nodes={value} schema={schema} />
     </div>
   )
 }
