@@ -37,10 +37,12 @@ export async function middleware(req: NextRequest) {
         return NextResponse.rewrite(resUrl)
       }
     } else if (getSessionCookieValue(req)) {
+      // Rewrite to gateway in order to fetch a JWT
       resUrl.pathname = '/_ssr/gateway'
       return NextResponse.rewrite(resUrl)
     }
   } catch (err) {
+    // Rewrite to gateway to fetch a new valid JWT
     console.error('JWT Verification Error', err)
     resUrl.pathname = '/_ssr/gateway'
     return NextResponse.rewrite(resUrl)
