@@ -13,11 +13,6 @@ function JWTMiddleware({ sessionCookieName, jwtCookieName }) {
   const cookieOptions = getCookieOptions()
 
   return (req, res, next) => {
-    console.log({
-      sessionPresent: checkIfCookieIsPresent(req, sessionCookieName),
-      jwtPresent: checkIfCookieIsPresent(req, jwtCookieName),
-      cookies: req.headers?.cookie,
-    })
     if (req.user || checkIfCookieIsPresent(req, sessionCookieName)) {
       const token = getJWTForUser(req.user, req.sessionID)
       res.cookie(jwtCookieName, token, {
