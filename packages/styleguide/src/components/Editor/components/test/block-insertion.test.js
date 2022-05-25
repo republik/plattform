@@ -112,6 +112,59 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
     expect(editor.selection.focus).toEqual({ path: [1, 0], offset: 0 })
   })
 
+  // TODO: make this work
+  xit('should split inline nodes gracefully', async () => {
+    value = [
+      {
+        type: 'paragraph',
+        children: [
+          { text: 'my fair ' },
+          {
+            type: 'link',
+            href: 'https://www.republik.ch',
+            children: [{ text: 'glowstick' }],
+          },
+        ],
+      },
+    ]
+    const structure = [
+      {
+        type: 'paragraph',
+        repeat: true,
+      },
+    ]
+    const editor = await setup(structure)
+    await Transforms.select(editor, { path: [0, 1, 0], offset: 4 })
+    insertRepeat(editor)
+    await new Promise(process.nextTick)
+    expect(cleanupTree(value)).toEqual([
+      {
+        type: 'paragraph',
+        children: [
+          { text: 'my fair ' },
+          {
+            type: 'link',
+            href: 'https://www.republik.ch',
+            children: [{ text: 'glow' }],
+          },
+        ],
+      },
+      {
+        type: 'paragraph',
+        children: [
+          { text: '' },
+          {
+            type: 'link',
+            href: 'https://www.republik.ch',
+            children: [{ text: 'stick' }],
+          },
+          { text: '' },
+        ],
+      },
+    ])
+    expect(editor.selection.focus).toEqual({ path: [1, 0], offset: 0 })
+  })
+
   it('should handle no-next-move-possible scenario', async () => {
     value = [
       {

@@ -194,8 +194,6 @@ export type ElementFormProps<E> = {
   onChange: (newProperties: Partial<E>) => void
 }
 
-export type dataRequiredType<E> = (keyof E)[]
-
 export type TemplateType = CustomElementsType | 'text'
 
 export type NodeTemplate = {
@@ -207,7 +205,6 @@ export type NodeTemplate = {
 export interface ElementConfigI {
   component: ExtendedElementType
   attrs?: ElementAttrsI
-  dataRequired?: dataRequiredType
   normalizations?: NormalizeFn[]
   structure?: NodeTemplate[]
   Form?: React.FC<ElementFormProps<CustomElement>>
