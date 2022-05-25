@@ -17,21 +17,24 @@ export const List: React.FC<{
 }
 
 const structure: NodeTemplate[] = [{ type: 'listItem', repeat: true }]
+const props = ['ordered']
 
 export const ulConfig: ElementConfigI = {
-  component: 'list',
-  structure,
   button: { icon: UlIcon },
+  component: 'list',
   defaultProps: {
     ordered: false,
   },
+  props,
+  structure,
 }
 
 export const olConfig: ElementConfigI = {
-  component: 'list',
-  structure,
   button: { icon: OlIcon },
+  component: 'list',
   defaultProps: {
     ordered: true,
   },
+  props,
+  structure,
 }

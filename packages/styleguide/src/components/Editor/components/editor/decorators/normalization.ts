@@ -7,9 +7,9 @@ import { config } from '../../../config/elements'
 import { Element as SlateElement, Text, Transforms, Range } from 'slate'
 import { fixStructure } from '../helpers/structure'
 import { handleEnds } from '../helpers/ends'
-import { cleanupMarks, createLinks, handlePlaceholders } from '../helpers/text'
+import { cleanupText, createLinks, handlePlaceholders } from '../helpers/text'
 import { resetSelection } from '../helpers/selection'
-import { cleanupVoids } from '../helpers/tree'
+import { cleanupElement, cleanupVoids } from '../helpers/tree'
 
 let originalSelection: Range
 
@@ -53,6 +53,9 @@ export const withNormalizations =
         rerun = cleanupVoids([node, path], editor)
         if (rerun) return
 
+        rerun = cleanupElement([node, path], editor)
+        if (rerun) return
+
         // if elements got replaced, try to restore previous selection
         rerun = resetSelection(originalSelection)([node, path], editor)
         originalSelection = undefined
@@ -64,13 +67,13 @@ export const withNormalizations =
       // text normalization
       if (Text.isText(node)) {
         // console.log('text node')
-        rerun = cleanupMarks([node, path], editor)
+        rerun = createLinks([node, path], editor)
         if (rerun) return
         rerun = handleEnds([node, path], editor)
         if (rerun) return
-        rerun = createLinks([node, path], editor)
-        if (rerun) return
         rerun = handlePlaceholders([node, path], editor)
+        if (rerun) return
+        rerun = cleanupText([node, path], editor)
         if (rerun) return
       }
 

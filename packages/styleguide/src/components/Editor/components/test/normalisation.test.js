@@ -680,7 +680,9 @@ describe('Slate Editor: Normalisation', () => {
         },
       ])
     })
+  })
 
+  describe('cleanup', () => {
     it('formatting (except sub/sup) should be removed unless parent block has formatText flag in config', async () => {
       value = [
         {
@@ -730,6 +732,37 @@ describe('Slate Editor: Normalisation', () => {
             { text: 'levels are ' },
             { text: 'crazy', bold: true },
             { text: '!!!' },
+          ],
+        },
+      ])
+    })
+
+    it('should remove attributes when they do not match the current node', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          ordered: true,
+          children: [
+            {
+              text: 'hello world',
+              href: 'www.world.global',
+            },
+          ],
+        },
+      ]
+      const structure = [
+        {
+          type: 'paragraph',
+        },
+      ]
+      const editor = await setup(structure)
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'paragraph',
+          children: [
+            {
+              text: 'hello world',
+            },
           ],
         },
       ])

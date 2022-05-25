@@ -29,15 +29,16 @@ const unlinkWhenEmpty: NormalizeFn<LinkElement> = ([node, path], editor) => {
 }
 
 export const config: ElementConfigI = {
-  component: 'link',
-  normalizations: [unlinkWhenEmpty],
-  defaultProps: {
-    href: 'https://',
-  },
   Form,
   attrs: {
     isInline: true,
     formatText: true,
   },
   button: { icon: LinkIcon },
+  component: 'link',
+  defaultProps: {
+    href: 'https://',
+  },
+  normalizations: [unlinkWhenEmpty],
+  props: ['href'],
 }

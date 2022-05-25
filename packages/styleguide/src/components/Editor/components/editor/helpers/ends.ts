@@ -15,6 +15,7 @@ export const handleEnds: NormalizeFn<CustomText> = ([node, path], editor) => {
   // Since the end nodes are at one end of the structure,
   // only previous or next will be defined.
   // TODO: same with next (no use case atm)
+  // TODO: make sure that all the nodes with texts are appended to before the end (see norm. test)
   const previous = Editor.previous(editor, { at: path })
   if (previous) {
     const nearestTextPath = getTextNode(previous, editor)[1]

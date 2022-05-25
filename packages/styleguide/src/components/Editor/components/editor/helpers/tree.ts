@@ -39,6 +39,27 @@ export const cleanupTree = (value: CustomDescendant[]): CustomDescendant[] => {
   })
 }
 
+export const cleanupNode: (allowList: string[]) => NormalizeFn<CustomNode> =
+  (allowList) =>
+  ([node, path], editor) => {
+    for (const prop in node) {
+      if (!allowList.includes(prop)) {
+        Transforms.unsetNodes(editor, prop, { at: path })
+      }
+    }
+    // tree hasn't change
+    return false
+  }
+
+const baseElementProps = ['type', 'children', 'template']
+export const cleanupElement: NormalizeFn<CustomElement> = (
+  [node, path],
+  editor,
+) => {
+  const allowedProps = baseElementProps.concat(elConfig[node.type].props || [])
+  return cleanupNode(allowedProps)([node, path], editor)
+}
+
 export const deleteExcessChildren = (
   from: number,
   node: CustomAncestor,

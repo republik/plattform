@@ -199,7 +199,6 @@ describe('Slate Editor: Block Conversion', () => {
     expect(cleanupTree(value)).toEqual([
       {
         type: 'blockQuote',
-        ordered: false, // TODO: get rid of props propagation
         children: [
           {
             type: 'blockQuoteText',

@@ -17,8 +17,8 @@ import {
 import { ReactEditor } from 'slate-react'
 import { config as elConfig } from '../../../config/elements'
 import { isCorrect } from './structure'
-import { configKeys as mKeys, MARKS_WHITELIST } from '../../../config/marks'
-import { overlaps } from './tree'
+import { configKeys as mKeys, MARKS_ALLOW_LIST } from '../../../config/marks'
+import { cleanupNode, overlaps } from './tree'
 
 const PSEUDO_EMPTY_STRING = '\u2060'
 
@@ -28,17 +28,15 @@ export const getCharCount = (nodes: (Descendant | Node)[]): number =>
 export const getCountDown = (editor: CustomEditor, maxSigns: number): number =>
   maxSigns - getCharCount(editor.children)
 
-export const cleanupMarks: NormalizeFn<CustomText> = ([node, path], editor) => {
+const baseTextProps = ['text', 'placeholder', 'template', 'end']
+export const cleanupText: NormalizeFn<CustomText> = ([node, path], editor) => {
   const parent = Editor.parent(editor, path)[0]
   const formatText =
     SlateElement.isElement(parent) && elConfig[parent.type].attrs?.formatText
-  if (formatText) return false
-  mKeys.forEach((mKey) => {
-    if (MARKS_WHITELIST.includes(mKey)) return
-    if (node[mKey]) {
-      Transforms.unsetNodes(editor, mKey, { at: path })
-    }
-  })
+  const allowedProps = (
+    (formatText ? mKeys : MARKS_ALLOW_LIST) as string[]
+  ).concat(baseTextProps)
+  return cleanupNode(allowedProps)([node, path], editor)
 }
 
 export const selectNearestWord = (

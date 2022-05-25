@@ -20,4 +20,4 @@ export const configKeys: (keyof MarksConfig)[] = Object.keys(
 ) as (keyof MarksConfig)[]
 
 // "marks" which aren't a style per se
-export const MARKS_WHITELIST = ['sup', 'sub']
+export const MARKS_ALLOW_LIST = ['sup', 'sub']

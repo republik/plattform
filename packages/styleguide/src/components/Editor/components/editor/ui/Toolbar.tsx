@@ -26,7 +26,7 @@ import {
   INLINE_BUTTONS,
   BLOCK_BUTTONS,
 } from '../../../config/elements'
-import { configKeys as mKeys, MARKS_WHITELIST } from '../../../config/marks'
+import { configKeys as mKeys, MARKS_ALLOW_LIST } from '../../../config/marks'
 import { useSlate, ReactEditor, useFocused } from 'slate-react'
 import { Editor, Range, NodeEntry } from 'slate'
 import { useColorContext } from '../../../../Colors/ColorContext'
@@ -103,7 +103,7 @@ const getAllowedMarks = (
     selectedElement && elConfig[selectedElement[0].type].attrs?.formatText
       ? mKeys
       : selectedElement
-      ? MARKS_WHITELIST
+      ? MARKS_ALLOW_LIST
       : []
   const buttons = showAll ? mKeys : allowedMarks
   return buttons.map((t) => ({

@@ -201,6 +201,7 @@ export interface ElementConfigI {
   Form?: React.FC<ElementFormProps<CustomElement>>
   button?: ButtonI
   defaultProps?: any
+  props?: string[]
 }
 
 export type ElementsConfig = {
