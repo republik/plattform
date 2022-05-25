@@ -65,7 +65,7 @@ const RepoRow = ({ repo, showPhases }) => {
       <Td>
         {intersperse(
           meta.contributors
-            .filter(({ kind }) => kind === 'Text')
+            .filter(({ kind }) => kind?.includes('Text'))
             .map(({ name, user }, i) => {
               if (user?.username) {
                 return (
