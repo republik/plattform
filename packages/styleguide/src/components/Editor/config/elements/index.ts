@@ -14,6 +14,8 @@ import { config as blockQuote } from './blockQuote/container'
 import { config as blockQuoteText } from './blockQuote/text'
 import { ulConfig as ul, olConfig as ol } from './list/container'
 import { config as listItem } from './list/item'
+import { config as inlineCode } from './inlineCode'
+import { config as blockCode } from './blockCode'
 
 export const config: ElementsConfig = {
   paragraph,
@@ -32,6 +34,8 @@ export const config: ElementsConfig = {
   ul,
   ol,
   listItem,
+  inlineCode,
+  blockCode,
 }
 
 // typesafe helper

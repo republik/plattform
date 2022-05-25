@@ -13,7 +13,11 @@ export const tree1: CustomDescendant[] = [
     type: 'paragraph',
     children: [
       {
-        text: 'Once upon a time, in a ',
+        type: 'inlineCode',
+        children: [{ text: 'Once upon' }],
+      },
+      {
+        text: ' a time, in a ',
       },
       {
         text: 'small',
@@ -112,6 +116,14 @@ export const tree1: CustomDescendant[] = [
       },
       {
         text: ' here.',
+      },
+    ],
+  },
+  {
+    type: 'blockCode',
+    children: [
+      {
+        text: 'The story machine says goodbye.',
       },
     ],
   },

@@ -5,6 +5,8 @@ import {
   CommentBodyHeading,
   CommentBodyParagraph,
   CommentBodyContainer,
+  CommentBodyCode,
+  CommentBodyBlockCode,
 } from '../../CommentBody/web'
 import { List } from '../config/elements/list/container'
 import { ListItem } from '../../CommentBody/web/List'
@@ -31,6 +33,8 @@ const schema: SchemaConfig = {
   strikethrough: Editorial.StrikeThrough,
   sub: Sub,
   sup: Sup,
+  inlineCode: CommentBodyCode,
+  blockCode: CommentBodyBlockCode,
 }
 
 export default schema

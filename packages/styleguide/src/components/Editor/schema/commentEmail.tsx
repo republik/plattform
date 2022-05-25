@@ -11,6 +11,8 @@ import {
   ListItem,
   Paragraph,
   StrikeThrough,
+  Code,
+  BlockCode,
 } from '../../CommentBody/email'
 import { Bold } from '../config/marks/bold'
 import { Italic } from '../config/marks/italic'
@@ -45,6 +47,8 @@ const schema: SchemaConfig = {
   strikethrough: StrikeThrough,
   sub: Sub,
   sup: Sup,
+  inlineCode: Code,
+  blockCode: BlockCode,
 }
 
 export default schema

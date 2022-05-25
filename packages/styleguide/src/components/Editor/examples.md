@@ -10,7 +10,7 @@ state: {
     ],
     structure: [
         {
-            type: ['paragraph', 'headline', 'ul', 'ol', 'blockQuote'],
+            type: ['paragraph', 'headline', 'ul', 'ol', 'blockQuote', 'blockCode'],
             repeat: true
         }
     ]

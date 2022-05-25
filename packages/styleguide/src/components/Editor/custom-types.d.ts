@@ -92,6 +92,14 @@ export type ListItemElement = SharedElement & {
   type: 'listItem'
 }
 
+export type InlineCodeElement = SharedElement & {
+  type: 'inlineCode'
+}
+
+export type BlockCodeElement = SharedElement & {
+  type: 'blockCode'
+}
+
 export type CustomElement =
   | HeadlineElement
   | ParagraphElement
@@ -108,6 +116,8 @@ export type CustomElement =
   | BlockQuoteTextElement
   | ListElement
   | ListItemElement
+  | InlineCodeElement
+  | BlockCodeElement
 
 export type CustomDescendant = CustomElement | CustomText
 export type CustomAncestor = CustomElement | CustomEditor
@@ -131,6 +141,8 @@ export type CustomElementsType =
   | 'ul'
   | 'ol'
   | 'listItem'
+  | 'inlineCode'
+  | 'blockCode'
 
 // include overlapping types (e.g. ol and ul both want to render 'list'
 // include 'container' type
