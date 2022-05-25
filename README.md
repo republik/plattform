@@ -29,7 +29,6 @@ The logo and fonts are the property of their owners (logo—Project R, GT Americ
 
 The `www`, `publikator` app and `styleguide` are BSD-3-Clause licensed. The `api`, `assets` app and all `backend-modules` are AGPL-3.0 licensed. See respective license files in subfolders.
 
-
 ### Utilities
 
 This turborepo has some additional tools already setup for you:
