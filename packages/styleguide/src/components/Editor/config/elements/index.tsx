@@ -43,11 +43,15 @@ export const coreEditorAttrs: EditorAttr[] = ['isVoid', 'isInline']
 
 export const INLINE_BUTTONS: TemplateType[] = ['link']
 
+// TODO: this should be generated automatically based on schema & config
+//  if: defined in schema + button in config -> show button
+// TODO: make top level structure optional
+//  default top level structure -> { type: [BLOCK_BUTTONS], repeat: true }
 export const BLOCK_BUTTONS: TemplateType[] = [
   'headline',
   'paragraph',
   // 'pullQuote',
-  'figure',
+  // 'figure',
   'blockQuote',
   'ul',
   'ol',
