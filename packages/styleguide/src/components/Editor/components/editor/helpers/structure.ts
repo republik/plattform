@@ -399,11 +399,10 @@ export const fixStructure: (
         return true
       }
     }
-    if (node.children.length > structure.length + repeatOffset) {
-      deleteExcessChildren(structure.length + repeatOffset, node, path, editor)
-      return true
-    }
-    return false
+    return deleteExcessChildren(structure.length + repeatOffset)(
+      [node, path],
+      editor,
+    )
   }
 
 export const insertOnKey =

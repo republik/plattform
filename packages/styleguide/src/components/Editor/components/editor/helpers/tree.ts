@@ -60,18 +60,19 @@ export const cleanupElement: NormalizeFn<CustomElement> = (
   return cleanupNode(allowedProps)([node, path], editor)
 }
 
-export const deleteExcessChildren = (
+export const deleteExcessChildren: (
   from: number,
-  node: CustomAncestor,
-  path: number[],
-  editor: CustomEditor,
-): void => {
-  // console.log('DELETE EXCESS', from, 'vs', node.children.length, node)
-  for (let i = node.children.length - 1; i >= from; i--) {
-    // console.log(i)
-    Transforms.removeNodes(editor, { at: path.concat(i), voids: true })
+) => NormalizeFn<CustomAncestor> =
+  (from) =>
+  ([node, path], editor) => {
+    if (node.children.length <= from) {
+      return false
+    }
+    for (let i = node.children.length - 1; i >= from; i--) {
+      Transforms.removeNodes(editor, { at: path.concat(i), voids: true })
+    }
+    return true
   }
-}
 
 export const cleanupVoids: NormalizeFn<CustomElement> = (
   [node, path],
@@ -80,12 +81,8 @@ export const cleanupVoids: NormalizeFn<CustomElement> = (
   if (!Editor.isVoid(editor, node)) return false
   if (Text.isText(node.children[0]) && node.children[0].text !== '') {
     Transforms.insertText(editor, '', { at: path.concat(0), voids: true })
-    return true
   }
-  if (node.children.length > 1) {
-    deleteExcessChildren(1, node, path, editor)
-  }
-  return false
+  return deleteExcessChildren(1)([node, path], editor)
 }
 
 export const getTextNode = (
