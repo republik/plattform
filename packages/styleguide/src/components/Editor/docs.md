@@ -3,13 +3,6 @@
   - [Adding New Elements](#adding-new-elements)
   - [Adding New Marks](#adding-new-marks)
 - [Concepts](#concepts)
-  - [Insertion](#insertion)
-  - [Normalisation](#normalisation)
-  - [Nodes Data](#nodes-data)
-  - [Toolbars](#toolbars)
-  - [Placeholders](#placeholders)
-  - [Character Count](#character-count)
-- [Config Options](#config-options)
 
 
 ## Introduction
