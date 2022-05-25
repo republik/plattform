@@ -16,7 +16,6 @@ const getJWTForUser = (user, sessionId) => {
     throw new Error('JWT arg sessionId is missing')
   }
 
-  const id = user?.id
   const roles = user?.roles?.filter((role) => exposableRoles.includes(role))
   const expiresIn = userIsInRoles(user, specialRoles)
     ? CookieExpirationTimeInMS.SHORT_MAX_AGE
@@ -24,14 +23,14 @@ const getJWTForUser = (user, sessionId) => {
   const issuer = process.env.JWT_ISSUER
   const jwtid = sessionId
 
-  const webTokenString = jwt.sign({ id, roles }, privateKey, {
+  const webTokenString = jwt.sign({ roles }, privateKey, {
     algorithm: 'ES256',
     expiresIn: `${expiresIn}ms`,
     issuer,
     jwtid,
   })
 
-  return { webTokenString, payload: { id, roles, expiresIn, issuer, jwtid } }
+  return { webTokenString, payload: { roles, expiresIn, issuer, jwtid } }
 }
 
 exports.getJWTForUser = getJWTForUser
