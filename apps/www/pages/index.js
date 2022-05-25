@@ -10,7 +10,6 @@ import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
 import createGetStaticProps from '../lib/helpers/createGetStaticProps'
 import { MARKETING_PAGE_QUERY } from '../components/Marketing/graphql/MarketingPageQuery.graphql'
 import { useMe } from '../lib/context/MeContext'
-import { Loader } from '@project-r/styleguide'
 
 const MARKETING_PAGE_SSG_REVALIDATE = 60 // revalidate every minute
 
@@ -19,8 +18,7 @@ const MarketingPage = () => {
   const router = useRouter()
   const { meLoading, hasAccess } = useMe()
 
-  const { query, isReady } = router
-  const isUserSync = query.syncUser === '1'
+  const { isReady } = router
 
   useEffect(() => {
     if (!isReady || meLoading) {
@@ -28,10 +26,8 @@ const MarketingPage = () => {
     }
     if (hasAccess) {
       window.location = '/'
-    } else if (isUserSync) {
-      router.replace(router.pathname, undefined, { shallow: true })
     }
-  }, [router, isReady, meLoading, isUserSync, hasAccess])
+  }, [router, isReady, meLoading, hasAccess])
 
   const meta = {
     pageTitle: t('pages/index/pageTitle'),
@@ -42,12 +38,8 @@ const MarketingPage = () => {
   }
 
   return (
-    <Frame raw meta={meta} isOnMarketingPage={!isUserSync}>
-      <Loader
-        loading={isUserSync}
-        style={{ minHeight: `calc(90vh)` }}
-        render={() => <Marketing />}
-      />
+    <Frame raw meta={meta} isOnMarketingPage={true}>
+      <Marketing />
     </Frame>
   )
 }

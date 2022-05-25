@@ -13,7 +13,7 @@ export async function middleware(req: NextRequest) {
   const resUrl = req.nextUrl.clone()
 
   // Don't run the middleware unless on home-page
-  if (resUrl.pathname !== '/' || resUrl.searchParams.has('syncUser')) {
+  if (resUrl.pathname !== '/') {
     return NextResponse.next()
   }
 
@@ -27,7 +27,6 @@ export async function middleware(req: NextRequest) {
     return NextResponse.rewrite(resUrl)
   }
 
-  let syncUser
   try {
     // Parse and verify JWT to decide about redirection
     const jwtBody = await parseAndVerifyJWT(req)
@@ -38,14 +37,11 @@ export async function middleware(req: NextRequest) {
         return NextResponse.rewrite(resUrl)
       }
     } else if (getSessionCookieValue(req)) {
-      syncUser = true
+      resUrl.pathname = '/_ssr/gateway'
+      return NextResponse.rewrite(resUrl)
     }
   } catch (err) {
     console.error('JWT Verification Error', err)
-    syncUser = true
-  }
-
-  if (syncUser) {
     resUrl.pathname = '/_ssr/gateway'
     return NextResponse.rewrite(resUrl)
   }
