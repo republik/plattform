@@ -3,7 +3,7 @@ const {
   Roles: { userHasRole },
 } = require('@orbiting/backend-modules-auth')
 const {
-  isUserUnrestricted,
+  hasFullDocumentAccess,
   includesUnrestrictedChildRepoId,
 } = require('@orbiting/backend-modules-documents/lib/restrictions')
 const {
@@ -306,7 +306,14 @@ const mapAggregations = (result, t) => {
 
 const MAX_NODES = 10000 // Limit, but exceedingly high
 
-const getFirst = (first, filter, user, recursive, forceUnrestricted) => {
+const getFirst = (
+  first,
+  filter,
+  user,
+  recursive,
+  forceUnrestricted,
+  apiKey,
+) => {
   // we only restrict the nodes array
   // making totalCount always available
   // querying a single document by path is always allowed
@@ -319,7 +326,7 @@ const getFirst = (first, filter, user, recursive, forceUnrestricted) => {
   const unrestricted = includesUnrestrictedChildRepoId(format)
 
   if (
-    !isUserUnrestricted(user) &&
+    !hasFullDocumentAccess(user, apiKey) &&
     !recursive &&
     !path &&
     !oneRepoId &&
@@ -355,6 +362,7 @@ const hasFieldRequested = (fieldName, GraphQLResolveInfo) => {
 const search = async (__, args, context, info) => {
   const { user, elastic, t, redis } = context
   const cache = createCache(redis)
+  const apiKey = args.apiKey || context.documentApiKey
 
   const {
     recursive = false,
@@ -413,7 +421,7 @@ const search = async (__, args, context, info) => {
 
   const first =
     (samples !== false && samples) ||
-    getFirst(_first, filter, user, recursive, unrestricted)
+    getFirst(_first, filter, user, recursive, unrestricted, apiKey)
 
   const indicesList = getIndicesList(filter)
   const query = {
@@ -486,6 +494,7 @@ const search = async (__, args, context, info) => {
       connection: response,
       context,
       withoutContent,
+      apiKey,
     })
   }
 

@@ -3,11 +3,12 @@ const visit = require('unist-util-visit')
 const { metaFieldResolver, getRepoId } = require('./resolve')
 const Promise = require('bluebird')
 const { v4: isUuid } = require('is-uuid')
+const { mdastToString } = require('@orbiting/backend-modules-utils')
 
 // mean German, see http://iovs.arvojournals.org/article.aspx?articleid=2166061
 const WORDS_PER_MIN = 180
 
-const { SUPPRESS_READING_MINUTES } = process.env
+const { SUPPRESS_READING_MINUTES, FRONTEND_BASE_URL } = process.env
 
 let suppressReadingMinutes
 
@@ -153,25 +154,56 @@ const getRepoIdsForDoc = (doc, includeParents) =>
 
 const getTemplate = (doc) => doc.meta?.template || doc._meta?.template
 
-const getAuthorUserIds = (doc, { loaders }, credits) =>
-  Promise.map(
-    (doc?.meta?.credits || doc?._meta?.credits || credits).filter(
-      (c) => c.type === 'link',
-    ),
-    async ({ url }) => {
+const getContributorUserLinks = (meta, { loaders }) => {
+  const { contributorUserLinks, credits, path } = meta
+  if (contributorUserLinks) {
+    // computed on publish
+    return Promise.resolve(contributorUserLinks)
+  }
+  return Promise.map(
+    credits.filter((c) => c.type === 'link'),
+    async (node) => {
+      let { url } = node
+      if (url.startsWith(FRONTEND_BASE_URL)) {
+        url = url.replace(FRONTEND_BASE_URL, '')
+      }
+      const name = mdastToString(node).trim()
       if (url.startsWith('/~')) {
         const idOrUsername = url.substring(2)
         if (isUuid(idOrUsername)) {
-          return idOrUsername
+          return {
+            id: idOrUsername,
+            name,
+          }
         } else {
-          return loaders.User.byUsername.load(idOrUsername).then((u) => u?.id)
+          return loaders.User.byUsername.load(idOrUsername).then((u) => {
+            if (!u) {
+              console.warn(
+                `linked contributor username not found: ${name} url=${url} path=${path}`,
+              )
+              return
+            }
+            return {
+              id: u.id,
+              name,
+            }
+          })
         }
       } else {
-        const source = doc?.meta?.credits || doc?._meta?.credits || credits
-        console.warn(`invalid author link: ${url} in: ${source}`)
+        console.warn(`unkown contributor link: ${name} url=${url} path=${path}`)
       }
     },
-  ).then((userIds) => userIds.filter(Boolean))
+  ).then((userLinks) => {
+    meta.contributorUserLinks = userLinks.filter(Boolean)
+    return meta.contributorUserLinks
+  })
+}
+
+const getContributorUserIds = (meta, context) =>
+  (meta.authorUserIds && Promise.resolve(meta.authorUserIds)) || // legacy in redis and elastic search caches
+  getContributorUserLinks(meta, context).then((userLinks) =>
+    userLinks.map((userLink) => userLink.id),
+  )
 
 /**
  * Prepares meta information and resolves linked documents in meta which are
@@ -224,5 +256,6 @@ module.exports = {
   getWordsPerMinute,
   getRepoIdsForDoc,
   getTemplate,
-  getAuthorUserIds,
+  getContributorUserIds,
+  getContributorUserLinks,
 }

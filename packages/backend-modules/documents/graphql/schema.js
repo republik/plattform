@@ -22,10 +22,12 @@ type queries {
     last: Int
     before: String
     after: String
+    apiKey: String
   ): DocumentConnection!
   # (pre)published document
   document(
     path: String!
+    apiKey: String
   ): Document
 }
 `
