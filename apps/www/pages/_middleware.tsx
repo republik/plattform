@@ -54,7 +54,10 @@ export async function middleware(req: NextRequest) {
     const { me, cookie } = await fetchMyRoles(req)
 
     const response = rewriteBasedOnRoles(me?.roles)
-    response.headers.set('Set-Cookie', cookie)
+
+    if (cookie) {
+      response.headers.set('Set-Cookie', cookie)
+    }
 
     return response
   }
