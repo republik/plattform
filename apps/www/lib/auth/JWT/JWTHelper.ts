@@ -12,7 +12,7 @@ export function getSessionCookieValue(req: NextRequest) {
 }
 
 export function getJWTCookieValue(req: NextRequest) {
-  const jwtCookieName = process.env.JWT_COOKIE_NAME ?? 'jwt'
+  const jwtCookieName = process.env.JWT_COOKIE_NAME ?? 'user-token'
   return req.cookies[jwtCookieName]
 }
 
