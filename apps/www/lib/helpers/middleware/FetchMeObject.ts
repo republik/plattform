@@ -17,8 +17,6 @@ async function fetchMeObject(
     },
   })
 
-  console.log('new cookie values', response.headers.get('set-cookie'))
-
   if (response.ok) {
     const { data } = await response.json()
 

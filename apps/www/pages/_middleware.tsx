@@ -90,11 +90,9 @@ export async function middleware(req: NextRequest) {
 
   if (sessionCookie && tokenCookie) {
     // Rewrite based on token
-    console.log('Rewriting based on session and token')
     return rewriteBasedOnToken(tokenCookie)
   } else if (sessionCookie) {
     // Rewrite if no JWT is present
-    console.log('Rewriting based on session')
     return rewriteBasedOnMe(req)
   }
 
