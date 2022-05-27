@@ -6,6 +6,7 @@ const next = require('next')
 const compression = require('compression')
 const helmet = require('helmet')
 const rateLimit = require('express-rate-limit')
+const { COOKIE_NAME } = require('../lib/auth/constants')
 
 const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
 if (DEV || process.env.DOTENV) {
@@ -174,7 +175,7 @@ app.prepare().then(() => {
         } = req
 
         // If user is logged in, 20 requests per minute are allowed. Otherwise, only 5 requests/min allowed.
-        if (cookie && cookie.includes(process.env.COOKIE_NAME)) {
+        if (cookie && cookie.includes(COOKIE_NAME)) {
           return 20
         }
         return 5
