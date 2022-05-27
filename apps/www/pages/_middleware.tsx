@@ -4,7 +4,7 @@ import {
   getSessionCookieValue,
   verifyJWT,
 } from '../lib/auth/JWT/JWTHelper'
-import fetchUserObject from '../lib/helpers/middleware/UpdateUserCookies'
+import fetchMyRoles from '../lib/helpers/middleware/FetchMeObject'
 
 /**
  * Middleware used to conditionally redirect between the marketing and front page
@@ -52,7 +52,8 @@ export async function middleware(req: NextRequest) {
    * @returns
    */
   async function rewriteBasedOnMe(req: NextRequest): Promise<NextResponse> {
-    const { me, cookie } = await fetchUserObject(req)
+    const { me, cookie } = await fetchMyRoles(req)
+
     const response: NextResponse =
       me && me.roles ? await rewriteBasedOnRoles(me.roles) : NextResponse.next()
 
