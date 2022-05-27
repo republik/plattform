@@ -47,7 +47,8 @@ export async function middleware(req: NextRequest) {
   }
 
   /**
-   *
+   * Load me from the API and rewrite according to the loaded me object.
+   * Also add the set-cookie header to the response.
    * @param req
    * @returns
    */
