@@ -12,7 +12,7 @@ export function getSessionCookieValue(req: NextRequest) {
 }
 
 export function getJWTCookieValue(req: NextRequest) {
-  const jwtCookieName = process.env.JWT_COOKIE_NAME ?? 'republik-token'
+  const jwtCookieName = process.env.JWT_COOKIE_NAME ?? 'jwt'
   return req.cookies[jwtCookieName]
 }
 

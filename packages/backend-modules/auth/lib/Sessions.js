@@ -1,7 +1,11 @@
 const kraut = require('kraut')
 const geoForIP = require('./geoForIP')
 const { newAuthError } = require('./AuthError')
-const { getCookieOptions } = require('./CookieOptions')
+const {
+  getCookieOptions,
+  COOKIE_NAME,
+  JWT_COOKIE_NAME,
+} = require('./CookieOptions')
 
 const DestroySessionError = newAuthError(
   'session-destroy-failed',
@@ -21,11 +25,8 @@ const destroySession = async (req, res) => {
       }
       if (res) {
         const cookieOptions = getCookieOptions()
-        res.clearCookie(process.env.COOKIE_NAME ?? 'connect.sid', cookieOptions)
-        res.clearCookie(
-          process.env.JWT_COOKIE_NAME ?? 'republik-token',
-          cookieOptions,
-        )
+        res.clearCookie(COOKIE_NAME, cookieOptions)
+        res.clearCookie(JWT_COOKIE_NAME, cookieOptions)
       }
       return resolve()
     })

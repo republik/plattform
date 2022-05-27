@@ -8,6 +8,7 @@ const { JWTMiddleware } = require('../lib/middlewares/JWTMiddleware')
 const {
   CookieExpirationTimeInMS,
   getCookieOptions,
+  COOKIE_NAME,
 } = require('../lib/CookieOptions')
 
 exports.configure = ({
@@ -15,10 +16,6 @@ exports.configure = ({
   pgdb = null, // pogi connection
   // Secret used to encrypt session data on the server
   secret = null,
-  // name of the session ID cookie to set in the response (and read from request)
-  cookieName = 'connect.sid',
-  // name of the jwt cookie sent when a user is logged in
-  jwtCookieName = 'republik-token',
   // Max session age in ms
   // NB: With 'rolling: true' passed to session() the session expiry time will
   // be reset every time a user visits the site again before it expires.
@@ -57,7 +54,7 @@ exports.configure = ({
       rolling: true,
       saveUninitialized: false,
       httpOnly: true,
-      name: cookieName,
+      name: COOKIE_NAME,
       cookie: {
         maxAge: maxAge,
         ...cookieOptions,
@@ -89,12 +86,7 @@ exports.configure = ({
     return next()
   })
 
-  server.use(
-    JWTMiddleware({
-      sessionCookieName: cookieName,
-      jwtCookieName,
-    }),
-  )
+  server.use(JWTMiddleware())
 
   const close = () => {
     return store.close()

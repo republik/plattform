@@ -16,7 +16,12 @@ const CookieExpirationTimeInMS = {
   SHORT_MAX_AGE: 60000 * 60 * 24 * 7, // 1 week
 }
 
+const COOKIE_NAME = process.env.COOKIE_DOMAIN || 'connect.sid'
+const JWT_COOKIE_NAME = process.env.JWT_COOKIE_NAME || 'jwt'
+
 module.exports = {
+  COOKIE_NAME,
+  JWT_COOKIE_NAME,
   getCookieOptions,
   CookieExpirationTimeInMS,
 }
