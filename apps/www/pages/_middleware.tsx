@@ -36,9 +36,7 @@ export async function middleware(req: NextRequest) {
    * @param roles Roles of the user
    * @returns NextResponse
    */
-  async function rewriteBasedOnRoles(
-    roles: string[] = [],
-  ): Promise<NextResponse> {
+  function rewriteBasedOnRoles(roles: string[] = []): NextResponse {
     if (roles?.includes('member')) {
       resUrl.pathname = '/front'
       return NextResponse.rewrite(resUrl)
@@ -55,10 +53,9 @@ export async function middleware(req: NextRequest) {
   async function rewriteBasedOnMe(req: NextRequest): Promise<NextResponse> {
     const { me, cookie } = await fetchMyRoles(req)
 
-    const response: NextResponse =
-      me && me.roles ? await rewriteBasedOnRoles(me.roles) : NextResponse.next()
-
+    const response = rewriteBasedOnRoles(me?.roles)
     response.headers.set('Set-Cookie', cookie)
+
     return response
   }
 
@@ -72,12 +69,8 @@ export async function middleware(req: NextRequest) {
       // Parse and verify JWT to decide about redirection
       const jwtBody = await verifyJWT(token)
 
-      if (jwtBody && jwtBody.roles) {
-        return rewriteBasedOnRoles(jwtBody.roles)
-      } else {
-        // in case of empty jwt-payload -> expired session-cookie
-        return NextResponse.next()
-      }
+      // empty jwt-payload -> expired session-cookie
+      return rewriteBasedOnRoles(jwtBody?.roles)
     } catch (err) {
       // Rewrite to gateway to fetch a new valid JWT
       console.error('JWT Verification Error', err)
