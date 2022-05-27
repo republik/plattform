@@ -3,7 +3,7 @@ import {
   getJWTCookieValue,
   getSessionCookieValue,
   verifyJWT,
-} from '../lib/auth/JWT/JWTHelper'
+} from '../lib/auth/JWTHelper'
 import fetchMyRoles from '../lib/helpers/middleware/FetchMeObject'
 
 /**
