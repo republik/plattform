@@ -60,7 +60,6 @@ module.exports = withTM(
         {
           source: '/front',
           destination: '/',
-          permanent: true,
         },
         // Don't allow accessing legacy marketing-/front-page
         {
