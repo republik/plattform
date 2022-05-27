@@ -121,6 +121,12 @@ const getIOSVersion = (userAgent) => {
   return matches ? parseFloat(matches[1]) : undefined
 }
 
+export const NativeAppHelpers = {
+  getNativeAppVersion,
+  getIOSVersion,
+  isNewerVersion,
+}
+
 export const useInNativeApp = () => {
   const { userAgent, isIOS } = useUserAgent()
 

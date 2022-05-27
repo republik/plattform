@@ -4,9 +4,12 @@ const { makeExecutableSchema } = require('graphql-tools')
 const cookie = require('cookie')
 const cookieParser = require('cookie-parser')
 const { transformUser } = require('@orbiting/backend-modules-auth')
+const {
+  COOKIE_NAME,
+} = require('@orbiting/backend-modules-auth/lib/CookieOptions')
 const util = require('util')
 
-const { NODE_ENV, COOKIE_NAME, WS_KEEPALIVE_INTERVAL } = process.env
+const { NODE_ENV, WS_KEEPALIVE_INTERVAL } = process.env
 
 const documentApiKeyScheme = 'DocumentApiKey'
 
@@ -51,10 +54,10 @@ module.exports = (
 
   const apolloServer = new ApolloServer({
     schema: executableSchema,
-    context: ({ req, connection }) =>
+    context: ({ req, res, connection }) =>
       connection
         ? connection.context
-        : createContext({ user: req.user, req, scope: 'request' }),
+        : createContext({ user: req.user, req, res, scope: 'request' }),
     debug: true,
     introspection: true,
     playground: false, // see ./graphiql.js
@@ -71,7 +74,7 @@ module.exports = (
             return createContext({ scope: 'socket' })
           }
           const cookies = cookie.parse(cookiesRaw)
-          const authCookie = cookies[COOKIE_NAME || 'connect.sid']
+          const authCookie = cookies[COOKIE_NAME]
           const sid =
             authCookie &&
             cookieParser.signedCookie(authCookie, process.env.SESSION_SECRET)

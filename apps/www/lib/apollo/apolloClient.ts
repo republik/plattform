@@ -126,7 +126,7 @@ export function initializeApollo(
  * @param providedApolloClient
  * @returns {ApolloClient<unknown>|ApolloClient<any>}
  */
-export function useApollo<P extends unknown>(
+export function useApollo<P>(
   pageProps: P,
   providedApolloClient?: ApolloClient<NormalizedCacheObject>,
 ): ApolloClient<NormalizedCacheObject> {

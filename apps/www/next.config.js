@@ -55,9 +55,27 @@ module.exports = withTM(
     },
     async redirects() {
       return [
+        // '/front' must not be reachable directly!
+        // if a user is authenticated, '/' will be rewritten to '/front'
+        {
+          source: '/front',
+          destination: '/',
+          permanent: false,
+        },
+        // Don't allow accessing legacy marketing-/front-page
+        {
+          source: '/_ssr/',
+          destination: '/',
+          permanent: true,
+        },
         {
           source: '/_ssr/:path*',
           destination: '/:path*',
+          permanent: true,
+        },
+        {
+          source: '/_ssr/front/:id*',
+          destination: '/',
           permanent: true,
         },
         {
