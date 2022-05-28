@@ -34,6 +34,12 @@ module.exports = withTM(
           source: '/~:slug',
           destination: '/~/:slug',
         },
+        // Avoid SSG for extract urls used for image rendering
+        {
+          source: '/:path*',
+          destination: '/_ssr/:path*',
+          has: [{ type: 'query', key: 'extract' }],
+        },
         // Rewrite for crawlers when a comment is focused inside a debate on the article-site
         {
           source: '/:path*',
@@ -83,6 +89,7 @@ module.exports = withTM(
           destination: '/~:slug',
           permanent: true,
         },
+        // keep query when redirecting
         {
           source: '/pledge',
           destination: '/angebote',
@@ -93,7 +100,6 @@ module.exports = withTM(
           destination: '/mitteilung',
           permanent: true,
         },
-
         {
           source: '/merci',
           destination: '/konto',

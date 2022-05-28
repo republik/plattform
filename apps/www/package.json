@@ -8,7 +8,7 @@
   "description": "",
   "main": "server/index.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon --watch server --watch .env server/index.js",
+    "dev": "cross-env NODE_ENV=development nodemon --watch server --watch .env --watch next.config.js server/index.js",
     "start": "node server/index.js",
     "build": "next build",
     "heroku-postbuild": "npm run build",
