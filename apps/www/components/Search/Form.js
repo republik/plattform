@@ -86,14 +86,14 @@ const Form = compose(
             value={formValue}
             onChange={update}
             icon={
-              !startState && (
+              !startState ? (
                 <CloseIcon
                   style={{ cursor: 'pointer' }}
                   size={30}
                   onClick={reset}
                   {...colorScheme.set('fill', 'text')}
                 />
-              )
+              ) : undefined
             }
           />
         </form>
