@@ -29,61 +29,53 @@ module.exports = withTM(
       ignoreDuringBuilds: true,
     },
     async rewrites() {
-      return [
-        {
-          source: '/~:slug',
-          destination: '/~/:slug',
-        },
-        // Avoid SSG for extract urls used for image rendering
-        {
-          source: '/:path*',
-          destination: '/_ssr/:path*',
-          has: [{ type: 'query', key: 'extract' }],
-        },
-        // Rewrite for crawlers when a comment is focused inside a debate on the article-site
-        {
-          source: '/:path*',
-          destination: '/_ssr/:path*',
-          has: [
-            { type: 'query', key: 'focus' },
-            {
-              type: 'header',
-              key: 'User-Agent',
-              value: '.*(Googlebot|facebookexternalhit|Twitterbot).*',
-            },
-          ],
-        },
-        {
-          source: '/pgp/:userSlug',
-          destination: '/api/pgp/:userSlug',
-        },
-      ]
+      return {
+        beforeFiles: [
+          // /front is only accessible via _middleware rewrite
+          {
+            source: '/front',
+            destination: '/404',
+          },
+          // _ssr routes are only accessible via rewrites
+          {
+            source: '/_ssr/:path*',
+            destination: '/404',
+          },
+        ],
+        afterFiles: [
+          // impossible route via file system path
+          {
+            source: '/~:slug',
+            destination: '/~/:slug',
+          },
+          // Avoid SSG for extract urls used for image rendering
+          {
+            source: '/:path*',
+            destination: '/_ssr/:path*',
+            has: [{ type: 'query', key: 'extract' }],
+          },
+          // Rewrite for crawlers when a comment is focused inside a debate on the article-site
+          {
+            source: '/:path*',
+            destination: '/_ssr/:path*',
+            has: [
+              { type: 'query', key: 'focus' },
+              {
+                type: 'header',
+                key: 'User-Agent',
+                value: '.*(Googlebot|facebookexternalhit|Twitterbot).*',
+              },
+            ],
+          },
+          {
+            source: '/pgp/:userSlug',
+            destination: '/api/pgp/:userSlug',
+          },
+        ],
+      }
     },
     async redirects() {
       return [
-        // '/front' must not be reachable directly!
-        // if a user is authenticated, '/' will be rewritten to '/front'
-        {
-          source: '/front',
-          destination: '/',
-          permanent: false,
-        },
-        // Don't allow accessing legacy marketing-/front-page
-        {
-          source: '/_ssr/',
-          destination: '/',
-          permanent: true,
-        },
-        {
-          source: '/_ssr/:path*',
-          destination: '/:path*',
-          permanent: true,
-        },
-        {
-          source: '/_ssr/front/:id*',
-          destination: '/',
-          permanent: true,
-        },
         {
           source: '/~/:slug',
           destination: '/~:slug',
