@@ -211,15 +211,7 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
 
               {me && me.accessCampaigns.length > 0 && hasActiveMembership && (
                 <li>
-                  <FooterNavLink
-                    href='/teilen'
-                    onClick={(e) => {
-                      if (shouldIgnoreClick(e)) {
-                        return
-                      }
-                      router.push('/teilen')
-                    }}
-                  >
+                  <FooterNavLink href='/teilen'>
                     <a {...navLinkStyle}>{t('footer/me/share')}</a>
                   </FooterNavLink>
                 </li>

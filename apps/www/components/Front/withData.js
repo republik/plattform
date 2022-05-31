@@ -2,7 +2,7 @@ import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import { TeaserActiveDebates, TeaserMyMagazine } from '@project-r/styleguide'
 
-const feedQuery = gql`
+export const FRONT_FEED_QUERY = gql`
   query getFrontFeed(
     $specificRepoIds: [ID!]
     $filters: [SearchGenericFilterInput!]
@@ -55,48 +55,50 @@ const feedQuery = gql`
   }
 `
 
-export const withFeedData = graphql(feedQuery, {
-  options: ({
-    priorRepoIds,
-    excludeRepoIds: excludeRepoIdsCS = '',
-    specificRepoIds = [],
-    minPublishDate,
-    lastPublishedAt,
-  }) => {
-    const excludeRepoIds = [
-      ...priorRepoIds,
-      ...(typeof excludeRepoIdsCS === 'string'
-        ? excludeRepoIdsCS.split(',')
-        : excludeRepoIdsCS),
-    ].filter(Boolean)
+export const getFrontFeedOptions = ({
+  priorRepoIds,
+  excludeRepoIds: excludeRepoIdsCS = '',
+  specificRepoIds = [],
+  minPublishDate,
+  lastPublishedAt,
+}) => {
+  const excludeRepoIds = [
+    ...priorRepoIds,
+    ...(typeof excludeRepoIdsCS === 'string'
+      ? excludeRepoIdsCS.split(',')
+      : excludeRepoIdsCS),
+  ].filter(Boolean)
 
-    let from =
-      minPublishDate ||
-      (lastPublishedAt
-        ? `${lastPublishedAt.split('T')[0]}T02:00:00.000Z`
-        : undefined)
+  let from =
+    minPublishDate ||
+    (lastPublishedAt
+      ? `${lastPublishedAt.split('T')[0]}T02:00:00.000Z`
+      : undefined)
 
-    return {
-      variables: specificRepoIds.filter(Boolean).length
-        ? { specificRepoIds }
-        : {
-            minPublishDate: from && {
-              from,
-            },
-            filters: [
-              { key: 'template', not: true, value: 'section' },
-              { key: 'template', not: true, value: 'format' },
-              { key: 'template', not: true, value: 'front' },
-            ].concat(
-              excludeRepoIds.map((repoId) => ({
-                key: 'repoId',
-                not: true,
-                value: repoId,
-              })),
-            ),
+  return {
+    variables: specificRepoIds.filter(Boolean).length
+      ? { specificRepoIds }
+      : {
+          minPublishDate: from && {
+            from,
           },
-    }
-  },
+          filters: [
+            { key: 'template', not: true, value: 'section' },
+            { key: 'template', not: true, value: 'format' },
+            { key: 'template', not: true, value: 'front' },
+          ].concat(
+            excludeRepoIds.map((repoId) => ({
+              key: 'repoId',
+              not: true,
+              value: repoId,
+            })),
+          ),
+        },
+  }
+}
+
+export const withFeedData = graphql(FRONT_FEED_QUERY, {
+  options: getFrontFeedOptions,
 })
 
 export const withDiscussionsData = graphql(
