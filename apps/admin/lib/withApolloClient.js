@@ -54,10 +54,6 @@ const WithApolloClient = (App) => {
           console.error('Error while running `getDataFromTree`', error)
         }
 
-        // getDataFromTree does not call componentWillUnmount
-        // head side effect therefore need to be cleared manually
-        Head.rewind()
-
         // Extract query data from the Apollo store
         apolloState = apollo.cache.extract()
       }
@@ -80,7 +76,7 @@ const WithApolloClient = (App) => {
       const { apolloState, ...props } = this.props
       return <App {...props} apolloClient={this.apolloClient} />
     }
-  };
+  }
 }
 
 export default WithApolloClient

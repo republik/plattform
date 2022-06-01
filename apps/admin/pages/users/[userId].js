@@ -4,7 +4,6 @@ import { compose } from 'react-apollo'
 
 import { enforceAuthorization } from '../../components/Auth/withAuthorization'
 import App from '../../components/App'
-import { Body, Content, Header } from '../../components/Layout'
 
 import { css } from 'glamor'
 
@@ -23,6 +22,8 @@ import Sessions from '../../components/Users/Sessions'
 import Actions from '../../components/Users/Actions'
 import Dialog from '../../components/Users/Dialog'
 import Mailbox from '../../components/Users/Mailbox'
+import { Body, Content } from '../../components/Layout'
+import Header from '../../components/Layout/Header'
 
 const styles = {
   row: css({
