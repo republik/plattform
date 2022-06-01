@@ -76,6 +76,9 @@ const give = async (
   }
 }
 
+const revoke = async () => {} // do nothing
+
 module.exports = {
   give,
+  revoke,
 }
