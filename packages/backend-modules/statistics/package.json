@@ -17,7 +17,8 @@
   },
   "homepage": "https://github.com/orbiting/backends#readme",
   "scripts": {
-    "link": "yarn link"
+    "dev": "tsc -w",
+    "build": "tsc"
   },
   "dependencies": {
     "bluebird": "^3.7.2",
@@ -25,6 +26,7 @@
     "debug": "^4.1.1",
     "mdast-util-to-string": "^1.1.0",
     "moment": "^2.26.0",
+    "ts-tokenizr": "^1.1.1",
     "yargs": "^17.0.1"
   }
 }

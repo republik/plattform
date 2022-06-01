@@ -1,10 +1,9 @@
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
-import { gql } from '@apollo/client'
 import Loader from '../Loader'
 import { RenderFront } from '../Front'
+import { useTranslation } from '../../lib/withT'
 
-const MiniFront = ({ data: { loading, error, front }, t }) => {
+const MiniFront = ({ loading, error, front }) => {
+  const { t } = useTranslation()
   return (
     <Loader
       loading={loading}
@@ -23,23 +22,4 @@ const MiniFront = ({ data: { loading, error, front }, t }) => {
   )
 }
 
-const query = gql`
-  query MarketingMiniFront {
-    front: document(path: "/marketing") {
-      id
-      children {
-        totalCount
-        nodes {
-          id
-          body
-        }
-      }
-      meta {
-        prepublication
-        lastPublishedAt
-      }
-    }
-  }
-`
-
-export default compose(graphql(query))(MiniFront)
+export default MiniFront

@@ -4,6 +4,9 @@ import Router, { withRouter } from 'next/router'
 import { max } from 'd3-array'
 
 import {
+  P,
+  H2,
+  H1,
   Button,
   Editorial,
   Interaction,
@@ -13,18 +16,13 @@ import {
   FigureImage,
   FigureCaption,
   fontStyles,
-} from '@project-r/styleguide'
-import {
   ChartTitle,
   ChartLead,
   ChartLegend,
   Chart,
 } from '@project-r/styleguide'
 
-import md from 'markdown-in-js'
-
 import Frame from '../components/Frame'
-import { light as mdComponents } from '../lib/utils/mdComponents'
 import { countFormat } from '../lib/utils/format'
 
 import { PackageItem, PackageBuffer } from '../components/Pledge/Accordion'
@@ -384,15 +382,18 @@ const Page = ({
           return (
             <>
               <div style={{ marginBottom: 60 }}>
-                {md(mdComponents)`
-
-${t('cockpit19/beforeNote')} ${(
-                  <Link href='/cockpit' passHref>
-                    <Editorial.A>{t('cockpit19/beforeNote/link')}</Editorial.A>
-                  </Link>
-                )}
-
-                `}
+                <>
+                  <P>
+                    {t('cockpit19/beforeNote')}{' '}
+                    {
+                      <Link href='/cockpit' passHref>
+                        <Editorial.A>
+                          {t('cockpit19/beforeNote/link')}
+                        </Editorial.A>
+                      </Link>
+                    }
+                  </P>
+                </>
                 <br />
                 <RawStatus
                   t={t}
@@ -409,11 +410,10 @@ ${t('cockpit19/beforeNote')} ${(
                   crowdfunding={crowdfunding}
                 />
               </div>
-              {md(mdComponents)`
-
-# Die Republik braucht Ihre Unterstützung, Ihren Mut und Ihren Einsatz, damit sie in Zukunft bestehen kann!
-
-      `}
+              <H1>
+                Die Republik braucht Ihre Unterstützung, Ihren Mut und Ihren
+                Einsatz, damit sie in Zukunft bestehen kann!
+              </H1>
               <Accordion
                 me={me}
                 query={query}
@@ -422,11 +422,7 @@ ${t('cockpit19/beforeNote')} ${(
                 defaultBenefactor={defaultBenefactor}
                 questionnaire={questionnaire}
               />
-
-              {md(mdComponents)`
-
-## Unsere Verlegerinnen – Sie!`}
-
+              <H2>Unsere Verlegerinnen – Sie!</H2>
               <TestimonialList
                 seed={communitySeed.start}
                 membershipAfter={END_DATE}
@@ -435,18 +431,36 @@ ${t('cockpit19/beforeNote')} ${(
                 share={false}
               />
               <br />
+              <P>
+                Seit zwei Jahren ist die Republik jetzt da – als digitales
+                Magazin, als Labor für den Journalismus des 21. Jahrhunderts.
+              </P>
 
-              {md(mdComponents)`
+              <P>
+                Sie haben uns bis hierhin begleitet: mit Ihrer Neugier, Ihrer
+                Unterstützung, Ihrem Lob und Ihrer Kritik. Dafür ein grosses
+                Danke! Ohne Sie wären wir nicht hier.
+              </P>
 
-Seit zwei Jahren ist die Republik jetzt da – als digitales Magazin, als Labor für den Journalismus des 21. Jahrhunderts.
+              <P>
+                Die Aufgabe der Republik ist, brauchbaren Journalismus zu
+                machen. Einen, der die Köpfe klarer, das Handeln mutiger, die
+                Entscheidungen klüger macht. Und der das Gemeinsame stärkt: die
+                Freiheit, den Rechtsstaat, die Demokratie.
+              </P>
 
-Sie haben uns bis hierhin begleitet: mit Ihrer Neugier, Ihrer Unterstützung, Ihrem Lob und Ihrer Kritik. Dafür ein grosses Danke! Ohne Sie wären wir nicht hier.
+              <P>
+                Dafür haben wir eine funktionierende Redaktion aufgebaut, die
+                ordentlichen und immer öfter auch ausserordentlichen
+                Journalismus liefert und sich weiterentwickeln will. Was wir
+                leider noch nicht geschafft haben: ein funktionierendes
+                Geschäftsmodell für diesen werbefreien, unabhängigen,
+                leserfinanzierten Journalismus zu etablieren.
+              </P>
 
-Die Aufgabe der Republik ist, brauchbaren Journalismus zu machen. Einen, der die Köpfe klarer, das Handeln mutiger, die Entscheidungen klüger macht. Und der das Gemeinsame stärkt: die Freiheit, den Rechtsstaat, die Demokratie.
-
-Dafür haben wir eine funktionierende Redaktion aufgebaut, die ordentlichen und immer öfter auch ausserordentlichen Journalismus liefert und sich weiterentwickeln will. Was wir leider noch nicht geschafft haben: ein funktionierendes Geschäftsmodell für diesen werbefreien, unabhängigen, leserfinanzierten Journalismus zu etablieren.
-
-Wir sind überzeugt, dass unsere Existenz einen Unterschied machen kann. Deshalb kämpfen wir für die Republik. ${(
+              <P>
+                Wir sind überzeugt, dass unsere Existenz einen Unterschied
+                machen kann. Deshalb kämpfen wir für die Republik.{' '}
                 <PrimaryCTA
                   me={me}
                   query={query}
@@ -458,9 +472,7 @@ Wir sind überzeugt, dass unsere Existenz einen Unterschied machen kann. Deshalb
                     Kämpfen Sie mit.
                   </Editorial.A>
                 </PrimaryCTA>
-              )}
-
-  `}
+              </P>
 
               {inNativeIOSApp && (
                 <Interaction.P
@@ -474,19 +486,35 @@ Wir sind überzeugt, dass unsere Existenz einen Unterschied machen kann. Deshalb
                 </Interaction.P>
               )}
 
-              {md(mdComponents)`
-## Darum geht es
+              <H2>Darum geht es</H2>
 
-Die Republik hatte 2019 im Schnitt 18’220 Verlegerinnen. Das deckt 70 Prozent der Kosten. Die restlichen 30 Prozent reissen ein tiefes Loch in die Bilanz. Defizite sind in der Aufbauphase eines Start-ups normal. Ein wachsendes Defizit ist für ein junges Unternehmen aber schnell tödlich.
+              <P>
+                Die Republik hatte 2019 im Schnitt 18’220 Verlegerinnen. Das
+                deckt 70 Prozent der Kosten. Die restlichen 30 Prozent reissen
+                ein tiefes Loch in die Bilanz. Defizite sind in der Aufbauphase
+                eines Start-ups normal. Ein wachsendes Defizit ist für ein
+                junges Unternehmen aber schnell tödlich.
+              </P>
 
-Im vergangenen Jahr haben wir weniger neue Verlegerinnen dazugewonnen, als uns verlassen haben. Oder anders: Wir haben unser Budgetziel verfehlt. Das hat heftige Folgen: Bis Ende März müssen wir den Rückstand von 2019 aufholen, sonst hat die Republik keine Zukunft. 
+              <P>
+                Im vergangenen Jahr haben wir weniger neue Verlegerinnen
+                dazugewonnen, als uns verlassen haben. Oder anders: Wir haben
+                unser Budgetziel verfehlt. Das hat heftige Folgen: Bis Ende März
+                müssen wir den Rückstand von 2019 aufholen, sonst hat die
+                Republik keine Zukunft.
+              </P>
 
-Konkret brauchen wir bis Ende März wieder 19’000 Mitglieder und Abonnenten und zusätzlich 2,2 Millionen Franken an Investoren­geldern, Spenden und Förder­beiträgen. Schaffen wir das nicht, werden wir die Republik ab dem 31. März 2020 abwickeln. Schaffen wir es, haben wir eine realistische Chance, langfristig ein tragfähiges Geschäfts­modell zu etablieren.
+              <P>
+                Konkret brauchen wir bis Ende März wieder 19’000 Mitglieder und
+                Abonnenten und zusätzlich 2,2 Millionen Franken an
+                Investoren­geldern, Spenden und Förder­beiträgen. Schaffen wir
+                das nicht, werden wir die Republik ab dem 31. März 2020
+                abwickeln. Schaffen wir es, haben wir eine realistische Chance,
+                langfristig ein tragfähiges Geschäfts­modell zu etablieren.
+              </P>
 
-## Updates
+              <H2> Updates </H2>
 
-
-`}
               <Fragment>
                 <VideoPlayer
                   key={activeVideo.hls}
@@ -537,83 +565,160 @@ Konkret brauchen wir bis Ende März wieder 19’000 Mitglieder und Abonnenten un
                   ))}
                 </div>
               </Fragment>
-              {md(mdComponents)`
+              <P>
+                <em style={{ ...fontStyles.serifItalic }}>
+                  17.03.2020, 7-Uhr-Newsletter
+                </em>
+                <br />
+                <Editorial.A href='https://www.republik.ch/2020/03/17/7-uhr-newsletter'>
+                  Gemeinsam haben wir die Ziele erreicht. Danke!
+                </Editorial.A>
+              </P>
+              <P>
+                <em style={{ ...fontStyles.serifItalic }}>
+                  01.03.2020, Project-R-Newsletter
+                </em>
+                <br />
+                <Editorial.A href='https://project-r.construction/newsletter/2020-03-01-wachstum'>
+                  Ein Wachstumsschub für die Zukunft der Republik
+                </Editorial.A>
+              </P>
+              <P>
+                <em style={{ ...fontStyles.serifItalic }}>
+                  15.02.2020, Experiment 2
+                </em>
+                <br />
+                <Editorial.A href='https://www.republik.ch/2020/02/15/schon-gehoert-eine-woche-republik-in-zehn-minuten'>
+                  Eine Woche Republik in 10 Minuten
+                </Editorial.A>
+              </P>
+              <P>
+                <em style={{ ...fontStyles.serifItalic }}>
+                  07.02.2020, Experiment 1
+                </em>
+                <br />
+                <Editorial.A href='https://www.republik.ch/2020/02/07/die-welt-ist-voll-mit-gutem-journalismus-teilen-sie-ihn-mit-der-community'>
+                  Ein «Zettelbrett» für journalistische Glanzstücke
+                </Editorial.A>
+              </P>
+              <P>
+                <em style={{ ...fontStyles.serifItalic }}>
+                  04.02.2020, Project-R-Newsletter
+                </em>
+                <br />
+                <Editorial.A href='https://project-r.construction/newsletter/2020-02-04-75-prozent'>
+                  Danke für 75 Prozent!
+                </Editorial.A>
+              </P>
+              <P>
+                <em style={{ ...fontStyles.serifItalic }}>
+                  12.01.2020, Project-R-Newsletter
+                </em>
+                <br />
+                <Editorial.A href='https://project-r.construction/newsletter/2020-01-12-zustand'>
+                  Das Update zum Zustand der Republik
+                </Editorial.A>
+              </P>
+              <P>
+                <em style={{ ...fontStyles.serifItalic }}>
+                  11.01.2020, Gesprächsrunde im Rothaus:
+                </em>
+                <br />
+                <Editorial.A href='https://www.republik.ch/2020/01/11/zur-lage-der-republik'>
+                  «Ihr braucht mehr Einnahmen. Woher sollen die kommen?»
+                </Editorial.A>
+              </P>
+              <P>
+                <em style={{ ...fontStyles.serifItalic }}>
+                  24.12.2019, Rückmeldungen:
+                </em>
+                <br />
+                <Editorial.A href='https://www.republik.ch/2019/12/24/was-wir-gehoert-haben'>
+                  Was wir gehört haben
+                </Editorial.A>
+              </P>
+              <P>
+                <em style={{ ...fontStyles.serifItalic }}>
+                  09.12.2019, Fragen und Antworten:
+                </em>
+                <br />
+                <Editorial.A href='https://www.republik.ch/2019/12/09/lage-der-republik'>
+                  Was Sie zur Lage der Republik wissen müssen
+                </Editorial.A>
+              </P>
+              <P>
+                <em style={{ ...fontStyles.serifItalic }}>
+                  09.12.2019, Project-R-Newsletter
+                </em>
+                <br />
+                <Editorial.A href='https://project-r.construction/newsletter/2019-12-09-der-wichtigste-newsletter'>
+                  Der wichtigste Newsletter seit dem Start der Republik
+                </Editorial.A>
+              </P>
 
-_17.03.2020, 7-Uhr-Newsletter_  
-[Gemeinsam haben wir die Ziele erreicht. Danke!](https://www.republik.ch/2020/03/17/7-uhr-newsletter)
+              <P>
+                {(shouldBuyProlong || !me || !me.activeMembership) && (
+                  <PrimaryCTA
+                    me={me}
+                    query={query}
+                    questionnaire={questionnaire}
+                    shouldBuyProlong={shouldBuyProlong}
+                    isReactivating={isReactivating}
+                  >
+                    <Button primary>
+                      {shouldBuyProlong
+                        ? isReactivating
+                          ? 'Jetzt zurückkehren'
+                          : 'Jetzt verlängern'
+                        : 'Mitglied werden'}
+                    </Button>
+                  </PrimaryCTA>
+                )}
+              </P>
 
-_01.03.2020, Project-R-Newsletter_  
-[Ein Wachstumsschub für die Zukunft der Republik](https://project-r.construction/newsletter/2020-03-01-wachstum)
+              <H2>Ohne Sie können wir nicht wachsen</H2>
 
-_15.02.2020, Experiment 2_  
-[Eine Woche Republik in 10 Minuten](https://www.republik.ch/2020/02/15/schon-gehoert-eine-woche-republik-in-zehn-minuten)
+              <P>
+                Wir brauchen Reichweite. Die können wir uns jedoch weder kaufen
+                (zu teuer) noch allein mit Journalismus erarbeiten.
+              </P>
 
-_07.02.2020, Experiment 1_  
-[Ein «Zettelbrett» für journalistische Glanzstücke](https://www.republik.ch/2020/02/07/die-welt-ist-voll-mit-gutem-journalismus-teilen-sie-ihn-mit-der-community)
+              <P>
+                Wir setzen also auf unsere wichtigste Ressource: Sie. Sie – und
+                Ihr Adressbuch, Ihr Netzwerk, Ihre Begeisterung, Ihre Skepsis.
+              </P>
 
-_04.02.2020, Project-R-Newsletter_  
-[Danke für 75 Prozent!](https://project-r.construction/newsletter/2020-02-04-75-prozent)
+              <P>
+                Bis Ende März werden wir eine Kampagne machen müssen, in der Sie
+                als Multiplikatoren, Botschafterinnen, Komplizen – nennen Sie
+                es, wie Sie wollen – eine Hauptrolle spielen.
+              </P>
 
-_12.01.2020, Project-R-Newsletter_  
-[Das Update zum Zustand der Republik](https://project-r.construction/newsletter/2020-01-12-zustand)
+              <P>
+                Unser Job dabei ist, Sie regelmässig, offen und klar über den
+                Stand der Dinge zu informieren. Und Ihnen die besten Werkzeuge
+                in die Hand zu geben: Argumente, Flyer, Mailkanonen – kurz:
+                Propaganda­material.
+              </P>
 
-_11.01.2020, Gesprächsrunde im Rothaus:_  
-[«Ihr braucht mehr Einnahmen. Woher sollen die kommen?»](https://www.republik.ch/2020/01/11/zur-lage-der-republik)
+              <P>
+                Falls Sie sich vorstellen können, dabei zu sein, haben wir ein
+                kleines Formular für Sie vorbereitet. Es auszufüllen, braucht
+                genau eine Minute. Wir sind Ihnen dankbar, wenn Sie sich diese
+                Minute nehmen.
+              </P>
 
-_24.12.2019, Rückmeldungen:_  
-[Was wir gehört haben](https://www.republik.ch/2019/12/24/was-wir-gehoert-haben)
-
-_09.12.2019, Fragen und Antworten:_  
-[Was Sie zur Lage der Republik wissen müssen](https://www.republik.ch/2019/12/09/lage-der-republik)
-
-_09.12.2019, Project-R-Newsletter_  
-[Der wichtigste Newsletter seit dem Start der Republik](https://project-r.construction/newsletter/2019-12-09-der-wichtigste-newsletter)
-
-${
-  (shouldBuyProlong || !me || !me.activeMembership) && (
-    <PrimaryCTA
-      me={me}
-      query={query}
-      questionnaire={questionnaire}
-      shouldBuyProlong={shouldBuyProlong}
-      isReactivating={isReactivating}
-    >
-      <Button primary>
-        {shouldBuyProlong
-          ? isReactivating
-            ? 'Jetzt zurückkehren'
-            : 'Jetzt verlängern'
-          : 'Mitglied werden'}
-      </Button>
-    </PrimaryCTA>
-  )
-}
-
-## Ohne Sie können wir nicht wachsen
-
-Wir brauchen Reichweite. Die können wir uns jedoch weder kaufen (zu teuer) noch allein mit Journalismus erarbeiten.
-
-Wir setzen also auf unsere wichtigste Ressource: Sie. Sie – und Ihr Adressbuch, Ihr Netzwerk, Ihre Begeisterung, Ihre Skepsis.
-
-Bis Ende März werden wir eine Kampagne machen müssen, in der Sie als Multiplikatoren, Botschafterinnen, Komplizen – nennen Sie es, wie Sie wollen – eine Hauptrolle spielen.
-
-Unser Job dabei ist, Sie regelmässig, offen und klar über den Stand der Dinge zu informieren. Und Ihnen die besten Werkzeuge in die Hand zu geben: Argumente, Flyer, Mailkanonen – kurz: Propaganda­material.
-
-Falls Sie sich vorstellen können, dabei zu sein, haben wir ein kleines Formular für Sie vorbereitet. Es auszufüllen, braucht genau eine Minute. Wir sind Ihnen dankbar, wenn Sie sich diese Minute nehmen.
-
-${
-  questionnaire && questionnaire.userHasSubmitted ? (
-    'Vielen Dank fürs Ausfüllen.'
-  ) : questionnaire && questionnaire.hasEnded ? (
-    'Nicht mehr verfügbar.'
-  ) : (
-    <Link href='/umfrage/1-minute' passHref>
-      <Editorial.A>Komplizin werden</Editorial.A>
-    </Link>
-  )
-}
-
-`}
+              <P>
+                {questionnaire && questionnaire.userHasSubmitted ? (
+                  'Vielen Dank fürs Ausfüllen.'
+                ) : questionnaire && questionnaire.hasEnded ? (
+                  'Nicht mehr verfügbar.'
+                ) : (
+                  <Link href='/umfrage/1-minute' passHref>
+                    <Editorial.A>Komplizin werden</Editorial.A>
+                  </Link>
+                )}
+              </P>
 
               <div style={{ width: '50%', margin: '20px 0' }}>
                 <FigureImage
@@ -625,11 +730,11 @@ ${
                 />
               </div>
 
-              {md(mdComponents)`
-
-Für die Bekanntmachung der Republik können Sie bei uns Flyer, Probeabo-Kärtchen, Sticker und Plakate bestellen. Es wäre uns eine Ehre, wenn Sie die Republik bekannter machen.
-
-`}
+              <P>
+                Für die Bekanntmachung der Republik können Sie bei uns Flyer,
+                Probeabo-Kärtchen, Sticker und Plakate bestellen. Es wäre uns
+                eine Ehre, wenn Sie die Republik bekannter machen.
+              </P>
 
               <Button
                 style={{ marginTop: 20 }}
@@ -747,47 +852,101 @@ Für die Bekanntmachung der Republik können Sie bei uns Flyer, Probeabo-Kärtch
                   {formatDateTime(new Date(evolution.updatedAt))}
                 </ChartLegend>
               </div>
+              <H2>Gemeinsam sind wir weit gekommen</H2>
 
-              {md(mdComponents)`
-## Gemeinsam sind wir weit gekommen
+              <P>Abgesehen von den Finanzen war 2019 ein gutes Jahr:</P>
 
-Abgesehen von den Finanzen war 2019 ein gutes Jahr:
+              <Editorial.UL>
+                <Editorial.LI>
+                  Wir haben mit Recherchen einen{' '}
+                  <Editorial.A href='/2019'>
+                    entscheidenden Unterschied gemacht
+                  </Editorial.A>
+                </Editorial.LI>
+                <Editorial.LI>
+                  Wir haben die Redaktion so weiterentwickelt, dass sie beides
+                  kann: schnell auf wichtige Ereignisse reagieren und
+                  Hintergrund liefern.
+                </Editorial.LI>
+                <Editorial.LI>
+                  Wir haben die Themen­führerschaft in den Bereichen Justiz,
+                  Digitalisierung und Klimapolitik aufgebaut.
+                </Editorial.LI>
+                <Editorial.LI>
+                  Wir waren permanent im Dialog mit Ihnen. Bei keinem anderen
+                  Medium können Sie direkt mit den Autorinnen debattieren.
+                </Editorial.LI>
+                <Editorial.LI>
+                  Wir reflektieren wie kein anderes Medien­unternehmen die
+                  eigene Arbeit öffentlich und schaffen Transparenz darüber, wie
+                  wir uns entwickeln.
+                </Editorial.LI>
+                <Editorial.LI>
+                  Wir haben Nachwuchs ausgebildet – und was für einen!
+                </Editorial.LI>
+                <Editorial.LI>
+                  Wir waren für den deutschen Grimme Online Award nominiert. Wir
+                  haben den Schweizer Reporterpreis und den Preis als European
+                  Start-up of the Year gewonnen. Und wir sind laut einer Umfrage
+                  das «unverwechselbarste Medium der Schweiz».
+                </Editorial.LI>
+                <Editorial.LI>
+                  Wir haben seit einem Jahr ein starkes Gremium im Rücken, das
+                  uns trägt, unterstützt – und konstruktiv kritisiert: den
+                  Genossenschaftsrat.
+                </Editorial.LI>
+              </Editorial.UL>
+              <H2>Die drei Phasen bis Ende März</H2>
+              <P>
+                Gemeinsam haben wir drei nicht ganz einfache Dinge zu erledigen:
+              </P>
+              <P>
+                ✅{' '}
+                <strong style={{ ...fontStyles.serifBold }}>
+                  Bis Ende Januar
+                </strong>
+              </P>
 
-- Wir haben mit Recherchen einen [entscheidenden Unterschied gemacht](https://republik.ch/2019).
+              <P>
+                ✅ Dass möglichst viele Verlegerinnen trotz Risiko an Bord
+                bleiben.
+              </P>
 
-- Wir haben die Redaktion so weiterentwickelt, dass sie beides kann: schnell auf wichtige Ereignisse reagieren und Hintergrund liefern.
+              <P>
+                ✅ Dass möglichst viele von Ihnen auf den doppelten
+                Mitgliedschaftspreis aufstocken. Denn was bringt Leben in
+                Projekte? Grosszügigkeit und Geld.
+              </P>
 
-- Wir haben die Themen­führerschaft in den Bereichen Justiz, Digitalisierung und Klimapolitik aufgebaut.
+              <P>
+                ✅ Neue unerschrockene Investorinnen und Grossspender finden.
+                (Falls Sie investieren wollen, schreiben Sie an: {''}
+                <Editorial.A href='mailto:ir@republik.ch'>
+                  ir@republik.ch
+                </Editorial.A>
+                )
+              </P>
 
-- Wir waren permanent im Dialog mit Ihnen. Bei keinem anderen Medium können Sie direkt mit den Autorinnen debattieren.
+              <P>
+                ✅{' '}
+                <strong style={{ ...fontStyles.serifBold }}>Im Februar</strong>{' '}
+                wollen wir an ein paar Schrauben drehen, bevor wir in den
+                entscheidenden Monat gehen. Wir wollen die Republik nicht neu
+                erfinden. Aber sie gemeinsam mit Ihnen noch ein wenig
+                nützlicher, transparenter und interaktiver machen.
+              </P>
 
-- Wir reflektieren wie kein anderes Medien­unternehmen die eigene Arbeit öffentlich und schaffen Transparenz darüber, wie wir uns entwickeln.
+              <P>
+                ✅ <strong style={{ ...fontStyles.serifBold }}>Im März</strong>{' '}
+                werden wir mit einer grossen und lauten Kampagne ein paar
+                tausend neue Verlegerinnen gewinnen müssen. Jetzt geht es um:
+                Wachstum.
+              </P>
 
-- Wir haben Nachwuchs ausgebildet – und was für einen!
-
-- Wir waren für den deutschen Grimme Online Award nominiert. Wir haben den Schweizer Reporterpreis und den Preis als European Start-up of the Year gewonnen. Und wir sind laut einer Umfrage das «unverwechselbarste Medium der Schweiz».
-
-- Wir haben seit einem Jahr ein starkes Gremium im Rücken, das uns trägt, unterstützt – und konstruktiv kritisiert: den Genossenschaftsrat.
-
-## Die drei Phasen bis Ende März
-
-Gemeinsam haben wir drei nicht ganz einfache Dinge zu erledigen:
-
-✅ **Bis Ende Januar** 
-
-✅ Dass möglichst viele Verlegerinnen trotz Risiko an Bord bleiben.
-
-✅ Dass möglichst viele von Ihnen auf den doppelten Mitgliedschaftspreis aufstocken. Denn was bringt Leben in Projekte? Grosszügigkeit und Geld.
-
-✅ Neue unerschrockene Investorinnen und Grossspender finden. (Falls Sie investieren wollen, schreiben Sie an: [ir@republik.ch](mailto:ir@republik.ch))
-
-✅ **Im Februar** wollen wir an ein paar Schrauben drehen, bevor wir in den entscheidenden Monat gehen. Wir wollen die Republik nicht neu erfinden. Aber sie gemeinsam mit Ihnen noch ein wenig nützlicher, transparenter und interaktiver machen.
-
-✅ **Im März** werden wir mit einer grossen und lauten Kampagne ein paar tausend neue Verlegerinnen gewinnen müssen. Jetzt geht es um: Wachstum.
-
-Wir freuen uns, wenn Sie Seite an Seite mit uns für die Zukunft der Republik kämpfen.
-
-`}
+              <P>
+                Wir freuen uns, wenn Sie Seite an Seite mit uns für die Zukunft
+                der Republik kämpfen.
+              </P>
               <br />
               <Accordion
                 me={me}
@@ -803,15 +962,13 @@ Wir freuen uns, wenn Sie Seite an Seite mit uns für die Zukunft der Republik k�
                   {t('cockpit/ios')}
                 </Interaction.P>
               )}
-
-              {md(mdComponents)`
-
-
-
-## ${countFormat(
-                lastMonth.activeEndOfMonth + lastMonth.pendingSubscriptionsOnly,
-              )} sind dabei.`}
-
+              <H2>
+                {countFormat(
+                  lastMonth.activeEndOfMonth +
+                    lastMonth.pendingSubscriptionsOnly,
+                )}{' '}
+                sind dabei.
+              </H2>
               <TestimonialList
                 seed={communitySeed.end}
                 membershipAfter={END_DATE}
@@ -821,11 +978,10 @@ Wir freuen uns, wenn Sie Seite an Seite mit uns für die Zukunft der Republik k�
                 share={false}
               />
               <br />
-
-              {md(mdComponents)`
-[Alle anschauen](/community)${
-                me && me.activeMembership ? (
-                  <Fragment>
+              <P>
+                <Editorial.A href='/community'>Alle anschauen</Editorial.A>
+                {me && me.activeMembership ? (
+                  <>
                     {'\u00a0– '}
                     <Editorial.A
                       style={{ color: colors.negative.text }}
@@ -833,16 +989,13 @@ Wir freuen uns, wenn Sie Seite an Seite mit uns für die Zukunft der Republik k�
                     >
                       Ihr Profil einrichten
                     </Editorial.A>
-                  </Fragment>
+                  </>
                 ) : (
                   ''
-                )
-              }
-      `}
-
+                )}
+              </P>
               <br />
               <br />
-
               {questionnaire && questionnaire.shouldAnswer && (
                 <Link href='/umfrage/1-minute' passHref>
                   <Button white block>
@@ -850,7 +1003,6 @@ Wir freuen uns, wenn Sie Seite an Seite mit uns für die Zukunft der Republik k�
                   </Button>
                 </Link>
               )}
-
               <br />
               <br />
             </>

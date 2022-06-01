@@ -250,7 +250,6 @@ export const defaultProps = {
     paddingRight: 1,
     paddingBottom: 50,
     paddingLeft: 30,
-    size: 'size',
     sizeRangeMax: 4,
     label: 'label',
     heightRatio: 1,

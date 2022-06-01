@@ -295,7 +295,7 @@ const ActionBar = ({
         (isDiscussion ||
           meta.template === 'format' ||
           meta.format ||
-          meta.authors?.length) &&
+          meta.contributors?.some((c) => c.user)) &&
         // and signed in or loading me
         (me || meLoading),
     },

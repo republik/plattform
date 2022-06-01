@@ -27,6 +27,15 @@ const styles = {
     overflowY: 'auto',
     WebkitOverflowScrolling: 'touch',
   }),
+  backdrop: css({
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    height: '100vh',
+    width: '100vw',
+  }),
   inner: css({
     position: 'relative',
     zIndex: 1, // to establish a stacking context
@@ -131,9 +140,8 @@ export const OverlayRenderer: React.FC<
   }
 > = ({ isVisible, mUpStyle, children, onClose, ssrMode, scrollRef }) => {
   const close = (e) => {
-    if (e.target === e.currentTarget) {
-      onClose(e)
-    }
+    e.preventDefault()
+    onClose(e)
   }
   const [colorScheme] = useColorContext()
 
@@ -142,9 +150,9 @@ export const OverlayRenderer: React.FC<
       {...styles.root}
       {...(ssrMode && { [ssrAttribute]: true })}
       style={{ opacity: isVisible ? 1 : 0 }}
-      onClick={close}
       ref={scrollRef}
     >
+      <div {...styles.backdrop} onClick={close} />
       <div
         {...merge(styles.inner, mUpStyle && { [mUp]: mUpStyle })}
         {...colorScheme.set('backgroundColor', 'overlay')}

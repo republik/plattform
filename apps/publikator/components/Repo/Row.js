@@ -1,7 +1,5 @@
 import LockIcon from 'react-icons/lib/md/lock'
 import PublicIcon from 'react-icons/lib/md/public'
-import { renderMdast } from 'mdast-react-render'
-import { matchType } from 'mdast-react-render/lib/utils'
 
 import { A, Label, colors } from '@project-r/styleguide'
 
@@ -20,18 +18,6 @@ import {
   isPublished,
 } from '../../lib/utils/repo'
 import { displayDateTime } from '../../lib/utils/calendar'
-
-const link = {
-  matchMdast: matchType('link'),
-  props: (node) => ({
-    title: node.title,
-    href: node.url,
-  }),
-  component: A,
-}
-const creditSchema = {
-  rules: [link],
-}
 
 const PublicationLink =
   (Icon) =>
@@ -77,11 +63,25 @@ const RepoRow = ({ repo, showPhases }) => {
         </Link>
       </Td>
       <Td>
-        {meta.credits &&
-          intersperse(
-            renderMdast(meta.credits.filter(link.matchMdast), creditSchema),
-            () => ', ',
-          )}
+        {intersperse(
+          meta.contributors
+            .filter(({ kind }) => kind?.includes('Text'))
+            .map(({ name, user }, i) => {
+              if (user?.username) {
+                return (
+                  <A
+                    key={user.id}
+                    href={`${FRONTEND_BASE_URL}/~${user.username}`}
+                    target='_blank'
+                  >
+                    {name}
+                  </A>
+                )
+              }
+              return <span key={i}>{name}</span>
+            }),
+          () => ', ',
+        )}
       </Td>
       <TdNum>
         {displayDateTime(date)}

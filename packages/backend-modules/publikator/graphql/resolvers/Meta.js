@@ -4,11 +4,9 @@ const { hyphenate } = require('hyphen/de-ch-1901')
 const {
   Roles: { userHasRole },
 } = require('@orbiting/backend-modules-auth')
+
 const {
-  lib: {
-    resolve,
-    meta: { getAuthorUserIds },
-  },
+  lib: { resolve },
 } = require('@orbiting/backend-modules-documents')
 
 const commit = require('./Commit')
@@ -93,19 +91,6 @@ const resolvePath = (meta) => {
   })
 }
 
-const resolveAuthors = async (meta, args, context) => {
-  const { authorUserIds, credits } = meta
-  const { loaders } = context
-
-  const ids =
-    // published documents may come with an authorUserIds array …
-    authorUserIds ||
-    // … but if missing, we'll parse mdast credits
-    (await getAuthorUserIds(null, context, credits))
-
-  return Promise.map(ids, (id) => loaders.User.byId.load(id)).filter(Boolean)
-}
-
 const resolveRecommendations = async (meta, args, context) => {
   const { recommendations } = meta
   const { user } = context
@@ -149,5 +134,4 @@ module.exports = {
   series: resolveRepoId('series'),
   recommendations: resolveRecommendations,
   path: resolvePath,
-  authors: resolveAuthors,
 }

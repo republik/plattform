@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 import { css } from 'glamor'
-import { scaleThreshold } from 'd3-scale'
-import { descending, ascending } from 'd3-array'
+import { scaleThreshold, scaleLinear } from 'd3-scale'
+import { descending, ascending, extent } from 'd3-array'
 
 import { useColorContext } from '../Colors/ColorContext'
 import { getFormat, getTextColor, deduplicate } from './utils'
@@ -14,6 +14,12 @@ import { sansSerifRegular18 } from '../Typography/styles'
 import { PADDING } from '../Center'
 import { getColorMapper } from './colorMaps'
 import { Collapsable } from '../Collapsable'
+import { createTextGauger } from '../../lib/textGauger'
+
+const labelGauger = createTextGauger(sansSerifRegular18, {
+  dimension: 'width',
+  html: true,
+})
 
 const styles = {
   container: css({
@@ -59,7 +65,7 @@ const Table = (props) => {
     t,
   } = props
   const columns = values.columns || Object.keys(values[0] || {})
-  const numberFormatter = getFormat(numberFormat)
+  const numberFormatter = getFormat(numberFormat, props.tLabel)
   const dateParser = timeParse(props.timeParse)
   const dateFormatter = timeFormat(props.timeFormat)
 
@@ -79,6 +85,10 @@ const Table = (props) => {
     .filter((d) => d.type === 'date')
     .map((d) => d.column)
 
+  const barColumns = tableColumns
+    .filter((d) => d.type === 'bar')
+    .map((d) => d.column)
+
   const parsedData =
     numberColumns.length || dateColumns.length
       ? values.map((row) => {
@@ -96,6 +106,19 @@ const Table = (props) => {
           return parsedRow
         })
       : [].concat(values)
+
+  const barChartData = []
+  barColumns.length &&
+    values.map((row) => {
+      barColumns.forEach((key) => {
+        if (row[key] !== undefined) {
+          row[key] = +row[key]
+        }
+        barChartData.push(row[key])
+      })
+    })
+
+  const barChartExtent = extent(barChartData)
 
   if (sortBy.key) {
     parsedData.sort((a, b) => {
@@ -165,6 +188,9 @@ const Table = (props) => {
                     : 'left',
                   cursor: 'pointer',
                   whiteSpace: sortBy.key === tableHead ? 'nowrap' : undefined,
+                  width: tableColumns.find((d) => d.column === tableHead)
+                    ? tableColumns.find((d) => d.column === tableHead).width
+                    : undefined,
                 }}
                 key={index}
                 onClick={() => setSort(columns[index])}
@@ -191,10 +217,14 @@ const Table = (props) => {
               {columns.map((cellKey, cellIndex) => (
                 <Cell
                   key={cellIndex}
+                  barChartExtent={barChartExtent}
                   {...tableColumns.find((d) => d.column === cellKey)}
                   isNumeric={numericColumns.includes(cellKey)}
                   value={row[cellKey]}
                   colorScale={colorScale}
+                  columnName={cellKey}
+                  isBarColumn={barColumns.includes(cellKey)}
+                  numberFormatter={numberFormatter}
                 >
                   {numberColumns.includes(cellKey)
                     ? numberFormatter(row[cellKey])
@@ -254,18 +284,98 @@ Table.propTypes = propTypes
 export default Table
 
 const Cell = (props) => {
-  const { type, width, color, colorScale, value, children, isNumeric } = props
+  const {
+    columnName,
+    width,
+    color,
+    colorScale,
+    value,
+    children,
+    isNumeric,
+    isBarColumn,
+    barChartExtent,
+    numberFormatter,
+  } = props
+
+  const maxWidth = isBarColumn && (width || 100)
+
+  const barScale = scaleLinear()
+    .domain(barChartExtent)
+    .range([0, maxWidth - PADDING])
+
   return (
     <td
       {...(isNumeric && styles.cellNumeric)}
       {...styles.cell}
       style={{
         width: width !== undefined ? +width : undefined,
-        backgroundColor: color ? colorScale(value) : 'transparent',
-        color: color && getTextColor(colorScale(value)),
+        backgroundColor:
+          !isBarColumn && color ? colorScale(value) : 'transparent',
+        color: !isBarColumn && color && getTextColor(colorScale(value)),
+        whiteSpace: isBarColumn && 'nowrap',
       }}
     >
-      {children}
+      {isBarColumn ? (
+        <BarComponent
+          colorScale={colorScale}
+          barWidth={Math.ceil(barScale(value))}
+          label={numberFormatter(value)}
+          columnName={columnName}
+          color={color}
+        />
+      ) : (
+        children
+      )}
     </td>
+  )
+}
+
+const BarComponent = (props) => {
+  const { barWidth, color, label, columnName, colorScale } = props
+
+  const labelSize = labelGauger(label)
+  const BAR_LABEL_PADDING = 5
+
+  const isLabelOutside = labelSize > barWidth
+
+  return (
+    <>
+      <span
+        style={{
+          display: 'inline-block',
+          position: 'relative',
+          verticalAlign: 'middle',
+          width: barWidth,
+          backgroundColor: color && colorScale(columnName),
+          height: '30px',
+        }}
+      >
+        {!isLabelOutside && (
+          <span
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: BAR_LABEL_PADDING,
+              lineHeight: '30px',
+              color: color && getTextColor(colorScale(columnName)),
+            }}
+          >
+            {label}
+          </span>
+        )}
+      </span>
+      {isLabelOutside && (
+        <span
+          style={{
+            display: 'inline-block',
+            verticalAlign: 'middle',
+            paddingLeft: barWidth > 0 && BAR_LABEL_PADDING,
+            lineHeight: '30px',
+          }}
+        >
+          {label}
+        </span>
+      )}
+    </>
   )
 }

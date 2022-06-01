@@ -4,7 +4,7 @@ import { imageSizeInfo, imageResizeUrl } from 'mdast-react-render/lib/utils'
 
 import { CDN_FRONTEND_BASE_URL } from '../../lib/constants'
 
-const Meta = ({ data, data: { url, image } }) => {
+const Meta = ({ data, data: { url, image, jsonLds } }) => {
   const title = data.pageTitle || `${data.title} – Republik`
 
   // to prevent facebook from using a random image from the website we fall back to a square avatar and claim it's below 315px in size to trigger the small image layout
@@ -60,6 +60,14 @@ const Meta = ({ data, data: { url, image } }) => {
           content={imageResizeUrl(twitterImage, '3000x')}
         />
       )}
+
+      {jsonLds?.map((jsonLd, index) => (
+        <script
+          key={index}
+          type='application/ld+json'
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      ))}
     </Head>
   )
 }

@@ -8,6 +8,7 @@ module.exports = async (__, args, context, info) => {
       first: args.first,
       after: args.after,
       before: args.before,
+      apiKey: args.apiKey,
       unrestricted:
         args.unrestricted !== undefined
           ? args.unrestricted
@@ -15,7 +16,7 @@ module.exports = async (__, args, context, info) => {
           ? true
           : undefined,
       filter: {
-        ..._.omit(args, ['first', 'after', 'before', 'unrestricted']),
+        ..._.omit(args, ['first', 'after', 'before', 'unrestricted', 'apiKey']),
         type: 'Document',
       },
       sort: {

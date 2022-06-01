@@ -200,6 +200,7 @@ const SectionNav = ({
                       </div>
                     )}
                     <Panel
+                      key={id}
                       isMobile={isMobile}
                       isActivePanel={isActivePanel}
                       href={path}

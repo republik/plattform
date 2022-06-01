@@ -199,6 +199,47 @@ const text = {
       .
     </>
   ),
+  April: (p) => (
+    <>
+      Zu Besuch bei Feministinnen in{' '}
+      <Highlight {...p} series='republik/article-der-feministische-balkan'>
+        Serbien, in Kosovo und in Albanien
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['a8rI4buQ0']}>
+        Wie die EU die Marktmacht von Tech-Unternehmen eindämmen will
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['v9uiJT90X']}>
+        wie Hilfsgüter zu den Menschen gelangen, die sie benötigen
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['zLDaQ9Zbe']}>
+        Warum private Unternehmen Russland boykottieren
+      </Highlight>{' '}
+      und die Frage:{' '}
+      <Highlight {...p} ids={['txvr-JPV_']}>
+        Was können Sanktionen bewirken
+      </Highlight>
+      ?{' '}
+      <Highlight {...p} ids={['pmozFybp8']}>
+        Eine Umweltkatastrophe
+      </Highlight>
+      , von der viele noch nie gehört haben, und{' '}
+      <Highlight {...p} ids={['L74LK4XpF']}>
+        eine Künstlerin
+      </Highlight>
+      , die ihre Objekte zertrümmert. Und zwei Einsichten:{' '}
+      <Highlight {...p} ids={['reeHuFtEi']}>
+        «Eigenverantwortung» ist gnadenlos
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['C-x0z6Xml']}>
+        der Kampf der Systeme ist zurück
+      </Highlight>
+      .
+    </>
+  ),
 }
 
 const Overview2022 = (props) => <Page {...props} year={2022} text={text} />

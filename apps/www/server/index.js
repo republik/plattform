@@ -5,24 +5,28 @@ const dotenv = require('dotenv')
 const next = require('next')
 const compression = require('compression')
 const helmet = require('helmet')
-const bodyParser = require('body-parser')
-const chalk = require('chalk')
 const rateLimit = require('express-rate-limit')
+const { COOKIE_NAME } = require('../lib/auth/constants')
 
 const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
 if (DEV || process.env.DOTENV) {
   dotenv.config()
 }
 
-const pgp = require('./pgp')
-const useragent = require('./useragent')
-
 const PORT = process.env.PORT || 3005
 
-const { CURTAIN_MESSAGE } = process.env
+const { CURTAIN_MESSAGE, PUBLIC_BASE_URL } = process.env
+
+if (!PUBLIC_BASE_URL) {
+  throw new Error(
+    'missing PUBLIC_BASE_URL environment variable, but is required by next-js middleware.',
+  )
+}
 
 const app = next({
   dev: DEV,
+  port: PORT,
+  hostname: new URL(PUBLIC_BASE_URL).hostname,
 })
 const handler = app.getRequestHandler()
 
@@ -120,8 +124,6 @@ app.prepare().then(() => {
     )
   }
 
-  server.use(pgp)
-
   // tmp unavailable
   server.get('/vote', (req, res) => {
     res.statusCode = 503
@@ -135,20 +137,6 @@ app.prepare().then(() => {
   // PayPal donate return url can be posted to
   server.post('/en', (req, res) => {
     return app.render(req, res, '/en', req.query)
-  })
-
-  // Report Error
-  server.post('/api/reportError', bodyParser.text(), (req, res) => {
-    console.warn(
-      chalk.yellow(
-        'reportError from',
-        useragent(req.get('User-Agent')),
-        req.body,
-      ),
-    )
-    res.statusCode = 200
-    res.setHeader('Content-Type', 'application/json')
-    res.end(JSON.stringify({ ack: true }))
   })
 
   // iOS app universal links setup
@@ -187,7 +175,7 @@ app.prepare().then(() => {
         } = req
 
         // If user is logged in, 20 requests per minute are allowed. Otherwise, only 5 requests/min allowed.
-        if (cookie && cookie.includes('connect.sid')) {
+        if (cookie && cookie.includes(COOKIE_NAME)) {
           return 20
         }
         return 5
