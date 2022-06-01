@@ -110,7 +110,7 @@ export class Analyzer {
         name !== 'Update' &&
         !name.includes('letztes Update') &&
         !name.includes('Update um') &&
-        !name.includes('Update Uhr')
+        !name.includes('Update Uhr'),
     )
     contributors.forEach((c, index, all) => {
       if (!c.kind) {

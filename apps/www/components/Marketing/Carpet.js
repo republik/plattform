@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { css } from 'glamor'
-import { gql } from '@apollo/client'
 import {
   Loader,
   LazyLoad,
@@ -12,22 +11,12 @@ import {
 
 import TeaserBlock, { GAP } from '../Overview/TeaserBlock'
 import { getTeasersFromDocument } from '../Overview/utils'
-const query = gql`
-  query MarketingCarpet {
-    front: document(path: "/") {
-      id
-      children(first: 40) {
-        nodes {
-          body
-        }
-      }
-    }
-  }
-`
+import { useTranslation } from '../../lib/withT'
 
-const Carpet = ({ t, data: { loading, front } }) => {
+const Carpet = ({ loading, front }) => {
   const [highlight, setHighlight] = useState()
   const [isMobile, setIsMobile] = useState()
+  const { t } = useTranslation()
 
   useEffect(() => {
     const handleResize = () => {
@@ -98,4 +87,4 @@ const styles = {
   }),
 }
 
-export default compose(graphql(query))(Carpet)
+export default Carpet
