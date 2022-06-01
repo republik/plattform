@@ -1,5 +1,5 @@
-import App from '../components/App'
-import { Body, Content, Header, Footer } from '../components/Layout'
+import App from './App'
+import { Body, Content, Header, Footer } from './Layout'
 
 const Layout = () => {
   return (

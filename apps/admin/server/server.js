@@ -1,6 +1,5 @@
 const express = require('express')
 const next = require('next')
-const routes = require('./routes')
 const basicAuth = require('express-basic-auth')
 const helmet = require('helmet')
 
@@ -12,7 +11,7 @@ if (DEV || process.env.DOTENV) {
 const CSP_FRAME_ANCESTORS = process.env.CSP_FRAME_ANCESTORS?.split(',') || []
 
 const app = next({ dev: DEV })
-const handle = routes.getRequestHandler(app)
+const handler = app.getRequestHandler()
 
 app.prepare().then(() => {
   const server = express()
@@ -69,7 +68,7 @@ app.prepare().then(() => {
     res.redirect(`/users/${req.params.userId}`)
   })
   server.get('*', (req, res) => {
-    handle(req, res)
+    handler(req, res)
   })
 
   server.listen(process.env.PORT || 3003)

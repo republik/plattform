@@ -5,7 +5,7 @@ import gql from 'graphql-tag'
 import { css } from 'glamor'
 import isEmail from 'validator/lib/isEmail'
 
-import { Router, Link } from '../../server/routes'
+import Link from 'next/link'
 import withT from '../../lib/withT'
 
 import ErrorMessage from '../ErrorMessage'
@@ -21,6 +21,7 @@ import {
 } from '@project-r/styleguide'
 
 import Poller from './Poller'
+import { withRouter } from 'next/router'
 
 const styles = {
   form: css({
@@ -148,7 +149,8 @@ class SignIn extends Component {
             this.setState(() => ({
               polling: false,
             }))
-            Router.pushRoute('signin')
+            // TODO: is this really needed
+            // router.push('/signin')
           }}
           onTokenTypeChange={(altTokenType) => {
             this.signIn(altTokenType)
@@ -217,11 +219,11 @@ class SignIn extends Component {
           </div>
         </form>
         <Label {...styles.hint}>
-          <Link route='legal/privacy'>
+          <Link href='/legal/privacy'>
             <a {...styles.hintA}>{t('signIn/privacy')}</a>
           </Link>
           {' – '}
-          <Link route='faq'>
+          <Link href='/faq'>
             <a {...styles.hintA}>{t('signIn/faq')}</a>
           </Link>
           {' – '}
@@ -264,4 +266,4 @@ export const withSignIn = graphql(signInMutation, {
   }),
 })
 
-export default compose(withSignIn, withT)(SignIn)
+export default compose(withSignIn, withT, withRouter)(SignIn)

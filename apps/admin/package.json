@@ -6,7 +6,7 @@
     "node": "^14.4.0"
   },
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon --watch server --watch .env --watch server/routes.js --watch server/constants.js server/server.js",
+    "dev": "cross-env NODE_ENV=development nodemon --watch server --watch .env --watch server/constants.js server/server.js",
     "build": "next build",
     "start": "node server/server.js",
     "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./.next*\" | xargs wc -l",
@@ -45,8 +45,7 @@
     "lodash.debounce": "^4.0.8",
     "mdast-react-render": "^1.2.0",
     "moment": "^2.29.1",
-    "next": "^9.5.5",
-    "next-routes": "^1.4.2",
+    "next": "^10",
     "next-transpile-modules": "^7.0.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",

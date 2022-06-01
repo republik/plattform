@@ -3,9 +3,7 @@ import { compose } from 'react-apollo'
 import { createContainer, createTile } from './Grid'
 import Me from '../Auth/Me'
 import { BrandMark, Interaction, colors } from '@project-r/styleguide'
-import routes from '../../server/routes'
-
-const { Link } = routes
+import Link from 'next/link'
 
 const link = css({
   textDecoration: 'none',
@@ -57,6 +55,7 @@ const navLinkStyles = {
 
 const HeaderComponent = ({ ...props }) => {
   const searchParams = props.search ? { search: props.search } : {}
+
   return (
     <Header {...props}>
       <HeaderSection flex='0 0 85px'>
@@ -67,27 +66,47 @@ const HeaderComponent = ({ ...props }) => {
       <HeaderSection flex='1 1 auto'>
         <Interaction.H2>Admin</Interaction.H2>
         <nav>
-          <Link route='users' params={searchParams}>
+          <Link
+            href={{
+              pathname: '/users',
+              query: searchParams,
+            }}
+          >
             <a className={`${link}`} style={navLinkStyles}>
               Users
             </a>
           </Link>
-          <Link route='mailbox' params={searchParams}>
+          <Link
+            href={{
+              pathname: '/mailbox',
+              query: searchParams,
+            }}
+          >
             <a className={`${link}`} style={navLinkStyles}>
               E-Mails
             </a>
           </Link>
-          <Link route='payments' params={searchParams}>
+          <Link
+            href={{
+              pathname: '/payments',
+              query: searchParams,
+            }}
+          >
             <a className={`${link}`} style={navLinkStyles}>
               Payments
             </a>
           </Link>
-          <Link route='postfinance-payments' params={searchParams}>
+          <Link
+            href={{
+              pathname: '/postfinance-payments',
+              query: searchParams,
+            }}
+          >
             <a className={`${link}`} style={navLinkStyles}>
               Postfinance Payments
             </a>
           </Link>
-          <Link route='merge-users'>
+          <Link href='/merge-users'>
             <a className={`${link}`} style={navLinkStyles}>
               Users zusammenführen
             </a>

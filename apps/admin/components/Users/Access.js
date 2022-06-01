@@ -19,8 +19,7 @@ import {
 
 import ErrorMessage from '../ErrorMessage'
 import List, { Item } from '../List'
-import routes from '../../server/routes'
-
+import Link from 'next/link'
 import { displayDateTime, Section, SectionTitle } from '../Display/utils'
 
 const GET_ACCESS_GRANTS = gql`
@@ -92,8 +91,6 @@ const REVOKE_ACCESS = gql`
     revokeAccess(id: $id)
   }
 `
-
-const { Link } = routes
 
 const getDays = (begin, end) => moment(end).diff(begin, 'days')
 
@@ -215,7 +212,7 @@ class Grant extends Component {
           <Interaction.P>
             <Label>{t('account/access/Grant/granter/label')}</Label>
             <br />
-            <Link route='user' params={{ userId: grant.granter.id }} passHref>
+            <Link href={`/users/${grant.granter.id}`} passHref>
               <A>{`${grant.granter.name} (${grant.granter.email})`}</A>
             </Link>
           </Interaction.P>
@@ -225,7 +222,7 @@ class Grant extends Component {
           <Interaction.P>
             <Label>{t('account/access/Grant/recipient/label')}</Label>
             <br />
-            <Link route='user' params={{ userId: grant.recipient.id }} passHref>
+            <Link href={`/users/${grant.recipient.id}`} passHref>
               <A>{`${grant.recipient.name} (${grant.recipient.email})`}</A>
             </Link>
           </Interaction.P>
