@@ -165,9 +165,10 @@ const DiscussionPreferencesEditor = ({
   me,
 }) => {
   const [colorScheme] = useColorContext()
-  const [state, setState] = useState(
+  const [initialState] = useState(
     getInitialState(userPreference, rules, autoCredential),
   )
+  const [state, setState] = useState(initialState)
   const [error, setError] = useState(null)
 
   const [showAllSuggestedCredentials, setShowAllSuggestedCredentials] =
@@ -358,9 +359,9 @@ const DiscussionPreferencesEditor = ({
                     ...curr,
                     anonymity: val,
                     credential:
-                      val && curr.credential === autoCredential?.description 
+                      val && curr.credential === initialState.credential
                         ? '' // remove auto credential when setting anonymous to true
-                        :  curr.credential
+                        : curr.credential,
                   }))
                 }}
               >
