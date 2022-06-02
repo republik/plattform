@@ -5,13 +5,13 @@ import {
   NormalizedCacheObject,
 } from '@apollo/client'
 import { createLink } from './apolloLink'
-import deepMerge from '../deepMerge'
+import deepMerge from './deepMerge'
 import fetch from 'isomorphic-unfetch'
 
 const isDev = process.env.NODE_ENV && process.env.NODE_ENV === 'development'
 
 // Polyfill fetch() on the server (used by apollo-client)
-if (!process.browser) {
+if (!process) {
   global.fetch = fetch
 }
 
@@ -19,6 +19,7 @@ if (!process.browser) {
 // Source: https://github.com/vercel/next.js/blob/canary/examples/with-apollo/lib/apolloClient.js
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__'
+const isClient = typeof window !== 'undefined'
 
 type Options = {
   headers?: any
@@ -29,8 +30,8 @@ function createApolloClient(
   options: Options = {},
 ): ApolloClient<NormalizedCacheObject> {
   return new ApolloClient({
-    connectToDevTools: process.browser && isDev,
-    ssrMode: !process.browser,
+    connectToDevTools: isClient && isDev,
+    ssrMode: !isClient,
     cache: new InMemoryCache({
       typePolicies: {
         // Since Meta doesn't have a key-field, update cached data
