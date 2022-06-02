@@ -5,15 +5,9 @@ import {
   InMemoryCache,
   NormalizedCacheObject,
 } from '@apollo/client'
-import fetch from 'isomorphic-unfetch'
 import { createLink } from './apolloLink'
 import deepMerge from './deepMerge'
 import { isDev, isClient } from './util'
-
-// Polyfill fetch() on the server (used by apollo-client)
-if (!process) {
-  global.fetch = fetch
-}
 
 // Based on the with-apollo example inside the Next.js repository
 // Source: https://github.com/vercel/next.js/blob/canary/examples/with-apollo/lib/apolloClient.js
