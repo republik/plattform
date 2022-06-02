@@ -40,7 +40,7 @@ type CreateLinkOptions = ApolloClientOptions
 export const createLink = ({
   apiUrl,
   wsUrl,
-  headers,
+  headers = {},
   onResponse,
   mobileConfigOptions,
 }: CreateLinkOptions) => {
