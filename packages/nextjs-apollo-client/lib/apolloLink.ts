@@ -1,12 +1,9 @@
 import { ApolloLink, HttpLink } from '@apollo/client'
 import { WebSocketLink } from '@apollo/client/link/ws'
 
-import { API_URL, API_WS_URL, API_AUTHORIZATION_HEADER } from '../constants'
-import {
-  inNativeAppBrowser,
-  inNativeAppBrowserLegacy,
-} from '../withInNativeApp'
+import { ApolloClientOptions } from './apolloClient'
 import { createAppWorkerLink, hasSubscriptionOperation } from './appWorkerLink'
+import { isClient, isDev } from './util'
 
 const withResponseInterceptor = ({ onResponse }) =>
   new ApolloLink((operation, forward) => {
@@ -19,13 +16,11 @@ const withResponseInterceptor = ({ onResponse }) =>
     })
   })
 
-const __DEV__ = process.env.NODE_ENV === 'development'
-
 const rewriteAPIHost = (url) => {
-  if (__DEV__) {
+  if (isDev) {
     // support Android Emulator and Virtualbox IE VM
     if (
-      process.browser &&
+      isClient &&
       url.indexOf('localhost') !== -1 &&
       location.hostname !== 'localhost'
     ) {
@@ -35,25 +30,33 @@ const rewriteAPIHost = (url) => {
   return url
 }
 
-export const createLink = (headers = {}, onResponse = () => {}) => {
-  if (inNativeAppBrowser && inNativeAppBrowserLegacy) {
+type CreateLinkOptions = ApolloClientOptions
+
+export const createLink = ({
+  apiUrl,
+  wsUrl,
+  headers,
+  onResponse,
+  isInMobileApp,
+}: CreateLinkOptions) => {
+  if (isInMobileApp) {
     return createAppWorkerLink()
   }
   const http = new HttpLink({
-    uri: rewriteAPIHost(API_URL),
+    uri: rewriteAPIHost(apiUrl),
     credentials: 'include',
     headers: {
       cookie: headers.cookie,
       accept: headers.accept,
-      Authorization: headers.authorization || API_AUTHORIZATION_HEADER,
+      Authorization: headers.authorization,
     },
   })
 
-  if (process.browser) {
+  if (isClient) {
     return ApolloLink.split(
       hasSubscriptionOperation,
       new WebSocketLink({
-        uri: rewriteAPIHost(API_WS_URL),
+        uri: rewriteAPIHost(wsUrl),
         options: {
           lazy: true,
           reconnect: true,

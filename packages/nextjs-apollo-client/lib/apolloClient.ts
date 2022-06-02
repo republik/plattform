@@ -4,11 +4,10 @@ import {
   InMemoryCache,
   NormalizedCacheObject,
 } from '@apollo/client'
+import fetch from 'isomorphic-unfetch'
 import { createLink } from './apolloLink'
 import deepMerge from './deepMerge'
-import fetch from 'isomorphic-unfetch'
-
-const isDev = process.env.NODE_ENV && process.env.NODE_ENV === 'development'
+import { isDev, isClient } from './util'
 
 // Polyfill fetch() on the server (used by apollo-client)
 if (!process) {
@@ -19,15 +18,17 @@ if (!process) {
 // Source: https://github.com/vercel/next.js/blob/canary/examples/with-apollo/lib/apolloClient.js
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__'
-const isClient = typeof window !== 'undefined'
 
-type Options = {
-  headers?: any
-  onResponse?: any
+export type ApolloClientOptions = {
+  apiUrl: string
+  wsUrl: string
+  headers?: { [key: string]: string | number | boolean }
+  onResponse?: (response: any) => void
+  isInMobileApp?: boolean
 }
 
 function createApolloClient(
-  options: Options = {},
+  options: ApolloClientOptions,
 ): ApolloClient<NormalizedCacheObject> {
   return new ApolloClient({
     connectToDevTools: isClient && isDev,
@@ -78,10 +79,7 @@ function createApolloClient(
         CachedEmbed: ['LinkPreview', 'TwitterEmbed'],
       },
     }),
-    link: createLink(
-      options.headers ?? undefined,
-      options.onResponse ?? undefined,
-    ),
+    link: createLink(options),
   })
 }
 
@@ -98,7 +96,7 @@ let apolloClient: ApolloClient<NormalizedCacheObject> = null
  */
 export function initializeApollo(
   initialCache: NormalizedCacheObject = null,
-  options: Options = {},
+  options: ApolloClientOptions,
 ): ApolloClient<NormalizedCacheObject> {
   const _apolloClient = apolloClient ?? createApolloClient(options)
 
@@ -109,7 +107,7 @@ export function initializeApollo(
   }
 
   // For SSG and SSR always create a new Apollo Client
-  if (!process.browser) return _apolloClient
+  if (!isClient) return _apolloClient
   // Create the Apollo Client once in the client
   if (!apolloClient) apolloClient = _apolloClient
 
@@ -129,14 +127,17 @@ export function initializeApollo(
  */
 export function useApollo<P>(
   pageProps: P,
-  providedApolloClient?: ApolloClient<NormalizedCacheObject>,
+  options: ApolloClientOptions & {
+    providedApolloClient?: ApolloClient<NormalizedCacheObject>
+  },
 ): ApolloClient<NormalizedCacheObject> {
   const apolloCache =
     pageProps && pageProps[APOLLO_STATE_PROP_NAME]
       ? pageProps[APOLLO_STATE_PROP_NAME]
       : null
   return useMemo(
-    () => providedApolloClient || initializeApollo(apolloCache),
-    [apolloCache, providedApolloClient],
+    () =>
+      options?.providedApolloClient || initializeApollo(apolloCache, options),
+    [apolloCache, options],
   )
 }
