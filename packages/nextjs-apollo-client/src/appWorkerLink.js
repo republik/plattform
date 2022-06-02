@@ -2,7 +2,7 @@ import { ApolloLink, Observable } from '@apollo/client'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 import { postMessage } from '../withInNativeApp'
 import uuid from 'uuid/v4'
-import { parseJSONObject } from '../safeJSON'
+import { parseJSONObject } from './safeJSON'
 
 export const hasSubscriptionOperation = ({ query: { definitions } }) =>
   definitions.some(
