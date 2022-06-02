@@ -2,8 +2,13 @@ import { ApolloLink, HttpLink } from '@apollo/client'
 import { WebSocketLink } from '@apollo/client/link/ws'
 
 import { ApolloClientOptions } from './apolloClient'
-import { createAppWorkerLink, hasSubscriptionOperation } from './appWorkerLink'
 import { isClient, isDev } from './util'
+
+export const hasSubscriptionOperation = ({ query: { definitions } }) =>
+  definitions.some(
+    ({ kind, operation }) =>
+      kind === 'OperationDefinition' && operation === 'subscription',
+  )
 
 const withResponseInterceptor = ({ onResponse }) =>
   new ApolloLink((operation, forward) => {
@@ -37,10 +42,10 @@ export const createLink = ({
   wsUrl,
   headers,
   onResponse,
-  isInMobileApp,
+  mobileConfigOptions,
 }: CreateLinkOptions) => {
-  if (isInMobileApp) {
-    return createAppWorkerLink()
+  if (mobileConfigOptions.isInMobileApp) {
+    return mobileConfigOptions.createAppWorkerLink()
   }
   const http = new HttpLink({
     uri: rewriteAPIHost(apiUrl),

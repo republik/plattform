@@ -10,7 +10,7 @@ import {
  */
 type CreateApolloClientUtilitiesOptions = Pick<
   ApolloClientOptions,
-  'apiUrl' | 'wsUrl' | 'isInMobileApp'
+  'apiUrl' | 'wsUrl' | 'mobileConfigOptions'
 >
 
 /**
@@ -49,4 +49,5 @@ function createApolloClientUtilities(
   }
 }
 
+export { hasSubscriptionOperation } from './apolloLink'
 export default createApolloClientUtilities

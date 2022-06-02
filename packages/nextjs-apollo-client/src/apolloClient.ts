@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import {
   ApolloClient,
+  ApolloLink,
   InMemoryCache,
   NormalizedCacheObject,
 } from '@apollo/client'
@@ -24,7 +25,10 @@ export type ApolloClientOptions = {
   wsUrl: string
   headers?: { [key: string]: string | number | boolean }
   onResponse?: (response: any) => void
-  isInMobileApp?: boolean
+  mobileConfigOptions?: {
+    isInMobileApp: boolean
+    createAppWorkerLink: () => ApolloLink
+  }
 }
 
 function createApolloClient(
