@@ -240,6 +240,39 @@ const text = {
       .
     </>
   ),
+  Mai: (p) => (
+    <>
+      <Highlight {...p} ids={['0TVGaLGeH']}>
+        Warum Millionen von Russinnen weltweit den Krieg unterstützen
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['FH-JHnRSi']}>
+        Wie der Krieg Träume raubt
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['2DUh67rZ6']}>
+        Putins Parade jungen Ukrainern Hoffnung schenkt
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['0jYSMD--D']}>
+        Ein Asylfall bringt das Staatssekretariat für Migration in Erklärungsnot
+      </Highlight>
+      . Und: Plötzlich wollen alle aufrüsten, bloss:{' '}
+      <Highlight {...p} ids={['lMAxAzD3b']}>
+        Wie soll das gehen mit der heutigen Neutralität
+      </Highlight>
+      ?{' '}
+      <Highlight {...p} series='republik/article-jugend-und-psyche'>
+        Kinderpsychiatrien sind überfüllt, Eltern überfordert. Doch können
+        Kinder trotzdem resilient werden
+      </Highlight>
+      . Und:{' '}
+      <Highlight {...p} ids={['auTny3lfi']}>
+        Stimmen aus dem grössten Frauengefängnis der Schweiz
+      </Highlight>
+      .
+    </>
+  ),
 }
 
 const Overview2022 = (props) => <Page {...props} year={2022} text={text} />
