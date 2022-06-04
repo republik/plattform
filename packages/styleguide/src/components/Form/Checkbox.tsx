@@ -62,6 +62,8 @@ const Checkbox: React.FC<{
             width='18'
             height='18'
             viewBox='0 0 18 18'
+            aria-hidden='true'
+            focusable='false'
           >
             <path
               d='M0 0h18v18H0V0zm7 14L2 9.192l1.4-1.346L7 11.308 14.6 4 16 5.346 7 14z'
@@ -71,6 +73,7 @@ const Checkbox: React.FC<{
           </svg>
         ) : (
           <span
+            aria-hidden='true'
             {...styles.unchecked}
             {...styles.outlineOnPrevInputFocus}
             {...checkMarkBorderColor}
