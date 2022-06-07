@@ -2,6 +2,7 @@ import React, {
   MouseEvent,
   ReactElement,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -21,11 +22,7 @@ import {
   TemplateType,
   ToolbarMode,
 } from '../../../custom-types'
-import {
-  config as elConfig,
-  INLINE_BUTTONS,
-  BLOCK_BUTTONS,
-} from '../../../config/elements'
+import { config as elConfig, configKeys } from '../../../config/elements'
 import { configKeys as mKeys, MARKS_ALLOW_LIST } from '../../../config/marks'
 import { useSlate, ReactEditor, useFocused } from 'slate-react'
 import { Editor, Range, NodeEntry } from 'slate'
@@ -61,13 +58,25 @@ const styles = {
   }),
 }
 
-const getInitialButtons = (
-  buttons: (TemplateType | CustomMarksType)[],
+const asButton = (key: CustomElementsType | CustomMarksType): ButtonConfig => ({
+  type: key,
+  disabled: true,
+})
+
+const getElementButtons = (
+  editor: CustomEditor,
+  isInline = false,
 ): ButtonConfig[] =>
-  buttons.map((t) => ({
-    type: t as CustomElementsType,
-    disabled: true,
-  }))
+  configKeys
+    .filter((elKey) => {
+      const config = elConfig[elKey]
+      return (
+        config.button &&
+        editor.customConfig.schema[config.component] &&
+        (isInline ? config.attrs?.isInline : !config.attrs?.isInline)
+      )
+    })
+    .map(asButton)
 
 const hasSelection = (editor: CustomEditor): boolean => {
   const { selection } = editor
@@ -112,7 +121,7 @@ const getAllowedMarks = (
   }))
 }
 
-const getTemplateTypes = (
+const getAllowedTypes = (
   nodeEntry?: NodeEntry<CustomDescendant>,
 ): TemplateType[] => {
   if (!nodeEntry) return []
@@ -124,21 +133,21 @@ const getTemplateTypes = (
 
 const getAllowedInlines = (
   editor: CustomEditor,
-  showAllInlines: boolean,
+  shown: ButtonConfig[],
   selectedText?: NodeEntry<CustomText>,
   selectedElement?: NodeEntry<CustomElement>,
 ): ButtonConfig[] => {
-  if (!showAllInlines && noWordSelected(editor)) return []
-
+  if (!shown.length && noWordSelected(editor)) return []
   // make it link icon grey in sticky mode
-  const allowedTemplates = noWordSelected(editor)
+  const allowedTypes = noWordSelected(editor)
     ? []
-    : getTemplateTypes(selectedText)
-  return INLINE_BUTTONS.map((t) => {
+    : getAllowedTypes(selectedText)
+  const buttons = shown.length ? shown.map((b) => b.type) : allowedTypes
+  return buttons.map((t) => {
     const isSelected = selectedElement && t === selectedElement[0].type
     return {
-      type: t as CustomElementsType,
-      disabled: !isSelected && allowedTemplates.indexOf(t) === -1,
+      type: t,
+      disabled: !isSelected && allowedTypes.indexOf(t) === -1,
       active: isSelected,
     }
   })
@@ -146,20 +155,20 @@ const getAllowedInlines = (
 
 const getAllowedBlocks = (
   editor: CustomEditor,
-  showAllBlocks: boolean,
+  shown: ButtonConfig[],
   selectedNode?: NodeEntry<CustomElement>,
   selectedContainer?: NodeEntry<CustomElement>,
 ): ButtonConfig[] => {
   if (selectedContainer) {
-    return getAllowedBlocks(editor, showAllBlocks, selectedContainer)
+    return getAllowedBlocks(editor, shown, selectedContainer)
   }
-  const allowedTemplates = getTemplateTypes(selectedNode)
-  const blocksToUse = showAllBlocks ? BLOCK_BUTTONS : allowedTemplates
-  return blocksToUse.map((t) => {
+  const allowedTypes = getAllowedTypes(selectedNode)
+  const buttons = shown.length ? shown.map((b) => b.type) : allowedTypes
+  return buttons.map((t) => {
     const isSelected = selectedNode && t === selectedNode[0].type
     return {
-      type: t as CustomElementsType,
-      disabled: allowedTemplates.indexOf(t) === -1,
+      type: t,
+      disabled: allowedTypes.indexOf(t) === -1,
       active: isSelected,
     }
   })
@@ -263,11 +272,23 @@ const Toolbar: React.FC<{
   containerRef: React.RefObject<HTMLDivElement>
   mode: ToolbarMode
 }> = ({ containerRef, mode }) => {
+  const editor = useSlate()
+  const isSticky = mode === 'sticky'
+  const initialInlineButtons = useMemo(
+    () => (isSticky ? getElementButtons(editor, true) : []),
+    [isSticky],
+  )
+  const initialBlockButtons = useMemo(
+    () => (isSticky ? getElementButtons(editor) : []),
+    [isSticky],
+  )
+  const initialMarkButtons = useMemo(
+    () => (isSticky ? mKeys.map(asButton) : []),
+    [isSticky],
+  )
   const [colorScheme] = useColorContext()
   const focused = useFocused()
   const ref = useRef<HTMLDivElement>(null)
-  const editor = useSlate()
-  const isSticky = mode === 'sticky'
 
   const [isVisible, setVisible] = useState(false)
   const [marks, setMarks] = useState<ButtonConfig[]>([])
@@ -276,9 +297,9 @@ const Toolbar: React.FC<{
 
   const reset = () => {
     setVisible(false)
-    setMarks(isSticky ? getInitialButtons(mKeys) : [])
-    setInlines(isSticky ? getInitialButtons(INLINE_BUTTONS) : [])
-    setBlocks(isSticky ? getInitialButtons(BLOCK_BUTTONS) : [])
+    setMarks(initialMarkButtons)
+    setInlines(initialInlineButtons)
+    setBlocks(initialBlockButtons)
   }
 
   useEffect(() => {
@@ -312,10 +333,10 @@ const Toolbar: React.FC<{
 
   const setButtons = (text, element, topLevelContainer) => {
     setMarks(getAllowedMarks(editor, isSticky, element))
-    setInlines(getAllowedInlines(editor, isSticky, text, element))
+    setInlines(getAllowedInlines(editor, initialInlineButtons, text, element))
     const allowedBlocks = getAllowedBlocks(
       editor,
-      isSticky,
+      initialBlockButtons,
       element,
       topLevelContainer,
     )

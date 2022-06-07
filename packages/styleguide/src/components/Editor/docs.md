@@ -685,7 +685,7 @@ const unlinkWhenEmpty: NormalizeFn<LinkElement> = ([node, path], editor) => {
 }
 ```
 
-Note that: a conform normaliser should break and return `true` when it changes something to the Slate tree, `false` otherwise.
+Note that: a correct normaliser should break and return `true` when it changes something to the Slate tree, `false` otherwise.
 
 ### Toolbar
 
@@ -693,20 +693,7 @@ Any element/mark that defines a `button` in the config can be rendered in either
 
 Every mark comes up as a button by default.
 
-The default buttons for the blocks (e.g. paragraph, headline, etc.) and the inlines (e.g. link) are listed in the `config/elements/index.tsx` file:
-
-```code|lang-js
-export const INLINE_BUTTONS: TemplateType[] = ['link']
-export const BLOCK_BUTTONS: TemplateType[] = [
-  'headline',
-  'paragraph',
-  'blockQuote',
-  'ul',
-  'ol',
-]
-```
-
-**Refactoring:** the buttons should be generated automatically based on schema & config. If defined in schema + button in config -> show button.
+For elements, buttons are available when a `button` object is defined in the config and a render component is present in the schema. In sticky mode, all buttons are shown at all time, although some may be inactive. The buttons are segregated between `inline` and `block`, based on the `isInline` attribute in the element config.
 
 ### Placeholders
 
