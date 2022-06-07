@@ -1,6 +1,3 @@
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
-import { gql } from '@apollo/client'
 import { css } from 'glamor'
 import {
   Loader,
@@ -15,6 +12,7 @@ import {
 import SectionTitle from './Common/SectionTitle'
 import SectionContainer from './Common/SectionContainer'
 import Link from 'next/link'
+import { useTranslation } from '../../lib/withT'
 
 const EmployeeLink = ({ employee, children }) => (
   <Link href={`/~${employee.user.slug || employee.user.id}`} passHref>
@@ -22,7 +20,8 @@ const EmployeeLink = ({ employee, children }) => (
   </Link>
 )
 
-const Team = ({ t, data: { loading, error, employees } }) => {
+const Team = ({ loading, error, employees }) => {
+  const { t } = useTranslation()
   const [colorScheme] = useColorContext()
   return (
     <SectionContainer>
@@ -106,21 +105,4 @@ const styles = {
   }),
 }
 
-const query = gql`
-  query MarketingTeam {
-    employees(withBoosted: true, shuffle: 3, withPitch: true) {
-      title
-      name
-      group
-      subgroup
-      pitch
-      user {
-        id
-        portrait
-        slug
-      }
-    }
-  }
-`
-
-export default compose(graphql(query))(Team)
+export default Team

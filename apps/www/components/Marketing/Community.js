@@ -1,6 +1,3 @@
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
-import { gql } from '@apollo/client'
 import {
   Loader,
   CommentTeaser,
@@ -14,8 +11,10 @@ import SectionTitle from './Common/SectionTitle'
 import SectionContainer from './Common/SectionContainer'
 import CommentLink from '../Discussion/shared/CommentLink'
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../lib/constants'
+import { useTranslation } from '../../lib/withT'
 
-const Community = ({ t, data: { loading, error, featured } }) => {
+const Community = ({ loading, error, featuredComments }) => {
+  const { t } = useTranslation()
   return (
     <SectionContainer>
       <SectionTitle
@@ -28,7 +27,7 @@ const Community = ({ t, data: { loading, error, featured } }) => {
         style={{ minHeight: 400 }}
         render={() => (
           <div {...styles.row}>
-            {featured.nodes.map((comment) => {
+            {featuredComments.nodes.map((comment) => {
               const image =
                 comment.discussion?.document?.meta?.image ||
                 (comment.discussion?.document?.meta?.shareText
@@ -88,53 +87,4 @@ const styles = {
   }),
 }
 
-const query = gql`
-  query MarketingCommunity {
-    featured: comments(
-      orderBy: FEATURED_AT
-      orderDirection: DESC
-      first: 2
-      featuredTarget: MARKETING
-    ) {
-      id
-      nodes {
-        id
-        featuredText
-        createdAt
-        updatedAt
-        displayAuthor {
-          id
-          name
-          slug
-          credential {
-            id
-            description
-            verified
-          }
-          profilePicture
-        }
-        discussion {
-          id
-          title
-          path
-          comments(first: 0) {
-            totalCount
-          }
-          document {
-            id
-            meta {
-              format {
-                id
-              }
-              path
-              image
-              shareText
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
-export default compose(graphql(query))(Community)
+export default Community
