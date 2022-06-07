@@ -1,8 +1,38 @@
 - [Introduction](#introduction)
 - [Guides](#guides)
   - [Adding New Elements](#adding-new-elements)
+    - [Basics](#basics)
+      - [1. Type System Extension](#1-type-system-extension)
+      - [2. Element Config](#2-element-config)
+      - [3. Rendering Schema](#3-rendering-schema)
+    - [Import a Styleguide Component](#import-a-styleguide-component)
+    - [Handle Custom Data](#handle-custom-data)
+    - [Putting Things Together](#putting-things-together)
   - [Adding New Marks](#adding-new-marks)
 - [Concepts](#concepts)
+  - [Editor config](#editor-config)
+    - [schema config](#schema-config)
+  - [Slate Node config](#slate-node-config)
+    - [Element config](#element-config)
+      - [ExtendedElementType](#extendedelementtype)
+      - [attrs config](#attrs-config)
+      - [NodeTemplate](#nodetemplate)
+      - [button config](#button-config)
+    - [Mark Config](#mark-config)
+  - [Structure](#structure)
+  - [Custom Data and Forms](#custom-data-and-forms)
+  - [Insert Element](#insert-element)
+    - [On Enter](#on-enter)
+    - [Keyboard Shortcuts](#keyboard-shortcuts)
+  - [Normalisation](#normalisation)
+    - [Fix Structure](#fix-structure)
+    - [End Nodes](#end-nodes)
+    - [Main Nodes](#main-nodes)
+    - [Linking](#linking)
+    - [Custom Normalisers](#custom-normalisers)
+  - [Toolbar](#toolbar)
+  - [Placeholders](#placeholders)
+  - [Character Count](#character-count)
 
 
 ## Introduction
@@ -18,6 +48,8 @@ You don't need any Slate literacy to go through the [guides](#guides), but a wor
 ### Adding New Elements
 
 *Monday:* Oli corners you in front of the coffee machine, and he really, really wants a carousel, because he thinks carousels are very cool. And indeed, you are getting chills, mostly because you know that carousels are tricky beasts. Can you throw a draft together before you've got to pick your kid at 6pm?
+
+#### Basics
 
 Let's make Oli happy and create a `carousel` element. This consists in 3 steps:
 
@@ -116,7 +148,7 @@ Slate has a [handful of requirements](https://docs.slatejs.org/walkthroughs/03-d
 - render the `children` prop last
 - if your element is "empty" as far as the editor is concerned (e.g. an image), use `style={{ userSelect: 'none' }}` or `contentEditable={false}`
 
-#### Import a Styleguide Compoment
+#### Import a Styleguide Component
 
 Now to `carouselTitle`. Same story as before: 
 
@@ -350,17 +382,25 @@ const schema: SchemaConfig = {
 
 We tried to build a config-first editor. The `config` object passed to the `Editor` component. Contains:
 
-Name | Description
-:--- | ---:
-schema | schema config *(see below)*
-maxSigns | number
-debug | boolean
+```table
+span: 3
+rows:
+  - Variable: schema
+    Description: schema config *(see below)*
+  - Variable: maxSigns
+    Description: number
+  - Variable: debug
+    Description: boolean  
+```
 
-- `schema`:
+#### schema config
 
-	Name | Description
-:--- | ---:
-[component key] | React component
+```table
+span: 3
+rows:
+  - Variable: ExtendedElementType or CustomMarksType key
+    Description: React component
+```
 
 ### Slate Node config
 
@@ -368,56 +408,89 @@ The individual `config/` files for marks and elements describe the rules accordi
 
 #### Element Config
 
-Name | Description
-:--- | ---:
-component | schema key *(see below)*
-attrs | *(see below)*
-normalizations | array of normalisers
-structure | array of `structure elements`
-Form | data form
-button | UI config *(see below)*
-defaultProps | custom default props
-props | custom element props
+```table
+span: 3
+rows:
+  - Variable: component
+    Description: ExtendedElementType key
+  - Variable: attrs
+    Description: attrs config *(see below)*
+  - Variable: normalizations
+    Description: array of normaliser functions
+  - Variable: structure
+    Description: array of `NodeTemplate`
+  - Variable: Form
+    Description: data form
+  - Variable: button
+    Description: button config *(see below)*
+  - Variable: props
+    Description: array of custom props keys
+  - Variable: defaultProps
+    Description: default values for custom props
+```
 
-- `ExtendedElementType`: any element type, e.g. `figureImage`, plus a few custom ones such as `list` or `container`
+#### `ExtendedElementType`
+Any element type, e.g. `figureImage`, plus a few custom ones such as `list` or `container`
 
-- `attrs`: extended core Slate attributes:
+#### attrs config
 
-	Name | Description
-:--- | ---:
-isVoid | boolean
-isInline | boolean
-highlightSelected | boolean
-formatText | boolean
-isMain | boolean
+Extended core Slate attributes:
 
-- `structure`
+```table
+span: 3
+rows:
+  - Variable: isVoid
+    Description: boolean
+  - Variable: isInline
+    Description: boolean
+  - Variable: highlightSelected
+    Description: boolean *(for void elements)*
+  - Variable: formatText
+    Description: boolean
+  - Variable: isMain
+    Description: boolean
+```
 
- Name | Description
-:--- | ---:
-type | custom element type or array of types
-repeat | boolean
-end | boolean *(only for text)*
+#### `NodeTemplate`
 
-- `button`
+```table
+span: 3
+rows:
+  - Variable: type
+    Description: element type or array of types
+  - Variable: repeat
+    Description: boolean
+  - Variable: end
+    Description: boolean *(only for inline nodes)*
+```
 
-	Name | Description
-:--- | ---:
-icon | React icon
-small | boolean
+#### button config
+
+```table
+span: 3
+rows:
+  - Variable: icon
+    Description: React Icon
+  - Variable: small
+    Description: boolean
+```
 
 #### Mark Config
 
-Name | Description
-:--- | ---:
-component | schema key *(see element config)*
-button | UI config *(see element config)*
+```table
+span: 3
+rows:
+  - Variable: component
+    Description: CustomMarksType key
+  - Variable: button
+    Description: button config *(see above)*
+```
 
 ### Structure
 
 A `structure` is an array of `NodeTemplate`. Each `NodeTemplate` specifies the type of the element (single element or an array of them) and whether the element is unique or can be repeated.
 
-The normalisation automatically make sure that the constrains are enforced.
+The normalisation automatically make sure that the constraints are enforced.
 
 `figureCaption` is a good example:
 
@@ -568,7 +641,7 @@ Conversely, if an element config doesn't specify a structure, we default to:
 const DEFAULT_STRUCTURE = [{ type: ['text'], repeat: true }]
 ```
 
-### End Nodes
+#### End Nodes
 
 One of Slate's [built-in constraints](https://docs.slatejs.org/concepts/11-normalizing#built-in-constraints) is that inline nodes cannot be the first or last nodes of a parent block. This is annoying. 
 
@@ -587,6 +660,12 @@ export const config: ElementConfigI = {
 ```
 
 We solve the problem by adding an attribute called `end` to text nodes. End nodes can be placed at either end of the structure and do not contain any text. If someone starts writing inside an end node, the text gets reallocated to the nearest non-end node in the next normalisation cycle.
+
+#### Main Nodes
+
+The `isMain` flag signals that a node is the "principle node" of a structure. If this node is deleted by the writer, the whole parent structure should be deleted too.
+
+Example: the image node of a figure is the main node of the figure structure (image + caption). If the writer deletes the image, the whole figure gets removed.
 
 #### Linking
 
