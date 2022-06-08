@@ -22,14 +22,25 @@ import { KeyboardEvent } from 'react'
 import { selectPlaceholder } from './text'
 import { config as elConfig } from '../../../config/elements'
 
-// remove attributes using by working editor
-// TODO: delete empty nodes
-export const cleanupTree = (value: CustomDescendant[]): CustomDescendant[] => {
+const removeEmpty = (nodes: CustomDescendant[]): CustomDescendant[] =>
+  nodes.filter((n) => {
+    if (SlateElement.isElement(n)) {
+      return Node.string(n) !== '' || elConfig[n.type].attrs?.isVoid
+    } else {
+      return !n.end
+    }
+  })
+
+export const cleanupTree = (
+  value: CustomDescendant[],
+  noEmpty = false,
+): CustomDescendant[] => {
   return value.map((node) => {
     if (SlateElement.isElement(node)) {
       const { template, children, ...rest } = node
+      const childrenNoEmpty = noEmpty ? removeEmpty(children) : children
       return {
-        children: cleanupTree(children),
+        children: cleanupTree(childrenNoEmpty, noEmpty),
         ...rest,
       }
     } else if (Text.isText(node)) {
