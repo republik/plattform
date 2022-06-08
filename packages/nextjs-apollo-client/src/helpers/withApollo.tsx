@@ -18,6 +18,11 @@ export type PagePropsWithApollo<P = unknown> = {
   apolloClient?: ApolloClient<NormalizedCacheObject>
 } & P
 
+/**
+ * HOC to wrap a Next.js App with an ApolloProvider.
+ * @param useApollo hook to retrieve the apollo client
+ * @returns App wrapped with ApolloProvider with the cache from the server being injected.
+ */
 function makeWithApollo<P>(
   useApollo: (
     pageProps: P,
