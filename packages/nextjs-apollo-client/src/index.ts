@@ -19,7 +19,7 @@ type CreateApolloClientUtilitiesOptions = Pick<
  * with the application specific options.
  * @param options Options that must only be provided once per application.
  */
-function createApolloClientUtilities(
+export function createApolloClientUtilities(
   options: CreateApolloClientUtilitiesOptions,
 ) {
   const useApollo = <P>(
@@ -55,4 +55,4 @@ function createApolloClientUtilities(
 
 export { hasSubscriptionOperation } from './apolloLink'
 export { APOLLO_STATE_PROP_NAME } from './apolloClient'
-export default createApolloClientUtilities
+export type { PagePropsWithApollo } from './withApollo'

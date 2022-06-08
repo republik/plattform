@@ -7,7 +7,7 @@ import { AppProps } from 'next/app'
 import { APOLLO_STATE_PROP_NAME } from './apolloClient'
 import { ComponentType } from 'react'
 
-export type PagePropsWithCache<P = unknown> = {
+export type PagePropsWithApollo<P = unknown> = {
   /**
    * Shared cache between the client and server
    */
@@ -29,13 +29,13 @@ function makeWithApollo<P>(
    * @param AppComponent
    */
   return function withApollo<P>(
-    AppComponent: ComponentType<AppProps<PagePropsWithCache<P>>>,
-  ): ComponentType<AppProps<PagePropsWithCache<P>>> {
+    AppComponent: ComponentType<AppProps<PagePropsWithApollo<P>>>,
+  ): ComponentType<AppProps<PagePropsWithApollo<P>>> {
     const WrappedApp = ({
       Component,
       pageProps,
       ...appProps
-    }: AppProps<PagePropsWithCache<P>>) => {
+    }: AppProps<PagePropsWithApollo<P>>) => {
       const {
         apolloClient: providedApolloClient,
         [APOLLO_STATE_PROP_NAME]: apolloState,

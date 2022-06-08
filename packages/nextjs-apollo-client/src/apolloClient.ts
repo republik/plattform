@@ -8,6 +8,7 @@ import {
 import { createLink } from './apolloLink'
 import deepMerge from './deepMerge'
 import { isDev, isClient } from './util'
+import type { IncomingHttpHeaders } from 'http'
 
 // Based on the with-apollo example inside the Next.js repository
 // Source: https://github.com/vercel/next.js/blob/canary/examples/with-apollo/lib/apolloClient.js
@@ -17,7 +18,7 @@ export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__'
 export type ApolloClientOptions = {
   apiUrl: string
   wsUrl: string
-  headers?: { [key: string]: string | number | boolean }
+  headers?: { [key: string]: string | number | boolean } | IncomingHttpHeaders
   onResponse?: (response: any) => void
   mobileConfigOptions?: {
     isInMobileApp: boolean
