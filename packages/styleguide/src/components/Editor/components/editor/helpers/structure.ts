@@ -355,7 +355,6 @@ export const fixStructure: (
 ) => NormalizeFn<CustomAncestor> =
   (structure = DEFAULT_STRUCTURE) =>
   ([node, path], editor) => {
-    // console.log('MATCH STRUCTURE', { structure })
     let i = 0
     let repeatOffset = 0
     let loop = true

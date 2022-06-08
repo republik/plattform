@@ -40,6 +40,10 @@ const RenderedElement: React.FC<{
 }> = ({ element, schema }) => {
   const { type, children, ...customElProps } = element
   const config = elConfig[type]
+  if (!config) {
+    console.warn('Config for', type, 'missing')
+    return null
+  }
   const Component = schema[config.component]
   // console.log({ type })
   if (!Component) {

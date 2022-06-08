@@ -30,6 +30,7 @@ import { withDelete } from './decorators/delete'
 import { useColorContext } from '../../../Colors/ColorContext'
 import { withCustomConfig } from './decorators/config'
 import { LayoutContainer } from './ui/Layout'
+import ErrorMessage from './ui/ErrorMessage'
 
 const SlateEditor: React.FC<{
   value: CustomDescendant[]
@@ -67,9 +68,29 @@ const SlateEditor: React.FC<{
     const setFormPath = useFormContext()[1]
     const isSelected = useSelected()
     const config = elementsConfig[element.type]
+    if (!config) {
+      return (
+        <ErrorMessage
+          attributes={attributes}
+          error={`${element.type} config missing`}
+        >
+          {children}
+        </ErrorMessage>
+      )
+    }
     const isVoid = config.attrs?.isVoid
     const highlightSelected = config.attrs?.highlightSelected
     const Component = editor.customConfig.schema[config.component]
+    if (!Component) {
+      return (
+        <ErrorMessage
+          attributes={attributes}
+          error={`${config.component} component missing in schema`}
+        >
+          {children}
+        </ErrorMessage>
+      )
+    }
     const path = ReactEditor.findPath(editor, element)
     const selectVoid = (e) => {
       if (isVoid) {

@@ -680,6 +680,35 @@ describe('Slate Editor: Normalisation', () => {
         },
       ])
     })
+
+    it('should gracefully handle case where element type is allowed in the structure, but not defined in schema', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Timeo ' },
+            {
+              type: 'inlineCode',
+              children: [{ text: 'Danaos' }],
+            },
+            { text: ' et dona ferentes' },
+          ],
+        },
+      ]
+      const structure = [
+        {
+          type: 'paragraph',
+        },
+      ]
+
+      let err = null
+      try {
+        await setup(structure)
+      } catch (error) {
+        err = error
+      }
+      expect(err).toBeNull()
+    })
   })
 
   describe('cleanup', () => {
