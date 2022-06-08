@@ -4,12 +4,12 @@ import {
   GetStaticPropsContext,
   GetStaticPropsResult,
 } from 'next'
-import { BasePageProps } from '../../pages/_app'
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
+import { initializeApollo } from '../apollo'
 import {
   APOLLO_STATE_PROP_NAME,
-  initializeApollo,
-} from '../apollo/apolloClient'
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
+  PagePropsWithApollo,
+} from '@republik/nextjs-apollo-client'
 
 /**
  * A function that is able to interact with the apollo-client
@@ -27,10 +27,10 @@ type ApolloSSGQueryFunc<P, Q extends ParsedUrlQuery> = (
 function createGetStaticProps<P, Q extends ParsedUrlQuery = ParsedUrlQuery>(
   queryFunc: ApolloSSGQueryFunc<P, Q>,
   headers?: { [key: string]: string },
-): GetStaticProps<BasePageProps<P>> {
+): GetStaticProps<PagePropsWithApollo<P>> {
   return async (
     ctx: GetStaticPropsContext<Q>,
-  ): Promise<GetStaticPropsResult<BasePageProps<P>>> => {
+  ): Promise<GetStaticPropsResult<PagePropsWithApollo<P>>> => {
     const apolloClient = initializeApollo(null, {
       headers,
     })

@@ -5,14 +5,13 @@ import {
   GetServerSidePropsContext,
   GetServerSidePropsResult,
 } from 'next'
-import { BasePageProps } from '../../pages/_app'
-import {
-  APOLLO_STATE_PROP_NAME,
-  initializeApollo,
-} from '../apollo/apolloClient'
 import { meQuery } from '../apollo/withMe'
 import { MeObjectType } from '../context/MeContext'
-import { IncomingMessage } from 'http'
+import { initializeApollo } from '../apollo'
+import {
+  APOLLO_STATE_PROP_NAME,
+  PagePropsWithApollo,
+} from '@republik/nextjs-apollo-client'
 
 /**
  * Type of function that can be passed to `createGetServerSideProps`
@@ -26,10 +25,10 @@ type ApolloSSRQueryFunc<P, Q extends ParsedUrlQuery> = (
 
 function createGetServerSideProps<P, Q extends ParsedUrlQuery = ParsedUrlQuery>(
   queryFunc: ApolloSSRQueryFunc<P, Q>,
-): GetServerSideProps<BasePageProps<P>> {
+): GetServerSideProps<PagePropsWithApollo<P>> {
   return async (
     context: GetServerSidePropsContext<Q>,
-  ): Promise<GetServerSidePropsResult<BasePageProps<P>>> => {
+  ): Promise<GetServerSidePropsResult<PagePropsWithApollo<P>>> => {
     // Use the request object to pass on the cookies to the graphql requests
     const apolloClient = initializeApollo(null, {
       // Pass headers of the client-request to the apollo-link

@@ -1,17 +1,17 @@
-import {
-  APOLLO_STATE_PROP_NAME,
-  initializeApollo,
-} from '../apollo/apolloClient'
 import { getDataFromTree } from '@apollo/client/react/ssr'
 import { NextPage, NextPageContext } from 'next'
-import { BasePageProps } from '../../pages/_app'
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { meQuery } from '../apollo/withMe'
+import { initializeApollo } from '../apollo'
+import {
+  APOLLO_STATE_PROP_NAME,
+  PagePropsWithApollo,
+} from '@republik/nextjs-apollo-client'
 
 /**
  * Default Props used when rendering a page using SSR
  */
-type DefaultSSRPageProps<P = unknown> = BasePageProps<P> & {
+type DefaultSSRPageProps<P = unknown> = PagePropsWithApollo<P> & {
   /**
    * Provided ApolloClient used to populate the cache on when doing SSR
    */
