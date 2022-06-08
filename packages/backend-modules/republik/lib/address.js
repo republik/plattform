@@ -2,7 +2,7 @@ const MAX_DEFAULT_LENGTH = 70
 const MAX_CITY_LENGTH = 35
 
 const ensureStringLengthForAddressProp = (prop, maxLength, message, t) => {
-  if (prop.length > maxLength) {
+  if (prop?.length > maxLength) {
     throw new Error(t(message, { maxLength }))
   }
 }
