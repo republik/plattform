@@ -51,7 +51,7 @@ import {
 } from '@project-r/styleguide'
 import ReasonsVideo from '../components/About/ReasonsVideo'
 import Link from 'next/link'
-import withDefaultSSR from '../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../lib/apollo/helpers'
 
 const query = gql`
   query cf2($accessToken: ID) {

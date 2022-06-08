@@ -97,10 +97,6 @@ export function makeWithDefaultSSR(
 
         // Extract query data from the Apollo store
         props[APOLLO_STATE_PROP_NAME] = apolloClient.cache.extract()
-        console.log(
-          'retrieved apollo cache data',
-          props[APOLLO_STATE_PROP_NAME],
-        )
       }
 
       return props

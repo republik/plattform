@@ -1,5 +1,5 @@
 import Article from '../../components/Article/Page'
-import withDefaultSSR from '../../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../../lib/apollo/helpers'
 
 /**
  * Reexport the article page with SSR-mode.
