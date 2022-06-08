@@ -909,6 +909,59 @@ describe('Slate Editor: Normalisation', () => {
         },
       ])
     })
+
+    it('should not autolink if parent element does not allow links', async () => {
+      value = [
+        {
+          type: 'blockQuote',
+          children: [
+            {
+              type: 'blockQuoteText',
+              children: [{ text: 'Read the story on www.republik.ch' }],
+            },
+            {
+              type: 'figureCaption',
+              children: [
+                { text: '' },
+                {
+                  type: 'figureByline',
+                  children: [{ text: '' }],
+                },
+                { text: '' },
+              ],
+            },
+          ],
+        },
+      ]
+      const structure = [
+        {
+          type: 'blockQuote',
+        },
+      ]
+      await setup(structure)
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'blockQuote',
+          children: [
+            {
+              type: 'blockQuoteText',
+              children: [{ text: 'Read the story on www.republik.ch' }],
+            },
+            {
+              type: 'figureCaption',
+              children: [
+                { text: '' },
+                {
+                  type: 'figureByline',
+                  children: [{ text: '' }],
+                },
+                { text: '' },
+              ],
+            },
+          ],
+        },
+      ])
+    })
   })
 
   describe('handlePlaceholders()', () => {

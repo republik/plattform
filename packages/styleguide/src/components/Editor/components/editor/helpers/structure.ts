@@ -41,7 +41,7 @@ import { getCharCount, selectNearestWord } from './text'
 const DEFAULT_STRUCTURE: NodeTemplate[] = [{ type: ['text'], repeat: true }]
 export const TEXT = { text: '' }
 
-const isAllowedType = (
+export const isAllowedType = (
   elType: TemplateType,
   allowedTypes: TemplateType | TemplateType[],
 ): boolean =>

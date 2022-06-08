@@ -1,5 +1,4 @@
 import {
-  CustomDescendant,
   CustomEditor,
   CustomMarksType,
   CustomText,
@@ -12,12 +11,11 @@ import {
   Node,
   NodeEntry,
   Transforms,
-  Point,
   Range,
 } from 'slate'
 import { ReactEditor } from 'slate-react'
 import { config as elConfig } from '../../../config/elements'
-import { isCorrect } from './structure'
+import { isAllowedType, isCorrect } from './structure'
 import { configKeys as mKeys, MARKS_ALLOW_LIST } from '../../../config/marks'
 import { cleanupNode, overlaps } from './tree'
 
@@ -121,6 +119,10 @@ export const createLinks: NormalizeFn<CustomText> = ([node, path], editor) => {
   const parent = Editor.parent(editor, path)
   const parentNode = parent[0]
 
+  if (!node.template || !isAllowedType('link', node.template.type)) {
+    return false
+  }
+
   // regex should only return one link!
   const regex =
     /(https?:\/\/(?:www\.|(?!www))[^\s.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})/gi
@@ -130,43 +132,31 @@ export const createLinks: NormalizeFn<CustomText> = ([node, path], editor) => {
     if (SlateElement.isElement(parentNode) && parentNode.type !== 'link') {
       const linkStartPoint = node.text.indexOf(linkContent[0])
       const linkEndPoint = linkContent[0].length + linkStartPoint
-
-      const href = /^(https?:|\/|#)/.test(linkContent[0])
-        ? linkContent[0]
-        : 'http://' + linkContent[0]
-
-      Transforms.wrapNodes(
-        editor,
-        { type: 'link', href, children: [] },
-        {
-          at: {
-            anchor: { path, offset: linkStartPoint },
-            focus: { path, offset: linkEndPoint },
-          },
-          split: true,
-        },
-      )
-
-      if (
-        editor.selection &&
-        !Point.equals(
-          { path, offset: linkContent[0].length },
-          Range.end(editor.selection),
-        )
-      ) {
-        // TODO: double check this clause
-        // console.log({ path })
-        const nextTextPath = path.map((p, idx) =>
-          idx !== path.length - 1 ? p : p + 2,
-        )
-        // console.log('nextTextPath', nextTextPath)
-        // same hack as for placeholders
-        setTimeout(() => {
-          Transforms.select(editor, nextTextPath)
-        })
+      const linkRange = {
+        anchor: { path, offset: linkStartPoint },
+        focus: { path, offset: linkEndPoint },
       }
+      // only autolink if cursor is out of link
+      if (
+        !editor.selection ||
+        !Range.isCollapsed(editor.selection) ||
+        !Range.intersection(editor.selection, linkRange)
+      ) {
+        const href = /^(https?:|\/|#)/.test(linkContent[0])
+          ? linkContent[0]
+          : 'http://' + linkContent[0]
 
-      return true
+        Transforms.wrapNodes(
+          editor,
+          { type: 'link', href, children: [] },
+          {
+            at: linkRange,
+            split: true,
+          },
+        )
+
+        return true
+      }
     }
   }
   return false
