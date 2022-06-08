@@ -7,9 +7,9 @@ import {
 } from 'next'
 import {
   APOLLO_STATE_PROP_NAME,
-  PagePropsWithApollo,
-} from '@republik/nextjs-apollo-client'
-import { InitializeApolloFunc } from '../apollo/apolloClient'
+  InitializeApolloFunc,
+} from '../apollo/apolloClient'
+import { PagePropsWithApollo } from './withApollo'
 
 /**
  * Type of function that can be passed to `createGetServerSideProps`
