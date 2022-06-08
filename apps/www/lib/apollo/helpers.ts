@@ -1,6 +1,7 @@
 import {
   makeCreateGetServerSideProps,
   makeCreateGetStaticProps,
+  makeWithDefaultSSR,
 } from '@republik/nextjs-apollo-client'
 import { initializeApollo } from '.'
 import { MeObjectType } from '../context/MeContext'
@@ -21,3 +22,12 @@ export const createGetServerSideProps =
       return me
     },
   )
+
+export const withDefaultSSR = makeWithDefaultSSR(
+  initializeApollo,
+  async (client) => {
+    await client.query({
+      query: meQuery,
+    })
+  },
+)
