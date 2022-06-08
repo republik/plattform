@@ -1,8 +1,9 @@
-const MAX_ADDRESS_NAME_LENGTH = 70
+const MAX_DEFAULT_LENGTH = 70
+const MAX_CITY_LENGTH = 35
 
-const ensureStringLengthForAddress = (prop, maxLength, message, t) => {
+const ensureStringLengthForAddressProp = (prop, maxLength, message, t) => {
   if (prop.length > maxLength) {
-    throw new Error(t(message))
+    throw new Error(t(message, { maxLength }))
   }
 }
 
@@ -11,10 +12,24 @@ const insertAddress = (address, pgdb, t) => {
     return
   }
 
-  ensureStringLengthForAddress(
+  ensureStringLengthForAddressProp(
     address.name,
-    MAX_ADDRESS_NAME_LENGTH,
+    MAX_DEFAULT_LENGTH,
     'address/name/tooLong',
+    t,
+  )
+
+  ensureStringLengthForAddressProp(
+    address.line1,
+    MAX_DEFAULT_LENGTH,
+    'address/line1/tooLong',
+    t,
+  )
+
+  ensureStringLengthForAddressProp(
+    address.city,
+    MAX_CITY_LENGTH,
+    'address/city/tooLong',
     t,
   )
 
@@ -27,10 +42,24 @@ const updateAddress = (address, pgdb, t) => {
     return
   }
 
-  ensureStringLengthForAddress(
+  ensureStringLengthForAddressProp(
     address.name,
-    MAX_ADDRESS_NAME_LENGTH,
+    MAX_DEFAULT_LENGTH,
     'address/name/tooLong',
+    t,
+  )
+
+  ensureStringLengthForAddressProp(
+    address.line1,
+    MAX_DEFAULT_LENGTH,
+    'address/line1/tooLong',
+    t,
+  )
+
+  ensureStringLengthForAddressProp(
+    address.city,
+    MAX_CITY_LENGTH,
+    'address/city/tooLong',
     t,
   )
 

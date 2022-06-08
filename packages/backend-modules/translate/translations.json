@@ -922,7 +922,15 @@
     },
     {
       "key": "address/name/tooLong",
-      "value": "Name, maximal 70 Zeichen"
+      "value": "Name, maximal {maxLength} Zeichen"
+    },
+    {
+      "key": "address/line1/tooLong",
+      "value": "Strasse und Hausnummer, maximal {maxLength} Zeichen"
+    },
+    {
+      "key": "address/city/tooLong",
+      "value": "Ort, maximal {maxLength} Zeichen"
     },
     {
       "key": "pledge/contact/firstName/label",

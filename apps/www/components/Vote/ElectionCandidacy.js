@@ -44,9 +44,9 @@ const addressFields = (t) => [
     label: t('Account/AddressForm/line1/label'),
     name: 'line1',
     validator: (value) =>
-      (!value?.length && t('Account/AddressForm/line/error/empty')) ||
+      (!value?.length && t('Account/AddressForm/line1/error/empty')) ||
       (value?.length > 70 &&
-        t('Account/AddressForm/line/error/tooLong', { maxLength: 70 })),
+        t('Account/AddressForm/line1/error/tooLong', { maxLength: 70 })),
   },
   {
     label: t('Account/AddressForm/line2/label'),
