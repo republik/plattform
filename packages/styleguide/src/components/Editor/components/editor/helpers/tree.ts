@@ -22,6 +22,14 @@ import { KeyboardEvent } from 'react'
 import { selectPlaceholder } from './text'
 import { config as elConfig } from '../../../config/elements'
 
+export const NAV_KEYS = [
+  'ArrowLeft',
+  'ArrowRight',
+  'ArrowDown',
+  'ArrowUp',
+  'Tab',
+]
+
 const removeEmpty = (nodes: CustomDescendant[]): CustomDescendant[] =>
   nodes.filter((n) => {
     if (SlateElement.isElement(n)) {

@@ -24,7 +24,7 @@ const Countdown: React.FC<{ maxSigns: number }> = ({ maxSigns }) => {
   return (
     <Label>
       <span
-        {...colorScheme.set('color', countdown < 100 ? 'error' : 'textSoft')}
+        {...colorScheme.set('color', countdown < 20 ? 'error' : 'textSoft')}
       >
         {countdown} Zeichen
       </span>

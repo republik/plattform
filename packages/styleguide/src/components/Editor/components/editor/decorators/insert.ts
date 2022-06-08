@@ -2,6 +2,7 @@ import { CustomEditor, EditorConfig } from '../../../custom-types'
 import { getCharCount } from '../helpers/text'
 import { unwrapOnPaste } from '../helpers/structure'
 
+// related issue: https://github.com/ianstormtaylor/slate/issues/5010
 export const withInsert =
   (config: EditorConfig) =>
   (editor: CustomEditor): CustomEditor => {
@@ -15,7 +16,7 @@ export const withInsert =
 
     editor.insertText = (text) => {
       // console.log('insert text', maxSigns)
-      if (maxSigns && getCharCount(editor.children) >= maxSigns) {
+      if (maxSigns && getCharCount(editor.children) + text.length > maxSigns) {
         // console.log('max reached')
         return
       }

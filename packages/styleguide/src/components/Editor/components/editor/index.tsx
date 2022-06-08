@@ -23,7 +23,7 @@ import {
   EditorConfig,
   NodeTemplate,
 } from '../../custom-types'
-import { navigateOnTab } from './helpers/tree'
+import { NAV_KEYS, navigateOnTab } from './helpers/tree'
 import { handleInsert, insertOnKey } from './helpers/structure'
 import { withInsert } from './decorators/insert'
 import { withDelete } from './decorators/delete'
@@ -31,6 +31,7 @@ import { useColorContext } from '../../../Colors/ColorContext'
 import { withCustomConfig } from './decorators/config'
 import { LayoutContainer } from './ui/Layout'
 import ErrorMessage from './ui/ErrorMessage'
+import { getCharCount } from './helpers/text'
 
 const SlateEditor: React.FC<{
   value: CustomDescendant[]
@@ -147,7 +148,18 @@ const SlateEditor: React.FC<{
               renderElement={renderElement}
               renderLeaf={renderLeaf}
               onKeyDown={(event) => {
-                // console.log('event', event.key, event.shiftKey)
+                // console.log('event', event.key, event.shiftKey, event)
+
+                // disable key down events if max signs is reached
+                if (
+                  config.maxSigns &&
+                  getCharCount(editor.children) >= config.maxSigns &&
+                  !NAV_KEYS.concat('Backspace').includes(event.key)
+                ) {
+                  event.preventDefault()
+                  return false
+                }
+
                 insertOnKey({ name: 'Enter', shift: true }, 'break')(
                   editor,
                   event,

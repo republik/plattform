@@ -22570,10 +22570,10 @@ slate-react@^0.10.23:
     slate-plain-serializer "^0.4.16"
     slate-prop-types "^0.4.16"
 
-slate-react@^0.77.4:
-  version "0.77.4"
-  resolved "https://registry.yarnpkg.com/slate-react/-/slate-react-0.77.4.tgz#b2532b57e47c4e088b1583ed8befc6e238a15ad5"
-  integrity sha512-e3gYuEhjbEX4IhydC4kWZgcvH5fgJkJMuu9paarO6gdW5vRRSWnys/EbOs5ALp4e9NWr5u1XzQkJnbpyW5AqBA==
+slate-react@^0.81.0:
+  version "0.81.0"
+  resolved "https://registry.yarnpkg.com/slate-react/-/slate-react-0.81.0.tgz#248eb688ce01f23680ce2554625fd60676614962"
+  integrity sha512-bwryad4EvOmc7EFKb8aGg9DWNDh3KvToaggGieIgGTTbHJYHc9ADFC3A87Ittlpd5XUVopR0MpChQ3g3ODyvqw==
   dependencies:
     "@types/is-hotkey" "^0.1.1"
     "@types/lodash" "^4.14.149"
@@ -22607,10 +22607,10 @@ slate@^0.31.8:
     slate-dev-logger "^0.1.36"
     type-of "^2.0.1"
 
-slate@^0.78.0:
-  version "0.78.0"
-  resolved "https://registry.yarnpkg.com/slate/-/slate-0.78.0.tgz#cd0328d22b0a99c543987d2a2dd30903bb950ee9"
-  integrity sha512-VwQ0RafT3JPf9SFrXI02Dh3S4Iz9en7d1nn50C/LJjjqjfgv+a2ORbgWMdYjhycPYldaxJwcI3OpP9D1g4SXEg==
+slate@^0.81.0:
+  version "0.81.0"
+  resolved "https://registry.yarnpkg.com/slate/-/slate-0.81.0.tgz#2b58a72d2510a0e4158e1ce69cf4ee95d2d035c4"
+  integrity sha512-VKHeZ/PMeYorIeRiJWYT78kd5MkLdfKiVpPrUfdj6ZMLYYfIhnb8zIZdP5Jp9GaFYM3g+oZw+Pm9HCJstfQJ9A==
   dependencies:
     immer "^9.0.6"
     is-plain-object "^5.0.0"

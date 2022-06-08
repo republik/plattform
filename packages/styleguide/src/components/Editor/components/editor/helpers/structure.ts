@@ -524,7 +524,7 @@ export const unwrapOnPaste = (
       Text.isText(unwrappedFragment[0])
     ) {
       // console.log('paste this one instead', unwrappedFragment)
-      Transforms.insertFragment(editor, unwrappedFragment)
+      Editor.insertFragment(editor, unwrappedFragment)
       return true
     }
   }
