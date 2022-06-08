@@ -1,13 +1,13 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Front from '../components/Front'
-import createGetStaticProps from '../lib/helpers/createGetStaticProps'
 import { FRONT_QUERY } from '../components/Front/graphql/getFrontQuery.graphql'
 import { useMe } from '../lib/context/MeContext'
 import {
   FRONT_FEED_QUERY,
   getFrontFeedOptions,
 } from '../components/Front/withData'
+import { createGetStaticProps } from '../lib/apollo/helpers'
 
 const FRONT_PAGE_SSG_REVALIDATE = 60 // revalidate every minute
 const FRONT_PATH = '/'
