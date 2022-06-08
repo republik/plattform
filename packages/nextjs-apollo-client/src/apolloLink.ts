@@ -44,7 +44,7 @@ export const createLink = ({
   onResponse,
   mobileConfigOptions,
 }: CreateLinkOptions) => {
-  if (mobileConfigOptions.isInMobileApp) {
+  if (mobileConfigOptions && mobileConfigOptions.isInMobileApp) {
     return mobileConfigOptions.createAppWorkerLink()
   }
   const http = new HttpLink({
