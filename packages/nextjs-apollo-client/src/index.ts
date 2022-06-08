@@ -60,3 +60,5 @@ export type { ApolloSSGQueryFunc } from './helpers/createGetStaticProps'
 
 export { makeCreateGetServerSideProps } from './helpers/createGetServerSideProps'
 export type { ApolloSSRQueryFunc } from './helpers/createGetServerSideProps'
+
+export { makeWithDefaultSSR } from './helpers/withDefaultSSR'
