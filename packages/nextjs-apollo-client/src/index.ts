@@ -3,8 +3,9 @@ import {
   ApolloClientOptions,
   useApollo as useApolloHook,
   initializeApollo as initializeApolloFunc,
-} from './apolloClient'
-import makeWithApollo from './withApollo'
+  InitializeApolloFunc,
+} from './apollo/apolloClient'
+import makeWithApollo from './helpers/withApollo'
 
 /**
  * Options that must only be provided once per application.
@@ -31,13 +32,10 @@ export function createApolloClientUtilities(
       providedApolloClient,
     })
 
-  const initializeApollo = (
-    initialCacheObject: NormalizedCacheObject = null,
-    {
-      headers,
-      onResponse,
-    }: Pick<ApolloClientOptions, 'headers' | 'onResponse'>,
-  ): ApolloClient<NormalizedCacheObject> =>
+  const initializeApollo: InitializeApolloFunc = (
+    initialCacheObject = null,
+    { headers, onResponse },
+  ) =>
     initializeApolloFunc(initialCacheObject, {
       ...options,
       headers,
@@ -53,6 +51,12 @@ export function createApolloClientUtilities(
   }
 }
 
-export { hasSubscriptionOperation } from './apolloLink'
-export { APOLLO_STATE_PROP_NAME } from './apolloClient'
-export type { PagePropsWithApollo } from './withApollo'
+export { hasSubscriptionOperation } from './apollo/apolloLink'
+export { APOLLO_STATE_PROP_NAME } from './apollo/apolloClient'
+export type { PagePropsWithApollo } from './helpers/withApollo'
+
+export { makeCreateGetStaticProps } from './helpers/createGetStaticProps'
+export type { ApolloSSGQueryFunc } from './helpers/createGetStaticProps'
+
+export { makeCreateGetServerSideProps } from './helpers/createGetServerSideProps'
+export type { ApolloSSRQueryFunc } from './helpers/createGetServerSideProps'

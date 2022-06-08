@@ -85,6 +85,11 @@ function createApolloClient(
 // Client only, initializeApollo only sets it when in browser
 let apolloClient: ApolloClient<NormalizedCacheObject> = null
 
+export type InitializeApolloFunc = (
+  initialCacheObject: NormalizedCacheObject,
+  options: Pick<ApolloClientOptions, 'headers' | 'onResponse'>,
+) => ApolloClient<NormalizedCacheObject>
+
 /**
  * Initialize an Apollo Client. On the client the Apollo Client is shared across
  * the whole application and on the server a new instance is generated with each execution.

@@ -4,7 +4,7 @@ import {
   NormalizedCacheObject,
 } from '@apollo/client'
 import { AppProps } from 'next/app'
-import { APOLLO_STATE_PROP_NAME } from './apolloClient'
+import { APOLLO_STATE_PROP_NAME } from '../apollo/apolloClient'
 import { ComponentType } from 'react'
 
 export type PagePropsWithApollo<P = unknown> = {
