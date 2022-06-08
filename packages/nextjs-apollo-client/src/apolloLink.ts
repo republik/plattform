@@ -41,7 +41,8 @@ export const createLink = ({
   apiUrl,
   wsUrl,
   headers = {},
-  onResponse,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onResponse = () => {},
   mobileConfigOptions,
 }: CreateLinkOptions) => {
   if (mobileConfigOptions && mobileConfigOptions.isInMobileApp) {
