@@ -1,12 +1,12 @@
 import '../lib/polyfill'
 
-import { NormalizedCacheObject } from '@apollo/client'
 import Head from 'next/head'
 
 import {
   ColorContextProvider,
   IconContextProvider,
 } from '@project-r/styleguide'
+import type { PagePropsWithApollo } from '@republik/nextjs-apollo-client'
 
 import { ErrorBoundary, reportError } from '../lib/errors'
 import Track from '../components/Track'
@@ -16,7 +16,6 @@ import AudioPlayer from '../components/Audio/AudioPlayer'
 import MediaProgressContext from '../components/Audio/MediaProgress'
 import AppVariableContext from '../components/Article/AppVariableContext'
 import ColorSchemeSync from '../components/ColorScheme/Sync'
-import { APOLLO_STATE_PROP_NAME } from '../lib/apollo/apolloClient'
 import { AppProps } from 'next/app'
 import MeContextProvider from '../lib/context/MeContext'
 import UserAgentProvider from '../lib/context/UserAgentContext'
@@ -42,22 +41,7 @@ if (typeof window !== 'undefined') {
   )
 }
 
-/**
- * Base PageProps that contains the apollo-cache utilized in SSG & SSR.
- */
-export type BasePageProps<P = unknown> = {
-  /**
-   * Shared cache between the client and server
-   */
-  [APOLLO_STATE_PROP_NAME]?: NormalizedCacheObject
-  /**
-   * When rendering a member-page in SSG, this value is passed to the me-context
-   * to allow elements, which are only visible to members, to be rendered.
-   */
-  assumeAccess?: boolean
-} & P // All other props given in a page
-
-const WebApp = ({ Component, pageProps }: AppProps<BasePageProps>) => {
+const WebApp = ({ Component, pageProps }: AppProps<PagePropsWithApollo>) => {
   const {
     // SSR only props
     providedUserAgent = undefined,
