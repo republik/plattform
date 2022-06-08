@@ -42,7 +42,6 @@ function makeWithApollo<P>(
         ...filteredPageProps // Filtered PageProps
       } = pageProps
 
-      console.log('Extracted apolloState:', apolloState)
       const apolloClient = useApollo(pageProps, providedApolloClient)
       return (
         <ApolloProvider client={apolloClient}>
