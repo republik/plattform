@@ -7,9 +7,9 @@ import {
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import {
   APOLLO_STATE_PROP_NAME,
-  PagePropsWithApollo,
-} from '@republik/nextjs-apollo-client'
-import { InitializeApolloFunc } from '../apollo/apolloClient'
+  InitializeApolloFunc,
+} from '../apollo/apolloClient'
+import { PagePropsWithApollo } from './withApollo'
 
 /**
  * A function that is able to interact with the apollo-client
