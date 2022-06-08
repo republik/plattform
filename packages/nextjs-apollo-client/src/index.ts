@@ -4,6 +4,7 @@ import {
   useApollo as useApolloHook,
   initializeApollo as initializeApolloFunc,
 } from './apolloClient'
+import makeWithApollo from './withApollo'
 
 /**
  * Options that must only be provided once per application.
@@ -21,6 +22,8 @@ type CreateApolloClientUtilitiesOptions = Pick<
 function createApolloClientUtilities(
   options: CreateApolloClientUtilitiesOptions,
 ) {
+  console.log('prefilling apollo stuff with options', options)
+
   const useApollo = <P>(
     pageProps: P,
     providedApolloClient: ApolloClient<NormalizedCacheObject>,
@@ -43,11 +46,15 @@ function createApolloClientUtilities(
       onResponse,
     })
 
+  const withApollo = makeWithApollo(useApollo)
+
   return {
     useApollo,
     initializeApollo,
+    withApollo,
   }
 }
 
 export { hasSubscriptionOperation } from './apolloLink'
+export { APOLLO_STATE_PROP_NAME } from './apolloClient'
 export default createApolloClientUtilities
