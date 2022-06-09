@@ -402,6 +402,163 @@ const cases = [
     ],
   },
   {
+    name: 'sub and sup',
+    mdast: {
+      type: 'root',
+      children: [
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              value: '2H',
+            },
+            {
+              type: 'sub',
+              children: [
+                {
+                  type: 'text',
+                  value: '2',
+                },
+              ],
+            },
+            {
+              type: 'text',
+              value: '+O',
+            },
+            {
+              type: 'sub',
+              children: [
+                {
+                  type: 'text',
+                  value: '2',
+                },
+              ],
+            },
+            {
+              type: 'text',
+              value: '→2H',
+            },
+            {
+              type: 'sub',
+              children: [
+                {
+                  type: 'text',
+                  value: '2',
+                },
+              ],
+            },
+            {
+              type: 'text',
+              value: 'O',
+            },
+          ],
+        },
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              value: '32m',
+            },
+            {
+              type: 'sup',
+              children: [
+                {
+                  type: 'text',
+                  value: '2',
+                },
+              ],
+            },
+            {
+              type: 'text',
+              value: '+8m',
+            },
+            {
+              type: 'sup',
+              children: [
+                {
+                  type: 'text',
+                  value: '2',
+                },
+              ],
+            },
+            {
+              type: 'text',
+              value: '=40m',
+            },
+            {
+              type: 'sup',
+              children: [
+                {
+                  type: 'text',
+                  value: '2',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    slatetree: [
+      {
+        children: [
+          {
+            text: '2H',
+          },
+          {
+            text: '2',
+            sub: true,
+          },
+          {
+            text: '+O',
+          },
+          {
+            text: '2',
+            sub: true,
+          },
+          {
+            text: '→2H',
+          },
+          {
+            text: '2',
+            sub: true,
+          },
+          {
+            text: 'O',
+          },
+        ],
+        type: 'paragraph',
+      },
+      {
+        children: [
+          {
+            text: '32m',
+          },
+          {
+            text: '2',
+            sup: true,
+          },
+          {
+            text: '+8m',
+          },
+          {
+            text: '2',
+            sup: true,
+          },
+          {
+            text: '=40m',
+          },
+          {
+            text: '2',
+            sup: true,
+          },
+        ],
+        type: 'paragraph',
+      },
+    ],
+  },
+  {
     name: 'complex comment 1',
     mdast: {
       type: 'root',

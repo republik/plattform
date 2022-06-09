@@ -1,6 +1,5 @@
-// eslint-disable no-case-declarations, no-case-declarations, prefer-const
-
-import * as console from 'console'
+// eslint-disable no-case-declarations, no-case-declarations
+const flattenArray = require('./flattenArray')
 
 export type MdastNode = {
   identifier?: string
@@ -87,6 +86,16 @@ function mapMdastToSlateNode(
         ...node,
         strikethrough: true,
       }))
+    case 'sup':
+      return mappedChildren?.flatMap((node) => ({
+        ...node,
+        sup: true,
+      }))
+    case 'sub':
+      return mappedChildren?.flatMap((node) => ({
+        ...node,
+        sub: true,
+      }))
     case 'link':
       // eslint-disable-next-line no-case-declarations
       let url = mdastNode?.url
@@ -107,8 +116,7 @@ function mapMdastToSlateNode(
       return {
         type: 'blockQuote',
         children: [
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          ...mappedChildren, // @ts-ignore
+          ...flattenArray(mappedChildren),
           {
             children: [
               {
