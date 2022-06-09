@@ -2,6 +2,7 @@
 const flattenArray = require('./flattenArray')
 
 export type MdastNode = {
+  ordered?: boolean
   identifier?: string
   url?: string
   type: string
@@ -139,8 +140,40 @@ function mapMdastToSlateNode(
         ],
       }
     case 'break':
-      // TODO: handle breaks
-      return undefined
+      return {
+        type: 'break',
+        children: {
+          text: '',
+        },
+      }
+    case 'heading':
+      return {
+        type: 'headline',
+        children: mappedChildren,
+      }
+    case 'list':
+      return {
+        type: mdastNode?.ordered ? 'ol' : 'ul',
+        ordered: !!mdastNode?.ordered,
+        children: mappedChildren,
+      }
+    case 'listItem':
+      // eslint-disable-next-line no-case-declarations
+      const textNodes = mappedChildren?.flatMap((node) => {
+        if (
+          node instanceof Object &&
+          'type' in node &&
+          'children' in node &&
+          node.type === 'paragraph'
+        ) {
+          return node.children
+        }
+        return node
+      })
+      return {
+        type: 'listItem',
+        children: textNodes,
+      }
     default:
       console.warn(`Unhandled mdast node type: ${mdastNode.type}`)
       return undefined

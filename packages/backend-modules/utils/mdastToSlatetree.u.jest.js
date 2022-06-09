@@ -1,7 +1,7 @@
 const UUT = require('./mdastToSlate/mdastToSlatetree')
 
 const cases = [
-  /* 
+  /*
   {
     name: '',
     mdast: {},
@@ -559,174 +559,17 @@ const cases = [
     ],
   },
   {
-    name: 'complex comment 1',
+    name: 'headline',
     mdast: {
       type: 'root',
       children: [
-        {
-          type: 'paragraph',
-          children: [
-            {
-              type: 'text',
-              value: 'Das hier ist ein ',
-            },
-            {
-              type: 'link',
-              title: null,
-              url: '123',
-              children: [
-                {
-                  type: 'text',
-                  value: 'Link',
-                },
-              ],
-            },
-          ],
-        },
-        {
-          type: 'paragraph',
-          children: [
-            {
-              type: 'text',
-              value: 'Zitat mit ',
-            },
-            {
-              type: 'delete',
-              children: [
-                {
-                  type: 'text',
-                  value: 'Italic',
-                },
-              ],
-            },
-          ],
-        },
-        {
-          type: 'definition',
-          identifier: '123',
-          label: '123',
-          title: null,
-          url: 'https://www.republik.ch',
-        },
-        {
-          type: 'thematicBreak',
-        },
-        {
-          type: 'blockquote',
-          children: [
-            {
-              type: 'paragraph',
-              children: [
-                {
-                  type: 'text',
-                  value: 'Das hier ist ein Zitat',
-                },
-                {
-                  type: 'break',
-                },
-                {
-                  type: 'text',
-                  value: 'Das ist die zweite Zeile des Zitats',
-                },
-              ],
-            },
-          ],
-        },
-        {
-          type: 'blockquote',
-          children: [
-            {
-              type: 'paragraph',
-              children: [
-                {
-                  type: 'text',
-                  value: 'Zitat mit ',
-                },
-                {
-                  type: 'delete',
-                  children: [
-                    {
-                      type: 'text',
-                      value: 'Italic',
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        {
-          type: 'blockquote',
-          children: [
-            {
-              type: 'paragraph',
-              children: [
-                {
-                  type: 'text',
-                  value: 'Hallo',
-                },
-              ],
-            },
-            {
-              type: 'blockquote',
-              children: [
-                {
-                  type: 'paragraph',
-                  children: [
-                    {
-                      type: 'text',
-                      value: 'Hallo 2',
-                    },
-                  ],
-                },
-                {
-                  type: 'blockquote',
-                  children: [
-                    {
-                      type: 'paragraph',
-                      children: [
-                        {
-                          type: 'text',
-                          value: 'Hallo 3',
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        {
-          type: 'paragraph',
-          children: [
-            {
-              type: 'text',
-              value: 'Das ist ein ',
-            },
-            {
-              type: 'inlineCode',
-              value: 'foobar',
-            },
-            {
-              type: 'text',
-              value: '.',
-            },
-          ],
-        },
-        {
-          type: 'code',
-          lang: null,
-          meta: null,
-          value: 'Codeblock',
-        },
         {
           type: 'heading',
           depth: 1,
           children: [
             {
               type: 'text',
-              value: 'Das ist ein Titel',
+              value: 'Headline 1',
             },
           ],
         },
@@ -736,7 +579,7 @@ const cases = [
           children: [
             {
               type: 'text',
-              value: 'Subheadline',
+              value: 'Headline 2',
             },
           ],
         },
@@ -746,7 +589,7 @@ const cases = [
           children: [
             {
               type: 'text',
-              value: 'H3',
+              value: 'Headline 3',
             },
           ],
         },
@@ -756,29 +599,88 @@ const cases = [
           children: [
             {
               type: 'text',
-              value: 'H4',
+              value: 'Headline 4',
             },
           ],
         },
         {
           type: 'heading',
-          depth: 1,
+          depth: 5,
           children: [
             {
               type: 'text',
-              value: 'Titel mit ',
-            },
-            {
-              type: 'emphasis',
-              children: [
-                {
-                  type: 'text',
-                  value: 'Italic',
-                },
-              ],
+              value: 'Headline 5',
             },
           ],
         },
+        {
+          type: 'heading',
+          depth: 6,
+          children: [
+            {
+              type: 'text',
+              value: 'Headline 6',
+            },
+          ],
+        },
+      ],
+    },
+    slatetree: [
+      {
+        children: [
+          {
+            text: 'Headline 1',
+          },
+        ],
+        type: 'headline',
+      },
+      {
+        children: [
+          {
+            text: 'Headline 2',
+          },
+        ],
+        type: 'headline',
+      },
+      {
+        children: [
+          {
+            text: 'Headline 3',
+          },
+        ],
+        type: 'headline',
+      },
+      {
+        children: [
+          {
+            text: 'Headline 4',
+          },
+        ],
+        type: 'headline',
+      },
+      {
+        children: [
+          {
+            text: 'Headline 5',
+          },
+        ],
+        type: 'headline',
+      },
+      {
+        children: [
+          {
+            text: 'Headline 6',
+          },
+        ],
+        type: 'headline',
+      },
+    ],
+  },
+  {
+    name: 'lists',
+    mdast: {
+      type: 'root',
+      children: [
         {
           type: 'list',
           ordered: false,
@@ -795,7 +697,7 @@ const cases = [
                   children: [
                     {
                       type: 'text',
-                      value: 'Das hier ist eine Liste',
+                      value: 'Item 1',
                     },
                   ],
                 },
@@ -811,7 +713,7 @@ const cases = [
                   children: [
                     {
                       type: 'text',
-                      value: 'Der zweite Eintrag in der Liste',
+                      value: 'Item 2',
                     },
                   ],
                 },
@@ -827,7 +729,7 @@ const cases = [
                   children: [
                     {
                       type: 'text',
-                      value: 'Noch ein Listeneintrag',
+                      value: 'Item 3',
                     },
                   ],
                 },
@@ -851,7 +753,7 @@ const cases = [
                   children: [
                     {
                       type: 'text',
-                      value: 'Space, …',
+                      value: 'Item 1',
                     },
                   ],
                 },
@@ -867,7 +769,7 @@ const cases = [
                   children: [
                     {
                       type: 'text',
-                      value: '… the final frontier …',
+                      value: 'Item 2',
                     },
                   ],
                 },
@@ -883,39 +785,7 @@ const cases = [
                   children: [
                     {
                       type: 'text',
-                      value: 'These are the voyages',
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              type: 'listItem',
-              spread: false,
-              checked: null,
-              children: [
-                {
-                  type: 'paragraph',
-                  children: [
-                    {
-                      type: 'text',
-                      value: 'of the starship',
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              type: 'listItem',
-              spread: false,
-              checked: null,
-              children: [
-                {
-                  type: 'paragraph',
-                  children: [
-                    {
-                      type: 'text',
-                      value: 'Enterprise.',
+                      value: 'Item 3',
                     },
                   ],
                 },
@@ -929,182 +799,9 @@ const cases = [
       {
         children: [
           {
-            text: 'Das hier ist ein ',
-          },
-          {
             children: [
               {
-                text: 'Link',
-              },
-            ],
-            type: 'link',
-            href: 'https://www.republik.ch',
-          },
-        ],
-        type: 'paragraph',
-      },
-      {
-        children: [
-          {
-            text: 'Zitat mit ',
-          },
-          {
-            text: 'Italic',
-            strikethrough: true,
-          },
-        ],
-        type: 'paragraph',
-      },
-      {
-        children: [
-          {
-            children: [
-              {
-                text: 'Das hier ist ein Zitat',
-              },
-            ],
-            type: 'blockQuoteText',
-          },
-          {
-            children: [
-              {
-                text: 'Das ist die zweite Zeile des Zitats',
-              },
-            ],
-            type: 'blockQuoteText',
-          },
-          {
-            children: [
-              {
-                text: '',
-              },
-              {
-                children: [
-                  {
-                    text: '',
-                  },
-                ],
-                type: 'figureByline',
-              },
-              {
-                text: '',
-              },
-            ],
-            type: 'figureCaption',
-          },
-        ],
-        type: 'blockQuote',
-      },
-      {
-        children: [
-          {
-            children: [
-              {
-                text: 'Hallo 1',
-              },
-            ],
-            type: 'blockQuoteText',
-          },
-          {
-            children: [
-              {
-                text: 'Hallo 2',
-              },
-            ],
-            type: 'blockQuoteText',
-          },
-          {
-            children: [
-              {
-                text: 'Hallo 3',
-              },
-            ],
-            type: 'blockQuoteText',
-          },
-          {
-            children: [
-              {
-                text: '',
-              },
-              {
-                children: [
-                  {
-                    text: '',
-                  },
-                ],
-                type: 'figureByline',
-              },
-              {
-                text: '',
-              },
-            ],
-            type: 'figureCaption',
-          },
-        ],
-        type: 'blockQuote',
-      },
-      {
-        children: [
-          {
-            text: 'Das ist ein `foobar`',
-          },
-        ],
-        type: 'paragraph',
-      },
-      {
-        children: [
-          {
-            text: '```Codeblock```',
-          },
-        ],
-        type: 'paragraph',
-      },
-      {
-        children: [
-          {
-            text: 'Das ist ein Titel',
-          },
-        ],
-        type: 'headline',
-      },
-      {
-        children: [
-          {
-            text: 'Subheadline',
-          },
-        ],
-        type: 'headline',
-      },
-      {
-        children: [
-          {
-            text: 'H3',
-          },
-        ],
-        type: 'headline',
-      },
-      {
-        children: [
-          {
-            text: 'H4',
-          },
-        ],
-        type: 'headline',
-      },
-      {
-        children: [
-          {
-            text: 'Titel mit Italic',
-          },
-        ],
-        type: 'headline',
-      },
-      {
-        children: [
-          {
-            children: [
-              {
-                text: 'Das hier ist eine Liste',
+                text: 'Item 1',
               },
             ],
             type: 'listItem',
@@ -1112,7 +809,7 @@ const cases = [
           {
             children: [
               {
-                text: 'Der zweite Eintrag in der Liste',
+                text: 'Item 2',
               },
             ],
             type: 'listItem',
@@ -1120,7 +817,7 @@ const cases = [
           {
             children: [
               {
-                text: 'Noch ein Listeneintrag',
+                text: 'Item 3',
               },
             ],
             type: 'listItem',
@@ -1134,7 +831,7 @@ const cases = [
           {
             children: [
               {
-                text: 'Space, …',
+                text: 'Item 1',
               },
             ],
             type: 'listItem',
@@ -1142,7 +839,7 @@ const cases = [
           {
             children: [
               {
-                text: '… the final frontier …',
+                text: 'Item 2',
               },
             ],
             type: 'listItem',
@@ -1150,23 +847,7 @@ const cases = [
           {
             children: [
               {
-                text: 'These are the voyages',
-              },
-            ],
-            type: 'listItem',
-          },
-          {
-            children: [
-              {
-                text: 'of the starship',
-              },
-            ],
-            type: 'listItem',
-          },
-          {
-            children: [
-              {
-                text: 'Enterprise.',
+                text: 'Item 3',
               },
             ],
             type: 'listItem',
@@ -1174,6 +855,48 @@ const cases = [
         ],
         type: 'ol',
         ordered: true,
+      },
+    ],
+  },
+  {
+    name: 'break',
+    mdast: [
+      {
+        type: 'paragraph',
+        children: [
+          {
+            type: 'text',
+            value: 'We should',
+          },
+          {
+            type: 'break',
+          },
+          {
+            type: 'text',
+            value: 'break up',
+          },
+        ],
+      },
+    ],
+    slatetree: [
+      {
+        children: [
+          {
+            text: 'We should',
+          },
+          {
+            children: [
+              {
+                text: '',
+              },
+            ],
+            type: 'break',
+          },
+          {
+            text: 'break up',
+          },
+        ],
+        type: 'paragraph',
       },
     ],
   },
