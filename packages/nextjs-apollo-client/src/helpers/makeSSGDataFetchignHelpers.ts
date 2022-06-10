@@ -6,6 +6,7 @@ import {
   GetStaticProps,
   GetStaticPropsContext,
   GetStaticPropsResult,
+  PreviewData,
 } from 'next'
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import {
@@ -19,9 +20,13 @@ export type GetStaticPathsWithApollo<Q extends ParsedUrlQuery> = (
   ctx: GetStaticPathsContext,
 ) => Promise<GetStaticPathsResult<Q>>
 
-export type GetStaticPropsWithApollo<P, Q extends ParsedUrlQuery> = (
+export type GetStaticPropsWithApollo<
+  P,
+  Q extends ParsedUrlQuery,
+  D extends PreviewData = PreviewData,
+> = (
   client: ApolloClient<NormalizedCacheObject>,
-  ctx: GetStaticPropsContext<Q>,
+  ctx: GetStaticPropsContext<Q, D>,
 ) => Promise<GetStaticPropsResult<P>>
 
 /**
@@ -57,12 +62,16 @@ export function makeSSGDataFetchingHelpers(
    * @param queryFunc function where you query the graphql api
    * @param headers headers to be passed to the apollo client
    */
-  function createGetStaticProps<P, Q extends ParsedUrlQuery = ParsedUrlQuery>(
+  function createGetStaticProps<
+    P,
+    Q extends ParsedUrlQuery = ParsedUrlQuery,
+    D extends PreviewData = PreviewData,
+  >(
     queryFunc: GetStaticPropsWithApollo<P, Q>,
     headers?: { [key: string]: string },
   ): GetStaticProps<PagePropsWithApollo<P>> {
     return async (
-      ctx: GetStaticPropsContext<Q>,
+      ctx: GetStaticPropsContext<Q, D>,
     ): Promise<GetStaticPropsResult<PagePropsWithApollo<P>>> => {
       const apolloClient = initializeApollo(null, {
         headers,

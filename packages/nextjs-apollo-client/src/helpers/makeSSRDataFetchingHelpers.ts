@@ -4,6 +4,7 @@ import {
   GetServerSideProps,
   GetServerSidePropsContext,
   GetServerSidePropsResult,
+  PreviewData,
 } from 'next'
 import {
   APOLLO_STATE_PROP_NAME,
@@ -16,13 +17,13 @@ import { PagePropsWithApollo } from './withApollo'
  */
 export type GetServerSidePropsWithApollo<
   P,
-  Q extends ParsedUrlQuery,
+  Q extends ParsedUrlQuery = ParsedUrlQuery,
+  D extends PreviewData = PreviewData,
   User = unknown,
 > = (
   client: ApolloClient<NormalizedCacheObject>,
-  params: Q,
+  ctx: GetServerSidePropsContext<Q, D>,
   user: User | null,
-  ctx: GetServerSidePropsContext<Q>,
 ) => Promise<GetServerSidePropsResult<P>>
 
 /**
@@ -41,11 +42,12 @@ export function makeSSRDataFetchingHelpers<U = unknown>(
   return function createGetServerSideProps<
     P,
     Q extends ParsedUrlQuery = ParsedUrlQuery,
+    D extends PreviewData = PreviewData,
   >(
     queryFunc: GetServerSidePropsWithApollo<P, Q>,
-  ): GetServerSideProps<PagePropsWithApollo<P>> {
+  ): GetServerSideProps<PagePropsWithApollo<P>, Q, D> {
     return async (
-      context: GetServerSidePropsContext<Q>,
+      context: GetServerSidePropsContext<Q, D>,
     ): Promise<GetServerSidePropsResult<PagePropsWithApollo<P>>> => {
       // Use the request object to pass on the cookies to the graphql requests
       const apolloClient = initializeApollo(null, {
@@ -68,12 +70,7 @@ export function makeSSRDataFetchingHelpers<U = unknown>(
         user = await fetchUserFunc(apolloClient)
       }
 
-      const result = await queryFunc(
-        apolloClient,
-        context.params,
-        user,
-        context,
-      )
+      const result = await queryFunc(apolloClient, context, user)
 
       if ('redirect' in result || 'notFound' in result) {
         return result

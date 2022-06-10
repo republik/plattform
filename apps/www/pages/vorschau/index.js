@@ -24,7 +24,8 @@ const FrontPreviewPage = () => {
 export default FrontPreviewPage
 
 export const getServerSideProps = createGetServerSideProps(
-  async (client, params, user) => {
+  async (client, ctx) => {
+    const params = ctx.params
     await client.query({
       query: FRONT_QUERY,
       variables: {
