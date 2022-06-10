@@ -21,7 +21,7 @@ export type GetStaticPathsWithApollo<Q extends ParsedUrlQuery> = (
 
 export type GetStaticPropsWithApollo<P, Q extends ParsedUrlQuery> = (
   client: ApolloClient<NormalizedCacheObject>,
-  params: Q,
+  ctx: GetStaticPropsContext<Q>,
 ) => Promise<GetStaticPropsResult<P>>
 
 /**
@@ -67,7 +67,7 @@ export function makeSSGDataFetchingHelpers(
       const apolloClient = initializeApollo(null, {
         headers,
       })
-      const result = await queryFunc(apolloClient, ctx.params)
+      const result = await queryFunc(apolloClient, ctx)
 
       // Return result directly if not successful getStaticProps-result
       if ('redirect' in result || 'notFound' in result) {

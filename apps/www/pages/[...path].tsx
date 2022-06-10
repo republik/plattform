@@ -24,7 +24,8 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
 const REVALIDATE_SECONDS = 10
 
 export const getStaticProps = createGetStaticProps<Props, Params>(
-  async (client, params) => {
+  async (client, ctx) => {
+    const params = ctx.params
     const path = '/' + params.path.join('/')
 
     const {

@@ -42,11 +42,13 @@ const FrontPage = () => {
 export default FrontPage
 
 export const getStaticProps = createGetStaticProps(
-  async (client, params) => {
+  async (client, ctx) => {
     // Throw error to fail build if the key is not defined
     if (!process.env.SSG_DOCUMENTS_API_KEY) {
       throw new Error('Missing SSG_DOCUMENTS_API_KEY environment variable')
     }
+
+    const params = ctx.params
 
     // Query the front-document
     const frontQueryResult = await client.query({
