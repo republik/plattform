@@ -315,7 +315,7 @@ const cases = [
             {
               type: 'linkReference',
               identifier: 'plural',
-              label: 'plural',
+              label: 'FOOO',
               referenceType: 'shortcut',
               children: [
                 {
@@ -323,6 +323,16 @@ const cases = [
                   value: 'plural',
                 },
               ],
+            },
+            {
+              type: 'linkReference',
+              identifier: 'bar',
+              label: 'bar',
+              referenceType: 'shortcut',
+            },
+            {
+              type: 'linkReference',
+              identifier: 'baz',
             },
           ],
         },
@@ -342,6 +352,12 @@ const cases = [
           },
           {
             text: '[plural]',
+          },
+          {
+            text: '[bar]',
+          },
+          {
+            text: '[baz]',
           },
         ],
         type: 'paragraph',
