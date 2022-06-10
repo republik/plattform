@@ -62,7 +62,12 @@ function mapMdastToSlateNode(
 
         return mappedChildren
           ?.filter(Boolean)
-          .filter((node) => typeof node === 'object' && node?.type !== 'break')
+          .filter(
+            // Filter breakpoints
+            (node) =>
+              typeof node === 'object' &&
+              (!('type' in node) || node?.type !== 'break'),
+          )
           .map((child) => ({
             type: 'blockQuoteText',
             children: [child],

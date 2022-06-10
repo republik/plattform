@@ -977,6 +977,523 @@ const cases = [
       },
     ],
   },
+  {
+    name: 'Complex example 1',
+    mdast: {
+      type: 'root',
+      children: [
+        {
+          type: 'heading',
+          depth: 1,
+          children: [
+            {
+              type: 'text',
+              value: 'Text',
+            },
+          ],
+        },
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              value: 'Lorem ipsum ',
+            },
+            {
+              type: 'link',
+              title: null,
+              url: 'https://www.loremipsum.de/',
+              children: [
+                {
+                  type: 'text',
+                  value: 'dolor',
+                },
+              ],
+            },
+            {
+              type: 'text',
+              value:
+                ' sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
+            },
+          ],
+        },
+        {
+          type: 'heading',
+          depth: 1,
+          children: [
+            {
+              type: 'text',
+              value: 'Ordered list',
+            },
+          ],
+        },
+        {
+          type: 'list',
+          ordered: true,
+          start: 1,
+          spread: false,
+          children: [
+            {
+              type: 'listItem',
+              spread: false,
+              checked: null,
+              children: [
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      type: 'text',
+                      value: 'Item 1',
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'listItem',
+              spread: false,
+              checked: null,
+              children: [
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      type: 'text',
+                      value: 'Item 2',
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'listItem',
+              spread: false,
+              checked: null,
+              children: [
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      type: 'text',
+                      value: 'Item 3',
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          type: 'heading',
+          depth: 1,
+          children: [
+            {
+              type: 'text',
+              value: 'Unordered list',
+            },
+          ],
+        },
+        {
+          type: 'list',
+          ordered: false,
+          start: null,
+          spread: false,
+          children: [
+            {
+              type: 'listItem',
+              spread: false,
+              checked: null,
+              children: [
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      type: 'text',
+                      value: 'Item 1',
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'listItem',
+              spread: false,
+              checked: null,
+              children: [
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      type: 'text',
+                      value: 'Item 2',
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'listItem',
+              spread: false,
+              checked: null,
+              children: [
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      type: 'text',
+                      value: 'Item 3',
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          type: 'heading',
+          depth: 1,
+          children: [
+            {
+              type: 'text',
+              value: 'Marks',
+            },
+          ],
+        },
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'strong',
+              children: [
+                {
+                  type: 'text',
+                  value: 'Bold',
+                },
+              ],
+            },
+            {
+              type: 'text',
+              value: ' ',
+            },
+            {
+              type: 'emphasis',
+              children: [
+                {
+                  type: 'text',
+                  value: 'Italic',
+                },
+              ],
+            },
+            {
+              type: 'text',
+              value: ' ',
+            },
+            {
+              type: 'delete',
+              children: [
+                {
+                  type: 'text',
+                  value: 'Strikethrough',
+                },
+              ],
+            },
+          ],
+        },
+        {
+          type: 'heading',
+          depth: 1,
+          children: [
+            {
+              type: 'text',
+              value: 'Blockquote',
+            },
+          ],
+        },
+        {
+          type: 'blockquote',
+          children: [
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  type: 'text',
+                  value: 'Quote mit einem Paragraph',
+                },
+              ],
+            },
+          ],
+        },
+        {
+          type: 'blockquote',
+          children: [
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  type: 'text',
+                  value: 'Quote mit vier Paragraphen',
+                },
+                {
+                  type: 'break',
+                },
+                {
+                  type: 'text',
+                  value: 'Text 1',
+                },
+                {
+                  type: 'break',
+                },
+                {
+                  type: 'text',
+                  value: 'Text 2',
+                },
+                {
+                  type: 'break',
+                },
+                {
+                  type: 'text',
+                  value: 'Text 3',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    slatetree: [
+      {
+        children: [
+          {
+            text: 'Text',
+          },
+        ],
+        type: 'headline',
+      },
+      {
+        children: [
+          {
+            text: 'Lorem ipsum ',
+          },
+          {
+            children: [
+              {
+                text: 'dolor',
+              },
+            ],
+            type: 'link',
+            href: 'https://www.loremipsum.de/',
+          },
+          {
+            text: ' sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
+          },
+        ],
+        type: 'paragraph',
+      },
+      {
+        children: [
+          {
+            text: 'Ordered list',
+          },
+        ],
+        type: 'headline',
+      },
+      {
+        children: [
+          {
+            children: [
+              {
+                text: 'Item 1',
+              },
+            ],
+            type: 'listItem',
+          },
+          {
+            children: [
+              {
+                text: 'Item 2',
+              },
+            ],
+            type: 'listItem',
+          },
+          {
+            children: [
+              {
+                text: 'Item 3',
+              },
+            ],
+            type: 'listItem',
+          },
+        ],
+        type: 'ol',
+        ordered: true,
+      },
+      {
+        children: [
+          {
+            text: 'Unordered list',
+          },
+        ],
+        type: 'headline',
+      },
+      {
+        children: [
+          {
+            children: [
+              {
+                text: 'Item 1',
+              },
+            ],
+            type: 'listItem',
+          },
+          {
+            children: [
+              {
+                text: 'Item 2',
+              },
+            ],
+            type: 'listItem',
+          },
+          {
+            children: [
+              {
+                text: 'Item 3',
+              },
+            ],
+            type: 'listItem',
+          },
+        ],
+        type: 'ul',
+        ordered: false,
+      },
+      {
+        children: [
+          {
+            text: 'Marks',
+          },
+        ],
+        type: 'headline',
+      },
+      {
+        children: [
+          {
+            text: 'Bold',
+            bold: true,
+          },
+          {
+            text: ' ',
+          },
+          {
+            text: 'Italic',
+            italic: true,
+          },
+          {
+            text: ' ',
+          },
+          {
+            text: 'Strikethrough',
+            strikethrough: true,
+          },
+        ],
+        type: 'paragraph',
+      },
+      {
+        children: [
+          {
+            text: 'Blockquote',
+          },
+        ],
+        type: 'headline',
+      },
+      {
+        children: [
+          {
+            children: [
+              {
+                text: 'Quote mit einem Paragraph',
+              },
+            ],
+            type: 'blockQuoteText',
+          },
+          {
+            children: [
+              {
+                text: '',
+              },
+              {
+                children: [
+                  {
+                    text: '',
+                  },
+                ],
+                type: 'figureByline',
+              },
+              {
+                text: '',
+              },
+            ],
+            type: 'figureCaption',
+          },
+        ],
+        type: 'blockQuote',
+      },
+      {
+        children: [
+          {
+            children: [
+              {
+                text: 'Quote mit vier Paragraphen',
+              },
+            ],
+            type: 'blockQuoteText',
+          },
+          {
+            children: [
+              {
+                text: 'Text 1',
+              },
+            ],
+            type: 'blockQuoteText',
+          },
+          {
+            children: [
+              {
+                text: 'Text 2',
+              },
+            ],
+            type: 'blockQuoteText',
+          },
+          {
+            children: [
+              {
+                text: 'Text 3',
+              },
+            ],
+            type: 'blockQuoteText',
+          },
+          {
+            children: [
+              {
+                text: '',
+              },
+              {
+                children: [
+                  {
+                    text: '',
+                  },
+                ],
+                type: 'figureByline',
+              },
+              {
+                text: '',
+              },
+            ],
+            type: 'figureCaption',
+          },
+        ],
+        type: 'blockQuote',
+      },
+    ],
+  },
 ]
 
 describe('mdastToSlatetree', () => {
