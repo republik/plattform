@@ -231,7 +231,7 @@ const cases = [
     ],
   },
   {
-    name: 'reference link',
+    name: 'link definition',
     mdast: {
       type: 'root',
       children: [
@@ -278,6 +278,111 @@ const cases = [
             ],
             type: 'link',
             href: 'https://www.republik.ch',
+          },
+        ],
+        type: 'paragraph',
+      },
+    ],
+  },
+  {
+    name: 'linkReference compatibility',
+    mdast: {
+      type: 'root',
+      children: [
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              value: 'Der Mensch ',
+            },
+            {
+              type: 'linkReference',
+              identifier: 'single',
+              label: 'singular',
+              referenceType: 'shortcut',
+              children: [
+                {
+                  type: 'text',
+                  value: 'singular',
+                },
+              ],
+            },
+            {
+              type: 'text',
+              value: ', Die Menschen ',
+            },
+            {
+              type: 'linkReference',
+              identifier: 'plural',
+              label: 'plural',
+              referenceType: 'shortcut',
+              children: [
+                {
+                  type: 'text',
+                  value: 'plural',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    slatetree: [
+      {
+        children: [
+          {
+            text: 'Der Mensch ',
+          },
+          {
+            text: '[singular]',
+          },
+          {
+            text: ', Die Menschen ',
+          },
+          {
+            text: '[plural]',
+          },
+        ],
+        type: 'paragraph',
+      },
+    ],
+  },
+  {
+    name: 'html compatibility',
+    mdast: {
+      type: 'root',
+      children: [
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              value: 'Dies ist eigentlich kein ',
+            },
+            {
+              type: 'html',
+              value: '<html>',
+            },
+            {
+              type: 'text',
+              value: ' Element :thinking:',
+            },
+          ],
+        },
+      ],
+    },
+    slatetree: [
+      {
+        children: [
+          {
+            text: 'Dies ist eigentlich kein ',
+          },
+          {
+            text: '<html>',
+          },
+          {
+            text: ' Element :thinking:',
           },
         ],
         type: 'paragraph',

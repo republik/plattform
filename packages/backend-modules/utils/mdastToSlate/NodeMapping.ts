@@ -2,6 +2,7 @@
 const flattenArray = require('./flattenArray')
 
 export type MdastNode = {
+  label?: string
   lang?: string
   meta?: string
   ordered?: boolean
@@ -119,7 +120,11 @@ function mapMdastToSlateNode(
         href: url,
         children: mappedChildren,
       }
-    case 'definition':
+    case 'linkReference':
+      return {
+        text: `[${mdastNode.label}]`,
+      }
+    case 'definition': // Not supported
       return undefined
     case 'thematicBreak': // Horizontal rule
       return undefined
@@ -196,6 +201,12 @@ function mapMdastToSlateNode(
         type: 'blockCode',
         value: mdastNode.value,
       }
+    case 'html':
+      return {
+        text: mdastNode.value,
+      }
+    case 'image': // not supported
+      return undefined
     default:
       console.log(`Unhandled mdast node type: ${mdastNode.type}`)
       return undefined
