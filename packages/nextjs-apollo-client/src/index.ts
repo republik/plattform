@@ -55,10 +55,13 @@ export { hasSubscriptionOperation } from './apollo/apolloLink'
 export { APOLLO_STATE_PROP_NAME } from './apollo/apolloClient'
 export type { PagePropsWithApollo } from './helpers/withApollo'
 
-export { makeCreateGetStaticProps } from './helpers/createGetStaticProps'
-export type { ApolloSSGQueryFunc } from './helpers/createGetStaticProps'
+export { makeSSGDataFetchingHelpers } from './helpers/makeSSGDataFetchignHelpers'
+export type {
+  GetStaticPropsWithApollo,
+  GetStaticPathsWithApollo,
+} from './helpers/makeSSGDataFetchignHelpers'
 
-export { makeCreateGetServerSideProps } from './helpers/createGetServerSideProps'
-export type { ApolloSSRQueryFunc } from './helpers/createGetServerSideProps'
+export { makeSSRDataFetchingHelpers } from './helpers/makeSSRDataFetchingHelpers'
+export type { GetServerSidePropsWithApollo } from './helpers/makeSSRDataFetchingHelpers'
 
 export { makeWithDefaultSSR } from './helpers/withDefaultSSR'

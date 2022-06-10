@@ -14,7 +14,11 @@ import { PagePropsWithApollo } from './withApollo'
 /**
  * Type of function that can be passed to `createGetServerSideProps`
  */
-export type ApolloSSRQueryFunc<P, Q extends ParsedUrlQuery, User = unknown> = (
+export type GetServerSidePropsWithApollo<
+  P,
+  Q extends ParsedUrlQuery,
+  User = unknown,
+> = (
   client: ApolloClient<NormalizedCacheObject>,
   params: Q,
   user: User | null,
@@ -22,13 +26,13 @@ export type ApolloSSRQueryFunc<P, Q extends ParsedUrlQuery, User = unknown> = (
 ) => Promise<GetServerSidePropsResult<P>>
 
 /**
- * Returns a function that take a `ApolloSSRQueryFunc` and returns a `GetServerSidePropsResult`.
- * The `ApolloSSRQueryFunc` has access to the `getServerSideProps` context as well as to an Apollo client instance.
+ * Returns a function that takes a `GetServerSidePropsWithApollo` and returns a `GetServerSidePropsResult`.
+ * The `GetServerSidePropsWithApollo` has access to the `getServerSideProps` context as well as to an Apollo client instance.
  * Additionally, a user object is made available if the optional fetchUserFunc parameter was provided.
  * @param initializeApollo function to retrieve the apollo client
  * @param fetchUserFunc function to retrieve the user object
  */
-export function makeCreateGetServerSideProps<U = unknown>(
+export function makeSSRDataFetchingHelpers<U = unknown>(
   initializeApollo: InitializeApolloFunc,
   fetchUserFunc?: (
     apolloClient: ApolloClient<NormalizedCacheObject>,
@@ -38,7 +42,7 @@ export function makeCreateGetServerSideProps<U = unknown>(
     P,
     Q extends ParsedUrlQuery = ParsedUrlQuery,
   >(
-    queryFunc: ApolloSSRQueryFunc<P, Q>,
+    queryFunc: GetServerSidePropsWithApollo<P, Q>,
   ): GetServerSideProps<PagePropsWithApollo<P>> {
     return async (
       context: GetServerSidePropsContext<Q>,
