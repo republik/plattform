@@ -860,24 +860,27 @@ const cases = [
   },
   {
     name: 'break',
-    mdast: [
-      {
-        type: 'paragraph',
-        children: [
-          {
-            type: 'text',
-            value: 'We should',
-          },
-          {
-            type: 'break',
-          },
-          {
-            type: 'text',
-            value: 'break up',
-          },
-        ],
-      },
-    ],
+    mdast: {
+      type: 'root',
+      children: [
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              value: 'We should',
+            },
+            {
+              type: 'break',
+            },
+            {
+              type: 'text',
+              value: 'break up',
+            },
+          ],
+        },
+      ],
+    },
     slatetree: [
       {
         children: [
@@ -897,6 +900,80 @@ const cases = [
           },
         ],
         type: 'paragraph',
+      },
+    ],
+  },
+  {
+    name: 'code',
+    mdast: {
+      type: 'root',
+      children: [
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              value: 'Some',
+            },
+            {
+              type: 'break',
+            },
+            {
+              type: 'inlineCode',
+              value: 'Inline code',
+            },
+            {
+              type: 'break',
+            },
+            {
+              type: 'text',
+              value: 'Followed by:',
+            },
+          ],
+        },
+        {
+          type: 'code',
+          lang: null,
+          meta: null,
+          value: 'Code block',
+        },
+      ],
+    },
+    slatetree: [
+      {
+        type: 'paragraph',
+        children: [
+          {
+            text: 'Some',
+          },
+          {
+            children: [
+              {
+                text: '',
+              },
+            ],
+            type: 'break',
+          },
+          {
+            type: 'inlineCode',
+            value: 'Inline code',
+          },
+          {
+            children: [
+              {
+                text: '',
+              },
+            ],
+            type: 'break',
+          },
+          {
+            text: 'Followed by:',
+          },
+        ],
+      },
+      {
+        type: 'blockCode',
+        value: 'Code block',
       },
     ],
   },

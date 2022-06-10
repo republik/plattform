@@ -2,6 +2,8 @@
 const flattenArray = require('./flattenArray')
 
 export type MdastNode = {
+  lang?: string
+  meta?: string
   ordered?: boolean
   identifier?: string
   url?: string
@@ -58,10 +60,13 @@ function mapMdastToSlateNode(
       if (parent?.type === 'blockquote') {
         // Each nested text field must be rendered in a separate paragraph object
 
-        return mappedChildren?.filter(Boolean).map((child) => ({
-          type: 'blockQuoteText',
-          children: [child],
-        }))
+        return mappedChildren
+          ?.filter(Boolean)
+          .filter((node) => typeof node === 'object' && node?.type !== 'break')
+          .map((child) => ({
+            type: 'blockQuoteText',
+            children: [child],
+          }))
       }
 
       return {
@@ -142,9 +147,11 @@ function mapMdastToSlateNode(
     case 'break':
       return {
         type: 'break',
-        children: {
-          text: '',
-        },
+        children: [
+          {
+            text: '',
+          },
+        ],
       }
     case 'heading':
       return {
@@ -174,8 +181,18 @@ function mapMdastToSlateNode(
         type: 'listItem',
         children: textNodes,
       }
+    case 'inlineCode':
+      return {
+        type: 'inlineCode',
+        value: mdastNode.value,
+      }
+    case 'code':
+      return {
+        type: 'blockCode',
+        value: mdastNode.value,
+      }
     default:
-      console.warn(`Unhandled mdast node type: ${mdastNode.type}`)
+      console.log(`Unhandled mdast node type: ${mdastNode.type}`)
       return undefined
   }
 }
