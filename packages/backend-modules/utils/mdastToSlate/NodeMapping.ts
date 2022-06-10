@@ -20,8 +20,9 @@ export type SlateNode =
       text?: string
       italic?: boolean
     }
-  | object
-  | SlateNode[]
+  | {
+      [key: string]: any
+    }
 
 function findDefinition(
   identifier: string,
@@ -121,8 +122,18 @@ function mapMdastToSlateNode(
         children: mappedChildren,
       }
     case 'linkReference':
+      // eslint-disable-next-line no-case-declarations
+      const nestedText =
+        mappedChildren &&
+        Array.isArray(mappedChildren) &&
+        mappedChildren.length > 0
+          ? (mappedChildren[0] as SlateNode)
+          : undefined
+
       return {
-        text: `[${mdastNode.label}]`,
+        text: `[${
+          nestedText?.text ?? mdastNode?.label ?? mdastNode?.identifier
+        }]`,
       }
     case 'definition': // Not supported
       return undefined
