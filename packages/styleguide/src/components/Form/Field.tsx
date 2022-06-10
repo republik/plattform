@@ -12,6 +12,8 @@ import {
   FIELD_HEIGHT,
 } from './constants'
 import { IconType } from 'react-icons/lib/esm/iconBase'
+import { CloseIcon } from '../Icons'
+import { plainButtonRule } from '../Button'
 
 const styles = {
   container: css({
@@ -67,6 +69,11 @@ const styles = {
     position: 'absolute',
     right: 0,
     cursor: 'pointer',
+  }),
+  secondaryActionCenter: css({
+    position: 'absolute',
+    top: '50%',
+    right: 0,
   }),
   noBrowserIcon: css({
     '::-ms-clear': {
@@ -135,6 +142,7 @@ const Field = React.forwardRef<
     error?: string | boolean
     onInc?: () => void
     onDec?: () => void
+    showClearIcon?: boolean
     icon?: IconType
     simulate?: string
     renderInput: React.FC<Record<string, unknown>>
@@ -151,6 +159,7 @@ const Field = React.forwardRef<
       error,
       onInc,
       onDec,
+      showClearIcon,
       icon,
       disabled,
       value,
@@ -179,7 +188,7 @@ const Field = React.forwardRef<
       fieldValue !== null &&
       String(fieldValue).length !== 0
     const browserIconStyle =
-      hasIncrease || icon ? styles.noBrowserIcon : undefined
+      hasIncrease || showClearIcon || icon ? styles.noBrowserIcon : undefined
     const iconStyle = icon ? styles.fieldIcon : undefined
 
     const styleRules = useMemo(() => {
@@ -277,6 +286,27 @@ const Field = React.forwardRef<
               }
             }}
           />
+        )}
+        {!disabled && showClearIcon && hasValue && (
+          <button
+            {...styles.secondaryActionCenter}
+            {...plainButtonRule}
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              onChange(null, '', true)
+              if (inputRef.current) {
+                inputRef.current.focus()
+              }
+            }}
+          >
+            <CloseIcon
+              {...(isFocused
+                ? colorScheme.set('fill', 'text')
+                : colorScheme.set('fill', 'disabled'))}
+              size={FIELD_HEIGHT / 2}
+            />
+          </button>
         )}
         {icon && <span {...styles.iconWrapper}>{icon}</span>}
       </label>
