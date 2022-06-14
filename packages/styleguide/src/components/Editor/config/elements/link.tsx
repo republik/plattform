@@ -32,6 +32,7 @@ export const config: ElementConfigI = {
   Form,
   attrs: {
     isInline: true,
+    isTextInline: true,
     formatText: true,
   },
   button: { icon: LinkIcon },

@@ -156,12 +156,13 @@ interface ButtonI {
 interface EditorAttrsI {
   isVoid?: boolean
   isInline?: boolean
-  highlightSelected?: boolean
 }
 
 interface ElementAttrsI extends EditorAttrsI {
   formatText?: boolean
   isMain?: boolean
+  isTextInline?: boolean
+  highlightSelected?: boolean
 }
 
 export type EditorAttr = keyof EditorAttrsI

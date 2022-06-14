@@ -427,8 +427,6 @@ export const insertRepeat = (editor: CustomEditor): void => {
   let nextTarget = false
   let deleteP
 
-  console.log({ target })
-
   // if no target found: look if the next sibling has a target
   // (e.g. paragraph when pressing "enter" in a headline)
   if (!target) {
@@ -492,8 +490,7 @@ export const insertRepeat = (editor: CustomEditor): void => {
     // in the first position where repeats are allowed
     Transforms.splitNodes(editor, { always: true })
     // since the node got split, splitP != selectionP
-    const splitP = getSelectedElement(editor)[1]
-    console.log({ splitP })
+    const splitP = getSelectedElement(editor, true)[1]
     Transforms.setNodes(
       editor,
       { type: getTemplateType(targetN.template) },
@@ -503,7 +500,7 @@ export const insertRepeat = (editor: CustomEditor): void => {
       nextTarget || multiElementSelection
         ? targetP
         : calculateSiblingPath(targetP)
-    console.log({ insertP })
+    // console.log({ insertP })
     Transforms.moveNodes(editor, { at: splitP, to: insertP })
     Transforms.select(editor, insertP)
     Transforms.collapse(editor, { edge: 'start' })

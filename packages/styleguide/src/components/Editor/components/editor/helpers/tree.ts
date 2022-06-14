@@ -308,11 +308,18 @@ export const getAncestry = (
   }
 }
 
+const isTextInline = (element: CustomElement): boolean =>
+  elConfig[element.type].attrs?.isTextInline
+
 export const getSelectedElement = (
   editor: CustomEditor,
+  noTextInlines = false,
 ): NodeEntry<CustomElement> => {
   let selectedNode = Editor.node(editor, editor.selection, { edge: 'end' })
-  while (!SlateElement.isElement(selectedNode[0])) {
+  while (
+    !SlateElement.isElement(selectedNode[0]) ||
+    (noTextInlines && isTextInline(selectedNode[0]))
+  ) {
     selectedNode = Editor.parent(editor, selectedNode[1])
   }
   return selectedNode as NodeEntry<CustomElement>

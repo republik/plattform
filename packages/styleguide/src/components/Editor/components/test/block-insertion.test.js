@@ -118,12 +118,13 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
       {
         type: 'paragraph',
         children: [
-          { text: 'my fair ' },
+          { text: 'my ' },
           {
             type: 'link',
             href: 'https://www.republik.ch',
-            children: [{ text: 'glowstick' }],
+            children: [{ text: 'blowfish' }],
           },
+          { text: ' glows' },
         ],
       },
     ]
@@ -141,11 +142,14 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
       {
         type: 'paragraph',
         children: [
-          { text: 'my fair ' },
+          { text: 'my ' },
           {
             type: 'link',
             href: 'https://www.republik.ch',
-            children: [{ text: 'glow' }],
+            children: [{ text: 'blow' }],
+          },
+          {
+            text: '',
           },
         ],
       },
@@ -156,13 +160,13 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
           {
             type: 'link',
             href: 'https://www.republik.ch',
-            children: [{ text: 'stick' }],
+            children: [{ text: 'fish' }],
           },
-          { text: '' },
+          { text: ' glows' },
         ],
       },
     ])
-    expect(editor.selection.focus).toEqual({ path: [1, 0], offset: 0 })
+    expect(editor.selection.focus).toEqual({ path: [1, 1, 0], offset: 0 })
   })
 
   it('should handle no-next-move-possible scenario', async () => {
