@@ -266,6 +266,12 @@ export const toggleElement = (
     Transforms.collapse(editor, { edge: 'end' })
   }
 
+  // inserted element can't be selected as such:
+  if (config.attrs?.isVoid && !config.attrs?.highlightSelected) {
+    selectAdjacent(editor)
+    return editor.selection.anchor.path
+  }
+
   return elementPath
 }
 
