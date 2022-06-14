@@ -146,7 +146,7 @@ export const getTextNode = (
   }
 }
 
-export const findInsertTarget = (
+export const findRepeatableNode = (
   editor: CustomEditor,
   at?: Path,
 ): NodeEntry<CustomElement> | undefined => {

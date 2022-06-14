@@ -113,7 +113,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
   })
 
   // TODO: make this work
-  xit('should split inline nodes gracefully', async () => {
+  it('should split inline nodes gracefully', async () => {
     value = [
       {
         type: 'paragraph',

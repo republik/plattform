@@ -25,7 +25,7 @@ import {
 import {
   calculateSiblingPath,
   deleteExcessChildren,
-  findInsertTarget,
+  findRepeatableNode,
   getAncestry,
   getParent,
   getSelectedElement,
@@ -423,16 +423,18 @@ export const insertOnKey =
 export const insertRepeat = (editor: CustomEditor): void => {
   const currentElement = getSelectedElement(editor)
   const multiElementSelection = spansManyElements(editor)
-  let target = findInsertTarget(editor)
+  let target = findRepeatableNode(editor)
   let nextTarget = false
   let deleteP
+
+  console.log({ target })
 
   // if no target found: look if the next sibling has a target
   // (e.g. paragraph when pressing "enter" in a headline)
   if (!target) {
     const nextNode = getSiblingNode(editor, 'next', currentElement)
     if (nextNode) {
-      target = findInsertTarget(editor, nextNode[1])
+      target = findRepeatableNode(editor, nextNode[1])
       nextTarget = true
     }
   }
@@ -457,7 +459,7 @@ export const insertRepeat = (editor: CustomEditor): void => {
       deleteP = target[1]
       const nextNode = getSiblingNode(editor, 'next', target)
       const deleteImmediately = nextNode && isDescendant(parent, nextNode)
-      target = findInsertTarget(editor, parent[1]) // fall back to the parent
+      target = findRepeatableNode(editor, parent[1]) // fall back to the parent
       if (deleteImmediately) {
         return Transforms.removeNodes(editor, { at: deleteP })
       }
@@ -469,19 +471,20 @@ export const insertRepeat = (editor: CustomEditor): void => {
     return selectAdjacent(editor)
   }
 
-  const [targetN, targetP] = target
-
   if (!deleteP) {
     const isInline = Editor.isInline(editor, target[0])
     const selectionP = getSelectedElement(editor)[1]
     if (
-      selectionP.length !== targetP.length &&
+      selectionP.length !== target[1].length &&
       hasNextSibling(editor, isInline)
     ) {
       return selectAdjacent(editor)
+    } else if (isInline) {
+      target = getParent(editor, target)
     }
   }
 
+  const [targetN, targetP] = target
   let insertP
   Editor.withoutNormalizing(editor, () => {
     // console.log('insert', { target })
@@ -490,6 +493,7 @@ export const insertRepeat = (editor: CustomEditor): void => {
     Transforms.splitNodes(editor, { always: true })
     // since the node got split, splitP != selectionP
     const splitP = getSelectedElement(editor)[1]
+    console.log({ splitP })
     Transforms.setNodes(
       editor,
       { type: getTemplateType(targetN.template) },
@@ -499,6 +503,7 @@ export const insertRepeat = (editor: CustomEditor): void => {
       nextTarget || multiElementSelection
         ? targetP
         : calculateSiblingPath(targetP)
+    console.log({ insertP })
     Transforms.moveNodes(editor, { at: splitP, to: insertP })
     Transforms.select(editor, insertP)
     Transforms.collapse(editor, { edge: 'start' })
