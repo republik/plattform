@@ -257,35 +257,4 @@ describe('Slate Editor: Block Conversion', () => {
     ])
     expect(editor.selection.focus.path).toEqual([1, 0])
   })
-
-  it('should not set the cursor on elements that cannot be shown as selected (e.g.: break)', async () => {
-    value = [
-      {
-        type: 'paragraph',
-        children: [{ text: 'LoremIpsum' }],
-      },
-    ]
-    const structure = [
-      {
-        type: 'paragraph',
-        repeat: true,
-      },
-    ]
-    const editor = await setup(structure)
-    await Transforms.select(editor, { path: [0, 0], offset: 5 })
-
-    toggleElement(editor, 'break')
-    await new Promise(process.nextTick)
-    expect(cleanupTree(value)).toEqual([
-      {
-        type: 'paragraph',
-        children: [
-          { text: 'Lorem' },
-          { type: 'break', children: [{ text: '' }] },
-          { text: 'Ipsum' },
-        ],
-      },
-    ])
-    expect(editor.selection.focus).toEqual({ path: [0, 2], offset: 0 })
-  })
 })

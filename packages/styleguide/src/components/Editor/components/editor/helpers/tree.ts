@@ -264,6 +264,22 @@ export const getParent = (
 export const spansManyElements = (editor: CustomEditor): boolean =>
   Node.fragment(editor, editor.selection).length > 1
 
+export const isEntireNodeSelected = (
+  node: NodeEntry<CustomText>,
+  selection: Range,
+): boolean => {
+  const nodeP = node[1]
+  const offset = node[0].text.length
+  const start = Range.start(selection)
+  const end = Range.end(selection)
+  return (
+    Path.equals(start.path, nodeP) &&
+    Path.equals(end.path, nodeP) &&
+    start.offset === 0 &&
+    end.offset === offset
+  )
+}
+
 export const getAncestry = (
   editor: CustomEditor,
   customNode?: NodeEntry<CustomNode>,

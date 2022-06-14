@@ -76,6 +76,16 @@ describe('Slate Editor: Inline Insertion', () => {
           ],
         },
       ])
+      expect(editor.selection).toEqual({
+        anchor: {
+          offset: 5,
+          path: [0, 1, 0],
+        },
+        focus: {
+          offset: 5,
+          path: [0, 1, 0],
+        },
+      })
     })
 
     it('should wrap the element around corresponding word if selection is collapsed', async () => {
@@ -110,6 +120,58 @@ describe('Slate Editor: Inline Insertion', () => {
           ],
         },
       ])
+      expect(editor.selection).toEqual({
+        anchor: {
+          offset: 5,
+          path: [0, 1, 0],
+        },
+        focus: {
+          offset: 5,
+          path: [0, 1, 0],
+        },
+      })
+    })
+
+    it('should work when text has some marks', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Lorem ipsum dolor sit amet.' },
+            { text: 'ipsum', bold: true },
+            { text: ' dolor' },
+          ],
+        },
+      ]
+      const structure = [
+        {
+          type: 'paragraph',
+        },
+      ]
+      const editor = await setup(structure)
+
+      await Transforms.select(editor, {
+        anchor: { path: [0, 1], offset: 0 },
+        focus: { path: [0, 1], offset: 5 },
+      })
+      toggleElement(editor, 'link')
+      await new Promise(process.nextTick)
+
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Lorem ipsum dolor sit amet.' },
+            {
+              type: 'link',
+              href: 'https://',
+              children: [{ text: 'ipsum', bold: true }],
+            },
+            { text: ' dolor' },
+          ],
+        },
+      ])
+      expect(editor.selection.anchor.path).toEqual([0, 1, 0])
     })
 
     it('should remove the element if it is already there and cursor is in it', async () => {
@@ -144,6 +206,16 @@ describe('Slate Editor: Inline Insertion', () => {
           children: [{ text: 'Lorem ipsum dolor sit amet.' }],
         },
       ])
+      expect(editor.selection).toEqual({
+        anchor: {
+          offset: 6,
+          path: [0, 0],
+        },
+        focus: {
+          offset: 6,
+          path: [0, 0],
+        },
+      })
     })
   })
 
@@ -215,6 +287,37 @@ describe('Slate Editor: Inline Insertion', () => {
           ],
         },
       ])
+    })
+
+    it('should not set the cursor on the element if it cannot be shown as selected', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          children: [{ text: 'LoremIpsum' }],
+        },
+      ]
+      const structure = [
+        {
+          type: 'paragraph',
+          repeat: true,
+        },
+      ]
+      const editor = await setup(structure)
+      await Transforms.select(editor, { path: [0, 0], offset: 5 })
+
+      toggleElement(editor, 'break')
+      await new Promise(process.nextTick)
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Lorem' },
+            { type: 'break', children: [{ text: '' }] },
+            { text: 'Ipsum' },
+          ],
+        },
+      ])
+      expect(editor.selection.focus).toEqual({ path: [0, 2], offset: 0 })
     })
 
     it('should remove the element if it is already there and cursor is in it', async () => {
