@@ -31,7 +31,7 @@ export const DiscussionContext = createContext<DiscussionContextValue>(
 )
  */
 
-// TODO: One the dialog-components no longer directly use the discussion context
+// TODO: Once the dialog-components no longer use the discussion context directly
 // replace it with the above commented out code
 export default DiscussionContext
 
