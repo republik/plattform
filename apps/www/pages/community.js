@@ -6,7 +6,7 @@ import List, { generateSeed } from '../components/Testimonial/List'
 import Share from '../components/Testimonial/Share'
 import TV from '../components/Testimonial/TV'
 import Image from '../components/Testimonial/Image'
-import withDefaultSSR from '../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../lib/apollo/helpers'
 
 class CommunityPage extends Component {
   static async getInitialProps(ctx) {

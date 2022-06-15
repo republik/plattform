@@ -30,7 +30,7 @@ import {
   CDN_FRONTEND_BASE_URL,
   PAYPAL_DONATE_LINK,
 } from '../lib/constants'
-import withDefaultSSR from '../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../lib/apollo/helpers'
 
 const { Headline: EH1, P: EP } = Editorial
 const { H2, P: IP } = Interaction

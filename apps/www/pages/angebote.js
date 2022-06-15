@@ -10,7 +10,7 @@ import PledgeForm from '../components/Pledge/Form'
 import PledgeReceivePayment from '../components/Pledge/ReceivePayment'
 
 import { PSP_PLEDGE_ID_QUERY_KEYS } from '../components/Payment/constants'
-import withDefaultSSR from '../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../lib/apollo/helpers'
 
 class PledgePage extends Component {
   render() {

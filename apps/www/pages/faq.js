@@ -7,7 +7,7 @@ import withT from '../lib/withT'
 import { Interaction, RawHtml } from '@project-r/styleguide'
 
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
-import withDefaultSSR from '../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../lib/apollo/helpers'
 
 const Page = ({ t }) => (
   <Frame

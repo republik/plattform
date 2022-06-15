@@ -1,9 +1,9 @@
 import Article from '../components/Article/Page'
-import createGetStaticProps from '../lib/helpers/createGetStaticProps'
 import { GetStaticPaths } from 'next'
 import { ParsedUrlQuery } from 'querystring'
 import { gql } from '@apollo/client'
 import { getDocument } from '../components/Article/graphql/getDocument'
+import { createGetStaticProps } from '../lib/apollo/helpers'
 
 type Params = {
   path: string[]
@@ -24,7 +24,8 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
 const REVALIDATE_SECONDS = 10
 
 export const getStaticProps = createGetStaticProps<Props, Params>(
-  async (client, params) => {
+  async (client, ctx) => {
+    const params = ctx.params
     const path = '/' + params.path.join('/')
 
     const {
