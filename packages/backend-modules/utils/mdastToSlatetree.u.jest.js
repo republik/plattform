@@ -231,6 +231,68 @@ const cases = [
     ],
   },
   {
+    name: 'bold link',
+    mdast: {
+      type: 'root',
+      children: [
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'strong',
+              children: [
+                {
+                  type: 'text',
+                  value: 'Qui esse ',
+                },
+                {
+                  type: 'link',
+                  title: null,
+                  url: 'https://www.republik.ch',
+                  children: [
+                    {
+                      type: 'text',
+                      value: 'facere minima incidunt accusantium rem',
+                    },
+                  ],
+                },
+                {
+                  type: 'text',
+                  value: '.',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    slatetree: [
+      {
+        children: [
+          {
+            text: 'Qui esse ',
+            bold: true,
+          },
+          {
+            children: [
+              {
+                text: 'facere minima incidunt accusantium rem',
+                bold: true,
+              },
+            ],
+            type: 'link',
+            href: 'https://www.republik.ch',
+          },
+          {
+            text: '.',
+            bold: true,
+          },
+        ],
+        type: 'paragraph',
+      },
+    ],
+  },
+  {
     name: 'link definition',
     mdast: {
       type: 'root',
