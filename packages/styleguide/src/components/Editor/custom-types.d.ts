@@ -193,6 +193,7 @@ export type MarksConfig = {
 export type ElementFormProps<E> = {
   element: E
   onChange: (newProperties: Partial<E>) => void
+  onClose: () => void
 }
 
 export type TemplateType = CustomElementsType | 'text'

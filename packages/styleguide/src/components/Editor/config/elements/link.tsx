@@ -5,20 +5,40 @@ import {
   NormalizeFn,
 } from '../../custom-types'
 import { LinkIcon } from '../../../Icons'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import Field from '../../../Form/Field'
 import { Editor, Transforms } from 'slate'
 
 const Form: React.FC<ElementFormProps<LinkElement>> = ({
   element,
   onChange,
-}) => (
-  <Field
-    label='URL'
-    value={element.href}
-    onChange={(_, href: string) => onChange({ href })}
-  />
-)
+  onClose,
+}) => {
+  const ref = useRef(null)
+
+  // TODO: make autofocus work
+  useEffect(() => {
+    if (ref?.current) {
+      ref.current.focus()
+    }
+  }, [ref])
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault()
+        onClose()
+      }}
+    >
+      <Field
+        ref={ref}
+        label='URL'
+        value={element.href}
+        onChange={(_, href: string) => onChange({ href })}
+      />
+    </form>
+  )
+}
 
 const unlinkWhenEmpty: NormalizeFn<LinkElement> = ([node, path], editor) => {
   if (Editor.string(editor, path) === '') {

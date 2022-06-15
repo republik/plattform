@@ -75,7 +75,11 @@ export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
     .filter(Boolean)
 }
 
-const ElementForm: React.FC<FormData> = ({ node, Form }) => {
+const ElementForm: React.FC<FormData & { onClose: () => void }> = ({
+  node,
+  Form,
+  onClose,
+}) => {
   const editor = useSlate()
   const element = Editor.node(editor, node[1])[0] as CustomElement
   return (
@@ -90,6 +94,7 @@ const ElementForm: React.FC<FormData> = ({ node, Form }) => {
             at: node[1],
           })
         }}
+        onClose={onClose}
       />
     </div>
   )
@@ -103,8 +108,9 @@ export const FormOverlay = (): ReactElement => {
   if (!forms.length || !formPath) return null
 
   const onClose = () => {
-    setFormPath(undefined)
     ReactEditor.focus(editor)
+    Transforms.select(editor, formPath)
+    setFormPath(undefined)
   }
 
   return (
@@ -112,7 +118,7 @@ export const FormOverlay = (): ReactElement => {
       <OverlayToolbar title='Edit Data' onClose={onClose} />
       <OverlayBody>
         {forms.map((formData, i) => (
-          <ElementForm {...formData} key={i} />
+          <ElementForm {...formData} onClose={onClose} key={i} />
         ))}
       </OverlayBody>
     </Overlay>
