@@ -289,16 +289,26 @@ export const getAncestry = (
   container?: NodeEntry<CustomElement>
   topLevelContainer?: NodeEntry<CustomElement>
 } => {
-  const common = customNode || getCommonNode(editor)
+  const first = customNode || Editor.first(editor, editor.selection)
+  const last = customNode || Editor.last(editor, editor.selection)
+  const firstParent = getParent(editor, first)
+  const lastParent = getParent(editor, last)
   let text: NodeEntry<CustomText>
   let element: NodeEntry<CustomElement>
   let container: NodeEntry<CustomElement>
   let topLevelContainer: NodeEntry<CustomElement>
-  if (Text.isText(common[0])) {
-    text = common as NodeEntry<CustomText>
-    element = getParent(editor, common)
-  } else if (SlateElement.isElement(common[0])) {
-    element = common as NodeEntry<CustomElement>
+  if (
+    Text.isText(first[0]) &&
+    Text.isText(last[0]) &&
+    Path.equals(firstParent[1], lastParent[1])
+  ) {
+    text = first as NodeEntry<CustomText>
+    element = firstParent
+  } else if (
+    SlateElement.isElement(first[0]) &&
+    Path.equals(first[1], last[1])
+  ) {
+    element = first as NodeEntry<CustomElement>
   } else {
     return {}
   }

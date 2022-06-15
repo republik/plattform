@@ -135,7 +135,7 @@ describe('Slate Editor: Inline Insertion', () => {
         {
           type: 'paragraph',
           children: [
-            { text: 'Lorem ipsum dolor sit amet.' },
+            { text: 'Lorem ' },
             { text: 'ipsum', bold: true },
             { text: ' dolor' },
           ],
@@ -159,12 +159,56 @@ describe('Slate Editor: Inline Insertion', () => {
         {
           type: 'paragraph',
           children: [
-            { text: 'Lorem ipsum dolor sit amet.' },
+            { text: 'Lorem ' },
             {
               type: 'link',
               children: [{ text: 'ipsum', bold: true }],
             },
             { text: ' dolor' },
+          ],
+        },
+      ])
+      expect(editor.selection.anchor.path).toEqual([0, 1, 0])
+    })
+
+    it('should work across complex inline/text nodes', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Lorem ' },
+            {
+              type: 'link',
+              children: [{ text: 'ipsum', bold: true }],
+            },
+            { text: ' dolor' },
+          ],
+        },
+      ]
+      const structure = [
+        {
+          type: 'paragraph',
+        },
+      ]
+      const editor = await setup(structure)
+
+      await Transforms.select(editor, {
+        anchor: { path: [0, 0], offset: 4 },
+        focus: { path: [0, 2], offset: 2 },
+      })
+      toggleElement(editor, 'inlineCode')
+      await new Promise(process.nextTick)
+
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Lore' },
+            {
+              type: 'inlineCode',
+              children: [{ text: 'm ipsum d' }],
+            },
+            { text: 'olor' },
           ],
         },
       ])

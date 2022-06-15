@@ -174,7 +174,7 @@ const toggleInline = (
   }
   return isEntireNodeSelected(target, selection)
     ? target[1]
-    : calculateSiblingPath(Range.end(selection).path)
+    : calculateSiblingPath(target[1])
 }
 
 const convertBlock = (
