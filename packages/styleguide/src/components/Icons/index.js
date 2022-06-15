@@ -80,6 +80,7 @@ export {
   MdFormatQuote as QuoteIcon,
   MdStrikethroughS as StrikeThrough,
   MdTitle as TitleIcon,
+  MdCode as CodeIcon,
 } from 'react-icons/md'
 
 export {
@@ -88,7 +89,10 @@ export {
   FaSuperscript as SupIcon,
 } from 'react-icons/fa'
 
-export { AiFillInstagram as InstagramIcon } from 'react-icons/ai'
+export {
+  AiFillInstagram as InstagramIcon,
+  AiOutlineCode as BlockCodeIcon,
+} from 'react-icons/ai'
 export { SiThreema as ThreemaIcon } from 'react-icons/si'
 export { DiOpensource as OpenSourceIcon } from 'react-icons/di'
 export { BiParagraph as ParagraphIcon } from 'react-icons/bi'

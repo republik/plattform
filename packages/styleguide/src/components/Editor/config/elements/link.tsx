@@ -57,9 +57,6 @@ export const config: ElementConfigI = {
   },
   button: { icon: LinkIcon },
   component: 'link',
-  defaultProps: {
-    href: 'https://',
-  },
   normalizations: [unlinkWhenEmpty],
   props: ['href'],
 }

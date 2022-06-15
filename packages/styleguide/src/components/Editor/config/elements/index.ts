@@ -20,6 +20,7 @@ import { config as blockCode } from './blockCode'
 export const config: ElementsConfig = {
   paragraph,
   headline,
+  inlineCode,
   link,
   figure,
   figureImage,
@@ -34,7 +35,6 @@ export const config: ElementsConfig = {
   ul,
   ol,
   listItem,
-  inlineCode,
   blockCode,
 }
 

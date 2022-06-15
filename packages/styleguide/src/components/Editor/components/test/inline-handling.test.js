@@ -69,7 +69,6 @@ describe('Slate Editor: Inline Insertion', () => {
             { text: 'Lorem ' },
             {
               type: 'link',
-              href: 'https://',
               children: [{ text: 'ipsum' }],
             },
             { text: ' dolor sit amet.' },
@@ -113,7 +112,6 @@ describe('Slate Editor: Inline Insertion', () => {
             { text: 'Lorem ' },
             {
               type: 'link',
-              href: 'https://',
               children: [{ text: 'ipsum' }],
             },
             { text: ' dolor sit amet.' },
@@ -164,7 +162,6 @@ describe('Slate Editor: Inline Insertion', () => {
             { text: 'Lorem ipsum dolor sit amet.' },
             {
               type: 'link',
-              href: 'https://',
               children: [{ text: 'ipsum', bold: true }],
             },
             { text: ' dolor' },
@@ -182,7 +179,6 @@ describe('Slate Editor: Inline Insertion', () => {
             { text: 'Lorem ' },
             {
               type: 'link',
-              href: 'https://',
               children: [{ text: 'ipsum' }],
             },
             { text: ' dolor sit amet.' },
