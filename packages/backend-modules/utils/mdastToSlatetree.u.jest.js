@@ -458,25 +458,6 @@ const cases = [
             ],
             type: 'blockQuoteText',
           },
-          {
-            children: [
-              {
-                text: '',
-              },
-              {
-                children: [
-                  {
-                    text: '',
-                  },
-                ],
-                type: 'figureByline',
-              },
-              {
-                text: '',
-              },
-            ],
-            type: 'figureCaption',
-          },
         ],
         type: 'blockQuote',
       },
@@ -498,24 +479,86 @@ const cases = [
             ],
             type: 'blockQuoteText',
           },
+        ],
+        type: 'blockQuote',
+      },
+    ],
+  },
+  {
+    name: 'nested blockquote compability',
+    mdast: {
+      type: 'root',
+      children: [
+        {
+          type: 'blockquote',
+          children: [
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  type: 'text',
+                  value: 'Blockquote Level 1',
+                },
+              ],
+            },
+            {
+              type: 'blockquote',
+              children: [
+                {
+                  type: 'paragraph',
+                  children: [
+                    {
+                      type: 'text',
+                      value: 'Blockquote Level 2',
+                    },
+                  ],
+                },
+                {
+                  type: 'blockquote',
+                  children: [
+                    {
+                      type: 'paragraph',
+                      children: [
+                        {
+                          type: 'text',
+                          value: 'Blockquote Level 3',
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    slatetree: [
+      {
+        children: [
           {
             children: [
               {
-                text: '',
-              },
-              {
-                children: [
-                  {
-                    text: '',
-                  },
-                ],
-                type: 'figureByline',
-              },
-              {
-                text: '',
+                text: 'Blockquote Level 1',
               },
             ],
-            type: 'figureCaption',
+            type: 'blockQuoteText',
+          },
+          {
+            children: [
+              {
+                text: 'Blockquote Level 2',
+              },
+            ],
+            type: 'blockQuoteText',
+          },
+          {
+            children: [
+              {
+                text: 'Blockquote Level 3',
+              },
+            ],
+            type: 'blockQuoteText',
           },
         ],
         type: 'blockQuote',
@@ -1535,25 +1578,6 @@ const cases = [
             ],
             type: 'blockQuoteText',
           },
-          {
-            children: [
-              {
-                text: '',
-              },
-              {
-                children: [
-                  {
-                    text: '',
-                  },
-                ],
-                type: 'figureByline',
-              },
-              {
-                text: '',
-              },
-            ],
-            type: 'figureCaption',
-          },
         ],
         type: 'blockQuote',
       },
@@ -1590,25 +1614,6 @@ const cases = [
               },
             ],
             type: 'blockQuoteText',
-          },
-          {
-            children: [
-              {
-                text: '',
-              },
-              {
-                children: [
-                  {
-                    text: '',
-                  },
-                ],
-                type: 'figureByline',
-              },
-              {
-                text: '',
-              },
-            ],
-            type: 'figureCaption',
           },
         ],
         type: 'blockQuote',

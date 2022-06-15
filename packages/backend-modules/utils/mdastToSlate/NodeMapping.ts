@@ -140,30 +140,14 @@ function mapMdastToSlateNode(
     case 'thematicBreak': // Horizontal rule
       return undefined
     case 'blockquote':
+      // Handle nested blockquotes and return them inline as a new paragraph
+      if (parent && parent?.type === 'blockquote') {
+        return mappedChildren
+      }
+
       return {
         type: 'blockQuote',
-        children: [
-          ...flattenArray(mappedChildren),
-          {
-            children: [
-              {
-                text: '',
-              },
-              {
-                children: [
-                  {
-                    text: '',
-                  },
-                ],
-                type: 'figureByline',
-              },
-              {
-                text: '',
-              },
-            ],
-            type: 'figureCaption',
-          },
-        ],
+        children: [...flattenArray(mappedChildren)],
       }
     case 'break':
       return {
