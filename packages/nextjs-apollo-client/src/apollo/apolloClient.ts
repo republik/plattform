@@ -8,7 +8,7 @@ import {
 import { createLink } from './apolloLink'
 import deepMerge from './deepMerge'
 import { isDev, isClient } from './util'
-import type { IncomingHttpHeaders } from 'http'
+import type { IncomingHttpHeaders } from 'node:http'
 
 // Based on the with-apollo example inside the Next.js repository
 // Source: https://github.com/vercel/next.js/blob/canary/examples/with-apollo/lib/apolloClient.js
