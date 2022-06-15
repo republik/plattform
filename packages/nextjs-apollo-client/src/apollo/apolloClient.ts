@@ -17,7 +17,7 @@ export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__'
 
 export type ApolloClientOptions = {
   apiUrl: string
-  wsUrl: string
+  wsUrl?: string
   headers?: { [key: string]: string | number | boolean } | IncomingHttpHeaders
   onResponse?: (response: any) => void
   mobileConfigOptions?: {
