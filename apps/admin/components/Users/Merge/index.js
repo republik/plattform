@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
-import gql from 'graphql-tag'
+import { gql } from '@apollo/client'
 import { colors, Interaction, Button } from '@project-r/styleguide'
 import Link from 'next/link'
 import ErrorMessage from '../../ErrorMessage'

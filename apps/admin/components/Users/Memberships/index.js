@@ -1,8 +1,8 @@
 import { Fragment } from 'react'
 import * as React from 'react'
 import { css } from 'glamor'
-import { Query, Mutation } from 'react-apollo'
-import gql from 'graphql-tag'
+import { Query, Mutation } from '@apollo/client/react/components'
+import { gql } from '@apollo/client'
 import { MdChevronLeft as CurrentIcon } from 'react-icons/md'
 
 import {

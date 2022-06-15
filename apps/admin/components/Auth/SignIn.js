@@ -1,7 +1,7 @@
 import { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
-import { graphql, compose } from 'react-apollo'
-import gql from 'graphql-tag'
+import compose from 'lodash/flowRight'
+import { gql } from '@apollo/client'
 import { css } from 'glamor'
 import isEmail from 'validator/lib/isEmail'
 
@@ -22,6 +22,7 @@ import {
 
 import Poller from './Poller'
 import { withRouter } from 'next/router'
+import { graphql } from '@apollo/client/react/hoc'
 
 const styles = {
   form: css({

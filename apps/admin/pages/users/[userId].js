@@ -1,6 +1,6 @@
 import { Fragment } from 'react'
 import { withRouter } from 'next/router'
-import { compose } from 'react-apollo'
+import compose from 'lodash/flowRight'
 
 import { enforceAuthorization } from '../../components/Auth/withAuthorization'
 import App from '../../components/App'

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Query, compose } from 'react-apollo'
+import compose from 'lodash/flowRight'
+import { Query } from '@apollo/client/react/components'
 import { withRouter } from 'next/router'
-import gql from 'graphql-tag'
+import { gql } from '@apollo/client'
 import { Loader } from '@project-r/styleguide'
 
 import { enforceAuthorization } from '../components/Auth/withAuthorization'

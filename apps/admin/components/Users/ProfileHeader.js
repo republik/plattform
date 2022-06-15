@@ -1,6 +1,6 @@
-import { Query } from 'react-apollo'
+import { Query } from '@apollo/client/react/components'
 import { css } from 'glamor'
-import gql from 'graphql-tag'
+import { gql } from '@apollo/client'
 import {
   colors,
   fontStyles,

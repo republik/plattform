@@ -21086,7 +21086,7 @@ re2@^1.16.0:
     nan "^2.15.0"
     node-gyp "^8.4.1"
 
-react-apollo@^2.1.11, react-apollo@^2.5.8:
+react-apollo@^2.1.11:
   version "2.5.8"
   resolved "https://registry.yarnpkg.com/react-apollo/-/react-apollo-2.5.8.tgz#c7a593b027efeefdd8399885e0ac6bec3b32623c"
   integrity sha512-60yOQrnNosxU/tRbOxGDaYNLFcOKmQqxHPhxyvKTlGIaF/rRCXQRKixUgWVffpEupSHHD7psY5k5ZOuZsdsSGQ==

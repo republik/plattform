@@ -1,5 +1,5 @@
 import { css } from 'glamor'
-import { compose } from 'react-apollo'
+import compose from 'lodash/flowRight'
 import { createContainer, createTile } from './Grid'
 import Me from '../Auth/Me'
 import { BrandMark, Interaction, colors } from '@project-r/styleguide'
