@@ -11,6 +11,7 @@
     "start": "node server/server.js",
     "test": "jest",
     "test:watch": "jest --watch",
+    "analyze": "ANALYZE=true next build",
     "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./.next*\" | xargs wc -l",
     "lint": "eslint --fix .",
     "zat:setup": "docker compose build",
@@ -64,6 +65,7 @@
     "validator": "^10.11.0"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^10.2.3",
     "@republik/eslint-config-frontend": "*",
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "^12.1.4",
