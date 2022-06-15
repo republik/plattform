@@ -6,6 +6,7 @@ import enforceAuthorization from '../components/Auth/withAuthorization'
 
 import { Body, Content, Header } from '../components/Layout'
 import PostfinancePayments from '../components/PostfinancePayments/List'
+import { withDefaultSSR } from '../lib/apollo'
 
 const PostFinance = () => {
   const router = useRouter()
@@ -32,6 +33,6 @@ const PostFinance = () => {
   )
 }
 
-export default compose(enforceAuthorization(['supporter', 'accountant']))(
-  PostFinance,
+export default withDefaultSSR(
+  compose(enforceAuthorization(['supporter', 'accountant']))(PostFinance),
 )

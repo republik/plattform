@@ -6,6 +6,7 @@ import { enforceAuthorization } from '../components/Auth/withAuthorization'
 
 import { Body, Content, Header } from '../components/Layout'
 import MailboxPage from '../components/Mailbox/Page'
+import { withDefaultSSR } from '../lib/apollo'
 
 const Mailbox = () => {
   const router = useRouter()
@@ -32,4 +33,6 @@ const Mailbox = () => {
   )
 }
 
-export default compose(enforceAuthorization(['supporter']))(Mailbox)
+export default withDefaultSSR(
+  compose(enforceAuthorization(['supporter']))(Mailbox),
+)

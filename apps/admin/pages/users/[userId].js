@@ -24,6 +24,7 @@ import Dialog from '../../components/Users/Dialog'
 import Mailbox from '../../components/Users/Mailbox'
 import { Body, Content } from '../../components/Layout'
 import Header from '../../components/Layout/Header'
+import { withDefaultSSR } from '../../lib/apollo'
 
 const styles = {
   row: css({
@@ -83,10 +84,7 @@ const SectionSwitch = ({ userId, section }) => {
   )
 }
 
-export default compose(
-  withRouter,
-  enforceAuthorization(['supporter']),
-)((props) => {
+const UserPage = (props) => {
   const { userId, section = 'index' } = props.router.query
   return (
     <App>
@@ -99,4 +97,8 @@ export default compose(
       </Body>
     </App>
   )
-})
+}
+
+export default withDefaultSSR(
+  compose(withRouter, enforceAuthorization(['supporter']))(UserPage),
+)

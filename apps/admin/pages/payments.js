@@ -6,6 +6,7 @@ import { enforceAuthorization } from '../components/Auth/withAuthorization'
 
 import { Body, Content, Header } from '../components/Layout'
 import Payments from '../components/Payments/List'
+import { withDefaultSSR } from '../lib/apollo'
 
 const PaymentsPage = () => {
   const router = useRouter()
@@ -32,4 +33,6 @@ const PaymentsPage = () => {
   )
 }
 
-export default compose(enforceAuthorization(['supporter']))(PaymentsPage)
+export default withDefaultSSR(
+  compose(enforceAuthorization(['supporter']))(PaymentsPage),
+)

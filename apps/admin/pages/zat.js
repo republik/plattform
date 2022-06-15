@@ -13,6 +13,7 @@ import App from '../components/App'
 import { Body } from '../components/Layout'
 
 import ZafClient from '../lib/zat/client'
+import { withDefaultSSR } from '../lib/apollo'
 
 export const GET_ZAT_SEARCH = gql`
   query zatSearch($search: String!) {
@@ -132,4 +133,6 @@ const Zat = (props) => {
   )
 }
 
-export default compose(enforceAuthorization(['supporter']), withRouter)(Zat)
+export default withDefaultSSR(
+  compose(enforceAuthorization(['supporter']), withRouter)(Zat),
+)

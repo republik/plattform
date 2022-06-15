@@ -4,6 +4,7 @@ import { enforceAuthorization } from '../components/Auth/withAuthorization'
 import App from '../components/App'
 import { Body, Content, Header } from '../components/Layout'
 import Users from '../components/Users/List'
+import { withDefaultSSR } from '../lib/apollo'
 
 const UserOverview = () => {
   const router = useRouter()
@@ -31,4 +32,6 @@ const UserOverview = () => {
   )
 }
 
-export default compose(enforceAuthorization(['supporter']))(UserOverview)
+export default withDefaultSSR(
+  compose(enforceAuthorization(['supporter']))(UserOverview),
+)
