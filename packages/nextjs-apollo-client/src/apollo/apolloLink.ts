@@ -58,7 +58,7 @@ export const createLink = ({
     },
   })
 
-  if (isClient) {
+  if (isClient && wsUrl) {
     return ApolloLink.split(
       hasSubscriptionOperation,
       new WebSocketLink({
