@@ -16,7 +16,7 @@ import { FigureByline, FigureCaption } from '../../Figure'
 import { Bold } from '../config/marks/bold'
 import { Italic } from '../config/marks/italic'
 
-const schema: SchemaConfig = {
+const commentWebSchema: SchemaConfig = {
   container: CommentBodyContainer,
   blockQuote: CommentBodyBlockQuote,
   blockQuoteText: CommentBodyBlockQuoteParagraph,
@@ -37,4 +37,4 @@ const schema: SchemaConfig = {
   blockCode: CommentBodyBlockCode,
 }
 
-export default schema
+export default commentWebSchema
