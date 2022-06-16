@@ -320,7 +320,7 @@ module.exports = async (_, args, context) => {
     }
 
     if (address) {
-      const { id: addressId } = upsertAddress(
+      const { id: addressId } = await upsertAddress(
         { ...address, id: me._raw?.addressId },
         transaction,
         t,

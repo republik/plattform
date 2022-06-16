@@ -29,7 +29,7 @@ module.exports = async (_, args, { pgdb, req, t, mail }) => {
       )
     }
     if (address) {
-      const { id: addressId } = upsertAddress(
+      const { id: addressId } = await upsertAddress(
         { ...address, id: user.addressId },
         transaction,
         t,
