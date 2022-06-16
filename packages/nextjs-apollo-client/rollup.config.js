@@ -3,6 +3,7 @@ import commonjs from '@rollup/plugin-commonjs'
 import peerDepsExternal from 'rollup-plugin-peer-deps-external'
 import dts from 'rollup-plugin-dts'
 import typescript from '@rollup/plugin-typescript'
+import json from '@rollup/plugin-json'
 import { terser } from 'rollup-plugin-terser'
 import visualizer from 'rollup-plugin-visualizer'
 import bundleSize from 'rollup-plugin-bundle-size'
@@ -26,6 +27,7 @@ export default [
     plugins: [
       peerDepsExternal(),
       nodeResolve(),
+      json(),
       typescript({
         tsconfig: './tsconfig.json',
       }),
@@ -42,6 +44,6 @@ export default [
   {
     input: 'dist/types/index.d.ts',
     output: [{ file: 'dist/index.d.ts', format: 'esm' }],
-    plugins: [dts()],
+    plugins: [nodeResolve({ preferBuiltins: true }), dts()],
   },
 ]

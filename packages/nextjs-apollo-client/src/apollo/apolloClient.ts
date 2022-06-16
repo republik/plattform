@@ -5,10 +5,11 @@ import {
   InMemoryCache,
   NormalizedCacheObject,
 } from '@apollo/client'
+import type { IncomingHttpHeaders } from 'node:http'
 import { createLink } from './apolloLink'
 import deepMerge from './deepMerge'
 import { isDev, isClient } from './utils'
-import type { IncomingHttpHeaders } from 'node:http'
+import possibleTypes from '../generated/possibleTypes.json'
 
 // Based on the with-apollo example inside the Next.js repository
 // Source: https://github.com/vercel/next.js/blob/canary/examples/with-apollo/lib/apolloClient.js
@@ -47,36 +48,8 @@ function createApolloClient(
           },
         },
       },
-      // Generated with a script found in the apollo-client docs:
-      // https://www.apollographql.com/docs/react/data/fragments/#generating-possibletypes-automatically
-      possibleTypes: {
-        Reward: ['Goodie', 'MembershipType'],
-        RepoPhaseInterface: ['RepoPhase', 'RepoPhaseWithCount'],
-        MilestoneInterface: ['Publication', 'Milestone'],
-        PlayableMedia: ['AudioSource', 'YoutubeEmbed', 'VimeoEmbed'],
-        SearchEntity: ['Document', 'DocumentZone', 'Comment', 'User'],
-        VotingInterface: ['Voting', 'Election'],
-        QuestionInterface: [
-          'QuestionTypeText',
-          'QuestionTypeDocument',
-          'QuestionTypeRange',
-          'QuestionTypeChoice',
-        ],
-        CollectionItemInterface: [
-          'CollectionItem',
-          'DocumentProgress',
-          'MediaProgress',
-        ],
-        EventObject: ['Comment', 'Document'],
-        SubscriptionObject: ['Document', 'User', 'Discussion'],
-        Embed: [
-          'TwitterEmbed',
-          'YoutubeEmbed',
-          'VimeoEmbed',
-          'DocumentCloudEmbed',
-        ],
-        CachedEmbed: ['LinkPreview', 'TwitterEmbed'],
-      },
+      // Generated with the script located in scripts/generatePossibleTypes.js
+      possibleTypes,
     }),
     link: createLink(options),
   })
