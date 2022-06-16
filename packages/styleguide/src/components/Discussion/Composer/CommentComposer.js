@@ -12,8 +12,9 @@ import { useColorContext } from '../../Colors/ColorContext'
 import { deleteDraft, readDraft, writeDraft } from './CommentDraftHelper'
 import { DisplayAuthorPropType } from '../Internal/PropTypes'
 import { CommentUI } from '../Tree/CommentNode'
-import Loader from '../../Loader'
 import { fontStyles } from '../../Typography'
+import Editor from '../../Editor/components/editor'
+import commentWebSchema from '../../Editor/schema/comment'
 
 const styles = {
   root: css({}),
@@ -136,11 +137,6 @@ export const CommentComposer = ({
   const textRef = useRef()
 
   const [isPreviewing, setIsPreviewing] = useState(false)
-  const [preview, setPreview] = useState({
-    loading: false,
-    error: null,
-    comment: null,
-  })
 
   /*
    * Synchronize the text with localStorage, and restore it from there if not otherwise
@@ -152,50 +148,29 @@ export const CommentComposer = ({
   const isEditing = !!commentId
   const [text, setText] = useState(() => {
     if (initialText) {
+      // TODO: ensure only valid slate-tree are accepted
       return initialText
-    } else if (!isEditing) {
-      return readDraft(discussionId, parentId) || ''
+    }
+    const draft = readDraft(discussionId, parentId)
+    if (!isEditing && !!draft) {
+      // TODO: decide how to handle old mdast-based drafts
+      return draft
     } else {
-      return ''
+      return [
+        {
+          type: 'paragraph',
+          children: [{ text: '' }],
+        },
+      ]
     }
   })
 
-  const textLength =
-    isPreviewing && preview.comment
-      ? preview.comment.contentLength
-      : text.length
+  // TODO: calculate text length based on slate-tree
+  const textLength = 0
 
   const [selectedTagValue, setSelectedTagValue] = useState()
   // we adapt to the initialTagValue as long as no tag has been selected
   const tagValue = selectedTagValue || initialTagValue
-
-  const fetchPreview = async () => {
-    setPreview({
-      loading: true,
-      error: null,
-      comment: null,
-    })
-    try {
-      const result = await onPreviewComment({
-        discussionId,
-        parentId,
-        content: text,
-        id: commentId,
-        tags: tagValue ? [tagValue] : undefined,
-      })
-      setPreview({
-        loading: false,
-        error: null,
-        comment: result,
-      })
-    } catch (e) {
-      setPreview({
-        loading: false,
-        error: e,
-        comment: null,
-      })
-    }
-  }
 
   /*
    * Focus the textarea upon mount.
@@ -308,7 +283,31 @@ export const CommentComposer = ({
                 />
               </div>
             )}
-            <>
+            <div {...styles.textArea}>
+              <Editor
+                value={text}
+                setValue={setText}
+                structure={[
+                  {
+                    type: [
+                      'paragraph',
+                      'headline',
+                      'ul',
+                      'ol',
+                      'blockQuote',
+                      'blockCode',
+                    ],
+                    repeat: true,
+                  },
+                ]}
+                config={{
+                  maxSigns: 3000,
+                  debug: true,
+                  schema: commentWebSchema,
+                }}
+              />
+            </div>
+            {/*<>
               <Textarea
                 inputRef={textareaRef}
                 {...styles.textArea}
@@ -328,7 +327,7 @@ export const CommentComposer = ({
                     {hint}
                   </div>
                 ))}
-            </>
+            </>*/}
             {maxLength && (
               <MaxLengthIndicator maxLength={maxLength} length={textLength} />
             )}
@@ -338,20 +337,19 @@ export const CommentComposer = ({
             <span {...styles.previewLabel}>
               {t('styleguide/CommentComposer/preview')}
             </span>
-            <Loader
-              loading={preview.loading}
-              error={preview.error}
-              render={() => (
-                <CommentUI
-                  t={t}
-                  comment={{
-                    ...preview.comment,
-                    displayAuthor,
-                  }}
-                  isExpanded
-                  isPreview
-                />
-              )}
+            <CommentUI
+              t={t}
+              comment={{
+                content: text,
+                contentLength: textLength,
+                createdAt: new Date(Date.now()),
+                updatedAt: new Date(Date.now()),
+                tags: tagValue ? [tagValue] : undefined,
+                id: 'preview-comment',
+                displayAuthor,
+              }}
+              isExpanded
+              isPreview
             />
           </div>
         )}
@@ -382,7 +380,6 @@ export const CommentComposer = ({
         onPreview={
           onPreviewComment && !isPreviewing
             ? () => {
-                fetchPreview()
                 setIsPreviewing(true)
               }
             : undefined

@@ -6,7 +6,6 @@ import { DiscussionContext } from '../../DiscussionContext'
 import { Label } from '../../../Typography'
 
 import { Context } from './Context'
-import { renderCommentMdast } from './render'
 import SlateRender from '../../../Editor/components/render'
 import commentWebSchema from '../../../Editor/schema/comment'
 
