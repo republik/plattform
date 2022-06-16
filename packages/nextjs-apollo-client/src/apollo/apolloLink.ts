@@ -2,7 +2,7 @@ import { ApolloLink, HttpLink } from '@apollo/client'
 import { WebSocketLink } from '@apollo/client/link/ws'
 
 import { ApolloClientOptions } from './apolloClient'
-import { isClient, isDev } from './util'
+import { isClient, isDev } from './utils'
 
 export const hasSubscriptionOperation = ({ query: { definitions } }) =>
   definitions.some(

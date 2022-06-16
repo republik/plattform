@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { ParsedUrlQuery } from 'querystring'
 import Front from '../components/Front'
 import { FRONT_QUERY } from '../components/Front/graphql/getFrontQuery.graphql'
 import { useMe } from '../lib/context/MeContext'
@@ -41,14 +42,16 @@ const FrontPage = () => {
 
 export default FrontPage
 
-export const getStaticProps = createGetStaticProps(
-  async (client, ctx) => {
+interface Params extends ParsedUrlQuery {
+  extractId?: string
+}
+
+export const getStaticProps = createGetStaticProps<unknown, Params>(
+  async (client, { params }) => {
     // Throw error to fail build if the key is not defined
     if (!process.env.SSG_DOCUMENTS_API_KEY) {
       throw new Error('Missing SSG_DOCUMENTS_API_KEY environment variable')
     }
-
-    const params = ctx.params
 
     // Query the front-document
     const frontQueryResult = await client.query({
