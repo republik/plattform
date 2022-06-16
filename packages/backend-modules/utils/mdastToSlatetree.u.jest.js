@@ -293,6 +293,95 @@ const cases = [
     ],
   },
   {
+    name: 'strikethrough',
+    mdast: {
+      type: 'root',
+      children: [
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              value: 'Some Text with ',
+            },
+            {
+              type: 'delete',
+              children: [
+                {
+                  type: 'text',
+                  value: 'strikethrough',
+                },
+              ],
+            },
+            {
+              type: 'text',
+              value: ' as well as ',
+            },
+            {
+              type: 'delete',
+              children: [
+                {
+                  type: 'text',
+                  value: 'strikethrough ',
+                },
+                {
+                  type: 'link',
+                  title: null,
+                  url: 'https://republik.ch',
+                  children: [
+                    {
+                      type: 'text',
+                      value: 'containing',
+                    },
+                  ],
+                },
+                {
+                  type: 'text',
+                  value: ' a link',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    slatetree: [
+      {
+        children: [
+          {
+            text: 'Some Text with ',
+          },
+          {
+            text: 'strikethrough',
+            strikethrough: true,
+          },
+          {
+            text: ' as well as ',
+          },
+          {
+            text: 'strikethrough ',
+            strikethrough: true,
+          },
+          {
+            children: [
+              {
+                strikethrough: true,
+                text: 'containing',
+              },
+            ],
+            type: 'link',
+            href: 'https://republik.ch',
+          },
+          {
+            strikethrough: true,
+            text: ' a link',
+          },
+        ],
+        type: 'paragraph',
+      },
+    ],
+  },
+  {
     name: 'link definition',
     mdast: {
       type: 'root',
