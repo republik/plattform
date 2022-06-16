@@ -52,12 +52,13 @@ const getCommentInfo = async (comment, displayAuthor, discussion, context) => {
   const { preview, discussionUrl, contentMdast } = await Promise.props({
     preview: getPreview(comment, { length: 128 }, context),
     discussionUrl: getDiscussionUrl(discussion, context),
-    contentMdast: getContent(comment, { strip: false }, context),
+    contentMdast: getContent(comment, { strip: false }, context), // @TODO: content might not be mdast anymore
   })
 
-  const contentHtml = renderEmail(contentMdast, createCommentEmailSchema(), {
-    doctype: '',
-  })
+  const contentHtml =
+    (Array.isArray(contentMdast) && '<p>TODO: render this html version</p>') ||
+    // mdast version
+    renderEmail(contentMdast, createCommentEmailSchema(), { doctype: '' })
   const contentPlain = htmlToText.fromString(contentHtml)
 
   const { parentIds } = comment

@@ -6,7 +6,7 @@ const {
 } = require('../../../lib/discussionPreferences')
 const userCanComment = require('../Discussion/userCanComment')
 const userWaitUntil = require('../Discussion/userWaitUntil')
-const { contentLength } = require('../Comment')
+// const { contentLength } = require('../Comment')
 const slack = require('../../../lib/slack')
 const { timeahead } = require('@orbiting/backend-modules-formats')
 const Promise = require('bluebird')
@@ -20,7 +20,14 @@ module.exports = async (_, args, context) => {
   const { id, discussionId, parentId, content, discussionPreferences, tags } =
     args
 
-  if (!content || !content.trim().length) {
+  console.log({ content })
+
+  if (!Array.isArray(content)) {
+    throw new Error(t('api/comment/invalid'))
+  }
+
+  if (!content.length) {
+    // @TODO: maybe to string first?
     throw new Error(t('api/comment/empty'))
   }
 
@@ -88,8 +95,8 @@ module.exports = async (_, args, context) => {
   // ensure comment length is within limit
   if (
     discussion.maxLength &&
-    unsavedComment.content.length > discussion.maxLength &&
-    (await contentLength(unsavedComment, {}, context)) > discussion.maxLength
+    unsavedComment.content.length > discussion.maxLength // &&
+    // (await contentLength(unsavedComment, {}, context)) > discussion.maxLength // @TODO: rewrite contentLength
   ) {
     throw new Error(
       t('api/comment/tooLong', { maxLength: discussion.maxLength }),

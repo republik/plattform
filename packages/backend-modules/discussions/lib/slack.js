@@ -36,7 +36,10 @@ exports.publishComment = async (comment, discussion, context) => {
     author,
   )}* wrote in <${await getCommentLink(comment, discussion, context)}|${
     discussion.title
-  }>:\n${comment.content}`
+  }>:\n${
+    (Array.isArray(comment.content) && '@TODO: render slack content') ||
+    comment.content // Markdown version
+  }`
   return publish(SLACK_CHANNEL_COMMENTS, content)
 }
 
@@ -51,7 +54,14 @@ exports.publishCommentUpdate = async (
     author,
   )}* edited in <${await getCommentLink(comment, discussion, context)}|${
     discussion.title
-  }>:\n*old:*\n${oldComment.content}\n*new:*\n${comment.content}`
+  }>:\n*old:*\n${
+    (Array.isArray(oldComment.content) &&
+      '@TODO: render slack oldComment content') ||
+    comment.content // Markdown version
+  }\n*new:*\n${
+    (Array.isArray(comment.content) && '@TODO: render slack content') ||
+    comment.content // Markdown version
+  }`
   return publish(SLACK_CHANNEL_COMMENTS, content)
 }
 
@@ -74,7 +84,10 @@ exports.publishCommentUnpublish = async (
     comment,
     discussion,
     context,
-  )}|${discussion.title}>:\n${comment.content}`
+  )}|${discussion.title}>:\n${
+    (Array.isArray(comment.content) && '@TODO: render slack content') ||
+    comment.content // Markdown version
+  }`
   return publish(
     update.adminUnpublished
       ? SLACK_CHANNEL_COMMENTS_ADMIN
@@ -94,7 +107,8 @@ exports.publishCommentReport = async (user, comment, discussion, context) => {
     discussion,
     context,
   )}|${discussion.title}> (${comment.reports.length}. report):\n${
-    comment.content
+    (Array.isArray(comment.content) && '@TODO: render slack content') ||
+    comment.content // Markdown version
   }`
 
   return publish(SLACK_CHANNEL_COMMENTS_ADMIN, content, {

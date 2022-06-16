@@ -6,6 +6,16 @@ const {
 const MD_URL_REGEX = /\[.*?\]\((.*?)\)/gm
 
 const getUrls = (content) => {
+  // @TODO: Find URLS in Slatetree content
+  if (Array.isArray(content)) {
+    console.warn('getUrls can not handle Slatetree content yet')
+    return {
+      urls: [],
+      embedUrl: null,
+    }
+  }
+
+  // Markdown version
   const text = content.replace(MD_URL_REGEX, (match, url) => url)
   const urls = getUrlsFromText(text) || null
   return {

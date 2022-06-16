@@ -1,7 +1,7 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const slack = require('../../../lib/slack')
 const { transform } = require('../../../lib/Comment')
-const { contentLength } = require('../Comment')
+// const { contentLength } = require('../Comment')
 const Promise = require('bluebird')
 
 module.exports = async (_, args, context) => {
@@ -10,7 +10,12 @@ module.exports = async (_, args, context) => {
 
   Roles.ensureUserHasRole(user, 'member')
 
-  if (!content || !content.trim().length) {
+  if (!Array.isArray(content)) {
+    throw new Error(t('api/comment/invalid'))
+  }
+
+  if (!content.length) {
+    // @TODO: maybe to string first?
     throw new Error(t('api/comment/empty'))
   }
 
@@ -44,8 +49,8 @@ module.exports = async (_, args, context) => {
     // ensure comment length is within limit
     if (
       discussion.maxLength &&
-      unsavedComment.content.length > discussion.maxLength &&
-      (await contentLength(unsavedComment, {}, context)) > discussion.maxLength
+      unsavedComment.content.length > discussion.maxLength // &&
+      // (await contentLength(unsavedComment, {}, context)) > discussion.maxLength // @TODO: rewrite contentLength
     ) {
       throw new Error(
         t('api/comment/tooLong', { maxLength: discussion.maxLength }),

@@ -41,7 +41,7 @@ const embedForComment = async (
 const textForComment = async (comment, strip = false, context) => {
   const {
     userId,
-    content,
+    content__markdown,
     published,
     adminUnpublished,
     discussionId,
@@ -55,16 +55,16 @@ const textForComment = async (comment, strip = false, context) => {
     return null
   }
 
-  let newContent = content
+  let newContent = content__markdown
   if (!isMine && !Roles.userIsInRoles(me, ['member'])) {
     const namesToClip =
       await context.loaders.Discussion.byIdCommenterNamesToClip.load(
         discussionId,
       )
-    newContent = clipNamesInText(namesToClip, content)
+    newContent = clipNamesInText(namesToClip, content__markdown)
   }
   if (strip && !!(await embedForComment(comment, context))) {
-    newContent = stripUrlFromText(embedUrl, content)
+    newContent = stripUrlFromText(embedUrl, content__markdown)
   }
   return newContent
 }
@@ -111,6 +111,12 @@ module.exports = {
     published && !adminUnpublished,
 
   content: async (comment, args, context) => {
+    if (Array.isArray(comment.content)) {
+      // @TOOD: rewire textForComment
+      return comment.content // @TODO: remove, once comments.content becomes a jsonb type
+    }
+
+    // mdast version
     const strip = args && args.strip !== null ? args.strip : false
     const text = await textForComment(comment, strip, context)
     if (!text) {
@@ -119,7 +125,14 @@ module.exports = {
     return remark.parse(text)
   },
 
-  text: (comment, args, context) => textForComment(comment, false, context),
+  text: (comment, args, context) => {
+    if (Array.isArray(comment.content)) {
+      // @TOOD: rewire textForComment
+      return '(@TODO: placeholder for text version)'
+    }
+
+    return textForComment(comment, false, context)
+  },
 
   featuredText: ({
     published,
@@ -132,6 +145,12 @@ module.exports = {
       : null,
 
   preview: async (comment, { length = 500 }, context) => {
+    if (Array.isArray(comment.content) && comment.content.length) {
+      // @TOOD: rewire textForComment, mdastToHumanString(... length)
+      return { string: '(@TODO: placeholder for preview version)', more: 0 }
+    }
+
+    // mdast version
     const text = await textForComment(comment, false, context)
     if (!text) {
       return null
@@ -143,7 +162,7 @@ module.exports = {
 
   contentLength: ({ content, embedUrl, userId }, args, { user: me }) =>
     me && me.id === userId
-      ? content.length - (embedUrl ? embedUrl.length : 0)
+      ? 1234 // @TODO: rewire counting; content.length - (embedUrl ? embedUrl.length : 0)
       : null,
 
   upVotes: (comment) => {

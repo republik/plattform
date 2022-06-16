@@ -1,4 +1,9 @@
 const stripUrlFromText = (url, content) => {
+  if (Array.isArray(content)) {
+    console.warn('stripUrlFromText can not handle Slatetree yet')
+    return content
+  }
+
   if (!url || !content) {
     return content
   }
