@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import Textarea from 'react-textarea-autosize'
 import scrollIntoView from 'scroll-into-view'
 import { mBreakPoint } from '../../../theme/mediaQueries'
 import { serifRegular16, sansSerifRegular12 } from '../../Typography/styles'
@@ -11,7 +10,6 @@ import { convertStyleToRem } from '../../Typography/utils'
 import { useColorContext } from '../../Colors/ColorContext'
 import { deleteDraft, readDraft, writeDraft } from './CommentDraftHelper'
 import { DisplayAuthorPropType } from '../Internal/PropTypes'
-import { CommentUI } from '../Tree/CommentNode'
 import { fontStyles } from '../../Typography'
 import Editor from '../../Editor/components/editor'
 import commentWebSchema from '../../Editor/schema/comment'
@@ -133,10 +131,7 @@ export const CommentComposer = ({
    */
   const root = useRef()
   const [textarea, textareaRef] = useState(null)
-  const [hints, setHints] = useState([])
   const textRef = useRef()
-
-  const [isPreviewing, setIsPreviewing] = useState(false)
 
   /*
    * Synchronize the text with localStorage, and restore it from there if not otherwise
@@ -165,9 +160,6 @@ export const CommentComposer = ({
     }
   })
 
-  // TODO: calculate text length based on slate-tree
-  const textLength = 0
-
   const [selectedTagValue, setSelectedTagValue] = useState()
   // we adapt to the initialTagValue as long as no tag has been selected
   const tagValue = selectedTagValue || initialTagValue
@@ -189,15 +181,6 @@ export const CommentComposer = ({
   }, [textarea, autoFocus])
 
   textRef.current = text
-
-  const onChangeText = (ev) => {
-    const nextText = ev.target.value
-    setText(nextText)
-    setHints(hintValidators.map((fn) => fn(nextText)).filter(Boolean))
-    if (!isEditing) {
-      writeDraft(discussionId, parentId, ev.target.value)
-    }
-  }
 
   /*
    * We keep track of the submission process, to prevent the user from
@@ -256,58 +239,57 @@ export const CommentComposer = ({
   return (
     <div ref={root} {...styles.root}>
       <div {...styles.background} {...colorScheme.set('background', 'hover')}>
-        {!isPreviewing ? (
-          <>
-            {!hideHeader && (
-              <div
-                {...styles.withBorderBottom}
-                {...colorScheme.set('borderColor', 'default')}
-              >
-                <Header
-                  t={t}
-                  displayAuthor={displayAuthor}
-                  onClick={onOpenPreferences}
-                />
-              </div>
-            )}
-            {/* Tags are only available in the root composer! */}
-            {isRoot && tags && (
-              <div
-                {...styles.withBorderBottom}
-                {...colorScheme.set('borderColor', 'default')}
-              >
-                <Tags
-                  tags={tags}
-                  onChange={setSelectedTagValue}
-                  value={tagValue}
-                />
-              </div>
-            )}
-            <div {...styles.textArea}>
-              <Editor
-                value={text}
-                setValue={setText}
-                structure={[
-                  {
-                    type: [
-                      'paragraph',
-                      'headline',
-                      'ul',
-                      'ol',
-                      'blockQuote',
-                      'blockCode',
-                    ],
-                    repeat: true,
-                  },
-                ]}
-                config={{
-                  maxSigns: 3000,
-                  debug: true,
-                  schema: commentWebSchema,
-                }}
+        <>
+          {!hideHeader && (
+            <div
+              {...styles.withBorderBottom}
+              {...colorScheme.set('borderColor', 'default')}
+            >
+              <Header
+                t={t}
+                displayAuthor={displayAuthor}
+                onClick={onOpenPreferences}
               />
             </div>
-            {/*<>
+          )}
+          {/* Tags are only available in the root composer! */}
+          {isRoot && tags && (
+            <div
+              {...styles.withBorderBottom}
+              {...colorScheme.set('borderColor', 'default')}
+            >
+              <Tags
+                tags={tags}
+                onChange={setSelectedTagValue}
+                value={tagValue}
+              />
+            </div>
+          )}
+          <div {...styles.textArea}>
+            <Editor
+              value={text}
+              setValue={setText}
+              structure={[
+                {
+                  type: [
+                    'paragraph',
+                    'headline',
+                    'ul',
+                    'ol',
+                    'blockQuote',
+                    'blockCode',
+                  ],
+                  repeat: true,
+                },
+              ]}
+              config={{
+                maxSigns: 3000,
+                debug: true,
+                schema: commentWebSchema,
+              }}
+            />
+          </div>
+          {/*<>
               <Textarea
                 inputRef={textareaRef}
                 {...styles.textArea}
@@ -328,62 +310,18 @@ export const CommentComposer = ({
                   </div>
                 ))}
             </>*/}
-            {maxLength && (
-              <MaxLengthIndicator maxLength={maxLength} length={textLength} />
-            )}
-          </>
-        ) : (
-          <div {...styles.previewWrapper}>
-            <span {...styles.previewLabel}>
-              {t('styleguide/CommentComposer/preview')}
-            </span>
-            <CommentUI
-              t={t}
-              comment={{
-                content: text,
-                contentLength: textLength,
-                createdAt: new Date(Date.now()),
-                updatedAt: new Date(Date.now()),
-                tags: tagValue ? [tagValue] : undefined,
-                id: 'preview-comment',
-                displayAuthor,
-              }}
-              isExpanded
-              isPreview
-            />
-          </div>
-        )}
+        </>
       </div>
-
       <Actions
         t={t}
         onClose={() => {
-          if (isPreviewing) {
-            setIsPreviewing(false)
-          } else {
-            deleteDraft(discussionId, parentId)
-            onClose()
-            // Delete the draft of the field
-          }
+          deleteDraft(discussionId, parentId)
+          onClose()
+          // Delete the draft of the field
         }}
-        onCloseLabel={
-          isPreviewing
-            ? t('styleguide/CommentComposer/exitPreview')
-            : onCloseLabel
-        }
-        onSubmit={
-          loading || (maxLength && textLength > maxLength)
-            ? undefined
-            : submitHandler
-        }
+        onCloseLabel={onCloseLabel}
+        onSubmit={loading ? undefined : submitHandler}
         onSubmitLabel={onSubmitLabel}
-        onPreview={
-          onPreviewComment && !isPreviewing
-            ? () => {
-                setIsPreviewing(true)
-              }
-            : undefined
-        }
         secondaryActions={secondaryActions}
       />
       {error && <Error>{error}</Error>}
@@ -392,23 +330,3 @@ export const CommentComposer = ({
 }
 
 CommentComposer.propTypes = propTypes
-
-const MaxLengthIndicator = ({ maxLength, length }) => {
-  const [colorScheme] = useColorContext()
-  const remaining = maxLength - length
-  if (remaining > maxLength * 0.33) {
-    return null
-  }
-
-  return (
-    <div
-      {...styles.maxLengthIndicator}
-      {...colorScheme.set(
-        'color',
-        remaining < 0 ? 'error' : remaining < 21 ? 'text' : 'textSoft',
-      )}
-    >
-      {remaining}
-    </div>
-  )
-}

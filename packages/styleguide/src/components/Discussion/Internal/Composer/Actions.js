@@ -55,7 +55,6 @@ export const Actions = ({
   onCloseLabel,
   onSubmit,
   onSubmitLabel,
-  onPreview,
   secondaryActions,
 }) => {
   const [colorScheme] = useColorContext()
@@ -97,15 +96,6 @@ export const Actions = ({
         >
           {onCloseLabel || t('styleguide/CommentComposer/cancel')}
         </button>
-        {onPreview && (
-          <button
-            {...styles.secondaryButton}
-            {...styleRules.closeButton}
-            onClick={onPreview}
-          >
-            {t('styleguide/CommentComposer/preview')}
-          </button>
-        )}
         <button
           {...styles.primaryButton}
           {...styleRules.submitButton}
@@ -125,7 +115,5 @@ Actions.propTypes = {
   onCloseLabel: PropTypes.string,
   onSubmit: PropTypes.func,
   onSubmitLabel: PropTypes.string,
-  onPreview: PropTypes.func,
-  onPreviewLabel: PropTypes.string,
   secondaryActions: PropTypes.node,
 }
