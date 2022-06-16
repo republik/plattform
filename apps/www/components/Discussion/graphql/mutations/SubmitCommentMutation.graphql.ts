@@ -33,7 +33,7 @@ export const SUBMIT_COMMENT_MUTATION = gql`
     $discussionId: ID!
     $parentId: ID
     $id: ID!
-    $content: String!
+    $content: JSON!
     $tags: [String!]!
   ) {
     submitComment(

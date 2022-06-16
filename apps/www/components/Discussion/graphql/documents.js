@@ -86,7 +86,7 @@ export const UP_VOTE_COMMENT_ACTION = gql`
 `
 
 export const EDIT_COMMENT_MUTATION = gql`
-  mutation editComment($commentId: ID!, $content: String!, $tags: [String!]) {
+  mutation editComment($commentId: ID!, $content: JSON!, $tags: [String!]) {
     editComment(id: $commentId, content: $content, tags: $tags) {
       ...Comment
     }
