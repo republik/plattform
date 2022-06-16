@@ -7,6 +7,8 @@ import {
   useColorContext,
 } from '@project-r/styleguide'
 import Link from 'next/link'
+import { useTranslation } from '../../../lib/withT'
+import { AccessibilityStyles } from '../../../lib/accessibility/styles'
 
 const styles = {
   link: css({
@@ -59,6 +61,7 @@ export const NavA = forwardRef(
     ref,
   ) => {
     const [colorScheme] = useColorContext()
+    const { t } = useTranslation()
     const hoverRule = useMemo(
       () =>
         formatColor &&
@@ -90,9 +93,13 @@ export const NavA = forwardRef(
         style={style}
         className={isActive ? 'is-active' : undefined}
         title={title}
+        aria-current={isActive ? 'page' : undefined}
         {...props}
       >
         {children}
+        {isActive && (
+          <span {...AccessibilityStyles.srOnly}>{t('nav/active-page')}</span>
+        )}
       </a>
     )
   },

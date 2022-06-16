@@ -33,6 +33,10 @@
       "value": "Mitglied werden"
     },
     {
+      "key": "nav/active-page",
+      "value": "(aktive Seite)"
+    },
+    {
       "key": "navbar/front",
       "value": "Magazin"
     },
