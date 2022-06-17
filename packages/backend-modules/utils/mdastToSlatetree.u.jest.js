@@ -5,7 +5,7 @@ const cases = [
   {
     name: '',
     mdast: {},
-    slatetree: {},
+    slatetree: [],
   },
   */
   {
