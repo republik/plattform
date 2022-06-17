@@ -1,4 +1,4 @@
-const UUT = require('./mdastToSlate/mdastToSlatetree')
+const UUT = require('./slate/mdastToSlatetree')
 
 const cases = [
   /*
