@@ -21,7 +21,7 @@ const propTypes = {
   onClose: PropTypes.func,
   commentId: PropTypes.string,
   parentId: PropTypes.string,
-  initialText: PropTypes.string,
+  initialContent: PropTypes.array,
   initialTagValue: PropTypes.string,
   initialActiveState: PropTypes.bool,
   placeholder: PropTypes.string,
@@ -34,7 +34,7 @@ const DiscussionComposer = ({
   // Props below are used for editing a comment
   commentId,
   parentId,
-  initialText,
+  initialContent,
   initialTagValue,
   initialActiveState,
   placeholder,
@@ -68,7 +68,7 @@ const DiscussionComposer = ({
     )
   }, [preferences])
 
-  const [active, setActive] = useState(!!(initialText || initialActiveState))
+  const [active, setActive] = useState(!!(initialContent || initialActiveState))
   useEffect(() => {
     const draft = readDiscussionCommentDraft(discussionId, parentId)
     if (draft) {
@@ -127,7 +127,7 @@ const DiscussionComposer = ({
           commentId={commentId}
           onSubmit={({ text, tags = [] }) => handleSubmit(text, tags)}
           onSubmitLabel={
-            initialText
+            initialContent?.length
               ? t('styleguide/comment/edit/submit')
               : parentId
               ? t('styleguide/CommentComposer/answer')
@@ -152,7 +152,7 @@ const DiscussionComposer = ({
           placeholder={placeholder}
           maxLength={rules?.maxLength}
           tags={tags}
-          initialText={initialText}
+          initialContent={initialContent}
           initialTagValue={
             // In case a reply is being composed, no tag-values should be passed
             !parentId && tags?.length > 0
