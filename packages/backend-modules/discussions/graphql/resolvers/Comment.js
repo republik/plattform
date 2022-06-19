@@ -38,10 +38,9 @@ const embedForComment = async (
  * Return processed content by either
  * - suppressing it, user should not see it
  * - clip names
- * - strip embed URL from nodes
  *
  */
-const processContent = async (comment, strip = false, context) => {
+const processContent = async (comment, context) => {
   const {
     userId,
     content,
@@ -98,7 +97,7 @@ module.exports = {
     processContent(comment, !!args.strip, context),
 
   text: async (comment, args, context) => {
-    const content = await processContent(comment, false, context)
+    const content = await processContent(comment, context)
     return slateToString(content, '\n')
   },
 
@@ -113,7 +112,7 @@ module.exports = {
       : null,
 
   preview: async (comment, { length = 500 }, context) => {
-    const content = await processContent(comment, false, context)
+    const content = await processContent(comment, context)
     return slateToTrimmedString(content, length)
   },
 
@@ -127,7 +126,7 @@ module.exports = {
       return null
     }
 
-    const content = await processContent(comment, false, context)
+    const content = await processContent(comment, context)
     return slateToString(content).length - (embedUrl?.length || 0)
   },
 
