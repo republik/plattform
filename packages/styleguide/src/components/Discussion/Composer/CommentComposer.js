@@ -82,7 +82,7 @@ const propTypes = {
   maxLength: PropTypes.number,
   tags: PropTypes.arrayOf(PropTypes.string),
 
-  initialText: PropTypes.string,
+  initialContent: PropTypes.arrayOf(PropTypes.object),
   initialTagValue: PropTypes.string,
 
   isBoard: PropTypes.bool,
@@ -114,7 +114,7 @@ export const CommentComposer = ({
   tags,
 
   // Initial values
-  initialText,
+  initialContent,
   initialTagValue,
 
   isBoard,
@@ -142,9 +142,9 @@ export const CommentComposer = ({
    */
   const isEditing = !!commentId
   const [text, setText] = useState(() => {
-    if (initialText) {
+    if (initialContent) {
       // TODO: ensure only valid slate-tree are accepted
-      return initialText
+      return initialContent
     }
     const draft = readDraft(discussionId, parentId)
     if (!isEditing && !!draft) {

@@ -13,10 +13,17 @@ import { Label } from '../../Typography'
 export { CommentComposerPlaceholder } from './CommentComposerPlaceholder'
 
 const t = createFormatter(require('../../../lib/translations.json').data)
-const someText = 'Das Tückische beim Crowdfunding ist, dass der Ansturm'
+const someContent = [
+  {
+    type: 'paragraph',
+    children: [
+      { text: 'Das Tückische beim Crowdfunding ist, dass der Ansturm' },
+    ],
+  },
+]
 
 export const CommentComposerPlayground = () => {
-  const [{ counter, mode, initialText, tagRequired, maxLength }, dispatch] =
+  const [{ counter, mode, initialContent, tagRequired, maxLength }, dispatch] =
     React.useReducer(
       (state, action) => {
         if ('start' in action) {
@@ -24,7 +31,7 @@ export const CommentComposerPlayground = () => {
             ...state,
             counter: state.counter + 1,
             mode: 'composer',
-            initialText: action.start.initialText,
+            initialContent: action.start.initialContent,
             tagRequired: action.start.tagRequired,
             maxLength: action.start.maxLength,
           }
@@ -45,7 +52,7 @@ export const CommentComposerPlayground = () => {
       {
         counter: 1,
         mode: 'composer',
-        initialText: someText,
+        initialContent: someContent,
         tagValue: undefined,
         tagRequired: true,
       },
@@ -92,7 +99,7 @@ export const CommentComposerPlayground = () => {
             isRoot
             key={counter}
             t={t}
-            initialText={initialText}
+            initialContent={initialContent}
             onClose={() => {
               dispatch({ cancel: {} })
             }}
@@ -127,7 +134,7 @@ export const CommentComposerPlayground = () => {
                 onClick={() => {
                   dispatch({
                     start: {
-                      initialText: undefined,
+                      initialContent: undefined,
                       tagValue: undefined,
                       tagRequired: false,
                       maxLength: undefined,
@@ -144,7 +151,7 @@ export const CommentComposerPlayground = () => {
                 onClick={() => {
                   dispatch({
                     start: {
-                      initialText: someText,
+                      initialContent: someContent,
                       tagValue: 'Wunsch',
                       tagRequired: true,
                       maxLength: 60,
