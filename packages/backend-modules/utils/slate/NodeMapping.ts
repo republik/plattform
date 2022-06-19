@@ -18,6 +18,7 @@ export type SlateNode =
       type?: string
       children?: SlateNode[]
       text?: string
+      value?: boolean
       italic?: boolean
     }
   | {
