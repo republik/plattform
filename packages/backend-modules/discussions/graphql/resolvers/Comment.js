@@ -1,19 +1,15 @@
 const crypto = require('crypto')
 
 const { Roles } = require('@orbiting/backend-modules-auth')
-const {
-  mdastCollapseLink,
-  mdastToString,
-  remark,
-} = require('@orbiting/backend-modules-utils')
+const { slateToString } = require('@orbiting/backend-modules-utils')
 
 const {
   portrait: getPortrait,
   name: getName,
   slug: getSlug,
 } = require('@orbiting/backend-modules-republik/graphql/resolvers/User')
-const { clipNamesInText } = require('../../lib/nameClipper')
-const { stripUrlFromText } = require('../../lib/urlStripper')
+// const { clipNamesInText } = require('../../lib/nameClipper')
+// const { stripUrlFromText } = require('../../lib/urlStripper')
 const { getEmbedByUrl } = require('@orbiting/backend-modules-embeds')
 
 const { DISPLAY_AUTHOR_SECRET, ASSETS_SERVER_BASE_URL } = process.env
@@ -38,69 +34,57 @@ const embedForComment = async (
   return null
 }
 
-const textForComment = async (comment, strip = false, context) => {
+/**
+ * Return processed content by either
+ * - suppressing it, user should not see it
+ * - clip names
+ * - strip embed URL from nodes
+ *
+ */
+const processContent = async (comment, strip = false, context) => {
   const {
     userId,
-    content__markdown,
+    content,
     published,
     adminUnpublished,
-    discussionId,
-    embedUrl,
+    // discussionId,
+    // embedUrl,
   } = comment
   const { user: me } = context
 
   const isPublished = !!(published && !adminUnpublished)
   const isMine = !!(me && userId && userId === me.id)
   if (!isMine && !isPublished) {
-    return null
+    return []
   }
 
-  let newContent = content__markdown
-  if (!isMine && !Roles.userIsInRoles(me, ['member'])) {
-    const namesToClip =
-      await context.loaders.Discussion.byIdCommenterNamesToClip.load(
-        discussionId,
-      )
-    newContent = clipNamesInText(namesToClip, content__markdown)
-  }
-  if (strip && !!(await embedForComment(comment, context))) {
-    newContent = stripUrlFromText(embedUrl, content__markdown)
-  }
-  return newContent
+  // @TODO: clipNamesInText
+  // @TODO: stripUrlFromText (embedUrl)
+
+  return content
 }
 
 /**
- * @typedef {Object} Preview
- * @property {String}  string Preview string
- * @property {Boolean} more   If transformUser string was shortened
- * @property {Boolean} done   If true, char limit (<length>) has was reached
- */
-
-/**
- * Stringifies an mdast tree into a single, plain string in a human readable
- * manner.
+ * Stringify Slate tree and trim it to a length.
  *
- * @param  {Object}  node         mdast Object
- * @param  {Number}  [length=500] Maximum chars string should contain
- * @return {Preview}
  */
-const mdastToHumanString = (node, length = 500) => {
+const slateToTrimmedString = (children, length = 500) => {
   let string = ''
-  const parts = mdastToString(mdastCollapseLink(node))
-    .split(/\s+/)
-    .filter(Boolean)
+  const tokens = slateToString(children).split(/\s+/).filter(Boolean)
+
+  // TODO: mdastCollapseLink (for Slate)
 
   do {
-    const part = parts.shift()
+    const token = tokens.shift()
 
-    if (!part || string.length + part.length > length) {
+    if (!token || string.length + token.length > length) {
       break
     }
 
-    string += `${part} `
-  } while (string.length <= length && parts.length > 0)
+    string += `${token} `
+  } while (string.length <= length && tokens.length > 0)
 
-  return { string: string.trim(), more: parts.length > 0 }
+  return { string: string.trim(), more: tokens.length > 0 }
 }
 
 module.exports = {
@@ -110,28 +94,12 @@ module.exports = {
   published: ({ published, adminUnpublished }) =>
     published && !adminUnpublished,
 
-  content: async (comment, args, context) => {
-    if (Array.isArray(comment.content)) {
-      // @TOOD: rewire textForComment
-      return comment.content // @TODO: remove, once comments.content becomes a jsonb type
-    }
+  content: (comment, args, context) =>
+    processContent(comment, !!args.strip, context),
 
-    // mdast version
-    const strip = args && args.strip !== null ? args.strip : false
-    const text = await textForComment(comment, strip, context)
-    if (!text) {
-      return text
-    }
-    return remark.parse(text)
-  },
-
-  text: (comment, args, context) => {
-    if (Array.isArray(comment.content)) {
-      // @TOOD: rewire textForComment
-      return '(@TODO: placeholder for text version)'
-    }
-
-    return textForComment(comment, false, context)
+  text: async (comment, args, context) => {
+    const content = await processContent(comment, false, context)
+    return slateToString(content, '\n')
   },
 
   featuredText: ({
@@ -145,25 +113,23 @@ module.exports = {
       : null,
 
   preview: async (comment, { length = 500 }, context) => {
-    if (Array.isArray(comment.content) && comment.content.length) {
-      // @TOOD: rewire textForComment, mdastToHumanString(... length)
-      return { string: '(@TODO: placeholder for preview version)', more: 0 }
-    }
-
-    // mdast version
-    const text = await textForComment(comment, false, context)
-    if (!text) {
-      return null
-    }
-    return mdastToHumanString(remark.parse(text), length)
+    const content = await processContent(comment, false, context)
+    return slateToTrimmedString(content, length)
   },
 
-  embed: async (comment, args, context) => embedForComment(comment, context),
+  embed: (comment, args, context) => embedForComment(comment, context),
 
-  contentLength: ({ content, embedUrl, userId }, args, { user: me }) =>
-    me && me.id === userId
-      ? 1234 // @TODO: rewire counting; content.length - (embedUrl ? embedUrl.length : 0)
-      : null,
+  contentLength: async (comment, args, context) => {
+    const { embedUrl, userId } = comment
+    const { user: me } = context
+
+    if (me?.id !== userId) {
+      return null
+    }
+
+    const content = await processContent(comment, false, context)
+    return slateToString(content).length - (embedUrl?.length || 0)
+  },
 
   upVotes: (comment) => {
     const { published, adminUnpublished, upVotes } = comment
