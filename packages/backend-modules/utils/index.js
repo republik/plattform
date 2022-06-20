@@ -6,6 +6,7 @@ module.exports = {
   mdastCollapseLink: require('./mdastCollapseLink'),
   mdastToString: require('./mdastToString'),
   slateToString: require('./slate/toString'),
+  slateVisit: require('./slate/visit'),
   hasUserActiveMembership: require('./hasUserActiveMembership'),
   fetchWithTimeout: require('./fetchWithTimeout'),
   getUrls: require('./getUrls'),
