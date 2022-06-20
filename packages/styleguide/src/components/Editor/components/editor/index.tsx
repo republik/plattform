@@ -142,7 +142,7 @@ const SlateEditor: React.FC<{
         >
           <FormOverlay />
           <Toolbar containerRef={containerRef} mode='sticky' />
-          <LayoutContainer config={config}>
+          <LayoutContainer schema={config.schema}>
             <Editable
               data-testid='slate-content-editable'
               renderElement={renderElement}
