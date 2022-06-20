@@ -16,7 +16,11 @@ import {
 import { ReactEditor } from 'slate-react'
 import { config as elConfig } from '../../../config/elements'
 import { isAllowedType, isCorrect } from './structure'
-import { configKeys as mKeys, MARKS_ALLOW_LIST } from '../../../config/marks'
+import {
+  configKeys as mKeys,
+  MARKS_ALLOW_LIST,
+  config as mConfig,
+} from '../../../config/marks'
 import { cleanupNode, overlaps } from './tree'
 
 const PSEUDO_EMPTY_STRING = '\u2060'
@@ -72,6 +76,17 @@ export const isMarkActive = (
   return !!marks && !!marks[mKey]
 }
 
+const removeIncompatible = (
+  editor: CustomEditor,
+  mKey: CustomMarksType,
+): void => {
+  const config = mConfig[mKey]
+  if (!config.remove?.length) return
+  config.remove.forEach((excludedKey) => {
+    Editor.removeMark(editor, excludedKey)
+  })
+}
+
 export const toggleMark = (
   editor: CustomEditor,
   mKey: CustomMarksType,
@@ -88,6 +103,7 @@ export const toggleMark = (
     Editor.removeMark(editor, mKey)
   } else {
     Editor.addMark(editor, mKey, true)
+    removeIncompatible(editor, mKey)
   }
 }
 

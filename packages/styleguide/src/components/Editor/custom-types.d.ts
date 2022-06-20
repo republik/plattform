@@ -183,11 +183,12 @@ type SchemaConfig = {
 
 export interface MarkConfigI {
   component: MarkType
+  remove?: MarkType[]
   button?: ButtonI
 }
 
 export type MarksConfig = {
-  [K in CustomMarksType]: NodeConfigI
+  [K in CustomMarksType]: MarkConfigI
 }
 
 export type ElementFormProps<E> = {
