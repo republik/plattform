@@ -3,6 +3,7 @@ import { useLinkInfoContext } from './LinkInfoContext'
 import IconButton from '../IconButton'
 import { CloseIcon } from '../Icons'
 import RawHtml from '../RawHtml'
+import { A } from '../Typography'
 
 const LinkInfo = ({ link }) => {
   const [expandedLinks, setExpandedLinks] = useLinkInfoContext()
@@ -15,7 +16,9 @@ const LinkInfo = ({ link }) => {
     <div>
       <RawHtml dangerouslySetInnerHTML={{ __html: link.description }} />
       <br />
-      {link.href}
+      <A href={link.href} target='_blank'>
+        {link.href}
+      </A>
       <IconButton Icon={CloseIcon} onClick={closeInfo} />
     </div>
   )

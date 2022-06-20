@@ -23,10 +23,20 @@ const ExpandableLink = ({ children, attributes, title, description, href }) => {
       setExpandedIdx(undefined)
       setExpandedLinks(expandedLinks.filter((link) => link.href !== href))
     } else {
-      setExpandedIdx(expandedLinks.length)
-      setExpandedLinks(expandedLinks.concat({ title, description, href }))
+      const idx = expandedLinks.length
+      setExpandedIdx(idx)
+      setExpandedLinks(
+        expandedLinks.concat({ title, description, href, expandedIdx: idx }),
+      )
     }
   }
+
+  useEffect(() => {
+    if (!isOpen) return
+    if (!expandedLinks.find((link) => link.expandedIdx === expandedIdx)) {
+      toggleLinkInfoBox()
+    }
+  }, [expandedLinks])
 
   useEffect(() => {
     if (!isOpen) return
