@@ -8,8 +8,7 @@ const {
   name: getName,
   slug: getSlug,
 } = require('@orbiting/backend-modules-republik/graphql/resolvers/User')
-// const { clipNamesInText } = require('../../lib/nameClipper')
-// const { stripUrlFromText } = require('../../lib/urlStripper')
+const { clipNames } = require('../../lib/nameClipper')
 const { getEmbedByUrl } = require('@orbiting/backend-modules-embeds')
 
 const { DISPLAY_AUTHOR_SECRET, ASSETS_SERVER_BASE_URL } = process.env
@@ -41,14 +40,7 @@ const embedForComment = async (
  *
  */
 const processContent = async (comment, context) => {
-  const {
-    userId,
-    content,
-    published,
-    adminUnpublished,
-    // discussionId,
-    // embedUrl,
-  } = comment
+  const { userId, content, published, adminUnpublished, discussionId } = comment
   const { user: me } = context
 
   const isPublished = !!(published && !adminUnpublished)
@@ -57,10 +49,19 @@ const processContent = async (comment, context) => {
     return []
   }
 
-  // @TODO: clipNamesInText
-  // @TODO: stripUrlFromText (embedUrl)
+  if (isMine || Roles.userIsInRoles(me, ['member'])) {
+    return content
+  }
 
-  return content
+  const names = await context.loaders.Discussion.byIdCommenterNamesToClip.load(
+    discussionId,
+  )
+
+  if (!names.length) {
+    return content
+  }
+
+  return clipNames(names, content)
 }
 
 /**
@@ -93,8 +94,7 @@ module.exports = {
   published: ({ published, adminUnpublished }) =>
     published && !adminUnpublished,
 
-  content: (comment, args, context) =>
-    processContent(comment, !!args.strip, context),
+  content: (comment, args, context) => processContent(comment, context),
 
   text: async (comment, args, context) => {
     const content = await processContent(comment, context)
