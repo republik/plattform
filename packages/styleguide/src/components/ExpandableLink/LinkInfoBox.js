@@ -2,6 +2,7 @@ import React from 'react'
 import { useLinkInfoContext } from './LinkInfoContext'
 import IconButton from '../IconButton'
 import { CloseIcon } from '../Icons'
+import RawHtml from '../RawHtml'
 
 const LinkInfo = ({ link }) => {
   const [expandedLinks, setExpandedLinks] = useLinkInfoContext()
@@ -9,9 +10,10 @@ const LinkInfo = ({ link }) => {
   const closeInfo = () => {
     setExpandedLinks(expandedLinks.filter((l) => l.href !== link.href))
   }
+
   return (
     <div>
-      {link.description}
+      <RawHtml dangerouslySetInnerHTML={{ __html: link.description }} />
       <br />
       {link.href}
       <IconButton Icon={CloseIcon} onClick={closeInfo} />

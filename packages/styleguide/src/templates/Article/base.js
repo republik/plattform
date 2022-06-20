@@ -43,9 +43,9 @@ const createBase = ({ metaBody, metaHeadlines }) => {
   const link = {
     matchMdast: matchType('link'),
     props: (node, index, parent, { ancestors }) => {
-      console.log({ ancestors })
+      // console.log({ ancestors })
       const allowsExpandable = ancestors.find(matchParagraph)
-      console.log({ allowsExpandable })
+      // console.log({ allowsExpandable })
       const [title, description] = (node.title || '').split('%%')
       return {
         title,

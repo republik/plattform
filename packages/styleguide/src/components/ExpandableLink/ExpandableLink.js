@@ -14,20 +14,28 @@ const link = css({
 const ExpandableLink = ({ children, attributes, title, description, href }) => {
   const [colorScheme] = useColorContext()
   const [expandedLinks, setExpandedLinks] = useLinkInfoContext()
-  const [isOpen, setOpen] = useState(false)
+  const [expandedIdx, setExpandedIdx] = useState(undefined)
 
-  useEffect(() => {
-    setOpen(expandedLinks.find((link) => link.href === href))
-  }, [expandedLinks])
+  const isOpen = expandedIdx !== undefined
 
   const toggleLinkInfoBox = () => {
     if (isOpen) {
+      setExpandedIdx(undefined)
       setExpandedLinks(expandedLinks.filter((link) => link.href !== href))
     } else {
+      setExpandedIdx(expandedLinks.length)
       setExpandedLinks(expandedLinks.concat({ title, description, href }))
     }
-    setOpen(!isOpen)
   }
+
+  useEffect(() => {
+    if (!isOpen) return
+    setExpandedLinks(
+      expandedLinks.map((link, i) =>
+        i === expandedIdx ? { title, description, href } : link,
+      ),
+    )
+  }, [title, description, href])
 
   return (
     <a
