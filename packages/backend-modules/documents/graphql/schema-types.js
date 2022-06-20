@@ -54,6 +54,12 @@ enum PaynoteMode {
   noPaynote
 } 
 
+type Contributor {
+  name: String!
+  kind: String
+  user: User
+}
+
 type Meta {
   title: String
   shortTitle: String
@@ -93,6 +99,9 @@ type Meta {
   shareBackgroundImageInverted: String
 
   credits: JSON
+  
+  authors: [User!]! @deprecated(reason: "use \`Meta.contributors\` instead")
+  contributors: [Contributor!]!
   audioSource: AudioSource
   podcast: Podcast
 

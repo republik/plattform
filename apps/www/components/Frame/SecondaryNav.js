@@ -65,6 +65,7 @@ export const SecondaryNav = ({
   const [colorScheme] = useColorContext()
   const router = useRouter()
   const active = router.asPath
+
   return (
     <>
       {hasOverviewNav ? (
@@ -81,7 +82,12 @@ export const SecondaryNav = ({
             borderTopStyle: 'solid',
           }}
         >
-          <NavLink href='/' active={active} minifeed title={t('navbar/front')}>
+          <NavLink
+            href='/'
+            active={active === '/front' ? '/' : active}
+            minifeed
+            title={t('navbar/front')}
+          >
             {t('navbar/front')}
           </NavLink>
           <NavLink

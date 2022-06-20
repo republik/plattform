@@ -3,6 +3,9 @@ jest.mock('@orbiting/backend-modules-auth', () => ({
     userIsInRoles: jest.fn(),
   },
 }))
+jest.mock('./restrictions', () => ({
+  hasFullDocumentAccess: jest.fn(),
+}))
 
 const UUT = require('./process')
 
@@ -316,8 +319,8 @@ const getMdast = () => ({
 describe('process', () => {
   describe('processIfHasAccess', () => {
     it('keeps non-member nodes if user has no access', () => {
-      const { Roles } = require('@orbiting/backend-modules-auth')
-      Roles.userIsInRoles.mockReturnValue(false)
+      const { hasFullDocumentAccess } = require('./restrictions')
+      hasFullDocumentAccess.mockReturnValue(false)
 
       const mdast = getMdast()
 
@@ -326,8 +329,8 @@ describe('process', () => {
     })
 
     it('keeps member nodes if user has access', () => {
-      const { Roles } = require('@orbiting/backend-modules-auth')
-      Roles.userIsInRoles.mockReturnValue(true)
+      const { hasFullDocumentAccess } = require('./restrictions')
+      hasFullDocumentAccess.mockReturnValue(true)
 
       const mdast = getMdast()
       UUT.processIfHasAccess(mdast)

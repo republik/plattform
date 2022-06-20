@@ -29,38 +29,59 @@ module.exports = withTM(
       ignoreDuringBuilds: true,
     },
     async rewrites() {
-      return [
-        {
-          source: '/~:slug',
-          destination: '/~/:slug',
-        },
-        // Rewrite for crawlers when a comment is focused inside a debate on the article-site
-        {
-          source: '/:path*',
-          destination: '/_ssr/:path*',
-          has: [
-            { type: 'query', key: 'focus' },
-            {
-              type: 'header',
-              key: 'User-Agent',
-              value: '.*(Googlebot|facebookexternalhit|Twitterbot).*',
-            },
-          ],
-        },
-      ]
+      return {
+        beforeFiles: [
+          // /front is only accessible via _middleware rewrite
+          {
+            source: '/front',
+            destination: '/404',
+          },
+          // _ssr routes are only accessible via rewrites
+          {
+            source: '/_ssr/:path*',
+            destination: '/404',
+          },
+        ],
+        afterFiles: [
+          // impossible route via file system path
+          {
+            source: '/~:slug',
+            destination: '/~/:slug',
+          },
+          // Avoid SSG for extract urls used for image rendering
+          {
+            source: '/:path*',
+            destination: '/_ssr/:path*',
+            has: [{ type: 'query', key: 'extract' }],
+          },
+          // Rewrite for crawlers when a comment is focused inside a debate on the article-site
+          {
+            source: '/:path*',
+            destination: '/_ssr/:path*',
+            has: [
+              { type: 'query', key: 'focus' },
+              {
+                type: 'header',
+                key: 'User-Agent',
+                value: '.*(Googlebot|facebookexternalhit|Twitterbot).*',
+              },
+            ],
+          },
+          {
+            source: '/pgp/:userSlug',
+            destination: '/api/pgp/:userSlug',
+          },
+        ],
+      }
     },
     async redirects() {
       return [
-        {
-          source: '/_ssr/:path*',
-          destination: '/:path*',
-          permanent: true,
-        },
         {
           source: '/~/:slug',
           destination: '/~:slug',
           permanent: true,
         },
+        // keep query when redirecting
         {
           source: '/pledge',
           destination: '/angebote',
@@ -71,7 +92,6 @@ module.exports = withTM(
           destination: '/mitteilung',
           permanent: true,
         },
-
         {
           source: '/merci',
           destination: '/konto',

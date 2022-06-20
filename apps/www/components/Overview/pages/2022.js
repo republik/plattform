@@ -199,6 +199,80 @@ const text = {
       .
     </>
   ),
+  April: (p) => (
+    <>
+      Zu Besuch bei Feministinnen in{' '}
+      <Highlight {...p} series='republik/article-der-feministische-balkan'>
+        Serbien, in Kosovo und in Albanien
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['a8rI4buQ0']}>
+        Wie die EU die Marktmacht von Tech-Unternehmen eindämmen will
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['v9uiJT90X']}>
+        wie Hilfsgüter zu den Menschen gelangen, die sie benötigen
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['zLDaQ9Zbe']}>
+        Warum private Unternehmen Russland boykottieren
+      </Highlight>{' '}
+      und die Frage:{' '}
+      <Highlight {...p} ids={['txvr-JPV_']}>
+        Was können Sanktionen bewirken
+      </Highlight>
+      ?{' '}
+      <Highlight {...p} ids={['pmozFybp8']}>
+        Eine Umweltkatastrophe
+      </Highlight>
+      , von der viele noch nie gehört haben, und{' '}
+      <Highlight {...p} ids={['L74LK4XpF']}>
+        eine Künstlerin
+      </Highlight>
+      , die ihre Objekte zertrümmert. Und zwei Einsichten:{' '}
+      <Highlight {...p} ids={['reeHuFtEi']}>
+        «Eigenverantwortung» ist gnadenlos
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['C-x0z6Xml']}>
+        der Kampf der Systeme ist zurück
+      </Highlight>
+      .
+    </>
+  ),
+  Mai: (p) => (
+    <>
+      <Highlight {...p} ids={['0TVGaLGeH']}>
+        Warum Millionen von Russinnen weltweit den Krieg unterstützen
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['FH-JHnRSi']}>
+        Wie der Krieg Träume raubt
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['2DUh67rZ6']}>
+        Putins Parade jungen Ukrainern Hoffnung schenkt
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['0jYSMD--D']}>
+        Ein Asylfall bringt das Staatssekretariat für Migration in Erklärungsnot
+      </Highlight>
+      . Und: Plötzlich wollen alle aufrüsten, bloss:{' '}
+      <Highlight {...p} ids={['lMAxAzD3b']}>
+        Wie soll das gehen mit der heutigen Neutralität
+      </Highlight>
+      ?{' '}
+      <Highlight {...p} series='republik/article-jugend-und-psyche'>
+        Kinderpsychiatrien sind überfüllt, Eltern überfordert. Doch können
+        Kinder trotzdem resilient werden
+      </Highlight>
+      . Und:{' '}
+      <Highlight {...p} ids={['auTny3lfi']}>
+        Stimmen aus dem grössten Frauengefängnis der Schweiz
+      </Highlight>
+      .
+    </>
+  ),
 }
 
 const Overview2022 = (props) => <Page {...props} year={2022} text={text} />

@@ -165,9 +165,10 @@ const DiscussionPreferencesEditor = ({
   me,
 }) => {
   const [colorScheme] = useColorContext()
-  const [state, setState] = useState(
+  const [initialState] = useState(
     getInitialState(userPreference, rules, autoCredential),
   )
+  const [state, setState] = useState(initialState)
   const [error, setError] = useState(null)
 
   const [showAllSuggestedCredentials, setShowAllSuggestedCredentials] =
@@ -277,6 +278,7 @@ const DiscussionPreferencesEditor = ({
                 credential: val,
               }))
             }}
+            showClearIcon
           />
           {isListedCredential && state.anonymity && (
             <div style={{ marginBottom: 10 }}>
@@ -287,7 +289,7 @@ const DiscussionPreferencesEditor = ({
               </Label>
             </div>
           )}
-          {credentialSuggestions && (
+          {credentialSuggestions && credentialSuggestions.length > 0 && (
             <div {...styles.suggestedCredentialsWrapper}>
               <Label>
                 {t('components/DiscussionPreferences/existingCredentialLabel')}
@@ -356,6 +358,10 @@ const DiscussionPreferencesEditor = ({
                   setState((curr) => ({
                     ...curr,
                     anonymity: val,
+                    credential:
+                      val && curr.credential === initialState.credential
+                        ? '' // remove auto credential when setting anonymous to true
+                        : curr.credential,
                   }))
                 }}
               >

@@ -23,6 +23,12 @@ The frontends are Next.js apps, the backends use Express.js.
 
 All packages and apps support [TypeScript](https://www.typescriptlang.org/) and plain ECMAScript.
 
+### Licenses
+
+The logo and fonts are the property of their owners (logo—Project R, GT America—GrilliType and Rubis—Nootype), and may not be reproduced without permission.
+
+The `www`, `publikator` app and `styleguide` are BSD-3-Clause licensed. The `api`, `assets` app and all `backend-modules` are AGPL-3.0 licensed. See respective license files in subfolders.
+
 ### Utilities
 
 This turborepo has some additional tools already setup for you:
@@ -155,7 +161,7 @@ Please be patient on boot. It might take a minute for everything to compile and 
 If you don't want all apps to run when using the `dev` script, you can use the scope flag on the to run only that package in dev mode.
 For example when developing www and api `yarn dev --scope="@orbiting/www-app" --scope="@orbiting/api-app"`
 
-### Include dependencies
+#### Include dependencies
 
 If you are developing on a package in a scoped mode, you might want to also pass the `--include-dependencies` flag to ensure that your dependencies are also running.
 
@@ -185,15 +191,20 @@ Scope is optional.
 
 > The footer should contain any information about Breaking Changes and is also the place to reference GitHub issues that this commit Closes.
 
-## Deployment
+### Yaproxy
 
-The environment variable `SERVER` is used to determine which app to build and run on deploy. If `SERVER` is missing the api app is run.
+Don't care about developing the backend? Just want to test something against our production backend? We have yet another proxy for that:
 
-A `heroku-prebuild` script runs `scripts/prune.sh` which runs `turbo prune` with the correct scope and moved the pruned apps and packages to the root directory.
+```
+# terminal 1
+yarn yaproxy
+# terminal 2
+yarn dev:www
+```
 
-A `heroku-postbuild` script is used to add a `Procfile` for running the scheduler on heroku for the `api` app.
+(Obvious )Warning: whatever you do here is for realz, if you login to your account and change things they are changed on republik.ch!
 
-## Development in a secure context (HTTPS tunnels with NGROK)
+### Development in a secure context
 
 Install the `ngrok` cli: `brew install --cask ngrok`
 
@@ -215,13 +226,13 @@ tunnels:
 
 Now you must update the following environment variables:
 
-### Frontend Environment Variables
+#### Frontend Environment Variables
 ```
 API_URL=https://api.republik.eu.ngrok.io/graphql
 API_WS_URL=wss://api.republik.eu.ngrok.io/graphql
 ```
 
-### Backend Environment Variables
+#### Backend Environment Variables
 ```
 FRONTEND_BASE_URL=https://republik.eu.ngrok.io # optional
 COOKIE_DOMAIN=.republik.eu.ngrok.io
@@ -245,3 +256,11 @@ Your local development servers are now relayed to the following ngrok tunnels.
 | http://localhost:5010 | https://api.republik.eu.ngrok.io |
 
 With this you're now able to test payment-options (such as Apple Pay) that are only available in a secure context.
+
+## Deployment
+
+The environment variable `SERVER` is used to determine which app to build and run on deploy. If `SERVER` is missing the api app is run.
+
+A `heroku-prebuild` script runs `scripts/prune.sh` which runs `turbo prune` with the correct scope and moved the pruned apps and packages to the root directory.
+
+A `heroku-postbuild` script is used to add a `Procfile` for running the scheduler on heroku for the `api` app.

@@ -217,3 +217,66 @@ Abuzaid Dzhandarovich VISMURADOV,07.12.2021,HR
   <ChartLegend>Die Tabelle zeigt Personen und Organisationen, die auf der Sanktionsliste der EU, aber nicht auf der Seco-Liste auftauchen. Die Abkürzungen in der Spalte «Programm» beziehen sich auf unterschiedliche Sanktionsprogramme der EU. CYB: Cyberangriffe. CHEM: Chemische Waffen. HR: Menschenrechte. UKR: Ukraine. Quelle: OpenSanctions.</ChartLegend>
 </div>
 ```
+
+## Balkengrafik als Tabellenzeile
+
+```react
+<div>
+  <ChartTitle>Preisgelder E-Sports</ChartTitle>
+  <CsvChart
+    t={t}
+    config={{
+  "type": "Table",
+  "numberFormat": ".2s",
+  "tableColumns": [
+    {
+      "column": "Jahr",
+      "type": "string",
+      "width": "50"
+    },
+    {
+      "column": "Spiel",
+      "type": "string"
+    },
+    {
+      "column": "Preisgeld",
+      "type": "bar",
+      "color": true,
+      "width": "175"
+    }
+  ],
+  "defaultSortColumn": "Preisgeld",
+  "colorMap": {
+    "Preisgeld": "#1f77b4"
+    },
+}}
+    values={`
+Jahr,Spiel,Preisgeld
+1998,Quake II,66200
+1999,StarCraft: Brood War,139554
+2000,Quake III Arena,415238
+2001,Counter-Strike,346592
+2002,Counter-Strike,400995
+2003,Counter-Strike,821958
+2004,Counter-Strike,902652
+2005,Counter-Strike,1354441
+2006,Counter-Strike,2138623
+2007,Counter-Strike,1636886
+2008,Counter-Strike,1681708
+2009,Counter-Strike,1354653
+2010,Counter-Strike,1453214
+2011,StarCraft II,3192864
+2012,League of Legends,4287209
+2013,League of Legends,6226260
+2014,Dota 2,16608031
+2015,Dota 2,31050787
+2016,Dota 2,37464420
+2017,Dota 2,38074599
+2018,Dota 2,41457369
+2019,Fortnite,72800079
+2020,Counter-Strike: Global Offensive,15943486
+2021,Dota 2,47730561
+    `.trim()} />
+  <ChartLegend></ChartLegend>
+</div>
+```

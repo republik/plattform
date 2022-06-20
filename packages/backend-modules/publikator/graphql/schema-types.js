@@ -184,10 +184,6 @@ enum RepoChangeMutationType {
   DELETED
 }
 
-extend type Meta {
-  authors: [User!]!
-}
-
 type Memo {
   id: ID!
   parentIds: [ID!]!

@@ -6,8 +6,8 @@ import {
   AudioIcon,
   fontStyles,
   mediaQueries,
-  RawHtml,
   PodcastIcon,
+  Editorial,
 } from '@project-r/styleguide'
 
 import { AudioContext } from '../Audio/AudioProvider'
@@ -58,16 +58,17 @@ const styles = {
       alignItems: 'center',
     },
   }),
-  textContainer: css({
+  text: css({
     flex: 1,
+    margin: 0,
   }),
   title: css({
     ...fontStyles.sansSerifMedium15,
+    textDecoration: 'none',
     cursor: 'pointer',
     margin: '0px 0 4px 0',
     padding: 0,
   }),
-  lead: css({ ...fontStyles.sansSerifRegular15, margin: 0, padding: 0 }),
 }
 
 const SyntheticAudio = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
@@ -83,7 +84,7 @@ const SyntheticAudio = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
       <div {...styles.container}>
         <IconButton
           style={{ marginRight: 0 }}
-          size={56}
+          size={32}
           Icon={Icon}
           onClick={(e) => {
             e.preventDefault()
@@ -95,8 +96,9 @@ const SyntheticAudio = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
             })
           }}
         />
-        <div {...styles.textContainer}>
-          <p
+        <p {...styles.text}>
+          <a
+            href='#'
             onClick={(e) => {
               e.preventDefault()
               trackEvent([eventCategory, 'audio', meta.url])
@@ -106,21 +108,18 @@ const SyntheticAudio = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
                 path: meta.path,
               })
             }}
+            {...colorScheme.set('color', 'text')}
             {...styles.title}
-            {...colorScheme.set('fill', 'text')}
           >
             {t(`article/${kind}/title`)}
-          </p>
-          <p {...styles.lead}>
-            <RawHtml
-              dangerouslySetInnerHTML={{
-                __html: t(`article/${kind}/lead`),
-              }}
-            />
-          </p>
-        </div>
+          </a>{' '}
+          {isSynthetic && (
+            <Editorial.A href='/2022/05/04/helfen-sie-uns-die-synthetische-stimme-zu-verbessern/diskussion'>
+              {t('article/syntheticReadAloud/errorLink')}
+            </Editorial.A>
+          )}
+        </p>
       </div>
-
       <hr {...styles.hr} {...colorScheme.set('backgroundColor', 'divider')} />
     </div>
   )

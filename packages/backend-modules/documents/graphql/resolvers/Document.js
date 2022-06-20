@@ -81,9 +81,9 @@ module.exports = {
         processEmbedImageUrlsInContent(doc.content, addFormatAuto),
       ])
 
-      processMembersOnlyZonesInContent(doc.content, context.user)
+      processMembersOnlyZonesInContent(doc.content, context.user, doc._apiKey)
       processNodeModifiersInContent(doc.content, context.user)
-      processIfHasAccess(doc.content, context.user)
+      processIfHasAccess(doc.content, context.user, doc._apiKey)
     }
     return doc.content
   },
@@ -98,6 +98,7 @@ module.exports = {
         urlPrefix,
         searchString,
         context.user || null,
+        doc._apiKey,
       )
 
       await processRepoImageUrlsInMeta(doc.content, addFormatAuto)
@@ -163,9 +164,9 @@ module.exports = {
           processEmbedImageUrlsInContent(node, addFormatAuto),
         ])
 
-        processMembersOnlyZonesInContent(node, context.user)
+        processMembersOnlyZonesInContent(node, context.user, doc._apiKey)
         processNodeModifiersInContent(node, context.user)
-        processIfHasAccess(node, context.user)
+        processIfHasAccess(node, context.user, doc._apiKey)
 
         return extractIdsFromNode(node, doc.meta.repoId)
       })

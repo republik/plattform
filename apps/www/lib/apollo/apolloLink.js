@@ -45,7 +45,7 @@ export const createLink = (headers = {}, onResponse = () => {}) => {
     headers: {
       cookie: headers.cookie,
       accept: headers.accept,
-      Authorization: API_AUTHORIZATION_HEADER,
+      Authorization: headers.authorization || API_AUTHORIZATION_HEADER,
     },
   })
 

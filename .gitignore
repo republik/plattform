@@ -18,6 +18,7 @@ build
 *.pem
 local/
 .idea
+.run
 
 # debug
 npm-debug.log*
