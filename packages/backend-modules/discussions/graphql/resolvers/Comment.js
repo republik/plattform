@@ -114,13 +114,7 @@ module.exports = {
   },
 
   contentLength: async (comment, args, context) => {
-    const { embedUrl, userId } = comment
-    const { user: me } = context
-
-    if (me?.id !== userId) {
-      return null
-    }
-
+    const { embedUrl } = comment
     const content = await processContent(comment, context)
     return toString(content).length - (embedUrl?.length || 0)
   },
