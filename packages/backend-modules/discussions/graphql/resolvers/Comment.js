@@ -1,7 +1,10 @@
 const crypto = require('crypto')
 
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { slateToString } = require('@orbiting/backend-modules-utils')
+const {
+  slateCollapseLinkText: collapseLinkText,
+  slateToString: toString,
+} = require('@orbiting/backend-modules-utils')
 
 const {
   portrait: getPortrait,
@@ -64,29 +67,6 @@ const processContent = async (comment, context) => {
   return clipNames(names, content)
 }
 
-/**
- * Stringify Slate tree and trim it to a length.
- *
- */
-const slateToTrimmedString = (children, length = 500) => {
-  let string = ''
-  const tokens = slateToString(children).split(/\s+/).filter(Boolean)
-
-  // TODO: mdastCollapseLink (for Slate)
-
-  do {
-    const token = tokens.shift()
-
-    if (!token || string.length + token.length > length) {
-      break
-    }
-
-    string += `${token} `
-  } while (string.length <= length && tokens.length > 0)
-
-  return { string: string.trim(), more: tokens.length > 0 }
-}
-
 module.exports = {
   discussion: ({ discussion, discussionId }, args, { loaders }) =>
     loaders.Discussion.byId.load(discussionId),
@@ -98,7 +78,7 @@ module.exports = {
 
   text: async (comment, args, context) => {
     const content = await processContent(comment, context)
-    return slateToString(content, '\n')
+    return toString(content, '\n')
   },
 
   featuredText: ({
@@ -113,7 +93,23 @@ module.exports = {
 
   preview: async (comment, { length = 500 }, context) => {
     const content = await processContent(comment, context)
-    return slateToTrimmedString(content, length)
+
+    await collapseLinkText(content)
+
+    let string = ''
+    const tokens = toString(content).split(/\s+/).filter(Boolean)
+
+    do {
+      const token = tokens.shift()
+
+      if (!token || string.length + token.length > length) {
+        break
+      }
+
+      string += `${token} `
+    } while (string.length <= length && tokens.length > 0)
+
+    return { string: string.trim(), more: tokens.length > 0 }
   },
 
   embed: (comment, args, context) => embedForComment(comment, context),
@@ -127,7 +123,7 @@ module.exports = {
     }
 
     const content = await processContent(comment, context)
-    return slateToString(content).length - (embedUrl?.length || 0)
+    return toString(content).length - (embedUrl?.length || 0)
   },
 
   upVotes: (comment) => {
