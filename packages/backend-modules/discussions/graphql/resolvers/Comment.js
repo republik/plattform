@@ -5,35 +5,18 @@ const {
   slateCollapseLinkText: collapseLinkText,
   slateToString: toString,
 } = require('@orbiting/backend-modules-utils')
-
 const {
   portrait: getPortrait,
   name: getName,
   slug: getSlug,
 } = require('@orbiting/backend-modules-republik/graphql/resolvers/User')
-const { clipNames } = require('../../lib/nameClipper')
 const { getEmbedByUrl } = require('@orbiting/backend-modules-embeds')
+
+const { clipNames } = require('../../lib/nameClipper')
 
 const { DISPLAY_AUTHOR_SECRET, ASSETS_SERVER_BASE_URL } = process.env
 if (!DISPLAY_AUTHOR_SECRET) {
   throw new Error('missing required DISPLAY_AUTHOR_SECRET')
-}
-
-const embedForComment = async (
-  { embedUrl, discussionId, depth, published, adminUnpublished },
-  context,
-) => {
-  if (!embedUrl) {
-    return null
-  }
-  if (!(published && !adminUnpublished)) {
-    return null
-  }
-  const discussion = await context.loaders.Discussion.byId.load(discussionId)
-  if (discussion && discussion.isBoard && depth === 0) {
-    return getEmbedByUrl(embedUrl, context)
-  }
-  return null
 }
 
 /**
@@ -112,7 +95,23 @@ module.exports = {
     return { string: string.trim(), more: tokens.length > 0 }
   },
 
-  embed: (comment, args, context) => embedForComment(comment, context),
+  embed: async (
+    { embedUrl, discussionId, depth, published, adminUnpublished },
+    args,
+    context,
+  ) => {
+    if (!embedUrl) {
+      return null
+    }
+    if (!(published && !adminUnpublished)) {
+      return null
+    }
+    const discussion = await context.loaders.Discussion.byId.load(discussionId)
+    if (discussion && discussion.isBoard && depth === 0) {
+      return getEmbedByUrl(embedUrl, context)
+    }
+    return null
+  },
 
   contentLength: async (comment, args, context) => {
     const { embedUrl, userId } = comment
