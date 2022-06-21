@@ -57,7 +57,8 @@ module.exports = {
   published: ({ published, adminUnpublished }) =>
     published && !adminUnpublished,
 
-  content: (comment, args, context) => processContent(comment, context),
+  // @TODO: Check who's responsible to collapse links.
+  content: async (comment, args, context) => processContent(comment, context),
 
   text: async (comment, args, context) => {
     const content = await processContent(comment, context)
