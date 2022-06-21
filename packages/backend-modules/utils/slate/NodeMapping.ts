@@ -20,6 +20,7 @@ export type SlateNode =
       text?: string
       value?: boolean
       italic?: boolean
+      href?: string
     }
   | {
       [key: string]: any

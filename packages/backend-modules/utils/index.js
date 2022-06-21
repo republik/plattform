@@ -5,6 +5,7 @@ module.exports = {
   naming: require('./naming'),
   mdastCollapseLink: require('./mdastCollapseLink'),
   mdastToString: require('./mdastToString'),
+  slateFindLinkHref: require('./slate/findLinkHref'),
   slateToString: require('./slate/toString'),
   slateVisit: require('./slate/visit'),
   hasUserActiveMembership: require('./hasUserActiveMembership'),

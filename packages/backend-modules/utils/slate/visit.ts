@@ -1,8 +1,8 @@
 import Promise from 'bluebird'
 import type { SlateNode } from './NodeMapping'
 
-type Predicate = (child: SlateNode) => Promise<boolean>
-type Visitor = (child: SlateNode) => Promise<SlateNode>
+type Predicate = (child: SlateNode) => boolean | Promise<boolean>
+type Visitor = (child: SlateNode) => void | Promise<void>
 
 /**
  * A simple and unsafe walker. Visits and mutates array of Slate
@@ -12,7 +12,7 @@ type Visitor = (child: SlateNode) => Promise<SlateNode>
  * infinitiy loop. A risk taken to keep code simple.
  *
  */
-function visit(
+export default function visit(
   children: SlateNode[],
   predicate: Predicate,
   visitor: Visitor,
