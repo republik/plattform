@@ -26,7 +26,7 @@ module.exports = async (_, args, context) => {
   if (comment) {
     return {
       ...comment,
-      ...transform.edit(args),
+      ...(await transform.edit(args)),
     }
   } else {
     return transform.create(

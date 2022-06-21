@@ -1,28 +1,8 @@
-const hotness = require('../hotness')
 const {
-  getUrls: { getUrlsFromText },
+  slateFindLinkHref: findLinkHref,
 } = require('@orbiting/backend-modules-utils')
 
-const MD_URL_REGEX = /\[.*?\]\((.*?)\)/gm
-
-const getUrls = (content) => {
-  // @TODO: Find URLS in Slatetree content
-  if (Array.isArray(content)) {
-    console.warn('getUrls can not handle Slatetree content yet')
-    return {
-      urls: [],
-      embedUrl: null,
-    }
-  }
-
-  // Markdown version
-  const text = content.replace(MD_URL_REGEX, (match, url) => url)
-  const urls = getUrlsFromText(text) || null
-  return {
-    urls,
-    embedUrl: urls && urls.length ? urls[urls.length - 1] : null,
-  }
-}
+const hotness = require('../hotness')
 
 const create = async (
   {
@@ -47,6 +27,9 @@ const create = async (
     parentIds = [...(parent.parentIds || []), parentId]
   }
 
+  const urls = await findLinkHref(content)
+  const embedUrl = urls.length ? urls.slice(-1)[0] : null
+
   return {
     ...(id ? { id } : {}),
     discussionId,
@@ -54,7 +37,8 @@ const create = async (
     depth: (parentIds && parentIds.length) || 0,
     userId,
     content,
-    ...getUrls(content),
+    urls,
+    embedUrl,
     hotness: hotness(0, 0, now.getTime()),
     ...(tags ? { tags } : {}),
     published,
@@ -64,13 +48,19 @@ const create = async (
   }
 }
 
-const edit = ({ content, tags, now = new Date() }) => ({
-  content,
-  ...getUrls(content),
-  ...(tags ? { tags } : {}),
-  published: true,
-  updatedAt: now,
-})
+const edit = async ({ content, tags, now = new Date() }) => {
+  const urls = await findLinkHref(content)
+  const embedUrl = urls.length ? urls.slice(-1)[0] : null
+
+  return {
+    content,
+    urls,
+    embedUrl,
+    ...(tags ? { tags } : {}),
+    published: true,
+    updatedAt: now,
+  }
+}
 
 module.exports = {
   create,

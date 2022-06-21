@@ -40,7 +40,7 @@ module.exports = async (_, args, context) => {
     }
 
     // prebuild comment
-    const unsavedComment = transform.edit({
+    const unsavedComment = await transform.edit({
       content,
       tags,
       now: args.now,
