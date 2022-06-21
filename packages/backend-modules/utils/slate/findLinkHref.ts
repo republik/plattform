@@ -14,8 +14,8 @@ async function findLinkHref(children: SlateNode[]): Promise<string[]> {
 
   await visit(
     children,
-    (child: SlateNode) => child?.type === 'link' && !!child?.href,
-    ({ href }: SlateNode) => {
+    (child) => child?.type === 'link' && !!child?.href,
+    ({ href }) => {
       const isValidUrl = validator.isURL(href, {
         require_protocol: true,
         protocols: ['http', 'https'],
