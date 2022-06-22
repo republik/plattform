@@ -6,47 +6,10 @@ The front-end of [republik.ch](https://www.republik.ch/en).
 
 ### Quick start
 
-You need to have node 14+ installed.
-
 Bootstrap your .env file:
 
 ```
 cp .env.example .env
-```
-
-Install and run:
-
-```
-npm install
-npm run dev
-```
-
-The example env assumes a backend running on port 5010. The backend needs to run on the same TLD for cookie sharing.
-
-#### Setup Local Backend
-
-See «[How To Run: Setup the Backends](https://github.com/orbiting/docs/blob/master/guides/how-to-run.md#1-setup-the-backends)».
-
-#### Proxy Production Backend
-
-Don't care about developing the backend? Just want to test something against our production backend? We have [yet another proxy](https://github.com/orbiting/proxy) for that:
-
-```
-PORT=5010 TARGET=https://api.republik.ch CORS_ORIGIN=http://localhost:3010 npx yaproxy
-```
-
-(Obvious )Warning: whatever you do here is for realz, if you login to your account and change things they are changed on republik.ch! 
-
-### Testing
-
-Run a test locally:
-```
-npm run tape components/Me/index.test.js
-```
-
-Run all tests:
-```
-npm run test
 ```
 
 ### Pledge
@@ -103,35 +66,6 @@ MATOMO_SITE_ID=1
 ### Theming
 
 Your logo, fonts and colors? See [orbiting/styleguide](https://github.com/orbiting/styleguide#theming)
-
-#### Linking the Styleguide
-
-Want to change code in the styleguide and preview how it looks here?
-
-Here are the steps:
-
-```
-cd ../styleguide
-npm i
-# run dev before linking
-npm run dev
-npm link
-
-cd ../republik-frontend
-npm i
-# deeply link styleguide and some peers
-# and add a tmp preinstall script to unlink
-npm run sg:link
-
-# do your work
-
-# simply run npm install to unlink
-# rm the links and the tmp preinstall script
-# reinstall stuff via npm
-npm i
-```
-
-_Why? `glamor`, `react` and `react-dom` use singletons. And `peerDependencies` are not flattened when `npm link`ed—two versions with their own singletons end up running. While linked this way those packages are linked to the styleguide node_modules folder._
 
 ### Curtain
 

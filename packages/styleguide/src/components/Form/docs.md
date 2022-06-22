@@ -59,6 +59,20 @@ state: {
   onDec={() => setState({value: state.value - 10})} />
 ```
 
+### Clear field
+
+```react
+state: {
+  value: 'Eine Rolle'
+}
+---
+<Field
+  label='Rolle'
+  value={state.value}
+  onChange={(_, value) => setState({value})}
+  onClear={() => setState({value:""})} />
+```
+
 ### Ref
 
 The ref is forwarded for e.g. programatic focussing.
