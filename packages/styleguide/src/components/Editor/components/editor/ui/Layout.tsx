@@ -1,10 +1,10 @@
 import React from 'react'
-import { EditorConfig } from '../../../custom-types'
+import { SchemaConfig } from '../../../custom-types'
 
-export const LayoutContainer: React.FC<{ config: EditorConfig }> = ({
-  config,
+export const LayoutContainer: React.FC<{ schema: SchemaConfig }> = ({
+  schema,
   children,
 }) => {
-  const Container = config.schema.container
+  const Container = schema.container
   return Container ? <Container>{children}</Container> : <>{children}</>
 }

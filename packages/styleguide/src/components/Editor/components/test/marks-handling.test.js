@@ -67,6 +67,46 @@ describe('Slate Editor: Marks Handling', () => {
     })
   })
 
+  it('should remove incompatible marks', async () => {
+    value = [
+      {
+        type: 'paragraph',
+        children: [
+          { text: 'Lorem ' },
+          { text: 'ipsum dolor sit', sub: true },
+          { text: ' amet.' },
+        ],
+      },
+    ]
+    const structure = [
+      {
+        type: 'paragraph',
+      },
+    ]
+    const editor = await setup(structure)
+    const selection = {
+      anchor: { path: [0, 1], offset: 6 },
+      focus: { path: [0, 1], offset: 11 },
+    }
+
+    await Transforms.select(editor, selection)
+    toggleMark(editor, 'sup')
+    await new Promise(process.nextTick)
+
+    expect(cleanupTree(value)).toEqual([
+      {
+        type: 'paragraph',
+        children: [
+          { text: 'Lorem ' },
+          { text: 'ipsum ', sub: true },
+          { text: 'dolor', sup: true },
+          { text: ' sit', sub: true },
+          { text: ' amet.' },
+        ],
+      },
+    ])
+  })
+
   it('should apply formatting to word if selection is collapsed and in a word', async () => {
     value = [
       {

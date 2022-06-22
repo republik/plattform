@@ -9,6 +9,7 @@ import {
 import { config as elConfig } from '../../config/elements'
 import { Element as SlateElement } from 'slate'
 import { Marks } from '../editor/ui/Mark'
+import { LayoutContainer } from '../editor/ui/Layout'
 
 const RenderedLeaf: React.FC<{
   leaf: CustomText
@@ -60,11 +61,9 @@ const RenderedElement: React.FC<{
 const SlateRender: React.FC<{
   value: CustomDescendant[]
   schema: SchemaConfig
-}> = ({ value, schema }) => {
-  return (
-    <div>
-      <RenderNodes nodes={value} schema={schema} />
-    </div>
-  )
-}
+}> = ({ value, schema }) => (
+  <LayoutContainer schema={schema}>
+    <RenderNodes nodes={value} schema={schema} />
+  </LayoutContainer>
+)
 export default SlateRender

@@ -482,9 +482,15 @@ span: 3
 rows:
   - Variable: component
     Description: CustomMarksType key
+  - Variable: remove
+    Description: array to CustomMarksType keys
   - Variable: button
     Description: button config *(see above)*
 ```
+
+#### `remove`
+
+Optional array of `CustomMarksType` keys which are to be removed when a mark is added. E.g. `['sup']` is incompatible with `sub`.
 
 ### Structure
 
