@@ -1,10 +1,10 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import {
   ApolloClientOptions,
-  useApollo as useApolloHook,
   initializeApollo as initializeApolloFunc,
   InitializeApolloFunc,
 } from './apollo/apolloClient'
+import useApolloHook from './apollo/useApollo'
 import makeWithApollo from './helpers/withApollo'
 
 /**
@@ -17,8 +17,8 @@ type CreateApolloClientUtilitiesOptions = Pick<
 
 /**
  * Factory function that returns all needed utilities for the Apollo Client
- * with the application specific options.
- * @param options Options that must only be provided once per application.
+ * with the application specific options being injected.
+ * @param options Application specific options needed to connect to the graphql server.
  */
 export function createApolloClientUtilities(
   options: CreateApolloClientUtilitiesOptions,
