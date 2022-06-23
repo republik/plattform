@@ -30,7 +30,7 @@ export default [
       json(),
       typescript({
         tsconfig: './tsconfig.json',
-        outputToFilesystem: 'true',
+        outputToFilesystem: true,
       }),
       commonjs(),
       terser(),
