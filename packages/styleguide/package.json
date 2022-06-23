@@ -10,7 +10,11 @@
   "dependencies": {
     "body-scroll-lock": "^3.1.5",
     "react-icons": "^4.3.1",
-    "serve": "^13.0.2"
+    "serve": "^13.0.2",
+    "slate": "^0.81.0",
+    "slate-history": "^0.66.0",
+    "slate-react": "^0.81.0",
+    "use-memo-one": "^1.1.2"
   },
   "peerDependencies": {
     "d3-array": "1.x",
@@ -83,15 +87,11 @@
     "rw": "^1.3.3",
     "scroll-into-view": "1.15.0",
     "semantic-release": "^17.1.1",
-    "slate": "^0.81.0",
-    "slate-history": "^0.66.0",
     "slate-test-utils": "^1.3.2",
-    "slate-react": "^0.81.0",
     "slate-mdast-serializer": "^3",
     "topojson": "^3.0.2",
     "tslib": "^2.3.1",
     "typescript": "^4.5.5",
-    "use-memo-one": "^1.1.2",
     "validate-commit-msg": "^2.14.0"
   },
   "files": [
