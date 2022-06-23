@@ -59,8 +59,9 @@ app.prepare().then(() => {
     server.use(basicAuth(opts))
   }
 
+  server.use(express.static('public'))
   server.get('*', (req, res) => {
-    handler(req, res)
+    return handler(req, res)
   })
 
   server.listen(process.env.PORT || 3003)
