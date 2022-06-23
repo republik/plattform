@@ -18,8 +18,7 @@
     "jsx": "react-jsx",
     "incremental": true,
     "declaration": true,
-    "declarationDir": "types",
-    "emitDeclarationOnly": true
+    "declarationDir": "types"
   },
   "include": [
     "src/**/*.ts",
