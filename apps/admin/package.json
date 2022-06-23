@@ -24,6 +24,7 @@
   ],
   "dependencies": {
     "@apollo/client": "^3.5.8",
+    "@next/bundle-analyzer": "^12.1.6",
     "@project-r/styleguide": "*",
     "@republik/nextjs-apollo-client": "*",
     "apollo-cache-inmemory": "^1.6.6",
@@ -65,7 +66,6 @@
     "validator": "^10.11.0"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^10.2.3",
     "@republik/eslint-config-frontend": "*",
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "^12.1.4",
