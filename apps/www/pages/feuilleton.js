@@ -9,7 +9,7 @@ import withMembership from '../components/Auth/withMembership'
 
 import { Interaction, Loader, RawHtml } from '@project-r/styleguide'
 
-import withDefaultSSR from '../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../lib/apollo/helpers'
 
 const FeuilletonPage = (props) => {
   const { t, router, isMember, serverContext } = props

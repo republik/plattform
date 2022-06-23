@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import Frame from '../../components/Frame'
 import withT from '../../lib/withT'
-import withDefaultSSR from '../../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../../lib/apollo/helpers'
 import AccountTabs from '../../components/Account/AccountTabs'
 import { AccountEnforceMe } from '../../components/Account/Elements'
 import PledgeList from '../../components/Account/PledgeList'

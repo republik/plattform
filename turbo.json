@@ -61,6 +61,12 @@
         "^build",
         "build"
       ]
+    },
+    "prepare": {
+      "outputs": [
+        "dist/**",
+        "build/**"
+      ]
     }
   },
   "globalDependencies": [

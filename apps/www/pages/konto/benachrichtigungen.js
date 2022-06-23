@@ -5,7 +5,7 @@ import withT from '../../lib/withT'
 import AccountTabs from '../../components/Account/AccountTabs'
 import { AccountEnforceMe } from '../../components/Account/Elements'
 
-import withDefaultSSR from '../../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../../lib/apollo/helpers'
 
 const NotificationsSettingsPage = ({ t }) => {
   return (

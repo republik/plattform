@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import Front from '../../components/Front'
-import createGetServerSideProps from '../../lib/helpers/createGetServerSideProps'
 import { FRONT_QUERY } from '../../components/Front/graphql/getFrontQuery.graphql'
+import { createGetServerSideProps } from '../../lib/apollo/helpers'
 
 const FRONT_PREVIEW_PATH = `/vorschau`
 
@@ -24,7 +24,7 @@ const FrontPreviewPage = () => {
 export default FrontPreviewPage
 
 export const getServerSideProps = createGetServerSideProps(
-  async (client, params, user) => {
+  async (client, { params }) => {
     await client.query({
       query: FRONT_QUERY,
       variables: {

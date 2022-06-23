@@ -1,12 +1,14 @@
 import { ApolloLink, HttpLink } from '@apollo/client'
 import { WebSocketLink } from '@apollo/client/link/ws'
 
-import { API_URL, API_WS_URL, API_AUTHORIZATION_HEADER } from '../constants'
-import {
-  inNativeAppBrowser,
-  inNativeAppBrowserLegacy,
-} from '../withInNativeApp'
-import { createAppWorkerLink, hasSubscriptionOperation } from './appWorkerLink'
+import { ApolloClientOptions } from './apolloClient'
+import { isClient, isDev } from './utils'
+
+export const hasSubscriptionOperation = ({ query: { definitions } }) =>
+  definitions.some(
+    ({ kind, operation }) =>
+      kind === 'OperationDefinition' && operation === 'subscription',
+  )
 
 const withResponseInterceptor = ({ onResponse }) =>
   new ApolloLink((operation, forward) => {
@@ -19,13 +21,11 @@ const withResponseInterceptor = ({ onResponse }) =>
     })
   })
 
-const __DEV__ = process.env.NODE_ENV === 'development'
-
 const rewriteAPIHost = (url) => {
-  if (__DEV__) {
+  if (isDev) {
     // support Android Emulator and Virtualbox IE VM
     if (
-      process.browser &&
+      isClient &&
       url.indexOf('localhost') !== -1 &&
       location.hostname !== 'localhost'
     ) {
@@ -35,25 +35,34 @@ const rewriteAPIHost = (url) => {
   return url
 }
 
-export const createLink = (headers = {}, onResponse = () => {}) => {
-  if (inNativeAppBrowser && inNativeAppBrowserLegacy) {
-    return createAppWorkerLink()
+type CreateLinkOptions = ApolloClientOptions
+
+export const createLink = ({
+  apiUrl,
+  wsUrl,
+  headers = {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onResponse = () => {},
+  mobileConfigOptions,
+}: CreateLinkOptions) => {
+  if (mobileConfigOptions && mobileConfigOptions.isInMobileApp) {
+    return mobileConfigOptions.createAppWorkerLink()
   }
   const http = new HttpLink({
-    uri: rewriteAPIHost(API_URL),
+    uri: rewriteAPIHost(apiUrl),
     credentials: 'include',
     headers: {
       cookie: headers.cookie,
       accept: headers.accept,
-      Authorization: headers.authorization || API_AUTHORIZATION_HEADER,
+      Authorization: headers.authorization,
     },
   })
 
-  if (process.browser) {
+  if (isClient && wsUrl) {
     return ApolloLink.split(
       hasSubscriptionOperation,
       new WebSocketLink({
-        uri: rewriteAPIHost(API_WS_URL),
+        uri: rewriteAPIHost(wsUrl),
         options: {
           lazy: true,
           reconnect: true,
