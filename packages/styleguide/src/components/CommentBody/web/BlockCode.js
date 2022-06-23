@@ -25,10 +25,10 @@ const styles = {
   }),
 }
 
-export default ({ children }) => {
+export default ({ attributes, children }) => {
   const [colorScheme] = useColorContext()
   return (
-    <pre {...styles.pre}>
+    <pre {...attributes} {...styles.pre}>
       <code {...styles.code} {...colorScheme.set('backgroundColor', 'hover')}>
         {children}
       </code>

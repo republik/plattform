@@ -22,8 +22,8 @@ const styles = {
   }),
 }
 
-export default ({ children }) => (
-  <div {...styles.container} {...Editorial.fontRule}>
+export default ({ children, attributes }) => (
+  <div {...attributes} {...styles.container} {...Editorial.fontRule}>
     {children}
   </div>
 )

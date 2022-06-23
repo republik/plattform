@@ -145,7 +145,7 @@ const Field = React.forwardRef<
     showClearIcon?: boolean
     icon?: IconType
     simulate?: string
-    renderInput: React.FC<Record<string, unknown>>
+    renderInput?: React.FC<Record<string, unknown>>
   }
 >(
   (
