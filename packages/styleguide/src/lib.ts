@@ -177,6 +177,10 @@ export { default as Scroller } from './components/Tabs/Scroller'
 // Export createRequire for dynamic-components
 export { createRequire } from './components/DynamicComponent'
 
+// Export helpers for editor
+export { cleanupTree } from './components/Editor/components/editor/helpers/tree'
+export { default as commentEmailSlateSchema } from './components/Editor/schema/commentEmail'
+
 export * from './chart'
 
 export * from './components/Icons'

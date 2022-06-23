@@ -9,7 +9,7 @@ type CommentVote = 'UP' | 'DOWN'
 export type CommentFragmentType = {
   id: string
   text: Nullable<string>
-  content: Record<string, any>
+  content: { [key: string]: any }[] // @TODO: declare SlateNode
   published: boolean
   adminUnpublished: Nullable<boolean>
   featuredAt: Nullable<DateTime>

@@ -13,7 +13,7 @@ import * as docs from '../documents'
  *     downvoteComment(commentId: ID)
  *     reportComment(commentId: ID)
  *     unpublishComment(commentId: ID)
- *     editComment(comment: Comment, content: string, tags?: string[])
+ *     editComment(comment: Comment, content: JSON, tags?: string[])
  *   }
  */
 

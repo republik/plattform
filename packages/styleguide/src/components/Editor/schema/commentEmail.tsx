@@ -30,7 +30,7 @@ const List: React.FC<{
   <InnerEmailList data={{ ordered }}>{children}</InnerEmailList>
 )
 
-const schema: SchemaConfig = {
+const commentEmailSchema: SchemaConfig = {
   container: Container,
   blockQuote: BlockQuote,
   blockQuoteText: BlockQuoteParagraph,
@@ -51,4 +51,4 @@ const schema: SchemaConfig = {
   blockCode: BlockCode,
 }
 
-export default schema
+export default commentEmailSchema

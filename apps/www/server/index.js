@@ -174,9 +174,9 @@ app.prepare().then(() => {
           headers: { cookie },
         } = req
 
-        // If user is logged in, 20 requests per minute are allowed. Otherwise, only 5 requests/min allowed.
+        // If user is logged in, 50 requests per minute are allowed. Otherwise, only 5 requests/min allowed.
         if (cookie && cookie.includes(COOKIE_NAME)) {
-          return 20
+          return 50
         }
         return 5
       },

@@ -1,4 +1,4 @@
-const { naming } = require('@orbiting/backend-modules-utils')
+const { naming, slateVisit: visit } = require('@orbiting/backend-modules-utils')
 
 const excludeLastNames = ['weiss']
 
@@ -49,7 +49,17 @@ const clipNamesInText = (namesToClip, text) => {
   return newText
 }
 
+const clipNames = (namesToClip, children) =>
+  visit(
+    children,
+    (child) => !!child?.text,
+    (child) => {
+      child.text = clipNamesInText(namesToClip, child.text)
+    },
+  )
+
 module.exports = {
   transformName,
   clipNamesInText,
+  clipNames,
 }

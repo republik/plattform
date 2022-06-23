@@ -124,7 +124,7 @@ const CommentContainer = ({
             onClose={() => setIsEditing(false)}
             isRoot={comment.parentIds.length === 0}
             commentId={comment.id}
-            initialText={comment.text}
+            initialContent={comment.content}
             initialTagValue={comment?.tags?.[0]}
           />
         )

@@ -16,7 +16,7 @@ import { PREVIEW_COMMENT_QUERY } from '../queries/PreviewCommentQuery.graphql'
  * Provides the component with
  *
  *   {
- *     submitComment(parent: Comment, content: string, tags?: string[])
+ *     submitComment(parent: Comment, content: JSON, tags?: string[])
  *   }
  */
 

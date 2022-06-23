@@ -6,7 +6,8 @@ import { DiscussionContext } from '../../DiscussionContext'
 import { Label } from '../../../Typography'
 
 import { Context } from './Context'
-import { renderCommentMdast } from './render'
+import SlateRender from '../../../Editor/components/render'
+import commentWebSchema from '../../../Editor/schema/comment'
 
 const styles = {
   container: css({
@@ -42,7 +43,9 @@ export const Body = ({
           <Context {...context} />
         </div>
       )}
-      {content && renderCommentMdast(content)}
+      {content && Array.isArray(content) && (
+        <SlateRender value={content} schema={commentWebSchema} />
+      )}
     </>
   )
   const bodyNode =

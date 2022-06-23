@@ -62,13 +62,13 @@ type mutations {
     # can be discussion id or repoId
     discussionId: ID!
     parentId: ID
-    content: String!
+    content: JSON!
     discussionPreferences: DiscussionPreferencesInput
     tags: [String!]
   ): Comment!
   editComment(
     id: ID!
-    content: String!
+    content: JSON!
     tags: [String!]
   ): Comment!
   # can be called by the creator or an admin

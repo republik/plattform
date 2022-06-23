@@ -12,8 +12,10 @@ require('@orbiting/backend-modules-env').config()
 const {
   lib: { ConnectionContext },
 } = require('@orbiting/backend-modules-base')
-const mdastToSlatetree = require('@orbiting/backend-modules-utils/mdastToSlate/mdastToSlatetree')
-const { parse } = require('@orbiting/remark-preset')
+const mdastToSlatetree = require('@orbiting/backend-modules-utils/slate/mdastToSlatetree')
+const {
+  remark: { parse },
+} = require('@orbiting/backend-modules-utils')
 
 const { FRONTEND_BASE_URL } = process.env
 
