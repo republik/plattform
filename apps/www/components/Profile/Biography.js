@@ -22,7 +22,7 @@ const fields = (t) => [
     autoSize: true,
     validator: (value) =>
       value &&
-      value.trim().length >= 1500 &&
+      value.trim().length >= 2000 &&
       t('profile/biography/label/tooLong'),
   },
 ]
