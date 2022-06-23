@@ -1,3 +1,9 @@
+/**
+ --- Disabled due to slate-test-utils causing severe issues with building
+ --- and apps depending on styleguide
+ --- re-enable if a valid alternative for slate-test-utils has been found
+ -- or the issues have been fixed
+
 import { cleanupTree } from '../editor/helpers/tree'
 
 describe('Slate Editor', () => {
@@ -144,3 +150,4 @@ describe('Slate Editor', () => {
     })
   })
 })
+*/

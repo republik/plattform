@@ -87,7 +87,6 @@
     "rw": "^1.3.3",
     "scroll-into-view": "1.15.0",
     "semantic-release": "^17.1.1",
-    "slate-test-utils": "^1.3.2",
     "slate-mdast-serializer": "^3",
     "topojson": "^3.0.2",
     "tslib": "^2.3.1",
