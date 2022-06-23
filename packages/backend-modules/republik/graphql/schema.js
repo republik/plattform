@@ -59,6 +59,19 @@ type mutations {
     gender: String
   ): User!
 
+  # required role: supporter
+  updateUser(
+    firstName: String
+    lastName: String
+    
+    address: AddressInput
+
+    birthday: Date
+    phoneNumber: String
+    
+    userId: ID!
+  ): User!
+
   updateAddress(
     id: ID!,
     address: AddressInput!

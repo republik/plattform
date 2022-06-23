@@ -7,7 +7,7 @@ import json from '@rollup/plugin-json'
 import { terser } from 'rollup-plugin-terser'
 import visualizer from 'rollup-plugin-visualizer'
 import bundleSize from 'rollup-plugin-bundle-size'
-import path from 'node:path'
+import path from 'path'
 
 const pkgJSON = require('./package.json')
 
@@ -30,6 +30,7 @@ export default [
       json(),
       typescript({
         tsconfig: './tsconfig.json',
+        outputToFilesystem: true,
       }),
       commonjs(),
       terser(),

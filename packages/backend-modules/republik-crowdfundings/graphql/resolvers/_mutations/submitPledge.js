@@ -326,6 +326,7 @@ module.exports = async (_, args, context) => {
         (await upsertAddress(
           { ...pledge.address, id: user.addressId },
           transaction,
+          t,
         ))
 
       user = await transaction.public.users.updateAndGetOne(
@@ -406,6 +407,7 @@ module.exports = async (_, args, context) => {
     const shippingAddress = await insertAddress(
       pledge.shippingAddress,
       transaction,
+      t,
     )
 
     // insert pledge

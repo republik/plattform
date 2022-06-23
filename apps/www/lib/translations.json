@@ -769,6 +769,10 @@
       "value": "Eindeutige Anschrift fehlt"
     },
     {
+      "key": "Account/AddressForm/name/error/tooLong",
+      "value": "Ihr Name, maximal {maxLength} Zeichen"
+    },
+    {
       "key": "Account/AddressForm/name/explanation",
       "value": "Ihr Name für Postsendungen, falls nötig mit c/o."
     },
@@ -779,6 +783,10 @@
     {
       "key": "Account/AddressForm/line1/error/empty",
       "value": "Strasse und Hausnummer fehlen"
+    },
+    {
+      "key": "Account/AddressForm/line1/error/tooLong",
+      "value": "Strasse und Hausnummer, maximal {maxLength} Zeichen"
     },
     {
       "key": "Account/AddressForm/line2/label",
@@ -799,6 +807,10 @@
     {
       "key": "Account/AddressForm/city/error/empty",
       "value": "Ort fehlt"
+    },
+    {
+      "key": "Account/AddressForm/city/error/tooLong",
+      "value": "Ort, maximal {maxLength} Zeichen"
     },
     {
       "key": "Account/AddressForm/country/label",
