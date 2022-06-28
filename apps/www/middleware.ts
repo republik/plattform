@@ -14,8 +14,14 @@ import fetchMyRoles from './lib/helpers/middleware/FetchMeObject'
 export async function middleware(req: NextRequest) {
   const resUrl = req.nextUrl.clone()
 
+  // Rewrite if someone tries to directly access the front
+  if (req.nextUrl.pathname === '/front') {
+    resUrl.pathname = '/404'
+    return NextResponse.rewrite(resUrl)
+  }
+
   // Don't run the middleware unless on home-page
-  if (resUrl.pathname !== '/') {
+  if (req.nextUrl.pathname !== '/') {
     return NextResponse.next()
   }
 
@@ -32,14 +38,13 @@ export async function middleware(req: NextRequest) {
   /* ------------ Logic to handle SSG front- & marketing-page ------------ */
 
   /**
-   * Rewrite to the front if the user is a memeber
+   * Rewrite to the front if the user is a member
    * @param roles Roles of the user
    * @returns NextResponse
    */
   function rewriteBasedOnRoles(roles: string[] = []): NextResponse {
     if (roles?.includes('member')) {
       resUrl.pathname = '/front'
-      console.log('Rewriting to front-page based on role', resUrl)
       return NextResponse.rewrite(resUrl)
     }
     return NextResponse.next()
@@ -57,7 +62,6 @@ export async function middleware(req: NextRequest) {
     const response = rewriteBasedOnRoles(me?.roles)
 
     if (cookie) {
-      console.log('Setting cookie in response')
       // Forward cookies to the client
       response.headers.set('Set-Cookie', cookie)
     }
@@ -90,11 +94,9 @@ export async function middleware(req: NextRequest) {
 
   if (sessionCookie && tokenCookie) {
     // Rewrite based on token
-    console.log('Rewriting based on token')
     return rewriteBasedOnToken(tokenCookie)
   } else if (sessionCookie) {
     // Rewrite if no JWT is present
-    console.log('No JWT cookie found, rewriting to front-page')
     return rewriteBasedOnMe(req)
   }
 
