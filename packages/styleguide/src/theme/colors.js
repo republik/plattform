@@ -96,7 +96,7 @@ const colors = {
     overlay: '#FFFFFF',
     hover: '#F6F8F7',
     alert: '#E4F5E1',
-    error: '#9E0041',
+    error: '#9F2500',
     defaultInverted: '#191919',
     overlayInverted: '#1F1F1F',
     divider: '#DADDDC',
