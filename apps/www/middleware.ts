@@ -3,8 +3,8 @@ import {
   getJWTCookieValue,
   getSessionCookieValue,
   verifyJWT,
-} from '../lib/auth/JWTHelper'
-import fetchMyRoles from '../lib/helpers/middleware/FetchMeObject'
+} from './lib/auth/JWTHelper'
+import fetchMyRoles from './lib/helpers/middleware/FetchMeObject'
 
 /**
  * Middleware used to conditionally redirect between the marketing and front page
@@ -39,6 +39,7 @@ export async function middleware(req: NextRequest) {
   function rewriteBasedOnRoles(roles: string[] = []): NextResponse {
     if (roles?.includes('member')) {
       resUrl.pathname = '/front'
+      console.log('Rewriting to front-page based on role', resUrl)
       return NextResponse.rewrite(resUrl)
     }
     return NextResponse.next()
@@ -56,6 +57,8 @@ export async function middleware(req: NextRequest) {
     const response = rewriteBasedOnRoles(me?.roles)
 
     if (cookie) {
+      console.log('Setting cookie in response')
+      // Forward cookies to the client
       response.headers.set('Set-Cookie', cookie)
     }
 
@@ -87,9 +90,11 @@ export async function middleware(req: NextRequest) {
 
   if (sessionCookie && tokenCookie) {
     // Rewrite based on token
+    console.log('Rewriting based on token')
     return rewriteBasedOnToken(tokenCookie)
   } else if (sessionCookie) {
     // Rewrite if no JWT is present
+    console.log('No JWT cookie found, rewriting to front-page')
     return rewriteBasedOnMe(req)
   }
 
