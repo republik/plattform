@@ -67,7 +67,7 @@ const Discussion = ({
 
   return (
     <Loader
-      loading={discussionLoading}
+      loading={discussionLoading && !discussion}
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       error={
@@ -96,22 +96,27 @@ const Discussion = ({
             {!inRootCommentOverlay && (
               <DiscussionOptions documentMeta={documentMeta} />
             )}
-            <DiscussionCommentsWrapper
-              t={t}
-              loadMore={loadMore}
-              moreAvailableCount={
-                comments.directTotalCount - comments.nodes.length
-              }
-              tagMappings={documentMeta?.tagMappings}
-              errorMessage={focusError?.message}
-            >
-              <DiscussionCommentTreeRenderer
-                comments={comments.nodes}
-                discussion={discussion}
-                inRootCommentOverlay={inRootCommentOverlay}
-                documentMeta={documentMeta}
-              />
-            </DiscussionCommentsWrapper>
+            <Loader
+              loading={discussionLoading}
+              render={() => (
+                <DiscussionCommentsWrapper
+                  t={t}
+                  loadMore={loadMore}
+                  moreAvailableCount={
+                    comments.directTotalCount - comments.nodes.length
+                  }
+                  tagMappings={documentMeta?.tagMappings}
+                  errorMessage={focusError?.message}
+                >
+                  <DiscussionCommentTreeRenderer
+                    comments={comments.nodes}
+                    discussion={discussion}
+                    inRootCommentOverlay={inRootCommentOverlay}
+                    documentMeta={documentMeta}
+                  />
+                </DiscussionCommentsWrapper>
+              )}
+            />
           </div>
         </>
       )}
