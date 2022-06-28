@@ -32,6 +32,7 @@ const articleSchemaParams = {
   dynamicComponentRequire,
   dynamicComponentIdentifiers,
   ...withArticleData,
+  noEmpty: false,
 }
 
 const schemas = {

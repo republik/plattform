@@ -187,6 +187,7 @@ const createSchema = ({
   CommentLink = DefaultLink,
   ActionBar = DefaultActionBar,
   PayNote,
+  noEmpty = true,
 } = {}) => {
   const base = createBase({ metaBody, metaHeadlines })
   const blocks = createBlocks({
@@ -368,11 +369,14 @@ const createSchema = ({
               },
               {
                 matchMdast: matchHeading(2),
-                component: ({ children, attributes }) => (
-                  <Editorial.Subject attributes={attributes}>
-                    {children}
-                  </Editorial.Subject>
-                ),
+                component: ({ children, attributes }) => {
+                  if (!children.length && noEmpty) return null
+                  return (
+                    <Editorial.Subject attributes={attributes}>
+                      {children}
+                    </Editorial.Subject>
+                  )
+                },
                 editorModule: 'headline',
                 editorOptions: {
                   type: 'SUBJECT',

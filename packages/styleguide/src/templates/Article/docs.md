@@ -36,6 +36,8 @@ const schema = createArticleSchema({
 
 # Gregor Samsa eines Morgens aus unruhigen Träumen
 
+##
+
 Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas Böses getan hätte, wurde er eines Morgens verhaftet. «Wie ein Hund!» sagte er, es war, als sollte die Scham ihn überleben.
 
 Von [Franz Kafka](<>) (Text) und [Laurent Burst](<>) (Bilder), 13. Juli 2017
