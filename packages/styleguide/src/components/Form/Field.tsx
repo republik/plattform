@@ -195,7 +195,7 @@ const Field = React.forwardRef<
       return {
         labelText: css({
           color: colorScheme.getCSSColor(
-            error ? 'error' : isFocused ? 'primary' : 'disabled',
+            error ? 'error' : isFocused ? 'primary' : 'textSoft',
           ),
         }),
         field: css({
@@ -259,7 +259,7 @@ const Field = React.forwardRef<
           <ArrowDown
             {...(isFocused
               ? colorScheme.set('fill', 'primary')
-              : colorScheme.set('fill', 'disabled'))}
+              : colorScheme.set('fill', 'textSoft'))}
             size={FIELD_HEIGHT / 2}
             onClick={(e) => {
               e.preventDefault()
@@ -275,7 +275,7 @@ const Field = React.forwardRef<
           <ArrowUp
             {...(isFocused
               ? colorScheme.set('fill', 'primary')
-              : colorScheme.set('fill', 'disabled'))}
+              : colorScheme.set('fill', 'textSoft'))}
             size={FIELD_HEIGHT / 2}
             onClick={(e) => {
               e.preventDefault()
@@ -303,7 +303,7 @@ const Field = React.forwardRef<
             <CloseIcon
               {...(isFocused
                 ? colorScheme.set('fill', 'text')
-                : colorScheme.set('fill', 'disabled'))}
+                : colorScheme.set('fill', 'textSoft'))}
               size={FIELD_HEIGHT / 2}
             />
           </button>
