@@ -84,6 +84,7 @@ const DefaultLink = ({ children }) => children
 const createFrontSchema = ({
   Link = DefaultLink,
   t = () => '',
+  noEmpty = true,
   ...rest
 } = {}) => {
   const credit = {
@@ -185,24 +186,27 @@ const createFrontSchema = ({
       logo,
       color,
       collapsedColor,
-    }) => (
-      <>
-        {logo && (
-          <Link href={href} passHref>
-            <a href={href} {...styles.link}>
-              <TeaserFrontLogo logo={logo} />
-            </a>
-          </Link>
-        )}
-        <TeaserFrontFormat color={color} collapsedColor={collapsedColor}>
-          <Link href={href} passHref>
-            <a href={href} {...styles.link}>
-              {children}
-            </a>
-          </Link>
-        </TeaserFrontFormat>
-      </>
-    ),
+    }) => {
+      if (noEmpty && !children.length) return null
+      return (
+        <>
+          {logo && (
+            <Link href={href} passHref>
+              <a href={href} {...styles.link}>
+                <TeaserFrontLogo logo={logo} />
+              </a>
+            </Link>
+          )}
+          <TeaserFrontFormat color={color} collapsedColor={collapsedColor}>
+            <Link href={href} passHref>
+              <a href={href} {...styles.link}>
+                {children}
+              </a>
+            </Link>
+          </TeaserFrontFormat>
+        </>
+      )
+    },
     props(node, index, parent, { ancestors }) {
       const teaser = ancestors.find(matchTeaser)
       return {

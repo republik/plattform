@@ -26,6 +26,7 @@ const schema = createArticleSchema({
   - `passHref` Boolean, indicates this will eventually end in an a tag and you may overwrite href
 - `getVideoPlayerProps`, a [prop getter](https://blog.kentcdodds.com/how-to-give-rendering-control-to-users-with-prop-getters-549eaef76acf) for the video player. Make sure to forward, modified or unmodified, the props that are passed to the function.
 - `metaBody`, use the meta font for body text
+- `noEmpty`, prevents rendering from empty tags (useful from site accessibility, not useful for publikator), default: `true`
 
 # Example
 

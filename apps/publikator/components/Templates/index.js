@@ -47,6 +47,7 @@ const schemas = {
     CommentLink: NoOpLink,
     DiscussionLink: NoOpLink,
     t,
+    noEmpty: false,
     ...withFrontData,
   }),
   format: createFormatSchema(articleSchemaParams),
