@@ -14,14 +14,20 @@ export const fields = (t) => [
     label: t('Account/AddressForm/name/label'),
     name: 'name',
     autoComplete: 'name',
-    validator: (value) => !value && t('Account/AddressForm/name/error/empty'),
+    validator: (value) =>
+      (!value?.length && t('Account/AddressForm/name/error/empty')) ||
+      (value?.length > 70 &&
+        t('Account/AddressForm/name/error/tooLong', { maxLength: 70 })),
     explanation: <Hint t={t} tKey={'Account/AddressForm/name/explanation'} />,
   },
   {
     label: t('Account/AddressForm/line1/label'),
     name: 'line1',
     autoComplete: 'address-line1',
-    validator: (value) => !value && t('Account/AddressForm/line1/error/empty'),
+    validator: (value) =>
+      (!value?.length && t('Account/AddressForm/line1/error/empty')) ||
+      (value?.length > 70 &&
+        t('Account/AddressForm/line1/error/tooLong', { maxLength: 70 })),
   },
   {
     label: t('Account/AddressForm/line2/label'),
@@ -39,7 +45,10 @@ export const fields = (t) => [
     label: t('Account/AddressForm/city/label'),
     name: 'city',
     autoComplete: 'address-level2',
-    validator: (value) => !value && t('Account/AddressForm/city/error/empty'),
+    validator: (value) =>
+      (!value?.length && t('Account/AddressForm/city/error/empty')) ||
+      (value?.length > 35 &&
+        t('Account/AddressForm/city/error/tooLong', { maxLength: 35 })),
   },
   {
     label: t('Account/AddressForm/country/label'),

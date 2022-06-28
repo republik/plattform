@@ -5,7 +5,7 @@ import withMe from '../lib/apollo/withMe'
 import withT from '../lib/withT'
 
 import { CDN_FRONTEND_BASE_URL } from '../lib/constants'
-import withDefaultSSR from '../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../lib/apollo/helpers'
 
 const FeedPage = ({ t }) => {
   const meta = {

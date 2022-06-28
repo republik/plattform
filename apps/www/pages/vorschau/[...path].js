@@ -1,4 +1,4 @@
-import withDefaultSSR from '../../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../../lib/apollo/helpers'
 import ArticlePage from '../../components/Article/Page'
 
 const PreviewArticlePage = (props) => <ArticlePage {...props} isPreview />

@@ -176,6 +176,7 @@ module.exports = async (_, args, context) => {
         (await upsertAddress(
           { ...pledgePayment.address, id: user.addressId },
           transaction,
+          t,
         ))
 
       if (address) {

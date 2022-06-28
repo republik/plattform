@@ -7,10 +7,16 @@ export const fields = (t) => [
   {
     label: t('me/addressForm/name/label'),
     name: 'name',
+    validator: (value) =>
+      value?.length > 70 &&
+      t('me/addressForm/name/error/tooLong', { maxLength: 70 }),
   },
   {
     label: t('me/addressForm/line1/label'),
     name: 'line1',
+    validator: (value) =>
+      value?.length > 70 &&
+      t('me/addressForm/line1/error/tooLong', { maxLength: 70 }),
   },
   {
     label: t('me/addressForm/line2/label'),
@@ -23,6 +29,9 @@ export const fields = (t) => [
   {
     label: t('me/addressForm/city/label'),
     name: 'city',
+    validator: (value) =>
+      value?.length > 35 &&
+      t('me/addressForm/city/error/tooLong', { maxLength: 35 }),
   },
   {
     label: t('me/addressForm/country/label'),

@@ -4,7 +4,7 @@ import isEmail from 'validator/lib/isEmail'
 
 import { maybeDecode } from '../lib/utils/base64u'
 import withT from '../lib/withT'
-import withDefaultSSR from '../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../lib/apollo/helpers'
 
 import ClaimMembership, {
   sanitizeVoucherCode,
