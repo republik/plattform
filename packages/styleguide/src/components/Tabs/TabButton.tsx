@@ -90,6 +90,8 @@ const TabButton = React.forwardRef<
         !border ? 'transparent' : isActive ? 'text' : 'divider',
       )}
       title={text}
+      role='tab'
+      aria-selected={isActive}
     >
       {text}
     </Element>

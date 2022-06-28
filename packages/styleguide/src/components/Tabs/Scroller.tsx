@@ -1,5 +1,5 @@
 import { css } from 'glamor'
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, Children } from 'react'
 import scrollIntoView from 'scroll-into-view'
 import { ChevronLeftIcon, ChevronRightIcon } from '../Icons'
 import { plainButtonRule } from '../Button'
@@ -10,6 +10,9 @@ const styles = {
   container: css({
     position: 'relative',
     overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
   }),
   breakoutMargin: css({
     [mUp]: {
@@ -17,10 +20,12 @@ const styles = {
     },
   }),
   scroller: css({
+    listStyle: 'none',
+    margin: 0,
+    padding: 0,
     display: 'flex',
     flexDirection: 'row',
     overflowX: 'scroll',
-    flexWrap: 'nowrap',
     scrollbarWidth: 'none' /* Firefox */,
     msOverflowStyle: 'none' /* IE 10+ */,
     WebkitOverflowScrolling: 'touch',
@@ -64,6 +69,9 @@ const styles = {
       },
     },
   }),
+  listItem: css({
+    display: 'flex',
+  }),
 }
 
 type ScrollerType = {
@@ -83,7 +91,7 @@ const Scroller = ({
   arrowSize = 28,
   innerPadding = 0,
 }: ScrollerType) => {
-  const scrollRef = useRef<HTMLDivElement>()
+  const scrollRef = useRef<HTMLUListElement>()
   const [{ left, right }, setArrows] = useState({ left: false, right: false })
   const [colorScheme] = useColorContext()
 
@@ -177,26 +185,29 @@ const Scroller = ({
   const shouldCenter = center && !(left || right)
 
   return (
-    <div {...styles.container} role='group'>
+    <div
+      {...styles.container}
+      style={{
+        justifyContent: shouldCenter ? 'center' : 'flex-start',
+      }}
+    >
       <div
-        ref={scrollRef}
-        {...styles.scroller}
         style={{
-          justifyContent: shouldCenter ? 'center' : 'flex-start',
+          flex: shouldCenter ? 1 : `0 0 ${innerPadding}px`,
         }}
-      >
-        <div
-          style={{
-            flex: shouldCenter ? 1 : `0 0 ${innerPadding}px`,
-          }}
-        />
-        {children}
-        <div
-          style={{
-            flex: shouldCenter ? 1 : `0 0 ${innerPadding}px`,
-          }}
-        />
-      </div>
+      />
+      <ul ref={scrollRef} {...styles.scroller} role='tablist'>
+        {Children.toArray(children).map((child, index) => (
+          <li key={index} {...styles.listItem}>
+            {child}
+          </li>
+        ))}
+      </ul>
+      <div
+        style={{
+          flex: shouldCenter ? 1 : `0 0 ${innerPadding}px`,
+        }}
+      />
       {!hideArrows && (
         <>
           <button
