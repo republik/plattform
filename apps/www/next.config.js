@@ -110,6 +110,17 @@ module.exports = withTM(
           destination: 'https://ultradashboard.republik.ch/dashboard/17',
           permanent: false,
         },
+        // Legacy crowdfunding pages
+        {
+          source: '/updates/wer-sind-sie',
+          destination: '/503',
+          permanent: false,
+        },
+        {
+          source: '/vote',
+          destination: '/503',
+          permanent: false,
+        },
       ]
     },
   }),
