@@ -32,7 +32,7 @@ import Check from 'react-icons/lib/md/check'
 
 import UIForm from '../../UIForm'
 import ImageInput from '../../utils/ImageInput'
-import ColorPicker from '../../utils/ColorPicker'
+import ColorPicker, { isContrastOk } from '../../utils/ColorPicker'
 import createOnFieldChange from '../../utils/createOnFieldChange'
 import RepoSearch from '../../utils/RepoSearch'
 import { AutoSlugLinkInfo } from '../../utils/github'
@@ -313,6 +313,13 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
             onChange('bgColor', null, color)
           }}
         />
+      )}
+      {node.data.get('color') && node.data.get('bgColor') && (
+        <div>
+          {isContrastOk(node.data.get('color'), node.data.get('bgColor'))
+            ? 'Contrast OK'
+            : 'Wrong color you donkey'}
+        </div>
       )}
       {options.includes('outline') && (
         <>

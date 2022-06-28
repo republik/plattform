@@ -1,5 +1,6 @@
 import { Component } from 'react'
 import { ChromePicker } from 'react-color'
+import { lab } from 'd3-color'
 import { Label } from '@project-r/styleguide'
 
 const styles = {
@@ -24,6 +25,14 @@ const styles = {
     fontSize: 15,
     padding: '7px 6px',
   },
+}
+
+// WCAG 2.0 level AA standard, for large text
+// minimum contrast level 3:1
+export const isContrastOk = (color1, color2) => {
+  const l1 = lab(color1)?.l
+  const l2 = lab(color2)?.l
+  return (l1 > l2 ? l1 - l2 : l2 - l1) >= 38
 }
 
 class ColorPicker extends Component {
