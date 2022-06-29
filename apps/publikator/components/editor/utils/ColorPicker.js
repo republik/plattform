@@ -2,6 +2,7 @@ import { Component } from 'react'
 import { ChromePicker } from 'react-color'
 import { rgb } from 'd3-color'
 import { Label } from '@project-r/styleguide'
+import withT from '../../../lib/withT'
 
 const styles = {
   popover: {
@@ -55,25 +56,25 @@ const getColorContrast = (color1, color2) => {
 
 // WCAG 2.0 level AA standard, for large text
 // minimum contrast level 3:1
-export const ContrastInfo = ({ color, bgColor }) => {
+export const ContrastInfo = withT(({ t, color, bgColor }) => {
   if (!color || !bgColor) return null
   const contrast = getColorContrast(color, bgColor)
   const warning = contrast < 3
   return (
     <div style={{ margin: '5px 0' }}>
-      Farbkontrast:&nbsp;
+      {t('colorPicker/contrastInfo/title')}
       <span style={{ marginRight: 10 }}>
         {contrast.toFixed(1)}&thinsp;:&thinsp;1
       </span>
       {warning ? '⚠️' : '✅'}
       {warning && (
         <span style={{ display: 'block' }}>
-          <small>Wert sollte mehr als 3&thinsp;:&thinsp;1 sein.</small>
+          <small>{t('colorPicker/contrastInfo/warning')}</small>
         </span>
       )}
     </div>
   )
-}
+})
 
 class ColorPicker extends Component {
   constructor(...args) {
