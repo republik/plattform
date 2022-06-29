@@ -937,6 +937,14 @@
       "value": "Die Publikation ist für {date} geplant."
     },
     {
+      "key": "colorPicker/contrastInfo/title",
+      "value": "Farbkontrast: "
+    },
+    {
+      "key": "colorPicker/contrastInfo/warning",
+      "value": "Wert sollte höher als 3 : 1 sein."
+    },
+    {
       "key": "variable/insert/greeting",
       "value": "Begrüssung"
     },
