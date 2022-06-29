@@ -187,7 +187,7 @@ const createFrontSchema = ({
       color,
       collapsedColor,
     }) => {
-      if (noEmpty && !children.length) return null
+      if (noEmpty && !React.Children.count(children)) return null
       return (
         <>
           {logo && (
