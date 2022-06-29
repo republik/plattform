@@ -164,7 +164,7 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
         <div {...styles.middleRow}>
           <div {...styles.nav}>
             <ul {...styles.navList}>
-              <li {...colorScheme.set('color', 'disabled')}>
+              <li {...colorScheme.set('color', 'textSoft')}>
                 {me ? `${t('footer/me/title')}` : `${t('footer/becomemember')}`}
               </li>
               {!!me && (
@@ -238,7 +238,7 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
               )}
             </ul>
             <ul {...styles.navList}>
-              <li {...colorScheme.set('color', 'disabled')}>Republik</li>
+              <li {...colorScheme.set('color', 'textSoft')}>Republik</li>
               <li>
                 <FooterNavLink href='/about'>
                   <a {...navLinkStyle}>{t('footer/about')}</a>
@@ -273,7 +273,7 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
               </li>
             </ul>
             <ul {...styles.navList}>
-              <li {...colorScheme.set('color', 'disabled')}>Community</li>
+              <li {...colorScheme.set('color', 'textSoft')}>Community</li>
               <li>
                 <FooterNavLink href='/veranstaltungen'>
                   <a {...navLinkStyle}>{t('footer/events')}</a>
@@ -296,7 +296,7 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
               </li>
             </ul>
             <ul {...styles.navList}>
-              <li {...colorScheme.set('color', 'disabled')}>Rechtliches</li>
+              <li {...colorScheme.set('color', 'textSoft')}>Rechtliches</li>
               <li>
                 <FooterNavLink href='/agb'>
                   <a {...navLinkStyle}>{t('footer/legal/tos')}</a>
