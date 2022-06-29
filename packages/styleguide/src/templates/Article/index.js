@@ -370,7 +370,7 @@ const createSchema = ({
               {
                 matchMdast: matchHeading(2),
                 component: ({ children, attributes }) => {
-                  if (!React.Children.count(children) && noEmpty) return null
+                  if (noEmpty && !React.Children.count(children)) return null
                   return (
                     <Editorial.Subject attributes={attributes}>
                       {children}

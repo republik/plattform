@@ -186,17 +186,16 @@ const createFrontSchema = ({
       logo,
       color,
       collapsedColor,
-    }) => {
-      if (noEmpty && !React.Children.count(children)) return null
-      return (
-        <>
-          {logo && (
-            <Link href={href} passHref>
-              <a href={href} {...styles.link}>
-                <TeaserFrontLogo logo={logo} />
-              </a>
-            </Link>
-          )}
+    }) => (
+      <>
+        {logo && (
+          <Link href={href} passHref>
+            <a href={href} {...styles.link}>
+              <TeaserFrontLogo logo={logo} />
+            </a>
+          </Link>
+        )}
+        {(!noEmpty || !!React.Children.count(children)) && (
           <TeaserFrontFormat color={color} collapsedColor={collapsedColor}>
             <Link href={href} passHref>
               <a href={href} {...styles.link}>
@@ -204,9 +203,9 @@ const createFrontSchema = ({
               </a>
             </Link>
           </TeaserFrontFormat>
-        </>
-      )
-    },
+        )}
+      </>
+    ),
     props(node, index, parent, { ancestors }) {
       const teaser = ancestors.find(matchTeaser)
       return {
