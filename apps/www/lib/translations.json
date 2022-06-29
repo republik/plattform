@@ -106,11 +106,11 @@
     },
     {
       "key": "pages/profile/pageTitle",
-      "value": "{name} – Profil – Republik"
+      "value": "Profil von {name} – Republik"
     },
     {
       "key": "pages/profile/title",
-      "value": "{name} – Profil"
+      "value": "Profil von {name}"
     },
     {
       "key": "pages/profile/empty/pageTitle",
