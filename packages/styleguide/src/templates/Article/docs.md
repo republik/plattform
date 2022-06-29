@@ -26,6 +26,7 @@ const schema = createArticleSchema({
   - `passHref` Boolean, indicates this will eventually end in an a tag and you may overwrite href
 - `getVideoPlayerProps`, a [prop getter](https://blog.kentcdodds.com/how-to-give-rendering-control-to-users-with-prop-getters-549eaef76acf) for the video player. Make sure to forward, modified or unmodified, the props that are passed to the function.
 - `metaBody`, use the meta font for body text
+- `noEmpty`, prevents rendering from empty tags (useful from site accessibility, not useful for publikator), default: `true`
 
 # Example
 
@@ -35,6 +36,8 @@ const schema = createArticleSchema({
 <section><h6>TITLE</h6>
 
 # Gregor Samsa eines Morgens aus unruhigen Träumen
+
+##
 
 Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas Böses getan hätte, wurde er eines Morgens verhaftet. «Wie ein Hund!» sagte er, es war, als sollte die Scham ihn überleben.
 
