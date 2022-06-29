@@ -5385,6 +5385,10 @@
       "value": "Wahrscheinlich ist der von Ihnen verwendete Link bereits benutzt worden oder unvollständig. Falls das Problem wider alle Erwartungen weiterhin auftritt, helfen wir Ihnen unter <a href=\"mailto:wahlen19@republik.ch?subject=Nicht%20gefunden\">wahlen19@republik.ch</a> gerne und zügig weiter."
     },
     {
+      "key": "components/Frame/Meta/title",
+      "value": "{title} – Republik"
+    },
+    {
       "key": "pages/cardSetup/title",
       "value": "Profil einrichten – Wahltindär"
     },
