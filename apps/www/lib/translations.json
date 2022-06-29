@@ -106,11 +106,15 @@
     },
     {
       "key": "pages/profile/pageTitle",
+      "value": "{name} – Profil – Republik"
+    },
+    {
+      "key": "pages/profile/title",
       "value": "{name} – Profil"
     },
     {
       "key": "pages/profile/empty/pageTitle",
-      "value": "Profil"
+      "value": "Profil – Republik"
     },
     {
       "key": "pages/profile/empty/title",
@@ -538,6 +542,10 @@
     },
     {
       "key": "sections/pageTitle",
+      "value": "Rubriken – Republik"
+    },
+    {
+      "key": "sections/title",
       "value": "Rubriken"
     },
     {
@@ -2890,7 +2898,7 @@
     },
     {
       "key": "shareholder/pageTitle",
-      "value": "Aktionariat"
+      "value": "Aktionariat – Republik"
     },
     {
       "key": "shareholder/title",
@@ -5326,6 +5334,10 @@
     },
     {
       "key": "pages/cardGroups/pageTitle",
+      "value": "«Republik Wahltindär»"
+    },
+    {
+      "key": "pages/cardGroups/title",
       "value": "«Republik Wahltindär»"
     },
     {
