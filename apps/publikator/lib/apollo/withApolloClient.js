@@ -49,7 +49,6 @@ const WithApolloClient = (App) => {
 
         // getDataFromTree does not call componentWillUnmount
         // head side effect therefore need to be cleared manually
-        Head.rewind()
 
         // Extract query data from the Apollo store
         apolloState = apollo.cache.extract()
