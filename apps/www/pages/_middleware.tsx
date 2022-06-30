@@ -3,8 +3,8 @@ import {
   getJWTCookieValue,
   getSessionCookieValue,
   verifyJWT,
-} from './lib/auth/JWTHelper'
-import fetchMyRoles from './lib/helpers/middleware/FetchMeObject'
+} from '../lib/auth/JWTHelper'
+import fetchMyRoles from '../lib/helpers/middleware/FetchMeObject'
 
 /**
  * Middleware used to conditionally redirect between the marketing and front page
@@ -14,14 +14,8 @@ import fetchMyRoles from './lib/helpers/middleware/FetchMeObject'
 export async function middleware(req: NextRequest) {
   const resUrl = req.nextUrl.clone()
 
-  // Rewrite if someone tries to directly access the front
-  if (req.nextUrl.pathname === '/front') {
-    resUrl.pathname = '/404'
-    return NextResponse.rewrite(resUrl)
-  }
-
   // Don't run the middleware unless on home-page
-  if (req.nextUrl.pathname !== '/') {
+  if (resUrl.pathname !== '/') {
     return NextResponse.next()
   }
 
@@ -38,7 +32,7 @@ export async function middleware(req: NextRequest) {
   /* ------------ Logic to handle SSG front- & marketing-page ------------ */
 
   /**
-   * Rewrite to the front if the user is a member
+   * Rewrite to the front if the user is a memeber
    * @param roles Roles of the user
    * @returns NextResponse
    */
@@ -62,7 +56,6 @@ export async function middleware(req: NextRequest) {
     const response = rewriteBasedOnRoles(me?.roles)
 
     if (cookie) {
-      // Forward cookies to the client
       response.headers.set('Set-Cookie', cookie)
     }
 
