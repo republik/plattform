@@ -103,6 +103,8 @@ export const TeaserFeed = ({
     ? borderColor
     : undefined
 
+  const showCredits = credits && credits.length > 0
+
   return (
     <Container
       highlighted={highlighted}
@@ -141,11 +143,14 @@ export const TeaserFeed = ({
           )}
         </Lead>
       )}
-      <Credit>
-        {credits && credits.length > 0
-          ? renderMdast(credits, getCreditsSchema(!nonInteractive))
-          : !!publishDate && dateFormat(new Date(publishDate))}
-      </Credit>
+      {showCredits && (
+        <Credit>
+          {renderMdast(credits, getCreditsSchema(!nonInteractive))}
+        </Credit>
+      )}
+      {!showCredits && !!publishDate && (
+        <Credit>{dateFormat(new Date(publishDate))}</Credit>
+      )}
       {!!highlight && (
         <Highlight label={highlightLabel}>
           <Link href={href} passHref>

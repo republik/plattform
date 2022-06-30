@@ -12,7 +12,8 @@ import { withDefaultSSR } from '../lib/apollo/helpers'
 
 const ShareholderPage = ({ t }) => {
   const meta = {
-    title: t('shareholder/pageTitle'),
+    pageTitle: t('shareholder/pageTitle'),
+    title: t('shareholder/title'),
     description: t('shareholder/description'),
     image: `${CDN_FRONTEND_BASE_URL}/static/social-media/aktionariat.png`,
   }

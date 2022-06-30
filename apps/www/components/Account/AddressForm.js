@@ -14,6 +14,7 @@ export const fields = (t) => [
     label: t('Account/AddressForm/name/label'),
     name: 'name',
     autoComplete: 'name',
+    required: true,
     validator: (value) =>
       (!value?.length && t('Account/AddressForm/name/error/empty')) ||
       (value?.length > 70 &&
@@ -24,6 +25,7 @@ export const fields = (t) => [
     label: t('Account/AddressForm/line1/label'),
     name: 'line1',
     autoComplete: 'address-line1',
+    required: true,
     validator: (value) =>
       (!value?.length && t('Account/AddressForm/line1/error/empty')) ||
       (value?.length > 70 &&
@@ -38,6 +40,7 @@ export const fields = (t) => [
     label: t('Account/AddressForm/postalCode/label'),
     name: 'postalCode',
     autoComplete: 'postal-code',
+    required: true,
     validator: (value) =>
       !value && t('Account/AddressForm/postalCode/error/empty'),
   },
@@ -45,6 +48,7 @@ export const fields = (t) => [
     label: t('Account/AddressForm/city/label'),
     name: 'city',
     autoComplete: 'address-level2',
+    required: true,
     validator: (value) =>
       (!value?.length && t('Account/AddressForm/city/error/empty')) ||
       (value?.length > 35 &&
@@ -54,6 +58,7 @@ export const fields = (t) => [
     label: t('Account/AddressForm/country/label'),
     name: 'country',
     autoComplete: 'country-name',
+    required: true,
     validator: (value) =>
       !value && t('Account/AddressForm/country/error/empty'),
   },

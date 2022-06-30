@@ -67,8 +67,15 @@ class FieldSet extends Component {
     return (
       <Fragment>
         {fields.map((field) => {
-          const { label, type, autoComplete, name, validator, explanation } =
-            field
+          const {
+            label,
+            type,
+            autoComplete,
+            required,
+            name,
+            validator,
+            explanation,
+          } = field
 
           return (
             <Fragment key={name}>
@@ -77,6 +84,7 @@ class FieldSet extends Component {
                 type={type}
                 name={autoComplete || name}
                 autoComplete={autoComplete}
+                required={required}
                 {...additionalFieldProps(field)}
                 value={values[name]}
                 error={dirty[name] && errors[name]}
