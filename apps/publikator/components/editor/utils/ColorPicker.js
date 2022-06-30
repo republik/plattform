@@ -3,6 +3,7 @@ import { ChromePicker } from 'react-color'
 import { rgb } from 'd3-color'
 import { Label } from '@project-r/styleguide'
 import withT from '../../../lib/withT'
+import { swissNumbers } from '../../../lib/utils/format'
 
 const styles = {
   popover: {
@@ -54,24 +55,20 @@ const getColorContrast = (color1, color2) => {
   return (rlmax + 0.05) / (rlmin + 0.05)
 }
 
+const formatOneDecimal = swissNumbers.format('.1f')
 // WCAG 2.0 level AA standard, for large text
 // minimum contrast level 3:1
 export const ContrastInfo = withT(({ t, color, bgColor }) => {
-  if (!color || !bgColor) return null
-  const contrast = getColorContrast(color, bgColor)
-  const warning = contrast < 3
+  const contrast = color && bgColor && getColorContrast(color, bgColor)
+  const warning = Math.round(contrast * 10) / 10 < 3
   return (
-    <div style={{ margin: '5px 0' }}>
-      {t('colorPicker/contrastInfo/title')}
+    <div style={{ margin: '5px 0', opacity: contrast ? 1 : 0 }}>
+      <Label>{t('colorPicker/contrastInfo/title')}</Label>
+      <br />
       <span style={{ marginRight: 10 }}>
-        {contrast.toFixed(1)}&thinsp;:&thinsp;1
+        {formatOneDecimal(contrast)}&thinsp;:&thinsp;1
       </span>
-      {warning ? '⚠️' : '✅'}
-      {warning && (
-        <span style={{ display: 'block' }}>
-          <small>{t('colorPicker/contrastInfo/warning')}</small>
-        </span>
-      )}
+      {t(`colorPicker/contrastInfo/${warning ? 'warning' : 'ok'}`)}
     </div>
   )
 })
