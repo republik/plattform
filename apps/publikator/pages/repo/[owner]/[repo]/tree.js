@@ -26,6 +26,7 @@ import * as fragments from '../../../../lib/graphql/fragments'
 import CurrentPublications from '../../../../components/Publication/Current'
 import UncommittedChanges from '../../../../components/VersionControl/UncommittedChanges'
 import withT from '../../../../lib/withT'
+import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 
 export const COMMIT_LIMIT = 40
 export const getRepoHistory = gql`
@@ -125,7 +126,7 @@ class EditorPage extends Component {
       this.unsubscribe = this.props.data.subscribeToMore({
         document: treeRepoSubscription,
         variables: {
-          repoId: this.props.router.query.repoId,
+          repoId: getRepoIdFromQuery(this.props.router.query),
         },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) {
@@ -178,7 +179,7 @@ class EditorPage extends Component {
   render() {
     const { router, commits, hasMore, fetchMore, t } = this.props
     const { loading, error, repo } = this.props.data
-    const { repoId } = router.query
+    const repoId = getRepoIdFromQuery(router.query)
 
     const localStorageCommitIds = getLocalStorageKeys()
       .filter((key) => key.startsWith(repoId))
@@ -259,7 +260,7 @@ export default compose(
     options: ({ router }) => {
       return {
         variables: {
-          repoId: router.query.repoId,
+          repoId: getRepoIdFromQuery(router.query),
           first: COMMIT_LIMIT,
         },
         notifyOnNetworkStatusChange: true,

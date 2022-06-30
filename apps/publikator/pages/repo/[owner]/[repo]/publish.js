@@ -8,14 +8,11 @@ import RepoNav from '../../../../components/Repo/Nav'
 import Publication from '../../../../components/Publication'
 
 import withT from '../../../../lib/withT'
+import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 
-const Page = ({
-  router: {
-    query: { repoId, commitId },
-  },
-  data,
-  t,
-}) => {
+const Page = ({ router, t }) => {
+  const repoId = getRepoIdFromQuery(router.query)
+  const { commitId } = router.query
   return (
     <Frame>
       <Frame.Header>

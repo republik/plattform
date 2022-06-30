@@ -62,6 +62,7 @@ import {
   generateAuthorsLine,
 } from '../../../../lib/utils/helpers'
 import { withEditRepoMeta } from '../../../../components/Repo/EditMetaDate'
+import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 
 const commitMutation = gql`
   mutation commit(
@@ -1060,7 +1061,7 @@ export default compose(
       router.query.commitId === 'new' || !router.query.commitId,
     options: ({ router }) => ({
       variables: {
-        repoId: router.query.repoId,
+        repoId: getRepoIdFromQuery(router.query),
         commitId: router.query.commitId,
       },
     }),
@@ -1072,7 +1073,7 @@ export default compose(
       // always the latest
       fetchPolicy: 'network-only',
       variables: {
-        repoId: router.query.repoId,
+        repoId: getRepoIdFromQuery(router.query),
       },
     }),
     props: ({ data, ownProps: { router, t } }) => {
@@ -1103,7 +1104,7 @@ export default compose(
   withUncommitedChanges({
     options: ({ router }) => ({
       variables: {
-        repoId: router.query.repoId,
+        repoId: getRepoIdFromQuery(router.query),
       },
     }),
   }),

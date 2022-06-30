@@ -25,6 +25,10 @@ import {
   withUncommitedChanges,
 } from '../../../../components/VersionControl/UncommittedChanges'
 import BranchingNotice from '../../../../components/VersionControl/BranchingNotice'
+import {
+  getQueryFromRepoId,
+  getRepoIdFromQuery,
+} from '../../../../lib/repoIdHelper'
 
 const styles = css({
   background: colors.secondaryBg,
@@ -79,12 +83,13 @@ export default compose(
   withUncommitedChanges({
     options: ({ router }) => ({
       variables: {
-        repoId: router.query.repoId,
+        repoId: getRepoIdFromQuery(router.query),
       },
     }),
   }),
 )(({ t, router, uncommittedChanges }) => {
-  const { repoId, commitId, schema, template, isTemplate } = router.query
+  const repoId = getRepoIdFromQuery(router.query)
+  const { commitId, schema, template, isTemplate } = router.query
   const [store, setStore] = useState(undefined)
   const [md, setMd] = useState('')
   const [meta, setMeta] = useState(undefined)
@@ -96,7 +101,7 @@ export default compose(
     if (e) e.preventDefault()
     Router.pushRoute('repo/edit', {
       ...router.query,
-      repoId: repoId.split('/'),
+      ...getQueryFromRepoId(repoId),
       commitId,
       ...(commitId === 'new' ? { schema: schema || template, isTemplate } : {}),
     })
