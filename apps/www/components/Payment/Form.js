@@ -114,6 +114,7 @@ const styles = {
   }),
   paymentMethod: css({
     ...fontStyles.sansSerifMedium,
+    position: 'relative',
     fontSize: 14,
     display: 'inline-block',
     borderWidth: 1,
@@ -125,7 +126,26 @@ const styles = {
     lineHeight: 0,
     verticalAlign: 'top',
     '& input': {
-      display: 'none',
+      cursor: 'pointer',
+      // hidden but accessible
+      // https://www.sarasoueidan.com/blog/inclusively-hiding-and-styling-checkboxes-and-radio-buttons/
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      opacity: 0,
+    },
+  }),
+  outlineOnPrevInputFocus: css({
+    display: 'inline-block',
+    minHeight: 40,
+    'input:focus + &': {
+      outline: 'solid',
+      outlineOffset: 10 + 1 + 3, // label padding + border + 3px
+    },
+    'input:focus:not(:focus-visible) + &': {
+      outline: 'none',
     },
   }),
   paymentMethodText: css({
@@ -334,18 +354,20 @@ class PaymentForm extends Component {
                         value={paymentSource.id}
                         checked={values.paymentSource === paymentSource.id}
                       />
-                      {PaymentSourceIcon}
-                      {PaymentSourceIcon && (
-                        <span {...styles.paymentMethodHiddenText}>
-                          {paymentSource.brand}
+                      <span {...styles.outlineOnPrevInputFocus}>
+                        {PaymentSourceIcon}
+                        {PaymentSourceIcon && (
+                          <span {...styles.paymentMethodHiddenText}>
+                            {paymentSource.brand}
+                          </span>
+                        )}
+                        <span {...styles.paymentMethodSourceText}>
+                          {!PaymentSourceIcon && paymentSource.brand}
+                          {'**** '}
+                          {paymentSource.last4}
+                          <br />
+                          {pad2(paymentSource.expMonth)}/{paymentSource.expYear}
                         </span>
-                      )}
-                      <span {...styles.paymentMethodSourceText}>
-                        {!PaymentSourceIcon && paymentSource.brand}
-                        {'**** '}
-                        {paymentSource.last4}
-                        <br />
-                        {pad2(paymentSource.expMonth)}/{paymentSource.expYear}
                       </span>
                     </PaymentMethodLabel>
                     <br />
@@ -411,13 +433,15 @@ class PaymentForm extends Component {
                           paymentMethod === pm.key && !values.paymentSource
                         }
                       />
-                      {pm.Icon ? <pm.Icon values={values} /> : null}
-                      <span
-                        {...(pm.Icon
-                          ? styles.paymentMethodHiddenText
-                          : styles.paymentMethodText)}
-                      >
-                        {t(`payment/method/${pm.key}`)}
+                      <span {...styles.outlineOnPrevInputFocus}>
+                        {pm.Icon ? <pm.Icon values={values} /> : null}
+                        <span
+                          {...(pm.Icon
+                            ? styles.paymentMethodHiddenText
+                            : styles.paymentMethodText)}
+                        >
+                          {t(`payment/method/${pm.key}`)}
+                        </span>
                       </span>
                     </PaymentMethodLabel>
                   ))}

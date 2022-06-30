@@ -82,12 +82,14 @@ const getContactFields = (t) => [
   {
     label: t('pledge/contact/firstName/label'),
     name: 'firstName',
+    required: true,
     validator: (value) =>
       value.trim().length <= 0 && t('pledge/contact/firstName/error/empty'),
   },
   {
     label: t('pledge/contact/lastName/label'),
     name: 'lastName',
+    required: true,
     validator: (value) =>
       value.trim().length <= 0 && t('pledge/contact/lastName/error/empty'),
   },
@@ -95,6 +97,7 @@ const getContactFields = (t) => [
     label: t('pledge/contact/email/label'),
     name: 'email',
     type: 'email',
+    required: true,
     validator: (value) =>
       (value.trim().length <= 0 && t('pledge/contact/email/error/empty')) ||
       (!isEmail(value) && t('pledge/contact/email/error/invalid')),
