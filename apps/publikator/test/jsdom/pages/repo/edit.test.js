@@ -6,7 +6,7 @@ import { RouterContext } from 'next/dist/next-server/lib/router-context'
 import { t } from '../../../../lib/withT'
 import { parse } from '@orbiting/remark-preset'
 
-import { EditorPage } from '../../../../pages/repo/edit'
+import { EditorPage } from '../../../../pages/repo/[owner]/[repo]/edit'
 
 const me = {
   __typename: 'User',

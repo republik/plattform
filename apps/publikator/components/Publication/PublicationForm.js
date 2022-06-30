@@ -5,7 +5,10 @@ import gql from 'graphql-tag'
 
 import ErrorMessage from '../ErrorMessage'
 import { getRepoWithPublications } from './Current'
-import { getRepoHistory, COMMIT_LIMIT } from '../../pages/repo/tree'
+import {
+  getRepoHistory,
+  COMMIT_LIMIT,
+} from '../../pages/repo/[owner]/[repo]/tree'
 
 import { GITHUB_ORG, FRONTEND_BASE_URL } from '../../lib/settings'
 import { Link, Router } from '../../lib/routes'

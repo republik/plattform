@@ -6,26 +6,26 @@ import gql from 'graphql-tag'
 
 import { path } from 'ramda'
 
-import withAuthorization from '../../components/Auth/withAuthorization'
+import withAuthorization from '../../../../components/Auth/withAuthorization'
 
-import Loader from '../../components/Loader'
-import Tree from '../../components/Tree'
-import Frame from '../../components/Frame'
-import RepoNav from '../../components/Repo/Nav'
-import RepoArchive from '../../components/Repo/Archive'
-import RepoArchivedBanner from '../../components/Repo/ArchivedBanner'
+import Loader from '../../../../components/Loader'
+import Tree from '../../../../components/Tree'
+import Frame from '../../../../components/Frame'
+import RepoNav from '../../../../components/Repo/Nav'
+import RepoArchive from '../../../../components/Repo/Archive'
+import RepoArchivedBanner from '../../../../components/Repo/ArchivedBanner'
 import {
   NarrowContainer,
   A,
   InlineSpinner,
   Interaction,
 } from '@project-r/styleguide'
-import { getKeys as getLocalStorageKeys } from '../../lib/utils/localStorage'
-import * as fragments from '../../lib/graphql/fragments'
+import { getKeys as getLocalStorageKeys } from '../../../../lib/utils/localStorage'
+import * as fragments from '../../../../lib/graphql/fragments'
 
-import CurrentPublications from '../../components/Publication/Current'
-import UncommittedChanges from '../../components/VersionControl/UncommittedChanges'
-import withT from '../../lib/withT'
+import CurrentPublications from '../../../../components/Publication/Current'
+import UncommittedChanges from '../../../../components/VersionControl/UncommittedChanges'
+import withT from '../../../../lib/withT'
 
 export const COMMIT_LIMIT = 40
 export const getRepoHistory = gql`

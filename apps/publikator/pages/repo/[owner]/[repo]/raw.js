@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
-import Frame from '../../components/Frame'
-import RepoNav from '../../components/Repo/Nav'
-import initLocalStore from '../../lib/utils/localStorage'
+import Frame from '../../../../components/Frame'
+import RepoNav from '../../../../components/Repo/Nav'
+import initLocalStore from '../../../../lib/utils/localStorage'
 import { withRouter } from 'next/router'
-import withT from '../../lib/withT'
-import withAuthorization from '../../components/Auth/withAuthorization'
+import withT from '../../../../lib/withT'
+import withAuthorization from '../../../../components/Auth/withAuthorization'
 import { compose } from 'react-apollo'
 import { stringify, parse } from '@orbiting/remark-preset'
 import { css } from 'glamor'
@@ -16,15 +16,15 @@ import {
   fontFamilies,
   Checkbox,
 } from '@project-r/styleguide'
-import { Router } from '../../lib/routes'
+import { Router } from '../../../../lib/routes'
 import CircleIcon from 'react-icons/lib/md/lens'
 import InfoIcon from 'react-icons/lib/md/info-outline'
 import { Controlled as CodeMirror } from 'react-codemirror2'
 import {
   UncommittedChanges,
   withUncommitedChanges,
-} from '../../components/VersionControl/UncommittedChanges'
-import BranchingNotice from '../../components/VersionControl/BranchingNotice'
+} from '../../../../components/VersionControl/UncommittedChanges'
+import BranchingNotice from '../../../../components/VersionControl/BranchingNotice'
 
 const styles = css({
   background: colors.secondaryBg,
@@ -57,7 +57,7 @@ const styles = css({
 
 // CodeMirror can only run in the browser
 if (process.browser) {
-  require('../../components/editor/utils/codemirror-md')
+  require('../../../../components/editor/utils/codemirror-md')
   require('codemirror/addon/fold/foldcode')
   require('codemirror/addon/fold/foldgutter')
   require('codemirror/addon/fold/xml-fold')
@@ -175,7 +175,10 @@ export default compose(
               style={{ textAlign: 'center', marginTop: 7 }}
               {...css({ fontSize: 10, [mediaQueries.mUp]: { fontSize: 14 } })}
             >
-              <A href='#' onClick={goToEditor}>
+              <A
+                href='apps/publikator/pages/repo/[owner]/[repo]/raw#'
+                onClick={goToEditor}
+              >
                 {t('pages/raw/cancel')}
               </A>
             </div>

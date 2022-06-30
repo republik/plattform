@@ -7,19 +7,19 @@ import debounce from 'lodash/debounce'
 import { timeFormat } from 'd3-time-format'
 import { parse } from '@orbiting/remark-preset'
 
-import withAuthorization from '../../components/Auth/withAuthorization'
+import withAuthorization from '../../../../components/Auth/withAuthorization'
 
-import Frame from '../../components/Frame'
-import { HEADER_HEIGHT } from '../../components/Frame/constants'
-import RepoNav from '../../components/Repo/Nav'
-import RepoArchivedBanner from '../../components/Repo/ArchivedBanner'
+import Frame from '../../../../components/Frame'
+import { HEADER_HEIGHT } from '../../../../components/Frame/constants'
+import RepoNav from '../../../../components/Repo/Nav'
+import RepoArchivedBanner from '../../../../components/Repo/ArchivedBanner'
 
-import Editor from '../../components/editor'
-import EditorUI from '../../components/editor/UI'
+import Editor from '../../../../components/editor'
+import EditorUI from '../../../../components/editor/UI'
 
-import VersionControl from '../../components/VersionControl'
-import BranchingNotice from '../../components/VersionControl/BranchingNotice'
-import CommitButton from '../../components/VersionControl/CommitButton'
+import VersionControl from '../../../../components/VersionControl'
+import BranchingNotice from '../../../../components/VersionControl/BranchingNotice'
+import CommitButton from '../../../../components/VersionControl/CommitButton'
 import {
   UncommittedChanges,
   withUncommitedChanges,
@@ -27,24 +27,24 @@ import {
   warningColor,
   joinUsers,
   withUncommittedChangesMutation,
-} from '../../components/VersionControl/UncommittedChanges'
-import Sidebar from '../../components/Sidebar'
-import Warning from '../../components/Sidebar/Warning'
-import ScreenSizePicker from '../../components/ScreenSizePicker'
-import PreviewFrame from '../../components/PreviewFrame'
+} from '../../../../components/VersionControl/UncommittedChanges'
+import Sidebar from '../../../../components/Sidebar'
+import Warning from '../../../../components/Sidebar/Warning'
+import ScreenSizePicker from '../../../../components/ScreenSizePicker'
+import PreviewFrame from '../../../../components/PreviewFrame'
 
-import Loader from '../../components/Loader'
-import CharCount from '../../components/CharCount'
-import withT from '../../lib/withT'
-import withMe from '../../lib/withMe'
-import { Router } from '../../lib/routes'
+import Loader from '../../../../components/Loader'
+import CharCount from '../../../../components/CharCount'
+import withT from '../../../../lib/withT'
+import withMe from '../../../../lib/withMe'
+import { Router } from '../../../../lib/routes'
 
-import { errorToString } from '../../lib/utils/errors'
-import initLocalStore from '../../lib/utils/localStorage'
+import { errorToString } from '../../../../lib/utils/errors'
+import initLocalStore from '../../../../lib/utils/localStorage'
 
-import { getSchema } from '../../components/Templates'
-import { API_UNCOMMITTED_CHANGES_URL } from '../../lib/settings'
-import * as fragments from '../../lib/graphql/fragments'
+import { getSchema } from '../../../../components/Templates'
+import { API_UNCOMMITTED_CHANGES_URL } from '../../../../lib/settings'
+import * as fragments from '../../../../lib/graphql/fragments'
 
 import {
   ColorContextProvider,
@@ -60,8 +60,8 @@ import {
   findAuthorsP,
   findTitleLeaf,
   generateAuthorsLine,
-} from '../../lib/utils/helpers'
-import { withEditRepoMeta } from '../../components/Repo/EditMetaDate'
+} from '../../../../lib/utils/helpers'
+import { withEditRepoMeta } from '../../../../components/Repo/EditMetaDate'
 
 const commitMutation = gql`
   mutation commit(

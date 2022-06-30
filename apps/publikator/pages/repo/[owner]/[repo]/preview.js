@@ -5,13 +5,13 @@ import gql from 'graphql-tag'
 import { ColorContextProvider, VariableContext } from '@project-r/styleguide'
 import { renderMdast } from 'mdast-react-render'
 
-import Loader from '../../components/Loader'
-import Frame from '../../components/Frame'
-import { getSchema } from '../../components/Templates'
+import Loader from '../../../../components/Loader'
+import Frame from '../../../../components/Frame'
+import { getSchema } from '../../../../components/Templates'
 
-import * as fragments from '../../lib/graphql/fragments'
-import initLocalStore from '../../lib/utils/localStorage'
-import withT from '../../lib/withT'
+import * as fragments from '../../../../lib/graphql/fragments'
+import initLocalStore from '../../../../lib/utils/localStorage'
+import withT from '../../../../lib/withT'
 
 const getCommitById = gql`
   query getCommitById($repoId: ID!, $commitId: ID!) {

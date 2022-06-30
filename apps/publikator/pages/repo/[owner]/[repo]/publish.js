@@ -1,13 +1,13 @@
 import { compose } from 'react-apollo'
 import { withRouter } from 'next/router'
 
-import withAuthorization from '../../components/Auth/withAuthorization'
+import withAuthorization from '../../../../components/Auth/withAuthorization'
 
-import Frame from '../../components/Frame'
-import RepoNav from '../../components/Repo/Nav'
-import Publication from '../../components/Publication'
+import Frame from '../../../../components/Frame'
+import RepoNav from '../../../../components/Repo/Nav'
+import Publication from '../../../../components/Publication'
 
-import withT from '../../lib/withT'
+import withT from '../../../../lib/withT'
 
 const Page = ({
   router: {
