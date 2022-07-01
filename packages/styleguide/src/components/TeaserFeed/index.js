@@ -104,7 +104,7 @@ export const TeaserFeed = ({
     : undefined
 
   const showCredits = credits && credits.length > 0
-  const hidePublishDate = template === 'section'
+  const hidePublishDate = ['section', 'format'].includes(template)
 
   return (
     <Container
