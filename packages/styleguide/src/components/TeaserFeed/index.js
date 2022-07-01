@@ -86,6 +86,7 @@ export const TeaserFeed = ({
   const Headline =
     formatMeta.kind === 'meta' ||
     metaKind === 'meta' ||
+    template === 'section' ||
     template === 'format' ||
     template === 'page'
       ? Headlines.Interaction
