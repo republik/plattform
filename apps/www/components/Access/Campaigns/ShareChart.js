@@ -286,10 +286,11 @@ export default compose(
   graphql(accessGrantQuery, {
     options: () => {
       const currentDay = timeDay.floor(new Date())
+      const minDay = timeDay.offset(currentDay, -29)
       return {
         variables: {
           max: formatApiDate(currentDay),
-          min: '01.01.2022',
+          min: formatApiDate(minDay),
         },
       }
     },
