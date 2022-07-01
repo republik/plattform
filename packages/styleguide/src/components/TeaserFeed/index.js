@@ -104,6 +104,7 @@ export const TeaserFeed = ({
     : undefined
 
   const showCredits = credits && credits.length > 0
+  const hidePublishDate = template === 'section'
 
   return (
     <Container
@@ -148,7 +149,7 @@ export const TeaserFeed = ({
           {renderMdast(credits, getCreditsSchema(!nonInteractive))}
         </Credit>
       )}
-      {!showCredits && !!publishDate && (
+      {!showCredits && !hidePublishDate && !!publishDate && (
         <Credit>{dateFormat(new Date(publishDate))}</Credit>
       )}
       {!!highlight && (
