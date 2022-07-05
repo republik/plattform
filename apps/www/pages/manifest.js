@@ -21,7 +21,7 @@ import { BackIcon } from '@project-r/styleguide'
 
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
 import Link from 'next/link'
-import withDefaultSSR from '../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../lib/apollo/helpers'
 
 const pRule = css({
   fontFamily: fontFamilies.sansSerifRegular,

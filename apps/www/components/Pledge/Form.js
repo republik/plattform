@@ -277,6 +277,7 @@ class Pledge extends Component {
     const { values, errors, dirty, basePledge } = this.state
 
     const {
+      preventMetaUpdate, // flag to prevent <Meta /> being rendered
       loading,
       error,
       isMember,
@@ -314,33 +315,35 @@ class Pledge extends Component {
       '',
     )
 
-    const meta = statementTitle
-      ? {
-          title: t('pledge/form/statement/share/title', statement),
-          description: t('pledge/form/statement/share/description'),
-          image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=628&updatedAt=${encodeURIComponent(
-            statement.updatedAt,
-          )}&url=${encodeURIComponent(
-            `${PUBLIC_BASE_URL}/community?share=${statement.id}&package=${queryPackage}`,
-          )}`,
-        }
-      : {
-          title: t.first([
-            pkg && `pledge/meta/package/${pkg.name}/title`,
-            queryGroup && `pledge/meta/group/${queryGroup}/title`,
-            'pledge/meta/title',
-          ]),
-          description: t.first([
-            pkg && `pledge/meta/package/${pkg.name}/description`,
-            queryGroup && `pledge/meta/group/${queryGroup}/description`,
-            'pledge/meta/description',
-          ]),
-          image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
-        }
+    const meta =
+      !preventMetaUpdate &&
+      (statementTitle
+        ? {
+            title: t('pledge/form/statement/share/title', statement),
+            description: t('pledge/form/statement/share/description'),
+            image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=628&updatedAt=${encodeURIComponent(
+              statement.updatedAt,
+            )}&url=${encodeURIComponent(
+              `${PUBLIC_BASE_URL}/community?share=${statement.id}&package=${queryPackage}`,
+            )}`,
+          }
+        : {
+            title: t.first([
+              pkg && `pledge/meta/package/${pkg.name}/title`,
+              queryGroup && `pledge/meta/group/${queryGroup}/title`,
+              'pledge/meta/title',
+            ]),
+            description: t.first([
+              pkg && `pledge/meta/package/${pkg.name}/description`,
+              queryGroup && `pledge/meta/group/${queryGroup}/description`,
+              'pledge/meta/description',
+            ]),
+            image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
+          })
 
     return (
       <Fragment>
-        <Meta data={meta} />
+        {!!meta && <Meta data={meta} />}
         <Loader
           loading={loading}
           error={error}

@@ -20,6 +20,8 @@ The frontends are Next.js apps, the backends use Express.js.
 
 - `styleguide`: a React component library shared by all frontends and used by the `api` to render newsletters
 - `backend-modules/*`: packages used by the `api` and `assets` server
+- `eslint-config-*`: multiple eslint configurations which are used accross our apps
+- `nextjs-apollo-client`: a reusable Nextjs / Apollo Client setup
 
 All packages and apps support [TypeScript](https://www.typescriptlang.org/) and plain ECMAScript.
 

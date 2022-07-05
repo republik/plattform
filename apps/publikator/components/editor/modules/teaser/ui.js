@@ -32,7 +32,7 @@ import Check from 'react-icons/lib/md/check'
 
 import UIForm from '../../UIForm'
 import ImageInput from '../../utils/ImageInput'
-import ColorPicker from '../../utils/ColorPicker'
+import ColorPicker, { ContrastInfo } from '../../utils/ColorPicker'
 import createOnFieldChange from '../../utils/createOnFieldChange'
 import RepoSearch from '../../utils/RepoSearch'
 import { AutoSlugLinkInfo } from '../../utils/github'
@@ -295,6 +295,12 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
         >
           Hochformat
         </Checkbox>
+      )}
+      {options.includes('color') && options.includes('bgColor') && (
+        <ContrastInfo
+          color={node.data.get('color')}
+          bgColor={node.data.get('bgColor')}
+        />
       )}
       {options.includes('color') && (
         <ColorPicker

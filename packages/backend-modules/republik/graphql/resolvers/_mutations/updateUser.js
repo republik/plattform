@@ -1,4 +1,7 @@
 const { Roles, transformUser } = require('@orbiting/backend-modules-auth')
+
+const { upsertAddress } = require('../../../lib/address')
+
 const logger = console
 
 module.exports = async (_, args, { pgdb, req, t, mail }) => {
@@ -26,20 +29,17 @@ module.exports = async (_, args, { pgdb, req, t, mail }) => {
       )
     }
     if (address) {
-      if (user.addressId) {
-        // update address of user
-        await transaction.public.addresses.update(
-          { id: user.addressId },
-          address,
-        )
-      } else {
-        // user has no address yet
-        const userAddress = await transaction.public.addresses.insertAndGet(
-          address,
-        )
-        await transaction.public.users.update(
+      const { id: addressId } = await upsertAddress(
+        { ...address, id: user.addressId },
+        transaction,
+        t,
+      )
+
+      if (!user.addressId) {
+        // link upserted address to user
+        await transaction.public.users.updateOne(
           { id: user.id },
-          { addressId: userAddress.id },
+          { addressId, updatedAt: new Date() },
         )
       }
     }

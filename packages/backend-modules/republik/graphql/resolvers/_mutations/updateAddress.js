@@ -1,4 +1,5 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
+
 const { updateAddress } = require('../../../lib/address')
 
 const ALLOWED_ROLES = ['admin', 'supporter']
@@ -24,7 +25,7 @@ module.exports = async (_, args, { pgdb, user: me, t }) => {
   const tx = await pgdb.transactionBegin()
 
   try {
-    const address = updateAddress({ ...args.address, id: args.id }, tx)
+    const address = await updateAddress({ ...args.address, id: args.id }, tx, t)
 
     await tx.transactionCommit()
     return address

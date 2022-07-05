@@ -139,6 +139,7 @@ const Field = React.forwardRef<
     type?: string
     label?: string
     disabled?: boolean
+    required?: boolean
     error?: string | boolean
     onInc?: () => void
     onDec?: () => void
@@ -162,6 +163,7 @@ const Field = React.forwardRef<
       showClearIcon,
       icon,
       disabled,
+      required,
       value,
       renderInput,
     },
@@ -219,6 +221,7 @@ const Field = React.forwardRef<
     return (
       <label {...styles.container}>
         {renderInput({
+          ['aria-required']: required ? true : undefined,
           disabled,
           name,
           autoComplete,

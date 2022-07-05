@@ -4247,12 +4247,20 @@
       "value": "Anschrift fehlt"
     },
     {
+      "key": "me/addressForm/name/error/tooLong",
+      "value": "Name, maximal {maxLength} Zeichen"
+    },
+    {
       "key": "me/addressForm/line1/label",
       "value": "Strasse und Hausnummer"
     },
     {
       "key": "me/addressForm/line1/error/empty",
       "value": "Strasse und Hausnummer fehlen"
+    },
+    {
+      "key": "me/addressForm/line1/error/tooLong",
+      "value": "Strasse und Hausnummer, maximal {maxLength} Zeichen"
     },
     {
       "key": "me/addressForm/line2/label",
@@ -4273,6 +4281,10 @@
     {
       "key": "me/addressForm/city/error/empty",
       "value": "Ort fehlt"
+    },
+    {
+      "key": "me/addressForm/city/error/tooLong",
+      "value": "Ort, maximal {maxLength} Zeichen"
     },
     {
       "key": "me/addressForm/country/label",

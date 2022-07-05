@@ -68,7 +68,11 @@ const Pledge = ({ router, serverContext }) => {
           query={query}
         />
       ) : (
-        <PledgeForm crowdfundingName={CROWDFUNDING_PLEDGE} query={query} />
+        <PledgeForm
+          preventMetaUpdate // Form should not call <Meta />
+          crowdfundingName={CROWDFUNDING_PLEDGE}
+          query={query}
+        />
       )}
     </SectionContainer>
   )
