@@ -249,6 +249,7 @@ interface QuestionInterface {
   order: Int!
   text: String
   metadata: JSON
+  answers: AnswerConnection
   userAnswer: Answer
   turnout: QuestionTurnout!
 }
@@ -265,6 +266,7 @@ type QuestionTypeText implements QuestionInterface {
   order: Int!
   text: String
   metadata: JSON
+  answers: AnswerConnection
   userAnswer: Answer
   turnout: QuestionTurnout!
 
@@ -277,6 +279,7 @@ type QuestionTypeDocument implements QuestionInterface {
   order: Int!
   text: String
   metadata: JSON
+  answers: AnswerConnection
   userAnswer: Answer
   turnout: QuestionTurnout!
 
@@ -300,6 +303,7 @@ type QuestionTypeRange implements QuestionInterface {
   order: Int!
   text: String
   metadata: JSON
+  answers: AnswerConnection
   userAnswer: Answer
   turnout: QuestionTurnout!
 
@@ -331,6 +335,7 @@ type QuestionTypeChoice implements QuestionInterface {
   order: Int!
   text: String
   metadata: JSON
+  answers: AnswerConnection
   userAnswer: Answer
   turnout: QuestionTurnout!
 
@@ -374,6 +379,18 @@ type Answer {
   submitted: Boolean!
 }
 
+type AnswerConnection {
+  nodes: [Answer!]!
+  pageInfo: AnserPageInfo!
+  totalCount: Int!
+}
+
+type AnserPageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
 
 input VideoInput {
   hls: String!

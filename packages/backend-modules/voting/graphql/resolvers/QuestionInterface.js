@@ -4,6 +4,7 @@ module.exports = {
   __resolveType(question) {
     return `QuestionType${question.type}`
   },
+  answers: () => null,
   userAnswer: (question, args, { req, user: me, pgdb, t, loaders }) => {
     if (!me) {
       return null
