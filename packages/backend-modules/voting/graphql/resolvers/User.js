@@ -10,4 +10,5 @@ module.exports = {
 
     return candidaciesLib.findByUser(user._raw, pgdb)
   },
+  questionnaire: async () => null,
 }

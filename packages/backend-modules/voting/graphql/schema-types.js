@@ -189,6 +189,7 @@ input ElectionBallotInput {
 
 extend type User {
   candidacies: [Candidacy!]!
+  questionnaire(slug: String!): Questionnaire
 }
 
 type ElectionCandidacyResult {
