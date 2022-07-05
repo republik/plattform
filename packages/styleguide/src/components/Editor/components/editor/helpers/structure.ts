@@ -502,7 +502,7 @@ export const insertRepeat = (editor: CustomEditor): void => {
     const splitP = getSelectedElement(editor, true)[1]
     Transforms.setNodes(
       editor,
-      { type: getTemplateType(targetN.template) },
+      { type: getTemplateType(targetN.template) } as Partial<CustomElement>,
       { at: splitP },
     )
     insertP =

@@ -1,4 +1,4 @@
-import { CustomDescendant } from './custom-types'
+import { CustomDescendant } from '../custom-types'
 
 export const tree1: CustomDescendant[] = [
   {

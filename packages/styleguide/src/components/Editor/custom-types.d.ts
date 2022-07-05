@@ -100,6 +100,42 @@ export type BlockCodeElement = SharedElement & {
   type: 'blockCode'
 }
 
+export type FlyerTileOpeningElement = SharedElement & {
+  type: 'flyerTileOpening'
+}
+
+export type FlyerTileClosingElement = SharedElement & {
+  type: 'flyerTileClosing'
+}
+
+export type FlyerTileElement = SharedElement & {
+  type: 'flyerTile'
+}
+
+export type FlyerMetaPElement = SharedElement & {
+  type: 'flyerMetaP'
+}
+
+export type FlyerTopicElement = SharedElement & {
+  type: 'flyerTopic'
+}
+
+export type FlyerTitleElement = SharedElement & {
+  type: 'flyerTitle'
+}
+
+export type FlyerAuthorElement = SharedElement & {
+  type: 'flyerAuthor'
+}
+
+export type FlyerPunchlineElement = SharedElement & {
+  type: 'flyerPunchline'
+}
+
+export type ArticlePreviewElement = SharedElement & {
+  type: 'articlePreview'
+}
+
 export type CustomElement =
   | HeadlineElement
   | ParagraphElement
@@ -118,6 +154,15 @@ export type CustomElement =
   | ListItemElement
   | InlineCodeElement
   | BlockCodeElement
+  | FlyerTileClosingElement
+  | FlyerTileOpeningElement
+  | FlyerTileElement
+  | FlyerMetaPElement
+  | FlyerTopicElement
+  | FlyerTitleElement
+  | FlyerAuthorElement
+  | FlyerPunchlineElement
+  | ArticlePreviewElement
 
 export type CustomDescendant = CustomElement | CustomText
 export type CustomAncestor = CustomElement | CustomEditor
@@ -143,6 +188,15 @@ export type CustomElementsType =
   | 'listItem'
   | 'inlineCode'
   | 'blockCode'
+  | 'flyerTileOpening'
+  | 'flyerTileClosing'
+  | 'flyerTile'
+  | 'flyerMetaP'
+  | 'flyerTopic'
+  | 'flyerTitle'
+  | 'flyerAuthor'
+  | 'flyerPunchline'
+  | 'articlePreview'
 
 // include overlapping types (e.g. ol and ul both want to render 'list'
 // include 'container' type
@@ -172,7 +226,6 @@ export type NormalizeFn<E> = (entry: [E, Path], editor: CustomEditor) => boolean
 type SchemaComponent =
   | React.FC<{
       attributes: any
-      children: any
       [x: string]: unknown
     }>
   | ForwardRefExoticComponent

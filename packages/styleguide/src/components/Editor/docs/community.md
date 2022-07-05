@@ -1,5 +1,3 @@
-## Community Editor
-
 ```react
 state: {
     value: [
@@ -26,7 +24,7 @@ state: {
 />
 ```
 
-## Comment Rendering
+## Rendering
 
 #### Web
 

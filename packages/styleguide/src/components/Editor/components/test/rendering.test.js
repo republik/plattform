@@ -1,4 +1,4 @@
-import { tree1 } from '../../examples.imports'
+import { tree1 } from '../../docs/community.imports'
 import renderAsText from '../render/text'
 
 describe('Slate Rendering', () => {

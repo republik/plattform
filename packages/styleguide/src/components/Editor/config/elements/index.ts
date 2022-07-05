@@ -16,6 +16,15 @@ import { ulConfig as ul, olConfig as ol } from './list/container'
 import { config as listItem } from './list/item'
 import { config as inlineCode } from './inlineCode'
 import { config as blockCode } from './blockCode'
+import { config as flyerTile } from './flyerTile'
+import { config as flyerTileOpening } from './flyerTile/opening'
+import { config as flyerTileClosing } from './flyerTile/closing'
+import { config as flyerAuthor } from './flyerTile/elements/author'
+import { config as flyerMetaP } from './flyerTile/elements/metaP'
+import { config as flyerPunchline } from './flyerTile/elements/punchline'
+import { config as flyerTitle } from './flyerTile/elements/title'
+import { config as flyerTopic } from './flyerTile/elements/topic'
+import { config as articlePreview } from './articlePreview'
 
 export const config: ElementsConfig = {
   paragraph,
@@ -36,6 +45,15 @@ export const config: ElementsConfig = {
   ol,
   listItem,
   blockCode,
+  flyerTile,
+  flyerTileClosing,
+  flyerTileOpening,
+  flyerAuthor,
+  flyerMetaP,
+  flyerPunchline,
+  flyerTitle,
+  flyerTopic,
+  articlePreview,
 }
 
 // typesafe helper
