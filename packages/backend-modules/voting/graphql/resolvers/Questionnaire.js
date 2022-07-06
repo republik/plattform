@@ -27,4 +27,23 @@ module.exports = {
     }
     return { entity: questionnaire }
   },
+  async submissions(questionnaire, args, { pgdb }) {
+    const nodes = await pgdb.public.questionnaireSubmissions.find(
+      { questionnaireId: questionnaire.id },
+      { limit: 5 },
+    )
+
+    if (!nodes?.length) {
+      return null
+    }
+
+    return {
+      nodes,
+      pageInfo: {
+        hasNextPage: false,
+        hasPreviousPage: false,
+      },
+      totalCount: nodes?.length || 0,
+    }
+  },
 }

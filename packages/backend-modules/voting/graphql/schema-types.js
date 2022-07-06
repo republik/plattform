@@ -189,7 +189,7 @@ input ElectionBallotInput {
 
 extend type User {
   candidacies: [Candidacy!]!
-  questionnaire(slug: String!): Questionnaire
+  questionnaireSubmissions: SubmissionConnection
 }
 
 type ElectionCandidacyResult {
@@ -237,6 +237,45 @@ type Questionnaire {
   ): [QuestionInterface!]!
 
   turnout: QuestionnaireTurnout
+
+  submissions: SubmissionConnection
+}
+
+type SubmissionConnection {
+  nodes: [Submission!]!
+  pageInfo: SubmissionPageInfo!
+  totalCount: Int!
+}
+
+type Submission {
+  id: ID!
+  questionnaire: Questionnaire!
+  user: User
+  displayAuthor: DisplayUser!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+
+  answers: AnswerConnection!
+}
+
+type SubmissionPageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type AnswerConnection {
+  nodes: [Answer!]!
+  pageInfo: AnserPageInfo!
+  totalCount: Int!
+}
+
+type AnserPageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
 }
 
 type QuestionnaireTurnout {
@@ -250,7 +289,6 @@ interface QuestionInterface {
   order: Int!
   text: String
   metadata: JSON
-  answers: AnswerConnection
   userAnswer: Answer
   turnout: QuestionTurnout!
 }
@@ -267,7 +305,6 @@ type QuestionTypeText implements QuestionInterface {
   order: Int!
   text: String
   metadata: JSON
-  answers: AnswerConnection
   userAnswer: Answer
   turnout: QuestionTurnout!
 
@@ -280,7 +317,6 @@ type QuestionTypeDocument implements QuestionInterface {
   order: Int!
   text: String
   metadata: JSON
-  answers: AnswerConnection
   userAnswer: Answer
   turnout: QuestionTurnout!
 
@@ -304,7 +340,6 @@ type QuestionTypeRange implements QuestionInterface {
   order: Int!
   text: String
   metadata: JSON
-  answers: AnswerConnection
   userAnswer: Answer
   turnout: QuestionTurnout!
 
@@ -336,7 +371,6 @@ type QuestionTypeChoice implements QuestionInterface {
   order: Int!
   text: String
   metadata: JSON
-  answers: AnswerConnection
   userAnswer: Answer
   turnout: QuestionTurnout!
 
@@ -378,19 +412,8 @@ type Answer {
   id: ID!
   payload: JSON!
   submitted: Boolean!
-}
 
-type AnswerConnection {
-  nodes: [Answer!]!
-  pageInfo: AnserPageInfo!
-  totalCount: Int!
-}
-
-type AnserPageInfo {
-  endCursor: String
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  startCursor: String
+  question: QuestionInterface!
 }
 
 input VideoInput {

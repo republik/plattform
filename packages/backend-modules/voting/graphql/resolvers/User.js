@@ -10,5 +10,23 @@ module.exports = {
 
     return candidaciesLib.findByUser(user._raw, pgdb)
   },
-  questionnaire: async () => null,
+  questionnaireSubmissions: async (user, args, { pgdb }) => {
+    const nodes = await pgdb.public.questionnaireSubmissions.find(
+      { userId: user.id },
+      { limit: 5 },
+    )
+
+    if (!nodes?.length) {
+      return null
+    }
+
+    return {
+      nodes,
+      pageInfo: {
+        hasNextPage: false,
+        hasPreviousPage: false,
+      },
+      totalCount: nodes?.length || 0,
+    }
+  },
 }

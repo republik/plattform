@@ -4,21 +4,6 @@ module.exports = {
   __resolveType(question) {
     return `QuestionType${question.type}`
   },
-  answers: async (question, args, { pgdb }) => {
-    const nodes = await pgdb.public.answers.find(
-      { questionId: question.id },
-      { limit: 5 },
-    )
-
-    return {
-      nodes,
-      pageInfo: {
-        hasNextPage: false,
-        hasPreviousPage: false,
-      },
-      totalCount: nodes?.length || 0,
-    }
-  },
   userAnswer: (question, args, { req, user: me, pgdb, t, loaders }) => {
     if (!me) {
       return null
