@@ -1,10 +1,36 @@
 ```react
 state: {
     value: [
-        {
-           type: 'paragraph',
-           children: [{ text: '' }]
-        }
+      {
+        type: 'flyerTileOpening',
+        children: [
+          {
+            type: 'headline',
+            children: [
+              { text: 'Guten Morgen,' },
+              { type: 'break', children: [{ text: '' }] },
+              { text: 'schoen sind Sie da!' },
+            ],
+          },
+        ],
+      },
+      {
+        type: 'flyerTileClosing',
+        children: [
+          {
+            type: 'headline',
+            children: [{ text: 'Bis nachher!' }],
+          },
+          {
+            type: 'flyerSignature',
+            children: [
+              {
+                text: 'Ihre Crew der Republik',
+              },
+            ],
+          },
+        ],
+      },
     ],
     structure: [
         {
@@ -33,5 +59,5 @@ state: {
 ## Rendering
 
 ```react
-<SlateRender value={tree1} schema={schemaFlyer} />
+<SlateRender value={exampleTree} schema={schemaFlyer} />
 ```

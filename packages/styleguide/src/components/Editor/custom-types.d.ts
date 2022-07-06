@@ -126,6 +126,7 @@ export type FlyerTitleElement = SharedElement & {
 
 export type FlyerAuthorElement = SharedElement & {
   type: 'flyerAuthor'
+  authorId?: string
 }
 
 export type FlyerPunchlineElement = SharedElement & {

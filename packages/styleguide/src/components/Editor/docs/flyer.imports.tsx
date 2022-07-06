@@ -1,6 +1,6 @@
 import { CustomDescendant } from '../custom-types'
 
-export const tree1: CustomDescendant[] = [
+export const exampleTree: CustomDescendant[] = [
   {
     type: 'flyerTileOpening',
     children: [
@@ -46,6 +46,7 @@ export const tree1: CustomDescendant[] = [
       },
       {
         type: 'flyerAuthor',
+        authorId: '123',
         children: [{ text: '' }],
       },
       {
@@ -148,6 +149,7 @@ export const tree1: CustomDescendant[] = [
       },
       {
         type: 'flyerAuthor',
+        authorId: '456',
         children: [{ text: '' }],
       },
       {
