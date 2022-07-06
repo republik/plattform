@@ -3,6 +3,8 @@ import { ElementConfigI } from '../../../../custom-types'
 
 export const FlyerMetaP = ({ children, attributes, ...props }) => (
   <p
+    {...attributes}
+    {...props}
     style={{
       color: '#0E755A',
       fontWeight: 700,
@@ -10,8 +12,6 @@ export const FlyerMetaP = ({ children, attributes, ...props }) => (
       fontSize: 30,
       paddingBottom: 90,
     }}
-    {...attributes}
-    {...props}
   >
     {children}
   </p>

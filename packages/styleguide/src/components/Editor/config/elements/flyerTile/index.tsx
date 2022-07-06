@@ -37,6 +37,6 @@ export const config: ElementConfigI = {
     { type: 'flyerTitle' },
     { type: 'flyerAuthor' },
     { type: ['paragraph', 'ul', 'ol'], repeat: true },
-    { type: ['articlePreview', 'pullQuote', 'figure', 'flyerPunchline'] },
+    { type: ['flyerPunchline', 'articlePreview', 'pullQuote', 'figure'] },
   ],
 }

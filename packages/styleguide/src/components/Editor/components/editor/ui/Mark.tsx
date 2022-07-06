@@ -36,6 +36,7 @@ const styles = {
     cursor: 'text',
     position: 'absolute',
     whiteSpace: 'nowrap',
+    opacity: 0.4,
   }),
 }
 
@@ -64,7 +65,6 @@ const Placeholder: React.FC<{
   text: string
   parent: CustomElement
 }> = ({ text, setStyle, parent }) => {
-  const [colorScheme] = useColorContext()
   const editor = useSlate()
   const placeholderRef = useRef<HTMLSpanElement>()
 
@@ -90,7 +90,6 @@ const Placeholder: React.FC<{
     <span
       ref={placeholderRef}
       {...styles.placeholder}
-      {...colorScheme.set('color', 'disabled')}
       style={{ userSelect: 'none' }}
       contentEditable={false}
       onClick={onClick}

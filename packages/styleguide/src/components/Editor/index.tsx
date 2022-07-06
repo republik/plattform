@@ -31,7 +31,7 @@ const Editor: React.FC<{
 
   return (
     <ErrorBoundary showException={true}>
-      <div style={{ maxWidth: 690 }}>
+      <div>
         <SlateEditor
           value={value}
           setValue={setValue}

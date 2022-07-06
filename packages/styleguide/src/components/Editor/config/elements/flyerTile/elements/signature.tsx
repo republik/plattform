@@ -3,14 +3,14 @@ import { ElementConfigI } from '../../../../custom-types'
 
 export const FlyerSignature = ({ children, attributes, ...props }) => (
   <p
+    {...attributes}
+    {...props}
     style={{
       fontWeight: 400,
       fontFamily: 'GT America',
       fontSize: 26,
       textAlign: 'center',
     }}
-    {...attributes}
-    {...props}
   >
     {children}
   </p>

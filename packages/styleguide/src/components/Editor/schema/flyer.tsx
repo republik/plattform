@@ -19,13 +19,15 @@ import { useColorContext } from '../../Colors/ColorContext'
 import { FlyerSignature } from '../config/elements/flyerTile/elements/signature'
 
 const container = ({ children, attributes }) => (
-  <div {...attributes} style={{ backgroundColor: '#FFE501' }}>
+  <div style={{ backgroundColor: '#FFE501' }} {...attributes}>
     {children}
   </div>
 )
 
 const Headline = ({ children, attributes, ...props }) => (
   <h1
+    {...attributes}
+    {...props}
     style={{
       fontFamily: 'Druk Text Wide Trial',
       fontStyle: 'Medium',
@@ -33,8 +35,6 @@ const Headline = ({ children, attributes, ...props }) => (
       textAlign: 'center',
       marginBottom: 50,
     }}
-    {...attributes}
-    {...props}
   >
     {children}
   </h1>

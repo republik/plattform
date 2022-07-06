@@ -3,6 +3,8 @@ import { ElementConfigI } from '../../../../custom-types'
 
 export const FlyerTopic = ({ children, attributes, ...props }) => (
   <p
+    {...attributes}
+    {...props}
     style={{
       color: '#D50032',
       fontFamily: 'Druk Text Wide Trial',
@@ -10,8 +12,6 @@ export const FlyerTopic = ({ children, attributes, ...props }) => (
       fontSize: 20,
       textTransform: 'uppercase',
     }}
-    {...attributes}
-    {...props}
   >
     {children}
   </p>
