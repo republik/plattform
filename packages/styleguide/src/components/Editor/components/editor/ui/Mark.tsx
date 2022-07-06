@@ -18,8 +18,7 @@ import {
   CustomText,
   SchemaConfig,
 } from '../../../custom-types'
-import { css } from 'glamor'
-import { useColorContext } from '../../../../Colors/ColorContext'
+import { css, keyframes } from 'glamor'
 import {
   isEmpty,
   isMarkActive,
@@ -28,6 +27,15 @@ import {
 } from '../helpers/text'
 import { getTextNode } from '../helpers/tree'
 
+const fadeIn = keyframes({
+  from: {
+    opacity: 0,
+  },
+  to: {
+    opacity: 0.4,
+  },
+})
+
 const styles = {
   leaf: css({
     position: 'relative',
@@ -35,8 +43,10 @@ const styles = {
   placeholder: css({
     cursor: 'text',
     position: 'absolute',
+    left: 0,
     whiteSpace: 'nowrap',
-    opacity: 0.4,
+    opacity: 0,
+    animation: `0.1s ${fadeIn} 0.1s forwards`,
   }),
 }
 
