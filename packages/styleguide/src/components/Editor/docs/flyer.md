@@ -1,3 +1,26 @@
+### Todos
+
+- Switch block type when nested (feature kinda-sorta worked, then got "forgotten" for community editor)
+- Tile UI
+    - move up/down
+    - delete
+    - edit meta
+    - import from list
+- Create new tile
+- New elements
+    - Chart
+    - Quiz
+    - Survey
+- Copy from HTML
+
+### Bugs
+
+- Enter on empty Meta P in opening tile -> should create new tile
+- Copy title with break swallows the break
+- Convert P <-> List doesn't work
+- Convert punchline <-> image <-> article preview <-> etc. doesn't work
+
+
 ```react
 state: {
     value: [
