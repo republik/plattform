@@ -2,9 +2,18 @@ import React from 'react'
 import { ElementConfigI } from '../../../../custom-types'
 
 export const FlyerTitle = ({ children, attributes, ...props }) => (
-  <p style={{ fontSize: 36 }} {...attributes} {...props}>
+  <h2
+    style={{
+      fontFamily: 'Druk Text Wide Trial',
+      fontStyle: 'Medium',
+      fontSize: 40,
+      paddingBottom: 40,
+    }}
+    {...attributes}
+    {...props}
+  >
     {children}
-  </p>
+  </h2>
 )
 
 export const config: ElementConfigI = {

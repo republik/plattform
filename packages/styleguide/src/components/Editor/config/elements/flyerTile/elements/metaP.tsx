@@ -2,7 +2,17 @@ import React from 'react'
 import { ElementConfigI } from '../../../../custom-types'
 
 export const FlyerMetaP = ({ children, attributes, ...props }) => (
-  <p style={{ color: 'green', fontWeight: 'bold' }} {...attributes} {...props}>
+  <p
+    style={{
+      color: '#0E755A',
+      fontWeight: 700,
+      fontFamily: 'GT America',
+      fontSize: 30,
+      paddingBottom: 90,
+    }}
+    {...attributes}
+    {...props}
+  >
     {children}
   </p>
 )

@@ -40,6 +40,12 @@ export const NoRefEditoralA = ({ children, attributes, ...props }) => {
   )
 }
 
+export const NoRefA = ({ children, attributes, ...props }) => (
+  <a {...attributes} {...props} {...link}>
+    {children}
+  </a>
+)
+
 const Form: React.FC<ElementFormProps<LinkElement>> = ({
   element,
   onChange,

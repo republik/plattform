@@ -10,7 +10,23 @@ export const FlyerAuthor: React.FC<{
   [x: string]: unknown
 }> = ({ children, attributes, ...props }) => (
   <div {...attributes} {...props}>
-    <div contentEditable={false}>AUTHOR BLOCK</div>
+    <div
+      contentEditable={false}
+      style={{ display: 'flex', alignItems: 'center', padding: '15px 0' }}
+    >
+      <img src='/static/christof_moser.jpg' width='50' />
+      <span
+        style={{
+          fontWeight: 300,
+          fontFamily: 'GT America',
+          fontSize: 16,
+          textTransform: 'uppercase',
+          paddingLeft: 15,
+        }}
+      >
+        Author Authorson
+      </span>
+    </div>
     {children}
   </div>
 )

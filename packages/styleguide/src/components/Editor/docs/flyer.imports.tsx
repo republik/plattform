@@ -9,21 +9,21 @@ export const tree1: CustomDescendant[] = [
         children: [
           { text: 'Hallo,' },
           { type: 'break', children: [{ text: '' }] },
-          { text: 'schön sind Sie da!' },
+          { text: 'schoen sind Sie da!' },
         ],
       },
       {
         type: 'flyerMetaP',
         children: [
           {
-            text: 'Es war heiss, es ist heiss, es bleibt heiss. In Europa sind die Temperaturen grade hochsommerlich. Im Nahen Osten sind sie lebensfeindlich.',
+            text: 'Es war heiss, es ist heiss, es bleibt heiss. In Europa sind die Temperaturen grade hochsommerlich. Im Nahen Osten sind sie lebensfeindlich. ',
           },
           {
             type: 'link',
             children: [{ text: 'Im Irak wurden gestern 51.6°C gemessen.' }],
           },
           {
-            text: 'Hoch genug, um in einem Backofen ein Entrecôte niederzugaren.',
+            text: ' Hoch genug, um in einem Backofen ein Entrecôte niederzugaren.',
           },
         ],
       },
@@ -77,6 +77,7 @@ export const tree1: CustomDescendant[] = [
         children: [
           {
             type: 'figureImage',
+            src: '/static/flyer-pic.jpg',
             children: [{ text: '' }],
           },
         ],
@@ -154,7 +155,7 @@ export const tree1: CustomDescendant[] = [
         children: [
           {
             type: 'pullQuoteText',
-            children: [{ text: 'Che tristezza, Nicoletta' }],
+            children: [{ text: '“ Che tristezza, Nicoletta. ”' }],
           },
           {
             type: 'pullQuoteSource',
@@ -176,7 +177,7 @@ export const tree1: CustomDescendant[] = [
         children: [{ text: 'Geniessen Sie die Hitze.' }],
       },
       {
-        type: 'flyerPunchline',
+        type: 'flyerSignature',
         children: [
           {
             text: 'Ihre Crew der Republik',

@@ -132,6 +132,10 @@ export type FlyerPunchlineElement = SharedElement & {
   type: 'flyerPunchline'
 }
 
+export type FlyerSignatureElement = SharedElement & {
+  type: 'flyerSignature'
+}
+
 export type ArticlePreviewElement = SharedElement & {
   type: 'articlePreview'
 }
@@ -162,6 +166,7 @@ export type CustomElement =
   | FlyerTitleElement
   | FlyerAuthorElement
   | FlyerPunchlineElement
+  | FlyerSignatureElement
   | ArticlePreviewElement
 
 export type CustomDescendant = CustomElement | CustomText
@@ -196,6 +201,7 @@ export type CustomElementsType =
   | 'flyerTitle'
   | 'flyerAuthor'
   | 'flyerPunchline'
+  | 'flyerSignature'
   | 'articlePreview'
 
 // include overlapping types (e.g. ol and ul both want to render 'list'
