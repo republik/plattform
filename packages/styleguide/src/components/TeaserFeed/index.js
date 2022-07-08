@@ -86,6 +86,7 @@ export const TeaserFeed = ({
   const Headline =
     formatMeta.kind === 'meta' ||
     metaKind === 'meta' ||
+    template === 'section' ||
     template === 'format' ||
     template === 'page'
       ? Headlines.Interaction
@@ -104,6 +105,7 @@ export const TeaserFeed = ({
     : undefined
 
   const showCredits = credits && credits.length > 0
+  const hidePublishDate = ['section', 'format'].includes(template)
 
   return (
     <Container
@@ -148,7 +150,7 @@ export const TeaserFeed = ({
           {renderMdast(credits, getCreditsSchema(!nonInteractive))}
         </Credit>
       )}
-      {!showCredits && !!publishDate && (
+      {!showCredits && !hidePublishDate && !!publishDate && (
         <Credit>{dateFormat(new Date(publishDate))}</Credit>
       )}
       {!!highlight && (
