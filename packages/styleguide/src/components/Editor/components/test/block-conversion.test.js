@@ -3,7 +3,8 @@ import { buildTestHarness } from 'slate-test-utils'
 import { createEditor, Transforms } from 'slate'
 import { cleanupTree } from '../editor/helpers/tree'
 import { toggleElement } from '../editor/helpers/structure'
-import schema from '../../schema/article'
+import articleSchema from '../../schema/article'
+import flyerSchema from '../../schema/flyer'
 
 describe('Slate Editor: Block Conversion', () => {
   function getMockEditor() {
@@ -13,7 +14,7 @@ describe('Slate Editor: Block Conversion', () => {
 
   let value
 
-  const defaultConfig = { schema }
+  const defaultConfig = { schema: articleSchema }
 
   async function setup(structure, config = defaultConfig) {
     const mock = getMockEditor()
@@ -30,231 +31,343 @@ describe('Slate Editor: Block Conversion', () => {
     return editor
   }
 
-  it('should convert empty simple block types (P) to empty complex types (Quote, List) and back', async () => {
-    value = [
-      {
-        type: 'paragraph',
-        children: [{ text: '' }],
-      },
-    ]
-    const structure = [
-      {
-        type: ['paragraph', 'blockQuote', 'ul', 'ol'],
-      },
-    ]
-    const editor = await setup(structure)
-    await Transforms.select(editor, { path: [0, 0], offset: 0 })
+  describe('simple conversion', () => {
+    it('should convert empty simple block types (P) to empty complex types (Quote, List) and back', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          children: [{ text: '' }],
+        },
+      ]
+      const structure = [
+        {
+          type: ['paragraph', 'blockQuote', 'ul', 'ol'],
+        },
+      ]
+      const editor = await setup(structure)
+      await Transforms.select(editor, { path: [0, 0], offset: 0 })
 
-    toggleElement(editor, 'blockQuote')
-    await new Promise(process.nextTick)
-    expect(value.length).toBe(1)
-    expect(value[0].type).toBe('blockQuote')
+      toggleElement(editor, 'blockQuote')
+      await new Promise(process.nextTick)
+      expect(value.length).toBe(1)
+      expect(value[0].type).toBe('blockQuote')
 
-    toggleElement(editor, 'ul')
-    await new Promise(process.nextTick)
-    expect(value.length).toBe(1)
-    expect(value[0].type).toBe('ul')
+      toggleElement(editor, 'ul')
+      await new Promise(process.nextTick)
+      expect(value.length).toBe(1)
+      expect(value[0].type).toBe('ul')
 
-    toggleElement(editor, 'ol')
-    await new Promise(process.nextTick)
-    expect(value.length).toBe(1)
-    expect(value[0].type).toBe('ol')
+      toggleElement(editor, 'ol')
+      await new Promise(process.nextTick)
+      expect(value.length).toBe(1)
+      expect(value[0].type).toBe('ol')
 
-    toggleElement(editor, 'ul')
-    await new Promise(process.nextTick)
-    expect(value.length).toBe(1)
-    expect(value[0].type).toBe('ul')
+      toggleElement(editor, 'ul')
+      await new Promise(process.nextTick)
+      expect(value.length).toBe(1)
+      expect(value[0].type).toBe('ul')
 
-    toggleElement(editor, 'blockQuote')
-    await new Promise(process.nextTick)
-    expect(value.length).toBe(1)
-    expect(value[0].type).toBe('blockQuote')
+      toggleElement(editor, 'blockQuote')
+      await new Promise(process.nextTick)
+      expect(value.length).toBe(1)
+      expect(value[0].type).toBe('blockQuote')
 
-    toggleElement(editor, 'paragraph')
-    await new Promise(process.nextTick)
-    expect(value.length).toBe(1)
-    expect(value[0].type).toBe('paragraph')
+      toggleElement(editor, 'paragraph')
+      await new Promise(process.nextTick)
+      expect(value.length).toBe(1)
+      expect(value[0].type).toBe('paragraph')
+    })
+
+    it('should preserve formatting/links during conversion but remove illegal inlines', async () => {
+      const formattedText = [
+        { text: 'CO' },
+        { text: '2', sub: true },
+        { text: 'levels are ' },
+        {
+          type: 'link',
+          href: 'https://www.republik.ch',
+          children: [{ text: 'increasing' }],
+        },
+        { text: '' },
+      ]
+      value = [
+        {
+          type: 'paragraph',
+          children: JSON.parse(JSON.stringify(formattedText)),
+        },
+      ]
+      const structure = [
+        {
+          type: ['paragraph', 'blockQuote', 'ul', 'ol'],
+        },
+      ]
+      const editor = await setup(structure)
+      await Transforms.select(editor, { path: [0, 0], offset: 0 })
+
+      toggleElement(editor, 'ul')
+      await new Promise(process.nextTick)
+      expect(cleanupTree(value[0].children[0].children)).toEqual(formattedText)
+
+      toggleElement(editor, 'ol')
+      await new Promise(process.nextTick)
+      expect(cleanupTree(value[0].children[0].children)).toEqual(formattedText)
+
+      toggleElement(editor, 'blockQuote')
+      await new Promise(process.nextTick)
+      expect(cleanupTree(value[0].children[0].children)).toEqual([
+        { text: 'CO' },
+        { text: '2', sub: true },
+        { text: 'levels are increasing' },
+      ])
+
+      toggleElement(editor, 'paragraph')
+      await new Promise(process.nextTick)
+      expect(cleanupTree(value[0].children)).toEqual([
+        { text: 'CO' },
+        { text: '2', sub: true },
+        { text: 'levels are increasing' },
+      ])
+    })
+
+    it('should convert paragraph where selection is', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          children: [{ text: 'One' }],
+        },
+        {
+          type: 'paragraph',
+          children: [{ text: 'Two' }],
+        },
+      ]
+      const structure = [
+        {
+          type: ['paragraph', 'blockQuote', 'ul', 'ol'],
+          repeat: true,
+        },
+      ]
+      const editor = await setup(structure)
+      await Transforms.select(editor, { path: [1, 0], offset: 0 })
+
+      toggleElement(editor, 'ol')
+      await new Promise(process.nextTick)
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'paragraph',
+          children: [{ text: 'One' }],
+        },
+        {
+          type: 'ol',
+          ordered: true,
+          children: [
+            {
+              type: 'listItem',
+              children: [{ text: 'Two' }],
+            },
+          ],
+        },
+      ])
+      expect(editor.selection.focus.path).toEqual([1, 0, 0])
+    })
+
+    it('should convert multiple nested elements and move cursor to the last main (nested) element', async () => {
+      value = [
+        {
+          type: 'ul',
+          ordered: false,
+          children: [
+            {
+              type: 'listItem',
+              children: [{ text: 'One' }],
+            },
+            {
+              type: 'listItem',
+              children: [{ text: 'Two' }],
+            },
+          ],
+        },
+      ]
+      const structure = [
+        {
+          type: ['paragraph', 'blockQuote', 'ul', 'ol'],
+          repeat: true,
+        },
+      ]
+      const editor = await setup(structure)
+      await Transforms.select(editor, { path: [0, 0], offset: 0 })
+
+      toggleElement(editor, 'blockQuote')
+      await new Promise(process.nextTick)
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'blockQuote',
+          children: [
+            {
+              type: 'blockQuoteText',
+              children: [{ text: 'One' }],
+            },
+            {
+              type: 'blockQuoteText',
+              children: [{ text: 'Two' }],
+            },
+            {
+              type: 'figureCaption',
+              children: [
+                { text: '' },
+                { type: 'figureByline', children: [{ text: '' }] },
+                { text: '' },
+              ],
+            },
+          ],
+        },
+      ])
+      expect(editor.selection.focus.path).toEqual([0, 1, 0])
+
+      await Transforms.select(editor, [0, 0, 0])
+      toggleElement(editor, 'ol')
+      await new Promise(process.nextTick)
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'ol',
+          ordered: true,
+          children: [
+            {
+              type: 'listItem',
+              children: [{ text: 'One' }],
+            },
+            {
+              type: 'listItem',
+              children: [{ text: 'Two' }],
+            },
+          ],
+        },
+      ])
+      expect(editor.selection.focus.path).toEqual([0, 1, 0])
+
+      await Transforms.select(editor, [0, 0])
+      toggleElement(editor, 'paragraph')
+      await new Promise(process.nextTick)
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'paragraph',
+          children: [{ text: 'One' }],
+        },
+        {
+          type: 'paragraph',
+          children: [{ text: 'Two' }],
+        },
+      ])
+      expect(editor.selection.focus.path).toEqual([1, 0])
+    })
   })
 
-  it('should preserve formatting/links during conversion but remove illegal inlines', async () => {
-    const formattedText = [
-      { text: 'CO' },
-      { text: '2', sub: true },
-      { text: 'levels are ' },
-      {
-        type: 'link',
-        href: 'https://www.republik.ch',
-        children: [{ text: 'increasing' }],
-      },
-      { text: '' },
-    ]
-    value = [
-      {
-        type: 'paragraph',
-        children: JSON.parse(JSON.stringify(formattedText)),
-      },
-    ]
-    const structure = [
-      {
-        type: ['paragraph', 'blockQuote', 'ul', 'ol'],
-      },
-    ]
-    const editor = await setup(structure)
-    await Transforms.select(editor, { path: [0, 0], offset: 0 })
+  describe('nested conversion', () => {
+    it('should convert nested elements (e.g. within tile) successfully', async () => {
+      value = [
+        {
+          type: 'flyerTile',
+          children: [
+            {
+              type: 'flyerMetaP',
+              children: [
+                {
+                  text: '',
+                },
+              ],
+            },
+            {
+              type: 'flyerTopic',
+              children: [
+                {
+                  text: '',
+                },
+              ],
+            },
+            {
+              type: 'flyerTitle',
+              children: [
+                {
+                  text: 'Hitzewelle werden mit Strand- und Badebilder illustriert! Wieso?',
+                },
+              ],
+            },
+            {
+              type: 'flyerAuthor',
+              authorId: '123',
+              children: [{ text: '' }],
+            },
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  text: 'Lorem ipsum.',
+                },
+              ],
+            },
+            {
+              type: 'figure',
+              children: [
+                {
+                  type: 'figureImage',
+                  src: '/static/flyer-pic.jpg',
+                  children: [{ text: '' }],
+                },
+              ],
+            },
+          ],
+        },
+      ]
+      const structure = [
+        {
+          type: 'flyerTile',
+        },
+      ]
+      console.log({ flyerSchema })
+      const editor = await setup(structure, { schema: flyerSchema })
 
-    toggleElement(editor, 'ul')
-    await new Promise(process.nextTick)
-    expect(cleanupTree(value[0].children[0].children)).toEqual(formattedText)
+      await Transforms.select(editor, [0, 2, 0])
+      toggleElement(editor, 'ul')
 
-    toggleElement(editor, 'ol')
-    await new Promise(process.nextTick)
-    expect(cleanupTree(value[0].children[0].children)).toEqual(formattedText)
-
-    toggleElement(editor, 'blockQuote')
-    await new Promise(process.nextTick)
-    expect(cleanupTree(value[0].children[0].children)).toEqual([
-      { text: 'CO' },
-      { text: '2', sub: true },
-      { text: 'levels are increasing' },
-    ])
-
-    toggleElement(editor, 'paragraph')
-    await new Promise(process.nextTick)
-    expect(cleanupTree(value[0].children)).toEqual([
-      { text: 'CO' },
-      { text: '2', sub: true },
-      { text: 'levels are increasing' },
-    ])
-  })
-
-  it('should convert paragraph where selection is', async () => {
-    value = [
-      {
-        type: 'paragraph',
-        children: [{ text: 'One' }],
-      },
-      {
-        type: 'paragraph',
-        children: [{ text: 'Two' }],
-      },
-    ]
-    const structure = [
-      {
-        type: ['paragraph', 'blockQuote', 'ul', 'ol'],
-        repeat: true,
-      },
-    ]
-    const editor = await setup(structure)
-    await Transforms.select(editor, { path: [1, 0], offset: 0 })
-
-    toggleElement(editor, 'ol')
-    await new Promise(process.nextTick)
-    expect(cleanupTree(value)).toEqual([
-      {
-        type: 'paragraph',
-        children: [{ text: 'One' }],
-      },
-      {
-        type: 'ol',
-        ordered: true,
-        children: [
-          {
-            type: 'listItem',
-            children: [{ text: 'Two' }],
-          },
-        ],
-      },
-    ])
-    expect(editor.selection.focus.path).toEqual([1, 0, 0])
-  })
-
-  it('should convert multiple nested elements and move cursor to the last main (nested) element', async () => {
-    value = [
-      {
-        type: 'ul',
-        ordered: false,
-        children: [
-          {
-            type: 'listItem',
-            children: [{ text: 'One' }],
-          },
-          {
-            type: 'listItem',
-            children: [{ text: 'Two' }],
-          },
-        ],
-      },
-    ]
-    const structure = [
-      {
-        type: ['paragraph', 'blockQuote', 'ul', 'ol'],
-        repeat: true,
-      },
-    ]
-    const editor = await setup(structure)
-    await Transforms.select(editor, { path: [0, 0], offset: 0 })
-
-    toggleElement(editor, 'blockQuote')
-    await new Promise(process.nextTick)
-    expect(cleanupTree(value)).toEqual([
-      {
-        type: 'blockQuote',
-        children: [
-          {
-            type: 'blockQuoteText',
-            children: [{ text: 'One' }],
-          },
-          {
-            type: 'blockQuoteText',
-            children: [{ text: 'Two' }],
-          },
-          {
-            type: 'figureCaption',
-            children: [
-              { text: '' },
-              { type: 'figureByline', children: [{ text: '' }] },
-              { text: '' },
-            ],
-          },
-        ],
-      },
-    ])
-    expect(editor.selection.focus.path).toEqual([0, 1, 0])
-
-    await Transforms.select(editor, [0, 0, 0])
-    toggleElement(editor, 'ol')
-    await new Promise(process.nextTick)
-    expect(cleanupTree(value)).toEqual([
-      {
-        type: 'ol',
-        ordered: true,
-        children: [
-          {
-            type: 'listItem',
-            children: [{ text: 'One' }],
-          },
-          {
-            type: 'listItem',
-            children: [{ text: 'Two' }],
-          },
-        ],
-      },
-    ])
-    expect(editor.selection.focus.path).toEqual([0, 1, 0])
-
-    await Transforms.select(editor, [0, 0])
-    toggleElement(editor, 'paragraph')
-    await new Promise(process.nextTick)
-    expect(cleanupTree(value)).toEqual([
-      {
-        type: 'paragraph',
-        children: [{ text: 'One' }],
-      },
-      {
-        type: 'paragraph',
-        children: [{ text: 'Two' }],
-      },
-    ])
-    expect(editor.selection.focus.path).toEqual([1, 0])
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'flyerTile',
+          children: [
+            {
+              type: 'flyerTitle',
+              children: [
+                {
+                  text: 'Hitzewelle werden mit Strand- und Badebilder illustriert! Wieso?',
+                },
+              ],
+            },
+            {
+              type: 'flyerAuthor',
+              authorId: '123',
+              children: [{ text: '' }],
+            },
+            {
+              type: 'ul',
+              ordered: false,
+              children: [
+                {
+                  type: 'listItem',
+                  children: [{ text: 'Lorem ipsum.' }],
+                },
+              ],
+            },
+            {
+              type: 'figure',
+              children: [
+                {
+                  type: 'figureImage',
+                  src: '/static/flyer-pic.jpg',
+                  children: [{ text: '' }],
+                },
+              ],
+            },
+          ],
+        },
+      ])
+    })
   })
 })

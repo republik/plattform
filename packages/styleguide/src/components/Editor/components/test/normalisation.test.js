@@ -3,6 +3,7 @@ import { buildTestHarness } from 'slate-test-utils'
 import { createEditor } from 'slate'
 import { cleanupTree } from '../editor/helpers/tree'
 import schema from '../../schema/article'
+import flyerSchema from '../../schema/flyer'
 
 describe('Slate Editor: Normalisation', () => {
   function getMockEditor() {
@@ -368,7 +369,7 @@ describe('Slate Editor: Normalisation', () => {
     it('should delete illegal inline node', async () => {
       value = [
         {
-          type: 'headline',
+          type: 'pullQuoteText',
           children: [
             { text: 'Hello' },
             { type: 'break', children: [{ text: '' }] },
@@ -378,13 +379,13 @@ describe('Slate Editor: Normalisation', () => {
       ]
       const structure = [
         {
-          type: 'headline',
+          type: 'pullQuoteText',
         },
       ]
       await setup(structure)
       expect(cleanupTree(value)).toEqual([
         {
-          type: 'headline',
+          type: 'pullQuoteText',
           children: [{ text: 'HelloWorld' }],
         },
       ])
@@ -708,6 +709,126 @@ describe('Slate Editor: Normalisation', () => {
         err = error
       }
       expect(err).toBeNull()
+    })
+
+    it('should insert multiple missing nested elements (e.g. within tile)', async () => {
+      value = [
+        {
+          type: 'flyerTile',
+          children: [
+            {
+              type: 'flyerTitle',
+              children: [
+                {
+                  text: 'Hitzewelle werden mit Strand- und Badebilder illustriert! Wieso?',
+                },
+              ],
+            },
+            {
+              type: 'flyerAuthor',
+              authorId: '123',
+              children: [{ text: '' }],
+            },
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  text: 'Lorem ipsum.',
+                },
+              ],
+            },
+            {
+              type: 'figure',
+              children: [
+                {
+                  type: 'figureImage',
+                  src: '/static/flyer-pic.jpg',
+                  children: [{ text: '' }],
+                },
+              ],
+            },
+          ],
+        },
+      ]
+      const structure = [
+        {
+          type: 'flyerTile',
+        },
+      ]
+      await setup(structure, { schema: flyerSchema })
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'flyerTile',
+          children: [
+            {
+              type: 'flyerMetaP',
+              children: [
+                {
+                  text: '',
+                },
+              ],
+            },
+            {
+              type: 'flyerTopic',
+              children: [
+                {
+                  text: '',
+                },
+              ],
+            },
+            {
+              type: 'flyerTitle',
+              children: [
+                {
+                  text: 'Hitzewelle werden mit Strand- und Badebilder illustriert! Wieso?',
+                },
+              ],
+            },
+            {
+              type: 'flyerAuthor',
+              authorId: '123',
+              children: [{ text: '' }],
+            },
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  text: 'Lorem ipsum.',
+                },
+              ],
+            },
+            {
+              type: 'figure',
+              children: [
+                {
+                  type: 'figureImage',
+                  src: '/static/flyer-pic.jpg',
+                  children: [{ text: '' }],
+                },
+                {
+                  type: 'figureCaption',
+                  children: [
+                    {
+                      text: '',
+                    },
+                    {
+                      type: 'figureByline',
+                      children: [
+                        {
+                          text: '',
+                        },
+                      ],
+                    },
+                    {
+                      text: '',
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ])
     })
   })
 

@@ -282,13 +282,16 @@ const fixNode = (
   node: CustomDescendant | undefined,
   path: number[],
   currentTemplate: NodeTemplate,
-  nextTemplate: NodeTemplate | undefined,
+  nextTemplates: NodeTemplate[] | undefined,
   editor: CustomEditor,
 ): void => {
   const newNode = buildFromTemplate(currentTemplate)
   // console.log('FIX NODE', { node, path, currentTemplate, newNode })
 
-  if (!node || isCorrect(node, nextTemplate)) {
+  if (
+    !node ||
+    (nextTemplates?.length && nextTemplates.some((t) => isCorrect(node, t)))
+  ) {
     // console.log('insert node')
     return Transforms.insertNodes(editor, newNode, {
       at: path,
@@ -376,6 +379,7 @@ export const fixStructure: (
       const currentTemplate = structure[i]
       const prevTemplate = i > 0 && structure[i - 1]
       const nextTemplate = i < structure.length - 1 && structure[i + 1]
+      const nextTemplates = nextTemplate && structure.slice(i + 1)
       /* console.log({
         i,
         repeatOffset,
@@ -403,7 +407,13 @@ export const fixStructure: (
         Transforms.removeNodes(editor, { at: path })
         return true
       } else {
-        fixNode(currentNode, currentPath, currentTemplate, nextTemplate, editor)
+        fixNode(
+          currentNode,
+          currentPath,
+          currentTemplate,
+          nextTemplates,
+          editor,
+        )
         return true
       }
     }
