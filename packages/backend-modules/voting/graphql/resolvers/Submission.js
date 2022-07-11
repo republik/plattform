@@ -18,21 +18,13 @@ module.exports = {
       username: null,
     }
   },
-  answers: async (submission, args, { pgdb }) => {
+  answers: async (submission, args, { loaders, pgdb }) => {
     const { questionnaireId, userId } = submission
 
-    const nodes = await pgdb.public.query(
-      `
-      SELECT a.*
-      FROM answers a
-      JOIN questions q
-        ON q.id = "questionId"
-       AND a."questionnaireId" = :questionnaireId
-      WHERE a."userId" = :userId
-      ORDER BY q.order
-    `,
-      { questionnaireId, userId },
-    )
+    const nodes = await loaders.Answer.byKeyObj.load({
+      questionnaireId,
+      userId,
+    })
 
     return {
       nodes,
