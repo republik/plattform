@@ -305,14 +305,8 @@ describe('Slate Editor: Block Conversion', () => {
               ],
             },
             {
-              type: 'figure',
-              children: [
-                {
-                  type: 'figureImage',
-                  src: '/static/flyer-pic.jpg',
-                  children: [{ text: '' }],
-                },
-              ],
+              type: 'flyerPunchline',
+              children: [{ text: '' }],
             },
           ],
         },
@@ -322,16 +316,36 @@ describe('Slate Editor: Block Conversion', () => {
           type: 'flyerTile',
         },
       ]
-      console.log({ flyerSchema })
       const editor = await setup(structure, { schema: flyerSchema })
 
-      await Transforms.select(editor, [0, 2, 0])
+      await Transforms.select(editor, [0, 4, 0])
       toggleElement(editor, 'ul')
+      await new Promise(process.nextTick)
+
+      await Transforms.select(editor, [0, 5, 0])
+      toggleElement(editor, 'figure')
+      await new Promise(process.nextTick)
 
       expect(cleanupTree(value)).toEqual([
         {
           type: 'flyerTile',
           children: [
+            {
+              type: 'flyerMetaP',
+              children: [
+                {
+                  text: '',
+                },
+              ],
+            },
+            {
+              type: 'flyerTopic',
+              children: [
+                {
+                  text: '',
+                },
+              ],
+            },
             {
               type: 'flyerTitle',
               children: [
@@ -360,8 +374,30 @@ describe('Slate Editor: Block Conversion', () => {
               children: [
                 {
                   type: 'figureImage',
-                  src: '/static/flyer-pic.jpg',
-                  children: [{ text: '' }],
+                  children: [
+                    {
+                      text: '',
+                    },
+                  ],
+                },
+                {
+                  type: 'figureCaption',
+                  children: [
+                    {
+                      text: '',
+                    },
+                    {
+                      type: 'figureByline',
+                      children: [
+                        {
+                          text: '',
+                        },
+                      ],
+                    },
+                    {
+                      text: '',
+                    },
+                  ],
                 },
               ],
             },

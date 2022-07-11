@@ -280,6 +280,15 @@ export const isEntireNodeSelected = (
   )
 }
 
+const hasConvertChoices = (element: CustomElement) => {
+  const templateTypes = element?.template?.type
+  return (
+    Array.isArray(templateTypes) &&
+    templateTypes.length > 1 &&
+    !elConfig[element.type].attrs?.isInline
+  )
+}
+
 export const getAncestry = (
   editor: CustomEditor,
   customNode?: NodeEntry<CustomNode>,
@@ -287,7 +296,7 @@ export const getAncestry = (
   text?: NodeEntry<CustomText>
   element?: NodeEntry<CustomElement>
   container?: NodeEntry<CustomElement>
-  topLevelContainer?: NodeEntry<CustomElement>
+  convertContainer?: NodeEntry<CustomElement>
 } => {
   const first = customNode || Editor.first(editor, editor.selection)
   const last = customNode || Editor.last(editor, editor.selection)
@@ -296,7 +305,7 @@ export const getAncestry = (
   let text: NodeEntry<CustomText>
   let element: NodeEntry<CustomElement>
   let container: NodeEntry<CustomElement>
-  let topLevelContainer: NodeEntry<CustomElement>
+  let convertContainer: NodeEntry<CustomElement>
   if (
     Text.isText(first[0]) &&
     Text.isText(last[0]) &&
@@ -320,9 +329,11 @@ export const getAncestry = (
     container = getParent(editor, container)
   }
 
-  for (const [n, p] of Node.ancestors(editor, element[1], { reverse: true })) {
-    if (SlateElement.isElement(n)) {
-      topLevelContainer = [n as CustomElement, p]
+  if (!hasConvertChoices(element[0])) {
+    for (const [n, p] of Node.ancestors(editor, element[1])) {
+      if (SlateElement.isElement(n) && hasConvertChoices(n)) {
+        convertContainer = [n as CustomElement, p]
+      }
     }
   }
 
@@ -330,7 +341,7 @@ export const getAncestry = (
     text,
     element,
     container,
-    topLevelContainer,
+    convertContainer,
   }
 }
 

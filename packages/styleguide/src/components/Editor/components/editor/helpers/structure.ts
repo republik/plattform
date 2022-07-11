@@ -182,7 +182,7 @@ const convertBlock = (
   element: CustomElement,
   customTarget?: NodeEntry<CustomNode>,
 ): number[] => {
-  const { element: targetE, topLevelContainer: targetC } = getAncestry(
+  const { element: targetE, convertContainer: targetC } = getAncestry(
     editor,
     customTarget,
   )
@@ -269,7 +269,7 @@ export const toggleElement = (
     Transforms.collapse(editor, { edge: 'end' })
   }
 
-  // inserted element can't be selected as such:
+  // handle unselectable elements (e.g. break)
   if (config.attrs?.isVoid && !config.attrs?.highlightSelected) {
     selectAdjacent(editor)
     return editor.selection.anchor.path
