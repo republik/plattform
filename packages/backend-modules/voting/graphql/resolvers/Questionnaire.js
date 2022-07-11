@@ -5,6 +5,8 @@ const {
   getQuestions,
 } = require('../../lib/Questionnaire')
 
+const { getConnection } = require('../../lib/Submission')
+
 module.exports = {
   async userIsEligible(entity, args, { pgdb, user: me }) {
     return isEligible(me && me.id, entity, pgdb)
@@ -27,23 +29,7 @@ module.exports = {
     }
     return { entity: questionnaire }
   },
-  async submissions(questionnaire, args, { pgdb }) {
-    const nodes = await pgdb.public.questionnaireSubmissions.find(
-      { questionnaireId: questionnaire.id },
-      { limit: 5 },
-    )
-
-    if (!nodes?.length) {
-      return null
-    }
-
-    return {
-      nodes,
-      pageInfo: {
-        hasNextPage: false,
-        hasPreviousPage: false,
-      },
-      totalCount: nodes?.length || 0,
-    }
+  submissions(questionnaire, args, { pgdb }) {
+    return getConnection({ questionnaireId: questionnaire.id }, args, { pgdb })
   },
 }

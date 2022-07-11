@@ -189,7 +189,11 @@ input ElectionBallotInput {
 
 extend type User {
   candidacies: [Candidacy!]!
-  questionnaireSubmissions: SubmissionConnection
+  questionnaireSubmissions(
+    first: Int
+    before: String
+    after: String
+  ): SubmissionConnection
 }
 
 type ElectionCandidacyResult {
@@ -238,7 +242,11 @@ type Questionnaire {
 
   turnout: QuestionnaireTurnout
 
-  submissions: SubmissionConnection
+  submissions(
+    first: Int
+    before: String
+    after: String
+  ): SubmissionConnection
 }
 
 type SubmissionConnection {
