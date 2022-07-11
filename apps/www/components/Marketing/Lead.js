@@ -14,7 +14,7 @@ export default function LeadSection({ t }) {
         <div {...styles.logo}>
           <Logo />
         </div>
-        <h2 {...styles.lead}>{t('marketing/page/lead/subtitle')}</h2>
+        <p {...styles.lead}>{t('marketing/page/lead/subtitle')}</p>
       </Container>
       <Container {...styles.description}>
         <Editorial.P>{t('marketing/page/minifront/description')}</Editorial.P>

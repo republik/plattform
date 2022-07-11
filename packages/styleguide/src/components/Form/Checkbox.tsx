@@ -37,6 +37,7 @@ const Checkbox: React.FC<{
     : black
     ? colorScheme.set('fill', 'logo')
     : colorScheme.set('fill', 'primary')
+
   return (
     <label
       {...styles.label}
@@ -44,28 +45,41 @@ const Checkbox: React.FC<{
       {...labelColor}
     >
       <span {...(children ? styles.box : styles.boxWithouText)}>
+        <input
+          {...styles.input}
+          name={name}
+          type='checkbox'
+          checked={checked}
+          disabled={disabled}
+          onChange={(event) => {
+            onChange(event, event.target.checked)
+          }}
+        />
         {checked ? (
-          <svg {...checkMarkFill} width='18' height='18' viewBox='0 0 18 18'>
+          <svg
+            {...checkMarkFill}
+            {...styles.outlineOnPrevInputFocus}
+            width='18'
+            height='18'
+            viewBox='0 0 18 18'
+            aria-hidden='true'
+            focusable='false'
+          >
             <path
               d='M0 0h18v18H0V0zm7 14L2 9.192l1.4-1.346L7 11.308 14.6 4 16 5.346 7 14z'
-              fill={'inherit'}
+              fill='inherit'
               fillRule='evenodd'
             />
           </svg>
         ) : (
-          <span {...styles.unchecked} {...checkMarkBorderColor} />
+          <span
+            aria-hidden='true'
+            {...styles.unchecked}
+            {...styles.outlineOnPrevInputFocus}
+            {...checkMarkBorderColor}
+          />
         )}
       </span>
-      <input
-        {...styles.input}
-        name={name}
-        type='checkbox'
-        checked={checked}
-        disabled={disabled}
-        onChange={(event) => {
-          onChange(event, event.target.checked)
-        }}
-      />
       {children}
     </label>
   )
@@ -83,9 +97,6 @@ const styles = {
   withoutText: css({
     lineHeight: 0,
   }),
-  input: css({
-    display: 'none',
-  }),
   unchecked: css({
     display: 'inline-block',
     boxSizing: 'border-box',
@@ -95,6 +106,7 @@ const styles = {
     borderStyle: 'solid',
   }),
   box: css({
+    position: 'relative',
     display: 'inline-block',
     padding: '3px 3px 3px 0',
     marginRight: 5,
@@ -102,8 +114,29 @@ const styles = {
     float: 'left',
   }),
   boxWithouText: css({
+    position: 'relative',
     display: 'inline-block',
     padding: '3px 0',
+  }),
+  outlineOnPrevInputFocus: css({
+    'input:focus + &': {
+      outline: 'solid',
+      outlineOffset: 3,
+    },
+    'input:focus:not(:focus-visible) + &': {
+      outline: 'none',
+    },
+  }),
+  input: css({
+    cursor: 'pointer',
+    // hidden but accessible
+    // https://www.sarasoueidan.com/blog/inclusively-hiding-and-styling-checkboxes-and-radio-buttons/
+    position: 'absolute',
+    top: 3,
+    left: 0,
+    width: 18,
+    height: 18,
+    opacity: 0,
   }),
 }
 

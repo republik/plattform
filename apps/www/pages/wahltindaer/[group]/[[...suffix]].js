@@ -19,7 +19,7 @@ import StatusError from '../../../components/StatusError'
 import { cardFragment } from '../../../components/Card/fragments'
 import { useCardPreferences } from '../../../components/Card/Preferences'
 import medianSmartspiders from '../../../components/Card/medianSmartspiders'
-import withDefaultSSR from '../../../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../../../lib/apollo/helpers'
 
 const query = gql`
   query getCardGroup(

@@ -43,7 +43,10 @@ const addressFields = (t) => [
   {
     label: t('Account/AddressForm/line1/label'),
     name: 'line1',
-    validator: (value) => !value && t('Account/AddressForm/line1/error/empty'),
+    validator: (value) =>
+      (!value?.length && t('Account/AddressForm/line1/error/empty')) ||
+      (value?.length > 70 &&
+        t('Account/AddressForm/line1/error/tooLong', { maxLength: 70 })),
   },
   {
     label: t('Account/AddressForm/line2/label'),
@@ -58,7 +61,10 @@ const addressFields = (t) => [
   {
     label: t('Account/AddressForm/city/label'),
     name: 'city',
-    validator: (value) => !value && t('Account/AddressForm/city/error/empty'),
+    validator: (value) =>
+      (!value?.length && t('Account/AddressForm/city/error/empty')) ||
+      (value?.length > 35 &&
+        t('Account/AddressForm/city/error/tooLong', { maxLength: 35 })),
   },
   {
     label: t('Account/AddressForm/country/label'),

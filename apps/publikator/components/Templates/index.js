@@ -32,6 +32,7 @@ const articleSchemaParams = {
   dynamicComponentRequire,
   dynamicComponentIdentifiers,
   ...withArticleData,
+  noEmpty: false,
 }
 
 const schemas = {
@@ -46,6 +47,7 @@ const schemas = {
     CommentLink: NoOpLink,
     DiscussionLink: NoOpLink,
     t,
+    noEmpty: false,
     ...withFrontData,
   }),
   format: createFormatSchema(articleSchemaParams),

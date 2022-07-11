@@ -1,39 +1,33 @@
-import compose from 'lodash/flowRight'
-import { withRouter } from 'next/router'
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 
 import Frame from '../components/Frame'
-import { useInNativeApp } from '../lib/withInNativeApp'
-import SignInPage from './anmelden'
-import Front from '../components/Front'
 import Marketing from '../components/Marketing'
-import withT from '../lib/withT'
-import withMembership from '../components/Auth/withMembership'
+import { useTranslation } from '../lib/withT'
+import { createGetStaticProps } from '../lib/apollo/helpers'
 
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
 
-import withDefaultSSR from '../lib/hocs/withDefaultSSR'
+import { MARKETING_PAGE_QUERY } from '../components/Marketing/graphql/MarketingPageQuery.graphql'
+import { useMe } from '../lib/context/MeContext'
 
-const IndexPage = ({ t, isMember, router }) => {
-  const { inNativeIOSApp, isMinimalNativeAppVersion } = useInNativeApp()
-  if (
-    router.query.stale !== 'marketing' &&
-    (isMember || router.query.extractId)
-  ) {
-    // does its own meta
-    return (
-      <Front
-        shouldAutoRefetch
-        hasOverviewNav
-        extractId={router.query.extractId}
-        finite
-      />
-    )
-  }
+const MARKETING_PAGE_SSG_REVALIDATE = 60 // revalidate every minute
 
-  // only show marketing in ios app if it's the latest version
-  if (inNativeIOSApp && !isMinimalNativeAppVersion('2.1.0')) {
-    return <SignInPage />
-  }
+const MarketingPage = () => {
+  const { t } = useTranslation()
+  const router = useRouter()
+  const { meLoading, hasAccess } = useMe()
+
+  const { isReady } = router
+
+  useEffect(() => {
+    if (!isReady || meLoading) {
+      return
+    }
+    if (hasAccess) {
+      window.location = '/'
+    }
+  }, [router, isReady, meLoading, hasAccess])
 
   const meta = {
     pageTitle: t('pages/index/pageTitle'),
@@ -42,6 +36,7 @@ const IndexPage = ({ t, isMember, router }) => {
     image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
     url: `${PUBLIC_BASE_URL}/`,
   }
+
   return (
     <Frame raw meta={meta} isOnMarketingPage={true}>
       <Marketing />
@@ -49,6 +44,16 @@ const IndexPage = ({ t, isMember, router }) => {
   )
 }
 
-const EnhancedPage = compose(withMembership, withT, withRouter)(IndexPage)
+export default MarketingPage
 
-export default withDefaultSSR(EnhancedPage)
+export const getStaticProps = createGetStaticProps(async (client) => {
+  const data = await client.query({
+    query: MARKETING_PAGE_QUERY,
+  })
+  return {
+    props: {
+      data,
+    },
+    revalidate: MARKETING_PAGE_SSG_REVALIDATE,
+  }
+})

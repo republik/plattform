@@ -1,8 +1,6 @@
 const checkEnv = require('check-env')
 const visit = require('unist-util-visit')
-const {
-  Roles: { userIsInRoles },
-} = require('@orbiting/backend-modules-auth')
+const { hasFullDocumentAccess } = require('./restrictions')
 
 checkEnv(['FRONTEND_BASE_URL'])
 
@@ -10,7 +8,6 @@ const {
   GITHUB_LOGIN,
   GITHUB_ORGS = GITHUB_LOGIN,
   FRONTEND_BASE_URL,
-  DOCUMENTS_RESTRICT_TO_ROLES,
   DOCUMENTS_LINKS_RESTRICTED,
 } = process.env
 
@@ -212,12 +209,12 @@ const contentUrlResolver = (
   )
 
   const stripDocLinks =
-    DOCUMENTS_RESTRICT_TO_ROLES &&
     DOCUMENTS_LINKS_RESTRICTED &&
-    doc?.meta?.path && // not present during publish
-    DOCUMENTS_LINKS_RESTRICTED.split(',').includes(doc.meta.path) &&
+    DOCUMENTS_LINKS_RESTRICTED.split(',').includes(doc.meta?.path) &&
+    // user is undefined during publish -> no stripping
+    // null during document delivery -> strip unless authorized
     user !== undefined &&
-    !userIsInRoles(user, DOCUMENTS_RESTRICT_TO_ROLES.split(','))
+    !hasFullDocumentAccess(user, doc._apiKey)
 
   visit(doc.content, 'link', (node) => {
     node.url = urlReplacer(node.url, stripDocLinks)
@@ -274,6 +271,7 @@ const metaUrlResolver = (
   urlPrefix,
   searchString,
   user,
+  apiKey,
 ) => {
   const urlReplacer = createUrlReplacer(
     _all,
@@ -288,9 +286,8 @@ const metaUrlResolver = (
       index <= 1 ||
       !episode.document?.meta?.path ||
       episode.document.meta.path === meta.path ||
-      !DOCUMENTS_RESTRICT_TO_ROLES ||
       user === undefined ||
-      userIsInRoles(user, DOCUMENTS_RESTRICT_TO_ROLES.split(','))
+      hasFullDocumentAccess(user, apiKey)
     ) {
       return
     }
@@ -305,11 +302,7 @@ const metaUrlResolver = (
         c.url = urlReplacer(c.url)
       })
 
-  if (
-    user === undefined ||
-    (DOCUMENTS_RESTRICT_TO_ROLES &&
-      !userIsInRoles(user, DOCUMENTS_RESTRICT_TO_ROLES.split(',')))
-  ) {
+  if (user === undefined || !hasFullDocumentAccess(user, apiKey)) {
     meta.recommendations = null
   }
 }

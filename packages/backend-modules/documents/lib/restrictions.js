@@ -5,15 +5,28 @@ const {
 const {
   DOCUMENTS_RESTRICT_TO_ROLES,
   DOCUMENTS_UNRESTRICTED_CHILDREN_REPO_IDS,
+  DOCUMENTS_API_KEYS,
 } = process.env
 
-const restrictToRoles = () =>
-  (DOCUMENTS_RESTRICT_TO_ROLES || false) &&
-  DOCUMENTS_RESTRICT_TO_ROLES.length &&
-  DOCUMENTS_RESTRICT_TO_ROLES.split(',')
+let apiKeys = []
+try {
+  if (DOCUMENTS_API_KEYS) {
+    apiKeys = JSON.parse(DOCUMENTS_API_KEYS)
+  }
+} catch (e) {
+  console.error('DOCUMENTS_API_KEYS invalid', e)
+}
 
-const isUserUnrestricted = (user) =>
-  !restrictToRoles() || userIsInRoles(user, restrictToRoles())
+const isValidApiKey = (key) => {
+  return !!key && apiKeys.some((apiKey) => apiKey.value === key)
+}
+
+const documentsRestrictToRoles = DOCUMENTS_RESTRICT_TO_ROLES?.split(',')
+
+const hasFullDocumentAccess = (user, apiKey) =>
+  !documentsRestrictToRoles ||
+  userIsInRoles(user, documentsRestrictToRoles) ||
+  isValidApiKey(apiKey)
 
 const includesUnrestrictedChildRepoId = (repoIds) =>
   (repoIds || false) &&
@@ -24,7 +37,6 @@ const includesUnrestrictedChildRepoId = (repoIds) =>
   )
 
 module.exports = {
-  restrictToRoles,
-  isUserUnrestricted,
+  hasFullDocumentAccess,
   includesUnrestrictedChildRepoId,
 }

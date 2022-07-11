@@ -6,11 +6,12 @@ import withT from '../lib/withT'
 import { CDN_FRONTEND_BASE_URL } from '../lib/constants'
 
 import { Center } from '@project-r/styleguide'
-import withDefaultSSR from '../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../lib/apollo/helpers'
 
 const FormatsPage = ({ t }) => {
   const meta = {
-    title: t('sections/pageTitle'),
+    pageTitle: t('sections/pageTitle'),
+    title: t('sections/title'),
     description: t('sections/description'),
     image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
   }

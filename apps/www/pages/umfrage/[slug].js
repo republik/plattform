@@ -9,7 +9,7 @@ import { withQuestionnaire } from '../../components/Questionnaire/enhancers'
 import Questionnaire from '../../components/Questionnaire/Questionnaire'
 import Frame from '../../components/Frame'
 import Link from 'next/link'
-import withDefaultSSR from '../../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../../lib/apollo/helpers'
 
 const meta = {
   title: t('questionnaire/title'),

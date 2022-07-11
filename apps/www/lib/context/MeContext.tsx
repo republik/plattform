@@ -1,4 +1,12 @@
-import { createContext, ReactNode, useContext, useEffect, useMemo } from 'react'
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import NextHead from 'next/head'
 import { ApolloError, useQuery } from '@apollo/client'
 import { checkRoles, meQuery } from '../apollo/withMe'
@@ -42,7 +50,7 @@ css.global(
   },
 )
 
-type Me = {
+export type MeObjectType = {
   id: string
   username: string
   name: string
@@ -69,11 +77,11 @@ type Me = {
 }
 
 type MeResponse = {
-  me: Me | null
+  me: MeObjectType | null
 }
 
 type MeContextValues = {
-  me?: Me
+  me?: MeObjectType
   meLoading: boolean
   meError?: ApolloError
   meRefetch: any
@@ -88,10 +96,17 @@ export const useMe = (): MeContextValues => useContext(MeContext)
 
 type Props = {
   children: ReactNode
+  /**
+   * Assumes that a memberships exists, even before me is loaded.
+   * All values returned from the context that correlate to a membership will be set to true.
+   */
+  assumeAccess?: boolean
 }
 
-const MeContextProvider = ({ children }: Props) => {
+
+const MeContextProvider = ({ children, assumeAccess = false }: Props) => {
   const { data, loading, error, refetch } = useQuery<MeResponse>(meQuery, {})
+
 
   const me = data?.me
   const isMember = checkRoles(me, ['member'])
@@ -143,7 +158,7 @@ const MeContextProvider = ({ children }: Props) => {
         meError: error,
         meRefetch: refetch,
         hasActiveMembership,
-        hasAccess: isMember,
+        hasAccess: !data && assumeAccess ? assumeAccess : isMember,
         isEditor: checkRoles(me, ['editor']),
       }}
     >

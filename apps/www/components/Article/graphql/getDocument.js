@@ -38,6 +38,7 @@ export const getDocument = gql`
       ...UserProgressOnDocument
       meta {
         publishDate
+        lastPublishedAt
         template
         path
         title
@@ -73,8 +74,16 @@ export const getDocument = gql`
           }
         }
         color
-        authors {
-          id
+        contributors {
+          name
+          kind
+          user {
+            id
+            username
+            publicUrl
+            twitterHandle
+            facebookId
+          }
         }
         format {
           id

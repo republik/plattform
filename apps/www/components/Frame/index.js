@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import { css } from 'glamor'
 import 'glamor/reset'
-import compose from 'lodash/flowRight'
 import {
   Container,
   RawHtml,
@@ -22,8 +21,7 @@ import {
   FRAME_CONTENT_PADDING,
   FRAME_CONTENT_PADDING_MOBILE,
 } from '../constants'
-import { withMembership } from '../Auth/checkRoles'
-import withT from '../../lib/withT'
+import { useTranslation } from '../../lib/withT'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 import LegacyAppNoticeBox from './LegacyAppNoticeBox'
 import { useMe } from '../../lib/context/MeContext'
@@ -94,7 +92,6 @@ export const Content = ({ children, style }) => (
 )
 
 const Frame = ({
-  t,
   children,
   raw,
   meta,
@@ -104,16 +101,16 @@ const Frame = ({
   formatColor,
   footer = true,
   pullable,
-  isMember,
   hasOverviewNav: wantOverviewNav,
   stickySecondaryNav,
   isOnMarketingPage,
   pageColorSchemeKey,
 }) => {
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
-  const { me } = useMe()
+  const { t } = useTranslation()
+  const { me, hasAccess } = useMe()
 
-  const hasOverviewNav = isMember && wantOverviewNav
+  const hasOverviewNav = hasAccess && wantOverviewNav
   const hasSecondaryNav = !!(secondaryNav || hasOverviewNav)
   const padHeaderRule = useMemo(() => {
     return css({
@@ -187,4 +184,4 @@ const Frame = ({
   )
 }
 
-export default compose(withMembership, withT)(Frame)
+export default Frame

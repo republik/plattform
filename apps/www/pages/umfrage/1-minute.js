@@ -41,7 +41,7 @@ import { css } from 'glamor'
 import NewsletterSignUp from '../../components/Auth/NewsletterSignUp'
 import Link from 'next/link'
 import { description } from './[slug]'
-import withDefaultSSR from '../../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../../lib/apollo/helpers'
 import ErrorMessage from '../../components/ErrorMessage'
 
 const SLUG = '1-minute'
