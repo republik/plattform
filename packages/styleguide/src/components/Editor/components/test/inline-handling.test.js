@@ -396,13 +396,13 @@ describe('Slate Editor: Inline Insertion', () => {
     it('should not change anything if the element is not allowed', async () => {
       value = [
         {
-          type: 'headline',
+          type: 'pullQuoteText',
           children: [{ text: 'Lorem ipsum dolor sit amet.' }],
         },
       ]
       const structure = [
         {
-          type: 'headline',
+          type: 'pullQuoteText',
         },
       ]
       const editor = await setup(structure)
@@ -416,7 +416,7 @@ describe('Slate Editor: Inline Insertion', () => {
 
       expect(cleanupTree(value)).toEqual([
         {
-          type: 'headline',
+          type: 'pullQuoteText',
           children: [{ text: 'Lorem ipsum dolor sit amet.' }],
         },
       ])
