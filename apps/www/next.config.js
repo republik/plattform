@@ -107,5 +107,8 @@ module.exports = withTM(
         },
       ]
     },
+    experimental: {
+      largePageDataBytes: 512 * 1000, // 512KB
+    },
   }),
 )

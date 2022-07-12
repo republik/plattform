@@ -296,6 +296,12 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
           Hochformat
         </Checkbox>
       )}
+      {options.includes('color') && options.includes('bgColor') && (
+        <ContrastInfo
+          color={node.data.get('color')}
+          bgColor={node.data.get('bgColor')}
+        />
+      )}
       {options.includes('color') && (
         <ColorPicker
           label='Textfarbe'
@@ -314,10 +320,6 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
           }}
         />
       )}
-      <ContrastInfo
-        color={node.data.get('color')}
-        bgColor={node.data.get('bgColor')}
-      />
       {options.includes('outline') && (
         <>
           <Checkbox

@@ -938,11 +938,15 @@
     },
     {
       "key": "colorPicker/contrastInfo/title",
-      "value": "Farbkontrast: "
+      "value": "Farbkontrast"
+    },
+    {
+      "key": "colorPicker/contrastInfo/ok",
+      "value": "✅"
     },
     {
       "key": "colorPicker/contrastInfo/warning",
-      "value": "Wert sollte höher als 3 : 1 sein."
+      "value": "⚠️ Mindestens 3,0 : 1"
     },
     {
       "key": "variable/insert/greeting",
