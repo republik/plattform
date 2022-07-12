@@ -20,7 +20,7 @@ state: {
         setState({value: newValue})
     }}
     structure={state.structure}
-    config={{ maxSigns: 3000, debug: true, schema: schemaComment }}
+    config={{ maxSigns: 3000, debug: true, schema: schemaComment, toolbar: 'fixed' }}
 />
 ```
 

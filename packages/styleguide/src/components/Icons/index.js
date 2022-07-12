@@ -81,6 +81,8 @@ export {
   MdStrikethroughS as StrikeThrough,
   MdTitle as TitleIcon,
   MdCode as CodeIcon,
+  MdDragHandle as PunchlineIcon,
+  MdOutlineCallToAction as ArticlePreviewIcon,
 } from 'react-icons/md'
 
 export {

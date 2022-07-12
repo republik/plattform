@@ -6,6 +6,7 @@ import {
 } from '../../custom-types'
 import { css } from 'glamor'
 import { serifTitle38, serifRegular23 } from '../../../Typography/styles'
+import { ArticlePreviewIcon } from '../../../Icons'
 
 // TODO: Maybe – kachel wysiwyg
 export const ArticlePreview: React.FC<{
@@ -50,4 +51,5 @@ export const config: ElementConfigI = {
     isVoid: true,
     highlightSelected: true,
   },
+  button: { icon: ArticlePreviewIcon },
 }

@@ -34,12 +34,13 @@ const Countdown: React.FC<{ maxSigns: number }> = ({ maxSigns }) => {
 
 const Footer: React.FC<{ config: EditorConfig }> = ({ config }) => {
   const [colorScheme] = useColorContext()
+  if (!config.maxSigns) return null
   return (
     <div
       {...styles.container}
       {...colorScheme.set('borderTopColor', 'divider')}
     >
-      {config.maxSigns && <Countdown maxSigns={config.maxSigns} />}
+      <Countdown maxSigns={config.maxSigns} />
     </div>
   )
 }

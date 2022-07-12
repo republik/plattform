@@ -216,6 +216,7 @@ const convertBlock = (
 
   // TODO: insert path when mainElKey doesn't allow for repeats (no use case atm)
   Editor.withoutNormalizing(editor, () => {
+    console.log({ target, targetMainElKey, mainElKey })
     if (targetMainElKey && mainElKey) {
       Transforms.setNodes(editor, insertPartial, { at: target[1] })
       const updatedChildren = setChildren(
@@ -249,6 +250,8 @@ export const toggleElement = (
   editor: CustomEditor,
   elKey: CustomElementsType,
 ): number[] => {
+  console.log('toggle', elKey)
+
   const { selection } = editor
   if (!selection) return
 

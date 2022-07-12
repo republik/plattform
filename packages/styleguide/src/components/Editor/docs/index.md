@@ -387,6 +387,8 @@ span: 3
 rows:
   - Variable: schema
     Description: schema config *(see below)*
+  - Variable: toolbar
+    Description: sticky (default), fixed or floating
   - Variable: maxSigns
     Description: number
   - Variable: debug
@@ -695,11 +697,9 @@ Note that: a correct normaliser should break and return `true` when it changes s
 
 ### Toolbar
 
-Any element/mark that defines a `button` in the config can be rendered in either the `sticky` or the `hovering` toolbar. At the moment the `sticky` toolbar is the default.
+Any element/mark that defines a `button` in the config can be rendered in the toolbar. Every mark comes up as a button by default.
 
-Every mark comes up as a button by default.
-
-For elements, buttons are available when a `button` object is defined in the config and a render component is present in the schema. In sticky mode, all buttons are shown at all time, although some may be inactive. The buttons are segregated between `inline` and `block`, based on the `isInline` attribute in the element config.
+Depending on the config value, the toolbar can be either `sticky`, `fixed` or `floating`, `sticky` being the default.
 
 ### Placeholders
 

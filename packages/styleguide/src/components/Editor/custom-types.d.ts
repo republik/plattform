@@ -290,6 +290,7 @@ export type EditorConfig = {
   schema: SchemaConfig
   maxSigns?: number
   debug?: boolean
+  toolbar?: ToolbarMode
 }
 
 export type KeyCombo = {
@@ -303,7 +304,7 @@ export type ButtonConfig = {
   active?: boolean
 }
 
-export type ToolbarMode = 'sticky' | 'floating'
+export type ToolbarMode = 'fixed' | 'sticky' | 'floating'
 
 export type CustomEditor = BaseEditor &
   ReactEditor &

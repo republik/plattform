@@ -46,12 +46,20 @@ const styles = {
     display: 'flex',
     transition: 'opacity 0.75s',
   }),
-  stickyToolbar: css({
-    marginBottom: '15px',
+  topToolbar: css({
+    padding: '15px 0',
     overflow: 'hidden',
     display: 'flex',
     minHeight: '19px',
     transition: 'opacity 0.75s',
+  }),
+  stickyToolbar: css({
+    backgroundColor: 'white',
+    position: 'sticky',
+    top: 0,
+    zIndex: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
   }),
   buttonGroup: css({
     display: 'flex',
@@ -273,18 +281,15 @@ const Toolbar: React.FC<{
   mode: ToolbarMode
 }> = ({ containerRef, mode }) => {
   const editor = useSlate()
-  const isSticky = mode === 'sticky'
+  const isOnTop = mode === 'sticky' || mode === 'fixed'
   const initialInlineButtons = useMemo(
-    () => (isSticky ? getElementButtons(editor, true) : []),
-    [isSticky],
+    () => (isOnTop ? getElementButtons(editor, true) : []),
+    [isOnTop],
   )
-  const initialBlockButtons = useMemo(
-    () => (isSticky ? getElementButtons(editor) : []),
-    [isSticky],
-  )
+  const initialBlockButtons = []
   const initialMarkButtons = useMemo(
-    () => (isSticky ? mKeys.map(asButton) : []),
-    [isSticky],
+    () => (isOnTop ? mKeys.map(asButton) : []),
+    [isOnTop],
   )
   const [colorScheme] = useColorContext()
   const focused = useFocused()
@@ -309,7 +314,7 @@ const Toolbar: React.FC<{
   }, [focused])
 
   useEffect(() => {
-    if (isSticky) return
+    if (isOnTop) return
 
     const el = ref.current
     if (!el) return
@@ -332,7 +337,7 @@ const Toolbar: React.FC<{
   })
 
   const setButtons = (text, element, convertContainer) => {
-    setMarks(getAllowedMarks(editor, isSticky, element))
+    setMarks(getAllowedMarks(editor, isOnTop, element))
     setInlines(getAllowedInlines(editor, initialInlineButtons, text, element))
     const allowedBlocks = getAllowedBlocks(
       editor,
@@ -344,13 +349,13 @@ const Toolbar: React.FC<{
   }
 
   const onChange = (e?: MouseEvent<HTMLDivElement>) => {
-    if (!hasSelection(editor) || (!isSticky && !ref.current)) {
+    if (!hasSelection(editor) || (!isOnTop && !ref.current)) {
       return reset()
     }
     const { text, element, convertContainer } = getAncestry(editor)
     if (
       !!element &&
-      (isSticky ||
+      (isOnTop ||
         hasUsableSelection(editor, element) ||
         hasVoidSelection(element))
     ) {
@@ -364,8 +369,13 @@ const Toolbar: React.FC<{
     onChange()
   }, [editor.selection, focused])
 
-  return isSticky ? (
-    <div ref={ref} {...styles.stickyToolbar} onClick={(e) => onChange(e)}>
+  return isOnTop ? (
+    <div
+      ref={ref}
+      {...styles.topToolbar}
+      {...(mode === 'sticky' && styles.stickyToolbar)}
+      onClick={(e) => onChange(e)}
+    >
       <ToolbarButtons marks={marks} inlines={inlines} blocks={blocks} />
     </div>
   ) : (
