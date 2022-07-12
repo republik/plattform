@@ -9,7 +9,10 @@ export const withDelete = (editor: CustomEditor): CustomEditor => {
   editor.deleteBackward = (unit) => {
     if (unit === 'character') {
       const { element: parent } = getAncestry(editor)
+      // e.g. deleting all the text in a blockquote
+      // -> we want to delete the whole blockquote
       if (Range.isCollapsed(editor.selection) && !getCharCount([parent[0]])) {
+        // TODO: fix cursor -> goes down instead of up
         return Transforms.removeNodes(editor, { at: parent[1] })
       }
     }

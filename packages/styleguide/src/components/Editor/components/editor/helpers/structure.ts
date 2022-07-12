@@ -480,6 +480,8 @@ const insertElement = (
   cleanupFn()
 }
 
+// TODO: include single ones of repeat template type
+//  e.g. single empty paragraph -> on Enter -> we want to jump to next element
 const hasBetterSelectTarget = (
   editor: CustomEditor,
   target: NodeEntry<CustomElement>,

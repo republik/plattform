@@ -1,6 +1,6 @@
 ### Todos
 
-- Switch block type when nested (feature kinda-sorta worked, then got "forgotten" for community editor)
+- Switch block type UI when nested
 - Tile UI
     - move up/down
     - delete
@@ -15,10 +15,8 @@
 
 ### Bugs
 
-- Enter on empty Meta P in opening tile -> should create new tile
 - Copy title with break swallows the break
-- Convert P <-> List doesn't work
-- Convert punchline <-> image <-> article preview <-> etc. doesn't work
+- Enter on tile paragraph doesn't jump to next element
 
 
 ```react

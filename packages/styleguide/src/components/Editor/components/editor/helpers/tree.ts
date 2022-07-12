@@ -200,8 +200,10 @@ export const getAdjacentNode = (
 ): NodeEntry<CustomDescendant> | undefined => {
   let currentNode = node
   if (!currentNode) {
-    const getPath = direction === 'next' ? Range.end : Range.start
-    const lowLevelPath = getPath(editor.selection).path
+    const getPoint = direction === 'next' ? Range.end : Range.start
+    const lowLevelPath = editor.selection && getPoint(editor.selection).path
+    if (!lowLevelPath) return
+
     currentNode = Editor.node(
       editor,
       lowLevelPath,
@@ -210,6 +212,7 @@ export const getAdjacentNode = (
   const edgeOfNode = Editor.edges(editor, currentNode[1])[
     direction === 'next' ? 1 : 0
   ]
+
   const findTarget = direction === 'next' ? Editor.next : Editor.previous
   let target = findTarget(editor, {
     at: edgeOfNode,
