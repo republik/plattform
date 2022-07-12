@@ -193,7 +193,7 @@ const isUnselectable = (
   target: NodeEntry<CustomDescendant>,
 ): boolean => isUnselectableVoid(editor, target) || isEnd(target)
 
-export const getSiblingNode = (
+export const getAdjacentNode = (
   editor: CustomEditor,
   direction: 'next' | 'previous' = 'next',
   node?: NodeEntry<CustomDescendant>,
@@ -215,7 +215,7 @@ export const getSiblingNode = (
     at: edgeOfNode,
   })
   if (target && isUnselectable(editor, target)) {
-    target = getSiblingNode(editor, direction, target)
+    target = getAdjacentNode(editor, direction, target)
   }
   return target
 }
@@ -242,18 +242,15 @@ const getSiblingTextNode = (
   editor: CustomEditor,
   direction: 'next' | 'previous' = 'next',
 ): NodeEntry<CustomText> => {
-  const node = getSiblingNode(editor, direction)
+  const node = getAdjacentNode(editor, direction)
   if (node) {
     return getTextNode(node, editor, direction)
   }
 }
 
-const getCommonNode = (editor: CustomEditor): NodeEntry =>
-  Node.common(editor, editor.selection.anchor.path, editor.selection.focus.path)
-
 export const getParent = (
   editor: CustomEditor,
-  node: NodeEntry<Node>,
+  node: NodeEntry,
 ): NodeEntry<CustomElement> | undefined => {
   const parent = Editor.parent(editor, node[1])
   if (SlateElement.isElement(parent[0])) {
@@ -390,7 +387,7 @@ export const selectAdjacent = (
   editor: CustomEditor,
   direction: 'next' | 'previous' = 'next',
 ): void => {
-  const node = getSiblingNode(editor, direction)
+  const node = getAdjacentNode(editor, direction)
   if (node) {
     selectNode(editor, node[1], direction)
   }

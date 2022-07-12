@@ -29,7 +29,7 @@ import {
   getAncestry,
   getParent,
   getSelectedElement,
-  getSiblingNode,
+  getAdjacentNode,
   hasNextSibling,
   isDescendant,
   isEntireNodeSelected,
@@ -432,6 +432,88 @@ export const insertOnKey =
     }
   }
 
+const deleteOnInsert = (
+  editor: CustomEditor,
+  target: NodeEntry<CustomElement>,
+  selected: NodeEntry<CustomElement>,
+): number[] | undefined => {
+  // TODO: isEmpty -> take into account voids with filled props edge case
+  const isEmptyTarget = target && getCharCount([target[0]]) === 0
+  if (isEmptyTarget) {
+    const siblingPath = calculateSiblingPath(selected[1])
+    const nextOfType =
+      Node.has(editor, siblingPath) && Editor.node(editor, siblingPath)
+    const hasSibling =
+      nextOfType &&
+      SlateElement.isElement(nextOfType[0]) &&
+      nextOfType[0].type === target[0].type
+    const targetParent = getParent(editor, target)
+    if (!hasSibling && targetParent) {
+      return target[1]
+    }
+  }
+}
+
+const insertElement = (
+  editor: CustomEditor,
+  target: NodeEntry<CustomElement>,
+  inPlace: boolean,
+  cleanupFn: () => void,
+) => {
+  Editor.withoutNormalizing(editor, () => {
+    // split nodes at selection and move the second half of the split
+    // in the first position where repeats are allowed
+    const [targetN, targetP] = target
+    Transforms.splitNodes(editor, { always: true })
+    // since the node got split, splitP != selectionP
+    const splitP = getSelectedElement(editor, true)[1]
+    Transforms.setNodes(
+      editor,
+      { type: getTemplateType(targetN.template) } as Partial<CustomElement>,
+      { at: splitP },
+    )
+    const insertP = inPlace ? targetP : calculateSiblingPath(targetP)
+    Transforms.moveNodes(editor, { at: splitP, to: insertP })
+    Transforms.select(editor, insertP)
+    Transforms.collapse(editor, { edge: 'start' })
+  })
+  cleanupFn()
+}
+
+const hasBetterSelectTarget = (
+  editor: CustomEditor,
+  target: NodeEntry<CustomElement>,
+  isInline: boolean,
+  skip: boolean,
+): boolean => {
+  if (skip) return false
+  const selectionP = getSelectedElement(editor)[1]
+  return (
+    selectionP.length !== target[1].length && hasNextSibling(editor, isInline)
+  )
+}
+
+const findInsertTarget = (
+  editor: CustomEditor,
+  selected: NodeEntry<CustomElement>,
+): {
+  target?: NodeEntry<CustomElement>
+  isNextTarget?: boolean
+} => {
+  const target = findRepeatableNode(editor)
+  if (target) {
+    return { target, isNextTarget: false }
+  }
+  // if no target found: look if the next node has a target
+  // (e.g. paragraph when pressing "enter" in a headline)
+  const adjNode = getAdjacentNode(editor, 'next', selected)
+  if (!adjNode) return {}
+  return {
+    target: findRepeatableNode(editor, adjNode[1]),
+    isNextTarget: true,
+  }
+}
+
 // struct allows repeats?
 //     |               |
 //    YES              NO
@@ -442,91 +524,45 @@ export const insertOnKey =
 export const insertRepeat = (editor: CustomEditor): void => {
   const currentElement = getSelectedElement(editor)
   const multiElementSelection = spansManyElements(editor)
-  let target = findRepeatableNode(editor)
-  let nextTarget = false
-  let deleteP
+  // eslint-disable-next-line prefer-const
+  let { target, isNextTarget } = findInsertTarget(editor, currentElement)
 
-  // if no target found: look if the next sibling has a target
-  // (e.g. paragraph when pressing "enter" in a headline)
-  if (!target) {
-    const nextNode = getSiblingNode(editor, 'next', currentElement)
-    if (nextNode) {
-      target = findRepeatableNode(editor, nextNode[1])
-      nextTarget = true
-    }
-  }
-
-  // if the current target is empty, and has no sibling:
+  // if the current insert target is empty, and has no sibling:
   // jump out of element altogether
   // (e.g. after pressing "enter" on the last item of a list when empty)
-  const isEmptyTarget = target && getCharCount([target[0]]) === 0
-  // console.log({ target, isEmptyTarget, editor })
-  if (isEmptyTarget) {
-    const nextPath = calculateSiblingPath(currentElement[1])
-    const nextNode = Node.has(editor, nextPath) && Editor.node(editor, nextPath)
-    // console.log({ nextNode })
-    const hasSibling =
-      nextNode &&
-      SlateElement.isElement(nextNode[0]) &&
-      nextNode[0].type === target[0].type
-    const parent = getParent(editor, target)
-    // console.log({ nextNode, target })
-    if (!hasSibling && parent) {
-      // console.log({ parent })
-      deleteP = target[1]
-      const nextNode = getSiblingNode(editor, 'next', target)
-      const deleteImmediately = nextNode && isDescendant(parent, nextNode)
-      target = findRepeatableNode(editor, parent[1]) // fall back to the parent
-      if (deleteImmediately) {
-        return Transforms.removeNodes(editor, { at: deleteP })
-      }
+  const deleteP = deleteOnInsert(editor, target, currentElement)
+  if (deleteP) {
+    const targetParent = getParent(editor, target)
+    const adjNode = getAdjacentNode(editor, 'next', target)
+    const deleteImmediately = adjNode && isDescendant(targetParent, adjNode)
+    if (deleteImmediately) {
+      return Transforms.removeNodes(editor, { at: deleteP })
+    } else {
+      target = findRepeatableNode(editor, targetParent[1]) // fall back to the parent
     }
   }
 
   // if insert doesn't make sense, we jump to the next element instead
   if (!target) {
+    selectAdjacent(editor)
+    return deleteP && Transforms.removeNodes(editor, { at: deleteP })
+  }
+  const isInline = Editor.isInline(editor, target[0])
+  if (hasBetterSelectTarget(editor, target, isInline, !!deleteP)) {
     return selectAdjacent(editor)
   }
 
-  if (!deleteP) {
-    const isInline = Editor.isInline(editor, target[0])
-    const selectionP = getSelectedElement(editor)[1]
-    if (
-      selectionP.length !== target[1].length &&
-      hasNextSibling(editor, isInline)
-    ) {
-      return selectAdjacent(editor)
-    } else if (isInline) {
-      target = getParent(editor, target)
-    }
+  // fallback on parent for inline elements
+  if (isInline) {
+    target = getParent(editor, target)
   }
 
-  const [targetN, targetP] = target
-  let insertP
-  Editor.withoutNormalizing(editor, () => {
-    // console.log('insert', { target })
-    // split nodes at selection and move the second half of the split
-    // in the first position where repeats are allowed
-    Transforms.splitNodes(editor, { always: true })
-    // since the node got split, splitP != selectionP
-    const splitP = getSelectedElement(editor, true)[1]
-    Transforms.setNodes(
-      editor,
-      { type: getTemplateType(targetN.template) } as Partial<CustomElement>,
-      { at: splitP },
-    )
-    insertP =
-      nextTarget || multiElementSelection
-        ? targetP
-        : calculateSiblingPath(targetP)
-    // console.log({ insertP })
-    Transforms.moveNodes(editor, { at: splitP, to: insertP })
-    Transforms.select(editor, insertP)
-    Transforms.collapse(editor, { edge: 'start' })
-  })
-  if (deleteP) {
-    Transforms.removeNodes(editor, { at: deleteP })
-  }
+  insertElement(
+    editor,
+    target,
+    isNextTarget || multiElementSelection,
+    () => deleteP && Transforms.removeNodes(editor, { at: deleteP }),
+  )
 }
 
 // unwrap on paste if simple block with inline children

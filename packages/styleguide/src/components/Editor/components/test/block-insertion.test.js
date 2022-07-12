@@ -112,7 +112,6 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
     expect(editor.selection.focus).toEqual({ path: [1, 0], offset: 0 })
   })
 
-  // TODO: make this work
   it('should split inline nodes gracefully', async () => {
     value = [
       {
@@ -473,7 +472,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
     expect(editor.selection.focus).toEqual({ path: [0, 1, 0], offset: 0 })
   })
 
-  it('should delete last repeated element if it is empty and fallback on adjacent node if it makes sense', async () => {
+  it('should delete last repeated element if it is empty and fallback on adjacent node', async () => {
     value = [
       {
         type: 'blockQuote',
@@ -529,7 +528,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
     expect(editor.selection.focus).toEqual({ path: [0, 1, 0], offset: 0 })
   })
 
-  it('should delete last repeated element if it is empty and create the new repeated node if it makes sense', async () => {
+  it('should delete last repeated element if it is empty and create the new repeated node', async () => {
     value = [
       {
         type: 'ol',
@@ -573,6 +572,114 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
       },
     ])
     expect(editor.selection.focus).toEqual({ path: [1, 0], offset: 0 })
+  })
+
+  it('should delete last nested repeated element if it is empty and fallback on adjacent node', async () => {
+    value = [
+      {
+        type: 'flyerTileOpening',
+        children: [
+          {
+            type: 'headline',
+            children: [{ text: 'Hallo!' }],
+          },
+          {
+            type: 'flyerMetaP',
+            children: [
+              {
+                text: 'Es war heiss, es ist heiss, es bleibt heiss.',
+              },
+            ],
+          },
+          {
+            type: 'flyerMetaP',
+            children: [
+              {
+                text: '',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: 'flyerTile',
+        children: [
+          {
+            type: 'flyerMetaP',
+            children: [
+              {
+                text: '',
+              },
+            ],
+          },
+          {
+            type: 'flyerTopic',
+            children: [
+              {
+                text: '',
+              },
+            ],
+          },
+          {
+            type: 'flyerTitle',
+            children: [
+              {
+                text: 'Hitzewelle werden mit Strand- und Badebilder illustriert! Wieso?',
+              },
+            ],
+          },
+          {
+            type: 'flyerAuthor',
+            authorId: '123',
+            children: [{ text: '' }],
+          },
+          {
+            type: 'paragraph',
+            children: [
+              {
+                text: 'Lorem ipsum.',
+              },
+            ],
+          },
+          {
+            type: 'flyerPunchline',
+            children: [{ text: '' }],
+          },
+        ],
+      },
+    ]
+    const structure = [
+      {
+        type: 'flyerTileOpening',
+      },
+      {
+        type: 'flyerTile',
+        repeat: true,
+      },
+    ]
+    const editor = await setup(structure)
+    await Transforms.select(editor, [0, 2, 0])
+    insertRepeat(editor)
+    await new Promise(process.nextTick)
+    expect(cleanupTree(value)[0]).toEqual({
+      type: 'flyerTileOpening',
+      children: [
+        {
+          type: 'headline',
+          children: [{ text: 'Hallo!' }],
+        },
+        {
+          type: 'flyerMetaP',
+          children: [
+            {
+              text: 'Es war heiss, es ist heiss, es bleibt heiss.',
+            },
+          ],
+        },
+      ],
+    })
+    expect(value.length).toEqual(2)
+    expect(editor.selection.focus.path).toEqual([1, 0, 0])
   })
 
   it('should not exit nested repeatable structure if current block is not the last element', async () => {
