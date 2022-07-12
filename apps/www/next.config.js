@@ -19,6 +19,7 @@ module.exports = withTM(
       return config
     },
     poweredByHeader: false,
+    largePageDataBytes: 512 * 1000, // 512KB
     assetPrefix:
       NODE_ENV === 'production' && CDN_FRONTEND_BASE_URL
         ? CDN_FRONTEND_BASE_URL
