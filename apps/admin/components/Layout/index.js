@@ -1,4 +1,4 @@
-import { compose } from 'react-apollo'
+import compose from 'lodash/flowRight'
 import HeaderComponent from './Header'
 import { createTile, createContainer } from './Grid'
 import { colors } from '@project-r/styleguide'

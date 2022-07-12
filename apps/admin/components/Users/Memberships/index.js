@@ -1,18 +1,15 @@
 import { Fragment } from 'react'
 import * as React from 'react'
 import { css } from 'glamor'
-import { Query, Mutation } from 'react-apollo'
-import gql from 'graphql-tag'
+import { Query, Mutation } from '@apollo/client/react/components'
+import { gql } from '@apollo/client'
 import { MdChevronLeft as CurrentIcon } from 'react-icons/md'
 
 import {
   A,
-  Button,
   Checkbox,
   colors,
   Dropdown,
-  Field,
-  InlineSpinner,
   Label,
   Loader,
   Spinner,
@@ -29,7 +26,7 @@ import {
   DD,
 } from '../../Display/utils'
 import { tableStyles } from '../../Tables/utils'
-import { Link } from '../../../server/routes'
+import Link from 'next/link'
 
 import { REPUBLIK_FRONTEND_URL } from '../../../server/constants'
 
@@ -110,7 +107,7 @@ const GET_MEMBERSHIPS = gql`
 
 const getState = (membership) => {
   if (!membership.active) {
-    if (!!membership.periods.length) {
+    if (membership.periods.length) {
       return 'deaktiviert'
     }
 
@@ -238,11 +235,7 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
               <Fragment>
                 <DT>Gekauft durch</DT>
                 <DD>
-                  <Link
-                    route='user'
-                    params={{ userId: membership.pledge.user.id }}
-                    passHref
-                  >
+                  <Link href={`/users/${membership.pledge.user.id}`} passHref>
                     <A>{membership.pledge.user.name}</A>
                   </Link>
                 </DD>

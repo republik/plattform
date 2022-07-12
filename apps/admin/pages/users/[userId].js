@@ -1,28 +1,30 @@
 import { Fragment } from 'react'
 import { withRouter } from 'next/router'
-import { compose } from 'react-apollo'
+import compose from 'lodash/flowRight'
 
-import { enforceAuthorization } from '../components/Auth/withAuthorization'
-import App from '../components/App'
-import { Body, Content, Header } from '../components/Layout'
+import { enforceAuthorization } from '../../components/Auth/withAuthorization'
+import App from '../../components/App'
 
 import { css } from 'glamor'
 
-import User from '../components/Users/Particulars'
-import Email from '../components/Users/Email'
-import NewsletterSubscriptions from '../components/Users/NewsletterSubscriptions'
-import Roles from '../components/Users/Roles'
-import ProfileHeader from '../components/Users/ProfileHeader'
-import Memberships from '../components/Users/Memberships'
-import Pledges from '../components/Users/Pledges'
-import AdminNotes from '../components/Users/AdminNotes'
-import AuthSettings from '../components/Users/AuthSettings'
+import User from '../../components/Users/Particulars'
+import Email from '../../components/Users/Email'
+import NewsletterSubscriptions from '../../components/Users/NewsletterSubscriptions'
+import Roles from '../../components/Users/Roles'
+import ProfileHeader from '../../components/Users/ProfileHeader'
+import Memberships from '../../components/Users/Memberships'
+import Pledges from '../../components/Users/Pledges'
+import AdminNotes from '../../components/Users/AdminNotes'
+import AuthSettings from '../../components/Users/AuthSettings'
 
-import Access from '../components/Users/Access'
-import Sessions from '../components/Users/Sessions'
-import Actions from '../components/Users/Actions'
-import Dialog from '../components/Users/Dialog'
-import Mailbox from '../components/Users/Mailbox'
+import Access from '../../components/Users/Access'
+import Sessions from '../../components/Users/Sessions'
+import Actions from '../../components/Users/Actions'
+import Dialog from '../../components/Users/Dialog'
+import Mailbox from '../../components/Users/Mailbox'
+import { Body, Content } from '../../components/Layout'
+import Header from '../../components/Layout/Header'
+import { withDefaultSSR } from '../../lib/apollo'
 
 const styles = {
   row: css({
@@ -82,10 +84,7 @@ const SectionSwitch = ({ userId, section }) => {
   )
 }
 
-export default compose(
-  withRouter,
-  enforceAuthorization(['supporter']),
-)((props) => {
+const UserPage = (props) => {
   const { userId, section = 'index' } = props.router.query
   return (
     <App>
@@ -98,4 +97,8 @@ export default compose(
       </Body>
     </App>
   )
-})
+}
+
+export default withDefaultSSR(
+  compose(withRouter, enforceAuthorization(['supporter']))(UserPage),
+)

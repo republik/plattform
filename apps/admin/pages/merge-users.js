@@ -1,4 +1,4 @@
-import { compose } from 'react-apollo'
+import compose from 'lodash/flowRight'
 import { withRouter } from 'next/router'
 
 import { Container } from '@project-r/styleguide'
@@ -6,11 +6,9 @@ import { enforceAuthorization } from '../components/Auth/withAuthorization'
 import App from '../components/App'
 import { Body, Content, Header } from '../components/Layout'
 import MergeUsers from '../components/Users/Merge'
+import { withDefaultSSR } from '../lib/apollo'
 
-export default compose(
-  withRouter,
-  enforceAuthorization(['supporter']),
-)(() => {
+const MergeUser = () => {
   return (
     <App>
       <Body>
@@ -23,4 +21,8 @@ export default compose(
       </Body>
     </App>
   )
-})
+}
+
+export default withDefaultSSR(
+  compose(withRouter, enforceAuthorization(['supporter']))(MergeUser),
+)

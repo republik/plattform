@@ -1,6 +1,6 @@
 import { Fragment } from 'react'
-import { graphql } from 'react-apollo'
-import gql from 'graphql-tag'
+import { graphql } from '@apollo/client/react/hoc'
+import { gql } from '@apollo/client'
 import ErrorMessage from '../../ErrorMessage'
 import InfiniteScroller from 'react-infinite-scroller'
 import { Loader } from '@project-r/styleguide'

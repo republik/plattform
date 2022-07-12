@@ -1,13 +1,11 @@
 import { Component } from 'react'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
-import gql from 'graphql-tag'
+import { gql } from '@apollo/client'
 import { colors, Interaction, Button } from '@project-r/styleguide'
+import Link from 'next/link'
 import ErrorMessage from '../../ErrorMessage'
 import SearchUser from '../../Form/SearchUser'
-
-import routes from '../../../server/routes'
-const { Link } = routes
 
 const interactiveStyles = {
   cursor: 'pointer',
@@ -90,8 +88,12 @@ class MergeUsers extends Component {
     }
   }
 
-  componentWillReceiveProps() {
-    this.state = { errors: {} }
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps !== this.props) {
+      this.setState(() => ({
+        errors: {},
+      }))
+    }
   }
 
   render() {
@@ -149,7 +151,7 @@ class MergeUsers extends Component {
         {mergedUser && (
           <div style={{ marginTop: '30px' }}>
             Prima! Die Accounts wurden zusammen geführt. <br />
-            <Link route='user' params={{ userId: mergedUser.id }}>
+            <Link href={`/users/${mergedUser.id()}`}>
               <a className={`${link}`} style={interactiveStyles}>
                 Zum neuen User-Profil
               </a>

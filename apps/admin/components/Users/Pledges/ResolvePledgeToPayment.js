@@ -1,6 +1,6 @@
 import { Component, Fragment } from 'react'
-import { Mutation } from 'react-apollo'
-import gql from 'graphql-tag'
+import { Mutation } from '@apollo/client/react/components'
+import { gql } from '@apollo/client'
 import Textarea from 'react-textarea-autosize'
 import { css } from 'glamor'
 

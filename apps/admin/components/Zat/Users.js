@@ -1,4 +1,4 @@
-import gql from 'graphql-tag'
+import { gql } from '@apollo/client'
 import { A } from '@project-r/styleguide'
 
 import Memberships, { fragments as UserMemberships } from './User/Memberships'

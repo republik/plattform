@@ -1,6 +1,6 @@
 import { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
-import { graphql, compose } from 'react-apollo'
+import compose from 'lodash/flowRight'
 import { meQuery } from '../../lib/withMe'
 import { css } from 'glamor'
 
@@ -16,6 +16,7 @@ import {
 } from 'react-icons/md'
 
 import { Label, Interaction, RawHtml, linkRule } from '@project-r/styleguide'
+import { graphql } from '@apollo/client/react/hoc'
 
 const { H3, P } = Interaction
 

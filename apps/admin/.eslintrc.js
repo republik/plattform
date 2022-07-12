@@ -1,3 +1,6 @@
 module.exports = {
-  extends: ['@republik/eslint-config-frontend'],
+  extends: [
+    '@republik/eslint-config-frontend',
+    'plugin:@next/next/recommended',
+  ],
 }

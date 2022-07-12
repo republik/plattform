@@ -1,27 +1,37 @@
-import { withRouter } from 'next/router'
-import { compose } from 'react-apollo'
+import { useRouter } from 'next/router'
+import compose from 'lodash/flowRight'
 import { enforceAuthorization } from '../components/Auth/withAuthorization'
 import App from '../components/App'
 import { Body, Content, Header } from '../components/Layout'
 import Users from '../components/Users/List'
-import { Router } from '../server/routes'
+import { withDefaultSSR } from '../lib/apollo'
 
-const changeHandler = (params) => {
-  Router.replaceRoute('users', params, { shallow: true })
-}
+const UserOverview = () => {
+  const router = useRouter()
 
-export default compose(
-  withRouter,
-  enforceAuthorization(['supporter']),
-)((props) => {
+  const changeHandler = (params) => {
+    router.replace(
+      {
+        pathname: '/users',
+        query: params ?? {},
+      },
+      undefined,
+      { shallow: true },
+    )
+  }
+
   return (
     <App>
       <Body>
-        <Header search={props.router.query.search} />
+        <Header search={router.query.search} />
         <Content id='content'>
-          <Users params={props.router.query} onChange={changeHandler} />
+          <Users params={router.query} onChange={changeHandler} />
         </Content>
       </Body>
     </App>
   )
-})
+}
+
+export default withDefaultSSR(
+  compose(enforceAuthorization(['supporter']))(UserOverview),
+)
