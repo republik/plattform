@@ -36,8 +36,6 @@ import {
 } from './utils'
 import { MIN_GALLERY_IMG_WIDTH } from '../../components/Figure/Image'
 import { ExpandableLink } from '../../components/ExpandableLink'
-import { LinkInfoContextProvider } from '../../components/ExpandableLink/LinkInfoContext'
-import { LinkInfoBox } from '../../components/ExpandableLink/LinkInfoBox'
 
 const createBase = ({ metaBody, metaHeadlines }) => {
   const link = {
@@ -130,12 +128,7 @@ const createBase = ({ metaBody, metaHeadlines }) => {
 
   const paragraph = {
     matchMdast: matchParagraph,
-    component: (props) => (
-      <LinkInfoContextProvider>
-        <Typography.P {...props} />
-        <LinkInfoBox />
-      </LinkInfoContextProvider>
-    ),
+    component: (props) => <Typography.P {...props} />,
     editorModule: 'paragraph',
     editorOptions: {
       formatButtonText: 'Paragraph',
