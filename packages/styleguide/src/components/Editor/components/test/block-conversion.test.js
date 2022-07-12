@@ -322,88 +322,106 @@ describe('Slate Editor: Block Conversion', () => {
       toggleElement(editor, 'ul')
       await new Promise(process.nextTick)
 
+      expect(cleanupTree(value)[0].children[4]).toEqual({
+        type: 'ul',
+        ordered: false,
+        children: [
+          {
+            type: 'listItem',
+            children: [{ text: 'Lorem ipsum.' }],
+          },
+        ],
+      })
+
       await Transforms.select(editor, [0, 5, 0])
       toggleElement(editor, 'figure')
       await new Promise(process.nextTick)
 
-      expect(cleanupTree(value)).toEqual([
-        {
-          type: 'flyerTile',
-          children: [
-            {
-              type: 'flyerMetaP',
-              children: [
-                {
-                  text: '',
-                },
-              ],
-            },
-            {
-              type: 'flyerTopic',
-              children: [
-                {
-                  text: '',
-                },
-              ],
-            },
-            {
-              type: 'flyerTitle',
-              children: [
-                {
-                  text: 'Hitzewelle werden mit Strand- und Badebilder illustriert! Wieso?',
-                },
-              ],
-            },
-            {
-              type: 'flyerAuthor',
-              authorId: '123',
-              children: [{ text: '' }],
-            },
-            {
-              type: 'ul',
-              ordered: false,
-              children: [
-                {
-                  type: 'listItem',
-                  children: [{ text: 'Lorem ipsum.' }],
-                },
-              ],
-            },
-            {
-              type: 'figure',
-              children: [
-                {
-                  type: 'figureImage',
-                  children: [
-                    {
-                      text: '',
-                    },
-                  ],
-                },
-                {
-                  type: 'figureCaption',
-                  children: [
-                    {
-                      text: '',
-                    },
-                    {
-                      type: 'figureByline',
-                      children: [
-                        {
-                          text: '',
-                        },
-                      ],
-                    },
-                    {
-                      text: '',
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ])
+      expect(cleanupTree(value)[0].children[5]).toEqual({
+        type: 'figure',
+        children: [
+          {
+            type: 'figureImage',
+            children: [
+              {
+                text: '',
+              },
+            ],
+          },
+          {
+            type: 'figureCaption',
+            children: [
+              {
+                text: '',
+              },
+              {
+                type: 'figureByline',
+                children: [
+                  {
+                    text: '',
+                  },
+                ],
+              },
+              {
+                text: '',
+              },
+            ],
+          },
+        ],
+      })
+
+      toggleElement(editor, 'pullQuote')
+      await new Promise(process.nextTick)
+
+      expect(cleanupTree(value)[0].children[5]).toEqual({
+        type: 'pullQuote',
+        children: [
+          {
+            type: 'pullQuoteText',
+            children: [{ text: '' }],
+          },
+          {
+            type: 'pullQuoteSource',
+            children: [{ text: '' }],
+          },
+        ],
+      })
+
+      toggleElement(editor, 'figure')
+      await new Promise(process.nextTick)
+
+      expect(cleanupTree(value)[0].children[5]).toEqual({
+        type: 'figure',
+        children: [
+          {
+            type: 'figureImage',
+            children: [
+              {
+                text: '',
+              },
+            ],
+          },
+          {
+            type: 'figureCaption',
+            children: [
+              {
+                text: '',
+              },
+              {
+                type: 'figureByline',
+                children: [
+                  {
+                    text: '',
+                  },
+                ],
+              },
+              {
+                text: '',
+              },
+            ],
+          },
+        ],
+      })
     })
   })
 })

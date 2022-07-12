@@ -180,13 +180,15 @@ const toggleInline = (
 const convertBlock = (
   editor: CustomEditor,
   element: CustomElement,
-  customTarget?: NodeEntry<CustomNode>,
+  customTarget?: NodeEntry<CustomElement>,
 ): number[] => {
-  const { element: targetE, convertContainer: targetC } = getAncestry(
-    editor,
-    customTarget,
-  )
-  const target = targetC || targetE
+  let target
+  if (customTarget) {
+    target = customTarget
+  } else {
+    const { element: targetE, convertContainer: targetC } = getAncestry(editor)
+    target = targetC || targetE
+  }
 
   const targetConfig = elConfig[target[0].type]
   const insertConfig = elConfig[element.type]
@@ -216,7 +218,7 @@ const convertBlock = (
 
   // TODO: insert path when mainElKey doesn't allow for repeats (no use case atm)
   Editor.withoutNormalizing(editor, () => {
-    console.log({ target, targetMainElKey, mainElKey })
+    // console.log({ target, targetMainElKey, mainElKey })
     if (targetMainElKey && mainElKey) {
       Transforms.setNodes(editor, insertPartial, { at: target[1] })
       const updatedChildren = setChildren(
@@ -250,7 +252,7 @@ export const toggleElement = (
   editor: CustomEditor,
   elKey: CustomElementsType,
 ): number[] => {
-  console.log('toggle', elKey)
+  // console.log('toggle', elKey)
 
   const { selection } = editor
   if (!selection) return
@@ -370,6 +372,7 @@ export const fixStructure: (
 ) => NormalizeFn<CustomAncestor> =
   (structure = DEFAULT_STRUCTURE) =>
   ([node, path], editor) => {
+    // console.log({ value: editor.children })
     let i = 0
     let repeatOffset = 0
     let loop = true
