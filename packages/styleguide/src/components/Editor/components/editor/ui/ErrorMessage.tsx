@@ -11,8 +11,8 @@ const ErrorMessage: React.FC<{
   const editor = useSlate()
   const P = editor.customConfig.schema.paragraph || Interaction.P
   return (
-    <div {...attributes}>
-      <P contentEditable={false}>
+    <div {...attributes} style={{ userSelect: 'none' }} contentEditable={false}>
+      <P>
         <span {...colorScheme.set('color', 'error')}>Error: {error}</span>
       </P>
       {children}

@@ -32,6 +32,7 @@ import { withCustomConfig } from './decorators/config'
 import { LayoutContainer } from './ui/Layout'
 import ErrorMessage from './ui/ErrorMessage'
 import { getCharCount } from './helpers/text'
+import BlockUi from './ui/BlockUi'
 
 export type SlateEditorProps = {
   value: CustomDescendant[]
@@ -88,6 +89,7 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
       )
     }
     const isVoid = config.attrs?.isVoid
+    const isBlock = config.attrs?.isBlock
     const highlightSelected = config.attrs?.highlightSelected
     const Component = editor.customConfig.schema[config.component]
     if (!Component) {
@@ -107,22 +109,33 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
         Transforms.select(editor, path)
       }
     }
+    const baseStyles = { position: 'relative' }
+    const attributesWithStyle = {
+      ...attributes,
+      style:
+        isSelected && highlightSelected
+          ? {
+              ...attributes.style,
+              ...baseStyles,
+              borderWidth: 2,
+              borderStyle: 'solid',
+            }
+          : { ...attributes.style, ...baseStyles },
+    }
     return (
       <Component
-        {...colorScheme.set('borderColor', 'primary')}
-        style={
-          isSelected && highlightSelected
-            ? { borderWidth: 2, borderStyle: 'solid' }
-            : {}
-        }
+        {...(isSelected &&
+          highlightSelected &&
+          colorScheme.set('borderColor', 'primary'))}
         {...element}
-        attributes={attributes}
+        attributes={attributesWithStyle}
         onMouseDown={selectVoid}
         onDoubleClick={(e) => {
           e.preventDefault()
           setFormPath(path)
         }}
       >
+        {isBlock && isSelected && <BlockUi />}
         {children}
       </Component>
     )

@@ -12,8 +12,11 @@ const styles = {
     '& > h1': {
       maxWidth: 900,
     },
-    '& > :first-child': {
+    '& > :not(.ui-element)': {
       paddingTop: 90,
+    },
+    '& > :not(.ui-element) ~ :not(.ui-element)': {
+      paddingTop: 'inherit',
     },
     '& > :last-child': {
       paddingBottom: 90,
@@ -22,12 +25,15 @@ const styles = {
 }
 
 export const FlyerTile: React.FC<{
+  attributes: any
   [x: string]: unknown
-}> = ({ props, children }) => (
-  <div {...props} {...styles.container}>
-    {children}
-  </div>
-)
+}> = ({ children, attributes, ...props }) => {
+  return (
+    <div {...props} {...attributes} {...styles.container}>
+      {children}
+    </div>
+  )
+}
 
 export const config: ElementConfigI = {
   component: 'flyerTile',
@@ -39,4 +45,7 @@ export const config: ElementConfigI = {
     { type: ['paragraph', 'ul', 'ol'], repeat: true },
     { type: ['flyerPunchline', 'pullQuote', 'articlePreview', 'figure'] },
   ],
+  attrs: {
+    isBlock: true,
+  },
 }

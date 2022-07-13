@@ -222,6 +222,7 @@ interface EditorAttrsI {
 interface ElementAttrsI extends EditorAttrsI {
   formatText?: boolean
   isMain?: boolean
+  isBlock?: boolean
   isTextInline?: boolean
   highlightSelected?: boolean
 }

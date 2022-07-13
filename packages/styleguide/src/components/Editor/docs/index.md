@@ -451,6 +451,8 @@ rows:
     Description: boolean
   - Variable: isMain
     Description: boolean
+  - Variable: isBlock
+    Description: boolean *(display block UI)*
 ```
 
 #### `NodeTemplate`
