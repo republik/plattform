@@ -1,4 +1,15 @@
+const crypto = require('crypto')
+
+const {
+  portrait: getPortrait,
+  name: getName,
+  slug: getSlug,
+  credentials: getCredentials,
+} = require('@orbiting/backend-modules-republik/graphql/resolvers/User')
+
 const { findById } = require('../../lib/Questionnaire')
+
+const { DISPLAY_AUTHOR_SECRET } = process.env
 
 module.exports = {
   questionnaire: async (submission, args, { pgdb }) => {
@@ -7,15 +18,30 @@ module.exports = {
   user: async (submission, args, { loaders }) => {
     return loaders.User.byId.load(submission.userId)
   },
-  displayAuthor: async (submission, args, { t }) => {
-    const { id, questionnaireId, userId } = submission
+  displayAuthor: async (submission, args, context) => {
+    const { userId, questionnaireId } = submission
+    const { loaders, t } = context
+
+    const id = crypto
+      .createHmac('sha256', DISPLAY_AUTHOR_SECRET)
+      .update(`${questionnaireId}${userId}`)
+      .digest('hex')
+
+    const submitter = await loaders.User.byId.load(userId)
+
+    const name = getName(submitter, null, context)
+    const profilePicture = getPortrait(submitter, args?.portrait, context)
+    const credentials = await getCredentials(submitter, null, context)
+    const slug = getSlug(submitter, null, context)
 
     return {
-      id: [id, questionnaireId, userId].filter(Boolean).join('-'),
-      name: t('api/comment/anonymous/displayName'),
-      profilePicture: null,
-      anonymity: true,
-      username: null,
+      id,
+      name: name || t('api/noname'),
+      profilePicture: profilePicture,
+      credential: credentials?.find((c) => !!c.isListed),
+      anonymity: false,
+      username: slug,
+      slug,
     }
   },
   answers: async (submission, args, { loaders, pgdb }) => {
