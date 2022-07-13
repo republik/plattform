@@ -57,6 +57,7 @@ type mutations {
   # delete all my unsubmitted answers
   resetQuestionnaire(id: ID!): Questionnaire!
   submitQuestionnaire(id: ID!): Questionnaire!
+  revokeQuestionnaire(id: ID!): Questionnaire!
   finalizeQuestionnaire(
     slug: String!
     dry: Boolean!
