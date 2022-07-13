@@ -7,7 +7,7 @@ import Loader from '../components/Loader'
 import { PageCenter } from '../components/Auth/withAuthorization'
 
 import { useTranslation } from '../lib/withT'
-import withDefaultSSR from '../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../lib/apollo/helpers'
 import { useMe } from '../lib/context/MeContext'
 
 const SigninPage = () => {

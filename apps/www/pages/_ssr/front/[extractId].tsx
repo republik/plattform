@@ -1,8 +1,8 @@
 import { GetServerSideProps, NextPage } from 'next'
 import { ParsedUrlQuery } from 'querystring'
-import createGetServerSideProps from '../../../lib/helpers/createGetServerSideProps'
 import Front from '../../../components/Front'
 import { FRONT_QUERY } from '../../../components/Front/graphql/getFrontQuery.graphql'
+import { createGetServerSideProps } from '../../../lib/apollo/helpers'
 
 function paramToString(param: string | string[]): string {
   return Array.isArray(param) ? param[0] : param
@@ -35,7 +35,7 @@ interface Params extends ParsedUrlQuery {
 export const getServerSideProps: GetServerSideProps = createGetServerSideProps<
   Props,
   Params
->(async (client, params, _, ctx) => {
+>(async (client, { params }) => {
   const extractId = paramToString(params.extractId)
 
   await client.query({

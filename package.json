@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "commit": "cz",
-    "prepare": "husky install",
+    "prepare": "husky install && turbo run prepare",
     "test": "turbo run test",
     "start": "scripts/start.sh",
     "start:scheduler": "cd apps/api && yarn start:scheduler",

@@ -1,4 +1,4 @@
-import withDefaultSSR from '../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../lib/apollo/helpers'
 import { css } from 'glamor'
 import {
   A,

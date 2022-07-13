@@ -4,10 +4,10 @@ import { useRouter } from 'next/router'
 import Frame from '../components/Frame'
 import Marketing from '../components/Marketing'
 import { useTranslation } from '../lib/withT'
+import { createGetStaticProps } from '../lib/apollo/helpers'
 
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
 
-import createGetStaticProps from '../lib/helpers/createGetStaticProps'
 import { MARKETING_PAGE_QUERY } from '../components/Marketing/graphql/MarketingPageQuery.graphql'
 import { useMe } from '../lib/context/MeContext'
 

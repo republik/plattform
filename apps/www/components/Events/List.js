@@ -127,7 +127,8 @@ const Overview = compose(
           <Content>
             <Meta
               data={{
-                title: t('events/pageTitle'),
+                pageTitle: t('events/pageTitle'),
+                title: t('events/title'),
                 description: t('events/metaDescription'),
                 url: `${PUBLIC_BASE_URL}/events`,
                 image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,

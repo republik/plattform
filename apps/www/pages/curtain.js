@@ -19,7 +19,7 @@ import {
   CURTAIN_META,
   CURTAIN_COLORS,
 } from '../lib/constants'
-import withDefaultSSR from '../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../lib/apollo/helpers'
 
 const colors = {
   color: '#fff',

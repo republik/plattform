@@ -1,6 +1,6 @@
 import Frame from '../components/Frame'
 import Page from '../components/Imprint/Page'
-import withDefaultSSR from '../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../lib/apollo/helpers'
 
 const ImprintPage = () => {
   const meta = {

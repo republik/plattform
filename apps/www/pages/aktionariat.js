@@ -8,11 +8,12 @@ import Table from '../components/Shareholder/Table'
 import Sunburst, { radius } from '../components/Shareholder/Sunburst'
 
 import { CDN_FRONTEND_BASE_URL } from '../lib/constants'
-import withDefaultSSR from '../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../lib/apollo/helpers'
 
 const ShareholderPage = ({ t }) => {
   const meta = {
-    title: t('shareholder/pageTitle'),
+    pageTitle: t('shareholder/pageTitle'),
+    title: t('shareholder/title'),
     description: t('shareholder/description'),
     image: `${CDN_FRONTEND_BASE_URL}/static/social-media/aktionariat.png`,
   }

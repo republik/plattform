@@ -10,7 +10,7 @@ import Cancel from '../components/Account/Memberships/Cancel'
 import SignIn from '../components/Auth/SignIn'
 
 import { Interaction } from '@project-r/styleguide'
-import withDefaultSSR from '../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../lib/apollo/helpers'
 
 const CancelMembershipPage = ({ router, me, t }) => {
   const { membershipId } = router.query

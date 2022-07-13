@@ -1,7 +1,7 @@
 import compose from 'lodash/flowRight'
 
 import withT from '../../lib/withT'
-import withDefaultSSR from '../../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../../lib/apollo/helpers'
 import Frame from '../../components/Frame'
 
 import AccountTabs from '../../components/Account/AccountTabs'

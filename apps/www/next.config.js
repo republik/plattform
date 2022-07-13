@@ -1,7 +1,10 @@
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 })
-const withTM = require('next-transpile-modules')(['@project-r/styleguide'])
+const withTM = require('next-transpile-modules')([
+  '@project-r/styleguide',
+  '@republik/nextjs-apollo-client', // Ensures ES5 compatibility to work in IE11
+])
 
 const { NODE_ENV, CDN_FRONTEND_BASE_URL } = process.env
 
@@ -108,6 +111,9 @@ module.exports = withTM(
           permanent: false,
         },
       ]
+    },
+    experimental: {
+      largePageDataBytes: 512 * 1000, // 512KB
     },
   }),
 )
