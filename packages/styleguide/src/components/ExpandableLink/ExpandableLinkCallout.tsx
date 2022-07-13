@@ -34,6 +34,15 @@ const fadeIn = keyframes({
   },
 })
 
+const shortenLink = (href) => {
+  const baseURL = href.replace(/(http(s)?:\/\/)|(\/.*){1}/g, '')
+  const URLWithoutQuery = href.match(/(.+)(?=\?)/g)
+  const lastURLPath = URLWithoutQuery
+    ? URLWithoutQuery[0].match(/([^/]*$)/g)[0]
+    : href.match(/([^/]*$)/g)[0]
+  return `${baseURL}/.../${lastURLPath}`
+}
+
 const styles = {
   calloutContainer: css({
     position: 'fixed',
@@ -180,9 +189,9 @@ const ExpandableLinkCallout = ({
         animation: `0.3s ${fadeIn} forwards`,
         [mUp]: {
           animation: `0.3s ${
-            expandedLink?.position?.top === 'auto' ? appearUp : appearDown
+            expandedLink.position?.top === 'auto' ? appearUp : appearDown
           } alternate`,
-          ...expandedLink?.position,
+          ...expandedLink.position,
         },
       })}
     >
@@ -203,7 +212,7 @@ const ExpandableLinkCallout = ({
       >
         <RawHtml
           type={ExpandableLinkP}
-          dangerouslySetInnerHTML={{ __html: expandedLink?.description }}
+          dangerouslySetInnerHTML={{ __html: expandedLink.description }}
           error={false}
         />
         <a
@@ -217,7 +226,7 @@ const ExpandableLinkCallout = ({
             {...styles.linkIcon}
             {...colorScheme.set('fill', 'textSoft')}
           />
-          {expandedLink?.href}
+          {shortenLink(expandedLink.href)}
         </a>
       </div>
     </div>
