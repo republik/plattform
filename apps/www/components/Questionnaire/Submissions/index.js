@@ -18,6 +18,10 @@ export const mainQuery = gql`
           displayAuthor {
             name
           }
+          user {
+            id
+            name
+          }
           answers {
             totalCount
             nodes {
@@ -59,11 +63,12 @@ const Answers = () => {
           <>
             <Interaction.H2>{questionnaire.description}</Interaction.H2>
             <Interaction.P>{submissions.totalCount} Teilnehmende</Interaction.P>
-            {submissions.nodes.map(({ id, displayAuthor, answers }) => {
+            {submissions.nodes.map(({ id, user, displayAuthor, answers }) => {
               return (
                 <div key={id} style={{ margin: '30px 0 60px' }}>
                   <Interaction.H3>
-                    {answers.totalCount} Antworten von {displayAuthor.name}
+                    {answers.totalCount} Antworten von{' '}
+                    {user.name || displayAuthor.name}
                   </Interaction.H3>
                   {answers.nodes.map(({ id, question, payload }) => {
                     return (
