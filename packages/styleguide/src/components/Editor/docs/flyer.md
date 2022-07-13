@@ -1,6 +1,5 @@
 ### Todos
 
-- Switch block type UI when nested
 - Tile UI
     - move up/down
     - delete
@@ -12,11 +11,11 @@
     - Quiz
     - Survey
 - Copy from HTML
+- Review insert selectAdjacent/delete logic
 
 ### Bugs
 
 - Copy title with break swallows the break
-- Enter on tile paragraph doesn't jump to next element
 
 
 ```react

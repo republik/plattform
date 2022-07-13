@@ -30,6 +30,7 @@ import { useColorContext } from '../../../../Colors/ColorContext'
 import IconButton from '../../../../IconButton'
 import { getAncestry } from '../helpers/tree'
 import { isEmpty, selectNearestWord } from '../helpers/text'
+import Scroller from '../../../../Tabs/Scroller'
 
 const styles = {
   hoveringToolbar: css({
@@ -48,7 +49,6 @@ const styles = {
   }),
   topToolbar: css({
     padding: '15px 0',
-    overflow: 'hidden',
     display: 'flex',
     minHeight: '19px',
     transition: 'opacity 0.75s',
@@ -370,13 +370,17 @@ const Toolbar: React.FC<{
   }, [editor.selection, focused])
 
   return isOnTop ? (
-    <div
-      ref={ref}
-      {...styles.topToolbar}
-      {...(mode === 'sticky' && styles.stickyToolbar)}
-      onClick={(e) => onChange(e)}
-    >
-      <ToolbarButtons marks={marks} inlines={inlines} blocks={blocks} />
+    <div>
+      <Scroller>
+        <div
+          ref={ref}
+          {...styles.topToolbar}
+          {...(mode === 'sticky' && styles.stickyToolbar)}
+          onClick={(e) => onChange(e)}
+        >
+          <ToolbarButtons marks={marks} inlines={inlines} blocks={blocks} />
+        </div>
+      </Scroller>
     </div>
   ) : (
     <Portal>
