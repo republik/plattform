@@ -223,9 +223,8 @@ export const LinkForm = withT(
                 value={node.data.get('title')}
                 onChange={onInputChange('title')}
               />
-              // TODO (@expandable): translation string
               <Field
-                label='LINK DESCRIPTION'
+                label={t(`link/description`, undefined, 'title')}
                 value={node.data.get('description')}
                 onChange={onInputChange('description')}
                 renderInput={({ ref, ...inputProps }) => (

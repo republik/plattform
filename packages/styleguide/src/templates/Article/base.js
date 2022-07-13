@@ -36,15 +36,16 @@ import {
 } from './utils'
 import { MIN_GALLERY_IMG_WIDTH } from '../../components/Figure/Image'
 import { ExpandableLink } from '../../components/ExpandableLink'
+import { SEPARATOR as EXPANDABLE_LINK_SEPARATOR } from '../../components/ExpandableLink/ExpandableLink'
 
 const createBase = ({ metaBody, metaHeadlines }) => {
   const link = {
     matchMdast: matchType('link'),
     props: (node, index, parent, { ancestors }) => {
-      // console.log({ ancestors })
       const allowsExpandable = ancestors.find(matchParagraph)
-      // console.log({ allowsExpandable })
-      const [title, description] = (node.title || '').split('%%')
+      const [title, description] = (node.title || '').split(
+        EXPANDABLE_LINK_SEPARATOR,
+      )
       return {
         title,
         description,
@@ -128,7 +129,7 @@ const createBase = ({ metaBody, metaHeadlines }) => {
 
   const paragraph = {
     matchMdast: matchParagraph,
-    component: (props) => <Typography.P {...props} />,
+    component: Typography.P,
     editorModule: 'paragraph',
     editorOptions: {
       formatButtonText: 'Paragraph',

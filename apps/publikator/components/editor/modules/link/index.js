@@ -1,5 +1,6 @@
 import { matchInline } from '../../utils'
 import MarkdownSerializer from 'slate-mdast-serializer'
+import { EXPANDABLE_LINK_SEPARATOR as SEPARATOR } from '@project-r/styleguide'
 
 import createUi from './ui'
 
@@ -11,8 +12,7 @@ export default ({ rule, subModules, TYPE }) => {
     match: matchInline(TYPE),
     matchMdast: rule.matchMdast,
     fromMdast: (node, index, parent, { visitChildren, context }) => {
-      const [title, description] = (node.title || '').split('%%')
-      console.log({ title, description })
+      const [title, description] = (node.title || '').split(SEPARATOR)
       return {
         kind: 'inline',
         type: TYPE,
@@ -26,14 +26,10 @@ export default ({ rule, subModules, TYPE }) => {
       }
     },
     toMdast: (object, index, parent, { visitChildren }) => {
-      console.log({
-        title: object.data.title,
-        mash: [object.data.title || '', object.data.description].join('%%'),
-      })
       return {
         type: 'link',
         title: object.data.description
-          ? [object.data.title || '', object.data.description].join('%%')
+          ? [object.data.title || '', object.data.description].join(SEPARATOR)
           : object.data.title,
         description: object.data.description,
         url: object.data.href,

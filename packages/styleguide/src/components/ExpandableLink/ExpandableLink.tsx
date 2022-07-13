@@ -34,6 +34,8 @@ const styles = {
 const MARGIN = 8
 export const DELAY = 300
 
+export const SEPARATOR = '%%'
+
 const Portal: React.FC<{ children: ReactElement }> = ({ children }) => {
   return typeof document === 'object'
     ? ReactDOM.createPortal(children, document.body)

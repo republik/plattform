@@ -1293,6 +1293,10 @@
       "value": "Dokument suchen"
     },
     {
+      "key": "link/description",
+      "value": "Zusätzliche Beschreibung"
+    },
+    {
       "key": "memo/modal/remove",
       "value": "Memo entfernen"
     },

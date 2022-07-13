@@ -140,6 +140,8 @@ export {
 export { renderCommentMdast } from './components/Discussion/Internal/Comment/render'
 export { IconLink as DiscussionIconLink } from './components/Discussion/Internal/Comment/IconLink'
 
+export { SEPARATOR as EXPANDABLE_LINK_SEPARATOR } from './components/ExpandableLink/ExpandableLink'
+
 export { default as DiscussionCommentsWrapper } from './components/Discussion/DiscussionCommentsWrapper'
 export { CommentNode, BoardComment } from './components/Discussion/Tree'
 export type { CommentProps } from './components/Discussion/Tree'
