@@ -16,7 +16,17 @@ module.exports = {
       userId: me.id,
     })
 
-    return userAnswer
+    if (!userAnswer) {
+      return null
+    }
+
+    const { draft } = userAnswer
+
+    return {
+      ...userAnswer,
+      ...(draft ? { payload: draft } : {}),
+      drafted: !!draft,
+    }
   },
   turnout: async (question, args, { pgdb }) => {
     const { result } = question

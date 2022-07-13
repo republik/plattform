@@ -220,18 +220,26 @@ type Questionnaire {
   description: String
   beginDate: DateTime!
   endDate: DateTime!
-  # current user (me) is eligible to submit a ballot
-  userIsEligible: Boolean
 
-  # current user (me) has submitted a ballot
+  # current user (me) is eligible to submit an answer
+  userIsEligible: Boolean
+  # current user (me) has submitted an answer
   userHasSubmitted: Boolean
   userSubmitDate: DateTime
 
   allowedMemberships: [VotingMembershipRequirement!]
   allowedRoles: [String!]
 
-  # enables anonymous submissions via submitAnswerUnattributed mutation
-  unattributedAnswers: Boolean
+  # submits answers immediately and requires no
+  # submitQuestionnaire mutation call
+  submitAnswersImmediately: Boolean!
+
+  # allows to resubmit already submitted answers ("edit")
+  resubmitAnswers: Boolean!
+
+  # allows anonymous submissions
+  # (see submitAnswerUnattributed mutation)
+  unattributedAnswers: Boolean!
 
   questions(
     "select questions by order field"
@@ -420,6 +428,8 @@ type Answer {
   id: ID!
   payload: JSON!
   submitted: Boolean!
+  # indicates whether current payload is a draft
+  drafted: Boolean
 
   question: QuestionInterface!
 }
