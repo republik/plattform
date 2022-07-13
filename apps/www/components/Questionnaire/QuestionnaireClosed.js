@@ -1,17 +1,15 @@
 import { css } from 'glamor'
-import compose from 'lodash/flowRight'
 
-import { colors, Interaction, A } from '@project-r/styleguide'
+import { Interaction, A, useColorContext } from '@project-r/styleguide'
 
-import withT from '../../lib/withT'
 import Results from './Results'
+import { useTranslation } from '../../lib/withT'
 
 const { Headline, P } = Interaction
 
 const styles = {
   closed: css({
     marginTop: 35,
-    background: colors.primaryBg,
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
@@ -21,11 +19,14 @@ const styles = {
   }),
 }
 
-export default compose(withT)(({ t, slug, submitted, showResults }) => {
+const QuestionnaireClosed = ({ slug, submitted, showResults }) => {
+  const { t } = useTranslation()
+  const [colorScheme] = useColorContext()
+
   return (
     <>
       <Headline>{t('questionnaire/title')}</Headline>
-      <div {...styles.closed}>
+      <div {...styles.closed} {...colorScheme.set('backgroundColor', 'alert')}>
         <P>
           {submitted
             ? t.elements('questionnaire/thankyou', {
@@ -38,13 +39,17 @@ export default compose(withT)(({ t, slug, submitted, showResults }) => {
       </div>
       {showResults && (
         <>
-          <P style={{ marginBottom: 20, color: colors.error }}>
-            Diese Resultate werden{' '}
-            <Interaction.Emphasis>nur intern</Interaction.Emphasis> angezeigt.
+          <P style={{ marginBottom: 20 }}>
+            <span {...colorScheme.set('color', 'error')}>
+              Diese Resultate werden{' '}
+              <Interaction.Emphasis>nur intern</Interaction.Emphasis> angezeigt.
+            </span>
           </P>
           <Results canDownload slug={slug} />
         </>
       )}
     </>
   )
-})
+}
+
+export default QuestionnaireClosed

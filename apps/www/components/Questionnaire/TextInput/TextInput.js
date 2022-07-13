@@ -1,15 +1,15 @@
-import { Component } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { colors, fontStyles, Field } from '@project-r/styleguide'
-import TextInputProgress from './TextInputProgress'
+import {
+  useColorContext,
+  ProgressCircle,
+  fontStyles,
+  Field,
+} from '@project-r/styleguide'
 import AutosizeInput from 'react-textarea-autosize'
 import { styles as fieldSetStyles } from '../../FieldSet'
 
 const styles = {
-  form: css({
-    borderTop: '1px solid white',
-  }),
   textArea: css({
     width: '100%',
     minWidth: '100%',
@@ -21,13 +21,6 @@ const styles = {
     outline: 'none',
     boxSizing: 'border-box',
     ...fontStyles.sansSerifRegular21,
-    color: colors.text,
-  }),
-  textAreaEmpty: css({
-    color: colors.lightText,
-    '::-webkit-input-placeholder': {
-      color: colors.lightText,
-    },
   }),
   maxLength: css({
     alignItems: 'center',
@@ -43,59 +36,49 @@ const styles = {
   }),
 }
 
-class TextInput extends Component {
-  getStats = () => {
-    const { text = '', maxLength } = this.props
-    return {
-      count: text.length,
-      progress: (text.length / maxLength) * 100,
-    }
-  }
+const TextInput = (props) => {
+  const { text = '', maxLength } = props
+  const count = text.length
+  const progress = (count / maxLength) * 100
+  const remaining = maxLength - count
+  const progressColorName = progress > 100 ? 'error' : 'text'
+  const [colorScheme] = useColorContext()
 
-  renderProgress = () => {
-    const { maxLength } = this.props
-    if (!maxLength) return null
-
-    const { count, progress } = this.getStats()
-    const remaining = maxLength - count
-    const progressColor = progress > 100 ? colors.error : colors.text
-    return (
-      <div {...styles.maxLength}>
-        {remaining < 21 && (
-          <span {...styles.remaining} style={{ color: progressColor }}>
-            {remaining}
-          </span>
+  const { placeholder, onChange } = props
+  return (
+    <div>
+      <Field
+        label={placeholder}
+        renderInput={({ ref, ...inputProps }) => (
+          <AutosizeInput
+            {...inputProps}
+            {...fieldSetStyles.autoSize}
+            inputRef={ref}
+          />
         )}
-        <TextInputProgress
-          stroke={progressColor}
-          radius={9}
-          strokeWidth={2}
-          progress={Math.min(progress, 100)}
-        />
-      </div>
-    )
-  }
-
-  render() {
-    const { text, placeholder, onChange } = this.props
-    return (
-      <div {...styles.form}>
-        <Field
-          label={placeholder}
-          renderInput={({ ref, ...inputProps }) => (
-            <AutosizeInput
-              {...inputProps}
-              {...fieldSetStyles.autoSize}
-              inputRef={ref}
-            />
+        value={text}
+        onChange={onChange}
+      />
+      {maxLength && (
+        <div {...styles.maxLength}>
+          {remaining < 21 && (
+            <span
+              {...styles.remaining}
+              {...colorScheme.set('color', progressColorName)}
+            >
+              {remaining}
+            </span>
           )}
-          value={text}
-          onChange={onChange}
-        />
-        {this.renderProgress()}
-      </div>
-    )
-  }
+          <ProgressCircle
+            strokeColorName={progressColorName}
+            size={18}
+            strokeWidth={2}
+            progress={Math.min(progress, 100)}
+          />
+        </div>
+      )}
+    </div>
+  )
 }
 
 TextInput.propTypes = {

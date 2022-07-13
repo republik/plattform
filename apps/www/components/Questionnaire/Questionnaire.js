@@ -3,10 +3,9 @@ import Loader from '../Loader'
 
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
-import { CheckCircleIcon } from '@project-r/styleguide'
+import { CheckCircleIcon, useColorContext } from '@project-r/styleguide'
 
 import {
-  colors,
   Interaction,
   InlineSpinner,
   RawHtml,
@@ -30,11 +29,11 @@ const styles = {
     marginTop: 35,
   }),
   count: css({
-    background: '#fff',
     zIndex: 10,
     position: 'sticky',
     padding: '10px 0',
-    borderBottom: `0.5px solid ${colors.divider}`,
+    borderBottomWidth: 1,
+    borderBottomStyle: 'solid',
     display: 'flex',
     minHeight: 55,
   }),
@@ -61,6 +60,7 @@ const Questionnaire = (props) => {
   const [headerHeight] = useHeaderHeight()
   const { t } = useTranslation()
   const router = useRouter()
+  const [colorScheme] = useColorContext()
 
   const processSubmit = (fn, ...args) => {
     setState({ updating: true })
@@ -165,13 +165,13 @@ const Questionnaire = (props) => {
               />
               <br />
             </div>
-            {hideCount && error && (
-              <div {...styles.count} style={{ top: headerHeight }}>
-                <ErrorMessage style={{ margin: 0 }} error={error} />
-              </div>
-            )}
-            {!hideCount && (
-              <div {...styles.count} style={{ top: headerHeight }}>
+            {(!hideCount || error) && (
+              <div
+                {...styles.count}
+                {...colorScheme.set('backgroundColor', 'default')}
+                {...colorScheme.set('borderBottomColor', 'divider')}
+                style={{ top: headerHeight }}
+              >
                 {error ? (
                   <ErrorMessage style={{ margin: 0 }} error={error} />
                 ) : (
@@ -186,7 +186,10 @@ const Questionnaire = (props) => {
                     </P>
                     {questionCount === userAnswerCount ? (
                       <div {...styles.progressIcon}>
-                        <CheckCircleIcon size={22} color={colors.primary} />
+                        <CheckCircleIcon
+                          size={22}
+                          {...colorScheme.set('fill', 'primary')}
+                        />
                       </div>
                     ) : updating ? (
                       <div style={{ marginLeft: 5, marginTop: 3 }}>
