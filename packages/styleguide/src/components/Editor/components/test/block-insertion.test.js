@@ -1,14 +1,10 @@
-import Editor from '../editor'
-import { buildTestHarness } from 'slate-test-utils'
 import { createEditor, Transforms } from 'slate'
 import { cleanupTree } from '../editor/helpers/tree'
 import { insertRepeat } from '../editor/helpers/structure'
 import schema from '../../schema/article'
+import mockEditor from './mockEditor'
 
 describe('Slate Editor: Block Insertion (On Enter)', () => {
-  function getMockEditor() {
-    return createEditor()
-  }
   window.document.getSelection = jest.fn()
 
   let value
@@ -16,18 +12,12 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
   const defaultConfig = { schema }
 
   async function setup(structure, config = defaultConfig) {
-    const mock = getMockEditor()
-    const [editor] = await buildTestHarness(Editor)({
-      editor: mock,
-      initialValue: value,
-      componentProps: {
-        structure,
-        config,
-        value,
-        setValue: (val) => (value = val),
-      },
+    return await mockEditor(createEditor(), {
+      structure,
+      config,
+      value,
+      setValue: (val) => (value = val),
     })
-    return editor
   }
 
   it('should create a new element of the same type if possible (repeatable)', async () => {

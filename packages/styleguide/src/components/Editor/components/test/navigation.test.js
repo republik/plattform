@@ -1,14 +1,10 @@
-import Editor from '../editor'
-import { buildTestHarness } from 'slate-test-utils'
 import { createEditor, Transforms } from 'slate'
 import { selectAdjacent } from '../editor/helpers/tree'
 import { toggleElement, insertRepeat } from '../editor/helpers/structure'
 import schema from '../../schema/article'
+import mockEditor from './mockEditor'
 
 describe('Slate Editor: Navigation (On Tab)', () => {
-  function getMockEditor() {
-    return createEditor()
-  }
   window.document.getSelection = jest.fn()
 
   let value
@@ -16,18 +12,12 @@ describe('Slate Editor: Navigation (On Tab)', () => {
   const defaultConfig = { schema }
 
   async function setup(structure, config = defaultConfig) {
-    const mock = getMockEditor()
-    const [editor] = await buildTestHarness(Editor)({
-      editor: mock,
-      initialValue: value,
-      componentProps: {
-        structure,
-        config,
-        value,
-        setValue: (val) => (value = val),
-      },
+    return await mockEditor(createEditor(), {
+      structure,
+      config,
+      value,
+      setValue: (val) => (value = val),
     })
-    return editor
   }
 
   it('should allow forward and backward navigation (incl. nested elements)', async () => {

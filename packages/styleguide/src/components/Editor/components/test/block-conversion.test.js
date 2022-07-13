@@ -1,15 +1,11 @@
-import Editor from '../editor'
-import { buildTestHarness } from 'slate-test-utils'
 import { createEditor, Transforms } from 'slate'
 import { cleanupTree } from '../editor/helpers/tree'
 import { toggleElement } from '../editor/helpers/structure'
+import mockEditor from './mockEditor'
 import articleSchema from '../../schema/article'
 import flyerSchema from '../../schema/flyer'
 
 describe('Slate Editor: Block Conversion', () => {
-  function getMockEditor() {
-    return createEditor()
-  }
   window.document.getSelection = jest.fn()
 
   let value
@@ -17,18 +13,12 @@ describe('Slate Editor: Block Conversion', () => {
   const defaultConfig = { schema: articleSchema }
 
   async function setup(structure, config = defaultConfig) {
-    const mock = getMockEditor()
-    const [editor] = await buildTestHarness(Editor)({
-      editor: mock,
-      initialValue: value,
-      componentProps: {
-        structure,
-        config,
-        value,
-        setValue: (val) => (value = val),
-      },
+    return await mockEditor(createEditor(), {
+      structure,
+      config,
+      value,
+      setValue: (val) => (value = val),
     })
-    return editor
   }
 
   describe('simple conversion', () => {

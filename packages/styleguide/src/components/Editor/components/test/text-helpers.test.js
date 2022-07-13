@@ -1,13 +1,9 @@
-import Editor from '../editor'
-import { buildTestHarness } from 'slate-test-utils'
 import { createEditor, Transforms } from 'slate'
 import { selectNearestWord } from '../editor/helpers/text'
 import schema from '../../schema/article'
+import mockEditor from './mockEditor'
 
 describe('Slate Editor', () => {
-  function getMockEditor() {
-    return createEditor()
-  }
   window.document.getSelection = jest.fn()
 
   let value
@@ -15,18 +11,12 @@ describe('Slate Editor', () => {
   const defaultConfig = { schema }
 
   async function setup(structure, config = defaultConfig) {
-    const mock = getMockEditor()
-    const [editor] = await buildTestHarness(Editor)({
-      editor: mock,
-      initialValue: value,
-      componentProps: {
-        structure,
-        config,
-        value,
-        setValue: (val) => (value = val),
-      },
+    return await mockEditor(createEditor(), {
+      structure,
+      config,
+      value,
+      setValue: (val) => (value = val),
     })
-    return editor
   }
 
   describe('selectNearestWord()', () => {

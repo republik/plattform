@@ -80,7 +80,6 @@
     "semantic-release": "^17.1.1",
     "slate": "^0.81.0",
     "slate-history": "^0.66.0",
-    "slate-test-utils": "^1.3.2",
     "slate-react": "^0.81.0",
     "slate-mdast-serializer": "^3",
     "topojson": "^3.0.2",
