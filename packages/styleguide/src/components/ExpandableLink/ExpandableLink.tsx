@@ -1,7 +1,8 @@
-import React, { useRef, CSSProperties } from 'react'
+import React, { useRef, CSSProperties, ReactElement, useState } from 'react'
+import ReactDOM from 'react-dom'
 import { useColorContext } from '../Colors/ColorContext'
 import { css } from 'glamor'
-import { useLinkInfoContext } from './LinkInfoContext'
+import ExpandableLinkCallout from './ExpandableLinkCallout'
 
 type Props = {
   children?: React.ReactNode
@@ -9,6 +10,13 @@ type Props = {
   title: string
   description: string
   href: string
+}
+
+export type StateProps = {
+  href: string
+  title: string
+  description: string
+  position: CSSProperties
 }
 
 const styles = {
@@ -24,6 +32,13 @@ const styles = {
 }
 
 const MARGIN = 8
+export const DELAY = 300
+
+const Portal: React.FC<{ children: ReactElement }> = ({ children }) => {
+  return typeof document === 'object'
+    ? ReactDOM.createPortal(children, document.body)
+    : null
+}
 
 const ExpandableLink = ({
   children,
@@ -33,7 +48,8 @@ const ExpandableLink = ({
   href,
 }: Props) => {
   const [colorScheme] = useColorContext()
-  const [expandedLink, setExpandedLink, timeOutRef] = useLinkInfoContext()
+  const [expandedLink, setExpandedLink] = useState<StateProps>(undefined)
+  const timeOutRef = useRef<NodeJS.Timeout>(null)
 
   const toggleLinkInfoBox = (position: CSSProperties) => {
     if (expandedLink) {
@@ -82,6 +98,19 @@ const ExpandableLink = ({
     }
   }
 
+  const showInfoBox = (event) => {
+    clearTimeout(timeOutRef.current)
+    const position = getCalloutPosition(event)
+    timeOutRef.current = setTimeout(() => {
+      toggleLinkInfoBox(position)
+    }, DELAY)
+  }
+
+  const removeInfoBox = () => {
+    clearTimeout(timeOutRef.current)
+    timeOutRef.current = setTimeout(() => setExpandedLink(undefined), DELAY)
+  }
+
   return (
     <a
       {...attributes}
@@ -90,31 +119,25 @@ const ExpandableLink = ({
       {...colorScheme.set('textDecorationColor', 'textSoft')}
       onClick={(event) => {
         event.preventDefault()
-        clearTimeout(timeOutRef.current)
-        const position = getCalloutPosition(event)
-        timeOutRef.current = setTimeout(() => {
-          toggleLinkInfoBox(position)
-        }, 300)
+        showInfoBox(event)
       }}
       onFocus={() => toggleLinkInfoBox({})}
-      onBlur={() => {
-        clearTimeout(timeOutRef.current)
-        timeOutRef.current = setTimeout(() => setExpandedLink(undefined), 300)
-      }}
-      onMouseLeave={() => {
-        clearTimeout(timeOutRef.current)
-        timeOutRef.current = setTimeout(() => setExpandedLink(undefined), 300)
-      }}
+      onBlur={removeInfoBox}
+      onMouseLeave={removeInfoBox}
       onMouseEnter={(event) => {
-        event.preventDefault()
-        clearTimeout(timeOutRef.current)
-        const position = getCalloutPosition(event)
-        timeOutRef.current = setTimeout(() => {
-          toggleLinkInfoBox(position)
-        }, 300)
+        showInfoBox(event)
       }}
     >
       {children}
+      {expandedLink && (
+        <Portal>
+          <ExpandableLinkCallout
+            timeOutRef={timeOutRef}
+            expandedLink={expandedLink}
+            setExpandedLink={setExpandedLink}
+          />
+        </Portal>
+      )}
     </a>
   )
 }

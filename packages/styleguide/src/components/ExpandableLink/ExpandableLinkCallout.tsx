@@ -3,14 +3,17 @@ import { css, keyframes } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import zIndex from '../../theme/zIndex'
 import { useColorContext } from '../Colors/useColorContext'
-import { useLinkInfoContext } from './LinkInfoContext'
 import RawHtml from '../RawHtml'
 import { LinkIcon } from '../Icons'
 import { fontStyles } from '../Typography'
 import { ellipsize } from '../../lib/styleMixins'
+import { StateProps, DELAY } from './ExpandableLink'
 
 type Props = {
   inNativeApp?: boolean
+  timeOutRef: React.MutableRefObject<NodeJS.Timeout>
+  expandedLink: StateProps
+  setExpandedLink: React.Dispatch<React.SetStateAction<StateProps>>
 }
 
 const ExpandableLinkP = ({ children, ...props }) => {
@@ -103,9 +106,13 @@ const appearDown = keyframes({
   },
 })
 
-const ExpandableLinkCallout = ({ inNativeApp }: Props) => {
+const ExpandableLinkCallout = ({
+  inNativeApp,
+  timeOutRef,
+  expandedLink,
+  setExpandedLink,
+}: Props) => {
   const [colorScheme] = useColorContext()
-  const [expandedLink, setExpandedLink, timeOutRef] = useLinkInfoContext()
   const [calloutHeight, setCalloutHeight] = useState(400)
 
   const calloutContainerRef = useRef<HTMLDivElement>()
@@ -146,10 +153,6 @@ const ExpandableLinkCallout = ({ inNativeApp }: Props) => {
     }
   }, [calloutRef])
 
-  if (!expandedLink) {
-    return null
-  }
-
   const slideUp = keyframes({
     from: {
       bottom: -calloutHeight,
@@ -159,19 +162,18 @@ const ExpandableLinkCallout = ({ inNativeApp }: Props) => {
     },
   })
 
+  const removeInfoBox = () => {
+    clearTimeout(timeOutRef.current)
+    timeOutRef.current = setTimeout(() => setExpandedLink(undefined), DELAY)
+  }
+
   return (
     <div
       onMouseEnter={() => {
         clearTimeout(timeOutRef.current)
       }}
-      onMouseLeave={() => {
-        clearTimeout(timeOutRef.current)
-        timeOutRef.current = setTimeout(() => setExpandedLink(undefined), 300)
-      }}
-      onClick={() => {
-        clearTimeout(timeOutRef.current)
-        timeOutRef.current = setTimeout(() => setExpandedLink(undefined), 300)
-      }}
+      onMouseLeave={removeInfoBox}
+      onClick={removeInfoBox}
       ref={calloutContainerRef}
       {...styles.calloutContainer}
       {...css({

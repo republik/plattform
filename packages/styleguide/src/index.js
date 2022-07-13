@@ -331,9 +331,6 @@ const Styleguide = () => {
                         ...require('./components/Typography'),
                         ...require('./components/ExpandableLink'),
                         ExpandableLinkCallout: require('./components/ExpandableLink/ExpandableLinkCallout'),
-                        LinkInfoContextProvider:
-                          require('./components/ExpandableLink/LinkInfoContext')
-                            .LinkInfoContextProvider,
                       },
                       src: require('./components/ExpandableLink/docs.md'),
                     },
