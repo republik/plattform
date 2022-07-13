@@ -110,25 +110,23 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
       }
     }
     const baseStyles = { position: 'relative' }
-    const attributesWithStyle = {
-      ...attributes,
-      style:
-        isSelected && highlightSelected
-          ? {
-              ...attributes.style,
-              ...baseStyles,
-              borderWidth: 2,
-              borderStyle: 'solid',
-            }
-          : { ...attributes.style, ...baseStyles },
-    }
     return (
       <Component
         {...(isSelected &&
           highlightSelected &&
           colorScheme.set('borderColor', 'primary'))}
         {...element}
-        attributes={attributesWithStyle}
+        attributes={attributes}
+        style={
+          isSelected && highlightSelected
+            ? {
+                ...attributes.style,
+                ...baseStyles,
+                borderWidth: 2,
+                borderStyle: 'solid',
+              }
+            : { ...attributes.style, ...baseStyles }
+        }
         onMouseDown={selectVoid}
         onDoubleClick={(e) => {
           e.preventDefault()
