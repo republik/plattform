@@ -34,11 +34,6 @@ module.exports = withTM(
     async rewrites() {
       return {
         beforeFiles: [
-          // /front is only accessible via _middleware rewrite
-          {
-            source: '/front',
-            destination: '/404',
-          },
           // _ssr routes are only accessible via rewrites
           {
             source: '/_ssr/:path*',
