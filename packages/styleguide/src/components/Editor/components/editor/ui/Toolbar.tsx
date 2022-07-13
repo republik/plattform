@@ -370,16 +370,15 @@ const Toolbar: React.FC<{
   }, [editor.selection, focused])
 
   return isOnTop ? (
-    <Scroller>
-      <div
-        ref={ref}
-        {...styles.topToolbar}
-        {...(mode === 'sticky' && styles.stickyToolbar)}
-        onClick={(e) => onChange(e)}
-      >
+    <div
+      {...styles.topToolbar}
+      {...(mode === 'sticky' && styles.stickyToolbar)}
+      onClick={(e) => onChange(e)}
+    >
+      <Scroller>
         <ToolbarButtons marks={marks} inlines={inlines} blocks={blocks} />
-      </div>
-    </Scroller>
+      </Scroller>
+    </div>
   ) : (
     <Portal>
       <div
