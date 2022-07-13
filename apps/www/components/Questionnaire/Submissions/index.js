@@ -1,5 +1,6 @@
 import { gql, useQuery } from '@apollo/client'
-import { Editorial, Interaction, Loader } from '@project-r/styleguide'
+import { Editorial, inQuotes, Interaction, Loader } from '@project-r/styleguide'
+import { ascending } from 'd3-array'
 import { useRouter } from 'next/router'
 
 export const mainQuery = gql`
@@ -11,6 +12,24 @@ export const mainQuery = gql`
       endDate
       userHasSubmitted
       userSubmitDate
+      questions {
+        id
+        text
+        ... on QuestionTypeChoice {
+          options {
+            label
+            value
+            category
+          }
+        }
+        ... on QuestionTypeRange {
+          kind
+          ticks {
+            label
+            value
+          }
+        }
+      }
       submissions {
         totalCount
         nodes {
@@ -28,8 +47,6 @@ export const mainQuery = gql`
               id
               question {
                 id
-                __typename
-                text
               }
               payload
             }
@@ -39,6 +56,31 @@ export const mainQuery = gql`
     }
   }
 `
+
+const AnswerText = ({ value, question }) => {
+  if (question.options) {
+    const selectedOptions = question.options.filter((option) =>
+      value.includes(option.value),
+    )
+    return selectedOptions.map((option) => option.label).join(', ')
+  }
+  if (question.ticks) {
+    const closest = question.ticks
+      .map((tick) => ({
+        distance: Math.abs(tick.value - value),
+        tick,
+      }))
+      .sort((a, b) => ascending(a.distance, b.distance))[0]
+    return (
+      <>
+        {closest.distance !== 0 && 'Am ehesten '}
+        {inQuotes(closest.tick.label || closest.tick.value)}
+      </>
+    )
+  }
+
+  return value
+}
 
 const Answers = () => {
   const {
@@ -57,7 +99,7 @@ const Answers = () => {
       render={() => {
         const {
           questionnaire,
-          questionnaire: { submissions },
+          questionnaire: { submissions, questions },
         } = data
         return (
           <>
@@ -70,15 +112,22 @@ const Answers = () => {
                     {answers.totalCount} Antworten von{' '}
                     {user.name || displayAuthor.name}
                   </Interaction.H3>
-                  {answers.nodes.map(({ id, question, payload }) => {
-                    return (
-                      <Editorial.P key={id}>
-                        <strong>{question.text}</strong>
-                        <br />
-                        {payload.value}
-                      </Editorial.P>
-                    )
-                  })}
+                  {answers.nodes.map(
+                    ({ id, question: { id: qid }, payload }) => {
+                      const question = questions.find((q) => q.id === qid)
+
+                      return (
+                        <Editorial.P key={id}>
+                          <strong>{question.text}</strong>
+                          <br />
+                          <AnswerText
+                            value={payload.value}
+                            question={question}
+                          />
+                        </Editorial.P>
+                      )
+                    },
+                  )}
                 </div>
               )
             })}
