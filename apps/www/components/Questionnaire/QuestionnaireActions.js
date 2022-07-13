@@ -27,19 +27,11 @@ const styles = {
 }
 
 export default compose(withT)(
-  ({ t, onSubmit, onReset, updating, submitting, invalid, leftAlign }) => {
+  ({ t, onSubmit, onReset, updating, invalid, leftAlign }) => {
     return (
       <div {...merge(styles.actions, leftAlign && styles.actionsLeft)}>
-        <Button
-          primary
-          onClick={onSubmit}
-          disabled={updating || submitting || invalid}
-        >
-          {updating || submitting ? (
-            <InlineSpinner size={40} />
-          ) : (
-            t('questionnaire/submit')
-          )}
+        <Button primary onClick={onSubmit} disabled={updating || invalid}>
+          {updating ? <InlineSpinner size={40} /> : t('questionnaire/submit')}
         </Button>
         {!!onReset && (
           <div {...merge(styles.reset, leftAlign && styles.resetLeft)}>
