@@ -50,32 +50,30 @@ const ExpandableLink = ({
     const targetTop = target.getBoundingClientRect().top
     const targetMiddle =
       target.getBoundingClientRect().top + target.offsetHeight / 2
-
-    // link wraps over multiple lines if the css line-height is smaller than the target height
     const isMultiline =
       parseInt(
         window.getComputedStyle(target).getPropertyValue('line-height'),
       ) <= targetHeight
-
-    // check if we are hovering over the top line
-    const hoveringOverTopLine = event.clientY <= targetMiddle
-    // when hovering over the top line, displaybelow should use middle, else top
-    // when hovering over the bottom line, displayabove shoul duse middle, else bottom
+    const hoveringOnTopLine = event.clientY <= targetMiddle
     const displayAbove = event.clientY >= window.innerHeight / 2
     const displayToLeft = event.clientX >= window.innerWidth / 2
 
     return {
+      // if callout renders BELOW target AND
+      // if the target link wraps on multiple lines AND
+      // the client is hovering on the TOP line of the multi-line wrapped link THEN
+      // use the target middle as baseline
       top: displayAbove
         ? 'auto'
-        : // if callout should render BELOW target, check if we are hovering over the
-        // top line of a multi-line wrapped link. If so, use the target middle as baseline
-        isMultiline && hoveringOverTopLine
+        : isMultiline && hoveringOnTopLine
         ? targetMiddle + MARGIN
         : targetBottom + MARGIN,
+      // if callout renders ABOVE the target link AND
+      // if the target link wraps on multiple lines AND
+      // the client is hovering on the BOTTOM line of the multi-line wrapped link THEN
+      // use the target middle as baseline
       bottom: displayAbove
-        ? // if callout should render ABOVE target, check if we are hovering over the
-          // bottom line of a multi-line wrapped link. If so, use the target middle as baseline
-          isMultiline && !hoveringOverTopLine
+        ? isMultiline && !hoveringOnTopLine
           ? window.innerHeight - targetMiddle + MARGIN
           : window.innerHeight - targetTop + MARGIN
         : 'auto',
@@ -99,7 +97,10 @@ const ExpandableLink = ({
         }, 300)
       }}
       onFocus={() => toggleLinkInfoBox({})}
-      onBlur={() => toggleLinkInfoBox({})}
+      onBlur={() => {
+        clearTimeout(timeOutRef.current)
+        timeOutRef.current = setTimeout(() => setExpandedLink(undefined), 300)
+      }}
       onMouseLeave={() => {
         clearTimeout(timeOutRef.current)
         timeOutRef.current = setTimeout(() => setExpandedLink(undefined), 300)

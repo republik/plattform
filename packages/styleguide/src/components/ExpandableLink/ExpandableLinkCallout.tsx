@@ -9,6 +9,10 @@ import { LinkIcon } from '../Icons'
 import { fontStyles } from '../Typography'
 import { ellipsize } from '../../lib/styleMixins'
 
+type Props = {
+  inNativeApp?: boolean
+}
+
 const ExpandableLinkP = ({ children, ...props }) => {
   const [colorScheme] = useColorContext()
   return (
@@ -18,9 +22,14 @@ const ExpandableLinkP = ({ children, ...props }) => {
   )
 }
 
-type Props = {
-  inNativeApp?: boolean
-}
+const fadeIn = keyframes({
+  from: {
+    opacity: 0,
+  },
+  to: {
+    opacity: 1,
+  },
+})
 
 const styles = {
   calloutContainer: css({
@@ -151,23 +160,21 @@ const ExpandableLinkCallout = ({ inNativeApp }: Props) => {
   }
   return (
     <div
-      onMouseEnter={(e) => {
-        e.preventDefault()
+      onMouseEnter={() => {
         clearTimeout(timeOutRef.current)
       }}
-      onMouseLeave={(e) => {
-        e.preventDefault()
+      onMouseLeave={() => {
         clearTimeout(timeOutRef.current)
         timeOutRef.current = setTimeout(() => setExpandedLink(undefined), 300)
       }}
-      onClick={(e) => {
-        e.preventDefault()
+      onClick={() => {
         clearTimeout(timeOutRef.current)
         timeOutRef.current = setTimeout(() => setExpandedLink(undefined), 300)
       }}
       ref={calloutContainerRef}
       {...styles.calloutContainer}
       {...css({
+        animation: `0.3s ${fadeIn} forwards`,
         [mUp]: {
           animation: `0.3s ${
             expandedLink?.position?.top === 'auto' ? appearUp : appearDown
@@ -181,7 +188,7 @@ const ExpandableLinkCallout = ({ inNativeApp }: Props) => {
         {...styles.callout}
         {...calloutRule}
         {...css({
-          animation: `0.3s ${slideUp} 0.2s forwards`,
+          animation: `0.3s ${slideUp} forwards`,
           bottom: -calloutHeight,
           paddingBottom: inNativeApp ? '50px' : '24px',
           [mUp]: {
