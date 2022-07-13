@@ -88,11 +88,10 @@ const Questionnaire = (props) => {
     )
   }
 
-  const handleReset = (e) => {
+  const handleReset = () => {
     const {
       questionnaire: { id },
     } = questionnaireData
-    e.preventDefault()
     processSubmit(resetQuestionnaire, id).then(() => window.scrollTo(0, 0))
   }
 
