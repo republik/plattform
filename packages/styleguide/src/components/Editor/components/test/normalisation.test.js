@@ -1,13 +1,9 @@
-import Editor from '../editor'
-import { buildTestHarness } from 'slate-test-utils'
 import { createEditor } from 'slate'
 import { cleanupTree } from '../editor/helpers/tree'
 import schema from '../../schema/article'
+import mockEditor from './mockEditor'
 
 describe('Slate Editor: Normalisation', () => {
-  function getMockEditor() {
-    return createEditor()
-  }
   window.document.getSelection = jest.fn()
 
   let value
@@ -15,18 +11,12 @@ describe('Slate Editor: Normalisation', () => {
   const defaultConfig = { schema }
 
   async function setup(structure, config = defaultConfig) {
-    const mock = getMockEditor()
-    const [editor] = await buildTestHarness(Editor)({
-      editor: mock,
-      initialValue: value,
-      componentProps: {
-        structure,
-        config,
-        value,
-        setValue: (val) => (value = val),
-      },
+    return await mockEditor(createEditor(), {
+      structure,
+      config,
+      value,
+      setValue: (val) => (value = val),
     })
-    return editor
   }
 
   describe('fixStructure()', () => {

@@ -33,13 +33,21 @@ import { LayoutContainer } from './ui/Layout'
 import ErrorMessage from './ui/ErrorMessage'
 import { getCharCount } from './helpers/text'
 
-const SlateEditor: React.FC<{
+export type SlateEditorProps = {
   value: CustomDescendant[]
   setValue: (t: CustomDescendant[]) => void
   structure?: NodeTemplate[]
   editor?: CustomEditor
   config: EditorConfig
-}> = ({ value, setValue, structure, editor: mockEditor, config }) => {
+}
+
+const SlateEditor: React.FC<SlateEditorProps> = ({
+  value,
+  setValue,
+  structure,
+  editor: mockEditor,
+  config,
+}) => {
   const editor = useMemoOne<CustomEditor>(
     () =>
       withInsert(config)(
