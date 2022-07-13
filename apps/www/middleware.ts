@@ -13,9 +13,11 @@ import fetchMyRoles from './lib/helpers/middleware/FetchMeObject'
  */
 export async function middleware(req: NextRequest) {
   const resUrl = req.nextUrl.clone()
-
-  // Rewrite if someone tries to directly access the front
-  if (req.nextUrl.pathname === '/front') {
+  // Rewrite if someone tries to directly access the front or the front-preview url
+  if (
+    req.nextUrl.pathname === '/front' ||
+    req.nextUrl.pathname.startsWith('/_front/')
+  ) {
     resUrl.pathname = '/404'
     return NextResponse.rewrite(resUrl)
   }
@@ -24,14 +26,13 @@ export async function middleware(req: NextRequest) {
   if (req.nextUrl.pathname !== '/') {
     return NextResponse.next()
   }
-
   // Redirect to front-preview ssr to generate article front-preview
   // used in the yearly overview
   if (resUrl.searchParams.has('extractId')) {
     // Remap extractId query param to id-slug
     const extractId = resUrl.searchParams.get('extractId')
     resUrl.searchParams.delete('extractId')
-    resUrl.pathname = `/_ssr/front/${extractId}`
+    resUrl.pathname = `/_front/${extractId}`
     return NextResponse.rewrite(resUrl)
   }
 
