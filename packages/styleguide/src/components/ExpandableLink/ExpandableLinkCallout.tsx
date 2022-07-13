@@ -107,7 +107,7 @@ const ExpandableLinkCallout = ({ inNativeApp }: Props) => {
   const [colorScheme] = useColorContext()
   const [expandedLink, setExpandedLink, timeOutRef] = useLinkInfoContext()
   const [calloutHeight, setCalloutHeight] = useState(400)
-  console.log(calloutHeight)
+
   const calloutContainerRef = useRef<HTMLDivElement>()
   const calloutRef = useRef<HTMLDivElement>()
   const calloutRule = useMemo(
@@ -146,6 +146,10 @@ const ExpandableLinkCallout = ({ inNativeApp }: Props) => {
     }
   }, [calloutRef])
 
+  if (!expandedLink) {
+    return null
+  }
+
   const slideUp = keyframes({
     from: {
       bottom: -calloutHeight,
@@ -155,9 +159,6 @@ const ExpandableLinkCallout = ({ inNativeApp }: Props) => {
     },
   })
 
-  if (!expandedLink) {
-    return null
-  }
   return (
     <div
       onMouseEnter={() => {
