@@ -1,6 +1,6 @@
 import { CustomEditor } from '../../../custom-types'
-import { Range, Transforms } from 'slate'
-import { getAncestry } from '../helpers/tree'
+import { Transforms } from 'slate'
+import { getAncestry, selectAdjacent } from '../helpers/tree'
 import { getCharCount } from '../helpers/text'
 
 export const withDelete = (editor: CustomEditor): CustomEditor => {
@@ -11,8 +11,8 @@ export const withDelete = (editor: CustomEditor): CustomEditor => {
       const { element: parent } = getAncestry(editor)
       // e.g. deleting all the text in a blockquote
       // -> we want to delete the whole blockquote
-      if (Range.isCollapsed(editor.selection) && !getCharCount([parent[0]])) {
-        // TODO: fix cursor -> goes down instead of up
+      if (getCharCount([parent[0]]) === 0) {
+        selectAdjacent(editor, 'previous')
         return Transforms.removeNodes(editor, { at: parent[1] })
       }
     }

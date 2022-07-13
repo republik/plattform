@@ -1,9 +1,10 @@
 import { CustomNode, NormalizeFn } from '../../../custom-types'
-import { Node, Range, Transforms } from 'slate'
+import { Editor, Node, Range, Transforms } from 'slate'
 
 export const resetSelection: (selection?: Range) => NormalizeFn<CustomNode> =
   (selection) =>
   ([node, path], editor) => {
+    // restore previously saved selection
     if (
       editor.selection &&
       selection &&
@@ -12,6 +13,14 @@ export const resetSelection: (selection?: Range) => NormalizeFn<CustomNode> =
     ) {
       Transforms.select(editor, selection.focus.path)
       return true
+    }
+    // factory reset :-)
+    if (!selection && !editor.selection) {
+      const node = Editor.first(editor, [])
+      if (node) {
+        Transforms.select(editor, node[1])
+        return true
+      }
     }
     return false
   }
