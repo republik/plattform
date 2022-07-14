@@ -4246,11 +4246,15 @@
     },
     {
       "key": "questionnaire/thankyou",
-      "value": "Ihre Meinung ist bei uns angekommen. Danke fürs Mitmachen! {metaLink} finden Sie eine Übersicht zum aktuellen Stand des Irrtums."
+      "value": "Ihre Antworten sind bei uns angekommen. Danke fürs Mitmachen!"
     },
     {
-      "key": "questionnaire/thankyou/metaText",
-      "value": "Hier"
+      "key": "questionnaire/thankyou/resubmit",
+      "value": "bearbeiten"
+    },
+    {
+      "key": "questionnaire/thankyou/revoke",
+      "value": "zurückziehen"
     },
     {
       "key": "questionnaire/ended",

@@ -15,7 +15,11 @@ import {
 import { useTranslation } from '../../lib/withT'
 import withAuthorization from '../Auth/withAuthorization'
 import StatusError from '../StatusError'
-import { withQuestionnaireMutation, withQuestionnaireReset } from './enhancers'
+import {
+  withQuestionnaireMutation,
+  withQuestionnaireReset,
+  withQuestionnaireRevoke,
+} from './enhancers'
 import Questions from './Questions'
 import QuestionnaireClosed from './QuestionnaireClosed'
 import QuestionnaireActions from './QuestionnaireActions'
@@ -53,12 +57,17 @@ const Questionnaire = (props) => {
     questionnaireData,
     submitQuestionnaire,
     resetQuestionnaire,
+    revokeQuestionnaire,
     onQuestionnaireChange,
   } = props
   const [state, setState] = useState({})
+  const [isResubmitAnswers, setIsResubmitAnswers] = useState(false)
   const [headerHeight] = useHeaderHeight()
   const { t } = useTranslation()
   const [colorScheme] = useColorContext()
+  const {
+    questionnaire: { id },
+  } = questionnaireData
 
   const processSubmit = (fn, ...args) => {
     setState({ updating: true })
@@ -78,16 +87,13 @@ const Questionnaire = (props) => {
   }
 
   const handleSubmit = () => {
-    const {
-      questionnaire: { id },
-    } = questionnaireData
-    processSubmit(submitQuestionnaire, id)
+    if (isResubmitAnswers) {
+      setIsResubmitAnswers(false)
+    }
+    processSubmit(submitQuestionnaire, id).then(() => window.scrollTo(0, 0))
   }
 
   const handleReset = () => {
-    const {
-      questionnaire: { id },
-    } = questionnaireData
     processSubmit(resetQuestionnaire, id).then(() => window.scrollTo(0, 0))
   }
 
@@ -122,7 +128,7 @@ const Questionnaire = (props) => {
 
         // handle already submitted
         const {
-          questionnaire: { userHasSubmitted, questions },
+          questionnaire: { userHasSubmitted, questions, resubmitAnswers },
         } = questionnaireData
         const error = state.error || props.error
         const updating = state.updating || props.updating || props.submitting
@@ -131,12 +137,23 @@ const Questionnaire = (props) => {
           return submittedMessage
         }
 
-        if (!updating && (hasEnded || userHasSubmitted)) {
+        if (!updating && !isResubmitAnswers && (hasEnded || userHasSubmitted)) {
           return (
             <QuestionnaireClosed
               submitted={userHasSubmitted}
               showResults={showResults}
               slug={slug}
+              onResubmit={
+                resubmitAnswers &&
+                (() => {
+                  setIsResubmitAnswers(true)
+                })
+              }
+              onRevoke={() => {
+                processSubmit(revokeQuestionnaire, id).then(() =>
+                  window.scrollTo(0, 0),
+                )
+              }}
             />
           )
         }
@@ -223,4 +240,5 @@ export default compose(
   withAuthorization(['supporter', 'editor'], 'showResults'),
   withQuestionnaireMutation,
   withQuestionnaireReset,
+  withQuestionnaireRevoke,
 )(Questionnaire)

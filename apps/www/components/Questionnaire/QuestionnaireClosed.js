@@ -19,7 +19,13 @@ const styles = {
   }),
 }
 
-const QuestionnaireClosed = ({ slug, submitted, showResults }) => {
+const QuestionnaireClosed = ({
+  slug,
+  submitted,
+  showResults,
+  onResubmit,
+  onRevoke,
+}) => {
   const { t } = useTranslation()
   const [colorScheme] = useColorContext()
 
@@ -28,14 +34,37 @@ const QuestionnaireClosed = ({ slug, submitted, showResults }) => {
       <Headline>{t('questionnaire/title')}</Headline>
       <div {...styles.closed} {...colorScheme.set('backgroundColor', 'alert')}>
         <P>
-          {submitted
-            ? t.elements('questionnaire/thankyou', {
-                metaLink: (
-                  <A href='/meta'>{t('questionnaire/thankyou/metaText')}</A>
-                ),
-              })
-            : t('questionnaire/ended')}
+          {submitted ? t('questionnaire/thankyou') : t('questionnaire/ended')}
         </P>
+        {submitted && (
+          <>
+            <P>
+              {onResubmit && (
+                <>
+                  <A
+                    href='#'
+                    onClick={(e) => {
+                      e.preventDefault()
+                      onResubmit()
+                    }}
+                  >
+                    {t('questionnaire/thankyou/resubmit')}
+                  </A>
+                  {' – '}
+                </>
+              )}
+              <A
+                onClick={(e) => {
+                  e.preventDefault()
+                  onRevoke()
+                }}
+                href='#'
+              >
+                {t('questionnaire/thankyou/revoke')}
+              </A>
+            </P>
+          </>
+        )}
       </div>
       {showResults && (
         <>

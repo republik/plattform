@@ -25,6 +25,14 @@ const resetQuestionnaireMutation = gql`
   }
 `
 
+const revokeQuestionnaireMutation = gql`
+  mutation revokeQuestionnaire($id: ID!) {
+    revokeQuestionnaire(id: $id) {
+      id
+    }
+  }
+`
+
 const submitQuestionnaireMutation = gql`
   mutation submitQuestionnaire($id: ID!) {
     submitQuestionnaire(id: $id) {
@@ -43,6 +51,7 @@ const getQuestionnaire = gql`
       endDate
       userHasSubmitted
       userSubmitDate
+      resubmitAnswers
       questions {
         ... on QuestionInterface {
           id
@@ -63,6 +72,7 @@ const getQuestionnaire = gql`
             label
             value
             category
+            requireAddress
           }
         }
         ... on QuestionTypeRange {
@@ -104,6 +114,24 @@ export const withQuestionnaireMutation = graphql(submitQuestionnaireMutation, {
 export const withQuestionnaireReset = graphql(resetQuestionnaireMutation, {
   props: ({ mutate, ownProps: { slug } }) => ({
     resetQuestionnaire: (id) => {
+      return mutate({
+        variables: {
+          id,
+        },
+        refetchQueries: [
+          {
+            query: getQuestionnaire,
+            variables: { slug },
+          },
+        ],
+      })
+    },
+  }),
+})
+
+export const withQuestionnaireRevoke = graphql(revokeQuestionnaireMutation, {
+  props: ({ mutate, ownProps: { slug } }) => ({
+    revokeQuestionnaire: (id) => {
       return mutate({
         variables: {
           id,
