@@ -20,6 +20,8 @@ import { AppProps } from 'next/app'
 import MeContextProvider from '../lib/context/MeContext'
 import UserAgentProvider from '../lib/context/UserAgentContext'
 import { withApollo } from '../lib/apollo'
+import { ReactNode, useEffect } from 'react'
+import Router, { useRouter } from 'next/router'
 
 if (typeof window !== 'undefined') {
   window.addEventListener('error', (event: ErrorEvent) => {
@@ -67,6 +69,7 @@ const WebApp = ({ Component, pageProps }: AppProps<PagePropsWithApollo>) => {
                         content='width=device-width, initial-scale=1'
                       />
                     </Head>
+                    <RoutingDebug />
                     <Component
                       serverContext={serverContext}
                       {...otherPageProps}
@@ -85,3 +88,32 @@ const WebApp = ({ Component, pageProps }: AppProps<PagePropsWithApollo>) => {
 }
 
 export default withApollo(WebApp)
+
+const RoutingDebug = ({ children }: { children: ReactNode }) => {
+  const router = useRouter()
+
+  console.log('DBG: router', router)
+
+  useEffect(() => {
+    Router.events.on('routeChangeComplete', (url) => {
+      console.log('DBG: routeChangeComplete', url)
+    })
+    Router.events.on('routeChangeError', (err) => {
+      console.log('DBG: routeChangeError', err)
+    })
+    Router.events.on('beforeHistoryChange', (url) => {
+      console.log('DBG: beforeHistoryChange', url)
+    })
+    Router.events.on('hashChangeStart', (url) => {
+      console.log('DBG: hashChangeStart', url)
+    })
+    Router.events.on('hashChangeComplete', (url) => {
+      console.log('DBG: hashChangeComplete', url)
+    })
+    Router.events.on('routeChangeStart', (url) => {
+      console.log('DBG: routeChangeStart', url)
+    })
+  }, [])
+
+  return null
+}
