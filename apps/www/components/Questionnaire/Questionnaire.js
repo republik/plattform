@@ -65,9 +65,7 @@ const Questionnaire = (props) => {
   const [headerHeight] = useHeaderHeight()
   const { t } = useTranslation()
   const [colorScheme] = useColorContext()
-  const {
-    questionnaire: { id },
-  } = questionnaireData
+  const id = questionnaireData.questionnaire?.id
 
   const processSubmit = (fn, ...args) => {
     setState({ updating: true })
