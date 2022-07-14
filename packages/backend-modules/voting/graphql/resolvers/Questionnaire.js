@@ -1,3 +1,5 @@
+const { Roles } = require('@orbiting/backend-modules-auth')
+
 const {
   isEligible,
   userHasSubmitted,
@@ -29,7 +31,17 @@ module.exports = {
     }
     return { entity: questionnaire }
   },
-  submissions(questionnaire, args, { pgdb }) {
-    return getConnection({ questionnaireId: questionnaire.id }, args, { pgdb })
+  submissions(questionnaire, args, { user: me, pgdb }) {
+    const { submissionsAccessRole, id: questionnaireId } = questionnaire
+
+    if (
+      submissionsAccessRole !== 'NONE' &&
+      (submissionsAccessRole === 'PUBLIC' ||
+        Roles.userHasRole(me, submissionsAccessRole.toLowerCase()))
+    ) {
+      return getConnection({ questionnaireId }, args, { pgdb })
+    }
+
+    return null
   },
 }
