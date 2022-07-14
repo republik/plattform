@@ -1,5 +1,5 @@
 import { withRouter } from 'next/router'
-import { compose } from 'react-apollo'
+import compose from 'lodash/flowRight'
 import { css } from 'glamor'
 
 import { A } from '@project-r/styleguide'

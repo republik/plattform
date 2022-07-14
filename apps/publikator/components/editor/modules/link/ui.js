@@ -1,6 +1,7 @@
 import { Text } from 'slate'
 import { Component } from 'react'
-import { graphql } from 'react-apollo'
+import { graphql } from '@apollo/client/react/hoc'
+import { gql } from '@apollo/client'
 import {
   Label,
   Field,
@@ -13,7 +14,6 @@ import createOnFieldChange from '../../utils/createOnFieldChange'
 import RepoSearch from '../../utils/RepoSearch'
 import { AutoSlugLinkInfo } from '../../utils/github'
 import withT from '../../../../lib/withT'
-import gql from 'graphql-tag'
 import debounce from 'lodash/debounce'
 
 import { createInlineButton, matchInline, buttonStyles } from '../../utils'

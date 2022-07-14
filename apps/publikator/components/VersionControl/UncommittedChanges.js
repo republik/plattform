@@ -1,6 +1,7 @@
 import { Component, Fragment } from 'react'
-import { graphql, compose } from 'react-apollo'
-import gql from 'graphql-tag'
+import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
+import { gql } from '@apollo/client'
 import { css, merge } from 'glamor'
 import {
   colors,

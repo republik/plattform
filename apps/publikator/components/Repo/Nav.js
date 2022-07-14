@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { compose } from 'react-apollo'
+import compose from 'lodash/flowRight'
 import { withRouter } from 'next/router'
 import { Link } from '../../lib/routes'
 import { css } from 'glamor'

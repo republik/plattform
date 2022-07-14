@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { compose } from 'react-apollo'
+import compose from 'lodash/flowRight'
 import { css } from 'glamor'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import MemoIcon from 'react-icons/lib/md/rate-review'

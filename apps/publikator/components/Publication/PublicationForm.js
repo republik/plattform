@@ -1,7 +1,8 @@
 import { Fragment, useState } from 'react'
-import { graphql, compose } from 'react-apollo'
+import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
+import { gql } from '@apollo/client'
 import { css } from 'glamor'
-import gql from 'graphql-tag'
 
 import ErrorMessage from '../ErrorMessage'
 import { getRepoWithPublications } from './Current'

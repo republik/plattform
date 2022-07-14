@@ -5,7 +5,7 @@ import initLocalStore from '../../../../lib/utils/localStorage'
 import { withRouter } from 'next/router'
 import withT from '../../../../lib/withT'
 import withAuthorization from '../../../../components/Auth/withAuthorization'
-import { compose } from 'react-apollo'
+import compose from 'lodash/flowRight'
 import { stringify, parse } from '@orbiting/remark-preset'
 import { css } from 'glamor'
 import {

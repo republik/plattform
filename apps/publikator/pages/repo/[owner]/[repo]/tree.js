@@ -1,10 +1,8 @@
 import { Component, Fragment } from 'react'
 import { withRouter } from 'next/router'
 import { css } from 'glamor'
-import { graphql, compose } from 'react-apollo'
-import gql from 'graphql-tag'
-
-import { path } from 'ramda'
+import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
 
 import withAuthorization from '../../../../components/Auth/withAuthorization'
 
@@ -27,6 +25,7 @@ import CurrentPublications from '../../../../components/Publication/Current'
 import UncommittedChanges from '../../../../components/VersionControl/UncommittedChanges'
 import withT from '../../../../lib/withT'
 import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
+import { gql } from '@apollo/client'
 
 export const COMMIT_LIMIT = 40
 export const getRepoHistory = gql`

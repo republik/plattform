@@ -1,5 +1,6 @@
-import { Mutation, compose } from 'react-apollo'
-import gql from 'graphql-tag'
+import { Mutation } from '@apollo/client/react/components'
+import compose from 'lodash/flowRight'
+import { gql } from '@apollo/client'
 import Router, { withRouter } from 'next/router'
 
 import withT from '../../lib/withT'

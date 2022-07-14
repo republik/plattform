@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { compose } from 'react-apollo'
+import compose from 'lodash/flowRight'
 import withT from '../../lib/withT'
 import { Router } from '../../lib/routes'
 import { Field, useDebounce } from '@project-r/styleguide'

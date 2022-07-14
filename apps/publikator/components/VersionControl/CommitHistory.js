@@ -2,7 +2,7 @@ import { Component } from 'react'
 import { Link } from '../../lib/routes'
 import { colors, A, Interaction } from '@project-r/styleguide'
 import { css } from 'glamor'
-import { compose } from 'react-apollo'
+import compose from 'lodash/flowRight'
 import { swissTime } from '../../lib/utils/format'
 import withT from '../../lib/withT'
 

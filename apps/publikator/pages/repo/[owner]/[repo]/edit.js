@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import { withRouter } from 'next/router'
-import { graphql, compose } from 'react-apollo'
-import gql from 'graphql-tag'
+import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
 import { Value, resetKeyGenerator } from 'slate'
 import debounce from 'lodash/debounce'
 import { timeFormat } from 'd3-time-format'
@@ -63,6 +63,7 @@ import {
 } from '../../../../lib/utils/helpers'
 import { withEditRepoMeta } from '../../../../components/Repo/EditMetaDate'
 import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
+import { gql } from '@apollo/client'
 
 const commitMutation = gql`
   mutation commit(
