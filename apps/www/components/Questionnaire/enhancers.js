@@ -48,6 +48,7 @@ const getQuestionnaire = gql`
           id
           order
           text
+          explanation
           userAnswer {
             id
             payload

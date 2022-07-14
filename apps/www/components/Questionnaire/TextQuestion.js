@@ -6,7 +6,7 @@ import uuid from 'uuid/v4'
 import { Interaction } from '@project-r/styleguide'
 import TextInput from './TextInput/TextInput'
 import withT from '../../lib/withT'
-const { H2 } = Interaction
+const { H2, P } = Interaction
 
 class TextQuestion extends Component {
   constructor(props) {
@@ -47,13 +47,14 @@ class TextQuestion extends Component {
 
   render() {
     const {
-      question: { text, maxLength },
+      question: { text, explanation, maxLength },
       t,
     } = this.props
     const { value } = this.state
     return (
       <div>
         {text && <H2 {...questionStyles.label}>{text}</H2>}
+        {explanation && <P {...questionStyles.help}>{explanation}</P>}
         <TextInput
           placeholder={t('questionnaire/text/label', { maxLength })}
           text={value || ''}

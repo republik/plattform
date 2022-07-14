@@ -19,7 +19,6 @@ import { withQuestionnaireMutation, withQuestionnaireReset } from './enhancers'
 import Questions from './Questions'
 import QuestionnaireClosed from './QuestionnaireClosed'
 import QuestionnaireActions from './QuestionnaireActions'
-import { useRouter } from 'next/router'
 import ErrorMessage from '../ErrorMessage'
 
 const { Headline, P } = Interaction
@@ -59,7 +58,6 @@ const Questionnaire = (props) => {
   const [state, setState] = useState({})
   const [headerHeight] = useHeaderHeight()
   const { t } = useTranslation()
-  const router = useRouter()
   const [colorScheme] = useColorContext()
 
   const processSubmit = (fn, ...args) => {
@@ -83,9 +81,7 @@ const Questionnaire = (props) => {
     const {
       questionnaire: { id },
     } = questionnaireData
-    processSubmit(submitQuestionnaire, id).then(() =>
-      router.push('/meta').then(() => window.scrollTo(0, 0)),
-    )
+    processSubmit(submitQuestionnaire, id)
   }
 
   const handleReset = () => {
