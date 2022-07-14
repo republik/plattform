@@ -150,8 +150,6 @@ class SignIn extends Component {
             this.setState(() => ({
               polling: false,
             }))
-            // TODO: is this really needed
-            // router.push('/signin')
           }}
           onTokenTypeChange={(altTokenType) => {
             this.signIn(altTokenType)
