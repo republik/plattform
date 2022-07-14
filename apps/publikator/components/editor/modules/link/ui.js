@@ -8,7 +8,7 @@ import {
   Autocomplete,
   InlineSpinner,
 } from '@project-r/styleguide'
-import LinkIcon from 'react-icons/lib/fa/chain'
+import { FaLink as LinkIcon } from 'react-icons/fa'
 import UIForm from '../../UIForm'
 import createOnFieldChange from '../../utils/createOnFieldChange'
 import RepoSearch from '../../utils/RepoSearch'

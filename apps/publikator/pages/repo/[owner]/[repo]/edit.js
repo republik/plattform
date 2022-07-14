@@ -53,7 +53,7 @@ import {
   Interaction,
   Checkbox,
 } from '@project-r/styleguide'
-import SettingsIcon from 'react-icons/lib/fa/cogs'
+import { FaCogs as SettingsIcon } from 'react-icons/fa'
 
 import createDebug from 'debug'
 import {

@@ -17,8 +17,7 @@ import {
   Checkbox,
 } from '@project-r/styleguide'
 import { Router } from '../../../../lib/routes'
-import CircleIcon from 'react-icons/lib/md/lens'
-import InfoIcon from 'react-icons/lib/md/info-outline'
+import { MdLens as CircleIcon, MdInfoOutline as InfoIcon } from 'react-icons/md'
 import { Controlled as CodeMirror } from 'react-codemirror2'
 import {
   UncommittedChanges,
