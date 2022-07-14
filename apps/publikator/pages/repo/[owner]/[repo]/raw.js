@@ -29,6 +29,7 @@ import {
   getQueryFromRepoId,
   getRepoIdFromQuery,
 } from '../../../../lib/repoIdHelper'
+import { withDefaultSSR } from '../../../../lib/apollo/helpers'
 
 const styles = css({
   background: colors.secondaryBg,
@@ -76,183 +77,191 @@ const hasOpenSections = (md) => {
   return openTags?.length !== closeTags?.length
 }
 
-export default compose(
-  withRouter,
-  withT,
-  withAuthorization(['editor']),
-  withUncommitedChanges({
-    options: ({ router }) => ({
-      variables: {
-        repoId: getRepoIdFromQuery(router.query),
-      },
+export default withDefaultSSR(
+  compose(
+    withRouter,
+    withT,
+    withAuthorization(['editor']),
+    withUncommitedChanges({
+      options: ({ router }) => ({
+        variables: {
+          repoId: getRepoIdFromQuery(router.query),
+        },
+      }),
     }),
-  }),
-)(({ t, router, uncommittedChanges }) => {
-  const repoId = getRepoIdFromQuery(router.query)
-  const { commitId, schema, template, isTemplate } = router.query
-  const [store, setStore] = useState(undefined)
-  const [md, setMd] = useState('')
-  const [meta, setMeta] = useState(undefined)
-  const [foldCode, setFoldCode] = useState(false)
-  const [editMeta, setEditMeta] = useState(false)
-  const [validity, setValidity] = useState(true)
+  )(({ t, router, uncommittedChanges }) => {
+    const repoId = getRepoIdFromQuery(router.query)
+    const { commitId, schema, template, isTemplate } = router.query
+    const [store, setStore] = useState(undefined)
+    const [md, setMd] = useState('')
+    const [meta, setMeta] = useState(undefined)
+    const [foldCode, setFoldCode] = useState(false)
+    const [editMeta, setEditMeta] = useState(false)
+    const [validity, setValidity] = useState(true)
 
-  const goToEditor = (e) => {
-    if (e) e.preventDefault()
-    Router.pushRoute('repo/edit', {
-      ...router.query,
-      ...getQueryFromRepoId(repoId),
-      commitId,
-      ...(commitId === 'new' ? { schema: schema || template, isTemplate } : {}),
-    })
-  }
-
-  const onSave = (e) => {
-    if (e) e.preventDefault()
-    const editedMdast = editMeta
-      ? parse(md)
-      : {
-          ...parse(md),
-          meta,
-        }
-
-    if (!editedMdast.meta.template) {
-      editedMdast.meta.template = meta.template
+    const goToEditor = (e) => {
+      if (e) e.preventDefault()
+      Router.pushRoute('repo/edit', {
+        ...router.query,
+        ...getQueryFromRepoId(repoId),
+        commitId,
+        ...(commitId === 'new'
+          ? { schema: schema || template, isTemplate }
+          : {}),
+      })
     }
-    store.set('editorState', editedMdast)
-    goToEditor()
-  }
 
-  const onEditMeta = () => {
-    if (editMeta) return
-    setEditMeta(true)
-    const contentAndMeta = stringify({
-      ...parse(md),
-      meta,
-    })
-    setMd(contentAndMeta)
-  }
+    const onSave = (e) => {
+      if (e) e.preventDefault()
+      const editedMdast = editMeta
+        ? parse(md)
+        : {
+            ...parse(md),
+            meta,
+          }
 
-  useEffect(() => {
-    const storeKey = [repoId, commitId].join('/')
-    setStore(initLocalStore(storeKey))
-  }, [repoId, commitId])
+      if (!editedMdast.meta.template) {
+        editedMdast.meta.template = meta.template
+      }
+      store.set('editorState', editedMdast)
+      goToEditor()
+    }
 
-  useEffect(() => {
-    if (!store) return
-    setMeta(store.get('editorState').meta)
-    const documentSchema = store.get('editorState').meta?.template || schema
-    setFoldCode(documentSchema !== 'front')
-    const editorMdast = { ...store.get('editorState'), meta: {} }
-    setMd(stringify(editorMdast))
-  }, [store])
+    const onEditMeta = () => {
+      if (editMeta) return
+      setEditMeta(true)
+      const contentAndMeta = stringify({
+        ...parse(md),
+        meta,
+      })
+      setMd(contentAndMeta)
+    }
 
-  useEffect(() => {
-    setValidity(!hasOpenSections(md))
-  }, [md])
+    useEffect(() => {
+      const storeKey = [repoId, commitId].join('/')
+      setStore(initLocalStore(storeKey))
+    }, [repoId, commitId])
 
-  return (
-    <Frame raw>
-      <Frame.Header isTemplate={isTemplate === 'true'}>
-        <Frame.Header.Section align='left'>
-          <Frame.Nav>
-            <RepoNav
-              route='repo/edit'
-              prefix={isTemplate === 'true' ? 'template' : 'document'}
-            />
-          </Frame.Nav>
-        </Frame.Header.Section>
-        <Frame.Header.Section align='right'>
-          <div style={{ padding: '35px 25px' }}>
-            <CircleIcon
-              style={{ color: validity ? colors.containerBg : colors.error }}
-            />
-          </div>
-        </Frame.Header.Section>
-        <Frame.Header.Section align='right'>
-          <div
-            {...css({
-              width: 100,
-              [mediaQueries.mUp]: { width: 180 },
-            })}
-          >
+    useEffect(() => {
+      if (!store) return
+      setMeta(store.get('editorState').meta)
+      const documentSchema = store.get('editorState').meta?.template || schema
+      setFoldCode(documentSchema !== 'front')
+      const editorMdast = { ...store.get('editorState'), meta: {} }
+      setMd(stringify(editorMdast))
+    }, [store])
+
+    useEffect(() => {
+      setValidity(!hasOpenSections(md))
+    }, [md])
+
+    return (
+      <Frame raw>
+        <Frame.Header isTemplate={isTemplate === 'true'}>
+          <Frame.Header.Section align='left'>
+            <Frame.Nav>
+              <RepoNav
+                route='repo/edit'
+                prefix={isTemplate === 'true' ? 'template' : 'document'}
+              />
+            </Frame.Nav>
+          </Frame.Header.Section>
+          <Frame.Header.Section align='right'>
+            <div style={{ padding: '35px 25px' }}>
+              <CircleIcon
+                style={{ color: validity ? colors.containerBg : colors.error }}
+              />
+            </div>
+          </Frame.Header.Section>
+          <Frame.Header.Section align='right'>
             <div
-              style={{ textAlign: 'center', marginTop: 7 }}
-              {...css({ fontSize: 10, [mediaQueries.mUp]: { fontSize: 14 } })}
+              {...css({
+                width: 100,
+                [mediaQueries.mUp]: { width: 180 },
+              })}
             >
-              <A
-                href='apps/publikator/pages/repo/[owner]/[repo]/raw#'
-                onClick={goToEditor}
+              <div
+                style={{ textAlign: 'center', marginTop: 7 }}
+                {...css({ fontSize: 10, [mediaQueries.mUp]: { fontSize: 14 } })}
               >
-                {t('pages/raw/cancel')}
+                <A
+                  href='apps/publikator/pages/repo/[owner]/[repo]/raw#'
+                  onClick={goToEditor}
+                >
+                  {t('pages/raw/cancel')}
+                </A>
+              </div>
+              <Button
+                style={{
+                  margin: '4px 0 0',
+                  minWidth: 0,
+                  height: 40,
+                  fontSize: '16px',
+                }}
+                primary
+                block
+                disabled={!validity}
+                onClick={validity && onSave}
+              >
+                {t('pages/raw/save')}
+              </Button>
+            </div>
+          </Frame.Header.Section>
+          <Frame.Header.Section align='right'>
+            <BranchingNotice
+              asIcon
+              repoId={repoId}
+              currentCommitId={commitId}
+            />
+          </Frame.Header.Section>
+          <Frame.Header.Section align='right'>
+            <UncommittedChanges uncommittedChanges={uncommittedChanges} t={t} />
+          </Frame.Header.Section>
+          <Frame.Header.Section align='right'>
+            <Frame.Me />
+          </Frame.Header.Section>
+        </Frame.Header>
+        <Frame.Body raw>
+          <div {...styles}>
+            <div className='Info'>
+              <A
+                href='https://github.com/orbiting/publikator-frontend/blob/master/docs/raw.md'
+                target='_blank'
+              >
+                <InfoIcon />
               </A>
             </div>
-            <Button
-              style={{
-                margin: '4px 0 0',
-                minWidth: 0,
-                height: 40,
-                fontSize: '16px',
+            <div className='Checkbox' style={{ opacity: editMeta ? 0.5 : 1 }}>
+              <Checkbox checked={editMeta} onChange={onEditMeta}>
+                {t('pages/raw/metadata')}
+              </Checkbox>
+            </div>
+            <CodeMirror
+              value={md}
+              options={{
+                mode: 'markdown',
+                theme: 'neo',
+                lineNumbers: true,
+                lineWrapping: true,
+                smartIndent: false,
+                viewportMargin: Infinity,
+                foldGutter: foldCode,
+                gutters: [
+                  'CodeMirror-linenumbers',
+                  foldCode && 'CodeMirror-foldgutter',
+                ].filter(Boolean),
+                foldOptions: process.browser &&
+                  foldCode && {
+                    rangeFinder: require('codemirror').fold.xml,
+                  },
               }}
-              primary
-              block
-              disabled={!validity}
-              onClick={validity && onSave}
-            >
-              {t('pages/raw/save')}
-            </Button>
+              onBeforeChange={(editor, data, value) => {
+                setMd(value)
+              }}
+            />
           </div>
-        </Frame.Header.Section>
-        <Frame.Header.Section align='right'>
-          <BranchingNotice asIcon repoId={repoId} currentCommitId={commitId} />
-        </Frame.Header.Section>
-        <Frame.Header.Section align='right'>
-          <UncommittedChanges uncommittedChanges={uncommittedChanges} t={t} />
-        </Frame.Header.Section>
-        <Frame.Header.Section align='right'>
-          <Frame.Me />
-        </Frame.Header.Section>
-      </Frame.Header>
-      <Frame.Body raw>
-        <div {...styles}>
-          <div className='Info'>
-            <A
-              href='https://github.com/orbiting/publikator-frontend/blob/master/docs/raw.md'
-              target='_blank'
-            >
-              <InfoIcon />
-            </A>
-          </div>
-          <div className='Checkbox' style={{ opacity: editMeta ? 0.5 : 1 }}>
-            <Checkbox checked={editMeta} onChange={onEditMeta}>
-              {t('pages/raw/metadata')}
-            </Checkbox>
-          </div>
-          <CodeMirror
-            value={md}
-            options={{
-              mode: 'markdown',
-              theme: 'neo',
-              lineNumbers: true,
-              lineWrapping: true,
-              smartIndent: false,
-              viewportMargin: Infinity,
-              foldGutter: foldCode,
-              gutters: [
-                'CodeMirror-linenumbers',
-                foldCode && 'CodeMirror-foldgutter',
-              ].filter(Boolean),
-              foldOptions: process.browser &&
-                foldCode && {
-                  rangeFinder: require('codemirror').fold.xml,
-                },
-            }}
-            onBeforeChange={(editor, data, value) => {
-              setMd(value)
-            }}
-          />
-        </div>
-      </Frame.Body>
-    </Frame>
-  )
-})
+        </Frame.Body>
+      </Frame>
+    )
+  }),
+)

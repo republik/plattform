@@ -14,6 +14,7 @@ import * as fragments from '../../../../lib/graphql/fragments'
 import initLocalStore from '../../../../lib/utils/localStorage'
 import withT from '../../../../lib/withT'
 import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
+import { withDefaultSSR } from '../../../../lib/apollo/helpers'
 
 const getCommitById = gql`
   query getCommitById($repoId: ID!, $commitId: ID!) {
@@ -100,17 +101,19 @@ const PreviewPage = ({ t, router, data = {} }) => {
   )
 }
 
-export default compose(
-  withRouter,
-  withT,
-  graphql(getCommitById, {
-    skip: ({ router }) =>
-      router.query.commitId === 'new' || !router.query.commitId,
-    options: ({ router }) => ({
-      variables: {
-        repoId: getRepoIdFromQuery(router.query),
-        commitId: router.query.commitId,
-      },
+export default withDefaultSSR(
+  compose(
+    withRouter,
+    withT,
+    graphql(getCommitById, {
+      skip: ({ router }) =>
+        router.query.commitId === 'new' || !router.query.commitId,
+      options: ({ router }) => ({
+        variables: {
+          repoId: getRepoIdFromQuery(router.query),
+          commitId: router.query.commitId,
+        },
+      }),
     }),
-  }),
-)(PreviewPage)
+  )(PreviewPage),
+)

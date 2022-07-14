@@ -9,6 +9,7 @@ import Publication from '../../../../components/Publication'
 
 import withT from '../../../../lib/withT'
 import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
+import { withDefaultSSR } from '../../../../lib/apollo/helpers'
 
 const Page = ({ router, t }) => {
   const repoId = getRepoIdFromQuery(router.query)
@@ -32,4 +33,6 @@ const Page = ({ router, t }) => {
   )
 }
 
-export default compose(withAuthorization(['editor']), withT, withRouter)(Page)
+export default withDefaultSSR(
+  compose(withAuthorization(['editor']), withT, withRouter)(Page),
+)

@@ -64,6 +64,7 @@ import {
 import { withEditRepoMeta } from '../../../../components/Repo/EditMetaDate'
 import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 import { gql } from '@apollo/client'
+import { withDefaultSSR } from '../../../../lib/apollo/helpers'
 
 const commitMutation = gql`
   mutation commit(
@@ -220,7 +221,7 @@ export class EditorPage extends Component {
         ...rmWarning(warning)(state),
       }
     }
-    this.unlock = (state) => {
+    this.unlock = () => {
       return {
         readOnly: false,
       }
@@ -286,6 +287,7 @@ export class EditorPage extends Component {
                 action: 'delete',
               }),
             )
+            // eslint-disable-next-line no-empty
           } catch (e) {}
         }
       }
@@ -1052,106 +1054,108 @@ export class EditorPage extends Component {
   }
 }
 
-export default compose(
-  withRouter,
-  withT,
-  withAuthorization(['editor']),
-  withMe,
-  graphql(getCommitById, {
-    skip: ({ router }) =>
-      router.query.commitId === 'new' || !router.query.commitId,
-    options: ({ router }) => ({
-      variables: {
-        repoId: getRepoIdFromQuery(router.query),
-        commitId: router.query.commitId,
-      },
+export default withDefaultSSR(
+  compose(
+    withRouter,
+    withT,
+    withAuthorization(['editor']),
+    withMe,
+    graphql(getCommitById, {
+      skip: ({ router }) =>
+        router.query.commitId === 'new' || !router.query.commitId,
+      options: ({ router }) => ({
+        variables: {
+          repoId: getRepoIdFromQuery(router.query),
+          commitId: router.query.commitId,
+        },
+      }),
     }),
-  }),
-  graphql(getLatestCommit, {
-    skip: ({ router }) =>
-      !!router.query.commitId && router.query.commitId !== 'new',
-    options: ({ router }) => ({
-      // always the latest
-      fetchPolicy: 'network-only',
-      variables: {
-        repoId: getRepoIdFromQuery(router.query),
-      },
-    }),
-    props: ({ data, ownProps: { router, t } }) => {
-      if (router.query.commitId === 'new') {
-        if (data.repo && data.repo.latestCommit) {
-          return {
-            data: {
-              error: t('repo/add/alreadyExists'),
-            },
+    graphql(getLatestCommit, {
+      skip: ({ router }) =>
+        !!router.query.commitId && router.query.commitId !== 'new',
+      options: ({ router }) => ({
+        // always the latest
+        fetchPolicy: 'network-only',
+        variables: {
+          repoId: getRepoIdFromQuery(router.query),
+        },
+      }),
+      props: ({ data, ownProps: { router, t } }) => {
+        if (router.query.commitId === 'new') {
+          if (data.repo && data.repo.latestCommit) {
+            return {
+              data: {
+                error: t('repo/add/alreadyExists'),
+              },
+            }
           }
+          return {}
         }
-        return {}
-      }
-      return {
-        data,
-      }
-    },
-  }),
-  graphql(getTemplateById, {
-    name: 'templateData',
-    skip: ({ router }) => !router.query.templateRepoId,
-    options: ({ router }) => ({
-      variables: {
-        repoId: router.query.templateRepoId,
+        return {
+          data,
+        }
       },
     }),
-  }),
-  withUncommitedChanges({
-    options: ({ router }) => ({
-      variables: {
-        repoId: getRepoIdFromQuery(router.query),
-      },
+    graphql(getTemplateById, {
+      name: 'templateData',
+      skip: ({ router }) => !router.query.templateRepoId,
+      options: ({ router }) => ({
+        variables: {
+          repoId: router.query.templateRepoId,
+        },
+      }),
     }),
-  }),
-  graphql(commitMutation, {
-    props: ({ mutate, ownProps: { router } }) => ({
-      commitMutation: (variables) =>
-        mutate({
-          variables,
-          update: (store, { data: { commit } }) => {
-            const { repoId, parentId } = variables
-            let data
-            if (parentId) {
-              const oldData = store.readQuery({
+    withUncommitedChanges({
+      options: ({ router }) => ({
+        variables: {
+          repoId: getRepoIdFromQuery(router.query),
+        },
+      }),
+    }),
+    graphql(commitMutation, {
+      props: ({ mutate }) => ({
+        commitMutation: (variables) =>
+          mutate({
+            variables,
+            update: (store, { data: { commit } }) => {
+              const { repoId, parentId } = variables
+              let data
+              if (parentId) {
+                const oldData = store.readQuery({
+                  query: getCommitById,
+                  variables: {
+                    repoId,
+                    commitId: parentId,
+                  },
+                })
+                data = {
+                  ...oldData,
+                  repo: {
+                    ...oldData.repo,
+                    commit,
+                  },
+                }
+              } else {
+                data = {
+                  repo: {
+                    ...commit.repo,
+                    commit,
+                  },
+                }
+              }
+              store.writeQuery({
                 query: getCommitById,
                 variables: {
                   repoId,
-                  commitId: parentId,
+                  commitId: commit.id,
                 },
+                data,
               })
-              data = {
-                ...oldData,
-                repo: {
-                  ...oldData.repo,
-                  commit,
-                },
-              }
-            } else {
-              data = {
-                repo: {
-                  ...commit.repo,
-                  commit,
-                },
-              }
-            }
-            store.writeQuery({
-              query: getCommitById,
-              variables: {
-                repoId,
-                commitId: commit.id,
-              },
-              data,
-            })
-          },
-        }),
+            },
+          }),
+      }),
     }),
-  }),
-  withUncommittedChangesMutation,
-  withEditRepoMeta,
-)(EditorPage)
+    withUncommittedChangesMutation,
+    withEditRepoMeta,
+  )(EditorPage),
+)

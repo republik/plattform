@@ -12,6 +12,7 @@ import Calendar from '../components/Calendar'
 import Frame from '../components/Frame'
 import RepoTable from '../components/Repo/Table'
 import RepoAdd from '../components/Repo/Add'
+import { withDefaultSSR } from '../lib/apollo/helpers'
 
 const styles = {
   defaultContainer: css({
@@ -86,4 +87,6 @@ const Index = ({
   </Frame>
 )
 
-export default compose(withRouter, withAuthorization(['editor']))(Index)
+export default withDefaultSSR(
+  compose(withRouter, withAuthorization(['editor']))(Index),
+)

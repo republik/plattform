@@ -26,6 +26,7 @@ import UncommittedChanges from '../../../../components/VersionControl/Uncommitte
 import withT from '../../../../lib/withT'
 import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 import { gql } from '@apollo/client'
+import { withDefaultSSR } from '../../../../lib/apollo/helpers'
 
 export const COMMIT_LIMIT = 40
 export const getRepoHistory = gql`
@@ -176,7 +177,7 @@ class EditorPage extends Component {
   }
 
   render() {
-    const { router, commits, hasMore, fetchMore, t } = this.props
+    const { router, commits, hasMore, fetchMore } = this.props
     const { loading, error, repo } = this.props.data
     const repoId = getRepoIdFromQuery(router.query)
 
@@ -251,60 +252,62 @@ class EditorPage extends Component {
   }
 }
 
-export default compose(
-  withRouter,
-  withT,
-  withAuthorization(['editor']),
-  graphql(getRepoHistory, {
-    options: ({ router }) => {
-      return {
-        variables: {
-          repoId: getRepoIdFromQuery(router.query),
-          first: COMMIT_LIMIT,
-        },
-        notifyOnNetworkStatusChange: true,
-        fetchPolicy: 'cache-and-network',
-      }
-    },
-    props: ({ data, ownProps }) => {
-      return {
-        data,
-        commits:
-          (data.repo && data.repo.commits && data.repo.commits.nodes) || [],
-        hasMore:
-          data.repo &&
-          data.repo.commits &&
-          data.repo.commits.pageInfo.hasNextPage,
-        fetchMore: () => {
-          return data.fetchMore({
-            variables: {
-              repoId: data.repo.id,
-              first: COMMIT_LIMIT,
-              after: data.repo.commits.pageInfo.endCursor,
-            },
-            updateQuery: (previousResult, { fetchMoreResult }) => {
-              return {
-                repo: {
-                  ...previousResult.repo,
-                  ...fetchMoreResult.repo,
-                  commits: {
-                    ...previousResult.repo.commits,
-                    ...fetchMoreResult.repo.commits,
-                    nodes: [
-                      ...previousResult.repo.commits.nodes,
-                      ...fetchMoreResult.repo.commits.nodes,
-                    ].filter(
-                      ({ id }, i, all) =>
-                        // deduplicate by id
-                        i === all.findIndex((repo) => repo.id === id),
-                    ),
+export default withDefaultSSR(
+  compose(
+    withRouter,
+    withT,
+    withAuthorization(['editor']),
+    graphql(getRepoHistory, {
+      options: ({ router }) => {
+        return {
+          variables: {
+            repoId: getRepoIdFromQuery(router.query),
+            first: COMMIT_LIMIT,
+          },
+          notifyOnNetworkStatusChange: true,
+          fetchPolicy: 'cache-and-network',
+        }
+      },
+      props: ({ data }) => {
+        return {
+          data,
+          commits:
+            (data.repo && data.repo.commits && data.repo.commits.nodes) || [],
+          hasMore:
+            data.repo &&
+            data.repo.commits &&
+            data.repo.commits.pageInfo.hasNextPage,
+          fetchMore: () => {
+            return data.fetchMore({
+              variables: {
+                repoId: data.repo.id,
+                first: COMMIT_LIMIT,
+                after: data.repo.commits.pageInfo.endCursor,
+              },
+              updateQuery: (previousResult, { fetchMoreResult }) => {
+                return {
+                  repo: {
+                    ...previousResult.repo,
+                    ...fetchMoreResult.repo,
+                    commits: {
+                      ...previousResult.repo.commits,
+                      ...fetchMoreResult.repo.commits,
+                      nodes: [
+                        ...previousResult.repo.commits.nodes,
+                        ...fetchMoreResult.repo.commits.nodes,
+                      ].filter(
+                        ({ id }, i, all) =>
+                          // deduplicate by id
+                          i === all.findIndex((repo) => repo.id === id),
+                      ),
+                    },
                   },
-                },
-              }
-            },
-          })
-        },
-      }
-    },
-  }),
-)(EditorPage)
+                }
+              },
+            })
+          },
+        }
+      },
+    }),
+  )(EditorPage),
+)
