@@ -402,6 +402,7 @@ type QuestionTypeChoiceOption {
   label: String!
   value: ID!
   category: String
+  requireAddress: Boolean
 }
 type QuestionTypeChoiceResult {
   option: QuestionTypeChoiceOption!
