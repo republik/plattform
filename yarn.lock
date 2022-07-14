@@ -3151,6 +3151,13 @@
   dependencies:
     webpack-bundle-analyzer "4.3.0"
 
+"@next/bundle-analyzer@^12.2.0":
+  version "12.2.2"
+  resolved "https://registry.yarnpkg.com/@next/bundle-analyzer/-/bundle-analyzer-12.2.2.tgz#c2da8bf44286cdf9cea91f8a4590a8172c6c5d43"
+  integrity sha512-ou8EIVzUTu9FACWbiCjwnpApix2kA5Qms7nuUELn2/FM4Ltx7ts+w5DDSQslrorJri1kFTp6nRD0Hy7FTERYcw==
+  dependencies:
+    webpack-bundle-analyzer "4.3.0"
+
 "@next/env@12.2.2":
   version "12.2.2"
   resolved "https://registry.yarnpkg.com/@next/env/-/env-12.2.2.tgz#cc1a0a445bd254499e30f632968c03192455f4cc"
@@ -3161,7 +3168,7 @@
   resolved "https://registry.yarnpkg.com/@next/env/-/env-9.5.5.tgz#db993649ec6e619e34a36de90dc2baa52fc5280f"
   integrity sha512-N9wdjU6XoqLqNQWtrGiWtp1SUuJsYK1cNrZ24A6YD+4w5CNV5SkZX6aewKZCCLP5Y8UNfTij2FkJiSYUfBjX8g==
 
-"@next/eslint-plugin-next@^12.2.2":
+"@next/eslint-plugin-next@^12.2.0", "@next/eslint-plugin-next@^12.2.2":
   version "12.2.2"
   resolved "https://registry.yarnpkg.com/@next/eslint-plugin-next/-/eslint-plugin-next-12.2.2.tgz#b4a22c06b6454068b54cc44502168d90fbb29a6d"
   integrity sha512-XOi0WzJhGH3Lk51SkSu9eZxF+IY1ZZhWcJTIGBycAbWU877IQa6+6KxMATWCOs7c+bmp6Sd8KywXJaDRxzu0JA==

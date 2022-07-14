@@ -16,6 +16,7 @@
     "lint": "eslint --fix .",
     "translations-raw": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1qPubCKz2YzbcFkRfF0MrgRqD0KLsgRPxoZfG5G3tHOA --title=live --pretty --out lib/translations.json",
     "translations": "npm run translations-raw && git add -p lib/translations.json && git checkout -- lib/translations.json",
+    "analyze": "ANALYZE=true next build",
     "sg:link": "./scripts/sg_link.sh",
     "sg:unlink": "./scripts/sg_unlink.sh"
   },
@@ -30,14 +31,15 @@
   },
   "homepage": "https://github.com/orbiting/haku-frontend#readme",
   "devDependencies": {
-    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.3",
+    "@next/eslint-plugin-next": "^12.2.0",
+    "@republik/eslint-config-frontend": "*",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@types/jest": "^27.5.0",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.3",
     "cross-env": "^5.2.1",
     "diff": "^3.5.0",
     "enzyme": "^3.11.0",
-    "@republik/eslint-config-frontend": "*",
     "jest": "^27.5.1",
     "gsheets": "^3.0.0",
     "nodemon": "^2.0.4",
@@ -46,6 +48,7 @@
   "dependencies": {
     "@apollo/client": "^3.5.8",
     "@orbiting/remark-preset": "^1.2.4",
+    "@next/bundle-analyzer": "^12.2.0",
     "@project-r/styleguide": "*",
     "@project-r/template-newsletter": "^1.5.0",
     "@republik/nextjs-apollo-client": "*",
