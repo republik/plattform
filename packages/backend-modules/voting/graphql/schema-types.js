@@ -257,7 +257,7 @@ type Questionnaire {
     search: String
     first: Int
     filters: SubmissionsFilterInput
-    orderBy: SubmissionsOrderBy
+    sort: SubmissionsSortInput
     before: String
     after: String
   ): SubmissionConnection
@@ -267,10 +267,14 @@ input SubmissionsFilterInput {
   id: ID
 }
 
-enum SubmissionsOrderBy {
-  NEWEST
-  OLDEST
-  RANDOM
+input SubmissionsSortInput {
+  by: SubmissionsSortBy!
+  direction: OrderDirection
+}
+
+enum SubmissionsSortBy {
+  createdAt
+  randmon
 }
 
 type SubmissionConnection {
