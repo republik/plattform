@@ -237,6 +237,9 @@ type Questionnaire {
   # allows to resubmit already submitted answers ("edit")
   resubmitAnswers: Boolean!
 
+  # allows to revoke a questionnaire submission
+  revokeSubmissions: Boolean!
+
   # allows anonymous submissions
   # (see submitAnswerUnattributed mutation)
   unattributedAnswers: Boolean!
