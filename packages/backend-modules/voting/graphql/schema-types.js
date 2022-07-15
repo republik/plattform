@@ -254,10 +254,23 @@ type Questionnaire {
   turnout: QuestionnaireTurnout
 
   submissions(
+    search: String
     first: Int
+    filters: SubmissionsFilterInput
+    orderBy: SubmissionsOrderBy
     before: String
     after: String
   ): SubmissionConnection
+}
+
+input SubmissionsFilterInput {
+  id: ID
+}
+
+enum SubmissionsOrderBy {
+  NEWEST
+  OLDEST
+  RANDOM
 }
 
 type SubmissionConnection {
