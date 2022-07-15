@@ -52,6 +52,7 @@ const getQuestionnaire = gql`
       userHasSubmitted
       userSubmitDate
       resubmitAnswers
+      revokeSubmissions
       questions {
         ... on QuestionInterface {
           id

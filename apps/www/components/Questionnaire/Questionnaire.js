@@ -126,7 +126,12 @@ const Questionnaire = (props) => {
 
         // handle already submitted
         const {
-          questionnaire: { userHasSubmitted, questions, resubmitAnswers },
+          questionnaire: {
+            userHasSubmitted,
+            questions,
+            resubmitAnswers,
+            revokeSubmissions,
+          },
         } = questionnaireData
         const error = state.error || props.error
         const updating = state.updating || props.updating || props.submitting
@@ -147,11 +152,14 @@ const Questionnaire = (props) => {
                   setIsResubmitAnswers(true)
                 })
               }
-              onRevoke={() => {
-                processSubmit(revokeQuestionnaire, id).then(() =>
-                  window.scrollTo(0, 0),
-                )
-              }}
+              onRevoke={
+                revokeSubmissions &&
+                (() => {
+                  processSubmit(revokeQuestionnaire, id).then(() =>
+                    window.scrollTo(0, 0),
+                  )
+                })
+              }
             />
           )
         }

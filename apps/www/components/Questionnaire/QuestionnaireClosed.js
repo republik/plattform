@@ -36,32 +36,32 @@ const QuestionnaireClosed = ({
         <P>
           {submitted ? t('questionnaire/thankyou') : t('questionnaire/ended')}
         </P>
-        {submitted && (
+        {submitted && (onResubmit || onRevoke) && (
           <>
             <P>
               {onResubmit && (
-                <>
-                  <A
-                    href='#'
-                    onClick={(e) => {
-                      e.preventDefault()
-                      onResubmit()
-                    }}
-                  >
-                    {t('questionnaire/thankyou/resubmit')}
-                  </A>
-                  {' – '}
-                </>
+                <A
+                  href='#'
+                  onClick={(e) => {
+                    e.preventDefault()
+                    onResubmit()
+                  }}
+                >
+                  {t('questionnaire/thankyou/resubmit')}
+                </A>
               )}
-              <A
-                onClick={(e) => {
-                  e.preventDefault()
-                  onRevoke()
-                }}
-                href='#'
-              >
-                {t('questionnaire/thankyou/revoke')}
-              </A>
+              {onResubmit && onRevoke && ' – '}
+              {onRevoke && (
+                <A
+                  onClick={(e) => {
+                    e.preventDefault()
+                    onRevoke()
+                  }}
+                  href='#'
+                >
+                  {t('questionnaire/thankyou/revoke')}
+                </A>
+              )}
             </P>
           </>
         )}
