@@ -7,12 +7,14 @@ export type JWTPayload = jose.JWTPayload & {
   roles?: string[]
 }
 
-export function getSessionCookieValue(req: NextRequest) {
-  return req.cookies[COOKIE_NAME]
+export function getSessionCookieValue(req: NextRequest): string {
+  const { value } = req.cookies.getWithOptions(COOKIE_NAME)
+  return value
 }
 
 export function getJWTCookieValue(req: NextRequest) {
-  return req.cookies[JWT_COOKIE_NAME]
+  const { value } = req.cookies.getWithOptions(JWT_COOKIE_NAME)
+  return value
 }
 
 /**
@@ -20,7 +22,7 @@ export function getJWTCookieValue(req: NextRequest) {
  */
 async function loadPublicKey() {
   const rawPublicKey = process.env.JWT_PUBLIC_KEY
-    ? Buffer.from(process.env.JWT_PUBLIC_KEY, 'base64').toString()
+    ? atob(process.env.JWT_PUBLIC_KEY)
     : null
   const publicKey = await jose.importSPKI(rawPublicKey, 'ES256')
   if (!publicKey) {

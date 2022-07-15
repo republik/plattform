@@ -10,7 +10,6 @@ const { NODE_ENV, CDN_FRONTEND_BASE_URL } = process.env
 
 module.exports = withTM(
   withBundleAnalyzer({
-    webpack5: true,
     webpack: (config) => {
       config.externals = config.externals || {}
       config.externals['lru-cache'] = 'lru-cache'
@@ -34,11 +33,6 @@ module.exports = withTM(
     async rewrites() {
       return {
         beforeFiles: [
-          // /front is only accessible via _middleware rewrite
-          {
-            source: '/front',
-            destination: '/404',
-          },
           // _ssr routes are only accessible via rewrites
           {
             source: '/_ssr/:path*',
@@ -50,12 +44,6 @@ module.exports = withTM(
           {
             source: '/~:slug',
             destination: '/~/:slug',
-          },
-          // Avoid SSG for extract urls used for image rendering
-          {
-            source: '/:path*',
-            destination: '/_ssr/:path*',
-            has: [{ type: 'query', key: 'extract' }],
           },
           // Rewrite for crawlers when a comment is focused inside a debate on the article-site
           {
