@@ -89,7 +89,7 @@ const WebApp = ({ Component, pageProps }: AppProps<PagePropsWithApollo>) => {
 
 export default withApollo(WebApp)
 
-const RoutingDebug = ({ children }: { children: ReactNode }) => {
+const RoutingDebug = () => {
   const router = useRouter()
 
   console.log('DBG: router', router)
