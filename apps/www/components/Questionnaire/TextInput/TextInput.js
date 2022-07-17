@@ -8,6 +8,7 @@ import {
 } from '@project-r/styleguide'
 import AutosizeInput from 'react-textarea-autosize'
 import { styles as fieldSetStyles } from '../../FieldSet'
+import { useTranslation } from '../../../lib/withT'
 
 const styles = {
   textArea: css({
@@ -26,13 +27,12 @@ const styles = {
     alignItems: 'center',
     display: 'flex',
     justifyContent: 'flex-end',
-    marginBottom: '-10px',
-    padding: '0 12px',
+    marginTop: '-10px',
   }),
   remaining: css({
     ...fontStyles.sansSerifRegular14,
+    fontFeatureSettings: '"tnum" 1, "kern" 1',
     lineHeight: '20px',
-    padding: '0 5px',
   }),
 }
 
@@ -41,14 +41,16 @@ const TextInput = (props) => {
   const count = text.length
   const progress = (count / maxLength) * 100
   const remaining = maxLength - count
-  const progressColorName = progress > 100 ? 'error' : 'text'
+  const progressColorName = progress > 100 ? 'error' : 'textSoft'
   const [colorScheme] = useColorContext()
+  const { t } = useTranslation()
 
-  const { placeholder, onChange } = props
+  const { label, onChange } = props
+  const isEmpty = !count
   return (
     <div>
       <Field
-        label={placeholder}
+        label={label}
         renderInput={({ ref, ...inputProps }) => (
           <AutosizeInput
             {...inputProps}
@@ -61,20 +63,25 @@ const TextInput = (props) => {
       />
       {maxLength && (
         <div {...styles.maxLength}>
-          {remaining < 21 && (
-            <span
-              {...styles.remaining}
-              {...colorScheme.set('color', progressColorName)}
-            >
-              {remaining}
+          <span
+            {...styles.remaining}
+            {...colorScheme.set('color', progressColorName)}
+          >
+            {t(`questionnaire/text/${isEmpty ? 'max' : 'remaining'}`, {
+              remaining,
+              maxLength,
+            })}
+          </span>
+          {!isEmpty && (
+            <span style={{ marginLeft: 5 }}>
+              <ProgressCircle
+                strokeColorName={progressColorName}
+                size={18}
+                strokeWidth={2}
+                progress={Math.min(progress, 100)}
+              />
             </span>
           )}
-          <ProgressCircle
-            strokeColorName={progressColorName}
-            size={18}
-            strokeWidth={2}
-            progress={Math.min(progress, 100)}
-          />
         </div>
       )}
     </div>
@@ -82,7 +89,7 @@ const TextInput = (props) => {
 }
 
 TextInput.propTypes = {
-  placeholder: PropTypes.string,
+  label: PropTypes.string,
   text: PropTypes.string,
   maxLength: PropTypes.number,
   onChange: PropTypes.func.isRequired,
@@ -90,7 +97,7 @@ TextInput.propTypes = {
 }
 
 TextInput.defaultProps = {
-  placeholder: '',
+  label: '',
   text: '',
 }
 

@@ -4270,7 +4270,15 @@
     },
     {
       "key": "questionnaire/text/label",
-      "value": "max. {maxLength} Zeichen"
+      "value": "Ihre Antwort"
+    },
+    {
+      "key": "questionnaire/text/max",
+      "value": "{maxLength} Zeichen"
+    },
+    {
+      "key": "questionnaire/text/remaining",
+      "value": "{remaining} Zeichen übrig"
     },
     {
       "key": "questionnaire/choice/helpMultiple",

@@ -56,7 +56,7 @@ class TextQuestion extends Component {
         {text && <H2 {...questionStyles.label}>{text}</H2>}
         {explanation && <P {...questionStyles.help}>{explanation}</P>}
         <TextInput
-          placeholder={t('questionnaire/text/label', { maxLength })}
+          label={t('questionnaire/text/label')}
           text={value || ''}
           onChange={this.handleChange}
           maxLength={maxLength}
