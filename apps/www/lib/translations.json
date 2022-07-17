@@ -4237,8 +4237,12 @@
       "value": "Abschicken"
     },
     {
-      "key": "questionnaire/cancel",
-      "value": "Abbrechen"
+      "key": "questionnaire/reset",
+      "value": "Antworten zurücksetzen"
+    },
+    {
+      "key": "questionnaire/reset/confirm",
+      "value": "Sind Sie sicher dass Sie Ihre Antworten zurücksetzen wollen?"
     },
     {
       "key": "questionnaire/turnout",

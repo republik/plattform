@@ -384,7 +384,6 @@ class QuestionnaireCrowdPage extends Component {
               onReset={() => this.reset()}
               updating={updating}
               submitting={submitting}
-              leftAlign
             />
           </>
         )}
