@@ -4282,7 +4282,7 @@
     },
     {
       "key": "questionnaire/text/max",
-      "value": "{maxLength} Zeichen"
+      "value": "max. {maxLength} Zeichen"
     },
     {
       "key": "questionnaire/text/remaining",
