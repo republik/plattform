@@ -4329,6 +4329,22 @@
       "value": "{count} Teilnehmende"
     },
     {
+      "key": "questionnaire/submissions/showAnswers/other",
+      "value": "{count} weitere Antworten lesen"
+    },
+    {
+      "key": "questionnaire/submissions/showAnswers/1",
+      "value": "Einen weiteren Antwort lesen"
+    },
+    {
+      "key": "questionnaire/submissions/loadMore/other",
+      "value": "Weitere {count} Fragebögen laden"
+    },
+    {
+      "key": "questionnaire/submissions/loadMore/1",
+      "value": "Einen weiteren Fragebogen laden"
+    },
+    {
       "key": "pages/meta/questionnaire/unauthorized",
       "value": "Vielen Dank für Ihr Interesse an unserer Umfrage. Unsere Mitglieder und Abonnentinnen können daran teilnehmen – {buyLink}"
     },
