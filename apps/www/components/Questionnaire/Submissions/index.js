@@ -1,17 +1,20 @@
 import { gql, useQuery } from '@apollo/client'
 import {
   Editorial,
-  inQuotes,
   Interaction,
   Loader,
   CommentHeaderProfile,
   useColorContext,
+  SearchIcon,
+  Field,
+  useDebounce,
 } from '@project-r/styleguide'
-import { ascending } from 'd3-array'
+import { useRouter } from 'next/router'
 import { useTranslation } from '../../../lib/withT'
+import AnswerText from './AnswerText'
 
 const mainQuery = gql`
-  query getQuestionnaireSubmissions($slug: String!) {
+  query getQuestionnaireSubmissions($slug: String!, $search: String) {
     questionnaire(slug: $slug) {
       id
       beginDate
@@ -37,6 +40,9 @@ const mainQuery = gql`
         }
       }
       submissions {
+        totalCount
+      }
+      results: submissions(search: $search) {
         totalCount
         nodes {
           id
@@ -69,97 +75,104 @@ const mainQuery = gql`
   }
 `
 
-const AnswerText = ({ value, question }) => {
-  if (question.options) {
-    const selectedOptions = question.options.filter((option) =>
-      value.includes(option.value),
-    )
-    return selectedOptions.map((option) => option.label).join(', ')
-  }
-  if (question.ticks) {
-    const closest = question.ticks
-      .map((tick) => ({
-        distance: Math.abs(tick.value - value),
-        tick,
-      }))
-      .sort((a, b) => ascending(a.distance, b.distance))[0]
-    return (
-      <>
-        {closest.distance !== 0 && 'Am ehesten '}
-        {inQuotes(closest.tick.label || closest.tick.value)}
-      </>
-    )
-  }
-
-  return value
-}
+const getTotalCount = (data) => data?.questionnaire?.submissions?.totalCount
 
 const Submissions = ({ slug }) => {
-  const { loading, error, data } = useQuery(mainQuery, {
+  const router = useRouter()
+  const searchQuery = router.query.q || ''
+  const [search] = useDebounce(searchQuery, 100)
+  const { loading, error, data, previousData } = useQuery(mainQuery, {
     variables: {
       slug,
+      search,
     },
   })
   const { t } = useTranslation()
   const [colorScheme] = useColorContext()
 
   return (
-    <Loader
-      loading={loading}
-      error={error}
-      render={() => {
-        const {
-          questionnaire,
-          questionnaire: { submissions, questions },
-        } = data
-        return (
-          <>
-            <Interaction.P>{submissions.totalCount} Teilnehmende</Interaction.P>
-            {submissions.nodes.map(({ id, displayAuthor, answers }) => {
-              return (
-                <div
-                  key={id}
-                  style={{
-                    margin: '30px 0 60px',
-                    padding: 10,
-                    borderWidth: 1,
-                    borderStyle: 'solid',
-                  }}
-                  {...colorScheme.set('borderColor', 'divider')}
-                >
-                  <CommentHeaderProfile
-                    t={t}
-                    displayAuthor={{
-                      name: displayAuthor.name,
-                      profilePicture: displayAuthor.profilePicture,
-                      credential: {
-                        description: `${answers.totalCount} Antworten`,
-                      },
+    <>
+      <Interaction.H2>
+        {t.pluralize('questionnaire/submissions/count', {
+          count: getTotalCount(data) || getTotalCount(previousData) || '',
+        })}
+      </Interaction.H2>
+      <Field
+        label='Suche'
+        value={searchQuery}
+        onChange={(_, value) => {
+          router[searchQuery ? 'replace' : 'push'](
+            `${router.asPath.split('?')[0]}${
+              value ? `?q=${encodeURIComponent(value)}` : ''
+            }`,
+            undefined,
+            { shallow: true },
+          )
+        }}
+        icon={<SearchIcon size={30} />}
+      />
+      <Loader
+        loading={loading}
+        error={error}
+        render={() => {
+          const {
+            questionnaire: { results, questions },
+          } = data
+          return (
+            <>
+              {results.totalCount !== getTotalCount(data) && (
+                <Interaction.P>
+                  {t.pluralize('search/preloaded/results', {
+                    count: results.totalCount,
+                  })}
+                </Interaction.P>
+              )}
+              {results.nodes.map(({ id, displayAuthor, answers }) => {
+                return (
+                  <div
+                    key={id}
+                    style={{
+                      margin: '30px 0 60px',
+                      padding: 10,
+                      borderWidth: 1,
+                      borderStyle: 'solid',
                     }}
-                  />
-                  {answers.nodes.map(
-                    ({ id, question: { id: qid }, payload }) => {
-                      const question = questions.find((q) => q.id === qid)
+                    {...colorScheme.set('borderColor', 'divider')}
+                  >
+                    <CommentHeaderProfile
+                      t={t}
+                      displayAuthor={{
+                        name: displayAuthor.name,
+                        profilePicture: displayAuthor.profilePicture,
+                        credential: {
+                          description: `${answers.totalCount} Antworten`,
+                        },
+                      }}
+                    />
+                    {answers.nodes.map(
+                      ({ id, question: { id: qid }, payload }) => {
+                        const question = questions.find((q) => q.id === qid)
 
-                      return (
-                        <Editorial.P key={id}>
-                          <strong>{question.text}</strong>
-                          <br />
-                          <AnswerText
-                            value={payload.value}
-                            question={question}
-                          />
-                        </Editorial.P>
-                      )
-                    },
-                  )}
-                </div>
-              )
-            })}
-          </>
-        )
-      }}
-    />
+                        return (
+                          <Editorial.P key={id}>
+                            <strong>{question.text}</strong>
+                            <br />
+                            <AnswerText
+                              value={payload.value}
+                              question={question}
+                            />
+                          </Editorial.P>
+                        )
+                      },
+                    )}
+                  </div>
+                )
+              })}
+            </>
+          )
+        }}
+      />
+    </>
   )
 }
 

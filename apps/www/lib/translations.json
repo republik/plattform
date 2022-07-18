@@ -4321,6 +4321,14 @@
       "value": "Vielen Dank für Ihre Zeit. Hier gehts zurück zum Magazin."
     },
     {
+      "key": "questionnaire/submissions/count/1",
+      "value": "Eine Person hat bereits geantwortet"
+    },
+    {
+      "key": "questionnaire/submissions/count/other",
+      "value": "{count} Teilnehmende"
+    },
+    {
       "key": "pages/meta/questionnaire/unauthorized",
       "value": "Vielen Dank für Ihr Interesse an unserer Umfrage. Unsere Mitglieder und Abonnentinnen können daran teilnehmen – {buyLink}"
     },
