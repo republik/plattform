@@ -132,11 +132,15 @@ const Questionnaire = (props) => {
             questions,
             resubmitAnswers,
             revokeSubmissions,
+            userIsEligible,
           },
         } = questionnaireData
         const error = state.error || props.error
         const updating = state.updating || props.updating || props.submitting
 
+        if (!userIsEligible) {
+          return null
+        }
         if (!updating && userHasSubmitted && submittedMessage) {
           return submittedMessage
         }
