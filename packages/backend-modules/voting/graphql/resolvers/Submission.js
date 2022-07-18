@@ -15,9 +15,6 @@ module.exports = {
   questionnaire: async (submission, args, { pgdb }) => {
     return findById(submission.questionnaireId, pgdb)
   },
-  user: async (submission, args, { loaders }) => {
-    return loaders.User.byId.load(submission.userId)
-  },
   displayAuthor: async (submission, args, context) => {
     const { userId, questionnaireId } = submission
     const { loaders, t } = context

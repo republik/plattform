@@ -281,7 +281,6 @@ type SubmissionConnection {
 type Submission {
   id: ID!
   questionnaire: Questionnaire!
-  user: User
   displayAuthor: DisplayUser!
   createdAt: DateTime!
   updatedAt: DateTime!
