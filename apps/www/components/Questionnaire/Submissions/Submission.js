@@ -7,6 +7,7 @@ import {
   plainLinkRule,
   RelativeTime,
   useColorContext,
+  useHeaderHeight,
 } from '@project-r/styleguide'
 import { useState } from 'react'
 import { max } from 'd3-array'
@@ -19,10 +20,13 @@ import Link from 'next/link'
 
 const styles = {
   profileRoot: css({
-    display: 'inline-flex',
+    position: 'sticky',
+    display: 'flex',
     alignItems: 'center',
     flexGrow: 1,
     overflowX: 'clip',
+    padding: '5px 0',
+    margin: '-5px 0',
   }),
   profilePicture: css({
     display: 'block',
@@ -61,6 +65,7 @@ const Submission = ({
       ? matchedIndexes
       : [0, 1].slice(0, answers.nodes.length), // handle 0 or 1 answer
   )
+  const [headerHeight] = useHeaderHeight()
   const hiddenAnswersCount =
     visibleIndexes === true ? 0 : answers.nodes.length - visibleIndexes.length
   let lastShownIndex
@@ -69,7 +74,11 @@ const Submission = ({
 
   return (
     <div>
-      <div {...styles.profileRoot}>
+      <div
+        {...styles.profileRoot}
+        style={{ top: headerHeight }}
+        {...colorScheme.set('backgroundColor', 'default')}
+      >
         {displayAuthor.profilePicture && (
           <img
             {...styles.profilePicture}
