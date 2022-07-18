@@ -453,6 +453,9 @@ type Answer {
   drafted: Boolean
 
   question: QuestionInterface!
+
+  # indicates whether this answer matched a search query
+  hasMatched: Boolean
 }
 
 input VideoInput {
