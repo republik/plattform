@@ -317,6 +317,7 @@ interface QuestionInterface {
   id: ID!
   questionnaire: Questionnaire!
   order: Int!
+  private: Boolean!
   text: String!
   explanation: String
   metadata: JSON
@@ -334,6 +335,7 @@ type QuestionTypeText implements QuestionInterface {
   id: ID!
   questionnaire: Questionnaire!
   order: Int!
+  private: Boolean!
   text: String!
   explanation: String
   metadata: JSON
@@ -347,6 +349,7 @@ type QuestionTypeDocument implements QuestionInterface {
   id: ID!
   questionnaire: Questionnaire!
   order: Int!
+  private: Boolean!
   text: String!
   explanation: String
   metadata: JSON
@@ -371,6 +374,7 @@ type QuestionTypeRange implements QuestionInterface {
   id: ID!
   questionnaire: Questionnaire!
   order: Int!
+  private: Boolean!
   text: String!
   explanation: String
   metadata: JSON
@@ -403,6 +407,7 @@ type QuestionTypeChoice implements QuestionInterface {
   id: ID!
   questionnaire: Questionnaire!
   order: Int!
+  private: Boolean!
   text: String!
   explanation: String
   metadata: JSON
