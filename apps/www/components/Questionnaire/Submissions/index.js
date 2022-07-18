@@ -144,7 +144,7 @@ const Submissions = ({ slug }) => {
 
   return (
     <>
-      <Interaction.H2>
+      <Interaction.H2 style={{ marginBottom: 10 }}>
         {t.pluralize('questionnaire/submissions/count', {
           count: getTotalCount(data) || getTotalCount(previousData) || '',
         })}
