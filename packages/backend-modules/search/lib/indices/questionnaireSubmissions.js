@@ -62,15 +62,12 @@ module.exports = {
             },
             user: {
               properties: {
-                text: {
+                name: {
                   type: 'text',
                   analyzer: 'german',
                 },
                 hasPublicProfile: {
                   type: 'boolean',
-                },
-                name: {
-                  type: 'text',
                 },
               },
             },
