@@ -116,7 +116,6 @@ export {
   Lead,
   P,
   Label,
-  Quote,
   Interaction,
   Meta,
   Editorial,
