@@ -58,6 +58,14 @@ const cascadeUpdateConfig = {
       where: 'id', // where repos.id === <via>
     },
   ],
+  questions: [
+    {
+      source: 'public.questions',
+      target: 'public.answers', // update all answers
+      via: 'id', // via questions.id
+      where: 'questionId', // where answers.questionId === <via>
+    },
+  ],
 }
 
 const updateCascade = async function ({ table, rows }, { pgdb, elastic }) {
