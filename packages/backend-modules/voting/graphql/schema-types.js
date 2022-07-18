@@ -274,7 +274,7 @@ input SubmissionsSortInput {
 
 enum SubmissionsSortBy {
   createdAt
-  randmon
+  random
 }
 
 type SubmissionConnection {
