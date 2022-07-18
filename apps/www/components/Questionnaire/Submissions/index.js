@@ -8,14 +8,12 @@ import {
   useColorContext,
 } from '@project-r/styleguide'
 import { ascending } from 'd3-array'
-import { useRouter } from 'next/router'
 import { useTranslation } from '../../../lib/withT'
 
-export const mainQuery = gql`
+const mainQuery = gql`
   query getQuestionnaireSubmissions($slug: String!) {
     questionnaire(slug: $slug) {
       id
-      description
       beginDate
       endDate
       userHasSubmitted
@@ -96,10 +94,7 @@ const AnswerText = ({ value, question }) => {
   return value
 }
 
-const Answers = () => {
-  const {
-    query: { slug },
-  } = useRouter()
+const Submissions = ({ slug }) => {
   const { loading, error, data } = useQuery(mainQuery, {
     variables: {
       slug,
@@ -119,7 +114,6 @@ const Answers = () => {
         } = data
         return (
           <>
-            <Interaction.H2>{questionnaire.description}</Interaction.H2>
             <Interaction.P>{submissions.totalCount} Teilnehmende</Interaction.P>
             {submissions.nodes.map(({ id, displayAuthor, answers }) => {
               return (
@@ -169,4 +163,4 @@ const Answers = () => {
   )
 }
 
-export default Answers
+export default Submissions
