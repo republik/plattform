@@ -44,7 +44,7 @@ module.exports = {
       slug,
     }
   },
-  answers: async (submission, args, { loaders, pgdb }) => {
+  answers: async (submission, args, { loaders }) => {
     const { questionnaireId, userId, _matchedAnswerIds } = submission
 
     const answers = await loaders.Answer.byKeyObj.load({

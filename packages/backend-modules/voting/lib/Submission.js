@@ -72,6 +72,7 @@ const createSubmissionsQuery = (
     size,
     userId,
     questionnaireId,
+    isMember,
     search,
     filters = {},
     sort = {},
@@ -82,15 +83,39 @@ const createSubmissionsQuery = (
   const mustUserId = userId && { term: { userId } }
   const mustQuestionnaireId = questionnaireId && { term: { questionnaireId } }
   const mustSearch = search && {
-    simple_query_string: {
-      query: search,
-      fields: [
-        'resolved.answers.payload.text',
-        'resolved.answers.resolved.question.text',
-        'resolved.answers.resolved.value.Text',
-        'resolved.answers.resolved.value.Choice',
+    bool: {
+      should: [
+        {
+          simple_query_string: {
+            query: search,
+            fields: [
+              'resolved.answers.payload.text',
+              'resolved.answers.resolved.question.text',
+              'resolved.answers.resolved.value.Text',
+              'resolved.answers.resolved.value.Choice',
+            ],
+            default_operator: 'AND',
+          },
+        },
+        {
+          bool: {
+            must: [
+              !isMember && {
+                term: {
+                  'resolved.user.hasPublicProfile': true,
+                },
+              },
+              {
+                simple_query_string: {
+                  query: search,
+                  fields: ['resolved.user.name'],
+                  default_operator: 'AND',
+                },
+              },
+            ].filter(Boolean),
+          },
+        },
       ],
-      default_operator: 'AND',
     },
   }
   const mustSubmissionId = filters?.id && { term: { id: filters.id } }
@@ -108,13 +133,14 @@ const createSubmissionsQuery = (
 }
 
 const count = async (
-  { userId, questionnaireId, search, filters },
+  { userId, questionnaireId, isMember, search, filters },
   { elastic },
 ) => {
   try {
     const submissionSort = createSubmissionsSort({
       userId,
       questionnaireId,
+      isMember,
       search,
       filters,
     })
@@ -122,6 +148,7 @@ const count = async (
     const submissionsQuery = createSubmissionsQuery({
       userId,
       questionnaireId,
+      isMember,
       search,
       filters,
     })
@@ -146,27 +173,27 @@ const count = async (
 }
 
 const find = async (
-  { size, userId, questionnaireId, search, filters, sort },
+  { size, userId, questionnaireId, isMember, search, filters, sort },
   { after, before },
   { elastic },
 ) => {
   try {
     const submissionsFrom = createSubmissionsFrom(
-      { size, userId, questionnaireId, search, filters, sort },
+      { size, userId, questionnaireId, isMember, search, filters, sort },
       { after, before },
     )
 
     const submissionsSize = createSubmissionsSize(
-      { size, userId, questionnaireId, search, filters, sort },
+      { size, userId, questionnaireId, isMember, search, filters, sort },
       { after, before },
     )
 
     const submissionSort = createSubmissionsSort(
-      { size, userId, questionnaireId, search, filters, sort },
+      { size, userId, questionnaireId, isMember, search, filters, sort },
       { after, before },
     )
     const submissionsQuery = createSubmissionsQuery(
-      { size, userId, questionnaireId, search, filters, sort },
+      { size, userId, questionnaireId, isMember, search, filters, sort },
       { after, before },
     )
 
@@ -204,8 +231,9 @@ const find = async (
   return []
 }
 
-const getConnection = (anchors, args, { elastic }) => {
-  const { userId, questionnaireId } = anchors
+const getConnection = (anchors, args, context) => {
+  const { userId, questionnaireId, isMember } = anchors
+  const { elastic } = context
 
   const countFn = (args) => {
     const { after, before } = args
@@ -213,7 +241,10 @@ const getConnection = (anchors, args, { elastic }) => {
     const search = after?.search || before?.search || args.search || undefined
     const filters = after?.filters || before?.filters || args.filters || {}
 
-    return count({ userId, questionnaireId, search, filters }, { elastic })
+    return count(
+      { userId, questionnaireId, isMember, search, filters },
+      { elastic },
+    )
   }
 
   const nodesFn = (args) => {
@@ -227,10 +258,9 @@ const getConnection = (anchors, args, { elastic }) => {
     const search = after?.search || before?.search || args.search || undefined
     const filters = after?.filters || before?.filters || args.filters || {}
     const sort = after?.sort || before?.sort || args.sort || {}
-    const anchor = after?.anchor || before?.anchor || args.anchor || undefined
 
     return find(
-      { size, userId, questionnaireId, search, filters, sort, anchor },
+      { size, userId, questionnaireId, isMember, search, filters, sort },
       { after, before },
       { elastic },
     )

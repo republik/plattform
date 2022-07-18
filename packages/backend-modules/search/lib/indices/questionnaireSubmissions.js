@@ -60,6 +60,20 @@ module.exports = {
                 },
               },
             },
+            user: {
+              properties: {
+                text: {
+                  type: 'text',
+                  analyzer: 'german',
+                },
+                hasPublicProfile: {
+                  type: 'boolean',
+                },
+                name: {
+                  type: 'text',
+                },
+              },
+            },
           },
         },
       },

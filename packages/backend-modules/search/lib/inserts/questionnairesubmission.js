@@ -5,10 +5,14 @@ const bulk = require('../indexPgTable')
 async function transform(row) {
   const { questionnaireId, userId } = row
 
-  const { questions, answers } = await Promise.props({
+  const { questions, answers, user } = await Promise.props({
     questions: this.payload.getQuestions(questionnaireId),
     answers: this.payload.getAnswers(questionnaireId, userId),
+    user: this.payload.getUser(userId),
   })
+
+  const { firstName, lastName, hasPublicProfile } = user
+  const name = [firstName, lastName].join(' ').trim()
 
   row.resolved = {
     answers: answers
@@ -34,17 +38,21 @@ async function transform(row) {
         return {
           ...answer,
           resolved: {
+            value: {
+              [type]: typeValue,
+            },
             question: {
               id,
               text,
-            },
-            value: {
-              [type]: typeValue,
             },
           },
         }
       })
       .filter(Boolean),
+    user: {
+      name,
+      hasPublicProfile,
+    },
   }
 
   return row
@@ -64,6 +72,14 @@ const getDefaultResource = async ({ pgdb }) => {
         return pgdb.public.answers.find(
           { questionnaireId, userId },
           { fields: ['id', 'questionId', 'payload'] },
+        )
+      },
+      getUser: async function (id) {
+        return pgdb.public.users.findOne(
+          { id },
+          {
+            fields: ['firstName', 'lastName', 'hasPublicProfile'],
+          },
         )
       },
     },

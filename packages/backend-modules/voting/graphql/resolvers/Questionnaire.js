@@ -31,15 +31,18 @@ module.exports = {
     }
     return { entity: questionnaire }
   },
-  submissions(questionnaire, args, { user: me, elastic }) {
+  submissions(questionnaire, args, context) {
     const { submissionsAccessRole, id: questionnaireId } = questionnaire
+    const { user: me } = context
 
     if (
       submissionsAccessRole !== 'NONE' &&
       (submissionsAccessRole === 'PUBLIC' ||
         Roles.userHasRole(me, submissionsAccessRole.toLowerCase()))
     ) {
-      return getConnection({ questionnaireId }, args, { elastic })
+      const isMember = Roles.userIsInRoles(me, ['member'])
+
+      return getConnection({ questionnaireId, isMember }, args, context)
     }
 
     return null
