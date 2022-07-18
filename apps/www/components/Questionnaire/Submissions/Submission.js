@@ -4,6 +4,8 @@ import {
   CommentHeaderProfile,
 } from '@project-r/styleguide'
 import { useState } from 'react'
+import { max } from 'd3-array'
+
 import AnswerText from './AnswerText'
 import PlainButton from './PlainButton'
 
@@ -16,6 +18,7 @@ const Submission = ({ t, displayAuthor, answers, questions }) => {
   )
   const hiddenAnswersCount =
     visibleIndexes === true ? 0 : answers.nodes.length - visibleIndexes.length
+  let lastShownIndex
 
   return (
     <>
@@ -33,11 +36,15 @@ const Submission = ({ t, displayAuthor, answers, questions }) => {
         const question = questions.find((q) => q.id === qid)
         const isVisible =
           visibleIndexes === true || visibleIndexes.includes(index)
-        const prevWasVisible =
-          visibleIndexes === true || visibleIndexes.includes(index - 1)
 
         if (!isVisible) {
-          if (prevWasVisible && index - 1 !== visibleIndexes.slice(-1)[0]) {
+          const prevWasVisible = lastShownIndex === index - 1
+          const nextWillBeVisible = visibleIndexes.includes(index + 1)
+          if (
+            (prevWasVisible ||
+              (nextWillBeVisible && lastShownIndex === undefined)) &&
+            index - 1 !== max(visibleIndexes)
+          ) {
             return (
               <Editorial.P key={id}>
                 <button
@@ -53,7 +60,7 @@ const Submission = ({ t, displayAuthor, answers, questions }) => {
           }
           return null
         }
-
+        lastShownIndex = index
         return (
           <Editorial.P key={id}>
             <strong>{question.text}</strong>

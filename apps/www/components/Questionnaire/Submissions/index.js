@@ -74,6 +74,7 @@ const mainQuery = gql`
             totalCount
             nodes {
               id
+              hasMatched
               question {
                 id
               }
