@@ -40,7 +40,7 @@ import ActionBarOverlay from './ActionBarOverlay'
 import SeriesNavBar from './SeriesNavBar'
 import TrialPayNoteMini from './TrialPayNoteMini'
 import Extract from './Extract'
-import { PayNote, TRY_TO_BUY_RATIO } from './PayNote'
+import { PayNote } from './PayNote'
 import Progress from './Progress'
 import PodcastButtons from './PodcastButtons'
 import { getDocument } from './graphql/getDocument'
@@ -128,6 +128,24 @@ const ElectionResult = dynamic(() => import('../Vote/ElectionResult'), {
 })
 const ElectionResultDiversity = dynamic(
   () => import('../Vote/ElectionDiversity'),
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
+)
+const Questionnaire = dynamic(
+  () =>
+    import('../Questionnaire/Questionnaire').then(
+      (m) => m.QuestionnaireWithData,
+    ),
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
+)
+
+const QuestionnaireSubmissions = dynamic(
+  () => import('../Questionnaire/Submissions'),
   {
     loading: LoadingComponent,
     ssr: false,
@@ -345,6 +363,8 @@ const ArticlePage = ({
           ELECTION: Election,
           ELECTION_RESULT: ElectionResult,
           ELECTION_RESULT_DIVERSITY: ElectionResultDiversity,
+          QUESTIONNAIRE: Questionnaire,
+          QUESTIONNAIRE_SUBMISSIONS: QuestionnaireSubmissions,
         },
         titleMargin: false,
         titleBreakout,

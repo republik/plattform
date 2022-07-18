@@ -45,8 +45,9 @@ module.exports = async (_, { answer }, context) => {
       questionId,
     })
     if (
-      (existingAnswer && existingAnswer.submitted) ||
-      (sameAnswer && sameAnswer.submitted)
+      !questionnaire.resubmitAnswers &&
+      ((existingAnswer && existingAnswer.submitted) ||
+        (sameAnswer && sameAnswer.submitted))
     ) {
       throw new Error(t('api/questionnaire/answer/immutable'))
     }
@@ -79,14 +80,14 @@ module.exports = async (_, { answer }, context) => {
       throw new Error(t('api/questionnaire/answer/empty'))
     }
 
-    const submitted = questionnaire.submitAnswersImmediately
+    const { submitAnswersImmediately } = questionnaire
 
     if (questionnaire.updateResultIncrementally) {
       await updateResultIncrementally(
         questionnaire.id,
         {
           ...answer,
-          submitted,
+          submitted: submitAnswersImmediately,
         },
         transaction,
         context,
@@ -103,17 +104,19 @@ module.exports = async (_, { answer }, context) => {
       if (existingAnswer) {
         await transaction.public.answers.updateOne(findQuery, {
           questionId,
-          payload,
+          ...(submitAnswersImmediately ? { payload } : { draft: payload }),
           updatedAt: now,
         })
       } else {
         await transaction.public.answers.insert({
-          id,
-          questionId,
-          questionnaireId: questionnaire.id,
-          userId: me.id,
-          payload,
-          submitted,
+          ...(sameAnswer || {
+            id,
+            questionId,
+            questionnaireId: questionnaire.id,
+            userId: me.id,
+            submitted: submitAnswersImmediately,
+          }),
+          ...(submitAnswersImmediately ? { payload } : { draft: payload }),
         })
       }
     }
