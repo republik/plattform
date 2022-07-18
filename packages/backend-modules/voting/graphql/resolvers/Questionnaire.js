@@ -31,7 +31,7 @@ module.exports = {
     }
     return { entity: questionnaire }
   },
-  submissions(questionnaire, args, { user: me, pgdb }) {
+  submissions(questionnaire, args, { user: me, elastic }) {
     const { submissionsAccessRole, id: questionnaireId } = questionnaire
 
     if (
@@ -39,7 +39,7 @@ module.exports = {
       (submissionsAccessRole === 'PUBLIC' ||
         Roles.userHasRole(me, submissionsAccessRole.toLowerCase()))
     ) {
-      return getConnection({ questionnaireId }, args, { pgdb })
+      return getConnection({ questionnaireId }, args, { elastic })
     }
 
     return null
