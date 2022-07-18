@@ -47,10 +47,12 @@ module.exports = {
   answers: async (submission, args, { loaders, pgdb }) => {
     const { questionnaireId, userId } = submission
 
-    const nodes = await loaders.Answer.byKeyObj.load({
+    const answers = await loaders.Answer.byKeyObj.load({
       questionnaireId,
       userId,
     })
+
+    const nodes = answers.filter(({ _question }) => !_question?.private)
 
     return {
       nodes,
