@@ -15,13 +15,6 @@ const styles = {
     width: '100%',
     minWidth: '100%',
     maxWidth: '100%',
-    minHeight: '60px',
-    padding: 0,
-    background: 'transparent',
-    border: 'none',
-    outline: 'none',
-    boxSizing: 'border-box',
-    ...fontStyles.sansSerifRegular21,
   }),
   maxLength: css({
     alignItems: 'center',
@@ -46,7 +39,6 @@ const TextInput = (props) => {
   const { t } = useTranslation()
 
   const { label, onChange } = props
-  const isEmpty = !count
   return (
     <div>
       <Field
@@ -55,6 +47,7 @@ const TextInput = (props) => {
           <AutosizeInput
             {...inputProps}
             {...fieldSetStyles.autoSize}
+            {...styles.textArea}
             inputRef={ref}
           />
         )}
@@ -67,13 +60,13 @@ const TextInput = (props) => {
             {...styles.remaining}
             {...colorScheme.set('color', progressColorName)}
           >
-            {t(`questionnaire/text/${isEmpty ? 'max' : 'remaining'}`, {
+            {t(`questionnaire/text/${remaining >= 100 ? 'max' : 'remaining'}`, {
               remaining,
               maxLength,
             })}
           </span>
-          {!isEmpty && (
-            <span style={{ marginLeft: 5 }}>
+          {progress > 33 && (
+            <span style={{ marginLeft: 5, marginBottom: -3 }}>
               <ProgressCircle
                 strokeColorName={progressColorName}
                 size={18}
