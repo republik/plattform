@@ -2,11 +2,10 @@ import {
   plainButtonRule,
   Editorial,
   CommentHeaderProfile,
-  useColorContext,
 } from '@project-r/styleguide'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import AnswerText from './AnswerText'
-import { css } from 'glamor'
+import PlainButton from './PlainButton'
 
 const Submission = ({ t, displayAuthor, answers, questions }) => {
   const matchedIndexes = answers.nodes
@@ -15,19 +14,8 @@ const Submission = ({ t, displayAuthor, answers, questions }) => {
   const [visibleIndexes, setVisible] = useState(
     matchedIndexes.length ? matchedIndexes : [0, 1],
   )
-  const [colorScheme] = useColorContext()
-  const buttonRule = useMemo(
-    () =>
-      css({
-        color: colorScheme.getCSSColor('primary'),
-        '@media (hover)': {
-          ':hover': {
-            color: colorScheme.getCSSColor('textSoft'),
-          },
-        },
-      }),
-    [colorScheme],
-  )
+  const hiddenAnswersCount =
+    visibleIndexes === true ? 0 : answers.nodes.length - visibleIndexes.length
 
   return (
     <>
@@ -78,16 +66,16 @@ const Submission = ({ t, displayAuthor, answers, questions }) => {
           </Editorial.P>
         )
       })}
-      {visibleIndexes !== true && visibleIndexes.length < answers.nodes.length && (
-        <button
-          {...buttonRule}
-          {...plainButtonRule}
+      {!!hiddenAnswersCount && (
+        <PlainButton
           onClick={() => {
             setVisible(true)
           }}
         >
-          Alle Antworten lesen
-        </button>
+          {t.pluralize('questionnaire/submissions/showAnswers', {
+            count: hiddenAnswersCount,
+          })}
+        </PlainButton>
       )}
     </>
   )
