@@ -9,11 +9,7 @@ const findMatchingAnswerIds = async ({ search, hits }, { elastic }) => {
   }
 
   const answerIds = hits
-    .map(({ _source }) =>
-      _source.resolved.answers
-        .filter((answer) => answer.resolved.payload.value.Text)
-        .map((answer) => answer.id),
-    )
+    .map(({ _source }) => _source.resolved.answers.map((answer) => answer.id))
     .flat()
 
   const { body: answersBody } = await elastic.search({
@@ -28,7 +24,11 @@ const findMatchingAnswerIds = async ({ search, hits }, { elastic }) => {
             {
               simple_query_string: {
                 query: search,
-                fields: ['resolved.value.Text'],
+                fields: [
+                  'payload.text',
+                  'resolved.question.text',
+                  'resolved.value.Text',
+                ],
                 default_operator: 'AND',
               },
             },
@@ -83,7 +83,11 @@ const createSubmissionsQuery = (
   const mustSearch = search && {
     simple_query_string: {
       query: search,
-      fields: ['resolved.answers.resolved.payload.value.Text'],
+      fields: [
+        'resolved.answers.payload.text',
+        'resolved.answers.resolved.question.text',
+        'resolved.answers.resolved.value.Text',
+      ],
       default_operator: 'AND',
     },
   }

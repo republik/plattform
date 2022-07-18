@@ -13,8 +13,10 @@ async function transform(row) {
   row.resolved = {
     answers: answers
       .map((answer) => {
-        const { type } =
+        const question =
           questions.find((question) => question.id === answer.questionId) || {}
+
+        const { type } = question
 
         if (!type) {
           return false
@@ -23,10 +25,9 @@ async function transform(row) {
         return {
           ...answer,
           resolved: {
-            payload: {
-              value: {
-                [type]: answer.payload?.value,
-              },
+            question,
+            value: {
+              [type]: answer.payload?.value,
             },
           },
         }
@@ -44,13 +45,13 @@ const getDefaultResource = async ({ pgdb }) => {
       getQuestions: async function (questionnaireId) {
         return pgdb.public.questions.find(
           { questionnaireId },
-          { fields: ['id', 'type'] },
+          { fields: ['id', 'type', 'text'] },
         )
       },
       getAnswers: async function (questionnaireId, userId) {
         return pgdb.public.answers.find(
           { questionnaireId, userId },
-          { fields: ['id', 'questionId', 'payload', 'createdAt'] },
+          { fields: ['id', 'questionId', 'payload'] },
         )
       },
     },

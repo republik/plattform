@@ -36,24 +36,28 @@ module.exports = {
                 },
                 resolved: {
                   properties: {
-                    payload: {
+                    value: {
                       properties: {
-                        value: {
-                          properties: {
-                            Choice: {
-                              type: 'keyword',
-                            },
-                            Document: {
-                              type: 'keyword',
-                            },
-                            Range: {
-                              type: 'long',
-                            },
-                            Text: {
-                              type: 'text',
-                              analyzer: 'german',
-                            },
-                          },
+                        Choice: {
+                          type: 'keyword',
+                        },
+                        Document: {
+                          type: 'keyword',
+                        },
+                        Range: {
+                          type: 'long',
+                        },
+                        Text: {
+                          type: 'text',
+                          analyzer: 'german',
+                        },
+                      },
+                    },
+                    question: {
+                      properties: {
+                        text: {
+                          type: 'text',
+                          analyzer: 'german',
                         },
                       },
                     },

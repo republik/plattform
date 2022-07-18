@@ -16,6 +16,7 @@ async function transform(row) {
     value: {
       [type]: payload?.value,
     },
+    question,
     submission: submission ?? null,
   }
 
@@ -29,7 +30,7 @@ const getDefaultResource = async ({ pgdb }) => {
       getQuestion: async function (questionId) {
         return pgdb.public.questions.findOne(
           { id: questionId },
-          { fields: ['id', 'type'] },
+          { fields: ['id', 'type', 'text'] },
         )
       },
       getSubmission: async function (questionnaireId, userId) {

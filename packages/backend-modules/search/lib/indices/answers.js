@@ -9,16 +9,14 @@ module.exports = {
     [type]: {
       dynamic: false,
       properties: {
-        questionnaireId: {
-          type: 'keyword',
+        payload: {
+          properties: {
+            text: {
+              type: 'text',
+              analyzer: 'german',
+            },
+          },
         },
-        questionId: {
-          type: 'keyword',
-        },
-        userId: {
-          type: 'keyword',
-        },
-
         resolved: {
           properties: {
             value: {
@@ -38,13 +36,11 @@ module.exports = {
                 },
               },
             },
-            submission: {
+            question: {
               properties: {
-                id: {
-                  type: 'keyword',
-                },
-                createdAt: {
-                  type: 'date',
+                text: {
+                  type: 'text',
+                  analyzer: 'german',
                 },
               },
             },
