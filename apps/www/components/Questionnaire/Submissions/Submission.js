@@ -15,7 +15,9 @@ const Submission = ({ t, displayAuthor, answers, questions }) => {
     .map((answer, index) => (answer.hasMatched ? index : false))
     .filter((d) => d !== false)
   const [visibleIndexes, setVisible] = useState(
-    matchedIndexes.length ? matchedIndexes : [0, 1],
+    matchedIndexes.length
+      ? matchedIndexes
+      : [0, 1].slice(0, answers.nodes.length), // handle 0 or 1 answer
   )
   const hiddenAnswersCount =
     visibleIndexes === true ? 0 : answers.nodes.length - visibleIndexes.length
