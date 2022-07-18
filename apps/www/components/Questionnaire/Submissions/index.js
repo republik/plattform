@@ -158,6 +158,7 @@ const Submissions = ({ slug }) => {
                             <strong>{question.text}</strong>
                             <br />
                             <AnswerText
+                              text={payload.text}
                               value={payload.value}
                               question={question}
                             />

@@ -1,7 +1,14 @@
 import { inQuotes } from '@project-r/styleguide'
 import { ascending } from 'd3-array'
+import { intersperse } from '../../../lib/utils/helpers'
 
-const AnswerText = ({ value, question }) => {
+const insetBr = (text) =>
+  intersperse(text.split('\n'), (_, i) => <br key={i} />)
+
+const AnswerText = ({ text, value, question }) => {
+  if (text) {
+    return insetBr(text)
+  }
   if (question.options) {
     const selectedOptions = question.options.filter((option) =>
       value.includes(option.value),
@@ -23,7 +30,7 @@ const AnswerText = ({ value, question }) => {
     )
   }
 
-  return value
+  return insetBr(value)
 }
 
 export default AnswerText
