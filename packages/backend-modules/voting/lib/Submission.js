@@ -130,9 +130,8 @@ const count = async (
       },
     })
 
-    // console.log('count total', submissionsBody.hits.total.value)
-
-    return submissionsBody.hits.total.value
+    const total = submissionsBody.hits.total
+    return Number.isFinite(total?.value) ? total.value : total
   } catch (e) {
     console.warn(e.message)
   }
