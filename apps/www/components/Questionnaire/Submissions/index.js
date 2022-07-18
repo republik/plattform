@@ -1,9 +1,7 @@
 import { gql, useQuery } from '@apollo/client'
 import {
-  Editorial,
   Interaction,
   Loader,
-  CommentHeaderProfile,
   SearchIcon,
   Field,
   useDebounce,
@@ -11,7 +9,7 @@ import {
 } from '@project-r/styleguide'
 import { useRouter } from 'next/router'
 import { useTranslation } from '../../../lib/withT'
-import AnswerText from './AnswerText'
+import Submission from './Submission'
 
 const mainQuery = gql`
   query getQuestionnaireSubmissions($slug: String!, $search: String) {
@@ -134,33 +132,12 @@ const Submissions = ({ slug }) => {
                       marginTop: 40,
                     }}
                   >
-                    <CommentHeaderProfile
+                    <Submission
                       t={t}
-                      displayAuthor={{
-                        name: displayAuthor.name,
-                        profilePicture: displayAuthor.profilePicture,
-                        credential: {
-                          description: `${answers.totalCount} Antworten`,
-                        },
-                      }}
+                      displayAuthor={displayAuthor}
+                      answers={answers}
+                      questions={questions}
                     />
-                    {answers.nodes.map(
-                      ({ id, question: { id: qid }, payload }) => {
-                        const question = questions.find((q) => q.id === qid)
-
-                        return (
-                          <Editorial.P key={id}>
-                            <strong>{question.text}</strong>
-                            <br />
-                            <AnswerText
-                              text={payload.text}
-                              value={payload.value}
-                              question={question}
-                            />
-                          </Editorial.P>
-                        )
-                      },
-                    )}
                     <HR />
                   </div>
                 )
