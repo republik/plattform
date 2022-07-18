@@ -52,7 +52,9 @@ module.exports = {
       userId,
     })
 
-    const nodes = answers.filter(({ _question }) => !_question?.private)
+    const nodes = answers
+      .filter(({ payload }) => !!payload)
+      .filter(({ _question }) => !_question?.private)
 
     return {
       nodes,
