@@ -5,7 +5,7 @@ import { Interaction, A, useColorContext } from '@project-r/styleguide'
 import Results from './Results'
 import { useTranslation } from '../../lib/withT'
 
-const { Headline, P } = Interaction
+const { P } = Interaction
 
 const styles = {
   closed: css({
@@ -31,7 +31,6 @@ const QuestionnaireClosed = ({
 
   return (
     <>
-      <Headline>{t('questionnaire/title')}</Headline>
       <div {...styles.closed} {...colorScheme.set('backgroundColor', 'alert')}>
         <P>
           {submitted ? t('questionnaire/thankyou') : t('questionnaire/ended')}
