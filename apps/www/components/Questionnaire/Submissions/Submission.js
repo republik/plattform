@@ -5,10 +5,13 @@ import {
   Interaction,
   pxToRem,
   plainLinkRule,
+  RelativeTime,
+  useColorContext,
 } from '@project-r/styleguide'
 import { useState } from 'react'
 import { max } from 'd3-array'
 import { css } from 'glamor'
+import { timeFormat } from 'd3-time-format'
 
 import AnswerText from './AnswerText'
 import PlainButton from './PlainButton'
@@ -38,7 +41,18 @@ const styles = {
   }),
 }
 
-const Submission = ({ t, displayAuthor, answers, questions }) => {
+const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
+const titleDate = (string) => dateTimeFormat(new Date(string))
+
+const Submission = ({
+  t,
+  displayAuthor,
+  answers,
+  questions,
+  createdAt,
+  updatedAt,
+}) => {
+  const [colorScheme] = useColorContext()
   const matchedIndexes = answers.nodes
     .map((answer, index) => (answer.hasMatched ? index : false))
     .filter((d) => d !== false)
@@ -50,6 +64,8 @@ const Submission = ({ t, displayAuthor, answers, questions }) => {
   const hiddenAnswersCount =
     visibleIndexes === true ? 0 : answers.nodes.length - visibleIndexes.length
   let lastShownIndex
+
+  const isUpdated = updatedAt && updatedAt !== createdAt
 
   return (
     <div>
@@ -71,6 +87,21 @@ const Submission = ({ t, displayAuthor, answers, questions }) => {
               displayAuthor.name
             )}
           </Interaction.H3>
+          <Label>
+            <span {...colorScheme.set('color', 'textSoft')}>
+              <span title={titleDate(createdAt)}>
+                <RelativeTime t={t} isDesktop date={createdAt} />
+              </span>
+              {isUpdated && (
+                <>
+                  {' · '}
+                  <span title={titleDate(updatedAt)}>
+                    {t('styleguide/comment/header/updated')}
+                  </span>
+                </>
+              )}
+            </span>
+          </Label>
         </div>
       </div>
 

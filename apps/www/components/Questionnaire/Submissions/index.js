@@ -175,24 +175,28 @@ const Submissions = ({ slug }) => {
                 </Interaction.P>
               )}
               <div ref={containerRef}>
-                {results.nodes.map(({ id, displayAuthor, answers }) => {
-                  return (
-                    <div
-                      key={id}
-                      style={{
-                        marginTop: 40,
-                      }}
-                    >
-                      <Submission
-                        t={t}
-                        displayAuthor={displayAuthor}
-                        answers={answers}
-                        questions={questions}
-                      />
-                      <HR />
-                    </div>
-                  )
-                })}
+                {results.nodes.map(
+                  ({ id, displayAuthor, answers, createdAt, updatedAt }) => {
+                    return (
+                      <div
+                        key={id}
+                        style={{
+                          marginTop: 40,
+                        }}
+                      >
+                        <Submission
+                          t={t}
+                          displayAuthor={displayAuthor}
+                          answers={answers}
+                          questions={questions}
+                          createdAt={createdAt}
+                          updatedAt={updatedAt}
+                        />
+                        <HR />
+                      </div>
+                    )
+                  },
+                )}
                 <div style={{ marginTop: 10 }}>
                   {loadingMoreError && (
                     <ErrorMessage error={loadingMoreError} />
