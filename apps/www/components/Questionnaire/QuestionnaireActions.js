@@ -15,14 +15,30 @@ const styles = {
 }
 
 export default compose(withT)(
-  ({ t, onSubmit, onReset, isResubmitAnswers, updating, invalid }) => {
+  ({
+    t,
+    onSubmit,
+    onReset,
+    isResubmitAnswers,
+    updating,
+    invalid,
+    publicSubmission,
+  }) => {
     return (
       <div {...styles.actions}>
         <Button primary onClick={onSubmit} disabled={updating || invalid}>
           {updating ? (
             <InlineSpinner size={40} />
           ) : (
-            t(`questionnaire/${isResubmitAnswers ? 'update' : 'submit'}`)
+            t(
+              `questionnaire/${
+                isResubmitAnswers
+                  ? 'update'
+                  : publicSubmission
+                  ? 'publish'
+                  : 'submit'
+              }`,
+            )
           )}
         </Button>
         {invalid ? (

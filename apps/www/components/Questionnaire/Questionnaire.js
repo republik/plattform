@@ -258,6 +258,8 @@ const Questionnaire = (props) => {
                 onReset={onReset}
                 updating={updating}
                 invalid={userAnswerCount < 1}
+                // ToDo: expose & query questionnaire.submissionsAccessRole
+                publicSubmission
               />
             )}
           </div>

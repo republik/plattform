@@ -4230,11 +4230,15 @@
     },
     {
       "key": "questionnaire/submit",
-      "value": "Abschicken"
+      "value": "abschicken"
+    },
+    {
+      "key": "questionnaire/publish",
+      "value": "publizieren"
     },
     {
       "key": "questionnaire/update",
-      "value": "Aktualisieren"
+      "value": "aktualisieren"
     },
     {
       "key": "questionnaire/reset",
