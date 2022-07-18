@@ -22,11 +22,10 @@ module.exports = async (_, { id: questionnaireId }, context) => {
       submitted: false,
     })
 
-    await transaction.public.answers.update({
-      questionnaireId,
-      userId: me.id,
-      draft: null,
-    })
+    await transaction.public.answers.update(
+      { questionnaireId, userId: me.id },
+      { draft: null },
+    )
 
     await transaction.transactionCommit()
 
