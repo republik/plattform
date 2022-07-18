@@ -410,7 +410,6 @@ export const PayNote = compose(
 )(
   ({
     inNativeIOSApp,
-    me,
     hasAccess,
     hasActiveMembership,
     seed,
@@ -429,7 +428,7 @@ export const PayNote = compose(
 
     const subject = {
       inNativeIOSApp,
-      isEligibleForTrial: !me || !!query.trialSignup,
+      isEligibleForTrial: !hasAccess || !!query.trialSignup,
       hasActiveMembership,
     }
     const payNote = getPayNote(
