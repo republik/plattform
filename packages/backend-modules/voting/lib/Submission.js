@@ -219,7 +219,11 @@ const getConnection = (anchors, args, { elastic }) => {
   const nodesFn = (args) => {
     const { after, before } = args
 
-    const size = after?.first || before?.first || args.first || 10
+    const size = Math.min(
+      after?.first || before?.first || args.first || 10,
+      100,
+    )
+
     const search = after?.search || before?.search || args.search || undefined
     const filters = after?.filters || before?.filters || args.filters || {}
     const sort = after?.sort || before?.sort || args.sort || {}
@@ -236,7 +240,11 @@ const getConnection = (anchors, args, { elastic }) => {
     const { after, before } = args
     const { nodes } = payload
 
-    const first = after?.first || before?.first || args.first || 10
+    const first = Math.min(
+      after?.first || before?.first || args.first || 10,
+      100,
+    )
+
     const search = after?.search || before?.search || args?.search || undefined
     const filters = after?.filters || before?.filters || args?.filters || {}
     const sort = after?.sort || before?.sort || args?.sort || {}
