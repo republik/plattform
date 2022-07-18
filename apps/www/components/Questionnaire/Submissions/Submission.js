@@ -2,6 +2,7 @@ import {
   plainButtonRule,
   Editorial,
   CommentHeaderProfile,
+  Label,
 } from '@project-r/styleguide'
 import { useState } from 'react'
 import { max } from 'd3-array'
@@ -32,58 +33,68 @@ const Submission = ({ t, displayAuthor, answers, questions }) => {
           },
         }}
       />
-      {answers.nodes.map(({ id, question: { id: qid }, payload }, index) => {
-        const question = questions.find((q) => q.id === qid)
-        const isVisible =
-          visibleIndexes === true || visibleIndexes.includes(index)
+      <div style={{ marginTop: 10 }}>
+        {answers.nodes.map(({ id, question: { id: qid }, payload }, index) => {
+          const question = questions.find((q) => q.id === qid)
+          const isVisible =
+            visibleIndexes === true || visibleIndexes.includes(index)
 
-        if (!isVisible) {
-          const prevWasVisible = lastShownIndex === index - 1
-          const nextWillBeVisible = visibleIndexes.includes(index + 1)
-          if (
-            (prevWasVisible ||
-              (nextWillBeVisible && lastShownIndex === undefined)) &&
-            index - 1 !== max(visibleIndexes)
-          ) {
-            return (
-              <Editorial.P key={id}>
-                <button
-                  {...plainButtonRule}
-                  onClick={() => {
-                    setVisible(visibleIndexes.concat(index))
+          if (!isVisible) {
+            const prevWasVisible = lastShownIndex === index - 1
+            const nextWillBeVisible = visibleIndexes.includes(index + 1)
+            if (
+              (prevWasVisible ||
+                (nextWillBeVisible && lastShownIndex === undefined)) &&
+              (matchedIndexes.length || index - 1 !== max(visibleIndexes))
+            ) {
+              return (
+                <div
+                  style={{
+                    marginTop: prevWasVisible ? -20 : 10,
+                    marginBottom: nextWillBeVisible ? -20 : 10,
                   }}
+                  key={id}
                 >
-                  …
-                </button>
-              </Editorial.P>
-            )
+                  <Label>
+                    <button
+                      {...plainButtonRule}
+                      onClick={() => {
+                        setVisible(visibleIndexes.concat(index))
+                      }}
+                    >
+                      […]
+                    </button>
+                  </Label>
+                </div>
+              )
+            }
+            return null
           }
-          return null
-        }
-        lastShownIndex = index
-        return (
-          <Editorial.P key={id}>
-            <strong>{question.text}</strong>
-            <br />
-            <AnswerText
-              text={payload.text}
-              value={payload.value}
-              question={question}
-            />
-          </Editorial.P>
-        )
-      })}
-      {!!hiddenAnswersCount && (
-        <PlainButton
-          onClick={() => {
-            setVisible(true)
-          }}
-        >
-          {t.pluralize('questionnaire/submissions/showAnswers', {
-            count: hiddenAnswersCount,
-          })}
-        </PlainButton>
-      )}
+          lastShownIndex = index
+          return (
+            <Editorial.P key={id}>
+              <strong>{question.text}</strong>
+              <br />
+              <AnswerText
+                text={payload.text}
+                value={payload.value}
+                question={question}
+              />
+            </Editorial.P>
+          )
+        })}
+        {!!hiddenAnswersCount && (
+          <PlainButton
+            onClick={() => {
+              setVisible(true)
+            }}
+          >
+            {t.pluralize('questionnaire/submissions/showAnswers', {
+              count: hiddenAnswersCount,
+            })}
+          </PlainButton>
+        )}
+      </div>
     </>
   )
 }
