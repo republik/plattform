@@ -46,7 +46,6 @@ const styles = {
     [mUp]: {
       ...fontStyles.serifBold52,
     },
-    color: colors.text,
     margin: '30px 0 20px 0',
     ':first-child': {
       marginTop: 0,
@@ -60,7 +59,6 @@ const styles = {
     [mUp]: {
       ...fontStyles.serifBold24,
     },
-    color: colors.text,
     margin: '30px 0 20px 0',
     ':first-child': {
       marginTop: 0,
@@ -71,11 +69,9 @@ const styles = {
   }),
   lead: css({
     ...fontStyles.serifRegular25,
-    color: colors.text,
     margin: '20px 0 20px 0',
   }),
   p: css({
-    color: colors.text,
     ...fontStyles.serifRegular16,
     [mUp]: {
       ...fontStyles.serifRegular21,
@@ -91,8 +87,6 @@ const styles = {
   hr: css({
     border: 0,
     height: 1,
-    color: colors.divider,
-    backgroundColor: colors.divider,
     marginTop: 30,
     marginBottom: 30,
   }),
@@ -201,7 +195,17 @@ export const Sup = ({ children, attributes }) => (
   </sup>
 )
 
-export const HR = ({ attributes }) => <hr {...attributes} {...styles.hr} />
+export const HR = ({ attributes }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <hr
+      {...attributes}
+      {...styles.hr}
+      {...colorScheme.set('color', 'divider')}
+      {...colorScheme.set('backgroundColor', 'divider')}
+    />
+  )
+}
 
 export const Quote = ({ children, source, ...props }) => (
   <blockquote {...props} {...styles.quote}>
