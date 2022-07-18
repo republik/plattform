@@ -3,7 +3,7 @@ const {
   paginate: { pageini },
 } = require('@orbiting/backend-modules-utils')
 
-const findMatchingAnswerIds = async ({ search, hits }, { elastic }) => {
+const findMatchingAnswerIds = async ({ search, hits }, elastic) => {
   if (!search || !hits?.length) {
     return []
   }
@@ -42,44 +42,25 @@ const findMatchingAnswerIds = async ({ search, hits }, { elastic }) => {
   return answersBody.hits.hits.map(({ _id }) => _id)
 }
 
-const createSubmissionsFrom = (
-  { size, userId, questionnaireId, search, filters = {} },
-  { after, before } = {},
-) => {
-  return after?.count || before?.count || 0
-}
+const createSubmissionsFrom = (_, { after, before } = {}) =>
+  after?.count || before?.count || 0
 
-const createSubmissionsSize = (
-  { size, userId, questionnaireId, search, filters = {} },
-  { after, before } = {},
-) => {
-  return size
-}
+const createSubmissionsSize = ({ size }) => size
 
-const createSubmissionsSort = (
-  { size, userId, questionnaireId, search, filters = {}, sort },
-  { after, before } = {},
-) => {
+const createSubmissionsSort = ({ sort }) => {
   const isSortByCreatedAt = !sort?.by || sort.by === 'createdAt'
   const direction = sort?.direction || 'DESC'
 
   return [isSortByCreatedAt && { createdAt: direction }]
 }
 
-const createSubmissionsQuery = (
-  {
-    ids,
-    size,
-    userId,
-    questionnaireId,
-    isMember,
-    search,
-    filters = {},
-    sort = {},
-    anchor,
-  },
-  { after, before } = {},
-) => {
+const createSubmissionsQuery = ({
+  userId,
+  questionnaireId,
+  isMember,
+  search,
+  filters = {},
+}) => {
   const mustUserId = userId && { term: { userId } }
   const mustQuestionnaireId = questionnaireId && { term: { questionnaireId } }
   const mustSearch = search && {
@@ -132,26 +113,10 @@ const createSubmissionsQuery = (
   }
 }
 
-const count = async (
-  { userId, questionnaireId, isMember, search, filters },
-  { elastic },
-) => {
+const count = async (args, elastic) => {
   try {
-    const submissionSort = createSubmissionsSort({
-      userId,
-      questionnaireId,
-      isMember,
-      search,
-      filters,
-    })
-
-    const submissionsQuery = createSubmissionsQuery({
-      userId,
-      questionnaireId,
-      isMember,
-      search,
-      filters,
-    })
+    const submissionSort = createSubmissionsSort(args)
+    const submissionsQuery = createSubmissionsQuery(args)
 
     const { body: submissionsBody } = await elastic.search({
       index: utils.getIndexAlias('questionnairesubmission', 'read'),
@@ -172,36 +137,14 @@ const count = async (
   return 0
 }
 
-const find = async (
-  { size, userId, questionnaireId, isMember, search, filters, sort },
-  { after, before },
-  { elastic },
-) => {
+const find = async (args, cursors, elastic) => {
+  const { search } = args
+
   try {
-    const submissionsFrom = createSubmissionsFrom(
-      { size, userId, questionnaireId, isMember, search, filters, sort },
-      { after, before },
-    )
-
-    const submissionsSize = createSubmissionsSize(
-      { size, userId, questionnaireId, isMember, search, filters, sort },
-      { after, before },
-    )
-
-    const submissionSort = createSubmissionsSort(
-      { size, userId, questionnaireId, isMember, search, filters, sort },
-      { after, before },
-    )
-    const submissionsQuery = createSubmissionsQuery(
-      { size, userId, questionnaireId, isMember, search, filters, sort },
-      { after, before },
-    )
-
-    /* console.log(
-      // JSON.stringify({ submissionsFrom, submissionsSize }, null, 2),
-      // JSON.stringify({ submissionSort }, null, 2),
-      // JSON.stringify({ submissionsQuery }, null, 2),
-    ) */
+    const submissionsFrom = createSubmissionsFrom(args, cursors)
+    const submissionsSize = createSubmissionsSize(args, cursors)
+    const submissionSort = createSubmissionsSort(args, cursors)
+    const submissionsQuery = createSubmissionsQuery(args, cursors)
 
     const { body: submissionsBody } = await elastic.search({
       index: utils.getIndexAlias('questionnairesubmission', 'read'),
@@ -214,13 +157,11 @@ const find = async (
       },
     })
 
-    // console.log(JSON.stringify({ submissionsBody }, null, 2))
-
     const hits = submissionsBody.hits.hits
 
     const _matchedAnswerIds = await findMatchingAnswerIds(
       { search, hits },
-      { elastic },
+      elastic,
     )
 
     return hits.map(({ _source }) => ({ ..._source, _matchedAnswerIds }))
@@ -243,7 +184,7 @@ const getConnection = (anchors, args, context) => {
 
     return count(
       { userId, questionnaireId, isMember, search, filters },
-      { elastic },
+      elastic,
     )
   }
 
@@ -262,7 +203,7 @@ const getConnection = (anchors, args, context) => {
     return find(
       { size, userId, questionnaireId, isMember, search, filters, sort },
       { after, before },
-      { elastic },
+      elastic,
     )
   }
 
