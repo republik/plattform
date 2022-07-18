@@ -30,6 +30,7 @@ import FieldSet from '../../components/FieldSet'
 import { gql } from '@apollo/client'
 import DetailsForm from '../../components/Account/DetailsForm'
 import {
+  A,
   Interaction,
   Figure,
   FigureImage,
@@ -40,11 +41,17 @@ import {
 import { css } from 'glamor'
 import NewsletterSignUp from '../../components/Auth/NewsletterSignUp'
 import Link from 'next/link'
-import { description } from './[slug]'
 import { withDefaultSSR } from '../../lib/apollo/helpers'
 import ErrorMessage from '../../components/ErrorMessage'
 
 const SLUG = '1-minute'
+const description = t.elements('pages/meta/questionnaire/unauthorized', {
+  buyLink: (
+    <Link href='/angebote' key='pledge' passHref>
+      <A>{t('pages/meta/questionnaire/unauthorized/buyText')}</A>
+    </Link>
+  ),
+})
 
 const { Headline, P } = Interaction
 

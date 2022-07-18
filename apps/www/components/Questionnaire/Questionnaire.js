@@ -16,6 +16,7 @@ import { useTranslation } from '../../lib/withT'
 import withAuthorization from '../Auth/withAuthorization'
 import StatusError from '../StatusError'
 import {
+  withQuestionnaire,
   withQuestionnaireMutation,
   withQuestionnaireReset,
   withQuestionnaireRevoke,
@@ -169,21 +170,25 @@ const Questionnaire = (props) => {
         const userAnswerCount = questions
           .map((q) => q.userAnswer)
           .filter(Boolean).length
-        const questionnairePath = questionnaireName
-          ? `/${questionnaireName}/`
-          : '/'
+
         return (
           <div>
-            <Headline>{t(`questionnaire${questionnairePath}title`)}</Headline>
-            <div {...styles.intro}>
-              <RawHtml
-                type={P}
-                dangerouslySetInnerHTML={{
-                  __html: t(`questionnaire${questionnairePath}intro`),
-                }}
-              />
-              <br />
-            </div>
+            {questionnaireName && (
+              <>
+                <Headline>
+                  {t(`questionnaire/${questionnaireName}/title`)}
+                </Headline>
+                <div {...styles.intro}>
+                  <RawHtml
+                    type={P}
+                    dangerouslySetInnerHTML={{
+                      __html: t(`questionnaire/${questionnaireName}/intro`),
+                    }}
+                  />
+                  <br />
+                </div>
+              </>
+            )}
             {(!hideCount || error) && (
               <div
                 {...styles.count}
@@ -242,9 +247,15 @@ const Questionnaire = (props) => {
   )
 }
 
-export default compose(
+const QuestionnaireWithMutations = compose(
   withAuthorization(['supporter', 'editor'], 'showResults'),
   withQuestionnaireMutation,
   withQuestionnaireReset,
   withQuestionnaireRevoke,
 )(Questionnaire)
+
+export default QuestionnaireWithMutations
+
+export const QuestionnaireWithData = withQuestionnaire(
+  QuestionnaireWithMutations,
+)

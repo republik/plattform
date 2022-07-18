@@ -133,6 +133,16 @@ const ElectionResultDiversity = dynamic(
     ssr: false,
   },
 )
+const Questionnaire = dynamic(
+  () =>
+    import('../Questionnaire/Questionnaire').then(
+      (m) => m.QuestionnaireWithData,
+    ),
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
+)
 
 const schemaCreators = {
   editorial: createArticleSchema,
@@ -345,6 +355,7 @@ const ArticlePage = ({
           ELECTION: Election,
           ELECTION_RESULT: ElectionResult,
           ELECTION_RESULT_DIVERSITY: ElectionResultDiversity,
+          QUESTIONNAIRE: Questionnaire,
         },
         titleMargin: false,
         titleBreakout,
