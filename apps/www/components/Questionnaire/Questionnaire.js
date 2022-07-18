@@ -187,11 +187,12 @@ const Questionnaire = (props) => {
             />
           )
         }
-
         // handle questions
-        const questionCount = questions.filter(Boolean).length
+        const questionCount = questions
+          .filter((q) => !q.private)
+          .filter(Boolean).length
         const userAnswerCount = questions
-          .map((q) => q.userAnswer)
+          .map((q) => !q.private && q.userAnswer)
           .filter(Boolean).length
         const askForAddress = questions.some((q) => {
           const value = q.userAnswer?.payload?.value
