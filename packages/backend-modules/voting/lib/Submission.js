@@ -3,103 +3,49 @@ const {
   paginate: { pageini },
 } = require('@orbiting/backend-modules-utils')
 
-const createAnswersQuery = (
-  { userId, questionnaireId, search, filters = {} },
-  { after, before } = {},
-) => {
-  const mustUserId = userId && { term: { userId } }
-  const mustQuestionnaireId = questionnaireId && { term: { questionnaireId } }
-  const mustSubmissionId = filters?.id && {
-    term: { 'resolved.submission.id': filters.id },
-  }
-  const mustSearch = search && {
-    simple_query_string: {
-      query: search,
-      fields: ['resolved.value.Text'],
-      default_operator: 'AND',
-    },
+const findMatchingAnswerIds = async ({ search, hits }, { elastic }) => {
+  if (!search || !hits?.length) {
+    return []
   }
 
-  return {
-    bool: {
-      must: [
-        mustUserId,
-        mustQuestionnaireId,
-        mustSubmissionId,
-        mustSearch,
-      ].filter(Boolean),
-    },
-  }
-}
-
-const createAnswersAggs = (
-  { size, userId, questionnaireId, search, filters = {} },
-  { after, before } = {},
-) => {
-  return {
-    countSubmissions: {
-      cardinality: {
-        field: 'resolved.submission.id',
-      },
-    },
-    submissionIds: {
-      terms: {
-        field: 'resolved.submission.id',
-        size,
-      },
-    },
-  }
-}
-
-const findAnswers = async (
-  { size, userId, questionnaireId, search, filters, sort, anchor },
-  { after, before },
-  { elastic },
-) => {
-  try {
-    const answersQuery = createAnswersQuery(
-      { size, userId, questionnaireId, search, filters },
-      { after, before },
+  const answerIds = hits
+    .map(({ _source }) =>
+      _source.resolved.answers
+        .filter((answer) => answer.resolved.payload.value.Text)
+        .map((answer) => answer.id),
     )
+    .flat()
 
-    const answersAggs = createAnswersAggs(
-      { size, userId, questionnaireId, search, filters },
-      { after, before },
-    )
-
-    const { body: answersBody } = await elastic.search({
-      index: utils.getIndexAlias('answer', 'read'),
-      size: 0,
-      track_total_hits: true,
-      body: {
-        query: answersQuery,
-        aggs: answersAggs,
+  const { body: answersBody } = await elastic.search({
+    index: utils.getIndexAlias('answer', 'read'),
+    size: answerIds.length,
+    _source: ['_id'],
+    body: {
+      query: {
+        bool: {
+          must: [
+            { terms: { _id: answerIds } },
+            {
+              simple_query_string: {
+                query: search,
+                fields: ['resolved.value.Text'],
+                default_operator: 'AND',
+              },
+            },
+          ],
+        },
       },
-    })
+    },
+  })
 
-    const { aggregations } = answersBody
-
-    const countSubmissions = aggregations.countSubmissions.value
-    const ids = aggregations.submissionIds.buckets.map(({ key }) => key)
-
-    /* console.log(
-      JSON.stringify({ answersQuery }, null, 2),
-      JSON.stringify({ answersAggs }, null, 2),
-      JSON.stringify({ answersBody }, null, 2),
-      { countSubmissions, ids },
-    ) */
-
-    return { countSubmissions, ids }
-  } catch (e) {}
-
-  return { countSubmissions: 0, ids: [] }
+  return answersBody.hits.hits.map(({ _id }) => _id)
 }
 
 const createSubmissionsFrom = (
   { ids, size, userId, questionnaireId, search, filters = {} },
   { after, before } = {},
 ) => {
-  return 0
+  return after?.count || before?.count || 0
 }
 
 const createSubmissionsSize = (
@@ -132,33 +78,23 @@ const createSubmissionsQuery = (
   },
   { after, before } = {},
 ) => {
-  const mustSort =
-    (!sort?.by || sort.by === 'createdAt') &&
-    ((after?.anchor && {
-      range: {
-        createdAt: { [sort?.direction === 'ASC' ? 'gt' : 'lt']: after.anchor },
-      },
-    }) ||
-      (before?.anchor && {
-        range: {
-          createdAt: {
-            [sort?.direction === 'ASC' ? 'lt' : 'gt']: before.anchor,
-          },
-        },
-      }))
-
-  const mustIds = ids && { terms: { id: ids } }
   const mustUserId = userId && { term: { userId } }
   const mustQuestionnaireId = questionnaireId && { term: { questionnaireId } }
+  const mustSearch = search && {
+    simple_query_string: {
+      query: search,
+      fields: ['resolved.answers.resolved.payload.value.Text'],
+      default_operator: 'AND',
+    },
+  }
   const mustSubmissionId = filters?.id && { term: { id: filters.id } }
 
   return {
     bool: {
       must: [
-        mustSort,
-        mustIds,
         mustUserId,
         mustQuestionnaireId,
+        mustSearch,
         mustSubmissionId,
       ].filter(Boolean),
     },
@@ -170,18 +106,33 @@ const count = async (
   { elastic },
 ) => {
   try {
-    const { countSubmissions } = await findAnswers(
-      {
-        userId,
-        questionnaireId,
-        search,
-        filters,
-      },
-      {},
-      { elastic },
-    )
+    const submissionSort = createSubmissionsSort({
+      userId,
+      questionnaireId,
+      search,
+      filters,
+    })
 
-    return countSubmissions
+    const submissionsQuery = createSubmissionsQuery({
+      userId,
+      questionnaireId,
+      search,
+      filters,
+    })
+
+    const { body: submissionsBody } = await elastic.search({
+      index: utils.getIndexAlias('questionnairesubmission', 'read'),
+      track_total_hits: true,
+      size: 0,
+      body: {
+        sort: submissionSort,
+        query: submissionsQuery,
+      },
+    })
+
+    // console.log('count total', submissionsBody.hits.total.value)
+
+    return submissionsBody.hits.total.value
   } catch (e) {
     console.warn(e.message)
   }
@@ -195,42 +146,34 @@ const find = async (
   { elastic },
 ) => {
   try {
-    const { ids } = search
-      ? await findAnswers(
-          { size, userId, questionnaireId, search, filters, sort, anchor },
-          { after, before },
-          { elastic },
-        )
-      : {}
-
     const submissionsFrom = createSubmissionsFrom(
-      { ids, size, userId, questionnaireId, search, filters, sort, anchor },
+      { size, userId, questionnaireId, search, filters, sort, anchor },
       { after, before },
     )
 
     const submissionsSize = createSubmissionsSize(
-      { ids, size, userId, questionnaireId, search, filters, sort, anchor },
+      { size, userId, questionnaireId, search, filters, sort, anchor },
       { after, before },
     )
 
     const submissionSort = createSubmissionsSort(
-      { ids, size, userId, questionnaireId, search, filters, sort, anchor },
+      { size, userId, questionnaireId, search, filters, sort, anchor },
       { after, before },
     )
     const submissionsQuery = createSubmissionsQuery(
-      { ids, size, userId, questionnaireId, search, filters, sort, anchor },
+      { size, userId, questionnaireId, search, filters, sort, anchor },
       { after, before },
     )
 
     /* console.log(
-      JSON.stringify({ submissionsFrom, submissionsSize }, null, 2),
-      JSON.stringify({ submissionSort }, null, 2),
-      JSON.stringify({ submissionsQuery }, null, 2),
+      // JSON.stringify({ submissionsFrom, submissionsSize }, null, 2),
+      // JSON.stringify({ submissionSort }, null, 2),
+      // JSON.stringify({ submissionsQuery }, null, 2),
     ) */
 
     const { body: submissionsBody } = await elastic.search({
       index: utils.getIndexAlias('questionnairesubmission', 'read'),
-      track_total_hits: true,
+      _source: { excludes: ['resolved.*'] },
       from: submissionsFrom,
       size: submissionsSize,
       body: {
@@ -241,8 +184,14 @@ const find = async (
 
     // console.log(JSON.stringify({ submissionsBody }, null, 2))
 
-    // @TODO: Handle error …
-    return submissionsBody.hits?.hits?.map((hit) => hit._source)
+    const hits = submissionsBody.hits.hits
+
+    const _matchedAnswerIds = await findMatchingAnswerIds(
+      { search, hits },
+      { elastic },
+    )
+
+    return hits.map(({ _source }) => ({ ..._source, _matchedAnswerIds }))
   } catch (e) {
     console.warn(e.message)
   }
@@ -306,6 +255,7 @@ const getConnection = (anchors, args, { elastic }) => {
         anchor: nodes[nodes.length - 1].createdAt,
         first,
         count,
+        search,
         filters,
         sort,
       },

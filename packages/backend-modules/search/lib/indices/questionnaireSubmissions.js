@@ -21,6 +21,48 @@ module.exports = {
         createdAt: {
           type: 'date',
         },
+
+        resolved: {
+          properties: {
+            answers: {
+              properties: {
+                payload: {
+                  properties: {
+                    text: {
+                      type: 'text',
+                      analyzer: 'german',
+                    },
+                  },
+                },
+                resolved: {
+                  properties: {
+                    payload: {
+                      properties: {
+                        value: {
+                          properties: {
+                            Choice: {
+                              type: 'keyword',
+                            },
+                            Document: {
+                              type: 'keyword',
+                            },
+                            Range: {
+                              type: 'long',
+                            },
+                            Text: {
+                              type: 'text',
+                              analyzer: 'german',
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     },
   },

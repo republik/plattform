@@ -45,7 +45,7 @@ module.exports = {
     }
   },
   answers: async (submission, args, { loaders, pgdb }) => {
-    const { questionnaireId, userId } = submission
+    const { questionnaireId, userId, _matchedAnswerIds } = submission
 
     const answers = await loaders.Answer.byKeyObj.load({
       questionnaireId,
@@ -53,8 +53,12 @@ module.exports = {
     })
 
     const nodes = answers
-      .filter(({ payload }) => !!payload)
       .filter(({ _question }) => !_question?.private)
+      .filter(({ payload }) => !!payload)
+      .map((answer) => ({
+        ...answer,
+        hasMatched: _matchedAnswerIds?.includes(answer.id),
+      }))
 
     return {
       nodes,
