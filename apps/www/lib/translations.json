@@ -4221,10 +4221,6 @@
       "value": "Sagen Sie uns Ihre Meinung!"
     },
     {
-      "key": "questionnaire/intro",
-      "value": "Geehrte Frau Verlegerin<br/>\nGeehrter Herr Verleger<br/>\n<br/>\nEs freut uns ausserordentlich, dass Sie Ihre Aufsichtspflicht wahrnehmen. Und zur Verbesserung der Republik beitragen. Antworten Sie ohne Rücksicht, ohne Skrupel, aber mit Weisheit. Und ohne Furcht: Es wird Sie nicht mehr als 10 Minuten kosten.<br/>\n<br/>\nMit Dank<br/>\nIhre Crew von Project R und der Republik"
-    },
-    {
       "key": "questionnaire/header",
       "value": "Sie haben {userAnswerCount} von {questionCount} Fragen beantwortet."
     },
@@ -4325,36 +4321,12 @@
       "value": "Vielen Dank für Ihre Zeit. Hier gehts zurück zum Magazin."
     },
     {
-      "key": "pages/meta/questionnaire/counterText",
-      "value": "Mitglieder haben an der Umfrage bereits teilgenommen."
-    },
-    {
-      "key": "pages/meta/questionnaire/thankyou",
-      "value": "Danke fürs Mitmachen!"
-    },
-    {
-      "key": "pages/meta/questionnaire/actionTitle",
-      "value": "Sagen Sie uns Ihre Meinung!"
-    },
-    {
-      "key": "pages/meta/questionnaire/actionLabel",
-      "value": "Jetzt mitmachen"
-    },
-    {
       "key": "pages/meta/questionnaire/unauthorized",
       "value": "Vielen Dank für Ihr Interesse an unserer Umfrage. Unsere Mitglieder und Abonnentinnen können daran teilnehmen – {buyLink}"
     },
     {
       "key": "pages/meta/questionnaire/unauthorized/buyText",
       "value": "kommen Sie an Bord!"
-    },
-    {
-      "key": "pages/meta/questionnaire/socialTitle",
-      "value": "Ist die Republik auf Kurs? Sagen Sie es uns!"
-    },
-    {
-      "key": "pages/meta/questionnaire/socialDescription",
-      "value": "Um an der Umfrage teilzunehmen, müssen Sie Mitglied oder Abonnentin sein."
     },
     {
       "key": "pages/meta/questionnaire/crowd/socialTitle",
