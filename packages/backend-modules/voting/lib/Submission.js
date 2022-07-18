@@ -43,21 +43,21 @@ const findMatchingAnswerIds = async ({ search, hits }, { elastic }) => {
 }
 
 const createSubmissionsFrom = (
-  { ids, size, userId, questionnaireId, search, filters = {} },
+  { size, userId, questionnaireId, search, filters = {} },
   { after, before } = {},
 ) => {
   return after?.count || before?.count || 0
 }
 
 const createSubmissionsSize = (
-  { ids, size, userId, questionnaireId, search, filters = {} },
+  { size, userId, questionnaireId, search, filters = {} },
   { after, before } = {},
 ) => {
   return size
 }
 
 const createSubmissionsSort = (
-  { ids, size, userId, questionnaireId, search, filters = {}, sort, anchor },
+  { size, userId, questionnaireId, search, filters = {}, sort },
   { after, before } = {},
 ) => {
   const isSortByCreatedAt = !sort?.by || sort.by === 'createdAt'
@@ -146,27 +146,27 @@ const count = async (
 }
 
 const find = async (
-  { size, userId, questionnaireId, search, filters, sort, anchor },
+  { size, userId, questionnaireId, search, filters, sort },
   { after, before },
   { elastic },
 ) => {
   try {
     const submissionsFrom = createSubmissionsFrom(
-      { size, userId, questionnaireId, search, filters, sort, anchor },
+      { size, userId, questionnaireId, search, filters, sort },
       { after, before },
     )
 
     const submissionsSize = createSubmissionsSize(
-      { size, userId, questionnaireId, search, filters, sort, anchor },
+      { size, userId, questionnaireId, search, filters, sort },
       { after, before },
     )
 
     const submissionSort = createSubmissionsSort(
-      { size, userId, questionnaireId, search, filters, sort, anchor },
+      { size, userId, questionnaireId, search, filters, sort },
       { after, before },
     )
     const submissionsQuery = createSubmissionsQuery(
-      { size, userId, questionnaireId, search, filters, sort, anchor },
+      { size, userId, questionnaireId, search, filters, sort },
       { after, before },
     )
 
@@ -265,7 +265,6 @@ const getConnection = (anchors, args, { elastic }) => {
     return {
       hasNextPage: count < payload.totalCount,
       end: {
-        anchor: nodes[nodes.length - 1].createdAt,
         first,
         count,
         search,
@@ -274,7 +273,6 @@ const getConnection = (anchors, args, { elastic }) => {
       },
       hasPreviousPage: count > first,
       start: {
-        anchor: nodes[0].createdAt,
         first,
         count,
         search,
