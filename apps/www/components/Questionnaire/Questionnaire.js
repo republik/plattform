@@ -10,10 +10,11 @@ import {
   InlineSpinner,
   RawHtml,
   useHeaderHeight,
+  FieldSet,
 } from '@project-r/styleguide'
 
 import { useTranslation } from '../../lib/withT'
-import withAuthorization from '../Auth/withAuthorization'
+
 import StatusError from '../StatusError'
 import {
   withQuestionnaire,
@@ -25,6 +26,8 @@ import Questions from './Questions'
 import QuestionnaireClosed from './QuestionnaireClosed'
 import QuestionnaireActions from './QuestionnaireActions'
 import ErrorMessage from '../ErrorMessage'
+import DetailsForm from '../Account/DetailsForm'
+import { withMyDetails, withMyDetailsMutation } from '../Account/enhancers'
 
 const { Headline, P } = Interaction
 
@@ -60,6 +63,7 @@ const Questionnaire = (props) => {
     resetQuestionnaire,
     revokeQuestionnaire,
     onQuestionnaireChange,
+    detailsData,
   } = props
   const [state, setState] = useState({})
   const [isResubmitAnswers, setIsResubmitAnswers] = useState(false)
@@ -67,6 +71,12 @@ const Questionnaire = (props) => {
   const { t } = useTranslation()
   const [colorScheme] = useColorContext()
   const id = questionnaireData.questionnaire?.id
+  const [detailsState, setDetailsState] = useState({
+    showErrors: false,
+    values: {},
+    errors: {},
+    dirty: {},
+  })
 
   const processSubmit = (fn, ...args) => {
     setState({ updating: true })
@@ -85,13 +95,6 @@ const Questionnaire = (props) => {
       })
   }
 
-  const handleSubmit = () => {
-    if (isResubmitAnswers) {
-      setIsResubmitAnswers(false)
-    }
-    processSubmit(submitQuestionnaire, id)
-  }
-
   const {
     submittedMessage,
     questionnaireName,
@@ -100,6 +103,7 @@ const Questionnaire = (props) => {
     sliceAt,
     showSlice2,
     slug,
+    updateDetails,
   } = props
 
   return (
@@ -189,6 +193,74 @@ const Questionnaire = (props) => {
         const userAnswerCount = questions
           .map((q) => q.userAnswer)
           .filter(Boolean).length
+        const askForAddress = questions.some((q) => {
+          const value = q.userAnswer?.payload?.value
+
+          return (
+            value &&
+            q.options?.some(
+              (option) => option.requireAddress && value.includes(option.value),
+            )
+          )
+        })
+        const askForName =
+          !detailsData.me?.firstName || !detailsData.me?.lastName
+        const needsMeUpdate = askForName || askForAddress
+
+        const detailsErrorMessages = Object.keys(detailsState.errors)
+          .map((key) => detailsState.errors[key])
+          .filter(Boolean)
+
+        const onSubmit = async () => {
+          if (needsMeUpdate && detailsErrorMessages.length) {
+            setDetailsState((state) =>
+              Object.keys(state.errors).reduce(
+                (nextState, key) => {
+                  nextState.dirty[key] = true
+                  return nextState
+                },
+                {
+                  ...state,
+                  showErrors: true,
+                  dirty: {},
+                },
+              ),
+            )
+            return
+          }
+          if (isResubmitAnswers) {
+            setIsResubmitAnswers(false)
+          }
+          if (needsMeUpdate) {
+            setState({ updating: true })
+            try {
+              await updateDetails({
+                ...(askForName
+                  ? {
+                      firstName: detailsState.values.firstName,
+                      lastName: detailsState.values.lastName,
+                    }
+                  : {}),
+                address: askForAddress
+                  ? {
+                      name: detailsState.values.name,
+                      line1: detailsState.values.line1,
+                      line2: detailsState.values.line2,
+                      postalCode: detailsState.values.postalCode,
+                      city: detailsState.values.city,
+                      country: detailsState.values.country,
+                    }
+                  : undefined,
+              })
+            } catch (error) {
+              setState({
+                error,
+              })
+              return
+            }
+          }
+          processSubmit(submitQuestionnaire, id)
+        }
 
         return (
           <div>
@@ -251,10 +323,26 @@ const Questionnaire = (props) => {
               showSlice2={showSlice2}
               slug={slug}
             />
+            {needsMeUpdate && (
+              <DetailsForm
+                style={{ marginTop: 50 }}
+                data={detailsData}
+                values={detailsState.values}
+                errors={detailsState.errors}
+                dirty={detailsState.dirty}
+                onChange={(fields) => {
+                  setDetailsState(FieldSet.utils.mergeFields(fields))
+                }}
+                errorMessages={detailsErrorMessages}
+                showErrors={!updating && !!detailsState.showErrors}
+                askForName={askForName}
+                askForAddress={askForAddress}
+              />
+            )}
             {!externalSubmit && (
               <QuestionnaireActions
                 isResubmitAnswers={isResubmitAnswers}
-                onSubmit={handleSubmit}
+                onSubmit={onSubmit}
                 onReset={onReset}
                 updating={updating}
                 invalid={userAnswerCount < 1}
@@ -273,6 +361,8 @@ const QuestionnaireWithMutations = compose(
   withQuestionnaireMutation,
   withQuestionnaireReset,
   withQuestionnaireRevoke,
+  withMyDetails,
+  withMyDetailsMutation,
 )(Questionnaire)
 
 export default QuestionnaireWithMutations

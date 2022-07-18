@@ -375,6 +375,8 @@ class QuestionnaireCrowdPage extends Component {
                 onChange={(fields) => this.onDetailsChange(fields)}
                 errorMessages={errorMessages}
                 showErrors={!updating && !!showErrors}
+                askForPhoneNumber
+                askForAddress
               />
             ) : (
               <>
