@@ -4,10 +4,10 @@ import {
   Interaction,
   Loader,
   CommentHeaderProfile,
-  useColorContext,
   SearchIcon,
   Field,
   useDebounce,
+  HR,
 } from '@project-r/styleguide'
 import { useRouter } from 'next/router'
 import { useTranslation } from '../../../lib/withT'
@@ -88,7 +88,6 @@ const Submissions = ({ slug }) => {
     },
   })
   const { t } = useTranslation()
-  const [colorScheme] = useColorContext()
 
   return (
     <>
@@ -132,12 +131,8 @@ const Submissions = ({ slug }) => {
                   <div
                     key={id}
                     style={{
-                      margin: '30px 0 60px',
-                      padding: 10,
-                      borderWidth: 1,
-                      borderStyle: 'solid',
+                      marginTop: 40,
                     }}
-                    {...colorScheme.set('borderColor', 'divider')}
                   >
                     <CommentHeaderProfile
                       t={t}
@@ -166,6 +161,7 @@ const Submissions = ({ slug }) => {
                         )
                       },
                     )}
+                    <HR />
                   </div>
                 )
               })}
