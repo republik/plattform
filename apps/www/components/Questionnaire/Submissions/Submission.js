@@ -12,11 +12,12 @@ import {
 import { useState } from 'react'
 import { max } from 'd3-array'
 import { css } from 'glamor'
-import { timeFormat } from 'd3-time-format'
+import Link from 'next/link'
 
 import AnswerText from './AnswerText'
 import PlainButton from './PlainButton'
-import Link from 'next/link'
+
+import { swissTime } from '../../../lib/utils/format'
 
 const styles = {
   profileRoot: css({
@@ -45,7 +46,7 @@ const styles = {
   }),
 }
 
-const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
+const dateTimeFormat = swissTime.format('%d. %B %Y %H:%M')
 const titleDate = (string) => dateTimeFormat(new Date(string))
 
 const Submission = ({

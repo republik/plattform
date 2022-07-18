@@ -4246,7 +4246,7 @@
     },
     {
       "key": "questionnaire/reset/confirm",
-      "value": "Sind Sie sicher dass Sie Ihre Antworten löschen wollen?"
+      "value": "Sind Sie sicher, dass Sie Ihre Antworten löschen wollen?"
     },
     {
       "key": "questionnaire/turnout",
@@ -4363,10 +4363,6 @@
     {
       "key": "pages/meta/questionnaire/crowd/socialTitle",
       "value": "Das 1-Minuten-Formular"
-    },
-    {
-      "key": "pages/meta/behind/gallery",
-      "value": "Hinter den Kulissen"
     },
     {
       "key": "package/PROLONG/title",
