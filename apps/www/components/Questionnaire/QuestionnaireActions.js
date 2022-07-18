@@ -14,30 +14,36 @@ const styles = {
   }),
 }
 
-export default compose(withT)(({ t, onSubmit, onReset, updating, invalid }) => {
-  return (
-    <div {...styles.actions}>
-      <Button primary onClick={onSubmit} disabled={updating || invalid}>
-        {updating ? <InlineSpinner size={40} /> : t('questionnaire/submit')}
-      </Button>
-      {invalid ? (
-        <Interaction.P>{t('questionnaire/invalid')}</Interaction.P>
-      ) : (
-        !!onReset && (
-          <Button
-            onClick={() => {
-              if (window.confirm(t('questionnaire/reset/confirm'))) {
-                onReset()
-              }
-            }}
-            style={{ padding: 0 }}
-            small
-            naked
-          >
-            {t('questionnaire/reset')}
-          </Button>
-        )
-      )}
-    </div>
-  )
-})
+export default compose(withT)(
+  ({ t, onSubmit, onReset, isResubmitAnswers, updating, invalid }) => {
+    return (
+      <div {...styles.actions}>
+        <Button primary onClick={onSubmit} disabled={updating || invalid}>
+          {updating ? (
+            <InlineSpinner size={40} />
+          ) : (
+            t(`questionnaire/${isResubmitAnswers ? 'update' : 'submit'}`)
+          )}
+        </Button>
+        {invalid ? (
+          <Interaction.P>{t('questionnaire/invalid')}</Interaction.P>
+        ) : (
+          !!onReset && (
+            <Button
+              onClick={() => {
+                if (window.confirm(t('questionnaire/reset/confirm'))) {
+                  onReset()
+                }
+              }}
+              style={{ padding: 0 }}
+              small
+              naked
+            >
+              {t('questionnaire/reset')}
+            </Button>
+          )
+        )}
+      </div>
+    )
+  },
+)

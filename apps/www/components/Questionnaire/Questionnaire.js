@@ -89,15 +89,10 @@ const Questionnaire = (props) => {
     if (isResubmitAnswers) {
       setIsResubmitAnswers(false)
     }
-    processSubmit(submitQuestionnaire, id).then(() => window.scrollTo(0, 0))
-  }
-
-  const handleReset = () => {
-    processSubmit(resetQuestionnaire, id).then(() => window.scrollTo(0, 0))
+    processSubmit(submitQuestionnaire, id)
   }
 
   const {
-    showResults,
     submittedMessage,
     questionnaireName,
     externalSubmit,
@@ -145,26 +140,46 @@ const Questionnaire = (props) => {
           return submittedMessage
         }
 
+        const onReset = async () => {
+          setState({ updating: true })
+          if (revokeSubmissions && userHasSubmitted) {
+            await revokeQuestionnaire(id).catch((error) => {
+              setState({
+                error,
+              })
+            })
+          }
+          await resetQuestionnaire(id).catch((error) => {
+            setState({
+              error,
+            })
+          })
+          if (isResubmitAnswers) {
+            setIsResubmitAnswers(false)
+          }
+          setState((state) => ({
+            // preserve error if present
+            ...state,
+            updating: false,
+          }))
+        }
+        const onRevoke =
+          revokeSubmissions &&
+          (() => {
+            processSubmit(revokeQuestionnaire, id)
+          })
+
         if (!updating && !isResubmitAnswers && (hasEnded || userHasSubmitted)) {
           return (
             <QuestionnaireClosed
               submitted={userHasSubmitted}
-              showResults={showResults}
-              slug={slug}
               onResubmit={
                 resubmitAnswers &&
                 (() => {
                   setIsResubmitAnswers(true)
                 })
               }
-              onRevoke={
-                revokeSubmissions &&
-                (() => {
-                  processSubmit(revokeQuestionnaire, id).then(() =>
-                    window.scrollTo(0, 0),
-                  )
-                })
-              }
+              onRevoke={onRevoke}
             />
           )
         }
@@ -238,8 +253,9 @@ const Questionnaire = (props) => {
             />
             {!externalSubmit && (
               <QuestionnaireActions
+                isResubmitAnswers={isResubmitAnswers}
                 onSubmit={handleSubmit}
-                onReset={handleReset}
+                onReset={onReset}
                 updating={updating}
                 invalid={userAnswerCount < 1}
               />
@@ -252,7 +268,6 @@ const Questionnaire = (props) => {
 }
 
 const QuestionnaireWithMutations = compose(
-  withAuthorization(['supporter', 'editor'], 'showResults'),
   withQuestionnaireMutation,
   withQuestionnaireReset,
   withQuestionnaireRevoke,

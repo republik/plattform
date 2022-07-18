@@ -4,6 +4,7 @@ import { Interaction, A, useColorContext } from '@project-r/styleguide'
 
 import Results from './Results'
 import { useTranslation } from '../../lib/withT'
+import PlainButton from './Submissions/PlainButton'
 
 const { P } = Interaction
 
@@ -19,13 +20,7 @@ const styles = {
   }),
 }
 
-const QuestionnaireClosed = ({
-  slug,
-  submitted,
-  showResults,
-  onResubmit,
-  onRevoke,
-}) => {
+const QuestionnaireClosed = ({ submitted, onResubmit, onRevoke }) => {
   const { t } = useTranslation()
   const [colorScheme] = useColorContext()
 
@@ -38,44 +33,26 @@ const QuestionnaireClosed = ({
         {submitted && (onResubmit || onRevoke) && (
           <>
             <P>
-              {onResubmit && (
-                <A
-                  href='#'
-                  onClick={(e) => {
-                    e.preventDefault()
+              <PlainButton
+                onClick={(e) => {
+                  e.preventDefault()
+                  if (onResubmit) {
                     onResubmit()
-                  }}
-                >
-                  {t('questionnaire/thankyou/resubmit')}
-                </A>
-              )}
-              {onResubmit && onRevoke && ' – '}
-              {onRevoke && (
-                <A
-                  onClick={(e) => {
-                    e.preventDefault()
+                  } else {
                     onRevoke()
-                  }}
-                  href='#'
-                >
-                  {t('questionnaire/thankyou/revoke')}
-                </A>
-              )}
+                  }
+                }}
+              >
+                {t(
+                  `questionnaire/thankyou/${
+                    onResubmit ? 'resubmit' : 'revoke'
+                  }`,
+                )}
+              </PlainButton>
             </P>
           </>
         )}
       </div>
-      {showResults && (
-        <>
-          <P style={{ marginBottom: 20 }}>
-            <span {...colorScheme.set('color', 'error')}>
-              Diese Resultate werden{' '}
-              <Interaction.Emphasis>nur intern</Interaction.Emphasis> angezeigt.
-            </span>
-          </P>
-          <Results canDownload slug={slug} />
-        </>
-      )}
     </>
   )
 }

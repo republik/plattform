@@ -4233,12 +4233,16 @@
       "value": "Abschicken"
     },
     {
+      "key": "questionnaire/update",
+      "value": "Aktualisieren"
+    },
+    {
       "key": "questionnaire/reset",
-      "value": "Antworten zurücksetzen"
+      "value": "Antworten löschen"
     },
     {
       "key": "questionnaire/reset/confirm",
-      "value": "Sind Sie sicher dass Sie Ihre Antworten zurücksetzen wollen?"
+      "value": "Sind Sie sicher dass Sie Ihre Antworten löschen wollen?"
     },
     {
       "key": "questionnaire/turnout",
