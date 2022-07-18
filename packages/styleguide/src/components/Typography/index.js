@@ -93,10 +93,6 @@ const styles = {
   label: css({
     ...convertStyleToRem(fontStyles.sansSerifRegular14),
   }),
-  quote: css({
-    ...fontStyles.sansSerifRegular21,
-    color: colors.text,
-  }),
 }
 
 export const A = React.forwardRef(({ children, ...props }, ref) => {
@@ -206,10 +202,3 @@ export const HR = ({ attributes }) => {
     />
   )
 }
-
-export const Quote = ({ children, source, ...props }) => (
-  <blockquote {...props} {...styles.quote}>
-    <div>«{children}»</div>
-    {!!source && <cite>{source}</cite>}
-  </blockquote>
-)
