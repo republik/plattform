@@ -16,18 +16,30 @@ async function transform(row) {
         const question =
           questions.find((question) => question.id === answer.questionId) || {}
 
-        const { type } = question
+        const { id, text, type, typePayload } = question
 
         if (!type) {
           return false
         }
 
+        const typeValue =
+          (type === 'Choice' &&
+            answer.payload?.value.map(
+              (value) =>
+                typePayload.options.find((option) => option.value == value) // eslint-disable-line eqeqeq
+                  ?.label || value,
+            )) ||
+          answer.payload?.value
+
         return {
           ...answer,
           resolved: {
-            question,
+            question: {
+              id,
+              text,
+            },
             value: {
-              [type]: answer.payload?.value,
+              [type]: typeValue,
             },
           },
         }
@@ -45,7 +57,7 @@ const getDefaultResource = async ({ pgdb }) => {
       getQuestions: async function (questionnaireId) {
         return pgdb.public.questions.find(
           { questionnaireId },
-          { fields: ['id', 'type', 'text'] },
+          { fields: ['id', 'text', 'type', 'typePayload'] },
         )
       },
       getAnswers: async function (questionnaireId, userId) {

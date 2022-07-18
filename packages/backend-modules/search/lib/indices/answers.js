@@ -22,13 +22,8 @@ module.exports = {
             value: {
               properties: {
                 Choice: {
-                  type: 'keyword',
-                },
-                Document: {
-                  type: 'keyword',
-                },
-                Range: {
-                  type: 'long',
+                  type: 'text',
+                  analyzer: 'german',
                 },
                 Text: {
                   type: 'text',
