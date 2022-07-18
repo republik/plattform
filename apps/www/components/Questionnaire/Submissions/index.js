@@ -64,11 +64,6 @@ const mainQuery = gql`
             name
             slug
             profilePicture
-            credential {
-              id
-              description
-              verified
-            }
           }
           answers {
             totalCount
