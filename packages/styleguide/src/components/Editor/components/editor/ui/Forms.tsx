@@ -54,7 +54,9 @@ const getForm = (
   // console.log({ element })
   if (!SlateElement.isElement(element)) return
   // console.log({ element, config: elConfig[element.type] })
-  const Form = elConfig[element.type].Form
+  const config = elConfig[element.type]
+  if (config.attrs?.isBlock) return
+  const Form = config.Form
   if (!Form) return
   return {
     node: node as NodeEntry<CustomElement>,
