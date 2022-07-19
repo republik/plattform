@@ -190,12 +190,15 @@ class RangeQuestion extends Component {
 
   render() {
     const {
-      question: { text },
+      question: { text, explanation },
     } = this.props
     return (
       <div>
         {text && (
           <Interaction.H2 {...questionStyles.label}>{text}</Interaction.H2>
+        )}
+        {explanation && (
+          <Interaction.P {...questionStyles.help}>{explanation}</Interaction.P>
         )}
         <div {...questionStyles.body}>
           {this.renderInput()}

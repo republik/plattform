@@ -1,9 +1,11 @@
 const dict = {
+  answers: require('./answers'),
   comments: require('./comments'),
   documents: require('./documents'),
   documentzones: require('./documentzones'),
   mails: require('./mails'),
   users: require('./users'),
+  questionnaireSubmissions: require('./questionnaireSubmissions'),
   repos: require('./repos'),
 }
 

@@ -298,7 +298,7 @@ const buildQueries = (tableName) => {
       if (!resultIsEligible) {
         throw new Error(t(`api/${table.translationsKey}/notEligible`))
       }
-      if (resultUserHasSubmitted) {
+      if (!entity?.resubmitAnswers && resultUserHasSubmitted) {
         throw new Error(t(`api/${table.translationsKey}/alreadySubmitted`))
       }
     } else if (!entity.unattributedAnswers) {

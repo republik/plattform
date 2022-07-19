@@ -116,7 +116,6 @@ export {
   Lead,
   P,
   Label,
-  Quote,
   Interaction,
   Meta,
   Editorial,
@@ -138,6 +137,7 @@ export {
 } from './components/Discussion/Composer'
 
 export { renderCommentMdast } from './components/Discussion/Internal/Comment/render'
+export { default as RelativeTime } from './components/Discussion/Internal/Comment/RelativeTime'
 export { IconLink as DiscussionIconLink } from './components/Discussion/Internal/Comment/IconLink'
 
 export { default as DiscussionCommentsWrapper } from './components/Discussion/DiscussionCommentsWrapper'

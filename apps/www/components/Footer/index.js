@@ -245,7 +245,7 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
                 </FooterNavLink>
               </li>
               <li>
-                <FooterNavLink href='/jobs'>
+                <FooterNavLink href='/format/jobs'>
                   <a {...navLinkStyle}>{t('footer/jobs')}</a>
                 </FooterNavLink>
               </li>

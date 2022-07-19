@@ -30,6 +30,7 @@ import FieldSet from '../../components/FieldSet'
 import { gql } from '@apollo/client'
 import DetailsForm from '../../components/Account/DetailsForm'
 import {
+  A,
   Interaction,
   Figure,
   FigureImage,
@@ -40,11 +41,17 @@ import {
 import { css } from 'glamor'
 import NewsletterSignUp from '../../components/Auth/NewsletterSignUp'
 import Link from 'next/link'
-import { description } from './[slug]'
 import { withDefaultSSR } from '../../lib/apollo/helpers'
 import ErrorMessage from '../../components/ErrorMessage'
 
 const SLUG = '1-minute'
+const description = t.elements('pages/meta/questionnaire/unauthorized', {
+  buyLink: (
+    <Link href='/angebote' key='pledge' passHref>
+      <A>{t('pages/meta/questionnaire/unauthorized/buyText')}</A>
+    </Link>
+  ),
+})
 
 const { Headline, P } = Interaction
 
@@ -149,7 +156,9 @@ const ThankYou = compose(withT)(({ t }) => {
           ))}
       </div>
       <NewsletterSignUp free skipTitle name='ACCOMPLICE' />
-      <Label>{t('questionnaire/crowd/submitted/optout')}</Label>
+      <div style={{ marginTop: 5 }}>
+        <Label>{t('questionnaire/crowd/submitted/optout')}</Label>
+      </div>
     </div>
   )
 })
@@ -366,6 +375,8 @@ class QuestionnaireCrowdPage extends Component {
                 onChange={(fields) => this.onDetailsChange(fields)}
                 errorMessages={errorMessages}
                 showErrors={!updating && !!showErrors}
+                askForPhoneNumber
+                askForAddress
               />
             ) : (
               <>
@@ -384,7 +395,6 @@ class QuestionnaireCrowdPage extends Component {
               onReset={() => this.reset()}
               updating={updating}
               submitting={submitting}
-              leftAlign
             />
           </>
         )}

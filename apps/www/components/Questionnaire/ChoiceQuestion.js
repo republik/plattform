@@ -77,7 +77,7 @@ class ChoiceQuestion extends Component {
 
   render() {
     const {
-      question: { text, userAnswer, cardinality, options },
+      question: { text, explanation, userAnswer, cardinality, options },
       t,
     } = this.props
     const multipleAllowed = cardinality === 0 || cardinality > 1
@@ -91,9 +91,9 @@ class ChoiceQuestion extends Component {
       <div>
         <div {...questionStyles.label}>
           {text && <H2>{text}</H2>}
-          {multipleAllowed && (
+          {(multipleAllowed || explanation) && (
             <P {...questionStyles.help}>
-              {t('questionnaire/choice/helpMultiple')}
+              {explanation || t('questionnaire/choice/helpMultiple')}
             </P>
           )}
         </div>
