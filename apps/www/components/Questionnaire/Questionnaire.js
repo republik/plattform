@@ -144,6 +144,9 @@ const Questionnaire = (props) => {
           return submittedMessage
         }
 
+        // ToDo: expose & query questionnaire.submissionsAccessRole
+        const publicSubmission = true
+
         const onReset = async () => {
           setState({ updating: true })
           if (revokeSubmissions && userHasSubmitted) {
@@ -184,6 +187,7 @@ const Questionnaire = (props) => {
                 })
               }
               onRevoke={onRevoke}
+              publicSubmission={publicSubmission}
             />
           )
         }
@@ -347,8 +351,7 @@ const Questionnaire = (props) => {
                 onReset={onReset}
                 updating={updating}
                 invalid={userAnswerCount < 1}
-                // ToDo: expose & query questionnaire.submissionsAccessRole
-                publicSubmission
+                publicSubmission={publicSubmission}
               />
             )}
           </div>

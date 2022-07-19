@@ -20,7 +20,12 @@ const styles = {
   }),
 }
 
-const QuestionnaireClosed = ({ submitted, onResubmit, onRevoke }) => {
+const QuestionnaireClosed = ({
+  submitted,
+  onResubmit,
+  onRevoke,
+  publicSubmission,
+}) => {
   const { t } = useTranslation()
   const [colorScheme] = useColorContext()
 
@@ -28,27 +33,34 @@ const QuestionnaireClosed = ({ submitted, onResubmit, onRevoke }) => {
     <>
       <div {...styles.closed} {...colorScheme.set('backgroundColor', 'alert')}>
         <P>
-          {submitted ? t('questionnaire/thankyou') : t('questionnaire/ended')}
+          {submitted
+            ? t(`questionnaire/thankyou${publicSubmission ? '/public' : ''}`)
+            : t('questionnaire/ended')}
         </P>
         {submitted && (onResubmit || onRevoke) && (
           <>
             <P>
-              <PlainButton
-                onClick={(e) => {
-                  e.preventDefault()
-                  if (onResubmit) {
+              {onResubmit && (
+                <PlainButton
+                  onClick={(e) => {
+                    e.preventDefault()
                     onResubmit()
-                  } else {
+                  }}
+                >
+                  {t('questionnaire/thankyou/resubmit')}
+                </PlainButton>
+              )}
+              {onResubmit && onRevoke && ' · '}
+              {onRevoke && (
+                <PlainButton
+                  onClick={(e) => {
+                    e.preventDefault()
                     onRevoke()
-                  }
-                }}
-              >
-                {t(
-                  `questionnaire/thankyou/${
-                    onResubmit ? 'resubmit' : 'revoke'
-                  }`,
-                )}
-              </PlainButton>
+                  }}
+                >
+                  {t('questionnaire/thankyou/revoke')}
+                </PlainButton>
+              )}
             </P>
           </>
         )}

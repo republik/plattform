@@ -4265,6 +4265,10 @@
       "value": "Ihre Antworten sind bei uns angekommen. Danke fürs Mitmachen!"
     },
     {
+      "key": "questionnaire/thankyou/public",
+      "value": "Ihre Antworten sind publiziert. Danke fürs Mitmachen!"
+    },
+    {
       "key": "questionnaire/thankyou/resubmit",
       "value": "bearbeiten"
     },
