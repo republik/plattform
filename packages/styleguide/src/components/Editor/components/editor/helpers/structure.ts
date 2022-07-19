@@ -36,7 +36,6 @@ import {
   isEntireNodeSelected,
   selectAdjacent,
   spansManyElements,
-  overlaps,
 } from './tree'
 import { config as elConfig } from '../../../config/elements'
 import { getCharCount, selectNearestWord } from './text'
@@ -482,6 +481,19 @@ export const removeElement = (
   return true
 }
 
+export const insertAfter = (
+  editor: CustomEditor,
+  elKey: CustomElementsType,
+  elPath: number[],
+) => {
+  const config = elConfig[elKey]
+  const element = buildElement(elKey, config)
+  const insertPath = calculateSiblingPath(elPath)
+  Transforms.insertNodes(editor, element, { at: insertPath })
+  Transforms.select(editor, insertPath)
+  Transforms.collapse(editor, { edge: 'start' })
+}
+
 const deleteOnInsert = (
   editor: CustomEditor,
   target: NodeEntry<CustomElement>,
@@ -501,7 +513,7 @@ const deleteOnInsert = (
   }
 }
 
-const insertElement = (
+const splitAndInsert = (
   editor: CustomEditor,
   target: NodeEntry<CustomElement>,
   inPlace: boolean,
@@ -606,7 +618,7 @@ export const insertRepeat = (editor: CustomEditor): void => {
     target = getParent(editor, target)
   }
 
-  insertElement(
+  splitAndInsert(
     editor,
     target,
     isNextTarget || multiElementSelection,
