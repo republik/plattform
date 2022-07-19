@@ -108,6 +108,10 @@ export type FlyerTileClosingElement = SharedElement & {
   type: 'flyerTileClosing'
 }
 
+export type FlyerTileMetaElement = SharedElement & {
+  type: 'flyerTileMeta'
+}
+
 export type FlyerTileElement = SharedElement & {
   type: 'flyerTile'
 }
@@ -161,6 +165,7 @@ export type CustomElement =
   | BlockCodeElement
   | FlyerTileClosingElement
   | FlyerTileOpeningElement
+  | FlyerTileMetaElement
   | FlyerTileElement
   | FlyerMetaPElement
   | FlyerTopicElement
@@ -196,6 +201,7 @@ export type CustomElementsType =
   | 'blockCode'
   | 'flyerTileOpening'
   | 'flyerTileClosing'
+  | 'flyerTileMeta'
   | 'flyerTile'
   | 'flyerMetaP'
   | 'flyerTopic'
@@ -221,7 +227,6 @@ interface EditorAttrsI {
 
 interface ElementAttrsI extends EditorAttrsI {
   formatText?: boolean
-  isMain?: boolean
   isBlock?: boolean
   isTextInline?: boolean
   highlightSelected?: boolean
@@ -262,6 +267,7 @@ export type TemplateType = CustomElementsType | 'text'
 
 export type NodeTemplate = {
   type: TemplateType | TemplateType[]
+  main?: boolean
   repeat?: boolean
   end?: boolean
 }

@@ -2,10 +2,10 @@ import React from 'react'
 import {
   ElementConfigI,
   ElementFormProps,
-  FlyerAuthorElement,
   FlyerTileElement,
 } from '../../../custom-types'
 import { css } from 'glamor'
+import { FlyerTileIcon } from '../../../../Icons'
 
 const styles = {
   container: css({
@@ -48,7 +48,7 @@ const Form: React.FC<ElementFormProps<FlyerTileElement>> = ({
 export const config: ElementConfigI = {
   component: 'flyerTile',
   structure: [
-    { type: 'flyerMetaP' },
+    { type: 'flyerMetaP', main: true },
     { type: 'flyerTopic' },
     { type: 'flyerTitle' },
     { type: 'flyerAuthor' },
@@ -59,4 +59,5 @@ export const config: ElementConfigI = {
   attrs: {
     isBlock: true,
   },
+  button: { icon: FlyerTileIcon },
 }

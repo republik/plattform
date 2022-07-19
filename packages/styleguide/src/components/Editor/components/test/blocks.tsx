@@ -4,15 +4,16 @@ import {
   FigureElement,
   HeadlineElement,
   ParagraphElement,
+  PullQuoteElement,
 } from '../../custom-types'
 
 export const figureCaption: FigureCaptionElement = {
   type: 'figureCaption',
   children: [
-    { text: 'A butterfly' },
+    { text: '' },
     {
       type: 'figureByline',
-      children: [{ text: 'lands on a branch' }],
+      children: [{ text: '' }],
     },
     { text: '' },
   ],
@@ -34,18 +35,32 @@ export const blockQuote: BlockQuoteElement = {
   children: [
     {
       type: 'blockQuoteText',
-      children: [{ text: 'Lorem ipsum quote' }],
+      children: [{ text: '' }],
     },
     figureCaption,
   ],
 }
 
+export const pullQuote: PullQuoteElement = {
+  type: 'pullQuote',
+  children: [
+    {
+      type: 'pullQuoteText',
+      children: [{ text: '' }],
+    },
+    {
+      type: 'pullQuoteSource',
+      children: [{ text: '' }],
+    },
+  ],
+}
+
 export const headline: HeadlineElement = {
   type: 'headline',
-  children: [{ text: 'Hello World' }],
+  children: [{ text: '' }],
 }
 
 export const paragraph: ParagraphElement = {
   type: 'paragraph',
-  children: [{ text: 'Lorem si amet paragraphum et sol.' }],
+  children: [{ text: '' }],
 }

@@ -4,6 +4,7 @@ import { toggleElement } from '../editor/helpers/structure'
 import mockEditor from './mockEditor'
 import articleSchema from '../../schema/article'
 import flyerSchema from '../../schema/flyer'
+import { figure, pullQuote } from './blocks'
 
 describe('Slate Editor: Block Conversion', () => {
   window.document.getSelection = jest.fn()
@@ -303,15 +304,16 @@ describe('Slate Editor: Block Conversion', () => {
       ]
       const structure = [
         {
-          type: 'flyerTile',
+          type: ['flyerTile', 'flyerTileMeta'],
+          repeat: true,
         },
       ]
       const editor = await setup(structure, { schema: flyerSchema })
 
+      // toggle inner tile elements
       await Transforms.select(editor, [0, 4, 0])
       toggleElement(editor, 'ul')
       await new Promise(process.nextTick)
-
       expect(cleanupTree(value)[0].children[4]).toEqual({
         type: 'ul',
         ordered: false,
@@ -323,95 +325,39 @@ describe('Slate Editor: Block Conversion', () => {
         ],
       })
 
+      // toggle inner tile elements
       await Transforms.select(editor, [0, 5, 0])
       toggleElement(editor, 'figure')
       await new Promise(process.nextTick)
-
-      expect(cleanupTree(value)[0].children[5]).toEqual({
-        type: 'figure',
-        children: [
-          {
-            type: 'figureImage',
-            children: [
-              {
-                text: '',
-              },
-            ],
-          },
-          {
-            type: 'figureCaption',
-            children: [
-              {
-                text: '',
-              },
-              {
-                type: 'figureByline',
-                children: [
-                  {
-                    text: '',
-                  },
-                ],
-              },
-              {
-                text: '',
-              },
-            ],
-          },
-        ],
-      })
+      expect(cleanupTree(value)[0].children[5]).toEqual(figure)
 
       toggleElement(editor, 'pullQuote')
       await new Promise(process.nextTick)
-
-      expect(cleanupTree(value)[0].children[5]).toEqual({
-        type: 'pullQuote',
-        children: [
-          {
-            type: 'pullQuoteText',
-            children: [{ text: '' }],
-          },
-          {
-            type: 'pullQuoteSource',
-            children: [{ text: '' }],
-          },
-        ],
-      })
+      expect(cleanupTree(value)[0].children[5]).toEqual(pullQuote)
 
       toggleElement(editor, 'figure')
       await new Promise(process.nextTick)
+      expect(cleanupTree(value)[0].children[5]).toEqual(figure)
 
-      expect(cleanupTree(value)[0].children[5]).toEqual({
-        type: 'figure',
-        children: [
-          {
-            type: 'figureImage',
-            children: [
-              {
-                text: '',
-              },
-            ],
-          },
-          {
-            type: 'figureCaption',
-            children: [
-              {
-                text: '',
-              },
-              {
-                type: 'figureByline',
-                children: [
-                  {
-                    text: '',
-                  },
-                ],
-              },
-              {
-                text: '',
-              },
-            ],
-          },
-        ],
-      })
+      // toggle tile type
+      await Transforms.select(editor, [0, 0, 0])
+      toggleElement(editor, 'flyerTileMeta')
+      await new Promise(process.nextTick)
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'flyerTileMeta',
+          children: [
+            {
+              type: 'flyerMetaP',
+              children: [
+                {
+                  text: '',
+                },
+              ],
+            },
+          ],
+        },
+      ])
     })
   })
 })

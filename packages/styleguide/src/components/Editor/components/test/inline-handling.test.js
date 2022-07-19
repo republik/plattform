@@ -401,7 +401,7 @@ describe('Slate Editor: Inline Insertion', () => {
         anchor: { path: [0, 0], offset: 6 },
         focus: { path: [0, 0], offset: 11 },
       })
-      toggleElement(editor, 'break')
+      toggleElement(editor, 'link')
       await new Promise(process.nextTick)
 
       expect(cleanupTree(value)).toEqual([

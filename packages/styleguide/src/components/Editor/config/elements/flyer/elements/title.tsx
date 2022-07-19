@@ -18,7 +18,4 @@ export const FlyerTitle = ({ children, attributes, ...props }) => (
 
 export const config: ElementConfigI = {
   component: 'flyerTitle',
-  attrs: {
-    isMain: true,
-  },
 }

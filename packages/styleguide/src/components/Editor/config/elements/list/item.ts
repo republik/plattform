@@ -5,6 +5,5 @@ export const config: ElementConfigI = {
   structure: [{ type: ['text', 'link'], repeat: true }],
   attrs: {
     formatText: true,
-    isMain: true,
   },
 }

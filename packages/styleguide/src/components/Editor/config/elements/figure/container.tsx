@@ -55,5 +55,5 @@ export const config: ElementConfigI = {
   button: { icon: ImageIcon },
   component: 'figure',
   props: ['size'],
-  structure: [{ type: 'figureImage' }, { type: 'figureCaption' }],
+  structure: [{ type: 'figureImage', main: true }, { type: 'figureCaption' }],
 }

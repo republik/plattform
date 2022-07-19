@@ -52,14 +52,8 @@ state: {
     ],
     structure: [
         {
-            type: 'flyerTileOpening',
-        },
-        {
-            type: 'flyerTile',
+            type: ['flyerTile', 'flyerTileMeta'],
             repeat: true
-        },
-        {
-            type: 'flyerTileClosing',
         },
     ]
 }

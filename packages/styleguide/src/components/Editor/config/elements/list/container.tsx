@@ -16,7 +16,9 @@ export const List: React.FC<{
   )
 }
 
-const structure: NodeTemplate[] = [{ type: 'listItem', repeat: true }]
+const structure: NodeTemplate[] = [
+  { type: 'listItem', main: true, repeat: true },
+]
 const props = ['ordered']
 
 export const ulConfig: ElementConfigI = {

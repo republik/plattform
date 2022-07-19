@@ -83,6 +83,8 @@ export {
   MdCode as CodeIcon,
   MdDragHandle as PunchlineIcon,
   MdOutlineCallToAction as ArticlePreviewIcon,
+  MdViewQuilt as FlyerTileIcon,
+  MdViewHeadline as FlyerTileMetaIcon,
 } from 'react-icons/md'
 
 export {

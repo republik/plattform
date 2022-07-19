@@ -362,7 +362,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'pullQuoteText',
           children: [
             { text: 'Hello' },
-            { type: 'break', children: [{ text: '' }] },
+            { type: 'link', children: [{ text: 'My' }] },
             { text: 'World' },
           ],
         },
@@ -376,7 +376,7 @@ describe('Slate Editor: Normalisation', () => {
       expect(cleanupTree(value)).toEqual([
         {
           type: 'pullQuoteText',
-          children: [{ text: 'HelloWorld' }],
+          children: [{ text: 'HelloMyWorld' }],
         },
       ])
     })

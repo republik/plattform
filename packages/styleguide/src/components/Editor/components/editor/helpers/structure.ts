@@ -121,12 +121,9 @@ const shouldRemove = (
 const getMainElement = (
   structure?: NodeTemplate[],
 ): CustomElementsType | undefined => {
-  if (!structure) return
-  for (let i = 0; i < structure.length; i++) {
-    const elType = getTemplateType(structure[i])
-    // console.log({ elType, isMain: elType && elConfig[elType].attrs?.isMain })
-    if (elType && elConfig[elType].attrs?.isMain) return elType
-  }
+  const main = structure?.find((template) => template.main)
+  if (!main) return
+  return getTemplateType(main)
 }
 
 const setChildren = (
@@ -253,7 +250,7 @@ export const toggleElement = (
   editor: CustomEditor,
   elKey: CustomElementsType,
 ): number[] => {
-  // console.log('toggle', elKey)
+  console.log('toggle', elKey)
 
   const { selection } = editor
   if (!selection) return
@@ -349,7 +346,7 @@ const deleteParent = (
     lastOp.type === 'remove_node' &&
     SlateElement.isElement(lastOp.node) &&
     lastOp.node.type === elementType &&
-    elConfig[elementType].attrs?.isMain
+    currentTemplate.main
   )
 }
 

@@ -17,6 +17,7 @@ import { config as listItem } from './list/item'
 import { config as inlineCode } from './inlineCode'
 import { config as blockCode } from './blockCode'
 import { config as flyerTile } from './flyer'
+import { config as flyerTileMeta } from './flyer/meta'
 import { config as flyerTileOpening } from './flyer/opening'
 import { config as flyerTileClosing } from './flyer/closing'
 import { config as flyerAuthor } from './flyer/elements/author'
@@ -49,6 +50,7 @@ export const config: ElementsConfig = {
   flyerTile,
   flyerTileClosing,
   flyerTileOpening,
+  flyerTileMeta,
   flyerAuthor,
   flyerMetaP,
   flyerPunchline,

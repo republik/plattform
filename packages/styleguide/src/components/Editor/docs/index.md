@@ -104,7 +104,8 @@ export const config: ElementConfigI = {
     { type: 'carouselTitle' },
     { 
     	type: 'figure', 
-    	repeat: true
+    	repeat: true,
+    	main: true
     }
   ]
 }
@@ -115,8 +116,9 @@ There are two attributes here:
 - the `component` key is used to find the correct React component to render this node with. This component is defined in the `schema` and passed through a `config` to the editor. We will come to that part soon.
 
 - the `structure` array tells us that `carouselContainer` consists of a `carouselTitle` and multiple `figures`. If this isn't true, new nodes will be automatically inserted and/or deleted during the normalisation cycle of Slate, until our `carousel` complies with the structure. 
+– the `main` attribute means that the `figure` element is the significant one in the `carousel` construct. If all figures get deleted by the user, the whole `carousel` should be deleted.
 
-	> Structures work recursively. For instance, `figure` requires a `figureImage` and a `figureCaption`.
+    > Structures work recursively. For instance, `figure` requires a `figureImage` and a `figureCaption`.
 
 ##### 3. Rendering Schema
 
@@ -249,7 +251,6 @@ export const config: ElementConfigI = {
   Form,
   attrs: {
     isVoid: true,
-    isMain: true,
     highlightSelected: true,
   },
   component: 'figureImage',
@@ -260,8 +261,7 @@ export const config: ElementConfigI = {
 A few interesting things here:
 
 - `props` matches the custom attributes defined in `custom-types.d`. Typescript isn't available on runtime, but we need to know which props belong to this element type and which don't, so we can erase the wrong props when needed.
-- `Form` comes up in an overlay when someone doube clicks on the element and allows the write to edit the custom data. Parent elements' forms are pulled out and displayed as well.
-- `isMain` means that the `figureImage` node is the significant one in the `figure` construct. If it gets deleted by the user, the whole `figure` should be deleted (among others). 
+- `Form` comes up in an overlay when someone doube clicks on the element and allows the write to edit the custom data. Parent elements' forms are pulled out and displayed as well. 
 
 `schema`:
 
@@ -449,8 +449,6 @@ rows:
     Description: boolean *(for void elements)*
   - Variable: formatText
     Description: boolean
-  - Variable: isMain
-    Description: boolean
   - Variable: isBlock
     Description: boolean *(display block UI)*
 ```
@@ -498,9 +496,9 @@ Optional array of `CustomMarksType` keys which are to be removed when a mark is 
 
 ### Structure
 
-A `structure` is an array of `NodeTemplate`. Each `NodeTemplate` specifies the type of the element (single element or an array of them) and whether the element is unique or can be repeated.
+A `structure` is an array of `NodeTemplate`. Each `NodeTemplate` specifies the type of the element (single element or an array of them) and whether the element is unique or can be repeated. It also tells us which is the main element of the construct. That's useful for deleting and converting nodes. 
 
-The normalisation automatically make sure that the constraints are enforced.
+Example: the image node of a figure is the main node of the figure structure (image + caption). If the writer deletes the image, the whole figure gets removed.
 
 `figureCaption` is a good example:
 
@@ -552,7 +550,6 @@ export const config: ElementConfigI = {
   Form,
   attrs: {
     isVoid: true,
-    isMain: true,
     highlightSelected: true,
   },
   component: 'figureImage',
@@ -670,12 +667,6 @@ export const config: ElementConfigI = {
 ```
 
 We solve the problem by adding an attribute called `end` to text nodes. End nodes can be placed at either end of the structure and do not contain any text. If someone starts writing inside an end node, the text gets reallocated to the nearest non-end node in the next normalisation cycle.
-
-#### Main Nodes
-
-The `isMain` flag signals that a node is the "principle node" of a structure. If this node is deleted by the writer, the whole parent structure should be deleted too.
-
-Example: the image node of a figure is the main node of the figure structure (image + caption). If the writer deletes the image, the whole figure gets removed.
 
 #### Linking
 

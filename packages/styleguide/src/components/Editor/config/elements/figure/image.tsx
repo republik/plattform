@@ -71,7 +71,6 @@ export const config: ElementConfigI = {
   Form,
   attrs: {
     isVoid: true,
-    isMain: true,
     highlightSelected: true,
   },
   component: 'figureImage',

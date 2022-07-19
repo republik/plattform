@@ -322,13 +322,14 @@ export const getAncestry = (
     return {}
   }
 
-  if (elConfig[element[0].type].attrs?.isMain) {
+  if (element[0].template.main) {
     container = element
   }
-  while (container && elConfig[container[0].type].attrs?.isMain) {
+  while (container && container[0].template.main) {
     container = getParent(editor, container)
   }
 
+  // for the convert options in the toolbar
   if (!hasConvertChoices(element[0])) {
     for (const [n, p] of Node.ancestors(editor, element[1])) {
       if (SlateElement.isElement(n) && hasConvertChoices(n)) {
