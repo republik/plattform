@@ -133,7 +133,7 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
           setFormPath(path)
         }}
       >
-        {isBlock && isSelected && <BlockUi path={path} />}
+        {isBlock && isSelected && <BlockUi path={path} element={element} />}
         {children}
       </Component>
     )

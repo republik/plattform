@@ -1,5 +1,10 @@
 import React from 'react'
-import { ElementConfigI } from '../../../custom-types'
+import {
+  ElementConfigI,
+  ElementFormProps,
+  FlyerAuthorElement,
+  FlyerTileElement,
+} from '../../../custom-types'
 import { css } from 'glamor'
 
 const styles = {
@@ -35,6 +40,11 @@ export const FlyerTile: React.FC<{
   )
 }
 
+const Form: React.FC<ElementFormProps<FlyerTileElement>> = ({
+  element,
+  onChange,
+}) => <div>FLYER TILE FORM</div>
+
 export const config: ElementConfigI = {
   component: 'flyerTile',
   structure: [
@@ -45,6 +55,7 @@ export const config: ElementConfigI = {
     { type: ['paragraph', 'ul', 'ol'], repeat: true },
     { type: ['flyerPunchline', 'pullQuote', 'articlePreview', 'figure'] },
   ],
+  Form,
   attrs: {
     isBlock: true,
   },

@@ -445,22 +445,59 @@ const getNode = (editor: CustomEditor, potentialPath): CustomNode | boolean =>
   Node.has(editor, potentialPath) &&
   Editor.node(editor, potentialPath)[0]
 
+export const moveElement = (
+  editor: CustomEditor,
+  elPath: number[],
+  direction: 'up' | 'down',
+  dryRun?: boolean,
+): boolean => {
+  const siblingPath = calculateSiblingPath(
+    elPath,
+    direction === 'up' ? 'previous' : 'next',
+  )
+  const siblingEl = getNode(editor, siblingPath)
+  if (!siblingEl || !SlateElement.isElement(siblingEl)) return
+  const element = getNode(editor, elPath)
+  const elTemplate = SlateElement.isElement(element) && element.template
+  // if the template doesn't allow for repeat, moving the element up/down
+  // would be erased by the normaliser
+  if (!elTemplate || !elTemplate.repeat) return
+  if (!isAllowedType(siblingEl.type, elTemplate.type)) return
+  if (dryRun) return true
+  Transforms.moveNodes(editor, { at: elPath, to: siblingPath })
+  return true
+}
+
+export const removeElement = (
+  editor: CustomEditor,
+  elPath: number[],
+  dryRun?: boolean,
+): boolean => {
+  const canRemove =
+    moveElement(editor, elPath, 'up', true) ||
+    moveElement(editor, elPath, 'down', true)
+  if (!canRemove) return
+  if (dryRun) return true
+  Transforms.removeNodes(editor, { at: elPath })
+  return true
+}
+
 const deleteOnInsert = (
   editor: CustomEditor,
   target: NodeEntry<CustomElement>,
   selected: NodeEntry<CustomElement>,
 ): number[] | undefined => {
   // TODO: isEmpty -> take into account voids with filled props edge case
-  const isEmptyTarget = target && getCharCount([target[0]]) === 0
-  if (isEmptyTarget) {
-    const siblingPath = calculateSiblingPath(selected[1])
-    const nextOfType = getNode(editor, siblingPath)
-    const hasSibling =
-      SlateElement.isElement(nextOfType) && nextOfType.type === target[0].type
-    const targetParent = getParent(editor, target)
-    if (!hasSibling && targetParent) {
-      return target[1]
-    }
+  if (!target) return
+  if (getCharCount([target[0]]) !== 0) return
+  if (!removeElement(editor, target[1], true)) return
+  const siblingPath = calculateSiblingPath(selected[1])
+  const nextOfType = getNode(editor, siblingPath)
+  const hasSibling =
+    SlateElement.isElement(nextOfType) && nextOfType.type === target[0].type
+  const targetParent = getParent(editor, target)
+  if (!hasSibling && targetParent) {
+    return target[1]
   }
 }
 
@@ -608,27 +645,4 @@ export const handleInsert = (
     event.preventDefault()
     insertRepeat(editor)
   }
-}
-
-export const moveElement = (
-  editor: CustomEditor,
-  elPath: number[],
-  direction: 'up' | 'down',
-  dryRun?: boolean,
-): boolean => {
-  const siblingPath = calculateSiblingPath(
-    elPath,
-    direction === 'up' ? 'previous' : 'next',
-  )
-  const siblingEl = getNode(editor, siblingPath)
-  if (!siblingEl || !SlateElement.isElement(siblingEl)) return
-  const element = getNode(editor, elPath)
-  const elTemplate = SlateElement.isElement(element) && element.template
-  // if the template doesn't allow for repeat, moving the element up/down
-  // would be erased by the normaliser
-  if (!elTemplate || !elTemplate.repeat) return
-  if (!isAllowedType(siblingEl.type, elTemplate.type)) return
-  if (dryRun) return true
-  Transforms.moveNodes(editor, { at: elPath, to: siblingPath })
-  return true
 }

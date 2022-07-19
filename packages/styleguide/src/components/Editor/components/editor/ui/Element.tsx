@@ -36,7 +36,7 @@ export const ElementButton: React.FC<{
 
   return (
     <ToolbarButton
-      title={`convert-to-${config.type}`}
+      title={`convert to ${config.type}`}
       button={element.button}
       disabled={config.disabled}
       active={config.active}

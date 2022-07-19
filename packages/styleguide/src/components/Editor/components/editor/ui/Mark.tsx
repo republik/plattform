@@ -61,7 +61,7 @@ export const MarkButton: React.FC<{
   }
   return (
     <ToolbarButton
-      title={`toggle-${config.type}`}
+      title={`toggle ${config.type}`}
       button={mark.button}
       disabled={config.disabled}
       active={isMarkActive(editor, mKey)}

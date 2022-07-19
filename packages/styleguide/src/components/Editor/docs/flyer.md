@@ -1,16 +1,13 @@
 ### Todos
 
-- Tile UI
-    - move up/down
-    - delete
-    - edit meta
-    - import from list
 - Create new tile
+- different render in editor and outside (e.g. for link)
 - New elements/real elements/forms for elements
     - Chart
     - Quiz
     - Survey
 - Copy from HTML (nice to have)
+- Flyer Tile Form
 
 - Authors editor (single tile)
 
