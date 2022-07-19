@@ -1,9 +1,15 @@
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 
-import { Button, Interaction, InlineSpinner } from '@project-r/styleguide'
+import {
+  Label,
+  Button,
+  Interaction,
+  InlineSpinner,
+} from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
+import { useMe } from '../../lib/context/MeContext'
 
 const styles = {
   actions: css({
@@ -24,8 +30,20 @@ export default compose(withT)(
     invalid,
     publicSubmission,
   }) => {
+    const { me } = useMe()
     return (
       <div {...styles.actions}>
+        {publicSubmission && (
+          <div style={{ marginBottom: 10 }}>
+            <Label>
+              {t(
+                `questionnaire/privacy/${
+                  me?.hasPublicProfile ? 'public' : 'private'
+                }`,
+              )}
+            </Label>
+          </div>
+        )}
         <Button primary onClick={onSubmit} disabled={updating || invalid}>
           {updating ? (
             <InlineSpinner size={40} />
