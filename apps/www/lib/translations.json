@@ -4357,6 +4357,14 @@
       "value": "Eine weitere Antwort lesen"
     },
     {
+      "key": "questionnaire/submissions/answers/other",
+      "value": "{count} Antworten"
+    },
+    {
+      "key": "questionnaire/submissions/answers/1",
+      "value": "Eine Antwort"
+    },
+    {
       "key": "questionnaire/submissions/loadMore/other",
       "value": "Weitere {count} Fragebögen laden"
     },
