@@ -126,6 +126,7 @@ const ExpandableLinkCallout = ({
 
   const calloutContainerRef = useRef<HTMLDivElement>()
   const calloutRef = useRef<HTMLDivElement>()
+
   const calloutRule = useMemo(
     () =>
       css({
@@ -171,18 +172,20 @@ const ExpandableLinkCallout = ({
     },
   })
 
-  const removeInfoBox = () => {
+  const removeCallout = () => {
     clearTimeout(timeOutRef.current)
     timeOutRef.current = setTimeout(() => setExpandedLink(undefined), DELAY)
   }
 
+  const persistCallout = () => {
+    clearTimeout(timeOutRef.current)
+  }
+
   return (
     <div
-      onMouseEnter={() => {
-        clearTimeout(timeOutRef.current)
-      }}
-      onMouseLeave={removeInfoBox}
-      onClick={removeInfoBox}
+      onMouseEnter={persistCallout}
+      onMouseLeave={removeCallout}
+      onClick={removeCallout}
       ref={calloutContainerRef}
       {...styles.calloutContainer}
       {...css({

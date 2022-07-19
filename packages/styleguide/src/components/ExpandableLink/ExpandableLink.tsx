@@ -72,6 +72,7 @@ const ExpandableLink = ({
       parseInt(
         window.getComputedStyle(target).getPropertyValue('line-height'),
       ) <= targetHeight
+
     const hoveringOnTopLine = event.clientY <= targetMiddle
     const displayAbove = event.clientY >= window.innerHeight / 2
     const displayToLeft = event.clientX >= window.innerWidth / 2
@@ -119,16 +120,16 @@ const ExpandableLink = ({
       {...styles.link}
       {...colorScheme.set('color', 'text')}
       {...colorScheme.set('textDecorationColor', 'textSoft')}
+      aria-lable={description}
       onClick={(event) => {
         event.preventDefault()
         showInfoBox(event)
       }}
-      onFocus={() => toggleLinkInfoBox({})}
-      onBlur={removeInfoBox}
       onMouseLeave={removeInfoBox}
       onMouseEnter={(event) => {
         showInfoBox(event)
       }}
+      tabIndex={0}
     >
       {children}
       {expandedLink && (
