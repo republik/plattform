@@ -30,8 +30,8 @@ const styles = {
     alignItems: 'center',
     flexGrow: 1,
     overflowX: 'clip',
-    padding: '5px 0',
-    margin: '-5px 0',
+    padding: '8px 0 5px',
+    margin: '-8px 0 -5px',
   }),
   profilePicture: css({
     display: 'block',
