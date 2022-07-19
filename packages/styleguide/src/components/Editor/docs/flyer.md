@@ -6,12 +6,13 @@
     - edit meta
     - import from list
 - Create new tile
-- New elements
+- New elements/real elements/forms for elements
     - Chart
     - Quiz
     - Survey
-- Copy from HTML
-- Review insert selectAdjacent/delete logic
+- Copy from HTML (nice to have)
+
+- Authors editor (single tile)
 
 ### Bugs
 

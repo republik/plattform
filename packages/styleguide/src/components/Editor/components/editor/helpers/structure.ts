@@ -21,6 +21,7 @@ import {
   Range,
   Node,
   NodeEntry,
+  Path,
 } from 'slate'
 import {
   calculateSiblingPath,
@@ -35,6 +36,7 @@ import {
   isEntireNodeSelected,
   selectAdjacent,
   spansManyElements,
+  overlaps,
 } from './tree'
 import { config as elConfig } from '../../../config/elements'
 import { getCharCount, selectNearestWord } from './text'
@@ -438,6 +440,11 @@ export const insertOnKey =
     }
   }
 
+const getNode = (editor: CustomEditor, potentialPath): CustomNode | boolean =>
+  Path.isPath(potentialPath) &&
+  Node.has(editor, potentialPath) &&
+  Editor.node(editor, potentialPath)[0]
+
 const deleteOnInsert = (
   editor: CustomEditor,
   target: NodeEntry<CustomElement>,
@@ -447,12 +454,9 @@ const deleteOnInsert = (
   const isEmptyTarget = target && getCharCount([target[0]]) === 0
   if (isEmptyTarget) {
     const siblingPath = calculateSiblingPath(selected[1])
-    const nextOfType =
-      Node.has(editor, siblingPath) && Editor.node(editor, siblingPath)
+    const nextOfType = getNode(editor, siblingPath)
     const hasSibling =
-      nextOfType &&
-      SlateElement.isElement(nextOfType[0]) &&
-      nextOfType[0].type === target[0].type
+      SlateElement.isElement(nextOfType) && nextOfType.type === target[0].type
     const targetParent = getParent(editor, target)
     if (!hasSibling && targetParent) {
       return target[1]
@@ -604,4 +608,27 @@ export const handleInsert = (
     event.preventDefault()
     insertRepeat(editor)
   }
+}
+
+export const moveElement = (
+  editor: CustomEditor,
+  elPath: number[],
+  direction: 'up' | 'down',
+  dryRun?: boolean,
+): boolean => {
+  const siblingPath = calculateSiblingPath(
+    elPath,
+    direction === 'up' ? 'previous' : 'next',
+  )
+  const siblingEl = getNode(editor, siblingPath)
+  if (!siblingEl || !SlateElement.isElement(siblingEl)) return
+  const element = getNode(editor, elPath)
+  const elTemplate = SlateElement.isElement(element) && element.template
+  // if the template doesn't allow for repeat, moving the element up/down
+  // would be erased by the normaliser
+  if (!elTemplate || !elTemplate.repeat) return
+  if (!isAllowedType(siblingEl.type, elTemplate.type)) return
+  if (dryRun) return true
+  Transforms.moveNodes(editor, { at: elPath, to: siblingPath })
+  return true
 }
