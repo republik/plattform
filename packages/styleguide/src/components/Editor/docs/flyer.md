@@ -1,19 +1,18 @@
 ### Todos
 
-- Create new tile
-- different render in editor and outside (e.g. for link)
+- different render in editor and outside (e.g. for link / share etc.)
 - New elements/real elements/forms for elements
     - Chart
     - Quiz
     - Survey
 - Copy from HTML (nice to have)
-- Flyer Tile Form
 
-- Authors editor (single tile)
+- Authors editor (single block)
 
 ### Bugs
 
 - Copy title with break swallows the break
+- enter on intro tile doesn't create a new block
 
 
 ```react

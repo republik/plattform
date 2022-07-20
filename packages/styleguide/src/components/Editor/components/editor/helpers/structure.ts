@@ -480,11 +480,11 @@ export const removeElement = (
 
 export const insertAfter = (
   editor: CustomEditor,
-  elKey: CustomElementsType,
+  elKey: CustomElementsType | TemplateType,
   elPath: number[],
 ) => {
   const config = elConfig[elKey]
-  const element = buildElement(elKey, config)
+  const element = buildElement(elKey as CustomElementsType, config)
   const insertPath = calculateSiblingPath(elPath)
   Transforms.insertNodes(editor, element, { at: insertPath })
   Transforms.select(editor, insertPath)

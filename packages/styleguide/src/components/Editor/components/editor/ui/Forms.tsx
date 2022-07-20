@@ -48,6 +48,7 @@ type FormData = {
 const getForm = (
   editor: CustomEditor,
   path: number[],
+  skipBlock?: boolean,
 ): FormData | undefined => {
   const node = Editor.node(editor, path)
   const element = node[0]
@@ -55,7 +56,7 @@ const getForm = (
   if (!SlateElement.isElement(element)) return
   // console.log({ element, config: elConfig[element.type] })
   const config = elConfig[element.type]
-  if (config.attrs?.isBlock) return
+  if (skipBlock && config.attrs?.isBlock) return
   const Form = config.Form
   if (!Form) return
   return {
@@ -70,7 +71,11 @@ export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
     .reduce((forms, p, i) => {
       const currentPath = path.slice(0, i ? -i : undefined)
       // console.log({ currentPath })
-      const currentForm = getForm(editor, currentPath)
+      const currentForm = getForm(
+        editor,
+        currentPath,
+        currentPath.length !== path.length,
+      )
       // console.log({ currentForm })
       return forms.concat(currentForm)
     }, [])
