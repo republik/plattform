@@ -51,7 +51,7 @@ const createSubmissionsSort = ({ sort }) => {
   const isSortByCreatedAt = !sort?.by || sort.by === 'createdAt'
   const direction = sort?.direction || 'DESC'
 
-  return [isSortByCreatedAt && { createdAt: direction }]
+  return [isSortByCreatedAt && { createdAt: direction }].filter(Boolean)
 }
 
 const createSubmissionsQuery = ({
@@ -60,7 +60,18 @@ const createSubmissionsQuery = ({
   isMember,
   search,
   filters = {},
+  sort = {},
 }) => {
+  const { by, date } = sort
+
+  const mustBeforeDate = date && {
+    range: {
+      createdAt: {
+        lte: sort?.date,
+      },
+    },
+  }
+
   const mustUserId = userId && { term: { userId } }
   const mustQuestionnaireId = questionnaireId && { term: { questionnaireId } }
   const mustSearch = search && {
@@ -101,9 +112,10 @@ const createSubmissionsQuery = ({
   }
   const mustSubmissionId = filters?.id && { term: { id: filters.id } }
 
-  return {
+  const query = {
     bool: {
       must: [
+        mustBeforeDate,
         mustUserId,
         mustQuestionnaireId,
         mustSearch,
@@ -111,6 +123,17 @@ const createSubmissionsQuery = ({
       ].filter(Boolean),
     },
   }
+
+  if (by === 'random' && date) {
+    return {
+      function_score: {
+        query,
+        functions: [{ random_score: { seed: date, field: 'id' } }],
+      },
+    }
+  }
+
+  return query
 }
 
 const count = async (args, elastic) => {
@@ -176,14 +199,18 @@ const getConnection = (anchors, args, context) => {
   const { userId, questionnaireId, isMember } = anchors
   const { elastic } = context
 
+  const sortStarter = { date: new Date().toISOString() }
+
   const countFn = (args) => {
     const { after, before } = args
 
     const search = after?.search || before?.search || args.search || undefined
     const filters = after?.filters || before?.filters || args.filters || {}
+    const sort = after?.sort ||
+      before?.sort || { ...args?.sort, ...sortStarter }
 
     return count(
-      { userId, questionnaireId, isMember, search, filters },
+      { userId, questionnaireId, isMember, search, filters, sort },
       elastic,
     )
   }
@@ -198,7 +225,8 @@ const getConnection = (anchors, args, context) => {
 
     const search = after?.search || before?.search || args.search || undefined
     const filters = after?.filters || before?.filters || args.filters || {}
-    const sort = after?.sort || before?.sort || args.sort || {}
+    const sort = after?.sort ||
+      before?.sort || { ...args?.sort, ...sortStarter }
 
     return find(
       { size, userId, questionnaireId, isMember, search, filters, sort },
@@ -218,7 +246,8 @@ const getConnection = (anchors, args, context) => {
 
     const search = after?.search || before?.search || args?.search || undefined
     const filters = after?.filters || before?.filters || args?.filters || {}
-    const sort = after?.sort || before?.sort || args?.sort || {}
+    const sort = after?.sort ||
+      before?.sort || { ...args?.sort, ...sortStarter }
     const count =
       (after?.count && after.count + nodes.length) ||
       (before?.count && before.count - nodes.length) ||
@@ -235,21 +264,9 @@ const getConnection = (anchors, args, context) => {
 
     return {
       hasNextPage: count < payload.totalCount,
-      end: {
-        first,
-        count,
-        search,
-        filters,
-        sort,
-      },
+      end: { first, count, search, filters, sort },
       hasPreviousPage: count > first,
-      start: {
-        first,
-        count,
-        search,
-        filters,
-        sort,
-      },
+      start: { first, count, search, filters, sort },
     }
   }
 
