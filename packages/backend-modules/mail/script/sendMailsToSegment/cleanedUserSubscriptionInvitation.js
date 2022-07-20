@@ -27,13 +27,12 @@ PgDb.connect().then(async (pgdb) => {
     console.warn('In dry-run mode. Use --no-dry-run to send emails to segment.')
   }
 
-  // if script is executed less or exactly once every 3 months, we can switch off onceFor option
+  // if we want to send email again to cleaned users who never resubscribed we can turn off once for
   if (argv.onceFor) {
     console.log(
       'onceFor set, i.e. mail template will be send to email address only once. Use --no-once-for to switch this off',
     )
   }
-
   console.log(
     `Fetching cleaned users between ${dayjs(argv.from).format(
       'YYYY-MM-DD',
@@ -44,7 +43,7 @@ PgDb.connect().then(async (pgdb) => {
     templateName: 'cleaned_user_subscription_invitation',
   }
 
-  const emailAddresses = await pgdb.queryOneColumn(
+  const cleanedUsers = await pgdb.query(
     `
     WITH records AS (
       WITH data AS (
@@ -71,18 +70,24 @@ PgDb.connect().then(async (pgdb) => {
       ORDER BY data."firedAt" DESC
     )
     
-    SELECT email 
+    SELECT email, "firedAt" 
     FROM records 
     WHERE "firedAt" BETWEEN :from AND :to
   `,
     { from: argv.from, to: argv.to },
   )
+  console.log(`${cleanedUsers.length} email addresses found`)
 
-  console.log(`${emailAddresses.length} email addresses found`)
+  const emailAddressCleanedDateMap = new Map(
+    cleanedUsers.map((entry) => {
+      return [entry.email, dayjs(entry.firedAt).format('YYYY-MM-DD')]
+    }),
+  )
 
-  await sendMailsToSegment(emailAddresses, mail, {
+  await sendMailsToSegment([...emailAddressCleanedDateMap.keys()], mail, {
     pgdb,
     argv,
+    emailAddressCleanedDateMap,
   })
   await pgdb.close()
   console.log('Done!')

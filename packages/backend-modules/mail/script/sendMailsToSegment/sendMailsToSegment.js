@@ -17,7 +17,7 @@ const {
 } = process.env
 
 module.exports = async (segment, mail, context) => {
-  const { argv, pgdb, accessEventData } = context
+  const { argv, pgdb, accessEventData, emailAddressCleanedDateMap } = context
   const tags = []
     .concat(SEND_MAILS_TAGS && SEND_MAILS_TAGS.split(','))
     .concat(mail.templateName && mail.templateName)
@@ -78,7 +78,15 @@ module.exports = async (segment, mail, context) => {
     }
 
     const onceFor = argv.onceFor
-      ? { type: mail.templateName, email: emailAddress }
+      ? {
+          type: mail.templateName,
+          email: emailAddress,
+          keys:
+            emailAddressCleanedDateMap &&
+            emailAddressCleanedDateMap.get(emailAddress)
+              ? [`cleaned:${emailAddressCleanedDateMap.get(emailAddress)}`]
+              : null,
+        }
       : false
 
     const sentData = await send({
