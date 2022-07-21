@@ -4229,6 +4229,14 @@
       "value": "Bitte beantworten Sie mindestens eine Frage."
     },
     {
+      "key": "questionnaire/privacy/private",
+      "value": "Antworten sind öffentlich einsehbar. Für Probeleser und Mitverlegerinnen erscheint der ausgefüllte Fragebogen unter Ihrem Namen. Gäste sehen lediglich Ihre Initialen."
+    },
+    {
+      "key": "questionnaire/privacy/public",
+      "value": "Antworten sind öffentlich einsehbar. Da Sie ein öffentliches Profil haben, erscheint Ihr Fragebogen für alle unter Ihrem Namen."
+    },
+    {
       "key": "questionnaire/submit",
       "value": "abschicken"
     },
@@ -4255,6 +4263,10 @@
     {
       "key": "questionnaire/thankyou",
       "value": "Ihre Antworten sind bei uns angekommen. Danke fürs Mitmachen!"
+    },
+    {
+      "key": "questionnaire/thankyou/public",
+      "value": "Ihre Antworten sind publiziert. Danke fürs Mitmachen!"
     },
     {
       "key": "questionnaire/thankyou/resubmit",
@@ -4343,6 +4355,14 @@
     {
       "key": "questionnaire/submissions/showAnswers/1",
       "value": "Eine weitere Antwort lesen"
+    },
+    {
+      "key": "questionnaire/submissions/answers/other",
+      "value": "{count} Antworten"
+    },
+    {
+      "key": "questionnaire/submissions/answers/1",
+      "value": "Eine Antwort"
     },
     {
       "key": "questionnaire/submissions/loadMore/other",

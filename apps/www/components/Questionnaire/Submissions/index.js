@@ -14,6 +14,7 @@ import { useTranslation } from '../../../lib/withT'
 import ErrorMessage from '../../ErrorMessage'
 import Submission from './Submission'
 import PlainButton from './PlainButton'
+import { Fragment } from 'react'
 
 const mainQuery = gql`
   query getQuestionnaireSubmissions(
@@ -174,16 +175,11 @@ const Submissions = ({ slug }) => {
                   })}
                 </Interaction.P>
               )}
-              <div ref={containerRef}>
+              <div ref={containerRef} style={{ marginTop: 30 }}>
                 {results.nodes.map(
                   ({ id, displayAuthor, answers, createdAt, updatedAt }) => {
                     return (
-                      <div
-                        key={id}
-                        style={{
-                          marginTop: 40,
-                        }}
-                      >
+                      <Fragment key={id}>
                         <Submission
                           t={t}
                           displayAuthor={displayAuthor}
@@ -193,7 +189,7 @@ const Submissions = ({ slug }) => {
                           updatedAt={updatedAt}
                         />
                         <HR />
-                      </div>
+                      </Fragment>
                     )
                   },
                 )}
