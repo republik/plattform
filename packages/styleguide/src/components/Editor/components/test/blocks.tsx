@@ -2,6 +2,8 @@ import {
   BlockQuoteElement,
   FigureCaptionElement,
   FigureElement,
+  FlyerTileElement,
+  FlyerTileOpeningElement,
   HeadlineElement,
   ParagraphElement,
   PullQuoteElement,
@@ -63,4 +65,68 @@ export const headline: HeadlineElement = {
 export const paragraph: ParagraphElement = {
   type: 'paragraph',
   children: [{ text: '' }],
+}
+
+export const flyerTileOpening: FlyerTileOpeningElement = {
+  type: 'flyerTileOpening',
+  children: [
+    {
+      type: 'headline',
+      children: [{ text: '' }],
+    },
+    {
+      type: 'flyerMetaP',
+      children: [
+        {
+          text: '',
+        },
+      ],
+    },
+  ],
+}
+
+export const flyerTile: FlyerTileElement = {
+  type: 'flyerTile',
+  children: [
+    {
+      type: 'flyerMetaP',
+      children: [
+        {
+          text: '',
+        },
+      ],
+    },
+    {
+      type: 'flyerTopic',
+      children: [
+        {
+          text: '',
+        },
+      ],
+    },
+    {
+      type: 'flyerTitle',
+      children: [
+        {
+          text: '',
+        },
+      ],
+    },
+    {
+      type: 'flyerAuthor',
+      children: [{ text: '' }],
+    },
+    {
+      type: 'paragraph',
+      children: [
+        {
+          text: '',
+        },
+      ],
+    },
+    {
+      type: 'flyerPunchline',
+      children: [{ text: '' }],
+    },
+  ],
 }

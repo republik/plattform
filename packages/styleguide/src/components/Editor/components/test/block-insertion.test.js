@@ -3,6 +3,7 @@ import { cleanupTree } from '../editor/helpers/tree'
 import { insertRepeat } from '../editor/helpers/structure'
 import schema from '../../schema/article'
 import mockEditor from './mockEditor'
+import { figure, flyerTile, flyerTileOpening, paragraph } from './blocks'
 
 describe('Slate Editor: Block Insertion (On Enter)', () => {
   window.document.getSelection = jest.fn()
@@ -564,20 +565,20 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
     expect(editor.selection.focus).toEqual({ path: [1, 0], offset: 0 })
   })
 
-  it('should delete last nested repeated element if it is empty and fallback on adjacent node', async () => {
+  it('should delete last nested repeated element if it is empty and fallback on adjacent non-repeatable node', async () => {
     value = [
       {
         type: 'flyerTileOpening',
         children: [
           {
             type: 'headline',
-            children: [{ text: 'Hallo!' }],
+            children: [{ text: '' }],
           },
           {
             type: 'flyerMetaP',
             children: [
               {
-                text: 'Es war heiss, es ist heiss, es bleibt heiss.',
+                text: '',
               },
             ],
           },
@@ -590,10 +591,35 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
             ],
           },
         ],
+      },
+      flyerTile,
+    ]
+    const structure = [
+      {
+        type: 'flyerTileOpening',
       },
       {
         type: 'flyerTile',
+      },
+    ]
+    const editor = await setup(structure)
+    await Transforms.select(editor, [0, 2, 0])
+    console.log({ value })
+    insertRepeat(editor)
+    await new Promise(process.nextTick)
+    expect(cleanupTree(value)).toEqual([flyerTileOpening, flyerTile])
+    expect(editor.selection.focus.path).toEqual([1, 0, 0])
+  })
+
+  it('should delete last nested repeated element if it is empty and create an adjacent repeatable node', async () => {
+    value = [
+      {
+        type: 'flyerTileOpening',
         children: [
+          {
+            type: 'headline',
+            children: [{ text: '' }],
+          },
           {
             type: 'flyerMetaP',
             children: [
@@ -603,40 +629,16 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
             ],
           },
           {
-            type: 'flyerTopic',
+            type: 'flyerMetaP',
             children: [
               {
                 text: '',
               },
             ],
           },
-          {
-            type: 'flyerTitle',
-            children: [
-              {
-                text: 'Hitzewelle werden mit Strand- und Badebilder illustriert! Wieso?',
-              },
-            ],
-          },
-          {
-            type: 'flyerAuthor',
-            authorId: '123',
-            children: [{ text: '' }],
-          },
-          {
-            type: 'paragraph',
-            children: [
-              {
-                text: 'Lorem ipsum.',
-              },
-            ],
-          },
-          {
-            type: 'flyerPunchline',
-            children: [{ text: '' }],
-          },
         ],
       },
+      flyerTile,
     ]
     const structure = [
       {
@@ -651,24 +653,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
     await Transforms.select(editor, [0, 2, 0])
     insertRepeat(editor)
     await new Promise(process.nextTick)
-    expect(cleanupTree(value)[0]).toEqual({
-      type: 'flyerTileOpening',
-      children: [
-        {
-          type: 'headline',
-          children: [{ text: 'Hallo!' }],
-        },
-        {
-          type: 'flyerMetaP',
-          children: [
-            {
-              text: 'Es war heiss, es ist heiss, es bleibt heiss.',
-            },
-          ],
-        },
-      ],
-    })
-    expect(value.length).toEqual(2)
+    expect(cleanupTree(value)).toEqual([flyerTileOpening, flyerTile, flyerTile])
     expect(editor.selection.focus.path).toEqual([1, 0, 0])
   })
 
@@ -731,28 +716,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
   })
 
   it('should navigate to the next element if neither the current nor the next element are repeatable', async () => {
-    value = [
-      {
-        type: 'figure',
-        children: [
-          {
-            type: 'figureImage',
-            children: [{ text: '' }],
-          },
-          {
-            type: 'figureCaption',
-            children: [
-              { text: 'A butterfly' },
-              {
-                type: 'figureByline',
-                children: [{ text: 'lands on a branch' }],
-              },
-              { text: '' },
-            ],
-          },
-        ],
-      },
-    ]
+    value = [figure]
     const structure = [
       {
         type: ['paragraph', 'figure'],
@@ -760,57 +724,17 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
       },
     ]
     const editor = await setup(structure)
-    await Transforms.select(editor, { path: [0, 1, 0], offset: 4 })
+    // select figure caption
+    await Transforms.select(editor, { path: [0, 1, 0], offset: 0 })
     insertRepeat(editor)
     await new Promise(process.nextTick)
-    expect(cleanupTree(value)).toEqual([
-      {
-        type: 'figure',
-        children: [
-          {
-            type: 'figureImage',
-            children: [{ text: '' }],
-          },
-          {
-            type: 'figureCaption',
-            children: [
-              { text: 'A butterfly' },
-              {
-                type: 'figureByline',
-                children: [{ text: 'lands on a branch' }],
-              },
-              { text: '' },
-            ],
-          },
-        ],
-      },
-    ])
-    expect(editor.selection.focus).toEqual({ path: [0, 1, 1, 0], offset: 0 })
+    expect(cleanupTree(value)).toEqual([figure])
+    // jump to figure byline
+    expect(editor.selection.focus.path).toEqual([0, 1, 1, 0])
   })
 
   it('should set cursor to the newly created element even if the cursor in an end node', async () => {
-    value = [
-      {
-        type: 'figure',
-        children: [
-          {
-            type: 'figureImage',
-            children: [{ text: '' }],
-          },
-          {
-            type: 'figureCaption',
-            children: [
-              { text: 'A butterfly' },
-              {
-                type: 'figureByline',
-                children: [{ text: 'lands on a branch' }],
-              },
-              { text: '' },
-            ],
-          },
-        ],
-      },
-    ]
+    value = [figure]
     const structure = [
       {
         type: ['paragraph', 'figure'],
@@ -821,32 +745,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
     await Transforms.select(editor, { path: [0, 1, 2], offset: 0 })
     insertRepeat(editor)
     await new Promise(process.nextTick)
-    expect(cleanupTree(value)).toEqual([
-      {
-        type: 'figure',
-        children: [
-          {
-            type: 'figureImage',
-            children: [{ text: '' }],
-          },
-          {
-            type: 'figureCaption',
-            children: [
-              { text: 'A butterfly' },
-              {
-                type: 'figureByline',
-                children: [{ text: 'lands on a branch' }],
-              },
-              { text: '' },
-            ],
-          },
-        ],
-      },
-      {
-        type: 'paragraph',
-        children: [{ text: '' }],
-      },
-    ])
+    expect(cleanupTree(value)).toEqual([figure, paragraph])
     expect(editor.selection.focus).toEqual({ path: [1, 0], offset: 0 })
   })
 })

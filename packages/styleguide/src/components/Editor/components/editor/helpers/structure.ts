@@ -558,7 +558,7 @@ const findInsertTarget = (
   target?: NodeEntry<CustomElement>
   isNextTarget?: boolean
 } => {
-  const target = findRepeatableNode(editor)
+  const target = findRepeatableNode(editor, selected[1])
   if (target) {
     return { target, isNextTarget: false }
   }
@@ -596,7 +596,9 @@ export const insertRepeat = (editor: CustomEditor): void => {
     if (deleteImmediately) {
       return Transforms.removeNodes(editor, { at: deleteP })
     } else {
-      target = findRepeatableNode(editor, targetParent[1]) // fall back to the parent
+      const newTargetData = findInsertTarget(editor, targetParent) // fall back to the parent
+      target = newTargetData.target
+      isNextTarget = newTargetData.isNextTarget
     }
   }
 

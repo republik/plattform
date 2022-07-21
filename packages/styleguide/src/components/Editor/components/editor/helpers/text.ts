@@ -25,6 +25,9 @@ import { cleanupNode, overlaps } from './tree'
 
 const PSEUDO_EMPTY_STRING = '\u2060'
 
+export const cleanupEmptyString = (text: string): string =>
+  text.replace(PSEUDO_EMPTY_STRING, '')
+
 export const getCharCount = (nodes: (Descendant | Node)[]): number =>
   nodes.map((node) => Node.string(node).length).reduce((a, b) => a + b, 0)
 

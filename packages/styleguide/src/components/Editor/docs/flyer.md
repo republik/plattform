@@ -12,7 +12,6 @@
 ### Bugs
 
 - Copy title with break swallows the break
-- enter on intro tile doesn't create a new block
 
 
 ```react
