@@ -42,7 +42,6 @@ const createBase = ({ metaBody, metaHeadlines }) => {
   const link = {
     matchMdast: matchType('link'),
     props: (node, index, parent, { ancestors }) => {
-      const allowsExpandable = ancestors.find(matchParagraph)
       const [title, description] = (node.title || '').split(
         EXPANDABLE_LINK_SEPARATOR,
       )
@@ -50,11 +49,10 @@ const createBase = ({ metaBody, metaHeadlines }) => {
         title,
         description,
         href: node.url,
-        allowsExpandable,
       }
     },
     component: (props) => {
-      const { href, description, allowsExpandable } = props
+      const { href, description } = props
       const LinkComponent = description ? ExpandableLink : Editorial.A
       // workaround app issues with hash url by handling them ourselves and preventing the default behaviour
       if (href && href.slice(0, 3) === '#t=') {

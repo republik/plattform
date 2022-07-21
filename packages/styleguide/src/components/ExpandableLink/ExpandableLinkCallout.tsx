@@ -35,6 +35,7 @@ const fadeIn = keyframes({
 })
 
 const shortenLink = (href) => {
+  if (!href) return
   const baseURL = href.replace(/(http(s)?:\/\/)|(\/.*){1}/g, '')
   const URLWithoutQuery = href.match(/(.+)(?=\?)/g)
   const lastURLPath = URLWithoutQuery
@@ -90,6 +91,7 @@ const styles = {
   }),
   linkIcon: css({
     marginRight: 8,
+    verticalAlign: 'middle',
   }),
 }
 

@@ -120,7 +120,7 @@ const ExpandableLink = ({
       {...styles.link}
       {...colorScheme.set('color', 'text')}
       {...colorScheme.set('textDecorationColor', 'textSoft')}
-      aria-lable={description}
+      aria-label={description}
       onClick={(event) => {
         event.preventDefault()
         showInfoBox(event)

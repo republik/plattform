@@ -28,7 +28,9 @@ export default ({ rule, subModules, TYPE }) => {
     toMdast: (object, index, parent, { visitChildren }) => {
       return {
         type: 'link',
-        title: [object.data.title, object.data.description].filter(Boolean).join(SEPARATOR),
+        title: [object.data.title, object.data.description]
+          .filter(Boolean)
+          .join(SEPARATOR),
         url: object.data.href,
         children: visitChildren(object),
       }

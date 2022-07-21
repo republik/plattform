@@ -18,6 +18,7 @@ import debounce from 'lodash/debounce'
 
 import { createInlineButton, matchInline, buttonStyles } from '../../utils'
 import AutosizeInput from 'react-textarea-autosize'
+import { css } from 'glamor'
 
 const getUsers = gql`
   query getUsers($search: String!) {
@@ -30,6 +31,14 @@ const getUsers = gql`
     }
   }
 `
+
+const styles = {
+  autoSize: css({
+    minHeight: 40,
+    paddingTop: '7px !important',
+    paddingBottom: '6px !important',
+  }),
+}
 
 const UserItem = ({ user }) => (
   <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -228,7 +237,11 @@ export const LinkForm = withT(
                 value={node.data.get('description')}
                 onChange={onInputChange('description')}
                 renderInput={({ ref, ...inputProps }) => (
-                  <AutosizeInput {...inputProps} inputRef={ref} />
+                  <AutosizeInput
+                    {...inputProps}
+                    inputRef={ref}
+                    {...styles.autoSize}
+                  />
                 )}
               />
               <SearchUserForm onChange={authorChange(onChange, value, node)} />
