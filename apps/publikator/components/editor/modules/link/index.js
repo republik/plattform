@@ -28,8 +28,10 @@ export default ({ rule, subModules, TYPE }) => {
     toMdast: (object, index, parent, { visitChildren }) => {
       return {
         type: 'link',
-        title: [object.data.title, object.data.description]
-          .filter(Boolean)
+        // if there is a tile but no description, just 'title' is good
+        // if there is no title but a description, we want '[SEPARATOR]description'
+        title: [object.data.title || '', object.data.description]
+          .filter((x) => x !== undefined)
           .join(SEPARATOR),
         url: object.data.href,
         children: visitChildren(object),

@@ -1309,6 +1309,10 @@
       "value": "Zusätzliche Beschreibung"
     },
     {
+      "key": "link/description/help",
+      "value": "Formatting geht mit <a href=\"https://styleguide.republik.ch/expandablelink#formatting\" target=\"_blank\">HTML-Tags</a>."
+    },
+    {
       "key": "memo/modal/remove",
       "value": "Memo entfernen"
     },

@@ -6,6 +6,7 @@ import {
   Field,
   Autocomplete,
   InlineSpinner,
+  RawHtml,
 } from '@project-r/styleguide'
 import LinkIcon from 'react-icons/lib/fa/chain'
 import UIForm from '../../UIForm'
@@ -19,6 +20,7 @@ import debounce from 'lodash/debounce'
 import { createInlineButton, matchInline, buttonStyles } from '../../utils'
 import AutosizeInput from 'react-textarea-autosize'
 import { css } from 'glamor'
+import MdInfoOutline from 'react-icons/lib/md/info-outline'
 
 const getUsers = gql`
   query getUsers($search: String!) {
@@ -37,6 +39,9 @@ const styles = {
     minHeight: 40,
     paddingTop: '7px !important',
     paddingBottom: '6px !important',
+  }),
+  descriptionHelp: css({
+    margin: '-10px 0 10px',
   }),
 }
 
@@ -244,6 +249,16 @@ export const LinkForm = withT(
                   />
                 )}
               />
+              <p {...styles.descriptionHelp}>
+                <small>
+                  <MdInfoOutline style={{ verticalAlign: 'sub' }} />{' '}
+                  <RawHtml
+                    dangerouslySetInnerHTML={{
+                      __html: t('link/description/help'),
+                    }}
+                  />
+                </small>
+              </p>
               <SearchUserForm onChange={authorChange(onChange, value, node)} />
               <RepoSearch
                 label={t('link/repo/search')}

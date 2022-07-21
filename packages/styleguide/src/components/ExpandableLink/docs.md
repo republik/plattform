@@ -7,3 +7,23 @@
       <Editorial.P>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</Editorial.P>
   </>
 ```
+
+## Formatting
+
+The following description text:
+
+```
+<b>Brand</b> <em>new</em> data on CO<sub>2</sub> levels
+```
+
+Renders as follow:
+
+```react
+<Editorial.P><ExpandableLink description="<b>Brand</b> <em>new</em> data on CO<sub>2</sub> levels" href="https://www.republik.ch" t={t}>Link</ExpandableLink> with html formatting.</Editorial.P>
+```
+
+Supported html tags for formatting:
+
+- b tags for *<b>bold</b>*
+- em tags for **<em>italics</em>**
+- sub and sup tags for subscript and superscript
