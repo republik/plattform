@@ -22,6 +22,8 @@ const mainQuery = gql`
     $search: String
     $first: Int
     $after: String
+    $sortBy: SubmissionsSortBy!
+    $sortDirection: OrderDirection
   ) {
     questionnaire(slug: $slug) {
       id
@@ -50,7 +52,12 @@ const mainQuery = gql`
       submissions {
         totalCount
       }
-      results: submissions(search: $search, first: $first, after: $after) {
+      results: submissions(
+        search: $search
+        first: $first
+        after: $after
+        sort: { by: $sortBy, direction: $sortDirection }
+      ) {
         totalCount
         pageInfo {
           endCursor
@@ -96,6 +103,8 @@ const Submissions = ({ slug }) => {
         slug,
         search,
         first: 10,
+        sortBy: 'random' || 'createdAt',
+        sortDirection: 'ASC' || 'DESC',
       },
     },
   )
