@@ -224,7 +224,7 @@ export const LinkForm = withT(
                 onChange={onInputChange('title')}
               />
               <Field
-                label={t(`link/description`, undefined, 'title')}
+                label={t(`link/description`, undefined, 'description')}
                 value={node.data.get('description')}
                 onChange={onInputChange('description')}
                 renderInput={({ ref, ...inputProps }) => (
