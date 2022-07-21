@@ -52,58 +52,60 @@ const getNextDirection = (sort, directions) => {
   return index === directions.length - 1 ? directions[0] : directions[index + 1]
 }
 
-const SortToggle = compose(withT)(({ t, sort, urlSort, getSearchParams }) => {
-  const selected = urlSort.key === sort.key
-  const label = t(`search/sort/${sort.key}`)
-  const direction = selected ? urlSort.direction : getDefaultDirection(sort)
-  const [colorScheme] = useColorContext()
-  const linkHover = useMemo(
-    () =>
-      css({
-        '@media (hover)': {
-          ':hover': {
-            color: colorScheme.getCSSColor('textSoft'),
-          },
-        },
-      }),
-    [colorScheme],
-  )
-  return (
-    <Link
-      href={{
-        pathname: '/suche',
-        query: getSearchParams({
-          sort: {
-            key: sort.key,
-            direction:
-              selected && direction
-                ? getNextDirection(urlSort, sort.directions)
-                : direction,
+export const SortToggle = compose(withT)(
+  ({ t, sort, urlSort, getSearchParams, pathname }) => {
+    const selected = urlSort.key === sort.key
+    const label = t(`search/sort/${sort.key}`)
+    const direction = selected ? urlSort.direction : getDefaultDirection(sort)
+    const [colorScheme] = useColorContext()
+    const linkHover = useMemo(
+      () =>
+        css({
+          '@media (hover)': {
+            ':hover': {
+              color: colorScheme.getCSSColor('textSoft'),
+            },
           },
         }),
-      }}
-      passHref
-    >
-      <a
-        {...styles.link}
-        {...styles[selected ? 'linkSelected' : 'linkRegular']}
-        {...(!selected && linkHover)}
-        {...colorScheme.set('color', 'text')}
+      [colorScheme],
+    )
+    return (
+      <Link
+        href={{
+          pathname,
+          query: getSearchParams({
+            sort: {
+              key: sort.key,
+              direction:
+                selected && direction
+                  ? getNextDirection(urlSort, sort.directions)
+                  : direction,
+            },
+          }),
+        }}
+        passHref
       >
-        {label}
-        {direction && (
-          <span
-            {...styles.icon}
-            role='button'
-            title={t(`search/sort/${direction}/aria`)}
-          >
-            {createElement(SORT_DIRECTION_ICONS[direction])}
-          </span>
-        )}
-      </a>
-    </Link>
-  );
-})
+        <a
+          {...styles.link}
+          {...styles[selected ? 'linkSelected' : 'linkRegular']}
+          {...(!selected && linkHover)}
+          {...colorScheme.set('color', 'text')}
+        >
+          {label}
+          {direction && (
+            <span
+              {...styles.icon}
+              role='button'
+              title={t(`search/sort/${direction}/aria`)}
+            >
+              {createElement(SORT_DIRECTION_ICONS[direction])}
+            </span>
+          )}
+        </a>
+      </Link>
+    )
+  },
+)
 
 const Sort = compose(withSearchRouter)(
   ({ urlQuery, urlSort, getSearchParams }) => {
@@ -116,6 +118,7 @@ const Sort = compose(withSearchRouter)(
               sort={sort}
               urlSort={urlSort}
               getSearchParams={getSearchParams}
+              pathname='/suche'
             />
           ),
         )}

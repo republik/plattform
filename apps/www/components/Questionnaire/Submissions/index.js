@@ -15,6 +15,18 @@ import ErrorMessage from '../../ErrorMessage'
 import Submission from './Submission'
 import PlainButton from './PlainButton'
 import { Fragment } from 'react'
+import { SortToggle } from '../../Search/Sort'
+import { SUPPORTED_TOKEN_TYPES } from '../../constants'
+
+const SUPPORTED_SORT = [
+  {
+    key: 'random',
+  },
+  {
+    key: 'createdAt',
+    directions: ['DESC', 'ASC'],
+  },
+]
 
 const mainQuery = gql`
   query getQuestionnaireSubmissions(
@@ -94,8 +106,11 @@ const getTotalCount = (data) => data?.questionnaire?.submissions?.totalCount
 
 const Submissions = ({ slug }) => {
   const router = useRouter()
+  const sortBy = router.query.skey || 'random'
+  const sortDirection = router.query.sdir || undefined
   const searchQuery = router.query.q || ''
   const [search] = useDebounce(searchQuery, 100)
+  const pathname = router.asPath.split('?')[0]
   const { loading, error, data, previousData, fetchMore } = useQuery(
     mainQuery,
     {
@@ -103,8 +118,8 @@ const Submissions = ({ slug }) => {
         slug,
         search,
         first: 10,
-        sortBy: 'random' || 'createdAt',
-        sortDirection: 'ASC' || 'DESC',
+        sortBy,
+        sortDirection,
       },
     },
   )
@@ -159,15 +174,26 @@ const Submissions = ({ slug }) => {
         value={searchQuery}
         onChange={(_, value) => {
           router[searchQuery ? 'replace' : 'push'](
-            `${router.asPath.split('?')[0]}${
-              value ? `?q=${encodeURIComponent(value)}` : ''
-            }`,
+            `${pathname}${value ? `?q=${encodeURIComponent(value)}` : ''}`,
             undefined,
             { shallow: true },
           )
         }}
         icon={<SearchIcon size={30} />}
       />
+      {SUPPORTED_SORT.map((sort, key) => (
+        <SortToggle
+          key={key}
+          sort={sort}
+          urlSort={{ key: sortBy, direction: sortDirection }}
+          getSearchParams={({ sort }) => ({
+            q: searchQuery,
+            skey: sort.key,
+            sdir: sort.direction,
+          })}
+          pathname={pathname}
+        />
+      ))}
       <Loader
         loading={loading}
         error={error}
