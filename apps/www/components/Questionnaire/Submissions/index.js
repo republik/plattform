@@ -59,6 +59,7 @@ const singleSubmissionQuery = gql`
               id
               hasMatched
               question {
+                __typename
                 id
               }
               payload
@@ -86,6 +87,7 @@ const mainQuery = gql`
       userHasSubmitted
       userSubmitDate
       questions {
+        __typename
         id
         text
         ... on QuestionTypeChoice {
@@ -133,6 +135,7 @@ const mainQuery = gql`
               id
               hasMatched
               question {
+                __typename
                 id
               }
               payload
@@ -146,7 +149,13 @@ const mainQuery = gql`
 
 const getSubmissionUrlWithRandomQid = (pathname, { id, answers }) =>
   getSubmissionUrl(pathname, id, {
-    qid: shuffle([...answers.nodes])[0].question.id,
+    qid: (
+      shuffle(
+        answers.nodes.filter(
+          (a) => a.question.__typename === 'QuestionTypeText',
+        ),
+      )[0] || shuffle([...answers.nodes])[0]
+    ).question.id,
   })
 const getTotalCount = (data) => data?.questionnaire?.submissions?.totalCount
 

@@ -51,7 +51,7 @@ const ShareSubmission = ({
   if (meta) {
     const replacements = {
       name: submission.displayAuthor.name,
-      questionText: question.text,
+      questionText: question.text.replace(/:$/, ''),
     }
     return (
       <Meta
