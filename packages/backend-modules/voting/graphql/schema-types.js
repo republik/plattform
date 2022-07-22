@@ -260,6 +260,7 @@ type Questionnaire {
 
 input SubmissionsFilterInput {
   id: ID
+  not: ID
 }
 
 input SubmissionsSortInput {

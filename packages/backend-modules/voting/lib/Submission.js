@@ -71,7 +71,6 @@ const createSubmissionsQuery = ({
       },
     },
   }
-
   const mustUserId = userId && { term: { userId } }
   const mustQuestionnaireId = questionnaireId && { term: { questionnaireId } }
   const mustSearch = search && {
@@ -111,6 +110,7 @@ const createSubmissionsQuery = ({
     },
   }
   const mustSubmissionId = filters?.id && { term: { id: filters.id } }
+  const mustNotSubmissionId = filters?.not && { term: { id: filters.not } }
 
   const query = {
     bool: {
@@ -121,6 +121,7 @@ const createSubmissionsQuery = ({
         mustSearch,
         mustSubmissionId,
       ].filter(Boolean),
+      must_not: [mustNotSubmissionId].filter(Boolean),
     },
   }
 
