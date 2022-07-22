@@ -3,10 +3,12 @@ import {
   Interaction,
   Loader,
   SearchIcon,
+  CloseIcon,
   Field,
   useDebounce,
   HR,
   InlineSpinner,
+  plainButtonRule,
 } from '@project-r/styleguide'
 import { useRouter } from 'next/router'
 import { useInfiniteScroll } from '../../../lib/hooks/useInfiniteScroll'
@@ -15,6 +17,22 @@ import ErrorMessage from '../../ErrorMessage'
 import Submission from './Submission'
 import PlainButton from './PlainButton'
 import { Fragment } from 'react'
+import { SortToggle } from '../../Search/Sort'
+import { format } from 'url'
+
+const SUPPORTED_SORT = [
+  {
+    key: 'random',
+  },
+  {
+    key: 'createdAt',
+    directions: ['DESC', 'ASC'],
+  },
+]
+
+const SORT_KEY_PARAM = 'skey'
+const SORT_DIRECTION_PARAM = 'sdir'
+const QUERY_PARAM = 'q'
 
 const mainQuery = gql`
   query getQuestionnaireSubmissions(
@@ -22,6 +40,8 @@ const mainQuery = gql`
     $search: String
     $first: Int
     $after: String
+    $sortBy: SubmissionsSortBy!
+    $sortDirection: OrderDirection
   ) {
     questionnaire(slug: $slug) {
       id
@@ -50,7 +70,12 @@ const mainQuery = gql`
       submissions {
         totalCount
       }
-      results: submissions(search: $search, first: $first, after: $after) {
+      results: submissions(
+        search: $search
+        first: $first
+        after: $after
+        sort: { by: $sortBy, direction: $sortDirection }
+      ) {
         totalCount
         pageInfo {
           endCursor
@@ -87,8 +112,11 @@ const getTotalCount = (data) => data?.questionnaire?.submissions?.totalCount
 
 const Submissions = ({ slug }) => {
   const router = useRouter()
+  const sortBy = router.query.skey || 'random'
+  const sortDirection = router.query.sdir || undefined
   const searchQuery = router.query.q || ''
   const [search] = useDebounce(searchQuery, 100)
+  const pathname = router.asPath.split('?')[0]
   const { loading, error, data, previousData, fetchMore } = useQuery(
     mainQuery,
     {
@@ -96,6 +124,8 @@ const Submissions = ({ slug }) => {
         slug,
         search,
         first: 10,
+        sortBy,
+        sortDirection,
       },
     },
   )
@@ -136,11 +166,29 @@ const Submissions = ({ slug }) => {
     loadMore,
   })
 
+  const getSearchParams = ({ sort, searchQuery }) => {
+    const query = {}
+    if (searchQuery) {
+      query[QUERY_PARAM] = searchQuery
+    }
+    if (sort.key === 'random') {
+      return query
+    }
+    query[SORT_KEY_PARAM] = sort.key
+    query[SORT_DIRECTION_PARAM] = sort.direction
+
+    return query
+  }
+
+  const onReset = () => {
+    router.push(pathname, undefined, { shallow: true })
+  }
+
   const { t } = useTranslation()
 
   return (
     <>
-      <Interaction.H2 style={{ marginBottom: 10 }}>
+      <Interaction.H2 style={{ marginBottom: 15 }}>
         {t.pluralize('questionnaire/submissions/count', {
           count: getTotalCount(data) || getTotalCount(previousData) || '',
         })}
@@ -150,15 +198,36 @@ const Submissions = ({ slug }) => {
         value={searchQuery}
         onChange={(_, value) => {
           router[searchQuery ? 'replace' : 'push'](
-            `${router.asPath.split('?')[0]}${
-              value ? `?q=${encodeURIComponent(value)}` : ''
-            }`,
+            format({
+              pathname,
+              query: getSearchParams({
+                sort: { key: sortBy, direction: sortDirection },
+                searchQuery: value,
+              }),
+            }),
             undefined,
             { shallow: true },
           )
         }}
-        icon={<SearchIcon size={30} />}
+        icon={
+          searchQuery ? (
+            <button {...plainButtonRule} onClick={onReset}>
+              <CloseIcon size={30} />
+            </button>
+          ) : (
+            <SearchIcon size={30} />
+          )
+        }
       />
+      {SUPPORTED_SORT.map((sort, key) => (
+        <SortToggle
+          key={key}
+          sort={sort}
+          urlSort={{ key: sortBy, direction: sortDirection }}
+          getSearchParams={({ sort }) => getSearchParams({ sort, searchQuery })}
+          pathname={pathname}
+        />
+      ))}
       <Loader
         loading={loading}
         error={error}
@@ -169,7 +238,7 @@ const Submissions = ({ slug }) => {
           return (
             <>
               {results.totalCount !== getTotalCount(data) && (
-                <Interaction.P>
+                <Interaction.P style={{ marginTop: 15 }}>
                   {t.pluralize('search/preloaded/results', {
                     count: results.totalCount,
                   })}

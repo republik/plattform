@@ -4129,6 +4129,14 @@
       "value": "absteigend"
     },
     {
+      "key": "search/sort/random",
+      "value": "Zufall"
+    },
+    {
+      "key": "search/sort/createdAt",
+      "value": "Zeit"
+    },
+    {
       "key": "search/excerpt",
       "value": "Auszug"
     },
