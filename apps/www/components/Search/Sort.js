@@ -84,6 +84,7 @@ export const SortToggle = compose(withT)(
           }),
         }}
         passHref
+        shallow
       >
         <a
           {...styles.link}
@@ -95,6 +96,7 @@ export const SortToggle = compose(withT)(
           {direction && (
             <span
               {...styles.icon}
+              style={{ opacity: selected ? 1 : 0 }}
               role='button'
               title={t(`search/sort/${direction}/aria`)}
             >

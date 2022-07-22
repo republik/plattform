@@ -16,6 +16,7 @@ import Submission from './Submission'
 import PlainButton from './PlainButton'
 import { Fragment } from 'react'
 import { SortToggle } from '../../Search/Sort'
+import { format } from 'url'
 import { SUPPORTED_TOKEN_TYPES } from '../../constants'
 
 const SUPPORTED_SORT = [
@@ -190,7 +191,13 @@ const Submissions = ({ slug }) => {
         value={searchQuery}
         onChange={(_, value) => {
           router[searchQuery ? 'replace' : 'push'](
-            `${pathname}${value ? `?q=${encodeURIComponent(value)}` : ''}`,
+            format({
+              pathname,
+              query: getSearchParams({
+                sort: { key: sortBy, direction: sortDirection },
+                searchQuery: value,
+              }),
+            }),
             undefined,
             { shallow: true },
           )
