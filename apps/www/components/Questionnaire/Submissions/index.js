@@ -168,7 +168,9 @@ const Submissions = ({ slug }) => {
 
   const getSearchParams = ({ sort, searchQuery }) => {
     const query = {}
-    query[QUERY_PARAM] = searchQuery
+    if (searchQuery) {
+      query[QUERY_PARAM] = searchQuery
+    }
     if (sort.key === 'random') {
       return query
     }
@@ -178,7 +180,7 @@ const Submissions = ({ slug }) => {
     return query
   }
 
-  const reset = () => {
+  const onReset = () => {
     router.push(pathname, undefined, { shallow: true })
   }
 
@@ -186,7 +188,7 @@ const Submissions = ({ slug }) => {
 
   return (
     <>
-      <Interaction.H2 style={{ marginBottom: 10 }}>
+      <Interaction.H2 style={{ marginBottom: 15 }}>
         {t.pluralize('questionnaire/submissions/count', {
           count: getTotalCount(data) || getTotalCount(previousData) || '',
         })}
@@ -209,7 +211,7 @@ const Submissions = ({ slug }) => {
         }}
         icon={
           searchQuery ? (
-            <button {...plainButtonRule} onClick={reset}>
+            <button {...plainButtonRule} onClick={onReset}>
               <CloseIcon size={30} />
             </button>
           ) : (
@@ -236,7 +238,7 @@ const Submissions = ({ slug }) => {
           return (
             <>
               {results.totalCount !== getTotalCount(data) && (
-                <Interaction.P>
+                <Interaction.P style={{ marginTop: 15 }}>
                   {t.pluralize('search/preloaded/results', {
                     count: results.totalCount,
                   })}
