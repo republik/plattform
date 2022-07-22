@@ -3,10 +3,12 @@ import {
   Interaction,
   Loader,
   SearchIcon,
+  CloseIcon,
   Field,
   useDebounce,
   HR,
   InlineSpinner,
+  plainButtonRule,
 } from '@project-r/styleguide'
 import { useRouter } from 'next/router'
 import { useInfiniteScroll } from '../../../lib/hooks/useInfiniteScroll'
@@ -17,7 +19,6 @@ import PlainButton from './PlainButton'
 import { Fragment } from 'react'
 import { SortToggle } from '../../Search/Sort'
 import { format } from 'url'
-import { SUPPORTED_TOKEN_TYPES } from '../../constants'
 
 const SUPPORTED_SORT = [
   {
@@ -177,6 +178,10 @@ const Submissions = ({ slug }) => {
     return query
   }
 
+  const reset = () => {
+    router.push(pathname, undefined, { shallow: true })
+  }
+
   const { t } = useTranslation()
 
   return (
@@ -202,7 +207,15 @@ const Submissions = ({ slug }) => {
             { shallow: true },
           )
         }}
-        icon={<SearchIcon size={30} />}
+        icon={
+          searchQuery ? (
+            <button {...plainButtonRule} onClick={reset}>
+              <CloseIcon style={{ cursor: 'pointer' }} size={30} />
+            </button>
+          ) : (
+            <SearchIcon size={30} />
+          )
+        }
       />
       {SUPPORTED_SORT.map((sort, key) => (
         <SortToggle
