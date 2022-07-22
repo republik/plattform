@@ -11,6 +11,7 @@ import {
   AddIcon,
   RemoveIcon,
   IconButton,
+  ShareIcon,
 } from '@project-r/styleguide'
 import { useRef, useState } from 'react'
 import { max } from 'd3-array'
@@ -22,9 +23,18 @@ import PlainButton from './PlainButton'
 
 import { swissTime } from '../../../lib/utils/format'
 import { HEADER_HEIGHT } from '../../constants'
+import { useInNativeApp } from '../../../lib/withInNativeApp'
+import { format } from 'url'
+import { PUBLIC_BASE_URL } from '../../../lib/constants'
+import ShareOverlay from '../../ActionBar/ShareOverlay'
+import { trackEvent } from '../../../lib/matomo'
 
 const styles = {
-  profileRoot: css({
+  highlightContainer: css({
+    padding: 7,
+    margin: -7,
+  }),
+  header: css({
     position: 'sticky',
     display: 'flex',
     alignItems: 'center',
@@ -33,14 +43,14 @@ const styles = {
     padding: '8px 0 5px',
     margin: '-8px 0 -5px',
   }),
-  profilePicture: css({
+  headerPicture: css({
     display: 'block',
     width: pxToRem(40),
     flex: `0 0 40px`,
     height: pxToRem(40),
     marginRight: '15px',
   }),
-  center: css({
+  headerText: css({
     marginTop: -3,
     alignSelf: 'stretch',
     display: 'flex',
@@ -49,13 +59,27 @@ const styles = {
     flexGrow: 1,
     minWidth: 0,
   }),
-  actionsWrapper: css({
+  linkUnderline: css({
+    color: 'inherit',
+    textDecoration: 'none',
+    '@media (hover)': {
+      '[href]:hover': {
+        textDecoration: 'underline',
+        textDecorationSkip: 'ink',
+      },
+    },
+  }),
+  headerActions: css({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     flexShrink: 0,
     height: pxToRem(40),
+  }),
+  footer: css({
+    display: 'flex',
+    justifyContent: 'space-between',
   }),
 }
 
@@ -64,11 +88,14 @@ const titleDate = (string) => dateTimeFormat(new Date(string))
 
 const Submission = ({
   t,
+  pathname,
+  id,
   displayAuthor,
   answers,
   questions,
   createdAt,
   updatedAt,
+  isHighlighted,
 }) => {
   const [colorScheme] = useColorContext()
   const matchedIndexes = answers.nodes
@@ -79,8 +106,19 @@ const Submission = ({
   const defaultVisible = matchedIndexes.length
     ? matchedIndexes
     : [0, 1].slice(0, answersCount) // handle 0 or 1 answer
-  const [visibleIndexes, setVisible] = useState(defaultVisible)
+  const [visibleIndexes, setVisible] = useState(
+    isHighlighted ? true : defaultVisible,
+  )
   const [isExpanded, setIsExpanded] = useState(true)
+
+  const { inNativeApp } = useInNativeApp()
+  const [sharePayload, setSharePayload] = useState()
+  const publicUrl = `${PUBLIC_BASE_URL}${format({
+    pathname,
+    query: {
+      share: id,
+    },
+  })}`
 
   const [headerHeight] = useHeaderHeight()
   const hiddenAnswersCount =
@@ -92,20 +130,38 @@ const Submission = ({
   const rootRef = useRef()
 
   return (
-    <div ref={rootRef}>
+    <div
+      ref={rootRef}
+      {...(isHighlighted && styles.highlightContainer)}
+      {...(isHighlighted &&
+        isHighlighted &&
+        colorScheme.set('backgroundColor', 'alert'))}
+    >
+      {sharePayload && (
+        <ShareOverlay
+          onClose={() => setSharePayload()}
+          url={sharePayload.url}
+          title={sharePayload.dialogTitle}
+          emailSubject={sharePayload.emailSubject}
+          eventCategory='SubmissionShare'
+        />
+      )}
       <div
-        {...styles.profileRoot}
+        {...styles.header}
         style={{ top: headerHeight }}
-        {...colorScheme.set('backgroundColor', 'default')}
+        {...colorScheme.set(
+          'backgroundColor',
+          isHighlighted ? 'alert' : 'default',
+        )}
       >
         {displayAuthor.profilePicture && (
           <img
-            {...styles.profilePicture}
+            {...styles.headerPicture}
             src={displayAuthor.profilePicture}
             alt=''
           />
         )}
-        <div {...styles.center}>
+        <div {...styles.headerText}>
           <Interaction.H3>
             {displayAuthor.slug ? (
               <Link href={`/~${displayAuthor.slug}`}>
@@ -117,9 +173,11 @@ const Submission = ({
           </Interaction.H3>
           <Label>
             <span {...colorScheme.set('color', 'textSoft')}>
-              <span title={titleDate(createdAt)}>
-                <RelativeTime t={t} isDesktop date={createdAt} />
-              </span>
+              <Link href={publicUrl}>
+                <a {...styles.linkUnderline} title={titleDate(createdAt)}>
+                  <RelativeTime t={t} isDesktop date={createdAt} />
+                </a>
+              </Link>
               {isUpdated && (
                 <>
                   {' · '}
@@ -131,7 +189,7 @@ const Submission = ({
             </span>
           </Label>
         </div>
-        <div {...styles.actionsWrapper}>
+        <div {...styles.headerActions}>
           <IconButton
             invert={true}
             Icon={isExpanded ? RemoveIcon : AddIcon}
@@ -213,16 +271,47 @@ const Submission = ({
             </Editorial.P>
           )
         })}
-      {isExpanded && !!hiddenAnswersCount && (
-        <PlainButton
-          onClick={() => {
-            setVisible(true)
-          }}
-        >
-          {t.pluralize('questionnaire/submissions/showAnswers', {
-            count: hiddenAnswersCount,
-          })}
-        </PlainButton>
+      {isExpanded && (
+        <div {...styles.footer}>
+          {!!hiddenAnswersCount && (
+            <PlainButton
+              onClick={() => {
+                setVisible(true)
+              }}
+            >
+              {t.pluralize('questionnaire/submissions/showAnswers', {
+                count: hiddenAnswersCount,
+              })}
+            </PlainButton>
+          )}
+          <IconButton
+            title={t('article/actionbar/share')}
+            label={t('styleguide/CommentActions/share/short')}
+            labelShort={t('styleguide/CommentActions/share/short')}
+            Icon={ShareIcon}
+            href={publicUrl}
+            onClick={(e) => {
+              e.preventDefault()
+              const payload = {
+                dialogTitle: t('questionnaire/share/dialogTitle'),
+                url: publicUrl,
+                title: t('questionnaire/share/title', {
+                  name: displayAuthor.name,
+                }),
+              }
+              if (inNativeApp) {
+                trackEvent(['SubmissionShare', 'native', publicUrl])
+                postMessage({
+                  type: 'share',
+                  payload,
+                })
+                e.target.blur()
+              } else {
+                setSharePayload(payload)
+              }
+            }}
+          />
+        </div>
       )}
     </div>
   )

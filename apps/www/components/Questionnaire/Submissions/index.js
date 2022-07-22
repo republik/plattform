@@ -34,6 +34,38 @@ const SORT_KEY_PARAM = 'skey'
 const SORT_DIRECTION_PARAM = 'sdir'
 const QUERY_PARAM = 'q'
 
+const singleSubmissionQuery = gql`
+  query getSingleQuestionnaireSubmission($slug: String!, $id: ID!) {
+    questionnaire(slug: $slug) {
+      id
+      submissions(filters: { id: $id }) {
+        nodes {
+          id
+          createdAt
+          updatedAt
+          displayAuthor {
+            id
+            name
+            slug
+            profilePicture
+          }
+          answers {
+            totalCount
+            nodes {
+              id
+              hasMatched
+              question {
+                id
+              }
+              payload
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
 const mainQuery = gql`
   query getQuestionnaireSubmissions(
     $slug: String!
@@ -115,6 +147,7 @@ const Submissions = ({ slug }) => {
   const sortBy = router.query.skey || 'random'
   const sortDirection = router.query.sdir || undefined
   const searchQuery = router.query.q || ''
+  const shareId = router.query.share
   const [search] = useDebounce(searchQuery, 100)
   const pathname = router.asPath.split('?')[0]
   const { loading, error, data, previousData, fetchMore } = useQuery(
@@ -129,6 +162,13 @@ const Submissions = ({ slug }) => {
       },
     },
   )
+  const shareQuery = useQuery(singleSubmissionQuery, {
+    skip: searchQuery || !shareId,
+    variables: {
+      slug,
+      id: shareId,
+    },
+  })
 
   const loadMore = () => {
     return fetchMore({
@@ -229,12 +269,16 @@ const Submissions = ({ slug }) => {
         />
       ))}
       <Loader
-        loading={loading}
-        error={error}
+        loading={loading || shareQuery.loading}
+        error={error || shareQuery.error}
         render={() => {
           const {
             questionnaire: { results, questions },
           } = data
+
+          const shareSubmission =
+            shareQuery.data?.questionnaire?.submissions?.nodes?.[0]
+
           return (
             <>
               {results.totalCount !== getTotalCount(data) && (
@@ -245,12 +289,30 @@ const Submissions = ({ slug }) => {
                 </Interaction.P>
               )}
               <div ref={containerRef} style={{ marginTop: 30 }}>
+                {shareSubmission && (
+                  <>
+                    <Submission
+                      t={t}
+                      pathname={pathname}
+                      questions={questions}
+                      {...shareSubmission}
+                      isHighlighted
+                    />
+                    <HR />
+                  </>
+                )}
                 {results.nodes.map(
                   ({ id, displayAuthor, answers, createdAt, updatedAt }) => {
+                    if (id === shareSubmission?.id) {
+                      return null
+                    }
+
                     return (
                       <Fragment key={id}>
                         <Submission
                           t={t}
+                          pathname={pathname}
+                          id={id}
                           displayAuthor={displayAuthor}
                           answers={answers}
                           questions={questions}
