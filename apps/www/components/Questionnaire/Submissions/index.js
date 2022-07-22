@@ -28,6 +28,10 @@ const SUPPORTED_SORT = [
   },
 ]
 
+const SORT_KEY_PARAM = 'skey'
+const SORT_DIRECTION_PARAM = 'sdir'
+const QUERY_PARAM = 'q'
+
 const mainQuery = gql`
   query getQuestionnaireSubmissions(
     $slug: String!
@@ -160,6 +164,18 @@ const Submissions = ({ slug }) => {
     loadMore,
   })
 
+  const getSearchParams = ({ sort, searchQuery }) => {
+    const query = {}
+    query[QUERY_PARAM] = searchQuery
+    if (sort.key === 'random') {
+      return query
+    }
+    query[SORT_KEY_PARAM] = sort.key
+    query[SORT_DIRECTION_PARAM] = sort.direction
+
+    return query
+  }
+
   const { t } = useTranslation()
 
   return (
@@ -186,11 +202,7 @@ const Submissions = ({ slug }) => {
           key={key}
           sort={sort}
           urlSort={{ key: sortBy, direction: sortDirection }}
-          getSearchParams={({ sort }) => ({
-            q: searchQuery,
-            skey: sort.key,
-            sdir: sort.direction,
-          })}
+          getSearchParams={({ sort }) => getSearchParams({ sort, searchQuery })}
           pathname={pathname}
         />
       ))}
