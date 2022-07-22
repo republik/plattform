@@ -210,7 +210,7 @@ const Submissions = ({ slug }) => {
         icon={
           searchQuery ? (
             <button {...plainButtonRule} onClick={reset}>
-              <CloseIcon style={{ cursor: 'pointer' }} size={30} />
+              <CloseIcon size={30} />
             </button>
           ) : (
             <SearchIcon size={30} />
