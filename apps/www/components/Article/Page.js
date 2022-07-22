@@ -148,7 +148,6 @@ const QuestionnaireSubmissions = dynamic(
   () => import('../Questionnaire/Submissions'),
   {
     loading: LoadingComponent,
-    ssr: false,
   },
 )
 
@@ -483,17 +482,16 @@ const ArticlePage = ({
   const hasOverviewNav = meta ? meta.template === 'section' : true // show/keep around while loading meta
   const colorSchemeKey = darkMode ? 'dark' : 'auto'
 
-  const metaWithSocialImages =
-    (meta?.ownDiscussion?.id && router.query.focus) ||
-    (meta?.ownDiscussion?.isBoard && router.query.parent)
-      ? undefined
-      : meta
+  const delegateMetaDown =
+    !!meta?.delegateDown ||
+    !!(meta?.ownDiscussion?.id && router.query.focus) ||
+    !!(meta?.ownDiscussion?.isBoard && router.query.parent)
 
   return (
     <Frame
       raw
       // Meta tags for a focus comment are rendered in Discussion/Commments.js
-      meta={metaWithSocialImages}
+      meta={!delegateMetaDown && meta}
       secondaryNav={seriesSecondaryNav}
       formatColor={formatColor}
       hasOverviewNav={hasOverviewNav}

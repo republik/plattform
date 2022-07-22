@@ -24,8 +24,6 @@ import PlainButton from './PlainButton'
 import { swissTime } from '../../../lib/utils/format'
 import { HEADER_HEIGHT } from '../../constants'
 import { useInNativeApp } from '../../../lib/withInNativeApp'
-import { format } from 'url'
-import { PUBLIC_BASE_URL } from '../../../lib/constants'
 import ShareOverlay from '../../ActionBar/ShareOverlay'
 import { trackEvent } from '../../../lib/matomo'
 
@@ -88,8 +86,7 @@ const titleDate = (string) => dateTimeFormat(new Date(string))
 
 const Submission = ({
   t,
-  pathname,
-  id,
+  publicUrl,
   displayAuthor,
   answers,
   questions,
@@ -113,12 +110,6 @@ const Submission = ({
 
   const { inNativeApp } = useInNativeApp()
   const [sharePayload, setSharePayload] = useState()
-  const publicUrl = `${PUBLIC_BASE_URL}${format({
-    pathname,
-    query: {
-      share: id,
-    },
-  })}`
 
   const [headerHeight] = useHeaderHeight()
   const hiddenAnswersCount =
