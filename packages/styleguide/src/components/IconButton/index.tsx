@@ -105,7 +105,6 @@ const styles = {
   button: css({
     display: 'flex',
     flexDirection: 'row',
-    position: 'relative',
     alignItems: 'center',
     textDecoration: 'none',
     marginRight: 20,
