@@ -57,6 +57,12 @@ module.exports = withTM(
             destination: '/_ssr/:path*',
             has: [{ type: 'query', key: 'extract' }],
           },
+          // Avoid SSG for share urls, e.g. meta.fromQuery
+          {
+            source: '/:path*',
+            destination: '/_ssr/:path*',
+            has: [{ type: 'query', key: 'share' }],
+          },
           // Rewrite for crawlers when a comment is focused inside a debate on the article-site
           {
             source: '/:path*',

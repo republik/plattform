@@ -4269,6 +4269,14 @@
       "value": "Basierend auf {formattedSubmittedCount} Antworten. {formattedSkippedCount} Personen haben diese Frage übersprungen."
     },
     {
+      "key": "questionnaire/share/dialogTitle",
+      "value": "Fragebogen teilen"
+    },
+    {
+      "key": "questionnaire/share/title",
+      "value": "Fragebogen von {name}"
+    },
+    {
       "key": "questionnaire/thankyou",
       "value": "Ihre Antworten sind bei uns angekommen. Danke fürs Mitmachen!"
     },
