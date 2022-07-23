@@ -134,6 +134,8 @@ const Submission = ({
           url={sharePayload.url}
           title={sharePayload.dialogTitle}
           emailSubject={sharePayload.emailSubject}
+          tweet={sharePayload.tweet || ''}
+          emailBody={sharePayload.emailBody || ''}
           eventCategory='SubmissionShare'
         />
       )}
