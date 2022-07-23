@@ -23,7 +23,7 @@ import PlainButton from './PlainButton'
 
 import { swissTime } from '../../../lib/utils/format'
 import { HEADER_HEIGHT } from '../../constants'
-import { useInNativeApp } from '../../../lib/withInNativeApp'
+import { useInNativeApp, postMessage } from '../../../lib/withInNativeApp'
 import ShareOverlay from '../../ActionBar/ShareOverlay'
 import { trackEvent } from '../../../lib/matomo'
 
@@ -283,12 +283,14 @@ const Submission = ({
             href={publicUrl}
             onClick={(e) => {
               e.preventDefault()
+              const title = t('questionnaire/share/title', {
+                name: displayAuthor.name,
+              })
               const payload = {
                 dialogTitle: t('questionnaire/share/dialogTitle'),
                 url: publicUrl,
-                title: t('questionnaire/share/title', {
-                  name: displayAuthor.name,
-                }),
+                title,
+                subject: title,
               }
               if (inNativeApp) {
                 trackEvent(['SubmissionShare', 'native', publicUrl])
