@@ -29,8 +29,8 @@ import { trackEvent } from '../../../lib/matomo'
 
 const styles = {
   highlightContainer: css({
-    padding: 7,
-    margin: -7,
+    padding: '8px 7px',
+    margin: '-8px -7px',
   }),
   header: css({
     position: 'sticky',
