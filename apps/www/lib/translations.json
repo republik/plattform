@@ -4129,6 +4129,14 @@
       "value": "absteigend"
     },
     {
+      "key": "search/sort/random",
+      "value": "Zufall"
+    },
+    {
+      "key": "search/sort/createdAt",
+      "value": "Zeit"
+    },
+    {
       "key": "search/excerpt",
       "value": "Auszug"
     },
@@ -4259,6 +4267,14 @@
     {
       "key": "questionnaire/turnout",
       "value": "Basierend auf {formattedSubmittedCount} Antworten. {formattedSkippedCount} Personen haben diese Frage übersprungen."
+    },
+    {
+      "key": "questionnaire/share/dialogTitle",
+      "value": "Fragebogen teilen"
+    },
+    {
+      "key": "questionnaire/share/title",
+      "value": "Fragebogen von {name}"
     },
     {
       "key": "questionnaire/thankyou",
