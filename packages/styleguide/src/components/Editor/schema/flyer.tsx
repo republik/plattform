@@ -75,7 +75,13 @@ const PullQuoteText = ({ children, attributes }) => (
       padding: 20,
     }}
   >
-    {children}
+    <q
+      style={{
+        quotes: `"«" "»" "‹" "›"`,
+      }}
+    >
+      {children}
+    </q>
   </div>
 )
 

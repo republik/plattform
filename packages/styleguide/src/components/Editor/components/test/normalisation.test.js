@@ -1163,7 +1163,7 @@ describe('Slate Editor: Normalisation', () => {
         },
       ]
       await setup(structure)
-      expect(value[0].children[0].placeholder).toEqual('Paragraph  ')
+      expect(value[0].children[0].placeholder).toEqual('Paragraph')
     })
     it('should not add placeholder on empty text node followed or preceded by another of equal status (same place in structure)', async () => {
       value = [
@@ -1216,7 +1216,7 @@ describe('Slate Editor: Normalisation', () => {
       ]
       await setup(structure)
       expect(value[0].children[1].children[0].placeholder).toEqual(
-        'Figure Caption  ',
+        'Figure Caption',
       )
     })
     it('should not add placeholder on end node', async () => {
