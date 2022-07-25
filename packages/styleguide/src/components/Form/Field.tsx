@@ -141,6 +141,7 @@ const Field = React.forwardRef<
     ) => void
     name?: string
     autoComplete?: boolean
+    autoFocus?: string
     type?: string
     label?: string
     disabled?: boolean
@@ -159,6 +160,7 @@ const Field = React.forwardRef<
       onChange,
       name,
       autoComplete,
+      autoFocus,
       type,
       simulate: sim,
       label,
@@ -230,6 +232,7 @@ const Field = React.forwardRef<
           disabled,
           name,
           autoComplete,
+          autoFocus,
           type,
           ref: inputRef,
           onChange: (event) => {

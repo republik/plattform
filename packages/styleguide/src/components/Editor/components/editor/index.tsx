@@ -129,7 +129,7 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
         }
         onMouseDown={selectVoid}
         onDoubleClick={(e) => {
-          e.preventDefault()
+          e.stopPropagation()
           setFormPath(path)
         }}
       >

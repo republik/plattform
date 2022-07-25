@@ -1021,6 +1021,80 @@ describe('Slate Editor: Normalisation', () => {
       ])
     })
 
+    it('should relink autolinks which are out of sync (with text as source of truth)', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Read the rest of the story on ' },
+            {
+              type: 'link',
+              href: 'http://www.republik.ch',
+              children: [{ text: 'www.republik.com' }],
+            },
+            { text: '' },
+          ],
+        },
+      ]
+      const structure = [
+        {
+          type: 'paragraph',
+        },
+      ]
+      await setup(structure)
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Read the rest of the story on ' },
+            {
+              type: 'link',
+              href: 'http://www.republik.com',
+              children: [{ text: 'www.republik.com' }],
+            },
+            { text: '' },
+          ],
+        },
+      ])
+    })
+
+    it('should not relink links which are not autolinks', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Read the rest of the story on ' },
+            {
+              type: 'link',
+              href: 'http://www.republik.ch',
+              children: [{ text: 'our website' }],
+            },
+            { text: '' },
+          ],
+        },
+      ]
+      const structure = [
+        {
+          type: 'paragraph',
+        },
+      ]
+      await setup(structure)
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'Read the rest of the story on ' },
+            {
+              type: 'link',
+              href: 'http://www.republik.ch',
+              children: [{ text: 'our website' }],
+            },
+            { text: '' },
+          ],
+        },
+      ])
+    })
+
     it('should not autolink if parent element does not allow links', async () => {
       value = [
         {

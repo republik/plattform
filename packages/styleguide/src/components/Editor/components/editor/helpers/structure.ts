@@ -250,7 +250,7 @@ export const toggleElement = (
   editor: CustomEditor,
   elKey: CustomElementsType,
 ): number[] => {
-  console.log('toggle', elKey)
+  // console.log('toggle', elKey)
 
   const { selection } = editor
   if (!selection) return

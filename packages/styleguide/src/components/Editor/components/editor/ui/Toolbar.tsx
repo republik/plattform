@@ -170,7 +170,9 @@ const getAllowedBlocks = (
   if (selectedContainer) {
     return getAllowedBlocks(editor, shown, selectedContainer)
   }
-  const allowedTypes = getAllowedTypes(selectedNode)
+  const allowedTypes = getAllowedTypes(selectedNode).filter(
+    (t) => !elConfig[t]?.attrs?.isInline,
+  )
   const buttons = shown.length ? shown.map((b) => b.type) : allowedTypes
   return buttons.map((t) => {
     const isSelected = selectedNode && t === selectedNode[0].type

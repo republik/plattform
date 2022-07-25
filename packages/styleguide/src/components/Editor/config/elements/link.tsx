@@ -5,12 +5,13 @@ import {
   NormalizeFn,
 } from '../../custom-types'
 import { LinkIcon } from '../../../Icons'
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useMemo, useState } from 'react'
 import Field from '../../../Form/Field'
 import { Editor, Transforms } from 'slate'
 import { useColorContext } from '../../../Colors/ColorContext'
 import { css } from 'glamor'
 import { link } from '../../../Typography/Editorial'
+import { getFullUrl, getLinkInText } from '../../components/editor/helpers/text'
 
 // TODO: Slate is very much not happy with forwardRef wrapped around the component
 //  check that this fix wont cause problems.
@@ -51,27 +52,22 @@ const Form: React.FC<ElementFormProps<LinkElement>> = ({
   onChange,
   onClose,
 }) => {
-  const ref = useRef(null)
-
-  // TODO: make autofocus work
-  useEffect(() => {
-    if (ref?.current) {
-      ref.current.focus()
-    }
-  }, [ref])
+  const [href, setHref] = useState<string>(element.href || '')
 
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault()
+        onChange({ href })
         onClose()
       }}
     >
       <Field
-        ref={ref}
+        autoFocus='autofocus'
         label='URL'
-        value={element.href}
-        onChange={(_, href: string) => onChange({ href })}
+        type='url'
+        value={href}
+        onChange={(_, value: string) => setHref(value)}
       />
     </form>
   )
@@ -85,6 +81,16 @@ const unlinkWhenEmpty: NormalizeFn<LinkElement> = ([node, path], editor) => {
   return false
 }
 
+const checkAutolink: NormalizeFn<LinkElement> = ([node, path], editor) => {
+  const linkInText = getLinkInText(Editor.string(editor, path))
+  // if there is no link in text, this is not an autolink
+  if (!linkInText) return false
+  const expectedHref = getFullUrl(linkInText)
+  if (expectedHref === node.href) return false
+  Transforms.setNodes(editor, { href: expectedHref }, { at: path })
+  return false
+}
+
 export const config: ElementConfigI = {
   Form,
   attrs: {
@@ -94,6 +100,6 @@ export const config: ElementConfigI = {
   },
   button: { icon: LinkIcon },
   component: 'link',
-  normalizations: [unlinkWhenEmpty],
+  normalizations: [unlinkWhenEmpty, checkAutolink],
   props: ['href'],
 }

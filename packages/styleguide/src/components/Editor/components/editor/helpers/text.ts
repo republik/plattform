@@ -134,6 +134,17 @@ export const selectPlaceholder = (
 export const isEmpty = (text?: string) =>
   !text || text === '' || text === PSEUDO_EMPTY_STRING
 
+export const getLinkInText = (text: string) => {
+  // regex should only return one link!
+  const regex =
+    /(https?:\/\/(?:www\.|(?!www))[^\s.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})/gi
+  const matches = text.match(regex)
+  return matches && matches[0]
+}
+
+export const getFullUrl = (url: string) =>
+  /^(https?:|\/|#)/.test(url) ? url : 'http://' + url
+
 export const createLinks: NormalizeFn<CustomText> = ([node, path], editor) => {
   const parent = Editor.parent(editor, path)
   const parentNode = parent[0]
@@ -142,40 +153,33 @@ export const createLinks: NormalizeFn<CustomText> = ([node, path], editor) => {
     return false
   }
 
-  // regex should only return one link!
-  const regex =
-    /(https?:\/\/(?:www\.|(?!www))[^\s.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})/gi
-  const linkContent = node.text.match(regex)
+  const linkInText = getLinkInText(node.text)
 
-  if (linkContent) {
+  if (linkInText) {
     if (SlateElement.isElement(parentNode) && parentNode.type !== 'link') {
-      const linkStartPoint = node.text.indexOf(linkContent[0])
-      const linkEndPoint = linkContent[0].length + linkStartPoint
+      const linkStartPoint = node.text.indexOf(linkInText)
+      const linkEndPoint = linkInText.length + linkStartPoint
       const linkRange = {
         anchor: { path, offset: linkStartPoint },
         focus: { path, offset: linkEndPoint },
       }
-      // only autolink if cursor is out of link
+      // don't autolink if cursor is still inside the target text
       if (
-        !editor.selection ||
-        !Range.isCollapsed(editor.selection) ||
-        !Range.intersection(editor.selection, linkRange)
+        editor.selection &&
+        Range.isCollapsed(editor.selection) &&
+        Range.intersection(editor.selection, linkRange)
       ) {
-        const href = /^(https?:|\/|#)/.test(linkContent[0])
-          ? linkContent[0]
-          : 'http://' + linkContent[0]
-
-        Transforms.wrapNodes(
-          editor,
-          { type: 'link', href, children: [] },
-          {
-            at: linkRange,
-            split: true,
-          },
-        )
-
-        return true
+        return false
       }
+      Transforms.wrapNodes(
+        editor,
+        { type: 'link', href: getFullUrl(linkInText), children: [] },
+        {
+          at: linkRange,
+          split: true,
+        },
+      )
+      return true
     }
   }
   return false

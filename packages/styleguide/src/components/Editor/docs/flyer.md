@@ -12,7 +12,9 @@
 ### Bugs
 
 - Copy title with break swallows the break
-
+- Links: 
+  - autolinking gets out of sync when the link is edited (onChange should also change text)
+  - shorten link text? (like BE would)
 
 ```react
 state: {
