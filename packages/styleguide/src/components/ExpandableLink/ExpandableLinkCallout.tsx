@@ -8,6 +8,7 @@ import { LinkIcon } from '../Icons'
 import { fontStyles } from '../Typography'
 import { ellipsize } from '../../lib/styleMixins'
 import { StateProps, DELAY } from './ExpandableLink'
+import { interactionFontRule } from '../Typography/fontRules'
 
 type Props = {
   inNativeApp?: boolean
@@ -119,7 +120,12 @@ const appearDown = keyframes({
 const ExpandableLinkP = ({ children, ...props }) => {
   const [colorScheme] = useColorContext()
   return (
-    <p {...props} {...styles.contentText} {...colorScheme.set('color', 'text')}>
+    <p
+      {...props}
+      {...styles.contentText}
+      {...colorScheme.set('color', 'text')}
+      {...interactionFontRule}
+    >
       {children}
     </p>
   )
