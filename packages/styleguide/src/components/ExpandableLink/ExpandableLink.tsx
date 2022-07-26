@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import { useColorContext } from '../Colors/ColorContext'
 import { css } from 'glamor'
 import ExpandableLinkCallout from './ExpandableLinkCallout'
+import { shouldIgnoreClick } from '../../lib/helpers'
 
 type Props = {
   children?: React.ReactNode
@@ -121,7 +122,11 @@ const ExpandableLink = ({
       {...colorScheme.set('color', 'text')}
       {...colorScheme.set('textDecorationColor', 'textSoft')}
       aria-label={description}
+      href={href}
       onClick={(event) => {
+        if (shouldIgnoreClick(event)) {
+          return
+        }
         event.preventDefault()
         showInfoBox(event)
       }}

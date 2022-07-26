@@ -1,11 +1,10 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 import { ascending } from 'd3-array'
-import { Checkbox, RawHtml } from '@project-r/styleguide'
+import { Checkbox, RawHtml, shouldIgnoreClick } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
 import LegalOverlay, { SUPPORTED_HREFS } from './LegalOverlay'
-import { shouldIgnoreClick } from '../../lib/utils/link'
 
 const stringifyCombo = (combo = []) =>
   combo
