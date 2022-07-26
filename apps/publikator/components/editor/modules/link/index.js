@@ -30,7 +30,10 @@ export default ({ rule, subModules, TYPE }) => {
         type: 'link',
         // if there is a tile but no description, just 'title' is good
         // if there is no title but a description, we want '[SEPARATOR]description'
-        title: [object.data.title || '', object.data.description]
+        title: [
+          object.data.title || '',
+          object.data.description?.replace(/[\r\n\v]+/g, ' '),
+        ]
           .filter((x) => x !== undefined)
           .join(SEPARATOR),
         url: object.data.href,
