@@ -4,6 +4,8 @@ import { useColorContext } from '../Colors/ColorContext'
 import { css } from 'glamor'
 import ExpandableLinkCallout from './ExpandableLinkCallout'
 import { shouldIgnoreClick } from '../../lib/helpers'
+import { useMediaQuery } from '../../lib/useMediaQuery'
+import { mUp } from '../../theme/mediaQueries'
 
 type Props = {
   children?: React.ReactNode
@@ -53,6 +55,7 @@ const ExpandableLink = ({
   const [colorScheme] = useColorContext()
   const [expandedLink, setExpandedLink] = useState<StateProps>(undefined)
   const timeOutRef = useRef<NodeJS.Timeout>(null)
+  const isDesktop = useMediaQuery(mUp)
 
   const toggleLinkInfoBox = (position: CSSProperties) => {
     if (expandedLink) {
@@ -132,6 +135,9 @@ const ExpandableLink = ({
       }}
       onMouseLeave={removeInfoBox}
       onMouseEnter={(event) => {
+        if (!isDesktop) {
+          return
+        }
         showInfoBox(event)
       }}
       tabIndex={0}
