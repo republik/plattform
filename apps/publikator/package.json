@@ -13,6 +13,7 @@
     "build": "next build",
     "tape": "cross-env NODE_ENV=test babel-tape-runner",
     "test": "jest",
+    "analyze": "ANALYZE=true next build",
     "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./.next*\" | xargs wc -l",
     "lint": "eslint --fix .",
     "translations-raw": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1qPubCKz2YzbcFkRfF0MrgRqD0KLsgRPxoZfG5G3tHOA --title=live --pretty --out lib/translations.json",
@@ -47,6 +48,7 @@
     "raf": "^3.4.0"
   },
   "dependencies": {
+    "@next/bundle-analyzer": "^10.2.3",
     "@orbiting/remark-preset": "^1.2.4",
     "@project-r/styleguide": "*",
     "@project-r/template-newsletter": "^1.5.0",
