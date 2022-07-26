@@ -11,7 +11,7 @@ Send simple and templated mails via Mandrill or Nodemailer, and manage subscript
 
 ### Send mail to users with cleaned Mailchimp status
 
-Send a mail to users which were cleaned from mailchimp during a certain time period.
+We have a weekly job which sends mails to users who were cleaned from Mailchimp. This mailing can also be triggered manually be executed the following script:
 
 Run `script/sendMailsToSegment/cleanedUserSubscriptionInvitation.js`
 

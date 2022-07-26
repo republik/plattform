@@ -1,7 +1,7 @@
 const yargs = require('yargs')
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 
-const sendMailsToSegment = require('./sendMailsToSegment')
+const sendMailsToSegment = require('../../lib/sendMailsToSegment')
 
 const argv = yargs
   .option('dry-run', {
@@ -68,13 +68,13 @@ PgDb.connect().then(async (pgdb) => {
   )
   const emailAddresses = [...emailAddressGrantIdMap.keys()]
 
-  await sendMailsToSegment(emailAddresses, mail, {
-    pgdb,
-    argv,
+  await sendMailsToSegment(emailAddresses, mail, pgdb, {
     accessEventData: {
       emailAddressGrantIdMap,
       event: 'email.recipient.dialog.kampa202202',
     },
+    dryRun: argv.dryRun,
+    onceFor: argv.onceFor,
   })
   await pgdb.close()
   console.log('Done!')
