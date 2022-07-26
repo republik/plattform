@@ -17,7 +17,7 @@ type Props = {
   setExpandedLink: React.Dispatch<React.SetStateAction<StateProps>>
 }
 
-const shortenLink = (url) => {
+export const shortenLink = (url) => {
   if (!url) return
   const addr = new URL(url)
   const host = addr.host
@@ -31,7 +31,7 @@ const shortenLink = (url) => {
   // select the last path item, if it has subpaths, add ellipsis
   const lastPath =
     cleanPath &&
-    `${hasSubPaths ? '/.../' : ''}${cleanPath.match(/([^/]*$)/g)[0]}`
+    `${hasSubPaths ? '/.../' : '/'}${cleanPath.match(/([^/]*$)/g)[0]}`
   return `${host}${lastPath}`
 }
 
