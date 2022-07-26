@@ -16,24 +16,6 @@ type Props = {
   setExpandedLink: React.Dispatch<React.SetStateAction<StateProps>>
 }
 
-const ExpandableLinkP = ({ children, ...props }) => {
-  const [colorScheme] = useColorContext()
-  return (
-    <p {...props} {...styles.contentText} {...colorScheme.set('color', 'text')}>
-      {children}
-    </p>
-  )
-}
-
-const fadeIn = keyframes({
-  from: {
-    opacity: 0,
-  },
-  to: {
-    opacity: 1,
-  },
-})
-
 const shortenLink = (url) => {
   if (!url) return
   const addr = new URL(url)
@@ -103,6 +85,15 @@ const styles = {
   }),
 }
 
+const fadeIn = keyframes({
+  from: {
+    opacity: 0,
+  },
+  to: {
+    opacity: 1,
+  },
+})
+
 const appearUp = keyframes({
   from: {
     opacity: 0,
@@ -124,6 +115,15 @@ const appearDown = keyframes({
     transform: 'translateY(0)',
   },
 })
+
+const ExpandableLinkP = ({ children, ...props }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <p {...props} {...styles.contentText} {...colorScheme.set('color', 'text')}>
+      {children}
+    </p>
+  )
+}
 
 const ExpandableLinkCallout = ({
   inNativeApp,
