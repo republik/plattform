@@ -56,7 +56,7 @@ const getForm = (
   if (!SlateElement.isElement(element)) return
   // console.log({ element, config: elConfig[element.type] })
   const config = elConfig[element.type]
-  if (skipBlock && config.attrs?.isBlock) return
+  if (skipBlock && config.attrs?.blockUi) return
   const Form = config.Form
   if (!Form) return
   return {

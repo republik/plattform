@@ -449,8 +449,17 @@ rows:
     Description: boolean *(for void elements)*
   - Variable: formatText
     Description: boolean
-  - Variable: isBlock
-    Description: boolean *(display block UI)*
+  - Variable: blockUi
+    Description: block UI attributes *(if applicable)*
+```
+
+#### `blockUi`
+
+```table
+span: 3
+rows:
+  - Variable: position
+    Description: absolute css positionning of the block
 ```
 
 #### `NodeTemplate`

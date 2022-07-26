@@ -27,6 +27,10 @@ import { config as flyerSignature } from './flyer/elements/signature'
 import { config as flyerTitle } from './flyer/elements/title'
 import { config as flyerTopic } from './flyer/elements/topic'
 import { config as articlePreview } from './articlePreview'
+import { config as quiz } from './quiz/container'
+import { config as quizItem } from './quiz/item'
+import { config as quizAnswer } from './quiz/answer'
+import { config as quizAnswerInfo } from './quiz/answerInfo'
 
 export const config: ElementsConfig = {
   paragraph,
@@ -58,6 +62,10 @@ export const config: ElementsConfig = {
   flyerTitle,
   flyerTopic,
   articlePreview,
+  quiz,
+  quizItem,
+  quizAnswer,
+  quizAnswerInfo,
 }
 
 // typesafe helper

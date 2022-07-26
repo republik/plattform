@@ -53,11 +53,18 @@ export const config: ElementConfigI = {
     { type: 'flyerTitle' },
     { type: 'flyerAuthor' },
     { type: ['paragraph', 'ul', 'ol'], repeat: true },
-    { type: ['flyerPunchline', 'pullQuote', 'articlePreview', 'figure'] },
+    {
+      type: ['flyerPunchline', 'pullQuote', 'articlePreview', 'figure', 'quiz'],
+    },
   ],
   Form,
   attrs: {
-    isBlock: true,
+    blockUi: {
+      position: {
+        top: 0,
+        left: 0,
+      },
+    },
   },
   button: { icon: FlyerTileIcon },
 }

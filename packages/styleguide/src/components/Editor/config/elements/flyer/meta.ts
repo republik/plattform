@@ -5,7 +5,12 @@ export const config: ElementConfigI = {
   component: 'flyerTile',
   structure: [{ type: 'flyerMetaP', main: true, repeat: true }],
   attrs: {
-    isBlock: true,
+    blockUi: {
+      position: {
+        top: 0,
+        left: 0,
+      },
+    },
   },
   button: { icon: FlyerTileMetaIcon },
 }

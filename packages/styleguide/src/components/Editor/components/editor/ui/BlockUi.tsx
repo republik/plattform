@@ -12,8 +12,8 @@ import { insertAfter, moveElement, removeElement } from '../helpers/structure'
 import { useSlate } from 'slate-react'
 import { useFormContext } from './Forms'
 import {
+  BlockUiAttrsI,
   CustomElement,
-  CustomElementsType,
   TemplateType,
 } from '../../../custom-types'
 import { config as elConfig } from '../../../config/elements'
@@ -22,11 +22,9 @@ const styles = {
   container: css({
     userSelect: 'none',
     position: 'absolute',
-    top: 0,
-    right: 0,
     background: 'white',
     padding: 5,
-    opacity: 0.8,
+    zIndex: 10,
   }),
   padded: css({
     marginBottom: 8,
@@ -158,12 +156,18 @@ const Edit: React.FC<{
 const BlockUi: React.FC<{
   path: number[]
   element: CustomElement
-}> = ({ path, element }) => {
+  blockUi: BlockUiAttrsI
+}> = ({ path, element, blockUi }) => {
   const template = element.template
   // this UI is here to manage repeatable, interchangeable elements
   if (!template?.repeat) return null
   return (
-    <div className='ui-element' {...styles.container} contentEditable={false}>
+    <div
+      className='ui-element'
+      {...styles.container}
+      style={blockUi.position}
+      contentEditable={false}
+    >
       {!!elConfig[element.type].Form && (
         <div {...styles.padded}>
           <Edit path={path} />

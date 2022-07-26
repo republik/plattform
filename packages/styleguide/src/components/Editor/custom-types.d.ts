@@ -145,6 +145,23 @@ export type ArticlePreviewElement = SharedElement & {
   type: 'articlePreview'
 }
 
+export type QuizElement = SharedElement & {
+  type: 'quiz'
+}
+
+export type QuizItemElement = SharedElement & {
+  type: 'quizItem'
+  isCorrect?: boolean
+}
+
+export type QuizAnswerElement = SharedElement & {
+  type: 'quizAnswer'
+}
+
+export type QuizAnswerInfoElement = SharedElement & {
+  type: 'quizAnswerInfo'
+}
+
 export type CustomElement =
   | HeadlineElement
   | ParagraphElement
@@ -174,6 +191,10 @@ export type CustomElement =
   | FlyerPunchlineElement
   | FlyerSignatureElement
   | ArticlePreviewElement
+  | QuizElement
+  | QuizItemElement
+  | QuizAnswerElement
+  | QuizAnswerInfoElement
 
 export type CustomDescendant = CustomElement | CustomText
 export type CustomAncestor = CustomElement | CustomEditor
@@ -210,6 +231,10 @@ export type CustomElementsType =
   | 'flyerPunchline'
   | 'flyerSignature'
   | 'articlePreview'
+  | 'quiz'
+  | 'quizItem'
+  | 'quizAnswer'
+  | 'quizAnswerInfo'
 
 // include overlapping types (e.g. ol and ul both want to render 'list'
 // include 'container' type
@@ -225,9 +250,13 @@ interface EditorAttrsI {
   isInline?: boolean
 }
 
+export interface BlockUiAttrsI {
+  position: object
+}
+
 interface ElementAttrsI extends EditorAttrsI {
   formatText?: boolean
-  isBlock?: boolean
+  blockUi?: BlockUiAttrsI
   isTextInline?: boolean
   highlightSelected?: boolean
 }

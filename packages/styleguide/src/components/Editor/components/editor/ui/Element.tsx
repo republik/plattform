@@ -9,7 +9,11 @@ import { useFormContext } from './Forms'
 export const ContainerComponent: React.FC<{
   [x: string]: unknown
 }> = ({ props, children }) => {
-  return <div {...props}>{children}</div>
+  return (
+    <div {...props} style={{ position: 'relative' }}>
+      {children}
+    </div>
+  )
 }
 
 export const ElementButton: React.FC<{

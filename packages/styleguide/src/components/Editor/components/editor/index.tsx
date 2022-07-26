@@ -89,7 +89,7 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
       )
     }
     const isVoid = config.attrs?.isVoid
-    const isBlock = config.attrs?.isBlock
+    const blockUi = config.attrs?.blockUi
     const highlightSelected = config.attrs?.highlightSelected
     const Component = editor.customConfig.schema[config.component]
     if (!Component) {
@@ -133,7 +133,9 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
           setFormPath(path)
         }}
       >
-        {isBlock && isSelected && <BlockUi path={path} element={element} />}
+        {blockUi && isSelected && (
+          <BlockUi path={path} element={element} blockUi={blockUi} />
+        )}
         {children}
       </Component>
     )

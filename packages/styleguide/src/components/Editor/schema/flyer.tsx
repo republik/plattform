@@ -7,7 +7,7 @@ import { List } from '../config/elements/list/container'
 import { ListItem } from '../../List'
 import { PullQuoteSource } from '../../PullQuote'
 import { Break } from '../config/elements/break'
-import { Editorial, Sub, Sup, Interaction } from '../../Typography'
+import { Editorial, Sub, Sup, Interaction, Label } from '../../Typography'
 import { NoRefA } from '../config/elements/link'
 import { FlyerTile } from '../config/elements/flyer'
 import { FlyerAuthor } from '../config/elements/flyer/elements/author'
@@ -17,6 +17,7 @@ import { FlyerTopic } from '../config/elements/flyer/elements/topic'
 import { ArticlePreview } from '../config/elements/articlePreview'
 import { useColorContext } from '../../Colors/ColorContext'
 import { FlyerSignature } from '../config/elements/flyer/elements/signature'
+import { ContainerComponent } from '../components/editor/ui/Element'
 
 const container = ({ children, attributes }) => (
   <div style={{ backgroundColor: '#FFE501' }} {...attributes}>
@@ -50,6 +51,7 @@ const Paragraph = ({ children, ...props }) => {
         fontWeight: 400,
         fontSize: 24,
         marginBottom: 20,
+        ...props.style,
       }}
       {...colorScheme.set('color', 'text')}
     >
@@ -85,6 +87,46 @@ const PullQuoteText = ({ children, attributes }) => (
   </div>
 )
 
+const QuizContainer: React.FC<{
+  [x: string]: unknown
+}> = ({ props, children }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <div {...props} style={{ position: 'relative' }}>
+      <div
+        style={{ userSelect: 'none', marginBottom: 10 }}
+        contentEditable={false}
+      >
+        <Label>
+          <span style={{ marginRight: 5 }}>ℹ️</span> Quiz solution depends on
+          answer choice. Check preview for final layout.
+        </Label>
+      </div>
+      {children}
+    </div>
+  )
+}
+
+const QuizAnswer = ({ children, attributes, ...props }) => {
+  return (
+    <div {...attributes} {...props}>
+      <div
+        style={{
+          fontFamily: 'Druk Text Wide Trial',
+          fontStyle: 'Medium',
+          fontSize: 23,
+          color: '#0E755A',
+          padding: '12px 30px',
+          border: '5px solid #0E755A',
+          display: 'inline-block',
+        }}
+      >
+        {children}
+      </div>
+    </div>
+  )
+}
+
 const schema: SchemaConfig = {
   container,
   flyerTile: FlyerTile,
@@ -113,6 +155,10 @@ const schema: SchemaConfig = {
   strikethrough: Editorial.StrikeThrough,
   sub: Sub,
   sup: Sup,
+  quiz: QuizContainer,
+  quizItem: ContainerComponent,
+  quizAnswer: QuizAnswer,
+  quizAnswerInfo: ContainerComponent,
 }
 
 export default schema
