@@ -50,13 +50,9 @@ const styles = {
   }),
   container: css({
     display: 'flex',
-    alignItems: 'flex-start',
     justifyContent: 'space-between',
     padding: '12px 0',
     gap: 16,
-    [mediaQueries.mUp]: {
-      alignItems: 'center',
-    },
   }),
   text: css({
     flex: 1,
@@ -81,7 +77,15 @@ const SyntheticAudio = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
   return (
     <div>
       <hr {...styles.hr} {...colorScheme.set('backgroundColor', 'divider')} />
-      <div {...styles.container}>
+      <div
+        {...styles.container}
+        {...css({
+          alignItems: isSynthetic ? 'flex-start' : 'center',
+          [mediaQueries.mUp]: {
+            alignItems: 'center',
+          },
+        })}
+      >
         <IconButton
           style={{ marginRight: 0 }}
           size={32}
