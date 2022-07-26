@@ -34,14 +34,22 @@ const fadeIn = keyframes({
   },
 })
 
-const shortenLink = (href) => {
-  if (!href) return
-  const baseURL = href.replace(/(http(s)?:\/\/)|(\/.*){1}/g, '')
-  const URLWithoutQuery = href.match(/(.+)(?=\?)/g)
-  const lastURLPath = URLWithoutQuery
-    ? URLWithoutQuery[0].match(/([^/]*$)/g)[0]
-    : href.match(/([^/]*$)/g)[0]
-  return `${baseURL}/.../${lastURLPath}`
+const shortenLink = (url) => {
+  if (!url) return
+  const addr = new URL(url)
+  const host = addr.host
+  const path = addr.pathname
+  const hasTrailingForwardSlash = path.slice(-1) === '/'
+  // remove trailing forward slashes
+  const cleanPath = hasTrailingForwardSlash ? path.slice(0, -1) : path
+  // check if it has subpaths (/foo/bar) (more than one forwardslash)
+  const hasSubPaths =
+    cleanPath.match(/\//g) && cleanPath.match(/\//g).length >= 2
+  // select the last path item, if it has subpaths, add ellipsis
+  const lastPath =
+    cleanPath &&
+    `${hasSubPaths ? '/.../' : ''}${cleanPath.match(/([^/]*$)/g)[0]}`
+  return `${host}${lastPath}`
 }
 
 const styles = {
