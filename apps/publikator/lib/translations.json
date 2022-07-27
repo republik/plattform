@@ -1310,7 +1310,7 @@
     },
     {
       "key": "link/description/help",
-      "value": "Formatting geht mit <a href=\"https://styleguide.republik.ch/expandablelink#formatting\" target=\"_blank\">HTML-Tags</a>."
+      "value": "<a href=\"https://styleguide.republik.ch/expandablelink#formatting\" target=\"_blank\">Einfache HTML-Tags erlaubt</a>."
     },
     {
       "key": "memo/modal/remove",

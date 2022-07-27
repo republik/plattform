@@ -13,17 +13,17 @@
 The following description text:
 
 ```
-<b>Brand</b> <em>new</em> data on CO<sub>2</sub> levels
+<b>Brand</b> <i>new</i> data on CO<sub>2</sub> levels
 ```
 
 Renders as follow:
 
 ```react
-<Editorial.P><ExpandableLink description="<b>Brand</b> <em>new</em> data on CO<sub>2</sub> levels" href="https://www.republik.ch" t={t}>Link</ExpandableLink> with html formatting.</Editorial.P>
+<Editorial.P><ExpandableLink description="<b>Brand</b> <i>new</i> data on CO<sub>2</sub> levels" href="https://www.republik.ch" t={t}>Link</ExpandableLink> with html formatting.</Editorial.P>
 ```
 
 Supported html tags for formatting:
 
-- b tags for *<b>bold</b>*
-- em tags for **<em>italics</em>**
+- b tags for **<b>bold</b>**
+- i tags for *<i>italics</i>*
 - sub and sup tags for subscript and superscript
