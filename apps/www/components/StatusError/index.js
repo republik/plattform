@@ -56,7 +56,11 @@ const StatusError = ({
   const queryString = router.asPath.split('?')[1]
   const clientRedirectionTarget =
     clientRedirection &&
-    `${clientRedirection.target}${queryString ? `?${queryString}` : ''}`
+    `${clientRedirection.target}${
+      queryString
+        ? `${clientRedirection.target.includes('?') ? '&' : '?'}${queryString}`
+        : ''
+    }`
   const { isReady } = router
 
   useEffect(() => {
