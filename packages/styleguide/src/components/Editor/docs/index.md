@@ -390,7 +390,7 @@ rows:
   - Variable: editorSchema
     Description: schema config *(see below)*
   - Variable: toolbar
-    Description: sticky (default), fixed or floating
+    Description: toolbar config *(see below)*
   - Variable: maxSigns
     Description: number
   - Variable: debug
@@ -407,6 +407,25 @@ rows:
 ```
 
 If something needs to be rendered differently in the editor and in the live version, you can use the `editorSchema` to specify the rendering of the editor (e.g. flyer quiz).
+
+#### toolbar config
+
+```table
+span: 3
+rows:
+  - Variable: mode
+    Description: sticky (default), fixed or floating
+  - Variable: style
+    Description: css styles to add to the toolbar
+  - Variable: styleInner
+    Description: css styles to add to the inner toolbar
+  - Variable: showChartCount
+    Description: boolean
+  - Variable: alsoRender
+    Description: React component
+```
+
+Most of these options are useful to integrate the editor gracefully somewhere else (e.g. in Publikator)
 
 ### Slate Node config
 

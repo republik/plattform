@@ -322,12 +322,19 @@ export interface DraftI {
   value: CustomElement[]
 }
 
+interface ToolbarConfig {
+  mode?: ToolbarMode
+  style?: object
+  showChartCount?: boolean
+  alsoRender?: React.FC
+}
+
 export type EditorConfig = {
   schema: SchemaConfig
   editorSchema?: SchemaConfig
   maxSigns?: number
   debug?: boolean
-  toolbar?: ToolbarMode
+  toolbar?: ToolbarConfig
 }
 
 export type KeyCombo = {

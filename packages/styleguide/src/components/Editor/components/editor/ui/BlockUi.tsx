@@ -17,6 +17,7 @@ import {
   TemplateType,
 } from '../../../custom-types'
 import { config as elConfig } from '../../../config/elements'
+import { useColorContext } from '../../../../Colors/ColorContext'
 
 const styles = {
   container: css({
@@ -25,6 +26,8 @@ const styles = {
     background: 'white',
     padding: 5,
     zIndex: 10,
+    borderRightWidth: 1,
+    borderRightStyle: 'solid',
   }),
   padded: css({
     marginBottom: 8,
@@ -158,6 +161,7 @@ const BlockUi: React.FC<{
   element: CustomElement
   blockUi: BlockUiAttrsI
 }> = ({ path, element, blockUi }) => {
+  const [colorScheme] = useColorContext()
   const template = element.template
   // this UI is here to manage repeatable, interchangeable elements
   if (!template?.repeat) return null
@@ -167,6 +171,7 @@ const BlockUi: React.FC<{
       {...styles.container}
       style={blockUi.position}
       contentEditable={false}
+      {...colorScheme.set('borderColor', 'divider')}
     >
       {!!elConfig[element.type].Form && (
         <div {...styles.padded}>

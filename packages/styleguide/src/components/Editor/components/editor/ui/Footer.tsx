@@ -17,7 +17,7 @@ const styles = {
   }),
 }
 
-const Countdown: React.FC<{ maxSigns: number }> = ({ maxSigns }) => {
+export const Countdown: React.FC<{ maxSigns: number }> = ({ maxSigns }) => {
   const editor = useSlate()
   const [colorScheme] = useColorContext()
   const countdown = getCountDown(editor, maxSigns)

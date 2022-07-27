@@ -20,7 +20,6 @@ import {
   CustomText,
   ButtonConfig,
   TemplateType,
-  ToolbarMode,
 } from '../../../custom-types'
 import { config as elConfig, configKeys } from '../../../config/elements'
 import { configKeys as mKeys, MARKS_ALLOW_LIST } from '../../../config/marks'
@@ -29,8 +28,9 @@ import { Editor, Range, NodeEntry } from 'slate'
 import { useColorContext } from '../../../../Colors/ColorContext'
 import IconButton from '../../../../IconButton'
 import { getAncestry } from '../helpers/tree'
-import { isEmpty, selectNearestWord } from '../helpers/text'
+import { getCharCount, isEmpty, selectNearestWord } from '../helpers/text'
 import Scroller from '../../../../Tabs/Scroller'
+import { Label } from '../../../../Typography'
 
 const styles = {
   hoveringToolbar: css({
@@ -49,9 +49,10 @@ const styles = {
   }),
   topToolbar: css({
     padding: '15px 0',
-    display: 'flex',
     minHeight: '19px',
     transition: 'opacity 0.75s',
+    borderBottomWidth: 1,
+    borderBottomStyle: 'solid',
   }),
   stickyToolbar: css({
     backgroundColor: 'white',
@@ -278,11 +279,18 @@ export const Portal: React.FC<{ children: ReactElement }> = ({ children }) => {
     : null
 }
 
+const CharCount = () => {
+  const editor = useSlate()
+  const charCount = getCharCount(editor.children)
+  return <Label>{charCount} Zeichen</Label>
+}
+
 const Toolbar: React.FC<{
   containerRef: React.RefObject<HTMLDivElement>
-  mode: ToolbarMode
-}> = ({ containerRef, mode }) => {
+}> = ({ containerRef }) => {
   const editor = useSlate()
+  const config = editor.customConfig.toolbar
+  const mode = config?.mode || 'sticky'
   const isOnTop = mode === 'sticky' || mode === 'fixed'
   const initialInlineButtons = useMemo(
     () => (isOnTop ? getElementButtons(editor, true) : []),
@@ -373,12 +381,18 @@ const Toolbar: React.FC<{
 
   return isOnTop ? (
     <div
-      {...styles.topToolbar}
-      {...(mode === 'sticky' && styles.stickyToolbar)}
       onClick={(e) => onChange(e)}
+      {...colorScheme.set('borderBottomColor', 'divider')}
+      {...(mode === 'sticky' && styles.stickyToolbar)}
+      {...styles.topToolbar}
+      style={config?.style}
     >
       <Scroller>
-        <ToolbarButtons marks={marks} inlines={inlines} blocks={blocks} />
+        {config?.showChartCount && <CharCount />}
+        <div style={{ width: 690, margin: '0 auto', display: 'flex' }}>
+          <ToolbarButtons marks={marks} inlines={inlines} blocks={blocks} />
+        </div>
+        {!!config?.alsoRender && config?.alsoRender}
       </Scroller>
     </div>
   ) : (

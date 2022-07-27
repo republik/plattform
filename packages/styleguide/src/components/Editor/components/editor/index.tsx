@@ -166,10 +166,7 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
           }}
         >
           <FormOverlay />
-          <Toolbar
-            containerRef={containerRef}
-            mode={config.toolbar || 'sticky'}
-          />
+          <Toolbar containerRef={containerRef} />
           <LayoutContainer
             style={{ position: 'sticky', zIndex: 1 }}
             schema={config.schema}

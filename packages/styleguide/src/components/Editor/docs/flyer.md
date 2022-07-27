@@ -1,11 +1,10 @@
 ### Todos
 
+- block UI scroll while moving element
 - New elements/real elements/forms for elements
     - Chart
-    - Quiz
     - Survey
 - Copy from HTML (nice to have)
-
 - Authors editor (single block)
 
 ### Bugs

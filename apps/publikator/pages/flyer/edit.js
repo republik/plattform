@@ -4,21 +4,18 @@ import { css } from 'glamor'
 import {
   Editor,
   flyerSchema,
-  colors,
-  Interaction,
+  flyerEditorSchema,
   A,
+  Label,
 } from '@project-r/styleguide'
 import withAuthorization from '../../components/Auth/withAuthorization'
 import Frame from '../../components/Frame'
 import { useState } from 'react'
 import { HEADER_HEIGHT } from '../../components/Frame/constants'
-import SettingsIcon from 'react-icons/lib/fa/cogs'
 import CommitButton from '../../components/VersionControl/CommitButton'
-import { SIDEBAR_ICON_SIZE } from '../repo/edit'
-import Sidebar from '../../components/Sidebar'
-import CharCount from '../../components/CharCount'
-import VersionControl from '../../components/VersionControl'
 import { Link } from '../../lib/routes'
+import { Phase } from '../../components/Repo/Phases'
+import withT from '../../lib/withT'
 
 const styles = {
   defaultContainer: css({
@@ -75,9 +72,19 @@ const STRUCTURE = [
   },
 ]
 
+const TOOLBAR = {
+  style: { top: HEADER_HEIGHT },
+  showChartCount: true,
+}
+
+const PhaseSummary = () => (
+  <div>
+    <Phase phase={{ label: 'Peer', color: 'gold' }} />
+  </div>
+)
+
 const Index = () => {
   const [value, setValue] = useState(INITIAL_VALUE)
-  const [showSidebar, setShowSidebar] = useState(true)
 
   return (
     <Frame raw>
@@ -87,25 +94,15 @@ const Index = () => {
             <span {...styles.navLink}>Document</span>
             <span {...styles.navLink}>
               <Link route='flyer/preview' passHref>
-                <A>History</A>
+                <A>Vorschau</A>
+              </Link>
+            </span>
+            <span {...styles.navLink}>
+              <Link route='repo/tree' passHref>
+                <A>Versionen</A>
               </Link>
             </span>
           </Frame.Nav>
-        </Frame.Header.Section>
-        <Frame.Header.Section align='right'>
-          <div
-            style={{
-              padding: 25,
-              paddingTop: 30,
-              // 1 px header border
-              paddingBottom: HEADER_HEIGHT - SIDEBAR_ICON_SIZE - 30 - 1,
-              cursor: 'pointer',
-              color: showSidebar ? colors.primary : undefined,
-            }}
-            onMouseDown={() => setShowSidebar(!showSidebar)}
-          >
-            <SettingsIcon size={SIDEBAR_ICON_SIZE} />
-          </div>
         </Frame.Header.Section>
         <Frame.Header.Section align='right'>
           <CommitButton isNew={true} />
@@ -121,20 +118,15 @@ const Index = () => {
             setValue(newValue)
           }}
           structure={STRUCTURE}
-          config={{ schema: flyerSchema }}
+          config={{
+            schema: flyerSchema,
+            editorSchema: flyerEditorSchema,
+            toolbar: {
+              ...TOOLBAR,
+              alsoRender: <PhaseSummary />,
+            },
+          }}
         />
-        <Sidebar selectedTabId='workflow' isOpen={showSidebar}>
-          <Sidebar.Tab tabId='workflow' label='Workflow'>
-            <div style={{ marginBottom: 10 }}>
-              <CharCount value={'TBD'} />
-            </div>
-            <VersionControl isNew={true} />
-          </Sidebar.Tab>
-          <Sidebar.Tab tabId='view' label='Ansicht'>
-            <A style={{ color: colors.primary }}>Vorschau</A>
-            <Interaction.P style={{ marginBottom: 16 }}>Vorschau</Interaction.P>
-          </Sidebar.Tab>
-        </Sidebar>
       </Frame.Body>
     </Frame>
   )
