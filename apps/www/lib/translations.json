@@ -321,6 +321,14 @@
       "value": "System nicht verfügbar"
     },
     {
+      "key": "redirection/external/message",
+      "value": "Sie werden auf {link} weitergeleitet."
+    },
+    {
+      "key": "redirection/external/genericLink",
+      "value": "eine externe Webseite"
+    },
+    {
       "key": "marketing/join/button/label",
       "value": "Mitglied werden"
     },

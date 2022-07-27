@@ -218,6 +218,7 @@ const ArticlePage = ({
   isPreview,
   markAsReadMutation,
   serverContext,
+  clientRedirection,
 }) => {
   const actionBarRef = useRef()
   const bottomActionBarRef = useRef()
@@ -238,6 +239,7 @@ const ArticlePage = ({
     variables: {
       path: cleanedPath,
     },
+    skip: clientRedirection,
   })
 
   const article = articleData?.article
@@ -440,7 +442,11 @@ const ArticlePage = ({
         render={() => {
           if (!article) {
             return (
-              <StatusError statusCode={404} serverContext={serverContext} />
+              <StatusError
+                statusCode={404}
+                clientRedirection={clientRedirection}
+                serverContext={serverContext}
+              />
             )
           }
           return extract === 'share' ? (
@@ -504,7 +510,11 @@ const ArticlePage = ({
         render={() => {
           if (!article || !schema) {
             return (
-              <StatusError statusCode={404} serverContext={serverContext} />
+              <StatusError
+                statusCode={404}
+                clientRedirection={clientRedirection}
+                serverContext={serverContext}
+              />
             )
           }
 

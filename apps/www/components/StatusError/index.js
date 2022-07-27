@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, useEffect } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
@@ -14,43 +14,121 @@ import Meta from '../Frame/Meta'
 
 import ErrorFrame from './Frame'
 
-import { Interaction } from '@project-r/styleguide'
+import { Interaction, Editorial } from '@project-r/styleguide'
+
+export const isExternal = (target) =>
+  !target.startsWith('/') &&
+  !target.startsWith(PUBLIC_BASE_URL) &&
+  !target.startsWith(PUBLIC_BASE_URL.replace('https://www.', 'https://'))
 
 const getRedirect = gql`
   query getRedirect($path: String!) {
     redirection(path: $path) {
+      id
       target
       status
     }
   }
 `
 
-const StatusError = ({ statusCode, t, loading, children }) => (
-  <Loader
-    loading={loading}
-    render={() => (
-      <Fragment>
-        <Meta data={{ title: statusCode }} />
-        <ErrorFrame statusCode={statusCode}>
-          {children || (
-            <Interaction.P>
-              {t(`error/${statusCode}`, undefined, null)}
-            </Interaction.P>
-          )}
-          <div style={{ height: 60 }} />
-          <Me />
-        </ErrorFrame>
-      </Fragment>
-    )}
-  />
-)
+const getURLLabel = (url) => {
+  try {
+    return new URL(url).hostname?.replace(/^www\./, '')
+  } catch (e) {
+    return url?.replace(/^https?:\/\/www\./, '')
+  }
+}
+
+const StatusError = ({
+  clientRedirection,
+  statusCode,
+  t,
+  loading,
+  children,
+  router,
+  inNativeApp,
+}) => {
+  const isExternalClientRedirection =
+    clientRedirection && isExternal(clientRedirection.target)
+  // forward current query string
+  // - this useful for utm preserving
+  // - forwarding params to ultradashboard
+  const queryString = router.asPath.split('?')[1]
+  const clientRedirectionTarget =
+    clientRedirection &&
+    `${clientRedirection.target}${queryString ? `?${queryString}` : ''}`
+  const { isReady } = router
+
+  useEffect(() => {
+    if (!clientRedirection || !isReady) {
+      return
+    }
+    if (isExternalClientRedirection) {
+      // give matomo some time to register the page view
+      const timeoutId = setTimeout(() => {
+        window.location = clientRedirectionTarget
+        if (inNativeApp) {
+          // window.location will open in a browser, reset app to last location
+          window.history.back()
+        }
+      }, 1000)
+      return () => {
+        clearTimeout(timeoutId)
+      }
+    } else {
+      router[clientRedirection.status === 301 ? 'replace' : 'push'](
+        clientRedirectionTarget,
+      )
+    }
+  }, [
+    clientRedirection,
+    isReady,
+    clientRedirectionTarget,
+    isExternalClientRedirection,
+    inNativeApp,
+  ])
+
+  return (
+    <Loader
+      loading={loading || !!clientRedirection}
+      message={
+        isExternalClientRedirection &&
+        t.elements('redirection/external/message', {
+          link: (
+            <Editorial.A key='link' href={clientRedirectionTarget}>
+              {getURLLabel(clientRedirection.target) ||
+                t('redirection/external/genericLink')}
+            </Editorial.A>
+          ),
+        })
+      }
+      render={() => (
+        <Fragment>
+          <Meta data={{ title: statusCode }} />
+          <ErrorFrame statusCode={statusCode}>
+            {children || (
+              <Interaction.P>
+                {t(`error/${statusCode}`, undefined, null)}
+              </Interaction.P>
+            )}
+            <div style={{ height: 60 }} />
+            <Me />
+          </ErrorFrame>
+        </Fragment>
+      )}
+    />
+  )
+}
 
 export default compose(
   withT,
   withInNativeApp,
   withRouter,
   graphql(getRedirect, {
-    skip: (props) => props.statusCode !== 404 || !props.router.asPath,
+    skip: (props) =>
+      props.statusCode !== 404 ||
+      !props.router.asPath ||
+      props.clientRedirection,
     options: ({ router: { asPath } }) => ({
       variables: {
         path: asPath.split('#')[0],
@@ -58,22 +136,16 @@ export default compose(
     }),
     props: ({
       data,
-      ownProps: {
-        serverContext,
-        statusCode,
-        router,
-        inNativeApp,
-        inNativeIOSApp,
-      },
+      ownProps: { serverContext, statusCode, inNativeApp, inNativeIOSApp },
     }) => {
       const redirection = !data.error && !data.loading && data.redirection
 
       let loading = data.loading
+      let clientRedirection
 
       if (redirection) {
         const { target, status } = redirection
-        const targetIsExternal =
-          target.startsWith('http') && !target.startsWith(PUBLIC_BASE_URL)
+        const targetIsExternal = isExternal(target)
         const restrictedIOSPath =
           inNativeIOSApp && target.match(/^\/angebote(\?|$)/)
 
@@ -84,21 +156,11 @@ export default compose(
             serverContext.res.redirect(status || 302, target)
             throw new Error('redirect')
           }
-        } else if (process.browser) {
+        } else if (
           // SSR does two two-passes: data (with serverContext) & render (without)
-          let clientTarget = target
-          let afterRouting
-          if (inNativeApp && (targetIsExternal || restrictedIOSPath)) {
-            clientTarget = '/feed'
-            afterRouting = () => {
-              window.location = target
-            }
-          }
-          if (status === 301) {
-            router.replace(clientTarget).then(afterRouting)
-          } else {
-            router.push(clientTarget).then(afterRouting)
-          }
+          process.browser
+        ) {
+          clientRedirection = redirection
         }
       } else {
         if (serverContext) {
@@ -108,6 +170,7 @@ export default compose(
 
       return {
         loading,
+        clientRedirection,
       }
     },
   }),
