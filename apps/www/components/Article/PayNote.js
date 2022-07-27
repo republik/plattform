@@ -9,6 +9,7 @@ import {
   ColorContextProvider,
   useColorContext,
   RawHtml,
+  shouldIgnoreClick,
 } from '@project-r/styleguide'
 import TrialForm from '../Trial/Form'
 import { css } from 'glamor'
@@ -19,7 +20,6 @@ import compose from 'lodash/flowRight'
 import withT, { t } from '../../lib/withT'
 import withInNativeApp from '../../lib/withInNativeApp'
 import withMe from '../../lib/apollo/withMe'
-import { shouldIgnoreClick } from '../../lib/utils/link'
 
 const styles = {
   banner: css({

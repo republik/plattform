@@ -6,11 +6,8 @@ import { css, merge } from 'glamor'
 import { max } from 'd3-array'
 
 import Meta from '../Frame/Meta'
-
 import withT from '../../lib/withT'
 import Loader from '../Loader'
-
-import { shouldIgnoreClick } from '../../lib/utils/link'
 
 import Detail from './Detail'
 
@@ -27,6 +24,7 @@ import {
   Field,
   A,
   useColorContext,
+  shouldIgnoreClick,
 } from '@project-r/styleguide'
 import { withRouter } from 'next/router'
 import ErrorMessage from '../ErrorMessage'

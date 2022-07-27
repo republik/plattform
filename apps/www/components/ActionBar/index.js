@@ -14,12 +14,12 @@ import {
   EtiquetteIcon,
   IconButton,
   Interaction,
+  shouldIgnoreClick,
 } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 import withInNativeApp, { postMessage } from '../../lib/withInNativeApp'
 
 import { splitByTitle } from '../../lib/utils/mdast'
-import { shouldIgnoreClick } from '../../lib/utils/link'
 import { trackEvent } from '../../lib/matomo'
 import { getDiscussionLinkProps } from './utils'
 import { PUBLIC_BASE_URL, PUBLIKATOR_BASE_URL } from '../../lib/constants'

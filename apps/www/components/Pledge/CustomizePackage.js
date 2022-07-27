@@ -15,7 +15,6 @@ import withT from '../../lib/withT'
 import { chfFormat, timeFormat } from '../../lib/utils/format'
 
 import FieldSet, { styles as fieldSetStyles } from '../FieldSet'
-import { shouldIgnoreClick } from '../../lib/utils/link'
 
 import {
   A,
@@ -29,6 +28,7 @@ import {
   Editorial,
   fontStyles,
   RawHtml,
+  shouldIgnoreClick,
 } from '@project-r/styleguide'
 
 import ManageMembership from '../Account/Memberships/Manage'

@@ -1,8 +1,14 @@
 import { useState } from 'react'
 import { css } from 'glamor'
 
-import { Interaction, colors, IconButton } from '@project-r/styleguide'
-import { CheckIcon, DiscussionIcon } from '@project-r/styleguide'
+import {
+  Interaction,
+  colors,
+  IconButton,
+  shouldIgnoreClick,
+  CheckIcon,
+  DiscussionIcon,
+} from '@project-r/styleguide'
 
 import withInNativeApp, { postMessage } from '../../lib/withInNativeApp'
 import { countFormat } from '../../lib/utils/format'
@@ -11,7 +17,6 @@ import Spider from './Spider'
 import getPartyColor from './partyColors'
 import InfoIcon from './InfoIcon'
 
-import { shouldIgnoreClick } from '../../lib/utils/link'
 import sharedStyles from '../sharedStyles'
 
 import { SmallParagraph, Finance } from './Shared'

@@ -16,7 +16,6 @@ import withT from '../../lib/withT'
 import withMe from '../../lib/apollo/withMe'
 import { withSignOut } from '../Auth/SignOut'
 import { useInNativeApp } from '../../lib/withInNativeApp'
-import { shouldIgnoreClick } from '../../lib/utils/link'
 import { ZINDEX_FOOTER } from '../constants'
 
 import SocialLinks from './SocialLinks'
