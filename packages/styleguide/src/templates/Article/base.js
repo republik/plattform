@@ -57,7 +57,7 @@ const createBase = ({ metaBody, metaHeadlines }) => {
       // workaround app issues with hash url by handling them ourselves and preventing the default behaviour
       if (href && href.slice(0, 3) === '#t=') {
         return (
-          <LinkComponent
+          <Editorial.A
             {...props}
             onClick={(e) => {
               const time = parseTimeHash(href)
@@ -71,7 +71,7 @@ const createBase = ({ metaBody, metaHeadlines }) => {
       }
       if (href && href[0] === '#') {
         return (
-          <LinkComponent
+          <Editorial.A
             {...props}
             onClick={(e) => {
               const ele = document.getElementById(href.substr(1))
