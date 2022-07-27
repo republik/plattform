@@ -30,7 +30,7 @@ import { withDelete } from './decorators/delete'
 import { useColorContext } from '../../../Colors/ColorContext'
 import { withCustomConfig } from './decorators/config'
 import { LayoutContainer } from './ui/Layout'
-import ErrorMessage from './ui/ErrorMessage'
+import { ErrorMessage } from './ui/ErrorMessage'
 import { getCharCount } from './helpers/text'
 import BlockUi from './ui/BlockUi'
 
@@ -91,8 +91,12 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
     const isVoid = config.attrs?.isVoid
     const blockUi = config.attrs?.blockUi
     const highlightSelected = config.attrs?.highlightSelected
-    const Component = editor.customConfig.schema[config.component]
+    const Component =
+      editor.customConfig.editorSchema?.[config.component] ||
+      editor.customConfig.schema[config.component]
+
     if (!Component) {
+      console.log(editor.customConfig)
       return (
         <ErrorMessage
           attributes={attributes}

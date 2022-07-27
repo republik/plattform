@@ -115,13 +115,90 @@ export const exampleTree: CustomDescendant[] = [
           },
         ],
       },
+
       {
-        type: 'articlePreview',
         children: [
           {
-            text: '',
+            children: [
+              {
+                children: [
+                  {
+                    text: 'one',
+                  },
+                ],
+                type: 'quizAnswer',
+              },
+              {
+                children: [
+                  {
+                    children: [
+                      {
+                        text: 'oneoneone',
+                      },
+                    ],
+                    type: 'paragraph',
+                  },
+                ],
+                type: 'quizAnswerInfo',
+              },
+            ],
+            type: 'quizItem',
+            isCorrect: true,
+          },
+          {
+            children: [
+              {
+                children: [
+                  {
+                    text: 'two',
+                  },
+                ],
+                type: 'quizAnswer',
+              },
+              {
+                children: [
+                  {
+                    children: [
+                      {
+                        text: 'twotwotwo',
+                      },
+                    ],
+                    type: 'paragraph',
+                  },
+                ],
+                type: 'quizAnswerInfo',
+              },
+            ],
+            type: 'quizItem',
+          },
+          {
+            children: [
+              {
+                children: [
+                  {
+                    text: 'three',
+                  },
+                ],
+                type: 'quizAnswer',
+              },
+              {
+                children: [
+                  {
+                    children: [
+                      {
+                        text: 'threethreethree',
+                      },
+                    ],
+                    type: 'paragraph',
+                  },
+                ],
+                type: 'quizAnswerInfo',
+              },
+            ],
+            type: 'quizItem',
           },
         ],
+        type: 'quiz',
       },
     ],
   },
@@ -157,7 +234,7 @@ export const exampleTree: CustomDescendant[] = [
         children: [
           {
             type: 'pullQuoteText',
-            children: [{ text: '“ Che tristezza, Nicoletta. ”' }],
+            children: [{ text: 'Che tristezza, Nicoletta.' }],
           },
           {
             type: 'pullQuoteSource',

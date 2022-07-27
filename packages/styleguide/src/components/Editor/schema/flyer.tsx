@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { SchemaConfig } from '../custom-types'
 import { FigureByline, FigureCaption } from '../../Figure'
 import { FigureContainer } from '../config/elements/figure/container'
@@ -7,17 +7,27 @@ import { List } from '../config/elements/list/container'
 import { ListItem } from '../../List'
 import { PullQuoteSource } from '../../PullQuote'
 import { Break } from '../config/elements/break'
-import { Editorial, Sub, Sup, Interaction, Label } from '../../Typography'
+import { Editorial, Sub, Sup, Interaction } from '../../Typography'
 import { NoRefA } from '../config/elements/link'
 import { FlyerTile } from '../config/elements/flyer'
 import { FlyerAuthor } from '../config/elements/flyer/elements/author'
 import { FlyerMetaP } from '../config/elements/flyer/elements/metaP'
 import { FlyerTitle } from '../config/elements/flyer/elements/title'
 import { FlyerTopic } from '../config/elements/flyer/elements/topic'
-import { ArticlePreview } from '../config/elements/articlePreview'
 import { useColorContext } from '../../Colors/ColorContext'
 import { FlyerSignature } from '../config/elements/flyer/elements/signature'
 import { ContainerComponent } from '../components/editor/ui/Element'
+import { ArticlePreview } from '../config/elements/articlePreview'
+import { QuizAnswer } from '../config/elements/quiz/answer'
+import { EditorQuizItem } from '../config/elements/quiz/item'
+import {
+  CORRECT_COLOR,
+  EditorQuizContainer,
+  WRONG_COLOR,
+} from '../config/elements/quiz/container'
+import { plainButtonRule } from '../../Button'
+import { RenderedElement } from '../components/render'
+import { Element as SlateElement } from 'slate'
 
 const container = ({ children, attributes }) => (
   <div style={{ backgroundColor: '#FFE501' }} {...attributes}>
@@ -87,47 +97,54 @@ const PullQuoteText = ({ children, attributes }) => (
   </div>
 )
 
-const QuizContainer: React.FC<{
-  [x: string]: unknown
-}> = ({ props, children }) => {
-  const [colorScheme] = useColorContext()
+const Quiz = ({ children, attributes, ...props }) => {
+  const [answerId, setAnswerId] = useState<number>(null)
+  const tree = children?.props?.nodes
+
+  if (!tree) return null
+
+  const answer = tree[answerId]
+  const answerInfo = answer?.children?.[1]
+
   return (
-    <div {...props} style={{ position: 'relative' }}>
-      <div
-        style={{ userSelect: 'none', marginBottom: 10 }}
-        contentEditable={false}
-      >
-        <Label>
-          <span style={{ marginRight: 5 }}>ℹ️</span> Quiz solution depends on
-          answer choice. Check preview for final layout.
-        </Label>
-      </div>
-      {children}
+    <div
+      {...props}
+      {...attributes}
+      style={{ position: 'relative' }}
+      contentEditable={false}
+    >
+      {tree.map((answer, i) => {
+        const isSelected = answerId === i
+        const color =
+          isSelected && answer?.isCorrect
+            ? CORRECT_COLOR
+            : isSelected
+            ? WRONG_COLOR
+            : 'inherit'
+        return (
+          <button
+            key={i}
+            onClick={() => setAnswerId(i)}
+            {...plainButtonRule}
+            style={{ color, borderColor: color }}
+          >
+            <RenderedElement element={answer.children[0]} schema={schema} />
+          </button>
+        )
+      })}
+      {SlateElement.isElement(answerInfo) && (
+        <RenderedElement element={answerInfo} schema={schema} />
+      )}
     </div>
   )
 }
 
-const QuizAnswer = ({ children, attributes, ...props }) => {
-  return (
-    <div {...attributes} {...props}>
-      <div
-        style={{
-          fontFamily: 'Druk Text Wide Trial',
-          fontStyle: 'Medium',
-          fontSize: 23,
-          color: '#0E755A',
-          padding: '12px 30px',
-          border: '5px solid #0E755A',
-          display: 'inline-block',
-        }}
-      >
-        {children}
-      </div>
-    </div>
-  )
+export const editorSchema: SchemaConfig = {
+  quizItem: EditorQuizItem,
+  quiz: EditorQuizContainer,
 }
 
-const schema: SchemaConfig = {
+export const schema: SchemaConfig = {
   container,
   flyerTile: FlyerTile,
   flyerAuthor: FlyerAuthor,
@@ -155,10 +172,7 @@ const schema: SchemaConfig = {
   strikethrough: Editorial.StrikeThrough,
   sub: Sub,
   sup: Sup,
-  quiz: QuizContainer,
-  quizItem: ContainerComponent,
+  quiz: Quiz,
   quizAnswer: QuizAnswer,
   quizAnswerInfo: ContainerComponent,
 }
-
-export default schema

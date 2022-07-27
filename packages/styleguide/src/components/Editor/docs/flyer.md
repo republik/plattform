@@ -1,6 +1,5 @@
 ### Todos
 
-- different render in editor and outside (e.g. for link / share etc.)
 - New elements/real elements/forms for elements
     - Chart
     - Quiz
@@ -70,12 +69,12 @@ state: {
         setState({value: newValue})
     }}
     structure={state.structure}
-    config={{ debug: true, schema: schemaFlyer }}
+    config={{ debug: true, schema, editorSchema }}
 />
 ```
 
 ## Rendering
 
 ```react
-<SlateRender value={exampleTree} schema={schemaFlyer} />
+<SlateRender value={exampleTree} schema={schema} />
 ```

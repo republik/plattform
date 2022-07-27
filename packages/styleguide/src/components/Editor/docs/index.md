@@ -387,6 +387,8 @@ span: 3
 rows:
   - Variable: schema
     Description: schema config *(see below)*
+  - Variable: editorSchema
+    Description: schema config *(see below)*
   - Variable: toolbar
     Description: sticky (default), fixed or floating
   - Variable: maxSigns
@@ -403,6 +405,8 @@ rows:
   - Variable: ExtendedElementType or CustomMarksType key
     Description: React component
 ```
+
+If something needs to be rendered differently in the editor and in the live version, you can use the `editorSchema` to specify the rendering of the editor (e.g. flyer quiz).
 
 ### Slate Node config
 

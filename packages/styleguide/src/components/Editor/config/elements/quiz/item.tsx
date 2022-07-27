@@ -3,8 +3,33 @@ import {
   ElementFormProps,
   QuizItemElement,
 } from '../../../custom-types'
-import React from 'react'
+import React, { useMemo } from 'react'
 import Checkbox from '../../../../Form/Checkbox'
+import { CORRECT_COLOR, WRONG_COLOR } from './container'
+import { css } from 'glamor'
+
+export const EditorQuizItem: React.FC<{
+  isCorrect?: boolean
+  attributes: any
+  [x: string]: unknown
+}> = ({ children, isCorrect, attributes, ...props }) => {
+  const colorRule = useMemo(
+    () =>
+      css({
+        '& .quiz-answer': {
+          color: isCorrect ? CORRECT_COLOR : WRONG_COLOR,
+          borderColor: isCorrect ? CORRECT_COLOR : WRONG_COLOR,
+        },
+      }),
+    [isCorrect],
+  )
+
+  return (
+    <div {...props} {...colorRule} style={{ position: 'relative' }}>
+      {children}
+    </div>
+  )
+}
 
 const Form: React.FC<ElementFormProps<QuizItemElement>> = ({
   element,

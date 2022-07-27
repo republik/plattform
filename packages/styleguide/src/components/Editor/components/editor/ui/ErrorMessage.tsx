@@ -1,23 +1,42 @@
 import React from 'react'
 import { useColorContext } from '../../../../Colors/ColorContext'
-import { Interaction } from '../../../../Typography'
-import { useSlate } from 'slate-react'
+import { Label } from '../../../../Typography'
 
-const ErrorMessage: React.FC<{
-  attributes: any
-  error: string
-}> = ({ error, attributes, children }) => {
+const icons = {
+  info: 'ℹ️',
+  error: '❌',
+}
+
+export const Message: React.FC<{
+  text: string
+  type?: 'error' | 'info'
+}> = ({ text, type = 'info' }) => {
   const [colorScheme] = useColorContext()
-  const editor = useSlate()
-  const P = editor.customConfig.schema.paragraph || Interaction.P
   return (
-    <div {...attributes} style={{ userSelect: 'none' }} contentEditable={false}>
-      <P>
-        <span {...colorScheme.set('color', 'error')}>Error: {error}</span>
-      </P>
-      {children}
+    <div
+      style={{ userSelect: 'none', marginBottom: 10 }}
+      contentEditable={false}
+    >
+      <Label>
+        <span style={{ marginRight: 5 }} role='img' aria-label='info'>
+          {icons[type]}
+        </span>{' '}
+        <span
+          {...colorScheme.set('color', type === 'error' ? 'error' : 'text')}
+        >
+          {text}
+        </span>
+      </Label>
     </div>
   )
 }
 
-export default ErrorMessage
+export const ErrorMessage: React.FC<{
+  attributes: any
+  error: string
+}> = ({ error, attributes, children }) => (
+  <div {...attributes} style={{ userSelect: 'none' }} contentEditable={false}>
+    <Message text={error} type='error' />
+    {children}
+  </div>
+)

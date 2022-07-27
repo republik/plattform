@@ -35,7 +35,7 @@ const RenderNodes: React.FC<{
   </>
 )
 
-const RenderedElement: React.FC<{
+export const RenderedElement: React.FC<{
   element: CustomElement
   schema: SchemaConfig
 }> = ({ element, schema }) => {

@@ -7,10 +7,11 @@ import { toggleElement } from '../helpers/structure'
 import { useFormContext } from './Forms'
 
 export const ContainerComponent: React.FC<{
+  attributes: any
   [x: string]: unknown
-}> = ({ props, children }) => {
+}> = ({ attributes, children, ...props }) => {
   return (
-    <div {...props} style={{ position: 'relative' }}>
+    <div {...attributes} {...props} style={{ position: 'relative' }}>
       {children}
     </div>
   )

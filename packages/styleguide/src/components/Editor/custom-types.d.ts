@@ -324,6 +324,7 @@ export interface DraftI {
 
 export type EditorConfig = {
   schema: SchemaConfig
+  editorSchema?: SchemaConfig
   maxSigns?: number
   debug?: boolean
   toolbar?: ToolbarMode

@@ -184,4 +184,7 @@ export * from './components/Icons'
 export * from './templates'
 
 export { default as Editor } from './components/Editor'
-export { default as flyerSchema } from './components/Editor/schema/flyer'
+export {
+  schema as flyerSchema,
+  editorSchema as flyerEditorSchema,
+} from './components/Editor/schema/flyer'
