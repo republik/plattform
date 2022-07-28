@@ -11,13 +11,14 @@ Send simple and templated mails via Mandrill or Nodemailer, and manage subscript
 
 ### Send mail to users with cleaned Mailchimp status
 
-Send a mail to users which were cleaned from mailchimp during a certain time period.
+We have a weekly job which sends mails to users who were cleaned from Mailchimp. This mailing can also be triggered manually be executed the following script:
 
 Run `script/sendMailsToSegment/cleanedUserSubscriptionInvitation.js`
 
-Three optional command line arguments can be used:
+These optional command line arguments can be used:
 
 - `--no-dry-run`: used to really send emails, defaults to `--dry-run` which queries segment but no mails will be sent or mail log entries will be created
+- `--no-once-for`: used to be able to send the same template mail multiple times, defaults to `--once-for`
 - `--from=YYYY-MM-DD`: from date for user segment query, defaults to 30 days ago
 - `--to=YYYY-MM-DD`: to date for user segment query, defaults to today
 
@@ -26,7 +27,8 @@ Three optional command line arguments can be used:
 This script was used to send an email about dialogue and a Republik event to all grant recipients of a special access campaign on a specific date.
 
 Run `node script/sendMailsToSegment/specialAccessCampaignMailing_kampa202202.js`.
-Two optional command line arguments can be used:
+These optional command line arguments can be used:
 
 - `--no-dry-run`: used to really send emails, defaults to `--dry-run` which queries segment but no mails will be sent or mail log entries will be created
+- `--no-once-for`: used to be able to send the same template mail multiple times, defaults to `--once-for`
 - `limit=100`: limit segment query to a certain number of rows (e.g. 100), defaults to all rows
