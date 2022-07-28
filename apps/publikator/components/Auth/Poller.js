@@ -1,6 +1,7 @@
 import { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
-import { compose, graphql } from 'react-apollo'
+import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
 import { meQuery } from '../../lib/withMe'
 import { css } from 'glamor'
 
@@ -10,8 +11,10 @@ import ErrorMessage from '../ErrorMessage'
 
 import { SUPPORTED_TOKEN_TYPES } from '../constants'
 
-import EmailTokenIcon from 'react-icons/lib/md/mail-outline'
-import AppTokenIcon from 'react-icons/lib/md/phonelink'
+import {
+  MdOutlineMail as EmailTokenIcon,
+  MdPhonelink as AppTokenIcon,
+} from 'react-icons/md'
 
 import { Interaction, Label, A, RawHtml } from '@project-r/styleguide'
 

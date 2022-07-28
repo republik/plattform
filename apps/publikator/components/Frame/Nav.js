@@ -1,4 +1,4 @@
-import { compose } from 'react-apollo'
+import compose from 'lodash/flowRight'
 import Router, { withRouter } from 'next/router'
 import { BrandMark, Interaction, mediaQueries } from '@project-r/styleguide'
 import { css } from 'glamor'

@@ -1,10 +1,8 @@
 import { useState } from 'react'
-import { css } from 'glamor'
-import { Query } from 'react-apollo'
-import gql from 'graphql-tag'
+import { Query } from '@apollo/client/react/components'
+import { gql } from '@apollo/client'
 import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer'
-import MdMoreHoriz from 'react-icons/lib/md/more-horiz'
-import MdWrapText from 'react-icons/lib/md/wrap-text'
+import { MdMoreHoriz, MdWrapText as MdWrapText } from 'react-icons/md'
 
 import {
   Overlay,

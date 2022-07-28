@@ -1,5 +1,6 @@
-import { graphql, compose } from 'react-apollo'
-import gql from 'graphql-tag'
+import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
+import { gql } from '@apollo/client'
 import withMe from '../../../../lib/withMe'
 
 export const getDisplayAuthor = (author) => {

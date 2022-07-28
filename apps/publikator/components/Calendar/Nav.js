@@ -1,6 +1,8 @@
 import { css } from 'glamor'
-import BackIcon from 'react-icons/lib/md/chevron-left'
-import ForthIcon from 'react-icons/lib/md/chevron-right'
+import {
+  MdChevronLeft as BackIcon,
+  MdChevronRight as ForthIcon,
+} from 'react-icons/md'
 import {
   IconButton,
   fontFamilies,

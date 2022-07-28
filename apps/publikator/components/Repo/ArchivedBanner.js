@@ -1,4 +1,4 @@
-import { compose } from 'react-apollo'
+import compose from 'lodash/flowRight'
 import { css } from 'glamor'
 
 import withT from '../../lib/withT'

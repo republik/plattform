@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react'
 import { css } from 'glamor'
 import MaskedInput from 'react-maskedinput'
-import EditIcon from 'react-icons/lib/md/edit'
+import { MdEdit as EditIcon } from 'react-icons/md'
 
 import { timeParse, timeFormat } from 'd3-time-format'
-import { compose, graphql } from 'react-apollo'
-import gql from 'graphql-tag'
+
+import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
+import { gql } from '@apollo/client'
+
 import { EditPageRepo } from '../../lib/graphql/fragments'
 import { displayDateTime } from '../../lib/utils/calendar'
 

@@ -1,6 +1,7 @@
 import { Component } from 'react'
-import { graphql, compose } from 'react-apollo'
-import gql from 'graphql-tag'
+import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
+import { gql } from '@apollo/client'
 
 import { InlineSpinner, Interaction, Label, A } from '@project-r/styleguide'
 

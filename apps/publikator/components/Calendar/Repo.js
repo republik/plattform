@@ -6,9 +6,9 @@ import {
   inQuotes,
   colors,
 } from '@project-r/styleguide'
+import { graphql } from '@apollo/client/react/hoc'
 import { Phase } from '../Repo/Phases'
 import EditMetaDate from '../Repo/EditMetaDate'
-import { graphql } from 'react-apollo'
 import { GITHUB_ORG } from '../../lib/settings'
 import { getPlaceholder } from './graphql'
 import { getLabel, getTitle, getTemplateRepoPrefix } from '../../lib/utils/repo'

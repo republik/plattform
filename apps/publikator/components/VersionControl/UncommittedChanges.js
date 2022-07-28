@@ -1,6 +1,7 @@
 import { Component, Fragment } from 'react'
-import { graphql, compose } from 'react-apollo'
-import gql from 'graphql-tag'
+import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
+import { gql } from '@apollo/client'
 import { css, merge } from 'glamor'
 import {
   colors,
@@ -21,7 +22,7 @@ import {
   UNCOMMITTED_CHANGES_POLL_INTERVAL_MS,
   MILESTONES_POLL_INTERVAL_MS,
 } from '../../lib/settings'
-import OfflineIcon from 'react-icons/lib/md/signal-wifi-off' // portable-wifi-off
+import { MdSignalWifiOff as OfflineIcon } from 'react-icons/md' // portable-wifi-off
 
 import createDebug from 'debug'
 

@@ -1,5 +1,5 @@
 import { useMemo, useState, useContext } from 'react'
-import { compose } from 'react-apollo'
+import compose from 'lodash/flowRight'
 
 import {
   UnpublishIcon,

@@ -6,11 +6,29 @@ import { createRequire } from '@project-r/styleguide'
  */
 
 /* eslint-disable */
-import * as reactApollo from 'react-apollo'
-import * as graphqlTag from 'graphql-tag'
+import { ApolloConsumer, ApolloProvider, gql } from "@apollo/client";
+import { Mutation, Query, Subscription } from "@apollo/client/react/components";
+import { graphql, withApollo, withMutation, withQuery, withSubscription } from "@apollo/client/react/hoc";
+import compose from "lodash/flowRight";
 /* eslint-enable */
 
 export default createRequire().alias({
-  'react-apollo': reactApollo,
-  'graphql-tag': graphqlTag,
+  'react-apollo': {
+    // Reexport react-apollo
+    // (work around until all dynamic components are updated)
+    // ApolloContext is no longer available but is exported in old versions of react-apollo
+    ApolloConsumer,
+    ApolloProvider,
+    Query,
+    Mutation,
+    Subscription,
+    graphql,
+    withQuery,
+    withMutation,
+    withSubscription,
+    withApollo,
+    compose,
+  },
+  // Reexport graphql-tag to be used by dynamic-components
+  'graphql-tag': gql,
 })

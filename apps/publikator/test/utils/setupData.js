@@ -1,14 +1,12 @@
-import { ApolloProvider } from 'react-apollo'
-import initApollo from '../../lib/apollo/initApollo'
+import { createApolloClientUtilities } from '@republik/nextjs-apollo-client'
+import { ApolloProvider } from '@apollo/client'
+
+const { initializeApollo } = createApolloClientUtilities({
+  apiUrl: 'http://localhost/graphql',
+})
 
 export default (initialState) => {
-  const client = initApollo(
-    initialState,
-    {},
-    {
-      API_URL: 'http://localhost/graphql',
-    },
-  )
+  const client = initializeApollo(initialState, {})
   const withData = (ComposedComponent) => (props) =>
     (
       <ApolloProvider client={client}>

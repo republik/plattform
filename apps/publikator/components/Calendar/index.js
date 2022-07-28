@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { css } from 'glamor'
-import { compose, graphql } from 'react-apollo'
+import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
 import { withRouter } from 'next/router'
 import { Router } from '../../lib/routes'
 import {

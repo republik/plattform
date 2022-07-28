@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
-import { compose } from 'react-apollo'
+import compose from 'lodash/flowRight'
 import { css } from 'glamor'
 import MarkdownSerializer from 'slate-mdast-serializer'
-import MemoIcon from 'react-icons/lib/md/rate-review'
-import RemoveIcon from 'react-icons/lib/md/delete'
+import {
+  MdRateReview as MemoIcon,
+  MdDelete as RemoveIcon,
+} from 'react-icons/md'
 import { Editorial, Interaction } from '@project-r/styleguide'
 
 import {

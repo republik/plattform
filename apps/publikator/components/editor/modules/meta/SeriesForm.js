@@ -13,7 +13,7 @@ import {
   ArrowDownwardIcon,
   HighlightOffIcon,
 } from '@project-r/styleguide'
-import ArrowUpwardIcon from 'react-icons/lib/md/arrow-upward'
+import { MdArrowUpward as ArrowUpwardIcon } from 'react-icons/md'
 
 import AutosizeInput from 'react-textarea-autosize'
 

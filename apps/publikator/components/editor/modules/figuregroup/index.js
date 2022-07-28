@@ -3,7 +3,7 @@ import { Block } from 'slate'
 import { FigureGroupButton, FigureGroupForm, isFigureGroup } from './ui'
 import { matchBlock } from '../../utils'
 import { createRemoveEmptyKeyHandler } from '../../utils/keyHandlers'
-import GalleryIcon from 'react-icons/lib/md/filter'
+import { MdFilter as GalleryIcon } from 'react-icons/md'
 import InlineUI from '../../utils/InlineUI'
 
 export const getData = (data) => ({
