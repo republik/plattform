@@ -775,14 +775,6 @@ const ArticlePage = ({
               {me && hasActiveMembership && (
                 <ArticleRecommendationsFeed path={cleanedPath} />
               )}
-              {(hasActiveMembership || isFormat) && (
-                <>
-                  <br />
-                  <br />
-                  <br />
-                  <br />
-                </>
-              )}
               {!suppressPayNotes && payNoteAfter}
             </>
           )
