@@ -11,8 +11,9 @@ type Params = {
 } & ParsedUrlQuery
 
 type Props = {
-  payNoteTryOrBuy: number
-  payNoteSeed: number
+  payNoteTryOrBuy?: number
+  payNoteSeed?: number
+  clientRedirection?: any
 }
 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
