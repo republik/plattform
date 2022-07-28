@@ -38,6 +38,11 @@ const getURLLabel = (url) => {
     return url?.replace(/^https?:\/\/www\./, '')
   }
 }
+const appendQueryString = (target, queryString) => {
+  return `${target}${
+    queryString ? `${target.includes('?') ? '&' : '?'}${queryString}` : ''
+  }`
+}
 
 const StatusError = ({
   clientRedirection,
@@ -56,11 +61,7 @@ const StatusError = ({
   const queryString = router.asPath.split('?')[1]
   const clientRedirectionTarget =
     clientRedirection &&
-    `${clientRedirection.target}${
-      queryString
-        ? `${clientRedirection.target.includes('?') ? '&' : '?'}${queryString}`
-        : ''
-    }`
+    appendQueryString(clientRedirection.target, queryString)
   const { isReady } = router
 
   useEffect(() => {
@@ -71,10 +72,18 @@ const StatusError = ({
       // give matomo some time to register the page view
       const timeoutId = setTimeout(() => {
         window.location = clientRedirectionTarget
-        if (inNativeApp) {
-          // window.location will open in a browser, reset app to last location
-          window.history.back()
-        }
+        setTimeout(() => {
+          if (inNativeApp) {
+            // window.location will open in a browser, reset app to last location
+            window.history.back()
+          } else {
+            // e.g. on iOS a Apple apps link will open the App Store App, reset to a more useful page afterwards
+            window.location = appendQueryString(
+              clientRedirection.postExternalTarget || '/',
+              queryString,
+            )
+          }
+        }, 1000)
       }, 1000)
       return () => {
         clearTimeout(timeoutId)
@@ -88,6 +97,7 @@ const StatusError = ({
     clientRedirection,
     isReady,
     clientRedirectionTarget,
+    queryString,
     isExternalClientRedirection,
     inNativeApp,
   ])
@@ -96,15 +106,18 @@ const StatusError = ({
     <Loader
       loading={loading || !!clientRedirection}
       message={
-        isExternalClientRedirection &&
-        t.elements('redirection/external/message', {
-          link: (
-            <Editorial.A key='link' href={clientRedirectionTarget}>
-              {getURLLabel(clientRedirection.target) ||
-                t('redirection/external/genericLink')}
-            </Editorial.A>
-          ),
-        })
+        isExternalClientRedirection && (
+          <div style={{ padding: 15 }}>
+            {t.elements('redirection/external/message', {
+              link: (
+                <Editorial.A key='link' href={clientRedirectionTarget}>
+                  {getURLLabel(clientRedirection.target) ||
+                    t('redirection/external/genericLink')}
+                </Editorial.A>
+              ),
+            })}
+          </div>
+        )
       }
       render={() => (
         <Fragment>

@@ -54,6 +54,7 @@ export const getServerSideProps = createGetServerSideProps(
             : isAndroid
             ? 'https://play.google.com/store/apps/details?id=app.republik'
             : '/probelesen',
+          postExternalTarget: '/probelesen',
         },
       },
     }
