@@ -21,8 +21,11 @@ const init = async (context) => {
       await cleanedUserMailing(from, to, context, dryRun)
     },
     lockTtlSecs: 60,
-    runAtTime: '13:00',
-    runAtDaysOfWeek: [3],
+    runAtTime: '09:00',
+    runAtDaysOfWeek: [1, 2, 3, 4, 5, 6, 7], // every day of the week
+    /* atm we do not send newsletters on Sundays, so there we will 
+    not have newly cleaned users but it doesn't matter to execute 
+    script anyway */
     runInitially: DEV,
   })
 

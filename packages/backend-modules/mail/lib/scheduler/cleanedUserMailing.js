@@ -1,3 +1,4 @@
+const debug = require('debug')('mail:lib:scheduler:cleanedUser')
 const sendMailsToSegment = require('../sendMailsToSegment')
 const dayjs = require('dayjs')
 
@@ -40,7 +41,7 @@ module.exports = async (from, to, { pgdb }, dryRun = false, onceFor = true) => {
 `,
     { from, to },
   )
-  console.log(`${cleanedUsers.length} email addresses found`)
+  debug(`${cleanedUsers.length} email addresses found`)
 
   const emailAddressCleanedDateMap = new Map(
     cleanedUsers.map((entry) => {
