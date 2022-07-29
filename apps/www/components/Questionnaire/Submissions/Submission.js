@@ -110,11 +110,17 @@ const Submission = ({
   const [visibleIndexes, setVisible] = useState(
     isHighlighted ? true : defaultVisible,
   )
+  const visibleIndexesString = [].concat(visibleIndexes).join()
+  const prevMatchedIndexesString = (prevMatchedIndexes || []).join()
+  const defaultVisibleString = defaultVisible.join()
   useEffect(() => {
-    if (visibleIndexes === prevMatchedIndexes) {
-      setVisible(defaultVisible)
+    if (
+      visibleIndexesString === prevMatchedIndexesString &&
+      visibleIndexesString !== defaultVisibleString
+    ) {
+      setVisible(defaultVisibleString.split())
     }
-  }, [prevMatchedIndexes, visibleIndexes, defaultVisible])
+  }, [visibleIndexesString, prevMatchedIndexesString, defaultVisibleString])
   const [isExpanded, setIsExpanded] = useState(true)
 
   const { inNativeApp } = useInNativeApp()

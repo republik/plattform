@@ -13,6 +13,7 @@ import {
   HR,
   InlineSpinner,
   plainButtonRule,
+  usePrevious,
 } from '@project-r/styleguide'
 
 import { useInfiniteScroll } from '../../../lib/hooks/useInfiniteScroll'
@@ -147,10 +148,10 @@ const mainQuery = gql`
 `
 
 const getTotalCount = (data) => data?.questionnaire?.submissions?.totalCount
-const getSearchParams = ({ sort, searchQuery }) => {
+const getSearchParams = ({ sort, search }) => {
   const query = {}
-  if (searchQuery) {
-    query[QUERY_PARAM] = searchQuery
+  if (search) {
+    query[QUERY_PARAM] = search
   }
   if (sort.key === 'random' || !sort.key) {
     return query
@@ -165,13 +166,18 @@ const Submissions = ({ slug, extract, share = {} }) => {
   const { t } = useTranslation()
   const router = useRouter()
   const { query } = router
+  const shareId = query.share
   const sortBy = query.skey || 'random'
   const sortDirection = query.sdir || undefined
   const searchQuery = query.q || ''
+  const prevSearchQuery = usePrevious(searchQuery)
   const [searchValue, setSearchValue] = useState(searchQuery)
-  const shareId = query.share
-  const [debouncedSearch] = useDebounce(searchValue, 100)
-
+  const [debouncedSearch] = useDebounce(searchValue, 200)
+  useEffect(() => {
+    if (prevSearchQuery !== searchQuery && searchValue !== searchQuery) {
+      setSearchValue(searchQuery)
+    }
+  }, [searchQuery, prevSearchQuery, searchValue])
   useEffect(() => {
     if ((debouncedSearch || '') === (router.query.q || '')) {
       return
@@ -181,7 +187,7 @@ const Submissions = ({ slug, extract, share = {} }) => {
         pathname,
         query: getSearchParams({
           sort: { key: router.query.skey, direction: router.query.sdir },
-          searchQuery: debouncedSearch,
+          search: debouncedSearch,
         }),
       }),
       undefined,
@@ -199,7 +205,6 @@ const Submissions = ({ slug, extract, share = {} }) => {
         sortBy,
         sortDirection,
       },
-      fetchPolicy: debouncedSearch ? 'no-cache' : 'cache-first',
     },
   )
   const shareQuery = useQuery(singleSubmissionQuery, {
@@ -297,7 +302,7 @@ const Submissions = ({ slug, extract, share = {} }) => {
           sort={sort}
           urlSort={{ key: sortBy, direction: sortDirection }}
           getSearchParams={({ sort }) =>
-            getSearchParams({ sort, searchQuery: searchValue })
+            getSearchParams({ sort, search: searchValue })
           }
           pathname={pathname}
         />
