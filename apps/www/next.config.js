@@ -106,16 +106,6 @@ module.exports = withTM(
           destination: '/konto',
           permanent: true,
         },
-        {
-          source: '/ud/report',
-          destination: 'https://ultradashboard.republik.ch/dashboard/15',
-          permanent: false,
-        },
-        {
-          source: '/ud/daily',
-          destination: 'https://ultradashboard.republik.ch/dashboard/17',
-          permanent: false,
-        },
       ]
     },
     experimental: {
