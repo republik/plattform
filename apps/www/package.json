@@ -54,7 +54,7 @@
     "gsheets": "^3.0.1",
     "jest": "^27.5.1",
     "nodemon": "^2.0.15",
-    "typescript": "^4.5.5"
+    "typescript": "^4.7.2"
   },
   "dependencies": {
     "@apollo/client": "^3.5.8",
