@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ES5",
+    "allowJs": true,
+    "target": "es5",
     "lib": [
       "dom",
       "dom.iterable",
@@ -10,18 +11,22 @@
     "strict": false,
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
-    "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
+    "allowSyntheticDefaultImports": true,
+    "outDir": "./dist",
+    "module": "commonjs",
+    "noEmit": false,
+    "sourceMap": true,
     "declaration": true,
-    "declarationDir": "types"
+    "declarationDir": "./dist/types",
+    "declarationMap": true
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx"
+    "src"
   ],
   "exclude": [
     "node_modules",
