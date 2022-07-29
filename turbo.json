@@ -10,9 +10,6 @@
         ".next/**"
       ]
     },
-    "@republik/nextjs-apollo-client#build": {
-      "cache": false
-    },
     "@orbiting/backend-modules-auth#build": {
       "cache": false
     },
