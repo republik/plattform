@@ -16,7 +16,6 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "prepare": "yarn build",
     "prebuild": "rimraf dist",
     "build": "rollup -c",
     "dev": "rollup -c -w",
