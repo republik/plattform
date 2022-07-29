@@ -2,7 +2,6 @@ import { Fragment, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { format } from 'url'
 import { gql, useQuery } from '@apollo/client'
-import { shuffle } from 'd3-array'
 
 import {
   Interaction,
@@ -22,7 +21,7 @@ import ErrorMessage from '../../ErrorMessage'
 import Submission from './Submission'
 import PlainButton from './PlainButton'
 import { SortToggle } from '../../Search/Sort'
-import ShareSubmission, { getSubmissionUrl } from './Share'
+import ShareSubmission from './Share'
 
 const SUPPORTED_SORT = [
   {
@@ -147,16 +146,6 @@ const mainQuery = gql`
   }
 `
 
-const getSubmissionUrlWithRandomQid = (pathname, { id, answers }) =>
-  getSubmissionUrl(pathname, id, {
-    qid: (
-      shuffle(
-        answers.nodes.filter(
-          (a) => a.question.__typename === 'QuestionTypeText',
-        ),
-      )[0] || shuffle([...answers.nodes])[0]
-    ).question.id,
-  })
 const getTotalCount = (data) => data?.questionnaire?.submissions?.totalCount
 const getSearchParams = ({ sort, searchQuery }) => {
   const query = {}
@@ -210,6 +199,7 @@ const Submissions = ({ slug, extract, share = {} }) => {
         sortBy,
         sortDirection,
       },
+      fetchPolicy: debouncedSearch ? 'no-cache' : 'cache-first',
     },
   )
   const shareQuery = useQuery(singleSubmissionQuery, {
@@ -345,10 +335,6 @@ const Submissions = ({ slug, extract, share = {} }) => {
                       pathname={pathname}
                       questions={questions}
                       {...shareSubmission}
-                      publicUrl={getSubmissionUrlWithRandomQid(
-                        pathname,
-                        shareSubmission,
-                      )}
                       isHighlighted
                     />
                     <HR />
@@ -364,10 +350,8 @@ const Submissions = ({ slug, extract, share = {} }) => {
                       <Fragment key={id}>
                         <Submission
                           t={t}
-                          publicUrl={getSubmissionUrlWithRandomQid(pathname, {
-                            id,
-                            answers,
-                          })}
+                          id={id}
+                          pathname={pathname}
                           displayAuthor={displayAuthor}
                           answers={answers}
                           questions={questions}
