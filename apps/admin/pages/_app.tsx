@@ -7,9 +7,7 @@ import { withApollo } from '../lib/apollo'
 const WebApp = ({ Component, pageProps }: AppProps<PagePropsWithApollo>) => {
   const {
     // SSR only props
-    providedUserAgent = undefined,
     serverContext = undefined,
-    assumeAccess = false,
     ...otherPageProps
   } = pageProps
 
