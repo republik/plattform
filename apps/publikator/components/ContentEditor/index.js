@@ -4,7 +4,6 @@ import {
   Editor,
   flyerSchema,
   flyerEditorSchema,
-  A,
   useDebounce,
 } from '@project-r/styleguide'
 import withAuthorization from '../../components/Auth/withAuthorization'
@@ -73,7 +72,9 @@ const PhaseSummary = () => (
 const toString = (array) => JSON.stringify({ children: array })
 
 const Index = ({ store, reference = INITIAL_VALUE }) => {
-  const [value, setValue] = useState(store.get(CONTENT_KEY) || reference)
+  const [value, setValue] = useState(
+    reference || store.get(CONTENT_KEY) || INITIAL_VALUE,
+  )
   const [debouncedValue] = useDebounce(value, 500)
 
   const referenceString = useMemo(() => toString(reference), [reference])
