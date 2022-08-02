@@ -21,7 +21,7 @@ module.exports = withTM(
     assetPrefix:
       NODE_ENV === 'production' && CDN_FRONTEND_BASE_URL
         ? CDN_FRONTEND_BASE_URL
-        : '',
+        : undefined,
     useFileSystemPublicRoutes: true,
     // , onDemandEntries: {
     //   // wait 5 minutes before disposing entries

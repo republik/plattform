@@ -625,7 +625,9 @@ class Container extends Component {
                     clearedFocus: undefined,
                   },
                   () => {
-                    router.replace('/community', undefined, { shallow: true })
+                    router.replace('/community', undefined, {
+                      shallow: router.pathname === '/community',
+                    })
                   },
                 )
               }
@@ -648,7 +650,9 @@ class Container extends Component {
                 clearedFocus: id,
               },
               () => {
-                router.push('/community', undefined, { shallow: true })
+                router.push('/community', undefined, {
+                  shallow: router.pathname === '/community',
+                })
               },
             )
           }}

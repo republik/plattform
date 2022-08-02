@@ -13,7 +13,7 @@ const SORT_DIRECTION_PARAM = 'sdir'
 
 const WrapperRouter = (WrappedComponent) =>
   compose(withRouter)(({ router, ...props }) => {
-    const { query } = router
+    const { query, pathname } = router
     const urlQuery = query[QUERY_PARAM]
     const urlFilter = {
       key: query[FILTER_KEY_PARAM] || DEFAULT_FILTER.key,
@@ -23,10 +23,11 @@ const WrapperRouter = (WrappedComponent) =>
       key: query[SORT_KEY_PARAM] || DEFAULT_SORT.key,
       direction: query[SORT_DIRECTION_PARAM],
     }
+    const shouldShallowRoute = pathname === '/suche'
 
     const pushRoute = (newParams) => {
       return router.push({ pathname: '/suche', query: newParams }, undefined, {
-        shallow: true,
+        shallow: shouldShallowRoute,
       })
     }
 
@@ -99,7 +100,7 @@ const WrapperRouter = (WrappedComponent) =>
       router.replace(
         { pathname: '/suche', query: getCleanQuery() },
         undefined,
-        { shallow: true },
+        { shallow: shouldShallowRoute },
       )
     }
 
