@@ -537,7 +537,6 @@ class CustomizePackage extends Component {
                   ? { group: pkg.group }
                   : undefined,
             }}
-            shallow
             passHref
           >
             <A>{t('package/customize/changePackage')}</A>
