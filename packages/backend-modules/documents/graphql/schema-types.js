@@ -123,8 +123,13 @@ type Meta {
   paynoteMode: PaynoteMode
 }
 
+enum DocumentType {
+  mdast
+  slate
+}
+
 input DocumentInput {
-  # AST of /article.md
+  type: DocumentType
   content: JSON!
 }
 
@@ -133,8 +138,9 @@ type Document {
   repoId: ID!
   issuedForUserId: ID
 
-  # AST of /article.md
+  type: DocumentType!
   content: JSON!
+
   meta: Meta!
   children(
     first: Int

@@ -4,7 +4,6 @@ const dataUriToBuffer = require('data-uri-to-buffer')
 const Promise = require('bluebird')
 const fetch = require('isomorphic-unfetch')
 
-const MDAST = require('@orbiting/remark-preset')
 const {
   lib: {
     isDataUrl,
@@ -89,8 +88,8 @@ module.exports = async (_, args, context) => {
 
   const { repoId, parentId, message, document, isTemplate } = args
 
-  const { content: mdast } = document
-  const { meta } = mdast
+  const { type = 'mdast', content } = document
+  const { meta = {} } = content
 
   debug({ repoId, message })
 
@@ -148,14 +147,13 @@ module.exports = async (_, args, context) => {
     const imageUrlHandler = createImageUrlHandler(repoId)
 
     await Promise.all([
-      processRepoImageUrlsInContent(mdast, imageUrlHandler),
-      processRepoImageUrlsInMeta(mdast, imageUrlHandler),
-      processEmbedImageUrlsInContent(mdast, imageUrlHandler),
+      processRepoImageUrlsInContent(content, imageUrlHandler),
+      processRepoImageUrlsInMeta(content, imageUrlHandler),
+      processEmbedImageUrlsInContent(content, imageUrlHandler),
     ])
 
-    mdast.meta = {}
+    delete content.meta
 
-    const markdown = MDAST.stringify(mdast)
     const parentCommit =
       parentId && (await tx.publikator.commits.findOne({ id: parentId }))
 
@@ -166,7 +164,8 @@ module.exports = async (_, args, context) => {
 
     const commit = await tx.publikator.commits.insertAndGet({
       repoId,
-      content: markdown,
+      type,
+      content,
       meta,
       message,
       userId: user.id,

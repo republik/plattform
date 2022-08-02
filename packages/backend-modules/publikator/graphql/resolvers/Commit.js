@@ -1,3 +1,4 @@
+const { stringify } = require('@orbiting/remark-preset')
 const {
   lib: { createRepoUrlPrefixer, createProxyUrlPrefixer },
 } = require('@orbiting/backend-modules-assets')
@@ -35,27 +36,30 @@ module.exports = {
     }
   },
   markdown: async (commit, args, context) => {
-    const { markdown } = await context.loaders.Commit.byIdMarkdown.load(
-      commit.id,
-    )
+    const { id } = commit
+    const { type, content } = await context.loaders.Commit.byIdContent.load(id)
 
-    return markdown
-  },
-  document: async (commit, { publicAssets = false }, context) => {
-    const { repoId, document: existingDocument } = commit
-    if (existingDocument) {
-      return existingDocument
+    if (type !== 'mdast') {
+      return '(keine Markdown-Version verfügbar)'
     }
 
-    const { mdast } = await context.loaders.Commit.byIdMdast.load(commit.id)
+    return stringify(content)
+  },
+  document: async (commit, { publicAssets = false }, context) => {
+    const { id, repoId, document } = commit
+    if (document) {
+      return document
+    }
+
+    const { type, content } = await context.loaders.Commit.byIdContent.load(id)
 
     const prefix = createRepoUrlPrefixer(repoId, publicAssets)
     const proxy = createProxyUrlPrefixer()
 
     await Promise.all([
-      processRepoImageUrlsInContent(mdast, prefix),
-      processRepoImageUrlsInMeta(mdast, prefix),
-      processEmbedsInContent(mdast, proxy, context),
+      processRepoImageUrlsInContent(content, prefix),
+      processRepoImageUrlsInMeta(content, prefix),
+      processEmbedsInContent(content, proxy, context),
     ])
 
     return {
@@ -63,7 +67,8 @@ module.exports = {
         'base64',
       ),
       repoId,
-      content: mdast,
+      type,
+      content,
     }
   },
   derivatives: async (commit, args, context) => {
