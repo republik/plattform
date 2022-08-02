@@ -170,7 +170,7 @@ class ArticleQuestion extends Component {
 
   render() {
     const {
-      question: { text },
+      question: { text, explanation },
       t,
     } = this.props
     const { value, items } = this.state
@@ -178,9 +178,10 @@ class ArticleQuestion extends Component {
       <div>
         <div {...questionStyles.label}>
           {text && <H2>{text}</H2>}
-          <P {...questionStyles.help}>{t('questionnaire/article/help')}</P>
+          <P {...questionStyles.help}>
+            {explanation || t('questionnaire/article/help')}
+          </P>
         </div>
-
         <div {...questionStyles.body}>
           {value ? (
             this.renderSelectedItem()

@@ -17,9 +17,9 @@ import { trackEvent, trackEventOnClick } from '../../lib/matomo'
 import { useRouter } from 'next/router'
 import compose from 'lodash/flowRight'
 import withT, { t } from '../../lib/withT'
-import withInNativeApp from '../../lib/withInNativeApp'
-import withMe from '../../lib/apollo/withMe'
+import { useInNativeApp } from '../../lib/withInNativeApp'
 import { shouldIgnoreClick } from '../../lib/utils/link'
+import { useMe } from '../../lib/context/MeContext'
 
 const styles = {
   banner: css({
@@ -403,16 +403,8 @@ export const InnerPaynote = ({
   )
 }
 
-export const PayNote = compose(
-  withInNativeApp,
-  withMe,
-  withDarkContextWhenBefore,
-)(
+export const PayNote = compose(withDarkContextWhenBefore)(
   ({
-    inNativeIOSApp,
-    me,
-    hasAccess,
-    hasActiveMembership,
     seed,
     tryOrBuy,
     documentId,
@@ -422,6 +414,8 @@ export const PayNote = compose(
     customMode,
     customOnly,
   }) => {
+    const { meLoading, hasActiveMembership, hasAccess } = useMe()
+    const { inNativeIOSApp } = useInNativeApp()
     const [colorScheme] = useColorContext()
     const { query } = useRouter()
 
@@ -429,7 +423,7 @@ export const PayNote = compose(
 
     const subject = {
       inNativeIOSApp,
-      isEligibleForTrial: !me || !!query.trialSignup,
+      isEligibleForTrial: !hasAccess || !!query.trialSignup,
       hasActiveMembership,
     }
     const payNote = getPayNote(
@@ -456,7 +450,7 @@ export const PayNote = compose(
 
     return (
       <div
-        data-hide-if-active-membership='true'
+        data-hide-if-active-membership={meLoading ? 'true' : undefined}
         {...styles.banner}
         {...colorScheme.set(
           'backgroundColor',

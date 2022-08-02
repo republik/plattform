@@ -472,14 +472,6 @@ Long, editorial texts use the serif cuts. With margins, except `:first-child` 0 
 </div>
 ```
 
-### Quotes
-
-```react
-<Quote source='Thomas Jefferson'>
-  Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
-</Quote>
-```
-
 ### Links
 
 ```react
