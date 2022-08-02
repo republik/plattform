@@ -267,6 +267,7 @@ class Tree extends Component {
         {commits && (
           <ul {...styles.list}>
             {commits.map((commit) => {
+              console.log({ commit })
               const treeColors = this.getColor(commit.author.email)
               const hasLocalVersion =
                 localStorageCommitIds.indexOf(commit.id) !== -1

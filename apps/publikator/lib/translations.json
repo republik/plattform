@@ -161,6 +161,10 @@
       "value": "Artikel"
     },
     {
+      "key": "repo/add/template/flyer",
+      "value": "Flyer"
+    },
+    {
       "key": "repo/add/template/front",
       "value": "Front"
     },

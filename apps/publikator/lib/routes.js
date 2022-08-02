@@ -8,5 +8,6 @@ routes
   .add('repo/tree', '/repo/:repoId*/tree')
   .add('repo/preview', '/repo/:repoId*/preview')
   .add('repo/publish', '/repo/:repoId*/publish')
+  .add('flyer/edit', '/flyer/:repoId*/edit')
 
 module.exports = routes

@@ -51,6 +51,9 @@ export const getRepoHistory = gql`
         ...SimpleMilestone
         commit {
           ...SimpleCommit
+          document {
+            type
+          }
           derivatives {
             ...SimpleDerivative
           }
@@ -73,6 +76,9 @@ const treeRepoSubscription = gql`
       }
       commit {
         ...SimpleCommit
+        document {
+          type
+        }
         derivatives {
           ...SimpleDerivative
         }

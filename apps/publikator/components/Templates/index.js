@@ -40,7 +40,7 @@ const schemas = {
   // - for Project R this should be the newsletter
   newsletter: newsletterSchema,
   editorialNewsletter: createNewsletterWebSchema(),
-  neutrum: neutrumSchema,
+  flyer: undefined, // new Slate editor
   article: createArticleSchema(articleSchemaParams),
   front: createFrontSchema({
     Link: NoOpLink,

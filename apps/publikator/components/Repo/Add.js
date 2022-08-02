@@ -217,7 +217,9 @@ class RepoAdd extends Component {
   goToEdit({ slug }) {
     const { title, schema, templateRepoId } = this.state
     const { isTemplate } = this.props
-    Router.replaceRoute('repo/edit', {
+    // TODO: replace with a more generic solution at some point
+    const path = schema === 'flyer' ? 'flyer/edit' : 'repo/edit'
+    Router.replaceRoute(path, {
       repoId: [GITHUB_ORG, slug],
       commitId: 'new',
       title,
