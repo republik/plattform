@@ -28,11 +28,11 @@ export default [
       peerDepsExternal(),
       nodeResolve(),
       json(),
+      commonjs(),
       typescript({
         tsconfig: './tsconfig.json',
         outputToFilesystem: true,
       }),
-      commonjs(),
       terser(),
       bundleSize(),
       process.env.ANALYZE === 'true' &&
