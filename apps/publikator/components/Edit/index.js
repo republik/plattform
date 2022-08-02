@@ -234,7 +234,7 @@ const EditLoader = ({
   }
 
   const commitCleanup = (data) => {
-    store.clear()
+    // store.clear() // @TODO check this, if included it resets state
     concludeChanges()
     setCommitting(false)
     Router.replaceRoute('flyer/edit', {

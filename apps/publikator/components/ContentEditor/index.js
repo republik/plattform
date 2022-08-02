@@ -71,13 +71,18 @@ const PhaseSummary = () => (
 
 const toString = (array) => JSON.stringify({ children: array })
 
-const Index = ({ store, reference = INITIAL_VALUE }) => {
+const Index = ({ store, reference }) => {
   const [value, setValue] = useState(
     reference || store.get(CONTENT_KEY) || INITIAL_VALUE,
   )
   const [debouncedValue] = useDebounce(value, 500)
-
   const referenceString = useMemo(() => toString(reference), [reference])
+
+  useEffect(() => {
+    if (reference) {
+      setValue(reference)
+    }
+  }, [reference])
 
   useEffect(() => {
     const compString = toString(debouncedValue)
@@ -87,6 +92,21 @@ const Index = ({ store, reference = INITIAL_VALUE }) => {
       store.clear()
     }
   }, [debouncedValue])
+
+  // helping hand to debug
+  console.log('ContentEditor, before render', {
+    reference: reference?.[0]?.children?.[0]?.children
+      ?.map((c) => c.text)
+      .join(''),
+    value: value?.[0]?.children?.[0]?.children?.map((c) => c.text).join(''),
+    store: store
+      .get(CONTENT_KEY)?.[0]
+      ?.children[0]?.children?.map((c) => c.text)
+      .join(''),
+    debouncedValue: debouncedValue[0]?.children[0]?.children
+      ?.map((c) => c.text)
+      .join(''),
+  })
 
   return (
     <Editor
