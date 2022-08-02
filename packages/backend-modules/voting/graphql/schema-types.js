@@ -215,18 +215,29 @@ type Questionnaire {
   description: String
   beginDate: DateTime!
   endDate: DateTime!
-  # current user (me) is eligible to submit a ballot
-  userIsEligible: Boolean
 
-  # current user (me) has submitted a ballot
+  # current user (me) is eligible to submit an answer
+  userIsEligible: Boolean
+  # current user (me) has submitted an answer
   userHasSubmitted: Boolean
   userSubmitDate: DateTime
 
   allowedMemberships: [VotingMembershipRequirement!]
   allowedRoles: [String!]
 
-  # enables anonymous submissions via submitAnswerUnattributed mutation
-  unattributedAnswers: Boolean
+  # submits answers immediately and requires no
+  # submitQuestionnaire mutation call
+  submitAnswersImmediately: Boolean!
+
+  # allows to resubmit already submitted answers ("edit")
+  resubmitAnswers: Boolean!
+
+  # allows to revoke a questionnaire submission
+  revokeSubmissions: Boolean!
+
+  # allows anonymous submissions
+  # (see submitAnswerUnattributed mutation)
+  unattributedAnswers: Boolean!
 
   questions(
     "select questions by order field"
@@ -236,6 +247,66 @@ type Questionnaire {
   ): [QuestionInterface!]!
 
   turnout: QuestionnaireTurnout
+
+  submissions(
+    search: String
+    first: Int
+    filters: SubmissionsFilterInput
+    sort: SubmissionsSortInput
+    before: String
+    after: String
+  ): SubmissionConnection
+}
+
+input SubmissionsFilterInput {
+  id: ID
+  not: ID
+}
+
+input SubmissionsSortInput {
+  by: SubmissionsSortBy!
+  direction: OrderDirection
+}
+
+enum SubmissionsSortBy {
+  createdAt
+  random
+}
+
+type SubmissionConnection {
+  nodes: [Submission!]!
+  pageInfo: SubmissionPageInfo!
+  totalCount: Int!
+}
+
+type Submission {
+  id: ID!
+  questionnaire: Questionnaire!
+  displayAuthor: DisplayUser!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+
+  answers: AnswerConnection!
+}
+
+type SubmissionPageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type AnswerConnection {
+  nodes: [Answer!]!
+  pageInfo: AnserPageInfo!
+  totalCount: Int!
+}
+
+type AnserPageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
 }
 
 type QuestionnaireTurnout {
@@ -247,7 +318,9 @@ interface QuestionInterface {
   id: ID!
   questionnaire: Questionnaire!
   order: Int!
-  text: String
+  private: Boolean!
+  text: String!
+  explanation: String
   metadata: JSON
   userAnswer: Answer
   turnout: QuestionTurnout!
@@ -263,7 +336,9 @@ type QuestionTypeText implements QuestionInterface {
   id: ID!
   questionnaire: Questionnaire!
   order: Int!
-  text: String
+  private: Boolean!
+  text: String!
+  explanation: String
   metadata: JSON
   userAnswer: Answer
   turnout: QuestionTurnout!
@@ -275,7 +350,9 @@ type QuestionTypeDocument implements QuestionInterface {
   id: ID!
   questionnaire: Questionnaire!
   order: Int!
-  text: String
+  private: Boolean!
+  text: String!
+  explanation: String
   metadata: JSON
   userAnswer: Answer
   turnout: QuestionTurnout!
@@ -298,7 +375,9 @@ type QuestionTypeRange implements QuestionInterface {
   id: ID!
   questionnaire: Questionnaire!
   order: Int!
-  text: String
+  private: Boolean!
+  text: String!
+  explanation: String
   metadata: JSON
   userAnswer: Answer
   turnout: QuestionTurnout!
@@ -329,7 +408,9 @@ type QuestionTypeChoice implements QuestionInterface {
   id: ID!
   questionnaire: Questionnaire!
   order: Int!
-  text: String
+  private: Boolean!
+  text: String!
+  explanation: String
   metadata: JSON
   userAnswer: Answer
   turnout: QuestionTurnout!
@@ -346,6 +427,7 @@ type QuestionTypeChoiceOption {
   label: String!
   value: ID!
   category: String
+  requireAddress: Boolean
 }
 type QuestionTypeChoiceResult {
   option: QuestionTypeChoiceOption!
@@ -372,8 +454,14 @@ type Answer {
   id: ID!
   payload: JSON!
   submitted: Boolean!
-}
+  # indicates whether current payload is a draft
+  drafted: Boolean
 
+  question: QuestionInterface!
+
+  # indicates whether this answer matched a search query
+  hasMatched: Boolean
+}
 
 input VideoInput {
   hls: String!

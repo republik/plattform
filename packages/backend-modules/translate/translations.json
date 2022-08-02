@@ -1449,6 +1449,10 @@
       "value": "Die Umfrage ist bereits geschlossen."
     },
     {
+      "key": "api/questionnaire/answer/404",
+      "value": "Antwort nicht gefunden"
+    },
+    {
       "key": "api/questionnaire/answer/empty",
       "value": "Leere Antworten sind nicht akzeptiert."
     },
@@ -1503,6 +1507,14 @@
     {
       "key": "api/questionnaire/noUnattributedAnswers",
       "value": "Dieser Fragebogen unterstützt keine anonymen Eingaben."
+    },
+    {
+      "key": "api/questionnaire/submission/404",
+      "value": "Umfrage-Teilnahme nicht gefunden"
+    },
+    {
+      "key": "api/questionnaire/submission/noRevokeSubmissions",
+      "value": "Ihre Umfrage-Teilnahme kann nicht zurückgezogen werden."
     },
     {
       "key": "timeAhead/justNow/other",

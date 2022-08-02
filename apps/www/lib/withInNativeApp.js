@@ -2,7 +2,7 @@ import Router from 'next/router'
 import { parseJSONObject } from './safeJSON'
 import { matchIOSUserAgent, useUserAgent } from './context/UserAgentContext'
 
-const getNativeAppVersion = (value) => {
+export const getNativeAppVersion = (value) => {
   const matches = value?.match(/RepublikApp\/([.0-9]+)/)
   return matches ? matches[1] : undefined
 }

@@ -1,4 +1,10 @@
-import React, { useState, useRef, useMemo, MutableRefObject } from 'react'
+import React, {
+  useState,
+  useRef,
+  useMemo,
+  MutableRefObject,
+  ReactNode,
+} from 'react'
 import { css, merge, simulate } from 'glamor'
 import { fontStyles } from '../../theme/fonts'
 import { mUp } from '../../theme/mediaQueries'
@@ -11,7 +17,6 @@ import {
   LINE_HEIGHT,
   FIELD_HEIGHT,
 } from './constants'
-import { IconType } from 'react-icons/lib/esm/iconBase'
 import { CloseIcon } from '../Icons'
 import { plainButtonRule } from '../Button'
 
@@ -144,7 +149,7 @@ const Field = React.forwardRef<
     onInc?: () => void
     onDec?: () => void
     showClearIcon?: boolean
-    icon?: IconType
+    icon?: ReactNode
     simulate?: string
     renderInput: React.FC<Record<string, unknown>>
   }
@@ -320,7 +325,7 @@ const Field = React.forwardRef<
 Field.propTypes = {
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   renderInput: PropTypes.func.isRequired,
-  icon: PropTypes.func,
+  icon: PropTypes.node,
   disabled: PropTypes.bool,
 }
 

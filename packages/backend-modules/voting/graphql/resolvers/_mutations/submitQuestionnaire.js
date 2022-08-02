@@ -15,25 +15,43 @@ module.exports = async (_, { id: questionnaireId }, context) => {
       pgdb: transaction,
     })
 
+    const queryParams = { questionnaireId, userId: me.id }
+
     if (!questionnaire.submitAnswersImmediately) {
-      await transaction.public.answers.update(
-        {
-          questionnaireId,
-          userId: me.id,
-        },
-        { submitted: true },
+      await transaction.public.answers.query(
+        `
+        UPDATE answers
+        SET payload = draft, draft = NULL
+        WHERE "questionnaireId" = :questionnaireId
+          AND "userId" = :userId
+          AND draft IS NOT NULL
+      `,
+        queryParams,
+      )
+
+      await transaction.public.answers.query(
+        `
+        UPDATE answers
+        SET submitted = TRUE
+        WHERE "questionnaireId" = :questionnaireId
+          AND "userId" = :userId
+          AND submitted = FALSE
+      `,
+        queryParams,
       )
     }
 
-    await transaction.public.questionnaireSubmissions.insert({
-      questionnaireId,
-      userId: me.id,
-    })
+    const questionnaireSubmissions = transaction.public.questionnaireSubmissions
 
-    await loaders.QuestionnaireSubmissions.byKeyObj.clear({
-      userId: me.id,
-      questionnaireId,
-    })
+    if (!(await questionnaireSubmissions.findOne(queryParams))) {
+      await questionnaireSubmissions.insert(queryParams)
+    } else {
+      await questionnaireSubmissions.update(queryParams, {
+        updatedAt: new Date(),
+      })
+    }
+
+    await loaders.QuestionnaireSubmissions.byKeyObj.clear(queryParams)
 
     await transaction.transactionCommit()
 
