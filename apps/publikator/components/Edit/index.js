@@ -269,7 +269,7 @@ const EditLoader = ({
       message: message,
       document: {
         type: 'slate',
-        content: store.get(CONTENT_KEY),
+        content: { children: store.get(CONTENT_KEY) },
         // TODO: meta
         // meta: store.get(META_KEY),
       },
@@ -417,7 +417,8 @@ const EditLoader = ({
               }
             }
 
-            console.log(repo?.commit.document)
+            const { children: reference } =
+              repo?.commit?.document?.content || {}
 
             return (
               <>
@@ -433,10 +434,7 @@ const EditLoader = ({
                   />
                 )}
                 {stuffToAddSomewhere}
-                <ContentEditor
-                  store={store}
-                  reference={repo?.commit.document.content}
-                />
+                <ContentEditor store={store} reference={reference} />
               </>
             )
           }}
