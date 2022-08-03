@@ -38,7 +38,7 @@
   },
   "homepage": "https://github.com/orbiting/republik-frontend#readme",
   "devDependencies": {
-    "@next/eslint-plugin-next": "^12.2.3-canary.8",
+    "@next/eslint-plugin-next": "^12.2.3",
     "@republik/eslint-config-frontend": "*",
     "@stripe/stripe-js": "^1.22.0",
     "@testing-library/jest-dom": "^5.16.1",
