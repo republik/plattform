@@ -20,8 +20,6 @@ import { AppProps } from 'next/app'
 import MeContextProvider from '../lib/context/MeContext'
 import UserAgentProvider from '../lib/context/UserAgentContext'
 import { withApollo } from '../lib/apollo'
-import { useEffect } from 'react'
-import Router, { useRouter } from 'next/router'
 
 if (typeof window !== 'undefined') {
   window.addEventListener('error', (event: ErrorEvent) => {
