@@ -10,15 +10,33 @@ const {
 const modifiers = require('./modifiers')
 const { hasFullDocumentAccess } = require('./restrictions')
 
-const processRepoImageUrlsInContent = async (mdast, fn) => {
+const processRepoImageUrlsInContent = async (content, fn) => {
   const fns = []
 
-  visit(mdast, 'image', (node) => {
+  // slate content
+  visit(
+    content,
+    (node) => !!node?.images,
+    (node) => {
+      console.log(node.images)
+
+      Object.keys(node.images).forEach((key) => {
+        if (node.images[key].url) {
+          fns.push(async () => {
+            node.images[key].url = await fn(node.images[key].url)
+          })
+        }
+      })
+    },
+  )
+
+  // mdast content
+  visit(content, 'image', (node) => {
     fns.push(async () => {
       node.url = await fn(node.url)
     })
   })
-  visit(mdast, 'zone', (node) => {
+  visit(content, 'zone', (node) => {
     if (node.data?.formatLogo) {
       fns.push(async () => {
         node.data.formatLogo = await fn(node.data.formatLogo)
