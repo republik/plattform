@@ -4,8 +4,6 @@ import { css } from 'glamor'
 import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 
-import { path } from 'ramda'
-
 import withAuthorization from '../../components/Auth/withAuthorization'
 
 import Loader from '../../components/Loader'
@@ -41,6 +39,10 @@ export const getRepoHistory = gql`
         }
         nodes {
           ...SimpleCommit
+          document {
+            id
+            type
+          }
           derivatives {
             ...SimpleDerivative
           }
@@ -51,9 +53,6 @@ export const getRepoHistory = gql`
         ...SimpleMilestone
         commit {
           ...SimpleCommit
-          document {
-            type
-          }
           derivatives {
             ...SimpleDerivative
           }
@@ -77,6 +76,7 @@ const treeRepoSubscription = gql`
       commit {
         ...SimpleCommit
         document {
+          id
           type
         }
         derivatives {

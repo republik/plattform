@@ -267,11 +267,12 @@ class Tree extends Component {
         {commits && (
           <ul {...styles.list}>
             {commits.map((commit) => {
-              console.log({ commit })
               const treeColors = this.getColor(commit.author.email)
               const hasLocalVersion =
                 localStorageCommitIds.indexOf(commit.id) !== -1
               const hightlight = hasLocalVersion || commit.milestones.length
+              const path =
+                commit.document.type === 'slate' ? 'flyer/edit' : 'repo/edit'
               return (
                 <li
                   key={commit.id}
@@ -296,7 +297,7 @@ class Tree extends Component {
                     <div>
                       <Interaction.P>
                         <Link
-                          route='repo/edit'
+                          route={path}
                           params={{
                             repoId: repoId.split('/'),
                             commitId: commit.id,
