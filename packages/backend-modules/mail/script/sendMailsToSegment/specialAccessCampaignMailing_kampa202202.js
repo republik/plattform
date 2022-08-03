@@ -1,10 +1,13 @@
 const yargs = require('yargs')
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 
-const sendMailsToSegment = require('./sendMailsToSegment')
+const sendMailsToSegment = require('../../lib/sendMailsToSegment')
 
 const argv = yargs
   .option('dry-run', {
+    default: true,
+  })
+  .option('once-for', {
     default: true,
   })
   .option('limit', { number: true })
@@ -14,6 +17,12 @@ const argv = yargs
 PgDb.connect().then(async (pgdb) => {
   if (argv.dryRun) {
     console.warn('In dry-run mode. Use --no-dry-run to send emails to segment.')
+  }
+
+  if (argv.onceFor) {
+    console.log(
+      'onceFor set, i.e. mail template will be send to email address only once. Use --no-once-for to switch this off',
+    )
   }
 
   const mail = {
@@ -59,13 +68,13 @@ PgDb.connect().then(async (pgdb) => {
   )
   const emailAddresses = [...emailAddressGrantIdMap.keys()]
 
-  await sendMailsToSegment(emailAddresses, mail, {
-    pgdb,
-    argv,
+  await sendMailsToSegment(emailAddresses, mail, pgdb, {
     accessEventData: {
       emailAddressGrantIdMap,
       event: 'email.recipient.dialog.kampa202202',
     },
+    dryRun: argv.dryRun,
+    onceFor: argv.onceFor,
   })
   await pgdb.close()
   console.log('Done!')
