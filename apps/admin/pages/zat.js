@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Query, compose } from 'react-apollo'
+import compose from 'lodash/flowRight'
+import { Query } from '@apollo/client/react/components'
 import { withRouter } from 'next/router'
-import gql from 'graphql-tag'
+import { gql } from '@apollo/client'
 import { Loader } from '@project-r/styleguide'
 
 import { enforceAuthorization } from '../components/Auth/withAuthorization'
@@ -12,6 +13,7 @@ import App from '../components/App'
 import { Body } from '../components/Layout'
 
 import ZafClient from '../lib/zat/client'
+import { withDefaultSSR } from '../lib/apollo'
 
 export const GET_ZAT_SEARCH = gql`
   query zatSearch($search: String!) {
@@ -131,4 +133,6 @@ const Zat = (props) => {
   )
 }
 
-export default compose(enforceAuthorization(['supporter']), withRouter)(Zat)
+export default withDefaultSSR(
+  compose(enforceAuthorization(['supporter']), withRouter)(Zat),
+)

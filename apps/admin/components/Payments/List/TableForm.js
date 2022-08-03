@@ -5,6 +5,7 @@ import StringArray from '../../Form/StringArray'
 import withDebouncedSearch from '../../Form/withDebouncedSearch'
 
 import CSVDownloader from './CsvDownloader'
+import { useApolloClient } from '@apollo/client'
 
 const searchHandler = (handler) => (event) => {
   handler(event.target.value)
@@ -22,49 +23,56 @@ export default withDebouncedSearch(
     onDateRange,
     stringArray,
     onStringArray,
-  }) => (
-    <div
-      style={{
-        borderBottom: `1px solid ${colors.divider}`,
-      }}
-    >
-      <div style={formSectionStyles}>
-        <Input
-          label='Search'
-          type='text'
-          value={search}
-          onChange={searchHandler(onSearch)}
-        />
-      </div>
-      <div style={formSectionStyles}>
-        <DateRange.Form
-          fields={['dueDate', 'createdAt']}
-          dateRange={dateRange}
-          onChange={onDateRange}
-        />
-      </div>
-      <div style={formSectionStyles}>
-        <StringArray.Form
-          fields={[
-            [
-              'status',
+  }) => {
+    const apolloClient = useApolloClient()
+
+    return (
+      <div
+        style={{
+          borderBottom: `1px solid ${colors.divider}`,
+        }}
+      >
+        <div style={formSectionStyles}>
+          <Input
+            label='Search'
+            type='text'
+            value={search}
+            onChange={searchHandler(onSearch)}
+          />
+        </div>
+        <div style={formSectionStyles}>
+          <DateRange.Form
+            fields={['dueDate', 'createdAt']}
+            dateRange={dateRange}
+            onChange={onDateRange}
+          />
+        </div>
+        <div style={formSectionStyles}>
+          <StringArray.Form
+            fields={[
               [
-                'WAITING',
-                'WAITING_FOR_REFUND',
-                'PAID',
-                'REFUNDED',
-                'CANCELLED',
+                'status',
+                [
+                  'WAITING',
+                  'WAITING_FOR_REFUND',
+                  'PAID',
+                  'REFUNDED',
+                  'CANCELLED',
+                ],
               ],
-            ],
-            ['method', ['STRIPE', 'POSTFINANCECARD', 'PAYPAL', 'PAYMENTSLIP']],
-          ]}
-          stringArray={stringArray}
-          onChange={onStringArray}
-        />
+              [
+                'method',
+                ['STRIPE', 'POSTFINANCECARD', 'PAYPAL', 'PAYMENTSLIP'],
+              ],
+            ]}
+            stringArray={stringArray}
+            onChange={onStringArray}
+          />
+        </div>
+        <div style={formSectionStyles}>
+          <CSVDownloader client={apolloClient} />
+        </div>
       </div>
-      <div style={formSectionStyles}>
-        <CSVDownloader />
-      </div>
-    </div>
-  ),
+    )
+  },
 )
