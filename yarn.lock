@@ -3114,13 +3114,6 @@
   resolved "https://registry.yarnpkg.com/@napi-rs/snappy-win32-x64-msvc/-/snappy-win32-x64-msvc-7.1.1.tgz#d30667e62057b8ec60a117722cc0662617330691"
   integrity sha512-Mu3yELySvzhBcNTVCq+hYxVh+lH3/KjoQ5HIEb3DDPoX0AGRTm3XZa+usq8pFWjl91Cgp9nWK+9lVSkCCIRaKA==
 
-"@next/bundle-analyzer@^12.1.6":
-  version "12.1.6"
-  resolved "https://registry.yarnpkg.com/@next/bundle-analyzer/-/bundle-analyzer-12.1.6.tgz#5f4efcdb8c91d70c8be6013b0aacdb4d89ba1312"
-  integrity sha512-WLydwytAeHoC/neXsiIgK+a6Me12PuSpwopnsZgX5JFNwXQ9MlwPeMGS3aTZkYsv8QmSm0Ns9Yh9FkgLKYaUuQ==
-  dependencies:
-    webpack-bundle-analyzer "4.3.0"
-
 "@next/bundle-analyzer@^12.2.3":
   version "12.2.3"
   resolved "https://registry.yarnpkg.com/@next/bundle-analyzer/-/bundle-analyzer-12.2.3.tgz#8b4b934d28c09b9c11c4a074fbcc444402c8e017"
@@ -3138,17 +3131,10 @@
   resolved "https://registry.yarnpkg.com/@next/env/-/env-9.5.5.tgz#db993649ec6e619e34a36de90dc2baa52fc5280f"
   integrity sha512-N9wdjU6XoqLqNQWtrGiWtp1SUuJsYK1cNrZ24A6YD+4w5CNV5SkZX6aewKZCCLP5Y8UNfTij2FkJiSYUfBjX8g==
 
-"@next/eslint-plugin-next@^12.1.6":
+"@next/eslint-plugin-next@^12.2.3":
   version "12.2.3"
   resolved "https://registry.yarnpkg.com/@next/eslint-plugin-next/-/eslint-plugin-next-12.2.3.tgz#63726691aac6a7f01b64190a0323d590a0e8154d"
   integrity sha512-B2e8Yg1MpuLsGxhCx4rU8/Tcnr5wFmCx1O2eyLXBPnaCcsFXfGCo067ujagtDLtWASL3GNgzg78U1SB0dbc38A==
-  dependencies:
-    glob "7.1.7"
-
-"@next/eslint-plugin-next@^12.2.3-canary.8":
-  version "12.2.3-canary.8"
-  resolved "https://registry.yarnpkg.com/@next/eslint-plugin-next/-/eslint-plugin-next-12.2.3-canary.8.tgz#7d820f6bef6b7ffd6df8bc32fbefe300bace8d02"
-  integrity sha512-LUdvrv7Xoj4cjyGfsqEvXeQWft0Li4Ek5jt4dL0tDwtqoKUG099jK2tdhJPkfPq5jkWtnmkj7uNBe2DNjLhI8w==
   dependencies:
     glob "7.1.7"
 
@@ -17713,7 +17699,7 @@ next-transpile-modules@^9.0.0:
     enhanced-resolve "^5.7.0"
     escalade "^3.1.1"
 
-next@^12.1.6, next@^12.2.3:
+next@^12.2.3:
   version "12.2.3"
   resolved "https://registry.yarnpkg.com/next/-/next-12.2.3.tgz#c29d235ce480e589894dfab3120dade25d015a22"
   integrity sha512-TA0tmSA6Dk6S6kfvCNbF7CWYW8468gZUxr/3/30z4KvAQbXnl2ASYZElVe7q/hBW/1F1ee0tSBlHa4/sn+ZIBw==
