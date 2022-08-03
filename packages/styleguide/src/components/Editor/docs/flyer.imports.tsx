@@ -78,7 +78,11 @@ export const exampleTree: CustomDescendant[] = [
         children: [
           {
             type: 'figureImage',
-            src: '/static/flyer-pic.jpg',
+            images: {
+              default: {
+                url: '/static/flyer-pic.jpg',
+              },
+            },
             children: [{ text: '' }],
           },
         ],

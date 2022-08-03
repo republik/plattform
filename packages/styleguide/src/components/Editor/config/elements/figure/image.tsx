@@ -3,6 +3,7 @@ import {
   ElementConfigI,
   ElementFormProps,
   FigureImageElement,
+  FigureImages,
 } from '../../../custom-types'
 import ImageInput from './ImageInput'
 import { FigureImage as InnerFigureImage } from '../../../../Figure'
@@ -20,26 +21,24 @@ const styles = {
 }
 
 export const FigureImage: React.FC<{
-  src?: string
-  srcDark?: string
+  images?: FigureImages
   alt?: string
   attributes: any
   [x: string]: unknown
-}> = ({
-  children,
-  src = PLACEHOLDER,
-  srcDark = PLACEHOLDER,
-  alt,
-  attributes,
-  ...props
-}) => (
-  <div {...attributes} {...props}>
-    <div contentEditable={false}>
-      <InnerFigureImage src={src} dark={{ src: srcDark }} alt={alt} />
+}> = ({ children, images, alt, attributes, ...props }) => {
+  return (
+    <div {...attributes} {...props}>
+      <div contentEditable={false}>
+        <InnerFigureImage
+          src={images?.default?.url || PLACEHOLDER}
+          dark={{ src: images?.dark?.url }}
+          alt={alt}
+        />
+      </div>
+      {children}
     </div>
-    {children}
-  </div>
-)
+  )
+}
 
 const Form: React.FC<ElementFormProps<FigureImageElement>> = ({
   element,
@@ -49,18 +48,18 @@ const Form: React.FC<ElementFormProps<FigureImageElement>> = ({
     <div>
       <Label>Light mode</Label>
       <ImageInput
-        src={element.src}
-        onChange={(src) => {
-          onChange({ src })
+        src={element.images?.default?.url}
+        onChange={(url) => {
+          onChange({ images: { ...element.images, default: { url } } })
         }}
       />
     </div>
     <div>
       <Label>Dark mode (optional)</Label>
       <ImageInput
-        src={element.srcDark}
-        onChange={(srcDark) => {
-          onChange({ srcDark })
+        src={element.images?.dark?.url}
+        onChange={(url) => {
+          onChange({ images: { ...element.images, dark: { url } } })
         }}
       />
     </div>
@@ -74,5 +73,5 @@ export const config: ElementConfigI = {
     highlightSelected: true,
   },
   component: 'figureImage',
-  props: ['src', 'srcDark', 'alt'],
+  props: ['images', 'alt'],
 }

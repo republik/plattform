@@ -48,10 +48,18 @@ export type FigureElement = SharedElement & {
   size?: string
 }
 
+export type Image = {
+  url: string
+}
+
+export type FigureImages = {
+  default?: Image
+  dark?: Image
+}
+
 export type FigureImageElement = SharedElement & {
   type: 'figureImage'
-  src?: string
-  srcDark?: string
+  images?: FigureImages
   alt?: string
 }
 
