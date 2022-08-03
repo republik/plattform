@@ -342,7 +342,7 @@ const Page = ({
   defaultBenefactor,
   communitySeed,
   crowdfunding,
-  router: { query },
+  router: { query, pathname },
 }) => {
   const meta = {
     pageTitle: '🚀 Republik Cockpit',
@@ -358,7 +358,7 @@ const Page = ({
         `/cockpit?token=${encodeURIComponent(query.token)}`,
         '/cockpit',
         {
-          shallow: true,
+          shallow: pathname === '/cockpit',
         },
       )
     }

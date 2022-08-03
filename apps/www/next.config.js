@@ -10,7 +10,6 @@ const { NODE_ENV, CDN_FRONTEND_BASE_URL } = process.env
 
 module.exports = withTM(
   withBundleAnalyzer({
-    webpack5: true,
     webpack: (config) => {
       config.externals = config.externals || {}
       config.externals['lru-cache'] = 'lru-cache'
@@ -22,7 +21,7 @@ module.exports = withTM(
     assetPrefix:
       NODE_ENV === 'production' && CDN_FRONTEND_BASE_URL
         ? CDN_FRONTEND_BASE_URL
-        : '',
+        : undefined,
     useFileSystemPublicRoutes: true,
     // , onDemandEntries: {
     //   // wait 5 minutes before disposing entries
@@ -34,11 +33,6 @@ module.exports = withTM(
     async rewrites() {
       return {
         beforeFiles: [
-          // /front is only accessible via _middleware rewrite
-          {
-            source: '/front',
-            destination: '/404',
-          },
           // _ssr routes are only accessible via rewrites
           {
             source: '/_ssr/:path*',
