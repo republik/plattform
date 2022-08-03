@@ -1,18 +1,10 @@
 import { withRouter } from 'next/router'
 import { compose } from 'react-apollo'
-import {
-  Editor,
-  flyerSchema,
-  flyerEditorSchema,
-  useDebounce,
-} from '@project-r/styleguide'
+import { Editor, flyerSchema, flyerEditorSchema } from '@project-r/styleguide'
 import withAuthorization from '../../components/Auth/withAuthorization'
-import { useEffect, useMemo, useState } from 'react'
 import { HEADER_HEIGHT } from '../Frame/constants'
-import { Phase } from '../Repo/Phases'
-import { CONTENT_KEY } from '../Edit'
 
-const INITIAL_VALUE = [
+export const INITIAL_VALUE = [
   {
     type: 'flyerTileOpening',
     children: [
@@ -63,56 +55,12 @@ const TOOLBAR = {
   showChartCount: true,
 }
 
-const PhaseSummary = () => (
-  <div>
-    <Phase phase={{ label: 'Peer', color: 'gold' }} />
-  </div>
-)
-
-const toString = (array) => JSON.stringify({ children: array })
-
-const Index = ({ store, reference }) => {
-  const [value, setValue] = useState(
-    reference || store.get(CONTENT_KEY) || INITIAL_VALUE,
-  )
-  const [debouncedValue] = useDebounce(value, 500)
-  const referenceString = useMemo(() => toString(reference), [reference])
-
-  useEffect(() => {
-    if (reference) {
-      setValue(reference)
-    }
-  }, [reference])
-
-  useEffect(() => {
-    const compString = toString(debouncedValue)
-    if (compString !== referenceString) {
-      store.set(CONTENT_KEY, debouncedValue)
-    } else {
-      store.clear()
-    }
-  }, [debouncedValue])
-
-  // helping hand to debug
-  console.log('ContentEditor, before render', {
-    reference: reference?.[0]?.children?.[0]?.children
-      ?.map((c) => c.text)
-      .join(''),
-    value: value?.[0]?.children?.[0]?.children?.map((c) => c.text).join(''),
-    store: store
-      .get(CONTENT_KEY)?.[0]
-      ?.children[0]?.children?.map((c) => c.text)
-      .join(''),
-    debouncedValue: debouncedValue[0]?.children[0]?.children
-      ?.map((c) => c.text)
-      .join(''),
-  })
-
+const Index = ({ value, onChange, renderInToolbar }) => {
   return (
     <Editor
       value={value}
       setValue={(newValue) => {
-        setValue(newValue)
+        onChange(newValue)
       }}
       structure={STRUCTURE}
       config={{
@@ -120,7 +68,7 @@ const Index = ({ store, reference }) => {
         editorSchema: flyerEditorSchema,
         toolbar: {
           ...TOOLBAR,
-          alsoRender: <PhaseSummary />,
+          alsoRender: renderInToolbar,
         },
       }}
     />
