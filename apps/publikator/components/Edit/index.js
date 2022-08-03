@@ -468,7 +468,7 @@ const EditLoader = ({
               }
             }
 
-            // TODO: warning that there is a newer version
+            // TODO: warning that there is a newer version (as BaseCommit does)
             //  ...replace BranchingNotice with VersionNotice?
             const stuffToAddSomewhere = [
               ...warnings
