@@ -70,6 +70,7 @@ const styles = {
   }),
   contentText: css({
     ...fontStyles.sansSerifRegular16,
+    lineHeight: '21px',
     margin: '0px 0px 8px 0px',
   }),
   contentLink: css({
@@ -221,7 +222,7 @@ const ExpandableLinkCallout = ({
         {...css({
           animation: `0.3s ${slideUp} forwards`,
           bottom: -calloutHeight,
-          paddingBottom: inNativeApp ? '50px' : '24px',
+          paddingBottom: inNativeApp ? '50px' : '15px',
           [mUp]: {
             animation: 'none',
             bottom: 'auto',
