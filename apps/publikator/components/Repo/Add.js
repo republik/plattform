@@ -1,5 +1,4 @@
 import { Component, useState, useMemo } from 'react'
-import { Router } from '../../lib/routes'
 import { slug as slugify } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
@@ -221,16 +220,20 @@ class RepoAdd extends Component {
   goToEdit({ slug }) {
     const { title, schema, templateRepoId } = this.state
     const { isTemplate } = this.props
-    Router.replaceRoute('repo/edit', {
-      repoId: [GITHUB_ORG, slug],
-      commitId: 'new',
-      title,
-      schema,
-      templateRepoId,
-      isTemplate,
-    }).then(() => {
-      window.scrollTo(0, 0)
-    })
+    this.props.router
+      .replace({
+        pathname: `/repo/${GITHUB_ORG}/${slug}/edit`,
+        query: {
+          commitId: 'new',
+          title,
+          schema,
+          templateRepoId,
+          isTemplate,
+        },
+      })
+      .then(() => {
+        window.scrollTo(0, 0)
+      })
   }
 
   onSubmit(event) {

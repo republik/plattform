@@ -2,7 +2,7 @@ import { Fragment } from 'react'
 
 import { A, Label } from '@project-r/styleguide'
 
-import { Link } from '../../../lib/routes'
+import Link from 'next/link'
 import { GITHUB_ORG } from '../../../lib/settings'
 
 // setter for testing
@@ -47,13 +47,7 @@ export const RepoLink = ({
   }
   return (
     <Wrapper>
-      <Link
-        passHref
-        route='repo/tree'
-        params={{
-          repoId: info.id.split('/'),
-        }}
-      >
+      <Link href={`/repo/${info.id}/tree`} passHref>
         <A>
           {info.name}
           {info.hash ? `#${info.hash}` : ''}

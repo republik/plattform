@@ -244,8 +244,10 @@ const RepoList = ({
             {orderFields.map(({ field, width }) => (
               <ThOrder
                 key={field}
-                route='index'
-                params={{ ...query, orderBy: getOrder(field) }}
+                href={{
+                  pathname: '/',
+                  query: { ...query, orderBy: getOrder(field) },
+                }}
                 activeDirection={orderDirection}
                 activeField={orderField}
                 field={field}

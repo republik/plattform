@@ -16,7 +16,6 @@ import {
   fontFamilies,
   Checkbox,
 } from '@project-r/styleguide'
-import { Router } from '../../../../lib/routes'
 import { MdLens as CircleIcon, MdInfoOutline as InfoIcon } from 'react-icons/md'
 import { Controlled as CodeMirror } from 'react-codemirror2'
 import {
@@ -24,10 +23,7 @@ import {
   withUncommitedChanges,
 } from '../../../../components/VersionControl/UncommittedChanges'
 import BranchingNotice from '../../../../components/VersionControl/BranchingNotice'
-import {
-  getQueryFromRepoId,
-  getRepoIdFromQuery,
-} from '../../../../lib/repoIdHelper'
+import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 import { withDefaultSSR } from '../../../../lib/apollo/helpers'
 
 const styles = css({
@@ -100,13 +96,15 @@ export default withDefaultSSR(
 
     const goToEditor = (e) => {
       if (e) e.preventDefault()
-      Router.pushRoute('repo/edit', {
-        ...router.query,
-        ...getQueryFromRepoId(repoId),
-        commitId,
-        ...(commitId === 'new'
-          ? { schema: schema || template, isTemplate }
-          : {}),
+      router.push({
+        pathname: `/repo/repoId/edit`,
+        query: {
+          ...router.query,
+          commitId,
+          ...(commitId === 'new'
+            ? { schema: schema || template, isTemplate }
+            : {}),
+        },
       })
     }
 
@@ -160,7 +158,7 @@ export default withDefaultSSR(
           <Frame.Header.Section align='left'>
             <Frame.Nav>
               <RepoNav
-                route='repo/edit'
+                route={`/repo/${repoId}/edit`}
                 prefix={isTemplate === 'true' ? 'template' : 'document'}
               />
             </Frame.Nav>

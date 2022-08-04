@@ -1,5 +1,5 @@
 import { css } from 'glamor'
-import { Link } from '../../lib/routes'
+import Link from 'next/link'
 import {
   fontStyles,
   useColorContext,
@@ -121,14 +121,17 @@ const PlaceholderLink = ({ repo, placeholderDate, children }) => {
 
   return (
     <Link
-      route='repo/edit'
-      params={{
-        repoId: [GITHUB_ORG, `${getTemplateRepoPrefix(id)}-${urlDate}`],
-        commitId: 'new',
-        title,
-        schema: template,
-        templateRepoId: id,
-        publishDate: placeholderDate,
+      href={{
+        pathname: `/repo/${GITHUB_ORG}/${getTemplateRepoPrefix(
+          id,
+        )}-${urlDate}}/edit`,
+        query: {
+          commitId: 'new',
+          title,
+          schema: template,
+          templateRepoId: id,
+          publishDate: placeholderDate,
+        },
       }}
       passHref
     >
@@ -144,7 +147,7 @@ const RepoLink = ({ repo, placeholderDate, children }) => {
       <a {...styles.link}>{children}</a>
     </PlaceholderLink>
   ) : (
-    <Link route='repo/tree' params={{ repoId: id.split('/') }} passHref>
+    <Link href={`/repo/${id}/tree`} passHref>
       <a title={getTitle(repo)} {...styles.link}>
         {children}
       </a>

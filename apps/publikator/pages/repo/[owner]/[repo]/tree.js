@@ -190,7 +190,7 @@ class EditorPage extends Component {
           <Frame.Header.Section align='left'>
             <Frame.Nav>
               <RepoNav
-                route='repo/tree'
+                route={`/repo/${repoId}/tree`}
                 prefix={repo?.isTemplate ? 'template' : 'document'}
               />
             </Frame.Nav>

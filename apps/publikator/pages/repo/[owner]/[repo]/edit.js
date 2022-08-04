@@ -37,7 +37,6 @@ import Loader from '../../../../components/Loader'
 import CharCount from '../../../../components/CharCount'
 import withT from '../../../../lib/withT'
 import withMe from '../../../../lib/withMe'
-import { Router } from '../../../../lib/routes'
 
 import { errorToString } from '../../../../lib/utils/errors'
 import initLocalStore from '../../../../lib/utils/localStorage'
@@ -479,18 +478,18 @@ export class EditorPage extends Component {
 
     if (!commitId && repo && repo.latestCommit) {
       debug('loadState', 'redirect', repo.latestCommit)
-      Router.replaceRoute('repo/edit', {
-        repoId: repoId.split('/'),
-        commitId: repo.latestCommit.id,
+      router.replace({
+        pathname: `/repo/${repoId}/edit`,
+        query: {
+          commitId: repo.latestCommit.id,
+        },
       })
       return
     }
 
     if (commitId && repo && !repo.commit) {
       this.setState(addWarning(t('commit/warn/commit404')))
-      Router.replaceRoute('repo/edit', {
-        repoId: repoId.split('/'),
-      })
+      router.replace(`/repo/${repoId}/edit`)
       return
     }
 
@@ -712,12 +711,14 @@ export class EditorPage extends Component {
     this.setState({
       committing: false,
     })
-    Router.replaceRoute('repo/edit', {
-      repoId: repoId.split('/'),
-      commitId: data.commit.id,
-      isTemplate: null,
-      templateRepoId: null,
-      publishDate: null,
+    this.props.router.replace({
+      pathname: `/repo/${repoId}/edit`,
+      query: {
+        commitId: data.commit.id,
+        isTemplate: null,
+        templateRepoId: null,
+        publishDate: null,
+      },
     })
   }
 
@@ -787,16 +788,18 @@ export class EditorPage extends Component {
     const serializedState = this.editor.serializer.serialize(editorState)
     this.beginChanges()
     this.store.set('editorState', serializedState)
-    Router.pushRoute('repo/raw', {
-      ...this.props.router.query,
-      repoId: repoId.split('/'),
-      commitId,
-      isTemplate: isTemplate,
-      ...(commitId === 'new'
-        ? {
-            schema: schema || template,
-          }
-        : {}),
+    this.props.router.push({
+      pathname: `/repo/${repoId}/raw`,
+      query: {
+        ...this.props.router.query,
+        commitId,
+        isTemplate: isTemplate,
+        ...(commitId === 'new'
+          ? {
+              schema: schema || template,
+            }
+          : {}),
+      },
     })
   }
 
@@ -872,7 +875,7 @@ export class EditorPage extends Component {
           <Frame.Header.Section align='left'>
             <Frame.Nav>
               <RepoNav
-                route='repo/edit'
+                route={`/repo/${repoId}/edit`}
                 isNew={isNew}
                 prefix={isTemplate ? 'template' : 'document'}
               />

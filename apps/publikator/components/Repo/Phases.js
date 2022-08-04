@@ -1,5 +1,5 @@
 import { css, merge } from 'glamor'
-import { Link } from '../../lib/routes'
+import Link from 'next/link'
 import { withRouter } from 'next/router'
 import { A, fontStyles } from '@project-r/styleguide'
 
@@ -47,10 +47,12 @@ const PhaseFilter = withRouter(
         return (
           <Link
             key={p.key}
-            route='index'
+            href={{
+              pathname: '/',
+              query: { ...query, phase: isActive ? null : p.key },
+            }}
             replace
             scroll={false}
-            params={{ ...query, phase: isActive ? null : p.key }}
             passHref
           >
             <A>

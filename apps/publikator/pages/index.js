@@ -4,7 +4,7 @@ import { css } from 'glamor'
 
 import { A } from '@project-r/styleguide'
 
-import { Link } from '../lib/routes'
+import Link from 'next/link'
 import withT from '../lib/withT'
 
 import withAuthorization from '../components/Auth/withAuthorization'
@@ -20,11 +20,11 @@ const styles = {
   }),
 }
 
-const IndexNavLink = ({ isActive, route, params, label }) =>
+const IndexNavLink = ({ isActive, href, label }) =>
   isActive ? (
     <span>{label} </span>
   ) : (
-    <Link route={route} params={params} passHref>
+    <Link href={href} passHref>
       <A>{label} </A>
     </Link>
   )
@@ -38,8 +38,10 @@ const IndexNav = compose(
   return (
     <span>
       <IndexNavLink
-        route='index'
-        params={{ ...query, view: null }}
+        href={{
+          pathname: '/',
+          query: { ...query, view: null },
+        }}
         label={t('repo/table/nav/documents')}
         isActive={!query.view}
       />
@@ -47,8 +49,10 @@ const IndexNav = compose(
         <span key={view}>
           <span>&nbsp;</span>
           <IndexNavLink
-            route='index'
-            params={{ ...query, view }}
+            href={{
+              pathname: '/',
+              query: { ...query, view },
+            }}
             label={t(`repo/table/nav/${view}`)}
             isActive={query.view === view}
           />

@@ -19,7 +19,7 @@ const Page = ({ router, t }) => {
       <Frame.Header>
         <Frame.Header.Section align='left'>
           <Frame.Nav>
-            <RepoNav route='repo/publish' prefix='document' />
+            <RepoNav route={`/repo/${repoId}/publish`} prefix='document' />
           </Frame.Nav>
         </Frame.Header.Section>
         <Frame.Header.Section align='right'>

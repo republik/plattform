@@ -12,7 +12,7 @@ import {
 } from '../../pages/repo/[owner]/[repo]/tree'
 
 import { GITHUB_ORG, FRONTEND_BASE_URL } from '../../lib/settings'
-import { Link, Router } from '../../lib/routes'
+import Link from 'next/link'
 import { swissTime } from '../../lib/utils/format'
 
 import {
@@ -31,6 +31,7 @@ import {
 import MaskedInput from 'react-maskedinput'
 import { getSchema } from '../Templates'
 import useValidation from './useValidation'
+import { useRouter } from 'next/router'
 
 const publishMutation = gql`
   mutation publish(
@@ -90,6 +91,7 @@ const Form = ({
   },
   publish,
 }) => {
+  const router = useRouter()
   const hasBeenPublished = !!repo.latestPublications.find(
     (pub) => !pub.prepublication && pub.live,
   )
@@ -146,13 +148,7 @@ const Form = ({
       </Label>
       <Interaction.P>
         <Label>
-          <Link
-            route='repo/tree'
-            params={{
-              repoId: repo.id.split('/'),
-            }}
-            passHref
-          >
+          <Link href={`/repo/${repo.id}/tree`} passHref>
             <A>{t('publish/commit/change')}</A>
           </Link>
         </Label>
@@ -386,13 +382,7 @@ const Form = ({
               <ul>
                 {state.unresolvedRepoIds.map((repoId) => (
                   <li key={repoId}>
-                    <Link
-                      route='repo/tree'
-                      params={{
-                        repoId: repoId.split('/'),
-                      }}
-                      passHref
-                    >
+                    <Link href={`/repo/${repoId}/tree`} passHref>
                       <A>{repoId.replace(`${GITHUB_ORG}/`, '')}</A>
                     </Link>
                   </li>
@@ -438,9 +428,7 @@ const Form = ({
               })
                 .then(({ data }) => {
                   if (data.publish.publication) {
-                    Router.pushRoute('repo/tree', {
-                      repoId: repo.id.split('/'),
-                    })
+                    router.push(`/repo/${repo.id}/tree`)
                   } else {
                     setState({
                       publishing: false,

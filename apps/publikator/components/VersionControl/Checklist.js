@@ -7,7 +7,7 @@ import { swissTime } from '../../lib/utils/format'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
-import { Link } from '../../lib/routes'
+import Link from 'next/link'
 import Loader from '../Loader'
 import withT from '../../lib/withT'
 import * as fragments from '../../lib/graphql/fragments'
@@ -153,12 +153,11 @@ class Checklist extends Component {
                   {!!commit && (
                     <span {...styles.commit}>
                       <Link
-                        passHref
-                        route='repo/edit'
-                        params={{
-                          repoId: repoId.split('/'),
-                          commitId: commit.id,
+                        href={{
+                          pathname: `/repo/${repoId}/edit`,
+                          query: { commitId: commit.id },
                         }}
+                        passHref
                       >
                         <A>{commit.message}</A>
                       </Link>

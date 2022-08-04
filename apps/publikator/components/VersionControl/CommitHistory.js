@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { Link } from '../../lib/routes'
+import Link from 'next/link'
 import { colors, A, Interaction } from '@project-r/styleguide'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
@@ -36,7 +36,6 @@ class CommitHistory extends Component {
     const { repoId, commitId, commits, maxItems, t } = this.props
 
     const numItems = maxItems || 3
-    const repoPath = repoId.split('/')
     if (commits.length) {
       return (
         <div {...styles.container}>
@@ -45,12 +44,11 @@ class CommitHistory extends Component {
               <li key={commit.id} {...styles.commit}>
                 {commit.id !== commitId ? (
                   <Link
-                    passHref
-                    route='repo/edit'
-                    params={{
-                      repoId: repoPath,
-                      commitId: commit.id,
+                    href={{
+                      pathname: `/repo/${repoId}/edit`,
+                      query: { commitId: commit.id },
                     }}
+                    passHref
                   >
                     <A>{commit.message}</A>
                   </Link>
@@ -64,7 +62,7 @@ class CommitHistory extends Component {
               </li>
             ))}
           </ul>
-          <Link route='repo/tree' params={{ repoId: repoPath }}>
+          <Link href={`/repo/${repoId}/tree`}>
             <A>{t('commitHistory/more')}</A>
           </Link>
         </div>
