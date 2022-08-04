@@ -23,7 +23,6 @@ import { plainButtonRule } from '../Button'
 const styles = {
   container: css({
     width: '100%',
-    paddingTop: LINE_HEIGHT,
     position: 'relative',
     display: 'inline-block',
     ...fontStyles.sansSerifRegular,
@@ -143,6 +142,7 @@ const Field = React.forwardRef<
     autoComplete?: boolean
     autoFocus?: string
     type?: string
+    placeholder?: string
     label?: string
     disabled?: boolean
     required?: boolean
@@ -173,6 +173,7 @@ const Field = React.forwardRef<
       required,
       value,
       renderInput,
+      placeholder,
     },
     forwardRef,
   ) => {
@@ -226,7 +227,10 @@ const Field = React.forwardRef<
     )
 
     return (
-      <label {...styles.container}>
+      <label
+        {...styles.container}
+        style={{ paddingTop: label ? LINE_HEIGHT : 0 }}
+      >
         {renderInput({
           ['aria-required']: required ? true : undefined,
           disabled,
@@ -234,6 +238,7 @@ const Field = React.forwardRef<
           autoComplete,
           autoFocus,
           type,
+          placeholder,
           ref: inputRef,
           onChange: (event) => {
             const v = event.target.value

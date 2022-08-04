@@ -10,15 +10,10 @@ import withT from '../lib/withT'
 import withAuthorization from '../components/Auth/withAuthorization'
 import Calendar from '../components/Calendar'
 import Frame from '../components/Frame'
+import MetaDataForm from '../components/MetaDataForm'
 import RepoTable from '../components/Repo/Table'
 import RepoAdd from '../components/Repo/Add'
 import { useState } from 'react'
-
-const styles = {
-  defaultContainer: css({
-    padding: 20,
-  }),
-}
 
 const IndexNavLink = ({ isActive, route, params, label }) =>
   isActive ? (
@@ -95,6 +90,10 @@ const Index = ({
       ],
     },
   ])
+  const [metaData, setMetaData] = useState({
+    slug: '',
+    title: '',
+  })
   const structure = [
     {
       type: 'flyerTileOpening',
@@ -128,6 +127,7 @@ const Index = ({
           structure={structure}
           config={{ schema: flyerSchema }}
         />
+        <MetaDataForm metaData={metaData} setMetaData={setMetaData} />
       </Frame.Body>
     </Frame>
   )
