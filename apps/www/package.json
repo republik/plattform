@@ -29,14 +29,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/orbiting/republik-frontend.git"
+    "url": "git+https://github.com/republik/plattform.git"
   },
   "author": "",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/orbiting/republik-frontend/issues"
+    "url": "https://github.com/republik/plattform/issues"
   },
-  "homepage": "https://github.com/orbiting/republik-frontend#readme",
+  "homepage": "https://github.com/republik/plattform#readme",
   "devDependencies": {
     "@next/eslint-plugin-next": "^12.2.3",
     "@republik/eslint-config-frontend": "*",

@@ -4,7 +4,7 @@
   "description": "all postgresql migration for orbiting",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/orbiting/backends.git"
+    "url": "git+https://github.com/republik/plattform.git"
   },
   "author": "Patrick Recher <patrick.recher@republik.ch>",
   "license": "AGPL-3.0",
@@ -12,9 +12,9 @@
     "access": "public"
   },
   "bugs": {
-    "url": "https://github.com/orbiting/backends/issues"
+    "url": "https://github.com/republik/plattform/issues"
   },
-  "homepage": "https://github.com/orbiting/backends#readme",
+  "homepage": "https://github.com/republik/plattform#readme",
   "scripts": {
     "link": "yarn link",
     "migrate:db:create": "script/db/create.js",
