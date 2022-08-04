@@ -10,6 +10,7 @@ import {
 } from '../Typography/styles'
 import { mUp } from '../../theme/mediaQueries'
 import { useColorContext } from '../Colors/useColorContext'
+import { AccessibilityStyles } from '../../lib/accessibility/styles'
 
 const styles = {
   container: css({
@@ -31,7 +32,7 @@ const styles = {
   }),
 }
 
-const FormatTag = ({ label, count, color }) => {
+const FormatTag = ({ label, count, color, selected, srSelectedText, t }) => {
   const [colorScheme] = useColorContext()
   return (
     <div {...styles.container} {...colorScheme.set('color', color, 'format')}>
@@ -39,7 +40,15 @@ const FormatTag = ({ label, count, color }) => {
       {count !== undefined && (
         <span {...styles.count} {...colorScheme.set('color', 'textSoft')}>
           {count}
+          {t && (
+            <span {...AccessibilityStyles.srOnly}>
+              {t('styleguide/Tag/count')}
+            </span>
+          )}
         </span>
+      )}
+      {selected && srSelectedText && (
+        <span {...AccessibilityStyles.srOnly}>{srSelectedText}</span>
       )}
     </div>
   )
@@ -49,6 +58,8 @@ FormatTag.propTypes = {
   label: PropTypes.string.isRequired,
   count: PropTypes.number,
   color: PropTypes.string,
+  selected: PropTypes.bool,
+  srSelectedText: PropTypes.string,
 }
 
 export default FormatTag

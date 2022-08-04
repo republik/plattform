@@ -5,6 +5,7 @@ import { plainLinkRule } from '../Typography'
 import { useColorContext } from '../Colors/ColorContext'
 import { sansSerifMedium16, sansSerifRegular16 } from '../Typography/styles'
 import { mUp } from '../../theme/mediaQueries'
+import { AccessibilityStyles } from '../../lib/accessibility/styles'
 
 export type TabItemType = {
   text: string
@@ -13,6 +14,9 @@ export type TabItemType = {
   onClick?: () => void
   href?: string
   border?: boolean
+  // Text to be shown behind the text of the selected tab
+  // to indicate selected state to screen-readers
+  srSelectedText?: string
 }
 
 const styles = {
@@ -61,41 +65,59 @@ const TabButton = React.forwardRef<
     text?: string
     href?: string
     onClick?: MouseEventHandler<HTMLAnchorElement & HTMLButtonElement>
+    // Text to be shown behind the text of the selected tab
+    // to indicate selected state to screen-readers
+    srSelectedText?: string
   }
->(({ border = true, isActive, text, href, onClick }: TabItemType, ref) => {
-  const [colorScheme] = useColorContext()
+>(
+  (
+    {
+      border = true,
+      isActive,
+      text,
+      srSelectedText,
+      href,
+      onClick,
+    }: TabItemType,
+    ref,
+  ) => {
+    const [colorScheme] = useColorContext()
 
-  const hoverRule = useMemo(() => {
-    return css({
-      '@media (hover)': {
-        ':hover': {
-          color: colorScheme.getCSSColor('textSoft'),
+    const hoverRule = useMemo(() => {
+      return css({
+        '@media (hover)': {
+          ':hover': {
+            color: colorScheme.getCSSColor('textSoft'),
+          },
         },
-      },
-    })
-  }, [colorScheme])
+      })
+    }, [colorScheme])
 
-  const Element = href ? 'a' : 'button'
+    const Element = href ? 'a' : 'button'
 
-  return (
-    <Element
-      ref={ref}
-      href={href}
-      onClick={onClick}
-      {...css(styles.default, isActive && styles.active, href && styles.link)}
-      {...plainButtonRule}
-      {...(!isActive && hoverRule)}
-      {...colorScheme.set(
-        'borderColor',
-        !border ? 'transparent' : isActive ? 'text' : 'divider',
-      )}
-      title={text}
-      role='tab'
-      aria-selected={isActive}
-    >
-      {text}
-    </Element>
-  )
-})
+    return (
+      <Element
+        ref={ref}
+        href={href}
+        onClick={onClick}
+        {...css(styles.default, isActive && styles.active, href && styles.link)}
+        {...plainButtonRule}
+        {...(!isActive && hoverRule)}
+        {...colorScheme.set(
+          'borderColor',
+          !border ? 'transparent' : isActive ? 'text' : 'divider',
+        )}
+        title={text}
+        role='tab'
+        aria-selected={isActive}
+      >
+        {text}
+        {isActive && srSelectedText && (
+          <span {...AccessibilityStyles.srOnly}>{srSelectedText}</span>
+        )}
+      </Element>
+    )
+  },
+)
 
 export default TabButton
