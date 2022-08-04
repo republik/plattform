@@ -1,17 +1,16 @@
 import { css } from 'glamor'
-import compose from 'lodash/flowRight'
 
-import { colors, Interaction, A } from '@project-r/styleguide'
+import { Interaction, A, useColorContext } from '@project-r/styleguide'
 
-import withT from '../../lib/withT'
 import Results from './Results'
+import { useTranslation } from '../../lib/withT'
+import PlainButton from './Submissions/PlainButton'
 
-const { Headline, P } = Interaction
+const { P } = Interaction
 
 const styles = {
   closed: css({
     marginTop: 35,
-    background: colors.primaryBg,
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
@@ -21,30 +20,53 @@ const styles = {
   }),
 }
 
-export default compose(withT)(({ t, slug, submitted, showResults }) => {
+const QuestionnaireClosed = ({
+  submitted,
+  onResubmit,
+  onRevoke,
+  publicSubmission,
+}) => {
+  const { t } = useTranslation()
+  const [colorScheme] = useColorContext()
+
   return (
     <>
-      <Headline>{t('questionnaire/title')}</Headline>
-      <div {...styles.closed}>
+      <div {...styles.closed} {...colorScheme.set('backgroundColor', 'alert')}>
         <P>
           {submitted
-            ? t.elements('questionnaire/thankyou', {
-                metaLink: (
-                  <A href='/meta'>{t('questionnaire/thankyou/metaText')}</A>
-                ),
-              })
+            ? t(`questionnaire/thankyou${publicSubmission ? '/public' : ''}`)
             : t('questionnaire/ended')}
         </P>
+        {submitted && (onResubmit || onRevoke) && (
+          <>
+            <P>
+              {onResubmit && (
+                <PlainButton
+                  onClick={(e) => {
+                    e.preventDefault()
+                    onResubmit()
+                  }}
+                >
+                  {t('questionnaire/thankyou/resubmit')}
+                </PlainButton>
+              )}
+              {onResubmit && onRevoke && ' · '}
+              {onRevoke && (
+                <PlainButton
+                  onClick={(e) => {
+                    e.preventDefault()
+                    onRevoke()
+                  }}
+                >
+                  {t('questionnaire/thankyou/revoke')}
+                </PlainButton>
+              )}
+            </P>
+          </>
+        )}
       </div>
-      {showResults && (
-        <>
-          <P style={{ marginBottom: 20, color: colors.error }}>
-            Diese Resultate werden{' '}
-            <Interaction.Emphasis>nur intern</Interaction.Emphasis> angezeigt.
-          </P>
-          <Results canDownload slug={slug} />
-        </>
-      )}
     </>
   )
-})
+}
+
+export default QuestionnaireClosed

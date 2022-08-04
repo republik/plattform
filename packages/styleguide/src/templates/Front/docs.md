@@ -9,12 +9,12 @@ const schema = createFrontSchema({
 
 `createFrontSchema` take an optional options object with following key:
 
-`Link`, a Next.js like `<Link />` component
+- `Link`, a Next.js like `<Link />` component
 This will be wrapped around and links (headlines and credits) and the whole teaser. You should attach an `onClick` handler within, if you wish to do client side routing and or prefetching. The component recieves following props:
 - `href` String, target url or path
 - `passHref` Boolean, indicates this will eventually end in an a tag and you may overwrite href
-
-`getPath`: `/:slug`
+- `noEmpty`, prevents rendering from empty tags (useful from site accessibility, not useful for publikator), default: `true`
+- `getPath`: `/:slug`
 
 # Example
 

@@ -1,5 +1,5 @@
-import { Query } from 'react-apollo'
-import gql from 'graphql-tag'
+import { Query } from '@apollo/client/react/components'
+import { gql } from '@apollo/client'
 
 import { A, Loader } from '@project-r/styleguide'
 

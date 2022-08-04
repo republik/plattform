@@ -86,6 +86,7 @@ export const TeaserFeed = ({
   const Headline =
     formatMeta.kind === 'meta' ||
     metaKind === 'meta' ||
+    template === 'section' ||
     template === 'format' ||
     template === 'page'
       ? Headlines.Interaction
@@ -102,6 +103,9 @@ export const TeaserFeed = ({
     : template === 'format'
     ? borderColor
     : undefined
+
+  const showCredits = credits && credits.length > 0
+  const hidePublishDate = ['section', 'format'].includes(template)
 
   return (
     <Container
@@ -141,11 +145,14 @@ export const TeaserFeed = ({
           )}
         </Lead>
       )}
-      <Credit>
-        {credits && credits.length > 0
-          ? renderMdast(credits, getCreditsSchema(!nonInteractive))
-          : !!publishDate && dateFormat(new Date(publishDate))}
-      </Credit>
+      {showCredits && (
+        <Credit>
+          {renderMdast(credits, getCreditsSchema(!nonInteractive))}
+        </Credit>
+      )}
+      {!showCredits && !hidePublishDate && !!publishDate && (
+        <Credit>{dateFormat(new Date(publishDate))}</Credit>
+      )}
       {!!highlight && (
         <Highlight label={highlightLabel}>
           <Link href={href} passHref>

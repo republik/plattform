@@ -1,32 +1,38 @@
-import { compose } from 'react-apollo'
-import { withRouter } from 'next/router'
+import compose from 'lodash/flowRight'
+import { useRouter } from 'next/router'
 
 import App from '../components/App'
 import enforceAuthorization from '../components/Auth/withAuthorization'
 
 import { Body, Content, Header } from '../components/Layout'
 import PostfinancePayments from '../components/PostfinancePayments/List'
-import { Router } from '../server/routes'
+import { withDefaultSSR } from '../lib/apollo'
 
-const changeHandler = (params) => {
-  Router.replaceRoute('postfinance-payments', params, { shallow: true })
-}
+const PostFinance = () => {
+  const router = useRouter()
+  const changeHandler = (params) => {
+    router.replace(
+      {
+        pathname: '/postfinance-payments',
+        query: params ?? {},
+      },
+      undefined,
+      { shallow: true },
+    )
+  }
 
-export default compose(
-  withRouter,
-  enforceAuthorization(['supporter', 'accountant']),
-)((props) => {
   return (
     <App>
       <Body>
-        <Header search={props.router.query.search} />
+        <Header search={router.query.search} />
         <Content id='content'>
-          <PostfinancePayments
-            params={props.router.query}
-            onChange={changeHandler}
-          />
+          <PostfinancePayments params={router.query} onChange={changeHandler} />
         </Content>
       </Body>
     </App>
   )
-})
+}
+
+export default withDefaultSSR(
+  compose(enforceAuthorization(['supporter', 'accountant']))(PostFinance),
+)

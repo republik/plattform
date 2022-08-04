@@ -14,7 +14,7 @@ export const matchIOSUserAgent = (value?: string): boolean =>
     !!value.match(/Mac.+RepublikApp/))
 
 export const matchAndroidUserAgent = (value?: string): boolean =>
-  !!value && !!value.match(/android/i)
+  !!value && !!value.match(/Android/)
 
 type UserAgentValues = {
   userAgent: string

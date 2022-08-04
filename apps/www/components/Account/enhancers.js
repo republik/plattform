@@ -38,8 +38,8 @@ export const userDetailsFragment = `
 const mutation = gql`
   mutation updateMe(
     $birthday: Date
-    $firstName: String!
-    $lastName: String!
+    $firstName: String
+    $lastName: String
     $phoneNumber: String
     $address: AddressInput
   ) {

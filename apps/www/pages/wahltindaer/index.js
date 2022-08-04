@@ -128,7 +128,7 @@ const Page = ({ data, data: { cardGroups }, router, t }) => (
     pageColorSchemeKey='light'
     meta={{
       pageTitle: t('pages/cardGroups/pageTitle'),
-      title: t('pages/cardGroups/pageTitle'),
+      title: t('pages/cardGroups/title'),
       description: t('pages/cardGroups/description'),
       url: `${PUBLIC_BASE_URL}/wahltindaer`,
       image: `${CDN_FRONTEND_BASE_URL}/static/social-media/republik-wahltindaer-09.png`,

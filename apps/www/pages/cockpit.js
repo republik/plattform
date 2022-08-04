@@ -336,7 +336,7 @@ const Page = ({
   shouldBuyProlong,
   isReactivating,
   defaultBenefactor,
-  router: { query },
+  router: { query, pathname },
 }) => {
   const meta = {
     pageTitle: '🚀 Republik Cockpit',
@@ -352,7 +352,7 @@ const Page = ({
         `/cockpit?token=${encodeURIComponent(query.token)}`,
         '/cockpit',
         {
-          shallow: true,
+          shallow: pathname === '/cockpit',
         },
       )
     }
