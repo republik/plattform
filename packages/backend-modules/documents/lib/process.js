@@ -18,8 +18,6 @@ const processRepoImageUrlsInContent = async (content, fn) => {
     content,
     (node) => !!node?.images,
     (node) => {
-      console.log(node.images)
-
       Object.keys(node.images).forEach((key) => {
         if (node.images[key].url) {
           fns.push(async () => {
