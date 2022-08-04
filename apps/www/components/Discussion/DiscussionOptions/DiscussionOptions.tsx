@@ -74,6 +74,7 @@ const DiscussionOptions = ({ documentMeta }: Props) => {
                 border={false}
                 text={t(`components/Discussion/OrderBy/${item}`)}
                 isActive={item === (resolvedOrderBy ?? orderBy)}
+                srSelectedText={t('components/Discussion/OrderBy/selected')}
               />
             </Link>
           )

@@ -1805,6 +1805,10 @@
       "value": "Anmelden"
     },
     {
+      "key": "components/Discussion/OrderBy/selected",
+      "value": "(aktive Sortierung)"
+    },
+    {
       "key": "components/Discussion/OrderBy/DATE",
       "value": "Neueste"
     },
@@ -1819,6 +1823,10 @@
     {
       "key": "components/Discussion/OrderBy/REPLIES",
       "value": "Meiste Antworten"
+    },
+    {
+      "key": "components/Discussion/TagFilter/selected",
+      "value": "(aktiver Filter)"
     },
     {
       "key": "components/Discussion/reload",
@@ -2159,6 +2167,10 @@
     {
       "key": "styleguide/SeriesNav/current",
       "value": "Sie lesen:"
+    },
+    {
+      "key": "styleguide/Tag/count",
+      "value": "Beiträge"
     },
     {
       "key": "timeago/justNow/other",

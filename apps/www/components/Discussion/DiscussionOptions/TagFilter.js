@@ -9,6 +9,7 @@ import {
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { rerouteDiscussion } from '../shared/DiscussionLink'
+import { useTranslation } from '../../../lib/withT'
 
 const BREAKOUT_PADDING = 15 // Center.PADDING
 
@@ -41,6 +42,7 @@ const TagLink = ({ tag, commentCount }) => {
   const {
     query: { tag: activeTag },
   } = route
+  const { t } = useTranslation()
   const isSelected = tag === activeTag
   const targetHref = rerouteDiscussion(route, {
     tag: isSelected ? undefined : tag,
@@ -50,9 +52,12 @@ const TagLink = ({ tag, commentCount }) => {
       <Link href={targetHref} scroll={false} passHref>
         <a>
           <FormatTag
+            t={t}
             color={isSelected ? 'text' : 'textSoft'}
             label={tag || 'Alle'}
             count={commentCount}
+            selected={isSelected}
+            srSelectedText={t('components/Discussion/TagFilter/selected')}
           />
         </a>
       </Link>
