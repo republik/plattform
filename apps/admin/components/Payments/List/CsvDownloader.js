@@ -1,6 +1,5 @@
 import { Component } from 'react'
-import { withApollo } from 'react-apollo'
-import gql from 'graphql-tag'
+import { gql } from '@apollo/client'
 import { css } from 'glamor'
 import ErrorMessage from '../../ErrorMessage'
 import { colors } from '@project-r/styleguide'
@@ -129,4 +128,4 @@ class CSVDownloader extends Component {
   }
 }
 
-export default withApollo(CSVDownloader)
+export default CSVDownloader

@@ -93,7 +93,7 @@
   "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
-    "url": "https://github.com/orbiting/styleguide.git"
+    "url": "https://github.com/republik/plattform.git"
   },
   "scripts": {
     "commit": "git-cz",

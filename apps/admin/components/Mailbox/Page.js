@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Query } from 'react-apollo'
-import gql from 'graphql-tag'
+import { Query } from '@apollo/client/react/components'
+import { gql } from '@apollo/client'
 import InfiniteScroller from 'react-infinite-scroller'
 import debounce from 'lodash.debounce'
 

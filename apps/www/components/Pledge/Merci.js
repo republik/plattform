@@ -101,7 +101,7 @@ class Merci extends Component {
           query: { context: 'pledge', package: query.package },
         },
         undefined,
-        { shallow: true },
+        { shallow: router.pathname === '/einrichten' },
       )
     }
   }

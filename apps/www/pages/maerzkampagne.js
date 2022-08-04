@@ -154,14 +154,14 @@ const Page = ({
   t,
   router,
 }) => {
-  const { query } = router
+  const { query, pathname } = router
   useEffect(() => {
     if (query.token) {
       router.replace(
         `/maerzkampagne?token=${encodeURIComponent(query.token)}`,
         '/maerzkampagne',
         {
-          shallow: true,
+          shallow: pathname === '/maerzkampagne',
         },
       )
     }

@@ -4,7 +4,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/orbiting/backends.git"
+    "url": "git+https://github.com/republik/plattform.git"
   },
   "author": "Pierre Spring <pierre.spring@republik.ch>",
   "license": "AGPL-3.0",
@@ -12,14 +12,13 @@
     "access": "public"
   },
   "bugs": {
-    "url": "https://github.com/orbiting/backends/issues"
+    "url": "https://github.com/republik/plattform/issues"
   },
-  "homepage": "https://github.com/orbiting/backends#readme",
+  "homepage": "https://github.com/republik/plattform#readme",
   "scripts": {
     "link": "yarn link"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "typescript": "^4.7.2"
   },
