@@ -2601,6 +2601,10 @@
       "value": "Das Monatsabo ist nur mit Kreditkarte (Visa, Mastercard, Amex) verfügbar."
     },
     {
+      "key": "payment/method/selected",
+      "value": "(ausgewählte Zahlungsart)"
+    },
+    {
       "key": "payment/stripe/js/failed",
       "value": "Kreditkartenzahlungen sind zurzeit nicht möglich. Die Verbindung zu stripe.com, unserem Dienstleister für Kreditkartenzahlungen, ist fehlgeschlagen. Mögliche Ursachen: eine wackelige Internetverbindung, ein temporärer Ausfall oder Ihre Browsererweiterungen. Wählen Sie bitte eine andere Zahlungsart oder versuchen Sie es in einigen Sekunden erneut."
     },

@@ -34,6 +34,8 @@ import StripeForm from './Form/Stripe'
 import ApplePayMark from './Form/ApplePayMark'
 import GooglePayMark from './Form/GooglePayMark'
 import { WalletPaymentMethod } from './PaymentRequest/usePaymentRequest'
+import { useTranslation } from '../../lib/withT'
+import { AccessibilityStyles } from '../../lib/accessibility/styles'
 
 const pad2 = format('02')
 
@@ -173,6 +175,7 @@ const PaymentMethodLabel = ({
   children,
 }) => {
   const [colorScheme] = useColorContext()
+  const { t } = useTranslation()
   return (
     <label
       {...styles.paymentMethod}
@@ -188,6 +191,11 @@ const PaymentMethodLabel = ({
       }}
     >
       {children}
+      {active && (
+        <span {...AccessibilityStyles.srOnly}>
+          {t('payment/method/selected')}
+        </span>
+      )}
     </label>
   )
 }
