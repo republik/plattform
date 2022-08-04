@@ -40,7 +40,7 @@ import ActionBarOverlay from './ActionBarOverlay'
 import SeriesNavBar from './SeriesNavBar'
 import TrialPayNoteMini from './TrialPayNoteMini'
 import Extract from './Extract'
-import { PayNote, TRY_TO_BUY_RATIO } from './PayNote'
+import { PayNote } from './PayNote'
 import Progress from './Progress'
 import PodcastButtons from './PodcastButtons'
 import { getDocument } from './graphql/getDocument'
@@ -133,6 +133,23 @@ const ElectionResultDiversity = dynamic(
     ssr: false,
   },
 )
+const Questionnaire = dynamic(
+  () =>
+    import('../Questionnaire/Questionnaire').then(
+      (m) => m.QuestionnaireWithData,
+    ),
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
+)
+
+const QuestionnaireSubmissions = dynamic(
+  () => import('../Questionnaire/Submissions'),
+  {
+    loading: LoadingComponent,
+  },
+)
 
 const schemaCreators = {
   editorial: createArticleSchema,
@@ -201,6 +218,7 @@ const ArticlePage = ({
   isPreview,
   markAsReadMutation,
   serverContext,
+  clientRedirection,
 }) => {
   const actionBarRef = useRef()
   const bottomActionBarRef = useRef()
@@ -221,6 +239,7 @@ const ArticlePage = ({
     variables: {
       path: cleanedPath,
     },
+    skip: clientRedirection,
   })
 
   const article = articleData?.article
@@ -345,6 +364,8 @@ const ArticlePage = ({
           ELECTION: Election,
           ELECTION_RESULT: ElectionResult,
           ELECTION_RESULT_DIVERSITY: ElectionResultDiversity,
+          QUESTIONNAIRE: Questionnaire,
+          QUESTIONNAIRE_SUBMISSIONS: QuestionnaireSubmissions,
         },
         titleMargin: false,
         titleBreakout,
@@ -421,7 +442,11 @@ const ArticlePage = ({
         render={() => {
           if (!article) {
             return (
-              <StatusError statusCode={404} serverContext={serverContext} />
+              <StatusError
+                statusCode={404}
+                clientRedirection={clientRedirection}
+                serverContext={serverContext}
+              />
             )
           }
           return extract === 'share' ? (
@@ -463,17 +488,16 @@ const ArticlePage = ({
   const hasOverviewNav = meta ? meta.template === 'section' : true // show/keep around while loading meta
   const colorSchemeKey = darkMode ? 'dark' : 'auto'
 
-  const metaWithSocialImages =
-    (meta?.ownDiscussion?.id && router.query.focus) ||
-    (meta?.ownDiscussion?.isBoard && router.query.parent)
-      ? undefined
-      : meta
+  const delegateMetaDown =
+    !!meta?.delegateDown ||
+    !!(meta?.ownDiscussion?.id && router.query.focus) ||
+    !!(meta?.ownDiscussion?.isBoard && router.query.parent)
 
   return (
     <Frame
       raw
       // Meta tags for a focus comment are rendered in Discussion/Commments.js
-      meta={metaWithSocialImages}
+      meta={!delegateMetaDown && meta}
       secondaryNav={seriesSecondaryNav}
       formatColor={formatColor}
       hasOverviewNav={hasOverviewNav}
@@ -486,7 +510,11 @@ const ArticlePage = ({
         render={() => {
           if (!article || !schema) {
             return (
-              <StatusError statusCode={404} serverContext={serverContext} />
+              <StatusError
+                statusCode={404}
+                clientRedirection={clientRedirection}
+                serverContext={serverContext}
+              />
             )
           }
 
@@ -746,14 +774,6 @@ const ArticlePage = ({
               )}
               {me && hasActiveMembership && (
                 <ArticleRecommendationsFeed path={cleanedPath} />
-              )}
-              {(hasActiveMembership || isFormat) && (
-                <>
-                  <br />
-                  <br />
-                  <br />
-                  <br />
-                </>
               )}
               {!suppressPayNotes && payNoteAfter}
             </>

@@ -1,15 +1,13 @@
 import { Fragment, useState } from 'react'
 import { A } from '@project-r/styleguide'
-
-import routes from '../../server/routes'
-const { Link } = routes
+import Link from 'next/link'
 
 const Address = ({ address: _address }) => {
   const { address, name, user } = _address
 
   if (user) {
     return (
-      <Link route='user' params={{ userId: user.id }} passHref>
+      <Link href={`/users/${user.id}`} passHref>
         <A>{user.name || address}</A>
       </Link>
     )

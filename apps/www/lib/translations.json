@@ -321,6 +321,14 @@
       "value": "System nicht verfügbar"
     },
     {
+      "key": "redirection/external/message",
+      "value": "Sie werden auf {link} weitergeleitet."
+    },
+    {
+      "key": "redirection/external/genericLink",
+      "value": "eine externe Webseite"
+    },
+    {
       "key": "marketing/join/button/label",
       "value": "Mitglied werden"
     },
@@ -482,7 +490,7 @@
     },
     {
       "key": "marketing/page/sections/description/kolumnen",
-      "value": "Regelmässig eine Kolumne: am Dienstag von Daniel Strassberg oder Kunsthistorikerin Kia Vahland. Jeden Samstag von Daniel Binswanger. Und dazu alle zwei Wochen Nicoletta Cimminos Audiokolumne «Sprachnotizen»."
+      "value": "Regelmässig eine Kolumne: am Dienstag von Daniel Strassberg oder Kunsthistorikerin Kia Vahland. Jeden Samstag von Daniel Binswanger."
     },
     {
       "key": "marketing/page/sections/title/kolumnen",
@@ -4129,6 +4137,14 @@
       "value": "absteigend"
     },
     {
+      "key": "search/sort/random",
+      "value": "Zufall"
+    },
+    {
+      "key": "search/sort/createdAt",
+      "value": "Zeit"
+    },
+    {
       "key": "search/excerpt",
       "value": "Auszug"
     },
@@ -4221,10 +4237,6 @@
       "value": "Sagen Sie uns Ihre Meinung!"
     },
     {
-      "key": "questionnaire/intro",
-      "value": "Geehrte Frau Verlegerin<br/>\nGeehrter Herr Verleger<br/>\n<br/>\nEs freut uns ausserordentlich, dass Sie Ihre Aufsichtspflicht wahrnehmen. Und zur Verbesserung der Republik beitragen. Antworten Sie ohne Rücksicht, ohne Skrupel, aber mit Weisheit. Und ohne Furcht: Es wird Sie nicht mehr als 10 Minuten kosten.<br/>\n<br/>\nMit Dank<br/>\nIhre Crew von Project R und der Republik"
-    },
-    {
       "key": "questionnaire/header",
       "value": "Sie haben {userAnswerCount} von {questionCount} Fragen beantwortet."
     },
@@ -4233,24 +4245,60 @@
       "value": "Bitte beantworten Sie mindestens eine Frage."
     },
     {
-      "key": "questionnaire/submit",
-      "value": "Abschicken"
+      "key": "questionnaire/privacy/private",
+      "value": "Antworten sind öffentlich einsehbar. Für Probeleser und Mitverlegerinnen erscheint der ausgefüllte Fragebogen unter Ihrem Namen. Gäste sehen lediglich Ihre Initialen."
     },
     {
-      "key": "questionnaire/cancel",
-      "value": "Abbrechen"
+      "key": "questionnaire/privacy/public",
+      "value": "Antworten sind öffentlich einsehbar. Da Sie ein öffentliches Profil haben, erscheint Ihr Fragebogen für alle unter Ihrem Namen."
+    },
+    {
+      "key": "questionnaire/submit",
+      "value": "abschicken"
+    },
+    {
+      "key": "questionnaire/publish",
+      "value": "publizieren"
+    },
+    {
+      "key": "questionnaire/update",
+      "value": "aktualisieren"
+    },
+    {
+      "key": "questionnaire/reset",
+      "value": "Antworten löschen"
+    },
+    {
+      "key": "questionnaire/reset/confirm",
+      "value": "Sind Sie sicher, dass Sie Ihre Antworten löschen wollen?"
     },
     {
       "key": "questionnaire/turnout",
       "value": "Basierend auf {formattedSubmittedCount} Antworten. {formattedSkippedCount} Personen haben diese Frage übersprungen."
     },
     {
-      "key": "questionnaire/thankyou",
-      "value": "Ihre Meinung ist bei uns angekommen. Danke fürs Mitmachen! {metaLink} finden Sie eine Übersicht zum aktuellen Stand des Irrtums."
+      "key": "questionnaire/share/dialogTitle",
+      "value": "Fragebogen teilen"
     },
     {
-      "key": "questionnaire/thankyou/metaText",
-      "value": "Hier"
+      "key": "questionnaire/share/title",
+      "value": "Fragebogen von {name}"
+    },
+    {
+      "key": "questionnaire/thankyou",
+      "value": "Ihre Antworten sind bei uns angekommen. Danke fürs Mitmachen!"
+    },
+    {
+      "key": "questionnaire/thankyou/public",
+      "value": "Ihre Antworten sind publiziert. Danke fürs Mitmachen!"
+    },
+    {
+      "key": "questionnaire/thankyou/resubmit",
+      "value": "bearbeiten"
+    },
+    {
+      "key": "questionnaire/thankyou/revoke",
+      "value": "zurückziehen"
     },
     {
       "key": "questionnaire/ended",
@@ -4266,7 +4314,15 @@
     },
     {
       "key": "questionnaire/text/label",
+      "value": "Ihre Antwort"
+    },
+    {
+      "key": "questionnaire/text/max",
       "value": "max. {maxLength} Zeichen"
+    },
+    {
+      "key": "questionnaire/text/remaining",
+      "value": "{remaining} Zeichen übrig"
     },
     {
       "key": "questionnaire/choice/helpMultiple",
@@ -4309,20 +4365,36 @@
       "value": "Vielen Dank für Ihre Zeit. Hier gehts zurück zum Magazin."
     },
     {
-      "key": "pages/meta/questionnaire/counterText",
-      "value": "Mitglieder haben an der Umfrage bereits teilgenommen."
+      "key": "questionnaire/submissions/count/1",
+      "value": "Eine Person hat bereits geantwortet"
     },
     {
-      "key": "pages/meta/questionnaire/thankyou",
-      "value": "Danke fürs Mitmachen!"
+      "key": "questionnaire/submissions/count/other",
+      "value": "{count} Teilnehmende"
     },
     {
-      "key": "pages/meta/questionnaire/actionTitle",
-      "value": "Sagen Sie uns Ihre Meinung!"
+      "key": "questionnaire/submissions/showAnswers/other",
+      "value": "{count} weitere Antworten lesen"
     },
     {
-      "key": "pages/meta/questionnaire/actionLabel",
-      "value": "Jetzt mitmachen"
+      "key": "questionnaire/submissions/showAnswers/1",
+      "value": "Eine weitere Antwort lesen"
+    },
+    {
+      "key": "questionnaire/submissions/answers/other",
+      "value": "{count} Antworten"
+    },
+    {
+      "key": "questionnaire/submissions/answers/1",
+      "value": "Eine Antwort"
+    },
+    {
+      "key": "questionnaire/submissions/loadMore/other",
+      "value": "Weitere {count} Fragebögen laden"
+    },
+    {
+      "key": "questionnaire/submissions/loadMore/1",
+      "value": "Einen weiteren Fragebogen laden"
     },
     {
       "key": "pages/meta/questionnaire/unauthorized",
@@ -4333,20 +4405,8 @@
       "value": "kommen Sie an Bord!"
     },
     {
-      "key": "pages/meta/questionnaire/socialTitle",
-      "value": "Ist die Republik auf Kurs? Sagen Sie es uns!"
-    },
-    {
-      "key": "pages/meta/questionnaire/socialDescription",
-      "value": "Um an der Umfrage teilzunehmen, müssen Sie Mitglied oder Abonnentin sein."
-    },
-    {
       "key": "pages/meta/questionnaire/crowd/socialTitle",
       "value": "Das 1-Minuten-Formular"
-    },
-    {
-      "key": "pages/meta/behind/gallery",
-      "value": "Hinter den Kulissen"
     },
     {
       "key": "package/PROLONG/title",

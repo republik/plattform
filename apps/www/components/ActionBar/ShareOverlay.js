@@ -11,6 +11,7 @@ const ShareOverlay = ({
   emailBody,
   emailAttachUrl,
   onClose,
+  eventCategory = 'ShareOverlay',
 }) => (
   <Overlay onClose={onClose} mUpStyle={{ maxWidth: 400, minHeight: 0 }}>
     <OverlayToolbar title={title} onClose={onClose} />
@@ -24,7 +25,7 @@ const ShareOverlay = ({
           emailSubject={emailSubject}
           emailBody={emailBody}
           emailAttachUrl={emailAttachUrl}
-          eventCategory='ShareOverlay'
+          eventCategory={eventCategory}
         />
       </div>
     </OverlayBody>

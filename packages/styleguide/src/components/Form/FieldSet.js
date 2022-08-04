@@ -86,7 +86,7 @@ class FieldSet extends Component {
                 autoComplete={autoComplete}
                 required={required}
                 {...additionalFieldProps(field)}
-                value={values[name]}
+                value={values[name] ?? ''}
                 error={dirty[name] && errors[name]}
                 onChange={(_, value, shouldValidate) => {
                   onChange({

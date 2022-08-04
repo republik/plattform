@@ -4,7 +4,7 @@ import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import { css } from 'glamor'
 import Head from 'next/head'
-import Router from 'next/router'
+import { withRouter } from 'next/router'
 
 import Loader from '../Loader'
 
@@ -26,7 +26,7 @@ class Image extends Component {
     }, this.props.duration)
   }
   next() {
-    const { statement, query, error } = this.props
+    const { statement, query, error, router } = this.props
     if (error && !query.sequenceNumber) {
       console.error(error)
       return
@@ -40,7 +40,7 @@ class Image extends Component {
           : statement && statement.sequenceNumber,
       },
     }
-    Router.push(to, to, { shallow: true })
+    router.push(to, to, { shallow: router.pathname === '/community' })
   }
   componentDidMount() {
     this.tick()
@@ -99,4 +99,5 @@ export default compose(
       }
     },
   }),
+  withRouter,
 )(Image)

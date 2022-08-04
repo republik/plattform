@@ -82,7 +82,7 @@
     "slate-mdast-serializer": "^3",
     "topojson": "^3.0.2",
     "tslib": "^2.3.1",
-    "typescript": "^4.5.5",
+    "typescript": "^4.7.2",
     "validate-commit-msg": "^2.14.0"
   },
   "files": [
@@ -93,7 +93,7 @@
   "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
-    "url": "https://github.com/orbiting/styleguide.git"
+    "url": "https://github.com/republik/plattform.git"
   },
   "scripts": {
     "commit": "git-cz",
