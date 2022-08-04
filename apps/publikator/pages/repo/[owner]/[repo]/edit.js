@@ -473,7 +473,7 @@ export class EditorPage extends Component {
       )
       return
     }
-    const repoId = router.query.repoId
+    const repoId = getRepoIdFromQuery(router.query)
     const commitId = router.query.commitId
 
     if (!commitId && repo && repo.latestCommit) {
@@ -699,12 +699,8 @@ export class EditorPage extends Component {
   }
 
   commitCleanup(data) {
-    const {
-      router: {
-        query: { repoId },
-      },
-    } = this.props
-
+    const { router } = this.props
+    const repoId = getRepoIdFromQuery(router.query)
     this.store.clear()
     this.concludeChanges()
 
@@ -723,16 +719,10 @@ export class EditorPage extends Component {
   }
 
   commitHandler() {
-    const {
-      router: {
-        query: { repoId, commitId, isTemplate, publishDate },
-      },
-      commitMutation,
-      editRepoMeta,
-      data,
-      t,
-    } = this.props
+    const { router, commitMutation, editRepoMeta, data, t } = this.props
     const { editorState } = this.state
+    const { commitId, isTemplate, publishDate } = router.query
+    const repoId = getRepoIdFromQuery(router.query)
 
     const message = window.prompt(t('commit/promtMessage'))
     if (!message) {
@@ -779,11 +769,9 @@ export class EditorPage extends Component {
   }
 
   goToRaw(isTemplate) {
-    const {
-      router: {
-        query: { repoId, commitId, schema, template },
-      },
-    } = this.props
+    const { router } = this.props
+    const { commitId, schema, template } = router.query
+    const repoId = getRepoIdFromQuery(router.query)
     const { editorState } = this.state
     const serializedState = this.editor.serializer.serialize(editorState)
     this.beginChanges()
@@ -811,7 +799,8 @@ export class EditorPage extends Component {
       uncommittedChanges,
       t,
     } = this.props
-    const { repoId, commitId, publishDate } = router.query
+    const { commitId, publishDate } = router.query
+    const repoId = getRepoIdFromQuery(router.query)
     const { loading, repo } = data
     const { loading: templateLoading, error: templateError } = templateData
     const {

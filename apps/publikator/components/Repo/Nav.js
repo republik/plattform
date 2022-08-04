@@ -26,7 +26,7 @@ const menu = [
 ]
 
 const Nav = ({ router, route, isNew, prefix, t }) => {
-  const { repoId } = router.query
+  const repoId = getRepoIdFromQuery(router.query)
 
   const params = {
     repoId: repoId.split('/'),
@@ -35,7 +35,7 @@ const Nav = ({ router, route, isNew, prefix, t }) => {
   const renderLink = (item) => {
     const label = t(`repo/nav/${prefix}/${item.key}`)
     if (item.makeHref(repoId) === route) {
-      return <span key={item.route}>{label} </span>
+      return <span key={item.key}>{label} </span>
     }
     if (isNew && item.key === 'tree') {
       return (
