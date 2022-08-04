@@ -273,7 +273,7 @@ const RepoList = ({
             )}
           {!showLoader &&
             data.repos &&
-            data.repos.nodes
+            [...data.repos.nodes]
               .sort((a, b) => orderCompare(orderAccessor(a), orderAccessor(b)))
               .map((repo) => (
                 <RepoRow key={repo.id} repo={repo} showPhases={showPhases} />

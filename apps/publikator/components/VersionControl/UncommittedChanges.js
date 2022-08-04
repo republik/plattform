@@ -29,6 +29,7 @@ import createDebug from 'debug'
 import { getMilestones } from './Checklist'
 
 import { parseJSONObject } from '../../lib/safeJSON'
+import { getRepoIdFromQuery } from '../../lib/repoIdHelper'
 
 const debug = createDebug('publikator:uncommittedChanges')
 const ghostProducer = parseJSONObject(GHOST_PRODUCER)
@@ -186,7 +187,7 @@ export const withUncommitedChanges =
         options: ({ repoId, router }) => ({
           pollInterval: MILESTONES_POLL_INTERVAL_MS,
           variables: {
-            repoId: repoId || router.query.repoId,
+            repoId: repoId || getRepoIdFromQuery(router.query),
           },
         }),
         props: ({ data }) => ({
