@@ -26,5 +26,14 @@ module.exports = withBundleAnalyzer(
       return config
     },
     poweredByHeader: false,
+    async redirects() {
+      return [
+        {
+          source: '/repo/:owner/:repo',
+          destination: '/repo/:owner/:repo/tree',
+          permanent: false,
+        },
+      ]
+    },
   }),
 )
