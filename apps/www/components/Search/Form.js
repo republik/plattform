@@ -88,7 +88,7 @@ const Form = compose(
             onChange={update}
             icon={
               !startState ? (
-                <button {...plainButtonRule} onClick={reset}>
+                <button {...plainButtonRule} onClick={reset} type='button'>
                   <CloseIcon
                     style={{ cursor: 'pointer' }}
                     size={30}

@@ -307,6 +307,7 @@ const Field = React.forwardRef<
                 inputRef.current.focus()
               }
             }}
+            type='button'
           >
             <CloseIcon
               {...(isFocused
