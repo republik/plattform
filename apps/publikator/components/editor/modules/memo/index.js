@@ -7,7 +7,6 @@ import {
   MdDelete as RemoveIcon,
 } from 'react-icons/md'
 import { Editorial, Interaction } from '@project-r/styleguide'
-
 import {
   Overlay,
   OverlayToolbar,
@@ -17,6 +16,7 @@ import {
 
 import withT from '../../../../lib/withT'
 import { matchInline, createInlineButton, buttonStyles } from '../../utils'
+import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 
 import standard, * as markers from './Markers'
 import MemoTree from './MemoTree'
@@ -82,7 +82,8 @@ const Memo = compose(
     }
   }
 
-  const { commitId, repoId } = router.query
+  const { commitId } = router.query
+  const repoId = getRepoIdFromQuery(router.query)
   const discussionEnabled = commitId !== 'new'
   const parentId = node.data.get('parentId')
 

@@ -6,7 +6,7 @@ import { css } from 'glamor'
 import { colors, A } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 import { intersperse } from '../../lib/utils/helpers'
-import { getQueryFromRepoId, getRepoIdFromQuery } from '../../lib/repoIdHelper'
+import { getRepoIdFromQuery } from '../../lib/repoIdHelper'
 
 const styles = {
   disabled: css({
