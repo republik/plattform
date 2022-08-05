@@ -290,12 +290,9 @@ export class EditorPage extends Component {
   }
 
   notifyChanges(action) {
-    const {
-      router: {
-        query: { repoId, commitId },
-      },
-      t,
-    } = this.props
+    const { router, t } = this.props
+    const { commitId } = router.query
+    const repoId = getRepoIdFromQuery(router.query)
 
     // we don't notify the backend if no backend repo exists
     if (commitId === 'new') return
