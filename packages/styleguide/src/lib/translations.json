@@ -286,6 +286,10 @@
       "value": "Diese Visualisierung ist kaputt."
     },
     {
+      "key": "styleguide/Tag/count",
+      "value": "Beiträge"
+    },
+    {
       "key": "styleguide/DynamicComponent/error",
       "value": "Diese Komponente ist kaputt."
     },
