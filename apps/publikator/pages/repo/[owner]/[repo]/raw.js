@@ -97,7 +97,7 @@ export default withDefaultSSR(
     const goToEditor = (e) => {
       if (e) e.preventDefault()
       router.push({
-        pathname: `/repo/repoId/edit`,
+        pathname: `/repo/${repoId}/edit`,
         query: {
           ...router.query,
           commitId,
@@ -181,10 +181,7 @@ export default withDefaultSSR(
                 style={{ textAlign: 'center', marginTop: 7 }}
                 {...css({ fontSize: 10, [mediaQueries.mUp]: { fontSize: 14 } })}
               >
-                <A
-                  href='apps/publikator/pages/repo/[owner]/[repo]/raw#'
-                  onClick={goToEditor}
-                >
+                <A href={`/repo/${repoId}/edit`} onClick={goToEditor}>
                   {t('pages/raw/cancel')}
                 </A>
               </div>
