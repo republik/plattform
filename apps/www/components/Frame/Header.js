@@ -1,4 +1,4 @@
-import { useMemo, useState, useRef, useEffect } from 'react'
+import { useMemo, useState, useRef, useEffect, Children } from 'react'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import { withRouter } from 'next/router'
@@ -7,6 +7,7 @@ import {
   mediaQueries,
   HeaderHeightProvider,
   useColorContext,
+  ConditionalFocusTrap,
 } from '@project-r/styleguide'
 import { BackIcon } from '@project-r/styleguide'
 import { withMembership } from '../Auth/checkRoles'
@@ -130,7 +131,11 @@ const Header = ({
         )
       }
 
-      if (!isOnMarketingPage && diff.current !== lastDiff.current) {
+      if (
+        !isOnMarketingPage &&
+        diff.current !== lastDiff.current &&
+        fixedRef.current
+      ) {
         fixedRef.current.style.top = `${diff.current}px`
         setHeaderOffset(diff.current)
       }
@@ -199,81 +204,93 @@ const Header = ({
     me || (inNativeApp && !showTrialButton) || router.pathname === '/angebote'
 
   return (
-    <>
-      <div
-        {...styles.navBar}
-        {...colorScheme.set('backgroundColor', 'default')}
-        ref={fixedRef}
-      >
-        <div {...styles.primary}>
-          <div {...styles.navBarItem}>
-            <div {...styles.leftBarItem}>
-              {backButton && (
-                <a
-                  {...styles.back}
-                  style={{
-                    opacity: 1,
-                    pointerEvents: backButton ? undefined : 'none',
-                    href: '#back',
-                  }}
-                  title={t('header/back')}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    if (backButton) {
-                      routeChangeStarted = false
-                      window.history.back()
-                      setTimeout(() => {
-                        if (!routeChangeStarted) {
-                          router.replace('/')
-                        }
-                      }, 200)
-                    }
-                  }}
-                >
-                  <BackIcon
-                    size={BACK_BUTTON_SIZE}
-                    {...colorScheme.set('fill', 'text')}
-                  />
-                </a>
-              )}
-              <User
-                me={me}
-                backButton={backButton}
-                id='user'
-                title={t(
-                  `header/nav/user/${
-                    expandedNav === 'user' ? 'close' : 'open'
-                  }/aria`,
-                )}
-                isOnMarketingPage={isOnMarketingPage}
-                inNativeIOSApp={inNativeIOSApp}
-                onClick={() =>
-                  !isAnyNavExpanded
-                    ? toggleExpanded('user')
-                    : expandedNav !== 'user'
-                    ? openUserNavOverMainNav()
-                    : closeHandler()
-                }
-              />
-              {me && <NotificationIcon />}
-            </div>
-          </div>
-          {!isOnMarketingPage || (!isOnMarketingPage && inNativeIOSApp) ? (
+    <ConditionalFocusTrap shouldTrap={expandedNav !== null}>
+      <div>
+        <div
+          {...styles.navBar}
+          {...colorScheme.set('backgroundColor', 'default')}
+          ref={fixedRef}
+        >
+          <div {...styles.primary}>
             <div {...styles.navBarItem}>
-              <a
-                {...styles.logo}
-                aria-label={t('header/logo/magazine/aria')}
-                href={'/'}
-                onClick={goTo('/', 'index')}
-              >
-                <Logo />
-              </a>
+              <div {...styles.leftBarItem}>
+                {backButton && (
+                  <a
+                    {...styles.back}
+                    style={{
+                      opacity: 1,
+                      pointerEvents: backButton ? undefined : 'none',
+                      href: '#back',
+                    }}
+                    title={t('header/back')}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      if (backButton) {
+                        routeChangeStarted = false
+                        window.history.back()
+                        setTimeout(() => {
+                          if (!routeChangeStarted) {
+                            router.replace('/')
+                          }
+                        }, 200)
+                      }
+                    }}
+                  >
+                    <BackIcon
+                      size={BACK_BUTTON_SIZE}
+                      {...colorScheme.set('fill', 'text')}
+                    />
+                  </a>
+                )}
+                <User
+                  me={me}
+                  backButton={backButton}
+                  id='user'
+                  title={t(
+                    `header/nav/user/${
+                      expandedNav === 'user' ? 'close' : 'open'
+                    }/aria`,
+                  )}
+                  isOnMarketingPage={isOnMarketingPage}
+                  inNativeIOSApp={inNativeIOSApp}
+                  onClick={() =>
+                    !isAnyNavExpanded
+                      ? toggleExpanded('user')
+                      : expandedNav !== 'user'
+                      ? openUserNavOverMainNav()
+                      : closeHandler()
+                  }
+                />
+                {me && <NotificationIcon />}
+              </div>
             </div>
-          ) : null}
-          <div {...styles.navBarItem}>
-            <div {...styles.rightBarItem}>
-              {!showToggle && (
-                <div data-show-if-me='true'>
+            {!isOnMarketingPage || (!isOnMarketingPage && inNativeIOSApp) ? (
+              <div {...styles.navBarItem}>
+                <a
+                  {...styles.logo}
+                  aria-label={t('header/logo/magazine/aria')}
+                  href={'/'}
+                  onClick={goTo('/', 'index')}
+                >
+                  <Logo />
+                </a>
+              </div>
+            ) : null}
+            <div {...styles.navBarItem}>
+              <div {...styles.rightBarItem}>
+                {!showToggle && (
+                  <div data-show-if-me='true'>
+                    <Toggle
+                      expanded={isAnyNavExpanded}
+                      title={t(
+                        `header/nav/${
+                          expandedNav === 'main' ? 'close' : 'open'
+                        }/aria`,
+                      )}
+                    />
+                  </div>
+                )}
+                {showToggle ? (
                   <Toggle
                     expanded={isAnyNavExpanded}
                     title={t(
@@ -281,114 +298,109 @@ const Header = ({
                         expandedNav === 'main' ? 'close' : 'open'
                       }/aria`,
                     )}
+                    id='main'
+                    onClick={() =>
+                      isAnyNavExpanded ? closeHandler() : toggleExpanded('main')
+                    }
                   />
-                </div>
-              )}
-              {showToggle ? (
-                <Toggle
-                  expanded={isAnyNavExpanded}
-                  title={t(
-                    `header/nav/${
-                      expandedNav === 'main' ? 'close' : 'open'
-                    }/aria`,
-                  )}
-                  id='main'
-                  onClick={() =>
-                    isAnyNavExpanded ? closeHandler() : toggleExpanded('main')
-                  }
-                />
-              ) : showTrialButton ? (
-                <Link href='#probelesen' passHref>
-                  <a
-                    data-hide-if-me='true'
-                    {...styles.button}
-                    {...(formatColor
-                      ? styles.buttonFormatColor
-                      : styles.buttonGeneric)}
-                    {...buttonColorRule}
-                  >
-                    <span>{t('marketing/preview/button/label')}</span>
-                  </a>
-                </Link>
-              ) : (
-                <Link href='/angebote' passHref>
-                  <a
-                    data-hide-if-me='true'
-                    {...styles.button}
-                    {...(isOnMarketingPage
-                      ? styles.buttonMarketing
-                      : formatColor
-                      ? styles.buttonFormatColor
-                      : styles.buttonGeneric)}
-                    {...buttonColorRule}
-                  >
-                    {isOnMarketingPage ? (
-                      <span>{t('marketing/page/carpet/button')}</span>
-                    ) : (
-                      <>
-                        <span {...styles.buttonTextMobile}>
-                          {t('marketing/page/carpet/buttonsmall')}
-                        </span>
-                        <span {...styles.buttonText}>
-                          {t('marketing/page/carpet/button')}
-                        </span>
-                      </>
-                    )}
-                  </a>
-                </Link>
-              )}
+                ) : showTrialButton ? (
+                  <Link href='#probelesen' passHref>
+                    <a
+                      data-hide-if-me='true'
+                      {...styles.button}
+                      {...(formatColor
+                        ? styles.buttonFormatColor
+                        : styles.buttonGeneric)}
+                      {...buttonColorRule}
+                    >
+                      <span>{t('marketing/preview/button/label')}</span>
+                    </a>
+                  </Link>
+                ) : (
+                  <Link href='/angebote' passHref>
+                    <a
+                      data-hide-if-me='true'
+                      {...styles.button}
+                      {...(isOnMarketingPage
+                        ? styles.buttonMarketing
+                        : formatColor
+                        ? styles.buttonFormatColor
+                        : styles.buttonGeneric)}
+                      {...buttonColorRule}
+                    >
+                      {isOnMarketingPage ? (
+                        <span>{t('marketing/page/carpet/button')}</span>
+                      ) : (
+                        <>
+                          <span {...styles.buttonTextMobile}>
+                            {t('marketing/page/carpet/buttonsmall')}
+                          </span>
+                          <span {...styles.buttonText}>
+                            {t('marketing/page/carpet/button')}
+                          </span>
+                        </>
+                      )}
+                    </a>
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
+          {expandedNav === null && ( // only show secondary nav if no popover is open
+            <SecondaryNav
+              secondaryNav={secondaryNav}
+              router={router}
+              formatColor={formatColor}
+              hasOverviewNav={hasOverviewNav}
+              isSecondarySticky={headerOffset === -scrollableHeaderHeight}
+            />
+          )}
+          {!isOnMarketingPage ? <HLine formatColor={formatColor} /> : null}
         </div>
-        <SecondaryNav
-          secondaryNav={secondaryNav}
-          router={router}
+        <Popover formatColor={formatColor} expanded={expandedNav === 'main'}>
+          <NavPopover
+            me={me}
+            router={router}
+            expanded={expandedNav === 'main'}
+            closeHandler={closeHandler}
+            onSearchSubmit={closeHandler}
+          />
+        </Popover>
+        <Popover
           formatColor={formatColor}
-          hasOverviewNav={hasOverviewNav}
-          isSecondarySticky={headerOffset === -scrollableHeaderHeight}
-        />
-        {!isOnMarketingPage ? <HLine formatColor={formatColor} /> : null}
-      </div>
-      <Popover formatColor={formatColor} expanded={expandedNav === 'main'}>
-        <NavPopover
-          me={me}
-          router={router}
-          expanded={expandedNav === 'main'}
-          closeHandler={closeHandler}
-          onSearchSubmit={closeHandler}
-        />
-      </Popover>
-      <Popover
-        formatColor={formatColor}
-        expanded={userNavExpanded || expandedNav === 'user'}
-      >
-        <UserNavPopover
-          me={me}
-          router={router}
           expanded={userNavExpanded || expandedNav === 'user'}
-          closeHandler={closeHandler}
-          pageColorSchemeKey={pageColorSchemeKey}
-        />
-      </Popover>
-      <LoadingBar
-        onRouteChangeStart={() => {
-          routeChangeStarted = true
-        }}
-      />
-      {inNativeApp && pullable && (
-        <Pullable
-          onRefresh={() => {
-            if (inNativeIOSApp) {
-              postMessage({ type: 'haptic', payload: { type: 'impactLight' } })
-            }
-            // give the browser 3 frames (1000/30fps) to start animating the spinner
-            setTimeout(() => {
-              window.location.reload(true)
-            }, 33 * 3)
+        >
+          <UserNavPopover
+            me={me}
+            router={router}
+            expanded={userNavExpanded || expandedNav === 'user'}
+            closeHandler={closeHandler}
+            pageColorSchemeKey={pageColorSchemeKey}
+          />
+        </Popover>
+        <LoadingBar
+          onRouteChangeStart={() => {
+            routeChangeStarted = true
           }}
         />
-      )}
-    </>
+        {inNativeApp && pullable && (
+          <Pullable
+            onRefresh={() => {
+              if (inNativeIOSApp) {
+                postMessage({
+                  type: 'haptic',
+                  payload: { type: 'impactLight' },
+                })
+              }
+              // give the browser 3 frames (1000/30fps) to start animating the spinner
+              setTimeout(() => {
+                window.location.reload(true)
+              }, 33 * 3)
+            }}
+          />
+        )}
+      </div>
+    </ConditionalFocusTrap>
   )
 }
 
