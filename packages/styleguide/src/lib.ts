@@ -102,6 +102,7 @@ export {
 } from './components/CommentBody/web'
 export { CommentTeaser } from './components/CommentTeaser'
 export { Overlay, OverlayToolbar, OverlayBody } from './components/Overlay'
+export { ConditionalFocusTrap } from './components/ConditionalFocusTrap'
 
 export { StatementNode } from './components/Discussion/Statements'
 
