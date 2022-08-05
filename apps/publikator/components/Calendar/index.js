@@ -87,7 +87,11 @@ const Calendar = ({
     !(from && until) && resetDates()
   }, [])
 
-  const changeDates = (dates) => router.replace('/', { ...query, ...dates })
+  const changeDates = (dates) =>
+    router.replace({
+      pathname: '/',
+      query: { ...query, ...dates },
+    })
 
   const offsetDates = (offset) => () =>
     changeDates({
