@@ -13,6 +13,7 @@ import { mUp } from '../../theme/mediaQueries'
 import { useColorContext } from '../Colors/ColorContext'
 
 import { useBodyScrollLock } from '../../lib/useBodyScrollLock'
+import { ConditionalFocusTrap } from '../ConditionalFocusTrap'
 
 const styles = {
   root: css({
@@ -146,21 +147,23 @@ export const OverlayRenderer: React.FC<
   const [colorScheme] = useColorContext()
 
   return (
-    <div
-      {...styles.root}
-      {...(ssrMode && { [ssrAttribute]: true })}
-      style={{ opacity: isVisible ? 1 : 0 }}
-      ref={scrollRef}
-    >
-      <div {...styles.backdrop} onClick={close} />
+    <ConditionalFocusTrap shouldTrap={isVisible}>
       <div
-        {...merge(styles.inner, mUpStyle && { [mUp]: mUpStyle })}
-        {...colorScheme.set('backgroundColor', 'overlay')}
-        {...colorScheme.set('boxShadow', 'overlay')}
-        {...colorScheme.set('color', 'text')}
+        {...styles.root}
+        {...(ssrMode && { [ssrAttribute]: true })}
+        style={{ opacity: isVisible ? 1 : 0 }}
+        ref={scrollRef}
       >
-        {children}
+        <div {...styles.backdrop} onClick={close} />
+        <div
+          {...merge(styles.inner, mUpStyle && { [mUp]: mUpStyle })}
+          {...colorScheme.set('backgroundColor', 'overlay')}
+          {...colorScheme.set('boxShadow', 'overlay')}
+          {...colorScheme.set('color', 'text')}
+        >
+          {children}
+        </div>
       </div>
-    </div>
+    </ConditionalFocusTrap>
   )
 }
