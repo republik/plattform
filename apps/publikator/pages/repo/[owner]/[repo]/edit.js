@@ -269,11 +269,7 @@ export class EditorPage extends Component {
       this.setState(this.unlock)
     }
     this.beforeunload = (event) => {
-      const {
-        router: {
-          query: { repoId },
-        },
-      } = this.props
+      const { router } = this.props
       const { hasUncommittedChanges, didUnlock } = this.state
       if (!hasUncommittedChanges && didUnlock) {
         this.notifyChanges('delete')
@@ -282,7 +278,7 @@ export class EditorPage extends Component {
             navigator.sendBeacon(
               API_UNCOMMITTED_CHANGES_URL,
               JSON.stringify({
-                repoId,
+                repoId: getRepoIdFromQuery(router.query),
                 action: 'delete',
               }),
             )
