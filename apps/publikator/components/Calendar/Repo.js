@@ -124,7 +124,7 @@ const PlaceholderLink = ({ repo, placeholderDate, children }) => {
       href={{
         pathname: `/repo/${GITHUB_ORG}/${getTemplateRepoPrefix(
           id,
-        )}-${urlDate}}/edit`,
+        )}-${urlDate}/edit`,
         query: {
           commitId: 'new',
           title,
