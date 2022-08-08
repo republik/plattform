@@ -1,6 +1,6 @@
 import { Component, Fragment } from 'react'
-import { Query, Mutation } from 'react-apollo'
-import gql from 'graphql-tag'
+import { Query, Mutation } from '@apollo/client/react/components'
+import { gql } from '@apollo/client'
 
 import { InlineSpinner, Loader, Radio } from '@project-r/styleguide'
 

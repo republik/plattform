@@ -667,7 +667,7 @@ const Group = ({
         },
       },
       undefined,
-      { shallow: true },
+      { shallow: router.pathname === '/wahltindaer/[group]' },
     )
     setOverlay(false)
   }
@@ -981,7 +981,7 @@ const Group = ({
                     },
                   },
                   undefined,
-                  { shallow: true },
+                  { shallow: router.pathname === '/wahltindaer/[group]' },
                 )
               }}
             />

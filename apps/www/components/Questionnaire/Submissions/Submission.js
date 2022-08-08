@@ -12,9 +12,10 @@ import {
   RemoveIcon,
   IconButton,
   ShareIcon,
+  usePrevious,
 } from '@project-r/styleguide'
-import { useRef, useState } from 'react'
-import { max } from 'd3-array'
+import { useEffect, useRef, useState } from 'react'
+import { max, shuffle } from 'd3-array'
 import { css } from 'glamor'
 import Link from 'next/link'
 
@@ -26,6 +27,7 @@ import { HEADER_HEIGHT } from '../../constants'
 import { useInNativeApp, postMessage } from '../../../lib/withInNativeApp'
 import ShareOverlay from '../../ActionBar/ShareOverlay'
 import { trackEvent } from '../../../lib/matomo'
+import { getSubmissionUrl } from './Share'
 
 const styles = {
   highlightContainer: css({
@@ -86,7 +88,8 @@ const titleDate = (string) => dateTimeFormat(new Date(string))
 
 const Submission = ({
   t,
-  publicUrl,
+  id,
+  pathname,
   displayAuthor,
   answers,
   questions,
@@ -98,6 +101,7 @@ const Submission = ({
   const matchedIndexes = answers.nodes
     .map((answer, index) => (answer.hasMatched ? index : false))
     .filter((d) => d !== false)
+  const prevMatchedIndexes = usePrevious(matchedIndexes)
   const answersCount = answers.nodes.length
 
   const defaultVisible = matchedIndexes.length
@@ -106,6 +110,17 @@ const Submission = ({
   const [visibleIndexes, setVisible] = useState(
     isHighlighted ? true : defaultVisible,
   )
+  const visibleIndexesString = [].concat(visibleIndexes).join()
+  const prevMatchedIndexesString = (prevMatchedIndexes || []).join()
+  const defaultVisibleString = defaultVisible.join()
+  useEffect(() => {
+    if (
+      visibleIndexesString === prevMatchedIndexesString &&
+      visibleIndexesString !== defaultVisibleString
+    ) {
+      setVisible(defaultVisibleString.split())
+    }
+  }, [visibleIndexesString, prevMatchedIndexesString, defaultVisibleString])
   const [isExpanded, setIsExpanded] = useState(true)
 
   const { inNativeApp } = useInNativeApp()
@@ -119,6 +134,7 @@ const Submission = ({
   const isUpdated = updatedAt && updatedAt !== createdAt
 
   const rootRef = useRef()
+  const publicUrl = getSubmissionUrl(pathname, id)
 
   return (
     <div
@@ -288,14 +304,30 @@ const Submission = ({
               const title = t('questionnaire/share/title', {
                 name: displayAuthor.name,
               })
+              const url = getSubmissionUrl(pathname, id, {
+                qid:
+                  matchedIndexes.length === 1 &&
+                  visibleIndexes[0] === matchedIndexes[0]
+                    ? // matched single question – share this
+                      answers.nodes[visibleIndexes[0]].question.id
+                    : // shuffle on every share click otherwise
+                      (
+                        shuffle(
+                          answers.nodes.filter(
+                            (a) => a.question.__typename === 'QuestionTypeText',
+                          ),
+                        )[0] || shuffle([...answers.nodes])[0]
+                      ).question.id,
+              })
+
               const payload = {
                 dialogTitle: t('questionnaire/share/dialogTitle'),
-                url: publicUrl,
+                url,
                 title,
                 subject: title,
               }
               if (inNativeApp) {
-                trackEvent(['SubmissionShare', 'native', publicUrl])
+                trackEvent(['SubmissionShare', 'native', url])
                 postMessage({
                   type: 'share',
                   payload,

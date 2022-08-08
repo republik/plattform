@@ -2,12 +2,12 @@ require('@orbiting/backend-modules-env').config()
 const debug = require('debug')('mail:script:sendMailsToSegment')
 const Promise = require('bluebird')
 
-const { getTemplates, envMergeVars } = require('../../lib/sendMailTemplate')
-const MandrillInterface = require('../../MandrillInterface')
-const NodemailerInterface = require('../../NodemailerInterface')
-const sendResultNormalizer = require('../../utils/sendResultNormalizer')
-const shouldSendMessage = require('../../utils/shouldSendMessage')
-const { send } = require('../../lib/mailLog')
+const { getTemplates, envMergeVars } = require('./sendMailTemplate')
+const MandrillInterface = require('../MandrillInterface')
+const NodemailerInterface = require('../NodemailerInterface')
+const sendResultNormalizer = require('../utils/sendResultNormalizer')
+const shouldSendMessage = require('../utils/shouldSendMessage')
+const { send } = require('./mailLog')
 
 const {
   DEFAULT_MAIL_FROM_ADDRESS,
@@ -16,8 +16,8 @@ const {
   SEND_MAILS_TAGS,
 } = process.env
 
-module.exports = async (segment, mail, context) => {
-  const { argv, pgdb, accessEventData } = context
+module.exports = async (segment, mail, pgdb, data) => {
+  const { accessEventData, emailAddressCleanedDateMap } = data
   const tags = []
     .concat(SEND_MAILS_TAGS && SEND_MAILS_TAGS.split(','))
     .concat(mail.templateName && mail.templateName)
@@ -72,12 +72,25 @@ module.exports = async (segment, mail, context) => {
       },
     )
 
-    if (argv.dryRun) {
+    if (data.dryRun) {
       console.log(mail.templateName, emailAddress)
       return
     }
+
+    const onceFor = data.onceFor
+      ? {
+          type: mail.templateName,
+          email: emailAddress,
+          keys:
+            emailAddressCleanedDateMap &&
+            emailAddressCleanedDateMap.get(emailAddress)
+              ? [`cleaned:${emailAddressCleanedDateMap.get(emailAddress)}`]
+              : null,
+        }
+      : false
+
     const sentData = await send({
-      log: { onceFor: { type: mail.templateName, email: emailAddress } },
+      log: { onceFor },
       sendFunc,
       message: {
         ...message,
