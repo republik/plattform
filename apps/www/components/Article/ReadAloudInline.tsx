@@ -50,22 +50,22 @@ const styles = {
   }),
   container: css({
     display: 'flex',
-    justifyContent: 'space-between',
-    padding: '12px 0',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    padding: '16px 0',
     gap: 16,
   }),
   text: css({
     flex: 1,
-    margin: 0,
+    margin: '2px 0',
   }),
   title: css({
     ...fontStyles.sansSerifMedium16,
     textDecoration: 'none',
-    cursor: 'pointer',
-    padding: 0,
   }),
   link: css({
-    ...fontStyles.sansSerif16,
+    ...fontStyles.sansSerifRegular16,
+    whiteSpace: 'nowrap',
   }),
 }
 
@@ -84,15 +84,7 @@ const ReadAloudInline = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
   return (
     <div>
       <hr {...styles.hr} {...colorScheme.set('backgroundColor', 'divider')} />
-      <div
-        {...styles.container}
-        {...css({
-          alignItems: isSynthetic ? 'flex-start' : 'center',
-          [mediaQueries.mUp]: {
-            alignItems: 'center',
-          },
-        })}
-      >
+      <div {...styles.container}>
         <IconButton
           style={{ marginRight: 0 }}
           size={32}
