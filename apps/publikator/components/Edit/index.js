@@ -5,7 +5,7 @@ import {
   withCommitMutation,
   withLatestCommit,
 } from './enhancers'
-import { Loader, A, useDebounce } from '@project-r/styleguide'
+import { Loader, A, useDebounce, slug } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 import withMe from '../../lib/withMe'
 import isEqual from 'lodash/isEqual'
@@ -312,9 +312,16 @@ const EditLoader = ({
       message: message,
       document: {
         type: 'slate',
-        content: { children: store.get(CONTENT_KEY) },
-        // TODO: meta
-        // meta: store.get(META_KEY),
+        content: {
+          children: store.get(CONTENT_KEY),
+          // TODO: meta
+          // meta: store.get(META_KEY),
+          // until then, a helping hand
+          meta: {
+            slug: slug(repoId),
+            template: 'flyer',
+          },
+        },
       },
     })
       .then(({ data }) => {
