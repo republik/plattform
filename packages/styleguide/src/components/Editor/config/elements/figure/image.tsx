@@ -31,7 +31,7 @@ export const FigureImage: React.FC<{
       <div contentEditable={false}>
         <InnerFigureImage
           src={images?.default?.url || PLACEHOLDER}
-          dark={{ src: images?.dark?.url }}
+          dark={images?.dark?.url ? { src: images.dark.url } : undefined}
           alt={alt}
         />
       </div>
