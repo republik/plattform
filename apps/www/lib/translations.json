@@ -3241,12 +3241,16 @@
       "value": "Beitrag von synthetischer Stimme vorlesen lassen."
     },
     {
-      "key": "article/syntheticReadAloud/errorLink",
+      "key": "article/syntheticReadAloud/link",
       "value": "Fehler melden"
     },
     {
       "key": "article/readAloud/title",
-      "value": "Beitrag vorlesen lassen"
+      "value": "Beitrag vorlesen lassen."
+    },
+    {
+      "key": "article/readAloud/link",
+      "value": "Alle vorgelesenen Beiträge"
     },
     {
       "key": "article/series/episode",
