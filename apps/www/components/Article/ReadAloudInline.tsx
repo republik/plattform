@@ -1,4 +1,4 @@
-import { useContext, useMemo } from 'react'
+import { useContext } from 'react'
 import { css } from 'glamor'
 import {
   IconButton,
@@ -72,23 +72,14 @@ const styles = {
 const ReadAloudInline = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
   const { toggleAudioPlayer } = useContext<AudioContextType>(AudioContext)
   const [colorScheme] = useColorContext()
+
   const { kind } = meta.audioSource
   const isSynthetic = kind === 'syntheticReadAloud'
-  const isReadAloud = kind === 'readAloud'
-
-  const { Icon, eventCategory, title, label, href } = useMemo(
-    () => ({
-      Icon: (isSynthetic && AudioIcon) || PodcastIcon,
-      eventCategory: (isSynthetic && 'SyntheticAudio') || 'ReadAloudAudio',
-      title: t(`article/${kind}/title`),
-      label: t(`article/${kind}/link`),
-      href:
-        (isSynthetic && '/synthetic-read-aloud') ||
-        (isReadAloud && '/read-aloud') ||
-        false,
-    }),
-    [kind],
-  )
+  const Icon = (isSynthetic && AudioIcon) || PodcastIcon
+  const eventCategory = (isSynthetic && 'SyntheticAudio') || 'ReadAloudAudio'
+  const title = t(`article/${kind}/title`)
+  const label = t(`article/${kind}/hint/label`)
+  const link = t(`article/${kind}/hint/link`)
 
   return (
     <div>
@@ -133,11 +124,11 @@ const ReadAloudInline = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
           >
             {title}
           </a>
-          {label && href && (
+          {label && link && (
             <>
               {' '}
-              <Editorial.A href={href} {...styles.link}>
-                {label}
+              <Editorial.A href={link}>
+                <span {...styles.link}>{label}</span>
               </Editorial.A>
             </>
           )}

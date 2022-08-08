@@ -3241,16 +3241,24 @@
       "value": "Beitrag von synthetischer Stimme vorlesen lassen."
     },
     {
-      "key": "article/syntheticReadAloud/link",
+      "key": "article/syntheticReadAloud/hint/label",
       "value": "Fehler melden"
+    },
+    {
+      "key": "article/syntheticReadAloud/hint/link",
+      "value": "/2022/05/04/helfen-sie-uns-die-synthetische-stimme-zu-verbessern/diskussion"
     },
     {
       "key": "article/readAloud/title",
       "value": "Beitrag vorlesen lassen."
     },
     {
-      "key": "article/readAloud/link",
+      "key": "article/readAloud/hint/label",
       "value": "Alle vorgelesenen Beiträge"
+    },
+    {
+      "key": "article/readAloud/hint/link",
+      "value": "/format/vorgelesen"
     },
     {
       "key": "article/series/episode",
