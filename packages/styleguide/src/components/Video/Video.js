@@ -22,6 +22,14 @@ const styles = {
     },
   }),
   thumbnail: css({
+    /* Clear button styling */
+    background: 'none',
+    color: 'inherit',
+    border: 'none',
+    padding: 0,
+    font: 'inherit',
+    outline: 'inherit',
+    /* End button styling clear */
     cursor: 'pointer',
     display: 'inline-block',
     lineHeight: 0,
@@ -29,6 +37,10 @@ const styles = {
     width: '100%',
     '::before': {
       position: 'absolute',
+      top: 0,
+      left: 0,
+      bottom: 0,
+      right: 0,
       background: 'rgba(0, 0, 0, .6)',
       content: ' ',
       height: '100%',
@@ -138,7 +150,7 @@ class Video extends Component {
         {...merge(styles.container, breakoutStyles[size])}
       >
         {!embedIframe && (
-          <a {...styles.thumbnail} onClick={this.handleClick}>
+          <button {...styles.thumbnail} onClick={this.handleClick}>
             <span {...styles.playIcon}>
               <PlayIcon />
             </span>
@@ -149,7 +161,7 @@ class Video extends Component {
               })}
             </span>
             <Image src={thumbnail} alt='' aspectRatio={aspectRatio} />
-          </a>
+          </button>
         )}
         {embedIframe && (
           <Embed
