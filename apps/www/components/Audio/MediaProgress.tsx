@@ -94,6 +94,7 @@ const MediaProgressProvider = ({ children }) => {
     if (!mediaId) {
       return
     }
+    // TODO: ensure that only of the two functions are called.
     saveMediaProgressNotPlaying(mediaId, mediaElement.currentTime)
     saveMediaProgressWhilePlaying(mediaId, mediaElement.currentTime)
   }
