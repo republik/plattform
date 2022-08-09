@@ -1,6 +1,6 @@
 import { AudioContext } from './AudioProvider'
 import { AudioPlayer } from '@project-r/styleguide'
-import ProgressComponent from '../../components/Article/Progress'
+import ProgressComponent from '../Article/Progress'
 import withT from '../../lib/withT'
 import compose from 'lodash/flowRight'
 import { AUDIO_PLAYER_HEIGHT } from '../constants'
