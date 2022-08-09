@@ -63,14 +63,14 @@ class MergeUsers extends Component {
   }
 
   mergeUsers = () => {
-    const { client } = this.context
+    const { apolloClient } = this.props
     const { sourceUser, targetUser } = this.state
     if (sourceUser && targetUser) {
       if (
         confirm(`Willst du wirklich den Account ${sourceUser.email}
          mit dem Account ${targetUser.email} zusammenführen?`)
       ) {
-        client
+        apolloClient
           .mutate({
             mutation: mergeUsersMutation,
             variables: {
@@ -151,7 +151,7 @@ class MergeUsers extends Component {
         {mergedUser && (
           <div style={{ marginTop: '30px' }}>
             Prima! Die Accounts wurden zusammen geführt. <br />
-            <Link href={`/users/${mergedUser.id()}`}>
+            <Link href={`/users/${mergedUser.id}`}>
               <a className={`${link}`} style={interactiveStyles}>
                 Zum neuen User-Profil
               </a>
