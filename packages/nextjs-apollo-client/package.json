@@ -16,7 +16,7 @@
     "generate::possibleTypes": "node scripts/generatePossibleTypes.js"
   },
   "devDependencies": {
-    "@apollo/client": "^3.5.8",
+    "@apollo/client": "^3.6.9",
     "@republik/eslint-config-frontend": "*",
     "@types/node": "^17.0.41",
     "@types/react": "^17.0.39",

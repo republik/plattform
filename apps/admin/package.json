@@ -23,7 +23,7 @@
     ".next/cache"
   ],
   "dependencies": {
-    "@apollo/client": "^3.5.8",
+    "@apollo/client": "^3.6.9",
     "@next/bundle-analyzer": "^12.2.3",
     "@project-r/styleguide": "*",
     "@republik/nextjs-apollo-client": "*",

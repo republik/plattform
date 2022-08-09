@@ -61,7 +61,7 @@
   dependencies:
     cross-fetch "3.1.5"
 
-"@apollo/client@^3.1.5", "@apollo/client@^3.5.8":
+"@apollo/client@^3.1.5", "@apollo/client@^3.6.9":
   version "3.6.9"
   resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.6.9.tgz#ad0ee2e3a3c92dbed4acd6917b6158a492739d94"
   integrity sha512-Y1yu8qa2YeaCUBVuw08x8NHenFi0sw2I3KCu7Kw9mDSu86HmmtHJkCAifKVrN2iPgDTW/BbP3EpSV8/EQCcxZA==
