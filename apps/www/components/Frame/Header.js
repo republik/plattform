@@ -357,27 +357,31 @@ const Header = ({
           )}
           {!isOnMarketingPage ? <HLine formatColor={formatColor} /> : null}
         </div>
-        <Popover formatColor={formatColor} expanded={expandedNav === 'main'}>
-          <NavPopover
-            me={me}
-            router={router}
-            expanded={expandedNav === 'main'}
-            closeHandler={closeHandler}
-            onSearchSubmit={closeHandler}
-          />
-        </Popover>
-        <Popover
-          formatColor={formatColor}
-          expanded={userNavExpanded || expandedNav === 'user'}
-        >
-          <UserNavPopover
-            me={me}
-            router={router}
+        {expandedNav === 'main' && (
+          <Popover formatColor={formatColor} expanded={expandedNav === 'main'}>
+            <NavPopover
+              me={me}
+              router={router}
+              expanded={expandedNav === 'main'}
+              closeHandler={closeHandler}
+              onSearchSubmit={closeHandler}
+            />
+          </Popover>
+        )}
+        {(userNavExpanded || expandedNav === 'user') && (
+          <Popover
+            formatColor={formatColor}
             expanded={userNavExpanded || expandedNav === 'user'}
-            closeHandler={closeHandler}
-            pageColorSchemeKey={pageColorSchemeKey}
-          />
-        </Popover>
+          >
+            <UserNavPopover
+              me={me}
+              router={router}
+              expanded={userNavExpanded || expandedNav === 'user'}
+              closeHandler={closeHandler}
+              pageColorSchemeKey={pageColorSchemeKey}
+            />
+          </Popover>
+        )}
         <LoadingBar
           onRouteChangeStart={() => {
             routeChangeStarted = true
