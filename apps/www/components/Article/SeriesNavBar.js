@@ -13,6 +13,7 @@ import {
   useBodyScrollLock,
   useHeaderHeight,
   SeriesNav,
+  ConditionalFocusTrap,
 } from '@project-r/styleguide'
 import { cleanAsPath, shouldIgnoreClick } from '../../lib/utils/link'
 import TrialPayNoteMini from './TrialPayNoteMini'
@@ -104,81 +105,83 @@ const SeriesNavBar = ({ t, me, showInlinePaynote, series, router, repoId }) => {
   }, [expanded])
 
   return (
-    <>
-      <a
-        {...styles.button}
-        href={titlePath}
-        onClick={(e) => {
-          if (shouldIgnoreClick(e)) {
-            return
-          }
-          e.preventDefault()
-          setExpanded(!expanded)
-        }}
-      >
-        <span {...styles.title}>
-          {series.logo && (
-            <>
-              <img
-                {...styles.logo}
-                src={imageResizeUrl(series.logo, 'x48')}
-                {...colorScheme.set(
-                  'display',
-                  series.logoDark ? 'displayLight' : 'block',
-                )}
-              />
-              {series.logoDark && (
+    <ConditionalFocusTrap shouldTrap={expanded}>
+      <div>
+        <a
+          {...styles.button}
+          href={titlePath}
+          onClick={(e) => {
+            if (shouldIgnoreClick(e)) {
+              return
+            }
+            e.preventDefault()
+            setExpanded(!expanded)
+          }}
+        >
+          <span {...styles.title}>
+            {series.logo && (
+              <>
                 <img
                   {...styles.logo}
-                  src={imageResizeUrl(series.logoDark, 'x48')}
-                  {...colorScheme.set('display', 'displayDark')}
+                  src={imageResizeUrl(series.logo, 'x48')}
+                  {...colorScheme.set(
+                    'display',
+                    series.logoDark ? 'displayLight' : 'block',
+                  )}
                 />
+                {series.logoDark && (
+                  <img
+                    {...styles.logo}
+                    src={imageResizeUrl(series.logoDark, 'x48')}
+                    {...colorScheme.set('display', 'displayDark')}
+                  />
+                )}
+              </>
+            )}
+
+            {series.title}
+
+            {currentEpisode &&
+              (series.title.match(/\?$/)
+                ? ` ${currentEpisode.label}`
+                : ` – ${currentEpisode.label}`)}
+            <span>
+              {expanded && (
+                <ArrowUpIcon size='28' {...colorScheme.set('fill', 'text')} />
               )}
-            </>
-          )}
-
-          {series.title}
-
-          {currentEpisode &&
-            (series.title.match(/\?$/)
-              ? ` ${currentEpisode.label}`
-              : ` – ${currentEpisode.label}`)}
-          <span>
-            {expanded && (
-              <ArrowUpIcon size='28' {...colorScheme.set('fill', 'text')} />
-            )}
-            {!expanded && (
-              <ArrowDownIcon size='28' {...colorScheme.set('fill', 'text')} />
-            )}
+              {!expanded && (
+                <ArrowDownIcon size='28' {...colorScheme.set('fill', 'text')} />
+              )}
+            </span>
           </span>
-        </span>
-      </a>
-      <div
-        style={{
-          top: headerHeight + 1, // 1px for border bottom
-          height: `calc(100vh - ${headerHeight}px)`,
-        }}
-        {...colorScheme.set('backgroundColor', 'default')}
-        {...colorScheme.set('color', 'text')}
-        {...styles.menu}
-        aria-expanded={expanded}
-        ref={ref}
-      >
-        <SeriesNav
-          repoId={repoId}
-          series={series}
-          context='navigation'
-          PayNote={showInlinePaynote ? TrialPayNoteMini : undefined}
-          ActionBar={me && ActionBar}
-          Link={Link}
-          onEpisodeClick={() => setExpanded(false)}
-          // lazy load does not work properly in scroll component
-          aboveTheFold
-          seriesDescription={true}
-          t={t}
-        />
+        </a>
+        <div
+          style={{
+            top: headerHeight + 1, // 1px for border bottom
+            height: `calc(100vh - ${headerHeight}px)`,
+          }}
+          {...colorScheme.set('backgroundColor', 'default')}
+          {...colorScheme.set('color', 'text')}
+          {...styles.menu}
+          aria-expanded={expanded}
+          ref={ref}
+        >
+          <SeriesNav
+            repoId={repoId}
+            series={series}
+            context='navigation'
+            PayNote={showInlinePaynote ? TrialPayNoteMini : undefined}
+            ActionBar={me && ActionBar}
+            Link={Link}
+            onEpisodeClick={() => setExpanded(false)}
+            // lazy load does not work properly in scroll component
+            aboveTheFold
+            seriesDescription={true}
+            t={t}
+          />
+        </div>
       </div>
-    </>
+    </ConditionalFocusTrap>
   )
 }
 
