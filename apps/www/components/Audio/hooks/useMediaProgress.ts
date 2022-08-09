@@ -1,3 +1,4 @@
+import { MediaProgress } from './../types/MediaProgress'
 import { gql } from '@apollo/client'
 import { makeLazyQueryHook } from '../../../lib/helpers/AbstractApolloGQLHooks.helper'
 
@@ -16,11 +17,7 @@ export type MediaProgressVariables = {
 }
 
 export type MediaProgressData = {
-  mediaProgress: {
-    id: string
-    mediaId: string
-    secs: number
-  }
+  mediaProgress: Pick<MediaProgress, 'id' | 'mediaId' | 'secs'>
 }
 
 const useMediaProgressLazyQuery = makeLazyQueryHook<

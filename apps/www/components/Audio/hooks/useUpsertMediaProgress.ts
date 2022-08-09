@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client'
 import { makeMutationHook } from '../../../lib/helpers/AbstractApolloGQLHooks.helper'
+import { MediaProgress } from './../types/MediaProgress'
 
 const UPSERT_MEDIA_PROGRESS_MUTATION = gql`
   mutation upsertMediaProgress($mediaId: ID!, $secs: Float!) {
@@ -17,11 +18,7 @@ export type UpsertMediaProgressVariables = {
 }
 
 export type UpserMediaProgressData = {
-  upsetMediaProgress: {
-    id: string
-    mediaId: string
-    secs: number
-  }
+  upsetMediaProgress: Pick<MediaProgress, 'id' | 'mediaId' | 'secs'>
 }
 
 const useUpsertMediaProgress = makeMutationHook<

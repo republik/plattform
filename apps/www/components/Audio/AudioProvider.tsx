@@ -5,11 +5,24 @@ import { useInNativeApp, postMessage } from '../../lib/withInNativeApp'
 
 import { useMediaProgress } from './MediaProgress'
 
-export const AudioContext = createContext({
+type AudioContextValue = {
+  audioSource?: unknown
+  audioState: unknown
+  audioPlayerVisible: boolean
+  autoPlayActive: boolean
+  toggleAudioPlayer: (payload: unknown) => void
+  onCloseAudioPlayer: () => void
+}
+
+export const AudioContext = createContext<AudioContextValue>({
   audioSource: {},
   audioPlayerVisible: false,
-  toggleAudioPlayer: () => {},
-  onCloseAudioPlayer: () => {},
+  toggleAudioPlayer: () => {
+    throw new Error('not implemented')
+  },
+  onCloseAudioPlayer: () => {
+    throw new Error('not implemented')
+  },
   audioState: {},
   autoPlayActive: false,
 })
