@@ -17,12 +17,12 @@ export type UpsertMediaProgressVariables = {
   secs: number
 }
 
-export type UpserMediaProgressData = {
-  upsetMediaProgress: Pick<MediaProgress, 'id' | 'mediaId' | 'secs'>
+export type UpsertMediaProgressData = {
+  upsertMediaProgress: Pick<MediaProgress, 'id' | 'mediaId' | 'secs'>
 }
 
 const useUpsertMediaProgress = makeMutationHook<
-  UpserMediaProgressData,
+  UpsertMediaProgressData,
   UpsertMediaProgressVariables
 >(UPSERT_MEDIA_PROGRESS_MUTATION)
 
