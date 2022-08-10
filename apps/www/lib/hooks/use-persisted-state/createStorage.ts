@@ -9,12 +9,12 @@ export type Storage<T> = {
 /**
  * Create a storage provider that can be used to persist state across sessions.
  */
-function createStorage<T>(provider: StorageProvider): Storage<T> {
+function createStorage<T = object>(provider: StorageProvider): Storage<T> {
   return {
     // todo: ensure t can be a both a fixed default value or a Supplier<T>
     get(key: string, defaultValue: T | (() => T)) {
       const json = provider.getItem(key)
-      if (json !== null) {
+      if (json) {
         return JSON.parse(json) as T
       }
       return typeof defaultValue === 'function'
