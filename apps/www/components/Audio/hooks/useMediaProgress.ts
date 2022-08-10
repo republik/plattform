@@ -1,4 +1,4 @@
-import { MediaProgress } from './../types/MediaProgress'
+import { MediaProgress } from '../types/MediaProgress'
 import { gql } from '@apollo/client'
 import { makeLazyQueryHook } from '../../../lib/helpers/AbstractApolloGQLHooks.helper'
 

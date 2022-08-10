@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 import { makeMutationHook } from '../../../lib/helpers/AbstractApolloGQLHooks.helper'
-import { MediaProgress } from './../types/MediaProgress'
+import { MediaProgress } from '../types/MediaProgress'
 
 const UPSERT_MEDIA_PROGRESS_MUTATION = gql`
   mutation upsertMediaProgress($mediaId: ID!, $secs: Float!) {
