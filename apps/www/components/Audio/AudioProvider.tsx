@@ -4,10 +4,18 @@ import createPersistedState from '../../lib/hooks/use-persisted-state'
 import { useInNativeApp, postMessage } from '../../lib/withInNativeApp'
 
 import { useMediaProgress } from './MediaProgress'
+import { AudioSource } from './types/AudioSource'
+
+type AudioState = {
+  audioSource: AudioSource
+  url: string
+  title: string
+  sourcePath: string
+  mediaId: string
+}
 
 type AudioContextValue = {
-  audioSource?: unknown
-  audioState: unknown
+  audioState: AudioState | null
   audioPlayerVisible: boolean
   autoPlayActive: boolean
   toggleAudioPlayer: (payload: unknown) => void
@@ -15,7 +23,6 @@ type AudioContextValue = {
 }
 
 export const AudioContext = createContext<AudioContextValue>({
-  audioSource: {},
   audioPlayerVisible: false,
   toggleAudioPlayer: () => {
     throw new Error('not implemented')
@@ -23,22 +30,34 @@ export const AudioContext = createContext<AudioContextValue>({
   onCloseAudioPlayer: () => {
     throw new Error('not implemented')
   },
-  audioState: {},
+  audioState: null,
   autoPlayActive: false,
 })
 
-const useAudioState = createPersistedState('republik-audioplayer-audiostate')
+const useAudioState = createPersistedState<AudioState>(
+  'republik-audioplayer-audiostate',
+)
 
 const AudioProvider = ({ children }) => {
   const { inNativeApp, inNativeIOSApp } = useInNativeApp()
-  const [audioState, setAudioState] = useAudioState(undefined)
+  const [audioState, setAudioState] = useAudioState<AudioState | undefined>(
+    undefined,
+  )
   const [audioPlayerVisible, setAudioPlayerVisible] = useState(false)
-  const [autoPlayAudioState, setAutoPlayAudioState] = useState(false)
-  const clearTimeoutId = useRef()
+  const [autoPlayAudioState, setAutoPlayAudioState] = useState(null)
+  const clearTimeoutId = useRef<NodeJS.Timeout | null>()
 
   const { getMediaProgress } = useMediaProgress()
 
-  const toggleAudioPlayer = async ({ audioSource, title, path }) => {
+  const toggleAudioPlayer = async ({
+    audioSource,
+    title,
+    path,
+  }: {
+    audioSource: AudioSource
+    title: string
+    path: string
+  }) => {
     const url = (
       (inNativeIOSApp && audioSource.aac) ||
       audioSource.mp3 ||
