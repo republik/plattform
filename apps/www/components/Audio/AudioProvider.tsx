@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useRef } from 'react'
+import { createContext, useState, useEffect, useRef, useContext } from 'react'
 
 import createPersistedState from '../../lib/hooks/use-persisted-state'
 import { useInNativeApp, postMessage } from '../../lib/withInNativeApp'
@@ -18,7 +18,11 @@ type AudioContextValue = {
   audioState: AudioState | null
   audioPlayerVisible: boolean
   autoPlayActive: boolean
-  toggleAudioPlayer: (payload: unknown) => void
+  toggleAudioPlayer: (payload: {
+    audioSource: AudioSource
+    title: string
+    path: string
+  }) => void
   onCloseAudioPlayer: () => void
 }
 
@@ -33,6 +37,8 @@ export const AudioContext = createContext<AudioContextValue>({
   audioState: null,
   autoPlayActive: false,
 })
+
+export const useAudioContext = () => useContext(AudioContext)
 
 const useAudioState = createPersistedState<AudioState>(
   'republik-audioplayer-audiostate',
@@ -58,6 +64,11 @@ const AudioProvider = ({ children }) => {
     title: string
     path: string
   }) => {
+    console.log('AudioProvider', {
+      audioSource,
+      title,
+      path,
+    })
     const url = (
       (inNativeIOSApp && audioSource.aac) ||
       audioSource.mp3 ||
@@ -94,6 +105,7 @@ const AudioProvider = ({ children }) => {
   }
 
   const onCloseAudioPlayer = () => {
+    console.log('onCloseAudioPlayer')
     setAudioPlayerVisible(false)
     clearTimeoutId.current = setTimeout(() => {
       setAudioState(undefined)
