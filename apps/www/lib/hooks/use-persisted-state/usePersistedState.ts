@@ -4,11 +4,13 @@ import useEventListener from '@use-it/event-listener'
 import createGlobalState from './createGlobalState'
 import { Storage } from './createStorage'
 
+type UsePersistedStateHook<T> = [T, Dispatch<SetStateAction<T>>, boolean]
+
 const usePersistedState = <T>(
   initialState: T,
   key: string,
   { get, set }: Storage<T>,
-): [T, Dispatch<SetStateAction<T>>, boolean] => {
+): UsePersistedStateHook<T> => {
   const globalState = useRef(null)
   const storageEventValue = useRef(null)
   const [persisted, setPersisted] = useState(true)
