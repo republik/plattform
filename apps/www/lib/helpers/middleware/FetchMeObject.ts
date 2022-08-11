@@ -7,9 +7,9 @@ import { NextRequest } from 'next/server'
 async function fetchMeObject(
   req: NextRequest,
 ): Promise<{ me: null | { roles: string[] }; cookie: string }> {
-  const response = await fetch(process.env.API_URL, {
-    method: 'POST',
-    body: JSON.stringify({ query: 'query { me { roles } }' }),
+  const response = await fetch(`${process.env.API_URL}?query={me{roles}}`, {
+    method: 'GET',
+    //body: JSON.stringify({ query: 'query ' }),
     headers: {
       'Content-Type': 'application/json',
       // Attach headers to the request to ensure `me` is returned
