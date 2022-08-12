@@ -5,8 +5,10 @@ import { useInNativeApp, postMessage } from '../../lib/withInNativeApp'
 
 import { useMediaProgress } from './MediaProgress'
 import { AudioSource } from './types/AudioSource'
+import compareVersion from '../../lib/react-native/CompareVersion'
+import { NEW_AUDIO_API_VERSION } from './constants'
 
-type AudioState = {
+export type AudioState = {
   audioSource: AudioSource
   url: string
   title: string
@@ -45,7 +47,7 @@ const useAudioState = createPersistedState<AudioState>(
 )
 
 const AudioProvider = ({ children }) => {
-  const { inNativeApp, inNativeIOSApp } = useInNativeApp()
+  const { inNativeApp, inNativeAppVersion, inNativeIOSApp } = useInNativeApp()
   const [audioState, setAudioState] = useAudioState<AudioState | undefined>(
     undefined,
   )
@@ -64,11 +66,6 @@ const AudioProvider = ({ children }) => {
     title: string
     path: string
   }) => {
-    console.log('AudioProvider', {
-      audioSource,
-      title,
-      path,
-    })
     const url = (
       (inNativeIOSApp && audioSource.aac) ||
       audioSource.mp3 ||
@@ -85,7 +82,11 @@ const AudioProvider = ({ children }) => {
       sourcePath: path,
       mediaId,
     }
-    if (inNativeApp) {
+    if (
+      inNativeApp &&
+      // check if current version is smaller than NEW_AUDIO_API_VERSION
+      compareVersion(inNativeAppVersion, NEW_AUDIO_API_VERSION) < 0
+    ) {
       let currentTime
       if (mediaId) {
         currentTime = await getMediaProgress({ mediaId })
