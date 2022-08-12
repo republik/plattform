@@ -1,15 +1,15 @@
-import { AudioContext } from './AudioProvider'
+import { AudioContext } from '../AudioProvider'
 import { AudioPlayer } from '@project-r/styleguide'
-import ProgressComponent from '../Article/Progress'
-import withT from '../../lib/withT'
+import ProgressComponent from '../../Article/Progress'
+import withT from '../../../lib/withT'
 import compose from 'lodash/flowRight'
-import { AUDIO_PLAYER_HEIGHT } from '../constants'
-import Link from '../Link/Href'
+import { AUDIO_PLAYER_HEIGHT } from '../../constants'
+import Link from '../../Link/Href'
 
-import BottomPanel from '../Frame/BottomPanel'
-import { useMe } from '../../lib/context/MeContext'
-import { usePlaybackRate } from '../../lib/playbackRate'
-import { trackEvent } from '../../lib/matomo'
+import BottomPanel from '../../Frame/BottomPanel'
+import { useMe } from '../../../lib/context/MeContext'
+import { usePlaybackRate } from '../../../lib/playbackRate'
+import { trackEvent } from '../../../lib/matomo'
 
 const AudioPlayerFrontend = ({ t }) => {
   const { meLoading } = useMe()
