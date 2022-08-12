@@ -50,42 +50,41 @@ const styles = {
   }),
   container: css({
     display: 'flex',
-    justifyContent: 'space-between',
-    padding: '12px 0',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    padding: '16px 0',
     gap: 16,
   }),
   text: css({
     flex: 1,
-    margin: 0,
+    margin: '2px 0',
   }),
   title: css({
-    ...fontStyles.sansSerifMedium15,
+    ...fontStyles.sansSerifMedium16,
     textDecoration: 'none',
-    cursor: 'pointer',
-    margin: '0px 0 4px 0',
-    padding: 0,
+  }),
+  link: css({
+    ...fontStyles.sansSerifRegular16,
+    whiteSpace: 'nowrap',
   }),
 }
 
-const SyntheticAudio = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
+const ReadAloudInline = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
   const { toggleAudioPlayer } = useContext<AudioContextType>(AudioContext)
   const [colorScheme] = useColorContext()
+
   const { kind } = meta.audioSource
   const isSynthetic = kind === 'syntheticReadAloud'
-  const Icon = isSynthetic ? AudioIcon : PodcastIcon
-  const eventCategory = isSynthetic ? 'SyntheticAudio' : 'ReadAloudAudio'
+  const Icon = (isSynthetic && AudioIcon) || PodcastIcon
+  const eventCategory = (isSynthetic && 'SyntheticAudio') || 'ReadAloudAudio'
+  const title = t(`article/${kind}/title`)
+  const label = t(`article/${kind}/hint/label`)
+  const link = t(`article/${kind}/hint/link`)
+
   return (
     <div>
       <hr {...styles.hr} {...colorScheme.set('backgroundColor', 'divider')} />
-      <div
-        {...styles.container}
-        {...css({
-          alignItems: isSynthetic ? 'flex-start' : 'center',
-          [mediaQueries.mUp]: {
-            alignItems: 'center',
-          },
-        })}
-      >
+      <div {...styles.container}>
         <IconButton
           style={{ marginRight: 0 }}
           size={32}
@@ -115,12 +114,15 @@ const SyntheticAudio = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
             {...colorScheme.set('color', 'text')}
             {...styles.title}
           >
-            {t(`article/${kind}/title`)}
-          </a>{' '}
-          {isSynthetic && (
-            <Editorial.A href='/2022/05/04/helfen-sie-uns-die-synthetische-stimme-zu-verbessern/diskussion'>
-              {t('article/syntheticReadAloud/errorLink')}
-            </Editorial.A>
+            {title}
+          </a>
+          {label && link && (
+            <>
+              {' '}
+              <Editorial.A href={link}>
+                <span {...styles.link}>{label}</span>
+              </Editorial.A>
+            </>
           )}
         </p>
       </div>
@@ -129,4 +131,4 @@ const SyntheticAudio = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
   )
 }
 
-export default SyntheticAudio
+export default ReadAloudInline
