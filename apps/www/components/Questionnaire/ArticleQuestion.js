@@ -47,7 +47,7 @@ const ArticleItem = ({ title, credits }) => (
   <div>
     <H3 {...styles.previewTitle}>{title}</H3>
     <div {...styles.previewCredits}>
-      {credits && credits.map(renderCredits).join('')}
+      {credits?.children?.map(renderCredits).join('')}
     </div>
   </div>
 )
@@ -220,7 +220,10 @@ const query = gql`
             meta {
               title
               path
-              credits
+              credits {
+                type
+                children
+              }
             }
           }
         }

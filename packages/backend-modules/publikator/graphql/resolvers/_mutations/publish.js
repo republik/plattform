@@ -150,7 +150,7 @@ module.exports = async (
 
   const searchString = '?' + querystring.stringify(utmParams)
 
-  contentUrlResolver(
+  await contentUrlResolver(
     resolvedDoc,
     _all,
     _usernames,

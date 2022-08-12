@@ -164,9 +164,13 @@ const prepareMetaForPublish = async ({
   })
 
   const contributorUserLinks = await getContributorUserLinks(
+    doc.type,
     {
       path,
-      credits,
+      credits: {
+        type: doc.type,
+        children: credits,
+      },
     },
     context,
   )
@@ -206,7 +210,10 @@ const prepareMetaForPublish = async ({
     scheduledAt,
     notifySubscribers,
     creditsString,
-    credits,
+    credits: {
+      type: doc.type,
+      children: credits,
+    },
     audioSource,
     contributorUserLinks,
     isSeriesMaster,

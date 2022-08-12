@@ -159,7 +159,7 @@ const TeaserMyMagazine = ({
                     format={format}
                     path={path}
                     title={limitedTitle(emailSubject || title, 140)}
-                    credits={credits}
+                    credits={credits?.children}
                     publishDate={publishDate}
                   />
                 )
@@ -290,7 +290,10 @@ WrappedTeaserMyMagazine.data = {
               meta {
                 title
                 emailSubject
-                credits
+                credits {
+                  type
+                  children
+                }
                 prepublication
                 path
                 kind
@@ -326,7 +329,10 @@ WrappedTeaserMyMagazine.data = {
                 template
                 kind
                 color
-                credits
+                credits {
+                  type
+                  children
+                }
                 estimatedConsumptionMinutes
                 estimatedReadingMinutes
                 format {

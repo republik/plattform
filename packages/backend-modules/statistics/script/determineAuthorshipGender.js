@@ -80,7 +80,7 @@ PgDb.connect()
         return !['/2018/02/21/bad-bottles'].includes(path)
       })
       .map((meta) => {
-        const credits = mdastToString({ children: meta.credits })
+        const credits = mdastToString(meta.credits)
 
         const authorship = credits
           .replace(/(Von|By|Mit) /, '')

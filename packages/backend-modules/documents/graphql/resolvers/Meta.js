@@ -12,12 +12,16 @@ module.exports = {
   // deprecated, left in for smooth transition including deploys
   authors: async (meta, _, context) => {
     const { loaders } = context
-    const ids = await getContributorUserIds(meta, context)
+    if (!meta?.credits?.children) {
+      return []
+    }
+
+    const ids = await getContributorUserIds(meta?.credits?.type, meta, context)
 
     return Promise.map(ids, (id) => loaders.User.byId.load(id)).filter(Boolean)
   },
   contributors: async (meta, _, context) => {
-    const creditString = mdastToString({ children: meta.credits })
+    const creditString = mdastToString(meta.credits)
 
     let contributors
     try {
@@ -27,7 +31,11 @@ module.exports = {
       return []
     }
 
-    let contributorsUserLinks = await getContributorUserLinks(meta, context)
+    let contributorsUserLinks = await getContributorUserLinks(
+      meta.type,
+      meta,
+      context,
+    )
     return contributors.map((contributor) => {
       const userLink = contributorsUserLinks.find(
         (c) => c.name === contributor.name,

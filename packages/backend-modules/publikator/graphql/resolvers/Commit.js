@@ -57,9 +57,9 @@ module.exports = {
     const proxy = createProxyUrlPrefixer()
 
     await Promise.all([
-      processRepoImageUrlsInContent(content, prefix),
-      processRepoImageUrlsInMeta(content, prefix),
-      processEmbedsInContent(content, proxy, context),
+      processRepoImageUrlsInContent(type, content, prefix),
+      processRepoImageUrlsInMeta(type, content, prefix),
+      processEmbedsInContent(type, content, proxy, context),
     ])
 
     return {

@@ -62,7 +62,10 @@ ConnectionContext.create('backends statistics publicationData').then(
               totalCount
             }
           }
-          credits
+          credits {
+            type
+            children
+          }
         }
         repoId
       }
@@ -104,7 +107,7 @@ ConnectionContext.create('backends statistics publicationData').then(
         repoId: d.repoId,
         title: d.meta.title,
         description: d.meta.description,
-        credits: mdastToString({ children: d.meta.credits }),
+        credits: mdastToString(d.meta.credits),
         formatRepoId: d.meta.format && d.meta.format.repoId,
         format: d.meta.format && d.meta.format.meta.title,
         linkedAuthors: d.users

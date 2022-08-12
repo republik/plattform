@@ -86,7 +86,10 @@ const getComments = gql`
             meta {
               title
               path
-              credits
+              credits {
+                type
+                children
+              }
               template
               ownDiscussion {
                 id
