@@ -6,10 +6,6 @@ const meta = {
 
 const { getWordsPerMinute, getRepoIdsForDoc, getTemplate } = meta.common
 
-const getCredits = (doc) => {
-  console.warn('meta/getCredits not implemented')
-}
-
 const getMeta = (doc) => {
   const getMeta = meta[doc.type || 'mdast']?.getMeta || meta.common?.getMeta
 
@@ -52,7 +48,6 @@ const getContributorUserIds = (type, docMeta, context) => {
 }
 
 module.exports = {
-  getCredits,
   getMeta,
   getWordsPerMinute,
   getRepoIdsForDoc,

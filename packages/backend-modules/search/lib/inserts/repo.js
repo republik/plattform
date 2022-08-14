@@ -1,10 +1,9 @@
 const visit = require('unist-util-visit')
 
 const {
-  mdastContentToString,
-} = require('@orbiting/backend-modules-search/lib/utils')
+  stringifyNode,
+} = require('@orbiting/backend-modules-documents/lib/resolve')
 const { mdastToString } = require('@orbiting/backend-modules-utils')
-const { parse: mdastParse } = require('@orbiting/remark-preset')
 
 const bulk = require('../indexPgTable')
 
@@ -13,50 +12,53 @@ function getCommit(restCommit) {
   return { id, message, createdAt }
 }
 
-function getCommitStrings(mdast) {
-  if (!mdast) {
-    return
+async function getCommitStrings(type, content) {
+  if (!content) {
+    return {}
   }
 
   const strings = {}
 
-  const text = mdastContentToString(mdast)
+  const text = await stringifyNode(type, content)
   text && Object.assign(strings, { text })
 
-  visit(mdast, 'zone', (node) => {
-    if (node.identifier === 'TITLE') {
-      const title = mdastToString({
-        children: node.children.filter(
-          (n) => n.type === 'heading' && n.depth === 1,
-        ),
-      }).trim()
+  // @TODO: make this work, slate needs a sibling to this.
+  if (type === 'mdast') {
+    visit(content, 'zone', (node) => {
+      if (node.identifier === 'TITLE') {
+        const title = mdastToString({
+          children: node.children.filter(
+            (n) => n.type === 'heading' && n.depth === 1,
+          ),
+        }).trim()
 
-      const subject = mdastToString({
-        children: node.children.filter(
-          (n) => n.type === 'heading' && n.depth === 2,
-        ),
-      }).trim()
+        const subject = mdastToString({
+          children: node.children.filter(
+            (n) => n.type === 'heading' && n.depth === 2,
+          ),
+        }).trim()
 
-      const lead = mdastToString({
-        children: [
-          node.children.filter((n) => n.type === 'paragraph')[0],
-        ].filter(Boolean),
-      }).trim()
+        const lead = mdastToString({
+          children: [
+            node.children.filter((n) => n.type === 'paragraph')[0],
+          ].filter(Boolean),
+        }).trim()
 
-      const credits = mdastToString({
-        children: [
-          node.children.filter((n) => n.type === 'paragraph')[1],
-        ].filter(Boolean),
-      }).trim()
+        const credits = mdastToString({
+          children: [
+            node.children.filter((n) => n.type === 'paragraph')[1],
+          ].filter(Boolean),
+        }).trim()
 
-      Object.assign(strings, {
-        title,
-        subject,
-        lead,
-        credits,
-      })
-    }
-  })
+        Object.assign(strings, {
+          title,
+          subject,
+          lead,
+          credits,
+        })
+      }
+    })
+  }
 
   return { strings }
 }
@@ -100,17 +102,14 @@ function getCommitMeta(meta) {
 }
 
 async function transform(row) {
-  const { content, meta, ...restCommit } = await this.payload.getLatestCommit(
-    row.id,
-  )
-
-  const mdast = mdastParse(content)
+  const { type, content, meta, ...restCommit } =
+    await this.payload.getLatestCommit(row.id)
 
   return {
     ...row,
     commit: {
       ...getCommit(restCommit),
-      ...getCommitStrings(mdast),
+      ...(await getCommitStrings(type, content)),
       ...getCommitMeta(meta),
     },
   }

@@ -5,7 +5,6 @@ const debug = require('debug')('statistics:script:report:daily')
 const moment = require('moment')
 const Promise = require('bluebird')
 const yargs = require('yargs')
-const mdastToString = require('mdast-util-to-string')
 const { descending } = require('d3-array')
 
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
@@ -13,6 +12,9 @@ const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch'
 const {
   publish: { postMessage },
 } = require('@orbiting/backend-modules-slack')
+const {
+  stringifyNode,
+} = require('@orbiting/backend-modules-documents/lib/resolve')
 
 const Data = require('../../lib/matomo/data')
 const Indexes = require('../../lib/matomo/indexes')
@@ -145,7 +147,7 @@ const getBlock = (
       type: 'mrkdwn',
       text: [
         `*<${getUltradashboardUrlReportLink(url)}|${meta.title}>*`,
-        `_${mdastToString({ children: meta.credits }).replace(
+        `_${stringifyNode(meta.credits).replace(
           `, ${date.format('DD.MM.YYYY')}`,
           '',
         )}_` + (daysPublished > 1 ? ` (${daysPublished}. Tag)` : ''),

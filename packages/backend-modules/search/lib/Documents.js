@@ -3,7 +3,7 @@ const debug = require('debug')('search:lib:Documents')
 const sleep = require('await-sleep')
 
 const {
-  resolve: { extractIdsFromNode, getRepoId },
+  resolve: { extractIdsFromNode, getRepoId, stringifyNode },
   meta: { getWordsPerMinute },
 } = require('@orbiting/backend-modules-documents/lib')
 
@@ -24,7 +24,7 @@ const {
 
 const createCache = require('./cache')
 
-const { getIndexAlias, mdastContentToString } = require('./utils')
+const { getIndexAlias } = require('./utils')
 
 const {
   createPublish: createPublishDocumentZones,
@@ -220,7 +220,7 @@ const schema = {
   },
 }
 
-const getElasticDoc = ({ doc, commitId, versionName, resolved }) => {
+const getElasticDoc = async ({ doc, commitId, versionName, resolved }) => {
   const meta = doc.content.meta
   const id = getDocumentId({ repoId: meta.repoId, commitId, versionName })
   return {
@@ -235,7 +235,7 @@ const getElasticDoc = ({ doc, commitId, versionName, resolved }) => {
     resolved: !_.isEmpty(resolved) ? resolved : undefined,
     type: doc.type,
     content: doc.content,
-    contentString: mdastContentToString(doc.content),
+    contentString: await stringifyNode(doc.type, doc.content),
   }
 }
 

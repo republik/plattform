@@ -2,8 +2,6 @@ const visit = require('unist-util-visit')
 const Promise = require('bluebird')
 const { v4: isUuid } = require('is-uuid')
 
-const { mdastToString } = require('@orbiting/backend-modules-utils')
-
 const {
   getAudioSource,
   isReadingMinutesSuppressed,
@@ -11,6 +9,8 @@ const {
   getEstimatedConsumptionMinutes,
 } = require('../common/meta')
 const { metaFieldResolver } = require('../common/resolve')
+
+const { stringifyNode } = require('./resolve')
 
 const { FRONTEND_BASE_URL } = process.env
 
@@ -80,12 +80,16 @@ const getMeta = (doc) => {
 
   // Populate {doc._meta}. Is used to recognize provided {doc} for which meta
   // information was retrieved already.
+
+  const credits = {
+    type: 'mdast',
+    children: getCredits(doc),
+  }
+
   doc._meta = {
     ...doc.content.meta,
-    credits: {
-      type: 'mdast',
-      children: getCredits(doc),
-    },
+    credits,
+    creditsString: stringifyNode(credits),
     audioSource: getAudioSource(doc),
     ...times,
     ...resolvedFields,
@@ -107,7 +111,7 @@ const getContributorUserLinks = (meta, { loaders }) => {
       if (url.startsWith(FRONTEND_BASE_URL)) {
         url = url.replace(FRONTEND_BASE_URL, '')
       }
-      const name = mdastToString(node).trim()
+      const name = stringifyNode(node).trim()
       if (url.startsWith('/~')) {
         const idOrUsername = url.substring(2)
         if (isUuid(idOrUsername)) {

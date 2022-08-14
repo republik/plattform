@@ -3,7 +3,7 @@ const {
   getContributorUserIds,
   getContributorUserLinks,
 } = require('../../lib/meta')
-const { mdastToString } = require('@orbiting/backend-modules-utils')
+const { stringifyNode } = require('../../lib/resolve')
 const {
   Analyzer,
 } = require('@orbiting/backend-modules-statistics/lib/credits/analyzer')
@@ -21,7 +21,10 @@ module.exports = {
     return Promise.map(ids, (id) => loaders.User.byId.load(id)).filter(Boolean)
   },
   contributors: async (meta, _, context) => {
-    const creditString = mdastToString(meta.credits)
+    const creditString = await stringifyNode(meta.credits?.type, meta.credits)
+    if (!creditString) {
+      return []
+    }
 
     let contributors
     try {
@@ -32,7 +35,7 @@ module.exports = {
     }
 
     let contributorsUserLinks = await getContributorUserLinks(
-      meta.type,
+      meta.credits?.type,
       meta,
       context,
     )

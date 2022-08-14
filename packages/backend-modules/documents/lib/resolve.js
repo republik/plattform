@@ -11,7 +11,9 @@ const resolve = {
 }
 
 const extractIdsFromNode = async (type, node, contextRepoId) => {
-  const extractIdsFromNode = resolve[type || 'mdast']?.extractIdsFromNode
+  const extractIdsFromNode =
+    resolve[type || 'mdast']?.extractIdsFromNode ||
+    process.common?.extractIdsFromNode
 
   if (!extractIdsFromNode) {
     console.warn(
@@ -32,7 +34,9 @@ const contentUrlResolver = (
   searchString,
   user,
 ) => {
-  const contentUrlResolver = resolve[doc.type || 'mdast']?.contentUrlResolver
+  const contentUrlResolver =
+    resolve[doc.type || 'mdast']?.contentUrlResolver ||
+    process.common?.contentUrlResolver
 
   if (!contentUrlResolver) {
     console.warn(
@@ -63,7 +67,8 @@ const metaUrlResolver = async (
   user,
   apiKey,
 ) => {
-  const metaUrlResolver = resolve[type || 'mdast']?.metaUrlResolver
+  const metaUrlResolver =
+    resolve[type || 'mdast']?.metaUrlResolver || process.common?.metaUrlResolver
 
   if (!metaUrlResolver) {
     console.warn(`resolve/metaUrlResolver for type "${type}" not implemented`)
@@ -82,6 +87,18 @@ const metaUrlResolver = async (
   )
 }
 
+const stringifyNode = async (type, node) => {
+  const stringifyNode =
+    resolve[type || 'mdast']?.stringifyNode || process.common?.stringifyNode
+
+  if (!stringifyNode) {
+    console.warn(`resolve/stringifyNode for type "${type}" not implemented`)
+    return
+  }
+
+  return stringifyNode(node)
+}
+
 module.exports = {
   getRepoId,
   extractIdsFromNode,
@@ -90,4 +107,5 @@ module.exports = {
   contentUrlResolver,
   metaUrlResolver,
   metaFieldResolver,
+  stringifyNode,
 }

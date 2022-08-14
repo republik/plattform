@@ -1,5 +1,8 @@
 const checkEnv = require('check-env')
-const { slateVisit: visit } = require('@orbiting/backend-modules-utils')
+const {
+  slateVisit: visit,
+  slateToString: toString,
+} = require('@orbiting/backend-modules-utils')
 const { v4: isUuid } = require('is-uuid')
 
 const { hasFullDocumentAccess } = require('../restrictions')
@@ -109,8 +112,17 @@ const extractIdsFromNode = async (node, contextRepoId) => {
   }
 }
 
+const stringifyNode = async (node) => {
+  if (!node?.children) {
+    return ''
+  }
+
+  return toString(node.children)
+}
+
 module.exports = {
   contentUrlResolver,
   metaUrlResolver,
   extractIdsFromNode,
+  stringifyNode,
 }

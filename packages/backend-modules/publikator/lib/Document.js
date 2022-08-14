@@ -5,11 +5,11 @@ const fetch = require('isomorphic-unfetch')
 const Promise = require('bluebird')
 
 const { timeFormat } = require('@orbiting/backend-modules-formats')
-const { mdastToString } = require('@orbiting/backend-modules-utils')
 const {
   Redirections: { upsert: upsertRedirection },
 } = require('@orbiting/backend-modules-redirections')
 const {
+  getMeta,
   getContributorUserLinks,
 } = require('@orbiting/backend-modules-documents/lib/meta')
 
@@ -105,20 +105,6 @@ const prepareMetaForPublish = async ({
     await updateRepo(repoId, { publishDate }, context.pgdb)
   }
 
-  let credits = []
-  visit(doc.content, 'zone', (node) => {
-    if (node.identifier === 'TITLE') {
-      const paragraphs = node.children.filter(
-        (child) => child.type === 'paragraph',
-      )
-      if (paragraphs.length >= 2) {
-        credits = paragraphs[paragraphs.length - 1].children
-      }
-    }
-  })
-
-  const creditsString = mdastToString({ children: credits })
-
   const { audioSourceKind, audioSourceMp3, audioSourceAac, audioSourceOgg } =
     doc.content.meta
   let durationMs = 0
@@ -163,18 +149,6 @@ const prepareMetaForPublish = async ({
     }
   })
 
-  const contributorUserLinks = await getContributorUserLinks(
-    doc.type,
-    {
-      path,
-      credits: {
-        type: doc.type,
-        children: credits,
-      },
-    },
-    context,
-  )
-
   const isSeriesMaster = typeof docMeta.series === 'object'
   const isSeriesEpisode = typeof docMeta.series === 'string'
 
@@ -196,6 +170,18 @@ const prepareMetaForPublish = async ({
     }
   }
 
+  await getMeta(doc)
+  const { credits, creditsString } = doc._meta
+
+  const contributorUserLinks = await getContributorUserLinks(
+    doc.type,
+    {
+      path,
+      credits,
+    },
+    context,
+  )
+
   // transform docMeta
   return {
     ...docMeta,
@@ -209,12 +195,9 @@ const prepareMetaForPublish = async ({
     prepublication,
     scheduledAt,
     notifySubscribers,
-    creditsString,
-    credits: {
-      type: doc.type,
-      children: credits,
-    },
     audioSource,
+    credits,
+    creditsString,
     contributorUserLinks,
     isSeriesMaster,
     isSeriesEpisode,

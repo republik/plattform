@@ -18,7 +18,9 @@ const Promise = require('bluebird')
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
 const utils = require('@orbiting/backend-modules-search/lib/utils')
-const { mdastToString } = require('@orbiting/backend-modules-utils')
+const {
+  stringifyNode,
+} = require('@orbiting/backend-modules-documents/lib/resolve')
 
 const { Analyzer } = require('../lib/credits/analyzer')
 
@@ -91,9 +93,9 @@ PgDb.connect()
     await Promise.each(
       hits
         .map(({ _source: { meta } }) => meta)
-        .filter(({ credits }) => credits.length > 0),
+        .filter(({ credits }) => credits.children.length > 0),
       async (meta) => {
-        const credits = mdastToString({ children: meta.credits })
+        const credits = await stringifyNode(meta.credits?.type, meta.credits)
 
         const analysis = new Analyzer().getAnalysis(credits)
         // console.log(analysis)

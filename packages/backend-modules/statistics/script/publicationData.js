@@ -13,7 +13,9 @@ const moment = require('moment')
 const {
   lib: { ConnectionContext },
 } = require('@orbiting/backend-modules-base')
-const { mdastToString } = require('@orbiting/backend-modules-utils')
+const {
+  stringifyNode,
+} = require('@orbiting/backend-modules-documents/lib/resolve')
 
 const findAuthorIdentifiers = (children) => {
   const identifiers = new Set()
@@ -107,7 +109,7 @@ ConnectionContext.create('backends statistics publicationData').then(
         repoId: d.repoId,
         title: d.meta.title,
         description: d.meta.description,
-        credits: mdastToString(d.meta.credits),
+        credits: stringifyNode(d.meta.credits),
         formatRepoId: d.meta.format && d.meta.format.repoId,
         format: d.meta.format && d.meta.format.meta.title,
         linkedAuthors: d.users

@@ -187,6 +187,7 @@ type DocumentZone {
   identifier: String!
   data: JSON!
   text: String
+  type: DocumentType!
   node: JSON!
   document: Document
 }
