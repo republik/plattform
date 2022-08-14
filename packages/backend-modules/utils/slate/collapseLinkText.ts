@@ -12,13 +12,17 @@ type CollapseOptions = {
  *
  */
 async function collapseLinkText(
-  children: SlateNode[],
+  node: SlateNode,
   options?: CollapseOptions,
 ): Promise<void> {
+  if (!node.children) {
+    return
+  }
+
   const { prefix = 35, postfix = 10, char = '…' } = options || {}
 
   await visit(
-    children,
+    node,
     (child) => {
       return (
         child?.type === 'link' &&
@@ -33,8 +37,6 @@ async function collapseLinkText(
         child.children[0].text.slice(0, prefix),
         child.children[0].text.slice(0 - postfix),
       ].join(char)
-
-      console.log(child.children[0]?.text, child.href)
     },
   )
 }

@@ -782,7 +782,7 @@ const cases = [
 describe('slate/toString', () => {
   cases.forEach(({ name, slatetree, glue, string }) => {
     test(`transform ${name}`, () => {
-      expect(UUT(slatetree, glue)).toEqual(string)
+      expect(UUT({ children: slatetree }, glue)).toEqual(string)
     })
   })
 })

@@ -113,11 +113,11 @@ const extractIdsFromNode = async (node, contextRepoId) => {
 }
 
 const stringifyNode = async (node) => {
-  if (!node?.children) {
+  if (!node.children) {
     return ''
   }
 
-  return toString(node.children)
+  return toString(node)
 }
 
 module.exports = {

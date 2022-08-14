@@ -298,7 +298,7 @@ const cases = [
 describe('slate/collapseLinkText', () => {
   cases.forEach(({ name, slatetree, options, expected }) => {
     test(name, () =>
-      UUT(slatetree, options).then(() => {
+      UUT({ children: slatetree }, options).then(() => {
         expect(slatetree).toEqual(expected)
       }),
     )

@@ -17,7 +17,7 @@ export default function visit(
   predicate: Predicate,
   visitor: Visitor,
 ): Promise<SlateNode> {
-  if (!node?.children) {
+  if (!node.children) {
     return Promise.resolve(node)
   }
 

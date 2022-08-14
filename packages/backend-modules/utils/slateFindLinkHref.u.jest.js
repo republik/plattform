@@ -101,7 +101,7 @@ const cases = [
 describe('slate/findLinkHref', () => {
   cases.forEach(({ name, slatetree, urls }) => {
     test(name, () =>
-      UUT(slatetree).then((result) => {
+      UUT({ children: slatetree }).then((result) => {
         expect(result).toEqual(urls)
       }),
     )

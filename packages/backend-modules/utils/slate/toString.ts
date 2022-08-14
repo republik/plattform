@@ -4,8 +4,8 @@ import type { SlateNode } from './NodeMapping'
  * Stringify array of Slate nodes ("Slate tree").
  *
  */
-function toString(children: SlateNode[], glue = ' '): string {
-  const texts = children.map((child) => {
+function toString(node: SlateNode, glue = ' '): string {
+  const texts = node.children?.map((child: SlateNode) => {
     // e.g. children in paragraphs
     if (typeof child.text === 'string') {
       return child.text
@@ -20,7 +20,7 @@ function toString(children: SlateNode[], glue = ' '): string {
       // type = paragraph + space?
       const appendGlue = child.type !== 'link'
 
-      return toString(child.children, glue) + (appendGlue ? glue : '')
+      return toString(child, glue) + (appendGlue ? glue : '')
     }
 
     console.error('unhandeled child', child.type, child)
