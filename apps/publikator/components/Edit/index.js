@@ -401,7 +401,7 @@ const EditLoader = ({
       <Frame.Header>
         <Frame.Header.Section align='left'>
           <Frame.Nav>
-            <span {...styles.navLink}>Document</span>
+            <span {...styles.navLink}>Dokument</span>
             <span {...styles.navLink}>
               <Link route='flyer/preview' passHref>
                 <A>Vorschau</A>
