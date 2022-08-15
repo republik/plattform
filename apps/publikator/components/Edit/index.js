@@ -461,7 +461,7 @@ const EditLoader = ({
             if (!commitId && repo && repo.latestCommit) {
               debug('loadState', 'redirect', repo.latestCommit)
               // TODO: get base path from router
-              Router.replaceRoute('repo/flyer/edit', {
+              Router.replaceRoute('flyer/edit', {
                 repoId: repoId.split('/'),
                 commitId: repo.latestCommit.id,
               })
@@ -470,7 +470,7 @@ const EditLoader = ({
 
             if (commitId && repo && !repo.commit) {
               setWarnings(addWarning(warnings, t('commit/warn/commit404')))
-              Router.replaceRoute('repo/flyer/edit', {
+              Router.replaceRoute('flyer/edit', {
                 repoId: repoId.split('/'),
               })
               return null
