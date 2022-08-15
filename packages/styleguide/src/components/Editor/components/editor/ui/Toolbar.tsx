@@ -32,6 +32,8 @@ import { getCharCount, isEmpty, selectNearestWord } from '../helpers/text'
 import Scroller from '../../../../Tabs/Scroller'
 import { Label } from '../../../../Typography'
 
+export const EDITOR_TOOLBAR_HEIGHT = 50
+
 const styles = {
   hoveringToolbar: css({
     padding: '8px 7px 6px',

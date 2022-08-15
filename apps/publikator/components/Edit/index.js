@@ -25,7 +25,7 @@ import {
 } from '../VersionControl/UncommittedChanges'
 import BranchingNotice from '../VersionControl/BranchingNotice'
 import { useEffect, useState, useRef } from 'react'
-import Warning from './Warning'
+import { Warnings, Warning } from './Warning'
 import RepoArchivedBanner from '../Repo/ArchivedBanner'
 import { css } from 'glamor'
 import ContentEditor, { INITIAL_VALUE } from '../ContentEditor'
@@ -484,23 +484,6 @@ const EditLoader = ({
               }
             }
 
-            // TODO: warning that there is a newer version (as BaseCommit does)
-            //  ...replace BranchingNotice with VersionNotice?
-            const stuffToAddSomewhere = [
-              ...warnings
-                .filter(Boolean)
-                .map(({ time, message }, i) => (
-                  <Warning
-                    key={`warning-${i}`}
-                    message={`${time} ${message}`}
-                    onRemove={() => setWarnings(rmWarning(warnings, message))}
-                  />
-                )),
-              // TODO: redirect to preview instead of showing banner
-              !pending && repo?.isArchived && (
-                <RepoArchivedBanner key='repo-archived-banner' />
-              ),
-            ].filter(Boolean)
             return (
               <>
                 {interruptingUsers && (
@@ -514,7 +497,22 @@ const EditLoader = ({
                     }}
                   />
                 )}
-                {stuffToAddSomewhere}
+                {!!warnings.length && (
+                  <Warnings>
+                    {warnings.map((warning, i) => (
+                      <Warning
+                        key={`warning-${i}`}
+                        warning={warning}
+                        onRemove={() =>
+                          setWarnings(rmWarning(warnings, warning.message))
+                        }
+                      />
+                    ))}
+                  </Warnings>
+                )}
+                {!pending && repo?.isArchived && (
+                  <RepoArchivedBanner key='repo-archived-banner' />
+                )}
                 <div {...styles.phase}>
                   <PhaseSummary
                     commitId={commit?.id}
