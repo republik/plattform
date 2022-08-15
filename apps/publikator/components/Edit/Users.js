@@ -102,6 +102,7 @@ const EditLoader = ({
   const [acknowledgedUsers, setAcknowledgedUsers] = useState(undefined)
   const [interruptingUsers, setInterruptingUsers] = useState(undefined)
   const [beginChanges, setBeginChanges] = useState(undefined)
+  const [hasUncommittedChanges, setHasUncommittedChanges] = useState(false)
   const [didUnlock, setDidUnlock] = useState(false)
   const [localError, setLocalError] = useState(undefined)
   const prevUncommittedChanges = usePreviousValue(uncommittedChanges)
@@ -144,10 +145,15 @@ const EditLoader = ({
 
   const isNew = commitId === 'new'
 
+  if (!process.browser && !TEST) {
+    console.warn(`loadState should only run in the browser`)
+    return null
+  }
+
   // users management and warnings
   const lock = () => {
     const noLock = t('commit/warn/canNotLock')
-    if (beginChanges) {
+    if (hasUncommittedChanges) {
       return setWarnings(addWarning(warnings, noLock))
     }
     setReadOnly(true)
@@ -175,7 +181,7 @@ const EditLoader = ({
   }
 
   const cleanupNotifications = (event) => {
-    if (!beginChanges && didUnlock) {
+    if (!hasUncommittedChanges && didUnlock) {
       notifyBackend('delete')
       if (event) {
         try {
@@ -194,7 +200,7 @@ const EditLoader = ({
   const lockHandler = (event) => {
     event && event.preventDefault()
     setDidUnlock(false)
-    if (beginChanges) {
+    if (hasUncommittedChanges) {
       console.warn(
         'lockHandler should not be called when user has uncommitted changes',
       )
@@ -224,13 +230,14 @@ const EditLoader = ({
   }
 
   const beginChangesHandler = () => {
+    setHasUncommittedChanges(true)
     setBeginChanges(new Date())
     setReadOnly(false)
     notifyBackend('create')
   }
 
   const concludeChanges = (notify = true) => {
-    setBeginChanges(undefined)
+    setHasUncommittedChanges(false)
     if (notify) {
       notifyBackend('delete')
     }
@@ -244,7 +251,7 @@ const EditLoader = ({
     )
     setInterruptingUsers(undefined)
     if (newUsers?.length) {
-      if (beginChanges || didUnlock) {
+      if (hasUncommittedChanges || didUnlock) {
         setInterruptingUsers(newUsers)
       } else {
         lock()
@@ -364,12 +371,13 @@ const EditLoader = ({
 
   const contentChangeHandler = () => {
     const committedValue = getCommittedValue(data)
+    console.log(committedValue, debouncedValue)
     if (!committedValue || !isEqual(committedValue, debouncedValue)) {
       store.set(CONTENT_KEY, debouncedValue)
       const msSinceBegin =
         beginChanges && new Date().getTime() - beginChanges.getTime()
       if (
-        !msSinceBegin ||
+        !hasUncommittedChanges ||
         msSinceBegin > 1000 * 60 * 5 ||
         (!uncommittedChanges.users.find((user) => user.id === me.id) &&
           (!msSinceBegin || msSinceBegin > 1000))
@@ -378,7 +386,7 @@ const EditLoader = ({
       }
     } else {
       store.clear()
-      if (beginChanges) {
+      if (hasUncommittedChanges) {
         concludeChanges(!didUnlock)
       }
     }
@@ -419,7 +427,7 @@ const EditLoader = ({
               isNew={isNew}
               readOnly={!pending && readOnly}
               didUnlock={didUnlock}
-              hasUncommittedChanges={!pending && beginChanges}
+              hasUncommittedChanges={!pending && hasUncommittedChanges}
               onUnlock={unlockHandler}
               onLock={lockHandler}
               onCommit={commitHandler}
@@ -511,7 +519,7 @@ const EditLoader = ({
                     commitId={commit?.id}
                     repoId={repoId}
                     phase={repo?.currentPhase}
-                    hasUncommittedChanges={beginChanges}
+                    hasUncommittedChanges={hasUncommittedChanges}
                     isNew={isNew}
                   />
                 </div>
