@@ -190,7 +190,6 @@ class EditorPage extends Component {
     const localStorageCommitIds = getLocalStorageKeys()
       .filter((key) => key.startsWith(repoId))
       .map((key) => key.split('/').pop())
-    console.log(repo?.commits?.nodes[0]?.document?.type)
     return (
       <Frame>
         <Frame.Header isTemplate={repo?.isTemplate}>

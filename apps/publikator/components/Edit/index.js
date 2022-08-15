@@ -10,7 +10,6 @@ import withT from '../../lib/withT'
 import withMe from '../../lib/withMe'
 import isEqual from 'lodash/isEqual'
 import createDebug from 'debug'
-import { timeFormat } from 'd3-time-format'
 import initLocalStore from '../../lib/utils/localStorage'
 import { Link, Router } from '../../lib/routes'
 import { errorToString } from '../../lib/utils/errors'
@@ -25,7 +24,7 @@ import {
 } from '../VersionControl/UncommittedChanges'
 import BranchingNotice from '../VersionControl/BranchingNotice'
 import { useEffect, useState, useRef } from 'react'
-import { Warnings, Warning } from './Warning'
+import { Warnings, useWarningContext } from './Warnings'
 import RepoArchivedBanner from '../Repo/ArchivedBanner'
 import { css } from 'glamor'
 import ContentEditor, { INITIAL_VALUE } from '../ContentEditor'
@@ -50,23 +49,9 @@ const styles = {
 }
 
 const debug = createDebug('publikator:pages:flyer:edit')
-const TEST = process.env.NODE_ENV === 'test'
 
 export const CONTENT_KEY = 'value'
 export const META_KEY = 'meta'
-
-const formatTime = timeFormat('%H:%M')
-
-const addWarning = (warnings, message) => {
-  const time = formatTime(new Date())
-  return [{ time, message }, ...warnings].filter(
-    // de-dup
-    ({ message }, i, all) => all.findIndex((w) => w.message === message) === i,
-  )
-}
-
-const rmWarning = (warnings, message) =>
-  warnings.filter((warning) => warning.message !== message)
 
 export const getCompString = (array) =>
   array && JSON.stringify({ children: array })
@@ -94,10 +79,10 @@ const EditLoader = ({
   editRepoMeta,
   me,
 }) => {
+  const { addWarning, rmWarning } = useWarningContext()
   const [store, setStore] = useState(undefined)
   const [readOnly, setReadOnly] = useState(false)
   const [committing, setCommitting] = useState(false)
-  const [warnings, setWarnings] = useState([])
   const [activeUsers, setActiveUsers] = useState(undefined)
   const [acknowledgedUsers, setAcknowledgedUsers] = useState(undefined)
   const [interruptingUsers, setInterruptingUsers] = useState(undefined)
@@ -148,10 +133,10 @@ const EditLoader = ({
   const lock = () => {
     const noLock = t('commit/warn/canNotLock')
     if (beginChanges) {
-      return setWarnings(addWarning(warnings, noLock))
+      return addWarning(noLock)
     }
     setReadOnly(true)
-    setWarnings(rmWarning(warnings, noLock))
+    rmWarning(noLock)
   }
 
   const unlock = () => setReadOnly(false)
@@ -166,11 +151,11 @@ const EditLoader = ({
       action,
     })
       .then(() => {
-        setWarnings(rmWarning(warnings, warning))
+        rmWarning(warning)
       })
       .catch((error) => {
         console.error(warning, error)
-        setWarnings(addWarning(warnings, warning))
+        addWarning(warning)
       })
   }
 
@@ -278,7 +263,7 @@ const EditLoader = ({
 
   const checkLocalStorageSupport = () => {
     if (store && !store.supported) {
-      setWarnings(addWarning(warnings, t('commit/warn/noStorage')))
+      addWarning(t('commit/warn/noStorage'))
     }
   }
 
@@ -341,13 +326,10 @@ const EditLoader = ({
       .catch((e) => {
         console.error(e)
         setCommitting(false)
-        setWarnings(
-          addWarning(
-            warnings,
-            t('commit/warn/failed', {
-              error: errorToString(e),
-            }),
-          ),
+        addWarning(
+          t('commit/warn/failed', {
+            error: errorToString(e),
+          }),
         )
       })
   }
@@ -462,7 +444,7 @@ const EditLoader = ({
             }
 
             if (commitId && repo && !repo.commit) {
-              setWarnings(addWarning(warnings, t('commit/warn/commit404')))
+              addWarning(t('commit/warn/commit404'))
               Router.replaceRoute('flyer/edit', {
                 repoId: repoId.split('/'),
               })
@@ -490,19 +472,7 @@ const EditLoader = ({
                     }}
                   />
                 )}
-                {!!warnings.length && (
-                  <Warnings>
-                    {warnings.map((warning, i) => (
-                      <Warning
-                        key={`warning-${i}`}
-                        warning={warning}
-                        onRemove={() =>
-                          setWarnings(rmWarning(warnings, warning.message))
-                        }
-                      />
-                    ))}
-                  </Warnings>
-                )}
+                <Warnings />
                 {!pending && repo?.isArchived && (
                   <RepoArchivedBanner key='repo-archived-banner' />
                 )}
