@@ -31,6 +31,7 @@ import { css } from 'glamor'
 import ContentEditor, { INITIAL_VALUE } from '../ContentEditor'
 import { API_UNCOMMITTED_CHANGES_URL } from '../../lib/settings'
 import { PhaseSummary } from './Workflow'
+import { HEADER_HEIGHT } from '../Frame/constants'
 
 const styles = {
   defaultContainer: css({
@@ -38,6 +39,13 @@ const styles = {
   }),
   navLink: css({
     paddingRight: 10,
+  }),
+  phase: css({
+    position: 'fixed',
+    right: 20,
+    top: HEADER_HEIGHT,
+    zIndex: 21,
+    marginTop: 13,
   }),
 }
 
@@ -386,6 +394,7 @@ const EditLoader = ({
   const repo = data?.repo
   const hasError = localError || data?.error
   const pending = (!isNew && !data) || committing || data?.loading
+  const commit = repo && (repo.commit || repo.latestCommit)
 
   return (
     <Frame raw>
@@ -492,7 +501,6 @@ const EditLoader = ({
                 <RepoArchivedBanner key='repo-archived-banner' />
               ),
             ].filter(Boolean)
-
             return (
               <>
                 {interruptingUsers && (
@@ -507,13 +515,16 @@ const EditLoader = ({
                   />
                 )}
                 {stuffToAddSomewhere}
-                {!!value && (
-                  <ContentEditor
-                    value={value}
-                    onChange={setValue}
-                    renderInToolbar={<PhaseSummary />}
+                <div {...styles.phase}>
+                  <PhaseSummary
+                    commitId={commit?.id}
+                    repoId={repoId}
+                    phase={repo?.currentPhase}
+                    hasUncommittedChanges={hasUncommittedChanges}
+                    isNew={isNew}
                   />
-                )}
+                </div>
+                {!!value && <ContentEditor value={value} onChange={setValue} />}
               </>
             )
           }}

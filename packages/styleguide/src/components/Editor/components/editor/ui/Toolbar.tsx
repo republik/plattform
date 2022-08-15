@@ -36,7 +36,7 @@ const styles = {
   hoveringToolbar: css({
     padding: '8px 7px 6px',
     position: 'absolute',
-    zIndex: 100,
+    zIndex: 20,
     top: 0,
     left: 0,
     height: 0,
@@ -58,7 +58,7 @@ const styles = {
     backgroundColor: 'white',
     position: 'sticky',
     top: 0,
-    zIndex: 100,
+    zIndex: 20,
     paddingLeft: 20,
     paddingRight: 20,
   }),
