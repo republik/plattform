@@ -30,6 +30,10 @@ const Meta = ({ data, t }) => {
 
     // Linked data props
     jsonLds,
+
+    // Citation meta data
+    // based on https://www.zotero.org/support/dev/exposing_metadata
+    citationMeta,
   } = data
 
   const metaTitle =
@@ -92,6 +96,10 @@ const Meta = ({ data, t }) => {
           content={imageResizeUrl(twitterCard, '3000x')}
         />
       )}
+      {citationMeta &&
+        Object.entries(citationMeta)
+          .filter(([_, value]) => !!value)
+          .map(([key, value]) => <meta key={key} name={key} content={value} />)}
 
       {jsonLds?.map((jsonLd, index) => (
         <script

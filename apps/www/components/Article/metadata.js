@@ -72,6 +72,26 @@ const getJSONLDs = (meta) => {
   }
 }
 
+function getCitationMetaData(meta) {
+  const authors = meta.contributors
+    .filter((contributor) => contributor?.kind?.includes('Text'))
+    .map((contributor) => {
+      const parts = contributor.name.split(' ')
+      // Convert the name into the following format `Surname, Given Name(s)`
+      return `${parts[parts.length - 1]}, ${parts
+        .slice(0, parts.length - 1)
+        .join(' ')}`
+    })
+    .join('; ')
+
+  return {
+    citation_title: meta.title,
+    citation_journal_title: PUBLIC_BASE_URL,
+    citation_date: meta.publishDate,
+    citation_authors: authors,
+  }
+}
+
 export const getMetaData = (documentId, meta) => {
   const shareImage =
     meta.shareText &&
@@ -91,5 +111,6 @@ export const getMetaData = (documentId, meta) => {
   return {
     ...metaWithUrls,
     jsonLds: getJSONLDs(metaWithUrls),
+    citationMeta: getCitationMetaData(meta),
   }
 }
