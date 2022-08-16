@@ -370,6 +370,7 @@ const EditLoader = ({
   const hasError = localError || data?.error
   const pending = (!isNew && !data) || committing || data?.loading
   const commit = repo && (repo.commit || repo.latestCommit)
+  const noEdits = !pending && (readOnly || repo?.isArchived)
 
   return (
     <Frame raw>
@@ -476,7 +477,9 @@ const EditLoader = ({
                 )}
                 <Warnings />
                 {!pending && repo?.isArchived && (
-                  <RepoArchivedBanner key='repo-archived-banner' />
+                  <RepoArchivedBanner
+                    style={{ zIndex: 23, position: 'fixed' }}
+                  />
                 )}
                 <div {...styles.phase}>
                   <PhaseSummary
@@ -487,7 +490,13 @@ const EditLoader = ({
                     isNew={isNew}
                   />
                 </div>
-                {!!value && <ContentEditor value={value} onChange={setValue} />}
+                {!!value && (
+                  <ContentEditor
+                    value={value}
+                    onChange={setValue}
+                    readOnly={noEdits}
+                  />
+                )}
               </>
             )
           }}

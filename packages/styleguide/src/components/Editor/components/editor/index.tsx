@@ -172,6 +172,7 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
             schema={config.schema}
           >
             <Editable
+              readOnly={config.readOnly}
               data-testid='slate-content-editable'
               renderElement={renderElement}
               renderLeaf={renderLeaf}

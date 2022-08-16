@@ -394,7 +394,6 @@ const Toolbar: React.FC<{
         <div style={{ width: 690, margin: '0 auto', display: 'flex' }}>
           <ToolbarButtons marks={marks} inlines={inlines} blocks={blocks} />
         </div>
-        {!!config?.alsoRender && config?.alsoRender}
       </Scroller>
     </div>
   ) : (
