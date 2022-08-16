@@ -1073,7 +1073,7 @@ const Styleguide = () => {
                       imports: {
                         ...require('./components/Editor/docs/flyer.imports'),
                         ...require('./components/Editor/schema/flyer'),
-                        Editor: require('./components/Editor'),
+                        Editor: require('./components/Editor').DevEditor,
                         SlateRender: require('./components/Editor/components/render'),
                         renderAsText: require('./components/Editor/components/render/text'),
                       },

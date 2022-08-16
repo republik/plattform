@@ -47,8 +47,6 @@ export const DevEditor: React.FC<{
     }
   }, [copyLabel])
 
-  console.log({ config })
-
   return (
     <div>
       <Editor
