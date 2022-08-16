@@ -1,16 +1,16 @@
-import schema from '../../schema/article'
 import mockEditor from './mockEditor'
 import { createEditor } from 'slate'
 import { moveElement, removeElement } from '../editor/helpers/structure'
 import { cleanupTree } from '../editor/helpers/tree'
 import { blockQuote, figure, headline, paragraph } from './blocks'
+import articleSchema from '../../schema/article'
 
 describe('Slate Editor', () => {
   window.document.getSelection = jest.fn()
 
   let value
 
-  const defaultConfig = { schema }
+  const defaultConfig = { schema: articleSchema }
 
   async function setup(structure, config = defaultConfig) {
     return await mockEditor(createEditor(), {
