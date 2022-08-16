@@ -14,6 +14,24 @@ const Editor: React.FC<{
   structure?: NodeTemplate[]
   config: EditorConfig
 }> = ({ value, setValue, structure, config }) => {
+  return (
+    <ErrorBoundary showException={true}>
+      <SlateEditor
+        value={value}
+        setValue={setValue}
+        structure={structure}
+        config={config}
+      />
+    </ErrorBoundary>
+  )
+}
+
+export const DevEditor: React.FC<{
+  value: CustomDescendant[]
+  setValue: (t: CustomDescendant[]) => void
+  structure?: NodeTemplate[]
+  config: EditorConfig
+}> = ({ value, setValue, structure, config }) => {
   const [copyLabel, setCopyLabel] = useState('Copy Tree')
   const displayValue = useMemo(
     () =>
@@ -29,16 +47,16 @@ const Editor: React.FC<{
     }
   }, [copyLabel])
 
+  console.log({ config })
+
   return (
-    <ErrorBoundary showException={true}>
-      <div>
-        <SlateEditor
-          value={value}
-          setValue={setValue}
-          structure={structure}
-          config={config}
-        />
-      </div>
+    <div>
+      <Editor
+        value={value}
+        setValue={setValue}
+        structure={structure}
+        config={config}
+      />
       {config.debug && (
         <>
           <CodeSpecimen lang='javascript'>{displayValue}</CodeSpecimen>
@@ -55,7 +73,7 @@ const Editor: React.FC<{
           </Button>
         </>
       )}
-    </ErrorBoundary>
+    </div>
   )
 }
 
