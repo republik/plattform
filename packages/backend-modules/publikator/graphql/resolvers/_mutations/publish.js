@@ -122,7 +122,7 @@ module.exports = async (
       nodes: [
         {
           type: indexType,
-          entity: getElasticDoc({
+          entity: await getElasticDoc({
             indexType: indexType,
             doc,
           }),
@@ -150,7 +150,7 @@ module.exports = async (
 
   const searchString = '?' + querystring.stringify(utmParams)
 
-  contentUrlResolver(
+  await contentUrlResolver(
     resolvedDoc,
     _all,
     _usernames,
@@ -160,6 +160,7 @@ module.exports = async (
   )
 
   metaUrlResolver(
+    resolvedDoc.type,
     resolvedDoc.content.meta,
     _all,
     _usernames,
@@ -356,7 +357,7 @@ module.exports = async (
   }
 
   // publish to elasticsearch
-  const elasticDoc = getElasticDoc({
+  const elasticDoc = await getElasticDoc({
     indexName: getIndexAlias(indexType.toLowerCase(), 'write'),
     indexType: indexType,
     doc,

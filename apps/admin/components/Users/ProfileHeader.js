@@ -1,6 +1,6 @@
-import { Query } from 'react-apollo'
+import { Query } from '@apollo/client/react/components'
 import { css } from 'glamor'
-import gql from 'graphql-tag'
+import { gql } from '@apollo/client'
 import {
   colors,
   fontStyles,
@@ -9,12 +9,11 @@ import {
   A,
 } from '@project-r/styleguide'
 import Head from 'next/head'
+import Link from 'next/link'
 
-import routes from '../../server/routes'
 import { REPUBLIK_FRONTEND_URL } from '../../server/constants'
 
 import { Section } from '../Display/utils'
-const { Link } = routes
 
 const styles = {
   header: css({
@@ -58,21 +57,17 @@ export const GET_PROFILE = gql`
 
 const Subnav = ({ userId, section }) => (
   <div>
-    <Link
-      route='user'
-      params={{
-        userId,
-      }}
-    >
+    <Link href={`/users/${userId}`}>
       <a {...styles.navLink} data-active={section === 'index'}>
         Übersicht
       </a>
     </Link>
     <Link
-      route='user'
-      params={{
-        userId,
-        section: 'sessions',
+      href={{
+        pathname: `/users/${userId}`,
+        query: {
+          section: 'sessions',
+        },
       }}
     >
       <a {...styles.navLink} data-active={section === 'sessions'}>
@@ -80,10 +75,11 @@ const Subnav = ({ userId, section }) => (
       </a>
     </Link>
     <Link
-      route='user'
-      params={{
-        userId,
-        section: 'access-grants',
+      href={{
+        pathname: `/users/${userId}`,
+        query: {
+          section: 'access-grants',
+        },
       }}
     >
       <a {...styles.navLink} data-active={section === 'access-grants'}>
@@ -91,10 +87,11 @@ const Subnav = ({ userId, section }) => (
       </a>
     </Link>
     <Link
-      route='user'
-      params={{
-        userId,
-        section: 'mailbox',
+      href={{
+        pathname: `/users/${userId}`,
+        query: {
+          section: 'mailbox',
+        },
       }}
     >
       <a {...styles.navLink} data-active={section === 'mailbox'}>
@@ -102,10 +99,11 @@ const Subnav = ({ userId, section }) => (
       </a>
     </Link>
     <Link
-      route='user'
-      params={{
-        userId,
-        section: 'dialog',
+      href={{
+        pathname: `/users/${userId}`,
+        query: {
+          section: 'dialog',
+        },
       }}
     >
       <a {...styles.navLink} data-active={section === 'dialog'}>

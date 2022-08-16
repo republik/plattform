@@ -1,20 +1,29 @@
 import { useState } from 'react'
-import { Subscription } from 'react-apollo'
+import { compose, graphql, Subscription } from 'react-apollo'
 import NewerVersionIcon from 'react-icons/lib/md/call-split'
 
-import { Button, colors } from '@project-r/styleguide'
+import { Button, colors, Loader } from '@project-r/styleguide'
 
-import { repoSubscription } from './index'
+import { getCommits, repoSubscription } from './index'
 import { Link } from '../../lib/routes'
+import { descending } from 'd3-array'
 
-const WarningIcon = ({ repoId }) => (
-  <div title='Neuere Version verfügbar'>
+const getColors = (warning) => ({
+  backgroundColor: warning ? colors.social : 'inherit',
+  borderColor: warning ? colors.social : 'inherit',
+  color: warning ? '#fff' : 'inherit',
+})
+
+const BranchingIcon = ({ repoId, warning }) => (
+  <div
+    title={`Neuere Version verfügbar${
+      warning ? ': dieses Commit wird ein Baum erzeugen' : ''
+    }`}
+  >
     <Link route='repo/tree' params={{ repoId: repoId.split('/') }}>
       <Button
         style={{
-          backgroundColor: colors.social,
-          borderColor: colors.social,
-          color: '#fff',
+          ...getColors(warning),
           height: 40,
           marginRight: 4,
           marginTop: 27,
@@ -29,15 +38,14 @@ const WarningIcon = ({ repoId }) => (
   </div>
 )
 
-const WarningButton = ({ repoId }) => (
+const BranchingButton = ({ repoId, warning }) => (
   <Link route='repo/tree' params={{ repoId: repoId.split('/') }}>
     <Button
       style={{
-        backgroundColor: colors.social,
-        borderColor: colors.social,
+        ...getColors(warning),
         marginBottom: 10,
       }}
-      primary
+      primary={warning}
       block
     >
       <NewerVersionIcon style={{ marginBottom: 4, marginRight: 4 }} /> Neuere
@@ -46,15 +54,29 @@ const WarningButton = ({ repoId }) => (
   </Link>
 )
 
-const BranchingNotice = ({ asIcon, repoId, currentCommitId }) => {
+const BranchingNotice = ({
+  asIcon,
+  repoId,
+  commit,
+  commits,
+  hasUncommittedChanges,
+}) => {
   const [isStale, setIsStale] = useState(false)
 
-  if (isStale) {
-    if (asIcon) {
-      return <WarningIcon repoId={repoId} />
-    }
+  const commitsBehind = [...commits]
+    .sort(function (a, b) {
+      return descending(new Date(a.date), new Date(b.date))
+    })
+    .map((c) => c.id)
+    .indexOf(commit.id)
 
-    return <WarningButton repoId={repoId} />
+  const isBehind = !!commitsBehind && commitsBehind > 0
+
+  if (isStale || isBehind) {
+    const BranchingComponent = asIcon ? BranchingIcon : BranchingButton
+    return (
+      <BranchingComponent repoId={repoId} warning={hasUncommittedChanges} />
+    )
   }
 
   return (
@@ -66,7 +88,7 @@ const BranchingNotice = ({ asIcon, repoId, currentCommitId }) => {
           data &&
           data.repoChange &&
           data.repoChange.commit &&
-          data.repoChange.commit.id !== currentCommitId
+          data.repoChange.commit.id !== commit.id
         ) {
           setIsStale(true)
         }
@@ -75,4 +97,27 @@ const BranchingNotice = ({ asIcon, repoId, currentCommitId }) => {
   )
 }
 
-export default BranchingNotice
+export default compose(
+  graphql(getCommits, {
+    options: (props) => ({
+      fetchPolicy: 'network-only',
+    }),
+  }),
+)(({ asIcon, repoId, commit, hasUncommittedChanges, data = {} }) => {
+  const { loading, error, repo } = data
+  return (
+    <Loader
+      loading={loading || !repo?.commits}
+      error={error}
+      render={() => (
+        <BranchingNotice
+          asIcon={asIcon}
+          repoId={repoId}
+          commit={commit}
+          commits={repo.commits?.nodes}
+          hasUncommittedChanges={hasUncommittedChanges}
+        />
+      )}
+    />
+  )
+})

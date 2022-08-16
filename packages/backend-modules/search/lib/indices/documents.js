@@ -7,24 +7,6 @@ const keywordPartial = {
   },
 }
 
-const mdastPartial = {
-  properties: {
-    type: {
-      type: 'keyword',
-    },
-    value: {
-      type: 'keyword',
-    },
-    url: {
-      type: 'keyword',
-    },
-    children: {
-      // is actually mdast again
-      type: 'object',
-    },
-  },
-}
-
 const type = 'Document'
 
 module.exports = {
@@ -293,9 +275,6 @@ module.exports = {
             creditsString: {
               type: 'text',
               analyzer: 'german_with_stopwords',
-            },
-            credits: {
-              ...mdastPartial,
             },
             dossier: {
               type: 'keyword',

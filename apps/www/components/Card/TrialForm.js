@@ -25,7 +25,7 @@ const Form = ({ router, redirect }) => (
           },
         },
         router.asPath,
-        { shallow: true },
+        { shallow: router.pathname === '/wahltindaer/[group]/[suffix]' },
       )
     }}
     onSuccess={() => {
@@ -36,7 +36,7 @@ const Form = ({ router, redirect }) => (
             query: { group: router.query.group, suffix: router.query.suffix },
           },
           undefined,
-          { shallow: true },
+          { shallow: router.pathname === '/wahltindaer/[group]/[suffix]' },
         )
         return false
       }

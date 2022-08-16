@@ -147,9 +147,9 @@ module.exports = async (_, args, context) => {
     const imageUrlHandler = createImageUrlHandler(repoId)
 
     await Promise.all([
-      processRepoImageUrlsInContent(content, imageUrlHandler),
-      processRepoImageUrlsInMeta(content, imageUrlHandler),
-      processEmbedImageUrlsInContent(content, imageUrlHandler),
+      processRepoImageUrlsInContent(type, content, imageUrlHandler),
+      processRepoImageUrlsInMeta(type, content, imageUrlHandler),
+      processEmbedImageUrlsInContent(type, content, imageUrlHandler),
     ])
 
     delete content.meta

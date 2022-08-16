@@ -77,7 +77,7 @@ const cases = [
 describe('slate/visit', () => {
   cases.forEach(({ name, slatetree, predicate, visitor, expected }) => {
     test(name, () =>
-      UUT(slatetree, predicate, visitor).then(() => {
+      UUT({ children: slatetree }, predicate, visitor).then(() => {
         expect(slatetree).toEqual(expected)
       }),
     )

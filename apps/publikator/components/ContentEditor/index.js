@@ -55,7 +55,7 @@ const TOOLBAR = {
   showChartCount: true,
 }
 
-const Index = ({ value, onChange, renderInToolbar }) => {
+const Index = ({ value, onChange, readOnly }) => {
   return (
     <Editor
       value={value}
@@ -66,10 +66,8 @@ const Index = ({ value, onChange, renderInToolbar }) => {
       config={{
         schema: flyerSchema,
         editorSchema: flyerEditorSchema,
-        toolbar: {
-          ...TOOLBAR,
-          alsoRender: renderInToolbar,
-        },
+        toolbar: TOOLBAR,
+        readOnly,
       }}
     />
   )

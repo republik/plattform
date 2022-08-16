@@ -5,12 +5,11 @@ import {
   withCommitMutation,
   withLatestCommit,
 } from './enhancers'
-import { Loader, A, useDebounce } from '@project-r/styleguide'
+import { Loader, A, useDebounce, slug } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 import withMe from '../../lib/withMe'
 import isEqual from 'lodash/isEqual'
 import createDebug from 'debug'
-import { timeFormat } from 'd3-time-format'
 import initLocalStore from '../../lib/utils/localStorage'
 import { Link, Router } from '../../lib/routes'
 import { errorToString } from '../../lib/utils/errors'
@@ -25,12 +24,13 @@ import {
 } from '../VersionControl/UncommittedChanges'
 import BranchingNotice from '../VersionControl/BranchingNotice'
 import { useEffect, useState, useRef } from 'react'
-import Warning from './Warning'
+import { Warnings, useWarningContext } from './Warnings'
 import RepoArchivedBanner from '../Repo/ArchivedBanner'
 import { css } from 'glamor'
 import ContentEditor, { INITIAL_VALUE } from '../ContentEditor'
 import { API_UNCOMMITTED_CHANGES_URL } from '../../lib/settings'
 import { PhaseSummary } from './Workflow'
+import { HEADER_HEIGHT } from '../Frame/constants'
 
 const styles = {
   defaultContainer: css({
@@ -39,26 +39,19 @@ const styles = {
   navLink: css({
     paddingRight: 10,
   }),
+  phase: css({
+    position: 'fixed',
+    right: 20,
+    top: HEADER_HEIGHT,
+    zIndex: 21,
+    marginTop: 13,
+  }),
 }
 
 const debug = createDebug('publikator:pages:flyer:edit')
-const TEST = process.env.NODE_ENV === 'test'
 
 export const CONTENT_KEY = 'value'
 export const META_KEY = 'meta'
-
-const formatTime = timeFormat('%H:%M')
-
-const addWarning = (warnings, message) => {
-  const time = formatTime(new Date())
-  return [{ time, message }, ...warnings].filter(
-    // de-dup
-    ({ message }, i, all) => all.findIndex((w) => w.message === message) === i,
-  )
-}
-
-const rmWarning = (warnings, message) =>
-  warnings.filter((warning) => warning.message !== message)
 
 export const getCompString = (array) =>
   array && JSON.stringify({ children: array })
@@ -86,19 +79,18 @@ const EditLoader = ({
   editRepoMeta,
   me,
 }) => {
+  const { addWarning, rmWarning } = useWarningContext()
   const [store, setStore] = useState(undefined)
   const [readOnly, setReadOnly] = useState(false)
   const [committing, setCommitting] = useState(false)
-  const [warnings, setWarnings] = useState([])
   const [activeUsers, setActiveUsers] = useState(undefined)
   const [acknowledgedUsers, setAcknowledgedUsers] = useState(undefined)
   const [interruptingUsers, setInterruptingUsers] = useState(undefined)
   const [beginChanges, setBeginChanges] = useState(undefined)
-  const [hasUncommittedChanges, setHasUncommittedChanges] = useState(false)
   const [didUnlock, setDidUnlock] = useState(false)
   const [localError, setLocalError] = useState(undefined)
   const prevUncommittedChanges = usePreviousValue(uncommittedChanges)
-  // value = slate tree for the wyiwyg
+  // value = slate tree for the wysiwyg
   const [value, setValue] = useState()
   const [debouncedValue] = useDebounce(value, 500)
 
@@ -137,19 +129,14 @@ const EditLoader = ({
 
   const isNew = commitId === 'new'
 
-  if (!process.browser && !TEST) {
-    console.warn(`loadState should only run in the browser`)
-    return null
-  }
-
   // users management and warnings
   const lock = () => {
     const noLock = t('commit/warn/canNotLock')
-    if (hasUncommittedChanges) {
-      return setWarnings(addWarning(warnings, noLock))
+    if (beginChanges) {
+      return addWarning(noLock)
     }
     setReadOnly(true)
-    setWarnings(rmWarning(warnings, noLock))
+    rmWarning(noLock)
   }
 
   const unlock = () => setReadOnly(false)
@@ -164,16 +151,16 @@ const EditLoader = ({
       action,
     })
       .then(() => {
-        setWarnings(rmWarning(warnings, warning))
+        rmWarning(warning)
       })
       .catch((error) => {
         console.error(warning, error)
-        setWarnings(addWarning(warnings, warning))
+        addWarning(warning)
       })
   }
 
   const cleanupNotifications = (event) => {
-    if (!hasUncommittedChanges && didUnlock) {
+    if (!beginChanges && didUnlock) {
       notifyBackend('delete')
       if (event) {
         try {
@@ -192,7 +179,7 @@ const EditLoader = ({
   const lockHandler = (event) => {
     event && event.preventDefault()
     setDidUnlock(false)
-    if (hasUncommittedChanges) {
+    if (beginChanges) {
       console.warn(
         'lockHandler should not be called when user has uncommitted changes',
       )
@@ -222,14 +209,13 @@ const EditLoader = ({
   }
 
   const beginChangesHandler = () => {
-    setHasUncommittedChanges(true)
     setBeginChanges(new Date())
     setReadOnly(false)
     notifyBackend('create')
   }
 
   const concludeChanges = (notify = true) => {
-    setHasUncommittedChanges(false)
+    setBeginChanges(undefined)
     if (notify) {
       notifyBackend('delete')
     }
@@ -243,7 +229,7 @@ const EditLoader = ({
     )
     setInterruptingUsers(undefined)
     if (newUsers?.length) {
-      if (hasUncommittedChanges || didUnlock) {
+      if (beginChanges || didUnlock) {
         setInterruptingUsers(newUsers)
       } else {
         lock()
@@ -277,7 +263,7 @@ const EditLoader = ({
 
   const checkLocalStorageSupport = () => {
     if (store && !store.supported) {
-      setWarnings(addWarning(warnings, t('commit/warn/noStorage')))
+      addWarning(t('commit/warn/noStorage'))
     }
   }
 
@@ -312,9 +298,16 @@ const EditLoader = ({
       message: message,
       document: {
         type: 'slate',
-        content: { children: store.get(CONTENT_KEY) },
-        // TODO: meta
-        // meta: store.get(META_KEY),
+        content: {
+          children: store.get(CONTENT_KEY),
+          // TODO: meta
+          // meta: store.get(META_KEY),
+          // until then, a helping hand
+          meta: {
+            slug: slug(repoId),
+            template: 'flyer',
+          },
+        },
       },
     })
       .then(({ data }) => {
@@ -333,13 +326,10 @@ const EditLoader = ({
       .catch((e) => {
         console.error(e)
         setCommitting(false)
-        setWarnings(
-          addWarning(
-            warnings,
-            t('commit/warn/failed', {
-              error: errorToString(e),
-            }),
-          ),
+        addWarning(
+          t('commit/warn/failed', {
+            error: errorToString(e),
+          }),
         )
       })
   }
@@ -361,7 +351,7 @@ const EditLoader = ({
       const msSinceBegin =
         beginChanges && new Date().getTime() - beginChanges.getTime()
       if (
-        !hasUncommittedChanges ||
+        !msSinceBegin ||
         msSinceBegin > 1000 * 60 * 5 ||
         (!uncommittedChanges.users.find((user) => user.id === me.id) &&
           (!msSinceBegin || msSinceBegin > 1000))
@@ -370,7 +360,7 @@ const EditLoader = ({
       }
     } else {
       store.clear()
-      if (hasUncommittedChanges) {
+      if (beginChanges) {
         concludeChanges(!didUnlock)
       }
     }
@@ -379,13 +369,15 @@ const EditLoader = ({
   const repo = data?.repo
   const hasError = localError || data?.error
   const pending = (!isNew && !data) || committing || data?.loading
+  const commit = repo && (repo.commit || repo.latestCommit)
+  const noEdits = !pending && (readOnly || repo?.isArchived)
 
   return (
     <Frame raw>
       <Frame.Header>
         <Frame.Header.Section align='left'>
           <Frame.Nav>
-            <span {...styles.navLink}>Document</span>
+            <span {...styles.navLink}>Dokument</span>
             <span {...styles.navLink}>
               <Link route='flyer/preview' passHref>
                 <A>Vorschau</A>
@@ -410,7 +402,7 @@ const EditLoader = ({
               isNew={isNew}
               readOnly={!pending && readOnly}
               didUnlock={didUnlock}
-              hasUncommittedChanges={!pending && hasUncommittedChanges}
+              hasUncommittedChanges={!pending && beginChanges}
               onUnlock={unlockHandler}
               onLock={lockHandler}
               onCommit={commitHandler}
@@ -423,7 +415,8 @@ const EditLoader = ({
             <BranchingNotice
               asIcon
               repoId={repo.id}
-              currentCommitId={commitId}
+              commit={commit}
+              hasUncommittedChanges={beginChanges}
             />
           )}
         </Frame.Header.Section>
@@ -441,11 +434,12 @@ const EditLoader = ({
           loading={pending}
           error={hasError}
           render={() => {
+            // TODO: redirect doesn't work here – move it
             // checks to make ensure repo/commit integrity
             if (!commitId && repo && repo.latestCommit) {
               debug('loadState', 'redirect', repo.latestCommit)
               // TODO: get base path from router
-              Router.replaceRoute('repo/flyer/edit', {
+              Router.replaceRoute('flyer/edit', {
                 repoId: repoId.split('/'),
                 commitId: repo.latestCommit.id,
               })
@@ -453,8 +447,8 @@ const EditLoader = ({
             }
 
             if (commitId && repo && !repo.commit) {
-              setWarnings(addWarning(warnings, t('commit/warn/commit404')))
-              Router.replaceRoute('repo/flyer/edit', {
+              addWarning(t('commit/warn/commit404'))
+              Router.replaceRoute('flyer/edit', {
                 repoId: repoId.split('/'),
               })
               return null
@@ -467,24 +461,6 @@ const EditLoader = ({
                 return null
               }
             }
-
-            // TODO: warning that there is a newer version (as BaseCommit does)
-            //  ...replace BranchingNotice with VersionNotice?
-            const stuffToAddSomewhere = [
-              ...warnings
-                .filter(Boolean)
-                .map(({ time, message }, i) => (
-                  <Warning
-                    key={`warning-${i}`}
-                    message={`${time} ${message}`}
-                    onRemove={() => setWarnings(rmWarning(warnings, message))}
-                  />
-                )),
-              // TODO: redirect to preview instead of showing banner
-              !pending && repo?.isArchived && (
-                <RepoArchivedBanner key='repo-archived-banner' />
-              ),
-            ].filter(Boolean)
 
             return (
               <>
@@ -499,12 +475,26 @@ const EditLoader = ({
                     }}
                   />
                 )}
-                {stuffToAddSomewhere}
+                <Warnings />
+                {!pending && repo?.isArchived && (
+                  <RepoArchivedBanner
+                    style={{ zIndex: 23, position: 'fixed' }}
+                  />
+                )}
+                <div {...styles.phase}>
+                  <PhaseSummary
+                    commitId={commit?.id}
+                    repoId={repoId}
+                    phase={repo?.currentPhase}
+                    hasUncommittedChanges={beginChanges}
+                    isNew={isNew}
+                  />
+                </div>
                 {!!value && (
                   <ContentEditor
                     value={value}
                     onChange={setValue}
-                    renderInToolbar={<PhaseSummary />}
+                    readOnly={noEdits}
                   />
                 )}
               </>

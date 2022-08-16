@@ -57,7 +57,10 @@ export const filterRepos = gql`
               shortTitle
               image
               description
-              credits
+              credits {
+                type
+                children
+              }
               kind
               externalBaseUrl
               color

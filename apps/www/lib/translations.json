@@ -321,6 +321,14 @@
       "value": "System nicht verfügbar"
     },
     {
+      "key": "redirection/external/message",
+      "value": "Sie werden auf {link} weitergeleitet."
+    },
+    {
+      "key": "redirection/external/genericLink",
+      "value": "eine externe Webseite"
+    },
+    {
       "key": "marketing/join/button/label",
       "value": "Mitglied werden"
     },
@@ -482,7 +490,7 @@
     },
     {
       "key": "marketing/page/sections/description/kolumnen",
-      "value": "Regelmässig eine Kolumne: am Dienstag von Daniel Strassberg oder Kunsthistorikerin Kia Vahland. Jeden Samstag von Daniel Binswanger. Und dazu alle zwei Wochen Nicoletta Cimminos Audiokolumne «Sprachnotizen»."
+      "value": "Regelmässig eine Kolumne: am Dienstag von Daniel Strassberg oder Kunsthistorikerin Kia Vahland. Jeden Samstag von Daniel Binswanger."
     },
     {
       "key": "marketing/page/sections/title/kolumnen",
@@ -3233,12 +3241,24 @@
       "value": "Beitrag von synthetischer Stimme vorlesen lassen."
     },
     {
-      "key": "article/syntheticReadAloud/errorLink",
+      "key": "article/syntheticReadAloud/hint/label",
       "value": "Fehler melden"
     },
     {
+      "key": "article/syntheticReadAloud/hint/link",
+      "value": "/2022/05/04/helfen-sie-uns-die-synthetische-stimme-zu-verbessern/diskussion"
+    },
+    {
       "key": "article/readAloud/title",
-      "value": "Beitrag vorlesen lassen"
+      "value": "Beitrag vorlesen lassen."
+    },
+    {
+      "key": "article/readAloud/hint/label",
+      "value": "Alle vorgelesenen Beiträge"
+    },
+    {
+      "key": "article/readAloud/hint/link",
+      "value": "/format/vorgelesen"
     },
     {
       "key": "article/series/episode",

@@ -1,8 +1,8 @@
 import { Component } from 'react'
 import { css } from 'glamor'
-import { compose } from 'react-apollo'
-import { graphql } from 'react-apollo'
-import gql from 'graphql-tag'
+import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
+import { gql } from '@apollo/client'
 import { Label, Interaction, colors } from '@project-r/styleguide'
 import List, { Item } from '../List'
 

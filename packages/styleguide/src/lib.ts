@@ -183,6 +183,7 @@ export * from './components/Icons'
 
 export * from './templates'
 
+export { EDITOR_TOOLBAR_HEIGHT } from './components/Editor/components/editor/ui/Toolbar'
 export { default as Editor } from './components/Editor'
 export {
   schema as flyerSchema,

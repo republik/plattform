@@ -1,3 +1,5 @@
+const { Roles } = require('@orbiting/backend-modules-auth')
+
 const {
   getOptions,
   isEligible,
@@ -30,6 +32,13 @@ module.exports = {
   async userSubmitDate(entity, args, context) {
     const { user: me } = context
     return userSubmitDate(entity.id, me && me.id, context)
+  },
+  allowedRoles(entity) {
+    const roles = entity?.allowedRoles?.filter((role) =>
+      Roles.exposableRoles.includes(role),
+    )
+
+    return roles?.length ? roles : null
   },
   async turnout(voting, args, { pgdb }) {
     if (voting.result && voting.result.turnout) {

@@ -7,6 +7,7 @@ export const CORRECT_COLOR = '#0E755A'
 export const WRONG_COLOR = '#D50032'
 
 export const EditorQuizContainer: React.FC<{
+  props: any
   attributes: any
   [x: string]: unknown
 }> = ({ props, attributes, children }) => {

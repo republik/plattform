@@ -47,6 +47,9 @@ const ShareSubmission = ({
   if (!answer || !question) {
     return null
   }
+  const questionInTitle =
+    (answer.payload.text || answer.payload.value).length > 100 ||
+    question.text > 100
 
   if (meta) {
     const replacements = {
@@ -60,7 +63,9 @@ const ShareSubmission = ({
             qid,
           }),
           title: replaceText(
-            share.title || t('questionnaire/share/title'),
+            (questionInTitle && share.titleWithQuestion) ||
+              share.title ||
+              t('questionnaire/share/title'),
             replacements,
           ),
           description: replaceText(share.description, replacements),
@@ -101,21 +106,31 @@ const ShareSubmission = ({
         <span
           style={{
             overflow: 'hidden',
-            textOverflow: '" …»"',
             display: '-webkit-box',
             WebkitLineClamp: 5,
             WebkitBoxOrient: 'vertical',
           }}
-          {...css({
-            textOverflow: ['ellipsis', '" …»"'],
-            '::before': {
-              content: '«',
-            },
-            '::after': {
-              content: '»',
-            },
-          })}
+          {...(questionInTitle &&
+            css({
+              textOverflow: ['ellipsis', '" …»"'],
+              '::before': {
+                content: '«',
+              },
+              '::after': {
+                content: '»',
+              },
+            }))}
         >
+          {!questionInTitle && (
+            <span
+              style={{
+                ...fontStyles.serifBold,
+              }}
+            >
+              {question.text}
+              <br />
+            </span>
+          )}
           <AnswerText
             text={answer.payload.text}
             value={answer.payload.value}

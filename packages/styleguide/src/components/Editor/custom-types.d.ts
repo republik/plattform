@@ -334,7 +334,6 @@ interface ToolbarConfig {
   mode?: ToolbarMode
   style?: object
   showChartCount?: boolean
-  alsoRender?: React.FC
 }
 
 export type EditorConfig = {
@@ -343,6 +342,7 @@ export type EditorConfig = {
   maxSigns?: number
   debug?: boolean
   toolbar?: ToolbarConfig
+  readOnly?: boolean
 }
 
 export type KeyCombo = {

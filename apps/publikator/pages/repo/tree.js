@@ -24,6 +24,7 @@ import * as fragments from '../../lib/graphql/fragments'
 import CurrentPublications from '../../components/Publication/Current'
 import UncommittedChanges from '../../components/VersionControl/UncommittedChanges'
 import withT from '../../lib/withT'
+import { Link } from '../../lib/routes'
 
 export const COMMIT_LIMIT = 40
 export const getRepoHistory = gql`
@@ -194,10 +195,28 @@ class EditorPage extends Component {
         <Frame.Header isTemplate={repo?.isTemplate}>
           <Frame.Header.Section align='left'>
             <Frame.Nav>
-              <RepoNav
-                route='repo/tree'
-                prefix={repo?.isTemplate ? 'template' : 'document'}
-              />
+              <span style={{ marginRight: 10 }}>
+                <Link
+                  route={
+                    repo?.commits?.nodes[0]?.document?.type === 'slate'
+                      ? 'flyer/edit'
+                      : 'repo/edit'
+                  }
+                  params={{
+                    repoId: repoId.split('/'),
+                  }}
+                  passHref
+                >
+                  <A>
+                    {t(
+                      `repo/nav/${
+                        repo?.isTemplate ? 'template' : 'document'
+                      }/edit`,
+                    )}
+                  </A>
+                </Link>
+              </span>
+              <span>Versionen</span>
             </Frame.Nav>
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>

@@ -3,8 +3,8 @@ import {
   getJWTCookieValue,
   getSessionCookieValue,
   verifyJWT,
-} from '../lib/auth/JWTHelper'
-import fetchMyRoles from '../lib/helpers/middleware/FetchMeObject'
+} from './lib/auth/JWTHelper'
+import fetchMyRoles from './lib/helpers/middleware/FetchMeObject'
 
 /**
  * Middleware used to conditionally redirect between the marketing and front page
@@ -13,26 +13,33 @@ import fetchMyRoles from '../lib/helpers/middleware/FetchMeObject'
  */
 export async function middleware(req: NextRequest) {
   const resUrl = req.nextUrl.clone()
-
-  // Don't run the middleware unless on home-page
-  if (resUrl.pathname !== '/') {
-    return NextResponse.next()
+  // Rewrite if someone tries to directly access the front or the front-preview url
+  if (
+    req.nextUrl.pathname === '/front' ||
+    req.nextUrl.pathname.startsWith('/_front/')
+  ) {
+    resUrl.pathname = '/404'
+    return NextResponse.rewrite(resUrl)
   }
 
+  // Don't run the middleware unless on home-page
+  if (req.nextUrl.pathname !== '/') {
+    return NextResponse.next()
+  }
   // Redirect to front-preview ssr to generate article front-preview
   // used in the yearly overview
   if (resUrl.searchParams.has('extractId')) {
     // Remap extractId query param to id-slug
     const extractId = resUrl.searchParams.get('extractId')
     resUrl.searchParams.delete('extractId')
-    resUrl.pathname = `/_ssr/front/${extractId}`
+    resUrl.pathname = `/_front/${extractId}`
     return NextResponse.rewrite(resUrl)
   }
 
   /* ------------ Logic to handle SSG front- & marketing-page ------------ */
 
   /**
-   * Rewrite to the front if the user is a memeber
+   * Rewrite to the front if the user is a member
    * @param roles Roles of the user
    * @returns NextResponse
    */
@@ -56,6 +63,7 @@ export async function middleware(req: NextRequest) {
     const response = rewriteBasedOnRoles(me?.roles)
 
     if (cookie) {
+      // Forward cookies to the client
       response.headers.set('Set-Cookie', cookie)
     }
 

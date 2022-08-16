@@ -21,6 +21,13 @@ module.exports = {
     const { user: me } = context
     return userSubmitDate(entity.id, me && me.id, context)
   },
+  allowedRoles(entity) {
+    const roles = entity?.allowedRoles?.filter((role) =>
+      Roles.exposableRoles.includes(role),
+    )
+
+    return roles?.length ? roles : null
+  },
   async questions(entity, args, { pgdb, user: me }) {
     return getQuestions(entity, args, pgdb)
   },

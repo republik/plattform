@@ -1,7 +1,8 @@
 import { Fragment, Component } from 'react'
-import { Query } from 'react-apollo'
-import gql from 'graphql-tag'
+import { Query } from '@apollo/client/react/components'
+import { gql } from '@apollo/client'
 import { merge } from 'glamor'
+import Link from 'next/link'
 
 import { Loader, Label, A } from '@project-r/styleguide'
 
@@ -19,14 +20,12 @@ import {
   DD,
 } from '../../Display/utils'
 import { tableStyles } from '../../Tables/utils'
-import routes from '../../../server/routes'
 
 import MovePledge from './MovePledge'
 import ResolvePledgeToPayment from './ResolvePledgeToPayment'
 import CancelPledge from './CancelPledge'
 import UpdatePayment from './UpdatePayment'
 import UpdateAddress from './UpdateAddress'
-const { Link } = routes
 
 const GET_PLEDGES = gql`
   fragment MembershipDetails on Membership {
@@ -221,7 +220,7 @@ const PledgeDetails = ({ userId, pledge, ...props }) => {
           <DD>
             <MovePledge
               pledge={pledge}
-              refetchQueries={({ data: { movePledge } }) => [
+              refetchQueries={() => [
                 {
                   query: GET_PLEDGES,
                   variables: { userId },
@@ -231,7 +230,7 @@ const PledgeDetails = ({ userId, pledge, ...props }) => {
             {pledge.status === 'PAID_INVESTIGATE' && (
               <ResolvePledgeToPayment
                 pledge={pledge}
-                refetchQueries={({ data: { resolvePledgeToPayment } }) => [
+                refetchQueries={() => [
                   {
                     query: GET_PLEDGES,
                     variables: { userId },
@@ -242,7 +241,7 @@ const PledgeDetails = ({ userId, pledge, ...props }) => {
             {pledge.status !== 'CANCELLED' && (
               <CancelPledge
                 pledge={pledge}
-                refetchQueries={({ data: { cancelPledge } }) => [
+                refetchQueries={() => [
                   {
                     query: GET_PLEDGES,
                     variables: { userId },
@@ -285,8 +284,8 @@ const PledgeDetails = ({ userId, pledge, ...props }) => {
         )}
 
         {!!memberships.length &&
-          memberships.map((membership, i) => (
-            <Fragment>
+          memberships.map((membership) => (
+            <Fragment key={membership}>
               <hr />
               <MembershipDetails
                 key={`details-${membership.id}`}
@@ -397,7 +396,7 @@ const MembershipDetails = ({ membership, ...props }) => {
         <DL>
           <DT>eingelöst von</DT>
           <DD>
-            <Link route='user' params={{ userId: membership.user.id }} passHref>
+            <Link href={`/users/${membership.user.id}`} passHref>
               <A>{membership.claimerName}</A>
             </Link>
           </DD>

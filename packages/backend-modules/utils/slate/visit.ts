@@ -13,19 +13,21 @@ type Visitor = (child: SlateNode) => void | Promise<void>
  *
  */
 export default function visit(
-  children: SlateNode[],
+  node: SlateNode,
   predicate: Predicate,
   visitor: Visitor,
-): Promise<SlateNode[]> {
-  // Promise.each returns children.
-  // A visitor may mutate children.
-  return Promise.each(children, async (child) => {
+): Promise<SlateNode> {
+  if (!node.children) {
+    return Promise.resolve(node)
+  }
+
+  return Promise.each(node.children, async (child) => {
     if (await predicate(child)) {
       await visitor(child)
     }
 
     if (child?.children) {
-      await visit(child.children, predicate, visitor)
+      await visit(child, predicate, visitor)
     }
   })
 }

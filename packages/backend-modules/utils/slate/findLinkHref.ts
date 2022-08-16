@@ -9,11 +9,15 @@ import visit from './visit'
  * URLs found in tree.
  *
  */
-async function findLinkHref(children: SlateNode[]): Promise<string[]> {
+async function findLinkHref(node: SlateNode): Promise<string[]> {
+  if (!node.children) {
+    return []
+  }
+
   const hrefs = new Set()
 
   await visit(
-    children,
+    node,
     (child) => child?.type === 'link' && !!child?.href,
     ({ href }) => {
       const isValidUrl = validator.isURL(href, {

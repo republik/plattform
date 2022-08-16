@@ -8,7 +8,10 @@ export const documentFragment = `
     ...BookmarkOnDocument
     ...UserProgressOnDocument
     meta {
-      credits
+      credits {
+        type
+        children
+      }
       title
       description
       publishDate

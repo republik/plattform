@@ -32,11 +32,13 @@ import { getCharCount, isEmpty, selectNearestWord } from '../helpers/text'
 import Scroller from '../../../../Tabs/Scroller'
 import { Label } from '../../../../Typography'
 
+export const EDITOR_TOOLBAR_HEIGHT = 50
+
 const styles = {
   hoveringToolbar: css({
     padding: '8px 7px 6px',
     position: 'absolute',
-    zIndex: 100,
+    zIndex: 20,
     top: 0,
     left: 0,
     height: 0,
@@ -58,7 +60,7 @@ const styles = {
     backgroundColor: 'white',
     position: 'sticky',
     top: 0,
-    zIndex: 100,
+    zIndex: 20,
     paddingLeft: 20,
     paddingRight: 20,
   }),
@@ -392,7 +394,6 @@ const Toolbar: React.FC<{
         <div style={{ width: 690, margin: '0 auto', display: 'flex' }}>
           <ToolbarButtons marks={marks} inlines={inlines} blocks={blocks} />
         </div>
-        {!!config?.alsoRender && config?.alsoRender}
       </Scroller>
     </div>
   ) : (

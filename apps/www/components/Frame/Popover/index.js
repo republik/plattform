@@ -12,10 +12,18 @@ import {
   HEADER_HEIGHT,
   HEADER_HEIGHT_MOBILE,
 } from '../../constants'
+import { useEffect } from 'react'
 
-const Popover = ({ expanded, id, children, dark }) => {
+const Popover = ({ expanded, id, children }) => {
   const [ref] = useBodyScrollLock(expanded)
   const [colorScheme] = useColorContext()
+
+  useEffect(() => {
+    if (expanded) {
+      ref.current.scrollTop = 0
+    }
+  }, [expanded])
+
   return (
     <div
       {...css({
