@@ -433,6 +433,7 @@ const EditLoader = ({
           loading={pending}
           error={hasError}
           render={() => {
+            // TODO: redirect doesn't work here – move it
             // checks to make ensure repo/commit integrity
             if (!commitId && repo && repo.latestCommit) {
               debug('loadState', 'redirect', repo.latestCommit)
