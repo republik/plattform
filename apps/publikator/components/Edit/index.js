@@ -414,7 +414,8 @@ const EditLoader = ({
             <BranchingNotice
               asIcon
               repoId={repo.id}
-              currentCommitId={commitId}
+              commit={commit}
+              hasUncommittedChanges={beginChanges}
             />
           )}
         </Frame.Header.Section>

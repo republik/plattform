@@ -832,6 +832,7 @@ export class EditorPage extends Component {
     const showLoading =
       committing || loading || templateLoading || (!schema && !error)
     const dark = editorState && editorState.document.data.get('darkMode')
+    const commit = repo && (repo.commit || repo.latestCommit)
 
     const sidebarPrependChildren = [
       ...warnings.filter(Boolean).map(({ time, message }, i) => (
@@ -847,7 +848,8 @@ export class EditorPage extends Component {
         <BranchingNotice
           key='branching-notice'
           repoId={repo.id}
-          currentCommitId={commitId}
+          commit={commit}
+          hasUncommittedChanges={hasUncommittedChanges}
         />
       ),
       !showLoading && repo && repo.isArchived && (
@@ -907,7 +909,8 @@ export class EditorPage extends Component {
               <BranchingNotice
                 asIcon
                 repoId={repo.id}
-                currentCommitId={commitId}
+                commit={commit}
+                hasUncommittedChanges={hasUncommittedChanges}
               />
             )}
           </Frame.Header.Section>
@@ -1009,7 +1012,7 @@ export class EditorPage extends Component {
               </div>
               <VersionControl
                 repoId={repoId}
-                commit={repo && (repo.commit || repo.latestCommit)}
+                commit={commit}
                 isNew={isNew}
                 hasUncommittedChanges={hasUncommittedChanges}
               />
