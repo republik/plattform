@@ -1,19 +1,10 @@
-import { Fragment } from 'react'
 import {
   ShareImageGenerator,
   ShareImagePreview,
   SharePreviewFacebook,
   SharePreviewTwitter,
-  socialPreviewStyles,
-  socialPreviewWidth,
-  Label,
-  SHARE_IMAGE_DEFAULTS,
-  SHARE_IMAGE_HEIGHT,
-  SHARE_IMAGE_WIDTH,
-  Radio,
   Field,
 } from '@project-r/styleguide'
-import ImageInput from '../../editor/utils/ImageInput'
 import withT from '../../../lib/withT'
 import { MetaOption, MetaOptionLabel, AutosizeInput } from './Layout'
 
@@ -52,7 +43,6 @@ const ShareImageForm = withT(({ t, data, onChange }) => {
         />
       </MetaOption>
       <MetaOption>
-        <MetaOptionLabel>Twitter</MetaOptionLabel>
         <Field
           label='Twitter Titel'
           name='twitterTitle'
@@ -70,7 +60,7 @@ const ShareImageForm = withT(({ t, data, onChange }) => {
         <Field
           label='Twitter Beschrieb'
           name='twitterDescription'
-          value={data.twitterDescription || data.description}
+          value={data.twitterDescription || data.lead}
           onChange={(event) => {
             onChange(event.target.name, event.target.value)
           }}
@@ -81,13 +71,13 @@ const ShareImageForm = withT(({ t, data, onChange }) => {
         />
       </MetaOption>
       <MetaOption>
+        <MetaOptionLabel>Twitter Vorschau</MetaOptionLabel>
         <SharePreviewTwitter
           title={data.twitterTitle || data.title}
           description={data.twitterDescription || data.lead}
         />
       </MetaOption>
       <MetaOption>
-        <MetaOptionLabel>Twitter</MetaOptionLabel>
         <Field
           label='Facebook Titel'
           name='facebookTitle'
@@ -105,7 +95,7 @@ const ShareImageForm = withT(({ t, data, onChange }) => {
         <Field
           label='Facebook Beschrieb'
           name='facebookDescription'
-          value={data.facebookDescription || data.description}
+          value={data.facebookDescription || data.lead}
           onChange={(event) => {
             onChange(event.target.name, event.target.value)
           }}
@@ -116,6 +106,7 @@ const ShareImageForm = withT(({ t, data, onChange }) => {
         />
       </MetaOption>
       <MetaOption>
+        <MetaOptionLabel>Facebook Vorschau</MetaOptionLabel>
         <SharePreviewFacebook
           title={data.facebookTitle || data.title}
           description={data.facebookDescription || data.lead}

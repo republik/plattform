@@ -1,6 +1,6 @@
 import { forwardRef } from 'react'
 import { css } from 'glamor'
-import { Label } from '@project-r/styleguide'
+import { Label, useColorContext } from '@project-r/styleguide'
 import { default as ReactTextAreaAutosize } from 'react-textarea-autosize'
 
 const styles = {
@@ -18,9 +18,10 @@ export const MetaOption = ({ children }) => {
 }
 
 export const MetaOptionLabel = ({ children }) => {
+  const [colorScheme] = useColorContext()
   return (
     <label {...styles.metaOptionLabel}>
-      <Label>{children}</Label>
+      <Label {...colorScheme.set('color', 'textSoft')}>{children}</Label>
     </label>
   )
 }
