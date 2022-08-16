@@ -239,9 +239,7 @@ class SignIn extends Component {
           </div>
         </form>
         <Label {...styles.hint}>
-          <Link href='/legal/privacy' passHref>
-            <a {...styles.hintA}>{t('signIn/privacy')}</a>
-          </Link>
+            <a {...styles.hintA} href={`${FRONTEND_BASE_URL}/datenschutz`}>{t('signIn/privacy')}</a>
           {' – '}
           <Link href='/faq' passHref>
             <a {...styles.hintA}>{t('signIn/faq')}</a>
