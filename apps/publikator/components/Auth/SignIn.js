@@ -23,6 +23,7 @@ import {
 } from '@project-r/styleguide'
 
 import Poller from './Poller'
+import { FRONTEND_BASE_URL } from '../../lib/settings'
 
 const styles = {
   form: css({
@@ -239,11 +240,9 @@ class SignIn extends Component {
           </div>
         </form>
         <Label {...styles.hint}>
-            <a {...styles.hintA} href={`${FRONTEND_BASE_URL}/datenschutz`}>{t('signIn/privacy')}</a>
-          {' – '}
-          <Link href='/faq' passHref>
-            <a {...styles.hintA}>{t('signIn/faq')}</a>
-          </Link>
+          <a {...styles.hintA} href={`${FRONTEND_BASE_URL}/datenschutz`}>
+            {t('signIn/privacy')}
+          </a>
           {' – '}
           {t('signIn/hint')}
         </Label>
