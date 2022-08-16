@@ -1,15 +1,15 @@
 import { useState } from 'react'
-import { Subscription } from 'react-apollo'
-import NewerVersionIcon from 'react-icons/lib/md/call-split'
+import { Subscription } from '@apollo/client/react/components'
+import { MdCallSplit as NewerVersionIcon } from 'react-icons/md'
 
 import { Button, colors } from '@project-r/styleguide'
 
 import { repoSubscription } from './index'
-import { Link } from '../../lib/routes'
+import Link from 'next/link'
 
 const WarningIcon = ({ repoId }) => (
   <div title='Neuere Version verfügbar'>
-    <Link route='repo/tree' params={{ repoId: repoId.split('/') }}>
+    <Link href={`/repo/${repoId}/tree`}>
       <Button
         style={{
           backgroundColor: colors.social,
@@ -30,7 +30,7 @@ const WarningIcon = ({ repoId }) => (
 )
 
 const WarningButton = ({ repoId }) => (
-  <Link route='repo/tree' params={{ repoId: repoId.split('/') }}>
+  <Link href={`/repo/${repoId}/tree`}>
     <Button
       style={{
         backgroundColor: colors.social,

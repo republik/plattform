@@ -1,6 +1,5 @@
 import { useColorContext, plainButtonRule } from '@project-r/styleguide'
-import MoonOutline from 'react-icons/lib/io/ios-moon-outline'
-import Moon from 'react-icons/lib/io/ios-moon'
+import { BsMoonFill as Moon, BsMoon as MoonOutline } from 'react-icons/bs'
 
 function DarkmodeToggle({ previewDarkmode, onToggle }) {
   const [colorScheme] = useColorContext()

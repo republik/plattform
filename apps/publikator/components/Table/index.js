@@ -2,10 +2,12 @@ import { css } from 'glamor'
 
 import { fontStyles, colors } from '@project-r/styleguide'
 
-import DownIcon from 'react-icons/lib/md/arrow-drop-down'
-import UpIcon from 'react-icons/lib/md/arrow-drop-up'
+import {
+  MdArrowDropDown as DownIcon,
+  MdArrowDropUp as UpIcon,
+} from 'react-icons/md'
 
-import { Link } from '../../lib/routes'
+import Link from 'next/link'
 
 const styles = {
   table: css({
@@ -87,14 +89,13 @@ export const ThOrder = ({
   activeDirection,
   activeField,
   field,
-  route,
-  params,
+  href,
   children,
   style,
 }) => (
   <Th style={style}>
     <span {...styles.order}>
-      <Link route={route} replace params={params}>
+      <Link href={href} replace>
         <a {...styles.orderLink}>
           {children}
           {activeField === field &&

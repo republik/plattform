@@ -1,11 +1,12 @@
 import { Component, Fragment } from 'react'
+import Link from 'next/link'
 import PropTypes from 'prop-types'
-import { graphql, compose, withApollo } from 'react-apollo'
-import gql from 'graphql-tag'
+import compose from 'lodash/flowRight'
+import { graphql, withApollo } from '@apollo/client/react/hoc'
+import { gql } from '@apollo/client'
 import { css } from 'glamor'
 import isEmail from 'validator/lib/isEmail'
 
-import { Link } from '../../lib/routes'
 import withT from '../../lib/withT'
 import { meQuery } from '../../lib/withMe'
 
@@ -22,6 +23,7 @@ import {
 } from '@project-r/styleguide'
 
 import Poller from './Poller'
+import { FRONTEND_BASE_URL } from '../../lib/settings'
 
 const styles = {
   form: css({
@@ -238,13 +240,9 @@ class SignIn extends Component {
           </div>
         </form>
         <Label {...styles.hint}>
-          <Link route='legal/privacy'>
-            <a {...styles.hintA}>{t('signIn/privacy')}</a>
-          </Link>
-          {' – '}
-          <Link route='faq'>
-            <a {...styles.hintA}>{t('signIn/faq')}</a>
-          </Link>
+          <a {...styles.hintA} href={`${FRONTEND_BASE_URL}/datenschutz`}>
+            {t('signIn/privacy')}
+          </a>
           {' – '}
           {t('signIn/hint')}
         </Label>
