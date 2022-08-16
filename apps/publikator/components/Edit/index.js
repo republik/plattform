@@ -16,7 +16,6 @@ import { errorToString } from '../../lib/utils/errors'
 import Frame from '../Frame'
 import CommitButton from '../VersionControl/CommitButton'
 import {
-  ActiveInterruptionOverlay,
   joinUsers,
   UncommittedChanges,
   withUncommitedChanges,
@@ -24,13 +23,12 @@ import {
 } from '../VersionControl/UncommittedChanges'
 import BranchingNotice from '../VersionControl/BranchingNotice'
 import { useEffect, useState, useRef } from 'react'
-import { Warnings, useWarningContext } from './Warnings'
-import RepoArchivedBanner from '../Repo/ArchivedBanner'
+import { useWarningContext } from './Warnings'
 import { css } from 'glamor'
-import ContentEditor, { INITIAL_VALUE } from '../ContentEditor'
+import { INITIAL_VALUE } from '../ContentEditor'
 import { API_UNCOMMITTED_CHANGES_URL } from '../../lib/settings'
-import { PhaseSummary } from './Workflow'
 import { HEADER_HEIGHT } from '../Frame/constants'
+import EditView from './EditView'
 
 const styles = {
   defaultContainer: css({
@@ -88,7 +86,6 @@ const EditLoader = ({
   const [interruptingUsers, setInterruptingUsers] = useState(undefined)
   const [beginChanges, setBeginChanges] = useState(undefined)
   const [didUnlock, setDidUnlock] = useState(false)
-  const [localError, setLocalError] = useState(undefined)
   const prevUncommittedChanges = usePreviousValue(uncommittedChanges)
   // value = slate tree for the wysiwyg
   const [value, setValue] = useState()
@@ -367,10 +364,8 @@ const EditLoader = ({
   }
 
   const repo = data?.repo
-  const hasError = localError || data?.error
   const pending = (!isNew && !data) || committing || data?.loading
   const commit = repo && (repo.commit || repo.latestCommit)
-  const noEdits = !pending && (readOnly || repo?.isArchived)
 
   return (
     <Frame raw>
@@ -432,7 +427,7 @@ const EditLoader = ({
       <Frame.Body raw>
         <Loader
           loading={pending}
-          error={hasError}
+          error={data?.error}
           render={() => {
             // TODO: redirect doesn't work here – move it
             // checks to make ensure repo/commit integrity
@@ -457,47 +452,26 @@ const EditLoader = ({
             if (!isNew) {
               const commit = repo?.commit
               if (!commit) {
-                setLocalError(t('commit/warn/missing', { commitId }))
+                addWarning(t('commit/warn/missing', { commitId }))
                 return null
               }
             }
 
             return (
-              <>
-                {interruptingUsers && (
-                  <ActiveInterruptionOverlay
-                    uncommittedChanges={uncommittedChanges}
-                    interruptingUsers={interruptingUsers}
-                    onRevert={revertHandler}
-                    onAcknowledged={() => {
-                      setAcknowledgedUsers(activeUsers)
-                      setInterruptingUsers(undefined)
-                    }}
-                  />
-                )}
-                <Warnings />
-                {!pending && repo?.isArchived && (
-                  <RepoArchivedBanner
-                    style={{ zIndex: 23, position: 'fixed' }}
-                  />
-                )}
-                <div {...styles.phase}>
-                  <PhaseSummary
-                    commitId={commit?.id}
-                    repoId={repoId}
-                    phase={repo?.currentPhase}
-                    hasUncommittedChanges={beginChanges}
-                    isNew={isNew}
-                  />
-                </div>
-                {!!value && (
-                  <ContentEditor
-                    value={value}
-                    onChange={setValue}
-                    readOnly={noEdits}
-                  />
-                )}
-              </>
+              <EditView
+                interruptingUsers={interruptingUsers}
+                uncommittedChanges={uncommittedChanges}
+                revertHandler={revertHandler}
+                interruptionHandler={() => {
+                  setAcknowledgedUsers(activeUsers)
+                  setInterruptingUsers(undefined)
+                }}
+                repo={repo}
+                hasUncommittedChanges={beginChanges}
+                value={value}
+                setValue={setValue}
+                readOnly={readOnly}
+              />
             )
           }}
         />

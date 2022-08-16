@@ -40,14 +40,9 @@ const PhaseLabel = compose(
   )
 })
 
-export const PhaseSummary = ({
-  commitId,
-  repoId,
-  isNew,
-  hasUncommittedChanges,
-}) => {
+export const PhaseSummary = ({ commitId, repoId, hasUncommittedChanges }) => {
   const [overlayVisible, setOverlayVisible] = useState(false)
-  if (isNew) return null
+  if (!repoId) return null
   return (
     <div>
       <PhaseLabel repoId={repoId} onClick={() => setOverlayVisible(true)} />
