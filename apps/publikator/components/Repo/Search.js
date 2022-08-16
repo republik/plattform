@@ -17,9 +17,15 @@ const DebouncedSearch = compose(
   const [debouncedSearch] = useDebounce(search, 500)
 
   useEffect(() => {
+    const params = new URLSearchParams(router.query)
+    if (debouncedSearch) {
+      params.set('q', debouncedSearch)
+    } else {
+      params.delete('q')
+    }
     router.replace({
       pathname: '/',
-      query: { ...query, q: debouncedSearch || null },
+      query: params.toString(),
     })
   }, [debouncedSearch])
 
