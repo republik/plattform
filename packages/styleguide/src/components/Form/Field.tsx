@@ -28,7 +28,8 @@ const styles = {
     ...fontStyles.sansSerifRegular,
     fontSize: 22,
     lineHeight: `${LINE_HEIGHT}px`,
-    marginBottom: 15,
+    paddingTop: `${LINE_HEIGHT}px`,
+    marginBottom: '15px',
     cursor: 'text',
   }),
   field: css({
@@ -142,7 +143,6 @@ const Field = React.forwardRef<
     autoComplete?: boolean
     autoFocus?: string
     type?: string
-    placeholder?: string
     label?: string
     disabled?: boolean
     required?: boolean
@@ -153,6 +153,7 @@ const Field = React.forwardRef<
     icon?: ReactNode
     simulate?: string
     renderInput?: React.FC<Record<string, unknown>>
+    noMargin?: boolean
   }
 >(
   (
@@ -173,7 +174,7 @@ const Field = React.forwardRef<
       required,
       value,
       renderInput,
-      placeholder,
+      noMargin,
     },
     forwardRef,
   ) => {
@@ -227,10 +228,7 @@ const Field = React.forwardRef<
     )
 
     return (
-      <label
-        {...styles.container}
-        style={{ paddingTop: label ? LINE_HEIGHT : 0 }}
-      >
+      <label {...styles.container} style={{ marginBottom: noMargin && 0 }}>
         {renderInput({
           ['aria-required']: required ? true : undefined,
           disabled,
@@ -238,7 +236,6 @@ const Field = React.forwardRef<
           autoComplete,
           autoFocus,
           type,
-          placeholder,
           ref: inputRef,
           onChange: (event) => {
             const v = event.target.value

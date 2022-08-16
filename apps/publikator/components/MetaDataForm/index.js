@@ -1,32 +1,28 @@
 import { useState, useEffect, useRef } from 'react'
-import { css, style } from 'glamor'
+import { css } from 'glamor'
 import {
   Scroller,
   TabButton,
   Field,
   mediaQueries,
   useColorContext,
-  fontStyles,
-  Label,
 } from '@project-r/styleguide'
 import scrollIntoView from 'scroll-into-view'
 import withT from '../../lib/withT'
-import GooglePreview from '../editor/modules/meta/GooglePreview'
+import { MetaOption, MetaOptionLabel, AutosizeInput } from './components/Layout'
 
 const styles = {
   metaContainer: css({
     maxWidth: 640,
-    margin: '0 auto',
-    padding: '0 15px 120px 15px',
+    margin: '0px auto',
+    padding: '24px 15px 120px 15px',
     [mediaQueries.mUp]: {
-      padding: '0 0 120px 0',
+      padding: '24px 0 120px 0',
     },
   }),
   metaHeader: css({ position: 'sticky', top: 80, zIndex: 9 }),
   metaSection: css({ ':not(:first-child)': { marginTop: 128 } }),
-  metaSectionTitle: css({}),
-  metaOption: css({ marginBottom: 24 }),
-  metaOptionLabel: css({ margin: 0 }),
+  metaSectionTitle: css({ margin: '24px 0' }),
 }
 
 const MetaSection = ({ children }) => {
@@ -35,14 +31,6 @@ const MetaSection = ({ children }) => {
 
 const MetaSectionTitle = ({ children }) => {
   return <h3 {...styles.metaSectionTitle}>{children}</h3>
-}
-
-const MetaOption = ({ children }) => {
-  return <div {...styles.metaOption}>{children}</div>
-}
-
-const MetaOptionLabel = ({ children }) => {
-  return <Label {...styles.metaOptionLabel}>{children}</Label>
 }
 
 const MetaDataForm = ({ t, metaData, setMetaData }) => {
@@ -62,8 +50,7 @@ const MetaDataForm = ({ t, metaData, setMetaData }) => {
     })
   }, [activeTabIndex])
 
-  const handleFieldChange = (event) => {
-    const { name, value } = event.target
+  const handleMetaDataChange = (name, value) => {
     setMetaData((prevState) => {
       return {
         ...prevState,
@@ -81,7 +68,7 @@ const MetaDataForm = ({ t, metaData, setMetaData }) => {
           {...colorScheme.set('background-color', 'hover')}
         >
           <Scroller innerPadding={0} activeChildIndex={activeTabIndex}>
-            {['Beitrag'].map((n, i) => (
+            {['Beitrag', 'Social Media'].map((n, i) => (
               <TabButton
                 key={n}
                 text={n}
@@ -97,79 +84,62 @@ const MetaDataForm = ({ t, metaData, setMetaData }) => {
           <MetaSection>
             <MetaSectionTitle>Beitrag</MetaSectionTitle>
             <MetaOption>
-              <MetaOptionLabel>Titel</MetaOptionLabel>
-              <Field
-                label=''
-                placeholder='Titel'
-                name='title'
-                value={metaData.title}
-                onChange={handleFieldChange}
-              />
-            </MetaOption>
-            <MetaOption>
-              <MetaOptionLabel>Slug</MetaOptionLabel>
-              <Field
-                label=''
-                placeholder='Slug'
-                name='slug'
-                value={metaData.slug}
-                onChange={setMetaData}
-              />
-            </MetaOption>
-          </MetaSection>
-          {/* <MetaSection>
-            <MetaSectionTitle>SEO</MetaSectionTitle>
-            <MetaOption>
               <Field
                 label='Titel'
                 name='title'
-                value={value.title}
-                onChange={onChange}
+                value={metaData.title}
+                onChange={(event) => {
+                  handleMetaDataChange(event.target.name, event.target.value)
+                }}
+                noMargin
+                renderInput={({ ref, ...inputProps }) => (
+                  <AutosizeInput {...inputProps} ref={ref} />
+                )}
+              />
+            </MetaOption>
+            <MetaOption>
+              <Field
+                label='Kurztitel'
+                name='kurztitel'
+                value={metaData.short_title}
+                onChange={(event) => {
+                  handleMetaDataChange(event.target.name, event.target.value)
+                }}
+                noMargin
+                renderInput={({ ref, ...inputProps }) => (
+                  <AutosizeInput {...inputProps} ref={ref} />
+                )}
               />
             </MetaOption>
             <MetaOption>
               <Field
                 label='Lead'
                 name='lead'
-                value={value.lead}
-                onChange={onChange}
+                value={metaData.lead}
+                onChange={(event) => {
+                  handleMetaDataChange(event.target.name, event.target.value)
+                }}
+                noMargin
+                renderInput={({ ref, ...inputProps }) => (
+                  <AutosizeInput {...inputProps} ref={ref} />
+                )}
               />
             </MetaOption>
             <MetaOption>
-              <MetaOptionTitle>
-                {t('metaData/field/googlePreview')}
-              </MetaOptionTitle>
-              <GooglePreview
-                title={value.seoTitle || value.twitterTitle || value.title}
-                description={
-                  value.seoDescription ||
-                  value.twitterDescription ||
-                  value.description
-                }
-                publishDate={value.previewPublishDate}
-                path={value.path}
+              <Field
+                label='Slug'
+                name='slug'
+                value={metaData.slug}
+                onChange={(event) => {
+                  handleMetaDataChange(event.target.name, event.target.value)
+                }}
+                noMargin
               />
             </MetaOption>
           </MetaSection>
           <MetaSection>
             <MetaSectionTitle>Social Media</MetaSectionTitle>
-            <MetaOption>
-              <Field
-                label='Titel'
-                name='title'
-                value={value.title}
-                onChange={onChange}
-              />
-            </MetaOption>
-            <MetaOption>
-              <Field
-                label='Lead'
-                name='lead'
-                value={value.lead}
-                onChange={onChange}
-              />
-            </MetaOption>
-          </MetaSection> */}
+          </MetaSection>
         </div>
       </div>
     </div>
