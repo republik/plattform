@@ -1,9 +1,7 @@
 import { useState } from 'react'
 import { compose, graphql, Subscription } from 'react-apollo'
 import NewerVersionIcon from 'react-icons/lib/md/call-split'
-
-import { Button, colors, Loader } from '@project-r/styleguide'
-
+import { Button, colors } from '@project-r/styleguide'
 import { getCommits, repoSubscription } from './index'
 import { Link } from '../../lib/routes'
 import { descending } from 'd3-array'
@@ -104,20 +102,15 @@ export default compose(
     }),
   }),
 )(({ asIcon, repoId, commit, hasUncommittedChanges, data = {} }) => {
-  const { loading, error, repo } = data
+  const { repo } = data
+  if (!repo) return null
   return (
-    <Loader
-      loading={loading || !repo?.commits}
-      error={error}
-      render={() => (
-        <BranchingNotice
-          asIcon={asIcon}
-          repoId={repoId}
-          commit={commit}
-          commits={repo.commits?.nodes}
-          hasUncommittedChanges={hasUncommittedChanges}
-        />
-      )}
+    <BranchingNotice
+      asIcon={asIcon}
+      repoId={repoId}
+      commit={commit}
+      commits={repo.commits?.nodes}
+      hasUncommittedChanges={hasUncommittedChanges}
     />
   )
 })

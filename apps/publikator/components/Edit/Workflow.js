@@ -1,11 +1,6 @@
 import { Phase } from '../Repo/Phases'
 import { useState } from 'react'
-import {
-  Overlay,
-  OverlayToolbar,
-  OverlayBody,
-  Loader,
-} from '@project-r/styleguide'
+import { Overlay, OverlayToolbar, OverlayBody } from '@project-r/styleguide'
 import Checklist, { getMilestones } from '../VersionControl/Checklist'
 import { compose, graphql } from 'react-apollo'
 
@@ -27,17 +22,9 @@ const PhaseLabel = compose(
     }),
   }),
 )(({ repoId, data, onClick }) => {
-  return (
-    <Loader
-      loading={!data || data.loading}
-      error={data.error}
-      render={() => {
-        const phase = data?.repo?.currentPhase
-        if (!phase) return null
-        return <Phase phase={phase} onClick={onClick} />
-      }}
-    />
-  )
+  const phase = data?.repo?.currentPhase
+  if (!phase) return null
+  return <Phase phase={phase} onClick={onClick} />
 })
 
 export const PhaseSummary = ({ commitId, repoId, hasUncommittedChanges }) => {

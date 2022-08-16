@@ -29,6 +29,7 @@ import { INITIAL_VALUE } from '../ContentEditor'
 import { API_UNCOMMITTED_CHANGES_URL } from '../../lib/settings'
 import { HEADER_HEIGHT } from '../Frame/constants'
 import EditView from './EditView'
+import Preview from './Preview'
 
 const styles = {
   defaultContainer: css({
@@ -57,12 +58,27 @@ export const getCompString = (array) =>
 const getCommittedValue = (data) =>
   data?.repo?.commit?.document?.content?.children
 
+export const getCurrentValue = (store, data) => {
+  const storedValue = store?.get(CONTENT_KEY)
+  const committedValue = getCommittedValue(data)
+  return storedValue || committedValue || INITIAL_VALUE
+}
+
 const usePreviousValue = (value) => {
   const ref = useRef()
   useEffect(() => {
     ref.current = value
   })
   return ref.current
+}
+
+const NavButton = ({ children, active, onClick }) => {
+  if (active) return <span {...styles.navLink}>{children}</span>
+  return (
+    <A href='#' {...styles.navLink} onClick={onClick}>
+      {children}
+    </A>
+  )
 }
 
 const EditLoader = ({
@@ -78,6 +94,7 @@ const EditLoader = ({
   me,
 }) => {
   const { addWarning, rmWarning } = useWarningContext()
+  const [previewMode, setPreviewMode] = useState(false)
   const [store, setStore] = useState(undefined)
   const [readOnly, setReadOnly] = useState(false)
   const [committing, setCommitting] = useState(false)
@@ -253,9 +270,8 @@ const EditLoader = ({
   }
 
   const resetValue = () => {
-    const storedValue = store.get(CONTENT_KEY)
-    const committedValue = getCommittedValue(data)
-    updateContentEditor(storedValue || committedValue || INITIAL_VALUE)
+    const currentValue = getCurrentValue(store, data)
+    updateContentEditor(currentValue)
   }
 
   const checkLocalStorageSupport = () => {
@@ -372,12 +388,18 @@ const EditLoader = ({
       <Frame.Header>
         <Frame.Header.Section align='left'>
           <Frame.Nav>
-            <span {...styles.navLink}>Dokument</span>
-            <span {...styles.navLink}>
-              <Link route='flyer/preview' passHref>
-                <A>Vorschau</A>
-              </Link>
-            </span>
+            <NavButton
+              onClick={() => setPreviewMode(false)}
+              active={!previewMode}
+            >
+              Dokument
+            </NavButton>
+            <NavButton
+              onClick={() => setPreviewMode(true)}
+              active={previewMode}
+            >
+              Vorschau
+            </NavButton>
             <span {...styles.navLink}>
               <Link
                 route='repo/tree'
@@ -457,7 +479,9 @@ const EditLoader = ({
               }
             }
 
-            return (
+            return previewMode ? (
+              <Preview repoId={repoId} commitId={commitId} />
+            ) : (
               <EditView
                 interruptingUsers={interruptingUsers}
                 uncommittedChanges={uncommittedChanges}

@@ -50,8 +50,10 @@ const STRUCTURE = [
   },
 ]
 
+export const editorToolbarStyle = { top: HEADER_HEIGHT }
+
 const TOOLBAR = {
-  style: { top: HEADER_HEIGHT },
+  style: editorToolbarStyle,
   showChartCount: true,
 }
 

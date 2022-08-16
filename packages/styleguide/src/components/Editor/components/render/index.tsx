@@ -10,6 +10,7 @@ import { config as elConfig } from '../../config/elements'
 import { Element as SlateElement } from 'slate'
 import { Marks } from '../editor/ui/Mark'
 import { LayoutContainer } from '../editor/ui/Layout'
+import { cleanupTree } from '../editor/helpers/tree'
 
 const RenderedLeaf: React.FC<{
   leaf: CustomText
@@ -63,7 +64,7 @@ const SlateRender: React.FC<{
   schema: SchemaConfig
 }> = ({ value, schema }) => (
   <LayoutContainer schema={schema}>
-    <RenderNodes nodes={value} schema={schema} />
+    <RenderNodes nodes={cleanupTree(value, true)} schema={schema} />
   </LayoutContainer>
 )
 export default SlateRender

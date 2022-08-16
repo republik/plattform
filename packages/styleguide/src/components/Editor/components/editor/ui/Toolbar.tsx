@@ -1,5 +1,6 @@
 import React, {
   MouseEvent,
+  MouseEventHandler,
   ReactElement,
   useEffect,
   useMemo,
@@ -20,6 +21,7 @@ import {
   CustomText,
   ButtonConfig,
   TemplateType,
+  ToolbarMode,
 } from '../../../custom-types'
 import { config as elConfig, configKeys } from '../../../config/elements'
 import { configKeys as mKeys, MARKS_ALLOW_LIST } from '../../../config/marks'
@@ -221,6 +223,40 @@ const calcHoverPosition = (
   }
 }
 
+export const ToolbarContainer: React.FC<{
+  onClick?: MouseEventHandler<HTMLDivElement>
+  style?: object
+  centered?: boolean
+  renderLeft?: ReactElement
+  mode?: ToolbarMode
+}> = ({ onClick, mode, style, centered, children, renderLeft }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <div
+      onClick={onClick}
+      {...colorScheme.set('background', 'default')}
+      {...colorScheme.set('borderBottomColor', 'divider')}
+      {...(mode === 'sticky' && styles.stickyToolbar)}
+      {...styles.topToolbar}
+      style={style}
+    >
+      <Scroller>
+        {!!renderLeft && renderLeft}
+        <div
+          style={{
+            width: 690,
+            margin: '0 auto',
+            display: 'flex',
+            justifyContent: centered ? 'center' : 'left',
+          }}
+        >
+          {children}
+        </div>
+      </Scroller>
+    </div>
+  )
+}
+
 export const ToolbarButton: React.FC<{
   button: ButtonI
   onClick: () => void
@@ -382,20 +418,14 @@ const Toolbar: React.FC<{
   }, [editor.selection, focused])
 
   return isOnTop ? (
-    <div
+    <ToolbarContainer
+      mode={mode}
       onClick={(e) => onChange(e)}
-      {...colorScheme.set('borderBottomColor', 'divider')}
-      {...(mode === 'sticky' && styles.stickyToolbar)}
-      {...styles.topToolbar}
       style={config?.style}
+      renderLeft={config?.showChartCount && <CharCount />}
     >
-      <Scroller>
-        {config?.showChartCount && <CharCount />}
-        <div style={{ width: 690, margin: '0 auto', display: 'flex' }}>
-          <ToolbarButtons marks={marks} inlines={inlines} blocks={blocks} />
-        </div>
-      </Scroller>
-    </div>
+      <ToolbarButtons marks={marks} inlines={inlines} blocks={blocks} />
+    </ToolbarContainer>
   ) : (
     <Portal>
       <div
