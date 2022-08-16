@@ -1,7 +1,7 @@
 import { createEditor } from 'slate'
 import { cleanupTree } from '../editor/helpers/tree'
 import schema from '../../schema/article'
-import flyerSchema from '../../schema/flyer'
+import { schema as flyerSchema } from '../../schema/flyer'
 import mockEditor from './mockEditor'
 
 describe('Slate Editor: Normalisation', () => {
@@ -732,7 +732,11 @@ describe('Slate Editor: Normalisation', () => {
               children: [
                 {
                   type: 'figureImage',
-                  src: '/static/flyer-pic.jpg',
+                  images: {
+                    default: {
+                      url: '/static/flyer-pic.jpg',
+                    },
+                  },
                   children: [{ text: '' }],
                 },
               ],
@@ -792,7 +796,11 @@ describe('Slate Editor: Normalisation', () => {
               children: [
                 {
                   type: 'figureImage',
-                  src: '/static/flyer-pic.jpg',
+                  images: {
+                    default: {
+                      url: '/static/flyer-pic.jpg',
+                    },
+                  },
                   children: [{ text: '' }],
                 },
                 {

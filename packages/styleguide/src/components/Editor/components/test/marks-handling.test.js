@@ -5,9 +5,6 @@ import schema from '../../schema/article'
 import mockEditor from './mockEditor'
 
 describe('Slate Editor: Marks Handling', () => {
-  function getMockEditor() {
-    return createEditor()
-  }
   window.document.getSelection = jest.fn()
 
   let value

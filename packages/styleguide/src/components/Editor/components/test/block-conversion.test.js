@@ -3,7 +3,7 @@ import { cleanupTree } from '../editor/helpers/tree'
 import { toggleElement } from '../editor/helpers/structure'
 import mockEditor from './mockEditor'
 import articleSchema from '../../schema/article'
-import flyerSchema from '../../schema/flyer'
+import { schema as flyerSchema } from '../../schema/flyer'
 import { figure, pullQuote } from './blocks'
 
 describe('Slate Editor: Block Conversion', () => {
