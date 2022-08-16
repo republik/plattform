@@ -10,6 +10,7 @@ import {
 import scrollIntoView from 'scroll-into-view'
 import withT from '../../lib/withT'
 import { MetaOption, MetaOptionLabel, AutosizeInput } from './components/Layout'
+import SocialMedia from './components/SocialMedia'
 
 const styles = {
   metaContainer: css({
@@ -139,6 +140,7 @@ const MetaDataForm = ({ t, metaData, setMetaData }) => {
           </MetaSection>
           <MetaSection>
             <MetaSectionTitle>Social Media</MetaSectionTitle>
+            <SocialMedia data={metaData} onChange={handleMetaDataChange} />
           </MetaSection>
         </div>
       </div>

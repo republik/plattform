@@ -5,7 +5,7 @@ import { default as ReactTextAreaAutosize } from 'react-textarea-autosize'
 
 const styles = {
   metaOption: css({ marginBottom: 24 }),
-  metaOptionLabel: css({ margin: 0 }),
+  metaOptionLabel: css({ display: 'block', marginBottom: 8 }),
   autoSize: css({
     paddingTop: '7px !important',
     paddingBottom: '6px !important',
@@ -18,7 +18,11 @@ export const MetaOption = ({ children }) => {
 }
 
 export const MetaOptionLabel = ({ children }) => {
-  return <Label {...styles.metaOptionLabel}>{children}</Label>
+  return (
+    <label {...styles.metaOptionLabel}>
+      <Label>{children}</Label>
+    </label>
+  )
 }
 
 export const AutosizeInput = forwardRef((props, ref) => (
