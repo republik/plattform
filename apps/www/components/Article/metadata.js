@@ -82,7 +82,7 @@ function getCitationMetaData(meta) {
 
   return {
     citation_title: meta.title,
-    citation_journal_title: PUBLIC_BASE_URL,
+    citation_journal_title: publisher.name,
     citation_date: meta.publishDate,
     citation_authors: authors,
   }
