@@ -76,11 +76,7 @@ function getCitationMetaData(meta) {
   const authors = meta.contributors
     .filter((contributor) => contributor?.kind?.includes('Text'))
     .map((contributor) => {
-      const parts = contributor.name.split(' ')
-      // Convert the name into the following format `Surname, Given Name(s)`
-      return `${parts[parts.length - 1]}, ${parts
-        .slice(0, parts.length - 1)
-        .join(' ')}`
+      return contributor.name
     })
     .join('; ')
 
