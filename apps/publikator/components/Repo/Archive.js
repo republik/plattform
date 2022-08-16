@@ -1,6 +1,7 @@
-import { Mutation, compose } from 'react-apollo'
-import gql from 'graphql-tag'
-import Router, { withRouter } from 'next/router'
+import { Mutation } from '@apollo/client/react/components'
+import compose from 'lodash/flowRight'
+import { gql } from '@apollo/client'
+import { useRouter, withRouter } from 'next/router'
 
 import withT from '../../lib/withT'
 import { errorToString } from '../../lib/utils/errors'
@@ -18,6 +19,8 @@ export const ARCHIVE_REPO = gql`
 `
 
 const RepoArchive = ({ repoId, isTemplate, t }) => {
+  const router = useRouter()
+
   return (
     <Mutation mutation={ARCHIVE_REPO} variables={{ repoId }}>
       {(archiveRepo) => (
@@ -34,7 +37,7 @@ const RepoArchive = ({ repoId, isTemplate, t }) => {
             ) {
               archiveRepo()
                 .then(() => {
-                  Router.pushRoute('index')
+                  router.push('/')
                 })
                 .catch((error) => {
                   window.alert(errorToString(error))

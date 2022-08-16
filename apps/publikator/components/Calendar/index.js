@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { css } from 'glamor'
-import { compose, graphql } from 'react-apollo'
-import { withRouter } from 'next/router'
-import { Router } from '../../lib/routes'
+import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
+import { useRouter, withRouter } from 'next/router'
 import {
   getPublicationCalendar,
   getUrlWeekEnd,
@@ -81,12 +81,17 @@ const Calendar = ({
   },
   data = {},
 }) => {
+  const router = useRouter()
+
   useEffect(() => {
     !(from && until) && resetDates()
   }, [])
 
   const changeDates = (dates) =>
-    Router.replaceRoute('index', { ...query, ...dates })
+    router.replace({
+      pathname: '/',
+      query: { ...query, ...dates },
+    })
 
   const offsetDates = (offset) => () =>
     changeDates({

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { css } from 'glamor'
-import { graphql, compose } from 'react-apollo'
-import gql from 'graphql-tag'
+import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
+import { gql } from '@apollo/client'
 import { descending, ascending } from 'd3-array'
 import { withRouter } from 'next/router'
 
@@ -243,8 +244,10 @@ const RepoList = ({
             {orderFields.map(({ field, width }) => (
               <ThOrder
                 key={field}
-                route='index'
-                params={{ ...query, orderBy: getOrder(field) }}
+                href={{
+                  pathname: '/',
+                  query: { ...query, orderBy: getOrder(field) },
+                }}
                 activeDirection={orderDirection}
                 activeField={orderField}
                 field={field}
@@ -270,7 +273,7 @@ const RepoList = ({
             )}
           {!showLoader &&
             data.repos &&
-            data.repos.nodes
+            [...data.repos.nodes]
               .sort((a, b) => orderCompare(orderAccessor(a), orderAccessor(b)))
               .map((repo) => (
                 <RepoRow key={repo.id} repo={repo} showPhases={showPhases} />

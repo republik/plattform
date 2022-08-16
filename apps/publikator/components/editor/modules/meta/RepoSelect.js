@@ -1,6 +1,6 @@
 import { css } from 'glamor'
 
-import CloseIcon from 'react-icons/lib/md/close'
+import { MdClose as CloseIcon } from 'react-icons/md'
 
 import { A, Label, colors } from '@project-r/styleguide'
 

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import gql from 'graphql-tag'
-import { compose, graphql } from 'react-apollo'
+import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
+import { gql } from '@apollo/client'
 import { getSchema } from '../../../../Templates'
 import { renderMdast } from 'mdast-react-render'
 import { JSONEditor, PlainEditor } from '../../../utils/CodeEditorFields'
@@ -17,9 +18,11 @@ import {
   mediaQueries,
   Interaction,
 } from '@project-r/styleguide'
-import Code from 'react-icons/lib/md/code'
-import Edit from 'react-icons/lib/md/edit'
-import Public from 'react-icons/lib/md/public'
+import {
+  MdCode as Code,
+  MdEdit as Edit,
+  MdPublic as Public,
+} from 'react-icons/md'
 import { css } from 'glamor'
 import TypeSelector from './TypeSelector'
 import { FRONTEND_BASE_URL } from '../../../../../lib/settings'
