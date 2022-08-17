@@ -3,7 +3,6 @@ import Router, { withRouter } from 'next/router'
 import { BrandMark, Interaction, mediaQueries, A } from '@project-r/styleguide'
 import { css } from 'glamor'
 import withT from '../../lib/withT'
-import Link from 'next/link'
 
 const styles = {
   nav: css({
@@ -14,9 +13,6 @@ const styles = {
     [mediaQueries.onlyS]: {
       fontSize: 14,
     },
-  }),
-  navLink: css({
-    paddingRight: 10,
   }),
   navContent: css({
     display: 'flex',
@@ -41,18 +37,6 @@ const styles = {
     display: 'inline-block',
     fontSize: 22,
   }),
-}
-
-// used by new flyer page
-export const NavLink = ({ children, active, href, replace }) => {
-  if (active) return <span {...styles.navLink}>{children}</span>
-  return (
-    <span {...styles.navLink}>
-      <Link href={href} passHref replace={replace}>
-        <A>{children}</A>
-      </Link>
-    </span>
-  )
 }
 
 export const Nav = ({ t, router, children }) => {

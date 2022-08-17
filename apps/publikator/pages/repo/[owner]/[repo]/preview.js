@@ -71,10 +71,6 @@ const PreviewPage = ({ t, router, data = {} }) => {
               if (!schema) {
                 return null
               }
-              // @TODO: handle slate
-              if (schema === 'slate') {
-                return <p>«Fly me to the moon»</p>
-              }
               return (
                 <>
                   {renderMdast(
@@ -117,6 +113,7 @@ export default withDefaultSSR(
           repoId: getRepoIdFromQuery(router.query),
           commitId: router.query.commitId,
         },
+        fetchPolicy: 'cache-first',
       }),
     }),
   )(PreviewPage),

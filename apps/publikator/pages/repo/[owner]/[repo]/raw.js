@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import Frame from '../../../../components/Frame'
-import RepoNav from '../../../../components/Repo/Nav'
 import initLocalStore from '../../../../lib/utils/localStorage'
 import { withRouter } from 'next/router'
 import withT from '../../../../lib/withT'
@@ -25,6 +24,7 @@ import {
 import BranchingNotice from '../../../../components/VersionControl/BranchingNotice'
 import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 import { withDefaultSSR } from '../../../../lib/apollo/helpers'
+import NavWithFlyer from '../../../../components/Edit/NavWithFlyer'
 
 const styles = css({
   background: colors.secondaryBg,
@@ -156,12 +156,7 @@ export default withDefaultSSR(
       <Frame raw>
         <Frame.Header isTemplate={isTemplate === 'true'}>
           <Frame.Header.Section align='left'>
-            <Frame.Nav>
-              <RepoNav
-                route={`/repo/${repoId}/edit`}
-                prefix={isTemplate === 'true' ? 'template' : 'document'}
-              />
-            </Frame.Nav>
+            <NavWithFlyer isTemplate={isTemplate === 'true'} />
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
             <div style={{ padding: '35px 25px' }}>

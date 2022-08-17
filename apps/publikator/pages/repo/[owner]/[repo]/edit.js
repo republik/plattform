@@ -11,7 +11,6 @@ import withAuthorization from '../../../../components/Auth/withAuthorization'
 
 import Frame from '../../../../components/Frame'
 import { HEADER_HEIGHT } from '../../../../components/Frame/constants'
-import RepoNav from '../../../../components/Repo/Nav'
 import RepoArchivedBanner from '../../../../components/Repo/ArchivedBanner'
 
 import Editor from '../../../../components/editor'
@@ -64,6 +63,7 @@ import { withEditRepoMeta } from '../../../../components/Repo/EditMetaDate'
 import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 import { gql } from '@apollo/client'
 import { withDefaultSSR } from '../../../../lib/apollo/helpers'
+import NavWithFlyer from '../../../../components/Edit/NavWithFlyer'
 
 const commitMutation = gql`
   mutation commit(
@@ -857,13 +857,7 @@ export class EditorPage extends Component {
           }}
         >
           <Frame.Header.Section align='left'>
-            <Frame.Nav>
-              <RepoNav
-                route={`/repo/${repoId}/edit`}
-                isNew={isNew}
-                prefix={isTemplate ? 'template' : 'document'}
-              />
-            </Frame.Nav>
+            <NavWithFlyer isNew={isNew} isTemplate={isTemplate} />
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
             <div

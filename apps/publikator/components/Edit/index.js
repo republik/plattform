@@ -4,7 +4,7 @@ import {
   withCommitMutation,
   withLatestCommit,
 } from './enhancers'
-import { Loader, A, useDebounce, slug } from '@project-r/styleguide'
+import { Loader, useDebounce, slug } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 import withMe from '../../lib/withMe'
 import isEqual from 'lodash/isEqual'
@@ -22,29 +22,13 @@ import {
 import BranchingNotice from '../VersionControl/BranchingNotice'
 import { useEffect, useState, useRef } from 'react'
 import { useWarningContext } from './Warnings'
-import { css } from 'glamor'
 import { INITIAL_VALUE } from '../ContentEditor'
 import { API_UNCOMMITTED_CHANGES_URL } from '../../lib/settings'
-import { HEADER_HEIGHT } from '../Frame/constants'
 import EditView from './EditView'
 import Preview from './Preview'
 import compose from 'lodash/flowRight'
-import Link from 'next/link'
 import { getQueryFromRepoId, getRepoIdFromQuery } from '../../lib/repoIdHelper'
-import { NavLink } from '../Frame/Nav'
-
-const styles = {
-  defaultContainer: css({
-    padding: 20,
-  }),
-  phase: css({
-    position: 'fixed',
-    right: 20,
-    top: HEADER_HEIGHT,
-    zIndex: 21,
-    marginTop: 13,
-  }),
-}
+import NavWithFlyer from './NavWithFlyer'
 
 const debug = createDebug('publikator:pages:flyer:edit')
 
@@ -385,28 +369,7 @@ const EditLoader = ({
     <Frame raw>
       <Frame.Header>
         <Frame.Header.Section align='left'>
-          <Frame.Nav>
-            <NavLink
-              href={{ pathname, query: queryWithoutPreview }}
-              replace
-              active={!preview}
-            >
-              Dokument
-            </NavLink>
-            <NavLink
-              href={{
-                pathname,
-                query: { ...queryWithoutPreview, preview: true },
-              }}
-              replace
-              active={preview}
-            >
-              Vorschau
-            </NavLink>
-            {!isNew && (
-              <NavLink href={`/repo/${repoId}/tree`}>Versionen</NavLink>
-            )}
-          </Frame.Nav>
+          <NavWithFlyer isFlyer isNew={isNew} />
         </Frame.Header.Section>
         <Frame.Header.Section align='right'>
           <div style={{ marginRight: 20 }}>

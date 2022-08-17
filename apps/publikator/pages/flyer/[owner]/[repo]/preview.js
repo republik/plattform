@@ -9,6 +9,7 @@ import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
+import { useEffect, useState } from 'react'
 
 const getCommitById = gql`
   query getCommitById($repoId: ID!, $commitId: ID!) {
@@ -23,20 +24,23 @@ const getCommitById = gql`
   ${fragments.CommitWithDocument}
 `
 
-const PreviewPage = ({ router: { query }, data = {} }) => {
-  const { loading, error } = data
+const PreviewPage = ({ router: { query }, data }) => {
   const { commitId } = query
   const repoId = getRepoIdFromQuery(query)
+  const [store, setStore] = useState()
 
-  const storeKey = [repoId, commitId].join('/')
-  const store = initLocalStore(storeKey)
+  useEffect(() => {
+    const storeKey = [repoId, commitId].join('/')
+    setStore(initLocalStore(storeKey))
+  }, [])
 
   return (
     <Loader
-      loading={loading}
-      error={error}
+      loading={data?.loading}
+      error={data?.error}
       render={() => {
         const value = getCurrentValue(store, data)
+        if (!value) return null
         return <SlateRender value={value} schema={flyerSchema} />
       }}
     />
@@ -54,6 +58,7 @@ export default compose(
         repoId: getRepoIdFromQuery(router.query),
         commitId: router.query.commitId,
       },
+      fetchPolicy: 'cache-first',
     }),
   }),
 )(PreviewPage)

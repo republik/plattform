@@ -1,5 +1,9 @@
 import { useEffect, useState, useRef } from 'react'
-import { useColorContext, Loader } from '@project-r/styleguide'
+import {
+  useColorContext,
+  Loader,
+  EDITOR_TOOLBAR_HEIGHT,
+} from '@project-r/styleguide'
 
 import { SIDEBAR_WIDTH } from '../Sidebar'
 import { HEADER_HEIGHT } from '../Frame/constants'
@@ -32,6 +36,7 @@ const PreviewFrame = ({
   darkmode,
   hasAccess,
   sideBarWidth,
+  isFlyer,
 }) => {
   const [scaleFactor, setScaleFactor] = useState(1)
   const [leftSpace, setLeftSpace] = useState(0)
@@ -39,8 +44,10 @@ const PreviewFrame = ({
   const [colorScheme] = useColorContext()
   const iframeRef = useRef()
 
-  const iframeSrc = `/repo/${repoId}/preview?commitId=${commitId}&darkmode=${darkmode}&hasAccess=${hasAccess}`
-  const currentSideBarWidth = sideBarWidth || SIDEBAR_WIDTH
+  const iframeSrc = isFlyer
+    ? `/flyer/${repoId}/preview?commitId=${commitId}`
+    : `/repo/${repoId}/preview?commitId=${commitId}&darkmode=${darkmode}&hasAccess=${hasAccess}`
+  const currentSideBarWidth = sideBarWidth || (isFlyer ? 0 : SIDEBAR_WIDTH)
 
   useEffect(() => {
     const handleResize = () => {
@@ -87,7 +94,15 @@ const PreviewFrame = ({
     marginLeft: PREVIEW_MARGIN + leftSpace,
   }
   return (
-    <>
+    <div
+      style={{
+        width: '100vw',
+        height: `calc(100vh - ${
+          HEADER_HEIGHT + (isFlyer ? EDITOR_TOOLBAR_HEIGHT : 0)
+        }px)`,
+        overflow: 'hidden',
+      }}
+    >
       <div
         style={{
           ...iframeStyle,
@@ -118,7 +133,7 @@ const PreviewFrame = ({
         }}
         {...colorScheme.set('backgroundColor', 'hover')}
       />
-    </>
+    </div>
   )
 }
 

@@ -3,7 +3,6 @@ import { withRouter } from 'next/router'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
-import Link from 'next/link'
 import withAuthorization from '../../../../components/Auth/withAuthorization'
 
 import Loader from '../../../../components/Loader'
@@ -26,7 +25,7 @@ import withT from '../../../../lib/withT'
 import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 import { gql } from '@apollo/client'
 import { withDefaultSSR } from '../../../../lib/apollo/helpers'
-import { NavLink } from '../../../../components/Frame/Nav'
+import NavWithFlyer from '../../../../components/Edit/NavWithFlyer'
 
 export const COMMIT_LIMIT = 40
 export const getRepoHistory = gql`
@@ -192,28 +191,12 @@ class EditorPage extends Component {
     const localStorageCommitIds = getLocalStorageKeys()
       .filter((key) => key.startsWith(repoId))
       .map((key) => key.split('/').pop())
-    const isSlate = repo?.commits?.nodes[0]?.document?.type === 'slate'
-    const root = isSlate ? 'flyer' : 'repo'
-    const editPath = `/${root}/${repoId}/edit`
+    const isFlyer = repo?.commits?.nodes[0]?.document?.type === 'slate'
     return (
       <Frame>
         <Frame.Header isTemplate={repo?.isTemplate}>
           <Frame.Header.Section align='left'>
-            <Frame.Nav>
-              <NavLink href={editPath}>
-                {t(
-                  `repo/nav/${repo?.isTemplate ? 'template' : 'document'}/edit`,
-                )}
-              </NavLink>
-              {!!isSlate && (
-                <NavLink
-                  href={{ pathname: editPath, query: { preview: true } }}
-                >
-                  Vorschau
-                </NavLink>
-              )}
-              <span>Versionen</span>
-            </Frame.Nav>
+            <NavWithFlyer isFlyer={isFlyer} isTemplate={repo?.isTemplate} />
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
             {!!repo && (
