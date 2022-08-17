@@ -220,7 +220,7 @@ class RepoAdd extends Component {
   goToEdit({ slug }) {
     const { title, schema, templateRepoId } = this.state
     const { isTemplate } = this.props
-    const path = schema === 'flyer' ? 'flyer/edit' : 'repo/edit'
+    const path = schema === 'flyer' ? 'flyer' : 'repo'
     this.props.router
       .replace({
         pathname: `/${path}/${GITHUB_ORG}/${slug}/edit`,
