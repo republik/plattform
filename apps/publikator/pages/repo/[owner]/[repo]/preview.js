@@ -113,7 +113,6 @@ export default withDefaultSSR(
           repoId: getRepoIdFromQuery(router.query),
           commitId: router.query.commitId,
         },
-        fetchPolicy: 'cache-first',
       }),
     }),
   )(PreviewPage),

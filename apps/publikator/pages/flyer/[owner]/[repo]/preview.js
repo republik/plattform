@@ -10,6 +10,7 @@ import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 import { useEffect, useState } from 'react'
+import Frame from '../../../../components/Frame'
 
 const getCommitById = gql`
   query getCommitById($repoId: ID!, $commitId: ID!) {
@@ -35,15 +36,17 @@ const PreviewPage = ({ router: { query }, data }) => {
   }, [])
 
   return (
-    <Loader
-      loading={data?.loading}
-      error={data?.error}
-      render={() => {
-        const value = getCurrentValue(store, data)
-        if (!value) return null
-        return <SlateRender value={value} schema={flyerSchema} />
-      }}
-    />
+    <Frame.Body raw>
+      <Loader
+        loading={!data || data?.loading}
+        error={data?.error}
+        render={() => {
+          const value = getCurrentValue(store, data)
+          if (!value) return null
+          return <SlateRender value={value} schema={flyerSchema} />
+        }}
+      />
+    </Frame.Body>
   )
 }
 
@@ -58,7 +61,6 @@ export default compose(
         repoId: getRepoIdFromQuery(router.query),
         commitId: router.query.commitId,
       },
-      fetchPolicy: 'cache-first',
     }),
   }),
 )(PreviewPage)
