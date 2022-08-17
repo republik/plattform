@@ -1,30 +1,31 @@
 import { Component, Fragment } from 'react'
 import { withRouter } from 'next/router'
 import { css } from 'glamor'
-import { graphql, compose } from 'react-apollo'
-import gql from 'graphql-tag'
+import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
+import Link from 'next/link'
+import withAuthorization from '../../../../components/Auth/withAuthorization'
 
-import withAuthorization from '../../components/Auth/withAuthorization'
-
-import Loader from '../../components/Loader'
-import Tree from '../../components/Tree'
-import Frame from '../../components/Frame'
-import RepoNav from '../../components/Repo/Nav'
-import RepoArchive from '../../components/Repo/Archive'
-import RepoArchivedBanner from '../../components/Repo/ArchivedBanner'
+import Loader from '../../../../components/Loader'
+import Tree from '../../../../components/Tree'
+import Frame from '../../../../components/Frame'
+import RepoArchive from '../../../../components/Repo/Archive'
+import RepoArchivedBanner from '../../../../components/Repo/ArchivedBanner'
 import {
   NarrowContainer,
   A,
   InlineSpinner,
   Interaction,
 } from '@project-r/styleguide'
-import { getKeys as getLocalStorageKeys } from '../../lib/utils/localStorage'
-import * as fragments from '../../lib/graphql/fragments'
+import { getKeys as getLocalStorageKeys } from '../../../../lib/utils/localStorage'
+import * as fragments from '../../../../lib/graphql/fragments'
 
-import CurrentPublications from '../../components/Publication/Current'
-import UncommittedChanges from '../../components/VersionControl/UncommittedChanges'
-import withT from '../../lib/withT'
-import { Link } from '../../lib/routes'
+import CurrentPublications from '../../../../components/Publication/Current'
+import UncommittedChanges from '../../../../components/VersionControl/UncommittedChanges'
+import withT from '../../../../lib/withT'
+import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
+import { gql } from '@apollo/client'
+import { withDefaultSSR } from '../../../../lib/apollo/helpers'
 
 export const COMMIT_LIMIT = 40
 export const getRepoHistory = gql`
@@ -132,7 +133,7 @@ class EditorPage extends Component {
       this.unsubscribe = this.props.data.subscribeToMore({
         document: treeRepoSubscription,
         variables: {
-          repoId: this.props.router.query.repoId,
+          repoId: getRepoIdFromQuery(this.props.router.query),
         },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) {
@@ -185,28 +186,22 @@ class EditorPage extends Component {
   render() {
     const { router, commits, hasMore, fetchMore, t } = this.props
     const { loading, error, repo } = this.props.data
-    const { repoId } = router.query
+    const repoId = getRepoIdFromQuery(router.query)
 
     const localStorageCommitIds = getLocalStorageKeys()
       .filter((key) => key.startsWith(repoId))
       .map((key) => key.split('/').pop())
+    const path =
+      repo?.commits?.nodes[0]?.document?.type === 'slate'
+        ? 'flyer/edit'
+        : 'repo/edit'
     return (
       <Frame>
         <Frame.Header isTemplate={repo?.isTemplate}>
           <Frame.Header.Section align='left'>
             <Frame.Nav>
               <span style={{ marginRight: 10 }}>
-                <Link
-                  route={
-                    repo?.commits?.nodes[0]?.document?.type === 'slate'
-                      ? 'flyer/edit'
-                      : 'repo/edit'
-                  }
-                  params={{
-                    repoId: repoId.split('/'),
-                  }}
-                  passHref
-                >
+                <Link href={`/${path}/${repoId.split('/')}/edit`} passHref>
                   <A>
                     {t(
                       `repo/nav/${
@@ -276,60 +271,62 @@ class EditorPage extends Component {
   }
 }
 
-export default compose(
-  withRouter,
-  withT,
-  withAuthorization(['editor']),
-  graphql(getRepoHistory, {
-    options: ({ router }) => {
-      return {
-        variables: {
-          repoId: router.query.repoId,
-          first: COMMIT_LIMIT,
-        },
-        notifyOnNetworkStatusChange: true,
-        fetchPolicy: 'cache-and-network',
-      }
-    },
-    props: ({ data, ownProps }) => {
-      return {
-        data,
-        commits:
-          (data.repo && data.repo.commits && data.repo.commits.nodes) || [],
-        hasMore:
-          data.repo &&
-          data.repo.commits &&
-          data.repo.commits.pageInfo.hasNextPage,
-        fetchMore: () => {
-          return data.fetchMore({
-            variables: {
-              repoId: data.repo.id,
-              first: COMMIT_LIMIT,
-              after: data.repo.commits.pageInfo.endCursor,
-            },
-            updateQuery: (previousResult, { fetchMoreResult }) => {
-              return {
-                repo: {
-                  ...previousResult.repo,
-                  ...fetchMoreResult.repo,
-                  commits: {
-                    ...previousResult.repo.commits,
-                    ...fetchMoreResult.repo.commits,
-                    nodes: [
-                      ...previousResult.repo.commits.nodes,
-                      ...fetchMoreResult.repo.commits.nodes,
-                    ].filter(
-                      ({ id }, i, all) =>
-                        // deduplicate by id
-                        i === all.findIndex((repo) => repo.id === id),
-                    ),
+export default withDefaultSSR(
+  compose(
+    withRouter,
+    withT,
+    withAuthorization(['editor']),
+    graphql(getRepoHistory, {
+      options: ({ router }) => {
+        return {
+          variables: {
+            repoId: getRepoIdFromQuery(router.query),
+            first: COMMIT_LIMIT,
+          },
+          notifyOnNetworkStatusChange: true,
+          fetchPolicy: 'cache-and-network',
+        }
+      },
+      props: ({ data }) => {
+        return {
+          data,
+          commits:
+            (data.repo && data.repo.commits && data.repo.commits.nodes) || [],
+          hasMore:
+            data.repo &&
+            data.repo.commits &&
+            data.repo.commits.pageInfo.hasNextPage,
+          fetchMore: () => {
+            return data.fetchMore({
+              variables: {
+                repoId: data.repo.id,
+                first: COMMIT_LIMIT,
+                after: data.repo.commits.pageInfo.endCursor,
+              },
+              updateQuery: (previousResult, { fetchMoreResult }) => {
+                return {
+                  repo: {
+                    ...previousResult.repo,
+                    ...fetchMoreResult.repo,
+                    commits: {
+                      ...previousResult.repo.commits,
+                      ...fetchMoreResult.repo.commits,
+                      nodes: [
+                        ...previousResult.repo.commits.nodes,
+                        ...fetchMoreResult.repo.commits.nodes,
+                      ].filter(
+                        ({ id }, i, all) =>
+                          // deduplicate by id
+                          i === all.findIndex((repo) => repo.id === id),
+                      ),
+                    },
                   },
-                },
-              }
-            },
-          })
-        },
-      }
-    },
-  }),
-)(EditorPage)
+                }
+              },
+            })
+          },
+        }
+      },
+    }),
+  )(EditorPage),
+)

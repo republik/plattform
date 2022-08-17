@@ -1,17 +1,20 @@
 import { useMemo } from 'react'
 import { withRouter } from 'next/router'
-import { graphql, compose } from 'react-apollo'
-import gql from 'graphql-tag'
+import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
+import { gql } from '@apollo/client'
 import { ColorContextProvider, VariableContext } from '@project-r/styleguide'
 import { renderMdast } from 'mdast-react-render'
 
-import Loader from '../../components/Loader'
-import Frame from '../../components/Frame'
-import { getSchema } from '../../components/Templates'
+import Loader from '../../../../components/Loader'
+import Frame from '../../../../components/Frame'
+import { getSchema } from '../../../../components/Templates'
 
-import * as fragments from '../../lib/graphql/fragments'
-import initLocalStore from '../../lib/utils/localStorage'
-import withT from '../../lib/withT'
+import * as fragments from '../../../../lib/graphql/fragments'
+import initLocalStore from '../../../../lib/utils/localStorage'
+import withT from '../../../../lib/withT'
+import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
+import { withDefaultSSR } from '../../../../lib/apollo/helpers'
 
 const getCommitById = gql`
   query getCommitById($repoId: ID!, $commitId: ID!) {
@@ -28,7 +31,8 @@ const getCommitById = gql`
 
 const PreviewPage = ({ t, router, data = {} }) => {
   const { loading, error, repo: { commit: { document } = {} } = {} } = data
-  const { repoId, commitId, darkmode, hasAccess } = router.query
+  const repoId = getRepoIdFromQuery(router.query)
+  const { commitId, darkmode, hasAccess } = router.query
 
   const storeKey = [repoId, commitId].join('/')
   const store = initLocalStore(storeKey)
@@ -101,17 +105,19 @@ const PreviewPage = ({ t, router, data = {} }) => {
   )
 }
 
-export default compose(
-  withRouter,
-  withT,
-  graphql(getCommitById, {
-    skip: ({ router }) =>
-      router.query.commitId === 'new' || !router.query.commitId,
-    options: ({ router }) => ({
-      variables: {
-        repoId: router.query.repoId,
-        commitId: router.query.commitId,
-      },
+export default withDefaultSSR(
+  compose(
+    withRouter,
+    withT,
+    graphql(getCommitById, {
+      skip: ({ router }) =>
+        router.query.commitId === 'new' || !router.query.commitId,
+      options: ({ router }) => ({
+        variables: {
+          repoId: getRepoIdFromQuery(router.query),
+          commitId: router.query.commitId,
+        },
+      }),
     }),
-  }),
-)(PreviewPage)
+  )(PreviewPage),
+)

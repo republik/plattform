@@ -1,10 +1,13 @@
 import { useState } from 'react'
-import { compose, graphql, Subscription } from 'react-apollo'
-import NewerVersionIcon from 'react-icons/lib/md/call-split'
+import { Subscription } from '@apollo/client/react/components'
+import { MdCallSplit as NewerVersionIcon } from 'react-icons/md'
+
 import { Button, colors } from '@project-r/styleguide'
 import { getCommits, repoSubscription } from './index'
-import { Link } from '../../lib/routes'
+import Link from 'next/link'
 import { descending } from 'd3-array'
+import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
 
 const getColors = (warning) => ({
   backgroundColor: warning ? colors.social : 'inherit',
@@ -18,7 +21,7 @@ const BranchingIcon = ({ repoId, warning }) => (
       warning ? ': dieses Commit wird ein Baum erzeugen' : ''
     }`}
   >
-    <Link route='repo/tree' params={{ repoId: repoId.split('/') }}>
+    <Link href={`/repo/${repoId}/tree`}>
       <Button
         style={{
           ...getColors(warning),
@@ -37,7 +40,7 @@ const BranchingIcon = ({ repoId, warning }) => (
 )
 
 const BranchingButton = ({ repoId, warning }) => (
-  <Link route='repo/tree' params={{ repoId: repoId.split('/') }}>
+  <Link href={`/repo/${repoId}/tree`}>
     <Button
       style={{
         ...getColors(warning),

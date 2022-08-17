@@ -1,25 +1,25 @@
 import { Component } from 'react'
 import { withRouter } from 'next/router'
-import { graphql, compose } from 'react-apollo'
-import gql from 'graphql-tag'
+import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
 import { Value, resetKeyGenerator } from 'slate'
 import debounce from 'lodash/debounce'
 import { timeFormat } from 'd3-time-format'
 import { parse } from '@orbiting/remark-preset'
 
-import withAuthorization from '../../components/Auth/withAuthorization'
+import withAuthorization from '../../../../components/Auth/withAuthorization'
 
-import Frame from '../../components/Frame'
-import { HEADER_HEIGHT } from '../../components/Frame/constants'
-import RepoNav from '../../components/Repo/Nav'
-import RepoArchivedBanner from '../../components/Repo/ArchivedBanner'
+import Frame from '../../../../components/Frame'
+import { HEADER_HEIGHT } from '../../../../components/Frame/constants'
+import RepoNav from '../../../../components/Repo/Nav'
+import RepoArchivedBanner from '../../../../components/Repo/ArchivedBanner'
 
-import Editor from '../../components/editor'
-import EditorUI from '../../components/editor/UI'
+import Editor from '../../../../components/editor'
+import EditorUI from '../../../../components/editor/UI'
 
-import VersionControl from '../../components/VersionControl'
-import BranchingNotice from '../../components/VersionControl/BranchingNotice'
-import CommitButton from '../../components/VersionControl/CommitButton'
+import VersionControl from '../../../../components/VersionControl'
+import BranchingNotice from '../../../../components/VersionControl/BranchingNotice'
+import CommitButton from '../../../../components/VersionControl/CommitButton'
 import {
   UncommittedChanges,
   withUncommitedChanges,
@@ -27,24 +27,23 @@ import {
   warningColor,
   joinUsers,
   withUncommittedChangesMutation,
-} from '../../components/VersionControl/UncommittedChanges'
-import Sidebar from '../../components/Sidebar'
-import Warning from '../../components/Sidebar/Warning'
-import ScreenSizePicker from '../../components/ScreenSizePicker'
-import PreviewFrame from '../../components/PreviewFrame'
+} from '../../../../components/VersionControl/UncommittedChanges'
+import Sidebar from '../../../../components/Sidebar'
+import Warning from '../../../../components/Sidebar/Warning'
+import ScreenSizePicker from '../../../../components/ScreenSizePicker'
+import PreviewFrame from '../../../../components/PreviewFrame'
 
-import Loader from '../../components/Loader'
-import CharCount from '../../components/CharCount'
-import withT from '../../lib/withT'
-import withMe from '../../lib/withMe'
-import { Router } from '../../lib/routes'
+import Loader from '../../../../components/Loader'
+import CharCount from '../../../../components/CharCount'
+import withT from '../../../../lib/withT'
+import withMe from '../../../../lib/withMe'
 
-import { errorToString } from '../../lib/utils/errors'
-import initLocalStore from '../../lib/utils/localStorage'
+import { errorToString } from '../../../../lib/utils/errors'
+import initLocalStore from '../../../../lib/utils/localStorage'
 
-import { getSchema } from '../../components/Templates'
-import { API_UNCOMMITTED_CHANGES_URL } from '../../lib/settings'
-import * as fragments from '../../lib/graphql/fragments'
+import { getSchema } from '../../../../components/Templates'
+import { API_UNCOMMITTED_CHANGES_URL } from '../../../../lib/settings'
+import * as fragments from '../../../../lib/graphql/fragments'
 
 import {
   ColorContextProvider,
@@ -53,15 +52,18 @@ import {
   Interaction,
   Checkbox,
 } from '@project-r/styleguide'
-import SettingsIcon from 'react-icons/lib/fa/cogs'
+import { FaCogs as SettingsIcon } from 'react-icons/fa'
 
 import createDebug from 'debug'
 import {
   findAuthorsP,
   findTitleLeaf,
   generateAuthorsLine,
-} from '../../lib/utils/helpers'
-import { withEditRepoMeta } from '../../components/Repo/EditMetaDate'
+} from '../../../../lib/utils/helpers'
+import { withEditRepoMeta } from '../../../../components/Repo/EditMetaDate'
+import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
+import { gql } from '@apollo/client'
+import { withDefaultSSR } from '../../../../lib/apollo/helpers'
 
 const commitMutation = gql`
   mutation commit(
@@ -218,7 +220,7 @@ export class EditorPage extends Component {
         ...rmWarning(warning)(state),
       }
     }
-    this.unlock = (state) => {
+    this.unlock = () => {
       return {
         readOnly: false,
       }
@@ -267,11 +269,7 @@ export class EditorPage extends Component {
       this.setState(this.unlock)
     }
     this.beforeunload = (event) => {
-      const {
-        router: {
-          query: { repoId },
-        },
-      } = this.props
+      const { router } = this.props
       const { hasUncommittedChanges, didUnlock } = this.state
       if (!hasUncommittedChanges && didUnlock) {
         this.notifyChanges('delete')
@@ -280,10 +278,11 @@ export class EditorPage extends Component {
             navigator.sendBeacon(
               API_UNCOMMITTED_CHANGES_URL,
               JSON.stringify({
-                repoId,
+                repoId: getRepoIdFromQuery(router.query),
                 action: 'delete',
               }),
             )
+            // eslint-disable-next-line no-empty
           } catch (e) {}
         }
       }
@@ -291,12 +290,9 @@ export class EditorPage extends Component {
   }
 
   notifyChanges(action) {
-    const {
-      router: {
-        query: { repoId, commitId },
-      },
-      t,
-    } = this.props
+    const { router, t } = this.props
+    const { commitId } = router.query
+    const repoId = getRepoIdFromQuery(router.query)
 
     // we don't notify the backend if no backend repo exists
     if (commitId === 'new') return
@@ -470,23 +466,23 @@ export class EditorPage extends Component {
       )
       return
     }
-    const repoId = router.query.repoId
+    const repoId = getRepoIdFromQuery(router.query)
     const commitId = router.query.commitId
 
     if (!commitId && repo && repo.latestCommit) {
       debug('loadState', 'redirect', repo.latestCommit)
-      Router.replaceRoute('repo/edit', {
-        repoId: repoId.split('/'),
-        commitId: repo.latestCommit.id,
+      router.replace({
+        pathname: `/repo/${repoId}/edit`,
+        query: {
+          commitId: repo.latestCommit.id,
+        },
       })
       return
     }
 
     if (commitId && repo && !repo.commit) {
       this.setState(addWarning(t('commit/warn/commit404')))
-      Router.replaceRoute('repo/edit', {
-        repoId: repoId.split('/'),
-      })
+      router.replace(`/repo/${repoId}/edit`)
       return
     }
 
@@ -696,38 +692,30 @@ export class EditorPage extends Component {
   }
 
   commitCleanup(data) {
-    const {
-      router: {
-        query: { repoId },
-      },
-    } = this.props
-
+    const { router } = this.props
+    const repoId = getRepoIdFromQuery(router.query)
     this.store.clear()
     this.concludeChanges()
 
     this.setState({
       committing: false,
     })
-    Router.replaceRoute('repo/edit', {
-      repoId: repoId.split('/'),
-      commitId: data.commit.id,
-      isTemplate: null,
-      templateRepoId: null,
-      publishDate: null,
+    this.props.router.replace({
+      pathname: `/repo/${repoId}/edit`,
+      query: {
+        commitId: data.commit.id,
+        isTemplate: null,
+        templateRepoId: null,
+        publishDate: null,
+      },
     })
   }
 
   commitHandler() {
-    const {
-      router: {
-        query: { repoId, commitId, isTemplate, publishDate },
-      },
-      commitMutation,
-      editRepoMeta,
-      data,
-      t,
-    } = this.props
+    const { router, commitMutation, editRepoMeta, data, t } = this.props
     const { editorState } = this.state
+    const { commitId, isTemplate, publishDate } = router.query
+    const repoId = getRepoIdFromQuery(router.query)
 
     const message = window.prompt(t('commit/promtMessage'))
     if (!message) {
@@ -774,25 +762,25 @@ export class EditorPage extends Component {
   }
 
   goToRaw(isTemplate) {
-    const {
-      router: {
-        query: { repoId, commitId, schema, template },
-      },
-    } = this.props
+    const { router } = this.props
+    const { commitId, schema, template } = router.query
+    const repoId = getRepoIdFromQuery(router.query)
     const { editorState } = this.state
     const serializedState = this.editor.serializer.serialize(editorState)
     this.beginChanges()
     this.store.set('editorState', serializedState)
-    Router.pushRoute('repo/raw', {
-      ...this.props.router.query,
-      repoId: repoId.split('/'),
-      commitId,
-      isTemplate: isTemplate,
-      ...(commitId === 'new'
-        ? {
-            schema: schema || template,
-          }
-        : {}),
+    this.props.router.push({
+      pathname: `/repo/${repoId}/raw`,
+      query: {
+        ...this.props.router.query,
+        commitId,
+        isTemplate: isTemplate,
+        ...(commitId === 'new'
+          ? {
+              schema: schema || template,
+            }
+          : {}),
+      },
     })
   }
 
@@ -804,7 +792,8 @@ export class EditorPage extends Component {
       uncommittedChanges,
       t,
     } = this.props
-    const { repoId, commitId, publishDate } = router.query
+    const { commitId, publishDate } = router.query
+    const repoId = getRepoIdFromQuery(router.query)
     const { loading, repo } = data
     const { loading: templateLoading, error: templateError } = templateData
     const {
@@ -870,7 +859,7 @@ export class EditorPage extends Component {
           <Frame.Header.Section align='left'>
             <Frame.Nav>
               <RepoNav
-                route='repo/edit'
+                route={`/repo/${repoId}/edit`}
                 isNew={isNew}
                 prefix={isTemplate ? 'template' : 'document'}
               />
@@ -1053,106 +1042,108 @@ export class EditorPage extends Component {
   }
 }
 
-export default compose(
-  withRouter,
-  withT,
-  withAuthorization(['editor']),
-  withMe,
-  graphql(getCommitById, {
-    skip: ({ router }) =>
-      router.query.commitId === 'new' || !router.query.commitId,
-    options: ({ router }) => ({
-      variables: {
-        repoId: router.query.repoId,
-        commitId: router.query.commitId,
-      },
+export default withDefaultSSR(
+  compose(
+    withRouter,
+    withT,
+    withAuthorization(['editor']),
+    withMe,
+    graphql(getCommitById, {
+      skip: ({ router }) =>
+        router.query.commitId === 'new' || !router.query.commitId,
+      options: ({ router }) => ({
+        variables: {
+          repoId: getRepoIdFromQuery(router.query),
+          commitId: router.query.commitId,
+        },
+      }),
     }),
-  }),
-  graphql(getLatestCommit, {
-    skip: ({ router }) =>
-      !!router.query.commitId && router.query.commitId !== 'new',
-    options: ({ router }) => ({
-      // always the latest
-      fetchPolicy: 'network-only',
-      variables: {
-        repoId: router.query.repoId,
-      },
-    }),
-    props: ({ data, ownProps: { router, t } }) => {
-      if (router.query.commitId === 'new') {
-        if (data.repo && data.repo.latestCommit) {
-          return {
-            data: {
-              error: t('repo/add/alreadyExists'),
-            },
+    graphql(getLatestCommit, {
+      skip: ({ router }) =>
+        !!router.query.commitId && router.query.commitId !== 'new',
+      options: ({ router }) => ({
+        // always the latest
+        fetchPolicy: 'network-only',
+        variables: {
+          repoId: getRepoIdFromQuery(router.query),
+        },
+      }),
+      props: ({ data, ownProps: { router, t } }) => {
+        if (router.query.commitId === 'new') {
+          if (data.repo && data.repo.latestCommit) {
+            return {
+              data: {
+                error: t('repo/add/alreadyExists'),
+              },
+            }
           }
+          return {}
         }
-        return {}
-      }
-      return {
-        data,
-      }
-    },
-  }),
-  graphql(getTemplateById, {
-    name: 'templateData',
-    skip: ({ router }) => !router.query.templateRepoId,
-    options: ({ router }) => ({
-      variables: {
-        repoId: router.query.templateRepoId,
+        return {
+          data,
+        }
       },
     }),
-  }),
-  withUncommitedChanges({
-    options: ({ router }) => ({
-      variables: {
-        repoId: router.query.repoId,
-      },
+    graphql(getTemplateById, {
+      name: 'templateData',
+      skip: ({ router }) => !router.query.templateRepoId,
+      options: ({ router }) => ({
+        variables: {
+          repoId: router.query.templateRepoId,
+        },
+      }),
     }),
-  }),
-  graphql(commitMutation, {
-    props: ({ mutate, ownProps: { router } }) => ({
-      commitMutation: (variables) =>
-        mutate({
-          variables,
-          update: (store, { data: { commit } }) => {
-            const { repoId, parentId } = variables
-            let data
-            if (parentId) {
-              const oldData = store.readQuery({
+    withUncommitedChanges({
+      options: ({ router }) => ({
+        variables: {
+          repoId: getRepoIdFromQuery(router.query),
+        },
+      }),
+    }),
+    graphql(commitMutation, {
+      props: ({ mutate }) => ({
+        commitMutation: (variables) =>
+          mutate({
+            variables,
+            update: (store, { data: { commit } }) => {
+              const { repoId, parentId } = variables
+              let data
+              if (parentId) {
+                const oldData = store.readQuery({
+                  query: getCommitById,
+                  variables: {
+                    repoId,
+                    commitId: parentId,
+                  },
+                })
+                data = {
+                  ...oldData,
+                  repo: {
+                    ...oldData.repo,
+                    commit,
+                  },
+                }
+              } else {
+                data = {
+                  repo: {
+                    ...commit.repo,
+                    commit,
+                  },
+                }
+              }
+              store.writeQuery({
                 query: getCommitById,
                 variables: {
                   repoId,
-                  commitId: parentId,
+                  commitId: commit.id,
                 },
+                data,
               })
-              data = {
-                ...oldData,
-                repo: {
-                  ...oldData.repo,
-                  commit,
-                },
-              }
-            } else {
-              data = {
-                repo: {
-                  ...commit.repo,
-                  commit,
-                },
-              }
-            }
-            store.writeQuery({
-              query: getCommitById,
-              variables: {
-                repoId,
-                commitId: commit.id,
-              },
-              data,
-            })
-          },
-        }),
+            },
+          }),
+      }),
     }),
-  }),
-  withUncommittedChangesMutation,
-  withEditRepoMeta,
-)(EditorPage)
+    withUncommittedChangesMutation,
+    withEditRepoMeta,
+  )(EditorPage),
+)

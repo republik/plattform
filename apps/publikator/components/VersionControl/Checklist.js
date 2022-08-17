@@ -4,9 +4,10 @@ import { css } from 'glamor'
 import { Checkbox, colors, A } from '@project-r/styleguide'
 import { getName } from '../../lib/utils/name'
 import { swissTime } from '../../lib/utils/format'
-import { graphql, compose } from 'react-apollo'
-import gql from 'graphql-tag'
-import { Link } from '../../lib/routes'
+import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
+import { gql } from '@apollo/client'
+import Link from 'next/link'
 import Loader from '../Loader'
 import withT from '../../lib/withT'
 import * as fragments from '../../lib/graphql/fragments'
@@ -157,12 +158,11 @@ class Checklist extends Component {
                   {!!commit && (
                     <span {...styles.commit}>
                       <Link
-                        passHref
-                        route='repo/edit'
-                        params={{
-                          repoId: repoId.split('/'),
-                          commitId: commit.id,
+                        href={{
+                          pathname: `/repo/${repoId}/edit`,
+                          query: { commitId: commit.id },
                         }}
+                        passHref
                       >
                         <A>{commit.message}</A>
                       </Link>

@@ -1,19 +1,19 @@
 import { Text } from 'slate'
 import { Component } from 'react'
-import { graphql } from 'react-apollo'
+import { graphql } from '@apollo/client/react/hoc'
+import { gql } from '@apollo/client'
 import {
   Label,
   Field,
   Autocomplete,
   InlineSpinner,
 } from '@project-r/styleguide'
-import LinkIcon from 'react-icons/lib/fa/chain'
+import { FaLink as LinkIcon } from 'react-icons/fa'
 import UIForm from '../../UIForm'
 import createOnFieldChange from '../../utils/createOnFieldChange'
 import RepoSearch from '../../utils/RepoSearch'
 import { AutoSlugLinkInfo } from '../../utils/github'
 import withT from '../../../../lib/withT'
-import gql from 'graphql-tag'
 import debounce from 'lodash/debounce'
 
 import { createInlineButton, matchInline, buttonStyles } from '../../utils'

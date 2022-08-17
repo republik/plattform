@@ -7,9 +7,7 @@ import {
   Dropdown,
   Checkbox,
 } from '@project-r/styleguide'
-import MdClose from 'react-icons/lib/md/close'
-import MdAdd from 'react-icons/lib/md/add'
-import MdInfoOutline from 'react-icons/lib/md/info-outline'
+import { MdClose, MdAdd, MdInfoOutline } from 'react-icons/md'
 import { css } from 'glamor'
 
 import withT from '../../../../lib/withT'
