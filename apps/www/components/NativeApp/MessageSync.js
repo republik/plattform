@@ -10,6 +10,7 @@ import AppSignInOverlay from './AppSignInOverlay'
 import { useMediaProgress } from '../Audio/MediaProgress'
 import { usePersistedOSColorSchemeKey } from '../ColorScheme/lib'
 import { useMe } from '../../lib/context/MeContext'
+import AppMessageEventEmitter from '../../lib/react-native/AppMessageEventEmitter'
 
 let routeChangeStarted
 
@@ -124,6 +125,14 @@ const NewAppMessageSync = () => {
             router.replace('/')
           }
         }, 200)
+      } else {
+        // Forward message to AppMessageEventEmitter
+        // to be handled in the individual components
+        console.log(
+          'Forwarding message to AppMessageEventEmitter',
+          JSON.stringify(content),
+        )
+        AppMessageEventEmitter.emit(content.type, content.payload)
       }
       postMessage({
         type: 'ackMessage',
