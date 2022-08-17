@@ -1,6 +1,8 @@
 import { useColorContext, plainButtonRule } from '@project-r/styleguide'
-import Person from 'react-icons/lib/io/ios-person'
-import PersonOutline from 'react-icons/lib/io/ios-person-outline'
+import {
+  IoPerson as Person,
+  IoPersonOutline as PersonOutline,
+} from 'react-icons/io5'
 
 function HasAccessToggle({ previewHasAccess, onToggle }) {
   const [colorScheme] = useColorContext()
@@ -9,7 +11,7 @@ function HasAccessToggle({ previewHasAccess, onToggle }) {
       {previewHasAccess ? (
         <Person {...colorScheme.set('fill', 'text')} size={26} />
       ) : (
-        <PersonOutline {...colorScheme.set('fill', 'text')} size={26} />
+        <PersonOutline {...colorScheme.set('color', 'text')} size={26} />
       )}
     </button>
   )

@@ -1,5 +1,5 @@
-import { graphql } from 'react-apollo'
-import gql from 'graphql-tag'
+import { graphql } from '@apollo/client/react/hoc'
+import { gql } from '@apollo/client'
 import { TeaserActiveDebates, TeaserMyMagazine } from '@project-r/styleguide'
 
 const feedQuery = gql`

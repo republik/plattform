@@ -452,7 +452,8 @@ const ActionBar = ({
       },
       label: t('PodcastButtons/play'),
       show:
-        !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud',
+        !!meta?.audioSource &&
+        !['syntheticReadAloud', 'readAloud'].includes(meta.audioSource.kind),
       modes: ['articleTop'],
     },
     {

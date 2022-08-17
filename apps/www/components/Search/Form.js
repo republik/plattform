@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
-import { CloseIcon } from '@project-r/styleguide'
 import {
   Field,
   mediaQueries,
   useDebounce,
   usePrevious,
   useColorContext,
+  plainButtonRule,
+  CloseIcon,
 } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
 import withSearchRouter from './withSearchRouter'
@@ -87,12 +88,13 @@ const Form = compose(
             onChange={update}
             icon={
               !startState ? (
-                <CloseIcon
-                  style={{ cursor: 'pointer' }}
-                  size={30}
-                  onClick={reset}
-                  {...colorScheme.set('fill', 'text')}
-                />
+                <button {...plainButtonRule} onClick={reset} type='button'>
+                  <CloseIcon
+                    style={{ cursor: 'pointer' }}
+                    size={30}
+                    {...colorScheme.set('fill', 'text')}
+                  />
+                </button>
               ) : undefined
             }
           />

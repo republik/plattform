@@ -1,6 +1,6 @@
 const { transformName, clipNamesInText } = require('./nameClipper')
 
-test('transformName', () => {
+test('transformName simple', () => {
   expect(
     transformName({
       firstName: 'Andrea',
@@ -15,11 +15,28 @@ test('transformName', () => {
   })
 })
 
+test('transformName elaborate', () => {
+  expect(
+    transformName({
+      firstName: 'Marie-Thérèse',
+      lastName: 'von und zu Wittich-Borchert',
+    }),
+  ).toEqual({
+    firstName: 'Marie-Thérèse',
+    lastName: 'von und zu Wittich-Borchert',
+    name: 'Marie-Thérèse von und zu Wittich-Borchert',
+    initials: 'M. V. U. Z. W.',
+    lastNameShort: 'V',
+  })
+})
+
 test('clipNamesInText', () => {
   const userNames = [
     { firstName: 'Patrick', lastName: 'Recher' },
     { firstName: 'Andreas', lastName: 'Moor' },
     { firstName: 'Urs', lastName: 'Wys' },
+    { firstName: 'Sharon', lastName: 'Funke' },
+    { firstName: 'Bettina', lastName: 'Hamilton-Irvine' },
   ]
   const namesToClip = userNames.map(transformName)
 
@@ -41,6 +58,11 @@ test('clipNamesInText', () => {
       expected: 'gute Recherchen brauchen Zeit.',
     },
     { input: 'Wys nicht weiss', expected: 'Wys nicht weiss' },
+    { input: 'Und so sprach Sharon.', expected: 'Und so sprach Sharon.' },
+    {
+      input: 'Vielen Dank, Frau Hamilton-Irvine',
+      expected: 'Vielen Dank, Frau H.',
+    },
   ]
 
   testStrings.forEach((ts) => {

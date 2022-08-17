@@ -6,7 +6,7 @@ import createUi from './ui'
 import { matchBlock } from '../../utils'
 import { createRemoveEmptyKeyHandler } from '../../utils/keyHandlers'
 import InlineUI, { MarkButton } from '../../utils/InlineUI'
-import MdEdit from 'react-icons/lib/md/edit'
+import { MdEdit } from 'react-icons/md'
 import { matchSubmodules } from '../../utils/matchers'
 import {
   OverlayFormContext,

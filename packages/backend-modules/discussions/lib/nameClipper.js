@@ -2,13 +2,23 @@ const { naming } = require('@orbiting/backend-modules-utils')
 
 const excludeLastNames = ['weiss']
 
-// https://unicode-table.com/en/
-const nameRegex = () =>
-  new RegExp(
-    /[^ \u0041-\u007a\u00c0-\u00ff\u0100-\u017F\u0180-\u024F\u0250-\u02AF\u0370-\u03FF\u0400-\u04FF\u0400-\u04FF\u1E00-\u1EFF]/g,
-  )
+// regex matches if character is not:
+// a letter of any category/alphebet (unicode),
+// a mark of any category,
+// a whitespace character or
+// one of the following special characters
+// U+0027 --> ' Apostrophe
+// U+002D --> - Hyphen-minus
+// U+002E --> . Full stop
+// U+2013 - U+2019 --> Dashes and single quotation marks
+// U+2032 --> ′ Prime
 
-const cleanName = (name) => name.trim().replace(nameRegex(), '')
+// https://unicode-table.com/en/
+const nameRegex = new RegExp(
+  /[^\p{L}\p{M}\s\u0027\u002D\u002E\u2013-\u2019\u2032]/gu,
+)
+
+const cleanName = (name) => name.trim().replace(nameRegex, '')
 
 const transformName = (u) => {
   const firstName = cleanName(u.firstName)

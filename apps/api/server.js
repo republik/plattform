@@ -53,6 +53,7 @@ const {
 const PublicationScheduler = require('@orbiting/backend-modules-publikator/lib/PublicationScheduler')
 const MembershipScheduler = require('@orbiting/backend-modules-republik-crowdfundings/lib/scheduler')
 const DatabroomScheduler = require('@orbiting/backend-modules-databroom/lib/scheduler')
+const MailScheduler = require('@orbiting/backend-modules-mail/lib/scheduler')
 
 const mail = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail')
 
@@ -66,6 +67,7 @@ const {
   MEMBERSHIP_SCHEDULER,
   PUBLICATION_SCHEDULER,
   DATABROOM_SCHEDULER,
+  MAIL_SCHEDULER,
   SERVER = 'graphql',
   DYNO,
 } = process.env
@@ -288,6 +290,19 @@ const runOnce = async () => {
     )
   }
 
+  let mailScheduler
+  if (MAIL_SCHEDULER === 'false' || (DEV && MAIL_SCHEDULER !== 'true')) {
+    console.log('MAIL_SCHEDULER prevented scheduler from being started', {
+      MAIL_SCHEDULER,
+      DEV,
+    })
+  } else {
+    mailScheduler = await MailScheduler.init(context).catch((error) => {
+      console.log(error)
+      throw new Error(error)
+    })
+  }
+
   const close = async () => {
     await Promise.all(
       [
@@ -297,6 +312,7 @@ const runOnce = async () => {
         membershipScheduler && membershipScheduler.close(),
         publicationScheduler && (await publicationScheduler.close()),
         databroomScheduler && databroomScheduler.close(),
+        mailScheduler && mailScheduler.close(),
       ].filter(Boolean),
     )
     await ConnectionContext.close(context)

@@ -218,6 +218,7 @@ const ArticlePage = ({
   isPreview,
   markAsReadMutation,
   serverContext,
+  clientRedirection,
 }) => {
   const actionBarRef = useRef()
   const bottomActionBarRef = useRef()
@@ -238,6 +239,7 @@ const ArticlePage = ({
     variables: {
       path: cleanedPath,
     },
+    skip: clientRedirection,
   })
 
   const article = articleData?.article
@@ -313,16 +315,12 @@ const ArticlePage = ({
   const podcast =
     hasMeta &&
     (meta.podcast || (meta.audioSource && meta.format?.meta?.podcast))
-  const syntheticAudioSource =
+  const isSyntheticReadAloud =
     hasMeta &&
     meta.audioSource &&
-    meta.audioSource.kind === 'syntheticReadAloud' &&
-    meta.audioSource
-  const readAloudSource =
-    hasMeta &&
-    meta.audioSource &&
-    meta.audioSource.kind === 'readAloud' &&
-    meta.audioSource
+    meta.audioSource.kind === 'syntheticReadAloud'
+  const isReadAloud =
+    hasMeta && meta.audioSource && meta.audioSource.kind === 'readAloud'
   const newsletterMeta =
     hasMeta && (meta.newsletter || meta.format?.meta?.newsletter)
 
@@ -440,7 +438,11 @@ const ArticlePage = ({
         render={() => {
           if (!article) {
             return (
-              <StatusError statusCode={404} serverContext={serverContext} />
+              <StatusError
+                statusCode={404}
+                clientRedirection={clientRedirection}
+                serverContext={serverContext}
+              />
             )
           }
           return extract === 'share' ? (
@@ -504,7 +506,11 @@ const ArticlePage = ({
         render={() => {
           if (!article || !schema) {
             return (
-              <StatusError statusCode={404} serverContext={serverContext} />
+              <StatusError
+                statusCode={404}
+                clientRedirection={clientRedirection}
+                serverContext={serverContext}
+              />
             )
           }
 
@@ -647,7 +653,8 @@ const ArticlePage = ({
                         {actionBar ||
                         isSection ||
                         showNewsletterSignupTop ||
-                        !!syntheticAudioSource ? (
+                        isSyntheticReadAloud ||
+                        isReadAloud ? (
                           <Center breakout={breakout}>
                             {actionBar && (
                               <div
@@ -663,7 +670,7 @@ const ArticlePage = ({
                                 {actionBar}
                               </div>
                             )}
-                            {(!!syntheticAudioSource || !!readAloudSource) && (
+                            {(isSyntheticReadAloud || isReadAloud) && (
                               <ReadAloudInline meta={meta} t={t} />
                             )}
                             {isSection && !hideSectionNav && (
@@ -764,14 +771,6 @@ const ArticlePage = ({
               )}
               {me && hasActiveMembership && (
                 <ArticleRecommendationsFeed path={cleanedPath} />
-              )}
-              {(hasActiveMembership || isFormat) && (
-                <>
-                  <br />
-                  <br />
-                  <br />
-                  <br />
-                </>
               )}
               {!suppressPayNotes && payNoteAfter}
             </>

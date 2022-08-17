@@ -1,8 +1,7 @@
-import { Fragment } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { format } from 'url'
 import { gql, useQuery } from '@apollo/client'
-import { shuffle } from 'd3-array'
 
 import {
   Interaction,
@@ -14,6 +13,7 @@ import {
   HR,
   InlineSpinner,
   plainButtonRule,
+  usePrevious,
 } from '@project-r/styleguide'
 
 import { useInfiniteScroll } from '../../../lib/hooks/useInfiniteScroll'
@@ -22,7 +22,7 @@ import ErrorMessage from '../../ErrorMessage'
 import Submission from './Submission'
 import PlainButton from './PlainButton'
 import { SortToggle } from '../../Search/Sort'
-import ShareSubmission, { getSubmissionUrl } from './Share'
+import ShareSubmission from './Share'
 
 const SUPPORTED_SORT = [
   {
@@ -147,34 +147,60 @@ const mainQuery = gql`
   }
 `
 
-const getSubmissionUrlWithRandomQid = (pathname, { id, answers }) =>
-  getSubmissionUrl(pathname, id, {
-    qid: (
-      shuffle(
-        answers.nodes.filter(
-          (a) => a.question.__typename === 'QuestionTypeText',
-        ),
-      )[0] || shuffle([...answers.nodes])[0]
-    ).question.id,
-  })
 const getTotalCount = (data) => data?.questionnaire?.submissions?.totalCount
+const getSearchParams = ({ sort, search }) => {
+  const query = {}
+  if (search) {
+    query[QUERY_PARAM] = search
+  }
+  if (sort.key === 'random' || !sort.key) {
+    return query
+  }
+  query[SORT_KEY_PARAM] = sort.key
+  query[SORT_DIRECTION_PARAM] = sort.direction
+
+  return query
+}
 
 const Submissions = ({ slug, extract, share = {} }) => {
   const { t } = useTranslation()
   const router = useRouter()
   const { query } = router
+  const shareId = query.share
   const sortBy = query.skey || 'random'
   const sortDirection = query.sdir || undefined
   const searchQuery = query.q || ''
-  const shareId = query.share
-  const [search] = useDebounce(searchQuery, 100)
+  const prevSearchQuery = usePrevious(searchQuery)
+  const [searchValue, setSearchValue] = useState(searchQuery)
+  const [debouncedSearch] = useDebounce(searchValue, 200)
+  useEffect(() => {
+    if (prevSearchQuery !== searchQuery && searchValue !== searchQuery) {
+      setSearchValue(searchQuery)
+    }
+  }, [searchQuery, prevSearchQuery, searchValue])
+  useEffect(() => {
+    if ((debouncedSearch || '') === (router.query.q || '')) {
+      return
+    }
+    router[router.query.q ? 'replace' : 'push'](
+      format({
+        pathname,
+        query: getSearchParams({
+          sort: { key: router.query.skey, direction: router.query.sdir },
+          search: debouncedSearch,
+        }),
+      }),
+      undefined,
+      { shallow: true },
+    )
+  }, [debouncedSearch])
   const pathname = router.asPath.split('?')[0]
   const { loading, error, data, previousData, fetchMore } = useQuery(
     mainQuery,
     {
       variables: {
         slug,
-        search,
+        search: debouncedSearch,
         first: 10,
         sortBy,
         sortDirection,
@@ -182,7 +208,7 @@ const Submissions = ({ slug, extract, share = {} }) => {
     },
   )
   const shareQuery = useQuery(singleSubmissionQuery, {
-    skip: searchQuery || !shareId,
+    skip: debouncedSearch || !shareId,
     variables: {
       slug,
       id: shareId,
@@ -243,22 +269,8 @@ const Submissions = ({ slug, extract, share = {} }) => {
     }
     return null
   }
-
-  const getSearchParams = ({ sort, searchQuery }) => {
-    const query = {}
-    if (searchQuery) {
-      query[QUERY_PARAM] = searchQuery
-    }
-    if (sort.key === 'random') {
-      return query
-    }
-    query[SORT_KEY_PARAM] = sort.key
-    query[SORT_DIRECTION_PARAM] = sort.direction
-
-    return query
-  }
   const onReset = () => {
-    router.push(pathname, undefined, { shallow: true })
+    setSearchValue('')
   }
 
   return (
@@ -270,22 +282,12 @@ const Submissions = ({ slug, extract, share = {} }) => {
       </Interaction.H2>
       <Field
         label='Suche'
-        value={searchQuery}
+        value={searchValue}
         onChange={(_, value) => {
-          router[searchQuery ? 'replace' : 'push'](
-            format({
-              pathname,
-              query: getSearchParams({
-                sort: { key: sortBy, direction: sortDirection },
-                searchQuery: value,
-              }),
-            }),
-            undefined,
-            { shallow: true },
-          )
+          setSearchValue(value)
         }}
         icon={
-          searchQuery ? (
+          searchValue ? (
             <button {...plainButtonRule} onClick={onReset}>
               <CloseIcon size={30} />
             </button>
@@ -299,7 +301,9 @@ const Submissions = ({ slug, extract, share = {} }) => {
           key={key}
           sort={sort}
           urlSort={{ key: sortBy, direction: sortDirection }}
-          getSearchParams={({ sort }) => getSearchParams({ sort, searchQuery })}
+          getSearchParams={({ sort }) =>
+            getSearchParams({ sort, search: searchValue })
+          }
           pathname={pathname}
         />
       ))}
@@ -336,10 +340,6 @@ const Submissions = ({ slug, extract, share = {} }) => {
                       pathname={pathname}
                       questions={questions}
                       {...shareSubmission}
-                      publicUrl={getSubmissionUrlWithRandomQid(
-                        pathname,
-                        shareSubmission,
-                      )}
                       isHighlighted
                     />
                     <HR />
@@ -355,10 +355,8 @@ const Submissions = ({ slug, extract, share = {} }) => {
                       <Fragment key={id}>
                         <Submission
                           t={t}
-                          publicUrl={getSubmissionUrlWithRandomQid(pathname, {
-                            id,
-                            answers,
-                          })}
+                          id={id}
+                          pathname={pathname}
                           displayAuthor={displayAuthor}
                           answers={answers}
                           questions={questions}

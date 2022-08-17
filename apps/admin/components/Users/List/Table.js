@@ -1,6 +1,5 @@
 import { Label } from '@project-r/styleguide'
-
-import { Link } from '../../../server/routes'
+import Link from 'next/link'
 import { displayDate } from '../../Display/utils'
 import { tableStyles as styles } from '../../Tables/utils'
 
@@ -37,7 +36,7 @@ const Table = ({ items, ...props }) => {
         {items.map((user) => (
           <tr key={`user-${user.id}`} {...styles.row}>
             <td>
-              <Link route='user' params={{ userId: user.id }}>
+              <Link href={`/users/${user.id}`}>
                 <a {...styles.link}>{user.email}</a>
               </Link>
             </td>

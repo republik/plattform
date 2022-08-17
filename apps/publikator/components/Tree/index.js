@@ -1,11 +1,13 @@
 import { Component } from 'react'
 import { css } from 'glamor'
-import LocalIcon from 'react-icons/lib/md/lock-open'
-import CheckIcon from 'react-icons/lib/md/check'
-import TagIcon from 'react-icons/lib/md/grade'
+import {
+  MdLockOpen as LocalIcon,
+  MdCheck as CheckIcon,
+  MdGrade as TagIcon,
+} from 'react-icons/md'
 import { Interaction, Label } from '@project-r/styleguide'
 import { lab } from 'd3-color'
-import { Link } from '../../lib/routes'
+import Link from 'next/link'
 import withT from '../../lib/withT'
 import { swissTime } from '../../lib/utils/format'
 import { transformData } from './transformData'
@@ -295,10 +297,11 @@ class Tree extends Component {
                     <div>
                       <Interaction.P>
                         <Link
-                          route='repo/edit'
-                          params={{
-                            repoId: repoId.split('/'),
-                            commitId: commit.id,
+                          href={{
+                            pathname: `/repo/${repoId}/edit`,
+                            query: {
+                              commitId: commit.id,
+                            },
                           }}
                         >
                           <a {...styles.link}>{commit.message}</a>
@@ -352,10 +355,11 @@ class Tree extends Component {
                         <Interaction.P>
                           <Label>
                             <Link
-                              route='repo/publish'
-                              params={{
-                                repoId: repoId.split('/'),
-                                commitId: commit.id,
+                              href={{
+                                pathname: `/repo/${repoId}/publish`,
+                                query: {
+                                  commitId: commit.id,
+                                },
                               }}
                             >
                               <a {...styles.link}>{t('tree/commit/publish')}</a>
@@ -395,10 +399,11 @@ class Tree extends Component {
                 {...styles.commitNode}
               >
                 <Link
-                  route='repo/edit'
-                  params={{
-                    repoId: repoId.split('/'),
-                    commitId: commit.id,
+                  href={{
+                    pathname: `/repo/${repoId}/edit`,
+                    query: {
+                      commitId: commit.id,
+                    },
                   }}
                 >
                   <a {...css(styles.nodeLink)} />

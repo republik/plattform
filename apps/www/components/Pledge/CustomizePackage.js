@@ -234,14 +234,14 @@ class CustomizePackage extends Component {
         if (pkg.suggestedTotal < regularMinPrice && !userPrice) {
           router.replace(
             {
-              pathname: 'angebote',
+              pathname: '/angebote',
               query: {
                 ...router.query,
                 userPrice: '1',
               },
             },
             undefined,
-            { shallow: true },
+            { shallow: router.pathname === '/angebote' },
           )
         }
       }
@@ -302,10 +302,10 @@ class CustomizePackage extends Component {
   resetUserPrice() {
     const { router } = this.props
     router.replace(
-      { pathname: 'angebote', query: omit(router.query, ['userPrice']) },
+      { pathname: '/angebote', query: omit(router.query, ['userPrice']) },
       undefined,
       {
-        shallow: true,
+        shallow: router.pathname === '/angebote',
       },
     )
   }
@@ -537,7 +537,6 @@ class CustomizePackage extends Component {
                   ? { group: pkg.group }
                   : undefined,
             }}
-            shallow
             passHref
           >
             <A>{t('package/customize/changePackage')}</A>
@@ -1175,7 +1174,7 @@ class CustomizePackage extends Component {
                                 query: { package: 'ABO_GIVE' },
                               },
                               undefined,
-                              { shallow: true },
+                              { shallow: router.pathname === '/angebote' },
                             )
                             .then(() => {
                               this.resetPrice()
@@ -1228,7 +1227,7 @@ class CustomizePackage extends Component {
                           query: omit(query, ['price', 'userPrice']),
                         },
                         undefined,
-                        { shallow: true },
+                        { shallow: router.pathname === '/angebote' },
                       )
                     }}
                   >
@@ -1286,7 +1285,7 @@ class CustomizePackage extends Component {
                             query: { ...omit(query, ['price']), userPrice: 1 },
                           },
                           undefined,
-                          { shallow: true },
+                          { shallow: router.pathname === '/angebote' },
                         )
                         .then(() => {
                           this.resetPrice()
