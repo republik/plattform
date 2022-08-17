@@ -10,14 +10,12 @@ import { mUp } from '../../theme/mediaQueries'
 type Props = {
   children?: React.ReactNode
   attributes: object
-  title: string
   description: string
   href: string
 }
 
 export type StateProps = {
   href: string
-  title: string
   description: string
   position: CSSProperties
 }
@@ -45,13 +43,7 @@ const Portal: React.FC<{ children: ReactElement }> = ({ children }) => {
     : null
 }
 
-const ExpandableLink = ({
-  children,
-  attributes,
-  title,
-  description,
-  href,
-}: Props) => {
+const ExpandableLink = ({ children, attributes, description, href }: Props) => {
   const [colorScheme] = useColorContext()
   const [expandedLink, setExpandedLink] = useState<StateProps>(undefined)
   const timeOutRef = useRef<NodeJS.Timeout>(null)
@@ -61,7 +53,7 @@ const ExpandableLink = ({
     if (expandedLink) {
       setExpandedLink(undefined)
     } else {
-      setExpandedLink({ title, description, href, position: position })
+      setExpandedLink({ description, href, position: position })
     }
   }
 
