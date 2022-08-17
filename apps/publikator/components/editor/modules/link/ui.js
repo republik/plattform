@@ -20,7 +20,7 @@ import debounce from 'lodash/debounce'
 import { createInlineButton, matchInline, buttonStyles } from '../../utils'
 import AutosizeInput from 'react-textarea-autosize'
 import { css } from 'glamor'
-import MdInfoOutline from 'react-icons/lib/md/info-outline'
+import { MdInfoOutline } from 'react-icons/md'
 
 const getUsers = gql`
   query getUsers($search: String!) {
