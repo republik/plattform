@@ -106,7 +106,11 @@ const PreviewFrame = ({ commitId, repoId }) => {
 
   return (
     <>
-      <EditorToolbar mode='sticky' style={editorToolbarStyle} centered>
+      <EditorToolbar
+        mode='sticky'
+        style={{ ...editorToolbarStyle, padding: 10 }}
+        centered
+      >
         {devices.map((key) => {
           const size = screenSizes[key]
           return (
@@ -123,34 +127,42 @@ const PreviewFrame = ({ commitId, repoId }) => {
       </EditorToolbar>
       <div
         style={{
-          ...iframeStyle,
-          position: 'absolute',
-          zIndex: iframeLoading ? 2 : -1,
+          width: '100vw',
+          height: `calc(100vh - ${HEADER_HEIGHT}px - ${EDITOR_TOOLBAR_HEIGHT}px)`,
+          overflow: 'hidden',
         }}
-        {...colorScheme.set('backgroundColor', 'default')}
       >
-        <Loader loading={iframeLoading} />
+        <div
+          style={{
+            ...iframeStyle,
+            position: 'absolute',
+            zIndex: iframeLoading ? 2 : -1,
+          }}
+          {...colorScheme.set('backgroundColor', 'default')}
+        >
+          <Loader loading={iframeLoading} />
+        </div>
+        <iframe
+          ref={iframeRef}
+          onLoad={() => setIframeLoading(false)}
+          style={{
+            ...iframeStyle,
+          }}
+          {...colorScheme.set('backgroundColor', 'default')}
+          src={iframeSrc}
+        />
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            position: 'fixed',
+            top: 0,
+            right: 0,
+            zIndex: -1,
+          }}
+          {...colorScheme.set('backgroundColor', 'hover')}
+        />
       </div>
-      <iframe
-        ref={iframeRef}
-        onLoad={() => setIframeLoading(false)}
-        style={{
-          ...iframeStyle,
-        }}
-        {...colorScheme.set('backgroundColor', 'default')}
-        src={iframeSrc}
-      />
-      <div
-        style={{
-          width: '100%',
-          height: '100%',
-          position: 'fixed',
-          top: 0,
-          right: 0,
-          zIndex: -1,
-        }}
-        {...colorScheme.set('backgroundColor', 'hover')}
-      />
     </>
   )
 }
