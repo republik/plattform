@@ -1,12 +1,14 @@
 import { withRouter } from 'next/router'
-import { graphql, compose } from 'react-apollo'
-import gql from 'graphql-tag'
 import { flyerSchema, SlateRender } from '@project-r/styleguide'
-import Loader from '../../components/Loader'
-import * as fragments from '../../lib/graphql/fragments'
-import initLocalStore from '../../lib/utils/localStorage'
-import withT from '../../lib/withT'
-import { getCurrentValue } from '../../components/Edit'
+import Loader from '../../../../components/Loader'
+import * as fragments from '../../../../lib/graphql/fragments'
+import initLocalStore from '../../../../lib/utils/localStorage'
+import withT from '../../../../lib/withT'
+import { getCurrentValue } from '../../../../components/Edit'
+import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
+import { gql } from '@apollo/client'
+import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 
 const getCommitById = gql`
   query getCommitById($repoId: ID!, $commitId: ID!) {
@@ -21,9 +23,10 @@ const getCommitById = gql`
   ${fragments.CommitWithDocument}
 `
 
-const PreviewPage = ({ router, data = {} }) => {
+const PreviewPage = ({ router: { query }, data = {} }) => {
   const { loading, error } = data
-  const { repoId, commitId } = router.query
+  const { commitId } = query
+  const repoId = getRepoIdFromQuery(query)
 
   const storeKey = [repoId, commitId].join('/')
   const store = initLocalStore(storeKey)
@@ -48,7 +51,7 @@ export default compose(
       router.query.commitId === 'new' || !router.query.commitId,
     options: ({ router }) => ({
       variables: {
-        repoId: router.query.repoId,
+        repoId: getRepoIdFromQuery(router.query),
         commitId: router.query.commitId,
       },
     }),

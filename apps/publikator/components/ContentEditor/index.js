@@ -1,8 +1,8 @@
 import { withRouter } from 'next/router'
-import { compose } from 'react-apollo'
 import { Editor, flyerSchema, flyerEditorSchema } from '@project-r/styleguide'
 import withAuthorization from '../../components/Auth/withAuthorization'
 import { HEADER_HEIGHT } from '../Frame/constants'
+import compose from 'lodash/flowRight'
 
 export const INITIAL_VALUE = [
   {

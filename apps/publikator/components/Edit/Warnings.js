@@ -3,8 +3,8 @@ import {
   colors,
   plainButtonRule,
   EDITOR_TOOLBAR_HEIGHT,
+  CloseIcon,
 } from '@project-r/styleguide'
-import MdClose from 'react-icons/lib/md/close'
 import { HEADER_HEIGHT } from '../Frame/constants'
 import { createContext, useContext, useState } from 'react'
 import { timeFormat } from 'd3-time-format'
@@ -76,7 +76,7 @@ const Warning = ({ warning }) => {
     <div {...styles.warning}>
       <b {...styles.time}>{warning.time}</b> {warning.message}
       <button {...styles.remove} onClick={() => rmWarning(warning.message)}>
-        <MdClose />
+        <CloseIcon />
       </button>
     </div>
   )

@@ -1,6 +1,7 @@
-import gql from 'graphql-tag'
 import * as fragments from '../../lib/graphql/fragments'
-import { graphql } from 'react-apollo'
+import { gql } from '@apollo/client'
+import { graphql } from '@apollo/client/react/hoc'
+import { getRepoIdFromQuery } from '../../lib/repoIdHelper'
 
 const commitMutation = gql`
   mutation commit(
@@ -57,7 +58,7 @@ export const withCommitData = graphql(getCommitById, {
     router.query.commitId === 'new' || !router.query.commitId,
   options: ({ router }) => ({
     variables: {
-      repoId: router.query.repoId,
+      repoId: getRepoIdFromQuery(router.query),
       commitId: router.query.commitId,
     },
   }),
@@ -70,7 +71,7 @@ export const withLatestCommit = graphql(getLatestCommit, {
     // always the latest
     fetchPolicy: 'network-only',
     variables: {
-      repoId: router.query.repoId,
+      repoId: getRepoIdFromQuery(router.query),
     },
   }),
   props: ({ data, ownProps: { router, t } }) => {

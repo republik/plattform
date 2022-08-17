@@ -191,17 +191,15 @@ class EditorPage extends Component {
     const localStorageCommitIds = getLocalStorageKeys()
       .filter((key) => key.startsWith(repoId))
       .map((key) => key.split('/').pop())
-    const path =
-      repo?.commits?.nodes[0]?.document?.type === 'slate'
-        ? 'flyer/edit'
-        : 'repo/edit'
+    const root =
+      repo?.commits?.nodes[0]?.document?.type === 'slate' ? 'flyer' : 'repo'
     return (
       <Frame>
         <Frame.Header isTemplate={repo?.isTemplate}>
           <Frame.Header.Section align='left'>
             <Frame.Nav>
               <span style={{ marginRight: 10 }}>
-                <Link href={`/${path}/${repoId.split('/')}/edit`} passHref>
+                <Link href={`/${root}/${repoId}/edit`} passHref>
                   <A>
                     {t(
                       `repo/nav/${

@@ -1,5 +1,4 @@
-import { compose } from 'react-apollo'
-import { withRouter } from 'next/router'
+import { useRouter, withRouter } from 'next/router'
 import {
   withCommitData,
   withCommitMutation,
@@ -11,7 +10,6 @@ import withMe from '../../lib/withMe'
 import isEqual from 'lodash/isEqual'
 import createDebug from 'debug'
 import initLocalStore from '../../lib/utils/localStorage'
-import { Link, Router } from '../../lib/routes'
 import { errorToString } from '../../lib/utils/errors'
 import Frame from '../Frame'
 import CommitButton from '../VersionControl/CommitButton'
@@ -30,6 +28,9 @@ import { API_UNCOMMITTED_CHANGES_URL } from '../../lib/settings'
 import { HEADER_HEIGHT } from '../Frame/constants'
 import EditView from './EditView'
 import Preview from './Preview'
+import compose from 'lodash/flowRight'
+import Link from 'next/link'
+import { getQueryFromRepoId, getRepoIdFromQuery } from '../../lib/repoIdHelper'
 
 const styles = {
   defaultContainer: css({
@@ -82,9 +83,7 @@ const NavButton = ({ children, active, onClick }) => {
 }
 
 const EditLoader = ({
-  router: {
-    query: { repoId, commitId, publishDate },
-  },
+  router: { query },
   t,
   data,
   hasUncommitedChanges,
@@ -93,6 +92,9 @@ const EditLoader = ({
   editRepoMeta,
   me,
 }) => {
+  const router = useRouter()
+  const { commitId, publishDate } = query
+  const repoId = getRepoIdFromQuery(query)
   const { addWarning, rmWarning } = useWarningContext()
   const [previewMode, setPreviewMode] = useState(false)
   const [store, setStore] = useState(undefined)
@@ -292,10 +294,13 @@ const EditLoader = ({
     store.clear()
     concludeChanges()
     setCommitting(false)
-    Router.replaceRoute('flyer/edit', {
-      repoId: repoId.split('/'),
-      commitId: data.commit.id,
-      publishDate: null,
+    router.replace({
+      pathname: '/flyer/[owner]/[repo]/edit',
+      query: {
+        ...getQueryFromRepoId(repoId),
+        commitId: data.commit.id,
+        publishDate: null,
+      },
     })
   }
 
@@ -401,13 +406,7 @@ const EditLoader = ({
               Vorschau
             </NavButton>
             <span {...styles.navLink}>
-              <Link
-                route='repo/tree'
-                params={{
-                  repoId: repoId.split('/'),
-                }}
-                passHref
-              >
+              <Link href={`/repo/${repoId}/tree`} passHref>
                 <A>Versionen</A>
               </Link>
             </span>
@@ -455,18 +454,21 @@ const EditLoader = ({
             // checks to make ensure repo/commit integrity
             if (!commitId && repo && repo.latestCommit) {
               debug('loadState', 'redirect', repo.latestCommit)
-              // TODO: get base path from router
-              Router.replaceRoute('flyer/edit', {
-                repoId: repoId.split('/'),
-                commitId: repo.latestCommit.id,
+              router.replace({
+                pathname: '/flyer/[owner]/[repo]/edit',
+                query: {
+                  ...getQueryFromRepoId(repoId),
+                  commitId: repo.latestCommit.id,
+                },
               })
               return null
             }
 
             if (commitId && repo && !repo.commit) {
               addWarning(t('commit/warn/commit404'))
-              Router.replaceRoute('flyer/edit', {
-                repoId: repoId.split('/'),
+              router.replace({
+                pathname: '/flyer/[owner]/[repo]/edit',
+                query: getQueryFromRepoId(repoId),
               })
               return null
             }
@@ -513,7 +515,7 @@ export default compose(
   withUncommitedChanges({
     options: ({ router }) => ({
       variables: {
-        repoId: router.query.repoId,
+        repoId: getRepoIdFromQuery(router.query),
       },
     }),
   }),

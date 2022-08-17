@@ -8,10 +8,12 @@ import {
   EDITOR_TOOLBAR_HEIGHT,
 } from '@project-r/styleguide'
 import { HEADER_HEIGHT } from '../Frame/constants'
-import MdPhoneIphone from 'react-icons/lib/md/phone-iphone'
-import MdTabletMac from 'react-icons/lib/md/tablet-mac'
-import MdLaptopMac from 'react-icons/lib/md/laptop-mac'
-import MdDesktopMac from 'react-icons/lib/md/desktop-mac'
+import {
+  MdPhoneIphone,
+  MdTabletMac,
+  MdLaptopMac,
+  MdDesktopMac,
+} from 'react-icons/md'
 import { editorToolbarStyle } from '../ContentEditor'
 
 const PREVIEW_MARGIN = 16

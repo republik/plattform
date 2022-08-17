@@ -13,6 +13,7 @@ import { swissTime } from '../../lib/utils/format'
 import { transformData } from './transformData'
 import Diff from './Diff'
 import Derivatives from '../Derivatives'
+import { getQueryFromRepoId } from '../../lib/repoIdHelper'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
@@ -273,8 +274,7 @@ class Tree extends Component {
               const hasLocalVersion =
                 localStorageCommitIds.indexOf(commit.id) !== -1
               const hightlight = hasLocalVersion || commit.milestones.length
-              const path =
-                commit.document.type === 'slate' ? 'flyer/edit' : 'repo/edit'
+              const root = commit.document.type === 'slate' ? 'flyer' : 'repo'
               return (
                 <li
                   key={commit.id}
@@ -300,7 +300,7 @@ class Tree extends Component {
                       <Interaction.P>
                         <Link
                           href={{
-                            pathname: `/${path}/${repoId}/edit`,
+                            pathname: `/${root}/${repoId}/edit`,
                             query: {
                               commitId: commit.id,
                             },
@@ -391,6 +391,7 @@ class Tree extends Component {
         {width &&
           commits &&
           commits.map((commit) => {
+            const root = commit.document.type === 'slate' ? 'flyer' : 'repo'
             return (
               <span
                 key={commit.id}
@@ -402,7 +403,7 @@ class Tree extends Component {
               >
                 <Link
                   href={{
-                    pathname: `/repo/${repoId}/edit`,
+                    pathname: `/${root}/${repoId}/edit`,
                     query: {
                       commitId: commit.id,
                     },
