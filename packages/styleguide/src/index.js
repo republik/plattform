@@ -1059,7 +1059,7 @@ const Styleguide = () => {
                       title: 'Community',
                       imports: {
                         ...require('./components/Editor/docs/community.imports'),
-                        Editor: require('./components/Editor').DevEditor,
+                        Editor: require('./components/Editor/DevEditor'),
                         SlateRender: require('./components/Editor/components/render'),
                         renderAsText: require('./components/Editor/components/render/text'),
                         schemaComment: require('./components/Editor/schema/comment'),
@@ -1073,7 +1073,7 @@ const Styleguide = () => {
                       imports: {
                         ...require('./components/Editor/docs/flyer.imports'),
                         ...require('./components/Editor/schema/flyer'),
-                        Editor: require('./components/Editor').DevEditor,
+                        Editor: require('./components/Editor/DevEditor'),
                         SlateRender: require('./components/Editor/components/render'),
                         renderAsText: require('./components/Editor/components/render/text'),
                       },

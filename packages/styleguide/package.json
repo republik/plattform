@@ -83,7 +83,6 @@
     "topojson": "^3.0.2",
     "tslib": "^2.3.1",
     "typescript": "^4.7.2",
-    "use-memo-one": "^1.1.2",
     "validate-commit-msg": "^2.14.0"
   },
   "files": [
@@ -127,7 +126,8 @@
     "serve": "^13.0.2",
     "slate": "^0.81.0",
     "slate-history": "^0.66.0",
-    "slate-react": "^0.81.0"
+    "slate-react": "^0.81.0",
+    "use-memo-one": "^1.1.2"
   },
   "browserslist": [
     ">0.2%",
