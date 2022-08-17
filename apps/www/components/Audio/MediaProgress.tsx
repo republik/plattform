@@ -107,7 +107,6 @@ const MediaProgressProvider = ({ children }) => {
       return (
         queryMediaProgress({
           variables: { mediaId },
-          fetchPolicy: 'network-only',
         })
           .then(({ data: { mediaProgress } }) => {
             // mediaProgress can be null

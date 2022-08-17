@@ -3,12 +3,12 @@ import {
   DefaultContext,
   DocumentNode,
   LazyQueryHookOptions,
-  LazyQueryResultTuple,
   MutationHookOptions,
   MutationTuple,
   OperationVariables,
   QueryHookOptions,
   QueryResult,
+  QueryTuple,
   TypedDocumentNode,
   useLazyQuery,
   useMutation,
@@ -37,7 +37,7 @@ export function makeLazyQueryHook<TData = any, TVariables = OperationVariables>(
 ) {
   return (
     options?: LazyQueryHookOptions<TData, TVariables>,
-  ): LazyQueryResultTuple<TData, TVariables> => useLazyQuery(query, options)
+  ): QueryTuple<TData, TVariables> => useLazyQuery(query, options)
 }
 
 /**
