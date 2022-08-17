@@ -7,6 +7,7 @@ import {
   Field,
   Autocomplete,
   InlineSpinner,
+  RawHtml,
 } from '@project-r/styleguide'
 import { FaLink as LinkIcon } from 'react-icons/fa'
 import UIForm from '../../UIForm'
@@ -17,6 +18,9 @@ import withT from '../../../../lib/withT'
 import debounce from 'lodash/debounce'
 
 import { createInlineButton, matchInline, buttonStyles } from '../../utils'
+import AutosizeInput from 'react-textarea-autosize'
+import { css } from 'glamor'
+import { MdInfoOutline } from 'react-icons/md'
 
 const getUsers = gql`
   query getUsers($search: String!) {
@@ -29,6 +33,17 @@ const getUsers = gql`
     }
   }
 `
+
+const styles = {
+  autoSize: css({
+    minHeight: 40,
+    paddingTop: '7px !important',
+    paddingBottom: '6px !important',
+  }),
+  descriptionHelp: css({
+    margin: '-10px 0 10px',
+  }),
+}
 
 const UserItem = ({ user }) => (
   <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -222,6 +237,28 @@ export const LinkForm = withT(
                 value={node.data.get('title')}
                 onChange={onInputChange('title')}
               />
+              <Field
+                label={t(`link/description`, undefined, 'description')}
+                value={node.data.get('description')}
+                onChange={onInputChange('description')}
+                renderInput={({ ref, ...inputProps }) => (
+                  <AutosizeInput
+                    {...inputProps}
+                    inputRef={ref}
+                    {...styles.autoSize}
+                  />
+                )}
+              />
+              <p {...styles.descriptionHelp}>
+                <small>
+                  <MdInfoOutline style={{ verticalAlign: 'sub' }} />{' '}
+                  <RawHtml
+                    dangerouslySetInnerHTML={{
+                      __html: t('link/description/help'),
+                    }}
+                  />
+                </small>
+              </p>
               <SearchUserForm onChange={authorChange(onChange, value, node)} />
               <RepoSearch
                 label={t('link/repo/search')}
