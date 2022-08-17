@@ -39,7 +39,9 @@ const EditView = ({
       )}
       <Warnings />
       {repo?.isArchived && (
-        <RepoArchivedBanner style={{ zIndex: 23, position: 'fixed' }} />
+        <RepoArchivedBanner
+          style={{ zIndex: 23, position: 'sticky', top: HEADER_HEIGHT }}
+        />
       )}
       <div {...styles.phase}>
         <PhaseSummary

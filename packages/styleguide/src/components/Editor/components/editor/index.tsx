@@ -96,7 +96,6 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
       editor.customConfig.schema[config.component]
 
     if (!Component) {
-      console.log(editor.customConfig)
       return (
         <ErrorMessage
           attributes={attributes}
@@ -166,7 +165,7 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
           }}
         >
           <FormOverlay />
-          <Toolbar containerRef={containerRef} />
+          {!config.readOnly && <Toolbar containerRef={containerRef} />}
           <LayoutContainer
             style={{ position: 'sticky', zIndex: 1 }}
             schema={config.schema}
