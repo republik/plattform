@@ -31,13 +31,11 @@ import Preview from './Preview'
 import compose from 'lodash/flowRight'
 import Link from 'next/link'
 import { getQueryFromRepoId, getRepoIdFromQuery } from '../../lib/repoIdHelper'
+import { NavLink } from '../Frame/Nav'
 
 const styles = {
   defaultContainer: css({
     padding: 20,
-  }),
-  navLink: css({
-    paddingRight: 10,
   }),
   phase: css({
     position: 'fixed',
@@ -73,17 +71,8 @@ const usePreviousValue = (value) => {
   return ref.current
 }
 
-const NavButton = ({ children, active, onClick }) => {
-  if (active) return <span {...styles.navLink}>{children}</span>
-  return (
-    <A href='#' {...styles.navLink} onClick={onClick}>
-      {children}
-    </A>
-  )
-}
-
 const EditLoader = ({
-  router: { query },
+  router: { query, pathname },
   t,
   data,
   hasUncommitedChanges,
@@ -95,8 +84,8 @@ const EditLoader = ({
   const router = useRouter()
   const { commitId, publishDate } = query
   const repoId = getRepoIdFromQuery(query)
+  const { preview, ...queryWithoutPreview } = query
   const { addWarning, rmWarning } = useWarningContext()
-  const [previewMode, setPreviewMode] = useState(false)
   const [store, setStore] = useState(undefined)
   const [readOnly, setReadOnly] = useState(false)
   const [committing, setCommitting] = useState(false)
@@ -295,7 +284,7 @@ const EditLoader = ({
     concludeChanges()
     setCommitting(false)
     router.replace({
-      pathname: '/flyer/[owner]/[repo]/edit',
+      pathname,
       query: {
         ...getQueryFromRepoId(repoId),
         commitId: data.commit.id,
@@ -360,6 +349,10 @@ const EditLoader = ({
     setDidUnlock(false)
     setAcknowledgedUsers([])
     updateContentEditor(getCommittedValue(data) || INITIAL_VALUE)
+    router.replace({
+      pathname,
+      query: queryWithoutPreview,
+    })
   }
 
   const contentChangeHandler = () => {
@@ -393,23 +386,26 @@ const EditLoader = ({
       <Frame.Header>
         <Frame.Header.Section align='left'>
           <Frame.Nav>
-            <NavButton
-              onClick={() => setPreviewMode(false)}
-              active={!previewMode}
+            <NavLink
+              href={{ pathname, query: queryWithoutPreview }}
+              replace
+              active={!preview}
             >
               Dokument
-            </NavButton>
-            <NavButton
-              onClick={() => setPreviewMode(true)}
-              active={previewMode}
+            </NavLink>
+            <NavLink
+              href={{
+                pathname,
+                query: { ...queryWithoutPreview, preview: true },
+              }}
+              replace
+              active={preview}
             >
               Vorschau
-            </NavButton>
-            <span {...styles.navLink}>
-              <Link href={`/repo/${repoId}/tree`} passHref>
-                <A>Versionen</A>
-              </Link>
-            </span>
+            </NavLink>
+            {!isNew && (
+              <NavLink href={`/repo/${repoId}/tree`}>Versionen</NavLink>
+            )}
           </Frame.Nav>
         </Frame.Header.Section>
         <Frame.Header.Section align='right'>
@@ -450,13 +446,13 @@ const EditLoader = ({
           loading={pending}
           error={data?.error}
           render={() => {
-            // TODO: redirect doesn't work here – move it
             // checks to make ensure repo/commit integrity
             if (!commitId && repo && repo.latestCommit) {
               debug('loadState', 'redirect', repo.latestCommit)
               router.replace({
-                pathname: '/flyer/[owner]/[repo]/edit',
+                pathname,
                 query: {
+                  ...query,
                   ...getQueryFromRepoId(repoId),
                   commitId: repo.latestCommit.id,
                 },
@@ -464,10 +460,11 @@ const EditLoader = ({
               return null
             }
 
+            // TODO: redirect doesn't work here – move it
             if (commitId && repo && !repo.commit) {
               addWarning(t('commit/warn/commit404'))
               router.replace({
-                pathname: '/flyer/[owner]/[repo]/edit',
+                pathname,
                 query: getQueryFromRepoId(repoId),
               })
               return null
@@ -481,7 +478,7 @@ const EditLoader = ({
               }
             }
 
-            return previewMode ? (
+            return preview ? (
               <Preview repoId={repoId} commitId={commitId} />
             ) : (
               <EditView

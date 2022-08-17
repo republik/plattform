@@ -26,6 +26,7 @@ import withT from '../../../../lib/withT'
 import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 import { gql } from '@apollo/client'
 import { withDefaultSSR } from '../../../../lib/apollo/helpers'
+import { NavLink } from '../../../../components/Frame/Nav'
 
 export const COMMIT_LIMIT = 40
 export const getRepoHistory = gql`
@@ -191,24 +192,26 @@ class EditorPage extends Component {
     const localStorageCommitIds = getLocalStorageKeys()
       .filter((key) => key.startsWith(repoId))
       .map((key) => key.split('/').pop())
-    const root =
-      repo?.commits?.nodes[0]?.document?.type === 'slate' ? 'flyer' : 'repo'
+    const isSlate = repo?.commits?.nodes[0]?.document?.type === 'slate'
+    const root = isSlate ? 'flyer' : 'repo'
+    const editPath = `/${root}/${repoId}/edit`
     return (
       <Frame>
         <Frame.Header isTemplate={repo?.isTemplate}>
           <Frame.Header.Section align='left'>
             <Frame.Nav>
-              <span style={{ marginRight: 10 }}>
-                <Link href={`/${root}/${repoId}/edit`} passHref>
-                  <A>
-                    {t(
-                      `repo/nav/${
-                        repo?.isTemplate ? 'template' : 'document'
-                      }/edit`,
-                    )}
-                  </A>
-                </Link>
-              </span>
+              <NavLink href={editPath}>
+                {t(
+                  `repo/nav/${repo?.isTemplate ? 'template' : 'document'}/edit`,
+                )}
+              </NavLink>
+              {!!isSlate && (
+                <NavLink
+                  href={{ pathname: editPath, query: { preview: true } }}
+                >
+                  Vorschau
+                </NavLink>
+              )}
               <span>Versionen</span>
             </Frame.Nav>
           </Frame.Header.Section>
