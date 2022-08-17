@@ -10,6 +10,7 @@ const AudioPlayerUI = ({
   isPlaying,
   onPlay,
   onPause,
+  onStop,
 }: AudioPlayerUIProps) => {
   const { inNativeApp } = useInNativeApp()
   const totalState = {
@@ -39,10 +40,17 @@ const AudioPlayerUI = ({
         backgroundColor: '#e1e1e1',
       }}
     >
+      <button onClick={() => onStop()}>Close</button>
       <div>
-        <details>
+        <details style={{ maxWidth: '60vw', margin: '0 auto' }}>
           <summary>State passed to UI</summary>
-          <pre>{JSON.stringify(totalState, null, 2)}</pre>
+          <pre
+            style={{
+              overflow: 'scroll',
+            }}
+          >
+            {JSON.stringify(totalState, null, 2)}
+          </pre>
         </details>
       </div>
       <div>
