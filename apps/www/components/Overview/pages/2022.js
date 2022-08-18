@@ -309,6 +309,38 @@ const text = {
       ?
     </>
   ),
+  Juli: (p) => (
+    <>
+      <Highlight {...p} ids={['SkrH_Fd3_']}>
+        Wie der Supreme Court die US-Demokratie aushöhlt
+      </Highlight>
+      . Wie aus Yandex – dem Google Russlands –{' '}
+      <Highlight {...p} ids={['10QhU0BAM']}>
+        ein Propagandainstrument des Kreml
+      </Highlight>{' '}
+      wurde.{' '}
+      <Highlight {...p} ids={['hHg-M5yyn']}>
+        Und hat ein Chatbot vor kurzem wirklich ein Bewusstsein erlangt
+      </Highlight>
+      ?{' '}
+      <Highlight {...p} ids={['Ss8CvrWc5']}>
+        Gelten demnach Computerprogramme bald als Personen
+      </Highlight>
+      ? Weltweit leiden Millionen von Menschen an Hunger –{' '}
+      <Highlight {...p} ids={['jO1tuGfOQ']}>
+        obwohl genug Nahrung da wäre
+      </Highlight>
+      . Dazu eine Utopie:{' '}
+      <Highlight {...p} ids={['MtoKEob8A']}>
+        Wie lassen sich 10 Milliarden Menschen nachhaltig ernähren
+      </Highlight>
+      ? Und überhaupt:{' '}
+      <Highlight {...p} series='republik/article-serie-schoene-bessere-welt'>
+        Wie lässt sich eine schönere, bessere Welt gestalten
+      </Highlight>
+      ?
+    </>
+  ),
 }
 
 const Overview2022 = (props) => <Page {...props} year={2022} text={text} />
