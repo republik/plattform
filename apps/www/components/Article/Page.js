@@ -32,6 +32,8 @@ import {
   createNewsletterWebSchema,
   createSectionSchema,
   createPageSchema,
+  flyerSchema,
+  SlateRender,
 } from '@project-r/styleguide'
 import { EditIcon } from '@project-r/styleguide'
 import { createRequire } from '@project-r/styleguide'
@@ -161,6 +163,9 @@ const schemaCreators = {
   editorialNewsletter: createNewsletterWebSchema,
   section: createSectionSchema,
   page: createPageSchema,
+  flyer: () => {
+    return flyerSchema
+  },
 }
 
 export const withCommentData = graphql(
@@ -245,6 +250,7 @@ const ArticlePage = ({
   const article = articleData?.article
   const documentId = article?.id
   const repoId = article?.repoId
+  const treeType = article?.type
 
   const articleMeta = article?.meta
   const articleContent = article?.content
@@ -595,117 +601,122 @@ const ArticlePage = ({
                   </Center>
                 </div>
               )}
-              <ArticleGallery
-                article={article}
-                show={!!router.query.gallery}
-                ref={galleryRef}
-              >
-                <ProgressComponent article={article}>
-                  <article style={{ display: 'block' }}>
-                    {splitContent.title && (
-                      <div {...styles.titleBlock}>
-                        {renderSchema(splitContent.title)}
-                        {isEditorialNewsletter && (
-                          <TitleBlock margin={false}>
-                            {format && format.meta && (
-                              <Editorial.Format
-                                color={
-                                  format.meta.color || colors[format.meta.kind]
-                                }
-                              >
-                                <Link href={format.meta.path} passHref>
-                                  <a {...styles.link} href={format.meta.path}>
-                                    {format.meta.title}
-                                  </a>
-                                </Link>
-                              </Editorial.Format>
-                            )}
-                            <Interaction.Headline>
-                              {meta.title}
-                            </Interaction.Headline>
-                            <Editorial.Credit>
-                              {formatDate(new Date(meta.publishDate))}
-                            </Editorial.Credit>
-                          </TitleBlock>
-                        )}
-                        {isEditor && repoId && disableActionBar ? (
-                          <Center
-                            breakout={breakout}
-                            style={{ paddingBottom: 0, paddingTop: 30 }}
-                          >
-                            <div
-                              {...(titleAlign === 'center'
-                                ? styles.flexCenter
-                                : {})}
+              {treeType === 'slate' ? (
+                <SlateRender value={article.content.children} schema={schema} />
+              ) : (
+                <ArticleGallery
+                  article={article}
+                  show={!!router.query.gallery}
+                  ref={galleryRef}
+                >
+                  <ProgressComponent article={article}>
+                    <article style={{ display: 'block' }}>
+                      {splitContent.title && (
+                        <div {...styles.titleBlock}>
+                          {renderSchema(splitContent.title)}
+                          {isEditorialNewsletter && (
+                            <TitleBlock margin={false}>
+                              {format && format.meta && (
+                                <Editorial.Format
+                                  color={
+                                    format.meta.color ||
+                                    colors[format.meta.kind]
+                                  }
+                                >
+                                  <Link href={format.meta.path} passHref>
+                                    <a {...styles.link} href={format.meta.path}>
+                                      {format.meta.title}
+                                    </a>
+                                  </Link>
+                                </Editorial.Format>
+                              )}
+                              <Interaction.Headline>
+                                {meta.title}
+                              </Interaction.Headline>
+                              <Editorial.Credit>
+                                {formatDate(new Date(meta.publishDate))}
+                              </Editorial.Credit>
+                            </TitleBlock>
+                          )}
+                          {isEditor && repoId && disableActionBar ? (
+                            <Center
+                              breakout={breakout}
+                              style={{ paddingBottom: 0, paddingTop: 30 }}
                             >
-                              <IconButton
-                                Icon={EditIcon}
-                                href={`${PUBLIKATOR_BASE_URL}/repo/${repoId}/tree`}
-                                target='_blank'
-                                title={t('feed/actionbar/edit')}
-                                label={t('feed/actionbar/edit')}
-                                labelShort={t('feed/actionbar/edit')}
-                                fill={'#E9A733'}
-                              />
-                            </div>
-                          </Center>
-                        ) : null}
-                        {actionBar ||
-                        isSection ||
-                        showNewsletterSignupTop ||
-                        isSyntheticReadAloud ||
-                        isReadAloud ? (
-                          <Center breakout={breakout}>
-                            {actionBar && (
                               <div
-                                ref={actionBarRef}
-                                {...styles.actionBarContainer}
-                                style={{
-                                  textAlign: titleAlign,
-                                  marginBottom: isEditorialNewsletter
-                                    ? 0
-                                    : undefined,
-                                }}
+                                {...(titleAlign === 'center'
+                                  ? styles.flexCenter
+                                  : {})}
                               >
-                                {actionBar}
-                              </div>
-                            )}
-                            {(isSyntheticReadAloud || isReadAloud) && (
-                              <ReadAloudInline meta={meta} t={t} />
-                            )}
-                            {isSection && !hideSectionNav && (
-                              <Breakout size='breakout'>
-                                <SectionNav
-                                  color={sectionColor}
-                                  linkedDocuments={article.linkedDocuments}
+                                <IconButton
+                                  Icon={EditIcon}
+                                  href={`${PUBLIKATOR_BASE_URL}/repo/${repoId}/tree`}
+                                  target='_blank'
+                                  title={t('feed/actionbar/edit')}
+                                  label={t('feed/actionbar/edit')}
+                                  labelShort={t('feed/actionbar/edit')}
+                                  fill={'#E9A733'}
                                 />
-                              </Breakout>
-                            )}
-                            {showNewsletterSignupTop && (
-                              <div style={{ marginTop: 10 }}>
-                                <NewsletterSignUp {...newsletterMeta} />
                               </div>
-                            )}
-                          </Center>
-                        ) : (
-                          <div {...styles.actionBarContainer}>
-                            {/* space before paynote */}
-                          </div>
-                        )}
+                            </Center>
+                          ) : null}
+                          {actionBar ||
+                          isSection ||
+                          showNewsletterSignupTop ||
+                          isSyntheticReadAloud ||
+                          isReadAloud ? (
+                            <Center breakout={breakout}>
+                              {actionBar && (
+                                <div
+                                  ref={actionBarRef}
+                                  {...styles.actionBarContainer}
+                                  style={{
+                                    textAlign: titleAlign,
+                                    marginBottom: isEditorialNewsletter
+                                      ? 0
+                                      : undefined,
+                                  }}
+                                >
+                                  {actionBar}
+                                </div>
+                              )}
+                              {(isSyntheticReadAloud || isReadAloud) && (
+                                <ReadAloudInline meta={meta} t={t} />
+                              )}
+                              {isSection && !hideSectionNav && (
+                                <Breakout size='breakout'>
+                                  <SectionNav
+                                    color={sectionColor}
+                                    linkedDocuments={article.linkedDocuments}
+                                  />
+                                </Breakout>
+                              )}
+                              {showNewsletterSignupTop && (
+                                <div style={{ marginTop: 10 }}>
+                                  <NewsletterSignUp {...newsletterMeta} />
+                                </div>
+                              )}
+                            </Center>
+                          ) : (
+                            <div {...styles.actionBarContainer}>
+                              {/* space before paynote */}
+                            </div>
+                          )}
 
-                        {!suppressFirstPayNote && payNote}
-                      </div>
-                    )}
-                    {renderSchema(splitContent.main)}
-                  </article>
-                  <ActionBarOverlay
-                    audioPlayerVisible={audioPlayerVisible}
-                    inNativeApp={inNativeApp}
-                  >
-                    {actionBarOverlay}
-                  </ActionBarOverlay>
-                </ProgressComponent>
-              </ArticleGallery>
+                          {!suppressFirstPayNote && payNote}
+                        </div>
+                      )}
+                      {renderSchema(splitContent.main)}
+                    </article>
+                    <ActionBarOverlay
+                      audioPlayerVisible={audioPlayerVisible}
+                      inNativeApp={inNativeApp}
+                    >
+                      {actionBarOverlay}
+                    </ActionBarOverlay>
+                  </ProgressComponent>
+                </ArticleGallery>
+              )}
               {meta.template === 'discussion' && ownDiscussion && (
                 <Center breakout={breakout}>
                   <DiscussionContextProvider
