@@ -1,7 +1,7 @@
 import { css } from 'glamor'
 
 import { colors, plainButtonRule } from '@project-r/styleguide'
-import { MdClose } from 'react-icons/md'
+import MdClose from 'react-icons/lib/md/close'
 
 const styles = {
   warning: css({

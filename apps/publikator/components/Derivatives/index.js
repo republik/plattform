@@ -3,10 +3,8 @@ import { keyframes, css } from 'glamor'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
-import {
-  MdHearing as MdHearingIcon,
-  MdPlayArrow as MdPlayArrow,
-} from 'react-icons/md'
+import MdHearingIcon from 'react-icons/lib/md/hearing'
+import MdPlayArrow from 'react-icons/lib/md/play-arrow'
 import {
   IconButton,
   AudioPlayer,

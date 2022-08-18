@@ -2,10 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { css, merge } from 'glamor'
 import buttonStyles from './buttonStyles'
 import { parent } from './selection'
-import {
-  MdArrowUpward as ArrowUpIcon,
-  MdArrowDownward as ArrowDownIcon,
-} from 'react-icons/md'
+import ArrowUpIcon from 'react-icons/lib/md/arrow-upward'
+import ArrowDownIcon from 'react-icons/lib/md/arrow-downward'
 import scrollIntoView from 'scroll-into-view'
 
 const styles = {

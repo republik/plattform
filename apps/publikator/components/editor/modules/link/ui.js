@@ -9,7 +9,7 @@ import {
   InlineSpinner,
   RawHtml,
 } from '@project-r/styleguide'
-import { FaLink as LinkIcon } from 'react-icons/fa'
+import LinkIcon from 'react-icons/lib/fa/chain'
 import UIForm from '../../UIForm'
 import createOnFieldChange from '../../utils/createOnFieldChange'
 import RepoSearch from '../../utils/RepoSearch'
@@ -20,7 +20,7 @@ import debounce from 'lodash/debounce'
 import { createInlineButton, matchInline, buttonStyles } from '../../utils'
 import AutosizeInput from 'react-textarea-autosize'
 import { css } from 'glamor'
-import { MdInfoOutline } from 'react-icons/md'
+import MdInfoOutline from 'react-icons/lib/md/info-outline'
 
 const getUsers = gql`
   query getUsers($search: String!) {

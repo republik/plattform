@@ -16,14 +16,18 @@ import {
   fontFamilies,
   Checkbox,
 } from '@project-r/styleguide'
-import { MdLens as CircleIcon, MdInfoOutline as InfoIcon } from 'react-icons/md'
+import CircleIcon from 'react-icons/lib/md/lens'
+import InfoIcon from 'react-icons/lib/md/info-outline'
 import { Controlled as CodeMirror } from 'react-codemirror2'
 import {
   UncommittedChanges,
   withUncommitedChanges,
 } from '../../../../components/VersionControl/UncommittedChanges'
 import BranchingNotice from '../../../../components/VersionControl/BranchingNotice'
-import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
+import {
+  getQueryFromRepoId,
+  getRepoIdFromQuery,
+} from '../../../../lib/repoIdHelper'
 import { withDefaultSSR } from '../../../../lib/apollo/helpers'
 
 const styles = css({
