@@ -6,6 +6,7 @@ Properties
 
 - `description` string: Text that is show in callout.
 - `href` string: href of link.
+- `title` string (optional): allows to set a title on the anchor tag.
 
 
 ```react

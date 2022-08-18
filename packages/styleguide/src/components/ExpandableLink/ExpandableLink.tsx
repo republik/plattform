@@ -12,10 +12,12 @@ type Props = {
   attributes: object
   description: string
   href: string
+  title?: string
 }
 
 export type StateProps = {
   href: string
+  title?: string
   description: string
   position: CSSProperties
 }
@@ -43,7 +45,13 @@ const Portal: React.FC<{ children: ReactElement }> = ({ children }) => {
     : null
 }
 
-const ExpandableLink = ({ children, attributes, description, href }: Props) => {
+const ExpandableLink = ({
+  children,
+  attributes,
+  description,
+  href,
+  title,
+}: Props) => {
   const [colorScheme] = useColorContext()
   const [expandedLink, setExpandedLink] = useState<StateProps>(undefined)
   const timeOutRef = useRef<NodeJS.Timeout>(null)
@@ -53,7 +61,7 @@ const ExpandableLink = ({ children, attributes, description, href }: Props) => {
     if (expandedLink) {
       setExpandedLink(undefined)
     } else {
-      setExpandedLink({ description, href, position: position })
+      setExpandedLink({ title, description, href, position: position })
     }
   }
 
@@ -117,6 +125,7 @@ const ExpandableLink = ({ children, attributes, description, href }: Props) => {
       {...colorScheme.set('color', 'text')}
       {...colorScheme.set('textDecorationColor', 'textSoft')}
       aria-label={description}
+      title={title}
       href={href}
       onClick={(event) => {
         if (shouldIgnoreClick(event)) {
