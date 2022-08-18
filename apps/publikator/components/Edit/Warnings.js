@@ -1,10 +1,6 @@
 import { css } from 'glamor'
-import {
-  colors,
-  plainButtonRule,
-  EDITOR_TOOLBAR_HEIGHT,
-  CloseIcon,
-} from '@project-r/styleguide'
+import { colors, plainButtonRule, CloseIcon } from '@project-r/styleguide'
+import { EDITOR_TOOLBAR_HEIGHT } from '@project-r/styleguide/editor'
 import { HEADER_HEIGHT } from '../Frame/constants'
 import { createContext, useContext, useState } from 'react'
 import { timeFormat } from 'd3-time-format'
