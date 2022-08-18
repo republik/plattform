@@ -9,6 +9,7 @@ import {
   ColorContextProvider,
   useColorContext,
   RawHtml,
+  shouldIgnoreClick,
 } from '@project-r/styleguide'
 import TrialForm from '../Trial/Form'
 import { css } from 'glamor'
@@ -18,7 +19,6 @@ import { useRouter } from 'next/router'
 import compose from 'lodash/flowRight'
 import withT, { t } from '../../lib/withT'
 import { useInNativeApp } from '../../lib/withInNativeApp'
-import { shouldIgnoreClick } from '../../lib/utils/link'
 import { useMe } from '../../lib/context/MeContext'
 
 const styles = {

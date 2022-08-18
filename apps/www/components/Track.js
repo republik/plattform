@@ -19,7 +19,14 @@ const trackRoles = (me) =>
     me ? [].concat(me.roles).sort().join(' ') || 'none' : 'guest',
   ])
 
+let lastTrackedUrl
 const trackUrl = (url) => {
+  // protect against double calls
+  // - e.g. because next router becomes ready and triggers a routeChangeComplete for the same url
+  if (url === lastTrackedUrl) {
+    return
+  }
+  lastTrackedUrl = url
   // sanitize url
   const urlObject = parse(url, true)
   const { query, pathname } = urlObject
@@ -103,7 +110,8 @@ const Track = () => {
     if (router.isReady) {
       trackUrl(window.location.href)
     }
-
+  }, [router.isReady])
+  useEffect(() => {
     const onRouteChangeComplete = (url) => {
       // give pages time to set correct page title
       // may not always be enough, e.g. if data dependent and slow query/network, but works fine for many cases
