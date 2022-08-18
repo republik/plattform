@@ -9,7 +9,7 @@ function HasAccessToggle({ previewHasAccess, onToggle }) {
       {previewHasAccess ? (
         <Person {...colorScheme.set('fill', 'text')} size={26} />
       ) : (
-        <PersonOutline {...colorScheme.set('color', 'text')} size={26} />
+        <PersonOutline {...colorScheme.set('fill', 'text')} size={26} />
       )}
     </button>
   )
