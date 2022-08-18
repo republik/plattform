@@ -95,6 +95,7 @@ const Track = () => {
       lastMeRef.current = me
     }
     payload.disable(me?.activeMembership)
+    throw new Error('test')
   }, [me, meLoading])
 
   const { inNativeAppVersion } = useInNativeApp()
