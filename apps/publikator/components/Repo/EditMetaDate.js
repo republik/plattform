@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { css } from 'glamor'
 import MaskedInput from 'react-maskedinput'
-import { MdEdit as EditIcon } from 'react-icons/md'
+import EditIcon from 'react-icons/lib/md/edit'
 
 import { timeParse, timeFormat } from 'd3-time-format'
 

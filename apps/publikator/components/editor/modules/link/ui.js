@@ -9,7 +9,7 @@ import {
   InlineSpinner,
   RawHtml,
 } from '@project-r/styleguide'
-import { FaLink as LinkIcon } from 'react-icons/fa'
+import LinkIcon from 'react-icons/lib/fa/chain'
 import UIForm from '../../UIForm'
 import createOnFieldChange from '../../utils/createOnFieldChange'
 import RepoSearch from '../../utils/RepoSearch'

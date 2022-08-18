@@ -5,12 +5,10 @@ import {
   useColorContext,
 } from '@project-r/styleguide'
 
-import {
-  MdPhoneIphone,
-  MdTabletMac,
-  MdLaptopMac,
-  MdDesktopMac,
-} from 'react-icons/md'
+import MdPhoneIphone from 'react-icons/lib/md/phone-iphone'
+import MdTabletMac from 'react-icons/lib/md/tablet-mac'
+import MdLaptopMac from 'react-icons/lib/md/laptop-mac'
+import MdDesktopMac from 'react-icons/lib/md/desktop-mac'
 
 const styles = {
   container: css({

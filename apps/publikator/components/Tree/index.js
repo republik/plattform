@@ -1,10 +1,8 @@
 import { Component } from 'react'
 import { css } from 'glamor'
-import {
-  MdLockOpen as LocalIcon,
-  MdCheck as CheckIcon,
-  MdGrade as TagIcon,
-} from 'react-icons/md'
+import LocalIcon from 'react-icons/lib/md/lock-open'
+import CheckIcon from 'react-icons/lib/md/check'
+import TagIcon from 'react-icons/lib/md/grade'
 import { Interaction, Label } from '@project-r/styleguide'
 import { lab } from 'd3-color'
 import Link from 'next/link'

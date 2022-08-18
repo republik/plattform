@@ -1,8 +1,6 @@
 import { useColorContext, plainButtonRule } from '@project-r/styleguide'
-import {
-  IoPerson as Person,
-  IoPersonOutline as PersonOutline,
-} from 'react-icons/io5'
+import Person from 'react-icons/lib/io/ios-person'
+import PersonOutline from 'react-icons/lib/io/ios-person-outline'
 
 function HasAccessToggle({ previewHasAccess, onToggle }) {
   const [colorScheme] = useColorContext()
