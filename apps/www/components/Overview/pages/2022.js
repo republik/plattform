@@ -273,6 +273,42 @@ const text = {
       .
     </>
   ),
+  Juni: (p) => (
+    <>
+      <Highlight {...p} ids={['glv0TLUza']}>
+        Warum die Antwort auf Putins Invasion eine feministische sein muss
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['SApR1eWlF']}>
+        Warum Grossbritannien so entschieden hinter der Ukraine steht
+      </Highlight>{' '}
+      und vor allem:{' '}
+      <Highlight {...p} ids={['A4-ug8Ux6']}>
+        Wann endet dieser Krieg
+      </Highlight>
+      ? Grüne, Amnesty, Jugendverbände:{' '}
+      <Highlight {...p} ids={['SoQnJ9oA9']}>
+        Der Schweizer Geheimdienst fichiert Unverdächtige
+      </Highlight>
+      . Zudem:{' '}
+      <Highlight
+        {...p}
+        series='republik/article-die-infokrieger-serienuebersicht'
+      >
+        eine Reise ans Ende der Schweizer Demokratie
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['ddlvqKBZU']}>
+        Haarsträubende Zustände in einer Grossbäckerei, die Aldi, Migros und
+        Coop beliefert
+      </Highlight>
+      . Und:{' '}
+      <Highlight {...p} ids={['N1SZWLst5']}>
+        Wie steht es um das Geschlechter­verhältnis in der Republik
+      </Highlight>
+      ?
+    </>
+  ),
 }
 
 const Overview2022 = (props) => <Page {...props} year={2022} text={text} />
