@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react'
 import copyToClipboard from 'clipboard-copy'
 import { css } from 'glamor'
-import { IconButton } from '@project-r/styleguide'
+import { IconButton, shouldIgnoreClick } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
 import { trackEvent } from '../../lib/matomo'
-import { shouldIgnoreClick } from '../../lib/utils/link'
 
 import {
   SpotifyIcon,

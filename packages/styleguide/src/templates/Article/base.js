@@ -35,16 +35,25 @@ import {
   matchImagesParagraph,
 } from './utils'
 import { MIN_GALLERY_IMG_WIDTH } from '../../components/Figure/Image'
+import { ExpandableLink } from '../../components/ExpandableLink'
+import { SEPARATOR as EXPANDABLE_LINK_SEPARATOR } from '../../components/ExpandableLink/ExpandableLink'
 
 const createBase = ({ metaBody, metaHeadlines }) => {
   const link = {
     matchMdast: matchType('link'),
-    props: (node) => ({
-      title: node.title,
-      href: node.url,
-    }),
+    props: (node, index, parent, { ancestors }) => {
+      const [title, description] = (node.title || '').split(
+        EXPANDABLE_LINK_SEPARATOR,
+      )
+      return {
+        title,
+        description,
+        href: node.url,
+      }
+    },
     component: (props) => {
-      const { href } = props
+      const { href, description } = props
+      const LinkComponent = description ? ExpandableLink : Editorial.A
       // workaround app issues with hash url by handling them ourselves and preventing the default behaviour
       if (href && href.slice(0, 3) === '#t=') {
         return (
@@ -74,7 +83,7 @@ const createBase = ({ metaBody, metaHeadlines }) => {
           />
         )
       }
-      return <Editorial.A {...props} />
+      return <LinkComponent {...props} />
     },
     editorModule: 'link',
     rules: globalInlines,

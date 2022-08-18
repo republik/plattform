@@ -1309,6 +1309,14 @@
       "value": "Dokument suchen"
     },
     {
+      "key": "link/description",
+      "value": "Zusätzliche Beschreibung"
+    },
+    {
+      "key": "link/description/help",
+      "value": "<a href=\"https://styleguide.republik.ch/expandablelink#formatting\" target=\"_blank\">Einfache HTML-Tags erlaubt</a>."
+    },
+    {
       "key": "memo/modal/remove",
       "value": "Memo entfernen"
     },
