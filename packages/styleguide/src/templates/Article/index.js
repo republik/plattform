@@ -19,7 +19,7 @@ import { Figure, CoverTextTitleBlockHeadline } from '../../components/Figure'
 import { Tweet } from '../../components/Social'
 import { Video } from '../../components/Video'
 import { VideoPlayer } from '../../components/VideoPlayer'
-import { AudioPlayer } from '../../components/AudioPlayer'
+import { AudioPlayer } from '../../components/LegacyAudioPlayer'
 
 import { TeaserFrontLogo } from '../../components/TeaserFront'
 import { getFormatLine } from '../../components/TeaserFeed/utils'

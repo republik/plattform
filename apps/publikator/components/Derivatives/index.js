@@ -9,7 +9,7 @@ import {
 } from 'react-icons/md'
 import {
   IconButton,
-  AudioPlayer,
+  LegacyAudioPlayer,
   mediaQueries,
   Overlay,
   OverlayBody,
@@ -137,7 +137,7 @@ const SynthesizedAudio = withT(({ t, derivative, onClickGenerate }) => {
       {showAudioPlayer && (
         <diy {...styles.audioPlayerContainer}>
           <div {...styles.audioPlayer}>
-            <AudioPlayer
+            <LegacyAudioPlayer
               src={{
                 mp3: derivative.result.audioAssetsUrl,
               }}
