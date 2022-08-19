@@ -1,17 +1,31 @@
 import { useInNativeApp } from '../../lib/withInNativeApp'
 import compareVersion from '../../lib/react-native/CompareVersion'
 import { NEW_AUDIO_API_VERSION } from './constants'
-import LegacyAudioPlayer from '../Audio/LegacyAudioPlayer/AudioPlayer'
 import AudioPlayerContainer from './AudioPlayerContainer'
 import AudioPlayerUI from './AudioPlayerUI'
+import dynamic from 'next/dynamic'
+import { useRouter } from 'next/router'
+
+const LegacyAudioPlayer = dynamic(
+  () => import('./LegacyAudioPlayer/LegacyAudioPlayer'),
+  {
+    ssr: false,
+  },
+)
 
 const AudioPlayerOrchestrator = () => {
+  // TODO: Remove before release
+  // Enforce usage of the legacy-audio-player for testing purposes
+  // by passing legacy=true into the url
+  const {
+    query: { legacy },
+  } = useRouter()
   const { inNativeApp, inNativeAppVersion } = useInNativeApp()
-
   // Render the old audio player if we're in a native app and using the old audio-player
   if (
-    inNativeApp &&
-    compareVersion(inNativeAppVersion, NEW_AUDIO_API_VERSION) < 0
+    (inNativeApp &&
+      compareVersion(inNativeAppVersion, NEW_AUDIO_API_VERSION) < 0) ||
+    !!legacy
   ) {
     return <LegacyAudioPlayer />
   }
