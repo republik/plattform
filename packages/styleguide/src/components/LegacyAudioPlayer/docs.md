@@ -1,4 +1,4 @@
-An `<AudioPlayer />` is a responsive click-to-play audio player.
+An `<LegacyAudioPlayer />` is a responsive click-to-play audio player.
 
 Props:
 
@@ -54,7 +54,7 @@ state: {playbackRate: 1}
       transition: 'all ease-out 0.3s',
   }}>
     <div style={{backgroundColor: 'white', boxShadow: '0 0 15px rgba(0,0,0,0.1)'}}>
-      <AudioPlayer
+      <LegacyAudioPlayer
         src={{
           mp3: 'https://cdn.repub.ch/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
         }}
@@ -76,7 +76,7 @@ Missing File
 state: {playbackRate: 1}
 ---
 <div style={{backgroundColor: 'white', boxShadow: '0 0 15px rgba(0,0,0,0.1)'}}>
-  <AudioPlayer
+  <LegacyAudioPlayer
     src={{
       mp3: '/static/non-existing-sample.mp3'
     }}
@@ -93,7 +93,7 @@ state: {playbackRate: 1}
 ### Inline Player
 
 ```react
-<AudioPlayer
+<LegacyAudioPlayer
   src={{
     mp3: 'https://cdn.repub.ch/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
   }}
@@ -102,7 +102,7 @@ state: {playbackRate: 1}
 ```
 
 ```react
-<AudioPlayer
+<LegacyAudioPlayer
   src={{
     mp3: 'https://cdn.repub.ch/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
   }}
@@ -112,7 +112,7 @@ state: {playbackRate: 1}
 ```
 
 ```react
-<AudioPlayer
+<LegacyAudioPlayer
   src={{
     mp3: 'https://cdn.repub.ch/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
   }}
@@ -123,7 +123,7 @@ state: {playbackRate: 1}
 ```
 
 ```react
-<AudioPlayer
+<LegacyAudioPlayer
   src={{
     mp3: 'https://cdn.repub.ch/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
   }}
@@ -135,7 +135,7 @@ state: {playbackRate: 1}
 ```
 
 ```react
-<AudioPlayer
+<LegacyAudioPlayer
   src={{
     mp3: 'https://cdn.repub.ch/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
   }}
@@ -150,7 +150,7 @@ state: {playbackRate: 1}
 ```
 
 ```react
-<AudioPlayer
+<LegacyAudioPlayer
   src={{
     mp3: 'https://cdn.repub.ch/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
   }}
@@ -166,7 +166,7 @@ state: {playbackRate: 1}
 ```
 
 ```react
-<AudioPlayer
+<LegacyAudioPlayer
   src={{
     mp3: '/static/non-existing-sample.mp3'
   }}
@@ -182,7 +182,7 @@ state: {playbackRate: 1}
 ```
 
 ```react
-<AudioPlayer
+<LegacyAudioPlayer
   src={{
     mp3: 'https://cdn.repub.ch/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
   }}
@@ -192,7 +192,7 @@ state: {playbackRate: 1}
 ```
 
 ```react
-<AudioPlayer
+<LegacyAudioPlayer
   src={{
     mp3: 'https://cdn.repub.ch/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
   }}
@@ -202,7 +202,7 @@ state: {playbackRate: 1}
 ```
 
 ```react
-<AudioPlayer
+<LegacyAudioPlayer
   src={{
     mp3: '/static/non-existing-sample.mp3'
   }}
@@ -211,7 +211,7 @@ state: {playbackRate: 1}
 ```
 
 ```react
-<AudioPlayer
+<LegacyAudioPlayer
   src={{
     mp3: '/static/non-existing-sample.mp3'
   }}
@@ -221,7 +221,7 @@ state: {playbackRate: 1}
 ```
 
 ```react
-<AudioPlayer
+<LegacyAudioPlayer
   src={{
     mp3: '/static/non-existing-sample.mp3'
   }}
@@ -232,10 +232,10 @@ state: {playbackRate: 1}
 />
 ```
 
-The `<AudioPlayer />` may also be used to play from video sources when visual content doesn't matter.
+The `<LegacyAudioPlayer />` may also be used to play from video sources when visual content doesn't matter.
 
 ```react
-<AudioPlayer
+<LegacyAudioPlayer
   src={{
     hls: 'https://player.vimeo.com/external/213080233.m3u8?s=40bdb9917fa47b39119a9fe34b9d0fb13a10a92e',
     mp4: 'https://player.vimeo.com/external/213080233.hd.mp4?s=ab84df0ac9134c86bb68bd9ea7ac6b9df0c35774&profile_id=175',
@@ -245,7 +245,7 @@ The `<AudioPlayer />` may also be used to play from video sources when visual co
 ```
 
 ```react
-<AudioPlayer
+<LegacyAudioPlayer
   src={{
     hls: 'https://player.vimeo.com/external/213080233.m3u8?s=40bdb9917fa47b39119a9fe34b9d0fb13a10a92e'
   }}
@@ -254,7 +254,7 @@ The `<AudioPlayer />` may also be used to play from video sources when visual co
 ```
 
 ```react
-<AudioPlayer
+<LegacyAudioPlayer
   src={{
     mp4: 'https://player.vimeo.com/external/213080233.hd.mp4?s=ab84df0ac9134c86bb68bd9ea7ac6b9df0c35774&profile_id=175'
   }}

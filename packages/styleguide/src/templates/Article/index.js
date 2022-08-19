@@ -19,7 +19,7 @@ import { Figure, CoverTextTitleBlockHeadline } from '../../components/Figure'
 import { Tweet } from '../../components/Social'
 import { Video } from '../../components/Video'
 import { VideoPlayer } from '../../components/VideoPlayer'
-import { AudioPlayer } from '../../components/LegacyAudioPlayer'
+import { LegacyAudioPlayer } from '../../components/LegacyAudioPlayer'
 
 import { TeaserFrontLogo } from '../../components/TeaserFront'
 import { getFormatLine } from '../../components/TeaserFeed/utils'
@@ -507,7 +507,11 @@ const createSchema = ({
                 component: ({ attributes, data }) => {
                   if (data.forceAudio && data.src) {
                     return (
-                      <AudioPlayer attributes={attributes} {...data} t={t} />
+                      <LegacyAudioPlayer
+                        attributes={attributes}
+                        {...data}
+                        t={t}
+                      />
                     )
                   }
                   if (data.src) {
