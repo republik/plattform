@@ -1,6 +1,8 @@
 import { useInNativeApp } from '../../lib/withInNativeApp'
 import { AudioPlayerUIProps } from './AudioPlayerContainer'
 
+import { AudioPlayer, Loader } from '@project-r/styleguide'
+
 const AudioPlayerUI = ({
   audioRef,
   audioState,
@@ -8,6 +10,7 @@ const AudioPlayerUI = ({
   playbackRate,
   duration,
   isPlaying,
+  isLoading,
   actions,
 }: AudioPlayerUIProps) => {
   const { inNativeApp } = useInNativeApp()
@@ -17,12 +20,6 @@ const AudioPlayerUI = ({
     duration,
     currentTime,
     playbackRate,
-  }
-
-  const renderTime = (time) => {
-    const minutes = Math.floor(time / 60)
-    const seconds = Math.floor(time % 60)
-    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
   }
 
   if (!audioState) return null
@@ -53,6 +50,7 @@ const AudioPlayerUI = ({
           </pre>
         </details>
       </div>
+      {isLoading && <Loader loading />}
       <div>
         {!inNativeApp && (
           <audio
@@ -60,7 +58,7 @@ const AudioPlayerUI = ({
             controls
             onPlay={actions.onPlay}
             onPause={actions.onPause}
-            onSeeking={actions.onSeek}
+            onCanPlay={actions.onCanPlay}
           >
             {audioState.audioSource.mp3 && (
               <source src={audioState.audioSource.mp3} type='audio/mp3' />
@@ -73,19 +71,13 @@ const AudioPlayerUI = ({
             )}
           </audio>
         )}
-        <button onClick={actions.onPlay} disabled={isPlaying}>
-          Play
-        </button>
-        <button onClick={actions.onPause} disabled={!isPlaying}>
-          Pause
-        </button>
-        <div>
-          <button onClick={actions.onForward}>forward</button>
-        </div>
       </div>
-      <p>
-        {renderTime(currentTime)} / {renderTime(duration)}
-      </p>
+      <AudioPlayer
+        isPlaying={isPlaying}
+        currentTime={currentTime}
+        duration={duration}
+        actions={actions}
+      />
     </div>
   )
 }

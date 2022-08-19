@@ -2,9 +2,12 @@ import { useInNativeApp } from '../../lib/withInNativeApp'
 import compareVersion from '../../lib/react-native/CompareVersion'
 import { NEW_AUDIO_API_VERSION } from './constants'
 import AudioPlayerContainer from './AudioPlayerContainer'
-import AudioPlayerUI from './AudioPlayerUI'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
+
+const AudioPlayerUI = dynamic(() => import('./AudioPlayerUI'), {
+  ssr: false,
+})
 
 const LegacyAudioPlayer = dynamic(
   () => import('./LegacyAudioPlayer/LegacyAudioPlayer'),

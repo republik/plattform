@@ -5,8 +5,11 @@ import { useInNativeApp } from '../../lib/withInNativeApp'
 import { AudioEvent } from './types/AudioEvent'
 import AppMessageEventEmitter from '../../lib/react-native/AppMessageEventEmitter'
 import notifyApp from '../../lib/react-native/NotifyApp'
+import { setLogVerbosity } from '@apollo/client'
 
 const DEFAULT_PLAYBACK_RATE = 1
+const SKIP_FORWARD_TIME = 15
+const SKIP_BACKWARD_TIME = 10
 
 export type AudioPlayerUIProps = {
   audioState: AudioState | null
@@ -18,10 +21,11 @@ export type AudioPlayerUIProps = {
   isLoading: boolean
   isSeeking: boolean
   actions: {
+    onCanPlay: () => void
     onPlay: () => void
     onPause: () => void
     onStop: () => void
-    onSeek: (event?: any) => void
+    onSeek: (progress: number) => void
     onForward: () => void
     onBackward: () => void
   }
@@ -40,9 +44,12 @@ type AudioPlayerContainerProps = {
 
 const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const { inNativeApp } = useInNativeApp()
-  const { audioState, onCloseAudioPlayer } = useAudioContext()
+  const { audioState, onCloseAudioPlayer, autoPlayActive } = useAudioContext()
+  const [trackedAudioState, setTrackedAudioState] = useState<AudioState | null>(
+    null,
+  )
   const [isPlaying, setIsPlaying] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [playbackRate, setPlaybackRate] = usePlaybackRate(DEFAULT_PLAYBACK_RATE)
@@ -68,13 +75,23 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     throw new Error('no audio state to sync')
   }
 
+  const onCanPlay = () => {
+    console.log('onCanPlay')
+    setIsLoading(false)
+    syncState()
+    if (!isPlaying && autoPlayActive) {
+      onPlay()
+    }
+  }
+
   const onPlay = () => {
     if (!audioState || isPlaying) return
     // TODO: start playing
     if (inNativeApp) {
       notifyApp(AudioEvent.PLAY, audioState)
     } else if (audioRef.current) {
-      audioRef.current.play().then((x) => setIsPlaying(true))
+      audioRef.current.play()
+      syncState()
     }
   }
 
@@ -101,17 +118,36 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     onCloseAudioPlayer()
   }
 
-  const onSeek = (event: any) => {
+  const onSeek = (progress: number) => {
     if (!audioState) return
-    console.log('onSeek', event)
+    console.log('onSeek', progress)
     if (inNativeApp) {
       throw new Error('not implemented')
     } else if (audioRef.current) {
+      audioRef.current.currentTime = progress * duration
       syncState()
     }
   }
 
-  // TODO: auto play if a new track is added and nothing is playing yet.
+  const onForward = () => {
+    if (!audioState) return
+    if (inNativeApp) {
+      notifyApp(AudioEvent.FORWARD, SKIP_FORWARD_TIME)
+    } else if (audioRef.current) {
+      audioRef.current.currentTime += SKIP_FORWARD_TIME
+      syncState()
+    }
+  }
+
+  const onBackward = () => {
+    if (!audioState) return
+    if (inNativeApp) {
+      notifyApp(AudioEvent.BACKWARD, SKIP_BACKWARD_TIME)
+    } else if (audioRef.current) {
+      audioRef.current.currentTime -= SKIP_BACKWARD_TIME
+      syncState()
+    }
+  }
 
   useEffect(() => {
     // Add a listener for the event emitted by the native app
@@ -135,6 +171,19 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
 
     throw new Error('no audio state to sync')
   }, [syncState, isPlaying])
+
+  // Update the local state if a new audio-state is provided
+  useEffect(() => {
+    if (audioState === trackedAudioState) return
+
+    setTrackedAudioState(audioState)
+    setIsLoading(true)
+    if (inNativeApp) {
+      throw new Error('not implemented')
+    } else if (audioRef.current) {
+      audioRef.current.load()
+    }
+  }, [audioState, trackedAudioState])
 
   // WEB-TASKS
   // --- Effects ---
@@ -176,16 +225,13 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
         duration: duration,
         playbackRate,
         actions: {
+          onCanPlay,
           onPlay,
           onPause,
           onStop,
           onSeek,
-          onForward: () => {
-            throw new Error('not implemented')
-          },
-          onBackward: () => {
-            throw new Error('not implemented')
-          },
+          onForward,
+          onBackward,
         },
       })}
     </div>
