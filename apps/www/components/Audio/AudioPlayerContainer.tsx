@@ -17,9 +17,14 @@ export type AudioPlayerUIProps = {
   isPlaying: boolean
   isLoading: boolean
   isSeeking: boolean
-  onPlay: () => void
-  onPause: () => void
-  onStop: () => void
+  actions: {
+    onPlay: () => void
+    onPause: () => void
+    onStop: () => void
+    onSeek: (event?: any) => void
+    onForward: () => void
+    onBackward: () => void
+  }
 }
 
 type AudioPlayerState = {
@@ -36,15 +41,15 @@ type AudioPlayerContainerProps = {
 const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const { inNativeApp } = useInNativeApp()
   const { audioState, onCloseAudioPlayer } = useAudioContext()
-  const audioRef = useRef<HTMLAudioElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [playbackRate, setPlaybackRate] = usePlaybackRate(DEFAULT_PLAYBACK_RATE)
 
+  const audioRef = useRef<HTMLAudioElement>(null)
+
   const syncState = (state?: AudioPlayerState) => {
-    console.log('syncState', state)
     if (inNativeApp && state) {
       // Sync via postmessage
       setCurrentTime(state.currentTime)
@@ -68,14 +73,6 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     // TODO: start playing
     if (inNativeApp) {
       notifyApp(AudioEvent.PLAY, audioState)
-      /*postMessage({
-        type: AudioEvent.PLAY,
-        payload: {
-          url: audioState.audioSource.mp3,
-          title: audioState.title,
-          path: audioState.sourcePath,
-        },
-      })*/
     } else if (audioRef.current) {
       audioRef.current.play().then((x) => setIsPlaying(true))
     }
@@ -103,6 +100,18 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     }
     onCloseAudioPlayer()
   }
+
+  const onSeek = (event: any) => {
+    if (!audioState) return
+    console.log('onSeek', event)
+    if (inNativeApp) {
+      throw new Error('not implemented')
+    } else if (audioRef.current) {
+      syncState()
+    }
+  }
+
+  // TODO: auto play if a new track is added and nothing is playing yet.
 
   useEffect(() => {
     // Add a listener for the event emitted by the native app
@@ -166,9 +175,18 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
         currentTime: currentTime,
         duration: duration,
         playbackRate,
-        onPlay,
-        onPause,
-        onStop,
+        actions: {
+          onPlay,
+          onPause,
+          onStop,
+          onSeek,
+          onForward: () => {
+            throw new Error('not implemented')
+          },
+          onBackward: () => {
+            throw new Error('not implemented')
+          },
+        },
       })}
     </div>
   )

@@ -8,9 +8,7 @@ const AudioPlayerUI = ({
   playbackRate,
   duration,
   isPlaying,
-  onPlay,
-  onPause,
-  onStop,
+  actions,
 }: AudioPlayerUIProps) => {
   const { inNativeApp } = useInNativeApp()
   const totalState = {
@@ -32,15 +30,17 @@ const AudioPlayerUI = ({
     <div
       style={{
         position: 'fixed',
-        bottom: 0,
-        right: 0,
+        bottom: '.5rem',
+        right: '.5rem',
         display: 'flex',
         flexDirection: 'column',
         padding: '2rem 4rem',
         backgroundColor: '#e1e1e1',
+        border: '2px solid black',
+        borderRadius: '0.5rem',
       }}
     >
-      <button onClick={() => onStop()}>Close</button>
+      <button onClick={() => actions.onStop()}>Close</button>
       <div>
         <details style={{ maxWidth: '60vw', margin: '0 auto' }}>
           <summary>State passed to UI</summary>
@@ -55,7 +55,13 @@ const AudioPlayerUI = ({
       </div>
       <div>
         {!inNativeApp && (
-          <audio ref={audioRef} controls onPlay={onPlay} onPause={onPause}>
+          <audio
+            ref={audioRef}
+            controls
+            onPlay={actions.onPlay}
+            onPause={actions.onPause}
+            onSeeking={actions.onSeek}
+          >
             {audioState.audioSource.mp3 && (
               <source src={audioState.audioSource.mp3} type='audio/mp3' />
             )}
@@ -67,12 +73,15 @@ const AudioPlayerUI = ({
             )}
           </audio>
         )}
-        <button onClick={onPlay} disabled={isPlaying}>
+        <button onClick={actions.onPlay} disabled={isPlaying}>
           Play
         </button>
-        <button onClick={onPause} disabled={!isPlaying}>
+        <button onClick={actions.onPause} disabled={!isPlaying}>
           Pause
         </button>
+        <div>
+          <button onClick={actions.onForward}>forward</button>
+        </div>
       </div>
       <p>
         {renderTime(currentTime)} / {renderTime(duration)}
