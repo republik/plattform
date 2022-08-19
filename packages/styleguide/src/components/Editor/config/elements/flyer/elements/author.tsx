@@ -4,6 +4,7 @@ import {
   ElementFormProps,
   FlyerAuthorElement,
 } from '../../../../custom-types'
+import AuthorSearch from '../../../../AuthorSearch'
 
 export const FlyerAuthor: React.FC<{
   authorId?: string
@@ -46,7 +47,18 @@ export const FlyerAuthor: React.FC<{
 const Form: React.FC<ElementFormProps<FlyerAuthorElement>> = ({
   element,
   onChange,
-}) => <div>AUTHOR FORM</div>
+}) => (
+  <div>
+    AUTHOR FORM
+    <br />
+    ID: {element.authorId}
+    <AuthorSearch
+      onChange={({ value }) => {
+        onChange({ authorId: value.id })
+      }}
+    />
+  </div>
+)
 
 export const config: ElementConfigI = {
   component: 'flyerAuthor',
