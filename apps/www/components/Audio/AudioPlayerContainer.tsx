@@ -7,6 +7,7 @@ import AppMessageEventEmitter from '../../lib/react-native/AppMessageEventEmitte
 import notifyApp from '../../lib/react-native/NotifyApp'
 import { setLogVerbosity } from '@apollo/client'
 
+const DEFAULT_SYNC_INTERVAL = 500 // in ms
 const DEFAULT_PLAYBACK_RATE = 1
 const SKIP_FORWARD_TIME = 15
 const SKIP_BACKWARD_TIME = 10
@@ -29,6 +30,7 @@ export type AudioPlayerUIProps = {
     onForward: () => void
     onBackward: () => void
   }
+  buffered: TimeRanges
 }
 
 type AudioPlayerState = {
@@ -44,15 +46,18 @@ type AudioPlayerContainerProps = {
 
 const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const { inNativeApp } = useInNativeApp()
-  const { audioState, onCloseAudioPlayer, autoPlayActive } = useAudioContext()
+  const { audioState, onCloseAudioPlayer, autoPlayActive, audioPlayerVisible } =
+    useAudioContext()
   const [trackedAudioState, setTrackedAudioState] = useState<AudioState | null>(
     null,
   )
+  const [hasAutoPlayed, setHasAutoPlayed] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [playbackRate, setPlaybackRate] = usePlaybackRate(DEFAULT_PLAYBACK_RATE)
+  const [buffered, setBuffered] = useState<TimeRanges>(null)
 
   const audioRef = useRef<HTMLAudioElement>(null)
 
@@ -70,6 +75,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       setDuration(audioElem.duration)
       setPlaybackRate(audioElem.playbackRate)
       setIsPlaying(!audioElem.paused)
+      setBuffered(audioElem.buffered)
       return
     }
     throw new Error('no audio state to sync')
@@ -79,7 +85,8 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     console.log('onCanPlay')
     setIsLoading(false)
     syncState()
-    if (!isPlaying && autoPlayActive) {
+    if (!isPlaying && autoPlayActive && !hasAutoPlayed) {
+      setHasAutoPlayed(true)
       onPlay()
     }
   }
@@ -163,14 +170,14 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     if (isPlaying && audioRef.current) {
       const interval = setInterval(() => {
         syncState()
-      }, 500)
+      }, Math.min(DEFAULT_SYNC_INTERVAL / playbackRate, 1000))
       return () => clearInterval(interval)
     }
 
     if (!isPlaying) return
 
     throw new Error('no audio state to sync')
-  }, [syncState, isPlaying])
+  }, [syncState, isPlaying, playbackRate]) // adapt sync-interval to playbackRate
 
   // Update the local state if a new audio-state is provided
   useEffect(() => {
@@ -215,25 +222,27 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
 
   return (
     <div>
-      {children({
-        audioRef,
-        audioState,
-        isLoading,
-        isPlaying,
-        isSeeking: false,
-        currentTime: currentTime,
-        duration: duration,
-        playbackRate,
-        actions: {
-          onCanPlay,
-          onPlay,
-          onPause,
-          onStop,
-          onSeek,
-          onForward,
-          onBackward,
-        },
-      })}
+      {audioPlayerVisible &&
+        children({
+          audioRef,
+          audioState,
+          isLoading,
+          isPlaying,
+          isSeeking: false,
+          currentTime: currentTime,
+          duration: duration,
+          playbackRate,
+          actions: {
+            onCanPlay,
+            onPlay,
+            onPause,
+            onStop,
+            onSeek,
+            onForward,
+            onBackward,
+          },
+          buffered,
+        })}
     </div>
   )
 }

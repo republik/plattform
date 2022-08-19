@@ -12,6 +12,7 @@ const AudioPlayerUI = ({
   isPlaying,
   isLoading,
   actions,
+  buffered,
 }: AudioPlayerUIProps) => {
   const { inNativeApp } = useInNativeApp()
   const totalState = {
@@ -77,6 +78,7 @@ const AudioPlayerUI = ({
         currentTime={currentTime}
         duration={duration}
         actions={actions}
+        buffered={buffered}
       />
     </div>
   )

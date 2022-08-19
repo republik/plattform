@@ -1,4 +1,5 @@
 import React from 'react'
+import Scrubber from './Scrubber'
 
 type AudioPlayerActions = {
   onPlay: () => void
@@ -13,7 +14,7 @@ type AudioPlayerProps = {
   //
   currentTime?: number
   duration?: number
-  buffered?: TimeRanges[]
+  buffered?: TimeRanges
   //
   actions: AudioPlayerActions
 }
@@ -51,6 +52,12 @@ const AudioPlayer = ({
       <p>
         {renderTime(currentTime)} / {renderTime(duration)}
       </p>
+      <Scrubber
+        currentTime={currentTime}
+        duration={duration}
+        buffered={buffered}
+        onSeek={actions.onSeek}
+      />
     </div>
   )
 }
