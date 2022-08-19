@@ -136,9 +136,16 @@ export type FlyerTitleElement = SharedElement & {
   type: 'flyerTitle'
 }
 
+export type ResolvedAuthor = {
+  id: string
+  name: string
+  portrait: string
+}
+
 export type FlyerAuthorElement = SharedElement & {
   type: 'flyerAuthor'
   authorId?: string
+  resolvedAuthor?: ResolvedAuthor
 }
 
 export type FlyerPunchlineElement = SharedElement & {
