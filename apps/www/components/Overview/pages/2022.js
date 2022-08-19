@@ -273,6 +273,74 @@ const text = {
       .
     </>
   ),
+  Juni: (p) => (
+    <>
+      <Highlight {...p} ids={['glv0TLUza']}>
+        Warum die Antwort auf Putins Invasion eine feministische sein muss
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['SApR1eWlF']}>
+        Warum Grossbritannien so entschieden hinter der Ukraine steht
+      </Highlight>{' '}
+      und vor allem:{' '}
+      <Highlight {...p} ids={['A4-ug8Ux6']}>
+        Wann endet dieser Krieg
+      </Highlight>
+      ? Grüne, Amnesty, Jugendverbände:{' '}
+      <Highlight {...p} ids={['SoQnJ9oA9']}>
+        Der Schweizer Geheimdienst fichiert Unverdächtige
+      </Highlight>
+      . Zudem:{' '}
+      <Highlight
+        {...p}
+        series='republik/article-die-infokrieger-serienuebersicht'
+      >
+        eine Reise ans Ende der Schweizer Demokratie
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['ddlvqKBZU']}>
+        Haarsträubende Zustände in einer Grossbäckerei, die Aldi, Migros und
+        Coop beliefert
+      </Highlight>
+      . Und:{' '}
+      <Highlight {...p} ids={['N1SZWLst5']}>
+        Wie steht es um das Geschlechter­verhältnis in der Republik
+      </Highlight>
+      ?
+    </>
+  ),
+  Juli: (p) => (
+    <>
+      <Highlight {...p} ids={['SkrH_Fd3_']}>
+        Wie der Supreme Court die US-Demokratie aushöhlt
+      </Highlight>
+      . Wie aus Yandex – dem Google Russlands –{' '}
+      <Highlight {...p} ids={['10QhU0BAM']}>
+        ein Propagandainstrument des Kreml
+      </Highlight>{' '}
+      wurde.{' '}
+      <Highlight {...p} ids={['hHg-M5yyn']}>
+        Und hat ein Chatbot vor kurzem wirklich ein Bewusstsein erlangt
+      </Highlight>
+      ?{' '}
+      <Highlight {...p} ids={['Ss8CvrWc5']}>
+        Gelten demnach Computerprogramme bald als Personen
+      </Highlight>
+      ? Weltweit leiden Millionen von Menschen an Hunger –{' '}
+      <Highlight {...p} ids={['jO1tuGfOQ']}>
+        obwohl genug Nahrung da wäre
+      </Highlight>
+      . Dazu eine Utopie:{' '}
+      <Highlight {...p} ids={['MtoKEob8A']}>
+        Wie lassen sich 10 Milliarden Menschen nachhaltig ernähren
+      </Highlight>
+      ? Und überhaupt:{' '}
+      <Highlight {...p} series='republik/article-serie-schoene-bessere-welt'>
+        Wie lässt sich eine schönere, bessere Welt gestalten
+      </Highlight>
+      ?
+    </>
+  ),
 }
 
 const Overview2022 = (props) => <Page {...props} year={2022} text={text} />

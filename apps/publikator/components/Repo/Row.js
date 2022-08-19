@@ -1,4 +1,5 @@
-import { MdLock as LockIcon, MdPublic as PublicIcon } from 'react-icons/md'
+import LockIcon from 'react-icons/lib/md/lock'
+import PublicIcon from 'react-icons/lib/md/public'
 
 import { A, Label, colors } from '@project-r/styleguide'
 

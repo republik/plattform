@@ -10,14 +10,14 @@ import { mUp } from '../../theme/mediaQueries'
 type Props = {
   children?: React.ReactNode
   attributes: object
-  title: string
   description: string
   href: string
+  title?: string
 }
 
 export type StateProps = {
   href: string
-  title: string
+  title?: string
   description: string
   position: CSSProperties
 }
@@ -48,9 +48,9 @@ const Portal: React.FC<{ children: ReactElement }> = ({ children }) => {
 const ExpandableLink = ({
   children,
   attributes,
-  title,
   description,
   href,
+  title,
 }: Props) => {
   const [colorScheme] = useColorContext()
   const [expandedLink, setExpandedLink] = useState<StateProps>(undefined)
@@ -125,6 +125,7 @@ const ExpandableLink = ({
       {...colorScheme.set('color', 'text')}
       {...colorScheme.set('textDecorationColor', 'textSoft')}
       aria-label={description}
+      title={title}
       href={href}
       onClick={(event) => {
         if (shouldIgnoreClick(event)) {

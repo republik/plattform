@@ -11,10 +11,8 @@ import ErrorMessage from '../ErrorMessage'
 
 import { SUPPORTED_TOKEN_TYPES } from '../constants'
 
-import {
-  MdOutlineMail as EmailTokenIcon,
-  MdPhonelink as AppTokenIcon,
-} from 'react-icons/md'
+import EmailTokenIcon from 'react-icons/lib/md/mail-outline'
+import AppTokenIcon from 'react-icons/lib/md/phonelink'
 
 import { Interaction, Label, A, RawHtml } from '@project-r/styleguide'
 

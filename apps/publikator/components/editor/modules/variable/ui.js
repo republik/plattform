@@ -1,9 +1,9 @@
 import { Map } from 'immutable'
 import { parse } from '@orbiting/remark-preset'
-import { Inline } from 'slate'
+import { Block, Inline } from 'slate'
 
 import { Label } from '@project-r/styleguide'
-import { FaTag as InsertVarIcon } from 'react-icons/fa'
+import InsertVarIcon from 'react-icons/lib/fa/tag'
 
 import MetaForm from '../../utils/MetaForm'
 import withT from '../../../../lib/withT'

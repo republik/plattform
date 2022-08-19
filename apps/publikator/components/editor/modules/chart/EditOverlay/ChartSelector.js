@@ -9,7 +9,7 @@ import {
 import { baseCharts } from './config'
 import { css, merge } from 'glamor'
 import { JSONEditor, PlainEditor } from '../../../utils/CodeEditorFields'
-import { MdChevronLeft as BackIcon } from 'react-icons/md'
+import BackIcon from 'react-icons/lib/md/chevron-left'
 import { styles as overlayStyles } from '../../../utils/OverlayForm'
 import ChartActions from './ChartActions'
 
