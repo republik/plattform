@@ -261,6 +261,15 @@ const Styleguide = () => {
                       src: require('./components/VideoPlayer/docs.md'),
                     },
                     {
+                      path: '/audioplayer',
+                      title: 'AudioPlayer',
+                      imports: {
+                        t,
+                        css,
+                        ...require('./components/AudioPlayer'),
+                      },
+                    },
+                    {
                       path: '/legacy-audioplayer',
                       title: 'Legacy AudioPlayer',
                       imports: {
