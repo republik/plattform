@@ -5,6 +5,7 @@ import debounce from 'lodash/debounce'
 
 import Autocomplete from '../Form/Autocomplete'
 import { InlineSpinner } from '../Spinner'
+import { ErrorMessage } from './components/editor/ui/ErrorMessage'
 
 const getAuthors = gql`
   query getAuthors($search: String!) {
@@ -49,11 +50,13 @@ const ConnectedAutoComplete = graphql(getAuthors, {
   props: ({ data }) => ({
     data: data,
     items:
-      data.loading ||
-      data.users.slice(0, 5).map((user) => ({
-        value: user,
-        element: <UserItem user={user} />,
-      })),
+      (!data.loading &&
+        data.users &&
+        data.users.slice(0, 5).map((user) => ({
+          value: user,
+          element: <UserItem user={user} />,
+        }))) ||
+      [],
   }),
 })((props) => (
   <span style={{ position: 'relative', display: 'block' }}>
@@ -69,6 +72,9 @@ const ConnectedAutoComplete = graphql(getAuthors, {
       >
         <InlineSpinner size={35} />
       </span>
+    )}
+    {props.data?.error && (
+      <ErrorMessage error={props.data?.error?.toString()} />
     )}
   </span>
 ))

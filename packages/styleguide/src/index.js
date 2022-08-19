@@ -72,7 +72,8 @@ const DarkModeSwitch = ({ setColorSchemeKey, colorSchemeKey }) => {
 }
 
 const client = new ApolloClient({
-  uri: process.env.API_URL,
+  uri: process.env.REACT_APP_API_URL,
+  credentials: 'include',
   cache: new InMemoryCache(),
 })
 
