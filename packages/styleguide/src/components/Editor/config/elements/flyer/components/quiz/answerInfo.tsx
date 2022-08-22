@@ -1,4 +1,4 @@
-import { ElementConfigI } from '../../../custom-types'
+import { ElementConfigI } from '../../../../../custom-types'
 
 export const config: ElementConfigI = {
   component: 'quizAnswerInfo',

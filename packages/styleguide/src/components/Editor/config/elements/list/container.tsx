@@ -19,8 +19,8 @@ export const ulConfig: ElementConfigI = {
 }
 
 export const olConfig: ElementConfigI = {
-  button: { icon: OlIcon },
   component: 'list',
+  button: { icon: OlIcon },
   defaultProps: {
     ordered: true,
   },

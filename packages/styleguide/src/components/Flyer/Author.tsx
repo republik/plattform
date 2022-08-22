@@ -1,11 +1,5 @@
 import React from 'react'
-import {
-  ElementConfigI,
-  ElementFormProps,
-  FlyerAuthorElement,
-  ResolvedAuthor,
-} from '../../../../custom-types'
-import AuthorSearch from '../../../../AuthorSearch'
+import { ResolvedAuthor } from '../Editor/custom-types'
 
 export const FlyerAuthor: React.FC<{
   resolvedAuthor?: ResolvedAuthor
@@ -44,29 +38,3 @@ export const FlyerAuthor: React.FC<{
     {children}
   </div>
 )
-
-const Form: React.FC<ElementFormProps<FlyerAuthorElement>> = ({
-  element,
-  onChange,
-}) => (
-  <div>
-    AUTHOR FORM
-    <br />
-    ID: {element.authorId}
-    <AuthorSearch
-      onChange={({ value }) => {
-        onChange({ authorId: value.id, resolvedAuthor: value })
-      }}
-    />
-  </div>
-)
-
-export const config: ElementConfigI = {
-  component: 'flyerAuthor',
-  Form,
-  props: ['authorId', 'resolvedAuthor'],
-  attrs: {
-    isVoid: true,
-    highlightSelected: true,
-  },
-}

@@ -1,5 +1,16 @@
 import React from 'react'
-import { SchemaConfig } from '../../../custom-types'
+import { SchemaConfig } from '../../custom-types'
+
+export const DefaultContainer: React.FC<{
+  attributes: any
+  [x: string]: unknown
+}> = ({ attributes, children, ...props }) => {
+  return (
+    <div {...attributes} {...props} style={{ position: 'relative' }}>
+      {children}
+    </div>
+  )
+}
 
 export const LayoutContainer: React.FC<{
   schema: SchemaConfig

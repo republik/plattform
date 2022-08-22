@@ -5,47 +5,10 @@ import {
   NormalizeFn,
 } from '../../custom-types'
 import { LinkIcon } from '../../../Icons'
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import Field from '../../../Form/Field'
 import { Editor, Transforms } from 'slate'
-import { useColorContext } from '../../../Colors/ColorContext'
-import { css } from 'glamor'
-import { link } from '../../../Typography/Editorial'
 import { getFullUrl, getLinkInText } from '../../components/editor/helpers/text'
-
-// TODO: Slate is very much not happy with forwardRef wrapped around the component
-//  check that this fix wont cause problems.
-export const NoRefEditoralA = ({ children, attributes, ...props }) => {
-  const [colorScheme] = useColorContext()
-  const hoverRule = useMemo(
-    () =>
-      css({
-        '@media (hover)': {
-          ':hover': {
-            color: colorScheme.getCSSColor('textSoft'),
-          },
-        },
-      }),
-    [colorScheme],
-  )
-  return (
-    <a
-      {...colorScheme.set('color', 'text')}
-      {...attributes}
-      {...props}
-      {...link}
-      {...hoverRule}
-    >
-      {children}
-    </a>
-  )
-}
-
-export const NoRefA = ({ children, attributes, ...props }) => (
-  <a {...attributes} {...props} {...link}>
-    {children}
-  </a>
-)
 
 const Form: React.FC<ElementFormProps<LinkElement>> = ({
   element,

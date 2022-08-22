@@ -14,8 +14,6 @@ import { Editorial, Sub, Sup, Bold, Italic } from '../../Typography'
 import { FigureByline, FigureCaption } from '../../Figure'
 import { Break } from '../../Typography/Break'
 
-import { NoRefEditoralA } from '../config/elements/link'
-
 const schema: SchemaConfig = {
   container: CommentBodyContainer,
   blockQuote: CommentBodyBlockQuote,
@@ -26,7 +24,7 @@ const schema: SchemaConfig = {
   listItem: ListItem,
   break: Break,
   headline: CommentBodyHeading,
-  link: NoRefEditoralA,
+  link: Editorial.NoRefA,
   paragraph: CommentBodyParagraph,
   bold: Bold,
   italic: Italic,

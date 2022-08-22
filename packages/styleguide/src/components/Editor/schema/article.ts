@@ -8,8 +8,6 @@ import { PullQuote, PullQuoteSource, PullQuoteText } from '../../PullQuote'
 import { Editorial, Sub, Sup } from '../../Typography'
 import { Break } from '../../Typography/Break'
 
-import { NoRefEditoralA } from '../config/elements/link'
-
 const schema: SchemaConfig = {
   blockQuote: BlockQuote,
   blockQuoteText: BlockQuoteParagraph,
@@ -24,7 +22,7 @@ const schema: SchemaConfig = {
   pullQuoteText: PullQuoteText,
   break: Break,
   headline: Editorial.Subhead,
-  link: NoRefEditoralA,
+  link: Editorial.NoRefA,
   paragraph: Editorial.P,
   bold: Editorial.Emphasis,
   italic: Editorial.Cursive,

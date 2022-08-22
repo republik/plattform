@@ -1,6 +1,6 @@
 import React from 'react'
-import { useColorContext } from '../../../../Colors/ColorContext'
-import { Label } from '../../../../Typography'
+import { useColorContext } from '../../../Colors/ColorContext'
+import { Label } from '../../../Typography'
 
 const icons = {
   info: 'ℹ️',

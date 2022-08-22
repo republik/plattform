@@ -7,10 +7,9 @@ import {
   SchemaConfig,
 } from '../../custom-types'
 import { config as elConfig } from '../../config/elements'
-import { Element as SlateElement } from 'slate'
-import { LayoutContainer } from '../editor/ui/Layout'
-import { cleanupTree } from '../editor/helpers/tree'
 import { Marks } from './Mark'
+import { LayoutContainer } from './Containers'
+import { isSlateElement } from './helpers'
 
 const RenderedLeaf: React.FC<{
   leaf: CustomText
@@ -27,7 +26,7 @@ const RenderNodes: React.FC<{
 }> = ({ nodes, schema }) => (
   <>
     {nodes.map((node: CustomDescendant, i) =>
-      SlateElement.isElement(node) ? (
+      isSlateElement(node) ? (
         <RenderedElement element={node} schema={schema} key={i} />
       ) : (
         <RenderedLeaf leaf={node} schema={schema} key={i} />
@@ -64,7 +63,7 @@ const SlateRender: React.FC<{
   schema: SchemaConfig
 }> = ({ value, schema }) => (
   <LayoutContainer schema={schema}>
-    <RenderNodes nodes={cleanupTree(value, true)} schema={schema} />
+    <RenderNodes nodes={value} schema={schema} />
   </LayoutContainer>
 )
 export default SlateRender

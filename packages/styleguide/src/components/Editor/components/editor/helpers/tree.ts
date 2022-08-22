@@ -69,7 +69,7 @@ export const cleanupNode: (allowList: string[]) => NormalizeFn<CustomNode> =
         Transforms.unsetNodes(editor, prop, { at: path })
       }
     }
-    // tree hasn't change
+    // tree hasn't changed
     return false
   }
 

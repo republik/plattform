@@ -6,17 +6,6 @@ import { CustomElementsType, ButtonConfig } from '../../../custom-types'
 import { toggleElement } from '../helpers/structure'
 import { useFormContext } from './Forms'
 
-export const ContainerComponent: React.FC<{
-  attributes: any
-  [x: string]: unknown
-}> = ({ attributes, children, ...props }) => {
-  return (
-    <div {...attributes} {...props} style={{ position: 'relative' }}>
-      {children}
-    </div>
-  )
-}
-
 export const ElementButton: React.FC<{
   config: ButtonConfig
 }> = ({ config }) => {

@@ -1,5 +1,12 @@
 import React from 'react'
 import { useColorContext } from '../Colors/ColorContext'
+import { link } from './Editorial'
+
+export const Layout = ({ children, attributes }) => (
+  <div style={{ backgroundColor: '#FFE501' }} {...attributes}>
+    {children}
+  </div>
+)
 
 export const H1 = ({ children, attributes, ...props }) => (
   <h1
@@ -96,4 +103,14 @@ export const Small = ({ children, attributes, ...props }) => (
   >
     {children}
   </p>
+)
+
+// TODO: forwardRef is problematic inside Slate
+//  check if this is OK
+//  otherwise use a link with forward ref on render
+//  and one without in the editor
+export const A = ({ children, attributes, ...props }) => (
+  <a {...attributes} {...props} {...link}>
+    {children}
+  </a>
 )

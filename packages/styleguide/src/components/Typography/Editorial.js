@@ -285,6 +285,36 @@ export const A = React.forwardRef(({ children, attributes, ...props }, ref) => {
   )
 })
 
+// TODO: forwardRef is problematic inside Slate
+//  check if this is OK
+//  otherwise use a link with forward ref on render
+//  and one without in the editor
+export const NoRefA = ({ children, attributes, ...props }) => {
+  const [colorScheme] = useColorContext()
+  const hoverRule = useMemo(
+    () =>
+      css({
+        '@media (hover)': {
+          ':hover': {
+            color: colorScheme.getCSSColor('textSoft'),
+          },
+        },
+      }),
+    [colorScheme],
+  )
+  return (
+    <a
+      {...colorScheme.set('color', 'text')}
+      {...attributes}
+      {...props}
+      {...link}
+      {...hoverRule}
+    >
+      {children}
+    </a>
+  )
+}
+
 const note = css({
   ...convertStyleToRem(styles.sansSerifRegular12),
   margin: '22px 0',

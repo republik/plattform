@@ -5,7 +5,7 @@ import debounce from 'lodash/debounce'
 
 import Autocomplete from '../Form/Autocomplete'
 import { InlineSpinner } from '../Spinner'
-import { ErrorMessage } from './components/editor/ui/ErrorMessage'
+import { ErrorMessage } from './components/render/Message'
 
 const getAuthors = gql`
   query getAuthors($search: String!) {
