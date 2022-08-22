@@ -1,5 +1,6 @@
 import { withRouter } from 'next/router'
-import { Editor, flyerSchema, flyerEditorSchema } from '@project-r/styleguide'
+import { flyerSchema } from '@project-r/styleguide'
+import { Editor, flyerEditorSchema } from '@project-r/styleguide/editor'
 import withAuthorization from '../../components/Auth/withAuthorization'
 import { HEADER_HEIGHT } from '../Frame/constants'
 import compose from 'lodash/flowRight'

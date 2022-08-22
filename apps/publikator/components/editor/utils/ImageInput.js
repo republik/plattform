@@ -1,7 +1,7 @@
 import { css } from 'glamor'
 import { Label } from '@project-r/styleguide'
 import withT from '../../../lib/withT'
-import { MdClose } from 'react-icons/md'
+import MdClose from 'react-icons/lib/md/close'
 
 const styles = {
   label: css({

@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { EditorToolbar, IconButton, colors } from '@project-r/styleguide'
+import { IconButton, colors } from '@project-r/styleguide'
+import { EditorToolbar } from '@project-r/styleguide/editor'
 import { editorToolbarStyle } from '../ContentEditor'
 import PreviewFrame from '../PreviewFrame'
 import { screenSizes } from '../ScreenSizePicker'

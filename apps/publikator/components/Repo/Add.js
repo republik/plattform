@@ -28,10 +28,8 @@ import {
 } from '../../lib/settings'
 
 import { withRouter } from 'next/router'
-import {
-  MdSearch as SearchIcon,
-  MdOutlineInfo as InfoIcon,
-} from 'react-icons/md'
+import SearchIcon from 'react-icons/lib/md/search'
+import InfoIcon from 'react-icons/lib/md/info-outline'
 
 const getTemplateRepos = gql`
   query templateListSearch {

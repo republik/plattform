@@ -18,11 +18,9 @@ import {
   mediaQueries,
   Interaction,
 } from '@project-r/styleguide'
-import {
-  MdCode as Code,
-  MdEdit as Edit,
-  MdPublic as Public,
-} from 'react-icons/md'
+import Code from 'react-icons/lib/md/code'
+import Edit from 'react-icons/lib/md/edit'
+import Public from 'react-icons/lib/md/public'
 import { css } from 'glamor'
 import TypeSelector from './TypeSelector'
 import { FRONTEND_BASE_URL } from '../../../../../lib/settings'

@@ -1,9 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
-import {
-  useColorContext,
-  Loader,
-  EDITOR_TOOLBAR_HEIGHT,
-} from '@project-r/styleguide'
+import { useColorContext, Loader } from '@project-r/styleguide'
+import { EDITOR_TOOLBAR_HEIGHT } from '@project-r/styleguide/editor'
 
 import { SIDEBAR_WIDTH } from '../Sidebar'
 import { HEADER_HEIGHT } from '../Frame/constants'

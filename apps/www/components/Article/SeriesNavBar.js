@@ -13,8 +13,9 @@ import {
   useBodyScrollLock,
   useHeaderHeight,
   SeriesNav,
+  shouldIgnoreClick,
 } from '@project-r/styleguide'
-import { cleanAsPath, shouldIgnoreClick } from '../../lib/utils/link'
+import { cleanAsPath } from '../../lib/utils/link'
 import TrialPayNoteMini from './TrialPayNoteMini'
 import withT from '../../lib/withT'
 const styles = {

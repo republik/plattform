@@ -3,13 +3,15 @@ import {
   ElementConfigI,
   ElementFormProps,
   FlyerAuthorElement,
+  ResolvedAuthor,
 } from '../../../../custom-types'
+import AuthorSearch from '../../../../AuthorSearch'
 
 export const FlyerAuthor: React.FC<{
-  authorId?: string
+  resolvedAuthor?: ResolvedAuthor
   attributes: any
   [x: string]: unknown
-}> = ({ children, attributes, authorId, ...props }) => (
+}> = ({ children, attributes, resolvedAuthor, ...props }) => (
   <div {...attributes} {...props}>
     <div
       contentEditable={false}
@@ -17,17 +19,17 @@ export const FlyerAuthor: React.FC<{
         display: 'flex',
         alignItems: 'center',
         padding: '15px 0',
-        opacity: authorId ? 1 : 0.4,
+        opacity: resolvedAuthor ? 1 : 0.4,
       }}
     >
-      <img
-        style={{ marginRight: 15 }}
-        src={
-          authorId ? '/static/christof_moser.jpg' : '/static/placeholder.png'
-        }
-        width='50'
-        height='50'
-      />
+      {resolvedAuthor?.portrait && (
+        <img
+          style={{ marginRight: 15 }}
+          src={resolvedAuthor.portrait}
+          width='50'
+          height='50'
+        />
+      )}
       <span
         style={{
           fontWeight: 300,
@@ -36,7 +38,7 @@ export const FlyerAuthor: React.FC<{
           textTransform: 'uppercase',
         }}
       >
-        {authorId ? 'Christof Moser' : 'Flyer Author'}
+        {resolvedAuthor?.name || 'Unresolved Author'}
       </span>
     </div>
     {children}
@@ -46,12 +48,23 @@ export const FlyerAuthor: React.FC<{
 const Form: React.FC<ElementFormProps<FlyerAuthorElement>> = ({
   element,
   onChange,
-}) => <div>AUTHOR FORM</div>
+}) => (
+  <div>
+    AUTHOR FORM
+    <br />
+    ID: {element.authorId}
+    <AuthorSearch
+      onChange={({ value }) => {
+        onChange({ authorId: value.id, resolvedAuthor: value })
+      }}
+    />
+  </div>
+)
 
 export const config: ElementConfigI = {
   component: 'flyerAuthor',
   Form,
-  props: ['authorId'],
+  props: ['authorId', 'resolvedAuthor'],
   attrs: {
     isVoid: true,
     highlightSelected: true,
