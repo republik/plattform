@@ -62,7 +62,7 @@ export const config: ElementConfigI = {
     formatText: true,
   },
   button: { icon: LinkIcon },
-  component: 'link',
   normalizations: [unlinkWhenEmpty, checkAutolink],
+  structure: [{ type: ['text'], repeat: true }],
   props: ['href'],
 }

@@ -5,4 +5,4 @@ export { default as Editor } from './components/Editor'
 export { default as AuthorSearch } from './components/Editor/AuthorSearch'
 
 export { ToolbarContainer as EditorToolbar } from './components/Editor/components/editor/ui/Toolbar'
-export { editorSchema as flyerEditorSchema } from './components/Editor/schema/flyer'
+export { default as flyerEditorSchema } from './components/Editor/schema/flyerEditor'

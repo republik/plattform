@@ -92,14 +92,14 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
     const blockUi = config.attrs?.blockUi
     const highlightSelected = config.attrs?.highlightSelected
     const Component =
-      editor.customConfig.editorSchema?.[config.component] ||
-      editor.customConfig.schema[config.component]
+      editor.customConfig.editorSchema?.[element.type] ||
+      editor.customConfig.schema[element.type]
 
     if (!Component) {
       return (
         <ErrorMessage
           attributes={attributes}
-          error={`${config.component} component missing in schema`}
+          error={`${element.type} component missing in schema`}
         >
           {children}
         </ErrorMessage>

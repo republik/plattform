@@ -1,7 +1,7 @@
 import { createEditor } from 'slate'
 import { cleanupTree } from '../editor/helpers/tree'
 import schema from '../../schema/article'
-import { schema as flyerSchema } from '../../schema/flyer'
+import flyerSchema from '../../schema/flyer'
 import mockEditor from './mockEditor'
 
 describe('Slate Editor: Normalisation', () => {
@@ -903,7 +903,7 @@ describe('Slate Editor: Normalisation', () => {
           type: 'paragraph',
         },
       ]
-      const editor = await setup(structure)
+      await setup(structure)
       expect(cleanupTree(value)).toEqual([
         {
           type: 'paragraph',

@@ -13,8 +13,8 @@ export const Message: React.FC<{
 }> = ({ text, type = 'info' }) => {
   const [colorScheme] = useColorContext()
   return (
-    <div
-      style={{ userSelect: 'none', marginBottom: 10 }}
+    <span
+      style={{ userSelect: 'none', marginBottom: 10, display: 'block' }}
       contentEditable={false}
     >
       <Label>
@@ -27,7 +27,7 @@ export const Message: React.FC<{
           {text}
         </span>
       </Label>
-    </div>
+    </span>
   )
 }
 
@@ -35,8 +35,12 @@ export const ErrorMessage: React.FC<{
   attributes: any
   error: string
 }> = ({ error, attributes, children }) => (
-  <div {...attributes} style={{ userSelect: 'none' }} contentEditable={false}>
+  <span
+    {...attributes}
+    style={{ userSelect: 'none', display: 'block' }}
+    contentEditable={false}
+  >
     <Message text={error} type='error' />
     {children}
-  </div>
+  </span>
 )

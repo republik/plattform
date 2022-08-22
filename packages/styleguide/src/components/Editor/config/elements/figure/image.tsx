@@ -43,7 +43,6 @@ const Form: React.FC<ElementFormProps<FigureImageElement>> = ({
 )
 
 export const config: ElementConfigI = {
-  component: 'figureImage',
   Form,
   attrs: {
     isVoid: true,

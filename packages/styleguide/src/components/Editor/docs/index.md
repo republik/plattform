@@ -99,7 +99,6 @@ import { ElementConfigI } from '../../custom-types'
 import { ContainerComponent } from '../../editor/Element'
 
 export const config: ElementConfigI = {
-  component: 'carousel',
   structure: [
     { type: 'carouselTitle' },
     { 
@@ -184,9 +183,7 @@ export type CustomElementsType =
 import { ElementConfigI } from '../../custom-types'
 import { Editorial } from '@project-r/styleguide'
 
-export const config: ElementConfigI = {
-  component: 'carouselTitle'
-}
+export const config: ElementConfigI = {}
 ```
 
 - We complete the `schema`.
@@ -253,7 +250,6 @@ export const config: ElementConfigI = {
     isVoid: true,
     highlightSelected: true,
   },
-  component: 'figureImage',
   props: ['src', 'srcDark', 'alt'],
 }
 ```
@@ -345,7 +341,6 @@ type CustomMarks = {
 import { StrikeThrough } from '../../../Icons'
 
 export const config: MarkConfigI = {
-  component: 'strikethrough',
   button: { icon: StrikeThrough },
 }
 ```
@@ -536,7 +531,6 @@ Example: the image node of a figure is the main node of the figure structure (im
 
 ```code|lang-js
 export const config: ElementConfigI = {
-  component: 'figureCaption',
   structure: [
     { type: ['text', 'link'], repeat: true },
     { type: 'figureByline' },
@@ -584,7 +578,6 @@ export const config: ElementConfigI = {
     isVoid: true,
     highlightSelected: true,
   },
-  component: 'figureImage',
   props: ['src', 'srcDark', 'alt'],
 }
 ```
@@ -688,7 +681,6 @@ See once more `figureCaption`, where `figureByline` should be the last element:
 
 ```code|lang-js
 export const config: ElementConfigI = {
-  component: 'figureCaption',
   structure: [
     { type: ['text', 'link'], repeat: true },
     { type: 'figureByline' },

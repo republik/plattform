@@ -1,6 +1,5 @@
 import React from 'react'
-import { CustomText, SchemaConfig } from '../../custom-types'
-import { config as mConfig, configKeys as mKeys } from '../../config/marks'
+import { CustomText, MarksConfig, SchemaConfig } from '../../custom-types'
 
 const Recurse: React.FC<{
   components?: React.FC[]
@@ -20,8 +19,8 @@ export const Marks: React.FC<{
   leaf: CustomText
   schema: SchemaConfig
 }> = ({ children, leaf, schema }) => {
-  const mComponents = mKeys
-    .filter((mKey) => leaf[mKey])
-    .map((mKey) => schema[mConfig[mKey].component])
+  const { text, end, placeholder, template, ...marks } = leaf
+  const mKeys = Object.keys(marks) as (keyof MarksConfig)[]
+  const mComponents = mKeys.map((mKey) => schema[mKey]).filter(Boolean)
   return <Recurse components={mComponents}>{children}</Recurse>
 }

@@ -187,4 +187,4 @@ export * from './components/Icons'
 export * from './templates'
 
 export { default as SlateRender } from './components/Editor/components/render'
-export { schema as flyerSchema } from './components/Editor/schema/flyer'
+export { default as flyerSchema } from './components/Editor/schema/flyer'

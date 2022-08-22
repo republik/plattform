@@ -23,7 +23,6 @@ const Form: React.FC<ElementFormProps<FlyerAuthorElement>> = ({
 )
 
 export const config: ElementConfigI = {
-  component: 'flyerAuthor',
   Form,
   props: ['authorId', 'resolvedAuthor'],
   attrs: {

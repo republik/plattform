@@ -251,10 +251,6 @@ export type CustomElementsType =
   | 'quizAnswer'
   | 'quizAnswerInfo'
 
-// include overlapping types (e.g. ol and ul both want to render 'list'
-// include 'container' type
-export type ExtendedElementType = CustomElementsType | 'list' | 'container'
-
 interface ButtonI {
   icon: IconType
   small?: boolean
@@ -292,7 +288,6 @@ type SchemaConfig = {
 }
 
 export interface MarkConfigI {
-  component: MarkType
   remove?: MarkType[]
   button?: ButtonI
 }
@@ -317,7 +312,6 @@ export type NodeTemplate = {
 }
 
 export interface ElementConfigI {
-  component: ExtendedElementType
   attrs?: ElementAttrsI
   normalizations?: NormalizeFn[]
   structure?: NodeTemplate[]

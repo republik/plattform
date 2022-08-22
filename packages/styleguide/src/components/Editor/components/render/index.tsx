@@ -6,7 +6,6 @@ import {
   CustomText,
   SchemaConfig,
 } from '../../custom-types'
-import { config as elConfig } from '../../config/elements'
 import { Marks } from './Mark'
 import { LayoutContainer } from './Containers'
 import { isSlateElement } from './helpers'
@@ -40,12 +39,7 @@ export const RenderedElement: React.FC<{
   schema: SchemaConfig
 }> = ({ element, schema }) => {
   const { type, children, ...customElProps } = element
-  const config = elConfig[type]
-  if (!config) {
-    console.warn('Config for', type, 'missing')
-    return null
-  }
-  const Component = schema[config.component]
+  const Component = schema[type]
   // console.log({ type })
   if (!Component) {
     console.warn('Component for', element.type, 'missing')

@@ -12,7 +12,6 @@ const Form: React.FC<ElementFormProps<ArticlePreviewElement>> = ({
 }) => <div>ARTICLE PREVIEW FORM</div>
 
 export const config: ElementConfigI = {
-  component: 'articlePreview',
   Form,
   attrs: {
     isVoid: true,

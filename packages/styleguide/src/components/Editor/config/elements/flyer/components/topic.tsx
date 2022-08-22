@@ -1,5 +1,5 @@
 import { ElementConfigI } from '../../../../custom-types'
 
 export const config: ElementConfigI = {
-  component: 'flyerTopic',
+  structure: [{ type: ['text'], repeat: true }],
 }

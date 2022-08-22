@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { css } from 'glamor'
 import { plainButtonRule } from '../Button'
-import { schema } from '../Editor/schema/flyer'
+import schema from '../Editor/schema/flyer'
 import { Message } from '../Editor/components/render/Message'
 import { RenderedElement } from '../Editor/components/render'
 import { isSlateElement } from '../Editor/components/render/helpers'

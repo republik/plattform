@@ -21,7 +21,6 @@ const Form: React.FC<ElementFormProps<QuizItemElement>> = ({
 )
 
 export const config: ElementConfigI = {
-  component: 'quizItem',
   structure: [{ type: 'quizAnswer', main: true }, { type: 'quizAnswerInfo' }],
   props: ['isCorrect'],
   Form,

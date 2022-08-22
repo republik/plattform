@@ -37,7 +37,6 @@ const Form: React.FC<ElementFormProps<FigureElement>> = ({
 )
 
 export const config: ElementConfigI = {
-  component: 'figure',
   Form,
   button: { icon: ImageIcon },
   props: ['size'],

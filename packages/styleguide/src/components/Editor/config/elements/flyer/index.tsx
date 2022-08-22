@@ -13,7 +13,6 @@ const Form: React.FC<ElementFormProps<FlyerTileElement>> = ({
 }) => <div>FLYER TILE FORM</div>
 
 export const config: ElementConfigI = {
-  component: 'flyerTile',
   structure: [
     { type: 'flyerMetaP', main: true },
     { type: 'flyerTopic' },

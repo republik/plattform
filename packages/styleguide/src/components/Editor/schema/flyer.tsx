@@ -14,9 +14,11 @@ import { DefaultContainer } from '../components/render/Containers'
 import { Break } from '../../Typography/Break'
 import { Editorial, Sub, Sup, Interaction, Flyer } from '../../Typography'
 
-export const schema: SchemaConfig = {
+const schema: SchemaConfig = {
   container: Flyer.Layout,
   flyerTile: FlyerTile,
+  flyerTileOpening: FlyerTile,
+  flyerTileClosing: FlyerTile,
   flyerAuthor: FlyerAuthor,
   flyerMetaP: Flyer.MetaP,
   flyerPunchline: FigureCaption,
@@ -28,7 +30,8 @@ export const schema: SchemaConfig = {
   figureCaption: FigureCaption,
   figure: Figure,
   figureImage: FigureImage,
-  list: List,
+  ul: List,
+  ol: List,
   listItem: ListItem,
   pullQuote: PullQuote,
   pullQuoteSource: PullQuoteSource,
@@ -46,3 +49,5 @@ export const schema: SchemaConfig = {
   quizAnswer: QuizAnswer,
   quizAnswerInfo: DefaultContainer,
 }
+
+export default schema

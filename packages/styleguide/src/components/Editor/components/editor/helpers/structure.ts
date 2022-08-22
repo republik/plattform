@@ -195,14 +195,6 @@ const convertBlock = (
     ...(insertConfig.defaultProps || {}),
   }
 
-  if (
-    insertConfig.component === targetConfig.component &&
-    insertConfig.defaultProps
-  ) {
-    Transforms.setNodes(editor, insertPartial, { at: target[1] })
-    return target[1]
-  }
-
   const mainElKey = getMainElement(insertConfig.structure)
   const mainElPartial = mainElKey && {
     type: mainElKey,

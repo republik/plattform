@@ -2,7 +2,7 @@ import { ElementConfigI } from '../../custom-types'
 import { CodeIcon } from '../../../Icons'
 
 export const config: ElementConfigI = {
-  component: 'inlineCode',
+  structure: [{ type: ['text'], repeat: true }],
   attrs: {
     isInline: true,
     isTextInline: true,

@@ -1,7 +1,6 @@
 import { ElementConfigI } from '../../../custom-types'
 
 export const config: ElementConfigI = {
-  component: 'figureCaption',
   structure: [
     { type: ['text', 'link'], repeat: true },
     { type: 'figureByline' },

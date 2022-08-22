@@ -3,9 +3,10 @@ import { ResolvedAuthor } from '../Editor/custom-types'
 
 export const FlyerAuthor: React.FC<{
   resolvedAuthor?: ResolvedAuthor
+  authorId?: string
   attributes: any
   [x: string]: unknown
-}> = ({ children, attributes, resolvedAuthor, ...props }) => (
+}> = ({ children, attributes, authorId, resolvedAuthor, ...props }) => (
   <div {...attributes} {...props}>
     <div
       contentEditable={false}
@@ -32,7 +33,7 @@ export const FlyerAuthor: React.FC<{
           textTransform: 'uppercase',
         }}
       >
-        {resolvedAuthor?.name || 'Unresolved Author'}
+        {resolvedAuthor?.name || 'Author'}
       </span>
     </div>
     {children}

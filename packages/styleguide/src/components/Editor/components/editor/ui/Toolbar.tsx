@@ -85,7 +85,7 @@ const getElementButtons = (
       const config = elConfig[elKey]
       return (
         config.button &&
-        editor.customConfig.schema[config.component] &&
+        editor.customConfig.schema[elKey] &&
         (isInline ? config.attrs?.isInline : !config.attrs?.isInline)
       )
     })
