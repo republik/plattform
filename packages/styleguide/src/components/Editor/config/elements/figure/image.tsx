@@ -3,14 +3,10 @@ import {
   ElementConfigI,
   ElementFormProps,
   FigureImageElement,
-  FigureImages,
 } from '../../../custom-types'
 import ImageInput from './ImageInput'
-import { FigureImage as InnerFigureImage } from '../../../../Figure'
 import { Label } from '../../../../Typography'
 import { css } from 'glamor'
-
-const PLACEHOLDER = '/static/placeholder.png'
 
 const styles = {
   container: css({
@@ -18,26 +14,6 @@ const styles = {
     gridTemplateColumns: 'repeat(2, 1fr)',
     gridColumnGap: 20,
   }),
-}
-
-export const FigureImage: React.FC<{
-  images?: FigureImages
-  alt?: string
-  attributes: any
-  [x: string]: unknown
-}> = ({ children, images, alt, attributes, ...props }) => {
-  return (
-    <div {...attributes} {...props}>
-      <div contentEditable={false}>
-        <InnerFigureImage
-          src={images?.default?.url || PLACEHOLDER}
-          dark={images?.dark?.url ? { src: images.dark.url } : undefined}
-          alt={alt}
-        />
-      </div>
-      {children}
-    </div>
-  )
 }
 
 const Form: React.FC<ElementFormProps<FigureImageElement>> = ({

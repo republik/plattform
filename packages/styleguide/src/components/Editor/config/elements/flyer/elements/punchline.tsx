@@ -1,4 +1,3 @@
-import React from 'react'
 import { ElementConfigI } from '../../../../custom-types'
 import { PunchlineIcon } from '../../../../../Icons'
 

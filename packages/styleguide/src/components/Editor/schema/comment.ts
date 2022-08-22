@@ -8,13 +8,12 @@ import {
   CommentBodyCode,
   CommentBodyBlockCode,
 } from '../../CommentBody/web'
-import { List } from '../config/elements/list/container'
 import { ListItem } from '../../CommentBody/web/List'
-import { Break } from '../config/elements/break'
-import { Editorial, Sub, Sup } from '../../Typography'
+import { List } from '../../List/Slate'
+import { Editorial, Sub, Sup, Bold, Italic } from '../../Typography'
 import { FigureByline, FigureCaption } from '../../Figure'
-import { Bold } from '../config/marks/bold'
-import { Italic } from '../config/marks/italic'
+import { Break } from '../../Typography/Break'
+
 import { NoRefEditoralA } from '../config/elements/link'
 
 const schema: SchemaConfig = {

@@ -1,7 +1,5 @@
 import React from 'react'
 import { SchemaConfig } from '../custom-types'
-import { Break } from '../config/elements/break'
-import { Sub, Sup } from '../../Typography'
 import {
   Container,
   BlockQuote,
@@ -14,13 +12,13 @@ import {
   Code,
   BlockCode,
 } from '../../CommentBody/email'
-import { Bold } from '../config/marks/bold'
-import { Italic } from '../config/marks/italic'
 import { List as InnerEmailList } from '../../CommentBody/email'
 import {
   Byline,
   Caption,
 } from '../../../templates/EditorialNewsletter/email/Figure'
+import { Sub, Sup, Bold, Italic } from '../../Typography'
+import { Break } from '../../Typography/Break'
 
 const List: React.FC<{
   ordered: boolean

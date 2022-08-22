@@ -1,21 +1,18 @@
 import React, { useState } from 'react'
 import { SchemaConfig } from '../custom-types'
+import { plainButtonRule } from '../../Button'
+
 import { FigureByline, FigureCaption } from '../../Figure'
-import { FigureContainer } from '../config/elements/figure/container'
-import { FigureImage } from '../config/elements/figure/image'
-import { List } from '../config/elements/list/container'
+import { Figure, FigureImage } from '../../Figure/Slate'
 import { ListItem } from '../../List'
+import { List } from '../../List/Slate'
 import { PullQuoteSource } from '../../PullQuote'
-import { Break } from '../config/elements/break'
-import { Editorial, Sub, Sup, Interaction } from '../../Typography'
+import { Break } from '../../Typography/Break'
+import { Editorial, Sub, Sup, Interaction, Flyer } from '../../Typography'
+
 import { NoRefA } from '../config/elements/link'
 import { FlyerTile } from '../config/elements/flyer'
 import { FlyerAuthor } from '../config/elements/flyer/elements/author'
-import { FlyerMetaP } from '../config/elements/flyer/elements/metaP'
-import { FlyerTitle } from '../config/elements/flyer/elements/title'
-import { FlyerTopic } from '../config/elements/flyer/elements/topic'
-import { useColorContext } from '../../Colors/ColorContext'
-import { FlyerSignature } from '../config/elements/flyer/elements/signature'
 import { ContainerComponent } from '../components/editor/ui/Element'
 import { ArticlePreview } from '../config/elements/articlePreview'
 import { QuizAnswer } from '../config/elements/quiz/answer'
@@ -25,7 +22,7 @@ import {
   EditorQuizContainer,
   WRONG_COLOR,
 } from '../config/elements/quiz/container'
-import { plainButtonRule } from '../../Button'
+
 import { RenderedElement } from '../components/render'
 import { Element as SlateElement } from 'slate'
 
@@ -34,41 +31,6 @@ const container = ({ children, attributes }) => (
     {children}
   </div>
 )
-
-const Headline = ({ children, attributes, ...props }) => (
-  <h1
-    {...attributes}
-    {...props}
-    style={{
-      fontFamily: 'Druk Text Wide Trial',
-      fontStyle: 'Medium',
-      fontSize: 60,
-      textAlign: 'center',
-      marginBottom: 50,
-    }}
-  >
-    {children}
-  </h1>
-)
-
-const Paragraph = ({ children, ...props }) => {
-  const [colorScheme] = useColorContext()
-  return (
-    <p
-      {...props}
-      style={{
-        fontFamily: 'GT America',
-        fontWeight: 400,
-        fontSize: 24,
-        marginBottom: 20,
-        ...props.style,
-      }}
-      {...colorScheme.set('color', 'text')}
-    >
-      {children}
-    </p>
-  )
-}
 
 const PullQuote = ({ children, attributes }) => (
   <blockquote {...attributes}>{children}</blockquote>
@@ -148,15 +110,15 @@ export const schema: SchemaConfig = {
   container,
   flyerTile: FlyerTile,
   flyerAuthor: FlyerAuthor,
-  flyerMetaP: FlyerMetaP,
+  flyerMetaP: Flyer.MetaP,
   flyerPunchline: FigureCaption,
-  flyerSignature: FlyerSignature,
-  flyerTitle: FlyerTitle,
-  flyerTopic: FlyerTopic,
+  flyerSignature: Flyer.Small,
+  flyerTitle: Flyer.H2,
+  flyerTopic: Flyer.H3,
   articlePreview: ArticlePreview,
   figureByline: FigureByline,
   figureCaption: FigureCaption,
-  figure: FigureContainer,
+  figure: Figure,
   figureImage: FigureImage,
   list: List,
   listItem: ListItem,
@@ -164,9 +126,9 @@ export const schema: SchemaConfig = {
   pullQuoteSource: PullQuoteSource,
   pullQuoteText: PullQuoteText,
   break: Break,
-  headline: Headline,
+  headline: Flyer.H1,
   link: NoRefA,
-  paragraph: Paragraph,
+  paragraph: Flyer.P,
   bold: Interaction.Emphasis,
   italic: Interaction.Cursive,
   strikethrough: Editorial.StrikeThrough,

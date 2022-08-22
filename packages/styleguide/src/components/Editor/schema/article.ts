@@ -1,13 +1,13 @@
 import { SchemaConfig } from '../custom-types'
 import { BlockQuote, BlockQuoteParagraph } from '../../BlockQuote'
 import { FigureByline, FigureCaption } from '../../Figure'
-import { FigureContainer } from '../config/elements/figure/container'
-import { FigureImage } from '../config/elements/figure/image'
-import { List } from '../config/elements/list/container'
+import { Figure, FigureImage } from '../../Figure/Slate'
 import { ListItem } from '../../List'
+import { List } from '../../List/Slate'
 import { PullQuote, PullQuoteSource, PullQuoteText } from '../../PullQuote'
-import { Break } from '../config/elements/break'
 import { Editorial, Sub, Sup } from '../../Typography'
+import { Break } from '../../Typography/Break'
+
 import { NoRefEditoralA } from '../config/elements/link'
 
 const schema: SchemaConfig = {
@@ -15,7 +15,7 @@ const schema: SchemaConfig = {
   blockQuoteText: BlockQuoteParagraph,
   figureByline: FigureByline,
   figureCaption: FigureCaption,
-  figure: FigureContainer,
+  figure: Figure,
   figureImage: FigureImage,
   list: List,
   listItem: ListItem,

@@ -7,6 +7,7 @@ import * as _Editorial from './Editorial'
 import * as _Interaction from './Interaction'
 import * as _Meta from './Meta'
 import * as _Scribble from './Scribble'
+import * as _Flyer from './Flyer'
 import { css } from 'glamor'
 import { convertStyleToRem } from './utils'
 import { useColorContext } from '../Colors/useColorContext'
@@ -16,6 +17,7 @@ export const Editorial = { ..._Editorial }
 export const Interaction = { ..._Interaction }
 export const Meta = { ..._Meta }
 export const Scribble = { ..._Scribble }
+export const Flyer = { ..._Flyer }
 
 // Direct exports.
 export const fontStyles = {
@@ -191,6 +193,14 @@ export const Sup = ({ children, attributes }) => (
   <sup {...attributes} {...sup}>
     {children}
   </sup>
+)
+
+export const Bold = ({ children, attributes }) => (
+  <strong {...attributes}>{children}</strong>
+)
+
+export const Italic = ({ children, attributes }) => (
+  <em {...attributes}>{children}</em>
 )
 
 export const HR = ({ attributes }) => {
