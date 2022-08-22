@@ -1,17 +1,13 @@
 import { CustomDescendant, CustomElement, CustomText } from '../../custom-types'
-import { Element as SlateElement } from 'slate'
-import { config as elConfig } from '../../config/elements'
+import { isSlateElement } from './helpers'
 
 const renderLeaf = (leaf: CustomText): string => leaf.text
 
 const renderAsText = (nodes: CustomDescendant[]): string =>
   nodes
     .reduce((acc: string, node: CustomDescendant) => {
-      if (SlateElement.isElement(node)) {
-        const { type } = node
-        // add a whitespace between block nodes
-        const finalChar = elConfig[type].attrs?.isInline ? '' : ' '
-        return acc.concat(renderElement(node)).concat(finalChar)
+      if (isSlateElement(node)) {
+        return acc.concat(renderElement(node)).concat(' ')
       }
       return acc.concat(renderLeaf(node))
     }, '')
