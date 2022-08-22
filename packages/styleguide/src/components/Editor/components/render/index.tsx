@@ -8,9 +8,9 @@ import {
 } from '../../custom-types'
 import { config as elConfig } from '../../config/elements'
 import { Element as SlateElement } from 'slate'
-import { Marks } from '../editor/ui/Mark'
 import { LayoutContainer } from '../editor/ui/Layout'
 import { cleanupTree } from '../editor/helpers/tree'
+import { Marks } from './Mark'
 
 const RenderedLeaf: React.FC<{
   leaf: CustomText

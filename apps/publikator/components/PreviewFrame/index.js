@@ -115,7 +115,14 @@ const PreviewFrame = ({
       </div>
       <iframe
         ref={iframeRef}
-        onLoad={() => setIframeLoading(false)}
+        onLoad={() => {
+          console.log('Im loaded')
+          setIframeLoading(false)
+        }}
+        onError={(e) => {
+          console.log(e)
+          setIframeLoading(false)
+        }}
         style={{
           ...iframeStyle,
         }}

@@ -9,14 +9,13 @@ import React, {
 } from 'react'
 import { Editor } from 'slate'
 import { ReactEditor, useSlate } from 'slate-react'
-import { config as mConfig, configKeys as mKeys } from '../../../config/marks'
+import { config as mConfig } from '../../../config/marks'
 import { ToolbarButton } from './Toolbar'
 import {
   ButtonConfig,
   CustomElement,
   CustomMarksType,
   CustomText,
-  SchemaConfig,
 } from '../../../custom-types'
 import { css, keyframes } from 'glamor'
 import {
@@ -26,6 +25,7 @@ import {
   toggleMark,
 } from '../helpers/text'
 import { getTextNode } from '../helpers/tree'
+import { Marks } from '../../render/Mark'
 
 const fadeIn = keyframes({
   from: {
@@ -107,30 +107,6 @@ const Placeholder: React.FC<{
       {text}
     </span>
   )
-}
-
-const Recurse: React.FC<{
-  components?: React.FC[]
-}> = ({ children, components = [] }) => {
-  if (!components.length) {
-    return <>{children}</>
-  }
-  const [Component, ...rest] = components
-  return (
-    <Recurse components={rest}>
-      <Component>{children}</Component>
-    </Recurse>
-  )
-}
-
-export const Marks: React.FC<{
-  leaf: CustomText
-  schema: SchemaConfig
-}> = ({ children, leaf, schema }) => {
-  const mComponents = mKeys
-    .filter((mKey) => leaf[mKey])
-    .map((mKey) => schema[mConfig[mKey].component])
-  return <Recurse components={mComponents}>{children}</Recurse>
 }
 
 export const LeafComponent: React.FC<{
