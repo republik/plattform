@@ -1,5 +1,6 @@
 import { withRouter } from 'next/router'
 import { flyerSchema, SlateRender } from '@project-r/styleguide'
+import { cleanupTree } from '@project-r/styleguide/editor'
 import Loader from '../../../../components/Loader'
 import * as fragments from '../../../../lib/graphql/fragments'
 import initLocalStore from '../../../../lib/utils/localStorage'
@@ -40,8 +41,9 @@ const PreviewPage = ({ router: { query }, data }) => {
       error={data?.error}
       render={() => {
         const value = getCurrentValue(store, data)
+        console.log({ value })
         if (!value) return null
-        return <SlateRender value={value} schema={flyerSchema} />
+        return <SlateRender value={cleanupTree(value)} schema={flyerSchema} />
       }}
     />
   )

@@ -474,13 +474,14 @@ export const insertAfter = (
   editor: CustomEditor,
   elKey: CustomElementsType | TemplateType,
   elPath: number[],
-) => {
+): number[] => {
   const config = elConfig[elKey]
   const element = buildElement(elKey as CustomElementsType, config)
   const insertPath = calculateSiblingPath(elPath)
   Transforms.insertNodes(editor, element, { at: insertPath })
   Transforms.select(editor, insertPath)
   Transforms.collapse(editor, { edge: 'start' })
+  return insertPath
 }
 
 const deleteOnInsert = (

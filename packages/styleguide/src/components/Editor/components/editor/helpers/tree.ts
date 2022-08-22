@@ -21,6 +21,7 @@ import {
 import { KeyboardEvent } from 'react'
 import { cleanupEmptyString, selectPlaceholder } from './text'
 import { config as elConfig } from '../../../config/elements'
+import { element } from 'prop-types'
 
 export const NAV_KEYS = [
   'ArrowLeft',
@@ -30,35 +31,51 @@ export const NAV_KEYS = [
   'Tab',
 ]
 
-const removeEmpty = (nodes: CustomDescendant[]): CustomDescendant[] =>
-  nodes.filter((n) => {
-    if (SlateElement.isElement(n)) {
-      return Node.string(n) !== '' || elConfig[n.type].attrs?.isVoid
-    } else {
-      return !n.end
-    }
-  })
+const hasFilledProps = (element: CustomElement): boolean => {
+  const props = elConfig[element.type]?.props
+  console.log({ props, test: props.some((p) => !!element[p]) })
+  return props.some((p) => !!element[p])
+}
+
+const keepVoid = (element: CustomElement): boolean => {
+  console.log({ element })
+  const config = elConfig[element.type]
+  return !config?.props?.length || hasFilledProps(element)
+}
+
+const removeEmptyNodes = (n: CustomDescendant): boolean => {
+  if (SlateElement.isElement(n)) {
+    return (
+      Node.string(n) !== '' || (elConfig[n.type].attrs?.isVoid && keepVoid(n))
+    )
+  } else {
+    return !n.end
+  }
+}
 
 export const cleanupTree = (
   value: CustomDescendant[],
   noEmpty = false,
 ): CustomDescendant[] => {
-  return value.map((node) => {
-    if (SlateElement.isElement(node)) {
-      const { template, children, ...rest } = node
-      const childrenNoEmpty = noEmpty ? removeEmpty(children) : children
-      return {
-        children: cleanupTree(childrenNoEmpty, noEmpty),
-        ...rest,
+  const emptyFilter = noEmpty ? removeEmptyNodes : Boolean
+  return value
+    .map((node) => {
+      if (SlateElement.isElement(node)) {
+        const { template, children, ...rest } = node
+        const childrenNoEmpty = children.filter(emptyFilter)
+        return {
+          children: cleanupTree(childrenNoEmpty, noEmpty),
+          ...rest,
+        }
+      } else if (Text.isText(node)) {
+        const { template, placeholder, end, text, ...rest } = node
+        return {
+          ...rest,
+          text: cleanupEmptyString(text),
+        }
       }
-    } else if (Text.isText(node)) {
-      const { template, placeholder, end, text, ...rest } = node
-      return {
-        ...rest,
-        text: cleanupEmptyString(text),
-      }
-    }
-  })
+    })
+    .filter(emptyFilter)
 }
 
 export const cleanupNode: (allowList: string[]) => NormalizeFn<CustomNode> =

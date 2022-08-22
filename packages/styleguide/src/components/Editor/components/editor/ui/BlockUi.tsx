@@ -90,51 +90,21 @@ const Remove: React.FC<{
   )
 }
 
-const ChooseTemplate: React.FC<{
-  path: number[]
-  templates: TemplateType[]
-}> = ({ path, templates }) => {
-  const editor = useSlate()
-
-  return (
-    <>
-      {templates.map((elKey) => {
-        const config = elConfig[elKey]
-        if (!config.button) return null
-        return (
-          <IconButton
-            key={elKey}
-            onClick={() => insertAfter(editor, elKey, path)}
-            Icon={config.button.icon}
-            size={config.button.small ? 18 : 24}
-            style={iconStyle}
-            title={`insert ${elKey}`}
-          />
-        )
-      })}
-    </>
-  )
-}
-
 const Insert: React.FC<{
   path: number[]
   templates: TemplateType | TemplateType[]
 }> = ({ path, templates }) => {
-  const [choices, setChoices] = useState<TemplateType[]>()
   const editor = useSlate()
+  const setFormPath = useFormContext()[1]
+  const template = Array.isArray(templates) ? templates[0] : templates
 
-  return choices ? (
-    <div style={{ marginTop: 8 }}>
-      <ChooseTemplate path={path} templates={choices} />
-    </div>
-  ) : (
+  return (
     <IconButton
       Icon={AddIcon}
-      onClick={() =>
-        Array.isArray(templates)
-          ? setChoices(templates)
-          : insertAfter(editor, templates, path)
-      }
+      onClick={() => {
+        const insertPath = insertAfter(editor, template, path)
+        setFormPath(insertPath)
+      }}
       title='insert new element'
       style={iconStyle}
     />

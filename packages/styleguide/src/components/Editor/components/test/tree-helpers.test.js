@@ -80,7 +80,7 @@ describe('Slate Editor', () => {
       expect(cleanupTree(value)).toEqual(value)
     })
 
-    it('should optionally delete empty non-void text nodes', async () => {
+    it('should optionally delete empty text nodes', async () => {
       const value = [
         {
           type: 'figure',
@@ -98,6 +98,10 @@ describe('Slate Editor', () => {
               ],
             },
           ],
+        },
+        {
+          type: 'break',
+          children: [{ text: '' }],
         },
         {
           type: 'figure',
@@ -119,21 +123,12 @@ describe('Slate Editor', () => {
       ]
       expect(cleanupTree(value, true)).toEqual([
         {
-          type: 'figure',
-          children: [
-            {
-              type: 'figureImage',
-              children: [{ text: '' }],
-            },
-          ],
+          type: 'break',
+          children: [{ text: '' }],
         },
         {
           type: 'figure',
           children: [
-            {
-              type: 'figureImage',
-              children: [{ text: '' }],
-            },
             {
               type: 'figureCaption',
               children: [{ text: 'Man with fruit.' }],
