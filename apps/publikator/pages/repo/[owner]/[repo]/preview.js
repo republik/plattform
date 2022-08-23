@@ -10,33 +10,20 @@ import Loader from '../../../../components/Loader'
 import Frame from '../../../../components/Frame'
 import { getSchema } from '../../../../components/Templates'
 
-import * as fragments from '../../../../lib/graphql/fragments'
 import initLocalStore from '../../../../lib/utils/localStorage'
 import withT from '../../../../lib/withT'
 import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 import { withDefaultSSR } from '../../../../lib/apollo/helpers'
-
-const getCommitById = gql`
-  query getCommitById($repoId: ID!, $commitId: ID!) {
-    repo(id: $repoId) {
-      ...EditPageRepo
-      commit(id: $commitId) {
-        ...CommitWithDocument
-      }
-    }
-  }
-  ${fragments.EditPageRepo}
-  ${fragments.CommitWithDocument}
-`
+import { withCommitData } from '../../../../components/Edit/enhancers'
 
 const PreviewPage = ({ t, router, data = {} }) => {
   const { loading, error, repo: { commit: { document } = {} } = {} } = data
   const repoId = getRepoIdFromQuery(router.query)
-  const { commitId, darkmode, hasAccess } = router.query
+  const { commitId, darkmode, hasAccess, commitOnly } = router.query
 
   const storeKey = [repoId, commitId].join('/')
   const store = initLocalStore(storeKey)
-  let localState = store.get('editorState')
+  const localState = commitOnly !== 'true' && store.get('editorState')
 
   const template = localState?.meta?.template || document?.meta?.template
 
@@ -102,18 +89,5 @@ const PreviewPage = ({ t, router, data = {} }) => {
 }
 
 export default withDefaultSSR(
-  compose(
-    withRouter,
-    withT,
-    graphql(getCommitById, {
-      skip: ({ router }) =>
-        router.query.commitId === 'new' || !router.query.commitId,
-      options: ({ router }) => ({
-        variables: {
-          repoId: getRepoIdFromQuery(router.query),
-          commitId: router.query.commitId,
-        },
-      }),
-    }),
-  )(PreviewPage),
+  compose(withRouter, withT, withCommitData)(PreviewPage),
 )

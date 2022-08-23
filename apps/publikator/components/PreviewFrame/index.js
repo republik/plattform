@@ -46,7 +46,7 @@ const PreviewFrame = ({
 
   const iframeSrc = isFlyer
     ? `/flyer/${repoId}/preview?commitId=${commitId}&commitOnly=${commitOnly}`
-    : `/repo/${repoId}/preview?commitId=${commitId}&darkmode=${darkmode}&hasAccess=${hasAccess}`
+    : `/repo/${repoId}/preview?commitId=${commitId}&darkmode=${darkmode}&hasAccess=${hasAccess}&commitOnly=${commitOnly}`
   const currentSideBarWidth = sideBarWidth || (isFlyer ? 0 : SIDEBAR_WIDTH)
 
   useEffect(() => {
