@@ -7,15 +7,19 @@ import IconButton from '../IconButton'
 import Loader from '../Loader'
 import { MdExpandLess } from 'react-icons/md'
 import { sansSerifRegular14, sansSerifRegular15 } from '../Typography/styles'
+import Spinner from '../Spinner'
 
 const styles = {
   root: css({
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'space-between',
     width: '100%',
+    height: 68,
   }),
   scrubberWrapper: css({}),
   playerWrapper: css({
+    flexGrow: 1,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-start',
@@ -35,6 +39,11 @@ const styles = {
     '& > *:not(:last-child)': {
       marginRight: 4,
     },
+  }),
+  spinnerWrapper: css({
+    position: 'relative',
+    width: 42,
+    height: 42,
   }),
   title: css({
     ...sansSerifRegular15,
@@ -107,7 +116,9 @@ const AudioPlayer = ({
     <div {...styles.root}>
       <div {...styles.playerWrapper}>
         {isLoading ? (
-          <Loader />
+          <div {...styles.spinnerWrapper}>
+            <Spinner size={32} />
+          </div>
         ) : (
           <IconButton
             onClick={toggleAudioPlayer}
@@ -116,6 +127,7 @@ const AudioPlayer = ({
             Icon={isPlaying ? PauseIcon : PlayIcon}
             size={42}
             fillColorName={'text'}
+            style={{ marginRight: 0 }}
           />
         )}
         <div {...styles.metaDataWrapper}>
@@ -154,6 +166,7 @@ const AudioPlayer = ({
           buffered={buffered}
           onSeek={actions.onSeek}
           showScrubber={isExpanded}
+          disabled={isLoading}
         />
       </div>
     </div>
