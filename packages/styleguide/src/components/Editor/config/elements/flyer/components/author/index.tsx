@@ -6,5 +6,10 @@ export const config: ElementConfigI = {
   props: ['authorId', 'resolvedAuthor'],
   attrs: {
     isVoid: true,
+    blockUi: {
+      position: {
+        top: 10,
+      },
+    },
   },
 }

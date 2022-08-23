@@ -24,4 +24,11 @@ export const config: ElementConfigI = {
   structure: [{ type: 'quizAnswer', main: true }, { type: 'quizAnswerInfo' }],
   props: ['isCorrect'],
   Form,
+  attrs: {
+    blockUi: {
+      position: {
+        top: 5,
+      },
+    },
+  },
 }

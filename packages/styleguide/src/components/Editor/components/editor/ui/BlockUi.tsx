@@ -150,7 +150,7 @@ const BlockUi: React.FC<{
     <div
       className='ui-element'
       {...styles.container}
-      style={blockUi?.position || DEFAULT_POSITION}
+      style={{ ...DEFAULT_POSITION, ...blockUi?.position }}
       contentEditable={false}
     >
       {showMoveUi ? (

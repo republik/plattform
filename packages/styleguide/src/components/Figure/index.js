@@ -135,8 +135,12 @@ export const FIGURE_SIZES = {
   center: MAX_WIDTH,
 }
 
-export const Figure = ({ children, attributes, size }) => (
-  <figure {...attributes} {...merge(styles.figure, figureBreakout[size])}>
+export const Figure = ({ children, attributes, size, ...props }) => (
+  <figure
+    {...attributes}
+    {...merge(styles.figure, figureBreakout[size])}
+    {...props}
+  >
     {children}
   </figure>
 )

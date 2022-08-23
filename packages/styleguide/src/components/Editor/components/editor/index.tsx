@@ -27,7 +27,6 @@ import { NAV_KEYS, navigateOnTab } from './helpers/tree'
 import { handleInsert, insertOnKey } from './helpers/structure'
 import { withInsert } from './decorators/insert'
 import { withDelete } from './decorators/delete'
-import { useColorContext } from '../../../Colors/ColorContext'
 import { withCustomConfig } from './decorators/config'
 import { ErrorMessage } from '../render/Message'
 import { LayoutContainer } from '../render/Containers'
@@ -74,7 +73,6 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
     element: CustomElement
     attributes: any
   }> = ({ element, children, attributes }) => {
-    const [colorScheme] = useColorContext()
     const setFormPath = useFormContext()[1]
     const isSelected = useSelected()
     const config = elementsConfig[element.type]
