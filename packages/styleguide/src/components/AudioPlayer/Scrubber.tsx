@@ -2,6 +2,7 @@ import React, {
   MouseEvent,
   TouchEventHandler,
   useEffect,
+  useMemo,
   useState,
 } from 'react'
 import { css } from 'glamor'
@@ -12,6 +13,7 @@ import {
   ZINDEX_AUDIOPLAYER_SCRUB,
 } from '../LegacyAudioPlayer/constants'
 import { useColorContext } from '../Colors/useColorContext'
+import debounce from 'lodash/debounce'
 
 function times(x) {
   return Array.from({ length: x }, (_, i) => i)
@@ -33,15 +35,16 @@ const styles = {
     height: PROGRESS_HEIGHT,
     backgroundColor: '#444', // TODO: define played styling
   }),
-  scrubber: css({
-    position: 'absolute',
-    inset: 0,
-    height: PROGRESS_HEIGHT,
-    zIndex: ZINDEX_AUDIOPLAYER_SCRUB,
-    marginTop: -12,
-    paddingTop: 16,
-    cursor: 'ew-resize',
-  }),
+  scrubber: (disabled: boolean) =>
+    css({
+      position: 'absolute',
+      inset: 0,
+      height: PROGRESS_HEIGHT,
+      zIndex: ZINDEX_AUDIOPLAYER_SCRUB,
+      marginTop: -12,
+      paddingTop: 16,
+      cursor: disabled ? 'default' : 'ew-resize',
+    }),
   seeking: css({
     cursor: '',
   }),
@@ -56,6 +59,7 @@ const styles = {
     position: 'absolute',
     backgroundColor: '#d1d1d1',
     height: PROGRESS_HEIGHT,
+    opacity: 0.25,
   }),
   sliderThumb: css({
     zIndex: 2,
@@ -78,6 +82,7 @@ type ScrubberProps = {
    */
   onSeek: (progress: number) => void
   showScrubber?: boolean
+  disabled?: boolean
 }
 
 const Scrubber = ({
@@ -86,20 +91,41 @@ const Scrubber = ({
   buffered,
   onSeek,
   showScrubber = true,
+  disabled = false,
 }: ScrubberProps) => {
   const [colorScheme] = useColorContext()
   const scrubber = React.useRef<HTMLDivElement>(null)
   const [isSeeking, setIsSeeking] = useState(false)
+  const [internalProgress, setInternalProgress] = useState(0)
 
-  const progress = currentTime / duration
+  const audioProgress = currentTime / duration
 
-  const scrub = (pointerPosition: number) => {
+  const progress = isSeeking ? internalProgress : audioProgress
+
+  useEffect(() => {
+    if (!isSeeking) {
+      setInternalProgress(audioProgress)
+    }
+  }, [audioProgress, setInternalProgress])
+
+  const debouncedSeek = useMemo(
+    () => debounce((progress) => onSeek(progress), 100),
+    [],
+  )
+
+  const scrub = (pointerPosition: number, force = false) => {
     if (!scrubber.current) return
     const scrubberBounds = scrubber.current.getBoundingClientRect()
     const scrubberWidth = scrubberBounds.width
     const scrubberLeft = pointerPosition - scrubberBounds.left
     const progress = scrubberLeft / scrubberWidth
-    onSeek(progress)
+    setInternalProgress(progress)
+    // Debounce syncing to the audio-container
+    if (force) {
+      onSeek(progress)
+    } else {
+      debouncedSeek(progress)
+    }
   }
 
   const touchStart: TouchEventHandler<HTMLDivElement> = (e) => {
@@ -111,6 +137,7 @@ const Scrubber = ({
   const touchEnd: TouchEventHandler<HTMLDivElement> = (e) => {
     e.preventDefault()
     setIsSeeking(false)
+    scrub(e.changedTouches[0].clientX, true)
   }
 
   const touchMove: TouchEventHandler<HTMLDivElement> = (e) => {
@@ -129,6 +156,7 @@ const Scrubber = ({
   const mouseUp = (e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault()
     setIsSeeking(false)
+    scrub(e.clientX, true)
   }
 
   const mouseMove = (e: MouseEvent<HTMLDivElement>) => {
@@ -149,7 +177,10 @@ const Scrubber = ({
 
   return (
     <div {...styles.root}>
-      <div {...styles.bufferedWrapper}>
+      <div
+        {...styles.bufferedWrapper}
+        {...colorScheme.set('backgroundColor', 'divider')}
+      >
         {buffered &&
           times(buffered.length).map((i) => {
             const start = buffered.start(i)
@@ -159,6 +190,7 @@ const Scrubber = ({
               <div
                 key={i}
                 {...styles.buffered}
+                {...colorScheme.set('backgroundColor', 'defaultInverted')}
                 style={{
                   left: `${(start / duration) * 100}%`,
                   width: `${width}%`,
@@ -167,7 +199,11 @@ const Scrubber = ({
             )
           })}
       </div>
-      <div {...styles.progress} style={{ width: `${progress * 100}%` }} />
+      <div
+        {...styles.progress}
+        {...colorScheme.set('backgroundColor', 'text')}
+        style={{ width: `${progress * 100}%` }}
+      />
       {showScrubber && (
         <div
           {...styles.sliderThumb}
@@ -179,12 +215,12 @@ const Scrubber = ({
         />
       )}
       <div
-        {...styles.scrubber}
+        {...styles.scrubber(disabled)}
         ref={scrubber}
-        onTouchStart={touchStart}
-        onTouchEnd={touchEnd}
-        onTouchMove={touchMove}
-        onMouseDown={mouseDown}
+        onTouchStart={!disabled ? touchStart : undefined}
+        onTouchEnd={!disabled ? touchEnd : undefined}
+        onTouchMove={!disabled ? touchMove : undefined}
+        onMouseDown={!disabled ? mouseDown : undefined}
         onMouseMove={isSeeking ? mouseMove : undefined}
         onMouseUp={isSeeking ? mouseUp : undefined}
       />
