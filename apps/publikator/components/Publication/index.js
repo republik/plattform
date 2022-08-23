@@ -193,6 +193,7 @@ const Preview = ({ commit, isFlyer }) => {
             hasAccess={previewHasAccess}
             sideBarWidth={PUBLICATION_COLUMN_WIDTH}
             isFlyer={isFlyer}
+            commitOnly={true}
           />
         </div>
       </div>

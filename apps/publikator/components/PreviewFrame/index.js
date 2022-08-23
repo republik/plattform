@@ -34,6 +34,7 @@ const PreviewFrame = ({
   hasAccess,
   sideBarWidth,
   isFlyer,
+  commitOnly,
 }) => {
   const [scaleFactor, setScaleFactor] = useState(1)
   const [leftSpace, setLeftSpace] = useState(0)
@@ -42,7 +43,7 @@ const PreviewFrame = ({
   const iframeRef = useRef()
 
   const iframeSrc = isFlyer
-    ? `/flyer/${repoId}/preview?commitId=${commitId}`
+    ? `/flyer/${repoId}/preview?commitId=${commitId}&commitOnly=${commitOnly}`
     : `/repo/${repoId}/preview?commitId=${commitId}&darkmode=${darkmode}&hasAccess=${hasAccess}`
   const currentSideBarWidth = sideBarWidth || (isFlyer ? 0 : SIDEBAR_WIDTH)
 

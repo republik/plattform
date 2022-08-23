@@ -5,6 +5,7 @@ import {
   withLatestCommit,
 } from './enhancers'
 import { Loader, useDebounce, slug } from '@project-r/styleguide'
+import { cleanupTree } from '@project-r/styleguide/editor'
 import withT from '../../lib/withT'
 import withMe from '../../lib/withMe'
 import isEqual from 'lodash/isEqual'
@@ -100,13 +101,15 @@ const EditLoader = ({
 
   // new route, new store
   useEffect(() => {
-    initStore()
+    if (commitId && repoId) {
+      initStore()
+    }
   }, [commitId, repoId])
 
   // when data is loaded and store is set up: we (re)initialise the value
   useEffect(() => {
-    if (store && !data?.loading) {
-      resetValue()
+    if (store && data && !data.loading) {
+      resetValue(store, data)
     }
   }, [data, store])
 
@@ -241,10 +244,10 @@ const EditLoader = ({
   // to reset the value
   const updateContentEditor = (newValue) => {
     setValue(undefined)
-    setTimeout(() => setValue(newValue))
+    setTimeout(() => setValue(newValue), 10)
   }
 
-  const resetValue = () => {
+  const resetValue = (store, data) => {
     const currentValue = getCurrentValue(store, data)
     updateContentEditor(currentValue)
   }
@@ -290,7 +293,7 @@ const EditLoader = ({
       document: {
         type: 'slate',
         content: {
-          children: store.get(CONTENT_KEY),
+          children: cleanupTree(store.get(CONTENT_KEY), true),
           // TODO: meta
           // meta: store.get(META_KEY),
           // until then, a helping hand
@@ -341,7 +344,10 @@ const EditLoader = ({
 
   const contentChangeHandler = () => {
     const committedValue = getCommittedValue(data)
-    if (!committedValue || !isEqual(committedValue, debouncedValue)) {
+    if (
+      !committedValue ||
+      !isEqual(committedValue, cleanupTree(debouncedValue, true))
+    ) {
       store.set(CONTENT_KEY, debouncedValue)
       const msSinceBegin =
         beginChanges && new Date().getTime() - beginChanges.getTime()

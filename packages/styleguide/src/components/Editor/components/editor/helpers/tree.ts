@@ -33,12 +33,10 @@ export const NAV_KEYS = [
 
 const hasFilledProps = (element: CustomElement): boolean => {
   const props = elConfig[element.type]?.props
-  console.log({ props, test: props.some((p) => !!element[p]) })
   return props.some((p) => !!element[p])
 }
 
 const keepVoid = (element: CustomElement): boolean => {
-  console.log({ element })
   const config = elConfig[element.type]
   return !config?.props?.length || hasFilledProps(element)
 }

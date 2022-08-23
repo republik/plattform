@@ -26,24 +26,27 @@ const getCommitById = gql`
 `
 
 const PreviewPage = ({ router: { query }, data }) => {
-  const { commitId } = query
+  const { commitId, commitOnly } = query
   const repoId = getRepoIdFromQuery(query)
   const [store, setStore] = useState()
 
   useEffect(() => {
-    const storeKey = [repoId, commitId].join('/')
-    setStore(initLocalStore(storeKey))
-  }, [])
+    if (repoId && commitId && commitOnly !== 'true') {
+      const storeKey = [repoId, commitId].join('/')
+      setStore(initLocalStore(storeKey))
+    }
+  }, [repoId, commitId])
 
   return (
     <Loader
-      loading={!data || data?.loading}
+      loading={!data || (!commitOnly && !store) || data?.loading}
       error={data?.error}
       render={() => {
-        const value = getCurrentValue(store, data)
-        console.log({ value })
+        const value = JSON.parse(JSON.stringify(getCurrentValue(store, data)))
         if (!value) return null
-        return <SlateRender value={cleanupTree(value)} schema={flyerSchema} />
+        return (
+          <SlateRender value={cleanupTree(value, true)} schema={flyerSchema} />
+        )
       }}
     />
   )

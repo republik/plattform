@@ -137,5 +137,99 @@ describe('Slate Editor', () => {
         },
       ])
     })
+
+    it('should delete empty nested nodes', async () => {
+      const value = [
+        {
+          type: 'flyerTileOpening',
+          children: [
+            {
+              type: 'headline',
+              children: [
+                {
+                  text: 'Bonjour Madame!',
+                },
+              ],
+            },
+            {
+              type: 'flyerMetaP',
+              children: [
+                {
+                  text: '',
+                },
+              ],
+            },
+          ],
+        },
+        {
+          type: 'flyerTile',
+          children: [
+            {
+              type: 'flyerMetaP',
+              children: [
+                {
+                  text: '',
+                },
+              ],
+            },
+            {
+              type: 'flyerTopic',
+              children: [
+                {
+                  text: '',
+                },
+              ],
+            },
+            {
+              type: 'flyerTitle',
+              children: [
+                {
+                  text: '',
+                },
+              ],
+            },
+            {
+              type: 'flyerAuthor',
+              children: [
+                {
+                  text: '',
+                },
+              ],
+            },
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  text: '',
+                },
+              ],
+            },
+            {
+              type: 'flyerPunchline',
+              children: [
+                {
+                  text: '',
+                },
+              ],
+            },
+          ],
+        },
+      ]
+      expect(cleanupTree(value, true)).toEqual([
+        {
+          type: 'flyerTileOpening',
+          children: [
+            {
+              type: 'headline',
+              children: [
+                {
+                  text: 'Bonjour Madame!',
+                },
+              ],
+            },
+          ],
+        },
+      ])
+    })
   })
 })
