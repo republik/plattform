@@ -27,7 +27,7 @@ const screenSizes = {
 }
 
 const PreviewFrame = ({
-  previewScreenSize,
+  previewScreenSize = 'phone',
   commitId,
   repoId,
   darkmode,
@@ -42,6 +42,8 @@ const PreviewFrame = ({
   const [colorScheme] = useColorContext()
   const iframeRef = useRef()
 
+  const screenSize = screenSizes[previewScreenSize]
+
   const iframeSrc = isFlyer
     ? `/flyer/${repoId}/preview?commitId=${commitId}&commitOnly=${commitOnly}`
     : `/repo/${repoId}/preview?commitId=${commitId}&darkmode=${darkmode}&hasAccess=${hasAccess}`
@@ -54,10 +56,8 @@ const PreviewFrame = ({
       const availableWidth =
         document.body.clientWidth - currentSideBarWidth - 2 * PREVIEW_MARGIN
 
-      const widthScaleFactor =
-        availableWidth / screenSizes[previewScreenSize].width
-      const heightScaleFactor =
-        availableHeight / screenSizes[previewScreenSize].height
+      const widthScaleFactor = availableWidth / screenSize.width
+      const heightScaleFactor = availableHeight / screenSize.height
       const currentScaleFactor = Math.min(
         widthScaleFactor,
         heightScaleFactor,
@@ -65,8 +65,7 @@ const PreviewFrame = ({
       )
       setScaleFactor(currentScaleFactor)
 
-      const scaledPreviewWidth =
-        screenSizes[previewScreenSize].width * currentScaleFactor
+      const scaledPreviewWidth = screenSize.width * currentScaleFactor
       setLeftSpace((availableWidth - scaledPreviewWidth) / 2)
     }
 
@@ -75,14 +74,14 @@ const PreviewFrame = ({
     return () => {
       window.removeEventListener('resize', handleResize)
     }
-  }, [previewScreenSize, currentSideBarWidth])
+  }, [screenSize, currentSideBarWidth])
 
   useEffect(() => {
     setIframeLoading(true)
   }, [darkmode])
 
   const iframeStyle = {
-    ...screenSizes[previewScreenSize],
+    ...screenSize,
     minWidth: 'unset',
     transform: `scale(${scaleFactor})`,
     transformOrigin: `0 0`,

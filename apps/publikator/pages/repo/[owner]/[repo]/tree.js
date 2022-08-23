@@ -25,7 +25,7 @@ import withT from '../../../../lib/withT'
 import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 import { gql } from '@apollo/client'
 import { withDefaultSSR } from '../../../../lib/apollo/helpers'
-import NavWithFlyer from '../../../../components/Edit/NavWithFlyer'
+import Nav from '../../../../components/Edit/Nav'
 
 export const COMMIT_LIMIT = 40
 export const getRepoHistory = gql`
@@ -191,12 +191,11 @@ class EditorPage extends Component {
     const localStorageCommitIds = getLocalStorageKeys()
       .filter((key) => key.startsWith(repoId))
       .map((key) => key.split('/').pop())
-    const isFlyer = repo?.commits?.nodes[0]?.document?.type === 'slate'
     return (
       <Frame>
         <Frame.Header isTemplate={repo?.isTemplate}>
           <Frame.Header.Section align='left'>
-            <NavWithFlyer isFlyer={isFlyer} isTemplate={repo?.isTemplate} />
+            <Nav isTemplate={repo?.isTemplate} />
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
             {!!repo && (

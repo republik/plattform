@@ -14,7 +14,7 @@ import PreviewFrame from '../PreviewFrame'
 import RepoArchivedBanner from '../Repo/ArchivedBanner'
 import ScreeenSizePicker from '../ScreenSizePicker'
 import Frame from '../Frame'
-import NavWithFlyer from '../Edit/NavWithFlyer'
+import Nav from '../Edit/Nav'
 
 const PUBLICATION_COLUMN_WIDTH = 500
 
@@ -216,7 +216,7 @@ const PublishForm = ({ t, data }) => {
             <Frame>
               <Frame.Header>
                 <Frame.Header.Section align='left'>
-                  <NavWithFlyer isFlyer={isFlyer} />
+                  <Nav />
                 </Frame.Header.Section>
                 <Frame.Header.Section align='right'>
                   <Frame.Me />

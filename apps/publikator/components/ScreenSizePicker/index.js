@@ -67,7 +67,11 @@ export const screenSizes = [
   },
 ]
 
-const ScreenSizePicker = ({ onSelect, selectedScreenSize, inline }) => {
+const ScreenSizePicker = ({
+  onSelect,
+  selectedScreenSize = 'phone',
+  inline,
+}) => {
   const [colorScheme] = useColorContext()
 
   return (

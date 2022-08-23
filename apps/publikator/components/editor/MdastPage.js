@@ -60,7 +60,7 @@ import {
 import { withEditRepoMeta } from '../Repo/EditMetaDate'
 import { getRepoIdFromQuery } from '../../lib/repoIdHelper'
 import { gql } from '@apollo/client'
-import NavWithFlyer from '../Edit/NavWithFlyer'
+import Nav from '../Edit/Nav'
 import {
   withCommitData,
   withCommitMutation,
@@ -126,17 +126,26 @@ export class EditorPage extends Component {
     }
     this.revertHandler = (e) => {
       e.preventDefault()
-      const { t } = this.props
+      const { t, router } = this.props
       if (!window.confirm(t('revert/confirm'))) {
         return
       }
       this.setState({
         didUnlock: false,
         acknowledgedUsers: [],
-        previewScreenSize: null,
       })
       this.store.clear()
       this.loadState(this.props)
+      if (router.query.preview) {
+        const { preview: _, ...queryWithoutPreview } = router.query
+        router.replace(
+          {
+            pathname: router.pathname,
+            query: queryWithoutPreview,
+          },
+          { shallow: true },
+        )
+      }
     }
 
     this.editorRef = (ref) => {
@@ -156,7 +165,6 @@ export class EditorPage extends Component {
       activeUsers: [],
       showSidebar: true,
       readOnly: true,
-      previewScreenSize: null,
       previewDarkmode: false,
     }
 
@@ -427,6 +435,7 @@ export class EditorPage extends Component {
         pathname: `/repo/${repoId}/edit`,
         query: {
           commitId: repo.latestCommit.id,
+          ...(router.query.preview && { preview: true }),
         },
       })
       return
@@ -744,7 +753,7 @@ export class EditorPage extends Component {
       uncommittedChanges,
       t,
     } = this.props
-    const { commitId, publishDate } = router.query
+    const { commitId, publishDate, preview: showPreview } = router.query
     const repoId = getRepoIdFromQuery(router.query)
     const { loading, repo } = data
     const { loading: templateLoading, error: templateError } = templateData
@@ -798,6 +807,7 @@ export class EditorPage extends Component {
       ),
     ].filter(Boolean)
     const sidebarDisabled = !!(showLoading || error)
+
     return (
       <Frame raw>
         <Frame.Header
@@ -809,7 +819,7 @@ export class EditorPage extends Component {
           }}
         >
           <Frame.Header.Section align='left'>
-            <NavWithFlyer isNew={isNew} isTemplate={isTemplate} />
+            <Nav isNew={isNew} isTemplate={isTemplate} />
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
             <div
@@ -880,20 +890,20 @@ export class EditorPage extends Component {
                     }
                   />
                 )}
-                <ColorContextProvider colorSchemeKey={dark ? 'dark' : 'light'}>
-                  {this.state.previewScreenSize !== null ? (
-                    <ColorContextProvider
-                      colorSchemeKey={
-                        this.state.previewDarkmode ? 'dark' : 'light'
-                      }
-                    >
-                      <PreviewFrame
-                        previewScreenSize={this.state.previewScreenSize}
-                        repoId={repoId}
-                        commitId={commitId}
-                        darkmode={this.state.previewDarkmode}
-                      />
-                    </ColorContextProvider>
+                <ColorContextProvider
+                  colorSchemeKey={
+                    dark
+                      ? 'dark'
+                      : (showPreview && this.state.previewDarkmode) || 'light'
+                  }
+                >
+                  {showPreview ? (
+                    <PreviewFrame
+                      previewScreenSize={this.state.previewScreenSize}
+                      repoId={repoId}
+                      commitId={commitId}
+                      darkmode={this.state.previewDarkmode}
+                    />
                   ) : null}
                   <Editor
                     ref={this.editorRef}
@@ -904,7 +914,7 @@ export class EditorPage extends Component {
                     onChange={this.changeHandler}
                     onDocumentChange={this.documentChangeHandler}
                     readOnly={readOnly}
-                    hide={this.state.previewScreenSize !== null}
+                    hide={showPreview}
                   />
                 </ColorContextProvider>
               </div>
@@ -913,16 +923,12 @@ export class EditorPage extends Component {
           <Sidebar
             prependChildren={sidebarPrependChildren}
             isDisabled={sidebarDisabled}
-            selectedTabId={readOnly ? 'workflow' : 'edit'}
+            selectedTabId={
+              showPreview ? 'view' : readOnly ? 'workflow' : 'edit'
+            }
             isOpen={showSidebar}
-            onTabChange={(activeTab) => {
-              if (activeTab !== 'view') {
-                // reset device preivew when navigation away from view
-                this.setState({ previewScreenSize: null })
-              }
-            }}
           >
-            {!readOnly && (
+            {!readOnly && !showPreview && (
               <Sidebar.Tab tabId='edit' label='Editieren'>
                 <button
                   onClick={() => this.goToRaw(isTemplate)}
@@ -941,46 +947,46 @@ export class EditorPage extends Component {
                 )}
               </Sidebar.Tab>
             )}
-            <Sidebar.Tab tabId='workflow' label='Workflow'>
-              <div style={{ marginBottom: 10 }}>
-                <CharCount value={editorState} />
-              </div>
-              <VersionControl
-                repoId={repoId}
-                commit={commit}
-                isNew={isNew}
-                hasUncommittedChanges={hasUncommittedChanges}
-              />
-            </Sidebar.Tab>
-            <Sidebar.Tab tabId='view' label='Ansicht'>
-              <Interaction.P style={{ marginBottom: 16 }}>
-                Vorschau
-              </Interaction.P>
-              <ScreenSizePicker
-                selectedScreenSize={this.state.previewScreenSize}
-                onSelect={(screenSize) => {
-                  this.setState({ previewScreenSize: screenSize })
-                }}
-              />
-              {this.state.previewScreenSize ? (
-                <>
-                  <Interaction.P style={{ marginBottom: 16 }}>
-                    Nachtmodus
-                  </Interaction.P>
-                  <Checkbox
-                    black
-                    checked={this.state.previewDarkmode}
-                    onChange={() =>
-                      this.setState({
-                        previewDarkmode: !this.state.previewDarkmode,
-                      })
-                    }
-                  >
-                    Ein
-                  </Checkbox>
-                </>
-              ) : null}
-            </Sidebar.Tab>
+            {!showPreview && (
+              <Sidebar.Tab tabId='workflow' label='Workflow'>
+                <div style={{ marginBottom: 10 }}>
+                  <CharCount value={editorState} />
+                </div>
+                <VersionControl
+                  repoId={repoId}
+                  commit={commit}
+                  isNew={isNew}
+                  hasUncommittedChanges={hasUncommittedChanges}
+                />
+              </Sidebar.Tab>
+            )}
+            {showPreview && (
+              <Sidebar.Tab tabId='view' label='Ansicht'>
+                <Interaction.P style={{ marginBottom: 16 }}>
+                  Vorschau
+                </Interaction.P>
+                <ScreenSizePicker
+                  selectedScreenSize={this.state.previewScreenSize}
+                  onSelect={(screenSize) => {
+                    this.setState({ previewScreenSize: screenSize })
+                  }}
+                />
+                <Interaction.P style={{ marginBottom: 16 }}>
+                  Nachtmodus
+                </Interaction.P>
+                <Checkbox
+                  black
+                  checked={this.state.previewDarkmode}
+                  onChange={() =>
+                    this.setState({
+                      previewDarkmode: !this.state.previewDarkmode,
+                    })
+                  }
+                >
+                  Ein
+                </Checkbox>
+              </Sidebar.Tab>
+            )}
           </Sidebar>
         </Frame.Body>
       </Frame>

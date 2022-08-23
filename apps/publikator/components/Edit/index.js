@@ -29,7 +29,7 @@ import EditView from './EditView'
 import Preview from './Preview'
 import compose from 'lodash/flowRight'
 import { getQueryFromRepoId, getRepoIdFromQuery } from '../../lib/repoIdHelper'
-import NavWithFlyer from './NavWithFlyer'
+import Nav from './Nav'
 
 const debug = createDebug('publikator:pages:flyer:edit')
 
@@ -375,7 +375,7 @@ const EditLoader = ({
     <Frame raw>
       <Frame.Header>
         <Frame.Header.Section align='left'>
-          <NavWithFlyer isFlyer isNew={isNew} />
+          <Nav isNew={isNew} />
         </Frame.Header.Section>
         <Frame.Header.Section align='right'>
           <div style={{ marginRight: 20 }}>

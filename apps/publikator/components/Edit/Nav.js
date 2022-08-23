@@ -24,28 +24,29 @@ const NavLink = ({ children, active, href, replace }) => {
   )
 }
 
-const NavWithFlyer = ({
-  router: { query, asPath },
-  t,
-  isFlyer,
-  isTemplate,
-  isNew,
-}) => {
+const Nav = ({ router: { query, asPath }, t, isTemplate, isNew }) => {
   const repoId = getRepoIdFromQuery(query)
   const editPath = `/repo/${repoId}/edit`
   const treePath = `/repo/${repoId}/tree`
   const currentPath = asPath.split('?')[0]
+  const editQuery =
+    currentPath === editPath && query.commitId
+      ? { commitId: query.commitId }
+      : undefined
   return (
     <Frame.Nav>
       <NavLink
-        href={editPath}
+        href={{ pathname: editPath, query: editQuery }}
         active={currentPath === editPath && !query.preview}
       >
         {t(`repo/nav/${isTemplate ? 'template' : 'document'}/edit`)}
       </NavLink>
-      {!!isFlyer && (
+      {!isNew && (
         <NavLink
-          href={{ pathname: editPath, query: { preview: true } }}
+          href={{
+            pathname: editPath,
+            query: { ...editQuery, preview: true },
+          }}
           active={currentPath === editPath && query.preview}
         >
           Vorschau
@@ -60,4 +61,4 @@ const NavWithFlyer = ({
   )
 }
 
-export default compose(withRouter, withT)(NavWithFlyer)
+export default compose(withRouter, withT)(Nav)

@@ -23,12 +23,9 @@ import {
   withUncommitedChanges,
 } from '../../../../components/VersionControl/UncommittedChanges'
 import BranchingNotice from '../../../../components/VersionControl/BranchingNotice'
-import {
-  getQueryFromRepoId,
-  getRepoIdFromQuery,
-} from '../../../../lib/repoIdHelper'
+import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 import { withDefaultSSR } from '../../../../lib/apollo/helpers'
-import NavWithFlyer from '../../../../components/Edit/NavWithFlyer'
+import Nav from '../../../../components/Edit/Nav'
 
 const styles = css({
   background: colors.secondaryBg,
@@ -160,7 +157,7 @@ export default withDefaultSSR(
       <Frame raw>
         <Frame.Header isTemplate={isTemplate === 'true'}>
           <Frame.Header.Section align='left'>
-            <NavWithFlyer isTemplate={isTemplate === 'true'} />
+            <Nav isTemplate={isTemplate === 'true'} />
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
             <div style={{ padding: '35px 25px' }}>
