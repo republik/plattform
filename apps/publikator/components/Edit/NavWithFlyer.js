@@ -32,8 +32,7 @@ const NavWithFlyer = ({
   isNew,
 }) => {
   const repoId = getRepoIdFromQuery(query)
-  const root = isFlyer ? 'flyer' : 'repo'
-  const editPath = `/${root}/${repoId}/edit`
+  const editPath = `/repo/${repoId}/edit`
   const treePath = `/repo/${repoId}/tree`
   const currentPath = asPath.split('?')[0]
   return (

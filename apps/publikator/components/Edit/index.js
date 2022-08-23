@@ -108,7 +108,7 @@ const EditLoader = ({
 
   // when data is loaded and store is set up: we (re)initialise the value
   useEffect(() => {
-    if (store && data && !data.loading) {
+    if (store && !data?.loading) {
       resetValue(store, data)
     }
   }, [data, store])

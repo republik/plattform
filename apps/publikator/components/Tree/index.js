@@ -272,7 +272,6 @@ class Tree extends Component {
               const hasLocalVersion =
                 localStorageCommitIds.indexOf(commit.id) !== -1
               const hightlight = hasLocalVersion || commit.milestones.length
-              const root = commit.document.type === 'slate' ? 'flyer' : 'repo'
               return (
                 <li
                   key={commit.id}
@@ -298,7 +297,7 @@ class Tree extends Component {
                       <Interaction.P>
                         <Link
                           href={{
-                            pathname: `/${root}/${repoId}/edit`,
+                            pathname: `/repo/${repoId}/edit`,
                             query: {
                               commitId: commit.id,
                             },
@@ -389,7 +388,6 @@ class Tree extends Component {
         {width &&
           commits &&
           commits.map((commit) => {
-            const root = commit.document.type === 'slate' ? 'flyer' : 'repo'
             return (
               <span
                 key={commit.id}
@@ -401,7 +399,7 @@ class Tree extends Component {
               >
                 <Link
                   href={{
-                    pathname: `/${root}/${repoId}/edit`,
+                    pathname: `/repo/${repoId}/edit`,
                     query: {
                       commitId: commit.id,
                     },

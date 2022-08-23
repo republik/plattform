@@ -47,6 +47,10 @@ const getLatestCommit = gql`
       id
       latestCommit {
         ...SimpleCommit
+        document {
+          id
+          type
+        }
       }
     }
   }
