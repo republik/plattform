@@ -106,7 +106,9 @@ const Insert: React.FC<{
       Icon={AddIcon}
       onClick={() => {
         const insertPath = insertAfter(editor, template, path)
-        setFormPath(insertPath)
+        setTimeout(() => {
+          setFormPath(insertPath)
+        })
       }}
       title='insert new element'
       style={iconStyle}

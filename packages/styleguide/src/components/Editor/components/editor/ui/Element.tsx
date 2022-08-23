@@ -29,7 +29,9 @@ export const ElementButton: React.FC<{
           editor,
           config.type as CustomElementsType,
         )
-        setFormPath(insertPath)
+        setTimeout(() => {
+          setFormPath(insertPath)
+        })
       }}
     />
   )

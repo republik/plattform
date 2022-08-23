@@ -17,6 +17,7 @@ import { Editorial, Sub, Sup, Interaction, Flyer } from '../../Typography'
 const schema: SchemaConfig = {
   container: Flyer.Layout,
   flyerTile: FlyerTile,
+  flyerTileMeta: FlyerTile,
   flyerTileOpening: FlyerTile,
   flyerTileClosing: FlyerTile,
   flyerAuthor: FlyerAuthor,
