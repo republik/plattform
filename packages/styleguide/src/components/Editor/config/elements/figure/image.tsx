@@ -46,7 +46,6 @@ export const config: ElementConfigI = {
   Form,
   attrs: {
     isVoid: true,
-    highlightSelected: true,
   },
   props: ['images', 'alt'],
 }

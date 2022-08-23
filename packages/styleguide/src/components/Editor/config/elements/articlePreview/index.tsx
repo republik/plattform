@@ -3,8 +3,8 @@ import {
   ArticlePreviewElement,
   ElementConfigI,
   ElementFormProps,
-} from '../../custom-types'
-import { ArticlePreviewIcon } from '../../../Icons'
+} from '../../../custom-types'
+import { ArticlePreviewIcon } from '../../../../Icons'
 
 const Form: React.FC<ElementFormProps<ArticlePreviewElement>> = ({
   element,
@@ -15,7 +15,6 @@ export const config: ElementConfigI = {
   Form,
   attrs: {
     isVoid: true,
-    highlightSelected: true,
   },
   button: { icon: ArticlePreviewIcon },
 }

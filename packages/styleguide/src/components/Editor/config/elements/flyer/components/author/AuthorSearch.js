@@ -3,9 +3,9 @@ import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import debounce from 'lodash/debounce'
 
-import Autocomplete from '../Form/Autocomplete'
-import { InlineSpinner } from '../Spinner'
-import { ErrorMessage } from './components/render/Message'
+import Autocomplete from '../../../../../../Form/Autocomplete'
+import { InlineSpinner } from '../../../../../../Spinner'
+import { ErrorMessage } from '../../../../../components/render/Message'
 
 const getAuthors = gql`
   query getAuthors($search: String!) {

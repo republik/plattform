@@ -265,7 +265,7 @@ export const toggleElement = (
   }
 
   // handle unselectable elements (e.g. break)
-  if (config.attrs?.isVoid && !config.attrs?.highlightSelected) {
+  if (config.attrs?.isVoid && !config?.Form) {
     selectAdjacent(editor)
     return editor.selection.anchor.path
   }
@@ -478,6 +478,7 @@ export const insertAfter = (
   const config = elConfig[elKey]
   const element = buildElement(elKey as CustomElementsType, config)
   const insertPath = calculateSiblingPath(elPath)
+  console.log({ element, insertPath })
   Transforms.insertNodes(editor, element, { at: insertPath })
   Transforms.select(editor, insertPath)
   Transforms.collapse(editor, { edge: 'start' })

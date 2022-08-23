@@ -86,6 +86,7 @@ export {
   MdViewQuilt as FlyerTileIcon,
   MdViewHeadline as FlyerTileMetaIcon,
   MdOutlineQuiz as QuizIcon,
+  MdOutlineDelete as DeleteIcon,
 } from 'react-icons/md'
 
 export {

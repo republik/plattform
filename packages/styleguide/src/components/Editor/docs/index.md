@@ -248,7 +248,6 @@ export const config: ElementConfigI = {
   Form,
   attrs: {
     isVoid: true,
-    highlightSelected: true,
   },
   props: ['src', 'srcDark', 'alt'],
 }
@@ -463,8 +462,6 @@ rows:
     Description: boolean
   - Variable: isInline
     Description: boolean
-  - Variable: highlightSelected
-    Description: boolean *(for void elements)*
   - Variable: formatText
     Description: boolean
   - Variable: blockUi
@@ -576,7 +573,6 @@ export const config: ElementConfigI = {
   Form,
   attrs: {
     isVoid: true,
-    highlightSelected: true,
   },
   props: ['src', 'srcDark', 'alt'],
 }

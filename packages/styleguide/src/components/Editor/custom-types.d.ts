@@ -262,14 +262,13 @@ interface EditorAttrsI {
 }
 
 export interface BlockUiAttrsI {
-  position: object
+  position?: object
 }
 
 interface ElementAttrsI extends EditorAttrsI {
   formatText?: boolean
   blockUi?: BlockUiAttrsI
   isTextInline?: boolean
-  highlightSelected?: boolean
 }
 
 export type EditorAttr = keyof EditorAttrsI

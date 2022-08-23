@@ -1,33 +1,35 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import {
   AddIcon,
   ArrowDownIcon,
   ArrowUpIcon,
   EditIcon,
-  RemoveIcon,
+  DeleteIcon,
+  MoreIcon,
 } from '../../../../Icons'
 import IconButton from '../../../../IconButton'
 import { css } from 'glamor'
 import { insertAfter, moveElement, removeElement } from '../helpers/structure'
 import { useSlate } from 'slate-react'
 import { useFormContext } from './Forms'
-import {
-  BlockUiAttrsI,
-  CustomElement,
-  TemplateType,
-} from '../../../custom-types'
+import { CustomElement, TemplateType } from '../../../custom-types'
 import { config as elConfig } from '../../../config/elements'
-import { useColorContext } from '../../../../Colors/ColorContext'
+import CalloutMenu from '../../../../Callout/CalloutMenu'
+import colors from '../../../../../theme/colors'
+
+const DEFAULT_POSITION = {
+  top: 0,
+  left: -40,
+}
 
 const styles = {
   container: css({
     userSelect: 'none',
     position: 'absolute',
     background: 'white',
-    padding: 5,
+    padding: 3,
     zIndex: 10,
-    borderRightWidth: 1,
-    borderRightStyle: 'solid',
+    borderRadius: 1,
   }),
   padded: css({
     marginBottom: 8,
@@ -81,7 +83,8 @@ const Remove: React.FC<{
   const isDisabled = useMemo(() => !removeElement(editor, path, true), [path])
   return (
     <IconButton
-      Icon={RemoveIcon}
+      Icon={DeleteIcon}
+      fill={colors.error}
       onClick={() => removeElement(editor, path)}
       disabled={isDisabled}
       title='remove element'
@@ -129,31 +132,45 @@ const Edit: React.FC<{
 const BlockUi: React.FC<{
   path: number[]
   element: CustomElement
-  blockUi: BlockUiAttrsI
-}> = ({ path, element, blockUi }) => {
-  const [colorScheme] = useColorContext()
+}> = ({ path, element }) => {
   const template = element.template
-  // this UI is here to manage repeatable, interchangeable elements
-  if (!template?.repeat) return null
+  const blockUi = elConfig[element.type].attrs?.blockUi
+  const showEdit = !!elConfig[element.type].Form
+  const showMoveUi = !!template?.repeat
+
+  const editButton = (
+    <div {...(showMoveUi && styles.padded)}>
+      <Edit path={path} />
+    </div>
+  )
+
   return (
     <div
       className='ui-element'
       {...styles.container}
-      style={blockUi.position}
+      style={blockUi?.position || DEFAULT_POSITION}
       contentEditable={false}
-      {...colorScheme.set('borderColor', 'divider')}
     >
-      {!!elConfig[element.type].Form && (
-        <div {...styles.padded}>
-          <Edit path={path} />
-        </div>
+      {showMoveUi ? (
+        <CalloutMenu
+          Element={(props) => <MoreIcon size={24} {...props} />}
+          elementProps={{ style: { display: 'flex' } }}
+        >
+          {showEdit && editButton}
+          {showMoveUi && [
+            <div {...styles.padded} key='move'>
+              <MoveUp path={path} />
+              <MoveDown path={path} />
+            </div>,
+            <div {...styles.padded} key='insert'>
+              <Insert path={path} templates={template.type} />
+            </div>,
+            <Remove path={path} key='remove' />,
+          ]}
+        </CalloutMenu>
+      ) : (
+        editButton
       )}
-      <div {...styles.padded}>
-        <MoveUp path={path} />
-        <MoveDown path={path} />
-      </div>
-      <Remove path={path} />
-      <Insert path={path} templates={template.type} />
     </div>
   )
 }

@@ -196,12 +196,11 @@ export const selectText = (
   Transforms.collapse(editor, { edge: direction === 'next' ? 'start' : 'end' })
 }
 
-const isUnselectableVoid = (
+export const isUnselectableVoid = (
   editor: CustomEditor,
   target: NodeEntry<CustomDescendant>,
 ): boolean =>
-  Editor.isVoid(editor, target[0]) &&
-  !elConfig[target[0].type].attrs?.highlightSelected
+  Editor.isVoid(editor, target[0]) && !elConfig[target[0].type]?.Form
 
 const isEnd = (target: NodeEntry<CustomDescendant>): boolean =>
   Text.isText(target[0]) && target[0].end

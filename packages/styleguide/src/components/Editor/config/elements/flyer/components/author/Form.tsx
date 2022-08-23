@@ -1,11 +1,10 @@
 import React from 'react'
 import {
-  ElementConfigI,
   ElementFormProps,
   FlyerAuthorElement,
-} from '../../../../custom-types'
-import AuthorSearch from '../../../../AuthorSearch'
-import { Label } from '../../../../../Typography'
+} from '../../../../../custom-types'
+import AuthorSearch from './AuthorSearch'
+import { Label } from '../../../../../../Typography'
 
 const Form: React.FC<ElementFormProps<FlyerAuthorElement>> = ({
   element,
@@ -22,11 +21,4 @@ const Form: React.FC<ElementFormProps<FlyerAuthorElement>> = ({
   </div>
 )
 
-export const config: ElementConfigI = {
-  Form,
-  props: ['authorId', 'resolvedAuthor'],
-  attrs: {
-    isVoid: true,
-    highlightSelected: true,
-  },
-}
+export default Form

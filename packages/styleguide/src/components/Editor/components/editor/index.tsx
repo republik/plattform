@@ -89,8 +89,7 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
       )
     }
     const isVoid = config.attrs?.isVoid
-    const blockUi = config.attrs?.blockUi
-    const highlightSelected = config.attrs?.highlightSelected
+    const showBlockUi = config.Form || element.template?.repeat
     const Component =
       editor.customConfig.editorSchema?.[element.type] ||
       editor.customConfig.schema[element.type]
@@ -115,30 +114,16 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
     const baseStyles = { position: 'relative' }
     return (
       <Component
-        {...(isSelected &&
-          highlightSelected &&
-          colorScheme.set('borderColor', 'primary'))}
         {...element}
         attributes={attributes}
-        style={
-          isSelected && highlightSelected
-            ? {
-                ...attributes.style,
-                ...baseStyles,
-                borderWidth: 2,
-                borderStyle: 'solid',
-              }
-            : { ...attributes.style, ...baseStyles }
-        }
+        style={{ ...attributes.style, ...baseStyles }}
         onMouseDown={selectVoid}
         onDoubleClick={(e) => {
           e.stopPropagation()
           setFormPath(path)
         }}
       >
-        {blockUi && isSelected && (
-          <BlockUi path={path} element={element} blockUi={blockUi} />
-        )}
+        {showBlockUi && isSelected && <BlockUi path={path} element={element} />}
         {children}
       </Component>
     )
