@@ -1,9 +1,15 @@
-import React, { useState } from 'react'
+import React, {
+  MouseEvent,
+  TouchEventHandler,
+  useEffect,
+  useState,
+} from 'react'
 import { css } from 'glamor'
 import {
   PROGRESS_HEIGHT,
   SLIDERTHUMB_SIZE,
   ZINDEX_AUDIOPLAYER_PROGRESS,
+  ZINDEX_AUDIOPLAYER_SCRUB,
 } from '../LegacyAudioPlayer/constants'
 import { useColorContext } from '../Colors/useColorContext'
 
@@ -26,6 +32,15 @@ const styles = {
     bottom: 0,
     height: PROGRESS_HEIGHT,
     backgroundColor: '#444', // TODO: define played styling
+  }),
+  scrubber: css({
+    position: 'absolute',
+    inset: 0,
+    height: PROGRESS_HEIGHT,
+    zIndex: ZINDEX_AUDIOPLAYER_SCRUB,
+  }),
+  seeking: css({
+    cursor: '',
   }),
   bufferedWrapper: css({
     position: 'relative',
@@ -59,6 +74,7 @@ type ScrubberProps = {
    * of where to seek to.
    */
   onSeek: (progress: number) => void
+  showScrubber?: boolean
 }
 
 const Scrubber = ({
@@ -66,22 +82,70 @@ const Scrubber = ({
   duration = 0,
   buffered,
   onSeek,
+  showScrubber = true,
 }: ScrubberProps) => {
   const [colorScheme] = useColorContext()
   const scrubber = React.useRef<HTMLDivElement>(null)
+  const [isSeeking, setIsSeeking] = useState(false)
 
   const progress = currentTime / duration
-  console.log('progress', progress)
+
+  const scrub = (pointerPosition: number) => {
+    if (!scrubber.current) return
+    const scrubberBounds = scrubber.current.getBoundingClientRect()
+    const scrubberWidth = scrubberBounds.width
+    const scrubberLeft = pointerPosition - scrubberBounds.left
+    const progress = scrubberLeft / scrubberWidth
+    onSeek(progress)
+  }
+
+  const touchStart: TouchEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault()
+    setIsSeeking(true)
+    scrub(e.changedTouches[0].clientX)
+  }
+
+  const touchEnd: TouchEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault()
+    setIsSeeking(false)
+  }
+
+  const touchMove: TouchEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault()
+    if (isSeeking) {
+      scrub(e.changedTouches[0].clientX)
+    }
+  }
+
+  const mouseDown = (e: MouseEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    setIsSeeking(true)
+    scrub(e.clientX)
+  }
+
+  const mouseUp = (e: MouseEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    setIsSeeking(false)
+  }
+
+  const mouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    if (isSeeking) {
+      scrub(e.clientX)
+    }
+  }
+
+  useEffect(() => {
+    if (isSeeking) {
+      const handleDocumentMouseUp = () => setIsSeeking(false)
+      document.addEventListener('mouseup', handleDocumentMouseUp)
+      return () =>
+        document.removeEventListener('mouseup', handleDocumentMouseUp)
+    }
+  })
 
   return (
-    <div ref={scrubber} {...styles.root}>
-      <div
-        {...styles.sliderThumb}
-        {...colorScheme.set('backgroundColor', 'defaultInverted')}
-        style={{
-          left: `${progress * 100}%`,
-        }}
-      />
+    <div {...styles.root}>
       <div {...styles.bufferedWrapper}>
         {buffered &&
           times(buffered.length).map((i) => {
@@ -101,6 +165,26 @@ const Scrubber = ({
           })}
       </div>
       <div {...styles.progress} style={{ width: `${progress * 100}%` }} />
+      {showScrubber && (
+        <div
+          {...styles.sliderThumb}
+          {...colorScheme.set('backgroundColor', 'defaultInverted')}
+          style={{
+            left: `${progress * 100}%`,
+            cursor: isSeeking ? 'grabbing' : 'grab',
+          }}
+        />
+      )}
+      <div
+        {...styles.scrubber}
+        ref={scrubber}
+        onTouchStart={touchStart}
+        onTouchEnd={touchEnd}
+        onTouchMove={touchMove}
+        onMouseDown={mouseDown}
+        onMouseMove={isSeeking ? mouseMove : undefined}
+        onMouseUp={isSeeking ? mouseUp : undefined}
+      />
     </div>
   )
 }
