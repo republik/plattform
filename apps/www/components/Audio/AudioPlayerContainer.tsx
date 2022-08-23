@@ -38,6 +38,7 @@ type AudioPlayerState = {
   duration: number
   playRate: number
   isPlaying: boolean
+  isLoading: boolean
 }
 
 type AudioPlayerContainerProps = {
@@ -68,6 +69,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       setDuration(state.duration)
       setPlaybackRate(state.playRate)
       setIsPlaying(state.isPlaying)
+      setIsLoading(state.isLoading)
       return
     } else if (audioRef.current) {
       const audioElem = audioRef.current
@@ -128,7 +130,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const onSeek = (progress: number) => {
     if (!audioState) return
     if (inNativeApp) {
-      throw new Error('not implemented')
+      notifyApp(AudioEvent.SEEK, progress * duration)
     } else if (audioRef.current) {
       audioRef.current.currentTime = progress * duration
       syncState()
@@ -184,7 +186,8 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     setTrackedAudioState(audioState)
     setIsLoading(true)
     if (inNativeApp) {
-      throw new Error('not implemented')
+      // TODO: check if logic required logic here is already handled by sync
+      // throw new Error('not implemented useEffect')
     } else if (audioRef.current) {
       audioRef.current.load()
     }
