@@ -25,4 +25,8 @@ describe('Link shortening test', () => {
     const res = shortenLink('https://example.com')
     expect(res).toBe('example.com')
   })
+  test('shortenLink: return string as is if it not link', () => {
+    const res = shortenLink('my link will go here')
+    expect(res).toBe('my link will go here')
+  })
 })
