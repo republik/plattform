@@ -27,7 +27,7 @@ export const config: ElementConfigI = {
   attrs: {
     blockUi: {
       position: {
-        top: 5,
+        top: 15,
       },
     },
   },

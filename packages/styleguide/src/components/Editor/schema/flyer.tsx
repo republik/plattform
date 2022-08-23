@@ -5,7 +5,12 @@ import { Figure, FigureImage } from '../../Figure/Slate'
 import { ListItem } from '../../List'
 import { List } from '../../List/Slate'
 import { PullQuoteSource } from '../../PullQuote'
-import { ArticlePreview } from '../../ArticlePreview'
+import {
+  ArticleLead,
+  ArticlePreview,
+  ArticleTextContainer,
+  ArticleTitle,
+} from '../../ArticlePreview'
 import { FlyerTile } from '../../Flyer'
 import { FlyerAuthor } from '../../Flyer/Author'
 import { PullQuote, PullQuoteText } from '../../Flyer/PullQuote'
@@ -27,6 +32,9 @@ const schema: SchemaConfig = {
   flyerTitle: Flyer.H2,
   flyerTopic: Flyer.H3,
   articlePreview: ArticlePreview,
+  articlePreviewTextContainer: ArticleTextContainer,
+  articlePreviewTitle: ArticleTitle,
+  articlePreviewLead: ArticleLead,
   figureByline: FigureByline,
   figureCaption: FigureCaption,
   figure: Figure,

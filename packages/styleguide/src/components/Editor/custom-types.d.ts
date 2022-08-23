@@ -158,6 +158,20 @@ export type FlyerSignatureElement = SharedElement & {
 
 export type ArticlePreviewElement = SharedElement & {
   type: 'articlePreview'
+  backgroundColor?: string
+  color?: string
+}
+
+export type ArticlePreviewTextContainerElement = SharedElement & {
+  type: 'articlePreviewTextContainer'
+}
+
+export type ArticlePreviewTitleElement = SharedElement & {
+  type: 'articlePreviewTitle'
+}
+
+export type ArticlePreviewLeadElement = SharedElement & {
+  type: 'articlePreviewLead'
 }
 
 export type QuizElement = SharedElement & {
@@ -206,6 +220,9 @@ export type CustomElement =
   | FlyerPunchlineElement
   | FlyerSignatureElement
   | ArticlePreviewElement
+  | ArticlePreviewTextContainerElement
+  | ArticlePreviewTitleElement
+  | ArticlePreviewLeadElement
   | QuizElement
   | QuizItemElement
   | QuizAnswerElement
@@ -246,6 +263,9 @@ export type CustomElementsType =
   | 'flyerPunchline'
   | 'flyerSignature'
   | 'articlePreview'
+  | 'articlePreviewTextContainer'
+  | 'articlePreviewTitle'
+  | 'articlePreviewLead'
   | 'quiz'
   | 'quizItem'
   | 'quizAnswer'

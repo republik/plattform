@@ -29,7 +29,7 @@ const styles = {
     background: 'white',
     padding: 3,
     zIndex: 10,
-    borderRadius: 1,
+    borderRadius: 40,
   }),
   padded: css({
     marginBottom: 8,

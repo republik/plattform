@@ -27,6 +27,9 @@ import { config as flyerSignature } from './flyer/components/signature'
 import { config as flyerTitle } from './flyer/components/title'
 import { config as flyerTopic } from './flyer/components/topic'
 import { config as articlePreview } from './articlePreview'
+import { config as articlePreviewTextContainer } from './articlePreview/textContainer'
+import { config as articlePreviewTitle } from './articlePreview/title'
+import { config as articlePreviewLead } from './articlePreview/lead'
 import { config as quiz } from './flyer/components/quiz/container'
 import { config as quizItem } from './flyer/components/quiz/item'
 import { config as quizAnswer } from './flyer/components/quiz/answer'
@@ -62,6 +65,9 @@ export const config: ElementsConfig = {
   flyerTitle,
   flyerTopic,
   articlePreview,
+  articlePreviewTextContainer,
+  articlePreviewTitle,
+  articlePreviewLead,
   quiz,
   quizItem,
   quizAnswer,
