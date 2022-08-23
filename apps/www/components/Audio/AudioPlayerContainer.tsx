@@ -5,7 +5,6 @@ import { useInNativeApp } from '../../lib/withInNativeApp'
 import { AudioEvent } from './types/AudioEvent'
 import AppMessageEventEmitter from '../../lib/react-native/AppMessageEventEmitter'
 import notifyApp from '../../lib/react-native/NotifyApp'
-import { setLogVerbosity } from '@apollo/client'
 
 const DEFAULT_SYNC_INTERVAL = 500 // in ms
 const DEFAULT_PLAYBACK_RATE = 1
@@ -29,6 +28,7 @@ export type AudioPlayerUIProps = {
     onSeek: (progress: number) => void
     onForward: () => void
     onBackward: () => void
+    onClose: () => void
   }
   buffered: TimeRanges
 }
@@ -93,7 +93,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
 
   const onPlay = () => {
     if (!audioState || isPlaying) return
-    // TODO: start playing
+    console.log('onPlay')
     if (inNativeApp) {
       notifyApp(AudioEvent.PLAY, audioState)
     } else if (audioRef.current) {
@@ -127,7 +127,6 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
 
   const onSeek = (progress: number) => {
     if (!audioState) return
-    console.log('onSeek', progress)
     if (inNativeApp) {
       throw new Error('not implemented')
     } else if (audioRef.current) {
@@ -159,14 +158,13 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   useEffect(() => {
     // Add a listener for the event emitted by the native app
     if (inNativeApp) {
-      // Setup listeneronMessageSync
       AppMessageEventEmitter.addListener(AudioEvent.SYNC, syncState)
       return () => {
         AppMessageEventEmitter.removeListener(AudioEvent.SYNC, syncState)
       }
     }
 
-    // Update the interal state based on the audio element every 500ms
+    // Update the internal state based on the audio element every 500ms
     if (isPlaying && audioRef.current) {
       const interval = setInterval(() => {
         syncState()
@@ -240,6 +238,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
             onSeek,
             onForward,
             onBackward,
+            onClose: onStop,
           },
           buffered,
         })}

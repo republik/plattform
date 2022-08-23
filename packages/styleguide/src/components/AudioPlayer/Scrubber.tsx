@@ -38,6 +38,9 @@ const styles = {
     inset: 0,
     height: PROGRESS_HEIGHT,
     zIndex: ZINDEX_AUDIOPLAYER_SCRUB,
+    marginTop: -12,
+    paddingTop: 16,
+    cursor: 'ew-resize',
   }),
   seeking: css({
     cursor: '',
