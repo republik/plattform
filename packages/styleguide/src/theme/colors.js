@@ -138,6 +138,10 @@ const colors = {
     neutral: '#bbb',
     discrete,
     chartsInverted: '#000000',
+    journalBg: '#AEC3FE',
+    journalText: '#141414',
+    journalMetaText: '#405080',
+    journalFormatText: '#D50033',
   },
   dark: {
     logo: '#FFFFFF',
@@ -187,6 +191,10 @@ const colors = {
     neutral: '#bbb',
     discrete,
     chartsInverted: '#FFFFFF',
+    journalBg: '#011651',
+    journalText: '#F0F0F0',
+    journalMetaText: '#A3B5E6',
+    journalFormatText: '#FF2A5C',
   },
   mappings: {
     format: {
