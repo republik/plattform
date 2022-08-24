@@ -1,24 +1,29 @@
 import React from 'react'
 import { css } from 'glamor'
+import { useColorContext } from '../Colors/ColorContext'
+import { mUp } from '../../theme/mediaQueries'
 
 const styles = {
   container: css({
-    borderBottom: '2px solid white',
-    '& > *': {
-      maxWidth: 700,
-      margin: '0 auto',
+    borderBottomWidth: '1px',
+    borderBottomStyle: 'solid',
+  }),
+  content: css({
+    maxWidth: 700,
+    margin: '0 auto',
+    padding: '50px 15px',
+    [mUp]: {
+      padding: '90px 0',
     },
-    '& > h1': {
-      maxWidth: 900,
-    },
+    '& > *': {},
     '& > :not(.ui-element)': {
-      paddingTop: 90,
+      // paddingTop: 90,
     },
     '& > :not(.ui-element) ~ :not(.ui-element)': {
-      paddingTop: 'inherit',
+      // paddingTop: 'inherit',
     },
     '& > :last-child': {
-      paddingBottom: 90,
+      marginBottom: '0 !important',
     },
   }),
 }
@@ -27,9 +32,15 @@ export const FlyerTile: React.FC<{
   attributes: any
   [x: string]: unknown
 }> = ({ children, attributes, ...props }) => {
+  const [colorScheme] = useColorContext()
   return (
-    <div {...props} {...attributes} {...styles.container}>
-      {children}
+    <div
+      {...props}
+      {...attributes}
+      {...styles.container}
+      {...colorScheme.set('borderBottomColor', 'journalText')}
+    >
+      <div {...styles.content}>{children}</div>
     </div>
   )
 }

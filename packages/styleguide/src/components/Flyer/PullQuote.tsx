@@ -1,21 +1,33 @@
 import React from 'react'
+import { css } from 'glamor'
+import { mUp } from '../../theme/mediaQueries'
+import { fontStyles } from '../Typography'
 
 export const PullQuote = ({ children, attributes }) => (
-  <blockquote {...attributes}>{children}</blockquote>
+  <blockquote
+    {...attributes}
+    {...css({ margin: '0 0 14px', [mUp]: { margin: '0 0 19px' } })}
+  >
+    {children}
+  </blockquote>
 )
 
 export const PullQuoteText = ({ children, attributes }) => (
   <div
     {...attributes}
-    style={{
-      backgroundColor: '#0E755A',
-      color: 'white',
-      fontFamily: 'GT America',
-      fontWeight: 700,
-      fontSize: 40,
-      textAlign: 'center',
-      padding: 20,
-    }}
+    {...css({
+      ...fontStyles.sansSerifMedium,
+      backgroundColor: '#000',
+      color: '#F2F2F2',
+      padding: 16,
+      fontSize: 20,
+      lineHeight: 1.318,
+      [mUp]: {
+        padding: 20,
+        fontSize: 40,
+        lineHeight: 1.179,
+      },
+    })}
   >
     <q
       style={{
