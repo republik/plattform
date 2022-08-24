@@ -30,6 +30,7 @@ export type AudioPlayerUIProps = {
     onForward: () => void
     onBackward: () => void
     onClose: () => void
+    onPlaybackRateChange: (value: number) => void
   }
   buffered: TimeRanges
 }
@@ -160,6 +161,17 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     }
   }
 
+  const onPlaybackRateChange = (value: number) => {
+    if (!audioState) return
+    if (inNativeApp) {
+      notifyApp(AudioEvent.PLAYBACK_RATE, value)
+    } else {
+      mediaRef.current.playbackRate = value
+      syncState()
+    }
+    setPlaybackRate(value)
+  }
+
   useEffect(() => {
     // Add a listener for the event emitted by the native app
     if (inNativeApp) {
@@ -220,6 +232,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
             onForward,
             onBackward,
             onClose: onStop,
+            onPlaybackRateChange,
           },
           buffered,
         })}

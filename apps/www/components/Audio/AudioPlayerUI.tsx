@@ -55,6 +55,7 @@ const AudioPlayerUI = ({
         isPlaying={isPlaying}
         isLoading={isLoading}
         currentTime={currentTime}
+        playbackRate={playbackRate}
         duration={duration}
         actions={actions}
         buffered={buffered}
