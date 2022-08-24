@@ -292,6 +292,7 @@ const EditLoader = ({
           meta: {
             slug: slug(repoId),
             template: 'flyer',
+            feed: true,
           },
         },
       },
