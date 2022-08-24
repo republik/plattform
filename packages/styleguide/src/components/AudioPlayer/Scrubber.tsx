@@ -45,9 +45,6 @@ const styles = {
       paddingBottom: 10,
       cursor: disabled ? 'default' : 'ew-resize',
     }),
-  seeking: css({
-    cursor: '',
-  }),
   bufferedWrapper: css({
     position: 'relative',
     inset: 0,
