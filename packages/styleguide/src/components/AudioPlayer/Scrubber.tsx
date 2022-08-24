@@ -109,8 +109,8 @@ const Scrubber = ({
   }, [audioProgress, setInternalProgress])
 
   const debouncedSeek = useMemo(
-    () => debounce((progress) => onSeek(progress), 100),
-    [],
+    () => debounce((progress) => onSeek(progress), 1000 / 60),
+    [onSeek],
   )
 
   const scrub = (pointerPosition: number, force = false) => {
@@ -150,19 +150,19 @@ const Scrubber = ({
   const mouseDown = (e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault()
     setIsSeeking(true)
-    scrub(e.clientX)
+    scrub(e.nativeEvent.clientX)
   }
 
   const mouseUp = (e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault()
     setIsSeeking(false)
-    scrub(e.clientX, true)
+    scrub(e.nativeEvent.clientX, true)
   }
 
   const mouseMove = (e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault()
     if (isSeeking) {
-      scrub(e.clientX)
+      scrub(e.nativeEvent.clientX)
     }
   }
 
