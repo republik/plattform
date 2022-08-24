@@ -7,3 +7,5 @@ export { default as AuthorSearch } from './components/Editor/config/elements/fly
 
 export { ToolbarContainer as EditorToolbar } from './components/Editor/components/editor/ui/Toolbar'
 export { default as flyerEditorSchema } from './components/Editor/schema/flyerEditor'
+
+export { default as ColorPicker } from './lib/ColorPicker'
