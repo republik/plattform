@@ -188,3 +188,4 @@ export * from './templates'
 
 export { default as SlateRender } from './components/Editor/components/render'
 export { default as flyerSchema } from './components/Editor/schema/flyer'
+export { default as ColorPicker } from './lib/ColorPicker'

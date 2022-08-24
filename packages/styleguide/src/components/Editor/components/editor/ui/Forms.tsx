@@ -15,7 +15,6 @@ import { config as elConfig } from '../../../config/elements'
 import { Overlay, OverlayBody, OverlayToolbar } from '../../../../Overlay'
 import { ReactEditor, useSlate } from 'slate-react'
 import { toTitle } from '../helpers/text'
-import { Interaction } from '../../../../Typography'
 import { css } from 'glamor'
 
 const styles = {
@@ -80,6 +79,11 @@ export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
       return forms.concat(currentForm)
     }, [])
     .filter(Boolean)
+    .sort((f1, f2) => {
+      const l1 = f1.node[1].length
+      const l2 = f2.node[1].length
+      return l1 - l2
+    })
 }
 
 const ElementForm: React.FC<FormData & { onClose: () => void }> = ({
@@ -88,14 +92,13 @@ const ElementForm: React.FC<FormData & { onClose: () => void }> = ({
   onClose,
 }) => {
   const editor = useSlate()
-  const element = Editor.node(editor, node[1])[0] as CustomElement
+  const nodeEntry = Editor.node(editor, node[1])
+  const element = nodeEntry[0] as CustomElement
   return (
     <div {...styles.elementForm}>
-      <div {...styles.elementTitle}>
-        <Interaction.P>{toTitle(element.type)}</Interaction.P>
-      </div>
       <Form
         element={element}
+        path={nodeEntry[1]}
         onChange={(newProperties: Partial<CustomElement>) => {
           Transforms.setNodes(editor, newProperties, {
             at: node[1],
@@ -122,7 +125,10 @@ export const FormOverlay = (): ReactElement => {
 
   return (
     <Overlay onClose={onClose}>
-      <OverlayToolbar title='Edit Data' onClose={onClose} />
+      <OverlayToolbar
+        title={toTitle(forms[forms.length - 1].node[0].type)}
+        onClose={onClose}
+      />
       <OverlayBody>
         {forms.map((formData, i) => (
           <ElementForm {...formData} onClose={onClose} key={i} />

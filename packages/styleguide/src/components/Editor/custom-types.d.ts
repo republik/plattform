@@ -158,6 +158,7 @@ export type FlyerSignatureElement = SharedElement & {
 
 export type ArticlePreviewElement = SharedElement & {
   type: 'articlePreview'
+  repoId?: string
   backgroundColor?: string
   color?: string
 }
@@ -317,6 +318,7 @@ export type MarksConfig = {
 
 export type ElementFormProps<E> = {
   element: E
+  path?: Path
   onChange: (newProperties: Partial<E>) => void
   onClose: () => void
 }

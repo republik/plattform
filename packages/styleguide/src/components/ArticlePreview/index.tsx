@@ -39,14 +39,20 @@ export const ArticleLead: React.FC<{
   )
 }
 
+// TODO: with link for wwww / preview
 export const ArticlePreview: React.FC<{
   attributes: any
   color: string
   backgroundColor: string
+  style?: object
   [x: string]: unknown
-}> = ({ children, attributes, color, backgroundColor, ...props }) => {
+}> = ({ children, attributes, color, backgroundColor, style, ...props }) => {
   return (
-    <div {...attributes} {...props} style={{ color, backgroundColor }}>
+    <div
+      {...attributes}
+      {...props}
+      style={{ ...style, color, backgroundColor }}
+    >
       {children}
     </div>
   )

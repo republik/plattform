@@ -4,6 +4,7 @@ import { ResolvedAuthor } from '../Editor/custom-types'
 import { useColorContext } from '../Colors/ColorContext'
 import { mUp } from '../../theme/mediaQueries'
 import { fontStyles } from '../Typography'
+import { PLACEHOLDER } from '../Figure/Slate'
 
 export const FlyerAuthor: React.FC<{
   resolvedAuthor?: ResolvedAuthor
@@ -21,24 +22,28 @@ export const FlyerAuthor: React.FC<{
           display: 'flex',
           alignItems: 'center',
           margin: '0 0 10px',
+          height: 30,
           opacity: resolvedAuthor ? 1 : 0.4,
           [mUp]: {
             margin: '0 0 20px',
+            height: 40,
           },
         }}
       >
-        {resolvedAuthor?.portrait && (
+        {(!authorId || resolvedAuthor?.portrait) && (
           <img
             style={{ marginRight: 16 }}
             {...css({
               marginRight: 15,
               height: 30,
+              width: 30,
               [mUp]: {
                 marginRight: 15,
                 height: 40,
+                width: 40,
               },
             })}
-            src={resolvedAuthor.portrait}
+            src={resolvedAuthor?.portrait || PLACEHOLDER}
           />
         )}
         <span

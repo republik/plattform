@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   ElementConfigI,
   ElementFormProps,
@@ -7,6 +7,7 @@ import {
 import ImageInput from './ImageInput'
 import { Label } from '../../../../Typography'
 import { css } from 'glamor'
+import Checkbox from '../../../../Form/Checkbox'
 
 const styles = {
   container: css({
@@ -22,7 +23,7 @@ const Form: React.FC<ElementFormProps<FigureImageElement>> = ({
 }) => (
   <div {...styles.container}>
     <div>
-      <Label>Light mode</Label>
+      <Label>Default Image</Label>
       <ImageInput
         src={element.images?.default?.url}
         onChange={(url) => {
@@ -31,7 +32,7 @@ const Form: React.FC<ElementFormProps<FigureImageElement>> = ({
       />
     </div>
     <div>
-      <Label>Dark mode (optional)</Label>
+      <Label>Dark Mode Image</Label>
       <ImageInput
         src={element.images?.dark?.url}
         onChange={(url) => {

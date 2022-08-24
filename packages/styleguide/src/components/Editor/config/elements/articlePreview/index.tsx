@@ -1,46 +1,90 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   ArticlePreviewElement,
   ElementConfigI,
   ElementFormProps,
 } from '../../../custom-types'
 import { ArticlePreviewIcon } from '../../../../Icons'
-import { SketchPicker as ColorPicker } from 'react-color'
-import { Label } from '../../../../Typography'
 import { css } from 'glamor'
-import ColorPickerCallout from '../../../../Chart/Editor/ColorPickerCallout'
+import ColorPicker from '../../../../../lib/ColorPicker'
+import RepoSearch from './RepoSearch'
+import { Label } from '../../../../Typography'
+import Checkbox from '../../../../Form/Checkbox'
+import { useSlate } from 'slate-react'
+import { Transforms } from 'slate'
 
 const styles = {
   container: css({
     display: 'grid',
     gridTemplateColumns: 'repeat(2, 1fr)',
     gridColumnGap: 20,
+    width: '100%',
+    marginTop: 20,
   }),
 }
 
 const Form: React.FC<ElementFormProps<ArticlePreviewElement>> = ({
   element,
+  path,
   onChange,
-}) => (
-  <div {...styles.container}>
-    <div>
-      <Label>Text Color</Label>
-      <ColorPickerCallout
-        mode={undefined}
-        pickableColors={undefined}
-        color={element.color}
-        onChange={(color) => onChange({ color })}
-      />
-    </div>
-    <div>
-      <Label>Background Color</Label>
-      <ColorPicker
-        color={element.backgroundColor}
-        onChange={(backgroundColor) => onChange({ backgroundColor })}
-      />
-    </div>
-  </div>
-)
+}) => {
+  const editor = useSlate()
+  const [syncData, setSyncData] = useState<boolean>(true)
+  return (
+    <>
+      <div>
+        <Label>Beitrag Id{element.repoId ? `: ${element.repoId}` : ''}</Label>
+        <RepoSearch
+          onChange={({ value }) => {
+            onChange({ repoId: value.id })
+            if (syncData) {
+              const meta = value.latestCommit.document.meta
+              Transforms.insertText(editor, meta.title, {
+                at: path.concat([1, 0]),
+              })
+              Transforms.insertText(editor, meta.shortTitle, {
+                at: path.concat([1, 1]),
+              })
+              Transforms.setNodes(
+                editor,
+                { images: { default: { url: meta.image } } },
+                {
+                  at: path.concat([0]),
+                },
+              )
+            }
+          }}
+        />
+        <Checkbox
+          checked={syncData}
+          onChange={(_, checked) => setSyncData(checked)}
+        >
+          Titel, Lead und Bild synchen
+        </Checkbox>
+      </div>
+      <div {...styles.container}>
+        <div>
+          <ColorPicker
+            label='Text Color'
+            value={element.color}
+            onChange={(color) => {
+              onChange({ color })
+            }}
+          />
+        </div>
+        <div>
+          <ColorPicker
+            label='Background Color'
+            value={element.backgroundColor}
+            onChange={(backgroundColor) => {
+              onChange({ backgroundColor })
+            }}
+          />
+        </div>
+      </div>
+    </>
+  )
+}
 
 export const config: ElementConfigI = {
   Form,
@@ -48,7 +92,7 @@ export const config: ElementConfigI = {
     { type: 'figureImage' },
     { type: 'articlePreviewTextContainer', main: true },
   ],
-  props: ['backgroundColor', 'color'],
+  props: ['backgroundColor', 'color', 'repoId'],
   defaultProps: {
     backgroundColor: '#000',
     color: '#fff',

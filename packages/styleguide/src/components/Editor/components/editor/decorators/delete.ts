@@ -12,8 +12,12 @@ export const withDelete = (editor: CustomEditor): CustomEditor => {
       // e.g. deleting all the text in a blockquote
       // -> we want to delete the whole blockquote
       if (getCharCount([(container || element)[0]]) === 0) {
-        selectAdjacent(editor, 'previous')
-        return Transforms.removeNodes(editor, { at: element[1] })
+        // selectAdjacent(editor, 'previous')
+        Transforms.removeNodes(editor, { at: element[1] })
+        setTimeout(() => {
+          selectAdjacent(editor, 'previous')
+        })
+        return
       }
     }
     deleteBackward(unit)

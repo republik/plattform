@@ -11,8 +11,7 @@ const Form: React.FC<ElementFormProps<FlyerAuthorElement>> = ({
   onChange,
 }) => (
   <div>
-    <Label>Author Id</Label>
-    {element.authorId}
+    <Label>Autor Id{element.authorId ? `: ${element.authorId}` : ''}</Label>
     <AuthorSearch
       onChange={({ value }) => {
         onChange({ authorId: value.id, resolvedAuthor: value })
