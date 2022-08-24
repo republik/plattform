@@ -93,17 +93,20 @@ const EditLoader = ({
 
   // new route, new store
   useEffect(() => {
-    if (commitId && repoId) {
-      initStore()
+    if (commitId && repoId && !data?.loading) {
+      const storeKey = [repoId, commitId].join('/')
+      const dataKey = [data?.repo?.id, data?.repo?.commit?.id].join('/')
+      if (
+        store?.key !== storeKey &&
+        (commitId === 'new' || dataKey === storeKey)
+      ) {
+        const newStore = initLocalStore(storeKey)
+        setStore(newStore)
+        checkLocalStorageSupport()
+        resetValue(newStore, data)
+      }
     }
-  }, [commitId, repoId])
-
-  // when data is loaded and store is set up: we (re)initialise the value
-  useEffect(() => {
-    if (store && !data?.loading) {
-      resetValue(store, data)
-    }
-  }, [data, store])
+  }, [store, commitId, repoId, data])
 
   useEffect(() => {
     if (debouncedValue) {
@@ -247,14 +250,6 @@ const EditLoader = ({
   const checkLocalStorageSupport = () => {
     if (store && !store.supported) {
       addWarning(t('commit/warn/noStorage'))
-    }
-  }
-
-  const initStore = () => {
-    const storeKey = [repoId, commitId].join('/')
-    if (!store || store.key !== storeKey) {
-      setStore(initLocalStore(storeKey))
-      checkLocalStorageSupport()
     }
   }
 
