@@ -8,12 +8,12 @@ export const withDelete = (editor: CustomEditor): CustomEditor => {
 
   editor.deleteBackward = (unit) => {
     if (unit === 'character') {
-      const { element: parent } = getAncestry(editor)
+      const { element, container } = getAncestry(editor)
       // e.g. deleting all the text in a blockquote
       // -> we want to delete the whole blockquote
-      if (getCharCount([parent[0]]) === 0) {
+      if (getCharCount([(container || element)[0]]) === 0) {
         selectAdjacent(editor, 'previous')
-        return Transforms.removeNodes(editor, { at: parent[1] })
+        return Transforms.removeNodes(editor, { at: element[1] })
       }
     }
     deleteBackward(unit)
