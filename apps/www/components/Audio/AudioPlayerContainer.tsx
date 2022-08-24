@@ -93,8 +93,8 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     }
   }
 
-  const onPlay = () => {
-    if (!audioState || isPlaying) return
+  const onPlay = (force?: true) => {
+    if (!audioState || (isPlaying && !force)) return
     console.log('onPlay')
     if (inNativeApp) {
       notifyApp(AudioEvent.PLAY, audioState)
@@ -106,7 +106,6 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
 
   const onPause = () => {
     if (!audioState || !isPlaying) return
-    // TODO: stop playing
     if (inNativeApp) {
       notifyApp(AudioEvent.PAUSE)
     } else if (audioRef.current) {
@@ -124,6 +123,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       audioRef.current.currentTime = 0
       syncState()
     }
+    setHasAutoPlayed(false)
     onCloseAudioPlayer()
   }
 
@@ -182,44 +182,18 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   // Update the local state if a new audio-state is provided
   useEffect(() => {
     if (audioState === trackedAudioState) return
-
+    console.log('new audio state', audioState)
+    setHasAutoPlayed(false) // reset autoplay
     setTrackedAudioState(audioState)
     setIsLoading(true)
     if (inNativeApp) {
-      // TODO: check if logic required logic here is already handled by sync
+      // TODO: check if required logic here is already handled by sync
       // throw new Error('not implemented useEffect')
     } else if (audioRef.current) {
       audioRef.current.load()
     }
+    onPlay(true)
   }, [audioState, trackedAudioState])
-
-  // WEB-TASKS
-  // --- Effects ---
-
-  // TODO: save media-progress periodically -> interval
-  // TODO: save media-progress onPause -> callback
-  // TODO: save media-progress onClose -> callback
-  // --- MediaSession ---
-  // TODO: sync track with media-session
-  // TODO: sync position with media-session
-  // TODO: sync playbackRate with media-session
-  // TODO: handle play + pause from media-session -> play/pause
-  // TODO: handle forward + backward from media-session -> forward/backward
-
-  // APP-TASKS
-  // --- PostMessage ---
-  // TODO: postMessage to app if track changes
-  // TODO: postMessage to app if playbackRate changes
-  // TODO: postMessage to app if play in web-ui
-  // TODO: postmessage to app if pause in web-ui
-  // TODO: postMessage to app if seekTo in web-ui (also handle seekForward + seekBackward)
-  // TODO: postMessage to app if close in web-ui
-  // --- onMessageSync listeners
-  // TODO: onMessageSync to web-ui if play in app
-  // TODO: onMessageSync to web-ui if pause in app
-  // TODO: onMessageSync to web-ui if seekTo in app
-  // TODO: onMessageSync to web-ui if seekForward in app
-  // TODO: onMessageSync to web-ui if seekBackward in app
 
   return (
     <div>
