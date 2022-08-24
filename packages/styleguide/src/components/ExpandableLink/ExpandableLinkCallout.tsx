@@ -241,12 +241,7 @@ const ExpandableLinkCallout = ({
           dangerouslySetInnerHTML={{ __html: expandedLink.description }}
           error={false}
         />
-        <a
-          href={expandedLink.href}
-          target='_blank'
-          {...styles.contentLink}
-          {...linkRule}
-        >
+        <a href={expandedLink.href} {...styles.contentLink} {...linkRule}>
           <LinkIcon
             size={20}
             {...styles.linkIcon}
