@@ -6,8 +6,9 @@ import { useTranslation } from '../../lib/withT'
 import BottomPanel from '../Frame/BottomPanel'
 
 const AudioPlayerUI = ({
-  audioRef,
+  mediaRef,
   audioState,
+  autoPlay,
   currentTime,
   playbackRate,
   duration,
@@ -18,22 +19,14 @@ const AudioPlayerUI = ({
 }: AudioPlayerUIProps) => {
   const { inNativeApp } = useInNativeApp()
   const { t } = useTranslation()
-  const totalState = {
-    audioState,
-    isPlaying,
-    duration,
-    currentTime,
-    playbackRate,
-  }
 
   const playbackElement = useMemo(() => {
     if (inNativeApp) return null
 
-    // TODO: potentially handle mp4 & hls audio-sources
-
     return (
       <audio
-        ref={audioRef}
+        ref={mediaRef}
+        preload={autoPlay ? 'auto' : 'metadata'}
         onPlay={actions.onPlay}
         onPause={actions.onPause}
         onCanPlay={actions.onCanPlay}
@@ -49,7 +42,7 @@ const AudioPlayerUI = ({
         )}
       </audio>
     )
-  }, [])
+  }, [audioState, inNativeApp, autoPlay, mediaRef, actions])
 
   if (!audioState) return null
 
@@ -58,6 +51,7 @@ const AudioPlayerUI = ({
       <AudioPlayer
         t={t}
         title={audioState.title}
+        sourcePath={audioState.sourcePath}
         isPlaying={isPlaying}
         isLoading={isLoading}
         currentTime={currentTime}

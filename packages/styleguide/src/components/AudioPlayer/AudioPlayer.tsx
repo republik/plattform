@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { css } from 'glamor'
+import Link from 'next/link'
 import Scrubber from './Scrubber'
 import { CloseIcon, PauseIcon, PlayIcon } from '../Icons'
 import { useColorContext } from '../Colors/ColorContext'
@@ -8,6 +9,7 @@ import Loader from '../Loader'
 import { MdExpandLess } from 'react-icons/md'
 import { sansSerifRegular14, sansSerifRegular15 } from '../Typography/styles'
 import Spinner from '../Spinner'
+import { underline } from '../../lib/styleMixins'
 
 const styles = {
   root: css({
@@ -47,6 +49,10 @@ const styles = {
   }),
   title: css({
     ...sansSerifRegular15,
+    textDecoration: 'none',
+    '&[href]:hover': {
+      ...underline,
+    },
   }),
   time: css({
     ...sansSerifRegular14,
@@ -83,6 +89,7 @@ type AudioPlayerProps = {
   //
   actions: AudioPlayerActions
   t: any
+  sourcePath?: string
 }
 
 const renderTime = (time) => {
@@ -94,6 +101,7 @@ const renderTime = (time) => {
 const AudioPlayer = ({
   t,
   title,
+  sourcePath,
   isPlaying,
   isLoading,
   currentTime = 0,
@@ -131,7 +139,16 @@ const AudioPlayer = ({
           />
         )}
         <div {...styles.metaDataWrapper}>
-          <span {...styles.title}>{title}</span>
+          {title &&
+            (sourcePath ? (
+              <Link href={sourcePath} passHref>
+                <a {...styles.title} {...colorScheme.set('color', 'text')}>
+                  {title}
+                </a>
+              </Link>
+            ) : (
+              <span {...styles.title}>{title}</span>
+            ))}
           <span {...styles.time} {...colorScheme.set('color', 'textSoft')}>
             {' '}
             {renderTime(currentTime)} / {renderTime(duration)}
@@ -149,6 +166,7 @@ const AudioPlayer = ({
             title={t(
               `styleguide/AudioPlayer/${isExpanded ? 'shrink' : 'expand'}`,
             )}
+            onClick={() => setIsExpanded(!isExpanded)}
           />
           <IconButton
             Icon={CloseIcon}

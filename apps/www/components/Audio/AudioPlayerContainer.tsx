@@ -12,8 +12,9 @@ const SKIP_FORWARD_TIME = 15
 const SKIP_BACKWARD_TIME = 10
 
 export type AudioPlayerUIProps = {
+  mediaRef: RefObject<HTMLAudioElement>
   audioState: AudioState | null
-  audioRef: RefObject<HTMLAudioElement>
+  autoPlay?: boolean
   playbackRate: number
   currentTime: number
   duration: number
@@ -60,7 +61,9 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const [playbackRate, setPlaybackRate] = usePlaybackRate(DEFAULT_PLAYBACK_RATE)
   const [buffered, setBuffered] = useState<TimeRanges>(null)
 
-  const audioRef = useRef<HTMLAudioElement>(null)
+  const mediaRef = useRef<HTMLAudioElement | HTMLVideoElement>(null)
+
+  // TODO: fetch audio progress from media progress
 
   const syncState = (state?: AudioPlayerState) => {
     if (inNativeApp && state) {
@@ -71,8 +74,8 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       setIsPlaying(state.isPlaying)
       setIsLoading(state.isLoading)
       return
-    } else if (audioRef.current) {
-      const audioElem = audioRef.current
+    } else if (mediaRef.current) {
+      const audioElem = mediaRef.current
       setCurrentTime(audioElem.currentTime)
       setDuration(audioElem.duration)
       setPlaybackRate(audioElem.playbackRate)
@@ -98,8 +101,8 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     console.log('onPlay')
     if (inNativeApp) {
       notifyApp(AudioEvent.PLAY, audioState)
-    } else if (audioRef.current) {
-      audioRef.current.play()
+    } else if (mediaRef.current) {
+      mediaRef.current.play()
       syncState()
     }
   }
@@ -108,8 +111,8 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     if (!audioState || !isPlaying) return
     if (inNativeApp) {
       notifyApp(AudioEvent.PAUSE)
-    } else if (audioRef.current) {
-      audioRef.current.pause()
+    } else if (mediaRef.current) {
+      mediaRef.current.pause()
       syncState()
     }
   }
@@ -118,9 +121,9 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     if (!audioState) return
     if (inNativeApp) {
       notifyApp(AudioEvent.STOP)
-    } else if (audioRef.current) {
-      audioRef.current.pause()
-      audioRef.current.currentTime = 0
+    } else if (mediaRef.current) {
+      mediaRef.current.pause()
+      mediaRef.current.currentTime = 0
       syncState()
     }
     setHasAutoPlayed(false)
@@ -131,8 +134,8 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     if (!audioState) return
     if (inNativeApp) {
       notifyApp(AudioEvent.SEEK, progress * duration)
-    } else if (audioRef.current) {
-      audioRef.current.currentTime = progress * duration
+    } else if (mediaRef.current) {
+      mediaRef.current.currentTime = progress * duration
       syncState()
     }
   }
@@ -141,8 +144,8 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     if (!audioState) return
     if (inNativeApp) {
       notifyApp(AudioEvent.FORWARD, SKIP_FORWARD_TIME)
-    } else if (audioRef.current) {
-      audioRef.current.currentTime += SKIP_FORWARD_TIME
+    } else if (mediaRef.current) {
+      mediaRef.current.currentTime += SKIP_FORWARD_TIME
       syncState()
     }
   }
@@ -151,8 +154,8 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     if (!audioState) return
     if (inNativeApp) {
       notifyApp(AudioEvent.BACKWARD, SKIP_BACKWARD_TIME)
-    } else if (audioRef.current) {
-      audioRef.current.currentTime -= SKIP_BACKWARD_TIME
+    } else if (mediaRef.current) {
+      mediaRef.current.currentTime -= SKIP_BACKWARD_TIME
       syncState()
     }
   }
@@ -167,7 +170,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     }
 
     // Update the internal state based on the audio element every 500ms
-    if (isPlaying && audioRef.current) {
+    if (isPlaying && mediaRef.current) {
       const interval = setInterval(() => {
         syncState()
       }, Math.min(DEFAULT_SYNC_INTERVAL / playbackRate, 1000))
@@ -189,8 +192,8 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     if (inNativeApp) {
       // TODO: check if required logic here is already handled by sync
       // throw new Error('not implemented useEffect')
-    } else if (audioRef.current) {
-      audioRef.current.load()
+    } else if (mediaRef.current) {
+      mediaRef.current.load()
     }
     onPlay(true)
   }, [audioState, trackedAudioState])
@@ -199,8 +202,9 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     <div>
       {audioPlayerVisible &&
         children({
-          audioRef,
+          mediaRef,
           audioState,
+          autoPlay: autoPlayActive,
           isLoading,
           isPlaying,
           isSeeking: false,
