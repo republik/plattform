@@ -66,6 +66,7 @@ const getForm = (
 
 export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
   if (!path || path === []) return []
+  // TODO: get forms of descendant nodes (unless excluded)
   return path
     .reduce((forms, p, i) => {
       const currentPath = path.slice(0, i ? -i : undefined)
@@ -126,7 +127,7 @@ export const FormOverlay = (): ReactElement => {
   return (
     <Overlay onClose={onClose}>
       <OverlayToolbar
-        title={toTitle(forms[forms.length - 1].node[0].type)}
+        title={toTitle(forms[0].node[0].type)}
         onClose={onClose}
       />
       <OverlayBody>
