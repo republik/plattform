@@ -7,23 +7,10 @@ import initLocalStore from '../../../../lib/utils/localStorage'
 import withT from '../../../../lib/withT'
 import { getCurrentValue } from '../../../../components/Edit'
 import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
-import { gql } from '@apollo/client'
 import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 import { useEffect, useState } from 'react'
-
-const getCommitById = gql`
-  query getCommitById($repoId: ID!, $commitId: ID!) {
-    repo(id: $repoId) {
-      ...EditPageRepo
-      commit(id: $commitId) {
-        ...CommitWithDocument
-      }
-    }
-  }
-  ${fragments.EditPageRepo}
-  ${fragments.CommitWithDocument}
-`
+import { withDefaultSSR } from '../../../../lib/apollo/helpers'
+import { withCommitData } from '../../../../components/Edit/enhancers'
 
 const PreviewPage = ({ router: { query }, data }) => {
   const { commitId, commitOnly } = query
@@ -52,17 +39,6 @@ const PreviewPage = ({ router: { query }, data }) => {
   )
 }
 
-export default compose(
-  withRouter,
-  withT,
-  graphql(getCommitById, {
-    skip: ({ router }) =>
-      router.query.commitId === 'new' || !router.query.commitId,
-    options: ({ router }) => ({
-      variables: {
-        repoId: getRepoIdFromQuery(router.query),
-        commitId: router.query.commitId,
-      },
-    }),
-  }),
-)(PreviewPage)
+export default withDefaultSSR(
+  compose(withRouter, withT, withCommitData)(PreviewPage),
+)

@@ -4,7 +4,7 @@ import {
   withCommitMutation,
   withLatestCommit,
 } from './enhancers'
-import { Loader, useDebounce, slug } from '@project-r/styleguide'
+import { Loader, useDebounce, slug, usePrevious } from '@project-r/styleguide'
 import { cleanupTree } from '@project-r/styleguide/editor'
 import withT from '../../lib/withT'
 import withMe from '../../lib/withMe'
@@ -21,7 +21,7 @@ import {
   withUncommittedChangesMutation,
 } from '../VersionControl/UncommittedChanges'
 import BranchingNotice from '../VersionControl/BranchingNotice'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { useWarningContext } from './Warnings'
 import { INITIAL_VALUE } from '../ContentEditor'
 import { API_UNCOMMITTED_CHANGES_URL } from '../../lib/settings'
@@ -48,14 +48,6 @@ export const getCurrentValue = (store, data) => {
   return storedValue || committedValue || INITIAL_VALUE
 }
 
-const usePreviousValue = (value) => {
-  const ref = useRef()
-  useEffect(() => {
-    ref.current = value
-  })
-  return ref.current
-}
-
 const EditLoader = ({
   router: { query, pathname },
   t,
@@ -79,7 +71,7 @@ const EditLoader = ({
   const [interruptingUsers, setInterruptingUsers] = useState(undefined)
   const [beginChanges, setBeginChanges] = useState(undefined)
   const [didUnlock, setDidUnlock] = useState(false)
-  const prevUncommittedChanges = usePreviousValue(uncommittedChanges)
+  const prevUncommittedChanges = usePrevious(uncommittedChanges)
   // value = slate tree for the wysiwyg
   const [value, setValue] = useState()
   const [debouncedValue] = useDebounce(value, 500)

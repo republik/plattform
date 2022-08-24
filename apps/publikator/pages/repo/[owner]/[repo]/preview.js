@@ -1,8 +1,6 @@
 import { useMemo } from 'react'
 import { withRouter } from 'next/router'
 import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
-import { gql } from '@apollo/client'
 import { ColorContextProvider, VariableContext } from '@project-r/styleguide'
 import { renderMdast } from 'mdast-react-render'
 
