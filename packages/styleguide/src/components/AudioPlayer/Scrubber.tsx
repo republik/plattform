@@ -29,11 +29,9 @@ const styles = {
   progress: css({
     position: 'absolute',
     zIndex: ZINDEX_AUDIOPLAYER_PROGRESS,
-    left: 0,
-    top: 0,
-    bottom: 0,
+    inset: 0,
     height: PROGRESS_HEIGHT,
-    backgroundColor: '#444', // TODO: define played styling
+    transition: 'width 100ms ease-in-out',
   }),
   scrubber: (disabled: boolean) =>
     css({
@@ -43,6 +41,8 @@ const styles = {
       zIndex: ZINDEX_AUDIOPLAYER_SCRUB,
       marginTop: -12,
       paddingTop: 16,
+      marginBottom: -12,
+      paddingBottom: 10,
       cursor: disabled ? 'default' : 'ew-resize',
     }),
   seeking: css({
@@ -55,9 +55,7 @@ const styles = {
     height: PROGRESS_HEIGHT,
   }),
   buffered: css({
-    // TODO: define styling for buffered
     position: 'absolute',
-    backgroundColor: '#d1d1d1',
     height: PROGRESS_HEIGHT,
     opacity: 0.25,
   }),
