@@ -8,7 +8,7 @@ import notifyApp from '../../lib/react-native/NotifyApp'
 
 const DEFAULT_SYNC_INTERVAL = 500 // in ms
 const DEFAULT_PLAYBACK_RATE = 1
-const SKIP_FORWARD_TIME = 15
+const SKIP_FORWARD_TIME = 30
 const SKIP_BACKWARD_TIME = 10
 
 export type AudioPlayerUIProps = {

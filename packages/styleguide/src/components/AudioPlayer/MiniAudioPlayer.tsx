@@ -6,10 +6,11 @@ import { CloseIcon, PauseIcon, PlayIcon } from '../Icons'
 import { useColorContext } from '../Colors/ColorContext'
 import IconButton from '../IconButton'
 import { MdExpandLess } from 'react-icons/md'
-import { sansSerifRegular14, sansSerifRegular15 } from '../Typography/styles'
+import { sansSerifRegular15 } from '../Typography/styles'
 import Spinner from '../Spinner'
 import { underline } from '../../lib/styleMixins'
-import { AudioPlayerProps, renderTime } from './shared'
+import { AudioPlayerProps } from './shared'
+import Time from './views/Time'
 
 const styles = {
   root: css({
@@ -53,11 +54,6 @@ const styles = {
     '&[href]:hover': {
       ...underline,
     },
-  }),
-  time: css({
-    ...sansSerifRegular14,
-    fontFeatureSettings: '"tnum" 1, "kern" 1',
-    margin: 0,
   }),
 }
 
@@ -121,10 +117,7 @@ const MiniAudioPlayer = ({
             ) : (
               <span {...styles.title}>{title}</span>
             ))}
-          <span {...styles.time} {...colorScheme.set('color', 'textSoft')}>
-            {' '}
-            {renderTime(currentTime)} / {renderTime(duration)}
-          </span>
+          <Time />
         </div>
         <div {...styles.buttonWrapper}>
           <IconButton
