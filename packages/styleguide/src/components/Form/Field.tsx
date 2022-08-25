@@ -25,7 +25,7 @@ const styles = {
     width: '100%',
     paddingTop: LINE_HEIGHT,
     position: 'relative',
-    display: 'inline-block',
+    display: 'block',
     ...fontStyles.sansSerifRegular,
     fontSize: 22,
     lineHeight: `${LINE_HEIGHT}px`,
