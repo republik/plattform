@@ -2,17 +2,18 @@ import React from 'react'
 import { css } from 'glamor'
 import { AudioPlayerProps, renderTime } from './shared'
 import IconButton from '../IconButton'
-import { ForwardIcon, PauseIcon, PlayIcon } from '../Icons'
+import { CloseIcon, ForwardIcon, PauseIcon, PlayIcon } from '../Icons'
 import Spinner from '../Spinner'
 import { MdExpandMore, MdReplay10 } from 'react-icons/md'
 import Scrubber from './Scrubber'
 import PlaybackRateControl from './controls/PlaybackRateControl'
+import CurrentlyPlaying from './views/CurrentlyPlaying'
 
 const styles = {
   root: css({
     display: 'flex',
     flexDirection: 'column',
-    gap: '1rem',
+    gap: '1.5rem',
     padding: '1.5rem',
   }),
   spinnerWrapper: css({
@@ -34,6 +35,12 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: '1rem',
+  }),
+  topActions: css({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   }),
 }
 
@@ -67,11 +74,23 @@ const ExpandedAudioPlayer = ({
 }: ExpandedAudioPlayerProps) => {
   return (
     <div {...styles.root}>
-      <div>queue</div>
-      <div>cover</div>
-      <div>
-        {renderTime(currentTime)} / {renderTime(duration)}
+      <div {...styles.topActions}>
+        <IconButton
+          Icon={CloseIcon}
+          size={24}
+          style={{ marginRight: 0 }}
+          onClick={handleClose}
+        />
       </div>
+      <div>queue</div>
+      <CurrentlyPlaying
+        t={t}
+        currentTime={currentTime}
+        duration={duration}
+        title={title}
+        sourcePath={sourcePath}
+        date={new Date().toLocaleDateString()}
+      />
       <div>
         <Scrubber
           currentTime={currentTime}
@@ -100,7 +119,7 @@ const ExpandedAudioPlayer = ({
             title={t(`styleguide/AudioPlayer/${isPlaying ? 'pause' : 'play'}`)}
             aria-live='assertive'
             Icon={isPlaying ? PauseIcon : PlayIcon}
-            size={48}
+            size={64}
             fillColorName={'text'}
             style={{ marginRight: 0 }}
           />
