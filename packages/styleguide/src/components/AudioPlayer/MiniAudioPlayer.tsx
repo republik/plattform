@@ -117,7 +117,7 @@ const MiniAudioPlayer = ({
             ) : (
               <span {...styles.title}>{title}</span>
             ))}
-          <Time />
+          <Time currentTime={currentTime} duration={duration} />
         </div>
         <div {...styles.buttonWrapper}>
           <IconButton

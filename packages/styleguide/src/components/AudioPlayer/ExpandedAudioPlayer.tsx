@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import { AudioPlayerProps, renderTime } from './shared'
+import { AudioPlayerProps } from './shared'
 import IconButton from '../IconButton'
 import { CloseIcon, ForwardIcon, PauseIcon, PlayIcon } from '../Icons'
 import Spinner from '../Spinner'
