@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { css } from 'glamor'
 import {
   Scroller,
@@ -39,18 +39,6 @@ const MetaDataForm = ({ t, metaData, setMetaData }) => {
   const [colorScheme] = useColorContext()
   const scrollRef = useRef()
 
-  useEffect(() => {
-    if (!scrollRef.current) {
-      return
-    }
-    const scroller = scrollRef.current
-    const target = Array.from(scroller.children)[activeTabIndex]
-
-    scrollIntoView(target, {
-      time: 400,
-    })
-  }, [activeTabIndex])
-
   const handleMetaDataChange = (name, value) => {
     setMetaData((prevState) => {
       return {
@@ -76,6 +64,17 @@ const MetaDataForm = ({ t, metaData, setMetaData }) => {
                 isActive={activeTabIndex === i}
                 onClick={() => {
                   setActiveTabIndex(i)
+
+                  const target = Array.from(scrollRef.current.children)[i]
+                  // since scroller also uses scrollIntoView we need to wait
+                  setTimeout(() => {
+                    scrollIntoView(target, {
+                      time: 400,
+                      align: {
+                        topOffset: 100,
+                      },
+                    })
+                  }, 100)
                 }}
               />
             ))}
