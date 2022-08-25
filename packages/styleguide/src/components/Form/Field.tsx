@@ -23,13 +23,13 @@ import { plainButtonRule } from '../Button'
 const styles = {
   container: css({
     width: '100%',
+    paddingTop: LINE_HEIGHT,
     position: 'relative',
-    display: 'inline-block',
+    display: 'block',
     ...fontStyles.sansSerifRegular,
     fontSize: 22,
     lineHeight: `${LINE_HEIGHT}px`,
-    paddingTop: `${LINE_HEIGHT}px`,
-    marginBottom: '15px',
+    marginBottom: 15,
     cursor: 'text',
   }),
   field: css({
@@ -153,7 +153,6 @@ const Field = React.forwardRef<
     icon?: ReactNode
     simulate?: string
     renderInput?: React.FC<Record<string, unknown>>
-    noMargin?: boolean
   }
 >(
   (
@@ -174,7 +173,6 @@ const Field = React.forwardRef<
       required,
       value,
       renderInput,
-      noMargin,
     },
     forwardRef,
   ) => {
@@ -228,7 +226,7 @@ const Field = React.forwardRef<
     )
 
     return (
-      <label {...styles.container} style={{ marginBottom: noMargin && 0 }}>
+      <label {...styles.container}>
         {renderInput({
           ['aria-required']: required ? true : undefined,
           disabled,
