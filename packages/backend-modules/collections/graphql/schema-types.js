@@ -53,6 +53,7 @@ enum ProgressState {
 extend type User {
   collections: [Collection!]!
   collection(name: String!): Collection
+  collectionPlaylist: [PlaylistItem!]
   collectionItems(
     names: [String!]!
     progress: ProgressState
@@ -91,6 +92,23 @@ type MediaProgress implements CollectionItemInterface {
   max: MediaProgress
 }
 
+type PlaylistItem implements CollectionItemInterface {
+  id: ID!
+  sequence: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  collection: Collection!
+  document: Document!
+}
+
+enum PlaylistItemType {
+  Document
+}
+
+input PlaylistItemInput {
+  type: PlaylistItemType!
+  id: ID!
+}
 
 extend interface PlayableMedia {
   userProgress: MediaProgress
