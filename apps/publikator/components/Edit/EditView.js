@@ -17,6 +17,7 @@ const styles = {
 }
 
 const EditView = ({
+  editorKey,
   interruptingUsers,
   uncommittedChanges,
   revertHandler,
@@ -52,6 +53,7 @@ const EditView = ({
       </div>
       {!!value && (
         <ContentEditor
+          key={editorKey}
           value={value}
           onChange={setValue}
           readOnly={readOnly || repo?.isArchived}

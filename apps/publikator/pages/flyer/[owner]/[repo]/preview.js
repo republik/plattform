@@ -2,10 +2,9 @@ import { withRouter } from 'next/router'
 import { flyerSchema, SlateRender } from '@project-r/styleguide'
 import { cleanupTree } from '@project-r/styleguide/editor'
 import Loader from '../../../../components/Loader'
-import * as fragments from '../../../../lib/graphql/fragments'
 import initLocalStore from '../../../../lib/utils/localStorage'
 import withT from '../../../../lib/withT'
-import { getCurrentValue } from '../../../../components/Edit'
+import { getCurrentContent } from '../../../../components/Edit'
 import compose from 'lodash/flowRight'
 import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 import { useEffect, useState } from 'react'
@@ -29,10 +28,13 @@ const PreviewPage = ({ router: { query }, data }) => {
       loading={!data || (!commitOnly && !store) || data?.loading}
       error={data?.error}
       render={() => {
-        const value = JSON.parse(JSON.stringify(getCurrentValue(store, data)))
-        if (!value) return null
+        const content = getCurrentContent(store, data)
+        if (!content) return null
         return (
-          <SlateRender value={cleanupTree(value, true)} schema={flyerSchema} />
+          <SlateRender
+            value={cleanupTree(content.children, true)}
+            schema={flyerSchema}
+          />
         )
       }}
     />

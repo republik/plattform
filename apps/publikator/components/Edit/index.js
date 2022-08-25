@@ -33,16 +33,23 @@ import Nav from './Nav'
 
 const debug = createDebug('publikator:slate:edit')
 
-export const CONTENT_KEY = 'value'
-export const META_KEY = 'meta'
+const getCommittedContent = (data) => data?.repo?.commit?.document?.content
 
-const getCommittedValue = (data) =>
-  data?.repo?.commit?.document?.content?.children
-
-export const getCurrentValue = (store, data) => {
-  const storedValue = store?.get(CONTENT_KEY)
-  const committedValue = getCommittedValue(data)
-  return storedValue || committedValue || INITIAL_VALUE
+export const getCurrentContent = (store, data) => {
+  const storedContent = store?.get('editorState')
+  const committedContent = getCommittedContent(data)
+  return (
+    storedContent ||
+    committedContent || {
+      children: INITIAL_VALUE,
+      meta: {
+        title: 'Journal',
+        slug: 'journal',
+        template: 'flyer',
+        feed: true,
+      },
+    }
+  )
 }
 
 const EditLoader = ({
@@ -55,6 +62,9 @@ const EditLoader = ({
   editRepoMeta,
   me,
 }) => {
+  const [editorKey, setEditorKey] = useState(1)
+  const remountEditor = () => setEditorKey((key) => key + 1)
+
   const router = useRouter()
   const { commitId, publishDate } = query
   const repoId = getRepoIdFromQuery(query)
@@ -69,9 +79,10 @@ const EditLoader = ({
   const [beginChanges, setBeginChanges] = useState(undefined)
   const [didUnlock, setDidUnlock] = useState(false)
   const prevUncommittedChanges = usePrevious(uncommittedChanges)
-  // value = slate tree for the wysiwyg
-  const [value, setValue] = useState()
-  const [debouncedValue] = useDebounce(value, 500)
+
+  // document.content to be committed ({children, meta})
+  const [content, setContent] = useState()
+  const [debouncedContent] = useDebounce(content, 500)
 
   // cleanup effect
   useEffect(() => {
@@ -100,16 +111,16 @@ const EditLoader = ({
         const newStore = initLocalStore(storeKey)
         setStore(newStore)
         checkLocalStorageSupport()
-        resetValue(newStore, data)
+        forceSetContent(getCurrentContent(newStore, data))
       }
     }
   }, [store, commitId, repoId, data])
 
   useEffect(() => {
-    if (debouncedValue) {
+    if (debouncedContent) {
       contentChangeHandler()
     }
-  }, [debouncedValue])
+  }, [debouncedContent])
 
   const isNew = commitId === 'new'
 
@@ -234,14 +245,9 @@ const EditLoader = ({
   // https://github.com/ianstormtaylor/slate/pull/4540
   // this is a workaround to rerender the editor when we want
   // to reset the value
-  const updateContentEditor = (newValue) => {
-    setValue(undefined)
-    setTimeout(() => setValue(newValue), 10)
-  }
-
-  const resetValue = (store, data) => {
-    const currentValue = getCurrentValue(store, data)
-    updateContentEditor(currentValue)
+  const forceSetContent = (newContent) => {
+    setContent(newContent)
+    remountEditor()
   }
 
   const checkLocalStorageSupport = () => {
@@ -275,17 +281,7 @@ const EditLoader = ({
       message: message,
       document: {
         type: 'slate',
-        content: {
-          children: cleanupTree(store.get(CONTENT_KEY), true),
-          // TODO: meta
-          // meta: store.get(META_KEY),
-          // until then, a helping hand
-          meta: {
-            slug: slug(repoId),
-            template: 'flyer',
-            feed: true,
-          },
-        },
+        content,
       },
     })
       .then(({ data }) => {
@@ -319,7 +315,7 @@ const EditLoader = ({
     }
     setDidUnlock(false)
     setAcknowledgedUsers([])
-    updateContentEditor(getCommittedValue(data) || INITIAL_VALUE)
+    forceSetContent(getCurrentContent(null, data))
     router.replace({
       pathname,
       query: queryWithoutPreview,
@@ -327,12 +323,19 @@ const EditLoader = ({
   }
 
   const contentChangeHandler = () => {
-    const committedValue = getCommittedValue(data)
+    if (!debouncedContent) {
+      return
+    }
+    const committedContent = getCommittedContent(data)
     if (
-      !committedValue ||
-      !isEqual(committedValue, cleanupTree(debouncedValue, true))
+      !committedContent ||
+      !isEqual(
+        cleanupTree(committedContent.children, true),
+        cleanupTree(debouncedContent.children, true),
+      ) ||
+      !isEqual(committedContent.meta, debouncedContent.meta)
     ) {
-      store.set(CONTENT_KEY, debouncedValue)
+      store.set('editorState', debouncedContent)
       const msSinceBegin =
         beginChanges && new Date().getTime() - beginChanges.getTime()
       if (
@@ -435,6 +438,7 @@ const EditLoader = ({
               <Preview repoId={repoId} commitId={commitId} />
             ) : (
               <EditView
+                editorKey={editorKey}
                 interruptingUsers={interruptingUsers}
                 uncommittedChanges={uncommittedChanges}
                 revertHandler={revertHandler}
@@ -444,8 +448,13 @@ const EditLoader = ({
                 }}
                 repo={repo}
                 hasUncommittedChanges={beginChanges}
-                value={value}
-                setValue={setValue}
+                value={content?.children}
+                setValue={(newValue) =>
+                  setContent((currentContent) => ({
+                    ...currentContent,
+                    children: newValue,
+                  }))
+                }
                 readOnly={readOnly}
               />
             )
