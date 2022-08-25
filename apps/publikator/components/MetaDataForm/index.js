@@ -100,8 +100,8 @@ const MetaDataForm = ({ t, metaData, setMetaData }) => {
             <MetaOption>
               <Field
                 label='Kurztitel'
-                name='kurztitel'
-                value={metaData.short_title}
+                name='shortTitle'
+                value={metaData.shortTitle}
                 onChange={(event) => {
                   handleMetaDataChange(event.target.name, event.target.value)
                 }}
