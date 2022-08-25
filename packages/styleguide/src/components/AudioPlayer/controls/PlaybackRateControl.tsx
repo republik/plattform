@@ -1,7 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
 import IconButton from '../../IconButton'
-import { HiMinus, HiPlus } from 'react-icons/all'
+import { HiMinus, HiPlus } from 'react-icons/hi/'
 
 const styles = {
   root: css({
