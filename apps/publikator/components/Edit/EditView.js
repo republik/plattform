@@ -5,6 +5,7 @@ import { css } from 'glamor'
 import ContentEditor from '../ContentEditor'
 import { PhaseSummary } from './Workflow'
 import { HEADER_HEIGHT } from '../Frame/constants'
+import MetaDataForm from '../MetaDataForm'
 
 const styles = {
   phase: css({
@@ -24,8 +25,8 @@ const EditView = ({
   interruptionHandler,
   repo,
   hasUncommittedChanges,
-  value,
-  setValue,
+  content,
+  setContent,
   readOnly,
 }) => {
   return (
@@ -51,12 +52,31 @@ const EditView = ({
           hasUncommittedChanges={hasUncommittedChanges}
         />
       </div>
-      {!!value && (
+      {!!content?.children && (
         <ContentEditor
           key={editorKey}
-          value={value}
-          onChange={setValue}
+          value={content.children}
+          onChange={(newValue) =>
+            setContent((currentContent) => ({
+              ...currentContent,
+              children: newValue,
+            }))
+          }
           readOnly={readOnly || repo?.isArchived}
+        />
+      )}
+      {!!content && (
+        <MetaDataForm
+          metaData={content.meta || {}}
+          setMetaData={(newMeta) => {
+            setContent((currentContent) => ({
+              ...currentContent,
+              meta:
+                typeof newMeta === 'function'
+                  ? newMeta(currentContent.meta)
+                  : newMeta,
+            }))
+          }}
         />
       )}
     </>

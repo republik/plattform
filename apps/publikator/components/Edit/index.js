@@ -448,13 +448,8 @@ const EditLoader = ({
                 }}
                 repo={repo}
                 hasUncommittedChanges={beginChanges}
-                value={content?.children}
-                setValue={(newValue) =>
-                  setContent((currentContent) => ({
-                    ...currentContent,
-                    children: newValue,
-                  }))
-                }
+                content={content}
+                setContent={setContent}
                 readOnly={readOnly}
               />
             )
