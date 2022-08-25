@@ -5,7 +5,7 @@ import AudioPlayerContainer from './AudioPlayerContainer'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 
-const AudioPlayerUI = dynamic(() => import('./AudioPlayerUI'), {
+const WebAudioPlayer = dynamic(() => import('./WebAudioPlayer'), {
   ssr: false,
 })
 
@@ -36,7 +36,7 @@ const AudioPlayerOrchestrator = () => {
   // Render new audio player if in web or in a native app using the new audio-player
   return (
     <AudioPlayerContainer>
-      {(props) => <AudioPlayerUI {...props} />}
+      {(props) => <WebAudioPlayer {...props} />}
     </AudioPlayerContainer>
   )
 }

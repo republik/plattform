@@ -5,7 +5,7 @@ import { useInNativeApp } from '../../lib/withInNativeApp'
 import { useTranslation } from '../../lib/withT'
 import BottomPanel from '../Frame/BottomPanel'
 
-const AudioPlayerUI = ({
+const WebAudioPlayer = ({
   mediaRef,
   audioState,
   autoPlay,
@@ -65,4 +65,4 @@ const AudioPlayerUI = ({
   )
 }
 
-export default AudioPlayerUI
+export default WebAudioPlayer
