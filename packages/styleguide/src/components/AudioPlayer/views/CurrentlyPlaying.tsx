@@ -29,7 +29,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    gap: '1rem',
+    gap: '0.25rem',
   }),
   metaWrapper: css({
     display: 'flex',

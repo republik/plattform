@@ -33,6 +33,7 @@ const PlaybackRateControl = ({
           setPlaybackRate(availablePlaybackRates[currentIndex - 1])
         }
         disabled={currentIndex === 0}
+        style={{ marginRight: 0 }}
       />
       <span>{playbackRate}x</span>
       <IconButton
@@ -41,6 +42,7 @@ const PlaybackRateControl = ({
           setPlaybackRate(availablePlaybackRates[currentIndex + 1])
         }
         disabled={currentIndex >= availablePlaybackRates.length - 1}
+        style={{ marginRight: 0 }}
       />
     </div>
   )
