@@ -31,13 +31,10 @@ import compose from 'lodash/flowRight'
 import { getQueryFromRepoId, getRepoIdFromQuery } from '../../lib/repoIdHelper'
 import Nav from './Nav'
 
-const debug = createDebug('publikator:pages:flyer:edit')
+const debug = createDebug('publikator:slate:edit')
 
 export const CONTENT_KEY = 'value'
 export const META_KEY = 'meta'
-
-export const getCompString = (array) =>
-  array && JSON.stringify({ children: array })
 
 const getCommittedValue = (data) =>
   data?.repo?.commit?.document?.content?.children
@@ -262,7 +259,6 @@ const EditLoader = ({
       query: {
         ...getQueryFromRepoId(repoId),
         commitId: data.commit.id,
-        publishDate: null,
       },
     })
   }

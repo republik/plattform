@@ -79,7 +79,7 @@ const getTemplateById = gql`
   ${fragments.CommitWithDocument}
 `
 
-const debug = createDebug('publikator:pages:edit')
+const debug = createDebug('publikator:mdast:edit')
 const TEST = process.env.NODE_ENV === 'test'
 
 const formatTime = timeFormat('%H:%M')
@@ -665,9 +665,6 @@ export class EditorPage extends Component {
       pathname: `/repo/${repoId}/edit`,
       query: {
         commitId: data.commit.id,
-        isTemplate: null,
-        templateRepoId: null,
-        publishDate: null,
       },
     })
   }
