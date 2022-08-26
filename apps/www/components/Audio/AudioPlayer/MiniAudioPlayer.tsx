@@ -2,15 +2,18 @@ import React from 'react'
 import { css } from 'glamor'
 import Link from 'next/link'
 import Scrubber from './Scrubber'
-import { CloseIcon, PauseIcon, PlayIcon } from '../Icons'
-import { useColorContext } from '../Colors/ColorContext'
-import IconButton from '../IconButton'
-import { MdExpandLess } from 'react-icons/md'
-import { sansSerifRegular15 } from '../Typography/styles'
-import Spinner from '../Spinner'
-import { underline } from '../../lib/styleMixins'
 import { AudioPlayerProps } from './shared'
 import Time from './views/Time'
+import {
+  IconButton,
+  Spinner,
+  useColorContext,
+  fontStyles,
+  PlayIcon,
+  PauseIcon,
+  CloseIcon,
+  ExpandLessIcon,
+} from '@project-r/styleguide'
 
 const styles = {
   root: css({
@@ -49,20 +52,13 @@ const styles = {
     height: 42,
   }),
   title: css({
-    ...sansSerifRegular15,
+    ...fontStyles.sansSerifRegular15,
     textDecoration: 'none',
     '&[href]:hover': {
-      ...underline,
+      textDecoration: 'underline',
+      textDecorationSkip: 'ink',
     },
   }),
-}
-
-const SIZE = {
-  play: 30,
-  close: 30,
-  download: 22,
-  forward: 22,
-  replay: 22,
 }
 
 type MiniAudioPlayerProps = {
@@ -121,7 +117,7 @@ const MiniAudioPlayer = ({
         </div>
         <div {...styles.buttonWrapper}>
           <IconButton
-            Icon={MdExpandLess}
+            Icon={ExpandLessIcon}
             size={32}
             fillColorName='text'
             title={t(`styleguide/AudioPlayer/expand`)}

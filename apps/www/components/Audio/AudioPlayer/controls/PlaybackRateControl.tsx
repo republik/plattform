@@ -1,7 +1,5 @@
-import React from 'react'
 import { css } from 'glamor'
-import IconButton from '../../IconButton'
-import { HiMinus, HiPlus } from 'react-icons/hi/'
+import { IconButton, AddIcon, RemoveIcon } from '@project-r/styleguide'
 
 const styles = {
   root: css({
@@ -28,7 +26,7 @@ const PlaybackRateControl = ({
   return (
     <div {...styles.root}>
       <IconButton
-        Icon={HiMinus}
+        Icon={RemoveIcon}
         onClick={() =>
           setPlaybackRate(availablePlaybackRates[currentIndex - 1])
         }
@@ -37,7 +35,7 @@ const PlaybackRateControl = ({
       />
       <span>{playbackRate}x</span>
       <IconButton
-        Icon={HiPlus}
+        Icon={AddIcon}
         onClick={() =>
           setPlaybackRate(availablePlaybackRates[currentIndex + 1])
         }

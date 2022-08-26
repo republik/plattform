@@ -1,13 +1,19 @@
 import React from 'react'
 import { css } from 'glamor'
 import { AudioPlayerProps } from './shared'
-import IconButton from '../IconButton'
-import { CloseIcon, ForwardIcon, PauseIcon, PlayIcon } from '../Icons'
-import Spinner from '../Spinner'
-import { MdExpandMore, MdReplay10 } from 'react-icons/md'
 import Scrubber from './Scrubber'
 import PlaybackRateControl from './controls/PlaybackRateControl'
 import CurrentlyPlaying from './views/CurrentlyPlaying'
+import {
+  IconButton,
+  Spinner,
+  CloseIcon,
+  ForwardIcon,
+  PauseIcon,
+  PlayIcon,
+  ReplayIcon,
+  ExpandMoreIcon,
+} from '@project-r/styleguide'
 
 const styles = {
   root: css({
@@ -108,7 +114,7 @@ const ExpandedAudioPlayer = ({
           size={32}
           fillColorName={'text'}
           onClick={handleBackward}
-          Icon={MdReplay10}
+          Icon={ReplayIcon}
           style={{ marginRight: 0 }}
         />
         {isLoading ? (
@@ -142,7 +148,7 @@ const ExpandedAudioPlayer = ({
         />
         <span>
           <IconButton
-            Icon={MdExpandMore}
+            Icon={ExpandMoreIcon}
             size={24}
             style={{ marginRight: 0 }}
             onClick={handleMinimize}

@@ -1,9 +1,10 @@
-import { useMemo } from 'react'
-import { AudioPlayer, Loader } from '@project-r/styleguide'
+import { useMemo, useState } from 'react'
 import { AudioPlayerUIProps } from '../AudioPlayerContainer'
 import { useInNativeApp } from '../../../lib/withInNativeApp'
 import { useTranslation } from '../../../lib/withT'
 import BottomPanel from '../../Frame/BottomPanel'
+import ExpandedAudioPlayer from './ExpandedAudioPlayer'
+import MiniAudioPlayer from './MiniAudioPlayer'
 
 const WebAudioPlayer = ({
   mediaRef,
@@ -19,6 +20,15 @@ const WebAudioPlayer = ({
 }: AudioPlayerUIProps) => {
   const { inNativeApp } = useInNativeApp()
   const { t } = useTranslation()
+  const [isExpanded, setIsExpanded] = useState(false)
+
+  const toggleAudioPlayer = () => {
+    if (isPlaying) {
+      actions.onPause()
+    } else {
+      actions.onPlay()
+    }
+  }
 
   const playbackElement = useMemo(() => {
     if (inNativeApp) return null
@@ -48,18 +58,41 @@ const WebAudioPlayer = ({
 
   return (
     <BottomPanel wide foreground={true} visible={true}>
-      <AudioPlayer
-        t={t}
-        title={audioState.title}
-        sourcePath={audioState.sourcePath}
-        isPlaying={isPlaying}
-        isLoading={isLoading}
-        currentTime={currentTime}
-        playbackRate={playbackRate}
-        duration={duration}
-        actions={actions}
-        buffered={buffered}
-      />
+      {isExpanded ? (
+        <ExpandedAudioPlayer
+          t={t}
+          title={audioState.title}
+          sourcePath={audioState.sourcePath}
+          playbackRate={playbackRate}
+          isPlaying={isPlaying}
+          isLoading={isLoading}
+          currentTime={currentTime}
+          duration={duration}
+          buffered={buffered}
+          handleMinimize={() => setIsExpanded(false)}
+          handleToggle={toggleAudioPlayer}
+          handleSeek={actions.onSeek}
+          handleClose={actions.onClose}
+          handleForward={actions.onForward}
+          handleBackward={actions.onBackward}
+          handlePlaybackRateChange={actions.onPlaybackRateChange}
+        />
+      ) : (
+        <MiniAudioPlayer
+          t={t}
+          title={audioState.title}
+          sourcePath={audioState.sourcePath}
+          isPlaying={isPlaying}
+          isLoading={isLoading}
+          currentTime={currentTime}
+          duration={duration}
+          buffered={buffered}
+          handleExpand={() => setIsExpanded(true)}
+          handleToggle={toggleAudioPlayer}
+          handleSeek={actions.onSeek}
+          handleClose={actions.onClose}
+        />
+      )}
       {playbackElement}
     </BottomPanel>
   )

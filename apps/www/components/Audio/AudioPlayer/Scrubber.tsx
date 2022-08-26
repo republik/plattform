@@ -1,19 +1,21 @@
-import React, {
+import {
   MouseEvent,
   TouchEventHandler,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 import { css } from 'glamor'
+import debounce from 'lodash/debounce'
 import {
   PROGRESS_HEIGHT,
   SLIDERTHUMB_SIZE,
+  ZINDEX_AUDIOPLAYER_BUFFER,
   ZINDEX_AUDIOPLAYER_PROGRESS,
   ZINDEX_AUDIOPLAYER_SCRUB,
-} from '../LegacyAudioPlayer/constants'
-import { useColorContext } from '../Colors/useColorContext'
-import debounce from 'lodash/debounce'
+} from './constants'
+import { useColorContext } from '@project-r/styleguide'
 
 function times(x) {
   return Array.from({ length: x }, (_, i) => i)
@@ -51,9 +53,10 @@ const styles = {
     width: '100%',
     height: PROGRESS_HEIGHT,
   }),
-  buffered: css({
+  buffer: css({
     position: 'absolute',
     height: PROGRESS_HEIGHT,
+    zIndex: ZINDEX_AUDIOPLAYER_BUFFER,
     opacity: 0.25,
   }),
   sliderThumb: css({
@@ -89,7 +92,7 @@ const Scrubber = ({
   disabled = false,
 }: ScrubberProps) => {
   const [colorScheme] = useColorContext()
-  const scrubber = React.useRef<HTMLDivElement>(null)
+  const scrubber = useRef<HTMLDivElement>(null)
   const [isSeeking, setIsSeeking] = useState(false)
   const [internalProgress, setInternalProgress] = useState(0)
 
@@ -184,7 +187,7 @@ const Scrubber = ({
             return (
               <div
                 key={i}
-                {...styles.buffered}
+                {...styles.buffer}
                 {...colorScheme.set('backgroundColor', 'defaultInverted')}
                 style={{
                   left: `${(start / duration) * 100}%`,

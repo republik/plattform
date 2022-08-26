@@ -1,12 +1,11 @@
 import { renderTime } from '../shared'
 import React from 'react'
 import { css } from 'glamor'
-import { sansSerifRegular14 } from '../../Typography/styles'
-import { useColorContext } from '../../Colors/ColorContext'
+import { fontStyles, useColorContext } from '@project-r/styleguide'
 
 const styles = {
   time: css({
-    ...sansSerifRegular14,
+    ...fontStyles.sansSerifRegular14,
     fontFeatureSettings: '"tnum" 1, "kern" 1',
     margin: 0,
   }),

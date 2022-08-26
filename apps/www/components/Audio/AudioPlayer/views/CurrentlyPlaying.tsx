@@ -1,10 +1,8 @@
 import React from 'react'
-import Time from './Time'
 import { css } from 'glamor'
-import { sansSerifRegular14, sansSerifRegular15 } from '../../Typography/styles'
-import { underline } from '../../../lib/styleMixins'
 import Link from 'next/link'
-import { useColorContext } from '../../Colors/ColorContext'
+import { fontStyles, useColorContext } from '@project-r/styleguide'
+import Time from './Time'
 
 const styles = {
   root: css({
@@ -39,14 +37,15 @@ const styles = {
     alignItems: 'center',
   }),
   title: css({
-    ...sansSerifRegular15,
+    ...fontStyles.sansSerifRegular15,
     textDecoration: 'none',
     '&[href]:hover': {
-      ...underline,
+      textDecoration: 'underline',
+      textDecorationSkip: 'ink',
     },
   }),
   dateText: css({
-    ...sansSerifRegular14,
+    ...fontStyles.sansSerifRegular14,
   }),
 }
 
