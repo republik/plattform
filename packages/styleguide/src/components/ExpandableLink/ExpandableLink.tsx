@@ -25,7 +25,7 @@ export type StateProps = {
 const styles = {
   link: css({
     cursor: 'pointer',
-    padding: '0 2px',
+    padding: 0,
     textDecorationLine: 'underline',
     textDecorationStyle: 'dotted',
     textDecorationSkip: 'ink',
