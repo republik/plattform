@@ -62,5 +62,7 @@ type mutations {
   removePlaylistItem(
     id: ID!
   ): [PlaylistItem!]!
+
+  clearPlaylist: [PlaylistItem!]!
 }
 `
