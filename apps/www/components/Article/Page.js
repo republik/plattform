@@ -671,7 +671,11 @@ const ArticlePage = ({
                               </div>
                             )}
                             {(isSyntheticReadAloud || isReadAloud) && (
-                              <ReadAloudInline meta={meta} t={t} />
+                              <ReadAloudInline
+                                documentId={documentId}
+                                meta={meta}
+                                t={t}
+                              />
                             )}
                             {isSection && !hideSectionNav && (
                               <Breakout size='breakout'>

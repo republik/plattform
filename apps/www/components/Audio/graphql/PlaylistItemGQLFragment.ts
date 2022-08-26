@@ -4,9 +4,11 @@ export type PlaylistItemFragment = {
   id: string
   sequence: number
   document?: {
+    id: string
     meta?: {
       title: string
       path: string
+      publishDate?: string
       audioSource?: {
         mediaId: string
         kind: string
@@ -28,9 +30,11 @@ export const PlaylistItemGQLFragment = gql`
     id
     sequence
     document {
+      id
       meta {
         title
         path
+        publishDate
         audioSource {
           mediaId
           kind

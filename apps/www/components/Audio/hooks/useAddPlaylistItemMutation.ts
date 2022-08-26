@@ -9,11 +9,10 @@ type AddPlaylistItemMutationData = PlaylistItemFragment[]
 
 type AddPlaylistItemMutationVariables = {
   item: {
+    // DocumentId
     id: string
-    type: {
-      // minimal document type
-      id: string
-    }
+    // PlaylistItem enum value
+    type: 'Document'
   }
   sequence?: number
 }

@@ -5,13 +5,15 @@ import {
   useColorContext,
   AudioIcon,
   fontStyles,
-  mediaQueries,
   PodcastIcon,
   Editorial,
+  AddIcon,
 } from '@project-r/styleguide'
 
 import { AudioContext } from '../Audio/AudioProvider'
 import { trackEvent } from '../../lib/matomo'
+import { useAddPlaylistItemMutation } from '../Audio/hooks/useAddPlaylistItemMutation'
+import { usePlaylistQuery } from '../Audio/hooks/usePlaylistQuery'
 
 type AudioSource = {
   kind: 'syntheticReadAloud' | 'readAloud'
@@ -69,9 +71,40 @@ const styles = {
   }),
 }
 
-const ReadAloudInline = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
+type ReadAloudInlineProps = {
+  documentId: string
+  meta: Meta
+  t: (sting) => string
+}
+
+const ReadAloudInline = ({ documentId, meta, t }: ReadAloudInlineProps) => {
   const { toggleAudioPlayer } = useContext<AudioContextType>(AudioContext)
   const [colorScheme] = useColorContext()
+
+  const {
+    data: playlistData,
+    loading: playlistLoading,
+    error: playlistError,
+  } = usePlaylistQuery()
+  const [addPlaylistItemMutation] = useAddPlaylistItemMutation()
+
+  const playlist = playlistData?.me?.collectionPlaylist
+  const alreadyInPlaylist =
+    !playlistLoading &&
+    !!playlistError &&
+    playlist &&
+    playlist.some(({ document: { id } }) => id === documentId)
+
+  const handleAddToPlaylist = async () => {
+    await addPlaylistItemMutation({
+      variables: {
+        item: {
+          id: documentId,
+          type: 'Document',
+        },
+      },
+    })
+  }
 
   const { kind } = meta.audioSource
   const isSynthetic = kind === 'syntheticReadAloud'
@@ -98,6 +131,12 @@ const ReadAloudInline = ({ meta, t }: { meta: Meta; t: (sting) => string }) => {
               path: meta.path,
             })
           }}
+        />
+        <IconButton
+          Icon={AddIcon}
+          onClick={handleAddToPlaylist}
+          disalbed={alreadyInPlaylist}
+          title={alreadyInPlaylist ? 'already in playlist' : 'add to playlist'}
         />
         <p {...styles.text}>
           <a
