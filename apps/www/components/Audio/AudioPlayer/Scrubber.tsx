@@ -15,14 +15,15 @@ import {
   ZINDEX_AUDIOPLAYER_PROGRESS,
   ZINDEX_AUDIOPLAYER_SCRUB,
 } from './constants'
-import { useColorContext } from '@project-r/styleguide'
+import { useColorContext, fontStyles } from '@project-r/styleguide'
+import { renderTime } from './shared'
 
 function times(x) {
   return Array.from({ length: x }, (_, i) => i)
 }
 
 const styles = {
-  root: css({
+  progressRoot: css({
     position: 'relative',
     width: '100%',
     height: PROGRESS_HEIGHT,
@@ -68,6 +69,17 @@ const styles = {
     height: SLIDERTHUMB_SIZE,
     transition: 'opacity ease-out 0.3s',
   }),
+  timeWrapper: css({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: '0.5rem',
+  }),
+  time: css({
+    ...fontStyles.sansSerifRegular14,
+    fontFeatureSettings: '"tnum" 1, "kern" 1',
+    margin: 0,
+  }),
 }
 
 type ScrubberProps = {
@@ -80,6 +92,7 @@ type ScrubberProps = {
    */
   onSeek: (progress: number) => void
   showScrubber?: boolean
+  showTime?: boolean
   disabled?: boolean
 }
 
@@ -88,7 +101,8 @@ const Scrubber = ({
   duration = 0,
   buffered,
   onSeek,
-  showScrubber = true,
+  showScrubber = false,
+  showTime = false,
   disabled = false,
 }: ScrubberProps) => {
   const [colorScheme] = useColorContext()
@@ -174,54 +188,62 @@ const Scrubber = ({
   })
 
   return (
-    <div {...styles.root}>
-      <div
-        {...styles.bufferedWrapper}
-        {...colorScheme.set('backgroundColor', 'divider')}
-      >
-        {buffered &&
-          times(buffered.length).map((i) => {
-            const start = buffered.start(i)
-            const end = buffered.end(i)
-            const width = ((end - start) / duration) * 100
-            return (
-              <div
-                key={i}
-                {...styles.buffer}
-                {...colorScheme.set('backgroundColor', 'defaultInverted')}
-                style={{
-                  left: `${(start / duration) * 100}%`,
-                  width: `${width}%`,
-                }}
-              />
-            )
-          })}
-      </div>
-      <div
-        {...styles.progress}
-        {...colorScheme.set('backgroundColor', 'text')}
-        style={{ width: `${progress * 100}%` }}
-      />
-      {showScrubber && (
+    <div>
+      <div {...styles.progressRoot}>
         <div
-          {...styles.sliderThumb}
-          {...colorScheme.set('backgroundColor', 'defaultInverted')}
-          style={{
-            left: `${progress * 100}%`,
-            cursor: isSeeking ? 'grabbing' : 'grab',
-          }}
+          {...styles.bufferedWrapper}
+          {...colorScheme.set('backgroundColor', 'divider')}
+        >
+          {buffered &&
+            times(buffered.length).map((i) => {
+              const start = buffered.start(i)
+              const end = buffered.end(i)
+              const width = ((end - start) / duration) * 100
+              return (
+                <div
+                  key={i}
+                  {...styles.buffer}
+                  {...colorScheme.set('backgroundColor', 'defaultInverted')}
+                  style={{
+                    left: `${(start / duration) * 100}%`,
+                    width: `${width}%`,
+                  }}
+                />
+              )
+            })}
+        </div>
+        <div
+          {...styles.progress}
+          {...colorScheme.set('backgroundColor', 'text')}
+          style={{ width: `${progress * 100}%` }}
         />
+        {showScrubber && (
+          <div
+            {...styles.sliderThumb}
+            {...colorScheme.set('backgroundColor', 'defaultInverted')}
+            style={{
+              left: `${progress * 100}%`,
+              cursor: isSeeking ? 'grabbing' : 'grab',
+            }}
+          />
+        )}
+        <div
+          {...styles.scrubber(disabled)}
+          ref={scrubber}
+          onTouchStart={!disabled ? touchStart : undefined}
+          onTouchEnd={!disabled ? touchEnd : undefined}
+          onTouchMove={!disabled ? touchMove : undefined}
+          onMouseDown={!disabled ? mouseDown : undefined}
+          onMouseMove={isSeeking ? mouseMove : undefined}
+          onMouseUp={isSeeking ? mouseUp : undefined}
+        />
+      </div>
+      {showTime && (
+        <div {...styles.timeWrapper} {...colorScheme.set('color', 'textSoft')}>
+          <span {...styles.time}>{renderTime(currentTime)}</span>
+          <span {...styles.time}>{renderTime(duration)}</span>
+        </div>
       )}
-      <div
-        {...styles.scrubber(disabled)}
-        ref={scrubber}
-        onTouchStart={!disabled ? touchStart : undefined}
-        onTouchEnd={!disabled ? touchEnd : undefined}
-        onTouchMove={!disabled ? touchMove : undefined}
-        onMouseDown={!disabled ? mouseDown : undefined}
-        onMouseMove={isSeeking ? mouseMove : undefined}
-        onMouseUp={isSeeking ? mouseUp : undefined}
-      />
     </div>
   )
 }

@@ -331,9 +331,13 @@ const ActionBar = ({
         e.preventDefault()
         trackEvent(['ActionBar', 'audio', meta.url])
         toggleAudioPlayer({
-          audioSource: meta.audioSource,
-          title: meta.title,
-          path: meta.path,
+          id: document.id,
+          meta: {
+            title: meta.title,
+            path: meta.path,
+            publishDate: meta.publishDate,
+            audioSource: meta.audioSource,
+          },
         })
       },
       label:
@@ -445,9 +449,13 @@ const ActionBar = ({
         e.preventDefault()
         trackEvent(['ActionBar', 'audio', meta.url])
         toggleAudioPlayer({
-          audioSource: meta.audioSource,
-          title: meta.title,
-          path: meta.path,
+          id: document.id,
+          meta: {
+            title: meta.title,
+            path: meta.path,
+            publishDate: meta.publishDate,
+            audioSource: meta.audioSource,
+          },
         })
       },
       label: t('PodcastButtons/play'),

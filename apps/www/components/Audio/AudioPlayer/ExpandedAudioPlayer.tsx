@@ -65,13 +65,12 @@ type ExpandedAudioPlayerProps = {
 
 const ExpandedAudioPlayer = ({
   t,
-  title,
-  sourcePath,
+  activePlayerItem,
+  currentTime = 0,
+  duration = 0,
   playbackRate,
   isPlaying,
   isLoading,
-  currentTime = 0,
-  duration = 0,
   buffered,
   handleMinimize,
   handleToggle,
@@ -81,6 +80,10 @@ const ExpandedAudioPlayer = ({
   handleBackward,
   handlePlaybackRateChange,
 }: ExpandedAudioPlayerProps) => {
+  const {
+    meta: { title, publishDate, path },
+  } = activePlayerItem
+
   return (
     <div {...styles.root}>
       <div {...styles.topActions}>
@@ -93,20 +96,20 @@ const ExpandedAudioPlayer = ({
       </div>
       <CurrentlyPlaying
         t={t}
-        currentTime={currentTime}
+        publishDate={publishDate}
         duration={duration}
         title={title}
-        sourcePath={sourcePath}
-        date={new Date().toLocaleDateString()}
+        sourcePath={path}
       />
       <div>
         <Scrubber
           currentTime={currentTime}
           duration={duration}
           buffered={buffered}
-          showScrubber={true}
           disabled={isLoading}
           onSeek={handleSeek}
+          showScrubber
+          showTime
         />
       </div>
       <div {...styles.actionWrapper}>

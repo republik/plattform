@@ -2,7 +2,7 @@ import React from 'react'
 import { css } from 'glamor'
 import Link from 'next/link'
 import { fontStyles, useColorContext } from '@project-r/styleguide'
-import Time from './Time'
+import { dateFormatter, formatMinutes } from '../shared'
 
 const styles = {
   root: css({
@@ -32,9 +32,7 @@ const styles = {
   metaWrapper: css({
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
     gap: '1rem',
-    alignItems: 'center',
   }),
   title: css({
     ...fontStyles.sansSerifRegular15,
@@ -51,18 +49,16 @@ const styles = {
 
 type CurrentlyPlayingProps = {
   t: any
-  currentTime: number
   duration: number
   title: string
   sourcePath?: string
-  date: string
+  publishDate: string
 }
 
 const CurrentlyPlaying = ({
   title,
   sourcePath,
-  date,
-  currentTime,
+  publishDate,
   duration,
 }: CurrentlyPlayingProps) => {
   const [colorScheme] = useColorContext()
@@ -86,13 +82,10 @@ const CurrentlyPlaying = ({
           ) : (
             <span {...styles.title}>{title}</span>
           ))}{' '}
-        <div {...styles.metaWrapper}>
-          <span {...styles.dateText} {...colorScheme.set('color', 'textSoft')}>
-            01.01.2020
-          </span>{' '}
-          {/* TODO: make dynamic */}
-          <span>
-            <Time currentTime={currentTime} duration={duration} />
+        <div {...styles.metaWrapper} {...colorScheme.set('color', 'textSoft')}>
+          <span {...styles.dateText}>
+            {publishDate && dateFormatter(new Date(Date.parse(publishDate)))} -{' '}
+            {formatMinutes(duration)}min
           </span>
         </div>
       </div>

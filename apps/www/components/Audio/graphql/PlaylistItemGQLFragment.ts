@@ -1,28 +1,10 @@
 import { gql } from '@apollo/client'
+import { AudioPlayerItem } from '../types/AudioPlayerItem'
 
 export type PlaylistItemFragment = {
   id: string
   sequence: number
-  document?: {
-    id: string
-    meta?: {
-      title: string
-      path: string
-      publishDate?: string
-      audioSource?: {
-        mediaId: string
-        kind: string
-        mp3: string
-        aac: string
-        ogg: string
-        durationMs: number
-        userProgress?: {
-          id: string
-          secs: number
-        }
-      }
-    }
-  }
+  document: AudioPlayerItem
 }
 
 export const PlaylistItemGQLFragment = gql`

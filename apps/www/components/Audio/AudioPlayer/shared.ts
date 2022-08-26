@@ -1,3 +1,6 @@
+import { timeFormat } from 'd3-time-format'
+import { AudioPlayerItem } from '../types/AudioPlayerItem'
+
 type AudioPlayerActions = {
   onPlay: () => void
   onPause: () => void
@@ -9,7 +12,7 @@ type AudioPlayerActions = {
 }
 
 export type AudioPlayerProps = {
-  title: string
+  activePlayerItem: AudioPlayerItem
   isPlaying?: boolean
   isLoading?: boolean
   //
@@ -20,11 +23,15 @@ export type AudioPlayerProps = {
   //
   actions: AudioPlayerActions
   t: any
-  sourcePath?: string
 }
 
+export const formatMinutes = (time: number) => Math.floor(time / 60)
+export const formatSeconds = (time: number) => Math.floor(time % 60)
+
 export const renderTime = (time) => {
-  const minutes = Math.floor(time / 60)
-  const seconds = Math.floor(time % 60)
+  const minutes = formatMinutes(time)
+  const seconds = formatSeconds(time)
   return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
 }
+
+export const dateFormatter = timeFormat('%d.%m.%y')

@@ -70,8 +70,7 @@ type MiniAudioPlayerProps = {
 
 const MiniAudioPlayer = ({
   t,
-  title,
-  sourcePath,
+  activePlayerItem,
   isPlaying,
   isLoading,
   currentTime = 0,
@@ -83,7 +82,9 @@ const MiniAudioPlayer = ({
   handleClose,
 }: MiniAudioPlayerProps) => {
   const [colorScheme] = useColorContext()
-
+  const {
+    meta: { title, path },
+  } = activePlayerItem
   return (
     <div {...styles.root}>
       <div {...styles.playerWrapper}>
@@ -104,8 +105,8 @@ const MiniAudioPlayer = ({
         )}
         <div {...styles.metaDataWrapper}>
           {title &&
-            (sourcePath ? (
-              <Link href={sourcePath} passHref>
+            (path ? (
+              <Link href={path} passHref>
                 <a {...styles.title} {...colorScheme.set('color', 'text')}>
                   {title}
                 </a>

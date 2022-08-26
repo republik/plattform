@@ -4,27 +4,19 @@ import createPersistedState from '../../lib/hooks/use-persisted-state'
 import { useInNativeApp, postMessage } from '../../lib/withInNativeApp'
 
 import { useMediaProgress } from './MediaProgress'
-import { AudioSource } from './types/AudioSource'
 import compareVersion from '../../lib/react-native/CompareVersion'
 import { NEW_AUDIO_API_VERSION } from './constants'
+import { AudioPlayerItem } from './types/AudioPlayerItem'
+import { PlaylistItemFragment } from './graphql/PlaylistItemGQLFragment'
 
-export type AudioState = {
-  audioSource: AudioSource
-  url: string
-  title: string
-  sourcePath: string
-  mediaId: string
-}
+type ToggleAudioPlayerFunc = (playerItem: AudioPlayerItem) => void
 
 type AudioContextValue = {
-  audioState: AudioState | null
+  activePlayerItem: AudioPlayerItem | null
+  queue: PlaylistItemFragment[]
   audioPlayerVisible: boolean
   autoPlayActive: boolean
-  toggleAudioPlayer: (payload: {
-    audioSource: AudioSource
-    title: string
-    path: string
-  }) => void
+  toggleAudioPlayer: ToggleAudioPlayerFunc
   onCloseAudioPlayer: () => void
 }
 
@@ -36,36 +28,32 @@ export const AudioContext = createContext<AudioContextValue>({
   onCloseAudioPlayer: () => {
     throw new Error('not implemented')
   },
-  audioState: null,
+  activePlayerItem: null,
   autoPlayActive: false,
 })
 
 export const useAudioContext = () => useContext(AudioContext)
 
-const useAudioState = createPersistedState<AudioState>(
+const usePersistedPlayerItem = createPersistedState<AudioPlayerItem>(
   'republik-audioplayer-audiostate',
 )
 
 const AudioProvider = ({ children }) => {
   const { inNativeApp, inNativeAppVersion, inNativeIOSApp } = useInNativeApp()
-  const [audioState, setAudioState] = useAudioState<AudioState | undefined>(
-    undefined,
-  )
+  const [activePlayerItem, setActivePlayerItem] = usePersistedPlayerItem<
+    AudioPlayerItem | undefined
+  >(undefined)
+  const [autoPlayAudioPlayerItem, setAutoPlayAudioPlayerItem] =
+    useState<AudioPlayerItem | null>(null)
   const [audioPlayerVisible, setAudioPlayerVisible] = useState(false)
-  const [autoPlayAudioState, setAutoPlayAudioState] = useState(null)
   const clearTimeoutId = useRef<NodeJS.Timeout | null>()
 
   const { getMediaProgress } = useMediaProgress()
 
-  const toggleAudioPlayer = async ({
-    audioSource,
-    title,
-    path,
-  }: {
-    audioSource: AudioSource
-    title: string
-    path: string
-  }) => {
+  const toggleAudioPlayer = async (playerItem: AudioPlayerItem) => {
+    const {
+      meta: { audioSource, path, title },
+    } = playerItem
     const url = (
       (inNativeIOSApp && audioSource.aac) ||
       audioSource.mp3 ||
@@ -75,13 +63,7 @@ const AudioProvider = ({ children }) => {
       return
     }
     const mediaId = audioSource.mediaId
-    const payload = {
-      audioSource,
-      url,
-      title,
-      sourcePath: path,
-      mediaId,
-    }
+
     if (
       inNativeApp &&
       // check if current version is smaller than NEW_AUDIO_API_VERSION
@@ -90,6 +72,15 @@ const AudioProvider = ({ children }) => {
       let currentTime
       if (mediaId) {
         currentTime = await getMediaProgress({ mediaId })
+      }
+      // The below constructed payload is required by the legacy in-app
+      // audio player.
+      const payload = {
+        audioSource,
+        url,
+        title,
+        sourcePath: path,
+        mediaId,
       }
       postMessage({
         type: 'play-audio',
@@ -100,8 +91,8 @@ const AudioProvider = ({ children }) => {
       })
       return
     }
-    setAudioState(payload)
-    setAutoPlayAudioState(payload)
+    setActivePlayerItem(playerItem)
+    setAutoPlayAudioPlayerItem(playerItem)
     clearTimeout(clearTimeoutId.current)
   }
 
@@ -109,13 +100,13 @@ const AudioProvider = ({ children }) => {
     console.log('onCloseAudioPlayer')
     setAudioPlayerVisible(false)
     clearTimeoutId.current = setTimeout(() => {
-      setAudioState(undefined)
+      setActivePlayerItem(undefined)
     }, 300)
   }
 
   useEffect(() => {
-    setAudioPlayerVisible(!!audioState)
-  }, [audioState])
+    setAudioPlayerVisible(!!activePlayerItem)
+  }, [activePlayerItem])
 
   return (
     <AudioContext.Provider
@@ -123,8 +114,8 @@ const AudioProvider = ({ children }) => {
         toggleAudioPlayer,
         onCloseAudioPlayer,
         audioPlayerVisible,
-        audioState,
-        autoPlayActive: autoPlayAudioState === audioState,
+        activePlayerItem,
+        autoPlayActive: autoPlayAudioPlayerItem === activePlayerItem,
       }}
     >
       {children}

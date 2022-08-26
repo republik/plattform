@@ -1,4 +1,3 @@
-import { useContext } from 'react'
 import { css } from 'glamor'
 import {
   IconButton,
@@ -10,38 +9,11 @@ import {
   AddIcon,
 } from '@project-r/styleguide'
 
-import { AudioContext } from '../Audio/AudioProvider'
+import { useAudioContext } from '../Audio/AudioProvider'
 import { trackEvent } from '../../lib/matomo'
 import { useAddPlaylistItemMutation } from '../Audio/hooks/useAddPlaylistItemMutation'
 import { usePlaylistQuery } from '../Audio/hooks/usePlaylistQuery'
-
-type AudioSource = {
-  kind: 'syntheticReadAloud' | 'readAloud'
-  mp3?: string
-  aac?: string
-  ogg?: string
-  mediaId: string
-  durationMs: number
-}
-
-type Meta = {
-  title: string
-  path: string
-  url: string
-  audioSource: AudioSource
-}
-
-type AudioContextType = {
-  toggleAudioPlayer: ({
-    audioSource,
-    title,
-    path,
-  }: {
-    audioSource: AudioSource
-    title: string
-    path: string
-  }) => void
-}
+import { AudioPlayerItem } from '../Audio/types/AudioPlayerItem'
 
 const styles = {
   hr: css({
@@ -73,12 +45,12 @@ const styles = {
 
 type ReadAloudInlineProps = {
   documentId: string
-  meta: Meta
+  meta: AudioPlayerItem['meta'] & { url: string }
   t: (sting) => string
 }
 
 const ReadAloudInline = ({ documentId, meta, t }: ReadAloudInlineProps) => {
-  const { toggleAudioPlayer } = useContext<AudioContextType>(AudioContext)
+  const { toggleAudioPlayer } = useAudioContext()
   const [colorScheme] = useColorContext()
 
   const {
@@ -126,9 +98,8 @@ const ReadAloudInline = ({ documentId, meta, t }: ReadAloudInlineProps) => {
             e.preventDefault()
             trackEvent([eventCategory, 'audio', meta.url])
             toggleAudioPlayer({
-              audioSource: meta.audioSource,
-              title: meta.title,
-              path: meta.path,
+              id: documentId,
+              meta,
             })
           }}
         />
@@ -145,9 +116,8 @@ const ReadAloudInline = ({ documentId, meta, t }: ReadAloudInlineProps) => {
               e.preventDefault()
               trackEvent([eventCategory, 'audio', meta.url])
               toggleAudioPlayer({
-                audioSource: meta.audioSource,
-                title: meta.title,
-                path: meta.path,
+                id: documentId,
+                meta,
               })
             }}
             {...colorScheme.set('color', 'text')}

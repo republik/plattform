@@ -1,14 +1,19 @@
 import { useMemo, useState } from 'react'
-import { AudioPlayerUIProps } from '../AudioPlayerContainer'
+import { AudioPlayerProps } from '../AudioPlayerContainer'
 import { useInNativeApp } from '../../../lib/withInNativeApp'
 import { useTranslation } from '../../../lib/withT'
 import BottomPanel from '../../Frame/BottomPanel'
 import ExpandedAudioPlayer from './ExpandedAudioPlayer'
 import MiniAudioPlayer from './MiniAudioPlayer'
 
-const WebAudioPlayer = ({
+// TODO: handle previously stored audio-player state
+// this is detectable if the stored object has an audioSource element in the top
+// level of the object
+// easiest would be to clear the storage if this object was found (unless in legacy app)
+
+const AudioPlayer = ({
   mediaRef,
-  audioState,
+  activePlayerItem,
   autoPlay,
   currentTime,
   playbackRate,
@@ -17,10 +22,11 @@ const WebAudioPlayer = ({
   isLoading,
   actions,
   buffered,
-}: AudioPlayerUIProps) => {
+}: AudioPlayerProps) => {
   const { inNativeApp } = useInNativeApp()
   const { t } = useTranslation()
   const [isExpanded, setIsExpanded] = useState(false)
+  const { meta: { audioSource, title, path } = {} } = activePlayerItem
 
   const toggleAudioPlayer = () => {
     if (isPlaying) {
@@ -31,7 +37,7 @@ const WebAudioPlayer = ({
   }
 
   const playbackElement = useMemo(() => {
-    if (inNativeApp) return null
+    if (inNativeApp || !audioSource) return null
 
     return (
       <audio
@@ -41,33 +47,26 @@ const WebAudioPlayer = ({
         onPause={actions.onPause}
         onCanPlay={actions.onCanPlay}
       >
-        {audioState.audioSource.mp3 && (
-          <source src={audioState.audioSource.mp3} type='audio/mp3' />
-        )}
-        {audioState.audioSource.aac && (
-          <source src={audioState.audioSource.aac} type='audio/aac' />
-        )}
-        {audioState.audioSource.ogg && (
-          <source src={audioState.audioSource.ogg} type='audio/ogg' />
-        )}
+        {audioSource.mp3 && <source src={audioSource.mp3} type='audio/mp3' />}
+        {audioSource.aac && <source src={audioSource.aac} type='audio/aac' />}
+        {audioSource.ogg && <source src={audioSource.ogg} type='audio/ogg' />}
       </audio>
     )
-  }, [audioState, inNativeApp, autoPlay, mediaRef, actions])
+  }, [audioSource, inNativeApp, autoPlay, mediaRef, actions])
 
-  if (!audioState) return null
+  if (!activePlayerItem) return null
 
   return (
     <BottomPanel wide foreground={true} visible={true}>
       {isExpanded ? (
         <ExpandedAudioPlayer
           t={t}
-          title={audioState.title}
-          sourcePath={audioState.sourcePath}
+          activePlayerItem={activePlayerItem}
+          currentTime={currentTime}
+          duration={duration}
           playbackRate={playbackRate}
           isPlaying={isPlaying}
           isLoading={isLoading}
-          currentTime={currentTime}
-          duration={duration}
           buffered={buffered}
           handleMinimize={() => setIsExpanded(false)}
           handleToggle={toggleAudioPlayer}
@@ -80,12 +79,11 @@ const WebAudioPlayer = ({
       ) : (
         <MiniAudioPlayer
           t={t}
-          title={audioState.title}
-          sourcePath={audioState.sourcePath}
-          isPlaying={isPlaying}
-          isLoading={isLoading}
+          activePlayerItem={activePlayerItem}
           currentTime={currentTime}
           duration={duration}
+          isPlaying={isPlaying}
+          isLoading={isLoading}
           buffered={buffered}
           handleExpand={() => setIsExpanded(true)}
           handleToggle={toggleAudioPlayer}
@@ -98,4 +96,4 @@ const WebAudioPlayer = ({
   )
 }
 
-export default WebAudioPlayer
+export default AudioPlayer
