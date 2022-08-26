@@ -17,6 +17,7 @@ export const PlaylistItemGQLFragment = gql`
         title
         path
         publishDate
+        image
         audioSource {
           mediaId
           kind

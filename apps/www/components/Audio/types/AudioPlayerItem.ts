@@ -7,6 +7,7 @@ export type AudioPlayerItem = {
     title: string
     path: string
     publishDate?: string
+    image?: string
     audioSource?: {
       mediaId: string
       kind: string

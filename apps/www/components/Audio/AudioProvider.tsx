@@ -8,6 +8,7 @@ import compareVersion from '../../lib/react-native/CompareVersion'
 import { NEW_AUDIO_API_VERSION } from './constants'
 import { AudioPlayerItem } from './types/AudioPlayerItem'
 import { PlaylistItemFragment } from './graphql/PlaylistItemGQLFragment'
+import { usePlaylistQuery } from './hooks/usePlaylistQuery'
 
 type ToggleAudioPlayerFunc = (playerItem: AudioPlayerItem) => void
 
@@ -22,6 +23,7 @@ type AudioContextValue = {
 
 export const AudioContext = createContext<AudioContextValue>({
   audioPlayerVisible: false,
+  queue: [],
   toggleAudioPlayer: () => {
     throw new Error('not implemented')
   },
@@ -48,6 +50,7 @@ const AudioProvider = ({ children }) => {
   const [audioPlayerVisible, setAudioPlayerVisible] = useState(false)
   const clearTimeoutId = useRef<NodeJS.Timeout | null>()
 
+  const { data: playlistData } = usePlaylistQuery()
   const { getMediaProgress } = useMediaProgress()
 
   const toggleAudioPlayer = async (playerItem: AudioPlayerItem) => {
@@ -111,11 +114,12 @@ const AudioProvider = ({ children }) => {
   return (
     <AudioContext.Provider
       value={{
+        activePlayerItem,
+        queue: playlistData?.me?.collectionPlaylist || [],
+        audioPlayerVisible,
+        autoPlayActive: autoPlayAudioPlayerItem === activePlayerItem,
         toggleAudioPlayer,
         onCloseAudioPlayer,
-        audioPlayerVisible,
-        activePlayerItem,
-        autoPlayActive: autoPlayAudioPlayerItem === activePlayerItem,
       }}
     >
       {children}

@@ -14,6 +14,7 @@ import MiniAudioPlayer from './MiniAudioPlayer'
 const AudioPlayer = ({
   mediaRef,
   activePlayerItem,
+  queue,
   autoPlay,
   currentTime,
   playbackRate,
@@ -62,6 +63,7 @@ const AudioPlayer = ({
         <ExpandedAudioPlayer
           t={t}
           activePlayerItem={activePlayerItem}
+          queue={queue}
           currentTime={currentTime}
           duration={duration}
           playbackRate={playbackRate}

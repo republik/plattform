@@ -1,9 +1,5 @@
 import React from 'react'
 import { css } from 'glamor'
-import { AudioPlayerProps } from './shared'
-import Scrubber from './Scrubber'
-import PlaybackRateControl from './controls/PlaybackRateControl'
-import CurrentlyPlaying from './views/CurrentlyPlaying'
 import {
   IconButton,
   Spinner,
@@ -14,12 +10,17 @@ import {
   ReplayIcon,
   ExpandMoreIcon,
 } from '@project-r/styleguide'
+import { AudioPlayerProps } from './shared'
+import Scrubber from './Scrubber'
+import PlaybackRateControl from './controls/PlaybackRateControl'
+import CurrentlyPlaying from './views/CurrentlyPlaying'
+import Queue from './views/Queue'
 
 const styles = {
   root: css({
     display: 'flex',
     flexDirection: 'column',
-    gap: '1.5rem',
+    gap: '1rem',
     padding: '1.5rem',
     '& > *': {
       userSelect: 'none',
@@ -66,6 +67,7 @@ type ExpandedAudioPlayerProps = {
 const ExpandedAudioPlayer = ({
   t,
   activePlayerItem,
+  queue,
   currentTime = 0,
   duration = 0,
   playbackRate,
@@ -80,27 +82,10 @@ const ExpandedAudioPlayer = ({
   handleBackward,
   handlePlaybackRateChange,
 }: ExpandedAudioPlayerProps) => {
-  const {
-    meta: { title, publishDate, path },
-  } = activePlayerItem
-
   return (
     <div {...styles.root}>
-      <div {...styles.topActions}>
-        <IconButton
-          Icon={CloseIcon}
-          size={24}
-          style={{ marginRight: 0 }}
-          onClick={handleClose}
-        />
-      </div>
-      <CurrentlyPlaying
-        t={t}
-        publishDate={publishDate}
-        duration={duration}
-        title={title}
-        sourcePath={path}
-      />
+      <CurrentlyPlaying t={t} activePlayerItem={activePlayerItem} />
+      <Queue items={queue} />
       <div>
         <Scrubber
           currentTime={currentTime}

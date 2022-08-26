@@ -1,14 +1,20 @@
 import React from 'react'
 import { css } from 'glamor'
-import Link from 'next/link'
 import { fontStyles, useColorContext } from '@project-r/styleguide'
-import { dateFormatter, formatMinutes } from '../shared'
+import { dateFormatter, FALLBACK_IMG_SRC, formatMinutes } from '../shared'
+import AudioPlayerTitle from './AudioPlayerTitle'
+import { AudioPlayerItem } from '../../types/AudioPlayerItem'
 
 const styles = {
   root: css({
     display: 'flex',
     flexDirection: 'row',
     gap: '1rem',
+  }),
+  heading: css({
+    ...fontStyles.sansSerifMedium16,
+    marginBottom: '0.5rem',
+    marginTop: 0,
   }),
   coverWrapper: css({
     display: 'flex',
@@ -17,30 +23,21 @@ const styles = {
     alignItems: 'center',
   }),
   cover: css({
-    aspectRatio: 1,
+    aspectRatio: '1 / 1',
     width: '100%',
-    maxWidth: '4rem',
+    maxWidth: '5rem',
     height: 'auto',
   }),
   detailWrapper: css({
     flexGrow: 1,
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between',
     gap: '0.25rem',
   }),
   metaWrapper: css({
     display: 'flex',
     flexDirection: 'row',
     gap: '1rem',
-  }),
-  title: css({
-    ...fontStyles.sansSerifRegular15,
-    textDecoration: 'none',
-    '&[href]:hover': {
-      textDecoration: 'underline',
-      textDecorationSkip: 'ink',
-    },
   }),
   dateText: css({
     ...fontStyles.sansSerifRegular14,
@@ -49,44 +46,36 @@ const styles = {
 
 type CurrentlyPlayingProps = {
   t: any
-  duration: number
-  title: string
-  sourcePath?: string
-  publishDate: string
+  activePlayerItem: AudioPlayerItem
 }
 
-const CurrentlyPlaying = ({
-  title,
-  sourcePath,
-  publishDate,
-  duration,
-}: CurrentlyPlayingProps) => {
+const CurrentlyPlaying = ({ activePlayerItem }: CurrentlyPlayingProps) => {
   const [colorScheme] = useColorContext()
 
+  const {
+    meta: { title, path, publishDate, audioSource, image },
+  } = activePlayerItem
+  const { durationMs } = audioSource
+  const cover = image || FALLBACK_IMG_SRC
+
   return (
-    <div {...styles.root}>
-      <div {...styles.coverWrapper}>
-        <img
-          {...styles.cover}
-          src='https://www.billboard.com/wp-content/uploads/2022/03/6.-Pink-Floyd-%E2%80%98Dark-Side-of-the-Moon-1973-album-art-billboard-1240.jpg?w=1024'
-        />
-      </div>
-      <div {...styles.detailWrapper}>
-        {title &&
-          (sourcePath ? (
-            <Link href={sourcePath} passHref>
-              <a {...styles.title} {...colorScheme.set('color', 'text')}>
-                {title}
-              </a>
-            </Link>
-          ) : (
-            <span {...styles.title}>{title}</span>
-          ))}{' '}
-        <div {...styles.metaWrapper} {...colorScheme.set('color', 'textSoft')}>
-          <span {...styles.dateText}>
-            {publishDate && dateFormatter(new Date(Date.parse(publishDate)))} -{' '}
-            {formatMinutes(duration)}min
-          </span>
+    <div>
+      <p {...styles.heading}>Aktueller Beitrag</p>
+      <div {...styles.root}>
+        <div {...styles.coverWrapper}>
+          <img {...styles.cover} src={cover} />
+        </div>
+        <div {...styles.detailWrapper}>
+          {title && <AudioPlayerTitle title={title} path={path} />}
+          <div
+            {...styles.metaWrapper}
+            {...colorScheme.set('color', 'textSoft')}
+          >
+            <span {...styles.dateText}>
+              {publishDate && dateFormatter(new Date(Date.parse(publishDate)))}{' '}
+              - {formatMinutes(durationMs / 1000)}min
+            </span>
+          </div>
         </div>
       </div>
     </div>

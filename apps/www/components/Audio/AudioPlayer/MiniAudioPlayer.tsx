@@ -66,7 +66,7 @@ type MiniAudioPlayerProps = {
   handleToggle: () => void
   handleSeek: (progress: number) => void
   handleClose: () => void
-} & Omit<AudioPlayerProps, 'actions' | 'playbackRate'>
+} & Omit<AudioPlayerProps, 'actions' | 'playbackRate' | 'queue'>
 
 const MiniAudioPlayer = ({
   t,

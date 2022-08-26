@@ -7,6 +7,7 @@ import AppMessageEventEmitter from '../../lib/react-native/AppMessageEventEmitte
 import notifyApp from '../../lib/react-native/NotifyApp'
 import { usePlaylistQuery } from './hooks/usePlaylistQuery'
 import { AudioPlayerItem } from './types/AudioPlayerItem'
+import { PlaylistItemFragment } from './graphql/PlaylistItemGQLFragment'
 
 const DEFAULT_SYNC_INTERVAL = 500 // in ms
 const DEFAULT_PLAYBACK_RATE = 1
@@ -16,6 +17,7 @@ const SKIP_BACKWARD_TIME = 10
 export type AudioPlayerProps = {
   mediaRef: RefObject<HTMLAudioElement>
   activePlayerItem: AudioPlayerItem | null
+  queue: PlaylistItemFragment[]
   autoPlay?: boolean
   playbackRate: number
   currentTime: number
@@ -53,6 +55,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const { inNativeApp } = useInNativeApp()
   const {
     activePlayerItem,
+    queue,
     onCloseAudioPlayer,
     autoPlayActive,
     audioPlayerVisible,
@@ -112,7 +115,9 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     if (!activePlayerItem || (isPlaying && !force)) return
     console.log('onPlay')
     if (inNativeApp) {
-      notifyApp(AudioEvent.PLAY, activePlayerItem)
+      notifyApp(AudioEvent.PLAY, {
+        audioSource: activePlayerItem.meta.audioSource,
+      })
     } else if (mediaRef.current) {
       mediaRef.current.play()
       syncState()
@@ -226,7 +231,8 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       {audioPlayerVisible &&
         children({
           mediaRef,
-          activePlayerItem: activePlayerItem,
+          activePlayerItem,
+          queue,
           autoPlay: autoPlayActive,
           isLoading,
           isPlaying,

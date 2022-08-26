@@ -1,5 +1,6 @@
 import { timeFormat } from 'd3-time-format'
 import { AudioPlayerItem } from '../types/AudioPlayerItem'
+import { PlaylistItemFragment } from '../graphql/PlaylistItemGQLFragment'
 
 type AudioPlayerActions = {
   onPlay: () => void
@@ -13,6 +14,7 @@ type AudioPlayerActions = {
 
 export type AudioPlayerProps = {
   activePlayerItem: AudioPlayerItem
+  queue: PlaylistItemFragment[]
   isPlaying?: boolean
   isLoading?: boolean
   //
@@ -35,3 +37,5 @@ export const renderTime = (time) => {
 }
 
 export const dateFormatter = timeFormat('%d.%m.%y')
+
+export const FALLBACK_IMG_SRC = '/static/android-chrome-512x512.png'
