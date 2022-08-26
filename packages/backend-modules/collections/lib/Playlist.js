@@ -2,9 +2,20 @@ const Promise = require('bluebird')
 
 const getCollectionName = () => 'playlist'
 
+const getRepoId = (entityId) => {
+  if (entityId) {
+    const [org, repoName] = Buffer.from(entityId, 'base64')
+      .toString('utf-8')
+      .split('/')
+    return [org, repoName].join('/')
+  }
+
+  return undefined
+}
+
 const upsertPlaylistItem = async (input, context) => {
   const { id, entityId, sequence } = input
-  const { user: me, loaders, pgdb } = context
+  const { user: me, loaders, pgdb, t } = context
 
   const collection = await loaders.Collection.byKeyObj.load({
     name: getCollectionName(),
@@ -14,13 +25,23 @@ const upsertPlaylistItem = async (input, context) => {
     throw new Error('Playlist is missing')
   }
 
+  const repoId = getRepoId(entityId)
+
+  if (repoId) {
+    const doc = await loaders.Document.byRepoId.load(repoId)
+
+    if (!doc) {
+      throw new Error(t(`api/collections/document/404`))
+    }
+  }
+
   const items = await pgdb.public.collectionDocumentItems.find({
     collectionId: collection.id,
     userId: me.id,
   })
 
   const existingItem = items.find(
-    (item) => item.id === id || item.repoId === entityId,
+    (item) => item.id === id || item.repoId === repoId,
   )
 
   const maxSequence =
@@ -45,7 +66,7 @@ const upsertPlaylistItem = async (input, context) => {
   const updatedItem = {
     collectionId: collection.id,
     userId: me.id,
-    repoId: entityId,
+    repoId,
     data: {
       ...existingItem?.data,
       sequence: evaluatedSequence,
