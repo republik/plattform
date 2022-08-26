@@ -5,7 +5,7 @@ import AudioPlayerContainer from './AudioPlayerContainer'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 
-const WebAudioPlayer = dynamic(() => import('./WebAudioPlayer'), {
+const WebAudioPlayer = dynamic(() => import('./AudioPlayer/WebAudioPlayer'), {
   ssr: false,
 })
 

@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import { AudioPlayer, Loader } from '@project-r/styleguide'
-import { AudioPlayerUIProps } from './AudioPlayerContainer'
-import { useInNativeApp } from '../../lib/withInNativeApp'
-import { useTranslation } from '../../lib/withT'
-import BottomPanel from '../Frame/BottomPanel'
+import { AudioPlayerUIProps } from '../AudioPlayerContainer'
+import { useInNativeApp } from '../../../lib/withInNativeApp'
+import { useTranslation } from '../../../lib/withT'
+import BottomPanel from '../../Frame/BottomPanel'
 
 const WebAudioPlayer = ({
   mediaRef,
