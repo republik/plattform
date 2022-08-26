@@ -15,6 +15,9 @@ const styles = {
     flexDirection: 'column',
     gap: '1.5rem',
     padding: '1.5rem',
+    '& > *': {
+      userSelect: 'none',
+    },
   }),
   spinnerWrapper: css({
     position: 'relative',
@@ -82,7 +85,6 @@ const ExpandedAudioPlayer = ({
           onClick={handleClose}
         />
       </div>
-      <div>queue</div>
       <CurrentlyPlaying
         t={t}
         currentTime={currentTime}
@@ -96,7 +98,7 @@ const ExpandedAudioPlayer = ({
           currentTime={currentTime}
           duration={duration}
           buffered={buffered}
-          showScrubber={false}
+          showScrubber={true}
           disabled={isLoading}
           onSeek={handleSeek}
         />
