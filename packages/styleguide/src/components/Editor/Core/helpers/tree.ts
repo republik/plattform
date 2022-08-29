@@ -40,7 +40,6 @@ const keepVoid = (element: CustomElement): boolean => {
   return !config?.props?.length || hasFilledProps(element)
 }
 
-// TODO: this doesnt work
 const removeEmptyNodes = (n: CustomDescendant): boolean => {
   if (SlateElement.isElement(n)) {
     return elConfig[n.type].attrs?.isVoid ? keepVoid(n) : !!n.children?.length

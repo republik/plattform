@@ -26,7 +26,7 @@ export const config: ElementConfigI = {
   Form,
   attrs: {
     blockUi: {
-      position: {
+      style: {
         top: 15,
       },
     },

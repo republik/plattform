@@ -5,7 +5,7 @@ export const config: ElementConfigI = {
   structure: [{ type: 'flyerMetaP', main: true, repeat: true }],
   attrs: {
     blockUi: {
-      position: {
+      style: {
         top: 0,
         left: 0,
       },

@@ -66,13 +66,13 @@ export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
   return path
     .reduce((forms, p, i) => {
       const currentPath = path.slice(0, i ? -i : undefined)
-      // console.log({ currentPath })
+      console.log({ currentPath })
       const currentForm = getForm(
         editor,
         currentPath,
         currentPath.length !== path.length,
       )
-      // console.log({ currentForm })
+      console.log({ currentForm })
       return forms.concat(currentForm)
     }, [])
     .filter(Boolean)

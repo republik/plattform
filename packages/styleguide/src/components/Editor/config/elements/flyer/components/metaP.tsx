@@ -4,7 +4,7 @@ export const config: ElementConfigI = {
   structure: [{ type: ['text', 'link', 'break'], repeat: true }],
   attrs: {
     blockUi: {
-      position: {
+      style: {
         top: 7,
       },
     },

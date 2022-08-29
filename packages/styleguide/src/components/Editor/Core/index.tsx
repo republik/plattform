@@ -114,8 +114,10 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
     return (
       <Component
         {...element}
-        attributes={attributes}
-        style={{ ...attributes.style, ...baseStyles }}
+        attributes={{
+          ...attributes,
+          style: { ...attributes.style, ...baseStyles },
+        }}
         onMouseDown={selectVoid}
         onDoubleClick={(e) => {
           e.stopPropagation()

@@ -8,7 +8,7 @@ export const List: React.FC<{
 }> = ({ children, ordered, attributes = {}, ...props }) => {
   const { ref, ...attrs } = attributes
   return (
-    <InnerList {...attrs} {...props} data={{ ordered }}>
+    <InnerList attributes={attrs} {...props} data={{ ordered }}>
       {children}
     </InnerList>
   )

@@ -1,4 +1,8 @@
-import { ElementConfigI, NodeTemplate } from '../../../custom-types'
+import {
+  ElementAttrsI,
+  ElementConfigI,
+  NodeTemplate,
+} from '../../../custom-types'
 import { UlIcon, OlIcon } from '../../../../Icons'
 
 const structure: NodeTemplate[] = [

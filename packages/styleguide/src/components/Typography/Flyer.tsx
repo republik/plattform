@@ -92,10 +92,11 @@ export const H3 = ({ children, attributes, ...props }) => {
   )
 }
 
-export const P = ({ children, ...props }) => {
+export const P = ({ children, attributes, ...props }) => {
   const [colorScheme] = useColorContext()
   return (
     <p
+      {...attributes}
       {...props}
       {...css({
         ...fontStyles.sansSerifRegular,
@@ -108,9 +109,6 @@ export const P = ({ children, ...props }) => {
           margin: '0 0 16px',
         },
       })}
-      style={{
-        ...props.style,
-      }}
       {...colorScheme.set('color', 'journalText')}
     >
       {children}

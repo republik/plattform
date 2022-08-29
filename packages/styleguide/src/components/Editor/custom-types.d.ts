@@ -283,7 +283,7 @@ interface EditorAttrsI {
 }
 
 export interface BlockUiAttrsI {
-  position?: object
+  style?: object
 }
 
 interface ElementAttrsI extends EditorAttrsI {
