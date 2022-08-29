@@ -12,7 +12,8 @@ export const resetSelection: (selection?: Range) => NormalizeFn<CustomNode> =
       Node.has(editor, selection.focus.path)
     ) {
       Transforms.select(editor, selection.focus.path)
-      return true
+      // tree has not changed
+      return false
     }
     // factory reset :-)
     if (!selection && !editor.selection) {

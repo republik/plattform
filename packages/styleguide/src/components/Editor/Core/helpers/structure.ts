@@ -619,29 +619,6 @@ export const insertRepeat = (editor: CustomEditor): void => {
   )
 }
 
-// unwrap on paste if simple block with inline children
-export const unwrapOnPaste = (
-  editor: CustomEditor,
-  data: DataTransfer,
-): boolean => {
-  const slateData = data.getData('application/x-slate-fragment')
-  if (slateData) {
-    const fragment = JSON.parse(decodeURIComponent(window.atob(slateData)))
-    // console.log('paste fragment', fragment)
-    const unwrappedFragment =
-      fragment && fragment.length === 1 && fragment[0].children
-    if (
-      Editor.isInline(editor, unwrappedFragment[0]) ||
-      Text.isText(unwrappedFragment[0])
-    ) {
-      // console.log('paste this one instead', unwrappedFragment)
-      Editor.insertFragment(editor, unwrappedFragment)
-      return true
-    }
-  }
-  return false
-}
-
 export const handleInsert = (
   editor: CustomEditor,
   event: KeyboardEvent<HTMLDivElement>,

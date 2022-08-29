@@ -1,6 +1,7 @@
 import { CustomEditor, EditorConfig } from '../../custom-types'
 import { getCharCount } from '../helpers/text'
-import { unwrapOnPaste } from '../helpers/structure'
+import { resetSelection } from '../helpers/selection'
+import { getSlateFragment, insertSlateFragment } from '../helpers/copy-paste'
 
 // related issue: https://github.com/ianstormtaylor/slate/issues/5010
 export const withInsert =
@@ -10,8 +11,14 @@ export const withInsert =
     const maxSigns = config.maxSigns
 
     editor.insertData = (data: DataTransfer) => {
-      if (unwrapOnPaste(editor, data)) return
-      insertData(data)
+      const originalSelection = JSON.parse(JSON.stringify(editor.selection))
+      const slateFragment = getSlateFragment(data)
+      if (slateFragment) {
+        insertSlateFragment(editor, slateFragment)
+      } else {
+        insertData(data)
+      }
+      resetSelection(originalSelection)([editor, []], editor)
     }
 
     editor.insertText = (text) => {
