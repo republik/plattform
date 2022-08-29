@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { CustomDescendant, EditorConfig, NodeTemplate } from './custom-types'
-import { cleanupTree } from './components/editor/helpers/tree'
+import { cleanupTree } from './Core/helpers/tree'
 import { CodeSpecimen } from '@catalog/core'
 import copyToClipboard from 'clipboard-copy'
 

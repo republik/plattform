@@ -3,7 +3,7 @@ import {
   ElementFormProps,
   FlyerAuthorElement,
 } from '../../../../../custom-types'
-import AuthorSearch from './AuthorSearch'
+import AuthorSearch from '../../../../../Forms/AuthorSearch'
 import { Label } from '../../../../../../Typography'
 
 const Form: React.FC<ElementFormProps<FlyerAuthorElement>> = ({

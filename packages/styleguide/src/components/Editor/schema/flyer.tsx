@@ -15,7 +15,7 @@ import { FlyerTile } from '../../Flyer'
 import { FlyerAuthor } from '../../Flyer/Author'
 import { PullQuote, PullQuoteText } from '../../Flyer/PullQuote'
 import { Quiz, QuizAnswer } from '../../Flyer/Quiz'
-import { DefaultContainer } from '../components/render/Containers'
+import { DefaultContainer } from '../Render/Containers'
 import { Break } from '../../Typography/Break'
 import { Editorial, Sub, Sup, Interaction, Flyer } from '../../Typography'
 

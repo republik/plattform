@@ -8,7 +8,7 @@ import { LinkIcon } from '../../../Icons'
 import React, { useState } from 'react'
 import Field from '../../../Form/Field'
 import { Editor, Transforms } from 'slate'
-import { getFullUrl, getLinkInText } from '../../components/editor/helpers/text'
+import { getFullUrl, getLinkInText } from '../../Core/helpers/text'
 
 const Form: React.FC<ElementFormProps<LinkElement>> = ({
   element,

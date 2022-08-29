@@ -1,6 +1,6 @@
 import React from 'react'
 import { CustomDescendant, EditorConfig, NodeTemplate } from './custom-types'
-import SlateEditor from './components/editor'
+import SlateEditor from './Core'
 import ErrorBoundary from '../ErrorBoundary'
 
 const Editor: React.FC<{

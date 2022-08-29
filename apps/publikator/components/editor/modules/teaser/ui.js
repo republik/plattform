@@ -6,8 +6,8 @@ import {
   Label,
   P,
   useColorContext,
-  ColorPicker,
 } from '@project-r/styleguide'
+import { ColorPicker } from '@project-r/styleguide/editor'
 import { useState } from 'react'
 import { css } from 'glamor'
 import { buttonStyles, createPropertyForm, matchBlock } from '../../utils'
