@@ -378,7 +378,7 @@ export type ButtonConfig = {
   active?: boolean
 }
 
-export type ToolbarMode = 'fixed' | 'sticky' | 'floating'
+export type ToolbarMode = 'fixed' | 'sticky'
 
 export type CustomEditor = BaseEditor &
   ReactEditor &

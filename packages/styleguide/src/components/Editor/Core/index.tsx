@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { createEditor, Editor, Transforms } from 'slate'
 import { withHistory } from 'slate-history'
 import {
@@ -63,7 +63,6 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
       ),
     [],
   )
-  const containerRef = useRef<HTMLDivElement>()
 
   useEffect(() => {
     Editor.normalize(editor, { force: true })
@@ -140,53 +139,51 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
   )
 
   return (
-    <div ref={containerRef}>
-      <FormContextProvider>
-        <Slate
-          editor={editor}
-          value={value}
-          onChange={(newValue) => {
-            // console.log({ newValue })
-            setValue(newValue)
-          }}
+    <FormContextProvider>
+      <Slate
+        editor={editor}
+        value={value}
+        onChange={(newValue) => {
+          // console.log({ newValue })
+          setValue(newValue)
+        }}
+      >
+        <FormOverlay />
+        {!config.readOnly && <Toolbar />}
+        <LayoutContainer
+          style={{ position: 'sticky', zIndex: 1 }}
+          schema={config.schema}
         >
-          <FormOverlay />
-          {!config.readOnly && <Toolbar containerRef={containerRef} />}
-          <LayoutContainer
-            style={{ position: 'sticky', zIndex: 1 }}
-            schema={config.schema}
-          >
-            <Editable
-              readOnly={config.readOnly}
-              data-testid='slate-content-editable'
-              renderElement={renderElement}
-              renderLeaf={renderLeaf}
-              onKeyDown={(event) => {
-                // console.log('event', event.key, event.shiftKey, event)
+          <Editable
+            readOnly={config.readOnly}
+            data-testid='slate-content-editable'
+            renderElement={renderElement}
+            renderLeaf={renderLeaf}
+            onKeyDown={(event) => {
+              // console.log('event', event.key, event.shiftKey, event)
 
-                // disable key down events if max signs is reached
-                if (
-                  config.maxSigns &&
-                  getCharCount(editor.children) >= config.maxSigns &&
-                  !NAV_KEYS.concat('Backspace').includes(event.key)
-                ) {
-                  event.preventDefault()
-                  return false
-                }
+              // disable key down events if max signs is reached
+              if (
+                config.maxSigns &&
+                getCharCount(editor.children) >= config.maxSigns &&
+                !NAV_KEYS.concat('Backspace').includes(event.key)
+              ) {
+                event.preventDefault()
+                return false
+              }
 
-                insertOnKey({ name: 'Enter', shift: true }, 'break')(
-                  editor,
-                  event,
-                )
-                handleInsert(editor, event)
-                navigateOnTab(editor, event)
-              }}
-            />
-          </LayoutContainer>
-          <Footer config={config} />
-        </Slate>
-      </FormContextProvider>
-    </div>
+              insertOnKey({ name: 'Enter', shift: true }, 'break')(
+                editor,
+                event,
+              )
+              handleInsert(editor, event)
+              navigateOnTab(editor, event)
+            }}
+          />
+        </LayoutContainer>
+        <Footer config={config} />
+      </Slate>
+    </FormContextProvider>
   )
 }
 

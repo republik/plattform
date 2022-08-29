@@ -408,7 +408,7 @@ If something needs to be rendered differently in the editor and in the live vers
 span: 3
 rows:
   - Variable: mode
-    Description: sticky (default), fixed or floating
+    Description: sticky (default), or fixed
   - Variable: style
     Description: css styles to add to the toolbar
   - Variable: styleInner
@@ -712,7 +712,7 @@ Note that: a correct normaliser should break and return `true` when it changes s
 
 Any element/mark that defines a `button` in the config can be rendered in the toolbar. Every mark comes up as a button by default.
 
-Depending on the config value, the toolbar can be either `sticky`, `fixed` or `floating`, `sticky` being the default.
+Depending on the config value, the toolbar can be either `sticky` or `fixed`, `sticky` being the default.
 
 ### Placeholders
 
