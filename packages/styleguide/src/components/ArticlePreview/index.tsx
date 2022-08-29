@@ -45,8 +45,17 @@ export const ArticlePreview: React.FC<{
   color: string
   backgroundColor: string
   style?: object
+  repoId?: string
   [x: string]: unknown
-}> = ({ children, attributes, color, backgroundColor, style, ...props }) => {
+}> = ({
+  children,
+  attributes,
+  color,
+  backgroundColor,
+  style,
+  repoId,
+  ...props
+}) => {
   return (
     <div
       {...attributes}

@@ -50,6 +50,8 @@ class ColorPicker extends Component {
         <Label>{this.props.label}</Label>
         <div>
           <span
+            role='img'
+            aria-label='toggle picker'
             onClick={this.clickHandler}
             style={{
               backgroundColor: this.props.value,
@@ -60,6 +62,8 @@ class ColorPicker extends Component {
           </span>
           {!!this.props.value && (
             <span
+              role='img'
+              aria-label='delete color'
               onClick={() => {
                 this.props.onChange(undefined)
               }}

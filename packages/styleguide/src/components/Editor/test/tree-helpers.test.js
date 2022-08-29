@@ -87,6 +87,32 @@ describe('Slate Editor', () => {
           children: [
             {
               type: 'figureImage',
+              images: {
+                default: {
+                  url: 'https://images.com/bla.png',
+                },
+              },
+              children: [{ text: '' }],
+            },
+            {
+              type: 'figureCaption',
+              children: [
+                { text: '' },
+                { type: 'figureByline', children: [{ text: '' }] },
+                { text: '', end: true },
+              ],
+            },
+          ],
+        },
+        {
+          type: 'break',
+          children: [{ text: '' }],
+        },
+        {
+          type: 'figure',
+          children: [
+            {
+              type: 'figureImage',
               children: [{ text: '' }],
             },
             {
@@ -123,8 +149,26 @@ describe('Slate Editor', () => {
       ]
       expect(cleanupTree(value, true)).toEqual([
         {
+          type: 'figure',
+          children: [
+            {
+              type: 'figureImage',
+              images: {
+                default: {
+                  url: 'https://images.com/bla.png',
+                },
+              },
+              children: [],
+            },
+          ],
+        },
+        {
           type: 'break',
-          children: [{ text: '' }],
+          children: [],
+        },
+        {
+          type: 'break',
+          children: [],
         },
         {
           type: 'figure',

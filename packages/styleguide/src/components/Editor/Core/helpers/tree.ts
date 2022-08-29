@@ -43,11 +43,9 @@ const keepVoid = (element: CustomElement): boolean => {
 // TODO: this doesnt work
 const removeEmptyNodes = (n: CustomDescendant): boolean => {
   if (SlateElement.isElement(n)) {
-    return (
-      Node.string(n) !== '' || (elConfig[n.type].attrs?.isVoid && keepVoid(n))
-    )
+    return elConfig[n.type].attrs?.isVoid ? keepVoid(n) : !!n.children?.length
   } else {
-    return !n.end
+    return !n.end && !!n.text
   }
 }
 

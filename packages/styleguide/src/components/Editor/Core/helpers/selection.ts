@@ -19,7 +19,8 @@ export const resetSelection: (selection?: Range) => NormalizeFn<CustomNode> =
       const node = Editor.first(editor, [])
       if (node) {
         Transforms.select(editor, node[1])
-        return true
+        // tree has not changed
+        return false
       }
     }
     return false

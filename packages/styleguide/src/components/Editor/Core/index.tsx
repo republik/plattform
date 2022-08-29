@@ -87,7 +87,8 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
       )
     }
     const isVoid = config.attrs?.isVoid
-    const showBlockUi = config.Form || element.template?.repeat
+    const showBlockUi =
+      !config.attrs?.isInline && (config.Form || element.template?.repeat)
     const Component =
       editor.customConfig.editorSchema?.[element.type] ||
       editor.customConfig.schema[element.type]
