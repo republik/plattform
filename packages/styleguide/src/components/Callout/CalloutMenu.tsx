@@ -62,10 +62,10 @@ const CalloutMenu = ({
 
   // wrapping div needed for robust positioning of <Callout />
   return (
-    <div
+    <span
       {...(padded && styles.padded)}
       {...attributes}
-      style={{ position: 'relative' }}
+      style={{ position: 'relative', display: 'block' }}
       ref={toggleRef}
     >
       {showMenu && (
@@ -78,7 +78,7 @@ const CalloutMenu = ({
         </Callout>
       )}
       <Element {...elementProps} onClick={() => setMenu(!showMenu)} />
-    </div>
+    </span>
   )
 }
 

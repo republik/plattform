@@ -24,6 +24,7 @@ const DEFAULT_POSITION = {
 
 const styles = {
   container: css({
+    display: 'block',
     userSelect: 'none',
     position: 'absolute',
     background: 'white',
@@ -32,6 +33,7 @@ const styles = {
     borderRadius: 40,
   }),
   padded: css({
+    display: 'block',
     marginBottom: 8,
   }),
 }
@@ -141,13 +143,13 @@ const BlockUi: React.FC<{
   const showMoveUi = !!template?.repeat
 
   const editButton = (
-    <div {...(showMoveUi && styles.padded)}>
+    <span {...(showMoveUi && styles.padded)}>
       <Edit path={path} />
-    </div>
+    </span>
   )
 
   return (
-    <div
+    <span
       className='ui-element'
       {...styles.container}
       style={{ ...DEFAULT_POSITION, ...blockUi?.position }}
@@ -160,20 +162,20 @@ const BlockUi: React.FC<{
         >
           {showEdit && editButton}
           {showMoveUi && [
-            <div {...styles.padded} key='move'>
+            <span {...styles.padded} key='move'>
               <MoveUp path={path} />
               <MoveDown path={path} />
-            </div>,
-            <div {...styles.padded} key='insert'>
+            </span>,
+            <span {...styles.padded} key='insert'>
               <Insert path={path} templates={template.type} />
-            </div>,
+            </span>,
             <Remove path={path} key='remove' />,
           ]}
         </CalloutMenu>
       ) : (
         editButton
       )}
-    </div>
+    </span>
   )
 }
 
