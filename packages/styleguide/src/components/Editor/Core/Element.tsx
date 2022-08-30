@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSlate } from 'slate-react'
 import { config as elConfig } from '../config/elements'
 import { ToolbarButton } from './Toolbar'
@@ -11,8 +11,16 @@ export const ElementButton: React.FC<{
   config: ButtonConfig
 }> = ({ config }) => {
   const editor = useSlate()
+  const [pendingPath, setPendingPath] = useState<number[]>()
   const setFormPath = useFormContext()[1]
   const element = elConfig[config.type]
+
+  useEffect(() => {
+    if (pendingPath && !Editor.isNormalizing(editor)) {
+      setFormPath(pendingPath)
+      setPendingPath(undefined)
+    }
+  }, [editor, pendingPath])
 
   if (!element?.button) {
     return null
@@ -30,9 +38,7 @@ export const ElementButton: React.FC<{
           editor,
           config.type as CustomElementsType,
         )
-        setTimeout(() => {
-          setFormPath(insertPath)
-        })
+        setPendingPath(insertPath)
       }}
     />
   )

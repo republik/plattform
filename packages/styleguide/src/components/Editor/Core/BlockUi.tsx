@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
   AddIcon,
   ArrowDownIcon,
@@ -16,6 +16,7 @@ import { CustomElement, TemplateType } from '../custom-types'
 import { config as elConfig } from '../config/elements'
 import CalloutMenu from '../../Callout/CalloutMenu'
 import colors from '../../../theme/colors'
+import { Editor } from 'slate'
 
 const DEFAULT_POSITION = {
   top: 0,
@@ -100,17 +101,23 @@ const Insert: React.FC<{
   templates: TemplateType | TemplateType[]
 }> = ({ path, templates }) => {
   const editor = useSlate()
+  const [pendingPath, setPendingPath] = useState<number[]>()
   const setFormPath = useFormContext()[1]
   const template = Array.isArray(templates) ? templates[0] : templates
+
+  useEffect(() => {
+    if (pendingPath && !Editor.isNormalizing(editor)) {
+      setFormPath(pendingPath)
+      setPendingPath(undefined)
+    }
+  }, [editor, pendingPath])
 
   return (
     <IconButton
       Icon={AddIcon}
       onClick={() => {
         const insertPath = insertAfter(editor, template, path)
-        setTimeout(() => {
-          setFormPath(insertPath)
-        })
+        setPendingPath(insertPath)
       }}
       title='insert new element'
       style={iconStyle}
