@@ -1,9 +1,8 @@
 const createNewsletterSubscription = (interestConfigurationMap) => ({
-  buildSubscription(userId, interestId, subscribed) {
-    const interestConfiguration = this.interestConfiguration(interestId)
-    const name = interestConfiguration.name
+  buildSubscription(userId, interestId, subscribed, roles) {
+    const { name, ...rest } = this.interestConfiguration(interestId)
     const id = Buffer.from(userId + name).toString('base64')
-    return { name, id, subscribed }
+    return { userId, subscribed, roles, name, ...rest, id }
   },
 
   allInterestConfigurations() {
