@@ -36,7 +36,6 @@ import DiscussionLinkButton from './DiscussionLinkButton'
 import UserProgress from './UserProgress'
 import ShareButtons from './ShareButtons'
 import { useMe } from '../../lib/context/MeContext'
-import { useAddPlaylistItemMutation } from '../Audio/hooks/useAddPlaylistItemMutation'
 import usePlaylist from '../Audio/hooks/usePlaylist'
 
 const ActionBar = ({
@@ -58,7 +57,7 @@ const ActionBar = ({
   const [podcastOverlayVisible, setPodcastOverlayVisible] = useState(false)
   const { toggleAudioPlayer } = useContext(AudioContext)
 
-  const { addToPlaylist } = usePlaylist()
+  const { addToPlaylist, isPlaylistAvailable } = usePlaylist()
 
   if (!document) {
     return (
@@ -373,6 +372,7 @@ const ActionBar = ({
       modes: ['feed', 'seriesEpisode'],
       // TODO: show only if not in playlist already
       show:
+        isPlaylistAvailable &&
         !!meta?.audioSource &&
         ['syntheticReadAloud', 'readAloud'].includes(meta.audioSource.kind),
     },

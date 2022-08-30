@@ -54,7 +54,7 @@ const ReadAloudInline = ({ documentId, meta, t }: ReadAloudInlineProps) => {
   const [colorScheme] = useColorContext()
 
   const { playlist, playlistIsLoading, playlistHasError } = usePlaylist()
-  const { addPlaylistItem } = usePlaylist()
+  const { addPlaylistItem, isPlaylistAvailable } = usePlaylist()
 
   const alreadyInPlaylist =
     !playlistIsLoading &&
@@ -98,12 +98,16 @@ const ReadAloudInline = ({ documentId, meta, t }: ReadAloudInlineProps) => {
             })
           }}
         />
-        <IconButton
-          Icon={PlaylistAddIcon}
-          onClick={handleAddToPlaylist}
-          disalbed={alreadyInPlaylist}
-          title={alreadyInPlaylist ? 'already in playlist' : 'add to playlist'}
-        />
+        {isPlaylistAvailable && (
+          <IconButton
+            Icon={PlaylistAddIcon}
+            onClick={handleAddToPlaylist}
+            disalbed={alreadyInPlaylist}
+            title={
+              alreadyInPlaylist ? 'already in playlist' : 'add to playlist' // TODO: t9n
+            }
+          />
+        )}
         <p {...styles.text}>
           <a
             href='#'

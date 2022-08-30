@@ -24,6 +24,7 @@ const styles = {
   }),
   cover: css({
     aspectRatio: '1 / 1',
+    objectFit: 'cover',
     width: '100%',
     maxWidth: '5rem',
     height: 'auto',

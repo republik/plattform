@@ -3,11 +3,16 @@ import { useAddPlaylistItemMutation } from './useAddPlaylistItemMutation'
 import { useRemovePlaylistItemMutation } from './useRemovePlaylistItemMutation'
 import { useMovePlaylistItemMutation } from './useMovePlaylistItemMutation'
 import { useClearPlaylistMutation } from './useClearPlaylistMutation'
+import { some } from 'lodash'
+import { useInNativeApp } from '../../../lib/withInNativeApp'
+import compareVersion from '../../../lib/react-native/CompareVersion'
+import { NEW_AUDIO_API_VERSION } from '../constants'
 
 /**
  * usePlaylist provides all playlist-data as well as operations to manage the playlist.
  */
 const usePlaylist = () => {
+  const { inNativeApp, inNativeAppVersion } = useInNativeApp()
   const {
     data: meWithPlaylist,
     loading: playlistIsLoading,
@@ -36,6 +41,10 @@ const usePlaylist = () => {
     removePlaylistItem,
     movePlaylistItem,
     clearPlaylist,
+    isPlaylistAvailable:
+      !inNativeApp || // in browser
+      (inNativeApp && // in app with non legacy version
+        compareVersion(inNativeAppVersion, NEW_AUDIO_API_VERSION) >= 0),
   }
 }
 
