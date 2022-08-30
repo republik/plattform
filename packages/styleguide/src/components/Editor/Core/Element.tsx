@@ -5,7 +5,7 @@ import { ToolbarButton } from './Toolbar'
 import { CustomElementsType, ButtonConfig } from '../custom-types'
 import { toggleElement } from './helpers/structure'
 import { useFormContext } from './Forms'
-import { Editor } from 'slate'
+import { Node } from 'slate'
 
 export const ElementButton: React.FC<{
   config: ButtonConfig
@@ -16,7 +16,7 @@ export const ElementButton: React.FC<{
   const element = elConfig[config.type]
 
   useEffect(() => {
-    if (pendingPath && !Editor.isNormalizing(editor)) {
+    if (pendingPath && Node.has(editor, pendingPath)) {
       setFormPath(pendingPath)
       setPendingPath(undefined)
     }

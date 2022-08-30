@@ -16,7 +16,7 @@ import { CustomElement, TemplateType } from '../custom-types'
 import { config as elConfig } from '../config/elements'
 import CalloutMenu from '../../Callout/CalloutMenu'
 import colors from '../../../theme/colors'
-import { Editor } from 'slate'
+import { Node } from 'slate'
 
 const DEFAULT_POSITION = {
   top: 0,
@@ -106,7 +106,7 @@ const Insert: React.FC<{
   const template = Array.isArray(templates) ? templates[0] : templates
 
   useEffect(() => {
-    if (pendingPath && !Editor.isNormalizing(editor)) {
+    if (pendingPath && Node.has(editor, pendingPath)) {
       setFormPath(pendingPath)
       setPendingPath(undefined)
     }
