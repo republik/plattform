@@ -27,7 +27,9 @@ const usePlaylist = () => {
   })
 
   return {
-    playlist: meWithPlaylist.me?.collectionPlaylist ?? [],
+    playlist: meWithPlaylist
+      ? meWithPlaylist?.me?.collectionPlaylist ?? []
+      : null,
     playlistIsLoading,
     playlistHasError,
     addPlaylistItem,

@@ -10,8 +10,8 @@ type ClearPlaylistMutationData = {
 }
 
 const ClearPlaylistMutation = gql`
-  mutation ClearPlaylist() {
-  playlistItems: clearPlaylist() {
+  mutation ClearPlaylist {
+  playlistItems: clearPlaylist {
     ...PlaylistFragment
   }
   ${PlaylistItemGQLFragment}
