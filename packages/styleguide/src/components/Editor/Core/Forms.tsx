@@ -108,8 +108,6 @@ export const FormOverlay = (): ReactElement => {
   const editor = useSlate()
   const forms = useMemo(() => getForms(editor, formPath), [editor, formPath])
 
-  console.log({ formPath })
-
   if (!forms.length || !formPath) return null
 
   const onClose = () => {

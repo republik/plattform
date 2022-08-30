@@ -5,34 +5,66 @@ import {
   NormalizeFn,
 } from '../../custom-types'
 import { LinkIcon } from '../../../Icons'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Field from '../../../Form/Field'
 import { Editor, Transforms } from 'slate'
 import { getFullUrl, getLinkInText } from '../../Core/helpers/text'
+import renderAsText from '../../Render/text'
+import { useSlate } from 'slate-react'
+
+const isValidHttpUrl = (test: string): boolean => {
+  try {
+    new URL(test)
+  } catch (_) {
+    return false
+  }
+  return true
+}
 
 const Form: React.FC<ElementFormProps<LinkElement>> = ({
   element,
+  path,
   onChange,
-  onClose,
 }) => {
   const [href, setHref] = useState<string>(element.href || '')
+  const [text, setText] = useState<string>(renderAsText([element]))
+  const editor = useSlate()
+  const hrefRef = useRef<string>()
+  hrefRef.current = href
+  const textRef = useRef<string>()
+  textRef.current = text
+
+  useEffect(() => {
+    return () => {
+      onChange({ href: hrefRef.current })
+      Transforms.insertText(editor, textRef.current, {
+        at: path,
+      })
+    }
+  }, [])
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault()
-        onChange({ href })
-        onClose()
-      }}
-    >
+    <>
       <Field
-        autoFocus='autofocus'
         label='URL'
         type='url'
+        error={
+          !!href && !isValidHttpUrl(href) && 'Geben sie eine gültige URL an'
+        }
         value={href}
-        onChange={(_, value: string) => setHref(value)}
+        onChange={(_, value: string) => {
+          setHref(value)
+        }}
       />
-    </form>
+      <Field
+        label='Text'
+        type='text'
+        value={text}
+        onChange={(_, value: string) => {
+          setText(value)
+        }}
+      />
+    </>
   )
 }
 
