@@ -7,6 +7,10 @@ const styles = {
   title: css({
     ...fontStyles.sansSerifRegular15,
     textDecoration: 'none',
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 2,
+    overflow: 'hidden',
     '&[href]:hover': {
       textDecoration: 'underline',
       textDecorationSkip: 'ink',
