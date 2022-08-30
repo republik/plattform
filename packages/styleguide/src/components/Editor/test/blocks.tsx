@@ -67,7 +67,7 @@ export const paragraph: ParagraphElement = {
   children: [{ text: '' }],
 }
 
-export const flyerTileOpening: FlyerTileOpeningElement = {
+export const flyerTileOpening: Partial<FlyerTileOpeningElement> = {
   type: 'flyerTileOpening',
   children: [
     {
@@ -85,7 +85,7 @@ export const flyerTileOpening: FlyerTileOpeningElement = {
   ],
 }
 
-export const flyerTile: FlyerTileElement = {
+export const flyerTile: Partial<FlyerTileElement> = {
   type: 'flyerTile',
   children: [
     {

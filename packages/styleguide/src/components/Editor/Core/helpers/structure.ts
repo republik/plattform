@@ -89,12 +89,20 @@ const buildTextNode = (isEnd: boolean): CustomText => {
   }
 }
 
-export const buildElement = (
-  elKey: CustomElementsType,
-  config?: ElementConfigI,
-): CustomElement => {
-  const isVoid = elConfig[elKey].attrs?.isVoid
-  const defaultProps = config?.defaultProps || {}
+const getDefaultProps = (config: ElementConfigI): any => {
+  const props = {}
+  if (!config?.defaultProps) return props
+  Object.keys(config.defaultProps).forEach((key) => {
+    const value = config.defaultProps[key]
+    props[key] = typeof value === 'function' ? value() : value
+  })
+  return props
+}
+
+const buildElement = (elKey: CustomElementsType): CustomElement => {
+  const config = elConfig[elKey]
+  const isVoid = config.attrs?.isVoid
+  const defaultProps = getDefaultProps(config)
   return {
     type: elKey,
     children: isVoid ? [TEXT] : [],
@@ -190,15 +198,17 @@ const convertBlock = (
 
   const targetConfig = elConfig[target[0].type]
   const insertConfig = elConfig[element.type]
+  const insertProps = getDefaultProps(insertConfig)
   const insertPartial = {
     type: element.type,
-    ...(insertConfig.defaultProps || {}),
+    ...insertProps,
   }
 
   const mainElKey = getMainElement(insertConfig.structure)
+  const mainElProps = getDefaultProps(elConfig[mainElKey])
   const mainElPartial = mainElKey && {
     type: mainElKey,
-    ...(elConfig[mainElKey].defaultProps || {}),
+    ...mainElProps,
   }
   const targetMainElKey = getMainElement(targetConfig.structure)
 
@@ -248,7 +258,7 @@ export const toggleElement = (
   if (!selection) return
 
   const config = elConfig[elKey]
-  const element = buildElement(elKey, config)
+  const element = buildElement(elKey)
 
   let elementPath: number[]
 
@@ -475,10 +485,8 @@ export const insertAfter = (
   elKey: CustomElementsType | TemplateType,
   elPath: number[],
 ): number[] => {
-  const config = elConfig[elKey]
-  const element = buildElement(elKey as CustomElementsType, config)
+  const element = buildElement(elKey as CustomElementsType)
   const insertPath = calculateSiblingPath(elPath)
-  console.log({ element, insertPath })
   Transforms.insertNodes(editor, element, { at: insertPath })
   Transforms.select(editor, insertPath)
   Transforms.collapse(editor, { edge: 'start' })
@@ -517,11 +525,14 @@ const splitAndInsert = (
     Transforms.splitNodes(editor, { always: true })
     // since the node got split, splitP != selectionP
     const splitP = getSelectedElement(editor, true)[1]
-    Transforms.setNodes(
-      editor,
-      { type: getTemplateType(targetN.template) } as Partial<CustomElement>,
-      { at: splitP },
-    )
+    const insertType = getTemplateType(targetN.template)
+    const insertConfig = elConfig[insertType]
+    const insertProps = getDefaultProps(insertConfig)
+    const insertPartial = {
+      type: insertType,
+      ...insertProps,
+    }
+    Transforms.setNodes(editor, insertPartial, { at: splitP })
     const insertP = inPlace ? targetP : calculateSiblingPath(targetP)
     Transforms.moveNodes(editor, { at: splitP, to: insertP })
     Transforms.select(editor, insertP)

@@ -3,6 +3,7 @@ import { CustomDescendant } from '../custom-types'
 export const exampleTree: CustomDescendant[] = [
   {
     type: 'flyerTileOpening',
+    id: '1',
     children: [
       {
         type: 'headline',
@@ -31,6 +32,7 @@ export const exampleTree: CustomDescendant[] = [
   },
   {
     type: 'flyerTile',
+    id: '2',
     children: [
       {
         type: 'flyerTopic',
@@ -91,6 +93,7 @@ export const exampleTree: CustomDescendant[] = [
   },
   {
     type: 'flyerTile',
+    id: '3',
     children: [
       {
         type: 'flyerMetaP',
@@ -123,6 +126,7 @@ export const exampleTree: CustomDescendant[] = [
   },
   {
     type: 'flyerTile',
+    id: '4',
     children: [
       {
         type: 'flyerMetaP',
@@ -169,6 +173,7 @@ export const exampleTree: CustomDescendant[] = [
   },
   {
     type: 'flyerTileClosing',
+    id: '5',
     children: [
       {
         type: 'headline',

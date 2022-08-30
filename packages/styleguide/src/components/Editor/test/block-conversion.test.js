@@ -343,7 +343,7 @@ describe('Slate Editor: Block Conversion', () => {
       await Transforms.select(editor, [0, 0, 0])
       toggleElement(editor, 'flyerTileMeta')
       await new Promise(process.nextTick)
-      expect(cleanupTree(value)).toEqual([
+      expect(cleanupTree(value)).toMatchObject([
         {
           type: 'flyerTileMeta',
           children: [

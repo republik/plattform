@@ -1,7 +1,25 @@
 import { ElementConfigI } from '../../../custom-types'
 import { FlyerTileIcon } from '../../../../Icons'
 
+const getId = (): string => Math.floor(Math.random() * 1000).toString()
+
+export const baseConfig: Partial<ElementConfigI> = {
+  attrs: {
+    blockUi: {
+      style: {
+        top: 10,
+        left: 10,
+      },
+    },
+  },
+  props: ['id'],
+  defaultProps: {
+    id: getId,
+  },
+}
+
 export const config: ElementConfigI = {
+  ...baseConfig,
   structure: [
     { type: 'flyerMetaP', main: true },
     { type: 'flyerTopic' },
@@ -12,13 +30,5 @@ export const config: ElementConfigI = {
       type: ['flyerPunchline', 'pullQuote', 'articlePreview', 'figure'],
     },
   ],
-  attrs: {
-    blockUi: {
-      style: {
-        top: 10,
-        left: 10,
-      },
-    },
-  },
   button: { icon: FlyerTileIcon },
 }

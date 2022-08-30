@@ -2,6 +2,7 @@ import { createEditor, Transforms } from 'slate'
 import { cleanupTree } from '../Core/helpers/tree'
 import { insertRepeat } from '../Core/helpers/structure'
 import schema from '../schema/article'
+import flyerSchema from '../schema/flyer'
 import mockEditor from './mockEditor'
 import { figure, flyerTile, flyerTileOpening, paragraph } from './blocks'
 
@@ -569,6 +570,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
     value = [
       {
         type: 'flyerTileOpening',
+        id: '123',
         children: [
           {
             type: 'headline',
@@ -606,7 +608,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
     await Transforms.select(editor, [0, 2, 0])
     insertRepeat(editor)
     await new Promise(process.nextTick)
-    expect(cleanupTree(value)).toEqual([flyerTileOpening, flyerTile])
+    expect(cleanupTree(value)).toMatchObject([flyerTileOpening, flyerTile])
     expect(editor.selection.focus.path).toEqual([1, 0, 0])
   })
 
@@ -614,6 +616,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
     value = [
       {
         type: 'flyerTileOpening',
+        id: '123',
         children: [
           {
             type: 'headline',
@@ -648,11 +651,15 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         repeat: true,
       },
     ]
-    const editor = await setup(structure)
+    const editor = await setup(structure, { schema: flyerSchema })
     await Transforms.select(editor, [0, 2, 0])
     insertRepeat(editor)
     await new Promise(process.nextTick)
-    expect(cleanupTree(value)).toEqual([flyerTileOpening, flyerTile, flyerTile])
+    expect(cleanupTree(value)).toMatchObject([
+      flyerTileOpening,
+      flyerTile,
+      flyerTile,
+    ])
     expect(editor.selection.focus.path).toEqual([1, 0, 0])
   })
 
@@ -746,5 +753,21 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
     await new Promise(process.nextTick)
     expect(cleanupTree(value)).toEqual([figure, paragraph])
     expect(editor.selection.focus).toEqual({ path: [1, 0], offset: 0 })
+  })
+
+  it('should generate default props as specified', async () => {
+    value = [flyerTile]
+    const structure = [
+      {
+        type: 'flyerTile',
+        repeat: true,
+      },
+    ]
+    const editor = await setup(structure, { schema: flyerSchema })
+    await Transforms.select(editor, { path: [0, 5, 0], offset: 0 })
+    insertRepeat(editor)
+    await new Promise(process.nextTick)
+    console.log(value[1])
+    expect(cleanupTree(value)[1].id).toBeDefined()
   })
 })

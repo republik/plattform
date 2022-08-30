@@ -108,21 +108,29 @@ export type BlockCodeElement = SharedElement & {
   type: 'blockCode'
 }
 
-export type FlyerTileOpeningElement = SharedElement & {
-  type: 'flyerTileOpening'
+type TileElement = {
+  id: string
 }
 
-export type FlyerTileClosingElement = SharedElement & {
-  type: 'flyerTileClosing'
-}
+export type FlyerTileOpeningElement = SharedElement &
+  TileElement & {
+    type: 'flyerTileOpening'
+  }
 
-export type FlyerTileMetaElement = SharedElement & {
-  type: 'flyerTileMeta'
-}
+export type FlyerTileClosingElement = SharedElement &
+  TileElement & {
+    type: 'flyerTileClosing'
+  }
 
-export type FlyerTileElement = SharedElement & {
-  type: 'flyerTile'
-}
+export type FlyerTileMetaElement = SharedElement &
+  TileElement & {
+    type: 'flyerTileMeta'
+  }
+
+export type FlyerTileElement = SharedElement &
+  TileElement & {
+    type: 'flyerTile'
+  }
 
 export type FlyerMetaPElement = SharedElement & {
   type: 'flyerMetaP'
