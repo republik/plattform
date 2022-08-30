@@ -27,7 +27,8 @@ const AudioPlayer = ({
   const { inNativeApp } = useInNativeApp()
   const { t } = useTranslation()
   const [isExpanded, setIsExpanded] = useState(false)
-  const { meta: { audioSource, title, path } = {} } = activePlayerItem
+  const { meta: { audioSource } = {} } = activePlayerItem
+  console.log('AudioSource', audioSource)
 
   const toggleAudioPlayer = () => {
     if (isPlaying) {
@@ -47,6 +48,7 @@ const AudioPlayer = ({
         onPlay={actions.onPlay}
         onPause={actions.onPause}
         onCanPlay={actions.onCanPlay}
+        onEnded={actions.onEnded}
       >
         {audioSource.mp3 && <source src={audioSource.mp3} type='audio/mp3' />}
         {audioSource.aac && <source src={audioSource.aac} type='audio/aac' />}

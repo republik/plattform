@@ -1,12 +1,14 @@
 import { ReactNode, RefObject, useEffect, useRef, useState } from 'react'
 import { usePlaybackRate } from '../../lib/playbackRate'
-import { useAudioContext } from './AudioProvider'
+import { AudioEventEmitter, useAudioContext } from './AudioProvider'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 import { AudioEvent } from './types/AudioEvent'
 import AppMessageEventEmitter from '../../lib/react-native/AppMessageEventEmitter'
 import notifyApp from '../../lib/react-native/NotifyApp'
 import { AudioPlayerItem } from './types/AudioPlayerItem'
 import { PlaylistItemFragment } from './graphql/PlaylistItemGQLFragment'
+import usePlaylist from './hooks/usePlaylist'
+import { useMediaProgress } from './MediaProgress'
 
 const DEFAULT_SYNC_INTERVAL = 500 // in ms
 const DEFAULT_PLAYBACK_RATE = 1
@@ -34,6 +36,7 @@ export type AudioPlayerProps = {
     onBackward: () => void
     onClose: () => void
     onPlaybackRateChange: (value: number) => void
+    onEnded: () => void
   }
   buffered: TimeRanges
 }
@@ -52,26 +55,69 @@ type AudioPlayerContainerProps = {
 
 const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const { inNativeApp } = useInNativeApp()
-  const {
-    activePlayerItem,
-    queue,
-    onCloseAudioPlayer,
-    autoPlayActive,
-    audioPlayerVisible,
-  } = useAudioContext()
+  const { onCloseAudioPlayer } = useAudioContext()
+  const { playlist, removePlaylistItem } = usePlaylist()
+  const { getMediaProgress } = useMediaProgress()
+
+  const [activePlayerItem, setActivePlayerItem] =
+    useState<PlaylistItemFragment | null>(null)
   const [trackedPlayerItem, setTrackedPlayerItem] =
-    useState<AudioPlayerItem | null>(null)
+    useState<PlaylistItemFragment | null>(null)
+
+  const [shouldAutoPlay, setShouldAutoPlay] = useState(false)
   const [hasAutoPlayed, setHasAutoPlayed] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [playbackRate, setPlaybackRate] = usePlaybackRate(DEFAULT_PLAYBACK_RATE)
+
   const [isLoading, setIsLoading] = useState(true)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
-  const [playbackRate, setPlaybackRate] = usePlaybackRate(DEFAULT_PLAYBACK_RATE)
   const [buffered, setBuffered] = useState<TimeRanges>(null)
 
   const mediaRef = useRef<HTMLAudioElement | HTMLVideoElement>(null)
 
-  // TODO: fetch audio progress from media progress
+  // TODO: add listener for audio-context togglePlayer
+  useEffect(() => {
+    const handler = (item) => {
+      setShouldAutoPlay(true)
+      setActivePlayerItem(item)
+    }
+    AudioEventEmitter.addListener('togglePlayer', handler)
+    return () => {
+      AudioEventEmitter.removeListener('togglePlayer', handler)
+    }
+  }, [setActivePlayerItem])
+
+  // Update the local state if a new audio-state is provided
+  useEffect(() => {
+    if (activePlayerItem === trackedPlayerItem) return
+    console.log(
+      'AudioPlayerContainer: useEffect: activePlayerItem',
+      activePlayerItem,
+    )
+    setHasAutoPlayed(false) // reset autoplay
+    setTrackedPlayerItem(activePlayerItem)
+    setIsLoading(true)
+    if (inNativeApp) {
+      // TODO: check if required logic here is already handled by sync
+      // throw new Error('not implemented useEffect')
+    } else if (mediaRef.current) {
+      mediaRef.current.load() // TODO: handle possible error
+    }
+    onPlay(true)
+  }, [activePlayerItem, trackedPlayerItem])
+
+  /*useEffect(() => {
+    if (
+      (playlist?.length > 0 && !activePlayerItem) ||
+      (playlist?.length > 0 &&
+        activePlayerItem &&
+        activePlayerItem.id !== playlist[0].id)
+    ) {
+      setHasAutoPlayed(false) // reset autoplay
+      setActivePlayerItem(playlist[0])
+    }
+  }, [playlist, activePlayerItem])*/
 
   const syncState = (state?: AudioPlayerState) => {
     if (inNativeApp && state) {
@@ -95,23 +141,37 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   }
 
   const onCanPlay = () => {
-    console.log('onCanPlay')
     setIsLoading(false)
     syncState()
-    if (!isPlaying && autoPlayActive && !hasAutoPlayed) {
+    console.log('AudioPlayerContainer: onCanPlay', {
+      isPlaying,
+      shouldAutoPlay,
+      hasAutoPlayed,
+    })
+    if (!isPlaying && shouldAutoPlay && !hasAutoPlayed) {
+      console.log('triggering onPlay via onCanPlay')
       setHasAutoPlayed(true)
       onPlay()
     }
   }
 
   const onPlay = (force?: true) => {
-    if (!activePlayerItem || (isPlaying && !force)) return
-    console.log('onPlay')
+    console.log('onPlay', {
+      activePlayerItem,
+      isPlaying,
+      force,
+    })
+    if (!activePlayerItem || (isPlaying && !force)) {
+      console.log('onPlay: no activePlayerItem or isPlaying')
+      return
+    }
     if (inNativeApp) {
       notifyApp(AudioEvent.PLAY, {
-        audioSource: activePlayerItem.meta.audioSource,
+        audioSource: activePlayerItem.document.meta.audioSource,
       })
     } else if (mediaRef.current) {
+      console.log('calling play on web-mediaRef')
+      mediaRef.current.playbackRate = playbackRate
       mediaRef.current.play()
       syncState()
     }
@@ -181,6 +241,22 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     setPlaybackRate(value)
   }
 
+  const onEnded = async () => {
+    if (!activePlayerItem) return
+    try {
+      const { data } = await removePlaylistItem({
+        variables: {
+          id: activePlayerItem.id,
+        },
+      })
+      if (data.playlistItems.length > 0) {
+        setActivePlayerItem(data.playlistItems[0])
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   useEffect(() => {
     // Add a listener for the event emitted by the native app
     if (inNativeApp) {
@@ -203,30 +279,16 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     throw new Error('no audio state to sync')
   }, [syncState, isPlaying, playbackRate]) // adapt sync-interval to playbackRate
 
-  // Update the local state if a new audio-state is provided
-  useEffect(() => {
-    if (activePlayerItem === trackedPlayerItem) return
-    console.log('new audio state', activePlayerItem)
-    setHasAutoPlayed(false) // reset autoplay
-    setTrackedPlayerItem(activePlayerItem)
-    setIsLoading(true)
-    if (inNativeApp) {
-      // TODO: check if required logic here is already handled by sync
-      // throw new Error('not implemented useEffect')
-    } else if (mediaRef.current) {
-      mediaRef.current.load()
-    }
-    onPlay(true)
-  }, [activePlayerItem, trackedPlayerItem])
+  if (!activePlayerItem) return null
 
   return (
     <div>
-      {audioPlayerVisible &&
+      {!!activePlayerItem &&
         children({
           mediaRef,
-          activePlayerItem,
-          queue,
-          autoPlay: autoPlayActive,
+          activePlayerItem: activePlayerItem.document,
+          queue: playlist?.slice(1),
+          autoPlay: shouldAutoPlay,
           isLoading,
           isPlaying,
           isSeeking: false,
@@ -243,6 +305,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
             onBackward,
             onClose: onStop,
             onPlaybackRateChange,
+            onEnded,
           },
           buffered,
         })}

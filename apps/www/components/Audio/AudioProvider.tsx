@@ -4,17 +4,16 @@ import createPersistedState from '../../lib/hooks/use-persisted-state'
 import { useInNativeApp, postMessage } from '../../lib/withInNativeApp'
 
 import { useMediaProgress } from './MediaProgress'
-import compareVersion from '../../lib/react-native/CompareVersion'
-import { NEW_AUDIO_API_VERSION } from './constants'
 import { AudioPlayerItem } from './types/AudioPlayerItem'
-import { PlaylistItemFragment } from './graphql/PlaylistItemGQLFragment'
 import usePlaylist from './hooks/usePlaylist'
+import EventEmitter from 'events'
 
 type ToggleAudioPlayerFunc = (playerItem: AudioPlayerItem) => void
 
+export const AudioEventEmitter = new EventEmitter()
+
 type AudioContextValue = {
   activePlayerItem: AudioPlayerItem | null
-  queue: PlaylistItemFragment[]
   audioPlayerVisible: boolean
   autoPlayActive: boolean
   toggleAudioPlayer: ToggleAudioPlayerFunc
@@ -23,7 +22,6 @@ type AudioContextValue = {
 
 export const AudioContext = createContext<AudioContextValue>({
   audioPlayerVisible: false,
-  queue: [],
   toggleAudioPlayer: () => {
     throw new Error('not implemented')
   },
@@ -41,7 +39,7 @@ const usePersistedPlayerItem = createPersistedState<AudioPlayerItem>(
 )
 
 const AudioProvider = ({ children }) => {
-  const { inNativeApp, inNativeAppVersion, inNativeIOSApp } = useInNativeApp()
+  const { inNativeIOSApp } = useInNativeApp()
   const [activePlayerItem, setActivePlayerItem] = usePersistedPlayerItem<
     AudioPlayerItem | undefined
   >(undefined)
@@ -50,7 +48,7 @@ const AudioProvider = ({ children }) => {
   const [audioPlayerVisible, setAudioPlayerVisible] = useState(false)
   const clearTimeoutId = useRef<NodeJS.Timeout | null>()
 
-  const { playlist } = usePlaylist()
+  const { addPlaylistItem, isPlaylistAvailable } = usePlaylist()
   const { getMediaProgress } = useMediaProgress()
 
   const toggleAudioPlayer = async (playerItem: AudioPlayerItem) => {
@@ -67,11 +65,20 @@ const AudioProvider = ({ children }) => {
     }
     const mediaId = audioSource.mediaId
 
-    if (
-      inNativeApp &&
-      // check if current version is smaller than NEW_AUDIO_API_VERSION
-      compareVersion(inNativeAppVersion, NEW_AUDIO_API_VERSION) < 0
-    ) {
+    if (isPlaylistAvailable) {
+      addPlaylistItem({
+        variables: {
+          item: {
+            id: playerItem.id,
+            type: 'Document',
+          },
+          sequence: 1,
+        },
+      }).then(({ data }) => {
+        setAudioPlayerVisible(true)
+        AudioEventEmitter.emit('togglePlayer', data.playlistItems[0])
+      })
+    } else {
       let currentTime
       if (mediaId) {
         currentTime = await getMediaProgress({ mediaId })
@@ -92,10 +99,9 @@ const AudioProvider = ({ children }) => {
           currentTime,
         },
       })
-      return
+      setActivePlayerItem(playerItem)
+      setAutoPlayAudioPlayerItem(playerItem)
     }
-    setActivePlayerItem(playerItem)
-    setAutoPlayAudioPlayerItem(playerItem)
     clearTimeout(clearTimeoutId.current)
   }
 
@@ -115,7 +121,6 @@ const AudioProvider = ({ children }) => {
     <AudioContext.Provider
       value={{
         activePlayerItem,
-        queue: playlist,
         audioPlayerVisible,
         autoPlayActive: autoPlayAudioPlayerItem === activePlayerItem,
         toggleAudioPlayer,
