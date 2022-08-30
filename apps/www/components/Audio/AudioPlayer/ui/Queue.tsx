@@ -2,7 +2,7 @@ import { css } from 'glamor'
 import QueueItem from './QueueItem'
 import { PlaylistItemFragment } from '../../graphql/PlaylistItemGQLFragment'
 import { fontStyles } from '@project-r/styleguide'
-import { useRemovePlaylistItemMutation } from '../../hooks/useRemovePlaylistItemMutation'
+import usePlaylist from '../../hooks/usePlaylist'
 
 const styles = {
   heading: css({
@@ -22,11 +22,11 @@ type QueueProps = {
 }
 
 const Queue = ({ items }: QueueProps) => {
-  const [removeItem] = useRemovePlaylistItemMutation()
+  const { removePlaylistItem } = usePlaylist()
 
   const handleRemove = async (item: PlaylistItemFragment, index: number) => {
     try {
-      await removeItem({
+      await removePlaylistItem({
         variables: {
           id: item.id,
           sequence: index,

@@ -37,6 +37,7 @@ import UserProgress from './UserProgress'
 import ShareButtons from './ShareButtons'
 import { useMe } from '../../lib/context/MeContext'
 import { useAddPlaylistItemMutation } from '../Audio/hooks/useAddPlaylistItemMutation'
+import usePlaylist from '../Audio/hooks/usePlaylist'
 
 const ActionBar = ({
   mode,
@@ -57,7 +58,7 @@ const ActionBar = ({
   const [podcastOverlayVisible, setPodcastOverlayVisible] = useState(false)
   const { toggleAudioPlayer } = useContext(AudioContext)
 
-  const [addToPlaylist] = useAddPlaylistItemMutation()
+  const { addToPlaylist } = usePlaylist()
 
   if (!document) {
     return (

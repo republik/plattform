@@ -5,7 +5,6 @@ import { useInNativeApp } from '../../lib/withInNativeApp'
 import { AudioEvent } from './types/AudioEvent'
 import AppMessageEventEmitter from '../../lib/react-native/AppMessageEventEmitter'
 import notifyApp from '../../lib/react-native/NotifyApp'
-import { usePlaylistQuery } from './hooks/usePlaylistQuery'
 import { AudioPlayerItem } from './types/AudioPlayerItem'
 import { PlaylistItemFragment } from './graphql/PlaylistItemGQLFragment'
 
@@ -71,12 +70,6 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const [buffered, setBuffered] = useState<TimeRanges>(null)
 
   const mediaRef = useRef<HTMLAudioElement | HTMLVideoElement>(null)
-
-  const { data: playlist } = usePlaylistQuery()
-
-  useEffect(() => {
-    console.log('Playlist:', playlist?.me?.collectionPlaylist)
-  }, [playlist])
 
   // TODO: fetch audio progress from media progress
 

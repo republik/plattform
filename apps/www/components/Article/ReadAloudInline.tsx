@@ -11,9 +11,9 @@ import {
 
 import { useAudioContext } from '../Audio/AudioProvider'
 import { trackEvent } from '../../lib/matomo'
-import { useAddPlaylistItemMutation } from '../Audio/hooks/useAddPlaylistItemMutation'
 import { usePlaylistQuery } from '../Audio/hooks/usePlaylistQuery'
 import { AudioPlayerItem } from '../Audio/types/AudioPlayerItem'
+import usePlaylist from '../Audio/hooks/usePlaylist'
 
 const styles = {
   hr: css({
@@ -53,22 +53,17 @@ const ReadAloudInline = ({ documentId, meta, t }: ReadAloudInlineProps) => {
   const { toggleAudioPlayer } = useAudioContext()
   const [colorScheme] = useColorContext()
 
-  const {
-    data: playlistData,
-    loading: playlistLoading,
-    error: playlistError,
-  } = usePlaylistQuery()
-  const [addPlaylistItemMutation] = useAddPlaylistItemMutation()
+  const { playlist, playlistIsLoading, playlistHasError } = usePlaylist()
+  const { addPlaylistItem } = usePlaylist()
 
-  const playlist = playlistData?.me?.collectionPlaylist
   const alreadyInPlaylist =
-    !playlistLoading &&
-    !!playlistError &&
+    !playlistIsLoading &&
+    !!playlistHasError &&
     playlist &&
     playlist.some(({ document: { id } }) => id === documentId)
 
   const handleAddToPlaylist = async () => {
-    await addPlaylistItemMutation({
+    await addPlaylistItem({
       variables: {
         item: {
           id: documentId,

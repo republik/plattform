@@ -11,7 +11,7 @@ type PlaylistQueryData = {
   }
 }
 
-const PlaylistQuery = gql`
+export const PlaylistQuery = gql`
   query GetPlayList {
     me {
       collectionPlaylist {

@@ -5,7 +5,9 @@ import {
   PlaylistItemGQLFragment,
 } from '../graphql/PlaylistItemGQLFragment'
 
-type RemovePlaylistItemMutationData = PlaylistItemFragment[]
+type RemovePlaylistItemMutationData = {
+  removePlaylistItem: PlaylistItemFragment[]
+}
 
 type RemovePlaylistItemMutationVariables = {
   id: string

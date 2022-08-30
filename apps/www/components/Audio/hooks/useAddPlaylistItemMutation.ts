@@ -5,7 +5,9 @@ import {
 } from '../graphql/PlaylistItemGQLFragment'
 import { makeMutationHook } from '../../../lib/helpers/AbstractApolloGQLHooks.helper'
 
-type AddPlaylistItemMutationData = PlaylistItemFragment[]
+type AddPlaylistItemMutationData = {
+  addPlaylistItem: PlaylistItemFragment[]
+}
 
 type AddPlaylistItemMutationVariables = {
   item: {
