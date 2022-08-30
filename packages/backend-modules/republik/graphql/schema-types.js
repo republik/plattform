@@ -131,6 +131,8 @@ enum NewsletterName {
   WEEKLY
   PROJECTR
   ACCOMPLICE
+  CLIMATE
+  READALOUD
 }
 
 type Video {
