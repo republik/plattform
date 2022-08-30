@@ -10,7 +10,7 @@ export default compose(withT)(({ t, node, isNew, me }) => {
       {...object.meta}
       title={object.meta.shortTitle || object.meta.title}
       description={!object.meta.shortTitle && object.meta.description}
-      credits={object.meta.credits?.children}
+      credits={object.meta.credits}
       t={t}
       key={object.meta.path}
       menu={

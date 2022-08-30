@@ -116,7 +116,7 @@ const ArticleRecommendationItem = ({
             <TeaserFeed
               title={metaData?.title}
               description={metaData?.description}
-              credits={metaData?.credits?.children}
+              credits={metaData?.credits}
               format={metaData?.format}
               t={t}
               prepublication={isInternallyPublished}
@@ -230,10 +230,7 @@ export default compose(
           title
           description
           publishDate
-          credits {
-            type
-            children
-          }
+          credits
           format {
             id
             meta {

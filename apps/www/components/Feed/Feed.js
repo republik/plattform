@@ -28,8 +28,8 @@ class Feed extends Component {
         t={this.props.t}
         credits={
           this.props.showHeader
-            ? formatCredits(doc.meta.credits)?.children
-            : doc.meta.credits?.children
+            ? formatCredits(doc.meta.credits)
+            : doc.meta.credits
         }
         publishDate={this.props.showHeader ? undefined : doc.meta.publishDate}
         kind={

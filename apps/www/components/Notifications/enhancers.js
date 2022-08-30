@@ -118,10 +118,7 @@ export const notificationsQuery = gql`
                 meta {
                   title
                   path
-                  credits {
-                    type
-                    children
-                  }
+                  credits
                   template
                   ownDiscussion {
                     id
