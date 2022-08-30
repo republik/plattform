@@ -37,9 +37,10 @@ const styles = {
 
 type QueueItemProps = {
   item: PlaylistItemFragment
+  onRemove: (item: PlaylistItemFragment) => void
 }
 
-const QueueItem = ({ item }: QueueItemProps) => {
+const QueueItem = ({ item, onRemove }: QueueItemProps) => {
   const [colorScheme] = useColorContext()
 
   const { document } = item
@@ -64,7 +65,9 @@ const QueueItem = ({ item }: QueueItemProps) => {
           </span>
         </div>
       </div>
-      <div {...styles.actions}>actions</div>
+      <div {...styles.actions}>
+        <button onClick={() => onRemove(item)}>remove</button>
+      </div>
     </div>
   )
 }
