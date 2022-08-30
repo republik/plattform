@@ -141,14 +141,17 @@ ConnectionContext.create(applicationName)
       const maybeUpload = createMaybeUpload(repoId, argv.origin)
 
       await Promise.each(commits, async (commit: Commit) => {
-        const { content, meta } = commit
+        const { type, meta } = commit
 
-        const mdast = { ...mdastParse(content), meta }
+        const content = {
+          ...(commit.content || mdastParse(commit.content__markdown)),
+          meta,
+        }
 
         await Promise.all([
-          processRepoImageUrlsInContent(mdast, add),
-          processRepoImageUrlsInMeta(mdast, add),
-          processEmbedImageUrlsInContent(mdast, add),
+          processRepoImageUrlsInContent(type, content, add),
+          processRepoImageUrlsInMeta(type, content, add),
+          processEmbedImageUrlsInContent(type, content, add),
         ])
       })
       debug('%i image paths found (%s)', imagePaths.size, repoId)
