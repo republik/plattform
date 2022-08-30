@@ -1,6 +1,6 @@
 import { fontStyles, useColorContext } from '@project-r/styleguide'
 import { css } from 'glamor'
-import { PlaylistItemFragment } from '../../graphql/PlaylistItemGQLFragment'
+import { AudioQueueItem } from '../../graphql/AudioQueueItemFragment'
 import { dateFormatter, FALLBACK_IMG_SRC, formatMinutes } from '../shared'
 import AudioPlayerTitle from './AudioPlayerTitle'
 
@@ -37,8 +37,8 @@ const styles = {
 }
 
 type QueueItemProps = {
-  item: PlaylistItemFragment
-  onRemove: (item: PlaylistItemFragment) => void
+  item: AudioQueueItem
+  onRemove: (item: AudioQueueItem) => void
 }
 
 const QueueItem = ({ item, onRemove }: QueueItemProps) => {

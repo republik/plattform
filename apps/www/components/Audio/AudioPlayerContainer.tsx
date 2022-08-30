@@ -6,8 +6,8 @@ import { AudioEvent } from './types/AudioEvent'
 import AppMessageEventEmitter from '../../lib/react-native/AppMessageEventEmitter'
 import notifyApp from '../../lib/react-native/NotifyApp'
 import { AudioPlayerItem } from './types/AudioPlayerItem'
-import { PlaylistItemFragment } from './graphql/PlaylistItemGQLFragment'
-import usePlaylist from './hooks/usePlaylist'
+import { AudioQueueItem } from './graphql/AudioQueueItemFragment'
+import useAudioQueue from './hooks/useAudioQueue'
 import { useMediaProgress } from './MediaProgress'
 
 const DEFAULT_SYNC_INTERVAL = 500 // in ms
@@ -18,7 +18,7 @@ const SKIP_BACKWARD_TIME = 10
 export type AudioPlayerProps = {
   mediaRef: RefObject<HTMLAudioElement>
   activePlayerItem: AudioPlayerItem | null
-  queue: PlaylistItemFragment[]
+  queue: AudioQueueItem[]
   autoPlay?: boolean
   playbackRate: number
   currentTime: number
@@ -56,13 +56,13 @@ type AudioPlayerContainerProps = {
 const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const { inNativeApp } = useInNativeApp()
   const { onCloseAudioPlayer } = useAudioContext()
-  const { playlist, removePlaylistItem } = usePlaylist()
+  const { audioQueue, removeAudioQueueItem } = useAudioQueue()
   const { getMediaProgress } = useMediaProgress()
 
   const [activePlayerItem, setActivePlayerItem] =
-    useState<PlaylistItemFragment | null>(null)
+    useState<AudioQueueItem | null>(null)
   const [trackedPlayerItem, setTrackedPlayerItem] =
-    useState<PlaylistItemFragment | null>(null)
+    useState<AudioQueueItem | null>(null)
 
   const [shouldAutoPlay, setShouldAutoPlay] = useState(false)
   const [hasAutoPlayed, setHasAutoPlayed] = useState(false)
@@ -244,13 +244,13 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const onEnded = async () => {
     if (!activePlayerItem) return
     try {
-      const { data } = await removePlaylistItem({
+      const { data } = await removeAudioQueueItem({
         variables: {
           id: activePlayerItem.id,
         },
       })
-      if (data.playlistItems.length > 0) {
-        setActivePlayerItem(data.playlistItems[0])
+      if (data.audioQueueItems.length > 0) {
+        setActivePlayerItem(data.audioQueueItems[0])
       }
     } catch (e) {
       console.error(e)
@@ -287,7 +287,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
         children({
           mediaRef,
           activePlayerItem: activePlayerItem.document,
-          queue: playlist?.slice(1),
+          queue: audioQueue?.slice(1),
           autoPlay: shouldAutoPlay,
           isLoading,
           isPlaying,

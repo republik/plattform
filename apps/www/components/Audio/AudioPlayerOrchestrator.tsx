@@ -4,7 +4,7 @@ import { NEW_AUDIO_API_VERSION } from './constants'
 import AudioPlayerContainer from './AudioPlayerContainer'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
-import usePlaylist from './hooks/usePlaylist'
+import useAudioQueue from './hooks/useAudioQueue'
 
 const AudioPlayer = dynamic(() => import('./AudioPlayer/AudioPlayer'), {
   ssr: false,
@@ -18,10 +18,10 @@ const LegacyAudioPlayer = dynamic(
 )
 
 const AudioPlayerOrchestrator = () => {
-  const { isPlaylistAvailable } = usePlaylist()
+  const { isAudioQueueAvailable } = useAudioQueue()
 
   // Render the old audio player if we're in a native app and using the old audio-player
-  if (!isPlaylistAvailable) {
+  if (!isAudioQueueAvailable) {
     return <LegacyAudioPlayer />
   }
 

@@ -36,7 +36,7 @@ import DiscussionLinkButton from './DiscussionLinkButton'
 import UserProgress from './UserProgress'
 import ShareButtons from './ShareButtons'
 import { useMe } from '../../lib/context/MeContext'
-import usePlaylist from '../Audio/hooks/usePlaylist'
+import useAudioQueue from '../Audio/hooks/useAudioQueue'
 
 const ActionBar = ({
   mode,
@@ -57,7 +57,7 @@ const ActionBar = ({
   const [podcastOverlayVisible, setPodcastOverlayVisible] = useState(false)
   const { toggleAudioPlayer } = useContext(AudioContext)
 
-  const { addPlaylistItem, isPlaylistAvailable } = usePlaylist()
+  const { addAudioQueueItem, isAudioQueueAvailable } = useAudioQueue()
 
   if (!document) {
     return (
@@ -359,9 +359,9 @@ const ActionBar = ({
       Icon: PlaylistAddIcon,
       onClick: async (e) => {
         e.preventDefault()
-        await addPlaylistItem({
+        await addAudioQueueItem({
           variables: {
-            item: {
+            entity: {
               id: document.id,
               type: 'Document',
             },
@@ -372,7 +372,7 @@ const ActionBar = ({
       modes: ['feed', 'seriesEpisode'],
       // TODO: show only if not in playlist already
       show:
-        isPlaylistAvailable &&
+        isAudioQueueAvailable &&
         !!meta?.audioSource &&
         ['syntheticReadAloud', 'readAloud'].includes(meta.audioSource.kind),
     },

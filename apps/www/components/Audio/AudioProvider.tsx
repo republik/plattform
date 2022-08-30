@@ -5,7 +5,7 @@ import { useInNativeApp, postMessage } from '../../lib/withInNativeApp'
 
 import { useMediaProgress } from './MediaProgress'
 import { AudioPlayerItem } from './types/AudioPlayerItem'
-import usePlaylist from './hooks/usePlaylist'
+import useAudioQueue from './hooks/useAudioQueue'
 import EventEmitter from 'events'
 
 type ToggleAudioPlayerFunc = (playerItem: AudioPlayerItem) => void
@@ -48,7 +48,7 @@ const AudioProvider = ({ children }) => {
   const [audioPlayerVisible, setAudioPlayerVisible] = useState(false)
   const clearTimeoutId = useRef<NodeJS.Timeout | null>()
 
-  const { addPlaylistItem, isPlaylistAvailable } = usePlaylist()
+  const { addAudioQueueItem, isAudioQueueAvailable } = useAudioQueue()
   const { getMediaProgress } = useMediaProgress()
 
   const toggleAudioPlayer = async (playerItem: AudioPlayerItem) => {
@@ -65,10 +65,10 @@ const AudioProvider = ({ children }) => {
     }
     const mediaId = audioSource.mediaId
 
-    if (isPlaylistAvailable) {
-      addPlaylistItem({
+    if (isAudioQueueAvailable) {
+      addAudioQueueItem({
         variables: {
-          item: {
+          entity: {
             id: playerItem.id,
             type: 'Document',
           },
@@ -76,7 +76,7 @@ const AudioProvider = ({ children }) => {
         },
       }).then(({ data }) => {
         setAudioPlayerVisible(true)
-        AudioEventEmitter.emit('togglePlayer', data.playlistItems[0])
+        AudioEventEmitter.emit('togglePlayer', data.audioQueueItems[0])
       })
     } else {
       let currentTime

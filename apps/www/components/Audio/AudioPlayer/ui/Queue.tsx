@@ -1,8 +1,8 @@
 import { css } from 'glamor'
 import QueueItem from './QueueItem'
-import { PlaylistItemFragment } from '../../graphql/PlaylistItemGQLFragment'
+import { AudioQueueItem } from '../../graphql/AudioQueueItemFragment'
 import { fontStyles } from '@project-r/styleguide'
-import usePlaylist from '../../hooks/usePlaylist'
+import useAudioQueue from '../../hooks/useAudioQueue'
 
 const styles = {
   heading: css({
@@ -18,15 +18,15 @@ const styles = {
 }
 
 type QueueProps = {
-  items: PlaylistItemFragment[]
+  items: AudioQueueItem[]
 }
 
 const Queue = ({ items }: QueueProps) => {
-  const { removePlaylistItem } = usePlaylist()
+  const { removeAudioQueueItem } = useAudioQueue()
 
-  const handleRemove = async (item: PlaylistItemFragment, index: number) => {
+  const handleRemove = async (item: AudioQueueItem, index: number) => {
     try {
-      await removePlaylistItem({
+      await removeAudioQueueItem({
         variables: {
           id: item.id,
           sequence: index,

@@ -11,9 +11,9 @@ import {
 
 import { useAudioContext } from '../Audio/AudioProvider'
 import { trackEvent } from '../../lib/matomo'
-import { usePlaylistQuery } from '../Audio/hooks/usePlaylistQuery'
+import { useAudioQueueQuery } from '../Audio/hooks/useAudioQueueQuery'
 import { AudioPlayerItem } from '../Audio/types/AudioPlayerItem'
-import usePlaylist from '../Audio/hooks/usePlaylist'
+import useAudioQueue from '../Audio/hooks/useAudioQueue'
 
 const styles = {
   hr: css({
@@ -53,19 +53,20 @@ const ReadAloudInline = ({ documentId, meta, t }: ReadAloudInlineProps) => {
   const { toggleAudioPlayer } = useAudioContext()
   const [colorScheme] = useColorContext()
 
-  const { playlist, playlistIsLoading, playlistHasError } = usePlaylist()
-  const { addPlaylistItem, isPlaylistAvailable } = usePlaylist()
+  const { audioQueue, audioQueueIsLoading, audioQueueHasError } =
+    useAudioQueue()
+  const { addAudioQueueItem, isAudioQueueAvailable } = useAudioQueue()
 
   const alreadyInPlaylist =
-    !playlistIsLoading &&
-    !!playlistHasError &&
-    playlist &&
-    playlist.some(({ document: { id } }) => id === documentId)
+    !audioQueueIsLoading &&
+    !!audioQueueHasError &&
+    audioQueue &&
+    audioQueue.some(({ document: { id } }) => id === documentId)
 
   const handleAddToPlaylist = async () => {
-    await addPlaylistItem({
+    await addAudioQueueItem({
       variables: {
-        item: {
+        entity: {
           id: documentId,
           type: 'Document',
         },
@@ -98,7 +99,7 @@ const ReadAloudInline = ({ documentId, meta, t }: ReadAloudInlineProps) => {
             })
           }}
         />
-        {isPlaylistAvailable && (
+        {isAudioQueueAvailable && (
           <IconButton
             Icon={PlaylistAddIcon}
             onClick={handleAddToPlaylist}
