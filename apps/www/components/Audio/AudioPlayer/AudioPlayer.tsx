@@ -28,7 +28,6 @@ const AudioPlayer = ({
   const { t } = useTranslation()
   const [isExpanded, setIsExpanded] = useState(false)
   const { meta: { audioSource } = {} } = activePlayerItem
-  console.log('AudioSource', audioSource)
 
   const toggleAudioPlayer = () => {
     if (isPlaying) {
