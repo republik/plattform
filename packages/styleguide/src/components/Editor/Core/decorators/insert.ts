@@ -1,7 +1,12 @@
 import { CustomEditor, EditorConfig } from '../../custom-types'
 import { getCharCount } from '../helpers/text'
 import { resetSelection } from '../helpers/selection'
-import { getSlateFragment, insertSlateFragment } from '../helpers/copy-paste'
+import {
+  parseSlate,
+  insertSlateFragment,
+  parseHtml,
+  insertHtmlFragment,
+} from '../helpers/copy-paste'
 
 // related issue: https://github.com/ianstormtaylor/slate/issues/5010
 export const withInsert =
@@ -12,9 +17,12 @@ export const withInsert =
 
     editor.insertData = (data: DataTransfer) => {
       const originalSelection = JSON.parse(JSON.stringify(editor.selection))
-      const slateFragment = getSlateFragment(data)
+      const slateFragment = parseSlate(data)
+      const htmlFragment = parseHtml(data)
       if (slateFragment) {
         insertSlateFragment(editor, slateFragment)
+      } else if (htmlFragment) {
+        insertHtmlFragment(editor, htmlFragment)
       } else {
         insertData(data)
       }

@@ -1,15 +1,5 @@
-### Todos
-
-- block UI scroll while moving element
-- New elements/real elements/forms for elements
-    - Chart
-    - Survey
-- Copy from HTML (nice to have)
-- Authors editor (single block)
-
 ### Bugs
 
-- Copy title with break swallows the break
 - Links: 
   - autolinking gets out of sync when the link is edited (onChange should also change text)
   - shorten link text? (like BE would)
