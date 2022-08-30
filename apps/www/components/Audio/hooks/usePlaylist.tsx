@@ -3,7 +3,6 @@ import { useAddPlaylistItemMutation } from './useAddPlaylistItemMutation'
 import { useRemovePlaylistItemMutation } from './useRemovePlaylistItemMutation'
 import { useMovePlaylistItemMutation } from './useMovePlaylistItemMutation'
 import { useClearPlaylistMutation } from './useClearPlaylistMutation'
-import { some } from 'lodash'
 import { useInNativeApp } from '../../../lib/withInNativeApp'
 import compareVersion from '../../../lib/react-native/CompareVersion'
 import { NEW_AUDIO_API_VERSION } from '../constants'
@@ -18,17 +17,31 @@ const usePlaylist = () => {
     loading: playlistIsLoading,
     error: playlistHasError,
   } = usePlaylistQuery()
+
+  const modifyApolloCacheWithUpdatedPlaylist = (
+    cache,
+    { data: { playlistItems } },
+  ) => {
+    const { me } = cache.readQuery({ query: PlaylistQuery })
+    cache.writeQuery({
+      query: PlaylistQuery,
+      data: {
+        me: { ...me, collectionPlaylist: playlistItems },
+      },
+    })
+  }
+
   const [addPlaylistItem] = useAddPlaylistItemMutation({
-    refetchQueries: [{ query: PlaylistQuery }],
+    update: modifyApolloCacheWithUpdatedPlaylist,
   })
   const [removePlaylistItem] = useRemovePlaylistItemMutation({
-    refetchQueries: [{ query: PlaylistQuery }],
+    update: modifyApolloCacheWithUpdatedPlaylist,
   })
   const [movePlaylistItem] = useMovePlaylistItemMutation({
-    refetchQueries: [{ query: PlaylistQuery }],
+    update: modifyApolloCacheWithUpdatedPlaylist,
   })
   const [clearPlaylist] = useClearPlaylistMutation({
-    refetchQueries: [{ query: PlaylistQuery }],
+    update: modifyApolloCacheWithUpdatedPlaylist,
   })
 
   return {
