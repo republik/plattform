@@ -14,9 +14,9 @@ import {
   ZINDEX_AUDIOPLAYER_BUFFER,
   ZINDEX_AUDIOPLAYER_PROGRESS,
   ZINDEX_AUDIOPLAYER_SCRUB,
-} from './constants'
+} from '../constants'
 import { useColorContext, fontStyles } from '@project-r/styleguide'
-import { renderTime } from './shared'
+import { renderTime } from '../shared'
 
 function times(x) {
   return Array.from({ length: x }, (_, i) => i)

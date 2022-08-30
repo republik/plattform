@@ -1,9 +1,9 @@
 import React from 'react'
 import { css } from 'glamor'
 import Link from 'next/link'
-import Scrubber from './Scrubber'
+import Scrubber from './ui/Scrubber'
 import { AudioPlayerProps } from './shared'
-import Time from './views/Time'
+import Time from './ui/Time'
 import {
   IconButton,
   Spinner,

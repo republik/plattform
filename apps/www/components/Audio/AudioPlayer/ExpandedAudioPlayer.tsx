@@ -11,10 +11,10 @@ import {
   ExpandMoreIcon,
 } from '@project-r/styleguide'
 import { AudioPlayerProps } from './shared'
-import Scrubber from './Scrubber'
+import Scrubber from './ui/Scrubber'
 import PlaybackRateControl from './controls/PlaybackRateControl'
-import CurrentlyPlaying from './views/CurrentlyPlaying'
-import Queue from './views/Queue'
+import CurrentlyPlaying from './ui/CurrentlyPlaying'
+import Queue from './ui/Queue'
 
 const styles = {
   root: css({
