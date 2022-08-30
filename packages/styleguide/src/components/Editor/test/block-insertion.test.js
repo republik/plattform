@@ -604,7 +604,6 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
     ]
     const editor = await setup(structure)
     await Transforms.select(editor, [0, 2, 0])
-    console.log({ value })
     insertRepeat(editor)
     await new Promise(process.nextTick)
     expect(cleanupTree(value)).toEqual([flyerTileOpening, flyerTile])

@@ -89,7 +89,7 @@ describe('Slate Editor: Block Conversion', () => {
       ]
       const structure = [
         {
-          type: ['paragraph', 'blockQuote', 'ul', 'ol'],
+          type: ['paragraph', 'pullQuote', 'ul', 'ol'],
         },
       ]
       const editor = await setup(structure)
@@ -103,7 +103,7 @@ describe('Slate Editor: Block Conversion', () => {
       await new Promise(process.nextTick)
       expect(cleanupTree(value[0].children[0].children)).toEqual(formattedText)
 
-      toggleElement(editor, 'blockQuote')
+      toggleElement(editor, 'pullQuote')
       await new Promise(process.nextTick)
       expect(cleanupTree(value[0].children[0].children)).toEqual([
         { text: 'CO' },

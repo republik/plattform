@@ -1106,50 +1106,36 @@ describe('Slate Editor: Normalisation', () => {
     it('should not autolink if parent element does not allow links', async () => {
       value = [
         {
-          type: 'blockQuote',
+          type: 'pullQuote',
           children: [
             {
-              type: 'blockQuoteText',
+              type: 'pullQuoteText',
               children: [{ text: 'Read the story on www.republik.ch' }],
             },
             {
-              type: 'figureCaption',
-              children: [
-                { text: '' },
-                {
-                  type: 'figureByline',
-                  children: [{ text: '' }],
-                },
-                { text: '' },
-              ],
+              type: 'pullQuoteSource',
+              children: [{ text: '' }],
             },
           ],
         },
       ]
       const structure = [
         {
-          type: 'blockQuote',
+          type: 'pullQuote',
         },
       ]
       await setup(structure)
       expect(cleanupTree(value)).toEqual([
         {
-          type: 'blockQuote',
+          type: 'pullQuote',
           children: [
             {
-              type: 'blockQuoteText',
+              type: 'pullQuoteText',
               children: [{ text: 'Read the story on www.republik.ch' }],
             },
             {
-              type: 'figureCaption',
-              children: [
-                { text: '' },
-                {
-                  type: 'figureByline',
-                  children: [{ text: '' }],
-                },
-                { text: '' },
-              ],
+              type: 'pullQuoteSource',
+              children: [{ text: '' }],
             },
           ],
         },
