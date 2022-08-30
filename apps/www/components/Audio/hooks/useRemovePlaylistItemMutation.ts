@@ -11,7 +11,6 @@ type RemovePlaylistItemMutationData = {
 
 type RemovePlaylistItemMutationVariables = {
   id: string
-  sequence: number
 }
 
 const RemovePlaylistItemMutation = gql`
