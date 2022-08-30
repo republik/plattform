@@ -25,7 +25,7 @@ const styles = {
     flexGrow: 1,
   }),
   button: css({
-    width: 160,
+    // width: 160,
     textAlign: 'center',
     marginBottom: 15,
   }),

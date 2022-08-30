@@ -14,6 +14,7 @@ import { Interaction } from '@project-r/styleguide'
 const SignUp = ({
   me,
   name,
+  buttonLabel,
   free,
   t,
   requestSubscription,
@@ -40,7 +41,7 @@ const SignUp = ({
   return (
     <EmailForm
       {...state}
-      label={t('Auth/NewsletterSignUp/submit')}
+      label={buttonLabel || t('Auth/NewsletterSignUp/submit')}
       onChange={setState}
       onSubmit={(e) => {
         e.preventDefault()
