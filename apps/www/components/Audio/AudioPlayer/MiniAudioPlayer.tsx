@@ -14,6 +14,7 @@ import {
   CloseIcon,
   ExpandLessIcon,
 } from '@project-r/styleguide'
+import AudioPlayerTitle from './ui/AudioPlayerTitle'
 
 const styles = {
   root: css({
@@ -104,16 +105,7 @@ const MiniAudioPlayer = ({
           />
         )}
         <div {...styles.metaDataWrapper}>
-          {title &&
-            (path ? (
-              <Link href={path} passHref>
-                <a {...styles.title} {...colorScheme.set('color', 'text')}>
-                  {title}
-                </a>
-              </Link>
-            ) : (
-              <span {...styles.title}>{title}</span>
-            ))}
+          <AudioPlayerTitle title={title} path={path} />
           <Time currentTime={currentTime} duration={duration} />
         </div>
         <div {...styles.buttonWrapper}>
