@@ -35,7 +35,7 @@ export const UPDATE_NEWSLETTER_SUBSCRIPTION = gql`
 `
 
 export const NEWSLETTER_SETTINGS = gql`
-  query myNewsletterSettings {
+  query myNewsletterSettings($newsletterName: NewsletterName) {
     me {
       id
       newsletterSettings {
@@ -47,7 +47,7 @@ export const NEWSLETTER_SETTINGS = gql`
 `
 
 const NewsletterSubscriptions = ({ t, isMember, free, onlyName }) => (
-  <Query query={NEWSLETTER_SETTINGS}>
+  <Query query={NEWSLETTER_SETTINGS} variables={{ newsletterName: onlyName }}>
     {({ loading, error, data }) => {
       if (loading || error) {
         return <Loader loading={loading} error={error} />
