@@ -3,7 +3,6 @@ import { css } from 'glamor'
 import {
   IconButton,
   Spinner,
-  CloseIcon,
   ForwardIcon,
   PauseIcon,
   PlayIcon,
@@ -129,19 +128,35 @@ const ExpandedAudioPlayer = ({
         />
       </div>
       <div {...styles.bottomActionsWrapper}>
-        <span>Share</span>
-        <PlaybackRateControl
-          playbackRate={playbackRate}
-          setPlaybackRate={handlePlaybackRateChange}
-        />
-        <span>
+        <div
+          style={{
+            flex: 1,
+            display: 'inline-flex',
+            justifyContent: 'flex-start',
+          }}
+        >
+          <span>Share</span>
+        </div>
+        <div style={{ flex: 2 }}>
+          <PlaybackRateControl
+            playbackRate={playbackRate}
+            setPlaybackRate={handlePlaybackRateChange}
+          />
+        </div>
+        <div
+          style={{
+            flex: 1,
+            display: 'inline-flex',
+            justifyContent: 'flex-end',
+          }}
+        >
           <IconButton
             Icon={ExpandMoreIcon}
             size={24}
             style={{ marginRight: 0 }}
             onClick={handleMinimize}
           />
-        </span>
+        </div>
       </div>
     </div>
   )
