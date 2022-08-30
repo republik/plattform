@@ -2,6 +2,7 @@ import { fontStyles, useColorContext } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { PlaylistItemFragment } from '../../graphql/PlaylistItemGQLFragment'
 import { dateFormatter, FALLBACK_IMG_SRC, formatMinutes } from '../shared'
+import AudioPlayerTitle from './AudioPlayerTitle'
 
 const styles = {
   root: css({
@@ -57,7 +58,10 @@ const QueueItem = ({ item, onRemove }: QueueItemProps) => {
           <img {...styles.cover} src={cover} />
         </div>
         <div {...styles.dataWrapper}>
-          <span>{document.meta.title}</span>
+          <AudioPlayerTitle
+            title={document.meta.title}
+            path={document.meta.path}
+          />
           <span {...styles.metaLine} {...colorScheme.set('color', 'textSoft')}>
             {dateFormatter(publishDate)}
             {' - '}
