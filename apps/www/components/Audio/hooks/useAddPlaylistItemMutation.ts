@@ -6,7 +6,7 @@ import {
 import { makeMutationHook } from '../../../lib/helpers/AbstractApolloGQLHooks.helper'
 
 type AddPlaylistItemMutationData = {
-  addPlaylistItem: PlaylistItemFragment[]
+  playlistItems: PlaylistItemFragment[]
 }
 
 type AddPlaylistItemMutationVariables = {
@@ -21,7 +21,7 @@ type AddPlaylistItemMutationVariables = {
 
 const UseAddPlaylistItemMutation = gql`
   mutation AddPlaylistItem($item: PlaylistItemInput!, $sequence: Int) {
-    addPlaylistItem(item: $item, sequence: $sequence) {
+    playlistItems: addPlaylistItem(item: $item, sequence: $sequence) {
       ...PlaylistItemFragment
     }
   }

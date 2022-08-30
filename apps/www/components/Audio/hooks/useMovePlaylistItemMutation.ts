@@ -5,7 +5,9 @@ import {
   PlaylistItemGQLFragment,
 } from '../graphql/PlaylistItemGQLFragment'
 
-type MovePlaylistItemMutationData = PlaylistItemFragment[]
+type MovePlaylistItemMutationData = {
+  playlistItems: PlaylistItemFragment[]
+}
 
 type MovePlaylistItemMutationVariables = {
   id: string
@@ -14,7 +16,7 @@ type MovePlaylistItemMutationVariables = {
 
 const MovePlaylistItemMutation = gql`
   mutation MovePlaylistItem($id: ID!, $sequence: Int!) {
-    movePlaylistItem(id: $id, sequence: $sequence) {
+    playlistItems: movePlaylistItem(id: $id, sequence: $sequence) {
       ...PlaylistItemFragment
     }
   }

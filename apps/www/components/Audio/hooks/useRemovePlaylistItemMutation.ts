@@ -6,7 +6,7 @@ import {
 } from '../graphql/PlaylistItemGQLFragment'
 
 type RemovePlaylistItemMutationData = {
-  removePlaylistItem: PlaylistItemFragment[]
+  playlistItems: PlaylistItemFragment[]
 }
 
 type RemovePlaylistItemMutationVariables = {
@@ -16,7 +16,7 @@ type RemovePlaylistItemMutationVariables = {
 
 const RemovePlaylistItemMutation = gql`
   mutation RemovePlaylistItem($id: ID!) {
-    removePlaylistItem(id: $id) {
+    playlistItems: removePlaylistItem(id: $id) {
       ...PlaylistItemFragment
     }
   }

@@ -5,11 +5,13 @@ import {
   PlaylistItemGQLFragment,
 } from '../graphql/PlaylistItemGQLFragment'
 
-type ClearPlaylistMutationData = PlaylistItemFragment[]
+type ClearPlaylistMutationData = {
+  playlistItems: PlaylistItemFragment[]
+}
 
 const ClearPlaylistMutation = gql`
   mutation ClearPlaylist() {
-  clearPlaylist() {
+  playlistItems: clearPlaylist() {
     ...PlaylistFragment
   }
   ${PlaylistItemGQLFragment}
