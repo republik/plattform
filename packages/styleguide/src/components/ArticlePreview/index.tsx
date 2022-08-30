@@ -44,7 +44,6 @@ export const ArticlePreview: React.FC<{
   attributes: any
   color: string
   backgroundColor: string
-  style?: object
   repoId?: string
   [x: string]: unknown
 }> = ({
@@ -60,7 +59,7 @@ export const ArticlePreview: React.FC<{
     <div
       {...attributes}
       {...props}
-      style={{ ...style, color, backgroundColor }}
+      style={{ ...attributes.style, color, backgroundColor }}
     >
       {children}
     </div>

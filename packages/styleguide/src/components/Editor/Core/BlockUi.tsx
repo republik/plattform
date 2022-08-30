@@ -145,7 +145,7 @@ const BlockUi: React.FC<{
   element: CustomElement
 }> = ({ path, element }) => {
   const template = element.template
-  const blockUi = elConfig[element.type].attrs?.blockUi
+  const config = elConfig[element.type].attrs?.blockUi
   const showEdit = !!elConfig[element.type].Form
   const showMoveUi = !!template?.repeat
 
@@ -159,7 +159,7 @@ const BlockUi: React.FC<{
     <span
       className='ui-element'
       {...styles.container}
-      style={{ ...DEFAULT_POSITION, ...blockUi?.style }}
+      style={{ ...DEFAULT_POSITION, ...config?.style }}
       contentEditable={false}
     >
       {showMoveUi ? (

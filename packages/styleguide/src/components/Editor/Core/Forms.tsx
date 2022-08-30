@@ -12,6 +12,7 @@ import { Overlay, OverlayBody, OverlayToolbar } from '../../Overlay'
 import { ReactEditor, useSlate } from 'slate-react'
 import { toTitle } from './helpers/text'
 import { css } from 'glamor'
+import { getAncestry } from './helpers/tree'
 
 const styles = {
   elementTitle: css({
@@ -42,45 +43,40 @@ type FormData = {
 
 const getForm = (
   editor: CustomEditor,
-  path: number[],
+  node: NodeEntry<CustomElement>,
   skipBlock?: boolean,
 ): FormData | undefined => {
-  const node = Editor.node(editor, path)
   const element = node[0]
-  // console.log({ element })
-  if (!SlateElement.isElement(element)) return
   // console.log({ element, config: elConfig[element.type] })
   const config = elConfig[element.type]
   if (skipBlock && config.attrs?.blockUi) return
   const Form = config.Form
   if (!Form) return
   return {
-    node: node as NodeEntry<CustomElement>,
+    node,
     Form,
   }
 }
 
 export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
   if (!path || path === []) return []
-  // TODO: get forms of descendant nodes (unless excluded)
-  return path
-    .reduce((forms, p, i) => {
-      const currentPath = path.slice(0, i ? -i : undefined)
-      console.log({ currentPath })
-      const currentForm = getForm(
-        editor,
-        currentPath,
-        currentPath.length !== path.length,
-      )
-      console.log({ currentForm })
-      return forms.concat(currentForm)
-    }, [])
-    .filter(Boolean)
-    .sort((f1, f2) => {
-      const l1 = f1.node[1].length
-      const l2 = f2.node[1].length
-      return l1 - l2
-    })
+
+  const node = Editor.node(editor, path)
+  const { convertContainer } = getAncestry(editor, node)
+  const topLevelNode = convertContainer || node
+
+  if (!SlateElement.isElement(topLevelNode[0])) return []
+
+  let forms: FormData[] = []
+  for (const [n, p] of Editor.nodes(editor, {
+    match: SlateElement.isElement,
+    at: path,
+  })) {
+    const currentForm = getForm(editor, [n, p])
+    forms = forms.concat(currentForm)
+  }
+
+  return forms.filter(Boolean)
 }
 
 const ElementForm: React.FC<FormData & { onClose: () => void }> = ({
@@ -111,6 +107,8 @@ export const FormOverlay = (): ReactElement => {
   const [formPath, setFormPath] = useFormContext()
   const editor = useSlate()
   const forms = useMemo(() => getForms(editor, formPath), [editor, formPath])
+
+  console.log({ formPath })
 
   if (!forms.length || !formPath) return null
 
