@@ -5,6 +5,7 @@ import {
   PdfIcon,
   ReadingTimeIcon,
   PlayCircleIcon,
+  PlaylistAddIcon,
   DownloadIcon,
   PodcastIcon,
   FontSizeIcon,
@@ -35,6 +36,7 @@ import DiscussionLinkButton from './DiscussionLinkButton'
 import UserProgress from './UserProgress'
 import ShareButtons from './ShareButtons'
 import { useMe } from '../../lib/context/MeContext'
+import { useAddPlaylistItemMutation } from '../Audio/hooks/useAddPlaylistItemMutation'
 
 const ActionBar = ({
   mode,
@@ -53,8 +55,10 @@ const ActionBar = ({
   const [fontSizeOverlayVisible, setFontSizeOverlayVisible] = useState(false)
   const [shareOverlayVisible, setShareOverlayVisible] = useState(false)
   const [podcastOverlayVisible, setPodcastOverlayVisible] = useState(false)
-
   const { toggleAudioPlayer } = useContext(AudioContext)
+
+  const [addToPlaylist] = useAddPlaylistItemMutation()
+
   if (!document) {
     return (
       <div {...styles.topRow} {...(isCentered && { ...styles.centered })}>
@@ -348,6 +352,28 @@ const ActionBar = ({
       modes: ['feed', 'seriesEpisode'],
       show:
         !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud',
+    },
+    {
+      title: 'Zur Wiedergabeliste hinzufügen', // TODO: t9n
+      label: 'Zur Wiedergabeliste hinzufügen', // TODO: t9n
+      Icon: PlaylistAddIcon,
+      onClick: async (e) => {
+        e.preventDefault()
+        await addToPlaylist({
+          variables: {
+            item: {
+              id: document.id,
+              type: 'Document',
+            },
+          },
+        })
+        // TODO: handle error
+      },
+      modes: ['feed', 'seriesEpisode'],
+      // TODO: show only if not in playlist already
+      show:
+        !!meta?.audioSource &&
+        ['syntheticReadAloud', 'readAloud'].includes(meta.audioSource.kind),
     },
     {
       title: t('article/actionbar/share'),

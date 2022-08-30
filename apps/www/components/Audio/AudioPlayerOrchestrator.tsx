@@ -28,7 +28,7 @@ const AudioPlayerOrchestrator = () => {
   if (
     (inNativeApp &&
       compareVersion(inNativeAppVersion, NEW_AUDIO_API_VERSION) < 0) ||
-    !!legacy
+    !!legacy // TODO: for debug purposes only
   ) {
     return <LegacyAudioPlayer />
   }

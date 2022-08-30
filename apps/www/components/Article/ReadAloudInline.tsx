@@ -6,7 +6,7 @@ import {
   fontStyles,
   PodcastIcon,
   Editorial,
-  AddIcon,
+  PlaylistAddIcon,
 } from '@project-r/styleguide'
 
 import { useAudioContext } from '../Audio/AudioProvider'
@@ -24,7 +24,7 @@ const styles = {
   }),
   container: css({
     display: 'flex',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'flex-start',
     padding: '16px 0',
     gap: 16,
@@ -104,7 +104,7 @@ const ReadAloudInline = ({ documentId, meta, t }: ReadAloudInlineProps) => {
           }}
         />
         <IconButton
-          Icon={AddIcon}
+          Icon={PlaylistAddIcon}
           onClick={handleAddToPlaylist}
           disalbed={alreadyInPlaylist}
           title={alreadyInPlaylist ? 'already in playlist' : 'add to playlist'}

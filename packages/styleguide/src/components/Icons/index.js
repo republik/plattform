@@ -71,6 +71,7 @@ export {
   MdOutlineSmsFailed as EtiquetteIcon,
   MdUnfoldLess as UnfoldLessIcon,
   MdUnfoldMore as UnfoldMoreIcon,
+  MdPlaylistAdd as PlaylistAddIcon,
 } from 'react-icons/md'
 
 export { AiFillInstagram as InstagramIcon } from 'react-icons/ai'
