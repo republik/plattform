@@ -23,11 +23,6 @@ import {
 } from '../../config/marks'
 import { cleanupNode, overlaps } from './tree'
 
-const PSEUDO_EMPTY_STRING = '\u2060'
-
-export const cleanupEmptyString = (text: string): string =>
-  text.replace(PSEUDO_EMPTY_STRING, '')
-
 export const getCharCount = (nodes: (Descendant | Node)[]): number =>
   nodes.map((node) => Node.string(node).length).reduce((a, b) => a + b, 0)
 
@@ -118,21 +113,11 @@ export const selectPlaceholder = (
   node: NodeEntry<CustomText>,
 ): void => {
   const at = node[1]
-  // this is a hack so that the element is selected before the text change
-  // (selecting empty text nodes is a problem)
-  Transforms.insertText(editor, PSEUDO_EMPTY_STRING, { at })
   ReactEditor.focus(editor)
   Transforms.select(editor, at)
-  setTimeout(() => {
-    Transforms.insertText(editor, '', {
-      at,
-    })
-    Transforms.select(editor, at)
-  })
 }
 
-export const isEmpty = (text?: string) =>
-  !text || text === '' || text === PSEUDO_EMPTY_STRING
+export const isEmpty = (text?: string) => !text || text === ''
 
 export const getLinkInText = (text: string) => {
   // regex should only return one link!
