@@ -39,6 +39,15 @@ function createApolloClient(
         Meta: {
           merge: true,
         },
+        User: {
+          fields: {
+            collectionPlaylist: {
+              merge: (existing, incoming, options) => {
+                return incoming
+              },
+            },
+          },
+        },
         Discussion: {
           fields: {
             userPreference: {
