@@ -1,6 +1,6 @@
 const Promise = require('bluebird')
 
-const getCollectionName = () => 'playlist'
+const getCollectionName = () => 'audioqueue'
 
 const getRepoId = (entityId) => {
   if (entityId) {
@@ -13,7 +13,7 @@ const getRepoId = (entityId) => {
   return undefined
 }
 
-const upsertPlaylistItem = async (input, context) => {
+const upsertItem = async (input, context) => {
   const { id, entityId, sequence } = input
   const { user: me, loaders, pgdb, t } = context
 
@@ -22,7 +22,7 @@ const upsertPlaylistItem = async (input, context) => {
   })
 
   if (!collection) {
-    throw new Error('Playlist is missing')
+    throw new Error('Audio queue is missing')
   }
 
   const repoId = getRepoId(entityId)
@@ -101,7 +101,7 @@ const upsertPlaylistItem = async (input, context) => {
   }
 }
 
-const removePlaylistItem = async (input, context) => {
+const removeItem = async (input, context) => {
   const { id } = input
   const { user: me, loaders, pgdb } = context
 
@@ -110,7 +110,7 @@ const removePlaylistItem = async (input, context) => {
   })
 
   if (!collection) {
-    throw new Error('Playlist is missing')
+    throw new Error('Audio queue is missing')
   }
 
   await pgdb.public.collectionDocumentItems.delete({
@@ -123,6 +123,6 @@ const removePlaylistItem = async (input, context) => {
 module.exports = {
   getCollectionName,
 
-  upsertPlaylistItem,
-  removePlaylistItem,
+  upsertItem,
+  removeItem,
 }

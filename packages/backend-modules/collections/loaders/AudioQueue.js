@@ -1,11 +1,13 @@
 const createDataLoader = require('@orbiting/backend-modules-dataloader')
 const { ascending } = require('d3-array')
 
+const { getCollectionName } = require('../lib/AudioQueue')
+
 module.exports = (context) => ({
   byUserId: createDataLoader(
     async (userIds) => {
       const collection = await context.loaders.Collection.byKeyObj.load({
-        name: 'playlist',
+        name: getCollectionName(),
       })
 
       if (!collection) {

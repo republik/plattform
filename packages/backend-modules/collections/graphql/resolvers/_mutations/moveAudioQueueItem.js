@@ -1,5 +1,5 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { upsertPlaylistItem } = require('../../../lib/Playlist')
+const { upsertItem } = require('../../../lib/AudioQueue')
 
 module.exports = async (_, args, context) => {
   const { id, sequence } = args
@@ -7,7 +7,7 @@ module.exports = async (_, args, context) => {
 
   Roles.ensureUserHasRole(me, 'member')
 
-  await upsertPlaylistItem({ id, sequence }, context)
+  await upsertItem({ id, sequence }, context)
 
-  return loaders.CollectionPlaylistItem.byUserId.load(me.id)
+  return loaders.AudioQueue.byUserId.load(me.id)
 }

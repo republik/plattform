@@ -45,7 +45,7 @@ module.exports = {
     return paginate(args, [])
   },
 
-  async collectionPlaylist(user, args, context) {
-    return context.loaders.CollectionPlaylistItem.byUserId.load(user.id)
+  async audioQueue(user, args, context) {
+    return context.loaders.AudioQueue.byUserId.load(user.id)
   },
 }
