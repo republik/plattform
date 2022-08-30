@@ -57,7 +57,7 @@ const ActionBar = ({
   const [podcastOverlayVisible, setPodcastOverlayVisible] = useState(false)
   const { toggleAudioPlayer } = useContext(AudioContext)
 
-  const { addToPlaylist, isPlaylistAvailable } = usePlaylist()
+  const { addToPlaylist: addPlaylistItem, isPlaylistAvailable } = usePlaylist()
 
   if (!document) {
     return (
@@ -359,7 +359,7 @@ const ActionBar = ({
       Icon: PlaylistAddIcon,
       onClick: async (e) => {
         e.preventDefault()
-        await addToPlaylist({
+        await addPlaylistItem({
           variables: {
             item: {
               id: document.id,
