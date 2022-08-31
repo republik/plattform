@@ -298,6 +298,7 @@ interface ElementAttrsI extends EditorAttrsI {
   formatText?: boolean
   blockUi?: BlockUiAttrsI
   isTextInline?: boolean
+  stopFormIteration?: boolean
 }
 
 export type EditorAttr = keyof EditorAttrsI

@@ -92,6 +92,7 @@ export const config: ElementConfigI = {
     isInline: true,
     isTextInline: true,
     formatText: true,
+    stopFormIteration: true,
   },
   button: { icon: LinkIcon },
   normalizations: [unlinkWhenEmpty, checkAutolink],

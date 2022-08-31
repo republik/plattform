@@ -12,7 +12,7 @@ import { Overlay, OverlayBody, OverlayToolbar } from '../../Overlay'
 import { ReactEditor, useSlate } from 'slate-react'
 import { toTitle } from './helpers/text'
 import { css } from 'glamor'
-import { getAncestry } from './helpers/tree'
+import { isDescendant } from './helpers/tree'
 
 const styles = {
   elementTitle: css({
@@ -61,19 +61,27 @@ const getForm = (
 export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
   if (!path || path === []) return []
 
-  const node = Editor.node(editor, path)
-  const { convertContainer } = getAncestry(editor, node)
-  const topLevelNode = convertContainer || node
-
-  if (!SlateElement.isElement(topLevelNode[0])) return []
+  let topLevelNode = Editor.node(editor, path) as NodeEntry<CustomElement>
+  let parent = Editor.parent(editor, topLevelNode[1])
+  while (
+    SlateElement.isElement(parent[0]) &&
+    !elConfig[parent[0].type].attrs?.stopFormIteration
+  ) {
+    topLevelNode = parent as NodeEntry<CustomElement>
+    parent = Editor.parent(editor, topLevelNode[1])
+  }
 
   let forms: FormData[] = []
   for (const [n, p] of Editor.nodes(editor, {
-    match: SlateElement.isElement,
     at: path,
   })) {
-    const currentForm = getForm(editor, [n, p])
-    forms = forms.concat(currentForm)
+    if (SlateElement.isElement(n) && isDescendant(topLevelNode, [n, p])) {
+      const currentForm = getForm(editor, [n, p])
+      forms = forms.concat(currentForm)
+      if (elConfig[n.type].attrs?.stopFormIteration) {
+        break
+      }
+    }
   }
 
   return forms.filter(Boolean)

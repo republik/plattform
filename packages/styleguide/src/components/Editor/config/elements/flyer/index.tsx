@@ -11,6 +11,7 @@ export const baseConfig: Partial<ElementConfigI> = {
         left: 10,
       },
     },
+    stopFormIteration: true,
   },
   props: ['id'],
   defaultProps: {
