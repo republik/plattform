@@ -214,10 +214,19 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   }
 
   const playQueue = () => {
-    if (!audioQueue.length) return
+    if (!audioQueue || audioQueue.length === 0) {
+      console.log('playQueue: no audioQueue', audioQueue)
+      return
+    }
+    console.log('playQueue', {
+      audioQueue,
+      activePlayerItem,
+      trackedPlayerItem,
+    })
     setActivePlayerItem(audioQueue[0])
     setShouldAutoPlay(true)
     setIsVisible(true)
+    onPlay()
   }
 
   useEffect(() => {
@@ -225,7 +234,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     return () => {
       AudioEventEmitter.removeListener('togglePlayer', playQueue)
     }
-  }, [setActivePlayerItem, setShouldAutoPlay])
+  }, [setActivePlayerItem, setShouldAutoPlay, playQueue])
 
   // Update the local state if a new audio-state is provided
   useEffect(() => {
@@ -274,12 +283,16 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     throw new Error('no audio state to sync')
   }, [syncState, isPlaying, playbackRate]) // adapt sync-interval to playbackRate
 
+  // Open up the audio-player once the app has started if the
+  // audio-queue is not empty
   useEffect(() => {
     if (audioQueueIsLoading || initialized) {
       return
     }
     if (audioQueue.length > 0) {
       setActivePlayerItem(audioQueue[0])
+      trackedPlayerItem.current = null
+      setShouldAutoPlay(false)
       setIsVisible(true)
     }
     initialized = true

@@ -30,7 +30,7 @@ const AudioPlayer = ({
   const {
     document: { meta: { audioSource } = {} },
   } = activeItem
-  const [currentItem, ...queuedItems] = queue
+  const [_, ...queuedItems] = queue // filter active-item from queue
 
   const toggleAudioPlayer = () => {
     if (isPlaying) {
@@ -66,7 +66,7 @@ const AudioPlayer = ({
       {isExpanded ? (
         <ExpandedAudioPlayer
           t={t}
-          activeItem={currentItem}
+          activeItem={activeItem}
           queuedItems={queuedItems}
           currentTime={currentTime}
           duration={duration}
@@ -85,7 +85,7 @@ const AudioPlayer = ({
       ) : (
         <MiniAudioPlayer
           t={t}
-          activeItem={currentItem}
+          activeItem={activeItem}
           currentTime={currentTime}
           duration={duration}
           isPlaying={isPlaying}
