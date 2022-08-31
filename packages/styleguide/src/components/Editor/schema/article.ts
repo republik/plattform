@@ -23,7 +23,7 @@ const schema: SchemaConfig = {
   pullQuoteText: PullQuoteText,
   break: Break,
   headline: Editorial.Subhead,
-  link: Editorial.NoRefA,
+  link: Editorial.A,
   paragraph: Editorial.P,
   bold: Editorial.Emphasis,
   italic: Editorial.Cursive,

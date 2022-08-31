@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from 'react'
 import { css } from 'glamor'
-import { CloseIcon } from '../../../../Icons'
+import { CloseIcon } from '../../Icons'
 
 const styles = {
   label: css({

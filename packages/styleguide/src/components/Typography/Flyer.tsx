@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { css } from 'glamor'
 import { useColorContext } from '../Colors/ColorContext'
 import { mUp } from '../../theme/mediaQueries'
 import { fontStyles } from '../../theme/fonts'
 import { link } from './Editorial'
 import { ListItem as InnerListItem } from '../List'
+import { useRenderContext } from '../Editor/Render/Context'
 
 export const Layout = ({ children, attributes }) => {
   const [colorScheme] = useColorContext()
@@ -205,8 +206,30 @@ export const ListItem: React.FC<{
 //  check if this is OK
 //  otherwise use a link with forward ref on render
 //  and one without in the editor
-export const A = ({ children, attributes, ...props }) => (
+export const A = forwardRef<HTMLAnchorElement, any>(
+  ({ children, attributes, ...props }, ref) => (
+    <a {...attributes} {...props} {...link} ref={ref}>
+      {children}
+    </a>
+  ),
+)
+
+// TODO: forwardRef is problematic inside Slate:
+//  for now we use the noref compoment inside the editor
+//  we should check what causes this and if it can be fixed
+export const NoRefA = ({ children, attributes, ...props }) => (
   <a {...attributes} {...props} {...link}>
     {children}
   </a>
 )
+
+export const Link: React.FC<any> = ({ children, href, ...props }) => {
+  const { Link } = useRenderContext()
+  return (
+    <Link href={href} passhref>
+      <A href={href} {...props}>
+        {children}
+      </A>
+    </Link>
+  )
+}

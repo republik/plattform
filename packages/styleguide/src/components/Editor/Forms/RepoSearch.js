@@ -43,6 +43,8 @@ export const filterRepos = gql`
               title
               shortTitle
               image
+              path
+              externalBaseUrl
             }
           }
         }

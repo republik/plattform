@@ -1,6 +1,9 @@
 import React from 'react'
 import { css } from 'glamor'
 import { serifRegular23, serifTitle38 } from '../Typography/styles'
+import { ResolvedRepo } from '../Editor/custom-types'
+import { getTeaserHref } from '../TeaserFeed'
+import { useRenderContext } from '../Editor/Render/Context'
 
 export const ArticleTextContainer: React.FC<{
   attributes: any
@@ -39,29 +42,39 @@ export const ArticleLead: React.FC<{
   )
 }
 
-// TODO: with link for wwww / preview
+// TODO: replace path by most recent path in backend?
 export const ArticlePreview: React.FC<{
   attributes: any
   color: string
   backgroundColor: string
-  repoId?: string
+  resolvedRepo?: ResolvedRepo
   [x: string]: unknown
 }> = ({
   children,
   attributes,
   color,
   backgroundColor,
-  style,
-  repoId,
+  resolvedRepo,
   ...props
 }) => {
+  const { Link } = useRenderContext()
+  const href =
+    resolvedRepo &&
+    getTeaserHref(resolvedRepo.path, resolvedRepo.externalBaseUrl)
   return (
-    <div
-      {...attributes}
-      {...props}
-      style={{ ...attributes.style, color, backgroundColor }}
-    >
-      {children}
-    </div>
+    <Link href={href} passHref>
+      <a
+        {...attributes}
+        {...props}
+        style={{
+          ...attributes.style,
+          display: 'block',
+          color,
+          backgroundColor,
+        }}
+      >
+        {children}
+      </a>
+    </Link>
   )
 }

@@ -30,13 +30,21 @@ const Form: React.FC<ElementFormProps<ArticlePreviewElement>> = ({
 }) => {
   const editor = useSlate()
   const [syncData, setSyncData] = useState<boolean>(true)
+  const repoId = element?.resolvedRepo?.repoId
   return (
     <>
       <div>
-        <Label>Beitrag Id{element.repoId ? `: ${element.repoId}` : ''}</Label>
+        <Label>Beitrag Id{repoId ? `: ${repoId}` : ''}</Label>
         <RepoSearch
           onChange={({ value }) => {
-            onChange({ repoId: value.id })
+            const meta = value.latestCommit.document.meta
+            onChange({
+              resolvedRepo: {
+                repoId: value.id,
+                path: meta.path,
+                externalBaseUrl: meta.externalBaseUrl,
+              },
+            })
             if (syncData) {
               const meta = value.latestCommit.document.meta
               Transforms.insertText(editor, meta.title, {
@@ -70,6 +78,7 @@ const Form: React.FC<ElementFormProps<ArticlePreviewElement>> = ({
             onChange={(color) => {
               onChange({ color })
             }}
+            noDelete
           />
         </div>
         <div>
@@ -79,6 +88,7 @@ const Form: React.FC<ElementFormProps<ArticlePreviewElement>> = ({
             onChange={(backgroundColor) => {
               onChange({ backgroundColor })
             }}
+            noDelete
           />
         </div>
       </div>

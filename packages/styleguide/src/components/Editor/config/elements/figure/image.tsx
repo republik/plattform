@@ -4,7 +4,7 @@ import {
   ElementFormProps,
   FigureImageElement,
 } from '../../../custom-types'
-import ImageInput from './ImageInput'
+import ImageInput from '../../../Forms/ImageInput'
 import { Label } from '../../../../Typography'
 import { css } from 'glamor'
 import Checkbox from '../../../../Form/Checkbox'

@@ -73,7 +73,7 @@ export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
 
   let forms: FormData[] = []
   for (const [n, p] of Editor.nodes(editor, {
-    at: path,
+    at: topLevelNode[1],
   })) {
     if (SlateElement.isElement(n) && isDescendant(topLevelNode, [n, p])) {
       const currentForm = getForm(editor, [n, p])

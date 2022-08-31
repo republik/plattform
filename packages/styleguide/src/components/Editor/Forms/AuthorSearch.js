@@ -11,6 +11,7 @@ const getAuthors = gql`
   query getAuthors($search: String!) {
     users(search: $search, hasPublicProfile: true) {
       id
+      slug
       name
       email
       portrait

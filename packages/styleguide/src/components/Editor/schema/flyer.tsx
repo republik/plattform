@@ -46,7 +46,7 @@ const schema: SchemaConfig = {
   pullQuoteText: PullQuoteText,
   break: Break,
   headline: Flyer.H1,
-  link: Flyer.A,
+  link: Flyer.Link,
   paragraph: Flyer.P,
   bold: Flyer.Emphasis,
   italic: Flyer.Cursive,

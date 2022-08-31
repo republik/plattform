@@ -60,7 +60,7 @@ class ColorPicker extends Component {
           >
             {!this.props.value && '❌'}
           </span>
-          {!!this.props.value && (
+          {!!this.props.value && !this.props.noDelete && (
             <span
               role='img'
               aria-label='delete color'

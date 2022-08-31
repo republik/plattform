@@ -1,10 +1,23 @@
 import React, { createContext, useContext } from 'react'
 
-const RenderContext = createContext({})
+type RenderProps = {
+  Link?: React.FC<any>
+  Share?: React.FC
+}
+
+const PlaceholderLink = ({ children }) => React.Children.only(children)
+
+const RenderContext = createContext<RenderProps>({
+  Link: PlaceholderLink,
+})
 
 export const useRenderContext = () => useContext(RenderContext)
 
-export const RenderContextProvider = ({ children, Link, Share }) => {
+export const RenderContextProvider: React.FC<RenderProps> = ({
+  children,
+  Link = PlaceholderLink,
+  Share,
+}) => {
   const renderContextValue = { Link, Share }
   return (
     <RenderContext.Provider value={renderContextValue}>
