@@ -5,6 +5,7 @@ import { mUp } from '../../theme/mediaQueries'
 import { fontStyles } from '../../theme/fonts'
 import { ListItem as InnerListItem } from '../List'
 import { useRenderContext } from '../Editor/Render/Context'
+import { pxToRem } from '../Typography/utils'
 
 export const Layout = ({ children, attributes }) => {
   const [colorScheme] = useColorContext()
@@ -25,13 +26,13 @@ export const H1 = ({ children, attributes, ...props }) => {
       {...colorScheme.set('color', 'journalText')}
       {...css({
         ...fontStyles.flyerTitle,
+        fontSize: pxToRem('27px'),
         lineHeight: 1.185,
-        letterSpacing: '0.5px',
-        fontSize: 27,
+        letterSpacing: pxToRem('0.5px'),
         margin: '0 0 28px',
         [mUp]: {
-          fontSize: 54,
-          lineHeight: 1.204,
+          fontSize: pxToRem('54px'),
+          lineHeight: 1.2,
           margin: '0 0 36px',
         },
       })}
@@ -50,15 +51,15 @@ export const H2 = ({ children, attributes, ...props }) => {
       {...colorScheme.set('color', 'journalFormatText')}
       {...css({
         ...fontStyles.flyerTitle,
-        textTransform: 'uppercase',
-        fontSize: 14,
-        letterSpacing: 1.4,
+        fontSize: pxToRem('14px'),
         lineHeight: 1,
+        letterSpacing: 1.4,
         margin: '0 0 6px',
+        textTransform: 'uppercase',
         [mUp]: {
-          fontSize: 20,
-          letterSpacing: 1,
+          fontSize: pxToRem('20px'),
           lineHeight: 0.75,
+          letterSpacing: 1,
           margin: '0 0 12px',
         },
       })}
@@ -77,12 +78,12 @@ export const H3 = ({ children, attributes, ...props }) => {
       {...colorScheme.set('color', 'journalText')}
       {...css({
         ...fontStyles.flyerTitle,
+        fontSize: pxToRem('26px'),
         lineHeight: 1.231,
-        letterSpacing: '0.5px',
-        fontSize: 26,
+        letterSpacing: pxToRem('0.5px'),
         margin: '0 0 12px',
         [mUp]: {
-          fontSize: 40,
+          fontSize: pxToRem('40px'),
           lineHeight: 1.2,
           margin: '0 0 18px',
         },
@@ -101,11 +102,11 @@ export const P = ({ children, attributes, ...props }) => {
       {...props}
       {...css({
         ...fontStyles.sansSerifRegular,
-        fontSize: 17,
+        fontSize: pxToRem('17px'),
         lineHeight: 1.471,
         margin: '0 0 22px',
         [mUp]: {
-          fontSize: 23,
+          fontSize: pxToRem('23px'),
           lineHeight: 1.522,
           margin: '0 0 16px',
         },
@@ -125,11 +126,11 @@ export const MetaP = ({ children, attributes, ...props }) => {
       {...props}
       {...css({
         ...fontStyles.sansSerifMedium,
-        fontSize: 20,
+        fontSize: pxToRem('20px'),
         lineHeight: 1.45,
         margin: '0 0 50px',
         [mUp]: {
-          fontSize: 28,
+          fontSize: pxToRem('28px'),
           lineHeight: 1.429,
           margin: '0 0 66px',
         },
@@ -150,11 +151,11 @@ export const Small = ({ children, attributes, ...props }) => {
       {...props}
       {...css({
         ...fontStyles.sansSerifRegular,
-        fontSize: 14,
+        fontSize: pxToRem('14px'),
         lineHeight: 1.214,
         margin: 0,
         [mUp]: {
-          fontSize: 17,
+          fontSize: pxToRem('17px'),
           lineHeight: 1.235,
         },
       })}
