@@ -13,11 +13,12 @@ import { isSlateElement } from './helpers'
 const RenderedLeaf: React.FC<{
   leaf: CustomText
   schema: SchemaConfig
-}> = ({ leaf, schema }) => (
-  <Marks leaf={leaf} schema={schema}>
-    {leaf.text}
-  </Marks>
-)
+}> = ({ leaf, schema }) =>
+  leaf.text ? (
+    <Marks leaf={leaf} schema={schema}>
+      {leaf.text}
+    </Marks>
+  ) : null
 
 const RenderNodes: React.FC<{
   nodes: CustomNode[]
