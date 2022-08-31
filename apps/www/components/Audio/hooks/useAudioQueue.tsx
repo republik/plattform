@@ -1,11 +1,14 @@
-import { useAudioQueueQuery, AUDIO_QUEUE_QUERY } from './useAudioQueueQuery'
-import { useAddAudioQueueItemMutation } from './useAddAudioQueueItemMutation'
-import { useRemoveAudioQueueItemMutation } from './useRemoveAudioQueueItemMutation'
-import { useMoveAudioQueueItemMutation } from './useMoveAudioQueueItemMutation'
-import { useClearAudioQueueMutation } from './useClearAudioQueueMutation'
 import { useInNativeApp } from '../../../lib/withInNativeApp'
 import compareVersion from '../../../lib/react-native/CompareVersion'
 import { NEW_AUDIO_API_VERSION } from '../constants'
+import {
+  AUDIO_QUEUE_QUERY,
+  useAddAudioQueueItemMutation,
+  useAudioQueueQuery,
+  useClearAudioQueueMutation,
+  useMoveAudioQueueItemMutation,
+  useRemoveAudioQueueItemMutation,
+} from '../graphql/AudioQueueHooks'
 
 /**
  * useAudioQueue provides all playlist-data as well as operations to manage the playlist.

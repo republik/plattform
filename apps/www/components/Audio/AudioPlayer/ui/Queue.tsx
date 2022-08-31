@@ -1,8 +1,8 @@
 import { css } from 'glamor'
 import QueueItem from './QueueItem'
-import { AudioQueueItem } from '../../graphql/AudioQueueItemFragment'
 import { fontStyles } from '@project-r/styleguide'
 import useAudioQueue from '../../hooks/useAudioQueue'
+import { AudioQueueItem } from '../../graphql/AudioQueueHooks'
 
 const styles = {
   heading: css({
@@ -24,12 +24,11 @@ type QueueProps = {
 const Queue = ({ items }: QueueProps) => {
   const { removeAudioQueueItem } = useAudioQueue()
 
-  const handleRemove = async (item: AudioQueueItem, index: number) => {
+  const handleRemove = async (item: AudioQueueItem) => {
     try {
       await removeAudioQueueItem({
         variables: {
           id: item.id,
-          sequence: index,
         },
       })
     } catch (e) {
@@ -44,10 +43,7 @@ const Queue = ({ items }: QueueProps) => {
       <ul {...styles.list}>
         {items.map((item, index) => (
           <li key={item.id}>
-            <QueueItem
-              item={item}
-              onRemove={(item) => handleRemove(item, index)}
-            />
+            <QueueItem item={item} onRemove={handleRemove} />
           </li>
         ))}
       </ul>

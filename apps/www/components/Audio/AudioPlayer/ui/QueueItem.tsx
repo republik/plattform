@@ -1,8 +1,8 @@
 import { fontStyles, useColorContext } from '@project-r/styleguide'
 import { css } from 'glamor'
-import { AudioQueueItem } from '../../graphql/AudioQueueItemFragment'
 import { dateFormatter, FALLBACK_IMG_SRC, formatMinutes } from '../shared'
 import AudioPlayerTitle from './AudioPlayerTitle'
+import { AudioQueueItem } from '../../graphql/AudioQueueHooks'
 
 const styles = {
   root: css({

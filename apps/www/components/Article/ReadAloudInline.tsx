@@ -11,7 +11,6 @@ import {
 
 import { useAudioContext } from '../Audio/AudioProvider'
 import { trackEvent } from '../../lib/matomo'
-import { useAudioQueueQuery } from '../Audio/hooks/useAudioQueueQuery'
 import { AudioPlayerItem } from '../Audio/types/AudioPlayerItem'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 

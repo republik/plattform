@@ -6,9 +6,9 @@ import { AudioEvent } from './types/AudioEvent'
 import AppMessageEventEmitter from '../../lib/react-native/AppMessageEventEmitter'
 import notifyApp from '../../lib/react-native/NotifyApp'
 import { AudioPlayerItem } from './types/AudioPlayerItem'
-import { AudioQueueItem } from './graphql/AudioQueueItemFragment'
 import useAudioQueue from './hooks/useAudioQueue'
 import { useMediaProgress } from './MediaProgress'
+import { AudioQueueItem } from './graphql/AudioQueueHooks'
 
 const DEFAULT_SYNC_INTERVAL = 500 // in ms
 const DEFAULT_PLAYBACK_RATE = 1
