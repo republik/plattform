@@ -77,7 +77,13 @@ const CalloutMenu = ({
           {children}
         </Callout>
       )}
-      <Element {...elementProps} onClick={() => setMenu(!showMenu)} />
+      <Element
+        {...elementProps}
+        onMouseDown={(e) => {
+          e.preventDefault()
+          setMenu(!showMenu)
+        }}
+      />
     </span>
   )
 }

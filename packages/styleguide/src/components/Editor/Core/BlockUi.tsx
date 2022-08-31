@@ -32,6 +32,7 @@ const styles = {
     padding: 3,
     zIndex: 10,
     borderRadius: 40,
+    color: colors.light.text,
   }),
   padded: css({
     display: 'block',
@@ -177,7 +178,11 @@ const BlockUi: React.FC<{
     >
       {showMoveUi ? (
         <CalloutMenu
-          Element={(props) => <MoreIcon size={24} {...props} />}
+          Element={(props) => (
+            <span {...props}>
+              <MoreIcon size={24} />
+            </span>
+          )}
           elementProps={{ style: { display: 'flex' } }}
         >
           {showEdit && editButton}

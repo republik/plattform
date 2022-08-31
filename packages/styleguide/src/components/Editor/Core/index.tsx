@@ -110,7 +110,9 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
         Transforms.select(editor, path)
       }
     }
-    const baseStyles = { position: 'relative' }
+    const baseStyles = showBlockUi
+      ? { position: 'relative', display: 'block' }
+      : {}
     return (
       <Component
         {...element}
