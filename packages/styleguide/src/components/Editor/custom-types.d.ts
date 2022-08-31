@@ -148,6 +148,7 @@ export type ResolvedAuthor = {
   id: string
   name: string
   portrait: string
+  slug: string
 }
 
 export type FlyerAuthorElement = SharedElement & {
@@ -164,9 +165,15 @@ export type FlyerSignatureElement = SharedElement & {
   type: 'flyerSignature'
 }
 
+export type ResolvedRepo = {
+  repoId: string
+  path: string
+  externalBaseUrl: string | null
+}
+
 export type ArticlePreviewElement = SharedElement & {
   type: 'articlePreview'
-  repoId?: string
+  resolvedRepo?: ResolvedRepo
   backgroundColor?: string
   color?: string
 }

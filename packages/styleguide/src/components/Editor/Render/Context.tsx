@@ -1,11 +1,22 @@
 import React, { createContext, useContext } from 'react'
 
-const RenderContext = createContext({})
+type RenderProps = {
+  Link?: React.FC<any>
+  Share?: React.FC
+  isEditable?: boolean
+}
+
+const RenderContext = createContext<RenderProps>({})
 
 export const useRenderContext = () => useContext(RenderContext)
 
-export const RenderContextProvider = ({ children, Link, Share }) => {
-  const renderContextValue = { Link, Share }
+export const RenderContextProvider: React.FC<RenderProps> = ({
+  children,
+  Link,
+  Share,
+  isEditable,
+}) => {
+  const renderContextValue = { Link, Share, isEditable }
   return (
     <RenderContext.Provider value={renderContextValue}>
       {children}

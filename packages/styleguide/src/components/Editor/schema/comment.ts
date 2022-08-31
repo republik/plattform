@@ -25,7 +25,7 @@ const schema: SchemaConfig = {
   listItem: ListItem,
   break: Break,
   headline: CommentBodyHeading,
-  link: Editorial.NoRefA,
+  link: Editorial.A,
   paragraph: CommentBodyParagraph,
   bold: Bold,
   italic: Italic,

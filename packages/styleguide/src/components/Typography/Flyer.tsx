@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { css } from 'glamor'
 import { useColorContext } from '../Colors/ColorContext'
 import { mUp } from '../../theme/mediaQueries'
@@ -164,11 +164,18 @@ export const Small = ({ children, attributes, ...props }) => {
   )
 }
 
-// TODO: forwardRef is problematic inside Slate
-//  check if this is OK
-//  otherwise use a link with forward ref on render
-//  and one without in the editor
-export const A = ({ children, attributes, ...props }) => (
+export const A = forwardRef<HTMLAnchorElement, any>(
+  ({ children, attributes, ...props }, ref) => (
+    <a {...attributes} {...props} {...link} ref={ref}>
+      {children}
+    </a>
+  ),
+)
+
+// TODO: forwardRef is problematic inside Slate:
+//  for now we use the noref compoment inside the editor
+//  we should check what causes this and if it can be fixed
+export const NoRefA = ({ children, attributes, ...props }) => (
   <a {...attributes} {...props} {...link}>
     {children}
   </a>

@@ -32,6 +32,7 @@ import { ErrorMessage } from '../Render/Message'
 import { LayoutContainer } from '../Render/Containers'
 import { getCharCount } from './helpers/text'
 import BlockUi from './BlockUi'
+import { RenderContextProvider } from '../Render/Context'
 
 export type SlateEditorProps = {
   value: CustomDescendant[]
@@ -139,51 +140,53 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
   )
 
   return (
-    <FormContextProvider>
-      <Slate
-        editor={editor}
-        value={value}
-        onChange={(newValue) => {
-          // console.log({ newValue })
-          setValue(newValue)
-        }}
-      >
-        <FormOverlay />
-        {!config.readOnly && <Toolbar />}
-        <LayoutContainer
-          style={{ position: 'sticky', zIndex: 1 }}
-          schema={config.schema}
+    <RenderContextProvider isEditable>
+      <FormContextProvider>
+        <Slate
+          editor={editor}
+          value={value}
+          onChange={(newValue) => {
+            // console.log({ newValue })
+            setValue(newValue)
+          }}
         >
-          <Editable
-            readOnly={config.readOnly}
-            data-testid='slate-content-editable'
-            renderElement={renderElement}
-            renderLeaf={renderLeaf}
-            onKeyDown={(event) => {
-              // console.log('event', event.key, event.shiftKey, event)
+          <FormOverlay />
+          {!config.readOnly && <Toolbar />}
+          <LayoutContainer
+            style={{ position: 'sticky', zIndex: 1 }}
+            schema={config.schema}
+          >
+            <Editable
+              readOnly={config.readOnly}
+              data-testid='slate-content-editable'
+              renderElement={renderElement}
+              renderLeaf={renderLeaf}
+              onKeyDown={(event) => {
+                // console.log('event', event.key, event.shiftKey, event)
 
-              // disable key down events if max signs is reached
-              if (
-                config.maxSigns &&
-                getCharCount(editor.children) >= config.maxSigns &&
-                !NAV_KEYS.concat('Backspace').includes(event.key)
-              ) {
-                event.preventDefault()
-                return false
-              }
+                // disable key down events if max signs is reached
+                if (
+                  config.maxSigns &&
+                  getCharCount(editor.children) >= config.maxSigns &&
+                  !NAV_KEYS.concat('Backspace').includes(event.key)
+                ) {
+                  event.preventDefault()
+                  return false
+                }
 
-              insertOnKey({ name: 'Enter', shift: true }, 'break')(
-                editor,
-                event,
-              )
-              handleInsert(editor, event)
-              navigateOnTab(editor, event)
-            }}
-          />
-        </LayoutContainer>
-        <Footer config={config} />
-      </Slate>
-    </FormContextProvider>
+                insertOnKey({ name: 'Enter', shift: true }, 'break')(
+                  editor,
+                  event,
+                )
+                handleInsert(editor, event)
+                navigateOnTab(editor, event)
+              }}
+            />
+          </LayoutContainer>
+          <Footer config={config} />
+        </Slate>
+      </FormContextProvider>
+    </RenderContextProvider>
   )
 }
 
