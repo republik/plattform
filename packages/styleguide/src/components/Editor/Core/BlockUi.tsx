@@ -52,7 +52,10 @@ const MoveUp: React.FC<{
   return (
     <IconButton
       Icon={ArrowUpIcon}
-      onClick={() => moveElement(editor, path, 'up')}
+      onMouseDown={(e) => {
+        e.preventDefault()
+        moveElement(editor, path, 'up')
+      }}
       disabled={isDisabled}
       title='move element up'
       style={iconStyle}
@@ -71,7 +74,10 @@ const MoveDown: React.FC<{
   return (
     <IconButton
       Icon={ArrowDownIcon}
-      onClick={() => moveElement(editor, path, 'down')}
+      onMouseDown={(e) => {
+        e.preventDefault()
+        moveElement(editor, path, 'down')
+      }}
       disabled={isDisabled}
       title='move element down'
       style={iconStyle}
@@ -88,7 +94,10 @@ const Remove: React.FC<{
     <IconButton
       Icon={DeleteIcon}
       fill={colors.error}
-      onClick={() => removeElement(editor, path)}
+      onMouseDown={(e) => {
+        e.preventDefault()
+        removeElement(editor, path)
+      }}
       disabled={isDisabled}
       title='remove element'
       style={iconStyle}
@@ -115,7 +124,8 @@ const Insert: React.FC<{
   return (
     <IconButton
       Icon={AddIcon}
-      onClick={() => {
+      onMouseDown={(e) => {
+        e.preventDefault()
         const insertPath = insertAfter(editor, template, path)
         setPendingPath(insertPath)
       }}
@@ -132,7 +142,10 @@ const Edit: React.FC<{
   return (
     <IconButton
       Icon={EditIcon}
-      onClick={() => setFormPath(path)}
+      onMouseDown={(e) => {
+        e.preventDefault()
+        setFormPath(path)
+      }}
       title='edit element'
       style={{ ...iconStyle, padding: 3 }}
       size={18}
