@@ -17,6 +17,10 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: '0.5rem',
+    cursor: 'move',
+    '&:active': {
+      cursor: 'grabbing',
+    },
   }),
   cover: css({
     aspectRatio: '1 / 1',

@@ -289,7 +289,8 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     if (
       audioQueue &&
       audioQueue.length > 0 &&
-      activePlayerItem !== audioQueue[0]
+      (!activePlayerItem ||
+        activePlayerItem.document.id !== audioQueue[0].document.id)
     ) {
       setActivePlayerItem(audioQueue[0])
       trackedPlayerItem.current = null
