@@ -27,10 +27,7 @@ export const FRONT_FEED_QUERY = gql`
           ... on Document {
             id
             meta {
-              credits {
-                type
-                children
-              }
+              credits
               shortTitle
               title
               description

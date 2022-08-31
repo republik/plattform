@@ -29,10 +29,7 @@ const feedQuery = gql`
           ... on Document {
             id
             meta {
-              credits {
-                type
-                children
-              }
+              credits
               shortTitle
               title
               description

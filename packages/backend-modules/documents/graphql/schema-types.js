@@ -98,8 +98,8 @@ type Meta {
   shareBackgroundImage: String
   shareBackgroundImageInverted: String
 
-  credits: MetaCredits!
-  
+  credits: JSON
+
   authors: [User!]! @deprecated(reason: "use \`Meta.contributors\` instead")
   contributors: [Contributor!]!
   audioSource: AudioSource
@@ -121,11 +121,6 @@ type Meta {
   
   paynotes: [JSON]
   paynoteMode: PaynoteMode
-}
-
-type MetaCredits {
-  type: DocumentType!
-  children: [JSON!]!
 }
 
 enum DocumentType {

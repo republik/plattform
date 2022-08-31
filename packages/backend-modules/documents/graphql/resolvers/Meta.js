@@ -20,6 +20,11 @@ module.exports = {
 
     return Promise.map(ids, (id) => loaders.User.byId.load(id)).filter(Boolean)
   },
+  credits: (meta) => {
+    return Array.isArray(meta.credits) // old data, e.g. pre-reindex
+      ? meta.credits
+      : meta.credits?.children
+  },
   contributors: async (meta, _, context) => {
     const creditString = await stringifyNode(meta.credits?.type, meta.credits)
     if (!creditString) {
