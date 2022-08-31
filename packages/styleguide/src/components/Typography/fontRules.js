@@ -17,3 +17,7 @@ export const interactionFontRule = css({
     textDecoration: `underline wavy ${colors.error}`,
   },
 })
+
+export const flyerFontRule = css({
+  ...fontStyles.sansSerifMedium,
+})

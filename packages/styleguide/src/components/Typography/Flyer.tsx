@@ -4,6 +4,7 @@ import { useColorContext } from '../Colors/ColorContext'
 import { mUp } from '../../theme/mediaQueries'
 import { fontStyles } from '../../theme/fonts'
 import { link } from './Editorial'
+import { ListItem as InnerListItem } from '../List'
 import { useRenderContext } from '../Editor/Render/Context'
 
 export const Layout = ({ children, attributes }) => {
@@ -165,9 +166,56 @@ export const Small = ({ children, attributes, ...props }) => {
   )
 }
 
+export const Emphasis = ({ children, attributes, ...props }) => (
+  <strong {...props} {...attributes} {...css(fontStyles.sansSerifMedium)}>
+    {children}
+  </strong>
+)
+
+export const Cursive = ({ children, attributes, ...props }) => (
+  <em {...props} {...attributes} {...css(fontStyles.sansSerifItalic)}>
+    {children}
+  </em>
+)
+
+export const StrikeThrough = ({ children, attributes, ...props }) => (
+  <span
+    {...attributes}
+    {...props}
+    {...css({
+      textDecoration: 'line-through',
+    })}
+  >
+    {children}
+  </span>
+)
+
+export const ListItem: React.FC<{
+  attributes: any
+  children: React.ReactNode
+}> = ({ children, attributes = {}, ...props }) => {
+  const { ref, ...attrs } = attributes
+  return (
+    <InnerListItem attributes={attrs} {...props} flyer={true}>
+      {children}
+    </InnerListItem>
+  )
+}
+
+const linkStyle = css({
+  color: 'inherit',
+  textDecoration: 'underline',
+  textDecorationSkip: 'ink',
+  cursor: 'pointer',
+})
+
+// TODO: forwardRef is problematic inside Slate
+//  check if this is OK
+//  otherwise use a link with forward ref on render
+//  and one without in the editor
 export const A = forwardRef<HTMLAnchorElement, any>(
   ({ children, attributes, ...props }, ref) => (
-    <a {...attributes} {...props} {...link} ref={ref}>
+    <a {...attributes} {...props} {...linkStyle} ref={ref}>
       {children}
     </a>
   ),
@@ -177,7 +225,7 @@ export const A = forwardRef<HTMLAnchorElement, any>(
 //  for now we use the noref compoment inside the editor
 //  we should check what causes this and if it can be fixed
 export const NoRefA = ({ children, attributes, ...props }) => (
-  <a {...attributes} {...props} {...link}>
+  <a {...attributes} {...props} {...linkStyle}>
     {children}
   </a>
 )
