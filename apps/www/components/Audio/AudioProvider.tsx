@@ -105,7 +105,6 @@ const AudioProvider = ({ children }) => {
   }
 
   const onCloseAudioPlayer = () => {
-    console.log('onCloseAudioPlayer')
     setAudioPlayerVisible(false)
     clearTimeoutId.current = setTimeout(() => {
       setActivePlayerItem(undefined)

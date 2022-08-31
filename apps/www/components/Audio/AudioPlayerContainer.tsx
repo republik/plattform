@@ -1,6 +1,6 @@
 import { ReactNode, RefObject, useEffect, useRef, useState } from 'react'
 import { usePlaybackRate } from '../../lib/playbackRate'
-import { AudioEventEmitter, useAudioContext } from './AudioProvider'
+import { AudioEventEmitter } from './AudioProvider'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 import { AudioEvent } from './types/AudioEvent'
 import AppMessageEventEmitter from '../../lib/react-native/AppMessageEventEmitter'
@@ -55,7 +55,6 @@ let initialized = false
 
 const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const { inNativeApp } = useInNativeApp()
-  const { onCloseAudioPlayer } = useAudioContext()
   const { audioQueue, audioQueueIsLoading, removeAudioQueueItem } =
     useAudioQueue()
 
@@ -153,7 +152,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     }
     setHasAutoPlayed(false)
     setIsVisible(false)
-    onCloseAudioPlayer()
+    initialized = false
   }
 
   const onSeek = (progress: number) => {
@@ -229,6 +228,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     onPlay()
   }
 
+  // Listen for togglePlayer events from the AudioContext
   useEffect(() => {
     AudioEventEmitter.addListener('togglePlayer', playQueue)
     return () => {
@@ -261,6 +261,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     onPlay,
   ])
 
+  // UI & Container state synchronisation
   useEffect(() => {
     // Add a listener for the event emitted by the native app
     if (inNativeApp) {
@@ -283,15 +284,28 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     throw new Error('no audio state to sync')
   }, [syncState, isPlaying, playbackRate]) // adapt sync-interval to playbackRate
 
+  // Handle an item being pushed to the front of the audio-queue
+  useEffect(() => {
+    if (
+      audioQueue &&
+      audioQueue.length > 0 &&
+      activePlayerItem !== audioQueue[0]
+    ) {
+      setActivePlayerItem(audioQueue[0])
+      trackedPlayerItem.current = null
+    }
+  }, [activePlayerItem, trackedPlayerItem, audioQueue])
+
   // Open up the audio-player once the app has started if the
   // audio-queue is not empty
   useEffect(() => {
-    if (audioQueueIsLoading || initialized) {
+    if (audioQueueIsLoading || audioQueue?.length === 0 || initialized) {
       return
     }
     if (audioQueue.length > 0) {
-      setActivePlayerItem(audioQueue[0])
-      trackedPlayerItem.current = null
+      const item = audioQueue[0]
+      setActivePlayerItem(item)
+      trackedPlayerItem.current = item
       setShouldAutoPlay(false)
       setIsVisible(true)
     }
