@@ -182,7 +182,6 @@ export const NoRefA = ({ children, attributes, ...props }) => (
   </a>
 )
 
-// TODO: test this!
 export const Link: React.FC<any> = ({ children, href, ...props }) => {
   const { Link } = useRenderContext()
   return (
