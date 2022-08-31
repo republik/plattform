@@ -19,7 +19,7 @@ import {
   Range,
 } from 'slate'
 import { KeyboardEvent } from 'react'
-import { selectPlaceholder } from './text'
+import { selectPlaceholder, cleanupEmptyString } from './text'
 import { config as elConfig } from '../../config/elements'
 
 export const NAV_KEYS = [
@@ -63,8 +63,11 @@ export const cleanupTree = (
           ...rest,
         }
       } else if (Text.isText(node)) {
-        const { template, placeholder, end, ...rest } = node
-        return rest
+        const { template, placeholder, end, text, ...rest } = node
+        return {
+          ...rest,
+          text: cleanupEmptyString(text),
+        }
       }
     })
     .filter(emptyFilter)
