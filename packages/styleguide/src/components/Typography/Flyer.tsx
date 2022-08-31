@@ -202,13 +202,20 @@ export const ListItem: React.FC<{
   )
 }
 
+const linkStyle = css({
+  color: 'inherit',
+  textDecoration: 'underline',
+  textDecorationSkip: 'ink',
+  cursor: 'pointer',
+})
+
 // TODO: forwardRef is problematic inside Slate
 //  check if this is OK
 //  otherwise use a link with forward ref on render
 //  and one without in the editor
 export const A = forwardRef<HTMLAnchorElement, any>(
   ({ children, attributes, ...props }, ref) => (
-    <a {...attributes} {...props} {...link} ref={ref}>
+    <a {...attributes} {...props} {...linkStyle} ref={ref}>
       {children}
     </a>
   ),
@@ -218,7 +225,7 @@ export const A = forwardRef<HTMLAnchorElement, any>(
 //  for now we use the noref compoment inside the editor
 //  we should check what causes this and if it can be fixed
 export const NoRefA = ({ children, attributes, ...props }) => (
-  <a {...attributes} {...props} {...link}>
+  <a {...attributes} {...props} {...linkStyle}>
     {children}
   </a>
 )
