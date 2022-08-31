@@ -13,7 +13,7 @@ export const newsletterSettingsFragment = `
   fragment NewsletterSettings on NewsletterSettings {
     id
     status
-    subscriptions(name: $newsletterName) {
+    subscriptions(name: $onlyName) {
       ...NewsletterInfo
     }
   }
