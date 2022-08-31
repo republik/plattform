@@ -3,7 +3,7 @@ import { css } from 'glamor'
 import { serifRegular23, serifTitle38 } from '../Typography/styles'
 import { ResolvedRepo } from '../Editor/custom-types'
 import { getTeaserHref } from '../TeaserFeed'
-import { RenderLink } from '../Editor/Render/Link'
+import { useRenderContext } from '../Editor/Render/Context'
 
 export const ArticleTextContainer: React.FC<{
   attributes: any
@@ -57,18 +57,24 @@ export const ArticlePreview: React.FC<{
   resolvedRepo,
   ...props
 }) => {
+  const { Link } = useRenderContext()
   const href =
     resolvedRepo &&
     getTeaserHref(resolvedRepo.path, resolvedRepo.externalBaseUrl)
   return (
-    <RenderLink href={href} passHref>
-      <div
+    <Link href={href} passHref>
+      <a
         {...attributes}
         {...props}
-        style={{ ...attributes.style, color, backgroundColor }}
+        style={{
+          ...attributes.style,
+          display: 'block',
+          color,
+          backgroundColor,
+        }}
       >
         {children}
-      </div>
-    </RenderLink>
+      </a>
+    </Link>
   )
 }

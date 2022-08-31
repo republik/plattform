@@ -30,7 +30,7 @@ const Form: React.FC<ElementFormProps<ArticlePreviewElement>> = ({
 }) => {
   const editor = useSlate()
   const [syncData, setSyncData] = useState<boolean>(true)
-  const repoId = element?.resolvedRepo.repoId
+  const repoId = element?.resolvedRepo?.repoId
   return (
     <>
       <div>
@@ -78,6 +78,7 @@ const Form: React.FC<ElementFormProps<ArticlePreviewElement>> = ({
             onChange={(color) => {
               onChange({ color })
             }}
+            noDelete
           />
         </div>
         <div>
@@ -87,6 +88,7 @@ const Form: React.FC<ElementFormProps<ArticlePreviewElement>> = ({
             onChange={(backgroundColor) => {
               onChange({ backgroundColor })
             }}
+            noDelete
           />
         </div>
       </div>

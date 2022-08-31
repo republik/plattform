@@ -140,7 +140,7 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
   )
 
   return (
-    <RenderContextProvider isEditable>
+    <RenderContextProvider>
       <FormContextProvider>
         <Slate
           editor={editor}

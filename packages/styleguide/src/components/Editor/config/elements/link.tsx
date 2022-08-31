@@ -34,6 +34,8 @@ const Form: React.FC<ElementFormProps<LinkElement>> = ({
   const textRef = useRef<string>()
   textRef.current = text
 
+  // Directly updating the link props causes issues
+  // with the normalizer and the cursor.
   useEffect(() => {
     return () => {
       onChange({ href: hrefRef.current })

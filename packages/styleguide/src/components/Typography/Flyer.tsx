@@ -4,6 +4,7 @@ import { useColorContext } from '../Colors/ColorContext'
 import { mUp } from '../../theme/mediaQueries'
 import { fontStyles } from '../../theme/fonts'
 import { link } from './Editorial'
+import { useRenderContext } from '../Editor/Render/Context'
 
 export const Layout = ({ children, attributes }) => {
   const [colorScheme] = useColorContext()
@@ -180,3 +181,15 @@ export const NoRefA = ({ children, attributes, ...props }) => (
     {children}
   </a>
 )
+
+// TODO: test this!
+export const Link: React.FC<any> = ({ children, href, ...props }) => {
+  const { Link } = useRenderContext()
+  return (
+    <Link href={href} passhref>
+      <A href={href} {...props}>
+        {children}
+      </A>
+    </Link>
+  )
+}

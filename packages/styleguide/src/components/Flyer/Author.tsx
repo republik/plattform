@@ -5,7 +5,7 @@ import { useColorContext } from '../Colors/ColorContext'
 import { mUp } from '../../theme/mediaQueries'
 import { fontStyles } from '../Typography'
 import { PLACEHOLDER } from '../Figure/Slate'
-import { RenderLink } from '../Editor/Render/Link'
+import { useRenderContext } from '../Editor/Render/Context'
 
 type FlyerProps = {
   resolvedAuthor?: ResolvedAuthor
@@ -22,11 +22,12 @@ export const FlyerAuthor: React.FC<FlyerProps> = ({
   resolvedAuthor,
   ...props
 }) => {
+  const { Link } = useRenderContext()
   const [colorScheme] = useColorContext()
 
   return (
-    <RenderLink href={`/~${resolvedAuthor?.slug}`} passhref>
-      <div {...attributes} {...props}>
+    <Link href={`/~${resolvedAuthor?.slug}`} passhref>
+      <a {...attributes} {...props}>
         <div
           contentEditable={false}
           style={{
@@ -75,7 +76,7 @@ export const FlyerAuthor: React.FC<FlyerProps> = ({
           </span>
         </div>
         {children}
-      </div>
-    </RenderLink>
+      </a>
+    </Link>
   )
 }

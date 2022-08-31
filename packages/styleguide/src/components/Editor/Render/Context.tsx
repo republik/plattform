@@ -3,20 +3,22 @@ import React, { createContext, useContext } from 'react'
 type RenderProps = {
   Link?: React.FC<any>
   Share?: React.FC
-  isEditable?: boolean
 }
 
-const RenderContext = createContext<RenderProps>({})
+const PlaceholderLink = ({ children }) => React.Children.only(children)
+
+const RenderContext = createContext<RenderProps>({
+  Link: PlaceholderLink,
+})
 
 export const useRenderContext = () => useContext(RenderContext)
 
 export const RenderContextProvider: React.FC<RenderProps> = ({
   children,
-  Link,
+  Link = PlaceholderLink,
   Share,
-  isEditable,
 }) => {
-  const renderContextValue = { Link, Share, isEditable }
+  const renderContextValue = { Link, Share }
   return (
     <RenderContext.Provider value={renderContextValue}>
       {children}
