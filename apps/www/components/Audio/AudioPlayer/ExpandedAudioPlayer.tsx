@@ -65,8 +65,8 @@ type ExpandedAudioPlayerProps = {
 
 const ExpandedAudioPlayer = ({
   t,
-  activePlayerItem,
-  queue,
+  activeItem,
+  queuedItems,
   currentTime = 0,
   duration = 0,
   playbackRate,
@@ -83,8 +83,10 @@ const ExpandedAudioPlayer = ({
 }: ExpandedAudioPlayerProps) => {
   return (
     <div {...styles.root}>
-      <CurrentlyPlaying t={t} activePlayerItem={activePlayerItem} />
-      {queue && queue.length > 0 && <Queue t={t} items={queue} />}
+      <CurrentlyPlaying t={t} item={activeItem} />
+      {queuedItems && queuedItems.length > 0 && (
+        <Queue t={t} items={queuedItems} />
+      )}
       <div>
         <Scrubber
           currentTime={currentTime}

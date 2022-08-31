@@ -70,7 +70,8 @@ const QueueItem = ({ item, onRemove }: QueueItemProps) => {
         </div>
       </div>
       <div {...styles.actions}>
-        <button onClick={() => onRemove(item)}>remove</button>
+        <button onClick={() => onRemove(item)}>x</button>
+        <span>{item.sequence}</span>
       </div>
     </div>
   )

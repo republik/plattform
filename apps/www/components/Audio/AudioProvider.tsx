@@ -74,9 +74,8 @@ const AudioProvider = ({ children }) => {
           },
           sequence: 1,
         },
-      }).then(({ data }) => {
-        setAudioPlayerVisible(true)
-        AudioEventEmitter.emit('togglePlayer', data.audioQueueItems[0])
+      }).then(() => {
+        AudioEventEmitter.emit('togglePlayer')
       })
     } else {
       let currentTime

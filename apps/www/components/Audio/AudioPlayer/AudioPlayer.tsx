@@ -13,7 +13,7 @@ import MiniAudioPlayer from './MiniAudioPlayer'
 
 const AudioPlayer = ({
   mediaRef,
-  activePlayerItem,
+  activeItem,
   queue,
   autoPlay,
   currentTime,
@@ -27,7 +27,10 @@ const AudioPlayer = ({
   const { inNativeApp } = useInNativeApp()
   const { t } = useTranslation()
   const [isExpanded, setIsExpanded] = useState(false)
-  const { meta: { audioSource } = {} } = activePlayerItem
+  const {
+    document: { meta: { audioSource } = {} },
+  } = activeItem
+  const [currentItem, ...queuedItems] = queue
 
   const toggleAudioPlayer = () => {
     if (isPlaying) {
@@ -56,15 +59,15 @@ const AudioPlayer = ({
     )
   }, [audioSource, inNativeApp, autoPlay, mediaRef, actions])
 
-  if (!activePlayerItem) return null
+  if (!activeItem) return null
 
   return (
     <BottomPanel wide foreground={true} visible={true}>
       {isExpanded ? (
         <ExpandedAudioPlayer
           t={t}
-          activePlayerItem={activePlayerItem}
-          queue={queue}
+          activeItem={currentItem}
+          queuedItems={queuedItems}
           currentTime={currentTime}
           duration={duration}
           playbackRate={playbackRate}
@@ -82,7 +85,7 @@ const AudioPlayer = ({
       ) : (
         <MiniAudioPlayer
           t={t}
-          activePlayerItem={activePlayerItem}
+          activeItem={currentItem}
           currentTime={currentTime}
           duration={duration}
           isPlaying={isPlaying}
@@ -95,6 +98,9 @@ const AudioPlayer = ({
         />
       )}
       {playbackElement}
+      <span style={{ fontSize: '8px', paddingBottom: '1rem' }}>
+        {activeItem.document.meta.title}
+      </span>
     </BottomPanel>
   )
 }

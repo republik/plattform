@@ -1,5 +1,4 @@
 import { timeFormat } from 'd3-time-format'
-import { AudioPlayerItem } from '../types/AudioPlayerItem'
 import { AudioQueueItem } from '../graphql/AudioQueueHooks'
 
 type AudioPlayerActions = {
@@ -13,8 +12,8 @@ type AudioPlayerActions = {
 }
 
 export type AudioPlayerProps = {
-  activePlayerItem: AudioPlayerItem
-  queue: AudioQueueItem[]
+  activeItem: AudioQueueItem
+  queuedItems: AudioQueueItem[]
   isPlaying?: boolean
   isLoading?: boolean
   //

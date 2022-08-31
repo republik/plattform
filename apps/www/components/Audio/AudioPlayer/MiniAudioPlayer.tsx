@@ -1,13 +1,11 @@
 import React from 'react'
 import { css } from 'glamor'
-import Link from 'next/link'
 import Scrubber from './ui/Scrubber'
 import { AudioPlayerProps } from './shared'
 import Time from './ui/Time'
 import {
   IconButton,
   Spinner,
-  useColorContext,
   fontStyles,
   PlayIcon,
   PauseIcon,
@@ -67,11 +65,11 @@ type MiniAudioPlayerProps = {
   handleToggle: () => void
   handleSeek: (progress: number) => void
   handleClose: () => void
-} & Omit<AudioPlayerProps, 'actions' | 'playbackRate' | 'queue'>
+} & Omit<AudioPlayerProps, 'actions' | 'playbackRate' | 'queuedItems'>
 
 const MiniAudioPlayer = ({
   t,
-  activePlayerItem,
+  activeItem,
   isPlaying,
   isLoading,
   currentTime = 0,
@@ -82,10 +80,11 @@ const MiniAudioPlayer = ({
   handleSeek,
   handleClose,
 }: MiniAudioPlayerProps) => {
-  const [colorScheme] = useColorContext()
   const {
-    meta: { title, path },
-  } = activePlayerItem
+    document: {
+      meta: { title, path },
+    },
+  } = activeItem
   return (
     <div {...styles.root}>
       <div {...styles.playerWrapper}>

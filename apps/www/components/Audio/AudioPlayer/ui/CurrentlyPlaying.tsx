@@ -4,6 +4,7 @@ import { fontStyles, useColorContext } from '@project-r/styleguide'
 import { dateFormatter, FALLBACK_IMG_SRC, formatMinutes } from '../shared'
 import AudioPlayerTitle from './AudioPlayerTitle'
 import { AudioPlayerItem } from '../../types/AudioPlayerItem'
+import { AudioQueueItem } from '../../graphql/AudioQueueHooks'
 
 const styles = {
   root: css({
@@ -47,15 +48,17 @@ const styles = {
 
 type CurrentlyPlayingProps = {
   t: any
-  activePlayerItem: AudioPlayerItem
+  item: AudioQueueItem
 }
 
-const CurrentlyPlaying = ({ t, activePlayerItem }: CurrentlyPlayingProps) => {
+const CurrentlyPlaying = ({ t, item }: CurrentlyPlayingProps) => {
   const [colorScheme] = useColorContext()
 
   const {
-    meta: { title, path, publishDate, audioSource, image },
-  } = activePlayerItem
+    document: {
+      meta: { title, path, publishDate, audioSource, image },
+    },
+  } = item
   const { durationMs } = audioSource
   const cover = image || FALLBACK_IMG_SRC
 
@@ -74,7 +77,7 @@ const CurrentlyPlaying = ({ t, activePlayerItem }: CurrentlyPlayingProps) => {
           >
             <span {...styles.dateText}>
               {publishDate && dateFormatter(new Date(Date.parse(publishDate)))}{' '}
-              - {formatMinutes(durationMs / 1000)}min
+              - {formatMinutes(durationMs / 1000)}min - {item.sequence}
             </span>
           </div>
         </div>
