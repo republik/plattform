@@ -5,10 +5,11 @@ import {
   serifRegular17,
   serifRegular19,
 } from '../Typography/styles'
+import { fontStyles } from '../Typography'
 import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
-import { editorialFontRule } from '../Typography/fontRules'
+import { editorialFontRule, flyerFontRule } from '../Typography/fontRules'
 import { useColorContext } from '../Colors/useColorContext'
 
 const WIDTH = 22
@@ -31,7 +32,7 @@ const styles = {
       paddingLeft: `${MARGIN}px`,
     },
   }),
-  li: css({
+  listItemEditorial: css({
     paddingLeft: `${WIDTH}px`,
     position: 'relative',
     ...convertStyleToRem(serifRegular17),
@@ -50,6 +51,33 @@ const styles = {
       margin: '12px 0',
       [mUp]: {
         ...convertStyleToRem(serifRegular17),
+        lineHeight: pxToRem('28px'),
+        margin: '14px 0',
+      },
+    },
+  }),
+  listItemFlyer: css({
+    ...fontStyles.sansSerifMedium,
+    paddingLeft: `${WIDTH}px`,
+    position: 'relative',
+    fontSize: pxToRem('17px'),
+    lineHeight: pxToRem('25px'),
+    [mUp]: {
+      fontSize: pxToRem('23px'),
+      lineHeight: pxToRem('35px'),
+    },
+    '& p': {
+      margin: '1em 0 1em 0',
+    },
+    '& p:last-child': {
+      marginBottom: 0,
+    },
+    'li &': {
+      fontSize: pxToRem('14px'),
+      lineHeight: pxToRem('22px'),
+      margin: '12px 0',
+      [mUp]: {
+        fontSize: pxToRem('17px'),
         lineHeight: pxToRem('28px'),
         margin: '14px 0',
       },
@@ -109,13 +137,18 @@ OrderedList.defaultProps = {
   start: 1,
 }
 
-export const ListItem = ({ children, attributes = {}, style = {} }) => {
+export const ListItem = ({
+  children,
+  attributes = {},
+  style = {},
+  flyer = false,
+}) => {
   const [colorScheme] = useColorContext()
   return (
     <li
-      {...styles.li}
+      {...(flyer ? styles.listItemFlyer : styles.listItemEditorial)}
+      {...(flyer ? flyerFontRule : editorialFontRule)}
       {...colorScheme.set('color', 'text')}
-      {...editorialFontRule}
       {...attributes}
       style={style}
     >
@@ -125,9 +158,10 @@ export const ListItem = ({ children, attributes = {}, style = {} }) => {
 }
 
 ListItem.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.any,
   attributes: PropTypes.object,
   style: PropTypes.object,
+  flyer: PropTypes.bool,
 }
 
 export const List = ({ children, data, attributes = {}, ...props }) =>

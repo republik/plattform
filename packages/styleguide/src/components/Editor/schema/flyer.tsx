@@ -2,7 +2,6 @@ import { SchemaConfig } from '../custom-types'
 
 import { FigureByline, FigureCaption } from '../../Figure'
 import { Figure, FigureImage } from '../../Figure/Slate'
-import { ListItem } from '../../List'
 import { List } from '../../List/Slate'
 import { PullQuoteSource } from '../../PullQuote'
 import {
@@ -17,7 +16,7 @@ import { PullQuote, PullQuoteText } from '../../Flyer/PullQuote'
 import { Quiz, QuizAnswer } from '../../Flyer/Quiz'
 import { DefaultContainer } from '../Render/Containers'
 import { Break } from '../../Typography/Break'
-import { Editorial, Sub, Sup, Interaction, Flyer } from '../../Typography'
+import { Sub, Sup, Flyer } from '../../Typography'
 
 const schema: SchemaConfig = {
   container: Flyer.Layout,
@@ -41,7 +40,7 @@ const schema: SchemaConfig = {
   figureImage: FigureImage,
   ul: List,
   ol: List,
-  listItem: ListItem,
+  listItem: Flyer.ListItem,
   pullQuote: PullQuote,
   pullQuoteSource: PullQuoteSource,
   pullQuoteText: PullQuoteText,
@@ -49,9 +48,9 @@ const schema: SchemaConfig = {
   headline: Flyer.H1,
   link: Flyer.A,
   paragraph: Flyer.P,
-  bold: Interaction.Emphasis,
-  italic: Interaction.Cursive,
-  strikethrough: Editorial.StrikeThrough,
+  bold: Flyer.Emphasis,
+  italic: Flyer.Cursive,
+  strikethrough: Flyer.StrikeThrough,
   sub: Sub,
   sup: Sup,
   quiz: Quiz,

@@ -4,6 +4,7 @@ import { useColorContext } from '../Colors/ColorContext'
 import { mUp } from '../../theme/mediaQueries'
 import { fontStyles } from '../../theme/fonts'
 import { link } from './Editorial'
+import { ListItem as InnerListItem } from '../List'
 
 export const Layout = ({ children, attributes }) => {
   const [colorScheme] = useColorContext()
@@ -161,6 +162,42 @@ export const Small = ({ children, attributes, ...props }) => {
     >
       {children}
     </p>
+  )
+}
+
+export const Emphasis = ({ children, attributes, ...props }) => (
+  <strong {...props} {...attributes} {...css(fontStyles.sansSerifMedium)}>
+    {children}
+  </strong>
+)
+
+export const Cursive = ({ children, attributes, ...props }) => (
+  <em {...props} {...attributes} {...css(fontStyles.sansSerifItalic)}>
+    {children}
+  </em>
+)
+
+export const StrikeThrough = ({ children, attributes, ...props }) => (
+  <span
+    {...attributes}
+    {...props}
+    {...css({
+      textDecoration: 'line-through',
+    })}
+  >
+    {children}
+  </span>
+)
+
+export const ListItem: React.FC<{
+  attributes: any
+  children: React.ReactNode
+}> = ({ children, attributes = {}, ...props }) => {
+  const { ref, ...attrs } = attributes
+  return (
+    <InnerListItem attributes={attrs} {...props} flyer={true}>
+      {children}
+    </InnerListItem>
   )
 }
 
