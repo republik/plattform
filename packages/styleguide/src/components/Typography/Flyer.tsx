@@ -3,7 +3,6 @@ import { css } from 'glamor'
 import { useColorContext } from '../Colors/ColorContext'
 import { mUp } from '../../theme/mediaQueries'
 import { fontStyles } from '../../theme/fonts'
-import { link } from './Editorial'
 import { ListItem as InnerListItem } from '../List'
 import { useRenderContext } from '../Editor/Render/Context'
 
