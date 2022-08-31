@@ -1,9 +1,6 @@
-const {
-  Roles: { userIsInRoles },
-} = require('@orbiting/backend-modules-auth')
-
 const filterMissingRole = ({ roles, visibleToRoles }) =>
-  !visibleToRoles?.length || userIsInRoles(roles, visibleToRoles)
+  !visibleToRoles?.length ||
+  !!visibleToRoles?.some((role) => roles?.includes(role))
 
 const filterInvisible = ({ invisible }) => !invisible
 
