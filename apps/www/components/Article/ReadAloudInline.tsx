@@ -52,15 +52,8 @@ const ReadAloudInline = ({ documentId, meta, t }: ReadAloudInlineProps) => {
   const { toggleAudioPlayer } = useAudioContext()
   const [colorScheme] = useColorContext()
 
-  const { audioQueue, audioQueueIsLoading, audioQueueHasError } =
-    useAudioQueue()
+  const { audioQueue, checkIfInQueue } = useAudioQueue()
   const { addAudioQueueItem, isAudioQueueAvailable } = useAudioQueue()
-
-  const alreadyInPlaylist =
-    !audioQueueIsLoading &&
-    !!audioQueueHasError &&
-    audioQueue &&
-    audioQueue.some(({ document: { id } }) => id === documentId)
 
   const handleAddToPlaylist = async () => {
     await addAudioQueueItem({
@@ -102,9 +95,11 @@ const ReadAloudInline = ({ documentId, meta, t }: ReadAloudInlineProps) => {
           <IconButton
             Icon={PlaylistAddIcon}
             onClick={handleAddToPlaylist}
-            disalbed={alreadyInPlaylist}
+            disalbed={checkIfInQueue(documentId)}
             title={
-              alreadyInPlaylist ? 'already in playlist' : 'add to playlist' // TODO: t9n
+              checkIfInQueue(documentId)
+                ? t('AudioPlayer/Queue/alreadyInQueue')
+                : t('AudioPlayer/Queue/Add')
             }
           />
         )}

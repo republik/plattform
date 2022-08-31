@@ -18,10 +18,11 @@ const styles = {
 }
 
 type QueueProps = {
+  t: any
   items: AudioQueueItem[]
 }
 
-const Queue = ({ items }: QueueProps) => {
+const Queue = ({ t, items }: QueueProps) => {
   const { removeAudioQueueItem } = useAudioQueue()
 
   const handleRemove = async (item: AudioQueueItem) => {
@@ -39,7 +40,7 @@ const Queue = ({ items }: QueueProps) => {
 
   return (
     <div>
-      <p {...styles.heading}>Als Nächstes</p>
+      <p {...styles.heading}>{t('AudioPlayer/Queue/NextUp')}</p>
       <ul {...styles.list}>
         {items.map((item, index) => (
           <li key={item.id}>

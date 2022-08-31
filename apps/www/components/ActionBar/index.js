@@ -354,8 +354,8 @@ const ActionBar = ({
         !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud',
     },
     {
-      title: 'Zur Wiedergabeliste hinzufügen', // TODO: t9n
-      label: 'Zur Wiedergabeliste hinzufügen', // TODO: t9n
+      title: t('AudioPlayer/Queue/Add'),
+      label: t('AudioPlayer/Queue/Add'),
       Icon: PlaylistAddIcon,
       onClick: async (e) => {
         e.preventDefault()

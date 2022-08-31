@@ -47,6 +47,12 @@ const useAudioQueue = () => {
     update: modifyApolloCacheWithUpdatedPlaylist,
   })
 
+  function checkIfInQueue(documentId: string): boolean {
+    return meWithAudioQueue?.me?.audioQueue.some(
+      (audioQueueItem) => audioQueueItem.document.id === documentId,
+    )
+  }
+
   return {
     audioQueue: meWithAudioQueue
       ? meWithAudioQueue?.me?.audioQueue ?? []
@@ -61,6 +67,7 @@ const useAudioQueue = () => {
       !inNativeApp || // in browser
       (inNativeApp && // in app with non legacy version
         compareVersion(inNativeAppVersion, NEW_AUDIO_API_VERSION) >= 0),
+    checkIfInQueue,
   }
 }
 

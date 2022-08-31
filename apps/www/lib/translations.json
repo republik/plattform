@@ -5101,6 +5101,22 @@
       "value": "Interne Publikation (Editoren-Vorschau)"
     },
     {
+      "key": "AudioPlayer/Queue/Add",
+      "value": "Zur Wiedergabeliste hinzufügen"
+    },
+    {
+      "key": "AudioPlayer/Queue/alreadyInQueue",
+      "value": "Bereits in der Wiedergabeliste vorhanden"
+    },
+    {
+      "key": "AudioPlayer/Queue/ActiveHeading",
+      "value": "Aktueller Beitrag"
+    },
+    {
+      "key": "AudioPlayer/Queue/NextUp",
+      "value": "Als Nächstes"
+    },
+    {
       "key": "Auth/CodeAuthorization/title",
       "value": "E-Mail-Adresse bestätigen"
     },

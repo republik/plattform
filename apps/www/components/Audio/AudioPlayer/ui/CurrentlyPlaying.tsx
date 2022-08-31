@@ -50,7 +50,7 @@ type CurrentlyPlayingProps = {
   activePlayerItem: AudioPlayerItem
 }
 
-const CurrentlyPlaying = ({ activePlayerItem }: CurrentlyPlayingProps) => {
+const CurrentlyPlaying = ({ t, activePlayerItem }: CurrentlyPlayingProps) => {
   const [colorScheme] = useColorContext()
 
   const {
@@ -61,7 +61,7 @@ const CurrentlyPlaying = ({ activePlayerItem }: CurrentlyPlayingProps) => {
 
   return (
     <div>
-      <p {...styles.heading}>Aktueller Beitrag</p>
+      <p {...styles.heading}>{t('AudioPlayer/Queue/ActiveHeading')}</p>
       <div {...styles.root}>
         <div {...styles.coverWrapper}>
           <img {...styles.cover} src={cover} />

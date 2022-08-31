@@ -84,7 +84,7 @@ const ExpandedAudioPlayer = ({
   return (
     <div {...styles.root}>
       <CurrentlyPlaying t={t} activePlayerItem={activePlayerItem} />
-      {queue && queue.length > 0 && <Queue items={queue} />}
+      {queue && queue.length > 0 && <Queue t={t} items={queue} />}
       <div>
         <Scrubber
           currentTime={currentTime}
