@@ -19,7 +19,7 @@ import {
   Range,
 } from 'slate'
 import { KeyboardEvent } from 'react'
-import { selectPlaceholder, cleanupEmptyString } from './text'
+import { selectPlaceholder, cleanupEmptyString, isEmpty } from './text'
 import { config as elConfig } from '../../config/elements'
 
 export const NAV_KEYS = [
@@ -40,11 +40,16 @@ const keepVoid = (element: CustomElement): boolean => {
   return !config?.props?.length || hasFilledProps(element)
 }
 
+const keepNonVoid = (element: CustomElement): boolean =>
+  element.children.some(
+    (child) => SlateElement.isElement(child) || !isEmpty(child.text),
+  )
+
 const removeEmptyNodes = (n: CustomDescendant): boolean => {
   if (SlateElement.isElement(n)) {
-    return elConfig[n.type].attrs?.isVoid ? keepVoid(n) : !!n.children?.length
+    return elConfig[n.type].attrs?.isVoid ? keepVoid(n) : keepNonVoid(n)
   } else {
-    return !n.end && !!n.text
+    return !n.end
   }
 }
 

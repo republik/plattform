@@ -158,17 +158,17 @@ describe('Slate Editor', () => {
                   url: 'https://images.com/bla.png',
                 },
               },
-              children: [],
+              children: [{ text: '' }],
             },
           ],
         },
         {
           type: 'break',
-          children: [],
+          children: [{ text: '' }],
         },
         {
           type: 'break',
-          children: [],
+          children: [{ text: '' }],
         },
         {
           type: 'figure',
