@@ -1,4 +1,11 @@
-import { fontStyles, useColorContext } from '@project-r/styleguide'
+import {
+  fontStyles,
+  useColorContext,
+  CalloutMenu,
+  MoreIcon,
+  RemoveIcon,
+  IconButton,
+} from '@project-r/styleguide'
 import { css } from 'glamor'
 import { dateFormatter, FALLBACK_IMG_SRC, formatMinutes } from '../shared'
 import AudioPlayerTitle from './AudioPlayerTitle'
@@ -31,8 +38,15 @@ const styles = {
     ...fontStyles.sansSerifRegular12,
   }),
   actions: css({
+    alignSelf: 'stretch',
+  }),
+  menuWrapper: css({
     display: 'flex',
-    transform: 'rotate(90deg)',
+    flexDirection: 'column',
+    alignItems: 'start',
+    '> *:not(:last-child)': {
+      marginBottom: '15px',
+    },
   }),
 }
 
@@ -70,8 +84,34 @@ const QueueItem = ({ item, onRemove }: QueueItemProps) => {
         </div>
       </div>
       <div {...styles.actions}>
-        <button onClick={() => onRemove(item)}>x</button>
-        <span>{item.sequence}</span>
+        <CalloutMenu
+          contentPaddingMobile={'30px'}
+          Element={MoreIcon}
+          align='right'
+          elementProps={{
+            ...colorScheme.set('fill', 'textSoft'),
+            size: 20,
+          }}
+        >
+          <div {...styles.menuWrapper}>
+            <span style={{ fontSize: '0.5rem' }}>Debug: {item.sequence}</span>
+            {[
+              {
+                Icon: RemoveIcon,
+                label: 'Entfernen',
+                action: onRemove,
+              },
+            ].map(({ Icon, label, action }) => (
+              <IconButton
+                key={label}
+                label={label}
+                labelShort={label}
+                Icon={Icon}
+                onClick={() => action(item)}
+              />
+            ))}
+          </div>
+        </CalloutMenu>
       </div>
     </div>
   )
