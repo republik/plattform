@@ -817,6 +817,14 @@
       "value": "Bestätigen Sie Ihre Anmeldung zum Project-R-Newsletter."
     },
     {
+      "key": "api/newsletters/request/CLIMATE/subject",
+      "value": "Bestätigen Sie Ihre Anmeldung zum Klimalabor-Newsletter."
+    },
+    {
+      "key": "api/newsletters/request/READALOUD/subject",
+      "value": "Magazin zum Hören: Bestätigen Sie Ihre Anmeldung."
+    },
+    {
       "key": "api/newsletters/request/notSupported",
       "value": "Diese Art der Anmeldung zum gewählten Newsletter wird noch nicht unterstützt."
     },

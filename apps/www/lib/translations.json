@@ -3770,7 +3770,7 @@
     },
     {
       "key": "notifications/email-confirmed/newsletter/title",
-      "value": "E-Mail-Adresse bestätigt"
+      "value": "Anmeldung bestätigt"
     },
     {
       "key": "notifications/email-confirmed/text",
@@ -3839,6 +3839,14 @@
     {
       "key": "notifications/newsletter/title",
       "value": "Newsletter-Anmeldung"
+    },
+    {
+      "key": "notifications/newsletter/name:READALOUD/title",
+      "value": "Die Republik zum Hören"
+    },
+    {
+      "key": "macNewsletterSubscription/name:READALOUD/text",
+      "value": "Dürfen wir Sie benachrichtigen, sobald die Republik zum Hören verfügbar ist?"
     },
     {
       "key": "macNewsletterSubscription/button",
