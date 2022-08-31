@@ -19,8 +19,5 @@ export const interactionFontRule = css({
 })
 
 export const flyerFontRule = css({
-  ...fontStyles.sansSerifRegular,
-  '& em, & i': fontStyles.sansSerifItalic,
-  '& strong, & b': fontStyles.sansSerifMedium,
-  '& strong em, & em strong, & b i, & i b': fontStyles.sansSerifMedium,
+  ...fontStyles.sansSerifMedium,
 })

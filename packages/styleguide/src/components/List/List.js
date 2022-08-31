@@ -5,7 +5,6 @@ import {
   serifRegular17,
   serifRegular19,
 } from '../Typography/styles'
-import { fontStyles } from '../Typography'
 import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
@@ -57,7 +56,6 @@ const styles = {
     },
   }),
   listItemFlyer: css({
-    ...fontStyles.sansSerifMedium,
     paddingLeft: `${WIDTH}px`,
     position: 'relative',
     fontSize: pxToRem('17px'),
