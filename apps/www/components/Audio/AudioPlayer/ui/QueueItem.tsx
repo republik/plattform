@@ -1,12 +1,12 @@
 import {
   fontStyles,
   useColorContext,
-  plainButtonRule,
   CalloutMenu,
   MoreIcon,
   RemoveIcon,
   IconButton,
 } from '@project-r/styleguide'
+import { Reorder, useMotionValue } from 'framer-motion'
 import { css } from 'glamor'
 import { dateFormatter, FALLBACK_IMG_SRC, formatMinutes } from '../shared'
 import AudioPlayerTitle from './AudioPlayerTitle'
@@ -72,6 +72,7 @@ type QueueItemProps = {
 }
 
 const QueueItem = ({ item, onClick, onRemove }: QueueItemProps) => {
+  const y = useMotionValue(0)
   const [colorScheme] = useColorContext()
 
   const { document } = item
@@ -82,9 +83,10 @@ const QueueItem = ({ item, onClick, onRemove }: QueueItemProps) => {
   const publishDate = new Date(Date.parse(document.meta.publishDate))
 
   return (
-    <div {...styles.root}>
+    <Reorder.Item key={item.id} value={item} {...styles.root} style={{ y }}>
       <button
         {...styles.buttonFix}
+        {...colorScheme.set('backgroundColor', 'default')}
         style={{ width: '100%' }}
         onClick={() => onClick(item)}
       >
@@ -141,7 +143,7 @@ const QueueItem = ({ item, onClick, onRemove }: QueueItemProps) => {
           </div>
         </CalloutMenu>
       </div>
-    </div>
+    </Reorder.Item>
   )
 }
 

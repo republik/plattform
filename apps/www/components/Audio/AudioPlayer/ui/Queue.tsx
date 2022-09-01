@@ -1,9 +1,11 @@
-import { useRef, useState } from 'react'
 import { css } from 'glamor'
+import { Reorder } from 'framer-motion'
 import QueueItem from './QueueItem'
-import { fontStyles, useColorContext } from '@project-r/styleguide'
+import { fontStyles } from '@project-r/styleguide'
 import useAudioQueue from '../../hooks/useAudioQueue'
 import { AudioQueueItem } from '../../graphql/AudioQueueHooks'
+import { useEffect, useState } from 'react'
+import throttle from 'lodash/throttle'
 
 const styles = {
   heading: css({
@@ -20,15 +22,25 @@ const styles = {
 
 type QueueProps = {
   t: any
+  activeItem: AudioQueueItem
   items: AudioQueueItem[]
 }
 
-const Queue = ({ t, items }: QueueProps) => {
-  const [colorScheme] = useColorContext()
-  const { moveAudioQueueItem, removeAudioQueueItem } = useAudioQueue()
-  const draggedItem = useRef<AudioQueueItem>(null)
-  const dragOverItem = useRef<AudioQueueItem>(null)
-  const [dragging, setDragging] = useState<AudioQueueItem>(null)
+const Queue = ({ t, activeItem, items: inputItems }: QueueProps) => {
+  /**
+   * Work with a copy of the inputItems array to allow the mutation inside the
+   * handleReorder function to be throttled while still having a smooth reordering in the ui.
+   */
+  const [items, setItems] = useState<AudioQueueItem[]>(inputItems)
+  const { moveAudioQueueItem, removeAudioQueueItem, reorderAudioQueue } =
+    useAudioQueue()
+
+  /**
+   * Synchronize the items passed via props with the internal items state.
+   */
+  useEffect(() => {
+    setItems(inputItems)
+  }, [inputItems])
 
   /**
    * Move the clicked queue-item to the front of the queue
@@ -60,60 +72,50 @@ const Queue = ({ t, items }: QueueProps) => {
     }
   }
 
-  const handleDragStart = (item: AudioQueueItem) => {
-    console.log('drag start', item)
-    draggedItem.current = item
-    setDragging(item)
-  }
+  const handleReorder = throttle(async (items: AudioQueueItem[]) => {
+    try {
+      const reorderedQueue = [activeItem, ...items].filter(Boolean)
 
-  const handleDragEnter = (item: AudioQueueItem) => {
-    console.log('drag enter', item)
-    dragOverItem.current = item
-  }
-
-  const handleDrop = (e) => {
-    console.log('drop', e)
-    console.log('dragged', draggedItem.current)
-    console.log('dragOver', dragOverItem.current)
-    console.log(
-      `Moving: ${draggedItem.current.document.meta.title} -> ${dragOverItem.current.document.meta.title}`,
-    )
-    moveAudioQueueItem({
-      variables: {
-        id: draggedItem.current.id,
-        sequence: dragOverItem.current.sequence,
-      },
-    }).then(() => {
-      setDragging(null)
-      draggedItem.current = null
-      dragOverItem.current = null
-    })
-  }
+      await reorderAudioQueue({
+        variables: {
+          ids: reorderedQueue.map(({ id }) => id),
+        },
+        optimisticResponse: {
+          audioQueueItems: reorderedQueue.map((item, index) => ({
+            ...item,
+            sequence: index + 1,
+            __typename: 'AudioQueueItem',
+          })),
+        },
+      })
+    } catch (e) {
+      console.error(e)
+      alert('Could not remove item from playlist')
+    }
+  }, 1000)
 
   return (
     <div>
       <p {...styles.heading}>{t('AudioPlayer/Queue/NextUp')}</p>
-      <ul {...styles.list}>
+      <Reorder.Group
+        as='ol'
+        {...styles.list}
+        axis='y'
+        values={items}
+        onReorder={(reorderedItems) => {
+          setItems(reorderedItems)
+          handleReorder(reorderedItems)
+        }}
+      >
         {items.map((item) => (
-          <li
+          <QueueItem
             key={item.id}
-            onDragStart={() => handleDragStart(item)}
-            onDragEnter={() => handleDragEnter(item)}
-            onDragEnd={handleDrop}
-            draggable
-            style={{
-              opacity: dragging?.id === item.id ? 0.5 : 1,
-            }}
-            {...colorScheme.set('backgroundColor', 'default')}
-          >
-            <QueueItem
-              item={item}
-              onClick={handleClick}
-              onRemove={handleRemove}
-            />
-          </li>
+            item={item}
+            onClick={handleClick}
+            onRemove={handleRemove}
+          />
         ))}
-      </ul>
+      </Reorder.Group>
     </div>
   )
 }
