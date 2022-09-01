@@ -1,5 +1,5 @@
 import { css } from 'glamor'
-import { Reorder } from 'framer-motion'
+import { MotionConfig, Reorder } from 'framer-motion'
 import QueueItem from './QueueItem'
 import { fontStyles } from '@project-r/styleguide'
 import useAudioQueue from '../../hooks/useAudioQueue'
@@ -97,25 +97,27 @@ const Queue = ({ t, activeItem, items: inputItems }: QueueProps) => {
   return (
     <div>
       <p {...styles.heading}>{t('AudioPlayer/Queue/NextUp')}</p>
-      <Reorder.Group
-        as='ol'
-        {...styles.list}
-        axis='y'
-        values={items}
-        onReorder={(reorderedItems) => {
-          setItems(reorderedItems)
-          handleReorder(reorderedItems)
-        }}
-      >
-        {items.map((item) => (
-          <QueueItem
-            key={item.id}
-            item={item}
-            onClick={handleClick}
-            onRemove={handleRemove}
-          />
-        ))}
-      </Reorder.Group>
+      <MotionConfig transition={{ duration: 0.3 }}>
+        <Reorder.Group
+          as='ol'
+          {...styles.list}
+          axis='y'
+          values={items}
+          onReorder={(reorderedItems) => {
+            setItems(reorderedItems)
+            handleReorder(reorderedItems)
+          }}
+        >
+          {items.map((item) => (
+            <QueueItem
+              key={item.id}
+              item={item}
+              onClick={handleClick}
+              onRemove={handleRemove}
+            />
+          ))}
+        </Reorder.Group>
+      </MotionConfig>
     </div>
   )
 }
