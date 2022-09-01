@@ -5,6 +5,7 @@ import { dateFormatter, FALLBACK_IMG_SRC, formatMinutes } from '../shared'
 import AudioPlayerTitle from './AudioPlayerTitle'
 import { AudioPlayerItem } from '../../types/AudioPlayerItem'
 import { AudioQueueItem } from '../../graphql/AudioQueueHooks'
+import { imageResizeUrl } from 'mdast-react-render/lib/utils'
 
 const styles = {
   root: css({
@@ -60,7 +61,7 @@ const CurrentlyPlaying = ({ t, item }: CurrentlyPlayingProps) => {
     },
   } = item
   const { durationMs } = audioSource
-  const cover = image || FALLBACK_IMG_SRC
+  const cover = imageResizeUrl(image, '250x') || FALLBACK_IMG_SRC
 
   return (
     <div>
@@ -77,7 +78,7 @@ const CurrentlyPlaying = ({ t, item }: CurrentlyPlayingProps) => {
           >
             <span {...styles.dateText}>
               {publishDate && dateFormatter(new Date(Date.parse(publishDate)))}{' '}
-              - {formatMinutes(durationMs / 1000)}min - {item.sequence}
+              - {formatMinutes(durationMs / 1000)}min
             </span>
           </div>
         </div>

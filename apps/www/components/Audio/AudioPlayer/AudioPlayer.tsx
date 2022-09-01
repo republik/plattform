@@ -98,9 +98,6 @@ const AudioPlayer = ({
         />
       )}
       {playbackElement}
-      <span style={{ fontSize: '8px', paddingBottom: '1rem' }}>
-        {activeItem.document.meta.title}
-      </span>
     </BottomPanel>
   )
 }

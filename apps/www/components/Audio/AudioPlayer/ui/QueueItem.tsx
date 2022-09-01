@@ -11,6 +11,7 @@ import { css } from 'glamor'
 import { dateFormatter, FALLBACK_IMG_SRC, formatMinutes } from '../shared'
 import AudioPlayerTitle from './AudioPlayerTitle'
 import { AudioQueueItem } from '../../graphql/AudioQueueHooks'
+import { imageResizeUrl } from 'mdast-react-render/lib/utils'
 
 const styles = {
   root: css({
@@ -78,7 +79,7 @@ const QueueItem = ({ item, onClick, onRemove }: QueueItemProps) => {
   const {
     meta: { audioSource },
   } = document
-  const cover = document.meta.image || FALLBACK_IMG_SRC
+  const cover = imageResizeUrl(document.meta.image, '150x') || FALLBACK_IMG_SRC
   const publishDate = new Date(Date.parse(document.meta.publishDate))
 
   return (
@@ -117,7 +118,6 @@ const QueueItem = ({ item, onClick, onRemove }: QueueItemProps) => {
           }}
         >
           <div {...styles.menuWrapper}>
-            <span style={{ fontSize: '0.5rem' }}>Debug: {item.sequence}</span>
             {[
               {
                 Icon: RemoveIcon,
