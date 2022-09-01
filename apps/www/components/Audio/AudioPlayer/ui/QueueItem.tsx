@@ -86,6 +86,7 @@ const QueueItem = ({ item, onClick, onRemove }: QueueItemProps) => {
     <Reorder.Item key={item.id} value={item} {...styles.root} style={{ y }}>
       <button
         {...styles.buttonFix}
+        {...colorScheme.set('backgroundColor', 'default')}
         style={{ width: '100%' }}
         onClick={() => onClick(item)}
       >
