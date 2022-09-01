@@ -52,8 +52,8 @@ const ReadAloudInline = ({ documentId, meta, t }: ReadAloudInlineProps) => {
   const { toggleAudioPlayer } = useAudioContext()
   const [colorScheme] = useColorContext()
 
-  const { audioQueue, checkIfInQueue } = useAudioQueue()
-  const { addAudioQueueItem, isAudioQueueAvailable } = useAudioQueue()
+  const { checkIfInQueue, addAudioQueueItem, isAudioQueueAvailable } =
+    useAudioQueue()
 
   const handleAddToPlaylist = async () => {
     await addAudioQueueItem({
