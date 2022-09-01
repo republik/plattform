@@ -35,6 +35,6 @@ export const renderTime = (time) => {
   return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
 }
 
-export const dateFormatter = timeFormat('%d.%m.%y')
+export const dateFormatter = timeFormat('%d.%m.%Y')
 
 export const FALLBACK_IMG_SRC = '/static/android-chrome-512x512.png'

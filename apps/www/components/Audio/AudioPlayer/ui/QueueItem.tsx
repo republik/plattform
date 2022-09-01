@@ -24,7 +24,6 @@ const styles = {
     },
   }),
   buttonFix: css({
-    background: 'none',
     color: 'inherit',
     border: 'none',
     padding: 0,
