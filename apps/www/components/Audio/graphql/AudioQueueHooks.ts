@@ -146,7 +146,7 @@ type ClearAudioQueueMutationData = {
   audioQueueItems: AudioQueueItem[]
 }
 
-const ClearPlaylistMutation = gql`
+const CLEAR_AUDIO_QUEUE = gql`
   mutation ClearAudioQueue {
     audioQueueItems: clearAudioQueue {
       ...AudioQueueItemFragment
@@ -156,4 +156,26 @@ const ClearPlaylistMutation = gql`
 `
 
 export const useClearAudioQueueMutation =
-  makeMutationHook<ClearAudioQueueMutationData>(ClearPlaylistMutation)
+  makeMutationHook<ClearAudioQueueMutationData>(CLEAR_AUDIO_QUEUE)
+
+const REORDER_AUDIO_QUEUE_MUTATION = gql`
+  mutation ReorderAudioQueue($ids: [ID!]!) {
+    audioQueueItems: reorderAudioQueue(ids: $ids) {
+      ...AudioQueueItemFragment
+    }
+  }
+  ${AudioQueueItemFragment}
+`
+
+type ReorderAudioQueueMutationData = {
+  audioQueueItems: AudioQueueItem[]
+}
+
+type ReorderAudioQueueMutationVariables = {
+  ids: string[]
+}
+
+export const useReorderAudioQueueMutation = makeMutationHook<
+  ReorderAudioQueueMutationData,
+  ReorderAudioQueueMutationVariables
+>(REORDER_AUDIO_QUEUE_MUTATION)

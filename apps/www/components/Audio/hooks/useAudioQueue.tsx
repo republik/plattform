@@ -3,11 +3,13 @@ import compareVersion from '../../../lib/react-native/CompareVersion'
 import { NEW_AUDIO_API_VERSION } from '../constants'
 import {
   AUDIO_QUEUE_QUERY,
+  AudioQueueItem,
   useAddAudioQueueItemMutation,
   useAudioQueueQuery,
   useClearAudioQueueMutation,
   useMoveAudioQueueItemMutation,
   useRemoveAudioQueueItemMutation,
+  useReorderAudioQueueMutation,
 } from '../graphql/AudioQueueHooks'
 
 /**
@@ -46,6 +48,9 @@ const useAudioQueue = () => {
   const [clearAudioQueue] = useClearAudioQueueMutation({
     update: modifyApolloCacheWithUpdatedPlaylist,
   })
+  const [reorderAudioQueue] = useReorderAudioQueueMutation({
+    update: modifyApolloCacheWithUpdatedPlaylist,
+  })
 
   function checkIfInQueue(documentId: string): boolean {
     return meWithAudioQueue?.me?.audioQueue.some(
@@ -63,6 +68,7 @@ const useAudioQueue = () => {
     removeAudioQueueItem,
     moveAudioQueueItem,
     clearAudioQueue,
+    reorderAudioQueue,
     isAudioQueueAvailable:
       !inNativeApp || // in browser
       (inNativeApp && // in app with non legacy version
