@@ -88,7 +88,7 @@ const QueueItem = ({ item, onClick, onRemove }: QueueItemProps) => {
         {...styles.buttonFix}
         {...colorScheme.set('backgroundColor', 'default')}
         style={{ width: '100%' }}
-        onClick={() => onClick(item)}
+        onDoubleClick={() => onClick(item)}
       >
         <div {...styles.itemWrapper}>
           <div>
