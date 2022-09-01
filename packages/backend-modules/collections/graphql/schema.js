@@ -78,5 +78,12 @@ type mutations {
   Clear all items in \`User.audioQueue\`.
   """ 
   clearAudioQueue: [AudioQueueItem!]!
+
+  """
+  Reorder existing items at once.
+  A non-existant item ID will be ignored.
+  If an item exists in queue but its ID is not submitted, it will be deleted.
+  """
+  reorderAudioQueue(ids: [ID!]!): [AudioQueueItem!]!
 }
 `
