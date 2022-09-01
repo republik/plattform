@@ -373,7 +373,17 @@ const ArticlePage = ({
         },
         titleMargin: false,
         titleBreakout,
-        onAudioCoverClick: toggleAudioPlayer,
+        onAudioCoverClick: () =>
+          toggleAudioPlayer({
+            id: documentId,
+            meta: {
+              title: meta.title,
+              path: meta.path,
+              publishDate: meta.publishDate,
+              image: meta.image,
+              audioSource: meta.audioSource,
+            },
+          }),
         getVideoPlayerProps:
           inNativeApp && !inNativeIOSApp
             ? (props) => ({
