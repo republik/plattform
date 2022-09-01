@@ -35,8 +35,9 @@ const styles = {
   }),
   cover: css({
     aspectRatio: '1 / 1',
-    width: '3rem',
     objectFit: 'cover',
+    width: '3rem',
+    height: 'auto',
   }),
   itemWrapper: css({
     flexGrow: 1,

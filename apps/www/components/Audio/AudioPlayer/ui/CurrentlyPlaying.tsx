@@ -27,8 +27,7 @@ const styles = {
   cover: css({
     aspectRatio: '1 / 1',
     objectFit: 'cover',
-    width: '100%',
-    maxWidth: '5rem',
+    width: '5rem',
     height: 'auto',
   }),
   detailWrapper: css({
