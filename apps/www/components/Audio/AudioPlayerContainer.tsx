@@ -88,6 +88,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       setDuration(audioElem.duration)
       setPlaybackRate(audioElem.playbackRate)
       setIsPlaying(!audioElem.paused)
+      setIsLoading(audioElem.readyState < 1)
       setBuffered(audioElem.buffered)
       return
     }
@@ -239,19 +240,20 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   // Update the local state if a new audio-state is provided
   useEffect(() => {
     if (activePlayerItem === trackedPlayerItem?.current) return
-    console.log(
-      'AudioPlayerContainer: useEffect: activePlayerItem',
-      activePlayerItem,
-    )
     setHasAutoPlayed(false) // reset autoplay
     setIsLoading(true)
     if (inNativeApp) {
       // TODO: check if required logic here is already handled by sync
       // throw new Error('not implemented useEffect')
-    } else if (mediaRef.current) {
-      mediaRef.current.load() // TODO: handle possible error
+    } else if (
+      mediaRef.current &&
+      // If no data could be retrieved so far, manually trigger load
+      mediaRef.current.readyState === 0
+    ) {
+      mediaRef.current.load()
     }
     trackedPlayerItem.current = activePlayerItem
+    mediaRef.current.currentTime = 0 // TODO: use saved media-progress
     onPlay(true)
   }, [
     activePlayerItem,

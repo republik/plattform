@@ -8,6 +8,7 @@ import {
   PlayIcon,
   ReplayIcon,
   ExpandMoreIcon,
+  mediaQueries,
 } from '@project-r/styleguide'
 import { AudioPlayerProps } from './shared'
 import Scrubber from './ui/Scrubber'
@@ -23,6 +24,10 @@ const styles = {
     padding: '1.5rem',
     '& > *': {
       userSelect: 'none',
+    },
+    maxHeight: '80vh',
+    [mediaQueries.mUp]: {
+      maxHeight: '50vh',
     },
   }),
   spinnerWrapper: css({

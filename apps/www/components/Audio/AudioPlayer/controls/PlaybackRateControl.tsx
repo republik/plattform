@@ -19,7 +19,7 @@ type PlaybackRateControl = {
 const PlaybackRateControl = ({
   playbackRate,
   setPlaybackRate,
-  availablePlaybackRates = [0.5, 0.8, 1, 1.25, 1.5, 2, 2.5, 3, 3.5, 4],
+  availablePlaybackRates = [0.5, 0.8, 1, 1.2, 1.5, 2, 2.5, 3, 3.5, 4],
 }: PlaybackRateControl) => {
   const currentIndex = availablePlaybackRates.indexOf(playbackRate)
 
@@ -33,7 +33,9 @@ const PlaybackRateControl = ({
         disabled={currentIndex === 0}
         style={{ marginRight: 0 }}
       />
-      <span>{playbackRate}x</span>
+      <span style={{ minWidth: '3ch', textAlign: 'center' }}>
+        {playbackRate}x
+      </span>
       <IconButton
         Icon={AddIcon}
         onClick={() =>
