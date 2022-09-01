@@ -281,7 +281,10 @@ const EditLoader = ({
       message: message,
       document: {
         type: 'slate',
-        content,
+        content: {
+          ...content,
+          children: cleanupTree(content.children, true),
+        },
       },
     })
       .then(({ data }) => {
