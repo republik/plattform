@@ -27,8 +27,11 @@ const styles = {
   }),
   spinnerWrapper: css({
     position: 'relative',
-    width: 42,
-    height: 42,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 64,
+    height: 64,
   }),
   actionWrapper: css({
     display: 'flex',
