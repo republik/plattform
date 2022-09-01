@@ -1,6 +1,7 @@
 import {
   fontStyles,
   useColorContext,
+  plainButtonRule,
   CalloutMenu,
   MoreIcon,
   RemoveIcon,
@@ -21,6 +22,16 @@ const styles = {
     '&:active': {
       cursor: 'grabbing',
     },
+  }),
+  buttonFix: css({
+    background: 'none',
+    color: 'inherit',
+    border: 'none',
+    padding: 0,
+    font: 'inherit',
+    cursor: 'pointer',
+    outline: 'inherit',
+    textAlign: 'start',
   }),
   cover: css({
     aspectRatio: '1 / 1',
@@ -56,10 +67,11 @@ const styles = {
 
 type QueueItemProps = {
   item: AudioQueueItem
-  onRemove: (item: AudioQueueItem) => void
+  onClick: (item: AudioQueueItem) => Promise<void>
+  onRemove: (item: AudioQueueItem) => Promise<void>
 }
 
-const QueueItem = ({ item, onRemove }: QueueItemProps) => {
+const QueueItem = ({ item, onClick, onRemove }: QueueItemProps) => {
   const [colorScheme] = useColorContext()
 
   const { document } = item
@@ -71,22 +83,28 @@ const QueueItem = ({ item, onRemove }: QueueItemProps) => {
 
   return (
     <div {...styles.root}>
-      <div {...styles.itemWrapper}>
-        <div>
-          <img {...styles.cover} src={cover} />
+      <button
+        {...styles.buttonFix}
+        style={{ width: '100%' }}
+        onClick={() => onClick(item)}
+      >
+        <div {...styles.itemWrapper}>
+          <div>
+            <img {...styles.cover} src={cover} />
+          </div>
+          <div {...styles.dataWrapper}>
+            <AudioPlayerTitle title={document.meta.title} />
+            <span
+              {...styles.metaLine}
+              {...colorScheme.set('color', 'textSoft')}
+            >
+              {dateFormatter(publishDate)}
+              {' - '}
+              {formatMinutes(audioSource.durationMs / 1000)}min
+            </span>
+          </div>
         </div>
-        <div {...styles.dataWrapper}>
-          <AudioPlayerTitle
-            title={document.meta.title}
-            path={document.meta.path}
-          />
-          <span {...styles.metaLine} {...colorScheme.set('color', 'textSoft')}>
-            {dateFormatter(publishDate)}
-            {' - '}
-            {formatMinutes(audioSource.durationMs / 1000)}min
-          </span>
-        </div>
-      </div>
+      </button>
       <div {...styles.actions}>
         <CalloutMenu
           contentPaddingMobile={'30px'}
@@ -102,16 +120,22 @@ const QueueItem = ({ item, onRemove }: QueueItemProps) => {
             {[
               {
                 Icon: RemoveIcon,
-                label: 'Entfernen',
-                action: onRemove,
+                label: 'Beitrag öffnen',
+                href: document.meta.path,
               },
-            ].map(({ Icon, label, action }) => (
+              {
+                Icon: RemoveIcon,
+                label: 'Entfernen',
+                onClick: () => onRemove(item),
+              },
+            ].map(({ Icon, label, onClick, href }) => (
               <IconButton
                 key={label}
                 label={label}
                 labelShort={label}
                 Icon={Icon}
-                onClick={() => action(item)}
+                href={href}
+                onClick={onClick}
               />
             ))}
           </div>

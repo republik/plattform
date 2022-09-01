@@ -30,6 +30,23 @@ const Queue = ({ t, items }: QueueProps) => {
   const dragOverItem = useRef<AudioQueueItem>(null)
   const [dragging, setDragging] = useState<AudioQueueItem>(null)
 
+  /**
+   * Move the clicked queue-item to the front of the queue
+   * @param item
+   */
+  const handleClick = async (item: AudioQueueItem) => {
+    await moveAudioQueueItem({
+      variables: {
+        id: item.id,
+        sequence: 1,
+      },
+    })
+  }
+
+  /**
+   * Remove a given item from the queue
+   * @param item
+   */
   const handleRemove = async (item: AudioQueueItem) => {
     try {
       await removeAudioQueueItem({
@@ -89,7 +106,11 @@ const Queue = ({ t, items }: QueueProps) => {
             }}
             {...colorScheme.set('backgroundColor', 'default')}
           >
-            <QueueItem item={item} onRemove={handleRemove} />
+            <QueueItem
+              item={item}
+              onClick={handleClick}
+              onRemove={handleRemove}
+            />
           </li>
         ))}
       </ul>

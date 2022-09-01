@@ -18,7 +18,12 @@ const styles = {
   }),
 }
 
-const AudioPlayerTitle = ({ title, path }) => {
+type AudioPlayerTitleProps = {
+  title: string
+  path?: string
+}
+
+const AudioPlayerTitle = ({ title, path }: AudioPlayerTitleProps) => {
   const [colorScheme] = useColorContext()
 
   if (path) {
