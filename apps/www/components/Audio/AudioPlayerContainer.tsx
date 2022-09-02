@@ -56,8 +56,12 @@ let initialized = false
 
 const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const { inNativeApp } = useInNativeApp()
-  const { audioQueue, audioQueueIsLoading, removeAudioQueueItem } =
-    useAudioQueue()
+  const {
+    audioQueue,
+    audioQueueIsLoading,
+    addAudioQueueItem,
+    removeAudioQueueItem,
+  } = useAudioQueue()
 
   const mediaRef = useRef<HTMLAudioElement>(null)
   const trackedPlayerItem = useRef<AudioQueueItem>(null)
@@ -134,10 +138,16 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     }
   }
 
-  const onPlay = () => {
+  const onPlay = async () => {
     if (inNativeApp) {
+      // handle edge case when the track-player queue is empty
+      // the previously played item must therefor be readded to the queue
+      if (audioQueue.length === 0 && activePlayerItem) {
+        // TODO: find a way to readd the last played item to the queue
+        // so that the track-player can start playing it again
+      }
       console.trace('onPlay: inNativeApp', JSON.stringify(activePlayerItem))
-      notifyApp(AudioEvent.RESUME)
+      notifyApp(AudioEvent.PLAY)
     } else if (mediaRef.current) {
       console.log('calling play on web-mediaRef')
       mediaRef.current.playbackRate = playbackRate
@@ -239,11 +249,6 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     })
     const nextItem = audioQueue[0]
     setActivePlayerItem(nextItem)
-    if (inNativeApp) {
-      notifyApp(AudioEvent.PREPARE, {
-        audioSource: nextItem.document.meta.audioSource,
-      })
-    }
     setIsVisible(true)
     onStart()
   }
