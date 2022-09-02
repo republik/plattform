@@ -21,11 +21,10 @@ const styles = {
   input: css({
     marginRight: 10,
     marginBottom: 0,
-    width: '58%',
+    width: '60%',
     flexGrow: 1,
   }),
   button: css({
-    // width: 160,
     textAlign: 'center',
     marginBottom: 15,
   }),
