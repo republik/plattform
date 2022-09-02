@@ -48,6 +48,8 @@ const LandingPage = () => {
           <br />
           <br />
           <Editorial.Lead>{t('marketing/readAloud/lead2')}</Editorial.Lead>
+          <br />
+          <br />
           <NewsletterSignup
             free
             name='READALOUD'
