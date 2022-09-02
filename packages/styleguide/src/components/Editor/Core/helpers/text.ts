@@ -249,3 +249,28 @@ export const flagChars: (
     })
     return ranges
   }
+
+export const insertSpecialChars = (editor: CustomEditor, chars: string) => {
+  if (chars.length === 1) return Transforms.insertText(editor, chars)
+  const { selection } = editor
+  const isCollapsed = selection && Range.isCollapsed(selection)
+  if (isCollapsed) {
+    Transforms.insertText(editor, chars)
+    return Transforms.move(editor, {
+      distance: 1,
+      unit: 'character',
+      reverse: true,
+    })
+  }
+  const start = Range.start(selection)
+  const startChar = chars[0]
+  Transforms.insertText(editor, startChar, { at: start })
+  const end = Range.end(selection)
+  const endLocation = { path: end.path, offset: end.offset + 1 }
+  const endChar = chars[1]
+  Transforms.insertText(editor, endChar, { at: endLocation })
+  Transforms.select(editor, {
+    anchor: { path: start.path, offset: start.offset + 1 },
+    focus: endLocation,
+  })
+}

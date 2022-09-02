@@ -1,5 +1,5 @@
 import { createEditor, Transforms } from 'slate'
-import { selectNearestWord } from '../Core/helpers/text'
+import { insertSpecialChars, selectNearestWord } from '../Core/helpers/text'
 import schema from '../schema/article'
 import mockEditor from './mockEditor'
 
@@ -114,6 +114,74 @@ describe('Slate Editor', () => {
         focus: { path: [0, 0], offset: 9 },
       })
       expect(changedSelection).toBe(true)
+    })
+  })
+
+  describe('insertSpecialChars()', () => {
+    const structure = [
+      {
+        type: 'paragraph',
+      },
+    ]
+
+    it('should insert single character into text', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          children: [{ text: 'Lorem ipsum dolor sit amet.' }],
+        },
+      ]
+      const editor = await setup(structure)
+
+      await Transforms.select(editor, { path: [0, 0], offset: 9 })
+      insertSpecialChars(editor, '%')
+      await new Promise(process.nextTick)
+      expect(editor.selection).toEqual({
+        anchor: { path: [0, 0], offset: 10 },
+        focus: { path: [0, 0], offset: 10 },
+      })
+      expect(value[0].children[0].text).toEqual('Lorem ips%um dolor sit amet.')
+    })
+
+    it('should insert two characters (e.g. quotes) into text and place the cursor in the middle', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          children: [{ text: 'Lorem ipsum:.' }],
+        },
+      ]
+      const editor = await setup(structure)
+
+      await Transforms.select(editor, { path: [0, 0], offset: 12 })
+      insertSpecialChars(editor, '<>')
+      await new Promise(process.nextTick)
+      expect(editor.selection).toEqual({
+        anchor: { path: [0, 0], offset: 13 },
+        focus: { path: [0, 0], offset: 13 },
+      })
+      expect(value[0].children[0].text).toEqual('Lorem ipsum:<>.')
+    })
+
+    it('should wrap two characters (e.g. quotes) around selected text', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          children: [{ text: 'Lorem ipsum.' }],
+        },
+      ]
+      const editor = await setup(structure)
+
+      await Transforms.select(editor, {
+        anchor: { path: [0, 0], offset: 6 },
+        focus: { path: [0, 0], offset: 11 },
+      })
+      insertSpecialChars(editor, '<>')
+      await new Promise(process.nextTick)
+      expect(editor.selection).toEqual({
+        anchor: { path: [0, 0], offset: 7 },
+        focus: { path: [0, 0], offset: 12 },
+      })
+      expect(value[0].children[0].text).toEqual('Lorem <ipsum>.')
     })
   })
 })

@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react'
-import { Range, Transforms } from 'slate'
 import { useSlate } from 'slate-react'
-import { CharButtonConfig, CustomEditor } from '../custom-types'
+import { CharButtonConfig } from '../custom-types'
 import { plainButtonRule } from '../../Button'
 import { css } from 'glamor'
 import { mUp } from '../../../theme/mediaQueries'
 import { useColorContext } from '../../Colors/ColorContext'
 import { config as charConfig } from '../config/special-chars'
+import { insertSpecialChars } from './helpers/text'
 
 export const styles = {
   button: css({
@@ -40,26 +40,6 @@ export const styles = {
   },
 }
 
-const insertChars = (editor: CustomEditor, chars: string) => {
-  if (chars.length === 1) return Transforms.insertText(editor, chars)
-  const { selection } = editor
-  const isCollapsed = selection && Range.isCollapsed(selection)
-  if (isCollapsed) {
-    Transforms.insertText(editor, chars)
-    return Transforms.move(editor, {
-      distance: 1,
-      unit: 'character',
-      reverse: true,
-    })
-  }
-  const start = Range.start(selection)
-  const startChar = chars[0]
-  Transforms.insertText(editor, startChar, { at: start })
-  const { path, offset } = Range.end(selection)
-  const endChar = chars[1]
-  Transforms.insertText(editor, endChar, { at: { path, offset: offset + 1 } })
-}
-
 export const CharButton: React.FC<{
   config: CharButtonConfig
 }> = ({ config }) => {
@@ -69,7 +49,7 @@ export const CharButton: React.FC<{
     <button
       title={`insert ${config.char.type}`}
       disabled={config.disabled}
-      onMouseDown={() => insertChars(editor, config.char.insert)}
+      onMouseDown={() => insertSpecialChars(editor, config.char.insert)}
       {...plainButtonRule}
       {...styles.button}
       {...colorScheme.set('color', config.disabled ? 'disabled' : 'text')}
