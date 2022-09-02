@@ -1,7 +1,7 @@
 // import { WaveVisualization } from './Wave'
 import { css, media, style } from 'glamor'
 import Frame from '../../components/Frame'
-import { fontStyles, mediaQueries } from '@project-r/styleguide'
+import { fontStyles, mediaQueries, Editorial } from '@project-r/styleguide'
 import NewsletterSignup from '../../components/Auth/NewsletterSignUp'
 import { CDN_FRONTEND_BASE_URL, PUBLIC_BASE_URL } from '../../lib/constants'
 import { useTranslation } from '../../lib/withT'
@@ -16,13 +16,6 @@ const styles = {
       flexDirection: 'row',
       marginTop: 48,
     },
-  }),
-  title: css({
-    ...fontStyles.serifTitle58,
-    marginTop: 0,
-  }),
-  lead: css({
-    ...fontStyles.serifRegular25,
   }),
 }
 
@@ -48,13 +41,18 @@ const LandingPage = () => {
           />
         </div>
         <div style={{ flex: 1 }}>
-          <h1 {...styles.title}>{t('marketing/readAloud/title')}</h1>
-          <p {...styles.lead}>{t('marketing/readAloud/lead1')}</p>
-          <p {...styles.lead}>{t('marketing/readAloud/lead2')}</p>
+          <Editorial.Headline>
+            {t('marketing/readAloud/title')}
+          </Editorial.Headline>
+          <Editorial.Lead>{t('marketing/readAloud/lead1')}</Editorial.Lead>
+          <br />
+          <br />
+          <Editorial.Lead>{t('marketing/readAloud/lead2')}</Editorial.Lead>
           <NewsletterSignup
             free
             name='READALOUD'
             buttonLabel='Benachrichtigen'
+            skipTitle={true}
           />
         </div>
       </div>
