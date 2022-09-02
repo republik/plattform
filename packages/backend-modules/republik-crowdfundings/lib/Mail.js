@@ -27,6 +27,8 @@ const {
   MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
   MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
+  MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
+  MAILCHIMP_INTEREST_NEWSLETTER_READALOUD,
   FRONTEND_BASE_URL,
 } = process.env
 
@@ -47,6 +49,16 @@ const mail = createMail([
     name: 'ACCOMPLICE',
     interestId: MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
     visibleToRoles: ['accomplice'],
+  },
+  {
+    name: 'CLIMATE',
+    interestId: MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
+    invisible: true,
+  },
+  {
+    name: 'READALOUD',
+    interestId: MAILCHIMP_INTEREST_NEWSLETTER_READALOUD,
+    invisible: true,
   },
 ])
 
