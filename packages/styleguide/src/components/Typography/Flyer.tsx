@@ -194,9 +194,8 @@ export const ListItem: React.FC<{
   attributes: any
   children: React.ReactNode
 }> = ({ children, attributes = {}, ...props }) => {
-  const { ref, ...attrs } = attributes
   return (
-    <InnerListItem attributes={attrs} {...props} flyer={true}>
+    <InnerListItem attributes={attributes} {...props} flyer={true}>
       {children}
     </InnerListItem>
   )

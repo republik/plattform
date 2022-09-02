@@ -29,9 +29,8 @@ export const Figure: React.FC<{
   attributes: any
   [x: string]: unknown
 }> = ({ children, size, attributes = {}, ...props }) => {
-  const { ref, ...attrs } = attributes
   return (
-    <InnerFigure {...attrs} size={size} {...props}>
+    <InnerFigure {...attributes} size={size} {...props}>
       {children}
     </InnerFigure>
   )
