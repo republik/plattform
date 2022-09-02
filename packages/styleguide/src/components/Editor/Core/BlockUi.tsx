@@ -17,6 +17,7 @@ import { config as elConfig } from '../config/elements'
 import CalloutMenu from '../../Callout/CalloutMenu'
 import colors from '../../../theme/colors'
 import { Node } from 'slate'
+import { toTitle } from './helpers/text'
 
 const DEFAULT_POSITION = {
   top: 0,
@@ -40,7 +41,7 @@ const styles = {
   }),
 }
 
-const iconStyle = { marginRight: 0 }
+const iconStyle = { paddingBottom: 8 }
 
 const MoveUp: React.FC<{
   path: number[]
@@ -60,6 +61,7 @@ const MoveUp: React.FC<{
       disabled={isDisabled}
       title='move element up'
       style={iconStyle}
+      label='Move up'
     />
   )
 }
@@ -82,6 +84,7 @@ const MoveDown: React.FC<{
       disabled={isDisabled}
       title='move element down'
       style={iconStyle}
+      label='Move down'
     />
   )
 }
@@ -102,6 +105,7 @@ const Remove: React.FC<{
       disabled={isDisabled}
       title='remove element'
       style={iconStyle}
+      label='Delete'
     />
   )
 }
@@ -132,6 +136,7 @@ const Insert: React.FC<{
       }}
       title='insert new element'
       style={iconStyle}
+      label='Insert new'
     />
   )
 }
@@ -163,11 +168,7 @@ const BlockUi: React.FC<{
   const showEdit = !!elConfig[element.type].Form
   const showMoveUi = !!template?.repeat
 
-  const editButton = (
-    <span {...(showMoveUi && styles.padded)}>
-      <Edit path={path} />
-    </span>
-  )
+  const editButton = <Edit path={path} />
 
   return (
     <span
@@ -187,13 +188,9 @@ const BlockUi: React.FC<{
         >
           {showEdit && editButton}
           {showMoveUi && [
-            <span {...styles.padded} key='move'>
-              <MoveUp path={path} />
-              <MoveDown path={path} />
-            </span>,
-            <span {...styles.padded} key='insert'>
-              <Insert path={path} templates={template.type} />
-            </span>,
+            <MoveUp key='up' path={path} />,
+            <MoveDown key='down' path={path} />,
+            <Insert key='insert' path={path} templates={template.type} />,
             <Remove path={path} key='remove' />,
           ]}
         </CalloutMenu>
