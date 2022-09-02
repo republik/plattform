@@ -473,6 +473,18 @@
       "value": "Die Republik ist eine Dienstleistung für interessierte Menschen in einer komplexen Welt. Wir recherchieren, fragen nach, ordnen ein und decken auf. Und liefern Ihnen Fakten und Zusammenhänge als Grundlage für Ihre eigenen Überlegungen und Entscheidungen."
     },
     {
+      "key": "marketing/readAloud/title",
+      "value": "Die Republik zum Hören"
+    },
+    {
+      "key": "marketing/readAloud/lead1",
+      "value": "Demnächst werden alle unsere Texte von Sprecherinnen vorgelesen."
+    },
+    {
+      "key": "marketing/readAloud/lead2",
+      "value": "Dürfen wir Sie benachrichtigen, sobald es losgeht?"
+    },
+    {
       "key": "marketing/page/sections/description/briefings",
       "value": "Durch die Woche mit der Republik: Das Datenbriefing «Auf lange Sicht» am Montag, das Justiz-Briefing «Am Gericht» am Mittwoch, das «Briefing aus Bern» am Donnerstag und «Was diese Woche wichtig war» am Freitag."
     },
