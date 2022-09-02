@@ -27,7 +27,7 @@ const styles = {
     },
     maxHeight: '80vh',
     [mediaQueries.mUp]: {
-      maxHeight: '50vh',
+      maxHeight: '600px',
     },
   }),
   spinnerWrapper: css({
