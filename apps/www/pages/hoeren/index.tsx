@@ -53,7 +53,7 @@ const LandingPage = () => {
           <p {...styles.lead}>{t('marketing/readAloud/lead2')}</p>
           <NewsletterSignup
             free
-            name='hoerthoert'
+            name='READALOUD'
             buttonLabel='Benachrichtigen'
           />
         </div>
