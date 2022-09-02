@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
-import { Transforms } from 'slate'
+import { Range, Transforms } from 'slate'
 import { useSlate } from 'slate-react'
-import { CharButtonConfig } from '../custom-types'
+import { CharButtonConfig, CustomEditor } from '../custom-types'
 import { plainButtonRule } from '../../Button'
 import { css } from 'glamor'
 import { mUp } from '../../../theme/mediaQueries'
@@ -40,6 +40,26 @@ export const styles = {
   },
 }
 
+const insertChars = (editor: CustomEditor, chars: string) => {
+  if (chars.length === 1) return Transforms.insertText(editor, chars)
+  const { selection } = editor
+  const isCollapsed = selection && Range.isCollapsed(selection)
+  if (isCollapsed) {
+    Transforms.insertText(editor, chars)
+    return Transforms.move(editor, {
+      distance: 1,
+      unit: 'character',
+      reverse: true,
+    })
+  }
+  const start = Range.start(selection)
+  const startChar = chars[0]
+  Transforms.insertText(editor, startChar, { at: start })
+  const { path, offset } = Range.end(selection)
+  const endChar = chars[1]
+  Transforms.insertText(editor, endChar, { at: { path, offset: offset + 1 } })
+}
+
 export const CharButton: React.FC<{
   config: CharButtonConfig
 }> = ({ config }) => {
@@ -49,7 +69,7 @@ export const CharButton: React.FC<{
     <button
       title={`insert ${config.char.type}`}
       disabled={config.disabled}
-      onMouseDown={() => Transforms.insertText(editor, config.char.insert)}
+      onMouseDown={() => insertChars(editor, config.char.insert)}
       {...plainButtonRule}
       {...styles.button}
       {...colorScheme.set('color', config.disabled ? 'disabled' : 'text')}
