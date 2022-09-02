@@ -1,10 +1,17 @@
 import React, { ForwardRefExoticComponent } from 'react'
 import { IconType } from '@react-icons/all-files/lib'
-import { BaseEditor, Path } from 'slate'
+import { BaseEditor, BaseRange, Path } from 'slate'
 import { ReactEditor } from 'slate-react'
 import { HistoryEditor } from 'slate-history'
 
-type MarkType = 'italic' | 'bold' | 'sub' | 'sup' | 'strikethrough'
+type MarkType =
+  | 'italic'
+  | 'bold'
+  | 'sub'
+  | 'sup'
+  | 'strikethrough'
+  | 'invisible'
+  | 'error'
 
 type CustomMarks = {
   [K in MarkType]?: boolean
@@ -311,6 +318,7 @@ interface ElementAttrsI extends EditorAttrsI {
 export type EditorAttr = keyof EditorAttrsI
 
 export type NormalizeFn<E> = (entry: [E, Path], editor: CustomEditor) => boolean
+export type DecorateFn<E> = (entry: [E, Path]) => BaseRange[]
 
 type SchemaComponent =
   | React.FC<{
@@ -386,6 +394,19 @@ export type EditorConfig = {
 export type KeyCombo = {
   name: string
   shift?: boolean
+}
+
+export type CharConfig = {
+  type: string
+  insert: string
+  render?: string
+  buttonStyle?: React.CSSProperties
+  isInvisible?: boolean
+}
+
+export type CharButtonConfig = {
+  char: CharConfig
+  disabled?: boolean
 }
 
 export type ButtonConfig = {

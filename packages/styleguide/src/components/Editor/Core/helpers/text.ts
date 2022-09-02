@@ -2,6 +2,7 @@ import {
   CustomEditor,
   CustomMarksType,
   CustomText,
+  DecorateFn,
   NormalizeFn,
 } from '../../custom-types'
 import {
@@ -21,6 +22,7 @@ import {
   MARKS_ALLOW_LIST,
   config as mConfig,
 } from '../../config/marks'
+import { config as charConfig } from '../../config/special-chars'
 import { cleanupNode, overlaps } from './tree'
 
 export const PSEUDO_EMPTY_STRING = '\u2060'
@@ -215,3 +217,35 @@ export const handlePlaceholders: NormalizeFn<CustomText> = (
   }
   return false
 }
+
+export const ERROR_CHARS = charConfig.map((char) => char.render).filter(Boolean)
+export const INVISIBLE_CHARS = charConfig
+  .map((char) => char.isInvisible && char.insert)
+  .filter(Boolean)
+
+export const flagChars: (
+  chars: string[],
+  mKey: CustomMarksType,
+) => DecorateFn<CustomText> =
+  (chars, mKey) =>
+  ([node, path]) => {
+    const ranges: Range[] = []
+    chars.forEach((char) => {
+      const { text } = node
+      const parts = text.split(char)
+      let offset = 0
+
+      parts.forEach((part, i) => {
+        if (i !== 0) {
+          ranges.push({
+            anchor: { path, offset: offset - 1 },
+            focus: { path, offset },
+            [mKey]: true,
+          })
+        }
+
+        offset = offset + part.length + 1
+      })
+    })
+    return ranges
+  }

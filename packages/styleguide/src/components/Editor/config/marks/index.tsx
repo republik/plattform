@@ -3,6 +3,8 @@ import { config as bold } from './bold'
 import { config as sup } from './sup'
 import { config as sub } from './sub'
 import { config as strikethrough } from './strikethrough'
+import { config as invisible } from './invisible'
+import { config as error } from './error'
 
 import { MarksConfig } from '../../custom-types'
 
@@ -12,6 +14,8 @@ export const config: MarksConfig = {
   strikethrough,
   sup,
   sub,
+  invisible,
+  error,
 }
 
 // typesafe helper

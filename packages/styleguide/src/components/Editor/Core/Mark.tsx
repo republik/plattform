@@ -2,7 +2,6 @@ import React, {
   Attributes,
   Dispatch,
   ReactElement,
-  MouseEvent,
   useEffect,
   useRef,
   useState,
@@ -149,7 +148,11 @@ export const LeafComponent: React.FC<{
           containerRef={containerRef}
         />
       )}
-      <Marks leaf={leaf} schema={editor.customConfig.schema}>
+      <Marks
+        leaf={leaf}
+        schema={editor.customConfig.schema}
+        editorSchema={editor.customConfig.editorSchema}
+      >
         {children}
       </Marks>
     </span>

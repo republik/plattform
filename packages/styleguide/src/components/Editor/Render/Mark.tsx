@@ -18,9 +18,12 @@ const Recurse: React.FC<{
 export const Marks: React.FC<{
   leaf: CustomText
   schema: SchemaConfig
-}> = ({ children, leaf, schema }) => {
+  editorSchema?: SchemaConfig
+}> = ({ children, leaf, schema, editorSchema = {} }) => {
   const { text, end, placeholder, template, ...marks } = leaf
   const mKeys = Object.keys(marks) as (keyof MarksConfig)[]
-  const mComponents = mKeys.map((mKey) => schema[mKey]).filter(Boolean)
+  const mComponents = mKeys
+    .map((mKey) => editorSchema[mKey] || schema[mKey])
+    .filter(Boolean)
   return <Recurse components={mComponents}>{children}</Recurse>
 }

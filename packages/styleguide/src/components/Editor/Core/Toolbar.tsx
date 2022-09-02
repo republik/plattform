@@ -20,8 +20,10 @@ import {
   ButtonConfig,
   TemplateType,
   ToolbarMode,
+  CharButtonConfig,
 } from '../custom-types'
 import { config as elConfig, configKeys } from '../config/elements'
+import { config as charConfig } from '../config/special-chars'
 import { configKeys as mKeys, MARKS_ALLOW_LIST } from '../config/marks'
 import { useSlate, ReactEditor, useFocused } from 'slate-react'
 import { Editor, NodeEntry } from 'slate'
@@ -31,6 +33,7 @@ import { getAncestry } from './helpers/tree'
 import { getCharCount, isEmpty, selectNearestWord } from './helpers/text'
 import Scroller from '../../Tabs/Scroller'
 import { Label } from '../../Typography'
+import { CharButton } from './SpecialChars'
 
 export const EDITOR_TOOLBAR_HEIGHT = 50
 
@@ -83,6 +86,14 @@ const hasSelection = (editor: CustomEditor): boolean => {
 const noWordSelected = (editor: CustomEditor): boolean =>
   isEmpty(Editor.string(editor, editor.selection)) &&
   !selectNearestWord(editor, true)
+
+const getAllowedChars = (
+  selectedElement?: NodeEntry<CustomElement>,
+): CharButtonConfig[] =>
+  charConfig.map((char) => ({
+    char,
+    disabled: !selectedElement,
+  }))
 
 const getAllowedMarks = (
   editor: CustomEditor,
@@ -210,37 +221,44 @@ export const ToolbarButton: React.FC<{
   />
 )
 
+const Separator = () => {
+  const [colorScheme] = useColorContext()
+  return (
+    <span
+      style={{
+        boxSizing: 'border-box',
+        marginRight: '20px',
+        borderRightWidth: '2px',
+        borderRightStyle: 'solid',
+      }}
+      {...colorScheme.set('borderColor', 'divider')}
+    />
+  )
+}
+
 const ToolbarButtons: React.FC<{
+  chars: CharButtonConfig[]
   marks: ButtonConfig[]
   inlines: ButtonConfig[]
   blocks: ButtonConfig[]
-}> = ({ marks, inlines, blocks }) => {
-  const [colorScheme] = useColorContext()
-  return (
-    <>
-      {marks.map((config) => (
-        <MarkButton key={config.type} config={config} />
-      ))}
-      {inlines.map((config) => (
-        <ElementButton key={config.type} config={config} />
-      ))}
-      {!!marks.length && !!blocks.length && (
-        <span
-          style={{
-            boxSizing: 'border-box',
-            marginRight: '20px',
-            borderRightWidth: '2px',
-            borderRightStyle: 'solid',
-          }}
-          {...colorScheme.set('borderColor', 'divider')}
-        />
-      )}
-      {blocks.map((config) => (
-        <ElementButton key={config.type} config={config} />
-      ))}
-    </>
-  )
-}
+}> = ({ chars, marks, inlines, blocks }) => (
+  <>
+    {marks.map((config) => (
+      <MarkButton key={config.type} config={config} />
+    ))}
+    {inlines.map((config) => (
+      <ElementButton key={config.type} config={config} />
+    ))}
+    <Separator />
+    {chars.map((config) => (
+      <CharButton key={config.char.type} config={config} />
+    ))}
+    {!!blocks.length && <Separator />}
+    {blocks.map((config) => (
+      <ElementButton key={config.type} config={config} />
+    ))}
+  </>
+)
 
 const CharCount = () => {
   const editor = useSlate()
@@ -258,12 +276,15 @@ const Toolbar: React.FC = () => {
   )
   const initialBlockButtons = []
   const initialMarkButtons = useMemo(() => mKeys.map(asButton), [])
+  const initialCharButtons = useMemo(() => getAllowedChars(), [])
   const focused = useFocused()
+  const [chars, setChars] = useState<CharButtonConfig[]>([])
   const [marks, setMarks] = useState<ButtonConfig[]>([])
   const [inlines, setInlines] = useState<ButtonConfig[]>([])
   const [blocks, setBlocks] = useState<ButtonConfig[]>([])
 
   const reset = () => {
+    setChars(initialCharButtons)
     setMarks(initialMarkButtons)
     setInlines(initialInlineButtons)
     setBlocks(initialBlockButtons)
@@ -276,6 +297,7 @@ const Toolbar: React.FC = () => {
   }, [focused])
 
   const setButtons = (text, element, convertContainer) => {
+    setChars(getAllowedChars(element))
     setMarks(getAllowedMarks(editor, element))
     setInlines(getAllowedInlines(editor, initialInlineButtons, text, element))
     const allowedBlocks = getAllowedBlocks(
@@ -310,7 +332,12 @@ const Toolbar: React.FC = () => {
       style={config?.style}
       renderLeft={config?.showChartCount && <CharCount />}
     >
-      <ToolbarButtons marks={marks} inlines={inlines} blocks={blocks} />
+      <ToolbarButtons
+        chars={chars}
+        marks={marks}
+        inlines={inlines}
+        blocks={blocks}
+      />
     </ToolbarContainer>
   )
 }

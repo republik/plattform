@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react'
-import { createEditor, Editor, Transforms } from 'slate'
+import { createEditor, Editor, Transforms, Text } from 'slate'
 import { withHistory } from 'slate-history'
 import {
   Slate,
@@ -30,7 +30,12 @@ import { withDelete } from './decorators/delete'
 import { withCustomConfig } from './decorators/config'
 import { ErrorMessage } from '../Render/Message'
 import { LayoutContainer } from '../Render/Containers'
-import { getCharCount } from './helpers/text'
+import {
+  ERROR_CHARS,
+  flagChars,
+  getCharCount,
+  INVISIBLE_CHARS,
+} from './helpers/text'
 import BlockUi from './BlockUi'
 import { RenderContextProvider } from '../Render/Context'
 
@@ -64,6 +69,20 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
       ),
     [],
   )
+
+  const decorate = useCallback(([node, path]) => {
+    let ranges = []
+
+    if (Text.isText(node)) {
+      ranges = ranges.concat(
+        flagChars(INVISIBLE_CHARS, 'invisible')([node, path]),
+      )
+      // TODO: this selects the whole node. Why? No idea.
+      ranges = ranges.concat(flagChars(ERROR_CHARS, 'error')([node, path]))
+    }
+
+    return ranges
+  }, [])
 
   useEffect(() => {
     Editor.normalize(editor, { force: true })
@@ -163,6 +182,7 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
               data-testid='slate-content-editable'
               renderElement={renderElement}
               renderLeaf={renderLeaf}
+              decorate={decorate}
               onKeyDown={(event) => {
                 // console.log('event', event.key, event.shiftKey, event)
 
