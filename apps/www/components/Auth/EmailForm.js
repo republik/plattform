@@ -27,6 +27,7 @@ const styles = {
   button: css({
     textAlign: 'center',
     marginBottom: 15,
+    minWidth: 160,
   }),
   hints: css({
     marginTop: -5,
