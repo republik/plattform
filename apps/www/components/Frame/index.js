@@ -1,4 +1,5 @@
-import { useMemo } from 'react'
+import { useMemo, Propty } from 'react'
+import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import 'glamor/reset'
 import {
@@ -183,6 +184,23 @@ const Frame = ({
       )}
     </div>
   )
+}
+
+Frame.propTypes = {
+  children: PropTypes.node.isRequired,
+  raw: PropTypes.bool,
+  meta: PropTypes.shape,
+  cover: PropTypes.any,
+  onNavExpanded: PropTypes.any,
+  secondaryNav: PropTypes.any,
+  formatColor: PropTypes.string,
+  footer: PropTypes.bool,
+  pullable: PropTypes.bool,
+  hasOverviewNav: PropTypes.bool,
+  stickySecondaryNav: PropTypes.any,
+  isOnMarketingPage: PropTypes.bool,
+  pageColorSchemeKey: PropTypes.string,
+  containerMaxWidth: PropTypes.number,
 }
 
 export default Frame
