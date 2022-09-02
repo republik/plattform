@@ -21,7 +21,7 @@ const styles = {
   input: css({
     marginRight: 10,
     marginBottom: 0,
-    width: '60%',
+    width: '58%',
     flexGrow: 1,
   }),
   button: css({
