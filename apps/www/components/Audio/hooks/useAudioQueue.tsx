@@ -3,7 +3,6 @@ import compareVersion from '../../../lib/react-native/CompareVersion'
 import { NEW_AUDIO_API_VERSION } from '../constants'
 import {
   AUDIO_QUEUE_QUERY,
-  AudioQueueItem,
   useAddAudioQueueItemMutation,
   useAudioQueueQuery,
   useClearAudioQueueMutation,

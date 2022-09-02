@@ -7,4 +7,6 @@ export enum AudioEvent {
   BACKWARD = 'audio:backward',
   SYNC = 'audio:sync',
   PLAYBACK_RATE = 'audio:playbackRate',
+  PREPARE = 'audio:prepare',
+  QUEUE_UPDATE = 'audio:queueUpdate',
 }
