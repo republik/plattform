@@ -126,12 +126,6 @@ const NewAppMessageSync = () => {
           }
         }, 200)
       } else {
-        // Forward message to AppMessageEventEmitter
-        // to be handled in the individual components
-        console.log(
-          'Forwarding message to AppMessageEventEmitter',
-          JSON.stringify(content),
-        )
         AppMessageEventEmitter.emit(content.type, content.payload)
       }
       postMessage({
