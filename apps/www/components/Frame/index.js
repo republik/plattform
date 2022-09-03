@@ -82,7 +82,7 @@ const styles = {
   }),
 }
 
-export const MainContainer = ({ children, maxWidth }) => (
+export const MainContainer = ({ children, maxWidth = '840px' }) => (
   <Container style={{ maxWidth }}>{children}</Container>
 )
 
@@ -106,7 +106,7 @@ const Frame = ({
   stickySecondaryNav,
   isOnMarketingPage,
   pageColorSchemeKey,
-  containerMaxWidth = 840,
+  containerMaxWidth,
 }) => {
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
   const { t } = useTranslation()
