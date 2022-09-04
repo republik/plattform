@@ -8,10 +8,11 @@ import { ArticlePreviewIcon } from '../../../../Icons'
 import { css } from 'glamor'
 import ColorPicker from '../../../Forms/ColorPicker'
 import RepoSearch from '../../../Forms/RepoSearch'
-import { Label } from '../../../../Typography'
 import Checkbox from '../../../../Form/Checkbox'
 import { useSlate } from 'slate-react'
 import { Transforms } from 'slate'
+import Field from '../../../../Form/Field'
+import { isValidHttpUrl } from '../../../Core/helpers/text'
 
 const styles = {
   container: css({
@@ -30,36 +31,50 @@ const Form: React.FC<ElementFormProps<ArticlePreviewElement>> = ({
 }) => {
   const editor = useSlate()
   const [syncData, setSyncData] = useState<boolean>(true)
-  const repoId = element?.resolvedRepo?.repoId
+  const href = element.href || ''
   return (
     <>
       <div>
-        <Label>Beitrag Id{repoId ? `: ${repoId}` : ''}</Label>
+        <Field
+          label='URL'
+          type='url'
+          error={
+            !!href && !isValidHttpUrl(href) && 'Geben sie eine gültige URL an'
+          }
+          value={href}
+          onChange={(_, value: string) => {
+            onChange({
+              href: value,
+            })
+          }}
+        />
         <RepoSearch
           onChange={({ value }) => {
-            const meta = value.latestCommit.document.meta
+            const href = `https://github.com/${value.id}?autoSlug`
             onChange({
-              resolvedRepo: {
-                repoId: value.id,
-                path: meta.path,
-                externalBaseUrl: meta.externalBaseUrl,
-              },
+              href,
             })
             if (syncData) {
               const meta = value.latestCommit.document.meta
-              Transforms.insertText(editor, meta.title, {
-                at: path.concat([1, 0]),
-              })
-              Transforms.insertText(editor, meta.shortTitle, {
-                at: path.concat([1, 1]),
-              })
-              Transforms.setNodes(
-                editor,
-                { images: { default: { url: meta.image } } },
-                {
-                  at: path.concat([0]),
-                },
-              )
+              if (meta.title) {
+                Transforms.insertText(editor, meta.title, {
+                  at: path.concat([1, 0]),
+                })
+              }
+              if (meta.shortTitle) {
+                Transforms.insertText(editor, meta.shortTitle, {
+                  at: path.concat([1, 1]),
+                })
+              }
+              if (meta.image) {
+                Transforms.setNodes(
+                  editor,
+                  { images: { default: { url: meta.image } } },
+                  {
+                    at: path.concat([0]),
+                  },
+                )
+              }
             }
           }}
         />
@@ -102,7 +117,7 @@ export const config: ElementConfigI = {
     { type: 'figureImage' },
     { type: 'articlePreviewTextContainer', main: true },
   ],
-  props: ['backgroundColor', 'color', 'repoId'],
+  props: ['backgroundColor', 'color', 'href'],
   defaultProps: {
     backgroundColor: '#000',
     color: '#fff',

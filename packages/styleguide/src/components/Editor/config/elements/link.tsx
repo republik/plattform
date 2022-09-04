@@ -8,19 +8,14 @@ import { LinkIcon } from '../../../Icons'
 import React, { useEffect, useRef, useState } from 'react'
 import Field from '../../../Form/Field'
 import { Editor, Transforms } from 'slate'
-import { getFullUrl, getLinkInText } from '../../Core/helpers/text'
+import {
+  getFullUrl,
+  getLinkInText,
+  isValidHttpUrl,
+} from '../../Core/helpers/text'
 import renderAsText from '../../Render/text'
 import { useSlate } from 'slate-react'
 import RepoSearch from '../../Forms/RepoSearch'
-
-const isValidHttpUrl = (test: string): boolean => {
-  try {
-    new URL(test)
-  } catch (_) {
-    return false
-  }
-  return true
-}
 
 const Form: React.FC<ElementFormProps<LinkElement>> = ({
   element,
@@ -69,7 +64,7 @@ const Form: React.FC<ElementFormProps<LinkElement>> = ({
       />
       <RepoSearch
         onChange={({ value, text }) => {
-          const href = `https://github.com/${value?.id}?autoSlug`
+          const href = `https://github.com/${value.id}?autoSlug`
           onChange({
             href,
             title: text,

@@ -274,3 +274,12 @@ export const insertSpecialChars = (editor: CustomEditor, chars: string) => {
     focus: endLocation,
   })
 }
+
+export const isValidHttpUrl = (test: string): boolean => {
+  try {
+    new URL(test)
+  } catch (_) {
+    return false
+  }
+  return true
+}

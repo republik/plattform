@@ -48,7 +48,7 @@ const contentUrlResolver = async (
 
   await visit(
     doc.content,
-    (node) => node?.type === 'link',
+    (node) => node?.type === 'link' || node?.type === 'articlePreview',
     (node) => {
       node.href = urlReplacer(node.href, stripDocLinks)
     },
@@ -90,7 +90,7 @@ const extractIdsFromNode = async (node, contextRepoId) => {
 
   await visit(
     node,
-    (node) => node?.type === 'link',
+    (node) => node?.type === 'link' || node?.type === 'articlePreview',
     (node) => {
       const { href } = node
 

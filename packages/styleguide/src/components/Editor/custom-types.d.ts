@@ -173,15 +173,9 @@ export type FlyerSignatureElement = SharedElement & {
   type: 'flyerSignature'
 }
 
-export type ResolvedRepo = {
-  repoId: string
-  path: string
-  externalBaseUrl: string | null
-}
-
 export type ArticlePreviewElement = SharedElement & {
   type: 'articlePreview'
-  resolvedRepo?: ResolvedRepo
+  href?: string
   backgroundColor?: string
   color?: string
 }
