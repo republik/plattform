@@ -18,9 +18,10 @@ const WorkflowOverlay = ({ onClose, commitId, repoId, disabled }) => {
 
 const PhaseLabel = compose(
   graphql(getMilestones, {
-    options: () => ({
+    options: {
       fetchPolicy: 'network-only',
-    }),
+      ssr: false,
+    },
   }),
 )(({ repoId, data, onClick }) => {
   const phase = data?.repo?.currentPhase

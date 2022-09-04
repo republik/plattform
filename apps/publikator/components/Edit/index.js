@@ -392,7 +392,7 @@ const EditLoader = ({
           )}
         </Frame.Header.Section>
         <Frame.Header.Section align='right'>
-          {!!repo && (
+          {!pending && !!repo && (
             <UncommittedChanges uncommittedChanges={uncommittedChanges} t={t} />
           )}
         </Frame.Header.Section>
