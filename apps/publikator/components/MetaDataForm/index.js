@@ -49,12 +49,12 @@ const MetaDataForm = ({ t, metaData, setMetaData }) => {
   }
 
   return (
-    <div {...colorScheme.set('background-color', 'hover')}>
+    <div {...colorScheme.set('backgroundColor', 'hover')}>
       <div {...styles.metaContainer}>
         <h2>Metadaten</h2>
         <div
           {...styles.metaHeader}
-          {...colorScheme.set('background-color', 'hover')}
+          {...colorScheme.set('backgroundColor', 'hover')}
         >
           <Scroller innerPadding={0} activeChildIndex={activeTabIndex}>
             {['Beitrag', 'Social Media'].map((n, i) => (

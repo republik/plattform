@@ -14,6 +14,39 @@ type FlyerProps = {
   [x: string]: unknown
 }
 
+const styles = {
+  container: css({
+    display: 'flex',
+    alignItems: 'center',
+    margin: '0 0 10px',
+    height: 30,
+    [mUp]: {
+      margin: '0 0 20px',
+      height: 40,
+    },
+  }),
+  portrait: css({
+    marginRight: 15,
+    height: 30,
+    width: 30,
+    [mUp]: {
+      height: 40,
+      width: 40,
+    },
+  }),
+  name: css({
+    ...fontStyles.sansSerifRegular,
+    textTransform: 'uppercase',
+    letterSpacing: 2,
+    fontSize: 15,
+    lineHeight: 0.867,
+    [mUp]: {
+      fontSize: 16,
+      lineHeight: 0.938,
+    },
+  }),
+}
+
 // TODO: replace slug by most recent slug in backend?
 export const FlyerAuthor: React.FC<FlyerProps> = ({
   children,
@@ -30,48 +63,19 @@ export const FlyerAuthor: React.FC<FlyerProps> = ({
       <a {...attributes} {...props}>
         <div
           contentEditable={false}
+          {...styles.container}
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            margin: '0 0 10px',
-            height: 30,
             opacity: resolvedAuthor ? 1 : 0.4,
-            [mUp]: {
-              margin: '0 0 20px',
-              height: 40,
-            },
           }}
         >
           {(!authorId || resolvedAuthor?.portrait) && (
             <img
-              style={{ marginRight: 16 }}
-              {...css({
-                marginRight: 15,
-                height: 30,
-                width: 30,
-                [mUp]: {
-                  marginRight: 15,
-                  height: 40,
-                  width: 40,
-                },
-              })}
+              {...styles.portrait}
               src={resolvedAuthor?.portrait || PLACEHOLDER}
+              alt=''
             />
           )}
-          <span
-            {...css({
-              ...fontStyles.sansSerifRegular,
-              textTransform: 'uppercase',
-              letterSpacing: 2,
-              fontSize: 15,
-              lineHeight: 0.867,
-              [mUp]: {
-                fontSize: 16,
-                lineHeight: 0.938,
-              },
-            })}
-            {...colorScheme.set('color', 'journalText')}
-          >
+          <span {...styles.name} {...colorScheme.set('color', 'journalText')}>
             {resolvedAuthor?.name || 'Author'}
           </span>
         </div>
