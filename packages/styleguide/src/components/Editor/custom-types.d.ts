@@ -48,6 +48,7 @@ export type BreakElement = SharedElement & {
 export type LinkElement = SharedElement & {
   type: 'link'
   href?: string
+  title?: string
 }
 
 export type FigureElement = SharedElement & {

@@ -11,6 +11,7 @@ import { Editor, Transforms } from 'slate'
 import { getFullUrl, getLinkInText } from '../../Core/helpers/text'
 import renderAsText from '../../Render/text'
 import { useSlate } from 'slate-react'
+import RepoSearch from '../../Forms/RepoSearch'
 
 const isValidHttpUrl = (test: string): boolean => {
   try {
@@ -26,11 +27,9 @@ const Form: React.FC<ElementFormProps<LinkElement>> = ({
   path,
   onChange,
 }) => {
-  const [href, setHref] = useState<string>(element.href || '')
+  const href = element.href || ''
   const [text, setText] = useState<string>(renderAsText([element]))
   const editor = useSlate()
-  const hrefRef = useRef<string>()
-  hrefRef.current = href
   const textRef = useRef<string>()
   textRef.current = text
 
@@ -38,7 +37,6 @@ const Form: React.FC<ElementFormProps<LinkElement>> = ({
   // with the normalizer and the cursor.
   useEffect(() => {
     return () => {
-      onChange({ href: hrefRef.current })
       Transforms.insertText(editor, textRef.current, {
         at: path,
       })
@@ -55,7 +53,27 @@ const Form: React.FC<ElementFormProps<LinkElement>> = ({
         }
         value={href}
         onChange={(_, value: string) => {
-          setHref(value)
+          onChange({
+            href: value,
+          })
+        }}
+      />
+      <Field
+        label='Title'
+        value={element.title || ''}
+        onChange={(_, value: string) => {
+          onChange({
+            title: value,
+          })
+        }}
+      />
+      <RepoSearch
+        onChange={({ value, text }) => {
+          const href = `https://github.com/${value?.id}?autoSlug`
+          onChange({
+            href,
+            title: text,
+          })
         }}
       />
       <Field
@@ -99,5 +117,5 @@ export const config: ElementConfigI = {
   button: { icon: LinkIcon },
   normalizations: [unlinkWhenEmpty, checkAutolink],
   structure: [{ type: ['text'], repeat: true }],
-  props: ['href'],
+  props: ['href', 'title'],
 }
