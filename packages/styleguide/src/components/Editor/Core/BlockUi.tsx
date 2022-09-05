@@ -61,6 +61,7 @@ const MoveUp: React.FC<{
       title='move element up'
       style={iconStyle}
       label='Move up'
+      labelShort='Move up'
     />
   )
 }
@@ -84,6 +85,7 @@ const MoveDown: React.FC<{
       title='move element down'
       style={iconStyle}
       label='Move down'
+      labelShort='Move down'
     />
   )
 }
@@ -105,6 +107,7 @@ const Remove: React.FC<{
       title='remove element'
       style={iconStyle}
       label='Delete'
+      labelShort='Delete'
     />
   )
 }
@@ -136,13 +139,15 @@ const Insert: React.FC<{
       title='insert new element'
       style={iconStyle}
       label='Insert new'
+      labelShort='Insert new'
     />
   )
 }
 
 const Edit: React.FC<{
   path: number[]
-}> = ({ path }) => {
+  standalone?: boolean
+}> = ({ path, standalone }) => {
   const setFormPath = useFormContext()[1]
   return (
     <IconButton
@@ -154,6 +159,8 @@ const Edit: React.FC<{
       title='edit element'
       style={{ ...iconStyle, padding: 3 }}
       size={18}
+      label={standalone ? undefined : 'Edit'}
+      labelShort={standalone ? undefined : 'Edit'}
     />
   )
 }
@@ -167,7 +174,7 @@ const BlockUi: React.FC<{
   const showEdit = !!elConfig[element.type].Form
   const showMoveUi = !!template?.repeat
 
-  const editButton = <Edit path={path} />
+  const editButton = <Edit path={path} standalone={!showMoveUi} />
 
   return (
     <span
