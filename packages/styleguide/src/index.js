@@ -1096,19 +1096,6 @@ const Styleguide = () => {
                         src: require('./components/Editor/__docs__/index.md'),
                       },
                       {
-                        path: '/editor/community',
-                        title: 'Community',
-                        imports: {
-                          ...require('./components/Editor/__docs__/community.imports'),
-                          Editor: require('./components/Editor/DevEditor'),
-                          SlateRender: require('./components/Editor/Render'),
-                          renderAsText: require('./components/Editor/Render/text'),
-                          schemaComment: require('./components/Editor/schema/comment'),
-                          schemaCommentEmail: require('./components/Editor/schema/commentEmail'),
-                        },
-                        src: require('./components/Editor/__docs__/community.md'),
-                      },
-                      {
                         path: '/editor/flyer',
                         title: 'Flyer',
                         imports: {
