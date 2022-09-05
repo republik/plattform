@@ -9,9 +9,9 @@ import { convertStyleToRem } from '../../Typography/utils'
 const styles = {
   blockquote: css({
     margin: '20px auto',
-    '& figcaption': {
-      marginLeft: 0,
-      marginRight: 0,
+    padding: '15px',
+    [mUp]: {
+      padding: '25px',
     },
   }),
   nestedBlockQuote: css({
@@ -19,46 +19,29 @@ const styles = {
     borderLeftStyle: 'solid',
   }),
   paragraph: css({
-    margin: 0,
-    padding: '0 15px 6px 15px',
+    margin: '6px 0',
     ...convertStyleToRem(serifRegular14),
     [mUp]: {
       ...convertStyleToRem(serifRegular16),
-      padding: '0 25px 10px 25px',
-      '&:first-child': {
-        paddingTop: '20px',
-      },
-      '&:last-of-type': {
-        paddingBottom: '20px',
-      },
+      margin: '10px 0',
     },
     '&:first-child': {
-      paddingTop: '12px',
+      marginTop: 0,
     },
-    '&:last-of-type': {
-      paddingBottom: '12px',
+    '&:last-child': {
+      marginBottom: 0,
     },
   }),
 }
 
-export const BlockQuoteParagraph = ({ attributes, children }) => {
-  const [colorScheme] = useColorContext()
-  return (
-    <p
-      {...attributes}
-      {...styles.paragraph}
-      {...colorScheme.set('backgroundColor', 'hover')}
-    >
-      {children}
-    </p>
-  )
-}
+export const BlockQuoteParagraph = ({ children }) => (
+  <p {...styles.paragraph}>{children}</p>
+)
 
-export const BlockQuoteNested = ({ attributes, children }) => {
+export const BlockQuoteNested = ({ children }) => {
   const [colorScheme] = useColorContext()
   return (
     <div
-      {...attributes}
       {...styles.blockquote}
       {...styles.nestedBlockQuote}
       {...colorScheme.set('backgroundColor', 'hover')}
@@ -69,9 +52,13 @@ export const BlockQuoteNested = ({ attributes, children }) => {
   )
 }
 
-export default ({ attributes, children }) => {
+export default ({ children }) => {
+  const [colorScheme] = useColorContext()
   return (
-    <div {...attributes} {...styles.blockquote}>
+    <div
+      {...styles.blockquote}
+      {...colorScheme.set('backgroundColor', 'hover')}
+    >
       {children}
     </div>
   )

@@ -2,9 +2,8 @@ import React from 'react'
 
 import { List, ListItem as CommentListItem } from '../../List'
 
-export const ListItem = ({ children, attributes }) => (
+export const ListItem = ({ children }) => (
   <CommentListItem
-    attributes={attributes}
     style={{
       fontSize: 'inherit',
       lineHeight: 'inherit',

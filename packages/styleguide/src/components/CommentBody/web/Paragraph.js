@@ -51,38 +51,26 @@ const styles = {
   }),
 }
 
-const Paragraph = ({ attributes, children }) => (
-  <p {...attributes} {...styles.p}>
-    {children}
-  </p>
+const Paragraph = ({ children }) => <p {...styles.p}>{children}</p>
+
+export const FeaturedText = ({ children }) => (
+  <span {...styles.featuredText}>{children}</span>
 )
 
-export const FeaturedText = ({ attributes, children }) => (
-  <span {...attributes} {...styles.featuredText}>
-    {children}
-  </span>
-)
-
-export const Heading = ({ attributes, children }) => (
-  <Paragraph attributes={attributes}>
+export const Heading = ({ children }) => (
+  <Paragraph>
     <strong>{children}</strong>
   </Paragraph>
 )
 
-export const Definition = ({ attributes, children }) => (
-  <p {...attributes} {...styles.definition}>
-    {children}
-  </p>
+export const Definition = ({ children }) => (
+  <p {...styles.definition}>{children}</p>
 )
 
-export const Code = ({ attributes, children }) => {
+export const Code = ({ children }) => {
   const [colorScheme] = useColorContext()
   return (
-    <code
-      {...attributes}
-      {...styles.code}
-      {...colorScheme.set('backgroundColor', 'hover')}
-    >
+    <code {...styles.code} {...colorScheme.set('backgroundColor', 'hover')}>
       {children}
     </code>
   )
