@@ -11,17 +11,8 @@ import { config as elConfig } from '../config/elements'
 import { Overlay, OverlayBody, OverlayToolbar } from '../../Overlay'
 import { ReactEditor, useSlate } from 'slate-react'
 import { toTitle } from './helpers/text'
-import { css } from 'glamor'
 import { isDescendant } from './helpers/tree'
-
-const styles = {
-  elementTitle: css({
-    marginBottom: 5,
-  }),
-  elementForm: css({
-    marginBottom: 20,
-  }),
-}
+import { formStyles } from '../Forms/layout'
 
 const FormContext = createContext([])
 
@@ -96,7 +87,7 @@ const ElementForm: React.FC<FormData & { onClose: () => void }> = ({
   const nodeEntry = Editor.node(editor, node[1])
   const element = nodeEntry[0] as CustomElement
   return (
-    <div {...styles.elementForm}>
+    <div {...formStyles.section}>
       <Form
         element={element}
         path={nodeEntry[1]}
@@ -125,7 +116,7 @@ export const FormOverlay = (): ReactElement => {
   }
 
   return (
-    <Overlay onClose={onClose}>
+    <Overlay onClose={onClose} mUpStyle={{ minHeight: 0 }}>
       <OverlayToolbar
         title={toTitle(forms[0].node[0].type)}
         onClose={onClose}

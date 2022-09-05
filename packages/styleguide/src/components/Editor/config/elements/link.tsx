@@ -16,6 +16,8 @@ import {
 import renderAsText from '../../Render/text'
 import { useSlate } from 'slate-react'
 import RepoSearch from '../../Forms/RepoSearch'
+import AuthorSearch from '../../Forms/AuthorSearch'
+import { formStyles, Hint } from '../../Forms/layout'
 
 const Form: React.FC<ElementFormProps<LinkElement>> = ({
   element,
@@ -23,62 +25,82 @@ const Form: React.FC<ElementFormProps<LinkElement>> = ({
   onChange,
 }) => {
   const href = element.href || ''
-  const [text, setText] = useState<string>(renderAsText([element]))
+  const initText = renderAsText([element])
+  const [text, setText] = useState<string>(initText)
   const editor = useSlate()
   const textRef = useRef<string>()
   textRef.current = text
 
-  // Directly updating the link props causes issues
-  // with the normalizer and the cursor.
-  useEffect(() => {
-    return () => {
+  const updateSlate = () => {
+    if (textRef.current !== initText) {
       Transforms.insertText(editor, textRef.current, {
         at: path,
       })
     }
+  }
+
+  // Directly updating the link props causes issues
+  // with the normalizer and the cursor.
+  useEffect(() => {
+    return updateSlate
   }, [])
 
   return (
     <>
-      <Field
-        label='URL'
-        type='url'
-        error={
-          !!href && !isValidHttpUrl(href) && 'Geben sie eine gültige URL an'
-        }
-        value={href}
-        onChange={(_, value: string) => {
-          onChange({
-            href: value,
-          })
-        }}
-      />
-      <Field
-        label='Title'
-        value={element.title || ''}
-        onChange={(_, value: string) => {
-          onChange({
-            title: value,
-          })
-        }}
-      />
-      <RepoSearch
-        onChange={({ value, text }) => {
-          const href = `https://github.com/${value.id}?autoSlug`
-          onChange({
-            href,
-            title: text,
-          })
-        }}
-      />
-      <Field
-        label='Text'
-        type='text'
-        value={text}
-        onChange={(_, value: string) => {
-          setText(value)
-        }}
-      />
+      <div {...formStyles.section}>
+        <Field
+          label='URL'
+          type='url'
+          error={
+            !!href && !isValidHttpUrl(href) && 'Geben sie eine gültige URL an'
+          }
+          value={href}
+          onChange={(_, value: string) => {
+            onChange({
+              href: value,
+            })
+          }}
+        />
+        <Field
+          label='Title'
+          value={element.title || ''}
+          onChange={(_, value: string) => {
+            onChange({
+              title: value,
+            })
+          }}
+        />
+        <Field
+          label='Text'
+          type='text'
+          value={text}
+          onChange={(_, value: string) => {
+            setText(value)
+          }}
+        />
+        <Hint text='Link Text editieren wird die lokale Formatierung löschen.' />
+      </div>
+      <div {...formStyles.section}>
+        <h3 {...formStyles.sectionTitle}>Suchen und ausfüllen</h3>
+        <RepoSearch
+          onChange={({ value, text }) => {
+            const href = `https://github.com/${value.id}?autoSlug`
+            onChange({
+              href,
+              title: text,
+            })
+          }}
+        />
+        <AuthorSearch
+          onChange={({ value }) => {
+            onChange({
+              href: `/~${value.id}`,
+              title: value.name,
+            })
+            setText(value.name)
+          }}
+        />
+      </div>
     </>
   )
 }
