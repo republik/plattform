@@ -1105,6 +1105,7 @@ const Styleguide = () => {
                           Editor: require('./components/Editor/DevEditor'),
                           SlateRender: require('./components/Editor/Render'),
                           renderAsText: require('./components/Editor/Render/text'),
+                          t,
                         },
                         src: require('./components/Editor/__docs__/flyer.md'),
                       },

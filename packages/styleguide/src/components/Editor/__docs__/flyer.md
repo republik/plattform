@@ -58,7 +58,7 @@ state: {
         setState({value: newValue})
     }}
     structure={state.structure}
-    config={{ debug: true, schema, editorSchema }}
+    config={{ debug: true, schema, editorSchema, t }}
 />
 ```
 

@@ -424,6 +424,90 @@
     {
       "key": "timeduration/years",
       "value": "vor {count} y"
+    },
+    {
+      "key": "editor/element/headline",
+      "value": "Titel"
+    },
+    {
+      "key": "editor/element/paragraph",
+      "value": "Paragraf"
+    },
+    {
+      "key": "editor/element/ul",
+      "value": "Liste"
+    },
+    {
+      "key": "editor/element/ol",
+      "value": "Aufzählung"
+    },
+    {
+      "key": "editor/element/listItem",
+      "value": "Listelement"
+    },
+    {
+      "key": "editor/element/flyerTopic",
+      "value": "Format"
+    },
+    {
+      "key": "editor/element/flyerTitle",
+      "value": "Titel"
+    },
+    {
+      "key": "editor/element/flyerAuthor",
+      "value": "Autorin"
+    },
+    {
+      "key": "editor/element/flyerMetaP",
+      "value": "Moderation"
+    },
+    {
+      "key": "editor/element/flyerPunchline",
+      "value": "Punchline"
+    },
+    {
+      "key": "editor/placeholder/paragraph",
+      "value": "Text"
+    },
+    {
+      "key": "editor/placeholder/listItem",
+      "value": "Text"
+    },
+    {
+      "key": "editor/mark/bold",
+      "value": "gefettet"
+    },
+    {
+      "key": "editor/mark/italic",
+      "value": "kursiv"
+    },
+    {
+      "key": "editor/mark/strikethrough",
+      "value": "durchgestrichen"
+    },
+    {
+      "key": "editor/mark/sup",
+      "value": "hochgestellt"
+    },
+    {
+      "key": "editor/mark/sub",
+      "value": "tiefgestellt"
+    },
+    {
+      "key": "editor/specialChar/nbsp",
+      "value": "Dauerleerzeichen"
+    },
+    {
+      "key": "editor/specialChar/shy",
+      "value": "weiches Trennzeichen"
+    },
+    {
+      "key": "editor/specialChar/quotes",
+      "value": "Anführungszeichen"
+    },
+    {
+      "key": "editor/specialChar/nestedQuotes",
+      "value": "einzelne Anführungszeichen"
     }
   ]
 }

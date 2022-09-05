@@ -7,6 +7,7 @@ import { mUp } from '../../../theme/mediaQueries'
 import { useColorContext } from '../../Colors/ColorContext'
 import { config as charConfig } from '../config/special-chars'
 import { insertSpecialChars } from './helpers/text'
+import { useRenderContext } from '../Render/Context'
 
 export const styles = {
   button: css({
@@ -43,11 +44,12 @@ export const styles = {
 export const CharButton: React.FC<{
   config: CharButtonConfig
 }> = ({ config }) => {
+  const { t } = useRenderContext()
   const editor = useSlate()
   const [colorScheme] = useColorContext()
   return (
     <button
-      title={`insert ${config.char.type}`}
+      title={t(`editor/specialChar/${config.char.type}`)}
       disabled={config.disabled}
       onMouseDown={() => insertSpecialChars(editor, config.char.insert)}
       {...plainButtonRule}

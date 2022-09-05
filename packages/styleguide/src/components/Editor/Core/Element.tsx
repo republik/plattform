@@ -6,10 +6,12 @@ import { CustomElementsType, ButtonConfig } from '../custom-types'
 import { toggleElement } from './helpers/structure'
 import { useFormContext } from './Forms'
 import { Node } from 'slate'
+import { useRenderContext } from '../Render/Context'
 
 export const ElementButton: React.FC<{
   config: ButtonConfig
 }> = ({ config }) => {
+  const { t } = useRenderContext()
   const editor = useSlate()
   const [pendingPath, setPendingPath] = useState<number[]>()
   const setFormPath = useFormContext()[1]
@@ -28,7 +30,7 @@ export const ElementButton: React.FC<{
 
   return (
     <ToolbarButton
-      title={`convert to ${config.type}`}
+      title={t(`editor/element/${config.type}`)}
       button={element.button}
       disabled={config.disabled}
       active={config.active}

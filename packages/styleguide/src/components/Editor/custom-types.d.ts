@@ -3,6 +3,7 @@ import { IconType } from '@react-icons/all-files/lib'
 import { BaseEditor, BaseRange, Path } from 'slate'
 import { ReactEditor } from 'slate-react'
 import { HistoryEditor } from 'slate-history'
+import { Formatter } from '../../lib/translate'
 
 type MarkType =
   | 'italic'
@@ -384,6 +385,7 @@ export type EditorConfig = {
   debug?: boolean
   toolbar?: ToolbarConfig
   readOnly?: boolean
+  t?: Formatter
 }
 
 export type KeyCombo = {

@@ -206,7 +206,7 @@ export const handlePlaceholders: NormalizeFn<CustomText> = (
       Transforms.unsetNodes(editor, 'placeholder', { at: path })
     }
   } else {
-    const placeholder = toTitle(parentNode.type)
+    const placeholder = parentNode.type
     if (!node.placeholder || node.placeholder !== placeholder) {
       Transforms.setNodes(
         editor,

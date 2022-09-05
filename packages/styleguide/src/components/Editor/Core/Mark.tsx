@@ -18,6 +18,7 @@ import {
   toggleMark,
 } from './helpers/text'
 import { Marks } from '../Render/Mark'
+import { useRenderContext } from '../Render/Context'
 
 const fadeIn = keyframes({
   from: {
@@ -46,6 +47,7 @@ const styles = {
 export const MarkButton: React.FC<{
   config: ButtonConfig
 }> = ({ config }) => {
+  const { t } = useRenderContext()
   const editor = useSlate()
   const mKey = config.type as CustomMarksType
   const mark = mConfig[mKey]
@@ -54,7 +56,7 @@ export const MarkButton: React.FC<{
   }
   return (
     <ToolbarButton
-      title={`toggle ${config.type}`}
+      title={t(`editor/mark/${config.type}`)}
       button={mark.button}
       disabled={config.disabled}
       active={isMarkActive(editor, mKey)}
@@ -65,8 +67,9 @@ export const MarkButton: React.FC<{
 
 const Placeholder: React.FC<{
   setStyle: Dispatch<any>
-  text: string
-}> = ({ text, setStyle }) => {
+  tKey: string
+}> = ({ tKey, setStyle }) => {
+  const { t } = useRenderContext()
   const placeholderRef = useRef<HTMLSpanElement>()
 
   useEffect(() => {
@@ -86,7 +89,7 @@ const Placeholder: React.FC<{
       style={{ userSelect: 'none' }}
       contentEditable={false}
     >
-      {text}
+      {t(`editor/placeholder/${tKey}`, undefined, t(`editor/element/${tKey}`))}
     </span>
   )
 }
@@ -118,7 +121,7 @@ export const LeafComponent: React.FC<{
       ref={containerRef}
     >
       {showPlaceholder && (
-        <Placeholder setStyle={setPlaceholderStyle} text={leaf.placeholder} />
+        <Placeholder setStyle={setPlaceholderStyle} tKey={leaf.placeholder} />
       )}
       <Marks
         leaf={leaf}
