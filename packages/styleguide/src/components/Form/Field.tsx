@@ -25,7 +25,7 @@ const styles = {
     width: '100%',
     paddingTop: LINE_HEIGHT,
     position: 'relative',
-    display: 'block',
+    display: 'inline-block',
     ...fontStyles.sansSerifRegular,
     fontSize: 22,
     lineHeight: `${LINE_HEIGHT}px`,
@@ -141,7 +141,6 @@ const Field = React.forwardRef<
     ) => void
     name?: string
     autoComplete?: boolean
-    autoFocus?: string
     type?: string
     label?: string
     disabled?: boolean
@@ -160,7 +159,6 @@ const Field = React.forwardRef<
       onChange,
       name,
       autoComplete,
-      autoFocus,
       type,
       simulate: sim,
       label,
@@ -232,7 +230,6 @@ const Field = React.forwardRef<
           disabled,
           name,
           autoComplete,
-          autoFocus,
           type,
           ref: inputRef,
           onChange: (event) => {
