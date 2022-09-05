@@ -19,7 +19,7 @@ import {
   Range,
 } from 'slate'
 import { KeyboardEvent } from 'react'
-import { selectPlaceholder, cleanupEmptyString, isEmpty } from './text'
+import { selectEmptyTextNode, isEmpty } from './text'
 import { config as elConfig } from '../../config/elements'
 
 export const NAV_KEYS = [
@@ -68,11 +68,8 @@ export const cleanupTree = (
           ...rest,
         }
       } else if (Text.isText(node)) {
-        const { template, placeholder, end, text, ...rest } = node
-        return {
-          ...rest,
-          text: cleanupEmptyString(text),
-        }
+        const { template, placeholder, end, ...rest } = node
+        return rest
       }
     })
     .filter(emptyFilter)
@@ -191,7 +188,7 @@ export const selectText = (
 ): void => {
   const [textNode, textPath] = node
   if (!textNode.text) {
-    selectPlaceholder(editor, node)
+    selectEmptyTextNode(editor, node)
     return
   }
   Transforms.select(editor, textPath)

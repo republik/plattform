@@ -24,11 +24,7 @@ import {
 } from '../../config/marks'
 import { config as charConfig } from '../../config/special-chars'
 import { cleanupNode, overlaps } from './tree'
-
-export const PSEUDO_EMPTY_STRING = '\u2060'
-
-export const cleanupEmptyString = (text: string): string =>
-  text.replace(PSEUDO_EMPTY_STRING, '')
+import { SelectionEdge } from 'slate/dist/interfaces/types'
 
 export const getCharCount = (nodes: (Descendant | Node)[]): number =>
   nodes.map((node) => Node.string(node).length).reduce((a, b) => a + b, 0)
@@ -115,20 +111,26 @@ export const toggleMark = (
 export const toTitle = (text = ''): string =>
   text.replace(/([A-Z])/g, ' $1').replace(/^\w/, (c) => c.toUpperCase())
 
-export const selectPlaceholder = (
+export const selectEmptyParentPath = (
+  editor: CustomEditor,
+  path: number[],
+  edge: SelectionEdge = 'start',
+): void => {
+  ReactEditor.focus(editor)
+  Transforms.select(editor, path)
+  Transforms.collapse(editor, { edge })
+}
+
+export const selectEmptyTextNode = (
   editor: CustomEditor,
   node: NodeEntry<CustomText>,
 ): void => {
-  const at = node[1]
-  // COMPAT: safari doesnt want to select empty text nodes
-  // this gets reverted to a normal empty string in the text node
-  Transforms.insertText(editor, PSEUDO_EMPTY_STRING, { at })
-  ReactEditor.focus(editor)
-  Transforms.select(editor, at)
+  const parent = Editor.parent(editor, node[1])
+  const edge = node[1].slice(-1)[0] === 0 ? 'start' : 'end'
+  selectEmptyParentPath(editor, parent[1], edge)
 }
 
-export const isEmpty = (text?: string) =>
-  !text || text === '' || text === PSEUDO_EMPTY_STRING
+export const isEmpty = (text?: string) => !text || text === ''
 
 export const getLinkInText = (text: string) => {
   // regex should only return one link!

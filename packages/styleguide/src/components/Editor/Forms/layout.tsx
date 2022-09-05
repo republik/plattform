@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import { MdInfoOutline } from 'react-icons/all'
+import { MdInfoOutline } from 'react-icons/md'
 
 export const formStyles = {
   section: css({ ':not(:first-child)': { marginTop: 64 } }),

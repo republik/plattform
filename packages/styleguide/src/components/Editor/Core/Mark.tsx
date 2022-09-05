@@ -6,25 +6,17 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { Editor, Transforms } from 'slate'
 import { ReactEditor, useSlate } from 'slate-react'
 import { config as mConfig } from '../config/marks'
 import { ToolbarButton } from './Toolbar'
-import {
-  ButtonConfig,
-  CustomElement,
-  CustomMarksType,
-  CustomText,
-} from '../custom-types'
+import { ButtonConfig, CustomMarksType, CustomText } from '../custom-types'
 import { css, keyframes } from 'glamor'
 import {
   isEmpty,
   isMarkActive,
-  PSEUDO_EMPTY_STRING,
-  selectPlaceholder,
+  selectEmptyParentPath,
   toggleMark,
 } from './helpers/text'
-import { getTextNode } from './helpers/tree'
 import { Marks } from '../Render/Mark'
 
 const fadeIn = keyframes({
@@ -32,7 +24,7 @@ const fadeIn = keyframes({
     opacity: 0,
   },
   to: {
-    opacity: 0.4,
+    opacity: 0.33,
   },
 })
 
@@ -74,10 +66,7 @@ export const MarkButton: React.FC<{
 const Placeholder: React.FC<{
   setStyle: Dispatch<any>
   text: string
-  parent: CustomElement
-  containerRef: React.MutableRefObject<HTMLSpanElement>
-}> = ({ text, setStyle, parent, containerRef }) => {
-  const editor = useSlate()
+}> = ({ text, setStyle }) => {
   const placeholderRef = useRef<HTMLSpanElement>()
 
   useEffect(() => {
@@ -90,20 +79,12 @@ const Placeholder: React.FC<{
     }
   }, [])
 
-  const selectText = () => {
-    const parentPath = ReactEditor.findPath(editor, parent)
-    const parentNode = Editor.node(editor, parentPath)
-    const node = getTextNode(parentNode, editor)
-    selectPlaceholder(editor, node)
-  }
-
   return (
     <span
       ref={placeholderRef}
       {...styles.placeholder}
       style={{ userSelect: 'none' }}
       contentEditable={false}
-      onClick={selectText}
     >
       {text}
     </span>
@@ -120,15 +101,11 @@ export const LeafComponent: React.FC<{
   const showPlaceholder = isEmpty(leaf.text) && !leaf.end
   const containerRef = useRef()
 
-  const removePlaceholders = () => {
-    if (leaf.text.length > 1 && leaf.text.startsWith(PSEUDO_EMPTY_STRING)) {
-      const at = ReactEditor.findPath(editor, children.props.parent)
-      Transforms.insertText(
-        editor,
-        leaf.text.replace(PSEUDO_EMPTY_STRING, ''),
-        { at },
-      )
-      Transforms.select(editor, at)
+  const selectEmptyText = (e) => {
+    if (showPlaceholder) {
+      e.preventDefault(e)
+      const parentPath = ReactEditor.findPath(editor, children.props.parent)
+      selectEmptyParentPath(editor, parentPath)
     }
   }
 
@@ -137,16 +114,11 @@ export const LeafComponent: React.FC<{
       {...styles.leaf}
       style={placeholderStyle}
       {...attributes}
-      onKeyDown={removePlaceholders}
+      onMouseDown={selectEmptyText}
       ref={containerRef}
     >
       {showPlaceholder && (
-        <Placeholder
-          setStyle={setPlaceholderStyle}
-          text={leaf.placeholder}
-          parent={children.props.parent}
-          containerRef={containerRef}
-        />
+        <Placeholder setStyle={setPlaceholderStyle} text={leaf.placeholder} />
       )}
       <Marks
         leaf={leaf}

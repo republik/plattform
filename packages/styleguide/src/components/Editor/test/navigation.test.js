@@ -119,7 +119,7 @@ describe('Slate Editor: Navigation (On Tab)', () => {
 
     selectAdjacent(editor, 'next')
     await new Promise(process.nextTick)
-    expect(editor.selection.focus).toEqual({ path: [2, 5], offset: 1 })
+    expect(editor.selection.focus).toEqual({ path: [2, 5], offset: 0 })
 
     selectAdjacent(editor, 'next')
     await new Promise(process.nextTick)
@@ -141,7 +141,7 @@ describe('Slate Editor: Navigation (On Tab)', () => {
 
     selectAdjacent(editor, 'previous')
     await new Promise(process.nextTick)
-    expect(editor.selection.focus).toEqual({ path: [2, 5], offset: 1 })
+    expect(editor.selection.focus).toEqual({ path: [2, 5], offset: 0 })
 
     selectAdjacent(editor, 'previous')
     await new Promise(process.nextTick)
