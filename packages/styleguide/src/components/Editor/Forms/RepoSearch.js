@@ -41,7 +41,7 @@ export const filterRepos = gql`
             id
             meta {
               title
-              shortTitle
+              description
               image
               path
               externalBaseUrl
@@ -175,7 +175,7 @@ export default class RepoSearch extends Component {
 
     return (
       <ConnectedAutoComplete
-        label='Suchen'
+        label='Dokument suchen'
         filter={filter}
         value={value}
         search={search}

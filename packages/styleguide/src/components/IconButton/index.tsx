@@ -58,7 +58,7 @@ const IconButton = React.forwardRef<
       <Element
         {...styles.button}
         {...(invert && styles.invertFlex)}
-        {...((onClick || href) && styles.hover)}
+        {...((onClick || onMouseDown || href) && styles.hover)}
         {...attributes}
         style={{
           cursor:
