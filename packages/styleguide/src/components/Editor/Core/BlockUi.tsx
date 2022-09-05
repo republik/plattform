@@ -31,7 +31,6 @@ const styles = {
     position: 'absolute',
     background: 'white',
     padding: 3,
-    zIndex: 10,
     borderRadius: 40,
     color: colors.light.text,
   }),
