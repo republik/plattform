@@ -66,6 +66,7 @@ const formatFonts = {
   scribble: 'cursiveTitle',
   editorial: 'serifTitle',
   meta: 'sansSerifRegular',
+  flyer: 'flyerTitle',
 }
 
 const shareImageJustify = {

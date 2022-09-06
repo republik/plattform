@@ -38,7 +38,7 @@ export const FlyerTile: React.FC<{
       {...props}
       {...attributes}
       {...styles.container}
-      {...colorScheme.set('borderBottomColor', 'journalText')}
+      {...colorScheme.set('borderBottomColor', 'flyerText')}
     >
       <div {...styles.content}>{children}</div>
     </div>
