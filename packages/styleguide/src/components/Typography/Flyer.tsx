@@ -141,6 +141,30 @@ export const MetaP = ({ children, attributes, ...props }) => {
   )
 }
 
+export const OpeningP = ({ children, attributes, ...props }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <p
+      {...attributes}
+      {...props}
+      {...css({
+        ...fontStyles.sansSerifMedium,
+        fontSize: 22,
+        lineHeight: 1.318,
+        margin: 0,
+        [mUp]: {
+          fontSize: 29,
+          lineHeight: 1.397,
+          margin: 0,
+        },
+      })}
+      {...colorScheme.set('color', 'flyerText')}
+    >
+      {children}
+    </p>
+  )
+}
+
 export const Small = ({ children, attributes, ...props }) => {
   const [colorScheme] = useColorContext()
 
