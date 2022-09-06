@@ -10,9 +10,9 @@ import { Editor, Transforms, Element as SlateElement, NodeEntry } from 'slate'
 import { config as elConfig } from '../config/elements'
 import { Overlay, OverlayBody, OverlayToolbar } from '../../Overlay'
 import { ReactEditor, useSlate } from 'slate-react'
-import { toTitle } from './helpers/text'
 import { isDescendant } from './helpers/tree'
 import { formStyles } from '../Forms/layout'
+import { useRenderContext } from '../Render/Context'
 
 const FormContext = createContext([])
 
@@ -103,6 +103,7 @@ const ElementForm: React.FC<FormData & { onClose: () => void }> = ({
 }
 
 export const FormOverlay = (): ReactElement => {
+  const { t } = useRenderContext()
   const [formPath, setFormPath] = useFormContext()
   const editor = useSlate()
   const forms = useMemo(() => getForms(editor, formPath), [editor, formPath])
@@ -118,7 +119,7 @@ export const FormOverlay = (): ReactElement => {
   return (
     <Overlay onClose={onClose} mUpStyle={{ minHeight: 0 }}>
       <OverlayToolbar
-        title={toTitle(forms[0].node[0].type)}
+        title={t(`editor/element/${forms[0].node[0].type}`)}
         onClose={onClose}
       />
       <OverlayBody>

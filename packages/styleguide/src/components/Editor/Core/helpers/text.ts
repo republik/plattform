@@ -108,9 +108,6 @@ export const toggleMark = (
   }
 }
 
-export const toTitle = (text = ''): string =>
-  text.replace(/([A-Z])/g, ' $1').replace(/^\w/, (c) => c.toUpperCase())
-
 export const selectEmptyParentPath = (
   editor: CustomEditor,
   path: number[],

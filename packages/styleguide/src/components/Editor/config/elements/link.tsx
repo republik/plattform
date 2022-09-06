@@ -97,7 +97,6 @@ const Form: React.FC<ElementFormProps<LinkElement>> = ({
               href: `/~${value.id}`,
               title: value.name,
             })
-            setText(value.name)
           }}
         />
       </div>

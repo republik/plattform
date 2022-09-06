@@ -434,6 +434,10 @@
       "value": "Paragraf"
     },
     {
+      "key": "editor/element/link",
+      "value": "Link"
+    },
+    {
       "key": "editor/element/ul",
       "value": "Liste"
     },
@@ -444,6 +448,26 @@
     {
       "key": "editor/element/listItem",
       "value": "Listelement"
+    },
+    {
+      "key": "editor/element/figure",
+      "value": "Bild"
+    },
+    {
+      "key": "editor/element/figureCaption",
+      "value": "Legende"
+    },
+    {
+      "key": "editor/element/figureByline",
+      "value": "Credit"
+    },
+    {
+      "key": "editor/element/pullQuote",
+      "value": "Zitat"
+    },
+    {
+      "key": "editor/element/articlePreview",
+      "value": "Beitragvorschau"
     },
     {
       "key": "editor/element/flyerTopic",
@@ -466,11 +490,43 @@
       "value": "Punchline"
     },
     {
+      "key": "editor/element/flyerTile",
+      "value": "standard Block"
+    },
+    {
+      "key": "editor/element/flyerTileMeta",
+      "value": "Moderationsblock"
+    },
+    {
       "key": "editor/placeholder/paragraph",
       "value": "Text"
     },
     {
       "key": "editor/placeholder/listItem",
+      "value": "Text"
+    },
+    {
+      "key": "editor/placeholder/articlePreviewTitle",
+      "value": "Titel"
+    },
+    {
+      "key": "editor/placeholder/articlePreviewLead",
+      "value": "Lead"
+    },
+    {
+      "key": "editor/placeholder/pullQuoteText",
+      "value": "Zitat"
+    },
+    {
+      "key": "editor/placeholder/pullQuoteSource",
+      "value": "Quelle"
+    },
+    {
+      "key": "editor/placeholder/figureCaption",
+      "value": "Legende&nbsp;"
+    },
+    {
+      "key": "editor/placeholder/flyerSignature",
       "value": "Text"
     },
     {
