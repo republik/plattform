@@ -71,6 +71,10 @@ export const flyerTileOpening: Partial<FlyerTileOpeningElement> = {
   type: 'flyerTileOpening',
   children: [
     {
+      type: 'flyerDate',
+      children: [{ text: '' }],
+    },
+    {
       type: 'headline',
       children: [{ text: '' }],
     },

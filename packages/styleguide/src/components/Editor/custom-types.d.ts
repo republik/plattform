@@ -176,7 +176,7 @@ export type FlyerSignatureElement = SharedElement & {
 
 export type FlyerDateElement = SharedElement & {
   type: 'flyerDate'
-  value: Date
+  value?: Date
 }
 
 export type ArticlePreviewElement = SharedElement & {

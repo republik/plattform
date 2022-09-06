@@ -585,6 +585,10 @@
       "value": "Verlinktes Dokument: "
     },
     {
+      "key": "metaData/field/href/error",
+      "value": "Geben sie eine gültige URL an"
+    },
+    {
       "key": "metaData/field/center",
       "value": "Zentriert"
     },
@@ -1801,8 +1805,16 @@
       "value": "Moderation"
     },
     {
+      "key": "editor/element/flyerOpeningP",
+      "value": "Begrüssung"
+    },
+    {
       "key": "editor/element/flyerPunchline",
       "value": "Punchline"
+    },
+    {
+      "key": "editor/element/flyerDate",
+      "value": "Datum"
     },
     {
       "key": "editor/element/flyerTile",
@@ -1899,6 +1911,10 @@
     {
       "key": "editor/form/link/urlError",
       "value": "Geben sie eine gültige URL an"
+    },
+    {
+      "key": "editor/meta/flyer/defaultShareText",
+      "value": "Sie mögen die Republik, haben aber zu wenig Zeit? Dann brauchen Sie nicht mehr als das."
     }
   ]
 }
