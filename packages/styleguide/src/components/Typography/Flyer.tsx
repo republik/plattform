@@ -9,7 +9,7 @@ import { useRenderContext } from '../Editor/Render/Context'
 export const Layout = ({ children, attributes }) => {
   const [colorScheme] = useColorContext()
   return (
-    <div {...colorScheme.set('background', 'journalBg')} {...attributes}>
+    <div {...colorScheme.set('background', 'flyerBg')} {...attributes}>
       {children}
     </div>
   )
@@ -22,7 +22,7 @@ export const H1 = ({ children, attributes, ...props }) => {
     <h1
       {...attributes}
       {...props}
-      {...colorScheme.set('color', 'journalText')}
+      {...colorScheme.set('color', 'flyerText')}
       {...css({
         ...fontStyles.flyerTitle,
         lineHeight: 1.185,
@@ -47,7 +47,7 @@ export const H2 = ({ children, attributes, ...props }) => {
     <h2
       {...attributes}
       {...props}
-      {...colorScheme.set('color', 'journalFormatText')}
+      {...colorScheme.set('color', 'flyerFormatText')}
       {...css({
         ...fontStyles.flyerTitle,
         textTransform: 'uppercase',
@@ -74,7 +74,7 @@ export const H3 = ({ children, attributes, ...props }) => {
     <h3
       {...attributes}
       {...props}
-      {...colorScheme.set('color', 'journalText')}
+      {...colorScheme.set('color', 'flyerText')}
       {...css({
         ...fontStyles.flyerTitle,
         lineHeight: 1.231,
@@ -110,7 +110,7 @@ export const P = ({ children, attributes, ...props }) => {
           margin: '0 0 16px',
         },
       })}
-      {...colorScheme.set('color', 'journalText')}
+      {...colorScheme.set('color', 'flyerText')}
     >
       {children}
     </p>
@@ -134,7 +134,7 @@ export const MetaP = ({ children, attributes, ...props }) => {
           margin: '0 0 66px',
         },
       })}
-      {...colorScheme.set('color', 'journalMetaText')}
+      {...colorScheme.set('color', 'flyerMetaText')}
     >
       {children}
     </p>
@@ -158,7 +158,7 @@ export const Small = ({ children, attributes, ...props }) => {
           lineHeight: 1.235,
         },
       })}
-      {...colorScheme.set('color', 'journalText')}
+      {...colorScheme.set('color', 'flyerText')}
     >
       {children}
     </p>

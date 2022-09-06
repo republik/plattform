@@ -75,7 +75,7 @@ export const FlyerAuthor: React.FC<FlyerProps> = ({
               alt=''
             />
           )}
-          <span {...styles.name} {...colorScheme.set('color', 'journalText')}>
+          <span {...styles.name} {...colorScheme.set('color', 'flyerText')}>
             {resolvedAuthor?.name || t('editor/element/flyerAuthor')}
           </span>
         </div>
