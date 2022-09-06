@@ -18,8 +18,8 @@ export const useRenderContext = () => useContext(RenderContext)
 
 export const RenderContextProvider: React.FC<RenderProps> = ({
   children,
-  Link,
-  t,
+  Link = PlaceholderLink,
+  t = identityFn,
 }) => {
   return (
     <RenderContext.Provider value={{ Link, t }}>

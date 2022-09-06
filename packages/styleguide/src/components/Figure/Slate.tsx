@@ -30,7 +30,7 @@ export const Figure: React.FC<{
   [x: string]: unknown
 }> = ({ children, size, attributes = {}, ...props }) => {
   return (
-    <InnerFigure {...attributes} size={size} {...props}>
+    <InnerFigure attributes={attributes} size={size} {...props}>
       {children}
     </InnerFigure>
   )
