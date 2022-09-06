@@ -129,7 +129,7 @@ With callout menu:
 ```
 
 ```react
-<TeaserFeed kind='flyer' format={{meta: {title: '«Nicht mehr als das», ein Republik Journal', kind: 'flyer'}}}
+<TeaserFeed kind='flyer' format={{meta: {title: 'Republik Journal', kind: 'flyer'}}}
   title='The quick brown fox jumps over the lazy dog'
 />
 ```
