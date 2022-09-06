@@ -93,7 +93,11 @@ export const H3 = ({ children, attributes, ...props }) => {
   )
 }
 
-export const P = ({ children, attributes, ...props }) => {
+export const P: React.FC<{ attributes?: any; [x: string]: unknown }> = ({
+  children,
+  attributes,
+  ...props
+}) => {
   const [colorScheme] = useColorContext()
   return (
     <p
@@ -141,7 +145,11 @@ export const MetaP = ({ children, attributes, ...props }) => {
   )
 }
 
-export const Small = ({ children, attributes, ...props }) => {
+export const Small: React.FC<{ attributes?: any; [x: string]: unknown }> = ({
+  children,
+  attributes,
+  ...props
+}) => {
   const [colorScheme] = useColorContext()
 
   return (

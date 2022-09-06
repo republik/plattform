@@ -12,6 +12,7 @@ import {
 } from '../../ArticlePreview'
 import { FlyerTile } from '../../Flyer'
 import { FlyerAuthor } from '../../Flyer/Author'
+import { FlyerDate } from '../../Flyer/Date'
 import { PullQuote, PullQuoteText } from '../../Flyer/PullQuote'
 import { Quiz, QuizAnswer } from '../../Flyer/Quiz'
 import { DefaultContainer } from '../Render/Containers'
@@ -28,6 +29,7 @@ const schema: SchemaConfig = {
   flyerMetaP: Flyer.MetaP,
   flyerPunchline: FigureCaption,
   flyerSignature: Flyer.Small,
+  flyerDate: FlyerDate,
   flyerTitle: Flyer.H3,
   flyerTopic: Flyer.H2,
   articlePreview: ArticlePreview,

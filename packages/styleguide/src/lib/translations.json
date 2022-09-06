@@ -470,6 +470,10 @@
       "value": "Beitragvorschau"
     },
     {
+      "key": "editor/element/flyerDate",
+      "value": "Datum"
+    },
+    {
       "key": "editor/element/flyerTopic",
       "value": "Format"
     },
@@ -480,6 +484,10 @@
     {
       "key": "editor/element/flyerAuthor",
       "value": "Autorin"
+    },
+    {
+      "key": "editor/element/flyerOpeningP",
+      "value": "Begrüssung"
     },
     {
       "key": "editor/element/flyerMetaP",
