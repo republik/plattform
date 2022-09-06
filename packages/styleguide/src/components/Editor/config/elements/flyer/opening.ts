@@ -3,5 +3,9 @@ import { baseConfig } from './index'
 
 export const config: ElementConfigI = {
   ...baseConfig,
-  structure: [{ type: 'headline' }, { type: 'flyerMetaP', repeat: true }],
+  structure: [
+    { type: 'flyerDate' },
+    { type: 'headline' },
+    { type: 'flyerMetaP', repeat: true },
+  ],
 }

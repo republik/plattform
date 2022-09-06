@@ -82,6 +82,8 @@ const Placeholder: React.FC<{
     }
   }, [])
 
+  if (!tKey) return null
+
   return (
     <span
       ref={placeholderRef}

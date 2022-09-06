@@ -25,6 +25,7 @@ import {
 import { config as charConfig } from '../../config/special-chars'
 import { cleanupNode, overlaps } from './tree'
 import { SelectionEdge } from 'slate/dist/interfaces/types'
+import isURL from 'validator/lib/isURL'
 
 export const getCharCount = (nodes: (Descendant | Node)[]): number =>
   nodes.map((node) => Node.string(node).length).reduce((a, b) => a + b, 0)
@@ -272,13 +273,4 @@ export const insertSpecialChars = (editor: CustomEditor, chars: string) => {
     anchor: { path: start.path, offset: start.offset + 1 },
     focus: endLocation,
   })
-}
-
-export const isValidHttpUrl = (test: string): boolean => {
-  try {
-    new URL(test)
-  } catch (_) {
-    return false
-  }
-  return true
 }

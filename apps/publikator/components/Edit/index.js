@@ -23,7 +23,7 @@ import {
 import BranchingNotice from '../VersionControl/BranchingNotice'
 import { useEffect, useState } from 'react'
 import { useWarningContext } from './Warnings'
-import { INITIAL_VALUE } from '../ContentEditor'
+import { getInitialValue, INITIAL_VALUE } from '../ContentEditor'
 import { API_UNCOMMITTED_CHANGES_URL } from '../../lib/settings'
 import EditView from './EditView'
 import Preview from './Preview'
@@ -35,13 +35,13 @@ const debug = createDebug('publikator:slate:edit')
 
 const getCommittedContent = (data) => data?.repo?.commit?.document?.content
 
-export const getCurrentContent = (store, data) => {
+export const getCurrentContent = (store, data, options) => {
   const storedContent = store?.get('editorState')
   const committedContent = getCommittedContent(data)
   return (
     storedContent ||
     committedContent || {
-      children: INITIAL_VALUE,
+      children: getInitialValue(options),
       meta: {
         title: 'Journal',
         slug: 'journal',
@@ -111,7 +111,7 @@ const EditLoader = ({
         const newStore = initLocalStore(storeKey)
         setStore(newStore)
         checkLocalStorageSupport()
-        forceSetContent(getCurrentContent(newStore, data))
+        forceSetContent(getCurrentContent(newStore, data, { publishDate }))
       }
     }
   }, [store, commitId, repoId, data])
@@ -318,7 +318,7 @@ const EditLoader = ({
     }
     setDidUnlock(false)
     setAcknowledgedUsers([])
-    forceSetContent(getCurrentContent(null, data))
+    forceSetContent(getCurrentContent(null, data, { publishDate }))
     router.replace({
       pathname,
       query: queryWithoutPreview,

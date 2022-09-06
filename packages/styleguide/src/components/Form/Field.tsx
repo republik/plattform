@@ -133,10 +133,10 @@ const ArrowDown: React.FC<ArrowProps> = ({ size, fill, ...props }) => (
 const Field = React.forwardRef<
   HTMLInputElement,
   {
-    value?: string | number
+    value?: string | number | Date
     onChange?: (
       event: InputEvent,
-      value: string | number,
+      value: string | number | Date,
       shouldValidate: boolean,
     ) => void
     name?: string

@@ -470,6 +470,10 @@
       "value": "Beitragvorschau"
     },
     {
+      "key": "editor/element/flyerDate",
+      "value": "Datum"
+    },
+    {
       "key": "editor/element/flyerTopic",
       "value": "Format"
     },
@@ -480,6 +484,10 @@
     {
       "key": "editor/element/flyerAuthor",
       "value": "Autorin"
+    },
+    {
+      "key": "editor/element/flyerOpeningP",
+      "value": "Begrüssung"
     },
     {
       "key": "editor/element/flyerMetaP",
@@ -584,6 +592,14 @@
     {
       "key": "editor/blockUi/remove",
       "value": "Element entfernen"
+    },
+    {
+      "key": "metaData/field/href/error",
+      "value": "Geben sie eine gültige URL an"
+    },
+    {
+      "key": "metaData/field/href/document",
+      "value": "Verlinktes Dokument: "
     }
   ]
 }

@@ -47,7 +47,6 @@ const styles = {
   }),
 }
 
-// TODO: replace slug by most recent slug in backend?
 export const FlyerAuthor: React.FC<FlyerProps> = ({
   children,
   attributes,

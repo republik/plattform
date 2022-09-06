@@ -174,6 +174,11 @@ export type FlyerSignatureElement = SharedElement & {
   type: 'flyerSignature'
 }
 
+export type FlyerDateElement = SharedElement & {
+  type: 'flyerDate'
+  value?: Date
+}
+
 export type ArticlePreviewElement = SharedElement & {
   type: 'articlePreview'
   href?: string
@@ -238,6 +243,7 @@ export type CustomElement =
   | FlyerAuthorElement
   | FlyerPunchlineElement
   | FlyerSignatureElement
+  | FlyerDateElement
   | ArticlePreviewElement
   | ArticlePreviewTextContainerElement
   | ArticlePreviewTitleElement
@@ -281,6 +287,7 @@ export type CustomElementsType =
   | 'flyerAuthor'
   | 'flyerPunchline'
   | 'flyerSignature'
+  | 'flyerDate'
   | 'articlePreview'
   | 'articlePreviewTextContainer'
   | 'articlePreviewTitle'

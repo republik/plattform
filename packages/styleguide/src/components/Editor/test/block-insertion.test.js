@@ -573,6 +573,10 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         id: '123',
         children: [
           {
+            type: 'flyerDate',
+            children: [{ text: '' }],
+          },
+          {
             type: 'headline',
             children: [{ text: '' }],
           },
@@ -605,7 +609,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
       },
     ]
     const editor = await setup(structure)
-    await Transforms.select(editor, [0, 2, 0])
+    await Transforms.select(editor, [0, 3, 0])
     insertRepeat(editor)
     await new Promise(process.nextTick)
     expect(cleanupTree(value)).toMatchObject([flyerTileOpening, flyerTile])
@@ -618,6 +622,10 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
         type: 'flyerTileOpening',
         id: '123',
         children: [
+          {
+            type: 'flyerDate',
+            children: [{ text: '' }],
+          },
           {
             type: 'headline',
             children: [{ text: '' }],
@@ -652,7 +660,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
       },
     ]
     const editor = await setup(structure, { schema: flyerSchema })
-    await Transforms.select(editor, [0, 2, 0])
+    await Transforms.select(editor, [0, 3, 0])
     insertRepeat(editor)
     await new Promise(process.nextTick)
     expect(cleanupTree(value)).toMatchObject([

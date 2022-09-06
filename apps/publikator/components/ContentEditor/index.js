@@ -4,39 +4,50 @@ import { Editor, flyerEditorSchema } from '@project-r/styleguide/editor'
 import withAuthorization from '../../components/Auth/withAuthorization'
 import { HEADER_HEIGHT } from '../Frame/constants'
 import compose from 'lodash/flowRight'
+import withT from '../../lib/withT'
 
-export const INITIAL_VALUE = [
-  {
-    type: 'flyerTileOpening',
-    children: [
-      {
-        type: 'headline',
-        children: [
-          { text: 'Guten Morgen,' },
-          { type: 'break', children: [{ text: '' }] },
-          { text: 'schoen sind Sie da!' },
-        ],
-      },
-    ],
-  },
-  {
-    type: 'flyerTileClosing',
-    children: [
-      {
-        type: 'headline',
-        children: [{ text: 'Bis nachher!' }],
-      },
-      {
-        type: 'flyerSignature',
-        children: [
-          {
-            text: 'Ihre Crew der Republik',
-          },
-        ],
-      },
-    ],
-  },
-]
+export const getInitialValue = (options) => {
+  const date = options?.publishDate
+    ? { value: new Date(options.publishDate) }
+    : {}
+  return [
+    {
+      type: 'flyerTileOpening',
+      children: [
+        {
+          type: 'flyerDate',
+          children: [{ text: '' }],
+          ...date,
+        },
+        {
+          type: 'headline',
+          children: [
+            { text: 'Guten Morgen,' },
+            { type: 'break', children: [{ text: '' }] },
+            { text: 'schön sind Sie da!' },
+          ],
+        },
+      ],
+    },
+    {
+      type: 'flyerTileClosing',
+      children: [
+        {
+          type: 'headline',
+          children: [{ text: 'Bis nachher!' }],
+        },
+        {
+          type: 'flyerSignature',
+          children: [
+            {
+              text: 'Ihre Crew der Republik',
+            },
+          ],
+        },
+      ],
+    },
+  ]
+}
 
 const STRUCTURE = [
   {
@@ -58,7 +69,7 @@ const TOOLBAR = {
   showChartCount: true,
 }
 
-const Index = ({ value, onChange, readOnly }) => {
+const Index = ({ value, onChange, readOnly, t }) => {
   return (
     <Editor
       value={value}
@@ -71,9 +82,10 @@ const Index = ({ value, onChange, readOnly }) => {
         editorSchema: flyerEditorSchema,
         toolbar: TOOLBAR,
         readOnly,
+        t,
       }}
     />
   )
 }
 
-export default compose(withRouter, withAuthorization(['editor']))(Index)
+export default compose(withT, withRouter, withAuthorization(['editor']))(Index)

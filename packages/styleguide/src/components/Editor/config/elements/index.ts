@@ -24,6 +24,7 @@ import { config as flyerAuthor } from './flyer/components/author'
 import { config as flyerMetaP } from './flyer/components/metaP'
 import { config as flyerPunchline } from './flyer/components/punchline'
 import { config as flyerSignature } from './flyer/components/signature'
+import { config as flyerDate } from './flyer/components/date'
 import { config as flyerTitle } from './flyer/components/title'
 import { config as flyerTopic } from './flyer/components/topic'
 import { config as articlePreview } from './articlePreview'
@@ -62,6 +63,7 @@ export const config: ElementsConfig = {
   flyerMetaP,
   flyerPunchline,
   flyerSignature,
+  flyerDate,
   flyerTitle,
   flyerTopic,
   articlePreview,

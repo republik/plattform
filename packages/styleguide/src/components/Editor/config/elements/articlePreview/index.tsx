@@ -11,8 +11,9 @@ import RepoSearch from '../../../Forms/RepoSearch'
 import Checkbox from '../../../../Form/Checkbox'
 import { useSlate } from 'slate-react'
 import { Transforms } from 'slate'
-import Field from '../../../../Form/Field'
-import { isValidHttpUrl } from '../../../Core/helpers/text'
+import { AutoSlugLinkInfo } from '../../../Forms/github'
+import { useRenderContext } from '../../../Render/Context'
+import { formStyles } from '../../../Forms/layout'
 
 const styles = {
   container: css({
@@ -29,62 +30,51 @@ const Form: React.FC<ElementFormProps<ArticlePreviewElement>> = ({
   path,
   onChange,
 }) => {
+  const { t } = useRenderContext()
   const editor = useSlate()
   const [syncData, setSyncData] = useState<boolean>(true)
-  const href = element.href || ''
   return (
     <>
-      <div>
-        <Field
-          label='URL'
-          type='url'
-          error={
-            !!href && !isValidHttpUrl(href) && 'Geben sie eine gültige URL an'
-          }
-          value={href}
-          onChange={(_, value: string) => {
-            onChange({
-              href: value,
-            })
-          }}
-        />
-        <RepoSearch
-          onChange={({ value }) => {
-            const href = `https://github.com/${value.id}?autoSlug`
-            onChange({
-              href,
-            })
-            if (syncData) {
-              const meta = value.latestCommit.document.meta
-              if (meta.title) {
-                Transforms.insertText(editor, meta.title, {
-                  at: path.concat([1, 0]),
-                })
-              }
-              if (meta.shortTitle) {
-                Transforms.insertText(editor, meta.description, {
-                  at: path.concat([1, 1]),
-                })
-              }
-              if (meta.image) {
-                Transforms.setNodes(
-                  editor,
-                  { images: { default: { url: meta.image } } },
-                  {
-                    at: path.concat([0]),
-                  },
-                )
-              }
+      <AutoSlugLinkInfo
+        value={element.href || ''}
+        label={t('metaData/field/href/document')}
+      />
+      <RepoSearch
+        onChange={({ value }) => {
+          const href = `https://github.com/${value.id}?autoSlug`
+          onChange({
+            href,
+          })
+          if (syncData) {
+            const meta = value.latestCommit.document.meta
+            if (meta.title) {
+              Transforms.insertText(editor, meta.title, {
+                at: path.concat([1, 0]),
+              })
             }
-          }}
-        />
-        <Checkbox
-          checked={syncData}
-          onChange={(_, checked) => setSyncData(checked)}
-        >
-          Titel, Lead und Bild synchen
-        </Checkbox>
-      </div>
+            if (meta.shortTitle) {
+              Transforms.insertText(editor, meta.description, {
+                at: path.concat([1, 1]),
+              })
+            }
+            if (meta.image) {
+              Transforms.setNodes(
+                editor,
+                { images: { default: { url: meta.image } } },
+                {
+                  at: path.concat([0]),
+                },
+              )
+            }
+          }
+        }}
+      />
+      <Checkbox
+        checked={syncData}
+        onChange={(_, checked) => setSyncData(checked)}
+      >
+        Titel, Lead und Bild synchen
+      </Checkbox>
       <div {...styles.container}>
         <div>
           <ColorPicker
