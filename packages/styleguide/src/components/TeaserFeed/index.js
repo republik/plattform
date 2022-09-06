@@ -92,6 +92,8 @@ export const TeaserFeed = ({
       ? Headlines.Interaction
       : formatMeta.kind === 'scribble' || metaKind === 'scribble'
       ? Headlines.Scribble
+      : formatMeta.kind === 'flyer'
+      ? Headlines.Flyer
       : Headlines.Editorial
   const borderColor = formatMeta.title
     ? formatMeta.color || colors[formatMeta.kind]

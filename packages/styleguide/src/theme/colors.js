@@ -52,6 +52,7 @@ const colorsDeprecated = {
   meta: '#64966E',
   feuilleton: '#555555',
   scribble: '#ef4533',
+  flyer: '#405080',
   neutral: '#bbb',
   highlight: '#FFFFCC',
   sequential: [
@@ -114,6 +115,7 @@ const colors = {
     accentColorFormats: '#d44438',
     accentColorMeta: '#000000',
     accentColorAudio: '#000000',
+    accentColorFlyer: '#405080',
     overlayShadow: '0 0 15px rgba(0,0,0,0.1)',
     fadeOutGradientDefault:
       'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)',
@@ -167,6 +169,7 @@ const colors = {
     accentColorFormats: '#d44438',
     accentColorMeta: '#FFFFFF',
     accentColorAudio: '#FFFFFF',
+    accentColorFlyer: '#405080',
     overlayShadow: '0 0 15px rgba(0,0,0,0.3)',
     fadeOutGradientDefault:
       'linear-gradient(0deg, rgba(25,25,25,1) 0%, rgba(25,25,25,0) 100%)',
