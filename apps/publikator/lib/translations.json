@@ -1715,6 +1715,190 @@
     {
       "key": "styleguide/SeriesNav/current",
       "value": "Sie lesen:"
+    },
+    {
+      "key": "editor/element/headline",
+      "value": "Titel"
+    },
+    {
+      "key": "editor/element/paragraph",
+      "value": "Paragraf"
+    },
+    {
+      "key": "editor/element/break",
+      "value": "Leerzeile"
+    },
+    {
+      "key": "editor/element/figure",
+      "value": "Bild"
+    },
+    {
+      "key": "editor/element/figureImage",
+      "value": "Bild"
+    },
+    {
+      "key": "editor/element/figureCaption",
+      "value": "Legende"
+    },
+    {
+      "key": "editor/element/figureByline",
+      "value": "Quelle"
+    },
+    {
+      "key": "editor/element/link",
+      "value": "Link"
+    },
+    {
+      "key": "editor/element/ul",
+      "value": "Liste"
+    },
+    {
+      "key": "editor/element/ol",
+      "value": "Aufzählung"
+    },
+    {
+      "key": "editor/element/listItem",
+      "value": "Listelement"
+    },
+    {
+      "key": "editor/element/pullQuote",
+      "value": "Zitat"
+    },
+    {
+      "key": "editor/element/pullQuoteText",
+      "value": "Zitat"
+    },
+    {
+      "key": "editor/element/pullQuoteSource",
+      "value": "Quelle"
+    },
+    {
+      "key": "editor/element/articlePreview",
+      "value": "Vorschau"
+    },
+    {
+      "key": "editor/element/articlePreviewTitle",
+      "value": "Titel"
+    },
+    {
+      "key": "editor/element/articlePreviewLead",
+      "value": "Aufmacher"
+    },
+    {
+      "key": "editor/element/flyerTopic",
+      "value": "Format"
+    },
+    {
+      "key": "editor/element/flyerTitle",
+      "value": "Titel"
+    },
+    {
+      "key": "editor/element/flyerAuthor",
+      "value": "Autorin"
+    },
+    {
+      "key": "editor/element/flyerMetaP",
+      "value": "Moderation"
+    },
+    {
+      "key": "editor/element/flyerPunchline",
+      "value": "Punchline"
+    },
+    {
+      "key": "editor/element/flyerTile",
+      "value": "standard Block"
+    },
+    {
+      "key": "editor/element/flyerTileMeta",
+      "value": "Moderationsblock"
+    },
+    {
+      "key": "editor/element/quiz",
+      "value": "Quiz"
+    },
+    {
+      "key": "editor/element/quizItem",
+      "value": "Quiz Element"
+    },
+    {
+      "key": "editor/element/quizAnswer",
+      "value": "Antwort"
+    },
+    {
+      "key": "editor/element/quizAnswerInfo",
+      "value": "Info"
+    },
+    {
+      "key": "editor/placeholder/paragraph",
+      "value": "Text"
+    },
+    {
+      "key": "editor/placeholder/listItem",
+      "value": "Text"
+    },
+    {
+      "key": "editor/placeholder/flyerSignature",
+      "value": "Text"
+    },
+    {
+      "key": "editor/mark/bold",
+      "value": "gefettet"
+    },
+    {
+      "key": "editor/mark/italic",
+      "value": "kursiv"
+    },
+    {
+      "key": "editor/mark/strikethrough",
+      "value": "durchgestrichen"
+    },
+    {
+      "key": "editor/mark/sup",
+      "value": "hochgestellt"
+    },
+    {
+      "key": "editor/mark/sub",
+      "value": "tiefgestellt"
+    },
+    {
+      "key": "editor/specialChar/nbsp",
+      "value": "Dauerleerzeichen"
+    },
+    {
+      "key": "editor/specialChar/shy",
+      "value": "weiches Trennzeichen"
+    },
+    {
+      "key": "editor/specialChar/quotes",
+      "value": "Anführungszeichen"
+    },
+    {
+      "key": "editor/specialChar/nestedQuotes",
+      "value": "einzelne Anführungszeichen"
+    },
+    {
+      "key": "editor/blockUi/moveUp",
+      "value": "nach oben scheiben"
+    },
+    {
+      "key": "editor/blockUi/moveDown",
+      "value": "nach unten scheiben"
+    },
+    {
+      "key": "editor/blockUi/edit",
+      "value": "Element bearbeiten"
+    },
+    {
+      "key": "editor/blockUi/new",
+      "value": "neues Element erzeugen"
+    },
+    {
+      "key": "editor/blockUi/remove",
+      "value": "Element entfernen"
+    },
+    {
+      "key": "editor/form/link/urlError",
+      "value": "Geben sie eine gültige URL an"
     }
   ]
 }

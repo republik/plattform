@@ -4,6 +4,7 @@ import { Editor, flyerEditorSchema } from '@project-r/styleguide/editor'
 import withAuthorization from '../../components/Auth/withAuthorization'
 import { HEADER_HEIGHT } from '../Frame/constants'
 import compose from 'lodash/flowRight'
+import withT from '../../lib/withT'
 
 export const INITIAL_VALUE = [
   {
@@ -58,7 +59,7 @@ const TOOLBAR = {
   showChartCount: true,
 }
 
-const Index = ({ value, onChange, readOnly }) => {
+const Index = ({ value, onChange, readOnly, t }) => {
   return (
     <Editor
       value={value}
@@ -71,9 +72,10 @@ const Index = ({ value, onChange, readOnly }) => {
         editorSchema: flyerEditorSchema,
         toolbar: TOOLBAR,
         readOnly,
+        t,
       }}
     />
   )
 }
 
-export default compose(withRouter, withAuthorization(['editor']))(Index)
+export default compose(withT, withRouter, withAuthorization(['editor']))(Index)

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { createEditor, Editor, Transforms, Text } from 'slate'
 import { withHistory } from 'slate-history'
 import {
@@ -94,6 +94,10 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
   }> = ({ element, children, attributes }) => {
     const setFormPath = useFormContext()[1]
     const isSelected = useSelected()
+    const path = useMemo(
+      () => ReactEditor.findPath(editor, element),
+      [editor, element],
+    )
     const config = elementsConfig[element.type]
     if (!config) {
       return (
@@ -122,7 +126,6 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
         </ErrorMessage>
       )
     }
-    const path = ReactEditor.findPath(editor, element)
     const selectVoid = (e) => {
       if (isVoid) {
         e.preventDefault()

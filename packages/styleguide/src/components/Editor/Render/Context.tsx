@@ -3,7 +3,6 @@ import { FormatterFunction } from '../../../lib/translate'
 
 type RenderProps = {
   Link?: React.FC<any>
-  Share?: React.FC
   t?: FormatterFunction
 }
 
@@ -19,13 +18,11 @@ export const useRenderContext = () => useContext(RenderContext)
 
 export const RenderContextProvider: React.FC<RenderProps> = ({
   children,
-  Link = PlaceholderLink,
-  Share,
-  t = identityFn,
+  Link,
+  t,
 }) => {
-  const renderContextValue = { Link, Share, t }
   return (
-    <RenderContext.Provider value={renderContextValue}>
+    <RenderContext.Provider value={{ Link, t }}>
       {children}
     </RenderContext.Provider>
   )

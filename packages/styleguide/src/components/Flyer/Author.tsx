@@ -55,7 +55,7 @@ export const FlyerAuthor: React.FC<FlyerProps> = ({
   resolvedAuthor,
   ...props
 }) => {
-  const { Link, t } = useRenderContext()
+  const { Link } = useRenderContext()
   const [colorScheme] = useColorContext()
 
   return (
@@ -76,7 +76,7 @@ export const FlyerAuthor: React.FC<FlyerProps> = ({
             />
           )}
           <span {...styles.name} {...colorScheme.set('color', 'journalText')}>
-            {resolvedAuthor?.name || t('editor/element/flyerAuthor')}
+            {resolvedAuthor?.name || 'Autor'}
           </span>
         </div>
         {children}

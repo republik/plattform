@@ -5,7 +5,7 @@ import {
   NormalizeFn,
 } from '../../custom-types'
 import { LinkIcon } from '../../../Icons'
-import React, { useEffect, useRef, useState } from 'react'
+import React from 'react'
 import Field from '../../../Form/Field'
 import { Editor, Transforms } from 'slate'
 import {
@@ -13,37 +13,17 @@ import {
   getLinkInText,
   isValidHttpUrl,
 } from '../../Core/helpers/text'
-import renderAsText from '../../Render/text'
-import { useSlate } from 'slate-react'
 import RepoSearch from '../../Forms/RepoSearch'
 import AuthorSearch from '../../Forms/AuthorSearch'
-import { formStyles, Hint } from '../../Forms/layout'
+import { formStyles } from '../../Forms/layout'
+import { useRenderContext } from '../../Render/Context'
 
 const Form: React.FC<ElementFormProps<LinkElement>> = ({
   element,
-  path,
   onChange,
 }) => {
+  const { t } = useRenderContext()
   const href = element.href || ''
-  const initText = renderAsText([element])
-  const [text, setText] = useState<string>(initText)
-  const editor = useSlate()
-  const textRef = useRef<string>()
-  textRef.current = text
-
-  const updateSlate = () => {
-    if (textRef.current !== initText) {
-      Transforms.insertText(editor, textRef.current, {
-        at: path,
-      })
-    }
-  }
-
-  // Directly updating the link props causes issues
-  // with the normalizer and the cursor.
-  useEffect(() => {
-    return updateSlate
-  }, [])
 
   return (
     <>
@@ -52,7 +32,7 @@ const Form: React.FC<ElementFormProps<LinkElement>> = ({
           label='URL'
           type='url'
           error={
-            !!href && !isValidHttpUrl(href) && 'Geben sie eine gültige URL an'
+            !!href && !isValidHttpUrl(href) && t('editor/form/link/urlError')
           }
           value={href}
           onChange={(_, value: string) => {
@@ -70,18 +50,8 @@ const Form: React.FC<ElementFormProps<LinkElement>> = ({
             })
           }}
         />
-        <Field
-          label='Text'
-          type='text'
-          value={text}
-          onChange={(_, value: string) => {
-            setText(value)
-          }}
-        />
-        <Hint text='Link Text editieren wird die lokale Formatierung löschen.' />
       </div>
       <div {...formStyles.section}>
-        <h3 {...formStyles.sectionTitle}>Suchen und ausfüllen</h3>
         <RepoSearch
           onChange={({ value, text }) => {
             const href = `https://github.com/${value.id}?autoSlug`

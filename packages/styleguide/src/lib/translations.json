@@ -584,6 +584,14 @@
     {
       "key": "editor/blockUi/remove",
       "value": "Element entfernen"
+    },
+    {
+      "key": "editor/form/link/urlError",
+      "value": "Geben sie eine gültige URL an"
+    },
+    {
+      "key": "editor/form/link/textHint",
+      "value": "Link Text editieren wird die lokale Formatierung löschen."
     }
   ]
 }
