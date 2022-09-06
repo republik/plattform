@@ -32,13 +32,13 @@ const ShareImageForm = withT(({ t, data, onChange }) => {
           }
           text={data.shareText}
           onTextChange={(e) => onChange('shareText', e.target.value)}
-          format={'editorial'}
+          format={{ kind: 'flyer', title: 'Das Republik Journal' }}
         />
         <ShareImagePreview
           fontSize={data.shareFontSize || 60}
           inverted={data.shareInverted}
-          text={data.shareText}
-          format={'editorial'}
+          text={data.shareText || t('editor/meta/flyer/defaultShareText')}
+          format={{ kind: 'flyer', title: 'Das Republik Journal' }}
           preview
         />
       </MetaOption>
