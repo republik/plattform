@@ -508,6 +508,26 @@
     {
       "key": "editor/specialChar/nestedQuotes",
       "value": "einzelne Anführungszeichen"
+    },
+    {
+      "key": "editor/blockUi/moveUp",
+      "value": "nach oben scheiben"
+    },
+    {
+      "key": "editor/blockUi/moveDown",
+      "value": "nach unten scheiben"
+    },
+    {
+      "key": "editor/blockUi/edit",
+      "value": "Element bearbeiten"
+    },
+    {
+      "key": "editor/blockUi/new",
+      "value": "neues Element erzeugen"
+    },
+    {
+      "key": "editor/blockUi/remove",
+      "value": "Element entfernen"
     }
   ]
 }

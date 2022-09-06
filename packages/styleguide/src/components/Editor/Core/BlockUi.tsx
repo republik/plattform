@@ -17,7 +17,7 @@ import { config as elConfig } from '../config/elements'
 import CalloutMenu from '../../Callout/CalloutMenu'
 import colors from '../../../theme/colors'
 import { Node } from 'slate'
-import { toTitle } from './helpers/text'
+import { useRenderContext } from '../Render/Context'
 
 const DEFAULT_POSITION = {
   top: 0,
@@ -45,6 +45,7 @@ const iconStyle = { paddingBottom: 8 }
 const MoveUp: React.FC<{
   path: number[]
 }> = ({ path }) => {
+  const { t } = useRenderContext()
   const editor = useSlate()
   const isDisabled = useMemo(
     () => !moveElement(editor, path, 'up', true),
@@ -60,8 +61,8 @@ const MoveUp: React.FC<{
       disabled={isDisabled}
       title='move element up'
       style={iconStyle}
-      label='Move up'
-      labelShort='Move up'
+      label={t('editor/blockUi/moveUp')}
+      labelShort={t('editor/blockUi/moveUp')}
     />
   )
 }
@@ -69,6 +70,7 @@ const MoveUp: React.FC<{
 const MoveDown: React.FC<{
   path: number[]
 }> = ({ path }) => {
+  const { t } = useRenderContext()
   const editor = useSlate()
   const isDisabled = useMemo(
     () => !moveElement(editor, path, 'down', true),
@@ -84,8 +86,8 @@ const MoveDown: React.FC<{
       disabled={isDisabled}
       title='move element down'
       style={iconStyle}
-      label='Move down'
-      labelShort='Move down'
+      label={t('editor/blockUi/moveDown')}
+      labelShort={t('editor/blockUi/moveDown')}
     />
   )
 }
@@ -93,6 +95,7 @@ const MoveDown: React.FC<{
 const Remove: React.FC<{
   path: number[]
 }> = ({ path }) => {
+  const { t } = useRenderContext()
   const editor = useSlate()
   const isDisabled = useMemo(() => !removeElement(editor, path, true), [path])
   return (
@@ -106,8 +109,8 @@ const Remove: React.FC<{
       disabled={isDisabled}
       title='remove element'
       style={iconStyle}
-      label='Delete'
-      labelShort='Delete'
+      label={t('editor/blockUi/remove')}
+      labelShort={t('editor/blockUi/remove')}
     />
   )
 }
@@ -116,6 +119,7 @@ const Insert: React.FC<{
   path: number[]
   templates: TemplateType | TemplateType[]
 }> = ({ path, templates }) => {
+  const { t } = useRenderContext()
   const editor = useSlate()
   const [pendingPath, setPendingPath] = useState<number[]>()
   const setFormPath = useFormContext()[1]
@@ -138,8 +142,8 @@ const Insert: React.FC<{
       }}
       title='insert new element'
       style={iconStyle}
-      label='Insert new'
-      labelShort='Insert new'
+      label={t('editor/blockUi/new')}
+      labelShort={t('editor/blockUi/new')}
     />
   )
 }
@@ -148,7 +152,9 @@ const Edit: React.FC<{
   path: number[]
   standalone?: boolean
 }> = ({ path, standalone }) => {
+  const { t } = useRenderContext()
   const setFormPath = useFormContext()[1]
+  const label = standalone ? undefined : t('editor/blockUi/edit')
   return (
     <IconButton
       Icon={EditIcon}
@@ -159,8 +165,8 @@ const Edit: React.FC<{
       title='edit element'
       style={{ ...iconStyle, padding: 3 }}
       size={18}
-      label={standalone ? undefined : 'Edit'}
-      labelShort={standalone ? undefined : 'Edit'}
+      label={label}
+      labelShort={label}
     />
   )
 }
