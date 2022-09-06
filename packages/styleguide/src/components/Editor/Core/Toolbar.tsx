@@ -56,6 +56,11 @@ const styles = {
   buttonGroup: css({
     display: 'flex',
   }),
+  charCount: css({
+    width: 0,
+    overflow: 'visible',
+    whiteSpace: 'nowrap',
+  }),
 }
 
 const asButton = (key: CustomElementsType | CustomMarksType): ButtonConfig => ({
@@ -263,7 +268,11 @@ const ToolbarButtons: React.FC<{
 const CharCount = () => {
   const editor = useSlate()
   const charCount = getCharCount(editor.children)
-  return <Label>{charCount} Zeichen</Label>
+  return (
+    <span {...styles.charCount}>
+      <Label>{charCount} Zeichen</Label>
+    </span>
+  )
 }
 
 const Toolbar: React.FC = () => {

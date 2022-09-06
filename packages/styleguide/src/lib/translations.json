@@ -586,12 +586,12 @@
       "value": "Element entfernen"
     },
     {
-      "key": "editor/form/link/urlError",
+      "key": "metaData/field/href/error",
       "value": "Geben sie eine gültige URL an"
     },
     {
-      "key": "editor/form/link/textHint",
-      "value": "Link Text editieren wird die lokale Formatierung löschen."
+      "key": "metaData/field/href/document",
+      "value": "Verlinktes Dokument: "
     }
   ]
 }

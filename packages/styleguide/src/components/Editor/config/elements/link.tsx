@@ -5,25 +5,36 @@ import {
   NormalizeFn,
 } from '../../custom-types'
 import { LinkIcon } from '../../../Icons'
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Field from '../../../Form/Field'
 import { Editor, Transforms } from 'slate'
-import {
-  getFullUrl,
-  getLinkInText,
-  isValidHttpUrl,
-} from '../../Core/helpers/text'
+import { getFullUrl, getLinkInText } from '../../Core/helpers/text'
 import RepoSearch from '../../Forms/RepoSearch'
 import AuthorSearch from '../../Forms/AuthorSearch'
 import { formStyles } from '../../Forms/layout'
 import { useRenderContext } from '../../Render/Context'
+import { AutoSlugLinkInfo } from '../../Forms/github'
 
 const Form: React.FC<ElementFormProps<LinkElement>> = ({
   element,
   onChange,
 }) => {
   const { t } = useRenderContext()
-  const href = element.href || ''
+  const [href, setHref] = useState(element.href || '')
+  const [title, setTitle] = useState(element.title || '')
+  const hrefRef = useRef<string>()
+  const titleRef = useRef<string>()
+  hrefRef.current = href
+  titleRef.current = title
+
+  useEffect(() => {
+    return () => {
+      onChange({
+        href: hrefRef.current,
+        title: titleRef.current,
+      })
+    }
+  }, [])
 
   return (
     <>
@@ -31,42 +42,35 @@ const Form: React.FC<ElementFormProps<LinkElement>> = ({
         <Field
           label='URL'
           type='url'
-          error={
-            !!href && !isValidHttpUrl(href) && t('editor/form/link/urlError')
-          }
           value={href}
           onChange={(_, value: string) => {
-            onChange({
-              href: value,
-            })
+            setHref(value)
           }}
+        />
+        <AutoSlugLinkInfo
+          value={href}
+          label={t('metaData/field/href/document')}
         />
         <Field
           label='Title'
-          value={element.title || ''}
+          value={title}
           onChange={(_, value: string) => {
-            onChange({
-              title: value,
-            })
+            setTitle(value)
           }}
         />
       </div>
       <div {...formStyles.section}>
         <RepoSearch
           onChange={({ value, text }) => {
-            const href = `https://github.com/${value.id}?autoSlug`
-            onChange({
-              href,
-              title: text,
-            })
+            const githubHref = `https://github.com/${value.id}?autoSlug`
+            setHref(githubHref)
+            setTitle(text)
           }}
         />
         <AuthorSearch
           onChange={({ value }) => {
-            onChange({
-              href: `/~${value.id}`,
-              title: value.name,
-            })
+            setHref(`/~${value.id}`)
+            setTitle(value.name)
           }}
         />
       </div>

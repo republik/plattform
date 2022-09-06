@@ -6,7 +6,7 @@ type RenderProps = {
   t?: FormatterFunction
 }
 
-const PlaceholderLink = ({ children }) => React.Children.only(children)
+export const PlaceholderLink = ({ children }) => React.Children.only(children)
 const identityFn = (key: string) => key
 
 const RenderContext = createContext<RenderProps>({
