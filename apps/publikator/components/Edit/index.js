@@ -30,6 +30,7 @@ import Preview from './Preview'
 import compose from 'lodash/flowRight'
 import { getQueryFromRepoId, getRepoIdFromQuery } from '../../lib/repoIdHelper'
 import Nav from './Nav'
+import { withEditRepoMeta } from '../Repo/EditMetaDate'
 
 const debug = createDebug('publikator:slate:edit')
 
@@ -288,7 +289,6 @@ const EditLoader = ({
       },
     })
       .then(({ data }) => {
-        // TODO: obliterate this
         if (publishDate) {
           editRepoMeta({
             repoId,
@@ -478,4 +478,5 @@ export default compose(
   }),
   withUncommittedChangesMutation,
   withCommitMutation,
+  withEditRepoMeta,
 )(EditLoader)
