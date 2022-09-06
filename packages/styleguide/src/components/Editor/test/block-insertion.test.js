@@ -581,7 +581,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
             children: [{ text: '' }],
           },
           {
-            type: 'flyerMetaP',
+            type: 'flyerOpeningP',
             children: [
               {
                 text: '',
@@ -589,7 +589,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
             ],
           },
           {
-            type: 'flyerMetaP',
+            type: 'flyerOpeningP',
             children: [
               {
                 text: '',
@@ -631,7 +631,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
             children: [{ text: '' }],
           },
           {
-            type: 'flyerMetaP',
+            type: 'flyerOpeningP',
             children: [
               {
                 text: '',
@@ -639,7 +639,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
             ],
           },
           {
-            type: 'flyerMetaP',
+            type: 'flyerOpeningP',
             children: [
               {
                 text: '',
@@ -775,7 +775,6 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
     await Transforms.select(editor, { path: [0, 5, 0], offset: 0 })
     insertRepeat(editor)
     await new Promise(process.nextTick)
-    console.log(value[1])
     expect(cleanupTree(value)[1].id).toBeDefined()
   })
 })

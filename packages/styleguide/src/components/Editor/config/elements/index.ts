@@ -22,6 +22,7 @@ import { config as flyerTileOpening } from './flyer/opening'
 import { config as flyerTileClosing } from './flyer/closing'
 import { config as flyerAuthor } from './flyer/components/author'
 import { config as flyerMetaP } from './flyer/components/metaP'
+import { config as flyerOpeningP } from './flyer/components/openingP'
 import { config as flyerPunchline } from './flyer/components/punchline'
 import { config as flyerSignature } from './flyer/components/signature'
 import { config as flyerDate } from './flyer/components/date'
@@ -61,6 +62,7 @@ export const config: ElementsConfig = {
   flyerTileMeta,
   flyerAuthor,
   flyerMetaP,
+  flyerOpeningP,
   flyerPunchline,
   flyerSignature,
   flyerDate,

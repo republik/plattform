@@ -145,6 +145,10 @@ export type FlyerMetaPElement = SharedElement & {
   type: 'flyerMetaP'
 }
 
+export type FlyerOpeningPElement = SharedElement & {
+  type: 'flyerOpeningP'
+}
+
 export type FlyerTopicElement = SharedElement & {
   type: 'flyerTopic'
 }
@@ -237,6 +241,7 @@ export type CustomElement =
   | FlyerTileOpeningElement
   | FlyerTileMetaElement
   | FlyerTileElement
+  | FlyerOpeningPElement
   | FlyerMetaPElement
   | FlyerTopicElement
   | FlyerTitleElement
@@ -281,6 +286,7 @@ export type CustomElementsType =
   | 'flyerTileClosing'
   | 'flyerTileMeta'
   | 'flyerTile'
+  | 'flyerOpeningP'
   | 'flyerMetaP'
   | 'flyerTopic'
   | 'flyerTitle'

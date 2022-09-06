@@ -6,6 +6,6 @@ export const config: ElementConfigI = {
   structure: [
     { type: 'flyerDate' },
     { type: 'headline' },
-    { type: 'flyerMetaP', repeat: true },
+    { type: 'flyerOpeningP', repeat: true },
   ],
 }

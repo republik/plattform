@@ -79,7 +79,7 @@ export const flyerTileOpening: Partial<FlyerTileOpeningElement> = {
       children: [{ text: '' }],
     },
     {
-      type: 'flyerMetaP',
+      type: 'flyerOpeningP',
       children: [
         {
           text: '',
