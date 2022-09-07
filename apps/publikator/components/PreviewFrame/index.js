@@ -1,9 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
-import { useColorContext, Loader } from '@project-r/styleguide'
-import { EDITOR_TOOLBAR_HEIGHT } from '@project-r/styleguide/editor'
+import { useColorContext, Loader, usePrevious } from '@project-r/styleguide'
 
 import { SIDEBAR_WIDTH } from '../Sidebar'
-import { HEADER_HEIGHT } from '../Frame/constants'
 
 const PREVIEW_MARGIN = 16
 
@@ -38,21 +36,40 @@ const PreviewFrame = ({
 }) => {
   const [scaleFactor, setScaleFactor] = useState(1)
   const [leftSpace, setLeftSpace] = useState(0)
-  const [iframeLoading, setIframeLoading] = useState(true)
+  const [height, setHeight] = useState(0)
+  const [iframeLoading, setIframeLoading] = useState()
   const [colorScheme] = useColorContext()
+  const containerRef = useRef()
   const iframeRef = useRef()
 
   const screenSize = screenSizes[previewScreenSize]
 
-  const iframeSrc = isFlyer
+  const src = isFlyer
     ? `/flyer/${repoId}/preview?commitId=${commitId}&commitOnly=${commitOnly}`
     : `/repo/${repoId}/preview?commitId=${commitId}&darkmode=${darkmode}&hasAccess=${hasAccess}&commitOnly=${commitOnly}`
+  const prevSrc = usePrevious(src)
+  if (src !== prevSrc && !iframeLoading) {
+    setIframeLoading(true)
+  }
+  // workaround for onload event not firing e.g. for flyer on page load
+  useEffect(() => {
+    const toId = setTimeout(() => {
+      setIframeLoading(false)
+    }, 3000)
+    return () => {
+      // clear timeout e.g. when src changes again
+      clearTimeout(toId)
+    }
+  }, [src])
   const currentSideBarWidth = sideBarWidth || (isFlyer ? 0 : SIDEBAR_WIDTH)
 
   useEffect(() => {
     const handleResize = () => {
+      const topOffset =
+        containerRef.current.getBoundingClientRect().top + window.pageYOffset
+
       const availableHeight =
-        window.innerHeight - HEADER_HEIGHT - 2 * PREVIEW_MARGIN
+        window.innerHeight - topOffset - 2 * PREVIEW_MARGIN
       const availableWidth =
         document.body.clientWidth - currentSideBarWidth - 2 * PREVIEW_MARGIN
 
@@ -67,6 +84,7 @@ const PreviewFrame = ({
 
       const scaledPreviewWidth = screenSize.width * currentScaleFactor
       setLeftSpace((availableWidth - scaledPreviewWidth) / 2)
+      setHeight(window.innerHeight - topOffset)
     }
 
     handleResize()
@@ -75,10 +93,6 @@ const PreviewFrame = ({
       window.removeEventListener('resize', handleResize)
     }
   }, [screenSize, currentSideBarWidth])
-
-  useEffect(() => {
-    setIframeLoading(true)
-  }, [darkmode])
 
   const iframeStyle = {
     ...screenSize,
@@ -92,11 +106,10 @@ const PreviewFrame = ({
   }
   return (
     <div
+      ref={containerRef}
       style={{
-        width: '100vw',
-        height: `calc(100vh - ${
-          HEADER_HEIGHT + (isFlyer ? EDITOR_TOOLBAR_HEIGHT : 0)
-        }px)`,
+        width: '100%',
+        height,
         overflow: 'hidden',
       }}
     >
@@ -112,19 +125,10 @@ const PreviewFrame = ({
       </div>
       <iframe
         ref={iframeRef}
-        onLoad={() => {
-          console.log('Im loaded')
-          setIframeLoading(false)
-        }}
-        onError={(e) => {
-          console.log(e)
-          setIframeLoading(false)
-        }}
-        style={{
-          ...iframeStyle,
-        }}
+        onLoad={() => setIframeLoading(false)}
+        src={src}
+        style={iframeStyle}
         {...colorScheme.set('backgroundColor', 'default')}
-        src={iframeSrc}
       />
       <div
         style={{
