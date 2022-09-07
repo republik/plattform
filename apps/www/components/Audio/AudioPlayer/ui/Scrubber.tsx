@@ -34,7 +34,6 @@ const styles = {
     zIndex: ZINDEX_AUDIOPLAYER_PROGRESS,
     inset: 0,
     height: PROGRESS_HEIGHT,
-    transition: 'width 100ms ease-in-out',
   }),
   scrubber: (disabled: boolean) =>
     css({
@@ -187,6 +186,8 @@ const Scrubber = ({
     }
   })
 
+  const visibleProgress = isSeeking ? internalProgress : progress
+
   return (
     <div>
       <div {...styles.progressRoot}>
@@ -215,14 +216,14 @@ const Scrubber = ({
         <div
           {...styles.progress}
           {...colorScheme.set('backgroundColor', 'text')}
-          style={{ width: `${progress * 100}%` }}
+          style={{ width: `${visibleProgress * 100}%` }}
         />
         {showScrubber && (
           <div
             {...styles.sliderThumb}
             {...colorScheme.set('backgroundColor', 'defaultInverted')}
             style={{
-              left: `${progress * 100}%`,
+              left: `${visibleProgress * 100}%`,
               cursor: isSeeking ? 'grabbing' : 'grab',
             }}
           />
