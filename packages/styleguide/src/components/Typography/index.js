@@ -193,14 +193,6 @@ export const Sup = ({ children, attributes }) => (
   </sup>
 )
 
-export const Bold = ({ children, attributes }) => (
-  <strong {...attributes}>{children}</strong>
-)
-
-export const Italic = ({ children, attributes }) => (
-  <em {...attributes}>{children}</em>
-)
-
 export const HR = ({ attributes }) => {
   const [colorScheme] = useColorContext()
   return (

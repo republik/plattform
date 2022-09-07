@@ -11,7 +11,6 @@ import { swissTime } from '../../lib/utils/format'
 import { transformData } from './transformData'
 import Diff from './Diff'
 import Derivatives from '../Derivatives'
-import { getQueryFromRepoId } from '../../lib/repoIdHelper'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
