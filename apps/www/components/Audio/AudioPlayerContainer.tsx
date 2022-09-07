@@ -106,30 +106,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     if (!isPlaying && shouldAutoPlay && !hasAutoPlayed) {
       console.log('triggering onPlay via onCanPlay')
       setHasAutoPlayed(true)
-      onStart()
-    }
-  }
-
-  const onStart = () => {
-    if (!activePlayerItem || isPlaying) {
-      console.log('onPlay: no activePlayerItem or isPlaying')
-      return
-    }
-
-    if (activePlayerItem !== trackedPlayerItem.current) {
-      trackedPlayerItem.current = activePlayerItem
-    }
-
-    if (inNativeApp) {
-      console.trace('onPlay: inNativeApp', JSON.stringify(activePlayerItem))
-      notifyApp(AudioEvent.PLAY, {
-        audioSource: activePlayerItem.document.meta.audioSource,
-      })
-    } else if (mediaRef.current) {
-      console.log('calling play on web-mediaRef')
-      mediaRef.current.playbackRate = playbackRate
-      mediaRef.current.play()
-      syncWithMediaElement()
+      onPlay()
     }
   }
 
@@ -251,7 +228,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     const nextItem = audioQueue[0]
     setActivePlayerItem(nextItem)
     setIsVisible(true)
-    onStart()
+    onPlay()
   }
 
   // Listen for togglePlayer events from the AudioContext
@@ -280,13 +257,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     if (mediaRef.current) {
       mediaRef.current.currentTime = 0 // TODO: use saved media-progress
     }
-  }, [
-    activePlayerItem,
-    trackedPlayerItem,
-    setIsLoading,
-    setHasAutoPlayed,
-    onStart,
-  ])
+  }, [activePlayerItem, trackedPlayerItem, setIsLoading, setHasAutoPlayed])
 
   // UI & Container state synchronisation
   useEffect(() => {
