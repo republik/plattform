@@ -399,6 +399,7 @@ export type EditorConfig = {
   toolbar?: ToolbarConfig
   readOnly?: boolean
   t?: Formatter
+  Link?: React.FC
 }
 
 export type KeyCombo = {
