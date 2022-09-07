@@ -158,7 +158,6 @@ export type FlyerTitleElement = SharedElement & {
 }
 
 export type ResolvedAuthor = {
-  id: string
   name: string
   portrait: string
   slug: string

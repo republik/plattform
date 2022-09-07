@@ -3,7 +3,7 @@ import { css } from 'glamor'
 import { ResolvedAuthor } from '../Editor/custom-types'
 import { useColorContext } from '../Colors/ColorContext'
 import { mUp } from '../../theme/mediaQueries'
-import { fontStyles } from '../Typography'
+import { fontStyles, plainLinkRule } from '../Typography'
 import { PLACEHOLDER } from '../Figure/Slate'
 import { useRenderContext } from '../Editor/Render/Context'
 
@@ -57,29 +57,40 @@ export const FlyerAuthor: React.FC<FlyerProps> = ({
   const { Link, t } = useRenderContext()
   const [colorScheme] = useColorContext()
 
+  const author = resolvedAuthor || {
+    slug: undefined,
+    portrait: PLACEHOLDER,
+    name: t('editor/element/flyerAuthor'),
+  }
+
+  const Tag = author.slug ? 'a' : 'span'
+  const content = (
+    <Tag
+      {...styles.container}
+      {...plainLinkRule}
+      style={{
+        opacity: resolvedAuthor ? 1 : 0.4,
+      }}
+    >
+      {(!authorId || author.portrait) && (
+        <img {...styles.portrait} src={author.portrait || PLACEHOLDER} alt='' />
+      )}
+      <span {...styles.name} {...colorScheme.set('color', 'flyerText')}>
+        {author.name}
+      </span>
+    </Tag>
+  )
+
   return (
-    <Link href={`/~${resolvedAuthor?.slug}`} passhref>
-      <a {...attributes} {...props}>
-        <div
-          contentEditable={false}
-          {...styles.container}
-          style={{
-            opacity: resolvedAuthor ? 1 : 0.4,
-          }}
-        >
-          {(!authorId || resolvedAuthor?.portrait) && (
-            <img
-              {...styles.portrait}
-              src={resolvedAuthor?.portrait || PLACEHOLDER}
-              alt=''
-            />
-          )}
-          <span {...styles.name} {...colorScheme.set('color', 'flyerText')}>
-            {resolvedAuthor?.name || t('editor/element/flyerAuthor')}
-          </span>
-        </div>
-        {children}
-      </a>
-    </Link>
+    <div {...attributes} {...props}>
+      {author.slug ? (
+        <Link href={`/~${author.slug}`} passHref>
+          {content}
+        </Link>
+      ) : (
+        content
+      )}
+      {children}
+    </div>
   )
 }
