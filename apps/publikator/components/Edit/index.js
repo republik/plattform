@@ -48,15 +48,7 @@ export const getCurrentContent = (store, data, options) => {
         slug: 'journal',
         template: 'flyer',
         feed: false,
-        format: {
-          id: 'flyer',
-          repoId: 'https://github.com/republik/format-journal',
-          meta: {
-            title: 'Republik-Journal',
-            color: '#405080',
-            kind: 'flyer',
-          },
-        },
+        format: 'https://github.com/republik/format-journal',
       },
     }
   )

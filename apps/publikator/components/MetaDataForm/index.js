@@ -14,6 +14,16 @@ import withT from '../../lib/withT'
 import { MetaOption, MetaOptionLabel, AutosizeInput } from './components/Layout'
 import SocialMedia from './components/SocialMedia'
 
+export const FLYER_FORMAT = {
+  id: 'flyer',
+  repoId: 'https://github.com/republik/format-journal',
+  meta: {
+    title: 'Republik-Journal',
+    color: '#405080',
+    kind: 'flyer',
+  },
+}
+
 const styles = {
   metaContainer: css({
     maxWidth: 640,
@@ -155,7 +165,7 @@ const MetaDataForm = ({ t, metaData, setMetaData }) => {
                 <TeaserFeed
                   title={metaData.title}
                   kind='flyer'
-                  format={metaData.format}
+                  format={FLYER_FORMAT}
                 />
               </div>
             </MetaOption>
