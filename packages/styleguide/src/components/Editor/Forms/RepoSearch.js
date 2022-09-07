@@ -45,6 +45,15 @@ export const filterRepos = gql`
               image
               path
               externalBaseUrl
+              format {
+                id
+                repoId
+                meta {
+                  title
+                  color
+                  kind
+                }
+              }
             }
           }
         }

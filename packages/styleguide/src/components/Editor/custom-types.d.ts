@@ -194,8 +194,19 @@ export type ArticlePreviewTextContainerElement = SharedElement & {
   type: 'articlePreviewTextContainer'
 }
 
+export type FormatData = {
+  id: string
+  repoId: string
+  meta: {
+    title?: string
+    color?: string
+    type?: string
+  }
+}
+
 export type ArticlePreviewTitleElement = SharedElement & {
   type: 'articlePreviewTitle'
+  format?: FormatData
 }
 
 export type ArticlePreviewLeadElement = SharedElement & {
