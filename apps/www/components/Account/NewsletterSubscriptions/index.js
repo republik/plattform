@@ -10,16 +10,20 @@ import FrameBox from '../../Frame/Box'
 import { P } from '../Elements'
 
 import { withMembership } from '../../Auth/checkRoles'
-import { newsletterFragment, newsletterSettingsFragment } from '../enhancers'
+import { newsletterFragment } from '../enhancers'
 import NewsletterItem from './NewsletterItem'
 
 export const RESUBSCRIBE_EMAIL = gql`
   mutation resubscribeEmail($userId: ID!) {
     resubscribeEmail(userId: $userId) {
-      ...NewsletterSettings
+      id
+      status
+      subscriptions {
+        ...NewsletterInfo
+      }
     }
   }
-  ${newsletterSettingsFragment}
+  ${newsletterFragment}
 `
 
 export const UPDATE_NEWSLETTER_SUBSCRIPTION = gql`
@@ -39,11 +43,15 @@ export const NEWSLETTER_SETTINGS = gql`
     me {
       id
       newsletterSettings {
-        ...NewsletterSettings
+        id
+        status
+        subscriptions(name: $onlyName) {
+          ...NewsletterInfo
+        }
       }
     }
   }
-  ${newsletterSettingsFragment}
+  ${newsletterFragment}
 `
 
 const NewsletterSubscriptions = ({ t, isMember, free, onlyName }) => (
