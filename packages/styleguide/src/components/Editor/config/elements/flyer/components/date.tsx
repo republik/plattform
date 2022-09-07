@@ -5,8 +5,6 @@ import {
 } from '../../../../custom-types'
 import React from 'react'
 import Field from '../../../../../Form/Field'
-import { timeFormat } from '../../../../../../lib/timeFormat'
-import { FLYER_DATE_FORMAT } from '../../../../../Flyer/Date'
 
 const Form: React.FC<ElementFormProps<FlyerDateElement>> = ({
   element,
@@ -16,7 +14,7 @@ const Form: React.FC<ElementFormProps<FlyerDateElement>> = ({
     <Field
       label='Datum'
       type='date'
-      value={element.date || ''}
+      value={element.date || ' '}
       onChange={(_, date: string) => {
         onChange({ date })
       }}
