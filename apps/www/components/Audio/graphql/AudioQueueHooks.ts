@@ -50,6 +50,7 @@ type AudiQueueQueryData = {
 export const AUDIO_QUEUE_QUERY = gql`
   query GetAudioQueue {
     me {
+      id
       audioQueue {
         ...AudioQueueItemFragment
       }
