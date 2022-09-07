@@ -34,6 +34,7 @@ import {
   createPageSchema,
   flyerSchema,
   SlateRender,
+  RenderContextProvider,
 } from '@project-r/styleguide'
 import { EditIcon } from '@project-r/styleguide'
 import { createRequire } from '@project-r/styleguide'
@@ -602,7 +603,12 @@ const ArticlePage = ({
                 </div>
               )}
               {treeType === 'slate' ? (
-                <SlateRender value={article.content.children} schema={schema} />
+                <RenderContextProvider t={t} Link={Link}>
+                  <SlateRender
+                    value={article.content.children}
+                    schema={schema}
+                  />
+                </RenderContextProvider>
               ) : (
                 <ArticleGallery
                   article={article}
