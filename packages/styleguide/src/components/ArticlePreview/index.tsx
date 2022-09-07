@@ -1,13 +1,50 @@
 import React from 'react'
 import { css } from 'glamor'
 import {
-  sansSerifMedium16,
-  sansSerifMedium20,
   serifRegular23,
   serifTitle38,
+  serifRegular16,
+  serifTitle28,
+  sansSerifMedium16,
+  sansSerifMedium20,
 } from '../Typography/styles'
 import { useRenderContext } from '../Editor/Render/Context'
 import { plainLinkRule } from '../Typography'
+import { mUp } from '../../theme/mediaQueries'
+
+const styles = {
+  format: css({
+    display: 'block',
+    ...convertStyleToRem(sansSerifMedium16),
+    margin: '0 0 18px 0',
+    [mUp]: {
+      ...convertStyleToRem(sansSerifMedium20),
+      margin: '0 0 28px 0',
+    },
+  }),
+  title: css({
+    margin: '0px 0px 12px 0px',
+    ...serifTitle28,
+    [mUp]: {
+      margin: '0px 0px 17px 0px',
+      ...serifTitle38,
+    },
+  }),
+  lead: css({
+    margin: 0,
+    ...serifRegular16,
+    [mUp]: {
+      ...serifRegular23,
+    },
+  }),
+  container: css({
+    textAlign: 'center',
+    padding: 15,
+    [mUp]: {
+      padding: 20,
+    },
+  }),
+}
 import { FormatData } from '../Editor/custom-types'
 import { convertStyleToRem } from '../Typography/utils'
 import { mUp } from '../TeaserFront/mediaQueries'
@@ -30,11 +67,7 @@ export const ArticleTextContainer: React.FC<{
   [x: string]: unknown
 }> = ({ children, attributes, ...props }) => {
   return (
-    <div
-      {...attributes}
-      {...props}
-      style={{ textAlign: 'center', padding: '30px 30px 10px' }}
-    >
+    <div {...attributes} {...props} {...styles.container}>
       {children}
     </div>
   )
@@ -47,7 +80,7 @@ export const ArticleTitle: React.FC<{
 }> = ({ children, attributes, format, color, backgroundColor, ...props }) => {
   const [colorScheme] = useColorContext()
   return (
-    <h4 {...attributes} {...props} style={{ margin: 0 }} {...css(serifTitle38)}>
+    <h4 {...attributes} {...props} {...styles.title}>
       {!!format && (
         <span
           contentEditable={false}
@@ -67,7 +100,7 @@ export const ArticleLead: React.FC<{
   [x: string]: unknown
 }> = ({ children, attributes, color, backgroundColor, ...props }) => {
   return (
-    <p {...attributes} {...props} {...css(serifRegular23)}>
+    <p {...attributes} {...props} {...styles.lead}>
       {children}
     </p>
   )
