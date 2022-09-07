@@ -13,7 +13,7 @@ import { useSlate } from 'slate-react'
 import { Transforms } from 'slate'
 import { AutoSlugLinkInfo } from '../../../Forms/github'
 import { useRenderContext } from '../../../Render/Context'
-import { formStyles } from '../../../Forms/layout'
+import { lab } from 'd3-color'
 
 const styles = {
   container: css({
@@ -23,6 +23,11 @@ const styles = {
     width: '100%',
     marginTop: 20,
   }),
+}
+
+const getBackgroundColor = (color: string): string => {
+  const labColor = lab(color)
+  return labColor.l > 50 ? '#000' : '#fff'
 }
 
 const Form: React.FC<ElementFormProps<ArticlePreviewElement>> = ({
@@ -42,17 +47,32 @@ const Form: React.FC<ElementFormProps<ArticlePreviewElement>> = ({
       <RepoSearch
         onChange={({ value }) => {
           const href = `https://github.com/${value.id}?autoSlug`
+          const meta = value.latestCommit.document.meta
+          const formatColor = meta.format?.meta.color
+          const colors = formatColor
+            ? {
+                color: formatColor,
+                backgroundColor: getBackgroundColor(formatColor),
+              }
+            : {}
           onChange({
             href,
+            ...colors,
           })
+          if (meta.format) {
+            Transforms.setNodes(
+              editor,
+              { format: meta.format },
+              { at: path.concat([1, 0]) },
+            )
+          }
           if (syncData) {
-            const meta = value.latestCommit.document.meta
             if (meta.title) {
               Transforms.insertText(editor, meta.title, {
                 at: path.concat([1, 0]),
               })
             }
-            if (meta.shortTitle) {
+            if (meta.description) {
               Transforms.insertText(editor, meta.description, {
                 at: path.concat([1, 1]),
               })
@@ -108,9 +128,5 @@ export const config: ElementConfigI = {
     { type: 'articlePreviewTextContainer', main: true },
   ],
   props: ['backgroundColor', 'color', 'href'],
-  defaultProps: {
-    backgroundColor: '#000',
-    color: '#fff',
-  },
   button: { icon: ArticlePreviewIcon },
 }

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { createEditor, Editor, Transforms, Text } from 'slate'
 import { withHistory } from 'slate-history'
 import {
@@ -170,7 +170,7 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
   )
 
   return (
-    <RenderContextProvider t={config.t}>
+    <RenderContextProvider t={config.t} Link={config.Link}>
       <FormContextProvider>
         <Slate
           editor={editor}

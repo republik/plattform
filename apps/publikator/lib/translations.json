@@ -1890,11 +1890,11 @@
     },
     {
       "key": "editor/blockUi/moveUp",
-      "value": "nach oben scheiben"
+      "value": "nach oben schieben"
     },
     {
       "key": "editor/blockUi/moveDown",
-      "value": "nach unten scheiben"
+      "value": "nach unten schieben"
     },
     {
       "key": "editor/blockUi/edit",
