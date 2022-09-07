@@ -16,7 +16,7 @@ const Form: React.FC<ElementFormProps<FlyerDateElement>> = ({
     <Field
       label='Datum'
       type='date'
-      value={element.date}
+      value={element.date || ''}
       onChange={(_, date: string) => {
         onChange({ date })
       }}
@@ -30,7 +30,4 @@ export const config: ElementConfigI = {
   },
   Form,
   props: ['date'],
-  defaultProps: {
-    date: () => timeFormat(FLYER_DATE_FORMAT)(new Date()),
-  },
 }
