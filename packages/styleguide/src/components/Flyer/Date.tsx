@@ -7,7 +7,7 @@ import { css } from 'glamor'
 export const FLYER_DATE_FORMAT = '%Y-%m-%d'
 
 export const parseDate = timeParse(FLYER_DATE_FORMAT)
-export const renderDate = timeFormat('%A, %d. %B')
+export const renderDate = timeFormat('%A, %-d. %B')
 
 export const FlyerDate: React.FC<{
   date?: Date
