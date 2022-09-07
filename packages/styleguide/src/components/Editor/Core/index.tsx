@@ -7,6 +7,7 @@ import {
   withReact,
   ReactEditor,
   useSelected,
+  useSlate,
 } from 'slate-react'
 import { useMemoOne } from 'use-memo-one'
 import { withNormalizations } from './decorators/normalization'
@@ -45,6 +46,75 @@ export type SlateEditorProps = {
   structure?: NodeTemplate[]
   editor?: CustomEditor
   config: EditorConfig
+}
+
+const RenderedElementComponent: React.FC<{
+  editor: CustomEditor
+  element: CustomElement
+  attributes: any
+}> = ({ element, children, attributes }) => {
+  const editor = useSlate()
+  const [_, setFormPath] = useFormContext()
+  const isSelected = useSelected()
+  const path = useMemo(
+    () => ReactEditor.findPath(editor, element),
+    [editor, element],
+  )
+  const config = elementsConfig[element.type]
+  if (!config) {
+    return (
+      <ErrorMessage
+        attributes={attributes}
+        error={`${element.type} config missing`}
+      >
+        {children}
+      </ErrorMessage>
+    )
+  }
+  const isVoid = config.attrs?.isVoid
+  const showBlockUi =
+    !config.attrs?.isInline && (config.Form || element.template?.repeat)
+  const Component =
+    editor.customConfig.editorSchema?.[element.type] ||
+    editor.customConfig.schema[element.type]
+
+  if (!Component) {
+    return (
+      <ErrorMessage
+        attributes={attributes}
+        error={`${element.type} component missing in schema`}
+      >
+        {children}
+      </ErrorMessage>
+    )
+  }
+  const selectVoid = (e) => {
+    if (isVoid) {
+      e.preventDefault()
+      Transforms.select(editor, path)
+    }
+  }
+  const baseStyles = showBlockUi
+    ? { position: 'relative', display: 'block' }
+    : {}
+
+  return (
+    <Component
+      {...element}
+      attributes={{
+        ...attributes,
+        style: { ...attributes.style, ...baseStyles },
+      }}
+      onMouseDown={selectVoid}
+      onDoubleClick={(e) => {
+        e.stopPropagation()
+        setFormPath(path)
+      }}
+    >
+      {showBlockUi && isSelected && <BlockUi path={path} element={element} />}
+      {children}
+    </Component>
+  )
 }
 
 const SlateEditor: React.FC<SlateEditorProps> = ({
@@ -88,73 +158,12 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
     Editor.normalize(editor, { force: true })
   }, [])
 
-  const RenderedElement: React.FC<{
-    element: CustomElement
-    attributes: any
-  }> = ({ element, children, attributes }) => {
-    const setFormPath = useFormContext()[1]
-    const isSelected = useSelected()
-    const path = useMemo(
-      () => ReactEditor.findPath(editor, element),
-      [editor, element],
-    )
-    const config = elementsConfig[element.type]
-    if (!config) {
-      return (
-        <ErrorMessage
-          attributes={attributes}
-          error={`${element.type} config missing`}
-        >
-          {children}
-        </ErrorMessage>
-      )
-    }
-    const isVoid = config.attrs?.isVoid
-    const showBlockUi =
-      !config.attrs?.isInline && (config.Form || element.template?.repeat)
-    const Component =
-      editor.customConfig.editorSchema?.[element.type] ||
-      editor.customConfig.schema[element.type]
-
-    if (!Component) {
-      return (
-        <ErrorMessage
-          attributes={attributes}
-          error={`${element.type} component missing in schema`}
-        >
-          {children}
-        </ErrorMessage>
-      )
-    }
-    const selectVoid = (e) => {
-      if (isVoid) {
-        e.preventDefault()
-        Transforms.select(editor, path)
-      }
-    }
-    const baseStyles = showBlockUi
-      ? { position: 'relative', display: 'block' }
-      : {}
-    return (
-      <Component
-        {...element}
-        attributes={{
-          ...attributes,
-          style: { ...attributes.style, ...baseStyles },
-        }}
-        onMouseDown={selectVoid}
-        onDoubleClick={(e) => {
-          e.stopPropagation()
-          setFormPath(path)
-        }}
-      >
-        {showBlockUi && isSelected && <BlockUi path={path} element={element} />}
-        {children}
-      </Component>
-    )
-  }
-
-  const renderElement = useCallback(RenderedElement, [])
+  const renderElement = useCallback(
+    ({ children, ...props }) => (
+      <RenderedElementComponent {...props}>{children}</RenderedElementComponent>
+    ),
+    [],
+  )
 
   const renderLeaf = useCallback(
     ({ children, ...props }) => (
