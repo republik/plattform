@@ -1,17 +1,17 @@
-import React, { createContext, useContext } from 'react'
-import { FormatterFunction } from '../../../lib/translate'
+import React, { createContext, useContext, useMemo } from 'react'
+import { createFormatter, Formatter } from '../../../lib/translate'
 
 type RenderProps = {
   Link?: React.FC<any>
-  t?: FormatterFunction
+  t?: Formatter
 }
 
 export const PlaceholderLink = ({ children }) => React.Children.only(children)
-const identityFn = (key: string) => key
+const emptyFormatter = createFormatter([])
 
 const RenderContext = createContext<RenderProps>({
   Link: PlaceholderLink,
-  t: identityFn,
+  t: emptyFormatter,
 })
 
 export const useRenderContext = () => useContext(RenderContext)
@@ -19,11 +19,10 @@ export const useRenderContext = () => useContext(RenderContext)
 export const RenderContextProvider: React.FC<RenderProps> = ({
   children,
   Link = PlaceholderLink,
-  t = identityFn,
+  t = emptyFormatter,
 }) => {
+  const value = useMemo(() => ({ Link, t }), [Link, t])
   return (
-    <RenderContext.Provider value={{ Link, t }}>
-      {children}
-    </RenderContext.Provider>
+    <RenderContext.Provider value={value}>{children}</RenderContext.Provider>
   )
 }

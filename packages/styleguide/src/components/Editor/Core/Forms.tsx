@@ -20,11 +20,8 @@ export const useFormContext = () => useContext(FormContext)
 
 export const FormContextProvider = ({ children }) => {
   const [formPath, setFormPath] = useState<number[]>()
-  return (
-    <FormContext.Provider value={[formPath, setFormPath]}>
-      {children}
-    </FormContext.Provider>
-  )
+  const value = useMemo(() => [formPath, setFormPath], [formPath])
+  return <FormContext.Provider value={value}>{children}</FormContext.Provider>
 }
 
 type FormData = {
