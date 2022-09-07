@@ -11,6 +11,9 @@ import {
 import { useRenderContext } from '../Editor/Render/Context'
 import { plainLinkRule } from '../Typography'
 import { mUp } from '../../theme/mediaQueries'
+import { FormatData } from '../Editor/custom-types'
+import { convertStyleToRem } from '../Typography/utils'
+import { useColorContext } from '../Colors/ColorContext'
 
 const styles = {
   format: css({
@@ -42,22 +45,6 @@ const styles = {
     padding: 15,
     [mUp]: {
       padding: 20,
-    },
-  }),
-}
-import { FormatData } from '../Editor/custom-types'
-import { convertStyleToRem } from '../Typography/utils'
-import { mUp } from '../TeaserFront/mediaQueries'
-import { useColorContext } from '../Colors/ColorContext'
-
-const styles = {
-  format: css({
-    display: 'block',
-    ...convertStyleToRem(sansSerifMedium16),
-    margin: '0 0 18px 0',
-    [mUp]: {
-      ...convertStyleToRem(sansSerifMedium20),
-      margin: '0 0 28px 0',
     },
   }),
 }
