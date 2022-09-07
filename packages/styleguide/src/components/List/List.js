@@ -136,12 +136,11 @@ export const List = ({ children, data, attributes = {}, ...props }) =>
       start={data.start}
       compact={data.compact}
       attributes={attributes}
-      {...props}
     >
       {children}
     </OrderedList>
   ) : (
-    <UnorderedList compact={data.compact} attributes={attributes} {...props}>
+    <UnorderedList compact={data.compact} attributes={attributes}>
       {children}
     </UnorderedList>
   )
