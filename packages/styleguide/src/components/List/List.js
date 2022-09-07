@@ -8,10 +8,10 @@ import {
 import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
-import { editorialFontRule, flyerFontRule } from '../Typography/fontRules'
+import { editorialFontRule } from '../Typography/fontRules'
 import { useColorContext } from '../Colors/useColorContext'
 
-const WIDTH = 22
+export const LIST_PADDING = 22
 const MARGIN = 8
 
 const styles = {
@@ -31,8 +31,8 @@ const styles = {
       paddingLeft: `${MARGIN}px`,
     },
   }),
-  listItemEditorial: css({
-    paddingLeft: `${WIDTH}px`,
+  li: css({
+    paddingLeft: `${LIST_PADDING}px`,
     position: 'relative',
     ...convertStyleToRem(serifRegular17),
     [mUp]: {
@@ -50,32 +50,6 @@ const styles = {
       margin: '12px 0',
       [mUp]: {
         ...convertStyleToRem(serifRegular17),
-        lineHeight: pxToRem('28px'),
-        margin: '14px 0',
-      },
-    },
-  }),
-  listItemFlyer: css({
-    paddingLeft: `${WIDTH}px`,
-    position: 'relative',
-    fontSize: pxToRem('17px'),
-    lineHeight: pxToRem('25px'),
-    [mUp]: {
-      fontSize: pxToRem('23px'),
-      lineHeight: pxToRem('35px'),
-    },
-    '& p': {
-      margin: '1em 0 1em 0',
-    },
-    '& p:last-child': {
-      marginBottom: 0,
-    },
-    'li &': {
-      fontSize: pxToRem('14px'),
-      lineHeight: pxToRem('22px'),
-      margin: '12px 0',
-      [mUp]: {
-        fontSize: pxToRem('17px'),
         lineHeight: pxToRem('28px'),
         margin: '14px 0',
       },
@@ -135,17 +109,12 @@ OrderedList.defaultProps = {
   start: 1,
 }
 
-export const ListItem = ({
-  children,
-  attributes = {},
-  style = {},
-  flyer = false,
-}) => {
+export const ListItem = ({ children, attributes = {}, style = {} }) => {
   const [colorScheme] = useColorContext()
   return (
     <li
-      {...(flyer ? styles.listItemFlyer : styles.listItemEditorial)}
-      {...(flyer ? flyerFontRule : editorialFontRule)}
+      {...styles.li}
+      {...editorialFontRule}
       {...colorScheme.set('color', 'text')}
       {...attributes}
       style={style}
@@ -159,7 +128,6 @@ ListItem.propTypes = {
   children: PropTypes.any,
   attributes: PropTypes.object,
   style: PropTypes.object,
-  flyer: PropTypes.bool,
 }
 
 export const List = ({ children, data, attributes = {}, ...props }) =>

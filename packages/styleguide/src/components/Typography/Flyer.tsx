@@ -3,8 +3,9 @@ import { css } from 'glamor'
 import { useColorContext } from '../Colors/ColorContext'
 import { mUp } from '../../theme/mediaQueries'
 import { fontStyles } from '../../theme/fonts'
-import { ListItem as InnerListItem } from '../List'
+import { LIST_PADDING, ListItem as InnerListItem } from '../List/List'
 import { useRenderContext } from '../Editor/Render/Context'
+import { pxToRem } from './utils'
 
 export const Layout = ({ children, attributes }) => {
   const [colorScheme] = useColorContext()
@@ -221,15 +222,50 @@ export const StrikeThrough = ({ children, attributes, ...props }) => (
   </span>
 )
 
-// TODO: move
+const listItemRule = css({
+  ...fontStyles.sansSerifMedium,
+  paddingLeft: `${LIST_PADDING}px`,
+  position: 'relative',
+  fontSize: pxToRem('17px'),
+  lineHeight: pxToRem('25px'),
+  [mUp]: {
+    fontSize: pxToRem('23px'),
+    lineHeight: pxToRem('35px'),
+  },
+  '& p': {
+    margin: '1em 0 1em 0',
+  },
+  '& p:last-child': {
+    marginBottom: 0,
+  },
+  'li &': {
+    fontSize: pxToRem('14px'),
+    lineHeight: pxToRem('22px'),
+    margin: '12px 0',
+    [mUp]: {
+      fontSize: pxToRem('17px'),
+      lineHeight: pxToRem('28px'),
+      margin: '14px 0',
+    },
+  },
+})
 export const ListItem: React.FC<{
   attributes: any
   children: React.ReactNode
-}> = ({ children, attributes = {}, ...props }) => {
+  style: any
+}> = ({ children, attributes = {}, style = {} }) => {
+  const [colorScheme] = useColorContext()
   return (
-    <InnerListItem attributes={attributes} {...props} flyer={true}>
+    <li
+      {...listItemRule}
+      {...colorScheme.set('color', 'text')}
+      {...attributes}
+      // this style override even with an empty object is necessary
+      // - otherwise slates/editors position relativ will destroy ol li marker
+      style={style}
+    >
       {children}
-    </InnerListItem>
+    </li>
   )
 }
 
