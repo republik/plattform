@@ -130,7 +130,7 @@ ListItem.propTypes = {
   style: PropTypes.object,
 }
 
-export const List = ({ children, data, attributes = {}, ...props }) =>
+export const List = ({ children, data, attributes = {} }) =>
   data.ordered ? (
     <OrderedList
       start={data.start}
