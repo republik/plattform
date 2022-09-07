@@ -1726,7 +1726,7 @@
     },
     {
       "key": "editor/element/paragraph",
-      "value": "Paragraf"
+      "value": "Paragraph"
     },
     {
       "key": "editor/element/break",
@@ -1762,7 +1762,7 @@
     },
     {
       "key": "editor/element/listItem",
-      "value": "Listelement"
+      "value": "Listen-Element"
     },
     {
       "key": "editor/element/pullQuote",
@@ -1818,11 +1818,11 @@
     },
     {
       "key": "editor/element/flyerTile",
-      "value": "standard Block"
+      "value": "Standard-Block"
     },
     {
       "key": "editor/element/flyerTileMeta",
-      "value": "Moderationsblock"
+      "value": "Moderations-Block"
     },
     {
       "key": "editor/element/quiz",
@@ -1830,7 +1830,7 @@
     },
     {
       "key": "editor/element/quizItem",
-      "value": "Quiz Element"
+      "value": "Quiz-Element"
     },
     {
       "key": "editor/element/quizAnswer",
@@ -1854,7 +1854,7 @@
     },
     {
       "key": "editor/mark/bold",
-      "value": "gefettet"
+      "value": "fett"
     },
     {
       "key": "editor/mark/italic",
@@ -1882,11 +1882,11 @@
     },
     {
       "key": "editor/specialChar/quotes",
-      "value": "Anführungszeichen"
+      "value": "Guillemets"
     },
     {
       "key": "editor/specialChar/nestedQuotes",
-      "value": "einzelne Anführungszeichen"
+      "value": "einfache Guillemets"
     },
     {
       "key": "editor/blockUi/moveUp",
@@ -1902,15 +1902,11 @@
     },
     {
       "key": "editor/blockUi/new",
-      "value": "neues Element erzeugen"
+      "value": "neues Element"
     },
     {
       "key": "editor/blockUi/remove",
       "value": "Element entfernen"
-    },
-    {
-      "key": "editor/form/link/urlError",
-      "value": "Geben sie eine gültige URL an"
     },
     {
       "key": "editor/meta/flyer/defaultShareText",
