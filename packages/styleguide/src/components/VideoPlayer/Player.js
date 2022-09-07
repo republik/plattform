@@ -157,7 +157,11 @@ class VideoPlayer extends Component {
       const progress = this.getCurrentTime() / video.duration
       this.props.onProgress && this.props.onProgress(progress, video)
       this.context.saveMediaProgress &&
-        this.context.saveMediaProgress(this.props, video)
+        this.context.saveMediaProgress(
+          this.props.mediaId,
+          video.currentTime,
+          !video.paused,
+        )
       this.setState({ progress })
     }
     this.syncProgress = () => {

@@ -16,8 +16,9 @@ type GetMediaProgress = ({
 }>) => Promise<number | void>
 
 type SaveMediaProgress = (
-  { mediaId }: { mediaId: string },
-  mediaElement: HTMLAudioElement,
+  mediaId: string,
+  currentTime: number,
+  isPlaying?: boolean,
 ) => void
 
 type MediaProgressContextValue = {
@@ -26,7 +27,9 @@ type MediaProgressContextValue = {
 }
 
 const MediaProgressContext = createContext<MediaProgressContextValue>({
-  getMediaProgress: () => Promise.reject('not implemented'),
+  getMediaProgress: () => {
+    throw new Error('not implemented')
+  },
   saveMediaProgress: () => {
     throw new Error('not implemented')
   },
@@ -88,13 +91,20 @@ const MediaProgressProvider = ({ children }) => {
     [isTrackingAllowed, upsertMediaProgress, setLocalMediaProgress],
   )
 
-  const saveMediaProgress: SaveMediaProgress = ({ mediaId }, mediaElement) => {
+  const saveMediaProgress: SaveMediaProgress = (
+    mediaId: string,
+    currentTime: number,
+    isPlaying?: boolean,
+  ) => {
     if (!mediaId) {
       return
     }
     // TODO: ensure that only of the two functions are called.
-    saveMediaProgressNotPlaying(mediaId, mediaElement.currentTime)
-    saveMediaProgressWhilePlaying(mediaId, mediaElement.currentTime)
+    if (isPlaying) {
+      saveMediaProgressNotPlaying(mediaId, currentTime)
+    } else {
+      saveMediaProgressWhilePlaying(mediaId, currentTime)
+    }
   }
 
   const getMediaProgress: GetMediaProgress = ({ mediaId, durationMs } = {}) => {

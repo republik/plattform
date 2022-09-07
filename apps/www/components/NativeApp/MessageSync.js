@@ -97,7 +97,7 @@ const NewAppMessageSync = () => {
       } else if (content.type === 'onAppMediaProgressUpdate') {
         // Audio Player sent media progress update
         const { currentTime, mediaId } = content
-        saveMediaProgress({ mediaId }, { currentTime })
+        saveMediaProgress(mediaId, currentTime)
       } else if (content.type === 'appState') {
         // Check Whenever App becomes active (foreground)
         // opens signin page if theres a pending request
