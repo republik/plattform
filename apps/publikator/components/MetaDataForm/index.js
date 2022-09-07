@@ -4,8 +4,10 @@ import {
   Scroller,
   TabButton,
   Field,
+  Checkbox,
   mediaQueries,
   useColorContext,
+  TeaserFeed,
 } from '@project-r/styleguide'
 import scrollIntoView from 'scroll-into-view'
 import withT from '../../lib/withT'
@@ -135,6 +137,27 @@ const MetaDataForm = ({ t, metaData, setMetaData }) => {
                 }}
                 noMargin
               />
+            </MetaOption>
+            <MetaOption>
+              <MetaOptionLabel>Feed-Sichtbarkeit</MetaOptionLabel>
+              <Checkbox
+                checked={metaData.feed}
+                onChange={(_, checked) => {
+                  handleMetaDataChange('feed', checked)
+                }}
+              >
+                Im Feed anzeigen
+              </Checkbox>
+            </MetaOption>
+            <MetaOption>
+              <MetaOptionLabel>Feed Vorschau</MetaOptionLabel>
+              <div style={{ backgroundColor: 'white', padding: 15 }}>
+                <TeaserFeed
+                  title={metaData.title}
+                  kind='flyer'
+                  format={metaData.format}
+                />
+              </div>
             </MetaOption>
           </MetaSection>
           <MetaSection>
