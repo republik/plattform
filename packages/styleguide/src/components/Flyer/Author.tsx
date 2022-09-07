@@ -68,6 +68,7 @@ export const FlyerAuthor: React.FC<FlyerProps> = ({
     <Tag
       {...styles.container}
       {...plainLinkRule}
+      contentEditable={false}
       style={{
         opacity: resolvedAuthor ? 1 : 0.4,
       }}
