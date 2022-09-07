@@ -25,9 +25,9 @@ const styles = {
     '& > *': {
       userSelect: 'none',
     },
-    maxHeight: '80vh',
+    // maxHeight: '80vh',
     [mediaQueries.mUp]: {
-      maxHeight: '600px',
+      // maxHeight: '600px',
     },
   }),
   spinnerWrapper: css({
