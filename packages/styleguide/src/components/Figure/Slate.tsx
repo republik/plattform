@@ -25,12 +25,13 @@ export const FigureImage: React.FC<{
 }
 
 export const Figure: React.FC<{
+  children: any
   size: string
   attributes: any
   [x: string]: unknown
-}> = ({ children, size, attributes = {}, ...props }) => {
+}> = ({ children, size, attributes = {} }) => {
   return (
-    <InnerFigure attributes={attributes} size={size} {...props}>
+    <InnerFigure attributes={attributes} size={size}>
       {children}
     </InnerFigure>
   )
