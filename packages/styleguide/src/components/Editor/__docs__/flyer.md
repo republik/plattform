@@ -18,6 +18,30 @@ state: {
               { text: 'schoen sind Sie da!' },
             ],
           },
+          {
+            type: 'flyerMetaP',
+            children: [
+              {
+                text: 'And ',
+              },
+              {
+                type: 'link',
+                href: 'www.one.com',
+                children: [{ text: 'one' }],
+              },
+              {
+                text: ' and ',
+              },
+              {
+                type: 'link',
+                href: 'www.two.com',
+                children: [{ text: 'two' }],
+              },
+              {
+                text: ' little links.',
+              },
+            ],
+          },
         ],
       },
       {

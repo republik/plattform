@@ -8,6 +8,5 @@ export const config: ElementConfigI = {
         display: 'none',
       },
     },
-    stopFormIteration: true,
   },
 }

@@ -10,7 +10,6 @@ export const config: ElementConfigI = {
         top: 4,
       },
     },
-    stopFormIteration: true,
   },
   button: { icon: ParagraphIcon },
 }

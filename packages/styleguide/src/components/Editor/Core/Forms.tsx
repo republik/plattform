@@ -52,6 +52,7 @@ export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
   let topLevelNode = Editor.node(editor, path) as NodeEntry<CustomElement>
   let parent = Editor.parent(editor, topLevelNode[1])
   while (
+    !elConfig[topLevelNode[0].type].attrs?.stopFormIteration &&
     SlateElement.isElement(parent[0]) &&
     !elConfig[parent[0].type].attrs?.stopFormIteration
   ) {
@@ -64,11 +65,14 @@ export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
     at: topLevelNode[1],
   })) {
     if (SlateElement.isElement(n) && isDescendant(topLevelNode, [n, p])) {
-      const currentForm = getForm(editor, [n, p])
-      forms = forms.concat(currentForm)
-      if (elConfig[n.type].attrs?.stopFormIteration) {
+      if (
+        p.length !== topLevelNode[1].length &&
+        elConfig[n.type].attrs?.stopFormIteration
+      ) {
         break
       }
+      const currentForm = getForm(editor, [n, p])
+      forms = forms.concat(currentForm)
     }
   }
 
