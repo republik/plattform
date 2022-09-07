@@ -1,5 +1,5 @@
 import { withRouter } from 'next/router'
-import { flyerSchema } from '@project-r/styleguide'
+import { flyerSchema, RenderContextProvider } from '@project-r/styleguide'
 import { Editor, flyerEditorSchema } from '@project-r/styleguide/editor'
 import withAuthorization from '../../components/Auth/withAuthorization'
 import { HEADER_HEIGHT } from '../Frame/constants'
@@ -71,20 +71,26 @@ const TOOLBAR = {
 
 const Index = ({ value, onChange, readOnly, t }) => {
   return (
-    <Editor
-      value={value}
-      setValue={(newValue) => {
-        onChange(newValue)
-      }}
-      structure={STRUCTURE}
-      config={{
-        schema: flyerSchema,
-        editorSchema: flyerEditorSchema,
-        toolbar: TOOLBAR,
-        readOnly,
-        t,
-      }}
-    />
+    <RenderContextProvider t={t}>
+      {/* The Editor does it's own RenderContextProvider
+       * but we also need to do one from the main styleguide entry point
+       * cause render components will use that context
+       */}
+      <Editor
+        value={value}
+        setValue={(newValue) => {
+          onChange(newValue)
+        }}
+        structure={STRUCTURE}
+        config={{
+          schema: flyerSchema,
+          editorSchema: flyerEditorSchema,
+          toolbar: TOOLBAR,
+          readOnly,
+          t,
+        }}
+      />
+    </RenderContextProvider>
   )
 }
 
