@@ -180,7 +180,7 @@ export type FlyerSignatureElement = SharedElement & {
 
 export type FlyerDateElement = SharedElement & {
   type: 'flyerDate'
-  value?: Date
+  date?: string
 }
 
 export type ArticlePreviewElement = SharedElement & {

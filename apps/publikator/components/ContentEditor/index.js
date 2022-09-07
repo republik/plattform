@@ -1,6 +1,14 @@
 import { withRouter } from 'next/router'
-import { flyerSchema, RenderContextProvider } from '@project-r/styleguide'
-import { Editor, flyerEditorSchema } from '@project-r/styleguide/editor'
+import {
+  flyerSchema,
+  RenderContextProvider,
+  timeFormat,
+} from '@project-r/styleguide'
+import {
+  Editor,
+  flyerEditorSchema,
+  FLYER_DATE_FORMAT,
+} from '@project-r/styleguide/editor'
 import withAuthorization from '../../components/Auth/withAuthorization'
 import { HEADER_HEIGHT } from '../Frame/constants'
 import compose from 'lodash/flowRight'
@@ -8,7 +16,7 @@ import withT from '../../lib/withT'
 
 export const getInitialValue = (options) => {
   const date = options?.publishDate
-    ? { value: new Date(options.publishDate) }
+    ? { date: timeFormat(FLYER_DATE_FORMAT)(new Date(options?.publishDate)) }
     : {}
   return [
     {

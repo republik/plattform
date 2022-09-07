@@ -188,6 +188,11 @@ describe('Slate Editor', () => {
           type: 'flyerTileOpening',
           children: [
             {
+              type: 'flyerDate',
+              date: '09-09-22',
+              children: [{ text: '' }],
+            },
+            {
               type: 'headline',
               children: [
                 {
@@ -263,6 +268,11 @@ describe('Slate Editor', () => {
         {
           type: 'flyerTileOpening',
           children: [
+            {
+              type: 'flyerDate',
+              date: '09-09-22',
+              children: [{ text: '' }],
+            },
             {
               type: 'headline',
               children: [

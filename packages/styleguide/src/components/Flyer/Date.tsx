@@ -1,15 +1,19 @@
 import React from 'react'
 import { Flyer } from '../Typography'
-import { timeFormat } from '../../lib/timeFormat'
+import { timeFormat, timeParse } from '../../lib/timeFormat'
 import { mUp } from '../../theme/mediaQueries'
 import { css } from 'glamor'
 
+export const FLYER_DATE_FORMAT = '%Y-%m-%d'
+
+export const parseDate = timeParse(FLYER_DATE_FORMAT)
+export const renderDate = timeFormat('%A, %d. %B')
+
 export const FlyerDate: React.FC<{
-  value?: Date
+  date?: Date
   attributes: any
   [x: string]: unknown
-}> = ({ children, attributes, value, ...props }) => {
-  const isDate = value instanceof Date && !isNaN(value.valueOf())
+}> = ({ children, attributes, date, ...props }) => {
   return (
     <div
       {...attributes}
@@ -21,11 +25,8 @@ export const FlyerDate: React.FC<{
         },
       })}
     >
-      <Flyer.Small
-        contentEditable={false}
-        style={{ opacity: isDate ? 1 : 0.33 }}
-      >
-        {isDate ? timeFormat('%A, %d. %B')(value) : 'Datum'}
+      <Flyer.Small contentEditable={false} style={{ opacity: date ? 1 : 0.33 }}>
+        {date ? renderDate(parseDate(date)) : 'Datum'}
       </Flyer.Small>
       {children}
     </div>

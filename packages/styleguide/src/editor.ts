@@ -9,3 +9,5 @@ export { ToolbarContainer as EditorToolbar } from './components/Editor/Core/Tool
 export { default as flyerEditorSchema } from './components/Editor/schema/flyerEditor'
 
 export { default as ColorPicker } from './components/Editor/Forms/ColorPicker'
+
+export { FLYER_DATE_FORMAT } from './components/Flyer/Date'

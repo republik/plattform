@@ -6,6 +6,7 @@ import {
 import React from 'react'
 import Field from '../../../../../Form/Field'
 import { timeFormat } from '../../../../../../lib/timeFormat'
+import { FLYER_DATE_FORMAT } from '../../../../../Flyer/Date'
 
 const Form: React.FC<ElementFormProps<FlyerDateElement>> = ({
   element,
@@ -15,9 +16,9 @@ const Form: React.FC<ElementFormProps<FlyerDateElement>> = ({
     <Field
       label='Datum'
       type='date'
-      value={timeFormat('%Y-%m-%d')(element.value)}
+      value={element.date}
       onChange={(_, date: string) => {
-        onChange({ value: new Date(date) })
+        onChange({ date })
       }}
     />
   )
@@ -28,8 +29,8 @@ export const config: ElementConfigI = {
     isVoid: true,
   },
   Form,
-  props: ['value'],
+  props: ['date'],
   defaultProps: {
-    value: () => new Date(),
+    date: () => timeFormat(FLYER_DATE_FORMAT)(new Date()),
   },
 }
