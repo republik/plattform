@@ -3,7 +3,6 @@ import { usePlaybackRate } from '../../lib/playbackRate'
 import { AudioEventEmitter } from './AudioProvider'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 import { AudioEvent } from './types/AudioEvent'
-import AppMessageEventEmitter from '../../lib/react-native/AppMessageEventEmitter'
 import notifyApp from '../../lib/react-native/NotifyApp'
 import useAudioQueue from './hooks/useAudioQueue'
 import { AudioQueueItem } from './graphql/AudioQueueHooks'
@@ -56,12 +55,8 @@ let initialized = false
 
 const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const { inNativeApp } = useInNativeApp()
-  const {
-    audioQueue,
-    audioQueueIsLoading,
-    addAudioQueueItem,
-    removeAudioQueueItem,
-  } = useAudioQueue()
+  const { audioQueue, audioQueueIsLoading, removeAudioQueueItem } =
+    useAudioQueue()
 
   const mediaRef = useRef<HTMLAudioElement>(null)
   const trackedPlayerItem = useRef<AudioQueueItem>(null)
@@ -139,6 +134,10 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   }
 
   const onPlay = async () => {
+    if (activePlayerItem !== trackedPlayerItem.current) {
+      trackedPlayerItem.current = activePlayerItem
+    }
+
     if (inNativeApp) {
       // handle edge case when the track-player queue is empty
       // the previously played item must therefor be readded to the queue
@@ -152,6 +151,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       console.log('calling play on web-mediaRef')
       mediaRef.current.playbackRate = playbackRate
       mediaRef.current.play()
+      syncWithMediaElement()
     }
   }
 
@@ -230,6 +230,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
         },
       })
       if (data.audioQueueItems.length > 0) {
+        setShouldAutoPlay(true)
         setActivePlayerItem(data.audioQueueItems[0])
       }
     } catch (e) {
@@ -359,8 +360,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
           playbackRate,
           actions: {
             onCanPlay,
-            onPlay:
-              activePlayerItem === trackedPlayerItem.current ? onPlay : onStart,
+            onPlay,
             onPause,
             onStop,
             onSeek,
