@@ -4,13 +4,25 @@ import {
   Scroller,
   TabButton,
   Field,
+  Checkbox,
   mediaQueries,
   useColorContext,
+  TeaserFeed,
 } from '@project-r/styleguide'
 import scrollIntoView from 'scroll-into-view'
 import withT from '../../lib/withT'
 import { MetaOption, MetaOptionLabel, AutosizeInput } from './components/Layout'
 import SocialMedia from './components/SocialMedia'
+
+export const FLYER_FORMAT = {
+  id: 'flyer',
+  repoId: 'https://github.com/republik/format-journal',
+  meta: {
+    title: 'Republik-Journal',
+    color: '#405080',
+    kind: 'flyer',
+  },
+}
 
 const styles = {
   metaContainer: css({
@@ -135,6 +147,27 @@ const MetaDataForm = ({ t, metaData, setMetaData }) => {
                 }}
                 noMargin
               />
+            </MetaOption>
+            <MetaOption>
+              <MetaOptionLabel>Feed-Sichtbarkeit</MetaOptionLabel>
+              <Checkbox
+                checked={metaData.feed}
+                onChange={(_, checked) => {
+                  handleMetaDataChange('feed', checked)
+                }}
+              >
+                Im Feed anzeigen
+              </Checkbox>
+            </MetaOption>
+            <MetaOption>
+              <MetaOptionLabel>Feed Vorschau</MetaOptionLabel>
+              <div style={{ backgroundColor: 'white', padding: 15 }}>
+                <TeaserFeed
+                  title={metaData.title}
+                  kind='flyer'
+                  format={FLYER_FORMAT}
+                />
+              </div>
             </MetaOption>
           </MetaSection>
           <MetaSection>

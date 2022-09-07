@@ -7,6 +7,7 @@ import {
 } from '@project-r/styleguide'
 import withT from '../../../lib/withT'
 import { MetaOption, MetaOptionLabel, AutosizeInput } from './Layout'
+import { FLYER_FORMAT } from '../index'
 
 export const SOCIAL_MEDIA = ['facebook', 'twitter']
 
@@ -32,13 +33,13 @@ const ShareImageForm = withT(({ t, data, onChange }) => {
           }
           text={data.shareText}
           onTextChange={(e) => onChange('shareText', e.target.value)}
-          format={{ kind: 'flyer', title: 'Das Republik Journal' }}
+          format={FLYER_FORMAT.meta}
         />
         <ShareImagePreview
           fontSize={data.shareFontSize || 60}
           inverted={data.shareInverted}
           text={data.shareText || t('editor/meta/flyer/defaultShareText')}
-          format={{ kind: 'flyer', title: 'Das Republik Journal' }}
+          format={FLYER_FORMAT.meta}
           preview
         />
       </MetaOption>

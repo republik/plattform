@@ -47,7 +47,8 @@ export const getCurrentContent = (store, data, options) => {
         title: 'Journal',
         slug: 'journal',
         template: 'flyer',
-        feed: true,
+        feed: false,
+        format: 'https://github.com/republik/format-journal',
       },
     }
   )
