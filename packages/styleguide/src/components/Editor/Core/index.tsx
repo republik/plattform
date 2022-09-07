@@ -56,10 +56,7 @@ const RenderedElementComponent: React.FC<{
   const editor = useSlate()
   const [_, setFormPath] = useFormContext()
   const isSelected = useSelected()
-  const path = useMemo(
-    () => ReactEditor.findPath(editor, element),
-    [editor, element],
-  )
+  const path = ReactEditor.findPath(editor, element)
   const config = elementsConfig[element.type]
   if (!config) {
     return (
