@@ -6,6 +6,7 @@ import withT from '../../lib/withT'
 import Link from 'next/link'
 import { css } from 'glamor'
 import { A } from '@project-r/styleguide'
+import Head from 'next/head'
 
 const styles = {
   navLink: css({
@@ -35,6 +36,12 @@ const Nav = ({ router: { query, asPath }, t, isTemplate, isNew }) => {
       : undefined
   return (
     <Frame.Nav>
+      <Head>
+        <title>
+          {query.preview ? 'preview' : currentPath.split('/').slice(-1)}:{' '}
+          {repoId.split('/')[1]} – Publikator
+        </title>
+      </Head>
       <NavLink
         href={{ pathname: editPath, query: editQuery }}
         active={currentPath === editPath && !query.preview}
