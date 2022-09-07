@@ -52,7 +52,7 @@ const Form: React.FC<ElementFormProps<ArticlePreviewElement>> = ({
                 at: path.concat([1, 0]),
               })
             }
-            if (meta.shortTitle) {
+            if (meta.description) {
               Transforms.insertText(editor, meta.description, {
                 at: path.concat([1, 1]),
               })
