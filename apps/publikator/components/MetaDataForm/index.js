@@ -13,6 +13,7 @@ import scrollIntoView from 'scroll-into-view'
 import withT from '../../lib/withT'
 import { MetaOption, MetaOptionLabel, AutosizeInput } from './components/Layout'
 import SocialMedia from './components/SocialMedia'
+import RepoSelect from '../editor/modules/meta/RepoSelect'
 
 export const FLYER_FORMAT = {
   id: 'flyer',
@@ -146,6 +147,19 @@ const MetaDataForm = ({ t, metaData, setMetaData }) => {
                   handleMetaDataChange(event.target.name, event.target.value)
                 }}
                 noMargin
+              />
+            </MetaOption>
+            <MetaOption>
+              <RepoSelect
+                label='Format'
+                value={metaData.format}
+                template='format'
+                onChange={(_, __, item) => {
+                  handleMetaDataChange(
+                    'format',
+                    item ? `https://github.com/${item.value.id}` : undefined,
+                  )
+                }}
               />
             </MetaOption>
             <MetaOption>

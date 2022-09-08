@@ -81,6 +81,7 @@ import DiscussionContextProvider from '../Discussion/context/DiscussionContextPr
 import Discussion from '../Discussion/Discussion'
 import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
 import { getMetaData, runMetaFromQuery } from './metadata'
+import FlyerNavi from './FlyerNavi'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -801,6 +802,9 @@ const ArticlePage = ({
                 (isEditorialNewsletter ||
                   meta.template === 'article' ||
                   meta.template === 'page') && <div style={{ height: 60 }} />}
+              {hasAccess && meta.template === 'flyer' && (
+                <FlyerNavi repoId={repoId} publishDate={meta.publishDate} />
+              )}
               {!suppressPayNotes && payNoteAfter}
             </>
           )
