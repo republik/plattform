@@ -121,7 +121,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       shouldAutoPlay,
       hasAutoPlayed,
     })
-    if (activePlayerItem !== trackedPlayerItem.current) {
+    if (activePlayerItem?.id !== trackedPlayerItem?.current?.id) {
       trackedPlayerItem.current = activePlayerItem
 
       const userProgress =
@@ -158,6 +158,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       mediaRef.current.play()
       syncWithMediaElement()
     }
+    await saveActiveItemProgress()
   }
 
   const onPause = async () => {
@@ -185,7 +186,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     initialized = false
   }
 
-  const onSeek = (progress: number) => {
+  const onSeek = async (progress: number) => {
     if (!activePlayerItem) return
     if (inNativeApp) {
       notifyApp(AudioEvent.SEEK, progress * duration)
@@ -193,9 +194,11 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       mediaRef.current.currentTime = progress * duration
       syncWithMediaElement()
     }
+    // TODO: debounce saving progress, since onSeek is called on every mousemove
+    await saveActiveItemProgress()
   }
 
-  const onForward = () => {
+  const onForward = async () => {
     if (!activePlayerItem) return
     if (inNativeApp) {
       notifyApp(AudioEvent.FORWARD, SKIP_FORWARD_TIME)
@@ -203,9 +206,10 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       mediaRef.current.currentTime += SKIP_FORWARD_TIME
       syncWithMediaElement()
     }
+    await saveActiveItemProgress()
   }
 
-  const onBackward = () => {
+  const onBackward = async () => {
     if (!activePlayerItem) return
     if (inNativeApp) {
       notifyApp(AudioEvent.BACKWARD, SKIP_BACKWARD_TIME)
@@ -213,6 +217,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       mediaRef.current.currentTime -= SKIP_BACKWARD_TIME
       syncWithMediaElement()
     }
+    await saveActiveItemProgress()
   }
 
   const onPlaybackRateChange = (value: number) => {
@@ -268,8 +273,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
 
   // Reset media-element if new source is provided
   useEffect(() => {
-    if (activePlayerItem === trackedPlayerItem?.current) {
-      console.log('out')
+    if (activePlayerItem?.id === trackedPlayerItem?.current?.id) {
       return
     }
     if (inNativeApp) {
