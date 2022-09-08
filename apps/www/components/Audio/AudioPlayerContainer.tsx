@@ -124,10 +124,16 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     if (activePlayerItem?.id !== trackedPlayerItem?.current?.id) {
       trackedPlayerItem.current = activePlayerItem
 
-      const userProgress =
-        activePlayerItem.document?.meta.audioSource?.userProgress
-
-      if (mediaRef.current && userProgress) {
+      const { userProgress, durationMs } =
+        activePlayerItem.document?.meta.audioSource ?? {}
+      const duration = durationMs / 1000
+      console.log('Available userProgress is ', userProgress?.secs ?? 0)
+      // Only load the userProgress if given and smaller within 2 seconds of the duration
+      if (
+        mediaRef.current &&
+        userProgress &&
+        (!duration || userProgress.secs + 2 < duration)
+      ) {
         setCurrentTime(userProgress.secs)
         mediaRef.current.currentTime = userProgress.secs
       }
@@ -315,7 +321,6 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       setHasAutoPlayed(false)
       setIsPlaying(false)
       if (mediaRef.current && alreadyHadActivePlayerItem) {
-        alert('ooooi')
         mediaRef.current.load()
       }
     }
