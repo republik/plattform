@@ -17,6 +17,7 @@ import {
   Center,
   Breakout,
   colors,
+  plainLinkRule,
   Interaction,
   mediaQueries,
   TitleBlock,
@@ -554,8 +555,6 @@ const ArticlePage = ({
             payNote && cloneElement(payNote, { position: 'after' })
 
           const ownDiscussion = meta.ownDiscussion
-          const linkedDiscussion =
-            meta.linkedDiscussion && !meta.linkedDiscussion.closed
 
           const ProgressComponent =
             hasAccess &&
@@ -630,7 +629,10 @@ const ArticlePage = ({
                                   }
                                 >
                                   <Link href={format.meta.path} passHref>
-                                    <a {...styles.link} href={format.meta.path}>
+                                    <a
+                                      {...plainLinkRule}
+                                      href={format.meta.path}
+                                    >
                                       {format.meta.title}
                                     </a>
                                   </Link>
@@ -753,10 +755,8 @@ const ArticlePage = ({
               )}
               {!!podcast && meta.template !== 'article' && (
                 <Center breakout={breakout}>
-                  <>
-                    <Interaction.H3>{t(`PodcastButtons/title`)}</Interaction.H3>
-                    <PodcastButtons {...podcast} />
-                  </>
+                  <Interaction.H3>{t(`PodcastButtons/title`)}</Interaction.H3>
+                  <PodcastButtons {...podcast} />
                 </Center>
               )}
               {episodes && !isSeriesOverview && (
@@ -789,6 +789,10 @@ const ArticlePage = ({
               {me && hasActiveMembership && (
                 <ArticleRecommendationsFeed path={cleanedPath} />
               )}
+              {hasActiveMembership &&
+                (isEditorialNewsletter ||
+                  meta.template === 'article' ||
+                  meta.template === 'page') && <div style={{ height: 60 }} />}
               {!suppressPayNotes && payNoteAfter}
             </>
           )
@@ -799,10 +803,6 @@ const ArticlePage = ({
 }
 
 const styles = {
-  link: css({
-    color: 'inherit',
-    textDecoration: 'none',
-  }),
   prepublicationNotice: css({
     backgroundColor: colors.social,
   }),
