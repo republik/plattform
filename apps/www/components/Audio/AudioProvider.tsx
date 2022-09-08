@@ -12,6 +12,25 @@ type ToggleAudioPlayerFunc = (playerItem: AudioPlayerItem) => void
 
 export const AudioEventEmitter = new EventEmitter()
 
+type EventHandler<E> = (eventData: E) => Promise<void>
+
+/**
+ * useAudioEvent allows to subscribe to events emitted by the audio-context.
+ * @param eventName The name of the event to subscribe to.
+ * @param handler The handler to call when the event is emitted.
+ */
+export function useAudioContextEvent<E = Event>(
+  eventName: string,
+  handler: EventHandler<E>,
+) {
+  useEffect(() => {
+    AudioEventEmitter.addListener(eventName, handler)
+    return () => {
+      AudioEventEmitter.removeListener(eventName, handler)
+    }
+  }, [eventName, handler])
+}
+
 type AudioContextValue = {
   activePlayerItem: AudioPlayerItem | null
   audioPlayerVisible: boolean
