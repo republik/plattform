@@ -201,7 +201,9 @@ export default withDefaultSSR(
             <BranchingNotice
               asIcon
               repoId={repoId}
-              currentCommitId={commitId}
+              commit={{
+                id: commitId,
+              }}
             />
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
