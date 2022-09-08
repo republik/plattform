@@ -276,18 +276,6 @@ const linkStyle = css({
   cursor: 'pointer',
 })
 
-// TODO: forwardRef is problematic inside Slate
-//  check if this is OK
-//  otherwise use a link with forward ref on render
-//  and one without in the editor
-export const A = forwardRef<HTMLAnchorElement, any>(
-  ({ children, attributes, ...props }, ref) => (
-    <a {...attributes} {...props} {...linkStyle} ref={ref}>
-      {children}
-    </a>
-  ),
-)
-
 // TODO: forwardRef is problematic inside Slate:
 //  for now we use the noref compoment inside the editor
 //  we should check what causes this and if it can be fixed
@@ -297,10 +285,22 @@ export const NoRefA = ({ children, attributes, ...props }) => (
   </a>
 )
 
+// Outside the editor we use a A with forwardRef for Next.js Link compat
+const A = forwardRef<HTMLAnchorElement, any>(
+  ({ children, attributes, ...props }, ref) => (
+    <a {...attributes} {...props} {...linkStyle} ref={ref}>
+      {children}
+    </a>
+  ),
+)
+
 export const Link: React.FC<any> = ({ children, href, ...props }) => {
   const { Link } = useRenderContext()
+  if (!href) {
+    return React.Children.only(children)
+  }
   return (
-    <Link href={href} passhref>
+    <Link href={href} passHref>
       <A href={href} {...props}>
         {children}
       </A>
