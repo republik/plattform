@@ -5,15 +5,20 @@ import { mUp } from '../../theme/mediaQueries'
 import { css } from 'glamor'
 
 export const FLYER_DATE_FORMAT = '%Y-%m-%d'
+const RENDER_FORMAT_CURRENT_YEAR = '%A, %-d. %B'
+const RENDER_FORMAT = '%A, %-d. %B %Y'
 
 export const parseDate = timeParse(FLYER_DATE_FORMAT)
-export const renderDate = timeFormat('%A, %-d. %B')
+
+const isCurrentYear = (date?: Date): boolean =>
+  date && date.getFullYear() === new Date().getFullYear()
 
 export const FlyerDate: React.FC<{
-  date?: Date
+  date?: string
   attributes: any
   [x: string]: unknown
 }> = ({ children, attributes, date, ...props }) => {
+  const parsedDate = date && parseDate(date)
   return (
     <div
       {...attributes}
@@ -26,7 +31,13 @@ export const FlyerDate: React.FC<{
       })}
     >
       <Flyer.Small contentEditable={false} style={{ opacity: date ? 1 : 0.33 }}>
-        {date ? renderDate(parseDate(date)) : 'Datum'}
+        {date
+          ? timeFormat(
+              isCurrentYear(parsedDate)
+                ? RENDER_FORMAT_CURRENT_YEAR
+                : RENDER_FORMAT,
+            )(parsedDate)
+          : 'Datum'}
       </Flyer.Small>
       {children}
     </div>
