@@ -48,6 +48,9 @@ const styles = {
   link: css({
     ...plainLinkRule,
   }),
+  activeLink: css({
+    textDecoration: 'underline',
+  }),
   active: css({
     ...sansSerifMedium16,
   }),
@@ -82,7 +85,12 @@ const TabButton = React.forwardRef<
       ref={ref}
       href={href}
       onClick={onClick}
-      {...css(styles.default, isActive && styles.active, href && styles.link)}
+      {...css(
+        styles.default,
+        isActive && styles.active,
+        href && styles.link,
+        href && isActive && !border && styles.activeLink,
+      )}
       {...plainButtonRule}
       {...(!isActive && hoverRule)}
       {...colorScheme.set(

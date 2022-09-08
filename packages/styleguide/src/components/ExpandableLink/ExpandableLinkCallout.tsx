@@ -66,12 +66,14 @@ const styles = {
     right: 0,
     textAlign: 'left',
     padding: '24px 15px',
+    paddingBottom: ['24px', 'max(24px, env(safe-area-inset-bottom))'],
     [mUp]: {
       width: 500,
       position: 'relative',
       left: 'auto',
       right: 'auto',
       padding: '15px',
+      paddingBottom: '15px',
     },
   }),
   contentText: css({
@@ -139,7 +141,6 @@ const ExpandableLinkP = ({ children, ...props }) => {
 }
 
 const ExpandableLinkCallout = ({
-  inNativeApp,
   timeOutRef,
   expandedLink,
   setExpandedLink,
@@ -228,7 +229,6 @@ const ExpandableLinkCallout = ({
         {...css({
           animation: `0.3s ${slideUp} forwards`,
           bottom: -calloutHeight,
-          paddingBottom: inNativeApp ? '50px' : '15px',
           [mUp]: {
             animation: 'none',
             bottom: 'auto',
@@ -241,12 +241,7 @@ const ExpandableLinkCallout = ({
           dangerouslySetInnerHTML={{ __html: expandedLink.description }}
           error={false}
         />
-        <a
-          href={expandedLink.href}
-          target='_blank'
-          {...styles.contentLink}
-          {...linkRule}
-        >
+        <a href={expandedLink.href} {...styles.contentLink} {...linkRule}>
           <LinkIcon
             size={20}
             {...styles.linkIcon}

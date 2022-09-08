@@ -60,8 +60,9 @@ const upload = async (portrait, dry = false) => {
 
 const del = (portraitUrl) => {
   if (!portraitUrl) {
-    return
+    return Promise.resolve()
   }
+
   const [, bucket, path] = new RegExp(/.*?s3\/(.*?)\/(.*?)\?/).exec(portraitUrl)
   debug('del: %o', { bucket, path })
   return S3.del({ bucket, path })

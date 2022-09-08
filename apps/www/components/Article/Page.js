@@ -106,6 +106,13 @@ const TestimonialList = dynamic(
 const ReasonsVideo = dynamic(() => import('../About/ReasonsVideo'), {
   ssr: true,
 })
+const NewsletterSignUpDynamic = dynamic(
+  () => import('../Auth/NewsletterSignUp'),
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
+)
 const Votebox = dynamic(() => import('../Vote/Voting'), {
   loading: LoadingComponent,
   ssr: false,
@@ -370,6 +377,7 @@ const ArticlePage = ({
           ELECTION_RESULT_DIVERSITY: ElectionResultDiversity,
           QUESTIONNAIRE: Questionnaire,
           QUESTIONNAIRE_SUBMISSIONS: QuestionnaireSubmissions,
+          NEWSLETTER_SIGNUP: NewsletterSignUpDynamic,
         },
         titleMargin: false,
         titleBreakout,

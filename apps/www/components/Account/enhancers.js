@@ -9,17 +9,6 @@ export const newsletterFragment = `
   }
 `
 
-export const newsletterSettingsFragment = `
-  fragment NewsletterSettings on NewsletterSettings {
-    id
-    status
-    subscriptions {
-      ...NewsletterInfo
-    }
-  }
-  ${newsletterFragment}
-`
-
 export const userDetailsFragment = `
   fragment PhoneAndAddressOnUser on User {
     id
@@ -67,11 +56,15 @@ const addMeToRole = gql`
       id
       roles
       newsletterSettings {
-        ...NewsletterSettings
+        id
+        status
+        subscriptions {
+          ...NewsletterInfo
+        }
       }
     }
   }
-  ${newsletterSettingsFragment}
+  ${newsletterFragment}
 `
 
 export const query = gql`
