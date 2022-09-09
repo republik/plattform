@@ -133,7 +133,7 @@ const FlyerNavi = ({ repoId, publishDate, actionBar }) => {
                 )}
                 <span {...styles.date}>{dateParse(date)}</span>
                 {next && (
-                  <Link href={prev.path} passHref>
+                  <Link href={next.path} passHref>
                     <IconButton invert Icon={ArrowForwardIcon} />
                   </Link>
                 )}
