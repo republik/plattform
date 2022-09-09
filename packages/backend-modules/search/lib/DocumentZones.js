@@ -3,9 +3,11 @@ const visit = require('unist-util-visit')
 const Promise = require('bluebird')
 const debug = require('debug')('search:lib:DocumentZones')
 
-const { mdastToString } = require('@orbiting/backend-modules-utils')
+const {
+  stringifyNode,
+} = require('@orbiting/backend-modules-documents/lib/resolve')
 
-const { getIndexAlias, mdastFilter } = require('./utils')
+const { getIndexAlias } = require('./utils')
 const { termEntry } = require('./schema')
 const { termCriteriaBuilder } = require('./filters')
 
@@ -28,13 +30,16 @@ const shouldIndexNode = (node) =>
   node.type === 'zone' && ['CHART'].includes(node.identifier)
 
 const findNodes = (elasticDoc) => {
+  const { type, content } = elasticDoc
   const nodes = []
 
-  visit(elasticDoc.content, 'zone', (node) => {
-    if (shouldIndexNode(node)) {
-      nodes.push(node)
-    }
-  })
+  if (type === 'mdast') {
+    visit(content, 'zone', (node) => {
+      if (shouldIndexNode(node)) {
+        nodes.push(node)
+      }
+    })
+  }
 
   return nodes
 }
@@ -45,7 +50,15 @@ const getZoneHash = (node) =>
 const getZoneId = (repoId, versionName, contentHash) =>
   Buffer.from(`${repoId}/${versionName}/${contentHash}`).toString('base64')
 
-const getElasticDoc = (repoId, commitId, versionName, state, date, node) => {
+const getElasticDoc = async (
+  repoId,
+  commitId,
+  versionName,
+  state,
+  date,
+  type,
+  node,
+) => {
   const contentHash = getZoneHash(node)
   const id = getZoneId(repoId, versionName, contentHash)
 
@@ -64,10 +77,10 @@ const getElasticDoc = (repoId, commitId, versionName, state, date, node) => {
     versionName,
     contentHash,
     identifier,
+    type,
     node,
     data: node?.data || {},
-    text:
-      mdastToString(mdastFilter(node, (n) => n.type === 'code')).trim() || '',
+    text: (await stringifyNode(type, node)).trim() || '',
   }
 }
 
@@ -158,12 +171,13 @@ const createPublish = (elastic, elasticDoc) => {
   return {
     insert: async (desiredState) => {
       const inserts = await Promise.map(findNodes(elasticDoc), async (node) => {
-        const documentZoneElasticDoc = getElasticDoc(
+        const documentZoneElasticDoc = await getElasticDoc(
           repoId,
           commitId,
           versionName,
           desiredState,
           publishDate,
+          elasticDoc.type,
           node,
         )
 

@@ -118,19 +118,20 @@ const PlaceholderLink = ({ repo, placeholderDate, children }) => {
     },
   } = repo
   const urlDate = getUrlDate(new Date(placeholderDate))
+  const templateRepoId = id ? { templateRepoId: id } : {}
 
   return (
     <Link
       href={{
-        pathname: `/repo/${GITHUB_ORG}/${getTemplateRepoPrefix(
-          id,
-        )}-${urlDate}/edit`,
+        pathname: `/repo/${GITHUB_ORG}/${
+          id ? getTemplateRepoPrefix(id) : template
+        }-${urlDate}/edit`,
         query: {
           commitId: 'new',
           title,
           schema: template,
-          templateRepoId: id,
           publishDate: placeholderDate,
+          ...templateRepoId,
         },
       }}
       passHref
@@ -157,12 +158,8 @@ const RepoLink = ({ repo, placeholderDate, children }) => {
 
 const Repo = withT(({ t, repo, isNewsletter, isPast, placeholderDate }) => {
   const [colorScheme] = useColorContext()
-  const {
-    id,
-    currentPhase,
-    meta: { publishDate },
-    latestCommit,
-  } = repo
+  const { id, currentPhase, meta, latestCommit } = repo
+  const publishDate = meta?.publishDate
   return (
     <RepoLink repo={repo} placeholderDate={placeholderDate}>
       <div

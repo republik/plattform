@@ -3,7 +3,7 @@ const {
   getContributorUserIds,
   getContributorUserLinks,
 } = require('../../lib/meta')
-const { mdastToString } = require('@orbiting/backend-modules-utils')
+const { stringifyNode } = require('../../lib/resolve')
 const {
   Analyzer,
 } = require('@orbiting/backend-modules-statistics/lib/credits/analyzer')
@@ -12,12 +12,24 @@ module.exports = {
   // deprecated, left in for smooth transition including deploys
   authors: async (meta, _, context) => {
     const { loaders } = context
-    const ids = await getContributorUserIds(meta, context)
+    if (!meta?.credits?.children) {
+      return []
+    }
+
+    const ids = await getContributorUserIds(meta?.credits?.type, meta, context)
 
     return Promise.map(ids, (id) => loaders.User.byId.load(id)).filter(Boolean)
   },
+  credits: (meta) => {
+    return Array.isArray(meta.credits) // old data, e.g. pre-reindex
+      ? meta.credits
+      : meta.credits?.children
+  },
   contributors: async (meta, _, context) => {
-    const creditString = mdastToString({ children: meta.credits })
+    const creditString = await stringifyNode(meta.credits?.type, meta.credits)
+    if (!creditString) {
+      return []
+    }
 
     let contributors
     try {
@@ -27,7 +39,11 @@ module.exports = {
       return []
     }
 
-    let contributorsUserLinks = await getContributorUserLinks(meta, context)
+    let contributorsUserLinks = await getContributorUserLinks(
+      meta.credits?.type,
+      meta,
+      context,
+    )
     return contributors.map((contributor) => {
       const userLink = contributorsUserLinks.find(
         (c) => c.name === contributor.name,

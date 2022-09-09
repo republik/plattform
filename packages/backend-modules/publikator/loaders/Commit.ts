@@ -10,14 +10,14 @@ const {
   cache: { create: createCache },
 } = require('@orbiting/backend-modules-utils')
 
-const { stringify: yamlStringify } = require('../lib/yaml')
-
 export interface Commit {
   id: string
   repoId: string
   parentIds: string[]
   message: string
+  type: null | 'mdast' | 'slate'
   content: string
+  content__markdown: string
   meta: any
   userId?: string
   author: CommitAuthor
@@ -53,15 +53,15 @@ export default module.exports = function (context: GraphqlContext) {
     context,
   )
 
-  async function getTransformedContentByIds(
+  async function getTransformedByIds(
     ids: readonly string[],
     transform: (commit: Commit) => any,
     name: string,
   ) {
-    // cached mdasts
     const cached = await Promise.map(
       ids,
-      async (id: string) => (await cache.get(`${id}:${name}`)) || { _miss: id },
+      async (id: string) =>
+        (await cache.get(`${id}:transformed:${name}`)) || { _miss: id },
     )
 
     // missing commit ids
@@ -72,13 +72,15 @@ export default module.exports = function (context: GraphqlContext) {
       (missing.length &&
         (await commits.find(
           { id: missing },
-          { fields: ['id', 'meta', 'content'] },
+          { fields: ['id', 'type', 'content', 'meta', 'content__markdown'] },
         ))) ||
       []
     const transformed = await Promise.map(contents, transform)
 
     // cache it!
-    await Promise.map(transformed, (row) => cache.set(row, `${row.id}:${name}`))
+    await Promise.map(transformed, (row) =>
+      cache.set(row, `${row.id}:transformed:${name}`),
+    )
 
     return [...cached.filter((m) => !m._miss), ...transformed]
   }
@@ -92,24 +94,18 @@ export default module.exports = function (context: GraphqlContext) {
         []
       )
     }),
-    byIdMarkdown: createDataLoader(async (ids: readonly string[]) =>
-      getTransformedContentByIds(
+    byIdContent: createDataLoader(async (ids: readonly string[]) =>
+      getTransformedByIds(
         ids,
         (row) => ({
           id: row.id,
-          markdown: yamlStringify(row.meta, row.content),
+          type: row.type || 'mdast',
+          content: {
+            ...(row.content || mdastParse(row.content__markdown)),
+            meta: row.meta,
+          },
         }),
-        'markdown',
-      ),
-    ),
-    byIdMdast: createDataLoader(async (ids: readonly string[]) =>
-      getTransformedContentByIds(
-        ids,
-        (row) => ({
-          id: row.id,
-          mdast: { ...mdastParse(row.content), meta: row.meta },
-        }),
-        'mdast',
+        'content',
       ),
     ),
     byRepoId: createDataLoader(

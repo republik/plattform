@@ -22,6 +22,9 @@
     },
     "REACT_APP_SG_LOGO_VIEWBOX": {
       "required": true
+    },
+    "REACT_APP_API_URL": {
+      "required": true
     }
   },
   "formation": {},

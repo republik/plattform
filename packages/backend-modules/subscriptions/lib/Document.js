@@ -57,6 +57,7 @@ const getSubscriptionsForDoc = async (
 
   // from prepareMetaForPublish
   const contributorUserIds = await getContributorUserIds(
+    doc.type,
     doc.meta || doc._meta,
     context,
   )

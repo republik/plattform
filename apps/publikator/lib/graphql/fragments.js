@@ -28,6 +28,7 @@ export const CommitWithDocument = gql`
     document {
       id
       repoId
+      type
       content
       meta {
         title

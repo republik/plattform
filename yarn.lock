@@ -3595,6 +3595,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/is-hotkey@^0.1.1":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@types/is-hotkey/-/is-hotkey-0.1.7.tgz#30ec6d4234895230b576728ef77e70a52962f3b3"
+  integrity sha512-yB5C7zcOM7idwYZZ1wKQ3pTfjA9BbvFqRWvKB46GFddxnJtHwi/b9y84ykQtxQPg5qhdpg4Q/kWU3EGoCTmLzQ==
+
 "@types/is-stream@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@types/is-stream/-/is-stream-1.1.0.tgz#b84d7bb207a210f2af9bed431dc0fbe9c4143be1"
@@ -3693,7 +3698,7 @@
     "@types/koa-compose" "*"
     "@types/node" "*"
 
-"@types/lodash@^4.14.162":
+"@types/lodash@^4.14.149", "@types/lodash@^4.14.162":
   version "4.14.182"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.182.tgz#05301a4d5e62963227eaafe0ce04dd77c54ea5c2"
   integrity sha512-/THyiqyQAP9AfARo4pF+aCGcyiQ94tX/Is2I7HofNRqoYLgN1PBoOWu2/zTA5zMxzP5EFutMtWtGAFRKUe961Q==
@@ -3925,6 +3930,11 @@
   version "8.3.4"
   resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.4.tgz#bd86a43617df0594787d38b735f55c805becf1bc"
   integrity sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==
+
+"@types/validator@^13.7.4":
+  version "13.7.4"
+  resolved "https://registry.yarnpkg.com/@types/validator/-/validator-13.7.4.tgz#33cc949ee87dd47c63e35ba4ad94f6888852be04"
+  integrity sha512-uAaSWegu2lymY18l+s5nmcXu3sFeeTOl1zhSGoYzcr6T3wz1M+3OcW4UjfPhIhHGd13tIMRDsEpR+d8w/MexwQ==
 
 "@types/vfile-message@*":
   version "2.0.0"
@@ -6583,6 +6593,11 @@ clipboard-copy@^3.1.0, clipboard-copy@^3.2.0:
   resolved "https://registry.yarnpkg.com/clipboard-copy/-/clipboard-copy-3.2.0.tgz#3c5b8651d3512dcfad295d77a9eb09e7fac8d5fb"
   integrity sha512-vooFaGFL6ulEP1liiaWFBmmfuPm3cY3y7T9eB83ZTnYc/oFeAKsq3NcDrOkBC8XaauEE8zHQwI7k0+JSYiVQSQ==
 
+clipboard-copy@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/clipboard-copy/-/clipboard-copy-4.0.1.tgz#326ef9726d4ffe72d9a82a7bbe19379de692017d"
+  integrity sha512-wOlqdqziE/NNTUJsfSgXmBMIrYmfd5V0HCGsR8uAKHcg+h9NENWINcfRjtWGU77wDHC8B8ijV4hMTGYbrKovng==
+
 clipboardy@2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/clipboardy/-/clipboardy-2.3.0.tgz#3c2903650c68e46a91b388985bc2774287dba290"
@@ -6912,7 +6927,7 @@ compression@^1.7.2, compression@^1.7.4:
     safe-buffer "5.1.2"
     vary "~1.1.2"
 
-compute-scroll-into-view@^1.0.2:
+compute-scroll-into-view@^1.0.17, compute-scroll-into-view@^1.0.2:
   version "1.0.17"
   resolved "https://registry.yarnpkg.com/compute-scroll-into-view/-/compute-scroll-into-view-1.0.17.tgz#6a88f18acd9d42e9cf4baa6bec7e0522607ab7ab"
   integrity sha512-j4dx+Fb0URmzbwwMUrhqWM2BEWHdFGx+qZ9qqASHRPqvTYdqvWnHg0H1hIbcyLnvgnoNAVMlwkepyqM3DaIFUg==
@@ -8498,6 +8513,11 @@ direction@^0.1.5:
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/direction/-/direction-0.1.5.tgz#ce5d797f97e26f8be7beff53f7dc40e1c1a9ec4c"
   integrity sha512-HceXsAluGbXKCz2qCVbXFUH4Vn4eNMWxY5gzydMFMnS1zKSwvDASqLwcrYLIFDpwuZ63FUAqjDLEP1eicHt8DQ==
+
+direction@^1.0.3:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/direction/-/direction-1.0.4.tgz#2b86fb686967e987088caf8b89059370d4837442"
+  integrity sha512-GYqKi1aH7PJXxdhTeZBFrg8vUBeKXi+cNprXsC1kpJcbcVnV9wBsrOu1cQEdG0WeQwlfHiy3XvnKfIrJ2R0NzQ==
 
 discontinuous-range@1.0.0:
   version "1.0.0"
@@ -11882,7 +11902,7 @@ immer@1.10.0:
   resolved "https://registry.yarnpkg.com/immer/-/immer-1.10.0.tgz#bad67605ba9c810275d91e1c2a47d4582e98286d"
   integrity sha512-O3sR1/opvCDGLEVcvrGTMtLac8GJ5IwZC4puPrLuRj3l7ICKvkmA0vGuU9OW8mV9WIBRnaxp5GJh9IEAaNOoYg==
 
-immer@^9.0.12:
+immer@^9.0.12, immer@^9.0.6:
   version "9.0.15"
   resolved "https://registry.yarnpkg.com/immer/-/immer-9.0.15.tgz#0b9169e5b1d22137aba7d43f8a81a495dd1b62dc"
   integrity sha512-2eB/sswms9AEUSkOm4SbV5Y7Vmt/bKRwByd52jfLkW4OLYeaTP3EEiJ9agqU0O/tq6Dk62Zfj+TJSqfm1rLVGQ==
@@ -12456,7 +12476,7 @@ is-hexadecimal@^1.0.0:
   resolved "https://registry.yarnpkg.com/is-hexadecimal/-/is-hexadecimal-1.0.4.tgz#cc35c97588da4bd49a8eedd6bc4082d44dcb23a7"
   integrity sha512-gyPJuv83bHMpocVYoqof5VDiZveEoGoFL8m3BXNb2VW8Xs+rz9kqO8LOQ5DH6EsuvilT1ApazU0pyl+ytbPtlw==
 
-is-hotkey@^0.1.1:
+is-hotkey@^0.1.1, is-hotkey@^0.1.6:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/is-hotkey/-/is-hotkey-0.1.8.tgz#6b1f4b2d0e5639934e20c05ed24d623a21d36d25"
   integrity sha512-qs3NZ1INIS+H+yeo7cD9pDfwYV/jqRh1JG9S9zYrNudkoUQg7OL7ziXqRKu+InFjUIDoP2o6HIkLYMh1pcWgyQ==
@@ -20097,6 +20117,13 @@ scroll-behavior@^0.9.5:
     dom-helpers "^3.4.0"
     invariant "^2.2.4"
 
+scroll-into-view-if-needed@^2.2.20:
+  version "2.2.29"
+  resolved "https://registry.yarnpkg.com/scroll-into-view-if-needed/-/scroll-into-view-if-needed-2.2.29.tgz#551791a84b7e2287706511f8c68161e4990ab885"
+  integrity sha512-hxpAR6AN+Gh53AdAimHM6C8oTN1ppwVZITihix+WqalywBeFcQ6LdQP5ABNl26nX8GTEL7VT+b8lKpdqq65wXg==
+  dependencies:
+    compute-scroll-into-view "^1.0.17"
+
 scroll-into-view@1.15.0:
   version "1.15.0"
   resolved "https://registry.yarnpkg.com/scroll-into-view/-/scroll-into-view-1.15.0.tgz#9e6733bd74680349d6e5c49ddde6a09d9309fadf"
@@ -20526,10 +20553,12 @@ slate-dev-logger@^0.1.36:
   resolved "https://registry.yarnpkg.com/slate-dev-logger/-/slate-dev-logger-0.1.43.tgz#77f6ca7207fcbf453a5516f3aa8b19794d1d26dc"
   integrity sha512-GkcPMGzmPVm85AL+jaKnzhIA0UH9ktQDEIDM+FuQtz+TAPcpPCQiRAaZ6I2p2uD0Hq9bImhKSCtHIa0qRxiVGw==
 
-slate-dev-warning@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/slate-dev-warning/-/slate-dev-warning-0.0.1.tgz#f6c36731babea5e301b5bd504fe64911dd24200a"
-  integrity sha512-QdXa+qmOG46VrTfnzn2gUVzs1WiO3Q+zCv3XomzMNGdgAJjCgHBs3jaeQD845h15loS3OJ181gCNAkB3dby6Hw==
+slate-history@^0.66.0:
+  version "0.66.0"
+  resolved "https://registry.yarnpkg.com/slate-history/-/slate-history-0.66.0.tgz#ac63fddb903098ceb4c944433e3f75fe63acf940"
+  integrity sha512-6MWpxGQZiMvSINlCbMW43E2YBSVMCMCIwQfBzGssjWw4kb0qfvj0pIdblWNRQZD0hR6WHP+dHHgGSeVdMWzfng==
+  dependencies:
+    is-plain-object "^5.0.0"
 
 slate-mdast-serializer@^2.0.0:
   version "2.0.0"
@@ -20578,6 +20607,20 @@ slate-react@^0.10.23:
     slate-plain-serializer "^0.4.16"
     slate-prop-types "^0.4.16"
 
+slate-react@^0.82.1:
+  version "0.82.1"
+  resolved "https://registry.yarnpkg.com/slate-react/-/slate-react-0.82.1.tgz#f70bfa370e8182af7055a45afc40b6a17cd24856"
+  integrity sha512-FHYai6LWAN2CbxNH7zNxbBOL8O3+EdPiviVdckTZBOh92+mR69jgvH3v26pdYczflIOXl1jisHFMhyb7vCC0qA==
+  dependencies:
+    "@types/is-hotkey" "^0.1.1"
+    "@types/lodash" "^4.14.149"
+    direction "^1.0.3"
+    is-hotkey "^0.1.6"
+    is-plain-object "^5.0.0"
+    lodash "^4.17.4"
+    scroll-into-view-if-needed "^2.2.20"
+    tiny-invariant "1.0.6"
+
 slate@^0.31.8:
   version "0.31.8"
   resolved "https://registry.yarnpkg.com/slate/-/slate-0.31.8.tgz#d93fd397bcceb2b5eb2e1cbafa20643044230d63"
@@ -20592,18 +20635,14 @@ slate@^0.31.8:
     slate-dev-logger "^0.1.36"
     type-of "^2.0.1"
 
-slate@^0.41.3:
-  version "0.41.3"
-  resolved "https://registry.yarnpkg.com/slate/-/slate-0.41.3.tgz#fa468de5db53afc453a0a7d7875b4de05737a900"
-  integrity sha512-I/ymHWRxtoSOWYKh/SFgW3Vkkojt5ywWf7Wh4oBvaKic/3mAsM1wymyZmhnvSKK59IeE0JJzD4uyyQaM1KEFHA==
+slate@^0.82.1:
+  version "0.82.1"
+  resolved "https://registry.yarnpkg.com/slate/-/slate-0.82.1.tgz#cf43cb828c980734dab01c9bbb517fd4d20892f7"
+  integrity sha512-3mdRdq7U3jSEoyFrGvbeb28hgrvrr4NdFCtJX+IjaNvSFozY0VZd/CGHF0zf/JDx7aEov864xd5uj0HQxxEWTQ==
   dependencies:
-    debug "^3.1.0"
-    direction "^0.1.5"
-    esrever "^0.2.0"
-    is-plain-object "^2.0.4"
-    lodash "^4.17.4"
-    slate-dev-warning "^0.0.1"
-    type-of "^2.0.1"
+    immer "^9.0.6"
+    is-plain-object "^5.0.0"
+    tiny-warning "^1.0.3"
 
 slice-ansi@^2.1.0:
   version "2.1.0"
@@ -21866,6 +21905,11 @@ tiny-inflate@^1.0.0, tiny-inflate@^1.0.3:
   resolved "https://registry.yarnpkg.com/tiny-inflate/-/tiny-inflate-1.0.3.tgz#122715494913a1805166aaf7c93467933eea26c4"
   integrity sha512-pkY1fj1cKHb2seWDy0B16HeWyczlJA9/WW3u3c4z/NiWDsO3DOU5D7nhTLE9CF0yXv/QZFY7sEJmj24dK+Rrqw==
 
+tiny-invariant@1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/tiny-invariant/-/tiny-invariant-1.0.6.tgz#b3f9b38835e36a41c843a3b0907a5a7b3755de73"
+  integrity sha512-FOyLWWVjG+aC0UqG76V53yAWdXfH8bO6FNmyZOuUrzDzK8DI3/JRY25UD7+g49JWM1LXwymsKERB+DzI0dTEQA==
+
 tiny-lru@8.0.2:
   version "8.0.2"
   resolved "https://registry.yarnpkg.com/tiny-lru/-/tiny-lru-8.0.2.tgz#812fccbe6e622ded552e3ff8a4c3b5ff34a85e4c"
@@ -21875,6 +21919,11 @@ tiny-relative-date@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/tiny-relative-date/-/tiny-relative-date-1.3.0.tgz#fa08aad501ed730f31cc043181d995c39a935e07"
   integrity sha512-MOQHpzllWxDCHHaDno30hhLfbouoYlOI8YlMNtvKe1zXbjEVhbcEovQxvZrPvtiYW630GQDoMMarCnjfyfHA+A==
+
+tiny-warning@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/tiny-warning/-/tiny-warning-1.0.3.tgz#94a30db453df4c643d0fd566060d60a875d84754"
+  integrity sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA==
 
 tinycolor2@^1.4.1:
   version "1.4.2"
@@ -22380,7 +22429,7 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==
 
-typescript@^4.4.3, typescript@^4.5.5, typescript@^4.6.4, typescript@^4.7.2:
+typescript@^4.4.3, typescript@^4.5.5, typescript@^4.6.4, typescript@^4.7.2, typescript@^4.7.3:
   version "4.7.4"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.7.4.tgz#1a88596d1cf47d59507a1bcdfb5b9dfe4d488235"
   integrity sha512-C0WQT0gezHuw6AdY1M2jxUO83Rjf0HP7Sk1DtXj6j1EwkQNZrHAg2XPWlq62oqEhYvONq5pkC2Y9oPljWToLmQ==
@@ -22795,6 +22844,11 @@ use-latest@^1.2.1:
   integrity sha512-xA+AVm/Wlg3e2P/JiItTziwS7FK92LWrDB0p+hgXloIMuVCeJJ8v6f0eeHyPZaJrM+usM1FkFfbNCrJGs8A/zw==
   dependencies:
     use-isomorphic-layout-effect "^1.1.1"
+
+use-memo-one@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/use-memo-one/-/use-memo-one-1.1.2.tgz#0c8203a329f76e040047a35a1197defe342fab20"
+  integrity sha512-u2qFKtxLsia/r8qG0ZKkbytbztzRb317XCkT7yP8wxL0tZ/CzK2G+WWie5vWvpyeP7+YoPIwbJoIHJ4Ba4k0oQ==
 
 use-sync-external-store@1.2.0:
   version "1.2.0"

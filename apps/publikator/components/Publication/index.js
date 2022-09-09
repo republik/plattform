@@ -13,6 +13,8 @@ import PublicationForm from './PublicationForm'
 import PreviewFrame from '../PreviewFrame'
 import RepoArchivedBanner from '../Repo/ArchivedBanner'
 import ScreeenSizePicker from '../ScreenSizePicker'
+import Frame from '../Frame'
+import Nav from '../Edit/Nav'
 
 const PUBLICATION_COLUMN_WIDTH = 500
 
@@ -41,6 +43,7 @@ export const getRepoWithCommit = gql`
         }
         document {
           id
+          type
           repoId
           content
           meta {
@@ -153,7 +156,7 @@ const styles = {
   }),
 }
 
-const Preview = ({ commit }) => {
+const Preview = ({ commit, isFlyer }) => {
   const [previewScreenSize, setPreviewScreenSize] = useState('phone')
   const [previewDarkmode, setPreviewDarkmode] = useState(false)
   const [previewHasAccess, setPreviewHasAccess] = useState(true)
@@ -189,6 +192,8 @@ const Preview = ({ commit }) => {
             darkmode={previewDarkmode}
             hasAccess={previewHasAccess}
             sideBarWidth={PUBLICATION_COLUMN_WIDTH}
+            isFlyer={isFlyer}
+            commitOnly={true}
           />
         </div>
       </div>
@@ -206,18 +211,30 @@ const PublishForm = ({ t, data }) => {
         error={error}
         render={() => {
           const { isArchived, commit } = repo
-
-          if (isArchived) {
-            return <RepoArchivedBanner />
-          }
-
+          const isFlyer = commit?.document?.type === 'slate'
           return (
-            <>
-              <div {...styles.formContainer}>
-                <PublicationForm t={t} repo={repo} commit={commit} />
-              </div>
-              <Preview commit={commit} />
-            </>
+            <Frame>
+              <Frame.Header>
+                <Frame.Header.Section align='left'>
+                  <Nav />
+                </Frame.Header.Section>
+                <Frame.Header.Section align='right'>
+                  <Frame.Me />
+                </Frame.Header.Section>
+              </Frame.Header>
+              <Frame.Body raw={true}>
+                {isArchived ? (
+                  <RepoArchivedBanner />
+                ) : (
+                  <>
+                    <div {...styles.formContainer}>
+                      <PublicationForm t={t} repo={repo} commit={commit} />
+                    </div>
+                    <Preview commit={commit} isFlyer={isFlyer} />
+                  </>
+                )}
+              </Frame.Body>
+            </Frame>
           )
         }}
       />

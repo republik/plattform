@@ -9,13 +9,16 @@
 
 require('@orbiting/backend-modules-env').config()
 
+const Promise = require('bluebird')
 const yargs = require('yargs')
 const moment = require('moment')
 
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
 const utils = require('@orbiting/backend-modules-search/lib/utils')
-const { mdastToString } = require('@orbiting/backend-modules-utils')
+const {
+  stringifyNode,
+} = require('@orbiting/backend-modules-documents/lib/resolve')
 
 const argv = yargs
   .option('begin', {
@@ -73,14 +76,15 @@ PgDb.connect()
 
     const hits = body.hits.hits
 
-    hits
-      .map(({ _source: { meta } }) => meta)
-      .filter(({ credits }) => credits.length > 0)
-      .filter(({ path }) => {
-        return !['/2018/02/21/bad-bottles'].includes(path)
-      })
-      .map((meta) => {
-        const credits = mdastToString({ children: meta.credits })
+    await Promise.map(
+      hits
+        .map(({ _source: { meta } }) => meta)
+        .filter(({ credits }) => credits.children.length > 0)
+        .filter(({ path }) => {
+          return !['/2018/02/21/bad-bottles'].includes(path)
+        }),
+      async (meta) => {
+        const credits = await stringifyNode(meta.credits?.type, meta.credits)
 
         const authorship = credits
           .replace(/(Von|By|Mit) /, '')
@@ -157,7 +161,8 @@ PgDb.connect()
           })
 
         articles.push({ path: meta.path, gender })
-      })
+      },
+    )
 
     unclassifiedAuthors.map(({ author, path }) => {
       console.warn(author, path)

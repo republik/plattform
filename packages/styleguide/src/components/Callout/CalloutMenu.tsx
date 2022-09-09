@@ -3,7 +3,7 @@ import Callout from './index'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 
-const hasAncestor = (node, predicate) => {
+export const hasAncestor = (node, predicate) => {
   if (predicate(node)) {
     return true
   }
@@ -62,10 +62,10 @@ const CalloutMenu = ({
 
   // wrapping div needed for robust positioning of <Callout />
   return (
-    <div
+    <span
       {...(padded && styles.padded)}
       {...attributes}
-      style={{ position: 'relative' }}
+      style={{ position: 'relative', display: 'block' }}
       ref={toggleRef}
     >
       {showMenu && (
@@ -77,8 +77,14 @@ const CalloutMenu = ({
           {children}
         </Callout>
       )}
-      <Element {...elementProps} onClick={() => setMenu(!showMenu)} />
-    </div>
+      <Element
+        {...elementProps}
+        onMouseDown={(e) => {
+          e.preventDefault()
+          setMenu(!showMenu)
+        }}
+      />
+    </span>
   )
 }
 

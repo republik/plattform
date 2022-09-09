@@ -99,7 +99,7 @@ type Meta {
   shareBackgroundImageInverted: String
 
   credits: JSON
-  
+
   authors: [User!]! @deprecated(reason: "use \`Meta.contributors\` instead")
   contributors: [Contributor!]!
   audioSource: AudioSource
@@ -123,8 +123,13 @@ type Meta {
   paynoteMode: PaynoteMode
 }
 
+enum DocumentType {
+  mdast
+  slate
+}
+
 input DocumentInput {
-  # AST of /article.md
+  type: DocumentType
   content: JSON!
 }
 
@@ -133,8 +138,9 @@ type Document {
   repoId: ID!
   issuedForUserId: ID
 
-  # AST of /article.md
+  type: DocumentType!
   content: JSON!
+
   meta: Meta!
   children(
     first: Int
@@ -176,6 +182,7 @@ type DocumentZone {
   identifier: String!
   data: JSON!
   text: String
+  type: DocumentType!
   node: JSON!
   document: Document
 }

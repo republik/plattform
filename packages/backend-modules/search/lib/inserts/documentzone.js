@@ -75,7 +75,7 @@ module.exports = {
             publishDate: publishedAt || scheduledAt,
           }
 
-          const elasticDoc = getElasticDoc({
+          const elasticDoc = await getElasticDoc({
             doc,
             commitId,
             versionName,

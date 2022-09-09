@@ -11,7 +11,7 @@ import { convertStyleToRem, pxToRem } from '../Typography/utils'
 import { editorialFontRule } from '../Typography/fontRules'
 import { useColorContext } from '../Colors/useColorContext'
 
-const WIDTH = 22
+export const LIST_PADDING = 22
 const MARGIN = 8
 
 const styles = {
@@ -32,7 +32,7 @@ const styles = {
     },
   }),
   li: css({
-    paddingLeft: `${WIDTH}px`,
+    paddingLeft: `${LIST_PADDING}px`,
     position: 'relative',
     ...convertStyleToRem(serifRegular17),
     [mUp]: {
@@ -114,8 +114,8 @@ export const ListItem = ({ children, attributes = {}, style = {} }) => {
   return (
     <li
       {...styles.li}
-      {...colorScheme.set('color', 'text')}
       {...editorialFontRule}
+      {...colorScheme.set('color', 'text')}
       {...attributes}
       style={style}
     >
@@ -125,16 +125,22 @@ export const ListItem = ({ children, attributes = {}, style = {} }) => {
 }
 
 ListItem.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.any,
   attributes: PropTypes.object,
   style: PropTypes.object,
 }
 
 export const List = ({ children, data, attributes = {} }) =>
   data.ordered ? (
-    <OrderedList start={data.start} compact={data.compact} {...attributes}>
+    <OrderedList
+      start={data.start}
+      compact={data.compact}
+      attributes={attributes}
+    >
       {children}
     </OrderedList>
   ) : (
-    <UnorderedList compact={data.compact}>{children}</UnorderedList>
+    <UnorderedList compact={data.compact} attributes={attributes}>
+      {children}
+    </UnorderedList>
   )
