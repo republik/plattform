@@ -135,7 +135,6 @@ const createLiveTeasers = ({
         loading={!data || data.loading}
         style={{ minHeight: LAZYLOADER_MYMAGAZINE_HEIGHT }}
         render={() => {
-          console.log({ data })
           if (!data.flyer) return null
           return <TeaserFlyer flyer={data.flyer} />
         }}
