@@ -1,7 +1,7 @@
 import { SchemaConfig } from '../custom-types'
 
-import { FigureByline, FigureCaption } from '../../Figure'
-import { Figure, FigureImage } from '../../Figure/Slate'
+import { FigureCaption } from '../../Figure'
+import { Figure, FigureImage, FigureByline } from '../../Figure/Slate'
 import { List } from '../../List/Slate'
 import { PullQuoteSource } from '../../PullQuote'
 import {
