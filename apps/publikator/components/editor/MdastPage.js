@@ -692,7 +692,11 @@ export class EditorPage extends Component {
       message: message,
       document: {
         content: parse(
-          stringify(this.editor.serializer.serialize(editorState)),
+          stringify(
+            JSON.parse(
+              JSON.stringify(this.editor.serializer.serialize(editorState)),
+            ),
+          ),
         ),
       },
     })
