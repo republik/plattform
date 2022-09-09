@@ -1,4 +1,6 @@
 import React from 'react'
+import { css } from 'glamor'
+import { mUp } from '../../theme/mediaQueries'
 import { TeaserSectionTitle } from '../TeaserShared'
 import { NarrowContainer } from '../Grid'
 import SlateRender from '../Editor/Render'
@@ -7,21 +9,40 @@ import { RenderContextProvider } from '../Editor/Render/Context'
 
 const DefaultLink = ({ children }) => children
 
+const styles = {
+  container: css({
+    padding: '46px 0',
+    [mUp]: {
+      padding: '70px 0',
+    },
+  }),
+  link: css({
+    marginTop: 27,
+    [mUp]: {
+      marginTop: 36,
+    },
+  }),
+}
+
 const TeaserFlyer = ({ flyer, Link = DefaultLink }) => {
   const value = flyer.content.children[0].children.filter(
     (n) => ['headline', 'flyerOpeningP'].indexOf(n.type) !== -1,
   )
   return (
-    <NarrowContainer>
-      <RenderContextProvider>
-        <SlateRender value={value} schema={schema} raw />
-      </RenderContextProvider>
-      <Link href={flyer.meta.path} passHref>
-        <TeaserSectionTitle href={flyer.meta.path}>
-          {flyer.meta.format?.meta.title}
-        </TeaserSectionTitle>
-      </Link>
-    </NarrowContainer>
+    <div {...styles.container}>
+      <NarrowContainer>
+        <RenderContextProvider>
+          <SlateRender value={value} schema={schema} raw />
+        </RenderContextProvider>
+        <div {...styles.link}>
+          <Link href={flyer.meta.path} passHref>
+            <TeaserSectionTitle small href={flyer.meta.path}>
+              {flyer.meta.format?.meta.title}
+            </TeaserSectionTitle>
+          </Link>
+        </div>
+      </NarrowContainer>
+    </div>
   )
 }
 
