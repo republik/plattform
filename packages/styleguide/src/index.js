@@ -745,7 +745,7 @@ const Styleguide = () => {
                         title: 'TeaserFlyer',
                         imports: {
                           css,
-                          TeaserFlyer: require('./components/TeaserFlyer'),
+                          ...require('./components/TeaserFlyer'),
                         },
                         src: require('./components/TeaserFlyer/docs.md'),
                       },

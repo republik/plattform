@@ -58,7 +58,7 @@ const SlateRender: React.FC<{
   schema: SchemaConfig
   raw?: boolean
 }> = ({ value, schema, raw }) => {
-  const Container = raw ? Fragment : LayoutContainer
+  const Container = raw ? (props) => <div {...props} /> : LayoutContainer
   return (
     <Container schema={schema}>
       <RenderNodes nodes={value} schema={schema} />
