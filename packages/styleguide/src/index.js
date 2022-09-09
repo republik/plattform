@@ -741,6 +741,15 @@ const Styleguide = () => {
                         src: require('./components/TeaserMyMagazine/docs.md'),
                       },
                       {
+                        path: '/teaserflyer',
+                        title: 'TeaserFlyer',
+                        imports: {
+                          css,
+                          TeaserFlyer: require('./components/TeaserFlyer'),
+                        },
+                        src: require('./components/TeaserFlyer/docs.md'),
+                      },
+                      {
                         path: '/teasercarousel',
                         title: 'TeaserCarousel',
                         imports: {
