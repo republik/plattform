@@ -127,7 +127,7 @@ const Nav = ({
                     active={active}
                     closeHandler={closeHandler}
                   >
-                    {t('navbar/sections')}
+                    {t('nav/sections')}
                   </NavLink>
                 </div>
                 <hr

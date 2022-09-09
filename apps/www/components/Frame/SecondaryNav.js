@@ -16,6 +16,7 @@ import {
   HEADER_HORIZONTAL_PADDING,
 } from '../constants'
 import { useRouter } from 'next/router'
+import { useFlyerMeta } from '../../lib/apollo/miniNavi'
 
 const sections = [
   {
@@ -66,6 +67,8 @@ export const SecondaryNav = ({
   const router = useRouter()
   const active = router.asPath
 
+  const flyerMeta = useFlyerMeta()
+
   return (
     <>
       {hasOverviewNav ? (
@@ -107,6 +110,15 @@ export const SecondaryNav = ({
             title={t('navbar/discussion')}
           >
             {t('navbar/discussion')}
+          </NavLink>
+          <NavLink
+            href={flyerMeta?.path || '/format/journal'}
+            active={active}
+            formatColor='accentColorFlyer'
+            minifeed
+            title={flyerMeta?.title || t('navbar/flyer')}
+          >
+            {t('navbar/flyer')}
           </NavLink>
           {sections.map((section) => {
             const color = section.color || colors[section.kind]

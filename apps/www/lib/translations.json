@@ -33,6 +33,10 @@
       "value": "Mitglied werden"
     },
     {
+      "key": "nav/sections",
+      "value": "Alle Rubriken"
+    },
+    {
       "key": "navbar/front",
       "value": "Magazin"
     },
@@ -41,12 +45,8 @@
       "value": "Feed"
     },
     {
-      "key": "navbar/feuilleton",
-      "value": "Feuilleton"
-    },
-    {
-      "key": "navbar/sections",
-      "value": "Alle Rubriken"
+      "key": "navbar/flyer",
+      "value": "Journal"
     },
     {
       "key": "navbar/discussion",
