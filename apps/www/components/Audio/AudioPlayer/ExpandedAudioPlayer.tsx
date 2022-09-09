@@ -21,13 +21,14 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '1rem',
-    padding: '1.5rem',
+    padding: 16,
     '& > *': {
       userSelect: 'none',
     },
     // maxHeight: '80vh',
     [mediaQueries.mUp]: {
       // maxHeight: '600px',
+      padding: 24,
     },
   }),
   spinnerWrapper: css({
@@ -162,7 +163,7 @@ const ExpandedAudioPlayer = ({
         >
           <IconButton
             Icon={ExpandMoreIcon}
-            size={24}
+            size={32}
             style={{ marginRight: 0 }}
             onClick={handleMinimize}
           />

@@ -2,9 +2,9 @@ import { useMemo, useState } from 'react'
 import { AudioPlayerProps } from '../AudioPlayerContainer'
 import { useInNativeApp } from '../../../lib/withInNativeApp'
 import { useTranslation } from '../../../lib/withT'
-import BottomPanel from '../../Frame/BottomPanel'
 import ExpandedAudioPlayer from './ExpandedAudioPlayer'
 import MiniAudioPlayer from './MiniAudioPlayer'
+import BackPanel from './ui/BackPanel'
 
 // TODO: handle previously stored audio-player state
 // this is detectable if the stored object has an audioSource element in the top
@@ -62,7 +62,10 @@ const AudioPlayer = ({
   if (!activeItem) return null
 
   return (
-    <BottomPanel wide foreground={true} visible={true}>
+    <BackPanel
+      isExpanded={isExpanded}
+      onBackdropClick={() => setIsExpanded(false)}
+    >
       {isExpanded ? (
         <ExpandedAudioPlayer
           t={t}
@@ -98,7 +101,7 @@ const AudioPlayer = ({
         />
       )}
       {playbackElement}
-    </BottomPanel>
+    </BackPanel>
   )
 }
 
