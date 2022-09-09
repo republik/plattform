@@ -83,7 +83,7 @@ import DiscussionContextProvider from '../Discussion/context/DiscussionContextPr
 import Discussion from '../Discussion/Discussion'
 import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
 import { getMetaData, runMetaFromQuery } from './metadata'
-import FlyerNavi from './FlyerNavi'
+import FlyerFooter from './FlyerFooter'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -628,13 +628,11 @@ const ArticlePage = ({
                     />
                   </RenderContextProvider>
                   <FlyerTile>
-                    {actionBarFlyer}
-                    {hasAccess && (
-                      <FlyerNavi
-                        repoId={repoId}
-                        publishDate={meta.publishDate}
-                      />
-                    )}
+                    <FlyerFooter
+                      actionBar={actionBarFlyer}
+                      repoId={repoId}
+                      publishDate={meta.publishDate}
+                    />
                   </FlyerTile>
                 </Flyer.Layout>
               ) : (
