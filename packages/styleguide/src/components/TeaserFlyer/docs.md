@@ -2,32 +2,87 @@
 
 Used to show latest «Journal» entry on magazine front.
 
-- `contentTree` (slate tree, required): part of a journal slate tree to be rendered in teh teaser.
-- `formatTitle` (string, required): title of the format ()
-- `flyerPath` (string, required): path to the format
+- `flyer`: a Document node
 
 ```react|responsive
 <TeaserFlyer
-  contentTree={[
-        {
-          type: 'headline',
-          children: [
-            {
-              text: 'This is the greeting',
-            },
-          ],
+  flyer={
+    {
+      meta: {
+        title: 'A title',
+        path: '/2022/09/09/journal',
+        externalBaseUrl: null,
+        format: {
+          meta: {
+            title: 'Republik-Journal',
+          },
         },
-        {
-          type: 'paragraph',
-          children: [
-            {
-              text: ' This is the opening Paragraph',
-            },
-          ],
-        }
-      ]}
-  formatTitle="Republik-Journal"
-  flyerPath="https://republik.ch"
+      },
+      content: {
+        children: [
+          {
+            children: [
+              {
+                children: [
+                  {
+                    text: 'Guten Morgen,',
+                  },
+                  {
+                    children: [
+                      {
+                        text: '',
+                      },
+                    ],
+                    type: 'break',
+                  },
+                  {
+                    text: 'schön sind Sie da!',
+                  },
+                ],
+                type: 'headline',
+              },
+              {
+                type: 'flyerOpeningP',
+                children: [
+                  {
+                    text: 'Es war heiss, es ist heiss, es bleibt heiss. In Europa sind die Temperaturen grade hochsommerlich. Im Nahen Osten sind sie lebensfeindlich. ',
+                  },
+                  {
+                    type: 'link',
+                    children: [{ text: 'Im Irak wurden gestern 51.6°C gemessen.' }],
+                  },
+                  {
+                    text: ' Hoch genug, um in einem Backofen ein Entrecôte niederzugaren.',
+                  },
+                ],
+              },
+            ],
+            type: 'flyerTileOpening',
+          },
+          {
+            children: [
+              {
+                children: [
+                  {
+                    text: 'Bis nachher!',
+                  },
+                ],
+                type: 'headline',
+              },
+              {
+                children: [
+                  {
+                    text: 'Ihre Crew der Republik',
+                  },
+                ],
+                type: 'flyerSignature',
+              },
+            ],
+            type: 'flyerTileClosing',
+          },
+        ],
+      },
+    }
+  }
 />
-
 ```

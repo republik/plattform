@@ -1,26 +1,27 @@
 import React from 'react'
 import { TeaserSectionTitle } from '../TeaserShared'
 import { NarrowContainer } from '../Grid'
+import SlateRender from '../Editor/Render'
+import schema from '../Editor/schema/flyer'
+import { RenderContextProvider } from '../Editor/Render/Context'
 
 const DefaultLink = ({ children }) => children
 
-const TeaserFlyer = ({
-  contentTree,
-  formatTitle,
-  flyerPath,
-  Link = DefaultLink,
-}) => {
+const TeaserFlyer = ({ flyer, Link = DefaultLink }) => {
+  const value = flyer.content.children[0].children.filter(
+    (n) => ['headline', 'flyerOpeningP'].indexOf(n.type) !== -1,
+  )
   return (
-    <>
-      <NarrowContainer>
-        {/* Render contentTree */}
-        <Link href={flyerPath} passHref>
-          <TeaserSectionTitle href={flyerPath}>
-            {formatTitle}
-          </TeaserSectionTitle>
-        </Link>
-      </NarrowContainer>
-    </>
+    <NarrowContainer>
+      <RenderContextProvider>
+        <SlateRender value={value} schema={schema} raw />
+      </RenderContextProvider>
+      <Link href={flyer.meta.path} passHref>
+        <TeaserSectionTitle href={flyer.meta.path}>
+          {flyer.meta.format?.meta.title}
+        </TeaserSectionTitle>
+      </Link>
+    </NarrowContainer>
   )
 }
 
@@ -31,14 +32,11 @@ export default WrappedTeaserFlyer
 WrappedTeaserFlyer.data = {
   config: {
     props: ({ data }) => {
-      const node = data.nodes[0]
       return {
         data: {
           loading: data.loading,
           error: data.error,
-          flyerPath: node?.meta.path,
-          formatTitle: node?.meta.format.meta.title,
-          contentTree: node?.content,
+          flyer: data.latestFlyer?.node[0],
         },
       }
     },

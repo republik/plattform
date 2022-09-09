@@ -14,7 +14,7 @@ export const exampleTree: CustomDescendant[] = [
         ],
       },
       {
-        type: 'flyerMetaP',
+        type: 'flyerOpeningP',
         children: [
           {
             text: 'Es war heiss, es ist heiss, es bleibt heiss. In Europa sind die Temperaturen grade hochsommerlich. Im Nahen Osten sind sie lebensfeindlich. ',
