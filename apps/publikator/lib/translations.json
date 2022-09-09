@@ -1911,6 +1911,10 @@
     {
       "key": "editor/meta/flyer/defaultShareText",
       "value": "Sie mögen die Republik, haben aber zu wenig Zeit? Dann brauchen Sie nicht mehr als das."
+    },
+    {
+      "key": "editor/workflow/uncommittedChanges",
+      "value": "Committen oder verwerfen Sie Ihre Änderungen, um die Phase anzupassen."
     }
   ]
 }
