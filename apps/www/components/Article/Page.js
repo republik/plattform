@@ -22,6 +22,7 @@ import {
   mediaQueries,
   TitleBlock,
   Editorial,
+  Flyer,
   TeaserEmbedComment,
   IconButton,
   SeriesNav,
@@ -36,6 +37,7 @@ import {
   flyerSchema,
   SlateRender,
   RenderContextProvider,
+  FlyerTile,
 } from '@project-r/styleguide'
 import { EditIcon } from '@project-r/styleguide'
 import { createRequire } from '@project-r/styleguide'
@@ -424,6 +426,12 @@ const ArticlePage = ({
       })
     : undefined
 
+  const actionBarFlyer = actionBar
+    ? cloneElement(actionBar, {
+        mode: 'flyer',
+      })
+    : undefined
+
   const series = meta?.series
   const episodes = series?.episodes
   const darkMode = article?.content?.meta?.darkMode
@@ -611,12 +619,24 @@ const ArticlePage = ({
                 </div>
               )}
               {treeType === 'slate' ? (
-                <RenderContextProvider t={t} Link={Link}>
-                  <SlateRender
-                    value={article.content.children}
-                    schema={schema}
-                  />
-                </RenderContextProvider>
+                <Flyer.Layout schema={schema}>
+                  <RenderContextProvider t={t} Link={Link}>
+                    <SlateRender
+                      value={article.content.children}
+                      schema={schema}
+                      raw
+                    />
+                  </RenderContextProvider>
+                  <FlyerTile>
+                    {actionBarFlyer}
+                    {hasAccess && (
+                      <FlyerNavi
+                        repoId={repoId}
+                        publishDate={meta.publishDate}
+                      />
+                    )}
+                  </FlyerTile>
+                </Flyer.Layout>
               ) : (
                 <ArticleGallery
                   article={article}
@@ -802,9 +822,6 @@ const ArticlePage = ({
                 (isEditorialNewsletter ||
                   meta.template === 'article' ||
                   meta.template === 'page') && <div style={{ height: 60 }} />}
-              {hasAccess && meta.template === 'flyer' && (
-                <FlyerNavi repoId={repoId} publishDate={meta.publishDate} />
-              )}
               {!suppressPayNotes && payNoteAfter}
             </>
           )

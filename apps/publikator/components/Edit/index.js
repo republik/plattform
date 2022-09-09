@@ -4,7 +4,7 @@ import {
   withCommitMutation,
   withLatestCommit,
 } from './enhancers'
-import { Loader, useDebounce, slug, usePrevious } from '@project-r/styleguide'
+import { Loader, useDebounce, usePrevious } from '@project-r/styleguide'
 import { cleanupTree } from '@project-r/styleguide/editor'
 import withT from '../../lib/withT'
 import withMe from '../../lib/withMe'
@@ -23,8 +23,8 @@ import {
 import BranchingNotice from '../VersionControl/BranchingNotice'
 import { useEffect, useState } from 'react'
 import { useWarningContext } from './Warnings'
-import { getInitialValue, INITIAL_VALUE } from '../ContentEditor'
-import { API_UNCOMMITTED_CHANGES_URL } from '../../lib/settings'
+import { getInitialValue } from '../ContentEditor'
+import { API_UNCOMMITTED_CHANGES_URL, REPO_PREFIX } from '../../lib/settings'
 import EditView from './EditView'
 import Preview from './Preview'
 import compose from 'lodash/flowRight'
@@ -36,7 +36,11 @@ const debug = createDebug('publikator:slate:edit')
 
 const getCommittedContent = (data) => data?.repo?.commit?.document?.content
 
-export const getCurrentContent = (store, data, options) => {
+const FORMAT_REPO_ID = `https://github.com/republik/${
+  REPO_PREFIX || ''
+}format-journal`
+
+export const getCurrentContent = (store, data, t, options) => {
   const storedContent = store?.get('editorState')
   const committedContent = getCommittedContent(data)
   return (
@@ -48,7 +52,8 @@ export const getCurrentContent = (store, data, options) => {
         slug: 'journal',
         template: 'flyer',
         feed: false,
-        format: 'https://github.com/republik/format-journal',
+        format: FORMAT_REPO_ID,
+        shareText: t('editor/meta/flyer/defaultShareText'),
       },
     }
   )
@@ -113,7 +118,7 @@ const EditLoader = ({
         const newStore = initLocalStore(storeKey)
         setStore(newStore)
         checkLocalStorageSupport()
-        forceSetContent(getCurrentContent(newStore, data, { publishDate }))
+        forceSetContent(getCurrentContent(newStore, data, t, { publishDate }))
       }
     }
   }, [store, commitId, repoId, data])
@@ -319,7 +324,7 @@ const EditLoader = ({
     }
     setDidUnlock(false)
     setAcknowledgedUsers([])
-    forceSetContent(getCurrentContent(null, data, { publishDate }))
+    forceSetContent(getCurrentContent(null, data, t, { publishDate }))
     router.replace({
       pathname,
       query: queryWithoutPreview,

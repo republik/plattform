@@ -3,11 +3,11 @@ import { css } from 'glamor'
 import { useColorContext } from '../Colors/ColorContext'
 import { mUp } from '../../theme/mediaQueries'
 import { fontStyles } from '../../theme/fonts'
-import { LIST_PADDING, ListItem as InnerListItem } from '../List/List'
+import { LIST_PADDING } from '../List/List'
 import { useRenderContext } from '../Editor/Render/Context'
 import { pxToRem } from './utils'
 
-export const Layout = ({ children, attributes }) => {
+export const Layout = ({ children, attributes = {} }) => {
   const [colorScheme] = useColorContext()
   return (
     <div {...colorScheme.set('background', 'flyerBg')} {...attributes}>

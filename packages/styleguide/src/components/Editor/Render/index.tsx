@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import {
   CustomDescendant,
   CustomElement,
@@ -56,9 +56,13 @@ export const RenderedElement: React.FC<{
 const SlateRender: React.FC<{
   value: CustomDescendant[]
   schema: SchemaConfig
-}> = ({ value, schema }) => (
-  <LayoutContainer schema={schema}>
-    <RenderNodes nodes={value} schema={schema} />
-  </LayoutContainer>
-)
+  raw?: boolean
+}> = ({ value, schema, raw }) => {
+  const Container = raw ? Fragment : LayoutContainer
+  return (
+    <Container schema={schema}>
+      <RenderNodes nodes={value} schema={schema} />
+    </Container>
+  )
+}
 export default SlateRender

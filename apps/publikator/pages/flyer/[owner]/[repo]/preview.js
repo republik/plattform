@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react'
 import { withDefaultSSR } from '../../../../lib/apollo/helpers'
 import { withCommitData } from '../../../../components/Edit/enhancers'
 
-const PreviewPage = ({ router: { query }, data }) => {
+const PreviewPage = ({ router: { query }, data, t }) => {
   const { commitId, commitOnly } = query
   const repoId = getRepoIdFromQuery(query)
   const [store, setStore] = useState()
@@ -28,7 +28,7 @@ const PreviewPage = ({ router: { query }, data }) => {
       loading={!data || (!commitOnly && !store) || data?.loading}
       error={data?.error}
       render={() => {
-        const content = getCurrentContent(store, data)
+        const content = getCurrentContent(store, data, t)
         if (!content) return null
         return (
           <SlateRender
