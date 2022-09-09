@@ -38,7 +38,7 @@ const ShareImageForm = withT(({ t, data, onChange }) => {
         <ShareImagePreview
           fontSize={data.shareFontSize || 60}
           inverted={data.shareInverted}
-          text={data.shareText || t('editor/meta/flyer/defaultShareText')}
+          text={data.shareText}
           format={FLYER_FORMAT.meta}
           preview
         />

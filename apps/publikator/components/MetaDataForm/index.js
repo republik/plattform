@@ -127,10 +127,9 @@ const MetaDataForm = ({ t, metaData, setMetaData }) => {
             <MetaOption>
               <Field
                 label='Lead'
-                name='lead'
                 value={metaData.description}
                 onChange={(event) => {
-                  handleMetaDataChange(event.target.name, event.target.value)
+                  handleMetaDataChange('description', event.target.value)
                 }}
                 noMargin
                 renderInput={({ ref, ...inputProps }) => (
