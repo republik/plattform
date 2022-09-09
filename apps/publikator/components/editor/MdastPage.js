@@ -786,6 +786,8 @@ export class EditorPage extends Component {
       committing || loading || templateLoading || (!schema && !error)
     const dark = editorState && editorState.document.data.get('darkMode')
     const commit = repo && (repo.commit || repo.latestCommit)
+    const schemaName = commit?.document.meta.template
+    const showBranchingNotice = schemaName !== 'front'
 
     const sidebarPrependChildren = [
       ...warnings.filter(Boolean).map(({ time, message }, i) => (
@@ -797,7 +799,7 @@ export class EditorPage extends Component {
           }}
         />
       )),
-      !showLoading && repo && (
+      !showLoading && repo && showBranchingNotice && (
         <BranchingNotice
           key='branching-notice'
           repoId={repo.id}
@@ -853,7 +855,7 @@ export class EditorPage extends Component {
             />
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
-            {!showLoading && !!repo && (
+            {!showLoading && !!repo && showBranchingNotice && (
               <BranchingNotice
                 asIcon
                 repoId={repo.id}
