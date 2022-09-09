@@ -25,7 +25,6 @@ import {
 import { config as charConfig } from '../../config/special-chars'
 import { cleanupNode, overlaps } from './tree'
 import { SelectionEdge } from 'slate/dist/interfaces/types'
-import isURL from 'validator/lib/isURL'
 
 export const getCharCount = (nodes: (Descendant | Node)[]): number =>
   nodes.map((node) => Node.string(node).length).reduce((a, b) => a + b, 0)
