@@ -128,7 +128,7 @@ const MetaDataForm = ({ t, metaData, setMetaData }) => {
               <Field
                 label='Lead'
                 name='lead'
-                value={metaData.lead}
+                value={metaData.description}
                 onChange={(event) => {
                   handleMetaDataChange(event.target.name, event.target.value)
                 }}
