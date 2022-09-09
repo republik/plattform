@@ -43,7 +43,7 @@ WrappedTeaserFlyer.data = {
   },
   query: `
     query getLatestFlyer {
-      latestFlyer: documents(format: "republik/anna-format-journal", first: 1) {
+      latestFlyer: documents(format: "republik/format-journal", first: 1) {
         nodes {
           id
           meta {
