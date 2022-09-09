@@ -7,15 +7,17 @@ const DefaultLink = ({ children }) => children
 const TeaserFlyer = ({
   contentTree,
   formatTitle,
-  href,
+  formatPath,
   Link = DefaultLink,
 }) => {
   return (
     <>
       <NarrowContainer>
         {/* Render contentTree */}
-        <Link href={href} passHref>
-          <TeaserSectionTitle href={href}>{formatTitle}</TeaserSectionTitle>
+        <Link href={formatPath} passHref>
+          <TeaserSectionTitle href={formatPath}>
+            {formatTitle}
+          </TeaserSectionTitle>
         </Link>
       </NarrowContainer>
     </>
@@ -34,9 +36,9 @@ WrappedTeaserFlyer.data = {
         data: {
           loading: data.loading,
           error: data.error,
-          href: node?.meta.path,
+          formatPath: node?.meta.path,
           formatTitle: node?.meta.format.meta.title,
-          content: node?.content,
+          contentTree: node?.content,
         },
       }
     },
