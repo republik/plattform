@@ -1,6 +1,10 @@
 import { ReactNode } from 'react'
-import { backdrop, css } from 'glamor'
-import { useColorContext, mediaQueries } from '@project-r/styleguide'
+import { css } from 'glamor'
+import {
+  useBodyScrollLock,
+  useColorContext,
+  mediaQueries,
+} from '@project-r/styleguide'
 
 type BackPanelProps = {
   children?: ReactNode
@@ -57,6 +61,7 @@ const BackPanel = ({
   onBackdropClick,
 }: BackPanelProps) => {
   const [colorScheme] = useColorContext()
+  useBodyScrollLock(isExpanded)
 
   return (
     <div {...styles.root}>
