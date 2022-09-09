@@ -5,7 +5,7 @@ import { graphql } from '@apollo/client/react/hoc'
 import { Value, resetKeyGenerator } from 'slate'
 import debounce from 'lodash/debounce'
 import { timeFormat } from 'd3-time-format'
-import { parse } from '@orbiting/remark-preset'
+import { parse, stringify } from '@orbiting/remark-preset'
 
 import Frame from '../Frame'
 import { HEADER_HEIGHT } from '../Frame/constants'
@@ -691,7 +691,9 @@ export class EditorPage extends Component {
       isTemplate: isNew ? isTemplate === 'true' : data?.repo?.isTemplate,
       message: message,
       document: {
-        content: this.editor.serializer.serialize(editorState),
+        content: parse(
+          stringify(this.editor.serializer.serialize(editorState)),
+        ),
       },
     })
       .then(({ data }) => {
