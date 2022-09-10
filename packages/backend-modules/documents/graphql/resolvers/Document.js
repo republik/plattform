@@ -25,7 +25,7 @@ const {
 } = require('@orbiting/backend-modules-assets')
 
 const {
-  loadLinkedMetaData,
+  resolveEntities,
 } = require('@orbiting/backend-modules-search/lib/Documents')
 
 const {
@@ -172,7 +172,7 @@ module.exports = {
 
         return extractIdsFromNode(doc.type, node, doc.meta.repoId)
       })
-      const { docs, usernames } = await loadLinkedMetaData({
+      const { docs, usernames } = await resolveEntities({
         context,
         userIds: idsFromNodes.reduce(
           (userIds, idsFromNode) => userIds.concat(idsFromNode.users),

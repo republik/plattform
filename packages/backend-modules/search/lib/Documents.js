@@ -244,7 +244,7 @@ const getDocsForConnection = (connection) =>
     .filter((node) => node.type === 'Document')
     .map((node) => node.entity)
 
-const loadLinkedMetaData = async ({
+const resolveEntities = async ({
   repoIds = [],
   userIds = [],
   context,
@@ -352,7 +352,7 @@ const addRelatedDocs = async ({
   // If there are any series master repositories, fetch these series master
   // documents and push series episodes onto the related docs stack
   if (seriesRepoIds.length) {
-    const { docs: seriesRelatedDocs } = await loadLinkedMetaData({
+    const { docs: seriesRelatedDocs } = await resolveEntities({
       context,
       repoIds: seriesRepoIds,
       scheduledAt,
@@ -373,7 +373,7 @@ const addRelatedDocs = async ({
     })
   }
 
-  const { docs: variousRelatedDocs } = await loadLinkedMetaData({
+  const { docs: variousRelatedDocs } = await resolveEntities({
     context,
     repoIds,
     scheduledAt,
@@ -403,7 +403,7 @@ const addRelatedDocs = async ({
   }
 
   // Resolve format repoIds and all userIds.
-  const { docs: relatedFormatDocs, usernames } = await loadLinkedMetaData({
+  const { docs: relatedFormatDocs, usernames } = await resolveEntities({
     context,
     repoIds: relatedFormatRepoIds,
     userIds,
@@ -874,7 +874,7 @@ module.exports = {
   LONG_DURATION_MINS,
   schema,
   getElasticDoc,
-  loadLinkedMetaData,
+  resolveEntities,
   addRelatedDocs,
   unpublish,
   publish,
