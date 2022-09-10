@@ -82,7 +82,11 @@ export const ReposByTemplate = ({
   isPast,
   isNewsletter,
 }) => {
-  const weeklyRepos = template.map((t) => templateRepos[t]).flat(1)
+  const weeklyRepos = template
+    .map((t) => templateRepos[t])
+    .flat(1)
+    .filter(Boolean)
+
   const reposAndPlaceholders = isPast
     ? repos
     : getPlaceholders(weeklyRepos, date).reduce((acc, placeholder) => {
