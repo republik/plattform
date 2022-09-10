@@ -17,6 +17,7 @@ export = (user: UserRow | User, additionalFields = {}): User | null => {
     // default public fields
     id: user.id,
     username: user.username,
+    slug: user.username || user.id,
     firstName: user.firstName,
     lastName: user.lastName,
     name,

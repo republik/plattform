@@ -74,7 +74,7 @@ module.exports = {
   isListed: (user) => user._raw.isListed,
   slug(user, args, { user: me }) {
     if (canAccessBasics(user, me)) {
-      return user._raw.username || user._raw.id
+      return user.slug
     }
     return null
   },

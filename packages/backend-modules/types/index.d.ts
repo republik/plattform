@@ -36,6 +36,7 @@ export interface UserRow {
 export interface User {
   id: string
   username: string
+  slug: string
   firstName: string
   lastName: string
   name: string
