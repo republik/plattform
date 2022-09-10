@@ -80,7 +80,7 @@ const extractUserUrl = (url) => {
 const createUrlReplacer =
   (
     _all = [],
-    _usernames = [],
+    _users = [],
     errors = [],
     urlPrefix = '',
     searchString = '',
@@ -89,7 +89,7 @@ const createUrlReplacer =
   (url, stripDocLinks) => {
     const userInfo = extractUserPath(url)
     if (userInfo) {
-      const user = _usernames.find((u) => u.id === userInfo.id)
+      const user = _users.find((u) => u.id === userInfo.id)
       if (user) {
         return [
           urlPrefix,
@@ -113,10 +113,7 @@ const createUrlReplacer =
     const linkedDoc = _all.find((d) => d.meta.repoId === repoId)
 
     if (linkedDoc) {
-      const linkedFormat = createResolver(
-        _all,
-        _usernames,
-      )(linkedDoc.meta?.format)
+      const linkedFormat = createResolver(_all, _users)(linkedDoc.meta?.format)
       const formatExternalBaseUrl = linkedFormat?.meta?.externalBaseUrl
 
       const baseUrl = formatExternalBaseUrl || urlPrefix || ''
@@ -164,7 +161,7 @@ const createUrlReplacer =
   }
 
 const createResolver =
-  (_all, _usernames, errors = []) =>
+  (_all, _users, errors = []) =>
   (url) => {
     const { repoId } = getRepoId(url)
     if (!repoId) {
@@ -176,7 +173,7 @@ const createResolver =
       return {
         ...linkedDoc,
         _all,
-        _usernames,
+        _users,
       }
     }
 
@@ -184,8 +181,8 @@ const createResolver =
     return null
   }
 
-const metaFieldResolver = (meta, _all = [], _usernames = [], errors) => {
-  const resolver = createResolver(_all, _usernames, errors)
+const metaFieldResolver = (meta, _all = [], _users = [], errors) => {
+  const resolver = createResolver(_all, _users, errors)
 
   const format = resolver(meta.format)
 

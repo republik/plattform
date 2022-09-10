@@ -54,13 +54,13 @@ module.exports = {
     // - this is easiest detectable by _all being present from documents resolver
     // - alt check info.path for documents / document being the root
     //   https://gist.github.com/tpreusse/f79833a023706520da53647f9c61c7f6
-    if (doc._all || doc._usernames) {
+    if (doc._all || doc._users) {
       processContentHashing(doc.type, doc.content)
 
       await contentUrlResolver(
         doc,
         doc._all,
-        doc._usernames,
+        doc._users,
         undefined,
         urlPrefix, // https://www.republik.ch bei Newslettern?
         searchString,
@@ -85,12 +85,12 @@ module.exports = {
   },
   async meta(doc, { urlPrefix, searchString }, context, info) {
     const meta = getMeta(doc)
-    if (doc._all || doc._usernames) {
+    if (doc._all || doc._users) {
       metaUrlResolver(
         doc.type,
         meta,
         doc._all,
-        doc._usernames,
+        doc._users,
         undefined,
         urlPrefix,
         searchString,
@@ -172,7 +172,7 @@ module.exports = {
 
         return extractIdsFromNode(doc.type, node, doc.meta.repoId)
       })
-      const { docs, usernames } = await resolveEntities({
+      const { docs, users } = await resolveEntities({
         context,
         userIds: idsFromNodes.reduce(
           (userIds, idsFromNode) => userIds.concat(idsFromNode.users),
@@ -184,12 +184,12 @@ module.exports = {
         ),
       })
       doc._all = doc._all.concat(docs)
-      doc._usernames = doc._usernames.concat(usernames)
+      doc._users = doc._users.concat(users)
 
       await contentUrlResolver(
         doc,
         doc._all,
-        doc._usernames,
+        doc._users,
         undefined,
         urlPrefix,
         searchString,

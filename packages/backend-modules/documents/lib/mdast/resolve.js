@@ -20,18 +20,18 @@ const { DOCUMENTS_LINKS_RESTRICTED } = process.env
 const contentUrlResolver = (
   doc,
   _all = [],
-  _usernames = [],
+  _users = [],
   errors,
   urlPrefix,
   searchString,
   user,
 ) => {
-  const docResolver = createResolver(_all, _usernames, errors)
+  const docResolver = createResolver(_all, _users, errors)
   const externalBaseUrl = docResolver(doc.meta?.format)?.meta?.externalBaseUrl
 
   const urlReplacer = createUrlReplacer(
     _all,
-    _usernames,
+    _users,
     errors,
     urlPrefix,
     searchString,
@@ -96,7 +96,7 @@ const contentUrlResolver = (
 const metaUrlResolver = (
   meta,
   _all,
-  _usernames,
+  _users,
   errors,
   urlPrefix,
   searchString,
@@ -105,7 +105,7 @@ const metaUrlResolver = (
 ) => {
   const urlReplacer = createUrlReplacer(
     _all,
-    _usernames,
+    _users,
     errors,
     urlPrefix,
     searchString,

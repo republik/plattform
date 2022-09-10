@@ -28,7 +28,7 @@ const extractIdsFromNode = async (type, node, contextRepoId) => {
 const contentUrlResolver = (
   doc,
   _all = [],
-  _usernames = [],
+  _users = [],
   errors,
   urlPrefix,
   searchString,
@@ -48,7 +48,7 @@ const contentUrlResolver = (
   return contentUrlResolver(
     doc,
     _all,
-    _usernames,
+    _users,
     errors,
     urlPrefix,
     searchString,
@@ -60,7 +60,7 @@ const metaUrlResolver = async (
   type,
   meta,
   _all = [],
-  _usernames = [],
+  _users = [],
   errors,
   urlPrefix,
   searchString,
@@ -78,7 +78,7 @@ const metaUrlResolver = async (
   return metaUrlResolver(
     meta,
     _all,
-    _usernames,
+    _users,
     errors,
     urlPrefix,
     searchString,

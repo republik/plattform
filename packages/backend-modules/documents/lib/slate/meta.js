@@ -22,8 +22,8 @@ const getMeta = (doc) => {
 
   // see _all note in Document.content resolver
   const resolvedFields =
-    doc._all || doc._usernames
-      ? metaFieldResolver(doc.content.meta, doc._all, doc._usernames)
+    doc._all || doc._users
+      ? metaFieldResolver(doc.content.meta, doc._all, doc._users)
       : {}
 
   /* const times = {

@@ -251,7 +251,7 @@ const resolveEntities = async ({
   scheduledAt,
   ignorePrepublished,
 }) => {
-  const usernames = !userIds.length
+  const users = !userIds.length
     ? []
     : await context.pgdb.public.users.find(
         {
@@ -287,7 +287,7 @@ const resolveEntities = async ({
       ).then(getDocsForConnection)
 
   return {
-    usernames,
+    users,
     docs,
   }
 }
@@ -403,7 +403,7 @@ const addRelatedDocs = async ({
   }
 
   // Resolve format repoIds and all userIds.
-  const { docs: relatedFormatDocs, usernames } = await resolveEntities({
+  const { docs: relatedFormatDocs, users } = await resolveEntities({
     context,
     repoIds: relatedFormatRepoIds,
     userIds,
@@ -426,7 +426,7 @@ const addRelatedDocs = async ({
     // for link resolving in lib/resolve
     // - including the usernames
     doc._all = [...(doc._all ? doc._all : []), ...relatedDocs, ...docs]
-    doc._usernames = usernames
+    doc._users = users
     doc._apiKey = apiKey
   })
 }
