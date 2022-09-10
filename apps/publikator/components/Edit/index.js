@@ -24,7 +24,7 @@ import BranchingNotice from '../VersionControl/BranchingNotice'
 import { useEffect, useState } from 'react'
 import { useWarningContext } from './Warnings'
 import { getInitialValue } from '../ContentEditor'
-import { API_UNCOMMITTED_CHANGES_URL, REPO_PREFIX } from '../../lib/settings'
+import { API_UNCOMMITTED_CHANGES_URL } from '../../lib/settings'
 import EditView from './EditView'
 import Preview from './Preview'
 import compose from 'lodash/flowRight'
@@ -35,10 +35,6 @@ import { withEditRepoMeta } from '../Repo/EditMetaDate'
 const debug = createDebug('publikator:slate:edit')
 
 const getCommittedContent = (data) => data?.repo?.commit?.document?.content
-
-const FORMAT_REPO_ID = `https://github.com/republik/${
-  REPO_PREFIX || ''
-}format-journal`
 
 export const getCurrentContent = (store, data, t, options) => {
   const storedContent = store?.get('editorState')
@@ -52,7 +48,7 @@ export const getCurrentContent = (store, data, t, options) => {
         slug: 'journal',
         template: 'flyer',
         feed: false,
-        format: FORMAT_REPO_ID,
+        format: 'https://github.com/republik/format-journal',
         shareText: t('editor/meta/flyer/defaultShareText'),
       },
     }
