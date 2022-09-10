@@ -76,12 +76,14 @@ const contentUserResolver = async (content, _users = []) => {
           name: user.name,
           portrait: getPortraitUrl(user, { properties }),
           slug: user.slug,
+          status: 'exists',
         }
       } else {
         // If user can't be retrieved, return name stored in tree,
         // but drop other props.
         node.resolvedAuthor = {
           name: node.resolvedAuthor.name,
+          status: 'missing',
         }
       }
     },

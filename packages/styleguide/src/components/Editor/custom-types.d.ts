@@ -161,6 +161,7 @@ export type ResolvedAuthor = {
   name: string
   portrait: string
   slug: string
+  status?: 'exists' | 'missing'
 }
 
 export type FlyerAuthorElement = SharedElement & {
