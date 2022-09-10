@@ -93,6 +93,10 @@ const contentUrlResolver = (
   })
 }
 
+const contentUserResolver = (content, _users = []) => {
+  return Promise.resolve()
+}
+
 const metaUrlResolver = (
   meta,
   _all,
@@ -215,6 +219,7 @@ const stringifyNode = (node) =>
 
 module.exports = {
   contentUrlResolver,
+  contentUserResolver,
   metaUrlResolver,
   extractIdsFromNode,
   stringifyNode,

@@ -56,6 +56,21 @@ const contentUrlResolver = (
   )
 }
 
+const contentUserResolver = (type, content, _users = []) => {
+  const contentUserResolver =
+    resolve[type || 'mdast']?.contentUserResolver ||
+    process.common?.contentUserResolver
+
+  if (!contentUrlResolver) {
+    console.warn(
+      `resolve/contentUserResolver for type "${type}" not implemented`,
+    )
+    return
+  }
+
+  return contentUserResolver(content, _users)
+}
+
 const metaUrlResolver = async (
   type,
   meta,
@@ -105,6 +120,7 @@ module.exports = {
   extractUserUrl,
   createResolver,
   contentUrlResolver,
+  contentUserResolver,
   metaUrlResolver,
   metaFieldResolver,
   stringifyNode,

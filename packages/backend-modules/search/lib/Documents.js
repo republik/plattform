@@ -6,6 +6,7 @@ const {
   resolve: { extractIdsFromNode, getRepoId, stringifyNode },
   meta: { getWordsPerMinute },
 } = require('@orbiting/backend-modules-documents/lib')
+const { transformUser } = require('@orbiting/backend-modules-auth')
 
 const { termEntry, countEntry, dateRangeParser } = require('./schema')
 
@@ -251,18 +252,15 @@ const resolveEntities = async ({
   scheduledAt,
   ignorePrepublished,
 }) => {
-  const users = !userIds.length
-    ? []
-    : await context.pgdb.public.users.find(
-        {
+  const users = userIds.length
+    ? (
+        await context.pgdb.public.users.find({
           id: userIds,
           hasPublicProfile: true,
           'username !=': null,
-        },
-        {
-          fields: ['id', 'username'],
-        },
-      )
+        })
+      ).map(transformUser)
+    : []
 
   const search = require('../graphql/resolvers/_queries/search')
   const sanitizedRepoIds = [...new Set(repoIds.filter(Boolean))]

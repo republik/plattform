@@ -1,15 +1,15 @@
 import { User, UserRow } from '@orbiting/backend-modules-types'
 
 interface PortraitArgs {
-  size: 'SMALL' | 'SHARE'
-  properties: {
-    width: number | undefined
-    height: number | undefined
-    bw: boolean | undefined
+  size?: 'SMALL' | 'SHARE'
+  properties?: {
+    width?: number | undefined
+    height?: number | undefined
+    bw?: boolean | undefined
   }
 }
 
-export const get = (user: UserRow | User, args: PortraitArgs) => {
+export const get = (user: UserRow | User, args: PortraitArgs = {}) => {
   const { portraitUrl } = '_raw' in user ? user._raw : user
   if (!portraitUrl) {
     return null

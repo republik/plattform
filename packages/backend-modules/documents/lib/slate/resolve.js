@@ -1,9 +1,13 @@
 const checkEnv = require('check-env')
+const { v4: isUuid } = require('is-uuid')
+
 const {
   slateVisit: visit,
   slateToString: toString,
 } = require('@orbiting/backend-modules-utils')
-const { v4: isUuid } = require('is-uuid')
+const {
+  get: getPortraitUrl,
+} = require('@orbiting/backend-modules-republik/lib/portrait')
 
 const { hasFullDocumentAccess } = require('../restrictions')
 const {
@@ -51,6 +55,28 @@ const contentUrlResolver = async (
     (node) => node?.type === 'link' || node?.type === 'articlePreview',
     (node) => {
       node.href = urlReplacer(node.href, stripDocLinks)
+    },
+  )
+}
+
+const contentUserResolver = async (content, _users = []) => {
+  // portrait (re)size
+  const properties = { width: 100, height: 100 }
+
+  await visit(
+    content,
+    (node) => node?.type === 'flyerAuthor',
+    (node) => {
+      const { authorId } = node
+
+      const user = _users.find(({ id }) => id === authorId)
+      if (user) {
+        node.resolvedAuthor = {
+          name: user.name,
+          portrait: getPortraitUrl(user, { properties }),
+          slug: user.slug,
+        }
+      }
     },
   )
 }
@@ -106,6 +132,18 @@ const extractIdsFromNode = async (node, contextRepoId) => {
     },
   )
 
+  await visit(
+    node,
+    (node) => node?.type === 'flyerAuthor',
+    (node) => {
+      const { authorId } = node
+
+      if (isUuid(authorId)) {
+        users.push(authorId)
+      }
+    },
+  )
+
   return {
     repos: repos.filter(Boolean),
     users: users.filter(Boolean),
@@ -122,6 +160,7 @@ const stringifyNode = async (node) => {
 
 module.exports = {
   contentUrlResolver,
+  contentUserResolver,
   metaUrlResolver,
   extractIdsFromNode,
   stringifyNode,
