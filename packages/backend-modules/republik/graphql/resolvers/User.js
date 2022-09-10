@@ -2,10 +2,11 @@ const {
   Roles,
   AccessToken: { isFieldExposed },
 } = require('@orbiting/backend-modules-auth')
+const { remark } = require('@orbiting/backend-modules-utils')
+
 const { age } = require('../../lib/age')
 const { getKeyId } = require('../../lib/pgp')
-const querystring = require('querystring')
-const { remark } = require('@orbiting/backend-modules-utils')
+const { get: getPortraitUrl } = require('../../lib/portrait')
 
 const { isEligible } = require('../../lib/profile')
 
@@ -142,32 +143,7 @@ module.exports = {
       canAccessBasics(user, me) ||
       isFieldExposed(user, 'portrait')
     ) {
-      const { portraitUrl } = user._raw
-      if (!portraitUrl) {
-        return portraitUrl
-      }
-      const bw =
-        args && args.properties && args.properties.bw !== undefined
-          ? args.properties.bw
-          : true // bw is default for portrait images
-      let resize
-      if (args && args.properties) {
-        const { width, height } = args.properties
-        resize = `${width || ''}x${height || ''}`
-      } else if (args && args.size === 'SHARE') {
-        // PortraitSize is deprecated
-        resize = '1000x1000'
-      } else {
-        resize = '384x384' // default for portraits
-      }
-      const [url, query] = portraitUrl.split('?')
-      const newQuery = querystring.stringify({
-        ...querystring.parse(query),
-        resize,
-        bw: bw || undefined,
-        format: 'auto',
-      })
-      return `${url}?${newQuery}`
+      return getPortraitUrl(user, args)
     }
     return null
   },
