@@ -14,17 +14,12 @@ import withT from '../../lib/withT'
 import { MetaOption, MetaOptionLabel, AutosizeInput } from './components/Layout'
 import SocialMedia from './components/SocialMedia'
 import RepoSelect from '../editor/modules/meta/RepoSelect'
-import { REPO_PREFIX } from '../../lib/settings'
-
-const FORMAT_REPO_ID = `https://github.com/republik/${
-  REPO_PREFIX || ''
-}format-journal`
 
 export const FLYER_FORMAT = {
   id: 'flyer',
-  repoId: FORMAT_REPO_ID,
+  repoId: 'https://github.com/republik/format-journal',
   meta: {
-    title: 'Republik-Journal',
+    title: 'Journal',
     color: '#405080',
     kind: 'flyer',
   },
