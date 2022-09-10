@@ -68,6 +68,7 @@ const contentUserResolver = async (content, _users = []) => {
     (node) => node?.type === 'flyerAuthor',
     (node) => {
       const { authorId } = node
+      delete node.authorId
 
       const user = _users.find(({ id }) => id === authorId)
       if (user) {
@@ -75,6 +76,12 @@ const contentUserResolver = async (content, _users = []) => {
           name: user.name,
           portrait: getPortraitUrl(user, { properties }),
           slug: user.slug,
+        }
+      } else {
+        // If user can't be retrieved, return name stored in tree,
+        // but drop other props.
+        node.resolvedAuthor = {
+          name: node.resolvedAuthor.name,
         }
       }
     },
