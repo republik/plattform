@@ -1,5 +1,3 @@
-# TeaserFlyer
-
 Used to show latest «Journal» entry on magazine front.
 
 - `flyer`: a Document node
