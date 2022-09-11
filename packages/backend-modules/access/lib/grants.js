@@ -434,53 +434,7 @@ const invalidate = async (grant, reason, t, pgdb, mail) => {
   await eventsLib.log(grant, `invalidated.${reason}`, pgdb)
 
   if (grant.recipientUserId) {
-    const recipient = await pgdb.public.users.findOne({
-      id: grant.recipientUserId,
-    })
-
-    if (recipient) {
-      const campaign = await pgdb.public.accessCampaigns.findOne({
-        id: grant.accessCampaignId,
-      })
-
-      const hasRoleChanged = await membershipsLib.removeMemberRole(
-        grant,
-        recipient,
-        findByRecipient,
-        pgdb,
-      )
-
-      if (hasRoleChanged) {
-        await mail.enforceSubscriptions({
-          userId: recipient.id,
-          pgdb,
-        })
-      }
-
-      const perks = await revokePerks(grant, recipient, campaign, pgdb)
-      if (perks.length > 0) {
-        grant.perks = {}
-
-        await Promise.map(perks, (perk) => {
-          eventsLib.log(grant, `perk.${perk.name}.revoked`, pgdb)
-        })
-      }
-
-      if (!(await hasUserActiveMembership(recipient, pgdb))) {
-        const granter = await pgdb.public.users.findOne({
-          id: grant.granterUserId,
-        })
-
-        await mailLib.sendRecipientExpired(
-          granter,
-          campaign,
-          recipient,
-          grant,
-          t,
-          pgdb,
-        )
-      }
-    }
+    removePrivileges(grant, pgdb, true, t, mail)
   }
 
   debug('invalidate', {
@@ -492,6 +446,92 @@ const invalidate = async (grant, reason, t, pgdb, mail) => {
   })
 
   return result > 0
+}
+
+const terminate = async (id, user, t, pgdb, mail) => {
+  const grant = await pgdb.public.accessGrants.findOne({ id })
+
+  if (!Roles.userIsInRoles(user, ['admin', 'supporter'])) {
+    throw new Error(t('api/access/terminate/role/error'))
+  }
+
+  const now = moment()
+  let eventsLogMessage = 'suppressedFollowup.admin'
+  const updateFields = {
+    followupAt: now,
+    updatedAt: now,
+  }
+
+  if (!grant.invalidatedAt) {
+    updateFields.invalidatedAt = now
+    eventsLogMessage = 'terminated.admin'
+    if (grant.recipientUserId) {
+      removePrivileges(grant, pgdb, false, t, mail)
+    }
+  }
+  const result = await pgdb.public.accessGrants.update(
+    { id: grant.id },
+    updateFields,
+  )
+
+  await eventsLib.log(grant, eventsLogMessage, pgdb)
+
+  debug('terminate', {
+    id: grant.id,
+    ...updateFields,
+  })
+
+  return result
+}
+
+const removePrivileges = async (grant, pgdb, sendMail = true, t, mail) => {
+  const recipient = await pgdb.public.users.findOne({
+    id: grant.recipientUserId,
+  })
+
+  if (recipient) {
+    const campaign = await pgdb.public.accessCampaigns.findOne({
+      id: grant.accessCampaignId,
+    })
+
+    const hasRoleChanged = await membershipsLib.removeMemberRole(
+      grant,
+      recipient,
+      findByRecipient,
+      pgdb,
+    )
+
+    if (hasRoleChanged) {
+      await mail.enforceSubscriptions({
+        userId: recipient.id,
+        pgdb,
+      })
+    }
+
+    const perks = await revokePerks(grant, recipient, campaign, pgdb)
+    if (perks.length > 0) {
+      grant.perks = {}
+
+      await Promise.map(perks, (perk) => {
+        eventsLib.log(grant, `perk.${perk.name}.revoked`, pgdb)
+      })
+    }
+
+    if (!(await hasUserActiveMembership(recipient, pgdb)) && sendMail) {
+      const granter = await pgdb.public.users.findOne({
+        id: grant.granterUserId,
+      })
+
+      await mailLib.sendRecipientExpired(
+        granter,
+        campaign,
+        recipient,
+        grant,
+        t,
+        pgdb,
+      )
+    }
+  }
 }
 
 const followUp = async (campaign, grant, t, pgdb, mail) => {
@@ -711,6 +751,7 @@ module.exports = {
   recommendations,
   invalidate,
   followUp,
+  terminate,
 
   findByGranter,
   findByRecipient,

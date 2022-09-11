@@ -44,6 +44,20 @@ type mutations {
     campaignId: ID!
     payload: JSON
   ): AccessGrant!
+
+  """
+  Terminate access before access grant ends
+  """
+  terminateAccess(id: ID!): Boolean!
+
+  """
+  Change access grant
+  """
+  changeAccess(
+    id: ID! 
+    revoke: Boolean!
+    terminate: Boolean! 
+  ): Boolean!
 }
 
 `
