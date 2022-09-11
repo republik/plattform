@@ -24,7 +24,53 @@ const styles = {
   }),
 }
 
-const TeaserFlyer = ({ flyer, Link = DefaultLink }) => {
+const PLACEHOLDER_FLYER = {
+  meta: {
+    path: '/path/to/journal',
+    format: {
+      meta: {
+        title: 'Republik-Journal',
+      },
+    },
+  },
+  content: {
+    children: [
+      {
+        children: [
+          {
+            type: 'headline',
+            children: [
+              {
+                text: 'Guten Morgen,',
+              },
+              {
+                children: [
+                  {
+                    text: '',
+                  },
+                ],
+                type: 'break',
+              },
+              {
+                text: 'schön sind Sie da!',
+              },
+            ],
+          },
+          {
+            type: 'flyerOpeningP',
+            children: [
+              {
+                text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+}
+
+const TeaserFlyer = ({ flyer = PLACEHOLDER_FLYER, Link = DefaultLink }) => {
   const value = flyer.content.children[0].children.filter(
     (n) => ['headline', 'flyerOpeningP'].indexOf(n.type) !== -1,
   )
@@ -64,7 +110,7 @@ WrappedTeaserFlyer.data = {
   },
   query: `
     query getLatestFlyer {
-      latestFlyer: documents(format: "republik/format-journal", first: 1) {
+      latestFlyer: documents(format: "republik/format-journal-1", first: 1) {
         nodes {
           id
           meta {
