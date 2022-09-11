@@ -5,26 +5,29 @@ import { parse } from 'url'
 import { FRONTEND_BASE_URL } from '../../lib/settings'
 import { mdastToString } from '../../lib/utils/helpers'
 
-import { Editorial } from '@project-r/styleguide'
 import { SOCIAL_MEDIA } from '../editor/modules/meta/ShareImageForm'
+
+import { Editorial } from '@project-r/styleguide'
+import { renderAsText } from '@project-r/styleguide/editor'
 
 const FRONTEND_HOSTNAME = FRONTEND_BASE_URL && parse(FRONTEND_BASE_URL).hostname
 
 const useValidation = ({ meta, content, t, updateMailchimp }) => {
   const links = useMemo(() => {
+    const isFlyer = meta.template === 'flyer'
+    const toText = isFlyer
+      ? (node) => renderAsText(node.children)
+      : mdastToString
+    const urlKey = isFlyer ? 'href' : 'url'
     const all = []
     visit(content, 'link', (node) => {
-      if (!node?.url) {
-        return
-      }
-
-      const urlObject = parse(node.url)
       const warnings = []
       const errors = []
 
-      if (!node.url || !node.url.trim()) {
+      if (!node || !node[urlKey] || !node[urlKey].trim()) {
         errors.push('empty')
       } else {
+        const urlObject = parse(node[urlKey])
         if (urlObject.path) {
           if (
             !urlObject.protocol &&
@@ -58,8 +61,8 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
       }
 
       all.push({
-        url: node.url,
-        text: mdastToString(node),
+        url: node[urlKey],
+        text: toText(node),
         warnings,
         errors,
       })

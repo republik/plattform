@@ -11,3 +11,5 @@ export { default as flyerEditorSchema } from './components/Editor/schema/flyerEd
 export { default as ColorPicker } from './components/Editor/Forms/ColorPicker'
 
 export { FLYER_DATE_FORMAT } from './components/Flyer/Date'
+
+export { default as renderAsText } from './components/Editor/Render/text'
