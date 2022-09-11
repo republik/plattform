@@ -68,11 +68,10 @@ export default ({ rule, subModules, TYPE }) => {
             editor.value.blocks.some((block) => block.key === node.key) &&
             !editor.value.isBlurred
 
+          // TODO: re-add removable={false}
           return (
             <>
-              {isSelected && (
-                <TeaserInlineUI node={node} editor={editor} removable={false} />
-              )}
+              {isSelected && <TeaserInlineUI node={node} editor={editor} />}
               <Preview
                 editorPreview
                 attributes={attributes}
