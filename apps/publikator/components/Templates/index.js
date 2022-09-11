@@ -12,6 +12,7 @@ import {
   createDossierSchema,
 } from '@project-r/styleguide'
 
+import { getDatePath } from '@project-r/styleguide/editor'
 import { t } from '../../lib/withT'
 
 import dynamicComponentRequire from '../editor/modules/dynamiccomponent/require'
@@ -39,7 +40,9 @@ const schemas = {
   // - for Project R this should be the newsletter
   newsletter: newsletterSchema,
   editorialNewsletter: createNewsletterWebSchema(),
-  flyer: 'slate', // @TODO: adopt, new Slate editor
+  flyer: {
+    getPath: getDatePath,
+  },
   article: createArticleSchema(articleSchemaParams),
   front: createFrontSchema({
     Link: NoOpLink,
