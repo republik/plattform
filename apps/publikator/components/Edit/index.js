@@ -36,7 +36,7 @@ const debug = createDebug('publikator:slate:edit')
 
 const getCommittedContent = (data) => data?.repo?.commit?.document?.content
 
-export const getCurrentContent = (store, data, t, options) => {
+export const getCurrentContent = (store, data, t, options = {}) => {
   const storedContent = store?.get('editorState')
   const committedContent = getCommittedContent(data)
   return (
@@ -44,7 +44,7 @@ export const getCurrentContent = (store, data, t, options) => {
     committedContent || {
       children: getInitialValue(options),
       meta: {
-        title: 'Journal',
+        title: options.title || 'Journal',
         slug: 'journal',
         template: 'flyer',
         feed: false,
@@ -114,7 +114,7 @@ const EditLoader = ({
         const newStore = initLocalStore(storeKey)
         setStore(newStore)
         checkLocalStorageSupport()
-        forceSetContent(getCurrentContent(newStore, data, t, { publishDate }))
+        forceSetContent(getCurrentContent(newStore, data, t, query))
       }
     }
   }, [store, commitId, repoId, data])
@@ -320,7 +320,7 @@ const EditLoader = ({
     }
     setDidUnlock(false)
     setAcknowledgedUsers([])
-    forceSetContent(getCurrentContent(null, data, t, { publishDate }))
+    forceSetContent(getCurrentContent(null, data, t, query))
     router.replace({
       pathname,
       query: queryWithoutPreview,
@@ -421,7 +421,6 @@ const EditLoader = ({
               return null
             }
 
-            // TODO: redirect doesn't work here – move it
             if (commitId && repo && !repo.commit) {
               addWarning(t('commit/warn/commit404'))
               router.replace({
