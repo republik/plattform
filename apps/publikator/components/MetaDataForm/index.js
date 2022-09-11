@@ -8,12 +8,15 @@ import {
   mediaQueries,
   useColorContext,
   TeaserFeed,
+  slug,
 } from '@project-r/styleguide'
 import scrollIntoView from 'scroll-into-view'
 import withT from '../../lib/withT'
 import { MetaOption, MetaOptionLabel, AutosizeInput } from './components/Layout'
 import SocialMedia from './components/SocialMedia'
 import RepoSelect from '../editor/modules/meta/RepoSelect'
+import PublishPathNotice from '../editor/modules/meta/PublishPathNotice'
+import schemas from '../Templates'
 
 export const FLYER_FORMAT = {
   id: 'flyer',
@@ -47,10 +50,18 @@ const MetaSectionTitle = ({ children }) => {
   return <h3 {...styles.metaSectionTitle}>{children}</h3>
 }
 
-const MetaDataForm = ({ t, metaData, setMetaData }) => {
+const MetaDataForm = ({ t, metaData, setMetaData, publishDate }) => {
   const [activeTabIndex, setActiveTabIndex] = useState(0)
   const [colorScheme] = useColorContext()
   const scrollRef = useRef()
+
+  // TODO: get publishDate here
+  const previewPublishDate = publishDate ? new Date(publishDate) : new Date()
+  const previewPath = schemas['flyer'].getPath({
+    ...metaData,
+    publishDate: previewPublishDate,
+    slug: slug(metaData.slug || ''),
+  })
 
   const handleMetaDataChange = (name, value) => {
     setMetaData((prevState) => {
@@ -147,6 +158,7 @@ const MetaDataForm = ({ t, metaData, setMetaData }) => {
                 }}
                 noMargin
               />
+              <PublishPathNotice meta={metaData} previewPath={previewPath} />
             </MetaOption>
             <MetaOption>
               <RepoSelect

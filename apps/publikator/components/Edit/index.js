@@ -455,7 +455,7 @@ const EditLoader = ({
                 hasUncommittedChanges={beginChanges}
                 content={content}
                 setContent={setContent}
-                readOnly={readOnly}
+                publishDate={repo?.meta?.publishDate || publishDate}
               />
             )
           }}
