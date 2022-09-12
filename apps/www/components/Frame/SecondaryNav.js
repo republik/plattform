@@ -102,15 +102,17 @@ export const SecondaryNav = ({
           >
             {t('navbar/feed')}
           </NavLink>
-          <NavLink
-            href={flyerMeta?.path || '/format/journal'}
-            active={active}
-            formatColor='accentColorFlyer'
-            minifeed
-            title={flyerMeta?.title || t('navbar/flyer')}
-          >
-            {t('navbar/flyer')}
-          </NavLink>
+          {flyerMeta?.path && (
+            <NavLink
+              href={flyerMeta?.path || '/format/journal'}
+              active={active}
+              formatColor='accentColorFlyer'
+              minifeed
+              title={flyerMeta?.title || t('navbar/flyer')}
+            >
+              {t('navbar/flyer')}
+            </NavLink>
+          )}
           <NavLink
             href='/dialog'
             active={active}
