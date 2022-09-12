@@ -786,7 +786,7 @@ export class EditorPage extends Component {
       committing || loading || templateLoading || (!schema && !error)
     const dark = editorState && editorState.document.data.get('darkMode')
     const commit = repo && (repo.commit || repo.latestCommit)
-    const schemaName = commit?.document.meta.template
+    const schemaName = commit?.document?.meta?.template
     const showBranchingNotice = schemaName !== 'front'
 
     const sidebarPrependChildren = [
