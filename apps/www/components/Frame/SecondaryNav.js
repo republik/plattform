@@ -68,6 +68,9 @@ export const SecondaryNav = ({
   const active = router.asPath
 
   const flyerMeta = useFlyerMeta()
+  // post journal launch cleanup task:
+  //   - remove conditionals for journal entry
+  //   - add textAlign center to styles.mininav
 
   return (
     <>
@@ -83,6 +86,7 @@ export const SecondaryNav = ({
           style={{
             borderTopWidth: isSecondarySticky ? 0 : 1,
             borderTopStyle: 'solid',
+            textAlign: flyerMeta?.path && 'center',
           }}
         >
           <NavLink
