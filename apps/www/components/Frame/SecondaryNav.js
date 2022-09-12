@@ -120,21 +120,22 @@ export const SecondaryNav = ({
           >
             {t('navbar/flyer')}
           </NavLink>
-          {sections.map((section) => {
-            const color = section.color || colors[section.kind]
-            return (
-              <NavLink
-                key={section.title}
-                href={section.href}
-                active={active}
-                formatColor={color}
-                minifeed
-                title={section.title}
-              >
-                {section.title}
-              </NavLink>
-            )
-          })}
+          {!flyerMeta?.path &&
+            sections.map((section) => {
+              const color = section.color || colors[section.kind]
+              return (
+                <NavLink
+                  key={section.title}
+                  href={section.href}
+                  active={active}
+                  formatColor={color}
+                  minifeed
+                  title={section.title}
+                >
+                  {section.title}
+                </NavLink>
+              )
+            })}
         </div>
       ) : (
         secondaryNav && (
