@@ -2,13 +2,10 @@ import { useState } from 'react'
 import { ColorContextProvider } from '@project-r/styleguide'
 import { css } from 'glamor'
 
+import PreviewFrame from './Frame'
 import DarkmodeToggle from './DarkmodeToggle'
 import HasAccessToggle from './HasAccessToggle'
-
-import PreviewFrame from '../Preview'
-import ScreeenSizePicker from '../ScreenSizePicker'
-
-const PUBLICATION_COLUMN_WIDTH = 500
+import ScreeenSizePicker from './ScreenSizePicker'
 
 const styles = {
   darkmodeButton: css({
@@ -33,7 +30,7 @@ const Preview = ({
   commitId,
   repoId,
   isFlyer,
-  sideBarWidth,
+  sideBarWidth = 0,
   commitOnly,
   darkmode,
 }) => {
@@ -43,7 +40,7 @@ const Preview = ({
   return (
     <ColorContextProvider colorSchemeKey={previewDarkmode ? 'dark' : 'light'}>
       <div style={{ paddingTop: 40 }}>
-        <div style={{ marginRight: PUBLICATION_COLUMN_WIDTH }}>
+        <div style={{ marginRight: sideBarWidth }}>
           <ScreeenSizePicker
             selectedScreenSize={previewScreenSize}
             onSelect={(screenSize) => {
@@ -72,7 +69,7 @@ const Preview = ({
           hasAccess={previewHasAccess}
           sideBarWidth={sideBarWidth}
           isFlyer={isFlyer}
-          commitOnly={true}
+          commitOnly={commitOnly}
         />
       </div>
     </ColorContextProvider>

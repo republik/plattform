@@ -26,11 +26,11 @@ import { useWarningContext } from './Warnings'
 import { getInitialValue } from '../ContentEditor'
 import { API_UNCOMMITTED_CHANGES_URL } from '../../lib/settings'
 import EditView from './EditView'
-import Preview from './Preview'
 import compose from 'lodash/flowRight'
 import { getQueryFromRepoId, getRepoIdFromQuery } from '../../lib/repoIdHelper'
 import Nav from './Nav'
 import { withEditRepoMeta } from '../Repo/EditMetaDate'
+import Preview from '../Preview'
 
 const debug = createDebug('publikator:slate:edit')
 
@@ -439,7 +439,7 @@ const EditLoader = ({
             }
 
             return preview ? (
-              <Preview repoId={repoId} commitId={commitId} />
+              <Preview repoId={repoId} commitId={commitId} isFlyer />
             ) : (
               <EditView
                 editorKey={editorKey}
