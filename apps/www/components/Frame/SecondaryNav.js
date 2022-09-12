@@ -112,7 +112,7 @@ export const SecondaryNav = ({
               active={active}
               formatColor='accentColorFlyer'
               minifeed
-              title={flyerMeta?.title || t('navbar/flyer')}
+              title={t('navbar/flyer')}
             >
               {t('navbar/flyer')}
             </NavLink>

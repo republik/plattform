@@ -66,13 +66,15 @@ export const CharButton: React.FC<{
 
 export const Invisible = ({ children, attributes, ...props }) => {
   const char = children?.props?.leaf?.text
-  const displayAs = char && charConfig.find((c) => c.insert === char)?.render
+  const config = char && charConfig.find((c) => c.insert === char)
+  const displayAs = config?.render
   const invisibleRule = useMemo(
     () =>
       css({
         ':before': {
           color: '#1E90FF',
           content: displayAs || '',
+          ...config?.renderStyle,
         },
       }),
     [children],

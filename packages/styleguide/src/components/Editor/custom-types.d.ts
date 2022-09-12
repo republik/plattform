@@ -422,6 +422,7 @@ export type CharConfig = {
   type: string
   insert: string
   render?: string
+  renderStyle?: object
   buttonStyle?: React.CSSProperties
   isInvisible?: boolean
 }

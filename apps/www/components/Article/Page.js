@@ -46,7 +46,7 @@ import ActionBarOverlay from './ActionBarOverlay'
 import SeriesNavBar from './SeriesNavBar'
 import TrialPayNoteMini from './TrialPayNoteMini'
 import Extract from './Extract'
-import { PayNote } from './PayNote'
+import { FlyerWrapper, PayNote } from './PayNote'
 import Progress from './Progress'
 import PodcastButtons from './PodcastButtons'
 import { getDocument } from './graphql/getDocument'
@@ -544,6 +544,7 @@ const ArticlePage = ({
           const isFormat = meta.template === 'format'
           const isSection = meta.template === 'section'
           const isPage = meta.template === 'page'
+          const isFlyer = treeType === 'slate'
 
           const hasNewsletterUtms =
             router.query.utm_source && router.query.utm_source === 'newsletter'
@@ -568,6 +569,7 @@ const ArticlePage = ({
               customMode={meta.paynoteMode}
               customOnly={isPage || isFormat}
               position='before'
+              Wrapper={isFlyer ? FlyerWrapper : undefined}
             />
           )
           const payNoteAfter =
@@ -620,7 +622,7 @@ const ArticlePage = ({
                   </Center>
                 </div>
               )}
-              {treeType === 'slate' ? (
+              {isFlyer ? (
                 <Flyer.Layout schema={schema}>
                   <RenderContextProvider t={t} Link={Link}>
                     <SlateRender
