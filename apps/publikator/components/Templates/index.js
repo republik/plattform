@@ -42,6 +42,7 @@ const schemas = {
   editorialNewsletter: createNewsletterWebSchema(),
   flyer: {
     getPath: getDatePath,
+    repoPrefix: 'flyer-',
   },
   article: createArticleSchema(articleSchemaParams),
   front: createFrontSchema({
