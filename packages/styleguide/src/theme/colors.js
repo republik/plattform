@@ -169,7 +169,7 @@ const colors = {
     accentColorFormats: '#d44438',
     accentColorMeta: '#FFFFFF',
     accentColorAudio: '#FFFFFF',
-    accentColorFlyer: '#405080',
+    accentColorFlyer: '#A3B5E6',
     overlayShadow: '0 0 15px rgba(0,0,0,0.3)',
     fadeOutGradientDefault:
       'linear-gradient(0deg, rgba(25,25,25,1) 0%, rgba(25,25,25,0) 100%)',
@@ -206,6 +206,7 @@ const colors = {
       '#282828': 'accentColorMeta',
       '#07809A': 'accentColorBriefing',
       '#07809a': 'accentColorBriefing',
+      '#405080': 'accentColorFlyer',
     },
     charts: {
       '#000': 'chartsInverted',
