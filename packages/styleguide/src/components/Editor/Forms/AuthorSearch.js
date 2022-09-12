@@ -34,7 +34,7 @@ const UserItem = ({ user }) => (
       }}
     />
     <div>
-      {user.lastName && (
+      {user.name && (
         <span>
           {user.name}
           <br />
