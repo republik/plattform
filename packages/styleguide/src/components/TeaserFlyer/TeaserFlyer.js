@@ -74,6 +74,7 @@ const TeaserFlyer = ({ flyer = PLACEHOLDER_FLYER, Link = DefaultLink }) => {
   const value = flyer.content.children[0].children.filter(
     (n) => ['headline', 'flyerOpeningP'].indexOf(n.type) !== -1,
   )
+
   return (
     <div {...styles.container}>
       <NarrowContainer>
@@ -110,7 +111,7 @@ WrappedTeaserFlyer.data = {
   },
   query: `
     query getLatestFlyer {
-      latestFlyer: documents(format: "republik/format-journal-1", first: 1) {
+      latestFlyer: documents(format: "republik/format-journal", first: 1) {
         nodes {
           id
           meta {
