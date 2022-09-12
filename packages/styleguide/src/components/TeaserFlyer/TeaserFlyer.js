@@ -6,6 +6,7 @@ import { NarrowContainer } from '../Grid'
 import SlateRender from '../Editor/Render'
 import schema from '../Editor/schema/flyer'
 import { RenderContextProvider } from '../Editor/Render/Context'
+import { plainLinkRule } from '../Typography'
 
 const DefaultLink = ({ children }) => children
 
@@ -80,16 +81,18 @@ const TeaserFlyer = ({ flyer = PLACEHOLDER_FLYER, Link = DefaultLink }) => {
   return (
     <div {...styles.container}>
       <NarrowContainer>
-        <RenderContextProvider>
-          <SlateRender value={value} schema={schema} raw />
-        </RenderContextProvider>
-        <div {...styles.link}>
-          <Link href={flyer.meta.path} passHref>
-            <TeaserSectionTitle small href={flyer.meta.path}>
-              {FLYER_LINKTEXT}
-            </TeaserSectionTitle>
-          </Link>
-        </div>
+        <Link href={flyer.meta.path} passHref>
+          <a {...plainLinkRule} href={flyer.meta.path}>
+            <RenderContextProvider>
+              <SlateRender value={value} schema={schema} raw />
+            </RenderContextProvider>
+            <div {...styles.link}>
+              <TeaserSectionTitle small href={flyer.meta.path}>
+                {FLYER_LINKTEXT}
+              </TeaserSectionTitle>
+            </div>
+          </a>
+        </Link>
       </NarrowContainer>
     </div>
   )
