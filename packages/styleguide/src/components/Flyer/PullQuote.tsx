@@ -20,11 +20,11 @@ export const PullQuoteText = ({ children, attributes }) => (
       backgroundColor: '#000',
       color: '#F2F2F2',
       padding: 16,
-      fontSize: 20,
+      fontSize: 22,
       lineHeight: 1.318,
       [mUp]: {
         padding: 20,
-        fontSize: 40,
+        fontSize: 39,
         lineHeight: 1.179,
       },
     })}
