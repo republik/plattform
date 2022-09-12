@@ -28,7 +28,7 @@ const schema: SchemaConfig = {
   flyerAuthor: FlyerAuthor,
   flyerMetaP: Flyer.MetaP,
   flyerOpeningP: Flyer.OpeningP,
-  flyerPunchline: FigureCaption,
+  flyerPunchline: Flyer.Small,
   flyerSignature: Flyer.OpeningP,
   flyerDate: FlyerDate,
   flyerTitle: Flyer.H3,
