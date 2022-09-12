@@ -24,6 +24,8 @@ const styles = {
   }),
 }
 
+const FLYER_LINKTEXT = 'Lesen Sie das Republik-Journal'
+
 const PLACEHOLDER_FLYER = {
   meta: {
     path: '/path/to/journal',
@@ -84,7 +86,7 @@ const TeaserFlyer = ({ flyer = PLACEHOLDER_FLYER, Link = DefaultLink }) => {
         <div {...styles.link}>
           <Link href={flyer.meta.path} passHref>
             <TeaserSectionTitle small href={flyer.meta.path}>
-              {flyer.meta.format?.meta.title}
+              {FLYER_LINKTEXT}
             </TeaserSectionTitle>
           </Link>
         </div>
