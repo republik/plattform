@@ -30,7 +30,12 @@ import { Editor, NodeEntry } from 'slate'
 import { useColorContext } from '../../Colors/ColorContext'
 import IconButton from '../../IconButton'
 import { getAncestry } from './helpers/tree'
-import { getCharCount, isEmpty, selectNearestWord } from './helpers/text'
+import {
+  countFormat,
+  getCharCount,
+  isEmpty,
+  selectNearestWord,
+} from './helpers/text'
 import Scroller from '../../Tabs/Scroller'
 import { Label } from '../../Typography'
 import { CharButton } from './SpecialChars'
@@ -270,7 +275,7 @@ const CharCount = () => {
   const charCount = getCharCount(editor.children)
   return (
     <span {...styles.charCount}>
-      <Label>{charCount} Zeichen</Label>
+      <Label>{countFormat(charCount)} Zeichen</Label>
     </span>
   )
 }
