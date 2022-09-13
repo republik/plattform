@@ -137,23 +137,25 @@ const getUrls = async ({ date, limit }, { pgdb }) => {
   )
 }
 
-const getBlock = (
+const getBlock = async (
   { url, daysPublished, document: { meta }, indexes, distributions },
   { date },
 ) => {
+  const credits = await stringifyNode(meta.credits.type, meta.credits)
+  const creditsFragment = credits.replace(`, ${date.format('DD.MM.YYYY')}`, '')
+  const daysFragment = daysPublished > 1 ? ` (${daysPublished}. Tag)` : ''
+
+  const indexFragment = Math.round(indexes.visitors * 100)
+  const memberIndexFragment = Math.round(indexes.memberVisitors * 100)
+
   const block = {
     type: 'section',
     text: {
       type: 'mrkdwn',
       text: [
         `*<${getUltradashboardUrlReportLink(url)}|${meta.title}>*`,
-        `_${stringifyNode(meta.credits).replace(
-          `, ${date.format('DD.MM.YYYY')}`,
-          '',
-        )}_` + (daysPublished > 1 ? ` (${daysPublished}. Tag)` : ''),
-        `*Index ${Math.round(
-          indexes.visitors * 100,
-        )}* ⋅ Abonnenten-Index ${Math.round(indexes.memberVisitors * 100)}`,
+        `_${creditsFragment}_` + daysFragment,
+        `*Index ${indexFragment}* ⋅ Abonnenten-Index ${memberIndexFragment}`,
         'Via ' +
           distributions
             .sort((a, b) => descending(a.percentage, b.percentage))
@@ -335,7 +337,11 @@ Promise.all([PgDb.connect(), Elasticsearch.connect()]).spread(
               ].join('\n'),
             },
           })
-          recent.forEach((article) => blocks.push(getBlock(article, { date })))
+
+          await Promise.each(recent, async (article) => {
+            const block = await getBlock(article, { date })
+            blocks.push(block)
+          })
         }
 
         // Earlier articles
@@ -354,7 +360,11 @@ Promise.all([PgDb.connect(), Elasticsearch.connect()]).spread(
               ].join('\n'),
             },
           })
-          earlier.forEach((article) => blocks.push(getBlock(article, { date })))
+
+          await Promise.each(earlier, async (article) => {
+            const block = await getBlock(article, { date })
+            blocks.push(block)
+          })
         }
 
         // Footer
