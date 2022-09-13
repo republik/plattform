@@ -201,8 +201,6 @@ export type FormatData = {
     title?: string
     color?: string
     type?: string
-    path?: string
-    externalBaseUrl?: string
   }
 }
 

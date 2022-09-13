@@ -49,8 +49,6 @@ export const filterRepos = gql`
                 id
                 repoId
                 meta {
-                  path
-                  externalBaseUrl
                   title
                   color
                   kind
