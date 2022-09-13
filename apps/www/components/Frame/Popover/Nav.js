@@ -101,7 +101,7 @@ const Nav = ({
                     >
                       {t('navbar/feed')}
                     </NavLink>
-                    {!flyerMeta?.path && (
+                    {flyerMeta?.path && (
                       <NavLink
                         large
                         href={flyerMeta?.path || '/format/journal'}
