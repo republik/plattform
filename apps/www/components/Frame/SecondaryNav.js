@@ -18,45 +18,6 @@ import {
 import { useRouter } from 'next/router'
 import { useFlyerMeta } from '../../lib/apollo/miniNavi'
 
-const sections = [
-  {
-    title: 'Meta',
-    href: '/meta',
-    color: '#000',
-    kind: null,
-  },
-  {
-    title: 'Briefings',
-    href: '/briefings',
-    color: '#07809a',
-    kind: 'editorial',
-  },
-  {
-    title: 'Kolumnen',
-    href: '/kolumnen',
-    color: '#D2933C',
-    kind: null,
-  },
-  {
-    title: 'Formate',
-    href: '/formate',
-    color: '#d44438',
-    kind: 'scribble',
-  },
-  {
-    title: 'Audio',
-    href: '/audio',
-    color: null,
-    kind: null,
-  },
-  {
-    title: 'Serien',
-    href: '/serien',
-    color: null,
-    kind: null,
-  },
-]
-
 export const SecondaryNav = ({
   secondaryNav,
   hasOverviewNav,
@@ -68,9 +29,6 @@ export const SecondaryNav = ({
   const active = router.asPath
 
   const flyerMeta = useFlyerMeta()
-  // post journal launch cleanup task:
-  //   - remove conditionals for journal entry
-  //   - add textAlign center to styles.mininav
 
   return (
     <>
@@ -86,7 +44,7 @@ export const SecondaryNav = ({
           style={{
             borderTopWidth: isSecondarySticky ? 0 : 1,
             borderTopStyle: 'solid',
-            textAlign: flyerMeta?.path && 'center',
+            textAlign: 'center',
           }}
         >
           <NavLink
@@ -106,17 +64,15 @@ export const SecondaryNav = ({
           >
             {t('navbar/feed')}
           </NavLink>
-          {flyerMeta?.path && (
-            <NavLink
-              href={flyerMeta?.path || '/format/journal'}
-              active={active}
-              formatColor='accentColorFlyer'
-              minifeed
-              title={t('navbar/flyer')}
-            >
-              {t('navbar/flyer')}
-            </NavLink>
-          )}
+          <NavLink
+            href={flyerMeta?.path || '/format/journal'}
+            active={active}
+            formatColor='accentColorFlyer'
+            minifeed
+            title={t('navbar/flyer')}
+          >
+            {t('navbar/flyer')}
+          </NavLink>
           <NavLink
             href='/dialog'
             active={active}
@@ -126,22 +82,6 @@ export const SecondaryNav = ({
           >
             {t('navbar/discussion')}
           </NavLink>
-          {!flyerMeta?.path &&
-            sections.map((section) => {
-              const color = section.color || colors[section.kind]
-              return (
-                <NavLink
-                  key={section.title}
-                  href={section.href}
-                  active={active}
-                  formatColor={color}
-                  minifeed
-                  title={section.title}
-                >
-                  {section.title}
-                </NavLink>
-              )
-            })}
         </div>
       ) : (
         secondaryNav && (
