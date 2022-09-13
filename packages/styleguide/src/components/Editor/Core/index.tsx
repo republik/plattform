@@ -1,26 +1,17 @@
 import React, { useCallback, useEffect } from 'react'
-import { createEditor, Editor, Transforms, Text } from 'slate'
+import { createEditor, Editor, Text } from 'slate'
 import { withHistory } from 'slate-history'
-import {
-  Slate,
-  Editable,
-  withReact,
-  ReactEditor,
-  useSelected,
-  useSlate,
-} from 'slate-react'
+import { Slate, Editable, withReact } from 'slate-react'
 import { useMemoOne } from 'use-memo-one'
 import { withNormalizations } from './decorators/normalization'
 import { withElAttrsConfig } from './decorators/attrs'
 import Footer from './Footer'
-import { FormContextProvider, FormOverlay, useFormContext } from './Forms'
+import { FormContextProvider, FormOverlay } from './Forms'
 import Toolbar from './Toolbar'
-import { config as elementsConfig } from '../config/elements'
 import { LeafComponent } from './Mark'
 import {
   CustomDescendant,
   CustomEditor,
-  CustomElement,
   EditorConfig,
   NodeTemplate,
 } from '../custom-types'
@@ -29,16 +20,15 @@ import { handleInsert, insertOnKey } from './helpers/structure'
 import { withInsert } from './decorators/insert'
 import { withDelete } from './decorators/delete'
 import { withCustomConfig } from './decorators/config'
-import { ErrorMessage } from '../Render/Message'
 import { LayoutContainer } from '../Render/Containers'
 import {
-  ERROR_CHARS,
   flagChars,
   getCharCount,
+  ERROR_CHARS,
   INVISIBLE_CHARS,
 } from './helpers/text'
-import BlockUi from './BlockUi'
 import { RenderContextProvider } from '../Render/Context'
+import { ElementComponent } from './Element'
 
 export type SlateEditorProps = {
   value: CustomDescendant[]
@@ -46,72 +36,6 @@ export type SlateEditorProps = {
   structure?: NodeTemplate[]
   editor?: CustomEditor
   config: EditorConfig
-}
-
-const RenderedElementComponent: React.FC<{
-  editor: CustomEditor
-  element: CustomElement
-  attributes: any
-}> = ({ element, children, attributes }) => {
-  const editor = useSlate()
-  const [_, setFormPath] = useFormContext()
-  const isSelected = useSelected()
-  const path = ReactEditor.findPath(editor, element)
-  const config = elementsConfig[element.type]
-  if (!config) {
-    return (
-      <ErrorMessage
-        attributes={attributes}
-        error={`${element.type} config missing`}
-      >
-        {children}
-      </ErrorMessage>
-    )
-  }
-  const isVoid = config.attrs?.isVoid
-  const showBlockUi =
-    !config.attrs?.isInline && (config.Form || element.template?.repeat)
-  const Component =
-    editor.customConfig.editorSchema?.[element.type] ||
-    editor.customConfig.schema[element.type]
-
-  if (!Component) {
-    return (
-      <ErrorMessage
-        attributes={attributes}
-        error={`${element.type} component missing in schema`}
-      >
-        {children}
-      </ErrorMessage>
-    )
-  }
-  const selectVoid = (e) => {
-    if (isVoid) {
-      e.preventDefault()
-      Transforms.select(editor, path)
-    }
-  }
-  const baseStyles = showBlockUi
-    ? { position: 'relative', display: 'block' }
-    : {}
-
-  return (
-    <Component
-      {...element}
-      attributes={{
-        ...attributes,
-        style: { ...attributes.style, ...baseStyles },
-      }}
-      onMouseDown={selectVoid}
-      onDoubleClick={(e) => {
-        e.stopPropagation()
-        setFormPath(path)
-      }}
-    >
-      {showBlockUi && isSelected && <BlockUi path={path} element={element} />}
-      {children}
-    </Component>
-  )
 }
 
 const SlateEditor: React.FC<SlateEditorProps> = ({
@@ -157,7 +81,7 @@ const SlateEditor: React.FC<SlateEditorProps> = ({
 
   const renderElement = useCallback(
     ({ children, ...props }) => (
-      <RenderedElementComponent {...props}>{children}</RenderedElementComponent>
+      <ElementComponent {...props}>{children}</ElementComponent>
     ),
     [],
   )
