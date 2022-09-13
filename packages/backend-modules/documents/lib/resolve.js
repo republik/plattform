@@ -28,7 +28,7 @@ const extractIdsFromNode = async (type, node, contextRepoId) => {
 const contentUrlResolver = (
   doc,
   _all = [],
-  _usernames = [],
+  _users = [],
   errors,
   urlPrefix,
   searchString,
@@ -48,7 +48,7 @@ const contentUrlResolver = (
   return contentUrlResolver(
     doc,
     _all,
-    _usernames,
+    _users,
     errors,
     urlPrefix,
     searchString,
@@ -56,11 +56,26 @@ const contentUrlResolver = (
   )
 }
 
+const contentUserResolver = (type, content, _users = []) => {
+  const contentUserResolver =
+    resolve[type || 'mdast']?.contentUserResolver ||
+    process.common?.contentUserResolver
+
+  if (!contentUrlResolver) {
+    console.warn(
+      `resolve/contentUserResolver for type "${type}" not implemented`,
+    )
+    return
+  }
+
+  return contentUserResolver(content, _users)
+}
+
 const metaUrlResolver = async (
   type,
   meta,
   _all = [],
-  _usernames = [],
+  _users = [],
   errors,
   urlPrefix,
   searchString,
@@ -78,7 +93,7 @@ const metaUrlResolver = async (
   return metaUrlResolver(
     meta,
     _all,
-    _usernames,
+    _users,
     errors,
     urlPrefix,
     searchString,
@@ -105,6 +120,7 @@ module.exports = {
   extractUserUrl,
   createResolver,
   contentUrlResolver,
+  contentUserResolver,
   metaUrlResolver,
   metaFieldResolver,
   stringifyNode,

@@ -3,6 +3,7 @@ import {
   FigureCaptionElement,
   FigureElement,
   FlyerTileElement,
+  FlyerTileMetaElement,
   FlyerTileOpeningElement,
   HeadlineElement,
   ParagraphElement,
@@ -80,6 +81,20 @@ export const flyerTileOpening: Partial<FlyerTileOpeningElement> = {
     },
     {
       type: 'flyerOpeningP',
+      children: [
+        {
+          text: '',
+        },
+      ],
+    },
+  ],
+}
+
+export const flyerTileMeta: Partial<FlyerTileMetaElement> = {
+  type: 'flyerTileMeta',
+  children: [
+    {
+      type: 'flyerMetaP',
       children: [
         {
           text: '',

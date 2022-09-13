@@ -65,14 +65,12 @@ export const getForms = (editor: CustomEditor, path: number[]): FormData[] => {
     at: topLevelNode[1],
   })) {
     if (SlateElement.isElement(n) && isDescendant(topLevelNode, [n, p])) {
-      if (
-        p.length !== topLevelNode[1].length &&
-        elConfig[n.type].attrs?.stopFormIteration
-      ) {
-        break
-      }
+      const stop = elConfig[n.type].attrs?.stopFormIteration
+      const isTopLevel = p.length === topLevelNode[1].length
+      if (stop && !isTopLevel) break
       const currentForm = getForm(editor, [n, p])
       forms = forms.concat(currentForm)
+      if (stop) break
     }
   }
 

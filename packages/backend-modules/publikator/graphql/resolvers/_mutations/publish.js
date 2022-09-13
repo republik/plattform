@@ -138,7 +138,7 @@ module.exports = async (
     context,
   })
 
-  const { _all, _usernames } = connection.nodes[0].entity
+  const { _all, _users } = connection.nodes[0].entity
 
   const resolvedDoc = JSON.parse(JSON.stringify(doc))
 
@@ -153,7 +153,7 @@ module.exports = async (
   await contentUrlResolver(
     resolvedDoc,
     _all,
-    _usernames,
+    _users,
     unresolvedRepoIds,
     FRONTEND_BASE_URL,
     searchString,
@@ -163,18 +163,13 @@ module.exports = async (
     resolvedDoc.type,
     resolvedDoc.content.meta,
     _all,
-    _usernames,
+    _users,
     unresolvedRepoIds,
     FRONTEND_BASE_URL,
     searchString,
   )
 
-  metaFieldResolver(
-    resolvedDoc.content.meta,
-    _all,
-    _usernames,
-    unresolvedRepoIds,
-  )
+  metaFieldResolver(resolvedDoc.content.meta, _all, _users, unresolvedRepoIds)
 
   unresolvedRepoIds = uniq(unresolvedRepoIds).filter(
     (unresolvedRepoId) => unresolvedRepoId !== repoId,

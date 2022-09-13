@@ -370,7 +370,7 @@ const ActionBar = ({
       label: !forceShortLabel ? t('article/actionbar/share') : '',
       labelShort:
         !forceShortLabel && isArticleBottom ? t('article/actionbar/share') : '',
-      modes: ['articleTop', 'articleOverlay', 'articleBottom'],
+      modes: ['articleTop', 'articleOverlay', 'articleBottom', 'flyer'],
       show: true,
     },
     {

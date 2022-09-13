@@ -1,22 +1,11 @@
 import { v4 as isUuid } from 'is-uuid'
+import { PgTable } from 'pogi'
 
 import createDataLoader from '@orbiting/backend-modules-dataloader'
 import auth from '@orbiting/backend-modules-auth'
-import { PgTable } from 'pogi'
+import { UserRow } from '@orbiting/backend-modules-types'
 
 const transformUser = auth.transformUser
-
-export interface UserRow {
-  id: string
-  username: string
-  firstName: string
-  lastName: string
-  name: string
-  initials: string
-  hasPublicProfile: boolean
-  roles: string[]
-  email: string
-}
 
 module.exports = (context: any) => {
   const users: PgTable<UserRow> = context.pgdb.public.users

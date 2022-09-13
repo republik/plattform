@@ -9,6 +9,7 @@ import { TeaserActiveDebates } from '../../components/TeaserActiveDebates'
 
 import { TeaserSectionTitle } from '../../components/TeaserShared'
 import { TeaserMyMagazine } from '../../components/TeaserMyMagazine'
+import { TeaserFlyer } from '../../components/TeaserFlyer'
 
 import Center from '../../components/Center'
 import Loader from '../../components/Loader'
@@ -57,6 +58,7 @@ const createLiveTeasers = ({
   withFeedData = withData,
   withDiscussionsData = withData,
   withMyMagazineData = withData,
+  withFlyerData = withData,
   ActionBar,
   showMyMagazine = true,
 }) => {
@@ -125,6 +127,19 @@ const createLiveTeasers = ({
       )
     },
   )
+
+  const FlyerTeaserWithData = withFlyerData(({ attributes, data }) => {
+    return (
+      <Loader
+        error={data.error}
+        loading={!data || data.loading}
+        style={{ minHeight: LAZYLOADER_MYMAGAZINE_HEIGHT }}
+        render={() => {
+          return <TeaserFlyer flyer={data.flyer} Link={Link} />
+        }}
+      />
+    )
+  })
 
   const extractRepoIds = (children) => {
     if (!children) {
@@ -262,6 +277,25 @@ const createLiveTeasers = ({
             note: 'Anzahl Beiträge, 0 für keine, default 1',
           },
         ],
+      },
+    },
+    {
+      matchMdast: (node) =>
+        matchZone('LIVETEASER')(node) && node.data.id === 'flyer',
+      props: (node) => node.data,
+      component: (props) => {
+        return (
+          <LazyLoad style={{ minHeight: LAZYLOADER_MYMAGAZINE_HEIGHT }}>
+            <FlyerTeaserWithData {...props} />
+          </LazyLoad>
+        )
+      },
+      isVoid: true,
+      editorModule: 'liveteaser',
+      editorOptions: {
+        type: 'LIVETEASERFLYER',
+        insertButtonText: 'Flyer Teaser',
+        insertId: 'flyer',
       },
     },
     {

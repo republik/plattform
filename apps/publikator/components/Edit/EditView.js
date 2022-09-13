@@ -28,6 +28,7 @@ const EditView = ({
   content,
   setContent,
   readOnly,
+  publishDate,
 }) => {
   return (
     <>
@@ -77,6 +78,7 @@ const EditView = ({
                   : newMeta,
             }))
           }}
+          publishDate={publishDate}
         />
       )}
     </>

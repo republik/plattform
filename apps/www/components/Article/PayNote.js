@@ -58,6 +58,14 @@ const styles = {
       marginTop: 0,
     },
   }),
+  flyerWrapper: css({
+    maxWidth: 700,
+    margin: '0 auto',
+    padding: 15,
+    [mediaQueries.mUp]: {
+      padding: '15px 0',
+    },
+  }),
 }
 
 const TRY_TO_BUY_RATIO = 0.5
@@ -385,6 +393,10 @@ const withDarkContextWhenBefore = (WrappedComponent) => (props) => {
   return <WrappedComponent {...props} />
 }
 
+export const FlyerWrapper = ({ children }) => (
+  <div {...styles.flyerWrapper}>{children}</div>
+)
+
 export const InnerPaynote = ({
   payNote,
   trackingPayload,
@@ -413,6 +425,7 @@ export const PayNote = compose(withDarkContextWhenBefore)(
     customPayNotes,
     customMode,
     customOnly,
+    Wrapper = Center,
   }) => {
     const { meLoading, hasActiveMembership, hasAccess } = useMe()
     const { inNativeIOSApp } = useInNativeApp()
@@ -457,7 +470,7 @@ export const PayNote = compose(withDarkContextWhenBefore)(
           position === 'before' ? 'hover' : 'alert',
         )}
       >
-        <Center>
+        <Wrapper>
           <InnerPaynote
             payNote={positionedNote}
             overwriteContent={
@@ -469,7 +482,7 @@ export const PayNote = compose(withDarkContextWhenBefore)(
             hasAccess={hasAccess}
             position={position}
           />
-        </Center>
+        </Wrapper>
       </div>
     )
   },

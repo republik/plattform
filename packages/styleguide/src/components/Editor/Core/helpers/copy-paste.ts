@@ -50,7 +50,8 @@ const deserialize = (
   el: HTMLElement,
 ): CustomDescendant | CustomDescendant[] => {
   if (el.nodeType === 3) {
-    return { text: el.textContent }
+    console.log(el.textContent)
+    return { text: el.textContent.replace(/[\n\r]+/g, '') }
   } else if (el.nodeType !== 1) {
     return null
   }
@@ -77,6 +78,7 @@ const deserialize = (
 
   if (ELEMENT_TAGS[nodeName]) {
     const attrs = ELEMENT_TAGS[nodeName](el)
+    console.log({ attrs })
     return {
       ...attrs,
       children,

@@ -25,6 +25,7 @@ import {
 import { config as charConfig } from '../../config/special-chars'
 import { cleanupNode, overlaps } from './tree'
 import { SelectionEdge } from 'slate/dist/interfaces/types'
+import { swissNumbers } from '../../../Chart/utils'
 
 export const getCharCount = (nodes: (Descendant | Node)[]): number =>
   nodes.map((node) => Node.string(node).length).reduce((a, b) => a + b, 0)
@@ -272,4 +273,13 @@ export const insertSpecialChars = (editor: CustomEditor, chars: string) => {
     anchor: { path: start.path, offset: start.offset + 1 },
     focus: endLocation,
   })
+}
+
+const count4Format = swissNumbers.format('.0f')
+const count5Format = swissNumbers.format(',.0f')
+export const countFormat = (value) => {
+  if (String(Math.round(value)).length > 4) {
+    return count5Format(value)
+  }
+  return count4Format(value)
 }

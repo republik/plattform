@@ -16,6 +16,7 @@ import {
   HEADER_HORIZONTAL_PADDING,
 } from '../constants'
 import { useRouter } from 'next/router'
+import { useFlyerMeta } from '../../lib/apollo/miniNavi'
 
 const sections = [
   {
@@ -66,6 +67,11 @@ export const SecondaryNav = ({
   const router = useRouter()
   const active = router.asPath
 
+  const flyerMeta = useFlyerMeta()
+  // post journal launch cleanup task:
+  //   - remove conditionals for journal entry
+  //   - add textAlign center to styles.mininav
+
   return (
     <>
       {hasOverviewNav ? (
@@ -80,6 +86,7 @@ export const SecondaryNav = ({
           style={{
             borderTopWidth: isSecondarySticky ? 0 : 1,
             borderTopStyle: 'solid',
+            textAlign: flyerMeta?.path && 'center',
           }}
         >
           <NavLink
@@ -99,6 +106,17 @@ export const SecondaryNav = ({
           >
             {t('navbar/feed')}
           </NavLink>
+          {flyerMeta?.path && (
+            <NavLink
+              href={flyerMeta?.path || '/format/journal'}
+              active={active}
+              formatColor='accentColorFlyer'
+              minifeed
+              title={t('navbar/flyer')}
+            >
+              {t('navbar/flyer')}
+            </NavLink>
+          )}
           <NavLink
             href='/dialog'
             active={active}
@@ -108,21 +126,22 @@ export const SecondaryNav = ({
           >
             {t('navbar/discussion')}
           </NavLink>
-          {sections.map((section) => {
-            const color = section.color || colors[section.kind]
-            return (
-              <NavLink
-                key={section.title}
-                href={section.href}
-                active={active}
-                formatColor={color}
-                minifeed
-                title={section.title}
-              >
-                {section.title}
-              </NavLink>
-            )
-          })}
+          {!flyerMeta?.path &&
+            sections.map((section) => {
+              const color = section.color || colors[section.kind]
+              return (
+                <NavLink
+                  key={section.title}
+                  href={section.href}
+                  active={active}
+                  formatColor={color}
+                  minifeed
+                  title={section.title}
+                >
+                  {section.title}
+                </NavLink>
+              )
+            })}
         </div>
       ) : (
         secondaryNav && (

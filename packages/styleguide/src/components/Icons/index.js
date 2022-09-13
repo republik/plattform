@@ -40,6 +40,7 @@ export {
   MdRssFeed as RssFeedIcon,
   MdArrowDownward as ArrowDownwardIcon,
   MdArrowForward as ArrowForwardIcon,
+  MdArrowBack as ArrowBackIcon,
   MdExpandMore as ExpandMoreIcon,
   MdExpandLess as ExpandLessIcon,
   MdDone as DoneIcon,

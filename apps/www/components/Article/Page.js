@@ -22,6 +22,7 @@ import {
   mediaQueries,
   TitleBlock,
   Editorial,
+  Flyer,
   TeaserEmbedComment,
   IconButton,
   SeriesNav,
@@ -36,6 +37,7 @@ import {
   flyerSchema,
   SlateRender,
   RenderContextProvider,
+  FlyerTile,
 } from '@project-r/styleguide'
 import { EditIcon } from '@project-r/styleguide'
 import { createRequire } from '@project-r/styleguide'
@@ -44,7 +46,7 @@ import ActionBarOverlay from './ActionBarOverlay'
 import SeriesNavBar from './SeriesNavBar'
 import TrialPayNoteMini from './TrialPayNoteMini'
 import Extract from './Extract'
-import { PayNote } from './PayNote'
+import { FlyerWrapper, PayNote } from './PayNote'
 import Progress from './Progress'
 import PodcastButtons from './PodcastButtons'
 import { getDocument } from './graphql/getDocument'
@@ -81,6 +83,7 @@ import DiscussionContextProvider from '../Discussion/context/DiscussionContextPr
 import Discussion from '../Discussion/Discussion'
 import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
 import { getMetaData, runMetaFromQuery } from './metadata'
+import FlyerFooter from './FlyerFooter'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -423,6 +426,12 @@ const ArticlePage = ({
       })
     : undefined
 
+  const actionBarFlyer = actionBar
+    ? cloneElement(actionBar, {
+        mode: 'flyer',
+      })
+    : undefined
+
   const series = meta?.series
   const episodes = series?.episodes
   const darkMode = article?.content?.meta?.darkMode
@@ -497,7 +506,9 @@ const ArticlePage = ({
       { MissingNode },
     )
 
-  const hasOverviewNav = meta ? meta.template === 'section' : true // show/keep around while loading meta
+  const hasOverviewNav = meta
+    ? meta.template === 'section' || meta.template === 'flyer'
+    : true // show/keep around while loading meta
   const colorSchemeKey = darkMode ? 'dark' : 'auto'
 
   const delegateMetaDown =
@@ -533,6 +544,7 @@ const ArticlePage = ({
           const isFormat = meta.template === 'format'
           const isSection = meta.template === 'section'
           const isPage = meta.template === 'page'
+          const isFlyer = treeType === 'slate'
 
           const hasNewsletterUtms =
             router.query.utm_source && router.query.utm_source === 'newsletter'
@@ -557,6 +569,7 @@ const ArticlePage = ({
               customMode={meta.paynoteMode}
               customOnly={isPage || isFormat}
               position='before'
+              Wrapper={isFlyer ? FlyerWrapper : undefined}
             />
           )
           const payNoteAfter =
@@ -609,13 +622,23 @@ const ArticlePage = ({
                   </Center>
                 </div>
               )}
-              {treeType === 'slate' ? (
-                <RenderContextProvider t={t} Link={Link}>
-                  <SlateRender
-                    value={article.content.children}
-                    schema={schema}
-                  />
-                </RenderContextProvider>
+              {isFlyer ? (
+                <Flyer.Layout schema={schema}>
+                  <RenderContextProvider t={t} Link={Link}>
+                    <SlateRender
+                      value={article.content.children}
+                      schema={schema}
+                      raw
+                    />
+                  </RenderContextProvider>
+                  <FlyerTile>
+                    <FlyerFooter
+                      actionBar={actionBarFlyer}
+                      repoId={repoId}
+                      publishDate={meta.publishDate}
+                    />
+                  </FlyerTile>
+                </Flyer.Layout>
               ) : (
                 <ArticleGallery
                   article={article}

@@ -131,6 +131,7 @@ With callout menu:
 ```react
 <TeaserFeed kind='flyer' format={{meta: {title: 'Republik Journal', kind: 'flyer'}}}
   title='The quick brown fox jumps over the lazy dog'
+  description='Description (usually the lead) is omitted on flyer feed item.'
 />
 ```
 

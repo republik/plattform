@@ -161,6 +161,7 @@ export type ResolvedAuthor = {
   name: string
   portrait: string
   slug: string
+  status?: 'exists' | 'missing'
 }
 
 export type FlyerAuthorElement = SharedElement & {
@@ -421,6 +422,7 @@ export type CharConfig = {
   type: string
   insert: string
   render?: string
+  renderStyle?: object
   buttonStyle?: React.CSSProperties
   isInvisible?: boolean
 }

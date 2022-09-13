@@ -1,20 +1,27 @@
 import { Phase } from '../Repo/Phases'
 import { useState } from 'react'
-import { Overlay, OverlayToolbar, OverlayBody } from '@project-r/styleguide'
+import {
+  Overlay,
+  OverlayToolbar,
+  OverlayBody,
+  Label,
+} from '@project-r/styleguide'
 import Checklist, { getMilestones } from '../VersionControl/Checklist'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
+import withT from '../../lib/withT'
 
-const WorkflowOverlay = ({ onClose, commitId, repoId, disabled }) => {
+const WorkflowOverlay = withT(({ t, onClose, commitId, repoId, disabled }) => {
   return (
     <Overlay onClose={onClose}>
       <OverlayToolbar title='Phasen' onClose={onClose} />
       <OverlayBody>
+        {disabled && <Label>{t('editor/workflow/uncommittedChanges')}</Label>}
         <Checklist disabled={disabled} repoId={repoId} commitId={commitId} />
       </OverlayBody>
     </Overlay>
   )
-}
+})
 
 const PhaseLabel = compose(
   graphql(getMilestones, {

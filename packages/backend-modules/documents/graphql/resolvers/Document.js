@@ -12,6 +12,7 @@ const {
 } = require('../../lib/process')
 const {
   contentUrlResolver,
+  contentUserResolver,
   metaUrlResolver,
   extractIdsFromNode,
 } = require('../../lib/resolve')
@@ -25,7 +26,7 @@ const {
 } = require('@orbiting/backend-modules-assets')
 
 const {
-  loadLinkedMetaData,
+  resolveEntities,
 } = require('@orbiting/backend-modules-search/lib/Documents')
 
 const {
@@ -54,13 +55,13 @@ module.exports = {
     // - this is easiest detectable by _all being present from documents resolver
     // - alt check info.path for documents / document being the root
     //   https://gist.github.com/tpreusse/f79833a023706520da53647f9c61c7f6
-    if (doc._all || doc._usernames) {
+    if (doc._all || doc._users) {
       processContentHashing(doc.type, doc.content)
 
       await contentUrlResolver(
         doc,
         doc._all,
-        doc._usernames,
+        doc._users,
         undefined,
         urlPrefix, // https://www.republik.ch bei Newslettern?
         searchString,
@@ -68,6 +69,7 @@ module.exports = {
       )
 
       await Promise.all([
+        contentUserResolver(doc.type, doc.content, doc._users),
         processRepoImageUrlsInContent(doc.type, doc.content, addFormatAuto),
         processEmbedImageUrlsInContent(doc.type, doc.content, addFormatAuto),
       ])
@@ -85,12 +87,12 @@ module.exports = {
   },
   async meta(doc, { urlPrefix, searchString }, context, info) {
     const meta = getMeta(doc)
-    if (doc._all || doc._usernames) {
+    if (doc._all || doc._users) {
       metaUrlResolver(
         doc.type,
         meta,
         doc._all,
-        doc._usernames,
+        doc._users,
         undefined,
         urlPrefix,
         searchString,
@@ -157,6 +159,7 @@ module.exports = {
 
       const idsFromNodes = await Promise.map(nodes, async (node) => {
         await Promise.all([
+          contentUserResolver(doc.type, node, doc._users),
           processRepoImageUrlsInContent(doc.type, node, addFormatAuto),
           processEmbedImageUrlsInContent(doc.type, node, addFormatAuto),
         ])
@@ -172,7 +175,7 @@ module.exports = {
 
         return extractIdsFromNode(doc.type, node, doc.meta.repoId)
       })
-      const { docs, usernames } = await loadLinkedMetaData({
+      const { docs, users } = await resolveEntities({
         context,
         userIds: idsFromNodes.reduce(
           (userIds, idsFromNode) => userIds.concat(idsFromNode.users),
@@ -184,12 +187,12 @@ module.exports = {
         ),
       })
       doc._all = doc._all.concat(docs)
-      doc._usernames = doc._usernames.concat(usernames)
+      doc._users = doc._users.concat(users)
 
       await contentUrlResolver(
         doc,
         doc._all,
-        doc._usernames,
+        doc._users,
         undefined,
         urlPrefix,
         searchString,
