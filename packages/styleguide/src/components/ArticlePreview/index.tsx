@@ -14,6 +14,7 @@ import { mUp } from '../../theme/mediaQueries'
 import { FormatData } from '../Editor/custom-types'
 import { convertStyleToRem } from '../Typography/utils'
 import { useColorContext } from '../Colors/ColorContext'
+import { getTeaserHref } from '../TeaserFeed'
 
 const styles = {
   format: css({
@@ -65,17 +66,23 @@ export const ArticleTitle: React.FC<{
   format: FormatData
   [x: string]: unknown
 }> = ({ children, attributes, format, color, backgroundColor, ...props }) => {
+  const { Link } = useRenderContext()
   const [colorScheme] = useColorContext()
   return (
     <h4 {...attributes} {...props} {...styles.title}>
       {!!format && (
-        <span
-          contentEditable={false}
-          {...styles.format}
-          {...colorScheme.set('color', format.meta.color || 'text', 'format')}
+        <Link
+          href={getTeaserHref(format.meta.path, format.meta.externalBaseUrl)}
+          passHref
         >
-          {format.meta.title}
-        </span>
+          <a
+            contentEditable={false}
+            {...styles.format}
+            {...colorScheme.set('color', format.meta.color || 'text', 'format')}
+          >
+            {format.meta.title}
+          </a>
+        </Link>
       )}
       {children}
     </h4>
