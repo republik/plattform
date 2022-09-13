@@ -13,6 +13,7 @@ import {
   NodeEntry,
   Transforms,
   Range,
+  Text,
 } from 'slate'
 import { ReactEditor } from 'slate-react'
 import { config as elConfig } from '../../config/elements'
@@ -34,7 +35,10 @@ export const getCountDown = (editor: CustomEditor, maxSigns: number): number =>
   maxSigns - getCharCount(editor.children)
 
 const baseTextProps = ['text', 'placeholder', 'template', 'end']
-export const cleanupText: NormalizeFn<CustomText> = ([node, path], editor) => {
+export const removeNonTextProps: NormalizeFn<CustomText> = (
+  [node, path],
+  editor,
+) => {
   const parent = Editor.parent(editor, path)[0]
   const formatText =
     SlateElement.isElement(parent) && elConfig[parent.type].attrs?.formatText
@@ -43,6 +47,9 @@ export const cleanupText: NormalizeFn<CustomText> = ([node, path], editor) => {
   ).concat(baseTextProps)
   return cleanupNode(allowedProps)([node, path], editor)
 }
+
+export const areSimilar = (node1: CustomText, node2: CustomText): boolean =>
+  (mKeys as string[]).concat(['end']).every((key) => node1[key] === node2[key])
 
 export const selectNearestWord = (
   editor: CustomEditor,
@@ -179,6 +186,20 @@ export const createLinks: NormalizeFn<CustomText> = ([node, path], editor) => {
     }
   }
   return false
+}
+
+export const mergeTextNodes: NormalizeFn<CustomText> = (
+  [node, path],
+  editor,
+) => {
+  const parent = Editor.parent(editor, path)
+  const parentNode = parent[0]
+  const currentIndex = path[path.length - 1]
+  const prevSibling = parentNode.children[currentIndex - 1]
+  if (!prevSibling || !Text.isText(prevSibling)) return false
+  if (!areSimilar(node, prevSibling)) return false
+  Transforms.mergeNodes(editor, { at: path })
+  return true
 }
 
 export const handlePlaceholders: NormalizeFn<CustomText> = (

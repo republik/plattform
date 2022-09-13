@@ -958,7 +958,7 @@ describe('Slate Editor: Normalisation', () => {
                 { text: 'Ulysses' },
                 {
                   type: 'figureByline',
-                  children: [{ text: 'Jame' }, { text: ' Joyce' }],
+                  children: [{ text: 'Jame Joyce' }],
                 },
                 { text: '' },
               ],
@@ -1268,6 +1268,76 @@ describe('Slate Editor: Normalisation', () => {
       ]
       await setup(structure)
       expect(value[0].children[0].placeholder).toBe(undefined)
+    })
+
+    it('should merge nodes despite placeholder mismatch', async () => {
+      value = [
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'this', placeholder: 'paragraph' },
+            { text: 'one' },
+          ],
+        },
+        {
+          type: 'paragraph',
+          children: [
+            { text: 'not this', placeholder: 'paragraph' },
+            { text: 'here', bold: true },
+          ],
+        },
+        {
+          type: 'figure',
+          children: [
+            {
+              type: 'figureImage',
+              children: [{ text: '' }],
+            },
+            {
+              type: 'figureCaption',
+              children: [
+                { text: 'neither' },
+                { type: 'figureByline', children: [{ text: 'nor' }] },
+                { text: '', end: true },
+              ],
+            },
+          ],
+        },
+      ]
+      const structure = [
+        {
+          type: ['paragraph', 'figure'],
+          repeat: true,
+        },
+      ]
+      await setup(structure)
+      expect(cleanupTree(value)).toEqual([
+        {
+          type: 'paragraph',
+          children: [{ text: 'thisone' }],
+        },
+        {
+          type: 'paragraph',
+          children: [{ text: 'not this' }, { text: 'here', bold: true }],
+        },
+        {
+          type: 'figure',
+          children: [
+            {
+              type: 'figureImage',
+              children: [{ text: '' }],
+            },
+            {
+              type: 'figureCaption',
+              children: [
+                { text: 'neither' },
+                { type: 'figureByline', children: [{ text: 'nor' }] },
+                { text: '' },
+              ],
+            },
+          ],
+        },
+      ])
     })
   })
 
