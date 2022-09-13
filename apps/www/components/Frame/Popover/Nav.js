@@ -20,6 +20,7 @@ import SearchForm from '../../Search/Form'
 import NavLink from './NavLink'
 import Sections from './Sections'
 import Link from 'next/link'
+import { useFlyerMeta } from '../../../lib/apollo/miniNavi'
 
 const Nav = ({
   me,
@@ -40,6 +41,9 @@ const Nav = ({
   if (expanded) {
     hasExpandedRef.current = true
   }
+  const flyerMeta = useFlyerMeta()
+  // post journal launch cleanup task:
+  //   - remove conditionals for journal entry
   return (
     <>
       <Center {...styles.container} id='nav'>
@@ -97,6 +101,16 @@ const Nav = ({
                     >
                       {t('navbar/feed')}
                     </NavLink>
+                    {!flyerMeta?.path && (
+                      <NavLink
+                        large
+                        href={flyerMeta?.path || '/format/journal'}
+                        active={active}
+                        closeHandler={closeHandler}
+                      >
+                        {t('navbar/flyer')}
+                      </NavLink>
+                    )}
                   </>
                 )}
                 <NavLink
