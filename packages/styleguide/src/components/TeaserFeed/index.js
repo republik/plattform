@@ -134,7 +134,7 @@ export const TeaserFeed = ({
           title
         )}
       </Headline>
-      {!!description && (
+      {!!description && formatMeta.kind !== 'flyer' && (
         <Lead>
           {!nonInteractive ? (
             <Link href={href} passHref>
