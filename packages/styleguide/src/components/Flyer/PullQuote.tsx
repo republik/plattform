@@ -22,10 +22,13 @@ export const PullQuoteText = ({ children, attributes }) => (
       padding: 16,
       fontSize: 22,
       lineHeight: 1.318,
+      margin: 0,
+      '&:not(:last-child)': { marginBottom: 14 },
       [mUp]: {
         padding: 20,
         fontSize: 39,
         lineHeight: 1.179,
+        '&:not(:last-child)': { marginBottom: 20 },
       },
     })}
   >
