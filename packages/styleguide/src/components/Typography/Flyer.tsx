@@ -183,9 +183,9 @@ export const Small: React.FC<{ attributes?: any; [x: string]: unknown }> = ({
       {...props}
       {...css({
         ...fontStyles.sansSerifRegular,
+        margin: '5px 0 0',
         fontSize: 14,
         lineHeight: 1.214,
-        margin: 0,
         [mUp]: {
           fontSize: 17,
           lineHeight: 1.235,
