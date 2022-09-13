@@ -54,12 +54,12 @@ export const H2 = ({ children, attributes, ...props }) => {
         textTransform: 'uppercase',
         fontSize: 14,
         letterSpacing: 1.4,
-        lineHeight: 1,
+        lineHeight: 1.142,
         margin: '0 0 6px',
         [mUp]: {
           fontSize: 20,
           letterSpacing: 1,
-          lineHeight: 0.75,
+          lineHeight: 1.1,
           margin: '0 0 12px',
         },
       })}
