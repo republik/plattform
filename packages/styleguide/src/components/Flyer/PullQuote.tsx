@@ -16,7 +16,7 @@ export const PullQuoteText = ({ children, attributes }) => (
   <div
     {...attributes}
     {...css({
-      ...fontStyles.sansSerifMedium,
+      ...fontStyles.sansSerifBold,
       backgroundColor: '#000',
       color: '#F2F2F2',
       padding: 16,

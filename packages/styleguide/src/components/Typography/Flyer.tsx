@@ -153,7 +153,7 @@ export const OpeningP = ({ children, attributes, ...props }) => {
       {...attributes}
       {...props}
       {...css({
-        ...fontStyles.sansSerifMedium,
+        ...fontStyles.sansSerifBold,
         fontSize: 22,
         lineHeight: 1.318,
         margin: 0,
@@ -223,7 +223,7 @@ export const StrikeThrough = ({ children, attributes, ...props }) => (
 )
 
 const listItemRule = css({
-  ...fontStyles.sansSerifMedium,
+  ...fontStyles.sansSerifBold,
   paddingLeft: `${LIST_PADDING}px`,
   position: 'relative',
   fontSize: pxToRem('17px'),
