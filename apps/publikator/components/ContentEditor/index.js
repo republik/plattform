@@ -30,9 +30,9 @@ export const getInitialValue = (options) => {
         {
           type: 'headline',
           children: [
-            { text: 'Guten Morgen,' },
+            { text: 'Guten Morgen.' },
             { type: 'break', children: [{ text: '' }] },
-            { text: 'schön sind Sie da!' },
+            { text: 'Schön, sind Sie da!' },
           ],
         },
       ],

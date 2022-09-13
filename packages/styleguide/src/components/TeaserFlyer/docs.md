@@ -23,7 +23,7 @@ Used to show latest «Journal» entry on magazine front.
               {
                 children: [
                   {
-                    text: 'Guten Morgen,',
+                    text: 'Guten Morgen.',
                   },
                   {
                     children: [
@@ -34,7 +34,7 @@ Used to show latest «Journal» entry on magazine front.
                     type: 'break',
                   },
                   {
-                    text: 'schön sind Sie da!',
+                    text: 'Schön, sind Sie da!',
                   },
                 ],
                 type: 'headline',
