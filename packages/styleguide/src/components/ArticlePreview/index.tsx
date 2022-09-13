@@ -45,7 +45,7 @@ const styles = {
     textAlign: 'center',
     padding: 15,
     [mUp]: {
-      padding: 20,
+      padding: 42,
     },
   }),
 }
