@@ -9,19 +9,19 @@ interface PortraitArgs {
   }
 }
 
-export const get = (user: UserRow | User, args: PortraitArgs = {}) => {
+export const get = (user: UserRow | User, args?: PortraitArgs) => {
   const { portraitUrl } = '_raw' in user ? user._raw : user
   if (!portraitUrl) {
     return null
   }
 
-  const { properties } = args
+  const { size, properties } = args ?? {}
 
   // resize image
   const resize: string =
     ((properties?.width || properties?.height) &&
       [properties.width ?? '', properties.height ?? ''].join('x')) ||
-    (args.size === 'SHARE' && '1000x1000') ||
+    (size === 'SHARE' && '1000x1000') ||
     '384x384'
 
   // greyscale image
