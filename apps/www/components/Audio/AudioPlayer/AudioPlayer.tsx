@@ -51,6 +51,7 @@ const AudioPlayer = ({
         onPause={actions.onPause}
         onCanPlay={actions.onCanPlay}
         onEnded={actions.onEnded}
+        onError={actions.onError}
       >
         {audioSource.mp3 && <source src={audioSource.mp3} type='audio/mp3' />}
         {audioSource.aac && <source src={audioSource.aac} type='audio/aac' />}

@@ -9,4 +9,5 @@ export enum AudioEvent {
   PLAYBACK_RATE = 'audio:playbackRate',
   QUEUE_UPDATE = 'audio:queueUpdate',
   QUEUE_ADVANCE = 'audio:queueAdvance',
+  ERROR = 'audio:error',
 }

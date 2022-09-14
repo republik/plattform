@@ -46,6 +46,7 @@ export type AudioPlayerProps = {
     onClose: () => void
     onPlaybackRateChange: (value: number) => void
     onEnded: () => void
+    onError: () => void
   }
   buffered: TimeRanges
 }
@@ -85,6 +86,8 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const [duration, setDuration] = useState(0)
   const [buffered, setBuffered] = useState<TimeRanges>(null)
   const [playbackRate, setPlaybackRate] = usePlaybackRate(DEFAULT_PLAYBACK_RATE)
+
+  // TODO: handle error state
 
   const saveActiveItemProgress = useCallback(async () => {
     console.log('saveActiveItemProgress', currentTime)
@@ -272,6 +275,15 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     await onPlay()
   }
 
+  const onError = () => {
+    if (mediaRef.current && mediaRef.current.error) {
+      const error = mediaRef.current.error
+      console.error('AudioPlayerContainer: onError', error)
+      // TODO: handle error and show visually
+    }
+    // TODO: look into best way for the track-player to handle errors
+  }
+
   useInterval(
     saveActiveItemProgress,
     isPlaying ? SAVE_MEDIA_PROGRESS_INTERVAL : null,
@@ -282,10 +294,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     if (activePlayerItem?.id === trackedPlayerItem?.current?.id) {
       return
     }
-    if (inNativeApp) {
-      // TODO: check if required logic here is already handled by sync
-      // throw new Error('not implemented useEffect')
-    } else if (
+    if (
       mediaRef.current &&
       // If no data could be retrieved so far, manually trigger load
       mediaRef.current.readyState === 0
@@ -382,6 +391,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
             onClose: onStop,
             onPlaybackRateChange,
             onEnded: onQueueAdvance,
+            onError,
           },
           buffered,
         })}
