@@ -197,7 +197,6 @@ export type ArticlePreviewTextContainerElement = SharedElement & {
 export type ArticlePreviewFormatElement = SharedElement & {
   type: 'articlePreviewFormat'
   href?: string
-  kind?: string
 }
 
 export type ArticlePreviewTitleElement = SharedElement & {

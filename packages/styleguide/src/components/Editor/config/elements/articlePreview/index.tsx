@@ -64,7 +64,6 @@ const Form: React.FC<ElementFormProps<ArticlePreviewElement>> = ({
               editor,
               {
                 href: `https://github.com/${meta.format.repoId}?autoSlug`,
-                kind: meta.format.meta.kind,
               },
               { at: path.concat([1, 0]) },
             )
@@ -72,7 +71,7 @@ const Form: React.FC<ElementFormProps<ArticlePreviewElement>> = ({
               at: path.concat([1, 0]),
             })
           } else {
-            Transforms.unsetNodes(editor, ['href', 'kind'], {
+            Transforms.unsetNodes(editor, 'href', {
               at: path.concat([1, 0]),
             })
             Transforms.insertText(editor, '', {

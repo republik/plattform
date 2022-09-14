@@ -62,9 +62,8 @@ export const ArticleTextContainer: React.FC<{
 export const ArticleFormat: React.FC<{
   attributes: any
   href?: string
-  kind?: string
   [x: string]: unknown
-}> = ({ children, attributes, href, kind, ...props }) => {
+}> = ({ children, attributes, href, ...props }) => {
   const { Link } = useRenderContext()
   const Tag = href ? 'a' : 'span'
   return (
