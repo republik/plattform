@@ -87,7 +87,7 @@ const TeaserFlyer = ({ flyer = PLACEHOLDER_FLYER, Link = DefaultLink }) => {
               <SlateRender value={value} schema={schema} raw />
             </RenderContextProvider>
             <div {...styles.link}>
-              <TeaserSectionTitle small href={flyer.meta.path}>
+              <TeaserSectionTitle small clickable>
                 {FLYER_LINKTEXT}
               </TeaserSectionTitle>
             </div>
