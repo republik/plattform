@@ -1,7 +1,7 @@
 import { gql, useQuery } from '@apollo/client'
 import { useEffect } from 'react'
 
-export const miniNaviQuery = gql`
+const miniNaviQuery = gql`
   query miniNavi {
     documents(format: "republik/format-journal", first: 1) {
       nodes {
@@ -16,27 +16,48 @@ export const miniNaviQuery = gql`
   }
 `
 
-let refetchTimeoutId
+const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000
+const PUBLISH_HOURS = 15
+const PUBLISH_MINUTES = 37
 
-const PUBLISH_HOURS = 5
-const PUBLISH_MINUTES = 0
+let lastFetchDate
+const runOnceIfOutdated = (callback) => {
+  const now = new Date()
+  if (!lastFetchDate) {
+    lastFetchDate = now
+  }
+  const publishTime = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    PUBLISH_HOURS,
+    PUBLISH_MINUTES,
+  )
+  if (
+    (lastFetchDate < publishTime && now > publishTime) ||
+    now - lastFetchDate > ONE_DAY_IN_MS
+  ) {
+    lastFetchDate = now
+    callback()
+  }
+}
 
 export const useFlyerMeta = () => {
   const { data, refetch } = useQuery(miniNaviQuery)
 
   useEffect(() => {
-    if (refetchTimeoutId !== undefined) {
-      return
-    }
+    // immediately refetch if necessary
+    runOnceIfOutdated(refetch)
+
     const now = new Date()
-    const updateTimeToday = new Date(
+    const publishTimeToday = new Date(
       now.getFullYear(),
       now.getMonth(),
       now.getDate(),
       PUBLISH_HOURS,
       PUBLISH_MINUTES,
     )
-    const nextUpdateTomorrow = new Date(
+    const publishTimeTomorrow = new Date(
       now.getFullYear(),
       now.getMonth(),
       now.getDate() + 1,
@@ -44,15 +65,20 @@ export const useFlyerMeta = () => {
       PUBLISH_MINUTES,
     )
     const nextUpdateMs =
-      now < updateTimeToday ? updateTimeToday - now : nextUpdateTomorrow - now
-    const refresh = () => {
-      refetch()
+      now < publishTimeToday
+        ? publishTimeToday - now
+        : publishTimeTomorrow - now
+    const refreshAtPublishTime = () => {
+      runOnceIfOutdated(refetch)
       // recursion 24h later again
       refetchTimeoutId = setTimeout(() => {
-        refresh()
-      }, 24 * 60 * 60 * 1000)
+        refreshAtPublishTime()
+      }, ONE_DAY_IN_MS)
     }
-    refetchTimeoutId = setTimeout(refresh, nextUpdateMs)
+    let refetchTimeoutId = setTimeout(refreshAtPublishTime, nextUpdateMs)
+    return () => {
+      clearTimeout(refetchTimeoutId)
+    }
   }, [])
 
   return data?.documents.nodes[0]?.meta
