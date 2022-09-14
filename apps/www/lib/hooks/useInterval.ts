@@ -2,7 +2,8 @@ import { useEffect, useRef } from 'react'
 
 /**
  * useInterval allows you to use to set an interval on a callback
- * that may be updated, without the interval being reset
+ * that may be updated, without the interval being reset.
+ * If no delay is provided, the interval will not be set.
  * @param callback the callback to be called on the interval
  * @param delay in ms, if null or a negative number is passed, the interval will be cleared
  */
