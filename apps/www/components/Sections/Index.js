@@ -63,7 +63,7 @@ const getSections = gql`
               color
               kind
             }
-            linkedDocuments(feed: true) {
+            linkedDocuments(feed: true, first: 0) {
               totalCount
             }
           }
