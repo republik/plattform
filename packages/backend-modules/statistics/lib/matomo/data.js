@@ -20,7 +20,7 @@ const retrieve = async ({ url, date, segment, idSite, period }, { pgdb }) => {
       ${fragmentSegment}
       AND "idSite" = '${idSite}'
       AND period = '${period}'
-      AND template = 'article'
+      AND template IN ('article', 'flyer')
 
     LIMIT 1
   `)
