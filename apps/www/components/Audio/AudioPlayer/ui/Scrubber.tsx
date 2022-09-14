@@ -85,6 +85,7 @@ type ScrubberProps = {
   currentTime?: number
   duration?: number
   buffered?: TimeRanges
+  showBuffered?: boolean
   /**
    * Returns the current progress as a percentage value
    * of where to seek to.
@@ -99,6 +100,7 @@ const Scrubber = ({
   currentTime = 0,
   duration = 0,
   buffered,
+  showBuffered = true,
   onSeek,
   showScrubber = false,
   showTime = false,
