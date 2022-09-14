@@ -24,7 +24,7 @@ const styles = {
     bottom: 0,
     right: 0,
     margin: 0,
-    paddingBottom: ['32px', 'max(32px, env(safe-area-inset-bottom))'],
+    paddingBottom: ['16px', 'max(16px, env(safe-area-inset-bottom))'],
     paddingLeft: ['16px', 'max(16px, env(safe-area-inset-left))'],
     paddingRight: ['16px', 'max(16px, env(safe-area-inset-right))'],
     width: '100%',
