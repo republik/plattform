@@ -194,19 +194,14 @@ export type ArticlePreviewTextContainerElement = SharedElement & {
   type: 'articlePreviewTextContainer'
 }
 
-export type FormatData = {
-  id: string
-  repoId: string
-  meta: {
-    title?: string
-    color?: string
-    type?: string
-  }
+export type ArticlePreviewFormatElement = SharedElement & {
+  type: 'articlePreviewFormat'
+  href?: string
+  kind?: string
 }
 
 export type ArticlePreviewTitleElement = SharedElement & {
   type: 'articlePreviewTitle'
-  format?: FormatData
 }
 
 export type ArticlePreviewLeadElement = SharedElement & {
@@ -262,6 +257,7 @@ export type CustomElement =
   | FlyerDateElement
   | ArticlePreviewElement
   | ArticlePreviewTextContainerElement
+  | ArticlePreviewFormatElement
   | ArticlePreviewTitleElement
   | ArticlePreviewLeadElement
   | QuizElement
@@ -307,6 +303,7 @@ export type CustomElementsType =
   | 'flyerDate'
   | 'articlePreview'
   | 'articlePreviewTextContainer'
+  | 'articlePreviewFormat'
   | 'articlePreviewTitle'
   | 'articlePreviewLead'
   | 'quiz'

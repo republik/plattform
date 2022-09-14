@@ -1,14 +1,12 @@
 import { SchemaConfig } from '../custom-types'
-
-import { FigureCaption } from '../../Figure'
 import { Figure, FigureImage, FigureByline } from '../../Figure/Slate'
 import { List } from '../../List/Slate'
-import { PullQuoteSource } from '../../PullQuote'
 import {
   ArticleLead,
   ArticlePreview,
   ArticleTextContainer,
   ArticleTitle,
+  ArticleFormat,
 } from '../../ArticlePreview'
 import { FlyerTile } from '../../Flyer'
 import { FlyerAuthor } from '../../Flyer/Author'
@@ -35,6 +33,7 @@ const schema: SchemaConfig = {
   flyerTopic: Flyer.H2,
   articlePreview: ArticlePreview,
   articlePreviewTextContainer: ArticleTextContainer,
+  articlePreviewFormat: ArticleFormat,
   articlePreviewTitle: ArticleTitle,
   articlePreviewLead: ArticleLead,
   figureByline: FigureByline,

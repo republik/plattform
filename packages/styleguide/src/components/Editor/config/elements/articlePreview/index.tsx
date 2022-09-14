@@ -62,19 +62,32 @@ const Form: React.FC<ElementFormProps<ArticlePreviewElement>> = ({
           if (meta.format) {
             Transforms.setNodes(
               editor,
-              { format: meta.format },
+              {
+                href: `https://github.com/${meta.format.repoId}?autoSlug`,
+                kind: meta.format.meta.kind,
+              },
               { at: path.concat([1, 0]) },
             )
+            Transforms.insertText(editor, meta.format.meta.title, {
+              at: path.concat([1, 0]),
+            })
+          } else {
+            Transforms.unsetNodes(editor, ['href', 'kind'], {
+              at: path.concat([1, 0]),
+            })
+            Transforms.insertText(editor, '', {
+              at: path.concat([1, 0]),
+            })
           }
           if (syncData) {
             if (meta.title) {
               Transforms.insertText(editor, meta.title, {
-                at: path.concat([1, 0]),
+                at: path.concat([1, 1]),
               })
             }
             if (meta.description) {
               Transforms.insertText(editor, meta.description, {
-                at: path.concat([1, 1]),
+                at: path.concat([1, 2]),
               })
             }
             if (meta.image) {

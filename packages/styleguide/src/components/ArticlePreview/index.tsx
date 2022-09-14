@@ -11,7 +11,6 @@ import {
 import { useRenderContext } from '../Editor/Render/Context'
 import { plainLinkRule } from '../Typography'
 import { mUp } from '../../theme/mediaQueries'
-import { FormatData } from '../Editor/custom-types'
 import { convertStyleToRem } from '../Typography/utils'
 import { useColorContext } from '../Colors/ColorContext'
 
@@ -60,23 +59,29 @@ export const ArticleTextContainer: React.FC<{
   )
 }
 
+export const ArticleFormat: React.FC<{
+  attributes: any
+  href?: string
+  kind?: string
+  [x: string]: unknown
+}> = ({ children, attributes, href, kind, ...props }) => {
+  const { Link } = useRenderContext()
+  const Tag = href ? 'a' : 'span'
+  return (
+    <Link href={href} passHref>
+      <Tag {...attributes} {...props} {...styles.format}>
+        {children}
+      </Tag>
+    </Link>
+  )
+}
+
 export const ArticleTitle: React.FC<{
   attributes: any
-  format: FormatData
   [x: string]: unknown
-}> = ({ children, attributes, format, color, backgroundColor, ...props }) => {
-  const [colorScheme] = useColorContext()
+}> = ({ children, attributes, ...props }) => {
   return (
     <h4 {...attributes} {...props} {...styles.title}>
-      {!!format && (
-        <span
-          contentEditable={false}
-          {...styles.format}
-          {...colorScheme.set('color', format.meta.color || 'text', 'format')}
-        >
-          {format.meta.title}
-        </span>
-      )}
       {children}
     </h4>
   )
@@ -85,7 +90,7 @@ export const ArticleTitle: React.FC<{
 export const ArticleLead: React.FC<{
   attributes: any
   [x: string]: unknown
-}> = ({ children, attributes, color, backgroundColor, ...props }) => {
+}> = ({ children, attributes, ...props }) => {
   return (
     <p {...attributes} {...props} {...styles.lead}>
       {children}

@@ -30,6 +30,7 @@ import { config as flyerTitle } from './flyer/components/title'
 import { config as flyerTopic } from './flyer/components/topic'
 import { config as articlePreview } from './articlePreview'
 import { config as articlePreviewTextContainer } from './articlePreview/textContainer'
+import { config as articlePreviewFormat } from './articlePreview/format'
 import { config as articlePreviewTitle } from './articlePreview/title'
 import { config as articlePreviewLead } from './articlePreview/lead'
 import { config as quiz } from './flyer/components/quiz/container'
@@ -70,6 +71,7 @@ export const config: ElementsConfig = {
   flyerTopic,
   articlePreview,
   articlePreviewTextContainer,
+  articlePreviewFormat,
   articlePreviewTitle,
   articlePreviewLead,
   quiz,
