@@ -412,7 +412,7 @@ const ActionBar = ({
           fill={'#E9A733'}
         />
       ),
-      modes: ['articleTop'],
+      modes: ['articleTop', 'flyer'],
       show: document?.repoId && isEditor,
     },
   ]
