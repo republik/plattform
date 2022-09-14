@@ -3,13 +3,15 @@ import { css } from 'glamor'
 import { useColorContext } from '../Colors/ColorContext'
 import { mUp } from '../../theme/mediaQueries'
 
+export const FLYER_CONTAINER_MAXWIDTH = 700
+
 const styles = {
   container: css({
     borderBottomWidth: '1px',
     borderBottomStyle: 'solid',
   }),
   content: css({
-    maxWidth: 700,
+    maxWidth: FLYER_CONTAINER_MAXWIDTH,
     margin: '0 auto',
     padding: '50px 15px',
     [mUp]: {

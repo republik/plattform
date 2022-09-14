@@ -2,19 +2,30 @@ import React from 'react'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { TeaserSectionTitle } from '../TeaserShared'
-import { NarrowContainer } from '../Grid'
 import SlateRender from '../Editor/Render'
 import schema from '../Editor/schema/flyer'
 import { RenderContextProvider } from '../Editor/Render/Context'
 import { plainLinkRule } from '../Typography'
+import { FLYER_CONTAINER_MAXWIDTH } from '../Flyer'
 
 const DefaultLink = ({ children }) => children
 
 const styles = {
-  container: css({
+  outerContainer: css({
     padding: '46px 0',
     [mUp]: {
       padding: '70px 0',
+    },
+  }),
+  innerContainer: css({
+    boxSizing: 'border-box',
+    width: '100%',
+    maxWidth: FLYER_CONTAINER_MAXWIDTH,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    padding: '0 15px',
+    [mUp]: {
+      padding: 0,
     },
   }),
   link: css({
@@ -33,8 +44,8 @@ const TeaserFlyer = ({ flyer, Link = DefaultLink }) => {
   )
 
   return (
-    <div {...styles.container}>
-      <NarrowContainer>
+    <div {...styles.outerContainer}>
+      <div {...styles.innerContainer}>
         <Link href={flyer.meta.path} passHref>
           <a {...plainLinkRule} href={flyer.meta.path}>
             <RenderContextProvider>
@@ -47,7 +58,7 @@ const TeaserFlyer = ({ flyer, Link = DefaultLink }) => {
             </div>
           </a>
         </Link>
-      </NarrowContainer>
+      </div>
     </div>
   )
 }
