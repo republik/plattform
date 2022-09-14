@@ -17,8 +17,8 @@ const miniNaviQuery = gql`
 `
 
 const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000
-const PUBLISH_HOURS = 15
-const PUBLISH_MINUTES = 37
+const PUBLISH_HOURS = 5
+const PUBLISH_MINUTES = 0
 
 let lastFetchDate
 const runOnceIfOutdated = (callback) => {
@@ -68,6 +68,7 @@ export const useFlyerMeta = () => {
       now < publishTimeToday
         ? publishTimeToday - now
         : publishTimeTomorrow - now
+    let refetchTimeoutId
     const refreshAtPublishTime = () => {
       runOnceIfOutdated(refetch)
       // recursion 24h later again
@@ -75,7 +76,7 @@ export const useFlyerMeta = () => {
         refreshAtPublishTime()
       }, ONE_DAY_IN_MS)
     }
-    let refetchTimeoutId = setTimeout(refreshAtPublishTime, nextUpdateMs)
+    refetchTimeoutId = setTimeout(refreshAtPublishTime, nextUpdateMs)
     return () => {
       clearTimeout(refetchTimeoutId)
     }
