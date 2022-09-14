@@ -3,9 +3,9 @@ import { IconButton, AddIcon, RemoveIcon } from '@project-r/styleguide'
 
 const styles = {
   root: css({
-    display: 'flex',
+    display: 'inline-flex',
     flexDirection: 'row',
-    gap: '1rem',
+    gap: 8,
     justifyContent: 'center',
   }),
 }
