@@ -79,9 +79,11 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     useState<AudioQueueItem | null>(null)
   const [shouldAutoPlay, setShouldAutoPlay] = useState(false)
   const [hasAutoPlayed, setHasAutoPlayed] = useState(false)
+
   const [isPlaying, setIsPlaying] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [isVisible, setIsVisible] = useState(false)
+
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [buffered, setBuffered] = useState<TimeRanges>(null)
@@ -89,11 +91,18 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
 
   // TODO: handle error state
 
-  const saveActiveItemProgress = useCallback(async () => {
-    console.log('saveActiveItemProgress', currentTime)
-    const { mediaId } = activePlayerItem?.document.meta?.audioSource ?? {}
-    saveMediaProgress(mediaId, currentTime, isPlaying)
-  }, [activePlayerItem, currentTime, isPlaying, saveMediaProgress])
+  const saveActiveItemProgress = useCallback(
+    async (forcedState?: { currentTime?: number; isPlaying?: boolean }) => {
+      console.log('saveActiveItemProgress', currentTime)
+      const { mediaId } = activePlayerItem?.document.meta?.audioSource ?? {}
+      saveMediaProgress(
+        mediaId,
+        forcedState?.currentTime ?? currentTime,
+        forcedState?.isPlaying ?? isPlaying,
+      )
+    },
+    [activePlayerItem, currentTime, isPlaying, saveMediaProgress],
+  )
 
   const syncWithNativeApp = (state: AudioPlayerState) => {
     if (!inNativeApp) return
@@ -167,7 +176,6 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       mediaRef.current.play()
       syncWithMediaElement()
     }
-    await saveActiveItemProgress()
   }
 
   const onPause = async () => {
@@ -178,7 +186,9 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       mediaRef.current.pause()
       syncWithMediaElement()
     }
-    await saveActiveItemProgress()
+    await saveActiveItemProgress({
+      isPlaying: false,
+    })
   }
 
   const onStop = () => {
@@ -197,6 +207,9 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
 
   const onSeek = async (progress: number) => {
     if (!activePlayerItem) return
+
+    const updatedCurrentTime = progress * duration
+
     if (inNativeApp) {
       notifyApp(AudioEvent.SEEK, progress * duration)
     } else if (mediaRef.current) {
@@ -204,29 +217,44 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       syncWithMediaElement()
     }
     // TODO: debounce saving progress, since onSeek is called on every mousemove
-    await saveActiveItemProgress()
+    await saveActiveItemProgress({
+      currentTime: updatedCurrentTime,
+      isPlaying: false,
+    })
   }
 
   const onForward = async () => {
     if (!activePlayerItem) return
+
+    const updatedCurrentTime = currentTime + SKIP_FORWARD_TIME
+
     if (inNativeApp) {
       notifyApp(AudioEvent.FORWARD, SKIP_FORWARD_TIME)
     } else if (mediaRef.current) {
       mediaRef.current.currentTime += SKIP_FORWARD_TIME
       syncWithMediaElement()
     }
-    await saveActiveItemProgress()
+    await saveActiveItemProgress({
+      currentTime: updatedCurrentTime,
+      isPlaying: false,
+    })
   }
 
   const onBackward = async () => {
     if (!activePlayerItem) return
+
+    const updatedCurrentTime = currentTime - SKIP_BACKWARD_TIME
+
     if (inNativeApp) {
       notifyApp(AudioEvent.BACKWARD, SKIP_BACKWARD_TIME)
     } else if (mediaRef.current) {
       mediaRef.current.currentTime -= SKIP_BACKWARD_TIME
       syncWithMediaElement()
     }
-    await saveActiveItemProgress()
+    await saveActiveItemProgress({
+      currentTime: updatedCurrentTime,
+      isPlaying: false,
+    })
   }
 
   const onPlaybackRateChange = (value: number) => {
