@@ -63,7 +63,7 @@ const decodeCursor = (cursor) => {
 // Returns args as options w/o nullish props.
 const cleanArgs = (args) =>
   Object.keys(args)
-    .filter((key) => !['undefined', 'null'].includes(typeof args[key]))
+    .filter((key) => ![null, undefined].includes(args[key]))
     .reduce((prev, curr) => ({ ...prev, [curr]: args[curr] }), {})
 
 // Processes search {args} and returns reasonable {options}.
