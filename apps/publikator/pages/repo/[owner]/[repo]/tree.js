@@ -3,13 +3,11 @@ import { withRouter } from 'next/router'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
-
 import withAuthorization from '../../../../components/Auth/withAuthorization'
 
 import Loader from '../../../../components/Loader'
 import Tree from '../../../../components/Tree'
 import Frame from '../../../../components/Frame'
-import RepoNav from '../../../../components/Repo/Nav'
 import RepoArchive from '../../../../components/Repo/Archive'
 import RepoArchivedBanner from '../../../../components/Repo/ArchivedBanner'
 import {
@@ -27,6 +25,7 @@ import withT from '../../../../lib/withT'
 import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 import { gql } from '@apollo/client'
 import { withDefaultSSR } from '../../../../lib/apollo/helpers'
+import Nav from '../../../../components/Edit/Nav'
 
 export const COMMIT_LIMIT = 40
 export const getRepoHistory = gql`
@@ -42,6 +41,10 @@ export const getRepoHistory = gql`
         }
         nodes {
           ...SimpleCommit
+          document {
+            id
+            type
+          }
           derivatives {
             ...SimpleDerivative
           }
@@ -74,6 +77,10 @@ const treeRepoSubscription = gql`
       }
       commit {
         ...SimpleCommit
+        document {
+          id
+          type
+        }
         derivatives {
           ...SimpleDerivative
         }
@@ -177,7 +184,7 @@ class EditorPage extends Component {
   }
 
   render() {
-    const { router, commits, hasMore, fetchMore } = this.props
+    const { router, commits, hasMore, fetchMore, t } = this.props
     const { loading, error, repo } = this.props.data
     const repoId = getRepoIdFromQuery(router.query)
 
@@ -188,12 +195,7 @@ class EditorPage extends Component {
       <Frame>
         <Frame.Header isTemplate={repo?.isTemplate}>
           <Frame.Header.Section align='left'>
-            <Frame.Nav>
-              <RepoNav
-                route={`/repo/${repoId}/tree`}
-                prefix={repo?.isTemplate ? 'template' : 'document'}
-              />
-            </Frame.Nav>
+            <Nav isTemplate={repo?.isTemplate} />
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
             {!!repo && (

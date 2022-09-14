@@ -1,8 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
-import { useColorContext, Loader } from '@project-r/styleguide'
+import { useColorContext, Loader, usePrevious } from '@project-r/styleguide'
 
 import { SIDEBAR_WIDTH } from '../Sidebar'
-import { HEADER_HEIGHT } from '../Frame/constants'
 
 const PREVIEW_MARGIN = 16
 
@@ -26,33 +25,56 @@ const screenSizes = {
 }
 
 const PreviewFrame = ({
-  previewScreenSize,
+  previewScreenSize = 'phone',
   commitId,
   repoId,
   darkmode,
   hasAccess,
   sideBarWidth,
+  isFlyer,
+  commitOnly,
 }) => {
   const [scaleFactor, setScaleFactor] = useState(1)
   const [leftSpace, setLeftSpace] = useState(0)
-  const [iframeLoading, setIframeLoading] = useState(true)
+  const [height, setHeight] = useState(0)
+  const [iframeLoading, setIframeLoading] = useState()
   const [colorScheme] = useColorContext()
+  const containerRef = useRef()
   const iframeRef = useRef()
 
-  const iframeSrc = `/repo/${repoId}/preview?commitId=${commitId}&darkmode=${darkmode}&hasAccess=${hasAccess}`
-  const currentSideBarWidth = sideBarWidth || SIDEBAR_WIDTH
+  const screenSize = screenSizes[previewScreenSize]
+
+  const src = isFlyer
+    ? `/flyer/${repoId}/preview?commitId=${commitId}&commitOnly=${commitOnly}`
+    : `/repo/${repoId}/preview?commitId=${commitId}&darkmode=${darkmode}&hasAccess=${hasAccess}&commitOnly=${commitOnly}`
+  const prevSrc = usePrevious(src)
+  if (src !== prevSrc && !iframeLoading) {
+    setIframeLoading(true)
+  }
+  // workaround for onload event not firing e.g. for flyer on page load
+  useEffect(() => {
+    const toId = setTimeout(() => {
+      setIframeLoading(false)
+    }, 3000)
+    return () => {
+      // clear timeout e.g. when src changes again
+      clearTimeout(toId)
+    }
+  }, [src])
+  const currentSideBarWidth = sideBarWidth || (isFlyer ? 0 : SIDEBAR_WIDTH)
 
   useEffect(() => {
     const handleResize = () => {
+      const topOffset =
+        containerRef.current.getBoundingClientRect().top + window.pageYOffset
+
       const availableHeight =
-        window.innerHeight - HEADER_HEIGHT - 2 * PREVIEW_MARGIN
+        window.innerHeight - topOffset - 2 * PREVIEW_MARGIN
       const availableWidth =
         document.body.clientWidth - currentSideBarWidth - 2 * PREVIEW_MARGIN
 
-      const widthScaleFactor =
-        availableWidth / screenSizes[previewScreenSize].width
-      const heightScaleFactor =
-        availableHeight / screenSizes[previewScreenSize].height
+      const widthScaleFactor = availableWidth / screenSize.width
+      const heightScaleFactor = availableHeight / screenSize.height
       const currentScaleFactor = Math.min(
         widthScaleFactor,
         heightScaleFactor,
@@ -60,9 +82,9 @@ const PreviewFrame = ({
       )
       setScaleFactor(currentScaleFactor)
 
-      const scaledPreviewWidth =
-        screenSizes[previewScreenSize].width * currentScaleFactor
+      const scaledPreviewWidth = screenSize.width * currentScaleFactor
       setLeftSpace((availableWidth - scaledPreviewWidth) / 2)
+      setHeight(window.innerHeight - topOffset)
     }
 
     handleResize()
@@ -70,14 +92,10 @@ const PreviewFrame = ({
     return () => {
       window.removeEventListener('resize', handleResize)
     }
-  }, [previewScreenSize, currentSideBarWidth])
-
-  useEffect(() => {
-    setIframeLoading(true)
-  }, [darkmode])
+  }, [screenSize, currentSideBarWidth])
 
   const iframeStyle = {
-    ...screenSizes[previewScreenSize],
+    ...screenSize,
     minWidth: 'unset',
     transform: `scale(${scaleFactor})`,
     transformOrigin: `0 0`,
@@ -87,7 +105,14 @@ const PreviewFrame = ({
     marginLeft: PREVIEW_MARGIN + leftSpace,
   }
   return (
-    <>
+    <div
+      ref={containerRef}
+      style={{
+        width: '100%',
+        height,
+        overflow: 'hidden',
+      }}
+    >
       <div
         style={{
           ...iframeStyle,
@@ -101,11 +126,9 @@ const PreviewFrame = ({
       <iframe
         ref={iframeRef}
         onLoad={() => setIframeLoading(false)}
-        style={{
-          ...iframeStyle,
-        }}
+        src={src}
+        style={iframeStyle}
         {...colorScheme.set('backgroundColor', 'default')}
-        src={iframeSrc}
       />
       <div
         style={{
@@ -118,7 +141,7 @@ const PreviewFrame = ({
         }}
         {...colorScheme.set('backgroundColor', 'hover')}
       />
-    </>
+    </div>
   )
 }
 

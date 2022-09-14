@@ -14,6 +14,10 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
   const links = useMemo(() => {
     const all = []
     visit(content, 'link', (node) => {
+      if (!node?.url) {
+        return
+      }
+
       const urlObject = parse(node.url)
       const warnings = []
       const errors = []

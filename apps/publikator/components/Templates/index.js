@@ -1,6 +1,5 @@
 import { cloneElement, Children } from 'react'
 import newsletterSchema from '@project-r/template-newsletter'
-import neutrumSchema from './Neutrum'
 
 import {
   createNewsletterWebSchema,
@@ -40,7 +39,7 @@ const schemas = {
   // - for Project R this should be the newsletter
   newsletter: newsletterSchema,
   editorialNewsletter: createNewsletterWebSchema(),
-  neutrum: neutrumSchema,
+  flyer: 'slate', // @TODO: adopt, new Slate editor
   article: createArticleSchema(articleSchemaParams),
   front: createFrontSchema({
     Link: NoOpLink,

@@ -1,6 +1,7 @@
 A `<TeaserFeed />` is a concise article teaser used in a feed context.
 
 Supported props:
+
 - `format`: An optional format which appears on top of the headline.
 - `series`: An optinal series with episodes, will appear on top of the headline unless it's the started epsiode.
 - `repoId`: An optional repo id to help detect the right series episode when paths do not suffice
@@ -16,6 +17,7 @@ Supported props:
 - `highlighted`: highlights the teaser
 
 Data props:
+
 - `path`
 - `title`
 - `description`
@@ -78,7 +80,6 @@ Only using title is great for compact feeds:
   publishDate='2017-12-31T11:34:00.000Z' />
 ```
 
-
 ```react
 <TeaserFeed kind='meta' format={{meta: {title: 'Format'}}}
   title='The quick brown fox jumps over the lazy dog'
@@ -128,6 +129,12 @@ With callout menu:
 ```
 
 ```react
+<TeaserFeed kind='flyer' format={{meta: {title: 'Republik Journal', kind: 'flyer'}}}
+  title='The quick brown fox jumps over the lazy dog'
+/>
+```
+
+```react
 <TeaserFeed format={{meta: {title: 'Format', kind: 'scribble'}}}
   title='The quick brown fox jumps over the lazy dog'
   description='Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.'
@@ -167,7 +174,6 @@ Add an excerpt of the content using the highlight prop (if `highlightLabel` is o
     highlighted
 />
 ```
-
 
 ### Series
 

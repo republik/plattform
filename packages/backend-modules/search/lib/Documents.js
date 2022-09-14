@@ -1,11 +1,9 @@
 const _ = require('lodash')
 const debug = require('debug')('search:lib:Documents')
-const isUUID = require('is-uuid')
-const visit = require('unist-util-visit')
 const sleep = require('await-sleep')
 
 const {
-  resolve: { extractUserUrl, getRepoId },
+  resolve: { extractIdsFromNode, getRepoId, stringifyNode },
   meta: { getWordsPerMinute },
 } = require('@orbiting/backend-modules-documents/lib')
 
@@ -26,7 +24,7 @@ const {
 
 const createCache = require('./cache')
 
-const { getIndexAlias, mdastContentToString } = require('./utils')
+const { getIndexAlias } = require('./utils')
 
 const {
   createPublish: createPublishDocumentZones,
@@ -222,7 +220,7 @@ const schema = {
   },
 }
 
-const getElasticDoc = ({ doc, commitId, versionName, resolved }) => {
+const getElasticDoc = async ({ doc, commitId, versionName, resolved }) => {
   const meta = doc.content.meta
   const id = getDocumentId({ repoId: meta.repoId, commitId, versionName })
   return {
@@ -235,42 +233,9 @@ const getElasticDoc = ({ doc, commitId, versionName, resolved }) => {
     versionName,
     meta, // doc.meta === doc.content.meta
     resolved: !_.isEmpty(resolved) ? resolved : undefined,
+    type: doc.type,
     content: doc.content,
-    contentString: mdastContentToString(doc.content),
-  }
-}
-
-const extractIdsFromNode = (haystack, contextRepoId) => {
-  const repos = []
-  const users = []
-  visit(haystack, 'zone', (node) => {
-    if (node.data) {
-      repos.push(getRepoId(node.data.url).repoId)
-      repos.push(getRepoId(node.data.formatUrl).repoId)
-    }
-  })
-  visit(haystack, 'link', (node) => {
-    const info = extractUserUrl(node.url)
-    if (info) {
-      node.url = info.path
-      if (isUUID.v4(info.id)) {
-        users.push(info.id)
-      } else {
-        debug(
-          'addRelatedDocs found nonUUID %s in repo %s',
-          info.id,
-          contextRepoId,
-        )
-      }
-    }
-    const { repoId } = getRepoId(node.url, 'autoSlug')
-    if (repoId) {
-      repos.push(repoId)
-    }
-  })
-  return {
-    repos: repos.filter(Boolean),
-    users: users.filter(Boolean),
+    contentString: await stringifyNode(doc.type, doc.content),
   }
 }
 
@@ -342,10 +307,13 @@ const addRelatedDocs = async ({
   let repoIds = []
   const seriesRepoIds = []
 
-  docs.forEach((doc) => {
+  for (const i in docs) {
+    const doc = docs[i]
+
     // from content
-    const { users, repos } = extractIdsFromNode(
-      withoutContent ? { children: doc.meta.credits } : doc.content,
+    const { users, repos } = await extractIdsFromNode(
+      doc.type,
+      withoutContent ? doc.meta.credits : doc.content,
       doc.repoId,
     )
     userIds = userIds.concat(users)
@@ -377,7 +345,7 @@ const addRelatedDocs = async ({
         })
       }
     }
-  })
+  }
 
   let relatedDocs = []
 
@@ -416,9 +384,12 @@ const addRelatedDocs = async ({
 
   const relatedFormatRepoIds = []
 
-  relatedDocs.forEach((doc) => {
-    const { users } = extractIdsFromNode(
-      withoutContent ? { children: doc.meta.credits } : doc.content,
+  for (const i in relatedDocs) {
+    const doc = relatedDocs[i]
+
+    const { users } = await extractIdsFromNode(
+      doc.type,
+      withoutContent ? doc.meta.credits : doc.content,
       doc.repoId,
     )
     userIds = userIds.concat(users)
@@ -429,7 +400,7 @@ const addRelatedDocs = async ({
     relatedFormatRepoIds.push(getRepoId(meta.format).repoId)
     relatedFormatRepoIds.push(getRepoId(meta.section).repoId)
     relatedFormatRepoIds.push(getRepoId(meta.discussion).repoId)
-  })
+  }
 
   // Resolve format repoIds and all userIds.
   const { docs: relatedFormatDocs, usernames } = await loadLinkedMetaData({
@@ -903,7 +874,6 @@ module.exports = {
   LONG_DURATION_MINS,
   schema,
   getElasticDoc,
-  extractIdsFromNode,
   loadLinkedMetaData,
   addRelatedDocs,
   unpublish,

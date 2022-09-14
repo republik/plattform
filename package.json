@@ -2,11 +2,17 @@
   "name": "@republik/plattform",
   "version": "0.0.0",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*",
-    "packages/backend-modules/*"
-  ],
+  "workspaces": {
+   "packages": [
+      "apps/*",
+      "packages/*",
+      "packages/backend-modules/*"
+    ],
+    "nohoist": [
+      "styleguide/slate",
+      "styleguide/slate-*"
+    ]
+  },
   "scripts": {
     "commit": "cz",
     "prepare": "husky install && turbo run prepare",

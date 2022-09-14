@@ -25,9 +25,9 @@ const styles = {
     flexGrow: 1,
   }),
   button: css({
-    width: 160,
     textAlign: 'center',
     marginBottom: 15,
+    minWidth: 160,
   }),
   hints: css({
     marginTop: -5,

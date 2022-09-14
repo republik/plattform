@@ -46,6 +46,11 @@ export const getMilestones = gql`
       milestones {
         ...MilestoneWithCommit
       }
+      currentPhase {
+        key
+        color
+        label
+      }
     }
   }
   ${fragments.MilestoneWithCommit}
@@ -226,6 +231,14 @@ export default compose(
               },
             })
           },
+          refetchQueries: [
+            {
+              query: getMilestones,
+              variables: {
+                repoId,
+              },
+            },
+          ],
         }),
     }),
   }),

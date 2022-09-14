@@ -6,7 +6,7 @@ type Translations = {
 }[]
 type Replacements = { [key: string]: ReactNode }
 
-type FormatterFunction = (
+export type FormatterFunction = (
   key: string,
   replacements?: Replacements,
   missingValue?: string,

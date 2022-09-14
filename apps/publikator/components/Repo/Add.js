@@ -219,7 +219,7 @@ class RepoAdd extends Component {
     const { title, schema, templateRepoId } = this.state
     const { isTemplate } = this.props
     this.props.router
-      .replace({
+      .push({
         pathname: `/repo/${GITHUB_ORG}/${slug}/edit`,
         query: {
           commitId: 'new',
