@@ -17,9 +17,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '0.5rem',
-    maxHeight: 200,
-    overflowY: 'scroll',
-    overflowX: 'hidden',
+    overflow: 'hidden',
     // TODO: custom scrollbar to better match the design
   }),
 }

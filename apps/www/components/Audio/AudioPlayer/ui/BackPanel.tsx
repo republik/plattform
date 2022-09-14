@@ -68,7 +68,8 @@ const BackPanel = ({
       {isExpanded && <div {...styles.backdrop} onClick={onBackdropClick} />}
       <div
         {...styles.wrapper}
-        {...colorScheme.set('backgroundColor', 'default')}
+        {...colorScheme.set('backgroundColor', 'overlay')}
+        {...colorScheme.set('boxShadow', 'overlayShadow')}
       >
         {children}
       </div>

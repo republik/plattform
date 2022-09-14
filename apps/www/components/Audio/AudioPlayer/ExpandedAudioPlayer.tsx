@@ -20,7 +20,7 @@ const styles = {
   root: css({
     display: 'flex',
     flexDirection: 'column',
-    gap: '1rem',
+    gap: 16,
     padding: 16,
     '& > *': {
       userSelect: 'none',
@@ -31,7 +31,12 @@ const styles = {
       padding: 24,
     },
   }),
-  spinnerWrapper: css({
+  currentPlaying: css({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+  }),
+  spinner: css({
     position: 'relative',
     display: 'flex',
     justifyContent: 'center',
@@ -39,7 +44,12 @@ const styles = {
     width: 64,
     height: 64,
   }),
-  actionWrapper: css({
+  controls: css({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 16,
+  }),
+  mainActions: css({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-center',
@@ -47,18 +57,12 @@ const styles = {
     gap: '1rem',
     margin: '0 auto',
   }),
-  bottomActionsWrapper: css({
+  bottomActions: css({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: '1rem',
-  }),
-  topActions: css({
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
   }),
 }
 
@@ -85,60 +89,63 @@ const ExpandedAudioPlayer = ({
   handleMinimize,
   handleToggle,
   handleSeek,
-  handleClose,
   handleForward,
   handleBackward,
   handlePlaybackRateChange,
 }: ExpandedAudioPlayerProps) => {
   return (
     <div {...styles.root}>
-      <CurrentlyPlaying t={t} item={activeItem} />
+      <div {...styles.currentPlaying}>
+        <CurrentlyPlaying t={t} item={activeItem} />
+        <div {...styles.controls}>
+          <div {...styles.mainActions}>
+            <IconButton
+              size={32}
+              fillColorName={'text'}
+              onClick={handleBackward}
+              Icon={ReplayIcon}
+              style={{ marginRight: 0 }}
+            />
+            {isLoading ? (
+              <div {...styles.spinner}>
+                <Spinner size={32} />
+              </div>
+            ) : (
+              <IconButton
+                onClick={handleToggle}
+                title={t(
+                  `styleguide/AudioPlayer/${isPlaying ? 'pause' : 'play'}`,
+                )}
+                aria-live='assertive'
+                Icon={isPlaying ? PauseIcon : PlayIcon}
+                size={64}
+                fillColorName={'text'}
+                style={{ marginRight: 0 }}
+              />
+            )}
+            <IconButton
+              size={32}
+              fillColorName={'text'}
+              onClick={handleForward}
+              Icon={ForwardIcon}
+              style={{ marginRight: 0 }}
+            />
+          </div>
+          <Scrubber
+            currentTime={currentTime}
+            duration={duration}
+            buffered={buffered}
+            disabled={isLoading}
+            onSeek={handleSeek}
+            showScrubber
+            showTime
+          />
+        </div>
+      </div>
       {queuedItems && queuedItems.length > 0 && (
         <Queue t={t} activeItem={activeItem} items={queuedItems} />
       )}
-      <div>
-        <Scrubber
-          currentTime={currentTime}
-          duration={duration}
-          buffered={buffered}
-          disabled={isLoading}
-          onSeek={handleSeek}
-          showScrubber
-          showTime
-        />
-      </div>
-      <div {...styles.actionWrapper}>
-        <IconButton
-          size={32}
-          fillColorName={'text'}
-          onClick={handleBackward}
-          Icon={ReplayIcon}
-          style={{ marginRight: 0 }}
-        />
-        {isLoading ? (
-          <div {...styles.spinnerWrapper}>
-            <Spinner size={32} />
-          </div>
-        ) : (
-          <IconButton
-            onClick={handleToggle}
-            title={t(`styleguide/AudioPlayer/${isPlaying ? 'pause' : 'play'}`)}
-            aria-live='assertive'
-            Icon={isPlaying ? PauseIcon : PlayIcon}
-            size={64}
-            fillColorName={'text'}
-            style={{ marginRight: 0 }}
-          />
-        )}
-        <IconButton
-          size={32}
-          fillColorName={'text'}
-          onClick={handleForward}
-          Icon={ForwardIcon}
-          style={{ marginRight: 0 }}
-        />
-      </div>
-      <div {...styles.bottomActionsWrapper}>
+      <div {...styles.bottomActions}>
         <div
           style={{
             flex: 1,
