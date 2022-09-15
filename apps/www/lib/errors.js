@@ -1,5 +1,8 @@
 import fetch from 'isomorphic-unfetch'
 import { Component } from 'react'
+import getConfig from 'next/config'
+
+const { publicRuntimeConfig } = getConfig()
 
 let lastError
 
@@ -14,7 +17,11 @@ export const reportError = (context, error) => {
   }
   fetch('/api/reportError', {
     method: 'POST',
-    body: `${context}\n${window.location.href}\n${error}`,
+    body: `${context}\n${window.location.href}\n${
+      publicRuntimeConfig.buildId
+        ? `(buildId: ${publicRuntimeConfig.buildId})\n`
+        : ''
+    }${error}`,
   })
   lastError = error
 }
