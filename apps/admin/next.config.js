@@ -7,11 +7,17 @@ const withTM = require('next-transpile-modules')([
   '@republik/nextjs-apollo-client',
 ])
 
+const buildId = process.env.SOURCE_VERSION?.substring(0, 10)
+
 module.exports = withTM(
   withBundleAnalyzer({
     poweredByHeader: false,
     eslint: {
       ignoreDuringBuilds: true,
+    },
+    generateBuildId: () => buildId,
+    publicRuntimeConfig: {
+      buildId,
     },
     async redirects() {
       return [

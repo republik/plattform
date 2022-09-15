@@ -7,7 +7,7 @@ const withTM = require('next-transpile-modules')([
 ])
 
 const { NODE_ENV, CDN_FRONTEND_BASE_URL } = process.env
-const buildId = process.env.SOURCE_VERSION || ''
+const buildId = process.env.SOURCE_VERSION?.substring(0, 10)
 
 /**
  * @type {import('next').NextConfig}

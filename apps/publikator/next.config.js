@@ -7,6 +7,8 @@ const withTM = require('next-transpile-modules')([
   '@republik/nextjs-apollo-client',
 ])
 
+const buildId = process.env.SOURCE_VERSION?.substring(0, 10)
+
 /**
  * @type {import('next').NextConfig}
  */
@@ -14,6 +16,10 @@ module.exports = withBundleAnalyzer(
   withTM({
     eslint: {
       ignoreDuringBuilds: true,
+    },
+    generateBuildId: () => buildId,
+    publicRuntimeConfig: {
+      buildId,
     },
     webpack: (config) => {
       const alias = Object.assign({}, config.resolve.alias)
