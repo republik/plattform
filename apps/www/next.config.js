@@ -7,14 +7,16 @@ const withTM = require('next-transpile-modules')([
 ])
 
 const { NODE_ENV, CDN_FRONTEND_BASE_URL } = process.env
-const buildId = process.env.SOURCE_VERSION?.substring(0, 10)
+const buildId =
+  process.env.SOURCE_VERSION?.substring(0, 10) ||
+  new Date(Date.now()).toISOString()
 
 /**
  * @type {import('next').NextConfig}
  */
 module.exports = withTM(
   withBundleAnalyzer({
-    generateBuildId: () => buildId || new Date(Date.now()).toISOString(),
+    generateBuildId: () => buildId,
     publicRuntimeConfig: {
       buildId,
     },
