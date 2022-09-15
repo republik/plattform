@@ -15,7 +15,7 @@ module.exports = withTM(
     eslint: {
       ignoreDuringBuilds: true,
     },
-    generateBuildId: () => buildId,
+    generateBuildId: () => buildId || new Date(Date.now()).toISOString(),
     publicRuntimeConfig: {
       buildId,
     },
