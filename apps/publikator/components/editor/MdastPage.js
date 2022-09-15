@@ -27,8 +27,6 @@ import {
 } from '../VersionControl/UncommittedChanges'
 import Sidebar from '../Sidebar'
 import Warning from '../Sidebar/Warning'
-import ScreenSizePicker from '../ScreenSizePicker'
-import PreviewFrame from '../PreviewFrame'
 
 import Loader from '../Loader'
 import CharCount from '../CharCount'
@@ -46,8 +44,6 @@ import {
   ColorContextProvider,
   colors,
   plainButtonRule,
-  Interaction,
-  Checkbox,
 } from '@project-r/styleguide'
 import SettingsIcon from 'react-icons/lib/fa/cogs'
 
@@ -66,6 +62,7 @@ import {
   withCommitMutation,
   withLatestCommit,
 } from '../Edit/enhancers'
+import Preview from '../Preview'
 
 const getTemplateById = gql`
   query getLatestCommit($repoId: ID!) {
@@ -786,6 +783,8 @@ export class EditorPage extends Component {
       committing || loading || templateLoading || (!schema && !error)
     const dark = editorState && editorState.document.data.get('darkMode')
     const commit = repo && (repo.commit || repo.latestCommit)
+    const schemaName = commit?.document?.meta?.template
+    const showBranchingNotice = schemaName !== 'front'
 
     const sidebarPrependChildren = [
       ...warnings.filter(Boolean).map(({ time, message }, i) => (
@@ -797,7 +796,7 @@ export class EditorPage extends Component {
           }}
         />
       )),
-      !showLoading && repo && (
+      !showLoading && repo && showBranchingNotice && (
         <BranchingNotice
           key='branching-notice'
           repoId={repo.id}
@@ -853,7 +852,7 @@ export class EditorPage extends Component {
             />
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
-            {!showLoading && !!repo && (
+            {!showLoading && !!repo && showBranchingNotice && (
               <BranchingNotice
                 asIcon
                 repoId={repo.id}
@@ -901,7 +900,7 @@ export class EditorPage extends Component {
                   }
                 >
                   {showPreview ? (
-                    <PreviewFrame
+                    <Preview
                       previewScreenSize={this.state.previewScreenSize}
                       repoId={repoId}
                       commitId={commitId}
@@ -929,7 +928,7 @@ export class EditorPage extends Component {
             selectedTabId={
               showPreview ? 'view' : readOnly ? 'workflow' : 'edit'
             }
-            isOpen={showSidebar}
+            isOpen={!showPreview && showSidebar}
           >
             {!readOnly && !showPreview && (
               <Sidebar.Tab tabId='edit' label='Editieren'>
@@ -961,33 +960,6 @@ export class EditorPage extends Component {
                   isNew={isNew}
                   hasUncommittedChanges={hasUncommittedChanges}
                 />
-              </Sidebar.Tab>
-            )}
-            {showPreview && (
-              <Sidebar.Tab tabId='view' label='Ansicht'>
-                <Interaction.P style={{ marginBottom: 16 }}>
-                  Vorschau
-                </Interaction.P>
-                <ScreenSizePicker
-                  selectedScreenSize={this.state.previewScreenSize}
-                  onSelect={(screenSize) => {
-                    this.setState({ previewScreenSize: screenSize })
-                  }}
-                />
-                <Interaction.P style={{ marginBottom: 16 }}>
-                  Nachtmodus
-                </Interaction.P>
-                <Checkbox
-                  black
-                  checked={this.state.previewDarkmode}
-                  onChange={() =>
-                    this.setState({
-                      previewDarkmode: !this.state.previewDarkmode,
-                    })
-                  }
-                >
-                  Ein
-                </Checkbox>
               </Sidebar.Tab>
             )}
           </Sidebar>

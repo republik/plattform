@@ -189,7 +189,7 @@ const Frame = ({
 Frame.propTypes = {
   children: PropTypes.node.isRequired,
   raw: PropTypes.bool,
-  meta: PropTypes.shape,
+  meta: PropTypes.object,
   cover: PropTypes.any,
   onNavExpanded: PropTypes.any,
   secondaryNav: PropTypes.any,

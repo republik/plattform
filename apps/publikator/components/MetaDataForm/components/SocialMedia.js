@@ -38,7 +38,7 @@ const ShareImageForm = withT(({ t, data, onChange }) => {
         <ShareImagePreview
           fontSize={data.shareFontSize || 60}
           inverted={data.shareInverted}
-          text={data.shareText || t('editor/meta/flyer/defaultShareText')}
+          text={data.shareText}
           format={FLYER_FORMAT.meta}
           preview
         />
@@ -61,7 +61,7 @@ const ShareImageForm = withT(({ t, data, onChange }) => {
         <Field
           label='Twitter Beschrieb'
           name='twitterDescription'
-          value={data.twitterDescription || data.lead}
+          value={data.twitterDescription || data.description}
           onChange={(event) => {
             onChange(event.target.name, event.target.value)
           }}
@@ -75,7 +75,7 @@ const ShareImageForm = withT(({ t, data, onChange }) => {
         <MetaOptionLabel>Twitter Vorschau</MetaOptionLabel>
         <SharePreviewTwitter
           title={data.twitterTitle || data.title}
-          description={data.twitterDescription || data.lead}
+          description={data.twitterDescription || data.description}
         />
       </MetaOption>
       <MetaOption>
@@ -96,7 +96,7 @@ const ShareImageForm = withT(({ t, data, onChange }) => {
         <Field
           label='Facebook Beschrieb'
           name='facebookDescription'
-          value={data.facebookDescription || data.lead}
+          value={data.facebookDescription || data.description}
           onChange={(event) => {
             onChange(event.target.name, event.target.value)
           }}
@@ -110,7 +110,7 @@ const ShareImageForm = withT(({ t, data, onChange }) => {
         <MetaOptionLabel>Facebook Vorschau</MetaOptionLabel>
         <SharePreviewFacebook
           title={data.facebookTitle || data.title}
-          description={data.facebookDescription || data.lead}
+          description={data.facebookDescription || data.description}
         />
       </MetaOption>
     </>

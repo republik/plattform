@@ -401,7 +401,7 @@ const ActionBar = ({
       label: !forceShortLabel ? t('article/actionbar/share') : '',
       labelShort:
         !forceShortLabel && isArticleBottom ? t('article/actionbar/share') : '',
-      modes: ['articleTop', 'articleOverlay', 'articleBottom'],
+      modes: ['articleTop', 'articleOverlay', 'articleBottom', 'flyer'],
       show: true,
     },
     {
@@ -443,7 +443,7 @@ const ActionBar = ({
           fill={'#E9A733'}
         />
       ),
-      modes: ['articleTop'],
+      modes: ['articleTop', 'flyer'],
       show: document?.repoId && isEditor,
     },
   ]

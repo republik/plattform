@@ -4,44 +4,60 @@ import {
   FlyerAuthorElement,
 } from '../../../../../custom-types'
 import AuthorSearch from '../../../../../Forms/AuthorSearch'
-import { A, Label } from '../../../../../../Typography'
+import Field from '../../../../../../Form/Field'
+import { DeleteIcon } from '../../../../../../Icons'
+import { Transforms } from 'slate'
+import { useSlate } from 'slate-react'
+import IconButton from '../../../../../../IconButton'
 
 const Form: React.FC<ElementFormProps<FlyerAuthorElement>> = ({
   element,
+  path,
   onChange,
 }) => {
+  const editor = useSlate()
   return (
     <div>
-      {!!element.resolvedAuthor && (
-        <Label>
-          Ausgewählte Autorin:{' '}
-          {element.resolvedAuthor.slug ? (
-            // TODO: domain name from env variable / render context?
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            <A href={`https://www.republik.ch/~${element.resolvedAuthor.slug}`}>
-              {element.resolvedAuthor.name}
-            </A>
-          ) : (
-            element.resolvedAuthor.name
-          )}
-        </Label>
+      {element.resolvedAuthor ? (
+        <Field
+          label='Ausgewählte Autorin'
+          value={element.resolvedAuthor?.name}
+          disabled
+          icon={
+            element.resolvedAuthor && (
+              <IconButton
+                Icon={DeleteIcon}
+                onClick={() => {
+                  Transforms.unsetNodes(
+                    editor,
+                    ['authorId', 'resolvedAuthor'],
+                    {
+                      at: path,
+                    },
+                  )
+                }}
+                size={30}
+              />
+            )
+          }
+        />
+      ) : (
+        <AuthorSearch
+          onChange={({ value }) => {
+            onChange({
+              authorId: value.id,
+              // explicit mapping to avoid leaking to the tree
+              // - e.g. value.email
+              // - tree will eventually be published
+              resolvedAuthor: {
+                name: value.name,
+                slug: value.slug,
+                portrait: value.portrait,
+              },
+            })
+          }}
+        />
       )}
-      <AuthorSearch
-        onChange={({ value }) => {
-          onChange({
-            authorId: value.id,
-            // explicit mapping to avoid leaking to the tree
-            // - e.g. value.email
-            // - tree will eventually be published
-            resolvedAuthor: {
-              name: value.name,
-              slug: value.slug,
-              portrait: value.portrait,
-            },
-          })
-        }}
-      />
     </div>
   )
 }

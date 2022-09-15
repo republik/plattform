@@ -45,7 +45,7 @@ export const sortBy = (array, accessor) =>
   )
 
 const thousandSeparator = '\u2019'
-const swissNumbers = formatLocale({
+export const swissNumbers = formatLocale({
   decimal: ',',
   thousands: thousandSeparator,
   grouping: [3],

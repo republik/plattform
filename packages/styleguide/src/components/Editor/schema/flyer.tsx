@@ -1,7 +1,7 @@
 import { SchemaConfig } from '../custom-types'
 
-import { FigureByline, FigureCaption } from '../../Figure'
-import { Figure, FigureImage } from '../../Figure/Slate'
+import { FigureCaption } from '../../Figure'
+import { Figure, FigureImage, FigureByline } from '../../Figure/Slate'
 import { List } from '../../List/Slate'
 import { PullQuoteSource } from '../../PullQuote'
 import {
@@ -28,8 +28,8 @@ const schema: SchemaConfig = {
   flyerAuthor: FlyerAuthor,
   flyerMetaP: Flyer.MetaP,
   flyerOpeningP: Flyer.OpeningP,
-  flyerPunchline: FigureCaption,
-  flyerSignature: Flyer.Small,
+  flyerPunchline: Flyer.Small,
+  flyerSignature: Flyer.OpeningP,
   flyerDate: FlyerDate,
   flyerTitle: Flyer.H3,
   flyerTopic: Flyer.H2,
@@ -38,14 +38,14 @@ const schema: SchemaConfig = {
   articlePreviewTitle: ArticleTitle,
   articlePreviewLead: ArticleLead,
   figureByline: FigureByline,
-  figureCaption: FigureCaption,
+  figureCaption: Flyer.Small,
   figure: Figure,
   figureImage: FigureImage,
   ul: List,
   ol: List,
   listItem: Flyer.ListItem,
   pullQuote: PullQuote,
-  pullQuoteSource: PullQuoteSource,
+  pullQuoteSource: Flyer.Small,
   pullQuoteText: PullQuoteText,
   break: Break,
   headline: Flyer.H1,

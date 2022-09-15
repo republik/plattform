@@ -13,6 +13,7 @@ import {
   NodeEntry,
   Transforms,
   Range,
+  Text,
 } from 'slate'
 import { ReactEditor } from 'slate-react'
 import { config as elConfig } from '../../config/elements'
@@ -25,6 +26,7 @@ import {
 import { config as charConfig } from '../../config/special-chars'
 import { cleanupNode, overlaps } from './tree'
 import { SelectionEdge } from 'slate/dist/interfaces/types'
+import { swissNumbers } from '../../../Chart/utils'
 
 export const getCharCount = (nodes: (Descendant | Node)[]): number =>
   nodes.map((node) => Node.string(node).length).reduce((a, b) => a + b, 0)
@@ -33,7 +35,10 @@ export const getCountDown = (editor: CustomEditor, maxSigns: number): number =>
   maxSigns - getCharCount(editor.children)
 
 const baseTextProps = ['text', 'placeholder', 'template', 'end']
-export const cleanupText: NormalizeFn<CustomText> = ([node, path], editor) => {
+export const removeNonTextProps: NormalizeFn<CustomText> = (
+  [node, path],
+  editor,
+) => {
   const parent = Editor.parent(editor, path)[0]
   const formatText =
     SlateElement.isElement(parent) && elConfig[parent.type].attrs?.formatText
@@ -42,6 +47,9 @@ export const cleanupText: NormalizeFn<CustomText> = ([node, path], editor) => {
   ).concat(baseTextProps)
   return cleanupNode(allowedProps)([node, path], editor)
 }
+
+export const areSimilar = (node1: CustomText, node2: CustomText): boolean =>
+  (mKeys as string[]).concat(['end']).every((key) => node1[key] === node2[key])
 
 export const selectNearestWord = (
   editor: CustomEditor,
@@ -180,6 +188,20 @@ export const createLinks: NormalizeFn<CustomText> = ([node, path], editor) => {
   return false
 }
 
+export const mergeTextNodes: NormalizeFn<CustomText> = (
+  [node, path],
+  editor,
+) => {
+  const parent = Editor.parent(editor, path)
+  const parentNode = parent[0]
+  const currentIndex = path[path.length - 1]
+  const prevSibling = parentNode.children[currentIndex - 1]
+  if (!prevSibling || !Text.isText(prevSibling)) return false
+  if (!areSimilar(node, prevSibling)) return false
+  Transforms.mergeNodes(editor, { at: path })
+  return true
+}
+
 export const handlePlaceholders: NormalizeFn<CustomText> = (
   [node, path],
   editor,
@@ -272,4 +294,13 @@ export const insertSpecialChars = (editor: CustomEditor, chars: string) => {
     anchor: { path: start.path, offset: start.offset + 1 },
     focus: endLocation,
   })
+}
+
+const count4Format = swissNumbers.format('.0f')
+const count5Format = swissNumbers.format(',.0f')
+export const countFormat = (value) => {
+  if (String(Math.round(value)).length > 4) {
+    return count5Format(value)
+  }
+  return count4Format(value)
 }

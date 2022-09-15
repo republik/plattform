@@ -73,9 +73,14 @@ export const FlyerAuthor: React.FC<FlyerProps> = ({
         opacity: resolvedAuthor ? 1 : 0.4,
       }}
     >
-      {(!authorId || author.portrait) && (
-        <img {...styles.portrait} src={author.portrait || PLACEHOLDER} alt='' />
-      )}
+      {(!author.status || author.status === 'exists') &&
+        (author.portrait || !authorId) && (
+          <img
+            {...styles.portrait}
+            src={author.portrait || PLACEHOLDER}
+            alt=''
+          />
+        )}
       <span {...styles.name} {...colorScheme.set('color', 'flyerText')}>
         {author.name}
       </span>

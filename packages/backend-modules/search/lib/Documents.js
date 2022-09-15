@@ -6,6 +6,7 @@ const {
   resolve: { extractIdsFromNode, getRepoId, stringifyNode },
   meta: { getWordsPerMinute },
 } = require('@orbiting/backend-modules-documents/lib')
+const { transformUser } = require('@orbiting/backend-modules-auth')
 
 const { termEntry, countEntry, dateRangeParser } = require('./schema')
 
@@ -154,7 +155,7 @@ const schema = {
     criteria: termCriteriaBuilder('versionName'),
   },
   userId: {
-    criteria: termCriteriaBuilder('meta.credits.url'),
+    criteria: termCriteriaBuilder('meta.credits.children.url'),
     parser: (value) => `/~${value}`,
   },
   publishedAt: {
@@ -244,25 +245,22 @@ const getDocsForConnection = (connection) =>
     .filter((node) => node.type === 'Document')
     .map((node) => node.entity)
 
-const loadLinkedMetaData = async ({
+const resolveEntities = async ({
   repoIds = [],
   userIds = [],
   context,
   scheduledAt,
   ignorePrepublished,
 }) => {
-  const usernames = !userIds.length
-    ? []
-    : await context.pgdb.public.users.find(
-        {
+  const users = userIds.length
+    ? (
+        await context.pgdb.public.users.find({
           id: userIds,
           hasPublicProfile: true,
           'username !=': null,
-        },
-        {
-          fields: ['id', 'username'],
-        },
-      )
+        })
+      ).map(transformUser)
+    : []
 
   const search = require('../graphql/resolvers/_queries/search')
   const sanitizedRepoIds = [...new Set(repoIds.filter(Boolean))]
@@ -287,7 +285,7 @@ const loadLinkedMetaData = async ({
       ).then(getDocsForConnection)
 
   return {
-    usernames,
+    users,
     docs,
   }
 }
@@ -352,7 +350,7 @@ const addRelatedDocs = async ({
   // If there are any series master repositories, fetch these series master
   // documents and push series episodes onto the related docs stack
   if (seriesRepoIds.length) {
-    const { docs: seriesRelatedDocs } = await loadLinkedMetaData({
+    const { docs: seriesRelatedDocs } = await resolveEntities({
       context,
       repoIds: seriesRepoIds,
       scheduledAt,
@@ -373,7 +371,7 @@ const addRelatedDocs = async ({
     })
   }
 
-  const { docs: variousRelatedDocs } = await loadLinkedMetaData({
+  const { docs: variousRelatedDocs } = await resolveEntities({
     context,
     repoIds,
     scheduledAt,
@@ -403,7 +401,7 @@ const addRelatedDocs = async ({
   }
 
   // Resolve format repoIds and all userIds.
-  const { docs: relatedFormatDocs, usernames } = await loadLinkedMetaData({
+  const { docs: relatedFormatDocs, users } = await resolveEntities({
     context,
     repoIds: relatedFormatRepoIds,
     userIds,
@@ -426,7 +424,7 @@ const addRelatedDocs = async ({
     // for link resolving in lib/resolve
     // - including the usernames
     doc._all = [...(doc._all ? doc._all : []), ...relatedDocs, ...docs]
-    doc._usernames = usernames
+    doc._users = users
     doc._apiKey = apiKey
   })
 }
@@ -874,7 +872,7 @@ module.exports = {
   LONG_DURATION_MINS,
   schema,
   getElasticDoc,
-  loadLinkedMetaData,
+  resolveEntities,
   addRelatedDocs,
   unpublish,
   publish,

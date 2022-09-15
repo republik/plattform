@@ -1,8 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { useColorContext, Loader, usePrevious } from '@project-r/styleguide'
 
-import { SIDEBAR_WIDTH } from '../Sidebar'
-
 const PREVIEW_MARGIN = 16
 
 const screenSizes = {
@@ -30,7 +28,7 @@ const PreviewFrame = ({
   repoId,
   darkmode,
   hasAccess,
-  sideBarWidth,
+  sideBarWidth = 0,
   isFlyer,
   commitOnly,
 }) => {
@@ -44,9 +42,9 @@ const PreviewFrame = ({
 
   const screenSize = screenSizes[previewScreenSize]
 
-  const src = isFlyer
-    ? `/flyer/${repoId}/preview?commitId=${commitId}&commitOnly=${commitOnly}`
-    : `/repo/${repoId}/preview?commitId=${commitId}&darkmode=${darkmode}&hasAccess=${hasAccess}&commitOnly=${commitOnly}`
+  const src = `/${
+    isFlyer ? 'flyer' : 'repo'
+  }/${repoId}/preview?commitId=${commitId}&darkmode=${darkmode}&hasAccess=${hasAccess}&commitOnly=${commitOnly}`
   const prevSrc = usePrevious(src)
   if (src !== prevSrc && !iframeLoading) {
     setIframeLoading(true)
@@ -61,7 +59,6 @@ const PreviewFrame = ({
       clearTimeout(toId)
     }
   }, [src])
-  const currentSideBarWidth = sideBarWidth || (isFlyer ? 0 : SIDEBAR_WIDTH)
 
   useEffect(() => {
     const handleResize = () => {
@@ -71,7 +68,7 @@ const PreviewFrame = ({
       const availableHeight =
         window.innerHeight - topOffset - 2 * PREVIEW_MARGIN
       const availableWidth =
-        document.body.clientWidth - currentSideBarWidth - 2 * PREVIEW_MARGIN
+        document.body.clientWidth - sideBarWidth - 2 * PREVIEW_MARGIN
 
       const widthScaleFactor = availableWidth / screenSize.width
       const heightScaleFactor = availableHeight / screenSize.height
@@ -92,7 +89,7 @@ const PreviewFrame = ({
     return () => {
       window.removeEventListener('resize', handleResize)
     }
-  }, [screenSize, currentSideBarWidth])
+  }, [screenSize, sideBarWidth])
 
   const iframeStyle = {
     ...screenSize,

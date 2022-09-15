@@ -43,7 +43,7 @@ const styles = {
 }
 
 const SectionTitle = React.forwardRef(
-  ({ children, small, onClick, href }, ref) => {
+  ({ children, small, onClick, href, clickable }, ref) => {
     const style = small ? styles.small : styles.container
     return href ? (
       <a href={href} onClick={onClick} {...style} ref={ref}>
@@ -53,6 +53,7 @@ const SectionTitle = React.forwardRef(
     ) : (
       <span onClick={onClick} {...style} ref={ref}>
         {children}
+        {!!clickable && <ChevronRightIcon />}
       </span>
     )
   },

@@ -77,6 +77,7 @@ export const TeaserFeed = ({
   series,
   dense = false,
   nonInteractive = false,
+  skipFormat = false,
 }) => {
   const formatMeta = (format && format.meta) || {}
   const href = getTeaserHref(
@@ -112,9 +113,9 @@ export const TeaserFeed = ({
   return (
     <Container
       highlighted={highlighted}
-      format={format}
+      format={skipFormat ? undefined : format}
       series={series}
-      formatColor={borderColor}
+      formatColor={skipFormat ? undefined : borderColor}
       Link={Link}
       menu={menu}
       repoId={repoId}
@@ -134,7 +135,7 @@ export const TeaserFeed = ({
           title
         )}
       </Headline>
-      {!!description && (
+      {!!description && formatMeta.kind !== 'flyer' && (
         <Lead>
           {!nonInteractive ? (
             <Link href={href} passHref>

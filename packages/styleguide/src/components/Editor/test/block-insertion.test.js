@@ -4,7 +4,7 @@ import { insertRepeat } from '../Core/helpers/structure'
 import schema from '../schema/article'
 import flyerSchema from '../schema/flyer'
 import mockEditor from './mockEditor'
-import { figure, flyerTile, flyerTileOpening, paragraph } from './blocks'
+import { figure, flyerTile, flyerTileMeta, paragraph } from './blocks'
 
 describe('Slate Editor: Block Insertion (On Enter)', () => {
   window.document.getSelection = jest.fn()
@@ -569,19 +569,11 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
   it('should delete last nested repeated element if it is empty and fallback on adjacent non-repeatable node', async () => {
     value = [
       {
-        type: 'flyerTileOpening',
+        type: 'flyerTileMeta',
         id: '123',
         children: [
           {
-            type: 'flyerDate',
-            children: [{ text: '' }],
-          },
-          {
-            type: 'headline',
-            children: [{ text: '' }],
-          },
-          {
-            type: 'flyerOpeningP',
+            type: 'flyerMetaP',
             children: [
               {
                 text: '',
@@ -589,7 +581,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
             ],
           },
           {
-            type: 'flyerOpeningP',
+            type: 'flyerMetaP',
             children: [
               {
                 text: '',
@@ -602,36 +594,28 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
     ]
     const structure = [
       {
-        type: 'flyerTileOpening',
+        type: 'flyerTileMeta',
       },
       {
         type: 'flyerTile',
       },
     ]
     const editor = await setup(structure)
-    await Transforms.select(editor, [0, 3, 0])
+    await Transforms.select(editor, [0, 1, 0])
     insertRepeat(editor)
     await new Promise(process.nextTick)
-    expect(cleanupTree(value)).toMatchObject([flyerTileOpening, flyerTile])
+    expect(cleanupTree(value)).toMatchObject([flyerTileMeta, flyerTile])
     expect(editor.selection.focus.path).toEqual([1, 0, 0])
   })
 
   it('should delete last nested repeated element if it is empty and create an adjacent repeatable node', async () => {
     value = [
       {
-        type: 'flyerTileOpening',
+        type: 'flyerTileMeta',
         id: '123',
         children: [
           {
-            type: 'flyerDate',
-            children: [{ text: '' }],
-          },
-          {
-            type: 'headline',
-            children: [{ text: '' }],
-          },
-          {
-            type: 'flyerOpeningP',
+            type: 'flyerMetaP',
             children: [
               {
                 text: '',
@@ -639,7 +623,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
             ],
           },
           {
-            type: 'flyerOpeningP',
+            type: 'flyerMetaP',
             children: [
               {
                 text: '',
@@ -652,7 +636,7 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
     ]
     const structure = [
       {
-        type: 'flyerTileOpening',
+        type: 'flyerTileMeta',
       },
       {
         type: 'flyerTile',
@@ -660,11 +644,11 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
       },
     ]
     const editor = await setup(structure, { schema: flyerSchema })
-    await Transforms.select(editor, [0, 3, 0])
+    await Transforms.select(editor, [0, 1, 0])
     insertRepeat(editor)
     await new Promise(process.nextTick)
     expect(cleanupTree(value)).toMatchObject([
-      flyerTileOpening,
+      flyerTileMeta,
       flyerTile,
       flyerTile,
     ])

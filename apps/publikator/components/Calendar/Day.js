@@ -11,6 +11,7 @@ import Repo, { Placeholder } from './Repo'
 import { ascending } from 'd3-array'
 import { parseJSONObject } from '../../lib/safeJSON'
 import { WEEK_TEMPLATE_REPOS } from '../../lib/settings'
+import withT from '../../lib/withT'
 const templateRepos = parseJSONObject(WEEK_TEMPLATE_REPOS)
 
 const styles = {
@@ -29,7 +30,7 @@ const styles = {
   }),
 }
 
-const Repos = ({ repos, isNewsletter, ...props }) => {
+const Repos = withT(({ t, repos, isNewsletter, ...props }) => {
   const sortedRepos = repos.sort((repo1, repo2) =>
     ascending(
       new Date(repo1.meta.publishDate),
@@ -45,7 +46,14 @@ const Repos = ({ repos, isNewsletter, ...props }) => {
             repo={{
               latestCommit: {
                 document: {
-                  meta: { title: repo.template, template: repo.template },
+                  meta: {
+                    title: t(
+                      `repo/add/template/${repo.template}`,
+                      null,
+                      repo.template,
+                    ),
+                    template: repo.template,
+                  },
                 },
               },
             }}
@@ -73,7 +81,7 @@ const Repos = ({ repos, isNewsletter, ...props }) => {
       )}
     </div>
   )
-}
+})
 
 export const ReposByTemplate = ({
   template,
@@ -82,7 +90,11 @@ export const ReposByTemplate = ({
   isPast,
   isNewsletter,
 }) => {
-  const weeklyRepos = template.map((t) => templateRepos[t]).flat(1)
+  const weeklyRepos = template
+    .map((t) => templateRepos[t])
+    .flat(1)
+    .filter(Boolean)
+
   const reposAndPlaceholders = isPast
     ? repos
     : getPlaceholders(weeklyRepos, date).reduce((acc, placeholder) => {

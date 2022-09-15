@@ -3,11 +3,11 @@ import { css } from 'glamor'
 import { useColorContext } from '../Colors/ColorContext'
 import { mUp } from '../../theme/mediaQueries'
 import { fontStyles } from '../../theme/fonts'
-import { LIST_PADDING, ListItem as InnerListItem } from '../List/List'
+import { LIST_PADDING } from '../List/List'
 import { useRenderContext } from '../Editor/Render/Context'
 import { pxToRem } from './utils'
 
-export const Layout = ({ children, attributes }) => {
+export const Layout = ({ children, attributes = {} }) => {
   const [colorScheme] = useColorContext()
   return (
     <div {...colorScheme.set('background', 'flyerBg')} {...attributes}>
@@ -54,12 +54,12 @@ export const H2 = ({ children, attributes, ...props }) => {
         textTransform: 'uppercase',
         fontSize: 14,
         letterSpacing: 1.4,
-        lineHeight: 1,
+        lineHeight: 1.142,
         margin: '0 0 6px',
         [mUp]: {
           fontSize: 20,
           letterSpacing: 1,
-          lineHeight: 0.75,
+          lineHeight: 1.1,
           margin: '0 0 12px',
         },
       })}
@@ -153,7 +153,7 @@ export const OpeningP = ({ children, attributes, ...props }) => {
       {...attributes}
       {...props}
       {...css({
-        ...fontStyles.sansSerifMedium,
+        ...fontStyles.sansSerifBold,
         fontSize: 22,
         lineHeight: 1.318,
         margin: 0,
@@ -223,7 +223,7 @@ export const StrikeThrough = ({ children, attributes, ...props }) => (
 )
 
 const listItemRule = css({
-  ...fontStyles.sansSerifMedium,
+  ...fontStyles.sansSerifBold,
   paddingLeft: `${LIST_PADDING}px`,
   position: 'relative',
   fontSize: pxToRem('17px'),

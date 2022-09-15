@@ -3,7 +3,12 @@ import { config } from '../../config/elements'
 import { Element as SlateElement, Text, Transforms, Range } from 'slate'
 import { fixStructure } from '../helpers/structure'
 import { handleEnds } from '../helpers/ends'
-import { cleanupText, createLinks, handlePlaceholders } from '../helpers/text'
+import {
+  removeNonTextProps,
+  createLinks,
+  handlePlaceholders,
+  mergeTextNodes,
+} from '../helpers/text'
 import { resetSelection } from '../helpers/selection'
 import { cleanupElement, cleanupVoids } from '../helpers/tree'
 
@@ -67,9 +72,11 @@ export const withNormalizations =
         if (rerun) return
         rerun = handleEnds([node, path], editor)
         if (rerun) return
-        rerun = handlePlaceholders([node, path], editor)
+        rerun = removeNonTextProps([node, path], editor)
         if (rerun) return
-        rerun = cleanupText([node, path], editor)
+        rerun = mergeTextNodes([node, path], editor)
+        if (rerun) return
+        rerun = handlePlaceholders([node, path], editor)
         if (rerun) return
       }
 
