@@ -7,6 +7,8 @@ import {
 import { createAppWorkerLink } from './appWorkerLink'
 
 export const { initializeApollo, withApollo } = createApolloClientUtilities({
+  name: '@orbiting/www-app',
+  version: '1.0',
   apiUrl: API_URL,
   wsUrl: API_WS_URL,
   mobileConfigOptions: {
