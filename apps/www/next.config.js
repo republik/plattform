@@ -7,14 +7,21 @@ const withTM = require('next-transpile-modules')([
 ])
 
 const { NODE_ENV, CDN_FRONTEND_BASE_URL } = process.env
+const buildId = process.env.SOURCE_VERSION || ''
 
+/**
+ * @type {import('next').NextConfig}
+ */
 module.exports = withTM(
   withBundleAnalyzer({
+    generateBuildId: () => buildId,
+    publicRuntimeConfig: {
+      buildId,
+    },
     webpack: (config) => {
       config.externals = config.externals || {}
       config.externals['lru-cache'] = 'lru-cache'
       config.externals['react-dom/server'] = 'react-dom/server'
-
       return config
     },
     poweredByHeader: false,

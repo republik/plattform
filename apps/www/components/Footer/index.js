@@ -11,6 +11,7 @@ import {
   useColorContext,
 } from '@project-r/styleguide'
 import { OpenSourceIcon } from '@project-r/styleguide'
+import getConfig from 'next/config'
 
 import withT from '../../lib/withT'
 import withMe from '../../lib/apollo/withMe'
@@ -20,6 +21,8 @@ import { ZINDEX_FOOTER } from '../constants'
 
 import SocialLinks from './SocialLinks'
 import Address from './Address'
+
+const { publicRuntimeConfig } = getConfig()
 
 const styles = {
   bg: css({
