@@ -32,6 +32,7 @@ const styles = {
     cursor: 'pointer',
     outline: 'inherit',
     textAlign: 'start',
+    backgroundColor: 'transparent',
   }),
   cover: css({
     aspectRatio: '1 / 1',
@@ -84,10 +85,15 @@ const QueueItem = ({ item, onClick, onRemove }: QueueItemProps) => {
   const publishDate = new Date(Date.parse(document.meta.publishDate))
 
   return (
-    <Reorder.Item key={item.id} value={item} {...styles.root} style={{ y }}>
+    <Reorder.Item
+      key={item.id}
+      value={item}
+      {...styles.root}
+      style={{ y }}
+      {...colorScheme.set('backgroundColor', 'default')}
+    >
       <button
         {...styles.buttonFix}
-        {...colorScheme.set('backgroundColor', 'default')}
         style={{ width: '100%' }}
         onDoubleClick={() => onClick(item)}
       >

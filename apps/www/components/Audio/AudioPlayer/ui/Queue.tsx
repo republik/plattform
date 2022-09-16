@@ -12,12 +12,14 @@ const styles = {
     ...fontStyles.sansSerifMedium16,
   }),
   list: css({
+    height: '100%',
     listStyle: 'none',
     padding: 0,
     display: 'flex',
     flexDirection: 'column',
     gap: '0.5rem',
     overflow: 'hidden',
+    overflowY: 'auto',
     // TODO: custom scrollbar to better match the design
   }),
 }
@@ -97,7 +99,7 @@ const Queue = ({ t, activeItem, items: inputItems }: QueueProps) => {
   }, 1000)
 
   return (
-    <div>
+    <div style={{ height: '100%' }}>
       <p {...styles.heading}>{t('AudioPlayer/Queue/NextUp')}</p>
       <MotionConfig transition={{ duration: 0.3 }}>
         <Reorder.Group

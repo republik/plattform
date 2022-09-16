@@ -11,6 +11,7 @@ import {
   PauseIcon,
   CloseIcon,
   ExpandLessIcon,
+  mediaQueries,
 } from '@project-r/styleguide'
 import AudioPlayerTitle from './ui/AudioPlayerTitle'
 
@@ -21,6 +22,10 @@ const styles = {
     justifyContent: 'space-between',
     width: '100%',
     height: 68,
+    marginBottom: 8,
+    [mediaQueries.mUp]: {
+      marginBottom: 0,
+    },
   }),
   scrubberWrapper: css({}),
   playerWrapper: css({

@@ -1,18 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
-import {
-  IconButton,
-  Spinner,
-  ForwardIcon,
-  PauseIcon,
-  PlayIcon,
-  ReplayIcon,
-  ExpandMoreIcon,
-  mediaQueries,
-} from '@project-r/styleguide'
+import { IconButton, ExpandMoreIcon, mediaQueries } from '@project-r/styleguide'
 import { AudioPlayerProps } from './shared'
-import Scrubber from './ui/Scrubber'
-import PlaybackRateControl from './controls/PlaybackRateControl'
 import CurrentlyPlaying from './ui/CurrentlyPlaying'
 import Queue from './ui/Queue'
 import AudioControl, { AudioControlProps } from './ui/AudioControl'
@@ -21,29 +10,23 @@ const styles = {
   root: css({
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'space-between',
     gap: 16,
     padding: 16,
+    height: '100vh',
     '& > *': {
       userSelect: 'none',
     },
-    // maxHeight: '80vh',
     [mediaQueries.mUp]: {
-      // maxHeight: '600px',
       padding: 24,
+      height: '50vh',
+      maxHeight: '100%',
     },
   }),
   currentPlaying: css({
     display: 'flex',
     flexDirection: 'column',
     gap: 8,
-  }),
-  spinner: css({
-    position: 'relative',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 64,
-    height: 64,
   }),
   controls: css({
     display: 'flex',
@@ -102,9 +85,11 @@ const ExpandedAudioPlayer = ({
           />
         </div>
       </div>
-      {queuedItems && queuedItems.length > 0 && (
-        <Queue t={t} activeItem={activeItem} items={queuedItems} />
-      )}
+      <div style={{ flexGrow: 1, flexShrink: 1 }}>
+        {queuedItems && queuedItems.length > 0 && (
+          <Queue t={t} activeItem={activeItem} items={queuedItems} />
+        )}
+      </div>
       <div {...styles.bottomActions}>
         <div
           style={{
@@ -114,12 +99,6 @@ const ExpandedAudioPlayer = ({
           }}
         >
           <span>Share</span>
-        </div>
-        <div style={{ flex: 2 }}>
-          <PlaybackRateControl
-            playbackRate={playbackRate}
-            setPlaybackRate={handlePlaybackRateChange}
-          />
         </div>
         <div
           style={{

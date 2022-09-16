@@ -24,14 +24,17 @@ const styles = {
     bottom: 0,
     right: 0,
     margin: 0,
-    paddingBottom: ['16px', 'max(16px, env(safe-area-inset-bottom))'],
+    display: 'flex',
+    paddingBottom: ['24px', 'max(24px, env(safe-area-inset-bottom))'],
     paddingLeft: ['16px', 'max(16px, env(safe-area-inset-left))'],
     paddingRight: ['16px', 'max(16px, env(safe-area-inset-right))'],
     width: '100%',
     boxShadow: '0px -5px 15px -3px rgba(0,0,0,0.1)',
+    maxHeight: '100vh',
     [mediaQueries.mUp]: {
       width: [290, `calc(100% - ${MARGIN * 2}px)`],
       maxWidth: 380,
+      maxHeight: '60vh',
       marginRight: MARGIN,
       marginBottom: MARGIN,
       paddingLeft: 0,
@@ -61,12 +64,13 @@ const BackPanel = ({
   onBackdropClick,
 }: BackPanelProps) => {
   const [colorScheme] = useColorContext()
-  useBodyScrollLock(isExpanded)
+  const [ref] = useBodyScrollLock(isExpanded)
 
   return (
     <div {...styles.root}>
       {isExpanded && <div {...styles.backdrop} onClick={onBackdropClick} />}
       <div
+        ref={ref}
         {...styles.wrapper}
         {...colorScheme.set('backgroundColor', 'overlay')}
         {...colorScheme.set('boxShadow', 'overlayShadow')}
