@@ -9,7 +9,7 @@ import { createAppWorkerLink } from './appWorkerLink'
 
 const { publicRuntimeConfig } = getConfig()
 
-console.log('apollo', publicRuntimeConfig)
+console.log('apollo', publicRuntimeConfig, process.env.buildId)
 
 export const { initializeApollo, withApollo } = createApolloClientUtilities({
   name: '@orbiting/www-app',

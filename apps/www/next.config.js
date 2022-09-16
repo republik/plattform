@@ -25,6 +25,9 @@ module.exports = withTM(
       SOURCE_VERSION: process.env.SOURCE_VERSION,
       hash: SOURCE_VERSION,
     },
+    env: {
+      buildId: process.env.SOURCE_VERSION,
+    },
     webpack: (config) => {
       config.externals = config.externals || {}
       config.externals['lru-cache'] = 'lru-cache'
