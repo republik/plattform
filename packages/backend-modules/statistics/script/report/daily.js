@@ -99,7 +99,7 @@ const getUrls = async ({ date, limit }, { pgdb }) => {
       .format('YYYY-MM-DD')}'
       AND sm.date = '${date.format('YYYY-MM-DD')}'
       AND sm.segment IS NULL
-      AND sm.template = 'article'
+      AND sm.template IN ('article', 'flyer')
 
     ORDER BY sm."publishDate" DESC
     LIMIT :limit
@@ -154,7 +154,7 @@ const getBlock = async (
       type: 'mrkdwn',
       text: [
         `*<${getUltradashboardUrlReportLink(url)}|${meta.title}>*`,
-        `_${creditsFragment}_` + daysFragment,
+        `_${creditsFragment || '(ohne Credits)'}_` + daysFragment,
         `*Index ${indexFragment}* ⋅ Abonnenten-Index ${memberIndexFragment}`,
         'Via ' +
           distributions

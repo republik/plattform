@@ -16,6 +16,8 @@ import possibleTypes from '../generated/possibleTypes.json'
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__'
 
 export type ApolloClientOptions = {
+  name?: string
+  version?: string
   apiUrl: string
   wsUrl?: string
   headers?: { [key: string]: string | number | boolean } | IncomingHttpHeaders
@@ -60,6 +62,8 @@ function createApolloClient(
       possibleTypes,
     }),
     link: createLink(options),
+    name: options.name,
+    version: options.version,
   })
 }
 
