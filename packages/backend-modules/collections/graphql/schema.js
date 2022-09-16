@@ -48,21 +48,35 @@ type mutations {
 
   clearProgress: Collection!
 
-
-  addPlaylistItem(
-    item: PlaylistItemInput!
+  """
+  Add an item to \`User.audioQueue\`.
+  If \`sequence\` number is not provided, item will be appended.
+  An item might get a different \`sequence\` number assigned then provided.
+  """ 
+  addAudioQueueItem(
+    entity: AudioQueueEntityInput!
     sequence: Int
-  ): [PlaylistItem!]!
+  ): [AudioQueueItem!]!
 
-  movePlaylistItem(
+  """
+  Move an existing item within \`User.audioQueue\`.
+  Unless \`sequence\` number exceeds maximum \`sequence\` number, an item will put onto \`sequence\` number.
+  """ 
+  moveAudioQueueItem(
     id: ID!
     sequence: Int!
-  ): [PlaylistItem!]!
+  ): [AudioQueueItem!]!
 
-  removePlaylistItem(
+  """
+  Move an existing item from \`User.audioQueue\`.
+  """ 
+  removeAudioQueueItem(
     id: ID!
-  ): [PlaylistItem!]!
+  ): [AudioQueueItem!]!
 
-  clearPlaylist: [PlaylistItem!]!
+  """
+  Clear all items in \`User.audioQueue\`.
+  """ 
+  clearAudioQueue: [AudioQueueItem!]!
 }
 `

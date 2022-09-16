@@ -53,7 +53,6 @@ enum ProgressState {
 extend type User {
   collections: [Collection!]!
   collection(name: String!): Collection
-  collectionPlaylist: [PlaylistItem!]
   collectionItems(
     names: [String!]!
     progress: ProgressState
@@ -64,6 +63,13 @@ extend type User {
     before: String
     after: String
   ): CollectionItemConnection!
+
+  """
+  Returns a queue with audio items point to playable content. Use
+  mutations \`addAudioQueueItem\`, \`moveAudioQueueItem\`,
+  \`removeAudioQueueItem\` or \`clearAudioQueue\` to modify queue.
+  """
+  audioQueue: [AudioQueueItem!]
 }
 
 type DocumentProgress implements CollectionItemInterface {
@@ -92,21 +98,32 @@ type MediaProgress implements CollectionItemInterface {
   max: MediaProgress
 }
 
-type PlaylistItem implements CollectionItemInterface {
+"""
+An item in an audio queue.
+"""
+type AudioQueueItem implements CollectionItemInterface {
   id: ID!
+
+  """
+  Sequence number of this item
+  """ 
   sequence: Int!
+
   createdAt: DateTime!
   updatedAt: DateTime!
   collection: Collection!
   document: Document!
 }
 
-enum PlaylistItemType {
+enum AudioQueueEntityType {
   Document
 }
 
-input PlaylistItemInput {
-  type: PlaylistItemType!
+"""
+Provide an entitiy type (e. g. \`Document\`) and its ID
+""" 
+input AudioQueueEntityInput {
+  type: AudioQueueEntityType!
   id: ID!
 }
 

@@ -1,5 +1,5 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { removePlaylistItem } = require('../../../lib/Playlist')
+const { removeItem } = require('../../../lib/AudioQueue')
 
 module.exports = async (_, args, context) => {
   const { id } = args
@@ -7,7 +7,7 @@ module.exports = async (_, args, context) => {
 
   Roles.ensureUserHasRole(me, 'member')
 
-  await removePlaylistItem({ id }, context)
+  await removeItem({ id }, context)
 
-  return loaders.CollectionPlaylistItem.byUserId.load(me.id)
+  return loaders.AudioQueue.byUserId.load(me.id)
 }
