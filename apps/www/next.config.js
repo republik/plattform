@@ -8,15 +8,21 @@ const withTM = require('next-transpile-modules')([
 
 const { NODE_ENV, CDN_FRONTEND_BASE_URL, SOURCE_VERSION } = process.env
 
+console.log('next.config.js', {
+  buildId: SOURCE_VERSION,
+  SOURCE_VERSION: process.env.SOURCE_VERSION,
+  hash: SOURCE_VERSION,
+})
+
 /**
  * @type {import('next').NextConfig}
  */
 module.exports = withTM(
   withBundleAnalyzer({
-    generateBuildId: () => SOURCE_VERSION,
+    generateBuildId: () => process.env.SOURCE_VERSION,
     publicRuntimeConfig: {
       buildId: SOURCE_VERSION,
-      SOURCE_VERSION,
+      SOURCE_VERSION: process.env.SOURCE_VERSION,
       hash: SOURCE_VERSION,
     },
     webpack: (config) => {
