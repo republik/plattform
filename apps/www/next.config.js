@@ -6,18 +6,18 @@ const withTM = require('next-transpile-modules')([
   '@republik/nextjs-apollo-client', // Ensures ES5 compatibility to work in IE11
 ])
 
-const { NODE_ENV, CDN_FRONTEND_BASE_URL } = process.env
-const buildId = process.env.SOURCE_VERSION || new Date().toISOString()
+const { NODE_ENV, CDN_FRONTEND_BASE_URL, SOURCE_VERSION } = process.env
 
 /**
  * @type {import('next').NextConfig}
  */
 module.exports = withTM(
   withBundleAnalyzer({
-    generateBuildId: () => buildId,
+    generateBuildId: () => SOURCE_VERSION,
     publicRuntimeConfig: {
-      buildId,
-      hash: buildId,
+      buildId: SOURCE_VERSION,
+      SOURCE_VERSION,
+      hash: SOURCE_VERSION,
     },
     webpack: (config) => {
       config.externals = config.externals || {}
