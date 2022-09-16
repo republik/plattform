@@ -47,5 +47,20 @@ type mutations {
   ): MediaProgress
 
   clearProgress: Collection!
+
+
+  addPlaylistItem(
+    item: PlaylistItemInput!
+    sequence: Int
+  ): [PlaylistItem!]!
+
+  movePlaylistItem(
+    id: ID!
+    sequence: Int!
+  ): [PlaylistItem!]!
+
+  removePlaylistItem(
+    id: ID!
+  ): [PlaylistItem!]!
 }
 `
