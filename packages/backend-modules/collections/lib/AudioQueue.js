@@ -120,9 +120,57 @@ const removeItem = async (input, context) => {
   })
 }
 
+const reorderItems = async (input, context) => {
+  const { ids } = input
+  const { user: me, loaders, pgdb } = context
+
+  const collection = await loaders.Collection.byKeyObj.load({
+    name: getCollectionName(),
+  })
+
+  const items = await pgdb.public.collectionDocumentItems.find({
+    collectionId: collection.id,
+    userId: me.id,
+  })
+
+  const updatables = [...new Set(ids)]
+    .filter((id) => items.find((item) => item.id === id))
+    .map((id, index) => {
+      const item = items.find((item) => item.id === id)
+
+      return {
+        ...item,
+        data: {
+          ...item.data,
+          sequence: index + 1,
+        },
+      }
+    })
+
+  const deletable = items.filter(
+    (item) => !updatables.find((update) => update.id === item.id),
+  )
+
+  await Promise.each(updatables, (item) =>
+    pgdb.public.collectionDocumentItems.update(
+      { collectionId: collection.id, userId: me.id, id: item.id },
+      item,
+    ),
+  )
+
+  await Promise.each(deletable, ({ id }) =>
+    pgdb.public.collectionDocumentItems.delete({
+      collectionId: collection.id,
+      userId: me.id,
+      id,
+    }),
+  )
+}
+
 module.exports = {
   getCollectionName,
 
   upsertItem,
   removeItem,
+  reorderItems,
 }
