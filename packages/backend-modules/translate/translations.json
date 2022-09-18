@@ -1589,6 +1589,38 @@
       "value": "Sie müssen zuerst zustimmen, dass Ihre Position gespeichert wird."
     },
     {
+      "key": "api/collections/audioQueue/error/invalidItemId",
+      "value": "ID ungültig"
+    },
+    {
+      "key": "api/collections/audioQueue/error/missingEntityType",
+      "value": "Entity-Typ fehlt"
+    },
+    {
+      "key": "api/collections/audioQueue/error/unsupportedEntityType",
+      "value": "Entity-Typ wird nicht unterstützt."
+    },
+    {
+      "key": "api/collections/audioQueue/error/unsupportedSequence",
+      "value": "Angegebenen Sequenznummer wird nicht unterstützt."
+    },
+    {
+      "key": "api/collections/audioQueue/error/missingCollection",
+      "value": "Wiedergabeliste nicht gefunden"
+    },
+    {
+      "key": "api/collections/audioQueue/error/invalidEntityId",
+      "value": "Entity-ID ungültig"
+    },
+    {
+      "key": "api/collections/audioQueue/error/missingDocument",
+      "value": "Dokument nicht gefunden"
+    },
+    {
+      "key": "api/collections/audioQueue/error/missingItem",
+      "value": "Eintrag in Wiedergabeliste nicht gefunden"
+    },
+    {
       "key": "api/subscriptions/type/notSupported",
       "value": "Dieser Typ Subscription wird noch nicht unterstützt."
     },
