@@ -44,8 +44,11 @@ module.exports = {
     }
     return paginate(args, [])
   },
+  audioQueue(user, args, context) {
+    if (canAccess(user, context)) {
+      return context.loaders.AudioQueue.byUserId.load(user.id)
+    }
 
-  async audioQueue(user, args, context) {
-    return context.loaders.AudioQueue.byUserId.load(user.id)
+    return null
   },
 }
