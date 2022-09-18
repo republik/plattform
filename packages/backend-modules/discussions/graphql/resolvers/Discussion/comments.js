@@ -6,50 +6,80 @@ const getSortKey = require('../../../lib/sortKey')
 
 const THRESHOLD_OLD_DISCUSSION_IN_MS = 1000 * 60 * 60 * 72 // 72 hours
 
-const assembleTree = (_comment, _comments) => {
-  const coveredComments = []
+const assembleTree = (
+  comments,
+  { parentId = false, includeParent = false },
+) => {
+  const rootNodes = []
 
-  const _assembleTree = (comment, comments, depth = -1) => {
-    const parentId = comment.id || null
-    comment._depth = depth
-    comment.comments = {
-      nodes: _.remove(
-        comments,
-        (c) =>
-          (!parentId && !c.parentIds) ||
-          (c.parentIds && c.parentIds.slice(-1).pop() === parentId),
-      ),
-    }
-    comment.comments.nodes = comment.comments.nodes
-      .map((c) => {
-        coveredComments.push(c)
-        return c
-      })
-      .map((c) => _assembleTree(c, comments, depth + 1))
-    return comment
+  const ref = comments.reduce((acc, comment, i) => {
+    acc[comment.id] = i
+    return acc
+  }, {})
+
+  comments
+    .filter((comment) => {
+      const missingParentId = !parentId
+      const isCommentParent = comment.id === parentId
+      const isCommentParentChid = comment.parentIds?.includes(parentId)
+
+      return missingParentId || isCommentParent || isCommentParentChid
+    })
+    .forEach((comment) => {
+      const isCommentRoot = !comment.parentIds?.length
+      const isParentCommentAsRoot = comment.id === parentId
+
+      if (isCommentRoot || isParentCommentAsRoot) {
+        rootNodes.push(comment)
+        return
+      }
+
+      const parentCommentId = comment.parentIds[comment.parentIds.length - 1]
+      const parentCommentIndex = ref[parentCommentId]
+      const parentComment = comments[parentCommentIndex]
+
+      const nodes = [...(parentComment.comments?.nodes || []), comment]
+
+      parentComment.comments = {
+        ...parentComment.comments,
+        nodes,
+      }
+    })
+
+  if (parentId && !includeParent) {
+    return rootNodes[0]
   }
 
-  _assembleTree(_comment, _comments)
-  return coveredComments
+  return {
+    comments: {
+      nodes: rootNodes,
+    },
+  }
 }
 
-const measureTree = (comment) => {
+const buildConnections = (comment) => {
   const { comments } = comment
-  const numChildren = comments.nodes.reduce((acc, value) => {
-    return acc + measureTree(value)
-  }, 0)
+
+  const totalCount =
+    comments?.nodes?.reduce(
+      (count, comment) => count + buildConnections(comment),
+      0,
+    ) || 0
+
   comment.comments = {
+    nodes: [],
     ...comments,
     id: comment.id,
-    totalCount: numChildren,
-    directTotalCount: comments.nodes.length || 0,
+    totalCount,
+    totalRepliesCount: totalCount,
+    directTotalCount: comments?.nodes?.length || 0,
     pageInfo: {
       hasNextPage: false,
       endCursor: null,
     },
   }
-  comment.totalRepliesCount = numChildren
-  return numChildren + 1
+
+  return totalCount + 1
 }
 
 // recursively sort tree
@@ -66,7 +96,7 @@ const deepSortTree = (
   bubbleSort = true,
 ) => {
   const { comments } = comment
-  if (comments.nodes.length > 0) {
+  if (comments.nodes.length) {
     comments.nodes.forEach((c) =>
       deepSortTree(c, ascDesc, sortKey, topValue, topIds, bubbleSort),
     )
@@ -96,7 +126,7 @@ const deepSortTree = (
 
 const filterTree = (comment, ids, cursorEnv) => {
   const { comments, id } = comment
-  if (comments.nodes.length > 0) {
+  if (comments.nodes.length) {
     const nodes = comments.nodes.filter(
       (n) => filterTree(n, ids, cursorEnv) > 0,
     )
@@ -167,7 +197,7 @@ const flattenTreeHorizontally = (_comment) => {
 const flattenTreeVertically = (_comment) => {
   const comments = []
   const _flattenTree = (comment) => {
-    if (comment.comments.nodes.length > 0) {
+    if (comment.comments.nodes.length) {
       comments.push(...comment.comments.nodes)
       comment.comments.nodes.forEach((c) => _flattenTree(c))
     }
@@ -177,7 +207,7 @@ const flattenTreeVertically = (_comment) => {
 }
 
 const meassureDepth = (fields, depth = 0) => {
-  if (fields.nodes && fields.nodes.comments) {
+  if (fields.nodes?.comments?.length) {
     return meassureDepth(fields.nodes.comments, depth + 1)
   } else {
     if (fields.nodes) {
@@ -260,7 +290,8 @@ module.exports = async (discussion, args, context, info) => {
   }
 
   const commentsQuery = [
-    `SELECT c.* FROM comments c`,
+    `SELECT c.*`,
+    `FROM comments c`,
     tag && `LEFT JOIN comments cr ON cr.id = (c."parentIds"->>0)::uuid`,
     `WHERE c."discussionId" = :discussionId`,
     tag && `AND (c.tags @> '"${tag}"' OR cr.tags @> '"${tag}"')`,
@@ -302,8 +333,6 @@ module.exports = async (discussion, args, context, info) => {
     orderBy,
     comments,
   )
-
-  let tree = parentId ? comments.find((c) => c.id === parentId) : {}
 
   // prepare sort
   const ascDesc = orderDirection === 'ASC' ? ascending : descending
@@ -359,12 +388,8 @@ module.exports = async (discussion, args, context, info) => {
     }
   }
 
-  assembleTree(tree, comments)
-  if (parentId && includeParent) {
-    tree = { comments: { nodes: [tree] } }
-  }
-
-  measureTree(tree)
+  const tree = assembleTree(comments, { parentId, includeParent })
+  buildConnections(tree)
   deepSortTree(tree, ascDesc, sortKey, topValue, topIds, bubbleSort)
 
   if (exceptIds) {
