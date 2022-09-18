@@ -3,7 +3,6 @@ import {
   RefObject,
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -17,6 +16,7 @@ import { AudioQueueItem } from './graphql/AudioQueueHooks'
 import useNativeAppEvent from '../../lib/react-native/useNativeAppEvent'
 import { useMediaProgress } from './MediaProgress'
 import useInterval from '../../lib/hooks/useInterval'
+import { reportError } from '../../lib/errors'
 
 const DEFAULT_SYNC_INTERVAL = 500 // in ms
 const DEFAULT_PLAYBACK_RATE = 1
@@ -89,7 +89,16 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const [buffered, setBuffered] = useState<TimeRanges>(null)
   const [playbackRate, setPlaybackRate] = usePlaybackRate(DEFAULT_PLAYBACK_RATE)
 
-  // TODO: handle error state
+  const handleError = (error: Error | MediaError | string) => {
+    if (typeof error === 'string') {
+      reportError('handle audio-error', error)
+    } else {
+      reportError(
+        'handle audio-error',
+        JSON.stringify(error, Object.getOwnPropertyNames(error), 2),
+      )
+    }
+  }
 
   const saveActiveItemProgress = useCallback(
     async (forcedState?: { currentTime?: number; isPlaying?: boolean }) => {
@@ -115,157 +124,195 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   }
 
   const syncWithMediaElement = () => {
-    if (!mediaRef.current) return
-    const audioElem = mediaRef.current
-    setCurrentTime(audioElem.currentTime)
-    setDuration(audioElem.duration)
-    setPlaybackRate(audioElem.playbackRate)
-    setIsPlaying(!audioElem.paused)
-    setIsLoading(audioElem.readyState < 1)
-    setBuffered(audioElem.buffered)
+    try {
+      if (!mediaRef.current) return
+      const audioElem = mediaRef.current
+      setCurrentTime(audioElem.currentTime)
+      setDuration(audioElem.duration)
+      setPlaybackRate(audioElem.playbackRate)
+      setIsPlaying(!audioElem.paused)
+      setIsLoading(audioElem.readyState < 1)
+      setBuffered(audioElem.buffered)
+    } catch (error) {
+      handleError(error)
+    }
   }
 
   const onCanPlay = async () => {
-    setIsLoading(false)
-    syncWithMediaElement()
-    console.log('AudioPlayerContainer: onCanPlay', {
-      isPlaying,
-      shouldAutoPlay,
-      hasAutoPlayed,
-    })
-    if (activePlayerItem?.id !== trackedPlayerItem?.current?.id) {
-      trackedPlayerItem.current = activePlayerItem
+    try {
+      setIsLoading(false)
+      syncWithMediaElement()
+      console.log('AudioPlayerContainer: onCanPlay', {
+        isPlaying,
+        shouldAutoPlay,
+        hasAutoPlayed,
+      })
+      if (activePlayerItem?.id !== trackedPlayerItem?.current?.id) {
+        trackedPlayerItem.current = activePlayerItem
 
-      const { userProgress, durationMs } =
-        activePlayerItem.document?.meta.audioSource ?? {}
-      const duration = durationMs / 1000
-      console.log('Available userProgress is ', userProgress?.secs ?? 0)
-      // Only load the userProgress if given and smaller within 2 seconds of the duration
-      if (
-        mediaRef.current &&
-        userProgress &&
-        (!duration || userProgress.secs + 2 < duration)
-      ) {
-        setCurrentTime(userProgress.secs)
-        mediaRef.current.currentTime = userProgress.secs
+        const { userProgress, durationMs } =
+          activePlayerItem.document?.meta.audioSource ?? {}
+        const duration = durationMs / 1000
+        console.log('Available userProgress is ', userProgress?.secs ?? 0)
+        // Only load the userProgress if given and smaller within 2 seconds of the duration
+        if (
+          mediaRef.current &&
+          userProgress &&
+          (!duration || userProgress.secs + 2 < duration)
+        ) {
+          setCurrentTime(userProgress.secs)
+          mediaRef.current.currentTime = userProgress.secs
+        }
       }
-    }
 
-    if (!activePlayerItem) return
+      if (!activePlayerItem) return
 
-    if (!isPlaying && shouldAutoPlay && !hasAutoPlayed) {
-      console.log('triggering onPlay via onCanPlay')
-      setHasAutoPlayed(true)
-      await onPlay()
+      if (!isPlaying && shouldAutoPlay && !hasAutoPlayed) {
+        console.log('triggering onPlay via onCanPlay')
+        setHasAutoPlayed(true)
+        await onPlay()
+      }
+    } catch (error) {
+      handleError(error)
     }
   }
 
   const onPlay = async () => {
-    if (inNativeApp) {
-      // handle edge case when the track-player queue is empty
-      // the previously played item must therefor be readded to the queue
-      if (audioQueue.length === 0 && activePlayerItem) {
-        // TODO: find a way to re-add the last played item to the queue
-        // so that the track-player can start playing it again
+    try {
+      if (inNativeApp) {
+        // handle edge case when the track-player queue is empty
+        // the previously played item must therefor be readded to the queue
+        if (audioQueue.length === 0 && activePlayerItem) {
+          // TODO: find a way to re-add the last played item to the queue
+          // so that the track-player can start playing it again
+        }
+        console.log('onPlay: inNativeApp', JSON.stringify(activePlayerItem))
+        notifyApp(AudioEvent.PLAY)
+      } else if (mediaRef.current) {
+        throw new Error('onPlay')
+
+        console.log('calling play on web-mediaRef')
+        mediaRef.current.playbackRate = playbackRate
+        mediaRef.current.play()
+        syncWithMediaElement()
       }
-      console.log('onPlay: inNativeApp', JSON.stringify(activePlayerItem))
-      notifyApp(AudioEvent.PLAY)
-    } else if (mediaRef.current) {
-      console.log('calling play on web-mediaRef')
-      mediaRef.current.playbackRate = playbackRate
-      mediaRef.current.play()
-      syncWithMediaElement()
+    } catch (error) {
+      handleError(error)
     }
   }
 
   const onPause = async () => {
-    if (!activePlayerItem || !isPlaying) return
-    if (inNativeApp) {
-      notifyApp(AudioEvent.PAUSE)
-    } else if (mediaRef.current) {
-      mediaRef.current.pause()
-      syncWithMediaElement()
+    try {
+      if (!activePlayerItem || !isPlaying) return
+      if (inNativeApp) {
+        notifyApp(AudioEvent.PAUSE)
+      } else if (mediaRef.current) {
+        mediaRef.current.pause()
+        syncWithMediaElement()
+      }
+      await saveActiveItemProgress({
+        isPlaying: false,
+      })
+    } catch (error) {
+      handleError(error)
     }
-    await saveActiveItemProgress({
-      isPlaying: false,
-    })
   }
 
   const onStop = () => {
-    if (!activePlayerItem) return
-    if (inNativeApp) {
-      notifyApp(AudioEvent.STOP)
-    } else if (mediaRef.current) {
-      mediaRef.current.pause()
-      mediaRef.current.currentTime = 0
-      syncWithMediaElement()
+    try {
+      if (!activePlayerItem) return
+      if (inNativeApp) {
+        notifyApp(AudioEvent.STOP)
+      } else if (mediaRef.current) {
+        mediaRef.current.pause()
+        mediaRef.current.currentTime = 0
+        syncWithMediaElement()
+      }
+      setHasAutoPlayed(false)
+      setIsVisible(false)
+      initialized = false
+    } catch (error) {
+      handleError(error)
     }
-    setHasAutoPlayed(false)
-    setIsVisible(false)
-    initialized = false
   }
 
   const onSeek = async (progress: number) => {
-    if (!activePlayerItem) return
+    try {
+      if (!activePlayerItem) return
 
-    const updatedCurrentTime = progress * duration
+      const updatedCurrentTime = progress * duration
 
-    if (inNativeApp) {
-      notifyApp(AudioEvent.SEEK, progress * duration)
-    } else if (mediaRef.current) {
-      mediaRef.current.currentTime = progress * duration
-      syncWithMediaElement()
+      if (inNativeApp) {
+        notifyApp(AudioEvent.SEEK, progress * duration)
+      } else if (mediaRef.current) {
+        mediaRef.current.currentTime = progress * duration
+        syncWithMediaElement()
+      }
+      // TODO: debounce saving progress, since onSeek is called on every mousemove
+      await saveActiveItemProgress({
+        currentTime: updatedCurrentTime,
+        isPlaying: false,
+      })
+    } catch (error) {
+      handleError(error)
     }
-    // TODO: debounce saving progress, since onSeek is called on every mousemove
-    await saveActiveItemProgress({
-      currentTime: updatedCurrentTime,
-      isPlaying: false,
-    })
   }
 
   const onForward = async () => {
-    if (!activePlayerItem) return
+    try {
+      if (!activePlayerItem) return
 
-    const updatedCurrentTime = currentTime + SKIP_FORWARD_TIME
+      const updatedCurrentTime = currentTime + SKIP_FORWARD_TIME
 
-    if (inNativeApp) {
-      notifyApp(AudioEvent.FORWARD, SKIP_FORWARD_TIME)
-    } else if (mediaRef.current) {
-      mediaRef.current.currentTime += SKIP_FORWARD_TIME
-      syncWithMediaElement()
+      if (inNativeApp) {
+        notifyApp(AudioEvent.FORWARD, SKIP_FORWARD_TIME)
+      } else if (mediaRef.current) {
+        mediaRef.current.currentTime += SKIP_FORWARD_TIME
+        syncWithMediaElement()
+      }
+      await saveActiveItemProgress({
+        currentTime: updatedCurrentTime,
+        isPlaying: false,
+      })
+    } catch (error) {
+      handleError(error)
     }
-    await saveActiveItemProgress({
-      currentTime: updatedCurrentTime,
-      isPlaying: false,
-    })
   }
 
   const onBackward = async () => {
-    if (!activePlayerItem) return
+    try {
+      if (!activePlayerItem) return
 
-    const updatedCurrentTime = currentTime - SKIP_BACKWARD_TIME
+      const updatedCurrentTime = currentTime - SKIP_BACKWARD_TIME
 
-    if (inNativeApp) {
-      notifyApp(AudioEvent.BACKWARD, SKIP_BACKWARD_TIME)
-    } else if (mediaRef.current) {
-      mediaRef.current.currentTime -= SKIP_BACKWARD_TIME
-      syncWithMediaElement()
+      if (inNativeApp) {
+        notifyApp(AudioEvent.BACKWARD, SKIP_BACKWARD_TIME)
+      } else if (mediaRef.current) {
+        mediaRef.current.currentTime -= SKIP_BACKWARD_TIME
+        syncWithMediaElement()
+      }
+      await saveActiveItemProgress({
+        currentTime: updatedCurrentTime,
+        isPlaying: false,
+      })
+    } catch (error) {
+      handleError(error)
     }
-    await saveActiveItemProgress({
-      currentTime: updatedCurrentTime,
-      isPlaying: false,
-    })
   }
 
   const onPlaybackRateChange = (value: number) => {
-    if (!activePlayerItem) return
-    if (inNativeApp) {
-      notifyApp(AudioEvent.PLAYBACK_RATE, value)
-    } else {
-      mediaRef.current.playbackRate = value
-      syncWithMediaElement()
+    try {
+      if (!activePlayerItem) return
+      if (inNativeApp) {
+        notifyApp(AudioEvent.PLAYBACK_RATE, value)
+      } else {
+        mediaRef.current.playbackRate = value
+        syncWithMediaElement()
+      }
+      setPlaybackRate(value)
+    } catch (error) {
+      handleError(error)
     }
-    setPlaybackRate(value)
   }
 
   // Handle track ending on media element
@@ -282,31 +329,35 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
         const nextUp = data.audioQueueItems[0]
         setActivePlayerItem(nextUp)
       }
-    } catch (e) {
-      console.error(e)
+    } catch (error) {
+      handleError(error)
     }
   }
 
   const playQueue = async () => {
-    if (!audioQueue || audioQueue.length === 0) {
-      console.log('playQueue: no audioQueue', audioQueue)
-      return
+    try {
+      if (!audioQueue || audioQueue.length === 0) {
+        console.log('playQueue: no audioQueue', audioQueue)
+        return
+      }
+      console.log('playQueue', {
+        audioQueue,
+        activePlayerItem,
+        trackedPlayerItem,
+      })
+      const nextUp = audioQueue[0]
+      setActivePlayerItem(nextUp)
+      setIsVisible(true)
+      await onPlay()
+    } catch (error) {
+      handleError(error)
     }
-    console.log('playQueue', {
-      audioQueue,
-      activePlayerItem,
-      trackedPlayerItem,
-    })
-    const nextUp = audioQueue[0]
-    setActivePlayerItem(nextUp)
-    setIsVisible(true)
-    await onPlay()
   }
 
   const onError = () => {
     if (mediaRef.current && mediaRef.current.error) {
       const error = mediaRef.current.error
-      console.error('AudioPlayerContainer: onError', error)
+      handleError(error)
       // TODO: handle error and show visually
     }
     // TODO: look into best way for the track-player to handle errors
@@ -388,6 +439,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   useAudioContextEvent<void>('togglePlayer', playQueue)
   useNativeAppEvent(AudioEvent.SYNC, syncWithNativeApp)
   useNativeAppEvent(AudioEvent.QUEUE_ADVANCE, onQueueAdvance)
+  useNativeAppEvent(AudioEvent.ERROR, handleError)
 
   if (!activePlayerItem) return null
 
