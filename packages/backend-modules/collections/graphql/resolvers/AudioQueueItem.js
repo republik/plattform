@@ -1,5 +1,3 @@
 module.exports = {
-  sequence: (item) => {
-    return item.data?.sequence
-  },
+  sequence: (item) => item.data?.sequence,
 }
