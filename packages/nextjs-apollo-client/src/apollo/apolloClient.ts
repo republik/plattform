@@ -43,7 +43,7 @@ function createApolloClient(
         },
         User: {
           fields: {
-            collectionPlaylist: {
+            audioQueue: {
               merge: (existing, incoming, options) => {
                 return incoming
               },
