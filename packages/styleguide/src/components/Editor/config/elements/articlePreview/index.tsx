@@ -121,7 +121,10 @@ const Form: React.FC<ElementFormProps<ArticlePreviewElement>> = ({
             )
           }
         }}
-        onDelete={() => Transforms.unsetNodes(editor, 'href', { at: path })}
+        onDelete={() => {
+          Transforms.unsetNodes(editor, 'href', { at: path })
+          unsetFormatData()
+        }}
       />
       <RepoField
         label='Format'

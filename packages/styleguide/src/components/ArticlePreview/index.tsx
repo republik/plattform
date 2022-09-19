@@ -7,12 +7,21 @@ import {
   serifTitle28,
   sansSerifMedium16,
   sansSerifMedium20,
+  serifTitle20,
+  serifTitle22,
+  sansSerifMedium22,
+  cursiveTitle20,
+  cursiveTitle22,
+  flyerTitle20,
+  flyerTitle22,
 } from '../Typography/styles'
 import { useRenderContext } from '../Editor/Render/Context'
 import { plainLinkRule } from '../Typography'
 import { mUp } from '../../theme/mediaQueries'
-import { convertStyleToRem } from '../Typography/utils'
+import { convertStyleToRem, pxToRem } from '../Typography/utils'
 import { useColorContext } from '../Colors/ColorContext'
+import { fontStyles } from '../../theme/fonts'
+import { ArticleKind } from '../Editor/custom-types'
 
 const styles = {
   format: css({
@@ -26,10 +35,12 @@ const styles = {
   }),
   title: css({
     margin: '0px 0px 12px 0px',
-    ...serifTitle28,
+    fontSize: 28,
+    lineHeight: '30px',
     [mUp]: {
       margin: '0px 0px 17px 0px',
-      ...serifTitle38,
+      fontSize: 38,
+      lineHeight: '43px',
     },
   }),
   lead: css({
@@ -44,6 +55,26 @@ const styles = {
     padding: 15,
     [mUp]: {
       padding: 42,
+    },
+  }),
+  editorial: css({
+    '& h4': {
+      ...fontStyles.serifTitle,
+    },
+  }),
+  meta: css({
+    '& h4': {
+      ...fontStyles.sansSerifMedium,
+    },
+  }),
+  scribble: css({
+    '& h4': {
+      ...fontStyles.cursiveTitle,
+    },
+  }),
+  flyer: css({
+    '& h4': {
+      ...fontStyles.flyerTitle,
     },
   }),
 }
@@ -102,10 +133,20 @@ export const ArticlePreview: React.FC<{
   color: string
   backgroundColor: string
   href?: string
+  kind?: ArticleKind
   [x: string]: unknown
-}> = ({ children, attributes, color, backgroundColor, href, ...props }) => {
+}> = ({
+  children,
+  attributes,
+  color,
+  backgroundColor,
+  href,
+  kind = 'editorial',
+  ...props
+}) => {
   const { Link } = useRenderContext()
   const [colorScheme] = useColorContext()
+  console.log({ kind })
   return (
     <Link href={href} passHref>
       <a
@@ -114,6 +155,7 @@ export const ArticlePreview: React.FC<{
         {...plainLinkRule}
         {...(!color && colorScheme.set('color', 'text'))}
         {...(!backgroundColor && colorScheme.set('backgroundColor', 'default'))}
+        {...styles[kind]}
         href={href}
         style={{
           ...attributes?.style,
