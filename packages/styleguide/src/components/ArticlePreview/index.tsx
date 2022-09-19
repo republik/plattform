@@ -2,23 +2,14 @@ import React from 'react'
 import { css } from 'glamor'
 import {
   serifRegular23,
-  serifTitle38,
   serifRegular16,
-  serifTitle28,
   sansSerifMedium16,
   sansSerifMedium20,
-  serifTitle20,
-  serifTitle22,
-  sansSerifMedium22,
-  cursiveTitle20,
-  cursiveTitle22,
-  flyerTitle20,
-  flyerTitle22,
 } from '../Typography/styles'
 import { useRenderContext } from '../Editor/Render/Context'
 import { plainLinkRule } from '../Typography'
 import { mUp } from '../../theme/mediaQueries'
-import { convertStyleToRem, pxToRem } from '../Typography/utils'
+import { convertStyleToRem } from '../Typography/utils'
 import { useColorContext } from '../Colors/ColorContext'
 import { fontStyles } from '../../theme/fonts'
 import { ArticleKind } from '../Editor/custom-types'
@@ -99,7 +90,7 @@ export const ArticleFormat: React.FC<{
   const Tag = href ? 'a' : 'span'
   return (
     <Link href={href} passHref>
-      <Tag {...attributes} {...props} {...styles.format}>
+      <Tag {...attributes} {...props} {...styles.format} {...plainLinkRule}>
         {children}
       </Tag>
     </Link>
@@ -146,26 +137,24 @@ export const ArticlePreview: React.FC<{
 }) => {
   const { Link } = useRenderContext()
   const [colorScheme] = useColorContext()
-  console.log({ kind })
   return (
     <Link href={href} passHref>
-      <a
+      <div
         {...attributes}
         {...props}
         {...plainLinkRule}
         {...(!color && colorScheme.set('color', 'text'))}
         {...(!backgroundColor && colorScheme.set('backgroundColor', 'default'))}
         {...styles[kind]}
-        href={href}
         style={{
           ...attributes?.style,
-          display: 'block',
+          cursor: 'pointer',
           color,
           backgroundColor,
         }}
       >
         {children}
-      </a>
+      </div>
     </Link>
   )
 }

@@ -12,7 +12,6 @@ import { css } from 'glamor'
 import ColorPicker from '../../../Forms/ColorPicker'
 import { useSlate } from 'slate-react'
 import { Transforms } from 'slate'
-import { lab } from 'd3-color'
 import Dropdown from '../../../../Form/Dropdown'
 import RepoField from '../../../Forms/RepoField'
 
