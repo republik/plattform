@@ -4,6 +4,9 @@ import { useColorContext } from '../Colors/ColorContext'
 import { mUp } from '../../theme/mediaQueries'
 import { Message } from '../Editor/Render/Message'
 import renderAsText from '../Editor/Render/text'
+import { CustomDescendant } from '../Editor/custom-types'
+import { isSlateElement } from '../Editor/Render/helpers'
+import { useDebounce } from '../../lib/useDebounce'
 
 const MAX_CHAR = 600
 export const FLYER_CONTAINER_MAXWIDTH = 700
@@ -51,14 +54,17 @@ export const FlyerTile: React.FC<{
 }
 
 export const EditorFlyerTile: React.FC<{
-  children: any
+  slateChildren: CustomDescendant[]
   attributes: any
   [x: string]: unknown
-}> = ({ children, attributes, ...props }) => {
+}> = ({ children, slateChildren = [], attributes, ...props }) => {
   const [colorScheme] = useColorContext()
-  const tree = children?.props?.nodes?.filter((n) => n.type !== 'MetaP')
-  console.log({ props })
-  const charCount = tree ? renderAsText(tree).length : 0
+  const charCount = useMemo(() => {
+    const tree = slateChildren.filter(
+      (n) => isSlateElement(n) && n.type !== 'flyerMetaP',
+    )
+    return renderAsText(tree).length
+  }, [slateChildren])
   return (
     <div
       {...props}
