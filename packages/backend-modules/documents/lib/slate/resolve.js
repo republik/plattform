@@ -52,7 +52,8 @@ const contentUrlResolver = async (
 
   await visit(
     doc.content,
-    (node) => node?.type === 'link' || node?.type === 'articlePreview',
+    (node) =>
+      ['link', 'articlePreview', 'articlePreviewFormat'].includes(node?.type),
     (node) => {
       node.href = urlReplacer(node.href, stripDocLinks)
     },

@@ -183,30 +183,27 @@ export type FlyerDateElement = SharedElement & {
   date?: string
 }
 
+export type ArticleKind = 'editorial' | 'meta' | 'flyer' | 'scribble'
+
 export type ArticlePreviewElement = SharedElement & {
   type: 'articlePreview'
   href?: string
   backgroundColor?: string
   color?: string
+  kind?: ArticleKind
 }
 
 export type ArticlePreviewTextContainerElement = SharedElement & {
   type: 'articlePreviewTextContainer'
 }
 
-export type FormatData = {
-  id: string
-  repoId: string
-  meta: {
-    title?: string
-    color?: string
-    type?: string
-  }
+export type ArticlePreviewFormatElement = SharedElement & {
+  type: 'articlePreviewFormat'
+  href?: string
 }
 
 export type ArticlePreviewTitleElement = SharedElement & {
   type: 'articlePreviewTitle'
-  format?: FormatData
 }
 
 export type ArticlePreviewLeadElement = SharedElement & {
@@ -262,6 +259,7 @@ export type CustomElement =
   | FlyerDateElement
   | ArticlePreviewElement
   | ArticlePreviewTextContainerElement
+  | ArticlePreviewFormatElement
   | ArticlePreviewTitleElement
   | ArticlePreviewLeadElement
   | QuizElement
@@ -307,6 +305,7 @@ export type CustomElementsType =
   | 'flyerDate'
   | 'articlePreview'
   | 'articlePreviewTextContainer'
+  | 'articlePreviewFormat'
   | 'articlePreviewTitle'
   | 'articlePreviewLead'
   | 'quiz'
