@@ -1781,6 +1781,10 @@
       "value": "Vorschau"
     },
     {
+      "key": "editor/element/articlePreviewFormat",
+      "value": "Format"
+    },
+    {
       "key": "editor/element/articlePreviewTitle",
       "value": "Titel"
     },

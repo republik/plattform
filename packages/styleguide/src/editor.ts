@@ -4,6 +4,7 @@ export { EDITOR_TOOLBAR_HEIGHT } from './components/Editor/Core/Toolbar'
 export { cleanupTree } from './components/Editor/Core/helpers/tree'
 export { default as Editor } from './components/Editor'
 export { default as AuthorSearch } from './components/Editor/Forms/AuthorSearch'
+export { default as RepoSearch } from './components/Editor/Forms/RepoSearch'
 
 export { ToolbarContainer as EditorToolbar } from './components/Editor/Core/Toolbar'
 export { default as flyerEditorSchema } from './components/Editor/schema/flyerEditor'

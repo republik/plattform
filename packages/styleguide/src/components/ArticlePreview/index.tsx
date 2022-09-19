@@ -2,22 +2,21 @@ import React from 'react'
 import { css } from 'glamor'
 import {
   serifRegular23,
-  serifTitle38,
   serifRegular16,
-  serifTitle28,
   sansSerifMedium16,
   sansSerifMedium20,
 } from '../Typography/styles'
 import { useRenderContext } from '../Editor/Render/Context'
 import { plainLinkRule } from '../Typography'
 import { mUp } from '../../theme/mediaQueries'
-import { FormatData } from '../Editor/custom-types'
 import { convertStyleToRem } from '../Typography/utils'
 import { useColorContext } from '../Colors/ColorContext'
+import { fontStyles } from '../../theme/fonts'
+import { ArticleKind } from '../Editor/custom-types'
 
 const styles = {
   format: css({
-    display: 'block',
+    display: 'inline-block',
     ...convertStyleToRem(sansSerifMedium16),
     margin: '0 0 18px 0',
     [mUp]: {
@@ -27,10 +26,12 @@ const styles = {
   }),
   title: css({
     margin: '0px 0px 12px 0px',
-    ...serifTitle28,
+    fontSize: 28,
+    lineHeight: '30px',
     [mUp]: {
       margin: '0px 0px 17px 0px',
-      ...serifTitle38,
+      fontSize: 38,
+      lineHeight: '43px',
     },
   }),
   lead: css({
@@ -47,6 +48,26 @@ const styles = {
       padding: 42,
     },
   }),
+  editorial: css({
+    '& h4': {
+      ...fontStyles.serifTitle,
+    },
+  }),
+  meta: css({
+    '& h4': {
+      ...fontStyles.sansSerifMedium,
+    },
+  }),
+  scribble: css({
+    '& h4': {
+      ...fontStyles.cursiveTitle,
+    },
+  }),
+  flyer: css({
+    '& h4': {
+      ...fontStyles.flyerTitle,
+    },
+  }),
 }
 
 export const ArticleTextContainer: React.FC<{
@@ -60,23 +81,28 @@ export const ArticleTextContainer: React.FC<{
   )
 }
 
+export const ArticleFormat: React.FC<{
+  attributes: any
+  href?: string
+  [x: string]: unknown
+}> = ({ children, attributes, href, ...props }) => {
+  const { Link } = useRenderContext()
+  const Tag = href ? 'a' : 'span'
+  return (
+    <Link href={href} passHref>
+      <Tag {...attributes} {...props} {...styles.format} {...plainLinkRule}>
+        {children}
+      </Tag>
+    </Link>
+  )
+}
+
 export const ArticleTitle: React.FC<{
   attributes: any
-  format: FormatData
   [x: string]: unknown
-}> = ({ children, attributes, format, color, backgroundColor, ...props }) => {
-  const [colorScheme] = useColorContext()
+}> = ({ children, attributes, ...props }) => {
   return (
     <h4 {...attributes} {...props} {...styles.title}>
-      {!!format && (
-        <span
-          contentEditable={false}
-          {...styles.format}
-          {...colorScheme.set('color', format.meta.color || 'text', 'format')}
-        >
-          {format.meta.title}
-        </span>
-      )}
       {children}
     </h4>
   )
@@ -85,7 +111,7 @@ export const ArticleTitle: React.FC<{
 export const ArticleLead: React.FC<{
   attributes: any
   [x: string]: unknown
-}> = ({ children, attributes, color, backgroundColor, ...props }) => {
+}> = ({ children, attributes, ...props }) => {
   return (
     <p {...attributes} {...props} {...styles.lead}>
       {children}
@@ -98,28 +124,37 @@ export const ArticlePreview: React.FC<{
   color: string
   backgroundColor: string
   href?: string
+  kind?: ArticleKind
   [x: string]: unknown
-}> = ({ children, attributes, color, backgroundColor, href, ...props }) => {
+}> = ({
+  children,
+  attributes,
+  color,
+  backgroundColor,
+  href,
+  kind = 'editorial',
+  ...props
+}) => {
   const { Link } = useRenderContext()
   const [colorScheme] = useColorContext()
   return (
     <Link href={href} passHref>
-      <a
+      <div
         {...attributes}
         {...props}
         {...plainLinkRule}
         {...(!color && colorScheme.set('color', 'text'))}
         {...(!backgroundColor && colorScheme.set('backgroundColor', 'default'))}
-        href={href}
+        {...styles[kind]}
         style={{
           ...attributes?.style,
-          display: 'block',
+          cursor: 'pointer',
           color,
           backgroundColor,
         }}
       >
         {children}
-      </a>
+      </div>
     </Link>
   )
 }
