@@ -10,16 +10,30 @@ import {
 import { ArticlePreviewIcon } from '../../../../Icons'
 import { css } from 'glamor'
 import ColorPicker from '../../../Forms/ColorPicker'
-import RepoSearch from '../../../Forms/RepoSearch'
 import { useSlate } from 'slate-react'
 import { Transforms } from 'slate'
-import { AutoSlugLinkInfo } from '../../../Forms/github'
-import { useRenderContext } from '../../../Render/Context'
 import { lab } from 'd3-color'
 import Dropdown from '../../../../Form/Dropdown'
-import Field from '../../../../Form/Field'
-import IconButton from '../../../../IconButton'
-import { DeleteIcon } from '../../../../Icons'
+import RepoField from '../../../Forms/RepoField'
+
+const ARTICLE_KINDS: { value: ArticleKind; text: string }[] = [
+  {
+    value: 'editorial',
+    text: 'Editorial',
+  },
+  {
+    value: 'meta',
+    text: 'Meta',
+  },
+  {
+    value: 'flyer',
+    text: 'Journal',
+  },
+  {
+    value: 'scribble',
+    text: 'Ameise',
+  },
+]
 
 const styles = {
   container: css({
@@ -34,34 +48,6 @@ const styles = {
 const getBackgroundColor = (color: string): string => {
   const labColor = lab(color)
   return labColor.l > 50 ? '#000' : '#fff'
-}
-
-const RepoField: React.FC<{
-  href?: string
-  onChange: ({ value: any }) => void
-  onDelete: () => void
-}> = ({ href, onChange, onDelete }) => {
-  const { t } = useRenderContext()
-  return (
-    <>
-      {href ? (
-        <>
-          <Field
-            label='URL'
-            value={href}
-            disabled
-            icon={<IconButton Icon={DeleteIcon} onClick={onDelete} size={30} />}
-          />
-          <AutoSlugLinkInfo
-            value={href || ''}
-            label={t('metaData/field/href/document')}
-          />
-        </>
-      ) : (
-        <RepoSearch onChange={onChange} />
-      )}
-    </>
-  )
 }
 
 const Form: React.FC<ElementFormProps<ArticlePreviewElement>> = ({
@@ -95,6 +81,7 @@ const Form: React.FC<ElementFormProps<ArticlePreviewElement>> = ({
   return (
     <>
       <RepoField
+        label='Dokument'
         href={element.href}
         onChange={({ value }) => {
           const href = `https://github.com/${value.id}?autoSlug`
@@ -137,32 +124,23 @@ const Form: React.FC<ElementFormProps<ArticlePreviewElement>> = ({
         onDelete={() => Transforms.unsetNodes(editor, 'href', { at: path })}
       />
       <RepoField
+        label='Format'
         href={
           (
             (element.children[1] as ArticlePreviewTextContainerElement)
               .children[0] as ArticlePreviewFormatElement
           ).href
         }
-        onChange={({ value }) =>
-          setFormatData({ value: value.latestCommit.document })
-        }
+        onChange={({ value }) => setFormatData(value.latestCommit.document)}
         onDelete={unsetFormatData}
+        template='format'
       />
       <Dropdown
         label='Inhaltsbezeichnung'
-        items={[
-          {
-            value: 'editorial',
-            text: 'Editorial',
-          },
-          {
-            value: 'meta',
-            text: 'Meta',
-          },
-        ]}
+        items={ARTICLE_KINDS}
         value={element.kind || 'editorial'}
-        onChange={(item) => {
-          onChange({ kind: item.value as ArticleKind })
+        onChange={(item: { value: ArticleKind; text: string }) => {
+          onChange({ kind: item.value })
         }}
       />
       <div {...styles.container}>

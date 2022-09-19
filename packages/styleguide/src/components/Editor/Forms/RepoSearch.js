@@ -47,6 +47,7 @@ export const filterRepos = gql`
           id
           document {
             id
+            repoId
             meta {
               title
               shortTitle
