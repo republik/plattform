@@ -7,7 +7,7 @@ import {
   P,
   useColorContext,
 } from '@project-r/styleguide'
-import { ColorPicker } from '@project-r/styleguide/editor'
+import { ColorPicker, RepoSearch } from '@project-r/styleguide/editor'
 import { useState } from 'react'
 import { css } from 'glamor'
 import { buttonStyles, createPropertyForm, matchBlock } from '../../utils'
@@ -35,7 +35,6 @@ import UIForm from '../../UIForm'
 import ImageInput from '../../utils/ImageInput'
 import ContrastInfo from '../../utils/ContrastInfo'
 import createOnFieldChange from '../../utils/createOnFieldChange'
-import RepoSearch from '../../utils/RepoSearch'
 import { AutoSlugLinkInfo } from '../../utils/github'
 
 import withT from '../../../../lib/withT'

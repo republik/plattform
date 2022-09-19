@@ -183,11 +183,14 @@ export type FlyerDateElement = SharedElement & {
   date?: string
 }
 
+export type ArticleKind = 'editorial' | 'interaction' | 'flyer' | 'scribble'
+
 export type ArticlePreviewElement = SharedElement & {
   type: 'articlePreview'
   href?: string
   backgroundColor?: string
   color?: string
+  kind?: ArticleKind
 }
 
 export type ArticlePreviewTextContainerElement = SharedElement & {
