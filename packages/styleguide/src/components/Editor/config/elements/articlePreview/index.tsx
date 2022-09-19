@@ -45,11 +45,6 @@ const styles = {
   }),
 }
 
-const getBackgroundColor = (color: string): string => {
-  const labColor = lab(color)
-  return labColor.l > 50 ? '#000' : '#fff'
-}
-
 const Form: React.FC<ElementFormProps<ArticlePreviewElement>> = ({
   element,
   path,
@@ -91,8 +86,8 @@ const Form: React.FC<ElementFormProps<ArticlePreviewElement>> = ({
           const kind = formatMeta?.kind
           const colors = formatColor
             ? {
-                color: formatColor,
-                backgroundColor: getBackgroundColor(formatColor),
+                color: '#fff',
+                backgroundColor: formatColor,
               }
             : {}
           onChange({
