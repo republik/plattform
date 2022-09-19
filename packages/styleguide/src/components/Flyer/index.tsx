@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { css } from 'glamor'
 import { useColorContext } from '../Colors/ColorContext'
 import { mUp } from '../../theme/mediaQueries'
+import { Message } from '../Editor/Render/Message'
+import renderAsText from '../Editor/Render/text'
 
+const MAX_CHAR = 600
 export const FLYER_CONTAINER_MAXWIDTH = 700
 
 const styles = {
@@ -42,6 +45,39 @@ export const FlyerTile: React.FC<{
       {...styles.container}
       {...colorScheme.set('borderBottomColor', 'flyerText')}
     >
+      <div {...styles.content}>{children}</div>
+    </div>
+  )
+}
+
+export const EditorFlyerTile: React.FC<{
+  children: any
+  attributes: any
+  [x: string]: unknown
+}> = ({ children, attributes, ...props }) => {
+  const [colorScheme] = useColorContext()
+  const tree = children?.props?.nodes?.filter((n) => n.type !== 'MetaP')
+  console.log({ props })
+  const charCount = tree ? renderAsText(tree).length : 0
+  return (
+    <div
+      {...props}
+      {...attributes}
+      {...styles.container}
+      {...colorScheme.set('borderBottomColor', 'flyerText')}
+    >
+      {!!charCount && (
+        <Message
+          text={`${charCount} Zeichen`}
+          type={charCount > MAX_CHAR ? 'error' : 'info'}
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            width: '100%',
+            textAlign: 'center',
+          }}
+        />
+      )}
       <div {...styles.content}>{children}</div>
     </div>
   )

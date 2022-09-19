@@ -3,18 +3,24 @@ import { useColorContext } from '../../Colors/ColorContext'
 import { Label } from '../../Typography'
 
 const icons = {
-  info: 'ℹ️',
+  info: '📋',
   error: '❌',
 }
 
 export const Message: React.FC<{
   text: string
   type?: 'error' | 'info'
-}> = ({ text, type = 'info' }) => {
+  style?: any
+}> = ({ text, style = {}, type = 'info' }) => {
   const [colorScheme] = useColorContext()
   return (
     <span
-      style={{ userSelect: 'none', marginBottom: 10, display: 'block' }}
+      style={{
+        userSelect: 'none',
+        marginBottom: 10,
+        display: 'block',
+        ...style,
+      }}
       contentEditable={false}
     >
       <Label>
