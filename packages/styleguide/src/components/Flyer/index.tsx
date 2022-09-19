@@ -6,7 +6,6 @@ import { Message } from '../Editor/Render/Message'
 import renderAsText from '../Editor/Render/text'
 import { CustomDescendant } from '../Editor/custom-types'
 import { isSlateElement } from '../Editor/Render/helpers'
-import { useDebounce } from '../../lib/useDebounce'
 
 const MAX_CHAR = 600
 export const FLYER_CONTAINER_MAXWIDTH = 700
