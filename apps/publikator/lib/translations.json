@@ -1905,8 +1905,12 @@
       "value": "Element bearbeiten"
     },
     {
-      "key": "editor/blockUi/new",
-      "value": "neues Element"
+      "key": "editor/blockUi/new/before",
+      "value": "oben einfügen"
+    },
+    {
+      "key": "editor/blockUi/new/after",
+      "value": "unten einfügen"
     },
     {
       "key": "editor/blockUi/remove",
