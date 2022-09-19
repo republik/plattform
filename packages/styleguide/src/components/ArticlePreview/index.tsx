@@ -16,7 +16,7 @@ import { ArticleKind } from '../Editor/custom-types'
 
 const styles = {
   format: css({
-    display: 'block',
+    display: 'inline-block',
     ...convertStyleToRem(sansSerifMedium16),
     margin: '0 0 18px 0',
     [mUp]: {
