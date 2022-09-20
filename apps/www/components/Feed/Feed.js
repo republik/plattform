@@ -38,12 +38,7 @@ class Feed extends Component {
         }
         Link={Link}
         key={doc.meta.path}
-        bar={
-          doc.meta.template !== 'editorialNewsletter' &&
-          doc.meta.template !== 'flyer' && (
-            <ActionBar mode='feed' document={doc} />
-          )
-        }
+        bar={<ActionBar mode='feed' document={doc} />}
       />
     ) : null
   }
