@@ -116,7 +116,6 @@ const start = async (
       // maxAge: <seconds>; up to 24 hours
       // @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Max-Age
       maxAge: 60 * 60 * 24,
-      preflightContinue: true,
       optionsSuccessStatus: 200,
     }
     server.use('*', cors(corsOptions))
