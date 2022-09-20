@@ -21,7 +21,6 @@ const styles = {
 }
 
 const EditView = ({
-  editorKey,
   interruptingUsers,
   uncommittedChanges,
   revertHandler,
@@ -115,7 +114,6 @@ const EditView = ({
       </div>
       {!!content?.children && (
         <ContentEditor
-          key={editorKey}
           value={content.children}
           onChange={(newValue) =>
             setContent((currentContent) => ({

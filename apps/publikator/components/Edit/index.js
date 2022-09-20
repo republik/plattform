@@ -441,7 +441,7 @@ const EditLoader = ({
               <Preview repoId={repoId} commitId={commitId} isFlyer />
             ) : (
               <EditView
-                editorKey={editorKey}
+                key={editorKey}
                 interruptingUsers={interruptingUsers}
                 uncommittedChanges={uncommittedChanges}
                 revertHandler={revertHandler}
