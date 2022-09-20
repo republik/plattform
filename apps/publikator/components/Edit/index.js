@@ -454,6 +454,7 @@ const EditLoader = ({
                 content={content}
                 setContent={setContent}
                 publishDate={repo?.meta?.publishDate || publishDate}
+                readOnly={readOnly}
               />
             )
           }}
