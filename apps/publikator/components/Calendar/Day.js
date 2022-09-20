@@ -3,6 +3,7 @@ import { fontStyles } from '@project-r/styleguide'
 import {
   columnDateFormat,
   getPlaceholders,
+  getTitleForTemplate,
   reformatPlaceholder,
   reformatUrlDate,
 } from '../../lib/utils/calendar'
@@ -30,7 +31,7 @@ const styles = {
   }),
 }
 
-const Repos = withT(({ t, repos, isNewsletter, ...props }) => {
+const Repos = ({ repos, isNewsletter, ...props }) => {
   const sortedRepos = repos.sort((repo1, repo2) =>
     ascending(
       new Date(repo1.meta.publishDate),
@@ -47,11 +48,7 @@ const Repos = withT(({ t, repos, isNewsletter, ...props }) => {
               latestCommit: {
                 document: {
                   meta: {
-                    title: t(
-                      `repo/add/template/${repo.template}`,
-                      null,
-                      repo.template,
-                    ),
+                    title: getTitleForTemplate(new Date(repo.meta.publishDate)),
                     template: repo.template,
                   },
                 },
@@ -81,7 +78,7 @@ const Repos = withT(({ t, repos, isNewsletter, ...props }) => {
       )}
     </div>
   )
-})
+}
 
 export const ReposByTemplate = ({
   template,

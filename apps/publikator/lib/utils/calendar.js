@@ -9,6 +9,7 @@ export const urlDateHourFormat = '%Y-%m-%dT%H:%M'
 export const displayDateTimeFormat = '%d.%m %H:%M'
 export const datePickerFormat = '%d.%m.%y'
 export const columnDateFormat = '%A, %d.%m'
+const titleDateFormat = '%a %d.%m'
 
 export const getUrlDate = swissTime.format(urlDateFormat)
 export const parseUrlDate = swissTime.parse(urlDateFormat)
@@ -73,3 +74,5 @@ export const reformatPlaceholder = (placeholder, publishDate) => ({
   },
   isPlaceholder: true,
 })
+
+export const getTitleForTemplate = (date) => formatDate(date, titleDateFormat)
