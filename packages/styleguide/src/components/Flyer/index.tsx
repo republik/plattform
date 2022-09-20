@@ -1,8 +1,13 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { css } from 'glamor'
 import { useColorContext } from '../Colors/ColorContext'
 import { mUp } from '../../theme/mediaQueries'
+import { Message } from '../Editor/Render/Message'
+import renderAsText from '../Editor/Render/text'
+import { CustomDescendant } from '../Editor/custom-types'
+import { isSlateElement } from '../Editor/Render/helpers'
 
+const MAX_CHAR = 600
 export const FLYER_CONTAINER_MAXWIDTH = 700
 
 const styles = {
@@ -42,6 +47,40 @@ export const FlyerTile: React.FC<{
       {...styles.container}
       {...colorScheme.set('borderBottomColor', 'flyerText')}
     >
+      <div {...styles.content}>{children}</div>
+    </div>
+  )
+}
+
+export const EditorFlyerTile: React.FC<{
+  slatechildren: CustomDescendant[]
+  attributes: any
+  [x: string]: unknown
+}> = ({ children, slatechildren = [], attributes, ...props }) => {
+  const [colorScheme] = useColorContext()
+  const charCount = useMemo(() => {
+    const tree = slatechildren.filter(
+      (n) => isSlateElement(n) && n.type !== 'flyerMetaP',
+    )
+    return renderAsText(tree).length
+  }, [slatechildren])
+  return (
+    <div
+      {...props}
+      {...attributes}
+      {...styles.container}
+      {...colorScheme.set('borderBottomColor', 'flyerText')}
+    >
+      <Message
+        text={`${charCount} Zeichen`}
+        type={charCount > MAX_CHAR ? 'error' : 'info'}
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          width: '100%',
+          textAlign: 'center',
+        }}
+      />
       <div {...styles.content}>{children}</div>
     </div>
   )

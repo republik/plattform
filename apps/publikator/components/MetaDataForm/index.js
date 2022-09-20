@@ -11,7 +11,6 @@ import {
   slug,
 } from '@project-r/styleguide'
 import scrollIntoView from 'scroll-into-view'
-import withT from '../../lib/withT'
 import { MetaOption, MetaOptionLabel, AutosizeInput } from './components/Layout'
 import SocialMedia from './components/SocialMedia'
 import RepoSelect from '../editor/modules/meta/RepoSelect'
@@ -50,7 +49,14 @@ const MetaSectionTitle = ({ children }) => {
   return <h3 {...styles.metaSectionTitle}>{children}</h3>
 }
 
-const MetaDataForm = ({ t, metaData, setMetaData, publishDate }) => {
+const MetaDataForm = ({
+  metaData,
+  onFieldChange,
+  publishDate,
+  syncKeys,
+  sync,
+  unsync,
+}) => {
   const [activeTabIndex, setActiveTabIndex] = useState(0)
   const [colorScheme] = useColorContext()
   const scrollRef = useRef()
@@ -62,15 +68,6 @@ const MetaDataForm = ({ t, metaData, setMetaData, publishDate }) => {
     publishDate: previewPublishDate,
     slug: slug(metaData.slug || ''),
   })
-
-  const handleMetaDataChange = (name, value) => {
-    setMetaData((prevState) => {
-      return {
-        ...prevState,
-        [name]: value,
-      }
-    })
-  }
 
   return (
     <div {...colorScheme.set('backgroundColor', 'hover')}>
@@ -113,7 +110,7 @@ const MetaDataForm = ({ t, metaData, setMetaData, publishDate }) => {
                 name='title'
                 value={metaData.title}
                 onChange={(event) => {
-                  handleMetaDataChange(event.target.name, event.target.value)
+                  onFieldChange(event.target.name, event.target.value)
                 }}
                 noMargin
                 renderInput={({ ref, ...inputProps }) => (
@@ -127,7 +124,7 @@ const MetaDataForm = ({ t, metaData, setMetaData, publishDate }) => {
                 name='shortTitle'
                 value={metaData.shortTitle}
                 onChange={(event) => {
-                  handleMetaDataChange(event.target.name, event.target.value)
+                  onFieldChange(event.target.name, event.target.value)
                 }}
                 noMargin
                 renderInput={({ ref, ...inputProps }) => (
@@ -140,7 +137,7 @@ const MetaDataForm = ({ t, metaData, setMetaData, publishDate }) => {
                 label='Lead'
                 value={metaData.description}
                 onChange={(event) => {
-                  handleMetaDataChange('description', event.target.value)
+                  onFieldChange('description', event.target.value)
                 }}
                 noMargin
                 renderInput={({ ref, ...inputProps }) => (
@@ -154,7 +151,7 @@ const MetaDataForm = ({ t, metaData, setMetaData, publishDate }) => {
                 name='slug'
                 value={metaData.slug}
                 onChange={(event) => {
-                  handleMetaDataChange(event.target.name, event.target.value)
+                  onFieldChange(event.target.name, event.target.value)
                 }}
                 noMargin
               />
@@ -166,7 +163,7 @@ const MetaDataForm = ({ t, metaData, setMetaData, publishDate }) => {
                 value={metaData.format}
                 template='format'
                 onChange={(_, __, item) => {
-                  handleMetaDataChange(
+                  onFieldChange(
                     'format',
                     item ? `https://github.com/${item.value.id}` : undefined,
                   )
@@ -178,7 +175,7 @@ const MetaDataForm = ({ t, metaData, setMetaData, publishDate }) => {
               <Checkbox
                 checked={metaData.feed}
                 onChange={(_, checked) => {
-                  handleMetaDataChange('feed', checked)
+                  onFieldChange('feed', checked)
                 }}
               >
                 Im Feed anzeigen
@@ -197,7 +194,13 @@ const MetaDataForm = ({ t, metaData, setMetaData, publishDate }) => {
           </MetaSection>
           <MetaSection>
             <MetaSectionTitle>Social Media</MetaSectionTitle>
-            <SocialMedia data={metaData} onChange={handleMetaDataChange} />
+            <SocialMedia
+              data={metaData}
+              onChange={onFieldChange}
+              syncKeys={syncKeys}
+              sync={sync}
+              unsync={unsync}
+            />
           </MetaSection>
         </div>
       </div>
@@ -205,4 +208,4 @@ const MetaDataForm = ({ t, metaData, setMetaData, publishDate }) => {
   )
 }
 
-export default withT(MetaDataForm)
+export default MetaDataForm

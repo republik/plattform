@@ -9,7 +9,7 @@ import {
 } from '../../Icons'
 import IconButton from '../../IconButton'
 import { css } from 'glamor'
-import { insertAfter, moveElement, removeElement } from './helpers/structure'
+import { insertElement, moveElement, removeElement } from './helpers/structure'
 import { useSlate } from 'slate-react'
 import { useFormContext } from './Forms'
 import { CustomElement, TemplateType } from '../custom-types'
@@ -118,7 +118,8 @@ const Remove: React.FC<{
 const Insert: React.FC<{
   path: number[]
   templates: TemplateType | TemplateType[]
-}> = ({ path, templates }) => {
+  direction: 'before' | 'after'
+}> = ({ path, templates, direction }) => {
   const { t } = useRenderContext()
   const editor = useSlate()
   const [pendingPath, setPendingPath] = useState<number[]>()
@@ -137,13 +138,13 @@ const Insert: React.FC<{
       Icon={AddIcon}
       onMouseDown={(e) => {
         e.preventDefault()
-        const insertPath = insertAfter(editor, template, path)
+        const insertPath = insertElement(editor, template, path, direction)
         setPendingPath(insertPath)
       }}
       title='insert new element'
       style={iconStyle}
-      label={t('editor/blockUi/new')}
-      labelShort={t('editor/blockUi/new')}
+      label={t(`editor/blockUi/new/${direction}`)}
+      labelShort={t(`editor/blockUi/new/${direction}`)}
     />
   )
 }
@@ -202,7 +203,18 @@ const BlockUi: React.FC<{
           {showMoveUi && [
             <MoveUp key='up' path={path} />,
             <MoveDown key='down' path={path} />,
-            <Insert key='insert' path={path} templates={template.type} />,
+            <Insert
+              key='insertBefore'
+              path={path}
+              templates={template.type}
+              direction='before'
+            />,
+            <Insert
+              key='insertAfter'
+              path={path}
+              templates={template.type}
+              direction='after'
+            />,
             <Remove path={path} key='remove' />,
           ]}
         </CalloutMenu>

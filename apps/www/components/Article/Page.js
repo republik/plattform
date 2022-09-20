@@ -629,6 +629,7 @@ const ArticlePage = ({
                       value={article.content.children}
                       schema={schema}
                       raw
+                      skip={['flyerOpeningP']}
                     />
                   </RenderContextProvider>
                   <FlyerTile>

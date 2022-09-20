@@ -13,10 +13,11 @@ import {
 } from '../custom-types'
 import { toggleElement } from './helpers/structure'
 import { useFormContext } from './Forms'
-import { Node, Transforms } from 'slate'
+import { Node } from 'slate'
 import { useRenderContext } from '../Render/Context'
 import { ErrorMessage } from '../Render/Message'
 import BlockUi from './BlockUi'
+import { selectNode } from './helpers/tree'
 
 export const ElementComponent: React.FC<{
   editor: CustomEditor
@@ -58,7 +59,7 @@ export const ElementComponent: React.FC<{
   const selectVoid = (e) => {
     if (isVoid) {
       e.preventDefault()
-      Transforms.select(editor, path)
+      selectNode(editor, path)
     }
   }
   const baseStyles = showBlockUi
@@ -68,6 +69,7 @@ export const ElementComponent: React.FC<{
   return (
     <Component
       {...element}
+      slatechildren={element.children}
       attributes={{
         ...attributes,
         style: { ...attributes.style, ...baseStyles },
