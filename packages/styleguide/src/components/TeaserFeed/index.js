@@ -19,9 +19,6 @@ const styles = {
     color: 'inherit',
     textDecoration: 'none',
   }),
-  bar: css({
-    marginTop: 10,
-  }),
 }
 
 const br = {
@@ -165,7 +162,7 @@ export const TeaserFeed = ({
           </Link>
         </Highlight>
       )}
-      {bar && <div {...styles.bar}>{bar}</div>}
+      {bar && bar}
       {prepublication && <InternalOnlyTag t={t} />}
     </Container>
   )
