@@ -20607,10 +20607,10 @@ slate-react@^0.10.23:
     slate-plain-serializer "^0.4.16"
     slate-prop-types "^0.4.16"
 
-slate-react@^0.82.1:
-  version "0.82.1"
-  resolved "https://registry.yarnpkg.com/slate-react/-/slate-react-0.82.1.tgz#f70bfa370e8182af7055a45afc40b6a17cd24856"
-  integrity sha512-FHYai6LWAN2CbxNH7zNxbBOL8O3+EdPiviVdckTZBOh92+mR69jgvH3v26pdYczflIOXl1jisHFMhyb7vCC0qA==
+slate-react@^0.82.2:
+  version "0.82.2"
+  resolved "https://registry.yarnpkg.com/slate-react/-/slate-react-0.82.2.tgz#4344ef392e3e51e5cd7c3272d3e5d61483c41823"
+  integrity sha512-lNmSqqNOKQJG1i3Wx4MkggWr6dLhQ43n4exPf5NLmKVBHPBuQSRNaWhAAKm6HOEC36Q6xBfkVONIQWi3GSyIEQ==
   dependencies:
     "@types/is-hotkey" "^0.1.1"
     "@types/lodash" "^4.14.149"
