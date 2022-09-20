@@ -44,6 +44,7 @@ export type HeadlineElement = SharedElement & {
 
 export type BreakElement = SharedElement & {
   type: 'break'
+  voidId?: string
 }
 
 export type LinkElement = SharedElement & {
@@ -70,6 +71,7 @@ export type FigureImageElement = SharedElement & {
   type: 'figureImage'
   images?: FigureImages
   alt?: string
+  voidId?: string
 }
 
 export type FigureCaptionElement = SharedElement & {
@@ -168,6 +170,7 @@ export type FlyerAuthorElement = SharedElement & {
   type: 'flyerAuthor'
   authorId?: string
   resolvedAuthor?: ResolvedAuthor
+  voidId?: string
 }
 
 export type FlyerPunchlineElement = SharedElement & {
@@ -181,6 +184,7 @@ export type FlyerSignatureElement = SharedElement & {
 export type FlyerDateElement = SharedElement & {
   type: 'flyerDate'
   date?: string
+  voidId?: string
 }
 
 export type ArticleKind = 'editorial' | 'meta' | 'flyer' | 'scribble'

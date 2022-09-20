@@ -10,7 +10,7 @@ import { Editor, Transforms, Element as SlateElement, NodeEntry } from 'slate'
 import { config as elConfig } from '../config/elements'
 import { Overlay, OverlayBody, OverlayToolbar } from '../../Overlay'
 import { ReactEditor, useSlate } from 'slate-react'
-import { isDescendant } from './helpers/tree'
+import { isDescendant, selectNode } from './helpers/tree'
 import { formStyles } from '../Forms/layout'
 import { useRenderContext } from '../Render/Context'
 
@@ -110,9 +110,10 @@ export const FormOverlay = (): ReactElement => {
   if (!forms.length || !formPath) return null
 
   const onClose = () => {
-    ReactEditor.focus(editor)
-    Transforms.select(editor, formPath)
+    const previousPath = formPath
     setFormPath(undefined)
+    ReactEditor.focus(editor)
+    selectNode(editor, previousPath)
   }
 
   return (

@@ -37,6 +37,8 @@ const Memo = compose(
   withRouter,
 )(({ t, editor, node, children, isSelected, router }) => {
   const [showModal, setShowModal] = useState()
+  const [parentId, setParentId] = useState(node.data.get('parentId'))
+  const [marker, setMarker] = useState(node.data.get('marker'))
 
   // noOpen flag added when deserializing
   // only new memos trigger the modal automatically
@@ -44,16 +46,9 @@ const Memo = compose(
     !node.data.get('noOpen') && open()
   }, [])
 
-  const persistData = (key, value) =>
-    editor.change((change) => {
-      change.setNodeByKey(node.key, {
-        data: node.data.set(key, value),
-      })
-    })
-
   const pickMarker = (name) => (e) => {
     e?.preventDefault()
-    persistData('marker', name)
+    setMarker(name)
   }
 
   const open = (e) => {
@@ -63,7 +58,16 @@ const Memo = compose(
 
   const close = (e) => {
     e?.preventDefault()
-    setShowModal(false)
+    editor.change((change) => {
+      change.setNodeByKey(node.key, {
+        data: node.data.merge({
+          parentId,
+          marker,
+        }),
+      })
+
+      setShowModal(false)
+    })
   }
 
   const remove = (e) => {
@@ -76,16 +80,12 @@ const Memo = compose(
   const onPublished = (memo) => {
     const isRoot = !memo.parentIds.length
     if (isRoot) {
-      persistData('parentId', memo.id)
+      setParentId(memo.id)
     }
   }
 
   const { commitId } = router.query
   const repoId = getRepoIdFromQuery(router.query)
-  const discussionEnabled = commitId !== 'new'
-  const parentId = node.data.get('parentId')
-
-  const marker = node.data.get('marker')
   const { Marker } = getMarker(marker)
 
   return (
@@ -117,7 +117,7 @@ const Memo = compose(
                 onClick={remove}
               />
             </div>
-            {discussionEnabled ? (
+            {commitId !== 'new' ? (
               <MemoTree
                 repoId={repoId}
                 parentId={parentId}

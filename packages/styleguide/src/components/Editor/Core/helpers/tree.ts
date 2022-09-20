@@ -21,6 +21,7 @@ import {
 import { KeyboardEvent } from 'react'
 import { selectEmptyTextNode, isEmpty } from './text'
 import { config as elConfig } from '../../config/elements'
+import { getId } from './utils'
 
 export const NAV_KEYS = [
   'ArrowLeft',
@@ -92,7 +93,10 @@ export const cleanupElement: NormalizeFn<CustomElement> = (
   [node, path],
   editor,
 ) => {
-  const allowedProps = baseElementProps.concat(elConfig[node.type].props || [])
+  const voidProps = elConfig[node.type].attrs?.isVoid ? ['voidId'] : []
+  const allowedProps = baseElementProps
+    .concat(voidProps)
+    .concat(elConfig[node.type].props || [])
   return cleanupNode(allowedProps)([node, path], editor)
 }
 
@@ -392,12 +396,30 @@ export const hasNextSibling = (
   return currentPath.every((p, i) => i >= depth || p === nextPath[i])
 }
 
+// this is a workaround:
+// slate seems to have trouble to select completely void nodes
+// so we temporarily set an ID and revert it
+const selectVoid = (
+  editor: CustomEditor,
+  node: NodeEntry<CustomElement>,
+): void => {
+  Transforms.setNodes(editor, { voidId: getId() }, { at: node[1] })
+  Transforms.select(editor, node[1])
+  Transforms.unsetNodes(editor, 'voidId', { at: node[1] })
+}
+
 export const selectNode = (
   editor: CustomEditor,
   target: BasePoint | Path,
   direction: 'next' | 'previous' = 'next',
 ): void => {
   const [targetNode, targetPath] = Editor.node(editor, target)
+  if (
+    SlateElement.isElement(targetNode) &&
+    elConfig[targetNode.type].attrs?.isVoid
+  ) {
+    return selectVoid(editor, [targetNode, targetPath])
+  }
   const text = getTextNode([targetNode, targetPath], editor, direction)
   selectText(editor, text, direction)
 }

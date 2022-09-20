@@ -113,7 +113,10 @@ const start = async (
     const corsOptions = {
       origin: CORS_ALLOWLIST_URL.split(','),
       credentials: true,
-      optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+      // maxAge: <seconds>; up to 24 hours
+      // @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Max-Age
+      maxAge: 60 * 60 * 24,
+      optionsSuccessStatus: 200,
     }
     server.use('*', cors(corsOptions))
   }

@@ -1,7 +1,8 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import {
   CustomDescendant,
   CustomElement,
+  CustomElementsType,
   CustomNode,
   CustomText,
   SchemaConfig,
@@ -23,11 +24,12 @@ const RenderedLeaf: React.FC<{
 const RenderNodes: React.FC<{
   nodes: CustomNode[]
   schema: SchemaConfig
-}> = ({ nodes, schema }) => (
+  skip?: CustomElementsType[]
+}> = ({ nodes, schema, skip }) => (
   <>
     {nodes.map((node: CustomDescendant, i) =>
       isSlateElement(node) ? (
-        <RenderedElement element={node} schema={schema} key={i} />
+        <RenderedElement element={node} schema={schema} skip={skip} key={i} />
       ) : (
         <RenderedLeaf leaf={node} schema={schema} key={i} />
       ),
@@ -38,8 +40,10 @@ const RenderNodes: React.FC<{
 export const RenderedElement: React.FC<{
   element: CustomElement
   schema: SchemaConfig
-}> = ({ element, schema }) => {
+  skip?: CustomElementsType[]
+}> = ({ element, schema, skip }) => {
   const { type, children, ...customElProps } = element
+  if (skip && skip.includes(type)) return null
   const Component = schema[type]
   // console.log({ type })
   if (!Component) {
@@ -48,7 +52,7 @@ export const RenderedElement: React.FC<{
   }
   return (
     <Component {...customElProps}>
-      <RenderNodes nodes={children} schema={schema} />
+      <RenderNodes nodes={children} schema={schema} skip={skip} />
     </Component>
   )
 }
@@ -57,11 +61,12 @@ const SlateRender: React.FC<{
   value: CustomDescendant[]
   schema: SchemaConfig
   raw?: boolean
-}> = ({ value, schema, raw }) => {
+  skip?: CustomElementsType[]
+}> = ({ value, schema, raw, skip }) => {
   const Container = raw ? (props) => <div {...props} /> : LayoutContainer
   return (
     <Container schema={schema}>
-      <RenderNodes nodes={value} schema={schema} />
+      <RenderNodes nodes={value} schema={schema} skip={skip} />
     </Container>
   )
 }
