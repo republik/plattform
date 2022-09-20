@@ -30,7 +30,7 @@ import {
   Editorial,
 } from '@project-r/styleguide'
 import Link from 'next/link'
-import withDefaultSSR from '../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../lib/apollo/helpers'
 
 const styles = {
   mediaDiversity: css({

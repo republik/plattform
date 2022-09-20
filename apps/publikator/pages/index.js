@@ -1,10 +1,10 @@
 import { withRouter } from 'next/router'
-import { compose } from 'react-apollo'
+import compose from 'lodash/flowRight'
 import { css } from 'glamor'
 
 import { A } from '@project-r/styleguide'
 
-import { Link } from '../lib/routes'
+import Link from 'next/link'
 import withT from '../lib/withT'
 
 import withAuthorization from '../components/Auth/withAuthorization'
@@ -12,6 +12,7 @@ import Calendar from '../components/Calendar'
 import Frame from '../components/Frame'
 import RepoTable from '../components/Repo/Table'
 import RepoAdd from '../components/Repo/Add'
+import { withDefaultSSR } from '../lib/apollo/helpers'
 
 const styles = {
   defaultContainer: css({
@@ -19,11 +20,11 @@ const styles = {
   }),
 }
 
-const IndexNavLink = ({ isActive, route, params, label }) =>
+const IndexNavLink = ({ isActive, href, label }) =>
   isActive ? (
     <span>{label} </span>
   ) : (
-    <Link route={route} params={params} passHref>
+    <Link href={href} passHref>
       <A>{label} </A>
     </Link>
   )
@@ -37,8 +38,10 @@ const IndexNav = compose(
   return (
     <span>
       <IndexNavLink
-        route='index'
-        params={{ ...query, view: null }}
+        href={{
+          pathname: '/',
+          query: { ...query, view: null },
+        }}
         label={t('repo/table/nav/documents')}
         isActive={!query.view}
       />
@@ -46,8 +49,10 @@ const IndexNav = compose(
         <span key={view}>
           <span>&nbsp;</span>
           <IndexNavLink
-            route='index'
-            params={{ ...query, view }}
+            href={{
+              pathname: '/',
+              query: { ...query, view },
+            }}
             label={t(`repo/table/nav/${view}`)}
             isActive={query.view === view}
           />
@@ -86,4 +91,6 @@ const Index = ({
   </Frame>
 )
 
-export default compose(withRouter, withAuthorization(['editor']))(Index)
+export default withDefaultSSR(
+  compose(withRouter, withAuthorization(['editor']))(Index),
+)

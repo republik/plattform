@@ -662,9 +662,12 @@ const Profile = (props) => {
             `${PUBLIC_BASE_URL}/community?share=${user.id}`,
           )}`
         : '',
-    title: user
+    pageTitle: user
       ? t('pages/profile/pageTitle', { name: user.name })
       : t('pages/profile/empty/pageTitle'),
+    title: user
+      ? t('pages/profile/title', { name: user.name })
+      : t('pages/profile/empty/title'),
   }
 
   return (

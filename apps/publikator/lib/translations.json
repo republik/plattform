@@ -161,6 +161,10 @@
       "value": "Artikel"
     },
     {
+      "key": "repo/add/template/flyer",
+      "value": "Journal"
+    },
+    {
       "key": "repo/add/template/front",
       "value": "Front"
     },
@@ -581,6 +585,10 @@
       "value": "Verlinktes Dokument: "
     },
     {
+      "key": "metaData/field/href/error",
+      "value": "Geben sie eine gültige URL an"
+    },
+    {
       "key": "metaData/field/center",
       "value": "Zentriert"
     },
@@ -937,6 +945,18 @@
       "value": "Die Publikation ist für {date} geplant."
     },
     {
+      "key": "colorPicker/contrastInfo/title",
+      "value": "Farbkontrast"
+    },
+    {
+      "key": "colorPicker/contrastInfo/ok",
+      "value": "✅"
+    },
+    {
+      "key": "colorPicker/contrastInfo/warning",
+      "value": "⚠️ Mindestens 3,0 : 1"
+    },
+    {
       "key": "variable/insert/greeting",
       "value": "Begrüssung"
     },
@@ -1291,6 +1311,14 @@
     {
       "key": "link/repo/search",
       "value": "Dokument suchen"
+    },
+    {
+      "key": "link/description",
+      "value": "Zusätzliche Beschreibung"
+    },
+    {
+      "key": "link/description/help",
+      "value": "<a href=\"https://styleguide.republik.ch/expandablelink#formatting\" target=\"_blank\">Einfache HTML-Tags erlaubt</a>."
     },
     {
       "key": "memo/modal/remove",
@@ -1691,6 +1719,206 @@
     {
       "key": "styleguide/SeriesNav/current",
       "value": "Sie lesen:"
+    },
+    {
+      "key": "editor/element/headline",
+      "value": "Titel"
+    },
+    {
+      "key": "editor/element/paragraph",
+      "value": "Paragraph"
+    },
+    {
+      "key": "editor/element/break",
+      "value": "Leerzeile"
+    },
+    {
+      "key": "editor/element/figure",
+      "value": "Bild"
+    },
+    {
+      "key": "editor/element/figureImage",
+      "value": "Bild"
+    },
+    {
+      "key": "editor/element/figureCaption",
+      "value": "Legende"
+    },
+    {
+      "key": "editor/element/figureByline",
+      "value": "Quelle"
+    },
+    {
+      "key": "editor/element/link",
+      "value": "Link"
+    },
+    {
+      "key": "editor/element/ul",
+      "value": "Liste"
+    },
+    {
+      "key": "editor/element/ol",
+      "value": "Aufzählung"
+    },
+    {
+      "key": "editor/element/listItem",
+      "value": "Listen-Element"
+    },
+    {
+      "key": "editor/element/pullQuote",
+      "value": "Zitat"
+    },
+    {
+      "key": "editor/element/pullQuoteText",
+      "value": "Zitat"
+    },
+    {
+      "key": "editor/element/pullQuoteSource",
+      "value": "Quelle"
+    },
+    {
+      "key": "editor/element/articlePreview",
+      "value": "Vorschau"
+    },
+    {
+      "key": "editor/element/articlePreviewFormat",
+      "value": "Format"
+    },
+    {
+      "key": "editor/element/articlePreviewTitle",
+      "value": "Titel"
+    },
+    {
+      "key": "editor/element/articlePreviewLead",
+      "value": "Aufmacher"
+    },
+    {
+      "key": "editor/element/flyerTopic",
+      "value": "Format"
+    },
+    {
+      "key": "editor/element/flyerTitle",
+      "value": "Titel"
+    },
+    {
+      "key": "editor/element/flyerAuthor",
+      "value": "Autorin"
+    },
+    {
+      "key": "editor/element/flyerMetaP",
+      "value": "Moderation"
+    },
+    {
+      "key": "editor/element/flyerOpeningP",
+      "value": "Begrüssung"
+    },
+    {
+      "key": "editor/element/flyerPunchline",
+      "value": "Punchline"
+    },
+    {
+      "key": "editor/element/flyerDate",
+      "value": "Datum"
+    },
+    {
+      "key": "editor/element/flyerTile",
+      "value": "Standard-Block"
+    },
+    {
+      "key": "editor/element/flyerTileMeta",
+      "value": "Moderations-Block"
+    },
+    {
+      "key": "editor/element/quiz",
+      "value": "Quiz"
+    },
+    {
+      "key": "editor/element/quizItem",
+      "value": "Quiz-Element"
+    },
+    {
+      "key": "editor/element/quizAnswer",
+      "value": "Antwort"
+    },
+    {
+      "key": "editor/element/quizAnswerInfo",
+      "value": "Info"
+    },
+    {
+      "key": "editor/placeholder/paragraph",
+      "value": "Text"
+    },
+    {
+      "key": "editor/placeholder/listItem",
+      "value": "Text"
+    },
+    {
+      "key": "editor/placeholder/flyerSignature",
+      "value": "Text"
+    },
+    {
+      "key": "editor/mark/bold",
+      "value": "fett"
+    },
+    {
+      "key": "editor/mark/italic",
+      "value": "kursiv"
+    },
+    {
+      "key": "editor/mark/strikethrough",
+      "value": "durchgestrichen"
+    },
+    {
+      "key": "editor/mark/sup",
+      "value": "hochgestellt"
+    },
+    {
+      "key": "editor/mark/sub",
+      "value": "tiefgestellt"
+    },
+    {
+      "key": "editor/specialChar/nbsp",
+      "value": "Dauerleerzeichen"
+    },
+    {
+      "key": "editor/specialChar/shy",
+      "value": "weiches Trennzeichen"
+    },
+    {
+      "key": "editor/specialChar/quotes",
+      "value": "Guillemets"
+    },
+    {
+      "key": "editor/specialChar/nestedQuotes",
+      "value": "einfache Guillemets"
+    },
+    {
+      "key": "editor/blockUi/moveUp",
+      "value": "nach oben schieben"
+    },
+    {
+      "key": "editor/blockUi/moveDown",
+      "value": "nach unten schieben"
+    },
+    {
+      "key": "editor/blockUi/edit",
+      "value": "Element bearbeiten"
+    },
+    {
+      "key": "editor/blockUi/new",
+      "value": "neues Element"
+    },
+    {
+      "key": "editor/blockUi/remove",
+      "value": "Element entfernen"
+    },
+    {
+      "key": "editor/meta/flyer/defaultShareText",
+      "value": "Die Tage sind zäh und die Agenden sind voll. Trotzdem kurz Zeit für Journalismus?"
+    },
+    {
+      "key": "editor/workflow/uncommittedChanges",
+      "value": "Committen oder verwerfen Sie Ihre Änderungen, um die Phase anzupassen."
     }
   ]
 }

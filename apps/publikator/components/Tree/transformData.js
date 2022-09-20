@@ -35,6 +35,7 @@ export const transformData = (props) => {
         }),
         derivatives: commit.derivatives,
         canDeriveSyntheticReadAloud: commit.canDeriveSyntheticReadAloud,
+        document: commit.document,
       }
     })
     .sort(function (a, b) {

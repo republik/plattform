@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/orbiting/backends.git"
+    "url": "git+https://github.com/republik/plattform.git"
   },
   "author": "Patrick Recher <patrick.recher@republik.ch>",
   "license": "AGPL-3.0",
@@ -13,11 +13,13 @@
     "access": "public"
   },
   "bugs": {
-    "url": "https://github.com/orbiting/backends/issues"
+    "url": "https://github.com/republik/plattform/issues"
   },
-  "homepage": "https://github.com/orbiting/backends#readme",
+  "homepage": "https://github.com/republik/plattform#readme",
   "scripts": {
-    "link": "yarn link"
+    "link": "yarn link",
+    "dev": "tsc -w",
+    "build": "tsc"
   },
   "dependencies": {
     "abort-controller": "^3.0.0",
@@ -26,6 +28,12 @@
     "get-urls": "^10.0.0",
     "moment": "^2.26.0",
     "unified": "^9.0.0",
-    "unist-util-visit": "^2.0.2"
+    "unist-util-visit": "^2.0.2",
+    "validator": "^13.7.0"
+  },
+  "devDependencies": {
+    "@orbiting/backend-modules-types": "*",
+    "@types/validator": "^13.7.4",
+    "typescript": "^4.7.3"
   }
 }

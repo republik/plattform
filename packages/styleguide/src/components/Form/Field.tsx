@@ -1,4 +1,10 @@
-import React, { useState, useRef, useMemo, MutableRefObject } from 'react'
+import React, {
+  useState,
+  useRef,
+  useMemo,
+  MutableRefObject,
+  ReactNode,
+} from 'react'
 import { css, merge, simulate } from 'glamor'
 import { fontStyles } from '../../theme/fonts'
 import { mUp } from '../../theme/mediaQueries'
@@ -11,7 +17,6 @@ import {
   LINE_HEIGHT,
   FIELD_HEIGHT,
 } from './constants'
-import { IconType } from 'react-icons/lib/esm/iconBase'
 import { CloseIcon } from '../Icons'
 import { plainButtonRule } from '../Button'
 
@@ -128,10 +133,10 @@ const ArrowDown: React.FC<ArrowProps> = ({ size, fill, ...props }) => (
 const Field = React.forwardRef<
   HTMLInputElement,
   {
-    value?: string | number
+    value?: string | number | Date
     onChange?: (
       event: InputEvent,
-      value: string | number,
+      value: string | number | Date,
       shouldValidate: boolean,
     ) => void
     name?: string
@@ -139,13 +144,14 @@ const Field = React.forwardRef<
     type?: string
     label?: string
     disabled?: boolean
+    required?: boolean
     error?: string | boolean
     onInc?: () => void
     onDec?: () => void
     showClearIcon?: boolean
-    icon?: IconType
+    icon?: ReactNode
     simulate?: string
-    renderInput: React.FC<Record<string, unknown>>
+    renderInput?: React.FC<Record<string, unknown>>
   }
 >(
   (
@@ -162,6 +168,7 @@ const Field = React.forwardRef<
       showClearIcon,
       icon,
       disabled,
+      required,
       value,
       renderInput,
     },
@@ -219,6 +226,7 @@ const Field = React.forwardRef<
     return (
       <label {...styles.container}>
         {renderInput({
+          ['aria-required']: required ? true : undefined,
           disabled,
           name,
           autoComplete,
@@ -299,6 +307,7 @@ const Field = React.forwardRef<
                 inputRef.current.focus()
               }
             }}
+            type='button'
           >
             <CloseIcon
               {...(isFocused
@@ -317,7 +326,7 @@ const Field = React.forwardRef<
 Field.propTypes = {
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   renderInput: PropTypes.func.isRequired,
-  icon: PropTypes.func,
+  icon: PropTypes.node,
   disabled: PropTypes.bool,
 }
 

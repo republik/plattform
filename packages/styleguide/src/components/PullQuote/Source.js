@@ -4,6 +4,7 @@ import { sansSerifRegular14, sansSerifRegular15 } from '../Typography/styles'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { convertStyleToRem } from '../Typography/utils'
+import { useColorContext } from '../Colors/ColorContext'
 
 const styles = {
   cite: css({
@@ -19,8 +20,13 @@ const styles = {
 }
 
 export const Source = ({ children, attributes }) => {
+  const [colorScheme] = useColorContext()
   return (
-    <cite {...styles.cite} {...attributes}>
+    <cite
+      {...styles.cite}
+      {...attributes}
+      {...colorScheme.set('color', 'text')}
+    >
       {children}
     </cite>
   )

@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Interaction } from '@project-r/styleguide'
 
 import { t, useTranslation } from '../lib/withT'
-import withDefaultSSR from '../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../lib/apollo/helpers'
 import { CROWDFUNDING } from '../lib/constants'
 import { useMe } from '../lib/context/MeContext'
 import { PackageBuffer, PackageItem } from '../components/Pledge/Accordion'

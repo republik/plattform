@@ -72,6 +72,22 @@ const getJSONLDs = (meta) => {
   }
 }
 
+function getCitationMetaData(meta) {
+  const authors = meta.contributors
+    .filter((contributor) => contributor?.kind?.includes('Text'))
+    .map((contributor) => {
+      return contributor.name
+    })
+    .join('; ')
+
+  return {
+    citation_title: meta.title,
+    citation_journal_title: publisher.name,
+    citation_date: meta.publishDate,
+    citation_authors: authors,
+  }
+}
+
 export const getMetaData = (documentId, meta) => {
   const shareImage =
     meta.shareText &&
@@ -91,5 +107,6 @@ export const getMetaData = (documentId, meta) => {
   return {
     ...metaWithUrls,
     jsonLds: getJSONLDs(metaWithUrls),
+    citationMeta: getCitationMetaData(meta),
   }
 }

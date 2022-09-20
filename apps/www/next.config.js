@@ -1,25 +1,36 @@
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 })
-const withTM = require('next-transpile-modules')(['@project-r/styleguide'])
+const withTM = require('next-transpile-modules')([
+  '@project-r/styleguide',
+  '@republik/nextjs-apollo-client', // Ensures ES5 compatibility to work in IE11
+])
 
 const { NODE_ENV, CDN_FRONTEND_BASE_URL } = process.env
+const buildId =
+  process.env.SOURCE_VERSION?.substring(0, 10) ||
+  new Date(Date.now()).toISOString()
 
+/**
+ * @type {import('next').NextConfig}
+ */
 module.exports = withTM(
   withBundleAnalyzer({
-    webpack5: true,
+    generateBuildId: () => buildId,
+    publicRuntimeConfig: {
+      buildId,
+    },
     webpack: (config) => {
       config.externals = config.externals || {}
       config.externals['lru-cache'] = 'lru-cache'
       config.externals['react-dom/server'] = 'react-dom/server'
-
       return config
     },
     poweredByHeader: false,
     assetPrefix:
       NODE_ENV === 'production' && CDN_FRONTEND_BASE_URL
         ? CDN_FRONTEND_BASE_URL
-        : '',
+        : undefined,
     useFileSystemPublicRoutes: true,
     // , onDemandEntries: {
     //   // wait 5 minutes before disposing entries
@@ -31,11 +42,6 @@ module.exports = withTM(
     async rewrites() {
       return {
         beforeFiles: [
-          // /front is only accessible via _middleware rewrite
-          {
-            source: '/front',
-            destination: '/404',
-          },
           // _ssr routes are only accessible via rewrites
           {
             source: '/_ssr/:path*',
@@ -53,6 +59,12 @@ module.exports = withTM(
             source: '/:path*',
             destination: '/_ssr/:path*',
             has: [{ type: 'query', key: 'extract' }],
+          },
+          // Avoid SSG for share urls, e.g. meta.fromQuery
+          {
+            source: '/:path*',
+            destination: '/_ssr/:path*',
+            has: [{ type: 'query', key: 'share' }],
           },
           // Rewrite for crawlers when a comment is focused inside a debate on the article-site
           {
@@ -97,17 +109,10 @@ module.exports = withTM(
           destination: '/konto',
           permanent: true,
         },
-        {
-          source: '/ud/report',
-          destination: 'https://ultradashboard.republik.ch/dashboard/15',
-          permanent: false,
-        },
-        {
-          source: '/ud/daily',
-          destination: 'https://ultradashboard.republik.ch/dashboard/17',
-          permanent: false,
-        },
       ]
+    },
+    experimental: {
+      largePageDataBytes: 512 * 1000, // 512KB
     },
   }),
 )

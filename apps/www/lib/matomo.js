@@ -1,5 +1,5 @@
 import { payload } from './utils/track'
-import { shouldIgnoreClick } from './utils/link'
+import { shouldIgnoreClick } from '@project-r/styleguide'
 
 const __DEV__ = process.env.NODE_ENV === 'development'
 

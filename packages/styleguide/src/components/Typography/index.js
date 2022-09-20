@@ -7,6 +7,7 @@ import * as _Editorial from './Editorial'
 import * as _Interaction from './Interaction'
 import * as _Meta from './Meta'
 import * as _Scribble from './Scribble'
+import * as _Flyer from './Flyer'
 import { css } from 'glamor'
 import { convertStyleToRem } from './utils'
 import { useColorContext } from '../Colors/useColorContext'
@@ -16,6 +17,7 @@ export const Editorial = { ..._Editorial }
 export const Interaction = { ..._Interaction }
 export const Meta = { ..._Meta }
 export const Scribble = { ..._Scribble }
+export const Flyer = { ..._Flyer }
 
 // Direct exports.
 export const fontStyles = {
@@ -46,7 +48,6 @@ const styles = {
     [mUp]: {
       ...fontStyles.serifBold52,
     },
-    color: colors.text,
     margin: '30px 0 20px 0',
     ':first-child': {
       marginTop: 0,
@@ -60,7 +61,6 @@ const styles = {
     [mUp]: {
       ...fontStyles.serifBold24,
     },
-    color: colors.text,
     margin: '30px 0 20px 0',
     ':first-child': {
       marginTop: 0,
@@ -71,11 +71,9 @@ const styles = {
   }),
   lead: css({
     ...fontStyles.serifRegular25,
-    color: colors.text,
     margin: '20px 0 20px 0',
   }),
   p: css({
-    color: colors.text,
     ...fontStyles.serifRegular16,
     [mUp]: {
       ...fontStyles.serifRegular21,
@@ -91,17 +89,11 @@ const styles = {
   hr: css({
     border: 0,
     height: 1,
-    color: colors.divider,
-    backgroundColor: colors.divider,
     marginTop: 30,
     marginBottom: 30,
   }),
   label: css({
     ...convertStyleToRem(fontStyles.sansSerifRegular14),
-  }),
-  quote: css({
-    ...fontStyles.sansSerifRegular21,
-    color: colors.text,
   }),
 }
 
@@ -201,11 +193,14 @@ export const Sup = ({ children, attributes }) => (
   </sup>
 )
 
-export const HR = ({ attributes }) => <hr {...attributes} {...styles.hr} />
-
-export const Quote = ({ children, source, ...props }) => (
-  <blockquote {...props} {...styles.quote}>
-    <div>«{children}»</div>
-    {!!source && <cite>{source}</cite>}
-  </blockquote>
-)
+export const HR = ({ attributes }) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <hr
+      {...attributes}
+      {...styles.hr}
+      {...colorScheme.set('color', 'divider')}
+      {...colorScheme.set('backgroundColor', 'divider')}
+    />
+  )
+}

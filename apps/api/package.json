@@ -2,7 +2,7 @@
   "name": "@orbiting/api-app",
   "version": "0.0.1",
   "engines": {
-    "node": "14.x"
+    "node": "^16.0.0"
   },
   "private": true,
   "license": "AGPL-3.0",
@@ -60,7 +60,7 @@
     "openpgp": "^4.10.4",
     "remark-breaks": "^1.0.5",
     "remark-parse": "^8.0.2",
-    "sharp": "^0.28.1",
+    "sharp": "^0.29.3",
     "slugify": "^1.4.0",
     "stripe": "^8.119.0",
     "throng": "^4.0.0",

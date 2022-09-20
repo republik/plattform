@@ -38,7 +38,7 @@ import withMe from '../lib/apollo/withMe'
 import { swissTime } from '../lib/utils/format'
 import withInNativeApp from '../lib/withInNativeApp'
 import Link from 'next/link'
-import withDefaultSSR from '../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../lib/apollo/helpers'
 
 const statusQuery = gql`
   query CockpitStatus(
@@ -336,7 +336,7 @@ const Page = ({
   shouldBuyProlong,
   isReactivating,
   defaultBenefactor,
-  router: { query },
+  router: { query, pathname },
 }) => {
   const meta = {
     pageTitle: '🚀 Republik Cockpit',
@@ -352,7 +352,7 @@ const Page = ({
         `/cockpit?token=${encodeURIComponent(query.token)}`,
         '/cockpit',
         {
-          shallow: true,
+          shallow: pathname === '/cockpit',
         },
       )
     }

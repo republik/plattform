@@ -9,17 +9,6 @@ export const newsletterFragment = `
   }
 `
 
-export const newsletterSettingsFragment = `
-  fragment NewsletterSettings on NewsletterSettings {
-    id
-    status
-    subscriptions {
-      ...NewsletterInfo
-    }
-  }
-  ${newsletterFragment}
-`
-
 export const userDetailsFragment = `
   fragment PhoneAndAddressOnUser on User {
     id
@@ -38,8 +27,8 @@ export const userDetailsFragment = `
 const mutation = gql`
   mutation updateMe(
     $birthday: Date
-    $firstName: String!
-    $lastName: String!
+    $firstName: String
+    $lastName: String
     $phoneNumber: String
     $address: AddressInput
   ) {
@@ -67,11 +56,15 @@ const addMeToRole = gql`
       id
       roles
       newsletterSettings {
-        ...NewsletterSettings
+        id
+        status
+        subscriptions {
+          ...NewsletterInfo
+        }
       }
     }
   }
-  ${newsletterSettingsFragment}
+  ${newsletterFragment}
 `
 
 export const query = gql`

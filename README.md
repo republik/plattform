@@ -20,6 +20,8 @@ The frontends are Next.js apps, the backends use Express.js.
 
 - `styleguide`: a React component library shared by all frontends and used by the `api` to render newsletters
 - `backend-modules/*`: packages used by the `api` and `assets` server
+- `eslint-config-*`: multiple eslint configurations which are used accross our apps
+- `nextjs-apollo-client`: a reusable Nextjs / Apollo Client setup
 
 All packages and apps support [TypeScript](https://www.typescriptlang.org/) and plain ECMAScript.
 
@@ -65,7 +67,7 @@ We recommend you install the postgresql client tools on your machine to interact
 sudo apt install postgresql-client-12
 ```
 
-When postgresql in running in docker client tools like `psql` or `createdb`/`dropdb` don't automatically connect to it. They try to access postgresql via a local socket, when instead you want them to connect via network to localhost. To make your life easier, you can add the following environment variables to `~/.bashrc` / `~/.zshrc` so the client tools connect to localhost per default.
+When postgresql is running in docker, client tools like `psql` or `createdb`/`dropdb` don't automatically connect to it. They try to access postgresql via a local socket, when instead you want them to connect via network to localhost. To make your life easier, you can add the following environment variables to `~/.bashrc` / `~/.zshrc` so the client tools connect to localhost per default.
 
 ```
 export PGHOST=127.0.0.1

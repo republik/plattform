@@ -77,6 +77,7 @@ export const TeaserFeed = ({
   series,
   dense = false,
   nonInteractive = false,
+  skipFormat = false,
 }) => {
   const formatMeta = (format && format.meta) || {}
   const href = getTeaserHref(
@@ -86,11 +87,14 @@ export const TeaserFeed = ({
   const Headline =
     formatMeta.kind === 'meta' ||
     metaKind === 'meta' ||
+    template === 'section' ||
     template === 'format' ||
     template === 'page'
       ? Headlines.Interaction
       : formatMeta.kind === 'scribble' || metaKind === 'scribble'
       ? Headlines.Scribble
+      : formatMeta.kind === 'flyer'
+      ? Headlines.Flyer
       : Headlines.Editorial
   const borderColor = formatMeta.title
     ? formatMeta.color || colors[formatMeta.kind]
@@ -103,12 +107,15 @@ export const TeaserFeed = ({
     ? borderColor
     : undefined
 
+  const showCredits = credits && credits.length > 0
+  const hidePublishDate = ['section', 'format'].includes(template)
+
   return (
     <Container
       highlighted={highlighted}
-      format={format}
+      format={skipFormat ? undefined : format}
       series={series}
-      formatColor={borderColor}
+      formatColor={skipFormat ? undefined : borderColor}
       Link={Link}
       menu={menu}
       repoId={repoId}
@@ -128,7 +135,7 @@ export const TeaserFeed = ({
           title
         )}
       </Headline>
-      {!!description && (
+      {!!description && formatMeta.kind !== 'flyer' && (
         <Lead>
           {!nonInteractive ? (
             <Link href={href} passHref>
@@ -141,11 +148,14 @@ export const TeaserFeed = ({
           )}
         </Lead>
       )}
-      <Credit>
-        {credits && credits.length > 0
-          ? renderMdast(credits, getCreditsSchema(!nonInteractive))
-          : !!publishDate && dateFormat(new Date(publishDate))}
-      </Credit>
+      {showCredits && (
+        <Credit>
+          {renderMdast(credits, getCreditsSchema(!nonInteractive))}
+        </Credit>
+      )}
+      {!showCredits && !hidePublishDate && !!publishDate && (
+        <Credit>{dateFormat(new Date(publishDate))}</Credit>
+      )}
       {!!highlight && (
         <Highlight label={highlightLabel}>
           <Link href={href} passHref>

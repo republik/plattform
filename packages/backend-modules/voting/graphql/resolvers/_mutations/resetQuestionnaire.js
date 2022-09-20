@@ -16,11 +16,16 @@ module.exports = async (_, { id: questionnaireId }, context) => {
       pgdb: transaction,
     })
 
-    await pgdb.public.answers.delete({
+    await transaction.public.answers.delete({
       questionnaireId,
       userId: me.id,
       submitted: false,
     })
+
+    await transaction.public.answers.update(
+      { questionnaireId, userId: me.id },
+      { draft: null },
+    )
 
     await transaction.transactionCommit()
 

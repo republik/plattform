@@ -14,12 +14,12 @@ import {
   EtiquetteIcon,
   IconButton,
   Interaction,
+  shouldIgnoreClick,
 } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 import withInNativeApp, { postMessage } from '../../lib/withInNativeApp'
 
 import { splitByTitle } from '../../lib/utils/mdast'
-import { shouldIgnoreClick } from '../../lib/utils/link'
 import { trackEvent } from '../../lib/matomo'
 import { getDiscussionLinkProps } from './utils'
 import { PUBLIC_BASE_URL, PUBLIKATOR_BASE_URL } from '../../lib/constants'
@@ -370,7 +370,7 @@ const ActionBar = ({
       label: !forceShortLabel ? t('article/actionbar/share') : '',
       labelShort:
         !forceShortLabel && isArticleBottom ? t('article/actionbar/share') : '',
-      modes: ['articleTop', 'articleOverlay', 'articleBottom'],
+      modes: ['articleTop', 'articleOverlay', 'articleBottom', 'flyer'],
       show: true,
     },
     {
@@ -412,7 +412,7 @@ const ActionBar = ({
           fill={'#E9A733'}
         />
       ),
-      modes: ['articleTop'],
+      modes: ['articleTop', 'flyer'],
       show: document?.repoId && isEditor,
     },
   ]
@@ -452,7 +452,8 @@ const ActionBar = ({
       },
       label: t('PodcastButtons/play'),
       show:
-        !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud',
+        !!meta?.audioSource &&
+        !['syntheticReadAloud', 'readAloud'].includes(meta.audioSource.kind),
       modes: ['articleTop'],
     },
     {

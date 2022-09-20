@@ -58,10 +58,11 @@ const IconButton = React.forwardRef<
       <Element
         {...styles.button}
         {...(invert && styles.invertFlex)}
-        {...((onClick || href) && styles.hover)}
+        {...((onClick || onMouseDown || href) && styles.hover)}
         {...attributes}
         style={{
-          cursor: (href || onClick) && !disabled ? 'pointer' : 'auto',
+          cursor:
+            (href || onClick || onMouseDown) && !disabled ? 'pointer' : 'auto',
           ...customStyles,
         }}
         onClick={onClick}
@@ -105,7 +106,6 @@ const styles = {
   button: css({
     display: 'flex',
     flexDirection: 'row',
-    position: 'relative',
     alignItems: 'center',
     textDecoration: 'none',
     marginRight: 20,

@@ -1,4 +1,5 @@
 const debug = require('debug')('publikator:resolver:query:search')
+const { ascending } = require('d3-array')
 
 const {
   Roles: { ensureUserHasRole },
@@ -19,6 +20,14 @@ const decodeCursor = (cursor) => {
 
   return false
 }
+
+// append index from elastic hits
+const appendHitIndex = (hits) => (repo) => ({
+  ...repo,
+  __index: hits.findIndex((hit) => hit._id === repo.id),
+})
+
+const byIndex = (a, b) => ascending(a.__index, b.__index)
 
 module.exports = async (__, args, context) => {
   ensureUserHasRole(context.user, 'editor')
@@ -78,7 +87,9 @@ module.exports = async (__, args, context) => {
   const hasPreviousPage = from > 0
 
   const repos = hits.length
-    ? await context.pgdb.publikator.repos.find({ id: hits.map((n) => n._id) })
+    ? (await context.pgdb.publikator.repos.find({ id: hits.map((n) => n._id) }))
+        .map(appendHitIndex(hits))
+        .sort(byIndex)
     : []
 
   const data = {

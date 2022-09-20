@@ -1,6 +1,7 @@
 import { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
-import { compose, graphql } from 'react-apollo'
+import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
 import { meQuery } from '../../lib/withMe'
 import { css } from 'glamor'
 

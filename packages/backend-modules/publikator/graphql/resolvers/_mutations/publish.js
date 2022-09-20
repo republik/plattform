@@ -122,7 +122,7 @@ module.exports = async (
       nodes: [
         {
           type: indexType,
-          entity: getElasticDoc({
+          entity: await getElasticDoc({
             indexType: indexType,
             doc,
           }),
@@ -138,7 +138,7 @@ module.exports = async (
     context,
   })
 
-  const { _all, _usernames } = connection.nodes[0].entity
+  const { _all, _users } = connection.nodes[0].entity
 
   const resolvedDoc = JSON.parse(JSON.stringify(doc))
 
@@ -150,30 +150,26 @@ module.exports = async (
 
   const searchString = '?' + querystring.stringify(utmParams)
 
-  contentUrlResolver(
+  await contentUrlResolver(
     resolvedDoc,
     _all,
-    _usernames,
+    _users,
     unresolvedRepoIds,
     FRONTEND_BASE_URL,
     searchString,
   )
 
   metaUrlResolver(
+    resolvedDoc.type,
     resolvedDoc.content.meta,
     _all,
-    _usernames,
+    _users,
     unresolvedRepoIds,
     FRONTEND_BASE_URL,
     searchString,
   )
 
-  metaFieldResolver(
-    resolvedDoc.content.meta,
-    _all,
-    _usernames,
-    unresolvedRepoIds,
-  )
+  metaFieldResolver(resolvedDoc.content.meta, _all, _users, unresolvedRepoIds)
 
   unresolvedRepoIds = uniq(unresolvedRepoIds).filter(
     (unresolvedRepoId) => unresolvedRepoId !== repoId,
@@ -356,7 +352,7 @@ module.exports = async (
   }
 
   // publish to elasticsearch
-  const elasticDoc = getElasticDoc({
+  const elasticDoc = await getElasticDoc({
     indexName: getIndexAlias(indexType.toLowerCase(), 'write'),
     indexType: indexType,
     doc,

@@ -5,7 +5,6 @@ const debug = require('debug')('statistics:script:report:daily')
 const moment = require('moment')
 const Promise = require('bluebird')
 const yargs = require('yargs')
-const mdastToString = require('mdast-util-to-string')
 const { descending } = require('d3-array')
 
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
@@ -13,6 +12,9 @@ const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch'
 const {
   publish: { postMessage },
 } = require('@orbiting/backend-modules-slack')
+const {
+  stringifyNode,
+} = require('@orbiting/backend-modules-documents/lib/resolve')
 
 const Data = require('../../lib/matomo/data')
 const Indexes = require('../../lib/matomo/indexes')
@@ -97,7 +99,7 @@ const getUrls = async ({ date, limit }, { pgdb }) => {
       .format('YYYY-MM-DD')}'
       AND sm.date = '${date.format('YYYY-MM-DD')}'
       AND sm.segment IS NULL
-      AND sm.template = 'article'
+      AND sm.template IN ('article', 'flyer')
 
     ORDER BY sm."publishDate" DESC
     LIMIT :limit
@@ -135,23 +137,25 @@ const getUrls = async ({ date, limit }, { pgdb }) => {
   )
 }
 
-const getBlock = (
+const getBlock = async (
   { url, daysPublished, document: { meta }, indexes, distributions },
   { date },
 ) => {
+  const credits = await stringifyNode(meta.credits.type, meta.credits)
+  const creditsFragment = credits.replace(`, ${date.format('DD.MM.YYYY')}`, '')
+  const daysFragment = daysPublished > 1 ? ` (${daysPublished}. Tag)` : ''
+
+  const indexFragment = Math.round(indexes.visitors * 100)
+  const memberIndexFragment = Math.round(indexes.memberVisitors * 100)
+
   const block = {
     type: 'section',
     text: {
       type: 'mrkdwn',
       text: [
         `*<${getUltradashboardUrlReportLink(url)}|${meta.title}>*`,
-        `_${mdastToString({ children: meta.credits }).replace(
-          `, ${date.format('DD.MM.YYYY')}`,
-          '',
-        )}_` + (daysPublished > 1 ? ` (${daysPublished}. Tag)` : ''),
-        `*Index ${Math.round(
-          indexes.visitors * 100,
-        )}* ⋅ Abonnenten-Index ${Math.round(indexes.memberVisitors * 100)}`,
+        `_${creditsFragment || '(ohne Credits)'}_` + daysFragment,
+        `*Index ${indexFragment}* ⋅ Abonnenten-Index ${memberIndexFragment}`,
         'Via ' +
           distributions
             .sort((a, b) => descending(a.percentage, b.percentage))
@@ -333,7 +337,11 @@ Promise.all([PgDb.connect(), Elasticsearch.connect()]).spread(
               ].join('\n'),
             },
           })
-          recent.forEach((article) => blocks.push(getBlock(article, { date })))
+
+          await Promise.each(recent, async (article) => {
+            const block = await getBlock(article, { date })
+            blocks.push(block)
+          })
         }
 
         // Earlier articles
@@ -352,7 +360,11 @@ Promise.all([PgDb.connect(), Elasticsearch.connect()]).spread(
               ].join('\n'),
             },
           })
-          earlier.forEach((article) => blocks.push(getBlock(article, { date })))
+
+          await Promise.each(earlier, async (article) => {
+            const block = await getBlock(article, { date })
+            blocks.push(block)
+          })
         }
 
         // Footer

@@ -6,11 +6,12 @@ import {
   reformatPlaceholder,
   reformatUrlDate,
 } from '../../lib/utils/calendar'
-import { containsRepoFromTemplate } from '../../lib/utils/repo'
+import { existsAlready } from '../../lib/utils/repo'
 import Repo, { Placeholder } from './Repo'
 import { ascending } from 'd3-array'
 import { parseJSONObject } from '../../lib/safeJSON'
 import { WEEK_TEMPLATE_REPOS } from '../../lib/settings'
+import withT from '../../lib/withT'
 const templateRepos = parseJSONObject(WEEK_TEMPLATE_REPOS)
 
 const styles = {
@@ -29,7 +30,7 @@ const styles = {
   }),
 }
 
-const Repos = ({ repos, isNewsletter, ...props }) => {
+const Repos = withT(({ t, repos, isNewsletter, ...props }) => {
   const sortedRepos = repos.sort((repo1, repo2) =>
     ascending(
       new Date(repo1.meta.publishDate),
@@ -39,10 +40,32 @@ const Repos = ({ repos, isNewsletter, ...props }) => {
   return (
     <div {...styles.templateContainer}>
       {sortedRepos.map((repo) =>
-        repo.isPlaceholder ? (
+        repo.isPlaceholder && repo.template ? (
+          <Repo
+            key={repo.template}
+            repo={{
+              latestCommit: {
+                document: {
+                  meta: {
+                    title: t(
+                      `repo/add/template/${repo.template}`,
+                      null,
+                      repo.template,
+                    ),
+                    template: repo.template,
+                  },
+                },
+              },
+            }}
+            placeholderDate={repo.meta.publishDate}
+            isNewsletter={isNewsletter}
+            {...props}
+          />
+        ) : repo.isPlaceholder ? (
           <Placeholder
             key={repo.repoId}
             repoId={repo.repoId}
+            template={repo.template}
             placeholderDate={repo.meta.publishDate}
             isNewsletter={isNewsletter}
             {...props}
@@ -58,7 +81,7 @@ const Repos = ({ repos, isNewsletter, ...props }) => {
       )}
     </div>
   )
-}
+})
 
 export const ReposByTemplate = ({
   template,
@@ -67,17 +90,19 @@ export const ReposByTemplate = ({
   isPast,
   isNewsletter,
 }) => {
+  const weeklyRepos = template
+    .map((t) => templateRepos[t])
+    .flat(1)
+    .filter(Boolean)
+
   const reposAndPlaceholders = isPast
     ? repos
-    : getPlaceholders(templateRepos[template], date).reduce(
-        (acc, placeholder) => {
-          const isInList = containsRepoFromTemplate(repos, placeholder.repoId)
-          return isInList
-            ? acc
-            : acc.concat(reformatPlaceholder(placeholder, date))
-        },
-        repos,
-      )
+    : getPlaceholders(weeklyRepos, date).reduce((acc, placeholder) => {
+        const isInList = existsAlready(repos, placeholder)
+        return isInList
+          ? acc
+          : acc.concat(reformatPlaceholder(placeholder, date))
+      }, repos)
 
   return (
     <Repos

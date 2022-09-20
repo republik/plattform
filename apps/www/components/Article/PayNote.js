@@ -9,6 +9,7 @@ import {
   ColorContextProvider,
   useColorContext,
   RawHtml,
+  shouldIgnoreClick,
 } from '@project-r/styleguide'
 import TrialForm from '../Trial/Form'
 import { css } from 'glamor'
@@ -17,9 +18,8 @@ import { trackEvent, trackEventOnClick } from '../../lib/matomo'
 import { useRouter } from 'next/router'
 import compose from 'lodash/flowRight'
 import withT, { t } from '../../lib/withT'
-import withInNativeApp from '../../lib/withInNativeApp'
-import withMe from '../../lib/apollo/withMe'
-import { shouldIgnoreClick } from '../../lib/utils/link'
+import { useInNativeApp } from '../../lib/withInNativeApp'
+import { useMe } from '../../lib/context/MeContext'
 
 const styles = {
   banner: css({
@@ -56,6 +56,14 @@ const styles = {
       lineHeight: 1.4,
       marginLeft: 30,
       marginTop: 0,
+    },
+  }),
+  flyerWrapper: css({
+    maxWidth: 700,
+    margin: '0 auto',
+    padding: 15,
+    [mediaQueries.mUp]: {
+      padding: '15px 0',
     },
   }),
 }
@@ -385,6 +393,10 @@ const withDarkContextWhenBefore = (WrappedComponent) => (props) => {
   return <WrappedComponent {...props} />
 }
 
+export const FlyerWrapper = ({ children }) => (
+  <div {...styles.flyerWrapper}>{children}</div>
+)
+
 export const InnerPaynote = ({
   payNote,
   trackingPayload,
@@ -403,16 +415,8 @@ export const InnerPaynote = ({
   )
 }
 
-export const PayNote = compose(
-  withInNativeApp,
-  withMe,
-  withDarkContextWhenBefore,
-)(
+export const PayNote = compose(withDarkContextWhenBefore)(
   ({
-    inNativeIOSApp,
-    me,
-    hasAccess,
-    hasActiveMembership,
     seed,
     tryOrBuy,
     documentId,
@@ -421,7 +425,10 @@ export const PayNote = compose(
     customPayNotes,
     customMode,
     customOnly,
+    Wrapper = Center,
   }) => {
+    const { meLoading, hasActiveMembership, hasAccess } = useMe()
+    const { inNativeIOSApp } = useInNativeApp()
     const [colorScheme] = useColorContext()
     const { query } = useRouter()
 
@@ -429,7 +436,7 @@ export const PayNote = compose(
 
     const subject = {
       inNativeIOSApp,
-      isEligibleForTrial: !me || !!query.trialSignup,
+      isEligibleForTrial: !hasAccess || !!query.trialSignup,
       hasActiveMembership,
     }
     const payNote = getPayNote(
@@ -456,14 +463,14 @@ export const PayNote = compose(
 
     return (
       <div
-        data-hide-if-active-membership='true'
+        data-hide-if-active-membership={meLoading ? 'true' : undefined}
         {...styles.banner}
         {...colorScheme.set(
           'backgroundColor',
           position === 'before' ? 'hover' : 'alert',
         )}
       >
-        <Center>
+        <Wrapper>
           <InnerPaynote
             payNote={positionedNote}
             overwriteContent={
@@ -475,7 +482,7 @@ export const PayNote = compose(
             hasAccess={hasAccess}
             position={position}
           />
-        </Center>
+        </Wrapper>
       </div>
     )
   },

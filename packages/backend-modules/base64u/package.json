@@ -5,12 +5,12 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/orbiting/backends.git"
+    "url": "git+https://github.com/republik/plattform.git"
   },
   "author": "Patrick Venetz <patrick.venetz@republik.ch>",
   "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://github.com/orbiting/backends/issues"
+    "url": "https://github.com/republik/plattform/issues"
   },
-  "homepage": "https://github.com/orbiting/backends#readme"
+  "homepage": "https://github.com/republik/plattform#readme"
 }

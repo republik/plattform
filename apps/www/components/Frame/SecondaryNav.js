@@ -16,45 +16,7 @@ import {
   HEADER_HORIZONTAL_PADDING,
 } from '../constants'
 import { useRouter } from 'next/router'
-
-const sections = [
-  {
-    title: 'Meta',
-    href: '/meta',
-    color: '#000',
-    kind: null,
-  },
-  {
-    title: 'Briefings',
-    href: '/briefings',
-    color: '#07809a',
-    kind: 'editorial',
-  },
-  {
-    title: 'Kolumnen',
-    href: '/kolumnen',
-    color: '#D2933C',
-    kind: null,
-  },
-  {
-    title: 'Formate',
-    href: '/formate',
-    color: '#d44438',
-    kind: 'scribble',
-  },
-  {
-    title: 'Audio',
-    href: '/audio',
-    color: null,
-    kind: null,
-  },
-  {
-    title: 'Serien',
-    href: '/serien',
-    color: null,
-    kind: null,
-  },
-]
+import { useFlyerMeta } from '../../lib/apollo/miniNavi'
 
 export const SecondaryNav = ({
   secondaryNav,
@@ -65,6 +27,8 @@ export const SecondaryNav = ({
   const [colorScheme] = useColorContext()
   const router = useRouter()
   const active = router.asPath
+
+  const flyerMeta = useFlyerMeta()
 
   return (
     <>
@@ -80,6 +44,7 @@ export const SecondaryNav = ({
           style={{
             borderTopWidth: isSecondarySticky ? 0 : 1,
             borderTopStyle: 'solid',
+            textAlign: 'center',
           }}
         >
           <NavLink
@@ -100,6 +65,15 @@ export const SecondaryNav = ({
             {t('navbar/feed')}
           </NavLink>
           <NavLink
+            href={flyerMeta?.path || '/format/journal'}
+            active={active}
+            formatColor='accentColorFlyer'
+            minifeed
+            title={t('navbar/flyer')}
+          >
+            {t('navbar/flyer')}
+          </NavLink>
+          <NavLink
             href='/dialog'
             active={active}
             formatColor={colors.primary}
@@ -108,21 +82,6 @@ export const SecondaryNav = ({
           >
             {t('navbar/discussion')}
           </NavLink>
-          {sections.map((section) => {
-            const color = section.color || colors[section.kind]
-            return (
-              <NavLink
-                key={section.title}
-                href={section.href}
-                active={active}
-                formatColor={color}
-                minifeed
-                title={section.title}
-              >
-                {section.title}
-              </NavLink>
-            )
-          })}
         </div>
       ) : (
         secondaryNav && (

@@ -1,4 +1,4 @@
-import { compose } from 'react-apollo'
+import compose from 'lodash/flowRight'
 import { css } from 'glamor'
 
 import withT from '../../lib/withT'
@@ -10,15 +10,16 @@ const styles = {
     backgroundColor: colors.social,
     padding: '12px 24px',
     marginBottom: '12px',
+    width: '100%',
   }),
   notice: css({
     color: 'white',
   }),
 }
 
-const RepoArchivedBanner = ({ t, isTemplate }) => {
+const RepoArchivedBanner = ({ t, isTemplate, style }) => {
   return (
-    <div {...styles.container}>
+    <div {...styles.container} style={style}>
       <Interaction.H3 {...styles.notice}>
         {t(`repo/archived${isTemplate ? '/template/' : '/'}notice`)}
       </Interaction.H3>

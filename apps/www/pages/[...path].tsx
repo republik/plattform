@@ -1,17 +1,19 @@
 import Article from '../components/Article/Page'
-import createGetStaticProps from '../lib/helpers/createGetStaticProps'
 import { GetStaticPaths } from 'next'
 import { ParsedUrlQuery } from 'querystring'
 import { gql } from '@apollo/client'
 import { getDocument } from '../components/Article/graphql/getDocument'
+import { createGetStaticProps } from '../lib/apollo/helpers'
+import { isExternal } from '../components/StatusError'
 
 type Params = {
   path: string[]
 } & ParsedUrlQuery
 
 type Props = {
-  payNoteTryOrBuy: number
-  payNoteSeed: number
+  payNoteTryOrBuy?: number
+  payNoteSeed?: number
+  clientRedirection?: any
 }
 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
@@ -24,7 +26,7 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
 const REVALIDATE_SECONDS = 10
 
 export const getStaticProps = createGetStaticProps<Props, Params>(
-  async (client, params) => {
+  async (client, { params }) => {
     const path = '/' + params.path.join('/')
 
     const {
@@ -63,6 +65,14 @@ export const getStaticProps = createGetStaticProps<Props, Params>(
     })
 
     if (redirection) {
+      if (isExternal(redirection.target)) {
+        return {
+          props: {
+            clientRedirection: redirection,
+          },
+          revalidate: REVALIDATE_SECONDS,
+        }
+      }
       return {
         revalidate: REVALIDATE_SECONDS,
         redirect: {

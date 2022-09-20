@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react'
-import { compose } from 'react-apollo'
+import compose from 'lodash/flowRight'
 import { css } from 'glamor'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import MemoIcon from 'react-icons/lib/md/rate-review'
 import RemoveIcon from 'react-icons/lib/md/delete'
 import { Editorial, Interaction } from '@project-r/styleguide'
-
 import {
   Overlay,
   OverlayToolbar,
@@ -15,6 +14,7 @@ import {
 
 import withT from '../../../../lib/withT'
 import { matchInline, createInlineButton, buttonStyles } from '../../utils'
+import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 
 import standard, * as markers from './Markers'
 import MemoTree from './MemoTree'
@@ -84,7 +84,8 @@ const Memo = compose(
     }
   }
 
-  const { commitId, repoId } = router.query
+  const { commitId } = router.query
+  const repoId = getRepoIdFromQuery(router.query)
   const { Marker } = getMarker(marker)
 
   return (

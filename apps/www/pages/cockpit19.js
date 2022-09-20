@@ -43,7 +43,7 @@ import withMe from '../lib/apollo/withMe'
 import { swissTime } from '../lib/utils/format'
 import withInNativeApp from '../lib/withInNativeApp'
 import Link from 'next/link'
-import withDefaultSSR from '../lib/hocs/withDefaultSSR'
+import { withDefaultSSR } from '../lib/apollo/helpers'
 
 const END_DATE = '2020-03-31T10:00:00.000Z'
 
@@ -342,7 +342,7 @@ const Page = ({
   defaultBenefactor,
   communitySeed,
   crowdfunding,
-  router: { query },
+  router: { query, pathname },
 }) => {
   const meta = {
     pageTitle: '🚀 Republik Cockpit',
@@ -358,7 +358,7 @@ const Page = ({
         `/cockpit?token=${encodeURIComponent(query.token)}`,
         '/cockpit',
         {
-          shallow: true,
+          shallow: pathname === '/cockpit',
         },
       )
     }

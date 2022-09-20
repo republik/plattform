@@ -1,5 +1,6 @@
 import { matchInline } from '../../utils'
 import MarkdownSerializer from 'slate-mdast-serializer'
+import { EXPANDABLE_LINK_SEPARATOR as SEPARATOR } from '@project-r/styleguide'
 
 import createUi from './ui'
 
@@ -10,22 +11,35 @@ export default ({ rule, subModules, TYPE }) => {
   const link = {
     match: matchInline(TYPE),
     matchMdast: rule.matchMdast,
-    fromMdast: (node, index, parent, { visitChildren, context }) => ({
-      kind: 'inline',
-      type: TYPE,
-      data: {
-        title: node.title,
-        href: node.url,
-        color: context.color,
-      },
-      nodes: visitChildren(node),
-    }),
-    toMdast: (object, index, parent, { visitChildren }) => ({
-      type: 'link',
-      title: object.data.title,
-      url: object.data.href,
-      children: visitChildren(object),
-    }),
+    fromMdast: (node, index, parent, { visitChildren, context }) => {
+      const [title, description] = (node.title || '').split(SEPARATOR)
+      return {
+        kind: 'inline',
+        type: TYPE,
+        data: {
+          title,
+          href: node.url,
+          description,
+          color: context.color,
+        },
+        nodes: visitChildren(node),
+      }
+    },
+    toMdast: (object, index, parent, { visitChildren }) => {
+      return {
+        type: 'link',
+        // if there is a tile but no description, just 'title' is good
+        // if there is no title but a description, we want '[SEPARATOR]description'
+        title: [
+          object.data.title || '',
+          object.data.description?.replace(/[\r\n\v]+/g, ' '),
+        ]
+          .filter((x) => x !== undefined)
+          .join(SEPARATOR),
+        url: object.data.href,
+        children: visitChildren(object),
+      }
+    },
   }
 
   const serializer = new MarkdownSerializer({

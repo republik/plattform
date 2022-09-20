@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
+import { graphql, withApollo } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import { css, merge } from 'glamor'
 import isEmail from 'validator/lib/isEmail'
@@ -70,7 +70,7 @@ const Form = (props) => {
     narrow,
     isMember,
     me,
-    meRefetch,
+    client,
     t,
     minimal,
     initialEmail,
@@ -174,7 +174,7 @@ const Form = (props) => {
             })
           } else {
             minimal && setShowButtons(true)
-            meRefetch()
+            client.resetStore()
           }
         })
         .catch(catchError)
@@ -448,4 +448,5 @@ export default compose(
   withRouter,
   withMe,
   withT,
+  withApollo,
 )(Form)

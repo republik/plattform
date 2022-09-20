@@ -17,14 +17,31 @@ const styles = {
     lineHeight: 0,
   }),
   input: css({
-    display: 'none',
+    cursor: 'pointer',
+    // hidden but accessible
+    // https://www.sarasoueidan.com/blog/inclusively-hiding-and-styling-checkboxes-and-radio-buttons/
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: 24,
+    height: 24,
+    opacity: 0,
+    '&:focus + svg': {
+      outline: 'solid',
+      outlineOffset: 3,
+    },
+    '&:focus:not(:focus-visible) + svg': {
+      outline: 'none',
+    },
   }),
   box: css({
+    position: 'relative',
     display: 'inline-block',
     marginRight: 10,
     verticalAlign: 'middle',
   }),
   boxWithouText: css({
+    position: 'relative',
     display: 'inline-block',
   }),
 }
@@ -32,7 +49,13 @@ const styles = {
 const RadioCircle = ({ checked, disabled }) => {
   const [colorScheme] = useColorContext()
   return (
-    <svg width='24' height='24' viewBox='0 0 24 24'>
+    <svg
+      width='24'
+      height='24'
+      viewBox='0 0 24 24'
+      aria-hidden='true'
+      focusable='false'
+    >
       {checked && (
         <circle
           {...(disabled
@@ -75,17 +98,17 @@ const Radio: React.FC<{
       style={style}
     >
       <span {...(children ? styles.box : styles.boxWithouText)}>
+        <input
+          {...styles.input}
+          name={name}
+          type='radio'
+          value={value}
+          checked={checked}
+          disabled={disabled}
+          onChange={onChange}
+        />
         <RadioCircle checked={checked} disabled={disabled} />
       </span>
-      <input
-        {...styles.input}
-        name={name}
-        type='radio'
-        value={value}
-        checked={checked}
-        disabled={disabled}
-        onChange={onChange}
-      />
       {children}
     </label>
   )

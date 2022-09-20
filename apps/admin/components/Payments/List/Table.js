@@ -1,6 +1,6 @@
-import { A, Label, colors } from '@project-r/styleguide'
+import { Label, colors } from '@project-r/styleguide'
+import Link from 'next/link'
 import { chfFormat } from '../../../lib/utils/formats'
-import routes from '../../../server/routes'
 
 import { displayDate } from '../../Display/utils'
 
@@ -9,8 +9,6 @@ import {
   createSortHandler,
   createSortIndicator,
 } from '../../Tables/utils'
-
-const { Link } = routes
 
 const getDueDate = (status, dueDate) => {
   if (!dueDate) {
@@ -110,7 +108,7 @@ const Table = ({ items, sort, onSort, ...props }) => {
               <td>{getDueDate(payment.status, payment.dueDate)}</td>
               <td>{payment.method}</td>
               <td>
-                <Link route='user' params={{ userId: user.id }}>
+                <Link href={`/users/${user.id}`}>
                   <a {...styles.link}>{name}</a>
                 </Link>
               </td>

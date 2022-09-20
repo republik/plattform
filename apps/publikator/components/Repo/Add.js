@@ -1,6 +1,8 @@
 import { Component, useState, useMemo } from 'react'
-import { Router } from '../../lib/routes'
 import { slug as slugify } from '@project-r/styleguide'
+import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
+import { gql } from '@apollo/client'
 import schemas from '../Templates'
 import { css } from 'glamor'
 import withT from '../../lib/withT'
@@ -24,8 +26,7 @@ import {
   REPO_PREFIX,
   TEMPLATE_PREFIX,
 } from '../../lib/settings'
-import gql from 'graphql-tag'
-import { compose, graphql } from 'react-apollo'
+
 import { withRouter } from 'next/router'
 import SearchIcon from 'react-icons/lib/md/search'
 import InfoIcon from 'react-icons/lib/md/info-outline'
@@ -217,16 +218,20 @@ class RepoAdd extends Component {
   goToEdit({ slug }) {
     const { title, schema, templateRepoId } = this.state
     const { isTemplate } = this.props
-    Router.replaceRoute('repo/edit', {
-      repoId: [GITHUB_ORG, slug],
-      commitId: 'new',
-      title,
-      schema,
-      templateRepoId,
-      isTemplate,
-    }).then(() => {
-      window.scrollTo(0, 0)
-    })
+    this.props.router
+      .push({
+        pathname: `/repo/${GITHUB_ORG}/${slug}/edit`,
+        query: {
+          commitId: 'new',
+          title,
+          schema,
+          templateRepoId,
+          isTemplate,
+        },
+      })
+      .then(() => {
+        window.scrollTo(0, 0)
+      })
   }
 
   onSubmit(event) {

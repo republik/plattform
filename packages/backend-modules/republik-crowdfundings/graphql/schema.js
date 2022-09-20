@@ -89,9 +89,6 @@ type mutations {
   # Reset a membership
   resetMembership(id: ID!): Membership!
 
-  # required role: supporter
-  updateUser(firstName: String, lastName: String, birthday: Date, phoneNumber: String, address: AddressInput, userId: ID!): User!
-
   # merges the belongings from source to target
   # required role: admin
   mergeUsers(targetUserId: ID!, sourceUserId: ID!): User!

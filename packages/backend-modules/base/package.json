@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/orbiting/backends.git"
+    "url": "git+https://github.com/republik/plattform.git"
   },
   "author": "Patrick Recher <patrick.recher@republik.ch>",
   "license": "AGPL-3.0",
@@ -13,9 +13,9 @@
     "access": "public"
   },
   "bugs": {
-    "url": "https://github.com/orbiting/backends/issues"
+    "url": "https://github.com/republik/plattform/issues"
   },
-  "homepage": "https://github.com/orbiting/backends#readme",
+  "homepage": "https://github.com/republik/plattform#readme",
   "scripts": {
     "dev": "tsc -w",
     "build": "tsc"
@@ -40,7 +40,7 @@
     "graphql": "^15.3.0",
     "graphql-redis-subscriptions": "^2.2.1",
     "graphql-subscriptions": "^1.0.0",
-    "graphql-tools": "^6.0.12",
+    "graphql-tools": "^8.3.3",
     "helmet": "^3.22.0",
     "pogi": "^2.11.1",
     "redis": "^3.0.2"

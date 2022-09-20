@@ -817,6 +817,14 @@
       "value": "Bestätigen Sie Ihre Anmeldung zum Project-R-Newsletter."
     },
     {
+      "key": "api/newsletters/request/CLIMATE/subject",
+      "value": "Bestätigen Sie Ihre Anmeldung zum Klimalabor-Newsletter."
+    },
+    {
+      "key": "api/newsletters/request/READALOUD/subject",
+      "value": "Die Republik zum Hören: Anmeldung bestätigen"
+    },
+    {
       "key": "api/newsletters/request/notSupported",
       "value": "Diese Art der Anmeldung zum gewählten Newsletter wird noch nicht unterstützt."
     },
@@ -919,6 +927,18 @@
     {
       "key": "profile/contact/phoneNumberNote/label",
       "value": "Verfügbarkeit"
+    },
+    {
+      "key": "address/name/tooLong",
+      "value": "Name, maximal {maxLength} Zeichen"
+    },
+    {
+      "key": "address/line1/tooLong",
+      "value": "Strasse und Hausnummer, maximal {maxLength} Zeichen"
+    },
+    {
+      "key": "address/city/tooLong",
+      "value": "Ort, maximal {maxLength} Zeichen"
     },
     {
       "key": "pledge/contact/firstName/label",
@@ -1437,6 +1457,10 @@
       "value": "Die Umfrage ist bereits geschlossen."
     },
     {
+      "key": "api/questionnaire/answer/404",
+      "value": "Antwort nicht gefunden"
+    },
+    {
       "key": "api/questionnaire/answer/empty",
       "value": "Leere Antworten sind nicht akzeptiert."
     },
@@ -1491,6 +1515,14 @@
     {
       "key": "api/questionnaire/noUnattributedAnswers",
       "value": "Dieser Fragebogen unterstützt keine anonymen Eingaben."
+    },
+    {
+      "key": "api/questionnaire/submission/404",
+      "value": "Umfrage-Teilnahme nicht gefunden"
+    },
+    {
+      "key": "api/questionnaire/submission/noRevokeSubmissions",
+      "value": "Ihre Umfrage-Teilnahme kann nicht zurückgezogen werden."
     },
     {
       "key": "timeAhead/justNow/other",
@@ -1555,6 +1587,38 @@
     {
       "key": "api/collections/progress/notEnabled",
       "value": "Sie müssen zuerst zustimmen, dass Ihre Position gespeichert wird."
+    },
+    {
+      "key": "api/collections/audioQueue/error/invalidItemId",
+      "value": "ID ungültig"
+    },
+    {
+      "key": "api/collections/audioQueue/error/missingEntityType",
+      "value": "Entity-Typ fehlt"
+    },
+    {
+      "key": "api/collections/audioQueue/error/unsupportedEntityType",
+      "value": "Entity-Typ wird nicht unterstützt."
+    },
+    {
+      "key": "api/collections/audioQueue/error/unsupportedSequence",
+      "value": "Angegebenen Sequenznummer wird nicht unterstützt."
+    },
+    {
+      "key": "api/collections/audioQueue/error/missingCollection",
+      "value": "Wiedergabeliste nicht gefunden"
+    },
+    {
+      "key": "api/collections/audioQueue/error/invalidEntityId",
+      "value": "Entity-ID ungültig"
+    },
+    {
+      "key": "api/collections/audioQueue/error/missingDocument",
+      "value": "Dokument nicht gefunden"
+    },
+    {
+      "key": "api/collections/audioQueue/error/missingItem",
+      "value": "Eintrag in Wiedergabeliste nicht gefunden"
     },
     {
       "key": "api/subscriptions/type/notSupported",

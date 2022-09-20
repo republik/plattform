@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import RepoSearch from '../../../utils/RepoSearch'
 import withT from '../../../../../lib/withT'
 import { A, Interaction, useColorContext } from '@project-r/styleguide'
+import { RepoSearch } from '@project-r/styleguide/editor'
 import { css } from 'glamor'
 import MdAdd from 'react-icons/lib/md/add'
 import ArticleRecommendationItem from './ArticleRecommendationItem'

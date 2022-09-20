@@ -1,9 +1,13 @@
+const { Roles } = require('@orbiting/backend-modules-auth')
+
 const {
   isEligible,
   userHasSubmitted,
   userSubmitDate,
   getQuestions,
 } = require('../../lib/Questionnaire')
+
+const { getConnection } = require('../../lib/Submission')
 
 module.exports = {
   async userIsEligible(entity, args, { pgdb, user: me }) {
@@ -17,6 +21,13 @@ module.exports = {
     const { user: me } = context
     return userSubmitDate(entity.id, me && me.id, context)
   },
+  allowedRoles(entity) {
+    const roles = entity?.allowedRoles?.filter((role) =>
+      Roles.exposableRoles.includes(role),
+    )
+
+    return roles?.length ? roles : null
+  },
   async questions(entity, args, { pgdb, user: me }) {
     return getQuestions(entity, args, pgdb)
   },
@@ -26,5 +37,21 @@ module.exports = {
       return questionnaire.result.turnout
     }
     return { entity: questionnaire }
+  },
+  submissions(questionnaire, args, context) {
+    const { submissionsAccessRole, id: questionnaireId } = questionnaire
+    const { user: me } = context
+
+    if (
+      submissionsAccessRole !== 'NONE' &&
+      (submissionsAccessRole === 'PUBLIC' ||
+        Roles.userHasRole(me, submissionsAccessRole.toLowerCase()))
+    ) {
+      const isMember = Roles.userIsInRoles(me, ['member'])
+
+      return getConnection({ questionnaireId, isMember }, args, context)
+    }
+
+    return null
   },
 }

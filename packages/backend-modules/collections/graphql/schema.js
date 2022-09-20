@@ -47,5 +47,43 @@ type mutations {
   ): MediaProgress
 
   clearProgress: Collection!
+
+  """
+  Add an item to \`User.audioQueue\`.
+  If \`sequence\` number is not provided, item will be appended.
+  An item might get a different \`sequence\` number assigned then provided.
+  """ 
+  addAudioQueueItem(
+    entity: AudioQueueEntityInput!
+    sequence: Int
+  ): [AudioQueueItem!]!
+
+  """
+  Move an existing item within \`User.audioQueue\`.
+  Unless \`sequence\` number exceeds maximum \`sequence\` number, an item will put onto \`sequence\` number.
+  """ 
+  moveAudioQueueItem(
+    id: ID!
+    sequence: Int!
+  ): [AudioQueueItem!]!
+
+  """
+  Move an existing item from \`User.audioQueue\`.
+  """ 
+  removeAudioQueueItem(
+    id: ID!
+  ): [AudioQueueItem!]!
+
+  """
+  Clear all items in \`User.audioQueue\`.
+  """ 
+  clearAudioQueue: [AudioQueueItem!]!
+
+  """
+  Reorder existing items at once.
+  A non-existant item ID will be ignored.
+  If an item exists in queue but its ID is not submitted, it will be deleted.
+  """
+  reorderAudioQueue(ids: [ID!]!): [AudioQueueItem!]!
 }
 `

@@ -670,8 +670,8 @@ GROUP BY "discussionId"
           title: meta.title,
           path: meta.path,
           template: meta.template,
-          credits: meta.credits
-            .filter((c) => c.type === 'link')
+          credits: meta.credits?.children
+            ?.filter((c) => c.type === 'link')
             .map((c) => {
               return {
                 name:
