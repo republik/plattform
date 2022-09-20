@@ -14,5 +14,5 @@ export const getSyncText = (value, path) => {
     if (!node?.children) return ''
     node = node?.children[i]
   })
-  return renderAsText(node.children)
+  return node?.children ? renderAsText(node.children) : ''
 }

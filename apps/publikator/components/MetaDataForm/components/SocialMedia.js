@@ -6,13 +6,12 @@ import {
   Field,
   Checkbox,
 } from '@project-r/styleguide'
-import withT from '../../../lib/withT'
 import { MetaOption, MetaOptionLabel, AutosizeInput } from './Layout'
 import { FLYER_FORMAT } from '../index'
 
 export const SOCIAL_MEDIA = ['facebook', 'twitter']
 
-const ShareImageForm = withT(({ data, onChange, syncKeys, sync, unsync }) => {
+const ShareImageForm = ({ data, onChange, syncKeys, sync, unsync }) => {
   return (
     <>
       <MetaOption>
@@ -134,6 +133,6 @@ const ShareImageForm = withT(({ data, onChange, syncKeys, sync, unsync }) => {
       </MetaOption>
     </>
   )
-})
+}
 
-export default withT(ShareImageForm)
+export default ShareImageForm
