@@ -49,7 +49,6 @@ export const getCurrentContent = (store, data, t, options = {}) => {
         template: 'flyer',
         feed: false,
         format: 'https://github.com/republik/format-journal',
-        shareText: t('editor/meta/flyer/defaultShareText'),
       },
     }
   )
