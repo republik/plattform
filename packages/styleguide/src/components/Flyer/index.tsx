@@ -72,7 +72,7 @@ export const EditorFlyerTile: React.FC<{
       {...colorScheme.set('borderBottomColor', 'flyerText')}
     >
       <Message
-        text={`${charCount} ${charCount === 1 ? 'Zeiche' : 'Zeichen'}`}
+        text={`${charCount} Zeichen`}
         type={charCount > MAX_CHAR ? 'error' : 'info'}
         style={{
           position: 'absolute',
