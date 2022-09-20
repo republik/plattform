@@ -21,6 +21,7 @@ import {
 import { KeyboardEvent } from 'react'
 import { selectEmptyTextNode, isEmpty } from './text'
 import { config as elConfig } from '../../config/elements'
+import { getId } from './utils'
 
 export const NAV_KEYS = [
   'ArrowLeft',
@@ -29,8 +30,6 @@ export const NAV_KEYS = [
   'ArrowUp',
   'Tab',
 ]
-
-export const getId = (): string => Math.floor(Math.random() * 1000).toString()
 
 const hasFilledProps = (element: CustomElement): boolean => {
   const props = elConfig[element.type]?.props

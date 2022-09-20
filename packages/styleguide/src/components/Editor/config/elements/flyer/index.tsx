@@ -1,6 +1,6 @@
 import { ElementConfigI } from '../../../custom-types'
 import { FlyerTileIcon } from '../../../../Icons'
-import { getId } from '../../../Core/helpers/tree'
+import { getId } from '../../../Core/helpers/utils'
 
 export const baseConfig: Partial<ElementConfigI> = {
   attrs: {

@@ -53,17 +53,17 @@ export const FlyerTile: React.FC<{
 }
 
 export const EditorFlyerTile: React.FC<{
-  slateChildren: CustomDescendant[]
+  slatechildren: CustomDescendant[]
   attributes: any
   [x: string]: unknown
-}> = ({ children, slateChildren = [], attributes, ...props }) => {
+}> = ({ children, slatechildren = [], attributes, ...props }) => {
   const [colorScheme] = useColorContext()
   const charCount = useMemo(() => {
-    const tree = slateChildren.filter(
+    const tree = slatechildren.filter(
       (n) => isSlateElement(n) && n.type !== 'flyerMetaP',
     )
     return renderAsText(tree).length
-  }, [slateChildren])
+  }, [slatechildren])
   return (
     <div
       {...props}

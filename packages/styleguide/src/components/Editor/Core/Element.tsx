@@ -69,7 +69,7 @@ export const ElementComponent: React.FC<{
   return (
     <Component
       {...element}
-      slateChildren={element.children}
+      slatechildren={element.children}
       attributes={{
         ...attributes,
         style: { ...attributes.style, ...baseStyles },
