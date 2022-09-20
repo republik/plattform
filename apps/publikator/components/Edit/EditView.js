@@ -7,7 +7,7 @@ import { PhaseSummary } from './Workflow'
 import { HEADER_HEIGHT } from '../Frame/constants'
 import MetaDataForm from '../MetaDataForm'
 import { useEffect, useState } from 'react'
-import { getSyncText, SYNC_LIST, SYNC_RULES } from './sync'
+import { getSyncText, SYNC_LIST, SYNC_RULES } from './Sync'
 import { useDebounce } from '@project-r/styleguide'
 
 const styles = {
