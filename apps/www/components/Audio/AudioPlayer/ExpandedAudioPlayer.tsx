@@ -19,7 +19,7 @@ const styles = {
     },
     [mediaQueries.mUp]: {
       padding: 24,
-      height: '50vh',
+      height: 'max-content',
       maxHeight: '100%',
     },
   }),
@@ -85,11 +85,9 @@ const ExpandedAudioPlayer = ({
           />
         </div>
       </div>
-      <div style={{ flexGrow: 1, flexShrink: 1 }}>
-        {queuedItems && queuedItems.length > 0 && (
-          <Queue t={t} activeItem={activeItem} items={queuedItems} />
-        )}
-      </div>
+      {queuedItems && queuedItems.length > 0 && (
+        <Queue t={t} activeItem={activeItem} items={queuedItems} />
+      )}
       <div {...styles.bottomActions}>
         <div
           style={{

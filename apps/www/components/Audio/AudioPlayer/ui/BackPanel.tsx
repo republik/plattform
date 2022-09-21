@@ -3,6 +3,7 @@ import { css } from 'glamor'
 import {
   useBodyScrollLock,
   useColorContext,
+  useMediaQuery,
   mediaQueries,
 } from '@project-r/styleguide'
 
@@ -32,9 +33,9 @@ const styles = {
     boxShadow: '0px -5px 15px -3px rgba(0,0,0,0.1)',
     maxHeight: '100vh',
     [mediaQueries.mUp]: {
-      width: [290, `calc(100% - ${MARGIN * 2}px)`],
+      width: ['290px', `calc(100% - ${MARGIN * 2}px)`],
       maxWidth: 380,
-      maxHeight: '60vh',
+      maxHeight: '80vh',
       marginRight: MARGIN,
       marginBottom: MARGIN,
       paddingLeft: 0,
@@ -64,7 +65,8 @@ const BackPanel = ({
   onBackdropClick,
 }: BackPanelProps) => {
   const [colorScheme] = useColorContext()
-  const [ref] = useBodyScrollLock(isExpanded)
+  const isDesktop = useMediaQuery(mediaQueries.mUp)
+  const [ref] = useBodyScrollLock(isExpanded && !isDesktop)
 
   return (
     <div {...styles.root}>

@@ -99,7 +99,7 @@ const Queue = ({ t, activeItem, items: inputItems }: QueueProps) => {
   }, 1000)
 
   return (
-    <div style={{ height: '100%' }}>
+    <div style={{ flexGrow: 1, flexShrink: 1 }}>
       <p {...styles.heading}>{t('AudioPlayer/Queue/NextUp')}</p>
       <MotionConfig transition={{ duration: 0.3 }}>
         <Reorder.Group
