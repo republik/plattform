@@ -12,7 +12,7 @@ const Form: React.FC<ElementFormProps<QuizItemElement>> = ({
 }) => (
   <div>
     <Checkbox
-      checked={element.isCorrect}
+      checked={element.isCorrect || false}
       onChange={(_, checked) => onChange({ isCorrect: checked })}
     >
       correct answer
