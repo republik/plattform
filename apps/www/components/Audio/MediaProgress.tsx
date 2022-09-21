@@ -56,7 +56,9 @@ const setLocalMediaProgress = async (data) => {
 
 const MediaProgressProvider = ({ children }) => {
   const { me } = useMe()
-  const [queryMediaProgress] = useMediaProgressLazyQuery()
+  const [queryMediaProgress] = useMediaProgressLazyQuery({
+    ssr: false,
+  })
   const [upsertMediaProgress] = useUpsertMediaProgress()
 
   const isTrackingAllowed = me && me.progressConsent === true
