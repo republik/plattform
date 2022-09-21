@@ -198,6 +198,7 @@ export const getDocument = gql`
           mediaId
           durationMs
           kind
+          coverImage
         }
         podcast {
           podigeeSlug

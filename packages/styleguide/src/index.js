@@ -173,6 +173,14 @@ const Styleguide = () => {
                           SharePreviewFacebook: require('./components/ShareImage/SharePreviewFacebook'),
                         },
                       },
+                      {
+                        path: '/audio-cover',
+                        title: 'Audio Cover',
+                        src: require('./components/AudioCover/docs.md'),
+                        imports: {
+                          AudioCover: require('./components/AudioCover'),
+                        },
+                      },
                     ],
                   },
                   {

@@ -1,9 +1,16 @@
-import { Fragment } from 'react'
+import { Fragment, useEffect } from 'react'
 import { Set, Map } from 'immutable'
 
-import { Label, Field, Dropdown } from '@project-r/styleguide'
+import { Label, Field, Dropdown, AudioCover } from '@project-r/styleguide'
 
+import {
+  MetaSection,
+  MetaSectionTitle,
+  MetaOption,
+  MetaOptionLabel,
+} from '../../../MetaDataForm/components/Layout'
 import MetaForm from '../../utils/MetaForm'
+import ImageCrop from '../../utils/ImageCrop'
 import withT from '../../../../lib/withT'
 
 import UIForm from '../../UIForm'
@@ -14,8 +21,7 @@ const AUDIO_SOURCE_KINDS = [
   'readAloud',
   // 'syntheticReadAloud', // not in use (yet)
 ]
-
-export default withT(({ t, editor, node, onInputChange }) => {
+export default withT(({ t, editor, node, onInputChange, format }) => {
   const audioCoverAnchors = [null, 'middle'].map((value) => ({
     value,
     text: t(`metaData/audio/cover/anchor/${value}`),
@@ -45,17 +51,31 @@ export default withT(({ t, editor, node, onInputChange }) => {
     node.data.filter((_, key) => audioSourceKeys.has(key)),
   )
 
+  const labelHeight = 17 + 5
+
+  const width = 300
+  const height = 300
+
+  const documentImage = node.data.get('image')
+
+  useEffect(() => {
+    if (documentImage) {
+      onChange('audioSourceCoverImage')(documentImage)
+    }
+  }, [documentImage])
+
   return (
-    <Fragment>
-      <Label>{t('metaData/audio')}</Label>
-      <br />
-      <MetaForm
-        data={audioSourceData}
-        onInputChange={onInputChange}
-        getWidth={() => ''}
-        black
-      />
-      <UIForm getWidth={() => '25%'}>
+    <MetaSection>
+      <MetaSectionTitle>{t('metaData/audio')}</MetaSectionTitle>
+      <MetaOption>
+        <MetaForm
+          data={audioSourceData}
+          onInputChange={onInputChange}
+          getWidth={() => ''}
+          black
+        />
+      </MetaOption>
+      <MetaOption>
         <Dropdown
           black
           label={t('metaData/audio/source/kind')}
@@ -63,6 +83,8 @@ export default withT(({ t, editor, node, onInputChange }) => {
           value={audioSourceKind || null}
           onChange={({ value }) => onChange('audioSourceKind')(value)}
         />
+      </MetaOption>
+      <MetaOption>
         <Dropdown
           black
           label={t('metaData/audio/cover/anchor')}
@@ -80,20 +102,22 @@ export default withT(({ t, editor, node, onInputChange }) => {
             )
           }
         />
-        {audioCover && (
-          <Field
-            black
-            label={t('metaData/audio/cover/color')}
-            value={audioCover.color}
-            onChange={(_, color) => {
-              onChange('audioCover')({
-                ...audioCover,
-                color,
-              })
-            }}
-          />
-        )}
-        {audioCover && (
+      </MetaOption>
+      {audioCover && (
+        <Field
+          black
+          label={t('metaData/audio/cover/color')}
+          value={audioCover.color}
+          onChange={(_, color) => {
+            onChange('audioCover')({
+              ...audioCover,
+              color,
+            })
+          }}
+        />
+      )}
+      {audioCover && (
+        <MetaOption>
           <Field
             black
             label={t('metaData/audio/cover/backgroundColor')}
@@ -105,8 +129,24 @@ export default withT(({ t, editor, node, onInputChange }) => {
               })
             }}
           />
+        </MetaOption>
+      )}
+      <MetaOption>
+        <MetaOptionLabel>Audio-Cover und Vorschau</MetaOptionLabel>
+        {documentImage ? (
+          <ImageCrop
+            width={width}
+            height={height}
+            maxWidth='none'
+            label={t(`metaData/field/coverImage`)}
+            src={node.data.get('audioSourceCoverImage')}
+            placeholder={node.data.get('image')}
+            onChange={onInputChange('audioSourceCoverImage')}
+          />
+        ) : (
+          <AudioCover format={format} />
         )}
-      </UIForm>
-    </Fragment>
+      </MetaOption>
+    </MetaSection>
   )
 })

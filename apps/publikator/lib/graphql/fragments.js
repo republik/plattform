@@ -47,6 +47,7 @@ export const CommitWithDocument = gql`
             shareLogo
             shareBackgroundImage
             shareBackgroundImageInverted
+            audioCoverImage
             section {
               id
               meta {
