@@ -16,7 +16,7 @@ import {
   HEADER_HORIZONTAL_PADDING,
 } from '../constants'
 import { useRouter } from 'next/router'
-import { useFlyerMeta } from '../../lib/apollo/miniNavi'
+// import { useFlyerMeta } from '../../lib/apollo/miniNavi'
 
 export const SecondaryNav = ({
   secondaryNav,
@@ -28,7 +28,7 @@ export const SecondaryNav = ({
   const router = useRouter()
   const active = router.asPath
 
-  const flyerMeta = useFlyerMeta()
+  const flyerMeta = undefined // = useFlyerMeta()
 
   return (
     <>
