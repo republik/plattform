@@ -6,7 +6,7 @@ import { Message } from '../Editor/Render/Message'
 import { RenderedElement } from '../Editor/Render'
 import { isSlateElement } from '../Editor/Render/helpers'
 import { fontFamilies } from '../../theme/fonts'
-import { useColorContext } from '../Colors/ColorContext'
+import colorContext, { useColorContext } from '../Colors/ColorContext'
 
 const styles = {
   answersContainer: css({
@@ -114,33 +114,50 @@ export const Quiz = ({ children, attributes, ...props }) => {
       >
         {tree.map((answer, i) => {
           const isSelected = answerId === i
-          const color = isSelected ? '#fff' : 'inherit'
+          const colorRule = css({
+            color: isSelected ? '#fff' : 'inherit',
+            backgroundColor: colorScheme.getCSSColor(
+              isSelected && answer.isCorrect
+                ? 'primary'
+                : isSelected
+                ? 'flyerFormatText'
+                : 'default',
+            ),
+            borderColor: colorScheme.getCSSColor(
+              isSelected && answer.isCorrect
+                ? 'primary'
+                : isSelected
+                ? 'flyerFormatText'
+                : 'logo',
+            ),
+            '@media (hover)': {
+              ':hover': {
+                color: '#fff',
+                backgroundColor: colorScheme.getCSSColor(
+                  isSelected && answer.isCorrect
+                    ? 'primary'
+                    : isSelected
+                    ? 'flyerFormatText'
+                    : 'logo',
+                ),
+                borderColor: colorScheme.getCSSColor(
+                  isSelected && answer.isCorrect
+                    ? 'primary'
+                    : isSelected
+                    ? 'flyerFormatText'
+                    : 'logo',
+                ),
+              },
+            },
+          })
 
           return (
             <button
               key={i}
               onClick={() => setAnswerId(i)}
               {...plainButtonRule}
-              {...colorScheme.set(
-                'backgroundColor',
-                isSelected && answer.isCorrect
-                  ? 'primary'
-                  : isSelected
-                  ? 'flyerFormatText'
-                  : 'default',
-              )}
-              {...colorScheme.set(
-                'borderColor',
-                isSelected && answer.isCorrect
-                  ? 'primary'
-                  : isSelected
-                  ? 'flyerFormatText'
-                  : 'text',
-              )}
+              {...colorRule}
               {...styles.answerOuter}
-              style={{
-                color,
-              }}
             >
               <RenderedElement element={answer.children[0]} schema={schema} />
             </button>
