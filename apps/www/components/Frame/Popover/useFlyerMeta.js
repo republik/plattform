@@ -1,6 +1,10 @@
 import { gql, useQuery } from '@apollo/client'
 import { useEffect } from 'react'
 
+import { useMe } from '../../../lib/context/MeContext'
+
+const __DEV__ = process.env.NODE_ENV === 'development'
+
 const miniNaviQuery = gql`
   query miniNavi {
     documents(format: "republik/format-journal", first: 1) {
@@ -42,10 +46,23 @@ const runOnceIfOutdated = (callback) => {
   }
 }
 
-export const useFlyerMeta = () => {
-  const { data, refetch } = useQuery(miniNaviQuery)
+const useFlyerMeta = () => {
+  const { hasAccess } = useMe()
+  const { data, refetch } = useQuery(miniNaviQuery, {
+    skip: !hasAccess,
+  })
+
+  if (__DEV__) {
+    if (!hasAccess) {
+      // the query only can return a path when signed in with access
+      throw new Error('Do not useFlyerMeta in context without access')
+    }
+  }
 
   useEffect(() => {
+    if (!hasAccess) {
+      return
+    }
     // immediately refetch if necessary
     runOnceIfOutdated(refetch)
 
@@ -80,7 +97,9 @@ export const useFlyerMeta = () => {
     return () => {
       clearTimeout(refetchTimeoutId)
     }
-  }, [])
+  }, [hasAccess])
 
   return data?.documents.nodes[0]?.meta
 }
+
+export default useFlyerMeta

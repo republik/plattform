@@ -9,6 +9,7 @@ import {
 
 import withT from '../../lib/withT'
 import NavLink from './Popover/NavLink'
+import FlyerNavLink from './Popover/FlyerNavLink'
 
 import {
   SUBHEADER_HEIGHT,
@@ -16,7 +17,6 @@ import {
   HEADER_HORIZONTAL_PADDING,
 } from '../constants'
 import { useRouter } from 'next/router'
-// import { useFlyerMeta } from '../../lib/apollo/miniNavi'
 
 export const SecondaryNav = ({
   secondaryNav,
@@ -27,8 +27,6 @@ export const SecondaryNav = ({
   const [colorScheme] = useColorContext()
   const router = useRouter()
   const active = router.asPath
-
-  const flyerMeta = undefined // = useFlyerMeta()
 
   return (
     <>
@@ -64,15 +62,14 @@ export const SecondaryNav = ({
           >
             {t('navbar/feed')}
           </NavLink>
-          <NavLink
-            href={flyerMeta?.path || '/format/journal'}
+          <FlyerNavLink
             active={active}
             formatColor='accentColorFlyer'
             minifeed
             title={t('navbar/flyer')}
           >
             {t('navbar/flyer')}
-          </NavLink>
+          </FlyerNavLink>
           <NavLink
             href='/dialog'
             active={active}
