@@ -52,6 +52,7 @@ const PreviewPage = ({ router: { query }, data, t }) => {
               <SlateRender
                 value={cleanupTree(content.children, true)}
                 schema={flyerSchema}
+                skip={['flyerOpeningP']}
               />
             </VariableContext.Provider>
           </ColorContextProvider>
