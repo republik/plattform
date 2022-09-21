@@ -20,7 +20,7 @@ import SearchForm from '../../Search/Form'
 import NavLink from './NavLink'
 import Sections from './Sections'
 import Link from 'next/link'
-// import { useFlyerMeta } from '../../../lib/apollo/miniNavi'
+import { useFlyerMeta } from '../../../lib/apollo/miniNavi'
 
 const Nav = ({
   me,
@@ -41,7 +41,7 @@ const Nav = ({
   if (expanded) {
     hasExpandedRef.current = true
   }
-  const flyerMeta = undefined // useFlyerMeta()
+  const flyerMeta = useFlyerMeta()
   // post journal launch cleanup task:
   //   - remove conditionals for journal entry
   return (
