@@ -200,15 +200,14 @@ const EditLoader = ({
     }
     setDidUnlock(true)
     setAcknowledgedUsers(activeUsers)
-    setReadOnly(false)
     notifyBackend('create')
     unlock()
   }
 
   const beginChangesHandler = () => {
     setBeginChanges(new Date())
-    setReadOnly(false)
     notifyBackend('create')
+    unlock()
   }
 
   const concludeChanges = (notify = true) => {
