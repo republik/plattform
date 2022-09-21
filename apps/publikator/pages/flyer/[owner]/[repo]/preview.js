@@ -8,7 +8,6 @@ import {
 import { cleanupTree } from '@project-r/styleguide/editor'
 import Loader from '../../../../components/Loader'
 import initLocalStore from '../../../../lib/utils/localStorage'
-import withT from '../../../../lib/withT'
 import { getCurrentContent } from '../../../../components/Edit'
 import compose from 'lodash/flowRight'
 import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
@@ -16,7 +15,7 @@ import { useEffect, useState } from 'react'
 import { withDefaultSSR } from '../../../../lib/apollo/helpers'
 import { withCommitData } from '../../../../components/Edit/enhancers'
 
-const PreviewPage = ({ router: { query }, data, t }) => {
+const PreviewPage = ({ router: { query }, data }) => {
   const { commitId, darkmode, hasAccess, commitOnly } = query
   const repoId = getRepoIdFromQuery(query)
   const [store, setStore] = useState()
@@ -42,7 +41,7 @@ const PreviewPage = ({ router: { query }, data, t }) => {
       loading={!data || (!commitOnly && !store) || data?.loading}
       error={data?.error}
       render={() => {
-        const content = getCurrentContent(store, data, t)
+        const content = getCurrentContent(store, data)
         if (!content) return null
         return (
           <ColorContextProvider
@@ -62,6 +61,4 @@ const PreviewPage = ({ router: { query }, data, t }) => {
   )
 }
 
-export default withDefaultSSR(
-  compose(withRouter, withT, withCommitData)(PreviewPage),
-)
+export default withDefaultSSR(compose(withRouter, withCommitData)(PreviewPage))

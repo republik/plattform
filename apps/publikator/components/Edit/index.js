@@ -36,7 +36,7 @@ const debug = createDebug('publikator:slate:edit')
 
 const getCommittedContent = (data) => data?.repo?.commit?.document?.content
 
-export const getCurrentContent = (store, data, t, options = {}) => {
+export const getCurrentContent = (store, data, options = {}) => {
   const storedContent = store?.get('editorState')
   const committedContent = getCommittedContent(data)
   return (
@@ -113,7 +113,7 @@ const EditLoader = ({
         const newStore = initLocalStore(storeKey)
         setStore(newStore)
         checkLocalStorageSupport()
-        forceSetContent(getCurrentContent(newStore, data, t, query))
+        forceSetContent(getCurrentContent(newStore, data, query))
       }
     }
   }, [store, commitId, repoId, data])
@@ -318,7 +318,7 @@ const EditLoader = ({
     }
     setDidUnlock(false)
     setAcknowledgedUsers([])
-    forceSetContent(getCurrentContent(null, data, t, query))
+    forceSetContent(getCurrentContent(null, data, query))
     router.replace({
       pathname,
       query: queryWithoutPreview,
@@ -440,7 +440,7 @@ const EditLoader = ({
               <Preview repoId={repoId} commitId={commitId} isFlyer />
             ) : (
               <EditView
-                editorKey={editorKey}
+                key={editorKey}
                 interruptingUsers={interruptingUsers}
                 uncommittedChanges={uncommittedChanges}
                 revertHandler={revertHandler}
