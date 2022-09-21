@@ -186,12 +186,8 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
           // TODO: find a way to re-add the last played item to the queue
           // so that the track-player can start playing it again
         }
-        console.log('onPlay: inNativeApp', JSON.stringify(activePlayerItem))
         notifyApp(AudioEvent.PLAY)
       } else if (mediaRef.current) {
-        throw new Error('onPlay')
-
-        console.log('calling play on web-mediaRef')
         mediaRef.current.playbackRate = playbackRate
         mediaRef.current.play()
         syncWithMediaElement()
