@@ -200,15 +200,6 @@ export const exampleTree: CustomDescendant[] = [
                   {
                     children: [
                       {
-                        text: 'Well done!',
-                        bold: true,
-                      },
-                    ],
-                    type: 'paragraph',
-                  },
-                  {
-                    children: [
-                      {
                         text: "It's a yes!",
                       },
                     ],
