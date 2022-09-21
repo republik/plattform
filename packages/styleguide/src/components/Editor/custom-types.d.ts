@@ -44,6 +44,7 @@ export type HeadlineElement = SharedElement & {
 
 export type BreakElement = SharedElement & {
   type: 'break'
+  voidId?: string
 }
 
 export type LinkElement = SharedElement & {
@@ -70,6 +71,7 @@ export type FigureImageElement = SharedElement & {
   type: 'figureImage'
   images?: FigureImages
   alt?: string
+  voidId?: string
 }
 
 export type FigureCaptionElement = SharedElement & {
@@ -168,6 +170,7 @@ export type FlyerAuthorElement = SharedElement & {
   type: 'flyerAuthor'
   authorId?: string
   resolvedAuthor?: ResolvedAuthor
+  voidId?: string
 }
 
 export type FlyerPunchlineElement = SharedElement & {
@@ -181,32 +184,30 @@ export type FlyerSignatureElement = SharedElement & {
 export type FlyerDateElement = SharedElement & {
   type: 'flyerDate'
   date?: string
+  voidId?: string
 }
+
+export type ArticleKind = 'editorial' | 'meta' | 'flyer' | 'scribble'
 
 export type ArticlePreviewElement = SharedElement & {
   type: 'articlePreview'
   href?: string
   backgroundColor?: string
   color?: string
+  kind?: ArticleKind
 }
 
 export type ArticlePreviewTextContainerElement = SharedElement & {
   type: 'articlePreviewTextContainer'
 }
 
-export type FormatData = {
-  id: string
-  repoId: string
-  meta: {
-    title?: string
-    color?: string
-    type?: string
-  }
+export type ArticlePreviewFormatElement = SharedElement & {
+  type: 'articlePreviewFormat'
+  href?: string
 }
 
 export type ArticlePreviewTitleElement = SharedElement & {
   type: 'articlePreviewTitle'
-  format?: FormatData
 }
 
 export type ArticlePreviewLeadElement = SharedElement & {
@@ -262,6 +263,7 @@ export type CustomElement =
   | FlyerDateElement
   | ArticlePreviewElement
   | ArticlePreviewTextContainerElement
+  | ArticlePreviewFormatElement
   | ArticlePreviewTitleElement
   | ArticlePreviewLeadElement
   | QuizElement
@@ -307,6 +309,7 @@ export type CustomElementsType =
   | 'flyerDate'
   | 'articlePreview'
   | 'articlePreviewTextContainer'
+  | 'articlePreviewFormat'
   | 'articlePreviewTitle'
   | 'articlePreviewLead'
   | 'quiz'

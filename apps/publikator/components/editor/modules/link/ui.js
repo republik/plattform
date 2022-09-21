@@ -1,10 +1,9 @@
 import { Text } from 'slate'
 import { Label, Field, RawHtml } from '@project-r/styleguide'
-import { AuthorSearch } from '@project-r/styleguide/editor'
+import { AuthorSearch, RepoSearch } from '@project-r/styleguide/editor'
 import LinkIcon from 'react-icons/lib/fa/chain'
 import UIForm from '../../UIForm'
 import createOnFieldChange from '../../utils/createOnFieldChange'
-import RepoSearch from '../../utils/RepoSearch'
 import { AutoSlugLinkInfo } from '../../utils/github'
 import withT from '../../../../lib/withT'
 

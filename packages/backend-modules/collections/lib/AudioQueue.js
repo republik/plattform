@@ -178,9 +178,12 @@ const reorderItems = async (input, context) => {
   })
 
   const updatables = [...new Set(ids)]
-    .filter((id) => items.find((item) => item.id === id))
     .map((id, index) => {
       const item = items.find((item) => item.id === id)
+
+      if (!item) {
+        return false
+      }
 
       return {
         ...item,
@@ -190,6 +193,7 @@ const reorderItems = async (input, context) => {
         },
       }
     })
+    .filter(Boolean)
 
   const deletable = items.filter(
     (item) => !updatables.find((update) => update.id === item.id),

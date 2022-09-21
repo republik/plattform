@@ -143,7 +143,10 @@ const ActionBar = ({
 
   const isSeriesOverview = meta && meta.series?.overview?.id === document?.id
   const hasPdf = meta && meta.template === 'article' && !isSeriesOverview
-  const notBookmarkable = meta && meta.template === 'page'
+  const notBookmarkable =
+    meta?.template === 'page' ||
+    meta?.template === 'flyer' ||
+    meta?.template === 'editorialNewsletter'
   const isDiscussion = meta && meta.template === 'discussion'
   const emailSubject = t('article/share/emailSubject', {
     title: document.meta.title,
@@ -246,7 +249,7 @@ const ActionBar = ({
         />
       ),
       modes: ['articleOverlay', 'feed', 'bookmark', 'seriesEpisode'],
-      show: !!document,
+      show: !!document && document.userProgress,
     },
     {
       title: t('feed/actionbar/chart'),
@@ -504,11 +507,19 @@ const ActionBar = ({
     shouldRenderActionItem,
   ).length
 
+  const hasActionItems = !!ActionItems.filter(shouldRenderActionItem).length
+
+  // don't render actionbar if it has no items
+  if (!hasActionItems && !hasSecondaryActionItems) {
+    return null
+  }
+
   return (
     <>
       <div
         {...styles.topRow}
         {...(mode === 'articleOverlay' && styles.overlay)}
+        {...(mode === 'feed' && styles.feed)}
         {...((mode === 'seriesEpisode' || mode === 'articleBottom') &&
           styles.flexWrap)}
         {...(!!centered && { ...styles.centered })}
@@ -596,6 +607,9 @@ const styles = {
     padding: '12px 16px',
     display: 'flex',
     justifyContent: 'space-between',
+  }),
+  feed: css({
+    marginTop: 10,
   }),
   centered: css({
     justifyContent: 'center',

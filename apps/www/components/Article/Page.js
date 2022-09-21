@@ -634,11 +634,12 @@ const ArticlePage = ({
               )}
               {isFlyer ? (
                 <Flyer.Layout schema={schema}>
-                  <RenderContextProvider t={t} Link={Link}>
+                  <RenderContextProvider t={t} Link={HrefLink}>
                     <SlateRender
                       value={article.content.children}
                       schema={schema}
                       raw
+                      skip={['flyerOpeningP']}
                     />
                   </RenderContextProvider>
                   <FlyerTile>
