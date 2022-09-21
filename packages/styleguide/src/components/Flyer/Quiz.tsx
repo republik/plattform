@@ -6,7 +6,8 @@ import { Message } from '../Editor/Render/Message'
 import { RenderedElement } from '../Editor/Render'
 import { isSlateElement } from '../Editor/Render/helpers'
 import { fontFamilies } from '../../theme/fonts'
-import colorContext, { useColorContext } from '../Colors/ColorContext'
+import { useColorContext } from '../Colors/ColorContext'
+import { mUp } from '../../theme/mediaQueries'
 
 const styles = {
   answersContainer: css({
@@ -14,12 +15,19 @@ const styles = {
     padding: 15,
     width: '100%',
     marginBottom: 15,
+    [mUp]: {
+      padding: 30,
+      marginBottom: 30,
+    },
   }),
   answerOuter: css({
     display: 'block',
     width: '100%',
     '&:not(:last-child)': {
       marginBottom: 15,
+      [mUp]: {
+        marginBottom: 30,
+      },
     },
   }),
   answerInner: css({
@@ -30,6 +38,10 @@ const styles = {
     display: 'block',
     borderWidth: 1,
     borderStyle: 'solid',
+    [mUp]: {
+      fontSize: 23,
+      padding: '25px 30px',
+    },
   }),
 }
 
@@ -49,6 +61,10 @@ export const EditorQuizItem: React.FC<{
           ),
           border: '15px solid #fff',
           marginBottom: 15,
+          [mUp]: {
+            borderWidth: 30,
+            marginBottom: 30,
+          },
         },
       }),
     [colorScheme, isCorrect],
