@@ -1,13 +1,15 @@
-import { Fragment, useEffect } from 'react'
+import { useEffect } from 'react'
 import { Set, Map } from 'immutable'
 
-import { Label, Field, Dropdown, AudioCover } from '@project-r/styleguide'
+import { Field, Dropdown, AudioCover } from '@project-r/styleguide'
 
 import {
   MetaSection,
   MetaSectionTitle,
   MetaOption,
   MetaOptionLabel,
+  MetaOptionGroup,
+  MetaOptionGroupTitle,
 } from '../../../MetaDataForm/components/Layout'
 import MetaForm from '../../utils/MetaForm'
 import ImageCrop from '../../utils/ImageCrop'
@@ -84,55 +86,58 @@ export default withT(({ t, editor, node, onInputChange, format }) => {
           onChange={({ value }) => onChange('audioSourceKind')(value)}
         />
       </MetaOption>
-      <MetaOption>
-        <Dropdown
-          black
-          label={t('metaData/audio/cover/anchor')}
-          items={audioCoverAnchors}
-          value={audioCover ? audioCover.anchor : null}
-          onChange={({ value }) =>
-            onChange('audioCover')(
-              value && {
-                anchor: value,
-                color: (audioCover && audioCover.color) || '#fff',
-                backgroundColor:
-                  (audioCover && audioCover.backgroundColor) ||
-                  'rgba(255,255,255,0.3)',
-              },
-            )
-          }
-        />
-      </MetaOption>
-      {audioCover && (
-        <Field
-          black
-          label={t('metaData/audio/cover/color')}
-          value={audioCover.color}
-          onChange={(_, color) => {
-            onChange('audioCover')({
-              ...audioCover,
-              color,
-            })
-          }}
-        />
-      )}
-      {audioCover && (
+      <MetaOptionGroupTitle>Play-Button auf Artikel-Bild</MetaOptionGroupTitle>
+      <MetaOptionGroup>
         <MetaOption>
+          <Dropdown
+            black
+            label='Position'
+            items={audioCoverAnchors}
+            value={audioCover ? audioCover.anchor : null}
+            onChange={({ value }) =>
+              onChange('audioCover')(
+                value && {
+                  anchor: value,
+                  color: (audioCover && audioCover.color) || '#fff',
+                  backgroundColor:
+                    (audioCover && audioCover.backgroundColor) ||
+                    'rgba(255,255,255,0.3)',
+                },
+              )
+            }
+          />
+        </MetaOption>
+        {audioCover && (
           <Field
             black
-            label={t('metaData/audio/cover/backgroundColor')}
-            value={audioCover.backgroundColor}
-            onChange={(_, backgroundColor) => {
+            label={t('metaData/audio/cover/color')}
+            value={audioCover.color}
+            onChange={(_, color) => {
               onChange('audioCover')({
                 ...audioCover,
-                backgroundColor,
+                color,
               })
             }}
           />
-        </MetaOption>
-      )}
+        )}
+        {audioCover && (
+          <MetaOption>
+            <Field
+              black
+              label={t('metaData/audio/cover/backgroundColor')}
+              value={audioCover.backgroundColor}
+              onChange={(_, backgroundColor) => {
+                onChange('audioCover')({
+                  ...audioCover,
+                  backgroundColor,
+                })
+              }}
+            />
+          </MetaOption>
+        )}
+      </MetaOptionGroup>
+      <MetaOptionGroupTitle>Audio-Cover und Vorschau</MetaOptionGroupTitle>
       <MetaOption>
-        <MetaOptionLabel>Audio-Cover und Vorschau</MetaOptionLabel>
         {documentImage ? (
           <ImageCrop
             width={width}

@@ -56,7 +56,6 @@ const ImageCrop = ({
           crop={crop}
           zoom={zoom}
           onCropChange={setCrop}
-          onZoomChange={setZoom}
           onCropAreaChange={(croppedArea) => {
             setCroppedArea(croppedArea)
           }}
