@@ -18,7 +18,7 @@ const styles = {
     padding: 0,
     display: 'flex',
     flexDirection: 'column',
-    gap: '0.5rem',
+    gap: 8,
     overflow: 'hidden',
     overflowY: 'auto',
     // TODO: custom scrollbar to better match the design

@@ -57,7 +57,7 @@ const styles = {
     alignSelf: 'stretch',
   }),
   dragControl: css({
-    marginRight: 8,
+    padding: 8,
     cursor: 'grab',
     '&:hover': {
       cursor: 'grabbing',
