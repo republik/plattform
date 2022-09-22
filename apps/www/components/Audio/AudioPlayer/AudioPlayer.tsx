@@ -95,6 +95,7 @@ const AudioPlayer = ({
           isPlaying={isPlaying}
           isLoading={isLoading}
           buffered={buffered}
+          playbackRate={playbackRate}
           handleExpand={() => setIsExpanded(true)}
           handleToggle={toggleAudioPlayer}
           handleSeek={actions.onSeek}

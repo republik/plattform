@@ -85,7 +85,7 @@ type ScrubberProps = {
   currentTime?: number
   duration?: number
   buffered?: TimeRanges
-  showBuffered?: boolean
+  playbackRate?: number
   /**
    * Returns the current progress as a percentage value
    * of where to seek to.
@@ -100,7 +100,7 @@ const Scrubber = ({
   currentTime = 0,
   duration = 0,
   buffered,
-  showBuffered = true,
+  playbackRate = 1,
   onSeek,
   showScrubber = false,
   showTime = false,
@@ -243,8 +243,8 @@ const Scrubber = ({
       </div>
       {showTime && (
         <div {...styles.timeWrapper} {...colorScheme.set('color', 'textSoft')}>
-          <span {...styles.time}>{renderTime(currentTime)}</span>
-          <span {...styles.time}>{renderTime(duration)}</span>
+          <span {...styles.time}>{renderTime(currentTime / playbackRate)}</span>
+          <span {...styles.time}>{renderTime(duration / playbackRate)}</span>
         </div>
       )}
     </div>
