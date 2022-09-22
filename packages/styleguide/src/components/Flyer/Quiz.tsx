@@ -85,8 +85,9 @@ export const EditorQuizContainer: React.FC<{
   return (
     <div {...props} {...attributes} style={{ position: 'relative' }}>
       <Message
-        text='Quiz solution depends on answer choice. Check preview for final
-        layout.'
+        text={
+          'Quiz solution depends on answer choice. Check preview for final layout.'
+        }
       />
       {children}
     </div>
