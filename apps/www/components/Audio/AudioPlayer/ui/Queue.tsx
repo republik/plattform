@@ -21,6 +21,9 @@ const styles = {
     overflow: 'hidden',
     overflowY: 'auto',
     // TODO: custom scrollbar to better match the design
+    '&::-webkit-scrollbar': {
+      display: 'none',
+    },
   }),
 }
 
@@ -72,7 +75,9 @@ const Queue = ({ t, activeItem, items: inputItems }: QueueProps) => {
       })
     } catch (e) {
       console.error(e)
-      alert('Could not remove item from playlist')
+      alert(
+        'Could not remove item from playlist\n' + JSON.stringify(item, null, 2),
+      )
     }
   }
 
@@ -94,13 +99,17 @@ const Queue = ({ t, activeItem, items: inputItems }: QueueProps) => {
       })
     } catch (e) {
       console.error(e)
-      alert('Could not remove item from playlist')
+      alert('Could not reorder playlist')
     }
   }, 1000)
 
   return (
     <div style={{ flexGrow: 1, flexShrink: 1 }}>
-      <p {...styles.heading}>{t('AudioPlayer/Queue/NextUp')}</p>
+      <p {...styles.heading}>
+        {t('AudioPlayer/Queue', {
+          count: items.length ? `(${items.length})` : null,
+        })}
+      </p>
       <MotionConfig transition={{ duration: 0.3 }}>
         <Reorder.Group
           as='ol'

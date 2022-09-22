@@ -5,8 +5,9 @@ import {
   MoreIcon,
   RemoveIcon,
   IconButton,
+  DragHandleIcon,
 } from '@project-r/styleguide'
-import { Reorder, useMotionValue } from 'framer-motion'
+import { Reorder, useDragControls, useMotionValue } from 'framer-motion'
 import { css } from 'glamor'
 import { dateFormatter, FALLBACK_IMG_SRC, formatMinutes } from '../shared'
 import AudioPlayerTitle from './AudioPlayerTitle'
@@ -19,10 +20,6 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: '0.5rem',
-    cursor: 'move',
-    '&:active': {
-      cursor: 'grabbing',
-    },
   }),
   buttonFix: css({
     color: 'inherit',
@@ -57,6 +54,13 @@ const styles = {
   actions: css({
     alignSelf: 'stretch',
   }),
+  dragControl: css({
+    marginRight: 8,
+    cursor: 'grab',
+    '&:hover': {
+      cursor: 'grabbing',
+    },
+  }),
   menuWrapper: css({
     display: 'flex',
     flexDirection: 'column',
@@ -74,6 +78,7 @@ type QueueItemProps = {
 }
 
 const QueueItem = ({ item, onClick, onRemove }: QueueItemProps) => {
+  const controls = useDragControls()
   const y = useMotionValue(0)
   const [colorScheme] = useColorContext()
 
@@ -88,10 +93,20 @@ const QueueItem = ({ item, onClick, onRemove }: QueueItemProps) => {
     <Reorder.Item
       key={item.id}
       value={item}
+      dragControls={controls}
+      dragListener={false}
+      style={{ y, x: 0 }}
       {...styles.root}
-      style={{ y }}
-      {...colorScheme.set('backgroundColor', 'default')}
+      {...colorScheme.set('backgroundColor', 'overlay')}
     >
+      <button
+        {...styles.dragControl}
+        {...styles.buttonFix}
+        onPointerDown={(e) => controls.start(e)}
+        onTouchStart={(e) => controls.start(e)}
+      >
+        <DragHandleIcon size={20} />
+      </button>
       <button
         {...styles.buttonFix}
         style={{ width: '100%' }}

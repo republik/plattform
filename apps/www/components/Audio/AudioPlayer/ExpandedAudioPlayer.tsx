@@ -13,6 +13,7 @@ const styles = {
     justifyContent: 'space-between',
     gap: 16,
     padding: 16,
+    width: '100%',
     height: '100vh',
     '& > *': {
       userSelect: 'none',
