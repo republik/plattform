@@ -42,7 +42,7 @@ export const getInitialValue = (options) => {
       children: [
         {
           type: 'headline',
-          children: [{ text: 'Bis nachher!' }],
+          children: [{ text: 'Danke fürs Interesse.' }],
         },
         {
           type: 'flyerSignature',
