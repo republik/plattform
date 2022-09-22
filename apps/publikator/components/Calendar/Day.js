@@ -12,7 +12,7 @@ import Repo, { Placeholder } from './Repo'
 import { ascending } from 'd3-array'
 import { parseJSONObject } from '../../lib/safeJSON'
 import { WEEK_TEMPLATE_REPOS } from '../../lib/settings'
-import withT from '../../lib/withT'
+
 const templateRepos = parseJSONObject(WEEK_TEMPLATE_REPOS)
 
 const styles = {
