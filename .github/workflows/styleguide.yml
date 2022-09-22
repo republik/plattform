@@ -9,8 +9,7 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: '16.x'
-    - run: yarn
-    - run: cd packages/styleguide
+    - run: SERVER=styleguide ./scripts/prune.sh
     - run: yarn test
     - run: yarn build:lib
     - run: npm pack
