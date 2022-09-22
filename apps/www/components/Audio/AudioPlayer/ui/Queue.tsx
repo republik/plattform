@@ -4,7 +4,7 @@ import QueueItem from './QueueItem'
 import { fontStyles } from '@project-r/styleguide'
 import useAudioQueue from '../../hooks/useAudioQueue'
 import { AudioQueueItem } from '../../graphql/AudioQueueHooks'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import throttle from 'lodash/throttle'
 import { downloadFileFromUrl } from '../../../../lib/helpers/FileDownloadHelper'
 
@@ -40,6 +40,7 @@ const Queue = ({ t, activeItem, items: inputItems }: QueueProps) => {
    * handleReorder function to be throttled while still having a smooth reordering in the ui.
    */
   const [items, setItems] = useState<AudioQueueItem[]>(inputItems)
+  const ref = useRef()
   const { moveAudioQueueItem, removeAudioQueueItem, reorderAudioQueue } =
     useAudioQueue()
 
@@ -142,6 +143,7 @@ const Queue = ({ t, activeItem, items: inputItems }: QueueProps) => {
             setItems(reorderedItems)
             handleReorder(reorderedItems)
           }}
+          ref={ref}
         >
           {items.map((item) => (
             <QueueItem
@@ -151,6 +153,7 @@ const Queue = ({ t, activeItem, items: inputItems }: QueueProps) => {
               onClick={handleClick}
               onRemove={handleRemove}
               onDownload={handleDownload}
+              constraintRef={ref}
             />
           ))}
         </Reorder.Group>

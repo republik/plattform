@@ -15,6 +15,7 @@ import { dateFormatter, FALLBACK_IMG_SRC, formatMinutes } from '../shared'
 import AudioPlayerTitle from './AudioPlayerTitle'
 import { AudioQueueItem } from '../../graphql/AudioQueueHooks'
 import { imageResizeUrl } from 'mdast-react-render/lib/utils'
+import { Ref } from 'react'
 
 const styles = {
   root: css({
@@ -79,6 +80,7 @@ type QueueItemProps = {
   onClick: (item: AudioQueueItem) => Promise<void>
   onRemove: (item: AudioQueueItem) => Promise<void>
   onDownload: (item: AudioQueueItem) => Promise<void>
+  constraintRef?: Ref<any>
 }
 
 const QueueItem = ({
@@ -87,6 +89,7 @@ const QueueItem = ({
   onClick,
   onRemove,
   onDownload,
+  constraintRef,
 }: QueueItemProps) => {
   const controls = useDragControls()
   const y = useMotionValue(0)
@@ -104,6 +107,8 @@ const QueueItem = ({
       key={item.id}
       value={item}
       dragControls={controls}
+      dragConstraints={constraintRef}
+      dragElastic={0.1}
       dragListener={false}
       style={{ y, x: 0 }}
       {...styles.root}
