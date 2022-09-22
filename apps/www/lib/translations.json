@@ -5137,6 +5137,18 @@
       "value": "Aktueller Beitrag"
     },
     {
+      "key": "AudioPlayer/Queue/Remove",
+      "value": "Aus Wiedergabeliste entfernen"
+    },
+    {
+      "key": "AudioPlayer/Queue/Download",
+      "value": "Audiodatei herunterladen"
+    },
+    {
+      "key": "AudioPlayer/Queue/GoToItem",
+      "value": "Zum Beitrag"
+    },
+    {
       "key": "Auth/CodeAuthorization/title",
       "value": "E-Mail-Adresse bestätigen"
     },

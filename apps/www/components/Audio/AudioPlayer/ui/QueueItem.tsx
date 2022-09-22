@@ -3,9 +3,11 @@ import {
   useColorContext,
   CalloutMenu,
   MoreIcon,
-  RemoveIcon,
+  RemoveCircleIcon,
   IconButton,
   DragHandleIcon,
+  LinkIcon,
+  DownloadIcon,
 } from '@project-r/styleguide'
 import { Reorder, useDragControls, useMotionValue } from 'framer-motion'
 import { css } from 'glamor'
@@ -72,22 +74,30 @@ const styles = {
 }
 
 type QueueItemProps = {
+  t: any
   item: AudioQueueItem
   onClick: (item: AudioQueueItem) => Promise<void>
   onRemove: (item: AudioQueueItem) => Promise<void>
+  onDownload: (item: AudioQueueItem) => Promise<void>
 }
 
-const QueueItem = ({ item, onClick, onRemove }: QueueItemProps) => {
+const QueueItem = ({
+  t,
+  item,
+  onClick,
+  onRemove,
+  onDownload,
+}: QueueItemProps) => {
   const controls = useDragControls()
   const y = useMotionValue(0)
   const [colorScheme] = useColorContext()
 
-  const { document } = item
   const {
-    meta: { audioSource },
-  } = document
-  const cover = imageResizeUrl(document.meta.image, '150x') || FALLBACK_IMG_SRC
-  const publishDate = new Date(Date.parse(document.meta.publishDate))
+    document: { meta },
+  } = item
+  const { audioSource } = meta
+  const cover = imageResizeUrl(meta.image, '150x') || FALLBACK_IMG_SRC
+  const publishDate = new Date(Date.parse(meta.publishDate))
 
   return (
     <Reorder.Item
@@ -117,7 +127,7 @@ const QueueItem = ({ item, onClick, onRemove }: QueueItemProps) => {
             <img {...styles.cover} src={cover} />
           </div>
           <div {...styles.dataWrapper}>
-            <AudioPlayerTitle title={document.meta.title} />
+            <AudioPlayerTitle title={meta.title} />
             <span
               {...styles.metaLine}
               {...colorScheme.set('color', 'textSoft')}
@@ -142,14 +152,19 @@ const QueueItem = ({ item, onClick, onRemove }: QueueItemProps) => {
           <div {...styles.menuWrapper}>
             {[
               {
-                Icon: RemoveIcon,
-                label: 'Beitrag öffnen',
-                href: document.meta.path,
+                Icon: RemoveCircleIcon,
+                label: t('AudioPlayer/Queue/Remove'),
+                onClick: () => onRemove(item),
               },
               {
-                Icon: RemoveIcon,
-                label: 'Entfernen',
-                onClick: () => onRemove(item),
+                Icon: DownloadIcon,
+                label: t('AudioPlayer/Queue/Download'),
+                onClick: () => onDownload(item),
+              },
+              {
+                Icon: LinkIcon,
+                label: t('AudioPlayer/Queue/GoToItem'),
+                href: meta.path,
               },
             ].map(({ Icon, label, onClick, href }) => (
               <IconButton

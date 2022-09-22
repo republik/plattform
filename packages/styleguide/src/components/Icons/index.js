@@ -57,6 +57,7 @@ export {
   MdFilterList as FilterListIcon,
   MdAdd as AddIcon,
   MdRemove as RemoveIcon,
+  MdRemoveCircleOutline as RemoveCircleIcon,
   MdAccountBox as AccountBoxIcon,
   MdNoteAdd as NoteAddIcon,
   MdVpnKey as VpnKeyIcon,

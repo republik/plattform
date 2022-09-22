@@ -6,6 +6,7 @@ import useAudioQueue from '../../hooks/useAudioQueue'
 import { AudioQueueItem } from '../../graphql/AudioQueueHooks'
 import { useEffect, useState } from 'react'
 import throttle from 'lodash/throttle'
+import { downloadFileFromUrl } from '../../../../lib/helpers/FileDownloadHelper'
 
 const styles = {
   heading: css({
@@ -103,6 +104,27 @@ const Queue = ({ t, activeItem, items: inputItems }: QueueProps) => {
     }
   }, 1000)
 
+  const handleDownload = async (item: AudioQueueItem) => {
+    try {
+      const {
+        document: {
+          meta: { audioSource, title },
+        },
+      } = item
+      const downloadSource =
+        audioSource.mp3 || audioSource.aac || audioSource.ogg
+      const extension = downloadSource.split('.').pop()
+      const serializedTitle = title.replace(/[^a-z0-9]/gi, '_').toLowerCase()
+      const filename = `${serializedTitle}-republik.${extension}`
+
+      await downloadFileFromUrl(downloadSource, filename)
+    } catch (err) {
+      // TODO: handle download error
+      console.error(err)
+      alert('Download failed: ' + err)
+    }
+  }
+
   return (
     <div style={{ flexGrow: 1, flexShrink: 1 }}>
       <p {...styles.heading}>
@@ -124,9 +146,11 @@ const Queue = ({ t, activeItem, items: inputItems }: QueueProps) => {
           {items.map((item) => (
             <QueueItem
               key={item.id}
+              t={t}
               item={item}
               onClick={handleClick}
               onRemove={handleRemove}
+              onDownload={handleDownload}
             />
           ))}
         </Reorder.Group>
