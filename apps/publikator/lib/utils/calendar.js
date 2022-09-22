@@ -9,12 +9,12 @@ export const urlDateHourFormat = '%Y-%m-%dT%H:%M'
 export const displayDateTimeFormat = '%d.%m %H:%M'
 export const datePickerFormat = '%d.%m.%y'
 export const columnDateFormat = '%A, %d.%m'
-const titleDateFormat = '%a %d.%m'
+export const templateDateFormat = columnDateFormat
 
 export const getUrlDate = swissTime.format(urlDateFormat)
 export const parseUrlDate = swissTime.parse(urlDateFormat)
 
-const formatDate = (date, format) => swissTime.format(format)(date)
+export const formatDate = (date, format) => swissTime.format(format)(date)
 
 export const displayDateTime = (string) =>
   string && formatDate(new Date(string), displayDateTimeFormat)
@@ -75,4 +75,12 @@ export const reformatPlaceholder = (placeholder, publishDate) => ({
   isPlaceholder: true,
 })
 
-export const getTitleForTemplate = (date) => formatDate(date, titleDateFormat)
+export const suggestTemplateTitle = (publishDate) => {
+  if (publishDate) {
+    return {
+      title: formatDate(new Date(publishDate), templateDateFormat),
+    }
+  }
+
+  return {}
+}

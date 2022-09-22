@@ -2,8 +2,8 @@ import { css } from 'glamor'
 import { fontStyles } from '@project-r/styleguide'
 import {
   columnDateFormat,
+  suggestTemplateTitle,
   getPlaceholders,
-  getTitleForTemplate,
   reformatPlaceholder,
   reformatUrlDate,
 } from '../../lib/utils/calendar'
@@ -48,8 +48,8 @@ const Repos = ({ repos, isNewsletter, ...props }) => {
               latestCommit: {
                 document: {
                   meta: {
-                    title: getTitleForTemplate(new Date(repo.meta.publishDate)),
                     template: repo.template,
+                    ...suggestTemplateTitle(repo.meta?.publishDate),
                   },
                 },
               },
