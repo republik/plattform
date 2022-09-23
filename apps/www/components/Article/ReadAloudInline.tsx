@@ -95,7 +95,7 @@ const ReadAloudInline = ({ documentId, meta, t }: ReadAloudInlineProps) => {
           <IconButton
             Icon={PlaylistAddIcon}
             onClick={handleAddToPlaylist}
-            disalbed={checkIfInQueue(documentId)}
+            disabled={checkIfInQueue(documentId)}
             title={
               checkIfInQueue(documentId)
                 ? t('AudioPlayer/Queue/alreadyInQueue')

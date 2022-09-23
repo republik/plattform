@@ -57,7 +57,8 @@ const ActionBar = ({
   const [podcastOverlayVisible, setPodcastOverlayVisible] = useState(false)
   const { toggleAudioPlayer } = useContext(AudioContext)
 
-  const { addAudioQueueItem, isAudioQueueAvailable } = useAudioQueue()
+  const { addAudioQueueItem, isAudioQueueAvailable, checkIfInQueue } =
+    useAudioQueue()
 
   if (!document) {
     return (
@@ -371,6 +372,7 @@ const ActionBar = ({
         })
         // TODO: handle error
       },
+      disabled: checkIfInQueue(document.id),
       modes: ['feed', 'seriesEpisode'],
       // TODO: show only if not in playlist already
       show:
