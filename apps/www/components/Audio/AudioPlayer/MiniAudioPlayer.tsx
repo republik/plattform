@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import Scrubber from './ui/Scrubber'
+import Scrubber from './controls/Scrubber'
 import { AudioPlayerProps } from './shared'
 import Time from './ui/Time'
 import {

@@ -10,7 +10,7 @@ import {
 } from '@project-r/styleguide'
 import { useTranslation } from '../../../../lib/withT'
 import { AudioPlayerProps } from '../shared'
-import PlaybackRateControl from '../controls/PlaybackRateControl'
+import PlaybackRateControl from './PlaybackRateControl'
 import Scrubber from './Scrubber'
 
 const styles = {
