@@ -14,6 +14,7 @@ import {
   mediaQueries,
 } from '@project-r/styleguide'
 import AudioPlayerTitle from './ui/AudioPlayerTitle'
+import { AudioQueueItem } from '../graphql/AudioQueueHooks'
 
 const styles = {
   root: css({
@@ -70,6 +71,7 @@ type MiniAudioPlayerProps = {
   handleToggle: () => void
   handleSeek: (progress: number) => void
   handleClose: () => void
+  handleOpenArticle: (item: AudioQueueItem) => Promise<void>
 } & Omit<AudioPlayerProps, 'actions' | 'queuedItems'>
 
 const MiniAudioPlayer = ({
@@ -85,6 +87,7 @@ const MiniAudioPlayer = ({
   handleToggle,
   handleSeek,
   handleClose,
+  handleOpenArticle,
 }: MiniAudioPlayerProps) => {
   const {
     document: {
@@ -110,7 +113,10 @@ const MiniAudioPlayer = ({
           />
         )}
         <div {...styles.metaDataWrapper}>
-          <AudioPlayerTitle title={title} path={path} />
+          <AudioPlayerTitle
+            title={title}
+            onClick={() => handleOpenArticle(activeItem)}
+          />
           <Time
             currentTime={currentTime / playbackRate}
             duration={duration / playbackRate}

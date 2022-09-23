@@ -118,6 +118,7 @@ const AudioPlayer = ({
           handleToggle={toggleAudioPlayer}
           handleSeek={actions.onSeek}
           handleClose={actions.onClose}
+          handleOpenArticle={handleOpenArticle}
         />
       )}
       {playbackElement}
