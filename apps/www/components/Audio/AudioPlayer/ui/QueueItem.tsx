@@ -79,6 +79,7 @@ type QueueItemProps = {
   onClick: (item: AudioQueueItem) => Promise<void>
   onRemove: (item: AudioQueueItem) => Promise<void>
   onDownload: (item: AudioQueueItem) => Promise<void>
+  onOpen: (item: AudioQueueItem) => Promise<void>
   constraintRef?: Ref<any>
 }
 
@@ -88,6 +89,7 @@ const QueueItem = ({
   onClick,
   onRemove,
   onDownload,
+  onOpen,
   constraintRef,
 }: QueueItemProps) => {
   const controls = useDragControls()
@@ -168,15 +170,14 @@ const QueueItem = ({
               {
                 Icon: LinkIcon,
                 label: t('AudioPlayer/Queue/GoToItem'),
-                href: meta.path,
+                onClick: () => onOpen(item),
               },
-            ].map(({ Icon, label, onClick, href }) => (
+            ].map(({ Icon, label, onClick }) => (
               <IconButton
                 key={label}
                 label={label}
                 labelShort={label}
                 Icon={Icon}
-                href={href}
                 onClick={onClick}
               />
             ))}

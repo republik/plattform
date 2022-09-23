@@ -12,6 +12,8 @@ import { AudioPlayerProps } from './shared'
 import CurrentlyPlaying from './ui/CurrentlyPlaying'
 import Queue from './ui/Queue'
 import AudioControl, { AudioControlProps } from './ui/AudioControl'
+import { AudioPlayerItem } from '../types/AudioPlayerItem'
+import { AudioQueueItem } from '../graphql/AudioQueueHooks'
 
 const styles = {
   root: css({
@@ -63,6 +65,7 @@ const styles = {
 type ExpandedAudioPlayerProps = {
   handleMinimize: () => void
   handleClose: () => void
+  handleOpenArticle: (item: AudioQueueItem) => Promise<void>
 } & AudioControlProps &
   Omit<AudioPlayerProps, 'actions'>
 
@@ -82,12 +85,17 @@ const ExpandedAudioPlayer = ({
   handleForward,
   handleBackward,
   handlePlaybackRateChange,
+  handleOpenArticle,
 }: ExpandedAudioPlayerProps) => {
   const [colorScheme] = useColorContext()
 
   return (
     <div {...styles.root}>
-      <CurrentlyPlaying t={t} item={activeItem} />
+      <CurrentlyPlaying
+        t={t}
+        item={activeItem}
+        handleOpen={handleOpenArticle}
+      />
       <AudioControl
         handleToggle={handleToggle}
         handleSeek={handleSeek}
@@ -126,7 +134,12 @@ const ExpandedAudioPlayer = ({
             overflowY: 'scroll',
           }}
         >
-          {true && <Queue t={t} activeItem={activeItem} items={queuedItems} />}
+          <Queue
+            t={t}
+            activeItem={activeItem}
+            items={queuedItems}
+            handleOpenArticle={handleOpenArticle}
+          />
         </div>
       </div>
       <div {...styles.bottomActions}>
@@ -160,7 +173,11 @@ const ExpandedAudioPlayer = ({
   return (
     <div {...styles.root}>
       <div {...styles.currentPlaying}>
-        <CurrentlyPlaying t={t} item={activeItem} />
+        <CurrentlyPlaying
+          t={t}
+          item={activeItem}
+          handleOpen={handleOpenArticle}
+        />
         <div {...styles.controls}>
           <AudioControl
             handleToggle={handleToggle}
@@ -178,7 +195,12 @@ const ExpandedAudioPlayer = ({
         </div>
       </div>
       {queuedItems && queuedItems.length > 0 && (
-        <Queue t={t} activeItem={activeItem} items={queuedItems} />
+        <Queue
+          t={t}
+          activeItem={activeItem}
+          items={queuedItems}
+          handleOpenArticle={handleOpenArticle}
+        />
       )}
       <div {...styles.bottomActions}>
         <div

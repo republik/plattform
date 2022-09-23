@@ -21,9 +21,15 @@ type QueueProps = {
   t: any
   activeItem: AudioQueueItem
   items: AudioQueueItem[]
+  handleOpenArticle: (item: AudioQueueItem) => Promise<void>
 }
 
-const Queue = ({ t, activeItem, items: inputItems }: QueueProps) => {
+const Queue = ({
+  t,
+  activeItem,
+  items: inputItems,
+  handleOpenArticle,
+}: QueueProps) => {
   /**
    * Work with a copy of the inputItems array to allow the mutation inside the
    * handleReorder function to be throttled while still having a smooth reordering in the ui.
@@ -136,6 +142,7 @@ const Queue = ({ t, activeItem, items: inputItems }: QueueProps) => {
             onClick={handleClick}
             onRemove={handleRemove}
             onDownload={handleDownload}
+            onOpen={handleOpenArticle}
             constraintRef={ref}
           />
         ))}

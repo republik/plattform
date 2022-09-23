@@ -1,6 +1,5 @@
-import Link from 'next/link'
 import React from 'react'
-import { fontStyles, useColorContext } from '@project-r/styleguide'
+import { fontStyles } from '@project-r/styleguide'
 import { css } from 'glamor'
 
 const styles = {
@@ -16,26 +15,37 @@ const styles = {
       textDecorationSkip: 'ink',
     },
   }),
+  buttonFix: css({
+    color: 'inherit',
+    border: 'none',
+    padding: 0,
+    font: 'inherit',
+    outline: 'inherit',
+    textAlign: 'start',
+    backgroundColor: 'transparent',
+    cursor: 'pointer',
+    '&:hover > *': {
+      textDecoration: 'underline',
+      textDecorationSkip: 'ink',
+    },
+  }),
 }
 
 type AudioPlayerTitleProps = {
   title: string
-  path?: string
+  onClick?: () => void
 }
 
-const AudioPlayerTitle = ({ title, path }: AudioPlayerTitleProps) => {
-  const [colorScheme] = useColorContext()
+const AudioPlayerTitle = ({ title, onClick }: AudioPlayerTitleProps) => {
+  const titleElement = <span {...styles.title}>{title}</span>
 
-  if (path) {
-    return (
-      <Link href={path} passHref>
-        <a {...styles.title} {...colorScheme.set('color', 'text')}>
-          {title}
-        </a>
-      </Link>
-    )
-  }
-  return <span {...styles.title}>{title}</span>
+  if (!onClick) return titleElement
+
+  return (
+    <button {...styles.buttonFix} onClick={onClick}>
+      {titleElement}
+    </button>
+  )
 }
 
 export default AudioPlayerTitle

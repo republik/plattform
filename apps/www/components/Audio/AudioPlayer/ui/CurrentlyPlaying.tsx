@@ -49,14 +49,15 @@ const styles = {
 type CurrentlyPlayingProps = {
   t: any
   item: AudioQueueItem
+  handleOpen: (item: AudioQueueItem) => void
 }
 
-const CurrentlyPlaying = ({ t, item }: CurrentlyPlayingProps) => {
+const CurrentlyPlaying = ({ t, item, handleOpen }: CurrentlyPlayingProps) => {
   const [colorScheme] = useColorContext()
 
   const {
     document: {
-      meta: { title, path, publishDate, audioSource, image },
+      meta: { title, publishDate, audioSource, image },
     },
   } = item
   const { durationMs } = audioSource
@@ -70,7 +71,9 @@ const CurrentlyPlaying = ({ t, item }: CurrentlyPlayingProps) => {
           <img {...styles.cover} src={cover} />
         </div>
         <div {...styles.detailWrapper}>
-          {title && <AudioPlayerTitle title={title} path={path} />}
+          {title && (
+            <AudioPlayerTitle title={title} onClick={() => handleOpen(item)} />
+          )}
           <div
             {...styles.metaWrapper}
             {...colorScheme.set('color', 'textSoft')}

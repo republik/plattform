@@ -5,6 +5,10 @@ import { useTranslation } from '../../../lib/withT'
 import ExpandedAudioPlayer from './ExpandedAudioPlayer'
 import MiniAudioPlayer from './MiniAudioPlayer'
 import BackPanel from './ui/BackPanel'
+import { AudioPlayerItem } from '../types/AudioPlayerItem'
+import { useRouter } from 'next/router'
+import { useMediaQuery, mediaQueries } from '@project-r/styleguide'
+import { AudioQueueItem } from '../graphql/AudioQueueHooks'
 
 // TODO: handle previously stored audio-player state
 // this is detectable if the stored object has an audioSource element in the top
@@ -25,7 +29,9 @@ const AudioPlayer = ({
   buffered,
 }: AudioPlayerProps) => {
   const { inNativeApp } = useInNativeApp()
+  const isDesktop = useMediaQuery(mediaQueries.mUp)
   const { t } = useTranslation()
+  const router = useRouter()
   const [isExpanded, setIsExpanded] = useState(false)
   const {
     document: { meta: { audioSource } = {} },
@@ -37,6 +43,17 @@ const AudioPlayer = ({
       actions.onPause()
     } else {
       actions.onPlay()
+    }
+  }
+
+  const handleOpenArticle = async (item: AudioQueueItem) => {
+    const path = item?.document?.meta?.path
+    if (path) {
+      console.log({ inNativeApp, path, isDesktop })
+      if ((inNativeApp || !isDesktop) && isExpanded) {
+        setIsExpanded(false)
+      }
+      await router.push(path)
     }
   }
 
@@ -85,6 +102,7 @@ const AudioPlayer = ({
           handleForward={actions.onForward}
           handleBackward={actions.onBackward}
           handlePlaybackRateChange={actions.onPlaybackRateChange}
+          handleOpenArticle={handleOpenArticle}
         />
       ) : (
         <MiniAudioPlayer
