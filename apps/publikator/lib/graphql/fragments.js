@@ -35,6 +35,12 @@ export const CommitWithDocument = gql`
         template
         kind
         color
+        imageAudioCoverCrop {
+          x
+          y
+          width
+          height
+        }
         format {
           id
           repoId
@@ -47,7 +53,6 @@ export const CommitWithDocument = gql`
             shareLogo
             shareBackgroundImage
             shareBackgroundImageInverted
-            audioCoverImage
             section {
               id
               meta {

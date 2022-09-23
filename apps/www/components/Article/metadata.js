@@ -1,4 +1,9 @@
-import { SHARE_IMAGE_HEIGHT, SHARE_IMAGE_WIDTH } from '@project-r/styleguide'
+import {
+  SHARE_IMAGE_HEIGHT,
+  SHARE_IMAGE_WIDTH,
+  COVER_IMAGE_WIDTH,
+  COVER_IMAGE_HEIGHT,
+} from '@project-r/styleguide'
 
 import {
   ASSETS_SERVER_BASE_URL,
@@ -96,6 +101,15 @@ export const getMetaData = (documentId, meta) => {
     )}&url=${encodeURIComponent(
       `${PUBLIC_BASE_URL}${meta.path}?extract=share`,
     )}`
+
+  // meta.image(CD)&crop={cropxy}&scale={scale}
+  // schauen, dass kein Crop im meta.image schon drin ist,
+  // darum URL parsen. (siehe RESIZE für helper functons)
+  // const audioCover = `${ASSETS_SERVER_BASE_URL}/render?width=${COVER_IMAGE_WIDTH}&height=${COVER_IMAGE_HEIGHT}&updatedAt=${encodeURIComponent(
+  //   `${documentId}${meta.format ? `-${meta.format.id}` : ''}`,
+  // )}&url=${encodeURIComponent(
+  //   `${PUBLIC_BASE_URL}${meta.path}?extract=audioCover`,
+  // )}`
 
   const metaWithUrls = {
     ...meta,

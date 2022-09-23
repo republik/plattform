@@ -144,9 +144,9 @@ export default withT(({ t, editor, node, onInputChange, format }) => {
             height={height}
             maxWidth='none'
             label={t(`metaData/field/coverImage`)}
-            src={node.data.get('audioSourceCoverImage')}
+            src={node.data.get('image')}
             placeholder={node.data.get('image')}
-            onChange={onInputChange('audioSourceCoverImage')}
+            onChange={onInputChange('imageAudioCoverCrop')}
           />
         ) : (
           <AudioCover format={format} />

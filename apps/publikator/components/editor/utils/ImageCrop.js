@@ -58,6 +58,7 @@ const ImageCrop = ({
           onCropChange={setCrop}
           onCropAreaChange={(croppedArea) => {
             setCroppedArea(croppedArea)
+            onChange(croppedArea)
           }}
         />
         <div
