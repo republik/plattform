@@ -25,8 +25,8 @@ jobs:
     - name: Upload S3
       env:
         PKG_NAME: project-r-styleguide
-        S3_PATH: republik-assets-dev/packages
+        S3_PATH: republik-assets-dev/plattform
       working-directory: ./packages/styleguide
       run: |
-        aws s3 cp $PKG_NAME-0.0.0.tgz s3://$S3_PATH/$PKG_NAME-`echo ${{ github.ref }} | cut -d/ -f3`-`echo ${{ github.sha }} | cut -c-7`.tgz --acl public-read
+        aws s3 cp $PKG_NAME-0.0.0.tgz s3://$S3_PATH/$PKG_NAME-`echo ${{ github.sha }} | cut -c-7`.tgz --acl public-read
         aws s3 cp $PKG_NAME-0.0.0.tgz s3://$S3_PATH/$PKG_NAME-`echo ${{ github.ref }} | cut -d/ -f3`.tgz --acl public-read
