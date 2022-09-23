@@ -1,7 +1,6 @@
 import { css } from 'glamor'
 import { MotionConfig, Reorder } from 'framer-motion'
 import QueueItem from './QueueItem'
-import { fontStyles } from '@project-r/styleguide'
 import useAudioQueue from '../../hooks/useAudioQueue'
 import { AudioQueueItem } from '../../graphql/AudioQueueHooks'
 import { useEffect, useRef, useState } from 'react'
@@ -9,22 +8,12 @@ import throttle from 'lodash/throttle'
 import { downloadFileFromUrl } from '../../../../lib/helpers/FileDownloadHelper'
 
 const styles = {
-  heading: css({
-    ...fontStyles.sansSerifMedium16,
-  }),
   list: css({
-    height: '100%',
     listStyle: 'none',
     padding: 0,
     display: 'flex',
     flexDirection: 'column',
     gap: 8,
-    overflow: 'hidden',
-    overflowY: 'auto',
-    // TODO: custom scrollbar to better match the design
-    '&::-webkit-scrollbar': {
-      display: 'none',
-    },
   }),
 }
 
@@ -127,38 +116,31 @@ const Queue = ({ t, activeItem, items: inputItems }: QueueProps) => {
   }
 
   return (
-    <div style={{ flexGrow: 1, flexShrink: 1 }}>
-      <p {...styles.heading}>
-        {t('AudioPlayer/Queue', {
-          count: items.length ? `(${items.length})` : null,
-        })}
-      </p>
-      <MotionConfig transition={{ duration: 0.3 }}>
-        <Reorder.Group
-          as='ol'
-          {...styles.list}
-          axis='y'
-          values={items}
-          onReorder={(reorderedItems) => {
-            setItems(reorderedItems)
-            handleReorder(reorderedItems)
-          }}
-          ref={ref}
-        >
-          {items.map((item) => (
-            <QueueItem
-              key={item.id}
-              t={t}
-              item={item}
-              onClick={handleClick}
-              onRemove={handleRemove}
-              onDownload={handleDownload}
-              constraintRef={ref}
-            />
-          ))}
-        </Reorder.Group>
-      </MotionConfig>
-    </div>
+    <MotionConfig transition={{ duration: 0.3 }}>
+      <Reorder.Group
+        as='ol'
+        {...styles.list}
+        axis='y'
+        values={items}
+        onReorder={(reorderedItems) => {
+          setItems(reorderedItems)
+          handleReorder(reorderedItems)
+        }}
+        ref={ref}
+      >
+        {items.map((item) => (
+          <QueueItem
+            key={item.id}
+            t={t}
+            item={item}
+            onClick={handleClick}
+            onRemove={handleRemove}
+            onDownload={handleDownload}
+            constraintRef={ref}
+          />
+        ))}
+      </Reorder.Group>
+    </MotionConfig>
   )
 }
 
