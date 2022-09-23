@@ -71,7 +71,7 @@ type MiniAudioPlayerProps = {
   handleToggle: () => void
   handleSeek: (progress: number) => void
   handleClose: () => void
-  handleOpenArticle: (item: AudioQueueItem) => Promise<void>
+  handleOpenArticle: (path: string) => Promise<void>
 } & Omit<AudioPlayerProps, 'actions' | 'queuedItems'>
 
 const MiniAudioPlayer = ({
@@ -115,7 +115,7 @@ const MiniAudioPlayer = ({
         <div {...styles.metaDataWrapper}>
           <AudioPlayerTitle
             title={title}
-            onClick={() => handleOpenArticle(activeItem)}
+            onClick={() => handleOpenArticle(path)}
           />
           <Time
             currentTime={currentTime / playbackRate}

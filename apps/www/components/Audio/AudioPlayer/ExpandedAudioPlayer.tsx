@@ -13,7 +13,9 @@ import { AudioPlayerProps } from './shared'
 import CurrentlyPlaying from './ui/CurrentlyPlaying'
 import Queue from './ui/Queue'
 import AudioControl, { AudioControlProps } from './ui/AudioControl'
+import LatestArticles from './ui/LatestArticles'
 import { AudioQueueItem } from '../graphql/AudioQueueHooks'
+import { downloadFileFromUrl } from '../../../lib/helpers/FileDownloadHelper'
 
 const styles = {
   root: css({
@@ -65,7 +67,7 @@ const styles = {
 type ExpandedAudioPlayerProps = {
   handleMinimize: () => void
   handleClose: () => void
-  handleOpenArticle: (item: AudioQueueItem) => Promise<void>
+  handleOpenArticle: (path: string) => Promise<void>
 } & AudioControlProps &
   Omit<AudioPlayerProps, 'actions'>
 
@@ -89,6 +91,27 @@ const ExpandedAudioPlayer = ({
 }: ExpandedAudioPlayerProps) => {
   const [colorScheme] = useColorContext()
   const [activeTab, setActiveTab] = React.useState<'QUEUE' | 'LATEST'>('QUEUE')
+
+  const handleDownload = async (item: AudioQueueItem) => {
+    try {
+      const {
+        document: {
+          meta: { audioSource, title },
+        },
+      } = item
+      const downloadSource =
+        audioSource.mp3 || audioSource.aac || audioSource.ogg
+      const extension = downloadSource.split('.').pop()
+      const serializedTitle = title.replace(/[^a-z0-9]/gi, '_').toLowerCase()
+      const filename = `${serializedTitle}-republik.${extension}`
+
+      await downloadFileFromUrl(downloadSource, filename)
+    } catch (err) {
+      // TODO: handle download error
+      console.error(err)
+      alert('Download failed: ' + err)
+    }
+  }
 
   return (
     <div {...styles.root}>
@@ -147,6 +170,13 @@ const ExpandedAudioPlayer = ({
               activeItem={activeItem}
               items={queuedItems}
               handleOpenArticle={handleOpenArticle}
+              handleDownload={handleDownload}
+            />
+          )}
+          {activeTab === 'LATEST' && (
+            <LatestArticles
+              handleOpenArticle={handleOpenArticle}
+              handleDownload={handleDownload}
             />
           )}
         </m.div>
@@ -209,6 +239,7 @@ const ExpandedAudioPlayer = ({
           activeItem={activeItem}
           items={queuedItems}
           handleOpenArticle={handleOpenArticle}
+          handleDownload={handleDownload}
         />
       )}
       <div {...styles.bottomActions}>

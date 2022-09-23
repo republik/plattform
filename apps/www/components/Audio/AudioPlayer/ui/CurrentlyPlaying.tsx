@@ -49,7 +49,7 @@ const styles = {
 type CurrentlyPlayingProps = {
   t: any
   item: AudioQueueItem
-  handleOpen: (item: AudioQueueItem) => void
+  handleOpen: (path: string) => void
 }
 
 const CurrentlyPlaying = ({ t, item, handleOpen }: CurrentlyPlayingProps) => {
@@ -57,7 +57,7 @@ const CurrentlyPlaying = ({ t, item, handleOpen }: CurrentlyPlayingProps) => {
 
   const {
     document: {
-      meta: { title, publishDate, audioSource, image },
+      meta: { title, publishDate, audioSource, image, path },
     },
   } = item
   const { durationMs } = audioSource
@@ -72,7 +72,7 @@ const CurrentlyPlaying = ({ t, item, handleOpen }: CurrentlyPlayingProps) => {
         </div>
         <div {...styles.detailWrapper}>
           {title && (
-            <AudioPlayerTitle title={title} onClick={() => handleOpen(item)} />
+            <AudioPlayerTitle title={title} onClick={() => handleOpen(path)} />
           )}
           <div
             {...styles.metaWrapper}

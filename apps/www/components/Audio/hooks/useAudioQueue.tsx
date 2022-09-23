@@ -51,6 +51,13 @@ const useAudioQueue = () => {
     update: modifyApolloCacheWithUpdatedPlaylist,
   })
 
+  function checkIfActiveItem(documentId: string): boolean {
+    return (
+      meWithAudioQueue?.me?.audioQueue?.[0]?.document?.id === documentId ||
+      false
+    )
+  }
+
   function checkIfInQueue(documentId: string): boolean {
     return meWithAudioQueue?.me?.audioQueue.some(
       (audioQueueItem) => audioQueueItem.document.id === documentId,
@@ -72,6 +79,7 @@ const useAudioQueue = () => {
       !inNativeApp || // in browser
       (inNativeApp && // in app with non legacy version
         compareVersion(inNativeAppVersion, NEW_AUDIO_API_VERSION) >= 0),
+    checkIfActiveItem,
     checkIfInQueue,
   }
 }

@@ -5,7 +5,6 @@ import useAudioQueue from '../../hooks/useAudioQueue'
 import { AudioQueueItem } from '../../graphql/AudioQueueHooks'
 import { useEffect, useRef, useState } from 'react'
 import throttle from 'lodash/throttle'
-import { downloadFileFromUrl } from '../../../../lib/helpers/FileDownloadHelper'
 
 const styles = {
   list: css({
@@ -21,7 +20,8 @@ type QueueProps = {
   t: any
   activeItem: AudioQueueItem
   items: AudioQueueItem[]
-  handleOpenArticle: (item: AudioQueueItem) => Promise<void>
+  handleOpenArticle: (path: string) => Promise<void>
+  handleDownload: (item: AudioQueueItem['document']) => Promise<void>
 }
 
 const Queue = ({
@@ -29,6 +29,7 @@ const Queue = ({
   activeItem,
   items: inputItems,
   handleOpenArticle,
+  handleDownload,
 }: QueueProps) => {
   /**
    * Work with a copy of the inputItems array to allow the mutation inside the
@@ -36,8 +37,12 @@ const Queue = ({
    */
   const [items, setItems] = useState<AudioQueueItem[]>(inputItems)
   const ref = useRef()
-  const { moveAudioQueueItem, removeAudioQueueItem, reorderAudioQueue } =
-    useAudioQueue()
+  const {
+    moveAudioQueueItem,
+    removeAudioQueueItem,
+    reorderAudioQueue,
+    checkIfActiveItem,
+  } = useAudioQueue()
 
   /**
    * Synchronize the items passed via props with the internal items state.
@@ -100,27 +105,6 @@ const Queue = ({
     }
   }, 1000)
 
-  const handleDownload = async (item: AudioQueueItem) => {
-    try {
-      const {
-        document: {
-          meta: { audioSource, title },
-        },
-      } = item
-      const downloadSource =
-        audioSource.mp3 || audioSource.aac || audioSource.ogg
-      const extension = downloadSource.split('.').pop()
-      const serializedTitle = title.replace(/[^a-z0-9]/gi, '_').toLowerCase()
-      const filename = `${serializedTitle}-republik.${extension}`
-
-      await downloadFileFromUrl(downloadSource, filename)
-    } catch (err) {
-      // TODO: handle download error
-      console.error(err)
-      alert('Download failed: ' + err)
-    }
-  }
-
   return (
     <MotionConfig transition={{ duration: 0.3 }}>
       <Reorder.Group
@@ -139,6 +123,7 @@ const Queue = ({
             key={item.id}
             t={t}
             item={item}
+            isActive={checkIfActiveItem(item.document.id)}
             onClick={handleClick}
             onRemove={handleRemove}
             onDownload={handleDownload}
