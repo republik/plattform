@@ -358,7 +358,6 @@ const ActionBar = ({
     },
     {
       title: t('AudioPlayer/Queue/Add'),
-      label: t('AudioPlayer/Queue/Add'),
       Icon: PlaylistAddIcon,
       onClick: async (e) => {
         e.preventDefault()
