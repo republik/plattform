@@ -19,6 +19,7 @@ import { downloadFileFromUrl } from '../../../lib/helpers/FileDownloadHelper'
 
 const styles = {
   root: css({
+    position: 'relative',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
@@ -54,13 +55,10 @@ const styles = {
     display: 'inline-flex',
     flexDirection: 'column',
   }),
-  bottomActions: css({
-    flex: '0 0 auto',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: '1rem',
+  expandControl: css({
+    position: 'absolute',
+    top: 24,
+    right: 24,
   }),
 }
 
@@ -115,6 +113,14 @@ const ExpandedAudioPlayer = ({
 
   return (
     <div {...styles.root}>
+      <div {...styles.expandControl}>
+        <IconButton
+          Icon={ExpandMoreIcon}
+          size={32}
+          style={{ marginRight: 0 }}
+          onClick={handleMinimize}
+        />
+      </div>
       <CurrentlyPlaying
         t={t}
         item={activeItem}
@@ -180,92 +186,6 @@ const ExpandedAudioPlayer = ({
             />
           )}
         </m.div>
-      </div>
-      <div {...styles.bottomActions}>
-        <div
-          style={{
-            flex: 1,
-            display: 'inline-flex',
-            justifyContent: 'flex-start',
-          }}
-        >
-          <span>Share</span>
-        </div>
-        <div
-          style={{
-            flex: 1,
-            display: 'inline-flex',
-            justifyContent: 'flex-end',
-          }}
-        >
-          <IconButton
-            Icon={ExpandMoreIcon}
-            size={32}
-            style={{ marginRight: 0 }}
-            onClick={handleMinimize}
-          />
-        </div>
-      </div>
-    </div>
-  )
-
-  return (
-    <div {...styles.root}>
-      <div {...styles.currentPlaying}>
-        <CurrentlyPlaying
-          t={t}
-          item={activeItem}
-          handleOpen={handleOpenArticle}
-        />
-        <div {...styles.controls}>
-          <AudioControl
-            handleToggle={handleToggle}
-            handleSeek={handleSeek}
-            handleForward={handleForward}
-            handleBackward={handleBackward}
-            handlePlaybackRateChange={handlePlaybackRateChange}
-            isPlaying={isPlaying}
-            isLoading={isLoading}
-            playbackRate={playbackRate}
-            currentTime={currentTime}
-            duration={duration}
-            buffered={buffered}
-          />
-        </div>
-      </div>
-      {queuedItems && queuedItems.length > 0 && (
-        <Queue
-          t={t}
-          activeItem={activeItem}
-          items={queuedItems}
-          handleOpenArticle={handleOpenArticle}
-          handleDownload={handleDownload}
-        />
-      )}
-      <div {...styles.bottomActions}>
-        <div
-          style={{
-            flex: 1,
-            display: 'inline-flex',
-            justifyContent: 'flex-start',
-          }}
-        >
-          <span>Share</span>
-        </div>
-        <div
-          style={{
-            flex: 1,
-            display: 'inline-flex',
-            justifyContent: 'flex-end',
-          }}
-        >
-          <IconButton
-            Icon={ExpandMoreIcon}
-            size={32}
-            style={{ marginRight: 0 }}
-            onClick={handleMinimize}
-          />
-        </div>
       </div>
     </div>
   )
