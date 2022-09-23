@@ -410,13 +410,23 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     }
   }, [activePlayerItem, trackedPlayerItem, audioQueue])
 
-  // Sync the queue with the native-app
+  // Sync the queue with the native-app and reopen the player if queue changed
+  // while it was closed
   useEffect(() => {
     if (inNativeApp && audioQueue && audioQueue !== trackedQueue?.current) {
       notifyApp(AudioEvent.QUEUE_UPDATE, audioQueue)
-      trackedQueue.current = audioQueue
     }
-  }, [inNativeApp, audioQueue])
+    //
+    if (
+      audioQueue &&
+      audioQueue.length > 0 &&
+      !isVisible &&
+      audioQueue !== trackedQueue?.current
+    ) {
+      setIsVisible(true)
+    }
+    trackedQueue.current = audioQueue
+  }, [inNativeApp, audioQueue, isVisible])
 
   // Open up the audio-player once the app has started if the queue is not empty
   useEffect(() => {
