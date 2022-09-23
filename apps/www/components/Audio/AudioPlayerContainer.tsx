@@ -401,7 +401,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     ) {
       const alreadyHadActivePlayerItem = !!activePlayerItem
       setActivePlayerItem(audioQueue[0])
-      setShouldAutoPlay(isPlaying)
+      setShouldAutoPlay(true)
       setHasAutoPlayed(false)
       setIsPlaying(false)
       if (mediaRef.current && alreadyHadActivePlayerItem) {
