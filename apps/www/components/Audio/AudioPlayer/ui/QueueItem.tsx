@@ -32,6 +32,7 @@ const styles = {
     outline: 'inherit',
     textAlign: 'start',
     backgroundColor: 'transparent',
+    cursor: 'pointer',
   }),
   cover: css({
     aspectRatio: '1 / 1',
@@ -126,7 +127,7 @@ const QueueItem = ({
       <button
         {...styles.buttonFix}
         style={{ width: '100%' }}
-        onDoubleClick={() => onClick(item)}
+        onClick={() => onClick(item)}
       >
         <div {...styles.itemWrapper}>
           <div>
