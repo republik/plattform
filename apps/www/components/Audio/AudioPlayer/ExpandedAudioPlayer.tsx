@@ -8,11 +8,11 @@ import {
   TabButton,
   useColorContext,
 } from '@project-r/styleguide'
+import { m } from 'framer-motion'
 import { AudioPlayerProps } from './shared'
 import CurrentlyPlaying from './ui/CurrentlyPlaying'
 import Queue from './ui/Queue'
 import AudioControl, { AudioControlProps } from './ui/AudioControl'
-import { AudioPlayerItem } from '../types/AudioPlayerItem'
 import { AudioQueueItem } from '../graphql/AudioQueueHooks'
 
 const styles = {
@@ -88,6 +88,7 @@ const ExpandedAudioPlayer = ({
   handleOpenArticle,
 }: ExpandedAudioPlayerProps) => {
   const [colorScheme] = useColorContext()
+  const [activeTab, setActiveTab] = React.useState<'QUEUE' | 'LATEST'>('QUEUE')
 
   return (
     <div {...styles.root}>
@@ -115,9 +116,14 @@ const ExpandedAudioPlayer = ({
             text={t('AudioPlayer/Queue', {
               count: queuedItems.length ? `(${queuedItems.length})` : null,
             })}
-            isActive
+            isActive={activeTab === 'QUEUE'}
+            onClick={() => setActiveTab('QUEUE')}
           />
-          <TabButton text='Alle' />
+          <TabButton
+            text='Neuste Beiträge'
+            isActive={activeTab === 'LATEST'}
+            onClick={() => setActiveTab('LATEST')}
+          />
           <span
             style={{
               flexGrow: 1,
@@ -127,20 +133,23 @@ const ExpandedAudioPlayer = ({
             {...colorScheme.set('borderColor', 'divider')}
           />
         </Scroller>
-        <div
+        <m.div
           style={{
             flex: '1 1 0',
             minHeight: 0,
             overflowY: 'scroll',
           }}
+          layoutScroll
         >
-          <Queue
-            t={t}
-            activeItem={activeItem}
-            items={queuedItems}
-            handleOpenArticle={handleOpenArticle}
-          />
-        </div>
+          {activeTab === 'QUEUE' && (
+            <Queue
+              t={t}
+              activeItem={activeItem}
+              items={queuedItems}
+              handleOpenArticle={handleOpenArticle}
+            />
+          )}
+        </m.div>
       </div>
       <div {...styles.bottomActions}>
         <div
