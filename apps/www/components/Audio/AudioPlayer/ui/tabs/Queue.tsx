@@ -1,10 +1,11 @@
 import { css } from 'glamor'
 import { MotionConfig, Reorder } from 'framer-motion'
 import QueueItem from './QueueItem'
-import useAudioQueue from '../../hooks/useAudioQueue'
-import { AudioQueueItem } from '../../graphql/AudioQueueHooks'
+import useAudioQueue from '../../../hooks/useAudioQueue'
+import { AudioQueueItem } from '../../../graphql/AudioQueueHooks'
 import { useEffect, useRef, useState } from 'react'
 import throttle from 'lodash/throttle'
+import LoadingPlaceholder from './LoadingPlaceholder'
 
 const styles = {
   list: css({
@@ -38,6 +39,7 @@ const Queue = ({
   const [items, setItems] = useState<AudioQueueItem[]>(inputItems)
   const ref = useRef()
   const {
+    audioQueueIsLoading,
     moveAudioQueueItem,
     removeAudioQueueItem,
     reorderAudioQueue,
@@ -104,6 +106,10 @@ const Queue = ({
       alert('Could not reorder playlist')
     }
   }, 1000)
+
+  if (audioQueueIsLoading) {
+    return <LoadingPlaceholder />
+  }
 
   return (
     <MotionConfig transition={{ duration: 0.3 }}>

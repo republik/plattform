@@ -7,7 +7,7 @@ import {
 } from '@project-r/styleguide'
 import { Reorder, useDragControls, useMotionValue } from 'framer-motion'
 import { css } from 'glamor'
-import { AudioQueueItem } from '../../graphql/AudioQueueHooks'
+import { AudioQueueItem } from '../../../graphql/AudioQueueHooks'
 import AudioListItem from './AudioListItem'
 
 const styles = {

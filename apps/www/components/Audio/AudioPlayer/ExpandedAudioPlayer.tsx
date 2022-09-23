@@ -11,9 +11,9 @@ import {
 import { m } from 'framer-motion'
 import { AudioPlayerProps } from './shared'
 import CurrentlyPlaying from './ui/CurrentlyPlaying'
-import Queue from './ui/Queue'
+import Queue from './ui/tabs/Queue'
 import AudioControl, { AudioControlProps } from './controls/AudioControl'
-import LatestArticles from './ui/LatestArticles'
+import LatestArticles from './ui/tabs/LatestArticles'
 import { AudioQueueItem } from '../graphql/AudioQueueHooks'
 import { downloadFileFromUrl } from '../../../lib/helpers/FileDownloadHelper'
 
@@ -137,7 +137,7 @@ const ExpandedAudioPlayer = ({
         <Scroller>
           <TabButton
             text={t('AudioPlayer/Queue', {
-              count: queuedItems.length ? `(${queuedItems.length})` : null,
+              count: queuedItems.length ? `(${queuedItems.length})` : '',
             })}
             isActive={activeTab === 'QUEUE'}
             onClick={() => setActiveTab('QUEUE')}

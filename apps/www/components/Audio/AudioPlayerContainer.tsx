@@ -244,7 +244,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
         mediaRef.current.currentTime = progress * duration
         syncWithMediaElement()
       }
-      // TODO: debounce saving progress, since onSeek is called on every mousemove
+
       await saveActiveItemProgress({
         currentTime: updatedCurrentTime,
         isPlaying: false,
@@ -412,7 +412,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
 
   // Sync the queue with the native-app
   useEffect(() => {
-    if (inNativeApp && audioQueue && audioQueue !== trackedQueue.current) {
+    if (inNativeApp && audioQueue && audioQueue !== trackedQueue?.current) {
       notifyApp(AudioEvent.QUEUE_UPDATE, audioQueue)
       trackedQueue.current = audioQueue
     }

@@ -11,9 +11,9 @@ import {
 } from '@project-r/styleguide'
 import { Reorder, useDragControls, useMotionValue } from 'framer-motion'
 import { css } from 'glamor'
-import { dateFormatter, FALLBACK_IMG_SRC, formatMinutes } from '../shared'
-import AudioPlayerTitle from './AudioPlayerTitle'
-import { AudioQueueItem } from '../../graphql/AudioQueueHooks'
+import { dateFormatter, FALLBACK_IMG_SRC, formatMinutes } from '../../shared'
+import AudioPlayerTitle from '../AudioPlayerTitle'
+import { AudioQueueItem } from '../../../graphql/AudioQueueHooks'
 import { imageResizeUrl } from 'mdast-react-render/lib/utils'
 import { ComponentType, ReactNode, Ref } from 'react'
 

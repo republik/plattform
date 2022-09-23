@@ -7,10 +7,11 @@ import {
   LinkIcon,
 } from '@project-r/styleguide'
 import AudioListItem from './AudioListItem'
-import useAudioQueue from '../../hooks/useAudioQueue'
-import { useLatestArticlesQuery } from '../../graphql/LatestArticlesHook'
-import { useTranslation } from '../../../../lib/withT'
-import { AudioQueueItem } from '../../graphql/AudioQueueHooks'
+import useAudioQueue from '../../../hooks/useAudioQueue'
+import { useLatestArticlesQuery } from '../../../graphql/LatestArticlesHook'
+import { useTranslation } from '../../../../../lib/withT'
+import { AudioQueueItem } from '../../../graphql/AudioQueueHooks'
+import LoadingPlaceholder from './LoadingPlaceholder'
 
 const styles = {
   list: css({
@@ -72,7 +73,7 @@ const LatestArticlesTab = ({
   }, [data])
 
   if (loading) {
-    return <div>Loading...</div>
+    return <LoadingPlaceholder />
   }
 
   if (error) {
