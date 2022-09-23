@@ -181,6 +181,7 @@ module.exports = async ({
       (mime !== 'image/svg+xml' || (format && format !== 'webp'))
     ) {
       pipeline = sharp()
+
       if (crop && size) {
         pipeline.extract({
           left: Math.ceil((cropX / 100) * fileWidth),

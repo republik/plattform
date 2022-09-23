@@ -46,7 +46,12 @@ export const getDocument = gql`
         kind
         description
         image
-        imageAudioCoverCrop
+        imageAudioCoverCrop {
+          x
+          y
+          width
+          height
+        }
         facebookTitle
         facebookImage
         facebookDescription
@@ -199,7 +204,6 @@ export const getDocument = gql`
           mediaId
           durationMs
           kind
-          coverImageCrop
         }
         podcast {
           podigeeSlug
