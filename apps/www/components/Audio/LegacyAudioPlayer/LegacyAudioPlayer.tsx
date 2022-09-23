@@ -1,5 +1,5 @@
 import { AudioContext } from '../AudioProvider'
-import { LegacyAudioPlayer as LegacyAudioPlayerUI } from '@project-r/styleguide'
+import { AudioPlayer as LegacyAudioPlayerUI } from '@project-r/styleguide'
 import ProgressComponent from '../../Article/Progress'
 import { useTranslation } from '../../../lib/withT'
 import { AUDIO_PLAYER_HEIGHT } from '../../constants'

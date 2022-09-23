@@ -13,7 +13,7 @@ import Rewind from './Icons/Rewind'
 import Volume from './Icons/Volume'
 import Subtitles from './Icons/Subtitles'
 import { sansSerifRegular18 } from '../Typography/styles'
-import { getFormattedTime } from '../LegacyAudioPlayer/Player'
+import { getFormattedTime } from '../AudioPlayer/Player'
 
 import warn from '../../lib/warn'
 import globalState, { parseTimeHash } from '../../lib/globalMediaState'
