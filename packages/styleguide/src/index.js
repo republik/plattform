@@ -176,9 +176,9 @@ const Styleguide = () => {
                       {
                         path: '/audio-cover',
                         title: 'Audio Cover',
-                        src: require('./components/AudioCover/docs.md'),
+                        src: require('./components/AudioCoverGenerator/docs.md'),
                         imports: {
-                          AudioCover: require('./components/AudioCover'),
+                          AudioCoverGenerator: require('./components/AudioCoverGenerator'),
                         },
                       },
                     ],

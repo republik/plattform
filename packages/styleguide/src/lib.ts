@@ -177,7 +177,7 @@ export {
   default as AudioCover,
   COVER_IMAGE_WIDTH,
   COVER_IMAGE_HEIGHT,
-} from './components/AudioCover'
+} from './components/AudioCoverGenerator'
 
 export { default as TeaserEmbedComment } from './components/TeaserEmbedComment'
 export { SeriesNav } from './components/SeriesNav'

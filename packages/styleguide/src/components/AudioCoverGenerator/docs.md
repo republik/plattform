@@ -1,45 +1,25 @@
-`<AudioCover />` renders an in-browser preview of the share image. Say hello to dynamically generated images for social media.
+`<AudioCoverGenerator />` renders an in-browser preview of the share image. Say hello to dynamically generated images for social media.
 
 Supported props:
 
 - `format`: see `<ShareImageGenerator />` docs for a detailed run-through of the supported formats
-- `image`:
-- `croppedArea`:
 
 ```react
-<AudioCover
-  format={{
-    title: 'Aus der Arena',
-    section: {
-      meta: {
-        title: 'Format'
-      }
-    },
-    color: '#D74132',
-    kind: 'scribble'
-  }}
-  image='/static/rothaus_landscape.jpg'
-/>
-```
+<div style={{display: 'flex', gap: 16}}>
 
-
-```react
-<AudioCover
-  format={{
-    title: 'Aus der Arena',
-    section: {
-      meta: {
-        title: 'Format'
-      }
-    },
-    color: '#D74132',
-    kind: 'scribble'
-  }}
-/>
+  <AudioCoverGenerator
+    format={{ title: 'Aus der Arena', color: '#D74132' }}
+    previewSize={64}
+  />
+  <AudioCoverGenerator
+    format={{title: 'Aus der Arena',color: '#D74132' }}
+    previewSize={128}
+  />
+</div>
 ```
 
 ```react
-<AudioCover
+<AudioCoverGenerator
   format={{
     title: 'Briefing aus Bern',
     section: {
@@ -54,7 +34,7 @@ Supported props:
 ```
 
 ```react
-<AudioCover
+<AudioCoverGenerator
   format={{
     title: 'Binswanger',
     section: {
