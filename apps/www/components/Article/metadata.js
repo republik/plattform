@@ -102,15 +102,6 @@ export const getMetaData = (documentId, meta) => {
       `${PUBLIC_BASE_URL}${meta.path}?extract=share`,
     )}`
 
-  // meta.image(CD)&crop={cropxy}&scale={scale}
-  // schauen, dass kein Crop im meta.image schon drin ist,
-  // darum URL parsen. (siehe RESIZE für helper functons)
-  // const audioCover = `${ASSETS_SERVER_BASE_URL}/render?width=${COVER_IMAGE_WIDTH}&height=${COVER_IMAGE_HEIGHT}&updatedAt=${encodeURIComponent(
-  //   `${documentId}${meta.format ? `-${meta.format.id}` : ''}`,
-  // )}&url=${encodeURIComponent(
-  //   `${PUBLIC_BASE_URL}${meta.path}?extract=audioCover`,
-  // )}`
-
   const metaWithUrls = {
     ...meta,
     facebookImage: shareImage || meta.facebookImage,
