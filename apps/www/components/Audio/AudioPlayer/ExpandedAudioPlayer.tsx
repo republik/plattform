@@ -47,6 +47,7 @@ const styles = {
     flex: 1,
     minHeight: 0,
     overflowY: 'scroll',
+    scrollbarWidth: 'thin',
   }),
   tabBorder: css({
     flexGrow: 1,

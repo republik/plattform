@@ -24,12 +24,7 @@ const styles = {
     position: 'fixed',
     bottom: 0,
     right: 0,
-    margin: 0,
     display: 'flex',
-    paddingLeft: ['15px', 'max(15px, env(safe-area-inset-left))'],
-    paddingRight: ['15px', 'max(15px, env(safe-area-inset-right))'],
-    paddingBottom: ['24px', 'max(24px, env(safe-area-inset-bottom))'],
-    width: '100%',
     boxShadow: '0px -5px 15px -3px rgba(0,0,0,0.1)',
     maxHeight: '100vh',
     [mediaQueries.mUp]: {
@@ -38,9 +33,21 @@ const styles = {
       marginRight: MARGIN * 2,
       marginBottom: MARGIN * 2,
       padding: 0,
-      boxShadow: '0px -5px 15px -3px rgba(0,0,0,0.1)',
       maxHeight: ' min(720px, calc(100vh - 60px))',
     },
+  }),
+  wrapperMini: css({
+    marginRight: ['15px', 'max(15px, env(safe-area-inset-right))'],
+    marginLeft: ['15px', 'max(15px, env(safe-area-inset-left))'],
+    marginBottom: ['24px', 'max(24px, env(safe-area-inset-bottom))'],
+    width: ['290px', `calc(100% - ${MARGIN * 2}px)`],
+  }),
+  wrapperExpanded: css({
+    margin: 0,
+    paddingLeft: ['15px', 'max(15px, env(safe-area-inset-left))'],
+    paddingRight: ['15px', 'max(15px, env(safe-area-inset-right))'],
+    paddingBottom: 0,
+    width: '100%',
   }),
   backdrop: css({
     position: 'fixed',
@@ -72,6 +79,7 @@ const BackPanel = ({
       <div
         ref={ref}
         {...styles.wrapper}
+        {...(isExpanded ? styles.wrapperExpanded : styles.wrapperMini)}
         {...colorScheme.set('backgroundColor', 'overlay')}
         {...colorScheme.set('boxShadow', 'overlayShadow')}
       >
