@@ -1,9 +1,4 @@
-import {
-  SHARE_IMAGE_HEIGHT,
-  SHARE_IMAGE_WIDTH,
-  COVER_IMAGE_WIDTH,
-  COVER_IMAGE_HEIGHT,
-} from '@project-r/styleguide'
+import { SHARE_IMAGE_HEIGHT, SHARE_IMAGE_WIDTH } from '@project-r/styleguide'
 
 import {
   ASSETS_SERVER_BASE_URL,

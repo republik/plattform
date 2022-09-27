@@ -46,12 +46,6 @@ export const getDocument = gql`
         kind
         description
         image
-        imageAudioCoverCrop {
-          x
-          y
-          width
-          height
-        }
         facebookTitle
         facebookImage
         facebookDescription
