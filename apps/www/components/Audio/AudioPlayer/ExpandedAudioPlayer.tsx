@@ -25,40 +25,42 @@ const styles = {
     justifyContent: 'space-between',
     gap: 16,
     width: '100%',
-    height: 'calc(100vh - 48px)',
-    marginTop: 24,
+    height: '100vh',
+    paddingTop: 15,
     '& > *': {
       userSelect: 'none',
     },
     [mediaQueries.mUp]: {
       marginTop: 0,
-      padding: 24,
+      padding: 15,
       maxHeight: '100%',
-      height: 'calc(80vh - 48px)',
+      height: 'auto',
     },
   }),
-  currentPlaying: css({
-    flex: '1 0 auto',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 8,
-  }),
-  controls: css({
-    flex: '1 0 auto',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 16,
-  }),
   queueWrapper: css({
-    flex: '1 1 0',
+    flex: 1,
     minHeight: 0,
     display: 'inline-flex',
     flexDirection: 'column',
   }),
+  queue: css({
+    flex: 1,
+    minHeight: 0,
+    overflowY: 'scroll',
+  }),
+  tabBorder: css({
+    flexGrow: 1,
+    borderBottomWidth: 1,
+    borderBottomStyle: 'solid',
+  }),
   expandControl: css({
     position: 'absolute',
-    top: 24,
-    right: 24,
+    top: 8,
+    right: 0,
+    [mediaQueries.mUp]: {
+      top: 8,
+      right: 8,
+    },
   }),
 }
 
@@ -154,22 +156,11 @@ const ExpandedAudioPlayer = ({
             onClick={() => setActiveTab('LATEST')}
           />
           <span
-            style={{
-              flexGrow: 1,
-              borderBottomWidth: 1,
-              borderBottomStyle: 'solid',
-            }}
+            {...styles.tabBorder}
             {...colorScheme.set('borderColor', 'divider')}
           />
         </Scroller>
-        <m.div
-          style={{
-            flex: '1 1 0',
-            minHeight: 0,
-            overflowY: 'scroll',
-          }}
-          layoutScroll
-        >
+        <m.div {...styles.queue} layoutScroll>
           {activeTab === 'QUEUE' && (
             <Queue
               t={t}

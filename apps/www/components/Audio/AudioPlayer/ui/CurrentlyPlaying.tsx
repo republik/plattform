@@ -11,11 +11,12 @@ const styles = {
   root: css({
     display: 'flex',
     flexDirection: 'row',
-    gap: '1rem',
+    gap: 16,
   }),
   heading: css({
     ...fontStyles.sansSerifMedium16,
-    marginBottom: '0.5rem',
+    lineHeight: '20px',
+    marginBottom: 12,
     marginTop: 0,
   }),
   coverWrapper: css({
@@ -27,22 +28,22 @@ const styles = {
   cover: css({
     aspectRatio: '1 / 1',
     objectFit: 'cover',
-    width: '5rem',
+    width: 90,
     height: 'auto',
   }),
   detailWrapper: css({
     flexGrow: 1,
     display: 'flex',
     flexDirection: 'column',
-    gap: '0.25rem',
+    gap: 6,
   }),
   metaWrapper: css({
     display: 'flex',
     flexDirection: 'row',
-    gap: '1rem',
+    gap: 16,
   }),
   dateText: css({
-    ...fontStyles.sansSerifRegular14,
+    ...fontStyles.sansSerifRegular12,
   }),
 }
 
@@ -72,12 +73,14 @@ const CurrentlyPlaying = ({ t, item, handleOpen }: CurrentlyPlayingProps) => {
         </div>
         <div {...styles.detailWrapper}>
           {title && (
-            <AudioPlayerTitle title={title} onClick={() => handleOpen(path)} />
+            <AudioPlayerTitle
+              title={title}
+              onClick={() => handleOpen(path)}
+              lineClamp={3}
+              fontSize={19}
+            />
           )}
-          <div
-            {...styles.metaWrapper}
-            {...colorScheme.set('color', 'textSoft')}
-          >
+          <div {...styles.metaWrapper} {...colorScheme.set('color', 'text')}>
             <span {...styles.dateText}>
               {publishDate && dateFormatter(new Date(Date.parse(publishDate)))}{' '}
               - {formatMinutes(durationMs / 1000)}min

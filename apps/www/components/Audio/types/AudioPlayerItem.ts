@@ -10,7 +10,7 @@ export type AudioPlayerItem = {
     image?: string
     audioSource?: {
       mediaId: string
-      kind: string
+      kind: 'syntheticReadAloud' | 'readAloud'
       mp3: string
       aac: string
       ogg: string

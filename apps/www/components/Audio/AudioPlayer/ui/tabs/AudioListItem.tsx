@@ -3,15 +3,16 @@ import {
   useColorContext,
   CalloutMenu,
   MoreIcon,
-  RemoveCircleIcon,
   IconButton,
-  DragHandleIcon,
-  LinkIcon,
-  DownloadIcon,
 } from '@project-r/styleguide'
 import { Reorder, useDragControls, useMotionValue } from 'framer-motion'
 import { css } from 'glamor'
-import { dateFormatter, FALLBACK_IMG_SRC, formatMinutes } from '../../shared'
+import {
+  dateFormatter,
+  FALLBACK_IMG_SRC,
+  formatMinutes,
+  renderTime,
+} from '../../shared'
 import AudioPlayerTitle from '../AudioPlayerTitle'
 import { AudioQueueItem } from '../../../graphql/AudioQueueHooks'
 import { imageResizeUrl } from 'mdast-react-render/lib/utils'
@@ -22,9 +23,10 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    gap: '0.5rem',
+    gap: 16,
   }),
   buttonFix: css({
+    flex: 1,
     color: 'inherit',
     border: 'none',
     padding: 0,
@@ -40,22 +42,30 @@ const styles = {
   cover: css({
     aspectRatio: '1 / 1',
     objectFit: 'cover',
-    width: '3rem',
+    width: 62,
     height: 'auto',
   }),
   itemWrapper: css({
-    flexGrow: 1,
     display: 'flex',
     flexDirection: 'row',
-    gap: '0.5rem',
+    gap: 16,
   }),
   dataWrapper: css({
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexDirection: 'column',
+  }),
+  dataText: css({
     display: 'flex',
     flexDirection: 'column',
-    gap: '0.25rem',
+    gap: 4,
   }),
   metaLine: css({
-    ...fontStyles.sansSerifRegular12,
+    ...fontStyles.sansSerifRegular,
+    fontSize: 12,
+    gap: 12,
+    display: 'flex',
   }),
   actions: css({
     alignSelf: 'stretch',
@@ -110,24 +120,55 @@ const AudioListItem = ({
       {beforeActionItem}
       <button
         {...styles.buttonFix}
-        style={{ width: '100%' }}
         onClick={() => onClick(item.id)}
         disabled={isActive}
       >
         <div {...styles.itemWrapper}>
-          <div>
-            <img {...styles.cover} src={cover} />
-          </div>
+          <img {...styles.cover} src={cover} />
           <div {...styles.dataWrapper}>
-            <AudioPlayerTitle title={meta.title} />
-            <span
-              {...styles.metaLine}
-              {...colorScheme.set('color', 'textSoft')}
-            >
-              {dateFormatter(publishDate)}
-              {' - '}
-              {formatMinutes(audioSource.durationMs / 1000)}min
-            </span>
+            <div {...styles.dataText}>
+              <AudioPlayerTitle title={meta.title} />
+              <span
+                {...styles.metaLine}
+                {...colorScheme.set('color', 'textSoft')}
+              >
+                <span>{dateFormatter(publishDate)}</span>
+                <span style={{ whiteSpace: 'nowrap' }}>
+                  {formatMinutes(audioSource.durationMs / 1000)} min
+                </span>
+                <span
+                  style={{
+                    display: '-webkit-box',
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                    WebkitLineClamp: 1,
+                    wordBreak: 'break-all',
+                  }}
+                >
+                  {item.meta.audioSource.kind === 'syntheticReadAloud' &&
+                    'synthetisch'}
+                </span>
+              </span>
+            </div>
+            {audioSource.userProgress && audioSource.userProgress.secs >= 10 && (
+              <div
+                {...colorScheme.set('backgroundColor', 'hover')}
+                style={{ width: '100%', height: 2 }}
+              >
+                <div
+                  {...colorScheme.set('backgroundColor', 'divider')}
+                  style={{
+                    position: 'relative',
+                    width: `${
+                      (audioSource.userProgress.secs /
+                        (audioSource.durationMs / 1000)) *
+                      100
+                    }%`,
+                    height: 2,
+                  }}
+                ></div>
+              </div>
+            )}
           </div>
         </div>
       </button>

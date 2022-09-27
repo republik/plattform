@@ -13,7 +13,8 @@ const styles = {
     padding: 0,
     display: 'flex',
     flexDirection: 'column',
-    gap: 8,
+    gap: 24,
+    margin: '24px 0',
   }),
 }
 

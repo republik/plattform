@@ -4,6 +4,7 @@ import {
   DragHandleIcon,
   LinkIcon,
   DownloadIcon,
+  useColorContext,
 } from '@project-r/styleguide'
 import { Reorder, useDragControls, useMotionValue } from 'framer-motion'
 import { css } from 'glamor'
@@ -12,7 +13,6 @@ import AudioListItem from './AudioListItem'
 
 const styles = {
   buttonFix: css({
-    color: 'inherit',
     border: 'none',
     padding: 0,
     font: 'inherit',
@@ -22,7 +22,7 @@ const styles = {
     cursor: 'pointer',
   }),
   dragControl: css({
-    padding: 8,
+    padding: 0,
     cursor: 'grab',
     '&:hover': {
       cursor: 'grabbing',
@@ -53,6 +53,7 @@ const QueueItem = ({
 }: QueueItemProps) => {
   const controls = useDragControls()
   const y = useMotionValue(0)
+  const [colorScheme] = useColorContext()
 
   return (
     <Reorder.Item
@@ -72,10 +73,11 @@ const QueueItem = ({
           <button
             {...styles.dragControl}
             {...styles.buttonFix}
+            {...colorScheme.set('color', 'disabled')}
             onPointerDown={(e) => controls.start(e)}
             onTouchStart={(e) => controls.start(e)}
           >
-            <DragHandleIcon size={20} />
+            <DragHandleIcon size={24} />
           </button>
         }
         actions={[

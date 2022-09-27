@@ -4,11 +4,11 @@ import { css } from 'glamor'
 
 const styles = {
   title: css({
-    ...fontStyles.sansSerifRegular15,
+    ...fontStyles.sansSerifRegular,
+    lineHeight: '23px',
     textDecoration: 'none',
     display: '-webkit-box',
     WebkitBoxOrient: 'vertical',
-    WebkitLineClamp: 2,
     overflow: 'hidden',
     '&[href]:hover': {
       textDecoration: 'underline',
@@ -34,10 +34,28 @@ const styles = {
 type AudioPlayerTitleProps = {
   title: string
   onClick?: () => void
+  lineClamp?: number
+  fontSize?: number
 }
 
-const AudioPlayerTitle = ({ title, onClick }: AudioPlayerTitleProps) => {
-  const titleElement = <span {...styles.title}>{title}</span>
+const AudioPlayerTitle = ({
+  title,
+  onClick,
+  lineClamp = 2,
+  fontSize = 16,
+}: AudioPlayerTitleProps) => {
+  const titleElement = (
+    <span
+      {...styles.title}
+      {...css({
+        WebkitLineClamp: lineClamp,
+        fontSize: fontSize,
+        lineHeight: `${fontSize * 1.2}px`,
+      })}
+    >
+      {title}
+    </span>
+  )
 
   if (!onClick) return titleElement
 
