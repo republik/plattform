@@ -457,7 +457,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
           activeItem: activePlayerItem,
           queue: audioQueue,
           autoPlay: shouldAutoPlay,
-          isLoading,
+          isLoading: isPlaying && isLoading,
           isPlaying,
           isSeeking: false,
           currentTime: currentTime,
