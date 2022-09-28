@@ -37,6 +37,14 @@ const styles = {
     textAlign: 'center',
     zIndex: 1,
   }),
+  fallBack: css({
+    ...fontStyles.serifTitle,
+    fontSize: 800,
+    textAlign: 'center',
+    zIndex: 1,
+    color: '#fff',
+    paddingTop: 185,
+  }),
   formatBg: css({
     position: 'absolute',
     height: '100%',
@@ -74,16 +82,17 @@ const AudioCover = ({
   format,
   previewSize = COVER_PREVIEW_WIDTH,
 }: AudioCoverProps) => {
-  const formatImage =
+  const formatBackgroundImage =
     format?.shareBackgroundImageInverted || format?.shareBackgroundImage
   const formatColor = format?.color || colors[format?.kind]
 
-  if (formatImage) {
+  if (formatBackgroundImage) {
     return (
       <div
-        {...styles.container}
         style={{
-          backgroundImage: `url(${formatImage})`,
+          width: previewSize,
+          height: previewSize,
+          backgroundImage: `url(${formatBackgroundImage})`,
           backgroundSize: 'cover',
         }}
       />
@@ -106,25 +115,28 @@ const AudioCover = ({
       >
         {format?.shareLogo ? (
           <img src={format?.shareLogo} style={{ zIndex: 3 }} alt='' />
+        ) : format?.title ? (
+          <div {...styles.formatTitle} {...css({ color: formatColor })}>
+            {format.title}
+          </div>
         ) : (
-          format?.title && (
-            <div {...styles.formatTitle} {...css({ color: formatColor })}>
-              {format.title}
-            </div>
-          )
+          <span {...styles.fallBack}>R</span>
         )}
+        {formatColor && (
+          <div
+            {...styles.formatBg}
+            style={{
+              backgroundColor: formatColor,
+              opacity: 0.05,
+              zIndex: 1,
+            }}
+          />
+        )}
+
         <div
           {...styles.formatBg}
           style={{
-            backgroundColor: formatColor,
-            opacity: 0.05,
-            zIndex: 1,
-          }}
-        />
-        <div
-          {...styles.formatBg}
-          style={{
-            backgroundColor: '#F5F5F5',
+            backgroundColor: formatColor ? '#F5F5F5' : '#000000',
             zIndex: 0,
           }}
         />
