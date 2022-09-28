@@ -25,6 +25,7 @@ const SKIP_BACKWARD_TIME = 10
 const SAVE_MEDIA_PROGRESS_INTERVAL = 5000 // in ms
 
 export type AudioPlayerProps = {
+  isVisible: boolean
   mediaRef: RefObject<HTMLAudioElement>
   activeItem: AudioQueueItem | null
   queue: AudioQueueItem[]
@@ -450,38 +451,38 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   if (!activePlayerItem) return null
 
   return (
-    <div>
-      {isVisible &&
-        children({
-          mediaRef,
-          activeItem: activePlayerItem,
-          queue: audioQueue,
-          autoPlay: shouldAutoPlay,
-          isLoading: isPlaying && isLoading,
-          isPlaying,
-          isSeeking: false,
-          currentTime: currentTime,
-          duration:
-            duration !== 0
-              ? duration
-              : activePlayerItem.document.meta.audioSource.durationMs / 1000,
-          playbackRate,
-          actions: {
-            onCanPlay,
-            onPlay,
-            onPause,
-            onStop,
-            onSeek,
-            onForward,
-            onBackward,
-            onClose: onStop,
-            onPlaybackRateChange,
-            onEnded: onQueueAdvance,
-            onError,
-          },
-          buffered,
-        })}
-    </div>
+    <>
+      {children({
+        isVisible,
+        mediaRef,
+        activeItem: activePlayerItem,
+        queue: audioQueue,
+        autoPlay: shouldAutoPlay,
+        isLoading: isPlaying && isLoading,
+        isPlaying,
+        isSeeking: false,
+        currentTime: currentTime,
+        duration:
+          duration !== 0
+            ? duration
+            : activePlayerItem.document.meta.audioSource.durationMs / 1000,
+        playbackRate,
+        actions: {
+          onCanPlay,
+          onPlay,
+          onPause,
+          onStop,
+          onSeek,
+          onForward,
+          onBackward,
+          onClose: onStop,
+          onPlaybackRateChange,
+          onEnded: onQueueAdvance,
+          onError,
+        },
+        buffered,
+      })}
+    </>
   )
 }
 

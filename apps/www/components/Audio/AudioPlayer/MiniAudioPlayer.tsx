@@ -14,7 +14,6 @@ import {
   mediaQueries,
 } from '@project-r/styleguide'
 import AudioPlayerTitle from './ui/AudioPlayerTitle'
-import { AudioQueueItem } from '../graphql/AudioQueueHooks'
 
 const styles = {
   root: css({
