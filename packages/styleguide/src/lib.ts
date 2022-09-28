@@ -174,7 +174,7 @@ export {
 export { default as SharePreviewFacebook } from './components/ShareImage/SharePreviewFacebook'
 export { default as SharePreviewTwitter } from './components/ShareImage/SharePreviewTwitter'
 export {
-  default as AudioCover,
+  default as AudioCoverGenerator,
   COVER_IMAGE_WIDTH,
   COVER_IMAGE_HEIGHT,
 } from './components/AudioCoverGenerator'

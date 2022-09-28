@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Set, Map } from 'immutable'
 
-import { Field, Dropdown, AudioCover } from '@project-r/styleguide'
+import { Field, Dropdown } from '@project-r/styleguide'
 
 import {
   MetaSection,
@@ -14,8 +14,6 @@ import {
 import MetaForm from '../../utils/MetaForm'
 import ImageCrop from '../../utils/ImageCrop'
 import withT from '../../../../lib/withT'
-
-import UIForm from '../../UIForm'
 
 // @see GraphQL schema-types enum AudioSourceKind
 const AUDIO_SOURCE_KINDS = [
@@ -52,11 +50,6 @@ export default withT(({ t, editor, node, onInputChange, format }) => {
   const audioSourceData = audioDefaultValues.merge(
     node.data.filter((_, key) => audioSourceKeys.has(key)),
   )
-
-  const labelHeight = 17 + 5
-
-  const width = 300
-  const height = 300
 
   const documentImage = node.data.get('image')
 
@@ -138,19 +131,11 @@ export default withT(({ t, editor, node, onInputChange, format }) => {
       </MetaOptionGroup>
       <MetaOptionGroupTitle>Audio-Cover und Vorschau</MetaOptionGroupTitle>
       <MetaOption>
-        {documentImage ? (
-          <ImageCrop
-            width={width}
-            height={height}
-            maxWidth='none'
-            label={t(`metaData/field/coverImage`)}
-            src={node.data.get('image')}
-            placeholder={node.data.get('image')}
-            onChange={onInputChange('imageAudioCoverCrop')}
-          />
-        ) : (
-          <AudioCover format={format} />
-        )}
+        <ImageCrop
+          src={node.data.get('image')}
+          onChange={onInputChange('imageAudioCoverCrop')}
+          format={format}
+        />
       </MetaOption>
     </MetaSection>
   )
