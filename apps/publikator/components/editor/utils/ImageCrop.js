@@ -66,8 +66,14 @@ const ImageCrop = ({ onChange, src, format, t }) => {
               zoom={zoom}
               onCropChange={setCrop}
               onCropAreaChange={(croppedArea) => {
-                setCroppedArea(croppedArea)
-                onChange(croppedArea)
+                const croppedAreaInt = Object.fromEntries(
+                  Object.entries(croppedArea).map(([k, v], i) => [
+                    k,
+                    Math.floor(v),
+                  ]),
+                )
+                setCroppedArea(croppedAreaInt)
+                onChange(croppedAreaInt)
               }}
             />
             <div
