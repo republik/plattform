@@ -16,16 +16,16 @@ module.exports = (crop) => {
   const height = _height ? Math.ceil(Math.abs(_height)) : null
 
   if (isNaN(x) || (x && typeof x !== 'number')) {
-    throw new Error('invalid width')
+    throw new Error('invalid cropX')
   }
   if (isNaN(y) || (y && typeof y !== 'number')) {
-    throw new Error('invalid width')
+    throw new Error('invalid cropY')
   }
   if (isNaN(width) || (width && typeof width !== 'number')) {
-    throw new Error('invalid width')
+    throw new Error('invalid cropWidth')
   }
   if (isNaN(height) || (height && typeof height !== 'number')) {
-    throw new Error('invalid height')
+    throw new Error('invalid cropHeight')
   }
 
   return {
