@@ -5,7 +5,14 @@ import { AudioQueueItem } from '../../../graphql/AudioQueueHooks'
 import { useEffect, useState } from 'react'
 import throttle from 'lodash/throttle'
 import LoadingPlaceholder from './LoadingPlaceholder'
-import { DndContext, DragEndEvent } from '@dnd-kit/core'
+import {
+  DndContext,
+  DragEndEvent,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import {
   restrictToFirstScrollableAncestor,
@@ -39,6 +46,11 @@ const Queue = ({
   handleOpenArticle,
   handleDownload,
 }: QueueProps) => {
+  const mouseSensor = useSensor(MouseSensor)
+  const touchSensor = useSensor(TouchSensor)
+
+  const sensors = useSensors(mouseSensor, touchSensor)
+
   /**
    * Work with a copy of the inputItems array to allow the mutation inside the
    * handleReorder function to be throttled while still having a smooth reordering in the ui.
@@ -140,6 +152,7 @@ const Queue = ({
         restrictToWindowEdges,
         restrictToFirstScrollableAncestor,
       ]}
+      sensors={sensors}
     >
       <SortableContext
         items={items.map((item) => item.id)}

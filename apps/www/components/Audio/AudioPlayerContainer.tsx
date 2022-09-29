@@ -72,8 +72,6 @@ type AudioPlayerState = {
   currentTime: number
   duration: number
   playRate: number
-  isPlaying: boolean
-  isLoading: boolean
 }
 
 type AudioPlayerContainerProps = {
@@ -145,8 +143,15 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       setCurrentTime(state.currentTime)
     }
     setPlaybackRate(state.playRate)
-    setIsPlaying(state.isPlaying)
-    setIsLoading(state.isLoading)
+    setIsPlaying(
+      [
+        NativeAudioPlayerState.Playing,
+        NativeAudioPlayerState.Buffering,
+      ].includes(state.playerState),
+    )
+    setIsLoading(
+      [NativeAudioPlayerState.Connecting].includes(state.playerState),
+    )
   }
 
   const syncWithMediaElement = () => {
