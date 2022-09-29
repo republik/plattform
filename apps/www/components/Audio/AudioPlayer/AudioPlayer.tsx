@@ -51,6 +51,11 @@ const styles = {
     paddingRight: ['15px', 'max(15px, env(safe-area-inset-right))'],
     paddingBottom: 0,
     width: '100%',
+    [mediaQueries.mUp]: {
+      marginRight: ['15px', 'max(15px, env(safe-area-inset-right))'],
+      marginLeft: ['15px', 'max(15px, env(safe-area-inset-left))'],
+      marginBottom: ['24px', 'max(24px, env(safe-area-inset-bottom))'],
+    },
   }),
 }
 
