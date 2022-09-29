@@ -94,6 +94,7 @@ const ExpandedAudioPlayer = ({
   handleForward,
   handleBackward,
   handlePlaybackRateChange,
+  handleSkipToNext,
   handleOpenArticle,
   bodyLockTargetRef,
 }: ExpandedAudioPlayerProps) => {
@@ -142,6 +143,7 @@ const ExpandedAudioPlayer = ({
         handleForward={handleForward}
         handleBackward={handleBackward}
         handlePlaybackRateChange={handlePlaybackRateChange}
+        handleSkipToNext={handleSkipToNext}
         isPlaying={isPlaying}
         isLoading={isLoading}
         playbackRate={playbackRate}

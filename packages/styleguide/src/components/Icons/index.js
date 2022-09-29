@@ -91,6 +91,7 @@ export {
   MdOutlineDelete as DeleteIcon,
   MdPlaylistAdd as PlaylistAddIcon,
   MdDragHandle as DragHandleIcon,
+  MdSkipNext as SkipNextIcon,
 } from 'react-icons/md'
 
 export {

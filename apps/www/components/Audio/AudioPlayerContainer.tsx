@@ -63,6 +63,7 @@ export type AudioPlayerProps = {
     onPlaybackRateChange: (value: number) => void
     onEnded: () => void
     onError: () => void
+    onSkipToNext: () => void
   }
   buffered: TimeRanges
 }
@@ -525,6 +526,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
           onPlaybackRateChange,
           onEnded: onQueueAdvance,
           onError,
+          onSkipToNext: onQueueAdvance,
         },
         buffered,
       })}

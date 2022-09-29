@@ -160,6 +160,7 @@ const AudioPlayer = ({
                   handleForward={actions.onForward}
                   handleBackward={actions.onBackward}
                   handlePlaybackRateChange={actions.onPlaybackRateChange}
+                  handleSkipToNext={actions.onSkipToNext}
                   handleOpenArticle={handleOpenArticle}
                   bodyLockTargetRef={ref}
                 />
