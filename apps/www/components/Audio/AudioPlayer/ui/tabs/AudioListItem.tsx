@@ -118,7 +118,11 @@ const AudioListItem = ({
   return (
     <div {...styles.root} {...colorScheme.set('backgroundColor', 'overlay')}>
       {beforeActionItem}
-      <div {...styles.buttonFix}>
+      <button
+        {...styles.buttonFix}
+        onClick={() => onClick(item.id)}
+        disabled={isActive}
+      >
         <div {...styles.itemWrapper}>
           <img {...styles.cover} src={cover} />
           <div {...styles.dataWrapper}>
@@ -167,7 +171,7 @@ const AudioListItem = ({
             )}
           </div>
         </div>
-      </div>
+      </button>
       <div {...styles.actions}>
         <CalloutMenu
           contentPaddingMobile={'30px'}
