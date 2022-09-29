@@ -9,10 +9,7 @@ type BackdropProps = {
 }
 
 const styles = {
-  root: css({
-    position: 'fixed',
-    zIndex: 100,
-  }),
+  root: css({}),
   backdrop: css({
     position: 'fixed',
     top: 0,

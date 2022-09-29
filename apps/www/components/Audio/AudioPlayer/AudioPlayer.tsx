@@ -24,6 +24,7 @@ const MARGIN = 15
 const styles = {
   wrapper: css({
     position: 'fixed',
+    zIndex: 100,
     bottom: 0,
     right: 0,
     display: 'flex',
