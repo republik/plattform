@@ -8,7 +8,7 @@ import {
 } from 'react'
 import { usePlaybackRate } from '../../lib/playbackRate'
 import { useAudioContextEvent } from './AudioProvider'
-import { useInNativeApp } from '../../lib/withInNativeApp'
+import { NativeAppHelpers, useInNativeApp } from '../../lib/withInNativeApp'
 import { AudioEvent } from './types/AudioEvent'
 import notifyApp from '../../lib/react-native/NotifyApp'
 import useAudioQueue from './hooks/useAudioQueue'
@@ -23,6 +23,21 @@ const DEFAULT_PLAYBACK_RATE = 1
 const SKIP_FORWARD_TIME = 30
 const SKIP_BACKWARD_TIME = 10
 const SAVE_MEDIA_PROGRESS_INTERVAL = 5000 // in ms
+
+/**
+ * Enum to represent the state of the react-native-track-player lib.
+ * Check here for a reference ot this enum:
+ * https://react-native-track-player.js.org/docs/api/constants/state
+ */
+enum NativeAudioPlayerState {
+  None = 'none',
+  Ready = 'ready',
+  Playing = 'playing',
+  Paused = 'paused',
+  Stopped = 'stopped',
+  Buffering = 'buffering',
+  Connecting = 'connecting',
+}
 
 export type AudioPlayerProps = {
   isVisible: boolean
@@ -53,6 +68,7 @@ export type AudioPlayerProps = {
 }
 
 type AudioPlayerState = {
+  playerState: NativeAudioPlayerState
   currentTime: number
   duration: number
   playRate: number
@@ -116,9 +132,21 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const syncWithNativeApp = (state: AudioPlayerState) => {
     if (!inNativeApp) return
     console.log('syncWithNativeApp', state.currentTime, state)
-    // Sync via postmessage
-    setDuration(state.duration)
-    setCurrentTime(state.currentTime)
+    // Don't update the currentTime & duration
+    // if the native player wasn't yet able to load the media
+
+    // TODO: find out why the track-player sometimes provides currentTime = 0
+    // when state is ready
+    if (
+      ![
+        NativeAudioPlayerState.None,
+        NativeAudioPlayerState.Connecting,
+      ].includes(state.playerState)
+    ) {
+      console.log('updating time', activePlayerItem)
+      setDuration(state.duration)
+      setCurrentTime(state.currentTime)
+    }
     setPlaybackRate(state.playRate)
     setIsPlaying(state.isPlaying)
     setIsLoading(state.isLoading)
@@ -400,11 +428,23 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       (!activePlayerItem ||
         activePlayerItem.document.id !== audioQueue[0].document.id)
     ) {
+      const nextActivePlayerItem = audioQueue[0]
       const alreadyHadActivePlayerItem = !!activePlayerItem
-      setActivePlayerItem(audioQueue[0])
+      setActivePlayerItem(nextActivePlayerItem)
       setShouldAutoPlay(true)
       setHasAutoPlayed(false)
       setIsPlaying(false)
+
+      // Provide the inital duration and progress for the ui
+      // as a fallback until the media was loaded
+      // to prevent the ui from showing 0:00
+
+      const audioSource = nextActivePlayerItem.document?.meta?.audioSource
+      setDuration(audioSource.durationMs / 1000)
+      if (audioSource?.userProgress) {
+        setCurrentTime(audioSource.userProgress.secs)
+      }
+
       if (mediaRef.current && alreadyHadActivePlayerItem) {
         mediaRef.current.load()
       }
