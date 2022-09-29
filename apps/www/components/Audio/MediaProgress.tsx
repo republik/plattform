@@ -19,7 +19,7 @@ type SaveMediaProgress = (
   mediaId: string,
   currentTime: number,
   isPlaying?: boolean,
-) => void
+) => Promise<unknown>
 
 type MediaProgressContextValue = {
   getMediaProgress: GetMediaProgress
@@ -73,9 +73,11 @@ const MediaProgressProvider = ({ children }) => {
         )
         // Fires on pause, on scrub, on end of video.
         if (isTrackingAllowed) {
-          upsertMediaProgress({ variables: { mediaId, secs: currentTime } })
+          return upsertMediaProgress({
+            variables: { mediaId, secs: currentTime },
+          })
         } else {
-          setLocalMediaProgress({ mediaId, currentTime })
+          return setLocalMediaProgress({ mediaId, currentTime })
         }
       }, 300),
     [isTrackingAllowed, upsertMediaProgress, setLocalMediaProgress],
@@ -92,9 +94,11 @@ const MediaProgressProvider = ({ children }) => {
           )
           // Fires every 5 seconds while playing.
           if (isTrackingAllowed) {
-            upsertMediaProgress({ variables: { mediaId, secs: currentTime } })
+            return upsertMediaProgress({
+              variables: { mediaId, secs: currentTime },
+            })
           } else {
-            setLocalMediaProgress({ mediaId, currentTime })
+            return setLocalMediaProgress({ mediaId, currentTime })
           }
         },
         5000,
@@ -107,15 +111,14 @@ const MediaProgressProvider = ({ children }) => {
     mediaId: string,
     currentTime: number,
     isPlaying?: boolean,
-  ) => {
+  ): Promise<unknown> => {
     if (!mediaId) {
-      return
+      return Promise.resolve()
     }
-    // TODO: ensure that only of the two functions are called.
     if (isPlaying) {
-      saveMediaProgressWhilePlaying(mediaId, currentTime)
+      return saveMediaProgressWhilePlaying(mediaId, currentTime)
     } else {
-      saveMediaProgressNotPlaying(mediaId, currentTime)
+      return saveMediaProgressNotPlaying(mediaId, currentTime)
     }
   }
 
