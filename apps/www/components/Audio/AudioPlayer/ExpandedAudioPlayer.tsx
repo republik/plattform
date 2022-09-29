@@ -46,7 +46,7 @@ const styles = {
   queue: css({
     flex: 1,
     minHeight: 0,
-    overflowY: 'scroll',
+    overflowY: 'auto',
     scrollbarWidth: 'thin',
   }),
   tabBorder: css({

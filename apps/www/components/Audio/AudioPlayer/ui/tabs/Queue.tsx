@@ -1,11 +1,17 @@
 import { css } from 'glamor'
-import { MotionConfig, Reorder } from 'framer-motion'
 import QueueItem from './QueueItem'
 import useAudioQueue from '../../../hooks/useAudioQueue'
 import { AudioQueueItem } from '../../../graphql/AudioQueueHooks'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import throttle from 'lodash/throttle'
 import LoadingPlaceholder from './LoadingPlaceholder'
+import { DndContext, DragEndEvent } from '@dnd-kit/core'
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import {
+  restrictToFirstScrollableAncestor,
+  restrictToVerticalAxis,
+  restrictToWindowEdges,
+} from '@dnd-kit/modifiers'
 
 const styles = {
   list: css({
@@ -38,7 +44,6 @@ const Queue = ({
    * handleReorder function to be throttled while still having a smooth reordering in the ui.
    */
   const [items, setItems] = useState<AudioQueueItem[]>(inputItems)
-  const ref = useRef()
   const {
     audioQueueIsLoading,
     moveAudioQueueItem,
@@ -80,7 +85,7 @@ const Queue = ({
       })
     } catch (e) {
       console.error(e)
-      alert(
+      console.log(
         'Could not remove item from playlist\n' + JSON.stringify(item, null, 2),
       )
     }
@@ -104,42 +109,58 @@ const Queue = ({
       })
     } catch (e) {
       console.error(e)
-      alert('Could not reorder playlist')
+      console.log('Could not reorder queue')
     }
   }, 1000)
+
+  const handleDragEnd = ({ active, over }: DragEndEvent) => {
+    const draggedIndex = active.data.current.sortable.index
+    const draggedItem = items[draggedIndex]
+    const overIndex = over?.data.current.sortable.index
+
+    console.log('Moving item', draggedIndex, 'to', overIndex)
+    const nextItems = [...items]
+    nextItems.splice(draggedIndex, 1)
+    nextItems.splice(overIndex, 0, draggedItem)
+    console.log('Updated index', nextItems)
+
+    setItems(nextItems)
+    handleReorder(nextItems)
+  }
 
   if (audioQueueIsLoading) {
     return <LoadingPlaceholder />
   }
 
   return (
-    <MotionConfig transition={{ duration: 0.3 }}>
-      <Reorder.Group
-        as='ol'
-        {...styles.list}
-        axis='y'
-        values={items}
-        onReorder={(reorderedItems) => {
-          setItems(reorderedItems)
-          handleReorder(reorderedItems)
-        }}
-        ref={ref}
+    <DndContext
+      onDragEnd={handleDragEnd}
+      modifiers={[
+        restrictToVerticalAxis,
+        restrictToWindowEdges,
+        restrictToFirstScrollableAncestor,
+      ]}
+    >
+      <SortableContext
+        items={items.map((item) => item.id)}
+        strategy={verticalListSortingStrategy}
       >
-        {items.map((item) => (
-          <QueueItem
-            key={item.id}
-            t={t}
-            item={item}
-            isActive={checkIfActiveItem(item.document.id)}
-            onClick={handleClick}
-            onRemove={handleRemove}
-            onDownload={handleDownload}
-            onOpen={handleOpenArticle}
-            constraintRef={ref}
-          />
-        ))}
-      </Reorder.Group>
-    </MotionConfig>
+        <ol {...styles.list}>
+          {items.map((item) => (
+            <QueueItem
+              key={item.id}
+              t={t}
+              item={item}
+              isActive={checkIfActiveItem(item.document.id)}
+              onClick={handleClick}
+              onRemove={handleRemove}
+              onDownload={handleDownload}
+              onOpen={handleOpenArticle}
+            />
+          ))}
+        </ol>
+      </SortableContext>
+    </DndContext>
   )
 }
 
