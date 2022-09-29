@@ -76,7 +76,7 @@ const AudioPlayer = ({
   const { inNativeApp } = useInNativeApp()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
   const [isExpanded, setIsExpanded] = useState(false)
-  const [ref] = useBodyScrollLock(isExpanded && !isDesktop)
+  const [ref] = useBodyScrollLock(isExpanded && !isDesktop && false)
 
   const { t } = useTranslation()
   const router = useRouter()
