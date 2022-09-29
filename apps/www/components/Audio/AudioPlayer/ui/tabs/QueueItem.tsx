@@ -31,6 +31,9 @@ const styles = {
       cursor: 'grabbing',
     },
   }),
+  dragging: css({
+    zIndex: 110,
+  }),
 }
 
 type QueueItemProps = {
@@ -60,14 +63,16 @@ const QueueItem = ({
     setActivatorNodeRef,
     transform,
     transition,
+    isDragging,
   } = useSortable({ id: item.id })
-
+  console.log('isDragging', isDragging)
   return (
     <li
       key={item.id}
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition }}
       {...styles.root}
+      {...(isDragging ? styles.dragging : {})}
     >
       <AudioListItem
         item={item.document}
@@ -78,6 +83,11 @@ const QueueItem = ({
             ref={setActivatorNodeRef}
             {...styles.dragControl}
             {...styles.buttonFix}
+            {...css({
+              '&:hover, &:active': {
+                ...colorScheme.set('backgroundColor', 'hover'),
+              },
+            })}
             {...colorScheme.set('color', 'disabled')}
             {...attributes}
             {...listeners}
