@@ -48,6 +48,11 @@ const styles = {
     minHeight: 0,
     overflowY: 'auto',
     scrollbarWidth: 'thin',
+    // Hack to ensure scrollbar is within the padding of the overlay
+    marginLeft: ['-15px', 'calc(-1 * max(15px, env(safe-area-inset-left)))'],
+    marginRight: ['-15px', 'calc(-1 * max(15px, env(safe-area-inset-right)))'],
+    paddingLeft: ['15px', 'max(15px, env(safe-area-inset-left))'],
+    paddingRight: ['15px', 'max(15px, env(safe-area-inset-right))'],
   }),
   tabBorder: css({
     flexGrow: 1,
@@ -69,6 +74,7 @@ type ExpandedAudioPlayerProps = {
   handleMinimize: () => void
   handleClose: () => void
   handleOpenArticle: (path: string) => Promise<void>
+  bodyLockTargetRef: React.RefObject<HTMLDivElement>
 } & AudioControlProps &
   Omit<AudioPlayerProps, 'actions'>
 
@@ -89,6 +95,7 @@ const ExpandedAudioPlayer = ({
   handleBackward,
   handlePlaybackRateChange,
   handleOpenArticle,
+  bodyLockTargetRef,
 }: ExpandedAudioPlayerProps) => {
   const [colorScheme] = useColorContext()
   const [activeTab, setActiveTab] = React.useState<'QUEUE' | 'LATEST'>('QUEUE')
@@ -161,7 +168,7 @@ const ExpandedAudioPlayer = ({
             {...colorScheme.set('borderColor', 'divider')}
           />
         </Scroller>
-        <m.div {...styles.queue} layoutScroll>
+        <m.div {...styles.queue} layoutScroll ref={bodyLockTargetRef}>
           {activeTab === 'QUEUE' && (
             <Queue
               t={t}
