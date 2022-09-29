@@ -84,11 +84,6 @@ module.exports = async ({
 
   let cropX, cropY, cropWidth, cropHeight
   if (crop) {
-    if (!size) {
-      return res
-        .status(400)
-        .send('No size provided, crop requires size to function')
-    }
     try {
       ;({ cropX, cropY, cropWidth, cropHeight } = getCropDimensions(crop))
     } catch (e) {
@@ -187,7 +182,7 @@ module.exports = async ({
     ) {
       pipeline = sharp()
 
-      if (crop) {
+      if (crop && size) {
         pipeline.extract({
           left: Math.ceil((cropX / 100) * fileWidth),
           top: Math.ceil((cropY / 100) * fileHeight),
@@ -223,6 +218,7 @@ module.exports = async ({
           quality: 80,
         })
       }
+      // })
     }
 
     if (
