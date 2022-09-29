@@ -51,14 +51,6 @@ export default withT(({ t, editor, node, onInputChange, format }) => {
     node.data.filter((_, key) => audioSourceKeys.has(key)),
   )
 
-  const documentImage = node.data.get('image')
-
-  useEffect(() => {
-    if (documentImage) {
-      onChange('audioSourceCoverImage')(documentImage)
-    }
-  }, [documentImage])
-
   return (
     <MetaSection>
       <MetaSectionTitle>{t('metaData/audio')}</MetaSectionTitle>
@@ -133,7 +125,7 @@ export default withT(({ t, editor, node, onInputChange, format }) => {
       <MetaOption>
         <ImageCrop
           src={node.data.get('image')}
-          onChange={onInputChange('imageAudioCoverCrop')}
+          onChange={(crop) => onChange('imageAudioCoverCrop')({ ...crop })}
           format={format}
         />
       </MetaOption>
