@@ -7,13 +7,20 @@ import { AudioCoverGenerator, Slider } from '@project-r/styleguide'
 const PADDING = 15
 const SLIDER_HEIGHT = 52
 
-const ImageCrop = ({ onChange, src, format, t }) => {
-  const [crop, setCrop] = useState({ x: 0, y: 0 })
-  const [zoom, setZoom] = useState(1)
+const ImageCrop = ({ onChange, src, format, crop: defaultCrop, t }) => {
+  const [crop, setCrop] = useState(
+    defaultCrop ? { x: defaultCrop.x, y: defaultCrop.y } : { x: 0, y: 0 },
+  )
+  const [zoom, setZoom] = useState(
+    defaultCrop
+      ? Math.round(
+          (100 / Math.max(defaultCrop.width, defaultCrop.height)) * 10,
+        ) / 10
+      : 1,
+  )
   const [croppedArea, setCroppedArea] = useState(null)
   const [containerWidth, setContainerWidth] = useState(0)
   const containerRef = useRef()
-
   useEffect(() => {
     if (!containerRef.current) {
       return

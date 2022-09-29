@@ -125,7 +125,8 @@ export default withT(({ t, editor, node, onInputChange, format }) => {
       <MetaOption>
         <ImageCrop
           src={node.data.get('image')}
-          onChange={(crop) => onChange('audioCoverCrop')({ ...crop })}
+          crop={node.data.get('audioCoverCrop')}
+          onChange={(crop) => onChange('audioCoverCrop')(crop)}
           format={format}
         />
       </MetaOption>
