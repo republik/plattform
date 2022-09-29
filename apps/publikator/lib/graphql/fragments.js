@@ -35,7 +35,7 @@ export const CommitWithDocument = gql`
         template
         kind
         color
-        imageAudioCoverCrop {
+        audioCoverCrop {
           x
           y
           width

@@ -73,7 +73,7 @@ type Meta {
   slug: String
   path: String
   image: String
-  imageAudioCoverCrop: Crop
+  audioCoverCrop: Crop
   emailSubject: String
   description: String
   subject: String @deprecated(reason: "parse \`Document.content\` instead")
