@@ -1,4 +1,3 @@
-import { css } from 'glamor'
 import { useState, useEffect, useRef } from 'react'
 import withT from '../../../lib/withT'
 import Cropper from 'react-easy-crop'
@@ -7,14 +6,14 @@ import { AudioCoverGenerator, Slider } from '@project-r/styleguide'
 const PADDING = 15
 const SLIDER_HEIGHT = 52
 
-const ImageCrop = ({ onChange, src, format, crop: defaultCrop, t }) => {
+const ImageCrop = ({ onChange, src, format, crop: initialCrop, t }) => {
   const [crop, setCrop] = useState(
-    defaultCrop ? { x: defaultCrop.x, y: defaultCrop.y } : { x: 0, y: 0 },
+    initialCrop ? { x: initialCrop.x, y: initialCrop.y } : { x: 0, y: 0 },
   )
   const [zoom, setZoom] = useState(
-    defaultCrop
+    initialCrop
       ? Math.round(
-          (100 / Math.max(defaultCrop.width, defaultCrop.height)) * 10,
+          (100 / Math.max(initialCrop.width, initialCrop.height)) * 10,
         ) / 10
       : 1,
   )
