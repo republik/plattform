@@ -6,6 +6,9 @@ const styles = {
   text: css({
     ...fontStyles.sansSerifRegular16,
     lineHeight: '22px',
+    '&:last-child': {
+      marginBottom: 0,
+    },
   }),
   iconWrapper: css({
     marginLeft: 24,
@@ -17,7 +20,7 @@ const EmptyQueue = ({ t }: { t: any }) => {
     <>
       <p {...styles.text}>{t('AudioPlayer/Queue/EmptyQueue/p1')}</p>
       <div {...styles.iconWrapper}>
-        <PlaylistAddIcon size={43} />
+        <PlaylistAddIcon size={36} />
       </div>
       <p {...styles.text}>{t('AudioPlayer/Queue/EmptyQueue/p2')}</p>
       <p {...styles.text}>{t('AudioPlayer/Queue/EmptyQueue/p3')}</p>
