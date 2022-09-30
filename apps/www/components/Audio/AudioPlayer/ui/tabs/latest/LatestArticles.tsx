@@ -17,8 +17,10 @@ import FilterButton from './FilterButton'
 import { useMe } from '../../../../../../lib/context/MeContext'
 
 const styles = {
+  root: css({
+    paddingTop: 12,
+  }),
   filters: css({
-    marginTop: 12,
     display: 'flex',
     gap: 16,
   }),
@@ -117,7 +119,7 @@ const LatestArticlesTab = ({
   }
 
   return (
-    <div>
+    <div {...styles.root}>
       {hasReadAloudDocuments && (
         <div {...styles.filters}>
           <FilterButton
