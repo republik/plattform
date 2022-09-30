@@ -12,9 +12,9 @@ import {
   FALLBACK_IMG_SRC,
   formatMinutes,
   renderTime,
-} from '../../shared'
-import AudioPlayerTitle from '../AudioPlayerTitle'
-import { AudioQueueItem } from '../../../graphql/AudioQueueHooks'
+} from '../../../shared'
+import AudioPlayerTitle from '../../AudioPlayerTitle'
+import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
 import { imageResizeUrl } from 'mdast-react-render/lib/utils'
 import { ComponentType, ReactNode, Ref } from 'react'
 

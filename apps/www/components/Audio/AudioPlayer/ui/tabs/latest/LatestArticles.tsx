@@ -1,36 +1,24 @@
-import { ReactNode, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { css } from 'glamor'
 import {
   IconButton,
   PlaylistAddIcon,
   DownloadIcon,
   LinkIcon,
-  fontStyles,
-  useColorContext,
 } from '@project-r/styleguide'
-import AudioListItem from './AudioListItem'
-import useAudioQueue from '../../../hooks/useAudioQueue'
-import { useLatestArticlesQuery } from '../../../graphql/LatestArticlesHook'
-import { useTranslation } from '../../../../../lib/withT'
-import { AudioQueueItem } from '../../../graphql/AudioQueueHooks'
-import LoadingPlaceholder from './LoadingPlaceholder'
+import AudioListItem from '../shared/AudioListItem'
+import useAudioQueue from '../../../../hooks/useAudioQueue'
+import { useLatestArticlesQuery } from '../../../../graphql/LatestArticlesHook'
+import { useTranslation } from '../../../../../../lib/withT'
+import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
+import LoadingPlaceholder from '../shared/LoadingPlaceholder'
+import FilterButton from './FilterButton'
 
 const styles = {
-  filterButton: css({
-    border: 'none',
-    padding: 0,
-    font: 'inherit',
-    outline: 'inherit',
-    textAlign: 'start',
-    backgroundColor: 'transparent',
-    cursor: 'pointer',
-    ...fontStyles.sansSerifBold,
-    fontWeight: 'bold',
-  }),
   filters: css({
     marginTop: 12,
     display: 'flex',
-    gap: 8,
+    gap: 16,
   }),
   list: css({
     listStyle: 'none',
@@ -41,25 +29,6 @@ const styles = {
     marginTop: 12,
     marginBottom: 24,
   }),
-}
-
-type FilterButtonProps = {
-  children?: ReactNode
-  isActive?: boolean
-  onClick: () => void
-}
-
-const FilterButton = ({ children, onClick, isActive }: FilterButtonProps) => {
-  const [colorScheme] = useColorContext()
-  return (
-    <button
-      onClick={() => onClick()}
-      {...styles.filterButton}
-      {...colorScheme.set('color', isActive ? 'text' : 'disabled')}
-    >
-      {children}
-    </button>
-  )
 }
 
 type LatestArticlesProps = {

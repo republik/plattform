@@ -11,9 +11,9 @@ import {
 import { m } from 'framer-motion'
 import { AudioPlayerProps } from './shared'
 import CurrentlyPlaying from './ui/CurrentlyPlaying'
-import Queue from './ui/tabs/Queue'
+import Queue from './ui/tabs/queue/Queue'
 import AudioControl, { AudioControlProps } from './controls/AudioControl'
-import LatestArticles from './ui/tabs/LatestArticles'
+import LatestArticles from './ui/tabs/latest/LatestArticles'
 import { AudioQueueItem } from '../graphql/AudioQueueHooks'
 import { downloadFileFromUrl } from '../../../lib/helpers/FileDownloadHelper'
 

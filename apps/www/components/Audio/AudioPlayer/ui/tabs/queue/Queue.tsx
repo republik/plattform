@@ -1,10 +1,10 @@
 import { css } from 'glamor'
 import QueueItem from './QueueItem'
-import useAudioQueue from '../../../hooks/useAudioQueue'
-import { AudioQueueItem } from '../../../graphql/AudioQueueHooks'
+import useAudioQueue from '../../../../hooks/useAudioQueue'
+import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
 import { useEffect, useState } from 'react'
 import throttle from 'lodash/throttle'
-import LoadingPlaceholder from './LoadingPlaceholder'
+import LoadingPlaceholder from '../shared/LoadingPlaceholder'
 import {
   DndContext,
   DragEndEvent,

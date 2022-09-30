@@ -6,8 +6,8 @@ import {
   useColorContext,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
-import { AudioQueueItem } from '../../../graphql/AudioQueueHooks'
-import AudioListItem from './AudioListItem'
+import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
+import AudioListItem from '../shared/AudioListItem'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
