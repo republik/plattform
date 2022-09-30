@@ -5133,6 +5133,10 @@
       "value": "Alle"
     },
     {
+      "key": "AudioPlayer/Latest/NoAcces",
+      "value": "Die neusten Beiträge sind für Mitglieder und Abonnentinnen der Republik zugänglich."
+    },
+    {
       "key": "AudioPlayer/Queue",
       "value": "Wiedergabeliste {count}"
     },
@@ -5159,6 +5163,26 @@
     {
       "key": "AudioPlayer/Queue/GoToItem",
       "value": "Zum Beitrag"
+    },
+    {
+      "key": "AudioPlayer/Queue/EmptyQueue/p1",
+      "value": "Sie haben noch keine Beiträge in ihrer Wiedergabeliste."
+    },
+    {
+      "key": "AudioPlayer/Queue/EmptyQueue/p2",
+      "value": "Mit einem Klick auf das Widergabelisten-Symbol, können Sie Beiträge in ihre Widergabeliste hinzufügen."
+    },
+    {
+      "key": "AudioPlayer/Queue/EmptyQueue/p3",
+      "value": "Sie finden das Symbol auf Beitragsseiten, im Feed oder hier im Audio-Player bei «Neuste Beiträge»"
+    },
+    {
+      "key": "AudioPlayer/Queue/NoAcces",
+      "value": "Die Wiedergabeliste ist nur für Mitglieder und Abonnentinnen der Republik zugänglich."
+    },
+    {
+      "key": "AudioPlayer/shared/NoAccess/heading",
+      "value": "Einloggen und Weiterhören"
     },
     {
       "key": "Auth/CodeAuthorization/title",

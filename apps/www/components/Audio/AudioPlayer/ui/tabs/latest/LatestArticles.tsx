@@ -7,12 +7,14 @@ import {
   LinkIcon,
 } from '@project-r/styleguide'
 import AudioListItem from '../shared/AudioListItem'
+import NoAccess from '../shared/NoAccess'
 import useAudioQueue from '../../../../hooks/useAudioQueue'
 import { useLatestArticlesQuery } from '../../../../graphql/LatestArticlesHook'
 import { useTranslation } from '../../../../../../lib/withT'
 import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
 import LoadingPlaceholder from '../shared/LoadingPlaceholder'
 import FilterButton from './FilterButton'
+import { useMe } from '../../../../../../lib/context/MeContext'
 
 const styles = {
   filters: css({
@@ -42,6 +44,7 @@ const LatestArticlesTab = ({
 }: LatestArticlesProps) => {
   const [filter, setFilter] = useState<'all' | 'read-aloud'>('all')
   const { t } = useTranslation()
+  const { hasAccess } = useMe()
   const { data, loading, error } = useLatestArticlesQuery({
     variables: {
       count: 20,
@@ -95,6 +98,15 @@ const LatestArticlesTab = ({
       return article?.meta?.audioSource?.kind === 'readAloud'
     })
   }, [data, filter])
+
+  if (!hasAccess) {
+    return (
+      <NoAccess
+        text={t('AudioPlayer/Latest/NoAcces')}
+        heading={t('AudioPlayer/shared/NoAccess/heading')}
+      />
+    )
+  }
 
   if (loading) {
     return <LoadingPlaceholder />

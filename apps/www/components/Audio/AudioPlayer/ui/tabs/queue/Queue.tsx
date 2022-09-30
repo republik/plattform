@@ -1,5 +1,7 @@
 import { css } from 'glamor'
 import QueueItem from './QueueItem'
+import EmptyQueue from './EmptyQueue'
+import NoAccess from '../shared/NoAccess'
 import useAudioQueue from '../../../../hooks/useAudioQueue'
 import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
 import { useEffect, useState } from 'react'
@@ -19,6 +21,7 @@ import {
   restrictToVerticalAxis,
   restrictToWindowEdges,
 } from '@dnd-kit/modifiers'
+import { useMe } from '../../../../../../lib/context/MeContext'
 
 const styles = {
   list: css({
@@ -50,6 +53,7 @@ const Queue = ({
   const touchSensor = useSensor(TouchSensor)
 
   const sensors = useSensors(mouseSensor, touchSensor)
+  const { hasAccess } = useMe()
 
   /**
    * Work with a copy of the inputItems array to allow the mutation inside the
@@ -140,8 +144,21 @@ const Queue = ({
     handleReorder(nextItems)
   }
 
+  if (!hasAccess) {
+    return (
+      <NoAccess
+        text={t('AudioPlayer/Queue/NoAcces')}
+        heading={t('AudioPlayer/shared/NoAccess/heading')}
+      />
+    )
+  }
+
   if (audioQueueIsLoading) {
     return <LoadingPlaceholder />
+  }
+
+  if (!items || items.length === 0) {
+    return <EmptyQueue t={t} />
   }
 
   return (
