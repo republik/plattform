@@ -5121,6 +5121,18 @@
       "value": "Interne Publikation (Editoren-Vorschau)"
     },
     {
+      "key": "AudioPlayer/Latest",
+      "value": "Neueste Beiträge"
+    },
+    {
+      "key": "AudioPlayer/Latest/ReadAloud",
+      "value": "Vorgelesen"
+    },
+    {
+      "key": "AudioPlayer/Latest/All",
+      "value": "Alle"
+    },
+    {
       "key": "AudioPlayer/Queue",
       "value": "Wiedergabeliste {count}"
     },

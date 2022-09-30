@@ -6,6 +6,7 @@ import {
   ForwardIcon,
   PlayIcon,
   PauseIcon,
+  SkipNextIcon,
   Spinner,
 } from '@project-r/styleguide'
 import { useTranslation } from '../../../../lib/withT'
@@ -47,6 +48,7 @@ export type AudioControlProps = {
   handleSeek: (progress: number) => void
   handleForward: () => void
   handleBackward: () => void
+  handleSkipToNext: () => void
   handlePlaybackRateChange: (value: number) => void
 } & Pick<
   AudioPlayerProps,
@@ -64,6 +66,7 @@ const AudioControl = ({
   handleForward,
   handleBackward,
   handlePlaybackRateChange,
+  handleSkipToNext,
   isPlaying,
   isLoading,
   playbackRate,
@@ -116,6 +119,13 @@ const AudioControl = ({
             fillColorName={'text'}
             onClick={handleForward}
             Icon={ForwardIcon}
+            style={{ marginRight: 0 }}
+          />
+          <IconButton
+            size={32}
+            fillColorName={'text'}
+            onClick={handleSkipToNext}
+            Icon={SkipNextIcon}
             style={{ marginRight: 0 }}
           />
         </div>

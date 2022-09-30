@@ -63,6 +63,7 @@ export type AudioPlayerProps = {
     onPlaybackRateChange: (value: number) => void
     onEnded: () => void
     onError: () => void
+    onSkipToNext: () => void
   }
   buffered: TimeRanges
 }
@@ -72,8 +73,8 @@ type AudioPlayerState = {
   currentTime: number
   duration: number
   playRate: number
-  isPlaying: boolean
-  isLoading: boolean
+  isPlaying?: boolean
+  isLoading?: boolean
 }
 
 type AudioPlayerContainerProps = {
@@ -131,10 +132,8 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
 
   const syncWithNativeApp = (state: AudioPlayerState) => {
     if (!inNativeApp) return
-    console.log('syncWithNativeApp', state.currentTime, state)
     // Don't update the currentTime & duration
     // if the native player wasn't yet able to load the media
-
     // TODO: find out why the track-player sometimes provides currentTime = 0
     // when state is ready
     if (
@@ -143,13 +142,21 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
         NativeAudioPlayerState.Connecting,
       ].includes(state.playerState)
     ) {
-      console.log('updating time', activePlayerItem)
       setDuration(state.duration)
       setCurrentTime(state.currentTime)
     }
     setPlaybackRate(state.playRate)
-    setIsPlaying(state.isPlaying)
-    setIsLoading(state.isLoading)
+    setIsPlaying(
+      state?.isPlaying ||
+        [
+          NativeAudioPlayerState.Playing,
+          NativeAudioPlayerState.Buffering,
+        ].includes(state.playerState),
+    )
+    setIsLoading(
+      state?.isLoading ||
+        [NativeAudioPlayerState.Connecting].includes(state.playerState),
+    )
   }
 
   const syncWithMediaElement = () => {
@@ -519,6 +526,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
           onPlaybackRateChange,
           onEnded: onQueueAdvance,
           onError,
+          onSkipToNext: onQueueAdvance,
         },
         buffered,
       })}

@@ -109,7 +109,7 @@ export const postMessage = !inNativeAppBrowser
         typeof msg === 'string' ? msg : JSON.stringify(msg),
         '*',
       )
-  : window.ReactNativeWebView
+  : window.ReactNativeWebView && window.ReactNativeWebView.postMessage
   ? (msg) =>
       window.ReactNativeWebView.postMessage(
         typeof msg === 'string' ? msg : JSON.stringify(msg),

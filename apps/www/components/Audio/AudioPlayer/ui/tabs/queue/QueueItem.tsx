@@ -1,4 +1,3 @@
-import { RefObject } from 'react'
 import {
   RemoveCircleIcon,
   DragHandleIcon,
@@ -6,12 +5,16 @@ import {
   DownloadIcon,
   useColorContext,
 } from '@project-r/styleguide'
-import { Reorder, useDragControls, useMotionValue } from 'framer-motion'
 import { css } from 'glamor'
-import { AudioQueueItem } from '../../../graphql/AudioQueueHooks'
-import AudioListItem from './AudioListItem'
+import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
+import AudioListItem from '../shared/AudioListItem'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 
 const styles = {
+  root: css({
+    listStyle: 'none',
+  }),
   buttonFix: css({
     border: 'none',
     padding: 0,
@@ -27,6 +30,10 @@ const styles = {
     '&:hover': {
       cursor: 'grabbing',
     },
+    alignSelf: 'stretch',
+  }),
+  dragging: css({
+    zIndex: 110,
   }),
 }
 
@@ -38,7 +45,6 @@ type QueueItemProps = {
   onRemove: (item: AudioQueueItem) => Promise<void>
   onDownload: (item: AudioQueueItem['document']) => Promise<void>
   onOpen: (path: string) => Promise<void>
-  constraintRef?: RefObject<any>
 }
 
 const QueueItem = ({
@@ -49,21 +55,25 @@ const QueueItem = ({
   onRemove,
   onDownload,
   onOpen,
-  constraintRef,
 }: QueueItemProps) => {
-  const controls = useDragControls()
-  const y = useMotionValue(0)
   const [colorScheme] = useColorContext()
-
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    setActivatorNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: item.id })
+  console.log('isDragging', isDragging)
   return (
-    <Reorder.Item
+    <li
       key={item.id}
-      value={item}
-      dragControls={controls}
-      dragConstraints={constraintRef}
-      dragElastic={0.1}
-      dragListener={false}
-      style={{ y, x: 0 }}
+      ref={setNodeRef}
+      style={{ transform: CSS.Transform.toString(transform), transition }}
+      {...styles.root}
+      {...(isDragging ? styles.dragging : {})}
     >
       <AudioListItem
         item={item.document}
@@ -71,11 +81,17 @@ const QueueItem = ({
         onClick={() => onClick(item)}
         beforeActionItem={
           <button
+            ref={setActivatorNodeRef}
             {...styles.dragControl}
             {...styles.buttonFix}
+            {...css({
+              '&:hover, &:active': {
+                ...colorScheme.set('backgroundColor', 'hover'),
+              },
+            })}
             {...colorScheme.set('color', 'disabled')}
-            onPointerDown={(e) => controls.start(e)}
-            onTouchStart={(e) => controls.start(e)}
+            {...attributes}
+            {...listeners}
           >
             <DragHandleIcon size={24} />
           </button>
@@ -98,7 +114,7 @@ const QueueItem = ({
           },
         ]}
       />
-    </Reorder.Item>
+    </li>
   )
 }
 

@@ -11,9 +11,9 @@ import {
 import { m } from 'framer-motion'
 import { AudioPlayerProps } from './shared'
 import CurrentlyPlaying from './ui/CurrentlyPlaying'
-import Queue from './ui/tabs/Queue'
+import Queue from './ui/tabs/queue/Queue'
 import AudioControl, { AudioControlProps } from './controls/AudioControl'
-import LatestArticles from './ui/tabs/LatestArticles'
+import LatestArticles from './ui/tabs/latest/LatestArticles'
 import { AudioQueueItem } from '../graphql/AudioQueueHooks'
 import { downloadFileFromUrl } from '../../../lib/helpers/FileDownloadHelper'
 
@@ -46,8 +46,13 @@ const styles = {
   queue: css({
     flex: 1,
     minHeight: 0,
-    overflowY: 'scroll',
+    overflowY: 'auto',
     scrollbarWidth: 'thin',
+    // Hack to ensure scrollbar is within the padding of the overlay
+    marginLeft: ['-15px', 'calc(-1 * max(15px, env(safe-area-inset-left)))'],
+    marginRight: ['-15px', 'calc(-1 * max(15px, env(safe-area-inset-right)))'],
+    paddingLeft: ['15px', 'max(15px, env(safe-area-inset-left))'],
+    paddingRight: ['15px', 'max(15px, env(safe-area-inset-right))'],
   }),
   tabBorder: css({
     flexGrow: 1,
@@ -69,6 +74,7 @@ type ExpandedAudioPlayerProps = {
   handleMinimize: () => void
   handleClose: () => void
   handleOpenArticle: (path: string) => Promise<void>
+  bodyLockTargetRef: React.RefObject<HTMLDivElement>
 } & AudioControlProps &
   Omit<AudioPlayerProps, 'actions'>
 
@@ -88,7 +94,9 @@ const ExpandedAudioPlayer = ({
   handleForward,
   handleBackward,
   handlePlaybackRateChange,
+  handleSkipToNext,
   handleOpenArticle,
+  bodyLockTargetRef,
 }: ExpandedAudioPlayerProps) => {
   const [colorScheme] = useColorContext()
   const [activeTab, setActiveTab] = React.useState<'QUEUE' | 'LATEST'>('QUEUE')
@@ -135,6 +143,7 @@ const ExpandedAudioPlayer = ({
         handleForward={handleForward}
         handleBackward={handleBackward}
         handlePlaybackRateChange={handlePlaybackRateChange}
+        handleSkipToNext={handleSkipToNext}
         isPlaying={isPlaying}
         isLoading={isLoading}
         playbackRate={playbackRate}
@@ -152,7 +161,7 @@ const ExpandedAudioPlayer = ({
             onClick={() => setActiveTab('QUEUE')}
           />
           <TabButton
-            text='Neuste Beiträge'
+            text={t('AudioPlayer/Latest')}
             isActive={activeTab === 'LATEST'}
             onClick={() => setActiveTab('LATEST')}
           />
@@ -161,7 +170,7 @@ const ExpandedAudioPlayer = ({
             {...colorScheme.set('borderColor', 'divider')}
           />
         </Scroller>
-        <m.div {...styles.queue} layoutScroll>
+        <m.div {...styles.queue} layoutScroll ref={bodyLockTargetRef}>
           {activeTab === 'QUEUE' && (
             <Queue
               t={t}
