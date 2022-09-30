@@ -8,6 +8,7 @@ import {
   PauseIcon,
   SkipNextIcon,
   Spinner,
+  mediaQueries,
 } from '@project-r/styleguide'
 import { useTranslation } from '../../../../lib/withT'
 import { AudioPlayerProps } from '../shared'
@@ -32,6 +33,9 @@ const styles = {
     justifyContent: 'space-center',
     alignItems: 'center',
     gap: 16,
+    [mediaQueries.sDown]: {
+      gap: 8,
+    },
   }),
   spinner: css({
     position: 'relative',
@@ -40,6 +44,10 @@ const styles = {
     alignItems: 'center',
     width: 64,
     height: 64,
+    [mediaQueries.sDown]: {
+      width: 48,
+      height: 48,
+    },
   }),
 }
 
