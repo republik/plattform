@@ -1,7 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
 import Scrubber from './controls/Scrubber'
-import { AudioPlayerProps } from './shared'
+import { AudioPlayerProps, FALLBACK_IMG_SRC } from './shared'
 import Time from './ui/Time'
 import {
   IconButton,
@@ -14,6 +14,7 @@ import {
   mediaQueries,
 } from '@project-r/styleguide'
 import AudioPlayerTitle from './ui/AudioPlayerTitle'
+import { imageResizeUrl } from 'mdast-react-render/lib/utils'
 
 const styles = {
   root: css({
@@ -22,32 +23,35 @@ const styles = {
     justifyContent: 'space-between',
     width: '100%',
     height: 68,
-    marginBottom: 8,
     [mediaQueries.mUp]: {
       marginBottom: 0,
     },
   }),
-  scrubberWrapper: css({}),
+  cover: css({
+    aspectRatio: '1 / 1',
+    objectFit: 'cover',
+    width: 40,
+    height: 'auto',
+  }),
   playerWrapper: css({
-    flexGrow: 1,
+    flex: 1,
     display: 'flex',
-    flexDirection: 'row',
     justifyContent: 'flex-start',
+    gap: 8,
     alignItems: 'center',
-    padding: '0 10px 0 4px',
+    padding: '0 16px 0 8px',
   }),
   metaDataWrapper: css({
     display: 'flex',
+    flex: 1,
     flexDirection: 'column',
-    flexGrow: 1,
-    marginLeft: 16,
   }),
   buttonWrapper: css({
     display: 'flex',
     flexDirection: 'row',
-    marginLeft: 4,
+    margin: 0,
     '& > *:not(:last-child)': {
-      marginRight: 4,
+      marginRight: 6,
     },
   }),
   spinnerWrapper: css({
@@ -56,7 +60,7 @@ const styles = {
     height: 42,
   }),
   title: css({
-    ...fontStyles.sansSerifRegular15,
+    ...fontStyles.sansSerifRegular14,
     textDecoration: 'none',
     '&[href]:hover': {
       textDecoration: 'underline',
@@ -90,9 +94,11 @@ const MiniAudioPlayer = ({
 }: MiniAudioPlayerProps) => {
   const {
     document: {
-      meta: { title, path },
+      meta: { title, path, image },
     },
   } = activeItem
+  const cover = imageResizeUrl(image, '250x') || FALLBACK_IMG_SRC
+
   return (
     <div {...styles.root}>
       <div {...styles.playerWrapper}>
@@ -111,8 +117,10 @@ const MiniAudioPlayer = ({
             style={{ marginRight: 0 }}
           />
         )}
+        <img {...styles.cover} src={cover} />
         <div {...styles.metaDataWrapper}>
           <AudioPlayerTitle
+            lineClamp={1}
             title={title}
             onClick={() => handleOpenArticle(path)}
           />
@@ -138,7 +146,7 @@ const MiniAudioPlayer = ({
           />
         </div>
       </div>
-      <div {...styles.scrubberWrapper}>
+      <div>
         <Scrubber
           currentTime={currentTime}
           duration={duration}
