@@ -92,7 +92,6 @@ const AudioControl = ({
         buffered={buffered}
         disabled={isLoading}
         onSeek={handleSeek}
-        playbackRate={playbackRate}
         showScrubber
         showTime
       />

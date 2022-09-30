@@ -75,7 +75,7 @@ type MiniAudioPlayerProps = {
   handleSeek: (progress: number) => void
   handleClose: () => void
   handleOpenArticle: (path: string) => Promise<void>
-} & Omit<AudioPlayerProps, 'actions' | 'queuedItems'>
+} & Omit<AudioPlayerProps, 'actions' | 'queuedItems' | 'playbackRate'>
 
 const MiniAudioPlayer = ({
   t,
@@ -85,7 +85,6 @@ const MiniAudioPlayer = ({
   currentTime = 0,
   duration = 0,
   buffered,
-  playbackRate,
   handleExpand,
   handleToggle,
   handleSeek,
@@ -124,10 +123,7 @@ const MiniAudioPlayer = ({
             title={title}
             onClick={() => handleOpenArticle(path)}
           />
-          <Time
-            currentTime={currentTime / playbackRate}
-            duration={duration / playbackRate}
-          />
+          <Time currentTime={currentTime} duration={duration} />
         </div>
         <div {...styles.buttonWrapper}>
           <IconButton
