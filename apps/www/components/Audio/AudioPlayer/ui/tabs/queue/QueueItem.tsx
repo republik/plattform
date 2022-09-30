@@ -30,6 +30,7 @@ const styles = {
     '&:hover': {
       cursor: 'grabbing',
     },
+    alignSelf: 'stretch',
   }),
   dragging: css({
     zIndex: 110,
