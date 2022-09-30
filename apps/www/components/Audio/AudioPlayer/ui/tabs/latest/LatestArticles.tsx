@@ -50,6 +50,14 @@ const LatestArticlesTab = ({
   const { addAudioQueueItem, checkIfInQueue, checkIfActiveItem } =
     useAudioQueue()
 
+  const hasReadAloudDocuments =
+    data?.latestArticles?.nodes.some(
+      (node) => node?.meta?.audioSource?.kind === 'readAloud',
+    ) || false
+  if (hasReadAloudDocuments && filter !== 'all') {
+    setFilter('all')
+  }
+
   const handlePlay = async (documentId: string) => {
     await addAudioQueueItem({
       variables: {
@@ -98,20 +106,22 @@ const LatestArticlesTab = ({
 
   return (
     <div>
-      <div {...styles.filters}>
-        <FilterButton
-          isActive={filter === 'read-aloud'}
-          onClick={() => setFilter('read-aloud')}
-        >
-          Vorgelesen
-        </FilterButton>
-        <FilterButton
-          isActive={filter === 'all'}
-          onClick={() => setFilter('all')}
-        >
-          Alle
-        </FilterButton>
-      </div>
+      {hasReadAloudDocuments && (
+        <div {...styles.filters}>
+          <FilterButton
+            isActive={filter === 'read-aloud'}
+            onClick={() => setFilter('read-aloud')}
+          >
+            {t('AudioPlayer/Latest/ReadAloud')}
+          </FilterButton>
+          <FilterButton
+            isActive={filter === 'all'}
+            onClick={() => setFilter('all')}
+          >
+            {t('AudioPlayer/Latest/All')}
+          </FilterButton>
+        </div>
+      )}
       <ul {...styles.list}>
         {filteredArticles.map((article) => (
           <li key={article.id}>

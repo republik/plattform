@@ -161,7 +161,7 @@ const ExpandedAudioPlayer = ({
             onClick={() => setActiveTab('QUEUE')}
           />
           <TabButton
-            text='Neuste Beiträge'
+            text={t('AudioPlayer/Latest')}
             isActive={activeTab === 'LATEST'}
             onClick={() => setActiveTab('LATEST')}
           />
