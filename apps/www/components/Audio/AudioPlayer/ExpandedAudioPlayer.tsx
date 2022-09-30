@@ -8,7 +8,7 @@ import {
   TabButton,
   useColorContext,
 } from '@project-r/styleguide'
-import { m } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { AudioPlayerProps } from './shared'
 import CurrentlyPlaying from './ui/CurrentlyPlaying'
 import Queue from './ui/tabs/queue/Queue'
@@ -53,6 +53,10 @@ const styles = {
     marginRight: ['-15px', 'calc(-1 * max(15px, env(safe-area-inset-right)))'],
     paddingLeft: ['15px', 'max(15px, env(safe-area-inset-left))'],
     paddingRight: ['15px', 'max(15px, env(safe-area-inset-right))'],
+    [mediaQueries.mUp]: {
+      minHeight: 282,
+      maxHeight: 282,
+    },
   }),
   tabBorder: css({
     flexGrow: 1,
@@ -170,7 +174,7 @@ const ExpandedAudioPlayer = ({
             {...colorScheme.set('borderColor', 'divider')}
           />
         </Scroller>
-        <m.div {...styles.queue} layoutScroll ref={bodyLockTargetRef}>
+        <motion.div {...styles.queue} ref={bodyLockTargetRef} layoutScroll>
           {activeTab === 'QUEUE' && (
             <Queue
               t={t}
@@ -186,7 +190,7 @@ const ExpandedAudioPlayer = ({
               handleDownload={handleDownload}
             />
           )}
-        </m.div>
+        </motion.div>
       </div>
     </div>
   )
