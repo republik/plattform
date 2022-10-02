@@ -39,7 +39,13 @@ function defaultFind<Value extends ValueConstraint>(
   if (typeof key === 'object') {
     const keyFields = Object.keys(key)
     const matchRow = (row: Value) =>
-      keyFields.every((keyField) => row[keyField] === key[keyField])
+      keyFields.every((keyField) => {
+        if (Array.isArray(key[keyField])) {
+          return key[keyField].includes(row[keyField])
+        }
+
+        return row[keyField] === key[keyField]
+      })
     if (many) {
       return rows.filter(matchRow)
     }
