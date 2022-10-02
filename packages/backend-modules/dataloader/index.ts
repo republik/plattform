@@ -1,6 +1,6 @@
 import DataLoader from 'dataloader'
 
-interface StringObject {
+export interface StringObject {
   [key: string]: string
 }
 
@@ -53,7 +53,10 @@ type FindFunction<Key, Value> = (
   options?: { many?: boolean },
 ) => Value | Value[] | undefined
 
-export = function createDataLoader<Key extends KeyConstraint, Value>(
+export default module.exports = function createDataLoader<
+  Key extends KeyConstraint,
+  Value,
+>(
   loader: (keys: readonly Key[]) => Promise<Value[]>,
   options?: CreateDataLoaderOptions<Key, Value> | null,
   find: FindFunction<Key, Value> = defaultFind,
