@@ -8,6 +8,7 @@ import { isSlateElement } from '../Editor/Render/helpers'
 import { fontFamilies } from '../../theme/fonts'
 import { useColorContext } from '../Colors/ColorContext'
 import { mUp } from '../../theme/mediaQueries'
+import colors from '../../theme/colors'
 
 const styles = {
   answersContainer: css({
@@ -36,8 +37,6 @@ const styles = {
     fontSize: 17,
     padding: 15,
     display: 'block',
-    borderWidth: 1,
-    borderStyle: 'solid',
     [mUp]: {
       fontSize: 23,
       padding: '25px 30px',
@@ -123,46 +122,30 @@ export const Quiz = ({ children, attributes, ...props }) => {
     >
       <div
         {...styles.answersContainer}
-        {...colorScheme.set(
-          'backgroundColor',
-          answer && answer.isCorrect ? 'alert' : 'default',
-        )}
+        style={{
+          backgroundColor: answer?.isCorrect
+            ? '#EBFFE0'
+            : answer
+            ? '#FFE0E0'
+            : colors.light.default,
+        }}
       >
         {tree.map((answer, i) => {
           const isSelected = answerId === i
+          const primaryColor =
+            isSelected && answer.isCorrect
+              ? colors.light.primary
+              : isSelected
+              ? colors.light.flyerFormatText
+              : undefined
           const colorRule = css({
-            color: isSelected ? '#fff' : 'inherit',
-            backgroundColor: colorScheme.getCSSColor(
-              isSelected && answer.isCorrect
-                ? 'primary'
-                : isSelected
-                ? 'flyerFormatText'
-                : 'default',
-            ),
-            borderColor: colorScheme.getCSSColor(
-              isSelected && answer.isCorrect
-                ? 'primary'
-                : isSelected
-                ? 'flyerFormatText'
-                : 'logo',
-            ),
+            color: isSelected ? '#fff' : colors.light.text,
+            backgroundColor: primaryColor || '#fff',
+            border: `1px solid ${primaryColor || '#000'}`,
             '@media (hover)': {
               ':hover': {
                 color: '#fff',
-                backgroundColor: colorScheme.getCSSColor(
-                  isSelected && answer.isCorrect
-                    ? 'primary'
-                    : isSelected
-                    ? 'flyerFormatText'
-                    : 'logo',
-                ),
-                borderColor: colorScheme.getCSSColor(
-                  isSelected && answer.isCorrect
-                    ? 'primary'
-                    : isSelected
-                    ? 'flyerFormatText'
-                    : 'logo',
-                ),
+                backgroundColor: primaryColor || '#000',
               },
             },
           })
