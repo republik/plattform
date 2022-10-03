@@ -78,6 +78,7 @@ export const config: ElementsConfig = {
   quizItem,
   quizAnswer,
   quizAnswerInfo,
+  quizAnswerInfoP: paragraph,
 }
 
 // typesafe helper
