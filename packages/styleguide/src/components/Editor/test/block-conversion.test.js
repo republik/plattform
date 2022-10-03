@@ -359,5 +359,122 @@ describe('Slate Editor: Block Conversion', () => {
         },
       ])
     })
+
+    it('should convert quiz into preview with success', async () => {
+      value = [
+        {
+          type: 'quiz',
+          children: [
+            {
+              type: 'quizItem',
+              isCorrect: true,
+              children: [
+                {
+                  type: 'quizAnswer',
+                  children: [
+                    {
+                      text: 'Answer 1',
+                    },
+                  ],
+                },
+                {
+                  type: 'quizAnswerInfo',
+                  children: [
+                    {
+                      type: 'quizAnswerInfoP',
+                      children: [
+                        {
+                          text: 'Info to first answer',
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'quizItem',
+              children: [
+                {
+                  type: 'quizAnswer',
+                  children: [
+                    {
+                      text: 'Answer 2',
+                    },
+                  ],
+                },
+                {
+                  type: 'quizAnswerInfo',
+                  children: [
+                    {
+                      type: 'quizAnswerInfoP',
+                      children: [
+                        {
+                          text: 'Wrong!',
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'quizItem',
+              children: [
+                {
+                  type: 'quizAnswer',
+                  children: [
+                    {
+                      text: 'Answer 3',
+                    },
+                  ],
+                },
+                {
+                  type: 'quizAnswerInfo',
+                  children: [
+                    {
+                      type: 'quizAnswerInfoP',
+                      children: [
+                        {
+                          text: 'Also wrong…',
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ]
+      const structure = [
+        {
+          type: ['quiz', 'articlePreview'],
+          repeat: true,
+        },
+      ]
+      const editor = await setup(structure, { schema: flyerSchema })
+
+      // toggle inner tile elements
+      await Transforms.select(editor, [0, 1, 1, 0])
+      toggleElement(editor, 'articlePreview')
+      await new Promise(process.nextTick)
+      expect(cleanupTree(value)).toEqual({
+        type: 'ul',
+        ordered: false,
+        children: [
+          {
+            type: 'listItem',
+            children: [{ text: 'Lorem ipsum.' }],
+          },
+        ],
+      })
+
+      // toggle inner tile elements
+      await Transforms.select(editor, [0, 5, 0])
+      toggleElement(editor, 'figure')
+      await new Promise(process.nextTick)
+      expect(cleanupTree(value)[0].children[5]).toEqual(figure)
+    })
   })
 })
