@@ -228,6 +228,40 @@ export const StrikeThrough = ({ children, attributes, ...props }) => (
   </span>
 )
 
+const ulRule = css({
+  marginLeft: 0,
+  paddingLeft: 0,
+  listStyle: 'none',
+  '& > li:before': {
+    content: '—',
+    position: 'absolute',
+    left: 0,
+  },
+})
+
+export const UL = ({ children, attributes = {}, ...props }) => {
+  return (
+    <ul {...attributes} {...props} {...ulRule}>
+      {children}
+    </ul>
+  )
+}
+
+const olRule = css({
+  paddingLeft: '1.7em',
+  '& > li': {
+    paddingLeft: 8,
+  },
+})
+
+export const OL = ({ children, attributes = {}, ...props }) => {
+  return (
+    <ol {...attributes} {...props} {...olRule}>
+      {children}
+    </ol>
+  )
+}
+
 const listItemRule = css({
   ...fontStyles.sansSerifRegular,
   '& em, & i': fontStyles.sansSerifItalic,

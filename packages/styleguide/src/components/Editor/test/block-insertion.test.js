@@ -426,7 +426,6 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
     value = [
       {
         type: 'ul',
-        ordered: false,
         children: [
           {
             type: 'listItem',
@@ -448,7 +447,6 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
     expect(cleanupTree(value)).toEqual([
       {
         type: 'ul',
-        ordered: false,
         children: [
           {
             type: 'listItem',
@@ -524,7 +522,6 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
     value = [
       {
         type: 'ol',
-        ordered: true,
         children: [
           {
             type: 'listItem',
@@ -550,7 +547,6 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
     expect(cleanupTree(value)).toEqual([
       {
         type: 'ol',
-        ordered: true,
         children: [
           {
             type: 'listItem',
@@ -659,7 +655,6 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
     value = [
       {
         type: 'ol',
-        ordered: true,
         children: [
           {
             type: 'listItem',
@@ -689,7 +684,6 @@ describe('Slate Editor: Block Insertion (On Enter)', () => {
     expect(cleanupTree(value)).toEqual([
       {
         type: 'ol',
-        ordered: true,
         children: [
           {
             type: 'listItem',
