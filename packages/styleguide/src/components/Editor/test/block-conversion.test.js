@@ -459,22 +459,28 @@ describe('Slate Editor: Block Conversion', () => {
       await Transforms.select(editor, [0, 1, 1, 0])
       toggleElement(editor, 'articlePreview')
       await new Promise(process.nextTick)
-      expect(cleanupTree(value)).toEqual({
-        type: 'ul',
-        ordered: false,
-        children: [
-          {
-            type: 'listItem',
-            children: [{ text: 'Lorem ipsum.' }],
-          },
-        ],
-      })
-
-      // toggle inner tile elements
-      await Transforms.select(editor, [0, 5, 0])
-      toggleElement(editor, 'figure')
-      await new Promise(process.nextTick)
-      expect(cleanupTree(value)[0].children[5]).toEqual(figure)
+      expect(cleanupTree(value)).toEqual([
+        {
+          children: [
+            { children: [{ text: '' }], type: 'figureImage' },
+            {
+              children: [
+                {
+                  children: [{ text: 'Answer 1' }],
+                  type: 'articlePreviewFormat',
+                },
+                {
+                  children: [{ text: 'Info to first answer' }],
+                  type: 'articlePreviewTitle',
+                },
+                { children: [{ text: '' }], type: 'articlePreviewLead' },
+              ],
+              type: 'articlePreviewTextContainer',
+            },
+          ],
+          type: 'articlePreview',
+        },
+      ])
     })
   })
 })
