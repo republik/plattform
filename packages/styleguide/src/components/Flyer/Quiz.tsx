@@ -83,10 +83,7 @@ export const EditorQuizContainer: React.FC<{
 }> = ({ props, attributes, children }) => {
   return (
     <div {...props} {...attributes} style={{ position: 'relative' }}>
-      <Message
-        text='Quiz solution depends on answer choice. Check preview for final
-        layout.'
-      />
+      <Message text='Infos zu Antworten werden nur zur ausgewählten Option eingeblendet. Um Quiz final zu prüfen, «Vorschau»-Ansicht nutzen.' />
       {children}
     </div>
   )
@@ -104,7 +101,6 @@ export const QuizAnswer: React.FC<{
 )
 
 export const Quiz = ({ children, attributes, ...props }) => {
-  const [colorScheme] = useColorContext()
   const [answerId, setAnswerId] = useState<number>(null)
   const tree = children?.props?.nodes
 
