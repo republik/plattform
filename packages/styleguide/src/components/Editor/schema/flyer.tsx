@@ -8,7 +8,7 @@ import {
   ArticleTitle,
   ArticleFormat,
 } from '../../ArticlePreview'
-import { FlyerTile } from '../../Flyer'
+import { FlyerTile, FlyerTileOpening } from '../../Flyer'
 import { FlyerAuthor } from '../../Flyer/Author'
 import { FlyerDate } from '../../Flyer/Date'
 import { PullQuote, PullQuoteText } from '../../Flyer/PullQuote'
@@ -21,7 +21,7 @@ const schema: SchemaConfig = {
   container: Flyer.Layout,
   flyerTile: FlyerTile,
   flyerTileMeta: FlyerTile,
-  flyerTileOpening: FlyerTile,
+  flyerTileOpening: FlyerTileOpening,
   flyerTileClosing: FlyerTile,
   flyerAuthor: FlyerAuthor,
   flyerMetaP: Flyer.MetaP,
