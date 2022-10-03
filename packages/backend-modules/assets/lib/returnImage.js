@@ -85,6 +85,9 @@ module.exports = async ({
   let cropX, cropY, cropWidth, cropHeight
   if (crop) {
     try {
+      if (!size) {
+        throw new Error('crop requires size parameter')
+      }
       ;({ cropX, cropY, cropWidth, cropHeight } = getCropDimensions(crop))
     } catch (e) {
       return res.status(400).send(e.message)
@@ -218,7 +221,6 @@ module.exports = async ({
           quality: 80,
         })
       }
-      // })
     }
 
     if (

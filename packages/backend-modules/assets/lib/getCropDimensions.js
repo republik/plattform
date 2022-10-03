@@ -1,31 +1,41 @@
 module.exports = (crop) => {
   if (!crop) {
     return {
-      x: null,
-      y: null,
-      width: null,
-      height: null,
+      cropX: null,
+      cropY: null,
+      cropWidth: null,
+      cropHeight: null,
     }
   }
-  // /[^0-9]/ regex: match non-numeric values
-  // turns '10x20y100w10h' into ["10", "20", "100", "10", ""] and removes the last value
-  const [_x, _y, _width, _height] = crop.split(/[^0-9]/).slice(0, -1)
-  const x = _x ? Math.ceil(Math.abs(_x)) : null
-  const y = _y ? Math.ceil(Math.abs(_y)) : null
-  const width = _width ? Math.ceil(Math.abs(_width)) : null
-  const height = _height ? Math.ceil(Math.abs(_height)) : null
+  // /[(x|y|w|h)]/ regex: match and split only at specific characters
+  // turns '10x20y100w10h' into ["10", "20", "100", "10"]
+  const [_x, _y, _width, _height] = crop.split(/[(x|y|w|h)]/)
 
-  if (isNaN(x) || (x && typeof x !== 'number')) {
+  const x = _x ? parseInt(_x) : null
+  const y = _y ? parseInt(_y) : null
+  const width = _width ? parseInt(_width) : null
+  const height = _height ? parseInt(_height) : null
+
+  if (Number.isFinite(x)) {
     throw new Error('invalid cropX')
   }
-  if (isNaN(y) || (y && typeof y !== 'number')) {
+  if (Number.isFinite(y)) {
     throw new Error('invalid cropY')
   }
-  if (isNaN(width) || (width && typeof width !== 'number')) {
+  if (Number.isFinite(width)) {
     throw new Error('invalid cropWidth')
   }
-  if (isNaN(height) || (height && typeof height !== 'number')) {
+  if (Number.isFinite(height)) {
     throw new Error('invalid cropHeight')
+  }
+  if (x + width > 100) {
+    throw new Error('crop area overflows horizontally, reduce crop width or x')
+  }
+  if (y + height > 100) {
+    throw new Error('crop area overflows vertically, reduce crop height or y')
+  }
+  if (width === 0 || height === 0) {
+    throw new Error('crop requires with or height values greater than 0')
   }
 
   return {
