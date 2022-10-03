@@ -272,10 +272,11 @@ const listItemRule = css({
   paddingLeft: `${LIST_PADDING}px`,
   position: 'relative',
   fontSize: pxToRem('17px'),
-  lineHeight: pxToRem('25px'),
+  lineHeight: 1.522,
+  margin: '12px 0',
   [mUp]: {
     fontSize: pxToRem('23px'),
-    lineHeight: pxToRem('35px'),
+    margin: '14px 0',
   },
 })
 export const ListItem: React.FC<{
