@@ -229,6 +229,7 @@ export const StrikeThrough = ({ children, attributes, ...props }) => (
 )
 
 const ulRule = css({
+  marginBottom: 25,
   marginLeft: 0,
   paddingLeft: 0,
   listStyle: 'none',
@@ -248,6 +249,7 @@ export const UL = ({ children, attributes = {}, ...props }) => {
 }
 
 const olRule = css({
+  marginBottom: 25,
   paddingLeft: '1.7em',
   '& > li': {
     paddingLeft: 8,
@@ -272,11 +274,12 @@ const listItemRule = css({
   paddingLeft: `${LIST_PADDING}px`,
   position: 'relative',
   fontSize: pxToRem('17px'),
-  lineHeight: 1.522,
-  margin: '12px 0',
+  lineHeight: pxToRem('22px'),
+  margin: '0 0 12px',
   [mUp]: {
     fontSize: pxToRem('23px'),
-    margin: '14px 0',
+    lineHeight: pxToRem('28px'),
+    margin: '0 0 14px',
   },
 })
 export const ListItem: React.FC<{
