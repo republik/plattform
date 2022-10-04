@@ -149,7 +149,6 @@ describe('Slate Editor: Block Conversion', () => {
         },
         {
           type: 'ol',
-          ordered: true,
           children: [
             {
               type: 'listItem',
@@ -165,7 +164,6 @@ describe('Slate Editor: Block Conversion', () => {
       value = [
         {
           type: 'ul',
-          ordered: false,
           children: [
             {
               type: 'listItem',
@@ -220,7 +218,6 @@ describe('Slate Editor: Block Conversion', () => {
       expect(cleanupTree(value)).toEqual([
         {
           type: 'ol',
-          ordered: true,
           children: [
             {
               type: 'listItem',
@@ -316,7 +313,6 @@ describe('Slate Editor: Block Conversion', () => {
       await new Promise(process.nextTick)
       expect(cleanupTree(value)[0].children[4]).toEqual({
         type: 'ul',
-        ordered: false,
         children: [
           {
             type: 'listItem',

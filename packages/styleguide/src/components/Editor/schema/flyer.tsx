@@ -1,6 +1,5 @@
 import { SchemaConfig } from '../custom-types'
 import { Figure, FigureImage, FigureByline } from '../../Figure/Slate'
-import { List } from '../../List/Slate'
 import {
   ArticleLead,
   ArticlePreview,
@@ -40,8 +39,8 @@ const schema: SchemaConfig = {
   figureCaption: Flyer.Small,
   figure: Figure,
   figureImage: FigureImage,
-  ul: List,
-  ol: List,
+  ul: Flyer.UL,
+  ol: Flyer.OL,
   listItem: Flyer.ListItem,
   pullQuote: PullQuote,
   pullQuoteSource: Flyer.Small,
