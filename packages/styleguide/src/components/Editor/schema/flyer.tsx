@@ -9,7 +9,7 @@ import {
 } from '../../ArticlePreview'
 import { FlyerTile, FlyerTileOpening } from '../../Flyer'
 import { FlyerAuthor } from '../../Flyer/Author'
-import { FlyerDate } from '../../Flyer/Date'
+import { FlyerNav } from '../../Flyer/Date'
 import { PullQuote, PullQuoteText } from '../../Flyer/PullQuote'
 import { Quiz, QuizAnswer } from '../../Flyer/Quiz'
 import { DefaultContainer } from '../Render/Containers'
@@ -27,7 +27,8 @@ const schema: SchemaConfig = {
   flyerOpeningP: Flyer.OpeningP,
   flyerPunchline: Flyer.Small,
   flyerSignature: Flyer.OpeningP,
-  flyerDate: FlyerDate,
+  // TODO: rename to flyerNav
+  flyerDate: FlyerNav,
   flyerTitle: Flyer.H3,
   flyerTopic: Flyer.H2,
   articlePreview: ArticlePreview,

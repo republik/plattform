@@ -3,6 +3,7 @@ import {
   flyerSchema,
   RenderContextProvider,
   timeFormat,
+  FlyerDate,
 } from '@project-r/styleguide'
 import {
   Editor,
@@ -77,10 +78,10 @@ const TOOLBAR = {
   showChartCount: true,
 }
 
-const Index = ({ value, onChange, readOnly, t }) => {
+const Index = ({ value, publishDate, onChange, readOnly, t }) => {
   return (
-    <RenderContextProvider t={t}>
-      {/* The Editor does it's own RenderContextProvider
+    <RenderContextProvider t={t} nav={<FlyerDate date={publishDate} />}>
+      {/* The Editor does its own RenderContextProvider
        * but we also need to do one from the main styleguide entry point
        * cause render components will use that context
        */}
