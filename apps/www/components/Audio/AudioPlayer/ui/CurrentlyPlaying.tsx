@@ -16,7 +16,7 @@ const styles = {
   heading: css({
     ...fontStyles.sansSerifMedium16,
     lineHeight: '20px',
-    marginBottom: 12,
+    marginBottom: 24,
     marginTop: 0,
   }),
   coverWrapper: css({

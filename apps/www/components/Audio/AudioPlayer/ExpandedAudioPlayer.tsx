@@ -72,6 +72,24 @@ const styles = {
       right: 8,
     },
   }),
+  topSection: css({
+    display: 'flex',
+    gap: 24,
+    flexDirection: 'column',
+    ['@media (orientation: landscape)']: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      '> div': {
+        flex: 1,
+        alignSelf: 'flex-end',
+      },
+      '> div:last-child': {
+        display: 'flex',
+        gap: 16,
+        flexDirection: 'column-reverse',
+      },
+    },
+  }),
 }
 
 type ExpandedAudioPlayerProps = {
@@ -136,25 +154,27 @@ const ExpandedAudioPlayer = ({
           onClick={handleMinimize}
         />
       </div>
-      <CurrentlyPlaying
-        t={t}
-        item={activeItem}
-        handleOpen={handleOpenArticle}
-      />
-      <AudioControl
-        handleToggle={handleToggle}
-        handleSeek={handleSeek}
-        handleForward={handleForward}
-        handleBackward={handleBackward}
-        handlePlaybackRateChange={handlePlaybackRateChange}
-        handleSkipToNext={handleSkipToNext}
-        isPlaying={isPlaying}
-        isLoading={isLoading}
-        playbackRate={playbackRate}
-        currentTime={currentTime}
-        duration={duration}
-        buffered={buffered}
-      />
+      <div {...styles.topSection}>
+        <CurrentlyPlaying
+          t={t}
+          item={activeItem}
+          handleOpen={handleOpenArticle}
+        />
+        <AudioControl
+          handleToggle={handleToggle}
+          handleSeek={handleSeek}
+          handleForward={handleForward}
+          handleBackward={handleBackward}
+          handlePlaybackRateChange={handlePlaybackRateChange}
+          handleSkipToNext={handleSkipToNext}
+          isPlaying={isPlaying}
+          isLoading={isLoading}
+          playbackRate={playbackRate}
+          currentTime={currentTime}
+          duration={duration}
+          buffered={buffered}
+        />
+      </div>
       <div {...styles.queueWrapper}>
         <Scroller>
           <TabButton

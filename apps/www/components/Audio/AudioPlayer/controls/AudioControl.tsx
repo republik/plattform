@@ -26,6 +26,7 @@ const styles = {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginTop: 8,
   }),
   mainControls: css({
     display: 'flex',
