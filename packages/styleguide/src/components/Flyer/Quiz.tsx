@@ -11,17 +11,14 @@ import { mUp } from '../../theme/mediaQueries'
 import colors from '../../theme/colors'
 
 const styles = {
-  quizContainer: css({
-    marginBottom: 40,
-    [mUp]: {
-      marginBottom: 55,
-    },
-  }),
   answersContainer: css({
     backgroundColor: '#ffffff',
     padding: 15,
     width: '100%',
     marginBottom: 15,
+    '& p:last-child': {
+      marginBottom: '0px !important',
+    },
     [mUp]: {
       padding: 30,
       marginBottom: 30,
@@ -59,25 +56,27 @@ export const EditorQuizItem: React.FC<{
   const colorRule = useMemo(
     () =>
       css({
-        borderLeft: '5px solid white',
-        '& p': {
-          paddingLeft: 30,
+        background: 'white',
+        padding: '15px 15px 0',
+        [mUp]: {
+          padding: '30px 30px 0',
+        },
+        '&:last-child': {
+          paddingBottom: 15,
           [mUp]: {
-            paddingLeft: 60,
+            paddingBottom: 30,
           },
         },
-        '& p:last-child': {
-          paddingBottom: 5,
+        '& p:last-of-type': {
+          marginBottom: '0 !important',
         },
         '& .quiz-answer': {
-          color: '#fff',
+          color: 'white',
           backgroundColor: colorScheme.getCSSColor(
             isCorrect ? 'primary' : 'flyerFormatText',
           ),
-          border: '15px solid #fff',
           marginBottom: 15,
           [mUp]: {
-            borderWidth: 30,
             marginBottom: 30,
           },
         },
@@ -127,55 +126,47 @@ export const Quiz = ({ children, attributes, ...props }) => {
 
   return (
     <div
-      {...props}
-      {...attributes}
-      style={{ position: 'relative' }}
-      contentEditable={false}
-      {...styles.quizContainer}
+      {...styles.answersContainer}
+      style={{
+        backgroundColor: answer?.isCorrect
+          ? '#EBFFE0'
+          : answer
+          ? '#FFE0E0'
+          : colors.light.default,
+      }}
     >
-      <div
-        {...styles.answersContainer}
-        style={{
-          backgroundColor: answer?.isCorrect
-            ? '#EBFFE0'
-            : answer
-            ? '#FFE0E0'
-            : colors.light.default,
-        }}
-      >
-        {tree.map((answer, i) => {
-          const isSelected = answerId === i
-          const primaryColor =
-            isSelected && answer.isCorrect
-              ? colors.light.primary
-              : isSelected
-              ? colors.light.flyerFormatText
-              : undefined
-          const colorRule = css({
-            color: isSelected ? '#fff' : colors.light.text,
-            backgroundColor: primaryColor || '#fff',
-            border: `1px solid ${primaryColor || '#000'}`,
-            '@media (hover)': {
-              ':hover': {
-                color: '#fff',
-                backgroundColor: primaryColor || '#000',
-              },
+      {tree.map((answer, i) => {
+        const isSelected = answerId === i
+        const primaryColor =
+          isSelected && answer.isCorrect
+            ? colors.light.primary
+            : isSelected
+            ? colors.light.flyerFormatText
+            : undefined
+        const colorRule = css({
+          color: isSelected ? '#fff' : colors.light.text,
+          backgroundColor: primaryColor || '#fff',
+          border: `1px solid ${primaryColor || '#000'}`,
+          '@media (hover)': {
+            ':hover': {
+              color: '#fff',
+              backgroundColor: primaryColor || '#000',
             },
-          })
+          },
+        })
 
-          return (
-            <button
-              key={i}
-              onClick={() => setAnswerId(i)}
-              {...plainButtonRule}
-              {...colorRule}
-              {...styles.answerOuter}
-            >
-              <RenderedElement element={answer.children[0]} schema={schema} />
-            </button>
-          )
-        })}
-      </div>
+        return (
+          <button
+            key={i}
+            onClick={() => setAnswerId(i)}
+            {...plainButtonRule}
+            {...colorRule}
+            {...styles.answerOuter}
+          >
+            <RenderedElement element={answer.children[0]} schema={schema} />
+          </button>
+        )
+      })}
       {isSlateElement(answerInfo) && (
         <RenderedElement element={answerInfo} schema={schema} />
       )}

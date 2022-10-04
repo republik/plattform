@@ -7,7 +7,7 @@ export const config: ElementConfigI = {
     blockUi: {
       style: {
         top: 4,
-        left: 18,
+        left: -70,
       },
     },
   },
