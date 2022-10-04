@@ -231,6 +231,10 @@ export type QuizAnswerInfoElement = SharedElement & {
   type: 'quizAnswerInfo'
 }
 
+export type QuizAnswerInfoPElement = SharedElement & {
+  type: 'quizAnswerInfoP'
+}
+
 export type CustomElement =
   | HeadlineElement
   | ParagraphElement
@@ -270,6 +274,7 @@ export type CustomElement =
   | QuizItemElement
   | QuizAnswerElement
   | QuizAnswerInfoElement
+  | QuizAnswerInfoPElement
 
 export type CustomDescendant = CustomElement | CustomText
 export type CustomAncestor = CustomElement | CustomEditor
@@ -316,6 +321,7 @@ export type CustomElementsType =
   | 'quizItem'
   | 'quizAnswer'
   | 'quizAnswerInfo'
+  | 'quizAnswerInfoP'
 
 interface ButtonI {
   icon: IconType

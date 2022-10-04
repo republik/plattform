@@ -57,6 +57,7 @@ const schema: SchemaConfig = {
   quiz: Quiz,
   quizAnswer: QuizAnswer,
   quizAnswerInfo: DefaultContainer,
+  quizAnswerInfoP: Flyer.P,
 }
 
 export default schema
