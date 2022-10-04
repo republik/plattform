@@ -1,12 +1,13 @@
 import { ElementConfigI } from '../../../../../custom-types'
 
 export const config: ElementConfigI = {
-  structure: [{ type: ['quizAnswerInfoP'], repeat: true }],
+  structure: [{ type: ['text', 'link', 'break', 'inlineCode'], repeat: true }],
   attrs: {
-    stopFormIteration: true,
+    formatText: true,
     blockUi: {
       style: {
-        display: 'none',
+        top: 4,
+        left: 18,
       },
     },
   },

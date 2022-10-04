@@ -11,6 +11,12 @@ import { mUp } from '../../theme/mediaQueries'
 import colors from '../../theme/colors'
 
 const styles = {
+  quizContainer: css({
+    marginBottom: 40,
+    [mUp]: {
+      marginBottom: 55,
+    },
+  }),
   answersContainer: css({
     backgroundColor: '#ffffff',
     padding: 15,
@@ -53,6 +59,16 @@ export const EditorQuizItem: React.FC<{
   const colorRule = useMemo(
     () =>
       css({
+        borderLeft: '5px solid white',
+        '& p': {
+          paddingLeft: 30,
+          [mUp]: {
+            paddingLeft: 60,
+          },
+        },
+        '& p:last-child': {
+          paddingBottom: 5,
+        },
         '& .quiz-answer': {
           color: '#fff',
           backgroundColor: colorScheme.getCSSColor(
@@ -115,6 +131,7 @@ export const Quiz = ({ children, attributes, ...props }) => {
       {...attributes}
       style={{ position: 'relative' }}
       contentEditable={false}
+      {...styles.quizContainer}
     >
       <div
         {...styles.answersContainer}
