@@ -337,3 +337,14 @@ export const flyerTitle20 = {
   fontSize: 20,
   lineHeight: '22px',
 }
+
+export const flyerTitle18 = {
+  ...fontStyles.flyerTitle,
+  fontSize: 18,
+  lineHeight: '20px',
+}
+export const flyerTitle16 = {
+  ...fontStyles.flyerTitle,
+  fontSize: 16,
+  lineHeight: '18px',
+}
