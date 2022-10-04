@@ -1,3 +1,7 @@
+// turns '10x20y100w10h' into { x: '10', y: '20', w: '100', h: '10' }
+// using named groups in regular expression
+const cropPattern = /^(?<x>\d{1,3})x(?<y>\d{1,3})y(?<w>\d{1,3})w(?<h>\d{1,3})h$/
+
 module.exports = (crop) => {
   if (!crop) {
     return {
@@ -7,41 +11,31 @@ module.exports = (crop) => {
       cropHeight: null,
     }
   }
-  // /[(x|y|w|h)]/ regex: match and split only at specific characters
-  // turns '10x20y100w10h' into ["10", "20", "100", "10"]
-  const [_x, _y, _width, _height] = crop.split(/[(x|y|w|h)]/)
 
-  const x = _x ? parseInt(_x) : null
-  const y = _y ? parseInt(_y) : null
-  const width = _width ? parseInt(_width) : null
-  const height = _height ? parseInt(_height) : null
+  const groups = crop.match(cropPattern)?.groups
+  if (!groups) {
+    throw new Error('invalid crop string')
+  }
 
-  if (Number.isFinite(x)) {
-    throw new Error('invalid cropX')
-  }
-  if (Number.isFinite(y)) {
-    throw new Error('invalid cropY')
-  }
-  if (Number.isFinite(width)) {
-    throw new Error('invalid cropWidth')
-  }
-  if (Number.isFinite(height)) {
-    throw new Error('invalid cropHeight')
-  }
-  if (x + width > 100) {
+  const cropX = +groups.x
+  const cropY = +groups.y
+  const cropWidth = +groups.w
+  const cropHeight = +groups.h
+
+  if (cropX + cropWidth > 100) {
     throw new Error('crop area overflows horizontally, reduce crop width or x')
   }
-  if (y + height > 100) {
+  if (cropY + cropHeight > 100) {
     throw new Error('crop area overflows vertically, reduce crop height or y')
   }
-  if (width === 0 || height === 0) {
-    throw new Error('crop requires with or height values greater than 0')
+  if (cropWidth === 0 || cropHeight === 0) {
+    throw new Error('crop requires width or height values greater than 0')
   }
 
   return {
-    cropX: x,
-    cropY: y,
-    cropWidth: width,
-    cropHeight: height,
+    cropX,
+    cropY,
+    cropWidth,
+    cropHeight,
   }
 }
