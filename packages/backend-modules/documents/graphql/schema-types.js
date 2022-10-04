@@ -74,6 +74,7 @@ type Meta {
   path: String
   image: String
   audioCoverCrop: Crop
+  willNotBeReadAloud: Boolean
   emailSubject: String
   description: String
   subject: String @deprecated(reason: "parse \`Document.content\` instead")

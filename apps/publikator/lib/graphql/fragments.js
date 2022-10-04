@@ -35,6 +35,7 @@ export const CommitWithDocument = gql`
         template
         kind
         color
+        willNotBeReadAloud
         audioCoverCrop {
           x
           y

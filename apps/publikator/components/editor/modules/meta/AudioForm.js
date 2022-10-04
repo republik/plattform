@@ -1,7 +1,6 @@
-import { useEffect } from 'react'
 import { Set, Map } from 'immutable'
 
-import { Field, Dropdown } from '@project-r/styleguide'
+import { Field, Dropdown, Checkbox } from '@project-r/styleguide'
 
 import {
   MetaSection,
@@ -55,13 +54,32 @@ export default withT(({ t, editor, node, onInputChange, format }) => {
     <MetaSection>
       <MetaSectionTitle>{t('metaData/audio')}</MetaSectionTitle>
       <MetaOption>
-        <MetaForm
-          data={audioSourceData}
-          onInputChange={onInputChange}
-          getWidth={() => ''}
-          black
-        />
+        <MetaOptionLabel>Optionen</MetaOptionLabel>
+        <Checkbox
+          checked={node.data.get('willNotBeReadAloud')}
+          onChange={onInputChange('willNotBeReadAloud')}
+        >
+          <span style={{ verticalAlign: 'top' }}>Wird nicht vorgelesen</span>
+        </Checkbox>
       </MetaOption>
+      <MetaOptionGroupTitle>Audio-Files</MetaOptionGroupTitle>
+      <MetaOptionGroup>
+        <MetaOption>
+          <Field
+            label={'MP3 URL (zwingend)'}
+            name={'audioSourceMp3'}
+            value={node.data.get('audioSourceMp3')}
+            onChange={onInputChange('audioSourceMp3')}
+          />
+          <Field
+            label={'AAC URL (optional)'}
+            name={'audioSourceAac'}
+            value={node.data.get('audioSourceAac')}
+            onChange={onInputChange('audioSourceAac')}
+          />
+        </MetaOption>
+      </MetaOptionGroup>
+
       <MetaOption>
         <Dropdown
           black
@@ -91,22 +109,20 @@ export default withT(({ t, editor, node, onInputChange, format }) => {
               )
             }
           />
-        </MetaOption>
-        {audioCover && (
-          <Field
-            black
-            label={t('metaData/audio/cover/color')}
-            value={audioCover.color}
-            onChange={(_, color) => {
-              onChange('audioCover')({
-                ...audioCover,
-                color,
-              })
-            }}
-          />
-        )}
-        {audioCover && (
-          <MetaOption>
+          {audioCover && (
+            <Field
+              black
+              label={t('metaData/audio/cover/color')}
+              value={audioCover.color}
+              onChange={(_, color) => {
+                onChange('audioCover')({
+                  ...audioCover,
+                  color,
+                })
+              }}
+            />
+          )}
+          {audioCover && (
             <Field
               black
               label={t('metaData/audio/cover/backgroundColor')}
@@ -118,8 +134,8 @@ export default withT(({ t, editor, node, onInputChange, format }) => {
                 })
               }}
             />
-          </MetaOption>
-        )}
+          )}
+        </MetaOption>
       </MetaOptionGroup>
       <MetaOptionGroupTitle>Audio-Cover und Vorschau</MetaOptionGroupTitle>
       <MetaOption>
