@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import withT from '../../../lib/withT'
 import Cropper from 'react-easy-crop'
 import { AudioCoverGenerator, Slider } from '@project-r/styleguide'
@@ -6,14 +6,16 @@ import { AudioCoverGenerator, Slider } from '@project-r/styleguide'
 const PADDING = 15
 const SLIDER_HEIGHT = 52
 
-const ImageCrop = ({ onChange, src, format, crop: initialCrop, t }) => {
+const ImageCrop = ({ onChange, image, format, crop: initialCropArea }) => {
   const [crop, setCrop] = useState(
-    initialCrop ? { x: initialCrop.x, y: initialCrop.y } : { x: 0, y: 0 },
+    initialCropArea
+      ? { x: initialCropArea.x, y: initialCropArea.y }
+      : { x: 0, y: 0 },
   )
   const [zoom, setZoom] = useState(
-    initialCrop
+    initialCropArea
       ? Math.round(
-          (100 / Math.max(initialCrop.width, initialCrop.height)) * 10,
+          (100 / Math.max(initialCropArea.width, initialCropArea.height)) * 10,
         ) / 10
       : 1,
   )
@@ -51,9 +53,45 @@ const ImageCrop = ({ onChange, src, format, crop: initialCrop, t }) => {
     height: transform.height,
     transformOrigin: 'top left',
   }
+
+  useEffect(() => {
+    // reset state if croparea changes outside of component (for example on "verwerfen")
+    if (
+      initialCropArea &&
+      croppedArea &&
+      (initialCropArea.x !== croppedArea.x ||
+        initialCropArea.y !== croppedArea.y ||
+        initialCropArea.width !== croppedArea.width ||
+        initialCropArea.height !== croppedArea.height)
+    ) {
+      setCrop({ x: initialCropArea.x, y: initialCropArea.y })
+      setZoom(
+        Math.round(
+          (100 / Math.max(initialCropArea.width, initialCropArea.height)) * 10,
+        ) / 10,
+      )
+    }
+  }, [initialCropArea])
+
+  useEffect(() => {
+    // reset state and metadata if image changes
+    onChange(null)
+    setCroppedArea(null)
+    setCrop({ x: 0, y: 0 })
+    setZoom(1)
+  }, [image])
+
+  const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+    const croppedAreaInt = Object.fromEntries(
+      Object.entries(croppedArea).map(([k, v], i) => [k, Math.floor(v)]),
+    )
+    setCroppedArea(croppedAreaInt)
+    onChange(croppedAreaInt)
+  })
+
   return (
     <div ref={containerRef} style={{ width: '100%' }}>
-      {!src ? (
+      {!image ? (
         <AudioCoverGenerator format={format} previewSize={previewSize} />
       ) : (
         <>
@@ -66,21 +104,12 @@ const ImageCrop = ({ onChange, src, format, crop: initialCrop, t }) => {
             }}
           >
             <Cropper
-              image={src}
+              image={image}
               aspect={1}
               crop={crop}
               zoom={zoom}
               onCropChange={setCrop}
-              onCropAreaChange={(croppedArea) => {
-                const croppedAreaInt = Object.fromEntries(
-                  Object.entries(croppedArea).map(([k, v], i) => [
-                    k,
-                    Math.floor(v),
-                  ]),
-                )
-                setCroppedArea(croppedAreaInt)
-                onChange(croppedAreaInt)
-              }}
+              onCropComplete={onCropComplete}
             />
             <div
               style={{
@@ -114,7 +143,7 @@ const ImageCrop = ({ onChange, src, format, crop: initialCrop, t }) => {
                 paddingBottom: '100%',
               }}
             >
-              <img src={src} alt='Preview Crop' style={imageStyle} />
+              <img src={image} alt='Preview Crop' style={imageStyle} />
             </div>
           </div>
         </>
