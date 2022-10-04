@@ -122,7 +122,7 @@ function SeriesNav({
                 {titlePath &&
                   t.elements('styleguide/SeriesNav/seriesoverview/link', {
                     link: (
-                      <Link href={titlePath} passHref>
+                      <Link key='link' href={titlePath} passHref>
                         <Editorial.A>
                           {t('styleguide/SeriesNav/seriesoverview')}
                         </Editorial.A>
@@ -180,7 +180,7 @@ SeriesNav.propTypes = {
   repoId: PropTypes.string,
   series: PropTypes.object.isRequired,
   ActionBar: PropTypes.func,
-  Link: PropTypes.func,
+  Link: PropTypes.elementType,
   PayNote: PropTypes.func,
   inline: PropTypes.bool,
   height: PropTypes.number,

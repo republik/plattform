@@ -1,7 +1,7 @@
 import { ElementConfigI } from '../../../../../custom-types'
 
 export const config: ElementConfigI = {
-  structure: [{ type: ['paragraph'], repeat: true }],
+  structure: [{ type: ['quizAnswerInfoP'], repeat: true }],
   attrs: {
     blockUi: {
       style: {

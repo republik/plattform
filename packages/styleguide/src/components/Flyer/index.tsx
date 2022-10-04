@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { css } from 'glamor'
+import { css, merge } from 'glamor'
 import { useColorContext } from '../Colors/ColorContext'
 import { mUp } from '../../theme/mediaQueries'
 import { Message } from '../Editor/Render/Message'
@@ -22,15 +22,14 @@ const styles = {
     [mUp]: {
       padding: '90px 0',
     },
-    '& > *': {},
-    '& > :not(.ui-element)': {
-      // paddingTop: 90,
-    },
-    '& > :not(.ui-element) ~ :not(.ui-element)': {
-      // paddingTop: 'inherit',
-    },
     '& > :last-child': {
       marginBottom: '0 !important',
+    },
+  }),
+  contentOpening: css({
+    marginBottom: -72,
+    [mUp]: {
+      marginBottom: -144,
     },
   }),
 }
@@ -48,6 +47,19 @@ export const FlyerTile: React.FC<{
       {...colorScheme.set('borderBottomColor', 'flyerText')}
     >
       <div {...styles.content}>{children}</div>
+    </div>
+  )
+}
+
+export const FlyerTileOpening: React.FC<{
+  attributes: any
+  [x: string]: unknown
+}> = ({ children, attributes, ...props }) => {
+  return (
+    <div {...props} {...attributes}>
+      <div {...styles.content} {...styles.contentOpening}>
+        {children}
+      </div>
     </div>
   )
 }

@@ -2,6 +2,7 @@ import { css } from 'glamor'
 import { fontStyles } from '@project-r/styleguide'
 import {
   columnDateFormat,
+  suggestTemplateTitle,
   getPlaceholders,
   reformatPlaceholder,
   reformatUrlDate,
@@ -11,7 +12,7 @@ import Repo, { Placeholder } from './Repo'
 import { ascending } from 'd3-array'
 import { parseJSONObject } from '../../lib/safeJSON'
 import { WEEK_TEMPLATE_REPOS } from '../../lib/settings'
-import withT from '../../lib/withT'
+
 const templateRepos = parseJSONObject(WEEK_TEMPLATE_REPOS)
 
 const styles = {
@@ -30,7 +31,7 @@ const styles = {
   }),
 }
 
-const Repos = withT(({ t, repos, isNewsletter, ...props }) => {
+const Repos = ({ repos, isNewsletter, ...props }) => {
   const sortedRepos = repos.sort((repo1, repo2) =>
     ascending(
       new Date(repo1.meta.publishDate),
@@ -47,12 +48,8 @@ const Repos = withT(({ t, repos, isNewsletter, ...props }) => {
               latestCommit: {
                 document: {
                   meta: {
-                    title: t(
-                      `repo/add/template/${repo.template}`,
-                      null,
-                      repo.template,
-                    ),
                     template: repo.template,
+                    ...suggestTemplateTitle(repo.meta?.publishDate),
                   },
                 },
               },
@@ -81,7 +78,7 @@ const Repos = withT(({ t, repos, isNewsletter, ...props }) => {
       )}
     </div>
   )
-})
+}
 
 export const ReposByTemplate = ({
   template,

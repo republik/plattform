@@ -6,6 +6,7 @@ import { fontStyles } from '../../theme/fonts'
 import { LIST_PADDING } from '../List/List'
 import { useRenderContext } from '../Editor/Render/Context'
 import { pxToRem } from './utils'
+import colors from '../../theme/colors'
 
 export const Layout = ({ children, attributes = {} }) => {
   const [colorScheme] = useColorContext()
@@ -106,6 +107,11 @@ export const P: React.FC<{ attributes?: any; [x: string]: unknown }> = ({
       {...props}
       {...css({
         ...fontStyles.sansSerifRegular,
+        '& em, & i': fontStyles.sansSerifItalic,
+        '& strong, & b': fontStyles.sansSerifMedium,
+        '& strong em, & em strong, & b i, & i b': {
+          textDecoration: `underline wavy ${colors.error}`,
+        },
         fontSize: 17,
         lineHeight: 1.471,
         margin: '0 0 22px',
@@ -199,13 +205,13 @@ export const Small: React.FC<{ attributes?: any; [x: string]: unknown }> = ({
 }
 
 export const Emphasis = ({ children, attributes, ...props }) => (
-  <strong {...props} {...attributes} {...css(fontStyles.sansSerifMedium)}>
+  <strong {...props} {...attributes}>
     {children}
   </strong>
 )
 
 export const Cursive = ({ children, attributes, ...props }) => (
-  <em {...props} {...attributes} {...css(fontStyles.sansSerifItalic)}>
+  <em {...props} {...attributes}>
     {children}
   </em>
 )
@@ -222,31 +228,58 @@ export const StrikeThrough = ({ children, attributes, ...props }) => (
   </span>
 )
 
+const ulRule = css({
+  marginBottom: 25,
+  marginLeft: 0,
+  paddingLeft: 0,
+  listStyle: 'none',
+  '& > li:before': {
+    content: '—',
+    position: 'absolute',
+    left: 0,
+  },
+})
+
+export const UL = ({ children, attributes = {}, ...props }) => {
+  return (
+    <ul {...attributes} {...props} {...ulRule}>
+      {children}
+    </ul>
+  )
+}
+
+const olRule = css({
+  marginBottom: 25,
+  paddingLeft: '1.7em',
+  '& > li': {
+    paddingLeft: 8,
+  },
+})
+
+export const OL = ({ children, attributes = {}, ...props }) => {
+  return (
+    <ol {...attributes} {...props} {...olRule}>
+      {children}
+    </ol>
+  )
+}
+
 const listItemRule = css({
-  ...fontStyles.sansSerifBold,
+  ...fontStyles.sansSerifRegular,
+  '& em, & i': fontStyles.sansSerifItalic,
+  '& strong, & b': fontStyles.sansSerifBold,
+  '& strong em, & em strong, & b i, & i b': {
+    textDecoration: `underline wavy ${colors.error}`,
+  },
   paddingLeft: `${LIST_PADDING}px`,
   position: 'relative',
   fontSize: pxToRem('17px'),
-  lineHeight: pxToRem('25px'),
+  lineHeight: pxToRem('22px'),
+  margin: '0 0 12px',
   [mUp]: {
     fontSize: pxToRem('23px'),
-    lineHeight: pxToRem('35px'),
-  },
-  '& p': {
-    margin: '1em 0 1em 0',
-  },
-  '& p:last-child': {
-    marginBottom: 0,
-  },
-  'li &': {
-    fontSize: pxToRem('14px'),
-    lineHeight: pxToRem('22px'),
-    margin: '12px 0',
-    [mUp]: {
-      fontSize: pxToRem('17px'),
-      lineHeight: pxToRem('28px'),
-      margin: '14px 0',
-    },
+    lineHeight: pxToRem('28px'),
+    margin: '0 0 14px',
   },
 })
 export const ListItem: React.FC<{
