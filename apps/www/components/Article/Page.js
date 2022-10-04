@@ -641,9 +641,7 @@ const ArticlePage = ({
                       skip={['flyerOpeningP']}
                     />
                   </RenderContextProvider>
-                  <FlyerTile>
-                    <FlyerFooter actionBar={actionBarFlyer} />
-                  </FlyerTile>
+                  <FlyerFooter>{actionBarFlyer}</FlyerFooter>
                 </Flyer.Layout>
               ) : (
                 <ArticleGallery

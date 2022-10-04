@@ -6,6 +6,7 @@ import {
   IconButton,
   FlyerDate,
   mediaQueries,
+  FlyerTile,
 } from '@project-r/styleguide'
 import Link from 'next/link'
 import { useMe } from '../../lib/context/MeContext'
@@ -14,10 +15,10 @@ const FORMAT_REPO_ID = 'republik/format-journal'
 
 const styles = {
   footer: css({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
+    marginTop: -35,
+    [mediaQueries.mUp]: {
+      marginTop: -60,
+    },
   }),
   navi: css({
     display: 'flex',
@@ -129,6 +130,12 @@ export const FlyerNav = ({ repoId, publishDate }) => {
   )
 }
 
-const FlyerFooter = ({ actionBar }) => <div {...styles.footer}>{actionBar}</div>
+const FlyerFooter = ({ children }) => {
+  return (
+    <FlyerTile {...styles.footer} innerStyle={{ paddingTop: 0 }}>
+      {children}
+    </FlyerTile>
+  )
+}
 
 export default FlyerFooter
