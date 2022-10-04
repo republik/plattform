@@ -53,6 +53,16 @@ export const EditorQuizItem: React.FC<{
   const colorRule = useMemo(
     () =>
       css({
+        borderLeft: '5px solid white',
+        '& p': {
+          paddingLeft: 30,
+          [mUp]: {
+            paddingLeft: 60,
+          },
+        },
+        '& p:last-child': {
+          paddingBottom: 5,
+        },
         '& .quiz-answer': {
           color: '#fff',
           backgroundColor: colorScheme.getCSSColor(
