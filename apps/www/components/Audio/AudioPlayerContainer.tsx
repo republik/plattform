@@ -17,6 +17,7 @@ import useNativeAppEvent from '../../lib/react-native/useNativeAppEvent'
 import { useMediaProgress } from './MediaProgress'
 import useInterval from '../../lib/hooks/useInterval'
 import { reportError } from '../../lib/errors'
+import hasQueueChanged from './helpers/hasQueueChanged'
 
 const DEFAULT_SYNC_INTERVAL = 500 // in ms
 const DEFAULT_PLAYBACK_RATE = 1
@@ -477,7 +478,11 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   // Sync the queue with the native-app and reopen the player if queue changed
   // while it was closed
   useEffect(() => {
-    if (inNativeApp && audioQueue && audioQueue !== trackedQueue?.current) {
+    if (
+      inNativeApp &&
+      audioQueue &&
+      hasQueueChanged(trackedQueue?.current, audioQueue)
+    ) {
       notifyApp(AudioEvent.QUEUE_UPDATE, audioQueue)
     }
     //
@@ -485,7 +490,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       audioQueue &&
       audioQueue.length > 0 &&
       !isVisible &&
-      audioQueue !== trackedQueue?.current
+      hasQueueChanged(trackedQueue?.current, audioQueue)
     ) {
       setIsVisible(true)
     }
