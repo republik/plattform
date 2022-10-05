@@ -62,9 +62,11 @@ export const EditorQuizItem: React.FC<{
           padding: '30px 30px 0',
         },
         '&:last-child': {
+          marginBottom: 15,
           paddingBottom: 15,
           [mUp]: {
             paddingBottom: 30,
+            marginBottom: 30,
           },
         },
         '& p:last-of-type': {

@@ -27,7 +27,7 @@ export const config: ElementConfigI = {
     { type: 'flyerAuthor' },
     { type: ['paragraph', 'ul', 'ol', 'quiz'], repeat: true },
     {
-      type: ['flyerPunchline', 'pullQuote', 'articlePreview', 'figure', 'quiz'],
+      type: ['flyerPunchline', 'pullQuote', 'articlePreview', 'figure'],
     },
   ],
   button: { icon: FlyerTileIcon },
