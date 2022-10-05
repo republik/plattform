@@ -60,6 +60,90 @@ export const exampleTree: CustomDescendant[] = [
         ],
       },
       {
+        children: [
+          {
+            children: [
+              {
+                children: [
+                  {
+                    text: 'Yes',
+                  },
+                ],
+                type: 'quizAnswer',
+              },
+              {
+                children: [
+                  {
+                    children: [
+                      {
+                        text: "It's a yes!",
+                      },
+                    ],
+                    type: 'paragraph',
+                  },
+                ],
+                type: 'quizAnswerInfo',
+              },
+            ],
+            type: 'quizItem',
+            isCorrect: true,
+          },
+          {
+            children: [
+              {
+                children: [
+                  {
+                    text: 'No',
+                  },
+                ],
+                type: 'quizAnswer',
+              },
+              {
+                children: [
+                  {
+                    children: [
+                      {
+                        text: 'Errrr, nope.',
+                      },
+                    ],
+                    type: 'paragraph',
+                  },
+                ],
+                type: 'quizAnswerInfo',
+              },
+            ],
+            type: 'quizItem',
+          },
+          {
+            children: [
+              {
+                children: [
+                  {
+                    text: 'Maybe',
+                  },
+                ],
+                type: 'quizAnswer',
+              },
+              {
+                children: [
+                  {
+                    children: [
+                      {
+                        text: "We are trying to wiggle out of it, aren't we?",
+                      },
+                    ],
+                    type: 'paragraph',
+                  },
+                ],
+                type: 'quizAnswerInfo',
+              },
+            ],
+            type: 'quizItem',
+          },
+        ],
+        type: 'quiz',
+      },
+      {
         type: 'paragraph',
         children: [
           {
