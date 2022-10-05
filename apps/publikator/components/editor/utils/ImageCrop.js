@@ -45,6 +45,8 @@ const CreepyCropper = ({ onChange, onReset, image, crop: initialCropArea }) => {
   }, [initialCropArea])
 
   useEffect(() => {
+    // TODO: tighten condition to excluse case where the one img is a url the other a base64 img
+    console.log({ prevImage, image })
     if (prevImage && prevImage !== image) {
       onReset()
     }
