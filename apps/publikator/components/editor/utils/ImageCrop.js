@@ -1,12 +1,19 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { css } from 'glamor'
 import withT from '../../../lib/withT'
 import Cropper from 'react-easy-crop'
-import { AudioCoverGenerator, Slider } from '@project-r/styleguide'
+import {
+  AudioCoverGenerator,
+  Slider,
+  fontStyles,
+  Button,
+} from '@project-r/styleguide'
 
 const PADDING = 15
 const SLIDER_HEIGHT = 52
 
 const ImageCrop = ({ onChange, image, format, crop: initialCropArea }) => {
+  const [customCropEnabled, setCustomCropEnabled] = useState(!!initialCropArea)
   const [crop, setCrop] = useState(
     initialCropArea
       ? { x: initialCropArea.x, y: initialCropArea.y }
@@ -73,22 +80,33 @@ const ImageCrop = ({ onChange, image, format, crop: initialCropArea }) => {
     }
   }, [initialCropArea])
 
-  useEffect(() => {
-    // reset state and metadata if image changes
+  const resetStateAndMeta = () => {
     onChange(null)
     setCroppedArea(null)
     setCrop({ x: 0, y: 0 })
     setZoom(1)
+  }
+
+  useEffect(() => {
+    // reset state and metadata if image changes
+    resetStateAndMeta()
   }, [image])
 
+  useEffect(() => {
+    // reset state and metadata if image changes
+    setCrop({ x: 0, y: 0 })
+  }, [customCropEnabled])
+
   const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+    if (!customCropEnabled) {
+      return
+    }
     const croppedAreaInt = Object.fromEntries(
       Object.entries(croppedArea).map(([k, v], i) => [k, Math.floor(v)]),
     )
     setCroppedArea(croppedAreaInt)
     onChange(croppedAreaInt)
   })
-
   return (
     <div ref={containerRef} style={{ width: '100%' }}>
       {!image ? (
@@ -103,30 +121,61 @@ const ImageCrop = ({ onChange, image, format, crop: initialCropArea }) => {
               marginBottom: SLIDER_HEIGHT,
             }}
           >
-            <Cropper
-              image={image}
-              aspect={1}
-              crop={crop}
-              zoom={zoom}
-              onCropChange={setCrop}
-              onCropComplete={onCropComplete}
-            />
-            <div
-              style={{
-                position: 'relative',
-                top: containerWidth / 2,
-                width: previewSize,
-              }}
-            >
-              <Slider
-                fullWidth
-                label={'Zoom: ' + zoom}
-                value={zoom * 10}
-                min='10'
-                max='20'
-                onChange={(_, zoom) => setZoom(zoom / 10)}
-              />
-            </div>
+            {!customCropEnabled ? (
+              <button
+                {...css({
+                  position: 'absolute',
+                  border: 'none',
+                  cursor: 'pointer',
+                  height: previewSize,
+                  width: previewSize,
+                  zIndex: 3,
+                })}
+                onClick={() => setCustomCropEnabled(!customCropEnabled)}
+              >
+                <span style={{ color: 'white', ...fontStyles.sansSerifMedium }}>
+                  Eigenen Ausschnitt Setzen
+                </span>
+              </button>
+            ) : (
+              <>
+                <Cropper
+                  image={image}
+                  aspect={1}
+                  crop={crop}
+                  zoom={zoom}
+                  onCropChange={setCrop}
+                  onCropComplete={onCropComplete}
+                />
+                <div
+                  style={{
+                    position: 'relative',
+                    top: containerWidth / 2,
+                    width: previewSize,
+                  }}
+                >
+                  <Slider
+                    fullWidth
+                    inactive={!customCropEnabled}
+                    label={'Zoom: ' + zoom}
+                    value={zoom * 10}
+                    min='10'
+                    max='20'
+                    onChange={(_, zoom) => setZoom(zoom / 10)}
+                  />
+                  <Button
+                    small
+                    onClick={() => {
+                      setCustomCropEnabled(false)
+                      resetStateAndMeta()
+                    }}
+                    style={{ marginTop: 8 }}
+                  >
+                    Ausschnitt Zurücksetzen
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
           <div
             style={{
@@ -137,14 +186,22 @@ const ImageCrop = ({ onChange, image, format, crop: initialCropArea }) => {
               overflow: 'hidden',
             }}
           >
-            <div
-              style={{
-                marginBottom: -previewSize,
-                paddingBottom: '100%',
-              }}
-            >
-              <img src={image} alt='Preview Crop' style={imageStyle} />
-            </div>
+            {!customCropEnabled ? (
+              <img
+                src={image}
+                alt='Preview Crop'
+                style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+              />
+            ) : (
+              <div
+                style={{
+                  marginBottom: -previewSize,
+                  paddingBottom: '100%',
+                }}
+              >
+                <img src={image} alt='Preview Crop' style={imageStyle} />
+              </div>
+            )}
           </div>
         </>
       )}
