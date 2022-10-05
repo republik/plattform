@@ -12,10 +12,10 @@ const Form: React.FC<ElementFormProps<QuizItemElement>> = ({
 }) => (
   <div>
     <Checkbox
-      checked={element.isCorrect}
+      checked={element.isCorrect || false}
       onChange={(_, checked) => onChange({ isCorrect: checked })}
     >
-      correct answer
+      Diese Antwort ist richtig.
     </Checkbox>
   </div>
 )
@@ -27,7 +27,7 @@ export const config: ElementConfigI = {
   attrs: {
     blockUi: {
       style: {
-        top: 15,
+        top: 55,
       },
     },
   },

@@ -231,6 +231,10 @@ export type QuizAnswerInfoElement = SharedElement & {
   type: 'quizAnswerInfo'
 }
 
+export type QuizAnswerInfoPElement = SharedElement & {
+  type: 'quizAnswerInfoP'
+}
+
 export type CustomElement =
   | HeadlineElement
   | ParagraphElement
@@ -270,6 +274,7 @@ export type CustomElement =
   | QuizItemElement
   | QuizAnswerElement
   | QuizAnswerInfoElement
+  | QuizAnswerInfoPElement
 
 export type CustomDescendant = CustomElement | CustomText
 export type CustomAncestor = CustomElement | CustomEditor
@@ -316,6 +321,7 @@ export type CustomElementsType =
   | 'quizItem'
   | 'quizAnswer'
   | 'quizAnswerInfo'
+  | 'quizAnswerInfoP'
 
 interface ButtonI {
   icon: IconType
@@ -336,6 +342,7 @@ interface ElementAttrsI extends EditorAttrsI {
   blockUi?: BlockUiAttrsI
   isTextInline?: boolean
   stopFormIteration?: boolean
+  neverDelete?: boolean
 }
 
 export type EditorAttr = keyof EditorAttrsI
@@ -414,6 +421,7 @@ export type EditorConfig = {
   readOnly?: boolean
   t?: Formatter
   Link?: React.FC
+  nav?: JSX.Element
 }
 
 export type KeyCombo = {

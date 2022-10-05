@@ -1,6 +1,6 @@
 const maxSize = 6000
 
-module.exports = (resize) => {
+module.exports = (resize, ignoreMaxSize) => {
   if (!resize) {
     return {
       width: null,
@@ -20,7 +20,7 @@ module.exports = (resize) => {
   if (isNaN(height) || (height && typeof height !== 'number')) {
     throw new Error('invalid height')
   }
-  if (width > maxSize || height > maxSize) {
+  if (!ignoreMaxSize && (width > maxSize || height > maxSize)) {
     throw new Error('maxSize: ' + maxSize)
   }
   return {

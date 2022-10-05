@@ -11,7 +11,13 @@ import {
   slug,
 } from '@project-r/styleguide'
 import scrollIntoView from 'scroll-into-view'
-import { MetaOption, MetaOptionLabel, AutosizeInput } from './components/Layout'
+import {
+  MetaOption,
+  MetaOptionLabel,
+  AutosizeInput,
+  MetaSection,
+  MetaSectionTitle,
+} from './components/Layout'
 import SocialMedia from './components/SocialMedia'
 import RepoSelect from '../editor/modules/meta/RepoSelect'
 import PublishPathNotice from '../editor/modules/meta/PublishPathNotice'
@@ -37,16 +43,6 @@ const styles = {
     },
   }),
   metaHeader: css({ position: 'sticky', top: 80, zIndex: 9 }),
-  metaSection: css({ ':not(:first-child)': { marginTop: 128 } }),
-  metaSectionTitle: css({ margin: '24px 0' }),
-}
-
-const MetaSection = ({ children }) => {
-  return <div {...styles.metaSection}>{children}</div>
-}
-
-const MetaSectionTitle = ({ children }) => {
-  return <h3 {...styles.metaSectionTitle}>{children}</h3>
 }
 
 const MetaDataForm = ({

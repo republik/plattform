@@ -1,38 +1,33 @@
 import { gql, useQuery } from '@apollo/client'
 import { css } from 'glamor'
 import {
-  Loader,
   ArrowForwardIcon,
   ArrowBackIcon,
   IconButton,
-  fontStyles,
+  FlyerDate,
   mediaQueries,
+  FlyerTile,
 } from '@project-r/styleguide'
 import Link from 'next/link'
-import { swissTime } from '../../lib/utils/format'
 import { useMe } from '../../lib/context/MeContext'
 
 const FORMAT_REPO_ID = 'republik/format-journal'
-const dateParse = swissTime.format('%d.%m.%Y')
 
 const styles = {
   footer: css({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
+    marginTop: -35,
+    [mediaQueries.mUp]: {
+      marginTop: -60,
+    },
   }),
   navi: css({
     display: 'flex',
     flexWrap: 'nowrap',
     alignItems: 'center',
-    justifyContent: 'flex-end',
   }),
   date: css({
-    ...fontStyles.sansSerifRegular16,
     marginRight: 20,
     [mediaQueries.mUp]: {
-      ...fontStyles.sansSerifRegular17,
       marginRight: 24,
     },
   }),
@@ -103,47 +98,43 @@ const QUERY = gql`
   }
 `
 
-const FlyerNavi = ({ repoId, publishDate, actionBar }) => {
-  const { data, loading, error } = useQuery(QUERY, {
+export const FlyerNav = ({ repoId, publishDate }) => {
+  const { hasAccess } = useMe()
+  const { data, loading } = useQuery(QUERY, {
     variables: {
       publishedAt: publishDate,
       repoId,
     },
+    skip: !hasAccess,
   })
-  const date = new Date(publishDate)
-  const { hasAccess } = useMe()
-
+  const prev = data?.prev.nodes[0]?.entity?.meta
+  const next = data?.next.nodes[0]?.entity?.meta
   return (
-    <Loader
-      loading={loading}
-      error={error}
-      render={() => {
-        const prev = data.prev.nodes[0]?.entity?.meta
-        const next = data.next.nodes[0]?.entity?.meta
-
-        return (
-          <div {...styles.footer}>
-            {actionBar}
-            {hasAccess && (
-              <div {...styles.navi}>
-                {prev && (
-                  <Link href={prev.path} passHref>
-                    <IconButton Icon={ArrowBackIcon} />
-                  </Link>
-                )}
-                <span {...styles.date}>{dateParse(date)}</span>
-                {next && (
-                  <Link href={next.path} passHref>
-                    <IconButton invert Icon={ArrowForwardIcon} />
-                  </Link>
-                )}
-              </div>
-            )}
-          </div>
-        )
-      }}
-    />
+    <div {...styles.navi}>
+      {/* prevent flicker */}
+      {hasAccess && (loading || prev) && (
+        <Link href={prev?.path || '#'} passHref>
+          <IconButton Icon={ArrowBackIcon} />
+        </Link>
+      )}
+      <div {...styles.date}>
+        <FlyerDate date={publishDate} />
+      </div>
+      {next && (
+        <Link href={next?.path || '#'} passHref>
+          <IconButton invert Icon={ArrowForwardIcon} />
+        </Link>
+      )}
+    </div>
   )
 }
 
-export default FlyerNavi
+const FlyerFooter = ({ children }) => {
+  return (
+    <FlyerTile {...styles.footer} innerStyle={{ paddingTop: 0 }}>
+      {children}
+    </FlyerTile>
+  )
+}
+
+export default FlyerFooter

@@ -37,6 +37,7 @@ import { config as quiz } from './flyer/components/quiz/container'
 import { config as quizItem } from './flyer/components/quiz/item'
 import { config as quizAnswer } from './flyer/components/quiz/answer'
 import { config as quizAnswerInfo } from './flyer/components/quiz/answerInfo'
+import { config as quizAnswerInfoP } from './flyer/components/quiz/answerInfoP'
 
 export const config: ElementsConfig = {
   paragraph,
@@ -78,6 +79,7 @@ export const config: ElementsConfig = {
   quizItem,
   quizAnswer,
   quizAnswerInfo,
+  quizAnswerInfoP,
 }
 
 // typesafe helper

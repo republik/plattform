@@ -550,6 +550,10 @@
       "value": "Info"
     },
     {
+      "key": "editor/element/quizAnswerInfoP",
+      "value": "Info-Paragraph"
+    },
+    {
       "key": "editor/placeholder/paragraph",
       "value": "Text"
     },
@@ -560,6 +564,10 @@
     {
       "key": "editor/placeholder/flyerSignature",
       "value": "Text"
+    },
+    {
+      "key": "editor/placeholder/quizAnswerInfoP",
+      "value": "Infos zu Antwort (oder Enter für weitere Option)"
     },
     {
       "key": "editor/mark/bold",

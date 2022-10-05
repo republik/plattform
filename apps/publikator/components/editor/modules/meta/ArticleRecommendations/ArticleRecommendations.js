@@ -8,16 +8,13 @@ import ArticleRecommendationItem from './ArticleRecommendationItem'
 import { getAbsoluteRepoUrl } from './util/RepoLinkUtility'
 import { useRouter } from 'next/router'
 import { swapArrayElements } from './util/ArraySwapElementsUtility'
-
+import {
+  MetaSection,
+  MetaSectionTitle,
+} from '../../../../MetaDataForm/components/Layout'
 const ARTICLE_RECOMMENDATIONS_KEY = 'recommendations'
 
 const styles = {
-  title: css({
-    marginBottom: '1rem',
-  }),
-  wrapper: css({
-    display: 'block',
-  }),
   recommendationList: css({
     margin: '1rem 0',
     padding: 0,
@@ -87,10 +84,10 @@ const ArticleRecommendations = ({ t, editor, node }) => {
   }
 
   return (
-    <div {...styles.wrapper}>
-      <Interaction.H3 {...styles.title}>
+    <MetaSection>
+      <MetaSectionTitle>
         {t('metaData/recommendations/heading')}
-      </Interaction.H3>
+      </MetaSectionTitle>
       {
         // Even if recommended-articles shouldn't be available based on the article type,
         // one can override it by manually adding the recommended-articles key into the source-code
@@ -146,7 +143,7 @@ const ArticleRecommendations = ({ t, editor, node }) => {
           </p>
         )
       }
-    </div>
+    </MetaSection>
   )
 }
 
