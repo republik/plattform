@@ -79,9 +79,7 @@ const AudioPlayer = ({
   const isDesktop = useMediaQuery(mediaQueries.mUp)
   const [isExpanded, setIsExpanded] = useState(false)
   const [forceScrollLock, setForceScrollLock] = useState(false)
-  const [ref] = useBodyScrollLock(
-    (isExpanded && (!isDesktop || inNativeApp)) || forceScrollLock,
-  )
+  const [ref] = useBodyScrollLock((isExpanded && !isDesktop) || forceScrollLock)
 
   const { t } = useTranslation()
   const router = useRouter()
@@ -97,7 +95,6 @@ const AudioPlayer = ({
   }
 
   const handleOpenArticle = async (path: string) => {
-    console.log({ inNativeApp, path, isDesktop })
     if ((inNativeApp || !isDesktop) && isExpanded) {
       setIsExpanded(false)
     }
