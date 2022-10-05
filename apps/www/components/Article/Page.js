@@ -83,7 +83,7 @@ import DiscussionContextProvider from '../Discussion/context/DiscussionContextPr
 import Discussion from '../Discussion/Discussion'
 import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
 import { getMetaData, runMetaFromQuery } from './metadata'
-import FlyerFooter from './FlyerFooter'
+import FlyerFooter, { FlyerNav } from './Flyer'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -624,7 +624,16 @@ const ArticlePage = ({
               )}
               {isFlyer ? (
                 <Flyer.Layout schema={schema}>
-                  <RenderContextProvider t={t} Link={HrefLink}>
+                  <RenderContextProvider
+                    t={t}
+                    Link={HrefLink}
+                    nav={
+                      <FlyerNav
+                        repoId={repoId}
+                        publishDate={meta.publishDate}
+                      />
+                    }
+                  >
                     <SlateRender
                       value={article.content.children}
                       schema={schema}
@@ -632,13 +641,7 @@ const ArticlePage = ({
                       skip={['flyerOpeningP']}
                     />
                   </RenderContextProvider>
-                  <FlyerTile>
-                    <FlyerFooter
-                      actionBar={actionBarFlyer}
-                      repoId={repoId}
-                      publishDate={meta.publishDate}
-                    />
-                  </FlyerTile>
+                  <FlyerFooter>{actionBarFlyer}</FlyerFooter>
                 </Flyer.Layout>
               ) : (
                 <ArticleGallery

@@ -38,7 +38,11 @@ const hasFilledProps = (element: CustomElement): boolean => {
 
 const keepVoid = (element: CustomElement): boolean => {
   const config = elConfig[element.type]
-  return !config?.props?.length || hasFilledProps(element)
+  return (
+    config?.attrs?.neverDelete ||
+    !config?.props?.length ||
+    hasFilledProps(element)
+  )
 }
 
 const keepNonVoid = (element: CustomElement): boolean =>

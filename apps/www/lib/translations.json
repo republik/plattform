@@ -3109,6 +3109,10 @@
       "value": "Teilen"
     },
     {
+      "key": "article/actionbar/flyer/share",
+      "value": "Journal teilen"
+    },
+    {
       "key": "article/actionbar/facebook/title",
       "value": "Auf Facebook teilen"
     },

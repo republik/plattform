@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { css, merge } from 'glamor'
+import { css } from 'glamor'
 import { useColorContext } from '../Colors/ColorContext'
 import { mUp } from '../../theme/mediaQueries'
 import { Message } from '../Editor/Render/Message'
@@ -36,8 +36,9 @@ const styles = {
 
 export const FlyerTile: React.FC<{
   attributes: any
+  innerStyle?: object
   [x: string]: unknown
-}> = ({ children, attributes, ...props }) => {
+}> = ({ children, attributes, innerStyle = {}, ...props }) => {
   const [colorScheme] = useColorContext()
   return (
     <div
@@ -45,8 +46,11 @@ export const FlyerTile: React.FC<{
       {...attributes}
       {...styles.container}
       {...colorScheme.set('borderBottomColor', 'flyerText')}
+      {...colorScheme.set('background', 'flyerBg')}
     >
-      <div {...styles.content}>{children}</div>
+      <div {...styles.content} style={innerStyle}>
+        {children}
+      </div>
     </div>
   )
 }
@@ -55,8 +59,13 @@ export const FlyerTileOpening: React.FC<{
   attributes: any
   [x: string]: unknown
 }> = ({ children, attributes, ...props }) => {
+  const [colorScheme] = useColorContext()
   return (
-    <div {...props} {...attributes}>
+    <div
+      {...props}
+      {...attributes}
+      {...colorScheme.set('background', 'flyerBg')}
+    >
       <div {...styles.content} {...styles.contentOpening}>
         {children}
       </div>

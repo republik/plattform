@@ -116,6 +116,7 @@ const EditView = ({
       )}
       {!!content?.children && (
         <ContentEditor
+          publishDate={publishDate}
           value={content.children}
           onChange={(newValue) =>
             setContent((currentContent) => ({
