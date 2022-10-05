@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { AudioPlayerProps } from '../AudioPlayerContainer'
 import { useInNativeApp } from '../../../lib/withInNativeApp'
 import { useTranslation } from '../../../lib/withT'
@@ -15,6 +15,7 @@ import {
 import { AnimatePresence, motion } from 'framer-motion'
 import { css } from 'glamor'
 import AudioPlaybackElement from './AudioPlaybackElement'
+import { useAudioContext } from '../AudioProvider'
 
 const MARGIN = 15
 
@@ -74,6 +75,7 @@ const AudioPlayer = ({
   actions,
   buffered,
 }: AudioPlayerProps) => {
+  const { audioPlayerContainerRef } = useAudioContext()
   const { inNativeApp } = useInNativeApp()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
   const [isExpanded, setIsExpanded] = useState(false)
@@ -154,6 +156,7 @@ const AudioPlayer = ({
                   handleSeek={actions.onSeek}
                   handleClose={actions.onClose}
                   handleOpenArticle={handleOpenArticle}
+                  containerRef={audioPlayerContainerRef}
                 />
               )}
             </motion.div>

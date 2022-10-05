@@ -1,4 +1,13 @@
-import { createContext, useState, useEffect, useRef, useContext } from 'react'
+import {
+  createContext,
+  useState,
+  useEffect,
+  useRef,
+  useContext,
+  RefObject,
+  Dispatch,
+  SetStateAction,
+} from 'react'
 
 import createPersistedState from '../../lib/hooks/use-persisted-state'
 import { useInNativeApp, postMessage } from '../../lib/withInNativeApp'
@@ -34,13 +43,18 @@ export function useAudioContextEvent<E = Event>(
 type AudioContextValue = {
   activePlayerItem: AudioPlayerItem | null
   audioPlayerVisible: boolean
+  setAudioPlayerVisible: Dispatch<SetStateAction<boolean>>
   autoPlayActive: boolean
   toggleAudioPlayer: ToggleAudioPlayerFunc
   onCloseAudioPlayer: () => void
+  audioPlayerContainerRef: RefObject<HTMLDivElement>
 }
 
 export const AudioContext = createContext<AudioContextValue>({
   audioPlayerVisible: false,
+  setAudioPlayerVisible: () => {
+    throw new Error('not implemented')
+  },
   toggleAudioPlayer: () => {
     throw new Error('not implemented')
   },
@@ -49,6 +63,7 @@ export const AudioContext = createContext<AudioContextValue>({
   },
   activePlayerItem: null,
   autoPlayActive: false,
+  audioPlayerContainerRef: null,
 })
 
 export const useAudioContext = () => useContext(AudioContext)
@@ -58,6 +73,7 @@ const usePersistedPlayerItem = createPersistedState<AudioPlayerItem>(
 )
 
 const AudioProvider = ({ children }) => {
+  const audioPlayerContainerRef = useRef<HTMLDivElement>(null)
   const { inNativeIOSApp } = useInNativeApp()
   const [activePlayerItem, setActivePlayerItem] = usePersistedPlayerItem<
     AudioPlayerItem | undefined
@@ -139,9 +155,11 @@ const AudioProvider = ({ children }) => {
       value={{
         activePlayerItem,
         audioPlayerVisible,
+        setAudioPlayerVisible,
         autoPlayActive: autoPlayAudioPlayerItem === activePlayerItem,
         toggleAudioPlayer,
         onCloseAudioPlayer,
+        audioPlayerContainerRef,
       }}
     >
       {children}

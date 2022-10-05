@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { RefObject } from 'react'
 import { css } from 'glamor'
 import Scrubber from './controls/Scrubber'
 import { AudioPlayerProps, FALLBACK_IMG_SRC } from './shared'
@@ -75,6 +75,7 @@ type MiniAudioPlayerProps = {
   handleSeek: (progress: number) => void
   handleClose: () => void
   handleOpenArticle: (path: string) => Promise<void>
+  containerRef: RefObject<HTMLDivElement>
 } & Omit<AudioPlayerProps, 'actions' | 'queuedItems' | 'playbackRate'>
 
 const MiniAudioPlayer = ({
@@ -90,6 +91,7 @@ const MiniAudioPlayer = ({
   handleSeek,
   handleClose,
   handleOpenArticle,
+  containerRef,
 }: MiniAudioPlayerProps) => {
   const {
     document: {
@@ -99,7 +101,7 @@ const MiniAudioPlayer = ({
   const cover = imageResizeUrl(image, '250x') || FALLBACK_IMG_SRC
 
   return (
-    <div {...styles.root}>
+    <div {...styles.root} ref={containerRef}>
       <div {...styles.playerWrapper}>
         {isLoading ? (
           <div {...styles.spinnerWrapper}>
