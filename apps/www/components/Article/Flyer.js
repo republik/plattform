@@ -105,7 +105,6 @@ export const FlyerNav = ({ repoId, publishDate }) => {
       publishedAt: publishDate,
       repoId,
     },
-    // @Tobias: could this explode at me?
     skip: !hasAccess,
   })
   const prev = data?.prev.nodes[0]?.entity?.meta

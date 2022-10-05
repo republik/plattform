@@ -285,5 +285,107 @@ describe('Slate Editor', () => {
         },
       ])
     })
+
+    it('should not delete nodes with never delete flag', async () => {
+      const value = [
+        {
+          type: 'flyerTileOpening',
+          children: [
+            {
+              type: 'flyerDate',
+              children: [{ text: '' }],
+            },
+            {
+              type: 'headline',
+              children: [
+                {
+                  text: 'Bonjour Madame!',
+                },
+              ],
+            },
+            {
+              type: 'flyerMetaP',
+              children: [
+                {
+                  text: '',
+                },
+              ],
+            },
+          ],
+        },
+        {
+          type: 'flyerTile',
+          children: [
+            {
+              type: 'flyerMetaP',
+              children: [
+                {
+                  text: '',
+                },
+              ],
+            },
+            {
+              type: 'flyerTopic',
+              children: [
+                {
+                  text: '',
+                },
+              ],
+            },
+            {
+              type: 'flyerTitle',
+              children: [
+                {
+                  text: '',
+                },
+              ],
+            },
+            {
+              type: 'flyerAuthor',
+              children: [
+                {
+                  text: '',
+                },
+              ],
+            },
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  text: '',
+                },
+              ],
+            },
+            {
+              type: 'flyerPunchline',
+              children: [
+                {
+                  text: '',
+                },
+              ],
+            },
+          ],
+        },
+      ]
+      expect(cleanupTree(value, true)).toEqual([
+        {
+          type: 'flyerTileOpening',
+          children: [
+            {
+              type: 'flyerDate',
+              children: [{ text: '' }],
+            },
+            {
+              type: 'headline',
+              children: [
+                {
+                  text: 'Bonjour Madame!',
+                },
+              ],
+            },
+          ],
+        },
+      ])
+    })
   })
 })
