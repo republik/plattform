@@ -391,7 +391,21 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const onError = () => {
     if (mediaRef.current && mediaRef.current.error) {
       const error = mediaRef.current.error
-      handleError(error)
+      handleError(
+        new Error(
+          JSON.stringify(
+            {
+              message: error.message,
+              code: error.code,
+              MEDIA_ERR_ABORTED: error.MEDIA_ERR_ABORTED,
+              MEDIA_ERR_NETWORK: error.MEDIA_ERR_NETWORK,
+              MEDIA_ERR_DECODE: error.MEDIA_ERR_DECODE,
+            },
+            null,
+            2,
+          ),
+        ),
+      )
       // TODO: handle error and show visually
     }
     // TODO: look into best way for the track-player to handle errors
