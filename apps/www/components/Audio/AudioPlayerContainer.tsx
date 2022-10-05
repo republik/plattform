@@ -178,11 +178,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     try {
       setIsLoading(false)
       syncWithMediaElement()
-      console.log('AudioPlayerContainer: onCanPlay', {
-        isPlaying,
-        shouldAutoPlay,
-        hasAutoPlayed,
-      })
+
       if (activePlayerItem?.id !== trackedPlayerItem?.current?.id) {
         trackedPlayerItem.current = activePlayerItem
 
@@ -350,6 +346,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   // Handle track ending on media element
   const onQueueAdvance = async () => {
     if (!activePlayerItem) return
+    console.log('onQueueAdvance')
     try {
       const { data } = await removeAudioQueueItem({
         variables: {
@@ -360,6 +357,10 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
         setShouldAutoPlay(true)
         const nextUp = data.audioQueueItems[0]
         setActivePlayerItem(nextUp)
+      } else {
+        console.log('onQueueAdvance: no more items in queue')
+        setShouldAutoPlay(false)
+        setActivePlayerItem(null)
       }
     } catch (error) {
       handleError(error)
@@ -495,8 +496,6 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   useNativeAppEvent(AudioEvent.QUEUE_ADVANCE, onQueueAdvance)
   useNativeAppEvent(AudioEvent.ERROR, handleError)
 
-  if (!activePlayerItem) return null
-
   return (
     <>
       {children({
@@ -512,7 +511,8 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
         duration:
           duration !== 0
             ? duration
-            : activePlayerItem.document.meta.audioSource.durationMs / 1000,
+            : activePlayerItem?.document?.meta?.audioSource?.durationMs /
+                1000 || 0,
         playbackRate,
         actions: {
           onCanPlay,
