@@ -33,6 +33,7 @@ const styles = {
     boxShadow: '0px -5px 15px -3px rgba(0,0,0,0.1)',
     maxHeight: '100vh',
     [mediaQueries.mUp]: {
+      right: 15,
       width: ['290px', `calc(100% - ${MARGIN * 2}px)`],
       maxWidth: 420,
       marginRight: MARGIN * 2,
