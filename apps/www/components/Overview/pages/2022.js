@@ -341,6 +341,45 @@ const text = {
       ?
     </>
   ),
+  August: (p) => (
+    <>
+      Warum die Schweiz der{' '}
+      <Highlight {...p} ids={['c8Dzktqcb']}>
+        Affenpocken
+      </Highlight>{' '}
+      nicht Herr wird. Worum es geht im Konflikt{' '}
+      <Highlight {...p} ids={['u2aItn2Sg']}>
+        China gegen Taiwan
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['vJ9uxk_q-']}>
+        Wie Werbemillionen die Demokratie zersetzen
+      </Highlight>
+      . Und:{' '}
+      <Highlight {...p} ids={['BvcLjeTvR']}>
+        Ist es juristisch okay, Oligarchenjachten zu beschlagnahmen
+      </Highlight>
+      ? Wie kommt es zu{' '}
+      <Highlight {...p} ids={['bv30j129E']}>
+        Polizeigewalt
+      </Highlight>
+      ? Was muss ich zum Thema{' '}
+      <Highlight {...p} ids={['GyndF2o9a']}>
+        cultural appropriation
+      </Highlight>{' '}
+      wirklich wissen? Davon abgesehen droht ein Strommangel. Bemerkenswert
+      daran: Er begünstigt{' '}
+      <Highlight {...p} ids={['DZhTy8GHO']}>
+        höchst ungewöhnliche politische Allianzen
+      </Highlight>
+      . Doch es bleibt die Frage:{' '}
+      <Highlight {...p} ids={['NaM38tsF_']}>
+        Ist die Schweiz bereit, wenn Putin im Winter die Pipelines nach Europa
+        dichtmacht
+      </Highlight>
+      ?
+    </>
+  ),
 }
 
 const Overview2022 = (props) => <Page {...props} year={2022} text={text} />
