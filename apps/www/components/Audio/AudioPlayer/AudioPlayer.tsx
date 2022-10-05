@@ -75,7 +75,7 @@ const AudioPlayer = ({
   actions,
   buffered,
 }: AudioPlayerProps) => {
-  const { inNativeApp } = useInNativeApp()
+  const { inNativeApp, inIOS } = useInNativeApp()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
   const [isExpanded, setIsExpanded] = useState(false)
   const [ref] = useBodyScrollLock(isExpanded && !isDesktop)
@@ -101,6 +101,38 @@ const AudioPlayer = ({
     await router.push(path)
   }
 
+  // Handle webkit in react-native-webview on iOS not resolving env(safe-area-inset-bottom).
+  // See: https://github.com/react-native-webview/react-native-webview/issues/155
+  const iOSSafeInsets = css({
+    // iPhone 14
+    ['@media only screen and (device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)']:
+      {
+        marginBottom: 49,
+      },
+    ['@media only screen and (device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)']:
+      {
+        marginBottom: 36,
+      },
+    // iPhone 13 mini, iPhone 12 mini, iPhone 11 Pro, iPhone Xs, and iPhone X
+    ['@media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)']:
+      {
+        marginBottom: 34 + 15,
+      },
+    ['@media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)']:
+      {
+        marginBottom: 21 + 15,
+      },
+    // iPhone 11 and iPhone XR
+    ['@media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)']:
+      {
+        marginBottom: 34 + 15,
+      },
+    ['@media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)']:
+      {
+        marginBottom: 21 + 15,
+      },
+  })
+
   return (
     <AnimatePresence>
       {isVisible && (
@@ -110,6 +142,7 @@ const AudioPlayer = ({
             onBackdropClick={() => setIsExpanded(false)}
           >
             <motion.div
+              {...(inNativeApp && inIOS && !isExpanded && iOSSafeInsets)}
               ref={ref}
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
