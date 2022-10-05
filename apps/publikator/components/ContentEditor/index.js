@@ -79,8 +79,9 @@ const TOOLBAR = {
 }
 
 const Index = ({ value, publishDate, onChange, readOnly, t }) => {
+  const nav = <FlyerDate date={publishDate} />
   return (
-    <RenderContextProvider t={t} nav={<FlyerDate date={publishDate} />}>
+    <RenderContextProvider t={t} nav={nav}>
       {/* The Editor does its own RenderContextProvider
        * but we also need to do one from the main styleguide entry point
        * cause render components will use that context
@@ -97,6 +98,7 @@ const Index = ({ value, publishDate, onChange, readOnly, t }) => {
           toolbar: TOOLBAR,
           readOnly,
           t,
+          nav,
         }}
       />
     </RenderContextProvider>

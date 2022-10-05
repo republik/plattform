@@ -421,6 +421,7 @@ export type EditorConfig = {
   readOnly?: boolean
   t?: Formatter
   Link?: React.FC
+  nav?: JSX.Element
 }
 
 export type KeyCombo = {
