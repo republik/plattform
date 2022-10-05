@@ -1,4 +1,4 @@
-import React, { RefObject } from 'react'
+import React from 'react'
 import { css } from 'glamor'
 import Scrubber from './controls/Scrubber'
 import { AudioPlayerProps, FALLBACK_IMG_SRC } from './shared'
@@ -16,13 +16,15 @@ import {
 import AudioPlayerTitle from './ui/AudioPlayerTitle'
 import { imageResizeUrl } from 'mdast-react-render/lib/utils'
 
+export const MINI_AUDIO_PLAYER_HEIGHT = 68
+
 const styles = {
   root: css({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
     width: '100%',
-    height: 68,
+    height: MINI_AUDIO_PLAYER_HEIGHT,
     [mediaQueries.mUp]: {
       marginBottom: 0,
     },
@@ -75,7 +77,6 @@ type MiniAudioPlayerProps = {
   handleSeek: (progress: number) => void
   handleClose: () => void
   handleOpenArticle: (path: string) => Promise<void>
-  containerRef: RefObject<HTMLDivElement>
 } & Omit<AudioPlayerProps, 'actions' | 'queuedItems' | 'playbackRate'>
 
 const MiniAudioPlayer = ({
@@ -91,7 +92,6 @@ const MiniAudioPlayer = ({
   handleSeek,
   handleClose,
   handleOpenArticle,
-  containerRef,
 }: MiniAudioPlayerProps) => {
   const {
     document: {
@@ -101,7 +101,7 @@ const MiniAudioPlayer = ({
   const cover = imageResizeUrl(image, '250x') || FALLBACK_IMG_SRC
 
   return (
-    <div {...styles.root} ref={containerRef}>
+    <div {...styles.root}>
       <div {...styles.playerWrapper}>
         {isLoading ? (
           <div {...styles.spinnerWrapper}>

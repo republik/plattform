@@ -5,26 +5,7 @@ import { AUDIO_PLAYER_HEIGHT } from '../constants'
 import BottomPanel from '../Frame/BottomPanel'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { useAudioContext } from '../Audio/AudioProvider'
-
-/**
- * Compute needed offset for audio player
- * @returns {number|number}
- */
-const useAudioPlayerOffset = () => {
-  const { isAudioQueueAvailable } = useAudioQueue()
-  const { audioPlayerVisible, audioPlayerContainerRef } = useAudioContext()
-
-  if (!isAudioQueueAvailable) {
-    return audioPlayerVisible ? AUDIO_PLAYER_HEIGHT + 20 : 0
-  }
-
-  if (typeof window !== 'undefined' && audioPlayerContainerRef?.current) {
-    const clientRect = audioPlayerContainerRef.current.getBoundingClientRect()
-    return window.innerHeight - clientRect.top - 10
-  }
-
-  return 0
-}
+import { MINI_AUDIO_PLAYER_HEIGHT } from '../Audio/AudioPlayer/MiniAudioPlayer'
 
 const ACTIONBAR_FADE_AREA = 400
 const FOOTER_FADE_AREA = 800
@@ -33,7 +14,14 @@ const FOOTER_FADE_AREA_MOBILE = 1200
 const ActionBarOverlay = ({ children }) => {
   const [overlayVisible, setOverlayVisible] = useState(false)
   const isDesktop = useMediaQuery(mediaQueries.mUp)
-  const audioPlayerOffset = useAudioPlayerOffset()
+  const { isAudioQueueAvailable } = useAudioQueue()
+  const { audioPlayerVisible } = useAudioContext()
+
+  const audioPlayerOffset = audioPlayerVisible
+    ? isAudioQueueAvailable
+      ? MINI_AUDIO_PLAYER_HEIGHT + 10
+      : AUDIO_PLAYER_HEIGHT + 20
+    : 0
 
   const lastY = useRef()
   const diff = useRef(0)

@@ -4,7 +4,6 @@ import {
   useEffect,
   useRef,
   useContext,
-  RefObject,
   Dispatch,
   SetStateAction,
 } from 'react'
@@ -47,7 +46,6 @@ type AudioContextValue = {
   autoPlayActive: boolean
   toggleAudioPlayer: ToggleAudioPlayerFunc
   onCloseAudioPlayer: () => void
-  audioPlayerContainerRef: RefObject<HTMLDivElement>
 }
 
 export const AudioContext = createContext<AudioContextValue>({
@@ -63,7 +61,6 @@ export const AudioContext = createContext<AudioContextValue>({
   },
   activePlayerItem: null,
   autoPlayActive: false,
-  audioPlayerContainerRef: null,
 })
 
 export const useAudioContext = () => useContext(AudioContext)
@@ -73,7 +70,6 @@ const usePersistedPlayerItem = createPersistedState<AudioPlayerItem>(
 )
 
 const AudioProvider = ({ children }) => {
-  const audioPlayerContainerRef = useRef<HTMLDivElement>(null)
   const { inNativeIOSApp } = useInNativeApp()
   const [activePlayerItem, setActivePlayerItem] = usePersistedPlayerItem<
     AudioPlayerItem | undefined
@@ -159,7 +155,6 @@ const AudioProvider = ({ children }) => {
         autoPlayActive: autoPlayAudioPlayerItem === activePlayerItem,
         toggleAudioPlayer,
         onCloseAudioPlayer,
-        audioPlayerContainerRef,
       }}
     >
       {children}
