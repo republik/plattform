@@ -402,9 +402,21 @@ const ActionBar = ({
           setShareOverlayVisible(!shareOverlayVisible)
         }
       },
-      label: !forceShortLabel ? t('article/actionbar/share') : '',
+      label: !forceShortLabel
+        ? t(
+            `article/actionbar/${mode}/share`,
+            undefined,
+            t('article/actionbar/share'),
+          )
+        : '',
       labelShort:
-        !forceShortLabel && isArticleBottom ? t('article/actionbar/share') : '',
+        !forceShortLabel && isArticleBottom
+          ? t(
+              `article/actionbar/${mode}/share`,
+              undefined,
+              t('article/actionbar/share'),
+            )
+          : '',
       modes: ['articleTop', 'articleOverlay', 'articleBottom', 'flyer'],
       show: true,
     },

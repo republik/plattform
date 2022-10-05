@@ -2327,6 +2327,26 @@
     {
       "key": "api/publikator/generateDerivative/unable",
       "value": "Ein Fehler verhinderte das Erzeugen für diesen Commit"
+    },
+    {
+      "key": "api/calendar/404",
+      "value": "Kalender existiert nicht"
+    },
+    {
+      "key": "api/calendar/slot/error/keyInvalid",
+      "value": "Gesuchter Kalendereintrag ist ungültig"
+    },
+    {
+      "key": "api/calendar/slot/error/userBookedAlready",
+      "value": "Kalendereintrag bereits vorhanden"
+    },
+    {
+      "key": "api/calendar/slot/error/someoneBookAlready",
+      "value": "Kalendereintrag nicht mehr verfügbar"
+    },
+    {
+      "key": "api/calendar/slot/error/404",
+      "value": "Kalendereintrag nicht gefunden"
     }
   ]
 }

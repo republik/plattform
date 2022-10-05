@@ -60,12 +60,20 @@ type Contributor {
   user: User
 }
 
+type Crop {
+  x: Int
+  y: Int
+  width: Int
+  height: Int 
+}
+
 type Meta {
   title: String
   shortTitle: String
   slug: String
   path: String
   image: String
+  audioCoverCrop: Crop
   emailSubject: String
   description: String
   subject: String @deprecated(reason: "parse \`Document.content\` instead")

@@ -319,7 +319,12 @@ const MetaData = ({
         <br />
         <br />
         <br />
-        <AudioForm editor={editor} node={node} onInputChange={onInputChange} />
+        <AudioForm
+          editor={editor}
+          node={node}
+          onInputChange={onInputChange}
+          format={titleData?.format?.meta}
+        />
         <br />
         <br />
         <br />

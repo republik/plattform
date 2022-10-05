@@ -105,15 +105,18 @@ const EditView = ({
           style={{ zIndex: 23, position: 'sticky', top: HEADER_HEIGHT }}
         />
       )}
-      <div {...styles.phase}>
-        <PhaseSummary
-          commitId={(repo?.commit || repo?.latestCommit)?.id}
-          repoId={repo?.id}
-          hasUncommittedChanges={hasUncommittedChanges}
-        />
-      </div>
+      {!readOnly && (
+        <div {...styles.phase}>
+          <PhaseSummary
+            commitId={(repo?.commit || repo?.latestCommit)?.id}
+            repoId={repo?.id}
+            hasUncommittedChanges={hasUncommittedChanges}
+          />
+        </div>
+      )}
       {!!content?.children && (
         <ContentEditor
+          publishDate={publishDate}
           value={content.children}
           onChange={(newValue) =>
             setContent((currentContent) => ({
