@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 import { css } from 'glamor'
 import {
   IconButton,
@@ -99,6 +99,7 @@ type ExpandedAudioPlayerProps = {
   handleClose: () => void
   handleOpenArticle: (path: string) => Promise<void>
   bodyLockTargetRef: React.RefObject<HTMLDivElement>
+  setForceScrollLock: Dispatch<SetStateAction<boolean>>
 } & AudioControlProps &
   Omit<AudioPlayerProps, 'actions'>
 
@@ -121,6 +122,7 @@ const ExpandedAudioPlayer = ({
   handleSkipToNext,
   handleOpenArticle,
   bodyLockTargetRef,
+  setForceScrollLock,
 }: ExpandedAudioPlayerProps) => {
   const [colorScheme] = useColorContext()
   const [activeTab, setActiveTab] = React.useState<'QUEUE' | 'LATEST'>('QUEUE')
@@ -207,6 +209,7 @@ const ExpandedAudioPlayer = ({
               items={queuedItems}
               handleOpenArticle={handleOpenArticle}
               handleDownload={handleDownload}
+              setForceScrollLock={setForceScrollLock}
             />
           )}
           {activeTab === 'LATEST' && (

@@ -4,7 +4,7 @@ import EmptyQueue from './EmptyQueue'
 import NoAccess from '../shared/NoAccess'
 import useAudioQueue from '../../../../hooks/useAudioQueue'
 import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
-import { useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import throttle from 'lodash/throttle'
 import LoadingPlaceholder from '../shared/LoadingPlaceholder'
 import {
@@ -22,6 +22,7 @@ import {
   restrictToWindowEdges,
 } from '@dnd-kit/modifiers'
 import { useMe } from '../../../../../../lib/context/MeContext'
+import { useInNativeApp } from '../../../../../../lib/withInNativeApp'
 
 const styles = {
   list: css({
@@ -40,6 +41,7 @@ type QueueProps = {
   items: AudioQueueItem[]
   handleOpenArticle: (path: string) => Promise<void>
   handleDownload: (item: AudioQueueItem['document']) => Promise<void>
+  setForceScrollLock: Dispatch<SetStateAction<boolean>>
 }
 
 const Queue = ({
@@ -48,7 +50,9 @@ const Queue = ({
   items: inputItems,
   handleOpenArticle,
   handleDownload,
+  setForceScrollLock,
 }: QueueProps) => {
+  const { inNativeApp } = useInNativeApp()
   const mouseSensor = useSensor(MouseSensor)
   const touchSensor = useSensor(TouchSensor)
 
@@ -163,7 +167,17 @@ const Queue = ({
 
   return (
     <DndContext
-      onDragEnd={handleDragEnd}
+      onDragStart={() => {
+        if (inNativeApp) {
+          console.log('force lock')
+          setForceScrollLock(true)
+        }
+      }}
+      onDragEnd={(e) => {
+        console.log('release lock')
+        setForceScrollLock(false)
+        handleDragEnd(e)
+      }}
       modifiers={[
         restrictToVerticalAxis,
         restrictToWindowEdges,

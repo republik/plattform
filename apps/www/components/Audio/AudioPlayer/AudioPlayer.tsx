@@ -78,7 +78,10 @@ const AudioPlayer = ({
   const { inNativeApp, inIOS } = useInNativeApp()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
   const [isExpanded, setIsExpanded] = useState(false)
-  const [ref] = useBodyScrollLock(isExpanded && !isDesktop)
+  const [forceScrollLock, setForceScrollLock] = useState(true)
+  const [ref] = useBodyScrollLock(
+    (isExpanded && (!isDesktop || inNativeApp)) || forceScrollLock,
+  )
 
   const { t } = useTranslation()
   const router = useRouter()
@@ -173,6 +176,7 @@ const AudioPlayer = ({
                   handleSkipToNext={actions.onSkipToNext}
                   handleOpenArticle={handleOpenArticle}
                   bodyLockTargetRef={ref}
+                  setForceScrollLock={setForceScrollLock}
                 />
               ) : (
                 <MiniAudioPlayer

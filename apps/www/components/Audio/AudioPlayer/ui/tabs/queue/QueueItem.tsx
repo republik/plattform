@@ -66,7 +66,7 @@ const QueueItem = ({
     transition,
     isDragging,
   } = useSortable({ id: item.id })
-  console.log('isDragging', isDragging)
+
   return (
     <li
       key={item.id}
