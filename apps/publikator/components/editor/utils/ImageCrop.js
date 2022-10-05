@@ -92,11 +92,6 @@ const ImageCrop = ({ onChange, image, format, crop: initialCropArea }) => {
     resetStateAndMeta()
   }, [image])
 
-  useEffect(() => {
-    // reset state and metadata if image changes
-    setCrop({ x: 0, y: 0 })
-  }, [customCropEnabled])
-
   const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
     if (!customCropEnabled) {
       return
