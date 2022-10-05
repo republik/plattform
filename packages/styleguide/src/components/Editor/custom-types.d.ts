@@ -342,6 +342,7 @@ interface ElementAttrsI extends EditorAttrsI {
   blockUi?: BlockUiAttrsI
   isTextInline?: boolean
   stopFormIteration?: boolean
+  neverDelete?: boolean
 }
 
 export type EditorAttr = keyof EditorAttrsI
@@ -420,6 +421,7 @@ export type EditorConfig = {
   readOnly?: boolean
   t?: Formatter
   Link?: React.FC
+  nav?: JSX.Element
 }
 
 export type KeyCombo = {

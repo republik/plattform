@@ -1,8 +1,9 @@
 import React from 'react'
 import { Flyer } from '../Typography'
 import { timeFormat, timeParse } from '../../lib/timeFormat'
-import { mUp } from '../../theme/mediaQueries'
+import { useRenderContext } from '../Editor/Render/Context'
 import { css } from 'glamor'
+import { mUp } from '../../theme/mediaQueries'
 
 export const FLYER_DATE_FORMAT = '%Y-%m-%d'
 const RENDER_FORMAT_CURRENT_YEAR = '%A, %-d. %B'
@@ -15,10 +16,26 @@ const isCurrentYear = (date?: Date): boolean =>
 
 export const FlyerDate: React.FC<{
   date?: string
+}> = ({ date }) => {
+  const parsedDate = date && parseDate(date.split('T')[0])
+  return (
+    <Flyer.Small contentEditable={false} style={{ opacity: date ? 1 : 0.33 }}>
+      {date
+        ? timeFormat(
+            isCurrentYear(parsedDate)
+              ? RENDER_FORMAT_CURRENT_YEAR
+              : RENDER_FORMAT,
+          )(parsedDate)
+        : 'Publikationsdatum'}
+    </Flyer.Small>
+  )
+}
+
+export const FlyerNav: React.FC<{
   attributes: any
   [x: string]: unknown
-}> = ({ children, attributes, date, ...props }) => {
-  const parsedDate = date && parseDate(date)
+}> = ({ attributes, children, ...props }) => {
+  const { nav } = useRenderContext()
   return (
     <div
       {...attributes}
@@ -30,15 +47,7 @@ export const FlyerDate: React.FC<{
         },
       })}
     >
-      <Flyer.Small contentEditable={false} style={{ opacity: date ? 1 : 0.33 }}>
-        {date
-          ? timeFormat(
-              isCurrentYear(parsedDate)
-                ? RENDER_FORMAT_CURRENT_YEAR
-                : RENDER_FORMAT,
-            )(parsedDate)
-          : 'Datum'}
-      </Flyer.Small>
+      <div contentEditable={false}>{nav}</div>
       {children}
     </div>
   )
