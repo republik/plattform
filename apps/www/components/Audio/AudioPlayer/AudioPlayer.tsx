@@ -78,7 +78,7 @@ const AudioPlayer = ({
   const { inNativeApp, inIOS } = useInNativeApp()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
   const [isExpanded, setIsExpanded] = useState(false)
-  const [forceScrollLock, setForceScrollLock] = useState(true)
+  const [forceScrollLock, setForceScrollLock] = useState(false)
   const [ref] = useBodyScrollLock(
     (isExpanded && (!isDesktop || inNativeApp)) || forceScrollLock,
   )
