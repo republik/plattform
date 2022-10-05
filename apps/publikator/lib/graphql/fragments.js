@@ -35,6 +35,12 @@ export const CommitWithDocument = gql`
         template
         kind
         color
+        audioCoverCrop {
+          x
+          y
+          width
+          height
+        }
         format {
           id
           repoId
