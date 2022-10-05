@@ -134,14 +134,22 @@ const Queue = ({
   }, 1000)
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
-    const draggedIndex = active.data.current.sortable.index
-    const draggedItem = items[draggedIndex]
-    const overIndex = over?.data.current.sortable.index
+    const draggedItemIndex = active.data.current.sortable.index
+    const draggedItem = items[draggedItemIndex]
+    const draggedOverIndex = over?.data.current.sortable.index
 
-    console.log('Moving item', draggedIndex, 'to', overIndex)
+    // If the drag event is cancelled, the draggedOverIndex will be undefined.
+    if (draggedOverIndex === undefined) {
+      console.log(
+        `Drag event cancelled: from ${draggedItemIndex} to ${draggedOverIndex}`,
+      )
+      return
+    }
+
+    console.log('Moving item', draggedItemIndex, 'to', draggedOverIndex)
     const nextItems = [...items]
-    nextItems.splice(draggedIndex, 1)
-    nextItems.splice(overIndex, 0, draggedItem)
+    nextItems.splice(draggedItemIndex, 1)
+    nextItems.splice(draggedOverIndex, 0, draggedItem)
     console.log('Updated index', nextItems)
 
     setItems(nextItems)
