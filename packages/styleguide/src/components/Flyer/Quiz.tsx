@@ -6,7 +6,7 @@ import { Message } from '../Editor/Render/Message'
 import { RenderedElement } from '../Editor/Render'
 import { isSlateElement } from '../Editor/Render/helpers'
 import { fontFamilies } from '../../theme/fonts'
-import { useColorContext } from '../Colors/ColorContext'
+import { ColorContextProvider, useColorContext } from '../Colors/ColorContext'
 import { mUp } from '../../theme/mediaQueries'
 import colors from '../../theme/colors'
 
@@ -170,7 +170,9 @@ export const Quiz = ({ children, attributes, ...props }) => {
         )
       })}
       {isSlateElement(answerInfo) && (
-        <RenderedElement element={answerInfo} schema={schema} />
+        <ColorContextProvider colorSchemeKey='light'>
+          <RenderedElement element={answerInfo} schema={schema} />
+        </ColorContextProvider>
       )}
     </div>
   )
