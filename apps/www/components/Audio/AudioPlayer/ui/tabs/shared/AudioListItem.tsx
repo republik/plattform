@@ -164,6 +164,7 @@ const AudioListItem = ({
                         (audioSource.durationMs / 1000)) *
                       100
                     }%`,
+                    maxWidth: '100%',
                     height: 2,
                   }}
                 ></div>
