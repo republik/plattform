@@ -76,7 +76,7 @@ const styles = {
     display: 'flex',
     gap: 24,
     flexDirection: 'column',
-    ['@media (orientation: landscape)']: {
+    [`@media (orientation: landscape) and ${mediaQueries.mDown}`]: {
       flexDirection: 'row',
       justifyContent: 'center',
       '> div': {
@@ -140,7 +140,6 @@ const ExpandedAudioPlayer = ({
     } catch (err) {
       // TODO: handle download error
       console.error(err)
-      alert('Download failed: ' + err)
     }
   }
 
@@ -154,27 +153,31 @@ const ExpandedAudioPlayer = ({
           onClick={handleMinimize}
         />
       </div>
-      <div {...styles.topSection}>
-        <CurrentlyPlaying
-          t={t}
-          item={activeItem}
-          handleOpen={handleOpenArticle}
-        />
-        <AudioControl
-          handleToggle={handleToggle}
-          handleSeek={handleSeek}
-          handleForward={handleForward}
-          handleBackward={handleBackward}
-          handlePlaybackRateChange={handlePlaybackRateChange}
-          handleSkipToNext={handleSkipToNext}
-          isPlaying={isPlaying}
-          isLoading={isLoading}
-          playbackRate={playbackRate}
-          currentTime={currentTime}
-          duration={duration}
-          buffered={buffered}
-        />
-      </div>
+      {activeItem && (
+        <>
+          <div {...styles.topSection}>
+            <CurrentlyPlaying
+              t={t}
+              item={activeItem}
+              handleOpen={handleOpenArticle}
+            />
+          </div>
+          <AudioControl
+            handleToggle={handleToggle}
+            handleSeek={handleSeek}
+            handleForward={handleForward}
+            handleBackward={handleBackward}
+            handlePlaybackRateChange={handlePlaybackRateChange}
+            handleSkipToNext={handleSkipToNext}
+            isPlaying={isPlaying}
+            isLoading={isLoading}
+            playbackRate={playbackRate}
+            currentTime={currentTime}
+            duration={duration}
+            buffered={buffered}
+          />
+        </>
+      )}
       <div {...styles.queueWrapper}>
         <Scroller>
           <TabButton

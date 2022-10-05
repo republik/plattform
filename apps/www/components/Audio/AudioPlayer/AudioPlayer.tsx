@@ -14,6 +14,7 @@ import {
 } from '@project-r/styleguide'
 import { AnimatePresence, motion } from 'framer-motion'
 import { css } from 'glamor'
+import AudioPlaybackElement from './AudioPlaybackElement'
 
 const MARGIN = 15
 
@@ -81,10 +82,7 @@ const AudioPlayer = ({
   const { t } = useTranslation()
   const router = useRouter()
   const [colorScheme] = useColorContext()
-  const {
-    document: { meta: { audioSource } = {} },
-  } = activeItem
-  const [_, ...queuedItems] = queue // filter active-item from queue
+  const [_, ...queuedItems] = queue || [] // filter active-item from queue
 
   const toggleAudioPlayer = () => {
     if (isPlaying) {
@@ -101,28 +99,6 @@ const AudioPlayer = ({
     }
     await router.push(path)
   }
-
-  const playbackElement = useMemo(() => {
-    if (inNativeApp || !audioSource) return null
-
-    return (
-      <audio
-        ref={mediaRef}
-        preload={autoPlay ? 'auto' : 'metadata'}
-        onPlay={actions.onPlay}
-        onPause={actions.onPause}
-        onCanPlay={actions.onCanPlay}
-        onEnded={actions.onEnded}
-        onError={actions.onError}
-      >
-        {audioSource.mp3 && <source src={audioSource.mp3} type='audio/mp3' />}
-        {audioSource.aac && <source src={audioSource.aac} type='audio/aac' />}
-        {audioSource.ogg && <source src={audioSource.ogg} type='audio/ogg' />}
-      </audio>
-    )
-  }, [audioSource, inNativeApp, autoPlay, mediaRef, actions])
-
-  if (!activeItem) return null
 
   return (
     <AnimatePresence>
@@ -182,7 +158,14 @@ const AudioPlayer = ({
               )}
             </motion.div>
           </Backdrop>
-          {playbackElement}
+          {activeItem && !inNativeApp && (
+            <AudioPlaybackElement
+              mediaRef={mediaRef}
+              activeItem={activeItem}
+              autoPlay={autoPlay}
+              actions={actions}
+            />
+          )}
         </>
       )}
     </AnimatePresence>
