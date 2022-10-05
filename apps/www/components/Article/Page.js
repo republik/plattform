@@ -294,7 +294,7 @@ const ArticlePage = ({
     throw new Error('redirect')
   }
 
-  const { toggleAudioPlayer, audioPlayerVisible } = useContext(AudioContext)
+  const { toggleAudioPlayer } = useContext(AudioContext)
 
   const markNotificationsAsRead = () => {
     const unreadNotifications = articleUnreadNotifications?.nodes?.filter(
@@ -762,12 +762,7 @@ const ArticlePage = ({
                       )}
                       {renderSchema(splitContent.main)}
                     </article>
-                    <ActionBarOverlay
-                      audioPlayerVisible={audioPlayerVisible}
-                      inNativeApp={inNativeApp}
-                    >
-                      {actionBarOverlay}
-                    </ActionBarOverlay>
+                    <ActionBarOverlay>{actionBarOverlay}</ActionBarOverlay>
                   </ProgressComponent>
                 </ArticleGallery>
               )}
