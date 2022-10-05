@@ -123,13 +123,21 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const saveActiveItemProgress = useCallback(
     async (forcedState?: { currentTime?: number; isPlaying?: boolean }) => {
       const { mediaId } = activePlayerItem?.document.meta?.audioSource ?? {}
-      saveMediaProgress(
+      if (duration < (forcedState?.currentTime ?? currentTime)) {
+        console.log('duration is less than current time, not saving progress', {
+          duration,
+          attemptedCurrentTime: forcedState?.currentTime ?? currentTime,
+        })
+        return
+      }
+
+      return saveMediaProgress(
         mediaId,
         forcedState?.currentTime ?? currentTime,
         forcedState?.isPlaying ?? isPlaying,
       )
     },
-    [activePlayerItem, currentTime, isPlaying, saveMediaProgress],
+    [activePlayerItem, currentTime, isPlaying, saveMediaProgress, duration],
   )
 
   const syncWithNativeApp = (state: AudioPlayerState) => {
