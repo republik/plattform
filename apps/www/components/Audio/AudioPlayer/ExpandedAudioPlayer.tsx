@@ -54,7 +54,7 @@ const styles = {
     paddingLeft: ['15px', 'max(15px, env(safe-area-inset-left))'],
     paddingRight: ['15px', 'max(15px, env(safe-area-inset-right))'],
     [mediaQueries.mUp]: {
-      minHeight: 282,
+      height: 282,
       maxHeight: 282,
     },
   }),
