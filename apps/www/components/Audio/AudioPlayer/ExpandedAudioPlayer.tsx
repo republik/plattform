@@ -38,6 +38,7 @@ const styles = {
       maxHeight: '100%',
       height: 'auto',
     },
+    overflow: 'hidden',
   }),
   queueWrapper: css({
     flex: 1,
@@ -56,7 +57,7 @@ const styles = {
     paddingLeft: ['15px', 'max(15px, env(safe-area-inset-left))'],
     paddingRight: ['15px', 'max(15px, env(safe-area-inset-right))'],
     [mediaQueries.mUp]: {
-      height: 282,
+      minHeight: 282,
       maxHeight: 282,
     },
   }),
