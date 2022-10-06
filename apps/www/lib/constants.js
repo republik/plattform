@@ -67,4 +67,5 @@ export const ONBOARDING_SECTIONS_REPO_IDS = ENV.ONBOARDING_SECTIONS_REPO_IDS
 
 export const SCHEMA_PUBLISHER = ENV.SCHEMA_PUBLISHER
 
-export const __isDev__ = ENV.NODE_ENV !== 'production'
+export const isDev = ENV.NODE_ENV !== 'production'
+export const isClient = typeof window !== 'undefined'

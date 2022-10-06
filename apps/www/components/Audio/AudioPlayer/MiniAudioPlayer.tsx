@@ -71,6 +71,7 @@ type MiniAudioPlayerProps = {
   handleSeek: (progress: number) => void
   handleClose: () => void
   handleOpenArticle: (path: string) => Promise<void>
+  error?: string
 } & Omit<AudioPlayerProps, 'actions' | 'queuedItems' | 'playbackRate'>
 
 const MiniAudioPlayer = ({

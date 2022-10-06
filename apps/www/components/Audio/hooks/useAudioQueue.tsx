@@ -20,6 +20,7 @@ const useAudioQueue = () => {
     data: meWithAudioQueue,
     loading: audioQueueIsLoading,
     error: audioQueueHasError,
+    refetch: refetchAudioQueue,
   } = useAudioQueueQuery()
 
   const modifyApolloCacheWithUpdatedPlaylist = (
@@ -70,6 +71,7 @@ const useAudioQueue = () => {
       : null,
     audioQueueIsLoading,
     audioQueueHasError,
+    refetchAudioQueue,
     addAudioQueueItem,
     removeAudioQueueItem,
     moveAudioQueueItem,

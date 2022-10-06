@@ -1,6 +1,6 @@
 import { AudioPlayerProps } from '../AudioPlayerContainer'
 import { useEffect } from 'react'
-import { __isDev__ } from '../../../lib/constants'
+import { isDev } from '../../../lib/constants'
 
 type AudioPlaybackElementProps = Pick<
   AudioPlayerProps,
@@ -23,12 +23,12 @@ const AudioPlaybackElement = ({
   } = activeItem
 
   useEffect(() => {
-    if (__isDev__ && !activeItem?.document?.meta?.audioSource) {
+    if (isDev && !activeItem?.document?.meta?.audioSource) {
       throw new Error(
         'AudioPlaybackElement: audioSource is missing in activeItem prop',
       )
     }
-  }, [__isDev__, activeItem])
+  }, [isDev, activeItem])
 
   return (
     <audio

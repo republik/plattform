@@ -100,6 +100,7 @@ type ExpandedAudioPlayerProps = {
   handleOpenArticle: (path: string) => Promise<void>
   bodyLockTargetRef: React.RefObject<HTMLDivElement>
   setForceScrollLock: Dispatch<SetStateAction<boolean>>
+  error: string
 } & AudioControlProps &
   Omit<AudioPlayerProps, 'actions'>
 
@@ -123,6 +124,7 @@ const ExpandedAudioPlayer = ({
   handleOpenArticle,
   bodyLockTargetRef,
   setForceScrollLock,
+  error,
 }: ExpandedAudioPlayerProps) => {
   const [colorScheme] = useColorContext()
   const [activeTab, setActiveTab] = React.useState<'QUEUE' | 'LATEST'>('QUEUE')
