@@ -23,10 +23,6 @@ const LegacyAudioPlayer = () => {
         activePlayerItem,
         autoPlayActive,
       }) => {
-        const {
-          meta: { audioSource, title, path },
-        } = activePlayerItem
-
         return (
           <>
             {!meLoading && activePlayerItem && (
@@ -38,12 +34,12 @@ const LegacyAudioPlayer = () => {
                       activePlayerItem.meta.audioSource.mediaId || ' ' //activePlayerItem.url
                     }
                     // mediaId and durationMs is neccessary for media progress to work
-                    mediaId={audioSource.mediaId}
-                    durationMs={audioSource.durationMs}
+                    mediaId={activePlayerItem?.meta?.audioSource.mediaId}
+                    durationMs={activePlayerItem?.meta?.audioSource.durationMs}
                     mode='overlay'
-                    src={audioSource}
-                    title={title}
-                    sourcePath={path}
+                    src={activePlayerItem?.meta?.audioSource}
+                    title={activePlayerItem?.meta?.title}
+                    sourcePath={activePlayerItem?.meta?.path}
                     closeHandler={onCloseAudioPlayer}
                     setPlaybackRate={(rate) => {
                       trackEvent(['AudioPlayer', 'playbackRate', rate])
