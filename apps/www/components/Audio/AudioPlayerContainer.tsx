@@ -522,7 +522,12 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
 
   // Open up the audio-player once the app has started if the queue is not empty
   useEffect(() => {
-    if (audioQueueIsLoading || audioQueue?.length === 0 || initialized) {
+    if (
+      audioQueueIsLoading ||
+      !audioQueue ||
+      audioQueue?.length === 0 ||
+      initialized
+    ) {
       return
     }
     if (audioQueue.length > 0) {

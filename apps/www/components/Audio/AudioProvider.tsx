@@ -75,7 +75,6 @@ const AudioProvider = ({ children }) => {
   const [activePlayerItem, setActivePlayerItem] = usePersistedPlayerItem<
     AudioPlayerItem | undefined
   >(undefined)
-  console.log('activePlayerItem', activePlayerItem)
   const [autoPlayAudioPlayerItem, setAutoPlayAudioPlayerItem] =
     useState<AudioPlayerItem | null>(null)
   const [audioPlayerVisible, setAudioPlayerVisible] = useState(false)
