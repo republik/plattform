@@ -9,6 +9,7 @@ import {
   Scroller,
   TabButton,
   useColorContext,
+  fontStyles,
 } from '@project-r/styleguide'
 import { motion } from 'framer-motion'
 import { AudioPlayerProps } from './shared'
@@ -20,7 +21,6 @@ import { AudioQueueItem } from '../graphql/AudioQueueHooks'
 import { downloadFileFromUrl } from '../../../lib/helpers/FileDownloadHelper'
 import AudioError from './ui/AudioError'
 import { NEXT_PUBLIC_FEAT_HOERT_HOERT } from '../constants'
-import { useInNativeApp } from '../../../lib/withInNativeApp'
 import { useUserAgent } from '../../../lib/context/UserAgentContext'
 
 const styles = {
@@ -28,7 +28,9 @@ const styles = {
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    justifyContent: NEXT_PUBLIC_FEAT_HOERT_HOERT
+      ? 'space-between'
+      : 'flex-start',
     gap: 16,
     width: '100%',
     height: '100vh',
@@ -70,14 +72,16 @@ const styles = {
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
   }),
-  expandControl: css({
-    position: 'absolute',
-    top: 8,
-    right: 0,
-    [mediaQueries.mUp]: {
-      top: 8,
-      right: 8,
-    },
+  header: css({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  }),
+  heading: css({
+    ...fontStyles.sansSerifMedium16,
+    lineHeight: '20px',
+    marginBottom: 8,
+    marginTop: 0,
   }),
   topWrapper: css({
     display: 'flex',
@@ -179,11 +183,12 @@ const ExpandedAudioPlayer = ({
 
   return (
     <div {...styles.root}>
-      <div {...styles.expandControl}>
+      <div {...styles.header}>
+        <p {...styles.heading}>{t('AudioPlayer/Queue/ActiveHeading')}</p>
         <IconButton
           Icon={ExpandMoreIcon}
           size={32}
-          style={{ marginRight: 0 }}
+          style={{ marginRight: 0, marginTop: -8 }}
           onClick={handleMinimize}
         />
       </div>

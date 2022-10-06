@@ -3,7 +3,6 @@ import { css } from 'glamor'
 import { fontStyles, useColorContext } from '@project-r/styleguide'
 import { dateFormatter, FALLBACK_IMG_SRC, formatMinutes } from '../shared'
 import AudioPlayerTitle from './AudioPlayerTitle'
-import { AudioPlayerItem } from '../../types/AudioPlayerItem'
 import { AudioQueueItem } from '../../graphql/AudioQueueHooks'
 import AudioCover from './AudioCover'
 
@@ -12,12 +11,6 @@ const styles = {
     display: 'flex',
     flexDirection: 'row',
     gap: 16,
-  }),
-  heading: css({
-    ...fontStyles.sansSerifMedium16,
-    lineHeight: '20px',
-    marginBottom: 24,
-    marginTop: 0,
   }),
   coverWrapper: css({
     display: 'flex',
@@ -66,7 +59,6 @@ const CurrentlyPlaying = ({ t, item, handleOpen }: CurrentlyPlayingProps) => {
   const { durationMs } = audioSource
   return (
     <div>
-      <p {...styles.heading}>{t('AudioPlayer/Queue/ActiveHeading')}</p>
       <div {...styles.root}>
         <div {...styles.coverWrapper}>
           <AudioCover
