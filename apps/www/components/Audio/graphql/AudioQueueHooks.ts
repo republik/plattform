@@ -22,6 +22,12 @@ const AudioQueueItemFragment = gql`
         path
         publishDate
         image
+        audioCoverCrop {
+          x
+          y
+          width
+          height
+        }
         audioSource {
           mediaId
           kind
@@ -32,6 +38,16 @@ const AudioQueueItemFragment = gql`
           userProgress {
             id
             secs
+          }
+        }
+        format {
+          id
+          meta {
+            title
+            color
+            shareLogo
+            shareBackgroundImage
+            shareBackgroundImageInverted
           }
         }
       }

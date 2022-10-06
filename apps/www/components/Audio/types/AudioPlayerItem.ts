@@ -8,6 +8,12 @@ export type AudioPlayerItem = {
     path: string
     publishDate?: string
     image?: string
+    audioCoverCrop?: {
+      x: number
+      y: number
+      width: number
+      height: number
+    }
     audioSource?: {
       mediaId: string
       kind: 'syntheticReadAloud' | 'readAloud'
@@ -18,6 +24,15 @@ export type AudioPlayerItem = {
       userProgress?: {
         id: string
         secs: number
+      }
+    }
+    format?: {
+      meta: {
+        title: string
+        color: string
+        shareLogo: string
+        shareBackgroundImage: string
+        shareBackgroundImageInverted: string
       }
     }
   }

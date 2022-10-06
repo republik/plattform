@@ -14,6 +14,7 @@ import {
   renderTime,
 } from '../../../shared'
 import AudioPlayerTitle from '../../AudioPlayerTitle'
+import AudioCover from '../../AudioCover'
 import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
 import { imageResizeUrl } from 'mdast-react-render/lib/utils'
 import { ComponentType, ReactNode, Ref } from 'react'
@@ -38,12 +39,6 @@ const styles = {
     '&:disabled': {
       cursor: 'default',
     },
-  }),
-  cover: css({
-    aspectRatio: '1 / 1',
-    objectFit: 'cover',
-    width: 62,
-    height: 'auto',
   }),
   itemWrapper: css({
     display: 'flex',
@@ -124,7 +119,12 @@ const AudioListItem = ({
         disabled={isActive}
       >
         <div {...styles.itemWrapper}>
-          <img {...styles.cover} src={cover} />
+          <AudioCover
+            size={62}
+            image={meta.image}
+            format={meta.format?.meta}
+            audioCoverCrop={meta.audioCoverCrop}
+          />
           <div {...styles.dataWrapper}>
             <div {...styles.dataText}>
               <AudioPlayerTitle title={meta.title} />
