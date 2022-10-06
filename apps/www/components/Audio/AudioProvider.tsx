@@ -15,7 +15,7 @@ import { useMediaProgress } from './MediaProgress'
 import { AudioPlayerItem } from './types/AudioPlayerItem'
 import useAudioQueue from './hooks/useAudioQueue'
 import EventEmitter from 'events'
-import { FEAT_HOERT_HOERT } from './constants'
+import { NEXT_PUBLIC_FEAT_HOERT_HOERT } from './constants'
 
 type ToggleAudioPlayerFunc = (playerItem: AudioPlayerItem) => void
 
@@ -102,18 +102,10 @@ const AudioProvider = ({ children }) => {
     if (isAudioQueueAvailable) {
       // Clearing the queue when ever a new item is added.
       // Workaround until hoert hoert is implemented
-      if (!FEAT_HOERT_HOERT) {
+      if (!NEXT_PUBLIC_FEAT_HOERT_HOERT) {
         await clearAudioQueue()
       }
-      await addAudioQueueItem({
-        variables: {
-          entity: {
-            id: playerItem.id,
-            type: 'Document',
-          },
-          sequence: 1,
-        },
-      })
+      await addAudioQueueItem(playerItem, 1)
       AudioEventEmitter.emit('togglePlayer')
     } else {
       let currentTime

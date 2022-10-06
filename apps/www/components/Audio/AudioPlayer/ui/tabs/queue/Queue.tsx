@@ -84,12 +84,7 @@ const Queue = ({
    * @param item
    */
   const handleClick = async (item: AudioQueueItem) => {
-    await moveAudioQueueItem({
-      variables: {
-        id: item.id,
-        sequence: 1,
-      },
-    })
+    await moveAudioQueueItem(item.id, 1)
   }
 
   /**
@@ -98,11 +93,7 @@ const Queue = ({
    */
   const handleRemove = async (item: AudioQueueItem) => {
     try {
-      await removeAudioQueueItem({
-        variables: {
-          id: item.id,
-        },
-      })
+      await removeAudioQueueItem(item.id)
     } catch (e) {
       console.error(e)
       console.log(
@@ -114,19 +105,7 @@ const Queue = ({
   const handleReorder = throttle(async (items: AudioQueueItem[]) => {
     try {
       const reorderedQueue = [activeItem, ...items].filter(Boolean)
-
-      await reorderAudioQueue({
-        variables: {
-          ids: reorderedQueue.map(({ id }) => id),
-        },
-        optimisticResponse: {
-          audioQueueItems: reorderedQueue.map((item, index) => ({
-            ...item,
-            sequence: index + 1,
-            __typename: 'AudioQueueItem',
-          })),
-        },
-      })
+      await reorderAudioQueue(reorderedQueue)
     } catch (e) {
       console.error(e)
       console.log('Could not reorder queue')

@@ -84,8 +84,6 @@ type AudioPlayerContainerProps = {
   children: (props: AudioPlayerProps) => ReactNode
 }
 
-let initialized = false
-
 const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const { inNativeApp } = useInNativeApp()
   const { setAudioPlayerVisible } = useAudioContext()
@@ -102,6 +100,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const trackedPlayerItem = useRef<AudioQueueItem>(null)
   const trackedQueue = useRef<AudioQueueItem[]>(null)
 
+  const [initialized, setInitialized] = useState(false)
   const [activePlayerItem, setActivePlayerItem] =
     useState<AudioQueueItem | null>(null)
   const [shouldAutoPlay, setShouldAutoPlay] = useState(false)
@@ -268,7 +267,9 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
 
   const onStop = () => {
     try {
-      if (!activePlayerItem) return
+      if (!activePlayerItem) {
+        return
+      }
       if (inNativeApp) {
         notifyApp(AudioEvent.STOP)
       } else if (mediaRef.current) {
@@ -278,7 +279,6 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       }
       setHasAutoPlayed(false)
       setIsVisible(false)
-      initialized = false
     } catch (error) {
       handleError(error)
     }
@@ -366,13 +366,8 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   // Handle track ending on media element
   const onQueueAdvance = async () => {
     if (!activePlayerItem) return
-    console.log('onQueueAdvance')
     try {
-      const { data } = await removeAudioQueueItem({
-        variables: {
-          id: activePlayerItem.id,
-        },
-      })
+      const { data } = await removeAudioQueueItem(activePlayerItem.id)
       if (data.audioQueueItems.length > 0) {
         setShouldAutoPlay(true)
         const nextUp = data.audioQueueItems[0]
@@ -390,7 +385,6 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const playQueue = async () => {
     try {
       if (!audioQueue || audioQueue.length === 0) {
-        console.log('playQueue: no audioQueue', audioQueue)
         return
       }
       console.log('playQueue', {
@@ -400,6 +394,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       })
       const nextUp = audioQueue[0]
       setActivePlayerItem(nextUp)
+      console.log('playQueue: nextUp', nextUp)
       setIsVisible(true)
       await onPlay()
     } catch (error) {
@@ -475,14 +470,22 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     // to prevent the ui from showing 0:00
 
     const audioSource = nextActivePlayerItem.document?.meta?.audioSource
-    setDuration(audioSource.durationMs / 1000)
-    if (audioSource?.userProgress) {
-      setCurrentTime(audioSource.userProgress.secs)
-    }
+    if (audioSource) {
+      setDuration(audioSource.durationMs / 1000)
+      if (audioSource?.userProgress) {
+        setCurrentTime(audioSource.userProgress.secs)
+      }
 
-    if (mediaRef.current && alreadyHadActivePlayerItem) {
-      mediaRef.current.load()
+      if (mediaRef.current && alreadyHadActivePlayerItem) {
+        mediaRef.current.load()
+      }
     }
+    console.log(
+      'handleItemPushedToFront',
+      activePlayerItem,
+      audioQueue,
+      nextActivePlayerItem,
+    )
   }, [audioQueue, activePlayerItem, trackedPlayerItem, isPlaying, mediaRef])
 
   if (
@@ -490,9 +493,8 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     audioQueue &&
     audioQueue.length > 0 &&
     (!activePlayerItem ||
-      activePlayerItem.document.id !== audioQueue[0].document.id)
+      activePlayerItem?.document?.id !== audioQueue[0].document.id)
   ) {
-    console.log('handleItemPushedToFront')
     handleItemPushedToFront()
   }
 
@@ -529,8 +531,8 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       setShouldAutoPlay(false)
       setIsVisible(true)
     }
-    initialized = true
-  }, [audioQueue])
+    setInitialized(true)
+  }, [audioQueue, initialized, audioQueueIsLoading])
 
   // Sync audio-player visible with audio-context
   useEffect(() => {
@@ -538,12 +540,10 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   }, [isVisible])
 
   useEffect(() => {
-    const handler = async (e) => {
+    const handler = async () => {
       const documentIsVisible = document.visibilityState === 'visible'
-      console.log('visbilitychange', e, documentIsVisible)
       if (documentIsVisible && !isPlaying) {
         setShouldAutoPlay(false)
-        console.log('refetching queue', shouldAutoPlay)
         await refetchAudioQueue()
       }
     }

@@ -57,7 +57,7 @@ const AudioQueueItemFragment = gql`
 
 // Read AudioQueue
 
-type AudiQueueQueryData = {
+export type AudiQueueQueryData = {
   me?: {
     audioQueue?: AudioQueueItem[]
   }
@@ -80,7 +80,7 @@ export const useAudioQueueQuery =
 
 // Add AudioQueueItem
 
-type AddAudioQueueItemMutationData = {
+export type AddAudioQueueItemMutationData = {
   audioQueueItems: AudioQueueItem[]
 }
 
@@ -110,7 +110,7 @@ export const useAddAudioQueueItemMutation = makeMutationHook<
 
 // Move AudioQueueItem
 
-type MoveAudioQueueItemMutationData = {
+export type MoveAudioQueueItemMutationData = {
   audioQueueItems: AudioQueueItem[]
 }
 
@@ -135,7 +135,7 @@ export const useMoveAudioQueueItemMutation = makeMutationHook<
 
 // Remove AudioQueueItem
 
-type RemoveAudioQueueItemMutationData = {
+export type RemoveAudioQueueItemMutationData = {
   audioQueueItems: AudioQueueItem[]
 }
 
@@ -159,7 +159,7 @@ export const useRemoveAudioQueueItemMutation = makeMutationHook<
 
 // ClearAudioQueue
 
-type ClearAudioQueueMutationData = {
+export type ClearAudioQueueMutationData = {
   audioQueueItems: AudioQueueItem[]
 }
 
@@ -183,7 +183,7 @@ const REORDER_AUDIO_QUEUE_MUTATION = gql`
   ${AudioQueueItemFragment}
 `
 
-type ReorderAudioQueueMutationData = {
+export type ReorderAudioQueueMutationData = {
   audioQueueItems: AudioQueueItem[]
 }
 

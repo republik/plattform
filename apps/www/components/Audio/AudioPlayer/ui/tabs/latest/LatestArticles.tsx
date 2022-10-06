@@ -15,6 +15,7 @@ import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
 import LoadingPlaceholder from '../shared/LoadingPlaceholder'
 import FilterButton from './FilterButton'
 import { useMe } from '../../../../../../lib/context/MeContext'
+import { AudioPlayerItem } from '../../../../types/AudioPlayerItem'
 
 const styles = {
   root: css({
@@ -63,28 +64,13 @@ const LatestArticlesTab = ({
     setFilter('all')
   }
 
-  const handlePlay = async (documentId: string) => {
-    await addAudioQueueItem({
-      variables: {
-        entity: {
-          id: documentId,
-          type: 'Document',
-        },
-        sequence: 1,
-      },
-    })
+  const handlePlay = async (article: AudioPlayerItem) => {
+    await addAudioQueueItem(article, 1)
     // TODO: handle error
   }
 
-  const handleAddToQueue = async (documentId: string) => {
-    await addAudioQueueItem({
-      variables: {
-        entity: {
-          id: documentId,
-          type: 'Document',
-        },
-      },
-    })
+  const handleAddToQueue = async (article: AudioPlayerItem) => {
+    await addAudioQueueItem(article)
     // TODO: handle error
   }
 
@@ -146,7 +132,7 @@ const LatestArticlesTab = ({
                 <IconButton
                   Icon={PlaylistAddIcon}
                   title={t('AudioPlayer/Queue/Add')}
-                  onClick={() => handleAddToQueue(article.id)}
+                  onClick={() => handleAddToQueue(article)}
                   disabled={checkIfInQueue(article.id)}
                   style={{ marginRight: 0 }}
                 />
@@ -163,7 +149,7 @@ const LatestArticlesTab = ({
                   onClick: () => handleOpenArticle(article.meta.path),
                 },
               ]}
-              onClick={() => handlePlay(article.id)}
+              onClick={() => handlePlay(article)}
             />
           </li>
         ))}

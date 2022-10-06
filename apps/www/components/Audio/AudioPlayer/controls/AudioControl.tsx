@@ -14,7 +14,7 @@ import { useTranslation } from '../../../../lib/withT'
 import { AudioPlayerProps } from '../shared'
 import PlaybackRateControl from './PlaybackRateControl'
 import Scrubber from './Scrubber'
-import { FEAT_HOERT_HOERT } from '../../constants'
+import { NEXT_PUBLIC_FEAT_HOERT_HOERT } from '../../constants'
 
 const styles = {
   root: css({
@@ -130,7 +130,7 @@ const AudioControl = ({
             Icon={ForwardIcon}
             style={{ marginRight: 0 }}
           />
-          {FEAT_HOERT_HOERT && (
+          {NEXT_PUBLIC_FEAT_HOERT_HOERT && (
             <IconButton
               size={32}
               fillColorName={'text'}

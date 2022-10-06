@@ -13,7 +13,7 @@ import { useAudioContext } from '../Audio/AudioProvider'
 import { trackEvent } from '../../lib/matomo'
 import { AudioPlayerItem } from '../Audio/types/AudioPlayerItem'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
-import { FEAT_HOERT_HOERT } from '../Audio/constants'
+import { NEXT_PUBLIC_FEAT_HOERT_HOERT } from '../Audio/constants'
 
 const styles = {
   hr: css({
@@ -53,17 +53,12 @@ const ReadAloudInline = ({ documentId, meta, t }: ReadAloudInlineProps) => {
   const { toggleAudioPlayer } = useAudioContext()
   const [colorScheme] = useColorContext()
 
-  const { checkIfInQueue, addAudioQueueItem, isAudioQueueAvailable } =
-    useAudioQueue()
+  const { checkIfInQueue, addAudioQueueItem } = useAudioQueue()
 
   const handleAddToPlaylist = async () => {
     await addAudioQueueItem({
-      variables: {
-        entity: {
-          id: documentId,
-          type: 'Document',
-        },
-      },
+      id: documentId,
+      meta,
     })
   }
 
@@ -92,7 +87,7 @@ const ReadAloudInline = ({ documentId, meta, t }: ReadAloudInlineProps) => {
             })
           }}
         />
-        {FEAT_HOERT_HOERT && (
+        {NEXT_PUBLIC_FEAT_HOERT_HOERT && (
           <IconButton
             Icon={PlaylistAddIcon}
             onClick={handleAddToPlaylist}

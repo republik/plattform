@@ -37,7 +37,7 @@ import UserProgress from './UserProgress'
 import ShareButtons from './ShareButtons'
 import { useMe } from '../../lib/context/MeContext'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
-import { FEAT_HOERT_HOERT } from '../Audio/constants'
+import { NEXT_PUBLIC_FEAT_HOERT_HOERT } from '../Audio/constants'
 
 const ActionBar = ({
   mode,
@@ -364,21 +364,14 @@ const ActionBar = ({
       Icon: PlaylistAddIcon,
       onClick: async (e) => {
         e.preventDefault()
-        await addAudioQueueItem({
-          variables: {
-            entity: {
-              id: document.id,
-              type: 'Document',
-            },
-          },
-        })
+        await addAudioQueueItem(document)
         // TODO: handle error
       },
       disabled: checkIfInQueue(document.id),
       modes: ['feed', 'seriesEpisode'],
       // TODO: show only if not in playlist already
       show:
-        FEAT_HOERT_HOERT &&
+        NEXT_PUBLIC_FEAT_HOERT_HOERT &&
         isAudioQueueAvailable &&
         !!meta?.audioSource &&
         ['syntheticReadAloud', 'readAloud'].includes(meta.audioSource.kind),

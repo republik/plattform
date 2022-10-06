@@ -17,7 +17,7 @@ import LatestArticles from './ui/tabs/latest/LatestArticles'
 import { AudioQueueItem } from '../graphql/AudioQueueHooks'
 import { downloadFileFromUrl } from '../../../lib/helpers/FileDownloadHelper'
 import AudioError from './ui/AudioError'
-import { FEAT_HOERT_HOERT } from '../constants'
+import { NEXT_PUBLIC_FEAT_HOERT_HOERT } from '../constants'
 
 const styles = {
   root: css({
@@ -186,7 +186,7 @@ const ExpandedAudioPlayer = ({
           {hasError && <AudioError />}
         </>
       )}
-      {FEAT_HOERT_HOERT && (
+      {NEXT_PUBLIC_FEAT_HOERT_HOERT && (
         <div {...styles.queueWrapper}>
           <Scroller>
             <TabButton
