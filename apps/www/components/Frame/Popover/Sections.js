@@ -100,7 +100,7 @@ const Panel = ({
         .concat(formats.nodes)
         .sort((a, b) => ascending(a.meta.title, b.meta.title))
         .map(({ id, meta: formatMeta, linkedDocuments }) => (
-          <Link href={formatMeta.path} key={id} passHref>
+          <Link href={formatMeta.path} key={id} passHref prefetch={false}>
             <a {...styles.formatLink} onClick={() => closeHandler()}>
               <FormatTag
                 color={formatMeta.color || colors[formatMeta.kind]}
