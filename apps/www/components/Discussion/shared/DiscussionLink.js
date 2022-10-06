@@ -62,7 +62,7 @@ const DiscussionLink = ({ children, discussion }) => {
   const href = getDiscussionUrlObject(discussion)
   if (href) {
     return (
-      <Link href={href} passHref>
+      <Link href={href} passHref prefetch={false}>
         {children}
       </Link>
     )

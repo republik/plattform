@@ -67,6 +67,7 @@ const DiscussionOptions = ({ documentMeta }: Props) => {
                 order: item,
               })}
               scroll={false}
+              prefetch={false}
               passHref
               key={item}
             >
