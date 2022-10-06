@@ -75,6 +75,11 @@ const styles = {
       right: 8,
     },
   }),
+  topWrapper: css({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 16,
+  }),
   topSection: css({
     display: 'flex',
     gap: 24,
@@ -162,7 +167,7 @@ const ExpandedAudioPlayer = ({
         />
       </div>
       {activeItem && (
-        <>
+        <div {...styles.topWrapper}>
           <div {...styles.topSection}>
             <CurrentlyPlaying
               t={t}
@@ -185,7 +190,7 @@ const ExpandedAudioPlayer = ({
             buffered={buffered}
           />
           {hasError && <AudioError />}
-        </>
+        </div>
       )}
       {NEXT_PUBLIC_FEAT_HOERT_HOERT && (
         <div {...styles.queueWrapper}>
