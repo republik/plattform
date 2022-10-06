@@ -4,11 +4,6 @@ module.exports = `
 
 scalar Date
 
-enum OrderDirection {
-  ASC
-  DESC
-}
-
 enum SearchProcessor {
 ${getProcessorsList().join('\n')}
 }

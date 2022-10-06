@@ -7,6 +7,11 @@ enum AccessRole {
   PUBLIC
 }
 
+enum OrderDirection {
+  ASC
+  DESC
+}
+
 # deprecated: use ImageProperties instead
 enum PortraitSize {
   # 384x384

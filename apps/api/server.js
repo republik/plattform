@@ -4,55 +4,64 @@ const {
   server: Server,
   lib: { ConnectionContext },
 } = require('@orbiting/backend-modules-base')
-const {
-  NotifyListener: SearchNotifyListener,
-} = require('@orbiting/backend-modules-search')
+// const {
+//   NotifyListener: SearchNotifyListener,
+// } = require('@orbiting/backend-modules-search')
 const { t } = require('@orbiting/backend-modules-translate')
-const SlackGreeter = require('@orbiting/backend-modules-slack/lib/SlackGreeter')
+// const SlackGreeter = require('@orbiting/backend-modules-slack/lib/SlackGreeter')
+
+// can't be easily disabled
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
-const {
-  graphql: redirections,
-} = require('@orbiting/backend-modules-redirections')
-const { graphql: search } = require('@orbiting/backend-modules-search')
-const {
-  graphql: notifications,
-} = require('@orbiting/backend-modules-push-notifications')
-const { graphql: voting } = require('@orbiting/backend-modules-voting')
+
+// const {
+//   graphql: redirections,
+// } = require('@orbiting/backend-modules-redirections')
+// const { graphql: search } = require('@orbiting/backend-modules-search')
+// const {
+//   graphql: notifications,
+// } = require('@orbiting/backend-modules-push-notifications')
+// const { graphql: voting } = require('@orbiting/backend-modules-voting')
+
+// can't be easily disabled
 const {
   graphql: discussions,
 } = require('@orbiting/backend-modules-discussions')
-const {
-  graphql: collections,
-} = require('@orbiting/backend-modules-collections')
-const {
-  graphql: subscriptions,
-} = require('@orbiting/backend-modules-subscriptions')
-const { graphql: cards } = require('@orbiting/backend-modules-cards')
+
+// const {
+//   graphql: collections,
+// } = require('@orbiting/backend-modules-collections')
+// const {
+//   graphql: subscriptions,
+// } = require('@orbiting/backend-modules-subscriptions')
+// const { graphql: cards } = require('@orbiting/backend-modules-cards')
+
+// can't be easily disabled
 const { graphql: embeds } = require('@orbiting/backend-modules-embeds')
+
 const { graphql: gsheets } = require('@orbiting/backend-modules-gsheets')
 const { graphql: mailbox } = require('@orbiting/backend-modules-mailbox')
-const { graphql: slots } = require('@orbiting/backend-modules-calendar')
+// const { graphql: slots } = require('@orbiting/backend-modules-calendar')
 
 const loaderBuilders = {
-  ...require('@orbiting/backend-modules-voting/loaders'),
+  // ...require('@orbiting/backend-modules-voting/loaders'),
   ...require('@orbiting/backend-modules-discussions/loaders'),
   ...require('@orbiting/backend-modules-documents/loaders'),
   ...require('@orbiting/backend-modules-auth/loaders'),
-  ...require('@orbiting/backend-modules-collections/loaders'),
-  ...require('@orbiting/backend-modules-subscriptions/loaders'),
-  ...require('@orbiting/backend-modules-cards/loaders'),
+  // ...require('@orbiting/backend-modules-collections/loaders'),
+  // ...require('@orbiting/backend-modules-subscriptions/loaders'),
+  // ...require('@orbiting/backend-modules-cards/loaders'),
   ...require('@orbiting/backend-modules-embeds/loaders'),
   ...require('@orbiting/backend-modules-republik-crowdfundings/loaders'),
   ...require('@orbiting/backend-modules-republik/loaders'),
-  ...require('@orbiting/backend-modules-publikator/loaders'),
-  ...require('@orbiting/backend-modules-calendar/loaders'),
+  // ...require('@orbiting/backend-modules-publikator/loaders'),
+  // ...require('@orbiting/backend-modules-calendar/loaders'),
 }
 
 const {
   AccessScheduler,
   graphql: access,
 } = require('@orbiting/backend-modules-access')
-const PublicationScheduler = require('@orbiting/backend-modules-publikator/lib/PublicationScheduler')
+// const PublicationScheduler = require('@orbiting/backend-modules-publikator/lib/PublicationScheduler')
 const MembershipScheduler = require('@orbiting/backend-modules-republik-crowdfundings/lib/scheduler')
 const DatabroomScheduler = require('@orbiting/backend-modules-databroom/lib/scheduler')
 const MailScheduler = require('@orbiting/backend-modules-mail/lib/scheduler')
@@ -63,11 +72,11 @@ const {
   LOCAL_ASSETS_SERVER,
   MAIL_EXPRESS_RENDER,
   MAIL_EXPRESS_MAILCHIMP,
-  SEARCH_PG_LISTENER,
+  // SEARCH_PG_LISTENER,
   NODE_ENV,
   ACCESS_SCHEDULER,
   MEMBERSHIP_SCHEDULER,
-  PUBLICATION_SCHEDULER,
+  // PUBLICATION_SCHEDULER,
   DATABROOM_SCHEDULER,
   MAIL_SCHEDULER,
   SERVER = 'graphql',
@@ -97,27 +106,27 @@ const run = async (workerId, config) => {
   const {
     graphql: republikCrowdfundings,
   } = require('@orbiting/backend-modules-republik-crowdfundings')
-  const {
-    graphql: publikator,
-  } = require('@orbiting/backend-modules-publikator')
+  // const {
+  //   graphql: publikator,
+  // } = require('@orbiting/backend-modules-publikator')
 
   const graphqlSchema = merge(republik, [
     republikCrowdfundings,
-    publikator,
+    // publikator,
     documents,
-    search,
-    redirections,
+    // search,
+    // redirections,
     discussions,
-    notifications,
+    // notifications,
     access,
-    voting,
-    collections,
-    subscriptions,
-    cards,
+    // voting,
+    // collections,
+    // subscriptions,
+    // cards,
     embeds,
     gsheets,
     mailbox,
-    slots,
+    // slots,
   ])
 
   // middlewares
@@ -125,9 +134,9 @@ const run = async (workerId, config) => {
     require('@orbiting/backend-modules-republik-crowdfundings/express/paymentWebhooks'),
     require('@orbiting/backend-modules-gsheets/express/gsheets'),
     require('@orbiting/backend-modules-mail/express/mandrill'),
-    require('@orbiting/backend-modules-publikator/express/syntheticReadAloud'),
-    require('@orbiting/backend-modules-publikator/express/uncommittedChanges'),
-    require('@orbiting/backend-modules-publikator/express/webhook'),
+    // require('@orbiting/backend-modules-publikator/express/syntheticReadAloud'),
+    // require('@orbiting/backend-modules-publikator/express/uncommittedChanges'),
+    // require('@orbiting/backend-modules-publikator/express/webhook'),
     require('@orbiting/backend-modules-invoices/express'),
   ]
 
@@ -227,12 +236,12 @@ const runOnce = async () => {
 
   const context = await createGraphQLContext({ scope: 'scheduler' })
 
-  const slackGreeter = await SlackGreeter.start()
+  // const slackGreeter = await SlackGreeter.start()
 
-  let searchNotifyListener
-  if (SEARCH_PG_LISTENER && SEARCH_PG_LISTENER !== 'false') {
-    searchNotifyListener = await SearchNotifyListener.start(context)
-  }
+  // let searchNotifyListener
+  // if (SEARCH_PG_LISTENER && SEARCH_PG_LISTENER !== 'false') {
+  //   searchNotifyListener = await SearchNotifyListener.start(context)
+  // }
 
   let accessScheduler
   if (ACCESS_SCHEDULER === 'false' || (DEV && ACCESS_SCHEDULER !== 'true')) {
@@ -257,23 +266,23 @@ const runOnce = async () => {
     membershipScheduler = await MembershipScheduler.init(context)
   }
 
-  let publicationScheduler
-  if (
-    PUBLICATION_SCHEDULER === 'false' ||
-    (DEV && PUBLICATION_SCHEDULER !== 'true')
-  ) {
-    console.log(
-      'PUBLICATION_SCHEDULER prevented scheduler from being started',
-      { PUBLICATION_SCHEDULER, DEV },
-    )
-  } else {
-    publicationScheduler = await PublicationScheduler.init(context).catch(
-      (error) => {
-        console.log(error)
-        throw new Error(error)
-      },
-    )
-  }
+  // let publicationScheduler
+  // if (
+  //   PUBLICATION_SCHEDULER === 'false' ||
+  //   (DEV && PUBLICATION_SCHEDULER !== 'true')
+  // ) {
+  //   console.log(
+  //     'PUBLICATION_SCHEDULER prevented scheduler from being started',
+  //     { PUBLICATION_SCHEDULER, DEV },
+  //   )
+  // } else {
+  //   publicationScheduler = await PublicationScheduler.init(context).catch(
+  //     (error) => {
+  //       console.log(error)
+  //       throw new Error(error)
+  //     },
+  //   )
+  // }
 
   let databroomScheduler
   if (
@@ -309,11 +318,11 @@ const runOnce = async () => {
   const close = async () => {
     await Promise.all(
       [
-        slackGreeter && slackGreeter.close(),
-        searchNotifyListener && searchNotifyListener.close(),
+        // slackGreeter && slackGreeter.close(),
+        // searchNotifyListener && searchNotifyListener.close(),
         accessScheduler && accessScheduler.close(),
         membershipScheduler && membershipScheduler.close(),
-        publicationScheduler && (await publicationScheduler.close()),
+        // publicationScheduler && (await publicationScheduler.close()),
         databroomScheduler && databroomScheduler.close(),
         mailScheduler && mailScheduler.close(),
       ].filter(Boolean),
