@@ -159,9 +159,6 @@ CREATE TABLE companies(
   UNIQUE("name")
 );
 
-INSERT INTO companies("name") VALUES ('PROJECT_R');
-INSERT INTO companies("name") VALUES ('REPUBLIK');
-
 ALTER TABLE "packages" ADD COLUMN "companyId" uuid references "companies";
 ALTER TABLE "membershipTypes" ADD COLUMN "companyId" uuid references "companies";
 ALTER TABLE "paymentSources" ADD COLUMN "companyId" uuid references "companies";
