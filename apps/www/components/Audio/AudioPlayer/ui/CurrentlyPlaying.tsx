@@ -64,7 +64,6 @@ const CurrentlyPlaying = ({ t, item, handleOpen }: CurrentlyPlayingProps) => {
     },
   } = item
   const { durationMs } = audioSource
-  console.log(format)
   return (
     <div>
       <p {...styles.heading}>{t('AudioPlayer/Queue/ActiveHeading')}</p>
