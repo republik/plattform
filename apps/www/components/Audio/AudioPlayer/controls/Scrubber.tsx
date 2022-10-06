@@ -52,6 +52,7 @@ const styles = {
     inset: 0,
     width: '100%',
     height: PROGRESS_HEIGHT,
+    overflow: 'hidden',
   }),
   buffer: css({
     position: 'absolute',
