@@ -22,6 +22,8 @@ function times(x) {
   return Array.from({ length: x }, (_, i) => i)
 }
 
+const clamp = (num, min, max) => Math.min(Math.max(num, min), max)
+
 const styles = {
   progressRoot: css({
     position: 'relative',
@@ -212,7 +214,7 @@ const Scrubber = ({
                   {...styles.buffer}
                   {...colorScheme.set('backgroundColor', 'defaultInverted')}
                   style={{
-                    left: `${(start / duration) * 100}%`,
+                    left: `${(start / duration) * 100})%`,
                     width: `${width}%`,
                   }}
                 />
@@ -229,7 +231,11 @@ const Scrubber = ({
             {...styles.sliderThumb}
             {...colorScheme.set('backgroundColor', 'defaultInverted')}
             style={{
-              left: `calc(${visibleProgress * 100}% - 12px)`,
+              left: `calc(${clamp(
+                visibleProgress,
+                0,
+                1,
+              )} * (100% - ${SLIDERTHUMB_SIZE}px))`,
               cursor: isSeeking ? 'grabbing' : 'grab',
             }}
           />

@@ -1,7 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
 import { fontStyles, useColorContext } from '@project-r/styleguide'
-import { dateFormatter, FALLBACK_IMG_SRC, formatMinutes } from '../shared'
+import { dateFormatter, formatMinutes } from '../shared'
 import AudioPlayerTitle from './AudioPlayerTitle'
 import { AudioQueueItem } from '../../graphql/AudioQueueHooks'
 import AudioCover from './AudioCover'
