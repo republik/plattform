@@ -1,9 +1,11 @@
-import React, { Dispatch, SetStateAction } from 'react'
+import React, { Dispatch, SetStateAction, useEffect } from 'react'
 import { css } from 'glamor'
+import { useRouter } from 'next/router'
 import {
   IconButton,
   ExpandMoreIcon,
   mediaQueries,
+  useMediaQuery,
   Scroller,
   TabButton,
   useColorContext,
@@ -18,6 +20,8 @@ import { AudioQueueItem } from '../graphql/AudioQueueHooks'
 import { downloadFileFromUrl } from '../../../lib/helpers/FileDownloadHelper'
 import AudioError from './ui/AudioError'
 import { NEXT_PUBLIC_FEAT_HOERT_HOERT } from '../constants'
+import { useInNativeApp } from '../../../lib/withInNativeApp'
+import { useUserAgent } from '../../../lib/context/UserAgentContext'
 
 const styles = {
   root: css({
@@ -135,6 +139,23 @@ const ExpandedAudioPlayer = ({
 }: ExpandedAudioPlayerProps) => {
   const [colorScheme] = useColorContext()
   const [activeTab, setActiveTab] = React.useState<'QUEUE' | 'LATEST'>('QUEUE')
+  const { isAndroid } = useUserAgent()
+  const isDesktop = useMediaQuery(mediaQueries.mUp)
+  const router = useRouter()
+
+  // On Android we expect the back-button to close the expanded-player
+  // and not the browser to navigate back.
+  useEffect(() => {
+    if (isDesktop || !isAndroid) {
+      return
+    }
+    router.beforePopState(() => {
+      handleMinimize()
+      return false
+    })
+
+    return () => router.beforePopState(() => true)
+  }, [router.beforePopState, handleMinimize])
 
   const handleDownload = async (item: AudioQueueItem) => {
     try {
