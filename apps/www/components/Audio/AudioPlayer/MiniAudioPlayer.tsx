@@ -14,7 +14,7 @@ import {
   mediaQueries,
 } from '@project-r/styleguide'
 import AudioPlayerTitle from './ui/AudioPlayerTitle'
-import { imageResizeUrl } from 'mdast-react-render/lib/utils'
+import AudioCover from '../AudioPlayer/ui/AudioCover'
 
 export const MINI_AUDIO_PLAYER_HEIGHT = 68
 
@@ -28,12 +28,6 @@ const styles = {
     [mediaQueries.mUp]: {
       marginBottom: 0,
     },
-  }),
-  cover: css({
-    aspectRatio: '1 / 1',
-    objectFit: 'cover',
-    width: 40,
-    height: 'auto',
   }),
   playerWrapper: css({
     flex: 1,
@@ -95,10 +89,9 @@ const MiniAudioPlayer = ({
 }: MiniAudioPlayerProps) => {
   const {
     document: {
-      meta: { title, path, image },
+      meta: { title, path, image, format, audioCoverCrop },
     },
   } = activeItem
-  const cover = imageResizeUrl(image, '250x') || FALLBACK_IMG_SRC
 
   return (
     <div {...styles.root}>
@@ -118,7 +111,12 @@ const MiniAudioPlayer = ({
             style={{ marginRight: 0 }}
           />
         )}
-        <img {...styles.cover} src={cover} />
+        <AudioCover
+          size={40}
+          image={image}
+          format={format?.meta}
+          audioCoverCrop={audioCoverCrop}
+        />
         <div {...styles.metaDataWrapper}>
           <AudioPlayerTitle
             lineClamp={1}

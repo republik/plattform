@@ -5,7 +5,7 @@ import { dateFormatter, FALLBACK_IMG_SRC, formatMinutes } from '../shared'
 import AudioPlayerTitle from './AudioPlayerTitle'
 import { AudioPlayerItem } from '../../types/AudioPlayerItem'
 import { AudioQueueItem } from '../../graphql/AudioQueueHooks'
-import { imageResizeUrl } from 'mdast-react-render/lib/utils'
+import AudioCover from './AudioCover'
 
 const styles = {
   root: css({
@@ -24,12 +24,6 @@ const styles = {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-  }),
-  cover: css({
-    aspectRatio: '1 / 1',
-    objectFit: 'cover',
-    width: 90,
-    height: 'auto',
   }),
   detailWrapper: css({
     flexGrow: 1,
@@ -58,18 +52,30 @@ const CurrentlyPlaying = ({ t, item, handleOpen }: CurrentlyPlayingProps) => {
 
   const {
     document: {
-      meta: { title, publishDate, audioSource, image, path },
+      meta: {
+        title,
+        publishDate,
+        audioSource,
+        image,
+        path,
+        format,
+        audioCoverCrop,
+      },
     },
   } = item
   const { durationMs } = audioSource
-  const cover = imageResizeUrl(image, '250x') || FALLBACK_IMG_SRC
-
+  console.log(format)
   return (
     <div>
       <p {...styles.heading}>{t('AudioPlayer/Queue/ActiveHeading')}</p>
       <div {...styles.root}>
         <div {...styles.coverWrapper}>
-          <img {...styles.cover} src={cover} />
+          <AudioCover
+            size={90}
+            image={image}
+            format={format?.meta}
+            audioCoverCrop={audioCoverCrop}
+          />
         </div>
         <div {...styles.detailWrapper}>
           {title && (
