@@ -11,12 +11,12 @@ import { useTranslation } from '../../../../lib/withT'
 
 const styles = {
   root: css({
-    height: '25px',
-    ...fontStyles.sansSerifRegular10,
-    lineHeight: '1.25em',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'start',
+    ...fontStyles.sansSerifRegular12,
     [mediaQueries.mUp]: {
       ...fontStyles.sansSerifRegular15,
-      lineHeight: '1.25em',
     },
   }),
   button: css({

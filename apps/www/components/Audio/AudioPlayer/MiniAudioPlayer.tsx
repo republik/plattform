@@ -15,6 +15,7 @@ import {
 } from '@project-r/styleguide'
 import AudioPlayerTitle from './ui/AudioPlayerTitle'
 import AudioCover from '../AudioPlayer/ui/AudioCover'
+import AudioError from './ui/AudioError'
 
 export const MINI_AUDIO_PLAYER_HEIGHT = 68
 
@@ -86,6 +87,7 @@ const MiniAudioPlayer = ({
   handleSeek,
   handleClose,
   handleOpenArticle,
+  hasError,
 }: MiniAudioPlayerProps) => {
   const {
     document: {
@@ -117,30 +119,36 @@ const MiniAudioPlayer = ({
           format={format?.meta}
           audioCoverCrop={audioCoverCrop}
         />
-        <div {...styles.metaDataWrapper}>
-          <AudioPlayerTitle
-            lineClamp={1}
-            title={title}
-            onClick={() => handleOpenArticle(path)}
-          />
-          <Time currentTime={currentTime} duration={duration} />
-        </div>
-        <div {...styles.buttonWrapper}>
-          <IconButton
-            Icon={ExpandLessIcon}
-            size={32}
-            fillColorName='text'
-            title={t(`styleguide/AudioPlayer/expand`)}
-            onClick={handleExpand}
-          />
-          <IconButton
-            Icon={CloseIcon}
-            size={24}
-            fillColorName={'text'}
-            onClick={handleClose}
-            title={t('styleguide/AudioPlayer/close')}
-          />
-        </div>
+        {!hasError ? (
+          <>
+            <div {...styles.metaDataWrapper}>
+              <AudioPlayerTitle
+                lineClamp={1}
+                title={title}
+                onClick={() => handleOpenArticle(path)}
+              />
+              <Time currentTime={currentTime} duration={duration} />
+            </div>
+            <div {...styles.buttonWrapper}>
+              <IconButton
+                Icon={ExpandLessIcon}
+                size={32}
+                fillColorName='text'
+                title={t(`styleguide/AudioPlayer/expand`)}
+                onClick={handleExpand}
+              />
+              <IconButton
+                Icon={CloseIcon}
+                size={24}
+                fillColorName={'text'}
+                onClick={handleClose}
+                title={t('styleguide/AudioPlayer/close')}
+              />
+            </div>
+          </>
+        ) : (
+          <AudioError />
+        )}
       </div>
       <div>
         <Scrubber
