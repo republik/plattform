@@ -37,6 +37,7 @@ import UserProgress from './UserProgress'
 import ShareButtons from './ShareButtons'
 import { useMe } from '../../lib/context/MeContext'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
+import { FEAT_HOERT_HOERT } from '../Audio/constants'
 
 const ActionBar = ({
   mode,
@@ -344,6 +345,7 @@ const ActionBar = ({
             title: meta.title,
             path: meta.path,
             publishDate: meta.publishDate,
+            image: meta.image,
             audioSource: meta.audioSource,
           },
         })
@@ -376,6 +378,7 @@ const ActionBar = ({
       modes: ['feed', 'seriesEpisode'],
       // TODO: show only if not in playlist already
       show:
+        FEAT_HOERT_HOERT &&
         isAudioQueueAvailable &&
         !!meta?.audioSource &&
         ['syntheticReadAloud', 'readAloud'].includes(meta.audioSource.kind),

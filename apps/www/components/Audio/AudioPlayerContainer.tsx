@@ -93,6 +93,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     audioQueue,
     audioQueueIsLoading,
     removeAudioQueueItem,
+    clearAudioQueue,
     refetchAudioQueue,
   } = useAudioQueue()
   const { saveMediaProgress } = useMediaProgress()

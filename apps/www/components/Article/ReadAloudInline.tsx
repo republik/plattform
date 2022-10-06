@@ -13,6 +13,7 @@ import { useAudioContext } from '../Audio/AudioProvider'
 import { trackEvent } from '../../lib/matomo'
 import { AudioPlayerItem } from '../Audio/types/AudioPlayerItem'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
+import { FEAT_HOERT_HOERT } from '../Audio/constants'
 
 const styles = {
   hr: css({
@@ -91,7 +92,7 @@ const ReadAloudInline = ({ documentId, meta, t }: ReadAloudInlineProps) => {
             })
           }}
         />
-        {isAudioQueueAvailable && (
+        {FEAT_HOERT_HOERT && (
           <IconButton
             Icon={PlaylistAddIcon}
             onClick={handleAddToPlaylist}

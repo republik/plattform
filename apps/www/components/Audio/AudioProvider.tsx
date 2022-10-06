@@ -15,6 +15,7 @@ import { useMediaProgress } from './MediaProgress'
 import { AudioPlayerItem } from './types/AudioPlayerItem'
 import useAudioQueue from './hooks/useAudioQueue'
 import EventEmitter from 'events'
+import { FEAT_HOERT_HOERT } from './constants'
 
 type ToggleAudioPlayerFunc = (playerItem: AudioPlayerItem) => void
 
@@ -74,12 +75,14 @@ const AudioProvider = ({ children }) => {
   const [activePlayerItem, setActivePlayerItem] = usePersistedPlayerItem<
     AudioPlayerItem | undefined
   >(undefined)
+  console.log('activePlayerItem', activePlayerItem)
   const [autoPlayAudioPlayerItem, setAutoPlayAudioPlayerItem] =
     useState<AudioPlayerItem | null>(null)
   const [audioPlayerVisible, setAudioPlayerVisible] = useState(false)
   const clearTimeoutId = useRef<NodeJS.Timeout | null>()
 
-  const { addAudioQueueItem, isAudioQueueAvailable } = useAudioQueue()
+  const { addAudioQueueItem, clearAudioQueue, isAudioQueueAvailable } =
+    useAudioQueue()
   const { getMediaProgress } = useMediaProgress()
 
   const toggleAudioPlayer = async (playerItem: AudioPlayerItem) => {
@@ -97,7 +100,12 @@ const AudioProvider = ({ children }) => {
     const mediaId = audioSource.mediaId
 
     if (isAudioQueueAvailable) {
-      addAudioQueueItem({
+      // Clearing the queue when ever a new item is added.
+      // Workaround until hoert hoert is implemented
+      if (!FEAT_HOERT_HOERT) {
+        await clearAudioQueue()
+      }
+      await addAudioQueueItem({
         variables: {
           entity: {
             id: playerItem.id,
@@ -105,9 +113,8 @@ const AudioProvider = ({ children }) => {
           },
           sequence: 1,
         },
-      }).then(() => {
-        AudioEventEmitter.emit('togglePlayer')
       })
+      AudioEventEmitter.emit('togglePlayer')
     } else {
       let currentTime
       if (mediaId) {

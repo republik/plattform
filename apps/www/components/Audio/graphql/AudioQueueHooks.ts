@@ -166,9 +166,8 @@ type ClearAudioQueueMutationData = {
 const CLEAR_AUDIO_QUEUE = gql`
   mutation ClearAudioQueue {
     audioQueueItems: clearAudioQueue {
-      ...AudioQueueItemFragment
+      id
     }
-    ${AudioQueueItemFragment}
   }
 `
 
