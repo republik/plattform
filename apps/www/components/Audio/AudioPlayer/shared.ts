@@ -24,6 +24,7 @@ export type AudioPlayerProps = {
   //
   actions: AudioPlayerActions
   t: any
+  hasError?: boolean
 }
 
 export const formatMinutes = (time: number) => Math.floor(time / 60)

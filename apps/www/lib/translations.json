@@ -5189,6 +5189,14 @@
       "value": "Einloggen und Weiterhören"
     },
     {
+      "key": "AudioPlayer/error",
+      "value": "Beim Abspielen ist ein Fehler aufgetreten."
+    },
+    {
+      "key": "AudioPlayer/error/reload",
+      "value": "Bitte laden Sie die Seite neu."
+    },
+    {
       "key": "Auth/CodeAuthorization/title",
       "value": "E-Mail-Adresse bestätigen"
     },

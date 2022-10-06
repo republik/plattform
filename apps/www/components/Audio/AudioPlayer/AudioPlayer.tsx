@@ -74,6 +74,7 @@ const AudioPlayer = ({
   isLoading,
   actions,
   buffered,
+  hasError,
 }: AudioPlayerProps) => {
   const { inNativeApp, inIOS } = useInNativeApp()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
@@ -174,6 +175,7 @@ const AudioPlayer = ({
                   handleOpenArticle={handleOpenArticle}
                   bodyLockTargetRef={ref}
                   setForceScrollLock={setForceScrollLock}
+                  hasError={hasError}
                 />
               ) : (
                 <MiniAudioPlayer
@@ -189,6 +191,7 @@ const AudioPlayer = ({
                   handleSeek={actions.onSeek}
                   handleClose={actions.onClose}
                   handleOpenArticle={handleOpenArticle}
+                  hasError={hasError}
                 />
               )}
             </motion.div>

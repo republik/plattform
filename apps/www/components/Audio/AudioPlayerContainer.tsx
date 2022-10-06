@@ -53,6 +53,7 @@ export type AudioPlayerProps = {
   isPlaying: boolean
   isLoading: boolean
   isSeeking: boolean
+  hasError: boolean
   actions: {
     onCanPlay: () => void
     onPlay: () => void
@@ -108,6 +109,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const [isPlaying, setIsPlaying] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [isVisible, setIsVisible] = useState(false)
+  const [hasError, setHasError] = useState(false)
 
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
@@ -422,9 +424,8 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
           ),
         ),
       )
-      // TODO: handle error and show visually
+      setHasError(true)
     }
-    // TODO: look into best way for the track-player to handle errors
   }
 
   useInterval(
@@ -587,6 +588,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
           onSkipToNext: onQueueAdvance,
         },
         buffered,
+        hasError,
       })}
     </>
   )

@@ -16,6 +16,7 @@ import AudioControl, { AudioControlProps } from './controls/AudioControl'
 import LatestArticles from './ui/tabs/latest/LatestArticles'
 import { AudioQueueItem } from '../graphql/AudioQueueHooks'
 import { downloadFileFromUrl } from '../../../lib/helpers/FileDownloadHelper'
+import AudioError from './ui/AudioError'
 
 const styles = {
   root: css({
@@ -123,6 +124,7 @@ const ExpandedAudioPlayer = ({
   handleOpenArticle,
   bodyLockTargetRef,
   setForceScrollLock,
+  hasError,
 }: ExpandedAudioPlayerProps) => {
   const [colorScheme] = useColorContext()
   const [activeTab, setActiveTab] = React.useState<'QUEUE' | 'LATEST'>('QUEUE')
@@ -180,6 +182,7 @@ const ExpandedAudioPlayer = ({
             duration={duration}
             buffered={buffered}
           />
+          {hasError && <AudioError />}
         </>
       )}
       <div {...styles.queueWrapper}>
