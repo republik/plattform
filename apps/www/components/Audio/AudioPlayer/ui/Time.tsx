@@ -16,11 +16,11 @@ type TimeProps = {
   duration?: number
 }
 
-const Time = ({ currentTime = 0, duration = 0 }: TimeProps) => {
+const Time = ({ currentTime, duration }: TimeProps) => {
   const [colorScheme] = useColorContext()
   return (
     <span {...styles.time} {...colorScheme.set('color', 'textSoft')}>
-      {renderTime(currentTime)} / {renderTime(duration)}
+      {renderTime(currentTime || 0)} / {renderTime(duration || 0)}
     </span>
   )
 }

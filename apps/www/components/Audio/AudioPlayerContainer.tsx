@@ -576,8 +576,8 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
         duration:
           duration !== 0
             ? duration
-            : activePlayerItem?.document?.meta?.audioSource?.durationMs /
-                1000 || 0,
+            : (activePlayerItem?.document?.meta?.audioSource?.durationMs || 0) /
+              1000,
         playbackRate,
         actions: {
           onCanPlay,

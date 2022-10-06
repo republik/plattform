@@ -188,10 +188,10 @@ const Scrubber = ({
   })
 
   const visibleProgress = isSeeking ? internalProgress : progress
-  const currentPosition = renderTime(currentTime)
+  const currentPosition = renderTime(currentTime || 0)
   const remainingTime =
     duration - currentTime > 0
-      ? renderTime(Math.ceil(duration) - Math.floor(currentTime))
+      ? renderTime(Math.ceil(duration) - Math.floor(currentTime) || 0)
       : '0:00'
 
   return (
@@ -229,7 +229,7 @@ const Scrubber = ({
             {...styles.sliderThumb}
             {...colorScheme.set('backgroundColor', 'defaultInverted')}
             style={{
-              left: `${visibleProgress * 100}%`,
+              left: `calc(${visibleProgress * 100}% - 12px)`,
               cursor: isSeeking ? 'grabbing' : 'grab',
             }}
           />
