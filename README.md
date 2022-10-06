@@ -44,7 +44,7 @@ This turborepo has some additional tools already setup for you:
 To get started you'll need:
 
 - yarn v1.22
-- Node.js v14.4
+- Node.js v16
 - Docker or native postgresql@12, elasticsearch@6 and redis
 
 <details><summary>Setup with Docker</summary>
@@ -82,8 +82,8 @@ export PGUSER=postgres
 
 ```bash
 brew install postgresql@12 elasticsearch@6 redis nvm
-nvm install 14
-nvm alias default 14
+nvm install 16
+nvm alias default 16
 npm install -g yarn@1.22
 brew services start postgresql@12
 brew services start elasticsearch@6
@@ -144,8 +144,14 @@ For more about the available env variables see the individual readme of the apps
 
 ```bash
 yarn install
-yarn build
+yarn build --scope="@orbiting/api-app" --include-dependencies
+# either all-in-one
 yarn dev:setup
+# or step by step
+yarn migrate:db:create # createdb YOURDBNAME
+yarn migrate:up
+DATABASE_SAMPLE_DATA_URL=x yarn migrate:db:import # optional
+yarn populate
 ```
 
 ### Develop
