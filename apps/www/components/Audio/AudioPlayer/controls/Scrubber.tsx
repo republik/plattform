@@ -187,6 +187,11 @@ const Scrubber = ({
   })
 
   const visibleProgress = isSeeking ? internalProgress : progress
+  const currentPosition = renderTime(currentTime)
+  const remainingTime =
+    duration - currentTime > 0
+      ? renderTime(Math.ceil(duration) - Math.floor(currentTime))
+      : '0:00'
 
   return (
     <div>
@@ -216,7 +221,7 @@ const Scrubber = ({
         <div
           {...styles.progress}
           {...colorScheme.set('backgroundColor', 'text')}
-          style={{ width: `${visibleProgress * 100}%` }}
+          style={{ width: `${visibleProgress * 100}%`, maxWidth: '100%' }}
         />
         {showScrubber && (
           <div
@@ -241,8 +246,8 @@ const Scrubber = ({
       </div>
       {showTime && (
         <div {...styles.timeWrapper} {...colorScheme.set('color', 'textSoft')}>
-          <span {...styles.time}>{renderTime(currentTime)}</span>
-          <span {...styles.time}>-{renderTime(duration - currentTime)}</span>
+          <span {...styles.time}>{currentPosition}</span>
+          <span {...styles.time}>-{remainingTime}</span>
         </div>
       )}
     </div>
