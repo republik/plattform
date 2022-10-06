@@ -66,11 +66,6 @@ const MediaProgressProvider = ({ children }) => {
   const saveMediaProgressNotPlaying = useMemo(
     () =>
       debounce((mediaId, currentTime) => {
-        console.log(
-          'saveMediaProgressNotPlaying (debounced 300ms)',
-          mediaId,
-          currentTime,
-        )
         // Fires on pause, on scrub, on end of video.
         if (isTrackingAllowed) {
           return upsertMediaProgress({
@@ -87,11 +82,6 @@ const MediaProgressProvider = ({ children }) => {
     () =>
       throttle(
         (mediaId, currentTime) => {
-          console.log(
-            'saveMediaProgressWhilePlaying (throttled to 5000ms)',
-            mediaId,
-            currentTime,
-          )
           // Fires every 5 seconds while playing.
           if (isTrackingAllowed) {
             return upsertMediaProgress({
