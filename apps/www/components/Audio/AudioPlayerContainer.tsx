@@ -169,12 +169,9 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     setPlaybackRate(state.playRate)
     setIsPlaying(
       state?.isPlaying ||
-        [
-          NativeAudioPlayerState.Playing,
-          NativeAudioPlayerState.Buffering,
-          NativeAudioPlayerState.Connecting,
-          NativeAudioPlayerState.Ready,
-        ].includes(state.playerState),
+        [NativeAudioPlayerState.Playing, NativeAudioPlayerState.Ready].includes(
+          state.playerState,
+        ),
     )
     setIsLoading(
       state?.isLoading ||
@@ -194,7 +191,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       setDuration(audioElem.duration)
       setPlaybackRate(audioElem.playbackRate)
       setIsPlaying(!audioElem.paused)
-      setIsLoading(audioElem.readyState < 1)
+      setIsLoading(audioElem.readyState < 2)
       setBuffered(audioElem.buffered)
     } catch (error) {
       handleError(error)
