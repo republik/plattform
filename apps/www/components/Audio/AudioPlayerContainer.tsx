@@ -20,6 +20,8 @@ import { reportError } from '../../lib/errors'
 import hasQueueChanged from './helpers/hasQueueChanged'
 import { isClient } from '../../lib/constants'
 import { useRouter } from 'next/router'
+import { trackEvent } from '../../lib/matomo'
+import { AUDIO_PLAYER_TRACK_CATEGORY } from './constants'
 
 const DEFAULT_SYNC_INTERVAL = 500 // in ms
 const DEFAULT_PLAYBACK_RATE = 1
@@ -120,14 +122,20 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const [buffered, setBuffered] = useState<TimeRanges>(null)
   const [playbackRate, setPlaybackRate] = usePlaybackRate(DEFAULT_PLAYBACK_RATE)
 
-  const handleError = (error: Error | MediaError | string) => {
+  const handleError = (error: Error | string) => {
     if (typeof error === 'string') {
       reportError('handle audio-error', error)
+      trackEvent([AUDIO_PLAYER_TRACK_CATEGORY, 'error', error])
     } else {
       reportError(
         'handle audio-error',
         JSON.stringify(error, Object.getOwnPropertyNames(error), 2),
       )
+      trackEvent([
+        AUDIO_PLAYER_TRACK_CATEGORY,
+        'error',
+        JSON.stringify(error, Object.getOwnPropertyNames(error), 2),
+      ])
     }
   }
 
@@ -135,10 +143,14 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     async (forcedState?: { currentTime?: number; isPlaying?: boolean }) => {
       const { mediaId } = activePlayerItem?.document.meta?.audioSource ?? {}
       if (duration < (forcedState?.currentTime ?? currentTime)) {
-        console.log('duration is less than current time, not saving progress', {
-          duration,
-          attemptedCurrentTime: forcedState?.currentTime ?? currentTime,
-        })
+        trackEvent([
+          AUDIO_PLAYER_TRACK_CATEGORY,
+          'updateProgress',
+          'illegalUpdate',
+          `upsert-value was ${
+            forcedState?.currentTime ?? currentTime
+          }, track duration is ${duration}, mediaId is ${mediaId}`,
+        ])
         return
       }
 
@@ -209,7 +221,6 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
         const { userProgress, durationMs } =
           activePlayerItem.document?.meta.audioSource ?? {}
         const duration = durationMs / 1000
-        console.log('Available userProgress is ', userProgress?.secs ?? 0)
 
         // Web
         // Only load the userProgress if given and smaller within 2 seconds of the duration
@@ -226,7 +237,6 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       if (!activePlayerItem) return
 
       if (!isPlaying && shouldAutoPlay && !hasAutoPlayed) {
-        console.log('triggering onPlay via onCanPlay')
         setHasAutoPlayed(true)
         await onPlay()
       }
@@ -363,6 +373,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const onPlaybackRateChange = (value: number) => {
     try {
       if (!activePlayerItem) return
+      trackEvent([AUDIO_PLAYER_TRACK_CATEGORY, 'playbackRate', value])
       if (inNativeApp) {
         notifyApp(AudioEvent.PLAYBACK_RATE, value)
       } else {
@@ -382,13 +393,12 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     }
     try {
       const { data } = await removeAudioQueueItem(activePlayerItem.id)
-      console.log('onQueueAdvance, last item removed', data)
       if (data.audioQueueItems.length > 0) {
         setShouldAutoPlay(true)
         const nextUp = data.audioQueueItems[0]
         setActivePlayerItem(nextUp)
       } else {
-        console.log('onQueueAdvance: no more items in queue')
+        trackEvent([AUDIO_PLAYER_TRACK_CATEGORY, 'queue', 'ended'])
         setShouldAutoPlay(false)
       }
     } catch (error) {
@@ -402,14 +412,10 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
         // In case the audioQueue is not yet available (slow audio-queue sync)
         // Set should auto-play to allow onCanPlay to trigger play once ready
         setShouldAutoPlay(true)
-        console.log(
-          'playQueue: no audioQueue available, setting shouldAutoPlay',
-        )
         return
       }
       const nextUp = audioQueue[0]
       setActivePlayerItem(nextUp)
-      console.log('playQueue: nextUp', nextUp)
       setIsVisible(true)
       await onPlay()
     } catch (error) {
@@ -420,21 +426,20 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const onError = () => {
     if (mediaRef.current && mediaRef.current.error) {
       const error = mediaRef.current.error
-      handleError(
-        new Error(
-          JSON.stringify(
-            {
-              message: error.message,
-              code: error.code,
-              MEDIA_ERR_ABORTED: error.MEDIA_ERR_ABORTED,
-              MEDIA_ERR_NETWORK: error.MEDIA_ERR_NETWORK,
-              MEDIA_ERR_DECODE: error.MEDIA_ERR_DECODE,
-            },
-            null,
-            2,
-          ),
-        ),
-      )
+      const errorObject = {
+        message: error.message,
+        code: error.code,
+        MEDIA_ERR_ABORTED: error.MEDIA_ERR_ABORTED,
+        MEDIA_ERR_NETWORK: error.MEDIA_ERR_NETWORK,
+        MEDIA_ERR_DECODE: error.MEDIA_ERR_DECODE,
+      }
+      trackEvent([
+        AUDIO_PLAYER_TRACK_CATEGORY,
+        'webPlayer',
+        'error',
+        JSON.stringify(errorObject),
+      ])
+      handleError(new Error(JSON.stringify(errorObject, null, 2)))
       setHasError(true)
     }
   }
@@ -495,12 +500,6 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
         mediaRef.current.load()
       }
     }
-    console.log(
-      'handleItemPushedToFront',
-      activePlayerItem,
-      audioQueue,
-      nextActivePlayerItem,
-    )
   }, [audioQueue, activePlayerItem, trackedPlayerItem, isPlaying, mediaRef])
 
   if (

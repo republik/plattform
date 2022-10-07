@@ -5,3 +5,5 @@ export const NEXT_PUBLIC_FEAT_HOERT_HOERT = process.env
   .NEXT_PUBLIC_FEAT_HOERT_HOERT
   ? process.env.NEXT_PUBLIC_FEAT_HOERT_HOERT == 'true'
   : false
+
+export const AUDIO_PLAYER_TRACK_CATEGORY = 'AudioPlayer'
