@@ -19,12 +19,15 @@ import useInterval from '../../lib/hooks/useInterval'
 import { reportError } from '../../lib/errors'
 import hasQueueChanged from './helpers/hasQueueChanged'
 import { isClient } from '../../lib/constants'
+import { useRouter } from 'next/router'
 
 const DEFAULT_SYNC_INTERVAL = 500 // in ms
 const DEFAULT_PLAYBACK_RATE = 1
 const SKIP_FORWARD_TIME = 30
 const SKIP_BACKWARD_TIME = 10
 const SAVE_MEDIA_PROGRESS_INTERVAL = 5000 // in ms
+
+const PATHS_WITH_DELAYED_INITIALIZATION: string[] = ['/mitteilung']
 
 /**
  * Enum to represent the state of the react-native-track-player lib.
@@ -85,6 +88,7 @@ type AudioPlayerContainerProps = {
 }
 
 const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
+  const { pathname } = useRouter()
   const { inNativeApp } = useInNativeApp()
   const { setAudioPlayerVisible } = useAudioContext()
   const {
@@ -501,6 +505,10 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   // Sync the queue with the native-app and reopen the player if queue changed
   // while it was closed
   useEffect(() => {
+    if (!initialized) {
+      return
+    }
+
     if (
       inNativeApp &&
       audioQueue &&
@@ -520,13 +528,14 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     trackedQueue.current = audioQueue
   }, [inNativeApp, audioQueue, isVisible])
 
+  // Initialize the player once the queue has loaded.
   // Open up the audio-player once the app has started if the queue is not empty
   useEffect(() => {
     if (
+      initialized ||
+      PATHS_WITH_DELAYED_INITIALIZATION.includes(pathname) ||
       audioQueueIsLoading ||
-      !audioQueue ||
-      audioQueue?.length === 0 ||
-      initialized
+      !audioQueue
     ) {
       return
     }
@@ -537,13 +546,13 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       setIsVisible(true)
     }
     setInitialized(true)
-  }, [audioQueue, initialized, audioQueueIsLoading])
-
+  }, [audioQueue, initialized, audioQueueIsLoading, pathname])
   // Sync audio-player visible with audio-context
   useEffect(() => {
     setAudioPlayerVisible(isVisible)
   }, [isVisible])
 
+  // refetch the queue to check for possible changes once the tab is opened again
   useEffect(() => {
     const handler = async () => {
       const documentIsVisible = document.visibilityState === 'visible'
