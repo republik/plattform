@@ -57,6 +57,7 @@ const setLocalMediaProgress = async (data) => {
 const MediaProgressProvider = ({ children }) => {
   const { me } = useMe()
   const [queryMediaProgress] = useMediaProgressLazyQuery({
+    fetchPolicy: 'network-only',
     ssr: false,
   })
   const [upsertMediaProgress] = useUpsertMediaProgress()
