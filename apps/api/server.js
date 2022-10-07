@@ -55,6 +55,7 @@ const loaderBuilders = {
   ...require('@orbiting/backend-modules-republik/loaders'),
   // ...require('@orbiting/backend-modules-publikator/loaders'),
   // ...require('@orbiting/backend-modules-calendar/loaders'),
+  ...require('@orbiting/backend-modules-lobbywatch/loaders'),
 }
 
 const {
@@ -67,6 +68,8 @@ const DatabroomScheduler = require('@orbiting/backend-modules-databroom/lib/sche
 const MailScheduler = require('@orbiting/backend-modules-mail/lib/scheduler')
 
 const mail = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail')
+
+const { graphql: lobbywatch } = require('@orbiting/backend-modules-lobbywatch')
 
 const {
   LOCAL_ASSETS_SERVER,
@@ -127,6 +130,7 @@ const run = async (workerId, config) => {
     gsheets,
     mailbox,
     // slots,
+    lobbywatch,
   ])
 
   // middlewares

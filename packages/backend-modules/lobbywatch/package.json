@@ -1,0 +1,32 @@
+{
+  "name": "@orbiting/backend-modules-lobbywatch",
+  "version": "0.0.0",
+  "private": true,
+  "description": "add lobbywatch data to schema",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lobbywatch/plattform.git"
+  },
+  "author": "Thomas Preusse <t@preus.se> (https://t.preus.se/)",
+  "license": "BSD-3-Clause",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/lobbywatch/plattform/issues"
+  },
+  "homepage": "https://github.com/lobbywatch/plattform#readme",
+  "dependencies": {
+    "d3-array": "^1.0.2",
+    "d3-time": "^1.1.0",
+    "d3-time-format": "^2.3.0",
+    "dataloader": "^2.0.0",
+    "entities": "^3.0.1",
+    "gsheets": "^3.0.1",
+    "isomorphic-unfetch": "^3.1.0",
+    "lodash": "^4.17.21",
+    "lru-cache": "^7.0.0",
+    "striptags": "^3.2.0"
+  }
+}

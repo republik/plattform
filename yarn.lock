@@ -7734,7 +7734,7 @@ cz-conventional-changelog@3.3.0, cz-conventional-changelog@^3.3.0:
   optionalDependencies:
     "@commitlint/load" ">6.1.1"
 
-d3-array@1, d3-array@1.x, d3-array@^1.1.1, d3-array@^1.2.0, d3-array@^1.2.1, d3-array@^1.2.4:
+d3-array@1, d3-array@1.x, d3-array@^1.0.2, d3-array@^1.1.1, d3-array@^1.2.0, d3-array@^1.2.1, d3-array@^1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-1.2.4.tgz#635ce4d5eea759f6f605863dbcfc30edc737f71f"
   integrity sha512-KHW6M86R+FUPYGb3R5XiYjXPq7VzwxZ22buHhAEVG5ztoEcZZMLov530mmccaqA1GghZArjQV46fuc8kUqhhHw==
@@ -8921,6 +8921,11 @@ entities@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/entities/-/entities-2.2.0.tgz#098dc90ebb83d8dffa089d55256b351d34c4da55"
   integrity sha512-p92if5Nz619I0w+akJrLZH0MX0Pb5DX39XOwQTtXSdQQOaYH03S1uIQp4mhOZtAXrxq4ViO67YTiLBo2638o9A==
+
+entities@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/entities/-/entities-3.0.1.tgz#2b887ca62585e96db3903482d336c1006c3001d4"
+  integrity sha512-WiyBqoomrwMdFG1e0kqvASYfnlb0lp8M5o5Fw2OFq1hNZxxcNk8Ik0Xm7LxzBhuidnZB/UtBqVCgUz3kBOP51Q==
 
 entities@^4.2.0, entities@^4.3.0:
   version "4.3.1"
@@ -15212,6 +15217,11 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
+lru-cache@^7.0.0:
+  version "7.14.0"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.14.0.tgz#21be64954a4680e303a09e9468f880b98a0b3c7f"
+  integrity sha512-EIRtP1GrSJny0dqb50QXRUNBxHJhcpxHC++M5tD7RYbvLLn5KVWKsbyswSSqDuU15UFi3bgTQIY8nhDMeF6aDQ==
+
 lru-cache@^7.7.1:
   version "7.13.2"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.13.2.tgz#bb5d3f1deea3f3a7a35c1c44345566a612e09cd0"
@@ -21490,6 +21500,11 @@ stripe@^8.119.0:
   dependencies:
     "@types/node" ">=8.1.0"
     qs "^6.10.3"
+
+striptags@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/striptags/-/striptags-3.2.0.tgz#cc74a137db2de8b0b9a370006334161f7dd67052"
+  integrity sha512-g45ZOGzHDMe2bdYMdIvdAfCQkCTDMGBazSw1ypMowwGIee7ZQ5dU0rBJ8Jqgl+jAKIv4dbeE1jscZq9wid1Tkw==
 
 strnum@^1.0.4:
   version "1.0.5"

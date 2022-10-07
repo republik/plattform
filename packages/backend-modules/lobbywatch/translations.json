@@ -1,0 +1,1307 @@
+{
+  "data": [
+    {
+      "key": "claim",
+      "de": "Gut zu wissen, wer Politik macht",
+      "fr": "Pour savoir qui façonne la politique"
+    },
+    {
+      "key": "index/newsletter/text",
+      "de": "Der Herbst 2022 wird bei Lobbywatch im Zeichen des Ausbaus stehen – bleiben Sie in Kontakt:",
+      "fr": "Cet automne 2022, Lobbywatch se développe et grandit - restez en contact : "
+    },
+    {
+      "key": "index/explore/title",
+      "de": "Beispiele der Netzwerke des Parlaments",
+      "fr": "Exemples de réseaux du Parlement"
+    },
+    {
+      "key": "index/explore/link",
+      "de": "Alle Lobbygruppen ansehen",
+      "fr": "Voir tous les groupes d'intérêt"
+    },
+    {
+      "key": "index/explore/58",
+      "de": "Mit diesem Netzwerk verhinderten die Lobbygruppe der Anwälte und Treuhänder unter anderem, dass ihre Branche unter die Geldwäscherei-Gesetzgebung gestellt wird.",
+      "fr": "Grâce à ce réseau, le groupe d'intérêt des avocats et des fiduciaires a notamment empêché que la branche soit soumise à la législation sur le blanchiment d'argent."
+    },
+    {
+      "key": "index/explore/53",
+      "de": "Auf diese Organisationen stützen sich die Gewerkschaften, wenn sie gegen ein höheres Rentenalter für Frauen kämpfen.",
+      "fr": "C'est sur ces organisations que s'appuient les syndicats pour lutter contre le relèvement de l'âge de la retraite des femmes."
+    },
+    {
+      "key": "purpose/research/title",
+      "de": "Interessenskonflikte",
+      "fr": "Conflits d'intérêts"
+    },
+    {
+      "key": "purpose/research/text",
+      "de": "Politik muss transparent sein. Deshalb zeigen wir auf, für welche Unternehmen sich Nationalrätinnen und Ständeräte engagieren.",
+      "fr": "La politique doit être transparente. C'est pourquoi nous indiquons les entreprises pour lesquelles les conseillers-ères nationaux-ales et les conseillers-ères aux États s'engagent."
+    },
+    {
+      "key": "purpose/independence/title",
+      "de": "Wir sind unabhängig",
+      "fr": "Nous sommes indépendants"
+    },
+    {
+      "key": "purpose/independence/text",
+      "de": "Lobbywatch ist eine unabhängige journalistische Plattform. Frei zugänglich für interessierte Bürger:innen und alle Redaktionen.",
+      "fr": "Lobbywatch est une plateforme journalistique indépendante. Elle est librement accessible aux citoyens-nes intéressés-ées et à toutes les rédactions."
+    },
+    {
+      "key": "purpose/nonprofit/title",
+      "de": "Gemeinnütziger Verein",
+      "fr": "Association à but non lucratif"
+    },
+    {
+      "key": "purpose/nonprofit/text",
+      "de": "Rund 250 Mitglieder engagieren sich bei uns für eine lebendige und transparente Demokratie. Bald auch Sie?",
+      "fr": "Environ 250 membres s'engagent chez nous pour une démocratie vivante et transparente. Bientôt vous aussi ?"
+    },
+    {
+      "key": "menu/locales/de",
+      "de": "Deutsch",
+      "fr": "Deutsch"
+    },
+    {
+      "key": "menu/locales/fr",
+      "de": "Français",
+      "fr": "Français"
+    },
+    {
+      "key": "menu/parliamentarians",
+      "de": "Parlamentarier:in",
+      "fr": "Parlementaires"
+    },
+    {
+      "key": "menu/lobbygroups",
+      "de": "Lobbygruppen",
+      "fr": "Groupes d'intérêt"
+    },
+    {
+      "key": "menu/branchs",
+      "de": "Branchen",
+      "fr": "Branches"
+    },
+    {
+      "key": "menu/guests",
+      "de": "Zutrittsberechtigte",
+      "fr": "Personnes accréditées"
+    },
+    {
+      "key": "search/placeholder",
+      "de": "Personen, Organisationen, Lobbygruppen",
+      "fr": "Personnes, Organisations, Groupes d'intérêt"
+    },
+    {
+      "key": "index/blog/link",
+      "de": "Weitere Artikel anzeigen",
+      "fr": "Montrer plus d'articles"
+    },
+    {
+      "key": "card/read",
+      "de": "Lesen",
+      "fr": "Lire"
+    },
+    {
+      "key": "blog/title",
+      "de": "Blog",
+      "fr": "Blog"
+    },
+    {
+      "key": "index/blog/title",
+      "de": "Aktuelles aus der Lobbywelt",
+      "fr": "En direct du monde des lobbyistes"
+    },
+    {
+      "key": "index/meta/description",
+      "de": "Die Plattform Lobbywatch thematisiert Interessenbindungen zwischen National‐ und Ständeräten zu Firmen, Vereinigungen und Institutionen und den Einfluss dieser Verbände, Organisationen und Firmen.",
+      "fr": "La plateforme Lobbywatch réunit les liens des parlementaires de l'Assemblée fédérale avec des entreprises, des associations et des institutions. Lobbywatch veut montrer l'influence de ces organismes dans la politique."
+    },
+    {
+      "key": "blog/meta/description",
+      "de": "Lesenswertes aus der Lobbywelt. Beobachtungen aus der Wandelhalle, Interessenkonflikte der Politiker und Meinungen zu Transparenz.",
+      "fr": "Ce qu'il vaut la peine de lire sur le monde des lobbies. Remarques venant de la Salle des Pas Perdus, conflits d'intérêts des politiciens et avis sur la transparence."
+    },
+    {
+      "key": "guests/meta/title",
+      "de": "Zutrittsberechtigte Personen",
+      "fr": "Personnes accréditées"
+    },
+    {
+      "key": "guests/meta/description",
+      "de": "{count} Zutrittsberechtigte der Wandelhalle im Bundeshaus.",
+      "fr": "{count} invités dans la salle des Pas perdus du Palais fédéral "
+    },
+    {
+      "key": "guest/meta/description/F/0",
+      "de": "{name} eingeladen von {invitedBy} hat keine erfassten Verbindungen.",
+      "fr": "{name}, invitée par {invitedBy}, n'a pas de liens d'intérêts "
+    },
+    {
+      "key": "guest/meta/description/F/1",
+      "de": "{name} eingeladen von {invitedBy} hat {count} erfasste Verbindung: {connections}",
+      "fr": "{name}, invitée par {invitedBy}, a un total de {count} liens et connexions: {connections}"
+    },
+    {
+      "key": "guest/meta/description/F/other",
+      "de": "{name} eingeladen von {invitedBy} hat {count} erfasste Verbindungen: {connections}",
+      "fr": "{name}, invitée par {invitedBy}, a un total de {count} liens et connexions: {connections}"
+    },
+    {
+      "key": "guest/meta/description/M/0",
+      "de": "{name} eingeladen von {invitedBy} hat keine erfassten Verbindungen.",
+      "fr": "{name}, invité par {invitedBy}, n'a pas de liens d'intérêts"
+    },
+    {
+      "key": "guest/meta/description/M/1",
+      "de": "{name} eingeladen von {invitedBy} hat {count} erfasste Verbindung: {connections}",
+      "fr": "{name}, invité par {invitedBy}, a un total de {count} liens et connexions: {connections}"
+    },
+    {
+      "key": "guest/meta/description/M/other",
+      "de": "{name} eingeladen von {invitedBy} hat {count} erfasste Verbindungen: {connections}",
+      "fr": "{name}, invité par {invitedBy}, a un total de {count} liens et connexions: {connections}"
+    },
+    {
+      "key": "lobbygroups/meta/description",
+      "de": "{count} Lobbygruppen nehmen Einfluss auf die Politik in der Schweiz.",
+      "fr": "{count} lobbies influencent la politique en Suisse"
+    },
+    {
+      "key": "lobbygroup/meta/description/0",
+      "de": "Die Lobbygruppe {name} ({sector}) hat keine Verbindungen ins Parlament.",
+      "fr": "Le lobby {name} ({sector}) n'a pas de relations au parlement"
+    },
+    {
+      "key": "lobbygroup/meta/description/1",
+      "de": "Die Lobbygruppe {name} ({sector}) hat eine Verbindung ({partyCounts}) ins Parlament.",
+      "fr": "Le lobby {name} ({sector}) n'a qu'une relation ({partyCounts}) au parlement."
+    },
+    {
+      "key": "lobbygroup/meta/description/other",
+      "de": "Die Lobbygruppe {name} ({sector}) hat {count} Verbindungen ({partyCounts}) ins Parlament.",
+      "fr": "Le lobby {name} ({sector}) a {count} relations ({partyCounts}) au parlement."
+    },
+    {
+      "key": "branchs/meta/description",
+      "de": "{count} Branchen nehmen Einfluss auf die Politik in der Schweiz.",
+      "fr": "{count} branches influencent la politique en Suisse"
+    },
+    {
+      "key": "branch/meta/description",
+      "de": "Die Branche {name} der Schweizer Wirtschaft.",
+      "fr": "La branche {name} de l'économie suisse."
+    },
+    {
+      "key": "organisation/meta/description/0",
+      "de": "{name} ({legalFormAndUid}) hat keine Verbindungen ins Parlament.",
+      "fr": "{name} ({legalFormAndUid}) n'a pas de relations au parlement."
+    },
+    {
+      "key": "organisation/meta/description/1",
+      "de": "{name} ({legalFormAndUid}) hat eine Verbindung ({partyCounts}) ins Parlament.",
+      "fr": "{name} ({legalFormAndUid}) a une relation ({partyCounts}) au parlament."
+    },
+    {
+      "key": "organisation/meta/description/other",
+      "de": "{name} ({legalFormAndUid}) hat {count} Verbindungen ({partyCounts}) ins Parlament.",
+      "fr": "{name} ({legalFormAndUid}) a {count} relations ({partyCounts}) au parlament."
+    },
+    {
+      "key": "parliamentarians/meta/title",
+      "de": "Parlamentarierinnen und Parlamentarier",
+      "fr": "Parlementaires"
+    },
+    {
+      "key": "parliamentarians/meta/description",
+      "de": "{count} Parlamentarier und ihre Interessensbindungen.",
+      "fr": "{count} parlementaires et leurs liens d'intérêts"
+    },
+    {
+      "key": "parliamentarian/meta/description/F/0",
+      "de": "{councilTitle} {name} ({party}) hat keine erfasste, direkte Verbindung.",
+      "fr": "{name}, {councilTitle}, ({party}) n'a pas de lien direct recensé."
+    },
+    {
+      "key": "parliamentarian/meta/description/F/1",
+      "de": "{councilTitle} {name} ({party}) hat {count} erfasste Verbindung: {connections}",
+      "fr": "{name}, {councilTitle}, ({party}) a {count} liens recensés: {connections}"
+    },
+    {
+      "key": "parliamentarian/meta/description/F/other",
+      "de": "{councilTitle} {name} ({party}) hat {count} erfasste Verbindungen: {connections}",
+      "fr": "{name}, {councilTitle}, ({party}) a {count} liens recensés: {connections}"
+    },
+    {
+      "key": "parliamentarian/meta/description/M/0",
+      "de": "{councilTitle} {name} ({party}) hat keine erfasste, direkte Verbindung.",
+      "fr": "{name}, {councilTitle}, ({party}) n'a pas de lien direct recensé."
+    },
+    {
+      "key": "parliamentarian/meta/description/M/1",
+      "de": "{councilTitle} {name} ({party}) hat {count} erfasste Verbindung: {connections}",
+      "fr": "{name}, {councilTitle}, ({party}) a {count} liens recensés: {connections}"
+    },
+    {
+      "key": "parliamentarian/meta/description/M/other",
+      "de": "{councilTitle} {name} ({party}) hat {count} erfasste Verbindungen: {connections}",
+      "fr": "{name}, {councilTitle}, ({party}) a {count} liens recensés: {connections}"
+    },
+    {
+      "key": "search/meta/description/other",
+      "de": "{count} Treffer zu «{term}»",
+      "fr": "{count} résultats pour «{term}»"
+    },
+    {
+      "key": "search/meta/description/10",
+      "de": "10+ Treffer zu «{term}»",
+      "fr": "10+ résultats pour la recherche «{term}»"
+    },
+    {
+      "key": "search/meta/title",
+      "de": "Suche",
+      "fr": "Chercher"
+    },
+    {
+      "key": "page/next",
+      "de": "Nächste Seite",
+      "fr": "Suivant"
+    },
+    {
+      "key": "page/prev",
+      "de": "Vorherige Seite",
+      "fr": "Précédent"
+    },
+    {
+      "key": "social/title",
+      "de": "Folgen Sie uns",
+      "fr": "Nous suivre"
+    },
+    {
+      "key": "newsletter/title",
+      "de": "Newsletter",
+      "fr": "Newsletter"
+    },
+    {
+      "key": "newsletter/placeholder",
+      "de": "E-Mail-Adresse",
+      "fr": "Email"
+    },
+    {
+      "key": "newsletter/submit",
+      "de": "Abonnieren",
+      "fr": "S'inscrire"
+    },
+    {
+      "key": "newsletter/processing",
+      "de": "Anmelden…",
+      "fr": "Inscrire…"
+    },
+    {
+      "key": "newsletter/succes",
+      "de": "Abonnement erfolgreich.",
+      "fr": "Inscription réussie"
+    },
+    {
+      "key": "newsletter/error/timeout",
+      "de": "Verbindung zu MailChimp fehlgeschlagen, versuchen Sie es später nochmals.\nUrsache könnte auch ein «Content Blocking» durch den Browser sein, z.B. «Firefox Content Blocking ‹Strict›». Schalten Sie das «Content Blocking» während der Newsletter-Anmeldung temporär aus.",
+      "fr": "Erreurs dans la connexion avec MailChimp, réessayez plus tard.\nUne raison pourrait être le «Content Blocking» du browser, par exemple «Content Blocking Strict» de Firefox. Veuillez éteindre le «Content Blocking» temporairement pendant l'inscription."
+    },
+    {
+      "key": "newsletter/error/generic",
+      "de": "Anmeldung fehlgeschlagen.",
+      "fr": "Votre inscription comporte des erreurs."
+    },
+    {
+      "key": "newsletter/error/already-subscribed",
+      "de": "Sie sind bereits angemeldet.",
+      "fr": "Vous êtes maintenant connecté.",
+      "undefined": "Vous êtes maintenant connectée."
+    },
+    {
+      "key": "footer/cc",
+      "de": "Die Inhalte von Lobbywatch.ch sind lizenziert unter einer <a href=\"https://creativecommons.org/licenses/by-sa/4.0/deed.de\">Creative Commons Namensnennung - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz</a>.",
+      "fr": "Le contenu de Lobbywatch.ch est disponible sous licence <a href=\"https://creativecommons.org/licenses/by-sa/4.0/deed.fr\">Licence Creative Commons Attribution - Partage dans les mêmes conditions 4.0 International</a>."
+    },
+    {
+      "key": "updated",
+      "de": "Letzte Aktualisierung am {date}",
+      "fr": "Dernière modification le {date}"
+    },
+    {
+      "key": "published",
+      "de": "Veröffentlicht am {date}",
+      "fr": "Publié le {date}"
+    },
+    {
+      "key": "search/hint",
+      "de": "Suchen Sie nach Nationalrätinnen, Nationalräten, Ständerätinnen, Ständeräten, Lobbyisten, Lobbygruppen oder Organisationen.",
+      "fr": "Cherchez d'après le nom d'un parlementaire, un lobbyiste, un groupe d'intérêt ou une organisation "
+    },
+    {
+      "key": "search/more",
+      "de": "Es werden höchstens 30 Treffer angezeigt.",
+      "fr": "Un maximum de 30 résultats sera affiché."
+    },
+    {
+      "key": "parliamentarian/council/title/NR-M",
+      "de": "Nationalrat",
+      "fr": "Conseiller national"
+    },
+    {
+      "key": "parliamentarian/council/title/NR-F",
+      "de": "Nationalrätin",
+      "fr": "Conseillère nationale"
+    },
+    {
+      "key": "parliamentarian/council/title/NR-M-Ex",
+      "de": "Alt-Nationalrat",
+      "fr": "Ancien Conseiller national"
+    },
+    {
+      "key": "parliamentarian/council/title/NR-F-Ex",
+      "de": "Alt-Nationalrätin",
+      "fr": "Ancienne Conseillère nationale"
+    },
+    {
+      "key": "parliamentarian/council/title/SR-M",
+      "de": "Ständerat",
+      "fr": "Conseiller aux Etats"
+    },
+    {
+      "key": "parliamentarian/council/title/SR-F",
+      "de": "Ständerätin",
+      "fr": "Conseillère aux Etats"
+    },
+    {
+      "key": "parliamentarian/council/title/SR-M-Ex",
+      "de": "Alt-Ständerat",
+      "fr": "Ancien Conseiller aux Etats"
+    },
+    {
+      "key": "parliamentarian/council/title/SR-F-Ex",
+      "de": "Alt-Ständerätin",
+      "fr": "Ancienne Conseillère aux Etats"
+    },
+    {
+      "key": "parliamentarian/civilStatus/F-ledig",
+      "de": "ledig",
+      "fr": "célibataire "
+    },
+    {
+      "key": "parliamentarian/civilStatus/M-ledig",
+      "de": "ledig",
+      "fr": "célibataire "
+    },
+    {
+      "key": "parliamentarian/civilStatus/F-verheiratet",
+      "de": "verheiratet",
+      "fr": "mariée"
+    },
+    {
+      "key": "parliamentarian/civilStatus/M-verheiratet",
+      "de": "verheiratet",
+      "fr": "marié"
+    },
+    {
+      "key": "parliamentarian/civilStatus/F-geschieden",
+      "de": "geschieden",
+      "fr": "divorcée "
+    },
+    {
+      "key": "parliamentarian/civilStatus/M-geschieden",
+      "de": "geschieden",
+      "fr": "divorcé "
+    },
+    {
+      "key": "parliamentarian/civilStatus/F-eingetragene partnerschaft",
+      "de": "eingetragene Partnerschaft",
+      "fr": "en partenariat enregistré "
+    },
+    {
+      "key": "parliamentarian/civilStatus/M-eingetragene partnerschaft",
+      "de": "eingetragene Partnerschaft",
+      "fr": "en partenariat enregistré "
+    },
+    {
+      "key": "parliamentarian/civilStatus/F-getrennt",
+      "de": "getrennt",
+      "fr": "séparée"
+    },
+    {
+      "key": "parliamentarian/civilStatus/M-getrennt",
+      "de": "getrennt",
+      "fr": "séparé "
+    },
+    {
+      "key": "parliamentarian/civilStatus/F-verwitwet",
+      "de": "verwitwet",
+      "fr": "Veuve"
+    },
+    {
+      "key": "parliamentarian/civilStatus/M-verwitwet",
+      "de": "verwitwet",
+      "fr": "Veuf "
+    },
+    {
+      "key": "guest/M/invited",
+      "de": "eingeladen von",
+      "fr": "Invité par"
+    },
+    {
+      "key": "guest/F/invited",
+      "de": "eingeladen von",
+      "fr": "Invitée par"
+    },
+    {
+      "key": "connections/legend/type/title",
+      "de": "Verbindungsart",
+      "fr": "Lien"
+    },
+    {
+      "key": "connections/legend/direct",
+      "de": "Direkt",
+      "fr": "direct"
+    },
+    {
+      "key": "connections/legend/indirect",
+      "de": "Indirekt",
+      "fr": "indirect"
+    },
+    {
+      "key": "connections/legend/title",
+      "de": "Wirksamkeit",
+      "fr": "Efficacité"
+    },
+    {
+      "key": "connections/legend/path",
+      "de": "seite/wirksamkeit",
+      "fr": "page/efficacite"
+    },
+    {
+      "key": "connections/legend/HIGH",
+      "de": "Hoch",
+      "fr": "fort"
+    },
+    {
+      "key": "connections/legend/MEDIUM",
+      "de": "Mittel",
+      "fr": "moyen"
+    },
+    {
+      "key": "connections/legend/LOW",
+      "de": "Gering",
+      "fr": "faible"
+    },
+    {
+      "key": "connections/context/paths/direct",
+      "de": "Direkt verbunden",
+      "fr": "Lien direct"
+    },
+    {
+      "key": "connections/context/paths/indirect",
+      "de": "Indirekt verbunden via",
+      "fr": "Lien indirect"
+    },
+    {
+      "key": "connections/context/sector",
+      "de": "Branche",
+      "fr": "Branche"
+    },
+    {
+      "key": "connections/context/branch",
+      "de": "Branche",
+      "fr": "Branche"
+    },
+    {
+      "key": "connections/context/lobbygroup",
+      "de": "Lobbygruppe",
+      "fr": "Groupe d'intérêt"
+    },
+    {
+      "key": "connections/context/function",
+      "de": "Funktion",
+      "fr": "Fonction"
+    },
+    {
+      "key": "connections/context/occupation",
+      "de": "Beruf",
+      "fr": "profession"
+    },
+    {
+      "key": "connections/context/description",
+      "de": "Beschreibung",
+      "fr": "Description"
+    },
+    {
+      "key": "connections/context/compensation",
+      "de": "Entschädigungen pro Jahr",
+      "fr": "Indemnités par année"
+    },
+    {
+      "key": "connections/context/compensation/periode",
+      "de": "pro Jahr",
+      "fr": "par année"
+    },
+    {
+      "key": "connections/context/compensation/notAvailable",
+      "de": "keine Angabe",
+      "fr": "pas d'information"
+    },
+    {
+      "key": "connections/context/compensation/money/-1",
+      "de": "keine, bezahlendes Mitglied",
+      "fr": "aucun, membre payant"
+    },
+    {
+      "key": "connections/context/compensation/money/0",
+      "de": "Ehrenamtlich",
+      "fr": "Bénévole"
+    },
+    {
+      "key": "connections/context/compensation/money/1",
+      "de": "bezahlte Tätigkeit, Betrag unbekannt",
+      "fr": "activité rémunérée, montant inconnu"
+    },
+    {
+      "key": "connections/context/compensation/money/other",
+      "de": "{formatted}",
+      "fr": "{formatted}"
+    },
+    {
+      "key": "connections/more/singular",
+      "de": "Weiteres",
+      "fr": "Autre"
+    },
+    {
+      "key": "connections/more/plural",
+      "de": "Weitere",
+      "fr": "Autres"
+    },
+    {
+      "key": "connections/party/none",
+      "de": "Parteilos",
+      "fr": "Sans parti"
+    },
+    {
+      "key": "connections/organisation",
+      "de": "Organisationen",
+      "fr": "Organisations"
+    },
+    {
+      "key": "connections/lobbyGroup",
+      "de": "Lobbygruppen",
+      "fr": "Groupes d'intérêt"
+    },
+    {
+      "key": "connections/groups/arbeitet fuer",
+      "de": "tätig für",
+      "fr": "actif pour",
+      "undefined": "active pour"
+    },
+    {
+      "key": "connections/groups/auftraggeber fuer",
+      "de": "Auftraggeber(in) für",
+      "fr": "Mandant de",
+      "undefined": "Mandante de"
+    },
+    {
+      "key": "connections/groups/mitglied von",
+      "de": "ist Mitglied von",
+      "fr": "est membre de"
+    },
+    {
+      "key": "connections/groups/mitglieder",
+      "de": "Mitglieder",
+      "fr": "Membres"
+    },
+    {
+      "key": "connections/groups/tochtergesellschaft von",
+      "de": "Oberorganisation",
+      "fr": "est une filiale de "
+    },
+    {
+      "key": "connections/groups/tochtergesellschaften",
+      "de": "Unterorganisationen",
+      "fr": "Filiales"
+    },
+    {
+      "key": "connections/groups/partner von",
+      "de": "Partnerorganisationen",
+      "fr": "Organisations partenaires"
+    },
+    {
+      "key": "connections/groups/beteiligt an",
+      "de": "Beteiligungen an",
+      "fr": "Participations à"
+    },
+    {
+      "key": "connections/groups/beteiligungen von",
+      "de": "Beteiligungen von",
+      "fr": "Participations de"
+    },
+    {
+      "key": "connections/art/arbeitet fuer",
+      "de": "Auftraggeber(in)",
+      "fr": "Mandant",
+      "undefined": "Mandante"
+    },
+    {
+      "key": "connections/art/tochtergesellschaft von",
+      "de": "Unterorganisationen",
+      "fr": "Filiales"
+    },
+    {
+      "key": "connections/art/tochtergesellschaften",
+      "de": "Oberorganisation",
+      "fr": "est une filiale de "
+    },
+    {
+      "key": "detail/title",
+      "de": "Angaben",
+      "fr": "Données"
+    },
+    {
+      "key": "detail/Parliamentarian/title",
+      "de": "Angaben zur Person",
+      "fr": "Données sur la personne"
+    },
+    {
+      "key": "detail/Guest/title",
+      "de": "Angaben zur Person",
+      "fr": "Données sur la personne"
+    },
+    {
+      "key": "detail/Organisation/title",
+      "de": "Angaben zur Organisation",
+      "fr": "Données sur l'organisation"
+    },
+    {
+      "key": "detail/Lobbygroup/title",
+      "de": "Angaben zur Lobbygruppe",
+      "fr": "Données sur le groupe d'intérêt"
+    },
+    {
+      "key": "detail/value/years/1",
+      "de": "1 Jahr",
+      "fr": "1 année"
+    },
+    {
+      "key": "detail/value/years/other",
+      "de": "{count} Jahre",
+      "fr": "{count} ans"
+    },
+    {
+      "key": "detail/value/months/1",
+      "de": "1 Monat",
+      "fr": "1 mois"
+    },
+    {
+      "key": "detail/value/months/other",
+      "de": "{count} Monate",
+      "fr": "{count} mois"
+    },
+    {
+      "key": "detail/value/children/1",
+      "de": "1 Kind",
+      "fr": "1 enfant"
+    },
+    {
+      "key": "detail/value/children/other",
+      "de": "{count} Kinder",
+      "fr": "{count} enfants"
+    },
+    {
+      "key": "detail/label/represents",
+      "de": "Vertretene Bevölkerung",
+      "fr": "Electeurs représentés"
+    },
+    {
+      "key": "detail/label/councilTenure",
+      "de": "Im Parlament seit",
+      "fr": "Au parlement depuis"
+    },
+    {
+      "key": "detail/label/age",
+      "de": "Alter",
+      "fr": "âge"
+    },
+    {
+      "key": "detail/label/occupation",
+      "de": "Beruf",
+      "fr": "profession"
+    },
+    {
+      "key": "detail/label/family",
+      "de": "Familie",
+      "fr": "Famille"
+    },
+    {
+      "key": "detail/label/website",
+      "de": "Homepage",
+      "fr": "Site internet"
+    },
+    {
+      "key": "detail/label/profile",
+      "de": "Parlament.ch Profil",
+      "fr": "Page sur parlament.ch"
+    },
+    {
+      "key": "detail/label/commissions",
+      "de": "Kommissionen",
+      "fr": "Commissions"
+    },
+    {
+      "key": "detail/label/description",
+      "de": "Beschreibung",
+      "fr": "Description"
+    },
+    {
+      "key": "detail/label/uid",
+      "de": "Handelsregister UID",
+      "fr": "IDE registre du commerce"
+    },
+    {
+      "key": "organisation/legalForm/AG",
+      "de": "AG",
+      "fr": "SA"
+    },
+    {
+      "key": "organisation/legalForm/GmbH",
+      "de": "GmbH",
+      "fr": "Sàrl"
+    },
+    {
+      "key": "organisation/legalForm/Stiftung",
+      "de": "Stiftung",
+      "fr": "Fondation"
+    },
+    {
+      "key": "organisation/legalForm/Verein",
+      "de": "Verein",
+      "fr": "Association"
+    },
+    {
+      "key": "organisation/legalForm/Informelle Gruppe",
+      "de": "Informelle Gruppe",
+      "fr": "Groupe informel"
+    },
+    {
+      "key": "organisation/legalForm/Parlamentarische Gruppe",
+      "de": "Parlamentarische Gruppe",
+      "fr": "Groupe parlementaire"
+    },
+    {
+      "key": "organisation/legalForm/Oeffentlich-rechtlich",
+      "de": "Öffentlich-rechtliche Anstalt",
+      "fr": "Etablissement de droit public"
+    },
+    {
+      "key": "organisation/legalForm/Einzelunternehmen",
+      "de": "Einzelunternehmen",
+      "fr": "Entreprise individuelle"
+    },
+    {
+      "key": "organisation/legalForm/KG",
+      "de": "Kollektivgesellschaft",
+      "fr": "Société en nom collectif"
+    },
+    {
+      "key": "organisation/legalForm/Genossenschaft",
+      "de": "Genossenschaft",
+      "fr": "Coopérative"
+    },
+    {
+      "key": "organisation/legalForm/Staatlich",
+      "de": "Staatlich",
+      "fr": "public",
+      "undefined": "publique"
+    },
+    {
+      "key": "organisation/legalForm/Ausserparlamentarische Kommission",
+      "de": "Ausserparlamentarische Kommission",
+      "fr": "Commission extraparlementaire"
+    },
+    {
+      "key": "organisation/legalForm/Einfache Gesellschaft",
+      "de": "Einfache Gesellschaft",
+      "fr": "Société simple"
+    },
+    {
+      "key": "organisation/legalForm/Parlamentarische Freundschaftsgruppe",
+      "de": "Parlamentarische Freundschaftsgruppe",
+      "fr": "Groupe d'amitié parlementaire"
+    },
+    {
+      "key": "connection/art/taetig",
+      "de": "tätig",
+      "fr": "actif"
+    },
+    {
+      "key": "connection/art/geschaeftsfuehrend",
+      "de": "geschäftsführend",
+      "fr": "en poste de direction"
+    },
+    {
+      "key": "connection/art/beirat",
+      "de": "Beirat/Patronatskomitee/Expertenkommission/Advisory Board",
+      "fr": "Conseil/Comité de patronage/Commission d'experts/Advisory Board"
+    },
+    {
+      "key": "connection/art/mitglied",
+      "de": "Mitglied",
+      "fr": "Membre"
+    },
+    {
+      "key": "connection/art/vorstand",
+      "de": "Vorstand",
+      "fr": "Comité"
+    },
+    {
+      "key": "connection/funktion_im_gremium/praesident-F",
+      "de": "Präsidentin",
+      "fr": "Présidente"
+    },
+    {
+      "key": "connection/funktion_im_gremium/praesident-M",
+      "de": "Präsident",
+      "fr": "Président"
+    },
+    {
+      "key": "connection/funktion_im_gremium/vizepraesident-F",
+      "de": "Vizepräsidentin",
+      "fr": "Vice-présidente"
+    },
+    {
+      "key": "connection/funktion_im_gremium/vizepraesident-M",
+      "de": "Vizepräsident",
+      "fr": "Vice-président"
+    },
+    {
+      "key": "connection/funktion_im_gremium/mitglied",
+      "de": "Mitglied",
+      "fr": "Membre"
+    },
+    {
+      "key": "connection/function/Stiftung-vorstand-praesident-F",
+      "de": "Stiftungsratspräsidentin",
+      "fr": "Présidente de fondation"
+    },
+    {
+      "key": "connection/function/Stiftung-vorstand-praesident-M",
+      "de": "Stiftungsratspräsident",
+      "fr": "Président de fondation"
+    },
+    {
+      "key": "connection/function/Stiftung-vorstand-vizepraesident-F",
+      "de": "Stiftungsratsvizepräsidentin",
+      "fr": "Vice-présidente de fondation"
+    },
+    {
+      "key": "connection/function/Stiftung-vorstand-vizepraesident-M",
+      "de": "Stiftungsratsvizepräsident",
+      "fr": "Vice-président de fondation"
+    },
+    {
+      "key": "connection/function/Stiftung-vorstand-mitglied-F",
+      "de": "Stiftungsrätin",
+      "fr": "Membre du Conseil de fondation"
+    },
+    {
+      "key": "connection/function/Stiftung-vorstand-mitglied-M",
+      "de": "Stiftungsrat",
+      "fr": "Membre du Conseil de fondation"
+    },
+    {
+      "key": "connection/function/Stiftung-geschaeftsfuehrend-praesident-F",
+      "de": "Geschäftsführerin",
+      "fr": "Administratrice"
+    },
+    {
+      "key": "connection/function/Stiftung-geschaeftsfuehrend-praesident-M",
+      "de": "Geschäftsführer",
+      "fr": "Administrateur"
+    },
+    {
+      "key": "connection/function/Stiftung-geschaeftsfuehrend-vizepraesident-F",
+      "de": "Vizegeschäftsführerin",
+      "fr": "Vice-administratrice"
+    },
+    {
+      "key": "connection/function/Stiftung-geschaeftsfuehrend-vizepraesident-M",
+      "de": "Vizegeschäftsführer",
+      "fr": "Vice-administrateur"
+    },
+    {
+      "key": "connection/function/Stiftung-geschaeftsfuehrend-mitglied-F",
+      "de": "Geschäftsleitung",
+      "fr": "Direction"
+    },
+    {
+      "key": "connection/function/Stiftung-geschaeftsfuehrend-mitglied-M",
+      "de": "Geschäftsleitung",
+      "fr": "Direction"
+    },
+    {
+      "key": "connection/function/AG-vorstand-praesident-F",
+      "de": "Verwaltungsratspräsidentin",
+      "fr": "Présidente du Conseil d'administration"
+    },
+    {
+      "key": "connection/function/AG-vorstand-praesident-M",
+      "de": "Verwaltungsratspräsident",
+      "fr": "Président du Conseil d'administration"
+    },
+    {
+      "key": "connection/function/AG-vorstand-vizepraesident-F",
+      "de": "Verwaltungsratsvizepräsidentin",
+      "fr": "Vice-présidente du Conseil d'administration"
+    },
+    {
+      "key": "connection/function/AG-vorstand-vizepraesident-M",
+      "de": "Verwaltungsratsvizepräsident",
+      "fr": "Vice-président du Conseil d'administration"
+    },
+    {
+      "key": "connection/function/AG-vorstand-mitglied-F",
+      "de": "Verwaltungsrätin",
+      "fr": "Membre du Conseil d'administration"
+    },
+    {
+      "key": "connection/function/AG-vorstand-mitglied-M",
+      "de": "Verwaltungsrat",
+      "fr": "Membre du Conseil d'administration"
+    },
+    {
+      "key": "connection/function/AG-geschaeftsfuehrend-praesident-F",
+      "de": "Geschäftsführerin (CEO)",
+      "fr": "Administratrice (CEO)"
+    },
+    {
+      "key": "connection/function/AG-geschaeftsfuehrend-praesident-M",
+      "de": "Geschäftsführer (CEO)",
+      "fr": "Administrateur (CEO)"
+    },
+    {
+      "key": "connection/function/AG-geschaeftsfuehrend-vizepraesident-F",
+      "de": "Vizegeschäftsführerin",
+      "fr": "Vice-administratrice"
+    },
+    {
+      "key": "connection/function/AG-geschaeftsfuehrend-vizepraesident-M",
+      "de": "Vizegeschäftsführer",
+      "fr": "Vice-administrateur"
+    },
+    {
+      "key": "connection/function/AG-geschaeftsfuehrend-mitglied-F",
+      "de": "Geschäftsleitung",
+      "fr": "Direction"
+    },
+    {
+      "key": "connection/function/AG-geschaeftsfuehrend-mitglied-M",
+      "de": "Geschäftsleitung",
+      "fr": "Direction"
+    },
+    {
+      "key": "connection/function/Genossenschaft-vorstand-praesident-F",
+      "de": "Verwaltungsratspräsidentin",
+      "fr": "Présidente du Conseil d'administration"
+    },
+    {
+      "key": "connection/function/Genossenschaft-vorstand-praesident-M",
+      "de": "Verwaltungsratspräsident",
+      "fr": "Président du Conseil d'administration"
+    },
+    {
+      "key": "connection/function/Genossenschaft-vorstand-vizepraesident-F",
+      "de": "Verwaltungsratsvizepräsidentin",
+      "fr": "Vice-présidente du Conseil d'administration"
+    },
+    {
+      "key": "connection/function/Genossenschaft-vorstand-vizepraesident-M",
+      "de": "Verwaltungsratsvizepräsident",
+      "fr": "Vice-président du Conseil d'administration"
+    },
+    {
+      "key": "connection/function/Genossenschaft-vorstand-mitglied-F",
+      "de": "Verwaltungsrätin",
+      "fr": "Membre du Conseil d'administration"
+    },
+    {
+      "key": "connection/function/Genossenschaft-vorstand-mitglied-M",
+      "de": "Verwaltungsrat",
+      "fr": "Membre du Conseil d'administration"
+    },
+    {
+      "key": "connection/function/Genossenschaft-geschaeftsfuehrend-praesident-F",
+      "de": "Geschäftsführerin (CEO)",
+      "fr": "Administratrice (CEO)"
+    },
+    {
+      "key": "connection/function/Genossenschaft-geschaeftsfuehrend-praesident-M",
+      "de": "Geschäftsführer (CEO)",
+      "fr": "Administrateur (CEO)"
+    },
+    {
+      "key": "connection/function/Genossenschaft-geschaeftsfuehrend-vizepraesident-F",
+      "de": "Vizegeschäftsführerin",
+      "fr": "Vice-administratrice"
+    },
+    {
+      "key": "connection/function/Genossenschaft-geschaeftsfuehrend-vizepraesident-M",
+      "de": "Vizegeschäftsführer",
+      "fr": "Vice-administrateur"
+    },
+    {
+      "key": "connection/function/Genossenschaft-geschaeftsfuehrend-mitglied-F",
+      "de": "Geschäftsleitung",
+      "fr": "Direction"
+    },
+    {
+      "key": "connection/function/Genossenschaft-geschaeftsfuehrend-mitglied-M",
+      "de": "Geschäftsleitung",
+      "fr": "Direction"
+    },
+    {
+      "key": "connection/function/Verein-vorstand-praesident-F",
+      "de": "Präsidentin",
+      "fr": "Présidente du Comité"
+    },
+    {
+      "key": "connection/function/Verein-vorstand-praesident-M",
+      "de": "Präsident",
+      "fr": "Président du Comité"
+    },
+    {
+      "key": "connection/function/Verein-vorstand-vizepraesident-F",
+      "de": "Vizepräsidentin",
+      "fr": "Vice-présidente du Comité"
+    },
+    {
+      "key": "connection/function/Verein-vorstand-vizepraesident-M",
+      "de": "Vizepräsident",
+      "fr": "Vice-président du Comité"
+    },
+    {
+      "key": "connection/function/Verein-vorstand-mitglied-F",
+      "de": "Vorstand",
+      "fr": "Comité"
+    },
+    {
+      "key": "connection/function/Verein-vorstand-mitglied-M",
+      "de": "Vorstand",
+      "fr": "Comité"
+    },
+    {
+      "key": "connection/function/Verein-geschaeftsfuehrend-praesident-F",
+      "de": "Geschäftsführerin",
+      "fr": "Administratrice"
+    },
+    {
+      "key": "connection/function/Verein-geschaeftsfuehrend-praesident-M",
+      "de": "Geschäftsführer",
+      "fr": "Administrateur"
+    },
+    {
+      "key": "connection/function/Verein-geschaeftsfuehrend-vizepraesident-F",
+      "de": "Vizegeschäftsführerin",
+      "fr": "Vice-administratrice"
+    },
+    {
+      "key": "connection/function/Verein-geschaeftsfuehrend-vizepraesident-M",
+      "de": "Vizegeschäftsführer",
+      "fr": "Vice-administrateur"
+    },
+    {
+      "key": "connection/function/Verein-geschaeftsfuehrend-mitglied-F",
+      "de": "Geschäftsleitung",
+      "fr": "Direction"
+    },
+    {
+      "key": "connection/function/Verein-geschaeftsfuehrend-mitglied-M",
+      "de": "Geschäftsleitung",
+      "fr": "Direction"
+    },
+    {
+      "key": "connection/function/beirat-mitglied",
+      "de": "Beirat/Patronatskomitee/Expertenkommission/Advisory Board",
+      "fr": "Conseil/Comité de patronage/Commission d'experts/Advisory Board"
+    },
+    {
+      "key": "banner/text"
+    },
+    {
+      "key": "banner/link/text"
+    },
+    {
+      "key": "banner/link/href"
+    },
+    {
+      "key": "crowdfunding/status/goal/people",
+      "de": "von {count} Mitgliedern"
+    },
+    {
+      "key": "crowdfunding/status/goal/memberships",
+      "de": "von {count} Mitgliedschaften"
+    },
+    {
+      "key": "crowdfunding/status/goal/money",
+      "de": "von {count}"
+    },
+    {
+      "key": "crowdfunding/status/time/label",
+      "de": "bis Deadline"
+    },
+    {
+      "key": "crowdfunding/status/time/days/1",
+      "de": "1 Tag"
+    },
+    {
+      "key": "crowdfunding/status/time/days/other",
+      "de": "{count} Tage"
+    },
+    {
+      "key": "crowdfunding/status/time/hours/1",
+      "de": "1 Stunde"
+    },
+    {
+      "key": "crowdfunding/status/time/hours/other",
+      "de": "{count} Stunden"
+    },
+    {
+      "key": "crowdfunding/status/time/minutes/1",
+      "de": "1 Minute"
+    },
+    {
+      "key": "crowdfunding/status/time/minutes/other",
+      "de": "{count} Minuten"
+    },
+    {
+      "key": "crowdfunding/status/time/seconds/1",
+      "de": "1 Sekunde"
+    },
+    {
+      "key": "crowdfunding/status/time/seconds/other",
+      "de": "{count} Sekunden"
+    },
+    {
+      "key": "crowdfunding/status/time/ended",
+      "de": "Das Crowdfunding ist vorbei."
+    },
+    {
+      "key": "actionbar/share",
+      "de": "Teilen"
+    },
+    {
+      "key": "actionbar/facebook/title",
+      "de": "Auf Facebook teilen"
+    },
+    {
+      "key": "actionbar/facebook/label",
+      "de": "Facebook"
+    },
+    {
+      "key": "actionbar/twitter/title",
+      "de": "Auf Twitter teilen"
+    },
+    {
+      "key": "actionbar/twitter/label",
+      "de": "Twitter"
+    },
+    {
+      "key": "actionbar/whatsapp/title",
+      "de": "Auf WhatsApp teilen"
+    },
+    {
+      "key": "actionbar/whatsapp/label",
+      "de": "WhatsApp"
+    },
+    {
+      "key": "actionbar/threema/title",
+      "de": "Auf Threema teilen"
+    },
+    {
+      "key": "actionbar/threema/label",
+      "de": "Threema"
+    },
+    {
+      "key": "actionbar/telegram/title",
+      "de": "Auf Telegram teilen"
+    },
+    {
+      "key": "actionbar/telegram/label",
+      "de": "Telegram"
+    },
+    {
+      "key": "actionbar/email/title",
+      "de": "Per E-Mail verschicken"
+    },
+    {
+      "key": "actionbar/email/label",
+      "de": "E-Mail"
+    },
+    {
+      "key": "actionbar/download",
+      "de": "Herunterladen"
+    },
+    {
+      "key": "actionbar/link/title",
+      "de": "Link kopieren"
+    },
+    {
+      "key": "actionbar/link/label",
+      "de": "Link kopieren"
+    },
+    {
+      "key": "actionbar/link/label/success",
+      "de": "Link kopiert!"
+    },
+    {
+      "key": "actionbar/link/label/error",
+      "de": "Nicht unterstützt :("
+    },
+    {
+      "key": "Goodies/title",
+      "de": "Noch etwas Handfestes?"
+    },
+    {
+      "key": "Goodie/dropdown/label",
+      "de": "Anzahl"
+    },
+    {
+      "key": "package/price",
+      "de": "{formattedCHF}"
+    },
+    {
+      "key": "package/price/free",
+      "de": "kostenlos"
+    },
+    {
+      "key": "package/customize/price/payMore",
+      "de": "Können Sie Ihr Investment erhöhen?"
+    },
+    {
+      "key": "package/customize/price/payMore/1.5",
+      "de": "Ich bin für Grosszügigkeit: {formattedCHF}"
+    },
+    {
+      "key": "package/customize/price/payMore/thx",
+      "de": "Danke!"
+    },
+    {
+      "key": "package/customize/price/payMore/2",
+      "de": "Tollkühne {formattedCHF}"
+    },
+    {
+      "key": "package/customize/price/payMore/thx/2",
+      "de": "Herzlichen Dank!"
+    },
+    {
+      "key": "package/customize/price/payRegular",
+      "de": "Auf den regulären Betrag zurücksetzen"
+    }
+  ]
+}
