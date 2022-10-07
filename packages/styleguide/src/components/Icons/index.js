@@ -28,7 +28,7 @@ export {
   MdChevronRight as ChevronRightIcon,
   MdFullscreen as FullscreenIcon,
   MdFullscreenExit as FullscreenExitIcon,
-  MdMic as PodcastIcon,
+  MdPodcasts as PodcastIcon,
   MdPlayCircleOutline as PlayCircleIcon,
   MdQueryBuilder as ReadingTimeIcon,
   MdMail as MailIcon,
