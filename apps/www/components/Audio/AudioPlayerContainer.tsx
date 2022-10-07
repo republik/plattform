@@ -172,11 +172,17 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
         [
           NativeAudioPlayerState.Playing,
           NativeAudioPlayerState.Buffering,
+          NativeAudioPlayerState.Connecting,
+          NativeAudioPlayerState.Ready,
         ].includes(state.playerState),
     )
     setIsLoading(
       state?.isLoading ||
-        [NativeAudioPlayerState.Connecting].includes(state.playerState),
+        [
+          NativeAudioPlayerState.Buffering,
+          NativeAudioPlayerState.Connecting,
+          NativeAudioPlayerState.None,
+        ].includes(state.playerState),
     )
   }
 
@@ -374,7 +380,9 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
 
   // Handle track ending on media element
   const onQueueAdvance = async () => {
-    if (!activePlayerItem) return
+    if (!activePlayerItem) {
+      return
+    }
     try {
       const { data } = await removeAudioQueueItem(activePlayerItem.id)
       console.log('onQueueAdvance, last item removed', data)
