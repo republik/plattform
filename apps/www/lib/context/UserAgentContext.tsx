@@ -16,10 +16,14 @@ export const matchIOSUserAgent = (value?: string): boolean =>
 export const matchAndroidUserAgent = (value?: string): boolean =>
   !!value && !!value.match(/Android/)
 
+export const matchFirefoxUserAgent = (value?: string): boolean =>
+  !!value && !!value.match(/Firefox/)
+
 type UserAgentValues = {
   userAgent: string
   isIOS: boolean
   isAndroid: boolean
+  isFirefox: boolean
 }
 
 const UserAgentContext = createContext<UserAgentValues>(undefined)
@@ -44,6 +48,7 @@ const UserAgentProvider = ({ children, providedValue }: Props) => {
         userAgent,
         isIOS: matchIOSUserAgent(userAgent),
         isAndroid: matchAndroidUserAgent(userAgent),
+        isFirefox: matchFirefoxUserAgent(userAgent),
       }}
     >
       {children}
