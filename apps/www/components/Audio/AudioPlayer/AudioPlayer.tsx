@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AudioPlayerProps } from '../AudioPlayerContainer'
 import { useInNativeApp } from '../../../lib/withInNativeApp'
 import { useTranslation } from '../../../lib/withT'
@@ -15,8 +15,10 @@ import {
 import { AnimatePresence, motion } from 'framer-motion'
 import { css } from 'glamor'
 import AudioPlaybackElement from './AudioPlaybackElement'
+import { useUserAgent } from '../../../lib/context/UserAgentContext'
 
 const MARGIN = 15
+const AUDIO_PLAYER_WRAPPER_ID = 'audio-player-wrapper'
 
 // TODO: handle previously stored audio-player state
 // this is detectable if the stored object has an audioSource element in the top
@@ -30,7 +32,6 @@ const styles = {
     right: 0,
     display: 'flex',
     boxShadow: '0px -5px 15px -3px rgba(0,0,0,0.1)',
-    maxHeight: '100vh',
     [mediaQueries.mUp]: {
       right: 15,
       width: ['290px', `calc(100% - ${MARGIN * 2}px)`],
@@ -46,14 +47,23 @@ const styles = {
     marginLeft: ['15px', 'max(15px, env(safe-area-inset-left))'],
     marginBottom: ['24px', 'max(24px, env(safe-area-inset-bottom))'],
     width: ['290px', `calc(100% - ${MARGIN * 2}px)`],
+    maxHeight: '100vh',
   }),
   wrapperExpanded: css({
+    maxHeight: '100vh',
+    height: [
+      '100vh',
+      '-moz-available',
+      '-webkit-fill-available',
+      'fill-available',
+    ],
     margin: 0,
     paddingLeft: ['15px', 'max(15px, env(safe-area-inset-left))'],
     paddingRight: ['15px', 'max(15px, env(safe-area-inset-right))'],
     paddingBottom: 0,
     width: '100%',
     [mediaQueries.mUp]: {
+      height: 'auto',
       paddingTop: ['15px', 'max(15px, env(safe-area-inset-top))'],
       marginRight: ['15px', 'max(15px, env(safe-area-inset-right))'],
       marginLeft: ['15px', 'max(15px, env(safe-area-inset-left))'],
@@ -78,6 +88,7 @@ const AudioPlayer = ({
   hasError,
 }: AudioPlayerProps) => {
   const { inNativeApp, inIOS } = useInNativeApp()
+  const { isAndroid } = useUserAgent()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
   const [isExpanded, setIsExpanded] = useState(false)
   const [forceScrollLock, setForceScrollLock] = useState(false)
@@ -135,6 +146,38 @@ const AudioPlayer = ({
       },
   })
 
+  // Mobile browser on android can't seem to handle fill-available
+  // thus we must fallback to the following JS solutin as described here:
+  // Source: https://ilxanlar.medium.com/you-shouldnt-rely-on-css-100vh-and-here-s-why-1b4721e74487
+
+  useEffect(() => {
+    if (isDesktop || inNativeApp || !isAndroid) {
+      return
+    }
+    function calculateVh() {
+      const vh = window.innerHeight * 0.01
+      const wrapperElement = document.getElementById(AUDIO_PLAYER_WRAPPER_ID)
+      wrapperElement.style.setProperty('--vh', vh + 'px')
+    }
+    // Initial calculation
+    calculateVh()
+    // Re-calculate on resize
+    window.addEventListener('resize', calculateVh)
+    // Re-calculate on device orientation change
+    window.addEventListener('orientationchange', calculateVh)
+    document
+      .getElementById(AUDIO_PLAYER_WRAPPER_ID)
+      .style.setProperty('min-height', 'calc(var(--vh) * 100)')
+
+    return () => {
+      window.removeEventListener('resize', calculateVh)
+      window.removeEventListener('orientationchange', calculateVh)
+      document
+        .getElementById(AUDIO_PLAYER_WRAPPER_ID)
+        .style.removeProperty('min-height')
+    }
+  }, [isDesktop, inNativeApp, isAndroid])
+
   return (
     <AnimatePresence>
       {isVisible && (
@@ -144,6 +187,7 @@ const AudioPlayer = ({
             onBackdropClick={() => setIsExpanded(false)}
           >
             <motion.div
+              id={AUDIO_PLAYER_WRAPPER_ID}
               {...(inNativeApp && inIOS && !isExpanded && iOSSafeInsets)}
               ref={ref}
               initial={{ opacity: 0, y: 50 }}
