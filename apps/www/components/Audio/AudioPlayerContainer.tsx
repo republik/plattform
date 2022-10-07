@@ -94,8 +94,8 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const {
     audioQueue,
     audioQueueIsLoading,
+    addAudioQueueItem,
     removeAudioQueueItem,
-    clearAudioQueue,
     refetchAudioQueue,
   } = useAudioQueue()
   const { saveMediaProgress } = useMediaProgress()
@@ -234,6 +234,11 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
 
   const onPlay = async () => {
     try {
+      // In case the queue has ended, readd the last played item to the queue and play it
+      if (activePlayerItem && audioQueue.length === 0) {
+        await addAudioQueueItem(activePlayerItem.document, 1)
+      }
+
       if (inNativeApp) {
         // handle edge case when the track-player queue is empty
         // the previously played item must therefor be readded to the queue
@@ -244,7 +249,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
         notifyApp(AudioEvent.PLAY)
       } else if (mediaRef.current) {
         mediaRef.current.playbackRate = playbackRate
-        mediaRef.current.play()
+        await mediaRef.current.play()
         syncWithMediaElement()
       }
     } catch (error) {
@@ -372,6 +377,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     if (!activePlayerItem) return
     try {
       const { data } = await removeAudioQueueItem(activePlayerItem.id)
+      console.log('onQueueAdvance, last item removed', data)
       if (data.audioQueueItems.length > 0) {
         setShouldAutoPlay(true)
         const nextUp = data.audioQueueItems[0]
@@ -379,7 +385,6 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       } else {
         console.log('onQueueAdvance: no more items in queue')
         setShouldAutoPlay(false)
-        setActivePlayerItem(null)
       }
     } catch (error) {
       handleError(error)
@@ -389,13 +394,14 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const playQueue = async () => {
     try {
       if (!audioQueue || audioQueue.length === 0) {
+        // In case the audioQueue is not yet available (slow audio-queue sync)
+        // Set should auto-play to allow onCanPlay to trigger play once ready
+        setShouldAutoPlay(true)
+        console.log(
+          'playQueue: no audioQueue available, setting shouldAutoPlay',
+        )
         return
       }
-      console.log('playQueue', {
-        audioQueue,
-        activePlayerItem,
-        trackedPlayerItem,
-      })
       const nextUp = audioQueue[0]
       setActivePlayerItem(nextUp)
       console.log('playQueue: nextUp', nextUp)

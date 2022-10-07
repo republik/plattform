@@ -20,11 +20,10 @@ import { useMe } from '../../../lib/context/MeContext'
 import createPersistedState from '../../../lib/hooks/use-persisted-state'
 import { AudioPlayerItem } from '../types/AudioPlayerItem'
 import { ApolloError, FetchResult } from '@apollo/client'
-import { defaultJsFileExtensions } from 'next/dist/build/webpack/loaders/utils'
-import { json } from 'express'
 
-const usePersistedAudioState =
-  createPersistedState<AudioQueueItem>('audioState')
+const usePersistedAudioState = createPersistedState<AudioQueueItem>(
+  'audio-player-local-state',
+)
 
 /**
  * useAudioQueue provides all playlist-data as well as operations to manage the playlist.
