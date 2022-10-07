@@ -146,38 +146,6 @@ const AudioPlayer = ({
       },
   })
 
-  // Mobile browser on android can't seem to handle fill-available
-  // thus we must fallback to the following JS solutin as described here:
-  // Source: https://ilxanlar.medium.com/you-shouldnt-rely-on-css-100vh-and-here-s-why-1b4721e74487
-
-  useEffect(() => {
-    if (isDesktop || inNativeApp || !isAndroid) {
-      return
-    }
-    function calculateVh() {
-      const vh = window.innerHeight * 0.01
-      const wrapperElement = document.getElementById(AUDIO_PLAYER_WRAPPER_ID)
-      wrapperElement.style.setProperty('--vh', vh + 'px')
-    }
-    // Initial calculation
-    calculateVh()
-    // Re-calculate on resize
-    window.addEventListener('resize', calculateVh)
-    // Re-calculate on device orientation change
-    window.addEventListener('orientationchange', calculateVh)
-    document
-      .getElementById(AUDIO_PLAYER_WRAPPER_ID)
-      .style.setProperty('min-height', 'calc(var(--vh) * 100)')
-
-    return () => {
-      window.removeEventListener('resize', calculateVh)
-      window.removeEventListener('orientationchange', calculateVh)
-      document
-        .getElementById(AUDIO_PLAYER_WRAPPER_ID)
-        .style.removeProperty('min-height')
-    }
-  }, [isDesktop, inNativeApp, isAndroid])
-
   return (
     <AnimatePresence>
       {isVisible && (
