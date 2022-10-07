@@ -26,7 +26,12 @@ const usePersistedAudioState = createPersistedState<AudioQueueItem>(
 )
 
 /**
- * useAudioQueue provides all playlist-data as well as operations to manage the playlist.
+ * useAudioQueue acts as a provider for the audio queue and all it's mutations.
+ * Additionally, it provides the user-progress for all queued audio-items.
+ *d
+ * For users with an active membership, the queue is synchronized with the server.
+ * For users without an active membership, the queue is persisted in local storage.
+ * The local storage however doesn't allow for more than one item to be saved.
  */
 const useAudioQueue = (): {
   audioQueue: AudioQueueItem[]
@@ -66,6 +71,11 @@ const useAudioQueue = (): {
   const [localAudioItem, setLocalAudioItem] =
     usePersistedAudioState<AudioQueueItem>(null)
 
+  /**
+   *
+   * @param cache
+   * @param audioQueueItems
+   */
   const modifyApolloCacheWithUpdatedPlaylist = (
     cache,
     { data: { audioQueueItems } },
@@ -82,6 +92,24 @@ const useAudioQueue = (): {
   const [addAudioQueueItem] = useAddAudioQueueItemMutation({
     update: modifyApolloCacheWithUpdatedPlaylist,
   })
+  const [removeAudioQueueItem] = useRemoveAudioQueueItemMutation({
+    update: modifyApolloCacheWithUpdatedPlaylist,
+  })
+  const [moveAudioQueueItem] = useMoveAudioQueueItemMutation({
+    update: modifyApolloCacheWithUpdatedPlaylist,
+  })
+  const [clearAudioQueue] = useClearAudioQueueMutation({
+    update: modifyApolloCacheWithUpdatedPlaylist,
+  })
+  const [reorderAudioQueue] = useReorderAudioQueueMutation({
+    update: modifyApolloCacheWithUpdatedPlaylist,
+  })
+
+  /**
+   * Add an audio item to the queue or to the local storage if the user is not a member.
+   * @param item partial of a document with all the required meta fields
+   * @param position position in the queue. To push to front of queue, pass 1
+   */
   const handleAddQueueItem = async (
     item: AudioPlayerItem,
     position?: number,
@@ -111,9 +139,10 @@ const useAudioQueue = (): {
     }
   }
 
-  const [removeAudioQueueItem] = useRemoveAudioQueueItemMutation({
-    update: modifyApolloCacheWithUpdatedPlaylist,
-  })
+  /**
+   * Remove an item from the queue or from the local storage if the user is not a member.
+   * @param audioItemId
+   */
   const handleRemoveQueueItem = async (
     audioItemId: string,
   ): Promise<FetchResult<RemoveAudioQueueItemMutationData>> => {
@@ -133,9 +162,6 @@ const useAudioQueue = (): {
     }
   }
 
-  const [moveAudioQueueItem] = useMoveAudioQueueItemMutation({
-    update: modifyApolloCacheWithUpdatedPlaylist,
-  })
   const handleMoveQueueItem = async (
     audioItemId: string,
     position: number,
@@ -156,9 +182,6 @@ const useAudioQueue = (): {
     }
   }
 
-  const [clearAudioQueue] = useClearAudioQueueMutation({
-    update: modifyApolloCacheWithUpdatedPlaylist,
-  })
   const handleClearQueue = async (): Promise<
     FetchResult<ClearAudioQueueMutationData>
   > => {
@@ -174,9 +197,6 @@ const useAudioQueue = (): {
     }
   }
 
-  const [reorderAudioQueue] = useReorderAudioQueueMutation({
-    update: modifyApolloCacheWithUpdatedPlaylist,
-  })
   const handleQueueReorder = async (
     reorderedQueue: AudioQueueItem[],
   ): Promise<FetchResult<ReorderAudioQueueMutationData>> => {
