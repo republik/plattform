@@ -122,7 +122,7 @@ const Scrubber = ({
   }, [audioProgress, setInternalProgress])
 
   const debouncedSeek = useMemo(
-    () => debounce((progress) => onSeek(progress), 1000 / 60),
+    () => debounce((progress) => onSeek(progress), 1000 / 30),
     [onSeek],
   )
 
