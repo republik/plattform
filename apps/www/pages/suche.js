@@ -1,6 +1,7 @@
 import compose from 'lodash/flowRight'
 import { withRouter } from 'next/router'
 import Frame from '../components/Frame'
+import Nav from '../components/Frame/Popover/Nav'
 import Search from '../components/Search'
 import { enforceMembership } from '../components/Auth/withMembership'
 import withT from '../lib/withT'
@@ -13,9 +14,13 @@ const SearchPage = ({ router, t }) => {
     title: t('pages/search/title'),
     image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
   }
+
   return (
-    <Frame raw meta={meta}>
+    <Frame hasOverviewNav meta={meta}>
       <Search query={router.query} />
+      {router.query && Object.keys(router.query).length === 0 && (
+        <Nav router={router} />
+      )}
     </Frame>
   )
 }

@@ -126,7 +126,7 @@ const NavLink = ({
         title={title}
         inline={inline}
         onClick={
-          !minifeed
+          !minifeed && closeHandler
             ? (e) => {
                 e.stopPropagation()
                 closeHandler()
