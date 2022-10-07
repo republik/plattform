@@ -71,7 +71,7 @@ const usePersistedPlayerItem = createPersistedState<AudioPlayerItem>(
 )
 
 const AudioProvider = ({ children }) => {
-  const { inNativeIOSApp } = useInNativeApp()
+  const { inNativeApp, inNativeIOSApp } = useInNativeApp()
   const [activePlayerItem, setActivePlayerItem] = usePersistedPlayerItem<
     AudioPlayerItem | undefined
   >(undefined)
