@@ -1,5 +1,5 @@
 /**
- * PlayerItem is a Partial of the Document type.
+ * PlayerItem is a partial of the Document type.
  */
 export type AudioPlayerItem = {
   id: string
