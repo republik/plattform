@@ -107,26 +107,28 @@ const AudioProvider = ({ children }) => {
       await addAudioQueueItem(playerItem, 1)
       AudioEventEmitter.emit('togglePlayer')
     } else {
-      let currentTime
-      if (mediaId) {
-        currentTime = await getMediaProgress({ mediaId })
+      if (inNativeApp) {
+        let currentTime
+        if (mediaId) {
+          currentTime = await getMediaProgress({ mediaId })
+        }
+        // The below constructed payload is required by the legacy in-app
+        // audio player.
+        const payload = {
+          audioSource,
+          url,
+          title,
+          sourcePath: path,
+          mediaId,
+        }
+        postMessage({
+          type: 'play-audio',
+          payload: {
+            ...payload,
+            currentTime,
+          },
+        })
       }
-      // The below constructed payload is required by the legacy in-app
-      // audio player.
-      const payload = {
-        audioSource,
-        url,
-        title,
-        sourcePath: path,
-        mediaId,
-      }
-      postMessage({
-        type: 'play-audio',
-        payload: {
-          ...payload,
-          currentTime,
-        },
-      })
       setActivePlayerItem(playerItem)
       setAutoPlayAudioPlayerItem(playerItem)
     }
