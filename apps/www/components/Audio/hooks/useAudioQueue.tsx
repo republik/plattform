@@ -24,6 +24,7 @@ import createPersistedState from '../../../lib/hooks/use-persisted-state'
 import { AudioPlayerItem } from '../types/AudioPlayerItem'
 import { ApolloError, FetchResult } from '@apollo/client'
 import { trackEvent } from '../../../lib/matomo'
+import OptimisticQueueResponseHelper from '../helpers/OptimisticQueueResponseHelper'
 
 const TRACK_NAME = 'AudioQueue'
 
@@ -157,9 +158,15 @@ const useAudioQueue = (): {
   ): Promise<FetchResult<RemoveAudioQueueItemMutationData>> => {
     trackEvent([AUDIO_PLAYER_TRACK_CATEGORY, TRACK_NAME, 'removeItem'])
     if (hasAccess) {
+      const audioQueueItems = meWithAudioQueue?.me?.audioQueue || []
       return removeAudioQueueItem({
         variables: {
           id: audioItemId,
+        },
+        optimisticResponse: {
+          audioQueueItems: audioQueueItems.filter(
+            (item) => item.id !== audioItemId,
+          ),
         },
       })
     } else {
@@ -178,11 +185,18 @@ const useAudioQueue = (): {
   ): Promise<FetchResult<MoveAudioQueueItemMutationData>> => {
     trackEvent([AUDIO_PLAYER_TRACK_CATEGORY, TRACK_NAME, 'moveItem'])
     if (hasAccess) {
+      const audioQueueItems = meWithAudioQueue?.me?.audioQueue || []
       return moveAudioQueueItem({
         variables: {
           id: audioItemId,
           sequence: position,
         },
+        optimisticResponse:
+          OptimisticQueueResponseHelper.makeMoveQueueItemResponse(
+            audioQueueItems,
+            audioItemId,
+            position,
+          ),
       })
     } else {
       return Promise.resolve({
@@ -197,7 +211,11 @@ const useAudioQueue = (): {
     FetchResult<ClearAudioQueueMutationData>
   > => {
     if (hasAccess) {
-      return clearAudioQueue()
+      return clearAudioQueue({
+        optimisticResponse: {
+          audioQueueItems: [],
+        },
+      })
     } else {
       setLocalAudioItem(null)
       return Promise.resolve({
