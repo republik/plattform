@@ -17,12 +17,11 @@ import {
 } from '../constants'
 import { useColorContext, fontStyles } from '@project-r/styleguide'
 import { renderTime } from '../shared'
+import { clamp } from '../../helpers/clamp'
 
 function times(x) {
   return Array.from({ length: x }, (_, i) => i)
 }
-
-const clamp = (num, min, max) => Math.min(Math.max(num, min), max)
 
 const styles = {
   progressRoot: css({
