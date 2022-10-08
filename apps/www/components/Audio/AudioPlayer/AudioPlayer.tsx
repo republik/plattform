@@ -74,7 +74,7 @@ const styles = {
 
 const AudioPlayer = ({
   isVisible,
-  mediaRef,
+  setWebHandlers,
   activeItem,
   queue,
   autoPlay,
@@ -180,7 +180,7 @@ const AudioPlayer = ({
 
   return (
     <AnimatePresence>
-      {isVisible && (
+      {isVisible && activeItem && (
         <>
           <Backdrop
             isExpanded={isExpanded}
@@ -243,8 +243,9 @@ const AudioPlayer = ({
           </Backdrop>
           {activeItem && !inNativeApp && (
             <AudioPlaybackElement
-              mediaRef={mediaRef}
+              setWebHandlers={setWebHandlers}
               activeItem={activeItem}
+              playbackRate={playbackRate}
               autoPlay={autoPlay}
               actions={actions}
             />
