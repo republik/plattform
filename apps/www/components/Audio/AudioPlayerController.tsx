@@ -343,7 +343,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       return
     }
     try {
-      console.log('onQueueAdvance')
       const { data } = await removeAudioQueueItem(activePlayerItem.id)
       console.log('onQueueAdvance', data)
       if (data.audioQueueItems.length > 0) {

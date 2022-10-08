@@ -62,11 +62,14 @@ const AudioPlaybackElement = ({
 
   const onCanPlay = async () => {
     try {
+      if (!activeItem) return
+
       setIsLoading(false)
       syncStateWithUI()
-
+      let activeItemHasChanged = false
       if (activeItem?.id !== trackedPlayerItem?.current?.id) {
         trackedPlayerItem.current = activeItem
+        activeItemHasChanged = true
 
         const { userProgress, durationMs } =
           activeItem.document?.meta.audioSource ?? {}
@@ -87,15 +90,8 @@ const AudioPlaybackElement = ({
         }
       }
 
-      if (!activeItem) return
-      console.log('onCanPlay', {
-        activeItem,
-        // isPlaying,
-        // shouldAutoPlay,
-        // hasAutoPlayed,
-      })
-      // TODO: fix auto-play
-      if (!isPlaying && autoPlay) {
+      // Don't call on play if already playing, unless the activeItem has changed
+      if ((activeItemHasChanged || !isPlaying) && autoPlay) {
         await onPlay()
       }
     } catch (error) {
