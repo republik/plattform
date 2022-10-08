@@ -346,6 +346,20 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         const nextUp = data.audioQueueItems[0]
         setShouldAutoPlay(true)
         setActivePlayerItem(nextUp)
+        const audioSource = nextUp?.document?.meta?.audioSource
+
+        // Optimistic UI update
+        if (audioSource) {
+          const duration = audioSource.durationMs / 1000
+          setDuration(duration || 0)
+          if (audioSource?.userProgress.secs) {
+            setCurrentTime(
+              audioSource?.userProgress.secs + 2 < duration
+                ? audioSource?.userProgress.secs
+                : 0,
+            )
+          }
+        }
       } else {
         trackEvent([AUDIO_PLAYER_TRACK_CATEGORY, 'queue', 'ended'])
         setShouldAutoPlay(false)
