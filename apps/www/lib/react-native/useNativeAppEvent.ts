@@ -14,7 +14,7 @@ function useNativeAppEvent<E = Event>(
   callback: EventHandler<E>,
 ) {
   const { inNativeApp } = useInNativeApp()
-  const savedCallback = useRef<EventHandler<E>>(() => Promise.resolve())
+  const savedCallback = useRef<EventHandler<E>>(callback)
 
   useEffect(() => {
     savedCallback.current = callback
