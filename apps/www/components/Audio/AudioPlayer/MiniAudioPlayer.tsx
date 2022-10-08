@@ -156,9 +156,8 @@ const MiniAudioPlayer = ({
           duration={duration}
           buffered={buffered}
           onSeek={handleSeek}
-          disabled={isLoading}
+          disabled={isLoading || hasError}
           showScrubber={false}
-          disabled={hasError}
         />
       </div>
     </div>
