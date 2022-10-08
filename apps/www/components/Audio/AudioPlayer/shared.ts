@@ -20,7 +20,6 @@ export type AudioPlayerProps = {
   duration?: number
   playbackRate: number
   buffered?: TimeRanges
-  //
   actions: AudioPlayerActions
   t: any
   hasError?: boolean
