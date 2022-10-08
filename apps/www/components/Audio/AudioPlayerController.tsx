@@ -99,9 +99,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     audioEventHandlers.current = updatedHandlers
   }
 
-  const trackedPlayerItem = useRef<AudioQueueItem>(null)
   const trackedQueue = useRef<AudioQueueItem[]>(null)
-
   const [initialized, setInitialized] = useState(false)
   const [activePlayerItem, setActivePlayerItem] =
     useState<AudioQueueItem | null>(null)
@@ -160,37 +158,41 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   )
 
   // Sync the Web-UI with the native audio player
-  const syncWithNativeApp = (state: AppAudioPlayerState) => {
-    console.log('syncWithNativeApp')
-    if (!inNativeApp) return
-    // Don't update the currentTime & duration
-    // if the native player wasn't yet able to load the media
-    // TODO: find out why the track-player sometimes provides currentTime = 0
-    // when state is ready
-    if (
-      ![
-        NativeAudioPlayerState.None,
-        NativeAudioPlayerState.Connecting,
-      ].includes(state.playerState)
-    ) {
-      setDuration(state.duration)
-      setCurrentTime(state.currentTime)
-    }
-    setPlaybackRate(state.playbackRate)
-    setIsPlaying(
-      [
-        NativeAudioPlayerState.Playing,
-        NativeAudioPlayerState.Buffering,
-      ].includes(state.playerState),
-    )
-    setIsLoading(
-      [
-        NativeAudioPlayerState.Buffering,
-        NativeAudioPlayerState.Connecting,
-        NativeAudioPlayerState.None,
-      ].includes(state.playerState),
-    )
-  }
+  const syncWithNativeApp = useCallback(
+    (state: AppAudioPlayerState) => {
+      console.log('syncWithNativeApp')
+      if (!inNativeApp) return
+      // Don't update the currentTime & duration
+      // if the native player wasn't yet able to load the media
+      // TODO: find out why the track-player sometimes provides currentTime = 0
+      // when state is ready
+      if (
+        ![
+          NativeAudioPlayerState.None,
+          NativeAudioPlayerState.Connecting,
+          NativeAudioPlayerState.Ready,
+        ].includes(state.playerState)
+      ) {
+        setDuration(state.duration)
+        setCurrentTime(state.currentTime)
+      }
+      setPlaybackRate(state.playbackRate)
+      setIsPlaying(
+        [
+          NativeAudioPlayerState.Playing,
+          NativeAudioPlayerState.Buffering,
+        ].includes(state.playerState),
+      )
+      setIsLoading(
+        [
+          NativeAudioPlayerState.Buffering,
+          NativeAudioPlayerState.Connecting,
+          NativeAudioPlayerState.None,
+        ].includes(state.playerState),
+      )
+    },
+    [inNativeApp],
+  )
 
   // Sync the Web-UI with the HTML5 audio element
   const syncWithMediaElement = (state: AudioElementState) => {
@@ -215,12 +217,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       }
 
       if (inNativeApp) {
-        // handle edge case when the track-player queue is empty
-        // the previously played item must therefor be readded to the queue
-        if (audioQueue.length === 0 && activePlayerItem) {
-          // TODO: find a way to re-add the last played item to the queue
-          // so that the track-player can start playing it again
-        }
         notifyApp(AudioEvent.PLAY)
       } else if (audioEventHandlers.current) {
         await audioEventHandlers.current.handlePlay()
@@ -236,7 +232,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       if (inNativeApp) {
         notifyApp(AudioEvent.PAUSE)
       } else if (audioEventHandlers.current) {
-        audioEventHandlers.current.handlePause()
+        await audioEventHandlers.current.handlePause()
       }
       await saveActiveItemProgress({
         isPlaying: false,
@@ -366,7 +362,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     }
   }
 
-  const playQueue = async () => {
+  const playQueue = useCallback(async () => {
     try {
       if (!audioQueue || audioQueue.length === 0) {
         // In case the audioQueue is not yet available (slow audio-queue sync)
@@ -381,7 +377,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     } catch (error) {
       handleError(error)
     }
-  }
+  }, [audioQueue, onPlay])
 
   useInterval(
     saveActiveItemProgress,
@@ -460,9 +456,9 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   }, [])
 
   useAudioContextEvent<void>('togglePlayer', playQueue)
-  useNativeAppEvent(AudioEvent.SYNC, syncWithNativeApp)
-  useNativeAppEvent(AudioEvent.QUEUE_ADVANCE, onQueueAdvance)
-  useNativeAppEvent(AudioEvent.ERROR, handleError)
+  useNativeAppEvent(AudioEvent.SYNC, syncWithNativeApp, [initialized])
+  useNativeAppEvent(AudioEvent.QUEUE_ADVANCE, onQueueAdvance, [initialized])
+  useNativeAppEvent(AudioEvent.ERROR, handleError, [initialized])
 
   return (
     <>

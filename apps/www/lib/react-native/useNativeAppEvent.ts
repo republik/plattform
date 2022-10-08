@@ -12,6 +12,7 @@ type EventHandler<E> = (eventData: E) => Promise<void> | void
 function useNativeAppEvent<E = Event>(
   eventName: string,
   callback: EventHandler<E>,
+  callbackDependencies: ReadonlyArray<any> = [],
 ) {
   const { inNativeApp } = useInNativeApp()
   const savedCallback = useRef<EventHandler<E>>(callback)
@@ -28,14 +29,13 @@ function useNativeAppEvent<E = Event>(
       console.log('useNativeAppEvent received', eventName, evenData)
       return savedCallback?.current(evenData)
     }
-
     console.log('useNativeAppEvent setup', eventName)
     AppMessageEventEmitter.addListener(eventName, handler)
     return () => {
       console.log('useNativeAppEvent teardown', eventName)
       AppMessageEventEmitter.removeListener(eventName, handler)
     }
-  }, [eventName])
+  }, [eventName, ...callbackDependencies])
 }
 
 export default useNativeAppEvent
