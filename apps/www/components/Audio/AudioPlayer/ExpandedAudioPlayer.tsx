@@ -212,7 +212,7 @@ const ExpandedAudioPlayer = ({
             currentTime={currentTime}
             duration={duration}
             buffered={buffered}
-            isLastItem={queuedItems.length <= 1}
+            isLastItem={queuedItems.length === 0}
           />
           {hasError && <AudioError />}
         </div>
