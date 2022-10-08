@@ -389,48 +389,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     isPlaying ? SAVE_MEDIA_PROGRESS_INTERVAL : null,
   )
 
-  // Web
-  const handleItemPushedToFront = useCallback(() => {
-    const nextActivePlayerItem = audioQueue[0]
-    const alreadyHadActivePlayerItem = !!activePlayerItem
-    console.log('handleItemPushedToFront', {
-      alreadyHadActivePlayerItem,
-      activePlayerItem: activePlayerItem?.document?.meta.title,
-      nextActivePlayerItem: activePlayerItem?.document?.meta.title,
-    })
-    setActivePlayerItem(nextActivePlayerItem)
-    setShouldAutoPlay(isPlaying)
-    setHasAutoPlayed(false)
-    setIsPlaying(false)
-
-    // Provide the inital duration and progress for the ui
-    // as a fallback until the media was loaded
-    // to prevent the ui from showing 0:00
-
-    const audioSource = nextActivePlayerItem.document?.meta?.audioSource
-    if (audioSource) {
-      setDuration(audioSource.durationMs / 1000)
-      if (audioSource?.userProgress) {
-        setCurrentTime(audioSource.userProgress.secs)
-      }
-
-      /*if (mediaRef.current && alreadyHadActivePlayerItem) {
-        mediaRef.current.load()
-      }*/
-    }
-  }, [audioQueue, activePlayerItem, trackedPlayerItem, isPlaying])
-
-  // TODO: extract to playback element
-  /*if (
-    isClient &&
-    audioQueue &&
-    audioQueue.length > 0 &&
-    (!activePlayerItem ||
-      activePlayerItem?.document?.id !== audioQueue[0].document.id)
-  ) {
-    handleItemPushedToFront()
-  }*/
-
   // Sync the queue with the native-app and reopen the player if queue changed
   // while it was closed
   useEffect(() => {
@@ -464,7 +422,8 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       initialized ||
       PATHS_WITH_DELAYED_INITIALIZATION.includes(pathname) ||
       audioQueueIsLoading ||
-      !audioQueue
+      !audioQueue ||
+      audioQueue.length == 0
     ) {
       return
     }
