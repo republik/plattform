@@ -106,7 +106,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const [activePlayerItem, setActivePlayerItem] =
     useState<AudioQueueItem | null>(null)
   const [shouldAutoPlay, setShouldAutoPlay] = useState(false)
-  const [hasAutoPlayed, setHasAutoPlayed] = useState(false)
 
   const [isPlaying, setIsPlaying] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -162,6 +161,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
 
   // Sync the Web-UI with the native audio player
   const syncWithNativeApp = (state: AppAudioPlayerState) => {
+    console.log('syncWithNativeApp')
     if (!inNativeApp) return
     // Don't update the currentTime & duration
     // if the native player wasn't yet able to load the media
@@ -251,12 +251,12 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       if (!activePlayerItem) {
         return
       }
+      setShouldAutoPlay(false)
       if (inNativeApp) {
         notifyApp(AudioEvent.STOP)
       } else if (audioEventHandlers.current) {
         audioEventHandlers.current.handleStop()
       }
-      setHasAutoPlayed(false)
       setIsVisible(false)
     } catch (error) {
       handleError(error)
@@ -353,7 +353,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       if (data.audioQueueItems.length > 0) {
         console.log('onQueueAdvance: play next', {
           shouldAutoPlay,
-          hasAutoPlayed,
         })
         const nextUp = data.audioQueueItems[0]
         setShouldAutoPlay(true)
@@ -389,13 +388,11 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     isPlaying ? SAVE_MEDIA_PROGRESS_INTERVAL : null,
   )
 
-  // Sync the queue with the native-app and reopen the player if queue changed
-  // while it was closed
   useEffect(() => {
     if (!initialized) {
       return
     }
-
+    // Notify the app of any changes to the queue
     if (
       inNativeApp &&
       audioQueue &&
@@ -403,17 +400,25 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     ) {
       notifyApp(AudioEvent.QUEUE_UPDATE, audioQueue)
     }
-    //
+
+    // React to queue updates
     if (
       audioQueue &&
       audioQueue.length > 0 &&
-      !isVisible &&
       hasQueueChanged(trackedQueue?.current, audioQueue)
     ) {
+      // In case the queue changed while not visible,
+      // toggle the visibility back on
       setIsVisible(true)
+
+      // IF the head of the queue changed, update the active player item
+      if (audioQueue[0].id !== activePlayerItem?.id) {
+        setActivePlayerItem(audioQueue[0])
+        setShouldAutoPlay(true)
+      }
     }
     trackedQueue.current = audioQueue
-  }, [inNativeApp, audioQueue, isVisible])
+  }, [initialized, inNativeApp, audioQueue])
 
   // Initialize the player once the queue has loaded.
   // Open up the audio-player once the app has started if the queue is not empty
