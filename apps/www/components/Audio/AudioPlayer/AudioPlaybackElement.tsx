@@ -95,10 +95,9 @@ const AudioPlaybackElement = ({
         // hasAutoPlayed,
       })
       // TODO: fix auto-play
-      /**if (!isPlaying && shouldAutoPlay && !hasAutoPlayed) {
-        setHasAutoPlayed(true)
+      if (!isPlaying && autoPlay) {
         await onPlay()
-      }*/
+      }
     } catch (error) {
       handleError(error)
     }
@@ -184,13 +183,11 @@ const AudioPlaybackElement = ({
   // Reset media-element if new source is provided
   useEffect(() => {
     if (activeItem?.id === trackedPlayerItem?.current?.id) {
+      console.log('MediaElement no reset required')
       return
     }
-    if (
-      mediaRef.current &&
-      // If no data could be retrieved so far, manually trigger load
-      mediaRef.current.readyState === 0
-    ) {
+    console.log('MediaElement resetting')
+    if (mediaRef.current) {
       setIsLoading(true)
       mediaRef.current.load()
       setIsLoading(false)
