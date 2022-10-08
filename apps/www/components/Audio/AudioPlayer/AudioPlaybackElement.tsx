@@ -1,18 +1,9 @@
-import { AudioPlayerProps } from '../AudioPlayerContainer'
-import {
-  ForwardedRef,
-  forwardRef,
-  MutableRefObject,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
+import { AudioPlayerProps } from '../AudioPlayerController'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { trackEvent } from '../../../lib/matomo'
 import { AUDIO_PLAYER_TRACK_CATEGORY } from '../constants'
 import useInterval from '../../../lib/hooks/useInterval'
 import { AudioQueueItem } from '../graphql/AudioQueueHooks'
-import { AudioEventHandlers } from '../types/AudioEvent'
 
 const DEFAULT_SYNC_INTERVAL = 500 // in ms
 
@@ -46,9 +37,6 @@ const AudioPlaybackElement = ({
   const trackedPlayerItem = useRef<AudioQueueItem>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
-  const {
-    document: { meta: { audioSource } = {} },
-  } = activeItem
 
   // Pass on the state of the media-element to the UI
   const syncStateWithUI = useCallback(() => {
@@ -209,6 +197,7 @@ const AudioPlaybackElement = ({
     }
   }, [activeItem, trackedPlayerItem, setIsLoading])
 
+  // Sync handlers with the controller
   useEffect(() => {
     setWebHandlers({
       handlePlay: onPlay,
@@ -228,6 +217,10 @@ const AudioPlaybackElement = ({
     onBackward,
     onPlaybackRateChange,
   ])
+
+  const {
+    document: { meta: { audioSource } = {} },
+  } = activeItem
 
   return (
     <audio

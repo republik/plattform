@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { AudioPlayerProps } from '../AudioPlayerContainer'
+import { AudioPlayerProps } from '../AudioPlayerController'
 import { useInNativeApp } from '../../../lib/withInNativeApp'
 import { useTranslation } from '../../../lib/withT'
 import ExpandedAudioPlayer from './ExpandedAudioPlayer'

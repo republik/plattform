@@ -79,7 +79,7 @@ type AudioPlayerContainerProps = {
   children: (props: AudioPlayerProps) => ReactNode
 }
 
-const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
+const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   const { pathname } = useRouter()
   const { inNativeApp } = useInNativeApp()
   const { setAudioPlayerVisible } = useAudioContext()
@@ -539,4 +539,4 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   )
 }
 
-export default AudioPlayerContainer
+export default AudioPlayerController
