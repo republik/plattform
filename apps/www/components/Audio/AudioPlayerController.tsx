@@ -160,12 +160,8 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   // Sync the Web-UI with the native audio player
   const syncWithNativeApp = useCallback(
     (state: AppAudioPlayerState) => {
-      console.log('syncWithNativeApp')
       if (!inNativeApp) return
-      // Don't update the currentTime & duration
-      // if the native player wasn't yet able to load the media
-      // TODO: find out why the track-player sometimes provides currentTime = 0
-      // when state is ready
+      // only update the optimistic UI if the track-player has started to play
       if (
         ![
           NativeAudioPlayerState.None,
@@ -209,10 +205,10 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
   }
 
   const onPlay = async () => {
-    console.log('onPlay', audioEventHandlers.current)
     try {
       // In case the queue has ended, readd the last played item to the queue and play it
       if (activePlayerItem && audioQueue.length === 0) {
+        // Re-add item to queue-head
         await addAudioQueueItem(activePlayerItem.document, 1)
       }
 
@@ -343,12 +339,10 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       return
     }
     try {
+      // Save the progress of the current track at 100%
+      await saveActiveItemProgress({ currentTime: duration, isPlaying: false })
       const { data } = await removeAudioQueueItem(activePlayerItem.id)
-      console.log('onQueueAdvance', data)
       if (data.audioQueueItems.length > 0) {
-        console.log('onQueueAdvance: play next', {
-          shouldAutoPlay,
-        })
         const nextUp = data.audioQueueItems[0]
         setShouldAutoPlay(true)
         setActivePlayerItem(nextUp)

@@ -78,7 +78,6 @@ const AudioPlaybackElement = ({
         if (mediaRef.current) {
           mediaRef.current.volume = 0.2
         }
-
         // Web
         // Only load the userProgress if given and smaller within 2 seconds of the duration
         if (
@@ -128,7 +127,9 @@ const AudioPlaybackElement = ({
 
     mediaElement.playbackRate = playbackRate
     mediaElement.volume = 0.2
-    await mediaElement.play()
+    await mediaElement
+      .play()
+      .catch((error) => console.error('playback error', error))
     setIsPlaying(true)
     syncStateWithUI()
   }, [playbackRate])
@@ -179,10 +180,9 @@ const AudioPlaybackElement = ({
   // Reset media-element if new source is provided
   useEffect(() => {
     if (activeItem?.id === trackedPlayerItem?.current?.id) {
-      console.log('MediaElement no reset required')
       return
     }
-    console.log('MediaElement resetting')
+
     if (mediaRef.current) {
       setIsLoading(true)
       mediaRef.current.load()
