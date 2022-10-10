@@ -11,7 +11,6 @@ import {
   PodcastIcon,
   FontSizeIcon,
   ShareIcon,
-  ChartIcon,
   EditIcon,
   EtiquetteIcon,
   IconButton,
@@ -39,6 +38,7 @@ import ShareButtons from './ShareButtons'
 import { useMe } from '../../lib/context/MeContext'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { NEXT_PUBLIC_FEAT_HOERT_HOERT } from '../Audio/constants'
+import AudioInfo from './AudioInfo'
 
 const RenderItems = ({ items }) => (
   <>
@@ -231,6 +231,21 @@ const ActionBar = ({
   const itemInAudioQueue = checkIfInQueue(document.id)
   const showAudioButtons =
     !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud'
+
+  const play = (trackKey) => (e) => {
+    e.preventDefault()
+    trackEvent(['ActionBar', trackKey, meta.url])
+    toggleAudioPlayer({
+      id: document.id,
+      meta: {
+        title: meta.title,
+        path: meta.path,
+        publishDate: meta.publishDate,
+        image: meta.image,
+        audioSource: meta.audioSource,
+      },
+    })
+  }
 
   const ActionItems = [
     {
@@ -439,20 +454,7 @@ const ActionBar = ({
       disabled: itemPlaying,
       title: t('PodcastButtons/play'),
       Icon: PlayCircleIcon,
-      onClick: (e) => {
-        e.preventDefault()
-        trackEvent(['ActionBar', 'audio', meta.url])
-        toggleAudioPlayer({
-          id: document.id,
-          meta: {
-            title: meta.title,
-            path: meta.path,
-            publishDate: meta.publishDate,
-            image: meta.image,
-            audioSource: meta.audioSource,
-          },
-        })
-      },
+      onClick: play('audio'),
       modes: ['feed', 'seriesEpisode', 'articleTop'],
       show: showAudioButtons,
       group: 'audio',
@@ -490,6 +492,13 @@ const ActionBar = ({
       modes: ['articleTop', 'articleBottom'],
       group: mode === 'articleTop' ? 'audio' : undefined,
     },
+    {
+      // TODO: flag which docs never get read by ppl
+      element: <AudioInfo play={play} showAudioButtons={showAudioButtons} />,
+      modes: ['articleTop'],
+      show: !podcast && !!meta.audioSource,
+      group: 'audio',
+    },
   ]
 
   const shouldRenderActionItem = (actionItem) =>
@@ -515,7 +524,7 @@ const ActionBar = ({
         <div
           {...styles.topRow}
           {...(mode === 'articleOverlay' && styles.overlay)}
-          {...(mode === 'feed' && styles.feed)}
+          {...(mode === 'feed' && styles.inline)}
           {...((mode === 'seriesEpisode' || mode === 'articleBottom') &&
             styles.flexWrap)}
           {...(!!centered && { ...styles.centered })}
@@ -525,7 +534,7 @@ const ActionBar = ({
 
         {!!secondaryItems.length && (
           <div
-            {...styles.bottomRow}
+            {...styles.secondary}
             {...(!!centered && { ...styles.centered })}
           >
             <RenderItems items={secondaryItems} />
@@ -534,8 +543,9 @@ const ActionBar = ({
 
         {!!audioItems.length && (
           <div
-            {...(mode === 'feed' && styles.feed)}
+            {...(mode === 'feed' ? styles.inline : styles.secondary)}
             {...(!!centered && { ...styles.centered })}
+            style={{ marginTop: 48 }}
           >
             <RenderItems items={audioItems} />
           </div>
@@ -604,10 +614,7 @@ const styles = {
     flexWrap: 'wrap',
     rowGap: 16,
   }),
-  rightAligned: css({
-    // selfAlign: 'right',
-  }),
-  bottomRow: css({
+  secondary: css({
     display: 'flex',
     marginTop: 24,
   }),
@@ -618,7 +625,7 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
   }),
-  feed: css({
+  inline: css({
     marginTop: 10,
     display: 'inline-flex',
   }),

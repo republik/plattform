@@ -61,7 +61,6 @@ import FontSizeSync from '../FontSize/Sync'
 import PageLoader from '../Loader'
 import Frame from '../Frame'
 import ActionBar from '../ActionBar'
-import ReadAloudInline from './ReadAloudInline'
 import { BrowserOnlyActionBar } from './BrowserOnly'
 import { AudioContext } from '../Audio/AudioProvider'
 import FormatFeed from '../Feed/Format'
@@ -733,13 +732,6 @@ const ArticlePage = ({
                                   {actionBar}
                                 </div>
                               )}
-                              {(isSyntheticReadAloud || isReadAloud) && (
-                                <ReadAloudInline
-                                  documentId={documentId}
-                                  meta={meta}
-                                  t={t}
-                                />
-                              )}
                               {isSection && !hideSectionNav && (
                                 <Breakout size='breakout'>
                                   <SectionNav
@@ -855,10 +847,6 @@ const styles = {
   }),
   actionBarContainer: css({
     marginTop: 16,
-    marginBottom: 24,
-    [mediaQueries.mUp]: {
-      marginBottom: 36,
-    },
   }),
   flexCenter: css({
     display: 'flex',

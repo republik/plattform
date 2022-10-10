@@ -127,7 +127,7 @@ const LatestArticlesTab = ({
           <li key={article.id}>
             <AudioListItem
               item={article}
-              isActive={checkIfActiveItem(article.id)}
+              isActive={!!checkIfActiveItem(article.id)}
               beforeActionItem={
                 <IconButton
                   Icon={PlaylistAddIcon}
