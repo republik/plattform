@@ -1,6 +1,6 @@
 const run = require('../run.js')
 
-const dir = 'packages/maillog/migrations/sqls'
+const dir = 'packages/mail/migrations/sqls'
 const file = '20220111160117-drop-unused-indices'
 
 exports.up = (db) => run(db, dir, `${file}-up.sql`)
