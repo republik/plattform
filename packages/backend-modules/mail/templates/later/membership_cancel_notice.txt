@@ -15,12 +15,8 @@ Auch für Ihre Kündigungs­begründung, aus der wir lernen können.
 Wir würden uns sehr freuen, wenn Sie zu einem späteren Zeitpunkt wieder bei uns
 vorbeischauten. Sie sind jederzeit willkommen.
 
-Herzlich
+Mit freundlichen Grüssen
 
-Ihre Crew der Republik
-
-
-Republik AG
-Sihlhallenstrasse 1, CH-8004 Zürich
-{{frontend_base_url}}
-kontakt@republik.ch
+Lobbywatch.ch
+3000 Bern
+info@lobbywatch.ch

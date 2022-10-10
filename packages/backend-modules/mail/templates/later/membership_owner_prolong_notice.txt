@@ -11,7 +11,7 @@ Ganz gleich, ob Sie uns einmal pro Woche oder einmal pro Jahr lesen: Wir hoffen,
 dass wir Sie im vergangenen Jahr immer wieder erfolgreich überzeugen,
 herausfordern, informieren, ärgern und erfreuen konnten.
 
-Wie Sie wissen, finanziert sich die Republik über ihre Leserinnen und Leser: Es
+Wie Sie wissen, finanziert sich die Lobbywatch über ihre Leserinnen und Leser: Es
 kommt also wirklich auf jede einzelne Person an. Sollten Sie dieses Mal noch
 mehr in unseren Journalismus investieren wollen und können, würde es uns freuen,
 wenn Sie Ihren Beitrag erhöhen {{prolong_url}} : Jede zusätzliche Summe macht
@@ -19,21 +19,17 @@ einen Unterschied.
 
 Sie haben nun die Wahl:
 
- * Sie bleiben an Bord und unterstützen weiterhin die Republik und ihre Idee:
+ * Sie bleiben an Bord und unterstützen weiterhin die Lobbywatch und ihre Idee:
    Hier bezahlen Sie die Rechnung für ein weiteres Jahr. {{prolong_url}}
- * Sie möchten die Republik nicht mehr lesen? Hier können Sie Ihre
+ * Sie möchten die Lobbywatch nicht mehr lesen? Hier können Sie Ihre
    Mitgliedschaft kündigen {{cancel_url}} und, wenn Sie möchten, uns mitteilen,
    warum.
 
 Wie auch immer Sie entscheiden: Wir bedanken uns für Ihr Engagement und Ihr
 Vertrauen bis hierhin.
 
-Herzlich
+Mit freundlichen Grüssen
 
-Ihre Crew der Republik
-
-
-Republik AG
-Sihlhallenstrasse 1, CH-8004 Zürich
-{{frontend_base_url}}
-kontakt@republik.ch
+Lobbywatch.ch
+3000 Bern
+info@lobbywatch.ch

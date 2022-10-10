@@ -22,18 +22,14 @@ einen finanziellen Engpass haben sollten, können Sie Ihre Mitgliedschaft zu
 einem tieferen Preis verlängern {{prolong_url}} .
 
 Sollte uns hingegen ein Fehler unterlaufen sein, nehmen Sie bitte ebenfalls so
-schnell wie möglich Kontakt mit uns auf: kontakt@republik.ch .
+schnell wie möglich Kontakt mit uns auf: info@lobbywatch.ch .
 
 Wir würden uns freuen, Sie ein weiteres Jahr an Bord zu wissen. Und wenn Sie
 sich dagegen entscheiden, würden wir uns freuen, wenn Sie zu einem späteren
 Zeitpunkt wieder vorbeischauten {{prolong_url}} .
 
-Herzlich
+Mit freundlichen Grüssen
 
-Ihre Crew der Republik
-
-
-Republik AG
-Sihlhallenstrasse 1, CH-8004 Zürich
-{{frontend_base_url}}
-kontakt@republik.ch
+Lobbywatch.ch
+3000 Bern
+info@lobbywatch.ch

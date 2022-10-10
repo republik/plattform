@@ -3,29 +3,28 @@ Guten Tag
 Heute erneuern sich Ihre Mitgliedschaft und Ihr Engagement für die
 Medienvielfalt, die Informationsfreiheit und die Demokratie.
 
-Ihr Mitgliedschaftsbeitrag ist fällig. Damit Sie weiter Teil der Republik sind,
+Ihr Mitgliedschaftsbeitrag ist fällig. Damit Sie weiter Teil der Lobbywatch sind,
 müssen Sie nur die Rechnung für das nächste Jahr begleichen, was mit zwei Klicks
 erledigt ist:
 
 Jetzt bezahlen {{prolong_url}}
 
-Sie wollen die Republik nicht mehr unterstützen? Bitte kündigen Sie Ihre
+Sie wollen die Lobbywatch nicht mehr unterstützen? Bitte kündigen Sie Ihre
 Mitgliedschaft {{cancel_url}} und teilen Sie uns mit, warum. Es wäre wertvoll
 für uns, Ihre Gründe zu kennen.
 
 Sollte uns ein Fehler unterlaufen sein, schreiben Sie uns via
-kontakt@republik.ch , und wir gehen dem Problem auf die Spur.
+info@lobbywatch.ch , und wir gehen dem Problem auf die Spur.
 
 Und wenn Sie einen finanziellen Engpass haben sollten, schreiben Sie uns ebenso
-auf kontakt@republik.ch – Journalismus kostet zwar, doch wir wollen niemanden
+auf info@lobbywatch.ch – Journalismus kostet zwar, doch wir wollen niemanden
 ausschliessen: Wir finden eine Lösung.
 
 Mit herzlichem Dank für das letzte Jahr und in Vorfreude auf ein neues!
 
-Ihre Crew der Republik
+Mit freundlichen Grüssen
 
 
-Republik AG
-Sihlhallenstrasse 1, CH-8004 Zürich
-{{frontend_base_url}}
-kontakt@republik.ch
+Lobbywatch.ch
+3000 Bern
+info@lobbywatch.ch

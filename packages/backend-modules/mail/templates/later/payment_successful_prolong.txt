@@ -15,10 +15,9 @@ eingegangen.
  * Total: {{total_formatted}}
 
 Herzlichen Dank für Ihre Unterstützung!
-Ihre Crew der Republik
 
+Mit freundlichen Grüssen
 
-Republik AG
-Sihlhallenstrasse 1, CH-8004 Zürich
-{{frontend_base_url}}
-kontakt@republik.ch
+Lobbywatch.ch
+3000 Bern
+info@lobbywatch.ch

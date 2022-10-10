@@ -13,18 +13,15 @@ wieder aktivieren:
 E-Mail-Newsletter reaktivieren http://eepurl.com/drh7uL
 
 Und falls es – was leider nicht ausgeschlossen werden kann – künftig zu weiteren
-Ausfällen kommen sollte, helfen wir Ihnen gerne weiter unter kontakt@republik.ch
+Ausfällen kommen sollte, helfen wir Ihnen gerne weiter unter info@lobbywatch.ch
 .
 
 Wir wünschen Ihnen noch einen angenehmen Tag und weiterhin anregende Lektüre.
 
-Herzlich
-
-Ihre Crew der Republik
-
+Mit freundlichen Grüssen
 PS: Möglicherweise ist das für Sie ja ganz gut, das Leben ohne
-Republik-Newsletter. Ja, vielleicht sogar gewollt, weil Sie sowieso immer direkt
-über unsere Website {{link_signin}} oder die Republik-App
+Lobbywatch-Newsletter. Ja, vielleicht sogar gewollt, weil Sie sowieso immer direkt
+über unsere Website {{link_signin}} oder die Lobbywatch-App
 {{link_faq}}#gibt-es-eine-app auf die Inhalte zugreifen und die Newsletter
 {{frontend_base_url}}/newsletter Ihr Postfach eigentlich nur überflutet haben.
 Dann müssen Sie jetzt auch nichts weiter unternehmen und dürfen sich gerne
@@ -35,7 +32,6 @@ PPS: Kennen Sie schon unsere Gebrauchsanleitung {{link_manual}} ? Darin finden
 Sie einige nützliche Tipps zur Handhabung unseres Magazins.
 
 
-Republik AG
-Sihlhallenstrasse 1, CH-8004 Zürich
-{{frontend_base_url}}
-kontakt@republik.ch
+Lobbywatch.ch
+3000 Bern
+info@lobbywatch.ch

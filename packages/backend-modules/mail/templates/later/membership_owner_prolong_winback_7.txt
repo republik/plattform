@@ -1,6 +1,6 @@
 Guten Tag
 
-Am {{grace_end_date}} verlieren Ihre Zugangsdaten zum Republik-Magazin ihre
+Am {{grace_end_date}} verlieren Ihre Zugangsdaten zum Lobbywatch-Magazin ihre
 Gültigkeit, da Ihre Mitgliedschaft ausgelaufen ist.
 
 Um dies zu verhindern, können Sie einfach die Rechnung für das nächste Jahr
@@ -8,20 +8,19 @@ begleichen, was mit einem Klick erledigt ist.
 
 Jetzt bezahlen {{prolong_url}}
 
-Wollen Sie die Republik nicht mehr lesen? Kündigen Sie Ihre Mitgliedschaft
+Wollen Sie die Lobbywatch nicht mehr lesen? Kündigen Sie Ihre Mitgliedschaft
 {{cancel_url}} und teilen Sie uns mit, warum. Es wäre wertvoll für uns, Ihre
 Gründe zu kennen.
 
 Sollte uns ein Fehler unterlaufen sein, nehmen Sie bitte mit uns Kontakt auf:
-Schreiben Sie an kontakt@republik.ch oder antworten Sie direkt auf diese E-Mail.
+Schreiben Sie an info@lobbywatch.ch oder antworten Sie direkt auf diese E-Mail.
 
 Wir bedanken uns herzlich für das letzte Jahr, und es würde uns freuen, Sie für
 ein weiteres an Bord zu wissen!
 
-Ihre Crew der Republik
+Mit freundlichen Grüssen
 
 
-Republik AG
-Sihlhallenstrasse 1, CH-8004 Zürich
-{{frontend_base_url}}
-kontakt@republik.ch
+Lobbywatch.ch
+3000 Bern
+info@lobbywatch.ch

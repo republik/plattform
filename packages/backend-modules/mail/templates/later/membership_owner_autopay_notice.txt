@@ -13,7 +13,7 @@ Endziffern {{autopay_card_last4}} belasten wir am {{end_date}} mit
 
 {{#if `autopay_membership_type == "BENEFACTOR_ABO"`}}
 
-Dieser Beitrag kommt zustande, weil Sie die Republik im letzten Jahr
+Dieser Beitrag kommt zustande, weil Sie die Lobbywatch im letzten Jahr
 grosszügigerweise mit einer Gönner-Mitgliedschaft {{#if autopay_with_donation}}
 und einer zusätzlichen Spende{{/if}} unterstützt haben. Durch Sie ist unsere
 Unabhängigkeit, unsere Werbefreiheit, ja unsere Existenz erst möglich. Wir
@@ -33,7 +33,7 @@ zusätzliche Summe macht einen Unterschied.
 
 {{elseif autopay_with_donation}}
 
-Dieser Beitrag kommt zustande, weil Sie die Republik im letzten Jahr
+Dieser Beitrag kommt zustande, weil Sie die Lobbywatch im letzten Jahr
 grosszügigerweise mit einer zusätzlichen Spende unterstützt haben. Durch Sie ist
 unsere Unabhängigkeit, unsere Werbefreiheit, ja unsere Existenz erst möglich.
 Wir bedanken uns von ganzem Herzen und hoffen, dass Sie sich und uns treu
@@ -55,14 +55,10 @@ hinterlegen, eine andere Zahlungsart wählen {{prolong_url}} oder Ihre
 Mitgliedschaft kündigen {{cancel_url}} .
 
 Wir melden uns erneut, sobald Ihre Mitgliedschaft erfolgreich verlängert wurde.
-In der Zwischenzeit können Sie sich bei Fragen unter kontakt@republik.ch melden.
+In der Zwischenzeit können Sie sich bei Fragen unter info@lobbywatch.ch melden.
 
-Herzlich
+Mit freundlichen Grüssen
 
-Ihre Crew der Republik
-
-
-Republik AG
-Sihlhallenstrasse 1, CH-8004 Zürich
-{{frontend_base_url}}
-kontakt@republik.ch
+Lobbywatch.ch
+3000 Bern
+info@lobbywatch.ch

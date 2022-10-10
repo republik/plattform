@@ -1,6 +1,6 @@
 Guten Tag
 
-Schön, dass Sie die Republik unterstützen wollen.
+Schön, dass Sie die Lobbywatch unterstützen wollen.
 
 Falls sich unsere Buchhaltung nicht irrt, ist Ihr Mitgliedschafts- oder
 Unterstützungsbeitrag in der Höhe von CHF {{total}} aber weiterhin ausstehend.
@@ -21,17 +21,16 @@ Mobile Banking, E-Banking oder am Schalter bei Bank und Post auslösen.
 
 Sollte sich Ihre Zahlung mit dieser Zahlungserinnerung kreuzen, erachten Sie
 unsere E-Mail als gegenstandslos. Haben Sie sonst Fragen, melden Sie sich
-jederzeit unter kontakt@republik.ch .
+jederzeit unter info@lobbywatch.ch .
 
 Wenn wir Ihre Zahlung in den nächsten 30 Tagen nicht erhalten, gehen wir davon
-aus, dass Sie die Republik nicht mehr lesen möchten, und deaktivieren Ihr Abo
+aus, dass Sie die Lobbywatch nicht mehr lesen möchten, und deaktivieren Ihr Abo
 und Ihre Mitgliedschaft.
 
 Herzlich
-Ihre Crew der Republik
+Mit freundlichen Grüssen
 
 
-Republik AG
-Sihlhallenstrasse 1, CH-8004 Zürich
-{{frontend_base_url}}
-kontakt@republik.ch
+Lobbywatch.ch
+3000 Bern
+info@lobbywatch.ch

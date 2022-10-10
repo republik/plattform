@@ -1,6 +1,6 @@
 Guten Tag
 
-Schön, dass Sie die Republik unterstützen.
+Schön, dass Sie die Lobbywatch unterstützen.
 
 Mit Ihrer Mitgliedschaft erhalten Sie sechsmal pro Woche ein unabhängiges und
 werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur.
@@ -8,7 +8,7 @@ werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur.
 Sie fördern aber auch eine wirklich unabhängige vierte Gewalt als zentrale
 Institution unserer Demokratie.
 
-Denn: Die Republik steht für die Verteidigung der demokratischen Institutionen
+Denn: Die Lobbywatch steht für die Verteidigung der demokratischen Institutionen
 und die Werte der Aufklärung. Für Treue zu Fakten, für Lösungen von Fall zu
 Fall, für Offenheit gegenüber Kritik, für Respektlosigkeit gegenüber der Macht
 und Respekt vor dem Menschen.
@@ -32,13 +32,12 @@ Mobile Banking, E-Banking oder am Schalter bei Bank und Post auslösen.
 
 Sollte sich Ihre Überweisung mit dieser Zahlungserinnerung kreuzen, erachten Sie
 unsere E-Mail als gegenstandslos. Haben Sie sonst Fragen, melden Sie sich
-jederzeit unter kontakt@republik.ch .
+jederzeit unter info@lobbywatch.ch .
 
 Herzlich
-Ihre Crew der Republik
+Mit freundlichen Grüssen
 
 
-Republik AG
-Sihlhallenstrasse 1, CH-8004 Zürich
-{{frontend_base_url}}
-kontakt@republik.ch
+Lobbywatch.ch
+3000 Bern
+info@lobbywatch.ch
