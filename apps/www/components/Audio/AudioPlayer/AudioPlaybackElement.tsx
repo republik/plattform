@@ -76,7 +76,7 @@ const AudioPlaybackElement = ({
         const duration = durationMs / 1000
 
         if (mediaRef.current) {
-          mediaRef.current.volume = 0.2
+          mediaRef.current.playbackRate = playbackRate
         }
         // Web
         // Only load the userProgress if given and smaller within 2 seconds of the duration
@@ -126,13 +126,12 @@ const AudioPlaybackElement = ({
     }
 
     mediaElement.playbackRate = playbackRate
-    mediaElement.volume = 0.2
     await mediaElement
       .play()
       .catch((error) => console.error('playback error', error))
     setIsPlaying(true)
     syncStateWithUI()
-  }, [playbackRate])
+  }, [syncStateWithUI, playbackRate])
 
   const onPause = useCallback(async () => {
     mediaRef.current?.pause()
@@ -186,9 +185,10 @@ const AudioPlaybackElement = ({
     if (mediaRef.current) {
       setIsLoading(true)
       mediaRef.current.load()
+      mediaRef.current.playbackRate = playbackRate
       setIsLoading(false)
     }
-  }, [activeItem, trackedPlayerItem, setIsLoading])
+  }, [activeItem, trackedPlayerItem, setIsLoading, playbackRate])
 
   // Sync handlers with the controller
   useEffect(() => {
