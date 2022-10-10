@@ -90,6 +90,7 @@ export {
   MdOutlineQuiz as QuizIcon,
   MdOutlineDelete as DeleteIcon,
   MdPlaylistAdd as PlaylistAddIcon,
+  MdPlaylistAddCheck as PlaylistRemoveIcon,
   MdDragHandle as DragHandleIcon,
   MdSkipNext as SkipNextIcon,
 } from 'react-icons/md'
