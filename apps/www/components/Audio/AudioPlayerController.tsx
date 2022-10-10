@@ -185,7 +185,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         activePlayerItem &&
         state.itemId !== activePlayerItem.id
       ) {
-        alert('skip update!!!')
         console.log(
           'Received update for outdated track-item. Skipping UI update',
         )
