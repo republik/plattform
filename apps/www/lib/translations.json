@@ -3253,6 +3253,30 @@
       "value": "Leseposition"
     },
     {
+      "key": "article/actionbar/audio/play",
+      "value": "Hören"
+    },
+    {
+      "key": "article/actionbar/audio/queue/add",
+      "value": "Hinfügen"
+    },
+    {
+      "key": "article/actionbar/audio/queue/remove",
+      "value": "Entfernen"
+    },
+    {
+      "key": "article/actionbar/audio/info/speaker",
+      "value": "Vorgelesen von unseren Sprecherinnenteam"
+    },
+    {
+      "key": "article/actionbar/audio/info/play-synth",
+      "value": "Synthetisch vorlesen lassen."
+    },
+    {
+      "key": "article/actionbar/audio/info/read-soon",
+      "value": "Bei 13 Uhr wird dieser Beitrag professionell vorgelesen."
+    },
+    {
       "key": "article/syntheticReadAloud/title",
       "value": "Beitrag von synthetischer Stimme vorlesen lassen."
     },

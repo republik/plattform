@@ -28,7 +28,7 @@ const AudioInfo = ({ t, showAudioButtons, play, noRead }) => {
       {...colorScheme.set('color', showAudioButtons ? 'text' : 'textSoft')}
     >
       {showAudioButtons ? (
-        'Vorgelesen von unseren Sprecherinnenteam'
+        t('article/actionbar/audio/info/speaker')
       ) : (
         <>
           <a
@@ -37,12 +37,10 @@ const AudioInfo = ({ t, showAudioButtons, play, noRead }) => {
             href='#'
             onClick={play('synthAudio')}
           >
-            Synthetisch vorlesen lassen.
+            {t('article/actionbar/audio/info/play-synth')}
           </a>{' '}
           {!noRead && (
-            <span>
-              Bei 13 Uhr wird dieser Beitrag professionell vorgelesen.
-            </span>
+            <span>{t('article/actionbar/audio/info/read-soon')}</span>
           )}
         </>
       )}

@@ -452,7 +452,8 @@ const ActionBar = ({
     {
       // TODO: more accurate itemPlaying flag
       disabled: itemPlaying,
-      title: t('PodcastButtons/play'),
+      title: t('article/actionbar/audio/play'),
+      label: !forceShortLabel ? t('article/actionbar/audio/play') : '',
       Icon: PlayCircleIcon,
       onClick: play('audio'),
       modes: ['feed', 'seriesEpisode', 'articleTop'],
@@ -462,6 +463,13 @@ const ActionBar = ({
     {
       disabled: itemPlaying,
       title: t(`AudioPlayer/Queue/${itemInAudioQueue ? 'Remove' : 'Add'}`),
+      label: !forceShortLabel
+        ? t(
+            `article/actionbar/audio/queue/${
+              itemInAudioQueue ? 'remove' : 'add'
+            }`,
+          )
+        : '',
       Icon: itemInAudioQueue ? PlaylistRemoveIcon : PlaylistAddIcon,
       onClick: async (e) => {
         e.preventDefault()
@@ -545,7 +553,7 @@ const ActionBar = ({
           <div
             {...(mode === 'feed' ? styles.inline : styles.secondary)}
             {...(!!centered && { ...styles.centered })}
-            style={{ marginTop: 48 }}
+            style={{ marginTop: mode === 'feed' ? 'inherit' : 48 }}
           >
             <RenderItems items={audioItems} />
           </div>
