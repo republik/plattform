@@ -143,3 +143,16 @@ export const EditPageRepo = gql`
     }
   }
 `
+
+export const RepoFile = gql`
+  fragment RepoFile on RepoFile {
+    id
+    name
+    status
+    url
+    author {
+      name
+    }
+    createdAt
+  }
+`
