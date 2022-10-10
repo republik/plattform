@@ -110,6 +110,19 @@ type mutations {
   unpublishMemo(
     id: ID
   ): Memo!
+
+  "Begin an upload, returns an upload URL to PUT file to"
+  repoFileUploadBegin(
+    repoId: ID!
+    name: String!
+  ): RepoFile!
+  "Commit an upload to file"
+  repoFileUploadCommit(id: ID!): RepoFile!
+  "Change visibility of file"
+  updateRepoFile(
+    id: ID!
+    public: Boolean!
+  ): RepoFile!
 }
 
 type subscriptions {
