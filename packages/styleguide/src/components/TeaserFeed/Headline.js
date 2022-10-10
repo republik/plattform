@@ -8,8 +8,8 @@ import {
   sansSerifMedium22,
   cursiveTitle20,
   cursiveTitle22,
-  flyerTitle20,
-  flyerTitle22,
+  flyerTitle16,
+  flyerTitle18,
 } from '../Typography/styles'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
 import { useColorContext } from '../Colors/useColorContext'
@@ -42,9 +42,9 @@ const styles = {
     },
   }),
   flyer: css({
-    ...convertStyleToRem(flyerTitle20),
+    ...convertStyleToRem(flyerTitle16),
     [mUp]: {
-      ...convertStyleToRem(flyerTitle22),
+      ...convertStyleToRem(flyerTitle18),
     },
   }),
 }

@@ -114,11 +114,11 @@ export const P: React.FC<{ attributes?: any; [x: string]: unknown }> = ({
         },
         fontSize: 17,
         lineHeight: 1.471,
-        margin: '0 0 22px',
+        margin: '0 0 16px',
         [mUp]: {
           fontSize: 23,
           lineHeight: 1.522,
-          margin: '0 0 16px',
+          margin: '0 0 22px',
         },
       })}
       {...colorScheme.set('color', 'flyerText')}
