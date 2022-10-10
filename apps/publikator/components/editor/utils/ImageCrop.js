@@ -24,7 +24,9 @@ const isDifferent = (area1, area2, delta = 0) =>
     Math.abs(area1.width - area2.width) > delta ||
     Math.abs(area1.height - area2.height) > delta)
 
-const CreepyCropper = ({ onChange, onReset, image, crop: initialCropArea }) => {
+const isBase64 = (img) => img.startsWith('data:image/jpeg;base64')
+
+const InnerCropper = ({ onChange, onReset, image, crop: initialCropArea }) => {
   const prevImage = usePrevious(image)
 
   const [cropperKey, setCropperKey] = useState(1)
@@ -45,9 +47,12 @@ const CreepyCropper = ({ onChange, onReset, image, crop: initialCropArea }) => {
   }, [initialCropArea])
 
   useEffect(() => {
-    // TODO: tighten condition to excluse case where the one img is a url the other a base64 img
-    console.log({ prevImage, image })
-    if (prevImage && prevImage !== image) {
+    if (
+      prevImage &&
+      prevImage !== image &&
+      // exclude case where the previous img is base64 and new image is url
+      !(isBase64(prevImage) && !isBase64(image))
+    ) {
       onReset()
     }
   }, [image, prevImage])
@@ -183,7 +188,7 @@ const ImageCrop = ({ onChange, image, format, crop }) => {
                 </span>
               </button>
             ) : (
-              <CreepyCropper
+              <InnerCropper
                 image={image}
                 crop={crop}
                 onChange={onChange}
