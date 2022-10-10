@@ -25,6 +25,7 @@
     "@orbiting/backend-modules-gsheets": "*",
     "@orbiting/backend-modules-invoices": "*",
     "@orbiting/backend-modules-keyCDN": "*",
+    "@orbiting/backend-modules-lobbywatch": "*",
     "@orbiting/backend-modules-mail": "*",
     "@orbiting/backend-modules-mailbox": "*",
     "@orbiting/backend-modules-matomo": "*",
