@@ -86,7 +86,7 @@ type AudioPlayerContainerProps = {
 
 const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   const { inNativeApp } = useInNativeApp()
-  const { setAudioPlayerVisible } = useAudioContext()
+  const { audioPlayerVisible, setAudioPlayerVisible } = useAudioContext()
   const {
     audioQueue,
     audioQueueIsLoading,
@@ -108,7 +108,6 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
 
   const [isPlaying, setIsPlaying] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [isVisible, setIsVisible] = useState(false)
   const [hasError, setHasError] = useState(false)
 
   const [currentTime, setCurrentTime] = useState(0)
@@ -278,7 +277,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
         syncWithMediaElement()
       }
       setHasAutoPlayed(false)
-      setIsVisible(false)
+      setAudioPlayerVisible(false)
     } catch (error) {
       handleError(error)
     }
@@ -395,7 +394,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       const nextUp = audioQueue[0]
       setActivePlayerItem(nextUp)
       console.log('playQueue: nextUp', nextUp)
-      setIsVisible(true)
+      setAudioPlayerVisible(true)
       await onPlay()
     } catch (error) {
       handleError(error)
@@ -512,13 +511,13 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
     if (
       audioQueue &&
       audioQueue.length > 0 &&
-      !isVisible &&
+      !audioPlayerVisible &&
       hasQueueChanged(trackedQueue?.current, audioQueue)
     ) {
-      setIsVisible(true)
+      setAudioPlayerVisible(true)
     }
     trackedQueue.current = audioQueue
-  }, [inNativeApp, audioQueue, isVisible])
+  }, [inNativeApp, audioQueue, audioPlayerVisible])
 
   // Open up the audio-player once the app has started if the queue is not empty
   useEffect(() => {
@@ -534,15 +533,10 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
       const nextUp = audioQueue[0]
       setActivePlayerItem(nextUp)
       setShouldAutoPlay(false)
-      setIsVisible(true)
+      setAudioPlayerVisible(true)
     }
     setInitialized(true)
   }, [audioQueue, initialized, audioQueueIsLoading])
-
-  // Sync audio-player visible with audio-context
-  useEffect(() => {
-    setAudioPlayerVisible(isVisible)
-  }, [isVisible])
 
   useEffect(() => {
     const handler = async () => {
@@ -564,7 +558,7 @@ const AudioPlayerContainer = ({ children }: AudioPlayerContainerProps) => {
   return (
     <>
       {children({
-        isVisible,
+        isVisible: audioPlayerVisible,
         mediaRef,
         activeItem: activePlayerItem,
         queue: audioQueue,

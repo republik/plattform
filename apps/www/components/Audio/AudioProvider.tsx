@@ -44,6 +44,8 @@ type AudioContextValue = {
   activePlayerItem: AudioPlayerItem | null
   audioPlayerVisible: boolean
   setAudioPlayerVisible: Dispatch<SetStateAction<boolean>>
+  audioPlayerExpanded: boolean
+  setAudioPlayerExpanded: Dispatch<SetStateAction<boolean>>
   autoPlayActive: boolean
   toggleAudioPlayer: ToggleAudioPlayerFunc
   onCloseAudioPlayer: () => void
@@ -51,7 +53,11 @@ type AudioContextValue = {
 
 export const AudioContext = createContext<AudioContextValue>({
   audioPlayerVisible: false,
+  audioPlayerExpanded: false,
   setAudioPlayerVisible: () => {
+    throw new Error('not implemented')
+  },
+  setAudioPlayerExpanded: () => {
     throw new Error('not implemented')
   },
   toggleAudioPlayer: () => {
@@ -78,6 +84,7 @@ const AudioProvider = ({ children }) => {
   const [autoPlayAudioPlayerItem, setAutoPlayAudioPlayerItem] =
     useState<AudioPlayerItem | null>(null)
   const [audioPlayerVisible, setAudioPlayerVisible] = useState(false)
+  const [audioPlayerExpanded, setAudioPlayerExpanded] = useState(false)
   const clearTimeoutId = useRef<NodeJS.Timeout | null>()
 
   const { addAudioQueueItem, clearAudioQueue, isAudioQueueAvailable } =
@@ -150,6 +157,8 @@ const AudioProvider = ({ children }) => {
         activePlayerItem,
         audioPlayerVisible,
         setAudioPlayerVisible,
+        audioPlayerExpanded,
+        setAudioPlayerExpanded,
         autoPlayActive: autoPlayAudioPlayerItem === activePlayerItem,
         toggleAudioPlayer,
         onCloseAudioPlayer,

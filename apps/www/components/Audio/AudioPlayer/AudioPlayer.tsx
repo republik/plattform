@@ -15,6 +15,7 @@ import {
 import { AnimatePresence, motion } from 'framer-motion'
 import { css } from 'glamor'
 import AudioPlaybackElement from './AudioPlaybackElement'
+import { useAudioContext } from '../AudioProvider'
 
 const MARGIN = 15
 
@@ -78,8 +79,11 @@ const AudioPlayer = ({
   hasError,
 }: AudioPlayerProps) => {
   const { inNativeApp, inIOS } = useInNativeApp()
+  const {
+    audioPlayerExpanded: isExpanded,
+    setAudioPlayerExpanded: setIsExpanded,
+  } = useAudioContext()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
-  const [isExpanded, setIsExpanded] = useState(false)
   const [forceScrollLock, setForceScrollLock] = useState(false)
   const [ref] = useBodyScrollLock((isExpanded && !isDesktop) || forceScrollLock)
 

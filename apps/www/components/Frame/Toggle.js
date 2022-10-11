@@ -15,27 +15,48 @@ import {
   TRANSITION_MS,
 } from '../constants'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
+import { useAudioContext } from '../Audio/AudioProvider'
 
 const SIZE = 28
 const PADDING_MOBILE = Math.floor((HEADER_HEIGHT_MOBILE - SIZE) / 2)
 const PADDING_DESKTOP = Math.floor((HEADER_HEIGHT - SIZE) / 2)
 
-const Toggle = ({ expanded, onClick, ...props }) => {
+const Toggle = ({ expanded, closeOverlay, ...props }) => {
   const [colorScheme] = useColorContext()
   const { audioQueue } = useAudioQueue()
-
+  const {
+    audioPlayerVisible,
+    setAudioPlayerVisible,
+    audioPlayerExpanded,
+    setAudioPlayerExpanded,
+  } = useAudioContext()
   const audioItemsCount = audioQueue?.length
+
+  const disableAudioBtn = !expanded && audioPlayerVisible && audioPlayerExpanded
 
   const buttonStyle = useMemo(
     () => ({
-      opacity: expanded ? 0.000001 : 1, // hacky fix for browser rendering issue in FF
+      opacity: expanded ? 0.000001 : disableAudioBtn ? 0.33 : 1, // hacky fix for browser rendering issue in FF
       transition: `opacity ${TRANSITION_MS}ms ease-out`,
     }),
-    [expanded],
+    [expanded, disableAudioBtn],
   )
 
+  const onClick = () => {
+    if (expanded) {
+      return closeOverlay && closeOverlay()
+    }
+    setAudioPlayerExpanded(true)
+    setAudioPlayerVisible(true)
+  }
+
   return (
-    <button {...styles.menuToggle} onClick={onClick} {...props}>
+    <button
+      {...styles.menuToggle}
+      disabled={disableAudioBtn}
+      onClick={onClick}
+      {...props}
+    >
       <MicIcon
         style={buttonStyle}
         {...colorScheme.set('fill', 'text')}

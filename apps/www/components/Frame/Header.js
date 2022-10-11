@@ -293,9 +293,7 @@ const Header = ({
                     }/aria`,
                   )}
                   id='main'
-                  onClick={() =>
-                    isAnyNavExpanded ? closeHandler() : toggleExpanded('main')
-                  }
+                  closeOverlay={closeHandler}
                 />
               ) : showTrialButton ? (
                 <Link href='#probelesen' passHref>

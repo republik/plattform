@@ -28,7 +28,7 @@ import PdfOverlay, { getPdfUrl } from '../Article/PdfOverlay'
 import FontSizeOverlay from '../FontSize/Overlay'
 import ShareOverlay from './ShareOverlay'
 import PodcastOverlay from './PodcastOverlay'
-import { AudioContext } from '../Audio/AudioProvider'
+import { useAudioContext } from '../Audio/AudioProvider'
 
 import SubscribeMenu from '../Notifications/SubscribeMenu'
 import BookmarkButton from './BookmarkButton'
@@ -67,7 +67,7 @@ const ActionBar = ({
   const [fontSizeOverlayVisible, setFontSizeOverlayVisible] = useState(false)
   const [shareOverlayVisible, setShareOverlayVisible] = useState(false)
   const [podcastOverlayVisible, setPodcastOverlayVisible] = useState(false)
-  const { toggleAudioPlayer, audioPlayerVisible } = useContext(AudioContext)
+  const { toggleAudioPlayer, audioPlayerVisible } = useAudioContext()
   const {
     addAudioQueueItem,
     removeAudioQueueItem,
