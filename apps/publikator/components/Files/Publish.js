@@ -27,7 +27,7 @@ export default ({ file }) => {
   if (file.status === 'PRIVATE') {
     return (
       <Button onClick={onClick} disabled={loading} primary small>
-        Publizieren
+        veröffentlichen
       </Button>
     )
   }
