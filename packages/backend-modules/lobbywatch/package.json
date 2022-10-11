@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "description": "add lobbywatch data to schema",
+  "scripts": {
+    "translations": "NODE_OPTIONS='-r dotenv/config' DOTENV_CONFIG_PATH=../../../apps/api/.env gsheets --key=1FhjogYL2SBxaJG3RfR01A7lWtb3XTE2dH8EtYdmdWXg --title=translations --pretty --out translations.json"
+  },
   "main": "index.js",
   "repository": {
     "type": "git",

@@ -1,109 +1,9 @@
 {
   "data": [
     {
-      "key": "claim",
-      "de": "Gut zu wissen, wer Politik macht",
-      "fr": "Pour savoir qui façonne la politique"
-    },
-    {
-      "key": "index/newsletter/text",
-      "de": "Der Herbst 2022 wird bei Lobbywatch im Zeichen des Ausbaus stehen – bleiben Sie in Kontakt:",
-      "fr": "Cet automne 2022, Lobbywatch se développe et grandit - restez en contact : "
-    },
-    {
-      "key": "index/explore/title",
-      "de": "Beispiele der Netzwerke des Parlaments",
-      "fr": "Exemples de réseaux du Parlement"
-    },
-    {
-      "key": "index/explore/link",
-      "de": "Alle Lobbygruppen ansehen",
-      "fr": "Voir tous les groupes d'intérêt"
-    },
-    {
-      "key": "index/explore/58",
-      "de": "Mit diesem Netzwerk verhinderten die Lobbygruppe der Anwälte und Treuhänder unter anderem, dass ihre Branche unter die Geldwäscherei-Gesetzgebung gestellt wird.",
-      "fr": "Grâce à ce réseau, le groupe d'intérêt des avocats et des fiduciaires a notamment empêché que la branche soit soumise à la législation sur le blanchiment d'argent."
-    },
-    {
-      "key": "index/explore/53",
-      "de": "Auf diese Organisationen stützen sich die Gewerkschaften, wenn sie gegen ein höheres Rentenalter für Frauen kämpfen.",
-      "fr": "C'est sur ces organisations que s'appuient les syndicats pour lutter contre le relèvement de l'âge de la retraite des femmes."
-    },
-    {
-      "key": "purpose/research/title",
-      "de": "Interessenskonflikte",
-      "fr": "Conflits d'intérêts"
-    },
-    {
-      "key": "purpose/research/text",
-      "de": "Politik muss transparent sein. Deshalb zeigen wir auf, für welche Unternehmen sich Nationalrätinnen und Ständeräte engagieren.",
-      "fr": "La politique doit être transparente. C'est pourquoi nous indiquons les entreprises pour lesquelles les conseillers-ères nationaux-ales et les conseillers-ères aux États s'engagent."
-    },
-    {
-      "key": "purpose/independence/title",
-      "de": "Wir sind unabhängig",
-      "fr": "Nous sommes indépendants"
-    },
-    {
-      "key": "purpose/independence/text",
-      "de": "Lobbywatch ist eine unabhängige journalistische Plattform. Frei zugänglich für interessierte Bürger:innen und alle Redaktionen.",
-      "fr": "Lobbywatch est une plateforme journalistique indépendante. Elle est librement accessible aux citoyens-nes intéressés-ées et à toutes les rédactions."
-    },
-    {
-      "key": "purpose/nonprofit/title",
-      "de": "Gemeinnütziger Verein",
-      "fr": "Association à but non lucratif"
-    },
-    {
-      "key": "purpose/nonprofit/text",
-      "de": "Rund 250 Mitglieder engagieren sich bei uns für eine lebendige und transparente Demokratie. Bald auch Sie?",
-      "fr": "Environ 250 membres s'engagent chez nous pour une démocratie vivante et transparente. Bientôt vous aussi ?"
-    },
-    {
-      "key": "menu/locales/de",
-      "de": "Deutsch",
-      "fr": "Deutsch"
-    },
-    {
-      "key": "menu/locales/fr",
-      "de": "Français",
-      "fr": "Français"
-    },
-    {
-      "key": "menu/parliamentarians",
-      "de": "Parlamentarier:in",
-      "fr": "Parlementaires"
-    },
-    {
-      "key": "menu/lobbygroups",
-      "de": "Lobbygruppen",
-      "fr": "Groupes d'intérêt"
-    },
-    {
-      "key": "menu/branchs",
-      "de": "Branchen",
-      "fr": "Branches"
-    },
-    {
-      "key": "menu/guests",
-      "de": "Zutrittsberechtigte",
-      "fr": "Personnes accréditées"
-    },
-    {
-      "key": "search/placeholder",
-      "de": "Personen, Organisationen, Lobbygruppen",
-      "fr": "Personnes, Organisations, Groupes d'intérêt"
-    },
-    {
-      "key": "index/blog/link",
-      "de": "Weitere Artikel anzeigen",
-      "fr": "Montrer plus d'articles"
-    },
-    {
-      "key": "card/read",
-      "de": "Lesen",
-      "fr": "Lire"
+      "key": "blog/meta/description",
+      "de": "Lesenswertes aus der Lobbywelt. Beobachtungen aus der Wandelhalle, Interessenkonflikte der Politiker und Meinungen zu Transparenz.",
+      "fr": "Ce qu'il vaut la peine de lire sur le monde des lobbies. Remarques venant de la Salle des Pas Perdus, conflits d'intérêts des politiciens et avis sur la transparence."
     },
     {
       "key": "blog/title",
@@ -111,29 +11,639 @@
       "fr": "Blog"
     },
     {
-      "key": "index/blog/title",
-      "de": "Aktuelles aus der Lobbywelt",
-      "fr": "En direct du monde des lobbyistes"
+      "key": "branch/meta/description",
+      "de": "Die Branche {name} der Schweizer Wirtschaft.",
+      "fr": "La branche {name} de l'économie suisse."
     },
     {
-      "key": "index/meta/description",
-      "de": "Die Plattform Lobbywatch thematisiert Interessenbindungen zwischen National‐ und Ständeräten zu Firmen, Vereinigungen und Institutionen und den Einfluss dieser Verbände, Organisationen und Firmen.",
-      "fr": "La plateforme Lobbywatch réunit les liens des parlementaires de l'Assemblée fédérale avec des entreprises, des associations et des institutions. Lobbywatch veut montrer l'influence de ces organismes dans la politique."
+      "key": "branchs/meta/description",
+      "de": "{count} Branchen nehmen Einfluss auf die Politik in der Schweiz.",
+      "fr": "{count} branches influencent la politique en Suisse"
     },
     {
-      "key": "blog/meta/description",
-      "de": "Lesenswertes aus der Lobbywelt. Beobachtungen aus der Wandelhalle, Interessenkonflikte der Politiker und Meinungen zu Transparenz.",
-      "fr": "Ce qu'il vaut la peine de lire sur le monde des lobbies. Remarques venant de la Salle des Pas Perdus, conflits d'intérêts des politiciens et avis sur la transparence."
+      "key": "card/read",
+      "de": "Lesen",
+      "fr": "Lire"
     },
     {
-      "key": "guests/meta/title",
-      "de": "Zutrittsberechtigte Personen",
-      "fr": "Personnes accréditées"
+      "key": "claim",
+      "de": "Gut zu wissen, wer Politik macht",
+      "fr": "Pour savoir qui façonne la politique"
     },
     {
-      "key": "guests/meta/description",
-      "de": "{count} Zutrittsberechtigte der Wandelhalle im Bundeshaus.",
-      "fr": "{count} invités dans la salle des Pas perdus du Palais fédéral "
+      "key": "connection/art/beirat",
+      "de": "Beirat/Patronatskomitee/Expertenkommission/Advisory Board",
+      "fr": "Conseil/Comité de patronage/Commission d'experts/Advisory Board"
+    },
+    {
+      "key": "connection/art/geschaeftsfuehrend",
+      "de": "geschäftsführend",
+      "fr": "en poste de direction"
+    },
+    {
+      "key": "connection/art/mitglied",
+      "de": "Mitglied",
+      "fr": "Membre"
+    },
+    {
+      "key": "connection/art/taetig",
+      "de": "tätig",
+      "fr": "actif"
+    },
+    {
+      "key": "connection/art/vorstand",
+      "de": "Vorstand",
+      "fr": "Comité"
+    },
+    {
+      "key": "connection/function/AG-geschaeftsfuehrend-mitglied-F",
+      "de": "Geschäftsleitung",
+      "fr": "Direction"
+    },
+    {
+      "key": "connection/function/AG-geschaeftsfuehrend-mitglied-M",
+      "de": "Geschäftsleitung",
+      "fr": "Direction"
+    },
+    {
+      "key": "connection/function/AG-geschaeftsfuehrend-praesident-F",
+      "de": "Geschäftsführerin (CEO)",
+      "fr": "Administratrice (CEO)"
+    },
+    {
+      "key": "connection/function/AG-geschaeftsfuehrend-praesident-M",
+      "de": "Geschäftsführer (CEO)",
+      "fr": "Administrateur (CEO)"
+    },
+    {
+      "key": "connection/function/AG-geschaeftsfuehrend-vizepraesident-F",
+      "de": "Vizegeschäftsführerin",
+      "fr": "Vice-administratrice"
+    },
+    {
+      "key": "connection/function/AG-geschaeftsfuehrend-vizepraesident-M",
+      "de": "Vizegeschäftsführer",
+      "fr": "Vice-administrateur"
+    },
+    {
+      "key": "connection/function/AG-vorstand-mitglied-F",
+      "de": "Verwaltungsrätin",
+      "fr": "Membre du Conseil d'administration"
+    },
+    {
+      "key": "connection/function/AG-vorstand-mitglied-M",
+      "de": "Verwaltungsrat",
+      "fr": "Membre du Conseil d'administration"
+    },
+    {
+      "key": "connection/function/AG-vorstand-praesident-F",
+      "de": "Verwaltungsratspräsidentin",
+      "fr": "Présidente du Conseil d'administration"
+    },
+    {
+      "key": "connection/function/AG-vorstand-praesident-M",
+      "de": "Verwaltungsratspräsident",
+      "fr": "Président du Conseil d'administration"
+    },
+    {
+      "key": "connection/function/AG-vorstand-vizepraesident-F",
+      "de": "Verwaltungsratsvizepräsidentin",
+      "fr": "Vice-présidente du Conseil d'administration"
+    },
+    {
+      "key": "connection/function/AG-vorstand-vizepraesident-M",
+      "de": "Verwaltungsratsvizepräsident",
+      "fr": "Vice-président du Conseil d'administration"
+    },
+    {
+      "key": "connection/function/beirat-mitglied",
+      "de": "Beirat/Patronatskomitee/Expertenkommission/Advisory Board",
+      "fr": "Conseil/Comité de patronage/Commission d'experts/Advisory Board"
+    },
+    {
+      "key": "connection/function/Genossenschaft-geschaeftsfuehrend-mitglied-F",
+      "de": "Geschäftsleitung",
+      "fr": "Direction"
+    },
+    {
+      "key": "connection/function/Genossenschaft-geschaeftsfuehrend-mitglied-M",
+      "de": "Geschäftsleitung",
+      "fr": "Direction"
+    },
+    {
+      "key": "connection/function/Genossenschaft-geschaeftsfuehrend-praesident-F",
+      "de": "Geschäftsführerin (CEO)",
+      "fr": "Administratrice (CEO)"
+    },
+    {
+      "key": "connection/function/Genossenschaft-geschaeftsfuehrend-praesident-M",
+      "de": "Geschäftsführer (CEO)",
+      "fr": "Administrateur (CEO)"
+    },
+    {
+      "key": "connection/function/Genossenschaft-geschaeftsfuehrend-vizepraesident-F",
+      "de": "Vizegeschäftsführerin",
+      "fr": "Vice-administratrice"
+    },
+    {
+      "key": "connection/function/Genossenschaft-geschaeftsfuehrend-vizepraesident-M",
+      "de": "Vizegeschäftsführer",
+      "fr": "Vice-administrateur"
+    },
+    {
+      "key": "connection/function/Genossenschaft-vorstand-mitglied-F",
+      "de": "Verwaltungsrätin",
+      "fr": "Membre du Conseil d'administration"
+    },
+    {
+      "key": "connection/function/Genossenschaft-vorstand-mitglied-M",
+      "de": "Verwaltungsrat",
+      "fr": "Membre du Conseil d'administration"
+    },
+    {
+      "key": "connection/function/Genossenschaft-vorstand-praesident-F",
+      "de": "Verwaltungsratspräsidentin",
+      "fr": "Présidente du Conseil d'administration"
+    },
+    {
+      "key": "connection/function/Genossenschaft-vorstand-praesident-M",
+      "de": "Verwaltungsratspräsident",
+      "fr": "Président du Conseil d'administration"
+    },
+    {
+      "key": "connection/function/Genossenschaft-vorstand-vizepraesident-F",
+      "de": "Verwaltungsratsvizepräsidentin",
+      "fr": "Vice-présidente du Conseil d'administration"
+    },
+    {
+      "key": "connection/function/Genossenschaft-vorstand-vizepraesident-M",
+      "de": "Verwaltungsratsvizepräsident",
+      "fr": "Vice-président du Conseil d'administration"
+    },
+    {
+      "key": "connection/function/Stiftung-geschaeftsfuehrend-mitglied-F",
+      "de": "Geschäftsleitung",
+      "fr": "Direction"
+    },
+    {
+      "key": "connection/function/Stiftung-geschaeftsfuehrend-mitglied-M",
+      "de": "Geschäftsleitung",
+      "fr": "Direction"
+    },
+    {
+      "key": "connection/function/Stiftung-geschaeftsfuehrend-praesident-F",
+      "de": "Geschäftsführerin",
+      "fr": "Administratrice"
+    },
+    {
+      "key": "connection/function/Stiftung-geschaeftsfuehrend-praesident-M",
+      "de": "Geschäftsführer",
+      "fr": "Administrateur"
+    },
+    {
+      "key": "connection/function/Stiftung-geschaeftsfuehrend-vizepraesident-F",
+      "de": "Vizegeschäftsführerin",
+      "fr": "Vice-administratrice"
+    },
+    {
+      "key": "connection/function/Stiftung-geschaeftsfuehrend-vizepraesident-M",
+      "de": "Vizegeschäftsführer",
+      "fr": "Vice-administrateur"
+    },
+    {
+      "key": "connection/function/Stiftung-vorstand-mitglied-F",
+      "de": "Stiftungsrätin",
+      "fr": "Membre du Conseil de fondation"
+    },
+    {
+      "key": "connection/function/Stiftung-vorstand-mitglied-M",
+      "de": "Stiftungsrat",
+      "fr": "Membre du Conseil de fondation"
+    },
+    {
+      "key": "connection/function/Stiftung-vorstand-praesident-F",
+      "de": "Stiftungsratspräsidentin",
+      "fr": "Présidente de fondation"
+    },
+    {
+      "key": "connection/function/Stiftung-vorstand-praesident-M",
+      "de": "Stiftungsratspräsident",
+      "fr": "Président de fondation"
+    },
+    {
+      "key": "connection/function/Stiftung-vorstand-vizepraesident-F",
+      "de": "Stiftungsratsvizepräsidentin",
+      "fr": "Vice-présidente de fondation"
+    },
+    {
+      "key": "connection/function/Stiftung-vorstand-vizepraesident-M",
+      "de": "Stiftungsratsvizepräsident",
+      "fr": "Vice-président de fondation"
+    },
+    {
+      "key": "connection/function/Verein-geschaeftsfuehrend-mitglied-F",
+      "de": "Geschäftsleitung",
+      "fr": "Direction"
+    },
+    {
+      "key": "connection/function/Verein-geschaeftsfuehrend-mitglied-M",
+      "de": "Geschäftsleitung",
+      "fr": "Direction"
+    },
+    {
+      "key": "connection/function/Verein-geschaeftsfuehrend-praesident-F",
+      "de": "Geschäftsführerin",
+      "fr": "Administratrice"
+    },
+    {
+      "key": "connection/function/Verein-geschaeftsfuehrend-praesident-M",
+      "de": "Geschäftsführer",
+      "fr": "Administrateur"
+    },
+    {
+      "key": "connection/function/Verein-geschaeftsfuehrend-vizepraesident-F",
+      "de": "Vizegeschäftsführerin",
+      "fr": "Vice-administratrice"
+    },
+    {
+      "key": "connection/function/Verein-geschaeftsfuehrend-vizepraesident-M",
+      "de": "Vizegeschäftsführer",
+      "fr": "Vice-administrateur"
+    },
+    {
+      "key": "connection/function/Verein-vorstand-mitglied-F",
+      "de": "Vorstand",
+      "fr": "Comité"
+    },
+    {
+      "key": "connection/function/Verein-vorstand-mitglied-M",
+      "de": "Vorstand",
+      "fr": "Comité"
+    },
+    {
+      "key": "connection/function/Verein-vorstand-praesident-F",
+      "de": "Präsidentin",
+      "fr": "Présidente du Comité"
+    },
+    {
+      "key": "connection/function/Verein-vorstand-praesident-M",
+      "de": "Präsident",
+      "fr": "Président du Comité"
+    },
+    {
+      "key": "connection/function/Verein-vorstand-vizepraesident-F",
+      "de": "Vizepräsidentin",
+      "fr": "Vice-présidente du Comité"
+    },
+    {
+      "key": "connection/function/Verein-vorstand-vizepraesident-M",
+      "de": "Vizepräsident",
+      "fr": "Vice-président du Comité"
+    },
+    {
+      "key": "connection/funktion_im_gremium/mitglied",
+      "de": "Mitglied",
+      "fr": "Membre"
+    },
+    {
+      "key": "connection/funktion_im_gremium/praesident-F",
+      "de": "Präsidentin",
+      "fr": "Présidente"
+    },
+    {
+      "key": "connection/funktion_im_gremium/praesident-M",
+      "de": "Präsident",
+      "fr": "Président"
+    },
+    {
+      "key": "connection/funktion_im_gremium/vizepraesident-F",
+      "de": "Vizepräsidentin",
+      "fr": "Vice-présidente"
+    },
+    {
+      "key": "connection/funktion_im_gremium/vizepraesident-M",
+      "de": "Vizepräsident",
+      "fr": "Vice-président"
+    },
+    {
+      "key": "connections/art/arbeitet fuer",
+      "de": "Auftraggeber(in)",
+      "fr": "Mandant"
+    },
+    {
+      "key": "connections/art/tochtergesellschaft von",
+      "de": "Unterorganisationen",
+      "fr": "Filiales"
+    },
+    {
+      "key": "connections/art/tochtergesellschaften",
+      "de": "Oberorganisation",
+      "fr": "est une filiale de "
+    },
+    {
+      "key": "connections/context/branch",
+      "de": "Branche",
+      "fr": "Branche"
+    },
+    {
+      "key": "connections/context/compensation",
+      "de": "Entschädigungen pro Jahr",
+      "fr": "Indemnités par année"
+    },
+    {
+      "key": "connections/context/compensation/money/-1",
+      "de": "keine, bezahlendes Mitglied",
+      "fr": "aucun, membre payant"
+    },
+    {
+      "key": "connections/context/compensation/money/0",
+      "de": "Ehrenamtlich",
+      "fr": "Bénévole"
+    },
+    {
+      "key": "connections/context/compensation/money/1",
+      "de": "bezahlte Tätigkeit, Betrag unbekannt",
+      "fr": "activité rémunérée, montant inconnu"
+    },
+    {
+      "key": "connections/context/compensation/money/other",
+      "de": "{formatted}",
+      "fr": "{formatted}"
+    },
+    {
+      "key": "connections/context/compensation/notAvailable",
+      "de": "keine Angabe",
+      "fr": "pas d'information"
+    },
+    {
+      "key": "connections/context/compensation/periode",
+      "de": "pro Jahr",
+      "fr": "par année"
+    },
+    {
+      "key": "connections/context/description",
+      "de": "Beschreibung",
+      "fr": "Description"
+    },
+    {
+      "key": "connections/context/function",
+      "de": "Funktion",
+      "fr": "Fonction"
+    },
+    {
+      "key": "connections/context/lobbygroup",
+      "de": "Lobbygruppe",
+      "fr": "Groupe d'intérêt"
+    },
+    {
+      "key": "connections/context/occupation",
+      "de": "Beruf",
+      "fr": "profession"
+    },
+    {
+      "key": "connections/context/paths/direct",
+      "de": "Direkt verbunden",
+      "fr": "Lien direct"
+    },
+    {
+      "key": "connections/context/paths/indirect",
+      "de": "Indirekt verbunden via",
+      "fr": "Lien indirect"
+    },
+    {
+      "key": "connections/context/sector",
+      "de": "Branche",
+      "fr": "Branche"
+    },
+    {
+      "key": "connections/groups/arbeitet fuer",
+      "de": "tätig für",
+      "fr": "actif pour"
+    },
+    {
+      "key": "connections/groups/auftraggeber fuer",
+      "de": "Auftraggeber(in) für",
+      "fr": "Mandant de"
+    },
+    {
+      "key": "connections/groups/beteiligt an",
+      "de": "Beteiligungen an",
+      "fr": "Participations à"
+    },
+    {
+      "key": "connections/groups/beteiligungen von",
+      "de": "Beteiligungen von",
+      "fr": "Participations de"
+    },
+    {
+      "key": "connections/groups/mitglied von",
+      "de": "ist Mitglied von",
+      "fr": "est membre de"
+    },
+    {
+      "key": "connections/groups/mitglieder",
+      "de": "Mitglieder",
+      "fr": "Membres"
+    },
+    {
+      "key": "connections/groups/partner von",
+      "de": "Partnerorganisationen",
+      "fr": "Organisations partenaires"
+    },
+    {
+      "key": "connections/groups/tochtergesellschaft von",
+      "de": "Oberorganisation",
+      "fr": "est une filiale de "
+    },
+    {
+      "key": "connections/groups/tochtergesellschaften",
+      "de": "Unterorganisationen",
+      "fr": "Filiales"
+    },
+    {
+      "key": "connections/legend/direct",
+      "de": "Direkt",
+      "fr": "direct"
+    },
+    {
+      "key": "connections/legend/HIGH",
+      "de": "Hoch",
+      "fr": "fort"
+    },
+    {
+      "key": "connections/legend/indirect",
+      "de": "Indirekt",
+      "fr": "indirect"
+    },
+    {
+      "key": "connections/legend/LOW",
+      "de": "Gering",
+      "fr": "faible"
+    },
+    {
+      "key": "connections/legend/MEDIUM",
+      "de": "Mittel",
+      "fr": "moyen"
+    },
+    {
+      "key": "connections/legend/path",
+      "de": "seite/wirksamkeit",
+      "fr": "page/efficacite"
+    },
+    {
+      "key": "connections/legend/title",
+      "de": "Wirksamkeit",
+      "fr": "Efficacité"
+    },
+    {
+      "key": "connections/legend/type/title",
+      "de": "Verbindungsart",
+      "fr": "Lien"
+    },
+    {
+      "key": "connections/lobbyGroup",
+      "de": "Lobbygruppen",
+      "fr": "Groupes d'intérêt"
+    },
+    {
+      "key": "connections/more/plural",
+      "de": "Weitere",
+      "fr": "Autres"
+    },
+    {
+      "key": "connections/more/singular",
+      "de": "Weiteres",
+      "fr": "Autre"
+    },
+    {
+      "key": "connections/organisation",
+      "de": "Organisationen",
+      "fr": "Organisations"
+    },
+    {
+      "key": "connections/party/none",
+      "de": "Parteilos",
+      "fr": "Sans parti"
+    },
+    {
+      "key": "detail/Guest/title",
+      "de": "Angaben zur Person",
+      "fr": "Données sur la personne"
+    },
+    {
+      "key": "detail/label/age",
+      "de": "Alter",
+      "fr": "âge"
+    },
+    {
+      "key": "detail/label/commissions",
+      "de": "Kommissionen",
+      "fr": "Commissions"
+    },
+    {
+      "key": "detail/label/councilTenure",
+      "de": "Im Parlament seit",
+      "fr": "Au parlement depuis"
+    },
+    {
+      "key": "detail/label/description",
+      "de": "Beschreibung",
+      "fr": "Description"
+    },
+    {
+      "key": "detail/label/family",
+      "de": "Familie",
+      "fr": "Famille"
+    },
+    {
+      "key": "detail/label/occupation",
+      "de": "Beruf",
+      "fr": "profession"
+    },
+    {
+      "key": "detail/label/profile",
+      "de": "Parlament.ch Profil",
+      "fr": "Page sur parlament.ch"
+    },
+    {
+      "key": "detail/label/represents",
+      "de": "Vertretene Bevölkerung",
+      "fr": "Electeurs représentés"
+    },
+    {
+      "key": "detail/label/uid",
+      "de": "Handelsregister UID",
+      "fr": "IDE registre du commerce"
+    },
+    {
+      "key": "detail/label/website",
+      "de": "Homepage",
+      "fr": "Site internet"
+    },
+    {
+      "key": "detail/Lobbygroup/title",
+      "de": "Angaben zur Lobbygruppe",
+      "fr": "Données sur le groupe d'intérêt"
+    },
+    {
+      "key": "detail/Organisation/title",
+      "de": "Angaben zur Organisation",
+      "fr": "Données sur l'organisation"
+    },
+    {
+      "key": "detail/Parliamentarian/title",
+      "de": "Angaben zur Person",
+      "fr": "Données sur la personne"
+    },
+    {
+      "key": "detail/title",
+      "de": "Angaben",
+      "fr": "Données"
+    },
+    {
+      "key": "detail/value/children/1",
+      "de": "1 Kind",
+      "fr": "1 enfant"
+    },
+    {
+      "key": "detail/value/children/other",
+      "de": "{count} Kinder",
+      "fr": "{count} enfants"
+    },
+    {
+      "key": "detail/value/months/1",
+      "de": "1 Monat",
+      "fr": "1 mois"
+    },
+    {
+      "key": "detail/value/months/other",
+      "de": "{count} Monate",
+      "fr": "{count} mois"
+    },
+    {
+      "key": "detail/value/years/1",
+      "de": "1 Jahr",
+      "fr": "1 année"
+    },
+    {
+      "key": "detail/value/years/other",
+      "de": "{count} Jahre",
+      "fr": "{count} ans"
+    },
+    {
+      "key": "footer/cc",
+      "de": "Die Inhalte von Lobbywatch.ch sind lizenziert unter einer <a href=\"https://creativecommons.org/licenses/by-sa/4.0/deed.de\">Creative Commons Namensnennung - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz</a>.",
+      "fr": "Le contenu de Lobbywatch.ch est disponible sous licence <a href=\"https://creativecommons.org/licenses/by-sa/4.0/deed.fr\">Licence Creative Commons Attribution - Partage dans les mêmes conditions 4.0 International</a>."
+    },
+    {
+      "key": "guest/F/invited",
+      "de": "eingeladen von",
+      "fr": "Invitée par"
+    },
+    {
+      "key": "guest/M/invited",
+      "de": "eingeladen von",
+      "fr": "Invité par"
     },
     {
       "key": "guest/meta/description/F/0",
@@ -166,9 +676,54 @@
       "fr": "{name}, invité par {invitedBy}, a un total de {count} liens et connexions: {connections}"
     },
     {
-      "key": "lobbygroups/meta/description",
-      "de": "{count} Lobbygruppen nehmen Einfluss auf die Politik in der Schweiz.",
-      "fr": "{count} lobbies influencent la politique en Suisse"
+      "key": "guests/meta/description",
+      "de": "{count} Zutrittsberechtigte der Wandelhalle im Bundeshaus.",
+      "fr": "{count} invités dans la salle des Pas perdus du Palais fédéral "
+    },
+    {
+      "key": "guests/meta/title",
+      "de": "Zutrittsberechtigte Personen",
+      "fr": "Personnes accréditées"
+    },
+    {
+      "key": "index/blog/link",
+      "de": "Weitere Artikel anzeigen",
+      "fr": "Montrer plus d'articles"
+    },
+    {
+      "key": "index/blog/title",
+      "de": "Aktuelles aus der Lobbywelt",
+      "fr": "En direct du monde des lobbyistes"
+    },
+    {
+      "key": "index/explore/53",
+      "de": "Auf diese Organisationen stützen sich die Gewerkschaften, wenn sie gegen ein höheres Rentenalter für Frauen kämpfen.",
+      "fr": "C'est sur ces organisations que s'appuient les syndicats pour lutter contre le relèvement de l'âge de la retraite des femmes."
+    },
+    {
+      "key": "index/explore/58",
+      "de": "Mit diesem Netzwerk verhinderten die Lobbygruppe der Anwälte und Treuhänder unter anderem, dass ihre Branche unter die Geldwäscherei-Gesetzgebung gestellt wird.",
+      "fr": "Grâce à ce réseau, le groupe d'intérêt des avocats et des fiduciaires a notamment empêché que la branche soit soumise à la législation sur le blanchiment d'argent."
+    },
+    {
+      "key": "index/explore/link",
+      "de": "Alle Lobbygruppen ansehen",
+      "fr": "Voir tous les groupes d'intérêt"
+    },
+    {
+      "key": "index/explore/title",
+      "de": "Beispiele der Netzwerke des Parlaments",
+      "fr": "Exemples de réseaux du Parlement"
+    },
+    {
+      "key": "index/meta/description",
+      "de": "Die Plattform Lobbywatch thematisiert Interessenbindungen zwischen National‐ und Ständeräten zu Firmen, Vereinigungen und Institutionen und den Einfluss dieser Verbände, Organisationen und Firmen.",
+      "fr": "La plateforme Lobbywatch réunit les liens des parlementaires de l'Assemblée fédérale avec des entreprises, des associations et des institutions. Lobbywatch veut montrer l'influence de ces organismes dans la politique."
+    },
+    {
+      "key": "index/newsletter/text",
+      "de": "Der Herbst 2022 wird bei Lobbywatch im Zeichen des Ausbaus stehen – bleiben Sie in Kontakt:",
+      "fr": "Cet automne 2022, Lobbywatch se développe et grandit - restez en contact : "
     },
     {
       "key": "lobbygroup/meta/description/0",
@@ -186,14 +741,149 @@
       "fr": "Le lobby {name} ({sector}) a {count} relations ({partyCounts}) au parlement."
     },
     {
-      "key": "branchs/meta/description",
-      "de": "{count} Branchen nehmen Einfluss auf die Politik in der Schweiz.",
-      "fr": "{count} branches influencent la politique en Suisse"
+      "key": "lobbygroups/meta/description",
+      "de": "{count} Lobbygruppen nehmen Einfluss auf die Politik in der Schweiz.",
+      "fr": "{count} lobbies influencent la politique en Suisse"
     },
     {
-      "key": "branch/meta/description",
-      "de": "Die Branche {name} der Schweizer Wirtschaft.",
-      "fr": "La branche {name} de l'économie suisse."
+      "key": "menu/branchs",
+      "de": "Branchen",
+      "fr": "Branches"
+    },
+    {
+      "key": "menu/guests",
+      "de": "Zutrittsberechtigte",
+      "fr": "Personnes accréditées"
+    },
+    {
+      "key": "menu/lobbygroups",
+      "de": "Lobbygruppen",
+      "fr": "Groupes d'intérêt"
+    },
+    {
+      "key": "menu/locales/de",
+      "de": "Deutsch",
+      "fr": "Deutsch"
+    },
+    {
+      "key": "menu/locales/fr",
+      "de": "Français",
+      "fr": "Français"
+    },
+    {
+      "key": "menu/parliamentarians",
+      "de": "Parlamentarier:in",
+      "fr": "Parlementaires"
+    },
+    {
+      "key": "newsletter/error/already-subscribed",
+      "de": "Sie sind bereits angemeldet.",
+      "fr": "Vous êtes maintenant connecté."
+    },
+    {
+      "key": "newsletter/error/generic",
+      "de": "Anmeldung fehlgeschlagen.",
+      "fr": "Votre inscription comporte des erreurs."
+    },
+    {
+      "key": "newsletter/error/timeout",
+      "de": "Verbindung zu MailChimp fehlgeschlagen, versuchen Sie es später nochmals.\nUrsache könnte auch ein «Content Blocking» durch den Browser sein, z.B. «Firefox Content Blocking ‹Strict›». Schalten Sie das «Content Blocking» während der Newsletter-Anmeldung temporär aus.",
+      "fr": "Erreurs dans la connexion avec MailChimp, réessayez plus tard.\nUne raison pourrait être le «Content Blocking» du browser, par exemple «Content Blocking Strict» de Firefox. Veuillez éteindre le «Content Blocking» temporairement pendant l'inscription."
+    },
+    {
+      "key": "newsletter/placeholder",
+      "de": "E-Mail-Adresse",
+      "fr": "Email"
+    },
+    {
+      "key": "newsletter/processing",
+      "de": "Anmelden…",
+      "fr": "Inscrire…"
+    },
+    {
+      "key": "newsletter/submit",
+      "de": "Abonnieren",
+      "fr": "S'inscrire"
+    },
+    {
+      "key": "newsletter/succes",
+      "de": "Abonnement erfolgreich.",
+      "fr": "Inscription réussie"
+    },
+    {
+      "key": "newsletter/title",
+      "de": "Newsletter",
+      "fr": "Newsletter"
+    },
+    {
+      "key": "organisation/legalForm/AG",
+      "de": "AG",
+      "fr": "SA"
+    },
+    {
+      "key": "organisation/legalForm/Ausserparlamentarische Kommission",
+      "de": "Ausserparlamentarische Kommission",
+      "fr": "Commission extraparlementaire"
+    },
+    {
+      "key": "organisation/legalForm/Einfache Gesellschaft",
+      "de": "Einfache Gesellschaft",
+      "fr": "Société simple"
+    },
+    {
+      "key": "organisation/legalForm/Einzelunternehmen",
+      "de": "Einzelunternehmen",
+      "fr": "Entreprise individuelle"
+    },
+    {
+      "key": "organisation/legalForm/Genossenschaft",
+      "de": "Genossenschaft",
+      "fr": "Coopérative"
+    },
+    {
+      "key": "organisation/legalForm/GmbH",
+      "de": "GmbH",
+      "fr": "Sàrl"
+    },
+    {
+      "key": "organisation/legalForm/Informelle Gruppe",
+      "de": "Informelle Gruppe",
+      "fr": "Groupe informel"
+    },
+    {
+      "key": "organisation/legalForm/KG",
+      "de": "Kollektivgesellschaft",
+      "fr": "Société en nom collectif"
+    },
+    {
+      "key": "organisation/legalForm/Oeffentlich-rechtlich",
+      "de": "Öffentlich-rechtliche Anstalt",
+      "fr": "Etablissement de droit public"
+    },
+    {
+      "key": "organisation/legalForm/Parlamentarische Freundschaftsgruppe",
+      "de": "Parlamentarische Freundschaftsgruppe",
+      "fr": "Groupe d'amitié parlementaire"
+    },
+    {
+      "key": "organisation/legalForm/Parlamentarische Gruppe",
+      "de": "Parlamentarische Gruppe",
+      "fr": "Groupe parlementaire"
+    },
+    {
+      "key": "organisation/legalForm/Staatlich",
+      "de": "Staatlich",
+      "fr": "public"
+    },
+    {
+      "key": "organisation/legalForm/Stiftung",
+      "de": "Stiftung",
+      "fr": "Fondation"
+    },
+    {
+      "key": "organisation/legalForm/Verein",
+      "de": "Verein",
+      "fr": "Association"
     },
     {
       "key": "organisation/meta/description/0",
@@ -211,14 +901,114 @@
       "fr": "{name} ({legalFormAndUid}) a {count} relations ({partyCounts}) au parlament."
     },
     {
-      "key": "parliamentarians/meta/title",
-      "de": "Parlamentarierinnen und Parlamentarier",
-      "fr": "Parlementaires"
+      "key": "page/next",
+      "de": "Nächste Seite",
+      "fr": "Suivant"
     },
     {
-      "key": "parliamentarians/meta/description",
-      "de": "{count} Parlamentarier und ihre Interessensbindungen.",
-      "fr": "{count} parlementaires et leurs liens d'intérêts"
+      "key": "page/prev",
+      "de": "Vorherige Seite",
+      "fr": "Précédent"
+    },
+    {
+      "key": "parliamentarian/civilStatus/F-eingetragene partnerschaft",
+      "de": "eingetragene Partnerschaft",
+      "fr": "en partenariat enregistré "
+    },
+    {
+      "key": "parliamentarian/civilStatus/F-geschieden",
+      "de": "geschieden",
+      "fr": "divorcée "
+    },
+    {
+      "key": "parliamentarian/civilStatus/F-getrennt",
+      "de": "getrennt",
+      "fr": "séparée"
+    },
+    {
+      "key": "parliamentarian/civilStatus/F-ledig",
+      "de": "ledig",
+      "fr": "célibataire "
+    },
+    {
+      "key": "parliamentarian/civilStatus/F-verheiratet",
+      "de": "verheiratet",
+      "fr": "mariée"
+    },
+    {
+      "key": "parliamentarian/civilStatus/F-verwitwet",
+      "de": "verwitwet",
+      "fr": "Veuve"
+    },
+    {
+      "key": "parliamentarian/civilStatus/M-eingetragene partnerschaft",
+      "de": "eingetragene Partnerschaft",
+      "fr": "en partenariat enregistré "
+    },
+    {
+      "key": "parliamentarian/civilStatus/M-geschieden",
+      "de": "geschieden",
+      "fr": "divorcé "
+    },
+    {
+      "key": "parliamentarian/civilStatus/M-getrennt",
+      "de": "getrennt",
+      "fr": "séparé "
+    },
+    {
+      "key": "parliamentarian/civilStatus/M-ledig",
+      "de": "ledig",
+      "fr": "célibataire "
+    },
+    {
+      "key": "parliamentarian/civilStatus/M-verheiratet",
+      "de": "verheiratet",
+      "fr": "marié"
+    },
+    {
+      "key": "parliamentarian/civilStatus/M-verwitwet",
+      "de": "verwitwet",
+      "fr": "Veuf "
+    },
+    {
+      "key": "parliamentarian/council/title/NR-F",
+      "de": "Nationalrätin",
+      "fr": "Conseillère nationale"
+    },
+    {
+      "key": "parliamentarian/council/title/NR-F-Ex",
+      "de": "Alt-Nationalrätin",
+      "fr": "Ancienne Conseillère nationale"
+    },
+    {
+      "key": "parliamentarian/council/title/NR-M",
+      "de": "Nationalrat",
+      "fr": "Conseiller national"
+    },
+    {
+      "key": "parliamentarian/council/title/NR-M-Ex",
+      "de": "Alt-Nationalrat",
+      "fr": "Ancien Conseiller national"
+    },
+    {
+      "key": "parliamentarian/council/title/SR-F",
+      "de": "Ständerätin",
+      "fr": "Conseillère aux Etats"
+    },
+    {
+      "key": "parliamentarian/council/title/SR-F-Ex",
+      "de": "Alt-Ständerätin",
+      "fr": "Ancienne Conseillère aux Etats"
+    },
+    {
+      "key": "parliamentarian/council/title/SR-M",
+      "de": "Ständerat",
+      "fr": "Conseiller aux Etats"
+    },
+    {
+      "key": "parliamentarian/council/title/SR-M-Ex",
+      "de": "Alt-Ständerat",
+      "fr": "Ancien Conseiller aux Etats"
     },
     {
       "key": "parliamentarian/meta/description/F/0",
@@ -251,85 +1041,14 @@
       "fr": "{name}, {councilTitle}, ({party}) a {count} liens recensés: {connections}"
     },
     {
-      "key": "search/meta/description/other",
-      "de": "{count} Treffer zu «{term}»",
-      "fr": "{count} résultats pour «{term}»"
+      "key": "parliamentarians/meta/description",
+      "de": "{count} Parlamentarier und ihre Interessensbindungen.",
+      "fr": "{count} parlementaires et leurs liens d'intérêts"
     },
     {
-      "key": "search/meta/description/10",
-      "de": "10+ Treffer zu «{term}»",
-      "fr": "10+ résultats pour la recherche «{term}»"
-    },
-    {
-      "key": "search/meta/title",
-      "de": "Suche",
-      "fr": "Chercher"
-    },
-    {
-      "key": "page/next",
-      "de": "Nächste Seite",
-      "fr": "Suivant"
-    },
-    {
-      "key": "page/prev",
-      "de": "Vorherige Seite",
-      "fr": "Précédent"
-    },
-    {
-      "key": "social/title",
-      "de": "Folgen Sie uns",
-      "fr": "Nous suivre"
-    },
-    {
-      "key": "newsletter/title",
-      "de": "Newsletter",
-      "fr": "Newsletter"
-    },
-    {
-      "key": "newsletter/placeholder",
-      "de": "E-Mail-Adresse",
-      "fr": "Email"
-    },
-    {
-      "key": "newsletter/submit",
-      "de": "Abonnieren",
-      "fr": "S'inscrire"
-    },
-    {
-      "key": "newsletter/processing",
-      "de": "Anmelden…",
-      "fr": "Inscrire…"
-    },
-    {
-      "key": "newsletter/succes",
-      "de": "Abonnement erfolgreich.",
-      "fr": "Inscription réussie"
-    },
-    {
-      "key": "newsletter/error/timeout",
-      "de": "Verbindung zu MailChimp fehlgeschlagen, versuchen Sie es später nochmals.\nUrsache könnte auch ein «Content Blocking» durch den Browser sein, z.B. «Firefox Content Blocking ‹Strict›». Schalten Sie das «Content Blocking» während der Newsletter-Anmeldung temporär aus.",
-      "fr": "Erreurs dans la connexion avec MailChimp, réessayez plus tard.\nUne raison pourrait être le «Content Blocking» du browser, par exemple «Content Blocking Strict» de Firefox. Veuillez éteindre le «Content Blocking» temporairement pendant l'inscription."
-    },
-    {
-      "key": "newsletter/error/generic",
-      "de": "Anmeldung fehlgeschlagen.",
-      "fr": "Votre inscription comporte des erreurs."
-    },
-    {
-      "key": "newsletter/error/already-subscribed",
-      "de": "Sie sind bereits angemeldet.",
-      "fr": "Vous êtes maintenant connecté.",
-      "undefined": "Vous êtes maintenant connectée."
-    },
-    {
-      "key": "footer/cc",
-      "de": "Die Inhalte von Lobbywatch.ch sind lizenziert unter einer <a href=\"https://creativecommons.org/licenses/by-sa/4.0/deed.de\">Creative Commons Namensnennung - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz</a>.",
-      "fr": "Le contenu de Lobbywatch.ch est disponible sous licence <a href=\"https://creativecommons.org/licenses/by-sa/4.0/deed.fr\">Licence Creative Commons Attribution - Partage dans les mêmes conditions 4.0 International</a>."
-    },
-    {
-      "key": "updated",
-      "de": "Letzte Aktualisierung am {date}",
-      "fr": "Dernière modification le {date}"
+      "key": "parliamentarians/meta/title",
+      "de": "Parlamentarierinnen und Parlamentarier",
+      "fr": "Parlementaires"
     },
     {
       "key": "published",
@@ -337,9 +1056,54 @@
       "fr": "Publié le {date}"
     },
     {
+      "key": "purpose/independence/text",
+      "de": "Lobbywatch ist eine unabhängige journalistische Plattform. Frei zugänglich für interessierte Bürger:innen und alle Redaktionen.",
+      "fr": "Lobbywatch est une plateforme journalistique indépendante. Elle est librement accessible aux citoyens-nes intéressés-ées et à toutes les rédactions."
+    },
+    {
+      "key": "purpose/independence/title",
+      "de": "Wir sind unabhängig",
+      "fr": "Nous sommes indépendants"
+    },
+    {
+      "key": "purpose/nonprofit/text",
+      "de": "Rund 250 Mitglieder engagieren sich bei uns für eine lebendige und transparente Demokratie. Bald auch Sie?",
+      "fr": "Environ 250 membres s'engagent chez nous pour une démocratie vivante et transparente. Bientôt vous aussi ?"
+    },
+    {
+      "key": "purpose/nonprofit/title",
+      "de": "Gemeinnütziger Verein",
+      "fr": "Association à but non lucratif"
+    },
+    {
+      "key": "purpose/research/text",
+      "de": "Politik muss transparent sein. Deshalb zeigen wir auf, für welche Unternehmen sich Nationalrätinnen und Ständeräte engagieren.",
+      "fr": "La politique doit être transparente. C'est pourquoi nous indiquons les entreprises pour lesquelles les conseillers-ères nationaux-ales et les conseillers-ères aux États s'engagent."
+    },
+    {
+      "key": "purpose/research/title",
+      "de": "Interessenskonflikte",
+      "fr": "Conflits d'intérêts"
+    },
+    {
       "key": "search/hint",
       "de": "Suchen Sie nach Nationalrätinnen, Nationalräten, Ständerätinnen, Ständeräten, Lobbyisten, Lobbygruppen oder Organisationen.",
       "fr": "Cherchez d'après le nom d'un parlementaire, un lobbyiste, un groupe d'intérêt ou une organisation "
+    },
+    {
+      "key": "search/meta/description/10",
+      "de": "10+ Treffer zu «{term}»",
+      "fr": "10+ résultats pour la recherche «{term}»"
+    },
+    {
+      "key": "search/meta/description/other",
+      "de": "{count} Treffer zu «{term}»",
+      "fr": "{count} résultats pour «{term}»"
+    },
+    {
+      "key": "search/meta/title",
+      "de": "Suche",
+      "fr": "Chercher"
     },
     {
       "key": "search/more",
@@ -347,801 +1111,432 @@
       "fr": "Un maximum de 30 résultats sera affiché."
     },
     {
-      "key": "parliamentarian/council/title/NR-M",
-      "de": "Nationalrat",
-      "fr": "Conseiller national"
+      "key": "search/placeholder",
+      "de": "Personen, Organisationen, Lobbygruppen",
+      "fr": "Personnes, Organisations, Groupes d'intérêt"
     },
     {
-      "key": "parliamentarian/council/title/NR-F",
-      "de": "Nationalrätin",
-      "fr": "Conseillère nationale"
+      "key": "social/title",
+      "de": "Folgen Sie uns",
+      "fr": "Nous suivre"
     },
     {
-      "key": "parliamentarian/council/title/NR-M-Ex",
-      "de": "Alt-Nationalrat",
-      "fr": "Ancien Conseiller national"
+      "key": "updated",
+      "de": "Letzte Aktualisierung am {date}",
+      "fr": "Dernière modification le {date}"
     },
     {
-      "key": "parliamentarian/council/title/NR-F-Ex",
-      "de": "Alt-Nationalrätin",
-      "fr": "Ancienne Conseillère nationale"
+      "key": "Account/AddressForm/city/error/empty",
+      "de": "Ort fehlt"
     },
     {
-      "key": "parliamentarian/council/title/SR-M",
-      "de": "Ständerat",
-      "fr": "Conseiller aux Etats"
+      "key": "Account/AddressForm/city/error/tooLong",
+      "de": "Ort, maximal {maxLength} Zeichen"
     },
     {
-      "key": "parliamentarian/council/title/SR-F",
-      "de": "Ständerätin",
-      "fr": "Conseillère aux Etats"
+      "key": "Account/AddressForm/city/label",
+      "de": "Ort"
     },
     {
-      "key": "parliamentarian/council/title/SR-M-Ex",
-      "de": "Alt-Ständerat",
-      "fr": "Ancien Conseiller aux Etats"
+      "key": "Account/AddressForm/country/error/empty",
+      "de": "Land fehlt"
     },
     {
-      "key": "parliamentarian/council/title/SR-F-Ex",
-      "de": "Alt-Ständerätin",
-      "fr": "Ancienne Conseillère aux Etats"
+      "key": "Account/AddressForm/country/label",
+      "de": "Land"
     },
     {
-      "key": "parliamentarian/civilStatus/F-ledig",
-      "de": "ledig",
-      "fr": "célibataire "
+      "key": "Account/AddressForm/edit",
+      "de": "ändern"
     },
     {
-      "key": "parliamentarian/civilStatus/M-ledig",
-      "de": "ledig",
-      "fr": "célibataire "
+      "key": "Account/AddressForm/editName",
+      "de": "bearbeiten"
     },
     {
-      "key": "parliamentarian/civilStatus/F-verheiratet",
-      "de": "verheiratet",
-      "fr": "mariée"
+      "key": "Account/AddressForm/line1/error/empty",
+      "de": "Strasse und Hausnummer fehlen"
     },
     {
-      "key": "parliamentarian/civilStatus/M-verheiratet",
-      "de": "verheiratet",
-      "fr": "marié"
+      "key": "Account/AddressForm/line1/error/tooLong",
+      "de": "Strasse und Hausnummer, maximal {maxLength} Zeichen"
     },
     {
-      "key": "parliamentarian/civilStatus/F-geschieden",
-      "de": "geschieden",
-      "fr": "divorcée "
+      "key": "Account/AddressForm/line1/label",
+      "de": "Strasse und Hausnummer"
     },
     {
-      "key": "parliamentarian/civilStatus/M-geschieden",
-      "de": "geschieden",
-      "fr": "divorcé "
+      "key": "Account/AddressForm/line2/label",
+      "de": "Zusatz (Optional)"
     },
     {
-      "key": "parliamentarian/civilStatus/F-eingetragene partnerschaft",
-      "de": "eingetragene Partnerschaft",
-      "fr": "en partenariat enregistré "
+      "key": "Account/AddressForm/name/error/empty",
+      "de": "Eindeutige Anschrift fehlt"
     },
     {
-      "key": "parliamentarian/civilStatus/M-eingetragene partnerschaft",
-      "de": "eingetragene Partnerschaft",
-      "fr": "en partenariat enregistré "
+      "key": "Account/AddressForm/name/error/tooLong",
+      "de": "Ihr Name, maximal {maxLength} Zeichen"
     },
     {
-      "key": "parliamentarian/civilStatus/F-getrennt",
-      "de": "getrennt",
-      "fr": "séparée"
+      "key": "Account/AddressForm/name/explanation",
+      "de": "Ihr Name für Postsendungen, falls nötig mit c/o."
     },
     {
-      "key": "parliamentarian/civilStatus/M-getrennt",
-      "de": "getrennt",
-      "fr": "séparé "
+      "key": "Account/AddressForm/name/label",
+      "de": "Eindeutige Anschrift"
     },
     {
-      "key": "parliamentarian/civilStatus/F-verwitwet",
-      "de": "verwitwet",
-      "fr": "Veuve"
+      "key": "Account/AddressForm/postalCode/error/empty",
+      "de": "Postleitzahl fehlt"
     },
     {
-      "key": "parliamentarian/civilStatus/M-verwitwet",
-      "de": "verwitwet",
-      "fr": "Veuf "
+      "key": "Account/AddressForm/postalCode/label",
+      "de": "Postleitzahl"
     },
     {
-      "key": "guest/M/invited",
-      "de": "eingeladen von",
-      "fr": "Invité par"
+      "key": "Account/AddressForm/reset",
+      "de": "zurücksetzen"
     },
     {
-      "key": "guest/F/invited",
-      "de": "eingeladen von",
-      "fr": "Invitée par"
+      "key": "Account/AddressForm/title",
+      "de": "Ihre Adresse"
     },
     {
-      "key": "connections/legend/type/title",
-      "de": "Verbindungsart",
-      "fr": "Lien"
+      "key": "account/item/label",
+      "de": "Erstellt am {formattedDate} um {formattedTime}"
     },
     {
-      "key": "connections/legend/direct",
-      "de": "Direkt",
-      "fr": "direct"
+      "key": "account/newsletterSubscriptions/button/subscribe",
+      "de": "Abonnieren"
     },
     {
-      "key": "connections/legend/indirect",
-      "de": "Indirekt",
-      "fr": "indirect"
+      "key": "account/newsletterSubscriptions/onlyName/subscribe",
+      "de": "abonnieren"
     },
     {
-      "key": "connections/legend/title",
-      "de": "Wirksamkeit",
-      "fr": "Efficacité"
+      "key": "account/newsletterSubscriptions/onlyName/subscribed",
+      "de": "abonniert"
     },
     {
-      "key": "connections/legend/path",
-      "de": "seite/wirksamkeit",
-      "fr": "page/efficacite"
+      "key": "account/newsletterSubscriptions/resendResubscribeEmail",
+      "de": "E-Mail erneut senden"
     },
     {
-      "key": "connections/legend/HIGH",
-      "de": "Hoch",
-      "fr": "fort"
+      "key": "account/newsletterSubscriptions/resubscribe",
+      "de": "Newsletter reaktivieren"
     },
     {
-      "key": "connections/legend/MEDIUM",
-      "de": "Mittel",
-      "fr": "moyen"
+      "key": "account/newsletterSubscriptions/resubscribed",
+      "de": "Sie haben alle Newsletter pausiert. Wir haben Ihnen eine E-Mail geschickt um die Reaktivierung zu bestätigen. Vielen Dank."
     },
     {
-      "key": "connections/legend/LOW",
-      "de": "Gering",
-      "fr": "faible"
+      "key": "account/newsletterSubscriptions/resubscribeEmailPending",
+      "de": "Sie haben alle Newsletter pausiert. Wir haben Ihnen bereits eine E-Mail geschickt um die Newsletter zu reaktivieren."
     },
     {
-      "key": "connections/context/paths/direct",
-      "de": "Direkt verbunden",
-      "fr": "Lien direct"
+      "key": "account/newsletterSubscriptions/unauthorized",
+      "de": "Sie müssen angemeldet sein, um Ihre Newsletter-Einstellungen zu ändern."
     },
     {
-      "key": "connections/context/paths/indirect",
-      "de": "Indirekt verbunden via",
-      "fr": "Lien indirect"
+      "key": "account/newsletterSubscriptions/unsubscribed",
+      "de": "Sie haben alle Newsletter pausiert. Möchten Sie die Newsletter wieder erhalten?"
     },
     {
-      "key": "connections/context/sector",
-      "de": "Branche",
-      "fr": "Branche"
+      "key": "account/paymentSource/error",
+      "de": "Fehler"
     },
     {
-      "key": "connections/context/branch",
-      "de": "Branche",
-      "fr": "Branche"
+      "key": "account/paymentSource/save",
+      "de": "speichern"
     },
     {
-      "key": "connections/context/lobbygroup",
-      "de": "Lobbygruppe",
-      "fr": "Groupe d'intérêt"
+      "key": "account/paymentSource/saving",
+      "de": "verifizieren"
     },
     {
-      "key": "connections/context/function",
-      "de": "Funktion",
-      "fr": "Fonction"
+      "key": "account/pledges/free-delivery",
+      "de": "Kostenlose Lieferung"
     },
     {
-      "key": "connections/context/occupation",
-      "de": "Beruf",
-      "fr": "profession"
+      "key": "account/pledges/payment/canceled",
+      "de": "Die Zahlung wurde abgebrochen."
     },
     {
-      "key": "connections/context/description",
-      "de": "Beschreibung",
-      "fr": "Description"
+      "key": "account/pledges/payment/method/PAYMENTSLIP",
+      "de": "Rechnung"
     },
     {
-      "key": "connections/context/compensation",
-      "de": "Entschädigungen pro Jahr",
-      "fr": "Indemnités par année"
+      "key": "account/pledges/payment/method/PAYPAL",
+      "de": "PayPal"
     },
     {
-      "key": "connections/context/compensation/periode",
-      "de": "pro Jahr",
-      "fr": "par année"
+      "key": "account/pledges/payment/method/POSTFINANCECARD",
+      "de": "Postcard"
     },
     {
-      "key": "connections/context/compensation/notAvailable",
-      "de": "keine Angabe",
-      "fr": "pas d'information"
+      "key": "account/pledges/payment/method/STRIPE",
+      "de": "Kreditkarte"
     },
     {
-      "key": "connections/context/compensation/money/-1",
-      "de": "keine, bezahlendes Mitglied",
-      "fr": "aucun, membre payant"
+      "key": "account/pledges/payment/method/STRIPE-WALLET-APPLE-PAY",
+      "de": "Apple Pay"
     },
     {
-      "key": "connections/context/compensation/money/0",
-      "de": "Ehrenamtlich",
-      "fr": "Bénévole"
+      "key": "account/pledges/payment/method/STRIPE-WALLET-GOOGLE-PAY",
+      "de": "Google Pay"
     },
     {
-      "key": "connections/context/compensation/money/1",
-      "de": "bezahlte Tätigkeit, Betrag unbekannt",
-      "fr": "activité rémunérée, montant inconnu"
+      "key": "account/pledges/payment/methods/loading",
+      "de": "Zahlungsmittel werden geladen"
     },
     {
-      "key": "connections/context/compensation/money/other",
-      "de": "{formatted}",
-      "fr": "{formatted}"
+      "key": "account/pledges/payment/methods/wallet/exception",
+      "de": "{wallet} konnte nicht geladen werden. Mögliche Ursachen: eine wackelige Internetverbindung, ein temporärer Ausfall, ein VPN oder Ihre Browsererweiterungen. Wählen Sie bitte eine andere Zahlungsart oder versuchen Sie es in einigen Sekunden erneut."
     },
     {
-      "key": "connections/more/singular",
-      "de": "Weiteres",
-      "fr": "Autre"
+      "key": "account/pledges/payment/methods/wallet/loading",
+      "de": "{wallet} lädt noch."
     },
     {
-      "key": "connections/more/plural",
-      "de": "Weitere",
-      "fr": "Autres"
+      "key": "account/pledges/payment/methods/wallet/unavailable",
+      "de": "{wallet} ist nicht verfügbar. Bitte überprüfen Sie Ihre Einstellungen, geben Sie Ihre Kreditkarte von Hand ein oder wählen Sie eine andere Zahlungsart."
     },
     {
-      "key": "connections/party/none",
-      "de": "Parteilos",
-      "fr": "Sans parti"
+      "key": "account/pledges/payment/paymentslipHint",
+      "de": "Die QR-Rechnung ersetzt den Einzahlungsschein. Sie können damit die Zahlung via Mobile Banking, E-Banking oder am Schalter bei Bank und Post auslösen."
     },
     {
-      "key": "connections/organisation",
-      "de": "Organisationen",
-      "fr": "Organisations"
+      "key": "account/pledges/payment/paymentslipLink",
+      "de": "QR-Rechnung anzeigen"
     },
     {
-      "key": "connections/lobbyGroup",
-      "de": "Lobbygruppen",
-      "fr": "Groupes d'intérêt"
+      "key": "account/pledges/payment/status/generic/CANCELLED",
+      "de": "{formattedTotal} storniert"
     },
     {
-      "key": "connections/groups/arbeitet fuer",
-      "de": "tätig für",
-      "fr": "actif pour",
-      "undefined": "active pour"
+      "key": "account/pledges/payment/status/generic/PAID",
+      "de": "{formattedTotal} bezahlt mit {method}{dateSuffix}"
     },
     {
-      "key": "connections/groups/auftraggeber fuer",
-      "de": "Auftraggeber(in) für",
-      "fr": "Mandant de",
-      "undefined": "Mandante de"
+      "key": "account/pledges/payment/status/generic/PAID/dateSuffix",
+      "de": " am {createdAt}"
     },
     {
-      "key": "connections/groups/mitglied von",
-      "de": "ist Mitglied von",
-      "fr": "est membre de"
+      "key": "account/pledges/payment/status/generic/REFUNDED",
+      "de": "{formattedTotal} zurückerstattet"
     },
     {
-      "key": "connections/groups/mitglieder",
-      "de": "Mitglieder",
-      "fr": "Membres"
+      "key": "account/pledges/payment/status/generic/WAITING",
+      "de": "{formattedTotal} ausstehend"
     },
     {
-      "key": "connections/groups/tochtergesellschaft von",
-      "de": "Oberorganisation",
-      "fr": "est une filiale de "
+      "key": "account/pledges/payment/status/generic/WAITING_FOR_REFUND",
+      "de": "{formattedTotal} wird zurückerstattet"
     },
     {
-      "key": "connections/groups/tochtergesellschaften",
-      "de": "Unterorganisationen",
-      "fr": "Filiales"
+      "key": "account/pledges/payment/status/PAYMENTSLIP/PAID",
+      "de": "{formattedTotal} bezahlt"
     },
     {
-      "key": "connections/groups/partner von",
-      "de": "Partnerorganisationen",
-      "fr": "Organisations partenaires"
+      "key": "account/pledges/payment/status/PAYMENTSLIP/WAITING",
+      "de": "Bitte überweisen Sie {formattedTotal} mit der Mitteilung «{hrid}» im Betreff-Feld an:<br /><br />\nPC 89-584470-6<br />\nIBAN: CH92 0900 0000 8958 4470 6<br />\nlautend auf:<br />\nLobbywatch.ch<br />\n3000 Bern\n"
     },
     {
-      "key": "connections/groups/beteiligt an",
-      "de": "Beteiligungen an",
-      "fr": "Participations à"
+      "key": "account/pledges/payment/your-payment-data",
+      "de": "Ihre Kreditkartendaten"
     },
     {
-      "key": "connections/groups/beteiligungen von",
-      "de": "Beteiligungen von",
-      "fr": "Participations de"
+      "key": "account/pledges/title",
+      "de": "Unterstützungsbeiträge"
     },
     {
-      "key": "connections/art/arbeitet fuer",
-      "de": "Auftraggeber(in)",
-      "fr": "Mandant",
-      "undefined": "Mandante"
+      "key": "Account/title",
+      "de": "Willkommen"
     },
     {
-      "key": "connections/art/tochtergesellschaft von",
-      "de": "Unterorganisationen",
-      "fr": "Filiales"
+      "key": "Account/title/name",
+      "de": "Willkommen, {name}"
     },
     {
-      "key": "connections/art/tochtergesellschaften",
-      "de": "Oberorganisation",
-      "fr": "est une filiale de "
+      "key": "Account/Update/address/label",
+      "de": "Adresse"
     },
     {
-      "key": "detail/title",
-      "de": "Angaben",
-      "fr": "Données"
+      "key": "Account/Update/birthday/error/empty",
+      "de": "Geburtsdatum fehlt"
     },
     {
-      "key": "detail/Parliamentarian/title",
-      "de": "Angaben zur Person",
-      "fr": "Données sur la personne"
+      "key": "Account/Update/birthday/error/invalid",
+      "de": "Geburtsdatum ungültig"
     },
     {
-      "key": "detail/Guest/title",
-      "de": "Angaben zur Person",
-      "fr": "Données sur la personne"
+      "key": "Account/Update/birthday/hint/plain",
+      "de": "TT.MM.JJJJ"
     },
     {
-      "key": "detail/Organisation/title",
-      "de": "Angaben zur Organisation",
-      "fr": "Données sur l'organisation"
+      "key": "Account/Update/birthday/hint/statute",
+      "de": "TT.MM.JJJJ, notwendig für Ihre Mitgliedschaft bei Project R"
     },
     {
-      "key": "detail/Lobbygroup/title",
-      "de": "Angaben zur Lobbygruppe",
-      "fr": "Données sur le groupe d'intérêt"
+      "key": "Account/Update/birthday/label",
+      "de": "Geburtsdatum"
     },
     {
-      "key": "detail/value/years/1",
-      "de": "1 Jahr",
-      "fr": "1 année"
+      "key": "Account/Update/birthday/label/optional",
+      "de": "Geburtsdatum (Optional)"
     },
     {
-      "key": "detail/value/years/other",
-      "de": "{count} Jahre",
-      "fr": "{count} ans"
+      "key": "Account/Update/cancel",
+      "de": "abbrechen"
     },
     {
-      "key": "detail/value/months/1",
-      "de": "1 Monat",
-      "fr": "1 mois"
+      "key": "Account/Update/details/title",
+      "de": "Bitte überprüfen Sie Ihre Angaben und korrigieren beziehungsweise ergänzen Sie sie."
     },
     {
-      "key": "detail/value/months/other",
-      "de": "{count} Monate",
-      "fr": "{count} mois"
+      "key": "Account/Update/edit",
+      "de": "ändern"
     },
     {
-      "key": "detail/value/children/1",
-      "de": "1 Kind",
-      "fr": "1 enfant"
+      "key": "Account/Update/email/confirm",
+      "de": "Sind Sie sicher, dass die neue E-Mail-Adresse für Ihr Lobbywatch-Konto {email} lauten soll?"
     },
     {
-      "key": "detail/value/children/other",
-      "de": "{count} Kinder",
-      "fr": "{count} enfants"
+      "key": "Account/Update/email/edit",
+      "de": "ändern"
     },
     {
-      "key": "detail/label/represents",
-      "de": "Vertretene Bevölkerung",
-      "fr": "Electeurs représentés"
+      "key": "Account/Update/email/empty",
+      "de": "Geben Sie eine gültige E-Mail-Adresse ein."
     },
     {
-      "key": "detail/label/councilTenure",
-      "de": "Im Parlament seit",
-      "fr": "Au parlement depuis"
+      "key": "Account/Update/email/error/invalid",
+      "de": "Das ist keine gültige E-Mail-Adresse"
     },
     {
-      "key": "detail/label/age",
-      "de": "Alter",
-      "fr": "âge"
+      "key": "Account/Update/email/form/label",
+      "de": "Ihre neue E-Mail-Adresse"
     },
     {
-      "key": "detail/label/occupation",
-      "de": "Beruf",
-      "fr": "profession"
+      "key": "Account/Update/email/hint",
+      "de": "Achtung: Wenn Sie Ihre E-Mail-Adresse ändern, werden Sie auf allen Geräten abgemeldet und Sie können sich danach ausschliesslich mit der neuen E-Mail-Adresse anmelden!"
     },
     {
-      "key": "detail/label/family",
-      "de": "Familie",
-      "fr": "Famille"
+      "key": "Account/Update/email/label",
+      "de": "E-Mail-Adresse"
     },
     {
-      "key": "detail/label/website",
-      "de": "Homepage",
-      "fr": "Site internet"
+      "key": "Account/Update/email/submit",
+      "de": "speichern"
     },
     {
-      "key": "detail/label/profile",
-      "de": "Parlament.ch Profil",
-      "fr": "Page sur parlament.ch"
+      "key": "Account/Update/email/updating",
+      "de": "Neue E-Mail-Adresse wird gespeichert"
     },
     {
-      "key": "detail/label/commissions",
-      "de": "Kommissionen",
-      "fr": "Commissions"
+      "key": "Account/Update/name/label",
+      "de": "Name"
     },
     {
-      "key": "detail/label/description",
-      "de": "Beschreibung",
-      "fr": "Description"
+      "key": "Account/Update/phone/label",
+      "de": "Telefonnummer (Optional)"
     },
     {
-      "key": "detail/label/uid",
-      "de": "Handelsregister UID",
-      "fr": "IDE registre du commerce"
+      "key": "Account/Update/phone/label/alt",
+      "de": "Telefonnummer"
     },
     {
-      "key": "organisation/legalForm/AG",
-      "de": "AG",
-      "fr": "SA"
+      "key": "Account/Update/submit",
+      "de": "speichern"
     },
     {
-      "key": "organisation/legalForm/GmbH",
-      "de": "GmbH",
-      "fr": "Sàrl"
+      "key": "Account/Update/title",
+      "de": "Persönliche Angaben"
     },
     {
-      "key": "organisation/legalForm/Stiftung",
-      "de": "Stiftung",
-      "fr": "Fondation"
+      "key": "Account/Update/updating",
+      "de": "speichert"
     },
     {
-      "key": "organisation/legalForm/Verein",
-      "de": "Verein",
-      "fr": "Association"
+      "key": "actionbar/download",
+      "de": "Herunterladen"
     },
     {
-      "key": "organisation/legalForm/Informelle Gruppe",
-      "de": "Informelle Gruppe",
-      "fr": "Groupe informel"
+      "key": "actionbar/email/label",
+      "de": "E-Mail"
     },
     {
-      "key": "organisation/legalForm/Parlamentarische Gruppe",
-      "de": "Parlamentarische Gruppe",
-      "fr": "Groupe parlementaire"
+      "key": "actionbar/email/title",
+      "de": "Per E-Mail verschicken"
     },
     {
-      "key": "organisation/legalForm/Oeffentlich-rechtlich",
-      "de": "Öffentlich-rechtliche Anstalt",
-      "fr": "Etablissement de droit public"
+      "key": "actionbar/facebook/label",
+      "de": "Facebook"
     },
     {
-      "key": "organisation/legalForm/Einzelunternehmen",
-      "de": "Einzelunternehmen",
-      "fr": "Entreprise individuelle"
+      "key": "actionbar/facebook/title",
+      "de": "Auf Facebook teilen"
     },
     {
-      "key": "organisation/legalForm/KG",
-      "de": "Kollektivgesellschaft",
-      "fr": "Société en nom collectif"
+      "key": "actionbar/link/label",
+      "de": "Link kopieren"
     },
     {
-      "key": "organisation/legalForm/Genossenschaft",
-      "de": "Genossenschaft",
-      "fr": "Coopérative"
+      "key": "actionbar/link/label/error",
+      "de": "Nicht unterstützt :("
     },
     {
-      "key": "organisation/legalForm/Staatlich",
-      "de": "Staatlich",
-      "fr": "public",
-      "undefined": "publique"
+      "key": "actionbar/link/label/success",
+      "de": "Link kopiert!"
     },
     {
-      "key": "organisation/legalForm/Ausserparlamentarische Kommission",
-      "de": "Ausserparlamentarische Kommission",
-      "fr": "Commission extraparlementaire"
+      "key": "actionbar/link/title",
+      "de": "Link kopieren"
     },
     {
-      "key": "organisation/legalForm/Einfache Gesellschaft",
-      "de": "Einfache Gesellschaft",
-      "fr": "Société simple"
+      "key": "actionbar/share",
+      "de": "Teilen"
     },
     {
-      "key": "organisation/legalForm/Parlamentarische Freundschaftsgruppe",
-      "de": "Parlamentarische Freundschaftsgruppe",
-      "fr": "Groupe d'amitié parlementaire"
+      "key": "actionbar/telegram/label",
+      "de": "Telegram"
     },
     {
-      "key": "connection/art/taetig",
-      "de": "tätig",
-      "fr": "actif"
+      "key": "actionbar/telegram/title",
+      "de": "Auf Telegram teilen"
     },
     {
-      "key": "connection/art/geschaeftsfuehrend",
-      "de": "geschäftsführend",
-      "fr": "en poste de direction"
+      "key": "actionbar/threema/label",
+      "de": "Threema"
     },
     {
-      "key": "connection/art/beirat",
-      "de": "Beirat/Patronatskomitee/Expertenkommission/Advisory Board",
-      "fr": "Conseil/Comité de patronage/Commission d'experts/Advisory Board"
+      "key": "actionbar/threema/title",
+      "de": "Auf Threema teilen"
     },
     {
-      "key": "connection/art/mitglied",
-      "de": "Mitglied",
-      "fr": "Membre"
+      "key": "actionbar/twitter/label",
+      "de": "Twitter"
     },
     {
-      "key": "connection/art/vorstand",
-      "de": "Vorstand",
-      "fr": "Comité"
+      "key": "actionbar/twitter/title",
+      "de": "Auf Twitter teilen"
     },
     {
-      "key": "connection/funktion_im_gremium/praesident-F",
-      "de": "Präsidentin",
-      "fr": "Présidente"
+      "key": "actionbar/whatsapp/label",
+      "de": "WhatsApp"
     },
     {
-      "key": "connection/funktion_im_gremium/praesident-M",
-      "de": "Präsident",
-      "fr": "Président"
-    },
-    {
-      "key": "connection/funktion_im_gremium/vizepraesident-F",
-      "de": "Vizepräsidentin",
-      "fr": "Vice-présidente"
-    },
-    {
-      "key": "connection/funktion_im_gremium/vizepraesident-M",
-      "de": "Vizepräsident",
-      "fr": "Vice-président"
-    },
-    {
-      "key": "connection/funktion_im_gremium/mitglied",
-      "de": "Mitglied",
-      "fr": "Membre"
-    },
-    {
-      "key": "connection/function/Stiftung-vorstand-praesident-F",
-      "de": "Stiftungsratspräsidentin",
-      "fr": "Présidente de fondation"
-    },
-    {
-      "key": "connection/function/Stiftung-vorstand-praesident-M",
-      "de": "Stiftungsratspräsident",
-      "fr": "Président de fondation"
-    },
-    {
-      "key": "connection/function/Stiftung-vorstand-vizepraesident-F",
-      "de": "Stiftungsratsvizepräsidentin",
-      "fr": "Vice-présidente de fondation"
-    },
-    {
-      "key": "connection/function/Stiftung-vorstand-vizepraesident-M",
-      "de": "Stiftungsratsvizepräsident",
-      "fr": "Vice-président de fondation"
-    },
-    {
-      "key": "connection/function/Stiftung-vorstand-mitglied-F",
-      "de": "Stiftungsrätin",
-      "fr": "Membre du Conseil de fondation"
-    },
-    {
-      "key": "connection/function/Stiftung-vorstand-mitglied-M",
-      "de": "Stiftungsrat",
-      "fr": "Membre du Conseil de fondation"
-    },
-    {
-      "key": "connection/function/Stiftung-geschaeftsfuehrend-praesident-F",
-      "de": "Geschäftsführerin",
-      "fr": "Administratrice"
-    },
-    {
-      "key": "connection/function/Stiftung-geschaeftsfuehrend-praesident-M",
-      "de": "Geschäftsführer",
-      "fr": "Administrateur"
-    },
-    {
-      "key": "connection/function/Stiftung-geschaeftsfuehrend-vizepraesident-F",
-      "de": "Vizegeschäftsführerin",
-      "fr": "Vice-administratrice"
-    },
-    {
-      "key": "connection/function/Stiftung-geschaeftsfuehrend-vizepraesident-M",
-      "de": "Vizegeschäftsführer",
-      "fr": "Vice-administrateur"
-    },
-    {
-      "key": "connection/function/Stiftung-geschaeftsfuehrend-mitglied-F",
-      "de": "Geschäftsleitung",
-      "fr": "Direction"
-    },
-    {
-      "key": "connection/function/Stiftung-geschaeftsfuehrend-mitglied-M",
-      "de": "Geschäftsleitung",
-      "fr": "Direction"
-    },
-    {
-      "key": "connection/function/AG-vorstand-praesident-F",
-      "de": "Verwaltungsratspräsidentin",
-      "fr": "Présidente du Conseil d'administration"
-    },
-    {
-      "key": "connection/function/AG-vorstand-praesident-M",
-      "de": "Verwaltungsratspräsident",
-      "fr": "Président du Conseil d'administration"
-    },
-    {
-      "key": "connection/function/AG-vorstand-vizepraesident-F",
-      "de": "Verwaltungsratsvizepräsidentin",
-      "fr": "Vice-présidente du Conseil d'administration"
-    },
-    {
-      "key": "connection/function/AG-vorstand-vizepraesident-M",
-      "de": "Verwaltungsratsvizepräsident",
-      "fr": "Vice-président du Conseil d'administration"
-    },
-    {
-      "key": "connection/function/AG-vorstand-mitglied-F",
-      "de": "Verwaltungsrätin",
-      "fr": "Membre du Conseil d'administration"
-    },
-    {
-      "key": "connection/function/AG-vorstand-mitglied-M",
-      "de": "Verwaltungsrat",
-      "fr": "Membre du Conseil d'administration"
-    },
-    {
-      "key": "connection/function/AG-geschaeftsfuehrend-praesident-F",
-      "de": "Geschäftsführerin (CEO)",
-      "fr": "Administratrice (CEO)"
-    },
-    {
-      "key": "connection/function/AG-geschaeftsfuehrend-praesident-M",
-      "de": "Geschäftsführer (CEO)",
-      "fr": "Administrateur (CEO)"
-    },
-    {
-      "key": "connection/function/AG-geschaeftsfuehrend-vizepraesident-F",
-      "de": "Vizegeschäftsführerin",
-      "fr": "Vice-administratrice"
-    },
-    {
-      "key": "connection/function/AG-geschaeftsfuehrend-vizepraesident-M",
-      "de": "Vizegeschäftsführer",
-      "fr": "Vice-administrateur"
-    },
-    {
-      "key": "connection/function/AG-geschaeftsfuehrend-mitglied-F",
-      "de": "Geschäftsleitung",
-      "fr": "Direction"
-    },
-    {
-      "key": "connection/function/AG-geschaeftsfuehrend-mitglied-M",
-      "de": "Geschäftsleitung",
-      "fr": "Direction"
-    },
-    {
-      "key": "connection/function/Genossenschaft-vorstand-praesident-F",
-      "de": "Verwaltungsratspräsidentin",
-      "fr": "Présidente du Conseil d'administration"
-    },
-    {
-      "key": "connection/function/Genossenschaft-vorstand-praesident-M",
-      "de": "Verwaltungsratspräsident",
-      "fr": "Président du Conseil d'administration"
-    },
-    {
-      "key": "connection/function/Genossenschaft-vorstand-vizepraesident-F",
-      "de": "Verwaltungsratsvizepräsidentin",
-      "fr": "Vice-présidente du Conseil d'administration"
-    },
-    {
-      "key": "connection/function/Genossenschaft-vorstand-vizepraesident-M",
-      "de": "Verwaltungsratsvizepräsident",
-      "fr": "Vice-président du Conseil d'administration"
-    },
-    {
-      "key": "connection/function/Genossenschaft-vorstand-mitglied-F",
-      "de": "Verwaltungsrätin",
-      "fr": "Membre du Conseil d'administration"
-    },
-    {
-      "key": "connection/function/Genossenschaft-vorstand-mitglied-M",
-      "de": "Verwaltungsrat",
-      "fr": "Membre du Conseil d'administration"
-    },
-    {
-      "key": "connection/function/Genossenschaft-geschaeftsfuehrend-praesident-F",
-      "de": "Geschäftsführerin (CEO)",
-      "fr": "Administratrice (CEO)"
-    },
-    {
-      "key": "connection/function/Genossenschaft-geschaeftsfuehrend-praesident-M",
-      "de": "Geschäftsführer (CEO)",
-      "fr": "Administrateur (CEO)"
-    },
-    {
-      "key": "connection/function/Genossenschaft-geschaeftsfuehrend-vizepraesident-F",
-      "de": "Vizegeschäftsführerin",
-      "fr": "Vice-administratrice"
-    },
-    {
-      "key": "connection/function/Genossenschaft-geschaeftsfuehrend-vizepraesident-M",
-      "de": "Vizegeschäftsführer",
-      "fr": "Vice-administrateur"
-    },
-    {
-      "key": "connection/function/Genossenschaft-geschaeftsfuehrend-mitglied-F",
-      "de": "Geschäftsleitung",
-      "fr": "Direction"
-    },
-    {
-      "key": "connection/function/Genossenschaft-geschaeftsfuehrend-mitglied-M",
-      "de": "Geschäftsleitung",
-      "fr": "Direction"
-    },
-    {
-      "key": "connection/function/Verein-vorstand-praesident-F",
-      "de": "Präsidentin",
-      "fr": "Présidente du Comité"
-    },
-    {
-      "key": "connection/function/Verein-vorstand-praesident-M",
-      "de": "Präsident",
-      "fr": "Président du Comité"
-    },
-    {
-      "key": "connection/function/Verein-vorstand-vizepraesident-F",
-      "de": "Vizepräsidentin",
-      "fr": "Vice-présidente du Comité"
-    },
-    {
-      "key": "connection/function/Verein-vorstand-vizepraesident-M",
-      "de": "Vizepräsident",
-      "fr": "Vice-président du Comité"
-    },
-    {
-      "key": "connection/function/Verein-vorstand-mitglied-F",
-      "de": "Vorstand",
-      "fr": "Comité"
-    },
-    {
-      "key": "connection/function/Verein-vorstand-mitglied-M",
-      "de": "Vorstand",
-      "fr": "Comité"
-    },
-    {
-      "key": "connection/function/Verein-geschaeftsfuehrend-praesident-F",
-      "de": "Geschäftsführerin",
-      "fr": "Administratrice"
-    },
-    {
-      "key": "connection/function/Verein-geschaeftsfuehrend-praesident-M",
-      "de": "Geschäftsführer",
-      "fr": "Administrateur"
-    },
-    {
-      "key": "connection/function/Verein-geschaeftsfuehrend-vizepraesident-F",
-      "de": "Vizegeschäftsführerin",
-      "fr": "Vice-administratrice"
-    },
-    {
-      "key": "connection/function/Verein-geschaeftsfuehrend-vizepraesident-M",
-      "de": "Vizegeschäftsführer",
-      "fr": "Vice-administrateur"
-    },
-    {
-      "key": "connection/function/Verein-geschaeftsfuehrend-mitglied-F",
-      "de": "Geschäftsleitung",
-      "fr": "Direction"
-    },
-    {
-      "key": "connection/function/Verein-geschaeftsfuehrend-mitglied-M",
-      "de": "Geschäftsleitung",
-      "fr": "Direction"
-    },
-    {
-      "key": "connection/function/beirat-mitglied",
-      "de": "Beirat/Patronatskomitee/Expertenkommission/Advisory Board",
-      "fr": "Conseil/Comité de patronage/Commission d'experts/Advisory Board"
-    },
-    {
-      "key": "banner/text"
-    },
-    {
-      "key": "banner/link/text"
+      "key": "actionbar/whatsapp/title",
+      "de": "Auf WhatsApp teilen"
     },
     {
       "key": "banner/link/href"
     },
     {
-      "key": "crowdfunding/status/goal/people",
-      "de": "von {count} Mitgliedern"
+      "key": "banner/link/text"
+    },
+    {
+      "key": "banner/text"
     },
     {
       "key": "crowdfunding/status/goal/memberships",
@@ -1152,8 +1547,8 @@
       "de": "von {count}"
     },
     {
-      "key": "crowdfunding/status/time/label",
-      "de": "bis Deadline"
+      "key": "crowdfunding/status/goal/people",
+      "de": "von {count} Mitgliedern"
     },
     {
       "key": "crowdfunding/status/time/days/1",
@@ -1164,12 +1559,20 @@
       "de": "{count} Tage"
     },
     {
+      "key": "crowdfunding/status/time/ended",
+      "de": "Das Crowdfunding ist vorbei."
+    },
+    {
       "key": "crowdfunding/status/time/hours/1",
       "de": "1 Stunde"
     },
     {
       "key": "crowdfunding/status/time/hours/other",
       "de": "{count} Stunden"
+    },
+    {
+      "key": "crowdfunding/status/time/label",
+      "de": "bis Deadline"
     },
     {
       "key": "crowdfunding/status/time/minutes/1",
@@ -1188,96 +1591,348 @@
       "de": "{count} Sekunden"
     },
     {
-      "key": "crowdfunding/status/time/ended",
-      "de": "Das Crowdfunding ist vorbei."
+      "key": "faq/before/support/text",
+      "de": "Bei allen technischen Problemen helfen wir Ihnen gerne so schnell wie möglich per Mail: <a href=\"mailto:info@lobbywatch.ch\">info@lobbywatch.ch</a>"
     },
     {
-      "key": "actionbar/share",
-      "de": "Teilen"
+      "key": "faq/before/support/title",
+      "de": "Erste-Hilfe-Team"
     },
     {
-      "key": "actionbar/facebook/title",
-      "de": "Auf Facebook teilen"
+      "key": "faq/before/title",
+      "de": "FAQ – Ihre häufigsten Fragen"
     },
     {
-      "key": "actionbar/facebook/label",
-      "de": "Facebook"
+      "key": "faq/metaDescription",
+      "de": "Jetzt Mitglied werden."
     },
     {
-      "key": "actionbar/twitter/title",
-      "de": "Auf Twitter teilen"
+      "key": "faq/pageTitle",
+      "de": "Fragen – Lobbywatch"
     },
     {
-      "key": "actionbar/twitter/label",
-      "de": "Twitter"
-    },
-    {
-      "key": "actionbar/whatsapp/title",
-      "de": "Auf WhatsApp teilen"
-    },
-    {
-      "key": "actionbar/whatsapp/label",
-      "de": "WhatsApp"
-    },
-    {
-      "key": "actionbar/threema/title",
-      "de": "Auf Threema teilen"
-    },
-    {
-      "key": "actionbar/threema/label",
-      "de": "Threema"
-    },
-    {
-      "key": "actionbar/telegram/title",
-      "de": "Auf Telegram teilen"
-    },
-    {
-      "key": "actionbar/telegram/label",
-      "de": "Telegram"
-    },
-    {
-      "key": "actionbar/email/title",
-      "de": "Per E-Mail verschicken"
-    },
-    {
-      "key": "actionbar/email/label",
-      "de": "E-Mail"
-    },
-    {
-      "key": "actionbar/download",
-      "de": "Herunterladen"
-    },
-    {
-      "key": "actionbar/link/title",
-      "de": "Link kopieren"
-    },
-    {
-      "key": "actionbar/link/label",
-      "de": "Link kopieren"
-    },
-    {
-      "key": "actionbar/link/label/success",
-      "de": "Link kopiert!"
-    },
-    {
-      "key": "actionbar/link/label/error",
-      "de": "Nicht unterstützt :("
-    },
-    {
-      "key": "Goodies/title",
-      "de": "Noch etwas Handfestes?"
+      "key": "faq/title",
+      "de": "Antworten auf die häufigsten Fragen"
     },
     {
       "key": "Goodie/dropdown/label",
       "de": "Anzahl"
     },
     {
-      "key": "package/price",
-      "de": "{formattedCHF}"
+      "key": "Goodies/title",
+      "de": "Noch etwas Handfestes?"
     },
     {
-      "key": "package/price/free",
-      "de": "kostenlos"
+      "key": "macNewsletterSubscription/button",
+      "de": "bestätigen"
+    },
+    {
+      "key": "me/signedinAs",
+      "de": "Sie sind angemeldet als: {nameOrEmail}"
+    },
+    {
+      "key": "me/signedOut",
+      "de": "Sie sind nicht angemeldet"
+    },
+    {
+      "key": "memberships/title/1",
+      "de": "Mitgliedschaft"
+    },
+    {
+      "key": "memberships/title/other",
+      "de": "Mitgliedschaften"
+    },
+    {
+      "key": "memberships/title/YEAR",
+      "de": "Jahresmitgliedschaft"
+    },
+    {
+      "key": "memberships/title/LEGISLATION",
+      "de": "Legislatur-Mitgliedschaft"
+    },
+    {
+      "key": "memberships/title/BENEFACTOR",
+      "de": "Gönner-Mitgliedschaft"
+    },
+    {
+      "key": "memberships/latestPeriod/ended",
+      "de": "Endete am {formattedEndDate}"
+    },
+    {
+      "key": "memberships/latestPeriod/overdue",
+      "de": "Überfällig seit dem {formattedEndDate}"
+    },
+    {
+      "key": "memberships/latestPeriod/renew/false/autoPay/false",
+      "de": "Gültig bis am {formattedEndDate}"
+    },
+    {
+      "key": "memberships/latestPeriod/renew/false/autoPay/true",
+      "de": "Gültig bis am {formattedEndDate}"
+    },
+    {
+      "key": "memberships/latestPeriod/renew/true/autoPay/false",
+      "de": "Erneuerung am {formattedEndDate} fällig"
+    },
+    {
+      "key": "memberships/latestPeriod/renew/true/autoPay/true",
+      "de": "Automatische Erneuerung am {formattedEndDate}"
+    },
+    {
+      "key": "memberships/manage/autoPay/disable",
+      "de": "Automatische Abbuchung deaktivieren"
+    },
+    {
+      "key": "memberships/manage/autoPay/enable",
+      "de": "Automatische Abbuchung aktivieren"
+    },
+    {
+      "key": "memberships/manage/cancel/link",
+      "de": "Mitgliedschaft kündigen"
+    },
+    {
+      "key": "memberships/manage/prolong/awaiting",
+      "de": "Sie haben bereits eine weitere Mitgliedschaft, diese wird automatisch zur Verlängerung genutzt."
+    },
+    {
+      "key": "memberships/manage/prolong/link",
+      "de": "Jetzt verlängern"
+    },
+    {
+      "key": "memberships/manage/reactivate",
+      "de": "Kündigung zurücknehmen"
+    },
+    {
+      "key": "memberships/MONTHLY_ABO/latestPeriod/renew/true/autoPay/false",
+      "de": "Automatische Erneuerung am {formattedEndDate}"
+    },
+    {
+      "key": "memberships/noActive",
+      "de": "Sie haben keine aktive Mitgliedschaft."
+    },
+    {
+      "key": "merci/claim/loading",
+      "de": "überprüfen"
+    },
+    {
+      "key": "merci/claim/signIn/before",
+      "de": "Geben Sie Ihre richtige E-Mail-Adresse ein:"
+    },
+    {
+      "key": "merci/claim/signIn/button",
+      "de": "Ändern"
+    },
+    {
+      "key": "merci/empty/button",
+      "de": "Jetzt mitmachen"
+    },
+    {
+      "key": "merci/empty/text",
+      "de": "Möchten auch Sie uns unterstützen?"
+    },
+    {
+      "key": "merci/empty/title",
+      "de": "Hallo {nameOrEmail}"
+    },
+    {
+      "key": "merci/lead",
+      "de": "Vielen Dank für Ihre Unterstützung. Es ist uns eine Ehre, Sie bei uns als Mitglied zu begrüssen.\n\nAuf dieser Seite finden Sie alles, was wir von Ihnen wissen: Ihre Unterstützungsbeiträge, Ihre persönlichen Angaben und Ihre Newsletter-Einstellungen."
+    },
+    {
+      "key": "merci/lead/package/DONATE",
+      "de": "Vielen Dank für Ihre Grosszügigkeit!\n\nAuf dieser Seite finden Sie alles, was wir von Ihnen wissen: Ihre Unterstützungsbeiträge, Ihre persönlichen Angaben und Ihre Newsletter-Einstellungen."
+    },
+    {
+      "key": "merci/lead/package/WORKSHOP",
+      "de": "Vielen Dank für Ihre Grosszügigkeit!\n\nAuf dieser Seite finden Sie alles, was wir von Ihnen wissen: Ihre Unterstützungsbeiträge, Ihre persönlichen Angaben und Ihre Newsletter-Einstellungen."
+    },
+    {
+      "key": "merci/postpay/lead",
+      "de": "Danke, Sie sind mit dem Wichtigsten durch. Jetzt müssen Sie noch Ihre E-Mail-Adresse bestätigen."
+    },
+    {
+      "key": "merci/postpay/reclaim",
+      "de": "Falsche E-Mail-Adresse?"
+    },
+    {
+      "key": "merci/postpay/signInError/email/body",
+      "de": "E-Mail-Adresse:\n{email}\n\nBuchungsreferenz:\n{pledgeId}\n\nFehler:\n{error}"
+    },
+    {
+      "key": "merci/postpay/signInError/email/subject",
+      "de": "E-Mail-Verifizierung fehlgeschlagen nach dem Bezahlen"
+    },
+    {
+      "key": "merci/postpay/signInError/retry",
+      "de": "erneut versuchen"
+    },
+    {
+      "key": "merci/postpay/signInError/text",
+      "de": "Ihre Zahlungsinformationen wurden gespeichert. Leider konnte das System aber Ihre E-Mail-Adresse «{email}» zurzeit nicht verifizieren. Versuchen Sie es in 10 Minuten erneut. Klappt das ein zweites Mal nicht, stehen wir Ihnen gerne mit Rat zur Verfügung. Schreiben Sie uns Ihr Problem an {contactEmailLink}."
+    },
+    {
+      "key": "merci/postpay/signInError/title",
+      "de": "E-Mail-Verifizierung fehlgeschlagen"
+    },
+    {
+      "key": "merci/title",
+      "de": "Willkommen an Bord, {name}"
+    },
+    {
+      "key": "merci/title/noName",
+      "de": "Willkommen an Bord"
+    },
+    {
+      "key": "merci/title/package/DONATE",
+      "de": "Guten Tag, {name}"
+    },
+    {
+      "key": "merci/title/package/DONATE/noName",
+      "de": "Guten Tag"
+    },
+    {
+      "key": "merci/title/package/WORKSHOP",
+      "de": "Guten Tag, {name}"
+    },
+    {
+      "key": "merci/title/package/WORKSHOP/noName",
+      "de": "Guten Tag"
+    },
+    {
+      "key": "notifications/closeButton",
+      "de": "Zur Startseite"
+    },
+    {
+      "key": "notifications/closeNote",
+      "de": "Sie können dieses Fenster schliessen. "
+    },
+    {
+      "key": "notifications/email-confirmed/claim/text",
+      "de": "Bitte kehren Sie zum vorherigen Fenster zurück, um den Vorgang abzuschliessen. "
+    },
+    {
+      "key": "notifications/email-confirmed/newsletter/title",
+      "de": "Anmeldung bestätigt"
+    },
+    {
+      "key": "notifications/email-confirmed/preview/text",
+      "de": "Bitte kehren Sie zum vorherigen Fenster zurück, um den Vorgang abzuschliessen. "
+    },
+    {
+      "key": "notifications/email-confirmed/projectr/title",
+      "de": "E-Mail-Adresse bestätigt"
+    },
+    {
+      "key": "notifications/email-confirmed/text",
+      "de": "Vielen Dank."
+    },
+    {
+      "key": "notifications/email-confirmed/title",
+      "de": "Zugriff bestätigt"
+    },
+    {
+      "key": "notifications/invalid-email/text",
+      "de": "Der von Ihnen aufgerufene Link enthält eine ungültige E-Mail-Adresse: «{email}».<br /><br />Es könnte sein, dass die Zeichenkodierung beim Übertragen korrumpiert wurde. Bitte versuchen Sie es mit einem anderen E-Mail-Programm.<br /><br />Und melden Sie uns, unter welchen Umständen dies passiert ist: <a href=\"mailto:info@lobbywatch.ch?subject=Korrumpierte%20E-Mail-Adresse\">info@lobbywatch.ch</a>."
+    },
+    {
+      "key": "notifications/invalid-email/title",
+      "de": "Ungültige E-Mail-Adresse"
+    },
+    {
+      "key": "notifications/invalid-token/text",
+      "de": "Der von Ihnen aufgerufene Link ist nicht gültig. Links zur Anmeldung sind nur einmal gültig."
+    },
+    {
+      "key": "notifications/invalid-token/title",
+      "de": "Ungültiger Link"
+    },
+    {
+      "key": "notifications/links/merci",
+      "de": "Ihre persönliche Übersicht"
+    },
+    {
+      "key": "notifications/newsletter-subscript-disabledion/title",
+      "de": "Newsletter-Anmeldung"
+    },
+    {
+      "key": "notifications/newsletter-subscription/title",
+      "de": "Newsletter-Anmeldung"
+    },
+    {
+      "key": "notifications/newsletter/title",
+      "de": "Newsletter-Anmeldung"
+    },
+    {
+      "key": "notifications/pageTitle",
+      "de": "Mitteilung – Lobbywatch"
+    },
+    {
+      "key": "notifications/session-denied/text",
+      "de": "Sie haben den Schwarzleser vor einem leeren Bildschirm sitzen lassen."
+    },
+    {
+      "key": "notifications/session-denied/title",
+      "de": "Zugriff abgelehnt"
+    },
+    {
+      "key": "notifications/unavailable/text",
+      "de": "Leider kann unser System Ihre Anfrage zurzeit nicht bearbeiten. Versuchen Sie es in 10 Minuten erneut. Klappt es ein zweites Mal nicht, stehen wir Ihnen gerne mit Rat zur Verfügung. Schreiben Sie uns an <a href=\"mailto:info@lobbywatch.ch?subject=Anmeldung%20nicht%20verf%C3%BCgbar\">info@lobbywatch.ch</a>."
+    },
+    {
+      "key": "notifications/unavailable/title",
+      "de": "System nicht verfügbar"
+    },
+    {
+      "key": "notifications/unkown/text",
+      "de": "Das System konnte Ihre Anfrage nicht erkennen. Es könnte sein, dass ein Übertragungsfehler vorliegt: Melden Sie sich bei <a href=\"mailto:info@lobbywatch.ch?subject=Kaputter%20Link\">info@lobbywatch.ch</a> mit einem Screenshot."
+    },
+    {
+      "key": "notifications/unkown/title",
+      "de": "Unbekannte Mitteilung"
+    },
+    {
+      "key": "option/suffix/endDate",
+      "de": " bis {formattedEndDate}"
+    },
+    {
+      "key": "package/BENEFACTOR/description",
+      "de": "Mit Ihrer Gönner-Mitgliedschaft werden Sie Mitglied des Vereins Lobbywatch.ch und wir laden Sie bei Gelegenheit auf einen Lobbyspaziergang mit Apéro ein."
+    },
+    {
+      "key": "package/BENEFACTOR/title",
+      "de": "Gönner-Mitgliedschaft"
+    },
+    {
+      "key": "package/choose",
+      "de": "Auswählen"
+    },
+    {
+      "key": "package/customize/changePackage",
+      "de": "Zum gesamten Angebot"
+    },
+    {
+      "key": "package/customize/option/error/max",
+      "de": "{label}, höchstens {maxAmount}"
+    },
+    {
+      "key": "package/customize/option/error/min",
+      "de": "{label}, mindestens {minAmount}"
+    },
+    {
+      "key": "package/customize/option/error/step",
+      "de": "{label}, nicht zugelassen, vielleicht {suggestedValue}?"
+    },
+    {
+      "key": "package/customize/price/error",
+      "de": "Betrag, mindestens {formattedCHF}"
+    },
+    {
+      "key": "package/customize/price/label",
+      "de": "Betrag in CHF"
+    },
+    {
+      "key": "package/customize/price/label/total",
+      "de": "Gesamtbetrag in CHF"
     },
     {
       "key": "package/customize/price/payMore",
@@ -1288,12 +1943,12 @@
       "de": "Ich bin für Grosszügigkeit: {formattedCHF}"
     },
     {
-      "key": "package/customize/price/payMore/thx",
-      "de": "Danke!"
-    },
-    {
       "key": "package/customize/price/payMore/2",
       "de": "Tollkühne {formattedCHF}"
+    },
+    {
+      "key": "package/customize/price/payMore/thx",
+      "de": "Danke!"
     },
     {
       "key": "package/customize/price/payMore/thx/2",
@@ -1302,6 +1957,642 @@
     {
       "key": "package/customize/price/payRegular",
       "de": "Auf den regulären Betrag zurücksetzen"
+    },
+    {
+      "key": "package/DONATE/description",
+      "de": "Sie wollen hervorragenden Journalismus unterstützen. Denn Sie wissen: Guter Journalismus kostet."
+    },
+    {
+      "key": "package/DONATE/title",
+      "de": "Spenden"
+    },
+    {
+      "key": "package/LEGISLATION/description",
+      "de": "Sie werden Mitglied für die vier Jahre der Legislaturperiode 2023-2027."
+    },
+    {
+      "key": "package/LEGISLATION/title",
+      "de": "Legislatur-Mitgliedschaft"
+    },
+    {
+      "key": "package/price",
+      "de": "{formattedCHF}"
+    },
+    {
+      "key": "package/price",
+      "de": "{formattedCHF}"
+    },
+    {
+      "key": "package/price/free",
+      "de": "kostenlos"
+    },
+    {
+      "key": "package/price/free",
+      "de": "kostenlos"
+    },
+    {
+      "key": "package/WORKSHOP/description",
+      "de": "Gedacht für Medien, Verbände und Unternehmen. Wir kommen exklusive bei Ihnen vorbei und geben Ihnen und Ihren Kolleg:innen einen Workshop zum Thema Lobbying & Recherche."
+    },
+    {
+      "key": "package/WORKSHOP/title",
+      "de": "Lobbywatch-Workshop"
+    },
+    {
+      "key": "package/YEAR/description",
+      "de": "Mit Ihrem jährlichen Beitrag sind Sie Mitglied des Vereins Lobbywatch.ch."
+    },
+    {
+      "key": "package/YEAR/price",
+      "de": "{formattedCHF} pro Jahr"
+    },
+    {
+      "key": "package/YEAR/title",
+      "de": "Jahresmitgliedschaft"
+    },
+    {
+      "key": "payment/insecure",
+      "de": "Unsichere Verbindung"
+    },
+    {
+      "key": "payment/method/choose",
+      "de": "Wählen Sie eine Zahlungsart"
+    },
+    {
+      "key": "payment/method/existing",
+      "de": "Gespeicherte Kreditkarte"
+    },
+    {
+      "key": "payment/method/new",
+      "de": "Neue Kreditkarte oder Zahlungsart"
+    },
+    {
+      "key": "payment/method/new/stripe",
+      "de": "Neue Kreditkarte erfassen"
+    },
+    {
+      "key": "payment/method/PAYMENTSLIP",
+      "de": "Rechnung"
+    },
+    {
+      "key": "payment/method/PAYPAL",
+      "de": "PayPal"
+    },
+    {
+      "key": "payment/method/POSTFINANCECARD",
+      "de": "PostFinance Card"
+    },
+    {
+      "key": "payment/method/selected",
+      "de": "(ausgewählte Zahlungsart)"
+    },
+    {
+      "key": "payment/method/STRIPE",
+      "de": "Visa/Mastercard/Amex"
+    },
+    {
+      "key": "payment/paymentslip/explanation",
+      "de": "Nach der Bestellung senden wir Ihnen per E-Mail eine QR-Rechnung."
+    },
+    {
+      "key": "payment/secure",
+      "de": "Sichere Verbindung"
+    },
+    {
+      "key": "payment/stripe/cardNumber/error/empty",
+      "de": "Kreditkartennummer fehlt"
+    },
+    {
+      "key": "payment/stripe/cardNumber/error/generic",
+      "de": "Kreditkartennummer ungültig"
+    },
+    {
+      "key": "payment/stripe/cardNumber/error/incomplete_number",
+      "de": "Kreditkartennummer unvollständig"
+    },
+    {
+      "key": "payment/stripe/cardNumber/label",
+      "de": "Kreditkartennummer"
+    },
+    {
+      "key": "payment/stripe/cvc/error/empty",
+      "de": "Prüfziffer (CVC) fehlt"
+    },
+    {
+      "key": "payment/stripe/cvc/error/generic",
+      "de": "Prüfziffer (CVC) ungültig"
+    },
+    {
+      "key": "payment/stripe/cvc/error/incomplete_cvc",
+      "de": "Prüfziffer (CVC) unvollständig"
+    },
+    {
+      "key": "payment/stripe/cvc/label",
+      "de": "Prüfziffer (CVC)"
+    },
+    {
+      "key": "payment/stripe/expiry/error/empty",
+      "de": "Ablaufdatum Ihrer Karte fehlt"
+    },
+    {
+      "key": "payment/stripe/expiry/error/generic",
+      "de": "Ablaufdatum Ihrer Karte ungültig"
+    },
+    {
+      "key": "payment/stripe/expiry/error/incomplete_expiry",
+      "de": "Ablaufdatum Ihrer Karte unvollständig"
+    },
+    {
+      "key": "payment/stripe/expiry/label",
+      "de": "Ablaufdatum Ihrer Karte"
+    },
+    {
+      "key": "payment/stripe/js/failed",
+      "de": "Kreditkartenzahlungen sind zurzeit nicht möglich. Die Verbindung zu stripe.com, unserem Dienstleister für Kreditkartenzahlungen, ist fehlgeschlagen. Mögliche Ursachen: eine wackelige Internetverbindung, ein temporärer Ausfall oder Ihre Browsererweiterungen. Wählen Sie bitte eine andere Zahlungsart oder versuchen Sie es in einigen Sekunden erneut."
+    },
+    {
+      "key": "payment/stripe/prefered",
+      "de": "Falls es für Sie keinen Unterschied macht: Die Kreditkarte (Visa, Mastercard, Amex) ist für uns das bevorzugte Zahlungsmittel."
+    },
+    {
+      "key": "payment/title",
+      "de": "Zahlungsart auswählen"
+    },
+    {
+      "key": "payment/title/single",
+      "de": "Bezahlung"
+    },
+    {
+      "key": "payment/title/single/DEFAULT_SOURCE",
+      "de": "Ihre Kreditkarte"
+    },
+    {
+      "key": "pledge/address/payment/likeShipping",
+      "de": "Gleich wie Lieferadresse"
+    },
+    {
+      "key": "pledge/address/payment/other",
+      "de": "Andere Adresse"
+    },
+    {
+      "key": "pledge/address/payment/title",
+      "de": "Rechnungsadresse"
+    },
+    {
+      "key": "pledge/address/shipping/setAccount",
+      "de": "Als Ihre Standardadresse speichern"
+    },
+    {
+      "key": "pledge/address/shipping/title",
+      "de": "Lieferadresse"
+    },
+    {
+      "key": "pledge/address/shipping/updateAccount",
+      "de": "Ihre Standardadresse aktualisieren"
+    },
+    {
+      "key": "pledge/claim/loading",
+      "de": "überprüfen"
+    },
+    {
+      "key": "pledge/claim/signIn/before",
+      "de": "Geben Sie Ihre richtige E-Mail-Adresse ein:"
+    },
+    {
+      "key": "pledge/claim/signIn/button",
+      "de": "Ändern"
+    },
+    {
+      "key": "pledge/consents/error/PRIVACY",
+      "de": "Sie müssen sich mit den Datenschutzbestimmungen einverstanden erklären."
+    },
+    {
+      "key": "pledge/consents/label/PRIVACY",
+      "de": "Ich bin mit den <a href=\"/datenschutz\" target=\"_blank\">Datenschutz&shy;bestimmungen</a> einverstanden."
+    },
+    {
+      "key": "pledge/contact/email/error/empty",
+      "de": "E-Mail-Adresse fehlt"
+    },
+    {
+      "key": "pledge/contact/email/error/invalid",
+      "de": "E-Mail-Adresse ungültig"
+    },
+    {
+      "key": "pledge/contact/email/label",
+      "de": "Ihre E-Mail-Adresse"
+    },
+    {
+      "key": "pledge/contact/firstName/error/empty",
+      "de": "Vorname fehlt"
+    },
+    {
+      "key": "pledge/contact/firstName/label",
+      "de": "Ihr Vorname"
+    },
+    {
+      "key": "pledge/contact/lastName/error/empty",
+      "de": "Nachname fehlt"
+    },
+    {
+      "key": "pledge/contact/lastName/label",
+      "de": "Ihr Nachname"
+    },
+    {
+      "key": "pledge/contact/signIn/customMe",
+      "de": "anmelden"
+    },
+    {
+      "key": "pledge/contact/signIn/hide",
+      "de": "Das erste Mal hier?"
+    },
+    {
+      "key": "pledge/contact/signIn/show",
+      "de": "Haben Sie bereits ein Konto? Melden Sie sich an.\n"
+    },
+    {
+      "key": "pledge/contact/signIn/wrongToken",
+      "de": "Ist das nicht Ihre E-Mail-Adresse?"
+    },
+    {
+      "key": "pledge/contact/signOut",
+      "de": "abmelden"
+    },
+    {
+      "key": "pledge/contact/title",
+      "de": "Ihre Kontaktinformationen"
+    },
+    {
+      "key": "pledge/meta/description",
+      "de": "Wir sind ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur. Unabhängig. Werbefrei."
+    },
+    {
+      "key": "pledge/meta/title",
+      "de": "Lobbywatch-Mitglied werden"
+    },
+    {
+      "key": "pledge/recievePayment/error",
+      "de": "Zahlung fehlgeschlagen.<br />\n<br />\nBitte versuchen Sie es erneut oder kontaktieren Sie uns unter {mailto}."
+    },
+    {
+      "key": "pledge/recievePayment/noPledge",
+      "de": "Die Bestellung wurde nicht gefunden. Kontaktieren Sie uns unter finance@lobbywatch.ch mit folgender Bestellungsreferenz: {pledgeId}."
+    },
+    {
+      "key": "pledge/recievePayment/paypal/cancel",
+      "de": "Zahlung abgebrochen. Wählen Sie bitte ein anderes Zahlungsmittel, um Ihre Bestellung abzuschliessen."
+    },
+    {
+      "key": "pledge/recievePayment/paypal/contactUs",
+      "de": "Während des Zahlungsverfahrens mit PayPal ist ein Problem aufgetreten, das zu einem nicht vorhersehbaren Resultat geführt hat.<br />\n<br />\nBitte nehmen Sie Kontakt mit uns auf unter {mailto}. Sie sollten es nicht erneut versuchen da die Buchung möglicherweise bereits akzeptiert wurde."
+    },
+    {
+      "key": "pledge/recievePayment/paypal/deny",
+      "de": "Zahlung fehlgeschlagen.<br />\n<br />\nWählen Sie bitte ein anderes Zahlungsmittel, um Ihre Bestellung abzuschliessen."
+    },
+    {
+      "key": "pledge/recievePayment/paypal/mailto/body",
+      "de": "Liebe Lobbywatch\n\nMeine PayPal-Transaktion funktioniert nicht.\n\nBuchungsreferenz:\n{pledgeId}\n\nPayPal:\n{payload}"
+    },
+    {
+      "key": "pledge/recievePayment/paypal/mailto/subject",
+      "de": "PayPal {status}"
+    },
+    {
+      "key": "pledge/submit/autoPay",
+      "de": "Ohne Bürokratie: Verlängerungen automatisch von meiner Kreditkarte abbuchen."
+    },
+    {
+      "key": "pledge/submit/autoPay/note",
+      "de": "Wir erinnern Sie, bevor wir abbuchen. Und Sie können jederzeit in Ihrem Konto kündigen."
+    },
+    {
+      "key": "pledge/submit/button/pay",
+      "de": "{formattedChf} bezahlen"
+    },
+    {
+      "key": "pledge/submit/emailVerify/done",
+      "de": "Vielen Dank für das Verifizieren Ihrer E-Mail-Adresse."
+    },
+    {
+      "key": "pledge/submit/emailVerify/note",
+      "de": "Diese E-Mail-Adresse wurde schon einmal verwendet. Falls das Ihre E-Mail-Adresse ist, klicken Sie bitte auf «anmelden»."
+    },
+    {
+      "key": "pledge/submit/error/title",
+      "de": "Fehler"
+    },
+    {
+      "key": "pledge/submit/loading/pay",
+      "de": "verarbeiten"
+    },
+    {
+      "key": "pledge/submit/loading/paypal",
+      "de": "weiterleiten"
+    },
+    {
+      "key": "pledge/submit/loading/postfinance",
+      "de": "weiterleiten"
+    },
+    {
+      "key": "pledge/submit/loading/stripe",
+      "de": "bezahlen"
+    },
+    {
+      "key": "pledge/submit/loading/submit",
+      "de": "einreichen"
+    },
+    {
+      "key": "pledge/submit/package/error",
+      "de": "Wählen Sie zuoberst ein Angebot aus"
+    },
+    {
+      "key": "pledge/submit/payMethod/error",
+      "de": "Zahlungsart auswählen"
+    },
+    {
+      "key": "pledge/submit/payMethod/label",
+      "de": "Wählen Sie eine Zahlungsart:"
+    },
+    {
+      "key": "pledge/title",
+      "de": "Willkommen an Bord!"
+    },
+    {
+      "key": "pledge/title/member",
+      "de": "Das Angebot"
+    },
+    {
+      "key": "signIn/button",
+      "de": "Anmelden"
+    },
+    {
+      "key": "signIn/email/error/empty",
+      "de": "E-Mail-Adresse fehlt"
+    },
+    {
+      "key": "signIn/email/error/invalid",
+      "de": "E-Mail-Adresse ungültig"
+    },
+    {
+      "key": "signIn/email/label",
+      "de": "E-Mail-Adresse"
+    },
+    {
+      "key": "signIn/faq",
+      "de": "FAQ"
+    },
+    {
+      "key": "signIn/polling/cancel",
+      "de": "Vertippt? E-Mail-Adresse erneut eingeben."
+    },
+    {
+      "key": "signIn/polling/email",
+      "de": "E-Mail-Adresse"
+    },
+    {
+      "key": "signIn/polling/EMAIL_TOKEN/text",
+      "de": "Wir haben Ihnen <b>eine E-Mail</b> geschickt, mit der Sie diesen Zugriff freischalten können. Schliessen Sie diese Seite nicht."
+    },
+    {
+      "key": "signIn/polling/EMAIL_TOKEN/title",
+      "de": "Zugriff via E-Mail bestätigen"
+    },
+    {
+      "key": "signIn/polling/phrase",
+      "de": "Seltsame Wörter (eine Sicherheitsmassnahme)"
+    },
+    {
+      "key": "signIn/polling/phrase/EMAIL_TOKEN/hint",
+      "de": "Wie funktioniert diese Sicherheitsmassnahme? Vergleichen Sie diese Wörter. Stehen sie ebenfalls auf der Bestätigungsseite, können Sie sicher sein, dass Sie dieser Anfrage den Zugriff freischalten."
+    },
+    {
+      "key": "signIn/polling/phrase/hint/show",
+      "de": "Wie funktioniert diese Sicherheitsmassnahme?"
+    },
+    {
+      "key": "signIn/polling/switch/EMAIL_TOKEN",
+      "de": "Zugriff via E-Mail bestätigen?"
+    },
+    {
+      "key": "signIn/privacy",
+      "de": "Datenschutz"
+    },
+    {
+      "key": "signIn/success",
+      "de": "Erfolgreich als {nameOrEmail} angemeldet."
+    },
+    {
+      "key": "signOut/error",
+      "de": "Unbekannter Fehler"
+    },
+    {
+      "key": "signOut/label",
+      "de": "Abmelden"
+    },
+    {
+      "key": "statement/404",
+      "de": "Das gewünschte Statement ist zurzeit nicht verfügbar."
+    },
+    {
+      "key": "statement/adminUnpublished",
+      "de": "Wir können Ihr Statement leider nicht publizieren. Schreiben Sie an info@lobbywatch.ch für weitere Informationen."
+    },
+    {
+      "key": "statement/description",
+      "de": "Sie können ein Statement abgeben und es zusammen mit einem Porträtbild auf unserer Community-Seite veröffentlichen."
+    },
+    {
+      "key": "statement/description/update",
+      "de": "Ihr Statement erscheint auf unserer Community-Seite."
+    },
+    {
+      "key": "statement/share/overlayTitle",
+      "de": "Statement von {name}"
+    },
+    {
+      "key": "statement/share/please",
+      "de": "Teilen Sie, dass Sie die Lobbywatch unterstützen:"
+    },
+    {
+      "key": "statement/share/PROLONG/title",
+      "de": "{name} hat bereits das Abo verlängert"
+    },
+    {
+      "key": "statement/share/title",
+      "de": "{name} unterstützt die Lobbywatch."
+    },
+    {
+      "key": "statement/submit",
+      "de": "veröffentlichen"
+    },
+    {
+      "key": "statement/submit/update",
+      "de": "aktualisieren"
+    },
+    {
+      "key": "statement/title",
+      "de": "Jetzt ein Statement abgeben."
+    },
+    {
+      "key": "statement/title/update",
+      "de": "Jetzt Ihr Statement aktualisieren."
+    },
+    {
+      "key": "statement/unpublish",
+      "de": "Statement zurücknehmen"
+    },
+    {
+      "key": "statement/unpublished",
+      "de": "Ihr Statement ist zurzeit nicht publik."
+    },
+    {
+      "key": "statement/viewLive",
+      "de": "ansehen"
+    },
+    {
+      "key": "testimonial/infinite/end",
+      "de": "Sie haben gerade {count} Statements angeschaut."
+    },
+    {
+      "key": "testimonial/infinite/endless",
+      "de": "Das waren {count} Mitglieder. Weitere {remaining} anschauen?"
+    },
+    {
+      "key": "testimonial/meta/description",
+      "de": "Jetzt Mitglied werden."
+    },
+    {
+      "key": "testimonial/meta/pageTitle",
+      "de": "Community – Lobbywatch"
+    },
+    {
+      "key": "testimonial/meta/single/description",
+      "de": "Jetzt Mitglied werden."
+    },
+    {
+      "key": "testimonial/meta/single/pageTitle",
+      "de": "{name} – Community – Lobbywatch"
+    },
+    {
+      "key": "testimonial/meta/single/title",
+      "de": "{name} unterstützt Lobbywatch"
+    },
+    {
+      "key": "testimonial/meta/title",
+      "de": "Die ganze Community auf einen Blick"
+    },
+    {
+      "key": "testimonial/search/label",
+      "de": "Suchen"
+    },
+    {
+      "key": "testimonial/search/seed",
+      "de": "Neu Mischen"
+    },
+    {
+      "key": "tokenAuthorization/after",
+      "de": "Falls Sie diese Anfrage nicht ausgelöst haben, wählen Sie «Nein». Haben Sie den Verdacht, dass jemand Unbekanntes sich mit Ihrem Abonnement Zugang verschaffen will? Dann wenden Sie sich bitte an info@lobbywatch.ch."
+    },
+    {
+      "key": "tokenAuthorization/deny",
+      "de": "Nein"
+    },
+    {
+      "key": "tokenAuthorization/email",
+      "de": "Ihre E-Mail-Adresse"
+    },
+    {
+      "key": "tokenAuthorization/error",
+      "de": "Ungültiger Link"
+    },
+    {
+      "key": "tokenAuthorization/fields/error/firstName/missing",
+      "de": "Vorname fehlt"
+    },
+    {
+      "key": "tokenAuthorization/fields/error/lastName/missing",
+      "de": "Nachname fehlt"
+    },
+    {
+      "key": "tokenAuthorization/fields/explanation",
+      "de": "Um Ihr Konto zu aktivieren, benötigen wir noch folgende Informationen:"
+    },
+    {
+      "key": "tokenAuthorization/fields/label/firstName",
+      "de": "Ihr Vorname"
+    },
+    {
+      "key": "tokenAuthorization/fields/label/lastName",
+      "de": "Ihr Nachname"
+    },
+    {
+      "key": "tokenAuthorization/grant",
+      "de": "Ja"
+    },
+    {
+      "key": "tokenAuthorization/ip",
+      "de": "IP-Adresse"
+    },
+    {
+      "key": "tokenAuthorization/location",
+      "de": "Standort"
+    },
+    {
+      "key": "tokenAuthorization/location/unknown",
+      "de": "Unbekannt"
+    },
+    {
+      "key": "tokenAuthorization/phrase",
+      "de": "Seltsame Wörter"
+    },
+    {
+      "key": "tokenAuthorization/title/existing",
+      "de": "Zugriff geben?"
+    },
+    {
+      "key": "tokenAuthorization/title/new",
+      "de": "Nutzung Ihrer E-Mail-Adresse erlauben?"
+    },
+    {
+      "key": "tokenAuthorization/title/sessionInfo",
+      "de": "Möchten Sie folgendem Gerät Zugriff geben?"
+    },
+    {
+      "key": "withAuthorization/authorizedRoles",
+      "de": "Zugelassene Rollen: {roles}"
+    },
+    {
+      "key": "withAuthorization/title",
+      "de": "Geschützter Bereich"
+    },
+    {
+      "key": "withMembership/signIn/note",
+      "de": "Noch nicht Mitglied? {buyLink} {moreLink}"
+    },
+    {
+      "key": "withMembership/signIn/note/buyText",
+      "de": "Jetzt beitreten!"
+    },
+    {
+      "key": "withMembership/signIn/note/moreText",
+      "de": "Mehr erfahren."
+    },
+    {
+      "key": "withMembership/title",
+      "de": "Mitgliederbereich"
+    },
+    {
+      "key": "withMembership/unauthorized",
+      "de": "Sie haben keine aktive Mitgliedschaft. {buyLink} oder {accountLink}?"
+    },
+    {
+      "key": "withMembership/unauthorized/accountText",
+      "de": "Konto ansehen"
+    },
+    {
+      "key": "withMembership/unauthorized/buyText",
+      "de": "Jetzt Mitglied werden"
     }
   ]
 }
