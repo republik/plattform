@@ -67,7 +67,7 @@ const ActionBar = ({
   const [fontSizeOverlayVisible, setFontSizeOverlayVisible] = useState(false)
   const [shareOverlayVisible, setShareOverlayVisible] = useState(false)
   const [podcastOverlayVisible, setPodcastOverlayVisible] = useState(false)
-  const { toggleAudioPlayer, audioPlayerVisible } = useAudioContext()
+  const { toggleAudioPlayer, audioPlayerPlaying } = useAudioContext()
   const {
     addAudioQueueItem,
     removeAudioQueueItem,
@@ -227,7 +227,7 @@ const ActionBar = ({
 
   const isArticleBottom = mode === 'articleBottom'
 
-  const itemPlaying = audioPlayerVisible && checkIfActiveItem(document.id)
+  const itemPlaying = audioPlayerPlaying && checkIfActiveItem(document.id)
   const itemInAudioQueue = checkIfInQueue(document.id)
   const showAudioButtons =
     !!meta.audioSource && meta.audioSource.kind !== 'syntheticReadAloud'
@@ -450,7 +450,6 @@ const ActionBar = ({
       show: document?.repoId && isEditor,
     },
     {
-      // TODO: more accurate itemPlaying flag
       disabled: itemPlaying,
       title: t('article/actionbar/audio/play'),
       label: !forceShortLabel ? t('article/actionbar/audio/play') : '',
