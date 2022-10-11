@@ -20,7 +20,7 @@ module.exports = async (_, args, context) => {
     const file = await pgdb.publikator.files.insertAndGet({
       repoId: repo.id,
       name: safeFileName,
-      status: 'PENDING',
+      status: 'Pending',
       userId: me.id,
       author: {
         name: me.name,

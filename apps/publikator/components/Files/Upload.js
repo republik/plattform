@@ -28,6 +28,16 @@ const UPLOAD_COMMIT = gql`
   ${RepoFile}
 `
 
+const UPLOAD_ABORT = gql`
+  mutation repoFileUploadAbort($id: ID!, $error: String!) {
+    repoFileUploadAbort(id: $id, error: $error) {
+      ...RepoFile
+    }
+  }
+
+  ${RepoFile}
+`
+
 const Upload = ({ repoId }) => {
   const [colorScheme] = useColorContext()
   const [uploading, setUploading] = useState(false)
@@ -35,6 +45,7 @@ const Upload = ({ repoId }) => {
 
   const [uploadBegin] = useMutation(UPLOAD_BEGIN)
   const [uploadCommit] = useMutation(UPLOAD_COMMIT)
+  const [uploadAbort] = useMutation(UPLOAD_ABORT)
 
   const styles = useMemo(
     () => ({
@@ -59,59 +70,43 @@ const Upload = ({ repoId }) => {
     setUploading(true)
     setProgress(0)
 
-    try {
-      const dropTotal = accepted.reduce((size, file) => size + file.size, 0)
-      let dropLoaded = 0
+    const dropTotal = accepted.reduce((size, file) => size + file.size, 0)
+    let dropLoaded = 0
 
-      for await (const file of accepted) {
-        const { data } = await uploadBegin({
-          variables: { repoId, name: file.name },
-          refetchQueries: ['getFiles'],
-          awaitRefetchQueries: true,
-        })
+    for await (const file of accepted) {
+      const { data } = await uploadBegin({
+        variables: { repoId, name: file.name },
+        refetchQueries: ['getFiles'],
+        awaitRefetchQueries: true,
+      })
 
-        const id = data?.repoFileUploadBegin?.id
-        const url = data?.repoFileUploadBegin?.url
+      const id = data?.repoFileUploadBegin?.id
 
-        const res = await axios(url, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': file.type,
-          },
-          data: file,
-          onUploadProgress: (progressEvent) => {
-            const { loaded: fileLoaded, total: fileTotal } = progressEvent
+      await axios(data?.repoFileUploadBegin?.url, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': file.type,
+        },
+        data: file,
+        onUploadProgress: (progressEvent) => {
+          const { loaded: fileLoaded, total: fileTotal } = progressEvent
 
-            if (fileTotal) {
-              setProgress(
-                Math.round(((dropLoaded + fileLoaded) / dropTotal) * 100),
-              )
+          if (fileTotal) {
+            setProgress(
+              Math.round(((dropLoaded + fileLoaded) / dropTotal) * 100),
+            )
 
-              if (fileLoaded >= fileTotal) {
-                dropLoaded += fileLoaded
-              }
+            if (fileLoaded === fileTotal) {
+              dropLoaded += fileLoaded
             }
-          },
-        })
-
-        if (!(res.status >= 200 && res.status < 300)) {
-          // @TODO: Handle shitty upload
-          throw Error(
-            `Unable to fetch url "${res.url}" (HTTP Status Code: ${res.status})`,
-          )
-        }
-
-        await uploadCommit({
-          variables: { id },
-          refetchQueries: ['getFiles'],
-        })
-      }
-
-      setUploading(false)
-    } catch (e) {
-      setUploading(false)
-      setProgress(0)
+          }
+        },
+      })
+        .then(() => uploadCommit({ variables: { id } }))
+        .catch((e) => uploadAbort({ variables: { id, error: e.message } }))
     }
+
+    setUploading(false)
   }
 
   return (

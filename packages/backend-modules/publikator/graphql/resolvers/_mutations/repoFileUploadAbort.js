@@ -1,9 +1,7 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 
-const { updateAcl } = require('../../../lib/File/utils')
-
 module.exports = async (_, args, context) => {
-  const { id, public: _public } = args
+  const { id, error } = args
   const { user: me, loaders, pgdb, t } = context
   Roles.ensureUserHasRole(me, 'editor')
 
@@ -15,23 +13,21 @@ module.exports = async (_, args, context) => {
       throw new Error(t('api/publikator/file/404'))
     }
 
-    if (!['PUBLIC', 'PRIVATE'].includes(file.status)) {
-      throw new Error(t('api/publikator/file/updateError'))
+    if (file.status !== 'Pending') {
+      throw new Error(t('api/publikator/file/error/notPending'))
     }
 
-    if (file.status === 'PUBLIC' && !_public) {
-      throw new Error(t('api/publikator/file/changePublicError'))
+    if (file.userId !== me.id) {
+      throw new Error(t('api/publikator/file/error/notYours'))
     }
 
     const updatedFile = await pgdb.publikator.files.updateAndGetOne(
       { id },
-      { status: _public ? 'PUBLIC' : 'PRIVATE', updatedAt: new Date() },
+      { status: 'Failure', error, failedAt: new Date() },
     )
 
-    await updateAcl(updatedFile)
-
     await tx.transactionCommit()
-    return file
+    return updatedFile
   } catch (e) {
     await tx.transactionRollback()
     throw e

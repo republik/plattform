@@ -44,7 +44,17 @@ export function updateAcl(file: RepoFileRow): Promise<unknown> {
     .putObjectAcl({
       Bucket: AWS_S3_BUCKET,
       Key: getKey(file),
-      ACL: file.status === 'PUBLIC' ? 'public-read' : 'private',
+      ACL: file.status === 'Public' ? 'public-read' : 'private',
+    })
+    .promise()
+}
+
+export function destroy(file: RepoFileRow): Promise<unknown> {
+  return s3
+    .getInstance()
+    .deleteObject({
+      Bucket: AWS_S3_BUCKET,
+      Key: getKey(file),
     })
     .promise()
 }

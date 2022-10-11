@@ -1,5 +1,7 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 
+const { destroy } = require('../../../lib/File/utils')
+
 module.exports = async (_, args, context) => {
   const { id } = args
   const { user: me, loaders, pgdb, t } = context
@@ -13,18 +15,16 @@ module.exports = async (_, args, context) => {
       throw new Error(t('api/publikator/file/404'))
     }
 
-    if (file.status !== 'Pending') {
-      throw new Error(t('api/publikator/file/error/notPending'))
-    }
-
-    if (file.userId !== me.id) {
-      throw new Error(t('api/publikator/file/error/notYours'))
+    if (file.status !== 'Failure') {
+      throw new Error(t('api/publikator/file/error/notFailure'))
     }
 
     const updatedFile = await pgdb.publikator.files.updateAndGetOne(
       { id },
-      { status: 'Private', updatedAt: new Date(), readyAt: new Date() },
+      { status: 'Destroyed', destroyedAt: new Date() },
     )
+
+    await destroy(updatedFile)
 
     await tx.transactionCommit()
     return updatedFile

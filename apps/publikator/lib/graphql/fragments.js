@@ -150,6 +150,7 @@ export const RepoFile = gql`
     name
     status
     url
+    error
     author {
       name
     }

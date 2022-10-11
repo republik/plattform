@@ -220,22 +220,26 @@ enum DerivativeStatus {
 }
 
 enum RepoFileStatus {
-  PENDING
-  PRIVATE
-  PUBLIC
+  Pending
+  Failure
+  Private
+  Public
+  Destroyed
 }
 
 type RepoFile {
   id: ID!
   name: String!
   status: RepoFileStatus!
-  public: Boolean!
   "If file is not ready, returns an upload URL"
   url: String
+  error: String
   author: Author!
   createdAt: DateTime!
   updatedAt: DateTime!
   readyAt: DateTime
+  failedAt: DateTime
+  destroyedAt: DateTime
 }
 
 `

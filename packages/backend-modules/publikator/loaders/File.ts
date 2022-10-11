@@ -19,11 +19,14 @@ export default module.exports = function (context: GraphqlContext) {
   const files: PgTable<RepoFileRow> = context.pgdb.publikator.files
   return {
     byId: createDataLoader(function (ids: readonly string[]) {
-      return files.find({ id: ids })
+      return files.find({ id: ids, destroyedAt: null })
     }),
     byRepoId: createDataLoader(
       function (ids: readonly string[]) {
-        return files.find({ repoId: ids }, { orderBy: { createdAt: 'desc' } })
+        return files.find(
+          { repoId: ids, destroyedAt: null },
+          { orderBy: { createdAt: 'desc' } },
+        )
       },
       null,
       (key, rows) => rows.filter((row) => row.repoId === key),

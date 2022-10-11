@@ -9,9 +9,7 @@ import Nav from '../Edit/Nav'
 import { Table, Tr, Th, Td } from '../Table'
 
 import Upload from './Upload'
-import File from './File'
-import Publish from './Publish'
-import Details from './Details'
+import Row from './Row'
 
 const GET_FILES = gql`
   query getFiles($id: ID!) {
@@ -41,7 +39,7 @@ const FilesPage = ({ router }) => {
       <Frame.Body raw>
         <Container>
           <Upload repoId={repoId} />
-          {data?.repo?.files?.length && (
+          {!!data?.repo?.files?.length && (
             <Table>
               <thead>
                 <Tr>
@@ -51,15 +49,7 @@ const FilesPage = ({ router }) => {
               </thead>
               <tbody>
                 {data.repo.files.map((file) => (
-                  <Tr key={file.id}>
-                    <Td>
-                      <File file={file} />
-                      <Details file={file} />
-                    </Td>
-                    <Td style={{ textAlign: 'right' }}>
-                      <Publish file={file} />
-                    </Td>
-                  </Tr>
+                  <Row key={file.id} file={file} />
                 ))}
               </tbody>
             </Table>

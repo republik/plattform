@@ -118,11 +118,15 @@ type mutations {
   ): RepoFile!
   "Commit an upload to file"
   repoFileUploadCommit(id: ID!): RepoFile!
-  "Change visibility of file"
-  updateRepoFile(
+  "Abort an upload, flags file as failed"
+  repoFileUploadAbort(
     id: ID!
-    public: Boolean!
+    error: String!
   ): RepoFile!
+  "Make repo file public"
+  repoFileMakePublic(id: ID!): RepoFile!
+  "Destroy repo file"
+  repoFileDestroy(id: ID!): RepoFile!
 }
 
 type subscriptions {

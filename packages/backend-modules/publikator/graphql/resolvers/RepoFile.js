@@ -7,9 +7,10 @@ const {
 module.exports = {
   url: (file) => {
     return (
-      (file.status === 'PENDING' && getUploadUrl(file)) ||
-      (file.status === 'PUBLIC' && getPublicUrl(file)) ||
-      getPrivateUrl(file)
+      (file.status === 'Pending' && getUploadUrl(file)) ||
+      (file.status === 'Public' && getPublicUrl(file)) ||
+      (file.status === 'Private' && getPrivateUrl(file)) ||
+      null
     )
   },
 }
