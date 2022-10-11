@@ -46,7 +46,7 @@ const FilesPage = ({ router }) => {
           render={() => (
             <Container>
               <Info />
-              <Upload repoId={data.id} />
+              <Upload repoId={data.repo.id} />
               {!!data.repo.files.length && (
                 <Table>
                   <thead>
